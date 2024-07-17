@@ -1,388 +1,353 @@
-Return-Path: <linux-pci+bounces-10473-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10474-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89BBD9343A0
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 23:06:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CAA29343B5
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 23:14:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03E1D1F2240E
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 21:06:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B86602852DE
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 21:14:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE9D2E3EB;
-	Wed, 17 Jul 2024 21:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96849180A63;
+	Wed, 17 Jul 2024 21:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RNcBy7Iz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ELVs74kX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2075.outbound.protection.outlook.com [40.107.212.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514C61CD2B
-	for <linux-pci@vger.kernel.org>; Wed, 17 Jul 2024 21:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721250385; cv=none; b=ZKnFPYeOmgDz91efuWrqIZgCA5ZMl2HJ9Ff73kgsmBoRkC3AcN/VIdTJtNJaVBQPWBtymJsE1yFSb9Hg+vqfGfn8I/ClU+UTCRZxcBdI+TS09Ieb8g27fzSAgAit1ss8qHq0kAl3mgfT2nLN0rMq7/LkUohhBmXXbRv3wxknXU8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721250385; c=relaxed/simple;
-	bh=PGT3OTOuusglmJ8/vOop2t7s+s+1/aBpvrgaC0dJq0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tEDD8hl0dM45Vb8d3wEsfMpnbnJ+A4rZUr0CZouMK+9VMlnIKz9XhkZ+oJkkq8vQyL+3SpSSd/bgrD8gXfQKahgzqu5Ir0StIEwNAywU9FNVDpnd21GIGHVEqVpACB/H1jkRWn0ADPmeogMiSsIkQ/5Uq9vpZVFS8A1Qw+DDgWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RNcBy7Iz; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44c21981043so415331cf.2
-        for <linux-pci@vger.kernel.org>; Wed, 17 Jul 2024 14:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1721250382; x=1721855182; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AptTwi2UGtTm80aSUdd008eUghqlak4RsTTmIuylxUw=;
-        b=RNcBy7Izjs05hUHEgKYmyXRfgf7s2RRXreksSMDQ12fdTmShI1nRnxL+z4QUhcmsZw
-         iAoD26l6HhcJXZ4tw5OmFgUSqbn22CTqyx4XXg4wn+CZBl9vpqq+VLsJCoXp5rf/xtQu
-         LuIM0mlGge0USMxX5JNGBvs9UAU8dM3wkX1sk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721250382; x=1721855182;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AptTwi2UGtTm80aSUdd008eUghqlak4RsTTmIuylxUw=;
-        b=ore+1Wsd0mFPwzNmIue/E+89f+8EaC2uK6dVom5HyzxkMZf70k22O1gpekhWDdyMMv
-         FiNqB3vJMxkhf0nRRxvobLW95ahs9l6VYjh5cenRqdclkidJmowB1KBI8OWVW1/Ffo8o
-         Ka/FTjtM7ZtQCzcbQvoHakrMicgPjJLe1K0NPHTzI228TPo2DHpx5n59Hi7zY4NI0MdH
-         ng2sGHdq5V4k8DpBxGM97YzrCNNDNreH/o/oI6/pIJrRpR0fvdA428sdo8ana5rkwY+W
-         nYHtcC6aScIQal7g7pCPo9WUvRJSeys1aQwSUE84Qq57WasujRl4yKuc0oceBvEMnvS5
-         40Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRupowoM/AJFuOapXUFD3kuZWOG8rsR+X3zswrLF7zZRu2gVe72TIyC2zqWcoRft+NEFk+Sg8e9J/7GNbMfgE3HKudSDIi7aks
-X-Gm-Message-State: AOJu0Yzby7udK78ReJdbodwM2RX86fWieJB0DU1AdDl0/OOUt6c1DMz9
-	QT8IL9ajN32Atdx6h3Bulr9otfSYDN5Ve2qvO7/rcezj7uAMhROQZjgR0x40zw==
-X-Google-Smtp-Source: AGHT+IG8diNT+kYmOxaBHWz1tA3LpZPeOIqtKlzuM+7OTqbNbN+drKKamD1bRY9cNM2k+qoV1hmSow==
-X-Received: by 2002:ac8:5786:0:b0:44f:8870:185f with SMTP id d75a77b69052e-44f88701c1amr35573161cf.61.1721250382023;
-        Wed, 17 Jul 2024 14:06:22 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44f5b7e00a7sm52327771cf.26.2024.07.17.14.06.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 14:06:21 -0700 (PDT)
-Message-ID: <238a1132-9ae5-4a2b-8f7c-31326d5d464c@broadcom.com>
-Date: Wed, 17 Jul 2024 14:06:17 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730D15B05E;
+	Wed, 17 Jul 2024 21:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721250876; cv=fail; b=bTR4ZB+ENDyodmDgqOHqKLBO+20NpvXCNVQD/NDLnZuX+kuTjoPmezi8O9nLtzkSFKu70IvbsGxGHunGaZB+uCQ89DUu7p6b7mza5YyhvIYXLEn28WO5m1lVY5+F1DWBsmM/VRFynsOMbFDMTnMvijN4Zh/f2j48OkTtOTYgREI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721250876; c=relaxed/simple;
+	bh=XljSIbrJJ+47vV8NGd/Mfg8uzL3dWpArZT74xo7CIWg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:In-Reply-To:
+	 Content-Type:MIME-Version; b=s9UnepukaOAlub6cgqJH83hrH9SzKpyJbnR6yo7NKjeEB8FZfbM+Ncix7bJRCQf64BFuMWSg8M1SwvcG8E8EXlbGxn1TUBo9VdYy6pM/Ap+gR1CICbmV4mdwD3TFkclVry9SNMey7Wp5fOZqokfHttpoD3o94+x+KkoHR839Gfc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ELVs74kX; arc=fail smtp.client-ip=40.107.212.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XQi6wBmOpkzTOiPk3f4PuEkW1h9WRDIPvtVW2bkuxI6lrHGiT7MOnyfRCoCrTB4Lbo1zDFJzym9KicNxnB60YbopUuolGBbrIlzB/vOA5UQez//y/28LQKxSBJTDHglgTmLd2tX0Nuqc3R6Tx5lleQ7Y+FCa6T2IUUtRX2Rnqew+qJq2tzsbOy4y1NP2xLxruhOc8e9PfP068Cl+/DYVOOoEFvUiSG3mh2Vcs1eQ75Xo1ceYmOjbzgB6wCYGDTVjQINKv9/SsEaI4ZKGwWzX4+0LVbfANvL6im2mjlHDxGX3PuUss4l5AG4V8UHOTcRlSrjyVmPpOZSPkyAnJr8eUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BLdVFGeWcSIaOqUV0J1ND9M1BBNxVFI1Av31aBqV3sQ=;
+ b=OFj3tNWHOIkgFu9BP8c5Yp+QNqfdkYMC8GW+zO2FhhIKqBOfDSv8sOpuGmzUbdaA9QYLzt28epWY0KTWsPl5BMy2OkC9T0kpXlz1p8YwYiV8Z6nBjnZOrVtOD1uN7iDY2zqFPmBmprn7+wgwVCK3mmbzzNgENtTunsCOhru/+BiHmv6z9516E293cdRBYL0AS8NQH3esFAVZeadX9kspGVZTntnLG8zZGrDnfriry1a/93+sUCkWAxvgUR7gXLrgLddyahsW7mdR+mwag9LYUAm0M4NOzF+IF3xmlMEULfaElrjHKqCus053JZtOGaxNNk3zZ6UpNGtYGFKhvH5wVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BLdVFGeWcSIaOqUV0J1ND9M1BBNxVFI1Av31aBqV3sQ=;
+ b=ELVs74kXkjis5SekMgykdqz/Jy2BueMQNZO6Y/zRBKle5IOXZhNqIyzGthKZMAajorLA45NaS4ipdK7gXjnv2VZF8SxqhH1WesBpMC4HeOEcvyzqsmxEUoE5Mps4mPU8SsCN0jg2b3Z386afihNqtSwRwbassLG+T43+xsTgQyA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com (2603:10b6:303:220::6)
+ by SA1PR12MB6678.namprd12.prod.outlook.com (2603:10b6:806:251::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.27; Wed, 17 Jul
+ 2024 21:14:29 +0000
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3]) by MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3%4]) with mapi id 15.20.7784.016; Wed, 17 Jul 2024
+ 21:14:29 +0000
+Subject: Re: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link
+ speed reduction
+To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>,
+ Hagan Billy <billy.hagan@amd.com>, Simon Guinot <simon.guinot@seagate.com>,
+ "Maciej W . Rozycki" <macro@orcam.me.uk>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20240617231841.GA1232294@bhelgaas>
+ <27be113e-3e33-b969-c1e3-c5e82d1b8b7f@amd.com>
+ <cf5f3b03-4c70-7a35-056e-5d94fc26f697@amd.com> <ZnKNJxJwdtWRphgX@wunner.de>
+ <73fd7b2d-9256-9eba-70be-d69ea336fd67@amd.com>
+ <6014882f-0936-ec31-d641-112a70eb2749@linux.intel.com>
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Message-ID: <ca2b8c13-a7d8-e157-fd1a-770ee8cb10c1@amd.com>
+Date: Wed, 17 Jul 2024 14:14:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+In-Reply-To: <6014882f-0936-ec31-d641-112a70eb2749@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR02CA0059.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::36) To MW4PR12MB7142.namprd12.prod.outlook.com
+ (2603:10b6:303:220::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
- add 7712 SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240716213131.6036-1-james.quinlan@broadcom.com>
- <20240716213131.6036-2-james.quinlan@broadcom.com>
- <d20be2d3-4fdd-48ca-b73e-80e8157bd5b2@kernel.org>
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <d20be2d3-4fdd-48ca-b73e-80e8157bd5b2@kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000009fcf8a061d77d5ad"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR12MB7142:EE_|SA1PR12MB6678:EE_
+X-MS-Office365-Filtering-Correlation-Id: 791733ce-28d8-4bdf-bc37-08dca6a57215
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YTJWZGU3TUMvdG5yZVBmRk93RTVwVy9KbHFabTh3NjVwcHpBbmFUQmV1TjFv?=
+ =?utf-8?B?WDUweWE4dE9RYXk2YTVzempsc3B6T3NxTFRoRDhuckhxY1BFVXp0dE1nTVRV?=
+ =?utf-8?B?SnA2eEJUTWxDbllwTUxhbmY1MTJKY3RDc0N5ODAwdC9xMk1WY09tWHFvM1FY?=
+ =?utf-8?B?RzFwS1FPRE5meGNzdDhKaDZWQ2Z2QkZVNXlmZ05Udy9UbjVsTC90aXZZSXFL?=
+ =?utf-8?B?VnNseU9QaXZzQjJ5eFphLzVDOWM1RmNYV3h5R2RaZThJdUg0TGtGL1UwOVlm?=
+ =?utf-8?B?bXJmeGNndVlRbHNzRjBIdUg5ZDZ0ZFRidEZ1cDRMTCsrTUgxcHZrR3ZhSFZq?=
+ =?utf-8?B?MG5jYmdtQUlSQ0trUjVxZ3RuTkF6ZDBFZCtzVTljbW50cVg0WmJPMzlBd3Bh?=
+ =?utf-8?B?V2EwZENzdTA5dWZ2NDVFZzR2L2Y3KzlFTzJIRmZvYk1nRXBLMXR4UDU5cDZQ?=
+ =?utf-8?B?aU9PdTh5eEUvbmkzZkxuVXFLdlpvRDZWVEtyV1ZJT29Qcm5TVkhlTXlUM3BD?=
+ =?utf-8?B?QmU2L3grWWhaN25yam4zL0VsUUZCdzFjamNRYWE4NE83eWJxcGw5Wmh3cGxX?=
+ =?utf-8?B?N0VpRENheGlVNUdhTVAvZEIzd2pyTlJkWldMVm1UQmdyRnB3WUQ0UUdMMnF2?=
+ =?utf-8?B?NU5ab3RJbXREYzdMN00rSTlwUzQvK01TRzViUWNRTzYxbm5aVEIvOXdad2x5?=
+ =?utf-8?B?SGM5eXp4Rnl6NlErS3lGTDFkZEJsOHMrVmdwMklkNXI5SmQ5Rlgrc3BIS2JY?=
+ =?utf-8?B?aENscXZkb0hKRyswRUI1TEE3VTVYVkw5Y0tKMXROTnJYdlFFeFY0ZFBhQzJv?=
+ =?utf-8?B?SmJYYVJ1Si9TeE5iRTJpdmNEMXdTV1Y5Tk9kSFc2ZndRblRIdHhTYXJ1Q0Vv?=
+ =?utf-8?B?dXRkeUMzYWFOZ2NDZGkzUDhUMTVKWGFUOHhFTVJhekt2UU9GQXFQUmxpVW1J?=
+ =?utf-8?B?ZW44Z3dlZkVyYWNkNE5wVlExd0ovMzE1c01UL2F6WjVrWVZTQVFqQzY3MkV3?=
+ =?utf-8?B?TG0xSHFWSkFMdjVZbnQ1RklsS1cxTi9PeVU1M2VvTCtkNStVVTVNMVAvSFNM?=
+ =?utf-8?B?RzBJajJSRkFTaTUrWVNBRHhVdjBYSWRRV25HakFOQmpTTzhLUFVFT1loVXZN?=
+ =?utf-8?B?cnJVMUU0RVB3U0JFTVNiaHNxbjhVSEZLMm5QRFJLMjhPWTJBazdIemJDOGlx?=
+ =?utf-8?B?eWtRSG5xSDErTmZLYnd2VDFwWUlnTjRZK05Fa3YzU01VUlBtSktnK2V4Y1d6?=
+ =?utf-8?B?eHUxbFUrbnJqR00zZU4wcVFObnpNMHJsTmlnS2Rwa3JnYzVPMlZrU1N0RVlh?=
+ =?utf-8?B?V1ByZzdScnRqUjM4ekMwNDNlTW5CUEtiemJuNU5BbjZ1SFFTTGd5MldWNFRG?=
+ =?utf-8?B?Um9uWjNLU1VmT25MMjEzYmFRb1dlRitjVHBvdmo2a2JDUEFSODRmdnZPQStk?=
+ =?utf-8?B?dkw0RnlKNENISGFpVkxUNFhtV3U5aUtqRHl4dlAwOVJxWHlJMjI3a3JDZ0Yr?=
+ =?utf-8?B?QjM1bXNGYXljRkFHQm1vb1JlVGk0eUduYUFacno1a1hzYkhsV01YZVZ6djk5?=
+ =?utf-8?B?Z0RhM2tOWk5YdDhRWGRLVFdvOG53UlVhTmhGSzY4UHBhNHRwdVVNTytOWU5t?=
+ =?utf-8?B?SXdVMWlnMjA1MnFNM2swM1p4NDNHZGg1clQzQTl4SXZDYjJSN0dCUnBxRGs4?=
+ =?utf-8?B?SzhieER6ZmZuWGsxNUtHL2RwaFd2L1JPQTdMUUVBQ3RlaUp4TlNuOThSNUNt?=
+ =?utf-8?Q?5zrp0YkNX3h/tBEAGA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7142.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q0xFTS9mWkFZcUY3ZDhlQ2JZQnMyemU2Y25rQnFqZ25mUGFtYm5XSE4wZzI5?=
+ =?utf-8?B?eHhqU3hQSXNSeE95b0JVa2l6V2dhbTBiZnFzWndwV2lUdTRMVi9wSVVoNWty?=
+ =?utf-8?B?cHp2NWtXek0rTlFka0QzN2I3cW02Q0Y5S0M2TWJ4bXZUK1dXTVkyaGZBNktl?=
+ =?utf-8?B?MHU4OXZiN09PYkhNbDlUNnZEZklETTNITGVSbm40Q2JOUXJEeCtpOU42bzFF?=
+ =?utf-8?B?NzAwVmVXQXpZci92Q2dSVmdnSGZRc1dXU1dJdnhtZmJzT29KOHAvM0lyalF0?=
+ =?utf-8?B?QzJpZzdoQkNMVGwyaGorT1dJWUxLZXlDdVVjYzVCaDNMZzlCRS9SbXA4U1U1?=
+ =?utf-8?B?a0JtYURtSlBzMk83ZHkralVCd1k3NGNieWVhVVlOVnZ5K0wvUitLeGpKRjN0?=
+ =?utf-8?B?QjdUaVdSKzZpUzVuaHVhejkwWDZRL21QNTVUaVRsYUdjb1I0cEozTEhLdnVW?=
+ =?utf-8?B?VDJGZHFnQWF5T0ZCeHBmRVhUbkdRSHJZMG1EcnFUa3Z2TGF1MUJtOG1FazN1?=
+ =?utf-8?B?TEROcmNaUmxzdUdYbnJkY2IzYVVCditRK2FYVmIyc0NTd3F5VFFJM1luczE2?=
+ =?utf-8?B?bDJBQXN2TnNiZ2FaK0liRkZVMFA0Z3FOSjFXZmw3UUd6aVEvMWd3bFZna1px?=
+ =?utf-8?B?UEkyWExiQ1VvNE90aDJTeFFsQW0yYXdrem5oSFFSc3NlcXZRUzhmOVBWQXEy?=
+ =?utf-8?B?T2VjMkFtakhnQkg4OWpaOWxjQ0ZEMUR0bUhKKzZkMkhwRGNSZ0FjY3BnSnJE?=
+ =?utf-8?B?LzRhTzNGTWxQQ1l2cnZtUWxsK2xwbFlRak8ybFo4L251Q2lnRnh1enIxdzFE?=
+ =?utf-8?B?aUx0MDhlSTNnNnUrTmVwSVRFaWwyQXYvYzFpT1JLZzNLbkR5VzUxeVFqMHVL?=
+ =?utf-8?B?eW5yb21VMW1BK0FEYnRWQWp4cUE2SVZYSlJodUtaMjV1N3U4NGV1aDhlY0lY?=
+ =?utf-8?B?SmcrWEd5cW5CNlRDQ0ZzcFAxOXVrUU8rNlFhWUdKYlJRRE5sSGVoS0RxVGFB?=
+ =?utf-8?B?eklEMFV6SlRMU3VWSWp2SzE1b2dEeFFzQlZ6NUpkNlRFQ0h5ZS9pajYwdGRS?=
+ =?utf-8?B?Y0s5clVLVGIzLzltUXlGRysxT3Frc3VReTBESW1pY2wwWW9qeFRyUUZZbzkx?=
+ =?utf-8?B?d01vNjVRRzVnNVkvWXlhN0xMNk53R2RyWkJtcmUvNDZzRnVvN2x4cHRjdjMv?=
+ =?utf-8?B?NVJBYklYd1NIZm4zbm9VUXVGakVpbFlSMW1XNTU2M2d4RWN5SkVhSitDTlFq?=
+ =?utf-8?B?bnVTTklNMGFTWnhXQW5jN2Zta1RjcnZIVnQzNEdkMHIreTQ0WEo3RGkxcVcx?=
+ =?utf-8?B?UndSeDd0ZzFLdXlBb2VQTUhCZkJrR0FPREE0Q0QrUGNQYVQ1RUdFZ2d5bER0?=
+ =?utf-8?B?UmNxK2NNQS9QN1NhUE1Jb0RYakFSeFJGdmpyWFhlekFIbE93OG0yc25WYzFL?=
+ =?utf-8?B?QTlZYXhJaWVXVlpBSEdpSmlIbTZuRTRGSTFGUGNOZ2xxVWZzWWZTYW8vQ3Vq?=
+ =?utf-8?B?TndnSGVNY1VGdUo5YmRIdGZtZUhRMFZzOFhtRFVEY0lNcWdkYW44MWdMeVVv?=
+ =?utf-8?B?R1p1NE0wc3o0bkFvcktiNXhVYzVoamZ0N0oxb2I4bGtGRDJwRHpzVjUvaVRz?=
+ =?utf-8?B?elRiZzgvRUtrSWJjTVdPQ2JoVEM1RktuWHJjN0hkMFNYWlFLR09CN3FMd0tQ?=
+ =?utf-8?B?cXhIZWxEUW9nQVpPWXQ2bU5mQW5Ic0xwYXRpWVlaS1M4blovc0Y0QVhscXdh?=
+ =?utf-8?B?bk4zTS9qS2hkcUFraVBjUElqVDJ2RE8wcVBVUlBvWm1sSmlzYTlmQ2VWZkl1?=
+ =?utf-8?B?anhiMDE1bDlYRVBPcDErdVB2aFFsYTV6L3N4VTRLL3Boa2Vvb3RTM2p5dVBJ?=
+ =?utf-8?B?YkV0Ky80MUNiN3ZNWElWTmtSdm9pWEVQaFNmRnJtRWJqUEYwRzZrQTdmWGto?=
+ =?utf-8?B?Ylpqd044YUlUYUpTVFNoVDNvZjNGYkxmM2F2bEV6bE80ZmQ3REpnTEx2Nyta?=
+ =?utf-8?B?V2phMlkxYThHeWpQak1YcUlRSWdjWEJUejFuVHVDR3ZwMVZ6L1BtWkFwcFND?=
+ =?utf-8?B?cGFaaVV4cFZTZko0NVhVcGYzS3o1ZXBCbjF2SHRBVVdBeHhaanJGczFNOGZr?=
+ =?utf-8?Q?pTHW6inslbWLCOBLBBZW1aA1i?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 791733ce-28d8-4bdf-bc37-08dca6a57215
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7142.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2024 21:14:29.5396
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MqUopaG/kMbU+pdRXnH+63wMHl1aTw1w8B3XpjSXhSoU7/Ei4YoQ6noLJv2ysVDPF5lfpykoDVVgkYwb62sZeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6678
 
---0000000000009fcf8a061d77d5ad
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 7/16/24 23:51, Krzysztof Kozlowski wrote:
-> On 16/07/2024 23:31, Jim Quinlan wrote:
->> o Change order of the compatible strings to be alphabetical
->>
->> o Describe resets/reset-names before using them in rules
->>
+On 7/9/2024 3:52 AM, Ilpo Järvinen wrote:
+> On Tue, 25 Jun 2024, Smita Koralahalli wrote:
 > 
-> <form letter>
-> This is a friendly reminder during the review process.
-> 
-> It seems my or other reviewer's previous comments were not fully
-> addressed. Maybe the feedback got lost between the quotes, maybe you
-> just forgot to apply it. Please go back to the previous discussion and
-> either implement all requested changes or keep discussing them.
-
-Maybe the feedback was not clear, the fault cannot always be in the 
-submitter, right?
-
-> 
-> Thank you.
-> </form letter>
-> 
->> o Add minItems/maxItems where needed.
+>> Sorry for the delay here. Took some time to find a system to run experiments.
+>> Comments inline.
 >>
->> o Change maintainer: Nicolas has not been active for a while.  It also
->>    makes sense for a Broadcom employee to be the maintainer as many of the
->>    details are privy to Broadcom.
+>> On 6/19/2024 12:47 AM, Lukas Wunner wrote:
+>>> On Tue, Jun 18, 2024 at 02:23:21PM -0700, Smita Koralahalli wrote:
+>>>> On 6/18/2024 11:51 AM, Smita Koralahalli wrote:
+>>>>>>>> But IIUC LBMS is set by hardware but never cleared by hardware, so
+>>>>>>>> if
+>>>>>>>> we remove a device and power off the slot, it doesn't seem like
+>>>>>>>> LBMS
+>>>>>>>> could be telling us anything useful (what could we do in response
+>>>>>>>> to
+>>>>>>>> LBMS when the slot is empty?), so it makes sense to me to clear
+>>>>>>>> it.
+>>>>>>>>
+>>>>>>>> It seems like pciehp_unconfigure_device() does sort of PCI core
+>>>>>>>> and
+>>>>>>>> driver-related things and possibly could be something shared by
+>>>>>>>> all
+>>>>>>>> hotplug drivers, while remove_board() does things more specific to
+>>>>>>>> the
+>>>>>>>> hotplug model (pciehp, shpchp, etc).
+>>>>>>>>
+>>>>>>>>   From that perspective, clearing LBMS might fit better in
+>>>>>>>> remove_board(). In that case, I wonder whether it should be done
+>>>>>>>> after turning off slot power? This patch clears is *before*
+>>>>>>>> turning
+>>>>>>>> off the power, so I wonder if hardware could possibly set it again
+>>>>>>>> before the poweroff?
+>>>>
+>>>> While clearing LBMS in remove_board() here:
+>>>>
+>>>> if (POWER_CTRL(ctrl)) {
+>>>> 	pciehp_power_off_slot(ctrl);
+>>>> +	pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
+>>>> 				   PCI_EXP_LNKSTA_LBMS);
+>>>>
+>>>> 	/*
+>>>> 	 * After turning power off, we must wait for at least 1 second
+>>>> 	 * before taking any action that relies on power having been
+>>>> 	 * removed from the slot/adapter.
+>>>> 	 */
+>>>> 	msleep(1000);
+>>>>
+>>>> 	/* Ignore link or presence changes caused by power off */
+>>>> 	atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+>>>> 		   &ctrl->pending_events);
+>>>> }
+>>>>
+>>>> This can happen too right? I.e Just after the slot poweroff and before
+>>>> LBMS
+>>>> clearing the PDC/PDSC could be fired. Then
+>>>> pciehp_handle_presence_or_link_change() would hit case "OFF_STATE" and
+>>>> proceed with pciehp_enable_slot() ....pcie_failed_link_retrain() and
+>>>> ultimately link speed drops..
+>>>>
+>>>> So, I added clearing just before turning off the slot.. Let me know if I'm
+>>>> thinking it right.
 >>
->> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->> ---
->>   .../bindings/pci/brcm,stb-pcie.yaml           | 26 ++++++++++++++-----
->>   1 file changed, 19 insertions(+), 7 deletions(-)
+>> I guess I should have experimented before putting this comment out.
 >>
->> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->> index 11f8ea33240c..692f7ed7c98e 100644
->> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->>   title: Brcmstb PCIe Host Controller
->>   
->>   maintainers:
->> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> +  - Jim Quinlan <james.quinlan@broadcom.com>
->>   
->>   properties:
->>     compatible:
->> @@ -16,11 +16,11 @@ properties:
->>             - brcm,bcm2711-pcie # The Raspberry Pi 4
->>             - brcm,bcm4908-pcie
->>             - brcm,bcm7211-pcie # Broadcom STB version of RPi4
->> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
->>             - brcm,bcm7216-pcie # Broadcom 7216 Arm
->> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
->> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
->>             - brcm,bcm7425-pcie # Broadcom 7425 MIPs
->>             - brcm,bcm7435-pcie # Broadcom 7435 MIPs
->> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
->>   
->>     reg:
->>       maxItems: 1
->> @@ -95,6 +95,18 @@ properties:
->>         minItems: 1
->>         maxItems: 3
->>   
->> +  resets:
->> +    minItems: 1
->> +    items:
->> +      - description: reset for external PCIe PERST# signal # perst
->> +      - description: reset for phy reset calibration       # rescal
->> +
->> +  reset-names:
->> +    minItems: 1
->> +    items:
->> +      - const: perst
->> +      - const: rescal
+>> After talking to the HW/FW teams, I understood that, none of our CRBs support
+>> power controller for NVMe devices, which means the "Power Controller Present"
+>> in Slot_Cap is always false. That's what makes it a "surprise removal." If the
+>> OS was notified beforehand and there was a power controller attached, the OS
+>> would turn off the power with SLOT_CNTL. That's an "orderly" removal. So
+>> essentially, the entire block from "if (POWER_CTRL(ctrl))" will never be
+>> executed for surprise removal for us.
+>>
+>> There could be board designs outside of us, with power controllers for the
+>> NVME devices, which I'm not aware of.
+>>>
+>>> This was added by 3943af9d01e9 ("PCI: pciehp: Ignore Link State Changes
+>>> after powering off a slot").  You can try reproducing it by writing "0"
+>>> to the slot's "power" file in sysfs, but your hardware needs to support
+>>> slot power.
+>>>
+>>> Basically the idea is that after waiting for 1 sec, chances are very low
+>>> that any DLLSC or PDSC events caused by removing slot power may still
+>>> occur.
+>>
+>> PDSC events occurring in our case aren't by removing slot power. It
+>> should/will always happen on a surprise removal along with DLLSC for us. But
+>> this PDSC is been delayed and happens after DLLSC is invoked and ctrl->state =
+>> OFF_STATE in pciehp_disable_slot(). So the PDSC is mistook to enable slot in
+>> pciehp_enable_slot() inside pciehp_handle_presence_or_link_change().
+>>>
+>>> Arguably the same applies to LBMS changes, so I'd recommend to likewise
+>>> clear stale LBMS after the msleep(1000).
+>>>
+>>> pciehp_ctrl.c only contains the state machine and higher-level logic of
+>>> the hotplug controller and all the actual register accesses are in helpers
+>>> in pciehp_hpc.c.  So if you want to do it picture-perfectly, add a helper
+>>> in pciehp_hpc.c to clear LBMS and call that from remove_board().
+>>>
+>>> That all being said, I'm wondering how this plays together with Ilpo's
+>>> bandwidth control driver?
+>>>
+>>> https://lore.kernel.org/all/20240516093222.1684-1-ilpo.jarvinen@linux.intel.com/
+>>
+>> I need to yet do a thorough reading of Ilpo's bandwidth control driver. Ilpo
+>> please correct me if I misspeak something as I don't have a thorough
+>> understanding.
+>>
+>> Ilpo's bandwidth controller also checks for lbms count to be greater than zero
+>> to bring down link speeds if CONFIG_PCIE_BWCTRL is true. If false, it follows
+>> the default path to check LBMS bit in link status register. So if,
+>> CONFIG_PCIE_BWCTRL is disabled by default we continue to see link speed drops.
+>> Even, if BWCTRL is enabled, LBMS count is incremented to 1 in
+>> pcie_bwnotif_enable() so likely pcie_lbms_seen() might return true thereby
+>> bringing down speeds here as well if DLLLA is clear?
 > 
-> There are no devices with two resets. Anyway, this does not match one of
-> your variants which have first element as rescal.
+> I did add code to clear the LBMS count in pciehp_unconfigure_device() in
+> part thanks to this patch of yours. Do you think it wouldn't work?
 
-Just to be clear, is the diff below what you would expect to see when 
-applying both patch 1 and 4 in succession, that is the reset properties 
-are described "generically" and the conditional section only describes 
-the order and values:
+It works with BWCTRL enabled. Just my concern would be to keep the 
+clearing in pciehp_unconfigure_device() and not do it inside 
+POWER_CTRL(ctrl), in remove_board() as per the suggestions given above.
+> 
+> But I agree there would still be problem if BWCTRL is not enabled. I
+> already have to keep part of it enabled due to the Target Speed quirk
+> and now this is another case where just having it always on would be
+> beneficial.
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml 
-b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 11f8ea33240c..faab7291d722 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -95,6 +95,28 @@ properties:
-        minItems: 1
-        maxItems: 3
+Correct, it should always be on to not see the problem.
 
-+  resets:
-+    minItems: 1
-+    maxItems: 3
-+    oneOf:
-+      - description: reset controller handling the PERST# signal
-+      - description: phandle pointing to the RESCAL reset controller
-+      - items:
-+          - description: phandle pointing to the RESCAL reset controller
-+          - description: reset for PCIe/CPU bus bridge
-+          - description: reset for soft PCIe core reset
-+
-+  reset-names:
-+    minItems: 1
-+    maxItems: 3
-+    oneOf:
-+      - const: perst
-+      - const: rescal
-+      - items:
-+          - const: rescal
-+          - const: bridge
-+          - const: swinit
-+
-  required:
-    - compatible
-    - reg
-@@ -118,8 +140,7 @@ allOf:
-      then:
-        properties:
-          resets:
--          items:
--            - description: reset controller handling the PERST# signal
-+          maxItems: 1
+Would like to have this "LBMS clearing fix" accepted in sooner since its 
+breaking things on our systems! :)
 
-          reset-names:
-            items:
-@@ -136,8 +157,7 @@ allOf:
-      then:
-        properties:
-          resets:
--          items:
--            - description: phandle pointing to the RESCAL reset controller
-+          maxItems: 1
+Thanks
+Smita.
 
-          reset-names:
-            items:
-@@ -146,6 +166,22 @@ allOf:
-        required:
-          - resets
-          - reset-names
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm7712-pcie
-+    then:
-+      properties:
-+        resets:
-+          minItems: 3
-+
-+        reset-names:
-+          minItems: 3
-+
-+      required:
-+        - resets
-+        - reset-names
-
-  unevaluatedProperties: false
-
-Thanks!
---
-Florian
-
-
---0000000000009fcf8a061d77d5ad
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIFwcjFCZR4Cn4rgS
-GBqf4OROcM0Y0SjoEdYOivVJ5ro8MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTI0MDcxNzIxMDYyMlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAO2tPjZEC3EWqZ7s5dpFyOE3UwPqNDLsrB
-Yrdr89of/6joXXxgO+Pz/mSgFambMy0jdJXfJQUoA2/NSxwmq8d63Dw55ZADH3uk9yf+Z+/lgUnp
-2GTjwPLWellDqEOz58zVH0c8AKmb8JSlDP2iX8dFQa9OHwFhH37vpv9sb9e/JmfBSX17uYVPp7yJ
-tCx8QITB4q72Pq/lDyBoOsfT9Ogxk19xtTzxEEJsv3NChcNf4s1ztqvItEOrJNaLuLzmt1AZk7JX
-rjPmncnPzmHT4TMMkc8p3B2RO1a40y5B2Uo7IOrWL2bf+9Qmk6hfL1xTYrGHLqF4w56Ao+aiIkql
-4dC4
---0000000000009fcf8a061d77d5ad--
+> 
+>>> IIUC, the bandwidth control driver will be in charge of handling LBMS
+>>> changes.  So clearing LBMS behind the bandwidth control driver's back
+>>> might be problematic.  Ilpo?
+> 
+> Yes, BW controller will take control of LBMS and other code should not
+> touch it directly (and LBMS will be kept cleared by the BW controller).
+> However, in this case I'll just need to adapt the code to replace the
+> LBMS clearing with resetting the LBMS count (if this patch is accepted
+> before BW controller), the resetting is already there anyway.
+> 
+>>> Also, since you've confirmed that this issue is fallout from
+>>> a89c82249c37 ("PCI: Work around PCIe link training failures"),
+>>> I'm wondering if the logic introduced by that commit can be
+>>> changed so that the quirk is applied more narrowly, i.e. *not*
+>>> applied to unaffected hardware, such as AMD's hotplug ports.
+>>> That would avoid the need to undo the effect of the quirk and
+>>> work around the downtraining you're seeing.
+>>>
+>>> Maciej, any ideas?
+>>
+>> Yeah I'm okay to go down to that approach as well. Any ideas would be helpful
+>> here.
+> 
+> One thing I don't like in the Target Speed quirk is that it leaves the
+> Link Speed into the lower value if the quirk fails to bring the link up,
+> the quirk could restore the original Link Speed on failure to avoid these
+> problems. I even suggested that earlier, however, the downside of
+> restoring the original Link Speed is that it will require triggering yet
+> another retraining (perhaps we could avoid waiting for its completion
+> though since we expect it to fail).
+> 
+> It might be possible to eventually trigger the Target Speed quirk from the
+> BW controller but it would require writing some state machine so that the
+> quirk is not repeatedly attempted. It seemed to complicate things too much
+> to add such a state machine at this point.
+> 
 
