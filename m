@@ -1,240 +1,183 @@
-Return-Path: <linux-pci+bounces-10458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F216F93424F
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 20:31:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D819934297
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 21:28:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20B001C20881
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 18:31:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 542EE2837EF
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 19:28:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A59C180053;
-	Wed, 17 Jul 2024 18:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF46D18410F;
+	Wed, 17 Jul 2024 19:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xCoCiib+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUA6B7CN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3AB1F94D;
-	Wed, 17 Jul 2024 18:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721241066; cv=fail; b=Qmk/CkwHoyrugPO6JACR5K0gxGDp4humWdnBEFZKS6USfhV+1EToN0X/DaNMfamQ7jL5d0qFEHpp1K5+GaJ/2Pq3WgZQVy18SmRcz4YqzhRvS7r+UV8n/mz03575tNeMCjBiI+LsjLauytccIU5I60gGsgWsMtsX4FjDzwuAnX0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721241066; c=relaxed/simple;
-	bh=zuo7ahM29Z+DEbdH2TKsdGvd14DDY2Bis12gHO9Wm5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g/t6EEqqOFXcheas25DdImwd+5GE+4cQFFX8En/QObquBMzdrpJPuDWnhfT1oxkCNEkq6m+mzDmFI03vlUPa48O6iLU+k5D9H6Ze3Aws5S7NzfgO7XXVYD/mDmmqM3yToEipRDH5gMaVcAkWA4eQBQ5jsgl4UlZVQvRGgLvjz/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xCoCiib+; arc=fail smtp.client-ip=40.107.223.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FCYvhyHNXWegWnC+BAX67tQpNUdd6IGDXmAOrtEjnAaMFg9JZjXJGwSOdBq/VTwzGEoz7GxfwfzYKSrGU7te88vgjZqMZFJweuUL4fPkEFmYUIAUL58JZbqjea2Rs0+0YqAervkm4eIExXYBDoac0nURB8lxqJbU6K0YLDkgta3hegD8OrsQkjA3ptL0YL9e2c14unTNRgqsWM+nn+HEX7ywbokWQxCa8Z3cymnJGmzBT4U9kgW637Ht2Z8m4QT3UUck2+1R2Rf5GLWLWToeO0cjvx0zv6IY/6dvh00RlNR10Jcekx8uykoAy4aN9bw2whp77XtUkAVvc7oFO7Gxvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FcfO2xuFYCs0wfQFuRFOUWckimVN6WEgeqLXYCgLYBw=;
- b=lEBOEbmcJtkzyDE5HHTvK+YijzJSDHLhfl4iNs6dDzIBqzLc1OBwKYvkccMdYfoSAjAKnStY/ez3Fi/cukbpHaGuJ82W8n0bgwt8zFv+cgciWD3qta81JArwu7IfLCzLpyc5ujltXMF7UlhoT3WjO1/u0pEw2M3aFpzeWM+i7IgjtqgG5d4kHDiFMkahC3YR36JCC1Kzuu/AFLhzjFW1fmJZdOkdc17Zyjs71GQ7Csc9KREBvSXAcPnIuiSwrd9PI6WUjy3H6ab8IyJF5p3ebm9l0YXeBN0YWkHVqcDhmfrraITem8bZFaZctGSPVUIAtlDdZEO+6AttfN1tXdE8Rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=aculab.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FcfO2xuFYCs0wfQFuRFOUWckimVN6WEgeqLXYCgLYBw=;
- b=xCoCiib+QeXb76ueCRL0awNx7Yx4lyVc5Wtn/hxsyxnccyFfiRlub3TSMWek4xYQZBNDW2hCEhY4j9OVq+uvMOzRqd+s/z2x6kLtmm+XjgjY34ztFiL6vR2pvkGaHjmZjcrHQaRdw8AVI1ShEi0v38nulEWj2xnLae6e8h8npzk=
-Received: from PH7PR02CA0006.namprd02.prod.outlook.com (2603:10b6:510:33d::17)
- by LV2PR12MB5822.namprd12.prod.outlook.com (2603:10b6:408:179::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Wed, 17 Jul
- 2024 18:31:01 +0000
-Received: from CY4PEPF0000EE3A.namprd03.prod.outlook.com
- (2603:10b6:510:33d:cafe::d2) by PH7PR02CA0006.outlook.office365.com
- (2603:10b6:510:33d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29 via Frontend
- Transport; Wed, 17 Jul 2024 18:31:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CY4PEPF0000EE3A.mail.protection.outlook.com (10.167.242.12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.11 via Frontend Transport; Wed, 17 Jul 2024 18:31:00 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 17 Jul
- 2024 13:30:59 -0500
-Received: from [172.25.198.154] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 17 Jul 2024 13:30:58 -0500
-Message-ID: <a4e2fdae-0db3-46de-b95d-bf6ef7b61b33@amd.com>
-Date: Wed, 17 Jul 2024 14:30:57 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5A21822CE
+	for <linux-pci@vger.kernel.org>; Wed, 17 Jul 2024 19:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721244520; cv=none; b=up7HOrAU3/N0HynZkINrvQ0onrs8reFs4sE2BtZLWQzqxrFIhVUFY/N0C/g0WL1Zw9mLgTo8J44CwkeKMixvmj6Dlp7iV5QH0hCD0Aj5WePzdP43NbsbOQZQZTg0p6fYhfz2E5hH947r8Z1mvJ7ab+Z12aA9tve2Hpk7Dnri4HU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721244520; c=relaxed/simple;
+	bh=0pD4HSoaZH2Ej/3hmFwgITFmR3sRWzcOIGw2wjyvXQ4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LJDQGaMUnONHZ/6TkIBK6pOTkAFVlwUoe3K5kwIrVA+FwsvFuOxrjju2yN5dYalUtkvdYEyucvCX9JBoNYqJAS6lpTobEZzO0EI9jamdZJA8wh7MPNzlWVncgjfWO2TiSY44fdgwEfIxzz/4Zf5tXM9RRcKjaB8EjpE8CRktxCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hUA6B7CN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721244517;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0pD4HSoaZH2Ej/3hmFwgITFmR3sRWzcOIGw2wjyvXQ4=;
+	b=hUA6B7CNFjFQxuoaGnwSHevK6WBaimmetl9hmMyzrQw94mD3nJsek1FMnEzzwWy6xQ01Oo
+	ittuvsltqDUFX+Yaoxqj7Q2fbS0zXUf1CnKQg4WK5/YljDDtjgeoMPOUmQJCFiq2bAoNFC
+	PasiY4dHtDrQVk89vDJyKRHqNgI/bpo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-202-h3KsiGjjM_-cQobcr-wXzw-1; Wed, 17 Jul 2024 15:28:35 -0400
+X-MC-Unique: h3KsiGjjM_-cQobcr-wXzw-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5a0d7d02a8aso107826a12.2
+        for <linux-pci@vger.kernel.org>; Wed, 17 Jul 2024 12:28:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721244513; x=1721849313;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0pD4HSoaZH2Ej/3hmFwgITFmR3sRWzcOIGw2wjyvXQ4=;
+        b=luz2KmJaHAAIynT/tDjwCZ9LBSsE6h6Vl1UsheELjjHidQpWfsn5PIFKyh97nZL+0u
+         CA53G8sNwkgYCFBCJMt74n4vCXDryvOZM1/5yL6W8g6LzGG8YFDSzedPIJ3Om4XGw7jL
+         bqbC7LJ3xenhpiyzrl5t9PpSjNlWXE+bTP187oxoi15Ur83O+I12CcXIkLQYluiLhTw7
+         cUxvitk8ScasPqsuStdGxPa7oGmXwXA9lKgDa7TPO+j7z/X+FY7jVl17spUS0rbtjBzw
+         Z3FF7XFWu1eKa2KWNATGRQCAslrwoR8JaKnmkxQmkpfjR56wE7pcEq4P2ZrA9e1sFfVS
+         DCYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Uu4JcP6bbcN39Ga3uP8d+DEHHpo8B6gLZZbnUePckvIzQEOtgpwAWaSHqc4QGwNteywQujI4lHlst28nZNhmYsrj/SVMC2tO
+X-Gm-Message-State: AOJu0YwqajjeEl4b17pGyC/C7R1GFIjKW3CXKE24qkloLuPtToEbBOcw
+	Z4G8zqdNanMxAm8ywqUapdoieRxnN3tDP95WeFnOSZ7rF+w3maCOLEYLanphEQb2IZTc6U8xDjD
+	CbQeG07BDxPAThlMQDcZOXajsBEVAgNCxum0smOzcOlcBKf/8asaMSpzVjA==
+X-Received: by 2002:a17:906:70d:b0:a77:af07:b978 with SMTP id a640c23a62f3a-a7a011388e8mr111275066b.1.1721244513423;
+        Wed, 17 Jul 2024 12:28:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/Ct2o1CBrr9w66JQWmdhXnrdu96P9BJ0eFvdM9l9nNYPtt56Gm4OdxI26zMMWwRGUsRcKMg==
+X-Received: by 2002:a17:906:70d:b0:a77:af07:b978 with SMTP id a640c23a62f3a-a7a011388e8mr111273966b.1.1721244513006;
+        Wed, 17 Jul 2024 12:28:33 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (200116b82dca8a00524d280e0718aac8.dip.versatel-1u1.de. [2001:16b8:2dca:8a00:524d:280e:718:aac8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5a3650sm487656566b.17.2024.07.17.12.28.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 12:28:32 -0700 (PDT)
+Message-ID: <757f5fcdc14c8f22e52a34974f2e48fe2dcea4d5.camel@redhat.com>
+Subject: Re: [PATCH v2 1/8] x86/PCI: Move some logic to new function
+From: Philipp Stanner <pstanner@redhat.com>
+To: Stewart Hildebrand <stewart.hildebrand@amd.com>, Bjorn Helgaas
+	 <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	 <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	 <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ilpo
+	=?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: x86@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 17 Jul 2024 21:28:31 +0200
+In-Reply-To: <20240716193246.1909697-2-stewart.hildebrand@amd.com>
+References: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
+	 <20240716193246.1909697-2-stewart.hildebrand@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/8] PCI: Align small (<4k) BARs
-To: David Laight <David.Laight@ACULAB.COM>, Bjorn Helgaas
-	<bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>, Thomas Zimmermann <tzimmermann@suse.de>, Arnd
- Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>, Yongji Xie
-	<elohimes@gmail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-CC: "x86@kernel.org" <x86@kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>
-References: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
- <0da056616de54589bc1d4b95dcdf5d3d@AcuMS.aculab.com>
-Content-Language: en-US
-From: Stewart Hildebrand <stewart.hildebrand@amd.com>
-In-Reply-To: <0da056616de54589bc1d4b95dcdf5d3d@AcuMS.aculab.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB03.amd.com: stewart.hildebrand@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3A:EE_|LV2PR12MB5822:EE_
-X-MS-Office365-Filtering-Correlation-Id: fa204659-be3a-4d4d-4908-08dca68e9bbf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|82310400026|376014|36860700013|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UXBGdlh4ZWRoSWNFbjJZc0NaN09ZcFdCQlJzUWN3RmlWcXBId0NJTkJiM1Nm?=
- =?utf-8?B?Mitra2VMdTIyZmNSTFIyN0IvWXpobzkva0VUdlVnZmtFY29WcTJ2NTdjSXRw?=
- =?utf-8?B?c0ZVSXVoTUlIZFQyZHNQc3liWi9sanhGOGJVeU1hcnFCZXlVaklPWm9OTjJU?=
- =?utf-8?B?dUFvSzR4andxTWVJTlhBc0xjdzdhcVRhRThoSFM0b0xiRlVkanRPdmRvWjBV?=
- =?utf-8?B?NE9DN0ZkRWRWVnVBWlVsUmo4L3JkYjFRYlJFbzgzVk1ENjFKQlNZSStock9E?=
- =?utf-8?B?MzUvbnExak1NRkk0M2Mvb1E0WlZCdFJmRUdPTVJiSDJKcnZyczZWeEx0dW1I?=
- =?utf-8?B?Mld5c29mU0FZVWlyNy9WSmh0Z2c2RFFGOGdaZ2JSWWs3WW1xVDNSODJOcVZu?=
- =?utf-8?B?UkdnK3BtelNBR1JXVUxtSTVBeUdQTlhoM2RvbmJBUExqTnpyT09hTVFERU0x?=
- =?utf-8?B?N2JJaUhaSGZ1UGlhUFhZTnJjVkZkN1lzMVlpOFVEb2QwMGRGTXgxbnlMNnM2?=
- =?utf-8?B?dXhyaTlhcFprWTN6NmxsZ3d1R29td0xkWWhxaFhsWHZqaXlnTEZUOVBTR0Ur?=
- =?utf-8?B?cExPYjExOWkreUNxbTBmeFU2WFpHM3VlUFJlRTQvUlhLeUM3am9PdlFNaDZM?=
- =?utf-8?B?R21XR3orZ1NRWFVHbXJxZ1hsQ3FCSTI1VjB5V2w5amtHRnIvaEFuZDY2OUFt?=
- =?utf-8?B?OWh1SWkxOXJZYzAxeFViclJIRUxVeTZQM3JaYlZtQ2JsTU5ZcmVzM0szdncr?=
- =?utf-8?B?VUlZbGV2bDVFK3huM3huejNmeFNNUmRBQnZTbkRhQVpoWmo0eG8wTFRmcFpi?=
- =?utf-8?B?a2JZaGVqTEtpQ3AyVG9QdEZoTTZCRkxDeUVham12UlZNcVdjR25IbzVYWEVL?=
- =?utf-8?B?T3BPUDFxcXQvaVhoV2pqcjFxMzczdWY2U3hTMHZ5dU54c3RWdkU5RnRwWkpM?=
- =?utf-8?B?ekdPRzJ1bEJyRFJwekRjOHpHeGo0aFkwL1FENE1jakpiVkRTRTFxZ0ZPcEpw?=
- =?utf-8?B?WUNnaWluYVlUQnRGeFA3ZUJERVBHSVA1YXZLRW1UQ2I3V3JFdXJVUkh3bUN5?=
- =?utf-8?B?VlAyOThKVS9NWXovQmVYM1JEN0xsdnNLaFpLUllxVTN1VWtLTmZmdFNjT0lP?=
- =?utf-8?B?N2I2L1ViTG8wWktyVjIzYnFJVVVvZ211QTBCVFdib0JHSVNPZVZLWCtCTWxC?=
- =?utf-8?B?Yk9neWhFdjFKL2g4M1lPVmpCdkZGc1VLQUx3Zm9qVVBuNTFqUFhOU3VjSXly?=
- =?utf-8?B?K2dKT3VvT2YrSGZLSkU2UThPck9DdkdabnZsbW4wOHBYMkFMOXJCYzRGbXF2?=
- =?utf-8?B?ZUVaUDFIOVNmVUVXWk9Wc24ySElzRXpJVnpYa3hySmF5WUtVS1RPajlEMnNF?=
- =?utf-8?B?L0RWLzZheFp3SnY4TE9KMTB6dENEOWc1YnFPaU9lS0loSGgxMGFQQjNwOTkz?=
- =?utf-8?B?d0owNVNBMEgvN0xSOGRZNmp3UVBpMmg2WHFwUE5XY2NvZi91eDhIcUpwQktL?=
- =?utf-8?B?RXN2KzIvMXUycTdySXRlckR4dlFaWm1Ob2tRdmMxOTF5eC84VnVYQjBlSSt1?=
- =?utf-8?B?TjBPTTZDL3JnUTYvS0d2RFNOT0EyM0FrbWNxa3FDRDZNTGtHQ1dOeDJnVnVI?=
- =?utf-8?B?VlFXSnlaTEVwdWtFSTJYNEZ2YVVWa0pPb1Zhd29LRE1mQVo1bmtPdFZLRldS?=
- =?utf-8?B?R1N1UWtMWTJZQUNxalRvZDNDcnY5bTZlUFFlZmdDcFRWTEZ3bm8vVWpxZDZS?=
- =?utf-8?B?UUp2YkVxcXZ3RCszM3o3eWJMSzIxdzdUSU02MklxSGxPSi9zWGtQOGo3c2Ur?=
- =?utf-8?B?ZjdnNjJUWE0venp2OStBTmZaRWplRWlQYkZDa3F2S0ttbFlOTkJraFc0RzBT?=
- =?utf-8?B?NGx5ZkoxQjFmbTVKdnllNHV1M2hFbWI0SldJT3p6Q1RtdGc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2024 18:31:00.7089
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa204659-be3a-4d4d-4908-08dca68e9bbf
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3A.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5822
 
-On 7/17/24 09:15, David Laight wrote:
-> From: Stewart Hildebrand
->> Sent: 16 July 2024 20:33
->>
->> This series sets the default minimum resource alignment to 4k for memory
->> BARs. In preparation, it makes an optimization and addresses some corner
->> cases observed when reallocating BARs. I consider the prepapatory
->> patches to be prerequisites to changing the default BAR alignment.
-> 
-> Should the BARs be page aligned on systems with large pages?
-> At least as an option for hypervisor pass-through and any than can be mmap()ed
-> into userspace.
-
-It is sort of an option already using the pci=resource_alignment=
-option, but you'd need to spell out every device and manually set the
-alignment value, and you'd still end up with fake BAR sizes. I had
-actually prepared locally a patch to make this less painful to do and
-preserve the BAR size (introduce "pci=resource_alignment=all" option),
-but I'd like Bjorn's opinion before sending since there has been some
-previous reluctance to making changes to the pci=resource_alignment=
-option [2].
-
-[2] https://lore.kernel.org/linux-pci/20160929115422.GA31048@localhost/
-
-Anyway, 4k is more defensible because that is what the PCIe 6.1 spec
-calls out, and that is better than the current situation of no default
-minimum alignment.
-
-I feel PAGE_SIZE is also justified, and that is why the actual patch now
-says max(SZ_4K, PAGE_SIZE) as you pointed out elsewhere. This is a
-change from v1 that simply had 4k (sorry, I forgot to update the cover
-letter). PowerNV has been using PAGE_SIZE since commits 0a701aa63784 and
-382746376993, I think with 64k page size. I don't have a strong opinion
-whether the common default should be max(SZ_4K, PAGE_SIZE) or simply
-SZ_4K.
-
-> Does any hardware actually have 'silly numbers' of small memory BARs?
-> 
-> I have a vague memory of some ethernet controllers having lots of (?)
-> virtual devices that might have separate registers than can be mapped
-> out to a hypervisor.
-> Expanding those to a large page might be problematic - but needed for security.
-
-This series does not change alignment of SRIOV / VF BARs. See commits
-62d9a78f32d9, ea629d873f3e, and PCIe 6.1 spec section 9.2.1.1.1.
-
-> For more normal hardware just ensuring that two separate targets don't share
-> a page while allowing (eg) two 1k BAR to reside in the same 64k page would
-> give some security.
-
-Allow me to understand this better, with an example:
-
-PCI Device A
-    BAR 1 (1k)
-    BAR 2 (1k)
-
-PCI Device B
-    BAR 1 (1k)
-    BAR 2 (1k)
-
-We align all BARs to 4k. Additionally, are you saying it would be ok to
-let both device A BARs to reside in the same 64k page, while device B
-BARs would need to reside in a separate 64k page? I.e. having two levels
-of alignment: PAGE_SIZE on a per-device basis, and 4k on a per-BAR
-basis?
-
-If I understand you correctly, there's currently no logic in the PCI
-subsystem to easily support this, so that is a rather large ask. I'm
-also not sure that it's necessary.
-
-> Aligning a small MSIX BAR is unlikely to have any effect on the address
-> space utilisation (for PCIe) since the bridge will assign a power of two
-> sized block - with a big pad (useful for generating pcie errors!)
-> 
-> 	David
+T24gVHVlLCAyMDI0LTA3LTE2IGF0IDE1OjMyIC0wNDAwLCBTdGV3YXJ0IEhpbGRlYnJhbmQgd3Jv
+dGU6Cj4gLi4uIHRvIHJlZHVjZSBpbmRlbnRhdGlvbiBsZXZlbC4gVGFrZSB0aGUgb3Bwb3J0dW5p
+dHkgdG8gcmVtb3ZlCj4gcmVkdW5kYW50IGluZm8gZnJvbSBkZWJ1ZyBwcmludCBzdHJpbmcuCgpJ
+cyB0aGF0IGludGVuZGVkIHRvIGJlIHRoZSBmaW5hbCBjb21taXQgbWVzc2FnZSBvciBpcyBpdCBz
+dGlsbCBhIGRyYWZ0PwoKSSdkIGNhbGwgdGhlIGNvbW1pdCAieDg2L1BDSTogSW1wcm92ZSBjb2Rl
+IHJlYWRhYmlsaXR5IiAob3Igc3RoIGxpa2UKdGhhdCkgc2luY2UgdGhhdCBpcyB3aGF0IHRoZSBj
+b21taXQgaXMgYWJvdXQuIEl0J3Mgbm90IHNvIG11Y2ggYWJvdXQKdGhlIGNvZGUgbW92ZSBwZXIg
+c2UuCgphbmQgaGF2ZSBhIHNob3J0IG1lc3NhZ2Ugc3VjaCBhczoKCiIKVGhlIGluZGVudGF0aW9u
+IGluIHBjaWJpb3NfYWxsb2NhdGVfZGV2X3Jlc291cmNlcygpIGlzIHVudXNhbGx5IGRlZXAuCgpJ
+bXByb3ZlIHRoYXQgYnkgbW92aW5nIHNvbWUgb2YgaXRzIGNvZGUgdG8gdGhlIG5ldyBmdW5jdGlv
+bgphbGxvY19yZXNvdXJjZSgpLgoKQXMgd2UncmUgYXQgaXQsIHJlbW92ZSByZWR1bmRhbnQgaW5m
+b3JtYXRpb24gZnJvbSBkZXZfZGJnKCkuCiIKCgpSZWdhcmRzLApQLgoKPiAKPiBTaWduZWQtb2Zm
+LWJ5OiBTdGV3YXJ0IEhpbGRlYnJhbmQgPHN0ZXdhcnQuaGlsZGVicmFuZEBhbWQuY29tPgo+IC0t
+LQo+IHYxLT52MjoKPiAqIG5ldyBwYXRjaAo+IC0tLQo+IMKgYXJjaC94ODYvcGNpL2kzODYuYyB8
+IDM4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tCj4gwqAxIGZpbGUgY2hh
+bmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBh
+L2FyY2gveDg2L3BjaS9pMzg2LmMgYi9hcmNoL3g4Ni9wY2kvaTM4Ni5jCj4gaW5kZXggZjJmNGE1
+ZDUwYjI3Li4zYWJkNTU5MDJkYmMgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYvcGNpL2kzODYuYwo+
+ICsrKyBiL2FyY2gveDg2L3BjaS9pMzg2LmMKPiBAQCAtMjQ2LDYgKzI0NiwyNSBAQCBzdHJ1Y3Qg
+cGNpX2NoZWNrX2lkeF9yYW5nZSB7Cj4gwqDCoMKgwqDCoMKgwqDCoGludCBlbmQ7Cj4gwqB9Owo+
+IMKgCj4gK3N0YXRpYyB2b2lkIGFsbG9jX3Jlc291cmNlKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGlu
+dCBpZHgsIGludCBwYXNzKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IHJlc291cmNlICpy
+ID0gJmRldi0+cmVzb3VyY2VbaWR4XTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgZGV2X2RiZygmZGV2
+LT5kZXYsICJCQVIgJWQ6IHJlc2VydmluZyAlcHIgKHA9JWQpXG4iLCBpZHgsIHIsCj4gcGFzcyk7
+Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGlmIChwY2lfY2xhaW1fcmVzb3VyY2UoZGV2LCBpZHgpIDwg
+MCkgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoci0+ZmxhZ3MgJiBJT1JF
+U09VUkNFX1BDSV9GSVhFRCkgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgZGV2X2luZm8oJmRldi0+ZGV2LCAiQkFSICVkICVwUiBpcwo+IGltbW92YWJs
+ZVxuIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgaWR4LCByKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+fSBlbHNlIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oC8qIFdlJ2xsIGFzc2lnbiBhIG5ldyBhZGRyZXNzIGxhdGVyICovCj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwY2liaW9zX3NhdmVfZndfYWRkcihkZXYs
+IGlkeCwgci0+c3RhcnQpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgci0+ZW5kIC09IHItPnN0YXJ0Owo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgci0+c3RhcnQgPSAwOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqB9Cj4gK8KgwqDCoMKgwqDCoMKgfQo+ICt9Cj4gKwo+IMKgc3RhdGljIHZvaWQg
+cGNpYmlvc19hbGxvY2F0ZV9kZXZfcmVzb3VyY2VzKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGludAo+
+IHBhc3MpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqDCoGludCBpZHgsIGRpc2FibGVkLCBpOwo+IEBA
+IC0yNzEsMjMgKzI5MCw4IEBAIHN0YXRpYyB2b2lkCj4gcGNpYmlvc19hbGxvY2F0ZV9kZXZfcmVz
+b3VyY2VzKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGludCBwYXNzKQo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkaXNhYmxlZCA9
+ICEoY29tbWFuZCAmCj4gUENJX0NPTU1BTkRfSU8pOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVsc2UKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGlzYWJsZWQgPSAhKGNvbW1h
+bmQgJgo+IFBDSV9DT01NQU5EX01FTU9SWSk7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocGFzcyA9PSBkaXNhYmxlZCkgewo+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldl9k
+YmcoJmRldi0+ZGV2LAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiQkFSICVkOiByZXNlcnZpbmcg
+JXByIChkPSVkLAo+IHA9JWQpXG4iLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZHgsIHIsIGRp
+c2FibGVkLCBwYXNzKTsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocGNpX2NsYWltX3Jlc291cmNlKGRldiwgaWR4KSA8
+IDApCj4gewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoci0+ZmxhZ3MgJgo+IElPUkVTT1VS
+Q0VfUENJX0ZJWEVEKSB7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBk
+ZXZfaW5mbygmZGV2LT5kZXYsCj4gIkJBUiAlZCAlcFIgaXMgaW1tb3ZhYmxlXG4iLAo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZHgsIHIp
+Owo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9IGVsc2Ugewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgLyogV2UnbGwgYXNzaWduIGEgbmV3Cj4gYWRkcmVzcyBsYXRlciAq
+Lwo+IC0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcGNpYmlvc19zYXZl
+X2Z3X2FkZHIoZGUKPiB2LAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZHgsCj4gci0+c3RhcnQpOwo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgci0+ZW5kIC09IHItPnN0YXJ0Owo+IC3C
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgci0+c3RhcnQgPSAwOwo+IC3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqB9Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgfQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgaWYgKHBhc3MgPT0gZGlzYWJsZWQpCj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWxsb2NfcmVzb3Vy
+Y2UoZGV2LCBpZHgsIHBhc3MpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfQo+
+IMKgwqDCoMKgwqDCoMKgwqBpZiAoIXBhc3MpIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHIgPSAmZGV2LT5yZXNvdXJjZVtQQ0lfUk9NX1JFU09VUkNFXTsKCg==
 
 
