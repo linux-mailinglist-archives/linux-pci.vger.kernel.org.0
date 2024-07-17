@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-10428-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10429-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 461E0933CCF
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 14:08:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2490933CD3
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 14:08:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 998471F23B61
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 12:08:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E4AB1C2295E
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 12:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2545517F51E;
-	Wed, 17 Jul 2024 12:08:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0DB17FAAE;
+	Wed, 17 Jul 2024 12:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpvdwEs1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/8sW3ek"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5A017F4FD;
-	Wed, 17 Jul 2024 12:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F80717F500;
+	Wed, 17 Jul 2024 12:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721218106; cv=none; b=YsoQKxrns2K1GM+3WI9EmksQ9YnBGFhylSajKU0OePrvmJDZkh+gAf/t/Ui9f83T4saZWM+hht08Hfp22U8uWWsw5gb/EWScHJj9FIFAdmOJXDIpD3z4azDn09Xu3FW/NJXDj5G8z1/7HeG26hZUQSjtynK6CQnxdGFkRxumMZs=
+	t=1721218135; cv=none; b=TARWxLeyTilzReVwPsIj9+N7q5ywsV+eD1sa7bWSV44egF39Zd3Mhcv7mjtjUJpzR5abAvPy3pbctZsuTe+9l8qTf0mkKCu9m6qobtUWkmMO9Ky+qkpee0O55pCuUOQkmYqVF1gW7PUlBlG/e/GscomuUF890s+qagbOXgWGn9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721218106; c=relaxed/simple;
-	bh=9is3kWQq7byWjLnfjgZmgqt2HbsdE+iWQlwOhO1Kq68=;
+	s=arc-20240116; t=1721218135; c=relaxed/simple;
+	bh=HoEjgZWwhfVkt761KZ8qBN2ajCYxeA6MlEaJAQbZJw4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XcStqpKc29p9Kg76Q1/VeHMvfiOVv9RjCotwxdxLi6oZiBf+PZIhqxXhpD+Za2gX5qOpN121QWYzMdWE6ksurssvrFWzRao2ajBCe1AN4OR7GEUULgUwdEbjdJcx0woplSFIU9IgCQv1Z9oryiXvRs4p+ncPcLnFbSChJzAFjkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpvdwEs1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88703C32782;
-	Wed, 17 Jul 2024 12:08:21 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=FWetoogViV5GutqklcNcIB7jV9VboZ8OUBdYKNUWJpzdmXxS5QhK4jchqoZk73MDeCpkwWYWZD2rVTsWENMWJxJzeM1N9h1mJgeu1LwHk83Zq2OmLM8ZD0SFLKLG0KZarfsfKDOt9BuUn/njPeLv4SzXGUeViPP6XuYiStRBEk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/8sW3ek; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AED3C32782;
+	Wed, 17 Jul 2024 12:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721218105;
-	bh=9is3kWQq7byWjLnfjgZmgqt2HbsdE+iWQlwOhO1Kq68=;
+	s=k20201202; t=1721218135;
+	bh=HoEjgZWwhfVkt761KZ8qBN2ajCYxeA6MlEaJAQbZJw4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IpvdwEs1o8Al8oPwIoFftr3t6x0JYNv7xcA1146nClLvyxB49gAafsgRdnAQTcpOh
-	 GJsIX5gF0rB14m/5ZoD+kYlfqW/uUx88VxLI5mV2eTcG/IiPQLDK64h4P5FI3cbWPq
-	 /HDGkn6eatNjlHaWAB7Oix/E1of8n+GMhuJ3+Fo5cCJ0Q7n3/1rc+ZJaSY35QIcdM4
-	 JADWNDdG3oxiQ9aifKnT8GEvOWKOvGj25wy+WcicPVnfVAsMK9NFaaWTBMgicLki6H
-	 EI7wFntk1h1DsKnMDRs2t6Oq+PH9AQPa73d886IYrl/Ps51E2Vvrac75uN4fGgox2k
-	 byiYLdF2ZrY8A==
-Message-ID: <04d94188-5e30-4cab-b534-e97c0b2a61f3@kernel.org>
-Date: Wed, 17 Jul 2024 14:08:19 +0200
+	b=k/8sW3ekasskfMDdNiDZpjjwXvXdcRDkzydOLvVl8Dt7yQ1d223TYOUuPwOnBLE08
+	 Rl8XpOPvfOZQgqSyyPMJHAQKhR1ozmnuPzcJFqYoDMDtzWVMeEupUiBqLIGPW2grmh
+	 3TuNvdPwmlmKKN3Wcokfn+BXltTQV2bs28vDN4kwXaIm3de1Ax931r1Z6Mzd/uLmTV
+	 FJODT+VenEDHEPU+AW4I/9Gg3FkLSKbGZN/GKk0xUZkLbqUeBQrH5Kb8us9ECu2mRm
+	 Tdw7i8NyOWzF3eQHmY747uwML3DD6G0ltDHoz01lUtqLuTogwUXxa+rdfhlCiesgcX
+	 XJ3X7EAb/ivTQ==
+Message-ID: <1caa0c9a-1de7-41db-be2b-557b49f4a248@kernel.org>
+Date: Wed, 17 Jul 2024 14:08:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: syscon: Add
- ti,j784s4-acspcie-proxy-ctrl compatible
+Subject: Re: [PATCH 2/3] dt-bindings: PCI: ti,j721e-pci-host: Add ACSPCIE
+ proxy control property
 To: Siddharth Vadapalli <s-vadapalli@ti.com>, lee@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, vigneshr@ti.com,
@@ -59,7 +59,7 @@ To: Siddharth Vadapalli <s-vadapalli@ti.com>, lee@kernel.org,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srk@ti.com
 References: <20240715120936.1150314-1-s-vadapalli@ti.com>
- <20240715120936.1150314-2-s-vadapalli@ti.com>
+ <20240715120936.1150314-3-s-vadapalli@ti.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,20 +105,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240715120936.1150314-2-s-vadapalli@ti.com>
+In-Reply-To: <20240715120936.1150314-3-s-vadapalli@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/07/2024 14:09, Siddharth Vadapalli wrote:
-> The ACSPCIE_PROXY_CTRL registers within the CTRL_MMR space of TI's J784S4
-> SoC are used to drive the reference clock to the PCIe Endpoint device via
-> the PAD IO Buffers. Add the compatible for allowing the PCIe driver to
-> obtain the regmap for the ACSPCIE_CTRL register within the System
-> Controller device-tree node in order to enable the PAD IO Buffers.
+> Add the "ti,syscon-acspcie-proxy-ctrl" device-tree property which is
+> used to obtain a reference to the ACSPCIE Proxy Control register along
+> with the details of the PAD IO Buffer output enable bits.
 > 
-> The Technical Reference Manual for J784S4 SoC with details of the
-> ASCPCIE_CTRL registers is available at:
-> https://www.ti.com/lit/zip/spruj52
+> The ACSPCIE Proxy Control register is used to drive the reference clock
+> for the PCIe Endpoint device via the PAD IO Buffers of the ACSPCIE module.
+> The ACSPCIE module can be used as an alternative to either an on-board
+> clock generator or an external clock generator for providing the reference
+> clock to the PCIe Endpoint device.
+> 
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
