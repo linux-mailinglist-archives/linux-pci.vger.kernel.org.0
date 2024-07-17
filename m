@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-10421-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10422-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86D8193375A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 08:47:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7D1F933762
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 08:51:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 071401F24E22
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 06:47:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E6EF2815EA
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jul 2024 06:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A51114F98;
-	Wed, 17 Jul 2024 06:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B805168BD;
+	Wed, 17 Jul 2024 06:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jb/8lf0b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkomTaA0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2131733D8;
-	Wed, 17 Jul 2024 06:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC0F179A3;
+	Wed, 17 Jul 2024 06:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721198860; cv=none; b=ZY7v+lcr9XYfSec6VMo722P/bJEatXLzC5quE4pF+CWUigZahUjL2UZWq2rKLCTBCdbZTzLp64LYj1fHmbdapngh8WKTp7/OOeai7Xg6Nuj/DqAVK38AKJi9wG08rfvTk+D6EUJpnPx/xqzwkFF+IgPfR5lxk5/UgOA19FRRysQ=
+	t=1721199086; cv=none; b=XBRpT26lKe9i+zO6iI9CXO3Cc3a13SxcqbUmlEljGJP2KSun6fRwAKr19MTKSh4/NvTeri3JEyXJWgkWdIetL0TyyUfpGmp9RXXcdiqCtzPLLf0Oa10Zb+7k0bQwC4jxFow9FdFBl4fFUj7N3q0+Ii/KANAkzQZgvlVSoJqmxUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721198860; c=relaxed/simple;
-	bh=oc3RW93YsVeiKi+ATef+h3px9KSBRraPGzUP9ozkiMs=;
+	s=arc-20240116; t=1721199086; c=relaxed/simple;
+	bh=/bcIcfdYG+Yqe7PVthuSpQKWfoWDme15YOkbEcmu37E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p5IWvpciHE3NEeDGH6dOIt8uSSP9y8E4s+2nuFT2NNPFAeNkehIIA3hN7ljQTsyoob4KulWT54MMvSRoZ/BCB4Qgo8v4bNJI3nNna1igZ3y/KVtCS+/sMCJWRUa1kjhvOug9dSEVo45Hn7z5EHhXnJMlm4RcW4wF/T4/HiGwlKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jb/8lf0b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15EB7C32782;
-	Wed, 17 Jul 2024 06:47:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Ep2hy2DYhVC4zFl8KxDZC7OTelL28476de2dW/wMpc5kFOCyM5BZL7PQD6QB2rEJfgt4fvyCBONlLxvKT7uVuNZeWbI5zRl+JcFot1lbCyneGoPkhCVu5Nhl5doMNpRWzcERKVhdm5GBvxHUN9V7lSz+l7ZlPqn642Dt//4OygI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkomTaA0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D4FC32782;
+	Wed, 17 Jul 2024 06:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721198859;
-	bh=oc3RW93YsVeiKi+ATef+h3px9KSBRraPGzUP9ozkiMs=;
+	s=k20201202; t=1721199086;
+	bh=/bcIcfdYG+Yqe7PVthuSpQKWfoWDme15YOkbEcmu37E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jb/8lf0bhZDzWBnf7kNGHkS6+U5o0LREgg8Q1+WTuaO0Eo1kUdmyx7VOlE+Gcr7DH
-	 wJUcjFC1BFqu4rkfyHPT1XMmS0gqhob8SO54NjgC0hhMv6bkzXSb8HQj0mpvGusKyJ
-	 /dX27fZXHwO/KM+//Dp8qK0BH2QkW33tCPGEqT9iOLJNc7NwBFpyLpAzieard8NnOt
-	 nDSIYi8SBpQDuPiJPuV6OFI3shpq0lIro8mTrjhJQYjuihCv+g7LINJGF/GD3LxBlB
-	 LYvJOfp6XOtFDNPkp7a6ShOE6HHmBOhjd/iN7jFyOdW/2AsLc4/hCwzzSzOVlvMswM
-	 WNZvsfXRxY7FA==
-Message-ID: <3221423a-d5b3-47e3-8b98-623d9b26363d@kernel.org>
-Date: Wed, 17 Jul 2024 08:47:27 +0200
+	b=SkomTaA0mvM1bCoz02/YICHTn5UCgN6A8MmiPHeRHKMn5ZieFwYQkjG3GA6r5gXCV
+	 ld4bGqHejLMI5TbtgChSB3eYezzmFL3r3Fa6OVOpPXcKRAy6nERCBJuYmA5u3ecX6o
+	 5MGCuQIHpxYq4cILY9kphQkb+edXK3tkeop7T7N3m/uc2eiLwSnGnB9ehYiYOSSC6d
+	 iEidpX3sdmGoFn83272XG5plrkZqj93nHrhx96lSCh2t5g/7C9jjL1z1NmT0LBVkL7
+	 lJuKWqQBiZ9Md8DX3OJRdjjUrCWejJjJMS3UeBoCDgWqTph1VTv+U/YWOxUsvkaqvn
+	 ruYWYrO3OVjew==
+Message-ID: <d20be2d3-4fdd-48ca-b73e-80e8157bd5b2@kernel.org>
+Date: Wed, 17 Jul 2024 08:51:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,25 +50,27 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V226/7] dt-bindings: PCI: host-generic-pci: Add
- snps,dw-pcie-ecam-msi binding
-To: Mayank Rana <quic_mrana@quicinc.com>, will@kernel.org,
- lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
- jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, cassel@kernel.org,
- yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com,
- u.kleine-koenig@pengutronix.de, dlemoal@kernel.org, amishin@t-argos.ru,
- thierry.reding@gmail.com, jonathanh@nvidia.com, Frank.Li@nxp.com,
- ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com,
- marek.vasut+renesas@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org
-Cc: quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
- quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
- quic_nitegupt@quicinc.com
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <1721067215-5832-7-git-send-email-quic_mrana@quicinc.com>
- <5f029f16-2030-4e86-929b-0b2832958912@kernel.org>
- <083e1e6f-714d-4a3e-a864-59e06bba0559@quicinc.com>
+Subject: Re: [PATCH v4 01/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
+ add 7712 SoC
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-2-james.quinlan@broadcom.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,93 +116,83 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <083e1e6f-714d-4a3e-a864-59e06bba0559@quicinc.com>
+In-Reply-To: <20240716213131.6036-2-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/07/2024 00:09, Mayank Rana wrote:
-> Hi Krzysztof
+On 16/07/2024 23:31, Jim Quinlan wrote:
+> o Change order of the compatible strings to be alphabetical
 > 
-> On 7/16/2024 12:28 AM, Krzysztof Kozlowski wrote:
->> On 15/07/2024 20:13, Mayank Rana wrote:
->>> To support MSI functionality using Synopsys DesignWare PCIe controller
->>> based MSI controller with ECAM driver, add "snps,dw-pcie-ecam-msi
->>> compatible binding which uses provided SPIs to support MSI functionality.
->>
->> To support MSI, you add MSI support... That's a tautology. Describe
->> hardware instead.
-> Ok. let me repharse it to provide more useful information.
->>>
->>> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
->>> ---
->>>   .../devicetree/bindings/pci/host-generic-pci.yaml  | 57 ++++++++++++++++++++++
->>>   1 file changed, 57 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
->>> index 9c714fa..9e860d5 100644
->>> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
->>> @@ -81,6 +81,12 @@ properties:
->>>                 - marvell,armada8k-pcie-ecam
->>>                 - socionext,synquacer-pcie-ecam
->>>             - const: snps,dw-pcie-ecam
->>> +      - description: |
->>> +         Firmware is configuring Synopsys DesignWare PCIe controller in RC mode with
->>> +         ECAM compatible fashion. To use MSI controller of Synopsys DesignWare PCIe
->>> +         controller for MSI functionality, this compatible is used.
->>> +        items:
->>> +          - const: snps,dw-pcie-ecam-msi
->>
->> MSI is already present in the binding, isn't it? 
-> It is mentioning as msi-parent usage which could be different MSI 
-> controller (GIC or vendor specific one) not related to designware PCIe 
-> controller based MSI controller.
+> o Describe resets/reset-names before using them in rules
 > 
->> Anyway, aren't you
->> forgetting specific compatible? Please open your internal (quite
->> comprehensive) guideline on bindings and DTS.
-> Here I am trying to define Designware based PCIe ECAM controller 
-> supporting MSIcontroller based device. Hence I am not mentioning vendor 
-> specific compatible usage
-> and keeping generic compatible binding for such device.
 
-I know what you try, yet it feels simply wrong. Read your guideline.
-Are you sure you work on Designware core itself, not on one used in
-Qualcomm? I would expect people from Designware to design Designware
-cores and people from Qualcomm only to design licensed cores.
+<form letter>
+This is a friendly reminder during the review process.
 
->>
->>>         - description:
->>>             CAM or ECAM compliant PCI host controllers without any quirks
->>>           enum:
->>> @@ -116,6 +122,20 @@ properties:
->>>         A phandle to the node that controls power or/and system resource or interface to firmware
->>>         to enable ECAM compliant PCIe root complex.
->>>   
->>> +  interrupts:
->>> +    description:
->>> +      DWC PCIe Root Port/Complex specific MSI interrupt/IRQs.
->>> +    minItems: 1
->>> +    maxItems: 8
->>> +
->>> +  interrupt-names:
->>> +    description:
->>> +      MSI interrupt names
->>> +    minItems: 1
->>> +    maxItems: 8
->>> +    items:
->>> +        pattern: '^msi[0-9]+$'
->>
->> Why the same devices have variable numbers?
-> Max supported MSI with designware PCIe controller is 8 Only, and it 
-> depends if those all are
-> used or some of used on specific vendor based device. Hence I have kept 
-> it here variable names. Although here it should be [0 - 7] instead of
-> [0 - 9].
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
 
-Wait, you just said there is no specific vendor device.
+Thank you.
+</form letter>
 
-Sorry, bring some sanity to this.
+> o Add minItems/maxItems where needed.
+> 
+> o Change maintainer: Nicolas has not been active for a while.  It also
+>   makes sense for a Broadcom employee to be the maintainer as many of the
+>   details are privy to Broadcom.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 26 ++++++++++++++-----
+>  1 file changed, 19 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 11f8ea33240c..692f7ed7c98e 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  title: Brcmstb PCIe Host Controller
+>  
+>  maintainers:
+> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +  - Jim Quinlan <james.quinlan@broadcom.com>
+>  
+>  properties:
+>    compatible:
+> @@ -16,11 +16,11 @@ properties:
+>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+>            - brcm,bcm4908-pcie
+>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>  
+>    reg:
+>      maxItems: 1
+> @@ -95,6 +95,18 @@ properties:
+>        minItems: 1
+>        maxItems: 3
+>  
+> +  resets:
+> +    minItems: 1
+> +    items:
+> +      - description: reset for external PCIe PERST# signal # perst
+> +      - description: reset for phy reset calibration       # rescal
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    items:
+> +      - const: perst
+> +      - const: rescal
+
+There are no devices with two resets. Anyway, this does not match one of
+your variants which have first element as rescal.
 
 Best regards,
 Krzysztof
