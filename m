@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-10486-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10489-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 206C993482C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 08:40:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4932934834
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 08:41:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 955051F2366F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 06:40:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 652CD2819F4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 06:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3185A42078;
-	Thu, 18 Jul 2024 06:40:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C94E5FB8A;
+	Thu, 18 Jul 2024 06:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JinHSecY"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Mf/SNGZp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB0E273FD;
-	Thu, 18 Jul 2024 06:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DFB2AD29;
+	Thu, 18 Jul 2024 06:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721284801; cv=none; b=CL6HMmecOGUiHxHPUnI1n4PJQvrA4iM0YZS2fNBpthyytIu01mWCb6TnVJ1BXDY8YqqzEUL/QGs6ouOmZp/p+57oPwcTtUDAsXwzoepQS4ldovU9yo3wRuThHBig1XxsQ/uPQ3hpdAjYxqD0MFz+GqeLVpf+scsovAPpDZjpj2o=
+	t=1721284847; cv=none; b=IOiMmXf9DeuuTWnK74RSmeAKwASsBooIoCIcvEsLBz4FJKN1XG7oVJ1Qa7+7vLcIl6EHb21p2xGV0nyqMkmD/sHRwaIgzabZYRATXpB14MGVWlD6ESCs+mKFRjaiDZG28HGB0xDl7E7/oQw0pBKDbsh2jW6aQi6UaOirJ1hg+pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721284801; c=relaxed/simple;
-	bh=o89AGorTf23IgzPfJaytCNoM57GTR1/i487FcdWHjDM=;
+	s=arc-20240116; t=1721284847; c=relaxed/simple;
+	bh=HTA+V233FqmMRP9qHx6p+O71mTJRn1KqUMOrWnvAHNs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cf4rElYEjpB3dFip4Cx6VkFkNRNGX9v3gz3WW+4JnRBnrIyGeEndKvFZCrvikjPse2pgZyFMTO1bg/z40SuCwB0GazkL4l39ewwT3/vOUuYZDn78fmKMdKoav/0lLHuv1wntj5MpOvm58GVIsvhrRww+BxB1rrHz+2ckW/3Z6bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JinHSecY; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=OQLRlzJJF3DXfkRrnpfsxlmaMOzX36pIgP5lGDxxungbiQ2SxbeO2qqhRFFEk9rW4w4TGo3GQihzwQEF+AdoOH1LkU3es1ZvLNUQGU6njagaMRFuotBaX5pwxlE9Rhwmuc6snaHilLh5RHrQFpfmT2fxfs9Df1nzJDYTpoc5meA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Mf/SNGZp; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I20oT1002489;
-	Thu, 18 Jul 2024 06:39:48 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I1mLPX022963;
+	Thu, 18 Jul 2024 06:40:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PpRraKb5qMJnMbM32gBiIJu+HGLUV+zSLXSxhQycvVM=; b=JinHSecYS1+JZEYp
-	eM35Kut17tjDH3YjUJgg0lPA2xSQhD+D7hWedG3bYjB8gf7kRAO3PJIZhWvPQPeY
-	RlvkoMwKszzzE10Z9oWprI/pXRQjOHGHDvkHEHp8ju4PsCpV0JEUOu/2USm7JzaX
-	qyDPoZ2SPGSSCE7HBBdQNb3t4789NPzkSQcfRKOrKBKLQmXjyGbjUO+j1eSBq2xJ
-	JUZA/Yb8GgB9w1/wJ5gVsBHml1znpR1RXyiSPmg2AWzW/QM9MP83PiPY03wR4A9C
-	arfXgV2ND0TELddJAt/VCIUNhS2SNb7qBZUpb7qxk2LQT9nEiwCqfeslEl6rZPMq
-	oQrugw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfs4hw0-1
+	mNZWhN5zHiWOEsLPu/XMpOuw4cfKJsnELGFX9qL0oUQ=; b=Mf/SNGZpSKik5zxA
+	CNbqVtrFym7K2LFu150xbjAXs41cOyldxtzChYa2vQXJPiC8aPbUx+fCf3How/Ea
+	vRh7KTdxVXY8ocKrLt57Bcl1eFO6QCpCgQHnzG2lxQOrlvcEZmaFDiyOwzrxFxFn
+	c6MpixMCvxvc71ipwEJBCUyZYbVNH4UX664en8NjzEKxJkEQ5NqaMYAxBRIwL11Q
+	wkiqbdW7nao6xfmmsiXj84QwUqLaV8qbHoqPNGeLxk37xtjeimpieUaRC3moVHYr
+	88MbWYA0ILC5oeSFIf4SikpqVaPs98epvLWqI5wydAjkZpq6EU3rB2CgbVS1cGyC
+	4qHQ5g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfnmnat-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 06:39:48 +0000 (GMT)
+	Thu, 18 Jul 2024 06:40:28 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46I6dl4Q031186
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46I6eH5Z026673
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 06:39:47 GMT
+	Thu, 18 Jul 2024 06:40:17 GMT
 Received: from [10.151.37.100] (10.80.80.8) by nalasex01c.na.qualcomm.com
  (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Jul
- 2024 23:39:42 -0700
-Message-ID: <927af089-ecd0-4175-ab13-e6086aac9ce3@quicinc.com>
-Date: Thu, 18 Jul 2024 12:09:39 +0530
+ 2024 23:40:12 -0700
+Message-ID: <840ba412-f4f9-494d-aee1-96d1e2b67e3f@quicinc.com>
+Date: Thu, 18 Jul 2024 12:10:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,8 +65,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 2/4] arm64: dts: qcom: ipq9574: Add PCIe PHYs and
- controller nodes
+Subject: Re: [PATCH V6 3/4] arm64: dts: qcom: ipq9574: Enable PCIe PHYs and
+ controllers
 To: Konrad Dybcio <konrad.dybcio@linaro.org>, <bhelgaas@google.com>,
         <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
@@ -75,27 +75,27 @@ To: Konrad Dybcio <konrad.dybcio@linaro.org>, <bhelgaas@google.com>,
         <linux-kernel@vger.kernel.org>
 CC: devi priya <quic_devipriy@quicinc.com>
 References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
- <20240716092347.2177153-3-quic_srichara@quicinc.com>
- <dbd172e0-d7c6-4ecc-b8cd-1329a4b03374@linaro.org>
+ <20240716092347.2177153-4-quic_srichara@quicinc.com>
+ <14f9f29c-2762-462f-b733-cde6a103b509@linaro.org>
 Content-Language: en-US
 From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <dbd172e0-d7c6-4ecc-b8cd-1329a4b03374@linaro.org>
+In-Reply-To: <14f9f29c-2762-462f-b733-cde6a103b509@linaro.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 8Zj3ozB_gM5C32iOdVbV2Kt30I2fnot6
-X-Proofpoint-GUID: 8Zj3ozB_gM5C32iOdVbV2Kt30I2fnot6
+X-Proofpoint-GUID: ldrMSLeYFKTmVgBePhWv4T_iqA5bgK14
+X-Proofpoint-ORIG-GUID: ldrMSLeYFKTmVgBePhWv4T_iqA5bgK14
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-18_03,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 bulkscore=0 adultscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=859 mlxscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180043
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=980 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407180044
 
 
 
@@ -103,65 +103,41 @@ On 7/16/2024 5:33 PM, Konrad Dybcio wrote:
 > On 16.07.2024 11:23 AM, Sricharan R wrote:
 >> From: devi priya <quic_devipriy@quicinc.com>
 >>
->> Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
->> found on IPQ9574 platform. The PCIe0 & PCIe1 are 1-lane Gen3
->> host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
+>> Enable the PCIe controller and PHY nodes corresponding to RDP 433.
 >>
 >> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
 >> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 >> ---
-> [...]
->
+>>   [V6] No change.
+>>
+>>   arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts | 113 ++++++++++++++++++++
+>>   1 file changed, 113 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>> index 1bb8d96c9a82..f4b6d540612c 100644
+>> --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>> @@ -8,6 +8,7 @@
+>>   
+>>   /dts-v1/;
+>>   
+>> +#include <dt-bindings/gpio/gpio.h>
+>>   #include "ipq9574-rdp-common.dtsi"
+>>   
+>>   / {
+>> @@ -15,6 +16,45 @@ / {
+>>   	compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
+>>   };
+>>   
+>> +&pcie1_phy {
+>> +	status = "okay";
+>> +};
 >> +
->> +			ranges = <0x01000000 0x0 0x00000000 0x10200000 0x0 0x100000>,  /* I/O */
->> +				 <0x02000000 0x0 0x10300000 0x10300000 0x0 0x7d00000>; /* MEM */
-> Drop these comments, please
-ok
->> +
->> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
->> +
-> Inconsistent newline
-ok, will fix
->> +			interrupt-names = "msi0",
->> +					  "msi1",
->> +					  "msi2",
->> +					  "msi3",
->> +					  "msi4",
->> +					  "msi5",
->> +					  "msi6",
->> +					  "msi7";
->> +
->> +			#interrupt-cells = <1>;
->> +			interrupt-map-mask = <0 0 0 0x7>;
->> +			interrupt-map = <0 0 0 1 &intc 0 0 35 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->> +					<0 0 0 2 &intc 0 0 49 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
->> +					<0 0 0 3 &intc 0 0 84 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
->> +					<0 0 0 4 &intc 0 0 85 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> Drop these comments, please
->
-> (all these comments apply to all the similar nodes)
-ok
-> [...]
->
->> +
->> +		pcie3: pcie@18000000 {
->> +			compatible = "qcom,pcie-ipq9574";
->> +			reg =  <0x18000000 0xf1d>,
->> +			       <0x18000f20 0xa8>,
->> +			       <0x18001000 0x1000>,
->> +			       <0x000f0000 0x4000>,
->> +			       <0x18100000 0x1000>;
->> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
->> +			device_type = "pci";
->> +			linux,pci-domain = <4>;
-> Any reason the PCI domain for PCIeN is N+1? You can start at 0
+>> +&pcie1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pcie1_default>;
+> property-n
+> property-names
 ok, will fix
 
 Regards,
