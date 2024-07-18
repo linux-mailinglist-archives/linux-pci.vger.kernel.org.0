@@ -1,265 +1,293 @@
-Return-Path: <linux-pci+bounces-10533-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10534-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C8F593517D
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 20:08:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5045A93704E
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 23:56:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E80C1C22DC9
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 18:08:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FE60B213A4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 21:56:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4DB7145A15;
-	Thu, 18 Jul 2024 18:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133AA145B10;
+	Thu, 18 Jul 2024 21:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZPLW+mNO"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gV4cyZZC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7420145A11;
-	Thu, 18 Jul 2024 18:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721326068; cv=fail; b=Db+kRiPWNbG4gcIZkriZlPpvBVok5YAMLysbYdCwPB8LTitnVwo7a97B0YQYyO3oTRlJyY0F7dxdoJuNxfI9fkO4t+hzXrBH5TaifOUKXJ/qpwXMqp8g8zJibhS3AFzlWCWXf0kcSTfnRQSwe9dM2uIh45k9KQwxHOJpNXZKL74=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721326068; c=relaxed/simple;
-	bh=xB2+e/DWX/PjwpJxUvZdh2Hp25LNiicQltvWLGCfAmE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tMU1/tNPWugQE5qIivsD6GagJQ5k4I9lvSS7VVlLJlFWfN6ysa44uW0gvsIjfFGLeqtZkMkLpU61+MWsq+Ftvc3gm3lPzY9Ian00SdZ9xd3vGOaCfpDzSw1W9b2u8OX3FwmZ0t1hpOaDHUGZYzYExi75nszHC7Ztx73s45TRFyM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZPLW+mNO; arc=fail smtp.client-ip=40.107.243.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f0oj26JNCCIdhMEWhchZt7S9Gozw8vlF6myuvdkpmd6ktg5Bfz4RW4uLyTDKl30EHyGBaVfPJg9BXp6fPt8hsCzX4UIuKLQRl0SiLmP7afti6uqg84PIau/AM9oc0Z7qQg+PhP1JfbcgOg3A86NWj2HtiNtxmle/wwLsglGDitclulqfi2wzSrWxVG4HLVZUYKT5aI5viRo4WBIej14rIjYMEwJYGxgdDqqqyiZaprjoRm+1Lr6cNo5A8PIQqZ+cXv7Ymn5FTCLj67cgdIqsT96eacS6HLBkEUFjznvraeXAfitMUXAuU6mRV3dRwveWa9cIOB05j3G6fG1k7k2JGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iHq4KkFd1QgzwAL03uzR0m7COj05vOO7CSNanjvindA=;
- b=UYMVtxCtGVRtRB3aWAc2T8zSEFVFrdL579WLAnxz/zar0IwnqNhCD62OkGqHQyom1aetqvG5/PVyJUyWpjeQyxMvX/AyFEkg2CiLiYwXz7dXDTJIMVUjbJL7UJfwKP3MNPlM6b1+37oZm8NqHKJdBKwBhPRmhHfEcXOyacQC5k1M5ChQyOwQ/w8yiL64VoQKXGoGwe6kKe8roIHRomZu80jjl8tQC1XX/oq1N7X7HaC9gRZEfxpmoWqaKUbAIjMjm3479hSwt0c1YH0mLzZ+/DYaVwHXX44PIxkoMb0NUxKzqAdKR6LvB/nUtFH1KMkR5LnYmGWwY0fy5K4sLIyDRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iHq4KkFd1QgzwAL03uzR0m7COj05vOO7CSNanjvindA=;
- b=ZPLW+mNOwTnp9x45PonDQINxPTBMl7sXE7/ClSA173n8gSoQTF9Q0u5N/5ZJygqULdj4tgOsDR/IAuhMRkxuH3Qqmj/5lnmEbwF0UAsD/xsveQ7/NSYmiRTpTwmgLQFqlN/486e5RjBlaqQOrnptqpj6UOVl/8QruWWcua03jto=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by SA1PR12MB8920.namprd12.prod.outlook.com (2603:10b6:806:38e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Thu, 18 Jul
- 2024 18:07:41 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%4]) with mapi id 15.20.7784.017; Thu, 18 Jul 2024
- 18:07:41 +0000
-Message-ID: <95ea23bf-b628-4fdb-a4ef-0029f9df2ec2@amd.com>
-Date: Thu, 18 Jul 2024 23:37:31 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] x86/amd_nb: Add new PCI IDs for AMD family 0x1a model
- 60h
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Peter Anvin <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Muralidhara M K <muralidhara.mk@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Avadhut Naik <Avadhut.Naik@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org
-References: <20240718171342.GA575689@bhelgaas>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20240718171342.GA575689@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1P287CA0015.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:40::33) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD10145B00;
+	Thu, 18 Jul 2024 21:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721339753; cv=none; b=IQycwDKEmjj7gGZbzHovVTkzk59TBj9dT1DY/bZ+WtFPOZiPSLPiceI/9IPmR8QONUg/8xakskXAUTy8Ugqy2g+Izuu+0N0X1qXo2YzORcostgCQ4Xror5h0fBZaCfwbup9/JBnmyZ64a0jf59lZ/dL4xI7KrHh6v14vDEBJPzE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721339753; c=relaxed/simple;
+	bh=aQn20DkKZX8DLc+OVqic662SFlNsLXgj0L6rqFW+IO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uKyDWpGdXhyybHnxeryxnFI5AlpUoIkdriZIwegqeIK0ZeZKWDN2ufU4lDVPCYdg8rY6W/PZJIDmZfHjEU2mWFLXRgko2fZpdYNi1ciyoY1i5gRmngMdrpHBwuchznh+hFJMAleKw0SZKWJBtQ4fYJExCfTsWJaW2bxA+GzRjYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gV4cyZZC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46IBD0wj023117;
+	Thu, 18 Jul 2024 21:52:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	h0mCvED66flAoqckntQBt2/IbGwfigCgEEWsJja9jeg=; b=gV4cyZZCVK5ZE+pI
+	S3W5U1iOrOb7cLrOkkgnTERXEYQ9WER3JUUY3TpcRLLl6EfH+TsBDK0WrIbfIZmq
+	/FOwJ76nUrbnZ/OXqRBsTvp6cNPNz8mV94xtIv0cX7VgRs8FqUayVaYLvJsiVRHi
+	ZlZLuZ+hIKhcOGYc0emEutJxrVTqosqv7fRzLx1x3oTwWQVeB8L+URBUaekaxzTU
+	En6vWvaHT7QmDjdHrb8G91tdTmIowsaOSpnQaqeGet0egbkN8kEmwjoTOHrH6wLR
+	OZcqtbVYEhKvjTZDCiQcNwdCxW3Y67Z8Kh5kZpuhBU6wev/I0oP5yobLfSEV82AO
+	xciYIg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfnprdw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 21:52:23 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46ILqLFZ027887
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 21:52:21 GMT
+Received: from [10.110.7.185] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Jul
+ 2024 14:52:21 -0700
+Message-ID: <e04f8a63-3dc8-4a58-a9a4-4c70debd2b93@quicinc.com>
+Date: Thu, 18 Jul 2024 14:52:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|SA1PR12MB8920:EE_
-X-MS-Office365-Filtering-Correlation-Id: 57acd565-fc9e-4e2c-0902-08dca75483f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S2ZDbHpvNGVoVHBpbUdWbEZpaFdSV2RvSVRhenZFbUlPWjJWUlhJcEtGMnJk?=
- =?utf-8?B?SVZPVENnOXpsdURqUUhNVHg1bWtVeFdtNFFWK2JpNHNsUUxxK09JbURUWTZK?=
- =?utf-8?B?TDZTWC9icWxGRHNXVVM2N2xuM0xSVHBWYkVhejhHand6STlEcXdObHZZV2Jn?=
- =?utf-8?B?SEp0RmU0TVBNT2R4WmNjdDIzaDhZeW5sK0wxV0E5MlpMZnBGQ3o2My9zNHQr?=
- =?utf-8?B?N25GdDlaT2hGTmljRVdRTUhOY1I0M3NEVC8xaU1wQkZGcUVKd1VuUVArUzNQ?=
- =?utf-8?B?VWJXbWREZWNqcjBMMlJ5aUVjWjM2MFV4OWhuVjVkYklrbHRGU1BMUWdxTTVm?=
- =?utf-8?B?Mit2ck1ZQzhGZkNvN011by9HeFIwNTRXVm0wekFBZWhsNERKRlFXS3BjU3I0?=
- =?utf-8?B?UklLNEpIaHh3eG5iQ0QrSFZ5RW8wcUh1bVhkdkxjbXFBSWpjL3lOQ0puZko0?=
- =?utf-8?B?WThNS2pnZDZtZ3hhTW9KWnkrb2V4aSthVW1xcStobFZOVUt6Z0FRelo2Ymt1?=
- =?utf-8?B?V2l3WXVvc0d6Vy9VbG5yVlFlemJEQy9yMTV4ZnYxVTZNd1p4MDI5NWE4bWk2?=
- =?utf-8?B?MUxlZDM0c05XengwZ2NHK2N5ZElTUnFhc0pIaTRSNkJxY0IrNXJTd0RhRDlu?=
- =?utf-8?B?Unc3MU1qcTFMTWNvMC9NWHZ1N0tpNjd4UGYySHhXSVJibDRHbU52aGxORWdY?=
- =?utf-8?B?Zkp0dWtuM3JGdkVNN1NmUzNFbXVzYzByY1o3cXMwOVBYeGJlV2IrNy82TmpF?=
- =?utf-8?B?bVNYcVpBYm1BN0NETHJ1R3ZnM2NJaExXZVVBczBPQVNFKzFjeVRWdEs0bUdu?=
- =?utf-8?B?SXYwMjJkTlhPUDdsSlZxZVN2b0ZBZXdwWGt4MStaNVhtVVRpbmQ5eUtzeW5X?=
- =?utf-8?B?cEYramdRYWFONHl5dWFkeUUva0dXcnhaR09ZQXFRdURLY0tUWnZYNm1NS2gw?=
- =?utf-8?B?M1c2TzVNZ2pNRURVS2Z4WDdtcDRkY0VmSWtIMkkwOHUzVUJOUnpGTHNuaDhV?=
- =?utf-8?B?UU83aHQxQ1FOcHV3djdJc3VDWis5akhVcEUzOEJBVGpaeFFVOHVielMyNEVm?=
- =?utf-8?B?TzYzUlJyaDdmQWVxT2RWeW1kQ1QycmJzbHBobDBwSVg1eUZtalhZY2d0NU1o?=
- =?utf-8?B?TlJtTmVsdGx1Sm42Z1BYZG1pOVhJclkvWGNOWWpndUsyWU9GeEdzM2NCK1lp?=
- =?utf-8?B?ZmVTR20yZno2cUh0MTRlQ2xjSys5ZVZ3MUd3aWxoVWp5U1o2TjFydlNyeUZ3?=
- =?utf-8?B?RjNZWUNCVnJaK2dmWFJ5ek1YdnRjdmJqK3FUVmMrdk9tK1kvdFFzaTFpZ3A5?=
- =?utf-8?B?UnpLajk0OFZFak9aZUFXblRlbVoveE11T2Q0RzE4YlBOVE96SHdjVWpVTWtS?=
- =?utf-8?B?VWw0NmRBVFlwZC9TYmpnT0dRZCtNVzNCVC9EWk9ydTlJbUlvU2JZRERHY2Jq?=
- =?utf-8?B?YnpmRk5mOTZlc3F3SGtIdGVGSWxILzVGM0pFcmkrZW5RQkFQL1NHckNyNmpC?=
- =?utf-8?B?Q0lSRzdpUjZUMmlZZW50ZGlMMHhpc2VScU16MUxZUG1qMmlIN1VBNEYxVlQx?=
- =?utf-8?B?R3FubnA4WkFhVEp6NytFenFxVnhZcWdzemo5blAzSVBpVU5LMGxXNHllZkN2?=
- =?utf-8?B?MmNldE5GdmpIZmRjV3I3SGVMbXdVWGFyaFFFckVVNFFhVDJJUjA2VEtRdXBH?=
- =?utf-8?B?T1Ira3NuZEZjOXZnU04zU25kYVBubTJTZG9QQTJJUVpMWXJCZS9tcFk2ODR1?=
- =?utf-8?B?bTltbWpwd0szSzI2SzRNWHJhNzIyTHByM2VmcHVhaXBkbytESHNFZEdEWGpl?=
- =?utf-8?B?VGMyZ1NHODUveDR5dXo4dz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?USs1L3ZUc2hnWDlVMCszaFo5L1EwQnJqcTdXNVpXczFaRitsalc0K0FGbmJS?=
- =?utf-8?B?bC82QllTdktCQ09Qd0czOTF1Q0tVTzZUeTZmRW02UlZ1aVNBOEFVT0VMNEZy?=
- =?utf-8?B?UkNoQWZQeGw1UGZ6QVZvS3pMU21qZHlZSFFmeDFOaExVeURGSUp3UXRoQ2hU?=
- =?utf-8?B?QXBCN0xMOU5EM3FEQUh6WDdwZXpEaDh4S1h3V0pJT3JvUkJFRlNjbVVEa1hB?=
- =?utf-8?B?VXRKWkdyQi9ESmYwWGVOaEJzdXRYV2Faa1ptS0htbnkycGVobUtFTlhOZGRp?=
- =?utf-8?B?SkNTeDVzOEpnVWE4YWtHS0lCYU5Xcjc4ZmNnVjJ0MWZQdFF1MjZwTE0xdlpZ?=
- =?utf-8?B?SWJuVkM1MytDWnZFWUpFb0ZtQVlRQkJOOXFZbEhKckhZa0tIMXprNzhvTXVL?=
- =?utf-8?B?OXh1RFhEVTN2eTB5M1pGVHpEd1E4NmlVU0trRlFPZk1QNERRU0cwZDFneVRX?=
- =?utf-8?B?NjQwUzJUSDlydnhUdEtXMW1JSGVwY1FaQ3VDR00wWnR6QVJSWTJPMXRXVkZV?=
- =?utf-8?B?RUZHZjNRbTUzeTU4ZkRjSHQrT2JVR25sb05vRlpwV0VMdG1PNzJRbGI3aTdp?=
- =?utf-8?B?aW01MHM4bjIvME0rUGZzK3NIUE8ydlM3NzJaYXRvNWpWb1hPcGlFSDE5MDh3?=
- =?utf-8?B?eTJSN1gwcmxRL0JOYU9vSHRRMFVSWGVxQU9xNFpzUkV3WmorNEtLMStzL3dS?=
- =?utf-8?B?cnVLQ1RZazJnK3N0blorMlFKV1pyMXg0WlZ2Y0pwRGExaEQ2VWFnRldQTmdN?=
- =?utf-8?B?UUpNdVZtUFpKQ0pmamdzYkg5UXAvNGJPMVlCVk5uSlRVL29RcjRNdTlMOGls?=
- =?utf-8?B?Tlcvb0xtdDkvME9UcW50S1JXNzZDaFN5VWQxUGtKSk1weGlFcHZGVzdEVi9G?=
- =?utf-8?B?WFR6aGZMNWZwb1J6aUZQbmFnS0dxU2dJTkJOTUFzajQ0amIwZmpjMDlNTEJJ?=
- =?utf-8?B?RVYwbS9OcFlJK2h5d1AvaTNWQWUyYTZSOU9MWXo5dEpiNVo5V1dOYko4aHFP?=
- =?utf-8?B?ZmRKM1JRMzBwQm5QTlZoczZWM3g0aVZROE9jb01WQ3pkeERhemVuM09aUGJi?=
- =?utf-8?B?Y2hobWJLcDhMYmtETjdwa3MreU5IbzJrcDZTeVBTUkFveEs0cm9vak1OSDA3?=
- =?utf-8?B?b0did3BrTkZQMGJueGl2MUt1YXIzdUNldHdWUGdDTCtQUUkrZkFFTG8vTUEw?=
- =?utf-8?B?YlBRdHpjVnBWMGhUOVl4djBWUElpakE1QWtyV0lOVkc1SWFhVjJ5RlRReDQ2?=
- =?utf-8?B?Wjlvamh3bzFXR1dlb1F4clNaSHFtVkJLenhWakFrSkFhUGxmRWk4cDNlNHJS?=
- =?utf-8?B?QkE5RUdCTkpTL0lBVFVQak5OUTUwSUZwNWc3ZWYydWdubjlnaG1FNkZrbnk0?=
- =?utf-8?B?RldQUXJaYUNJOEVtWHloMHFkdHFGQnN6SXoxZmwrWEpTbzliWDl2YjNUWXdu?=
- =?utf-8?B?UEllcVVzeEZHbFk0U1Q5SEdlT0FIbHJBNU5WV1dYQTA5cHNlenFySjY4VzF1?=
- =?utf-8?B?bFNZOWRMOVQ2VjhxVnlaWEZPc0RaS1BzMlBsR2MrQm5sc0pPQU11dXplbTVN?=
- =?utf-8?B?Z01iT1RLb2pPZitvbXNDSFloWWVneDFDbCt2ZUtyQ0ZlUis5T1VuSHIwNWcz?=
- =?utf-8?B?cTJ3Nkl0bWN2OXdPbnV4SjZWTGJUSVkyb0RONXl2d0ZRWFlyUTRkT1pIRndV?=
- =?utf-8?B?cXZ0djBLM25qc3RKSTdsS3poSVZrMEFFYXhXck1zNXJEVk5VZDlwR2wxSmcx?=
- =?utf-8?B?R1dYTURhdGhUTytiejY3WWgvVmhTTGNvRHhPdmxHSTMvdjdhS2NMWEl5U28y?=
- =?utf-8?B?TXZLL1RJK3E4QTcwdUtUQnh5YTAzM3dCWndDWTlsYnNKRGtJR0svblVEV2hG?=
- =?utf-8?B?OUROQ09FTDhkM0JOWEtUV1haUU1YRFVkUGMydk5KZVdtYW11V3U5eWNlT2ZI?=
- =?utf-8?B?VHNCK0t5dVlHZ3UrRE1ZdGtDVHVOYVVhanFpRnVuemxWdkxnOXAzaEZFRGVT?=
- =?utf-8?B?bHlwWkxJUTlLWnh4VGw3TU10S1R3UkVTMVgyblVNKzNMdzlEbUowcnFQQ2Vx?=
- =?utf-8?B?d093WjEyNWRualZDNTc3Y0pRbTFmcW9lbW1WTmEyZGNnS2Z5aEtRa29NYUxE?=
- =?utf-8?Q?J/QtjwdYopv92BduVr+WkZArf?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57acd565-fc9e-4e2c-0902-08dca75483f9
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 18:07:41.6058
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 50MKlsxFiue/XTP2Cv+5bT1uWVHiKPJTQ4HGF8SNNrUesR3h0lyi7LFkb5uuT+jSfkk7qUePlBmhpmsHGZydbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8920
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Avoid DBI and ATU register space mirror
+ to BAR/MMIO region
+To: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, <jingoohan1@gmail.com>,
+        <manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20240718051258.1115271-1-quic_pyarlaga@quicinc.com>
+ <20240718051258.1115271-3-quic_pyarlaga@quicinc.com>
+Content-Language: en-US
+From: Mayank Rana <quic_mrana@quicinc.com>
+In-Reply-To: <20240718051258.1115271-3-quic_pyarlaga@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: emAt5mAXUMMkMGMADMyQ74DUJyIcGVZH
+X-Proofpoint-ORIG-GUID: emAt5mAXUMMkMGMADMyQ74DUJyIcGVZH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_15,2024-07-18_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407180146
 
+Hi Prudhvi
 
-
-On 7/18/2024 22:43, Bjorn Helgaas wrote:
-> On Thu, Jul 18, 2024 at 07:32:58PM +0530, Shyam Sundar S K wrote:
->> Add the new PCI Device IDs to the root IDs and misc ids list to support
->> new generation of AMD 1Ah family 60h Models of processors.
->>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->> (As the amd_nb functions are used by PMC and PMF drivers, without these IDs
->> being present AMD PMF/PMC probe shall fail.)
+On 7/17/2024 10:12 PM, Prudhvi Yarlagadda wrote:
+> PARF hardware block which is a wrapper on top of DWC PCIe controller
+> mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
+> register to get the size of the memory block to be mirrored and uses
+> PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
+> address of DBI and ATU space inside the memory block that is being
+> mirrored.
 > 
-> Is there any plan for making this generic so a kernel update is not
-> needed?  Obviously the *functionality* is not changed by this patch,
-> so having to add a device ID for every new processor just makes work
-> for distros and users.
-
-Regarding AMD processors, there are numerous PCI IDs defined in the
-PPRs/BKDG. I'm not sure if there's a generic way to address this
-without a kernel update.
-
+> When a memory region which is located above the SLV_ADDR_SPACE_SIZE
+> boundary is used for BAR region then there could be an overlap of DBI and
+> ATU address space that is getting mirrored and the BAR region. This
+> results in DBI and ATU address space contents getting updated when a PCIe
+> function driver tries updating the BAR/MMIO memory region. Reference
+> memory map of the PCIe memory region with DBI and ATU address space
+> overlapping BAR region is as below.
 > 
->>  arch/x86/kernel/amd_nb.c | 3 +++
->>  include/linux/pci_ids.h  | 1 +
->>  2 files changed, 4 insertions(+)
->>
->> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
->> index 059e5c16af05..61eadde08511 100644
->> --- a/arch/x86/kernel/amd_nb.c
->> +++ b/arch/x86/kernel/amd_nb.c
->> @@ -26,6 +26,7 @@
->>  #define PCI_DEVICE_ID_AMD_19H_M70H_ROOT		0x14e8
->>  #define PCI_DEVICE_ID_AMD_1AH_M00H_ROOT		0x153a
->>  #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT		0x1507
->> +#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT		0x1122
->>  #define PCI_DEVICE_ID_AMD_MI200_ROOT		0x14bb
->>  #define PCI_DEVICE_ID_AMD_MI300_ROOT		0x14f8
->>  
->> @@ -63,6 +64,7 @@ static const struct pci_device_id amd_root_ids[] = {
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M70H_ROOT) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_ROOT) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_ROOT) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_ROOT) },
->>  	{}
->> @@ -95,6 +97,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M78H_DF_F3) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3) },
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_DF_F3) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M70H_DF_F3) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_DF_F3) },
->>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_DF_F3) },
->> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->> index 76a8f2d6bd64..bbe8f3dfa813 100644
->> --- a/include/linux/pci_ids.h
->> +++ b/include/linux/pci_ids.h
->> @@ -580,6 +580,7 @@
->>  #define PCI_DEVICE_ID_AMD_19H_M78H_DF_F3 0x12fb
->>  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3 0x12c3
->>  #define PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3 0x16fb
->> +#define PCI_DEVICE_ID_AMD_1AH_M60H_DF_F3 0x124b
+>                          |---------------|
+>                          |               |
+>                          |               |
+>          ------- --------|---------------|
+>             |       |    |---------------|
+>             |       |    |       DBI     |
+>             |       |    |---------------|---->DBI_BASE_ADDR
+>             |       |    |               |
+>             |       |    |               |
+>             |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
+>             |    BAR/MMIO|---------------|
+>             |    Region  |       ATU     |
+>             |       |    |---------------|---->ATU_BASE_ADDR
+>             |       |    |               |
+>          PCIe       |    |---------------|
+>          Memory     |    |       DBI     |
+>          Region     |    |---------------|---->DBI_BASE_ADDR
+>             |       |    |               |
+>             |    --------|               |
+>             |            |               |---->SLV_ADDR_SPACE_SIZE
+>             |            |---------------|
+>             |            |       ATU     |
+>             |            |---------------|---->ATU_BASE_ADDR
+>             |            |               |
+>             |            |---------------|
+>             |            |       DBI     |
+>             |            |---------------|---->DBI_BASE_ADDR
+>             |            |               |
+>             |            |               |
+>          ----------------|---------------|
+>                          |               |
+>                          |               |
+>                          |               |
+>                          |---------------|
 > 
-> Why not add this in amd_nb.c, as you did for
-> PCI_DEVICE_ID_AMD_1AH_M60H_ROOT?  There's already a
-> PCI_DEVICE_ID_AMD_CNB17H_F4 definition there.  No need to update
-> pci_ids.h unless PCI_DEVICE_ID_AMD_1AH_M60H_DF_F3 is used in more than
-> one place.
+> Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
+> used for BAR region which is why the above mentioned issue is not
+> encountered. This issue is discovered as part of internal testing when we
+> tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
+> we are trying to fix this.
 > 
-> Based on previous history, I suppose PCI_DEVICE_ID_AMD_1AH_M60H_DF_F3
-> will someday be used by k10temp.c?  Ideally a pci_ids.h addition would
-> be in the same patch that adds uses in both amd_nb.c and k10temp.c so
-> it's clear that the new definition is used in two places.
+> As PARF hardware block mirrors DBI and ATU register space after every
+> PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, write
+> U32_MAX (all 0xFF's) to PARF_SLV_ADDR_SPACE_SIZE register to avoid
+> mirroring DBI and ATU to BAR/MMIO region. Write the physical base address
+> of DBI and ATU register blocks to PARF_DBI_BASE_ADDR (default 0x0) and
+> PARF_ATU_BASE_ADDR (default 0x1000) respectively to make sure DBI and ATU
+> blocks are at expected memory locations.
 > 
-
-Okay, I understand your point. I will add
-PCI_DEVICE_ID_AMD_1AH_M60H_DF_F3 to k10temp.c in v2.
-
-Thanks,
-Shyam
-
->>  #define PCI_DEVICE_ID_AMD_1AH_M70H_DF_F3 0x12bb
->>  #define PCI_DEVICE_ID_AMD_MI200_DF_F3	0x14d3
->>  #define PCI_DEVICE_ID_AMD_MI300_DF_F3	0x152b
->> -- 
->> 2.25.1
->>
+> The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
+> and PARF_ATU_BASE_ADDR are applicable for platforms that use PARF
+> Qcom IP rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
+> PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for PARF Qcom IP rev 2.3.3.
+> PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for PARF
+> Qcom IP rev 1.0.0, 2.3.2 and 2.4.0. Updating the init()/post_init()
+> functions of the respective PARF versions to program applicable
+> PARF_DBI_BASE_ADDR, PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR
+> register offsets. And remove the unused SLV_ADDR_SPACE_SZ macro.
+> 
+> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+> ---
+>   drivers/pci/controller/dwc/pcie-qcom.c | 62 +++++++++++++++++++-------
+>   1 file changed, 45 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0180edf3310e..845c7641431f 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -45,6 +45,7 @@
+>   #define PARF_PHY_REFCLK				0x4c
+>   #define PARF_CONFIG_BITS			0x50
+>   #define PARF_DBI_BASE_ADDR			0x168
+> +#define PARF_SLV_ADDR_SPACE_SIZE		0x16C
+>   #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+>   #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+>   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+[...]> +static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +
+> +	if (pci->dbi_phys_addr)
+> +		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
+> +							PARF_DBI_BASE_ADDR);
+> +
+> +	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+We can't update PARF_SLV_ADDR_SPACE_SIZE without updating 
+PARF_DBI_BASE_ADDR.
+Please make dbi_phys_addr mandatory to update PARF_SLV_ADDR_SPACE_SIZE.
+> +}
+> +
+> +static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +
+> +	if (pci->dbi_phys_addr) {
+> +		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
+> +							PARF_DBI_BASE_ADDR_V2);
+> +		writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
+> +						PARF_DBI_BASE_ADDR_V2_HI);
+> +	}
+> +
+> +	if (pci->atu_phys_addr) {
+> +		writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
+> +							PARF_ATU_BASE_ADDR);
+> +		writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
+> +							PARF_ATU_BASE_ADDR_HI);
+> +	}
+> +
+> +	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
+> +	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
+Same as above. atu_phys_addr shall be optional here but not 
+dbi_phys_addr to update PARF_SLV_ADDR_SPACE_SIZE.
+> +}
+> +
+>   static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
+>   {
+>   	u32 val;
+> @@ -540,8 +576,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+>   
+>   static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+>   {
+> -	/* change DBI base address */
+> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+> +	qcom_pcie_configure_dbi_base(pcie);
+>   
+>   	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>   		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+> @@ -628,8 +663,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+>   	val &= ~PHY_TEST_PWR_DOWN;
+>   	writel(val, pcie->parf + PARF_PHY_CTRL);
+>   
+> -	/* change DBI base address */
+> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+> +	qcom_pcie_configure_dbi_base(pcie);
+>   
+>   	/* MAC PHY_POWERDOWN MUX DISABLE  */
+>   	val = readl(pcie->parf + PARF_SYS_CTRL);
+> @@ -811,13 +845,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+>   	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>   	u32 val;
+>   
+> -	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+> -
+>   	val = readl(pcie->parf + PARF_PHY_CTRL);
+>   	val &= ~PHY_TEST_PWR_DOWN;
+>   	writel(val, pcie->parf + PARF_PHY_CTRL);
+>   
+> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+> +	qcom_pcie_configure_dbi_atu_base(pcie);
+>   
+>   	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+>   		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+> @@ -913,8 +945,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>   	val &= ~PHY_TEST_PWR_DOWN;
+>   	writel(val, pcie->parf + PARF_PHY_CTRL);
+>   
+> -	/* change DBI base address */
+> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+> +	qcom_pcie_configure_dbi_atu_base(pcie);
+>   
+>   	/* MAC PHY_POWERDOWN MUX DISABLE  */
+>   	val = readl(pcie->parf + PARF_SYS_CTRL);
+> @@ -1123,14 +1154,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+>   	u32 val;
+>   	int i;
+>   
+> -	writel(SLV_ADDR_SPACE_SZ,
+> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+> -
+>   	val = readl(pcie->parf + PARF_PHY_CTRL);
+>   	val &= ~PHY_TEST_PWR_DOWN;
+>   	writel(val, pcie->parf + PARF_PHY_CTRL);
+>   
+> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+> +	qcom_pcie_configure_dbi_atu_base(pcie);
+>   
+>   	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+>   	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
 
