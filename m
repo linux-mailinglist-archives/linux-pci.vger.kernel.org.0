@@ -1,155 +1,349 @@
-Return-Path: <linux-pci+bounces-10501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4961D934CFF
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 14:13:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11680934DA3
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:01:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 747E6B22B91
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:13:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA0D3285331
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 13:01:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B93013C660;
-	Thu, 18 Jul 2024 12:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B0313D516;
+	Thu, 18 Jul 2024 13:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCH/BBnM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvDIHzT9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B342513B7A9
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 12:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C88484E11;
+	Thu, 18 Jul 2024 13:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721304766; cv=none; b=h/howUxWbtULXC6O/4f71LGfRtpq+b2kX26PWCOzAQdi76lhUn8+lBmr9jGCUWK0nyMbkADMYpIHNWectP1KcdVC4YhwU7kl53qvGVjxX7Py+PrpXhrLE1FIYtF/55aWKgGx62iigBxDNeel7A6mFXAUot0Db/zaJ3t0mIroH3Y=
+	t=1721307696; cv=none; b=r9JpsyqCM0dOgcSnzDcg6IOfRgUlbgdYS9YXhxed4r96gVDmAqsrMEFFPeteUHymE4SOpaHvpEw7cCcLEULdzAJL5hqUHSYcZHMh91JVfi7lRYCBMF4rd51rK94vtGgCnetG9uF/gLdsXTouJz31ODfGslYXYWLRdJ/6teKUUXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721304766; c=relaxed/simple;
-	bh=lDk/OFM9GdPyF5mO3TlS15U51RwuYwspDnGe9beFFBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tAKxkeTY0kVnCfUEWKv9uIUspiyyltUWgmvy4OCtVdOG7NQyx2umht7zuCJLlbR2Bg5mVDJmSpd6hwSgynD7EnIEkDRSAz3mjZUefAQ/FKLAsfE7qQ0CcF/X75vv53pw4Ql3Q8g1QOnHNAOv7UpkGk6FZAcIouN2GPo/9rYzjnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tCH/BBnM; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58be2b8b6b2so688518a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 05:12:44 -0700 (PDT)
+	s=arc-20240116; t=1721307696; c=relaxed/simple;
+	bh=mdwJYjPNqTr+Ia0NODkdrX29A4qTgc/06aRYk2Io+dA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TWjedmQVr3qvWUOp87pt4Yll5dVAdXQ4+0KqoBdtNhM3b9bcoW03YnZIryCV6xRLmxplogE009PaI1vygUHDiyU531AUpMO1HIFC1XO6rn66TSe7PG06zAGaIrSK2NPplIhCHMpfSpfkU9ltNmt/BVQoDYDMyZfQKJHUS0lZ/D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvDIHzT9; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5a108354819so924710a12.0;
+        Thu, 18 Jul 2024 06:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721304763; x=1721909563; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
-        b=tCH/BBnMTu8CG3Gxs5kcYA3zXyCbKxQYHAxqy1GvR4ONT8pi/L+aitwJqnF520xrak
-         HRtSiCC0nGNkSrqw9+yx8Zm6kA9qlEschgYKC/UZWNYcNKHaO8JifGJhKdvjNNfsx8e3
-         X52tcsczT4+V5KYr3UZcFBiSxiTxQJxHGUxolhBpE/3wZmnY5G6JSn7BH8AGOUSvlgns
-         c/16o7S/Tg0HjwlTPDDfsL74WSNBTr0fj5rQpuAaN5a47zr3qxLIkwWzN52rIQQhmWml
-         jK4pM1VymsWYrlh7pA/7No2kc2osE+Ag8IUB8pElBWcOj5k9dm8NTheFFDNlcqlpIaiv
-         BakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721304763; x=1721909563;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1721307693; x=1721912493; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
-        b=Hsv4NjXKy0DPqWgJ4p9BcG3KvFx79otNPYgWCermkGW7fVZ7PjUdqY7fg9G52XJqY0
-         1J4aEVIROQnDi6ZIlQ025adorD26B9IUe3vgW2GbAbgtJQlXvVNua53RL2TNE2kkQjfA
-         IF6NSUW+RDYovRLCT9rKPknh3EeeDXZoXNjviE/ixoJFNwmTt37/LF59aD6vHg1dYfVO
-         9TEeenIibmoHfueBMOv6XiCP6s+LUn4m3ZizkpWVqnmvIWpaBV/CM6MIr7uhOFunJwSi
-         iAksExx/Vcq1cZ38LvOj6szG6FopM0X/d3PL7Z70EbsG3Ry9M3YN6u2vaZRaP60XL2lZ
-         Z+xg==
-X-Gm-Message-State: AOJu0Yyo8/jAWO0EtOXwtwvuLb4c2KcVZXqVsNOvurhP4K0s6xy3UV6n
-	DjHNtIgluql1q/quVTnf67WUHCqjISHEeJ08ySqzK48ImA58uo/sxfUIno8Lf+s=
-X-Google-Smtp-Source: AGHT+IHpzAvuicnAr0t0F/QpWfgztRHIDCadRZ2CkWua+qXiqi9HeASkOwId5phE5trHQaIlvHyHqg==
-X-Received: by 2002:a05:6402:510f:b0:57c:c166:ba6 with SMTP id 4fb4d7f45d1cf-5a05bfab3c0mr3393413a12.19.1721304762690;
-        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
-Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a1d9a49e32sm654035a12.29.2024.07.18.05.12.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
-Message-ID: <f171ded0-e9db-4bf0-8e1a-e00065becd4e@linaro.org>
-Date: Thu, 18 Jul 2024 14:12:39 +0200
+        bh=hqj/azH3y0tVii1awb9kdff2TTuTT8XVCxNe0eEpg1s=;
+        b=JvDIHzT90Xz+Fhzyxlowl0qadw20xSCb+TTrPGVWX+RdOAD+1I1fUxier+wrpC59KB
+         lQXvrL5AIvmLSdQjGc+apWwUzkNMvdrSJKsGMgqWtA3J3SpBHztXXhNCtDviK3ysR8v1
+         0tcEwflS+MjtEifCci0W1OHvQKpfX6rmHPkvcmf0avRPrKbkDk/RhOS+2ydnnr0WuDtD
+         cr5q7PUJkmf3UfbcVkWOZ8PuQnvUq6OSwprfkVxh/UjCJP49akfzavnamAOab2PxN8fq
+         ZzaeWjQ1cR+S+L88Xzy7eeIxGMs8vgJ9C7E7hqZRbqFr+q4jTK7kalXoiJV2HczPKrVH
+         sY3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721307693; x=1721912493;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hqj/azH3y0tVii1awb9kdff2TTuTT8XVCxNe0eEpg1s=;
+        b=ug6o1pnrHfETOxXYczAExTkEwGo4zCu/dIblVVgoRjGDxXjtY/o02eUpjtU/GRDJtI
+         V0emK75osWa4KrJpM2QR1uHuPWYvp9kOHaNT+uPUqeviRDMiAYY3mYYqP+1k86jOS86Z
+         5l3eLKDYGDofvwIR1QzLYyjMUVFn4R3abwOONxSoqpkDGqyqyep+S9ugNOBwEj4BKUaK
+         jIp+P2ZdHPPXS1nSuzrP32bbf4nKg+Ydc3Xqn+cWjI8BHc4QI5sF5rKujeLHu+TWp0T9
+         JYvgdC3QX8Ar+0d6PDc6mkPZTSYLiJN2Lz689F8SBSOdCaZjyHrhDoyDaApFK9ogf8mm
+         3SvA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/thlq5DmDhGkFkBYqHQ065fYreOgWqLnyzhiB76rwZvPIvRwTau+j3uSLDImrbe9HNkcOzqnmDGp5uihEgXxVZxn/pzAea8WrTPTc6tEmvpBQu+BApIHWy/+6Jx461cUX
+X-Gm-Message-State: AOJu0YxDC9Irk/zHCNhoA1BJMlMXNE/alD8FgtD0ZNpJIOqZAf6f3Ycq
+	sDy9Gf6pLb6KBqK6XfChlVaiJLkmP22iIPcBzdWsGy1VC5WgJv2johWHOqfGrjr7HpianB23m9n
+	q630cpM1G76zuIWZLdC6zSlAuC/I=
+X-Google-Smtp-Source: AGHT+IFXeGp9YUEHJoLa9UObvkczqZCDhS1G7x7XY5+3lN6j1NYoUFvk0Q9sAg6yiIKlDD4SCrb/Gx1lNR4Foyvw3dc=
+X-Received: by 2002:a05:6402:40d5:b0:59e:a222:80f6 with SMTP id
+ 4fb4d7f45d1cf-5a05d0efa3emr3744381a12.27.1721307692110; Thu, 18 Jul 2024
+ 06:01:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/13] PCI: qcom-ep: Modify 'global_irq' and
- 'perst_irq' IRQ device names
-To: manivannan.sadhasivam@linaro.org,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
- <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAAhV-H6=nOf_cSv7K3hS3jdXsGcWR7Go30EFyZeqxYNQKhtH8A@mail.gmail.com>
+ <20240710194830.GA255085@bhelgaas>
+In-Reply-To: <20240710194830.GA255085@bhelgaas>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Thu, 18 Jul 2024 21:01:17 +0800
+Message-ID: <CAAhV-H678eySqhLr8cYhCsrJqm1acFcRAFJY_dQOpEHkRLVAGQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, loongarch@lists.linux.dev, linux-pci@vger.kernel.org, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
+	Sheng Wu <wusheng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17.07.2024 7:03 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Currently, the IRQ device name for both of these IRQs doesn't have Qcom
-> specific prefix and PCIe domain number. This causes 2 issues:
-> 
-> 1. Pollutes the global IRQ namespace since 'global' is a common name.
-> 2. When more than one EP controller instance is present in the SoC, naming
-> conflict will occur.
-> 
-> Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
-> names to uniquely identify the IRQs and also to fix the above mentioned
-> issues.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
+Hi, Bjorn,
 
-lgtm
+Sorry for the late reply.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+On Thu, Jul 11, 2024 at 3:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Wed, Jul 10, 2024 at 11:04:24AM +0800, Huacai Chen wrote:
+> > Hi, Bjorn,
+> >
+> > On Wed, Jul 10, 2024 at 5:24=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Jun 12, 2024 at 02:53:15PM +0800, Huacai Chen wrote:
+> > > > LS7A chipset can be used as a downstream bridge which connected to =
+a
+> > > > high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as=
+ the
+> > > > upward port. We should always enable MSI caps of this port, otherwi=
+se
+> > > > downstream devices cannot use MSI.
+> > >
+> > > Can you clarify this topology a bit?  Since DEV_LS7A_PCIE_PORT5
+> > > apparently has a class of PCI_CLASS_BRIDGE_HOST, I guess that in PCIe
+> > > terms, it is basically a PCI host bridge (Root Complex, if you prefer=
+)
+> > > that is materialized as a PCI Endpoint?
+> >
+> > Now most of the existing LoongArch CPUs don't have an integrated PCIe
+> > RC, instead they have HyperTransport controllers. But the latest CPU
+> > (Loongson-3C6000) has an integrated PCIe RC and removed
+> > HyperTransport.
+> >
+> > LS7A bridge can work together with both old (HT) CPUs and new (PCIe)
+> > CPUs. If it is connected to an old CPU, its upstream port is a HT
+> > port, and DEV_LS7A_PCIE_PORT5 works as a normal downstream PCIe port.
+> > If it is connected to a new CPU, DEV_LS7A_PCIE_PORT5 works as an
+> > upstream port (the class code becomes PCI_CLASS_BRIDGE_HOST) and the
+> > HT port is idle.
+>
+> What does lspci look like for both the old HT and the new PCIe CPUs?
+When LS7A connect to HT,
 
-Konrad
+00:00.0 Host bridge: Loongson Technology LLC Hyper Transport Bridge Control=
+ler
+00:00.1 Host bridge: Loongson Technology LLC Hyper Transport Bridge
+Controller (rev 01)
+00:00.2 Host bridge: Loongson Technology LLC Device 7a20 (rev 01)
+00:00.3 Host bridge: Loongson Technology LLC Device 7a30
+00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
+00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
+)
+00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
+)
+00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
+)
+00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
+)
+00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
+Audio) Controller
+00:08.0 SATA controller: Loongson Technology LLC Device 7a18
+00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
+00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
+00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
+00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
+00:13.0 PCI bridge: Loongson Technology LLC Device 7a59
+00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
+00:19.0 USB controller: Loongson Technology LLC Device 7a34
+02:00.0 Non-Volatile memory controller: Shenzhen Longsys Electronics
+Co., Ltd. SM2263EN/SM2263XT-based OEM NVME SSD (DRAM-less) (rev 03)
+04:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+[AMD/ATI] Oland [Radeon HD 8570 / R5 430 OEM / R7 240/340 / Radeon 520
+OEM] (rev 87)
+04:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
+Oland/Hainan/Cape Verde/Pitcairn HDMI Audio [Radeon HD 7000 Series]
+
+-[0000:00]-+-00.0  0014:7a00
+           +-00.1  0014:7a10
+           +-00.2  0014:7a20
+           +-00.3  0014:7a30
+           +-03.0  0014:7a13
+           +-04.0  0014:7a24
+           +-04.1  0014:7a14
+           +-05.0  0014:7a24
+           +-05.1  0014:7a14
+           +-07.0  0014:7a07
+           +-08.0  0014:7a18
+           +-09.0-[01]--
+           +-0d.0-[02]----00.0  1d97:2263
+           +-0f.0-[03]--
+           +-10.0-[04]--+-00.0  1002:6611
+           |            \-00.1  1002:aab0
+           +-13.0-[05]--
+           +-16.0  0014:7a1b
+           \-19.0  0014:7a34
+
+DEV_LS7A_PCIE_PORT5 is 00:13.0
+
+When LS7A connect to PCIe,
+
+00:00.0 Host bridge: Loongson Technology LLC Device 7a59
+00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
+00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
+)
+00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
+)
+00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
+)
+00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
+)
+00:06.0 Multimedia video controller: Loongson Technology LLC Device
+7a25 (rev 01)
+00:06.1 VGA compatible controller: Loongson Technology LLC Device 7a36 (rev=
+ 02)
+00:06.2 Audio device: Loongson Technology LLC Device 7a37
+00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
+Audio) Controller
+00:08.0 SATA controller: Loongson Technology LLC Device 7a18
+00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
+00:0a.0 PCI bridge: Loongson Technology LLC Device 7a39
+00:0b.0 PCI bridge: Loongson Technology LLC Device 7a39
+00:0c.0 PCI bridge: Loongson Technology LLC Device 7a39
+00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
+00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
+00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
+00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
+00:17.0 ISA bridge: Loongson Technology LLC LPC Controller (rev 01)
+00:19.0 USB controller: Loongson Technology LLC Device 7a34
+00:1c.0 PCI bridge: Loongson Technology LLC Device 3c09
+00:1d.0 IOMMU: Loongson Technology LLC Device 3c0f
+00:1e.0 PCI bridge: Loongson Technology LLC Device 3c09
+02:00.0 Ethernet controller: Device 1f0a:6801 (rev 01)
+08:00.0 PCI bridge: Loongson Technology LLC Device 3c19
+08:01.0 PCI bridge: Loongson Technology LLC Device 3c29
+08:02.0 PCI bridge: Loongson Technology LLC Device 3c29
+0c:00.0 PCI bridge: Loongson Technology LLC Device 3c19
+0c:01.0 PCI bridge: Loongson Technology LLC Device 3c19
+0c:04.0 IOMMU: Loongson Technology LLC Device 3c0f
+
+-[0000:00]-+-00.0  0014:7a59
+           +-03.0  0014:7a13
+           +-04.0  0014:7a24
+           +-04.1  0014:7a14
+           +-05.0  0014:7a24
+           +-05.1  0014:7a14
+           +-06.0  0014:7a25
+           +-06.1  0014:7a36
+           +-06.2  0014:7a37
+           +-07.0  0014:7a07
+           +-08.0  0014:7a18
+           +-09.0-[01]--
+           +-0a.0-[02]----00.0  1f0a:6801
+           +-0b.0-[03]--
+           +-0c.0-[04]--
+           +-0d.0-[05]--
+           +-0f.0-[06]--
+           +-10.0-[07]--
+           +-16.0  0014:7a1b
+           +-17.0  0014:7a0c
+           +-19.0  0014:7a34
+           +-1c.0-[08-0b]--+-00.0-[09]--
+           |               +-01.0-[0a]--
+           |               \-02.0-[0b]--
+           +-1d.0  0014:3c0f
+           \-1e.0-[0c-0e]--+-00.0-[0d]--
+                           +-01.0-[0e]--
+                           \-04.0  0014:3c0f
+
+DEV_LS7A_PCIE_PORT5 becomes 00:00.0
+
+
+Huacai
+
+>
+> With the old HT CPU, I imagine this:
+>
+>   [LS7A includes a HT port that doesn't appear as a PCI device and
+>   basically implements a PCIe Root Complex]
+>   00:00.0 Root Port to [bus 01-1f] (DEV_LS7A_PCIE_PORT5)
+>
+> With a new PCIe CPU, if DEV_LS7A_PCIE_PORT5 is a PCIe Upstream Port,
+> it would be part of a switch, so I'm imagining something like this:
+>
+>   00:00.0 Root Port to [bus 01-1f] (integrated into Loongson-3C6000)
+>   01:00.0 Upstream Port to [bus 02-1f] (DEV_LS7A_PCIE_PORT5)
+>   02:00.0 Downstream Port to [bus 03-1f] (part of the LS7A switch)
+>
+> In both cases, 00:00.0 and 01:00.0 (DEV_LS7A_PCIE_PORT5) would be a
+> Type 1 device that is enumerated as a PCI-to-PCI bridge, which would
+> normally have a Class Code of 0x0604 (PCI_CLASS_BRIDGE_PCI).
+>
+> But you're saying DEV_LS7A_PCIE_PORT5 has a Class Code of
+> PCI_CLASS_BRIDGE_HOST, which is 0x0600.  That would normally be a Type
+> 0 device and would not have a secondary bus.
+>
+> > > I'm curious about what's going on here because the normal PCI MSI
+> > > support should set PCI_MSI_FLAGS_ENABLE since it's completely
+> > > specified by the spec, which says it controls whether *this function*
+> > > can use MSI.
+> > >
+> > > But in this case PCI_MSI_FLAGS_ENABLE seems to have non-architected
+> > > behavior of controlling MSI from *other* devices below this host
+> > > bridge?  That's a little bit weird too because MSI looks like DMA to
+> > > any bridges upstream from the device that is using MSI, and the Bus
+> > > Master Enable bit in those bridges controls whether they forward thos=
+e
+> > > MSI DMA accesses upstream.  And of course the PCI core should already
+> > > make sure those bridges have Bus Master Enable set when downstream
+> > > devices use MSI.
+> >
+> > In my opinion this is a hardware bug, when DEV_LS7A_PCIE_PORT5 works
+> > as a host bridge, it should enable MSI automatically. But
+> > unfortunately hardware doesn't behave like this, so we need a quirk
+> > here.
+>
+> I'm fine with the quirk to work around this issue.  But the commit log
+> is confusing.
+>
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Signed-off-by: Sheng Wu <wusheng@loongson.cn>
+> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > ---
+> > > >  drivers/pci/controller/pci-loongson.c | 12 ++++++++++++
+> > > >  1 file changed, 12 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/co=
+ntroller/pci-loongson.c
+> > > > index 8b34ccff073a..ffc581605834 100644
+> > > > --- a/drivers/pci/controller/pci-loongson.c
+> > > > +++ b/drivers/pci/controller/pci-loongson.c
+> > > > @@ -163,6 +163,18 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON=
+,
+> > > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+> > > >                       DEV_LS7A_HDMI, loongson_pci_pin_quirk);
+> > > >
+> > > > +static void loongson_pci_msi_quirk(struct pci_dev *dev)
+> > > > +{
+> > > > +     u16 val, class =3D dev->class >> 8;
+> > > > +
+> > > > +     if (class =3D=3D PCI_CLASS_BRIDGE_HOST) {
+> > > > +             pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAG=
+S, &val);
+> > > > +             val |=3D PCI_MSI_FLAGS_ENABLE;
+> > > > +             pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLA=
+GS, val);
+> > > > +     }
+> > > > +}
+> > > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT=
+5, loongson_pci_msi_quirk);
+> > > > +
+> > > >  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus=
+ *bus)
+> > > >  {
+> > > >       struct pci_config_window *cfg;
+> > > > --
+> > > > 2.43.0
+> > > >
+>
 
