@@ -1,220 +1,191 @@
-Return-Path: <linux-pci+bounces-10496-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10497-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFF01934BAD
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:30:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C03B934C29
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 13:04:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4874286531
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 10:29:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11CECB20AC0
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 11:04:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F4912D76F;
-	Thu, 18 Jul 2024 10:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFtsf01i"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149FE12A14C;
+	Thu, 18 Jul 2024 11:04:09 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E9912C49B
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 10:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA930639;
+	Thu, 18 Jul 2024 11:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721298588; cv=none; b=EUw5qoFvH71ac69dwy5gZzaFowY31e6tLAswJapKGiUgGL6nXBSbcJvnrMNEsOkOwqRcH4iqfXxQcw7nMHHxutyVKeT/yZ8GQCtD9GSplK7U3TIwb2IcdUExlLbiyn6syk34ZKcdXh+mrs+KY3/RcaU/bmfa8CHRcdLQ1AlQq7U=
+	t=1721300649; cv=none; b=cXkwow47dNvr4ONpyTZrfquEHlReOehQavtig+w9ja2m9mNjXhbTYp7V+5thH4RgSzOoJNGIhc614uqP3TCX4Aegta8RJYo7KBCwAqmWnfj7nKJaqlYyOimr5R2ZMjMPWuBaaWtzcBEwJxCzwYGwPyDlpfO80Yg5khXito1DPFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721298588; c=relaxed/simple;
-	bh=3Qyk3nLyLDIHrxPcP2TVz5Xq7b5aJdgiNMZExcslJDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V1P2rGKLZWfqEjHv7hO/b5UZZcZmBgbv8Xv4TCy5Pl7qnU78PidLMYbmpdRC0IJC75XrdSMOqZ06O7Ocl53XpOz4dcPjCRoeni3FLNPLk787SyWU2cGP58GKcu5iuscSLVDi5fsGMnhSLvlslwMNcz5409eoZ4XlZJYOC+YGy78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OFtsf01i; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-25e3d388580so329556fac.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 03:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721298585; x=1721903385; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Qn595tj+8ziMn0/QIYoTkBU+IARmrWlkcsfgecQj10Y=;
-        b=OFtsf01icfZ0OGFJL4tHDxXooNhlpx2q6FBXzNRliE/tcdziWs9NqzF6mrMD7k5sSK
-         93ak/qihLNJ1qvSU8uB3H4N0oO+0LzkPf0tOZXWG9W1BWkOEc04gOvr72gji8t8T1P/L
-         91FFi3fVmji0vcbUUfIDhWoQAlh9Jx6pR86PQPas+J4EchFP36cL9U8CRz/ZqBvHfXsl
-         SFG7nJb5L/U5GC7jQuH7dW2TSxrjfn4YAGnsZAxi9JeYpAxnswbc+Fl28THlAA2i6iO6
-         XM+TLtr/TYxFAmpl39E1QvXzxSeUhkihqgHlvJ8PE2b3cHOfAhJgBf1oMLLF4jno/k6e
-         02tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721298585; x=1721903385;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qn595tj+8ziMn0/QIYoTkBU+IARmrWlkcsfgecQj10Y=;
-        b=ALzdWbMN9QOouDDtHzzredAjt54nLy4VeC35AsHGaEzj7GWZdfnPcQZLFtgmTKagA+
-         m//jCUV0ML1wjXC+HkwTdF1G7nNqtIs4HyfEfVMPpAcwy38FAlqXTIjrTkqv93yluBBy
-         7PukOuhmk02xTL64nttFa8uzBz+59goJVZHdoRtVnpKuZO+bFHRFhVzgyxwNVeYgnEW3
-         8CcGw2ws6wRLDle1VQ0kpgJHO1R4wZHED1OVWaBW1qz1M0EAM2FoIXiFsWdnHc1Y9TOB
-         r01fYYnf1y8jYUd4NFD8M+AIjVafDvfOU/WhjrJhMgU9WmZ4uu8PaxXnCF/sLrMm4PsX
-         UdGw==
-X-Forwarded-Encrypted: i=1; AJvYcCW41kGlqmlkNw1BCx1eDwly5ZpgJEi7pFe8YzEFGrMWOAyoL6+8gjl0C3hG/L/NFa7pQ4UjnLMd42P61ZaQL42BxPsx2WGUODHd
-X-Gm-Message-State: AOJu0YxAMxFwqETmsljalC7E6TRYA3sCIVpaYb56ZppW3V++rgHsLkrA
-	Z5tv6G+fjpnaCr+OWKCs55Yp7eQkIwIxFjPj7/3Y9EX4g91trZLYpBNOZNhunA==
-X-Google-Smtp-Source: AGHT+IEqtMgjvMxkbWmWOdXGGWp0Zjuz/CWNaJsNsiv+FSoHC2NTjU/GPw8xwFN3knQ+HKmaZvHkxw==
-X-Received: by 2002:a05:6871:149:b0:25e:12b9:be40 with SMTP id 586e51a60fabf-260d9221b48mr3740633fac.25.1721298584639;
-        Thu, 18 Jul 2024 03:29:44 -0700 (PDT)
-Received: from thinkpad ([220.158.156.207])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7ed56sm9640357b3a.125.2024.07.18.03.29.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 03:29:44 -0700 (PDT)
-Date: Thu, 18 Jul 2024 15:59:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mayank Rana <quic_mrana@quicinc.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 12/13] PCI: qcom: Simulate PCIe hotplug using 'global'
- interrupt
-Message-ID: <20240718102938.GA8877@thinkpad>
-References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
- <20240717-pci-qcom-hotplug-v2-12-71d304b817f8@linaro.org>
- <02b94a07-fcd6-4a48-bead-530b81c8a27e@quicinc.com>
+	s=arc-20240116; t=1721300649; c=relaxed/simple;
+	bh=I/0ZzAVCOebuM9O7BzGpCAsAC3hNWzhHlKZRe6qlOJM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=atanbCL04G+BRkeMtyq/uQaQp7VdKEzJhUYFx32eHQmCCvrqmRob0fD4a37M3lBA/oPrtHb6f/dN++WfaF+qugLm780OY94XG2BsvgnuCPoZidop1Cx9rSXSNDJwIWiwpiQKxmKufKPlcWAuvVSZwVe3g8ZGdA2H3aYYNIK5J5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WPqdr6yQwz6HJdS;
+	Thu, 18 Jul 2024 19:02:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 09F28140593;
+	Thu, 18 Jul 2024 19:04:02 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
+ 2024 12:04:01 +0100
+Date: Thu, 18 Jul 2024 12:04:00 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Lukas Wunner <lukas@wunner.de>
+CC: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, "James
+ Bottomley" <James.Bottomley@HansenPartnership.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linuxarm@huawei.com>, David Box
+	<david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Li, Ming"
+	<ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair
+ Francis <alistair.francis@wdc.com>, Wilfred Mallawa
+	<wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, "Alexey
+ Kardashevskiy" <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>,
+	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Jason Gunthorpe
+	<jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, Jerome Glisse
+	<jglisse@google.com>, Sean Christopherson <seanjc@google.com>, "Alexander
+ Graf" <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>, Eric Biggers
+	<ebiggers@google.com>
+Subject: Re: [PATCH v2 03/18] X.509: Move certificate length retrieval into
+ new helper
+Message-ID: <20240718120400.00006a70@Huawei.com>
+In-Reply-To: <cf34e283103de55b07fcddcbe39b60ea32b6d891.1719771133.git.lukas@wunner.de>
+References: <cover.1719771133.git.lukas@wunner.de>
+	<cf34e283103de55b07fcddcbe39b60ea32b6d891.1719771133.git.lukas@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02b94a07-fcd6-4a48-bead-530b81c8a27e@quicinc.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Jul 17, 2024 at 03:57:11PM -0700, Mayank Rana wrote:
-> Hi Mani
+On Sun, 30 Jun 2024 21:38:00 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> The upcoming in-kernel SPDM library (Security Protocol and Data Model,
+> https://www.dmtf.org/dsp/DSP0274) needs to retrieve the length from
+> ASN.1 DER-encoded X.509 certificates.
 > 
-> I don't think we can suggest that usage of link up event with Global IRQ as
-> simulate PCIe hotplug. hotplug is referring to allow handling of both
-> add or remove of endpoint device whereas here you are using global IRQ as
-> last step to rescan bus if endpoint is power up later after link training is
-> initiated.
+> Such code already exists in x509_load_certificate_list(), so move it
+> into a new helper for reuse by SPDM.
 > 
-
-Why not? Well it is not entirely the standard 'hotplug' and that's why I
-referred it as 'simulating hotplug'.
-
-The point of having this feature is to avoid the hassle of rescanning the bus
-manually when the devices are connected to this bus post boot.
-
-> Will this work if you remove endpoint device and add it back again ?
+> Export the helper so that SPDM can be tristate.  (Some upcoming users of
+> the SPDM libray may be modular, such as SCSI and ATA.)
 > 
-
-No, not currently. But we could add that logic using LINK_DOWN event. Though,
-when the device comes back again, it will not get enumerated successfully due to
-a bug in the link training part (which I plan to address later). But this
-issue is irrespective of this hotplug simulation.
-
-> Regards,
-> Mayank
-> On 7/17/2024 10:03 AM, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Historically, Qcom PCIe RC controllers lack standard hotplug support. So
-> > when an endpoint is attached to the SoC, users have to rescan the bus
-> > manually to enumerate the device. But this can be avoided by simulating the
-> > PCIe hotplug using Qcom specific way.
-> > 
-> > Qcom PCIe RC controllers are capable of generating the 'global' SPI
-> > interrupt to the host CPUs. The device driver can use this event to
-> > identify events such as PCIe link specific events, safety events etc...
-> > 
-> > One such event is the PCIe Link up event generated when an endpoint is
-> > detected on the bus and the Link is 'up'. This event can be used to
-> > simulate the PCIe hotplug in the Qcom SoCs.
-> > 
-> > So add support for capturing the PCIe Link up event using the 'global'
-> > interrupt in the driver. Once the Link up event is received, the bus
-> > underneath the host bridge is scanned to enumerate PCIe endpoint devices,
-> > thus simulating hotplug.
-> > 
-> > All of the Qcom SoCs have only one rootport per controller instance. So
-> > only a single 'Link up' event is generated for the PCIe controller.
-> > 
-> > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/pci/controller/dwc/pcie-qcom.c | 55 +++++++++++++++++++++++++++++++++-
-> >   1 file changed, 54 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0180edf3310e..a1d678fe7fa5 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -50,6 +50,9 @@
-> >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> >   #define PARF_Q2A_FLUSH				0x1ac
-> >   #define PARF_LTSSM				0x1b0
-> > +#define PARF_INT_ALL_STATUS			0x224
-> > +#define PARF_INT_ALL_CLEAR			0x228
-> > +#define PARF_INT_ALL_MASK			0x22c
-> >   #define PARF_SID_OFFSET				0x234
-> >   #define PARF_BDF_TRANSLATE_CFG			0x24c
-> >   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> > @@ -121,6 +124,9 @@
-> >   /* PARF_LTSSM register fields */
-> >   #define LTSSM_EN				BIT(8)
-> > +/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > +#define PARF_INT_ALL_LINK_UP			BIT(13)
-> > +
-> >   /* PARF_NO_SNOOP_OVERIDE register fields */
-> >   #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-> >   #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
-> > @@ -1488,6 +1494,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> >   				    qcom_pcie_link_transition_count);
-> >   }
-> > +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> > +{
-> > +	struct qcom_pcie *pcie = data;
-> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> > +	struct device *dev = pcie->pci->dev;
-> > +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-> > +
-> > +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
-> > +
-> > +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-> > +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> > +		/* Rescan the bus to enumerate endpoint devices */
-> > +		pci_lock_rescan_remove();
-> > +		pci_rescan_bus(pp->bridge->bus);
-> > +		pci_unlock_rescan_remove();
-> How do you handle case where endpoint is already enumerated, and seeing link
-> up event in parallel or later ? will it go ahead to rescan bus again here ?
+> No functional change intended.
 > 
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Rereading some of these early patches to try and get my head back into
+what is going on here..
 
-If the endpoint is already enumerated, there will be no Link up event. Unless
-the controller reinitializes the bus (which is the current behavior).
+Passing comments inline, but given you are just moving the code
+rather than writing it for the first time I don't mind keeping it as
+things stand.
 
-If the endpoint is already powered on during controller probe, then it will be
-enumerated during dw_pcie_host_init() and since we register the IRQ handler
-afterwards, there will be no Link up in that case.
-
-This feature is only applicable for endpoints that comes up post boot.
-
-> Also can you consider doing this outside hardirq context ?
+> ---
+>  crypto/asymmetric_keys/x509_loader.c | 38 +++++++++++++++++++---------
+>  include/keys/asymmetric-type.h       |  2 ++
+>  2 files changed, 28 insertions(+), 12 deletions(-)
 > 
+> diff --git a/crypto/asymmetric_keys/x509_loader.c b/crypto/asymmetric_keys/x509_loader.c
+> index a41741326998..25ff027fad1d 100644
+> --- a/crypto/asymmetric_keys/x509_loader.c
+> +++ b/crypto/asymmetric_keys/x509_loader.c
+> @@ -4,28 +4,42 @@
+>  #include <linux/key.h>
+>  #include <keys/asymmetric-type.h>
+>  
+> +ssize_t x509_get_certificate_length(const u8 *p, unsigned long buflen)
+> +{
+> +	ssize_t plen;
+> +
+> +	/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
+> +	 * than 256 bytes in size.
+> +	 */
+> +	if (buflen < 4)
+> +		return -EINVAL;
+> +
+> +	if (p[0] != 0x30 &&
+> +	    p[1] != 0x82)
 
-This is already running in threaded irq context (bottom half), wouldn't that
-be enough?
+Not sure readability would be hurt significantly by putting that on one line.
 
-- Mani
+> +		return -EINVAL;
+> +
+> +	plen = (p[2] << 8) | p[3];
 
--- 
-மணிவண்ணன் சதாசிவம்
+get_unaligned_be16() perhaps
+
+> +	plen += 4;
+It's kind of obvious, but maybe a comment no why +4 would be good.
+> +	if (plen > buflen)
+> +		return -EINVAL;
+> +
+> +	return plen;
+> +}
+> +EXPORT_SYMBOL_GPL(x509_get_certificate_length);
+> +
+>  int x509_load_certificate_list(const u8 cert_list[],
+>  			       const unsigned long list_size,
+>  			       const struct key *keyring)
+>  {
+>  	key_ref_t key;
+>  	const u8 *p, *end;
+> -	size_t plen;
+> +	ssize_t plen;
+>  
+>  	p = cert_list;
+>  	end = p + list_size;
+>  	while (p < end) {
+> -		/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
+> -		 * than 256 bytes in size.
+> -		 */
+> -		if (end - p < 4)
+> -			goto dodgy_cert;
+> -		if (p[0] != 0x30 &&
+> -		    p[1] != 0x82)
+> -			goto dodgy_cert;
+> -		plen = (p[2] << 8) | p[3];
+> -		plen += 4;
+> -		if (plen > end - p)
+> +		plen = x509_get_certificate_length(p, end - p);
+> +		if (plen < 0)
+>  			goto dodgy_cert;
+>  
+>  		key = key_create_or_update(make_key_ref(keyring, 1),
+> diff --git a/include/keys/asymmetric-type.h b/include/keys/asymmetric-type.h
+> index 69a13e1e5b2e..e2af07fec3c6 100644
+> --- a/include/keys/asymmetric-type.h
+> +++ b/include/keys/asymmetric-type.h
+> @@ -84,6 +84,8 @@ extern struct key *find_asymmetric_key(struct key *keyring,
+>  				       const struct asymmetric_key_id *id_2,
+>  				       bool partial);
+>  
+> +ssize_t x509_get_certificate_length(const u8 *p, unsigned long buflen);
+> +
+>  int x509_load_certificate_list(const u8 cert_list[], const unsigned long list_size,
+>  			       const struct key *keyring);
+>  
+
 
