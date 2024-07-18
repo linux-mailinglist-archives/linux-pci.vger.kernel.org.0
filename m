@@ -1,293 +1,273 @@
-Return-Path: <linux-pci+bounces-10534-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10535-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5045A93704E
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 23:56:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 828959370EF
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2024 01:04:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FE60B213A4
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 21:56:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DC9C0B22000
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 23:04:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133AA145B10;
-	Thu, 18 Jul 2024 21:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D0E146A64;
+	Thu, 18 Jul 2024 23:03:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gV4cyZZC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSnR4HKU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD10145B00;
-	Thu, 18 Jul 2024 21:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8DC146A60;
+	Thu, 18 Jul 2024 23:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721339753; cv=none; b=IQycwDKEmjj7gGZbzHovVTkzk59TBj9dT1DY/bZ+WtFPOZiPSLPiceI/9IPmR8QONUg/8xakskXAUTy8Ugqy2g+Izuu+0N0X1qXo2YzORcostgCQ4Xror5h0fBZaCfwbup9/JBnmyZ64a0jf59lZ/dL4xI7KrHh6v14vDEBJPzE=
+	t=1721343831; cv=none; b=rBmzfeZNhBK70G4rECjrEToUtW2KfWS2GFMKq6Z7wOvMkUZja8TnaG9HPG4OrQskY0fkbbpmrbxM1kVOv2AKCa9+Em7SkmKKGKGMmnetZowZq5obeQVCVx4lISJR+YQ2qQYDSYuIGbRC8kCYMCY8gWegvMCrRL+juy4qr694mlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721339753; c=relaxed/simple;
-	bh=aQn20DkKZX8DLc+OVqic662SFlNsLXgj0L6rqFW+IO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uKyDWpGdXhyybHnxeryxnFI5AlpUoIkdriZIwegqeIK0ZeZKWDN2ufU4lDVPCYdg8rY6W/PZJIDmZfHjEU2mWFLXRgko2fZpdYNi1ciyoY1i5gRmngMdrpHBwuchznh+hFJMAleKw0SZKWJBtQ4fYJExCfTsWJaW2bxA+GzRjYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gV4cyZZC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46IBD0wj023117;
-	Thu, 18 Jul 2024 21:52:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	h0mCvED66flAoqckntQBt2/IbGwfigCgEEWsJja9jeg=; b=gV4cyZZCVK5ZE+pI
-	S3W5U1iOrOb7cLrOkkgnTERXEYQ9WER3JUUY3TpcRLLl6EfH+TsBDK0WrIbfIZmq
-	/FOwJ76nUrbnZ/OXqRBsTvp6cNPNz8mV94xtIv0cX7VgRs8FqUayVaYLvJsiVRHi
-	ZlZLuZ+hIKhcOGYc0emEutJxrVTqosqv7fRzLx1x3oTwWQVeB8L+URBUaekaxzTU
-	En6vWvaHT7QmDjdHrb8G91tdTmIowsaOSpnQaqeGet0egbkN8kEmwjoTOHrH6wLR
-	OZcqtbVYEhKvjTZDCiQcNwdCxW3Y67Z8Kh5kZpuhBU6wev/I0oP5yobLfSEV82AO
-	xciYIg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfnprdw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 21:52:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46ILqLFZ027887
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 21:52:21 GMT
-Received: from [10.110.7.185] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Jul
- 2024 14:52:21 -0700
-Message-ID: <e04f8a63-3dc8-4a58-a9a4-4c70debd2b93@quicinc.com>
-Date: Thu, 18 Jul 2024 14:52:20 -0700
+	s=arc-20240116; t=1721343831; c=relaxed/simple;
+	bh=Jf2kDNED6Tr0S0iK4RToS1Yqyo2BDO2KGz6xiv5xhvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=p2WYrbCbrR1mkNC+hdQckaxFbfo9gm2wdMULvtsBt2XanAxlVQkrmdjt3S9aCdYSo6jt0PJDWx7nuUmKS4rf0UIehjE7/rICyUXXE5sxSd/aQqLUeJ0x6HLvTy/jot8XLbaxKq0D3pKpIA1knsUY8Kx3oo+/hMKcISwDzdtMaKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSnR4HKU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5F0C4AF0F;
+	Thu, 18 Jul 2024 23:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721343830;
+	bh=Jf2kDNED6Tr0S0iK4RToS1Yqyo2BDO2KGz6xiv5xhvk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rSnR4HKUACHvBrwOgQYDXPMxzUxEMb3Hzgwuy8/8xhL9xRYRndjuZ8JFzDdKAuAOB
+	 /+v4/rl2ptrj/CEwWwrFvXGsF2xFkHxGovkv0COAi8D+7yC9typx3JtB9iuZyIwAui
+	 yfYqGNqH+JaN6G900wsClCKmi49OGZiQ6G+XhPCEl8madl2MuU+t7bH4tKai0lRlc3
+	 fCYdv1ZOA4eFQdS3HuV+dGQKv5mNGwRZw9LyM2DJOekh0vXq3ZuFy0RJpB6uGOdcBb
+	 ZsYVw7oRkl32/OyS2abO381wXV8TBi6aq9kNjXB1YNImAdYOSRpPVWR6yBY/xbZ7Au
+	 0NjJiHzixovDQ==
+Date: Thu, 18 Jul 2024 18:03:48 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, loongarch@lists.linux.dev,
+	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+	Sheng Wu <wusheng@loongson.cn>
+Subject: Re: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
+Message-ID: <20240718230348.GA570741@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Avoid DBI and ATU register space mirror
- to BAR/MMIO region
-To: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, <jingoohan1@gmail.com>,
-        <manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20240718051258.1115271-1-quic_pyarlaga@quicinc.com>
- <20240718051258.1115271-3-quic_pyarlaga@quicinc.com>
-Content-Language: en-US
-From: Mayank Rana <quic_mrana@quicinc.com>
-In-Reply-To: <20240718051258.1115271-3-quic_pyarlaga@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: emAt5mAXUMMkMGMADMyQ74DUJyIcGVZH
-X-Proofpoint-ORIG-GUID: emAt5mAXUMMkMGMADMyQ74DUJyIcGVZH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_15,2024-07-18_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 clxscore=1015 spamscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2407180146
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H678eySqhLr8cYhCsrJqm1acFcRAFJY_dQOpEHkRLVAGQ@mail.gmail.com>
 
-Hi Prudhvi
+On Thu, Jul 18, 2024 at 09:01:17PM +0800, Huacai Chen wrote:
+> On Thu, Jul 11, 2024 at 3:48 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, Jul 10, 2024 at 11:04:24AM +0800, Huacai Chen wrote:
+> > > On Wed, Jul 10, 2024 at 5:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > On Wed, Jun 12, 2024 at 02:53:15PM +0800, Huacai Chen wrote:
+> > > > > LS7A chipset can be used as a downstream bridge which connected to a
+> > > > > high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as the
+> > > > > upward port. We should always enable MSI caps of this port, otherwise
+> > > > > downstream devices cannot use MSI.
+> > > >
+> > > > Can you clarify this topology a bit?  Since DEV_LS7A_PCIE_PORT5
+> > > > apparently has a class of PCI_CLASS_BRIDGE_HOST, I guess that in PCIe
+> > > > terms, it is basically a PCI host bridge (Root Complex, if you prefer)
+> > > > that is materialized as a PCI Endpoint?
+> > >
+> > > Now most of the existing LoongArch CPUs don't have an integrated PCIe
+> > > RC, instead they have HyperTransport controllers. But the latest CPU
+> > > (Loongson-3C6000) has an integrated PCIe RC and removed
+> > > HyperTransport.
+> > >
+> > > LS7A bridge can work together with both old (HT) CPUs and new (PCIe)
+> > > CPUs. If it is connected to an old CPU, its upstream port is a HT
+> > > port, and DEV_LS7A_PCIE_PORT5 works as a normal downstream PCIe port.
+> > > If it is connected to a new CPU, DEV_LS7A_PCIE_PORT5 works as an
+> > > upstream port (the class code becomes PCI_CLASS_BRIDGE_HOST) and the
+> > > HT port is idle.
+> >
+> > What does lspci look like for both the old HT and the new PCIe CPUs?
+> When LS7A connect to HT,
+> 
+> 00:00.0 Host bridge: Loongson Technology LLC Hyper Transport Bridge Controller
+> 00:00.1 Host bridge: Loongson Technology LLC Hyper Transport Bridge
+> Controller (rev 01)
+> 00:00.2 Host bridge: Loongson Technology LLC Device 7a20 (rev 01)
+> 00:00.3 Host bridge: Loongson Technology LLC Device 7a30
+> 00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
+> 00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02)
+> 00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02)
+> 00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02)
+> 00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02)
+> 00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
+> Audio) Controller
+> 00:08.0 SATA controller: Loongson Technology LLC Device 7a18
+> 00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
+> 00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
+> 00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
+> 00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
+> 00:13.0 PCI bridge: Loongson Technology LLC Device 7a59
+> 00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
+> 00:19.0 USB controller: Loongson Technology LLC Device 7a34
+> 02:00.0 Non-Volatile memory controller: Shenzhen Longsys Electronics
+> Co., Ltd. SM2263EN/SM2263XT-based OEM NVME SSD (DRAM-less) (rev 03)
+> 04:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> [AMD/ATI] Oland [Radeon HD 8570 / R5 430 OEM / R7 240/340 / Radeon 520
+> OEM] (rev 87)
+> 04:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
+> Oland/Hainan/Cape Verde/Pitcairn HDMI Audio [Radeon HD 7000 Series]
+> 
+> -[0000:00]-+-00.0  0014:7a00
+>            +-00.1  0014:7a10
+>            +-00.2  0014:7a20
+>            +-00.3  0014:7a30
+>            +-03.0  0014:7a13
+>            +-04.0  0014:7a24
+>            +-04.1  0014:7a14
+>            +-05.0  0014:7a24
+>            +-05.1  0014:7a14
+>            +-07.0  0014:7a07
+>            +-08.0  0014:7a18
+>            +-09.0-[01]--
+>            +-0d.0-[02]----00.0  1d97:2263
+>            +-0f.0-[03]--
+>            +-10.0-[04]--+-00.0  1002:6611
+>            |            \-00.1  1002:aab0
+>            +-13.0-[05]--
+>            +-16.0  0014:7a1b
+>            \-19.0  0014:7a34
+> 
+> DEV_LS7A_PCIE_PORT5 is 00:13.0
 
-On 7/17/2024 10:12 PM, Prudhvi Yarlagadda wrote:
-> PARF hardware block which is a wrapper on top of DWC PCIe controller
-> mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
-> register to get the size of the memory block to be mirrored and uses
-> PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
-> address of DBI and ATU space inside the memory block that is being
-> mirrored.
+In this case, the DEV_LS7A_PCIE_PORT5 at 00:13.0 is a Header Type 1
+(PCI-to-PCI bridge).  I assume it has a PCIe Capability that
+identifies it as Root Port, and the secondary bus 05 is probably a
+PCIe Link leading to a slot.
+
+I found "lspci -v" output similar to this at
+https://linux-hardware.org/?probe=ad154077da&log=lspci_all
+
+> When LS7A connect to PCIe,
 > 
-> When a memory region which is located above the SLV_ADDR_SPACE_SIZE
-> boundary is used for BAR region then there could be an overlap of DBI and
-> ATU address space that is getting mirrored and the BAR region. This
-> results in DBI and ATU address space contents getting updated when a PCIe
-> function driver tries updating the BAR/MMIO memory region. Reference
-> memory map of the PCIe memory region with DBI and ATU address space
-> overlapping BAR region is as below.
+> 00:00.0 Host bridge: Loongson Technology LLC Device 7a59
+> 00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
+> 00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02)
+> 00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02)
+> 00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02)
+> 00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02)
+> 00:06.0 Multimedia video controller: Loongson Technology LLC Device
+> 7a25 (rev 01)
+> 00:06.1 VGA compatible controller: Loongson Technology LLC Device 7a36 (rev 02)
+> 00:06.2 Audio device: Loongson Technology LLC Device 7a37
+> 00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
+> Audio) Controller
+> 00:08.0 SATA controller: Loongson Technology LLC Device 7a18
+> 00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
+> 00:0a.0 PCI bridge: Loongson Technology LLC Device 7a39
+> 00:0b.0 PCI bridge: Loongson Technology LLC Device 7a39
+> 00:0c.0 PCI bridge: Loongson Technology LLC Device 7a39
+> 00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
+> 00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
+> 00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
+> 00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
+> 00:17.0 ISA bridge: Loongson Technology LLC LPC Controller (rev 01)
+> 00:19.0 USB controller: Loongson Technology LLC Device 7a34
+> 00:1c.0 PCI bridge: Loongson Technology LLC Device 3c09
+> 00:1d.0 IOMMU: Loongson Technology LLC Device 3c0f
+> 00:1e.0 PCI bridge: Loongson Technology LLC Device 3c09
+> 02:00.0 Ethernet controller: Device 1f0a:6801 (rev 01)
+> 08:00.0 PCI bridge: Loongson Technology LLC Device 3c19
+> 08:01.0 PCI bridge: Loongson Technology LLC Device 3c29
+> 08:02.0 PCI bridge: Loongson Technology LLC Device 3c29
+> 0c:00.0 PCI bridge: Loongson Technology LLC Device 3c19
+> 0c:01.0 PCI bridge: Loongson Technology LLC Device 3c19
+> 0c:04.0 IOMMU: Loongson Technology LLC Device 3c0f
 > 
->                          |---------------|
->                          |               |
->                          |               |
->          ------- --------|---------------|
->             |       |    |---------------|
->             |       |    |       DBI     |
->             |       |    |---------------|---->DBI_BASE_ADDR
->             |       |    |               |
->             |       |    |               |
->             |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
->             |    BAR/MMIO|---------------|
->             |    Region  |       ATU     |
->             |       |    |---------------|---->ATU_BASE_ADDR
->             |       |    |               |
->          PCIe       |    |---------------|
->          Memory     |    |       DBI     |
->          Region     |    |---------------|---->DBI_BASE_ADDR
->             |       |    |               |
->             |    --------|               |
->             |            |               |---->SLV_ADDR_SPACE_SIZE
->             |            |---------------|
->             |            |       ATU     |
->             |            |---------------|---->ATU_BASE_ADDR
->             |            |               |
->             |            |---------------|
->             |            |       DBI     |
->             |            |---------------|---->DBI_BASE_ADDR
->             |            |               |
->             |            |               |
->          ----------------|---------------|
->                          |               |
->                          |               |
->                          |               |
->                          |---------------|
+> -[0000:00]-+-00.0  0014:7a59
+>            +-03.0  0014:7a13
+>            +-04.0  0014:7a24
+>            +-04.1  0014:7a14
+>            +-05.0  0014:7a24
+>            +-05.1  0014:7a14
+>            +-06.0  0014:7a25
+>            +-06.1  0014:7a36
+>            +-06.2  0014:7a37
+>            +-07.0  0014:7a07
+>            +-08.0  0014:7a18
+>            +-09.0-[01]--
+>            +-0a.0-[02]----00.0  1f0a:6801
+>            +-0b.0-[03]--
+>            +-0c.0-[04]--
+>            +-0d.0-[05]--
+>            +-0f.0-[06]--
+>            +-10.0-[07]--
+>            +-16.0  0014:7a1b
+>            +-17.0  0014:7a0c
+>            +-19.0  0014:7a34
+>            +-1c.0-[08-0b]--+-00.0-[09]--
+>            |               +-01.0-[0a]--
+>            |               \-02.0-[0b]--
+>            +-1d.0  0014:3c0f
+>            \-1e.0-[0c-0e]--+-00.0-[0d]--
+>                            +-01.0-[0e]--
+>                            \-04.0  0014:3c0f
 > 
-> Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
-> used for BAR region which is why the above mentioned issue is not
-> encountered. This issue is discovered as part of internal testing when we
-> tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
-> we are trying to fix this.
-> 
-> As PARF hardware block mirrors DBI and ATU register space after every
-> PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, write
-> U32_MAX (all 0xFF's) to PARF_SLV_ADDR_SPACE_SIZE register to avoid
-> mirroring DBI and ATU to BAR/MMIO region. Write the physical base address
-> of DBI and ATU register blocks to PARF_DBI_BASE_ADDR (default 0x0) and
-> PARF_ATU_BASE_ADDR (default 0x1000) respectively to make sure DBI and ATU
-> blocks are at expected memory locations.
-> 
-> The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
-> and PARF_ATU_BASE_ADDR are applicable for platforms that use PARF
-> Qcom IP rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
-> PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for PARF Qcom IP rev 2.3.3.
-> PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for PARF
-> Qcom IP rev 1.0.0, 2.3.2 and 2.4.0. Updating the init()/post_init()
-> functions of the respective PARF versions to program applicable
-> PARF_DBI_BASE_ADDR, PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR
-> register offsets. And remove the unused SLV_ADDR_SPACE_SZ macro.
-> 
-> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-> ---
->   drivers/pci/controller/dwc/pcie-qcom.c | 62 +++++++++++++++++++-------
->   1 file changed, 45 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 0180edf3310e..845c7641431f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -45,6 +45,7 @@
->   #define PARF_PHY_REFCLK				0x4c
->   #define PARF_CONFIG_BITS			0x50
->   #define PARF_DBI_BASE_ADDR			0x168
-> +#define PARF_SLV_ADDR_SPACE_SIZE		0x16C
->   #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->   #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
->   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-[...]> +static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (pci->dbi_phys_addr)
-> +		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-> +							PARF_DBI_BASE_ADDR);
-> +
-> +	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-We can't update PARF_SLV_ADDR_SPACE_SIZE without updating 
-PARF_DBI_BASE_ADDR.
-Please make dbi_phys_addr mandatory to update PARF_SLV_ADDR_SPACE_SIZE.
-> +}
-> +
-> +static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (pci->dbi_phys_addr) {
-> +		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-> +							PARF_DBI_BASE_ADDR_V2);
-> +		writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
-> +						PARF_DBI_BASE_ADDR_V2_HI);
-> +	}
-> +
-> +	if (pci->atu_phys_addr) {
-> +		writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
-> +							PARF_ATU_BASE_ADDR);
-> +		writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
-> +							PARF_ATU_BASE_ADDR_HI);
-> +	}
-> +
-> +	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
-> +	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
-Same as above. atu_phys_addr shall be optional here but not 
-dbi_phys_addr to update PARF_SLV_ADDR_SPACE_SIZE.
-> +}
-> +
->   static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
->   {
->   	u32 val;
-> @@ -540,8 +576,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
->   
->   static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
->   {
-> -	/* change DBI base address */
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> +	qcom_pcie_configure_dbi_base(pcie);
->   
->   	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->   		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
-> @@ -628,8 +663,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
->   	val &= ~PHY_TEST_PWR_DOWN;
->   	writel(val, pcie->parf + PARF_PHY_CTRL);
->   
-> -	/* change DBI base address */
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> +	qcom_pcie_configure_dbi_base(pcie);
->   
->   	/* MAC PHY_POWERDOWN MUX DISABLE  */
->   	val = readl(pcie->parf + PARF_SYS_CTRL);
-> @@ -811,13 +845,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
->   	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->   	u32 val;
->   
-> -	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> -
->   	val = readl(pcie->parf + PARF_PHY_CTRL);
->   	val &= ~PHY_TEST_PWR_DOWN;
->   	writel(val, pcie->parf + PARF_PHY_CTRL);
->   
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> +	qcom_pcie_configure_dbi_atu_base(pcie);
->   
->   	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
->   		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-> @@ -913,8 +945,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->   	val &= ~PHY_TEST_PWR_DOWN;
->   	writel(val, pcie->parf + PARF_PHY_CTRL);
->   
-> -	/* change DBI base address */
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> +	qcom_pcie_configure_dbi_atu_base(pcie);
->   
->   	/* MAC PHY_POWERDOWN MUX DISABLE  */
->   	val = readl(pcie->parf + PARF_SYS_CTRL);
-> @@ -1123,14 +1154,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
->   	u32 val;
->   	int i;
->   
-> -	writel(SLV_ADDR_SPACE_SZ,
-> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> -
->   	val = readl(pcie->parf + PARF_PHY_CTRL);
->   	val &= ~PHY_TEST_PWR_DOWN;
->   	writel(val, pcie->parf + PARF_PHY_CTRL);
->   
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> +	qcom_pcie_configure_dbi_atu_base(pcie);
->   
->   	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
->   	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+> DEV_LS7A_PCIE_PORT5 becomes 00:00.0
+
+In this case, the DEV_LS7A_PCIE_PORT5 at 00:00.0 looks like a Header
+Type 0 device (not a bridge), and the bus 00 it is on is not a normal
+PCIe Link.  Since it doesn't connect to a PCIe Link, 00:00.0 might not
+have a PCIe Capability at all, or it could be an RCiEP.  Or it's
+possible it has a PCIe Capability left over from the old model that
+says it's a Root Port, although this would potentially confuse an OS.
+
+The other bridges (00:09.0, 00:0a.0, etc) are probably PCIe Root
+Ports, which are logically part of the Root Complex, so the Root
+Complex would be implemented partly in the new CPU and partly in the
+LS7A.
+
+The connection between the new CPU and the LS7A might be electrically
+similar to PCIe, but it's not part of a PCIe hierarchy that Linux
+sees.  That connection would have to be managed in some non-PCI way,
+the same as all PCI host bridges, i.e., by firmware, ACPI, or a Linux
+native host bridge driver like pci-loongson.c.
+
+Here's the current commit log:
+
+  The LS7A chipset can be used as a downstream bridge that connects to
+  a high-level host bridge, and in such case the DEV_LS7A_PCIE_PORT5
+  is used as the upstream port.
+
+  Thus, always enable MSI caps of this port, otherwise downstream
+  devices cannot use MSI.
+
+In this configuration, DEV_LS7A_PCIE_PORT5 is not a PCI-to-PCI bridge
+itself.  It might be some sort of downstream end of a connection from
+the CPU, but that's not really relevant here.  And DEV_LS7A_PCIE_PORT5
+doesn't have any devices directly downstream from it.
+
+I think something like this would be clearer:
+
+  The LS7A chipset can be used as part of a PCIe Root Complex with
+  Loongson-3C6000 and similar CPUs.  In this case, DEV_LS7A_PCIE_PORT5
+  has a PCI_CLASS_BRIDGE_HOST class code, and it is a Type 0 Function
+  whose config space provides access to Root Complex registers.
+
+  The DEV_LS7A_PCIE_PORT5 has an MSI Capability, and its MSI Enable
+  bit must be set before other devices below the Root Complex can use
+  MSI.  This is not the standard PCI behavior of MSI Enable, so the
+  normal PCI MSI code does not set it.
+
+  Set the DEV_LS7A_PCIE_PORT5 MSI Enable bit via a quirk so other
+  devices below the Root Complex can use MSI.
+
+What do you think?
 
