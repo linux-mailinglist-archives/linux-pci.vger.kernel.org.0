@@ -1,75 +1,74 @@
-Return-Path: <linux-pci+bounces-10500-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10501-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 581DC934CF7
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 14:11:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4961D934CFF
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 14:13:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8EAA1F22AF2
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:11:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 747E6B22B91
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:13:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E0113BC12;
-	Thu, 18 Jul 2024 12:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B93013C660;
+	Thu, 18 Jul 2024 12:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zbplqjNg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCH/BBnM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6020012FB34
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 12:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B342513B7A9
+	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 12:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721304668; cv=none; b=kVwtnxWPITB2iKktpePSvJgRlC/Uh1kF4XJVhmdHVjO3GQNE4/v80gdJsAVStj1gImtuLhhbJVXRgYeUnhBe6mOEkXiozdeIoMG55eF5krIDtbF1E2zG0DNow7SSvfDcSNN/XycERhINDZ/PJXBnoiWom5h/qdCBHFbW/VcUJoI=
+	t=1721304766; cv=none; b=h/howUxWbtULXC6O/4f71LGfRtpq+b2kX26PWCOzAQdi76lhUn8+lBmr9jGCUWK0nyMbkADMYpIHNWectP1KcdVC4YhwU7kl53qvGVjxX7Py+PrpXhrLE1FIYtF/55aWKgGx62iigBxDNeel7A6mFXAUot0Db/zaJ3t0mIroH3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721304668; c=relaxed/simple;
-	bh=5FlvvF6ElZoar91TZyjpmKtRh40LGlBGD1Ri5a2ma5s=;
+	s=arc-20240116; t=1721304766; c=relaxed/simple;
+	bh=lDk/OFM9GdPyF5mO3TlS15U51RwuYwspDnGe9beFFBg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SH2HJS5Tv7843H66vERG27bvDMM0itKdv4flRZ7WKBlSM1uCtRoZQbMpFVk72LcW+dBOqlYPHVO2lb3ApmUV7qwULK2AkvdZnoYsOLJtH5jaVVnGpPs3gk+nao/xTJFdC4PZ820VgPldMRERh1zsO/tUSF2YH5N/Js1BDKEeIxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zbplqjNg; arc=none smtp.client-ip=209.85.218.54
+	 In-Reply-To:Content-Type; b=tAKxkeTY0kVnCfUEWKv9uIUspiyyltUWgmvy4OCtVdOG7NQyx2umht7zuCJLlbR2Bg5mVDJmSpd6hwSgynD7EnIEkDRSAz3mjZUefAQ/FKLAsfE7qQ0CcF/X75vv53pw4Ql3Q8g1QOnHNAOv7UpkGk6FZAcIouN2GPo/9rYzjnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tCH/BBnM; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a77cb7c106dso76601966b.1
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 05:11:05 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58be2b8b6b2so688518a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 05:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721304664; x=1721909464; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721304763; x=1721909563; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HMhzX7yfMRYWWdn8bv1T9AEmz4KNpf5iD+xeOE74dI4=;
-        b=zbplqjNgzzswYLqQve+cEiGc1I7tBZgic1M0R1D0Q4/xFtavr1XC0zfP+aF4Mz3A1I
-         lcwhKZc7UEEc35RP0BJhmOxgw3vFERFvBm1uwqA8gBXYXMvLd5viCoX9k8PxjnpIMtC9
-         p3WUiqWlsGff4z/55kSC5GLYo193Xm7i7L1RGLBeDarUzrWl2Osw9Y94+VhJzLBGFcRr
-         SjCzprgxMF57r4P28KPZ1ve0OqMjmgTSRRbuyD+KdqOWYMZnaxL7NoARmw0VWq5yqnUm
-         tReLC2m5VNyufr0bN99xfcrvQaUY7zl2LcaHXcs+zqP3Co4sng8Gxe+QjXc8kULdUscK
-         FmOA==
+        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
+        b=tCH/BBnMTu8CG3Gxs5kcYA3zXyCbKxQYHAxqy1GvR4ONT8pi/L+aitwJqnF520xrak
+         HRtSiCC0nGNkSrqw9+yx8Zm6kA9qlEschgYKC/UZWNYcNKHaO8JifGJhKdvjNNfsx8e3
+         X52tcsczT4+V5KYr3UZcFBiSxiTxQJxHGUxolhBpE/3wZmnY5G6JSn7BH8AGOUSvlgns
+         c/16o7S/Tg0HjwlTPDDfsL74WSNBTr0fj5rQpuAaN5a47zr3qxLIkwWzN52rIQQhmWml
+         jK4pM1VymsWYrlh7pA/7No2kc2osE+Ag8IUB8pElBWcOj5k9dm8NTheFFDNlcqlpIaiv
+         BakA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721304664; x=1721909464;
+        d=1e100.net; s=20230601; t=1721304763; x=1721909563;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HMhzX7yfMRYWWdn8bv1T9AEmz4KNpf5iD+xeOE74dI4=;
-        b=G1H52sNAtwS+tajaEFvGIHZiYUfmqI1jz53EZWz64mdZBEMH61AhhlyQcIo4UUhk7O
-         Ezdc0T9ZKtP1UyQXxuk2uzwYVihDrtUB6XMwtvCNv8hQdaQbF9NjE8zi5+XxYMGbr955
-         7OkeN2Mm/K/SG+KjoC1+lZC70HMBwtel+UJ2fUwJidfAYWxnZMYH7lA5sizsCXll9Ihc
-         BqnwMrp1YEQRuXKkMP7BG+0D+kwQLJjuXWo5CqC9YUIPPWbupsxst9ltOOmVqyGCfPQd
-         ysWBR/RkxM3Rl7RMAC3eVXogvQv0vVCo6sTohI7gYIFJz2ZUerSwNYEcruNMn+WGsa6w
-         IXOA==
-X-Gm-Message-State: AOJu0YweWjBvt5jEky/4HPUcvGGc/y3ZrrPGci0r1fzYt5XsDHkN881n
-	nz5TGRXbRLsNI8mz30rm24P/7kngnWH+0lpE5aWil33mwRQuC3oZo6cIj4qh0AjXa5q1cqSCrVM
-	i
-X-Google-Smtp-Source: AGHT+IEaFqvxuZZ7uAVDsD2FLeFUDd9vDe5QIGuH7rH9x2g06eiK94eBPWI/FWmwd3PIAyZkU8JvJg==
-X-Received: by 2002:a17:906:80c3:b0:a72:80b8:ba64 with SMTP id a640c23a62f3a-a7a01145e24mr325166966b.25.1721304662661;
-        Thu, 18 Jul 2024 05:11:02 -0700 (PDT)
+        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
+        b=Hsv4NjXKy0DPqWgJ4p9BcG3KvFx79otNPYgWCermkGW7fVZ7PjUdqY7fg9G52XJqY0
+         1J4aEVIROQnDi6ZIlQ025adorD26B9IUe3vgW2GbAbgtJQlXvVNua53RL2TNE2kkQjfA
+         IF6NSUW+RDYovRLCT9rKPknh3EeeDXZoXNjviE/ixoJFNwmTt37/LF59aD6vHg1dYfVO
+         9TEeenIibmoHfueBMOv6XiCP6s+LUn4m3ZizkpWVqnmvIWpaBV/CM6MIr7uhOFunJwSi
+         iAksExx/Vcq1cZ38LvOj6szG6FopM0X/d3PL7Z70EbsG3Ry9M3YN6u2vaZRaP60XL2lZ
+         Z+xg==
+X-Gm-Message-State: AOJu0Yyo8/jAWO0EtOXwtwvuLb4c2KcVZXqVsNOvurhP4K0s6xy3UV6n
+	DjHNtIgluql1q/quVTnf67WUHCqjISHEeJ08ySqzK48ImA58uo/sxfUIno8Lf+s=
+X-Google-Smtp-Source: AGHT+IHpzAvuicnAr0t0F/QpWfgztRHIDCadRZ2CkWua+qXiqi9HeASkOwId5phE5trHQaIlvHyHqg==
+X-Received: by 2002:a05:6402:510f:b0:57c:c166:ba6 with SMTP id 4fb4d7f45d1cf-5a05bfab3c0mr3393413a12.19.1721304762690;
+        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
 Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5e85ebsm558826066b.96.2024.07.18.05.11.01
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a1d9a49e32sm654035a12.29.2024.07.18.05.12.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 05:11:02 -0700 (PDT)
-Message-ID: <8b6cd895-8904-4d8c-bf23-5d933f476d57@linaro.org>
-Date: Thu, 18 Jul 2024 14:11:00 +0200
+        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
+Message-ID: <f171ded0-e9db-4bf0-8e1a-e00065becd4e@linaro.org>
+Date: Thu, 18 Jul 2024 14:12:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,8 +76,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/13] PCI: endpoint: Assign PCI domain number for
- endpoint controllers
+Subject: Re: [PATCH v2 06/13] PCI: qcom-ep: Modify 'global_irq' and
+ 'perst_irq' IRQ device names
 To: manivannan.sadhasivam@linaro.org,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -89,7 +88,7 @@ To: manivannan.sadhasivam@linaro.org,
 Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
- <20240717-pci-qcom-hotplug-v2-5-71d304b817f8@linaro.org>
+ <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
@@ -127,52 +126,30 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20240717-pci-qcom-hotplug-v2-5-71d304b817f8@linaro.org>
+In-Reply-To: <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17.07.2024 7:03 PM, Manivannan Sadhasivam via B4 Relay wrote:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Right now, PCI endpoint subsystem doesn't assign PCI domain number for the
-> PCI endpoint controllers. But this domain number could be useful to the EPC
-> drivers to uniquely identify each controller based on the hardware instance
-> when there are multiple ones present in an SoC (even multiple RC/EP).
+> Currently, the IRQ device name for both of these IRQs doesn't have Qcom
+> specific prefix and PCIe domain number. This causes 2 issues:
 > 
-> So let's make use of the existing pci_bus_find_domain_nr() API to allocate
-> domain numbers based on either Devicetree (linux,pci-domain) property or
-> dynamic domain number allocation scheme.
+> 1. Pollutes the global IRQ namespace since 'global' is a common name.
+> 2. When more than one EP controller instance is present in the SoC, naming
+> conflict will occur.
 > 
-> It should be noted that the domain number allocated by this API will be
-> based on both RC and EP controllers in a SoC. If the 'linux,pci-domain' DT
-> property is present, then the domain number represents the actual hardware
-> instance of the PCI endpoint controller. If not, then the domain number
-> will be allocated based on the PCI EP/RC controller probe order.
-> 
-> If the architecture doesn't support CONFIG_PCI_DOMAINS_GENERIC (rare), then
-> currently a warning is thrown to indicate that the architecture specific
-> implementation is needed.
+> Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
+> names to uniquely identify the IRQs and also to fix the above mentioned
+> issues.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/pci/endpoint/pci-epc-core.c | 10 ++++++++++
->  include/linux/pci-epc.h             |  2 ++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 84309dfe0c68..7fa81b91e762 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -838,6 +838,9 @@ void pci_epc_destroy(struct pci_epc *epc)
->  {
->  	pci_ep_cfs_remove_epc_group(epc->group);
->  	device_unregister(&epc->dev);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> +		pci_bus_release_domain_nr(NULL, &epc->dev);	
 
-Shouldn't this be called before device_unregister? pci/remove.c
-does that (via pci_remove_bus() in pci_remove_root_bus())
+lgtm
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
 
