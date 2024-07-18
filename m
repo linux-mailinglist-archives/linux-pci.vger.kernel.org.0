@@ -1,349 +1,229 @@
-Return-Path: <linux-pci+bounces-10502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10503-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11680934DA3
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:01:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BBDD934E84
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:50:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA0D3285331
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 13:01:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F30A1C222B8
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 13:50:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B0313D516;
-	Thu, 18 Jul 2024 13:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E5BC1420DF;
+	Thu, 18 Jul 2024 13:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvDIHzT9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XPPptqgm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2082.outbound.protection.outlook.com [40.107.96.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C88484E11;
-	Thu, 18 Jul 2024 13:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721307696; cv=none; b=r9JpsyqCM0dOgcSnzDcg6IOfRgUlbgdYS9YXhxed4r96gVDmAqsrMEFFPeteUHymE4SOpaHvpEw7cCcLEULdzAJL5hqUHSYcZHMh91JVfi7lRYCBMF4rd51rK94vtGgCnetG9uF/gLdsXTouJz31ODfGslYXYWLRdJ/6teKUUXQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721307696; c=relaxed/simple;
-	bh=mdwJYjPNqTr+Ia0NODkdrX29A4qTgc/06aRYk2Io+dA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TWjedmQVr3qvWUOp87pt4Yll5dVAdXQ4+0KqoBdtNhM3b9bcoW03YnZIryCV6xRLmxplogE009PaI1vygUHDiyU531AUpMO1HIFC1XO6rn66TSe7PG06zAGaIrSK2NPplIhCHMpfSpfkU9ltNmt/BVQoDYDMyZfQKJHUS0lZ/D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvDIHzT9; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5a108354819so924710a12.0;
-        Thu, 18 Jul 2024 06:01:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721307693; x=1721912493; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hqj/azH3y0tVii1awb9kdff2TTuTT8XVCxNe0eEpg1s=;
-        b=JvDIHzT90Xz+Fhzyxlowl0qadw20xSCb+TTrPGVWX+RdOAD+1I1fUxier+wrpC59KB
-         lQXvrL5AIvmLSdQjGc+apWwUzkNMvdrSJKsGMgqWtA3J3SpBHztXXhNCtDviK3ysR8v1
-         0tcEwflS+MjtEifCci0W1OHvQKpfX6rmHPkvcmf0avRPrKbkDk/RhOS+2ydnnr0WuDtD
-         cr5q7PUJkmf3UfbcVkWOZ8PuQnvUq6OSwprfkVxh/UjCJP49akfzavnamAOab2PxN8fq
-         ZzaeWjQ1cR+S+L88Xzy7eeIxGMs8vgJ9C7E7hqZRbqFr+q4jTK7kalXoiJV2HczPKrVH
-         sY3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721307693; x=1721912493;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hqj/azH3y0tVii1awb9kdff2TTuTT8XVCxNe0eEpg1s=;
-        b=ug6o1pnrHfETOxXYczAExTkEwGo4zCu/dIblVVgoRjGDxXjtY/o02eUpjtU/GRDJtI
-         V0emK75osWa4KrJpM2QR1uHuPWYvp9kOHaNT+uPUqeviRDMiAYY3mYYqP+1k86jOS86Z
-         5l3eLKDYGDofvwIR1QzLYyjMUVFn4R3abwOONxSoqpkDGqyqyep+S9ugNOBwEj4BKUaK
-         jIp+P2ZdHPPXS1nSuzrP32bbf4nKg+Ydc3Xqn+cWjI8BHc4QI5sF5rKujeLHu+TWp0T9
-         JYvgdC3QX8Ar+0d6PDc6mkPZTSYLiJN2Lz689F8SBSOdCaZjyHrhDoyDaApFK9ogf8mm
-         3SvA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/thlq5DmDhGkFkBYqHQ065fYreOgWqLnyzhiB76rwZvPIvRwTau+j3uSLDImrbe9HNkcOzqnmDGp5uihEgXxVZxn/pzAea8WrTPTc6tEmvpBQu+BApIHWy/+6Jx461cUX
-X-Gm-Message-State: AOJu0YxDC9Irk/zHCNhoA1BJMlMXNE/alD8FgtD0ZNpJIOqZAf6f3Ycq
-	sDy9Gf6pLb6KBqK6XfChlVaiJLkmP22iIPcBzdWsGy1VC5WgJv2johWHOqfGrjr7HpianB23m9n
-	q630cpM1G76zuIWZLdC6zSlAuC/I=
-X-Google-Smtp-Source: AGHT+IFXeGp9YUEHJoLa9UObvkczqZCDhS1G7x7XY5+3lN6j1NYoUFvk0Q9sAg6yiIKlDD4SCrb/Gx1lNR4Foyvw3dc=
-X-Received: by 2002:a05:6402:40d5:b0:59e:a222:80f6 with SMTP id
- 4fb4d7f45d1cf-5a05d0efa3emr3744381a12.27.1721307692110; Thu, 18 Jul 2024
- 06:01:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C946D13DBBF;
+	Thu, 18 Jul 2024 13:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721310521; cv=fail; b=AScpX025/A0roTj1H3C5ay13tt6nWndaMB1M4+8r6gNdE8JDDaD3vNaFL3I5AOs3uTOFP/PSiKwYKOOZvg5BKqEnXrYkIgAxzL0jH+bpiNf9mloehjFHVDx1KtmKo3AaOpl6gJrJQ+1shvI/3J8cx14aXO2+fF7oeDzhEeVUMSQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721310521; c=relaxed/simple;
+	bh=xXUOue54DfMNW8SqT9K3Jyfjir/QIDwfki3IcEgFRbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WCcEoREJIpDQrJk9GZ2XVAZ2d+cDfsLICOEslYxmpRy21afu7H+2mmKYe2Lmj61z6RcSWqbXef+1wtD5f85hTtWhoEdwkxqjLfi7sg+AypzV8uvYlppltSdBILU8GmkHnBLPcRqmoRsdOuKo02pIvdHLRjgusBlDvRY0SmWtyUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XPPptqgm; arc=fail smtp.client-ip=40.107.96.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ho0GMO+35KAmtSaiYVPXkL/9GnPNUrI3HWAUqNzD6tHXR36G2e4B55O2zHW56KAtfNyBfkd8al2sgtbIb1ad7k83XXq9pT9P3g99yFcJWBjXAgGjB11v6D8y4YLeiOst0I07B/scH77vCTUQlgS9akFmvwJQo54NXSQhKYA4/htsSMtju/htoIL0hb+5Q5vuTRyU5dXfB6YGBc5W1GgY4HasjdphLgvFvfhoHeCTxwvMGaEfNgADXmONRCRkCv5c+RM1sk/R1GX62D+qJUqflfWHEV6WPE66a0NHuIAGwYcpHAJmvKav65S/S2QdVFrUUZTnZWOX1a4gQj8I0HC49w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O2BqtejKqAOVlJy3nKX81UnmFiET1q6Y/i+tU+7E50g=;
+ b=W+258WxIUsYu0tbMgc9G1ymAC6wTIiy9Rd84j7bVPPrnXrAbQA9HE1t/O9e/NMwlFppAGUwCWeC4/449vxPqkQiu4HIo4xEqDCTqBjn2B+9+z9whp+iHX8tkPmdXGCwvha1OVn8dau5OqdKbB6URzmW58GwMwRSGM5zbpAWzW676YW+yaTqRTeIxH4D9aZLdp2jsoADL1kpdKq+ne8niVroWiGJFsLvJoRV1VgMChCou6viK+mPng07FOgGl1Z5+w9JtDDdJqE2oX5Or6R+KV7LTR+rwiIND1jlpQF6BTBVDXDiWZcNbgWyACgQ3PW0JR/i3YkoBsHufhwv/dHhz/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=aculab.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O2BqtejKqAOVlJy3nKX81UnmFiET1q6Y/i+tU+7E50g=;
+ b=XPPptqgmrlw1wSDKBBmVqNplS7rsnlypnUlciMOjsXa7bE7irYvsgQSD5UOt+TU2ICEihpuSPjpde3yqdWLMzqIm09DN3bS5/IHj0pUYNg50pwkOw26flO8wofZFOLcusjP1zWA22vcBL46rY+aOSKnnX7vvpQPz+nWskYB/t+k=
+Received: from BL1PR13CA0392.namprd13.prod.outlook.com (2603:10b6:208:2c2::7)
+ by MN0PR12MB5905.namprd12.prod.outlook.com (2603:10b6:208:379::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Thu, 18 Jul
+ 2024 13:48:35 +0000
+Received: from BL6PEPF0001AB59.namprd02.prod.outlook.com
+ (2603:10b6:208:2c2:cafe::fd) by BL1PR13CA0392.outlook.office365.com
+ (2603:10b6:208:2c2::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.17 via Frontend
+ Transport; Thu, 18 Jul 2024 13:48:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB59.mail.protection.outlook.com (10.167.241.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Thu, 18 Jul 2024 13:48:35 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 18 Jul
+ 2024 08:48:35 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 18 Jul
+ 2024 08:48:34 -0500
+Received: from [172.25.198.154] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 18 Jul 2024 08:48:31 -0500
+Message-ID: <f9875438-d937-4c0f-92ab-b69860b63edb@amd.com>
+Date: Thu, 18 Jul 2024 09:48:31 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAAhV-H6=nOf_cSv7K3hS3jdXsGcWR7Go30EFyZeqxYNQKhtH8A@mail.gmail.com>
- <20240710194830.GA255085@bhelgaas>
-In-Reply-To: <20240710194830.GA255085@bhelgaas>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Thu, 18 Jul 2024 21:01:17 +0800
-Message-ID: <CAAhV-H678eySqhLr8cYhCsrJqm1acFcRAFJY_dQOpEHkRLVAGQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, loongarch@lists.linux.dev, linux-pci@vger.kernel.org, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
-	Sheng Wu <wusheng@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/8] PCI: Align small (<4k) BARs
+To: David Laight <David.Laight@ACULAB.COM>, Bjorn Helgaas
+	<bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Michael
+ Ellerman" <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Thomas Zimmermann <tzimmermann@suse.de>, "Arnd
+ Bergmann" <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>, Yongji Xie
+	<elohimes@gmail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: "x86@kernel.org" <x86@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>
+References: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
+ <0da056616de54589bc1d4b95dcdf5d3d@AcuMS.aculab.com>
+ <a4e2fdae-0db3-46de-b95d-bf6ef7b61b33@amd.com>
+ <6cd271759286482db8d390823f408b05@AcuMS.aculab.com>
+Content-Language: en-US
+From: Stewart Hildebrand <stewart.hildebrand@amd.com>
+In-Reply-To: <6cd271759286482db8d390823f408b05@AcuMS.aculab.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB59:EE_|MN0PR12MB5905:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72cbb478-0c14-47a4-3126-08dca7305205
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|7416014|1800799024|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TjlqYmdGN2NabThhajNyTGhsTU0yMXpZTU5GbXV0enBpTkViaDVYOGVZQ01E?=
+ =?utf-8?B?Zzg4SElSNzVJL2p2Y1FZbXR0NVo1OWVENWtpM1JXaDdsVHJ1cFN3SWtxZlg3?=
+ =?utf-8?B?SkZRM3gyZTRrdCtrU3g2Q252UjVIUkgvUjFpUVh6blFKcW04NVRXbVJHOEtx?=
+ =?utf-8?B?MlNMdGIrOWVpUFJSbzBvUWdoaFBMVTlVVzNFNHlvUHAzdk9rcmg3WkpveUl2?=
+ =?utf-8?B?VlkvclJPMGsxTEl1TEJnQTNQaEJmb3hROTVqRWJ1YlIwVlR0UXF3K1l4NFdH?=
+ =?utf-8?B?SkJYK0k3TDJqUHlwYjRydjRSaGxudEhnVHh2d2lNaHlFUlZ4RU9YZkhlRndp?=
+ =?utf-8?B?Zmt3cjhDbU1vRzluWHBpRitXaDNGMDAySjd1Sk13Tnk2TlR1N1NkVE8waHBO?=
+ =?utf-8?B?R0xneSt5NjVpS0thWHNySkFIcGJBeXJubzVtN0dnQS9aVzhCWFNDa29QZVUy?=
+ =?utf-8?B?eDdYVWliaVFIc0I0bTdFZnlCZkNjci90dGdiN3FNMGFSWVZaV293OEZlTHda?=
+ =?utf-8?B?YWNhQkEzVXdMNWR5a1dBWG1xNEVLV2ZldEJvTlZEOVFDUFZBTkJONUF1ODVh?=
+ =?utf-8?B?WVcxOWJSQnJWS09qbStzUHI1QzRvUzBkRy9aZTlUSmhwQTU4dGFwQTVzZjlr?=
+ =?utf-8?B?N2puM0lUdWRvQmNiSk5icUs1MjZLVGxiWXdIS2dQaFRXSW0zU0FmV09MT1ZU?=
+ =?utf-8?B?aEtJc3NsbDRWbnJLNUY3KzFpVnBHd2hFbFJKN0NQS0JpNDVneVlVZDNMK3BU?=
+ =?utf-8?B?Zlpqd29lbHNzUlY4dXZWeVo0M0lIckQwb2NzTEwrWmR1SEJOSVp1SUM0U2pS?=
+ =?utf-8?B?V3U4T0FST3ZVZ1c4U2w3TEJBRGxQM3IwMVlvUlFnY3hpR0VEdmduMG9LNFBK?=
+ =?utf-8?B?VGtZYkFQWWljVVdCaUg0cWxBNTNXdHRRMnVKNG9HTlhDckc0Yi83ZnNxSitq?=
+ =?utf-8?B?eDhJUWl3S3JVODh3eXFFM1ljc3FxVjJLNE5HVmlFUEFVYjRvc1hoUnVUSm0v?=
+ =?utf-8?B?OUVpR0YzbWVJOVo0dkxlNUNQNm1qanJ1TVQ2NjRyUEJIM25BN3VsYWh5b0tX?=
+ =?utf-8?B?TklZL2dlNWZHdTRvbEhyTEtmUnpzMDJ6QWVPMmtRNzllTDErMDBqL1o4NjNu?=
+ =?utf-8?B?cFhiQXRSb1RKNkJYcmtCMnJtazQwcTB2Qmtxc1lQdlRpVmFsVTI0cUFkTThG?=
+ =?utf-8?B?aHExL2VYOTRUUm16c3hzWFBYb3Y4ZnBLU2U1ZXhqSTJ4U2JQekNwSSswL3Qx?=
+ =?utf-8?B?eWEzdTNpcHoyZ2hIR3ZDelNtcjl4QzZZbndldUNNZnhYUFJXV2lUZnJ6N3Rz?=
+ =?utf-8?B?S0gySUNxOEtRbFFiMzF2NXQ5ODN3YVV6eU5jV3FxUndCZE4xSHViT1VuYm1w?=
+ =?utf-8?B?a0VKcWtiVkFwU1ZuSUNjQ21aVSsyd0xVb0NMWjNKZCtHc3BaemQ5ZHB3K3J2?=
+ =?utf-8?B?eEZUUFNkRHZwS3pPSkltMlNaLzYxWkZPclpaYXVqRVAreHM3U3YwVUtVcUJm?=
+ =?utf-8?B?ZHloVnoyQ1FMY1hDeVM5QzIzaHQ0TmlNR1dLK3dQL0tkSStmVmh6eVcxS3lj?=
+ =?utf-8?B?MkM1dUJoQjdnNzAyUG05Y2NLVTZJUTJvODlnOXJaNGJpYnVnZklKQ2V4KzJC?=
+ =?utf-8?B?ZXgweU8veUpaZlhiUGxSQW8vNkdVN3g3dUVqRnFEZmN0OTVSbG9vV1BQRzdC?=
+ =?utf-8?B?b0N0Yk9tSW5kOGI5MzBwcU9QcFRCTDJFUTkxM3d2K3JIQzJ2ZTZXNHZ2SVdx?=
+ =?utf-8?B?WUp5N1dyNnlxWFpZTmlvaFVRcTFLSVk3NFRodGlYcWNIbkpKZG5FOXlqb0Q2?=
+ =?utf-8?B?L0VLZ0lMVTIwTm1MWGFlRC9YTmFzdURIcU03VWFZVTFjY3VsazhxK0p6THZJ?=
+ =?utf-8?B?WDhCaUlpZ0ZPRFFZWWJGb1VqN2h1VWxVT3BpMEhja1Y0MldvMUhDcGROUkU1?=
+ =?utf-8?B?ZUJXVWRjS0IwMjVvTkxxVWMwNnZjVEprZ2h5YVRPcXlkOXhVZVo5L3orazJF?=
+ =?utf-8?B?bUt6bERrRU53PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 13:48:35.5483
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72cbb478-0c14-47a4-3126-08dca7305205
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB59.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5905
 
-Hi, Bjorn,
+On 7/18/24 06:01, David Laight wrote:
+> From: Stewart Hildebrand
+>> Sent: 17 July 2024 19:31
+> ...
+>>> For more normal hardware just ensuring that two separate targets don't share
+>>> a page while allowing (eg) two 1k BAR to reside in the same 64k page would
+>>> give some security.
+>>
+>> Allow me to understand this better, with an example:
+>>
+>> PCI Device A
+>>     BAR 1 (1k)
+>>     BAR 2 (1k)
+>>
+>> PCI Device B
+>>     BAR 1 (1k)
+>>     BAR 2 (1k)
+>>
+>> We align all BARs to 4k. Additionally, are you saying it would be ok to
+>> let both device A BARs to reside in the same 64k page, while device B
+>> BARs would need to reside in a separate 64k page? I.e. having two levels
+>> of alignment: PAGE_SIZE on a per-device basis, and 4k on a per-BAR
+>> basis?
+>>
+>> If I understand you correctly, there's currently no logic in the PCI
+>> subsystem to easily support this, so that is a rather large ask. I'm
+>> also not sure that it's necessary.
+> 
+> That is what I was thinking, but it probably doesn't matter.
+> It would only be necessary if the system would otherwise run out
+> of PCI(e) address space.
+> 
+> Even after I reduced our FPGAs BARs from 32MB to 'only' 4MB (1MB + 1MB + 8k)
+> we still get issues with some PC bios failing to allocate the resources
+> in some slots - but these are old x86-64 systems that might have been expected
+> to run 32bit windows.
 
-Sorry for the late reply.
+I expect this series will not make any difference with that particular
+scenario since the BARs are >4k (and PAGE_SIZE == 4k on x86).
 
-On Thu, Jul 11, 2024 at 3:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Wed, Jul 10, 2024 at 11:04:24AM +0800, Huacai Chen wrote:
-> > Hi, Bjorn,
-> >
-> > On Wed, Jul 10, 2024 at 5:24=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > >
-> > > On Wed, Jun 12, 2024 at 02:53:15PM +0800, Huacai Chen wrote:
-> > > > LS7A chipset can be used as a downstream bridge which connected to =
-a
-> > > > high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as=
- the
-> > > > upward port. We should always enable MSI caps of this port, otherwi=
-se
-> > > > downstream devices cannot use MSI.
-> > >
-> > > Can you clarify this topology a bit?  Since DEV_LS7A_PCIE_PORT5
-> > > apparently has a class of PCI_CLASS_BRIDGE_HOST, I guess that in PCIe
-> > > terms, it is basically a PCI host bridge (Root Complex, if you prefer=
-)
-> > > that is materialized as a PCI Endpoint?
-> >
-> > Now most of the existing LoongArch CPUs don't have an integrated PCIe
-> > RC, instead they have HyperTransport controllers. But the latest CPU
-> > (Loongson-3C6000) has an integrated PCIe RC and removed
-> > HyperTransport.
-> >
-> > LS7A bridge can work together with both old (HT) CPUs and new (PCIe)
-> > CPUs. If it is connected to an old CPU, its upstream port is a HT
-> > port, and DEV_LS7A_PCIE_PORT5 works as a normal downstream PCIe port.
-> > If it is connected to a new CPU, DEV_LS7A_PCIE_PORT5 works as an
-> > upstream port (the class code becomes PCI_CLASS_BRIDGE_HOST) and the
-> > HT port is idle.
->
-> What does lspci look like for both the old HT and the new PCIe CPUs?
-When LS7A connect to HT,
+> The requirement to use a separate BAR for MSIX pretty much doubles the
+> required address space.
 
-00:00.0 Host bridge: Loongson Technology LLC Hyper Transport Bridge Control=
-ler
-00:00.1 Host bridge: Loongson Technology LLC Hyper Transport Bridge
-Controller (rev 01)
-00:00.2 Host bridge: Loongson Technology LLC Device 7a20 (rev 01)
-00:00.3 Host bridge: Loongson Technology LLC Device 7a30
-00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
-00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
-)
-00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
-)
-00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
-)
-00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
-)
-00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
-Audio) Controller
-00:08.0 SATA controller: Loongson Technology LLC Device 7a18
-00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
-00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
-00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
-00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
-00:13.0 PCI bridge: Loongson Technology LLC Device 7a59
-00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
-00:19.0 USB controller: Loongson Technology LLC Device 7a34
-02:00.0 Non-Volatile memory controller: Shenzhen Longsys Electronics
-Co., Ltd. SM2263EN/SM2263XT-based OEM NVME SSD (DRAM-less) (rev 03)
-04:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
-[AMD/ATI] Oland [Radeon HD 8570 / R5 430 OEM / R7 240/340 / Radeon 520
-OEM] (rev 87)
-04:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI]
-Oland/Hainan/Cape Verde/Pitcairn HDMI Audio [Radeon HD 7000 Series]
+4k region, not BAR.
 
--[0000:00]-+-00.0  0014:7a00
-           +-00.1  0014:7a10
-           +-00.2  0014:7a20
-           +-00.3  0014:7a30
-           +-03.0  0014:7a13
-           +-04.0  0014:7a24
-           +-04.1  0014:7a14
-           +-05.0  0014:7a24
-           +-05.1  0014:7a14
-           +-07.0  0014:7a07
-           +-08.0  0014:7a18
-           +-09.0-[01]--
-           +-0d.0-[02]----00.0  1d97:2263
-           +-0f.0-[03]--
-           +-10.0-[04]--+-00.0  1002:6611
-           |            \-00.1  1002:aab0
-           +-13.0-[05]--
-           +-16.0  0014:7a1b
-           \-19.0  0014:7a34
+> As an aside, if a PCIe device asks for:
+> 	BAR-0 (4k)
+> 	BAR-1 (8k)
+> 	BAR-2 (4k)
+> (which is a bit silly)
+> does it get packed into 16k with no padding by assigning BAR-2 between
+> BAR-0 and BAR-1, or is it all padded out to 32k.
+> I'd probably add a comment to say it isn't done :-)
 
-DEV_LS7A_PCIE_PORT5 is 00:13.0
+On a system with 4k page size, this series should not affect the example
+you've provided since those BARs are all 4k or larger.
 
-When LS7A connect to PCIe,
-
-00:00.0 Host bridge: Loongson Technology LLC Device 7a59
-00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13
-00:04.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
-)
-00:04.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
-)
-00:05.0 USB controller: Loongson Technology LLC OHCI USB Controller (rev 02=
-)
-00:05.1 USB controller: Loongson Technology LLC EHCI USB Controller (rev 02=
-)
-00:06.0 Multimedia video controller: Loongson Technology LLC Device
-7a25 (rev 01)
-00:06.1 VGA compatible controller: Loongson Technology LLC Device 7a36 (rev=
- 02)
-00:06.2 Audio device: Loongson Technology LLC Device 7a37
-00:07.0 Audio device: Loongson Technology LLC HDA (High Definition
-Audio) Controller
-00:08.0 SATA controller: Loongson Technology LLC Device 7a18
-00:09.0 PCI bridge: Loongson Technology LLC Device 7a49
-00:0a.0 PCI bridge: Loongson Technology LLC Device 7a39
-00:0b.0 PCI bridge: Loongson Technology LLC Device 7a39
-00:0c.0 PCI bridge: Loongson Technology LLC Device 7a39
-00:0d.0 PCI bridge: Loongson Technology LLC Device 7a49
-00:0f.0 PCI bridge: Loongson Technology LLC Device 7a69
-00:10.0 PCI bridge: Loongson Technology LLC Device 7a59
-00:16.0 System peripheral: Loongson Technology LLC Device 7a1b
-00:17.0 ISA bridge: Loongson Technology LLC LPC Controller (rev 01)
-00:19.0 USB controller: Loongson Technology LLC Device 7a34
-00:1c.0 PCI bridge: Loongson Technology LLC Device 3c09
-00:1d.0 IOMMU: Loongson Technology LLC Device 3c0f
-00:1e.0 PCI bridge: Loongson Technology LLC Device 3c09
-02:00.0 Ethernet controller: Device 1f0a:6801 (rev 01)
-08:00.0 PCI bridge: Loongson Technology LLC Device 3c19
-08:01.0 PCI bridge: Loongson Technology LLC Device 3c29
-08:02.0 PCI bridge: Loongson Technology LLC Device 3c29
-0c:00.0 PCI bridge: Loongson Technology LLC Device 3c19
-0c:01.0 PCI bridge: Loongson Technology LLC Device 3c19
-0c:04.0 IOMMU: Loongson Technology LLC Device 3c0f
-
--[0000:00]-+-00.0  0014:7a59
-           +-03.0  0014:7a13
-           +-04.0  0014:7a24
-           +-04.1  0014:7a14
-           +-05.0  0014:7a24
-           +-05.1  0014:7a14
-           +-06.0  0014:7a25
-           +-06.1  0014:7a36
-           +-06.2  0014:7a37
-           +-07.0  0014:7a07
-           +-08.0  0014:7a18
-           +-09.0-[01]--
-           +-0a.0-[02]----00.0  1f0a:6801
-           +-0b.0-[03]--
-           +-0c.0-[04]--
-           +-0d.0-[05]--
-           +-0f.0-[06]--
-           +-10.0-[07]--
-           +-16.0  0014:7a1b
-           +-17.0  0014:7a0c
-           +-19.0  0014:7a34
-           +-1c.0-[08-0b]--+-00.0-[09]--
-           |               +-01.0-[0a]--
-           |               \-02.0-[0b]--
-           +-1d.0  0014:3c0f
-           \-1e.0-[0c-0e]--+-00.0-[0d]--
-                           +-01.0-[0e]--
-                           \-04.0  0014:3c0f
-
-DEV_LS7A_PCIE_PORT5 becomes 00:00.0
-
-
-Huacai
-
->
-> With the old HT CPU, I imagine this:
->
->   [LS7A includes a HT port that doesn't appear as a PCI device and
->   basically implements a PCIe Root Complex]
->   00:00.0 Root Port to [bus 01-1f] (DEV_LS7A_PCIE_PORT5)
->
-> With a new PCIe CPU, if DEV_LS7A_PCIE_PORT5 is a PCIe Upstream Port,
-> it would be part of a switch, so I'm imagining something like this:
->
->   00:00.0 Root Port to [bus 01-1f] (integrated into Loongson-3C6000)
->   01:00.0 Upstream Port to [bus 02-1f] (DEV_LS7A_PCIE_PORT5)
->   02:00.0 Downstream Port to [bus 03-1f] (part of the LS7A switch)
->
-> In both cases, 00:00.0 and 01:00.0 (DEV_LS7A_PCIE_PORT5) would be a
-> Type 1 device that is enumerated as a PCI-to-PCI bridge, which would
-> normally have a Class Code of 0x0604 (PCI_CLASS_BRIDGE_PCI).
->
-> But you're saying DEV_LS7A_PCIE_PORT5 has a Class Code of
-> PCI_CLASS_BRIDGE_HOST, which is 0x0600.  That would normally be a Type
-> 0 device and would not have a secondary bus.
->
-> > > I'm curious about what's going on here because the normal PCI MSI
-> > > support should set PCI_MSI_FLAGS_ENABLE since it's completely
-> > > specified by the spec, which says it controls whether *this function*
-> > > can use MSI.
-> > >
-> > > But in this case PCI_MSI_FLAGS_ENABLE seems to have non-architected
-> > > behavior of controlling MSI from *other* devices below this host
-> > > bridge?  That's a little bit weird too because MSI looks like DMA to
-> > > any bridges upstream from the device that is using MSI, and the Bus
-> > > Master Enable bit in those bridges controls whether they forward thos=
-e
-> > > MSI DMA accesses upstream.  And of course the PCI core should already
-> > > make sure those bridges have Bus Master Enable set when downstream
-> > > devices use MSI.
-> >
-> > In my opinion this is a hardware bug, when DEV_LS7A_PCIE_PORT5 works
-> > as a host bridge, it should enable MSI automatically. But
-> > unfortunately hardware doesn't behave like this, so we need a quirk
-> > here.
->
-> I'm fine with the quirk to work around this issue.  But the commit log
-> is confusing.
->
-> > > > Cc: <stable@vger.kernel.org>
-> > > > Signed-off-by: Sheng Wu <wusheng@loongson.cn>
-> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > ---
-> > > >  drivers/pci/controller/pci-loongson.c | 12 ++++++++++++
-> > > >  1 file changed, 12 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/co=
-ntroller/pci-loongson.c
-> > > > index 8b34ccff073a..ffc581605834 100644
-> > > > --- a/drivers/pci/controller/pci-loongson.c
-> > > > +++ b/drivers/pci/controller/pci-loongson.c
-> > > > @@ -163,6 +163,18 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON=
-,
-> > > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-> > > >                       DEV_LS7A_HDMI, loongson_pci_pin_quirk);
-> > > >
-> > > > +static void loongson_pci_msi_quirk(struct pci_dev *dev)
-> > > > +{
-> > > > +     u16 val, class =3D dev->class >> 8;
-> > > > +
-> > > > +     if (class =3D=3D PCI_CLASS_BRIDGE_HOST) {
-> > > > +             pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAG=
-S, &val);
-> > > > +             val |=3D PCI_MSI_FLAGS_ENABLE;
-> > > > +             pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLA=
-GS, val);
-> > > > +     }
-> > > > +}
-> > > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT=
-5, loongson_pci_msi_quirk);
-> > > > +
-> > > >  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus=
- *bus)
-> > > >  {
-> > > >       struct pci_config_window *cfg;
-> > > > --
-> > > > 2.43.0
-> > > >
->
+If you are testing with this series applied to your kernel and notice
+any regression, please let me know.
 
