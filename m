@@ -1,290 +1,220 @@
-Return-Path: <linux-pci+bounces-10495-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10496-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28F3A934B88
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:13:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFF01934BAD
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:30:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57A62B2283F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 10:13:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4874286531
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 10:29:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A177A715;
-	Thu, 18 Jul 2024 10:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F4912D76F;
+	Thu, 18 Jul 2024 10:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q8AOWycx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFtsf01i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D103612C46D;
-	Thu, 18 Jul 2024 10:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E9912C49B
+	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 10:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721297617; cv=none; b=KXAgbb8n+jNik2tuzUlyDW+ohVbWC1zcGUN2dG0x98OcwnJLizqQtWMkNCWKmf1tpCQ6+bXafKGOPWnLyPPhWpHLNUtnkIfpBk1M+hhzuBt3RkbYQetq4suUNOKZqzSlzlScVaLzbVoxpSmI8OKyYxZ+A09bV1aK9Chawwv+ZYM=
+	t=1721298588; cv=none; b=EUw5qoFvH71ac69dwy5gZzaFowY31e6tLAswJapKGiUgGL6nXBSbcJvnrMNEsOkOwqRcH4iqfXxQcw7nMHHxutyVKeT/yZ8GQCtD9GSplK7U3TIwb2IcdUExlLbiyn6syk34ZKcdXh+mrs+KY3/RcaU/bmfa8CHRcdLQ1AlQq7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721297617; c=relaxed/simple;
-	bh=R3Xl2ulng1qAC+aJtbMR94fFWC6W2dXLXgdRmegLgWQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O3cZXbiL99T7Jl+AUgnC1dQw0gCu3AEZRtyhBnF0jnO/Xc+ZAfFHpZcBBAukkuobBm1c4zSRieHFfI7ufajrcmG6Y6w6AFPXv5qGScwnnagkPAR1mZ2kOIyAQYIPQX7/nLd8IQM2zohAnTkBGSalLH/wrRN7PmA8V9hy9479NzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q8AOWycx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I30Wdf024108;
-	Thu, 18 Jul 2024 10:13:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=eR8901HJO9WITQXSspzaYXad
-	3fJdO0EezwyJ9Xn459I=; b=Q8AOWycxxTaFrfPR+SH/hQf0nTv3AeJvra0O4mSj
-	WMFap5FNqsR/h66kTqWBIYk6rX/p/kLjoqi/TY9aHhF83eTO/NFGzSS87xBvcH2z
-	lCa4CBvuZC+Rgyrwn/6I6QvWLTNiw9H6PjykkmCzErCCW6FMmz2VLhthEjmtEizL
-	q6vSdcIjLnLivGDi7J6YcUBmSJ8RcnX8qSBqRRm1vJaaxbdCpo0gyrjeU+nyX5KJ
-	cXiuULlc0hD6Q+GQwx+9Tizimqe1G5gSfgOJE93pJs6apJ+3Jyh68BMO2ANZbs80
-	SpcBkJvSlkBDgHi6Z4ZCYLmHR/MwEApubaoHrhN/iGiKOg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfnn592-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 10:13:26 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46IADPOL017215
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 10:13:25 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 18 Jul 2024 03:13:21 -0700
-Date: Thu, 18 Jul 2024 15:43:18 +0530
-From: Pavan Kondeti <quic_pkondeti@quicinc.com>
-To: Will Deacon <will@kernel.org>, Vidya Sagar <vidyas@nvidia.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        Manikanta Maddireddy
-	<mmaddireddy@nvidia.com>,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Krishna Thota <kthota@nvidia.com>, Joerg Roedel <joro@8bytes.org>
-Subject: Re: [Query] ACS enablement in the DT based boot flow
-Message-ID: <f551eecc-33fa-4729-b004-64a532493705@quicinc.com>
-References: <PH8PR12MB667446D4A4CAD6E0A2F488B5B83F2@PH8PR12MB6674.namprd12.prod.outlook.com>
- <20240410192840.GA2147526@bhelgaas>
- <20240428072318.GA11447@willie-the-truck>
+	s=arc-20240116; t=1721298588; c=relaxed/simple;
+	bh=3Qyk3nLyLDIHrxPcP2TVz5Xq7b5aJdgiNMZExcslJDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V1P2rGKLZWfqEjHv7hO/b5UZZcZmBgbv8Xv4TCy5Pl7qnU78PidLMYbmpdRC0IJC75XrdSMOqZ06O7Ocl53XpOz4dcPjCRoeni3FLNPLk787SyWU2cGP58GKcu5iuscSLVDi5fsGMnhSLvlslwMNcz5409eoZ4XlZJYOC+YGy78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OFtsf01i; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-25e3d388580so329556fac.0
+        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 03:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721298585; x=1721903385; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Qn595tj+8ziMn0/QIYoTkBU+IARmrWlkcsfgecQj10Y=;
+        b=OFtsf01icfZ0OGFJL4tHDxXooNhlpx2q6FBXzNRliE/tcdziWs9NqzF6mrMD7k5sSK
+         93ak/qihLNJ1qvSU8uB3H4N0oO+0LzkPf0tOZXWG9W1BWkOEc04gOvr72gji8t8T1P/L
+         91FFi3fVmji0vcbUUfIDhWoQAlh9Jx6pR86PQPas+J4EchFP36cL9U8CRz/ZqBvHfXsl
+         SFG7nJb5L/U5GC7jQuH7dW2TSxrjfn4YAGnsZAxi9JeYpAxnswbc+Fl28THlAA2i6iO6
+         XM+TLtr/TYxFAmpl39E1QvXzxSeUhkihqgHlvJ8PE2b3cHOfAhJgBf1oMLLF4jno/k6e
+         02tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721298585; x=1721903385;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qn595tj+8ziMn0/QIYoTkBU+IARmrWlkcsfgecQj10Y=;
+        b=ALzdWbMN9QOouDDtHzzredAjt54nLy4VeC35AsHGaEzj7GWZdfnPcQZLFtgmTKagA+
+         m//jCUV0ML1wjXC+HkwTdF1G7nNqtIs4HyfEfVMPpAcwy38FAlqXTIjrTkqv93yluBBy
+         7PukOuhmk02xTL64nttFa8uzBz+59goJVZHdoRtVnpKuZO+bFHRFhVzgyxwNVeYgnEW3
+         8CcGw2ws6wRLDle1VQ0kpgJHO1R4wZHED1OVWaBW1qz1M0EAM2FoIXiFsWdnHc1Y9TOB
+         r01fYYnf1y8jYUd4NFD8M+AIjVafDvfOU/WhjrJhMgU9WmZ4uu8PaxXnCF/sLrMm4PsX
+         UdGw==
+X-Forwarded-Encrypted: i=1; AJvYcCW41kGlqmlkNw1BCx1eDwly5ZpgJEi7pFe8YzEFGrMWOAyoL6+8gjl0C3hG/L/NFa7pQ4UjnLMd42P61ZaQL42BxPsx2WGUODHd
+X-Gm-Message-State: AOJu0YxAMxFwqETmsljalC7E6TRYA3sCIVpaYb56ZppW3V++rgHsLkrA
+	Z5tv6G+fjpnaCr+OWKCs55Yp7eQkIwIxFjPj7/3Y9EX4g91trZLYpBNOZNhunA==
+X-Google-Smtp-Source: AGHT+IEqtMgjvMxkbWmWOdXGGWp0Zjuz/CWNaJsNsiv+FSoHC2NTjU/GPw8xwFN3knQ+HKmaZvHkxw==
+X-Received: by 2002:a05:6871:149:b0:25e:12b9:be40 with SMTP id 586e51a60fabf-260d9221b48mr3740633fac.25.1721298584639;
+        Thu, 18 Jul 2024 03:29:44 -0700 (PDT)
+Received: from thinkpad ([220.158.156.207])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7ed56sm9640357b3a.125.2024.07.18.03.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jul 2024 03:29:44 -0700 (PDT)
+Date: Thu, 18 Jul 2024 15:59:38 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Mayank Rana <quic_mrana@quicinc.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 12/13] PCI: qcom: Simulate PCIe hotplug using 'global'
+ interrupt
+Message-ID: <20240718102938.GA8877@thinkpad>
+References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
+ <20240717-pci-qcom-hotplug-v2-12-71d304b817f8@linaro.org>
+ <02b94a07-fcd6-4a48-bead-530b81c8a27e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240428072318.GA11447@willie-the-truck>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: iDxlsnbsC8QinLVrS0tGPOoz8_Quukl9
-X-Proofpoint-ORIG-GUID: iDxlsnbsC8QinLVrS0tGPOoz8_Quukl9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_06,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 clxscore=1011 spamscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2407180066
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <02b94a07-fcd6-4a48-bead-530b81c8a27e@quicinc.com>
 
-Hi Vidya/Will,
-
-On Sun, Apr 28, 2024 at 08:23:18AM +0100, Will Deacon wrote:
-> On Wed, Apr 10, 2024 at 02:28:40PM -0500, Bjorn Helgaas wrote:
-> > [+cc Will, Joerg]
-> > 
-> > On Mon, Apr 01, 2024 at 10:40:15AM +0000, Vidya Sagar wrote:
-> > > Hi folks,
-> > > ACS (Access Control Services) is configured for a PCI device through
-> > > pci_enable_acs().  The first thing pci_enable_acs() checks for is
-> > > whether the global flag 'pci_acs_enable' is set or not.  The global
-> > > flag 'pci_acs_enable' is set by the function pci_request_acs().
-> > > 
-> > > pci_enable_acs() function is called whenever a new PCI device is
-> > > added to the system
-> > > 
-> > >  pci_enable_acs+0x4c/0x2a4
-> > >  pci_acs_init+0x38/0x60
-> > >  pci_device_add+0x1a0/0x670
-> > >  pci_scan_single_device+0xc4/0x100
-> > >  pci_scan_slot+0x6c/0x1e0
-> > >  pci_scan_child_bus_extend+0x48/0x2e0
-> > >  pci_scan_root_bus_bridge+0x64/0xf0
-> > >  pci_host_probe+0x18/0xd0
-> > > 
-> > > In the case of a system that boots using device-tree blob,
-> > > pci_request_acs() is called when the device driver binds with the
-> > > respective device
-> > > 
-> > > of_iommu_configure+0xf4/0x230
-> > > of_dma_configure_id+0x110/0x340
-> > > pci_dma_configure+0x54/0x120
-> > > really_probe+0x80/0x3e0
-> > > __driver_probe_device+0x88/0x1c0
-> > > driver_probe_device+0x3c/0x140
-> > > __device_attach_driver+0xe8/0x1e0
-> > > bus_for_each_drv+0x78/0xf0
-> > > __device_attach+0x104/0x1e0
-> > > device_attach+0x14/0x30
-> > > pci_bus_add_device+0x50/0xd0
-> > > pci_bus_add_devices+0x38/0x90
-> > > pci_host_probe+0x40/0xd0
-> > > 
-> > > Since the device addition always happens first followed by the
-> > > driver binding, this flow effectively makes sure that ACS never gets
-> > > enabled.
-> > > 
-> > > Ideally, I would expect the pci_request_acs() get called (probably
-> > > by the OF framework itself) before calling pci_enable_acs().
-> > > 
-> > > This happens in the ACPI flow where pci_request_acs() is called
-> > > during IORT node initialization (i.e. iort_init_platform_devices()
-> > > function).
-> > > 
-> > > Is this understanding correct? If yes, would it make sense to call
-> > > pci_request_acs() during OF initialization (similar to IORT
-> > > initialization in ACPI flow)?
-> > 
-> > Your understanding looks correct to me.  My call graph notes, FWIW:
-> > 
-> >   mem_init
-> >     pci_iommu_alloc                   # x86 only
-> >       amd_iommu_detect                # init_state = IOMMU_START_STATE
-> >         iommu_go_to_state(IOMMU_IVRS_DETECTED)
-> >           state_next
-> >             switch (init_state)
-> >             case IOMMU_START_STATE:
-> >               detect_ivrs
-> >                 pci_request_acs
-> >                   pci_acs_enable = 1  # <--
-> >       detect_intel_iommu
-> >         pci_request_acs
-> >           pci_acs_enable = 1          # <--
-> > 
-> >   pci_scan_single_device              # PCI enumeration
-> >     ...
-> >       pci_init_capabilities
-> >         pci_acs_init
-> >           pci_enable_acs
-> >             if (pci_acs_enable)       # <--
-> >               pci_std_enable_acs
-> > 
-> >   __driver_probe_device
-> >     really_probe
-> >       pci_dma_configure               # pci_bus_type.dma_configure
-> >         if (OF)
-> >           of_dma_configure
-> >             of_dma_configure_id
-> >               of_iommu_configure
-> >                 pci_request_acs       # <-- 6bf6c24720d3
-> >                 iommu_probe_device
-> >         else if (ACPI)
-> >           acpi_dma_configure
-> >             acpi_dma_configure_id
-> >               acpi_iommu_configure_id
-> >                 iommu_probe_device
-> > 
-> > The pci_request_acs() in of_iommu_configure(), which happens too late
-> > to affect pci_enable_acs(), was added by 6bf6c24720d3 ("iommu/of:
-> > Request ACS from the PCI core when configuring IOMMU linkage"), so I
-> > cc'd Will and Joerg.  I don't know if that *used* to work and got
-> > broken somehow, or if it never worked as intended.
+On Wed, Jul 17, 2024 at 03:57:11PM -0700, Mayank Rana wrote:
+> Hi Mani
 > 
-> I don't have any way to test this, but I'm supportive of having the same
-> flow for DT and ACPI-based flows. Vidya, are you able to cook a patch?
+> I don't think we can suggest that usage of link up event with Global IRQ as
+> simulate PCIe hotplug. hotplug is referring to allow handling of both
+> add or remove of endpoint device whereas here you are using global IRQ as
+> last step to rescan bus if endpoint is power up later after link training is
+> initiated.
 > 
 
-I ran into a similar observation while testing a PCI device assignment
-to a VM. In my configuration, the virtio-iommu is enumerated over the
-PCI transport. So, I am thinking we can't hook pci_request_acs() to an
-IOMMU driver. Does the below patch makes sense?
+Why not? Well it is not entirely the standard 'hotplug' and that's why I
+referred it as 'simulating hotplug'.
 
-The patch is tested with a VM and I could see ACS getting enabled and
-separate IOMMU groups are created for the devices attached under
-PCIe root port(s).
+The point of having this feature is to avoid the hassle of rescanning the bus
+manually when the devices are connected to this bus post boot.
 
-The RC/devices with ACS quirks are not suffering from this problem as we 
-short circuit ACS capability detection checking in
-pci_acs_enabled()->pci_dev_specific_acs_enabled() . May be this is one
-of the reason why this was not reported/observed by some platforms with
-DT.
+> Will this work if you remove endpoint device and add it back again ?
+> 
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index b908fe1ae951..0eeb7abfbcfa 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -123,6 +123,13 @@ bool pci_host_of_has_msi_map(struct device *dev)
- 	return false;
- }
- 
-+bool pci_host_of_has_iommu_map(struct device *dev)
-+{
-+	if (dev && dev->of_node)
-+		return of_get_property(dev->of_node, "iommu-map", NULL);
-+	return false;
-+}
-+
- static inline int __of_pci_pci_compare(struct device_node *node,
- 				       unsigned int data)
- {
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4c367f13acdc..ea6fcdaf63e2 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -889,6 +889,7 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
- 	dev_set_msi_domain(&bus->dev, d);
- }
- 
-+bool pci_host_of_has_iommu(struct device *dev);
- static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- {
- 	struct device *parent = bridge->dev.parent;
-@@ -951,6 +952,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	    !pci_host_of_has_msi_map(parent))
- 		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
- 
-+	if (pci_host_of_has_iommu_map(parent))
-+		pci_request_acs();
-+
- 	if (!parent)
- 		set_dev_node(bus->bridge, pcibus_to_node(bus));
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cafc5ab1cbcb..7eceed71236a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2571,6 +2571,7 @@ struct device_node;
- struct irq_domain;
- struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus);
- bool pci_host_of_has_msi_map(struct device *dev);
-+bool pci_host_of_has_iommu_map(struct device *dev);
- 
- /* Arch may override this (weak) */
- struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
-@@ -2579,6 +2580,7 @@ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
- static inline struct irq_domain *
- pci_host_bridge_of_msi_domain(struct pci_bus *bus) { return NULL; }
- static inline bool pci_host_of_has_msi_map(struct device *dev) { return false; }
-+static inline bool pci_host_of_has_iommu_map(struct device *dev) { return false; }
- #endif  /* CONFIG_OF */
- 
- static inline struct device_node *
+No, not currently. But we could add that logic using LINK_DOWN event. Though,
+when the device comes back again, it will not get enumerated successfully due to
+a bug in the link training part (which I plan to address later). But this
+issue is irrespective of this hotplug simulation.
 
-Thanks,
-Pavan
+> Regards,
+> Mayank
+> On 7/17/2024 10:03 AM, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Historically, Qcom PCIe RC controllers lack standard hotplug support. So
+> > when an endpoint is attached to the SoC, users have to rescan the bus
+> > manually to enumerate the device. But this can be avoided by simulating the
+> > PCIe hotplug using Qcom specific way.
+> > 
+> > Qcom PCIe RC controllers are capable of generating the 'global' SPI
+> > interrupt to the host CPUs. The device driver can use this event to
+> > identify events such as PCIe link specific events, safety events etc...
+> > 
+> > One such event is the PCIe Link up event generated when an endpoint is
+> > detected on the bus and the Link is 'up'. This event can be used to
+> > simulate the PCIe hotplug in the Qcom SoCs.
+> > 
+> > So add support for capturing the PCIe Link up event using the 'global'
+> > interrupt in the driver. Once the Link up event is received, the bus
+> > underneath the host bridge is scanned to enumerate PCIe endpoint devices,
+> > thus simulating hotplug.
+> > 
+> > All of the Qcom SoCs have only one rootport per controller instance. So
+> > only a single 'Link up' event is generated for the PCIe controller.
+> > 
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >   drivers/pci/controller/dwc/pcie-qcom.c | 55 +++++++++++++++++++++++++++++++++-
+> >   1 file changed, 54 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 0180edf3310e..a1d678fe7fa5 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -50,6 +50,9 @@
+> >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> >   #define PARF_Q2A_FLUSH				0x1ac
+> >   #define PARF_LTSSM				0x1b0
+> > +#define PARF_INT_ALL_STATUS			0x224
+> > +#define PARF_INT_ALL_CLEAR			0x228
+> > +#define PARF_INT_ALL_MASK			0x22c
+> >   #define PARF_SID_OFFSET				0x234
+> >   #define PARF_BDF_TRANSLATE_CFG			0x24c
+> >   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+> > @@ -121,6 +124,9 @@
+> >   /* PARF_LTSSM register fields */
+> >   #define LTSSM_EN				BIT(8)
+> > +/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
+> > +#define PARF_INT_ALL_LINK_UP			BIT(13)
+> > +
+> >   /* PARF_NO_SNOOP_OVERIDE register fields */
+> >   #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
+> >   #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
+> > @@ -1488,6 +1494,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
+> >   				    qcom_pcie_link_transition_count);
+> >   }
+> > +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
+> > +{
+> > +	struct qcom_pcie *pcie = data;
+> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
+> > +	struct device *dev = pcie->pci->dev;
+> > +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
+> > +
+> > +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
+> > +
+> > +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+> > +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+> > +		/* Rescan the bus to enumerate endpoint devices */
+> > +		pci_lock_rescan_remove();
+> > +		pci_rescan_bus(pp->bridge->bus);
+> > +		pci_unlock_rescan_remove();
+> How do you handle case where endpoint is already enumerated, and seeing link
+> up event in parallel or later ? will it go ahead to rescan bus again here ?
+> 
 
+If the endpoint is already enumerated, there will be no Link up event. Unless
+the controller reinitializes the bus (which is the current behavior).
 
+If the endpoint is already powered on during controller probe, then it will be
+enumerated during dw_pcie_host_init() and since we register the IRQ handler
+afterwards, there will be no Link up in that case.
+
+This feature is only applicable for endpoints that comes up post boot.
+
+> Also can you consider doing this outside hardirq context ?
+> 
+
+This is already running in threaded irq context (bottom half), wouldn't that
+be enough?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
