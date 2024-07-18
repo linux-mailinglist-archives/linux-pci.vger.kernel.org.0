@@ -1,126 +1,178 @@
-Return-Path: <linux-pci+bounces-10499-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4161F934CD9
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 13:58:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 581DC934CF7
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 14:11:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0197283F14
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 11:58:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8EAA1F22AF2
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 12:11:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31EF813B2A4;
-	Thu, 18 Jul 2024 11:58:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E0113BC12;
+	Thu, 18 Jul 2024 12:11:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mWufwUOg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zbplqjNg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5007013AD2F
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 11:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6020012FB34
+	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 12:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721303914; cv=none; b=W5z+cOUbYuzIvKgh9mPCyqVhYzi5ygW/Krr/MQFuwU97HrtA7qbPMatiB/c+2YML0pePf3XziNy1+tPxZph4dysdrlW8MMDJUuixGFzaB1SPK5SyUSPxVLwK7DiHWD1WaYWFQ29GGJTCnpT5gKkF4SRbqStPLjP54LaVxYT28gQ=
+	t=1721304668; cv=none; b=kVwtnxWPITB2iKktpePSvJgRlC/Uh1kF4XJVhmdHVjO3GQNE4/v80gdJsAVStj1gImtuLhhbJVXRgYeUnhBe6mOEkXiozdeIoMG55eF5krIDtbF1E2zG0DNow7SSvfDcSNN/XycERhINDZ/PJXBnoiWom5h/qdCBHFbW/VcUJoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721303914; c=relaxed/simple;
-	bh=FFrNdvWWjN63s42BKAKBM8xaz6ftXrgEKRS6jcbmJL8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q3MoTWt4JGZgfPZ9h/CFh1IpkeSjcV1a3oWMfqiiNhBf8hkoT5IKdMvf9j/5yZXQs2YKrThZZjgmFWhGkOf5uh9KrxS1JqH7Olcw2LThIrEQ2TgIEuhEB2X9aBho7uM5RDX9PvxrwL4a/lGhx7fR/SFwwwp5s+sWBdF2vPwsZ6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mWufwUOg; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-426717a2d12so1669035e9.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 04:58:30 -0700 (PDT)
+	s=arc-20240116; t=1721304668; c=relaxed/simple;
+	bh=5FlvvF6ElZoar91TZyjpmKtRh40LGlBGD1Ri5a2ma5s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SH2HJS5Tv7843H66vERG27bvDMM0itKdv4flRZ7WKBlSM1uCtRoZQbMpFVk72LcW+dBOqlYPHVO2lb3ApmUV7qwULK2AkvdZnoYsOLJtH5jaVVnGpPs3gk+nao/xTJFdC4PZ820VgPldMRERh1zsO/tUSF2YH5N/Js1BDKEeIxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zbplqjNg; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a77cb7c106dso76601966b.1
+        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 05:11:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721303909; x=1721908709; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eT3/r8iq9vh5IHb+laarDBOv4FqNaSgzXd7Frm5ubA4=;
-        b=mWufwUOgGu9tdiTbF+wwaBViwZ/n4VkZG88CacADd3i1zoS9DkkZusfrOmHeK/jtli
-         Np/roYCnPe/6gkZWafuTul7lmwqWOct92+bai0+qHrEjtsqT/9krxKTRlxCe2zq2rYvv
-         ASYfWg4jaZMhWrVKMb9zOq5kI/rJQviCHWeK/o9qB7DB2ECMjFjn7SMvqlH8SLgGQGxz
-         CJplTKapwkiyg8sm6kBEKMrj68Iez0l3L60XL0SrUo5m82q3VKstqAULLMEROCSnuErU
-         pc71vIg7gz5X+z4zGwuqAeyodqQUmUyBvspOf974PiNE080Sr97Gn+/iH0N0vhRxCO7z
-         NxzA==
+        d=linaro.org; s=google; t=1721304664; x=1721909464; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=HMhzX7yfMRYWWdn8bv1T9AEmz4KNpf5iD+xeOE74dI4=;
+        b=zbplqjNgzzswYLqQve+cEiGc1I7tBZgic1M0R1D0Q4/xFtavr1XC0zfP+aF4Mz3A1I
+         lcwhKZc7UEEc35RP0BJhmOxgw3vFERFvBm1uwqA8gBXYXMvLd5viCoX9k8PxjnpIMtC9
+         p3WUiqWlsGff4z/55kSC5GLYo193Xm7i7L1RGLBeDarUzrWl2Osw9Y94+VhJzLBGFcRr
+         SjCzprgxMF57r4P28KPZ1ve0OqMjmgTSRRbuyD+KdqOWYMZnaxL7NoARmw0VWq5yqnUm
+         tReLC2m5VNyufr0bN99xfcrvQaUY7zl2LcaHXcs+zqP3Co4sng8Gxe+QjXc8kULdUscK
+         FmOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721303909; x=1721908709;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eT3/r8iq9vh5IHb+laarDBOv4FqNaSgzXd7Frm5ubA4=;
-        b=IdSuYQGzIBsMca/M55aeTBhOlLcIbI3rqGD1oRAQO+EDbzcVmz+SpmDTHnrY1Rw0/O
-         /Ore2t4rOBOvv5QylOyE5gzGJS2Um1jTBWnJzvE347ylS6778+kJ5fMTDjE/m1dDLXWj
-         BBpm2H0bY0uT6mSXMh3z0DZjonI0qRU7y3x4/+2GiAvfjyFgHlp2mrDUyn5WZ4TMNn6Q
-         OH7zVJS0l4VOV1MXl/xArYC2lcRKwx0DKizmiwdZAMwzg9z0OpQlZej7OCBfrQb2UDPZ
-         pETShZsidxNVbiE6NPgJ2yGtg36KYMLDBzpSUIuoVnPdmOhhgiV38jjcWy3QvjWm3dXp
-         jZBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGi8IwjUDvlVEZKXczfoGKvRniyq36tnlpx/ZQ9WbNno+Qbeta0CQDnfm2pIACc3p9+5Exlg7tMrXcJ0mi4xdy97NG1AAQlKmn
-X-Gm-Message-State: AOJu0Yz5PyESQWdwrfr0BUNF5b+s7wK+kS9x+zMWrXYxQoJVl8FFK5ow
-	JDWMkZwVhEDjexMs/Jd5qSqSQ9HlufKtZB0gWr9kwIlEFPNvkFErCV27nkXbOgk=
-X-Google-Smtp-Source: AGHT+IHpOFhVVOR50WDCPfi6DXrjDJkGmwaqmpgdsmAo5+FCsTxtL42b6u3Rfj/yngP1z/p7fq9EnA==
-X-Received: by 2002:a05:600c:4751:b0:426:5cc7:82f with SMTP id 5b1f17b1804b1-427d2b527demr5295885e9.13.1721303909431;
-        Thu, 18 Jul 2024 04:58:29 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:58d4:2f84:5fcd:8259])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-368467a34dcsm2258703f8f.109.2024.07.18.04.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 04:58:29 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Kalle Valo <kvalo@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	ath12k@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] Kconfig: reduce the amount of power sequencing noise
-Date: Thu, 18 Jul 2024 13:58:27 +0200
-Message-ID: <172130382340.64067.7765392027721457700.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240717142803.53248-1-brgl@bgdev.pl>
-References: <20240717142803.53248-1-brgl@bgdev.pl>
+        d=1e100.net; s=20230601; t=1721304664; x=1721909464;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HMhzX7yfMRYWWdn8bv1T9AEmz4KNpf5iD+xeOE74dI4=;
+        b=G1H52sNAtwS+tajaEFvGIHZiYUfmqI1jz53EZWz64mdZBEMH61AhhlyQcIo4UUhk7O
+         Ezdc0T9ZKtP1UyQXxuk2uzwYVihDrtUB6XMwtvCNv8hQdaQbF9NjE8zi5+XxYMGbr955
+         7OkeN2Mm/K/SG+KjoC1+lZC70HMBwtel+UJ2fUwJidfAYWxnZMYH7lA5sizsCXll9Ihc
+         BqnwMrp1YEQRuXKkMP7BG+0D+kwQLJjuXWo5CqC9YUIPPWbupsxst9ltOOmVqyGCfPQd
+         ysWBR/RkxM3Rl7RMAC3eVXogvQv0vVCo6sTohI7gYIFJz2ZUerSwNYEcruNMn+WGsa6w
+         IXOA==
+X-Gm-Message-State: AOJu0YweWjBvt5jEky/4HPUcvGGc/y3ZrrPGci0r1fzYt5XsDHkN881n
+	nz5TGRXbRLsNI8mz30rm24P/7kngnWH+0lpE5aWil33mwRQuC3oZo6cIj4qh0AjXa5q1cqSCrVM
+	i
+X-Google-Smtp-Source: AGHT+IEaFqvxuZZ7uAVDsD2FLeFUDd9vDe5QIGuH7rH9x2g06eiK94eBPWI/FWmwd3PIAyZkU8JvJg==
+X-Received: by 2002:a17:906:80c3:b0:a72:80b8:ba64 with SMTP id a640c23a62f3a-a7a01145e24mr325166966b.25.1721304662661;
+        Thu, 18 Jul 2024 05:11:02 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5e85ebsm558826066b.96.2024.07.18.05.11.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jul 2024 05:11:02 -0700 (PDT)
+Message-ID: <8b6cd895-8904-4d8c-bf23-5d933f476d57@linaro.org>
+Date: Thu, 18 Jul 2024 14:11:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/13] PCI: endpoint: Assign PCI domain number for
+ endpoint controllers
+To: manivannan.sadhasivam@linaro.org,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
+ <20240717-pci-qcom-hotplug-v2-5-71d304b817f8@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240717-pci-qcom-hotplug-v2-5-71d304b817f8@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Wed, 17 Jul 2024 16:28:03 +0200, Bartosz Golaszewski wrote:
-> Kconfig will ask the user twice about power sequencing: once for the QCom
-> WCN power sequencing driver and then again for the PCI power control
-> driver using it.
+On 17.07.2024 7:03 PM, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Let's automate the selection of PCI_PWRCTL by introducing a new hidden
-> symbol: HAVE_PWRCTL which should be selected by all platforms that have
-> the need to include PCI power control code (right now: only ARCH_QCOM).
+> Right now, PCI endpoint subsystem doesn't assign PCI domain number for the
+> PCI endpoint controllers. But this domain number could be useful to the EPC
+> drivers to uniquely identify each controller based on the hardware instance
+> when there are multiple ones present in an SoC (even multiple RC/EP).
 > 
-> [...]
+> So let's make use of the existing pci_bus_find_domain_nr() API to allocate
+> domain numbers based on either Devicetree (linux,pci-domain) property or
+> dynamic domain number allocation scheme.
+> 
+> It should be noted that the domain number allocated by this API will be
+> based on both RC and EP controllers in a SoC. If the 'linux,pci-domain' DT
+> property is present, then the domain number represents the actual hardware
+> instance of the PCI endpoint controller. If not, then the domain number
+> will be allocated based on the PCI EP/RC controller probe order.
+> 
+> If the architecture doesn't support CONFIG_PCI_DOMAINS_GENERIC (rare), then
+> currently a warning is thrown to indicate that the architecture specific
+> implementation is needed.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/endpoint/pci-epc-core.c | 10 ++++++++++
+>  include/linux/pci-epc.h             |  2 ++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index 84309dfe0c68..7fa81b91e762 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -838,6 +838,9 @@ void pci_epc_destroy(struct pci_epc *epc)
+>  {
+>  	pci_ep_cfs_remove_epc_group(epc->group);
+>  	device_unregister(&epc->dev);
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> +		pci_bus_release_domain_nr(NULL, &epc->dev);	
 
-I'm picking this up into my pwrseq/for-current branch. I'll be off next week
-so I want to give the autobuilders the chance to play with this and I'll send
-a PR to Linus with another pwrseq fix I have queued tomorrow evening.
+Shouldn't this be called before device_unregister? pci/remove.c
+does that (via pci_remove_bus() in pci_remove_root_bus())
 
-Let me know if there are any objections.
-
-[1/1] Kconfig: reduce the amount of power sequencing noise
-      commit: ed70aaac7c359540d3d8332827fa60b6a45e15f2
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Konrad
 
