@@ -1,190 +1,321 @@
-Return-Path: <linux-pci+bounces-10521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10522-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03307935035
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 17:54:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A14B935041
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 17:56:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 860722835A7
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:54:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D84D81F22DD7
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:56:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 654AB1448C7;
-	Thu, 18 Jul 2024 15:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iJCh00NQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Uj8Hvw2B";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E69SeGTh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5uFBpiLV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B3B7E766;
+	Thu, 18 Jul 2024 15:56:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C714D8B7;
-	Thu, 18 Jul 2024 15:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6137144D09;
+	Thu, 18 Jul 2024 15:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721318067; cv=none; b=uSIOTgT869LMJRhT5M2hrmJMNud17XKh0zCuMj6HDI3l1KcTrCfT9ySY38Pz7TV9Ljt8oUxDoEhUf6R/Zg7qnAZSCf+g5sZFAhSFCPSV/Le8S7N8wvUSA3DjkL30Q8TuVD0CL6jf0ureNWAqW1r/zjlM1k0wX4dS96FeXLvVU+s=
+	t=1721318194; cv=none; b=W7gPPKRhTfgMa07DEAZkOQYTaZ8s/LvvCSZ91lsq+JKaxQQRbKt4TqHdTrbgsic+pkCZDNSQE1D36ty7aSkP2GjsGrODfwmX7+E/0urL+X2aSfrOYj20axhuJrBcyhqh0lOhOK+HNBvCFvdt4Agc+udk9gLObEYjHOqAH1mfkiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721318067; c=relaxed/simple;
-	bh=+GyF6wF45Mva/16xGi0bZK4e1fiwil2bPTQjhXLOiuA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mdnDxpZdnMmKFTTUZO2AH/Ik7k5OjnD8C+2IAoEgvEPZAYMFpEjmweyI2FOyiBCrdbSCfIbw0UYi9sijbVFxoEteLJ70LXaR8JrShg/3kh+hBZtJ1uXw9DfOHES8zbwJs7wJscg4jFcnFuwVQckGUm3qR06H5mvnvCJmfQwbFGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iJCh00NQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Uj8Hvw2B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E69SeGTh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5uFBpiLV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C07061FBFB;
-	Thu, 18 Jul 2024 15:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721318064; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hw0JL5HeNP2tQP8OBPZN6qivjdHQ01R9UaXvGFT6Pl0=;
-	b=iJCh00NQGkmfEwGvfwMzpKue/TWOiYXwjn+GMJToXjItCBVOcl1OUyr0AIC9gEEJVW9b61
-	XW2XYvIONDxZHC8aKWSjEieRE618ITkMd9P0j5l6NPKBVr4L5GyBavXRRX81306M1lEafW
-	DK9iHSCx63rRqfwMGsyIZg72gupWvW8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721318064;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hw0JL5HeNP2tQP8OBPZN6qivjdHQ01R9UaXvGFT6Pl0=;
-	b=Uj8Hvw2B+SS4PYs54olzZcUTitI6gR7jaxSDzGJzjhOBbZCwnjhgnFWb7JYv/KX01ocBnG
-	fioRhtpAU7HrPTAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=E69SeGTh;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5uFBpiLV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721318063; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hw0JL5HeNP2tQP8OBPZN6qivjdHQ01R9UaXvGFT6Pl0=;
-	b=E69SeGThIYDdtfZ76g0+pC+Lfs1snFpP9Zy33ITQEk1+E3+wxGdJNazTURqB0/GEcCykwh
-	M+KGhULAeFNJgiI5xKMWQmhOl5rYCzg/ZFXvI2VQ1P4DfuOqHZIftd5+aIC3GDs2Ubx0BU
-	Gh3M4kj9XQMcW28ShyHxCO45KOwzLSI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721318063;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hw0JL5HeNP2tQP8OBPZN6qivjdHQ01R9UaXvGFT6Pl0=;
-	b=5uFBpiLVBmYySZIclc9Wuxvf6b4xhF9lMS4vb6s37vgtXQ2NZmqMjoZF9EKUkBRe3tcgN0
-	PRzbVTkeR+Fk8GCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC9681379D;
-	Thu, 18 Jul 2024 15:54:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jw2UL646mWYFNAAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Thu, 18 Jul 2024 15:54:22 +0000
-Message-ID: <3fa9cdef-b242-43ef-bf53-33fb3f294039@suse.de>
-Date: Thu, 18 Jul 2024 18:54:18 +0300
+	s=arc-20240116; t=1721318194; c=relaxed/simple;
+	bh=Lo4jqSKsydXxq6AsU34nSyXN5W6kwGKlU6z+Ewh5IsY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GmP85QbQdxe8vA6d1kBoa2mRQe7t94QcsKt54mowKrtmSTppfMe5ilr7PL7mV5mjEa0OvZLkjblfznTpY6P+II1ZJ24qByiVBJEddK3kT2Szp+QoBFRd2lm4S+AgZoYcdgJgkPiXlsyw3XrJ4qNih4pMy43+K9B8FEpzuyBN+Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WPy6j5mh4z67NNP;
+	Thu, 18 Jul 2024 23:54:37 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 26D4E140AE5;
+	Thu, 18 Jul 2024 23:56:29 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
+ 2024 16:56:28 +0100
+Date: Thu, 18 Jul 2024 16:56:27 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Lukas Wunner <lukas@wunner.de>
+CC: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, "James
+ Bottomley" <James.Bottomley@HansenPartnership.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linuxarm@huawei.com>, David Box
+	<david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Li, Ming"
+	<ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair
+ Francis <alistair.francis@wdc.com>, Wilfred Mallawa
+	<wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, "Alexey
+ Kardashevskiy" <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>,
+	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Jason Gunthorpe
+	<jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, Jerome Glisse
+	<jglisse@google.com>, Sean Christopherson <seanjc@google.com>, "Alexander
+ Graf" <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>, Jonathan Corbet
+	<corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Alan
+ Stern" <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2 15/18] PCI/CMA: Expose a log of received signatures
+ in sysfs
+Message-ID: <20240718165627.000052bc@Huawei.com>
+In-Reply-To: <77f549685f994981c010aebb1e9057aa3555b18a.1719771133.git.lukas@wunner.de>
+References: <cover.1719771133.git.lukas@wunner.de>
+	<77f549685f994981c010aebb1e9057aa3555b18a.1719771133.git.lukas@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] irqchip: Add Broadcom bcm2712 MSI-X interrupt
- controller
-To: Thomas Gleixner <tglx@linutronix.de>,
- Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-References: <20240626104544.14233-1-svarbanov@suse.de>
- <20240626104544.14233-4-svarbanov@suse.de> <87ikxu1t5e.ffs@tglx>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <87ikxu1t5e.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.00
-X-Spam-Level: 
-X-Rspamd-Queue-Id: C07061FBFB
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Thomas,
+On Sun, 30 Jun 2024 21:50:00 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
 
-Thank you for the comments!
+> When authenticating a device with CMA-SPDM, the kernel verifies the
+> challenge-response received from the device, but otherwise keeps it to
+> itself.
+>=20
+> James Bottomley contends that's not good enough because user space or a
+> remote attestation service may want to re-verify the challenge-response:
+> Either because it mistrusts the kernel or because the kernel is unaware
+> of policy constraints that user space or the remote attestation service
+> want to apply.
+>=20
+> Facilitate such use cases by exposing a log in sysfs which consists of
+> several files for each challenge-response event.  The files are prefixed
+> with a monotonically increasing number, starting at 0:
+>=20
+> /sys/devices/.../signatures/0_signature
+> /sys/devices/.../signatures/0_transcript
+> /sys/devices/.../signatures/0_requester_nonce
+> /sys/devices/.../signatures/0_responder_nonce
+> /sys/devices/.../signatures/0_hash_algorithm
+> /sys/devices/.../signatures/0_combined_spdm_prefix
+> /sys/devices/.../signatures/0_certificate_chain
+> /sys/devices/.../signatures/0_type
+>=20
+> The 0_signature is computed over the 0_transcript (a concatenation of
+> all SPDM messages exchanged with the device).
+>=20
+> To verify the signature, 0_transcript is hashed with 0_hash_algorithm
+> (e.g. "sha384") and prefixed by 0_combined_spdm_prefix.
+>=20
+> The public key to verify the signature against is the leaf certificate
+> contained in 0_certificate_chain.
+>=20
+> The nonces chosen by requester and responder are exposed as separate
+> attributes to ease verification of their freshness.  They're already
+> contained in the transcript but their offsets within the transcript are
+> variable, so user space would otherwise have to parse the SPDM messages
+> in the transcript to find the nonces.
+>=20
+> The type attribute contains the event type:  Currently it is always
+> "responder-challenge_auth signing".  In the future it may also contain
+> "responder-measurements signing".
+>=20
+> This custom log format was chosen for lack of a better alternative.
+> Although the TCG PFP Specification defines DEVICE_SECURITY_EVENT_DATA
+> structures, those structures do not store the transcript (which can be
+> a few kBytes or up to several MBytes in size).  They do store nonces,
+> hence at least allow for verification of nonce freshness.  But without
+> the transcript, user space cannot verify the signature:
+>=20
+> https://trustedcomputinggroup.org/resource/pc-client-specific-platform-fi=
+rmware-profile-specification/
+>=20
+> Exposing the transcript as an attribute of its own has the benefit that
+> it can directly be fed into a protocol dissector for debugging purposes
+> (think Wireshark).
+>=20
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Cc: J=E9r=F4me Glisse <jglisse@google.com>
+> Cc: Jason Gunthorpe <jgg@nvidia.com>
 
-On 6/27/24 15:12, Thomas Gleixner wrote:
-> Stanimir!
-> 
-> On Wed, Jun 26 2024 at 13:45, Stanimir Varbanov wrote:
->> Add an interrupt controller driver for MSI-X Interrupt Peripheral (MIP)
->> hardware block found in bcm2712. The interrupt controller is used to
->> handle MSI-X interrupts from peripherials behind PCIe endpoints like
->> RP1 south bridge found in RPi5.
->>
->> There are two MIPs on bcm2712, the first has 64 consecutive SPIs
->> assigned to 64 output vectors, and the second has 17 SPIs, but only
->> 8 of them are consecutive starting at the 8th output vector.
-> 
-> This is going to conflict with:
-> 
->   https://lore.kernel.org/all/20240623142137.448898081@linutronix.de/
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-arm-v4-1
-> 
-> Can you please have a look and rework it to the new per device MSI
-> domain concept?
+Nice - particularly the thorough ABI docs.  A few trivial comments inline.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-When do you expect this will be merged?
 
-~Stan
+> +/**
+> + * spdm_create_log_entry() - Allocate log entry for one received SPDM si=
+gnature
+> + *
+> + * @spdm_state: SPDM session state
+> + * @spdm_context: SPDM context (needed to create combined_spdm_prefix)
+> + * @slot: Slot which was used to generate the signature
+> + *	(needed to create certificate_chain symlink)
+> + * @req_nonce_off: Requester nonce offset within the transcript
+> + * @rsp_nonce_off: Responder nonce offset within the transcript
+> + *
+> + * Allocate and populate a struct spdm_log_entry upon device authenticat=
+ion.
+> + * Publish it in sysfs if the device has already been registered through
+> + * device_add().
+> + */
+> +void spdm_create_log_entry(struct spdm_state *spdm_state,
+> +			   const char *spdm_context, u8 slot,
+> +			   size_t req_nonce_off, size_t rsp_nonce_off)
+> +{
+> +	struct spdm_log_entry *log =3D kmalloc(sizeof(*log), GFP_KERNEL);
+> +	if (!log)
+> +		return;
+> +
+> +	*log =3D (struct spdm_log_entry) {
+> +		.slot		   =3D slot,
+> +		.version	   =3D spdm_state->version,
+> +		.counter	   =3D spdm_state->log_counter,
+> +		.list		   =3D LIST_HEAD_INIT(log->list),
+> +
+> +		.sig =3D {
+> +			.attr.name =3D log->sig_name,
+> +			.attr.mode =3D 0444,
+> +			.read	   =3D sysfs_bin_attr_simple_read,
+> +			.private   =3D spdm_state->transcript_end -
+> +				     spdm_state->sig_len,
+> +			.size	   =3D spdm_state->sig_len },
+
+We might set other bin_attr callbacks sometime in future, so I would
+add the trailing comma and move the }, to the next line for these.
+
+> +
+> +		.req_nonce =3D {
+> +			.attr.name =3D log->req_nonce_name,
+> +			.attr.mode =3D 0444,
+> +			.read	   =3D sysfs_bin_attr_simple_read,
+> +			.private   =3D spdm_state->transcript + req_nonce_off,
+> +			.size	   =3D SPDM_NONCE_SZ },
+> +
+> +		.rsp_nonce =3D {
+> +			.attr.name =3D log->rsp_nonce_name,
+> +			.attr.mode =3D 0444,
+> +			.read	   =3D sysfs_bin_attr_simple_read,
+> +			.private   =3D spdm_state->transcript + rsp_nonce_off,
+> +			.size	   =3D SPDM_NONCE_SZ },
+> +
+> +		.transcript =3D {
+> +			.attr.name =3D log->transcript_name,
+> +			.attr.mode =3D 0444,
+> +			.read	   =3D sysfs_bin_attr_simple_read,
+> +			.private   =3D spdm_state->transcript,
+> +			.size	   =3D spdm_state->transcript_end -
+> +				     spdm_state->transcript -
+> +				     spdm_state->sig_len },
+> +
+> +		.combined_prefix =3D {
+> +			.attr.name =3D log->combined_prefix_name,
+> +			.attr.mode =3D 0444,
+> +			.read	   =3D spdm_read_combined_prefix,
+> +			.private   =3D log,
+> +			.size	   =3D spdm_state->version <=3D 0x11 ? 0 :
+> +				     SPDM_COMBINED_PREFIX_SZ },
+> +
+> +		.spdm_context =3D {
+> +			.attr.attr.name =3D log->spdm_context_name,
+> +			.attr.attr.mode =3D 0444,
+> +			.attr.show =3D device_show_string,
+> +			.var	   =3D (char *)spdm_context },
+> +
+> +		.hash_alg =3D {
+> +			.attr.attr.name =3D log->hash_alg_name,
+> +			.attr.attr.mode =3D 0444,
+> +			.attr.show =3D device_show_string,
+> +			.var	   =3D (char *)spdm_state->base_hash_alg_name },
+> +	};
+> +
+> +	snprintf(log->sig_name, sizeof(log->sig_name),
+> +		 "%u_signature", spdm_state->log_counter);
+> +	snprintf(log->req_nonce_name, sizeof(log->req_nonce_name),
+> +		 "%u_requester_nonce", spdm_state->log_counter);
+> +	snprintf(log->rsp_nonce_name, sizeof(log->rsp_nonce_name),
+> +		 "%u_responder_nonce", spdm_state->log_counter);
+> +	snprintf(log->transcript_name, sizeof(log->transcript_name),
+> +		 "%u_transcript", spdm_state->log_counter);
+> +	snprintf(log->combined_prefix_name, sizeof(log->combined_prefix_name),
+> +		 "%u_combined_spdm_prefix", spdm_state->log_counter);
+> +	snprintf(log->spdm_context_name, sizeof(log->spdm_context_name),
+> +		 "%u_type", spdm_state->log_counter);
+> +	snprintf(log->hash_alg_name, sizeof(log->hash_alg_name),
+> +		 "%u_hash_algorithm", spdm_state->log_counter);
+> +
+> +	sysfs_bin_attr_init(&log->sig);
+> +	sysfs_bin_attr_init(&log->req_nonce);
+> +	sysfs_bin_attr_init(&log->rsp_nonce);
+> +	sysfs_bin_attr_init(&log->transcript);
+> +	sysfs_bin_attr_init(&log->combined_prefix);
+> +	sysfs_attr_init(&log->spdm_context.attr.attr);
+> +	sysfs_attr_init(&log->hash_alg.attr.attr);
+> +
+> +	list_add_tail(&log->list, &spdm_state->log);
+> +	spdm_state->log_counter++;
+
+Sanity check for roll over maybe?=20
+
+> +
+> +	/* Steal transcript pointer ahead of spdm_free_transcript() */
+> +	spdm_state->transcript =3D NULL;
+> +
+> +	if (device_is_registered(spdm_state->dev))
+> +		spdm_publish_log_entry(&spdm_state->dev->kobj, log);
+> +}
+> +
+> +/**
+> + * spdm_publish_log() - Publish log of received SPDM signatures in sysfs
+> + *
+> + * @spdm_state: SPDM session state
+> + *
+> + * sysfs attributes representing received SPDM signatures are not static,
+> + * but created dynamically upon authentication.  If a device was authent=
+icated
+> + * before it became visible in sysfs, the attributes could not be create=
+d.
+> + * This function retroactively creates those attributes in sysfs after t=
+he
+> + * device has become visible through device_add().
+> + */
+> +void spdm_publish_log(struct spdm_state *spdm_state)
+> +{
+> +	struct kobject *kobj =3D &spdm_state->dev->kobj;
+> +	struct kernfs_node *grp_kn __free(kernfs_put);
+
+As in previous reviews I'd keep constructor with destructor by declaring
+these inline.
+
+> +	struct spdm_log_entry *log;
+> +
+> +	grp_kn =3D kernfs_find_and_get(kobj->sd, spdm_signatures_group.name);
+> +	if (WARN_ON(!grp_kn))
+> +		return;
+> +
+> +	mutex_lock(&spdm_state->lock);
+
+guard() perhaps.
+
+> +	list_for_each_entry(log, &spdm_state->log, list) {
+> +		struct kernfs_node *sig_kn __free(kernfs_put);
+> +
+> +		/*
+> +		 * Skip over log entries created in-between device_add() and
+> +		 * spdm_publish_log() as they've already been published.
+> +		 */
+> +		sig_kn =3D kernfs_find_and_get(grp_kn, log->sig_name);
+> +		if (sig_kn)
+> +			continue;
+> +
+> +		spdm_publish_log_entry(kobj, log);
+> +	}
+> +	mutex_unlock(&spdm_state->lock);
+> +}
+> +EXPORT_SYMBOL_GPL(spdm_publish_log);
+
 
