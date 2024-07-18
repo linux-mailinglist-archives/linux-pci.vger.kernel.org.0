@@ -1,96 +1,127 @@
-Return-Path: <linux-pci+bounces-10512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AEE0934FC2
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 17:18:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F9E0934FCC
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 17:20:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC5A91C21B05
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:18:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 567191F21259
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 15:20:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FF214037F;
-	Thu, 18 Jul 2024 15:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqUIS49B"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F91143C55;
+	Thu, 18 Jul 2024 15:20:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D5E2AF12;
-	Thu, 18 Jul 2024 15:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942727A724;
+	Thu, 18 Jul 2024 15:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721315892; cv=none; b=hk05gRxPZM0xqS6XSyNmGXZaWhsaovQs+T4xKR0K+KMoBrR5XAGW3bKMTO0Sqo+MBZG0jme33bEVFR4LhWEvwEHKV1NTWwX5T+grK+jmelXgsYbEC6M9y4E2pKaVhtEDK4S+jsd0Tkgjyvc06d2DlZk1dirISsoCGG0hkZunwnQ=
+	t=1721316003; cv=none; b=cHp0xQWlsZMUA+iyYJpZZZrHS/8OWm8JBCZqn+DcuiTDrLWtMDR3n8HJ2ZMt+2DyNoQhJVcoW1fMaZnHpyOp/nUTwezKuvoBUC4Wr43TwxOgu9zP+fHHhqFhOyR+xVI9cpOGbBjsbuQ6gSdm+cHpAbKDCH4Lr+cF1RS4Akcj12c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721315892; c=relaxed/simple;
-	bh=iNa1tefSB/FdELqCaRRlM6i/wDIOifcN7591bc9zUEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PQT9E5tY59+EUx6WD8SP9zjHaUNTKvUoyUYde2JiYfLuG49ZaE8fLu4tYlqkwRudMs5dJ8b43ESL8XPsUU5I2DH5iUJKVg+/bWQ2Fo9nSmVkJGcaaHSeRUqZ34r1NkqeuEsdo8b8bvef58hmZKZBfsrrSLYicdPsZWcMEFnY8xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqUIS49B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71EDEC116B1;
-	Thu, 18 Jul 2024 15:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721315891;
-	bh=iNa1tefSB/FdELqCaRRlM6i/wDIOifcN7591bc9zUEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SqUIS49BUFLZplf+8ABMSghbxWFob1qmicPQoRxSSmiuFvgag/qwWvITzFgbo/Mk0
-	 mnI0Z38D00+2rlyks+4FV8CyVHusUrJ0JBGzhPomniMjIhlOrmsj6xUU/qc8WuFatY
-	 DPnw827MQZ47jcph0OcDG8+AW1uE9p+rL5JJDRn9icK60L+/mA8SloSXSxp4Fp3T2K
-	 O57ZqKdesQnKneiPpaWj9mlwSUZECRgkDiCjATlZ3zJfL0TFkGrWBS1/Uz60CUL+gD
-	 Sx1Y7PlyiStGg9Rgfp1de9aFXAE16ubnDaHY6OT7o9MUONEEtqkz6eAWmqbEWnvze7
-	 Ppl8ASpfLspzQ==
-Date: Thu, 18 Jul 2024 16:18:07 +0100
-From: Conor Dooley <conor@kernel.org>
-To: matthew.gerlach@linux.intel.com
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	joyce.ooi@intel.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: altera: msi: Convert to YAML
-Message-ID: <20240718-pounce-ferocity-d397d43e3a3f@spud>
-References: <20240717181756.2177553-1-matthew.gerlach@linux.intel.com>
+	s=arc-20240116; t=1721316003; c=relaxed/simple;
+	bh=nWPAZlQkcOnRtDZxhKLvWWSeEFOq36D4LuYtz3DocKw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bi+i7qIsFzGxVEDT8Xm6ELg5A+DS5t2nrGmJ5dH3+Mdn3erRLm6GcMi31daQUwacfNftjjZCwV071rizB68qRaVytM4gLels8b5Xx5wl/NMCQeV047qmNmZIp17cC9Rhd71Qd0ikNjLO+hT6NzOKp5/y2cD4HPVhel0a/6oGV4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WPxJ73Kntz6K9gJ;
+	Thu, 18 Jul 2024 23:17:43 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5CA91140B73;
+	Thu, 18 Jul 2024 23:19:59 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
+ 2024 16:19:58 +0100
+Date: Thu, 18 Jul 2024 16:19:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Lukas Wunner <lukas@wunner.de>
+CC: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, "James
+ Bottomley" <James.Bottomley@HansenPartnership.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linuxarm@huawei.com>, David Box
+	<david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Li, Ming"
+	<ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair
+ Francis <alistair.francis@wdc.com>, Wilfred Mallawa
+	<wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, "Alexey
+ Kardashevskiy" <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>,
+	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Jason Gunthorpe
+	<jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, Jerome Glisse
+	<jglisse@google.com>, Sean Christopherson <seanjc@google.com>, "Alexander
+ Graf" <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>, Jonathan Corbet
+	<corbet@lwn.net>
+Subject: Re: [PATCH v2 12/18] PCI/CMA: Expose certificates in sysfs
+Message-ID: <20240718161957.00001781@Huawei.com>
+In-Reply-To: <e42905e3e5f1d5be39355e833fefc349acb0b03c.1719771133.git.lukas@wunner.de>
+References: <cover.1719771133.git.lukas@wunner.de>
+	<e42905e3e5f1d5be39355e833fefc349acb0b03c.1719771133.git.lukas@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tzTR5lZJg29Tid9B"
-Content-Disposition: inline
-In-Reply-To: <20240717181756.2177553-1-matthew.gerlach@linux.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Sun, 30 Jun 2024 21:47:00 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
 
---tzTR5lZJg29Tid9B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> The kernel already caches certificate chains retrieved from a device
+> upon authentication.  Expose them in "slot[0-7]" files in sysfs for
+> examination by user space.
+> 
+> As noted in the ABI documentation, the "slot[0-7]" files always have a
+> file size of 65535 bytes (the maximum size of a certificate chain per
+> SPDM 1.0.0 table 18), even if the certificate chain in the slot is
+> actually smaller.  Although it would be possible to use the certifiate
+> chain's actual size as the file size, doing so would require a separate
+> struct attribute_group for each device, which would occupy additional
+> memory.
+> 
+> Slots are visible in sysfs even if they're currently unprovisioned
+> because a future commit will add support for certificate provisioning
+> by writing to the "slot[0-7]" files.
+> 
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+One trivial thing in addition to discussion in Dan's review thread.
 
-On Wed, Jul 17, 2024 at 01:17:56PM -0500, matthew.gerlach@linux.intel.com wrote:
->> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    msi0: msi@ff200000 {
+Jonathan
 
-nit: label is not used and should be dropped.
+> diff --git a/lib/spdm/req-authenticate.c b/lib/spdm/req-authenticate.c
+> index 90f7a7f2629c..1f701d07ad46 100644
+> --- a/lib/spdm/req-authenticate.c
+> +++ b/lib/spdm/req-authenticate.c
+> @@ -14,6 +14,7 @@
+>  #include "spdm.h"
+>  
+>  #include <linux/dev_printk.h>
+> +#include <linux/device.h>
+>  #include <linux/key.h>
+>  #include <linux/random.h>
+>  
+> @@ -288,9 +289,9 @@ static int spdm_get_digests(struct spdm_state *spdm_state)
+>  	struct spdm_get_digests_req *req = spdm_state->transcript_end;
+>  	struct spdm_get_digests_rsp *rsp;
+>  	unsigned long deprovisioned_slots;
+> +	u8 slot, supported_slots;
+>  	int rc, length;
+>  	size_t rsp_sz;
+> -	u8 slot;
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Move that to earlier patch.
 
-Thanks,
-Conor.
-
---tzTR5lZJg29Tid9B
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpkyLwAKCRB4tDGHoIJi
-0kqUAQDf7lFvCMOxzu8vAxd7JJg34UuNpyie9ez3yXIX4aeYAgEA7TY6dRh1aKpc
-pYWUtNFJ40XNQorCHJnf1gkvj0KHxgw=
-=E6Hq
------END PGP SIGNATURE-----
-
---tzTR5lZJg29Tid9B--
 
