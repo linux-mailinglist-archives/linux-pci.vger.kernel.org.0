@@ -1,220 +1,173 @@
-Return-Path: <linux-pci+bounces-10531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74117935138
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 19:23:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65C1C935162
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 19:55:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF2141F22AEA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 17:23:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C4A5283EC0
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 17:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3BF3145359;
-	Thu, 18 Jul 2024 17:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 059B114535D;
+	Thu, 18 Jul 2024 17:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yJNiSVvY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YmgOcFNc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B49144306
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 17:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A01145356;
+	Thu, 18 Jul 2024 17:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721323389; cv=none; b=LRfSiSvBx1FwGb4FHbXxQupmJVdACd8KGfc5B7y8ZwHfYfT41AQTAnHDl5M7wEfvXlBa784CMixjrZv1irDieiU92enrzJjQoTbzXcnlZDmHVbtHIQ9MjLG35f//f21eXkh3uyE8fXBffojf+nPxyFRD6aGLJ9IocqJvHrguAPY=
+	t=1721325295; cv=none; b=WgM2yTURSFpMF4f7oKdK9dvpUojFW2K4D4gpDenq2+7KWR4Xua+QERBM7BmL8ssxz4cbsSfMkYmlRJ/HcQk6rB0IMcG47OBOa/yJIYbiA84HbzODhx23035dNNBosxw2XLHaRt0e+DS44OJ2Gdmno5VM9iOFlyUI8aB3ovGBX4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721323389; c=relaxed/simple;
-	bh=0i7KtJ9FSifVfJLTP8L6MmmzH1IONF8nR5XE9Ek8NnA=;
+	s=arc-20240116; t=1721325295; c=relaxed/simple;
+	bh=X6jIlfRKMPKmywDaK5B+vu56+DcG5UEkdLppnfbwn9A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6GEJQwXkq8Yd1cw1+T0aVbaEaLgniJj5cVUmr7rTK7aSuXWRDox9PHto0l5VqZGaOp5U/8Hp0X6pbi4CJUW7//KTle5zrsP3yM3BDRW6IwfEofnNB8ySVF4oJ6JFvfB5opvn12rXidkrMlICVYG3xbjnGv/FVn9WNZO+uhakZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yJNiSVvY; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fc66fc35f2so5898445ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jul 2024 10:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721323387; x=1721928187; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6ICFDDieCGpEoaZYDXXhvPh/cZNuguHANawunFSMXlc=;
-        b=yJNiSVvYXGaKMDXOs618SvxsjDyKUPC2MVc3X36Wpl2m0Zj6WXd3gzC6iM4TLO+VBv
-         PP/1Gc/tQqHb3THu4VmUsdlbdzIWmO+OBx47ZZpw9ycJwX+6kJ4vaZ6NCOuCk7JlWwVu
-         +tmc6lkunSs5N8AZSLTiOe5+LMPI14Fw1KNDCU1Qa7qcHDTUYZjmkKDlvm71w26A9HAu
-         prSUbsgJB94dI83Qmi1OirumiXr7OKBZiAmqaUB57tz6PkPEbEbj69Egab2Cmz3IouIM
-         fD00D7px8Yb4Qlfz5PxBN3nXN6yuB4g7ybwRmZqWXvxXcWz6YVu3QCziZSxnX/I2Bkqm
-         LqsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721323387; x=1721928187;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ICFDDieCGpEoaZYDXXhvPh/cZNuguHANawunFSMXlc=;
-        b=DJjzcjZDC4YiNCQOtMPGiSWH9fgRCu1UCvM8O0hf9HFEDQEj147ohKM/65s5/aJQwd
-         Dbn1N2S7AkOOSWbFo92EEQRfWPhNmCJg51/fPCZvNn9sNX8w0vfXfZnieZCjgFVEqHfb
-         euhX0bhutAnDZdOJRJxU6ujIz6B4dU+Qh86a6KaMQ5OjUTTOTbXNgcMClz6ETXTj4l4Y
-         GtGUA7Wk3HAGXsV4O1tvJ8cWc4QYAavNR9zpHA3tubeQhbQkGGxLnhGLfKOp7Xi18lW6
-         wX7XriAmC1ZIVrwVUspUJedfEKsbjDggwIkwUeIcLnLPKHmzF0npH0WIN/3xyRCb6qdS
-         fiMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIOR11XoXpTY2m72kfxk5IfmiaQZ4sqBXrZaiPGJEkK1WWrsPGq3glGbtxYMQZO8+PNDBh7P20XtH1incWCeFs0xvRdvLRBjVJ
-X-Gm-Message-State: AOJu0Yxb1g3D1VHTXXkoz+5i8tEcmT2I/MRGrTpA84mZ2jln62tqYikU
-	lvzsLVdk/Io9KCw9xEH8m+6X6CK0qDKvj+Y0dwhkY9fnpd8BqqGTl4bYhvD6Mw==
-X-Google-Smtp-Source: AGHT+IEKTF3lGFKsLnOuovg2GIq+pf1Ok3ICUV+brkwjfKlutwdQ6WVPpLajBng6U/Qw4CmZ5dJUQA==
-X-Received: by 2002:a17:903:32c3:b0:1fc:54c4:61a7 with SMTP id d9443c01a7336-1fc5b60aa7bmr50154655ad.23.1721323387186;
-        Thu, 18 Jul 2024 10:23:07 -0700 (PDT)
-Received: from thinkpad ([120.56.207.21])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc2751bsm96197055ad.143.2024.07.18.10.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 10:23:06 -0700 (PDT)
-Date: Thu, 18 Jul 2024 22:53:01 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mayank Rana <quic_mrana@quicinc.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 12/13] PCI: qcom: Simulate PCIe hotplug using 'global'
- interrupt
-Message-ID: <20240718172301.GC2499@thinkpad>
-References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
- <20240717-pci-qcom-hotplug-v2-12-71d304b817f8@linaro.org>
- <02b94a07-fcd6-4a48-bead-530b81c8a27e@quicinc.com>
- <20240718102938.GA8877@thinkpad>
- <8c3e77b6-0d23-42ef-a7db-52635bd5070a@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EqOThebVCh5kq6WI8auICdbd/dAsmfMDue7N2llQFw3xoYR3yExPbdFgYGo3oc+btpsQshNPEKJHHkJJ1BusqT71kqOzKIgYtl8nPe6uePZgX57lX0ZSO1BQ4ffVi3njSD3wcnN8OkiYzNaDFx+wB2qqgYnhc0ciRnJZesSQ5yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YmgOcFNc; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721325294; x=1752861294;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=X6jIlfRKMPKmywDaK5B+vu56+DcG5UEkdLppnfbwn9A=;
+  b=YmgOcFNchRrZL1FMwzsAV7awQOnjkgKYlITUwJTgq6KO2oTldx5nDqRS
+   UMKQ81xIbizHqk4IXaVIZfJHKZjrOntgczVd2qAGETR99UY31OUSH6FfR
+   XneohxTVEZTH97eqSWgx/A3b2R+0QPmyzOlX6GZDWQQsVf1FMsF7sN2yN
+   dPIOQauBuJt+AsBBlc98ajByQ7qV0pRFiST2VSdd3zca67kUritvKSCuG
+   C/PXpRw3ic5HkD4XCUhGE27XwvCDI5jjHV62AhBzycm0IUckdjmsQuR0u
+   4RgrXt9wq1IIK7aljhRP87m+RIj17Ud5Wq6gLXgo7CU6KFBV50QjDij5a
+   A==;
+X-CSE-ConnectionGUID: jlP5v9jpR4aUQVrheE2Qzg==
+X-CSE-MsgGUID: odVTBz95QSu3Om7p6VVC5w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="30067124"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="30067124"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:54:53 -0700
+X-CSE-ConnectionGUID: DmbDazKDTIujuQlms22ytw==
+X-CSE-MsgGUID: 6HtGeUCMTcSNafbbvmS4HQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="50606615"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 18 Jul 2024 10:54:48 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sUVL4-000hUQ-1g;
+	Thu, 18 Jul 2024 17:54:46 +0000
+Date: Fri, 19 Jul 2024 01:53:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>, rafael@kernel.org, lenb@kernel.org,
+	james.morse@arm.com, tony.luck@intel.com, bp@alien8.de,
+	bhelgaas@google.com, robert.moore@intel.com, yazen.ghannam@amd.com,
+	avadhut.naik@amd.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, CobeChen@zhaoxin.com, TimGuo@zhaoxin.com,
+	TonyWWang-oc@zhaoxin.com, leoliu-oc@zhaoxin.com
+Subject: Re: [PATCH v3 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
+Message-ID: <202407190133.KRXYQI5m-lkp@intel.com>
+References: <20240718062405.30571-2-LeoLiu-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8c3e77b6-0d23-42ef-a7db-52635bd5070a@quicinc.com>
+In-Reply-To: <20240718062405.30571-2-LeoLiu-oc@zhaoxin.com>
 
-On Thu, Jul 18, 2024 at 10:15:58AM -0700, Mayank Rana wrote:
-> Hi Mani
-> 
-> On 7/18/2024 3:29 AM, Manivannan Sadhasivam wrote:
-> > On Wed, Jul 17, 2024 at 03:57:11PM -0700, Mayank Rana wrote:
-> > > Hi Mani
-> > > 
-> > > I don't think we can suggest that usage of link up event with Global IRQ as
-> > > simulate PCIe hotplug. hotplug is referring to allow handling of both
-> > > add or remove of endpoint device whereas here you are using global IRQ as
-> > > last step to rescan bus if endpoint is power up later after link training is
-> > > initiated.
-> > > 
-> > 
-> > Why not? Well it is not entirely the standard 'hotplug' and that's why I
-> > referred it as 'simulating hotplug'.
-> Because it is misleading here by saying simulate hotplug. You can mention as
-> use link up event
-> to rescan bus instead of using simulate PCIe hotplug here.
-> 
+Hi LeoLiu-oc,
 
-Fair point. Will reword in v3.
+kernel test robot noticed the following build warnings:
 
-> > The point of having this feature is to avoid the hassle of rescanning the bus
-> > manually when the devices are connected to this bus post boot.
-> > 
-> > > Will this work if you remove endpoint device and add it back again ?
-> > > 
-> > 
-> > No, not currently. But we could add that logic using LINK_DOWN event. Though,
-> > when the device comes back again, it will not get enumerated successfully due to
-> > a bug in the link training part (which I plan to address later). But this
-> > issue is irrespective of this hotplug simulation.
-> ok. Although LINK DOWN event not necessary suggests that endpoint has been
-> removed but it also suggests that link has gone into bad state, and it is
-> being detected and notified as link down event.
+[auto build test WARNING on pci/for-linus]
+[also build test WARNING on rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.10 next-20240718]
+[cannot apply to pci/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Right, but what would be the recovery process if Link down event happens? You'd
-remove the device and insert it back, right?
+url:    https://github.com/intel-lab-lkp/linux/commits/LeoLiu-oc/ACPI-APEI-Add-hest_parse_pcie_aer/20240718-144218
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+patch link:    https://lore.kernel.org/r/20240718062405.30571-2-LeoLiu-oc%40zhaoxin.com
+patch subject: [PATCH v3 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
+config: x86_64-randconfig-161-20240718 (https://download.01.org/0day-ci/archive/20240719/202407190133.KRXYQI5m-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240719/202407190133.KRXYQI5m-lkp@intel.com/reproduce)
 
-Doing link training again won't bring the link back I guess.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407190133.KRXYQI5m-lkp@intel.com/
 
-> > > Regards,
-> > > Mayank
-> > > On 7/17/2024 10:03 AM, Manivannan Sadhasivam via B4 Relay wrote:
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > 
-> > > > Historically, Qcom PCIe RC controllers lack standard hotplug support. So
-> > > > when an endpoint is attached to the SoC, users have to rescan the bus
-> > > > manually to enumerate the device. But this can be avoided by simulating the
-> > > > PCIe hotplug using Qcom specific way.
-> > > > 
-> > > > Qcom PCIe RC controllers are capable of generating the 'global' SPI
-> > > > interrupt to the host CPUs. The device driver can use this event to
-> > > > identify events such as PCIe link specific events, safety events etc...
-> > > > 
-> > > > One such event is the PCIe Link up event generated when an endpoint is
-> > > > detected on the bus and the Link is 'up'. This event can be used to
-> > > > simulate the PCIe hotplug in the Qcom SoCs.
-> > > > 
-> > > > So add support for capturing the PCIe Link up event using the 'global'
-> > > > interrupt in the driver. Once the Link up event is received, the bus
-> > > > underneath the host bridge is scanned to enumerate PCIe endpoint devices,
-> > > > thus simulating hotplug.
-> > > > 
-> > > > All of the Qcom SoCs have only one rootport per controller instance. So
-> > > > only a single 'Link up' event is generated for the PCIe controller.
-> > > > 
-> > > > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >    drivers/pci/controller/dwc/pcie-qcom.c | 55 +++++++++++++++++++++++++++++++++-
-> > > >    1 file changed, 54 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > index 0180edf3310e..a1d678fe7fa5 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+All warnings (new ones prefixed by >>):
 
-[...]
+   drivers/acpi/apei/hest.c: In function 'hest_source_is_pcie_aer':
+>> drivers/acpi/apei/hest.c:155:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     155 |                 if (pcie_type != PCI_EXP_TYPE_ROOT_PORT)
+         |                    ^
+   drivers/acpi/apei/hest.c:157:9: note: here
+     157 |         case ACPI_HEST_TYPE_AER_ENDPOINT:
+         |         ^~~~
+   drivers/acpi/apei/hest.c:158:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     158 |                 if (pcie_type != PCI_EXP_TYPE_ENDPOINT)
+         |                    ^
+   drivers/acpi/apei/hest.c:160:9: note: here
+     160 |         case ACPI_HEST_TYPE_AER_BRIDGE:
+         |         ^~~~
+   drivers/acpi/apei/hest.c:161:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     161 |                 if (pcie_type != PCI_EXP_TYPE_PCI_BRIDGE && pcie_type != PCI_EXP_TYPE_PCIE_BRIDGE)
+         |                    ^
+   drivers/acpi/apei/hest.c:163:9: note: here
+     163 |         default:
+         |         ^~~~~~~
 
-> > > > +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> > > > +{
-> > > > +	struct qcom_pcie *pcie = data;
-> > > > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> > > > +	struct device *dev = pcie->pci->dev;
-> > > > +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-> > > > +
-> > > > +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
-> > > > +
-> > > > +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-> > > > +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> > > > +		/* Rescan the bus to enumerate endpoint devices */
-> > > > +		pci_lock_rescan_remove();
-> > > > +		pci_rescan_bus(pp->bridge->bus);
-> > > > +		pci_unlock_rescan_remove();
-> > > How do you handle case where endpoint is already enumerated, and seeing link
-> > > up event in parallel or later ? will it go ahead to rescan bus again here ?
-> > > 
-> > 
-> > If the endpoint is already enumerated, there will be no Link up event. Unless
-> > the controller reinitializes the bus (which is the current behavior).
-> > 
-> > If the endpoint is already powered on during controller probe, then it will be
-> > enumerated during dw_pcie_host_init() and since we register the IRQ handler
-> > afterwards, there will be no Link up in that case.
-> > 
-> > This feature is only applicable for endpoints that comes up post boot.
-> ok. thanks for above information. I feel capturing this information in
-> commit text
-> would be helpful.
 
-Sure.
+vim +155 drivers/acpi/apei/hest.c
 
-- Mani
+   144	
+   145	static bool hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr, struct pci_dev *dev)
+   146	{
+   147		u16 hest_type = hest_hdr->type;
+   148		u8 pcie_type = pci_pcie_type(dev);
+   149		struct acpi_hest_aer_common *common;
+   150	
+   151		common = (struct acpi_hest_aer_common *)(hest_hdr + 1);
+   152	
+   153		switch (hest_type) {
+   154		case ACPI_HEST_TYPE_AER_ROOT_PORT:
+ > 155			if (pcie_type != PCI_EXP_TYPE_ROOT_PORT)
+   156				return false;
+   157		case ACPI_HEST_TYPE_AER_ENDPOINT:
+   158			if (pcie_type != PCI_EXP_TYPE_ENDPOINT)
+   159				return false;
+   160		case ACPI_HEST_TYPE_AER_BRIDGE:
+   161			if (pcie_type != PCI_EXP_TYPE_PCI_BRIDGE && pcie_type != PCI_EXP_TYPE_PCIE_BRIDGE)
+   162				return false;
+   163		default:
+   164			return false;
+   165		}
+   166	
+   167		if (common->flags & ACPI_HEST_GLOBAL)
+   168			return true;
+   169	
+   170		if (hest_match_pci_devfn(common, dev))
+   171			return true;
+   172	
+   173		return false;
+   174	}
+   175	
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
