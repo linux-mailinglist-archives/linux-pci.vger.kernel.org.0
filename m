@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-10536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E98B6937112
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2024 01:20:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 456BA937196
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2024 02:41:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2051C282743
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jul 2024 23:20:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F06A7281203
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jul 2024 00:41:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79CE1465BD;
-	Thu, 18 Jul 2024 23:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13FDC1362;
+	Fri, 19 Jul 2024 00:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RgnHaS42"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ih9Huuyg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92248146A8C;
-	Thu, 18 Jul 2024 23:20:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258F710E6;
+	Fri, 19 Jul 2024 00:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721344838; cv=none; b=DlHklWxaHkgHRtsngCeyY930rxLweVTqeKwCbvfVHFo59i5hB+P7frDUgMt/1/mVJ3oTKAIVFVkeaXqGExAbJTiTxmwz201x7wUj0D3jM+F0c0EqOrY70SUtOdeZplnk1tcRmX5Az98QmOdnsvvfVocjInJ8VmRLUgciqHt2+kA=
+	t=1721349677; cv=none; b=rRfVjGYJduoL9dLCGt4okQX2UJ8lC8lqqQpW7MVemAQW9ehyObN2o/5qacL1dIUQmq/mRvAqdpPfvYGh0wGgrNrHbFiYyylnUmKR+PvQUpZ7dNoRZihQzHDLQO3ISGEnYRMvsq1gZf6X64sGVqBd7H1eeHzjaaDztiTTVRMH3oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721344838; c=relaxed/simple;
-	bh=wWm4q2M8rBlqV2ruE3JVlVBiceu4Nwap703ySxFdbUY=;
+	s=arc-20240116; t=1721349677; c=relaxed/simple;
+	bh=lKbDJn1l1dPbAtFYRb1wkP3hMBmBjYROpspeqYgAkl0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pMyHBjm38KDmwb8/T1J18XESK+UIqmkL6wrmGsSwn8ngLYnYSsopkylTcJTDWvMl7YdOTa8MVNMqxr+wGysen0+watyz5Upd0gd0hQJrgN3gOeOV54jY5LmfNVWwCiAm92pwGKgYubUvGxVgMaGZ78b80tnKI0vJ2YHFY+LwRa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RgnHaS42; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=TGIU7gD6KCKtpTYqoB983bzeSOeipi1IdFVcCUrfPUynJSLQeErxLvHvi4z/rg2Cy/6wU0SURX7yc8A96luCOy6i1sZlX0AfrPVl4QrM1tv9UnFgABxOjCDco8RBd18p2ZalRIMf1fW7r95RpgMYZTkH1gwez6+NCoT/Wn78rbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ih9Huuyg; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46IE3LoE012817;
-	Thu, 18 Jul 2024 23:19:30 GMT
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46J0f1Id016384;
+	Fri, 19 Jul 2024 00:41:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7tI6QMarTkA1Aw41GeSyr3Fblvg074vDVUe6LTv9ZP0=; b=RgnHaS42WUWWr0Eo
-	lYVVmKFEACAM0oTQg8G2lRnJ/MnEXpKxMebzYj311QjuGhcWJqTsmoSALCJDqN2K
-	iovuUNZpMjDEy+yHXysMLKAC0yS2KDS/snGVvajB84XquHu2VpxcNA8tBGoewsGH
-	I490JZNX2ZZqnUiJ1sWl7uogAenSOO6B/vhpkleJRmyieurfuq7+FBuuYt2MpQ5N
-	Hq3UGrPL0/ZjeOCxq/SetivzYO7r20pj3Kdl8rBXatqdyBlAHnvxbVdNMCyn7evp
-	rVp4kBRLFwAUj8fveqR/d4cNCtncKBFpfNNDku+bDR9dh5I8y4XLoev7+W2sLvCG
-	BHQ+dg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfweq7n-1
+	9qU0nd0cLHnKw07phleTEn6p2h7abQ+S2U2Z6l7iDBw=; b=ih9Huuyge65/XGYO
+	6aNk7VhbMbCTpGRv33mOFy8vd+p4/vvHfcigMBxTFLoRG20i8OWPIFSELYg9wGl2
+	whZlRjRN9ITWqg6mO3/sW8a81FL2PZJ/yO8MHy5utqpwR4g3XpKjn8ugzKDdVthS
+	SE6jO5NC2q/8THXOKio9iv54+ScmhLTv2Q7VsB2C6YaIvZAfrm4Mkuc2gstnU0ml
+	gkpNjUtjlUFw0qSg2NzXtB6/jRaBQycEpsWIrxNulejypr0rsj7B3C10iuhe2gE9
+	tNHP0CoC1dNqb7vtxgP7xWqQzvbaVmqOx6Eaus0P2J3Lo5GwC0ImS3ge7loqM/iv
+	EmLu0Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfu6xge-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 23:19:30 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46INJTFv005378
+	Fri, 19 Jul 2024 00:41:05 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46J0f4PJ005736
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 23:19:29 GMT
-Received: from [10.110.7.185] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 19 Jul 2024 00:41:04 GMT
+Received: from [10.46.163.151] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Jul
- 2024 16:19:28 -0700
-Message-ID: <1a6f5cdf-9256-4d8d-b8c7-92bd6e7d3813@quicinc.com>
-Date: Thu, 18 Jul 2024 16:19:27 -0700
+ 2024 17:41:03 -0700
+Message-ID: <a188b4b6-811b-4890-8feb-2194b10a5501@quicinc.com>
+Date: Thu, 18 Jul 2024 17:41:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,151 +65,229 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V226/7] dt-bindings: PCI: host-generic-pci: Add
- snps,dw-pcie-ecam-msi binding
-To: Krzysztof Kozlowski <krzk@kernel.org>, <will@kernel.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-        <manivannan.sadhasivam@linaro.org>, <cassel@kernel.org>,
-        <yoshihiro.shimoda.uh@renesas.com>, <s-vadapalli@ti.com>,
-        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
-        <amishin@t-argos.ru>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <Frank.Li@nxp.com>,
-        <ilpo.jarvinen@linux.intel.com>, <vidyas@nvidia.com>,
-        <marek.vasut+renesas@gmail.com>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC: <quic_ramkri@quicinc.com>, <quic_nkela@quicinc.com>,
-        <quic_shazhuss@quicinc.com>, <quic_msarkar@quicinc.com>,
-        <quic_nitegupt@quicinc.com>
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <1721067215-5832-7-git-send-email-quic_mrana@quicinc.com>
- <5f029f16-2030-4e86-929b-0b2832958912@kernel.org>
- <083e1e6f-714d-4a3e-a864-59e06bba0559@quicinc.com>
- <3221423a-d5b3-47e3-8b98-623d9b26363d@kernel.org>
- <f06ab1ee-6078-4d89-b236-e11be4d28fc5@quicinc.com>
- <609c2420-4bf9-4d1b-b998-2dea825139b2@kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Avoid DBI and ATU register space mirror
+ to BAR/MMIO region
+To: Mayank Rana <quic_mrana@quicinc.com>, <jingoohan1@gmail.com>,
+        <manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20240718051258.1115271-1-quic_pyarlaga@quicinc.com>
+ <20240718051258.1115271-3-quic_pyarlaga@quicinc.com>
+ <e04f8a63-3dc8-4a58-a9a4-4c70debd2b93@quicinc.com>
 Content-Language: en-US
-From: Mayank Rana <quic_mrana@quicinc.com>
-In-Reply-To: <609c2420-4bf9-4d1b-b998-2dea825139b2@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+In-Reply-To: <e04f8a63-3dc8-4a58-a9a4-4c70debd2b93@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+ nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nVrTq8cQlAAkZw9qlo_w0oSRoxdazP_D
-X-Proofpoint-ORIG-GUID: nVrTq8cQlAAkZw9qlo_w0oSRoxdazP_D
+X-Proofpoint-GUID: 8i86i4xENjTR_nz4JsxLAKRJa795VYU6
+X-Proofpoint-ORIG-GUID: 8i86i4xENjTR_nz4JsxLAKRJa795VYU6
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_16,2024-07-18_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- mlxscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501 bulkscore=0
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2407180157
+ definitions=2024-07-18_17,2024-07-18_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ spamscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407190004
 
-Hi Krzysztof
+Hi Mayank,
 
-On 7/17/2024 11:05 PM, Krzysztof Kozlowski wrote:
-> On 17/07/2024 19:20, Mayank Rana wrote:
->> Hi Krzysztof
+Thanks for the review comments.
+
+On 7/18/2024 2:52 PM, Mayank Rana wrote:
+> Hi Prudhvi
+> 
+> On 7/17/2024 10:12 PM, Prudhvi Yarlagadda wrote:
+>> PARF hardware block which is a wrapper on top of DWC PCIe controller
+>> mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
+>> register to get the size of the memory block to be mirrored and uses
+>> PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
+>> address of DBI and ATU space inside the memory block that is being
+>> mirrored.
 >>
->> On 7/16/2024 11:47 PM, Krzysztof Kozlowski wrote:
->>> On 17/07/2024 00:09, Mayank Rana wrote:
->>>> Hi Krzysztof
->>>>
->>>> On 7/16/2024 12:28 AM, Krzysztof Kozlowski wrote:
->>>>> On 15/07/2024 20:13, Mayank Rana wrote:
->>>>>> To support MSI functionality using Synopsys DesignWare PCIe controller
->>>>>> based MSI controller with ECAM driver, add "snps,dw-pcie-ecam-msi
->>>>>> compatible binding which uses provided SPIs to support MSI functionality.
->>>>>
->>>>> To support MSI, you add MSI support... That's a tautology. Describe
->>>>> hardware instead.
->>>> Ok. let me repharse it to provide more useful information.
->>>>>>
->>>>>> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
->>>>>> ---
->>>>>>     .../devicetree/bindings/pci/host-generic-pci.yaml  | 57 ++++++++++++++++++++++
->>>>>>     1 file changed, 57 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
->>>>>> index 9c714fa..9e860d5 100644
->>>>>> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
->>>>>> @@ -81,6 +81,12 @@ properties:
->>>>>>                   - marvell,armada8k-pcie-ecam
->>>>>>                   - socionext,synquacer-pcie-ecam
->>>>>>               - const: snps,dw-pcie-ecam
->>>>>> +      - description: |
->>>>>> +         Firmware is configuring Synopsys DesignWare PCIe controller in RC mode with
->>>>>> +         ECAM compatible fashion. To use MSI controller of Synopsys DesignWare PCIe
->>>>>> +         controller for MSI functionality, this compatible is used.
->>>>>> +        items:
->>>>>> +          - const: snps,dw-pcie-ecam-msi
->>>>>
->>>>> MSI is already present in the binding, isn't it?
->>>> It is mentioning as msi-parent usage which could be different MSI
->>>> controller (GIC or vendor specific one) not related to designware PCIe
->>>> controller based MSI controller.
->>>>
->>>>> Anyway, aren't you
->>>>> forgetting specific compatible? Please open your internal (quite
->>>>> comprehensive) guideline on bindings and DTS.
->>>> Here I am trying to define Designware based PCIe ECAM controller
->>>> supporting MSIcontroller based device. Hence I am not mentioning vendor
->>>> specific compatible usage
->>>> and keeping generic compatible binding for such device.
->>>
->>> I know what you try, yet it feels simply wrong. Read your guideline.
->>> Are you sure you work on Designware core itself, not on one used in
->>> Qualcomm? I would expect people from Designware to design Designware
->>> cores and people from Qualcomm only to design licensed cores.
->> Ok. let me not make generic comment here. I refereed how it is done with
->> other
->> snps based IP usage for example USB, and would follow same.
-> 
-> Well, it is not. If you read their bindings or any reviews related to
-> such cores, you would see that single Designware compatible is always
-> never appropriate. Such cores always have customization per user.
-> 
-> You can also look at the binding you are changing. Do you see Designware
-> alone? No.
-I found reference in this binding as below:
-  79         items:
-  80           - enum:
-  81               - marvell,armada8k-pcie-ecam
-  82               - socionext,synquacer-pcie-ecam
-  83           - const: snps,dw-pcie-ecam
+>> When a memory region which is located above the SLV_ADDR_SPACE_SIZE
+>> boundary is used for BAR region then there could be an overlap of DBI and
+>> ATU address space that is getting mirrored and the BAR region. This
+>> results in DBI and ATU address space contents getting updated when a PCIe
+>> function driver tries updating the BAR/MMIO memory region. Reference
+>> memory map of the PCIe memory region with DBI and ATU address space
+>> overlapping BAR region is as below.
+>>
+>>                          |---------------|
+>>                          |               |
+>>                          |               |
+>>          ------- --------|---------------|
+>>             |       |    |---------------|
+>>             |       |    |       DBI     |
+>>             |       |    |---------------|---->DBI_BASE_ADDR
+>>             |       |    |               |
+>>             |       |    |               |
+>>             |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
+>>             |    BAR/MMIO|---------------|
+>>             |    Region  |       ATU     |
+>>             |       |    |---------------|---->ATU_BASE_ADDR
+>>             |       |    |               |
+>>          PCIe       |    |---------------|
+>>          Memory     |    |       DBI     |
+>>          Region     |    |---------------|---->DBI_BASE_ADDR
+>>             |       |    |               |
+>>             |    --------|               |
+>>             |            |               |---->SLV_ADDR_SPACE_SIZE
+>>             |            |---------------|
+>>             |            |       ATU     |
+>>             |            |---------------|---->ATU_BASE_ADDR
+>>             |            |               |
+>>             |            |---------------|
+>>             |            |       DBI     |
+>>             |            |---------------|---->DBI_BASE_ADDR
+>>             |            |               |
+>>             |            |               |
+>>          ----------------|---------------|
+>>                          |               |
+>>                          |               |
+>>                          |               |
+>>                          |---------------|
+>>
+>> Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
+>> used for BAR region which is why the above mentioned issue is not
+>> encountered. This issue is discovered as part of internal testing when we
+>> tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
+>> we are trying to fix this.
+>>
+>> As PARF hardware block mirrors DBI and ATU register space after every
+>> PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, write
+>> U32_MAX (all 0xFF's) to PARF_SLV_ADDR_SPACE_SIZE register to avoid
+>> mirroring DBI and ATU to BAR/MMIO region. Write the physical base address
+>> of DBI and ATU register blocks to PARF_DBI_BASE_ADDR (default 0x0) and
+>> PARF_ATU_BASE_ADDR (default 0x1000) respectively to make sure DBI and ATU
+>> blocks are at expected memory locations.
+>>
+>> The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
+>> and PARF_ATU_BASE_ADDR are applicable for platforms that use PARF
+>> Qcom IP rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
+>> PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for PARF Qcom IP rev 2.3.3.
+>> PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for PARF
+>> Qcom IP rev 1.0.0, 2.3.2 and 2.4.0. Updating the init()/post_init()
+>> functions of the respective PARF versions to program applicable
+>> PARF_DBI_BASE_ADDR, PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR
+>> register offsets. And remove the unused SLV_ADDR_SPACE_SZ macro.
+>>
+>> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 62 +++++++++++++++++++-------
+>>   1 file changed, 45 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 0180edf3310e..845c7641431f 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -45,6 +45,7 @@
+>>   #define PARF_PHY_REFCLK                0x4c
+>>   #define PARF_CONFIG_BITS            0x50
+>>   #define PARF_DBI_BASE_ADDR            0x168
+>> +#define PARF_SLV_ADDR_SPACE_SIZE        0x16C
+>>   #define PARF_MHI_CLOCK_RESET_CTRL        0x174
+>>   #define PARF_AXI_MSTR_WR_ADDR_HALT        0x178
+>>   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2        0x1a8
+> [...]> +static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
+>> +{
+>> +    struct dw_pcie *pci = pcie->pci;
+>> +
+>> +    if (pci->dbi_phys_addr)
+>> +        writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
+>> +                            PARF_DBI_BASE_ADDR);
+>> +
+>> +    writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+> We can't update PARF_SLV_ADDR_SPACE_SIZE without updating PARF_DBI_BASE_ADDR.
+> Please make dbi_phys_addr mandatory to update PARF_SLV_ADDR_SPACE_SIZE.
 
-And as you mentioned in previous emails about how to add such usage, I 
-ACKed it but let me put reason why I tried to add differently to start 
-with it.
+ACK. I will update it in the next patch.
 
-This specific driver under-discussion is really not vendor specific 
-driver. It can work with any PCIe controller which is already configured 
-in ECAM mode by firmware (i.e. PCIe controller from SNPS or any other 
-vendor). There are few quirks only added to get specific vendor based 
-SOC configuration for SNPS PCIe controller by different SOC vendors.
+>> +}
+>> +
+>> +static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
+>> +{
+>> +    struct dw_pcie *pci = pcie->pci;
+>> +
+>> +    if (pci->dbi_phys_addr) {
+>> +        writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
+>> +                            PARF_DBI_BASE_ADDR_V2);
+>> +        writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
+>> +                        PARF_DBI_BASE_ADDR_V2_HI);
+>> +    }
+>> +
+>> +    if (pci->atu_phys_addr) {
+>> +        writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
+>> +                            PARF_ATU_BASE_ADDR);
+>> +        writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
+>> +                            PARF_ATU_BASE_ADDR_HI);
+>> +    }
+>> +
+>> +    writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
+>> +    writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
+> Same as above. atu_phys_addr shall be optional here but not dbi_phys_addr to update PARF_SLV_ADDR_SPACE_SIZE.
 
-  90       - description:
-  91           CAM or ECAM compliant PCI host controllers without any quirks
-  92         enum:
-  93           - pci-host-cam-generic
-  94           - pci-host-ecam-generic
+ACK. I will update it in the next patch.
 
-Above enum based usage works for SA8775P platform which is having SNPS 
-PCIe controller which doesn't need any quirks, and firmware is able to 
-configure PCIe controller into ECAM mode. Here I tried adding PCIe SNPS 
-controller based MSI support as SA8775P doesn't support LPI/ITS for MSI. 
-I need to differentiate it hence added generic enum as MSI controller is 
-part of SNPS PCIe controller, and not separate MSI IP here. Although how 
-many MSI can be supported it depends on how many SPIs are available/used 
-with MSI controller depend on particular SOC. Hence put as 
-snps,dw-pcie-ecam-msi as usage and variable number of MSI. hopefully I 
-am able to convey why this driver binding modified differently.
-
-Regards,
-Mayank
+Thanks,
+Prudhvi
+>> +}
+>> +
+>>   static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
+>>   {
+>>       u32 val;
+>> @@ -540,8 +576,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+>>     static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+>>   {
+>> -    /* change DBI base address */
+>> -    writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> +    qcom_pcie_configure_dbi_base(pcie);
+>>         if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>>           u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+>> @@ -628,8 +663,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+>>       val &= ~PHY_TEST_PWR_DOWN;
+>>       writel(val, pcie->parf + PARF_PHY_CTRL);
+>>   -    /* change DBI base address */
+>> -    writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> +    qcom_pcie_configure_dbi_base(pcie);
+>>         /* MAC PHY_POWERDOWN MUX DISABLE  */
+>>       val = readl(pcie->parf + PARF_SYS_CTRL);
+>> @@ -811,13 +845,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+>>       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>>       u32 val;
+>>   -    writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+>> -
+>>       val = readl(pcie->parf + PARF_PHY_CTRL);
+>>       val &= ~PHY_TEST_PWR_DOWN;
+>>       writel(val, pcie->parf + PARF_PHY_CTRL);
+>>   -    writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> +    qcom_pcie_configure_dbi_atu_base(pcie);
+>>         writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+>>           | SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+>> @@ -913,8 +945,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>>       val &= ~PHY_TEST_PWR_DOWN;
+>>       writel(val, pcie->parf + PARF_PHY_CTRL);
+>>   -    /* change DBI base address */
+>> -    writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> +    qcom_pcie_configure_dbi_atu_base(pcie);
+>>         /* MAC PHY_POWERDOWN MUX DISABLE  */
+>>       val = readl(pcie->parf + PARF_SYS_CTRL);
+>> @@ -1123,14 +1154,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+>>       u32 val;
+>>       int i;
+>>   -    writel(SLV_ADDR_SPACE_SZ,
+>> -        pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+>> -
+>>       val = readl(pcie->parf + PARF_PHY_CTRL);
+>>       val &= ~PHY_TEST_PWR_DOWN;
+>>       writel(val, pcie->parf + PARF_PHY_CTRL);
+>>   -    writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> +    qcom_pcie_configure_dbi_atu_base(pcie);
+>>         writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+>>       writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
 
