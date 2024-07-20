@@ -1,304 +1,237 @@
-Return-Path: <linux-pci+bounces-10566-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10567-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F32FD938088
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Jul 2024 11:49:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7C00938282
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Jul 2024 20:30:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F02AB2136B
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Jul 2024 09:49:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B98C1F217C7
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Jul 2024 18:30:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E004CE09;
-	Sat, 20 Jul 2024 09:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1519E146D6C;
+	Sat, 20 Jul 2024 18:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aIQB64L+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I29YE8YR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEBE29A2
-	for <linux-pci@vger.kernel.org>; Sat, 20 Jul 2024 09:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04DB1B86E6;
+	Sat, 20 Jul 2024 18:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721468950; cv=none; b=QE49/YRUvJMNiTsqx7eKMJSZiB5X7CBCoVoK9Cg+G526mKlD4sNGECTCmoaks/sX+UlUQyhpMTKOyqoBuwHr9wEwqMrOOLWxqF+o9GfskIZCuDmWV/J94BAVSVCZHL2WpTPNwpNCGZNvIZwfEX6eGjQXBHjEVNoOqLcOumRsTuU=
+	t=1721500242; cv=none; b=bLDxEmbEcVpbRRH2Q9Sg2PpucK4jpFHKwhLKmoI9zzkfjc24YDuvycVkM+Jertu6aaWvrgDWguWjbycqDaNXCc8WJQqdOu+/8UhPfbWa/DPMBK7Jwlyfe3MsF04SF+Z8+iXYWvCG31bJJ3UOlzz46kVa3w0Tp8/MquBT5SO4qyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721468950; c=relaxed/simple;
-	bh=jS9W1MssTUzsQWpyEDjy+CPj7dqkX61+xMjMDdgURYY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=IppAyW9aiEerJOE62rDM3SHzfw01bTHuyC5pCmN4r8NxhpljaXI9CjUhhLkhTLdoNvKN5wb26/+rCfFGkDxVnDuD+FVOj33M4317b2xxcThSg0fEtd8SoKRAhiVmkqXmkYSG67CkguYAX7o11xBoUSxyCctum9bFPgBl/8YBHzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aIQB64L+; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721468949; x=1753004949;
-  h=date:from:to:cc:subject:message-id;
-  bh=jS9W1MssTUzsQWpyEDjy+CPj7dqkX61+xMjMDdgURYY=;
-  b=aIQB64L+3whRVRLbYlwgoNPwR2jvBLo8ikZMiUWYBlrffEWZsJ2wkfaw
-   moNUqU7t4aV42gKDnmbAYL48Me+NGclLJeNYj1sdNzHiUBEQD769FvHMe
-   bcyUPVWGKjq9pWFb0TiXfkjVT81O70LfxuVMQnnAHqtqqxCIHaf34UUwU
-   9YXnet0Jh5cQXv8J8OTkY3ArKxjI/iaRHFl4IX304xZxnCvfM+HkFVcEE
-   LwrQA2QjbZza5pEVPCHekeGgU0ZetcMmCXTZzfq64dIKgNsd1c2AtQfvo
-   1/0sg9TL/GrP9vbXLN1SCokLBiq4CD003yhcnz1ITUmLMj5CQTb/HsJqE
-   A==;
-X-CSE-ConnectionGUID: MRRfZrx+QHKwctOdPFokJg==
-X-CSE-MsgGUID: pMhujL7RQNeVSuKzbKhmTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11138"; a="18799182"
-X-IronPort-AV: E=Sophos;i="6.09,223,1716274800"; 
-   d="scan'208";a="18799182"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2024 02:49:08 -0700
-X-CSE-ConnectionGUID: KWMDaWQlTLaPSDr/S6H0ew==
-X-CSE-MsgGUID: LFpqT9vqTzyj2bqotfe7pQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,223,1716274800"; 
-   d="scan'208";a="51628743"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 20 Jul 2024 02:49:07 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sV6i8-000j5G-0h;
-	Sat, 20 Jul 2024 09:49:04 +0000
-Date: Sat, 20 Jul 2024 17:48:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 45659274e60864f9acabba844468e405362bdc8c
-Message-ID: <202407201705.vMWE0Q4q-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1721500242; c=relaxed/simple;
+	bh=N0thndlb9Rc77vx54WY3aUNoYfyGWgbYGRzNclFlqZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Edai0Ecgst/hhcqy+MjNQbdM3IVe8OW31NG0TD8Cu6m/pLSJ8y0LUI8OLZvtI54xLkn0Z0vHxAEW/SPl0xfo5s4EuJT+J4RCcgT0Cts4PDsa/NwJUfICXL/+wLE8/yX1wFFP/YK3apZGaZBtgmtyNdslKea4Eg3YG5IunnnVfNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I29YE8YR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D5FC2BD10;
+	Sat, 20 Jul 2024 18:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721500241;
+	bh=N0thndlb9Rc77vx54WY3aUNoYfyGWgbYGRzNclFlqZY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=I29YE8YRAm9zGA5TQZHMSFZqt87/BaRjiJ+i7d4OAdPq6jWdlYrJ7Y3T0AOF5zDYO
+	 DL65OGlJGpcB1DPYlkJ/jYHK4ZpG44oHXw9Gq0Nz0A/tNCaqTMrxMmQq6Js+G4szKu
+	 +9B9VOahOP/LvDjE77Wf/I6SB3DeYW/jUAb/yf94goaN+vyyD6mWwyZSq62GtVTvEo
+	 TZZ9TYR5kYC9ax0FCLh7KnZYrQXWaHb/264z7jxn1Xkd+4Gt9kwjfdC41qi4bsYgdd
+	 Z/W1aataRLkCS70MgIOZ30Vnw5FWkAhhZeDABHZs3yF+ihy3Y5Fjx8M7s5Ejvqm7w6
+	 ZcS293U3O7tNw==
+Message-ID: <24aee2d7-927b-4ea0-bb34-e8f63d8e7856@kernel.org>
+Date: Sat, 20 Jul 2024 20:30:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V226/7] dt-bindings: PCI: host-generic-pci: Add
+ snps,dw-pcie-ecam-msi binding
+To: Mayank Rana <quic_mrana@quicinc.com>, will@kernel.org,
+ lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, cassel@kernel.org,
+ yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com,
+ u.kleine-koenig@pengutronix.de, dlemoal@kernel.org, amishin@t-argos.ru,
+ thierry.reding@gmail.com, jonathanh@nvidia.com, Frank.Li@nxp.com,
+ ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com,
+ marek.vasut+renesas@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org
+Cc: quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
+ quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
+ quic_nitegupt@quicinc.com
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+ <1721067215-5832-7-git-send-email-quic_mrana@quicinc.com>
+ <5f029f16-2030-4e86-929b-0b2832958912@kernel.org>
+ <083e1e6f-714d-4a3e-a864-59e06bba0559@quicinc.com>
+ <3221423a-d5b3-47e3-8b98-623d9b26363d@kernel.org>
+ <f06ab1ee-6078-4d89-b236-e11be4d28fc5@quicinc.com>
+ <609c2420-4bf9-4d1b-b998-2dea825139b2@kernel.org>
+ <1a6f5cdf-9256-4d8d-b8c7-92bd6e7d3813@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1a6f5cdf-9256-4d8d-b8c7-92bd6e7d3813@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 45659274e60864f9acabba844468e405362bdc8c  Merge branch 'pci/misc'
+On 19/07/2024 01:19, Mayank Rana wrote:
+> Hi Krzysztof
+> 
+> On 7/17/2024 11:05 PM, Krzysztof Kozlowski wrote:
+>> On 17/07/2024 19:20, Mayank Rana wrote:
+>>> Hi Krzysztof
+>>>
+>>> On 7/16/2024 11:47 PM, Krzysztof Kozlowski wrote:
+>>>> On 17/07/2024 00:09, Mayank Rana wrote:
+>>>>> Hi Krzysztof
+>>>>>
+>>>>> On 7/16/2024 12:28 AM, Krzysztof Kozlowski wrote:
+>>>>>> On 15/07/2024 20:13, Mayank Rana wrote:
+>>>>>>> To support MSI functionality using Synopsys DesignWare PCIe controller
+>>>>>>> based MSI controller with ECAM driver, add "snps,dw-pcie-ecam-msi
+>>>>>>> compatible binding which uses provided SPIs to support MSI functionality.
+>>>>>>
+>>>>>> To support MSI, you add MSI support... That's a tautology. Describe
+>>>>>> hardware instead.
+>>>>> Ok. let me repharse it to provide more useful information.
+>>>>>>>
+>>>>>>> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
+>>>>>>> ---
+>>>>>>>     .../devicetree/bindings/pci/host-generic-pci.yaml  | 57 ++++++++++++++++++++++
+>>>>>>>     1 file changed, 57 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+>>>>>>> index 9c714fa..9e860d5 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+>>>>>>> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+>>>>>>> @@ -81,6 +81,12 @@ properties:
+>>>>>>>                   - marvell,armada8k-pcie-ecam
+>>>>>>>                   - socionext,synquacer-pcie-ecam
+>>>>>>>               - const: snps,dw-pcie-ecam
+>>>>>>> +      - description: |
+>>>>>>> +         Firmware is configuring Synopsys DesignWare PCIe controller in RC mode with
+>>>>>>> +         ECAM compatible fashion. To use MSI controller of Synopsys DesignWare PCIe
+>>>>>>> +         controller for MSI functionality, this compatible is used.
+>>>>>>> +        items:
+>>>>>>> +          - const: snps,dw-pcie-ecam-msi
+>>>>>>
+>>>>>> MSI is already present in the binding, isn't it?
+>>>>> It is mentioning as msi-parent usage which could be different MSI
+>>>>> controller (GIC or vendor specific one) not related to designware PCIe
+>>>>> controller based MSI controller.
+>>>>>
+>>>>>> Anyway, aren't you
+>>>>>> forgetting specific compatible? Please open your internal (quite
+>>>>>> comprehensive) guideline on bindings and DTS.
+>>>>> Here I am trying to define Designware based PCIe ECAM controller
+>>>>> supporting MSIcontroller based device. Hence I am not mentioning vendor
+>>>>> specific compatible usage
+>>>>> and keeping generic compatible binding for such device.
+>>>>
+>>>> I know what you try, yet it feels simply wrong. Read your guideline.
+>>>> Are you sure you work on Designware core itself, not on one used in
+>>>> Qualcomm? I would expect people from Designware to design Designware
+>>>> cores and people from Qualcomm only to design licensed cores.
+>>> Ok. let me not make generic comment here. I refereed how it is done with
+>>> other
+>>> snps based IP usage for example USB, and would follow same.
+>>
+>> Well, it is not. If you read their bindings or any reviews related to
+>> such cores, you would see that single Designware compatible is always
+>> never appropriate. Such cores always have customization per user.
+>>
+>> You can also look at the binding you are changing. Do you see Designware
+>> alone? No.
+> I found reference in this binding as below:
+>   79         items:
+>   80           - enum:
+>   81               - marvell,armada8k-pcie-ecam
+>   82               - socionext,synquacer-pcie-ecam
+>   83           - const: snps,dw-pcie-ecam
+> 
+> And as you mentioned in previous emails about how to add such usage, I 
+> ACKed it but let me put reason why I tried to add differently to start 
+> with it.
+> 
+> This specific driver under-discussion is really not vendor specific 
+> driver. It can work with any PCIe controller which is already configured 
+> in ECAM mode by firmware (i.e. PCIe controller from SNPS or any other 
+> vendor). There are few quirks only added to get specific vendor based 
+> SOC configuration for SNPS PCIe controller by different SOC vendors.
+> 
+>   90       - description:
+>   91           CAM or ECAM compliant PCI host controllers without any quirks
+>   92         enum:
+>   93           - pci-host-cam-generic
+>   94           - pci-host-ecam-generic
+> 
+> Above enum based usage works for SA8775P platform which is having SNPS 
+> PCIe controller which doesn't need any quirks, and firmware is able to 
+> configure PCIe controller into ECAM mode. Here I tried adding PCIe SNPS 
+> controller based MSI support as SA8775P doesn't support LPI/ITS for MSI. 
+> I need to differentiate it hence added generic enum as MSI controller is 
+> part of SNPS PCIe controller, and not separate MSI IP here. Although how 
+> many MSI can be supported it depends on how many SPIs are available/used 
+> with MSI controller depend on particular SOC. Hence put as 
+> snps,dw-pcie-ecam-msi as usage and variable number of MSI. hopefully I 
+> am able to convey why this driver binding modified differently.
 
-elapsed time: 1047m
+Your binding already defines some specifics for specific device, but you
+still claim all of them are identical.
 
-configs tested: 211
-configs skipped: 3
+Sorry, I am confused. Read carefully writing bindings, consult internal
+guideline (go/upstream - it is really detailed!) and then come with a
+solution.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Best regards,
+Krzysztof
 
-tested configs:
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                          axs101_defconfig   gcc-13.2.0
-arc                      axs103_smp_defconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                     nsimosci_hs_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240720   gcc-13.2.0
-arc                   randconfig-002-20240720   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-19
-arm                              allyesconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-14.1.0
-arm                       aspeed_g5_defconfig   gcc-14.1.0
-arm                                 defconfig   gcc-13.2.0
-arm                       omap2plus_defconfig   gcc-14.1.0
-arm                          pxa168_defconfig   clang-19
-arm                   randconfig-001-20240720   clang-15
-arm                   randconfig-002-20240720   gcc-14.1.0
-arm                   randconfig-003-20240720   gcc-14.1.0
-arm                   randconfig-004-20240720   gcc-14.1.0
-arm                        shmobile_defconfig   gcc-14.1.0
-arm                           stm32_defconfig   gcc-13.2.0
-arm                        vexpress_defconfig   gcc-14.1.0
-arm64                            allmodconfig   clang-19
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240720   gcc-14.1.0
-arm64                 randconfig-002-20240720   clang-17
-arm64                 randconfig-003-20240720   gcc-14.1.0
-arm64                 randconfig-004-20240720   clang-19
-csky                             alldefconfig   gcc-14.1.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240720   gcc-14.1.0
-csky                  randconfig-002-20240720   gcc-14.1.0
-hexagon                          allmodconfig   clang-19
-hexagon                           allnoconfig   clang-19
-hexagon                          allyesconfig   clang-19
-hexagon               randconfig-001-20240720   clang-16
-hexagon               randconfig-002-20240720   clang-19
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240720   clang-18
-i386         buildonly-randconfig-002-20240720   clang-18
-i386         buildonly-randconfig-002-20240720   gcc-13
-i386         buildonly-randconfig-003-20240720   clang-18
-i386         buildonly-randconfig-003-20240720   gcc-13
-i386         buildonly-randconfig-004-20240720   clang-18
-i386         buildonly-randconfig-005-20240720   clang-18
-i386         buildonly-randconfig-006-20240720   clang-18
-i386         buildonly-randconfig-006-20240720   gcc-11
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240720   clang-18
-i386                  randconfig-001-20240720   gcc-7
-i386                  randconfig-002-20240720   clang-18
-i386                  randconfig-003-20240720   clang-18
-i386                  randconfig-004-20240720   clang-18
-i386                  randconfig-005-20240720   clang-18
-i386                  randconfig-005-20240720   gcc-13
-i386                  randconfig-006-20240720   clang-18
-i386                  randconfig-006-20240720   gcc-11
-i386                  randconfig-011-20240720   clang-18
-i386                  randconfig-011-20240720   gcc-13
-i386                  randconfig-012-20240720   clang-18
-i386                  randconfig-012-20240720   gcc-13
-i386                  randconfig-013-20240720   clang-18
-i386                  randconfig-013-20240720   gcc-13
-i386                  randconfig-014-20240720   clang-18
-i386                  randconfig-014-20240720   gcc-13
-i386                  randconfig-015-20240720   clang-18
-i386                  randconfig-015-20240720   gcc-12
-i386                  randconfig-016-20240720   clang-18
-i386                  randconfig-016-20240720   gcc-13
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240720   gcc-14.1.0
-loongarch             randconfig-002-20240720   gcc-14.1.0
-m68k                             alldefconfig   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-m68k                       m5249evb_defconfig   gcc-13.2.0
-m68k                        m5407c3_defconfig   gcc-13.2.0
-m68k                        mvme147_defconfig   gcc-13.2.0
-m68k                           sun3_defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-14.1.0
-mips                     decstation_defconfig   gcc-13.2.0
-mips                           gcw0_defconfig   clang-19
-mips                           ip32_defconfig   clang-19
-mips                       lemote2f_defconfig   gcc-13.2.0
-mips                      maltaaprp_defconfig   clang-14
-mips                          rb532_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240720   gcc-14.1.0
-nios2                 randconfig-002-20240720   gcc-14.1.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240720   gcc-14.1.0
-parisc                randconfig-002-20240720   gcc-14.1.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   clang-19
-powerpc                     asp8347_defconfig   clang-17
-powerpc                 mpc832x_rdb_defconfig   gcc-14.1.0
-powerpc                      pmac32_defconfig   gcc-13.2.0
-powerpc                         ps3_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240720   clang-19
-powerpc               randconfig-002-20240720   clang-19
-powerpc               randconfig-003-20240720   gcc-14.1.0
-powerpc                     redwood_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240720   clang-19
-powerpc64             randconfig-002-20240720   clang-19
-powerpc64             randconfig-003-20240720   gcc-14.1.0
-riscv                            allmodconfig   clang-19
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   clang-19
-riscv                               defconfig   clang-19
-riscv                               defconfig   gcc-14.1.0
-riscv                 randconfig-001-20240720   clang-19
-riscv                 randconfig-002-20240720   gcc-14.1.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                             allyesconfig   clang-19
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   clang-19
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240720   gcc-14.1.0
-s390                  randconfig-002-20240720   clang-15
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                        apsh4ad0a_defconfig   gcc-13.2.0
-sh                                  defconfig   gcc-14.1.0
-sh                               j2_defconfig   gcc-14.1.0
-sh                     magicpanelr2_defconfig   gcc-14.1.0
-sh                    randconfig-001-20240720   gcc-14.1.0
-sh                    randconfig-002-20240720   gcc-14.1.0
-sh                   rts7751r2dplus_defconfig   gcc-14.1.0
-sh                             sh03_defconfig   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240720   gcc-14.1.0
-sparc64               randconfig-002-20240720   gcc-14.1.0
-um                               allmodconfig   clang-19
-um                                allnoconfig   clang-17
-um                               allyesconfig   gcc-13
-um                                  defconfig   clang-19
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-13
-um                             i386_defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240720   gcc-13
-um                    randconfig-002-20240720   clang-15
-um                           x86_64_defconfig   clang-15
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240720   clang-18
-x86_64       buildonly-randconfig-002-20240720   gcc-13
-x86_64       buildonly-randconfig-003-20240720   clang-18
-x86_64       buildonly-randconfig-004-20240720   clang-18
-x86_64       buildonly-randconfig-005-20240720   gcc-13
-x86_64       buildonly-randconfig-006-20240720   gcc-13
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                randconfig-001-20240720   clang-18
-x86_64                randconfig-002-20240720   gcc-13
-x86_64                randconfig-003-20240720   clang-18
-x86_64                randconfig-004-20240720   clang-18
-x86_64                randconfig-005-20240720   clang-18
-x86_64                randconfig-006-20240720   gcc-13
-x86_64                randconfig-011-20240720   gcc-13
-x86_64                randconfig-012-20240720   clang-18
-x86_64                randconfig-013-20240720   gcc-13
-x86_64                randconfig-014-20240720   clang-18
-x86_64                randconfig-015-20240720   gcc-13
-x86_64                randconfig-016-20240720   gcc-13
-x86_64                randconfig-071-20240720   clang-18
-x86_64                randconfig-072-20240720   gcc-13
-x86_64                randconfig-073-20240720   gcc-13
-x86_64                randconfig-074-20240720   gcc-9
-x86_64                randconfig-075-20240720   gcc-13
-x86_64                randconfig-076-20240720   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240720   gcc-14.1.0
-xtensa                randconfig-002-20240720   gcc-14.1.0
-xtensa                         virt_defconfig   gcc-14.1.0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
