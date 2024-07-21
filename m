@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-10573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020589383DD
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 09:57:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E3E69383E1
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 09:58:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B72B1F2141A
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 07:57:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 025F41F2135B
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 07:58:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27C58F6A;
-	Sun, 21 Jul 2024 07:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23DC88F49;
+	Sun, 21 Jul 2024 07:58:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpKw+WIW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c7SqcxH4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304108F40
-	for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 07:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A398E8C0B
+	for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 07:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721548646; cv=none; b=UrHhHehIS1UCPxrcq3F24oq5r7J33Hzal3FSayNR2UaN3gDLWn70mfxQzvDJ1iJQFJaJblZN57PW4M9RVaCKvf67Z5t9b6Bx6QFMLgdzZCV0Lg621BzhJ1Fg8qaJJMi1LENq3wdwExXZzEAcoAbW0PDDMGLvYxXbJ6jA3+NEC7I=
+	t=1721548692; cv=none; b=H6MnemnIR6cmPbh4VjzscCnDM+Q4N0NptMaWHT+NtyvxOgkm4sQscORH+NVtCf1yH+Wm4EGzOoqloUbrPwJ9wd1ZQm+gmB+npX2IOsq6Y5SkEN7xdcDTK+g+ngdMNB11q/ZSy5USLxjTOaF4C9+XqtIkTWudzNk5AktqMDh5zGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721548646; c=relaxed/simple;
-	bh=s69hgVRKMH7JDZd2qOJja1UzLIOGXfsO9ijXxL17Huk=;
+	s=arc-20240116; t=1721548692; c=relaxed/simple;
+	bh=NI687GCHjldfGpK107QeC6EjKSPt5ohNW/uOojsOCXY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nTn+vSxuLQ0V1xfOMnQOVHhbu2C5LU5uqKy9N6WbOGfSFu9QU9l0a+Dlw18q220d1tFDnHxD9ZSB6FkPrjc1KsQ1zSbrE1WFgqOnaH6EUH6DwUehKbKKYOuSHjQLvxavLGXp8kgZlSPgxeSN9JGUB9JECW/ZqagpBWcCD53T/vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpKw+WIW; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMi7gBZ3zXhUCR7pmEwDCyesBh5SyrP8Q/8UEZE/I0IiQhIlAQ6L+e2F2JtlMEq0/4TGVapHw/wJ8dDwn60PROkJO8VBhGerzUrw/zPhSM+GRKfkIruBaJ1KgXv417TX87cwT3scWJlVHOX8qrcDcPsRfVdfQeUdqk5djIayaKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c7SqcxH4; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fc569440e1so27671605ad.3
-        for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 00:57:24 -0700 (PDT)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2cb682fb0cdso1681475a91.3
+        for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 00:58:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721548644; x=1722153444; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721548690; x=1722153490; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=hyQz2Ns66mgvWpxSfqn/FqrN5K/JDuDi/DmSKkr9CpA=;
-        b=QpKw+WIWlWrHQmo+t2v27byKa60Mp2h5hpg6NI4vvrpY3kN6TLg00SUN5V4Ffw4qPg
-         cD2OhdjtyA8IaFH1XFEoXBnP+kDssVL/sMoxO3OjAyeTbI2U/AG3Bip36lO0d0onS0lh
-         DgZoS2s8xmdBFsdetzKBSwXQy/83cQuXVKyV0IqqjQottlyBuVE6xLjUap9L/rffTMn1
-         JlR/XIkK8GYmZOXoS8pq4g4oguIVdbyspED5tJ6H5G5KfvbPrKBjw2MDmISwX1QmzOFj
-         j9G1kffsntSj8dUvKPhah20APjdBrXKmoQbN+MyaCCii3KkOAG0X52InbXaS6ntXs/QC
-         MQIQ==
+        bh=raatYppCAGhkFlzNXfUu8dG+wXWP3mZb3MIn5RqUSNg=;
+        b=c7SqcxH4bLs3hd6OdtSajn/btADfaQBjKkV5E2CLPA6wuik8egJQhg0qL/g7RAdxWT
+         adMwDIc1VvhQouFQ5WHpMvb9mLD+xQpCfd98zfjWHCRfrDSXIIVqm/Ff+ATHEfqZ7lCD
+         OCRf6ElQ5pI/qH8hJdrafV9rlgBiedogfPL8d0ZNGibvQ3sFiEWuZYxjCgtp7i0lqtZh
+         rdOP11wGIfrfBT+PKY0Eosr5roIguPCW7ylo8BMwUf1CH7DTEVnLWZzJcnmlP4WNrTxz
+         TYNEwVAI+BkgLEDZzzeM5u1Wnxmf7NJNl4nd1lAlVCR2cs+o0PC2LmD1pXSC9MGabhZY
+         TutA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721548644; x=1722153444;
+        d=1e100.net; s=20230601; t=1721548690; x=1722153490;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hyQz2Ns66mgvWpxSfqn/FqrN5K/JDuDi/DmSKkr9CpA=;
-        b=aAvepJ0wjRyjg8slxc2u+ydlAMZDxsvpeCTmPg3W40jM5AINEGPrV61nIs2p32I1IQ
-         sEVsKiJXm2DxasTjNxUIQG+NM5CP4LLgsSlxyj9RX7DebdRYU56eMguJEUcmTY5Nr/gt
-         QmDMU6UVEspIoClhmp0dQohrgfEpO2Ur5ktMZf83vb5h5iNDT/W92d7AxVTp0axf+Wsa
-         iXmJUXlns+MHT4rYrcO/uvMFu7l0sK5JeilGTDAzBcg5EFV2Jt9x1MvrWAybuvvoWR1E
-         h5YJRferUURmO8pLl+oHm/nStNsAhnym35wAj4dTne2yIr5ab/U5d2zFJrEnN27RoSXQ
-         F2oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwKOdddiyyuQWUm3Rt7qps5jPgPgo2n3BDwkKM7ejvSRRmVUKjNsUxLlcYcEkgsbNuV/w+nSpqYLQVxWPO+A4FhuSQX3bAQjOm
-X-Gm-Message-State: AOJu0Yz53QEQXoi9GbiUULUbWRSRi8elTDfdIO3i2JhvXEh+rOg7CB0V
-	GWNsMfr3Oxdq9e8HJ6Mvz5niu8/nkgWHuAlmnMNqzpzhWzUTklBi4ZLcgmZ9rQ==
-X-Google-Smtp-Source: AGHT+IERUkgk9IVWEdkvqOOdRMakPjOZKnaunfxav2UdDTQ2WsxGK8Rz6HmUXynq1p6YcDsh3CF0RA==
-X-Received: by 2002:a17:902:d50e:b0:1fb:59e6:b0e1 with SMTP id d9443c01a7336-1fd7457e63cmr41518775ad.32.1721548644189;
-        Sun, 21 Jul 2024 00:57:24 -0700 (PDT)
+        bh=raatYppCAGhkFlzNXfUu8dG+wXWP3mZb3MIn5RqUSNg=;
+        b=aSCypdDVG1gR2pt5VtijHZl67/2D25UF2Q3D7tOTP5A3JmOAWPV6KLvtUysW6KGMMK
+         YDcZLi5BwZc+2v3OlPQHberrOgbmKF+ChxP0AujWDWlE1Q0os9/aMTJi4vz577lMvsTX
+         GxdfMsVk1pjKOCpQNn1bMLT9C00RB5IFOqTCmOO8SKxy0C7k7T+cdJj9wLt9Pr6xclx0
+         zvj8E3kzh8NmdsLdaByMbILhtLXev7CMoPkyfkPuuvt+eGrFHWRZBKQ/d8uaoSCwP9iO
+         srKl2CWVg3Vpcs1zsVv2Ahw7YKmKkmAyNAAgPFw3K+FTcMADF7Lq34lWJoksmYSjWGy7
+         qvdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW28IcFY4byh5qMZ7KHooLOaPEiu6mq7XjiaQZnd8O7k0QHymcALEuFWQqPPdnDgnyD3aQqjtN3Kx3ifRSVrax6QsPUFC0BxcNf
+X-Gm-Message-State: AOJu0YywWS8r4bCpn2O2lw4Whcs3pUCmEuSucrEl/mUt0BtPv2XZiCMn
+	JDSmg5GZCbqMQZL67iYwARtx2xbeUO0KOXMug7+H144gBuwfKttSve/LxqOZUA==
+X-Google-Smtp-Source: AGHT+IHp7aazJddbvZ+iXp2BV1KA3JLT7zvAEeg/7m94Sx/VEbulyCyvjIAeg6d2fD9sAuwdN0elyQ==
+X-Received: by 2002:a05:6a21:3282:b0:1c2:94ad:1c6a with SMTP id adf61e73a8af0-1c428643b72mr2081732637.37.1721548690016;
+        Sun, 21 Jul 2024 00:58:10 -0700 (PDT)
 Received: from thinkpad ([120.56.206.118])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f2a4801sm32369595ad.113.2024.07.21.00.57.18
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb773029d7sm5789297a91.15.2024.07.21.00.58.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jul 2024 00:57:23 -0700 (PDT)
-Date: Sun, 21 Jul 2024 13:27:17 +0530
+        Sun, 21 Jul 2024 00:58:09 -0700 (PDT)
+Date: Sun, 21 Jul 2024 13:28:02 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Richard Zhu <hongxing.zhu@nxp.com>,
@@ -87,12 +87,13 @@ Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
 	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 06/10] PCI: imx6: Improve comment for workaround
- ERR010728
-Message-ID: <20240721075717.GD1908@thinkpad>
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v7 08/10] dt-bindings: imx6q-pcie: Add i.MX8Q pcie
+ compatible string
+Message-ID: <20240721075802.GE1908@thinkpad>
 References: <20240708-pci2_upstream-v7-0-ac00b8174f89@nxp.com>
- <20240708-pci2_upstream-v7-6-ac00b8174f89@nxp.com>
+ <20240708-pci2_upstream-v7-8-ac00b8174f89@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,56 +103,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240708-pci2_upstream-v7-6-ac00b8174f89@nxp.com>
+In-Reply-To: <20240708-pci2_upstream-v7-8-ac00b8174f89@nxp.com>
 
-On Mon, Jul 08, 2024 at 01:08:10PM -0400, Frank Li wrote:
-> Improve comment about workaround ERR010728 by using official errata
-> document content(https://www.nxp.com/webapp/Download?colCode=IMX7DS_2N09P).
+On Mon, Jul 08, 2024 at 01:08:12PM -0400, Frank Li wrote:
+> From: Richard Zhu <hongxing.zhu@nxp.com>
 > 
+> Add i.MX8Q PCIe "fsl,imx8q-pcie" compatible strings. clock-names align dwc
+> common naming convension.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.yaml          | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 2c60858b74a09..2b95c41f8907e 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -714,9 +714,26 @@ static int imx7d_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
->  		return 0;
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> index 8b8d77b1154b5..1e05c560d7975 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -30,6 +30,7 @@ properties:
+>        - fsl,imx8mm-pcie
+>        - fsl,imx8mp-pcie
+>        - fsl,imx95-pcie
+> +      - fsl,imx8q-pcie
 >  
->  	/*
-> -	 * Workaround for ERR010728, failure of PCI-e PLL VCO to
-> -	 * oscillate, especially when cold. This turns off "Duty-cycle
-> -	 * Corrector" and other mysterious undocumented things.
-> +	 * Workaround for ERR010728 (IMX7DS_2N09P, Rev. 1.1, 4/2023):
-> +	 *
-> +	 * PCIe: PLL may fail to lock under corner conditions.
-> +	 *
-> +	 * Initial VCO oscillation may fail under corner conditions such as
-> +	 * cold temperature which will cause the PCIe PLL fail to lock in the
-> +	 * initialization phase.
-> +	 *
-> +	 * The Duty-cycle Corrector calibration must be disabled.
-> +	 *
-> +	 * 1. De-assert the G_RST signal by clearing
-> +	 *    SRC_PCIEPHY_RCR[PCIEPHY_G_RST].
-> +	 * 2. De-assert DCC_FB_EN by writing data “0x29” to the register
-> +	 *    address 0x306d0014 (PCIE_PHY_CMN_REG4).
-> +	 * 3. Assert RX_EQS, RX_EQ_SEL by writing data “0x48” to the register
-> +	 *    address 0x306d0090 (PCIE_PHY_CMN_REG24).
-> +	 * 4. Assert ATT_MODE by writing data “0xbc” to the register
-> +	 *    address 0x306d0098 (PCIE_PHY_CMN_REG26).
-> +	 * 5. De-assert the CMN_RST signal by clearing register bit
-> +	 *    SRC_PCIEPHY_RCR[PCIEPHY_BTN]
->  	 */
+>    clocks:
+>      minItems: 3
+> @@ -184,6 +185,21 @@ allOf:
+>              - const: pcie_bus
+>              - const: pcie_aux
 >  
->  	if (likely(imx_pcie->phy_base)) {
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - fsl,imx8q-pcie
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 3
+> +        clock-names:
+> +          items:
+> +            - const: dbi
+> +            - const: mstr
+> +            - const: slv
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
 > 
 > -- 
 > 2.34.1
