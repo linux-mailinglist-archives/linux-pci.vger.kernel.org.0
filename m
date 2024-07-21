@@ -1,134 +1,148 @@
-Return-Path: <linux-pci+bounces-10577-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10578-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9A47938403
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 10:25:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C44C5938459
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 12:24:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93952280F22
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 08:25:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 528E7B20D60
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 10:24:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99ECA8F7D;
-	Sun, 21 Jul 2024 08:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F4015FA6D;
+	Sun, 21 Jul 2024 10:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7MSQaig"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ET8rGtTF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193082F24
-	for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 08:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D613A27E;
+	Sun, 21 Jul 2024 10:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721550346; cv=none; b=GmyB3WSnBTmc4MtyW+2H+Fjk6VeQ2Ger1g8JfKjk/VACrtuOAYPcaVTEXnkFDBc3qcZYJTB82Si5WBu7v6fPpfoU0ENZnhqdlYSRzDUvC3lOjHuejZfPJ4P6F/B9vwQH6I8W9PXHySMWdw2piQ9UHQJHDoGIRF+Vuth9EHmOe48=
+	t=1721557461; cv=none; b=NDF8c/VqXWarZRYTIRyoVaHA1ADdAaBCfbTseueDZV3XZ84YoUnsfTPXu1bjDaTzZ5suel6ltNGipaSwCgHs4VkgUx1HT+9TbFFngTxanEyHJXZLYkqVdQKjm43GypdUsB8zPSXcxzau4N4rNlysdmxOtwjzF664C0y66t9C8KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721550346; c=relaxed/simple;
-	bh=7mxFT5RPH8uPGTLPA8mWVIBU6Y10+Ss+XorW4DoWPXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJ9/ZmynEUJHdVOrf4QMZF09MkAPu5XBsYpyoVWLd7gdSfHrEKcAH1A0qepZhcjlTmPYU0hYtRG2apkpGtHf3HlYHjVvQO/KRpvT2ToNCo206A8DR2xt8vOyv4uKmqM0EFclf0Kkk8PCRJBOvB1NM2r5vqjIIy+CTu39ZeTR26I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E7MSQaig; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7fd3dbc01deso149919439f.0
-        for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 01:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721550344; x=1722155144; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NRb+ts4NCAeHX8eVfGlmxAo56K5zTcMk9tYd2zxfBD4=;
-        b=E7MSQaigRkHuYFTzfZguchHmWDfl38MTAvzA1bBXWjboL9vM4geV0sBW/0wMDGsPAK
-         7gOu7XGjd+MMClbuRkv1a9BkLZn+E15gFpydxBG66WhpZ39ogUMKe7DjvwNlCCj8qsjE
-         7UX4/IFX4wiSFe/wm7+fJQKuTwFjz7o2zvHk1MJsznkjRkfGDkr8VLakVzDc6EuevZEn
-         3C+0axVDs0TMxJ1BLOhu8CUDlrBhfRTtHbSb3yrhYNzXfnhWqBrjlI5lHdVphAC5I6b4
-         czRjxY/KLPBb0hUMQjs6qLITWUpNuA8g1Ptmr0GctEjFvwtsb0GoHTchIdjXKk6UMYSP
-         NURg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721550344; x=1722155144;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NRb+ts4NCAeHX8eVfGlmxAo56K5zTcMk9tYd2zxfBD4=;
-        b=wAD2OmP/fkBjxNdZfyIDLY/pwn9mmBYVLMPGDgLllXJSsYzwybTxOBvFA/N2MdGudo
-         qztRF5jYTLMEU3rGDpELN19YFafbZlF2XJHOzTdWGgPKxOTEMMg1BWkKKIoLDffsaRIj
-         BHqRHFdyJdrV+uniUZDCIA8ECL82ZPPEDX6zZxLuTYHL/RknY3yHggk4QJItjLCv0K05
-         AIRiY2pzaspANp7sesTwozjE+JEjXJXd6reefqfunkButmhWAiO6KMD+S0VyrPtzZpB0
-         90BiWKQ0TOn3UWxCv5q/ZfgQbIEC0zB3K+/+4M9s4xsyvDNIEqvaKHw3vx+J0HHRI2dk
-         ljmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3CWymo7VgtnJmBgCdfnSeUbeg/YDQzGZFSHHlUzjfzvXPiN/PRRu3q5UV0cBrsXEhqCZZBHJrfzBirR5uM+7BbLHy1pV6dmw7
-X-Gm-Message-State: AOJu0Yw3xP6z7G/GvW+WK9BD0+xCI8jsNw9KZisgeEeI5HPoi9n61cIF
-	mHaERBY9SysA2W1GK6cbYO2PyMrQNEI97+K9yAEJN3cAR+1DBt7AIxknEjj9Jw==
-X-Google-Smtp-Source: AGHT+IElTOoJolfiF+bmMtTVVaiVVtUT1Qy014HteDsgb6L5kUnlFT0MfSAqpaqrfJx8vtSHjSru8g==
-X-Received: by 2002:a05:6602:601b:b0:805:e2bf:f303 with SMTP id ca18e2360f4ac-81aa9cc3f73mr572267839f.8.1721550344194;
-        Sun, 21 Jul 2024 01:25:44 -0700 (PDT)
-Received: from thinkpad ([120.56.206.118])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f319789sm32845225ad.137.2024.07.21.01.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jul 2024 01:25:43 -0700 (PDT)
-Date: Sun, 21 Jul 2024 13:55:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Aleksandr Mishin <amishin@t-argos.ru>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: keystone: Fix && vs || typo
-Message-ID: <20240721082538.GH1908@thinkpad>
-References: <1b762a93-e1b2-4af3-8c04-c8843905c279@stanley.mountain>
+	s=arc-20240116; t=1721557461; c=relaxed/simple;
+	bh=Qp4ZnoNJAsjmwage0fRNYKZ3x96815KqDkSFBz48iek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d/0f0g4bfqZHRyDe/5sZMQ3/9Nbdz8FHIH16HQvZWcV4xndaCD6bd9EC6i8eJd6EZ4bq4LQ+60v6eB4U1rA78XP1LH8QZaK7G4Omu681WkHF9tjhCh8bvRZ+I036Z0e8jvwu9pCiqne/fuBtg8vp9mg6YDdFa+L6y7F2gcc5hzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ET8rGtTF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 267F0C116B1;
+	Sun, 21 Jul 2024 10:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721557460;
+	bh=Qp4ZnoNJAsjmwage0fRNYKZ3x96815KqDkSFBz48iek=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ET8rGtTFOhT8pYPLYBYarZ8OywFaRScLYW6mRgRqevMgoNHnXrP4Z4AWbilo7R85A
+	 JGMcy756Faj2L5G0wvLVdT7OhBZwI9vLs6kwGJzyjQhsBTBDmi4VblbQA23gNKyq/t
+	 /iNnv38rildfBgQnkILltA8UdnnaUb82tqMUm8TtdfgQeSalxuxahRUR5mclBT20J+
+	 qoo3kmdvT6BlMznTrgXtdZzp3xNFXVltTIxPRbpeGBK3QAr8PzVsXG6B2i/kznZaYH
+	 1PJMOlHm6qIZrp1FZtWEnTmMApoQTUHrY19QfOxc8DuL283cwemaoHoJ6Ev4WHL2ww
+	 s2Ges3mg1h6nA==
+Message-ID: <dcb202bd-f36a-4be1-b817-8e572e847f7a@kernel.org>
+Date: Sun, 21 Jul 2024 12:24:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b762a93-e1b2-4af3-8c04-c8843905c279@stanley.mountain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: PCI: qcom,pcie-sc7280: specify eight
+ interrupts
+To: Rayyan Ansari <rayyan.ansari@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240718-sc7280-pcie-interrupts-v1-1-2047afa3b5b7@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240718-sc7280-pcie-interrupts-v1-1-2047afa3b5b7@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 19, 2024 at 06:53:26PM -0500, Dan Carpenter wrote:
-> This code accidentally uses && where || was intended.  It potentially
-> results in a NULL dereference.
+On 18/07/2024 17:20, Rayyan Ansari wrote:
+> In the previous commit to this binding,
 > 
-> Fixes: 86f271f22bbb ("PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> commit 756485bfbb85 ("dt-bindings: PCI: qcom,pcie-sc7280: Move SC7280 to dedicated schema")
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+"commit foo ("bar")" is always part of the sentence, so drop surrounding
+blank lines.
 
-- Mani
+> 
+> the binding was changed to specify one interrupt, as the device tree at
+> that moment in time did not describe the hardware fully.
+> 
+> The device tree for sc7280 now specifies eight interrupts, due to
+> 
+> commit b8ba66b40da3 ("arm64: dts: qcom: sc7280: Add additional MSI interrupts")
 
+Same here.
+
+> 
+> As a result, change the bindings to reflect this.
+> 
+> Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 > ---
->  drivers/pci/controller/dwc/pci-keystone.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 52c6420ae200..95a471d6a586 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -577,7 +577,7 @@ static void ks_pcie_quirk(struct pci_dev *dev)
->  	 */
->  	if (pci_match_id(am6_pci_devids, bridge)) {
->  		bridge_dev = pci_get_host_bridge_device(dev);
-> -		if (!bridge_dev && !bridge_dev->parent)
-> +		if (!bridge_dev || !bridge_dev->parent)
->  			return;
->  
->  		ks_pcie = dev_get_drvdata(bridge_dev->parent);
-> -- 
-> 2.43.0
+>  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 24 ++++++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+With above:
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
 
