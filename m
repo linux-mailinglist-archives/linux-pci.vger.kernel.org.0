@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-10571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F16DF9383C8
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 09:40:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 214DC9383D9
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 09:56:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F19DDB20E9F
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 07:40:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3ECB31C209B0
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Jul 2024 07:56:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E7E8827;
-	Sun, 21 Jul 2024 07:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ED6D8F5B;
+	Sun, 21 Jul 2024 07:56:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTepMrN1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RbPKmEWQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5757179CF
-	for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 07:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0AB8C1F
+	for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 07:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721547597; cv=none; b=YDCNc4LpR/ZU/0kEpb514Wrwk1SWZ41l4R5PUnMKWYuFTYGt7UwBa/cw+wmaYnCjGij+MOa4IKICNBMPWePBDwOxzh4TGJ1zpUMioVnQAE36oi3JZMhq0yicobyPk9SW2upvoUw5Vy8zY+KhFNmSwQ6heeaK5T6/qv/kW77iuNo=
+	t=1721548605; cv=none; b=K/w33XB/KEvNBh3hgw7uYYXJ/Gw9aWXzBQU0HT1N237ZBBMQsgttZjsDI6qK5hNhl3ayQ/z0WN+8YdL47PLLqjxh9HOuUDZq+hES2MjP5Ofrk22kY5tGyNZs2YEEg9UB/XsyekeOke8F+np5jT+Y1R4zm4iFrVmO1MF9oWO+8D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721547597; c=relaxed/simple;
-	bh=FKPYtsFtam4QQMK01ANM2dJ9eQL9oofZqTRrOT3jXts=;
+	s=arc-20240116; t=1721548605; c=relaxed/simple;
+	bh=XO5md9ConEoIIW06jXtI+hVZbOSSpaCoASh7waxuqWQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iipTVxzmD9dR3l6TWgXcbQHQ3YXe6D1Xo6vd8OKejx9Muz6E+HDrrM5DPnooNbm69IbIPtNQ8G99NCZRXx817QVxo/xrVn3lE0LIPoGM9Mk08UkVCz8dCHf/QdNGyYUnOiU5J5kY3NLF6RZcUzO/OchBID+hZJ75hIiRAkGf+0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vTepMrN1; arc=none smtp.client-ip=209.85.128.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8TQMXjURkHjOBKdPbNpECe1z4lwyZPS8vpjpNKr81Wrr6Oi3TrI4OEJwuCHeyIDQFsAZuHqaLHQbGrlBRMr0lYJWrw+AcLqaL/GIVjj3jl9X3U1R5UfUKf7mEpWE1+yS+xHUn8ycZDwSzkpX3TDUDXQZ265nvisc9WPC4KiPmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RbPKmEWQ; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-65f9708c50dso32240567b3.2
-        for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 00:39:55 -0700 (PDT)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7fb93b2e2a3so133631839f.1
+        for <linux-pci@vger.kernel.org>; Sun, 21 Jul 2024 00:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721547594; x=1722152394; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721548602; x=1722153402; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=N02rs0beU0+PCjKU6W+pNs3gEfWqOvtg3yl3XFcbS8U=;
-        b=vTepMrN1lhDS8EyTZ8/9FJS4kOinxkHYvL32d7599ZLJL9fFXWRRNNIvGwR5a6KMxa
-         nATLaRuFjtR38d/X0+QB8kciLZTRTO4sUqpcCsBgoOb8mQDwJk6PINVPcsS+mD6rGgRg
-         HeuKTcavw48rMwjYmdNlf5oNuq4z5Qe8W6/oIgdGnxUcLYQhWZZ+/t4qtSAOcE9hsIjA
-         XpJaC6x9cf1dVxrn+etHIOjQkQ16Hj0ijOtLZJHj7LQvCIc57gn/5mmmqNKLy8JngcgQ
-         x25yQnH5VhwqeHenZ/v9/DigVZQjvLBphuLJz5sCWyPIFSBS8AbXGLTD2FzqQBzzivUc
-         DDTA==
+        bh=k6gGU+fz2lIRBCY4VE5FcZg84uYYhlbx5aEGBL3Pm8E=;
+        b=RbPKmEWQjrpj5Wd1+vhgCGCMAk2MQiUKHCCOr1vrw/Ji5yVI3RIw5aVqu188VivO+T
+         t/WpHFrJE0GGDfP0DZcCjUX6zlaIx23XyDdQCdAzejOuZ3lwk4tsIXWGHcK7BMcxuvqK
+         y1FnU/lLfZajsDGC2QLKBJ432X49u47R/HBLMPn3Kr1AoceRe4mNNFin00Gfa6vuyEvb
+         fUrMRs7MFEESRnNsG10eOezgVkGgdpj0qNucwweZ6JismZY1JZqU8uqmaivE2Mx7MuI0
+         ADHTv1zgtgwfPEJlSnEStHhjLzr+iGqeykSOoF9rOluYwK22WLqm/nXuKw+aDrL5QCfD
+         J+ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721547594; x=1722152394;
+        d=1e100.net; s=20230601; t=1721548602; x=1722153402;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N02rs0beU0+PCjKU6W+pNs3gEfWqOvtg3yl3XFcbS8U=;
-        b=vjPszenIsz0A0yaJP+LgTfaL+50kd6Jqv1s+VOnBoXRmo9eVUsG5XSD5eEL1Qwq06G
-         QtqQN4ZrSFiMB6IJZ8Aw41+V8S6r/AXP0peGBSMcRvTNXV10BG5ZQhkz7t9RghbVErwG
-         UattCl0Xe7ee1dH3an2RUUkyRq9VPNYJtOg6qC0hDdliO9b0vnQPHnRGcdtdhUddS8Vn
-         omLigSMTrajp3LrSSaEoSqlP251WfINOrIDgJJynnjas73I+lfxHPDNWfNzuEdyINl4j
-         6Wg78Omka6wK1wCJ2x8/h4MK7H9tj6QLz/Y+FKQsxsKXBsW0AiGW8mwgj3I3Hbwf822w
-         5CCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdOA26hb1g0yjJHW33oymJC2Qn/CGn5KaPYgEvlRVSYyFACTb4vNmPBA8t7LTc5mIhGVbqwAWtVmC2MDxCI5kCN35TFQPMwJBF
-X-Gm-Message-State: AOJu0YyPrcGvBLBKr/VA9fltZK90Azl9yAtLAUUKG2k3fOQpW6ZHs6B/
-	4rycYLMCcLWdi0jI/6QBfLFrB3LvDrAq0KRPzIiw4ScnLEtw8aYoMc7BS6+ZnQ==
-X-Google-Smtp-Source: AGHT+IFQYY74iAGQY5pOOJPCWv5JUZVONiqWh0swcBRClZ6YAaFDgYxDWJLm9Z5K35Wb0bbXsmVAGg==
-X-Received: by 2002:a05:690c:4441:b0:665:7184:fcd0 with SMTP id 00721157ae682-66ad8dc0d02mr32319017b3.23.1721547594246;
-        Sun, 21 Jul 2024 00:39:54 -0700 (PDT)
+        bh=k6gGU+fz2lIRBCY4VE5FcZg84uYYhlbx5aEGBL3Pm8E=;
+        b=d8YDMGLlddKYDXGHZDq3fU3i2XCAG4Eh2cTC+1klNfx7/t40ABWqdH7kxjbdDL7T81
+         mxHSNVvPk7/+lP7cQlTukaCL0bDVxsfzzYG6g2CVgn9bPSorzrx0g0I+6XcCGTB+VlYl
+         Dz7q4pkPc5O54kVfG/rio2rT1vFxLPFBMlTFP+8s6bsWoXceHynZNiZ6Sj4xcYI0/EpC
+         68H5BKcfp131Qos9cm9wH1LRLhzhJTbBRjtURcf5PnFBwc4HAnBSziUsSAMwEhsZe9Yv
+         ZYsW9hktjJlAo4x9gq1oojK+ZO0v/qsRb7wuLrUsicEN4dbVvrBxCB/eUG+UWMbpigV+
+         IatA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEkV+fLaZeAti1uS8KA5DdBhUPMeOfoXC9dbX0L653eKhPs9zDujTVHu1Jtaz+mFdK3h/Hjvk4da46QNT1Krc2S7bm2KMJZP3S
+X-Gm-Message-State: AOJu0Yy8W1HLF7QVjsGcDKB8M1G+K+qIxLCJA5LXo0Sed+ivuUOFRKb6
+	RQJ7c1XC3sPDRGaAsu32B5JmhJri3tgMhYwpwtZQwoq2KjYjYZfN6P2o11vc7A==
+X-Google-Smtp-Source: AGHT+IF1uwclQelxCTCZt/SjCt51SdmajX/rFjbGweVu8AjNgTxJ4Qes8huNEaPThMJJ+JpjrtTQjw==
+X-Received: by 2002:a05:6602:1503:b0:7eb:4b89:b706 with SMTP id ca18e2360f4ac-81b341c7843mr467636839f.8.1721548602387;
+        Sun, 21 Jul 2024 00:56:42 -0700 (PDT)
 Received: from thinkpad ([120.56.206.118])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70d2243d137sm439633b3a.31.2024.07.21.00.39.48
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f25a841sm32550265ad.32.2024.07.21.00.56.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jul 2024 00:39:53 -0700 (PDT)
-Date: Sun, 21 Jul 2024 13:09:46 +0530
+        Sun, 21 Jul 2024 00:56:41 -0700 (PDT)
+Date: Sun, 21 Jul 2024 13:26:34 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Richard Zhu <hongxing.zhu@nxp.com>,
@@ -87,12 +87,12 @@ Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
 	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org, Jason Liu <jason.hui.liu@nxp.com>
-Subject: Re: [PATCH v7 02/10] PCI: imx6: Fix i.MX8MP PCIe EP's occasional
- failure to trigger MSI
-Message-ID: <20240721073946.GB1908@thinkpad>
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 04/10] PCI: imx6: Introduce SoC specific callbacks for
+ controlling REFCLK
+Message-ID: <20240721075634.GC1908@thinkpad>
 References: <20240708-pci2_upstream-v7-0-ac00b8174f89@nxp.com>
- <20240708-pci2_upstream-v7-2-ac00b8174f89@nxp.com>
+ <20240708-pci2_upstream-v7-4-ac00b8174f89@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,45 +102,258 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240708-pci2_upstream-v7-2-ac00b8174f89@nxp.com>
+In-Reply-To: <20240708-pci2_upstream-v7-4-ac00b8174f89@nxp.com>
 
-On Mon, Jul 08, 2024 at 01:08:06PM -0400, Frank Li wrote:
-> From: Richard Zhu <hongxing.zhu@nxp.com>
+On Mon, Jul 08, 2024 at 01:08:08PM -0400, Frank Li wrote:
+> Instead of using the switch case statement to enable/disable the reference
+> clock handled by this driver itself, let's introduce a new callback
+> enable_ref_clk() and define it for platforms that require it. This
+> simplifies the code.
 > 
-> Correct occasional MSI triggering failures in i.MX8MP PCIe EP by applying
-> the correct hardware outbound alignment requirement.
-> 
-> The i.MX platform has a restriction about outbound address translation. The
-> pci-epc-mem uses page_size to manage it. Set the correct page_size for i.MX
-> platform to meet the hardware requirement, which is the same as inbound
-> address alignment. Align it with epc_features::align.
-> 
-> Fixes: 1bd0d43dcf3b ("PCI: imx6: Clean up addr_space retrieval code")
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Acked-by: Jason Liu <jason.hui.liu@nxp.com>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 111 ++++++++++++++++------------------
+>  1 file changed, 51 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 47134e2dfecf2..dbcb70186036e 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -103,6 +103,7 @@ struct imx_pcie_drvdata {
+>  	const u32 mode_mask[IMX_PCIE_MAX_INSTANCES];
+>  	const struct pci_epc_features *epc_features;
+>  	int (*init_phy)(struct imx_pcie *pcie);
+> +	int (*enable_ref_clk)(struct imx_pcie *pcie, bool enable);
+>  };
+>  
+>  struct imx_pcie {
+> @@ -585,21 +586,20 @@ static int imx_pcie_attach_pd(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int imx_pcie_enable_ref_clk(struct imx_pcie *imx_pcie)
+> +static int imx6sx_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
+>  {
+> -	unsigned int offset;
+> -	int ret = 0;
+> +	if (enable)
+> +		regmap_clear_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				  IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Since all SoCs except IMX6Q/6QP doesn't have both enable/disable controls (which
+is very weird btw), you can have separate enable/disable callbacks and just
+populate the ones that require.
+
+This way it becomes clear which SoC is supporting what. If you have a common
+helper and just toggle based on a bool, then it becomes hard to follow.
 
 - Mani
 
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 9a71b8aa09b3c..ca9a000c9a96d 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1118,6 +1118,8 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
->  	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_SUPPORT_64BIT))
->  		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
 >  
-> +	ep->page_size = imx6_pcie->drvdata->epc_features->align;
+> -	switch (imx_pcie->drvdata->variant) {
+> -	case IMX6SX:
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> -				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
+> -		break;
+> -	case IMX6QP:
+> -	case IMX6Q:
+> +	return 0;
+> +}
 > +
->  	ret = dw_pcie_ep_init(ep);
->  	if (ret) {
->  		dev_err(dev, "failed to initialize endpoint\n");
+> +static int imx6q_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
+> +{
+> +	if (enable) {
+>  		/* power up core phy and enable ref clock */
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> -				   IMX6Q_GPR1_PCIE_TEST_PD, 0 << 18);
+> +		regmap_clear_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_TEST_PD);
+>  		/*
+>  		 * the async reset input need ref clock to sync internally,
+>  		 * when the ref clock comes after reset, internal synced
+> @@ -607,55 +607,33 @@ static int imx_pcie_enable_ref_clk(struct imx_pcie *imx_pcie)
+>  		 * add one ~10us delay here.
+>  		 */
+>  		usleep_range(10, 100);
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> -				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+> -		break;
+> -	case IMX7D:
+> -	case IMX95:
+> -	case IMX95_EP:
+> -		break;
+> -	case IMX8MM:
+> -	case IMX8MM_EP:
+> -	case IMX8MQ:
+> -	case IMX8MQ_EP:
+> -	case IMX8MP:
+> -	case IMX8MP_EP:
+> -		offset = imx_pcie_grp_offset(imx_pcie);
+> -		/*
+> -		 * Set the over ride low and enabled
+> -		 * make sure that REF_CLK is turned on.
+> -		 */
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, offset,
+> -				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE,
+> -				   0);
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, offset,
+> -				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN,
+> -				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN);
+> -		break;
+> +		regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_REF_CLK_EN);
+> +	} else {
+> +		regmap_clear_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_REF_CLK_EN);
+> +		regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_TEST_PD);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+> -static void imx_pcie_disable_ref_clk(struct imx_pcie *imx_pcie)
+> +static int imx8mm_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
+>  {
+> -	switch (imx_pcie->drvdata->variant) {
+> -	case IMX6QP:
+> -	case IMX6Q:
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> -				IMX6Q_GPR1_PCIE_REF_CLK_EN, 0);
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> -				IMX6Q_GPR1_PCIE_TEST_PD,
+> -				IMX6Q_GPR1_PCIE_TEST_PD);
+> -		break;
+> -	case IMX7D:
+> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> -				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+> -				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
+> -		break;
+> -	default:
+> -		break;
+> +	int offset = imx_pcie_grp_offset(imx_pcie);
+> +
+> +	if (enable) {
+> +		regmap_clear_bits(imx_pcie->iomuxc_gpr, offset, IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE);
+> +		regmap_set_bits(imx_pcie->iomuxc_gpr, offset, IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN);
+>  	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7d_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool enable)
+> +{
+> +	if (!enable)
+> +		regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
+> +	return 0;
+>  }
+>  
+>  static int imx_pcie_clk_enable(struct imx_pcie *imx_pcie)
+> @@ -668,10 +646,12 @@ static int imx_pcie_clk_enable(struct imx_pcie *imx_pcie)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = imx_pcie_enable_ref_clk(imx_pcie);
+> -	if (ret) {
+> -		dev_err(dev, "unable to enable pcie ref clock\n");
+> -		goto err_ref_clk;
+> +	if (imx_pcie->drvdata->enable_ref_clk) {
+> +		ret = imx_pcie->drvdata->enable_ref_clk(imx_pcie, true);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to enable PCIe REFCLK\n");
+> +			goto err_ref_clk;
+> +		}
+>  	}
+>  
+>  	/* allow the clocks to stabilize */
+> @@ -686,7 +666,8 @@ static int imx_pcie_clk_enable(struct imx_pcie *imx_pcie)
+>  
+>  static void imx_pcie_clk_disable(struct imx_pcie *imx_pcie)
+>  {
+> -	imx_pcie_disable_ref_clk(imx_pcie);
+> +	if (imx_pcie->drvdata->enable_ref_clk)
+> +		imx_pcie->drvdata->enable_ref_clk(imx_pcie, false);
+>  	clk_bulk_disable_unprepare(imx_pcie->drvdata->clks_cnt, imx_pcie->clks);
+>  }
+>  
+> @@ -1475,6 +1456,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.init_phy = imx_pcie_init_phy,
+> +		.enable_ref_clk = imx6q_pcie_enable_ref_clk,
+>  	},
+>  	[IMX6SX] = {
+>  		.variant = IMX6SX,
+> @@ -1489,6 +1471,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.init_phy = imx6sx_pcie_init_phy,
+> +		.enable_ref_clk = imx6sx_pcie_enable_ref_clk,
+>  	},
+>  	[IMX6QP] = {
+>  		.variant = IMX6QP,
+> @@ -1504,6 +1487,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.init_phy = imx_pcie_init_phy,
+> +		.enable_ref_clk = imx6q_pcie_enable_ref_clk,
+>  	},
+>  	[IMX7D] = {
+>  		.variant = IMX7D,
+> @@ -1516,6 +1500,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.init_phy = imx7d_pcie_init_phy,
+> +		.enable_ref_clk = imx7d_pcie_enable_ref_clk,
+>  	},
+>  	[IMX8MQ] = {
+>  		.variant = IMX8MQ,
+> @@ -1529,6 +1514,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[1] = IOMUXC_GPR12,
+>  		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+>  		.init_phy = imx8mq_pcie_init_phy,
+> +		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+>  	},
+>  	[IMX8MM] = {
+>  		.variant = IMX8MM,
+> @@ -1540,6 +1526,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+> +		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+>  	},
+>  	[IMX8MP] = {
+>  		.variant = IMX8MP,
+> @@ -1551,6 +1538,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.clks_cnt = ARRAY_SIZE(imx8mm_clks),
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+> +		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+>  	},
+>  	[IMX95] = {
+>  		.variant = IMX95,
+> @@ -1577,6 +1565,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+>  		.epc_features = &imx8m_pcie_epc_features,
+>  		.init_phy = imx8mq_pcie_init_phy,
+> +		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+>  	},
+>  	[IMX8MM_EP] = {
+>  		.variant = IMX8MM_EP,
+> @@ -1589,6 +1578,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.epc_features = &imx8m_pcie_epc_features,
+> +		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+>  	},
+>  	[IMX8MP_EP] = {
+>  		.variant = IMX8MP_EP,
+> @@ -1601,6 +1591,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.epc_features = &imx8m_pcie_epc_features,
+> +		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
+>  	},
+>  	[IMX95_EP] = {
+>  		.variant = IMX95_EP,
 > 
 > -- 
 > 2.34.1
