@@ -1,86 +1,103 @@
-Return-Path: <linux-pci+bounces-10618-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10619-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54B65939481
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 21:58:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4BBF9394D8
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 22:40:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F45628249F
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 19:58:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90DD41F21DBC
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 20:40:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC52171098;
-	Mon, 22 Jul 2024 19:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlwd0MtU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3343238FA3;
+	Mon, 22 Jul 2024 20:40:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9758E1CF96;
-	Mon, 22 Jul 2024 19:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B77C02C879;
+	Mon, 22 Jul 2024 20:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721678290; cv=none; b=uLm6mEV5z/3CAIpsJF1wMubx2FNk8ggFRwGMwERcUQrMmc+iS32AFFciI51WqBXYuKNkKvqIT8yICltIyEcOudOpCJN7GTUWc/9PIikjy0ZM9Ye0HrUbMWQUB5dGWtZDQQ9yq8+Qqij0tpb/WaHnNLYwK+IovBOKl6dAXiccVgI=
+	t=1721680835; cv=none; b=bs1+RObjDqYDTmvZpkt8NE43aDXcqHiv39rr+0OkwEmaaCpbLcwdroqjuIG1CgQykDt45jhxemFHvbVaKPw+3WqktfAW1Z7E1PrQnObLpBsdZO33u1gDJYufMREeiMJMN1QVyfZ0DhQRakY+XaVDYm8UoAsRsQ8ek/P4ACLq7l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721678290; c=relaxed/simple;
-	bh=wNxQzc6PHcEur/gfPKmxYKmaxva5dftyG4TEkbeZSB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TVb1F6ssGUNlZM98Yer6xMFE9zFMO963Sy2LCbr+p+7B2PA9Up4VFkAys5jkxVdeEcgcCEcoON/yxDmJ62njaCfbdpwn+D/OBONpq2wkzzbvraOoSO0VnnUpZwyRWBGAQ9+4Oo108dWzxBBihogMHuYo+3OKlvQCyHtmr1xfFd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlwd0MtU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9458C116B1;
-	Mon, 22 Jul 2024 19:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721678290;
-	bh=wNxQzc6PHcEur/gfPKmxYKmaxva5dftyG4TEkbeZSB0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mlwd0MtUG63ckboCPW5h/okSrziS2J88ECm5sIpsJ03nPt81dinQumnZKBIpH9UHP
-	 Yw2NaRwE3lOXmhLm1kBaqksXYBb38BOhJyPR3myORcENIhVA1O+jdCxmVKdhKlPEmx
-	 aPFf3KzuEh/qWhgUtJ21O//DX6nBlzMiXVIBvWDAn6KevryIy7qMbIM2m84xnii3SL
-	 jnxRXm6P9tlmTXfueEGv5OXQJpPcDPO6ic4yFTh9ZnozD5q47RfiH6sdewAW9zpiG7
-	 ycpug3EevugRAAHCCj+2AnyiJom5/TB+2BRISPanmuNcB2RTv8dc1PbRMwryaJ/UYI
-	 1VacNNpxApSvw==
-Date: Mon, 22 Jul 2024 14:58:08 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: ngn <ngn@ngn.tf>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: shpchp: Remove hpc_ops
-Message-ID: <20240722195808.GA729979@bhelgaas>
+	s=arc-20240116; t=1721680835; c=relaxed/simple;
+	bh=zMq1COTfxr28zTUf4ikrErgLDnhXEQIb4HQURyhtF7M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gRPGefbVrH+lKXSrzaxPSc5NRjPcFSHpqsV6gCEdEXieZnaN9L3k6vcxM4oEvTWdX8K1fX4jPIN5L5D577sDRP7GRqb7txdXzzvJw+fD8vgLYyJxQ3d9lttW220zOZje8uHdbp3oVJaH2NTLzKniKP4hGIqrLJ92Q+GI1yJtdgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 3F9AC92009C; Mon, 22 Jul 2024 22:40:29 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 38AC992009B;
+	Mon, 22 Jul 2024 21:40:29 +0100 (BST)
+Date: Mon, 22 Jul 2024 21:40:29 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Matthew W Carlis <mattc@purestorage.com>
+cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    alex.williamson@redhat.com, Bjorn Helgaas <bhelgaas@google.com>, 
+    christophe.leroy@csgroup.eu, "David S. Miller" <davem@davemloft.net>, 
+    david.abdurachmanov@gmail.com, edumazet@google.com, kuba@kernel.org, 
+    leon@kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+    linux-rdma@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, lukas@wunner.de, 
+    mahesh@linux.ibm.com, mika.westerberg@linux.intel.com, mpe@ellerman.id.au, 
+    netdev@vger.kernel.org, npiggin@gmail.com, oohall@gmail.com, 
+    pabeni@redhat.com, pali@kernel.org, saeedm@nvidia.com, sr@denx.de, 
+    Jim Wilson <wilson@tuliptree.org>
+Subject: Re: PCI: Work around PCIe link training failures
+In-Reply-To: <20240722193407.23255-1-mattc@purestorage.com>
+Message-ID: <alpine.DEB.2.21.2407222117300.51207@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2306111619570.64925@angie.orcam.me.uk> <20240722193407.23255-1-mattc@purestorage.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zp48oG47T_ZcwSI1@archbtw>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Jul 22, 2024 at 02:04:00PM +0300, ngn wrote:
-> hpc_ops struct is only used by shpchp, and it's unnecessary. This is
-> explained in the TODO file: drivers/pci/hotplug/TODO.
+[+cc Ilpo for his previous involvement here]
 
-This is a true statement, but it doesn't actually say what the patch
-*does* about it.
+On Mon, 22 Jul 2024, Matthew W Carlis wrote:
 
-The subject line does say it, but it should also be in the commit log
-itself because the subject is a title, not part of the commit log:
+> Sorry to resurrect this one, but I was wondering why the
+> PCI device ID in drivers/pci/quirks.c for the ASMedia ASM2824
+> isn't checked before forcing the link down to Gen1... We have
+> had to revert this patch during our kernel migration due to it
+> interacting poorly with at least one older Gen3 PLX PCIe switch
+> vendor/generation while using DPC. In another context we have
+> found similar issues during system bringup without DPC while
+> using a more legacy hot-plug model (BIOS defaults for us..).
+> In both contexts our devices are stuck at Gen1 after physical
+> hot-plug/insert, power-cycle.
 
-https://chris.beams.io/posts/git-commit/
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.9#n94
+ Sorry to hear about your problems.  However the workaround is supposed to 
+only trigger if the link has already failed negotiation.  Could you please 
+be more specific as to the actual scenario where it triggers?
 
-Point to the commit(s) that make similar changes to other drivers.
+ A scenario was mentioned earlier on, where a downstream device has been 
+removed from a slot and left behind the LBMS bit set in the corresponding 
+downstream port of the upstream device.  It then triggered the workaround 
+where the port was rescanned with the slot still empty, which then left 
+the link capped at 2.5GT/s for a device subsequently inserted.  Is it what 
+happens for you?
 
-Please also update the TODO file to remove this item.
+ As I recall Ilpo has been working on changes that among others should 
+make sure no stale LBMS bit has been left set, but I'm not sure what the 
+state of affairs has been here.  Myself I've been too swamped in the 
+recent months and consequently didn't look into any improvements in this 
+area (and unrelated issues involving the system in question in my remote 
+lab have further impeded me).
 
-> Signed-off-by: ngn <ngn@ngn.tf>
-> ---
+> Tried reading through the patch history/review but it was still
+> a little bit unclear to me. Can we add the device ID check as a
+> precondition to forcing link to Gen1?
 
-What's the change from v1?  It can go here (below the "---" cut line),
-where it's useful but doesn't get included in the commit log when
-merged.
+ The main reason is it is believed that it is the downstream device 
+causing the issue, and obviously you can't fetch its ID if you can't 
+negotiate link so as to talk to it in the first place.
 
-Bjorn
+  Maciej
 
