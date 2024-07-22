@@ -1,83 +1,70 @@
-Return-Path: <linux-pci+bounces-10598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 871C1938FAD
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 15:11:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86047939066
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 16:15:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31BAB1F21E1B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 13:11:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4217C28236B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 14:15:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0663916D306;
-	Mon, 22 Jul 2024 13:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECF7D16DC00;
+	Mon, 22 Jul 2024 14:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IVlMUY/i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VY6y6C5f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7284B16A38B
-	for <linux-pci@vger.kernel.org>; Mon, 22 Jul 2024 13:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA3C16D9CD
+	for <linux-pci@vger.kernel.org>; Mon, 22 Jul 2024 14:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721653912; cv=none; b=evrxqj5xu6NSuljiFKJHPTindCec6Kv6JeMcTpGNgacYfWOy2WiKG2n4mAxuJdgHwaZ1UtCCtrpqFgPfubEiW+7BivUetSfEuQldEmKAMtzUEOyUj6t5LLBoTsFdOU8bZvNvjVjg33z+mSWiyYJr7I2t+TQYX9BZgMN4fTUBVzg=
+	t=1721657701; cv=none; b=qwpdIpS97lX2plsaNsN8PiKWCVk5EBvFqSk9Td35aNMT7b9xvQ4bgSvhRLiQG74xYqqqdcPxFWUHdYbvgh2lYXrRz2hbLtm4l7S7+MHyRfwPm4zjKT/Lw0WsWQXwsKNEFPDGF7za2FatkF7CJeJ3U6cyNY8VgUWR9ctkmpKjWDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721653912; c=relaxed/simple;
-	bh=Yl54IhhBl5KN5lxPnpBkpytGNX+6KNwM0QpeivEX8uc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j6sbA0I2eySbw++CQZJTtqWQNuHexEHggWGIvPiVa0OLtfFoI5gLVStf46XgzJbjxnB1tdm0Ee7vI561gAn86a0PLSNJ6ZMxxduQZ9oVMJUY/HE6+0kZlhiOu4mpE3C2aHqMv5syte2MQII/h8LxPtiTEFnFXUaB4ixHS5YL5XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IVlMUY/i; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fd69e44596so17771195ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jul 2024 06:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721653911; x=1722258711; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WNLdaVhZLCULcVm0BuO6uOnDm8k9XTjZNc3bP/bzyl0=;
-        b=IVlMUY/iSdXQ5RGX+Xj+5FLUNieock8eGfBhmxYKqYcB/ZV0NiNigS5g31bKUGpZn8
-         H9D319kSJwFOB4Xc8XlpfVkeUSDhA/3PoogmjRV+tz91hfm0q+NskvDD56PcsHSZw1HS
-         0eVghYClsYWFn4CwZVJ3xMKc32Fq8BvO9fhdtPCzGurd7NdUiOozVO36ltqUufgKJx7v
-         NQZ7gpvgNmFUWoH+otCKtMdF0ra14s4Jr8pWMId1uedmyNuRjWEUBBhvNtaB5hdhQOwJ
-         7+PBVyYj9az/gLxe4nXPBqXTvxNR3zJR5skVhMIPmVuJcFbw85+WsyPAEAlgpGooybcd
-         Ja6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721653911; x=1722258711;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WNLdaVhZLCULcVm0BuO6uOnDm8k9XTjZNc3bP/bzyl0=;
-        b=HavNaVq+lh2UxmokCsWszJQ6Z0WYLxE8bAd/IOSaqwNHW8+d6fUU/WlQZU+6m4Fn3d
-         R88uZKFOUpNhXVzktW2tQWNsS8Ri1D6UQI4dFxK01kovtPjLYwJFS6wOv7vWtraLTTtM
-         lkXGqatTy5pSu56v9nOINyj35k2Lr19Od2mk/hCbNuu4WfMO0cJrNbTdeB9kpfHretIT
-         Eq517L7III9Ee8hzPm0R3MoWfP0nSx70nOjMFAcqofHrWq2x3jclhIUBOWSW32/r02hS
-         oThqplgrSRre2FSkJXQ9lPlKRCKU3JlOeUqwwS00heLOc+vaIrIi/PjfFO5hIFSdvHxW
-         SBkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU40OsE8/b1Ht4QCk/Ekgu6Zs9C5Yi+kCZyNM6bBIYwEl3tHJf8zs55O7aUXBb21X1QsJokEmZaw5kcjdGu7xMl/e5okELTZcFF
-X-Gm-Message-State: AOJu0YzQK2V12jNo+tZhFCxWL9CcoEUtHo/lHt7YjxfK7UEDPCnNHI70
-	c8Cn2cRCV1BNrsb8h4Ba1DTRZLUKGlEYqYfq6k82xfT1b2WiU/CFSFeXTMUDbw==
-X-Google-Smtp-Source: AGHT+IGkI1eeF3+ZjtqrWZ8QSMwy1g3He8uLa7RwxeT+z0eXBTnNP30Q7FcMNTGWn5a1pQb16PjBLg==
-X-Received: by 2002:a17:902:680a:b0:1fc:4680:820d with SMTP id d9443c01a7336-1fd74d16bfamr100301405ad.9.1721653910688;
-        Mon, 22 Jul 2024 06:11:50 -0700 (PDT)
-Received: from localhost.localdomain ([120.60.138.134])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f486a3bsm53945765ad.284.2024.07.22.06.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 06:11:50 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: lpieralisi@kernel.org,
-	kw@linux.com
-Cc: robh@kernel.org,
-	bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] PCI: qcom: Use OPP only if the platform supports it
-Date: Mon, 22 Jul 2024 18:41:28 +0530
-Message-Id: <20240722131128.32470-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721657701; c=relaxed/simple;
+	bh=sE7sP8SxuITfWyzDrN0sRuYC4GybKpfmPZVoMYMukKQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=apx+sStfnBtkx5oBrF0iN7lihuT08hF/JueLfZyjHpsZzJBHKqdtZqT223nxMNEozwPFt88kPm9fqAk/LEKbtLIXW88gJ9lCgUPiyO9xTSaMvVWWEd0HD1JRmqxnd0ESXVEuRZ1jNBbaufFk6JWJz5qpJCRrqxkSAfaaSV5lhiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VY6y6C5f; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721657700; x=1753193700;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sE7sP8SxuITfWyzDrN0sRuYC4GybKpfmPZVoMYMukKQ=;
+  b=VY6y6C5fk52BtACWU6wqK2g8Dze0BhsoHHjjGXPsXP1Knv8UD5LsMFks
+   8+jYCsdDic0jyvnXWvJWUD04TPnWee92xsCdPSvw8lxqRMYXhe4w5rgb3
+   ZylNJ1j7eQ/oc+IC2lzkbvMO4NLYZAhnbUGRkCRZpH3ftuvB/tCBNob4U
+   3WGSZmAQI87JTKgIM4I3ItSsNkxwHkl4m3yJj24NejrgyqHPBk1eRirj2
+   RtBfOUjsHtqF23JhWQlKwZcHXNffhrXyUUjGwoWMyJ1j7ydd/CiFcV5Uc
+   S8dY5kzOpWQTgN4svzxKJDKrlz39WsCIWoVS0XxoIy+ajYxeF/gdGRQaQ
+   w==;
+X-CSE-ConnectionGUID: pob2vfFkTXaERUD3MLh8og==
+X-CSE-MsgGUID: xA4awiWDSQeyBXbJMKEXTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11141"; a="44653195"
+X-IronPort-AV: E=Sophos;i="6.09,228,1716274800"; 
+   d="scan'208";a="44653195"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 07:14:59 -0700
+X-CSE-ConnectionGUID: D+6JZN8HTFWSvxEi+1OfUA==
+X-CSE-MsgGUID: 3EfGnL/ERbSM+GJixPzNSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,228,1716274800"; 
+   d="scan'208";a="51616967"
+Received: from linux-myjy.igk.intel.com ([10.102.108.92])
+  by fmviesa007.fm.intel.com with ESMTP; 22 Jul 2024 07:14:58 -0700
+From: Blazej Kucman <blazej.kucman@intel.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	mariusz.tkaczyk@linux.intel.com, ernel.org@web.codeaurora.org
+Subject: [PATCH] PCI: pciehp_hpc: Fix set raw indicator status
+Date: Mon, 22 Jul 2024 16:14:40 +0200
+Message-Id: <20240722141440.7210-1-blazej.kucman@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,71 +73,44 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With commit 5b6272e0efd5 ("PCI: qcom: Add OPP support to scale
-performance"), OPP was used to control the interconnect and power domains
-if the platform supported OPP. Also to maintain the backward compatibility
-with platforms not supporting OPP but just ICC, the above mentioned commit
-assumed that if ICC was not available on the platform, it would resort to
-OPP.
+Set raw indicator status interface has been designed to respect bits
+responsible for Attention and Power Indicator Control [1]. But since
+abaaac4845a0 ("PCI: hotplug: Use FIELD_GET/PREP()") only processes
+Attention Indicator Control bits.
 
-Unfortunately, some old platforms don't support either ICC or OPP. So on
-those platforms, resorting to OPP in the absence of ICC throws below errors
-from OPP core during suspend and resume:
+Mentioned change replace direct bit shift, via macro FIELD_PREP, which
+additionally performs an AND operation with the passed bitmask. The
+regression results from an incorrect bitmask, the mask should include bits
+responsible for Attention and Power Indicator Control, but only Attention
+Indicator Control was passed. This lead to a loss of passed bits
+responsible for Power Indicator control.
 
-qcom-pcie 1c08000.pcie: dev_pm_opp_set_opp: device opp doesn't exist
-qcom-pcie 1c08000.pcie: _find_key: OPP table not found (-19)
+This fix restores Power Indicator Control bits support.
 
-Also, it doesn't make sense to invoke the OPP APIs when OPP is not
-supported by the platform at all. So let's use a flag to identify whether
-OPP is supported by the platform or not and use it to control invoking the
-OPP APIs.
+[1] 576243b3f9ea ("PCI: pciehp: Allow exclusive userspace control of indicators")
 
-Fixes: 5b6272e0efd5 ("PCI: qcom: Add OPP support to scale performance")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Fixes: abaaac4845a0 ("PCI: hotplug: Use FIELD_GET/PREP()")
+Signed-off-by: Blazej Kucman <blazej.kucman@intel.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..6f953e32d990 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -261,6 +261,7 @@ struct qcom_pcie {
- 	const struct qcom_pcie_cfg *cfg;
- 	struct dentry *debugfs;
- 	bool suspended;
-+	bool use_pm_opp;
- };
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 061f01f60db4..736ad8baa2a5 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -485,7 +485,9 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
  
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-@@ -1433,7 +1434,7 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
- 			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
- 				ret);
- 		}
--	} else {
-+	} else if (pcie->use_pm_opp) {
- 		freq_mbps = pcie_dev_speed_mbps(pcie_link_speed[speed]);
- 		if (freq_mbps < 0)
- 			return;
-@@ -1592,6 +1593,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 				      max_freq);
- 			goto err_pm_runtime_put;
- 		}
+ 	pci_config_pm_runtime_get(pdev);
+-	pcie_write_cmd_nowait(ctrl, FIELD_PREP(PCI_EXP_SLTCTL_AIC, status),
 +
-+		pcie->use_pm_opp = true;
- 	} else {
- 		/* Skip ICC init if OPP is supported as it is handled by OPP */
- 		ret = qcom_pcie_icc_init(pcie);
-@@ -1683,7 +1686,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
- 		if (ret)
- 			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
- 
--		if (!pcie->icc_mem)
-+		if (pcie->use_pm_opp)
- 			dev_pm_opp_set_opp(pcie->pci->dev, NULL);
- 	}
- 	return ret;
++	/* Attention and Power Indicator Control bits are supported */
++	pcie_write_cmd_nowait(ctrl, FIELD_PREP(PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC, status),
+ 			      PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC);
+ 	pci_config_pm_runtime_put(pdev);
+ 	return 0;
 -- 
-2.25.1
+2.35.3
 
 
