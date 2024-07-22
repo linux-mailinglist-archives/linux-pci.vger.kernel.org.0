@@ -1,160 +1,103 @@
-Return-Path: <linux-pci+bounces-10624-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10625-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33BC693969F
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 00:38:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F504939721
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 01:51:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B72E1C213A5
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 22:38:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3F3C1F2220E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 23:51:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3B703BBCC;
-	Mon, 22 Jul 2024 22:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C85E50A6D;
+	Mon, 22 Jul 2024 23:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VH3WVAKM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSdZXSCJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B678FD512;
-	Mon, 22 Jul 2024 22:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC2617BCD;
+	Mon, 22 Jul 2024 23:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721687897; cv=none; b=aZHQoqTdZqaxfu3PCh2Me5BcqmXeePG1e6wKWckRVnoOsK9Ktf4QvABevbG543g10GNk5TDEIDpX7llwFlL/Z8KFpVhzTrRpPRs22RL3r8vaB50f3UJkoZ0Kva8lsS9ETfHpsm0yMA7OYwm99Gl8rqFtfQbsRRyzS+Kt5CjWxcQ=
+	t=1721692263; cv=none; b=Z8pwvMpNEuRe37xTc4Y+WAb9YLkbZvOIW4gMEYMb3kWUKMX2UCLA9n+dpa+aT6o2SOSTaRZpXxWZKRKMhFO4s4uX0GbBPVosZf2oBB8lnzqCd5csVg1u7jI6A1P0GfLRL9rYg38Q85bJ1kQEYIiYEi7hUQtQ6ETuElKWfU62Qe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721687897; c=relaxed/simple;
-	bh=zxNYwrFa6LhkKHTA0im0Ydgymd4rZUJv61OoqQvLUlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ca+rv9neNyYG/qlaqR/S8+84OIPuyT7XMMXZrpfE2RK+4ffXicqN6G+IkQJx0MZMRps9E87CTwCs223+r2WY4ngSYHEwg+ZdSiyVK5CLskuQBMNra7Ap9nJZadMCGes4ecjuamckbsuh0BtwguR3Z3RZqkA20RCWtRrRkjhE6gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VH3WVAKM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2A9C116B1;
-	Mon, 22 Jul 2024 22:38:16 +0000 (UTC)
+	s=arc-20240116; t=1721692263; c=relaxed/simple;
+	bh=iWoGd/pnuwD6hRFYl+KEW8p95X3vPwq+KaaEZPRZLi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpeUdpyEpkbdLSh4D59t0PT0ZmolWyjwy/cZgQBk0VBLB5Rll9mbZgU20HUIofC7FJINy0zRo6nO4eSbIV17TARa58KVV+BhmwvmZtZXBFKw+mSToTJ5a5/qvGL6kPm/dtszhPKqfh5LzkXvqOEOTabED1M+jDGBpRsyBIac3t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSdZXSCJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4FDC116B1;
+	Mon, 22 Jul 2024 23:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721687897;
-	bh=zxNYwrFa6LhkKHTA0im0Ydgymd4rZUJv61OoqQvLUlY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VH3WVAKMFrMVlW4ejo2TqEtTogPI7ko+uhjdVJJaHnnhnHKBt8bQx2IhPk1SywTFG
-	 fY7TcyA95gldwGueX0S7Ucdr9iR9UGFfNGyoRAi2DT7cCQwGXgT+veB3abkJzlxVsc
-	 btiN5UnKP8kBpDFmJIr28p4TT8IHnT6C79RlsbeQsOHo4MdEzlmczXKTgMECYL/+8u
-	 tbTqMLhfSnv2gU5FRdNkCXQx/g2onAUpL/P/60F9VVs5YvcHHCawumMSYX8gwEwY8x
-	 B9aRDgv3yPblQctWHWM1mePtL6N+kqRFjV9ojSTx3i+tgT/fxN47bgb429318K/apV
-	 RP40v1qOKQjGw==
-Date: Mon, 22 Jul 2024 17:38:14 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-pci@vger.kernel.org,
+	s=k20201202; t=1721692262;
+	bh=iWoGd/pnuwD6hRFYl+KEW8p95X3vPwq+KaaEZPRZLi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WSdZXSCJiezmSvaaQYljPXz/DNuhJ9d4GOr//ikmNXAfGnzfvL0wyJ8WWeYbUY7aA
+	 wa5EmAwU392AtyplKtPKQOudJBKc4fmpyePJSA8074zV7wpaQVYkmSN13XzH4UGjH9
+	 IE9pIKBECNRJsgY8aVUOq/etL7e28c9+N3dKaEo261213UD9i8Hdguo2uoXNUnmrun
+	 0YabzQXEDodIUsgnUyTe2qvWNqZL5+HWZn0Y3SwA0UZx1i9McAs/WYMs0OliuwFgSR
+	 PJMg6VoVV1VhuC+9x99gfC6s/Gt0j3Hl/gDBEWYDXoK9dDr+l1gF5+VOu5PohelxPC
+	 MRFAQnIbZiPFw==
+Date: Mon, 22 Jul 2024 17:50:51 -0600
+From: Rob Herring <robh@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-	Jon Hunter <jonathanh@nvidia.com>, Koichiro Den <den@valinux.co.jp>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, Nipun Gupta <nipun.gupta@amd.com>,
-	Rob Herring <robh@kernel.org>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] PCI/rcar-host: Silence set affinity failed warning
-Message-ID: <20240722223814.GA740637@bhelgaas>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 05/14] dt-bindings: PCI: qcom-ep: Document
+ "linux,pci-domain" property
+Message-ID: <20240722235051.GA378287-robh@kernel.org>
+References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
+ <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240715122012.35222-2-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
 
-In subject, to match history:
+On Mon, Jul 15, 2024 at 11:03:47PM +0530, Manivannan Sadhasivam wrote:
+> 'linux,pci-domain' property provides the PCI domain number for the PCI
+> endpoint controllers in a SoC. If this property is not present, then an
+> unstable (across boots) unique number will be assigned.
 
-s|PCI/rcar-host|PCI: rcar-host|
+You aren't "documenting" it here as the subject says, just using it in 
+the example.
 
-On Mon, Jul 15, 2024 at 02:19:27PM +0200, Marek Vasut wrote:
-> Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps .irq_set_affinity unset
-> and allows migrate_one_irq() code in cpuhotplug.c to exit right away, without
-> printing "IRQ...: set affinity failed(-22)" warning.
 > 
-> Remove .irq_set_affinity implementation which only return -EINVAL from this
-> controller driver.
-
-This would be a nice improvement; thanks for working on it.
-
-As you allude to at [1], there are many more PCI controller drivers
-that could benefit from similar changes.  I'd like to do them all at
-once if possible.
-
-[1] https://lore.kernel.org/r/d5efcb28-dd5a-4b96-aabd-c73c95dff8e7@mailbox.org
-
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> ---
-> Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Cc: Anup Patel <apatel@ventanamicro.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> Cc: Jon Hunter <jonathanh@nvidia.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Koichiro Den <den@valinux.co.jp>
-> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Nipun Gupta <nipun.gupta@amd.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
-> ---
-> V3: - New patch
-> ---
->  drivers/pci/controller/pcie-rcar-host.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+> Use this property to specify the domain number based on the actual hardware
+> instance of the PCI endpoint controllers in a SoC.
 > 
-> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-> index c01efc6ea64f6..3dd653f3d7841 100644
-> --- a/drivers/pci/controller/pcie-rcar-host.c
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-> @@ -658,11 +658,6 @@ static void rcar_msi_irq_unmask(struct irq_data *d)
->  	spin_unlock_irqrestore(&msi->mask_lock, flags);
->  }
->  
-> -static int rcar_msi_set_affinity(struct irq_data *d, const struct cpumask *mask, bool force)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static void rcar_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	struct rcar_msi *msi = irq_data_get_irq_chip_data(data);
-> @@ -678,7 +673,6 @@ static struct irq_chip rcar_msi_bottom_chip = {
->  	.irq_ack		= rcar_msi_irq_ack,
->  	.irq_mask		= rcar_msi_irq_mask,
->  	.irq_unmask		= rcar_msi_irq_unmask,
-> -	.irq_set_affinity 	= rcar_msi_set_affinity,
->  	.irq_compose_msi_msg	= rcar_compose_msi_msg,
->  };
->  
-> @@ -725,8 +719,8 @@ static const struct irq_domain_ops rcar_msi_domain_ops = {
->  };
->  
->  static struct msi_domain_info rcar_msi_info = {
-> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> -		   MSI_FLAG_MULTI_PCI_MSI),
-> +	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> +		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_MULTI_PCI_MSI,
->  	.chip	= &rcar_msi_top_chip,
->  };
->  
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> index 46802f7d9482..1226ee5d08d1 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -280,4 +280,5 @@ examples:
+>          phy-names = "pciephy";
+>          max-link-speed = <3>;
+>          num-lanes = <2>;
+> +        linux,pci-domain = <0>;
+>      };
+> 
 > -- 
-> 2.43.0
+> 2.25.1
 > 
 
