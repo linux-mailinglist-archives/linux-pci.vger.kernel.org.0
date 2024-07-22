@@ -1,123 +1,127 @@
-Return-Path: <linux-pci+bounces-10580-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10584-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9F1E938776
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 04:12:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3851A9388F4
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 08:34:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75074280A0B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 02:12:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6785D1C20E6F
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 06:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD5638C1A;
-	Mon, 22 Jul 2024 02:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsEi8vee"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFCFD18E0E;
+	Mon, 22 Jul 2024 06:34:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9144D12B73;
-	Mon, 22 Jul 2024 02:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8A417C9B;
+	Mon, 22 Jul 2024 06:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721614331; cv=none; b=fnyzZ08xwjoWUY/18koGt8xAVqXI+XADkJdM0pDl+jxftABq3fjUStBI/aWhy9flnqIpCqtCTIfKu21baMK6zUH6/JTzpwOM+MPzQEiT1sXQJt9KzeBSlWuaD2H0M7oYRBnXVp6ekr/Ca4jQzDmueFt/nNwjAtU3nuzl8d0yUL4=
+	t=1721630058; cv=none; b=BN21tLfBuF5Eeb7F8bYsdOFpQKJx3It06Q4QtTTyW7DF0n9DbVUg21yyDc85qa+wj6cYvreP2G8F95f63KZPle29DrDkxkL5BOez4/Xu299ibxrgC7boxbY3inSN69B5iSfjBrrxaEBs3FlTh34aug1oBHblg37QrWPBqhHUH5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721614331; c=relaxed/simple;
-	bh=azGo6m46VBgBM9ZicAuLCQPYP/jnz/425Y1D8wyAsVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cI9TLb7FgdXLXmlknTQNVu3Lo6T5OAj8MNz8Se2q2l9i6gADDodDHVIFBGj/GPsemiweDlh8pYZpORc4y0ETBT+QrfQX9KZsBvFvYCW3r0efk3SvMak4Pj5mLuiyPXo9+h7zp/ZsMm8igT9ZBbcPayKmIgD4cXAkPIY1Sqswq4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsEi8vee; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367CBC4AF10;
-	Mon, 22 Jul 2024 02:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721614331;
-	bh=azGo6m46VBgBM9ZicAuLCQPYP/jnz/425Y1D8wyAsVs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tsEi8veetkfkyxkB9x7XLhxI2FAksP4bmdPcxjHVjWOzbS6wkOnxStTFAKaQEzP2V
-	 g0bxLloMauq9ZiEu9BBq/BST3CiP0t+VN4GHANsJ2LNH7vctGUk+FMvpMXJ6R/g67K
-	 CyM7n7Owu6tWPTDoEHlUPC9jtV76+zGVFBNDXeEXnygONxu4wXF9vhmxTkYihFjmOX
-	 UmZ+184CPjWcKwx8cS0fA+LVoTsL1oBJzQ410k0srnTR/TymT1lHSiOK9ugqGHIjwg
-	 BQtZS7/lT4rNW3pJxa/DctqwDGsvAK/MVmlUFhXUyVkYQQNhYLdt/Ztyr/uXy+f3/a
-	 I2uWO8qkbrBmA==
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4266f3e0df8so26585005e9.2;
-        Sun, 21 Jul 2024 19:12:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXsvZIBRPSEXOHlOJAD54IiMWnsNXQfo6Zu/khk2Io5HDeR4ggQv/FZP63cDsHixVBpevZOWnnwRuS1oat7w8yyaWi25bJEzrGipjGTO78CZyzE437sXTyUm/Ymrp0S5IJggni6129GVdyIqFk+heLVXfFi6IQcOU64jkkyi/I8
-X-Gm-Message-State: AOJu0Yy/JZkA4B+6pjGjNstEJMD6oXReEm7HouSywBWhvTVPqnkKvyxJ
-	qvieR1VBiWwHdlOKUsWZyvg/ZZKBEtUrc0g0U2ZLuZGWuMMIughigwnkPPmZfV27WX93zsWYxKe
-	RG5VGeuXzQdLzf9gueF6keYpNe3k=
-X-Google-Smtp-Source: AGHT+IGT2WyeMDoqlKn1hDkEnwla+7lIh3WrUDuFvKGwxfwhDAI2HdQ/PAipMwCTm53YaP4pWdsbl0fcuJ39F0MwmrE=
-X-Received: by 2002:adf:cc81:0:b0:367:947a:a491 with SMTP id
- ffacd0b85a97d-369bae6427emr3154183f8f.26.1721614329748; Sun, 21 Jul 2024
- 19:12:09 -0700 (PDT)
+	s=arc-20240116; t=1721630058; c=relaxed/simple;
+	bh=xRJH4YLDXNzYsFzPjS7ocicNqmtabVQEM0ATruD2Xss=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=u60oGubT/cBZDU8rqtCREveEdfRT82woocchcG/jWq5hg9Sm99jkpjWf7aT1miWyf9apD+XQORRJv4lC6wKOeLLQcyipOrMKe6wbwA3hw4IJ5fvrQEE60d8Hy84HV/6RfGXEojU5P5JAU9twfccCZmJBEtD+NX+bbQy6FRdzDsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 456F5200DE2;
+	Mon, 22 Jul 2024 08:34:10 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0AD1C200DE1;
+	Mon, 22 Jul 2024 08:34:10 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 748521802183;
+	Mon, 22 Jul 2024 14:34:08 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	lorenzo.pieralisi@arm.com,
+	frank.li@nxp.com,
+	mani@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de,
+	imx@lists.linux.dev,
+	Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [PATCH v2] PCI: dwc: Fix resume failure if no EP is connected at some platforms
+Date: Mon, 22 Jul 2024 14:15:13 +0800
+Message-Id: <1721628913-1449-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
-In-Reply-To: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 22 Jul 2024 10:11:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4TSHqRg0F8xKb32g5CO2aQv=ibL2D_jqn8eUF8+yEZag@mail.gmail.com>
-Message-ID: <CAAhV-H4TSHqRg0F8xKb32g5CO2aQv=ibL2D_jqn8eUF8+yEZag@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when
- selected cpu is offline
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: Markus Elfring <Markus.Elfring@web.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Alex Belits <abelits@marvell.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, 
-	Nitesh Narayan Lal <nitesh@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-gentle ping?
+The dw_pcie_suspend_noirq() function currently returns success directly
+if no endpoint (EP) device is connected. However, on some platforms, power
+loss occurs during suspend, causing dw_resume() to do nothing in this case.
+This results in a system halt because the DWC controller is not initialized
+after power-on during resume.
 
-Huacai
+Change call to deinit() in suspend and init() at resume regardless of
+whether there are EP device connections or not. It is not harmful to
+perform deinit() and init() again for the no power-off case, and it keeps
+the code simple and consistent in logic.
 
-On Thu, Jun 13, 2024 at 3:43=E2=80=AFPM Hongchen Zhang
-<zhanghongchen@loongson.cn> wrote:
->
-> Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
-> @cpu is a offline cpu would cause system stuck forever.
->
-> This can be happen if a node is online while all its CPUs are
-> offline (We can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it).
->
-> So, in the above case, let pci_call_probe() call local_pci_probe()
-> instead of work_on_cpu() when the best selected cpu is offline.
->
-> Fixes: 69a18b18699b ("PCI: Restrict probe functions to housekeeping CPUs"=
-)
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> ---
-> v2 -> v3: Modify commit message according to Markus's suggestion
-> v1 -> v2: Add a method to reproduce the problem
-> ---
->  drivers/pci/pci-driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index af2996d0d17f..32a99828e6a3 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, str=
-uct pci_dev *dev,
->                 free_cpumask_var(wq_domain_mask);
->         }
->
-> -       if (cpu < nr_cpu_ids)
-> +       if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->                 error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
->         else
->                 error =3D local_pci_probe(&ddi);
-> --
-> 2.33.0
->
->
+Fixes: 4774faf854f5 ("PCI: dwc: Implement generic suspend/resume functionality")
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+---
+ .../pci/controller/dwc/pcie-designware-host.c | 30 +++++++++----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index a0822d5371bc5..cb8c3c2bcc790 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -933,23 +933,23 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+ 	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+ 		return 0;
+ 
+-	if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
+-		return 0;
+-
+-	if (pci->pp.ops->pme_turn_off)
+-		pci->pp.ops->pme_turn_off(&pci->pp);
+-	else
+-		ret = dw_pcie_pme_turn_off(pci);
++	if (dw_pcie_get_ltssm(pci) > DW_PCIE_LTSSM_DETECT_ACT) {
++		/* Only send out PME_TURN_OFF when PCIE link is up */
++		if (pci->pp.ops->pme_turn_off)
++			pci->pp.ops->pme_turn_off(&pci->pp);
++		else
++			ret = dw_pcie_pme_turn_off(pci);
+ 
+-	if (ret)
+-		return ret;
++		if (ret)
++			return ret;
+ 
+-	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+-				PCIE_PME_TO_L2_TIMEOUT_US/10,
+-				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+-	if (ret) {
+-		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+-		return ret;
++		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
++					PCIE_PME_TO_L2_TIMEOUT_US/10,
++					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
++		if (ret) {
++			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
++			return ret;
++		}
+ 	}
+ 
+ 	if (pci->pp.ops->deinit)
+-- 
+2.37.1
+
 
