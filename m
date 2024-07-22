@@ -1,299 +1,166 @@
-Return-Path: <linux-pci+bounces-10621-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10622-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 323F893957D
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 23:30:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0968F9395AE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 23:47:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBEC0282379
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 21:30:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70B74B21506
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jul 2024 21:47:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 413572D627;
-	Mon, 22 Jul 2024 21:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8123A1BA;
+	Mon, 22 Jul 2024 21:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/gTu0O/"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CWXMh9YC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C15C2FD;
-	Mon, 22 Jul 2024 21:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54B31849;
+	Mon, 22 Jul 2024 21:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721683851; cv=none; b=HrzgqiOWCjPYwP/zMVQ0j2OnYRv/5D9xrH2doUYtnj1lCbxoU7vwHaX8W3TxY7GGk6cnRxhGHzRecL3k35sGURlz+u4FTm5TiZoLNS6wv6cpnLjgWKDYap9DoYIGZzV+phhZPFkFBCd0nII8WQxDUKykJcj1knz365i3zbVM4Hc=
+	t=1721684836; cv=none; b=cez0J0T3/G/eoo5bZ+onyiiPcuNnyg1MnvccxGfO3gwKlCrT9oXYwgNp2OjF1y5e2Ah99NVSp8B/W4nwo7C9Q4Iot/Ln1m6lcReysIan9N9oLKHEYBvx/0mpRwDMKpe17WPczhKhY35QS0Ob6bpvJLrkrngIzFEe1jkJjfhJ8Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721683851; c=relaxed/simple;
-	bh=v2sonCVqGjpGXag0Jb6VPks8bVvtizl2cT0DH9S8f8I=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FxyX/Oc+HjPuwXXKnRQUWEwuGxD+UhQMvnhU1zVCoX7Wv3FbajvTc42FYkrDO51aleWeCQNant71A601Hgao+snucsEFkC2dXjUNhr2UuWXvnuWn0XUOg28QA6V25/YoGL4rKHG+6g970rUd2WkHg36b0iKjl105mLyhiivMxnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/gTu0O/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367D3C116B1;
-	Mon, 22 Jul 2024 21:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721683850;
-	bh=v2sonCVqGjpGXag0Jb6VPks8bVvtizl2cT0DH9S8f8I=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=M/gTu0O/fsCWf0yAF/e9ksNF7AtzQ8sI7IBf1Z26/uuvRpxVlQEDrfcHDlpY93t/X
-	 SWWNHGELxFQVA+m5/tiqL+glkGbvsvMnNk9caLotyWGE/7I93AUe0TguFafW54ULGh
-	 WXdFI1kaUsOi+1Ue+qSqDxWBUgohGR+xuYkgwKT10lKJXDxuh0TcQ4KY7WYEYVKVMb
-	 AWlqHarMTeyeaQyUUvfBpA4igCZeDY2ZkeoNyjEE+j3xSEXqSZvpZ1Vg7euKo4z8o3
-	 INhpJ+KxcPZesmlDwXSlG4p6DMStZd/l7k0BiC3p+W1phG0UHSmwsDbFhDPCgeDVqb
-	 f+784j3Wm6I5g==
-Date: Mon, 22 Jul 2024 14:30:47 -0700 (PDT)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: Jiqian Chen <Jiqian.Chen@amd.com>
-cc: Juergen Gross <jgross@suse.com>, 
-    Stefano Stabellini <sstabellini@kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>, 
-    xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-    Huang Rui <Ray.Huang@amd.com>, Huang Rui <ray.huang@amd.com>
-Subject: Re: [RFC KERNEL PATCH v8 3/3] xen/privcmd: Add new syscall to get
- gsi from dev
-In-Reply-To: <20240607075109.126277-4-Jiqian.Chen@amd.com>
-Message-ID: <alpine.DEB.2.22.394.2407221430380.4857@ubuntu-linux-20-04-desktop>
-References: <20240607075109.126277-1-Jiqian.Chen@amd.com> <20240607075109.126277-4-Jiqian.Chen@amd.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=arc-20240116; t=1721684836; c=relaxed/simple;
+	bh=JR+SY+2nPNlWy8HptYjfhNO/uli1R6DEjcPvFVCbSeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YIcFnlypRJLxe+lLetv9t3ZUMEyTFmblJDaI3BM4LJT2bUo0MmsOTo9aHRp1A3BnwsoSSxnJjFYSrI1CCojLUr/VANQedoyoQC8fFa6kKgX0M50rEHWGVoe2Jk+kbDw9yMM8f/rpehWT6cBLb8sO7sO0Z/ZptFz9Y+F4JrWFUY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CWXMh9YC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46MJNjZ7014036;
+	Mon, 22 Jul 2024 21:47:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Qs/JP/ZIxvYyiw9RdROCi9EzriMnBVyMayND9ThSpWU=; b=CWXMh9YCViqFve5l
+	MUehGau6ajxT/Vs3d1pPBmWd6Cc8fSTSylOIEYUeGyqbP358ivXhsahexCe7Zd2r
+	+HG/IeTjvvTZ0GsbG3CUaeuOC+QuiQys5o018j+OUwJfjn2XnUZT4AF2I8o820j1
+	6Rwhc4dk6R2M49/NMf9nEN26ZWuHHcETFF2EyMbqDqxzCrZb9iQIG5fTtsHhD13B
+	z6kfsE7YL0ZmoUkLBnVuEij6Z+qCZRoBX5j4SnMXI66q/cT/Kkb7Fpvnvm9caa5w
+	nLxtrSc+opT+5jIr0cv8SU7LytBSbyWQcoGD+0c04qS3N0jtGHJ8S3+rl2fbQzNL
+	nWF/tg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40g5m6vynr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jul 2024 21:47:05 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46MLl4at006331
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jul 2024 21:47:04 GMT
+Received: from [10.110.63.227] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 22 Jul
+ 2024 14:47:03 -0700
+Message-ID: <3c740b28-cb14-4d5d-ba0f-d8c658380ef7@quicinc.com>
+Date: Mon, 22 Jul 2024 14:47:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: qcom: Use OPP only if the platform supports it
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>
+CC: <robh@kernel.org>, <bhelgaas@google.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240722131128.32470-1-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+From: Mayank Rana <quic_mrana@quicinc.com>
+In-Reply-To: <20240722131128.32470-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: es4YjzH_eq1RZucgzmMOdH5sgQ-0r7rK
+X-Proofpoint-ORIG-GUID: es4YjzH_eq1RZucgzmMOdH5sgQ-0r7rK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-22_15,2024-07-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407220162
 
-On Fri, 7 Jun 2024, Jiqian Chen wrote:
-> In PVH dom0, it uses the linux local interrupt mechanism,
-> when it allocs irq for a gsi, it is dynamic, and follow
-> the principle of applying first, distributing first. And
-> the irq number is alloced from small to large, but the
-> applying gsi number is not, may gsi 38 comes before gsi 28,
-> it causes the irq number is not equal with the gsi number.
-> And when passthrough a device, QEMU will use device's gsi
-> number to do pirq mapping, but the gsi number is got from
-> file /sys/bus/pci/devices/<sbdf>/irq, irq!= gsi, so it will
-> fail when mapping.
-> And in current linux codes, there is no method to get gsi
-> for userspace.
+Hi Mani
+
+On 7/22/2024 6:11 AM, Manivannan Sadhasivam wrote:
+> With commit 5b6272e0efd5 ("PCI: qcom: Add OPP support to scale
+> performance"), OPP was used to control the interconnect and power domains
+> if the platform supported OPP. Also to maintain the backward compatibility
+> with platforms not supporting OPP but just ICC, the above mentioned commit
+> assumed that if ICC was not available on the platform, it would resort to
+> OPP.
 > 
-> For above purpose, record gsi of pcistub devices when init
-> pcistub and add a new syscall into privcmd to let userspace
-> can get gsi when they have a need.
+> Unfortunately, some old platforms don't support either ICC or OPP. So on
+> those platforms, resorting to OPP in the absence of ICC throws below errors
+> from OPP core during suspend and resume:
 > 
-> Signed-off-by: Huang Rui <ray.huang@amd.com>
-> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
-
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-
-
+> qcom-pcie 1c08000.pcie: dev_pm_opp_set_opp: device opp doesn't exist
+> qcom-pcie 1c08000.pcie: _find_key: OPP table not found (-19)
+> 
+> Also, it doesn't make sense to invoke the OPP APIs when OPP is not
+> supported by the platform at all. So let's use a flag to identify whether
+> OPP is supported by the platform or not and use it to control invoking the
+> OPP APIs.
+> 
+> Fixes: 5b6272e0efd5 ("PCI: qcom: Add OPP support to scale performance")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-> RFC: it need review and need to wait for previous patch of this series to be merged.
-> ---
->  drivers/xen/privcmd.c              | 28 ++++++++++++++++++++++
->  drivers/xen/xen-pciback/pci_stub.c | 38 +++++++++++++++++++++++++++---
->  include/uapi/xen/privcmd.h         |  7 ++++++
->  include/xen/acpi.h                 |  9 +++++++
->  4 files changed, 79 insertions(+), 3 deletions(-)
+>   drivers/pci/controller/dwc/pcie-qcom.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> index 67dfa4778864..5809b3168f25 100644
-> --- a/drivers/xen/privcmd.c
-> +++ b/drivers/xen/privcmd.c
-> @@ -45,6 +45,9 @@
->  #include <xen/page.h>
->  #include <xen/xen-ops.h>
->  #include <xen/balloon.h>
-> +#ifdef CONFIG_XEN_ACPI
-> +#include <xen/acpi.h>
-> +#endif
->  
->  #include "privcmd.h"
->  
-> @@ -842,6 +845,27 @@ static long privcmd_ioctl_mmap_resource(struct file *file,
->  	return rc;
->  }
->  
-> +static long privcmd_ioctl_gsi_from_dev(struct file *file, void __user *udata)
-> +{
-> +#ifdef CONFIG_XEN_ACPI
-> +	struct privcmd_gsi_from_dev kdata;
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0180edf3310e..6f953e32d990 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -261,6 +261,7 @@ struct qcom_pcie {
+>   	const struct qcom_pcie_cfg *cfg;
+>   	struct dentry *debugfs;
+>   	bool suspended;
+> +	bool use_pm_opp;
+>   };
+>   
+>   #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -1433,7 +1434,7 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
+>   			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+>   				ret);
+>   		}
+> -	} else {
+> +	} else if (pcie->use_pm_opp) {
+>   		freq_mbps = pcie_dev_speed_mbps(pcie_link_speed[speed]);
+>   		if (freq_mbps < 0)
+>   			return;
+> @@ -1592,6 +1593,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>   				      max_freq);
+>   			goto err_pm_runtime_put;
+>   		}
 > +
-> +	if (copy_from_user(&kdata, udata, sizeof(kdata)))
-> +		return -EFAULT;
-> +
-> +	kdata.gsi = pcistub_get_gsi_from_sbdf(kdata.sbdf);
-> +	if (kdata.gsi == -1)
-> +		return -EINVAL;
-> +
-> +	if (copy_to_user(udata, &kdata, sizeof(kdata)))
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +#else
-> +	return -EINVAL;
-> +#endif
-> +}
-> +
->  #ifdef CONFIG_XEN_PRIVCMD_EVENTFD
->  /* Irqfd support */
->  static struct workqueue_struct *irqfd_cleanup_wq;
-> @@ -1529,6 +1553,10 @@ static long privcmd_ioctl(struct file *file,
->  		ret = privcmd_ioctl_ioeventfd(file, udata);
->  		break;
->  
-> +	case IOCTL_PRIVCMD_GSI_FROM_DEV:
-> +		ret = privcmd_ioctl_gsi_from_dev(file, udata);
-> +		break;
-> +
->  	default:
->  		break;
->  	}
-> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-> index 6b22e45188f5..9d791d7a8098 100644
-> --- a/drivers/xen/xen-pciback/pci_stub.c
-> +++ b/drivers/xen/xen-pciback/pci_stub.c
-> @@ -56,6 +56,9 @@ struct pcistub_device {
->  
->  	struct pci_dev *dev;
->  	struct xen_pcibk_device *pdev;/* non-NULL if struct pci_dev is in use */
-> +#ifdef CONFIG_XEN_ACPI
-> +	int gsi;
-> +#endif
->  };
->  
->  /* Access to pcistub_devices & seized_devices lists and the initialize_devices
-> @@ -88,6 +91,9 @@ static struct pcistub_device *pcistub_device_alloc(struct pci_dev *dev)
->  
->  	kref_init(&psdev->kref);
->  	spin_lock_init(&psdev->lock);
-> +#ifdef CONFIG_XEN_ACPI
-> +	psdev->gsi = -1;
-> +#endif
->  
->  	return psdev;
->  }
-> @@ -220,6 +226,25 @@ static struct pci_dev *pcistub_device_get_pci_dev(struct xen_pcibk_device *pdev,
->  	return pci_dev;
->  }
->  
-> +#ifdef CONFIG_XEN_ACPI
-> +int pcistub_get_gsi_from_sbdf(unsigned int sbdf)
-> +{
-> +	struct pcistub_device *psdev;
-> +	int domain = (sbdf >> 16) & 0xffff;
-> +	int bus = PCI_BUS_NUM(sbdf);
-> +	int slot = PCI_SLOT(sbdf);
-> +	int func = PCI_FUNC(sbdf);
-> +
-> +	psdev = pcistub_device_find(domain, bus, slot, func);
-> +
-> +	if (!psdev)
-> +		return -1;
-> +
-> +	return psdev->gsi;
-> +}
-> +EXPORT_SYMBOL_GPL(pcistub_get_gsi_from_sbdf);
-> +#endif
-> +
->  struct pci_dev *pcistub_get_pci_dev_by_slot(struct xen_pcibk_device *pdev,
->  					    int domain, int bus,
->  					    int slot, int func)
-> @@ -367,14 +392,20 @@ static int pcistub_match(struct pci_dev *dev)
->  	return found;
->  }
->  
-> -static int pcistub_init_device(struct pci_dev *dev)
-> +static int pcistub_init_device(struct pcistub_device *psdev)
->  {
->  	struct xen_pcibk_dev_data *dev_data;
-> +	struct pci_dev *dev;
->  #ifdef CONFIG_XEN_ACPI
->  	int gsi, trigger, polarity;
->  #endif
->  	int err = 0;
->  
-> +	if (!psdev)
-> +		return -EINVAL;
-> +
-> +	dev = psdev->dev;
-> +
->  	dev_dbg(&dev->dev, "initializing...\n");
->  
->  	/* The PCI backend is not intended to be a module (or to work with
-> @@ -448,6 +479,7 @@ static int pcistub_init_device(struct pci_dev *dev)
->  		dev_err(&dev->dev, "Fail to get gsi info!\n");
->  		goto config_release;
->  	}
-> +	psdev->gsi = gsi;
->  
->  	if (xen_initial_domain() && xen_pvh_domain()) {
->  		err = xen_pvh_setup_gsi(gsi, trigger, polarity);
-> @@ -495,7 +527,7 @@ static int __init pcistub_init_devices_late(void)
->  
->  		spin_unlock_irqrestore(&pcistub_devices_lock, flags);
->  
-> -		err = pcistub_init_device(psdev->dev);
-> +		err = pcistub_init_device(psdev);
->  		if (err) {
->  			dev_err(&psdev->dev->dev,
->  				"error %d initializing device\n", err);
-> @@ -565,7 +597,7 @@ static int pcistub_seize(struct pci_dev *dev,
->  		spin_unlock_irqrestore(&pcistub_devices_lock, flags);
->  
->  		/* don't want irqs disabled when calling pcistub_init_device */
-> -		err = pcistub_init_device(psdev->dev);
-> +		err = pcistub_init_device(psdev);
->  
->  		spin_lock_irqsave(&pcistub_devices_lock, flags);
->  
-> diff --git a/include/uapi/xen/privcmd.h b/include/uapi/xen/privcmd.h
-> index 8b8c5d1420fe..220e7670a113 100644
-> --- a/include/uapi/xen/privcmd.h
-> +++ b/include/uapi/xen/privcmd.h
-> @@ -126,6 +126,11 @@ struct privcmd_ioeventfd {
->  	__u8 pad[2];
->  };
->  
-> +struct privcmd_gsi_from_dev {
-> +	__u32 sbdf;
-> +	int gsi;
-> +};
-> +
->  /*
->   * @cmd: IOCTL_PRIVCMD_HYPERCALL
->   * @arg: &privcmd_hypercall_t
-> @@ -157,5 +162,7 @@ struct privcmd_ioeventfd {
->  	_IOW('P', 8, struct privcmd_irqfd)
->  #define IOCTL_PRIVCMD_IOEVENTFD					\
->  	_IOW('P', 9, struct privcmd_ioeventfd)
-> +#define IOCTL_PRIVCMD_GSI_FROM_DEV				\
-> +	_IOC(_IOC_NONE, 'P', 10, sizeof(struct privcmd_gsi_from_dev))
->  
->  #endif /* __LINUX_PUBLIC_PRIVCMD_H__ */
-> diff --git a/include/xen/acpi.h b/include/xen/acpi.h
-> index 9b50027113f3..d6315fd559a9 100644
-> --- a/include/xen/acpi.h
-> +++ b/include/xen/acpi.h
-> @@ -83,4 +83,13 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
->  						  int *gsi_out,
->  						  int *trigger_out,
->  						  int *polarity_out);
-> +
-> +#ifdef CONFIG_XEN_PCI_STUB
-> +int pcistub_get_gsi_from_sbdf(unsigned int sbdf);
-> +#else
-> +static inline int pcistub_get_gsi_from_sbdf(unsigned int sbdf)
-> +{
-> +	return -1;
-> +}
-> +#endif
->  #endif	/* _XEN_ACPI_H */
-> -- 
-> 2.34.1
-> 
+> +		pcie->use_pm_opp = true;
+>   	} else {
+>   		/* Skip ICC init if OPP is supported as it is handled by OPP */
+>   		ret = qcom_pcie_icc_init(pcie);
+> @@ -1683,7 +1686,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>   		if (ret)
+>   			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
+>   
+> -		if (!pcie->icc_mem)
+> +		if (pcie->use_pm_opp)
+>   			dev_pm_opp_set_opp(pcie->pci->dev, NULL);
+>   	}
+>   	return ret;
+ >
+Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
+
+Regards,
+Mayank
 
