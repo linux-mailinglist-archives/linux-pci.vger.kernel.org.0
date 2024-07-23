@@ -1,311 +1,213 @@
-Return-Path: <linux-pci+bounces-10661-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88F4693A427
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 18:07:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 652E393A43C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 18:21:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07B4E1F234DE
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 16:07:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 221702840D5
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 16:21:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3A1157470;
-	Tue, 23 Jul 2024 16:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCEDB156F4B;
+	Tue, 23 Jul 2024 16:21:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lcm/08Fj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tm3Hr5Jk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AD5156F4D;
-	Tue, 23 Jul 2024 16:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963B814D2B8;
+	Tue, 23 Jul 2024 16:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721750826; cv=none; b=TLBgcEvBYpUWrXYgJMwAoSfT6+5MJ2SauqhYoXO+f4P/9GmazSRRDnjusdzx48hH3qtNnH5OikbNxzSef1Sgr3wlVbTafnyqqgtv3tW0NQLq5cZVFS7gJID0w4Nvm1WnYsEk4qhHBZP1qGwGw2tJPLYlbst/hknPv1Y3w3RQYCE=
+	t=1721751668; cv=none; b=AjAyV5CKchxUq4syeyWoHzMIMDm4mqNR/rFcIHNIC62iD96tWh+r6Ltmvys4rDH+s5DTGtfSHxis3CCslzty6hef5SvrIylzXIOrGJtZ4sF28UrQbb00ZmWWPtutE0xIAOW1WVsAy+juqqEJMlX6x6500FyZNThc+HOJ9TgPV+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721750826; c=relaxed/simple;
-	bh=e9EW7Nc+mZb16mvN+ebaUU/kC4zDknEwVmlDcy9SVuk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U7+yKoEDJMJrAgYtRCbRSKaCQcv+7s60+izegMpTX4Hr1VuzI1x8Lz7is8FewKZn1URb+sivJascf6vJsLz1+ZEvTABZqk1JWcZTC/Xz4mQnKyJrfltO3Q01Mj7JRgxkL3qAG1nD4nMTwY9KIjVvDG0GxYHq5T5SCNe5JUsEwnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lcm/08Fj; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e08724b2a08so3264045276.1;
-        Tue, 23 Jul 2024 09:07:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721750824; x=1722355624; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6whKPONxWpuod2UaAfqMj9j4YRdef/KUUH1KzMzXWQw=;
-        b=Lcm/08FjubgHXU7v2rjY5i8IhLk8kFNo99sgwbbypIG2D+EkOZrvkSLiZ9BTmtmMn1
-         Mao5BMUlQqj50q5LZ8cgwRnhLlCAY5W4YFOuHpOf/aj1nYyUQJy6uygAGFSnEpSBAd9i
-         XxVPOs39xN1FNDPJ2RsikO6AKIKBYrt9nywZ3UbBPBdX4+dF6xovd3sA5MX6+LtsaUYK
-         WAx1TLMuWIYhYVRpzLJLDAmolSqUVb1F1sqTUEW2RkNlRr47WY83Hj4lUNbunal5fpYX
-         8UR+QBCGRkjx9XyG9foj2dGJAcJJJqrNMv6SwUZsCWdGV6YdmPcY0VkoHdrj2TIcw4L3
-         r+Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721750824; x=1722355624;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6whKPONxWpuod2UaAfqMj9j4YRdef/KUUH1KzMzXWQw=;
-        b=dc8MfmPUYASsEI8TM3DRliQTPupUAtxDR8TxH0+M/PoSz71VGXkv1b93+hNep6SGEF
-         VtGnFB27Dc3oHHXMsGCtFw/oIhJ/B1Uei9vgMwBmv7F5QeBE1RsqduLmQ8viWwOGa9v4
-         vl2OCKx08pM3h7On+kl6ASthjTZ53GA6KxHPKIXGJ+vSlNI7fnscAw+3/R4blijjZ6PX
-         brXcZnsygV/LOlGvYIs2XBf7B97OsRkPnGnZGKKgBoKugCBqm0olp50WJRQrRa7m1VPU
-         IsRXD6fYTwx7u4oNgmwvc4kYy+w9Wv6TW79EyOyQxW58pne/WSjI3K1EbYOq54ADqJJW
-         Pzuw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0urt7LvdYkG+xZs8Ec138aGDltj9TF/SLz6stMHL5Unvz5UD2SnWtX47WwdKeQ5YclovOvZsYiu2RKM/sIY5ROhc8L00WeUhyLeF4AdqqSIEGCtlo//glFXYepec2b0f+bjNtQb07
-X-Gm-Message-State: AOJu0Ywwa3lzsg2YOP9SODWxocF/EjP8hz9vaaBd3Esc/zOgS1H60YQc
-	9kvuFUSBdXItvZQCkfBkzi+aOpfejEF1O831Y9+nJoh8ziWvVwVErX0wkG0uVZwmPsDTthCtw4Q
-	aYiD9jS+tFAHq2qUrmIcYCiqp4s4=
-X-Google-Smtp-Source: AGHT+IF1cItnDlJqIfIlEFkY8o7SJ9R4Itiszg3o01fP1prXMEJJpL2VxjYQqt6AZUJDpJsaZuvfEtYFqF3Gmaf6APw=
-X-Received: by 2002:a05:6902:2b8b:b0:e02:e12d:88c7 with SMTP id
- 3f1490d57ef6-e0b098ccc0cmr349389276.51.1721750823603; Tue, 23 Jul 2024
- 09:07:03 -0700 (PDT)
+	s=arc-20240116; t=1721751668; c=relaxed/simple;
+	bh=ibgOg0b+WNf0hExtbAkMakcq3rUFIvmNPQsl79AMda8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ge+OD45wgokSSb8gsVt0v/hB36NFAFRo5v7h4kv2ueBH5GcKHFkbK2sSjIB7jxsLcPMOTiL3tZWsogNq0EuJoFXnVcKERWWblRNEXw5oygjPeefeILLTLn4jypAndfkOuwpJ1PiCOJyT/y+rnpuQuf0rhWQHTUQinOzWBK7wKLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tm3Hr5Jk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB9FC4AF09;
+	Tue, 23 Jul 2024 16:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721751668;
+	bh=ibgOg0b+WNf0hExtbAkMakcq3rUFIvmNPQsl79AMda8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tm3Hr5JkaqbRrYxNoojwnOT5kyuBAFWFXzQlAQCRZrWYBohMm0dycCWPes48ewCAa
+	 ApXV+PGjWIuM+1COABF2TQ2E0ZGCDVs79yN3P4U7pmvUoyBdZiGVEz0RTPuEI5goyk
+	 XExPXRvm7yaOV1V0u5WPkPbtSGhyzY1LKh+Dat438yfCcmzdZfKADtS4cV/xUQicH2
+	 05f3bxxuJ5LNew3lZY4r7DJNRlRxz6NxNFmij3megUTig30E9d7D8C5X4AG/yiq5aj
+	 o6Xz+hhMx2JT/CXeIYk08kY90WGFLeCTiagIak3I5HkgDQxMbYGBGU7TgwM+rdJMQu
+	 Wu/O3cPsm7JLQ==
+Date: Tue, 23 Jul 2024 10:21:07 -0600
+From: Rob Herring <robh@kernel.org>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: Amit Machhiwal <amachhiw@linux.ibm.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Vaibhav Jain <vaibhav@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+	Kowshik Jois B S <kowsjois@linux.ibm.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+Message-ID: <20240723162107.GA501469-robh@kernel.org>
+References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+ <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+ <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240719115741.3694893-1-rick.wertenbroek@gmail.com>
- <20240719115741.3694893-2-rick.wertenbroek@gmail.com> <Zp+6TU/nn/Ea6xqq@x1-carbon.lan>
-In-Reply-To: <Zp+6TU/nn/Ea6xqq@x1-carbon.lan>
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date: Tue, 23 Jul 2024 18:06:26 +0200
-Message-ID: <CAAEEuho08Taw3v2BeCjNDQZ0BRU0oweiLuOuhfrLd7PqAyzSCQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: endpoint: Introduce 'get_bar' to map fixed
- address BARs in EPC
-To: Niklas Cassel <cassel@kernel.org>
-Cc: rick.wertenbroek@heig-vd.ch, alberto.dassatti@heig-vd.ch, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
 
-On Tue, Jul 23, 2024 at 4:17=E2=80=AFPM Niklas Cassel <cassel@kernel.org> w=
-rote:
->
-> On Fri, Jul 19, 2024 at 01:57:38PM +0200, Rick Wertenbroek wrote:
-> > The current mechanism for BARs is as follows: The endpoint function
-> > allocates memory with 'pci_epf_alloc_space' which calls
-> > 'dma_alloc_coherent' to allocate memory for the BAR and fills a
-> > 'pci_epf_bar' structure with the physical address, virtual address,
-> > size, BAR number and flags. This 'pci_epf_bar' structure is passed
-> > to the endpoint controller driver through 'set_bar'. The endpoint
-> > controller driver configures the actual endpoint to reroute PCI
-> > read/write TLPs to the BAR memory space allocated.
-> >
-> > The problem with this is that not all PCI endpoint controllers can
-> > be configured to reroute read/write TLPs to their BAR to a given
-> > address in memory space. Some PCI endpoint controllers e.g., FPGA
-> > IPs for Intel/Altera and AMD/Xilinx PCI endpoints. These controllers
-> > come with pre-assigned memory for the BARs (e.g., in FPGA BRAM),
-> > because of this the endpoint controller driver has no way to tell
-> > these controllers to reroute the read/write TLPs to the memory
-> > allocated by 'pci_epf_alloc_space' and no way to get access to the
-> > memory pre-assigned to the BARs through the current API.
->
-> Looking at your series, it seems that you skip not only setting up the
-> PCI address to internal address translation, you also skip the whole
-> call to set_bar(). set_bar() takes a 'pci_epf_bar' struct, and configures
-> the hardware accordingly, that means setting the flags for the BARs,
-> configuring it as 32 or 64-bit etc.
+On Mon, Jul 15, 2024 at 01:52:30PM -0700, Lizhi Hou wrote:
+> 
+> On 7/15/24 11:55, Rob Herring wrote:
+> > On Mon, Jul 15, 2024 at 2:08 AM Amit Machhiwal <amachhiw@linux.ibm.com> wrote:
+> > > With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+> > > of a PCI device attached to a PCI-bridge causes following kernel Oops on
+> > > a pseries KVM guest:
+> > > 
+> > >   RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+> > >   Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
+> > >   BUG: Unable to handle kernel data access on read at 0x10ec00000048
+> > >   Faulting instruction address: 0xc0000000012d8728
+> > >   Oops: Kernel access of bad area, sig: 11 [#1]
+> > >   LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+> > > <snip>
+> > >   NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
+> > >   LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
+> > >   Call Trace:
+> > >   [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
+> > >   [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
+> > >   [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
+> > >   [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
+> > >   [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
+> > >   [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
+> > >   [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
+> > >   [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
+> > >   [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
+> > >   [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
+> > >   [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
+> > >   [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
+> > > <snip>
+> > > 
+> > > A git bisect pointed this regression to be introduced via [1] that added
+> > > a mechanism to create device tree nodes for parent PCI bridges when a
+> > > PCI device is hot-plugged.
+> > > 
+> > > The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
+> > > device-tree node associated with the pci_dev that was earlier
+> > > hot-plugged and was attached under a pci-bridge. The PCI dev header
+> > > `dev->hdr_type` being 0, results a conditional check done with
+> > > `pci_is_bridge()` into false. Consequently, a call to
+> > > `of_pci_make_dev_node()` to create a device node is never made. When at
+> > > a later point in time, in the device node removal path, a memcpy is
+> > > attempted in `__of_changeset_entry_invert()`; since the device node was
+> > > never created, results in an Oops due to kernel read access to a bad
+> > > address.
+> > > 
+> > > To fix this issue, the patch updates `of_changeset_create_node()` to
+> > > allocate a new node only when the device node doesn't exist and init it
+> > > in case it does already. Also, introduce `of_pci_free_node()` to be
+> > > called to only revert and destroy the changeset device node that was
+> > > created via a call to `of_changeset_create_node()`.
+> > > 
+> > > [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> > > 
+> > > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> > > Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
+> > > Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> > > Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+> > > ---
+> > > Changes since v1:
+> > >      * Included Lizhi's suggested changes on V1
+> > >      * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
+> > >        part a bit in `of_pci_make_dev_node`
+> > >          drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
+> > >            611 | void of_pci_free_node(struct device_node *np)
+> > >                |      ^~~~~~~~~~~~~~~~
+> > >          drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
+> > >          drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
+> > >            696 | out_destroy_cset:
+> > >                | ^~~~~~~~~~~~~~~~
+> > >      * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
+> > > 
+> > >   drivers/of/dynamic.c  | 16 ++++++++++++----
+> > >   drivers/of/unittest.c |  2 +-
+> > >   drivers/pci/bus.c     |  3 +--
+> > >   drivers/pci/of.c      | 39 ++++++++++++++++++++++++++-------------
+> > >   drivers/pci/pci.h     |  2 ++
+> > >   include/linux/of.h    |  1 +
+> > >   6 files changed, 43 insertions(+), 20 deletions(-)
+> > > 
+> > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> > > index dda6092e6d3a..9bba5e82a384 100644
+> > > --- a/drivers/of/dynamic.c
+> > > +++ b/drivers/of/dynamic.c
+> > > @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct device_node *np,
+> > >    * a given changeset.
+> > >    *
+> > >    * @ocs: Pointer to changeset
+> > > + * @np: Pointer to device node. If null, allocate a new node. If not, init an
+> > > + *     existing one.
+> > >    * @parent: Pointer to parent device node
+> > >    * @full_name: Node full name
+> > >    *
+> > >    * Return: Pointer to the created device node or NULL in case of an error.
+> > >    */
+> > >   struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+> > > +                                            struct device_node *np,
+> > >                                               struct device_node *parent,
+> > >                                               const char *full_name)
+> > >   {
+> > > -       struct device_node *np;
+> > >          int ret;
+> > > 
+> > > -       np = __of_node_dup(NULL, full_name);
+> > > -       if (!np)
+> > > -               return NULL;
+> > > +       if (!np) {
+> > > +               np = __of_node_dup(NULL, full_name);
+> > > +               if (!np)
+> > > +                       return NULL;
+> > > +       } else {
+> > > +               of_node_set_flag(np, OF_DYNAMIC);
+> > > +               of_node_set_flag(np, OF_DETACHED);
+> > Are we going to rename the function to
+> > of_changeset_create_or_maybe_modify_node()? No. The functions here are
+> > very clear in that they allocate new objects and don't reuse what's
+> > passed in.
+> 
+> Ok. How about keeping of_changeset_create_node unchanged.
+> 
+> Instead, call kzalloc(), of_node_init() and of_changeset_attach_node()
+> 
+> in of_pci_make_dev_node() directly.
+> 
+> A similar example is dlpar_parse_cc_node().
+> 
+> 
+> Does this sound better?
 
-Thank you for the comments,
+No, because really that code should be re-written using of_changeset
+API.
 
-This is not skipped, it is done in the new 'get_bar()' function,
-depending on the hardware the flags are either fixed, then they are
-set inside the 'get_bar()' function, either they are settable and we
-could use the ones that come from the 'pci_epf_bar' structure as an
-"in-out" parameter. This is dependent on the controller and will be
-set in 'get_bar'. The structure returned by 'get_bar' will be filled.
-It also means get_bar() will call ioremap() to set the virtual
-address, as well as the physical address.
+My suggestion is add a data pointer to struct of_changeset and then set 
+that to something to know the data ptr is a changeset and is your 
+changeset.
 
->
-> I think you should still call set_bar(). Your PCIe EPC .set_bar() callbac=
-k
-> can then detect that the type is fixed address, and skip setting up the
-> internal address translation. (Although I can imagine someone in the
-> future might need a fixed internal address for the BAR, but they still
-> need to setup internal address translation.)
-
-That is why I suggested at first to have either the option to use
-'set_bar' (translate TLPs to the BAR address to the phys address from
-the pci_epf_bar struct) or 'get_bar' (because the translation of TLPs
-to BAR is fixed by hardware, and you want to fill the pci_epf_bar
-struct with the correct addresses), having both allows to choose the
-one adequate for the controller hardware based on features.
-
->
-> Maybe something like this:
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 85bdf2adb760..50ad728b3b3e 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -151,18 +151,22 @@ struct pci_epc {
->  /**
->   * @BAR_PROGRAMMABLE: The BAR mask can be configured by the EPC.
->   * @BAR_FIXED: The BAR mask is fixed by the hardware.
-> + * @BAR_FIXED_ADDR: The BAR mask and physical address is fixed by the ha=
-rdware.
->   * @BAR_RESERVED: The BAR should not be touched by an EPF driver.
->   */
->  enum pci_epc_bar_type {
->         BAR_PROGRAMMABLE =3D 0,
->         BAR_FIXED,
-> +       BAR_FIXED_ADDR,
->         BAR_RESERVED,
->  };
->
->  /**
->   * struct pci_epc_bar_desc - hardware description for a BAR
->   * @type: the type of the BAR
-> - * @fixed_size: the fixed size, only applicable if type is BAR_FIXED_MAS=
-K.
-> + * @fixed_size: the fixed size, only applicable if type is BAR_FIXED or
-> + *             BAR_FIXED_ADDRESS.
-> + * @fixed_addr: the fixed address, only applicable if type is BAR_FIXED_=
-ADDRESS.
->   * @only_64bit: if true, an EPF driver is not allowed to choose if this =
-BAR
->   *             should be configured as 32-bit or 64-bit, the EPF driver =
-must
->   *             configure this BAR as 64-bit. Additionally, the BAR succe=
-eding
->
-
-Yes, this is very similar to what I suggested initially, with the enum
-type instead of a boolean, and we need the address for
-pci_epf_alloc_space to do the ioremap, which is not needed if done in
-pci_epc_get_bar because the EPC itself knows about the fixed address.
-
->
-> I know you are using a FPGA, but for e.g. DWC, you would simply
-> ignore:
-> https://github.com/torvalds/linux/blob/master/drivers/pci/controller/dwc/=
-pcie-designware-ep.c#L232-L234
->
-
-Yes, exactly. But that needs your change suggested below (if not the
-caller should not call 'pci_epf_alloc_space' before calling
-'pci_epc_set_bar' and 'pci_epc_set_bar' should still ioremap the fixed
-physical address to provide to get the virtual address and provide
-both in the 'pci_epf_bar' struct (which should not be pre-filled by
-pci_epf_alloc_space)).
-
->
-> Perhaps we even want the EPF drivers to keep calling pci_epf_alloc_space(=
-),
-> by doing something like:
->
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/p=
-ci-epf-core.c
-> index 323f2a60ab16..35f7a9b68006 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -273,7 +273,9 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t=
- size, enum pci_barno bar,
->         if (size < 128)
->                 size =3D 128;
->
-> -       if (epc_features->bar[bar].type =3D=3D BAR_FIXED && bar_fixed_siz=
-e) {
-> +       if ((epc_features->bar[bar].type =3D=3D BAR_FIXED ||
-> +            epc_features->bar[bar].type =3D=3D BAR_FIXED_ADDR)
-> +           && bar_fixed_size) {
->                 if (size > bar_fixed_size) {
->                         dev_err(&epf->dev,
->                                 "requested BAR size is larger than fixed =
-size\n");
-> @@ -296,10 +298,15 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size=
-_t size, enum pci_barno bar,
->         }
->
->         dev =3D epc->dev.parent;
-> -       space =3D dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
-> -       if (!space) {
-> -               dev_err(dev, "failed to allocate mem space\n");
-> -               return NULL;
-> +       if (epc_features->bar[bar].type =3D=3D BAR_FIXED_ADDR) {
-> +               request_mem_region(...);
-> +               ioremap(...);
-> +       } else {
-> +               space =3D dma_alloc_coherent(dev, size, &phys_addr, GFP_K=
-ERNEL);
-> +               if (!space) {
-> +                       dev_err(dev, "failed to allocate mem space\n");
-> +                       return NULL;
-> +               }
->         }
->
->         epf_bar[bar].phys_addr =3D phys_addr;
->
->
-
-This seems like a sane approach, I thought that because
-'pci_epf_alloc_space' was in the EPF part, the EPF may not have been
-linked yet to a controller, but here as the features are passed, they
-EPF section already knows about the EPC features, so it makes sense to
-to do the ioremap() here instead of in 'set/get_bar()'. This would
-also be compatible with the current API.
-
-I really like this because it doesn't require a new function. Also it
-will not alloc/fill if it is a fixed BAR so less risk of errors when
-writing the endpoint function driver.
-
-And I like passing the BAR fixed address in the features, it makes sense.
-
->
-> I could also see some logic in the request_mem_region() and ioremap() cal=
-l
-> being in the EPC driver's set_bar() callback.
-
-My initial thought was that because it was really EPC dependent it
-would be in an EPC function, thus I suggested get_bar.
-
->
-> But like you suggested in the other mail, the right thing is to merge
-> alloc_space() and set_bar() anyway. (Basically instead of where EPF drive=
-rs
-> currently call set_bar(), the should call alloc_and_set_bar() (or whateve=
-r)
-> instead.)
->
-
-Yes, if we merge both, the code will need to be in the EPC code
-(because of the set_bar), and then the pci_epf_alloc_space (if needed)
-would be called internally in the EPC code and not in the endpoint
-function code.
-
-The only downside, as I said in my other mail, is the very niche case
-where the contents of a BAR should be moved and remain unchanged when
-rebinding a given endpoint function from one controller to another.
-But this is not expected in any endpoint function currently, and with
-the new changes, the endpoint could simply copy the BAR contents to a
-local buffer and then set the contents in the BAR of the new
-controller.
-Anyways, probably no one is moving live functions between controllers,
-and if needed it still can be done, so no problem here...
-
->
-> Kind regards,
-> Niklas
-
-Thank you very much for your insights.
-I really like the approach of setting the type and fixed address in
-the features.
-
-By doing so we can then merge the alloc/set_bar functions and simplify
-the endpoint function drivers while at the same time support fixed
-address BARs.
-
-Best regards,
-Rick
+Rob
 
