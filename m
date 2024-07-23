@@ -1,246 +1,346 @@
-Return-Path: <linux-pci+bounces-10681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3531893A98E
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 00:57:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 563B793A9A7
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 01:15:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D8781F22D4F
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 22:57:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D46E81F215FC
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 23:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1241482F0;
-	Tue, 23 Jul 2024 22:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA66F149C40;
+	Tue, 23 Jul 2024 23:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eHbDlyrM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHZzE8me"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D93725760;
-	Tue, 23 Jul 2024 22:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5651494B1;
+	Tue, 23 Jul 2024 23:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721775460; cv=none; b=Dda+bu4MzK/AFgSQJaLuJM4nUyL/UnJ3726Lqi6iiNq8M7XwoA8TpL7ZZaR9ZKCYUUn76+BZXM3hAiF6/DgWbWCVser1ut61OeBOh7FWY/uJIU6RkEvWrGfEpKHWM5/ROvCa/TIMkEiAwjEE/azspmPEahwLBpolleYhN+IUG0U=
+	t=1721776502; cv=none; b=aMpC71l92coumUl/2laP18FSYzc0b66mDg4z0csuKatLnNBNUnps26RpaD3I+BsKt4utA4QL5sWlaBViDEkG/WG+0q++/8OkkxlJh0bXsRBecfdOZNcM2bMWxijP5k0VZbnG2ffuJFEH/TIcgeGUZIBPM7iW0gVPzyL23Vlji+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721775460; c=relaxed/simple;
-	bh=4HkF86r2tTWndomkjDKrfJ3vDAdjfYG+k0T/xRQJz7s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=ugLWCHdxEP7LaqQ6Ka2K8Y+M2KmYb3DjZcrFtaC5V1Qi6CDyYxdRQGap7VjmXOfa3+lT6MyXDhG9l+2ywxRhbdj48L4yva5HubTzAaqrgdz07LnTjBZKs/wvC2mHOHjF5DpEuvMUrX9ifZE31vUAyx77wu9M72zSaxJaIAj/zMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eHbDlyrM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46NHlj3S028604;
-	Tue, 23 Jul 2024 22:56:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VpGSOjbGGSiM7Uoe2VHK5VFOWUwuexM+cF923++NpXU=; b=eHbDlyrMfUBhgRtM
-	1wn9T9Aqeq0Fehqrr+KtopXEuvJqImtpwsdmvHg4pnIebmt4bgtFqY0crjTizgYg
-	YJhcCBDFEyH1X7F2NcgFjyok4XMZ5W5sDYcJ5VM74T3qyhDf8zop0AIrwp6lZZLv
-	8j82ATBnAU2jpRn/Whir2TXEMEGup4VGLA07GvKIsdcnmkGSwiNdDttmkEB6+TC3
-	RDD+jW+gXsixTq1YoUqqPcxbNrL+dNAw8kE1OVYTaqy/6agM+kmzV6UOPK/zn+g/
-	uBvpZau1jdvbLelg4HmC7x4rGVYdLntc3K0zLN14Y69mMK0NT1PF2xslcGxmlyow
-	Rwji1g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40g5m70fe9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 22:56:38 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46NMuawk032209
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 22:56:36 GMT
-Received: from [10.110.63.227] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Jul
- 2024 15:56:35 -0700
-Message-ID: <6038632d-92ec-4034-bc68-add9d47f2bad@quicinc.com>
-Date: Tue, 23 Jul 2024 15:56:35 -0700
+	s=arc-20240116; t=1721776502; c=relaxed/simple;
+	bh=J+shRoyWxjjFtSLRx0IPGcWXX70uvHYdX9iSt+m2JAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QGA1EwWZ4Z98nKDUl6mtjS2rXAjQhMM5ML+szscTiSLtGiA3gAM9qViIlk+yuwU8ImvYCPfPxJb7G1abkvlXUOuSg0EIABnJNbLKA4tYbljkOZh21INPPSNXEGW7xqDwm9Tx0anKsZ7GoMTqsBjjpYzcDW2npKauWtSJSPS1AVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHZzE8me; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B4CC4AF0A;
+	Tue, 23 Jul 2024 23:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721776502;
+	bh=J+shRoyWxjjFtSLRx0IPGcWXX70uvHYdX9iSt+m2JAs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cHZzE8mek6vHkvSiyBnoztg4W+HvovQefLXWlpKDiFnSjb+mwvQ0XfEZwxjRuE0kD
+	 L8W+JNSdAh0yVxY7EiqYs2KJdhnKVYq+zWlK2IhgLvlRsx/fXWC6ezoanGH2UdIvtS
+	 bbOsQeKo5xoeZxTyfh/96jxOloIcPuuvt/+ZhXLicVVoHUQ+Pjym9P1cOQk44lybXt
+	 eJeDKziSAYGXbzF4ItxCg9Wopd22Mcoc/gM9U0yZvsUWQ6WBHlw4FrtuoJojr/MCtj
+	 Vcupn2zVpRdLZ0Sgxbgb9lp9Dm9xAD7cXOQhXTZkPJo0hK4d52jX+SzFbHfBVdIUOV
+	 mehJxWND3VYcg==
+Date: Tue, 23 Jul 2024 18:15:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Wei Huang <wei.huang2@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+	Jonathan.Cameron@huawei.com, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
+	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com,
+	bhelgaas@google.com
+Subject: Re: [PATCH V3 07/10] PCI/TPH: Introduce API to update TPH steering
+ tags in PCIe devices
+Message-ID: <20240723231500.GA780146@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 7/7] PCI: host-generic: Add dwc PCIe controller based
- MSI controller usage
-From: Mayank Rana <quic_mrana@quicinc.com>
-To: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <cassel@kernel.org>, <yoshihiro.shimoda.uh@renesas.com>,
-        <s-vadapalli@ti.com>, <u.kleine-koenig@pengutronix.de>,
-        <dlemoal@kernel.org>, <amishin@t-argos.ru>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <Frank.Li@nxp.com>,
-        <ilpo.jarvinen@linux.intel.com>, <vidyas@nvidia.com>,
-        <marek.vasut+renesas@gmail.com>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <quic_ramkri@quicinc.com>, <quic_nkela@quicinc.com>,
-        <quic_shazhuss@quicinc.com>, <quic_msarkar@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <linux-arm-msm@vger.kernel.org>
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <1721067215-5832-8-git-send-email-quic_mrana@quicinc.com>
- <20240716085811.GA19348@willie-the-truck>
- <20240716134210.GA3534018-robh@kernel.org>
- <9b6eac04-f377-4afa-8712-ab916f831bba@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <9b6eac04-f377-4afa-8712-ab916f831bba@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yMIb1vZTjHzgrE0Sw94Z46179o6FJvrl
-X-Proofpoint-ORIG-GUID: yMIb1vZTjHzgrE0Sw94Z46179o6FJvrl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-23_15,2024-07-23_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407230160
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240717205511.2541693-8-wei.huang2@amd.com>
 
-Hi Rob
+On Wed, Jul 17, 2024 at 03:55:08PM -0500, Wei Huang wrote:
+> Add an API function, pcie_tph_set_st(), to allow endpoint device driver
+> to update the steering tags. Depending on ST table location, the tags
+> will be written into device's MSI-X table or TPH Requester Extended
+> Capability structure.
 
-On 7/16/2024 3:32 PM, Mayank Rana wrote:
-> Hi Will and Rob
-> 
-> Thank you for your quick review comments.
-> 
-> On 7/16/2024 6:42 AM, Rob Herring wrote:
->> On Tue, Jul 16, 2024 at 09:58:12AM +0100, Will Deacon wrote:
->>> On Mon, Jul 15, 2024 at 11:13:35AM -0700, Mayank Rana wrote:
->>>> Add usage of Synopsys Designware PCIe controller based MSI 
->>>> controller to
->>>> support MSI functionality with ECAM compliant Synopsys Designware PCIe
->>>> controller. To use this functionality add device compatible string as
->>>> "snps,dw-pcie-ecam-msi".
->>>>
->>>> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
->>>> ---
->>>>   drivers/pci/controller/pci-host-generic.c | 92 
->>>> ++++++++++++++++++++++++++++++-
->>>>   1 file changed, 91 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/pci/controller/pci-host-generic.c 
->>>> b/drivers/pci/controller/pci-host-generic.c
->>>> index c2c027f..457ae44 100644
->>>> --- a/drivers/pci/controller/pci-host-generic.c
->>>> +++ b/drivers/pci/controller/pci-host-generic.c
->>>> @@ -8,13 +8,73 @@
->>>>    * Author: Will Deacon <will.deacon@arm.com>
->>>>    */
->>>> -#include <linux/kernel.h>
->>>>   #include <linux/init.h>
->>>> +#include <linux/kernel.h>
->>>>   #include <linux/module.h>
->>>> +#include <linux/of_address.h>
->>>>   #include <linux/pci-ecam.h>
->>>>   #include <linux/platform_device.h>
->>>>   #include <linux/pm_runtime.h>
->>>> +#include "dwc/pcie-designware-msi.h"
->>>> +
->>>> +struct dw_ecam_pcie {
->>>> +    void __iomem *cfg;
->>>> +    struct dw_msi *msi;
->>>> +    struct pci_host_bridge *bridge;
->>>> +};
->>>> +
->>>> +static u32 dw_ecam_pcie_readl(void *p_data, u32 reg)
->>>> +{
->>>> +    struct dw_ecam_pcie *ecam_pcie = (struct dw_ecam_pcie *)p_data;
->>>> +
->>>> +    return readl(ecam_pcie->cfg + reg);
->>>> +}
->>>> +
->>>> +static void dw_ecam_pcie_writel(void *p_data, u32 reg, u32 val)
->>>> +{
->>>> +    struct dw_ecam_pcie *ecam_pcie = (struct dw_ecam_pcie *)p_data;
->>>> +
->>>> +    writel(val, ecam_pcie->cfg + reg);
->>>> +}
->>>> +
->>>> +static struct dw_ecam_pcie *dw_pcie_ecam_msi(struct platform_device 
->>>> *pdev)
->>>> +{
->>>> +    struct device *dev = &pdev->dev;
->>>> +    struct dw_ecam_pcie *ecam_pcie;
->>>> +    struct dw_msi_ops *msi_ops;
->>>> +    u64 addr;
->>>> +
->>>> +    ecam_pcie = devm_kzalloc(dev, sizeof(*ecam_pcie), GFP_KERNEL);
->>>> +    if (!ecam_pcie)
->>>> +        return ERR_PTR(-ENOMEM);
->>>> +
->>>> +    if (of_property_read_reg(dev->of_node, 0, &addr, NULL) < 0) {
->>
->> Using this function on MMIO addresses is wrong. It is an untranslated
->> address.
-> ok. do you prefer me to use of_address_to_resource() instead here ?
-> 
->>>> +        dev_err(dev, "Failed to get reg address\n");
->>>> +        return ERR_PTR(-ENODEV);
->>>> +    }
->>>> +
->>>> +    ecam_pcie->cfg = devm_ioremap(dev, addr, PAGE_SIZE);
->>>> +    if (ecam_pcie->cfg == NULL)
->>>> +        return ERR_PTR(-ENOMEM);
->>>> +
->>>> +    msi_ops = devm_kzalloc(dev, sizeof(*msi_ops), GFP_KERNEL);
->>>> +    if (!msi_ops)
->>>> +        return ERR_PTR(-ENOMEM);
->>>> +
->>>> +    msi_ops->readl_msi = dw_ecam_pcie_readl;
->>>> +    msi_ops->writel_msi = dw_ecam_pcie_writel;
->>>> +    msi_ops->pp = ecam_pcie;
->>>> +    ecam_pcie->msi = dw_pcie_msi_host_init(pdev, msi_ops, 0);
->>>> +    if (IS_ERR(ecam_pcie->msi)) {
->>>> +        dev_err(dev, "dw_pcie_msi_host_init() failed\n");
->>>> +        return ERR_PTR(-EINVAL);
->>>> +    }
->>>> +
->>>> +    dw_pcie_msi_init(ecam_pcie->msi);
->>>> +    return ecam_pcie;
->>>> +}
->>>
->>> Hmm. This looks like quite a lot of not-very-generic code to be adding
->>> to pci-host-generic.c. The file is now, what, 50% designware logic?
->>
->> Agreed.
->>
->> I would suggest you add ECAM support to the DW/QCom driver reusing some
->> of the common ECAM support code.
-> I can try although there is very limited reusage of code with 
-> pcie-qcom.c and pcie-designware-host.c except reusing MSI functionality. 
-> That would make more new OPs within pcie-designware-host.c and 
-> pcie-qcom.c just to perform few operation. As now MSI functionality is 
-> available outside pcie core designware driver (although those changes 
-> are under review), will you be ok to allow separate Qualcomm PCIe ECAM 
-> driver as previously submitted RFC as 
-> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
-> 
-> I can modify above ECAM driver to call into PCIe designware module based 
-> MSI ops as doing here and that would allow reusing of MSI functionality 
-> at same time allowing separate driver for handling firmware VM based 
-> implementation.
-Can you consider above request to have separate driver here ?
-Please suggest on this.
+> +static u32 get_st_table_loc(struct pci_dev *pdev)
+> +{
+> +	u32 reg_val;
+> +
+> +	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg_val);
+> +
+> +	return FIELD_GET(PCI_TPH_CAP_LOC_MASK, reg_val);
+> +}
+> +
+> +static bool msix_index_in_bound(struct pci_dev *pdev, int msi_idx)
+> +{
+> +	u32 reg_val;
+> +	u16 st_tbl_sz;
+> +
+> +	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg_val);
+> +	st_tbl_sz = FIELD_GET(PCI_TPH_CAP_ST_MASK, reg_val);
 
->>
->> I suppose another option would be to define a node and driver which is
->> just the DW MSI controller. That might not work given the power domain
->> being added (which is not very generic either).
-> yes, I did consider this approach, and haven't used this due to concern 
-> as you mentioned, and also that ask for modifying devicetree usage for 
-> existing user of PCIe Designware controller based MSI controller.
-> 
-> Regards,
-> Mayank
-> 
+Seems like a one-time enumeration thing, not a config read we need to
+do for every Steering Tag update.  Same for get_st_table_loc(), I
+think.
+
+> +	return msi_idx <= st_tbl_sz;
+> +}
+> +
+> +/* Write ST to MSI-X vector control reg - Return 0 if OK, otherwise errno */
+> +static int tph_write_tag_to_msix(struct pci_dev *pdev, int msi_idx, u16 tag)
+> +{
+> +	struct msi_desc *msi_desc = NULL;
+> +	void __iomem *vec_ctrl;
+> +	u32 val;
+> +	int err = 0;
+> +
+> +	if (!msix_index_in_bound(pdev, msi_idx))
+> +		return -EINVAL;
+> +
+> +	msi_lock_descs(&pdev->dev);
+> +
+> +	/* find the msi_desc entry with matching msi_idx */
+> +	msi_for_each_desc(msi_desc, &pdev->dev, MSI_DESC_ASSOCIATED) {
+> +		if (msi_desc->msi_index == msi_idx)
+> +			break;
+> +	}
+> +
+> +	if (!msi_desc) {
+> +		pci_err(pdev, "MSI-X descriptor for #%d not found\n", msi_idx);
+> +		err = -ENXIO;
+> +		goto err_out;
+> +	}
+> +
+> +	/* get the vector control register (offset 0xc) pointed by msi_idx */
+> +	vec_ctrl = pdev->msix_base + msi_idx * PCI_MSIX_ENTRY_SIZE;
+> +	vec_ctrl += PCI_MSIX_ENTRY_VECTOR_CTRL;
+> +
+> +	val = readl(vec_ctrl);
+> +	val &= 0xffff;
+> +	val |= (tag << 16);
+
+Seems like there should be some kind of #defines here to connect this
+to the MSI-X table structure.  Maybe next to or connected somehow with
+PCI_MSIX_ENTRY_VECTOR_CTRL.
+
+> +	writel(val, vec_ctrl);
+> +
+> +	/* read back to flush the update */
+> +	val = readl(vec_ctrl);
+> +
+> +err_out:
+> +	msi_unlock_descs(&pdev->dev);
+> +	return err;
+> +}
+> +
+> +/* Return root port TPH completer capability - 0 means none */
+> +static u8 get_rp_completer_support(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *rp;
+> +	u32 reg_val;
+> +	int ret;
+> +
+> +	rp = pcie_find_root_port(pdev);
+> +	if (!rp) {
+> +		pci_err(pdev, "cannot find root port of %s\n", dev_name(&pdev->dev));
+> +		return 0;
+> +	}
+> +
+> +	ret = pcie_capability_read_dword(rp, PCI_EXP_DEVCAP2, &reg_val);
+> +	if (ret) {
+> +		pci_err(pdev, "cannot read device capabilities 2\n");
+> +		return 0;
+> +	}
+> +
+> +	return FIELD_GET(PCI_EXP_DEVCAP2_TPH_COMP_MASK, reg_val);
+> +}
+> +
+> +/*
+> + * TPH device needs to be below a rootport with the TPH Completer and
+> + * the completer must offer a compatible level of completer support to that
+> + * requested by the device driver.
+
+Use spec spelling of "Root Port" (not a mix of "rootport", "root
+port", etc).
+
+> + */
+> +static bool rp_completer_support_ok(struct pci_dev *pdev, u8 req_cap)
+> +{
+> +	u8 rp_cap;
+> +
+> +	rp_cap = get_rp_completer_support(pdev);
+> +
+> +	if (req_cap > rp_cap) {
+> +		pci_err(pdev, "root port lacks proper TPH completer capability\n");
+
+Doesn't look like an error we should log to me.  The *driver* might
+need to know this, but the *user* can't do anything with this message,
+so I don't think we should print it.  There's nothing actually broken
+in the hardware or software here.
+
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +/* Return 0 if OK, otherwise errno on failure */
+> +static int pcie_tph_write_st(struct pci_dev *pdev, unsigned int msix_idx,
+> +			     u8 req_type, u16 tag)
+> +{
+> +	int offset;
+> +	u32 loc;
+> +	int err = 0;
+> +
+> +	/* setting ST isn't needed - not an error, just return OK */
+> +	if (!pdev->tph_cap || pci_tph_disabled() || pci_tph_nostmode() ||
+> +	    !pdev->msix_enabled || !int_vec_mode_supported(pdev))
+
+I see now why you made int_vec_mode_supported() a separate helper.
+Makes sense since you call it several places, so disregard my earlier
+comment about inlining it.
+
+> +		return 0;
+> +
+> +	/* setting ST is incorrect in the following cases - return error */
+> +	if (!msix_index_in_bound(pdev, msix_idx) || !rp_completer_support_ok(pdev, req_type))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * disable TPH before updating the tag to avoid potential instability
+> +	 * as cautioned in PCIE Base Spec r6.2, sect 6.17.3 "ST Modes of Operation"
+
+Wrap to fit in 80 columns.  Capitalize as normal for English
+sentences.
+
+s/PCIE Base Spec/PCIe/
+s/sect/sec/ (as used in similar citations elsewhere)
+
+Apply to all comments in this series.
+
+> +	 */
+> +	pcie_tph_disable(pdev);
+> +
+> +	loc = get_st_table_loc(pdev);
+> +	/* Note: use FIELD_PREP to match PCI_TPH_LOC_* definitions in header */
+> +	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
+> +
+> +	switch (loc) {
+> +	case PCI_TPH_LOC_MSIX:
+> +		err = tph_write_tag_to_msix(pdev, msix_idx, tag);
+> +		break;
+> +	case PCI_TPH_LOC_CAP:
+> +		offset = pdev->tph_cap + PCI_TPH_BASE_SIZEOF + msix_idx * sizeof(u16);
+> +		err = pci_write_config_word(pdev, offset, tag);
+> +		break;
+> +	default:
+> +		pci_err(pdev, "unable to write steering tag for device %s\n",
+> +			dev_name(&pdev->dev));
+
+I *guess* this message is really telling me that the ST Table Location
+field is "Reserved"?  I don't think we should emit an error here
+because if it becomes defined in the future, we'll start warning about
+all devices that use it, even though nothing is actually wrong except
+that we don't know how to use the new value.
+
+In any event, "unable to write steering tag" isn't actually the
+problem here; it's only that "ST Table Location" contains something we
+don't know about.
+
+> +		err = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (!err) {
+> +		/* re-enable interrupt vector mode */
+> +		set_ctrl_reg_mode_sel(pdev, PCI_TPH_INT_VEC_MODE);
+> +		set_ctrl_reg_req_en(pdev, req_type);
+
+I wish this code *looked* parallel to the pcie_tph_disable() above,
+since it *is* actually paralle.
+
+> +	}
+
+  if (err)
+    return err;
+
+  /* Re-enable ... */
+
+  return 0;
+
+> +
+> +	return err;
+> +}
+
+> + * pcie_tph_set_st() - Set steering tag in ST table entry
+> + * @pdev: pci device
+> + * @msix_idx: ordinal number of msix interrupt.
+> + * @cpu_acpi_uid: the acpi cpu_uid.
+> + * @mem_type: memory type (vram, nvram)
+> + * @req_type: request type (disable, tph, extended tph)
+> + *
+> + * Return: 0 if success, otherwise errno
+> + */
+> +int pcie_tph_set_st(struct pci_dev *pdev, unsigned int msix_idx,
+> +		    unsigned int cpu_acpi_uid, enum tph_mem_type mem_type,
+> +		    u8 req_type)
+
+I think this function name should include something about "cpu".
+
+Seems like this file uses "cpu_uid" and "cpu_acpi_uid"
+interchangeably.  I'm a little unclear on whether that's actually the
+case or what the legal values are.  Driver passes cpumask_first(),
+which I think is a generic Linux CPU ID.   Is that identical with an
+ACPI CPU UID?  It looks like we assume that since we pass this
+unaltered to the _DSM.  I didn't dig into this, but would like to be
+reassured that all is well here.
+
+In any case, please use a consistent name so I don't have to wonder
+whether "cpu_uid" and "cpu_acpi_uid" are the same.
+
+> +{
+> +	u16 tag;
+> +	int err = 0;
+> +
+> +	if (!pdev->tph_cap)
+> +		return -ENODEV;
+> +
+> +	err = pcie_tph_get_st_from_acpi(pdev, cpu_acpi_uid, mem_type,
+> +					req_type, &tag);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	pci_dbg(pdev, "%s: writing tag %d for msi-x intr %d (cpu: %d)\n",
+> +		__func__, tag, msix_idx, cpu_acpi_uid);
+> +
+> +	err = pcie_tph_write_st(pdev, msix_idx, req_type, tag);
+> +
+> +	return err;
+
+  return pcie_tph_write_st(...);
+
+> +}
+> +EXPORT_SYMBOL(pcie_tph_set_st);
+
+> +static inline int pcie_tph_set_st(struct pci_dev *dev, unsigned int msix_nr,
+> +				   unsigned int cpu, enum tph_mem_type tag_type,
+> +				   u8 req_enable)
+> +{ return false; }
+
+"false" is not int.  This looks like "success" to the caller, and I'm
+not sure that's what you want.
+
+Bjorn
 
