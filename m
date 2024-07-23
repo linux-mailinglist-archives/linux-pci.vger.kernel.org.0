@@ -1,190 +1,161 @@
-Return-Path: <linux-pci+bounces-10658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C3EE93A282
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 16:18:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB22093A2DD
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 16:35:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52C981C22BD7
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 14:18:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60BD21F235E6
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 14:35:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39B92154BFC;
-	Tue, 23 Jul 2024 14:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1D5B155321;
+	Tue, 23 Jul 2024 14:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFysC4+A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtqKJGB7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2BE154BE8;
-	Tue, 23 Jul 2024 14:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD93C155307;
+	Tue, 23 Jul 2024 14:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721744260; cv=none; b=Wnsg9qbIdmcCMbPXonPupb+GO0wtwt9DQvZnvmPjd1lJq8iHuVrkZ8flDwSAQCN4vWuO0HEk/j/FUe+U4tCco12ENU04TJesM044yug54Nd3slCupqsPqNjEElM/7Mk06y0GXH1OZy8POjTi64k6mUVglIewm/3LOZvO8JJD7vY=
+	t=1721745318; cv=none; b=KxUd8/DDAvxMgNbYaFQY0b4RO4EDLDGEx1kFfEDEwT9hcCP+tyHrI/TQDfPTDBUzd5j1mWXDQVoAADjdXeRBGjf50D/+sSIW7wNNOikJR01e6M51o3C32tCo6hQFMkAVDyvdRgaIv05muYQbnECXU2wgyHjLuYjsAiBXawjTxvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721744260; c=relaxed/simple;
-	bh=BNRpzun9rkE0eh56ElQCopvHM5RntwbE6IrO8VcsIKA=;
+	s=arc-20240116; t=1721745318; c=relaxed/simple;
+	bh=SIEX4jZxPLkLEdwNUU9kodfaZkbypEBKoyUOHUf9f6E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPzVJuVQ26o9cLUDqFFHfw5KnZtqpHPFRTcL9dXA9AfjxxZIaNroS4k6EDRcbdN8wQyZue6r3KKn4iZdwdbtKo2Gogh/qAiwHXfyVhA/iaEIM84NqnSrXVydmX/VKomMkGI89GoyP/GyYFIxJFDRe2T1PXrCv8bGQ3JNbkokTew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PFysC4+A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391A1C4AF09;
-	Tue, 23 Jul 2024 14:17:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjOCQRStQ8WgYgclVDz42Y9B6vwTBJE0vSQ/bJw7R31y/2i2syu2dacrFx1TDduw57zNpTWZsANcpvecJAHSyiw3eoC8Zov7sJvNY3PnkCWYTlqSlfkga4tbtEpCIZnEcvqyjDYDXQHTtkzKwKp2PyXuBBnqgBXZUqE4jjyrxtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtqKJGB7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF67C4AF0A;
+	Tue, 23 Jul 2024 14:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721744259;
-	bh=BNRpzun9rkE0eh56ElQCopvHM5RntwbE6IrO8VcsIKA=;
+	s=k20201202; t=1721745318;
+	bh=SIEX4jZxPLkLEdwNUU9kodfaZkbypEBKoyUOHUf9f6E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PFysC4+AWVuC34Rk319E1zxE1piH/q43OkJKXIIrzGcxMAvjKTeHJjUJOHnZcwfPI
-	 ZCc8ypQBOqoS9kraZKIeYSwaB6IKR9jdUJE7nrvdWDvVrsxlezx9FFQg5EBW+pznzC
-	 fuPviFhqFQw4/80qtFuiXseBWbw7nD4EsI8zlRWuxYWWNgU99rR7XKtYgNItSZ6E+s
-	 SVPOUkQnyXpE2y1F9Tm8ySyrpP8LECfDHbeocGgLshnrDYlRq4GHeDMR1QgZW2v/zh
-	 KnDwh8F/lrbeObMUBCnGDA89vEk7BaPUuBuN+/7ZhlCeTTLPPumXXcYYJGSakmmW+s
-	 FeMJc9ydZ2R1w==
-Date: Tue, 23 Jul 2024 16:17:32 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Cc: rick.wertenbroek@heig-vd.ch, alberto.dassatti@heig-vd.ch,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: endpoint: Introduce 'get_bar' to map fixed
- address BARs in EPC
-Message-ID: <Zp+6TU/nn/Ea6xqq@x1-carbon.lan>
-References: <20240719115741.3694893-1-rick.wertenbroek@gmail.com>
- <20240719115741.3694893-2-rick.wertenbroek@gmail.com>
+	b=VtqKJGB7nMmm0EexSy9baNwYb9FRqmQC2CjMotyOTmjI5Vz+cjC14OC8ANYAItDM2
+	 9Rgey3t6jQiUABW6WUGo8Wl/BOAPvHcqBmvJdKHTV/XmNUcYiihbPUKC2rWK9WcYrD
+	 s8Ryv/ccXoUCZpvpL1yImSx70kgqsIYYDeKCoIrZ6Q7HvPttc6TH/pFIiM8dRBQbpF
+	 zeMDSB6yludRCUhCvuMuBuagpkCnE50T/uhsL98aaS65GB39aQRrlNtqEecdZ4kVJJ
+	 7hDPHWwYYogkq0uABp2OMK4HIqdqfMWe2gTI8/PCMiNFkbkoVK+YrvSYcj0Vysvxks
+	 gxKUQlf2fsdFg==
+Date: Tue, 23 Jul 2024 15:35:11 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, shawnguo@kernel.org, l.stach@pengutronix.de,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de, imx@lists.linux.dev
+Subject: Re: [PATCH v1 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and
+ "atu" for i.MX8M PCIe Endpoint
+Message-ID: <20240723-spinning-wikipedia-525130c48dcd@spud>
+References: <1721634979-1726-1-git-send-email-hongxing.zhu@nxp.com>
+ <1721634979-1726-2-git-send-email-hongxing.zhu@nxp.com>
+ <20240722-displace-amusable-a884352e0ff9@spud>
+ <Zp7FYRaXM4NNO0oM@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="f4Ml/B5fxYMPddxi"
+Content-Disposition: inline
+In-Reply-To: <Zp7FYRaXM4NNO0oM@lizhi-Precision-Tower-5810>
+
+
+--f4Ml/B5fxYMPddxi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240719115741.3694893-2-rick.wertenbroek@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 19, 2024 at 01:57:38PM +0200, Rick Wertenbroek wrote:
-> The current mechanism for BARs is as follows: The endpoint function
-> allocates memory with 'pci_epf_alloc_space' which calls
-> 'dma_alloc_coherent' to allocate memory for the BAR and fills a
-> 'pci_epf_bar' structure with the physical address, virtual address,
-> size, BAR number and flags. This 'pci_epf_bar' structure is passed
-> to the endpoint controller driver through 'set_bar'. The endpoint
-> controller driver configures the actual endpoint to reroute PCI
-> read/write TLPs to the BAR memory space allocated.
-> 
-> The problem with this is that not all PCI endpoint controllers can
-> be configured to reroute read/write TLPs to their BAR to a given
-> address in memory space. Some PCI endpoint controllers e.g., FPGA
-> IPs for Intel/Altera and AMD/Xilinx PCI endpoints. These controllers
-> come with pre-assigned memory for the BARs (e.g., in FPGA BRAM),
-> because of this the endpoint controller driver has no way to tell
-> these controllers to reroute the read/write TLPs to the memory
-> allocated by 'pci_epf_alloc_space' and no way to get access to the
-> memory pre-assigned to the BARs through the current API.
+On Mon, Jul 22, 2024 at 04:47:29PM -0400, Frank Li wrote:
+> On Mon, Jul 22, 2024 at 05:37:14PM +0100, Conor Dooley wrote:
+> > On Mon, Jul 22, 2024 at 03:56:16PM +0800, Richard Zhu wrote:
+> > > Add reg-name: "dbi2", "atu" for i.MX8M PCIe Endpoint.
+> > >=20
+> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml  | 13 +++++++++--=
+--
+> > >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.=
+yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+> > > index a06f75df8458..309e8953dc91 100644
+> > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+> > > @@ -65,11 +65,13 @@ allOf:
+> > >      then:
+> > >        properties:
+> > >          reg:
+> > > -          minItems: 2
+> > > -          maxItems: 2
+> > > +          minItems: 4
+> > > +          maxItems: 4
+> > >          reg-names:
+> > >            items:
+> > >              - const: dbi
+> > > +            - const: dbi2
+> > > +            - const: atu
+> >=20
+> > New properties in the middle of the list is potentially an ABI break.
+> > Why not add them at the end?
+>=20
+> Because it ref to snps,dw-pcie-ep.yaml, which already defined the reg
+> name orders.
 
-Looking at your series, it seems that you skip not only setting up the
-PCI address to internal address translation, you also skip the whole
-call to set_bar(). set_bar() takes a 'pci_epf_bar' struct, and configures
-the hardware accordingly, that means setting the flags for the BARs,
-configuring it as 32 or 64-bit etc.
+Are you sure that it defines an order for reg? If it did, it would not
+allow what you already have in this binding. The order is actually
+defined in this file.
 
-I think you should still call set_bar(). Your PCIe EPC .set_bar() callback
-can then detect that the type is fixed address, and skip setting up the
-internal address translation. (Although I can imagine someone in the
-future might need a fixed internal address for the BAR, but they still
-need to setup internal address translation.)
+> we using reg-names to get reg resource, I don't think it break
+> the ABI. Driver already auto detect both 'dbi2' or no 'dbi2' case.
 
-Maybe something like this:
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 85bdf2adb760..50ad728b3b3e 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -151,18 +151,22 @@ struct pci_epc {
- /**
-  * @BAR_PROGRAMMABLE: The BAR mask can be configured by the EPC.
-  * @BAR_FIXED: The BAR mask is fixed by the hardware.
-+ * @BAR_FIXED_ADDR: The BAR mask and physical address is fixed by the hardware.
-  * @BAR_RESERVED: The BAR should not be touched by an EPF driver.
-  */
- enum pci_epc_bar_type {
-        BAR_PROGRAMMABLE = 0,
-        BAR_FIXED,
-+       BAR_FIXED_ADDR,
-        BAR_RESERVED,
- };
- 
- /**
-  * struct pci_epc_bar_desc - hardware description for a BAR
-  * @type: the type of the BAR
-- * @fixed_size: the fixed size, only applicable if type is BAR_FIXED_MASK.
-+ * @fixed_size: the fixed size, only applicable if type is BAR_FIXED or
-+ *             BAR_FIXED_ADDRESS.
-+ * @fixed_addr: the fixed address, only applicable if type is BAR_FIXED_ADDRESS.
-  * @only_64bit: if true, an EPF driver is not allowed to choose if this BAR
-  *             should be configured as 32-bit or 64-bit, the EPF driver must
-  *             configure this BAR as 64-bit. Additionally, the BAR succeeding
+Linux's might, another might not. I don't see any point in breaking the
+ABI when you can just put the entries at the end of he list and have no
+problems at all.
 
+Thanks,
+Conor.
 
-I know you are using a FPGA, but for e.g. DWC, you would simply
-ignore:
-https://github.com/torvalds/linux/blob/master/drivers/pci/controller/dwc/pcie-designware-ep.c#L232-L234
+> > >              - const: addr_space
+> > > =20
+> > >    - if:
+> > > @@ -129,8 +131,11 @@ examples:
+> > > =20
+> > >      pcie_ep: pcie-ep@33800000 {
+> > >        compatible =3D "fsl,imx8mp-pcie-ep";
+> > > -      reg =3D <0x33800000 0x000400000>, <0x18000000 0x08000000>;
+> > > -      reg-names =3D "dbi", "addr_space";
+> > > +      reg =3D <0x33800000 0x100000>,
+> > > +            <0x33900000 0x100000>,
+> > > +            <0x33b00000 0x100000>,
+> > > +            <0x18000000 0x8000000>;
+> > > +      reg-names =3D "dbi", "dbi2", "atu", "addr_space";
+> > >        clocks =3D <&clk IMX8MP_CLK_HSIO_ROOT>,
+> > >                 <&clk IMX8MP_CLK_HSIO_AXI>,
+> > >                 <&clk IMX8MP_CLK_PCIE_ROOT>;
+> > > --=20
+> > > 2.37.1
+> > >=20
+>=20
+>=20
 
+--f4Ml/B5fxYMPddxi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Perhaps we even want the EPF drivers to keep calling pci_epf_alloc_space(),
-by doing something like:
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index 323f2a60ab16..35f7a9b68006 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -273,7 +273,9 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
-        if (size < 128)
-                size = 128;
- 
--       if (epc_features->bar[bar].type == BAR_FIXED && bar_fixed_size) {
-+       if ((epc_features->bar[bar].type == BAR_FIXED ||
-+            epc_features->bar[bar].type == BAR_FIXED_ADDR)
-+           && bar_fixed_size) {
-                if (size > bar_fixed_size) {
-                        dev_err(&epf->dev,
-                                "requested BAR size is larger than fixed size\n");
-@@ -296,10 +298,15 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
-        }
- 
-        dev = epc->dev.parent;
--       space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
--       if (!space) {
--               dev_err(dev, "failed to allocate mem space\n");
--               return NULL;
-+       if (epc_features->bar[bar].type == BAR_FIXED_ADDR) {
-+               request_mem_region(...);
-+               ioremap(...);
-+       } else {
-+               space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
-+               if (!space) {
-+                       dev_err(dev, "failed to allocate mem space\n");
-+                       return NULL;
-+               }
-        }
- 
-        epf_bar[bar].phys_addr = phys_addr;
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZp+/nwAKCRB4tDGHoIJi
+0o1yAP9Ri4U2xMei9m2+GEfjZXiikHHGvpUwLmes7Zt8FfQGUgEAw+oENNzcQbGV
+qT0hibbBrevG9+0vEZBZvrBDpf4H0wI=
+=PIZD
+-----END PGP SIGNATURE-----
 
-
-
-I could also see some logic in the request_mem_region() and ioremap() call
-being in the EPC driver's set_bar() callback.
-
-But like you suggested in the other mail, the right thing is to merge
-alloc_space() and set_bar() anyway. (Basically instead of where EPF drivers
-currently call set_bar(), the should call alloc_and_set_bar() (or whatever)
-instead.)
-
-
-Kind regards,
-Niklas
+--f4Ml/B5fxYMPddxi--
 
