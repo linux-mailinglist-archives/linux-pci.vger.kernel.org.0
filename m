@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-10653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C1993A18E
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 15:32:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF4A093A190
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 15:32:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 497AC1C223AF
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 13:32:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F1F21C2239B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 13:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBE01514D6;
-	Tue, 23 Jul 2024 13:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38AC6152E0D;
+	Tue, 23 Jul 2024 13:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="RmTn9eda";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="MHc7MTKL"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="cSza46MC";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="oDx8hHyt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CCC152E0D;
-	Tue, 23 Jul 2024 13:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28676152E1D;
+	Tue, 23 Jul 2024 13:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721741538; cv=none; b=JSvYoQiorhWOXBN4vmRNPqLUkQsTsjWqVOrw9dNGPC8TmL+wYtq0OTGGNwgJSvIs9s5xMaBG9GjBDwefi4CDQa3ga4qMJhSgexT8wKNufTX+IuCRDFc6orEGlyiRquG5Mbe3BG60U3e1q2Ypm5Vqf59hDQna87VXJydjj/IgfzA=
+	t=1721741545; cv=none; b=JAl+5Kwt7N4Nc4pUKxs14hXffzqV7n422a8IiDGRGZ1tekraAy3a5nHs+fvD6h09gNHPb9Loy2TGTe4QnJyZxe439cJD7Qqzukjj8wbBXcJO3AubqLqJSleCIuNoMTGchRouGIQjIoPbr/SOKX02XKysHaNdIDkcHxh/uAEP+xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721741538; c=relaxed/simple;
-	bh=itfldeCV5E8PbLp3l95eB5U+jln7FFIctMAYHM/2s4k=;
+	s=arc-20240116; t=1721741545; c=relaxed/simple;
+	bh=7VZx/BlyjiBZZAFGkoMkgwqr0PVQWJtSIlrphGmel4c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dCF0l+IwQnBVmsmtP5dfF9Pb2ncOciRnRFDQJIziZggGClD7nPx/YDAUXz4K28nnpoE586MQ9ZyeS6eMRm94sa5Nmw4e96z8vH2hD7xjHKPuzsDPZYuB4D6WGxWfQqxAViNKUs+C4uhIRY7RNzWFs1z+J1vfCDLlbl1rDM/guyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=RmTn9eda; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=MHc7MTKL; arc=none smtp.client-ip=80.241.56.161
+	 MIME-Version:Content-Type; b=aV0tqaz3bTX+5hadRCAUjFQzZUkhKpBuJD2udHNOd8kUxMqiC94+RN5Zgu61e6vCNsa5SWGzMEA7vD9XWXSqpsVD35MqcDZRl6Ad0iwj/fuUjtYj40HvLk7XyXnROTrdA1nn3IFA9Rp5VEu5vro5KuQUfCR/mtoqqVfhAE+ybY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=cSza46MC; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=oDx8hHyt; arc=none smtp.client-ip=80.241.56.161
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4WSyk71Nm6z9spg;
-	Tue, 23 Jul 2024 15:32:15 +0200 (CEST)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4WSykF21CCz9spm;
+	Tue, 23 Jul 2024 15:32:21 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1721741535;
+	t=1721741541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lgM4414BXkzkG7/YyYKWSiYAFiOZmUO66T1MzLWmSjA=;
-	b=RmTn9edate3rhYmSZifp/dwGtAeb5LNq8e3eP6ZuvWsXZHLMLXU/FIuzRrtw5P+/BPFZ02
-	+pvGza9+O2vzJf3u9YhFp2pKGfgRTdJZTN4m4Q0AUqufKQj/mwTs8hR5iKlWGcyLg+tJKI
-	yOt71dK7WiUAsFJGRzCnGoLeHnfIADNYl6zyKO6uIWG8OXwUR6cyicCQRGeGtiGAp1ep4j
-	OxmzyiI7e9+Ry7mJTCMKiOYYphtkCIhheGOf6tXeHE3fDi4z0xkgzcW7h22IVogatG3V1W
-	WjH/H9gW+ZWHLvm/k3NCxf/2QR3A2ViJfGfiWl3IoMXaYGRQr4s+dYAHkyXzlw==
+	bh=uHqYl7ZhdlKmC3M9eCufqi3KN10HPkOjoc62IcJ1TAU=;
+	b=cSza46MC4axXuI8nPQc07bdKbiQychyj9MHn0Uqv/n65S5RBkA+lNd7QHgszSwchBJw4pd
+	+JwEVRGqsrP9J/BHxSP6uyQOcvQv9H7zL+Jdi61erSH9ObYkqg2bThj7RPkTzQ2NWBg0N0
+	7PMN2kHdNyz6OVnLEYXuEoUNWWUt/9ofxzSQT0QBUR/XQ/by+ilUe5m/8B2eMoWfVyskub
+	F+cfwWb2qPQBPLa1dTNncjBHuGMI032sCiPzscb/2kvATazUpoXTqGAlImrgfi/HmMpYDS
+	8smdUOD1TohZg0kTeDVhGPoCfZQju3gPbbHsZ49BVLWkQtNRCAvJohSTugQm6Q==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1721741532;
+	t=1721741538;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lgM4414BXkzkG7/YyYKWSiYAFiOZmUO66T1MzLWmSjA=;
-	b=MHc7MTKL2oG5unIib99U2ueqFvhCaPQtdUQZYGrGo3VYqmB3aCXV3YkGz1nMwS61BVLe5/
-	8ry1rFxjDM1y/bwdqCdnzKQaWUzeHcSJHOB9DE9i/q/E+pNrHxu4SuQuLMVQugXdcXcqjM
-	XY+UFQ07gHtGDrHIT07+wABbGW7RK8TPi/YfS1GWaQJ9xS7PPbe+RoekwqlKYqRy/X6XpY
-	CX+g/31G6knvpLYDPvkFfyeCCZ18l1sGwLV5nj/08iqmN0MSBQt+ZXPuSFN8yIP8u90paf
-	0bY+YawIVWx/p9dFoocOjEEN2iwjQocnCQ9SoGKjhBK72DMjUHS3aI21oWti4A==
+	bh=uHqYl7ZhdlKmC3M9eCufqi3KN10HPkOjoc62IcJ1TAU=;
+	b=oDx8hHytmRditJ6W2cggjmmTsKITQWgRQroLXHcaepTdilrpCVXa54CppWi2r5HztcWQg+
+	i+uhVwX85V8Y9SusmHM9SSqbJuKHZtckRomfw5HkSk9E7Q6qEU36eF2cvWvUoPA2G1iMhm
+	+oJZpT2kA7Q97mnuWpNsz2uM50A2KJCsRuTheodPL/YUn/24qptHXgKJJ9/js/Nt5jxK1G
+	dWwjIGyHGtXN4B0A6F9yZ/ntHrJK5PMnB9bXjXw7C/88peq3XIQZGdP906aBf8FXoR0gGJ
+	5s4DMAbO77sk/q62hqqTTwB82FnFbLWZ8n0jAKjduDZx1kyDpwLmyYN70ysvmw==
 To: linux-pci@vger.kernel.org
 Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -108,9 +108,9 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	linux-renesas-soc@vger.kernel.org,
 	linux-rpi-kernel@lists.infradead.org,
 	linux-tegra@vger.kernel.org
-Subject: [PATCH v4 14/15] PCI: xilinx-xdma: Silence set affinity failed warning
-Date: Tue, 23 Jul 2024 15:27:14 +0200
-Message-ID: <20240723132958.41320-15-marek.vasut+renesas@mailbox.org>
+Subject: [PATCH v4 15/15] PCI: xilinx: Silence set affinity failed warning
+Date: Tue, 23 Jul 2024 15:27:15 +0200
+Message-ID: <20240723132958.41320-16-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
 References: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
@@ -121,8 +121,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: 5ac88d2ff646a9d260e
-X-MBO-RS-META: ng6qpsyimt39eabmedpzcda4197488ry
+X-MBO-RS-ID: ed593b2c540759fff74
+X-MBO-RS-META: go35zz1zo5op1nwnubdcnmt5h4mgd8ux
+X-Rspamd-Queue-Id: 4WSykF21CCz9spm
 
 Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps .irq_set_affinity unset
 and allows migrate_one_irq() code in cpuhotplug.c to exit right away, without
@@ -181,41 +182,43 @@ Cc: linux-tegra@vger.kernel.org
 ---
 V4: - New patch
 ---
- drivers/pci/controller/pcie-xilinx-dma-pl.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/pci/controller/pcie-xilinx.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-index 5be5dfd8398f2..ca9044d694dad 100644
---- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
-+++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-@@ -355,8 +355,8 @@ static struct irq_chip xilinx_msi_irq_chip = {
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+index cb6e9f7b0152c..0b534f73a9420 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -208,11 +208,6 @@ static struct irq_chip xilinx_msi_top_chip = {
+ 	.irq_ack	= xilinx_msi_top_irq_ack,
  };
  
- static struct msi_domain_info xilinx_msi_domain_info = {
--	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		MSI_FLAG_MULTI_PCI_MSI),
-+	.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		 MSI_FLAG_NO_AFFINITY | MSI_FLAG_MULTI_PCI_MSI,
- 	.chip = &xilinx_msi_irq_chip,
- };
- 
-@@ -370,16 +370,9 @@ static void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	msg->data = data->hwirq;
- }
- 
--static int xilinx_msi_set_affinity(struct irq_data *irq_data,
--				   const struct cpumask *mask, bool force)
+-static int xilinx_msi_set_affinity(struct irq_data *d, const struct cpumask *mask, bool force)
 -{
 -	return -EINVAL;
 -}
 -
- static struct irq_chip xilinx_irq_chip = {
- 	.name = "pl_dma:MSI",
- 	.irq_compose_msi_msg = xilinx_compose_msi_msg,
--	.irq_set_affinity = xilinx_msi_set_affinity,
+ static void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	struct xilinx_pcie *pcie = irq_data_get_irq_chip_data(data);
+@@ -225,7 +220,6 @@ static void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ static struct irq_chip xilinx_msi_bottom_chip = {
+ 	.name			= "Xilinx MSI",
+-	.irq_set_affinity 	= xilinx_msi_set_affinity,
+ 	.irq_compose_msi_msg	= xilinx_compose_msi_msg,
  };
  
- static int xilinx_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+@@ -271,7 +265,8 @@ static const struct irq_domain_ops xilinx_msi_domain_ops = {
+ };
+ 
+ static struct msi_domain_info xilinx_msi_info = {
+-	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
++	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
++		  MSI_FLAG_NO_AFFINITY,
+ 	.chip	= &xilinx_msi_top_chip,
+ };
+ 
 -- 
 2.43.0
 
