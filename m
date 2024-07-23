@@ -1,136 +1,117 @@
-Return-Path: <linux-pci+bounces-10678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F297D93A96E
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 00:44:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B2F593A97D
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 00:53:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8F322841B4
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 22:44:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B38721F22A64
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 22:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C9F143C77;
-	Tue, 23 Jul 2024 22:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C739525760;
+	Tue, 23 Jul 2024 22:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4IDhQzr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYN6yv+F"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2E31422AB;
-	Tue, 23 Jul 2024 22:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9801728E8;
+	Tue, 23 Jul 2024 22:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721774651; cv=none; b=eDarMjdGPn+WEWCfrz9vTXK2dVD6YNTsySz6YwPPnukVZMQznSGU8TDP7BkjkKHyIhy27F7NXyXuDqF3qP6WkY7ocNqMmmXVvZaDR9MJBbWpkzuUrWTwj+rQqPEcNXu5/892Ows5S98cWhVBzni8GpkxR9V2xzQRQ7SFCmJz5EM=
+	t=1721775211; cv=none; b=bWfeeiS58JQx+lVcqj6bKNo2nI1ucgLQEOmCJsIEYMKn5C5hHp1iTLwjlMY7g+I9O3o7It2izjC3OJkQ0v2wmIQ4XZQzqGvaIaDU7sbVGMZMaE3qyR3JQylfHDcdxD9RFD/1wyzQgEFuIPzfvsCYI3Qzy8S+gh9hL2+YgAiu4WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721774651; c=relaxed/simple;
-	bh=AQI883Cu7SaB5V4e/b8n1Uo6AlMO7QJgsxnRLVpSvMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tEOIILnGnNX/FJg4mMx+apSyytezKcmnkl6AYJ+0ow2PO59GJc0QfphW3MSRTyPSV+CQq8850SUqBGaHtCduWfX6/wfbjbsf0CdMRH0XX8b8uN0kwDGlET5CXM1P0OVBa6EgklgS+fCw61Pm8STDXoTwvVEU5v/SxolMwSm+cgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4IDhQzr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8981AC4AF0A;
-	Tue, 23 Jul 2024 22:44:10 +0000 (UTC)
+	s=arc-20240116; t=1721775211; c=relaxed/simple;
+	bh=cHJbPDlIH0oCEqFdHMXc1f/SmzHKfHRg/D0V77IKE/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YPhqzSbZXw4vZMeveK7bZx4AfpdLXWibS3e9IAUt1Z5og8xX9fuwpz8mi7r+sNwmvpb5/4KMImpCtSdJdR7H3YcoL1QKRi7IKc/VbrNDw1MHy0npvFRchpJEWoKNZqkKFlm1nC8Xk0D1CFe9SXxYCVfU5ziwTpgccNanw9od6wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYN6yv+F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7690FC4AF0A;
+	Tue, 23 Jul 2024 22:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721774650;
-	bh=AQI883Cu7SaB5V4e/b8n1Uo6AlMO7QJgsxnRLVpSvMI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=d4IDhQzrA0CWCB5XyCIQoSnLdwyQUwg+hE2bGAJdsxkH6CuREP5ZfvjKLDC1ZHF4f
-	 auFYmN89jfk2+KA/BlzrarrmROYC/t1vvrWuWLUErXGQdj6ZluG2/sqrPYIvtXRV+K
-	 3AwpRF1B48turD0JM7y1VZ8PfP8s7ZQjvEI43WH0IY7ccXG7woHffVdXPSHT8G7rYx
-	 FIbAlf4qoCRhc6jnN3r6VWWGZKE2y1rPbAdNR5zcUFRNSokxWgsovm3OIb88bvPbDl
-	 qwgJgUlyn38DdFm9VvyYWEkwArqIXaytvMZOiar0TAzotXR2q9RW0LstKclDnAQo+7
-	 RCqOeHvbcFDIA==
-Date: Tue, 23 Jul 2024 17:44:08 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Huang <wei.huang2@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-	Jonathan.Cameron@huawei.com, corbet@lwn.net, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	alex.williamson@redhat.com, gospo@broadcom.com,
-	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
-	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
-	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
-	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com,
-	bhelgaas@google.com
-Subject: Re: [PATCH V3 04/10] PCI/TPH: Add pci=nostmode to force No ST Mode
-Message-ID: <20240723224408.GA779931@bhelgaas>
+	s=k20201202; t=1721775211;
+	bh=cHJbPDlIH0oCEqFdHMXc1f/SmzHKfHRg/D0V77IKE/s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sYN6yv+FHlTLQYks25mPie6POPe6J0L437WXBzUx2BVXXHSKQ/tcNWSqUUBRayhzC
+	 NEAMi+W+qkJ0iKbJWCx80P94jdwSRvxy9VRpaQBnuQhmxw/15M3E8ovoNJI3R8qA3i
+	 g+dEicUhSjbRL0mGXUPibqbkQRsqVWQuZj6LQtfla8lb6TXLMxnL1hPIlctls7nxau
+	 OBiKOsmRvtcDWqbf87Ul9l1zLNbJgvsJQSVyjHowgvhoUhr1fdgPK48DOUT+0zycHQ
+	 CSssFzuPELhamsa2kR92pf3IhgxaVaWaMfxpguhYzwEKzv0EqeG4XnIxa51iU0j1e9
+	 ampGEo3+E8tFg==
+Message-ID: <a49bb411-f96d-4574-96ec-5b03668cdf87@kernel.org>
+Date: Wed, 24 Jul 2024 07:53:21 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717205511.2541693-5-wei.huang2@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/15] PCI: dwc: Silence set affinity failed warning
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Aleksandr Mishin <amishin@t-argos.ru>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Anup Patel <apatel@ventanamicro.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Jianjun Wang
+ <jianjun.wang@mediatek.com>, Jim Quinlan <jim2101024@gmail.com>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+ Jon Hunter <jonathanh@nvidia.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>,
+ Joyce Ooi <joyce.ooi@intel.com>,
+ Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Koichiro Den
+ <den@valinux.co.jp>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Marc Zyngier <maz@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>, Niklas Cassel
+ <cassel@kernel.org>, Nipun Gupta <nipun.gupta@amd.com>,
+ Nirmal Patel <nirmal.patel@linux.intel.com>, Rob Herring <robh@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>,
+ Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-tegra@vger.kernel.org
+References: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
+ <20240723132958.41320-6-marek.vasut+renesas@mailbox.org>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240723132958.41320-6-marek.vasut+renesas@mailbox.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 17, 2024 at 03:55:05PM -0500, Wei Huang wrote:
-> When "No ST mode" is enabled, endpoint devices can generate TPH headers
-> but with all steering tags treated as zero. A steering tag of zero is
-> interpreted as "using the default policy" by the root complex. This is
-> essential to quantify the benefit of steering tags for some given
-> workloads.
+On 7/23/24 10:27 PM, Marek Vasut wrote:
+> Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps .irq_set_affinity unset
+> and allows migrate_one_irq() code in cpuhotplug.c to exit right away, without
+> printing "IRQ...: set affinity failed(-22)" warning.
+> 
+> Remove .irq_set_affinity implementation which only return -EINVAL from this
+> controller driver.
+> 
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-Capitalize technical terms defined by spec.
+Looks good to me.
 
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4656,6 +4656,7 @@
->  		norid		[S390] ignore the RID field and force use of
->  				one PCI domain per PCI function
->  		notph		[PCIE] Do not use PCIe TPH
-> +		nostmode	[PCIE] Force TPH to use No ST Mode
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
-Needs a little more context here about what this means.  Users won't
-know where to even look for "No ST Mode" unless they have a copy of
-the spec.
+-- 
+Damien Le Moal
+Western Digital Research
 
-> +++ b/drivers/pci/pci-driver.c
-> @@ -324,8 +324,13 @@ static long local_pci_probe(void *_ddi)
->  	pci_dev->driver = pci_drv;
->  	rc = pci_drv->probe(pci_dev, ddi->id);
->  	if (!rc) {
-> -		if (pci_tph_disabled())
-> +		if (pci_tph_disabled()) {
->  			pcie_tph_disable(pci_dev);
-> +			return rc;
-> +		}
-> +
-> +		if (pci_tph_nostmode())
-> +			pcie_tph_set_nostmode(pci_dev);
-
-Same comment here; can we do this outside the probe() path somehow?
-
->  		return rc;
->  	}
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4cbfd5b53be8..8745ce1c4a9a 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -160,6 +160,9 @@ static bool pcie_ats_disabled;
->  /* If set, the PCIe TPH capability will not be used. */
->  static bool pcie_tph_disabled;
->  
-> +/* If TPH is enabled, "No ST Mode" will be enforced. */
-> +static bool pcie_tph_nostmode;
-> +
->  /* If set, the PCI config space of each device is printed during boot. */
->  bool pci_early_dump;
->  
-> @@ -175,6 +178,12 @@ bool pci_tph_disabled(void)
->  }
->  EXPORT_SYMBOL_GPL(pci_tph_disabled);
->  
-> +bool pci_tph_nostmode(void)
-> +{
-> +	return pcie_tph_nostmode;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_tph_nostmode);
-
-s/pci/pcie/
-
-Unexport unless it's useful for drivers.
-
-Bjorn
 
