@@ -1,315 +1,291 @@
-Return-Path: <linux-pci+bounces-10665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 845F693A574
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 20:21:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 281C893A747
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 20:44:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 154DF1F22D9F
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 18:21:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3C95283CA8
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 18:44:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 736A01581EB;
-	Tue, 23 Jul 2024 18:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0DDA158A04;
+	Tue, 23 Jul 2024 18:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D+EMST08"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IxLfvSCe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AFF155351;
-	Tue, 23 Jul 2024 18:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721758891; cv=fail; b=WxoiYYQNK0uv0UKFh19vH0X7rDk3RdJsx/H40Vd6/TmcwBG+oJ+ZwoY9cxjKT1YLRCbtY9BgOERQvT4FSZLhscne9WmFeq2c7Dk38Q0ltHbNjJJdsXZ+nddRwUzz9sa83vauCh+Wb29aTVd4lQvi1lkzHYHRfocY3iyieK7Nc8o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721758891; c=relaxed/simple;
-	bh=WjD24YJaEZVfq1FIFcntdlfXP+2LvxW/sRQM8ta7i/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k3z7UB/FbNqXraEVAs3BfP5PglNqHgH5MT4VjiwCmygh67LWSEd48Qgv44SHeM+a38dGdRsdzBNLj1fTbfo0ZO6Mat0c5LINpmb4SYB8lU8B58iE/3b2YuZkdqHK7POsMBENcrMhgZyUqtLBuh5w3HYY9ychoQgE9aPCuIUfJdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D+EMST08; arc=fail smtp.client-ip=40.107.94.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K8GYGID3vF4ntTeHGXOz2D568iJ3rKxqirF2B0gimJlcd9gGVvau8EAc9XfLtb6AgYL+Ze5fK/CgjyF1rS2NWFVxe+RbnDzbrLKlz7g+uVfWQkWL8BxsM//kAU0CkAKK70tefWA5SUcgqhYYTbiI3KmyhG1omiFhJve2oMhyz540baot366bkHaTJH1t6sciZb3ENE8c1X7raddUEZC8Uszmf89fBNOke3cHlHb6gmd7V4TNZXmZxspbEL1VjP17aCyyUJzK5kMKt+CtD/o355jKGI6syt142djScw7KN5SMkTG/gM2LUgZJqyklxFBuhergBUtTBzb0ZqH9Dwp3rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hJ+WRIwCzwLTCmsYetl2Ees2baVZl0Z2KGJCpT2KcoI=;
- b=IB21Yek8HpaYI7AcDXKwGseCctTJ+lS1tLRJ8eflqExhC/APT491TOqPACTcA38vhX6eXdk1qtTEpZ5LNsJ+cu93sntcKe1hLvkn+pqVeVFJtVPO/CWOM/9gWnOSALNwlq0kRTPHG9C3ImDWi1HdB7H6luQ856SDXt773J98iUfJ4cz1hX+vYQzz6ROS2YUw8asaX4X6+yZJK/SF5dwZr1vd3YMi7SY8i+qQmt6OTG4NKrRXph8qr5fHoJW5TbfNnIXrsh0KVm3AlVjoApCIKywbJVRyBK19g4cZAAyMVckSPuSRlTWIVFgctwrGIBcIfdCZgziXTF7cxcXtnOXQLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hJ+WRIwCzwLTCmsYetl2Ees2baVZl0Z2KGJCpT2KcoI=;
- b=D+EMST08KF6pA7W0w6QUQb8uD7KfOb1cvG3B6dbo59KGNgd0lNZiuu0i+ryAYv/KGESCeiIKShema3v2VPy90phmAmEqBjwClJlLItnIok4CA/s9K2eFoT9r9sr2GhcjmsbJyVA/AKpq1v29tlvtBiCC8c8FHDpstZo2F5LqoqU=
-Received: from MW4PR03CA0042.namprd03.prod.outlook.com (2603:10b6:303:8e::17)
- by SJ0PR12MB5676.namprd12.prod.outlook.com (2603:10b6:a03:42e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Tue, 23 Jul
- 2024 18:21:26 +0000
-Received: from CO1PEPF000044FC.namprd21.prod.outlook.com
- (2603:10b6:303:8e:cafe::58) by MW4PR03CA0042.outlook.office365.com
- (2603:10b6:303:8e::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14 via Frontend
- Transport; Tue, 23 Jul 2024 18:21:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CO1PEPF000044FC.mail.protection.outlook.com (10.167.241.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.5 via Frontend Transport; Tue, 23 Jul 2024 18:21:26 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 23 Jul
- 2024 13:21:25 -0500
-Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 23 Jul 2024 13:21:24 -0500
-Message-ID: <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
-Date: Tue, 23 Jul 2024 11:21:24 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28FE158873
+	for <linux-pci@vger.kernel.org>; Tue, 23 Jul 2024 18:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721760256; cv=none; b=dQoZRXLDszZ1kQ1MtMNRnNUoNTNJlv9inMJwCyKM7m2PccQ0wdkPmzuXcVDG0gSMgp7FiwZ3e9usOprbigT1oZ/tpRDT4kl3zG+TgR7mBqCn+udpJBiNAPwDweC2yfS/Z3AS3qT8Wz0gyEV6IEognb++fIcMeya01Xyh5UeNRAo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721760256; c=relaxed/simple;
+	bh=V7LJtI+1ePsORvJdtSv8vFH5aeSaGmjMDlJUATG0PHs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EPRJ3XT+TCZ7bFbvtKEK1IjXrwu8YeigwHzBIplZVW0zJ2lOqrd8FKv6IG18WQIkt1fnIuoHyjFGLyiYdT8AOBBEx2SLx/ooWcDWyZ6HYhuFW0np0ZSC/wWHq9nLBDoo6FPIjUhmRfj2jsVvHVGy5LW//eO9WhTOkTjs6+O0GJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IxLfvSCe; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ed9b802ceso5789893e87.3
+        for <linux-pci@vger.kernel.org>; Tue, 23 Jul 2024 11:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1721760253; x=1722365053; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cBPVwxayb5AbWLZ8bmvhOLbQFh13xoJVPJGcaBQL/oY=;
+        b=IxLfvSCeWw6HtpvO++BSoYmGZtjbXgmzgxIjv+BOWSbXj7smHFaeJvwVD3xyG0L9V5
+         MCJaNyO9yEeXUWlkp7J/iIPKuQt7fTtAhoJyZQAylkO9+YPukqw3BbjRYj1By7fQDxeK
+         8SCFqQAxYSnxjJzhVzxMQEXjLssWK7zzaDQ04=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721760253; x=1722365053;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cBPVwxayb5AbWLZ8bmvhOLbQFh13xoJVPJGcaBQL/oY=;
+        b=k1wKEKhPp+fhBoxzEpwzutZ+K89216BYTw4j/R60NRvkcGXMLqN2H8Gx3HbYo3CT01
+         Zo595oJatMurNkCCXoGfXw1FQyc7qhZgbyILgMTIna3GCVWzvh9yll68HOVvHIfZbgea
+         uCLpMu7sTisbpECBGHK2bv3VjAi9j5o2xJGRzYO6e76Up+6iZS2yhc0z/NMGsKJuorOG
+         EF9Zk15FeLKrVU77ltoHtgeHJDL2vaFNHols0wzuOArtxaF6PlDwRAI2srbOTKr0cQzt
+         9GRTB2SCRqtkN0n+xWOUs+qXNIZStfrpqULxpXcWTkw7Ukw6nOxcyfRODWwXmOVTiskz
+         m84A==
+X-Gm-Message-State: AOJu0YxDAiJpnvcJzz2Z0hk9n1gNBpMrnEiXVIKhuIraWwseDWsIhK8B
+	aUft+bF6KaMDcZCxkQYK1vtThg5d5GcJjDAFnOSotLK6+Mbumutsn0/p+A5W4133u4Zz2IcYeGI
+	ghwI5wmbp87YRKT4svwk1/xB7jbH9gB4QzVP+
+X-Google-Smtp-Source: AGHT+IFGsyMoCuHuwacuc6ozmXWlvPlrywYE7av5NrCfVeydZrOkPAOZS6BYZU52s3XkoulY1lRESYDQ05P5BRKGJMM=
+X-Received: by 2002:a05:6512:3a81:b0:52e:9cf1:a2ae with SMTP id
+ 2adb3069b0e04-52efb826a18mr8005596e87.51.1721760253037; Tue, 23 Jul 2024
+ 11:44:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: Amit Machhiwal <amachhiw@linux.ibm.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <kvm-ppc@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, Vaibhav Jain
-	<vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Vaidyanathan Srinivasan
-	<svaidy@linux.ibm.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, Lukas
- Wunner <lukas@wunner.de>
-References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
- <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
- <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
- <20240723162107.GA501469-robh@kernel.org>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <20240723162107.GA501469-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB03.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044FC:EE_|SJ0PR12MB5676:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24de94cd-bb2d-4a91-e016-08dcab4443ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0dlWWZUQkV0U3VRK0JYUlQ2QVV5b2o4YzF0VTBlaVVxNHZTbFczQmYxRzFv?=
- =?utf-8?B?VlFHQU1FaXhnL3RuMmVHS282d1BodWp5L05kaTd2b3lZQ2hjODFsUjNBblM0?=
- =?utf-8?B?Uk1FU054a2Z3Z0RLbWxFa2MwT0Y5MTdmMXg5ckpDYVpSTE5DUGh1WmVYaDNM?=
- =?utf-8?B?NFgyMHdvU1F0d3NDZmFpd2luTUNJdG8vNUpxMmpMbmZzUjdDcUkzSnkxeUtX?=
- =?utf-8?B?bS8rMUJXa3BLMGhQU1NoU1dnL1p1R25OQ05pVWNpdXVUUWxZelF3NCsrbmhV?=
- =?utf-8?B?VEZFWW1KWTFIR1NTZXRCenZBZEVDaG1sekFCUUhxeTFoZTBvTm5wYy9wS1Z5?=
- =?utf-8?B?REovV0haU20vOWVDL2FVSnQ2c0lCbFdzOVZBZVA3NFB4ZmJEZ1NHckJKaml0?=
- =?utf-8?B?M01haU5vU2JHT1YrdHZiZXFCZFVxUWRiZ1NsV2p0UUpTME5xdjl2akN6SHov?=
- =?utf-8?B?QXRXdEdwSUhBUVpJemJDeENRN1hGa1BDWmliUkVobVBHdGxydTJtSlpnTkZW?=
- =?utf-8?B?WkVMcUduQ3ovVVpmQjZxdnZJYWRXSHp6ZUlqMUxtSGF6NnBkVDNaVEJ4L0hI?=
- =?utf-8?B?THNMZ2gzVFFUVi9Cd0I4R1d0TXIzOHR4NWVGMkNLRHVVTzFvYmVTSkVXT094?=
- =?utf-8?B?eWRxM2pMVVRZZm8vem5DMFAwWmp3UFNFTTBXMnlrVVRFQkdUVnZSUFJsbXp1?=
- =?utf-8?B?T1FObVJkTmllU2QzYTBpN25wSFpUeWdVdjQrZXcvcWJONnVsanVvWHJaa1lu?=
- =?utf-8?B?cVRINkw2cXN6TFd0MjM2WWlhdXBlNmY1VXdOTVl0ZTJKL2NDZDdsVVNPT25a?=
- =?utf-8?B?TzZhZXFTdjBQWVhNOW9WTmVUT3NsUk5vVVlCZ01QTEVUR1d1c05uZlNlOUlH?=
- =?utf-8?B?WHJ3WU9XSzMzY1ZudWJhaUNsYTVrQnV1c0dtSTlXWlBqU0w5YThSVkt5dFdF?=
- =?utf-8?B?alUxeitYNGNvS1pZUm1Db2hDS0g2R0J2SDQ1bk1nQlVvNUpmVjlqTEoreG41?=
- =?utf-8?B?VnVRZ09Uanp1VUMxbDZQSXhyTGVuWENpRlBBanZES3JVeC9WMFcwSmtjenN6?=
- =?utf-8?B?ZWlXanBnSVNyUlRiSm9mYVcwWVFzTUlqZi9Bbk5WTCtPc0tBR2NCaVZENGJS?=
- =?utf-8?B?clJ0d3A1emZRUDFBQmlCMHJRTkFwS2xETDBHc0owUi9mV1daYVBVT1ZXY0gr?=
- =?utf-8?B?by9hSzFwV0k4cTc3TEx1ZWw4bW9NTlMyOStnNDFIMmF0aHBDd3BydGNMUWh0?=
- =?utf-8?B?RGR2bG1tcGtzQ0JQMlV4MTZpMkt4MHJoUWt4M1JSV0s1UVB6Q3lTeEo5U3Ji?=
- =?utf-8?B?dWxtZW8weGhyWU1KWjcwaGFkQ3MzdkxFczZtRjZqZm9xVUkzRkZTYXJsU2NL?=
- =?utf-8?B?bm1ZYnBxZHppbkMwUTVrZk1WMWk1S3NLTVEvOVIwOWlldmFIbGhXMXJFWXN4?=
- =?utf-8?B?RzYwdXZYd3g2aHpHZXFUVVZZVXN3a2FGbDZndjhJYzhPZkJOK25pZHByQjZ0?=
- =?utf-8?B?ZnBTRFhjb2xXTDV2Y29CSGVFRHJJZ1FVdC9ZcVZtMnRCdzArOThGZ1BpZlVa?=
- =?utf-8?B?NDF3aXdxSk05VFV5ODYycnliN3ZqcWhkWlVNWUdCbjE0cCtWT1ZkVXNwSTFo?=
- =?utf-8?B?bzN5cll2TEFaUFh6U29GMVdpSldhRERTaWVET1YrTUNwMXZLRm5tWEVxZ2Na?=
- =?utf-8?B?bHV0TWZsd05LVEkwekI2WFZZaGRhTHVGbk41bDBpMkJRa3FoemtoMEU5RGVX?=
- =?utf-8?B?VGxYTUE0ZytHZ1ZzVHk3Z0hzeXJlcXZBR0FDc1p1YWlDazhjSGFRaXp6VGs5?=
- =?utf-8?B?MlJaUVpKRUdUSDdYeGVTM3NFT1N1T2ZVRmpLMTA0Y0FER3EyQXc3bzlubTlq?=
- =?utf-8?B?aGR0aFl1TTZpVnU0R1RFZEltNzVEQ2k1YzZNRnY5WFcxNlE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2024 18:21:26.3968
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24de94cd-bb2d-4a91-e016-08dcab4443ef
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044FC.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5676
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-2-james.quinlan@broadcom.com> <d20be2d3-4fdd-48ca-b73e-80e8157bd5b2@kernel.org>
+In-Reply-To: <d20be2d3-4fdd-48ca-b73e-80e8157bd5b2@kernel.org>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Tue, 23 Jul 2024 14:44:00 -0400
+Message-ID: <CA+-6iNzsE0hwUhFyfuUZtuAVgOAS-L8pR37x8TV4R779g6E-Jg@mail.gmail.com>
+Subject: Re: [PATCH v4 01/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
+ add 7712 SoC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000004c491e061dee8cf7"
 
+--0000000000004c491e061dee8cf7
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/23/24 09:21, Rob Herring wrote:
-> On Mon, Jul 15, 2024 at 01:52:30PM -0700, Lizhi Hou wrote:
->> On 7/15/24 11:55, Rob Herring wrote:
->>> On Mon, Jul 15, 2024 at 2:08 AM Amit Machhiwal <amachhiw@linux.ibm.com> wrote:
->>>> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
->>>> of a PCI device attached to a PCI-bridge causes following kernel Oops on
->>>> a pseries KVM guest:
->>>>
->>>>    RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
->>>>    Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
->>>>    BUG: Unable to handle kernel data access on read at 0x10ec00000048
->>>>    Faulting instruction address: 0xc0000000012d8728
->>>>    Oops: Kernel access of bad area, sig: 11 [#1]
->>>>    LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
->>>> <snip>
->>>>    NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
->>>>    LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
->>>>    Call Trace:
->>>>    [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
->>>>    [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
->>>>    [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
->>>>    [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
->>>>    [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
->>>>    [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
->>>>    [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
->>>>    [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
->>>>    [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
->>>>    [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
->>>>    [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
->>>>    [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
->>>> <snip>
->>>>
->>>> A git bisect pointed this regression to be introduced via [1] that added
->>>> a mechanism to create device tree nodes for parent PCI bridges when a
->>>> PCI device is hot-plugged.
->>>>
->>>> The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
->>>> device-tree node associated with the pci_dev that was earlier
->>>> hot-plugged and was attached under a pci-bridge. The PCI dev header
->>>> `dev->hdr_type` being 0, results a conditional check done with
->>>> `pci_is_bridge()` into false. Consequently, a call to
->>>> `of_pci_make_dev_node()` to create a device node is never made. When at
->>>> a later point in time, in the device node removal path, a memcpy is
->>>> attempted in `__of_changeset_entry_invert()`; since the device node was
->>>> never created, results in an Oops due to kernel read access to a bad
->>>> address.
->>>>
->>>> To fix this issue, the patch updates `of_changeset_create_node()` to
->>>> allocate a new node only when the device node doesn't exist and init it
->>>> in case it does already. Also, introduce `of_pci_free_node()` to be
->>>> called to only revert and destroy the changeset device node that was
->>>> created via a call to `of_changeset_create_node()`.
->>>>
->>>> [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
->>>>
->>>> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
->>>> Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
->>>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
->>>> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
->>>> ---
->>>> Changes since v1:
->>>>       * Included Lizhi's suggested changes on V1
->>>>       * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
->>>>         part a bit in `of_pci_make_dev_node`
->>>>           drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
->>>>             611 | void of_pci_free_node(struct device_node *np)
->>>>                 |      ^~~~~~~~~~~~~~~~
->>>>           drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
->>>>           drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
->>>>             696 | out_destroy_cset:
->>>>                 | ^~~~~~~~~~~~~~~~
->>>>       * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
->>>>
->>>>    drivers/of/dynamic.c  | 16 ++++++++++++----
->>>>    drivers/of/unittest.c |  2 +-
->>>>    drivers/pci/bus.c     |  3 +--
->>>>    drivers/pci/of.c      | 39 ++++++++++++++++++++++++++-------------
->>>>    drivers/pci/pci.h     |  2 ++
->>>>    include/linux/of.h    |  1 +
->>>>    6 files changed, 43 insertions(+), 20 deletions(-)
->>>>
->>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->>>> index dda6092e6d3a..9bba5e82a384 100644
->>>> --- a/drivers/of/dynamic.c
->>>> +++ b/drivers/of/dynamic.c
->>>> @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct device_node *np,
->>>>     * a given changeset.
->>>>     *
->>>>     * @ocs: Pointer to changeset
->>>> + * @np: Pointer to device node. If null, allocate a new node. If not, init an
->>>> + *     existing one.
->>>>     * @parent: Pointer to parent device node
->>>>     * @full_name: Node full name
->>>>     *
->>>>     * Return: Pointer to the created device node or NULL in case of an error.
->>>>     */
->>>>    struct device_node *of_changeset_create_node(struct of_changeset *ocs,
->>>> +                                            struct device_node *np,
->>>>                                                struct device_node *parent,
->>>>                                                const char *full_name)
->>>>    {
->>>> -       struct device_node *np;
->>>>           int ret;
->>>>
->>>> -       np = __of_node_dup(NULL, full_name);
->>>> -       if (!np)
->>>> -               return NULL;
->>>> +       if (!np) {
->>>> +               np = __of_node_dup(NULL, full_name);
->>>> +               if (!np)
->>>> +                       return NULL;
->>>> +       } else {
->>>> +               of_node_set_flag(np, OF_DYNAMIC);
->>>> +               of_node_set_flag(np, OF_DETACHED);
->>> Are we going to rename the function to
->>> of_changeset_create_or_maybe_modify_node()? No. The functions here are
->>> very clear in that they allocate new objects and don't reuse what's
->>> passed in.
->> Ok. How about keeping of_changeset_create_node unchanged.
->>
->> Instead, call kzalloc(), of_node_init() and of_changeset_attach_node()
->>
->> in of_pci_make_dev_node() directly.
->>
->> A similar example is dlpar_parse_cc_node().
->>
->>
->> Does this sound better?
-> No, because really that code should be re-written using of_changeset
-> API.
+On Wed, Jul 17, 2024 at 2:51=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
 >
-> My suggestion is add a data pointer to struct of_changeset and then set
-> that to something to know the data ptr is a changeset and is your
-> changeset.
+> On 16/07/2024 23:31, Jim Quinlan wrote:
+> > o Change order of the compatible strings to be alphabetical
+> >
+> > o Describe resets/reset-names before using them in rules
+> >
+>
+> <form letter>
+> This is a friendly reminder during the review process.
+>
+> It seems my or other reviewer's previous comments were not fully
+> addressed. Maybe the feedback got lost between the quotes, maybe you
+> just forgot to apply it. Please go back to the previous discussion and
+> either implement all requested changes or keep discussing them.
+>
+> Thank you.
+> </form letter>
+>
+> > o Add minItems/maxItems where needed.
+> >
+> > o Change maintainer: Nicolas has not been active for a while.  It also
+> >   makes sense for a Broadcom employee to be the maintainer as many of t=
+he
+> >   details are privy to Broadcom.
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  .../bindings/pci/brcm,stb-pcie.yaml           | 26 ++++++++++++++-----
+> >  1 file changed, 19 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b=
+/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > index 11f8ea33240c..692f7ed7c98e 100644
+> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+> >  title: Brcmstb PCIe Host Controller
+> >
+> >  maintainers:
+> > -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > +  - Jim Quinlan <james.quinlan@broadcom.com>
+> >
+> >  properties:
+> >    compatible:
+> > @@ -16,11 +16,11 @@ properties:
+> >            - brcm,bcm2711-pcie # The Raspberry Pi 4
+> >            - brcm,bcm4908-pcie
+> >            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> > -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> >            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> > -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> > +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> >            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+> >            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+> > +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> >
+> >    reg:
+> >      maxItems: 1
+> > @@ -95,6 +95,18 @@ properties:
+> >        minItems: 1
+> >        maxItems: 3
+> >
+> > +  resets:
+> > +    minItems: 1
+> > +    items:
+> > +      - description: reset for external PCIe PERST# signal # perst
+> > +      - description: reset for phy reset calibration       # rescal
+> > +
+> > +  reset-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: perst
+> > +      - const: rescal
+>
+> There are no devices with two resets. Anyway, this does not match one of
+> your variants which have first element as rescal.
 
-I do not fully understand the point. I think the issue is that we do not 
-know if a given of_node is created by of_pci_make_dev_node(), correct?
 
-of_node->data can point to anything. And we do not know if it points a 
-cset or not.  Do you mean to add a flag (e.g. OF_PCI_DYNAMIC) to 
-indicate of_node->data points to cset?
+Hello Krzysztof,
 
-I probably misunderstood. Could you explain more?
+At this commit there are two resets; the 4908 requires "perst" and the
+7216 requires "rescal".   I now think what you are looking for is the
+top-level
+description of something like
 
+resets:
+  maxItems: 1
+    oneOf:
+      - description: reset controller handling the PERST# signal
+      - description: phandle pointing to the RESCAL reset controller
 
-Thanks,
+reset-names:
+  maxItems: 1
+    oneOf:
+      - const: perst
+      - const: rescal
 
-Lizhi
+I left out minItems because imItems=3D=3DmaxItems=3D1
+
+Before I was giving both of them as the "potential candidates list"
+that will be used further on, but this is not how Yaml should be used.
+
+Is the above in the right direction?
+
+Regards,
+Jim Quinlan
+Broadcom STB/CM
 
 >
-> Rob
+> Best regards,
+> Krzysztof
+>
+
+--0000000000004c491e061dee8cf7
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDE8ptGn5Vv4/gXhxlVenvrdjPTkyMp
+DGZ/AFS4X5KQtDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MjMxODQ0MTNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAA6EOga5DR9Fs1n3eaINmn2JX0OCNGKu/91fo7ge8gy6lxOk+
+iJkcRvg9jinZLA1RUDgnB5ciY0sHNIuOGEScwI9altcilVtiq8hcUqsEcOHq/zFyOfA/td7RhfI0
+g4u1Qdd/uQmLD+pS2qKx7R8BkjTY7wPguNegYM0jooyTqTDgs6amab/J5T0gKvB7I+2pQFNNrFgs
+9W1FnAa07wfziwh70WQLKGcbn3nUUx+lvSoVfBz666y63BAmpGjRSST6uCjpzOckW54QFdIUUyys
+o4r4O47U7M56Ob48HagOxLII4tCLO2WrQA+FeM8Rq7RtBpCQUPHkCwsZyE/eXRtcZg==
+--0000000000004c491e061dee8cf7--
 
