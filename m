@@ -1,226 +1,283 @@
-Return-Path: <linux-pci+bounces-10632-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10633-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6193D9398DF
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 06:26:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35CB4939B6D
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 09:07:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBD79B21A56
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 04:26:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B5DA1F2209F
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jul 2024 07:07:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F78413B7A6;
-	Tue, 23 Jul 2024 04:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3E8013D882;
+	Tue, 23 Jul 2024 07:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PxYCqLOu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTp9wDxz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1490161FE1;
-	Tue, 23 Jul 2024 04:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721708802; cv=fail; b=tfYU4jJjubmXlDKmIWGHjD5rLwiU5cvVbCGFBvTG47I366KDAW+BfLoIxBYnlrXDY82DNYNi7N6JEUwU9l8jIoRIFWXz9P908boaQVvOfVmE9z35b6klRDII3mY4jpnKhPtce+0ebodCYwbBmpc0vZebso4XvHPgxILO0DcTUEQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721708802; c=relaxed/simple;
-	bh=e61On6m6dF/5KiRdTyXF3Ld+xwJme8LARgHlozjUUz8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rIlYaHrkdKJu0YTO8z9Bmoh9+3lQghXou7I94yaFzun9Uy1OHZ1/O/1XSQ1gYzk0GA0ylWYYn9kH5SSyxP2uOPBbPxdrgYvmElcEx/9NdeOKmv4Qkyj89ByuQCfXZ53TkRBjnv7zGCSp+1XbHl593mkyEWR/7gYL85GgPEncU6Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PxYCqLOu; arc=fail smtp.client-ip=40.107.93.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kl/yPgMkMBVq3TTWE2iTTy2X6V3DoeicWOZxcQ68PK6Ta+2sa9EsKMKswbNpjDhLEyRE1zCmflaVDfQxXs+RCp1KHK/tpjXyFDR5hE0NRLSLjLemOz2RKoqE7JTF5jXi16ig6h0fb1Dz7U42tjnPoCRVGqxtOEoNTxRQSL9rLDPC8XtPRMHkqXtgy3qT/tOfEbaVsXE9rczwoBhWQb/01KuOQ7c2ryY0Ka9zbwwYlKRtWBJrfFiDtJAPrGTFOLXSHNxfL5iYtI4mHvGy90tikUEb5Nu9iQtFdB0sL+AfRMC5r1t7EVZ2GFZ2i1AT3cm2eDUd9ADaHqzcyZhr1teYPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8TGROUxPvSJkYfyB0Pn+qgfE4jGUky3H4j54Ymi6mCI=;
- b=QLxn7o3fJtHA7UBmTaeORix/BhZ56AmjWLSyRVcpR7oF+x12Xs3jQdYs6JuqAaNN+dvUje5KoWCQpgsCDYDMXaCi+IK6EdqcO2lOnkJAD0AYAj9Bk5v4JZspAtat8rFsGoEnKYZhbCRq63B00Dx+97ibRjkSxmNlNUlsYFz3dt3kjeo3N3VBUXpl2lzAfGnVmKq6ZQgB7hb46NbMwiqSNztylA8WE0lzhcv8uCM2jEMByac/tUaipQkNK+rbVO4ShwWf3ycGs/nYrEQwmL7DjPFnrug00jFnEq88KZbFFNmwJRld/p0tmiy0w/dvJ19uenDorlNtQDa7bj7xlBVAaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TGROUxPvSJkYfyB0Pn+qgfE4jGUky3H4j54Ymi6mCI=;
- b=PxYCqLOuwlAhpZc3jVHfsMAQoobizIjNbql+haQlhqoyGPJo4LvWO8Twi1nQFt2ZgMoAoUY5/Rn9Vg4fO9UuRyo4Wkp0HjiKYalgg87Zx1OHcIYK2d9V0GUNL0YILQG1Lcw1w40mSLP0MOQha2NI2vrGgo4+kPXgq02REB5olns=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DS0PR12MB8576.namprd12.prod.outlook.com (2603:10b6:8:165::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Tue, 23 Jul
- 2024 04:26:38 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.7762.032; Tue, 23 Jul 2024
- 04:26:37 +0000
-Message-ID: <de1ca8d1-b876-4b0f-9151-9303317b4d2b@amd.com>
-Date: Tue, 23 Jul 2024 14:26:23 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- David Woodhouse <dwmw2@infradead.org>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linuxarm@huawei.com,
- David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Alistair Francis <alistair.francis@wdc.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>,
- Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
- Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
- Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>,
- Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>,
- Samuel Ortiz <sameo@rivosinc.com>, Jann Horn <jannh@google.com>
-References: <ZpOPgcXU6eNqEB7M@wunner.de> <202407151005.15C1D4C5E8@keescook>
- <20240715181252.GU1482543@nvidia.com>
- <66958850db394_8f74d2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715220206.GV1482543@nvidia.com>
- <6695a7b4a1c14_1bc83294c1@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715232149.GY1482543@nvidia.com>
- <6695b29d204e4_8f74d294f8@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715235510.GA1482543@nvidia.com>
- <b297cfe0-c54f-4205-b102-ba53ec40344b@amd.com>
- <20240722120642.GI1482543@nvidia.com>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20240722120642.GI1482543@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY2PR01CA0002.jpnprd01.prod.outlook.com
- (2603:1096:404:a::14) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC2818D;
+	Tue, 23 Jul 2024 07:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721718418; cv=none; b=EyV4Gq22F8TWCAYNJL6EbiPuUAKRS0wyTDqzLJgsxvetJeIH9qZdK1r1iXdJJdYfzDE9SlCMmnkHMtUzktGFvikrMtxKlKbykePQyWSZrOk+nmJZzKbESSQaZvGAIf+5qbmYWkYfjqZcYNRTh3Y3pO9p39F72tNCkWkbUDilPWM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721718418; c=relaxed/simple;
+	bh=k8MRrBMVFfYZDFMx7bEp4Bj9HMFjcifBjx9Ov+crcH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IIQT0ZJBWrDb1vMa1KllrKupnURyhzcKUR+7Z1CdQy2cyu85rtLcDNacYKaDKn+JN+2rvt23hntylEhkXkNc9lWm8j3CAI+dZqoUP0ELiuyyjDFdd91CsH+BebDtMuvrJDfmw7fRFsHB8AuZuxIw3GGsWINSuU2Q3L0GIxciVd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fTp9wDxz; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e03a17a50a9so5556035276.1;
+        Tue, 23 Jul 2024 00:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721718416; x=1722323216; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vyWNjpEuHIjY8oO8nir6ymzjNGx2iSKiLuLIzOdWYzg=;
+        b=fTp9wDxzkxPZDsfYWHwfgHWBuFpfHRNAuCwjn5s/UazkiUXZa0cAMxvyvaFD83OfQk
+         rgaKXjgnjLJnDT+tlu1nrVvMJESUzbczSrOYJwb+PEeF4eDSuXyFjb61p99fJtUZDQ1K
+         2MEVSyV1WLm7yLHuQP243MPoDdif0gDVMOs10qhRefzQn3x+qufHgJCq4FwGWP6PXTgQ
+         QN80ldoXKTKvZvQ1m7diNT2SuNihBRtcJinCHaknPVB5jqtblQB+2hp72d1G72gxc1sT
+         s3NyhsKefcCbeDyMxkhQVtxgb2A/hPf8Vxbx9X89Yl4JRNyy7Ip/PbUI3da8sz6Kyz2F
+         ABZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721718416; x=1722323216;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vyWNjpEuHIjY8oO8nir6ymzjNGx2iSKiLuLIzOdWYzg=;
+        b=Eb3/+r4QfWlT5lv+sGRa3Ear75a4XjFxdgp0Up0VYgEbmsHtay48k7hLcVyKruHteK
+         sH68C9lvfnh5mySqt09uE2EuoDuuI2mOQVZ+Y9/7T0EAYr/S+q+ZSGD7ifseSrgkdTAS
+         LAX41JkVfAglb9fzqy0LaSES5hyEGW/vxlGZ/qSiiMOH0ioXB9jJOccKIP/9NOgLZfuf
+         xveLY3CKO/qO7Vvf56VNmwEQaA41az9WjjkSEw90EB2mR+NWir/E2hS9ubBiP2GraeiY
+         ou0FhLFBi4VCN/bMlyczBJMhkNiK68vm/Pwi3/jB9FZVsrMPVdTozEU1JeRqnp3bkDOU
+         7/sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWE+xLSXlOXn6M5LKLh3z4Ksdx4Ygisohfcr3gIG+E7E7e+d10lO9mSfzNvTN5Xjd4JHy61EVNCiRKwg2xv8Zfq6zsiF6GXBzbeX3O97Qb1RDoeKWP+x4zmfVibYvS6QxemAsteFnAZ
+X-Gm-Message-State: AOJu0YxoH/bJk8JNESVUuzEjtdO1i5rY0TZ1sgodP8PG1TNyoIxb5D+w
+	94xFksdCwtR2APXmxQ23NpGfxvpjKl7vyEXR3baB/+MB51NSqIOaHTJnrkVKraNTbcI18Pofs7j
+	llV4SjII8ELxDsav2YEpNmNU8CkE=
+X-Google-Smtp-Source: AGHT+IEAOaAFZ1K9IY7dR21pVSsJCONa9CysJx+Hk7vqe1hctFsp0WkeXfxodVtVvwChKzLr/2QPABH1T7oYhPRdT3I=
+X-Received: by 2002:a05:6902:2083:b0:e03:25d5:8039 with SMTP id
+ 3f1490d57ef6-e08706af0bfmr11423537276.51.1721718415978; Tue, 23 Jul 2024
+ 00:06:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB8576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c065df3-2abb-42c2-6bc3-08dcaacfa47d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RC9TaVFzcmdnOU5GUFIwSXQ5M3p0NkljUXVJRzd6S0NyalhyTzVCaityK09U?=
- =?utf-8?B?L0dxWnh1N0Rodm9IZGIxWWhKQThvMXBOT29uajE0SjVkRU1uQnd4RWlkYnpX?=
- =?utf-8?B?WXF6bCtrZTdDc3d2VDVqZGp0UHVuS1FWY2hQQ0dZVElldTZRbXEvMHBudGor?=
- =?utf-8?B?QUE5a0M5bHRZTkR2MEp4eWp0UEk5WFNnUVB6SHQyYkFKOEFaaG5wQzEyNG5n?=
- =?utf-8?B?Z1ZONTVKWXZqVXJjcE5zZVVweWYvcGVRcVFWTWFsMFpSZW9NaXVDMElkK3Vh?=
- =?utf-8?B?dlp2aXRPK3VsOUVSTG96OHpJc3R2TnZXQ1ZLQzV3bVF6OUhaTW9iWFUvajFC?=
- =?utf-8?B?eEF4RnZxQUE1VEhNaTJRcDdMMmMrSTNSM0RLR3RYTnlBVGtFcWNmRyt0MGV5?=
- =?utf-8?B?Q1pKMjBEZzMxeDI5VVBKY09xdnpGYmN2azJVWVdrVEgyWERiYm5LQjJyMks4?=
- =?utf-8?B?YW9kNUdhZkZTMnVWb0N4Y3c2c25IMGRQVG1lNVpmM3JpOElVenFzMDBOQW8v?=
- =?utf-8?B?dHZ6b1JDK3pHRWpHakxrbTIzR3F6b0xpeldJY05NQzBSNkE2MkdINENiTFZI?=
- =?utf-8?B?ODNFbDNBVG96SEVaRWFXV1lucFpsYnlGV0NoRUpXY2ZVbURSV21zdVhxN1Ew?=
- =?utf-8?B?QnAwUW50ay84UGUrSjV4ZDE0M0tFaGxLc0VjSWs2ZllrTXhzQTM0LzVrczZJ?=
- =?utf-8?B?VUloeGJtQUlkV0hsUlZzU0F5N3BhUFZockxzSzFSQjlXbXRNekhhekt0blJp?=
- =?utf-8?B?NWd0WUw1dkpjNS9zNmcxTHNhUW9NMVAzd1V0V25qenNBZy8yWlZqbHByZ1Rw?=
- =?utf-8?B?RGQwNVlhZ1gxNEpNbDRDbm1NMExHd05pSHZXWWR4cGlJYzdvcGRoQTFZN1JX?=
- =?utf-8?B?VmRoNlhNMmpPY0pZektmZ0ZOZjBPZ0JyMUQwOVBiZW5EUW5SclZTbzZhQjFL?=
- =?utf-8?B?SVhIcFZzalpJbmQ0YmY0WGNIYnE4VFN2MXR4ZUlYdldxM1oxcDZZTWRYSTlY?=
- =?utf-8?B?OGJ6NXg4V3ZuM2czSHBudXZOMjZJc25HTjkyMlVuU2NKdUIrNm1ObjMwdWt3?=
- =?utf-8?B?cXg5US82T3NQQ0wzeEJTemdwY2RRSTZoYjBPRGNWTFd3ZHZ5czJVSlhmRWk3?=
- =?utf-8?B?Y2sydVAwVjZPWjFQUUM0YjJZakg1TzNIeWxVZEYycVUyRkFJdUZtVml2WjRI?=
- =?utf-8?B?Z0xGQkFROVJLcUhUQnVMR1BFU29PZEtiak1OOTNCTzJtYXB2NWRIVURYSUlC?=
- =?utf-8?B?NUIxMno2ZVpOZWZubVJkY2xJMy9TYS9yVnJMU1g4WDhvUG5zTnJpMXFvUk9h?=
- =?utf-8?B?MDJ1UlVlSERFNkJGTXB2ZzdTQnUvdk9WdkdtVy8wVkNndkVLcVlIZmhVd2tm?=
- =?utf-8?B?NVJDY2x1L3VkdHI5VnptTTJDZTloQmlVMVcyRVdIaVo3czFHejVKdXlSVjgw?=
- =?utf-8?B?VlFGQXdQcjZqRHcwekZKK1JKaEJDZUdyTitPY2JTbjB0RzM5OHVyRWZQTEdP?=
- =?utf-8?B?WWtKMGhXRUY2Q3NXMitCVUxqTFBtUVFrb3EzSTBkbVFKL1ZoaWRJVkF4Qkk5?=
- =?utf-8?B?MU5TKzVEQXlKMFUrTXYzckFnWUNaMzNlQ0ZBanBrRTZsaG1MYUdGTWsvM09F?=
- =?utf-8?B?QTNqT1N6a2FmVHZkbmxGVzJITFp5VlZ5YTJReE9HQ2RiYjRGZ204T3k2MUZ5?=
- =?utf-8?B?MUtHanM3SXkzTzRxaGJEQmdCTjcwUys1SEhiY2RFclplc3czd3QzSWk5aHVR?=
- =?utf-8?B?U2JUYWNaRHplM09mcSt0d1pTOUZNU0laMlprZkdISnpkU2N0YUZWVXQ0Wmh0?=
- =?utf-8?B?T0p4dktsZk9JU0d2YnZ5UT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YlRrNnptbzd6SEdIYkpWUkwyTDNjQkI3WTMyT0hHZXdxdDgwQ09DMXBaUFE0?=
- =?utf-8?B?Z3RKTVh6RS80eGRNNjhvZGxIVGZzTVpXNFJLNVJXN2N6VURNakxGcUhGZjBz?=
- =?utf-8?B?VHNWSVlGV1VnWWpsc3ZnQmNjM05QY2pwOUYza2xkbDFIeXhUZUhwaUplaUpK?=
- =?utf-8?B?V0dqbDZtRFNySEV2VVFkbXFLZm1udWRPbWNoQ3R5RHU5d1cvdDJOZlhRNHRC?=
- =?utf-8?B?bmZPN2tDNHVPZjZ4L29zZitDck9zTzRYUUFHK3FpUSt6ZFJBc3FTTXFYd3V3?=
- =?utf-8?B?ZnNqTFVDeUI2bXBsRmdVSnEwTmN3V1pnSDlJa0JmK2hhTDUvZ09ta252My8x?=
- =?utf-8?B?OGwyRG9aNmlBU2xJalhvaElydExpTlVldGRsTTNOZmFiOWZibnpVdm1lTk1w?=
- =?utf-8?B?RWxOSXR2aHQ5dHAxVTR6NzZWWHJBTzZrTHFuSG1aNTlHQTNSb3pUSEQ3NTVU?=
- =?utf-8?B?eHN5SlNtNC9QcWhlcFpPbS9RekkvWTQ1bWZOUE82ZUoyckhBaElmRzdSYVFD?=
- =?utf-8?B?aDhRSzgzT3ZuMkYvZ1pJcEkzWjR5Z1NjbjRxVm1ReWFaMUxEREF6MVpRTXQr?=
- =?utf-8?B?aSt6aGtIZkJhR243OTlXWllFTU5PYTdzSDAvUldydVBjVjdhOXhIMDFYUGJO?=
- =?utf-8?B?RGZNUC9aZmY4L2xYRlRzbFR5eUxUUHV4NHVlYUEzYm5aUExoSm8zd05HS3o3?=
- =?utf-8?B?MUpFaXlyeVB1ak5JUjBqZXhSWnZnRTBvRjdNYmJiUTJyeFllRzJSSHYxTzZM?=
- =?utf-8?B?YzVyZCs2bWlaeGprRTBZalloQ2F1Vjhod2syaHpoak5mRmhBSjcvaUYvUzNP?=
- =?utf-8?B?TUEzMVpJUjY4NXdZcTlWZ0JxTHR4NDIreEVTK3crd1gwRFVTSFpBNy9pTlp5?=
- =?utf-8?B?NUtmQWhJUFhYWEYyMXFvYTdZZm0rNlZjRGgzTENQbzUvL0RNYzB5QXlwbG9y?=
- =?utf-8?B?VVJPVkJvQnc4aHZGZTBGTjQ2b0J0MWJ4eTJMbDdwOTVmOExZTmgzUG1DcHY3?=
- =?utf-8?B?L3RWMElxMUZNck9kQ1FqZEdJempEVzZvbFdGbWJxMWJGRi8vUEN3Vjhua2Z3?=
- =?utf-8?B?bG54dzlwd0ROZzU1RVhrVmEwVWhpRW5yQ0hTN1F1U3VRZnBwRGhnQWFWeWd1?=
- =?utf-8?B?UXZJZkg5MDFnVzIvcDU1VnV4bWlyb2hsQ05POENZeC91T1pwajk3VzhEdk9T?=
- =?utf-8?B?ckhxQUcrek1NdVdPako2MEU3cGUrYU9KcERIbHNIWHJpZWdSZzVnMkx2eFIy?=
- =?utf-8?B?OTdZRTRDbnJCRE9tSHZIVnBQZ2NkRTgreC8xYklaYWczQXhoczZTdnNTS3J0?=
- =?utf-8?B?VUF4dkt2MVVqbzlIMitZUnJFNnBqdzg3eWYxT2k1MndqRW1VS05nS2hTbjNP?=
- =?utf-8?B?K2I3ZXhJVTVjdUVjMEhCOTRMbEdEcEp2dXEyL3BTK1o4aXRVOVczUHRPMTlQ?=
- =?utf-8?B?NkJ1RXh0bmd2N1g3U08raHg4QlFuRVg4ejY1ZHFQdGIzcjhZWTdGQ0hPSDUw?=
- =?utf-8?B?SXh0b2N0SGVwYUdOcWJWenJvZkh1Qnp2US9taW1WQmRYZWpub1dTK1g3U2NS?=
- =?utf-8?B?bnNxWmc1aHR4UlJBcWxpOGptM21RWDhVSDBiY0puaGh4VWZQWGMwV3BneFVN?=
- =?utf-8?B?SndqMVlmYVZoMm1vM1Q5ckVTSFdXeCtGb1ZHd0J4WW1CeUJEaEk4eDltcnR0?=
- =?utf-8?B?bmVTODNnTUdrL2RTd1g2VWpiaVBPemdsMk45NHpaeFVaNXA2YmVNQ2p3cUts?=
- =?utf-8?B?R0dPeStxRXNDbUVxNFZ4dG1qZFBXRXpsNzJzbnVFcjBYYkU4blVHcEFuWEZT?=
- =?utf-8?B?N3dqUEt5bmZhekZoYldIdGdmU2dlZHQrRTJsbklYUk5BSUw4dzg5Q3ZKYVpj?=
- =?utf-8?B?bnRWWDhrODRaZC94b0dkVHNZb0ZTTmtqb1lLdncwRm96UFdiV1FJUmtiblJN?=
- =?utf-8?B?WURoWTJYZkVhaFZPWHJMc0ZZUTREWXZoMFJLSGNPeWZFc3ltUGVRY3pBK1lx?=
- =?utf-8?B?ditneDhVZm1wbE5HbmZRUEQ1VmNtSHdIenFxVlp2dmNPV1hnclZ0K0ZGMkIz?=
- =?utf-8?B?RnVPajYyaFF1OVFEYlczbTQydjZFWEI2clQvbEhXVmhJZllvclF0dzdyME1I?=
- =?utf-8?Q?P1wHysWBzwg61wtA6ci4X0Y4l?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c065df3-2abb-42c2-6bc3-08dcaacfa47d
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2024 04:26:37.6890
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1RwbfmKfAh1BBSIzbXxfSY5bHKDIPxLnC3sCf9xNZZh1KpwJx3TkixTqRFvMY3lnmWLKQU0PnTvMyvjWl3/hqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8576
+References: <20240719115741.3694893-1-rick.wertenbroek@gmail.com>
+ <20240719115741.3694893-2-rick.wertenbroek@gmail.com> <b4256f7c-350b-4fba-ba49-a91ee463b8d7@kernel.org>
+In-Reply-To: <b4256f7c-350b-4fba-ba49-a91ee463b8d7@kernel.org>
+From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Date: Tue, 23 Jul 2024 09:06:19 +0200
+Message-ID: <CAAEEuhqCM08NLTkM+WFh88S45OP-mjbJUd+KPtu2tBA+fbJvpw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: endpoint: Introduce 'get_bar' to map fixed
+ address BARs in EPC
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: rick.wertenbroek@heig-vd.ch, alberto.dassatti@heig-vd.ch, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Niklas Cassel <cassel@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jul 23, 2024 at 2:03=E2=80=AFAM Damien Le Moal <dlemoal@kernel.org>=
+ wrote:
+>
+> On 7/19/24 20:57, Rick Wertenbroek wrote:
+> > The current mechanism for BARs is as follows: The endpoint function
+> > allocates memory with 'pci_epf_alloc_space' which calls
+> > 'dma_alloc_coherent' to allocate memory for the BAR and fills a
+> > 'pci_epf_bar' structure with the physical address, virtual address,
+> > size, BAR number and flags. This 'pci_epf_bar' structure is passed
+> > to the endpoint controller driver through 'set_bar'. The endpoint
+> > controller driver configures the actual endpoint to reroute PCI
+> > read/write TLPs to the BAR memory space allocated.
+> >
+> > The problem with this is that not all PCI endpoint controllers can
+> > be configured to reroute read/write TLPs to their BAR to a given
+> > address in memory space. Some PCI endpoint controllers e.g., FPGA
+> > IPs for Intel/Altera and AMD/Xilinx PCI endpoints. These controllers
+> > come with pre-assigned memory for the BARs (e.g., in FPGA BRAM),
+> > because of this the endpoint controller driver has no way to tell
+> > these controllers to reroute the read/write TLPs to the memory
+> > allocated by 'pci_epf_alloc_space' and no way to get access to the
+> > memory pre-assigned to the BARs through the current API.
+> >
+> > Therefore, introduce 'get_bar' which allows to get access to a BAR
+> > without calling 'pci_epf_alloc_space'. Controllers with pre-assigned
+> > bars can therefore implement 'get_bar' which will assign the BAR
+> > pyhsical address, virtual address through ioremap, size, and flags.
+> >
+> > PCI endpoint functions can query the endpoint controller through the
+> > 'fixed_addr' boolean in the 'pci_epc_bar_desc' structure. Similarly
+> > to the BAR type, fixed size or fixed 64-bit descriptions. With this
+> > information they can either call 'pci_epf_alloc_space' and 'set_bar'
+> > as is currently the case, or call the new 'get_bar'. Both will provide
+> > a working, memory mapped BAR, that can be used in the endpoint
+> > function.
+> >
+> > Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> > ---
+> >  drivers/pci/endpoint/pci-epc-core.c | 37 +++++++++++++++++++++++++++++
+> >  include/linux/pci-epc.h             |  7 ++++++
+> >  2 files changed, 44 insertions(+)
+> >
+> > diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint=
+/pci-epc-core.c
+> > index 84309dfe0c68..fcef848876fe 100644
+> > --- a/drivers/pci/endpoint/pci-epc-core.c
+> > +++ b/drivers/pci/endpoint/pci-epc-core.c
+> > @@ -544,6 +544,43 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_n=
+o, u8 vfunc_no,
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_epc_set_bar);
+> >
+> > +/**
+> > + * pci_epc_get_bar - get BAR configuration from a fixed address BAR
+> > + * @epc: the EPC device on which BAR resides
+> > + * @func_no: the physical endpoint function number in the EPC device
+> > + * @vfunc_no: the virtual endpoint function number in the physical fun=
+ction
+> > + * @bar: the BAR number to get
+> > + * @epf_bar: the struct epf_bar to fill
+> > + *
+> > + * Invoke to get the configuration of the endpoint device fixed addres=
+s BAR
+> > + */
+> > +int pci_epc_get_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> > +                 enum pci_barno bar, struct pci_epf_bar *epf_bar)
+> > +{
+> > +     int ret;
+> > +
+> > +     if (IS_ERR_OR_NULL(epc) || func_no >=3D epc->max_functions)
+> > +             return -EINVAL;
+> > +
+> > +     if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[fun=
+c_no]))
+> > +             return -EINVAL;
+> > +
+> > +     if (bar < 0 || bar >=3D PCI_STD_NUM_BARS)
+> > +             return -EINVAL;
+> > +
+> > +     if (!epc->ops->get_bar)
+> > +             return -EINVAL;
+> > +
+> > +     epf_bar->barno =3D bar;
+> > +
+> > +     mutex_lock(&epc->lock);
+> > +     ret =3D epc->ops->get_bar(epc, func_no, vfunc_no, bar, epf_bar);
+> > +     mutex_unlock(&epc->lock);
+> > +
+> > +     return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_epc_get_bar);
+> > +
+> >  /**
+> >   * pci_epc_write_header() - write standard configuration header
+> >   * @epc: the EPC device to which the configuration header should be wr=
+itten
+> > diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> > index 85bdf2adb760..a5ea50dd49ba 100644
+> > --- a/include/linux/pci-epc.h
+> > +++ b/include/linux/pci-epc.h
+> > @@ -37,6 +37,7 @@ pci_epc_interface_string(enum pci_epc_interface_type =
+type)
+> >   * @write_header: ops to populate configuration space header
+> >   * @set_bar: ops to configure the BAR
+> >   * @clear_bar: ops to reset the BAR
+> > + * @get_bar: ops to get a fixed address BAR that cannot be set/cleared
+> >   * @map_addr: ops to map CPU address to PCI address
+> >   * @unmap_addr: ops to unmap CPU address and PCI address
+> >   * @set_msi: ops to set the requested number of MSI interrupts in the =
+MSI
+> > @@ -61,6 +62,8 @@ struct pci_epc_ops {
+> >                          struct pci_epf_bar *epf_bar);
+> >       void    (*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no=
+,
+> >                            struct pci_epf_bar *epf_bar);
+> > +     int     (*get_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> > +                        enum pci_barno, struct pci_epf_bar *epf_bar);
+> >       int     (*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >                           phys_addr_t addr, u64 pci_addr, size_t size);
+> >       void    (*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_n=
+o,
+> > @@ -163,6 +166,7 @@ enum pci_epc_bar_type {
+> >   * struct pci_epc_bar_desc - hardware description for a BAR
+> >   * @type: the type of the BAR
+> >   * @fixed_size: the fixed size, only applicable if type is BAR_FIXED_M=
+ASK.
+> > + * @fixed_addr: indicates that the BAR has a fixed address in memory m=
+ap.
+> >   * @only_64bit: if true, an EPF driver is not allowed to choose if thi=
+s BAR
+> >   *           should be configured as 32-bit or 64-bit, the EPF driver =
+must
+> >   *           configure this BAR as 64-bit. Additionally, the BAR succe=
+eding
+> > @@ -176,6 +180,7 @@ enum pci_epc_bar_type {
+> >  struct pci_epc_bar_desc {
+> >       enum pci_epc_bar_type type;
+> >       u64 fixed_size;
+> > +     bool fixed_addr;
+>
+> Why make this a bool instead of a 64-bits address ?
+> If the controller sets this to a non-zero value, we will know it is a fix=
+ed
+> address bar. And that can avoid adding the get_bar operations, no ?
+>
 
+The reason to use a bool is to force the use of 'get_bar', get_bar will fil=
+l
+the 'pci_epf_bar' structure and memory map the BAR. This ensures the
+'pci_epf_bar' structure is filled correctly and usable, same as after a
+'pci_epf_alloc_space' operation. This also removes a burden to the
+endpoint function (i.e., map the memory, handle errors, set the fields
+of the structure etc.). This will likely avoid errors in the endpoint funct=
+ions
+as this code is quite sensitive and possibly controller specific (e.g.,
+memremap for virtual controllers vs ioremap for real controllers). Also,
+this code would be duplicated for each endpoint function, therefore I think
+it is better to just call 'get_bar' instead of rewriting all corresponding =
+lines
+in each endpoint function (which would be very error prone).
 
-On 22/7/24 22:06, Jason Gunthorpe wrote:
-> On Mon, Jul 22, 2024 at 08:19:23PM +1000, Alexey Kardashevskiy wrote:
-> 
->> If there is vIOMMU, then the driver in the VM can decide whether it wants
->> private or shared memory for DMA, pass that new flag to dma_map() and 1)
->> have DMA memory allocated from the private pool (== no page state changes)
->> and 2) have C-bit set in the vIOMMU page table (which is in the VM memory).
-> 
-> Not all HW supports a flow like that.
+There could also be other cases where the PCIe controller is behind a
+specific bus and the BAR doesn't have a physical address and needs
+to be accessed in a specific way. E.g., one could make a BAR accessible
+via a serial interface in the FPGA (probably no one will do this, but it is
+a possible architecture).
 
-Fair point but still, under what imaginary circumstance a driver could 
-decide to flip T=0/1 when up and running?
+That's why I believe it is important to let the controller fill the
+'pci_epf_bar'
+structure and do the necessary io/mem remapping internally.
 
+> >       bool only_64bit;
+> >  };
+> >
+> > @@ -238,6 +243,8 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no=
+, u8 vfunc_no,
+> >                   struct pci_epf_bar *epf_bar);
+> >  void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >                      struct pci_epf_bar *epf_bar);
+> > +int pci_epc_get_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> > +                 enum pci_barno, struct pci_epf_bar *epf_bar);
+> >  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >                    phys_addr_t phys_addr,
+> >                    u64 pci_addr, size_t size);
+>
+> --
+> Damien Le Moal
+> Western Digital Research
+>
 
->> My V1 says "all IOVA below X are private and above - shared" (which is a hw
->> knob in absence of vIOMMU) and I set the X to all '1's just to mark it all
->> private.
-> Is that portable to other implementations?
-
-Well, when used as a big knob - 0 or the max (== flip private/shared), 
-then yes :)
-
-
--- 
-Alexey
-
+Thank you for your insights.
+Rick
 
