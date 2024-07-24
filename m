@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-10702-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10703-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3D6293AC64
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 08:02:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB49E93AC6C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 08:06:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BF191F24075
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 06:02:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 076BD1C20A64
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 06:06:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416434643B;
-	Wed, 24 Jul 2024 06:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5AEE49622;
+	Wed, 24 Jul 2024 06:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plWYvKW5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZowG31l"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F74423BF;
-	Wed, 24 Jul 2024 06:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A383D481A3;
+	Wed, 24 Jul 2024 06:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721800949; cv=none; b=ogTAvIKQA5MsCVu21KChnmRchEUDMojRzzOgb6JguXoJsMncrTakWAuUiMz28Ukq7CCrH5e8HZkdDJ3ips57jYgbIUUQY7RhqJeibwjFjRzePxN76U5JXCq0P6avT6LEi1YOriib8qEvnZ1jh4JkIxnFQ2Zq10qaomV4Tn3S5vs=
+	t=1721801201; cv=none; b=G8tt7ebZ6DRJtZTusNg+7XxmVo/xx0Tj2IBq3PflmTX0Wv0/JB0AQ3rDZlTAZDWbGiAsDlOITd8A2FHEbL/kIKaZyKseuCKRECl69OxQFWV6+MfHHFHm2PKex9zZIqcs3YZVlRlAGBG+XJ5yk60Q3VTyvp4RqMHoHpdcFBecXDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721800949; c=relaxed/simple;
-	bh=Ef9zeJf4ngiRMDrj9dMqjkqhHO9E05g2lO52iKthTWI=;
+	s=arc-20240116; t=1721801201; c=relaxed/simple;
+	bh=ATwyh1zib1lEjoQ8X4v0JU0kBM8RboBUg3gwbHDXR9Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jaV9shuhkxuoM+gC0ski6iHLV4iVUm01cjph8Hdnw2vWWyuqipF7Z3GhZltKzyQdT6GZNCvegXvNxvLzTMcubLoLwNRperHtUvfSwwX7hrWA4sjnp8T2VafLKWpNN8ys1TASFH9UEu4Gaclc0jqGAieDP/pQBIElfKoQ5R6E60c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plWYvKW5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D78C32782;
-	Wed, 24 Jul 2024 06:02:23 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=feb36kcfUnT3xLQ2Nuz+ccQ8Yk6jmAPyxQpi6lkcdG1o/8xnXrX+A2/FGefJqqHRjXkZJxq8ffjdhfOsLXBP40HqI7wl5Z79fez0h9sAlcom2RRBHWtlZ//8Z6EWTCuML0diXEyRnBV1SpbWuLAHib2xsdz5Agv9S4pQib+gu1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZowG31l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81FABC32782;
+	Wed, 24 Jul 2024 06:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721800948;
-	bh=Ef9zeJf4ngiRMDrj9dMqjkqhHO9E05g2lO52iKthTWI=;
+	s=k20201202; t=1721801201;
+	bh=ATwyh1zib1lEjoQ8X4v0JU0kBM8RboBUg3gwbHDXR9Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=plWYvKW5PseXMjBMwT+QL9G9zDENnjyZ4EqPaewQYDPNbkLp8kyTjPmHiRyB6Gjoe
-	 ZF5e4/CFkk07VnEwRHaGQ2yH70TrVXOKQcD+MGTRmEbaAdsTnS8+S17xLEtKQhVRRs
-	 Gy62EFibvKK6IVg3j8iTKXBh8rjr2K9kFA48ICqcIzjmDgN3tFePidwU9rZHqtevWN
-	 yR/QQfrwCQZCI6deoRNcNNCFq4MHwPInEXUQmgJgRBWZrujn5ngmEZA31UEY0mHTL0
-	 ef2DUCBZ2ednT0WolXHJGhVwcGV5oangWYCYqrD4koxQ+THM9rgz7DzRh/ByuTBhmo
-	 8i+zElMPUPp+Q==
-Message-ID: <4195ef00-bd81-4c1d-8e66-b4a17da03ef1@kernel.org>
-Date: Wed, 24 Jul 2024 08:02:21 +0200
+	b=mZowG31lOrJ/4nuMYl68K3c7iJEpzQfHHSptu/qYdGt+SSl2QURsruhgq4XYVNS3+
+	 4uataqKsZ32Ohwry0RA8ZOYlsbibStv8OH8uPcp9IEy/g2t/7Qnzq4XUczyVIzC14V
+	 BNQpi/c0We/ZB+Qn2QjjJAZ5cOSuT0r31e/pbLzZe7593LQnDcOLHIK/Veiwqr8lCn
+	 PMgM4RBnsI3ddAQEqsN3BCwHbkESK6J7g1WC1kyt6IFLS6oK3/PR8gDaMO3Kbb/6Zu
+	 bsq2kRyXXN5uiJHtdN+CP/JHngbdiQVvC/fwxlPTzu0YtC5nqSgQUDYhd9usHvF/gn
+	 mPBZt+5fEUdhQ==
+Message-ID: <dbcd776b-172a-4c53-b33a-3215f7dcfe77@kernel.org>
+Date: Wed, 24 Jul 2024 08:06:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,29 +50,15 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/12] dt-bindings: PCI: brcmstb: Add 7712 SoC
- description
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240716213131.6036-1-james.quinlan@broadcom.com>
- <20240716213131.6036-3-james.quinlan@broadcom.com>
- <e8b34f9e-5286-44aa-8bb8-88e5ff5c8255@kernel.org>
- <CA+-6iNxuJQEKA_BfLiaG6FfJJdsjV1u+Lv5Knna1KhnMX=Meew@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and
+ "atu" for i.MX8M PCIe Endpoint
+To: Richard Zhu <hongxing.zhu@nxp.com>, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, shawnguo@kernel.org, l.stach@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel@pengutronix.de, imx@lists.linux.dev
+References: <1721790236-3966-1-git-send-email-hongxing.zhu@nxp.com>
+ <1721790236-3966-2-git-send-email-hongxing.zhu@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,89 +104,15 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CA+-6iNxuJQEKA_BfLiaG6FfJJdsjV1u+Lv5Knna1KhnMX=Meew@mail.gmail.com>
+In-Reply-To: <1721790236-3966-2-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 23/07/2024 23:03, Jim Quinlan wrote:
-> On Wed, Jul 17, 2024 at 2:53 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 16/07/2024 23:31, Jim Quinlan wrote:
->>> This adds the description for the 7712 SoC, a Broadcom
->>> STB sibling chip of the RPi 5.  Two new reset controllers
->>> are described.
->>>
->>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>> ---
->>>  .../bindings/pci/brcm,stb-pcie.yaml           | 26 +++++++++++++++++++
->>>  1 file changed, 26 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> index 692f7ed7c98e..90683a0df2c5 100644
->>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> @@ -21,6 +21,7 @@ properties:
->>>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
->>>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
->>>            - brcm,bcm7445-pcie # Broadcom 7445 Arm
->>> +          - brcm,bcm7712-pcie # Broadcom STB sibling of Rpi 5
->>>
->>>    reg:
->>>      maxItems: 1
->>> @@ -100,12 +101,16 @@ properties:
->>>      items:
->>>        - description: reset for external PCIe PERST# signal # perst
->>>        - description: reset for phy reset calibration       # rescal
->>> +      - description: reset for PCIe/CPU bus bridge         # bridge
->>> +      - description: reset for soft PCIe core reset        # swinit
->>>
->>>    reset-names:
->>>      minItems: 1
->>>      items:
->>>        - const: perst
->>>        - const: rescal
->>> +      - const: bridge
->>> +      - const: swinit
->>
->> This does not match at all what you have in allOf:if:then section.
->>
->>>
->>>  required:
->>>    - compatible
->>> @@ -159,6 +164,27 @@ allOf:
->>>          - resets
->>>          - reset-names
->>>
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: brcm,bcm7712-pcie
->>> +    then:
->>> +      properties:
->>> +        resets:
->>> +          minItems: 3
->>> +          maxItems: 3
->>> +
->>> +        reset-names:
->>> +          items:
->>> +            - const: rescal
->>
->> Look - here it is rescal. Before you said it must be perst.
->>
->> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml#L132
-> 
-> Hello Krzysztof,
-> 
-> The difference between my commits and the above example is that the
-> above example has no "desc" line(s) to describe the clocks  -- How
+On 24/07/2024 05:03, Richard Zhu wrote:
+> Add reg-name: "dbi2", "atu" for i.MX8M PCIe Endpoint.
 
-Which does not really matter to illustrate the concept where you define
-the widest constraints and where you narrow them.
-
-> would you add this?  Or are you okay with (a) no description or (b)
-> using a "#comment..." next to the clock's name?
-
+This we see in the diff. What I do not see is why? Hardware changed? How
+come?
 
 
 Best regards,
