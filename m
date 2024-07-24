@@ -1,139 +1,146 @@
-Return-Path: <linux-pci+bounces-10719-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10720-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6172793B182
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:22:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2646293B1AA
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:31:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1DD81285AAB
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 13:22:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3A3D1F24893
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 13:31:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A3E158D69;
-	Wed, 24 Jul 2024 13:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1CD158A03;
+	Wed, 24 Jul 2024 13:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8st//Ie"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptC4AZJy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FB1158A01;
-	Wed, 24 Jul 2024 13:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E95383A9
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 13:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721827360; cv=none; b=dpcwpIyolI8HEaTbsSpMTZLxcOn/RgZ3TO+kx5QVK+CnHT1uf0sKsXP9WOwiUqmpPJZEnWqAvrxsmXAWxO3iyrAFiYVbp1p/gMYBJ1RVz+NgVaOXU86zCICHcuU5MXGrekRvg15k/QQ/DrPry5ZTcy1Y5BDSs/8Ci7So3iVwi78=
+	t=1721827909; cv=none; b=LE8Wu4uoyCdRJjSodPBFS2EOxutbQmOdwZsYXAYnbqUnoX1Oxx85JVPgdlPd5xZo5qj9CErVRy6QJrqFqsMbMgXcnJtVFUnqxyXAvEwHVsATcZpeFvjESwvqX0YlTQMQS2i0Zz19mUE3/aoZ+aE9KR8KR7BhMlKT+lNHr3MmJy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721827360; c=relaxed/simple;
-	bh=MbWcGKHLsBz3s1JF5yQsSo7cvuVml6sVGrY1qjjbzes=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=psP9Vh36SFPXRkBJIpMvoJkq7WpyFr23V7sQoVfs/3Mp68NfwYojLesANPOY6dnzXdDFTfJJIWNJwlA+L71dsFxq2ME4ozSry81sfkYCcSP3HYSR47oODj+Altg+rerppSaanzEzG2oAGqi8if88ZH2AWxE526+MzryLXn3uacQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8st//Ie; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3594FC32782;
-	Wed, 24 Jul 2024 13:22:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721827359;
-	bh=MbWcGKHLsBz3s1JF5yQsSo7cvuVml6sVGrY1qjjbzes=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l8st//Ie5qfMMa1MQZNJYcBjSKaKvMQTahrlvi3tL43CaPY8Q4yQsXsnNfFUgG4ky
-	 Tjp6h0zt85b9ljlHPBfHDxBJ/2bMnG34JnHl4PwNKoJA5TQYws9dIMJVJtWnd+lAy8
-	 4RJNIaxHKGcX3A9KcOwV0MVGXoJPkxBdAmT5UQLpNsCRNLv7+PUnrlP3DDoaRy0IG6
-	 yqaHl1tSU5adGLWyb1PMYn+SdAHLn/K1zwfc8z6SYhulYxxeq5Fr/zEjWpbzaUzdCF
-	 mBWXYXA0IxV0QLw4m/hn3f0H62sajSaMFQ666ePMmTo/gj6POAzD/JW2QcXKAfw2Iq
-	 gzo6MCsZKtHrg==
-Message-ID: <8cef6a08-c363-43f1-8d55-ad47b399fe5e@kernel.org>
-Date: Wed, 24 Jul 2024 15:22:32 +0200
+	s=arc-20240116; t=1721827909; c=relaxed/simple;
+	bh=uYCjH62094fWSixlswCV1RaLX7VIn9OqXvSaZojUorI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YM2fGPRsfL4N3x7SL/B1LatxZGRKbwbPj52xb97FGiqn/n+1L8eOKJO9oZuqX6tBKd4ZdT3W3oW+YiZw9XEC8AsO8KEXB8nYdrfUCCE8ccRy9Rui61EoKe0VH09ZTo1jtqXAcg1KUQD4ttrYxihCN7ZzBDTAH7yRGQZOsYnLHXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ptC4AZJy; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fec34f94abso4435475ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 06:31:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721827908; x=1722432708; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=An58Dm8uzaKKX2Id+IrUBFJsqsLXfX4o2DrHskK6/IE=;
+        b=ptC4AZJybq12bXHiJWB1ty4tX2lxSPCjdhFrKYUOkdR4yvUtAhM47/YV6DrihbSP+R
+         2bYtorfQuAhCn2TGYXhNHGiHdJ8lSQmAZ2NaZd3vYuG8T8OWnSj8BiCLytXFZrZQhIhl
+         b46GL33qpPsx81c+7FqQGzHx3IUmzwXCeLpbfgwiG41QPUfrKt/ZmCUee9sTszZ76FBT
+         R+5iur67m/z8WZ7VJRJDi17InXnp4y9f0oNdBxsSOEoEBR0NPVZ1vPqmpnITyzZMlLDS
+         wTWwEW1pDxp858MmRpT4x4c2x9/Nu2VTEet5FDTxM6jmfJApwCo/gnaSreWVyoV8nZhz
+         b0bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721827908; x=1722432708;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=An58Dm8uzaKKX2Id+IrUBFJsqsLXfX4o2DrHskK6/IE=;
+        b=UNqFLrrIg4tZXwCH9PvNEqyiWS3wsU0gBgzUJ0Sq4ni1qk8pqzUbtyECuTA9BXm9PG
+         tt/fIop8QyoIaioHHue65smTzvR8TNrteoC+0iLdnVCj7f82iRqIemL+5kf/tInCQsva
+         EgNGe//QlC1eP9ehocDWYku87J6PlibUcLTajqHmmiduHsTOmx82Qn4I+IM++ID7B1Le
+         s7gOgstPzth+WtKx4iw3LKptGnOZgJ+lPk2hra8PqEkAlykacfBP/sPWHBKfMBrQvnHn
+         +2vyWecKG3ZusRN607OQvTXlXwPnFoBOEVuLyvwzanIdeMZeHI/C7mcPs88Cj1kT9hHW
+         4O7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEZ1h1enuAvfELsUfFXiG33l0/mPVCSs6wTRRCW8C0gpB/RbLVctaKnXfjQqPP4f2lzzUv9MZeuQT7ko2kEDI6j2/BL5JGLhs4
+X-Gm-Message-State: AOJu0Yx/qV2n3LvT2h7syr9o8JaRDww6wTz8jz2B/fRe1b+rLR/6jJUV
+	LRrORje54uNJ2xSdgtsCrXMyOM59fle3STU842PbRkXUrYkMQTJV0Ki+uy84jQ==
+X-Google-Smtp-Source: AGHT+IHb0kWbPKxJXE8j3XbcKOASOVLyTWt8KuLbfjyutzlEHgdUE9xCdNY9SBRwTe6WQGUXPhg2RA==
+X-Received: by 2002:a17:902:cec8:b0:1fd:9c2d:2f17 with SMTP id d9443c01a7336-1fdd220ad6dmr32143095ad.44.1721827907808;
+        Wed, 24 Jul 2024 06:31:47 -0700 (PDT)
+Received: from thinkpad ([103.244.168.26])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f291f05sm94155675ad.90.2024.07.24.06.31.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jul 2024 06:31:47 -0700 (PDT)
+Date: Wed, 24 Jul 2024 19:01:39 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Mayank Rana <quic_mrana@quicinc.com>, will@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com, cassel@kernel.org,
+	yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com,
+	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org,
+	amishin@t-argos.ru, thierry.reding@gmail.com, jonathanh@nvidia.com,
+	Frank.Li@nxp.com, ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com,
+	marek.vasut+renesas@gmail.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
+	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
+	quic_nitegupt@quicinc.com
+Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
+ host generic ECAM driver
+Message-ID: <20240724133139.GB3349@thinkpad>
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+ <rzf5jaxs2g4usnqzgvisiols2zlizcqr3pg4b63kxkoaekkjdf@rleudqbiur5m>
+ <a87d4948-a9ce-473b-ae36-9f0c04c3041e@quicinc.com>
+ <CAA8EJpq=rj-=JsYpPmwXiYkL=AALf-ZPQeq9drEoCkCAufLdig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: PCI: qcom: Allow 'vddpe-3v3-supply' again
-To: Johan Hovold <johan+linaro@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240723151328.684-1-johan+linaro@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240723151328.684-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA8EJpq=rj-=JsYpPmwXiYkL=AALf-ZPQeq9drEoCkCAufLdig@mail.gmail.com>
 
-On 23/07/2024 17:13, Johan Hovold wrote:
-> Commit 756485bfbb85 ("dt-bindings: PCI: qcom,pcie-sc7280: Move SC7280 to
-> dedicated schema") incorrectly removed 'vddpe-3v3-supply' from the
-> bindings, which results in DT checker warnings like:
+On Wed, Jul 24, 2024 at 10:12:17AM +0300, Dmitry Baryshkov wrote:
+> On Wed, 24 Jul 2024 at 06:58, Mayank Rana <quic_mrana@quicinc.com> wrote:
+> >
+> >
+> >
+> > On 7/23/2024 7:13 PM, Dmitry Baryshkov wrote:
+> > > On Mon, Jul 15, 2024 at 11:13:28AM GMT, Mayank Rana wrote:
+> > >> Based on previously received feedback, this patch series adds functionalities
+> > >> with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
+> > >> host root complex functionality on Qualcomm SA8775P auto platform.
+> > >>
+> > >> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
+> > >> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
+> > >>
+> > >> 1. Interface to allow requesting firmware to manage system resources and performing
+> > >> PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
+> > >> 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
+> > >> framework based power domain controls these operations)
+> > >> 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
+> > >> This MSI functionality is used with PCIe host generic driver after splitting existing MSI
+> > >> functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
+> > >
+> > > Please excuse me my ignorance if this is described somewhere. Why are
+> > > you using DWC-specific MSI handling instead of using GIC ITS?
+> > Due to usage of GIC v3 on SA8775p with Gunyah hypervisor, we have
+> > limitation of not supporting GIC ITS
+> > functionality. We considered other approach as usage of free SPIs (not
+> > available, limitation in terms of mismatch between number of SPIs
+> > available with physical GIC vs hypervisor) and extended SPIs (not
+> > supported with GIC hardware). Hence we just left with DWC-specific MSI
+> > controller here for MSI functionality.
 > 
-> 	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-dora.dtb: pcie@600000: Unevaluated properties are not allowed ('vddpe-3v3-supply' was unexpected)
->         from schema $id: http://devicetree.org/schemas/pci/qcom,pcie.yaml#
+> ... or extend Gunyah to support GIC ITS. I'd say it is a significant
+> deficiency if one can not use GIC ITS on Gunyah platforms.
 > 
-> Note that this property has been part of the Qualcomm PCIe bindings
-> since 2018 and would need to be deprecated rather than simply removed if
-> there is a desire to replace it with 'vpcie3v3' which is used for some
-> non-Qualcomm controllers.
-> 
-> Fixes: 756485bfbb85 ("dt-bindings: PCI: qcom,pcie-sc7280: Move SC7280 to dedicated schema")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-Thanks. You could also mention in commit msg that Linux drivers for
-msm8996, SM8[123456]50 and few others actually requested that supply. In
-any case:
+It if were possible, Qcom would've went with that. Unfortunately, it is not.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+- Mani
 
-Best regards,
-Krzysztof
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
