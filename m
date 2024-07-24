@@ -1,214 +1,143 @@
-Return-Path: <linux-pci+bounces-10711-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10712-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E31693ACEF
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 09:05:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E5D393AD08
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 09:12:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 954ECB215B9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 07:05:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4E771F2369F
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 07:12:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3BA94C3D0;
-	Wed, 24 Jul 2024 07:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F0261FCA;
+	Wed, 24 Jul 2024 07:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymc+IyV4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A664C84;
-	Wed, 24 Jul 2024 07:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DABD29E
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 07:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721804744; cv=none; b=OABFNBq7Tq1C+cWXhPemTFyKk23xZvaojB0WYLAN0MRBiEYsvoyl2AkYYk2O4UuwqjILVlqAety3YT/lFwufUGeJZGtJ+PoI++pTIpYoNLwXKJfHgYN5bzWNw7qvy5v3k4zWpDBA58dD35NVYnGzIEjPuMPbq32kDS795gDbxQw=
+	t=1721805151; cv=none; b=k/Zn50ehDHkqQxUsijmVDY2j6npCP/evFq6a3VWC44EtyNtm/7I3bzyw3SLgw2bzF/lw4FVRBbfgfD9S2hO4S7nsxhSDi2o8r0KcW9jttwOYjTfLurkwxQPengE1Apz75P/BbmDx/pItn0ycO9E1uwwRtbErQLGC+AVDRK/rRqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721804744; c=relaxed/simple;
-	bh=NJzJ+6eswf7If47jsaja4ykHVWVCTmgmSDHPCmI0mBo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Il+wPd9UCpxTtzlJ4JiLQafGGMpGQFnv1EpVl+9tkNES4KnyR3cvcqcqXVFj3YIoEU6QsHkg+Cibc9i9kKQnPvqVBLdpDPoVBB/CFk8HZRu4J8Fd6DfPpXezeUosu51nwWKgyHfGiIezzcrBzAjjpwQOgITQWwbK64PrEvh1u3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8BxKurBp6Bm8NkAAA--.3376S3;
-	Wed, 24 Jul 2024 15:05:37 +0800 (CST)
-Received: from [10.180.13.176] (unknown [111.207.111.194])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx78e8p6BmhexWAA--.61518S3;
-	Wed, 24 Jul 2024 15:05:34 +0800 (CST)
-Subject: Re: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when
- selected cpu is offline
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>,
- Markus Elfring <Markus.Elfring@web.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Belits <abelits@marvell.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Nitesh Narayan Lal <nitesh@redhat.com>,
- Frederic Weisbecker <frederic@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
- <a50b3865-8a04-4a9a-8d27-b317619a75c0@linux.intel.com>
- <7340a27e-67c1-c0c3-9304-77710dc44f7f@loongson.cn>
- <670927f1-42d8-40bc-bd79-55e178bd907a@linux.intel.com>
- <0052b62b-aafe-e2eb-6d66-4ad0178bdae1@loongson.cn>
- <db628499-6faf-43c8-93e5-c24208ca0578@linux.intel.com>
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-Message-ID: <ea5a5c52-69ca-9504-dd80-a90c3000d9c6@loongson.cn>
-Date: Wed, 24 Jul 2024 15:05:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1721805151; c=relaxed/simple;
+	bh=2ET06663yJTfOvxOaRwLCX+2okuvYMcVwphYsNHgItQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qeRrx4KABHlJv5luR2JzNP7KW/eOZIxcetdUd+JNWFIpGRAiqWknr8XG2zLuGFArv7up03a8kJFD2BHYEeuKFBmdIfcEfjHf0u4BqTnOWqfaxCP5VH4YbkYjQzRSdJCby3490+qjYNMK5r173T5rFpz2w/VmC2qu8EhwTkfRzbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ymc+IyV4; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6518f8bc182so5099557b3.0
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 00:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721805149; x=1722409949; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cLTAfdBRmXNzN4nm7AmqSiNth27gEuiMxE8KchKt8To=;
+        b=ymc+IyV4wHdVYM4XEUydTVm7BSe0EqEqWDfsfGEANGPg9AUx5z+VoEmk3uNm1U2AxS
+         OZ10WSO3bCOGIivwGM6tPbAvU6E2GLbgJJ3kqq4kiSsoUb9HTw9YG8a4h96mFrvTty57
+         1iJmq0XY9xe5ERBGjEgMXW2b9fmJNv2GxMXXefQ0ZlPPnATgs/4JclB/pV7F8sPNCHuU
+         7elbI3t/N5hchtJ40eZI4ZJ4bMkkoODRtHq4vNazuafOr2N8WejRe4rPHkU41n2uHJ4w
+         Esm7aofYFP7240eYhNOJPjnPKojBiu3AJuI8b3rcXynkZG0E0sjcGvGuvHwfuyLjZWWD
+         +ftw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721805149; x=1722409949;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cLTAfdBRmXNzN4nm7AmqSiNth27gEuiMxE8KchKt8To=;
+        b=VUB1iRbWBKL1wzfKTJef94xDvXHdeQ4ny41DsduKV1P77M1QEf4fc3hFe3Ta52Z7mC
+         Acu0SqJ+DDy92Hhx74ekErvQoNd3P8WxlRx+uT6mdtkiT8OKqOmvH5yBLBTFQkFTKLVK
+         F69hn7vUGlGrONF5A/j5fRNh7DQTVx95nIVdRKJkhxgrvsvq/12vgKAmoq8biiUvqfxB
+         XL07XiIrLZzlY/NTkN/BUGz/AMnX+DSNWOSNdK3mLCuQALrXBIHaO8c33V2kHkiZVGbi
+         B9M+/1M5UOKBSKW50EjewyQ7/VK/Qpr8SxcHZUK6PUXszORZApsYpYjHPhmJAKCWSzCz
+         S8HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5vFEw6IISf3d02ArK7+WV3DOv4kk7BVli4hqM3WqEozl5m0tIawnmRdNIj8iWeOOx6g4hfPiYCPGczVAN1AmTsUpotrMgF5yT
+X-Gm-Message-State: AOJu0YxUtJ5LequOy2KEsvTRVLHrFNekhDCZtHVXv3UOHzHAWedhSOyf
+	5mzo5ee16R7WEMNDKdDi7H0IV19WG/YgSxPsxN89HNdzwoCccWbxK8JH4PaAKcRzuNLns70ACD9
+	ye2zYYwfviYwBQWmTgcX3HX2EMOaBXMs05teMew==
+X-Google-Smtp-Source: AGHT+IEvAasOl0cQtJERYgVEQnAkSlrJQKqNpmGkUyf9LG97Q8RPaN3ZEWsL4P54X5/lsTvBXFGI8U7s16kMGD0DZqs=
+X-Received: by 2002:a0d:c683:0:b0:651:ee07:76c with SMTP id
+ 00721157ae682-672c025ee17mr6101177b3.15.1721805149228; Wed, 24 Jul 2024
+ 00:12:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <db628499-6faf-43c8-93e5-c24208ca0578@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx78e8p6BmhexWAA--.61518S3
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAIB2agXhkDYAABst
-X-Coremail-Antispam: 1Uk129KBj93XoWxWry7CFWrXr4ktFyDury8Zwc_yoWruw4UpF
-	ykJFyUJrWkXr18J342qw1UZry0gw1DJa4UXw17JF15JFWqyr1Iqr47Xrn0gr1DJr4kJr1U
-	Aw1UJrW7uFyUAFbCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDU
-	UUU
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+ <rzf5jaxs2g4usnqzgvisiols2zlizcqr3pg4b63kxkoaekkjdf@rleudqbiur5m> <a87d4948-a9ce-473b-ae36-9f0c04c3041e@quicinc.com>
+In-Reply-To: <a87d4948-a9ce-473b-ae36-9f0c04c3041e@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 24 Jul 2024 10:12:17 +0300
+Message-ID: <CAA8EJpq=rj-=JsYpPmwXiYkL=AALf-ZPQeq9drEoCkCAufLdig@mail.gmail.com>
+Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
+ host generic ECAM driver
+To: Mayank Rana <quic_mrana@quicinc.com>
+Cc: will@kernel.org, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, 
+	cassel@kernel.org, yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com, 
+	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org, amishin@t-argos.ru, 
+	thierry.reding@gmail.com, jonathanh@nvidia.com, Frank.Li@nxp.com, 
+	ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com, 
+	marek.vasut+renesas@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, quic_ramkri@quicinc.com, quic_nkela@quicinc.com, 
+	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com, 
+	quic_nitegupt@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/7/24 下午2:40, Ethan Zhao wrote:
-> On 7/24/2024 11:09 AM, Hongchen Zhang wrote:
->> Hi Ethan,
->>
->> On 2024/7/24 上午10:47, Ethan Zhao wrote:
->>> On 7/24/2024 9:58 AM, Hongchen Zhang wrote:
->>>> Hi Ethan,
->>>> On 2024/7/22 PM 3:39, Ethan Zhao wrote:
->>>>>
->>>>> On 6/13/2024 3:42 PM, Hongchen Zhang wrote:
->>>>>> Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
->>>>>> @cpu is a offline cpu would cause system stuck forever.
->>>>>>
->>>>>> This can be happen if a node is online while all its CPUs are
->>>>>> offline (We can use "maxcpus=1" without "nr_cpus=1" to reproduce it).
->>>>>>
->>>>>> So, in the above case, let pci_call_probe() call local_pci_probe()
->>>>>> instead of work_on_cpu() when the best selected cpu is offline.
->>>>>>
->>>>>> Fixes: 69a18b18699b ("PCI: Restrict probe functions to 
->>>>>> housekeeping CPUs")
->>>>>> Cc: <stable@vger.kernel.org>
->>>>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>>>>> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
->>>>>> ---
->>>>>> v2 -> v3: Modify commit message according to Markus's suggestion
->>>>>> v1 -> v2: Add a method to reproduce the problem
->>>>>> ---
->>>>>>   drivers/pci/pci-driver.c | 2 +-
->>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->>>>>> index af2996d0d17f..32a99828e6a3 100644
->>>>>> --- a/drivers/pci/pci-driver.c
->>>>>> +++ b/drivers/pci/pci-driver.c
->>>>>> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver 
->>>>>> *drv, struct pci_dev *dev,
->>>>>>           free_cpumask_var(wq_domain_mask);
->>>>>>       }
->>>>>> -    if (cpu < nr_cpu_ids)
->>>>>
->>>>> Why not choose the right cpu to callwork_on_cpu() ? the one that is 
->>>>> online. Thanks, Ethan
->>>> Yes, let housekeeping_cpumask() return online cpu is a good idea, 
->>>> but it may be changed by command line. so the simplest way is to 
->>>> call local_pci_probe when the best selected cpu is offline.
->>>
->>> Hmm..... housekeeping_cpumask() should never return offline CPU, so
->>> I guess you didn't hit issue with the CPU isolation, but the following
->>> code seems not good.
->> The issue is the dev node is online but the best selected cpu is 
->> offline, so it seems that there is no better way to directly set the 
->> cpu to nr_cpu_ids.
-> 
-> I mean where the bug is ? you should debug more about that.
-> just add one cpu_online(cpu) check there might suggest there
-> is bug in the cpu selection stage.
-> 
-> 
-> if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
->          pci_physfn_is_probed(dev)) {
->          cpu = nr_cpu_ids; // <----- if you hit here, then 
-> local_pci_probe() should be called.
->      } else {
->          cpumask_var_t wq_domain_mask;
-> 
->          if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
->              error = -ENOMEM;
->              goto out;
->          }
->          cpumask_and(wq_domain_mask,
->                  housekeeping_cpumask(HK_TYPE_WQ),
->                  housekeeping_cpumask(HK_TYPE_DOMAIN));
-> 
->          cpu = cpumask_any_and(cpumask_of_node(node),
->                        wq_domain_mask);
->          free_cpumask_var(wq_domain_mask);
->                  // <----- if you hit here, then work_on_cpu(cpu, 
-> local_pci_probe, &ddi) should be called.
-Yes, but if the offline cpu is selected, local_pci_probe should be called.
->                  // do you mean there one offline cpu is selected ?
-Yes, the offline cpu is selected.
-> 
->      }
-> 
->      if (cpu < nr_cpu_ids)
->          error = work_on_cpu(cpu, local_pci_probe, &ddi);
->      else
->          error = local_pci_probe(&ddi);
-> 
-> 
-> Thanks,
-> Ethan
-> 
->>>
->>> ...
->>>
->>> if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
->>>          pci_physfn_is_probed(dev)) {
->>>          cpu = nr_cpu_ids;
->>>      } else {
->>>
->>> ....
->>>
->>> perhaps you could change the logic there and fix it  ?
->>>
->>> Thanks
->>> Ethan
->>>
->>>
->>>
->>>>>
->>>>>> +    if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->>>>>>           error = work_on_cpu(cpu, local_pci_probe, &ddi);
->>>>>>       else
->>>>>>           error = local_pci_probe(&ddi);
->>>>
->>>>
->>
->>
+On Wed, 24 Jul 2024 at 06:58, Mayank Rana <quic_mrana@quicinc.com> wrote:
+>
+>
+>
+> On 7/23/2024 7:13 PM, Dmitry Baryshkov wrote:
+> > On Mon, Jul 15, 2024 at 11:13:28AM GMT, Mayank Rana wrote:
+> >> Based on previously received feedback, this patch series adds functionalities
+> >> with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
+> >> host root complex functionality on Qualcomm SA8775P auto platform.
+> >>
+> >> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
+> >> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
+> >>
+> >> 1. Interface to allow requesting firmware to manage system resources and performing
+> >> PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
+> >> 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
+> >> framework based power domain controls these operations)
+> >> 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
+> >> This MSI functionality is used with PCIe host generic driver after splitting existing MSI
+> >> functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
+> >
+> > Please excuse me my ignorance if this is described somewhere. Why are
+> > you using DWC-specific MSI handling instead of using GIC ITS?
+> Due to usage of GIC v3 on SA8775p with Gunyah hypervisor, we have
+> limitation of not supporting GIC ITS
+> functionality. We considered other approach as usage of free SPIs (not
+> available, limitation in terms of mismatch between number of SPIs
+> available with physical GIC vs hypervisor) and extended SPIs (not
+> supported with GIC hardware). Hence we just left with DWC-specific MSI
+> controller here for MSI functionality.
+
+... or extend Gunyah to support GIC ITS. I'd say it is a significant
+deficiency if one can not use GIC ITS on Gunyah platforms.
+
+> >> Below architecture is used on Qualcomm SA8775P auto platform to get ECAM compliant PCIe
+> >> controller based functionality. Here firmware VM based PCIe driver takes care of resource
+> >> management and performing PCIe link related handling (D0 and D3cold). Linux VM based PCIe
+> >> host generic driver uses power domain to request firmware VM to perform these operations
+> >> using SCMI interface.
+> >
+> Regards,
+> Mayank
+
 
 
 -- 
-Best Regards
-Hongchen Zhang
-
+With best wishes
+Dmitry
 
