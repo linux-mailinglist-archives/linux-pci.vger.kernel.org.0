@@ -1,65 +1,48 @@
-Return-Path: <linux-pci+bounces-10701-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10702-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC31E93AC49
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 07:40:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3D6293AC64
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 08:02:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55A8A284BA2
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 05:40:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BF191F24075
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 06:02:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542CA4317C;
-	Wed, 24 Jul 2024 05:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416434643B;
+	Wed, 24 Jul 2024 06:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ddT/BjAv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plWYvKW5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBD14CDEC;
-	Wed, 24 Jul 2024 05:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F74423BF;
+	Wed, 24 Jul 2024 06:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721799600; cv=none; b=TfxfrFefBWjtfhNUT2xp18R7Hu+ltoaCR1P5XO8kzSTZrfAWvy16pXrMruKfe3MzQQwQHGu5yGy05wFruHxMUeQgp3+wSDBGj3agme3FW2r8xXogrpNhRkstx4M+0C1SfUMJpBbSVeRoVBQgM/CFY8iIVnXq9dCuas7DlW3W4tc=
+	t=1721800949; cv=none; b=ogTAvIKQA5MsCVu21KChnmRchEUDMojRzzOgb6JguXoJsMncrTakWAuUiMz28Ukq7CCrH5e8HZkdDJ3ips57jYgbIUUQY7RhqJeibwjFjRzePxN76U5JXCq0P6avT6LEi1YOriib8qEvnZ1jh4JkIxnFQ2Zq10qaomV4Tn3S5vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721799600; c=relaxed/simple;
-	bh=vgv/sVuDrseMUP/pyCPPjNCD18JQT/rUZ2CaLlZU5tM=;
+	s=arc-20240116; t=1721800949; c=relaxed/simple;
+	bh=Ef9zeJf4ngiRMDrj9dMqjkqhHO9E05g2lO52iKthTWI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TpHdnVPAdiH4PDoTjK2ldg/Nl4sJq1zvPkWKcUjV+T2TPoITvRqhkg9BEAZXYOEDzVTP0Iuzg2o0EIGPJOE2yfNcgJNjv4mUEEfGU21fPuuv59/8exyAZEEe7srUkmwYe6kSvpLsk1BhUTc6qW1ksz6OcncP3dbleehxRBPuEYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ddT/BjAv; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721799599; x=1753335599;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vgv/sVuDrseMUP/pyCPPjNCD18JQT/rUZ2CaLlZU5tM=;
-  b=ddT/BjAvUZpsfO2NwujRTYxJHKcTw+NtpYK9Wl/cSfmyLGiSx0WIUuf4
-   liW4gzQ1fEI7y4mt54RfFWrePFmrf9heE39XViqNkOtLzM0IW4xTAs3td
-   A3n7+W5hOex3LTTI3FGq5Z+IU7UfW7r/ROeVYeyrpeZ6cgohkrgRY6YzN
-   dGEXfPNiRwr3xN//05sWbepjyyyfFZMteIqov/CwMGO3a2z+AQAJ+4huL
-   9MTaucH6B6vSYP0e4EtC/bRUWlK6x7hvYHEIre+WYWZyRBtPML4xL6s2+
-   uSZ/c7RGY6DcqFzEXQWYTVh1/AJyhBjVygqniCwPX804FQ06nW0jDESYm
-   g==;
-X-CSE-ConnectionGUID: WAjFaOvmRPqtITvr+d3STg==
-X-CSE-MsgGUID: DxBPaiUmQfOPwQwE6YYVEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11142"; a="30118102"
-X-IronPort-AV: E=Sophos;i="6.09,232,1716274800"; 
-   d="scan'208";a="30118102"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 22:39:58 -0700
-X-CSE-ConnectionGUID: ncONMvkLQDyBLaGSnoYQxA==
-X-CSE-MsgGUID: x8TCFx/SQ5mhehx6BHXj0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,232,1716274800"; 
-   d="scan'208";a="56622781"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.9.238]) ([10.124.9.238])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 22:39:54 -0700
-Message-ID: <48373ac6-574b-4f72-b4f1-ddb7de8a5107@linux.intel.com>
-Date: Wed, 24 Jul 2024 13:39:45 +0800
+	 In-Reply-To:Content-Type; b=jaV9shuhkxuoM+gC0ski6iHLV4iVUm01cjph8Hdnw2vWWyuqipF7Z3GhZltKzyQdT6GZNCvegXvNxvLzTMcubLoLwNRperHtUvfSwwX7hrWA4sjnp8T2VafLKWpNN8ys1TASFH9UEu4Gaclc0jqGAieDP/pQBIElfKoQ5R6E60c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plWYvKW5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D78C32782;
+	Wed, 24 Jul 2024 06:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721800948;
+	bh=Ef9zeJf4ngiRMDrj9dMqjkqhHO9E05g2lO52iKthTWI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=plWYvKW5PseXMjBMwT+QL9G9zDENnjyZ4EqPaewQYDPNbkLp8kyTjPmHiRyB6Gjoe
+	 ZF5e4/CFkk07VnEwRHaGQ2yH70TrVXOKQcD+MGTRmEbaAdsTnS8+S17xLEtKQhVRRs
+	 Gy62EFibvKK6IVg3j8iTKXBh8rjr2K9kFA48ICqcIzjmDgN3tFePidwU9rZHqtevWN
+	 yR/QQfrwCQZCI6deoRNcNNCFq4MHwPInEXUQmgJgRBWZrujn5ngmEZA31UEY0mHTL0
+	 ef2DUCBZ2ednT0WolXHJGhVwcGV5oangWYCYqrD4koxQ+THM9rgz7DzRh/ByuTBhmo
+	 8i+zElMPUPp+Q==
+Message-ID: <4195ef00-bd81-4c1d-8e66-b4a17da03ef1@kernel.org>
+Date: Wed, 24 Jul 2024 08:02:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,76 +50,160 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] Subject: PCI: Enable io space 1k granularity for intel
- cpu root port
-To: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-Cc: helgaas@kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, lkp@intel.com, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev
-References: <e5c1990b-8c40-4376-bd9f-3701bf4eab91@linux.intel.com>
- <20240724033829.4724-1-zhoushengqing@ttyinfo.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20240724033829.4724-1-zhoushengqing@ttyinfo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4 02/12] dt-bindings: PCI: brcmstb: Add 7712 SoC
+ description
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-3-james.quinlan@broadcom.com>
+ <e8b34f9e-5286-44aa-8bb8-88e5ff5c8255@kernel.org>
+ <CA+-6iNxuJQEKA_BfLiaG6FfJJdsjV1u+Lv5Knna1KhnMX=Meew@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CA+-6iNxuJQEKA_BfLiaG6FfJJdsjV1u+Lv5Knna1KhnMX=Meew@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 7/24/2024 11:38 AM, Zhou Shengqing wrote:
->> On 7/23/2024 4:04 PM, Zhou Shengqing wrote:
->>>> I think this has potential.  Can you include a more complete citation
->>>> for the Intel spec?  Complete name, document number if available,
->>>> revision, section?  Hopefully it's publically available?
->>> Most of intel CPU EDS specs are under NDA. But you can refer to
->>> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e5-v2-datasheet-vol-2.pdf
->>> keyword:"EN1K".
->>> ...
+On 23/07/2024 23:03, Jim Quinlan wrote:
+> On Wed, Jul 17, 2024 at 2:53 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 16/07/2024 23:31, Jim Quinlan wrote:
+>>> This adds the description for the 7712 SoC, a Broadcom
+>>> STB sibling chip of the RPi 5.  Two new reset controllers
+>>> are described.
 >>>
->>> 	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
->>> 		if (pci_domain_nr(d->bus) == pci_domain_nr(dev->bus)) {
->> Perhaps it is enough to check if the 0x09a2 VT-d and the rootport are on the smae bus
->> e.g. On my SPR, domain 0000
-> Thank you for your comment.
->
-> Do you mean it shoud be like this?
->
-> 	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
-> 		if (d->bus->number == dev->bus->number) {
-> 			pci_read_config_word(d, 0x1c0, &en1k);
-> 			if (en1k & 0x4) {
-> 				pci_info(dev, "1K I/O windows enabled per %s EN1K setting\n", pci_name(d));
-> 				dev->io_window_1k = 1;
-> 			}
-> 		}
-> 	}
->
->> 00:00.0 System peripheral: Intel Corporation Device 09a2 (rev 20)
->> 00:0f.0 PCI bridge: Intel Corporation Device 1bbf (rev 10) (prog-if 00 [Normal decode])
+>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>>> ---
+>>>  .../bindings/pci/brcm,stb-pcie.yaml           | 26 +++++++++++++++++++
+>>>  1 file changed, 26 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>> index 692f7ed7c98e..90683a0df2c5 100644
+>>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>> @@ -21,6 +21,7 @@ properties:
+>>>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+>>>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+>>>            - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>>> +          - brcm,bcm7712-pcie # Broadcom STB sibling of Rpi 5
+>>>
+>>>    reg:
+>>>      maxItems: 1
+>>> @@ -100,12 +101,16 @@ properties:
+>>>      items:
+>>>        - description: reset for external PCIe PERST# signal # perst
+>>>        - description: reset for phy reset calibration       # rescal
+>>> +      - description: reset for PCIe/CPU bus bridge         # bridge
+>>> +      - description: reset for soft PCIe core reset        # swinit
+>>>
+>>>    reset-names:
+>>>      minItems: 1
+>>>      items:
+>>>        - const: perst
+>>>        - const: rescal
+>>> +      - const: bridge
+>>> +      - const: swinit
 >>
->>    
->> 15:00.0 System peripheral: Intel Corporation Device 09a2 (rev 20)
->> 15:01.0 PCI bridge: Intel Corporation Device 352a (rev 04) (prog-if 00 [Normal decode])
+>> This does not match at all what you have in allOf:if:then section.
 >>
->> and if you check domain number only, they might sit on different bus, perhaps that
->> would make thing complex, could you make sure the VT-d is on the upstream bus of the
->> bridge ?
-> I checked it on ICX SPR EMR GNR, VT-d is always on the same bus with root port,
-> and VT-d device and function number is always 0.
+>>>
+>>>  required:
+>>>    - compatible
+>>> @@ -159,6 +164,27 @@ allOf:
+>>>          - resets
+>>>          - reset-names
+>>>
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: brcm,bcm7712-pcie
+>>> +    then:
+>>> +      properties:
+>>> +        resets:
+>>> +          minItems: 3
+>>> +          maxItems: 3
+>>> +
+>>> +        reset-names:
+>>> +          items:
+>>> +            - const: rescal
+>>
+>> Look - here it is rescal. Before you said it must be perst.
+>>
+>> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml#L132
+> 
+> Hello Krzysztof,
+> 
+> The difference between my commits and the above example is that the
+> above example has no "desc" line(s) to describe the clocks  -- How
 
-Yes, every VT-d instance in the root complex and the root port integrated are
-on the same bus. and VT-d is the first device of that bus.
+Which does not really matter to illustrate the concept where you define
+the widest constraints and where you narrow them.
 
-The EDS doesn't say if there is exception one of the VT-d instances in an
-system its EN1K wasn't set while others were set, vice vesa. so I suggest
-just check the VT-d and then set the root port's io_windows_1k of the same bus.
-
-Hope that works for your case.
+> would you add this?  Or are you okay with (a) no description or (b)
+> using a "#comment..." next to the clock's name?
 
 
-Thanks,
-Ethan
 
->
-> Please let me know if further modifications are needed.
->
->> Thanks,
->> Ethan
+Best regards,
+Krzysztof
+
 
