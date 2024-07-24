@@ -1,172 +1,262 @@
-Return-Path: <linux-pci+bounces-10721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 592AB93B1AF
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:34:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D35E93B1E9
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:47:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3D69B2142B
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 13:34:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E4F7B2173F
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 13:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86CCD157461;
-	Wed, 24 Jul 2024 13:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E66E158D86;
+	Wed, 24 Jul 2024 13:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YkhkLiFk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h7tkJN0I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6C3152511
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 13:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A207113E020
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 13:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721828057; cv=none; b=Z6xfpSEICCCOUW5xna2CfXYic8g+mCn+raa7fbaSASDWcIT9jE4Jbm+8B4GM36nWEJn9w+CJI9y5j8+93XlqE2zKnlfyKvwu63ZRsEGfuuZaFjqis6tWU2X0KX2XqcsTDzM45VFO70wHR29psHg5IaBx+X5z8+pf4OCnND2OEZ4=
+	t=1721828856; cv=none; b=LpRdM9i34DlpBupgkhLQ1htMt32f2nrKE+Iql9JdlK1j8Fgy1anSA2Yc3zYsJUk+dGFqf7DgQ1NvD2mqGdLmO7ZiHiiskGwW2mEv//dM5ZClpGliAw+TFK9lnXa3ZcLYXDTfBbgVQpiEgPGfzs7C5LCugUMWp0QeMrswkHbg3RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721828057; c=relaxed/simple;
-	bh=SUUQmRZ2+Ng08hMBvnZsJP3Ew1XLswHadjWxmeWwjWs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ncpLZNXqE2ZYR56+5yJhVSV92TmsuqYJqbm8BuLZhqqYI75myxdS8kgXvwt4OvN86fvkkBt7C8rnu99Bk6pIyOBWsZL3zOizWgvFFjA6wgb2Plq0MNFEYPqS1UQzJc3MhhecONlwmSc+BaGmaQOLdzNDUplcavEziRcsmcvD1E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YkhkLiFk; arc=none smtp.client-ip=209.85.128.170
+	s=arc-20240116; t=1721828856; c=relaxed/simple;
+	bh=xjWm/eDlWeqPzKSEQS2S0Ya+3sWJ6iqZgAKGHCaMITE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5WgU+9kvvSsy3bmwOBUShFdcY+Iuwq4X28YPbf7mdT67ytSPMZJV/mvvtLvHJNRsqAvTTAlcHY9kNtnHtjlCJKTDUUWUt3nfh8NKkMEQzffow4zgTJq3Oq8MWiI9phcDR//Nz7rSpJCWhPTVByhJIeGCOvgrL5jH5tpziKy88s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h7tkJN0I; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-664ccd158b0so66376337b3.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 06:34:15 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fc52394c92so18757905ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 06:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721828055; x=1722432855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SUUQmRZ2+Ng08hMBvnZsJP3Ew1XLswHadjWxmeWwjWs=;
-        b=YkhkLiFkglxrtd8Lmx21PKV/rcP6wKh53VIHtpU0yaxId+fU6WJqUfO67/EMvgo7HG
-         Krd0LFY+lJ4AdOjJoWkdqNUjsM0MG7x879w7caufnS6g8rMqv2YDSJmNLDTgkCY5sonW
-         AMd/VemA9AFYZ5xUSPr05EwiH89/3dLLX3VpP3o+BhIpiMFsd/YwIV2s+a0MinwAVWf4
-         bAtrF4+KXNue2COTUnTIWY9d5+DIHWND6iHQizF41tpwaPP30zkASDkUIkr8SpY3VuLz
-         QuInxLMR9tmxdtTT+rrkCfiCAmY3UXbr7vUCAoz2zFRGJCTIpYn4648tT7pFoA6dQJc2
-         sXaQ==
+        d=linaro.org; s=google; t=1721828854; x=1722433654; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SjlS3KeN9meLLfSQsSaPi/f/kHzcBW78TFSUcPryCjM=;
+        b=h7tkJN0IXAmZSDVDgQOpeqfw+8fvEIc3K1Sbftr9/y0yr79iR+NCNt33saVsG1zH+Z
+         fMBSAvmZ+HthOyrGq/J8fiQhuggVeJDZkNx9dZMRxXMSLDVYyn8Rw/h5Sef+QszH30Lg
+         6K4XgaDxEe8PlovPdua7+GVEx0iaBo7NRBdqS6ShNyG1ngwkSWKAjmSy2VgKlg/jIXEz
+         iWM8hn0W6YrN13X5Zgp//JjFslD0GJK3urRYc+pxE+MjAMPv9sDFvhsReSodr4HZO6iL
+         dejcqC8zG9pVucrHnWh1Ejy/FlWkKhe/eaXgMkQioAxsZqCTlkk6V9EMCxX2HfKp97b1
+         L6Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721828055; x=1722432855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SUUQmRZ2+Ng08hMBvnZsJP3Ew1XLswHadjWxmeWwjWs=;
-        b=WDYqSk6ZcnN85Kq5B0Nl9SEaUeP5WIBfGY/BdzSK9vdOtXto0F/iTs2/LPuwzgHu/1
-         lS15799pUADJZ2CeOxo1qXnryErQn+jiQbzrErOHs35rVBVskTisP0+VGR5MADv5W8fK
-         s9ccf7yslUuw5FQZ06LZDFjCsuUfHFqo0UWydFFjk2BO/ymv9+YaSsjn7/Kk1WNqW+BT
-         zW6LmFCMDDrqbKOU4XxU3qzXE+GHd25sIv5nbXBcnaru4tmSeQBkjA5XdL078FFm4u4o
-         QqdhSf1b5obppeaS5UdiCWzdxwZB/s0vbqH3hzFdpAPc8jA4VI42LhgF+XNyUy/tyoHA
-         AbXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJqF4KNAubORW0HJR41M0R/dOdOyipSKt0N0cF+SPX50o5/rHVo6rFGW/2KAbnq2WO1IEt5/FJ6NI7m0FTU+NxwXLLB8by/ULR
-X-Gm-Message-State: AOJu0YxxsRkxGd7SfA7zNp2IUKEOaAe3Dc1rEL2UpTcFaJyRFLBWM8La
-	A4SBCHgiZiwQ75DEGsjrrNSQ0hdaVf8Or7X1j1wWwPx1v4VBGrPYXksPQAhbObkmgSEg75FOPt4
-	Xqt/HCuqPyUssLPbMzeVQuw98scjmDt8/OT9Dgg==
-X-Google-Smtp-Source: AGHT+IEmdGS3kWJwFOXkHdsFDbk48NhySqk+PBrvHOVCdWUgLmQZKnzxI3vscqlPqEO9OwfBwd6wWPGHC+h+ULfhzqQ=
-X-Received: by 2002:a05:690c:fcb:b0:64a:7379:eb53 with SMTP id
- 00721157ae682-6727d7bca25mr25623317b3.43.1721828054790; Wed, 24 Jul 2024
- 06:34:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721828854; x=1722433654;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SjlS3KeN9meLLfSQsSaPi/f/kHzcBW78TFSUcPryCjM=;
+        b=V8eWvKctHIbrpSvGgIBTF7Psn7CjmRJJ7FBbNd+hkE5mL3DTBgmjnhJgHH1ZHWYw4u
+         NBJUZuLG/BW+SCm9iufA2Aa+i6+li9DL4V7dAUNGu0i8HYPC+j4z/7C1RfpTkjLCYk5r
+         3dAJbxGQVCzbPZlBvZ1TRlnBW5NvXFO1ScbbKKtGJUIZKE2SPouf6SnjNC+jazkd4k/M
+         tSWxOPpsnjqw7cVO+OKMJlu411BIz21KV34K9gx+f0i/KH3YJxAoMTodfYPfTn5qfjdp
+         havSdaSk7kriniattII2DhipIa0wbaCQMml2ycwWdoxPNqr5nO6FvyStrpKf0/Nyipdo
+         DZCw==
+X-Gm-Message-State: AOJu0Yxoj/cI37foetor2qCR64JmHMX+TZX1eTH65toC7BOmJ0FC9VH0
+	Bj7ICj0NkIwSlpRyyGe1YUZ4p/qTj0UAiNIv3Spn6k1WBLCjiGKQbMMKYLQvNQ==
+X-Google-Smtp-Source: AGHT+IGQ1pRozmQ8WsiHI1I3zmEDTN6hvlFln3KcelbKxSnwPg41LAbjogxZsXYR2+UZUvCxUcYACA==
+X-Received: by 2002:a17:903:244a:b0:1fc:2ee3:d45a with SMTP id d9443c01a7336-1fdd54f46f3mr24825785ad.8.1721828853831;
+        Wed, 24 Jul 2024 06:47:33 -0700 (PDT)
+Received: from thinkpad ([103.244.168.26])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f44f4c4sm94151845ad.224.2024.07.24.06.47.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jul 2024 06:47:33 -0700 (PDT)
+Date: Wed, 24 Jul 2024 19:17:21 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-pci@vger.kernel.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Aleksandr Mishin <amishin@t-argos.ru>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Koichiro Den <den@valinux.co.jp>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Marc Zyngier <maz@kernel.org>, Michal Simek <michal.simek@amd.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Rob Herring <robh@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v4 05/15] PCI: dwc: Silence set affinity failed warning
+Message-ID: <20240724134721.GC3349@thinkpad>
+References: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
+ <20240723132958.41320-6-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <rzf5jaxs2g4usnqzgvisiols2zlizcqr3pg4b63kxkoaekkjdf@rleudqbiur5m>
- <a87d4948-a9ce-473b-ae36-9f0c04c3041e@quicinc.com> <CAA8EJpq=rj-=JsYpPmwXiYkL=AALf-ZPQeq9drEoCkCAufLdig@mail.gmail.com>
- <20240724133139.GB3349@thinkpad>
-In-Reply-To: <20240724133139.GB3349@thinkpad>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 24 Jul 2024 16:34:03 +0300
-Message-ID: <CAA8EJprSTfddwT1DxK7_B-bLbqWO7hTWKRfHnN5kxya6GbcmEA@mail.gmail.com>
-Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
- host generic ECAM driver
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mayank Rana <quic_mrana@quicinc.com>, will@kernel.org, lpieralisi@kernel.org, 
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
-	cassel@kernel.org, yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com, 
-	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org, amishin@t-argos.ru, 
-	thierry.reding@gmail.com, jonathanh@nvidia.com, Frank.Li@nxp.com, 
-	ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com, 
-	marek.vasut+renesas@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, quic_ramkri@quicinc.com, quic_nkela@quicinc.com, 
-	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com, 
-	quic_nitegupt@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240723132958.41320-6-marek.vasut+renesas@mailbox.org>
 
-On Wed, 24 Jul 2024 at 16:31, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Wed, Jul 24, 2024 at 10:12:17AM +0300, Dmitry Baryshkov wrote:
-> > On Wed, 24 Jul 2024 at 06:58, Mayank Rana <quic_mrana@quicinc.com> wrot=
-e:
-> > >
-> > >
-> > >
-> > > On 7/23/2024 7:13 PM, Dmitry Baryshkov wrote:
-> > > > On Mon, Jul 15, 2024 at 11:13:28AM GMT, Mayank Rana wrote:
-> > > >> Based on previously received feedback, this patch series adds func=
-tionalities
-> > > >> with existing PCIe host generic ECAM driver (pci-host-generic.c) t=
-o get PCIe
-> > > >> host root complex functionality on Qualcomm SA8775P auto platform.
-> > > >>
-> > > >> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM p=
-latform driver:
-> > > >> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@q=
-uicinc.com/T/
-> > > >>
-> > > >> 1. Interface to allow requesting firmware to manage system resourc=
-es and performing
-> > > >> PCIe Link up (devicetree binding in terms of power domain and runt=
-ime PM APIs is used in driver)
-> > > >> 2. Performing D3 cold with system suspend and D0 with system resum=
-e (usage of GenPD
-> > > >> framework based power domain controls these operations)
-> > > >> 3. SA8775P is using Synopsys Designware PCIe controller which supp=
-orts MSI controller.
-> > > >> This MSI functionality is used with PCIe host generic driver after=
- splitting existing MSI
-> > > >> functionality from pcie-designware-host.c file into pcie-designwar=
-e-msi.c file.
-> > > >
-> > > > Please excuse me my ignorance if this is described somewhere. Why a=
-re
-> > > > you using DWC-specific MSI handling instead of using GIC ITS?
-> > > Due to usage of GIC v3 on SA8775p with Gunyah hypervisor, we have
-> > > limitation of not supporting GIC ITS
-> > > functionality. We considered other approach as usage of free SPIs (no=
-t
-> > > available, limitation in terms of mismatch between number of SPIs
-> > > available with physical GIC vs hypervisor) and extended SPIs (not
-> > > supported with GIC hardware). Hence we just left with DWC-specific MS=
-I
-> > > controller here for MSI functionality.
-> >
-> > ... or extend Gunyah to support GIC ITS. I'd say it is a significant
-> > deficiency if one can not use GIC ITS on Gunyah platforms.
-> >
->
-> It if were possible, Qcom would've went with that. Unfortunately, it is n=
-ot.
+On Tue, Jul 23, 2024 at 03:27:05PM +0200, Marek Vasut wrote:
+> Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps .irq_set_affinity unset
+> and allows migrate_one_irq() code in cpuhotplug.c to exit right away, without
+> printing "IRQ...: set affinity failed(-22)" warning.
+> 
+> Remove .irq_set_affinity implementation which only return -EINVAL from this
+> controller driver.
+> 
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-Ack.
-Mayank, if the patch gets resent for any reason, please add this to
-the commit message.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
->
-> - Mani
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+- Mani
 
+> ---
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: "Pali Rohár" <pali@kernel.org>
+> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+> Cc: Aleksandr Mishin <amishin@t-argos.ru>
+> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Cc: Anup Patel <apatel@ventanamicro.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+> Cc: Daire McNamara <daire.mcnamara@microchip.com>
+> Cc: Damien Le Moal <dlemoal@kernel.org>
+> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+> Cc: Jim Quinlan <jim2101024@gmail.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Cc: Jon Hunter <jonathanh@nvidia.com>
+> Cc: Jonathan Derrick <jonathan.derrick@linux.dev>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Joyce Ooi <joyce.ooi@intel.com>
+> Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+> Cc: Koichiro Den <den@valinux.co.jp>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Michal Simek <michal.simek@amd.com>
+> Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+> Cc: Niklas Cassel <cassel@kernel.org>
+> Cc: Nipun Gupta <nipun.gupta@amd.com>
+> Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
+> Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-rpi-kernel@lists.infradead.org
+> Cc: linux-tegra@vger.kernel.org
+> ---
+> V4: - New patch
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c         |  7 -------
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 12 +++---------
+>  2 files changed, 3 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 52c6420ae2003..ce9d9e0a52609 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -189,12 +189,6 @@ static void ks_pcie_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		(int)data->hwirq, msg->address_hi, msg->address_lo);
+>  }
+>  
+> -static int ks_pcie_msi_set_affinity(struct irq_data *irq_data,
+> -				    const struct cpumask *mask, bool force)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+>  static void ks_pcie_msi_mask(struct irq_data *data)
+>  {
+>  	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(data);
+> @@ -247,7 +241,6 @@ static struct irq_chip ks_pcie_msi_irq_chip = {
+>  	.name = "KEYSTONE-PCI-MSI",
+>  	.irq_ack = ks_pcie_msi_irq_ack,
+>  	.irq_compose_msi_msg = ks_pcie_compose_msi_msg,
+> -	.irq_set_affinity = ks_pcie_msi_set_affinity,
+>  	.irq_mask = ks_pcie_msi_mask,
+>  	.irq_unmask = ks_pcie_msi_unmask,
+>  };
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index a0822d5371bc5..3e41865c72904 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -48,8 +48,9 @@ static struct irq_chip dw_pcie_msi_irq_chip = {
+>  };
+>  
+>  static struct msi_domain_info dw_pcie_msi_domain_info = {
+> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> -		   MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
+> +	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX |
+> +		  MSI_FLAG_MULTI_PCI_MSI,
+>  	.chip	= &dw_pcie_msi_irq_chip,
+>  };
+>  
+> @@ -116,12 +117,6 @@ static void dw_pci_setup_msi_msg(struct irq_data *d, struct msi_msg *msg)
+>  		(int)d->hwirq, msg->address_hi, msg->address_lo);
+>  }
+>  
+> -static int dw_pci_msi_set_affinity(struct irq_data *d,
+> -				   const struct cpumask *mask, bool force)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+>  static void dw_pci_bottom_mask(struct irq_data *d)
+>  {
+>  	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
+> @@ -177,7 +172,6 @@ static struct irq_chip dw_pci_msi_bottom_irq_chip = {
+>  	.name = "DWPCI-MSI",
+>  	.irq_ack = dw_pci_bottom_ack,
+>  	.irq_compose_msi_msg = dw_pci_setup_msi_msg,
+> -	.irq_set_affinity = dw_pci_msi_set_affinity,
+>  	.irq_mask = dw_pci_bottom_mask,
+>  	.irq_unmask = dw_pci_bottom_unmask,
+>  };
+> -- 
+> 2.43.0
+> 
 
-
---=20
-With best wishes
-Dmitry
+-- 
+மணிவண்ணன் சதாசிவம்
 
