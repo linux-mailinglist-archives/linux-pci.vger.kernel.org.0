@@ -1,124 +1,173 @@
-Return-Path: <linux-pci+bounces-10737-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10738-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E73293B5CC
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 19:23:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AE5093B6B7
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 20:29:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F7701C23A53
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 17:23:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9ED7B1C210F4
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 18:29:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E61715F3F9;
-	Wed, 24 Jul 2024 17:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3443216A943;
+	Wed, 24 Jul 2024 18:29:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q/SNlbnY"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JFkn6aSY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC4315B14C
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 17:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739B715FA6B;
+	Wed, 24 Jul 2024 18:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721841780; cv=none; b=DEX+vTpU/nxLdViUsdL2osDekxohw/npAmY0sbZ2KWisxQxwt8iqIceJigVm9cAoy3hTOhSHh95SCY/VREuc/bogWUYPpGDTWB6KuUv7mi4GKpwnw3ZS/hgNMnhKgrPw6n4/EBUR9Qhx+H8K2c2f0qrU3974paFYBZQrz4wrVTo=
+	t=1721845761; cv=none; b=sj+w6QxborNrMbtOkEBybtbknV1U5nS3ahkrogVVWFxwbEQ2r+Dd/Yh2Iz9FPbw7kTCrWBkcaq3pz1jn81EKGgQ+mkyVonEevW3pCZxrGOivMpoNuk9IVrk1TmkRZo3DBizjiEkleMWEraKOojZJSPFiqdv5JJpkdbIxSseoAdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721841780; c=relaxed/simple;
-	bh=ggnTWcK3pjB7kJizmljAvRwIt0ed0NYaiRHP2Yv3Am4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PYCzhhp4P4btpvouUiEzSlvkDVr4iTBljdGcvFQbJ6U0RqTFbADi3mOJowToOZ+nxgZVZrA0A/yA9dgzWwmpoVhGdnSc2n6fnLbM3GUdbnpo5Xy5aQu8XYYQKse99QWGbFW+tg0hMqD0xRoPTPqHOhcnFXkYVEjYHwjwkPfqGec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q/SNlbnY; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52f008aa351so5481326e87.0
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 10:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721841777; x=1722446577; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+AnGIHLZqTHOkv8jJV9QlhymBM4MVLY0RrtuPzdfXxw=;
-        b=q/SNlbnYk/lOfA2NMTuyT3mzOu23gxVMnd0+FHU9nQMcSook8MziNp7jJfomRQoTyU
-         tGTujwMQAhzTKMttVc9OcTDhsxS/Cuq1aF6Bqb+5Ig7S9oLnAHPpKLSedAoCBUjxRWRk
-         96Jj5sikbb7IkwT3FQaePXiYwZARKOviMd0IybGwpAzkspK8cXEBaXZPr6C3ezIVawa5
-         8wAGRfA24+9MSfgXFW0CXQj1A9M6YaAfrj5Oa4um+s9mtnnr3h2a9BzCt1lIt5WZXjia
-         kxBicud/1zXJ2GjXrLkJFPH8stp2wu8SQtte0ml+/09HrFU8beK+t0vOiaZcUHtFYcGK
-         nlBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721841777; x=1722446577;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+AnGIHLZqTHOkv8jJV9QlhymBM4MVLY0RrtuPzdfXxw=;
-        b=rAxkClcfw8qoGRZG+EVlbwLZ/hAZyBMinxX61qdS2sNUvIm+7McxTuYVTfd1XU6/B3
-         +iVzQ0s4rxzyu0qvMGFjtfAH+vB3B4UM1lkjOT5zrDdaG5VKJuVQ/nY19TYjgFTOEsHP
-         RwmXcgqMSKFHp77yQJZkpi6DfRRDCNCeUXnqsc5W6/9MbDfC7OXfr6ITkav2OcG6hTFa
-         OUXQ38iHVgc3nP+YeBRY3+lagkFeZh1cicDCATVjbqFlbVmBG5gtPwGc0zIAjF2fIkzK
-         KbjCHsM7Sauzxui5t2PZz3YrAvJvPCWQuOjBWaBu9GYfr+kHF9SnmLZ/WExnQ4RSNk4V
-         440Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUdonrB6VTzVB3ScKQbQS7I7XKbLIYC5HQbZzltG2EiaI+W9TDhB4f1aTq+dJr3VaqI/+DblkFmkLafzVEAiDqTeZA0zjvoCH5U
-X-Gm-Message-State: AOJu0Yzjob21hqtOKqyRL9orDvl/6lDv7aq8SErL9SRYpZirf320i3iX
-	i3lWwjNoDwpBhQXUzV8Cik4sl0TBrvPy7fR+l+s1GVf7V7ltwt77W+rC9aBtUJ0=
-X-Google-Smtp-Source: AGHT+IEWwx/MofUxwPo8lvoAod3ASgj4oIkVkizHpzCO8taKghKsAR4f06Rh66vlz4x1o/sMg/kNIg==
-X-Received: by 2002:a05:6512:2814:b0:52c:df6f:a66 with SMTP id 2adb3069b0e04-52fd3f7fc3amr256457e87.58.1721841776649;
-        Wed, 24 Jul 2024 10:22:56 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52efb8cdc72sm1621095e87.46.2024.07.24.10.22.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jul 2024 10:22:56 -0700 (PDT)
-Date: Wed, 24 Jul 2024 20:22:54 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom: Allow 'vddpe-3v3-supply' again
-Message-ID: <nanfhmds3yha3g52kcou2flgn3sltjkzhr4aop75iudhvg2rui@fsp3ecz4vgkb>
-References: <20240723151328.684-1-johan+linaro@kernel.org>
+	s=arc-20240116; t=1721845761; c=relaxed/simple;
+	bh=CTbhc2XR6ED+P758V6IIHvmcwsbhKOz48ZEW3Fuhb+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=A24vs2c9mXvQ5ymiIwr0bJhXs5HFJnEAHdbH+28zvdFnFyj2BAkWvPAJCBlvoP0s0wIIWaSFlPpG5VdQPjw1gDlF6bB9b3QZbftOcOo7hSBeXWUW0fNPADJ6uNeGqiD12E35SSQXNqXnA2Dl+yL1qGxcYixdDDoOE6fZZJ+Q/68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JFkn6aSY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46OFAUS6007443;
+	Wed, 24 Jul 2024 18:28:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LYaajTvqjnJdCOkMntWCIMJGdccPtPX0LbzNyy7YInI=; b=JFkn6aSYf6KRb1eI
+	IUTMNMD09XCIsOGuHQeDl7RZe2CLHV/07K90V70SVKiElyahWYTiaS9r1I5F4ENn
+	aiy2gfLKEThzhT/HohvSH4XN1jaPtulrfEJhwvoBet1iUP73kN5/j8fXF3JlxeqA
+	yAJ3w10PIzLqtk1ZeS8YF8g7ykYpmrGwB2oSV8Xxj/zveZ/qmfnQ0VKtl1bBXVfy
+	dVFqsCaGMuq5oCd0l67WJdBLOFkEbYx8n5sT1lnm7ctC2Zd0zx/2nGJG4j/80cHj
+	eZa/wGbGE+Nz4lFzF38W/7Ao22GeUhAumXHTprQPoO14oyKTOre7JjwLwzhf4X1u
+	NCifwQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40k413ggpg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jul 2024 18:28:59 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46OISwhg007609
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jul 2024 18:28:58 GMT
+Received: from [10.110.66.115] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 24 Jul
+ 2024 11:28:58 -0700
+Message-ID: <f60f3c75-d1cf-4622-8815-8cea17ae323c@quicinc.com>
+Date: Wed, 24 Jul 2024 11:28:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240723151328.684-1-johan+linaro@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] PCI: dwc: Add dbi_phys_addr and atu_phys_addr to
+ struct dw_pcie
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <jingoohan1@gmail.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_mrana@quicinc.com>
+References: <20240724022719.2868490-1-quic_pyarlaga@quicinc.com>
+ <20240724022719.2868490-2-quic_pyarlaga@quicinc.com>
+ <20240724135305.GE3349@thinkpad>
+Content-Language: en-US
+From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+In-Reply-To: <20240724135305.GE3349@thinkpad>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: E7EKnnQ48I5svAshJPWH7wFIf2muEXbS
+X-Proofpoint-GUID: E7EKnnQ48I5svAshJPWH7wFIf2muEXbS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-24_19,2024-07-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 mlxscore=0 spamscore=0 mlxlogscore=913 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407240133
 
-On Tue, Jul 23, 2024 at 05:13:28PM GMT, Johan Hovold wrote:
-> Commit 756485bfbb85 ("dt-bindings: PCI: qcom,pcie-sc7280: Move SC7280 to
-> dedicated schema") incorrectly removed 'vddpe-3v3-supply' from the
-> bindings, which results in DT checker warnings like:
+Hi Manivannan,
+
+Thanks for the review comments.
+
+On 7/24/2024 6:53 AM, Manivannan Sadhasivam wrote:
+> On Tue, Jul 23, 2024 at 07:27:18PM -0700, Prudhvi Yarlagadda wrote:
 > 
-> 	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-dora.dtb: pcie@600000: Unevaluated properties are not allowed ('vddpe-3v3-supply' was unexpected)
->         from schema $id: http://devicetree.org/schemas/pci/qcom,pcie.yaml#
+> Subject could be modified as below:
 > 
-> Note that this property has been part of the Qualcomm PCIe bindings
-> since 2018 and would need to be deprecated rather than simply removed if
-> there is a desire to replace it with 'vpcie3v3' which is used for some
-> non-Qualcomm controllers.
-
-I think Rob Herring suggested [1] adding the property to the root port
-node rather than the host. If that suggestion still applies it might be
-better to enable the deprecated propertly only for the hosts, which
-already used it, and to define a new property at the root port.
-
-[1] https://lore.kernel.org/lkml/20240604235806.GA1903493-robh@kernel.org/
-
+> PCI: dwc: Cache DBI and iATU physical addresses in 'struct dw_pcie_ops'
 > 
-> Fixes: 756485bfbb85 ("dt-bindings: PCI: qcom,pcie-sc7280: Move SC7280 to dedicated schema")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml   | 3 +++
->  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml   | 3 ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-sc8280xp.yaml | 3 ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.yaml          | 3 +++
->  4 files changed, 6 insertions(+), 6 deletions(-)
 
--- 
-With best wishes
-Dmitry
+ACK. I will update it in the next patch.
+
+>> Both DBI and ATU physical base addresses are needed by pcie_qcom.c
+>> driver to program the location of DBI and ATU blocks in Qualcomm
+>> PCIe Controller specific PARF hardware block.
+>>
+>> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+> 
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> - Mani
+> 
+
+ACK. I will add it in the next patch.
+
+Thanks,
+Prudhvi
+>> Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
+>>  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+>>  2 files changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 1b5aba1f0c92..bc3a5d6b0177 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -112,6 +112,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+>>  		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
+>>  		if (IS_ERR(pci->dbi_base))
+>>  			return PTR_ERR(pci->dbi_base);
+>> +		pci->dbi_phys_addr = res->start;
+>>  	}
+>>  
+>>  	/* DBI2 is mainly useful for the endpoint controller */
+>> @@ -134,6 +135,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+>>  			pci->atu_base = devm_ioremap_resource(pci->dev, res);
+>>  			if (IS_ERR(pci->atu_base))
+>>  				return PTR_ERR(pci->atu_base);
+>> +			pci->atu_phys_addr = res->start;
+>>  		} else {
+>>  			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+>>  		}
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 53c4c8f399c8..efc72989330c 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -407,8 +407,10 @@ struct dw_pcie_ops {
+>>  struct dw_pcie {
+>>  	struct device		*dev;
+>>  	void __iomem		*dbi_base;
+>> +	phys_addr_t		dbi_phys_addr;
+>>  	void __iomem		*dbi_base2;
+>>  	void __iomem		*atu_base;
+>> +	phys_addr_t		atu_phys_addr;
+>>  	size_t			atu_size;
+>>  	u32			num_ib_windows;
+>>  	u32			num_ob_windows;
+>> -- 
+>> 2.25.1
+>>
+> 
 
