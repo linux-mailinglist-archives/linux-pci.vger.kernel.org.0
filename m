@@ -1,122 +1,118 @@
-Return-Path: <linux-pci+bounces-10744-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10745-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7541B93B737
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 21:10:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4758093B783
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 21:18:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2674E281715
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 19:10:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8E1BB24249
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 19:18:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3945615FD16;
-	Wed, 24 Jul 2024 19:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8FB1607AB;
+	Wed, 24 Jul 2024 19:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJGeZfef"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="QjBQFpoD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B8515F403
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 19:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069D715667B
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 19:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721848233; cv=none; b=JOxqfZSSjF79JgXWVHnBIx/DqGkTcBvHbcdcIVfv6LRmUh7c9KLpTDIbqPAsDhIgYUdZO1geM0gNl/C/FzkDAgkwu/dlC7l/VdPxpMlrMJ3QCGHztPDvfCX6DTU+SXRFXECIq/7/m93oL/MVd/nxwGrXuIeolwD6J9Zhqg4VMS4=
+	t=1721848721; cv=none; b=HwG/UqKhb3mcvP3XAxtmqbtf5Q9yo9epEArkGShFeCSy2Yga1IKNJoAwM1LrpFbG2cJIT7c26r1jNxFzp40c/mr8hW9fY1R8RiKzio6pXbiBNUAusVWbUDvYSg1/0uypjZpy8V7NdECV+j2YRubss58gC5paqUm3Bdd56LEGDhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721848233; c=relaxed/simple;
-	bh=dFpa70ZJP28VQjYHLsU0meCJmv7S4f8fEaF8elB+tZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nGHvDxyXZmRtJl66K63hMRSxrTHgzspJCBB5m37LUGWLcJnOJJ7pVgiKT9e/M5AEOQjGvBBy/DpeMKoh0AGgtVtX4ai5qWOL/muyf3+ku2iMWg0C6YlRdQ1ZJrHgB7FN/vrtk+Zah3Ru2RXREfDhLPhnEeeb0ncxxd4hD5jy1jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJGeZfef; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 588F8C32781;
-	Wed, 24 Jul 2024 19:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721848232;
-	bh=dFpa70ZJP28VQjYHLsU0meCJmv7S4f8fEaF8elB+tZ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=JJGeZfef/llGuSsFpo5X8RH5AD8SsvVs9O4N3Z8vqFocAGhgDgYIcPfBHBOaM9FC7
-	 JbpTydmZzw8h2shjQbM6oDokVtENug6SGJP7mZNdq4dU1XzjgaLC7qgDvKtyJbUNxf
-	 l9vN9MWXuB2Nol3Qfq2HXLleX4A2KOL8X9sKJQLuDDAX2uu7u8oakb3erqKKZOEQwo
-	 d6aCaU5tGMBD1TR9s4tXPQSyG6FFpN9QKR1WvmSQj3opdJ7XjvqRtDJW5q/eQWLaX9
-	 9DcN4mBNEOmlOMVRLK4t9wRecST0Qznz16SoWjsbmdYzMS3ePvwTahboVN2mwj4mZN
-	 scXu5re5r8YsA==
-Date: Wed, 24 Jul 2024 14:10:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, paul.m.stillwell.jr@intel.com,
-	Jim Harris <james.r.harris@intel.com>
-Subject: Re: [PATCH] PCI: fixup PCI_INTERRUPT_LINE for VMD downstream devices
-Message-ID: <20240724191030.GA806685@bhelgaas>
+	s=arc-20240116; t=1721848721; c=relaxed/simple;
+	bh=a02GUhiWbAY4bVUVygn/E4p/MC1dnbGGAe2U0twtjyY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=t64cl8Sk6rC2P46D22+aiJfcQ1nmdFeA559bbADcoWipYS3TqKiHykqthNS7NjsqznrzJaihYNwUc1p8XJgdBy1CXP/BDUE0cEyTQ3Lw7RnrXI9txeqVSXP994tWNarWuEbUZoHlAj6skxcN/0a60df4gxw63Q1FLcii9EJWkkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=QjBQFpoD; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70d333d5890so139821b3a.0
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 12:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1721848719; x=1722453519; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=a02GUhiWbAY4bVUVygn/E4p/MC1dnbGGAe2U0twtjyY=;
+        b=QjBQFpoDwueoj4zaWBfhpIt1PmvjhP2Y9gai1cprtX9q/W0xgDhg6D1r7Fe0BfRb5T
+         Whvz+oHWbAyt+QN0zkgz2uqn33X5T6cyrbEk8yESXM6lfO0vuo6qCPx/awdTKjqgWXRE
+         QJU70uNzrK0fyWJ1tMFTihcXFcAj0cxZjBwBCYUojvQ5agXyw9jk76WXAS8M+IrPf/3H
+         +k/I9TV/SIcUiM6wXrq0QcU2NkAau0VGiN6HrDOo2C9fsNtcx2BtgasM0sST07zD6Pe4
+         9f6PHzti41HELRptWhxDVjE9h1npUjjUOMY0YQVLieuILaIAzF6Xfml0dPynXZeZMPXN
+         Z4tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721848719; x=1722453519;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a02GUhiWbAY4bVUVygn/E4p/MC1dnbGGAe2U0twtjyY=;
+        b=cfgkC0dZ9zxBI20CUWBS669kst+vy2Z6SToNlLBZXeNza5ObTicDh+PhNyId8/lc5n
+         G71Ud0p8MdLbi5xQOex/v+A9DZirgeJMWu2hzT3bh9RgNBe7AK9J5Py4x5zwtdiEunvc
+         KRIK9I8lANGHSJesigSnai6nRaELLiHDyD++w8MDxuFhBAgXiqH90jrOfJyXrwEnZ8C7
+         b0M4wtPiEctBZ7KTQc+skrUHqaA1kHpAbmlZQhRwD4hIfvz/MlnSqnlNzxbdmH9zmWuh
+         D9VhehIVfXylBhDG9cmgDyi+6MTQ3R5B/4nl4cRFTJf0L1DD5PZA14tXlRQZt738EAe/
+         Fqbg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7BZYz7J4AK0gQcTAousCa1HOobkBmxPtRQRejdKz+igwLYk3MnFFUvsnaomfZOHce23AAwqVHrlRV9w5x1a7rxYIbPPAiBTph
+X-Gm-Message-State: AOJu0Yw0PmrbJog6QwV0UfP1o8tASkEk8ZOiWjxw3FxL+D032EKu6Ahm
+	JsZWgncLhki4lLy7oVT7cSTvTX8+sD974JMUZ+a3jwduUpGG1trkqGiTvwk1QeU=
+X-Google-Smtp-Source: AGHT+IFUwWJ+8obz221hJG5x/jzoeJXTY4KS7z9HkU5UcBMvPmWxLk9KdioZD32zMoXRgep0BAh/AA==
+X-Received: by 2002:a05:6a00:3cd5:b0:70d:15b9:3ece with SMTP id d2e1a72fcca58-70eaa946a3bmr578402b3a.29.1721848719142;
+        Wed, 24 Jul 2024 12:18:39 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-70cff4b8166sm8862385b3a.85.2024.07.24.12.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jul 2024 12:18:38 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: alex.williamson@redhat.com,
+	bhelgaas@google.com,
+	christophe.leroy@csgroup.eu,
+	davem@davemloft.net,
+	david.abdurachmanov@gmail.com,
+	edumazet@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	kuba@kernel.org,
+	leon@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lukas@wunner.de,
+	mahesh@linux.ibm.com,
+	mattc@purestorage.com,
+	mika.westerberg@linux.intel.com,
+	mpe@ellerman.id.au,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	oohall@gmail.com,
+	pabeni@redhat.com,
+	pali@kernel.org,
+	saeedm@nvidia.com,
+	sr@denx.de,
+	wilson@tuliptree.org
+Subject: PCI: Work around PCIe link training failures
+Date: Wed, 24 Jul 2024 13:18:30 -0600
+Message-Id: <20240724191830.4807-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <alpine.DEB.2.21.2407222117300.51207@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2407222117300.51207@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240724170040.5193-1-nirmal.patel@linux.intel.com>
 
-On Wed, Jul 24, 2024 at 10:00:40AM -0700, Nirmal Patel wrote:
-> VMD does not support legacy interrupts for devices downstream from a
-> VMD endpoint. So initialize the PCI_INTERRUPT_LINE to 0 for these
-> devices to ensure we don't try to set up a legacy irq for them.
+Sorry for belated response. I wasn't really sure when you first asked & I
+still only have a 'hand wavy' theory here. I think one thing that is getting
+us in trouble is when we turn the endpoint device on, then off, wait for a
+little while then turn it back on. It seems that the port here in this case
+is forced to Gen1 & there is not any path for the kernel to allow it to
+try another alternative again without an informed user to write the register.
 
-s/legacy interrupts/INTx/
-s/legacy irq/INTx/
+I'm still trying to barter for the time to really deeply dive into this so
+must apologize if this sounds crazy or couldn't be correct.
 
-> Note: This patch was proposed by Jim, I am trying to upstream it.
-> 
-> Signed-off-by: Jim Harris <james.r.harris@intel.com>
-> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> ---
->  arch/x86/pci/fixup.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index b33afb240601..a3b34a256e7f 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -653,6 +653,20 @@ static void quirk_no_aersid(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
->  			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
->  
-> +#if IS_ENABLED(CONFIG_VMD)
-> +/* 
-> + * VMD does not support legacy interrupts for downstream devices.
-> + * So PCI_INTERRPUT_LINE needs to be initialized to 0 to ensure OS
-> + * doesn't try to configure a legacy irq.
-
-s/legacy interrupts/INTx/
-s/PCI_INTERRPUT_LINE/PCI_INTERRUPT_LINE/
-
-> + */
-> +static void quirk_vmd_interrupt_line(struct pci_dev *dev)
-> +{
-> +	if (is_vmd(dev->bus))
-> +		pci_write_config_byte(dev, PCI_INTERRUPT_LINE, 0);
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID, quirk_vmd_interrupt_line);
-
-A quirk for every PCI device, even on systems without VMD, seems like
-kind of a clumsy way to deal with this.
-
-Conceptually, I would expect a host bridge driver (VMD acts like a
-host bridge in this case) to know whether it supports INTx, and if the
-driver knows it doesn't support INTx or it has no _PRT or DT
-description of INTx routing to use, an attempt to configure INTx
-should just fail naturally.
-
-I don't claim this is how host bridge drivers actually work; I just
-think it's the way they *should* work.
-
-> +#endif
-> +
->  static void quirk_intel_th_dnv(struct pci_dev *dev)
->  {
->  	struct resource *r = &dev->resource[4];
-> -- 
-> 2.39.1
-> 
+- Matt
 
