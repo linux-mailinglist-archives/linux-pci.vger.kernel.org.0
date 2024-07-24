@@ -1,134 +1,123 @@
-Return-Path: <linux-pci+bounces-10684-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10685-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03FF693AAD6
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 03:58:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDAE593AAF2
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 04:13:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4FE82844EE
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 01:58:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06D73B2350C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 02:13:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B04FD53C;
-	Wed, 24 Jul 2024 01:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E6FD79F0;
+	Wed, 24 Jul 2024 02:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5y6AsFx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C90BA47;
-	Wed, 24 Jul 2024 01:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7335B18040
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 02:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721786303; cv=none; b=CWSxNhoyzMKY/1uGF7dL4GxKik72EXbEM/QwvckO+palZwvs5Pj0BJs7bKMUSTd/AOzIpnXXA13hXmiNe0ELV9Do0a0KvcTWhh562zo2NWh0ngfgsa8jMb8sEypB8Ba5QFrRWdSUsJQAEmK20MDkayWr6MS7zlgpbutf6gWaTjA=
+	t=1721787188; cv=none; b=ZmN0P9xwrXuimIimhz1WRyHggT7f8R/ZxqNJn+CtCJ7a7eTxa0fjQV8c4D63olcvlJnUH0kO1E3s/Zznxp303KbW5EdSvcAxTqMfzJPpHHGeAq3xtJeHERTsbS/2xxozK/sa3RBu4hLm2ip3bx1UWHLEIIXaNc1xsQqCLFoi/go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721786303; c=relaxed/simple;
-	bh=zTI/9lOgKmgqllYrdOynyvXw5CkyrdYdZJmnrTzc4vI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UhLfd6tUnwmjJ26D4WULqBOxf7iWV8r4/pQ8+obgLdREMvP6AFs28ehRb1qFuZS35iSu6iRKV73JWEfQUJjOQ9AfKmB7zMDGJSc2xXnQX62H2NXQQ9WaibHuWSVS92lJoK+VAmJflsTsWzppkO8ayZp9nBH0sURTnEtFwa5s0nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8Cxruu6X6BmkMYAAA--.3159S3;
-	Wed, 24 Jul 2024 09:58:18 +0800 (CST)
-Received: from [10.180.13.176] (unknown [111.207.111.194])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBMW4X6Bm8ppWAA--.50447S3;
-	Wed, 24 Jul 2024 09:58:17 +0800 (CST)
-Subject: Re: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when
- selected cpu is offline
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>,
- Markus Elfring <Markus.Elfring@web.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Belits <abelits@marvell.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Nitesh Narayan Lal <nitesh@redhat.com>,
- Frederic Weisbecker <frederic@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-References: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
- <a50b3865-8a04-4a9a-8d27-b317619a75c0@linux.intel.com>
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-Message-ID: <7340a27e-67c1-c0c3-9304-77710dc44f7f@loongson.cn>
-Date: Wed, 24 Jul 2024 09:58:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1721787188; c=relaxed/simple;
+	bh=zxRx6PS/BB5neEVqroTn3GBIguriVgxJTg1YuD2hYqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7FbFfrt2n8sKXuXw58t2+IpzdkTHIcKKj016OwoGD2qZ7JC9A3VEN50q9SCxk3GY7TDmzl/hjpGMtRiRD6pbuECi2JLGarzDZ1eunIgQvOHNiLOCBOQvIZjH+1PiR3L+4SVi5xPs3p4W6YRQIRDX3S3X+REimGchvmOEs0dhGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n5y6AsFx; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52f04150796so3991868e87.3
+        for <linux-pci@vger.kernel.org>; Tue, 23 Jul 2024 19:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721787184; x=1722391984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=h54jAPwrOx54tpaQLg9+LwjbtZwsdB+FHhiP8Skn4II=;
+        b=n5y6AsFxK2tTOlcCGBI7fZDDrKjL7gzf24y/a+YBD2RvytwBPve9Xk/mDVkR7TnPev
+         1aT3omzfwlMtM/Of84MOVafiLXlcXzaFdhjJZEhGFt5PlXdbL+2d9hHy9+ncBRaTW4IL
+         l0qGhakTD2n4Kx0wk/iDbpStenIqiFZY7xut07QSDKFQIncJL7IBbT7Dc7lXMgGHvrPA
+         35vaEZ3OZ/NkCnBs+JKn7z+WhfUkzhgM/YnAXXE6nqq4rY69zyQJqEH553sErQ/liXjd
+         b7pFb71Q4JnzyS14MXrXa1OSqel2cHLLDUv5a1lZR482zLjhJFsGdJyAejnAIioj0J0E
+         CTsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721787184; x=1722391984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h54jAPwrOx54tpaQLg9+LwjbtZwsdB+FHhiP8Skn4II=;
+        b=xBVoLrxUZ4x3zDCuXDZmF1g/IxDY4Ib6fMAwRQq4CG+kxxaQR+lzqq9EoiEL4zjT6G
+         0NHyKJKiJ4urMMAJThvRH/Pq4B4kDUHGroCW1CFpdnCIrTunpPMmuKZNDI6YUkOZyGdv
+         V+EycCiIiMjNOrPsj7Ylzz5HNS163E9cnpY3q4RzlxcOQ+y42o95U2BR60rttBptzLLy
+         VjwsMUddWZzEvDYslF0TLC2Ard6roC7aJzWpMo9pzmtPMArO50JRLxbQzVcCZBIc73Ry
+         /aWn0SxFl6oKk0LtRBrF19EFV16yU/C0WDrnT3nWfe8AoKNxYE7y3QWIpJcfHzLmpVWF
+         GlNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpwVR6BNtu7ETwX/0uj0MMc2hTBnVM48w/+nJLucbG9mCV2C/GIPEP14JoD2wQlSMqcq7ydtS9ykXkea3LGsa54KW+jJmby9eX
+X-Gm-Message-State: AOJu0YzqMSeDI2ID7/5qfs6LpDkAmKfEnAFdSrWI6VZ2weqG7RbWR8ba
+	Yful2UpvKSNHNUbhzG9fVVIQlFgqqZXNmHDCnwJtJStBkxLdO2jGCEDol2G1c9k=
+X-Google-Smtp-Source: AGHT+IGe2gdDtP0jYuva3hSreTxdFinLmhIMcyMOvFMx/S7foul0J6nvmcN6d9USXnjaYe/LViYKnw==
+X-Received: by 2002:a05:6512:3403:b0:52c:e180:4eac with SMTP id 2adb3069b0e04-52fcefea667mr362218e87.9.1721787184385;
+        Tue, 23 Jul 2024 19:13:04 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52fc51c5af9sm483686e87.148.2024.07.23.19.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jul 2024 19:13:03 -0700 (PDT)
+Date: Wed, 24 Jul 2024 05:13:02 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Mayank Rana <quic_mrana@quicinc.com>
+Cc: will@kernel.org, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, 
+	cassel@kernel.org, yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com, 
+	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org, amishin@t-argos.ru, thierry.reding@gmail.com, 
+	jonathanh@nvidia.com, Frank.Li@nxp.com, ilpo.jarvinen@linux.intel.com, 
+	vidyas@nvidia.com, marek.vasut+renesas@gmail.com, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, quic_ramkri@quicinc.com, quic_nkela@quicinc.com, 
+	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com, quic_nitegupt@quicinc.com
+Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
+ host generic ECAM driver
+Message-ID: <rzf5jaxs2g4usnqzgvisiols2zlizcqr3pg4b63kxkoaekkjdf@rleudqbiur5m>
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a50b3865-8a04-4a9a-8d27-b317619a75c0@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxBMW4X6Bm8ppWAA--.50447S3
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAIB2agXhkAJQABsr
-X-Coremail-Antispam: 1Uk129KBj93XoW7trW3Jw4kZFW7XF18Jr17CFX_yoW8Cw4kpF
-	WkJayFkrWvqF48CasFqa18uFyFgwsrJa4Ikw4xA3W5ZFW3AF1Iqr47WwnIgr1UGrWkZr1I
-	y3WUXrykuFW5ZFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
 
-Hi Ethan,
-On 2024/7/22 PM 3:39, Ethan Zhao wrote:
+On Mon, Jul 15, 2024 at 11:13:28AM GMT, Mayank Rana wrote:
+> Based on previously received feedback, this patch series adds functionalities
+> with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
+> host root complex functionality on Qualcomm SA8775P auto platform.
 > 
-> On 6/13/2024 3:42 PM, Hongchen Zhang wrote:
->> Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
->> @cpu is a offline cpu would cause system stuck forever.
->>
->> This can be happen if a node is online while all its CPUs are
->> offline (We can use "maxcpus=1" without "nr_cpus=1" to reproduce it).
->>
->> So, in the above case, let pci_call_probe() call local_pci_probe()
->> instead of work_on_cpu() when the best selected cpu is offline.
->>
->> Fixes: 69a18b18699b ("PCI: Restrict probe functions to housekeeping 
->> CPUs")
->> Cc: <stable@vger.kernel.org>
->> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
->> ---
->> v2 -> v3: Modify commit message according to Markus's suggestion
->> v1 -> v2: Add a method to reproduce the problem
->> ---
->>   drivers/pci/pci-driver.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->> index af2996d0d17f..32a99828e6a3 100644
->> --- a/drivers/pci/pci-driver.c
->> +++ b/drivers/pci/pci-driver.c
->> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, 
->> struct pci_dev *dev,
->>           free_cpumask_var(wq_domain_mask);
->>       }
->> -    if (cpu < nr_cpu_ids)
+> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
+> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/                                                                                                      
 > 
-> Why not choose the right cpu to callwork_on_cpu() ? the one that is 
-> online. Thanks, Ethan
-Yes, let housekeeping_cpumask() return online cpu is a good idea, but it 
-may be changed by command line. so the simplest way is to call 
-local_pci_probe when the best selected cpu is offline.
-> 
->> +    if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->>           error = work_on_cpu(cpu, local_pci_probe, &ddi);
->>       else
->>           error = local_pci_probe(&ddi);
+> 1. Interface to allow requesting firmware to manage system resources and performing
+> PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
+> 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
+> framework based power domain controls these operations)
+> 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
+> This MSI functionality is used with PCIe host generic driver after splitting existing MSI
+> functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
 
+Please excuse me my ignorance if this is described somewhere. Why are
+you using DWC-specific MSI handling instead of using GIC ITS?
+
+> Below architecture is used on Qualcomm SA8775P auto platform to get ECAM compliant PCIe
+> controller based functionality. Here firmware VM based PCIe driver takes care of resource
+> management and performing PCIe link related handling (D0 and D3cold). Linux VM based PCIe
+> host generic driver uses power domain to request firmware VM to perform these operations
+> using SCMI interface.
 
 -- 
-Best Regards
-Hongchen Zhang
-
+With best wishes
+Dmitry
 
