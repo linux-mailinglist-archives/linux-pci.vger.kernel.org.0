@@ -1,174 +1,146 @@
-Return-Path: <linux-pci+bounces-10729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10730-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD00A93B455
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 17:54:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAA2193B4C5
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 18:19:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D111285362
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:54:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6206D28155B
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 16:19:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D6D15B116;
-	Wed, 24 Jul 2024 15:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50D4415B134;
+	Wed, 24 Jul 2024 16:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BffLe/L1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uMUolZob"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F841D699;
-	Wed, 24 Jul 2024 15:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAF02595
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 16:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721836492; cv=none; b=LSFBPBpHeW/3DgkYm9Ozgp1Zkfb0N4vXrsYCqxJ1L+UfeDZrBA3UBDNz4n8yeI4BW13t7NtZFEHZuYkEI73TYgVHk3dRxC2aZIhwiGZdTyzRAFyte3XvEz2v3wdzoqWlXPfQN2rHcD2JbAqrOtJNRGJp2uYhjU/MMGnEKF90Xcg=
+	t=1721837963; cv=none; b=c2JmfFlRDiFWjypFmqtY/eyIupPJh30yOD0BnNkYdtwM1xwTRSD82p5SwlLzJ1VKqzbiD93NYwZ/gTk6rVJiwGzs3phDYW0SwNKMsNQz2puW6stseIvYKrBOwPP7oRbxnmRe0e7MRy7CqfAs4dRfXY/ZlzeJgg99jlVZ45XcKh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721836492; c=relaxed/simple;
-	bh=Gq95TCDqVaj7aNPzZtv9xbK1Uj/gt0DHW+RYTvdUq+M=;
+	s=arc-20240116; t=1721837963; c=relaxed/simple;
+	bh=f30zFParFK142Sof6KuO+fMd1kxpq+GScyC9c1ue9Ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSFMZx1eFGZ+EfoB8MBK59y2kR1ErNxEij3HWCSHbqffIwGTYyKokWCzM+Qv4ii9DGK+nvS5bRtknVnmYqnNDg2ZmF+RTbAgC7Sy6oTj2PZHy5dOZrZhzBJL75WLiYlbvrNqKhlcmrQ7Hl/lVauvwFMJXW08xZjkcg4u0YqHATY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BffLe/L1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2A7C32781;
-	Wed, 24 Jul 2024 15:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721836491;
-	bh=Gq95TCDqVaj7aNPzZtv9xbK1Uj/gt0DHW+RYTvdUq+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BffLe/L1Julily6ef/X5cPeA/ylQJJhUw960ffi9+HT4LDMFC8W7r1oezG4ZK5NJS
-	 4niBvlVoPRzLPFAhtsxq/ghTt42K37RhX9jfDE5Zk10ymTem9YlBMCRPArDtLrNJjn
-	 vWVawirZR23N5X9IMOia27RVZTjMdSnCB4nv3zTXYekFO4ASqygi9R9Fe5x2rJQqSS
-	 U4kNePaHGHBUoH/q1TtbfLWzba0RusSCtlE6Z1AcPqEQW4JNhQQ8uvQmi8TRoT+Jgv
-	 goJruXRmvr4ecKcx9UiSIbZStwA0vbw42p1CA6ZJcemb5NNYUVfY3dkaDV81ohF9wm
-	 /p1f28biGIZHQ==
-Date: Wed, 24 Jul 2024 16:54:47 +0100
-From: Conor Dooley <conor@kernel.org>
-To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"Simek, Michal" <michal.simek@amd.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: xilinx-xdma: Add schemas for
- Xilinx QDMA PCIe Root Port Bridge
-Message-ID: <20240724-result-twig-3789d7f0bcd5@spud>
-References: <20240722062558.1578744-1-thippesw@amd.com>
- <20240722062558.1578744-2-thippesw@amd.com>
- <20240722-wham-molasses-ec515cc554a0@spud>
- <SN7PR12MB7201729CCCF2953D9AC1A04F8BAA2@SN7PR12MB7201.namprd12.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WUoKw/Ao0RcJkxJh0cGNf2CKYUZqEy9f8UJS99mX9npwKvzVsKsCQ/6v+DMnu+h3GRh5AF1NUHpkpKWAmzKXzv/2N5BUlNIXFGY0Gy3CaaTJnRlP5YfnrxakdvoHW0NKuCPxQ9Q3GiLrr4H7tEt/PfphB1Dp1AdT54Qw/34T3Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uMUolZob; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fbc3a9d23bso13510695ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 09:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721837961; x=1722442761; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uk6VvkGCsbeQVal54C7Yzy20X2Egh4+UujE84uvAe84=;
+        b=uMUolZob77SBgvA8j2JRDYrU5kfmPoCw5R1Cl6Y0Ar55kxLyUkMS4DVygYQwiRTgHw
+         +zTW4u8eb/HbNj0jAiYNpfNPOpvz8tstVJLC6iJ64QANpVysfTa7PryCY281x3/6uAcD
+         kLVQ6Cqz3LDVs9zCBpLxwv8au/HyrqHsniBq9tvchHjEnbw9bhLvt2TEbJol9TAw7oOc
+         mSyoV1GGsnBE6qYXktvW7aWKf3xvXkElpP7FM+QAJf31LNILynQFKCBbXAmJkoVC4bX6
+         oYjkpaPtdga97WETNdODHodbARJci0LOuQg+i6Oi+89ig9EdYoYsZq6mb1E1udx+nx3+
+         ctsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721837961; x=1722442761;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uk6VvkGCsbeQVal54C7Yzy20X2Egh4+UujE84uvAe84=;
+        b=S9B7ZZiK4yAWBcusKlbcqjl/geTEEYWRC2KcDgVTSCnTf1D5TMjxPgqs3n5WYjCH09
+         Oj1WCShhIuoIL95/7OB4Z/85Zd816jVWjRN00O591l20ySZVA+zy8U1fRSV2GjG+zec/
+         EF+1iGAk1UJbButPlDfr2JOZNO9XYROVV2ULJlr9tC1lQpT5Y3gChlwK6zrOaknNkl0A
+         PiWswp98o168oKm8GKNTrSMDlWRAqt4a8Z7to+SPZaRKRH+1beJbiOsurwTWdlMVrjX8
+         ViaQrrCfntsaIU2uYfPT5Y/BKDKWo3IFL3+e4Vvtzl8Ku1Bm7O8HXyp8NO6eFGnaq76w
+         ReYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUR7yiY46mOhm1klmOM58iTzrDG3b1cxjYa4RVA0v786cLryj3ehl8a1P29JBBphN885C95j5VVTZSkygFNMi1cX1vTmlakDwzr
+X-Gm-Message-State: AOJu0YzcsK89Exm2hynFUsMD32sBHhQaFClKfSrn+sjXQHpEkw6SxMWW
+	K530/Lp7V9ihAxkXasmk0tBxQuGRcgLLDNlkeUBrmwLnxU7yMhmSJCBFqzmArg==
+X-Google-Smtp-Source: AGHT+IHIrTkDS2WCnTKJAArgrlpe4xhHZbFrE+hRGnbRw/giY7CXM7xCg5WsJLXv0yC3yxVxg2OLJA==
+X-Received: by 2002:a17:903:228d:b0:1fb:719a:28e2 with SMTP id d9443c01a7336-1fed387086fmr850095ad.21.1721837961184;
+        Wed, 24 Jul 2024 09:19:21 -0700 (PDT)
+Received: from thinkpad ([103.244.168.26])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fdd4c62d9dsm18029785ad.159.2024.07.24.09.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jul 2024 09:19:20 -0700 (PDT)
+Date: Wed, 24 Jul 2024 21:49:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, vigneshr@ti.com, kishon@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+	ahalaney@redhat.com, srk@ti.com
+Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
+Message-ID: <20240724161916.GG3349@thinkpad>
+References: <20240724065048.285838-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="92K84z8ZDtaxn7PF"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN7PR12MB7201729CCCF2953D9AC1A04F8BAA2@SN7PR12MB7201.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240724065048.285838-1-s-vadapalli@ti.com>
 
+On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote:
+> Since the configuration of Legacy Interrupts (INTx) is not supported, set
+> the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
+>   of_irq_parse_pci: failed with rc=-22
+> due to the absence of Legacy Interrupts in the device-tree.
+> 
 
---92K84z8ZDtaxn7PF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() will bail out
+if 'map_irq' is set to NULL.
 
-On Wed, Jul 24, 2024 at 09:30:21AM +0000, Havalige, Thippeswamy wrote:
-> Hi Conor Dooley,
->=20
-> > -----Original Message-----
-> > From: Conor Dooley <conor@kernel.org>
-> > Sent: Monday, July 22, 2024 10:15 PM
-> > To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
-> > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; krzk+dt@kernel.org; conor+dt@kernel.org; linux-
-> > kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > pci@vger.kernel.org; Havalige, Thippeswamy
-> > <thippeswamy.havalige@amd.com>; linux-arm-kernel@lists.infradead.org;
-> > Simek, Michal <michal.simek@amd.com>
-> > Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: xilinx-xdma: Add schemas =
-for
-> > Xilinx QDMA PCIe Root Port Bridge
-> >=20
-> > On Mon, Jul 22, 2024 at 11:55:57AM +0530, Thippeswamy Havalige wrote:
-> > > Add YAML devicetree schemas for Xilinx QDMA Soft IP PCIe Root Port
-> > Bridge.
-> > >
-> > > Signed-off-by: Thippeswamy Havalige <thippesw@amd.com>
-> > > ---
-> > >  .../bindings/pci/xlnx,xdma-host.yaml          | 41 +++++++++++++++++=
-+-
-> > >  1 file changed, 39 insertions(+), 2 deletions(-)
-> > > ---
-> > > changes in v2
-> > > - update dt node label with pcie.
-> > > ---
-> > > diff --git a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-> > b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-> > > index 2f59b3a73dd2..28d9350a7fb4 100644
-> > > --- a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-> > > @@ -14,10 +14,21 @@ allOf:
-> > >
-> > >  properties:
-> > >    compatible:
-> > > -    const: xlnx,xdma-host-3.00
-> > > +    enum:
-> > > +      - xlnx,xdma-host-3.00
-> > > +      - xlnx,qdma-host-3.00
-> > >
-> > >    reg:
-> > > -    maxItems: 1
-> > > +    items:
-> > > +      - description: configuration region and XDMA bridge register.
-> > > +      - description: QDMA bridge register.
-> >=20
-> > Please constrain the new entry to only the new compatible.
-> - Thanks, I ll resend patch with required changes.
+- Mani
 
-Weird quoting btw, the - isn't needed.
+> Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
+> Reported-by: Andrew Halaney <ahalaney@redhat.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> 
+> Hello,
+> 
+> This patch is based on commit
+> 786c8248dbd3 Merge tag 'perf-tools-fixes-for-v6.11-2024-07-23' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools
+> of Mainline Linux.
+> 
+> Patch has been tested on J784S4-EVM and J721e-EVM, both of which have
+> the PCIe Controller configured by the pci-j721e.c driver.
+> 
+> Regards,
+> Siddharth.
+> 
+>  drivers/pci/controller/cadence/pci-j721e.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 85718246016b..5372218849a8 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -417,6 +417,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  		if (!bridge)
+>  			return -ENOMEM;
+>  
+> +		/* Legacy interrupts are not supported */
+> +		bridge->map_irq = NULL;
+> +		bridge->swizzle_irq = NULL;
+> +
+>  		if (!data->byte_access_allowed)
+>  			bridge->ops = &cdns_ti_pcie_host_ops;
+>  		rc = pci_host_bridge_priv(bridge);
+> -- 
+> 2.40.1
+> 
+> 
 
-> > > +    minItems: 1
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - const: cfg
-> > > +      - const: breg
-> > > +    minItems: 1
-> > >
-> > >    ranges:
-> > >      maxItems: 2
-> > > @@ -111,4 +122,30 @@ examples:
-> > >                  interrupt-controller;
-> > >              };
-> > >          };
-> > > +
-> > > +        pcie@80000000 {
-> >=20
-> > tbh, don't see the point of a new example for this.
-> - For this in both examples ranges properties are different. So, here I w=
-anted to make sure that our example device tree bindings work straight forw=
-ard when our reference designs are used.
-
-Different ranges properties doesn't justify a new example. They don't
-exist to be copy-pasted, but rather to demonstrate usage of properties
-and validate the binding.
-
---92K84z8ZDtaxn7PF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZqEjxgAKCRB4tDGHoIJi
-0mHhAQCrh5YO1/JZ7IECO37RiQw1DnB5qf7QtbOsQnjjs+GAgAD9GlzOI5vOVD7B
-0bjbgj3+TO8fke9IHYGrN1Sdk+aDfAQ=
-=Ftu/
------END PGP SIGNATURE-----
-
---92K84z8ZDtaxn7PF--
+-- 
+மணிவண்ணன் சதாசிவம்
 
