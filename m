@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-10722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D35E93B1E9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:47:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56C4093B1F5
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 15:50:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E4F7B2173F
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 13:47:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EC49282EDB
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jul 2024 13:50:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E66E158D86;
-	Wed, 24 Jul 2024 13:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 180512D030;
+	Wed, 24 Jul 2024 13:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h7tkJN0I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3Yjsp1F"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A207113E020
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 13:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F4913E020
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 13:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721828856; cv=none; b=LpRdM9i34DlpBupgkhLQ1htMt32f2nrKE+Iql9JdlK1j8Fgy1anSA2Yc3zYsJUk+dGFqf7DgQ1NvD2mqGdLmO7ZiHiiskGwW2mEv//dM5ZClpGliAw+TFK9lnXa3ZcLYXDTfBbgVQpiEgPGfzs7C5LCugUMWp0QeMrswkHbg3RA=
+	t=1721829036; cv=none; b=BlZvy76JqqV529yQXJUVca5DKJ46xloIbPNY9d9FgMkmioJJc8WBPNtaCJokpfc+D6i2tmzPqQk4+kWXidQz7fn2bzXNfO7u2qJOH2kWvT4Jpx3B5cf8mXK9Bz8t5dF+y5t3+3YW0xInS9w517fszkROvIDzWwf/iqtof9YSAIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721828856; c=relaxed/simple;
-	bh=xjWm/eDlWeqPzKSEQS2S0Ya+3sWJ6iqZgAKGHCaMITE=;
+	s=arc-20240116; t=1721829036; c=relaxed/simple;
+	bh=s18bgWf0OFUxHbMJYtCB40QxzEeOIwnX88xESSf+9Fg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5WgU+9kvvSsy3bmwOBUShFdcY+Iuwq4X28YPbf7mdT67ytSPMZJV/mvvtLvHJNRsqAvTTAlcHY9kNtnHtjlCJKTDUUWUt3nfh8NKkMEQzffow4zgTJq3Oq8MWiI9phcDR//Nz7rSpJCWhPTVByhJIeGCOvgrL5jH5tpziKy88s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h7tkJN0I; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dv0SQUkqhikOipOR1+aUkwShkCJJbpxQv3r0a6FykYNagB1ygbO55Q9LFI7ke5dxnlRa0lu27Xxej8oZKEKQbEBd71aKkhwH57ZtTjM3eM9iuOYO7AolKcMYpAP1moVNVAghle2dM+Sc4RIbSCqtw4yvd0AhpzErkHjbqqiHGK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v3Yjsp1F; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fc52394c92so18757905ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 06:47:34 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70d333d57cdso1990249b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 06:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721828854; x=1722433654; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721829032; x=1722433832; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=SjlS3KeN9meLLfSQsSaPi/f/kHzcBW78TFSUcPryCjM=;
-        b=h7tkJN0IXAmZSDVDgQOpeqfw+8fvEIc3K1Sbftr9/y0yr79iR+NCNt33saVsG1zH+Z
-         fMBSAvmZ+HthOyrGq/J8fiQhuggVeJDZkNx9dZMRxXMSLDVYyn8Rw/h5Sef+QszH30Lg
-         6K4XgaDxEe8PlovPdua7+GVEx0iaBo7NRBdqS6ShNyG1ngwkSWKAjmSy2VgKlg/jIXEz
-         iWM8hn0W6YrN13X5Zgp//JjFslD0GJK3urRYc+pxE+MjAMPv9sDFvhsReSodr4HZO6iL
-         dejcqC8zG9pVucrHnWh1Ejy/FlWkKhe/eaXgMkQioAxsZqCTlkk6V9EMCxX2HfKp97b1
-         L6Rg==
+        bh=pbALP3QIjCL6mWz14PmpKACkxPrqfTSuSK7rkKg3La4=;
+        b=v3Yjsp1FfWuzXR9KIvO1sxZkyZ4mOVGYGKyozb7kadyq1MoPFScmzH2QQHJYZe9WaM
+         RD8KbmLLPq46jJSZhRkvJ09YODH1i4JmFjhNQZymiCsbjiRnmRZf/Rt37Idx2rmNUBHO
+         h+bCoQGAAqbzsKs8yr6LiIhkXqQV6GPMJKj08dr4ZGNSLoQiDSbWbMTIckSTzjxZvHTv
+         n6FBvJPMbvtDmMnihdG3uHF5APlKQeqYtOPiHXQMydY+9HecBLgebR1Jenm5ygvbvC7P
+         YtRnphDYSMYHx4BYzPpt2XasfJY4+VvYDtr3Kmp/4/P6v4puN46UdB8YG9ohZi7wbNrZ
+         GcyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721828854; x=1722433654;
+        d=1e100.net; s=20230601; t=1721829032; x=1722433832;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SjlS3KeN9meLLfSQsSaPi/f/kHzcBW78TFSUcPryCjM=;
-        b=V8eWvKctHIbrpSvGgIBTF7Psn7CjmRJJ7FBbNd+hkE5mL3DTBgmjnhJgHH1ZHWYw4u
-         NBJUZuLG/BW+SCm9iufA2Aa+i6+li9DL4V7dAUNGu0i8HYPC+j4z/7C1RfpTkjLCYk5r
-         3dAJbxGQVCzbPZlBvZ1TRlnBW5NvXFO1ScbbKKtGJUIZKE2SPouf6SnjNC+jazkd4k/M
-         tSWxOPpsnjqw7cVO+OKMJlu411BIz21KV34K9gx+f0i/KH3YJxAoMTodfYPfTn5qfjdp
-         havSdaSk7kriniattII2DhipIa0wbaCQMml2ycwWdoxPNqr5nO6FvyStrpKf0/Nyipdo
-         DZCw==
-X-Gm-Message-State: AOJu0Yxoj/cI37foetor2qCR64JmHMX+TZX1eTH65toC7BOmJ0FC9VH0
-	Bj7ICj0NkIwSlpRyyGe1YUZ4p/qTj0UAiNIv3Spn6k1WBLCjiGKQbMMKYLQvNQ==
-X-Google-Smtp-Source: AGHT+IGQ1pRozmQ8WsiHI1I3zmEDTN6hvlFln3KcelbKxSnwPg41LAbjogxZsXYR2+UZUvCxUcYACA==
-X-Received: by 2002:a17:903:244a:b0:1fc:2ee3:d45a with SMTP id d9443c01a7336-1fdd54f46f3mr24825785ad.8.1721828853831;
-        Wed, 24 Jul 2024 06:47:33 -0700 (PDT)
+        bh=pbALP3QIjCL6mWz14PmpKACkxPrqfTSuSK7rkKg3La4=;
+        b=feZQkOIhgGdDrOFxmFiBVtJohw0AAXYYE1PI76lqmlPysRN8BTsJrXFgZXsBYP8LLz
+         tIeZgqpkUypEyQTYR/LxNxOMEa0FXHtGlinBsOMMJC2l3QFDjitBCcDRZD3+f2ovLUSN
+         +ZdxUaxDD5B0GjVaJhoUR+k+mrhuzAtJZ1r9LzXiZlqZPq1Fn/YTiB2DNAVGcOsZ8IX2
+         0Wtj5qmGPU/rhDP0UU3b+4REWFXpCtc8JbD2Y1iaE/C7lifQilgKzZHDmAcBIebcyHZG
+         RiS+WfEVCw+XwKo51hA7uTHB33kivEHmB+hTRSynSCSuckKXgp9Row0IyOxWr4Eq3NPt
+         wOew==
+X-Gm-Message-State: AOJu0YyOo/I2Ck60UhiWyigHwPKuVFxqTyIgJVcEtIQaYL4strMDF+Bj
+	nhi4Uy+NyMocp1i9U6qc5fL9m9jh5JiygGKkEYoLKXKkVZu9Z7RlkT9pjfqEOA==
+X-Google-Smtp-Source: AGHT+IG0YFoIL4lPnBLT+Aopu2jQ/kCeCrRtyAOg5jS+eqaqVK57qCofzoxxbC6rl3vwtZMbLKsHKg==
+X-Received: by 2002:a05:6a00:a82:b0:70d:3337:7820 with SMTP id d2e1a72fcca58-70e99689086mr3278241b3a.8.1721829032049;
+        Wed, 24 Jul 2024 06:50:32 -0700 (PDT)
 Received: from thinkpad ([103.244.168.26])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f44f4c4sm94151845ad.224.2024.07.24.06.47.23
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70d22f50f46sm5507795b3a.77.2024.07.24.06.50.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jul 2024 06:47:33 -0700 (PDT)
-Date: Wed, 24 Jul 2024 19:17:21 +0530
+        Wed, 24 Jul 2024 06:50:31 -0700 (PDT)
+Date: Wed, 24 Jul 2024 19:20:20 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Marek Vasut <marek.vasut+renesas@mailbox.org>
 Cc: linux-pci@vger.kernel.org,
@@ -109,10 +109,9 @@ Cc: linux-pci@vger.kernel.org,
 	linux-mediatek@lists.infradead.org,
 	linux-renesas-soc@vger.kernel.org,
 	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v4 05/15] PCI: dwc: Silence set affinity failed warning
-Message-ID: <20240724134721.GC3349@thinkpad>
+Subject: Re: [PATCH v4 00/15] genirq/msi: Silence set affinity failed warning
+Message-ID: <20240724135020.GD3349@thinkpad>
 References: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
- <20240723132958.41320-6-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -122,23 +121,64 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240723132958.41320-6-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
 
-On Tue, Jul 23, 2024 at 03:27:05PM +0200, Marek Vasut wrote:
-> Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps .irq_set_affinity unset
-> and allows migrate_one_irq() code in cpuhotplug.c to exit right away, without
-> printing "IRQ...: set affinity failed(-22)" warning.
+On Tue, Jul 23, 2024 at 03:27:00PM +0200, Marek Vasut wrote:
+> Various PCIe controllers that mux MSIs onto single IRQ line produce these
+> "IRQ%d: set affinity failed" warnings when entering suspend. Remove the
+> .irq_set_affinity callbacks and make sure they are NULL in all affected
+> controllers, so this warning in kernel/irq/msi.c is not triggered.
 > 
-> Remove .irq_set_affinity implementation which only return -EINVAL from this
-> controller driver.
+> This has been compile-tested only on all but the R-Car PCI controller.
 > 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> The clean ups are done per-driver so they can be easily reverted in case
+> they break something.
+> 
+
+Whole series looks good to me (PCI controller specific patches).
+
+FWIW,
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> ---
+> Marek Vasut (15):
+>   genirq/msi: Silence set affinity failed warning
+>   PCI: aardvark: Silence set affinity failed warning
+>   PCI: altera-msi: Silence set affinity failed warning
+>   PCI: brcmstb: Silence set affinity failed warning
+>   PCI: dwc: Silence set affinity failed warning
+>   PCI: mediatek-gen3: Silence set affinity failed warning
+>   PCI: mediatek: Silence set affinity failed warning
+>   PCI: mobiveil: Silence set affinity failed warning
+>   PCI: plda: Silence set affinity failed warning
+>   PCI: rcar-host: Silence set affinity failed warning
+>   PCI: tegra: Silence set affinity failed warning
+>   PCI: vmd: Silence set affinity failed warning
+>   PCI: xilinx-nwl: Silence set affinity failed warning
+>   PCI: xilinx-xdma: Silence set affinity failed warning
+>   PCI: xilinx: Silence set affinity failed warning
+> 
+>  drivers/pci/controller/dwc/pci-keystone.c           |  7 -------
+>  drivers/pci/controller/dwc/pcie-designware-host.c   | 12 +++---------
+>  .../pci/controller/mobiveil/pcie-mobiveil-host.c    | 11 ++---------
+>  drivers/pci/controller/pci-aardvark.c               | 10 ++--------
+>  drivers/pci/controller/pci-tegra.c                  | 10 ++--------
+>  drivers/pci/controller/pcie-altera-msi.c            | 11 ++---------
+>  drivers/pci/controller/pcie-brcmstb.c               | 11 ++---------
+>  drivers/pci/controller/pcie-mediatek-gen3.c         | 13 +++----------
+>  drivers/pci/controller/pcie-mediatek.c              | 11 ++---------
+>  drivers/pci/controller/pcie-rcar-host.c             | 10 ++--------
+>  drivers/pci/controller/pcie-xilinx-dma-pl.c         | 11 ++---------
+>  drivers/pci/controller/pcie-xilinx-nwl.c            | 11 ++---------
+>  drivers/pci/controller/pcie-xilinx.c                |  9 ++-------
+>  drivers/pci/controller/plda/pcie-plda-host.c        | 11 ++---------
+>  drivers/pci/controller/vmd.c                        | 13 +------------
+>  include/linux/msi.h                                 |  2 ++
+>  kernel/irq/msi.c                                    |  2 +-
+>  17 files changed, 32 insertions(+), 133 deletions(-)
+> 
 > Cc: "Krzysztof Wilczyński" <kw@linux.com>
 > Cc: "Pali Rohár" <pali@kernel.org>
 > Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
@@ -184,75 +224,7 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > Cc: linux-renesas-soc@vger.kernel.org
 > Cc: linux-rpi-kernel@lists.infradead.org
 > Cc: linux-tegra@vger.kernel.org
-> ---
-> V4: - New patch
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c         |  7 -------
->  drivers/pci/controller/dwc/pcie-designware-host.c | 12 +++---------
->  2 files changed, 3 insertions(+), 16 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 52c6420ae2003..ce9d9e0a52609 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -189,12 +189,6 @@ static void ks_pcie_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  		(int)data->hwirq, msg->address_hi, msg->address_lo);
->  }
->  
-> -static int ks_pcie_msi_set_affinity(struct irq_data *irq_data,
-> -				    const struct cpumask *mask, bool force)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static void ks_pcie_msi_mask(struct irq_data *data)
->  {
->  	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(data);
-> @@ -247,7 +241,6 @@ static struct irq_chip ks_pcie_msi_irq_chip = {
->  	.name = "KEYSTONE-PCI-MSI",
->  	.irq_ack = ks_pcie_msi_irq_ack,
->  	.irq_compose_msi_msg = ks_pcie_compose_msi_msg,
-> -	.irq_set_affinity = ks_pcie_msi_set_affinity,
->  	.irq_mask = ks_pcie_msi_mask,
->  	.irq_unmask = ks_pcie_msi_unmask,
->  };
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index a0822d5371bc5..3e41865c72904 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -48,8 +48,9 @@ static struct irq_chip dw_pcie_msi_irq_chip = {
->  };
->  
->  static struct msi_domain_info dw_pcie_msi_domain_info = {
-> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> -		   MSI_FLAG_PCI_MSIX | MSI_FLAG_MULTI_PCI_MSI),
-> +	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> +		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX |
-> +		  MSI_FLAG_MULTI_PCI_MSI,
->  	.chip	= &dw_pcie_msi_irq_chip,
->  };
->  
-> @@ -116,12 +117,6 @@ static void dw_pci_setup_msi_msg(struct irq_data *d, struct msi_msg *msg)
->  		(int)d->hwirq, msg->address_hi, msg->address_lo);
->  }
->  
-> -static int dw_pci_msi_set_affinity(struct irq_data *d,
-> -				   const struct cpumask *mask, bool force)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static void dw_pci_bottom_mask(struct irq_data *d)
->  {
->  	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-> @@ -177,7 +172,6 @@ static struct irq_chip dw_pci_msi_bottom_irq_chip = {
->  	.name = "DWPCI-MSI",
->  	.irq_ack = dw_pci_bottom_ack,
->  	.irq_compose_msi_msg = dw_pci_setup_msi_msg,
-> -	.irq_set_affinity = dw_pci_msi_set_affinity,
->  	.irq_mask = dw_pci_bottom_mask,
->  	.irq_unmask = dw_pci_bottom_unmask,
->  };
 > -- 
 > 2.43.0
 > 
