@@ -1,111 +1,111 @@
-Return-Path: <linux-pci+bounces-10814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D11793CACF
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 00:22:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66EB193CAF8
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 00:54:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2665E1F22998
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 22:22:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90F3E1C21761
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 22:54:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E815517E9;
-	Thu, 25 Jul 2024 22:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42383143738;
+	Thu, 25 Jul 2024 22:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H3uJtd5x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9DZquRb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA42013E8A5
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 22:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6D07347D;
+	Thu, 25 Jul 2024 22:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721946120; cv=none; b=Pvfz+lb84wiF5wKGNQqTj74fMkIQTakXJzywWvVu1q//hrvwNxUZ7Dq2H+w6Rk5jV5lj8KZBiOYCrp5U3ZGN/HnJLP7NAhebWgK9O9Fwmuy7PsApZbl82BoMr1GNqjNGI/RlfqikCMf3I5+3IRDxqStRoPtwqb3wEAyln1YHDiU=
+	t=1721948038; cv=none; b=jBrDP+Ku62Fj/5Z2l2jlk4nDa6hdBtes5b9CMADX1AsuLP4kU9U86faIssqY8g2gNgPw3002he34YuDUpsm7lY7NiA8jSWS0CmI3WRc5/xUwqMfAv1tod+7Vlt5/cUQMvn22zFzB+eKb2ZCWoFpEKoHputPCTxCDJY7VBQhmeKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721946120; c=relaxed/simple;
-	bh=e3QtoGAhKBBmMhj47JDionvHjW/apkWJ7Za+hWvi5KI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROKPwpU0Nc9FqGlK8GpEpWKJK9Ni4Yi16s+F5jFjtJ7LbcPY9+M3KyxhU3kBU1NX6+IGMG9bCn6mLf5sAB6IR/rSuwRV9e4pPq8GVl4ZkBwtgTm3iPKWxmWrkMcyUHl3Egjt4SJTEyRiJFS6qJBYEFwItSYhaNuT8J1F0uBg9Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H3uJtd5x; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721946117;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c/KmYr3jbfKPlvOHElaBkUrO4ia1UgbTouR26iyDyNM=;
-	b=H3uJtd5xw/SvSf40wQdsRztGu16REUxpH+b8WoKBZQ51dg/Ym7/eOYx/oHDG3FqWB50mrk
-	n1+Rkz/QChkeIXhRbQsO/UJHhdvoxRxQYJF9PPoN/IvkqaKQPa0UURGvRo8vAuD2l8vaDM
-	z0saDYsH6uXCEE5qJcMKDJ6ORc3lCuc=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-696-7nHjy5QsNLKbsDyHskOAdw-1; Thu, 25 Jul 2024 18:21:56 -0400
-X-MC-Unique: 7nHjy5QsNLKbsDyHskOAdw-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6b79ab201faso603846d6.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 15:21:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721946116; x=1722550916;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c/KmYr3jbfKPlvOHElaBkUrO4ia1UgbTouR26iyDyNM=;
-        b=VHrwPJn8yo9k29hnYBoo+J+ZSVwCc7bO9nF8YT1xCCWL2C3wyiCItqizRNNO5zMaUx
-         CXmpms/Zvd1Xu+czwbrqeEO1OBvII0FrQaa8rPG2XetP1Qx85gPbnwrB+7xYOojGr/Tc
-         3xN1g2hkFAQ8IcVRn4QC2WRdnkonEBNrW6gJp/ZOoPx4H5jlnYvJRlv2LUNqgpj5aFaE
-         M/s5e1ImAV/SQaGSKpJbjYReUoMcus2T65XpEeqrdoLMJsG1KaDuf6lZVklimFncQNsP
-         Qedqb5SoKS9fG65VccAj+p1diCt2nBudJ+NasDb2xs09sQIJsT9Isf85jea4j7wtQziI
-         3IeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX28Mm2iN06nvuRHvqVjlvv1YsqtcHfSjMkSScvvC4zwZqr+aqyOTtyis6SXxByylB2i34k7cxSDzgEPUzeEfw0QesA+kB4vEOb
-X-Gm-Message-State: AOJu0Yz2aaXI15cY2mq6Bt1sg8/b8wPw3K2fEu5hAMY5z9+U5LGn90uH
-	GR6IKAn7ACjsIEcfKwpIon9MkJmWLHHzEssXQkaAS2R1ZzD/rCH6txnQRWSVmyAdA05TrJmWgjA
-	e9TtEHh70GQibh7evbEim6SuMcVXDVKp+76IhCls4x9RpfSJD+oAf9hkabg==
-X-Received: by 2002:a05:6214:cc6:b0:6b7:a4dc:e24a with SMTP id 6a1803df08f44-6bb4088c657mr43849366d6.54.1721946115686;
-        Thu, 25 Jul 2024 15:21:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF07I6M5sZysuSbSiY1fNxwueDCqDxgZ2yyxKjAhplt3Bd7CWYx3uTZ4M/qfs37U5MR3g6jXg==
-X-Received: by 2002:a05:6214:cc6:b0:6b7:a4dc:e24a with SMTP id 6a1803df08f44-6bb4088c657mr43849116d6.54.1721946115407;
-        Thu, 25 Jul 2024 15:21:55 -0700 (PDT)
-Received: from x1gen2nano ([2600:1700:1ff0:d0e0::d])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb3f925dc1sm10943676d6.65.2024.07.25.15.21.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jul 2024 15:21:55 -0700 (PDT)
-Date: Thu, 25 Jul 2024 17:21:52 -0500
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	robh@kernel.org, vigneshr@ti.com, kishon@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org, 
-	srk@ti.com
-Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
-Message-ID: <vj6vtjphpmqv6hcblaalr2m4bwjujjwvom6ca4bjdzcmgazyaa@436unrb2lav7>
-References: <20240724065048.285838-1-s-vadapalli@ti.com>
+	s=arc-20240116; t=1721948038; c=relaxed/simple;
+	bh=R6S9gXXCvFcEEnFGDPjRLt+pSR9174oFmWMbGbEGKuo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GYCsEEzVHVpwsNdyQaYDKC4APvs4gq4T0bI2xnqUdLQ60DOwT84YLhesjGbfL1RLudvCQG8HmeEM2j5ps9Rk4fTqzLqo8k355ukM+okLrPL9hHEj1cnipuN1vf77PY/N1oI9K4xYZsKw5k62ji38IVrXO9/31DWmluD1lBEw6/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9DZquRb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2790C116B1;
+	Thu, 25 Jul 2024 22:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721948037;
+	bh=R6S9gXXCvFcEEnFGDPjRLt+pSR9174oFmWMbGbEGKuo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o9DZquRbn6zpoY2VcT/cxuQlGzlixJq9mn94I96j9tBCMqVJwaR4rXU5PM9sZRe4k
+	 EU8FdjpXKx3vcolwK+CR0yi24vrZbQTNaFAuZMhbyqepoB2IiWEIA9M+2CkUBujnPh
+	 mMF4E6xTXCSY6B1n2jjNu/jnsiRNad8+Ts14QUEDocsnP+FX9kFpqh6uCNTU7QjSiK
+	 mNW3cI5Ec11jxNYP1p5Fmm8vUGlYNl+gRUFv00saQ6qliubm9IQ9tA16V6sC1PuX84
+	 mklYzhrZZfwCgdRRwqg5ELz29qDsxricp7HPWpSCiff9O17gGDnbTulAlZMLA+Ane+
+	 tbXh+ShG5tuEw==
+Message-ID: <9c76b9b4-9983-4389-bacb-ef4a5a8e7043@kernel.org>
+Date: Fri, 26 Jul 2024 07:53:54 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240724065048.285838-1-s-vadapalli@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] PCI: endpoint: Introduce 'get_bar' to map fixed
+ address BARs in EPC
+To: Niklas Cassel <cassel@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ rick.wertenbroek@heig-vd.ch, alberto.dassatti@heig-vd.ch,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+References: <20240719115741.3694893-1-rick.wertenbroek@gmail.com>
+ <20240719115741.3694893-2-rick.wertenbroek@gmail.com>
+ <Zp+6TU/nn/Ea6xqq@x1-carbon.lan>
+ <CAAEEuho08Taw3v2BeCjNDQZ0BRU0oweiLuOuhfrLd7PqAyzSCQ@mail.gmail.com>
+ <Zp/e2+NanHRNVfRJ@x1-carbon.lan> <20240725053348.GN2317@thinkpad>
+ <CAAEEuhpH-HB-tLinkLcCmiJ-9fmrGVjJFTjj7Nxk5M8M3XxSPA@mail.gmail.com>
+ <ZqJeX9D0ra2g9ifP@ryzen.lan> <20240725163652.GD2274@thinkpad>
+ <ZqLJIDz1P7H9tIu9@ryzen.lan>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <ZqLJIDz1P7H9tIu9@ryzen.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 24, 2024 at 12:20:48PM GMT, Siddharth Vadapalli wrote:
-> Since the configuration of Legacy Interrupts (INTx) is not supported, set
-> the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
->   of_irq_parse_pci: failed with rc=-22
-> due to the absence of Legacy Interrupts in the device-tree.
+On 7/26/24 06:52, Niklas Cassel wrote:
+> On Thu, Jul 25, 2024 at 10:06:52PM +0530, Manivannan Sadhasivam wrote:
+>>
+>> I vary with you here. IMO EPF drivers have no business in knowing the BAR
+>> location as they are independent of controller (mostly except drivers like MHI).
+>> So an EPF driver should call a single API that just allocates/configures the
+>> BAR. For fixed address BAR, EPC core should be able to figure it out using the
+>> EPC features.
+>>
+>> For naming, we have 3 proposals as of now:
+>>
+>> 1. pci_epf_setup_bar() - This looks good, but somewhat collides with the
+>> existing pci_epc_set_bar() API.
+>>
+>> 2. pci_epc_alloc_set_bar() - Looks ugly, but aligns with the existing APIs.
+>>
+>> 3. pci_epc_get_bar() - Also looks good, but the usage of 'get' gives the
+>> impression that the BAR is fetched from somewhere, which is true for fixed
+>> address BAR, but not for dynamic BAR.
 > 
-> Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
-> Reported-by: Andrew Halaney <ahalaney@redhat.com>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> pci_epc_configure_bar() ?
+> we could name the 'struct pci_epf_bar *' param 'conf'
 
-Tested-by: Andrew Halaney <ahalaney@redhat.com>
++1
 
-Thanks for the quick work and follow through on the patch, I appreciate
-it! I would not have come to this solution myself, I was definitely off
-in the weeds when debugging :P
+But let's spell this out: pci_epc_configure_bar(), to be sure to avoid any
+possible confusion (config could mean configure or configuration...).
+
+-- 
+Damien Le Moal
+Western Digital Research
 
 
