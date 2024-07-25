@@ -1,133 +1,129 @@
-Return-Path: <linux-pci+bounces-10780-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10781-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB7B793BDFC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 10:32:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20DB593BE42
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 10:57:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 508F7B21736
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 08:32:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 365381C20FB4
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 08:57:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E036F1741C2;
-	Thu, 25 Jul 2024 08:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5485D196D9D;
+	Thu, 25 Jul 2024 08:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kf9kEF9u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fp9uUVNr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9D8172BAA;
-	Thu, 25 Jul 2024 08:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8582D196D8E
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 08:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721896338; cv=none; b=uAGlrbNasgURFDtFWfQexYfleYekiYtxBj49dsu/82/nlnu/NUS39Adj6S+/JukNbAzu9FmEPI6xmafx5kU9FFAvH8H7aJWQHRZKRwvGrH7xRoAnweefQju0MivpMUy2+X6cyGPiBmMigrXmnUI/baWQcgHukH31PwKzdNUOCik=
+	t=1721897865; cv=none; b=XTfKcAgLYRLA0Sue5tebdyQdkhxUDaFPImjU+bbYDVrGTIbJbILlONFUGVxdHTlPKGe9WnGAIi+F/lhozGbf4k066+Dwrp7LtePIRlbOZSB3R/XjG4mjIUZ7aVtvkykshfCcAT7c4XeQJQgsi9hwiajPJQGKBKLWuyHHWpJa7mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721896338; c=relaxed/simple;
-	bh=jkkYI2hNRj4z5bkegjNxXjlklXFj0UNk4Tq3OvLzprQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mq408cRYgT+brMk+MFoIchjVKBnSVAfAtFPArPkdTFs+VBirM1Z11pOw/jKgkbKeaNOpm/DUvCT2WG/OYYe/aIvitN7ZddHmgEbg4dvwwTod/JULlNaErluFR6MiBxWe9MwmYRl67JMdkTIiTFDXaxs4BsjFA1msvuQ/jQsmyOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kf9kEF9u; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46P8VoqG109964;
-	Thu, 25 Jul 2024 03:31:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1721896310;
-	bh=TMDBni4n2ZZTbe6c4uAGB3NZ5xWs5BgH9TnNeQjviu8=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=kf9kEF9ubiIsx6Gk3gFvF4+KGGx6H5XjGRYNZI3UUsL+m9zuQhMiW67h0dld/wu+g
-	 7UX+Ae9Yl4J1kSYb0pcjk2rrYzj6JbXRFCFCJ7UaNmHHdHEG9fE/IUmkPLKWNYY+BC
-	 4rhQwDZREmSmwygsloDi3NDa+v87dRyaX8gBwAvg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46P8VoHJ004080
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 25 Jul 2024 03:31:50 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
- Jul 2024 03:31:50 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 25 Jul 2024 03:31:50 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46P8Vm6R068514;
-	Thu, 25 Jul 2024 03:31:49 -0500
-Date: Thu, 25 Jul 2024 14:01:48 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <bhelgaas@google.com>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <vigneshr@ti.com>, <kishon@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <stable@vger.kernel.org>, <ahalaney@redhat.com>, <srk@ti.com>
-Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
-Message-ID: <5f7328f8-eabc-4a8c-87a3-b27e2f6c0c1f@ti.com>
-References: <20240724065048.285838-1-s-vadapalli@ti.com>
- <20240724161916.GG3349@thinkpad>
- <69f8c45c-29b4-4090-8034-8c5a19efa4f8@ti.com>
- <20240725074708.GB2770@thinkpad>
+	s=arc-20240116; t=1721897865; c=relaxed/simple;
+	bh=E2N4yFbp+8KZPhXKJxPvSIIpVuXW1rJ4/UrT861ZObA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xh2x1aaKDZ7wXmWOoPWD2tzQRrE91i/7JU0K/hxxP7PenUXWr8+RbXfRl9i2Cx0grEZ1Kkwzc+OAAbyKMWSVnPQJZ920A8sA0MIBIxRM/IdqsFzMotWKsPdDZTLCOWACCpmpfG1oJcBFxSNexZVMuPAsM1ygyMO/mzji4pbnkXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fp9uUVNr; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eeb1051360so7028301fa.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 01:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721897862; x=1722502662; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I8NxyUuzsjejruT7irITjyyuzjJo/q4Q+2rql62w/gw=;
+        b=fp9uUVNrHZJS76YjNUBQRpVdMxX50c1G4/vneqc7GXqg+2+kVodrH0EoVERXq6sXYq
+         6LZFBn1V+n6oc+oHGPvr7i+iBRAxJphTz6Pu+P9dQ9t+xmKZxSbvXa0CYBybcqWtBc60
+         T3gfCcy/sM/vOb7PZeZAQgAClw920t9c3avrBPozscaJZupfUejlihqOgVT1+CFTU5Cy
+         3DLwQiHZQsYqCnBSQJPOUpb1WnMPrqHETd4I8Ja5r1Ltup/N8CfkmH+CCJDhvCxutMT0
+         tuA2EXOl3JmmQSOr8y3ByDEEBHzv7HFACuemlW7UwxSU4wGcXf4gOjpdSH7Ax5FfFqp+
+         /IBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721897862; x=1722502662;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I8NxyUuzsjejruT7irITjyyuzjJo/q4Q+2rql62w/gw=;
+        b=gbN+DZ9Iyx6QeR/RTd5Tg8jePNUnwsjxqP69d4uJqP1zCzZeNgEi6x7vgGwlK01ov8
+         VMrB8n6bCC2fNLHjJ6VZhxQTpydjUtJ8tIf/CH9HnrfKayF4yrq6EPefoeP4GDY51SnY
+         WCuEkQMEkf4j1aurZnYaJfogOAM8tQfnjazsv5Gizog6ULhGeU8YX7v5Fh0xWIlaTmoG
+         mP3cY/Lw3h3JauNkscM0nvgOtK4yl5DSQTqo+6YZ2RB9EMlC3JZI1ZQ2Ym60wY393Zuf
+         4udi3P1OMdFMv3pIVFzx64WjTWj3WeLoizInfa5ctBdkGLfxHDCXos9BgbF0IOkv9z/F
+         UNTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAZzEvT2DihmV0pCAAjun+y2fxAQLvdOPFHf19XIAr1KEDb2qNoDG0wpjZypbd2GRVr+lbymxt2WLaYkJ/2Q9KnZ3tdXI7UCIe
+X-Gm-Message-State: AOJu0Yy11N66z0aTYG+418lvBVXe+yKmVSGmVqWOPY3CWisvkUAL6cdk
+	kMB+gVYGLrba5CYJeNCRc6ncUzMNvTCFLGQWsq+5TIlQ7565U9yeHUp8iSVTKmY=
+X-Google-Smtp-Source: AGHT+IGr5oLThTee0qw7lkqmpiDTtsYrdLV73qS+/r23EtxU+L5YZDFR7Olu2ywE54dzOWxHz5kA+Q==
+X-Received: by 2002:a2e:9cce:0:b0:2ee:8720:b4c3 with SMTP id 38308e7fff4ca-2f039ddd47dmr14851391fa.43.1721897861566;
+        Thu, 25 Jul 2024 01:57:41 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f03d075489sm1351371fa.115.2024.07.25.01.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jul 2024 01:57:41 -0700 (PDT)
+Date: Thu, 25 Jul 2024 11:57:39 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: qcom: Allow 'vddpe-3v3-supply' again
+Message-ID: <y6ctin3zp55gzbvzamj2dxm4rdk2h5odmyprlnt4m4j44pnkvu@bfhmhu6djvz2>
+References: <20240723151328.684-1-johan+linaro@kernel.org>
+ <nanfhmds3yha3g52kcou2flgn3sltjkzhr4aop75iudhvg2rui@fsp3ecz4vgkb>
+ <ZqHuE2MqfGuLDGDr@hovoldconsulting.com>
+ <CAA8EJppZ5V8dFC5z1ZG0u0ed9HwGgJRzGTYL-7k2oGO9FB+Weg@mail.gmail.com>
+ <ZqIJE5MSFFQ4iv-R@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240725074708.GB2770@thinkpad>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <ZqIJE5MSFFQ4iv-R@hovoldconsulting.com>
 
-On Thu, Jul 25, 2024 at 01:17:08PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Jul 25, 2024 at 10:50:13AM +0530, Siddharth Vadapalli wrote:
-> > On Wed, Jul 24, 2024 at 09:49:16PM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote:
-> > > > Since the configuration of Legacy Interrupts (INTx) is not supported, set
-> > > > the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
-> > > >   of_irq_parse_pci: failed with rc=-22
-> > > > due to the absence of Legacy Interrupts in the device-tree.
-> > > > 
-> > > 
-> > > Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() will bail out
-> > > if 'map_irq' is set to NULL.
-> > 
-> > While 'swizzle_irq' won't be invoked if 'map_irq' is NULL, having a
-> > non-NULL 'swizzle_irq' (pci_common_swizzle in this case) with a NULL
-> > 'map_irq' seems inconsistent to me though the code-path may never invoke
-> > it. Wouldn't a non-NULL 'swizzle_irq' imply that Legacy Interrupts are
-> > supported, while a NULL 'map_irq' indicates that they aren't? Since they
-> > are always described in pairs, whether it is in the initial commit that
-> > added support for the Cadence PCIe Host controller (used by pci-j721e.c):
-> > https://github.com/torvalds/linux/commit/1b79c5284439
-> > OR the commit which moved the shared 'map_irq' and 'swizzle_irq' defaults
-> > from all the host drivers into the common 'devm_of_pci_bridge_init()'
-> > function:
-> > https://github.com/torvalds/linux/commit/b64aa11eb2dd
-> > I have set both of them to NULL for the sake of consistency.
-> > 
+On Thu, Jul 25, 2024 at 10:13:07AM GMT, Johan Hovold wrote:
+> On Thu, Jul 25, 2024 at 10:49:41AM +0300, Dmitry Baryshkov wrote:
+> > On Thu, 25 Jul 2024 at 09:17, Johan Hovold <johan@kernel.org> wrote:
+> > > On Wed, Jul 24, 2024 at 08:22:54PM +0300, Dmitry Baryshkov wrote:
+> > > > On Tue, Jul 23, 2024 at 05:13:28PM GMT, Johan Hovold wrote:
 > 
-> Since both callbacks are populated in the pci/of driver, this consistency won't
-> be visible in the controller drivers. From the functionality pov, setting both
-> callbacks to NULL is *not* required to disable INTx, right?
+> > > > > Note that this property has been part of the Qualcomm PCIe bindings
+> > > > > since 2018 and would need to be deprecated rather than simply removed if
+> > > > > there is a desire to replace it with 'vpcie3v3' which is used for some
+> > > > > non-Qualcomm controllers.
+> > > >
+> > > > I think Rob Herring suggested [1] adding the property to the root port
+> > > > node rather than the host. If that suggestion still applies it might be
+> > > > better to enable the deprecated propertly only for the hosts, which
+> > > > already used it, and to define a new property at the root port.
+> > >
+> > > You seem to miss the point that this is just restoring status quo (and
+> > > that the property has not yet been deprecated).
+> > 
+> > You are restoring it for all platforms.
+> 
+> It is already part of the bindings for all platforms.
 
-Yes, setting 'swizzle_irq' to NULL isn't required. The execution sequence
-with 'swizzle_irq' set to 'pci_common_swizzle()' is as follows:
+It is not, it is enabled only for sc7280 and sc8280xp. It has been,
+before the mentioned patch. I propopse to enable the property for the
+platforms which are using it now (that is +x1e80100, msm8996 and
+sdm845), clearly document it as deprecated and start shifting to the
+pwrseq and having the power supplies being a part of the root port or
+wcn device, depending on the use case.
 
-pci_assign_irq()
-  if (pin) {
-    if (hbrg->swizzle_irq)
-      slot = (*(hbrg->swizzle_irq))(dev, &pin);
-        pci_common_swizzle()
-	  while (!pci_is_root_bus(dev->bus)) <= NOT entered
-	..continue execution similar to 'swizzle_irq' being NULL.
-
-Having 'swizzle_irq' set to 'pci_common_swizzle()' will only result
-in a no-op which could have been avoided by setting it to NULL. So there
-is no difference w.r.t. functionality.
-
-Regards,
-Siddharth.
+-- 
+With best wishes
+Dmitry
 
