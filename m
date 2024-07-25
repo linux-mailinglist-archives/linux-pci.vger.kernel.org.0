@@ -1,73 +1,72 @@
-Return-Path: <linux-pci+bounces-10755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10756-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CDDC93BBD2
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 06:43:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B61793BBD5
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 06:48:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0776285A0A
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 04:43:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C46D0284AB4
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 04:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A886318633;
-	Thu, 25 Jul 2024 04:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6541C286;
+	Thu, 25 Jul 2024 04:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FyJH0Amf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5itf1fE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C951DF6C
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 04:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14BF17565
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 04:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721882632; cv=none; b=piGW5oJk15W+QFxn29IwZPjgOWbNROQwjmkJgjHU+bzYXVxbEemK9Yqb63QkD6QVOg2QwDC5t0cJIK0ntleeu5/nV1XwyoRovpcmEZ0IzaF2YMQPIKF1zthqXF2Kuc52OPOLZhp6dTfDKxNYYnzIhtr5f9cYCYS7owlFDla4bh0=
+	t=1721882902; cv=none; b=GIc7GwMd2r3BQdscReTZOF7qqVk7hYks6vO9GUA9zogZqjsnRKMDyn8H0uortJv0BPo8fMnCn7OFiAupjt4CmFwH6PQ+5r7EVJDBTs2LglSszo8mP0fXmU5kG7iPFSK2n+SeDpBfxrVHjFI/GquHsiNxoK58LDC8eCtoaeQvZeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721882632; c=relaxed/simple;
-	bh=guKMdJDh2Dsp0ZvO0y2p2rkfeU5PbBBaTqPQnUlwHec=;
+	s=arc-20240116; t=1721882902; c=relaxed/simple;
+	bh=4tkzV4CrdLGLyLxeqqrIR9odUjTIIvuyAKEAUZasaog=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=srtR0rEoWQSj2K373LscuG5lYjqsJe1pZ3gS8Ebh3NwtbfYnHSciLDj/+gA5EE4FNv9Ts/gTJEYtbc9iBCctT77fxt/+j+P+VsKPoSUz8u3QdAnVS7WbufDKgGQOLGfccpMJp5hMaMhxonAgtJH2YZp0urQ55CU5jVWTtGajE48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FyJH0Amf; arc=none smtp.client-ip=209.85.215.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=hoiG0FwHEOBJQKRQKAgn9K7PZ5MltsI62mORuWG4IJlS5wnHFcvoOweMSi2t/Km52PslmQ7AnYZKqznzwrFEiB9KT3Z6ppGTC5NtgMQCChUfFihWneOnVrANofdKuDWwW3gn47ERKhLYFptTnGATShBQr14rlcYJzHPDSj/A+KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n5itf1fE; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7a264a24ea7so338559a12.3
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 21:43:50 -0700 (PDT)
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-71871d5e087so387772a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 21:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721882630; x=1722487430; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721882899; x=1722487699; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2wEKpUv4fMwfLgYNRd8DtitOmSI092BkaurqEG/TeoI=;
-        b=FyJH0AmfjHHew3GLu9iNP4+UFwiNClsWdNdd1/j6RIewAEiuPRsgSZaQvMQYrutj8T
-         ari3+ZlIIMGOA/c6lF2QNQbUatrB4L9znLl6yKN74FVnlKv26MpV4b8sOd/wyhLWZr3a
-         ptUpQ++9q8J8JliQgIXc+ZooKUSkyLcM8WNIeGXf46HV3PGp6zn3JUfkPcTBK6IVP9DA
-         rsfeYbYovNLtevunOU/Wrjs9kgG69RK6njhb94FILuyc//6sy+qHWQXvESf9VbyQ8Us3
-         e4waR049q+Gl9IoHszYs29TGgGIkQmy6kN6v/SrIIty1SgkpEtFjof4voDFDt4kDWHdi
-         JlsA==
+        bh=fuLrTOMZXwDvrh3Gcss0q0VIdIl/tmC7R+/hGCD5mQk=;
+        b=n5itf1fEcC/Fe1QSCWu9b0tXh85FplQ3qRWFHq5FctPL8exhYKOpMOt/iFFstZlTcE
+         ozGlzgHcVy01s9nzZ+iYgDSNTNYId+ntYgigCKBrf9njRzJEf75QlXvIuSZTd+/1qqEK
+         0GuOOKF58koSgfcUY3Ycvf6hZ0z7Xgh3iMbp5aZwFUGXhtvC45m+xhoo3FSflEnvRQ9/
+         5rMcm5zsBAckA2Re9cMnwov/+VLJvw4VY1lX3Xq8ELl36L4//zHHcMpVac2KdyctseiL
+         3cIkoF5RLn3BkpDHkhMSgB1nfvrckRGHZeHFu4SjinU8reMKzRTOp+BYqJ5yLLTmw6As
+         Cpwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721882630; x=1722487430;
+        d=1e100.net; s=20230601; t=1721882899; x=1722487699;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2wEKpUv4fMwfLgYNRd8DtitOmSI092BkaurqEG/TeoI=;
-        b=IUrg9L9Pok6XggfizKqRUI61kLgudluSb91W40uVDYJJYT3h1cIl/79a5ZVz7Upigq
-         8A2ehPry15ocWx3tfIwYG6A4Pjp0084UwktPCErnGl1u6SeGDgxFrBOelLVhbtnJNj0e
-         fQF9pD7BXShEIW68zRshdRf/FA4fgzwHz6borXTRbJDyl75pnIphaHCicHrbSZK0Rgzu
-         sn5gvLTAFY8mN1spUHyPSHajwaPLFnKZHmGqCTd6FLi9W83mwF1vEDWeqEBgvSXZzVLD
-         uFxXEodOJNM+KZBMDTip0OTtJt/nDFUY9IXwwoTW0B3N8iE+hY4tAdfkM5jldi6f2bu8
-         NfSA==
-X-Gm-Message-State: AOJu0YxcHst17ki7iSwLos4H7yIPYUFLzOakfkLUIm6Xb4HkiB308dua
-	qlU9Ung629SNsowG37xNMOS/93TnI7h8GNexAx2oBZAFRwbyOjFpyfY+oZ9QroSXpYQio4HO3YI
-	=
-X-Google-Smtp-Source: AGHT+IGWryDYkmYqfGQhtlkQZyoWV2+MeYYkU6VgJs8IspKUBX7yQT5hHKvRN20Mhn96afsnACiolw==
-X-Received: by 2002:a17:90a:1fc8:b0:2c8:bf72:5389 with SMTP id 98e67ed59e1d1-2cf2e9d200cmr698468a91.9.1721882630473;
-        Wed, 24 Jul 2024 21:43:50 -0700 (PDT)
+        bh=fuLrTOMZXwDvrh3Gcss0q0VIdIl/tmC7R+/hGCD5mQk=;
+        b=huBzMMZ1MWCHnAr+50Dju93mfRD1nDD5+TL7bBv/IIjT2CJ7lb0uVW2yAfPKnWo4J3
+         6AyBexpt2fuwm0dDudHBNRgGurvlJ169gFcGytiah9sMk5BxsjccsrWSBeEgiGDFxc2D
+         anrpenGktt90uohLTccAUIjanALYcQvdghtmEu66rdZ+MbpgMGfL2lPATfVNLdOWPYeQ
+         B+Ms0Cu3qWXEZz1uEOHEac8CYSkk3oCQqWX80lj0G9FIzyW8tTPV6bSYnOgPeg7AS95y
+         w3TLFJm+XV2b8uGk6BWhXK+ZhIGECIAYR+9SfWGsYhLBhCIgpk9Lo/aeciOwcYYFVHt0
+         /kgw==
+X-Gm-Message-State: AOJu0Yz8S9K6wA3Yr0a9qRtFoOjCe0Whr2i452lgMtP4pM03+uKmnojc
+	e7GyQRPiSl6eCCusjoBwYavLou1pxCvCyUKTcjLbGmhBF39kbkYpjJMC1s0iqg==
+X-Google-Smtp-Source: AGHT+IEWwStak5o3MjRefRdeyCr2slwkGT9/t8cXU3b6WSdv7rBu11QlEfyQkbgSO9bxXTIKVaFdDg==
+X-Received: by 2002:a05:6a20:72ac:b0:1c0:f594:198c with SMTP id adf61e73a8af0-1c4728035d3mr2753100637.11.1721882899113;
+        Wed, 24 Jul 2024 21:48:19 -0700 (PDT)
 Received: from thinkpad ([103.244.168.26])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cdb73f00cesm2519947a91.34.2024.07.24.21.43.46
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cf28e62e6fsm505267a91.57.2024.07.24.21.48.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jul 2024 21:43:50 -0700 (PDT)
-Date: Thu, 25 Jul 2024 10:13:44 +0530
+        Wed, 24 Jul 2024 21:48:18 -0700 (PDT)
+Date: Thu, 25 Jul 2024 10:18:12 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Jim Quinlan <james.quinlan@broadcom.com>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -84,11 +83,11 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 07/12] PCI: brcmstb: Remove two unused constants from
- driver
-Message-ID: <20240725044344.GH2317@thinkpad>
+Subject: Re: [PATCH v4 08/12] PCI: brcmstb: Don't conflate the reset rescal
+ with phy ctrl
+Message-ID: <20240725044812.GI2317@thinkpad>
 References: <20240716213131.6036-1-james.quinlan@broadcom.com>
- <20240716213131.6036-8-james.quinlan@broadcom.com>
+ <20240716213131.6036-9-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,45 +97,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240716213131.6036-8-james.quinlan@broadcom.com>
+In-Reply-To: <20240716213131.6036-9-james.quinlan@broadcom.com>
 
-On Tue, Jul 16, 2024 at 05:31:22PM -0400, Jim Quinlan wrote:
-> Two constants in the driver, RGR1_SW_INIT_1_INIT_MASK and
-> RGR1_SW_INIT_1_INIT_SHIFT are no longer used and are removed.
+On Tue, Jul 16, 2024 at 05:31:23PM -0400, Jim Quinlan wrote:
+> We've been assuming that if an SOC has a "rescal" reset controller that we
+> should automatically invoke brcm_phy_cntl(...).  This will not be true in
+> future SOCs, so we create a bool "has_phy" and adjust the cfg_data
+> appropriately (we need to give 7216 its own cfg_data structure instead of
+> sharing one).
 > 
+
+In all commit messages, use imperative tone as per kernel documentation:
+
+"Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
+instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+to do frotz", as if you are giving orders to the codebase to change
+its behaviour."
+
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
 > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
 > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 5 -----
->  1 file changed, 5 deletions(-)
+>  drivers/pci/controller/pcie-brcmstb.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 073d790d97b7..dfb404748ad8 100644
+> index dfb404748ad8..8ab5a8ca05b4 100644
 > --- a/drivers/pci/controller/pcie-brcmstb.c
 > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -210,11 +210,6 @@ enum {
->  	PCIE_INTR2_CPU_BASE,
->  };
->  
-> -enum {
-> -	RGR1_SW_INIT_1_INIT_MASK,
-> -	RGR1_SW_INIT_1_INIT_SHIFT,
-> -};
-> -
->  enum pcie_type {
->  	GENERIC,
->  	BCM7425,
-> -- 
-> 2.17.1
-> 
+> @@ -222,6 +222,7 @@ enum pcie_type {
+>  struct pcie_cfg_data {
+>  	const int *offsets;
+>  	const enum pcie_type type;
+> +	const bool has_phy;
 
+'has_phy' means the controller supports PHY and the new SoC doesn't have a PHY
+for the controller?
 
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்
