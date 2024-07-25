@@ -1,141 +1,129 @@
-Return-Path: <linux-pci+bounces-10767-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10768-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 590CC93BD43
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 09:44:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44D2B93BD48
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 09:47:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 042161F21B46
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 07:44:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E883F283B72
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 07:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEFBB16F908;
-	Thu, 25 Jul 2024 07:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A66167DB8;
+	Thu, 25 Jul 2024 07:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H9J8A8X/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out28-193.mail.aliyun.com (out28-193.mail.aliyun.com [115.124.28.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED9916D9A3;
-	Thu, 25 Jul 2024 07:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899EB2746C
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 07:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721893457; cv=none; b=WADOPDYi/wadB9XYlCuOOzPz6p8iKW1HIJL+WqbhgeerA5wLbOXT8XoL1cgNg30nIBgAiMA9O7l0cnZmRf+x59SekE5+9MiVwUCXS5cjJLI1Deu4OhEjYBHlb/m51P7i1p3GwA89dTnov6gVwj9Xu6yRFm0LFW76uTg/WxHjSNA=
+	t=1721893638; cv=none; b=FREUNg6maoKgwSalqAw4tIBQ2XXlriXRtiTgBsL4Ar31OvJOWylDpnG20lgFRLJ1zddVw+aSFc8XFTf2V/zArZ3RmHOC6ZV1aX/mAj3Q/vNVp8YvZaIHEXEd1AJfOqXG6Q7PnZflI9XPgXwBFQPhOu1vaSe1aPl0GUOURWW1TMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721893457; c=relaxed/simple;
-	bh=VsRD9RpGfNzTJeBE424wyq4lMEpvXqO7CWBLN2aG/Qw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GwbT6BOvNTMCU06PAbrm9zEFDFuJdnPCOJAIPW9HnebgyTrRtfhO3oKf+jVKIJGEOwSHu7R7qmOYTqnY98ivbmOWuSdSNH86ycyA2midzN3fGzLXmkikryALLE6Uet5C4/ZxRU60uMgjwyMsB83o9lHDF2WKOfJROzDX2hJ2urc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=115.124.28.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07440004|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00729649-0.000270946-0.992433;FP=16230201195628131514|1|1|1|0|-1|-1|-1;HT=maildocker-contentspam033070021176;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.YZIOBDn_1721893443;
-Received: from ubuntu..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.YZIOBDn_1721893443)
-          by smtp.aliyun-inc.com;
-          Thu, 25 Jul 2024 15:44:04 +0800
-From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-To: haifeng.zhao@linux.intel.com
-Cc: helgaas@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lkp@intel.com,
-	llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	zhoushengqing@ttyinfo.com
-Subject: Re: [PATCH v4] PCI: Enable io space 1k granularity for intel cpu root port
-Date: Thu, 25 Jul 2024 07:44:03 +0000
-Message-Id: <20240725074403.12928-1-zhoushengqing@ttyinfo.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <2912551a-b4c6-4bd4-8c1c-22de7fd8fa20@linux.intel.com>
-References: <2912551a-b4c6-4bd4-8c1c-22de7fd8fa20@linux.intel.com>
+	s=arc-20240116; t=1721893638; c=relaxed/simple;
+	bh=xbNwwU319rkoRLiF5J4L5ECjiSneLZ1X5F5cu9hErGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RiqP5WgRrzQ1gpA5mf4btLxdxjxX92wMVOiu+O3Ka8A6sgEDYaGlHsFOarlNMshxtzVPHDH/Cntp6xy5+J2lYq3WUdUPV6Esv1rbezdQHOVwXVpy4/MmpIJRNJ2PhosUFhZ1Fasz/biBm65xA6Xjnq57kzqvllEkDUUQB8V7sQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H9J8A8X/; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc658b6b2eso5487895ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 00:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721893636; x=1722498436; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KpBq3z07GcYsJy4O1z5Daz2Py/Pecj57NPa35Ml6XIM=;
+        b=H9J8A8X/cnLnuixq52Qq8MknbtNeTUkz7WJb0jWO3YxDu4VObkFZOEjXfrJLAwNJQH
+         CPVT2nbR4qwmUmbaUKSyGW+U/Do74/TCuLgGI9Ms67UDKS9TeWirqRFSsPcbeZpL0WjA
+         vYmNXc8JWjRibQG5Ouc8TrnSSAVTIFxb8URC3ywUP6QZGsETemQcC/XnbCvWVBgezNIE
+         zEooNUOS4v0p6gMPoYBRgPaIpeF+9oI6saRMRzf+vcrxKKiJ3qjRzw1rAzD0szAlO8sQ
+         dJjU3V0z4F4ODuplWhCFLJh9kqTNW6sBhjFEK962VLkaoHTMHWM405inUYVdcbeefNcW
+         qVxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721893636; x=1722498436;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KpBq3z07GcYsJy4O1z5Daz2Py/Pecj57NPa35Ml6XIM=;
+        b=BF+6YACYMEDFgb6tqz1Q/JqM21nkMDkgVpyzwqDDgpAhxoetMJEBIhCv9DCrGwNiZy
+         Q9HaOL/PIlxBBwIVDHY9rT1YHo6UErE7Bm10E2g3Na0Ta4Y1teS520EQ59c1EHR0rNpY
+         Tnw/glShO9ZNgBeSDMe0xf8aoLd3p+GDN+m7X+uktXM8ipsv7BHpvfdpcR1RCctW9XPc
+         kbTLodmdArpyFUc6s0ABOG125BbIHVcEKhdi354rOX9rDqiW1/2gJUtVJpNEps3VGdqQ
+         H/p7F7gjhSBS5FlXAKmuaGYjAyltMegAJalcIo5/cHmTrkH3aTZidYq75ngU2X9qlv1D
+         eo1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUHxU4eQ86Y6ruym/PeOgLq89WgWNyk3O24qD4RhUoTm3iCl0faLMGyRSJX/B54wAiOiceq+Uztxj+ewk3dCPpPFjN8mMBtTfBo
+X-Gm-Message-State: AOJu0YxwFYr9noL0b+W6Bs1P8GX42GGn4ZFZbTp+z7aGvhJK/X+r9H7c
+	Zpvhwli2yAoWP1lZyDA90RmGqoZ2oeIRXQaatSuTn3MQFDtWXB/ED9DGV1ZdVQ==
+X-Google-Smtp-Source: AGHT+IEvPiQ4tXStL2sFA0d8J9F5uD2IHeouCkAncAwEO9kDbAu69BWI3aENx7hEAk7hZ0kx2c3RbA==
+X-Received: by 2002:a17:903:2343:b0:1fd:5e91:2b13 with SMTP id d9443c01a7336-1fed3870cdbmr20396675ad.1.1721893635894;
+        Thu, 25 Jul 2024 00:47:15 -0700 (PDT)
+Received: from thinkpad ([2409:40f4:1015:1102:1950:b07b:3704:5364])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7f6dc27sm7688855ad.237.2024.07.25.00.47.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jul 2024 00:47:15 -0700 (PDT)
+Date: Thu, 25 Jul 2024 13:17:08 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, vigneshr@ti.com, kishon@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+	ahalaney@redhat.com, srk@ti.com
+Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
+Message-ID: <20240725074708.GB2770@thinkpad>
+References: <20240724065048.285838-1-s-vadapalli@ti.com>
+ <20240724161916.GG3349@thinkpad>
+ <69f8c45c-29b4-4090-8034-8c5a19efa4f8@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <69f8c45c-29b4-4090-8034-8c5a19efa4f8@ti.com>
 
-> On 7/24/2024 2:35 PM, Zhou Shengqing wrote:
-> >>> Do you mean it shoud be like this?
-> >>>
-> >>> 	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
-> >>> 		if (d->bus->number == dev->bus->number) {
-> >>> 			pci_read_config_word(d, 0x1c0, &en1k);
-> >>> 			if (en1k & 0x4) {
-> >>> 				pci_info(dev, "1K I/O windows enabled per %s EN1K setting\n", pci_name(d));
-> >>> 				dev->io_window_1k = 1;
-> >>> 			}
-> >>> 		}
-> >>> 	}
-> >>>
-> >>>> 00:00.0 System peripheral: Intel Corporation Device 09a2 (rev 20)
-> >>>> 00:0f.0 PCI bridge: Intel Corporation Device 1bbf (rev 10) (prog-if 00 [Normal decode])
-> >>>>
-> >>>>     
-> >>>> 15:00.0 System peripheral: Intel Corporation Device 09a2 (rev 20)
-> >>>> 15:01.0 PCI bridge: Intel Corporation Device 352a (rev 04) (prog-if 00 [Normal decode])
-> >>>>
-> >>>> and if you check domain number only, they might sit on different bus, perhaps that
-> >>>> would make thing complex, could you make sure the VT-d is on the upstream bus of the
-> >>>> bridge ?
-> >>> I checked it on ICX SPR EMR GNR, VT-d is always on the same bus with root port,
-> >>> and VT-d device and function number is always 0.
-> >> Yes, every VT-d instance in the root complex and the root port integrated are
-> >> on the same bus. and VT-d is the first device of that bus.
-> >>
-> >> The EDS doesn't say if there is exception one of the VT-d instances in an
-> >> system its EN1K wasn't set while others were set, vice vesa. so I suggest
-> >> just check the VT-d and then set the root port's io_windows_1k of the same bus.
-> > But as Bjorn mentioned at July 12, 2024, 6:48 p.m.,
-> >
-> > "To be safe, "d" (the [8086:09a2] device) should be on the same bus as
-> > "dev" (with VMD, I think we get Root Ports *below* the VMD bridge,
-> > which would be a different bus, and they presumably are not influenced
-> > by the EN1K bit."
-> >
-> > When VMD enabled, just check bus number identical may lead to enable
-> > 1k io windows for VMD domain root port. E.g. 0000:80:00.0 is a
-> > VT-d(09a2). If VMD enabled, there might be a root port 10000:80:01.0 present.
-> > this code may lead to enable 10000:80:01.0 io_window_1k = 1.
-> > This is probably not expected.
-> >
-> > If I modify it like this,
-> >
-> > 	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
+On Thu, Jul 25, 2024 at 10:50:13AM +0530, Siddharth Vadapalli wrote:
+> On Wed, Jul 24, 2024 at 09:49:16PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote:
+> > > Since the configuration of Legacy Interrupts (INTx) is not supported, set
+> > > the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
+> > >   of_irq_parse_pci: failed with rc=-22
+> > > due to the absence of Legacy Interrupts in the device-tree.
+> > > 
+> > 
+> > Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() will bail out
+> > if 'map_irq' is set to NULL.
 > 
-> BTW, don't save letters to use single letter variable 'd', please use 'vtd_dev' or
-> something else to express the VT-d device.
-
-Got it!
-
-> 
-> > 	---if (d->bus->number == dev->bus->number) {
-> > 	+++if (d->bus == dev->bus) {
-> 
-> What if their 'bus' are NULL, though it is almost impossible. :)
-> 
-> > 			pci_read_config_word(d, 0x1c0, &en1k);
-> > 			if (en1k & 0x4) {
-> > 				pci_info(dev, "1K I/O windows enabled per %s EN1K setting\n", pci_name(d));
-> > 				dev->io_window_1k = 1;
-> > 			}
-> > 		}
-> > 	}
-> >      
-> > Can the situation mentioned above be avoided?
-> 
-> Yes, my understanding, as Bjorn pointed out root port extended from VMD
-> bridge not on the same bus as VT-d.
-
-For the root port extended from VMD, should the 1k window be set
-when BIOS setup EN1K knob enabled? 
-In my case, I think  EN1K should not apply to the VMD root port.
-
-But what I'm confused about is, how can I reasonably exclude the VMD root port
-in the code?
-
-> 
+> While 'swizzle_irq' won't be invoked if 'map_irq' is NULL, having a
+> non-NULL 'swizzle_irq' (pci_common_swizzle in this case) with a NULL
+> 'map_irq' seems inconsistent to me though the code-path may never invoke
+> it. Wouldn't a non-NULL 'swizzle_irq' imply that Legacy Interrupts are
+> supported, while a NULL 'map_irq' indicates that they aren't? Since they
+> are always described in pairs, whether it is in the initial commit that
+> added support for the Cadence PCIe Host controller (used by pci-j721e.c):
+> https://github.com/torvalds/linux/commit/1b79c5284439
+> OR the commit which moved the shared 'map_irq' and 'swizzle_irq' defaults
+> from all the host drivers into the common 'devm_of_pci_bridge_init()'
+> function:
+> https://github.com/torvalds/linux/commit/b64aa11eb2dd
+> I have set both of them to NULL for the sake of consistency.
 > 
 
+Since both callbacks are populated in the pci/of driver, this consistency won't
+be visible in the controller drivers. From the functionality pov, setting both
+callbacks to NULL is *not* required to disable INTx, right?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
