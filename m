@@ -1,322 +1,276 @@
-Return-Path: <linux-pci+bounces-10799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10800-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B4D293C7C3
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 19:46:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2922693C8F9
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 21:47:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E75C1C20381
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 17:46:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEF7A2821C6
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 19:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D292519B3CC;
-	Thu, 25 Jul 2024 17:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94CA713D8B6;
+	Thu, 25 Jul 2024 19:46:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="am5s7pHo"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SXi3mywt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC044381C8;
-	Thu, 25 Jul 2024 17:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6364678289
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 19:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721929573; cv=none; b=RRaa2N5q+WxySjlYNR6zjRlX+ie+kOD201wuprq9hftCtPL45TAGsMq5uPuAS2d4jA8/zBDGmXffvXdKIGshXi/OAfRztniwanRjVTwkgSSwYqLAebENgITUeH3NkszJ60dVoeQL0KWMvB2krbHZYUpJ4+yShEbbg4Wp4Ri6wLo=
+	t=1721936776; cv=none; b=VHk7uGm+w1ySY9H3H38Y1scQqPz1vTcPbWcM2OovlCW9rt+cuBlvwX8OKgZmqMcJpyvzgUUqlqQfH2oxLWyHULsi0MYzLzygia1EiFawJvadQoR+BzIaHZoNpruTVPcthxrfn6vf0ppj6GTf0vg9VNbjJjpelbKEi4eGFPWrzNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721929573; c=relaxed/simple;
-	bh=ir45b3c/4yfK/aVmaGc165QJD25kxjmIFcfqxCiaeX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tbXvec4pXD0Pju7R+u/zOePvkOKFvD6p6zgOjXg0DA+2Wba4LGYd+cmoQqpbFNkV2zDRncKXJFLVw9Wg4v5Xd/j4EnawRWE2Gylx6Hib1eu+mtnQ1Y9ZBsZ1frgAC9sdFLWO8XYZz408OGNE5Tr4NrWqk4YrCBaPigqtLXTrbl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=am5s7pHo; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46PFT40C007717;
-	Thu, 25 Jul 2024 17:45:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:content-transfer-encoding:mime-version; s=pp1; bh=M
-	ZdKiQHa5LXx1PNObBezoI2lqw387a+5mBLxj6pzPCE=; b=am5s7pHoN8qg0NQRK
-	pmWj7AxyC5+z1+0ycDRaYXeCADotj+YFZ9BEJJzvodMHLwciXB2t9IyhxWW3Cmml
-	emBGWYE8X/RQnKB4c99ulwBP02UvxcJyS2baKo/cOgSi7ttnQPSsVjlfdIXRxqgR
-	Poxcf4bwiaV4bdwt/sf3mU0WtkZsNT/fWVfjaThEyK2eU6L6VFsMCIjGjEfP5cGL
-	heu+Fma6qkrUX0xI4uvKkuy07obV5+SX569rfR18UbO6mTgT/C9bkyHTAf4diiKN
-	mKIw3bqLWgnFVXi6cnIZOkxUI1utA/m8x8/Ab75dmDBSUcOc4yhpR7hsfAnCFvrS
-	t9yug==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ksct8agx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jul 2024 17:45:54 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46PHjrhe012342;
-	Thu, 25 Jul 2024 17:45:53 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ksct8agu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jul 2024 17:45:53 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46PGdlWK018441;
-	Thu, 25 Jul 2024 17:45:52 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40kk3hj1mf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jul 2024 17:45:52 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46PHjkgJ48169470
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jul 2024 17:45:48 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AEBB720065;
-	Thu, 25 Jul 2024 17:45:46 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1C5920040;
-	Thu, 25 Jul 2024 17:45:43 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.195.36.169])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 25 Jul 2024 17:45:43 +0000 (GMT)
-Date: Thu, 25 Jul 2024 23:15:39 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Lizhi Hou <lizhi.hou@amd.com>, Rob Herring <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Kowshik Jois B S <kowsjois@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Message-ID: <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
-Mail-Followup-To: Lizhi Hou <lizhi.hou@amd.com>, 
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
-	Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, 
-	Kowshik Jois B S <kowsjois@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>
-References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
- <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
- <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
- <20240723162107.GA501469-robh@kernel.org>
- <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
- <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
- <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GDoVGmOGmgp8knitGbuYCsWK8dxRxh5c
-X-Proofpoint-ORIG-GUID: XKqLwETSvH1eIPln2q8-TM3vOzYRTQ25
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1721936776; c=relaxed/simple;
+	bh=zlBAdpqmU2PlBO+TYyGtVnw7qs1FGrR2hCiQ9kbPSRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IQit31KL9SgymtOrZqml0aGB7jlc1pJDQbsQtLXzvUptrWUbZzls7A857dyGxWjXIRQgAGOmDyjmGBxGk/Z1opMQIZqTUXOXZoJwtfROfCQ5NVMUkK56Q093nlyVvx9QvTHIl5LUEO7ttROr837A8g3yz0P3hAVcZSM8/P5Kh9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=SXi3mywt; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2f035ae0fd1so5548581fa.2
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 12:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1721936772; x=1722541572; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IPLN4o+vdOtBlxfEPNdxAaiSXzf/7LBICU67TBYGlxc=;
+        b=SXi3mywthXg1CYRp6kSv2y8CVakkdskRo+xTACJau1Ndncc1tj6b+4KmydX6eRnz0R
+         bN2Fobw6RQEhaJKe3APnunxlN0nZpW4ka8FBjwgE2rP3jdg3QzmgELrJlvsNuFSEpz4z
+         pHbJEEoeJdc+Jr1wDF+jBYk8KlLOtQoqn3pyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721936772; x=1722541572;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IPLN4o+vdOtBlxfEPNdxAaiSXzf/7LBICU67TBYGlxc=;
+        b=pgKfS7EsH+1oOnfTav/MPgwZpRbsMbRplWzaM0Ud1yVj4Nc3xWmkKLgn/3Iod2TlCt
+         9a2UHUyomMdh5AGhYqj2RBPIfBlcaghvJCNbGi915joSK6CUqWMtMkiRgGl8+q4HD5L4
+         cdV6HL48K7kbCHdhwEo38LENGuHxSbv/Pu+3G6jQaO09/9yz70Xm+FZ142S2t88lXNft
+         JkII74vNgK7V0LyOXszuJ/fi+xh9xTg9btUxregzuniyewilZpc54u3aai8UeBNsHpNH
+         6W6Pmzg6N9/+SKVOUPpCS+c1vw33C+rSIlToSQBVUwmZGNR+3BFak9s7xxwlA9bx2VIl
+         PZlA==
+X-Gm-Message-State: AOJu0YyMkZRZ1ZpYYCuLjBfK7PpUE2kwFBv7sNRgKll/1fea9t0O27Tp
+	gg5SRZXZu1pWLkiZ7HxOEqsQiW7kAZbbwyTCrAufm4KeMxKafl6PIoLpz3fMUBuT/c/m+ptxo0N
+	7EsK8buwDrL18W3VWSdpblPgEZOdG/tBb5fxu
+X-Google-Smtp-Source: AGHT+IFYD9K+LZj8fWMoJtaoHxyriUDBClkgb7dWpG26nm1VaKV8GCAXvgwPyC4H7AV48QltRCSbgczllcno5qRVlzQ=
+X-Received: by 2002:a2e:730a:0:b0:2ef:2c0f:284a with SMTP id
+ 38308e7fff4ca-2f039db9a80mr28248241fa.44.1721936772272; Thu, 25 Jul 2024
+ 12:46:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-25_15,2024-07-25_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- clxscore=1015 phishscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407250119
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-4-james.quinlan@broadcom.com> <20240725043111.GD2317@thinkpad>
+In-Reply-To: <20240725043111.GD2317@thinkpad>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Thu, 25 Jul 2024 15:45:59 -0400
+Message-ID: <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com>
+Subject: Re: [PATCH v4 03/12] PCI: brcmstb: Use common error handling code in brcm_pcie_probe()
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, bcm-kernel-feedback-list@broadcom.com, 
+	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000aafbc7061e17a5fe"
 
-Hi Lizhi, Rob,
+--000000000000aafbc7061e17a5fe
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for responding late. I got busy with some other things.
+On Thu, Jul 25, 2024 at 12:31=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Tue, Jul 16, 2024 at 05:31:18PM -0400, Jim Quinlan wrote:
+> > o Move the clk_prepare_enable() below the resource allocations.
+> > o Add a jump target (clk_out) so that a bit of exception handling can b=
+e
+> >   better reused at the end of this function implementation.
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 29 +++++++++++++++------------
+> >  1 file changed, 16 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index c08683febdd4..c257434edc08 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -1613,31 +1613,30 @@ static int brcm_pcie_probe(struct platform_devi=
+ce *pdev)
+> >
+> >       pcie->ssc =3D of_property_read_bool(np, "brcm,enable-ssc");
+> >
+> > -     ret =3D clk_prepare_enable(pcie->clk);
+> > -     if (ret) {
+> > -             dev_err(&pdev->dev, "could not enable clock\n");
+> > -             return ret;
+> > -     }
+> >       pcie->rescal =3D devm_reset_control_get_optional_shared(&pdev->de=
+v, "rescal");
+> > -     if (IS_ERR(pcie->rescal)) {
+> > -             clk_disable_unprepare(pcie->clk);
+> > +     if (IS_ERR(pcie->rescal))
+> >               return PTR_ERR(pcie->rescal);
+> > -     }
+> > +
+> >       pcie->perst_reset =3D devm_reset_control_get_optional_exclusive(&=
+pdev->dev, "perst");
+> > -     if (IS_ERR(pcie->perst_reset)) {
+> > -             clk_disable_unprepare(pcie->clk);
+> > +     if (IS_ERR(pcie->perst_reset))
+> >               return PTR_ERR(pcie->perst_reset);
+> > +
+> > +     ret =3D clk_prepare_enable(pcie->clk);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "could not enable clock\n");
+> > +             return ret;
+> >       }
+> >
+> >       ret =3D reset_control_reset(pcie->rescal);
+> > -     if (ret)
+> > +     if (ret) {
+> >               dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> > +             goto clk_out;
+>
+> Please use a descriptive name for the err labels. Here this err path disa=
+bles
+> and unprepares the clk, so use 'clk_disable_unprepare'.
+ack
+>
+> > +     }
+> >
+> >       ret =3D brcm_phy_start(pcie);
+> >       if (ret) {
+> >               reset_control_rearm(pcie->rescal);
+> > -             clk_disable_unprepare(pcie->clk);
+> > -             return ret;
+> > +             goto clk_out;
+> >       }
+> >
+> >       ret =3D brcm_pcie_setup(pcie);
+> > @@ -1676,6 +1675,10 @@ static int brcm_pcie_probe(struct platform_devic=
+e *pdev)
+> >
+> >       return 0;
+> >
+> > +clk_out:
+> > +     clk_disable_unprepare(pcie->clk);
+> > +     return ret;
+> > +
+>
+> This is leaking the resources. Move this new label below 'fail'.
+What resources is it leaking?  At "clk_out" the return value will be negati=
+ve
+and only managed resources have been allocated at that juncture.
 
-On 2024/07/23 02:08 PM, Lizhi Hou wrote:
-> 
-> On 7/23/24 12:54, Rob Herring wrote:
-> > On Tue, Jul 23, 2024 at 12:21 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
-> > > 
-> > > On 7/23/24 09:21, Rob Herring wrote:
-> > > > On Mon, Jul 15, 2024 at 01:52:30PM -0700, Lizhi Hou wrote:
-> > > > > On 7/15/24 11:55, Rob Herring wrote:
-> > > > > > On Mon, Jul 15, 2024 at 2:08 AM Amit Machhiwal <amachhiw@linux.ibm.com> wrote:
-> > > > > > > With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
-> > > > > > > of a PCI device attached to a PCI-bridge causes following kernel Oops on
-> > > > > > > a pseries KVM guest:
-> > > > > > > 
-> > > > > > >     RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
-> > > > > > >     Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
-> > > > > > >     BUG: Unable to handle kernel data access on read at 0x10ec00000048
-> > > > > > >     Faulting instruction address: 0xc0000000012d8728
-> > > > > > >     Oops: Kernel access of bad area, sig: 11 [#1]
-> > > > > > >     LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
-> > > > > > > <snip>
-> > > > > > >     NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
-> > > > > > >     LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
-> > > > > > >     Call Trace:
-> > > > > > >     [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
-> > > > > > >     [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
-> > > > > > >     [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
-> > > > > > >     [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
-> > > > > > >     [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
-> > > > > > >     [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
-> > > > > > >     [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
-> > > > > > >     [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
-> > > > > > >     [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
-> > > > > > >     [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
-> > > > > > >     [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
-> > > > > > >     [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-> > > > > > > <snip>
-> > > > > > > 
-> > > > > > > A git bisect pointed this regression to be introduced via [1] that added
-> > > > > > > a mechanism to create device tree nodes for parent PCI bridges when a
-> > > > > > > PCI device is hot-plugged.
-> > > > > > > 
-> > > > > > > The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
-> > > > > > > device-tree node associated with the pci_dev that was earlier
-> > > > > > > hot-plugged and was attached under a pci-bridge. The PCI dev header
-> > > > > > > `dev->hdr_type` being 0, results a conditional check done with
-> > > > > > > `pci_is_bridge()` into false. Consequently, a call to
-> > > > > > > `of_pci_make_dev_node()` to create a device node is never made. When at
-> > > > > > > a later point in time, in the device node removal path, a memcpy is
-> > > > > > > attempted in `__of_changeset_entry_invert()`; since the device node was
-> > > > > > > never created, results in an Oops due to kernel read access to a bad
-> > > > > > > address.
-> > > > > > > 
-> > > > > > > To fix this issue, the patch updates `of_changeset_create_node()` to
-> > > > > > > allocate a new node only when the device node doesn't exist and init it
-> > > > > > > in case it does already. Also, introduce `of_pci_free_node()` to be
-> > > > > > > called to only revert and destroy the changeset device node that was
-> > > > > > > created via a call to `of_changeset_create_node()`.
-> > > > > > > 
-> > > > > > > [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> > > > > > > 
-> > > > > > > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> > > > > > > Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
-> > > > > > > Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> > > > > > > Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
-> > > > > > > ---
-> > > > > > > Changes since v1:
-> > > > > > >        * Included Lizhi's suggested changes on V1
-> > > > > > >        * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
-> > > > > > >          part a bit in `of_pci_make_dev_node`
-> > > > > > >            drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
-> > > > > > >              611 | void of_pci_free_node(struct device_node *np)
-> > > > > > >                  |      ^~~~~~~~~~~~~~~~
-> > > > > > >            drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
-> > > > > > >            drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
-> > > > > > >              696 | out_destroy_cset:
-> > > > > > >                  | ^~~~~~~~~~~~~~~~
-> > > > > > >        * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
-> > > > > > > 
-> > > > > > >     drivers/of/dynamic.c  | 16 ++++++++++++----
-> > > > > > >     drivers/of/unittest.c |  2 +-
-> > > > > > >     drivers/pci/bus.c     |  3 +--
-> > > > > > >     drivers/pci/of.c      | 39 ++++++++++++++++++++++++++-------------
-> > > > > > >     drivers/pci/pci.h     |  2 ++
-> > > > > > >     include/linux/of.h    |  1 +
-> > > > > > >     6 files changed, 43 insertions(+), 20 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > > > > > > index dda6092e6d3a..9bba5e82a384 100644
-> > > > > > > --- a/drivers/of/dynamic.c
-> > > > > > > +++ b/drivers/of/dynamic.c
-> > > > > > > @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct device_node *np,
-> > > > > > >      * a given changeset.
-> > > > > > >      *
-> > > > > > >      * @ocs: Pointer to changeset
-> > > > > > > + * @np: Pointer to device node. If null, allocate a new node. If not, init an
-> > > > > > > + *     existing one.
-> > > > > > >      * @parent: Pointer to parent device node
-> > > > > > >      * @full_name: Node full name
-> > > > > > >      *
-> > > > > > >      * Return: Pointer to the created device node or NULL in case of an error.
-> > > > > > >      */
-> > > > > > >     struct device_node *of_changeset_create_node(struct of_changeset *ocs,
-> > > > > > > +                                            struct device_node *np,
-> > > > > > >                                                 struct device_node *parent,
-> > > > > > >                                                 const char *full_name)
-> > > > > > >     {
-> > > > > > > -       struct device_node *np;
-> > > > > > >            int ret;
-> > > > > > > 
-> > > > > > > -       np = __of_node_dup(NULL, full_name);
-> > > > > > > -       if (!np)
-> > > > > > > -               return NULL;
-> > > > > > > +       if (!np) {
-> > > > > > > +               np = __of_node_dup(NULL, full_name);
-> > > > > > > +               if (!np)
-> > > > > > > +                       return NULL;
-> > > > > > > +       } else {
-> > > > > > > +               of_node_set_flag(np, OF_DYNAMIC);
-> > > > > > > +               of_node_set_flag(np, OF_DETACHED);
-> > > > > > Are we going to rename the function to
-> > > > > > of_changeset_create_or_maybe_modify_node()? No. The functions here are
-> > > > > > very clear in that they allocate new objects and don't reuse what's
-> > > > > > passed in.
-> > > > > Ok. How about keeping of_changeset_create_node unchanged.
-> > > > > 
-> > > > > Instead, call kzalloc(), of_node_init() and of_changeset_attach_node()
-> > > > > 
-> > > > > in of_pci_make_dev_node() directly.
-> > > > > 
-> > > > > A similar example is dlpar_parse_cc_node().
-> > > > > 
-> > > > > 
-> > > > > Does this sound better?
-> > > > No, because really that code should be re-written using of_changeset
-> > > > API.
-> > > > 
-> > > > My suggestion is add a data pointer to struct of_changeset and then set
-> > > > that to something to know the data ptr is a changeset and is your
-> > > > changeset.
-> > > I do not fully understand the point. I think the issue is that we do not
-> > > know if a given of_node is created by of_pci_make_dev_node(), correct?
-> > Yes.
-> > 
-> > > of_node->data can point to anything. And we do not know if it points a
-> > > cset or not.
-> > Right. But instead of checking "of_node->data == of_pci_free_node",
-> > you would just be checking "*(of_node->data) == of_pci_free_node"
-> 
-> if of_node->data is a char* pointer, it would be panic. So I used
-> of_node->data == of_pci_free_node.
-> 
-> > (omitting a NULL check and cast for simplicity). I suppose in theory
-> > that could have a false match, but that could happen in this patch
-> > already.
-> 
-> I think if any other kernel code  put of_pci_free_node to of_node->data, it
-> can be fixed over there.
-> 
-> > 
-> > > Do you mean to add a flag (e.g. OF_PCI_DYNAMIC) to
-> > > indicate of_node->data points to cset?
-> > That would be another option, but OF_PCI_DYNAMIC would not be a good
-> > name because that would be a flag bit for every single caller needing
-> > similar functionality. Name it just what it indicates: of_node->data
-> > points to cset
-> > 
-> > If we have that flag, then possibly the DT core can handle more
-> > clean-up itself like calling detach and freeing the changeset.
-> > Ideally, the flags should be internal to the DT code.
-> 
-> Sure. If you prefer this option, I will propose another fix.
-> 
+Regards,
+Jim Quinlan
+Broadcom STB/CM
 
-The crash in question is a critical issue that we would want to have a fix for
-soon. And while this is still being figured out, is it okay to go with the fix I
-proposed in the V1 of this patch?
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
-Thanks,
-Amit
+--000000000000aafbc7061e17a5fe
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> 
-> Thanks,
-> 
-> Lizhi
-> 
-> > 
-> > Rob
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCC+FQ9F+1J41sHC+KdcHHYQSq0K7GEl
+Eqg+/dLzn7a0qDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MjUxOTQ2MTJaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEADdQ5oM0v5eWpauH4rvJaGXjyLQFe9S7JTKZTAg51mzwONKVl
+j+OcG2CxecsFuRNCb23SG/nGy3uyz1BP8Pubukqh55VX5apWfR0rbPPbFJnfXAW96XMyCrSi/xCQ
+Zgl0h2V87HQcxjkzZptEqULbbN7Qz9OOfnbMyf8w+blsYMy4UNOAtG29/FGCtkRUW3OmNLVIGDm6
+1Kq4H0i+i3yk2pmohHnl3rTI/C/Xlk8/d9YkIuSIF2mwA2pCcrMHJ7ZhHiYHzTaGxO12etxs5qUe
+G9KYa3LWkadXmLxI+lm6altMGObnux/xo/T4EEQHvWNNg09TnU9l8I08QJXN3OnbnA==
+--000000000000aafbc7061e17a5fe--
 
