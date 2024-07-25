@@ -1,119 +1,212 @@
-Return-Path: <linux-pci+bounces-10784-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10785-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00DE393BFDC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 12:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A2C3393BFDF
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 12:26:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 787E2B2175C
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 10:24:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D13BB21977
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 10:26:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827CF198E63;
-	Thu, 25 Jul 2024 10:24:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A69198E85;
+	Thu, 25 Jul 2024 10:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nhiw/56j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAO+P9u9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF79198A19
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 10:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5426C197A76
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 10:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721903073; cv=none; b=FOazuJ+uTYWnUV+IsVqKdYfhGCYZYOtXe4qHgSCkbZNqq8G2XybgnlpXM2CMSF9lJfyzrHGlRHvaxgwWY2ZVAH3sXqoCWUCs9IVJ4QrufJBcNY2LGLTJhxJYHIDSS1I8XRStyPQHdJm5xYx3uy8dciuJy0g6FYkr4pFiEh61Cqg=
+	t=1721903150; cv=none; b=AonWvaItn5qkOaz4K5Ya9DavVoIXsOvCzWGLbdGJ0tAKWC5GX1J0r4oSZPU2H43TPMqEZjsyTdc91UAgqtqdB+EIV5EPWQE1mey5FkG8x5jqF/MlMNuMF/eU7MZtwnq/x/62KtXVSejOGcPoWETsxrBnGXHyMWyOVQcycFe15Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721903073; c=relaxed/simple;
-	bh=CwvaLmHe/vs0rLGhaPMxOTOImY4e3eJPnOPidzlP8+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uYLlBTHtOF7n7z5K2DhKov6F3Lde3RKdqs5L8FG5PBk+rlZaB9mexTk12cfkHEAJoF0ZHIAV7idzB4LEl+gC/CBIQVHZWL+/yc7gfC4tgKn7YSJWK4ZvMnx4vwr+UN693EVISXjjfKEuda2oz6iEdJIfKnxf0MjAZj3DQ7AK2LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nhiw/56j; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52f01afa11cso895192e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 03:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721903070; x=1722507870; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WoxYQNUTCa1T0SH6iTcHddQ7maMyu3El9N4s8NEmbaI=;
-        b=nhiw/56jnuizFAnCeyPLNVQnh6Iu7PRZFMwcCFJ117cfMWIAgg8HRySx8enbX/UqdQ
-         00//43FeX3eFqYWDpBc0IUr5fNRjzMcA2ugOHk/cGs/333CjT9xu1Cyc4y+yck5r8AQ+
-         wsO9qOnOI4Gi6TES6BFSfghTt9VDa+AZI6JQb/XsKNxH/DWaU+e+Ok2FydwlH8hdJx+i
-         ytN0g2jzN0dcMM2ZK/8aRx20eikd3OmmvX7SJRj+LMNezxZhAQXBpiA4QnYj6BbE2sHg
-         CfgWQoJqQdhw4yOInCM1cg+zmoI3OUxbFvx3lrzVyU2Yz45ftCqhroxZ4dp3UnGo+0Po
-         bJDg==
+	s=arc-20240116; t=1721903150; c=relaxed/simple;
+	bh=p4YZq8MicH9fL/9yWPmj8mJdLwD5aH6J6ICVlx9dNbM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dsfwcWpgDvzjppUG38n7qcs913D5RKXMdPZvCwjLKSwgUt+GvLAJMoiP+H5XytxCxpOQ55876MakS3b24NhpeNPO6KOXS15ghl9b3m8gM7MzIm+4cO4Ony6mnSyqgMToa4OGwVQTqdNJYzYLt4nq6vBGfHZ0kI3mihjT8oX/f4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAO+P9u9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721903146;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZEREL8+YySrb9tj6znhlhD3I3mrmgkhOAZ20QmvKMqA=;
+	b=LAO+P9u9IgBYMVqXp8eAO07Vn3yIzzOTRGMjQHqa9SIRpFIsWvDv7BUh/zrQbuxUv7XP7m
+	IfFyskSDBe5+P9zR+6zSfeDIl+o5Txd4eaqyAxhL8vXiy9qnn19WLC3biwIOeg7zRzXBqg
+	Twkr9vCaunBbVc2leeMs+nxty7SkUWE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-98-HZVlblhLORaNTN-u-4Yn2g-1; Thu, 25 Jul 2024 06:25:45 -0400
+X-MC-Unique: HZVlblhLORaNTN-u-4Yn2g-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42808f5d32aso100735e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 03:25:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721903070; x=1722507870;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WoxYQNUTCa1T0SH6iTcHddQ7maMyu3El9N4s8NEmbaI=;
-        b=c9wOyWhbYFpcOHG29IJrgD3r5Y4zxnpJo5nSPtIPgawPmfA9OdbKdoMV99yF8Hbcc0
-         JDFS6WQb6Y/l6Ax8vgAtnrKdQZkir7CcSiajuJmm7kykBOLla2YzcCN94U8Qulxk17YZ
-         Qs4wphkpW9ZE31ZGcg5ozxaVgZnXY3OwvSrHqpGtepEl3ExOixW+NhlJNTt+o+rUcj2G
-         1Dn2sp5kRmfzSUCGYNBhOQFDknqrya70h+x+Nz8c4kqTch8MYiK7VkRSGg2wFOLOcYSy
-         7u28ugKswqYQGvc19AMkHABTYa9Bd+LrbFPu4Nk2TtM8BprQ7omkOobCyXEA6sREc5VU
-         AgVg==
-X-Forwarded-Encrypted: i=1; AJvYcCX39zsnkdGUr3UWAAe8p8w/SMqvjXk4l6avc6cQIz8Ewl2LnK56G83kqFiT/fuBhlodyUKmvRhc4VEh4PDxXgSLRDlEPpW9CjD+
-X-Gm-Message-State: AOJu0YxqcdEgVEoo5Huj+fstZNA84vzIshtj2+loTPV0yEmLUw7rxQIn
-	bxVV42WiAoTw3lOhhxBKsuv2PNLnG3W996MuV2lO5GtQSzqpFUooYvE029Y4HpzktsoXseOX/ZV
-	v
-X-Google-Smtp-Source: AGHT+IGON4hLG0hEzvd0Z/9nSbx4Zc3GQMs6yIMVvA/tKBhu9hBIRLjsY50KwApJu8PHZ19IjLHfQA==
-X-Received: by 2002:a05:6512:3e15:b0:52e:7125:c70a with SMTP id 2adb3069b0e04-52fd3f7e820mr1730350e87.47.1721903069556;
-        Thu, 25 Jul 2024 03:24:29 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52fd5c196e7sm175346e87.190.2024.07.25.03.24.28
+        d=1e100.net; s=20230601; t=1721903144; x=1722507944;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZEREL8+YySrb9tj6znhlhD3I3mrmgkhOAZ20QmvKMqA=;
+        b=ZuUngGSmRijJGAa09FD5iYH4tMiZvvvoa4IgDBcFCC+3iWpMfhP5tzXZmZ6/6w9ms1
+         8hLHmuc/v1zkxyQ9NqHJL7U0mVrhsE6++ab1x2UgKoklTZAerfor5R2mU0kLMLHLZvWb
+         gQmCrKaRfkqGVD5jNmV9f9xHyZofltUo7wVUVXEbaSQPeLGLWGNm3oC/QnRp+Z8QaCOL
+         Uxt9BtV6ERHvIyaOxdrPXxCGwDMcZl2jhfMqLLVe9DPc4PvyG43Lt+znI5mYBEaqCLyr
+         4U19PIczJZ26Bw5fke7H8T7aRuaI9WiCrdmdnlD5gFal4QX4wS2BD1jPtggD75ZmFDCm
+         AGyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCnt59l+p6PBKKC+zBM8OOLg94mAqjAAdPSHoTredtq18R2Ooigzn+YyOCvwPCkLdqnHQWEhP6IssadIP7SLZgGcVl5pXHbWLw
+X-Gm-Message-State: AOJu0Yz2EUg9Yt2glQGEi0BZh0KMDzd9UHJfHEKukpVIzu5KD3eCYzuC
+	9XBk2OlnFzK0Y9PTALRFhoEwCp3FW9fQaWkUwwZwndBS7WXB1ZU6+XWnJHpiie7oHQqSdSDHZCP
+	YLA3WK+vj6eb2P4XIaYH5o9valS0WWfwpJg9PTD711SBW7zXBJX39jfExAQ==
+X-Received: by 2002:a05:6000:1faf:b0:368:4c5:af3 with SMTP id ffacd0b85a97d-36b34d30e5bmr865739f8f.8.1721903144042;
+        Thu, 25 Jul 2024 03:25:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHAcuvXPUcmtp8FQtArctIyV+aWe4scfyfVhBCOlijOAVdjObA83QcvfKCEFZHHHyT9aXb8cQ==
+X-Received: by 2002:a05:6000:1faf:b0:368:4c5:af3 with SMTP id ffacd0b85a97d-36b34d30e5bmr865730f8f.8.1721903143603;
+        Thu, 25 Jul 2024 03:25:43 -0700 (PDT)
+Received: from pstanner-thinkpadp1gen5.fritz.box (200116b82d135a0064271627c11682d8.dip.versatel-1u1.de. [2001:16b8:2d13:5a00:6427:1627:c116:82d8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427fc95707esm35940515e9.0.2024.07.25.03.25.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jul 2024 03:24:28 -0700 (PDT)
-Date: Thu, 25 Jul 2024 13:24:27 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom: Allow 'vddpe-3v3-supply' again
-Message-ID: <pbkzwy63j7dh365amgdze2ns4krykckqyx2ncqjw2u4dufuoky@fg6rdpnqh5vb>
-References: <20240723151328.684-1-johan+linaro@kernel.org>
- <nanfhmds3yha3g52kcou2flgn3sltjkzhr4aop75iudhvg2rui@fsp3ecz4vgkb>
- <ZqHuE2MqfGuLDGDr@hovoldconsulting.com>
- <CAA8EJppZ5V8dFC5z1ZG0u0ed9HwGgJRzGTYL-7k2oGO9FB+Weg@mail.gmail.com>
- <ZqIJE5MSFFQ4iv-R@hovoldconsulting.com>
- <y6ctin3zp55gzbvzamj2dxm4rdk2h5odmyprlnt4m4j44pnkvu@bfhmhu6djvz2>
- <ZqIVQzQA5kHpwFgN@hovoldconsulting.com>
+        Thu, 25 Jul 2024 03:25:43 -0700 (PDT)
+Message-ID: <cb95352f5eabe17b56a0debf2564b09097b1c23f.camel@redhat.com>
+Subject: Re: REGRESSION with pcim_intx()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Damien Le Moal <dlemoal@kernel.org>, "linux-pci@vger.kernel.org"
+	 <linux-pci@vger.kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+	 <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Date: Thu, 25 Jul 2024 12:25:42 +0200
+In-Reply-To: <f0653852-0ae8-4b7d-b01c-3170b22490ff@kernel.org>
+References: <b8f4ba97-84fc-4b7e-ba1a-99de2d9f0118@kernel.org>
+	 <f0653852-0ae8-4b7d-b01c-3170b22490ff@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZqIVQzQA5kHpwFgN@hovoldconsulting.com>
 
-On Thu, Jul 25, 2024 at 11:05:07AM GMT, Johan Hovold wrote:
-> On Thu, Jul 25, 2024 at 11:57:39AM +0300, Dmitry Baryshkov wrote:
-> > On Thu, Jul 25, 2024 at 10:13:07AM GMT, Johan Hovold wrote:
-> 
-> > > It is already part of the bindings for all platforms.
-> > 
-> > It is not, it is enabled only for sc7280 and sc8280xp. 
-> 
-> No, that's both incorrect and irrelevant. It is used by msm8996 and
-> older platforms by in-kernel DTs as well. But the point is that is has
-> been part of the bindings an cannot simply be removed as there can be
-> out-of-tree DTs that are correctly using this property for any of these
-> platforms.
+On Wed, 2024-07-24 at 14:13 +0900, Damien Le Moal wrote:
+> On 7/24/24 1:56 PM, Damien Le Moal wrote:
+> >=20
+> > Commit 25216afc9db5 ("PCI: Add managed pcim_intx()") is causing a
+> > regression,
+> > which is easy to see using qemu with an AHCI device and the ahci
+> > driver
+> > compiled as a module.
+> >=20
+> > 1) Boot qemu: the AHCI controller is initialized and the drive(s)
+> > attached to
+> > it visible.
+> > 2) Run "rmmod ahci": the drives go away, all normal
+> > 3) Re-initialize the AHCI adapter and rescan the drives by running
+> > "modprobe
+> > ahci". That fails with the message "pci 0000:00:1f.2: Resources
+> > present before
+> > probing"
+> >=20
+> > The reason is that before commit 25216afc9db5, pci_intx(dev, 0) was
+> > called to
+> > disable INTX as MSI are used for the adapter, and for that case,
+> > pci_intx()
+> > would NOT allocate a device resource if the INTX enable/disable
+> > state was not
+> > being changed:
+> >=20
+> > 	if (new !=3D pci_command) {
+> > 		struct pci_devres *dr;
+> >=20
+> > 		pci_write_config_word(pdev, PCI_COMMAND, new);
+> >=20
+> > 		dr =3D find_pci_dr(pdev);
+> > 		if (dr && !dr->restore_intx) {
+> > 			dr->restore_intx =3D 1;
+> > 			dr->orig_intx =3D !enable;
+> > 		}
+> > 	}
+> >=20
+> > The former code was only looking for the resource and not
+> > allocating it.
+> >=20
+> > Now, with pcim_intx() being used, the intx resource is *always*
+> > allocated,
+> > including when INTX is disabled when the device is being disabled
+> > on rmmod.
+> > This leads to the device resource list to always have the intx
+> > resource
+> > remaining and thus causes the modprobe error.
+> >=20
+> > Reverting Commit 25216afc9db5 is one solution to fix this, and I
+> > can send a
+> > patch for that, unless someone has an idea how to fix this ? I
+> > tried but I do
+> > not see a clean way of fixing this...
+> > Thoughts ?
+>=20
+> This change works as a fix, but it is not pretty...
+>=20
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index 3780a9f9ec00..4e14f87e3d22 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -466,13 +466,22 @@ static struct pcim_intx_devres
+> *get_or_create_intx_devres(struct device *dev)
+> =C2=A0int pcim_intx(struct pci_dev *pdev, int enable)
+> =C2=A0{
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pcim_intx_devres *res;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u16 pci_command, new;
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 res =3D get_or_create_intx_devres(&=
+pdev->dev);
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!res)
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 return -ENOMEM;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_read_config_word(pdev, PCI_COMM=
+AND, &pci_command);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (enable)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (new !=3D pci_command) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 res =3D get_or_create_intx_devres(&pdev->dev);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 if (!res)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM=
+;
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 res->orig_intx =3D !enable;
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __pcim_intx(pdev, enable);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 res->orig_intx =3D !enable;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 pci_write_config_word(pdev, PCI_COMMAND, new);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+> =C2=A0}
 
-It can not be removed from the driver, but it definitely can be remove
-from bindings.
+Thanks for the report and the fix.
 
--- 
-With best wishes
-Dmitry
+Please let me take a look into this. Might take a day.
+
+
+Regards,
+P.
+
+
+>=20
+>=20
+
 
