@@ -1,56 +1,58 @@
-Return-Path: <linux-pci+bounces-10807-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10808-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46B8793CA02
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 23:00:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFF3993CA20
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 23:18:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F09481F21CFF
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 21:00:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84B0728231A
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 21:18:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFC722D05E;
-	Thu, 25 Jul 2024 21:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 534A07D401;
+	Thu, 25 Jul 2024 21:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsNTZmT5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d34bvc7r"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F3F225D9;
-	Thu, 25 Jul 2024 21:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275D81C6BE;
+	Thu, 25 Jul 2024 21:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721941218; cv=none; b=cdr5ejMdFdE27oQ4AAvQKa2/oXSO7qxC8pzog84GvxdVS2irUhsxf3RHxFYECX6oQk2l6geNkxB5v6T1wE5nZk93jvIp9dOaU4BOaMBn8YkWIYHTQJqFTSLch9P6fGLcDkhCyCiC+imjrc3uYPSwjMAxzWN20J1JR46NIfrGmEM=
+	t=1721942324; cv=none; b=a7X6M0U4V/rd4Gb1OidPMvnxodomLfU6va2F+ksyR+oKn6W9luVJ1TtDW2YxB6PyhnyVbE+au/ctgGM2QGW5JEsc7o6LBuxW7VLTNqaWY81WwH0Vb5mulSV55zwtffTrZ7FSTr0JfXx5FmClo0Q7BtF/wGvOYZbQHCCRSN72juw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721941218; c=relaxed/simple;
-	bh=d82TzPmf1GFgbEQwl4JV+d0VZLw0hz4hcnslcwaoSwg=;
+	s=arc-20240116; t=1721942324; c=relaxed/simple;
+	bh=/AAXREcOI32vQxwZurvxUKNxXBgKObFukzNWPPKPbQ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=E01JP1zG1WBFA+oJbI36XQGjE7BRMo3E6knrmpFgMYGHU3LQG0ZWDkIye8Ww4tiMG/g2Ghp+Fa0evKb3Wwk6o8THe2rK2dUEvs1t0v+yJcu2f/9UDZVqco9nNI7szClKWwxZMe4ICt2lrJWJPR20iD0wqBi5IKkhvOP2BL3Ebs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsNTZmT5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86AAC4AF0A;
-	Thu, 25 Jul 2024 21:00:17 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fLVHA1tbNnxa7sHESwLMW50j2if+X7UG5ozu5kC4tnct0JC8innpfj8ZRCk/BZcSApGS12T7ZEZ968yz9DsoyaC5E4kF8xj7jfhayMq63fXbto57Fdu0/Mvf8S0qwk57AC8h7/34wzB6uKnW8pJ4Fz6pzq7knQkUS0NTDAkrTV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d34bvc7r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90536C116B1;
+	Thu, 25 Jul 2024 21:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721941218;
-	bh=d82TzPmf1GFgbEQwl4JV+d0VZLw0hz4hcnslcwaoSwg=;
+	s=k20201202; t=1721942323;
+	bh=/AAXREcOI32vQxwZurvxUKNxXBgKObFukzNWPPKPbQ8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HsNTZmT5o2TWMgYnetJ4RaZzEeVAKej/WlnTqMoHuZ1+3nyP8UXf0/w7WfjnI2J9z
-	 Y6qsJhbpC+YCtywKRpLzfgasalSGXOxYGwXiNXpg4M2VeCkb4oEKdTNBc5rQPhOmgW
-	 RN1KhBBufYS8tnkki+9c16Z70gYy1ZvUm2lz4kbYDBzcEAViQpCDYFXQaKua+kxF4b
-	 4nsk/cJ0dE5fLpZRZenZrY5HWO3ofUuGNvXwnV6zggQyucT37maeM7bpMyc78I1ToD
-	 unPFpMYI12Va4MNrt4wdn6msQ1hVGywssXuTeMGjqyTjufySGnmUPy9Ydm4u/RKUPl
-	 mxXA0MBKc03eg==
-Date: Thu, 25 Jul 2024 16:00:16 -0500
+	b=d34bvc7r+wjZ8jdKwdacrvuz2jNHK9IOxnKkWsYdF3d7Kb1QRX/i09je4/70KecOu
+	 sq4c3XMfDYrrM6gRkarGgDjwd9B8L/IhQcFUOWkFlWnCk6m+7PVgQtSjs1xDrpxszF
+	 0pNPN3nN9fBkverGNrd65UvRMQJrAbBzFYQS/9Z1OHWG+NXxbsCzZxh7Xr45KU8feR
+	 vjWWNmIqcZ+G+uhBvxyNd/aaJxeGTkcEGNqK+7mVXTDPi+G5zaR2TjaVXvjxGEPi5F
+	 Ov9azfqw5jbEmI8Gnz+QJX1688MISdTSleTRc+jPmFbxIlOZfqVj85dB0HYdIksD2l
+	 jlTy9vFQK92cw==
+Date: Thu, 25 Jul 2024 16:18:41 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
-Message-ID: <20240725210016.GA859301@bhelgaas>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH 3/3] PCI: j721e: Add support for enabling ACSPCIE PAD IO
+ Buffer output
+Message-ID: <20240725211841.GA859405@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,82 +61,113 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240725120729.59788-2-pstanner@redhat.com>
+In-Reply-To: <20240715120936.1150314-4-s-vadapalli@ti.com>
 
-[+cc Christoph]
+On Mon, Jul 15, 2024 at 05:39:36PM +0530, Siddharth Vadapalli wrote:
+> The ACSPCIE module is capable of driving the reference clock required by
+> the PCIe Endpoint device. It is an alternative to on-board and external
+> reference clock generators. Enabling the output from the ACSPCIE module's
+> PAD IO Buffers requires clearing the "PAD IO disable" bits of the
+> ACSPCIE_PROXY_CTRL register in the CTRL_MMR register space.
 
-On Thu, Jul 25, 2024 at 02:07:30PM +0200, Philipp Stanner wrote:
-> pci_intx() is a function that becomes managed if pcim_enable_device()
-> has been called in advance. Commit 25216afc9db5 ("PCI: Add managed
-> pcim_intx()") changed this behavior so that pci_intx() always leads to
-> creation of a separate device resource for itself, whereas earlier, a
-> shared resource was used for all PCI devres operations.
-> 
-> Unfortunately, pci_intx() seems to be used in some drivers' remove()
-> paths; in the managed case this causes a device resource to be created
-> on driver detach.
-> 
-> Fix the regression by only redirecting pci_intx() to its managed twin
-> pcim_intx() if the pci_command changes.
-> 
-> Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
-> Reported-by: Damien Le Moal <dlemoal@kernel.org>
-> Closes: https://lore.kernel.org/all/b8f4ba97-84fc-4b7e-ba1a-99de2d9f0118@kernel.org/
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+And I guess this patch actually *does* enable the ACSPCIE PAD IO
+Buffer output?
 
-Applied to for-linus for v6.11, thanks!
+This commit log tells me what is *required* to enable the output, but
+it doesn't actually say whether the patch *does* enable the output.
 
+Similarly, if this patch enables ACSPCIE PAD IO Buffer output, I would
+make the subject be:
+
+  PCI: j721e: Enable ACSPCIE Refclk output when DT property is present
+
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > ---
-> Alright, I reproduced this with QEMU as Damien described and this here
-> fixes the issue on my side. Feedback welcome. Thank you very much,
-> Damien.
+>  drivers/pci/controller/cadence/pci-j721e.c | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> It seems that this might yet again be the issue of drivers not being
-> aware that pci_intx() might become managed, so they use it in their
-> unwind path (rightfully so; there probably was no alternative back
-> then).
-> 
-> That will make the long term cleanup difficult. But I think this for now
-> is the most elegant possible workaround.
-> ---
->  drivers/pci/pci.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e3a49f66982d..ffaaca0978cb 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4477,12 +4477,6 @@ void pci_intx(struct pci_dev *pdev, int enable)
->  {
->  	u16 pci_command, new;
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 85718246016b..2fa0eff68a8a 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -44,6 +44,7 @@ enum link_status {
+>  #define J721E_MODE_RC			BIT(7)
+>  #define LANE_COUNT(n)			((n) << 8)
 >  
-> -	/* Preserve the "hybrid" behavior for backwards compatibility */
-> -	if (pci_is_managed(pdev)) {
-> -		WARN_ON_ONCE(pcim_intx(pdev, enable) != 0);
-> -		return;
-> -	}
-> -
->  	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> +#define ACSPCIE_PAD_ENABLE_MASK		GENMASK(1, 0)
+>  #define GENERATION_SEL_MASK		GENMASK(1, 0)
 >  
->  	if (enable)
-> @@ -4490,8 +4484,15 @@ void pci_intx(struct pci_dev *pdev, int enable)
->  	else
->  		new = pci_command | PCI_COMMAND_INTX_DISABLE;
->  
-> -	if (new != pci_command)
-> +	if (new != pci_command) {
-> +		/* Preserve the "hybrid" behavior for backwards compatibility */
-> +		if (pci_is_managed(pdev)) {
-> +			WARN_ON_ONCE(pcim_intx(pdev, enable) != 0);
-> +			return;
-> +		}
-> +
->  		pci_write_config_word(pdev, PCI_COMMAND, new);
-> +	}
+>  struct j721e_pcie {
+> @@ -220,6 +221,30 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+>  	return ret;
 >  }
->  EXPORT_SYMBOL_GPL(pci_intx);
+>  
+> +static int j721e_acspcie_pad_enable(struct j721e_pcie *pcie, struct regmap *syscon)
+> +{
+> +	struct device *dev = pcie->cdns_pcie->dev;
+> +	struct device_node *node = dev->of_node;
+> +	u32 mask = ACSPCIE_PAD_ENABLE_MASK;
+> +	struct of_phandle_args args;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(node, "ti,syscon-acspcie-proxy-ctrl",
+> +					       1, 0, &args);
+> +	if (!ret) {
+> +		/* PAD Enable Bits have to be cleared to in order to enable output */
+
+Most of this file fits in 80 columns (printf strings are an exception
+so they're easier to find with grep).  It'd be nice if your new code
+and comments fit in 80 columns as well.
+
+An easy fix for the comment would be:
+
+  /* Clear PAD Enable bits to enable output */
+
+Although it sounds non-sensical to *clear* enable bits to enable
+something, and the commit log talks about clearing PAD IO *disable*
+bits, so maybe you meant this instead?
+
+  /* Clear PAD IO disable bits to enable output */
+
+If the logical operation here is to enable driving Refclk, I think the
+function name and error messages might be more informative if they
+mentioned "refclk" instead of "PAD".
+
+> +		val = ~(args.args[0]);
+> +		ret = regmap_update_bits(syscon, 0, mask, val);
+> +		if (ret)
+> +			dev_err(dev, "Enabling ACSPCIE PAD output failed: %d\n", ret);
+> +	} else {
+> +		dev_err(dev, "ti,syscon-acspcie-proxy-ctrl has invalid parameters\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->cdns_pcie->dev;
+> @@ -259,6 +284,14 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> +	/* Enable ACSPCIe PAD IO Buffers if the optional property exists */
+
+Is the canonical name "ACSPCIE" or "ACSPCIe"?  You used "ACSPCIE"
+above?
+
+> +	syscon = syscon_regmap_lookup_by_phandle_optional(node, "ti,syscon-acspcie-proxy-ctrl");
+> +	if (syscon) {
+> +		ret = j721e_acspcie_pad_enable(pcie, syscon);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	return 0;
+>  }
 >  
 > -- 
-> 2.45.2
+> 2.40.1
 > 
 
