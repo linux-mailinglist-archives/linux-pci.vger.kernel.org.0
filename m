@@ -1,182 +1,185 @@
-Return-Path: <linux-pci+bounces-10797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9890293C772
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 18:54:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 691A393C7B3
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 19:36:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 238151F234AC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 16:54:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA521B2198A
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 17:36:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CDB19D087;
-	Thu, 25 Jul 2024 16:54:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842F619DF7F;
+	Thu, 25 Jul 2024 17:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GHEXqKfO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrfZwzaX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2044.outbound.protection.outlook.com [40.107.20.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B86618786F;
-	Thu, 25 Jul 2024 16:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721926486; cv=fail; b=VycYb7Q/78jaLjq0uNsUK7P05lHqutQa15s8XaHCnQ9SRT8gXldBwdulgkLvDyt5fb8Qok5/a6v6rV7t7zy3LFUqKw1bXRUENdL0YbLDF7nXSRbbVvN1Q7fuIqJsR5jRili0Tn0IT1RAMQzXN39f0JuXutTkdTHQcZjLIxl3XnA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721926486; c=relaxed/simple;
-	bh=HgVs6oO+D5MFzwvx3PdZv0Lq+XopIcd/r5mWZxSuXQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kdTLe//+hrFYUOAfqLb+5Bd0Cq+UZ5nRpVN+EqvISGGIrFGeWCLdzqwH0Y4NfyjOIAhYFAR1KGYb8xABat1vPuAkfCGl3yKlbdH2z6VI0Ozp8hoKVfb2TNOeazd49Viy7RuQQVlcjdXw2aE6Oa9AvH21Jbc+vvWN0UzB2RIV2nE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GHEXqKfO; arc=fail smtp.client-ip=40.107.20.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ySI+lWB7p9mEr7o3FebnyaP8Xgiub7sAvZ/OQ2cs2oKdmJ05JH6HCZkPdKCIywJ3xfJbzErQr9EAwaT3SDZGEUvVCFw/R/zdOHaCcK2NPWFg2vXZt5EgGUvZeZ7dhk9/hMIXC1EyegiD9D3umVwr9ybqnm5zHfbMwUqZcqBhOzqk1tGBP2KCX4lxfZSXKkwkY3kMrRVncGvOgOAPDYE5RLPq3ruvTzFTGAUEJ5uzC3LoIZDnCGymoJVlkSIBh6ZCN2jBNJViJzi/exrSid56fquvF8SvL7S/IxW8mNtdvAq1+KwZ2e2Jb+/D8d4qAs+XhhKaxqJRhNOGvFZkP30TTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OjzrjhAxOEodv/GKWJ4H9S1uCW/M2xWBOrxkYMpPMwY=;
- b=oxOxSiUWkclsO5kffzfYSWgOc0HQJZguwcG5rWK04+1JqfsE5IAAXGcOtlzGosfoodG8EF+mHW8t0Ga+9G1Mddxdx/OmuYCjJRXiYWB8Rzji9ky6Cm2c1zJRG7ZXkcFZ9P7su+mBOoTZbJBHUyUvgpQTROXWAMiirjOVzuGiUuh0kVo1JQD4GkZ40btm0IkbU4UP1BWOHEg4DeN5xuAWlQYG5mpmo97JBChNQzwSveayWRkUh/KkKSVXUbzEh5+kXkIVCQyolREjr9dx3Z2vKX18OTKEPiqVoOX0bRonJkj8xqy9F5wwEfR4kb5wkxfEWjwcGwVxTLzu/HlAkbssLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OjzrjhAxOEodv/GKWJ4H9S1uCW/M2xWBOrxkYMpPMwY=;
- b=GHEXqKfOD8vNcxqxFwcOnwSqpdr4Vksm9lJpQItY2GmJ6cOTyKxUFhxPbbQlgVXbqRau8qr0EMRrZjZIV/MRA8A+W4JaVZ0VCSnwigyHnXg+FAtnjz/kwfzsD2txDRnlhasU16S5AKJaHB9y0uiShoEiH8H80FM/ZyhGMVuZSs4xDO5Bu+Qn5txX3e5RrjkBdTVlaJ8aD0cMj/Ro0RBX2thzM8WreDSGGNur4F5DUXUrl+Yy9+LFXtnSBtGbvUiA63TirwBfgOHbeWfP+liKP06q5rwYxzSHJt6JPccxZiO/zgQGTrNcDLfvdSGpGbkbjytfUbVRB3LYXvGaJhUNgw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB8379.eurprd04.prod.outlook.com (2603:10a6:10:241::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.28; Thu, 25 Jul
- 2024 16:54:41 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.7784.017; Thu, 25 Jul 2024
- 16:54:41 +0000
-Date: Thu, 25 Jul 2024 12:54:31 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, l.stach@pengutronix.de,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de, imx@lists.linux.dev
-Subject: Re: [PATCH v3 0/4] Add dbi2 and atu for i.MX8M PCIe EP
-Message-ID: <ZqKDR6ZuLFxb7Irl@lizhi-Precision-Tower-5810>
-References: <1721892916-5782-1-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1721892916-5782-1-git-send-email-hongxing.zhu@nxp.com>
-X-ClientProxiedBy: BYAPR08CA0008.namprd08.prod.outlook.com
- (2603:10b6:a03:100::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A77E198E6D;
+	Thu, 25 Jul 2024 17:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721928987; cv=none; b=Xpm5xOlao8LfSAy52m4RfZB3yBUc7v/PHTUvQs6NIW088XwdLGEAuMwVj8Ai5mrx1Mz6lPONK/cQMNx3YPGGP7/NLVgNoqBnnILJNgtncmJOqZLXXqtxfJbj4sWiJdJxT0XMl1qdsgwS4n9R+437faHMmNK9HRyJYccnW/W/XAQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721928987; c=relaxed/simple;
+	bh=wqWzraA34GyeuVscn1uWSNPbaFib2B/T/GEJV4L8vWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=R+z2crkH0XLEO1h4YOYfIpYP5QjfBLHOYyj7c0byYCL2bKwTE3r6lw7qT0XGWljJEDg8bBgA7KufJAWG/J9kl86nBHseO+SLtxKn1sSKQMdsaMjpncIaKAcfCywXkeZ0PCPMJh76TmV3rm9uwcyJrmIPgPCAprdWpOFHBSbAE8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrfZwzaX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4BCC116B1;
+	Thu, 25 Jul 2024 17:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721928987;
+	bh=wqWzraA34GyeuVscn1uWSNPbaFib2B/T/GEJV4L8vWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=PrfZwzaXqL/UyPDYMz0fGULFnXJZaclnVw9A6ViPzQTuFr6NpHFYDoFNf2ild9kva
+	 7Eo3ssD2FBOge1u7jSdgqWcUWPkXtbfjOBrUj2GZuQpmO3NuLvBZNMula+Og8Sfs+5
+	 CyZbBm7Q/liHVt6VWkr018FwmFuTVMRNECvBfWNgZanx9jQxCa5OJLWDDHF+qtfdpp
+	 95BTAnn+JgzZtJnj0DxuUggqS1IJzg2zB30+WkwRuGRBqI4MQhMdGHP5TMUx9Mjl/n
+	 VqZKQLLEx5FADN7I+YvaXQAlmDtEUDIlikYIDD6gfbN23SSM0OWaLgcmHSeWM2+LwE
+	 IgQ4UFiSwmKJg==
+Date: Thu, 25 Jul 2024 12:36:24 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Keith Busch <keith.busch@intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jim Harris <james.r.harris@intel.com>,
+	Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
+	Blazej Kucman <blazej.kucman@intel.com>
+Subject: Re: [PATCHv3 2/2] x86/vmd: Add PCI domain specific LED option
+Message-ID: <20240725173624.GA849156@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8379:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2c2d41d-87ff-4bf7-7cba-08dcacca7a20
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ekxjmm9Ed0Q9Ijp3lT/tgcWJf21LAkYwxJ6MyVLEoC/kuRly43HZq5zu3NC8?=
- =?us-ascii?Q?QAKM026WwNxgAWQf1fuurUPKlnzq7a9qAaQC2+NptUVCSXnEYfl2dd2w6xGt?=
- =?us-ascii?Q?ZC/d/IVksIoO2E6gZrTpiu2c63JLkhIE9pJe9H2Qp71gdX3ishq0UnDf4jTL?=
- =?us-ascii?Q?eoHnzursAWOpgrGloHUwOJUwxEEsYXmjpqoG49U0OcvXxc8nqJKo72+9i3ee?=
- =?us-ascii?Q?xqdvn2QydjyDEo7cfnUjNZ4lnn9cSgr7yEOEMSIfLuMqEvS/prtxOapS31Dd?=
- =?us-ascii?Q?RWGiJIE5T/Yh09HATm0ja6Y/IcmbXctx84q3QDrey1ZONvk/OXe+aZT3t7xA?=
- =?us-ascii?Q?jsUleQA5IxX+GgbLdbB/rw5S+wXO/0Wte6+7E7Qq/EnrkMR4xuVfyOinupG0?=
- =?us-ascii?Q?4eRNC50k8wJVb2jKi5pEbCJMI0EHlo9+6J4f7bTBHkbDia6xrbOg7qf+zIp7?=
- =?us-ascii?Q?Gms2GYqOpmmp2jUvfa0ZJNObE8s3bENpq7FUylmHcHt2qPHvvdI/FGRcl5wi?=
- =?us-ascii?Q?3KbSfDhXr8/vJFIvw273N1UL8qVLPVstnPgY6bFXk+f2c47y0+v8MdQ2vSwm?=
- =?us-ascii?Q?yuW2FNqk/OV5l1U62SFfvXxoIkStrSURfjT2rC2tJqTwG/jlFk/ACtIcTx73?=
- =?us-ascii?Q?qGqfB5tFuESUQCmtaUVDEmVa5sUh3wVKa97uJa4q5MEMfjGnND+QyChRYv5u?=
- =?us-ascii?Q?M84MrkObgXo0rvT2YlWfKDQZc99pUZ0xD0Eg2E5Ptr4j14SnNj2fS2idUB95?=
- =?us-ascii?Q?T+EmgwKFw8XcKNlBW19GM6J/VqgKh9N4mZnfk8gr0OyP58z8yp7cfr49P/JF?=
- =?us-ascii?Q?Gks5qdO3j+R7v7yAzbzKERaEFHwoGvSBX/R5tS1wrfvtMd/i6R6FCpLYzDI6?=
- =?us-ascii?Q?HBVei8IcErYJ9uXCgoCeh/uAkVJ8T5QHvOSi4pCF9EsSVQxITq7VMuvLHLhj?=
- =?us-ascii?Q?b954wRwyj/MJe7OSXjj8nYpxaUBfyArLyKWEoMRkyAQGCBSUmHCABxAMr3eC?=
- =?us-ascii?Q?Yek0e+HDiR+iMn4c6VyQhrBllsuIlARGCNFsqyUnKEFEWUlFvkbzeD9fs2fo?=
- =?us-ascii?Q?neRu5oeWgcbSpTjEi7etkDJmrHLzhj4X82tDYIjeUfBNipioGCPTu+CsXYjQ?=
- =?us-ascii?Q?EBTGm+e8Xalb4BuAduBfk8K58WnWSbS/jagLFq1ktjgixMKpNcn4PRGz6Sul?=
- =?us-ascii?Q?AHyQtq+9hhhMVTH92QBefMR0oO1Bwlg2iRU2LKR7D2OuZUnZorKfHVQBOWWm?=
- =?us-ascii?Q?qFrsjTBlo1emEvgylS3QifB7aiqeYERDdJzgi++/chAKeZ0Ao5/HGlgpNPqP?=
- =?us-ascii?Q?fuGqsvxADNvbKUbXLgX8ek94y4b94Rwnf72uS344Z7XAFpTXf33LeUHkTSUT?=
- =?us-ascii?Q?KNkIhRceHiaSPOAFNxUJ4zCnobgEj2o+qDrpH4DbQhsIW6oPEA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tp11tfN/4U4f2RTwXrz55ShJrSjfv6w032AjK9wSaQ0gd/fdTE7f9PFFb32E?=
- =?us-ascii?Q?nmqNJLOhDG4f0kYTFXo9fXMEjR2B5HZYGLCdQkVd2zsv/9nVf/0UqfQVrAzc?=
- =?us-ascii?Q?KrIYHH7QqQlNaKECt894myte07pt+rGILrch5a/3J3O+/TNRv5lnvPS0j7SV?=
- =?us-ascii?Q?8X/kKmEMcrh87vzeRLX8BLN0Ok8aA7mxDZGFt8UvP8QmSGT87+Il4LXXJ4UT?=
- =?us-ascii?Q?SrZIRtFjqdZWshE0yA8yxuFaHfGp7s5uSSMJPBr15Dvp+GVzqGI768OccBdw?=
- =?us-ascii?Q?d95/AVaBMKJ3w2vPHY5ejJ8Iq1qoOiTeyBGrxL4xRNc/gLPSg6A+0q+/wdtg?=
- =?us-ascii?Q?HzbmlFgSSVvQ0p5bbt70rGj87M8tKmN40aHCn5TmggvNF5UDKzbKUTe/0MS9?=
- =?us-ascii?Q?755LxC+EknEz/YnXCsW2l3NT4zNN9b7nY8jHKs+bGHzpkMuKARq+Eh81imIo?=
- =?us-ascii?Q?nti9Thyka4btait1e/qvi7S572Ytd0Or1jtf6ekHg6wKgXZKW2waCrw3I61o?=
- =?us-ascii?Q?oozaYnKW30qdCN0QIqzKTrxR5gL7m2snwACtkJSuNSOGfjlrdFLTGWRK6xAP?=
- =?us-ascii?Q?qmHLtzkUlD26Qi3D9DVDvoFweRcNdUYoCfMNeyszfrNMnnTXd8OVTgEsT9WV?=
- =?us-ascii?Q?Q7jJZaZVNJCMHp5g6CaoBbOG+9BbRmOvqLvDlMFzcQaNoVLPhfZ4VUP9eSep?=
- =?us-ascii?Q?3u+DuYv23ypQE3rGc+g3+THrF/Fpbz+WVx8w6BMXUKtYT8rJT9VnNyYtqdNh?=
- =?us-ascii?Q?dZLGOyPmvHKnqt9fcTYhnd2pCObuBPSkgxMomr1AUpggDPq3AdJdYpaE1hLT?=
- =?us-ascii?Q?3BCdfbX2qAe/MXz4ADNJvFhr/HJ9Phws9Iyb+Q0rEhyVlRS0djGRXrK8KSJ1?=
- =?us-ascii?Q?jbZGBzxdI6OhOyJ2FjL06Lzj86CUALt8p4OI3OQo7DMlcRgJ8yRSArJiyp0i?=
- =?us-ascii?Q?2TVSzd4nHJT6vlewisAJsx0ES0hgddHx9dKNCJIeIlRr+mM+I88/a0i5lWNO?=
- =?us-ascii?Q?URexsUrIlWrm11l3o01TCKHL08K6UOtGK/lcwrkEocOhZCDbDvwgSzsmd205?=
- =?us-ascii?Q?6P4vcHsJtMHoyrIE3fr7OR2BPlwRlaMgqYreAFwxmxqlB2l9iXnFNn2WtoUe?=
- =?us-ascii?Q?fu90bXn1b28xOXrNmEHOal/1jzrV6NkxmP3zX5/9PbKGzwvLuog6PEc9mBUO?=
- =?us-ascii?Q?UeVPyQsQdCW7a3eX42yWWvx5aj3j6gfsqL4QREVpKxLO2jZiTxUY2TlMZGqt?=
- =?us-ascii?Q?aNObCVDmIRGccH615RhQGgxdlwzr6jxndZFNyelBXSfzUikoi5sZ8IceAzQ/?=
- =?us-ascii?Q?VbQbP4viFgz07trRhhrApHdXeZRqY3nuabtqBBA/UDwISk259FGKLD1ip0pC?=
- =?us-ascii?Q?aEjedQrc0pC+nfb3+qctJ9zFPbn4dqgmwOae/0Z1+Nj/cFgm5Y5nK8aJjPkb?=
- =?us-ascii?Q?BOmFP4m54stjtiUbanlzQPwE2oOf7we7e5UxOVj1Z/5H/bMmdEfHeKK86nGE?=
- =?us-ascii?Q?mAAGqV4KpmDMEuhI9Lht3EOkXrBdQLbzYTYB9BxkPkh4GK2yeZ/ezf0DS7U5?=
- =?us-ascii?Q?E+3g3xy14eADOQlk/gc=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2c2d41d-87ff-4bf7-7cba-08dcacca7a20
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2024 16:54:41.3042
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yJasriVMKxi4UJG4ocKORf1mZqeOfohsbBLIa7AbGTOT0/TuYd3Ih6nB37XfzBp4F52Dk3K0ta/1xwlhTxq0JQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8379
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1473779140-4016-2-git-send-email-keith.busch@intel.com>
 
-On Thu, Jul 25, 2024 at 03:35:12PM +0800, Richard Zhu wrote:
-> v3 changes:
-> - Refine the commit descriptions.
-> 
-> v2 changes:
-> Thanks for Conor's comments.
-> - Place the new added properties at the end.
-> 
-> Ideally, dbi2 and atu base addresses should be fetched from DT.
-> Add dbi2 and atu base addresses for i.MX8M PCIe EP here.
-> 
-> [PATCH v3 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and "atu"
-> [PATCH v3 2/4] dts: arm64: imx8mq: Add dbi2 and atu reg for i.MX8MQ
-> [PATCH v3 3/4] dts: arm64: imx8mp: Add dbi2 and atu reg for i.MX8MP
-> [PATCH v3 4/4] dts: arm64: imx8mm: Add dbi2 and atu reg for i.MX8MM
+[+cc Nirmal, Jim, Paul, Blazej]
 
-for all patches:
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+On Tue, Sep 13, 2016 at 09:05:40AM -0600, Keith Busch wrote:
+> This patch adds a new function to set PCI domain specific options as
+> devices are added. The usage included in this patch is for LED indicator
+> control in VMD domains, but may be extended in the future as new domain
+> specific options are required.
 > 
-> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml | 13 +++++++++----
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi                    |  8 +++++---
-> arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  7 +++++--
-> arch/arm64/boot/dts/freescale/imx8mq.dtsi                    |  8 +++++---
-> 4 files changed, 24 insertions(+), 12 deletions(-)
+> PCIe LED Slot Control in a VMD domain is repurposed to a non-standard
+> implementation. As such, all devices in a VMD domain will be flagged so
+> pciehp does not attempt to use LED indicators. This user_led flag
+> has pciehp provide a different sysfs entry for user exclusive control
+> over the domain's slot indicators.
+> 
+> In order to determine if a bus is within a PCI domain, the patch appends
+> a bool to the pci_sysdata structure that the VMD driver sets during
+> initialization.
+
+This eventually turned into https://git.kernel.org/linus/3161832d58c7
+("x86/PCI: VMD: Request userspace control of PCIe hotplug indicators")
+
+More questions about this, prompted by Blazej's recent regression
+report:
+https://lore.kernel.org/r/20240722141440.7210-1-blazej.kucman@intel.com
+
+I assume this patch was prompted by NVMe devices behind a VMD?  And
+the non-standard slot indicator usage is specifically related to VMD
+Root Ports?  Isn't it possible to add non-NVMe devices behind VMD,
+e.g., a switch in an external enclosure where pciehp manages a switch
+Downstream Port with standard slot indicators?
+
+I'm wondering if pdev->hotplug_user_indicators should be more narrowly
+targeted to just VMD Root Ports.
+
+If there's any possibility of a Downstream Port behind VMD with
+standard indicators, users are going to be very confused when the
+sysfs "attention" file is basically backwards from normal.  IIUC
+writing 0 to "attention" when hotplug_user_indicators is set writes 0
+("reserved") to AIC, when it would otherwise write 11b ("off").
+
+I'm also wondering whether there's a way to do this in the vmd driver
+instead of in arch/x86/pci/common.c, but that's a secondary question.
+
+>  arch/x86/include/asm/pci.h | 14 ++++++++++++++
+>  arch/x86/pci/common.c      |  7 +++++++
+>  arch/x86/pci/vmd.c         |  1 +
+>  3 files changed, 22 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+> index 9ab7507..1411dbe 100644
+> --- a/arch/x86/include/asm/pci.h
+> +++ b/arch/x86/include/asm/pci.h
+> @@ -23,6 +23,9 @@ struct pci_sysdata {
+>  #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+>  	void		*fwnode;	/* IRQ domain for MSI assignment */
+>  #endif
+> +#if IS_ENABLED(CONFIG_VMD)
+> +	bool vmd_domain;		/* True if in Intel VMD domain */
+> +#endif
+>  };
+>  
+>  extern int pci_routeirq;
+> @@ -56,6 +59,17 @@ static inline void *_pci_root_bus_fwnode(struct pci_bus *bus)
+>  #define pci_root_bus_fwnode	_pci_root_bus_fwnode
+>  #endif
+>  
+> +static inline bool is_vmd(struct pci_bus *bus)
+> +{
+> +#if IS_ENABLED(CONFIG_VMD)
+> +	struct pci_sysdata *sd = bus->sysdata;
+> +
+> +	return sd->vmd_domain;
+> +#else
+> +	return false;
+> +#endif
+> +}
+> +
+>  /* Can be used to override the logic in pci_scan_bus for skipping
+>     already-configured bus numbers - to be used for buggy BIOSes
+>     or architectures with incomplete PCI setup by the loader */
+> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> index 7b6a9d1..ccf696c 100644
+> --- a/arch/x86/pci/common.c
+> +++ b/arch/x86/pci/common.c
+> @@ -677,6 +677,12 @@ static void set_dma_domain_ops(struct pci_dev *pdev)
+>  static void set_dma_domain_ops(struct pci_dev *pdev) {}
+>  #endif
+>  
+> +static void set_dev_domain_options(struct pci_dev *pdev)
+> +{
+> +	if (is_vmd(pdev->bus))
+> +		pdev->user_leds = 1;
+> +}
+> +
+>  int pcibios_add_device(struct pci_dev *dev)
+>  {
+>  	struct setup_data *data;
+> @@ -707,6 +713,7 @@ int pcibios_add_device(struct pci_dev *dev)
+>  		iounmap(data);
+>  	}
+>  	set_dma_domain_ops(dev);
+> +	set_dev_domain_options(dev);
+>  	return 0;
+>  }
+>  
+> diff --git a/arch/x86/pci/vmd.c b/arch/x86/pci/vmd.c
+> index b814ca6..a021b7b 100644
+> --- a/arch/x86/pci/vmd.c
+> +++ b/arch/x86/pci/vmd.c
+> @@ -596,6 +596,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd)
+>  		.parent = res,
+>  	};
+>  
+> +	sd->vmd_domain = true;
+>  	sd->domain = vmd_find_free_domain();
+>  	if (sd->domain < 0)
+>  		return sd->domain;
+> -- 
+> 2.7.2
 
