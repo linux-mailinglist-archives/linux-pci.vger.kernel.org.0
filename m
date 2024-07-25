@@ -1,84 +1,93 @@
-Return-Path: <linux-pci+bounces-10750-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10751-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 172E293BBB1
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 06:20:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D67D93BBC2
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 06:31:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBBF9281D8E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 04:20:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F35F1B21978
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 04:31:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D61BDEAC0;
-	Thu, 25 Jul 2024 04:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6B518029;
+	Thu, 25 Jul 2024 04:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r5tUR8L9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i4kH/NIl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5360425740
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 04:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FE312B95
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 04:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721881208; cv=none; b=lrJl+qwqrtcJ/QkF1pRwnGBxnyZVD9Zl4VJhlWrp8U4+CjsJe+sv5yHJhUjBwMwcvzw/0rCwkkTHVzFZryPwxqPj3UBuTdH543iiP39mfhg40YtGtljEDlOMXoZ6j3q6PqReVDb5323wqbxk5ZTJxZWnjZZQqrrD80StHLStjrY=
+	t=1721881879; cv=none; b=aPS5aRmH6bC0xsSAhQtbZvylxNwlG1kbFlvSpef2wxxyYXjyXlaWkIdtmGnhq8qoWYnd/2jI4e34FtZGfotFG+JILIF5LWspqpAp8R0ETzkjvcKthB2/lSYPBoWz0wvQxGYigPKy2Tzdl96B9DUdLR6HQSooF+CP+hOzim4dL9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721881208; c=relaxed/simple;
-	bh=kY0fom2PT3ibinAtblwyjUOcEx2vyt9CB7IUtU19EF0=;
+	s=arc-20240116; t=1721881879; c=relaxed/simple;
+	bh=X0LCLEP4obca1nLd4uqhOQvKIEY53jmMcqK3W3MSgRw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gBN35/9rg6IF27Sqd/gVIR8jWZM7yoQo1XAxHwLND6hKzUpfMek3/NQZ4KDAkXr+J7/IoNjqojBzBLI0TSzthB0JHh7BKuaXcbmtq1lOp3uA3OtA+PFg3bS4O7LuzaiHtWQu20D/hZPfVEo94s8oqfMvfz4Vp2t43Zvi/2ZYwTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r5tUR8L9; arc=none smtp.client-ip=209.85.215.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=KVDM3A+PxE3KzBRvegW1wZY60a5a0k/sFRaV7ZMZMzfk05Pus/tXfV74V8SXw8zC3nLwKx/WTGyHtmRWJNexgcsyZ5kfVCvmj9LDMcXUzWv61NbBKL32IL/JfbdeZxRzO9NrDzQT3OijNPGt9BXSq8snU3Wrsp09maT3/LWir78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i4kH/NIl; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-76cb5b6b3e4so356825a12.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 21:20:07 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70eae5896bcso166033b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jul 2024 21:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721881206; x=1722486006; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721881877; x=1722486677; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=4DmP3fxtSOwdi96Nd0UuEVePAIBxvlXMyWHucrA0W0k=;
-        b=r5tUR8L93LsJ6PPjDDtHK2JllOIecu+d7QrSwIaYRp7oYVVJxbypsi4MgW/RmDQ/mn
-         G7OUN8ZxH0/+sITHKeKL8vJpHv7R11Ss704Bk0v+bm/uFERHMKtC51ZIQQdre/xjqRoH
-         rhl3KTehZIOdSb0Gl624W56zIFe40T/ivWt00pQErld9syB9FsYU7axFzeLT27AfMwWw
-         fjCTmYrQ/nvCJNjD58iVf+H4x3g3vjTEneDOChEQjuAFM8rTqLZ8o6nYOajs28j6kH4R
-         1/yba9pt++ROTWwqMuu6ulWp9Jj6IDUcEjuElbjYEAgO3CPUYDuKBqOJxfJiZWXNbnvT
-         4diQ==
+        bh=XXfannR0i35m+kTBwRZd8UAXF5c0K76k4L1K8mKl1Ek=;
+        b=i4kH/NIldXSji/ilcniMrAQ97CA1IVs40pgk6sl5A/iIyJyoE/0Iaa6qnmwdAP1MsJ
+         I7b0a5Ml2+cnJ9/0FXv44yguYL/2LoAWt2pRmYTQfWJW1WcOyrR/GDQfDaLYExkR6Rhm
+         DQWiKMHZW+iSo+n3iIKH9o5N/gggwVdVyUAVE0no1byd2JKekv8eOdD7OPlIjh2z1onT
+         /cDq4RmOpOHDTRsjy4EcsMKSRRg3/WC34nIz0lQbGkRY+dzTI0cRUhhLX9QdHs2N6lG8
+         lK813LwsqW33VsTcudatAA2Qr7KeOxF5t2VForPD+wRI7bty6u2ab2WgisILKA2B7HUg
+         aRug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721881206; x=1722486006;
+        d=1e100.net; s=20230601; t=1721881877; x=1722486677;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4DmP3fxtSOwdi96Nd0UuEVePAIBxvlXMyWHucrA0W0k=;
-        b=jSQQ0xwwZEtu93h0aIXrULrJp8eR1XEiMPzVTp6eZEFJt8xs5b7xKJlR9IG4fJA8ZX
-         Tl2uVkCJ2AarYYThvuN/Hr7CR6m1mnLZOvb7NP47MMqVrurohrEuHpxqj0y8pD39DG1X
-         KSYOwuwNWVFkPGhdu3n49OTZEJIKLhftH+zOnCaTkCtd2DrTb+MfjBsGepdYWsJrYybb
-         36gD8uyZMfwN3HG4BkV0CICUnAoEXAS2z+14HR32Y2HZlSPTrErYwTsoTEpx0GO7s7HQ
-         6vvlir+TDxGjQrKLFiRuUvo58GrvdoNJAUdwfQTzbBbVfz3WhKjeyu+D3cpm5JLTy1K3
-         QqUA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4TDEIzMqXfEc27cDAFcvvflOo5+o6SNu+ICLZKzo934/etR2pOaN34ThgDXhomG3Tv9rRk74eSwu9BgOjOK2R0m5wD8giIz9e
-X-Gm-Message-State: AOJu0YyIRT36Fd3d5tl/eA54z0nj+9DPrVzM4AUbDpSCtnUcp7nKl2Sh
-	Wj2IncUikGzQrWfgnQ/PGXN0lsJlLpZweLifoL2Lbh1KSDygvOZWw1cHuScJUA==
-X-Google-Smtp-Source: AGHT+IF9TZsz6K8Hhe8vA7NOEy3c5xlX4b0C9eOnbb45IRWGE/FRIYwhph7kpZbJ0Q9QImNE3lbUMQ==
-X-Received: by 2002:a05:6a21:6b0b:b0:1c3:ff89:1fc5 with SMTP id adf61e73a8af0-1c47b1db237mr641329637.30.1721881206605;
-        Wed, 24 Jul 2024 21:20:06 -0700 (PDT)
+        bh=XXfannR0i35m+kTBwRZd8UAXF5c0K76k4L1K8mKl1Ek=;
+        b=uEpI1MYT0piWe9jQFBVISu7xne2M/D98rvH6Oq1eYMiPjFgUrKxoG7SGEh2EVi9gSH
+         MWJto8p6qV4qz+rz5TJtLB5oy7AQBQTnkSDcqUCVK/Xw8vULJJzk7JoT4mq2RlmRWtla
+         m0ToTaFHfZTZwHLAXx4Y1aWhgIjuJvDFelPjNbmfWQmMnvsc9SMpWabqKKSzdxQ5Zyv9
+         fd5P5+pfTPy8YV4Wm8gm/vmYlwE4l7GZVhhrYJeS676Caz3gQk0M8GGkliTYSaP9ZtMG
+         gtjcS9yUkuUw0RF4ew5BsVkF/WzXw2HnyssqR8hrO1EZSUErmT/B6TdngSamwH8TW73I
+         pkNg==
+X-Gm-Message-State: AOJu0Yw/lxYqs7J35/92ggO+KfXdj7i++mVRU6TuHDbCQu9/sHLFjbzk
+	yUOfEtfJ+/4Ifs5cr7c4LRofVHg1juKHnKjUluWV0h5fQgeec7zx0SOCg6KoBA==
+X-Google-Smtp-Source: AGHT+IGXP64T7aTAPdkei1RXlp7A5rssNN997hjPGJuJA94RsOXciUbGOuoAzAwhs2/QCXjvj/Qa8w==
+X-Received: by 2002:a05:6a00:22d1:b0:70b:152:331 with SMTP id d2e1a72fcca58-70eaa936f64mr2043343b3a.21.1721881876962;
+        Wed, 24 Jul 2024 21:31:16 -0700 (PDT)
 Received: from thinkpad ([103.244.168.26])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7c7f66esm3964335ad.15.2024.07.24.21.20.02
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead812300sm343213b3a.114.2024.07.24.21.31.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jul 2024 21:20:06 -0700 (PDT)
-Date: Thu, 25 Jul 2024 09:50:01 +0530
+        Wed, 24 Jul 2024 21:31:16 -0700 (PDT)
+Date: Thu, 25 Jul 2024 10:01:11 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, vigneshr@ti.com, kishon@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-	ahalaney@redhat.com, srk@ti.com
-Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
-Message-ID: <20240725042001.GC2317@thinkpad>
-References: <20240724065048.285838-1-s-vadapalli@ti.com>
- <20240724161916.GG3349@thinkpad>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/12] PCI: brcmstb: Use common error handling code in
+ brcm_pcie_probe()
+Message-ID: <20240725043111.GD2317@thinkpad>
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-4-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,22 +97,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240724161916.GG3349@thinkpad>
+In-Reply-To: <20240716213131.6036-4-james.quinlan@broadcom.com>
 
-On Wed, Jul 24, 2024 at 09:49:21PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote:
-> > Since the configuration of Legacy Interrupts (INTx) is not supported, set
-> > the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
-> >   of_irq_parse_pci: failed with rc=-22
-> > due to the absence of Legacy Interrupts in the device-tree.
-> > 
+On Tue, Jul 16, 2024 at 05:31:18PM -0400, Jim Quinlan wrote:
+> o Move the clk_prepare_enable() below the resource allocations.
+> o Add a jump target (clk_out) so that a bit of exception handling can be
+>   better reused at the end of this function implementation.
 > 
-> Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() will bail out
-> if 'map_irq' is set to NULL.
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 29 +++++++++++++++------------
+>  1 file changed, 16 insertions(+), 13 deletions(-)
 > 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index c08683febdd4..c257434edc08 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1613,31 +1613,30 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  
+>  	pcie->ssc = of_property_read_bool(np, "brcm,enable-ssc");
+>  
+> -	ret = clk_prepare_enable(pcie->clk);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "could not enable clock\n");
+> -		return ret;
+> -	}
+>  	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+> -	if (IS_ERR(pcie->rescal)) {
+> -		clk_disable_unprepare(pcie->clk);
+> +	if (IS_ERR(pcie->rescal))
+>  		return PTR_ERR(pcie->rescal);
+> -	}
+> +
+>  	pcie->perst_reset = devm_reset_control_get_optional_exclusive(&pdev->dev, "perst");
+> -	if (IS_ERR(pcie->perst_reset)) {
+> -		clk_disable_unprepare(pcie->clk);
+> +	if (IS_ERR(pcie->perst_reset))
+>  		return PTR_ERR(pcie->perst_reset);
+> +
+> +	ret = clk_prepare_enable(pcie->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not enable clock\n");
+> +		return ret;
+>  	}
+>  
+>  	ret = reset_control_reset(pcie->rescal);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> +		goto clk_out;
 
-Hold on. The errono of of_irq_parse_pci() is not -ENOENT. So the INTx interrupts
-are described in DT? Then why are they not supported?
+Please use a descriptive name for the err labels. Here this err path disables
+and unprepares the clk, so use 'clk_disable_unprepare'.
+
+> +	}
+>  
+>  	ret = brcm_phy_start(pcie);
+>  	if (ret) {
+>  		reset_control_rearm(pcie->rescal);
+> -		clk_disable_unprepare(pcie->clk);
+> -		return ret;
+> +		goto clk_out;
+>  	}
+>  
+>  	ret = brcm_pcie_setup(pcie);
+> @@ -1676,6 +1675,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  
+>  	return 0;
+>  
+> +clk_out:
+> +	clk_disable_unprepare(pcie->clk);
+> +	return ret;
+> +
+
+This is leaking the resources. Move this new label below 'fail'.
 
 - Mani
 
