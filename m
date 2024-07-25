@@ -1,163 +1,124 @@
-Return-Path: <linux-pci+bounces-10793-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10794-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0146393C649
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 17:21:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FD1D93C688
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 17:34:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E4801F22884
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 15:21:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CCA31F22FAA
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jul 2024 15:34:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1D219D062;
-	Thu, 25 Jul 2024 15:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51CD819CCEB;
+	Thu, 25 Jul 2024 15:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MKHfxdxQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaM3lN+i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9AB19CCE6
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 15:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DA71993AE;
+	Thu, 25 Jul 2024 15:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721920906; cv=none; b=SIi/xGQvLZhAZmwDq95dvyCIAn9DORncJiQmi1Msz6+BPWdRw+en4abxs6RWTkqSqEAhA8JeP9eMy2w25B2O1Vr1KUmyIYaEmdZtijmpccRJRg2bg94GVVRWiP2SLUoJ41i1BthrOZQL0IPwAq6nJ6D/cHQrrF7mSvQWXkvUz/0=
+	t=1721921689; cv=none; b=DFJ0iPJPL0fkLyJ8aX79u3RaxWAOlDWk0Sz6+3JrOPAWB7CKKpg8pNjBu/CY5MrpQzvqDPaif6DZspb74jzV6T9Dugx287CFtUy/7SrO8+CXqHb+5LpXV77nu8KhpmAUJx0nZTvgZ0oJhS/elI/y2g1Jya1yv0exy2sOd2Su3s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721920906; c=relaxed/simple;
-	bh=RkNVsX0GJWP39VhHnsRew4x+r/mYmpi8tLHm7VuNQnI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HOxuNSMT1/JKDlj+qes/hR+N2LQRfjrWScBRYYLQ4TISkBbt0PimOLtugUS6JpSGWOZRQeQ6uZ+NYD1N9Gomo/xWU08DFBsA9Tw+IN/SEVcTs7r9f+uay0k/4XhbQ4sE7kpnlYU78SXdtoL6tIguDrZBApnxCzpRwzTC9uYTIBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MKHfxdxQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721920903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z8Tjgy4dHalmku2MigGV36hJgcomQ9zlrQHbeuGTVtQ=;
-	b=MKHfxdxQDLeDjoRt155tJ66XTkJWcNhC3MIoXZHa6Sm14/R6uSUrvGloGWND7ShEkb5F2C
-	Z9AlqSyerw5ZaURvkm9j9Vw8loYfdvgeEmtxp2bXh9mdF8ZLaLW7nwvIbAkS2U70OzZ8Is
-	LITaf/5iRewgeCFu+AOf69M7gAGxDCk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-2-Ht3IS9PAKMc9Jj3iGJEA-1; Thu, 25 Jul 2024 11:21:42 -0400
-X-MC-Unique: 2-Ht3IS9PAKMc9Jj3iGJEA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4265e546ca9so1851205e9.3
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 08:21:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721920901; x=1722525701;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z8Tjgy4dHalmku2MigGV36hJgcomQ9zlrQHbeuGTVtQ=;
-        b=GSUA7otuT+AXzcpAffoWQenLDP/R54A8kBz+bMSDy9lDvExnJLdyB14UWxonoKwO3t
-         dCsaaVFgnupUZsl//qXNZciPhu2sBhz2L/uU3uJvAU9qgGMKR+9ktBmFJdKi1uBW/wJo
-         g/S+UjQnvN+fE3hCRgoOvfjeowhNNS90Jcjb7X4bJ21DVmuFPIW4ZKY5s6gk2K6/57EX
-         d3ywOzjbbU3o4VDtV/80JwOOIWE/Hdx2mIeSVS64HjwpnlDGBhMp0P13lbo3qeMzBOTR
-         pLLSANRX3n7DdwA5Hz0e19e3flK8NTRY9hLiABz2/N7XiKJGIZ2ef8OFXe5xitf0J2/G
-         AYlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUH0xSgA3rw2bSXaeNJ/Q0h6X+/zI4Bz6n3jxnKh9rs7ph/AW1WA5eX5a4WZi6ZvTZBbHiOdL9+l5Fj10fuegOFyy/SJJtkJHMH
-X-Gm-Message-State: AOJu0YwHrYNryl0V/favYq/PDNyrmfW5Le1DdzIv05J47RG3lQ2BZNb3
-	NwjbRkd8Wb45/aZWiKU1WZ/0EOZyMeZ7eH+ekkfxL3Sn1U1QX+KXY8P5UaO1Ws2ejz0nk/fmQ5k
-	1nXq5w1tFsgR/e3TWHqaJ12MtbP8KfL1hGNqdgkpqDYzDG3663pXlmMxjgg==
-X-Received: by 2002:a05:600c:19c7:b0:427:9f6f:4913 with SMTP id 5b1f17b1804b1-4280576b7famr12152535e9.5.1721920901108;
-        Thu, 25 Jul 2024 08:21:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUoq9MyYvXOU4HItbU3COs+rrthKOGlBJJ1A0/BR1JqKct+++msddOJXUIccyRZvEURjAPIw==
-X-Received: by 2002:a05:600c:19c7:b0:427:9f6f:4913 with SMTP id 5b1f17b1804b1-4280576b7famr12152425e9.5.1721920900677;
-        Thu, 25 Jul 2024 08:21:40 -0700 (PDT)
-Received: from pstanner-thinkpadp1gen5.fritz.box (200116b82d135a0064271627c11682d8.dip.versatel-1u1.de. [2001:16b8:2d13:5a00:6427:1627:c116:82d8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b36416e2esm2558518f8f.0.2024.07.25.08.21.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jul 2024 08:21:40 -0700 (PDT)
-Message-ID: <9529b8012b1a1573316d65727f231f5cf54d0315.camel@redhat.com>
-Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Krzysztof
- =?UTF-8?Q?Wilczy=C5=84ski?=
-	 <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-Date: Thu, 25 Jul 2024 17:21:39 +0200
-In-Reply-To: <ZqJgkLxJjJS7xpp1@infradead.org>
-References: <20240725120729.59788-2-pstanner@redhat.com>
-	 <ZqJgkLxJjJS7xpp1@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+	s=arc-20240116; t=1721921689; c=relaxed/simple;
+	bh=XwYVVIPGvDLM+Mi4lkud9Ay/FNg2RmftzXEjlRISXXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SpWl0ujHBxD8uJ+gJXwnzBxPnbGusgxH+AufoLe2dbuio3b3rb/NYS9oyRmfcFSI+qU8ThnMg4jVNdKsMJ8BXOVSQ/eAmLEOlipscHCigDBcLd227Se5V6QhE67ewANiWEfE+tGkhFAlSZ/JsX1+qDsu8GE4IxpeNlkfkj2xYns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaM3lN+i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736C4C116B1;
+	Thu, 25 Jul 2024 15:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721921688;
+	bh=XwYVVIPGvDLM+Mi4lkud9Ay/FNg2RmftzXEjlRISXXo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=eaM3lN+iLVyBPPl+yEcq6t0yIUHQzrNxG0e56HJ4cYuskPpcE2Myp72XAU77I8f9Q
+	 56nrZ1j5Sps8BYWLpkdNaMvGQzPDo4DBKAYGsq/GRnc/HHmBXUhfXdVa4i0bxv5QOa
+	 vrgr8lGA5k/wR74+3OIqOX+BJ5SLAckQqdTbThWIsf7AXRUQzXuVLrxoM2nM+1kVnu
+	 k2+Yih1sZFgYaA3Tcc+xRWvSR/VdwocYU0hBKmnqTRvkNWKlUc/72f9QZyNu9xGUVQ
+	 FmQp0sLXS9i6XS4DNIX2Ukur2ZMhgNyaJw4ZQLcFx6ZHaa114gdgESkylHcL0BvS8Z
+	 nih0jxLIPhIaQ==
+Date: Thu, 25 Jul 2024 10:34:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: George-Daniel Matei <danielgeorgem@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nic_swsd@realtek.com,
+	netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] PCI: r8169: add suspend/resume aspm quirk
+Message-ID: <20240725153446.GA841157@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e0e1ceb-9da8-4227-8964-04e891c1d9e3@gmail.com>
 
-On Thu, 2024-07-25 at 07:26 -0700, Christoph Hellwig wrote:
-> Can we please fix this to never silently redirect to a manager
-> version
+[+cc Rafael in case you have suspend debug help]
 
-It is not the fix or the recent changes (which the fix is for) to PCI
-devres that is doing that. pci_intx() has been "silently redirect[ing]
-to a managed version" since 15 years.
+On Tue, Jul 16, 2024 at 09:25:40PM +0200, Heiner Kallweit wrote:
+> On 16.07.2024 14:13, George-Daniel Matei wrote:
+> > On Thu, Jul 11, 2024 at 7:45 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >> On 10.07.2024 17:09, George-Daniel Matei wrote:
+> >>>>> Added aspm suspend/resume hooks that run
+> >>>>> before and after suspend and resume to change
+> >>>>> the ASPM states of the PCI bus in order to allow
+> >>>>> the system suspend while trying to prevent card hangs
+> >>>>
+> >>>> Why is this needed?  Is there a r8169 defect we're working around?
+> >>>> A BIOS defect?  Is there a problem report you can reference here?
+> >>>
+> >>> We encountered this issue while upgrading from kernel v6.1 to v6.6.
+> >>> The system would not suspend with 6.6. We tracked down the problem to
+> >>> the NIC of the device, mainly that the following code was removed in
+> >>> 6.6:
+> >>>> else if (tp->mac_version >= RTL_GIGA_MAC_VER_46)
+> >>>>         rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_2);1
+> >>
+> >> With this (older) 6.1 version everything is ok?
+> >> Would mean that L1.1 is active and the system suspends (STR?) properly
+> >> also with L1.1 being active.
+> >>
+> > Yes, with 6.1 everything was ok. L1 was active and just the L1.1 substate
+> > was enabled, L1.2 was disabled.
+> > 
+> >> Under 6.6 per default L1 (incl. sub-states) is disabled.
+> >> Then you manually enable L1 (incl. L1.1, but not L1.2?) via sysfs,
+> >> and now the system hangs on suspend?
+> >>
+> > Yes, in 6.6 L1 (+substates) is disabled. Like Bjorn mentioned, I
+> > think that is because of 90ca51e8c654 ("r8169:
+> > fix ASPM-related issues on a number of systems with NIC version from
+> > RTL8168h". With L1 disabled the system would not suspend so I enabled
+> > back L1 along with just L1.1 substate through sysfs, just to test, and
+> > saw that the system could
+> 
+> It still sounds very weird that a system does not suspend to ram
+> just because ASPM L1 is disabled for a single device.
+> What if a PCI device is used which doesn't support ASPM?
+> 
+> Which subsystem fails to suspend? Can you provide a log showing
+> the suspend error?
 
-The changes merged into v6.11 attempted to keep this behavior exactly
-identical as a preparation for later cleanups. The fix here only
-corrects the position of the redirection to where the "crazy devres
-voodoo" had always been:
+Can we push on this a little bit?  The fact that suspend fails is
+super interesting to me.  I'd like to know exactly how this fails and
+whether it's in the kernel or in firmware.  If we're violating some
+assumption firmware is making, maybe there would be a more generic
+fix.
 
-void pci_intx(struct pci_dev *pdev, int enable)
-{
-	u16 pci_command, new;
+How exactly do you suspend?  Is there any debugging output you can
+collect while doing that?  Maybe [1] has hints.  I see a bunch of
+trace_suspend_resume() calls, and I think they're connected to [2],
+which looks like it might generate console/dmesg output, but I don't
+know how to enable that.
 
-	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-
-	if (enable)
-		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
-	else
-		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
-
-	if (new !=3D pci_command) {
-		struct pci_devres *dr;
-
-		pci_write_config_word(pdev, PCI_COMMAND, new);
-
-		/* voodoo_begin */
-		dr =3D find_pci_dr(pdev);
-		if (dr && !dr->restore_intx) {
-			dr->restore_intx =3D 1;
-			dr->orig_intx =3D !enable;
-		}
-		/* voodoo_end */
-	}
-}
-EXPORT_SYMBOL_GPL(pci_intx);
-
-> and add a proper pcim_intx instead=C2=A0
-
-That has already been done. pcim_intx() sits in drivers/pci/devres.c
-
-> and use that where people actually
-> want to use the crazy devres voodoo instead?=C2=A0 Doing this silently
-> underneath will always create problems.
-
-That's precisely what all my work is all about. The hybrid nature of
-pci_intx(), pci_set_mwi() and all pci*request*() functions needs to be
-removed.
-
-However, that will take us some while, because the APIs are partly
-ossificated and every user that relies on implicit crazy devres voodoo
-has to be identified and then ported to *explicit* half-crazy devres
-voodoo.
-
-More details here:
-https://lore.kernel.org/all/20240613115032.29098-1-pstanner@redhat.com/
-
-P.
-
->=20
->=20
-
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/power/basic-pm-debugging.rst?id=v6.10
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/trace/events/power.h?id=v6.10#n247
 
