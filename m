@@ -1,431 +1,246 @@
-Return-Path: <linux-pci+bounces-10850-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10851-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8B4593D876
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 20:43:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A47793D881
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 20:45:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC6E71C23327
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 18:43:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0074F285C58
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 18:45:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2FF4433DF;
-	Fri, 26 Jul 2024 18:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E664594C;
+	Fri, 26 Jul 2024 18:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpJ7bFjw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SPzIDdh0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2066.outbound.protection.outlook.com [40.107.93.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4923F3FB83
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 18:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722019400; cv=none; b=KazJ4xHgoqHb0m8afUUh2koj43j1M43DGtRcn6fmv4Q94A71ILgyoKN23OIXvfSHuD1c5CMuUda06mkcOofvQQM3zqpzvR8/0lVfAPnzGFB9CSdPv+qb8M0avUO6igVqun7E1MS4oOsJHGge1RYbZPXtRODfPMBGhBhBzuyVC6Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722019400; c=relaxed/simple;
-	bh=XInYtRsO0ig8ZYzFvn+qr6hSi2uJ387yYJHAZojDWZU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KQkQtcgRW4/2HlwtDq3gxiWVwgtfWKA2onkR9j4qjrQ9GPhKt4MnAgHw/LzpJLOaFeMsBPOamyhM6NaboyFMw1DvSyzZjVfXa5tt9znLl8AJrGi6dwaBIC9hsIGF4/wdndC50STfH9mNdOf52/ytVUmF7PncwLBLQ+QSXGJUgVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dpJ7bFjw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722019397;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bcNO3jbhugBwlmCnyZwTsF0UWnAb4uSNNdMpqge9mGk=;
-	b=dpJ7bFjwUIyUk1/WgPq3nY9E580rkhHEJnCXKdbp6kannChZEsUQQLUJ/yVf/sR7pO52kP
-	f0wizZIkUjP1GHg51LEgoEPgtmtlPwXXrXGXryqBg9XmUjClvBEZ582Y/ekLX8MihLo8TJ
-	XDAuJvUMMOaNfK/y97tWaS+ItNaRs78=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-385-Z0gK8EAHMveUqAo3qo8DDg-1; Fri, 26 Jul 2024 14:43:15 -0400
-X-MC-Unique: Z0gK8EAHMveUqAo3qo8DDg-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5a2b8c44b48so501575a12.0
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 11:43:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722019394; x=1722624194;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bcNO3jbhugBwlmCnyZwTsF0UWnAb4uSNNdMpqge9mGk=;
-        b=Zv9VfSeSf5Wq1Opmm27ph1eMlwJPyOqRXgFzrdQaoEZ+b6j6h6CWeW5rCK6/iGul+1
-         mXpARzmHEXxXU2U1jlwkKl3gNjGtaoFBXicueESPUYe0dtwW3FLE3VODhuZBzGtbV/L4
-         UHNAb/XZncydChXsV503sMsTIE/iGe+aDbuj7rvZae4Z0pHwgQuDABWleuso14iuVYi+
-         EvytsSOKPxoqVilgMGO5HiopdTrzZPBZC6UR7cvBqSs21hASBFJlJUibnXxuiLEwTs7O
-         +ajBzDpd6oB+rfuZxctqNV6jaeUN8LTfxGJCmdLF2huaRz78hBTAVzjQJaduc+feK2gc
-         ZsMQ==
-X-Gm-Message-State: AOJu0Yw0uT/MAjkZ39cocIzMyfKbzbkwNLLzr26Cngc0BZyXqNISpMDj
-	P3Yc27g2bsaBwxtNl84DgGsA2rr11xK9ug+wVWQOLX3b4hZwHQRmHbWyaA/7b7ogbS1iGqx1+rL
-	zzy7LFFQgRRqbJ3I7RZCXfkeDRsNFPkFHt3gJ1TWZEjQ9prhBJjaAEsU8R41l3/E9sg==
-X-Received: by 2002:a05:6402:2711:b0:5a1:1ce3:9b58 with SMTP id 4fb4d7f45d1cf-5ac2775629cmr2906981a12.0.1722019394284;
-        Fri, 26 Jul 2024 11:43:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFI8/kRV51i8KHNBfGqgH9nsoK9ivieO2uRjEp1YZSEZIQ69c9eUiRlLcZjjUEy6A7Ui5M5hQ==
-X-Received: by 2002:a05:6402:2711:b0:5a1:1ce3:9b58 with SMTP id 4fb4d7f45d1cf-5ac2775629cmr2906973a12.0.1722019393756;
-        Fri, 26 Jul 2024 11:43:13 -0700 (PDT)
-Received: from fedora.fritz.box (200116b82d4f5c00cbecb909b7d5f58c.dip.versatel-1u1.de. [2001:16b8:2d4f:5c00:cbec:b909:b7d5:f58c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ac631b0464sm2244168a12.4.2024.07.26.11.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 11:43:13 -0700 (PDT)
-Message-ID: <ee44ea7ac760e73edad3f20b30b4d2fff66c1a85.camel@redhat.com>
-Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
-From: pstanner@redhat.com
-To: Damien Le Moal <dlemoal@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>,  Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 26 Jul 2024 20:43:12 +0200
-In-Reply-To: <6ce4c9f4-7c75-4451-8c6f-fe3d6a3dd913@kernel.org>
-References: <20240725120729.59788-2-pstanner@redhat.com>
-	 <6ce4c9f4-7c75-4451-8c6f-fe3d6a3dd913@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847C3433DF;
+	Fri, 26 Jul 2024 18:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722019512; cv=fail; b=UC4QxssB2LqJuBaXYPEbSJjBFTj4j1YlIxw2QZWI/dRGPTFvFdRtPeq+wFCZ8AYFRDxCbXJo0CyffUngOyS/o5phHcOShhyy+ZXuMOWkbyIOZymbg90GAGEavICq3sxwPnDZoORg1uB4dkSf1LXp2ttul8XcMmm7V4FCJnMSxUQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722019512; c=relaxed/simple;
+	bh=AYzZBJeO+f2UP8lQZgCtTbdE4sC8VnW6g/w5PwMgJ0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QnT4yuCaYtRm9nTuX/MvUYjfVIB5iPTBLUEEf/9d2jO1X9BNyQil+2t3O6pVrG9zXsMtdMWf4JPvmQvct2xzWaZ2a3Rl+04t2e2okPEg6Qj+1Fq6YK4ZXwwCrfOt80AoW0QJQxvrt6WP6cLF0AQLIUYHzQvT9Vcyfj5ITxtErlo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SPzIDdh0; arc=fail smtp.client-ip=40.107.93.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JjSvRAUq/8PPA2CslvLuKUUpKfUPzHmdjyQm6EIjwCYqRzjhs5V17Rnn+Hrb8twSI6o91Rl6uYLkwlbHQOwjkWmV1lXWHskByn4cKwvAT+xT3JVL3QuuUfB3YWp/asflmDs2IaIe1OuTeFEu1ek0H8B/ZP6d0uDPiaGFbDn5rDiMwiucGgN5RBoQL3hZA6kWQvAooyvXC2oCq1l9JlrrdKOkQ7E/OI9NJedgfXoWLH8PjtpaPRdZiAGQggnTaSosOG9meDUarnQ0+U4QdZK1XoXAdd0OgejEiR4xNjSkxpB2vGPtFAmnZUkBwlBm93z7JVCvIAVfmLfUTtRdeB4pvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g9Azu0YU9Rv9RzatF4DxeJMq+5AvqzQvxgRTAjY1XOE=;
+ b=wokuexyHBO4CCC02AXKieA0Nc3j0vmbjfjIqTX6rQ+N/DUBq0q2Q2EgGnlkwsyqL3edqftp4w1uwTbjAFWcH8RP66NPooU9tio7GDO+M60knDOI9B4cUXvJRgY95kiwERs1jq3PM3DSvU2PkAvdKT8N6uNwSxGjyqcFdBbpwKLB1A1UFA8Nma6MkSQDADs4TVDqfI6N3ZPlA+LbOpj4pmhm0YZfzOymBAAbNRrHL/PJ4ejR5C4q/AUEX2rxQHai5DAUHVoN81AxBYxNXnoEze5UFtWF9Jihz+VqQzNvYlCo2lPKRK9Gcbd+L3p0ywxL0GikQO8Ctk32xvrLzWWk0xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g9Azu0YU9Rv9RzatF4DxeJMq+5AvqzQvxgRTAjY1XOE=;
+ b=SPzIDdh0gU0yHAIVV/W7l9aWSwqr0R9rxnWwCVmC+zPGmn+FR6cOvkpNSw/uoAYGQpFaD9mRQdCTN0wQnf8YFyQDkUdsb/qHALvG7sVUNWpFUQx+ziF/Z/i+lKbReKOlPQ7mK7q/fI4DZ6QtVFyCSmjtsa9Y2TeKsrefKsQgqkU=
+Received: from MN2PR19CA0026.namprd19.prod.outlook.com (2603:10b6:208:178::39)
+ by DS7PR12MB6007.namprd12.prod.outlook.com (2603:10b6:8:7e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.28; Fri, 26 Jul
+ 2024 18:45:05 +0000
+Received: from BL02EPF00021F68.namprd02.prod.outlook.com
+ (2603:10b6:208:178:cafe::36) by MN2PR19CA0026.outlook.office365.com
+ (2603:10b6:208:178::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.28 via Frontend
+ Transport; Fri, 26 Jul 2024 18:45:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BL02EPF00021F68.mail.protection.outlook.com (10.167.249.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Fri, 26 Jul 2024 18:45:04 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 26 Jul
+ 2024 13:45:04 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 26 Jul 2024 13:45:03 -0500
+Message-ID: <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
+Date: Fri, 26 Jul 2024 11:45:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-On Fri, 2024-07-26 at 09:19 +0900, Damien Le Moal wrote:
-> On 7/25/24 21:07, Philipp Stanner wrote:
-> > pci_intx() is a function that becomes managed if
-> > pcim_enable_device()
-> > has been called in advance. Commit 25216afc9db5 ("PCI: Add managed
-> > pcim_intx()") changed this behavior so that pci_intx() always leads
-> > to
-> > creation of a separate device resource for itself, whereas earlier,
-> > a
-> > shared resource was used for all PCI devres operations.
-> >=20
-> > Unfortunately, pci_intx() seems to be used in some drivers'
-> > remove()
-> > paths; in the managed case this causes a device resource to be
-> > created
-> > on driver detach.
-> >=20
-> > Fix the regression by only redirecting pci_intx() to its managed
-> > twin
-> > pcim_intx() if the pci_command changes.
-> >=20
-> > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
-> > Reported-by: Damien Le Moal <dlemoal@kernel.org>
-> > Closes:
-> > https://lore.kernel.org/all/b8f4ba97-84fc-4b7e-ba1a-99de2d9f0118@kernel=
-.org/
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > Alright, I reproduced this with QEMU as Damien described and this
-> > here
-> > fixes the issue on my side. Feedback welcome. Thank you very much,
-> > Damien.
->=20
-> This works ans is cleaner that what I had :)
-
-The fundamental idea is mostly identical to yours =E2=80=93 you likely just
-didn't see it because your attention was directed towards the code in
-devres.c ;)
-
->=20
-> Tested-by: Damien Le Moal <dlemoal@kernel.org>
-
-You might wanna ping Bjorn about that in case he didn't see.
-
->=20
-> > It seems that this might yet again be the issue of drivers not
-> > being
-> > aware that pci_intx() might become managed, so they use it in their
-> > unwind path (rightfully so; there probably was no alternative back
-> > then).
->=20
-> At least for the ahci driver with wich I found the issue, what is odd
-> is that
-> there is only a single call to pci_intx()=C2=A0
-
-There is only a single _directly visible_ call :]
-
-> to *enable* intx, and that call is in
-> the probe path. With QEMU, this call is not even done as the qemu
-> AHCI support MSI.
-
-Hmm, MSI...
-
->=20
-> Adding a WARN_ON(!enable) at the beginning of pci_inx(), we can see
-> that what
-> happens is that during device probe, we get this backtrace:
->=20
-> [=C2=A0=C2=A0 34.658988] WARNING: CPU: 0 PID: 999 at drivers/pci/pci.c:44=
-80
-> pci_intx+0x7f/0xc0
-> [=C2=A0=C2=A0 34.660799] Modules linked in: ahci(+) rpcsec_gss_krb5 auth_=
-rpcgss
-> nfsv4
-> dns_resolver nfs lockd grace netfs]
-> [=C2=A0=C2=A0 34.673784] CPU: 0 UID: 0 PID: 999 Comm: modprobe Tainted:
-> G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W
-> =C2=A06.10.0+ #1948
-> [=C2=A0=C2=A0 34.675961] Tainted: [W]=3DWARN
-> [=C2=A0=C2=A0 34.676891] Hardware name: QEMU Standard PC (Q35 + ICH9, 200=
-9),
-> BIOS
-> 1.16.3-2.fc40 04/01/2014
-> [=C2=A0=C2=A0 34.679197] RIP: 0010:pci_intx+0x7f/0xc0
-> [=C2=A0=C2=A0 34.680348] Code: b7 d2 be 04 00 00 00 48 89 df e8 0c 84 ff =
-ff 48
-> 8b 44 24 08
-> 65 48 2b 04 25 28 00 00 00 756
-> [=C2=A0=C2=A0 34.685015] RSP: 0018:ffffb60f40e2f7f0 EFLAGS: 00010246
-> [=C2=A0=C2=A0 34.686436] RAX: 0000000000000000 RBX: ffff9dbb81237000 RCX:
-> ffffb60f40e2f64c
-> [=C2=A0=C2=A0 34.688294] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-> ffff9dbb81237000
-> [=C2=A0=C2=A0 34.690120] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> 0000000000000001
-> [=C2=A0=C2=A0 34.691986] R10: ffff9dbb88883538 R11: 0000000000000001 R12:
-> 0000000000000001
-> [=C2=A0=C2=A0 34.693687] R13: ffff9dbb812370c8 R14: ffff9dbb86eeaa00 R15:
-> 0000000000000000
-> [=C2=A0=C2=A0 34.695140] FS:=C2=A0 00007f9d81465740(0000) GS:ffff9dbcf7c0=
-0000(0000)
-> knlGS:0000000000000000
-> [=C2=A0=C2=A0 34.696884] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080=
-050033
-> [=C2=A0=C2=A0 34.698107] CR2: 00007ffc786ed8b8 CR3: 00000001088da000 CR4:
-> 0000000000350ef0
-> [=C2=A0=C2=A0 34.699562] Call Trace:
-> [=C2=A0=C2=A0 34.700215]=C2=A0 <TASK>
-> [=C2=A0=C2=A0 34.700802]=C2=A0 ? pci_intx+0x7f/0xc0
-> [=C2=A0=C2=A0 34.701607]=C2=A0 ? __warn.cold+0xa5/0x13c
-> [=C2=A0=C2=A0 34.702448]=C2=A0 ? pci_intx+0x7f/0xc0
-> [=C2=A0=C2=A0 34.703257]=C2=A0 ? report_bug+0xff/0x140
-> [=C2=A0=C2=A0 34.704105]=C2=A0 ? handle_bug+0x3a/0x70
-> [=C2=A0=C2=A0 34.704938]=C2=A0 ? exc_invalid_op+0x17/0x70
-> [=C2=A0=C2=A0 34.705826]=C2=A0 ? asm_exc_invalid_op+0x1a/0x20
-> [=C2=A0=C2=A0 34.706593]=C2=A0 ? pci_intx+0x7f/0xc0
-> [=C2=A0=C2=A0 34.707086]=C2=A0 msi_capability_init+0x35a/0x370
-> [=C2=A0=C2=A0 34.707723]=C2=A0 __pci_enable_msi_range+0x187/0x240
-> [=C2=A0=C2=A0 34.708356]=C2=A0 pci_alloc_irq_vectors_affinity+0xc4/0x110
-> [=C2=A0=C2=A0 34.709058]=C2=A0 ahci_init_one+0x6ec/0xcc0 [ahci]
-> [=C2=A0=C2=A0 34.709692]=C2=A0 ? __pm_runtime_resume+0x58/0x90
-> [=C2=A0=C2=A0 34.710311]=C2=A0 local_pci_probe+0x45/0x90
-> [=C2=A0=C2=A0 34.710865]=C2=A0 pci_device_probe+0xbb/0x230
-> [=C2=A0=C2=A0 34.711433]=C2=A0 really_probe+0xcc/0x350
-> [=C2=A0=C2=A0 34.711976]=C2=A0 ? pm_runtime_barrier+0x54/0x90
-> [=C2=A0=C2=A0 34.712569]=C2=A0 ? __pfx___driver_attach+0x10/0x10
-> [=C2=A0=C2=A0 34.713206]=C2=A0 __driver_probe_device+0x78/0x110
-> [=C2=A0=C2=A0 34.713837]=C2=A0 driver_probe_device+0x1f/0xa0
-> [=C2=A0=C2=A0 34.714427]=C2=A0 __driver_attach+0xbe/0x1d0
-> [=C2=A0=C2=A0 34.715001]=C2=A0 bus_for_each_dev+0x92/0xe0
-> [=C2=A0=C2=A0 34.715563]=C2=A0 bus_add_driver+0x115/0x200
-> [=C2=A0=C2=A0 34.716136]=C2=A0 driver_register+0x72/0xd0
-> [=C2=A0=C2=A0 34.716704]=C2=A0 ? __pfx_ahci_pci_driver_init+0x10/0x10 [ah=
-ci]
-> [=C2=A0=C2=A0 34.717457]=C2=A0 do_one_initcall+0x76/0x3a0
-> [=C2=A0=C2=A0 34.718036]=C2=A0 do_init_module+0x60/0x210
-> [=C2=A0=C2=A0 34.718616]=C2=A0 init_module_from_file+0x86/0xc0
-> [=C2=A0=C2=A0 34.719243]=C2=A0 idempotent_init_module+0x127/0x2c0
-> [=C2=A0=C2=A0 34.719913]=C2=A0 __x64_sys_finit_module+0x5e/0xb0
-> [=C2=A0=C2=A0 34.720546]=C2=A0 do_syscall_64+0x7d/0x160
-> [=C2=A0=C2=A0 34.721100]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.721695]=C2=A0 ? do_syscall_64+0x89/0x160
-> [=C2=A0=C2=A0 34.722258]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.722846]=C2=A0 ? do_sys_openat2+0x9c/0xe0
-> [=C2=A0=C2=A0 34.723421]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.724012]=C2=A0 ? syscall_exit_to_user_mode+0x64/0x1f0
-> [=C2=A0=C2=A0 34.724703]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.725293]=C2=A0 ? do_syscall_64+0x89/0x160
-> [=C2=A0=C2=A0 34.725883]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.726467]=C2=A0 ? syscall_exit_to_user_mode+0x64/0x1f0
-> [=C2=A0=C2=A0 34.727159]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.727764]=C2=A0 ? do_syscall_64+0x89/0x160
-> [=C2=A0=C2=A0 34.728341]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.728937]=C2=A0 ? exc_page_fault+0x6c/0x200
-> [=C2=A0=C2=A0 34.729511]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0=C2=A0 34.730109]=C2=A0 entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [=C2=A0=C2=A0 34.730837] RIP: 0033:0x7f9d80d281dd
-> [=C2=A0=C2=A0 34.731375] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 =
-0f 1e
-> fa 48 89 f8
-> 48 89 f7 48 89 d6 48 89 ca 4d8
-> [=C2=A0=C2=A0 34.733796] RSP: 002b:00007ffc786f0898 EFLAGS: 00000246 ORIG=
-_RAX:
-> 0000000000000139
-> [=C2=A0=C2=A0 34.734894] RAX: ffffffffffffffda RBX: 00005617347f09a0 RCX:
-> 00007f9d80d281dd
-> [=C2=A0=C2=A0 34.735850] RDX: 0000000000000000 RSI: 0000561715fe5e79 RDI:
-> 0000000000000003
-> [=C2=A0=C2=A0 34.736812] RBP: 00007ffc786f0950 R08: 00007f9d80df6b20 R09:
-> 00007ffc786f08e0
-> [=C2=A0=C2=A0 34.737769] R10: 00005617347f13e0 R11: 0000000000000246 R12:
-> 0000561715fe5e79
-> [=C2=A0=C2=A0 34.738725] R13: 0000000000040000 R14: 00005617347f8990 R15:
-> 00005617347f8b20
-> [=C2=A0=C2=A0 34.739695]=C2=A0 </TASK>
-> [=C2=A0=C2=A0 34.740075] ---[ end trace 0000000000000000 ]---
->=20
-> So it is msi_capability_init() that is the problem: that function
-> calls
-> pci_intx_for_msi(dev, 0) which then calls pci_intx(dev, 0), thus
-> creating the
-> intx devres for the device despite the driver code not touching intx
-> at all.
-
-Nope, that is not the problem =E2=80=93 as you correctly point out below, t=
-hat
-device resource should be destroyed again.
-
-> The driver is fine ! It is MSI touching INTX that is messing things
-> up.
-
-Yes, many drivers are more or less innocent in regards with all of
-that. As Christoph rightfully pointed out, an API should never behave
-like that and do _implicit_ magic behind your back. That's the entire
-philosophy of the C Language.
-
->=20
-> That said, I do not see that as an issue in itself. What I fail to
-> understand
-> though is why that intx devres is not deleted on device teardown. I
-> think this
-> may have something to do with the fact that pcim_intx() always does
-> "res->orig_intx =3D !enable;", that is, it assumes that if there is a
-> call to
-> pcim_intx(dev, 0), then it is because intx where enabled already,
-> which I do not
-> think is true for most drivers... So we endup with INTX being wrongly
-> enabled on
-> device teardown by pcim_intx_restore(), and because of that, the intx
-> resource
-> is not deleted ?
-
-Spoiler: The device resources that have initially been created do get
-deleted. Devres works as intended. The issue is that the forces of evil
-invoke pci_intx() through another path, hidden behind an API, through
-another devres callback.
-
-So the device resource never gets deleated because it is *created* on
-driver detach, when devres already ran.
-
->=20
-> Re-enabling intx on teardown is wrong I think, but that still does
-> not explain
-> why that resource is not deleted. I fail to see why.
-
-You came very close to the truth ;)
-
-With some help from my favorite coworker I did some tracing today and
-found this when doing `rmmod ahci`:
-
-=3D> pci_intx
-=3D> pci_msi_shutdown
-=3D> pci_disable_msi
-=3D> devres_release_all
-=3D> device_unbind_cleanup
-=3D> device_release_driver_internal
-=3D> driver_detach
-=3D> bus_remove_driver
-=3D> pci_unregister_driver
-=3D> __do_sys_delete_module
-=3D> do_syscall_64
-=3D> entry_SYSCALL_64_after_hwframe
-
-The SYSCALL is my `rmmod`.
-
-As you can see, pci_intx() is invoked indirectly through
-pci_disable_msi() =E2=80=93 which gets invoked by devres, which is precisel=
-y
-one reason why you could not find the suspicious pci_intx() call in the
-ahci code base.
-
-Now the question is: Who set up that devres callback which indirectly
-calls pci_intx()?
-
-It is indeed MSI, here in msi/msi.c:
-
-static void pcim_msi_release(void *pcidev)
-{
- struct pci_dev *dev =3D pcidev;
-
- dev->is_msi_managed =3D false;
- pci_free_irq_vectors(dev); // <-- calls pci_disable_msi(), which calls pci=
-_intx(), which re-registers yet another devres callback
-}
-
-/*
- * Needs to be separate from pcim_release to prevent an ordering problem
-
-=3D=3D> Oh, here they even had a warning about that interacting with devres=
- somehow...
-
- * vs. msi_device_data_release() in the MSI core code.
- */
-static int pcim_setup_msi_release(struct pci_dev *dev)
-{
- int ret;
-
- if (!pci_is_managed(dev) || dev->is_msi_managed)
- return 0;
-
- ret =3D devm_add_action(&dev->dev, pcim_msi_release, dev);
- if (ret)
- return ret;
-
- dev->is_msi_managed =3D true;
- return 0;
-}
-
-I don't know enough about AHCI to see where exactly it jumps into
-these, but a candidate would be:
- * pci_enable_msi(), called among others in acard-ahci.c
-
-Another path is:
-   1. ahci_init_one() calls
-   2. ahci_init_msi() calls
-   3. pci_alloc_irq_vectors() calls
-   4. pci_alloc_irq_vectors_affinity() calls
-   5. __pci_enable_msi_range() OR __pci_enable_msix_range() call
-   6. pci_setup_msi_context() calls
-   7. pcim_setup_msi_release() which registers the callback to
-      pci_intx()
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<kvm-ppc@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Saravana
+ Kannan <saravanak@google.com>, Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas
+ Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S
+	<kowsjois@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>
+References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+ <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+ <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
+ <20240723162107.GA501469-robh@kernel.org>
+ <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
+ <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
+ <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
+ <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
+ <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
+ <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB03.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F68:EE_|DS7PR12MB6007:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27ef26d3-52f8-478c-63a7-08dcada31091
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UkIvQmpQT2lQNzlLNkNJVVpveWtSTjNEYnBIaXVjWmRLVUhiUWpITzg2RDJp?=
+ =?utf-8?B?Q2s3WTkwbGRudS9xK3dhV3l2UEs0OW1MOUdDREorMExHa0Q0ejNaaCt4dFZy?=
+ =?utf-8?B?SmJuQjFOUG45SXUyV29qRWtna3A4MDcrZ0ZHTnRreTB6ekNCaURyWmJ0YnZy?=
+ =?utf-8?B?UmJoc3J5UGZ1TXBmT0NwbVJWOERuWkl4ejlrZHFiODNSSjh5N0pkcnAxUFNl?=
+ =?utf-8?B?NUFlejljcFJFdElST1BCNXJkN3ZMb0NnUzFPWlZEUEJSUXpTNERoREcyQWl0?=
+ =?utf-8?B?Y1NLeUlCTm5FaUtvMlNiN3VOdjN6WTZFUFlIWENPSDl1NjBhOENhaEtnWGNB?=
+ =?utf-8?B?Z2RIdWRsMjF1cjk1MWpxNFgySTV4OWIzaHlxV2xTL1ZVVFhvNGZORlRMQkZI?=
+ =?utf-8?B?R3ZieFpaRG8rdG5sT29YQk54bVZpOHg5MDkrUzB5SGRrYk9pVitycVRuTVRr?=
+ =?utf-8?B?UmRsbmE5L25DajZYNlZDS0RyOVhsc1ZONVQrTmtBSUpzWDh0OEczUURhU1Rm?=
+ =?utf-8?B?aDNnRlFaNHlsN2ZIbHJlZDMybldrSk1tdk5ScUJDMk9RUk5aV3M1dWdmNmxC?=
+ =?utf-8?B?MjZ4LzVnZkwweG1vbXUrbnVYakQxKzdrM00wYzhNU3FibE9JdXQvaUkycjhX?=
+ =?utf-8?B?clR5azlJL0tMWHUvRFV1ck9FMHorRzNrSDJwVUx4L0FUSnczOVlOV3JXQ0x1?=
+ =?utf-8?B?bDM3bnAybFFMZHJBQTl2dkx0M200N2c3aDdpYmJUSU92TjBKRmlZTkxLUSs3?=
+ =?utf-8?B?NlNyd2tEMEZvT2Ztb2pxRTc3TzFXVnhRYjliaEk5UWxHd1Y2RDRrVmIrT0s2?=
+ =?utf-8?B?UFdMcVQveXJYRytmL0pWQ3BrY0FPdEgxMmxNRzZoY29mYkY0bkk5MlRIVWJt?=
+ =?utf-8?B?dllEMHpoRTRHclQ0THlJZFg3dmFweW5ocnd2T3k4Z1BpVno1VkxCNWRRK2d3?=
+ =?utf-8?B?SEFwWHBaZHZOVjA1UmpJOEtuMFpXR1ZlS094djIvM3VERVJsTFRGd2NORDl2?=
+ =?utf-8?B?Y1NoVnVBdzNwUUxGcVpyaS9XMHk4clFXYzJvOWtXMER6Q2FaTmZQUExxTDlS?=
+ =?utf-8?B?Q2FEY1YveEg3MWkzNmhkQkErMVJqVmlEWkR2UUhBenZobWJBay9nQlZIbFh4?=
+ =?utf-8?B?eFp2TEJ1TTZBc1N2MHU5b3ovTEl6b29DQUhpOVBtei9GcU1Fd2NUSk96dDJk?=
+ =?utf-8?B?OGJwWVh0YjNjV0U1eXF5TDNhSXVLbGNFYVVEYkdDcU8vc1lrcmNEaStPRFk3?=
+ =?utf-8?B?cUhlei9qNUwyRVpLdUtVc3lOTzQ5SGp2eUEyallXcTBiTVpvQVp0VVFwUHU4?=
+ =?utf-8?B?aXRJVWVkckVRRFZ6N0w4SUtSMkE2dUhxbjhMYy9acm1DalRSSDlVZmtBVnVy?=
+ =?utf-8?B?Wm1FZ1FFa1BXeGF1eE1KK1k2SDIrOWowWWdER0ora1hBUEJyUzN4azdwYXpC?=
+ =?utf-8?B?dWpYTTNhZm9jRWRHYUkyVm1QaTBua1RrWkF4aWpoNVlDamhqQ0ltNkZGRGtS?=
+ =?utf-8?B?K3FHK1ZjNXliRGExclFTTnlhMk1CTjFqSjMraHIrSXArSzdLMk9HM1BySk9w?=
+ =?utf-8?B?NkJOeXdVQlkxaW02bU14UzlKNlF4UkxhcnAxQ1NOSE5DeW5VbmhCUWhmc1pZ?=
+ =?utf-8?B?ZUY0ZmN1L0M1OUwxb3djY2hMYlV5ZHI3akh5WlBwRDU3c2NkY2dveXVzNTZu?=
+ =?utf-8?B?SkM2dGkzbXo5MjZsa05YNm1FZlNIbmM5UTlKeFFRcEdFcEcwRlBXZ255T2h1?=
+ =?utf-8?B?WEViMWxacHJHc3IzN3hQN0NRSnVTMnUzMnhNamFXeVV3UTNIY1pIWVZtTFVq?=
+ =?utf-8?B?MEhnaEZ6S1FMNGFScU1qWDhoRXIvck1VZWdzY3ZTVVFrYkZWNEV2RERrMmg0?=
+ =?utf-8?B?YkV2SjFETjJMdUE1TTNPZnluRFNMak0rblVzRlVxbUNrc1lzTGpGTENtdmE0?=
+ =?utf-8?Q?KoEdZ61qaTS6vyl77i5vjULStD4RrfVQ?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2024 18:45:04.8224
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27ef26d3-52f8-478c-63a7-08dcada31091
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F68.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6007
 
 
-Ha!
+On 7/26/24 10:52, Rob Herring wrote:
+> On Thu, Jul 25, 2024 at 6:06 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
+>> Hi Amit,
+>>
+>>
+>> I try to follow the option which add a OF flag. If Rob is ok with this,
+>> I would suggest to use it instead of V1 patch
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index dda6092e6d3a..a401ed0463d9 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -382,6 +382,11 @@ void of_node_release(struct kobject *kobj)
+>>                                  __func__, node);
+>>           }
+>>
+>> +       if (of_node_check_flag(node, OF_CREATED_WITH_CSET)) {
+>> +               of_changeset_revert(node->data);
+>> +               of_changeset_destroy(node->data);
+>> +       }
+> What happens if multiple nodes are created in the changeset?
+Ok. multiple nodes will not work.
+>
+>> +
+>>           if (node->child)
+>>                   pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
+>>                           __func__, node->parent, node->full_name);
+>> @@ -507,6 +512,7 @@ struct device_node *of_changeset_create_node(struct
+>> of_changeset *ocs,
+>>           np = __of_node_dup(NULL, full_name);
+>>           if (!np)
+>>                   return NULL;
+>> +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
+> This should be set where the data ptr is set.
 
-I think I earned myself a Friday evening beer now 8-)
+Ok. It sounds the fix could be simplified to 3 lines change.
 
 
-Now the interesting question will be how the heck we're supposed to
-clean that up.
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 51e3dd0ea5ab..0b3ba1e1b18c 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -613,7 +613,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
+         struct device_node *np;
 
-Another interesting question is: Did that only work by coincidence
-during the last 15 years, or is it by design that the check in
-pci_intx():
+         np = pci_device_to_OF_node(pdev);
+-       if (!np || !of_node_check_flag(np, OF_DYNAMIC))
++       if (!np || !of_node_check_flag(np, OF_CREATED_WITH_CSET))
+                 return;
+         pdev->dev.of_node = NULL;
 
-if (new !=3D pci_command)
+@@ -672,6 +672,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+         if (ret)
+                 goto out_free_node;
 
-only evaluates to true if we are not in a detach path.
++       of_node_set_flag(np, OF_CREATED_WITH_CSET);
+         np->data = cset;
+         pdev->dev.of_node = np;
+         kfree(name);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a0bedd038a05..a46317f6626e 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
+  #define OF_POPULATED_BUS       4 /* platform bus created for children */
+  #define OF_OVERLAY             5 /* allocated for an overlay */
+  #define OF_OVERLAY_FREE_CSET   6 /* in overlay cset being freed */
++#define OF_CREATED_WITH_CSET    7 /* created by of_changeset_create_node */
 
-If it were coincidence, it would not have caused faults as it did now
-with my recent work, because the old version did not allocate in
-pci_intx().
-
-But it could certainly have been racy and might run into a UAF since
-the old pci_intx() would have worked on memory that is also managed by
-devres, but has been registered at a different place. I guess that is
-what that comment in the MSI code quoted above is hinting at.
+  #define OF_BAD_ADDR    ((u64)-1)
 
 
-Christoph indeed rightfully called it voodoo ^^
+Lizhi
 
-
-Cheers,
-P.
-
+>
+> Rob
 
