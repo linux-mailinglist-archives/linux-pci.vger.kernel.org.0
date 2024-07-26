@@ -1,119 +1,122 @@
-Return-Path: <linux-pci+bounces-10846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4293893D7BF
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 19:41:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A878993D7D4
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 19:53:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D0309B212E0
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 17:41:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13714283BD6
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 17:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA45117CA10;
-	Fri, 26 Jul 2024 17:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 012BC17C7D7;
+	Fri, 26 Jul 2024 17:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIck7ywF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAQh8Rs8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E2C812;
-	Fri, 26 Jul 2024 17:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC07E17C7CF;
+	Fri, 26 Jul 2024 17:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722015685; cv=none; b=n19YK2RQ7c7/8qp6l1WPdUECm6lvovZekJ/7LAPZHqQT0E3xnE4nHQo3wvdOx7P6unP/pxNGiXzQGXWoTTwfYqKhqpWse1ToVkzH9v8tp+G+qcZH5AJSH1p4pL6PVOUTjuE5nL5/hnAAxPOn529B1yU0ce/f3aMp9Uw3YU+SoxI=
+	t=1722016381; cv=none; b=n4hiQZiFISouNQKYR3HbG3v46iCNns4z8W4CF/BoqpTb2AaPfyIBGE6PgMVPRW6Zuzuq8poKFb0LIsqMD+Xg3uy41BbqOW2/vJ6T9j9mU4y2RmOuMvISYNXs9YSLaW5p7SwAlkRB+shdznjUEjMNp9oi6fVqnvhYUWXR0lQvI30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722015685; c=relaxed/simple;
-	bh=sQbl7cK7/k5EIiUevC9DkFKZSDV3M0fNt1wPoC/OQqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UxHNM07ukqTiA+652fzccVvSQlweD8k7N5a/HzNFizr+8aHr8LpVieZOsOKXQPiHvqGhZSepYPxSBgxudE2TwUqvavLnmRtAXS595bnOZDlpEzE7GYqAe1Xot6+fSZ61fXqyPr6qBUcuqAdXGe6eKKTcZrOjkrzSm+0zzV75O+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIck7ywF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB54C32782;
-	Fri, 26 Jul 2024 17:41:24 +0000 (UTC)
+	s=arc-20240116; t=1722016381; c=relaxed/simple;
+	bh=gbriWgUniQV5sMUGUpc7uG99BGb3pVKbc+1MWsqJxl0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hE6qn3bSLV0GC6OV1EmH0jS3N4bO8AQiDlA33tUi+R53UMKJ3kunolWxOUTabSu7H8uU9vtmAmlfshiHKB047KhdqB5QUOfsAO0NUySYoH5S8gSAg6rZE8FuXTNzhXkrbGKrKkhAD4DqPi4B60B/rJ1T2f+R7EvQ7HRIQ3RHfKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAQh8Rs8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAC7C32782;
+	Fri, 26 Jul 2024 17:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722015685;
-	bh=sQbl7cK7/k5EIiUevC9DkFKZSDV3M0fNt1wPoC/OQqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OIck7ywF4QGtuxhdZF0gLpe6sxp+h5gDjKuIcFX9+g2wA5JKY7G4uqzO7jYxCP4Mp
-	 hqbdDHfJscbBUUbGDtvxSCdFktOzf5Siuhzert5QkzhhtIwhWZZJnuTlrBKl5PTWvI
-	 CtopMm7zhQoo2reZK4/NvnOvgOyXQw/j1j20dyh2QPrklQ7JDvtCsDeqRA1uvWoHBH
-	 9szbsslj7wLYwgqiSUoiJKlSLXwUig2ht+1LMi3h93ajwrmqIOzZmhKuw9Ehg8gyik
-	 zuLtzzTRqc/1rbmic20NSIBxp/aU6vM358bo9q/mJdWyykVxh3Dof9meRc+1DYtwIY
-	 YVaQ27m+ZEP8w==
-Date: Fri, 26 Jul 2024 12:41:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, fancer.lancer@gmail.com,
-	yoshihiro.shimoda.uh@renesas.com, conor.dooley@microchip.com,
-	pankaj.dubey@samsung.com, gost.dev@samsung.com
-Subject: Re: [PATCH 2/3] PCI: debugfs: Add support for RASDES framework in DWC
-Message-ID: <20240726174123.GA907125@bhelgaas>
+	s=k20201202; t=1722016381;
+	bh=gbriWgUniQV5sMUGUpc7uG99BGb3pVKbc+1MWsqJxl0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VAQh8Rs86BVc0bQxBQpsw7E3oB7YUvEzDioyvNYyYRWg3/YE7BJZ9Bb5yeZktWUpE
+	 1jI2lNv0JjHBTeMrqFoOx4732CF0GlVQ8ls/qKpBs5EaMagA0+TzO3hURk91b+c2nJ
+	 GYh/ZaOkeTJ/Ehvehu29zHCbM1rfeyyShv0iZfQnHzViqUZtSQh7WwhFsgBPAwKaaR
+	 nXKjVlm1GJwtqXN4zJMB6FcsT14q3jUJG4IAHR0gTYtnyeAzTexMgGLCGw3OqNya4Y
+	 gHCfIMUscJ9mctMB6SDLSpL1yVxgIEmLbOAyZax3r6DQVedli9R+6goBy+Yf/JOwlD
+	 YhO2AP739onfg==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ef248ab2aeso22825781fa.0;
+        Fri, 26 Jul 2024 10:53:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrsVPzPygjIKRSXvxldVLhsgDZ1wWrePEaktv6iuCfZkgR8IOsVkkD3ubu1EvUjwYDyLSku+2H5lbS941ejyByE2fYCCm0HR7a7IgZClId9VQ5axIR3x2Bbb2gkIqGwQgfHGRjutTEa6fJg0vwDkJmBVxJoR3/R/Wf0GIkAxwx1hE=
+X-Gm-Message-State: AOJu0YwOV0vHjL9EaHuV4O/3uqHs+KDvdwDGhncAp0QXY0QWnuSbh5ph
+	ZKBggRmt0lpf2mw7FO7mCzy1T5z8dKc3QXzkUaJRaA217EytR4VapUci2TymQJKMagA0XKYz7Id
+	iC1WcR0bXmIuIxzigZ5C2mu4j+A==
+X-Google-Smtp-Source: AGHT+IGIboFhjpqofVqlOelOMvR4+RrtFqzfu/57gAtHLJz3rx7lzmCVwhoRpixh1COmKEuQcel3sDSsZgJ8oYzdKa4=
+X-Received: by 2002:a05:651c:a09:b0:2ef:2d54:f590 with SMTP id
+ 38308e7fff4ca-2f12ee278bamr4650001fa.24.1722016379634; Fri, 26 Jul 2024
+ 10:52:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625093813.112555-3-shradha.t@samsung.com>
+References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+ <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+ <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com> <20240723162107.GA501469-robh@kernel.org>
+ <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com> <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
+ <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com> <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
+ <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
+In-Reply-To: <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 26 Jul 2024 12:52:46 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
+Message-ID: <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Saravana Kannan <saravanak@google.com>, Vaibhav Jain <vaibhav@linux.ibm.com>, 
+	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
+	Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Based on the files touched, this looks DWC-specific, so the subject
-prefix should be "PCI: dwc: ", not the very generic "debugfs".
-The "debugfs" part could go later, e.g.,
+On Thu, Jul 25, 2024 at 6:06=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> wrote=
+:
+>
+> Hi Amit,
+>
+>
+> I try to follow the option which add a OF flag. If Rob is ok with this,
+> I would suggest to use it instead of V1 patch
+>
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index dda6092e6d3a..a401ed0463d9 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -382,6 +382,11 @@ void of_node_release(struct kobject *kobj)
+>                                 __func__, node);
+>          }
+>
+> +       if (of_node_check_flag(node, OF_CREATED_WITH_CSET)) {
+> +               of_changeset_revert(node->data);
+> +               of_changeset_destroy(node->data);
+> +       }
 
-  PCI: dwc: Add RASDES debugfs support
+What happens if multiple nodes are created in the changeset?
 
-On Tue, Jun 25, 2024 at 03:08:12PM +0530, Shradha Todi wrote:
-> Add support to use the RASDES feature of DesignWare PCIe controller
-> using debugfs entries.
-> 
-> RASDES is a vendor specific extended PCIe capability which reads the
-> current hardware internal state of PCIe device. Following primary
-> features are provided to userspace via debugfs:
-> - Debug registers
-> - Error injection
-> - Statistical counters
-
-This looks like great stuff, thanks a lot for implementing this!
-
-I think this debugfs structure and functionality should be documented
-somewhere like Documentation/ABI/testing/.  This functionality is
-likely to be used by userspace tools like perf that will depend on
-this ABI.  (Oh, sorry, I just saw Jonathan's similar comment, didn't
-mean to duplicate it.)
-
-I don't expect other vendors to implement exactly the same
-functionality, but we can at least try to use similar structure if
-they do.
-
-> +config PCIE_DW_DEBUGFS
-> +	bool "DWC PCIe debugfs entries"
-> +	help
-> +	  Enables debugfs entries for the DWC PCIe Controller.
-> +	  These entries make use of the RAS features in the DW
-> +	  controller to help in debug, error injection and statistical
-> +	  counters
-
-> +int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +	int ras_cap;
-> +	struct rasdes_info *dump_info;
-> +	char dirname[DWC_DEBUGFS_MAX];
-> +	struct dentry *dir, *rasdes_debug, *rasdes_err_inj;
-> +	struct dentry *rasdes_event_counter, *rasdes_events;
-> +	int i;
-> +	struct rasdes_priv *priv_tmp;
 > +
-> +	ras_cap = dw_pcie_find_vsec_capability(pci, DW_PCIE_RAS_DES_CAP);
+>          if (node->child)
+>                  pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
+>                          __func__, node->parent, node->full_name);
+> @@ -507,6 +512,7 @@ struct device_node *of_changeset_create_node(struct
+> of_changeset *ocs,
+>          np =3D __of_node_dup(NULL, full_name);
+>          if (!np)
+>                  return NULL;
+> +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
 
-Does this look at config space of a DWC Root Port, or is this in a
-RCRB or similar?
+This should be set where the data ptr is set.
 
-Bjorn
+Rob
 
