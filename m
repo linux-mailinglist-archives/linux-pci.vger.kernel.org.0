@@ -1,140 +1,140 @@
-Return-Path: <linux-pci+bounces-10825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6F3D93CE59
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 08:54:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BEF793CEC0
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 09:22:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 044A21C209AF
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 06:54:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F86E1F22151
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 07:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D036A176250;
-	Fri, 26 Jul 2024 06:54:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449A2225D7;
+	Fri, 26 Jul 2024 07:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ygbbBDYe"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Pr1g6gD1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CC7173332
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 06:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F303A2A;
+	Fri, 26 Jul 2024 07:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721976877; cv=none; b=lyaAVK4Ri6YD/kHkICdvSx2NzRU31yrz9LT5t1hgZNvuGsdnFDe48UMsMPkc/MZk56BQhhfQtfl5miD7c67lVhEWGU0K7tNOrX86DH1/2usI6VlV0nr/lbvTt7pvPrgZG9O2VFSlUNWDRP4JlNg6PZ6jUjrFfI+YQWyVLt4hZ1k=
+	t=1721978542; cv=none; b=doRDqSftePnU9TQ8ffyvZh/R2tOH6Z9yoYUTwL+gW/ccZkFyH96RrOUyZTY7fQzIW9dYEKTi67lQ3VheXIeuNPGgRRs6YZACtM00EEnaImVmYpzQ4iyLn2MhjZynkJ9lx2AN5hjS3aSi/zJmO8PErp8oTXJ6CJl6Xm0FJEDrxkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721976877; c=relaxed/simple;
-	bh=Qq4H0mLVvHzKi1FF3BapGpXq5XOG03c+lzd/i/KWfQc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EkMlqvStsr001Kj6xa8xXUeR5OHepM7zkK3wvcbohEtET5my9iW/KwmhaO4Pdj6RLj7Dnydw+CQ4j7NhWkMH+C8P5hABzN+EoepoUJCtNxYOFfSjXzWucrmiupQLU2KRdh6Rmo0c7a7+/CNI33SI0hU5XMonR5fKk34+2AbgRxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ygbbBDYe; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-368440b073bso1046786f8f.0
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 23:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721976873; x=1722581673; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vosmNuXwDGa5uER4StfNppOhy6Nfa++wczEcYPAA5JM=;
-        b=ygbbBDYe6kS3ljaXv78V4V4XnM+fbuWxVEXDDQtrrZ+sPkrKkQ7i+eKYcZNYFEbb/q
-         ytnX+f2qFRkpOsaQb8R2sCuMbT4HatOR+h3nzMtBPblZ7sj4IjSse9PBfp3hz0BNJZGm
-         7PR5PmQj/UZeN/2Idm8fr7eIotH4ADfGpimyBbBo39BElcDhZBJ+4A76anEwd0Hbfz8G
-         189f/nj1fNrpL+oe1y5K28aZR+JlAsvz7ODBIdfc9MSwufhljBbN3mjZkLXFY1lh1+Bi
-         CYUJc1JlUK6rB23/TVfE0TqZa2Qbjx0w1HkjVYTpBnj/gP/k2dhxnJjS1GeMeamB3PUR
-         vsiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721976873; x=1722581673;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vosmNuXwDGa5uER4StfNppOhy6Nfa++wczEcYPAA5JM=;
-        b=fCghCQatEMPjAaj95eWc5wnoOClFRy9IO3HvahX+uGmpj+BkF0xFDcIwAB2xgxl1qJ
-         WCTmh1umAqt2pUg/j5hHY22r8dr2/AAfqvbBr6CHmTmQ1e/o+Kt9m5/oAEh5llQCG+GF
-         6+XMYYTitUDRV3HqNOzzvAoNKhEUniKkigbLqvIAVij3H8t4UHM45ewssDgp8JLolyyR
-         rVC9hyZFGUkGYkcPpHpmqefrRbJv5JGf3o5tDEBbiPtcrhM4juMxjM9aHiIq05PO3phH
-         vO6CV7cGg6T6I9VH7y5KNq4trCwm6RVxsUw6QEQJFjqOYLl8Y6j1fWbHHsSizt4J6zeI
-         30BA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ7Jvx4pAi7Z9XmSAsiS+yC0xTCpDrwd6M8xMDPiqZqyJrH8liT86Bih/5mvtTpE8EF+zkss9D8o6Dw3iM+fAtR0JKuFgTWANG
-X-Gm-Message-State: AOJu0Yze4yQoZyDTsh/ElYwpzGZM5qbxBAmFm25rhotn0hBIi46Y3VZz
-	DGXwGEmTF6UmXIjgos8fGfJWRpj4BP854e82qyUjy1+si4sgXQ3NVd4vDkh+SP4=
-X-Google-Smtp-Source: AGHT+IFvqEGR3ueBBVAdfzzkJU7zbNLpl8jB61m6dIoGAuArudrlpfJeL8+53GdYQOV+g87EkJTQOg==
-X-Received: by 2002:adf:fc02:0:b0:366:dee6:a9ea with SMTP id ffacd0b85a97d-369f6706b4fmr5308654f8f.26.1721976873080;
-        Thu, 25 Jul 2024 23:54:33 -0700 (PDT)
-Received: from [127.0.1.1] ([82.79.124.209])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428054b9196sm63610475e9.0.2024.07.25.23.54.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jul 2024 23:54:32 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Fri, 26 Jul 2024 09:54:13 +0300
-Subject: [PATCH] PCI: qcom: Disable ASPM L0s on x1e801800
+	s=arc-20240116; t=1721978542; c=relaxed/simple;
+	bh=2JbLD6jaW6x6BA/sR9/SQ6vyPM670m1NlSV5gm2q91A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ixbyGm43r0/dB/F/IiWjoeFVI7BvyeaEdAKQrrWIdb57F+c6qGyhSpjT9N00XsLrU1JfD3/8XGZkGZZms+S8eDBWBU0RaLiroYKFgxlbxIXBHshNpecyZymWu3jn/WS9wspTL/YIyo2tSWODDg4vNO2KozdZLXWZsM91OpzjonQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Pr1g6gD1; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from [10.101.195.16] (unknown [10.101.195.16])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id D663E41098;
+	Fri, 26 Jul 2024 07:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1721978537;
+	bh=8Hhfqs0Ybtcs3cAp4OwCwvCol+GXkHQnr9pfIzKwbCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=Pr1g6gD1ca9giDUyersdFNyzxGiqFa/p+R9OgVSjcUFyHwi0PIVK+Cw0l8rhhvDlW
+	 AkISOaKPfthwAQF8R0jo0vFNePaU4Vjx8Hw5JeJz57tG2vbCesW0jpISNHWfjIBJ3z
+	 DIXq8m0iJhHUTNzFdv7hKRqm+ojq27LkuV2lM3nohP5veCJfc8FXOxg+QHpDiKinHF
+	 HdUu7szzt0ZDjfSs3KhcdH7Or6BNCZHkwJ5UuCA42GSHsc8z9PKV302vk7WZCNPC/F
+	 pvd0bhfaV4Qf2JQ+DGc9riZgVBqmZiU4SSFgTmTv/8DGCrlnPjdcjMlZpOtEGUsjQj
+	 t+B18PpzGyaQQ==
+Message-ID: <db2d9152-7c33-4fbc-8ca5-d70ab9f7598d@canonical.com>
+Date: Fri, 26 Jul 2024 15:22:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240726-x1e80100-pcie-disable-l0s-v1-1-8291e133a534@linaro.org>
-X-B4-Tracking: v=1; b=H4sIABVIo2YC/x3MQQqDMBBG4avIrB2YpKaVXkVcxPinHRArGRBBv
- HuDy2/x3kmGojB6NycV7Gr6Wytc21D6xvUD1rmavPhOXj7w4dCLE+EtKXhWi9MCXsQ4dH30+eG
- eQKLabwVZj/s9jNf1B/gm59ZrAAAA
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1156; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=Qq4H0mLVvHzKi1FF3BapGpXq5XOG03c+lzd/i/KWfQc=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmo0gjBgI84I/NAlqP0KTWfjk+wlTkHrw4s5KRr
- 81/OaSgx/uJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZqNIIwAKCRAbX0TJAJUV
- VgK5D/sEZkl/obkFuoacPvy4n/0gPEU1TQMaQAPh3wiuTZNcJmPfbNFXxLp1i3nS+Jx0qGkSdKQ
- cmIto2wHrgGLgvdCC96RWxD0k8sH2uyFwMOMOX73bEMlFCu4tj6fChPzEhrY8Pyh4ERv4hh70Oz
- 7hACPde4bDhc2aPMnW4q52oub6Vq2d+pEvED+8FsCPS2wNN+fYzo0V4T+r/HeiYk7s30+Ik3KDA
- 5bTC9lqka8cgNc1pFsMKZoRb248le3OL9xTUvUkUmLsVFnqm4IaBHWQ9TTi5b5sFXfjZPs9w5Tw
- /KwSf1uo+7ztTQJQWjS/sWP6LHZjfkXEp26PprRukg4dFwl/ofu3jT6FNyYmEnTQQdMgKWYJgWi
- LmPpQb/qLMtDEQaezVCAaL9uy/Mm3QRFFN0gmStBvrIeNqo3Iv/mGd0Ie0OkTYa8aYdbzAasK30
- EjFC14CBg7541ubZFEEWkdkcenHd+DfURpOMIFLE1VfP6C4/zJuTO1SgPELPCLIS8BGvMVm30kv
- uRjjdyM4bSfuFxxaM9+RC2yxWomxOZ9Am7A+xbxWciaXAPGtYVZRaHBVmhIP9c7Xx0m/72m0SLQ
- 75GkNsLcfB6OH0j/lCwUpm1qqwp2QUwZ2MEKaSEK/fdo26HBdhp3F79WNWGG3Om75Vvcr5uaXTr
- aV8ZZ1eg7oiACrA==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] PCI: ASPM: Allow OS to configure ASPM where BIOS is
+ incapable of
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+ ilpo.jarvinen@linux.intel.com, david.e.box@linux.intel.com,
+ AceLan Kao <acelan.kao@canonical.com>
+References: <20240530085227.91168-1-kai.heng.feng@canonical.com>
+Content-Language: en-US
+From: Hui Wang <hui.wang@canonical.com>
+In-Reply-To: <20240530085227.91168-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Confirmed by Qualcomm that the L0s should be disabled on this platform
-as well. So use the sc8280xp config instead.
+I tested the patchset on a Dell machine (the testing result is positive).
 
-Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Without the patchset, the ASPM is disabled on the NVME controller:
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..04fe624b49c1 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1739,7 +1739,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
--	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
-+	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
- 	{ }
- };
- 
+         LnkCtl:    ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+             ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
 
----
-base-commit: 864b1099d16fc7e332c3ad7823058c65f890486c
-change-id: 20240725-x1e80100-pcie-disable-l0s-548a2f316eec
+After applying the patchset, the ASPM is enabled on the NVME controller:
 
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
+          LnkCtl:    ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
+             ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
 
+
+Regards,
+
+Hui.
+
+
+On 5/30/24 16:52, Kai-Heng Feng wrote:
+> Since commit f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM
+> and LTR"), ASPM is configured for NVMe devices enabled in VMD domain.
+>
+> However, that doesn't cover the case when FADT has ACPI_FADT_NO_ASPM
+> set.
+>
+> So add a new attribute to bypass aspm_disabled so OS can configure ASPM.
+>
+> Fixes: f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and LTR")
+> Link: https://lore.kernel.org/linux-pm/218aa81f-9c6-5929-578d-8dc15f83dd48@panix.com/
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>   drivers/pci/pcie/aspm.c | 8 ++++++--
+>   include/linux/pci.h     | 1 +
+>   2 files changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index cee2365e54b8..e719605857b1 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1416,8 +1416,12 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+>   	 * the _OSC method), we can't honor that request.
+>   	 */
+>   	if (aspm_disabled) {
+> -		pci_warn(pdev, "can't override BIOS ASPM; OS doesn't have ASPM control\n");
+> -		return -EPERM;
+> +		if (aspm_support_enabled && pdev->aspm_os_control)
+> +			pci_info(pdev, "BIOS can't program ASPM, let OS control it\n");
+> +		else {
+> +			pci_warn(pdev, "can't override BIOS ASPM; OS doesn't have ASPM control\n");
+> +			return -EPERM;
+> +		}
+>   	}
+>   
+>   	if (!locked)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index fb004fd4e889..58cbd4bea320 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -467,6 +467,7 @@ struct pci_dev {
+>   	unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
+>   	unsigned int	rom_bar_overlap:1;	/* ROM BAR disable broken */
+>   	unsigned int	rom_attr_enabled:1;	/* Display of ROM attribute enabled? */
+> +	unsigned int	aspm_os_control:1;	/* Display of ROM attribute enabled? */
+>   	pci_dev_flags_t dev_flags;
+>   	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+>   
 
