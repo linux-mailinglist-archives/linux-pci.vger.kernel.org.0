@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-10822-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A494193CD69
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 07:04:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F33393CD6C
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 07:08:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C852C1C2144E
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 05:04:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30D5A1F21E36
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 05:08:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8FE3816;
-	Fri, 26 Jul 2024 05:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986882B9B6;
+	Fri, 26 Jul 2024 05:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQ9jG1ss"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sqOA+kbS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560F739FDD
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 05:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BC8219EA
+	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 05:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721970271; cv=none; b=hCrg9ltleWrH/9d6AeB+XBMvJNEWBfO7zqJRndYJ67SSsUtoLk926tGhiWP0+Yuw/d8dVHUxwizsnV9mzQWm8JC1gQLAsm3KNpnT+Q5lMYcAGFz5HdHxjymCJQxA3q+25UJyP89E9beJwwzmuQ/j+CAt3VjvO5zoIOJN6Uq8pTQ=
+	t=1721970493; cv=none; b=egbsGxoo6GparYIP/88gwIJQr2OQ4yE3YF+HQyvrX2K8DS6Zf5CgpuBL6vTmQ6Etj+Aby2nDLN3tXu6hAtRQVOedGAMQjgEzcVdA1kWuW4b7zHIAckOA3xSAvLxhcQZ6HyFybQd9MQBhqv1lzm8ypY8JdnFmS8T3Rdl+hCt3Fto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721970271; c=relaxed/simple;
-	bh=OwJ7YP0+np/+RjQ1EZiGr6NgT/Kssknb5vb4mbYf2gc=;
+	s=arc-20240116; t=1721970493; c=relaxed/simple;
+	bh=vRgTjVmBkef0bZYyhRCaL2/45FsAz1WDLtETKuC747c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYdl08OYRzH/3MTmeFVnU55J7akNithYrKXuYkdf3KRr73+XEM5h+tTFCiCtBdGQKcayQRZz551Cq1yOxuCnyKg/5pt88jpDwY2KVtrltuyc4nJ1FEYt7h05C1qznlk4RpCJedLR6Rk8/UwrOrbVOsJVnmweAKo8LH9a5bVHAEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kQ9jG1ss; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=pzOA0wZ5FUTOn5TminVrG3WXvIBmBR72J0PpmoHZp7kOuDeeL4yB6LYnAeJU9Z0XEJ+FFJdMPHOnjLJa20rAHYyUBa6a1Qc3dXqzzgHThbKxYIpwrKyZ7fKUniipfwN1K1YRf+kaqB6/7lTVg1LujXmxPUvsf2XoKzIumD8tk6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sqOA+kbS; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fc56fd4de1so1867295ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 22:04:30 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70d2ae44790so452125b3a.2
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 22:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721970270; x=1722575070; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721970491; x=1722575291; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=jVzY9HXY97cczgYDJULvCCMUVKhL5nbeKKOuLjBsycM=;
-        b=kQ9jG1ssMq7a2T7ME3/Uf4MOc89P3kha6mJaFDTxOWfKbJW3VyhH3BhKwZ2fOPa9Si
-         n7XlU7j7SKmSyk8o2yKAcI5iplhPOTrdxs0H+Vp52HJ2ISENGJVjAGS3FOIDu5CplCeS
-         lqqJCPT9ZKLQmNr6WWqzwDDuR0YYjS43DS5dp4nXGpsCt/CLa0JsWxAeIdrjR5whi32k
-         TEVkjvyRr2q6u29avCgY57Io+uzraEf0+RmjzUsn+9LXwHwcxKJWdyDC1svqUZ14hUO8
-         I6hcsqQClEd/9hf2gYjBII3ek0fh1Z+FyYq4ji9fAO0eCENVTYhzhOc3mVLH/US3plT5
-         qjnQ==
+        bh=3rKwuSlqAIySxz11l4PWG6VIoo7RMKChxKPZ2GCuBEY=;
+        b=sqOA+kbSzpKrS1p78jLMNk5h5+k31RBR6LTEwrtkOqwcPbtodik8J5Ix+zIX44c08u
+         vk98RRhzB6td0SF7BauWYKCO6pFMsXikLDkeqNbrcpm2nHQH1Nb08wnqhOYkz53MJNXi
+         AW077w+9TScSVS6Xl+bFdbDVIEhbD9uEOH+VPFT7dUInGG5cuGZNE7NGaLTBntw1khdF
+         V+8NHheZUulpmjTcxiReF/VztZJOsg1kETTxf5SGhA2JQR9g+9HbQJCaRr8gBJf49VmA
+         +e0GkWO6L8/Zi7gg/XW9s74by5CHlD+stjf88n3EdI/y5wRV81tWP3SLOTjiZuk95Syc
+         gTlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721970270; x=1722575070;
+        d=1e100.net; s=20230601; t=1721970491; x=1722575291;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jVzY9HXY97cczgYDJULvCCMUVKhL5nbeKKOuLjBsycM=;
-        b=KhMeckFY7akVRiZWtkrf6zzmlttONT0hmxjEOnC1VdKQ7spMYCya8wGcVW04qEKKSP
-         rKZswqXCkCml8N3/Qv32kxiO0kXTF4Ho4r37IzoBGCr0yftrb4vWgxVL4usrD/zwaBCR
-         SjJRsSbxQKmEu5jwG6DMtnw57i+a8SMJVf6NAN0ro7Flm0wraArNM8hejtrjqfx3v8iW
-         DtMT/utm+8Ae45YVbXR3+ZXgl9WZMp8hcYWOz5kNtZ1imqsxEp7VwWyAdHbhqZBRJ0dl
-         VcG1PHx+ITP8DrEU4NG5rMEDnHlypju6Ovj3OElR9OjkwaNim3Ny/NG9fDhOTAop7tCy
-         sGvw==
-X-Gm-Message-State: AOJu0YxPEcdU2sUIRdqhV8oQl3ECrbrijqwvt0gVApDjlJAmRPaWDdXQ
-	CQI10pogqlVFsY+5XJ02nnwxDNcO8tiEiHduSb0VMWl/iehy8wcLs5B4StlgEQ==
-X-Google-Smtp-Source: AGHT+IEv9bnCjkKaaT/mVatGZz8Er2pi/NLYy/srtwCMJgijY/eyFSkIBNPHBAyhamVGhdhOUZ8Aqg==
-X-Received: by 2002:a17:903:1ce:b0:1fc:41c0:7a82 with SMTP id d9443c01a7336-1fed248c8c0mr82068615ad.0.1721970269543;
-        Thu, 25 Jul 2024 22:04:29 -0700 (PDT)
+        bh=3rKwuSlqAIySxz11l4PWG6VIoo7RMKChxKPZ2GCuBEY=;
+        b=MOsViBe466Enl0Cb/8FalSg66QzD185HjVaUvhLlgDds7Ry8iccfpJV4AEDrdQyM5G
+         WUOQz/vdtX0h/bAAk0ApnHpkfMJzHLl7WsVpnexHosJMhau8dv60g1/jZWMpDztFlDy7
+         EalWxiSe6+KnsWt09+fjXqxCchnDiRO0HS2TfFzD+ndAFxDM4bZILpKpEcVE3ErqKOj5
+         DvXQ7Zq+Dov9yoH7el5unQfVKj1167NoPg/5XIIhJL4p605S1ehMmct9GZ8YmXV+9hcE
+         ynUebXCi4ax39dQpVsSmQUcdwkVQru7gVMcTRflM+Ols4mYw1TwrIHgpLENiQpdDkv4W
+         eaWw==
+X-Gm-Message-State: AOJu0YzCGrbqdXqjT/pUF7khhVJKQh/Ya6UftBcXRnDPe7CWbqNxFCjv
+	Bxz8tsgtDfN5+AqGKf9W/csUMytTzDbbQXSQAJjrJeYZWoFgvraADXdEtG3Wgw==
+X-Google-Smtp-Source: AGHT+IFPb+cpIlmTJHSn/eJI9XIpxgM8cTQg0C4/esBr4+srXONC/O3SgQ8mdQoB+Y0Wokbd7ElKDg==
+X-Received: by 2002:a05:6a21:388a:b0:1c4:7138:ad1b with SMTP id adf61e73a8af0-1c47b4f896amr4158589637.54.1721970491165;
+        Thu, 25 Jul 2024 22:08:11 -0700 (PDT)
 Received: from thinkpad ([220.158.156.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7c88aa1sm22840805ad.37.2024.07.25.22.04.25
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7f99099sm22814675ad.247.2024.07.25.22.08.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jul 2024 22:04:29 -0700 (PDT)
-Date: Fri, 26 Jul 2024 10:34:23 +0530
+        Thu, 25 Jul 2024 22:08:10 -0700 (PDT)
+Date: Fri, 26 Jul 2024 10:38:05 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Jim Quinlan <james.quinlan@broadcom.com>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -83,13 +83,13 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 03/12] PCI: brcmstb: Use common error handling code in
- brcm_pcie_probe()
-Message-ID: <20240726050423.GB2628@thinkpad>
+Subject: Re: [PATCH v4 09/12] PCI: brcmstb: Refactor for chips with many
+ regular inbound BARs
+Message-ID: <20240726050805.GC2628@thinkpad>
 References: <20240716213131.6036-1-james.quinlan@broadcom.com>
- <20240716213131.6036-4-james.quinlan@broadcom.com>
- <20240725043111.GD2317@thinkpad>
- <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com>
+ <20240716213131.6036-10-james.quinlan@broadcom.com>
+ <20240725045318.GJ2317@thinkpad>
+ <CA+-6iNyQ09BESbdCwY1x4yUOLmAHKFBU3-9TO_ST+2GkOEEAng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,97 +99,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com>
+In-Reply-To: <CA+-6iNyQ09BESbdCwY1x4yUOLmAHKFBU3-9TO_ST+2GkOEEAng@mail.gmail.com>
 
-On Thu, Jul 25, 2024 at 03:45:59PM -0400, Jim Quinlan wrote:
-> On Thu, Jul 25, 2024 at 12:31 AM Manivannan Sadhasivam
+On Thu, Jul 25, 2024 at 04:29:56PM -0400, Jim Quinlan wrote:
+> On Thu, Jul 25, 2024 at 12:53 AM Manivannan Sadhasivam
 > <manivannan.sadhasivam@linaro.org> wrote:
 > >
-> > On Tue, Jul 16, 2024 at 05:31:18PM -0400, Jim Quinlan wrote:
-> > > o Move the clk_prepare_enable() below the resource allocations.
-> > > o Add a jump target (clk_out) so that a bit of exception handling can be
-> > >   better reused at the end of this function implementation.
+> > On Tue, Jul 16, 2024 at 05:31:24PM -0400, Jim Quinlan wrote:
+> > > Previously, our chips provided three inbound "BARS" with fixed purposes:
+> > > the first was for mapping SoC internal registers, the second was for
+> > > memory, and the third was for memory but with the endian swapped.  We
+> > > typically only used one of these BARs.
 > > >
-> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-> > > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-brcmstb.c | 29 +++++++++++++++------------
-> > >  1 file changed, 16 insertions(+), 13 deletions(-)
+> > > Complicating that BARs usage was the fact that the PCIe HW would do a
+> > > baroque internal mapping of system memory, and concatenate the regions of
+> > > multiple memory controllers.
 > > >
-> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > > index c08683febdd4..c257434edc08 100644
-> > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > @@ -1613,31 +1613,30 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> > > Newer chips such as the 7712 and Cable Modem SOCs have taken a step forward
+> > > and now provide multiple inbound BARs.  This works in concert with the
+> > > dma-ranges property, where each provided range becomes an inbound BAR.
 > > >
-> > >       pcie->ssc = of_property_read_bool(np, "brcm,enable-ssc");
+> > > This commit provides support for these new chips and their multiple
+> > > inbound BARs but also keeps the legacy support for the older system.
 > > >
-> > > -     ret = clk_prepare_enable(pcie->clk);
-> > > -     if (ret) {
-> > > -             dev_err(&pdev->dev, "could not enable clock\n");
-> > > -             return ret;
-> > > -     }
-> > >       pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-> > > -     if (IS_ERR(pcie->rescal)) {
-> > > -             clk_disable_unprepare(pcie->clk);
-> > > +     if (IS_ERR(pcie->rescal))
-> > >               return PTR_ERR(pcie->rescal);
-> > > -     }
-> > > +
-> > >       pcie->perst_reset = devm_reset_control_get_optional_exclusive(&pdev->dev, "perst");
-> > > -     if (IS_ERR(pcie->perst_reset)) {
-> > > -             clk_disable_unprepare(pcie->clk);
-> > > +     if (IS_ERR(pcie->perst_reset))
-> > >               return PTR_ERR(pcie->perst_reset);
-> > > +
-> > > +     ret = clk_prepare_enable(pcie->clk);
-> > > +     if (ret) {
-> > > +             dev_err(&pdev->dev, "could not enable clock\n");
-> > > +             return ret;
-> > >       }
-> > >
-> > >       ret = reset_control_reset(pcie->rescal);
-> > > -     if (ret)
-> > > +     if (ret) {
-> > >               dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-> > > +             goto clk_out;
 > >
-> > Please use a descriptive name for the err labels. Here this err path disables
-> > and unprepares the clk, so use 'clk_disable_unprepare'.
-> ack
-> >
-> > > +     }
-> > >
-> > >       ret = brcm_phy_start(pcie);
-> > >       if (ret) {
-> > >               reset_control_rearm(pcie->rescal);
-> > > -             clk_disable_unprepare(pcie->clk);
-> > > -             return ret;
-> > > +             goto clk_out;
-> > >       }
-> > >
-> > >       ret = brcm_pcie_setup(pcie);
-> > > @@ -1676,6 +1675,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> > >
-> > >       return 0;
-> > >
-> > > +clk_out:
-> > > +     clk_disable_unprepare(pcie->clk);
-> > > +     return ret;
-> > > +
-> >
-> > This is leaking the resources. Move this new label below 'fail'.
-> What resources is it leaking?  At "clk_out" the return value will be negative
-> and only managed resources have been allocated at that juncture.
+> > BAR belongs to the endpoints not to the RC. How can the RC have 'BARs'? RC can
+> > only map endpoint BARs to MEM region. What you are referring to is 'MEM region'
+> > maybe?
+> 
+> Agreed, it is confusing.  Long story short, the HW team gave the
+> inbound windows the label "BAR".   We will still have to use their
+> register names,
+
+Wow, such an inventive naming :)
+
+> e.g. PCIE_MISC_RC_BAR4_CONFIG_LO, but what I can do is change
+> for example "struct rc_bar" to "struct inbound_win" as well as make similar
+> changes to the code and function names.
+> 
+> Let's assume you will be okay with my plan above; if not, please tell
+> me what you would prefer.
 > 
 
-Right, but what about the err path below this one? If that path is taken, then
-clks won't be released, right?
-
-It is not a good design to return from each err labels. There should be only one
-return for all err labels at the end and those labels need to be in reverse
-order w.r.t the actual code.
+Yes please. Just keep BAR in the register name and use 'inbound_win' elsewhere.
+Even better, add a comment at the top of these register names to clarify that
+these refer to inbound windows.
 
 - Mani
 
