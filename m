@@ -1,301 +1,431 @@
-Return-Path: <linux-pci+bounces-10849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8057193D865
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 20:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C8B4593D876
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 20:43:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 973711C20F6A
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 18:35:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC6E71C23327
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 18:43:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA707383A1;
-	Fri, 26 Jul 2024 18:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2FF4433DF;
+	Fri, 26 Jul 2024 18:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FhPhHtSY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpJ7bFjw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C696E36B11
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 18:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4923F3FB83
+	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 18:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722018910; cv=none; b=IVElAwn3AZ2UFQOZbXIXI+tReRYdJXPyACRYLI6hWijAZJq2/rx2uIjuK6phfmYJiUmkNNWvxg7/TQPzBLvv59YM5bQmEIYIJAuvn0F9XctUpbUW2aDx1FmSdUsYxIrQdhAqnwhjX/Jgjfe5YBdGNk6KcvxCvGAvaJf+LBf2tgU=
+	t=1722019400; cv=none; b=KazJ4xHgoqHb0m8afUUh2koj43j1M43DGtRcn6fmv4Q94A71ILgyoKN23OIXvfSHuD1c5CMuUda06mkcOofvQQM3zqpzvR8/0lVfAPnzGFB9CSdPv+qb8M0avUO6igVqun7E1MS4oOsJHGge1RYbZPXtRODfPMBGhBhBzuyVC6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722018910; c=relaxed/simple;
-	bh=sxFmuOyn7EV1aoChNcg9W/9eqDTC7Nv10nHW3xutZ44=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=djlR0nImNeiEqQr3U2kX3Kan7xHryK0i2+5ofJHH/cGQKzC+jMvWz9+GzRB+/whe2Tp6Hlz3ffSIzlo0V7qy462WlqrnQe/M4rD0JHniWClMGXc/IfEDCIHtKXNvXGKUHPA76ju6x5bJUc6VMKONel1mqL1Aimi9vrKBBXBzlTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FhPhHtSY; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ed9b802ceso1998746e87.3
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 11:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1722018907; x=1722623707; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TQ5jegaQFQAgIZsrLjOuwY6D2R+7qXtsnI/EJcwFhKE=;
-        b=FhPhHtSYug7ebG7mis3raA9w6KibnwUePn0oO8pt8P+Jc8Z4AmTBeu2vxmqKDwpK/z
-         iitMh8lrthVsR38/wx08xjOmoYM3x+rgaWx8y6geM3ZONwNRVibEg3ZNaooCbjwGuez7
-         lO/GW/TM49l/8meRcv12g2QAGbqoA6gLw0Jqg=
+	s=arc-20240116; t=1722019400; c=relaxed/simple;
+	bh=XInYtRsO0ig8ZYzFvn+qr6hSi2uJ387yYJHAZojDWZU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KQkQtcgRW4/2HlwtDq3gxiWVwgtfWKA2onkR9j4qjrQ9GPhKt4MnAgHw/LzpJLOaFeMsBPOamyhM6NaboyFMw1DvSyzZjVfXa5tt9znLl8AJrGi6dwaBIC9hsIGF4/wdndC50STfH9mNdOf52/ytVUmF7PncwLBLQ+QSXGJUgVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dpJ7bFjw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722019397;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bcNO3jbhugBwlmCnyZwTsF0UWnAb4uSNNdMpqge9mGk=;
+	b=dpJ7bFjwUIyUk1/WgPq3nY9E580rkhHEJnCXKdbp6kannChZEsUQQLUJ/yVf/sR7pO52kP
+	f0wizZIkUjP1GHg51LEgoEPgtmtlPwXXrXGXryqBg9XmUjClvBEZ582Y/ekLX8MihLo8TJ
+	XDAuJvUMMOaNfK/y97tWaS+ItNaRs78=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-385-Z0gK8EAHMveUqAo3qo8DDg-1; Fri, 26 Jul 2024 14:43:15 -0400
+X-MC-Unique: Z0gK8EAHMveUqAo3qo8DDg-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5a2b8c44b48so501575a12.0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 11:43:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722018907; x=1722623707;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TQ5jegaQFQAgIZsrLjOuwY6D2R+7qXtsnI/EJcwFhKE=;
-        b=Py356Slxxjgq09D6vWOYZiOFe2ylxAT1AmS6JGUlxPGEsN61Lxhvkp902PTIXG23T9
-         6N+G9hhr6ztiWiDGMDBz4AUXDvnY3hi6Zvst24hzn/LCdcGQppAoB4DkKNI3L8oyhyeM
-         Mp6HYiWjxTeHwmm6wpWB223864Uftb2B6Hbh24RYfJeTnXMYdZTxvqQM7KKvQCDyvMi3
-         mZ8V8MS/eZdIHmWUV57fwyjtrqwL5xxcD2V5ncSLELe+a721WHjNy7wdYbqxug556AG2
-         myo0sLd86RTzvI2IEgbNSqH8GIN2QyR78RhS2X0Ue/zRS2kJgHFDmDBuIqdAL68UjUTf
-         wp4A==
-X-Gm-Message-State: AOJu0YxmvhGXEKI570/56NlD9eLBpYSNWLwjal3HPMge4lK+c1kKoZH0
-	bP2AUQJ+hC8CnaskaQWginLXENtBQaw+VqxMfeV7PP+HQsIolp8066pvzxXgcJ/LjGtTfeaHdvI
-	Efl4HegYAydRrP7rMv9xgJE1+/X9vv7ElmnRl
-X-Google-Smtp-Source: AGHT+IEbgJ14TM04t5gLjRe+UpYBB4YU4vQ+M/sK7yhVHORwhDBaUiHtDXx+lP6/YaX5tbkBl/fUpC0VCWpMQlYsIo0=
-X-Received: by 2002:ac2:548c:0:b0:52e:a721:497b with SMTP id
- 2adb3069b0e04-5309b2bcc59mr423378e87.38.1722018906590; Fri, 26 Jul 2024
- 11:35:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722019394; x=1722624194;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bcNO3jbhugBwlmCnyZwTsF0UWnAb4uSNNdMpqge9mGk=;
+        b=Zv9VfSeSf5Wq1Opmm27ph1eMlwJPyOqRXgFzrdQaoEZ+b6j6h6CWeW5rCK6/iGul+1
+         mXpARzmHEXxXU2U1jlwkKl3gNjGtaoFBXicueESPUYe0dtwW3FLE3VODhuZBzGtbV/L4
+         UHNAb/XZncydChXsV503sMsTIE/iGe+aDbuj7rvZae4Z0pHwgQuDABWleuso14iuVYi+
+         EvytsSOKPxoqVilgMGO5HiopdTrzZPBZC6UR7cvBqSs21hASBFJlJUibnXxuiLEwTs7O
+         +ajBzDpd6oB+rfuZxctqNV6jaeUN8LTfxGJCmdLF2huaRz78hBTAVzjQJaduc+feK2gc
+         ZsMQ==
+X-Gm-Message-State: AOJu0Yw0uT/MAjkZ39cocIzMyfKbzbkwNLLzr26Cngc0BZyXqNISpMDj
+	P3Yc27g2bsaBwxtNl84DgGsA2rr11xK9ug+wVWQOLX3b4hZwHQRmHbWyaA/7b7ogbS1iGqx1+rL
+	zzy7LFFQgRRqbJ3I7RZCXfkeDRsNFPkFHt3gJ1TWZEjQ9prhBJjaAEsU8R41l3/E9sg==
+X-Received: by 2002:a05:6402:2711:b0:5a1:1ce3:9b58 with SMTP id 4fb4d7f45d1cf-5ac2775629cmr2906981a12.0.1722019394284;
+        Fri, 26 Jul 2024 11:43:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFI8/kRV51i8KHNBfGqgH9nsoK9ivieO2uRjEp1YZSEZIQ69c9eUiRlLcZjjUEy6A7Ui5M5hQ==
+X-Received: by 2002:a05:6402:2711:b0:5a1:1ce3:9b58 with SMTP id 4fb4d7f45d1cf-5ac2775629cmr2906973a12.0.1722019393756;
+        Fri, 26 Jul 2024 11:43:13 -0700 (PDT)
+Received: from fedora.fritz.box (200116b82d4f5c00cbecb909b7d5f58c.dip.versatel-1u1.de. [2001:16b8:2d4f:5c00:cbec:b909:b7d5:f58c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ac631b0464sm2244168a12.4.2024.07.26.11.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jul 2024 11:43:13 -0700 (PDT)
+Message-ID: <ee44ea7ac760e73edad3f20b30b4d2fff66c1a85.camel@redhat.com>
+Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
+From: pstanner@redhat.com
+To: Damien Le Moal <dlemoal@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>,  Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 26 Jul 2024 20:43:12 +0200
+In-Reply-To: <6ce4c9f4-7c75-4451-8c6f-fe3d6a3dd913@kernel.org>
+References: <20240725120729.59788-2-pstanner@redhat.com>
+	 <6ce4c9f4-7c75-4451-8c6f-fe3d6a3dd913@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716213131.6036-1-james.quinlan@broadcom.com>
- <20240716213131.6036-4-james.quinlan@broadcom.com> <20240725043111.GD2317@thinkpad>
- <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com> <20240726050423.GB2628@thinkpad>
-In-Reply-To: <20240726050423.GB2628@thinkpad>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Fri, 26 Jul 2024 14:34:54 -0400
-Message-ID: <CA+-6iNzpfh7_rXUEXNjZLCLQKu-e_bYMAO6PdKaxqReJRKjuAQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/12] PCI: brcmstb: Use common error handling code in brcm_pcie_probe()
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, bcm-kernel-feedback-list@broadcom.com, 
-	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000042a774061e2ac52d"
 
---00000000000042a774061e2ac52d
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2024-07-26 at 09:19 +0900, Damien Le Moal wrote:
+> On 7/25/24 21:07, Philipp Stanner wrote:
+> > pci_intx() is a function that becomes managed if
+> > pcim_enable_device()
+> > has been called in advance. Commit 25216afc9db5 ("PCI: Add managed
+> > pcim_intx()") changed this behavior so that pci_intx() always leads
+> > to
+> > creation of a separate device resource for itself, whereas earlier,
+> > a
+> > shared resource was used for all PCI devres operations.
+> >=20
+> > Unfortunately, pci_intx() seems to be used in some drivers'
+> > remove()
+> > paths; in the managed case this causes a device resource to be
+> > created
+> > on driver detach.
+> >=20
+> > Fix the regression by only redirecting pci_intx() to its managed
+> > twin
+> > pcim_intx() if the pci_command changes.
+> >=20
+> > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
+> > Reported-by: Damien Le Moal <dlemoal@kernel.org>
+> > Closes:
+> > https://lore.kernel.org/all/b8f4ba97-84fc-4b7e-ba1a-99de2d9f0118@kernel=
+.org/
+> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > ---
+> > Alright, I reproduced this with QEMU as Damien described and this
+> > here
+> > fixes the issue on my side. Feedback welcome. Thank you very much,
+> > Damien.
+>=20
+> This works ans is cleaner that what I had :)
 
-On Fri, Jul 26, 2024 at 1:04=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Thu, Jul 25, 2024 at 03:45:59PM -0400, Jim Quinlan wrote:
-> > On Thu, Jul 25, 2024 at 12:31=E2=80=AFAM Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > On Tue, Jul 16, 2024 at 05:31:18PM -0400, Jim Quinlan wrote:
-> > > > o Move the clk_prepare_enable() below the resource allocations.
-> > > > o Add a jump target (clk_out) so that a bit of exception handling c=
-an be
-> > > >   better reused at the end of this function implementation.
-> > > >
-> > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-> > > > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> > > > ---
-> > > >  drivers/pci/controller/pcie-brcmstb.c | 29 +++++++++++++++--------=
-----
-> > > >  1 file changed, 16 insertions(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/co=
-ntroller/pcie-brcmstb.c
-> > > > index c08683febdd4..c257434edc08 100644
-> > > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > > @@ -1613,31 +1613,30 @@ static int brcm_pcie_probe(struct platform_=
-device *pdev)
-> > > >
-> > > >       pcie->ssc =3D of_property_read_bool(np, "brcm,enable-ssc");
-> > > >
-> > > > -     ret =3D clk_prepare_enable(pcie->clk);
-> > > > -     if (ret) {
-> > > > -             dev_err(&pdev->dev, "could not enable clock\n");
-> > > > -             return ret;
-> > > > -     }
-> > > >       pcie->rescal =3D devm_reset_control_get_optional_shared(&pdev=
-->dev, "rescal");
-> > > > -     if (IS_ERR(pcie->rescal)) {
-> > > > -             clk_disable_unprepare(pcie->clk);
-> > > > +     if (IS_ERR(pcie->rescal))
-> > > >               return PTR_ERR(pcie->rescal);
-> > > > -     }
-> > > > +
-> > > >       pcie->perst_reset =3D devm_reset_control_get_optional_exclusi=
-ve(&pdev->dev, "perst");
-> > > > -     if (IS_ERR(pcie->perst_reset)) {
-> > > > -             clk_disable_unprepare(pcie->clk);
-> > > > +     if (IS_ERR(pcie->perst_reset))
-> > > >               return PTR_ERR(pcie->perst_reset);
-> > > > +
-> > > > +     ret =3D clk_prepare_enable(pcie->clk);
-> > > > +     if (ret) {
-> > > > +             dev_err(&pdev->dev, "could not enable clock\n");
-> > > > +             return ret;
-> > > >       }
-> > > >
-> > > >       ret =3D reset_control_reset(pcie->rescal);
-> > > > -     if (ret)
-> > > > +     if (ret) {
-> > > >               dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-> > > > +             goto clk_out;
-> > >
-> > > Please use a descriptive name for the err labels. Here this err path =
-disables
-> > > and unprepares the clk, so use 'clk_disable_unprepare'.
-> > ack
-> > >
-> > > > +     }
-> > > >
-> > > >       ret =3D brcm_phy_start(pcie);
-> > > >       if (ret) {
-> > > >               reset_control_rearm(pcie->rescal);
-> > > > -             clk_disable_unprepare(pcie->clk);
-> > > > -             return ret;
-> > > > +             goto clk_out;
-> > > >       }
-> > > >
-> > > >       ret =3D brcm_pcie_setup(pcie);
-> > > > @@ -1676,6 +1675,10 @@ static int brcm_pcie_probe(struct platform_d=
-evice *pdev)
-> > > >
-> > > >       return 0;
-> > > >
-> > > > +clk_out:
-> > > > +     clk_disable_unprepare(pcie->clk);
-> > > > +     return ret;
-> > > > +
-> > >
-> > > This is leaking the resources. Move this new label below 'fail'.
-> > What resources is it leaking?  At "clk_out" the return value will be ne=
-gative
-> > and only managed resources have been allocated at that juncture.
-> >
->
-> Right, but what about the err path below this one? If that path is taken,=
- then
-> clks won't be released, right?
-No, that is the same situation.  The clock is originally allocated
-with "devm_clk_get_optional()", i.e. it is a managed resource.
- If the probe fails, and it does in both of these error paths,
-Linux deallocates the newly formed device structure and all of its resource=
-s.
-Perhaps I am missing something?
+The fundamental idea is mostly identical to yours =E2=80=93 you likely just
+didn't see it because your attention was directed towards the code in
+devres.c ;)
 
->
-> It is not a good design to return from each err labels. There should be o=
-nly one
-> return for all err labels at the end and those labels need to be in rever=
-se
-> order w.r.t the actual code.
+>=20
+> Tested-by: Damien Le Moal <dlemoal@kernel.org>
 
-Agreed.
+You might wanna ping Bjorn about that in case he didn't see.
 
-Regards,
-Jim Quinlan
-Broadcom STB/CM
->
-> - Mani
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+>=20
+> > It seems that this might yet again be the issue of drivers not
+> > being
+> > aware that pci_intx() might become managed, so they use it in their
+> > unwind path (rightfully so; there probably was no alternative back
+> > then).
+>=20
+> At least for the ahci driver with wich I found the issue, what is odd
+> is that
+> there is only a single call to pci_intx()=C2=A0
 
---00000000000042a774061e2ac52d
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+There is only a single _directly visible_ call :]
 
-MIIQbgYJKoZIhvcNAQcCoIIQXzCCEFsCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3FMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBU0wggQ1oAMCAQICDEjuN1Vuw+TT9V/ygzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE3MTNaFw0yNTA5MTAxMjE3MTNaMIGO
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC0ppbSBRdWlubGFuMSkwJwYJKoZIhvcNAQkB
-FhpqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-ggEBAKtQZbH0dDsCEixB9shqHxmN7R0Tywh2HUGagri/LzbKgXsvGH/LjKUjwFOQwFe4EIVds/0S
-hNqJNn6Z/DzcMdIAfbMJ7juijAJCzZSg8m164K+7ipfhk7SFmnv71spEVlo7tr41/DT2HvUCo93M
-7Hu+D3IWHBqIg9YYs3tZzxhxXKtJW6SH7jKRz1Y94pEYplGQLM+uuPCZaARbh+i0auVCQNnxgfQ/
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCenPxyWO7KXw8o3HXf0rLW38lulHTR
-R7MQuYYGfaK1JTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MjYxODM1MDdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEADpYiPqZzxeQNtLOkQs4POJdOUPKWmsjT7lEo3iuybcwCSX18
-ub/P3ulwfpcFsjLOT2ZINL3CNhTtQ+eVhaeJ6KCmeLqRifw6RxjQHHBhu89vnTnkbG1ejuuHOUru
-+tUYYYOv3mHTUtS2oKosfxVBnPSsp1XviMZxwJbvRgug8rTJWGEieSzyjuWQR/WhFsJNE/7hgncZ
-8hQ8iT7fK+I4XPgaA6gs/3jmevwn7/b1y8si9ObsYT9DxC/RYp6hpie9Q85CK9D1zaUZt6Zh2gnO
-VQWixktMNarJllj+0HPHM7gdGVdwuH2ul9LZn9nhyo+iDL9CykHUkDDQ8hxeqDFQsw==
---00000000000042a774061e2ac52d--
+> to *enable* intx, and that call is in
+> the probe path. With QEMU, this call is not even done as the qemu
+> AHCI support MSI.
+
+Hmm, MSI...
+
+>=20
+> Adding a WARN_ON(!enable) at the beginning of pci_inx(), we can see
+> that what
+> happens is that during device probe, we get this backtrace:
+>=20
+> [=C2=A0=C2=A0 34.658988] WARNING: CPU: 0 PID: 999 at drivers/pci/pci.c:44=
+80
+> pci_intx+0x7f/0xc0
+> [=C2=A0=C2=A0 34.660799] Modules linked in: ahci(+) rpcsec_gss_krb5 auth_=
+rpcgss
+> nfsv4
+> dns_resolver nfs lockd grace netfs]
+> [=C2=A0=C2=A0 34.673784] CPU: 0 UID: 0 PID: 999 Comm: modprobe Tainted:
+> G=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W
+> =C2=A06.10.0+ #1948
+> [=C2=A0=C2=A0 34.675961] Tainted: [W]=3DWARN
+> [=C2=A0=C2=A0 34.676891] Hardware name: QEMU Standard PC (Q35 + ICH9, 200=
+9),
+> BIOS
+> 1.16.3-2.fc40 04/01/2014
+> [=C2=A0=C2=A0 34.679197] RIP: 0010:pci_intx+0x7f/0xc0
+> [=C2=A0=C2=A0 34.680348] Code: b7 d2 be 04 00 00 00 48 89 df e8 0c 84 ff =
+ff 48
+> 8b 44 24 08
+> 65 48 2b 04 25 28 00 00 00 756
+> [=C2=A0=C2=A0 34.685015] RSP: 0018:ffffb60f40e2f7f0 EFLAGS: 00010246
+> [=C2=A0=C2=A0 34.686436] RAX: 0000000000000000 RBX: ffff9dbb81237000 RCX:
+> ffffb60f40e2f64c
+> [=C2=A0=C2=A0 34.688294] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+> ffff9dbb81237000
+> [=C2=A0=C2=A0 34.690120] RBP: 0000000000000000 R08: 0000000000000000 R09:
+> 0000000000000001
+> [=C2=A0=C2=A0 34.691986] R10: ffff9dbb88883538 R11: 0000000000000001 R12:
+> 0000000000000001
+> [=C2=A0=C2=A0 34.693687] R13: ffff9dbb812370c8 R14: ffff9dbb86eeaa00 R15:
+> 0000000000000000
+> [=C2=A0=C2=A0 34.695140] FS:=C2=A0 00007f9d81465740(0000) GS:ffff9dbcf7c0=
+0000(0000)
+> knlGS:0000000000000000
+> [=C2=A0=C2=A0 34.696884] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080=
+050033
+> [=C2=A0=C2=A0 34.698107] CR2: 00007ffc786ed8b8 CR3: 00000001088da000 CR4:
+> 0000000000350ef0
+> [=C2=A0=C2=A0 34.699562] Call Trace:
+> [=C2=A0=C2=A0 34.700215]=C2=A0 <TASK>
+> [=C2=A0=C2=A0 34.700802]=C2=A0 ? pci_intx+0x7f/0xc0
+> [=C2=A0=C2=A0 34.701607]=C2=A0 ? __warn.cold+0xa5/0x13c
+> [=C2=A0=C2=A0 34.702448]=C2=A0 ? pci_intx+0x7f/0xc0
+> [=C2=A0=C2=A0 34.703257]=C2=A0 ? report_bug+0xff/0x140
+> [=C2=A0=C2=A0 34.704105]=C2=A0 ? handle_bug+0x3a/0x70
+> [=C2=A0=C2=A0 34.704938]=C2=A0 ? exc_invalid_op+0x17/0x70
+> [=C2=A0=C2=A0 34.705826]=C2=A0 ? asm_exc_invalid_op+0x1a/0x20
+> [=C2=A0=C2=A0 34.706593]=C2=A0 ? pci_intx+0x7f/0xc0
+> [=C2=A0=C2=A0 34.707086]=C2=A0 msi_capability_init+0x35a/0x370
+> [=C2=A0=C2=A0 34.707723]=C2=A0 __pci_enable_msi_range+0x187/0x240
+> [=C2=A0=C2=A0 34.708356]=C2=A0 pci_alloc_irq_vectors_affinity+0xc4/0x110
+> [=C2=A0=C2=A0 34.709058]=C2=A0 ahci_init_one+0x6ec/0xcc0 [ahci]
+> [=C2=A0=C2=A0 34.709692]=C2=A0 ? __pm_runtime_resume+0x58/0x90
+> [=C2=A0=C2=A0 34.710311]=C2=A0 local_pci_probe+0x45/0x90
+> [=C2=A0=C2=A0 34.710865]=C2=A0 pci_device_probe+0xbb/0x230
+> [=C2=A0=C2=A0 34.711433]=C2=A0 really_probe+0xcc/0x350
+> [=C2=A0=C2=A0 34.711976]=C2=A0 ? pm_runtime_barrier+0x54/0x90
+> [=C2=A0=C2=A0 34.712569]=C2=A0 ? __pfx___driver_attach+0x10/0x10
+> [=C2=A0=C2=A0 34.713206]=C2=A0 __driver_probe_device+0x78/0x110
+> [=C2=A0=C2=A0 34.713837]=C2=A0 driver_probe_device+0x1f/0xa0
+> [=C2=A0=C2=A0 34.714427]=C2=A0 __driver_attach+0xbe/0x1d0
+> [=C2=A0=C2=A0 34.715001]=C2=A0 bus_for_each_dev+0x92/0xe0
+> [=C2=A0=C2=A0 34.715563]=C2=A0 bus_add_driver+0x115/0x200
+> [=C2=A0=C2=A0 34.716136]=C2=A0 driver_register+0x72/0xd0
+> [=C2=A0=C2=A0 34.716704]=C2=A0 ? __pfx_ahci_pci_driver_init+0x10/0x10 [ah=
+ci]
+> [=C2=A0=C2=A0 34.717457]=C2=A0 do_one_initcall+0x76/0x3a0
+> [=C2=A0=C2=A0 34.718036]=C2=A0 do_init_module+0x60/0x210
+> [=C2=A0=C2=A0 34.718616]=C2=A0 init_module_from_file+0x86/0xc0
+> [=C2=A0=C2=A0 34.719243]=C2=A0 idempotent_init_module+0x127/0x2c0
+> [=C2=A0=C2=A0 34.719913]=C2=A0 __x64_sys_finit_module+0x5e/0xb0
+> [=C2=A0=C2=A0 34.720546]=C2=A0 do_syscall_64+0x7d/0x160
+> [=C2=A0=C2=A0 34.721100]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.721695]=C2=A0 ? do_syscall_64+0x89/0x160
+> [=C2=A0=C2=A0 34.722258]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.722846]=C2=A0 ? do_sys_openat2+0x9c/0xe0
+> [=C2=A0=C2=A0 34.723421]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.724012]=C2=A0 ? syscall_exit_to_user_mode+0x64/0x1f0
+> [=C2=A0=C2=A0 34.724703]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.725293]=C2=A0 ? do_syscall_64+0x89/0x160
+> [=C2=A0=C2=A0 34.725883]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.726467]=C2=A0 ? syscall_exit_to_user_mode+0x64/0x1f0
+> [=C2=A0=C2=A0 34.727159]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.727764]=C2=A0 ? do_syscall_64+0x89/0x160
+> [=C2=A0=C2=A0 34.728341]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.728937]=C2=A0 ? exc_page_fault+0x6c/0x200
+> [=C2=A0=C2=A0 34.729511]=C2=A0 ? srso_return_thunk+0x5/0x5f
+> [=C2=A0=C2=A0 34.730109]=C2=A0 entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [=C2=A0=C2=A0 34.730837] RIP: 0033:0x7f9d80d281dd
+> [=C2=A0=C2=A0 34.731375] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 =
+0f 1e
+> fa 48 89 f8
+> 48 89 f7 48 89 d6 48 89 ca 4d8
+> [=C2=A0=C2=A0 34.733796] RSP: 002b:00007ffc786f0898 EFLAGS: 00000246 ORIG=
+_RAX:
+> 0000000000000139
+> [=C2=A0=C2=A0 34.734894] RAX: ffffffffffffffda RBX: 00005617347f09a0 RCX:
+> 00007f9d80d281dd
+> [=C2=A0=C2=A0 34.735850] RDX: 0000000000000000 RSI: 0000561715fe5e79 RDI:
+> 0000000000000003
+> [=C2=A0=C2=A0 34.736812] RBP: 00007ffc786f0950 R08: 00007f9d80df6b20 R09:
+> 00007ffc786f08e0
+> [=C2=A0=C2=A0 34.737769] R10: 00005617347f13e0 R11: 0000000000000246 R12:
+> 0000561715fe5e79
+> [=C2=A0=C2=A0 34.738725] R13: 0000000000040000 R14: 00005617347f8990 R15:
+> 00005617347f8b20
+> [=C2=A0=C2=A0 34.739695]=C2=A0 </TASK>
+> [=C2=A0=C2=A0 34.740075] ---[ end trace 0000000000000000 ]---
+>=20
+> So it is msi_capability_init() that is the problem: that function
+> calls
+> pci_intx_for_msi(dev, 0) which then calls pci_intx(dev, 0), thus
+> creating the
+> intx devres for the device despite the driver code not touching intx
+> at all.
+
+Nope, that is not the problem =E2=80=93 as you correctly point out below, t=
+hat
+device resource should be destroyed again.
+
+> The driver is fine ! It is MSI touching INTX that is messing things
+> up.
+
+Yes, many drivers are more or less innocent in regards with all of
+that. As Christoph rightfully pointed out, an API should never behave
+like that and do _implicit_ magic behind your back. That's the entire
+philosophy of the C Language.
+
+>=20
+> That said, I do not see that as an issue in itself. What I fail to
+> understand
+> though is why that intx devres is not deleted on device teardown. I
+> think this
+> may have something to do with the fact that pcim_intx() always does
+> "res->orig_intx =3D !enable;", that is, it assumes that if there is a
+> call to
+> pcim_intx(dev, 0), then it is because intx where enabled already,
+> which I do not
+> think is true for most drivers... So we endup with INTX being wrongly
+> enabled on
+> device teardown by pcim_intx_restore(), and because of that, the intx
+> resource
+> is not deleted ?
+
+Spoiler: The device resources that have initially been created do get
+deleted. Devres works as intended. The issue is that the forces of evil
+invoke pci_intx() through another path, hidden behind an API, through
+another devres callback.
+
+So the device resource never gets deleated because it is *created* on
+driver detach, when devres already ran.
+
+>=20
+> Re-enabling intx on teardown is wrong I think, but that still does
+> not explain
+> why that resource is not deleted. I fail to see why.
+
+You came very close to the truth ;)
+
+With some help from my favorite coworker I did some tracing today and
+found this when doing `rmmod ahci`:
+
+=3D> pci_intx
+=3D> pci_msi_shutdown
+=3D> pci_disable_msi
+=3D> devres_release_all
+=3D> device_unbind_cleanup
+=3D> device_release_driver_internal
+=3D> driver_detach
+=3D> bus_remove_driver
+=3D> pci_unregister_driver
+=3D> __do_sys_delete_module
+=3D> do_syscall_64
+=3D> entry_SYSCALL_64_after_hwframe
+
+The SYSCALL is my `rmmod`.
+
+As you can see, pci_intx() is invoked indirectly through
+pci_disable_msi() =E2=80=93 which gets invoked by devres, which is precisel=
+y
+one reason why you could not find the suspicious pci_intx() call in the
+ahci code base.
+
+Now the question is: Who set up that devres callback which indirectly
+calls pci_intx()?
+
+It is indeed MSI, here in msi/msi.c:
+
+static void pcim_msi_release(void *pcidev)
+{
+ struct pci_dev *dev =3D pcidev;
+
+ dev->is_msi_managed =3D false;
+ pci_free_irq_vectors(dev); // <-- calls pci_disable_msi(), which calls pci=
+_intx(), which re-registers yet another devres callback
+}
+
+/*
+ * Needs to be separate from pcim_release to prevent an ordering problem
+
+=3D=3D> Oh, here they even had a warning about that interacting with devres=
+ somehow...
+
+ * vs. msi_device_data_release() in the MSI core code.
+ */
+static int pcim_setup_msi_release(struct pci_dev *dev)
+{
+ int ret;
+
+ if (!pci_is_managed(dev) || dev->is_msi_managed)
+ return 0;
+
+ ret =3D devm_add_action(&dev->dev, pcim_msi_release, dev);
+ if (ret)
+ return ret;
+
+ dev->is_msi_managed =3D true;
+ return 0;
+}
+
+I don't know enough about AHCI to see where exactly it jumps into
+these, but a candidate would be:
+ * pci_enable_msi(), called among others in acard-ahci.c
+
+Another path is:
+   1. ahci_init_one() calls
+   2. ahci_init_msi() calls
+   3. pci_alloc_irq_vectors() calls
+   4. pci_alloc_irq_vectors_affinity() calls
+   5. __pci_enable_msi_range() OR __pci_enable_msix_range() call
+   6. pci_setup_msi_context() calls
+   7. pcim_setup_msi_release() which registers the callback to
+      pci_intx()
+
+
+Ha!
+
+I think I earned myself a Friday evening beer now 8-)
+
+
+Now the interesting question will be how the heck we're supposed to
+clean that up.
+
+Another interesting question is: Did that only work by coincidence
+during the last 15 years, or is it by design that the check in
+pci_intx():
+
+if (new !=3D pci_command)
+
+only evaluates to true if we are not in a detach path.
+
+If it were coincidence, it would not have caused faults as it did now
+with my recent work, because the old version did not allocate in
+pci_intx().
+
+But it could certainly have been racy and might run into a UAF since
+the old pci_intx() would have worked on memory that is also managed by
+devres, but has been registered at a different place. I guess that is
+what that comment in the MSI code quoted above is hinting at.
+
+
+Christoph indeed rightfully called it voodoo ^^
+
+
+Cheers,
+P.
+
 
