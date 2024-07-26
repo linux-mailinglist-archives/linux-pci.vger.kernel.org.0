@@ -1,86 +1,85 @@
-Return-Path: <linux-pci+bounces-10838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D27E93D296
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 13:56:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2469993D2AD
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 14:01:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D719E28243F
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 11:56:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB81C1F222DF
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 12:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E8A17A5AF;
-	Fri, 26 Jul 2024 11:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A1117BB1E;
+	Fri, 26 Jul 2024 12:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VVJkwlh0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HuZlufqB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FD9179658
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 11:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6FB17BB06
+	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 12:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721994980; cv=none; b=knuwPbU9KLFQbJnAWruRXNdQJfTXOm+hKpihnUMvUbd0ffDHGk1BVSv7aQGQz0u2l/SqBc9C+d+PF9zEcU2Q9sM4YwEzMqNHhYR6Ubz4PVwC6LoSr1UqwLXKtlFvbnk3mknybD0sWmEEbCEQGnczFa9ZS+fGFoMmGrUs/QaeTP4=
+	t=1721995238; cv=none; b=mRQurWM53kM/KzmIfT7jcu47czQ4n1/+HYnc21xwnS7+lJzOVfsgb+qMPykOSHqT34NaUBryKGOTE/fo/jZNOCwhMcoBSvrlcHxokDMILsz6JF8CZgOaacSnw980C7T4rkSC8uRX5OT2n3IiIjZRFYeOPxPMXyLnRFpnu+fUziU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721994980; c=relaxed/simple;
-	bh=U539Uq8Qs5gV5WNuvWf2uP4NoFxyJZ+3W+hmd5gZpKo=;
+	s=arc-20240116; t=1721995238; c=relaxed/simple;
+	bh=t3NW53ZkPecb65g7j6b0wRbYmlTbwnDzeBcUWc6cKiA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZbLsnpOn6YJIwxt+9qm/JnnglxreTMk2mZloGtPL8GkXZThI6GUDEokbBp/jh+0klhwgqVxckybFiPNhPLTnvJdrIKgTuIAtCBNsMPjq7CgK6oEp9+4YhJ6aC/EF8VGFsLaoDep66IN9nFpBm00Wa5nTQSFhRpzRI+DXKyBT5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VVJkwlh0; arc=none smtp.client-ip=209.85.214.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2jKKHNgshZlTmcNI4K4dZn9pfIKR+npOYefqM/kpIRvY16xBPvELaXmdSId+8bvJge6FRbn4DbtLLleuCOekKTpWtJT6opa9fSAmPQpimg3U4mPiUOZFEeXdKutfsvDX/uQxy73D4km7TFpSwrVYTKrf++Abd9k4JN7v0p+CAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HuZlufqB; arc=none smtp.client-ip=209.85.166.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fc66fc35f2so4051725ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 04:56:18 -0700 (PDT)
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-8046f65536dso50114539f.1
+        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 05:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721994978; x=1722599778; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721995236; x=1722600036; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=5y7YOEDfU4JS5fx5scmrf6hqB3/+VWCj5aY8K/rMjG8=;
-        b=VVJkwlh084nD+XdVnWTV2AvVpAxMPUr3jeo6roxIRLQLXOuCdDAMjaqAT2dtZO4vvZ
-         s1pco6Vf7rj9+R5UIe7Tx+3xt0dXG+vGmegieQTECnkrdyL+Q3xT9FQdTqo5lRe0j754
-         sUrfTxoAPEKoMw+q02EnIyVmjgALPqpurIZjaw57ozYtXmKV9D6M87WmsJLmx0GKwWun
-         bK4K/0z3gCotXSR91s9IrbO30Hg6fsQgfPYellozxXBP7mZWblDVevOsSdWFOKkdJvzJ
-         BecmTw/W4AcWQiT5Ce3WUFcjgWXIwcWAPb3SeoTcycuHuj3z4X2KS/nWrGut3WcUJi+u
-         XXXg==
+        bh=EPFRRW8AIlKuxP8Q7EZWY4b5/1cZ7kF3YNc7kBeCMNA=;
+        b=HuZlufqBGFtw5tz/HtAUy969P3ORfDrEf4aXeT6Lbmre3BuoKNM/hpUGZGKgpVNw2y
+         wklD9Bqi6jEGxv+g0qcBqbgAanr0FXJH/9i3Q9Dq4WJxDJHJIyvjEH84BZdOE8FCB0QJ
+         U9LyRQT74gisK1+hEEjRnxFkEzbG8jfyRCKoKGVlnyJstNkjY9Xda3YV+VVWfJHUS+my
+         4RlpQFpt4ClhjjBZ+O1no0SsOOJrZFDrMVMUMbdowyyZC4kXSKAUEWgt7UummJRyZpit
+         nelCah4mh/Pt4qomvrJCBNNKp2RUKibjW0mhO34WR3nMqn+knFzuggwpdrdBjGO84MHF
+         24gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721994978; x=1722599778;
+        d=1e100.net; s=20230601; t=1721995236; x=1722600036;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5y7YOEDfU4JS5fx5scmrf6hqB3/+VWCj5aY8K/rMjG8=;
-        b=sTLmtqFOMOH9rbmZpN98+GSkluN+d3oHLoeYK45M5nYHppG9kPMs5QcGwp2ky8gksx
-         DEqgmjBbTFflgkBtK6BdpRgH5ICLYo95VBmV+PxHYejCOsDBJ4ZLXUoAUBs+U19ZrIN+
-         puPAlhAP1hg6q+YE55Gj1DEoDoC3YWvuQzK2ajo0/YgJa+ck+0Ja//XWVJ7fZ5UuxvGe
-         Hvt6ryHHtEui8JlyRuHujZyLXImlnHgCMCydNZSk+9z0U8g6j63o0H+j9tos56RgVqjM
-         bsfmpxd9TvxwtXapGSTMbTXJxqQa+/3mIKU4Put2UAp8l/wNz02ilAwmVvbVvGFkOFLV
-         IXRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqFBhInhKTx7xPUPThwOV1QQcMST+BUvIUWD9FeVUXG1Aq6xB+XRnYqcLB1swIBFEMKpkXTHdP1YtT4aA5+tH5PpQaFrJTw6CQ
-X-Gm-Message-State: AOJu0YzLdjtT0IxeIamZNd/qeZyXZkROvez0A98Sz5Sa17qJmZndWIHj
-	AFb3gzjEMSwnwEas9TPptfk3DTY1FS1Mn01MFM3MU+Z6T7o0QkTAIVWsYMbycg==
-X-Google-Smtp-Source: AGHT+IEcrjndBXB2ZtsnkLons2ztafN8jRqGa2IoiheYYReC037fHhFd+JnG6qPN10f0KGDBK21ZYw==
-X-Received: by 2002:a17:902:e550:b0:1fc:5b81:729f with SMTP id d9443c01a7336-1fdd6e89195mr109783765ad.32.1721994977780;
-        Fri, 26 Jul 2024 04:56:17 -0700 (PDT)
+        bh=EPFRRW8AIlKuxP8Q7EZWY4b5/1cZ7kF3YNc7kBeCMNA=;
+        b=uXkf7+584W6rvD8cDHpyT505bPqM6zH/K5lCUvpFEbKTO+RcBkXGkgC3mHK3w1OClF
+         ih3MGUzlwff0BKUPQBfUwAe8xyXwUWy7AXyy1H2UKP81Cc86HYweBB3j6hgn3/oQtZG5
+         x/54pUt68V4Ha+hZvOWSc+r1NuRGwTv9XF0IkCOaIJmBaC3WO5Jzt7N/ygbyfAWjGMyW
+         XzwUsgC4irEH/fZjqVW6BlKzPxij7o3xsmJuNLqG72paXlLCCgeXmVc4wI5jlXPWyjfQ
+         gsqonOJJAbWEBLwUM+vkcFxH2/iPbtDrpR7XECqK1rB7zENZmkZc6Z/jX5mLjne8EEnN
+         pwUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9c2J0q7l8r/otmYnclDZXT8xZB7qhz+0AZLG7J42V1qdP2SVNCseEBT6mMn+7RWpgGXDIUqyjJ567YqDWdo8peRxuoRuLaQlO
+X-Gm-Message-State: AOJu0YxVRFPQizrB4a0bAH8mPmkw2SYV3LHhcZQ+Vc3AJENZvZ/4Ed2R
+	/M0Yar82wC8qNV9f1DBTQ4jgAA09DYzTYMiM9HvGMVVBbOlwyeIeuC2wNp/zXQ==
+X-Google-Smtp-Source: AGHT+IGF1Vy8+vSXqTOa6id6FOH6iP3wriAe5OvwBBfxhoWQnfblL/Mji+X+LUi4afRVv7DXfGZn1w==
+X-Received: by 2002:a05:6602:6d8e:b0:803:85ba:3cf9 with SMTP id ca18e2360f4ac-81f7e43ed89mr685325739f.10.1721995235684;
+        Fri, 26 Jul 2024 05:00:35 -0700 (PDT)
 Received: from thinkpad ([2409:40f4:201d:928a:9e8:14a5:7572:42b6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7fb67e4sm30343095ad.265.2024.07.26.04.56.12
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead72bd1esm2623180b3a.96.2024.07.26.05.00.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 04:56:17 -0700 (PDT)
-Date: Fri, 26 Jul 2024 17:26:09 +0530
+        Fri, 26 Jul 2024 05:00:35 -0700 (PDT)
+Date: Fri, 26 Jul 2024 17:30:29 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, vigneshr@ti.com, kishon@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-	ahalaney@redhat.com, srk@ti.com
-Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
-Message-ID: <20240726115609.GF2628@thinkpad>
-References: <20240724065048.285838-1-s-vadapalli@ti.com>
- <20240724161916.GG3349@thinkpad>
- <20240725042001.GC2317@thinkpad>
- <93e864fb-cf52-4cc0-84a0-d689dd829afb@ti.com>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Disable ASPM L0s on x1e801800
+Message-ID: <20240726120029.GH2628@thinkpad>
+References: <20240726-x1e80100-pcie-disable-l0s-v1-1-8291e133a534@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,85 +89,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <93e864fb-cf52-4cc0-84a0-d689dd829afb@ti.com>
+In-Reply-To: <20240726-x1e80100-pcie-disable-l0s-v1-1-8291e133a534@linaro.org>
 
-On Thu, Jul 25, 2024 at 01:50:16PM +0530, Siddharth Vadapalli wrote:
-> On Thu, Jul 25, 2024 at 09:50:01AM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Jul 24, 2024 at 09:49:21PM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote:
-> > > > Since the configuration of Legacy Interrupts (INTx) is not supported, set
-> > > > the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
-> > > >   of_irq_parse_pci: failed with rc=-22
-> > > > due to the absence of Legacy Interrupts in the device-tree.
-> > > > 
-> > > 
-> > > Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() will bail out
-> > > if 'map_irq' is set to NULL.
-> > > 
-> > 
-> > Hold on. The errono of of_irq_parse_pci() is not -ENOENT. So the INTx interrupts
-> > are described in DT? Then why are they not supported?
-> 
-> No, the INTx interrupts are not described in the DT. It is the pcieport
-> driver that is attempting to setup INTx via "of_irq_parse_and_map_pci()"
-> which is the .map_irq callback. The sequence of execution leading to the
-> error is as follows:
-> 
-> pcie_port_probe_service()
->   pci_device_probe()
->     pci_assign_irq()
->       hbrg->map_irq
->         of_pciof_irq_parse_and_map_pci()
-> 	  of_irq_parse_pci()
-> 	    of_irq_parse_raw()
-> 	      rc = -EINVAL
-> 	      ...
-> 	      [DEBUG] OF: of_irq_parse_raw: ipar=/bus@100000/interrupt-controller@1800000, size=3
-> 	      if (out_irq->args_count != intsize)
-> 	        goto fail
-> 		  return rc
-> 
-> The call to of_irq_parse_raw() results in the Interrupt-Parent for the
-> PCIe node in the device-tree being found via of_irq_find_parent(). The
-> Interrupt-Parent for the PCIe node for MSI happens to be GIC_ITS:
-> msi-map = <0x0 &gic_its 0x0 0x10000>;
-> and the parent of GIC_ITS is:
-> gic500: interrupt-controller@1800000
-> which has the following:
-> #interrupt-cells = <3>;
-> 
-> The "size=3" portion of the DEBUG print above corresponds to the
-> #interrupt-cells property above. Now, "out_irq->args_count" is set to 1
-> as __assumed__ by of_irq_parse_pci() and mentioned as a comment in that
-> function:
-> 	/*
-> 	 * Ok, we don't, time to have fun. Let's start by building up an
-> 	 * interrupt spec.  we assume #interrupt-cells is 1, which is standard
-> 	 * for PCI. If you do different, then don't use that routine.
-> 	 */
-> 
-> In of_irq_parse_pci(), since the PCIe-Port driver doesn't have a
-> device-tree node, the following doesn't apply:
->   dn = pci_device_to_OF_node(pdev);
-> and we skip to the __assumption__ above and proceed as explained in the
-> execution sequence above.
-> 
-> If the device-tree nodes for the INTx interrupts were present, the
-> "ipar" sequence to find the interrupt parent would be skipped and we
-> wouldn't end up with the -22 (-EINVAL) error code.
-> 
-> I hope this clarifies the relation between the -22 error code and the
-> missing device-tree nodes for INTx.
+On Fri, Jul 26, 2024 at 09:54:13AM +0300, Abel Vesa wrote:
+> Confirmed by Qualcomm that the L0s should be disabled on this platform
+> as well. So use the sc8280xp config instead.
 > 
 
-Thanks for explaining the logic. Still I think the logic is flawed. Because the
-parent (host bridge) doesn't have 'interrupt-map', which means INTx is not
-supported. But parsing one level up to the GIC node and not returning -ENOENT
-doesn't make sense to me.
+What are the implications of not disabling L0s? Is it not supported on this
+platform or the PHY sequence doesn't support L0s?
 
-Rob, what is your opinion on this behavior?
+Please add these info in commit message.
 
 - Mani
+
+> Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0180edf3310e..04fe624b49c1 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1739,7 +1739,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+> -	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
+>  	{ }
+>  };
+>  
+> 
+> ---
+> base-commit: 864b1099d16fc7e332c3ad7823058c65f890486c
+> change-id: 20240725-x1e80100-pcie-disable-l0s-548a2f316eec
+> 
+> Best regards,
+> -- 
+> Abel Vesa <abel.vesa@linaro.org>
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
