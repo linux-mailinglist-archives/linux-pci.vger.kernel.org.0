@@ -1,166 +1,198 @@
-Return-Path: <linux-pci+bounces-10821-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10822-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C62C93CCB9
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 04:27:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A494193CD69
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 07:04:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 266F0B21F08
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 02:27:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C852C1C2144E
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 05:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB7118E11;
-	Fri, 26 Jul 2024 02:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8FE3816;
+	Fri, 26 Jul 2024 05:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MzqyC5h/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQ9jG1ss"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19FA1BF3F;
-	Fri, 26 Jul 2024 02:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560F739FDD
+	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 05:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721960858; cv=none; b=ME1thCfHgNtc9S9RD7sj8xiVKhAzQGLj1hFpyOTY9v8+KAMhORUl4nZVqH6+BHfvwvy+rA/sQn2bOvUhUXcpTnMwkPzImqm1+OPdNPEYn5r3qsWfoePFtScFY0sPpeahHwdvEPjw759itFez+O2rwUysrIi+KaNfjUJgSwWV+yQ=
+	t=1721970271; cv=none; b=hCrg9ltleWrH/9d6AeB+XBMvJNEWBfO7zqJRndYJ67SSsUtoLk926tGhiWP0+Yuw/d8dVHUxwizsnV9mzQWm8JC1gQLAsm3KNpnT+Q5lMYcAGFz5HdHxjymCJQxA3q+25UJyP89E9beJwwzmuQ/j+CAt3VjvO5zoIOJN6Uq8pTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721960858; c=relaxed/simple;
-	bh=OkGGEReskTiFAIXNmGQ7mm5sTD6cKpXvGbExc4kIzQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QpH4I24y5HJfV4xvzZFLBtUQt1+/5ZH9qb9szpQrvpNa4+SQAUecS2wBT5aoqbbf2OoeVR5cWGVdjZq/IF8xsIc2yZbYHM+eYqAOiJFiXK8LezdHwlN55yfOgCHgRimqHPV7JH4LpVacfTyAXKXwstws8GgLhrb109HXrUH0MaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MzqyC5h/; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721960857; x=1753496857;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OkGGEReskTiFAIXNmGQ7mm5sTD6cKpXvGbExc4kIzQA=;
-  b=MzqyC5h/yl1rxRhjmMA43KR6xrrXvsrljrjATmbZL2Oq3AVXioErYZ0R
-   TePrRxkprXcv8FYx8I4kE7odmjNpHEVVJSnMWd4NJDNZ/YWCzQ4ie2O/H
-   K07Bawus8FJMA1dhbKuEZnEQvqkdepBxM9PVysWXyp24tdE3WPee6a3aB
-   Wg3USdnHQkz0zvZVd9TxgCyozWN5zyV76hJKpUPFcsfA3MGvxRPh1kBoX
-   j3AsuWHNl3Y9e5MTp5yzt98xx4wo8VkzqYFMOeFM62d89VoOC55awq2eV
-   LrJrEwbaTjENxKIK6ulnLFXswCKFsD3xOXWGv5M+NHtKXJGxiGV+iZuz8
-   Q==;
-X-CSE-ConnectionGUID: hUwd+BW0RDWoAkrjEAiVtg==
-X-CSE-MsgGUID: 0Ar1EanoQduDGp4iQ4Vsfg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="19433076"
-X-IronPort-AV: E=Sophos;i="6.09,237,1716274800"; 
-   d="scan'208";a="19433076"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 19:27:36 -0700
-X-CSE-ConnectionGUID: /b/Z+7GqQc+kjuf6j66h2Q==
-X-CSE-MsgGUID: xSRy6hZSS9msm+Xeyu684Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,237,1716274800"; 
-   d="scan'208";a="57946862"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.125.241.20]) ([10.125.241.20])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 19:27:34 -0700
-Message-ID: <58ca7ae5-2197-4fd5-afe6-73743cd45e8c@linux.intel.com>
-Date: Fri, 26 Jul 2024 10:27:31 +0800
+	s=arc-20240116; t=1721970271; c=relaxed/simple;
+	bh=OwJ7YP0+np/+RjQ1EZiGr6NgT/Kssknb5vb4mbYf2gc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYdl08OYRzH/3MTmeFVnU55J7akNithYrKXuYkdf3KRr73+XEM5h+tTFCiCtBdGQKcayQRZz551Cq1yOxuCnyKg/5pt88jpDwY2KVtrltuyc4nJ1FEYt7h05C1qznlk4RpCJedLR6Rk8/UwrOrbVOsJVnmweAKo8LH9a5bVHAEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kQ9jG1ss; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fc56fd4de1so1867295ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 22:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721970270; x=1722575070; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jVzY9HXY97cczgYDJULvCCMUVKhL5nbeKKOuLjBsycM=;
+        b=kQ9jG1ssMq7a2T7ME3/Uf4MOc89P3kha6mJaFDTxOWfKbJW3VyhH3BhKwZ2fOPa9Si
+         n7XlU7j7SKmSyk8o2yKAcI5iplhPOTrdxs0H+Vp52HJ2ISENGJVjAGS3FOIDu5CplCeS
+         lqqJCPT9ZKLQmNr6WWqzwDDuR0YYjS43DS5dp4nXGpsCt/CLa0JsWxAeIdrjR5whi32k
+         TEVkjvyRr2q6u29avCgY57Io+uzraEf0+RmjzUsn+9LXwHwcxKJWdyDC1svqUZ14hUO8
+         I6hcsqQClEd/9hf2gYjBII3ek0fh1Z+FyYq4ji9fAO0eCENVTYhzhOc3mVLH/US3plT5
+         qjnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721970270; x=1722575070;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jVzY9HXY97cczgYDJULvCCMUVKhL5nbeKKOuLjBsycM=;
+        b=KhMeckFY7akVRiZWtkrf6zzmlttONT0hmxjEOnC1VdKQ7spMYCya8wGcVW04qEKKSP
+         rKZswqXCkCml8N3/Qv32kxiO0kXTF4Ho4r37IzoBGCr0yftrb4vWgxVL4usrD/zwaBCR
+         SjJRsSbxQKmEu5jwG6DMtnw57i+a8SMJVf6NAN0ro7Flm0wraArNM8hejtrjqfx3v8iW
+         DtMT/utm+8Ae45YVbXR3+ZXgl9WZMp8hcYWOz5kNtZ1imqsxEp7VwWyAdHbhqZBRJ0dl
+         VcG1PHx+ITP8DrEU4NG5rMEDnHlypju6Ovj3OElR9OjkwaNim3Ny/NG9fDhOTAop7tCy
+         sGvw==
+X-Gm-Message-State: AOJu0YxPEcdU2sUIRdqhV8oQl3ECrbrijqwvt0gVApDjlJAmRPaWDdXQ
+	CQI10pogqlVFsY+5XJ02nnwxDNcO8tiEiHduSb0VMWl/iehy8wcLs5B4StlgEQ==
+X-Google-Smtp-Source: AGHT+IEv9bnCjkKaaT/mVatGZz8Er2pi/NLYy/srtwCMJgijY/eyFSkIBNPHBAyhamVGhdhOUZ8Aqg==
+X-Received: by 2002:a17:903:1ce:b0:1fc:41c0:7a82 with SMTP id d9443c01a7336-1fed248c8c0mr82068615ad.0.1721970269543;
+        Thu, 25 Jul 2024 22:04:29 -0700 (PDT)
+Received: from thinkpad ([220.158.156.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7c88aa1sm22840805ad.37.2024.07.25.22.04.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jul 2024 22:04:29 -0700 (PDT)
+Date: Fri, 26 Jul 2024 10:34:23 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/12] PCI: brcmstb: Use common error handling code in
+ brcm_pcie_probe()
+Message-ID: <20240726050423.GB2628@thinkpad>
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-4-james.quinlan@broadcom.com>
+ <20240725043111.GD2317@thinkpad>
+ <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: Enable io space 1k granularity for intel cpu root
- port
-To: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-Cc: helgaas@kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, lkp@intel.com, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev
-References: <2912551a-b4c6-4bd4-8c1c-22de7fd8fa20@linux.intel.com>
- <20240725074403.12928-1-zhoushengqing@ttyinfo.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20240725074403.12928-1-zhoushengqing@ttyinfo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com>
 
+On Thu, Jul 25, 2024 at 03:45:59PM -0400, Jim Quinlan wrote:
+> On Thu, Jul 25, 2024 at 12:31 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Tue, Jul 16, 2024 at 05:31:18PM -0400, Jim Quinlan wrote:
+> > > o Move the clk_prepare_enable() below the resource allocations.
+> > > o Add a jump target (clk_out) so that a bit of exception handling can be
+> > >   better reused at the end of this function implementation.
+> > >
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> > > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-brcmstb.c | 29 +++++++++++++++------------
+> > >  1 file changed, 16 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > > index c08683febdd4..c257434edc08 100644
+> > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > @@ -1613,31 +1613,30 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> > >
+> > >       pcie->ssc = of_property_read_bool(np, "brcm,enable-ssc");
+> > >
+> > > -     ret = clk_prepare_enable(pcie->clk);
+> > > -     if (ret) {
+> > > -             dev_err(&pdev->dev, "could not enable clock\n");
+> > > -             return ret;
+> > > -     }
+> > >       pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+> > > -     if (IS_ERR(pcie->rescal)) {
+> > > -             clk_disable_unprepare(pcie->clk);
+> > > +     if (IS_ERR(pcie->rescal))
+> > >               return PTR_ERR(pcie->rescal);
+> > > -     }
+> > > +
+> > >       pcie->perst_reset = devm_reset_control_get_optional_exclusive(&pdev->dev, "perst");
+> > > -     if (IS_ERR(pcie->perst_reset)) {
+> > > -             clk_disable_unprepare(pcie->clk);
+> > > +     if (IS_ERR(pcie->perst_reset))
+> > >               return PTR_ERR(pcie->perst_reset);
+> > > +
+> > > +     ret = clk_prepare_enable(pcie->clk);
+> > > +     if (ret) {
+> > > +             dev_err(&pdev->dev, "could not enable clock\n");
+> > > +             return ret;
+> > >       }
+> > >
+> > >       ret = reset_control_reset(pcie->rescal);
+> > > -     if (ret)
+> > > +     if (ret) {
+> > >               dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> > > +             goto clk_out;
+> >
+> > Please use a descriptive name for the err labels. Here this err path disables
+> > and unprepares the clk, so use 'clk_disable_unprepare'.
+> ack
+> >
+> > > +     }
+> > >
+> > >       ret = brcm_phy_start(pcie);
+> > >       if (ret) {
+> > >               reset_control_rearm(pcie->rescal);
+> > > -             clk_disable_unprepare(pcie->clk);
+> > > -             return ret;
+> > > +             goto clk_out;
+> > >       }
+> > >
+> > >       ret = brcm_pcie_setup(pcie);
+> > > @@ -1676,6 +1675,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> > >
+> > >       return 0;
+> > >
+> > > +clk_out:
+> > > +     clk_disable_unprepare(pcie->clk);
+> > > +     return ret;
+> > > +
+> >
+> > This is leaking the resources. Move this new label below 'fail'.
+> What resources is it leaking?  At "clk_out" the return value will be negative
+> and only managed resources have been allocated at that juncture.
+> 
 
-On 7/25/2024 3:44 PM, Zhou Shengqing wrote:
->> On 7/24/2024 2:35 PM, Zhou Shengqing wrote:
->>>>> Do you mean it shoud be like this?
->>>>>
->>>>> 	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
->>>>> 		if (d->bus->number == dev->bus->number) {
->>>>> 			pci_read_config_word(d, 0x1c0, &en1k);
->>>>> 			if (en1k & 0x4) {
->>>>> 				pci_info(dev, "1K I/O windows enabled per %s EN1K setting\n", pci_name(d));
->>>>> 				dev->io_window_1k = 1;
->>>>> 			}
->>>>> 		}
->>>>> 	}
->>>>>
->>>>>> 00:00.0 System peripheral: Intel Corporation Device 09a2 (rev 20)
->>>>>> 00:0f.0 PCI bridge: Intel Corporation Device 1bbf (rev 10) (prog-if 00 [Normal decode])
->>>>>>
->>>>>>      
->>>>>> 15:00.0 System peripheral: Intel Corporation Device 09a2 (rev 20)
->>>>>> 15:01.0 PCI bridge: Intel Corporation Device 352a (rev 04) (prog-if 00 [Normal decode])
->>>>>>
->>>>>> and if you check domain number only, they might sit on different bus, perhaps that
->>>>>> would make thing complex, could you make sure the VT-d is on the upstream bus of the
->>>>>> bridge ?
->>>>> I checked it on ICX SPR EMR GNR, VT-d is always on the same bus with root port,
->>>>> and VT-d device and function number is always 0.
->>>> Yes, every VT-d instance in the root complex and the root port integrated are
->>>> on the same bus. and VT-d is the first device of that bus.
->>>>
->>>> The EDS doesn't say if there is exception one of the VT-d instances in an
->>>> system its EN1K wasn't set while others were set, vice vesa. so I suggest
->>>> just check the VT-d and then set the root port's io_windows_1k of the same bus.
->>> But as Bjorn mentioned at July 12, 2024, 6:48 p.m.,
->>>
->>> "To be safe, "d" (the [8086:09a2] device) should be on the same bus as
->>> "dev" (with VMD, I think we get Root Ports *below* the VMD bridge,
->>> which would be a different bus, and they presumably are not influenced
->>> by the EN1K bit."
->>>
->>> When VMD enabled, just check bus number identical may lead to enable
->>> 1k io windows for VMD domain root port. E.g. 0000:80:00.0 is a
->>> VT-d(09a2). If VMD enabled, there might be a root port 10000:80:01.0 present.
->>> this code may lead to enable 10000:80:01.0 io_window_1k = 1.
->>> This is probably not expected.
->>>
->>> If I modify it like this,
->>>
->>> 	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
->> BTW, don't save letters to use single letter variable 'd', please use 'vtd_dev' or
->> something else to express the VT-d device.
-> Got it!
->
->>> 	---if (d->bus->number == dev->bus->number) {
->>> 	+++if (d->bus == dev->bus) {
->> What if their 'bus' are NULL, though it is almost impossible. :)
->>
->>> 			pci_read_config_word(d, 0x1c0, &en1k);
->>> 			if (en1k & 0x4) {
->>> 				pci_info(dev, "1K I/O windows enabled per %s EN1K setting\n", pci_name(d));
->>> 				dev->io_window_1k = 1;
->>> 			}
->>> 		}
->>> 	}
->>>       
->>> Can the situation mentioned above be avoided?
->> Yes, my understanding, as Bjorn pointed out root port extended from VMD
->> bridge not on the same bus as VT-d.
-> For the root port extended from VMD, should the 1k window be set
-> when BIOS setup EN1K knob enabled?
-> In my case, I think  EN1K should not apply to the VMD root port.
->
-> But what I'm confused about is, how can I reasonably exclude the VMD root port
-> in the code?
+Right, but what about the err path below this one? If that path is taken, then
+clks won't be released, right?
 
-VMD, if enabled, is EP, not RP. and its RPs are mapped into its own space, and
-sit at different buses as VT-d, no need to care about them if am correct.
+It is not a good design to return from each err labels. There should be only one
+return for all err labels at the end and those labels need to be in reverse
+order w.r.t the actual code.
 
-Thanks,
-Ethan
+- Mani
 
->>
->
+-- 
+மணிவண்ணன் சதாசிவம்
 
