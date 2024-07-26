@@ -1,137 +1,105 @@
-Return-Path: <linux-pci+bounces-10839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2469993D2AD
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 14:01:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9577E93D2C8
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 14:07:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB81C1F222DF
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 12:01:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AAB091C21241
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 12:07:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A1117BB1E;
-	Fri, 26 Jul 2024 12:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B7317B424;
+	Fri, 26 Jul 2024 12:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HuZlufqB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HlXXtBas"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6FB17BB06
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 12:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D0017B41B;
+	Fri, 26 Jul 2024 12:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721995238; cv=none; b=mRQurWM53kM/KzmIfT7jcu47czQ4n1/+HYnc21xwnS7+lJzOVfsgb+qMPykOSHqT34NaUBryKGOTE/fo/jZNOCwhMcoBSvrlcHxokDMILsz6JF8CZgOaacSnw980C7T4rkSC8uRX5OT2n3IiIjZRFYeOPxPMXyLnRFpnu+fUziU=
+	t=1721995641; cv=none; b=OPrsYVAMidjv20KMggJ4wAaxYODOCXjvEUobSetZkBr+rns3X2/QMANf/xRR2P+P7PjbcW+dmOqrDskavNgLwXFj3L43QNOPYjjLzqzyPsQFsh15SwrZnivKHuMi7RLjxcP1ZSJGo4JG96NDRYLKlLqVJrfPDZNxxxD17CaAXD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721995238; c=relaxed/simple;
-	bh=t3NW53ZkPecb65g7j6b0wRbYmlTbwnDzeBcUWc6cKiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2jKKHNgshZlTmcNI4K4dZn9pfIKR+npOYefqM/kpIRvY16xBPvELaXmdSId+8bvJge6FRbn4DbtLLleuCOekKTpWtJT6opa9fSAmPQpimg3U4mPiUOZFEeXdKutfsvDX/uQxy73D4km7TFpSwrVYTKrf++Abd9k4JN7v0p+CAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HuZlufqB; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-8046f65536dso50114539f.1
-        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 05:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721995236; x=1722600036; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EPFRRW8AIlKuxP8Q7EZWY4b5/1cZ7kF3YNc7kBeCMNA=;
-        b=HuZlufqBGFtw5tz/HtAUy969P3ORfDrEf4aXeT6Lbmre3BuoKNM/hpUGZGKgpVNw2y
-         wklD9Bqi6jEGxv+g0qcBqbgAanr0FXJH/9i3Q9Dq4WJxDJHJIyvjEH84BZdOE8FCB0QJ
-         U9LyRQT74gisK1+hEEjRnxFkEzbG8jfyRCKoKGVlnyJstNkjY9Xda3YV+VVWfJHUS+my
-         4RlpQFpt4ClhjjBZ+O1no0SsOOJrZFDrMVMUMbdowyyZC4kXSKAUEWgt7UummJRyZpit
-         nelCah4mh/Pt4qomvrJCBNNKp2RUKibjW0mhO34WR3nMqn+knFzuggwpdrdBjGO84MHF
-         24gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721995236; x=1722600036;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EPFRRW8AIlKuxP8Q7EZWY4b5/1cZ7kF3YNc7kBeCMNA=;
-        b=uXkf7+584W6rvD8cDHpyT505bPqM6zH/K5lCUvpFEbKTO+RcBkXGkgC3mHK3w1OClF
-         ih3MGUzlwff0BKUPQBfUwAe8xyXwUWy7AXyy1H2UKP81Cc86HYweBB3j6hgn3/oQtZG5
-         x/54pUt68V4Ha+hZvOWSc+r1NuRGwTv9XF0IkCOaIJmBaC3WO5Jzt7N/ygbyfAWjGMyW
-         XzwUsgC4irEH/fZjqVW6BlKzPxij7o3xsmJuNLqG72paXlLCCgeXmVc4wI5jlXPWyjfQ
-         gsqonOJJAbWEBLwUM+vkcFxH2/iPbtDrpR7XECqK1rB7zENZmkZc6Z/jX5mLjne8EEnN
-         pwUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9c2J0q7l8r/otmYnclDZXT8xZB7qhz+0AZLG7J42V1qdP2SVNCseEBT6mMn+7RWpgGXDIUqyjJ567YqDWdo8peRxuoRuLaQlO
-X-Gm-Message-State: AOJu0YxVRFPQizrB4a0bAH8mPmkw2SYV3LHhcZQ+Vc3AJENZvZ/4Ed2R
-	/M0Yar82wC8qNV9f1DBTQ4jgAA09DYzTYMiM9HvGMVVBbOlwyeIeuC2wNp/zXQ==
-X-Google-Smtp-Source: AGHT+IGF1Vy8+vSXqTOa6id6FOH6iP3wriAe5OvwBBfxhoWQnfblL/Mji+X+LUi4afRVv7DXfGZn1w==
-X-Received: by 2002:a05:6602:6d8e:b0:803:85ba:3cf9 with SMTP id ca18e2360f4ac-81f7e43ed89mr685325739f.10.1721995235684;
-        Fri, 26 Jul 2024 05:00:35 -0700 (PDT)
-Received: from thinkpad ([2409:40f4:201d:928a:9e8:14a5:7572:42b6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead72bd1esm2623180b3a.96.2024.07.26.05.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 05:00:35 -0700 (PDT)
-Date: Fri, 26 Jul 2024 17:30:29 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Disable ASPM L0s on x1e801800
-Message-ID: <20240726120029.GH2628@thinkpad>
-References: <20240726-x1e80100-pcie-disable-l0s-v1-1-8291e133a534@linaro.org>
+	s=arc-20240116; t=1721995641; c=relaxed/simple;
+	bh=bMl77tOSd51zz1D3u2B0loJWkNusxsZyBhr+5DsdKYo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f53uEKoKutcnOsyQ3WqCmam9UGacrEfBi7thW/Eshm98h/489cCtMa1HnynOB5aZzLtau3GAr6sabZLyOl3zsEjeu54uuI+AlszOq69OZGcrdCSo/vur5J5BFDbOZ6x/kjSNGTQVGDKNdozRiRg9/EIHoxxz5kN0VBTOp9gCSGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HlXXtBas; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46QC6x8S023189;
+	Fri, 26 Jul 2024 07:06:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1721995619;
+	bh=vsqNMysQUHjEuHaKrRwfGzQ5izr5DrtDTkWgNjf9rQM=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=HlXXtBasnbagEpJyIlKNevd0sziAo+ztMtRUo+DcgwTljrPKiYldlv2SdyJiQxZ5C
+	 Go912/l8kT6Kowf19mxVnyWnBanPp7E09EFve3Y87aTVzTUwLMosrnsa1GupuvnNQH
+	 yyYbJayAnYzRPXGI/wqD+fU3aOHRN59AI3Rfqxkk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46QC6w6K041746
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 26 Jul 2024 07:06:58 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 26
+ Jul 2024 07:06:58 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 26 Jul 2024 07:06:58 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46QC6vkp129002;
+	Fri, 26 Jul 2024 07:06:58 -0500
+Date: Fri, 26 Jul 2024 17:36:56 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <bhelgaas@google.com>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <vigneshr@ti.com>, <kishon@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <stable@vger.kernel.org>, <ahalaney@redhat.com>, <srk@ti.com>
+Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
+Message-ID: <465fbf0f-39b9-4ea6-be99-f726e275d099@ti.com>
+References: <20240724065048.285838-1-s-vadapalli@ti.com>
+ <20240724161916.GG3349@thinkpad>
+ <69f8c45c-29b4-4090-8034-8c5a19efa4f8@ti.com>
+ <20240725074708.GB2770@thinkpad>
+ <5f7328f8-eabc-4a8c-87a3-b27e2f6c0c1f@ti.com>
+ <4cb79826-5945-40d5-b52c-22959a5df41a@ti.com>
+ <20240726113008.GE2628@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240726-x1e80100-pcie-disable-l0s-v1-1-8291e133a534@linaro.org>
+In-Reply-To: <20240726113008.GE2628@thinkpad>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Jul 26, 2024 at 09:54:13AM +0300, Abel Vesa wrote:
-> Confirmed by Qualcomm that the L0s should be disabled on this platform
-> as well. So use the sc8280xp config instead.
+On Fri, Jul 26, 2024 at 05:00:08PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jul 26, 2024 at 03:54:17PM +0530, Siddharth Vadapalli wrote:
+
+[...]
+
+> > Mani,
+> > 
+> > I prefer setting 'swizzle_irq' to NULL as well unless you have an objection
+> > to it. Kindly let me know. I plan to post the v2 for this patch addressing
+> > Bjorn's feedback and collecting Andrew's "Tested-by" tag as well.
+> > 
 > 
+> Ok, fine with me.
 
-What are the implications of not disabling L0s? Is it not supported on this
-platform or the PHY sequence doesn't support L0s?
+Thank you for the confirmation.
 
-Please add these info in commit message.
-
-- Mani
-
-> Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 0180edf3310e..04fe624b49c1 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1739,7 +1739,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
-> -	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
-> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
->  	{ }
->  };
->  
-> 
-> ---
-> base-commit: 864b1099d16fc7e332c3ad7823058c65f890486c
-> change-id: 20240725-x1e80100-pcie-disable-l0s-548a2f316eec
-> 
-> Best regards,
-> -- 
-> Abel Vesa <abel.vesa@linaro.org>
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Siddharth.
 
