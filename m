@@ -1,150 +1,140 @@
-Return-Path: <linux-pci+bounces-10824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DEE293CDCE
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 07:50:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6F3D93CE59
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 08:54:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE6EF1F217D1
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 05:50:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 044A21C209AF
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 06:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C9CD155306;
-	Fri, 26 Jul 2024 05:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D036A176250;
+	Fri, 26 Jul 2024 06:54:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LkGSmevw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ygbbBDYe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8224154C10;
-	Fri, 26 Jul 2024 05:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CC7173332
+	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 06:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721973003; cv=none; b=FWp2kA90Jb9XwaYvK+hKimUIgCUJqoHhR5SLJ4V7z2f8XyY7WMzzNpQ0GTxfZ7r4PR1866M945ihAP+M/wtL5Zmtb76SZVlSsDj85glV6u/0434vnkxO84utboGZgGc9L2fNjPvNY41WWCe2GeNILEouSDbvITtczfGEnkopE3A=
+	t=1721976877; cv=none; b=lyaAVK4Ri6YD/kHkICdvSx2NzRU31yrz9LT5t1hgZNvuGsdnFDe48UMsMPkc/MZk56BQhhfQtfl5miD7c67lVhEWGU0K7tNOrX86DH1/2usI6VlV0nr/lbvTt7pvPrgZG9O2VFSlUNWDRP4JlNg6PZ6jUjrFfI+YQWyVLt4hZ1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721973003; c=relaxed/simple;
-	bh=1RSV4wLf77v5OYCZydF77u28YwpEi2UycxOjfiDnplk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUrDpts6YhcFeZpeRwcUCq8m5oZWk3mq3s+zJTojHh3C49GeagvfbmJH1BILOP36NCxG3Z3xDb/PpKyGlYP2lJyy0NX1U8vlfOO2+q3k+10I6od74SoxFAkh8PqfDaqK/c9R2qJhn5Yr+9pWVYBuKTZhDzPa9ETMFht+REtLuDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LkGSmevw; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46Q4USqh026158;
-	Fri, 26 Jul 2024 05:49:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=/pL0JuAfruxg3LvJnxZHYB3JtXD
-	cvdoee0Ej2lHdXwk=; b=LkGSmevwhm0aRHK+a9IJNrdqPoCeWWN1eHXuDHS7waf
-	GOcy3/xFTSbTwj69u2JTvZbqSpWKw92YuNTLaFfAEFVJSBEIDFE/JFlyvHCzRfqq
-	ncpROR4EKtzZNoXx+c6+Ijir3OhAifaABsQ3ejG+2iVWZglnNmUcu3pIf23gqDyQ
-	+0S6deZMi73ur/rZ8Ep9pAoNNXF71+TabWMDqssPyEghDm9TXJJhXQ2MhXbbmq0E
-	EHK/EoQeyYQaiCqc80haNKrtJzriNYZ8ND8NxzkbOC0H9kC9eawgKlUVYEa4njtf
-	HV1wrG3F2O5clA9cJxK1vCIz6OaZyul0rOZ0nFnYosw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40m3g009m6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jul 2024 05:49:46 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46Q5nkSE024488;
-	Fri, 26 Jul 2024 05:49:46 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40m3g009m3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jul 2024 05:49:46 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46Q52p6l018513;
-	Fri, 26 Jul 2024 05:49:45 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40kk3hmh6q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jul 2024 05:49:45 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46Q5ndtG50332122
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Jul 2024 05:49:41 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6BDC720043;
-	Fri, 26 Jul 2024 05:49:39 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 05D0120040;
-	Fri, 26 Jul 2024 05:49:36 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.124.219.245])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 26 Jul 2024 05:49:35 +0000 (GMT)
-Date: Fri, 26 Jul 2024 11:19:31 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lizhi Hou <lizhi.hou@amd.com>, Rob Herring <robh@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Kowshik Jois B S <kowsjois@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Message-ID: <dx32q3sa4oopk3fnm2zyeplotuq6gq3rmnbmaw3mo4q3lgjpe7@gvpgu4rdk4f4>
-Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>, 
-	Lizhi Hou <lizhi.hou@amd.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Saravana Kannan <saravanak@google.com>, Vaibhav Jain <vaibhav@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
-	Lukas Wunner <lukas@wunner.de>
-References: <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
- <20240725205537.GA858788@bhelgaas>
+	s=arc-20240116; t=1721976877; c=relaxed/simple;
+	bh=Qq4H0mLVvHzKi1FF3BapGpXq5XOG03c+lzd/i/KWfQc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EkMlqvStsr001Kj6xa8xXUeR5OHepM7zkK3wvcbohEtET5my9iW/KwmhaO4Pdj6RLj7Dnydw+CQ4j7NhWkMH+C8P5hABzN+EoepoUJCtNxYOFfSjXzWucrmiupQLU2KRdh6Rmo0c7a7+/CNI33SI0hU5XMonR5fKk34+2AbgRxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ygbbBDYe; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-368440b073bso1046786f8f.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jul 2024 23:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721976873; x=1722581673; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vosmNuXwDGa5uER4StfNppOhy6Nfa++wczEcYPAA5JM=;
+        b=ygbbBDYe6kS3ljaXv78V4V4XnM+fbuWxVEXDDQtrrZ+sPkrKkQ7i+eKYcZNYFEbb/q
+         ytnX+f2qFRkpOsaQb8R2sCuMbT4HatOR+h3nzMtBPblZ7sj4IjSse9PBfp3hz0BNJZGm
+         7PR5PmQj/UZeN/2Idm8fr7eIotH4ADfGpimyBbBo39BElcDhZBJ+4A76anEwd0Hbfz8G
+         189f/nj1fNrpL+oe1y5K28aZR+JlAsvz7ODBIdfc9MSwufhljBbN3mjZkLXFY1lh1+Bi
+         CYUJc1JlUK6rB23/TVfE0TqZa2Qbjx0w1HkjVYTpBnj/gP/k2dhxnJjS1GeMeamB3PUR
+         vsiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721976873; x=1722581673;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vosmNuXwDGa5uER4StfNppOhy6Nfa++wczEcYPAA5JM=;
+        b=fCghCQatEMPjAaj95eWc5wnoOClFRy9IO3HvahX+uGmpj+BkF0xFDcIwAB2xgxl1qJ
+         WCTmh1umAqt2pUg/j5hHY22r8dr2/AAfqvbBr6CHmTmQ1e/o+Kt9m5/oAEh5llQCG+GF
+         6+XMYYTitUDRV3HqNOzzvAoNKhEUniKkigbLqvIAVij3H8t4UHM45ewssDgp8JLolyyR
+         rVC9hyZFGUkGYkcPpHpmqefrRbJv5JGf3o5tDEBbiPtcrhM4juMxjM9aHiIq05PO3phH
+         vO6CV7cGg6T6I9VH7y5KNq4trCwm6RVxsUw6QEQJFjqOYLl8Y6j1fWbHHsSizt4J6zeI
+         30BA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ7Jvx4pAi7Z9XmSAsiS+yC0xTCpDrwd6M8xMDPiqZqyJrH8liT86Bih/5mvtTpE8EF+zkss9D8o6Dw3iM+fAtR0JKuFgTWANG
+X-Gm-Message-State: AOJu0Yze4yQoZyDTsh/ElYwpzGZM5qbxBAmFm25rhotn0hBIi46Y3VZz
+	DGXwGEmTF6UmXIjgos8fGfJWRpj4BP854e82qyUjy1+si4sgXQ3NVd4vDkh+SP4=
+X-Google-Smtp-Source: AGHT+IFvqEGR3ueBBVAdfzzkJU7zbNLpl8jB61m6dIoGAuArudrlpfJeL8+53GdYQOV+g87EkJTQOg==
+X-Received: by 2002:adf:fc02:0:b0:366:dee6:a9ea with SMTP id ffacd0b85a97d-369f6706b4fmr5308654f8f.26.1721976873080;
+        Thu, 25 Jul 2024 23:54:33 -0700 (PDT)
+Received: from [127.0.1.1] ([82.79.124.209])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428054b9196sm63610475e9.0.2024.07.25.23.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jul 2024 23:54:32 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Fri, 26 Jul 2024 09:54:13 +0300
+Subject: [PATCH] PCI: qcom: Disable ASPM L0s on x1e801800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240725205537.GA858788@bhelgaas>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hrWbadeSvvg3pthFD6dbebsK6nYnlI9I
-X-Proofpoint-ORIG-GUID: TUS0qhJ3TBEy9O6kA7xiLL7ZbyW2NSJ5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-26_02,2024-07-25_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- bulkscore=0 clxscore=1015 mlxlogscore=671 priorityscore=1501
- suspectscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2407260036
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240726-x1e80100-pcie-disable-l0s-v1-1-8291e133a534@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABVIo2YC/x3MQQqDMBBG4avIrB2YpKaVXkVcxPinHRArGRBBv
+ HuDy2/x3kmGojB6NycV7Gr6Wytc21D6xvUD1rmavPhOXj7w4dCLE+EtKXhWi9MCXsQ4dH30+eG
+ eQKLabwVZj/s9jNf1B/gm59ZrAAAA
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1156; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=Qq4H0mLVvHzKi1FF3BapGpXq5XOG03c+lzd/i/KWfQc=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmo0gjBgI84I/NAlqP0KTWfjk+wlTkHrw4s5KRr
+ 81/OaSgx/uJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZqNIIwAKCRAbX0TJAJUV
+ VgK5D/sEZkl/obkFuoacPvy4n/0gPEU1TQMaQAPh3wiuTZNcJmPfbNFXxLp1i3nS+Jx0qGkSdKQ
+ cmIto2wHrgGLgvdCC96RWxD0k8sH2uyFwMOMOX73bEMlFCu4tj6fChPzEhrY8Pyh4ERv4hh70Oz
+ 7hACPde4bDhc2aPMnW4q52oub6Vq2d+pEvED+8FsCPS2wNN+fYzo0V4T+r/HeiYk7s30+Ik3KDA
+ 5bTC9lqka8cgNc1pFsMKZoRb248le3OL9xTUvUkUmLsVFnqm4IaBHWQ9TTi5b5sFXfjZPs9w5Tw
+ /KwSf1uo+7ztTQJQWjS/sWP6LHZjfkXEp26PprRukg4dFwl/ofu3jT6FNyYmEnTQQdMgKWYJgWi
+ LmPpQb/qLMtDEQaezVCAaL9uy/Mm3QRFFN0gmStBvrIeNqo3Iv/mGd0Ie0OkTYa8aYdbzAasK30
+ EjFC14CBg7541ubZFEEWkdkcenHd+DfURpOMIFLE1VfP6C4/zJuTO1SgPELPCLIS8BGvMVm30kv
+ uRjjdyM4bSfuFxxaM9+RC2yxWomxOZ9Am7A+xbxWciaXAPGtYVZRaHBVmhIP9c7Xx0m/72m0SLQ
+ 75GkNsLcfB6OH0j/lCwUpm1qqwp2QUwZ2MEKaSEK/fdo26HBdhp3F79WNWGG3Om75Vvcr5uaXTr
+ aV8ZZ1eg7oiACrA==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Hi Bjorn,
+Confirmed by Qualcomm that the L0s should be disabled on this platform
+as well. So use the sc8280xp config instead.
 
-On 2024/07/25 03:55 PM, Bjorn Helgaas wrote:
-> On Thu, Jul 25, 2024 at 11:15:39PM +0530, Amit Machhiwal wrote:
-> > ...
-> > The crash in question is a critical issue that we would want to have
-> > a fix for soon. And while this is still being figured out, is it
-> > okay to go with the fix I proposed in the V1 of this patch?
-> 
-> v6.10 has been released already, and it will be a couple months before
-> the v6.11 release.
-> 
-> It looks like the regression is 407d1a51921e, which appeared in v6.6,
-> almost a year ago, so it's fairly old.
-> 
-> What target are you thinking about for the V1 patch?  I guess if we
-> add it as a v6.11 post-merge window fix, it might get backported to
-> stable kernels before v6.11?  
+Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, I think we can go ahead with taking V1 patch for v6.11 post-merge window to
-fix the current bug and ask Ubuntu to pick it while Lizhi's proposed patch goes
-under test and review.
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 0180edf3310e..04fe624b49c1 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1739,7 +1739,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+ 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+ 	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+-	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
++	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
+ 	{ }
+ };
+ 
 
-Thanks,
-Amit
+---
+base-commit: 864b1099d16fc7e332c3ad7823058c65f890486c
+change-id: 20240725-x1e80100-pcie-disable-l0s-548a2f316eec
+
+Best regards,
+-- 
+Abel Vesa <abel.vesa@linaro.org>
+
 
