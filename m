@@ -1,156 +1,126 @@
-Return-Path: <linux-pci+bounces-10828-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10829-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDBE793CEDB
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 09:30:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6552F93CF3A
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 10:05:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 780B4B22CD2
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 07:30:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E5FD1C20947
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jul 2024 08:05:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F108F176255;
-	Fri, 26 Jul 2024 07:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D12C178363;
+	Fri, 26 Jul 2024 08:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="apLvUBI7"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="RRFql49r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF2D176252
-	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 07:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F700176AD5
+	for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 08:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721979003; cv=none; b=NSrsJ8rtFEgV50ms8EBVNx/sdou8+DpUtUWyg7/55hEQ9bj+w4rUzSqpuQqvVBOBbM7WrIARRGMJTO7rdVXeZZA3fCZmJUi4TLBhX4XjgjBnNr7ZF1rErt5p0FT8N8FkOPoEwX/A3ghIaNYq79NpPJkSXFsZuBoC43VAbVEQhyc=
+	t=1721981097; cv=none; b=sLKo8GeSraEUWSDsrdgnTNQl/nUV0qc0bpVXnhB7KBB4gp0lLlXkJHMoh1DyIVJ9dZAGkI0uqu1+bOVFGNC82qgmO5KOJzWAFg6Oh3NlwAoju1QmHQpxpOPtM+elIUfgndZKhzdjk0CHFq/Ew62hLo2zphjFqRe/ErczmH0RAqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721979003; c=relaxed/simple;
-	bh=hpSo3OxJVkWPVomcn518gtcFv8PdP1Xf+q4k4GP9HzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rRqV9/UDX+csK/7SXjO8ggdQs0KvqkukreL9Zp7craDS3P1yGEyy+xMyMoOMzK5FLCvUa6y/WWBdCOGCP8XgzB/smfQ3jUoFUrJZVu3z+z/IWufZxRrP6oC2IZb0lXXs6irllNZ8F/Yru9+SUq0jTj6L/XPBKYTgn908FfaM5os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=apLvUBI7; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721979002; x=1753515002;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hpSo3OxJVkWPVomcn518gtcFv8PdP1Xf+q4k4GP9HzY=;
-  b=apLvUBI7FOCiX0qVntcKhKSdDHC7vF2EghTOwEisoT4dBWdly4bHKxDq
-   CtFbSVWtGNJ5K7OfoBPcqHIkUDPJ0d5uO5F0f9tzC7mX7/g7vNvBpsj4v
-   DEjWUqsPge6KfkGOoR+fU0iYRof64GyMrfwmKul8D52AXP+PE1g1Br9OY
-   zKT1eh3WgP2DxjtcpCuuyLhrHGVBdMZaHG2C6U52wM0clE5qMYpmRn3Pd
-   yrncWJhrqNF17ej8dtHwbPiEXkPYxjxU+gFOqmyt7QOncEEuKIsoXy9iK
-   UV6XJ79YuZKvAyTiIoMvpuu+a5WEbBDrGm1Z5/ADe/FkmJThNafoa7PAj
-   g==;
-X-CSE-ConnectionGUID: fxnvIp4ZSeqR+F3plMLnxw==
-X-CSE-MsgGUID: sbEddzBcQYuER3ZIMoLgcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="23517619"
-X-IronPort-AV: E=Sophos;i="6.09,238,1716274800"; 
-   d="scan'208";a="23517619"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2024 00:30:02 -0700
-X-CSE-ConnectionGUID: BeIgU2FaTN+UugkLS0u8Eg==
-X-CSE-MsgGUID: dpI2ZSEgS52q+/NYQX9LEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,238,1716274800"; 
-   d="scan'208";a="53260388"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.245.82.157])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2024 00:29:58 -0700
-Date: Fri, 26 Jul 2024 09:29:53 +0200
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, Christoph
- Hellwig <hch@lst.de>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Stuart Hayes <stuart.w.hayes@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Dan
- Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Keith Busch <kbusch@kernel.org>, Marek Behun
- <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap
- <rdunlap@infradead.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Blazej Kucman
- <blazej.kucman@intel.com>
-Subject: Re: [PATCH v4 0/3] PCIe Enclosure LED Management
-Message-ID: <20240726092953.000007fa@linux.intel.com>
-In-Reply-To: <20240725200819.GA856133@bhelgaas>
-References: <20240711083009.5580-1-mariusz.tkaczyk@linux.intel.com>
-	<20240725200819.GA856133@bhelgaas>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1721981097; c=relaxed/simple;
+	bh=TYWIXrzkXVZZkZdz/QrKdM2ifv+qqqsEjLpzrowXvkE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=PlKJKHKXyQFEqTIktV8GnRYC+LlO1k/6RYeaUBTB4RcbQEZIk70JKClK1mHXYEvV5scT5gjbJrYNWZuwTwjXffi7UQZ+PSZTynNutktc42TysdqHsTS13orqcaUNPQZ+WQEgrp3v5TLvlY6YIIunKj2IQlQphRXiUsAVNV/e24s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=RRFql49r; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fd78c165eeso3558995ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 26 Jul 2024 01:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1721981095; x=1722585895; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TYWIXrzkXVZZkZdz/QrKdM2ifv+qqqsEjLpzrowXvkE=;
+        b=RRFql49rFXFAqF4zve46pf3X2MbjA6hs/ZGlyUvjdtygs77+1bt3hfw56mkpKPGQ5s
+         x5enAJ55pJXC8AP4yewyxAPhq1E73CZ0gRBJujtYGYTrKSzoD1z/vV7YihNiVfLB4Raf
+         x/mFqnzjZWeG5LCHqWrTrHTxGmWJX2zQ+6SLUzI8pS3NMW0ev1n2yJWlv1EFhx+R7frw
+         Hh94j3Xq+2YPI40RYgqC7QvrliVj5RntASc97Eb7dLYLsSnVgjVR05WvOzCJ69IH0J+L
+         kEJ6c1vEfOH10Ysvg8LJV2Isi2qZI1jX0GqkmPwFnwoc9TOy5KWy4a6ZX4d6Xmx1WX24
+         EoMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721981095; x=1722585895;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TYWIXrzkXVZZkZdz/QrKdM2ifv+qqqsEjLpzrowXvkE=;
+        b=avZJ4lTptZcX63eJqP2y0UTpfmOyXtb7SXEdw4waWYzBH19KMn+9uF8T10JRKJV5YH
+         TTE08FLNGfy2+frsEKyVpTFqkoCyevkHUyjsvPuNOyghj6cB12BSLYcuCOccCGv4Bm68
+         NsJoKCjV+zPu276e8/FLgYXxTBDF4kGWNxf8VblAXlRfnYH+sxXOVXdwFnN2h7La+SYR
+         7JeLyiMO62OfqwewXZVxbQ8JnKGQVDmxIb5sv9xAGRzqTngdPJRPzzlAJhb+g+DvmkHM
+         eSul+9LBiOevOQ7+V6vDxG7OCjACu3RsEW7TSA9MeLzii4ovXqDeNMGse+hhFG6QzSOu
+         L6og==
+X-Forwarded-Encrypted: i=1; AJvYcCVcPm3JXwFZ0Yf7iSg91MMAOGkrAFLgjByiAGAGRnJrtaF9zBItQRdRrTYFXGSLHf1iPrGgSJR+6aumN7x1OwF7kU2RWTlFOif4
+X-Gm-Message-State: AOJu0YwefBURsivHsC90/jPn4MnZYbkToXFg7TncswMf3nJUEAA2JSG/
+	lIhm5qKqWQj9sKfBph9UOxrAZtJ8h6UjjC6sKfsZ4lWAW5+z/ij65cHST5oovpU=
+X-Google-Smtp-Source: AGHT+IEThCF8MbTWoYXIfCiu9y7Wa9LyskvBWhr5h/HfiuuzcdkiOmRFKdkB2FSE+F5WHhuVNo59Hw==
+X-Received: by 2002:a17:902:f685:b0:1fd:9fd8:1b2f with SMTP id d9443c01a7336-1fed90b8c7amr55949925ad.8.1721981094597;
+        Fri, 26 Jul 2024 01:04:54 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1fed7d37b9asm26186495ad.114.2024.07.26.01.04.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jul 2024 01:04:54 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: alex.williamson@redhat.com,
+	bhelgaas@google.com,
+	christophe.leroy@csgroup.eu,
+	davem@davemloft.net,
+	david.abdurachmanov@gmail.com,
+	edumazet@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	kuba@kernel.org,
+	leon@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lukas@wunner.de,
+	mahesh@linux.ibm.com,
+	mattc@purestorage.com,
+	mika.westerberg@linux.intel.com,
+	mpe@ellerman.id.au,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	oohall@gmail.com,
+	pabeni@redhat.com,
+	pali@kernel.org,
+	saeedm@nvidia.com,
+	sr@denx.de,
+	wilson@tuliptree.org
+Subject: PCI: Work around PCIe link training failures
+Date: Fri, 26 Jul 2024 02:04:46 -0600
+Message-Id: <20240726080446.12375-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240724191830.4807-1-mattc@purestorage.com>
+References: <20240724191830.4807-1-mattc@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jul 2024 15:08:19 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Mon, 22 Jul 2024, Maciej W. Rozycki wrote:
 
-> [+cc Blazej]
-> 
-> On Thu, Jul 11, 2024 at 10:30:06AM +0200, Mariusz Tkaczyk wrote:
-> > Patchset is named as PCIe Enclosure LED Management because it adds two
-> > features:
-> > - Native PCIe Enclosure Management (NPEM)
-> > - PCIe SSD Status LED Management (DSM)
-> > 
-> > Both are pattern oriented standards, they tell which "indication" should
-> > blink. It doesn't control physical LED or pattern visualization.
-> > 
-> > Overall, driver is simple but it was not simple to fit it into interfaces
-> > we have in kernel (We considered leds and enclosure interfaces). It reuses
-> > leds interface, this approach seems to be the best because:
-> > - leds are actively maintained, no new interface added.
-> > - leds do not require any extensions, enclosure needs to be adjusted first.
-> > 
-> > There are trade-offs:
-> > - "brightness" is the name of sysfs file to control led. It is not
-> >   natural to use brightness to set patterns, that is why multiple led
-> >   devices are created (one per indication);
-> > - Update of one led may affect other leds, led triggers may not work
-> >   as expected.  
-> 
-> I see the sysfs interface (/sys/.../leds/10000:02:05.0:enclosure:fail,
-> etc).  I assume this is intended for things like ledmon?  I think this
-> should be documented somewhere in Documentation/ABI/ if it's not
-> already there.
+> The main reason is it is believed that it is the downstream device
+> causing the issue, and obviously you can't fetch its ID if you can't
+> negotiate link so as to talk to it in the first place.
 
-Currently, ledmon is not familiar with the kernel LEDs class so I do not expect
-have it documented in kernel.
+Have had some more time to look into this issue. So, I think the problem
+with this change is that it is quite strict in its assumptions about what
+it means when a device fails to train, but in an environment where hot-plug
+is exercised frequently you are essentially bound have something interrupt
+the link training. In the first case where we caught this problem our test
+automation was doing some power cycle tortures on our endpoints. If you catch
+the right timing the link will be forced down to Gen1 forever without some other
+automation to recover you unless your device is the one single device in the
+allowlist which had the hardware bug in the first place.
 
-I will create Documentation/ABI/testing/sysfs-class-led-npem-dsm and resend it.
+I wonder if we can come up with some kind of alternative.
 
-> 
-> I think that sysfs interface is the same for NPEM and _DSM?
-
-Yes, in this implementation the backend (NPEM/DSM) is not presented to
-userspace.
-
-> 
-> I guess this is basically a newer, better, more generic approach to
-> the pciehp functionality added by 576243b3f9ea ("PCI: pciehp: Allow
-> exclusive userspace control of indicators") for NVMe behind VMD?
-
-So far I know, the motivation of NPEM was to provide enterprise enclosure led
-management for NVMes. NPEM capable hardware is replacing VMD blinking on Intel
-platforms as you expect.
-
-In ledmon, if both VMD and NPEM detected, NPEM has higher priority.
-Ledmon is able to manipulate NPEM directly now, we will switch it to kernel
-driver.
-
-> 
-> I suppose it's too late for any hope of unifying all these things in
-> terms of the user interface?  I guess we're stuck with maintaining
-> 576243b3f9ea regardless since users are using it, but the VMD stuff in
-> ledmon seems like kind of an ugly special case.
-
-Yes, we cannot abandon VMD blinking :(
-NPEM is a hardware feature, we cannot just switch to NPEM with new kernels,
-hardware must support it.
-
-Mariusz
+- Matt
 
