@@ -1,110 +1,143 @@
-Return-Path: <linux-pci+bounces-10892-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10893-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99CE493E7CA
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:16:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B29693E7CD
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:16:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBA341C21410
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:16:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5892B28647B
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8000014388F;
-	Sun, 28 Jul 2024 16:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCD91442F2;
+	Sun, 28 Jul 2024 16:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghYj+7ju"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzV9bB36"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B9641C64;
-	Sun, 28 Jul 2024 16:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117E143C7E;
+	Sun, 28 Jul 2024 16:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722182832; cv=none; b=JBP0lZ6J35QYPpyXUn9B8a6E+49N9tSYmvPhxdnKwOJa7OzzGSQEFCtfmUhI6Flggrli6LHDT6lBuc8Tgfp5bqmKVF41RwkYiNHW2AFpJNRpaOrDIFTJlg492fGnj7oPHr8j95v3J8u0gQ8pKWGZ1LDKz/G1MUepNd0H+wDcMGo=
+	t=1722182835; cv=none; b=Kz5ckfhyWSeec7LsHJs7HTx69Cljw40WlnPojEx4/T6KVZwCHiRNQtXQJ5w80KI/+fZPeROb6OFLebo6SCoN02uNFezQ2ZOhTrdpZSmRiM4mEzwLZaDSy4C2ZlrT+L5os1IzJHs1942+ZAXRx1dOkWpZ9TlBuO76D33yaD2OafI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722182832; c=relaxed/simple;
-	bh=cvZjx4tKvqb5Bi6SKxJps2POuHJes3dAJC2Sde15U1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dI8TCt77pZ8zxo4q3Phlv1d1L7LVU5z47GxgxWsR1WoKni1AW/cYq9obDphlN+xXyW3cVbsa/8f9/DjWtnSCeSi54q1+kRDcW8LFRsot5K1dU+QrqxEnfq0LstIYWYQfO9MWYotmJsIcbJ4beFDGPh8SdeZTEnKInzy5xIr/pow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghYj+7ju; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26202C116B1;
-	Sun, 28 Jul 2024 16:07:11 +0000 (UTC)
+	s=arc-20240116; t=1722182835; c=relaxed/simple;
+	bh=ZI5AWqvz0DyorLkp5KM0L+Vqbt9/YI6EUF0PAnQuU7I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IQxQFsHSALOnq3HMFAfxrnSW1n7iQqL9eqvW2kCsFnaYid/wSwzG8BfOB4wFK8CJs26tF+bm+nInL60mXsW8jiENjqEZPTJ+ifPKRmf7Auj56LuOTwj5IMTF2B3tVOcyGD46RD/P+9kKZn21yQCjS16TB0OkJSxx6Hg8b3K281w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzV9bB36; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD04C4AF13;
+	Sun, 28 Jul 2024 16:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722182832;
-	bh=cvZjx4tKvqb5Bi6SKxJps2POuHJes3dAJC2Sde15U1s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ghYj+7ju4IkM7hnH5N+52PhvcgVQ9QWZStuU9jdebHJaK4kb6MiVRhM+Yy2tRrmTL
-	 9N2wg6OJTZNlDHUNYQTEBb6OPgzeyHSe3drNblZkZ+fhiQuA3wAsg9BiBz3cV6m18v
-	 oaXPX7KMuiFSjidNPArfuoDds1psK7I2pBVhpAucDKQ7nAHqYrtVe3rlN9YjMi2t4M
-	 TAjg8ItOw1lq+5GbgRrGpWRtPlvhC2NF05ljIJW8jukPwFrwKKe7NhFC2FuKceg8k+
-	 QyKYrT/IIF6BVpYV6EOuYrUchPnzOIIsxjEzeC0V3C4IBUVCEb6Wqb1/Hh+/LHBJSl
-	 IF81zjCkHwoyw==
+	s=k20201202; t=1722182834;
+	bh=ZI5AWqvz0DyorLkp5KM0L+Vqbt9/YI6EUF0PAnQuU7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HzV9bB36UTtliBDdxwFQAe+RAuqocITYDuSLp8x+4dIxgWdgNJug6wGNf8dn7aN57
+	 q/98Pj8AF1GZM0PGrBcVv0axy+PFkGjGamRsqVplLnf+hDb96dxeGn/jISQAF16VfR
+	 NhHJSCoTBcmElYnlRB0pYth+HelKfxVFmyZsBiaJXtlV5b4vct/BQ8Mdk/ix4jXhYu
+	 P6gAL6LbfoBT30Vaw/uW6xlEKwNESMk0lbaJ8LJq4X7JvdKOPqYf9A14LnZTEbUcjp
+	 xT4D/Q+fMEtXDmTOStEX7oBd3pdys/jSR7JOyCWIWp7KjJY6+cn4916UqM889yl31j
+	 l7TESv2RnrOYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajit Khaparde <ajit.khaparde@broadcom.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Vidya Sagar <vidyas@nvidia.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Andy Gospodarek <gospo@broadcom.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 01/17] PCI: Add ACS quirk for Broadcom BCM5760X NIC
-Date: Sun, 28 Jul 2024 12:06:37 -0400
-Message-ID: <20240728160709.2052627-1-sashal@kernel.org>
+	will@kernel.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 02/17] PCI: Use preserve_config in place of pci_flags
+Date: Sun, 28 Jul 2024 12:06:38 -0400
+Message-ID: <20240728160709.2052627-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240728160709.2052627-1-sashal@kernel.org>
+References: <20240728160709.2052627-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.43
 Content-Transfer-Encoding: 8bit
 
-From: Ajit Khaparde <ajit.khaparde@broadcom.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 524e057b2d66b61f9b63b6db30467ab7b0bb4796 ]
+[ Upstream commit 7246a4520b4bf1494d7d030166a11b5226f6d508 ]
 
-The Broadcom BCM5760X NIC may be a multi-function device.
+Use preserve_config in place of checking for PCI_PROBE_ONLY flag to enable
+support for "linux,pci-probe-only" on a per host bridge basis.
 
-While it does not advertise an ACS capability, peer-to-peer transactions
-are not possible between the individual functions. So it is ok to treat
-them as fully isolated.
+This also obviates the use of adding PCI_REASSIGN_ALL_BUS flag if
+!PCI_PROBE_ONLY, as pci_assign_unassigned_root_bus_resources() takes care
+of reassigning the resources that are not already claimed.
 
-Add an ACS quirk for this device so the functions can be in independent
-IOMMU groups and attached individually to userspace applications using
-VFIO.
-
-[kwilczynski: commit log]
-Link: https://lore.kernel.org/linux-pci/20240510204228.73435-1-ajit.khaparde@broadcom.com
-Signed-off-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Link: https://lore.kernel.org/r/20240508174138.3630283-5-vidyas@nvidia.com
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/controller/pci-host-common.c |  4 ----
+ drivers/pci/probe.c                      | 20 +++++++++-----------
+ 2 files changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ec4277d7835b2..1bf1a83dabb93 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5092,6 +5092,10 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1750, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1751, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1752, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1760, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1761, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1762, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1763, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	/* Amazon Annapurna Labs */
- 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 6be3266cd7b5b..e2602e38ae452 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -73,10 +73,6 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 	if (IS_ERR(cfg))
+ 		return PTR_ERR(cfg);
+ 
+-	/* Do not reassign resources if probe only */
+-	if (!pci_has_flag(PCI_PROBE_ONLY))
+-		pci_add_flags(PCI_REASSIGN_ALL_BUS);
+-
+ 	bridge->sysdata = cfg;
+ 	bridge->ops = (struct pci_ops *)&ops->pci_ops;
+ 	bridge->msi_domain = true;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 43159965e09e9..217cf8a491eda 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -3080,20 +3080,18 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+ 
+ 	bus = bridge->bus;
+ 
++	/* If we must preserve the resource configuration, claim now */
++	if (bridge->preserve_config)
++		pci_bus_claim_resources(bus);
++
+ 	/*
+-	 * We insert PCI resources into the iomem_resource and
+-	 * ioport_resource trees in either pci_bus_claim_resources()
+-	 * or pci_bus_assign_resources().
++	 * Assign whatever was left unassigned. If we didn't claim above,
++	 * this will reassign everything.
+ 	 */
+-	if (pci_has_flag(PCI_PROBE_ONLY)) {
+-		pci_bus_claim_resources(bus);
+-	} else {
+-		pci_bus_size_bridges(bus);
+-		pci_bus_assign_resources(bus);
++	pci_assign_unassigned_root_bus_resources(bus);
+ 
+-		list_for_each_entry(child, &bus->children, node)
+-			pcie_bus_configure_settings(child);
+-	}
++	list_for_each_entry(child, &bus->children, node)
++		pcie_bus_configure_settings(child);
+ 
+ 	pci_bus_add_devices(bus);
+ 	return 0;
 -- 
 2.43.0
 
