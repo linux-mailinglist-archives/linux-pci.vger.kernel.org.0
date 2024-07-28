@@ -1,68 +1,61 @@
-Return-Path: <linux-pci+bounces-10901-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10902-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5887093E81F
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:23:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE8E393E822
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:23:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A6C81C2161A
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:23:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99A6D1F214C0
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE2CE15EFA1;
-	Sun, 28 Jul 2024 16:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F8D915F3F0;
+	Sun, 28 Jul 2024 16:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4iq8VWk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5z8uFBo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C9E15CD64;
-	Sun, 28 Jul 2024 16:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FC815F3E6;
+	Sun, 28 Jul 2024 16:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722182927; cv=none; b=qNVWByvNC5xpVBG5CZ+OYrycjOOcqpyHOtTT5OTHsl8yxyzkYd/9T+xMh33KJqWVZ8qOH2EznNcCTuBoRCk+ZvbP+yqIi23Ec3I+8aTEe4tZSEvMhBssKP/RT+uar+GSt0mbvFpltNzdY4aM7D/KIXrKQUSP+WuMyfH/QvwgF3o=
+	t=1722182930; cv=none; b=n8772/Dld3z4W4zdLdh8zAF4aPbp91q1Zlu60/FolX8vsoZmQsBA3ddsdWmis8S4mW6h7T0Fdv7VgTdZKKb1xlbQ1okPDqR7YHFbzwIcmYFzs7wPzGvqho2usrRdcKa6WHmNGGzUbG9PjhCbMYEyoflu4CwjCw1b8B7wRzE/Alo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722182927; c=relaxed/simple;
-	bh=Qw/bYbSn5T9RBGGRQLkodYDV5wO9LSEYBYAQ05LrB+A=;
+	s=arc-20240116; t=1722182930; c=relaxed/simple;
+	bh=AJmEPH33FrWe+f3WPuMEtoSocShVAGWSHROoTdVM6ac=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UUqKV+nIN6++QbTFLaXzJUR88oC4+A/U2Npbhee0prnXlplWC1JwqOiiWkjCQ/DCcUE2GFGShZRvoYcnMpmHt15wHcOqcaT3L7PZXQrtl+yTa++HFNUsRhYm8fl8bKGq7l7K+EAdvhATQpw1drAS2+Z+2iL25X/lZSL5YdrG5fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4iq8VWk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC37C116B1;
-	Sun, 28 Jul 2024 16:08:45 +0000 (UTC)
+	 MIME-Version:Content-Type; b=gVj8Lo2wRUlWw1/RI4mOzS8Y9BLoBGzdWEXnLdKdgwA5BR+GpvV9laAdUQ/0ZZjQiuT0tGtSKBzO/bmv90X1glnq4J6KBsMKsRszeCt9e9CdH5GAl+e4G6I0BGydz8ouLDyL6CRB6rO1jYZiWsK2Xmhs/eJ7LT0KJ4Ti0HwPs1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5z8uFBo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31622C32782;
+	Sun, 28 Jul 2024 16:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722182927;
-	bh=Qw/bYbSn5T9RBGGRQLkodYDV5wO9LSEYBYAQ05LrB+A=;
+	s=k20201202; t=1722182929;
+	bh=AJmEPH33FrWe+f3WPuMEtoSocShVAGWSHROoTdVM6ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e4iq8VWkRitctMrSTVMRJZDAVum13ULjks4hYU0lqZeIFV+OrJZG4shvxwBS1JeAG
-	 XZ+bdaNVH3VtvHZgsFzL1QOZMzgcgKfm4+oruyRSfqY/NYpOlHF+6GnX9GmumnlFcz
-	 GRBRoVhPg+ykDxeYXwfd3J14di+L1fgqwBpD9xAbFVeJPMn901l2ADbYhDu774aCme
-	 9BMe3orNUeDJheAPNQN3sntwUfZXrUpoShJsnKSUWqoYFcl8/msNC/n63IuZP/E4tx
-	 U0e0ouA7wnGDnUdkLVSWs924uCoLxhDo+pld2CxQOJzrlq/QDagseJq1U0NulxrZNP
-	 zGWHvJo8UJBkg==
+	b=e5z8uFBongTyklrSuNYdXHh6MW42v2E3sTHghYrCefElapNGhVfSkEHnsfmUy2Y+e
+	 j5BcFp+WvZBUtev8SlNfdH8e7oWHp0U73wa/B6Q8cb/xND8VjWlWb1Y03SuV5QcD56
+	 k6uk1o0DdincJLdKLm3UytGOt7MvIyPwEqzG2sNBh94O+W3jaHslTLwYT1YBgDtAeb
+	 aEDLOeKnFqRdp/lprOsSAQ319tt4dtZVV23gvB+OTXhd4j+bXCbvyXLI3EiZ6LLKEo
+	 fU3UftOcgWu+wZP8BNw5j30xbCAt0NIdZkH++mOnEc2yqqwFRKA25NbbyMeEpScmym
+	 Nq6L8NQyIu3xQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kishon Vijay Abraham I <kishon@ti.com>,
-	Achal Verma <a-verma1@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
+Cc: Jiwei Sun <sunjw10@lenovo.com>,
+	Adrian Huang <ahuang12@lenovo.com>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	lpieralisi@kernel.org,
 	kw@linux.com,
-	bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org,
-	cassel@kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	dlemoal@kernel.org,
-	amishin@t-argos.ru,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 12/15] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
-Date: Sun, 28 Jul 2024 12:07:56 -0400
-Message-ID: <20240728160813.2053107-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 13/15] PCI: vmd: Create domain symlink before pci_bus_add_devices()
+Date: Sun, 28 Jul 2024 12:07:57 -0400
+Message-ID: <20240728160813.2053107-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728160813.2053107-1-sashal@kernel.org>
 References: <20240728160813.2053107-1-sashal@kernel.org>
@@ -78,124 +71,111 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.102
 Content-Transfer-Encoding: 8bit
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Jiwei Sun <sunjw10@lenovo.com>
 
-[ Upstream commit 86f271f22bbb6391410a07e08d6ca3757fda01fa ]
+[ Upstream commit f24c9bfcd423e2b2bb0d198456412f614ec2030a ]
 
-Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
-(SPRZ452D_July 2018_Revised December 2019 [1]) mentions when an
-inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
-the bus may corrupt the packet payload and the corrupt data may
-cause associated applications or the processor to hang.
+The vmd driver creates a "domain" symlink in sysfs for each VMD bridge.
+Previously this symlink was created after pci_bus_add_devices() added
+devices below the VMD bridge and emitted udev events to announce them to
+userspace.
 
-The workaround for Errata #i2037 is to limit the maximum read
-request size and maximum payload size to 128 bytes. Add workaround
-for Errata #i2037 here.
+This led to a race between userspace consumers of the udev events and the
+kernel creation of the symlink.  One such consumer is mdadm, which
+assembles block devices into a RAID array, and for devices below a VMD
+bridge, mdadm depends on the "domain" symlink.
 
-The errata and workaround is applicable only to AM65x SR 1.0 and
-later versions of the silicon will have this fixed.
+If mdadm loses the race, it may be unable to assemble a RAID array, which
+may cause a boot failure or other issues, with complaints like this:
 
-[1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+  (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
 
-Link: https://lore.kernel.org/linux-pci/16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Achal Verma <a-verma1@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+This symptom prevents the OS from booting successfully.
+
+After a NVMe disk is probed/added by the nvme driver, udevd invokes mdadm
+to detect if there is a mdraid associated with this NVMe disk, and mdadm
+determines if a NVMe device is connected to a particular VMD domain by
+checking the "domain" symlink. For example:
+
+  Thread A                   Thread B             Thread mdadm
+  vmd_enable_domain
+    pci_bus_add_devices
+      __driver_probe_device
+       ...
+       work_on_cpu
+         schedule_work_on
+         : wakeup Thread B
+                             nvme_probe
+                             : wakeup scan_work
+                               to scan nvme disk
+                               and add nvme disk
+                               then wakeup udevd
+                                                  : udevd executes
+                                                    mdadm command
+         flush_work                               main
+         : wait for nvme_probe done                ...
+      __driver_probe_device                        find_driver_devices
+      : probe next nvme device                     : 1) Detect domain symlink
+      ...                                            2) Find domain symlink
+      ...                                               from vmd sysfs
+      ...                                            3) Domain symlink not
+      ...                                               created yet; failed
+    sysfs_create_link
+    : create domain symlink
+
+Create the VMD "domain" symlink before invoking pci_bus_add_devices() to
+avoid this race.
+
+Suggested-by: Adrian Huang <ahuang12@lenovo.com>
+Link: https://lore.kernel.org/linux-pci/20240605124844.24293-1-sjiwei@163.com
+Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+[bhelgaas: commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 44 ++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+ drivers/pci/controller/vmd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 7ecad72cff7e7..daf838caef33d 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -35,6 +35,11 @@
- #define PCIE_DEVICEID_SHIFT	16
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 5c35884c226e6..a1dd614bdc324 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -870,6 +870,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 		dev_set_msi_domain(&vmd->bus->dev,
+ 				   dev_get_msi_domain(&vmd->dev->dev));
  
- /* Application registers */
-+#define PID				0x000
-+#define RTL				GENMASK(15, 11)
-+#define RTL_SHIFT			11
-+#define AM6_PCI_PG1_RTL_VER		0x15
++	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
++			       "domain"), "Can't create symlink to domain\n");
 +
- #define CMD_STATUS			0x004
- #define LTSSM_EN_VAL		        BIT(0)
- #define OB_XLAT_EN_VAL		        BIT(1)
-@@ -105,6 +110,8 @@
+ 	vmd_acpi_begin();
  
- #define to_keystone_pcie(x)		dev_get_drvdata((x)->dev)
+ 	pci_scan_child_bus(vmd->bus);
+@@ -907,9 +910,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	pci_bus_add_devices(vmd->bus);
  
-+#define PCI_DEVICE_ID_TI_AM654X		0xb00c
-+
- struct ks_pcie_of_data {
- 	enum dw_pcie_device_mode mode;
- 	const struct dw_pcie_host_ops *host_ops;
-@@ -528,7 +535,11 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
- static void ks_pcie_quirk(struct pci_dev *dev)
- {
- 	struct pci_bus *bus = dev->bus;
-+	struct keystone_pcie *ks_pcie;
-+	struct device *bridge_dev;
- 	struct pci_dev *bridge;
-+	u32 val;
-+
- 	static const struct pci_device_id rc_pci_devids[] = {
- 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2HK),
- 		 .class = PCI_CLASS_BRIDGE_PCI_NORMAL, .class_mask = ~0, },
-@@ -540,6 +551,11 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- 		 .class = PCI_CLASS_BRIDGE_PCI_NORMAL, .class_mask = ~0, },
- 		{ 0, },
- 	};
-+	static const struct pci_device_id am6_pci_devids[] = {
-+		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654X),
-+		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
-+		{ 0, },
-+	};
- 
- 	if (pci_is_root_bus(bus))
- 		bridge = dev;
-@@ -561,10 +577,36 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- 	 */
- 	if (pci_match_id(rc_pci_devids, bridge)) {
- 		if (pcie_get_readrq(dev) > 256) {
--			dev_info(&dev->dev, "limiting MRRS to 256\n");
-+			dev_info(&dev->dev, "limiting MRRS to 256 bytes\n");
- 			pcie_set_readrq(dev, 256);
- 		}
- 	}
-+
-+	/*
-+	 * Memory transactions fail with PCI controller in AM654 PG1.0
-+	 * when MRRS is set to more than 128 bytes. Force the MRRS to
-+	 * 128 bytes in all downstream devices.
-+	 */
-+	if (pci_match_id(am6_pci_devids, bridge)) {
-+		bridge_dev = pci_get_host_bridge_device(dev);
-+		if (!bridge_dev && !bridge_dev->parent)
-+			return;
-+
-+		ks_pcie = dev_get_drvdata(bridge_dev->parent);
-+		if (!ks_pcie)
-+			return;
-+
-+		val = ks_pcie_app_readl(ks_pcie, PID);
-+		val &= RTL;
-+		val >>= RTL_SHIFT;
-+		if (val != AM6_PCI_PG1_RTL_VER)
-+			return;
-+
-+		if (pcie_get_readrq(dev) > 128) {
-+			dev_info(&dev->dev, "limiting MRRS to 128 bytes\n");
-+			pcie_set_readrq(dev, 128);
-+		}
-+	}
+ 	vmd_acpi_end();
+-
+-	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+-			       "domain"), "Can't create symlink to domain\n");
+ 	return 0;
  }
- DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
  
+@@ -985,8 +985,8 @@ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+ 
+-	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
++	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_remove_root_bus(vmd->bus);
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_detach_resources(vmd);
 -- 
 2.43.0
 
