@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-10890-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10891-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EB0C93E7BF
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:15:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BEFB93E7C2
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:15:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AE5B1F22AAF
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:15:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DC391C20C73
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A30313E032;
-	Sun, 28 Jul 2024 16:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E003140363;
+	Sun, 28 Jul 2024 16:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KaAkpKqR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFBMRjEU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E98513E021;
-	Sun, 28 Jul 2024 16:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB0A13FD83;
+	Sun, 28 Jul 2024 16:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722182807; cv=none; b=om0M5hl3R7AEs9HwMTLBwukbJ+6qFcsgVghdeIv1m3iNZonMEZO0814T5vW4k6eG2C2Q7ArSw1gWxImmXf5QUYxX12nLOHhZtlxs+IaYStndcjGe8k0aTC+W6r+r55mJdwbbsZu8AHrkSqoh6D5tgJVhskVmOpqRcdOOaWj+VS8=
+	t=1722182809; cv=none; b=h9ABxMCV5AciEkbg5rHz3jq99yXkvBZ0kK9cyZPsnatWLyuCiDAwDjub2MumDvAqlnYSPfSDK0O+5z1X06Fy37knKEdww1y9Bor9M1toiqXJUvR5Vkv1jBZkwkK9NsrseZSvuTPAtkWik4mgMoIQOSlsa0b90YbjF9TFamc7OJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722182807; c=relaxed/simple;
-	bh=nJWpP4D2fWvNv5iki6UL8RpY+6Z0N9MsvKDPnjVrleU=;
+	s=arc-20240116; t=1722182809; c=relaxed/simple;
+	bh=/lGRAITXtSpzwUJ7q32wIkYJ92q3Oyo0JBm3X1tuKws=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LRRCX6khB1kZi5LBZF/KTYPjRXwsDAVYdMZg6iHRNaJsS17s26XBvevbXn5Jc+X3Nb1MPsEQlgKZRa6C4hdy9yoIl9dHeZdS3MvvuZ9MppI7fdB6dDNmeS+ICksmW0xfBa6lDWvePZZJr+m+uho4uXBRhfHB982Toc3M1A4iWlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KaAkpKqR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 828AAC4AF0E;
-	Sun, 28 Jul 2024 16:06:45 +0000 (UTC)
+	 MIME-Version; b=Zv4Kuo9YqW6M5qLijB6gH1UatysxpvbkzkN374larfCBdUGcl/RFPk1iFhk8pBpd0qLk+oWXvoG9XwloNOhJ6nKamzeAwt23FMp2dMoQ6/fZHFoH/3s6GW2eubFa3K/E3x8lvMT2ATjtS1bv0HLqMAxZhT4+0FjXH+l4Gb2V6Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFBMRjEU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C83C4AF15;
+	Sun, 28 Jul 2024 16:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722182806;
-	bh=nJWpP4D2fWvNv5iki6UL8RpY+6Z0N9MsvKDPnjVrleU=;
+	s=k20201202; t=1722182808;
+	bh=/lGRAITXtSpzwUJ7q32wIkYJ92q3Oyo0JBm3X1tuKws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KaAkpKqR0rCJpSjDD1hmDSnJ+yATpzVVjWMLesbiBHRvuQIuC9iwoWdVZ6oaRKUCP
-	 74hB0LIPIn+dj3akJGEtYXxxsm1VoV9+JO33Kpg7e7khyOeo8vr02xh+V9O02EyrAw
-	 4wMuOuqnseYbSBFdTkwba3++pOHJQ5gUnqBhe3PCbwQYKrtWf+8XT0zLYbRedbn5Fr
-	 Vq+63sPZE0oic+H+AnuIzC7z8Wfb/r+7nS8ER5lES/u3UlpQekzwpwH8tlntSAJ0sv
-	 t7l2gybnK/cc+ZbUGhEXGKGbCwKcmgnnp7qXPioWWUQD4a8339/YKrJycwPWeOCRG9
-	 wuUjbAyyf8kPQ==
+	b=aFBMRjEUSLNYG02sVuiIQXKDsUdP5IwLbMWYgkNhsyx1XGLaz/VRGICcjECKD8Txn
+	 vq5R9ZqWEQEjp3oFsNHhrepdBly1iMZ4IJA6RIV4xptX8NEylF877YA2P9WYQMg0YJ
+	 /T1lRLnKy/GTs5s0pLHMFfwqBBK6o+3VLxhwbKc6va334O3YUgNqKTAgPWU2Ccld4v
+	 uMn2BWMvQjAqKs2Bcx7OK4y1ngyj3VhkHtksoEnN4ebB26tJmCXkV9vKgERCqTl9m6
+	 mid2nprYsMJd9p1kAJcRSgDd8LyrKJNEJwtbss5Iu5kLYkkAGH14hUq0pFs5Ap1Aso
+	 zKfz/jSY1ZUEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jiwei Sun <sunjw10@lenovo.com>,
-	Adrian Huang <ahuang12@lenovo.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Keith Busch <kbusch@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lpieralisi@kernel.org,
-	kw@linux.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 21/23] PCI: vmd: Create domain symlink before pci_bus_add_devices()
-Date: Sun, 28 Jul 2024 12:05:02 -0400
-Message-ID: <20240728160538.2051879-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.10 22/23] PCI: Add missing bridge lock to pci_bus_lock()
+Date: Sun, 28 Jul 2024 12:05:03 -0400
+Message-ID: <20240728160538.2051879-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728160538.2051879-1-sashal@kernel.org>
 References: <20240728160538.2051879-1-sashal@kernel.org>
@@ -65,117 +65,166 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.10.2
 Content-Transfer-Encoding: 8bit
 
-From: Jiwei Sun <sunjw10@lenovo.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit f24c9bfcd423e2b2bb0d198456412f614ec2030a ]
+[ Upstream commit a4e772898f8bf2e7e1cf661a12c60a5612c4afab ]
 
-The vmd driver creates a "domain" symlink in sysfs for each VMD bridge.
-Previously this symlink was created after pci_bus_add_devices() added
-devices below the VMD bridge and emitted udev events to announce them to
-userspace.
+One of the true positives that the cfg_access_lock lockdep effort
+identified is this sequence:
 
-This led to a race between userspace consumers of the udev events and the
-kernel creation of the symlink.  One such consumer is mdadm, which
-assembles block devices into a RAID array, and for devices below a VMD
-bridge, mdadm depends on the "domain" symlink.
+  WARNING: CPU: 14 PID: 1 at drivers/pci/pci.c:4886 pci_bridge_secondary_bus_reset+0x5d/0x70
+  RIP: 0010:pci_bridge_secondary_bus_reset+0x5d/0x70
+  Call Trace:
+   <TASK>
+   ? __warn+0x8c/0x190
+   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+   ? report_bug+0x1f8/0x200
+   ? handle_bug+0x3c/0x70
+   ? exc_invalid_op+0x18/0x70
+   ? asm_exc_invalid_op+0x1a/0x20
+   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+   pci_reset_bus+0x1d8/0x270
+   vmd_probe+0x778/0xa10
+   pci_device_probe+0x95/0x120
 
-If mdadm loses the race, it may be unable to assemble a RAID array, which
-may cause a boot failure or other issues, with complaints like this:
+Where pci_reset_bus() users are triggering unlocked secondary bus resets.
+Ironically pci_bus_reset(), several calls down from pci_reset_bus(), uses
+pci_bus_lock() before issuing the reset which locks everything *but* the
+bridge itself.
 
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
-  (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+For the same motivation as adding:
 
-This symptom prevents the OS from booting successfully.
+  bridge = pci_upstream_bridge(dev);
+  if (bridge)
+    pci_dev_lock(bridge);
 
-After a NVMe disk is probed/added by the nvme driver, udevd invokes mdadm
-to detect if there is a mdraid associated with this NVMe disk, and mdadm
-determines if a NVMe device is connected to a particular VMD domain by
-checking the "domain" symlink. For example:
+to pci_reset_function() for the "bus" and "cxl_bus" reset cases, add
+pci_dev_lock() for @bus->self to pci_bus_lock().
 
-  Thread A                   Thread B             Thread mdadm
-  vmd_enable_domain
-    pci_bus_add_devices
-      __driver_probe_device
-       ...
-       work_on_cpu
-         schedule_work_on
-         : wakeup Thread B
-                             nvme_probe
-                             : wakeup scan_work
-                               to scan nvme disk
-                               and add nvme disk
-                               then wakeup udevd
-                                                  : udevd executes
-                                                    mdadm command
-         flush_work                               main
-         : wait for nvme_probe done                ...
-      __driver_probe_device                        find_driver_devices
-      : probe next nvme device                     : 1) Detect domain symlink
-      ...                                            2) Find domain symlink
-      ...                                               from vmd sysfs
-      ...                                            3) Domain symlink not
-      ...                                               created yet; failed
-    sysfs_create_link
-    : create domain symlink
-
-Create the VMD "domain" symlink before invoking pci_bus_add_devices() to
-avoid this race.
-
-Suggested-by: Adrian Huang <ahuang12@lenovo.com>
-Link: https://lore.kernel.org/linux-pci/20240605124844.24293-1-sjiwei@163.com
-Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-[bhelgaas: commit log]
+Link: https://lore.kernel.org/r/171711747501.1628941.15217746952476635316.stgit@dwillia2-xfh.jf.intel.com
+Reported-by: Imre Deak <imre.deak@intel.com>
+Closes: http://lore.kernel.org/r/6657833b3b5ae_14984b29437@dwillia2-xfh.jf.intel.com.notmuch
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+[bhelgaas: squash in recursive locking deadlock fix from Keith Busch:
+https://lore.kernel.org/r/20240711193650.701834-1-kbusch@meta.com]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Kalle Valo <kvalo@kernel.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/vmd.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/pci.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 87b7856f375ab..4e7fe2e13cacb 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -925,6 +925,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 		dev_set_msi_domain(&vmd->bus->dev,
- 				   dev_get_msi_domain(&vmd->dev->dev));
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 35fb1f17a589c..bd3818c72ba29 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5441,10 +5441,12 @@ static void pci_bus_lock(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
  
-+	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
-+			       "domain"), "Can't create symlink to domain\n");
++	pci_dev_lock(bus->self);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
+ 	}
+ }
+ 
+@@ -5456,8 +5458,10 @@ static void pci_bus_unlock(struct pci_bus *bus)
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
++	pci_dev_unlock(bus->self);
+ }
+ 
+ /* Return 1 on successful lock, 0 on contention */
+@@ -5465,15 +5469,15 @@ static int pci_bus_trylock(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
+ 
++	if (!pci_dev_trylock(bus->self))
++		return 0;
 +
- 	vmd_acpi_begin();
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		if (!pci_dev_trylock(dev))
+-			goto unlock;
+ 		if (dev->subordinate) {
+-			if (!pci_bus_trylock(dev->subordinate)) {
+-				pci_dev_unlock(dev);
++			if (!pci_bus_trylock(dev->subordinate))
+ 				goto unlock;
+-			}
+-		}
++		} else if (!pci_dev_trylock(dev))
++			goto unlock;
+ 	}
+ 	return 1;
  
- 	pci_scan_child_bus(vmd->bus);
-@@ -964,9 +967,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	pci_bus_add_devices(vmd->bus);
- 
- 	vmd_acpi_end();
--
--	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
--			       "domain"), "Can't create symlink to domain\n");
+@@ -5481,8 +5485,10 @@ static int pci_bus_trylock(struct pci_bus *bus)
+ 	list_for_each_entry_continue_reverse(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
++	pci_dev_unlock(bus->self);
  	return 0;
  }
  
-@@ -1042,8 +1042,8 @@ static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+@@ -5514,9 +5520,10 @@ static void pci_slot_lock(struct pci_slot *slot)
+ 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+ 		if (!dev->slot || dev->slot != slot)
+ 			continue;
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
+ 	}
+ }
  
--	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
-+	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_remove_root_bus(vmd->bus);
- 	vmd_cleanup_srcu(vmd);
- 	vmd_detach_resources(vmd);
+@@ -5542,14 +5549,13 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+ 		if (!dev->slot || dev->slot != slot)
+ 			continue;
+-		if (!pci_dev_trylock(dev))
+-			goto unlock;
+ 		if (dev->subordinate) {
+ 			if (!pci_bus_trylock(dev->subordinate)) {
+ 				pci_dev_unlock(dev);
+ 				goto unlock;
+ 			}
+-		}
++		} else if (!pci_dev_trylock(dev))
++			goto unlock;
+ 	}
+ 	return 1;
+ 
+@@ -5560,7 +5566,8 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 			continue;
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
+ 	return 0;
+ }
 -- 
 2.43.0
 
