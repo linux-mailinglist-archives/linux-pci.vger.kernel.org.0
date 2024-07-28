@@ -1,69 +1,61 @@
-Return-Path: <linux-pci+bounces-10913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC0EF93E86C
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:30:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F2D5B93E870
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:30:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD68E1C2179F
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:30:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30F5E1C217BA
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:30:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA8C78C84;
-	Sun, 28 Jul 2024 16:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1127A18FDA0;
+	Sun, 28 Jul 2024 16:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jz98pBCS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQtUOLJg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D5278C83;
-	Sun, 28 Jul 2024 16:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD68118FC75;
+	Sun, 28 Jul 2024 16:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722183021; cv=none; b=eo3S7G6KHze1R839uMADmmfOjOr+/GIV7V2fq2cEvPG1utHrADQzUOhswM/bVGr0psC3OYFzunt2EVcQWhjg5rlY37UxcHrnimfDqym5zoy0NwWghPzkHI1vpmvj6PnOuUvYlSKAFENiXBsEN/5PDkVyb+ofbuugcHg+N2kl4b0=
+	t=1722183023; cv=none; b=JTVpKs2rvIBRIVp+Yi9Vd9kemqjgFtUTY25w2xRbbbjPtN27fhDpXVvPHQ14K8YHBQS2SingGl2H46dzLCE1g9QPL67pA1qfw98JXx1hv2rG05ECqc1ojwwHIpd03ryDaFZi7jsTvDSg5RKGmZHDGRUkyVMxhkBzq09G997TExE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722183021; c=relaxed/simple;
-	bh=tU52H7BCe2Zlu8UiMiakPjXPpYLklU+AGWhMSMLJwjo=;
+	s=arc-20240116; t=1722183023; c=relaxed/simple;
+	bh=Tmm0+c/HM30/oPp6K+2rmedqukAHJ1g5WNBOImBZFck=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i/gcXLcmNS//W3RhmfzSOywV0ulacXyqgao1DXMCBvzDGh9nM/gnuo67Km2+sFxADlyjWO5h0o9CG6hyjJJSyvNl9pT/Fd46qyu1HuAMD0hfnpS8kBZBrCXdlKzHMXTmA7ACwS5ORij3+27BzgZRL3wlsxjKnYLW7haYBs8Ur18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jz98pBCS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77ED1C116B1;
-	Sun, 28 Jul 2024 16:10:18 +0000 (UTC)
+	 MIME-Version; b=e6zf/Zv/gD65Qs/M+3e6klEwUH5gBieZP5a769dGyP+bviHoHTsRQ08MaIgm/pT2ai5Chu0XjD0Foq3fO7FGZCr+PPsFGjGK96eQbTKe1rM/At+TKL4CdaayojjYeahOgADPceRjTNZ4KPnwfDB3qGyU9wNbk3ddXCqP34cC2h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQtUOLJg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57546C4AF0E;
+	Sun, 28 Jul 2024 16:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722183020;
-	bh=tU52H7BCe2Zlu8UiMiakPjXPpYLklU+AGWhMSMLJwjo=;
+	s=k20201202; t=1722183022;
+	bh=Tmm0+c/HM30/oPp6K+2rmedqukAHJ1g5WNBOImBZFck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jz98pBCS6IoAmH4PoDJDPYPPNAjHL+f86sKOA+OvvDupyQUKYGuqTzt67J9WRvUxk
-	 HV1DvoIhvoFSyMx6FCCkY9IDHDHxcw9GCtX6NUc+UPlWZRZWfsez0b1sQi9IaN8yl8
-	 vXZ22hS63qD8GeYupgdUMKUZ6h3y7kUktdbe3r1VamQJ+llg7f2h0OK2Xf65yN5zHm
-	 CSQgMywRKlbkIZJmsiF3Z75hcaQrNrjxlF1clgiCAdFF0OOIvutZhlyVENsCE9vdxB
-	 uU/pd0YHfoKCpcKAU0UXK/SusApLqvV6NbZfIupLD33eDQnFrrOKTpvnFutDJFHUWG
-	 olI73462Q1sbQ==
+	b=TQtUOLJgBnhG/gjOl/S26BPB8rfvJbqIN7p0Q0hLuGvFmLj9Y/B4DQ3GCrt0VwyNN
+	 QMjVVrVoFwiHR6JCcO2D2LyNfLbph1XTQvQ9rkPNX0j8Ub9yoiqkLhAZS9pTdjLkG2
+	 XO9tMQlRud6r7s/RQ6n/5W8ujD1IqOCM35oyrX2jQXb9YFRjAzxlURNtOIpaoIhWmN
+	 xL15vR9Gn6ZW3Z2JR4yOPODL186u5++mxdiSuTOL13jjBW1eKbvO9vC/lTXMnvFuMs
+	 KwBRYjNKXGtcKPHcki9KzBhXX99yoNiSaOIREORuqPXNCFJ1g5LZV6X7u0Ilx+Z/z4
+	 aSI4qhvUzk0zA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kishon Vijay Abraham I <kishon@ti.com>,
-	Achal Verma <a-verma1@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org,
-	cassel@kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	yoshihiro.shimoda.uh@renesas.com,
-	dlemoal@kernel.org,
-	amishin@t-argos.ru,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 09/11] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
-Date: Sun, 28 Jul 2024 12:09:42 -0400
-Message-ID: <20240728160954.2054068-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 10/11] PCI: Add missing bridge lock to pci_bus_lock()
+Date: Sun, 28 Jul 2024 12:09:43 -0400
+Message-ID: <20240728160954.2054068-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728160954.2054068-1-sashal@kernel.org>
 References: <20240728160954.2054068-1-sashal@kernel.org>
@@ -73,130 +65,166 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.223
 Content-Transfer-Encoding: 8bit
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit 86f271f22bbb6391410a07e08d6ca3757fda01fa ]
+[ Upstream commit a4e772898f8bf2e7e1cf661a12c60a5612c4afab ]
 
-Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
-(SPRZ452D_July 2018_Revised December 2019 [1]) mentions when an
-inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
-the bus may corrupt the packet payload and the corrupt data may
-cause associated applications or the processor to hang.
+One of the true positives that the cfg_access_lock lockdep effort
+identified is this sequence:
 
-The workaround for Errata #i2037 is to limit the maximum read
-request size and maximum payload size to 128 bytes. Add workaround
-for Errata #i2037 here.
+  WARNING: CPU: 14 PID: 1 at drivers/pci/pci.c:4886 pci_bridge_secondary_bus_reset+0x5d/0x70
+  RIP: 0010:pci_bridge_secondary_bus_reset+0x5d/0x70
+  Call Trace:
+   <TASK>
+   ? __warn+0x8c/0x190
+   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+   ? report_bug+0x1f8/0x200
+   ? handle_bug+0x3c/0x70
+   ? exc_invalid_op+0x18/0x70
+   ? asm_exc_invalid_op+0x1a/0x20
+   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+   pci_reset_bus+0x1d8/0x270
+   vmd_probe+0x778/0xa10
+   pci_device_probe+0x95/0x120
 
-The errata and workaround is applicable only to AM65x SR 1.0 and
-later versions of the silicon will have this fixed.
+Where pci_reset_bus() users are triggering unlocked secondary bus resets.
+Ironically pci_bus_reset(), several calls down from pci_reset_bus(), uses
+pci_bus_lock() before issuing the reset which locks everything *but* the
+bridge itself.
 
-[1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
+For the same motivation as adding:
 
-Link: https://lore.kernel.org/linux-pci/16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Achal Verma <a-verma1@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+  bridge = pci_upstream_bridge(dev);
+  if (bridge)
+    pci_dev_lock(bridge);
+
+to pci_reset_function() for the "bus" and "cxl_bus" reset cases, add
+pci_dev_lock() for @bus->self to pci_bus_lock().
+
+Link: https://lore.kernel.org/r/171711747501.1628941.15217746952476635316.stgit@dwillia2-xfh.jf.intel.com
+Reported-by: Imre Deak <imre.deak@intel.com>
+Closes: http://lore.kernel.org/r/6657833b3b5ae_14984b29437@dwillia2-xfh.jf.intel.com.notmuch
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+[bhelgaas: squash in recursive locking deadlock fix from Keith Busch:
+https://lore.kernel.org/r/20240711193650.701834-1-kbusch@meta.com]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Kalle Valo <kvalo@kernel.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 44 ++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index d3c3ca3ef4bae..0b49bdf149a69 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -35,6 +35,11 @@
- #define PCIE_DEVICEID_SHIFT	16
- 
- /* Application registers */
-+#define PID				0x000
-+#define RTL				GENMASK(15, 11)
-+#define RTL_SHIFT			11
-+#define AM6_PCI_PG1_RTL_VER		0x15
-+
- #define CMD_STATUS			0x004
- #define LTSSM_EN_VAL		        BIT(0)
- #define OB_XLAT_EN_VAL		        BIT(1)
-@@ -105,6 +110,8 @@
- 
- #define to_keystone_pcie(x)		dev_get_drvdata((x)->dev)
- 
-+#define PCI_DEVICE_ID_TI_AM654X		0xb00c
-+
- struct ks_pcie_of_data {
- 	enum dw_pcie_device_mode mode;
- 	const struct dw_pcie_host_ops *host_ops;
-@@ -537,7 +544,11 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
- static void ks_pcie_quirk(struct pci_dev *dev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 530ced8f7abd2..8c92214c38055 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5255,10 +5255,12 @@ static void pci_bus_lock(struct pci_bus *bus)
  {
- 	struct pci_bus *bus = dev->bus;
-+	struct keystone_pcie *ks_pcie;
-+	struct device *bridge_dev;
- 	struct pci_dev *bridge;
-+	u32 val;
-+
- 	static const struct pci_device_id rc_pci_devids[] = {
- 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2HK),
- 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
-@@ -549,6 +560,11 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
- 		{ 0, },
- 	};
-+	static const struct pci_device_id am6_pci_devids[] = {
-+		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654X),
-+		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
-+		{ 0, },
-+	};
+ 	struct pci_dev *dev;
  
- 	if (pci_is_root_bus(bus))
- 		bridge = dev;
-@@ -570,10 +586,36 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- 	 */
- 	if (pci_match_id(rc_pci_devids, bridge)) {
- 		if (pcie_get_readrq(dev) > 256) {
--			dev_info(&dev->dev, "limiting MRRS to 256\n");
-+			dev_info(&dev->dev, "limiting MRRS to 256 bytes\n");
- 			pcie_set_readrq(dev, 256);
- 		}
++	pci_dev_lock(bus->self);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
  	}
-+
-+	/*
-+	 * Memory transactions fail with PCI controller in AM654 PG1.0
-+	 * when MRRS is set to more than 128 bytes. Force the MRRS to
-+	 * 128 bytes in all downstream devices.
-+	 */
-+	if (pci_match_id(am6_pci_devids, bridge)) {
-+		bridge_dev = pci_get_host_bridge_device(dev);
-+		if (!bridge_dev && !bridge_dev->parent)
-+			return;
-+
-+		ks_pcie = dev_get_drvdata(bridge_dev->parent);
-+		if (!ks_pcie)
-+			return;
-+
-+		val = ks_pcie_app_readl(ks_pcie, PID);
-+		val &= RTL;
-+		val >>= RTL_SHIFT;
-+		if (val != AM6_PCI_PG1_RTL_VER)
-+			return;
-+
-+		if (pcie_get_readrq(dev) > 128) {
-+			dev_info(&dev->dev, "limiting MRRS to 128 bytes\n");
-+			pcie_set_readrq(dev, 128);
-+		}
-+	}
  }
- DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
  
+@@ -5270,8 +5272,10 @@ static void pci_bus_unlock(struct pci_bus *bus)
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
++	pci_dev_unlock(bus->self);
+ }
+ 
+ /* Return 1 on successful lock, 0 on contention */
+@@ -5279,15 +5283,15 @@ static int pci_bus_trylock(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
+ 
++	if (!pci_dev_trylock(bus->self))
++		return 0;
++
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		if (!pci_dev_trylock(dev))
+-			goto unlock;
+ 		if (dev->subordinate) {
+-			if (!pci_bus_trylock(dev->subordinate)) {
+-				pci_dev_unlock(dev);
++			if (!pci_bus_trylock(dev->subordinate))
+ 				goto unlock;
+-			}
+-		}
++		} else if (!pci_dev_trylock(dev))
++			goto unlock;
+ 	}
+ 	return 1;
+ 
+@@ -5295,8 +5299,10 @@ static int pci_bus_trylock(struct pci_bus *bus)
+ 	list_for_each_entry_continue_reverse(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
++	pci_dev_unlock(bus->self);
+ 	return 0;
+ }
+ 
+@@ -5328,9 +5334,10 @@ static void pci_slot_lock(struct pci_slot *slot)
+ 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+ 		if (!dev->slot || dev->slot != slot)
+ 			continue;
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
+ 	}
+ }
+ 
+@@ -5356,14 +5363,13 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+ 		if (!dev->slot || dev->slot != slot)
+ 			continue;
+-		if (!pci_dev_trylock(dev))
+-			goto unlock;
+ 		if (dev->subordinate) {
+ 			if (!pci_bus_trylock(dev->subordinate)) {
+ 				pci_dev_unlock(dev);
+ 				goto unlock;
+ 			}
+-		}
++		} else if (!pci_dev_trylock(dev))
++			goto unlock;
+ 	}
+ 	return 1;
+ 
+@@ -5374,7 +5380,8 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 			continue;
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
+ 	return 0;
+ }
 -- 
 2.43.0
 
