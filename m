@@ -1,60 +1,58 @@
-Return-Path: <linux-pci+bounces-10893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10894-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B29693E7CD
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:16:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C689393E7E5
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:18:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5892B28647B
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:16:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7071D1F2109C
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:18:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCD91442F2;
-	Sun, 28 Jul 2024 16:07:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBEC3146591;
+	Sun, 28 Jul 2024 16:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzV9bB36"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PldaCcLz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117E143C7E;
-	Sun, 28 Jul 2024 16:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A485814658C;
+	Sun, 28 Jul 2024 16:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722182835; cv=none; b=Kz5ckfhyWSeec7LsHJs7HTx69Cljw40WlnPojEx4/T6KVZwCHiRNQtXQJ5w80KI/+fZPeROb6OFLebo6SCoN02uNFezQ2ZOhTrdpZSmRiM4mEzwLZaDSy4C2ZlrT+L5os1IzJHs1942+ZAXRx1dOkWpZ9TlBuO76D33yaD2OafI=
+	t=1722182852; cv=none; b=e8kRWXVLGrwtqg8NKsVJhVwF1bxCF3Q82/xm+Z43FhJj/XXUzze1J3sNFUemHit1pJp0JlTZo1ApuzWE7lyzWifouMqIzSOWg7tLGrD0ZGYqEKNfAHv4nB4cHTsk/kU+RSOlPNkgHdMJ4+HYDbls18uMnedh/k8EVH1ddwzMB6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722182835; c=relaxed/simple;
-	bh=ZI5AWqvz0DyorLkp5KM0L+Vqbt9/YI6EUF0PAnQuU7I=;
+	s=arc-20240116; t=1722182852; c=relaxed/simple;
+	bh=lXMmkszlhFRgOggI49i6zKOqzCBeo3TSnuu/Y2jM26Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IQxQFsHSALOnq3HMFAfxrnSW1n7iQqL9eqvW2kCsFnaYid/wSwzG8BfOB4wFK8CJs26tF+bm+nInL60mXsW8jiENjqEZPTJ+ifPKRmf7Auj56LuOTwj5IMTF2B3tVOcyGD46RD/P+9kKZn21yQCjS16TB0OkJSxx6Hg8b3K281w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzV9bB36; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD04C4AF13;
-	Sun, 28 Jul 2024 16:07:12 +0000 (UTC)
+	 MIME-Version; b=bJnA3pv17nxJ/kxsGjRyjG41wjeJ8f4hd1qWqps//ERMZ9KQATjIzMOcVotWM1o0rc5e6ZDALjYeru7JBx9G1iNx9UAky09Jy/3CKzVoUGPEcFVR+HUW/SLj9mxXsKTRZt6asDBFOEM3ML3pLa6+YuS4s8e7ZrWGVOXpYm+iR7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PldaCcLz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAB4C116B1;
+	Sun, 28 Jul 2024 16:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722182834;
-	bh=ZI5AWqvz0DyorLkp5KM0L+Vqbt9/YI6EUF0PAnQuU7I=;
+	s=k20201202; t=1722182852;
+	bh=lXMmkszlhFRgOggI49i6zKOqzCBeo3TSnuu/Y2jM26Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HzV9bB36UTtliBDdxwFQAe+RAuqocITYDuSLp8x+4dIxgWdgNJug6wGNf8dn7aN57
-	 q/98Pj8AF1GZM0PGrBcVv0axy+PFkGjGamRsqVplLnf+hDb96dxeGn/jISQAF16VfR
-	 NhHJSCoTBcmElYnlRB0pYth+HelKfxVFmyZsBiaJXtlV5b4vct/BQ8Mdk/ix4jXhYu
-	 P6gAL6LbfoBT30Vaw/uW6xlEKwNESMk0lbaJ8LJq4X7JvdKOPqYf9A14LnZTEbUcjp
-	 xT4D/Q+fMEtXDmTOStEX7oBd3pdys/jSR7JOyCWIWp7KjJY6+cn4916UqM889yl31j
-	 l7TESv2RnrOYQ==
+	b=PldaCcLz0NzVheWV+r7yeptuXX3/VVHHXXA+iB4gHK+GFAbHayamqC7D2xtJ6BBlH
+	 yoA1MFnAkbcr30JXEdqgKs9APvgA4xB5uQnS99e14irAt+6Y4IsXC4154Yvrkzxh4F
+	 cLKvarRu21PYa26MYzPfW0+LP6TPSTOyfIFPcOo7+geqI0lcXS+MQesJ3HzV+nf8Ov
+	 PAb4W7mxDd9mLOUvmuSKzx6NWEgxCnF90EoquI+br91kVbBU7aNHKbc4hdfpQMuSWp
+	 4UvNdubFQ+Ze1ky2uK8mj+mAQxOuAfFJTGvhbe002kmJ/4i5LgYOoTJ2A78qHCFd4f
+	 MvPJCsLpYWQfw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vidya Sagar <vidyas@nvidia.com>,
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	will@kernel.org,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 02/17] PCI: Use preserve_config in place of pci_flags
-Date: Sun, 28 Jul 2024 12:06:38 -0400
-Message-ID: <20240728160709.2052627-2-sashal@kernel.org>
+	mahesh@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 09/17] PCI/AER: Disable AER service on suspend
+Date: Sun, 28 Jul 2024 12:06:45 -0400
+Message-ID: <20240728160709.2052627-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728160709.2052627-1-sashal@kernel.org>
 References: <20240728160709.2052627-1-sashal@kernel.org>
@@ -69,75 +67,66 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.43
 Content-Transfer-Encoding: 8bit
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 7246a4520b4bf1494d7d030166a11b5226f6d508 ]
+[ Upstream commit 5afc2f763edc5daae4722ee46fea4e627d01fa90 ]
 
-Use preserve_config in place of checking for PCI_PROBE_ONLY flag to enable
-support for "linux,pci-probe-only" on a per host bridge basis.
+If the link is powered off during suspend, electrical noise may cause
+errors that are logged via AER.  If the AER interrupt is enabled and shares
+an IRQ with PME, that causes a spurious wakeup during suspend.
 
-This also obviates the use of adding PCI_REASSIGN_ALL_BUS flag if
-!PCI_PROBE_ONLY, as pci_assign_unassigned_root_bus_resources() takes care
-of reassigning the resources that are not already claimed.
+Disable the AER interrupt during suspend to prevent this.  Clear error
+status before re-enabling IRQ interrupts during resume so we don't get an
+interrupt for errors that occurred during the suspend/resume process.
 
-Link: https://lore.kernel.org/r/20240508174138.3630283-5-vidyas@nvidia.com
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+Link: https://lore.kernel.org/r/20240416043225.1462548-2-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+[bhelgaas: drop pci_ancestor_pr3_present() etc, commit log]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-host-common.c |  4 ----
- drivers/pci/probe.c                      | 20 +++++++++-----------
- 2 files changed, 9 insertions(+), 15 deletions(-)
+ drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-index 6be3266cd7b5b..e2602e38ae452 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -73,10 +73,6 @@ int pci_host_common_probe(struct platform_device *pdev)
- 	if (IS_ERR(cfg))
- 		return PTR_ERR(cfg);
- 
--	/* Do not reassign resources if probe only */
--	if (!pci_has_flag(PCI_PROBE_ONLY))
--		pci_add_flags(PCI_REASSIGN_ALL_BUS);
--
- 	bridge->sysdata = cfg;
- 	bridge->ops = (struct pci_ops *)&ops->pci_ops;
- 	bridge->msi_domain = true;
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 43159965e09e9..217cf8a491eda 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3080,20 +3080,18 @@ int pci_host_probe(struct pci_host_bridge *bridge)
- 
- 	bus = bridge->bus;
- 
-+	/* If we must preserve the resource configuration, claim now */
-+	if (bridge->preserve_config)
-+		pci_bus_claim_resources(bus);
-+
- 	/*
--	 * We insert PCI resources into the iomem_resource and
--	 * ioport_resource trees in either pci_bus_claim_resources()
--	 * or pci_bus_assign_resources().
-+	 * Assign whatever was left unassigned. If we didn't claim above,
-+	 * this will reassign everything.
- 	 */
--	if (pci_has_flag(PCI_PROBE_ONLY)) {
--		pci_bus_claim_resources(bus);
--	} else {
--		pci_bus_size_bridges(bus);
--		pci_bus_assign_resources(bus);
-+	pci_assign_unassigned_root_bus_resources(bus);
- 
--		list_for_each_entry(child, &bus->children, node)
--			pcie_bus_configure_settings(child);
--	}
-+	list_for_each_entry(child, &bus->children, node)
-+		pcie_bus_configure_settings(child);
- 
- 	pci_bus_add_devices(bus);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index c9afe43628356..eeb9ea9044b43 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1342,6 +1342,22 @@ static int aer_probe(struct pcie_device *dev)
  	return 0;
+ }
+ 
++static int aer_suspend(struct pcie_device *dev)
++{
++	struct aer_rpc *rpc = get_service_data(dev);
++
++	aer_disable_rootport(rpc);
++	return 0;
++}
++
++static int aer_resume(struct pcie_device *dev)
++{
++	struct aer_rpc *rpc = get_service_data(dev);
++
++	aer_enable_rootport(rpc);
++	return 0;
++}
++
+ /**
+  * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+  * @dev: pointer to Root Port, RCEC, or RCiEP
+@@ -1413,6 +1429,8 @@ static struct pcie_port_service_driver aerdriver = {
+ 	.service	= PCIE_PORT_SERVICE_AER,
+ 
+ 	.probe		= aer_probe,
++	.suspend	= aer_suspend,
++	.resume		= aer_resume,
+ 	.remove		= aer_remove,
+ };
+ 
 -- 
 2.43.0
 
