@@ -1,110 +1,132 @@
-Return-Path: <linux-pci+bounces-10919-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10920-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE5B93E889
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A9B793E88C
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:33:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07DB71F21D72
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:32:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 121461F21C4E
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:33:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 836497E799;
-	Sun, 28 Jul 2024 16:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5DD9191F81;
+	Sun, 28 Jul 2024 16:10:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCyna17H"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/94ZdHx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5881A7E591;
-	Sun, 28 Jul 2024 16:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9FA7F48A;
+	Sun, 28 Jul 2024 16:10:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722183058; cv=none; b=aUUi0U0NQhi6srqIl+/D64PrvUtKoPfzDU56L/WfI8MUGGyE7AfaXzZs/Cnzv89Zi7JbrjE0wHV6tM7Ma/CKj2bLH5aiRtP1sHwD4k+LfMzIgZJglLJU96wCrsoR12eFJQWitbVrP+R3kdzMRfCMu8+G4nNE9lS2aNPVathw0cs=
+	t=1722183059; cv=none; b=V+dDDqgG2/ulVOvE5I/GTVx4k57ZtI5JF2+rhovZ1XTAZv6vgHAXzUWw0u6BUCITx+kthVO6Y305ftn80u36AARTFMDAiPnvtTDyGo7LUdCNQHCE6nU/jrEq0fFHB0Nso15CS3Vg8YLl/OJNMWaFEb93D1U1XaHqETWdvZziLz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722183058; c=relaxed/simple;
-	bh=97fXIGhKlQ53uprVUf/kOjQudazMme3HpSsGf+W/dxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GmhGMBHiPV27oLRspmfLMXm0TM53u2QxTpmZcUEIlxr2oXSOEqIiju91u0zyjuwHNj4G7wfpwrSyWDnGMIUXJ13JHCs/Qq6RyWhh8vUN6O264Z8i1m3qxsUZxTE22uDPSyLCeDQxxEVk7jyMGmLmYeVLYVf4greTmUVYuJzKaj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCyna17H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB2DC116B1;
-	Sun, 28 Jul 2024 16:10:56 +0000 (UTC)
+	s=arc-20240116; t=1722183059; c=relaxed/simple;
+	bh=X6s4I4eC7Wnz1I6pC3l7IG/ytFfYQlSgaxQq0s4xUyU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NCfmi3IjOC8DrK/EIzjpa85w7EquIfgCQXXZOYgt0YNeNnTKTQxM6O7pK4aG3CJD3pZchSFIo81w/7dNhZUZzbKbX68dRbwZhKV8BCCNHa0pDciaD7QdokopBqztHsOG4j+YsqPeo6udgHWHTGRozbqsa86FZVD9KTMhAY0Ym48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/94ZdHx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F50DC32782;
+	Sun, 28 Jul 2024 16:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722183057;
-	bh=97fXIGhKlQ53uprVUf/kOjQudazMme3HpSsGf+W/dxg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BCyna17HSBpi13hdL3My643C8+j1v2IdA8gxno9v2lS2ueb9AdFEgfZZNLU+S1THD
-	 ZhkgPogYqqTxmI8NGTbTEoo+v2kG25CnNwcEYp/WYFyOkUTzQMOn6V6SnOxgdPnMUq
-	 SDVo+sbIgzAdLa5b15OknL4hY4gV6RvoFMQM2kzvSPEKwFg7nIeFIVGH+tTS1LDbQF
-	 +AXCZ9Kpv0UY3F9Toct7lfrjrXZ7ADOTx8oBC5D2HNFQnB2UhrThg584FWXqJVa/ja
-	 g9qGP154ZQa/MglQKBGZdGw3t+jWOSKw7tPYZzdfNuVoAOMLBtXUo8gFfyu0d+lM2g
-	 yXf8l5LPmU21g==
+	s=k20201202; t=1722183059;
+	bh=X6s4I4eC7Wnz1I6pC3l7IG/ytFfYQlSgaxQq0s4xUyU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=S/94ZdHx0EPrzI+MJST8/39WYrcsZy0hyto6G0UxuOEnKNrIo99G8OPul7ysrS7oV
+	 ToEguQb3B698FrlDyU1i2p9ru8ejNyhrdFd9XymA2HG7AV41d1kczVo51IBh2BcbxK
+	 HpciGu/D27RP5GmpmlXHBauX8xf68tPmwJmVakyPjJTLjP4bW6j91BJx/nwaqHaqDz
+	 kDl/6KUrIgtkbjdw7uRJjfLqu21BSGWSUvpUzp5VuS0guX0NUGJ6WiBSe6hC17Zbh3
+	 hd4IxuuPfJh9BiBdfxyuXEvfLcQb36PKmy7My1bxHNlmr94TK2ZuJpOrmtXAHdLA/L
+	 bHW/FMA+Hhoig==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ajit Khaparde <ajit.khaparde@broadcom.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Andy Gospodarek <gospo@broadcom.com>,
 	Sasha Levin <sashal@kernel.org>,
+	mahesh@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 1/4] PCI: Add ACS quirk for Broadcom BCM5760X NIC
-Date: Sun, 28 Jul 2024 12:10:50 -0400
-Message-ID: <20240728161055.2054513-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 2/4] PCI/AER: Disable AER service on suspend
+Date: Sun, 28 Jul 2024 12:10:51 -0400
+Message-ID: <20240728161055.2054513-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240728161055.2054513-1-sashal@kernel.org>
+References: <20240728161055.2054513-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 4.19.319
 Content-Transfer-Encoding: 8bit
 
-From: Ajit Khaparde <ajit.khaparde@broadcom.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 524e057b2d66b61f9b63b6db30467ab7b0bb4796 ]
+[ Upstream commit 5afc2f763edc5daae4722ee46fea4e627d01fa90 ]
 
-The Broadcom BCM5760X NIC may be a multi-function device.
+If the link is powered off during suspend, electrical noise may cause
+errors that are logged via AER.  If the AER interrupt is enabled and shares
+an IRQ with PME, that causes a spurious wakeup during suspend.
 
-While it does not advertise an ACS capability, peer-to-peer transactions
-are not possible between the individual functions. So it is ok to treat
-them as fully isolated.
+Disable the AER interrupt during suspend to prevent this.  Clear error
+status before re-enabling IRQ interrupts during resume so we don't get an
+interrupt for errors that occurred during the suspend/resume process.
 
-Add an ACS quirk for this device so the functions can be in independent
-IOMMU groups and attached individually to userspace applications using
-VFIO.
-
-[kwilczynski: commit log]
-Link: https://lore.kernel.org/linux-pci/20240510204228.73435-1-ajit.khaparde@broadcom.com
-Signed-off-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+Link: https://lore.kernel.org/r/20240416043225.1462548-2-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+[bhelgaas: drop pci_ancestor_pr3_present() etc, commit log]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index bb51820890965..a3a4c4724b6c9 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4822,6 +4822,10 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1750, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1751, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1752, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1760, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1761, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1762, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0x1763, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	{ 0 }
- };
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 1563e22600eca..49680f83d8c37 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1509,6 +1509,22 @@ static int aer_probe(struct pcie_device *dev)
+ 	return 0;
+ }
+ 
++static int aer_suspend(struct pcie_device *dev)
++{
++	struct aer_rpc *rpc = get_service_data(dev);
++
++	aer_disable_rootport(rpc);
++	return 0;
++}
++
++static int aer_resume(struct pcie_device *dev)
++{
++	struct aer_rpc *rpc = get_service_data(dev);
++
++	aer_enable_rootport(rpc);
++	return 0;
++}
++
+ /**
+  * aer_root_reset - reset link on Root Port
+  * @dev: pointer to Root Port's pci_dev data structure
+@@ -1561,6 +1577,8 @@ static struct pcie_port_service_driver aerdriver = {
+ 	.service	= PCIE_PORT_SERVICE_AER,
+ 
+ 	.probe		= aer_probe,
++	.suspend	= aer_suspend,
++	.resume		= aer_resume,
+ 	.remove		= aer_remove,
+ 	.error_resume	= aer_error_resume,
+ 	.reset_link	= aer_root_reset,
 -- 
 2.43.0
 
