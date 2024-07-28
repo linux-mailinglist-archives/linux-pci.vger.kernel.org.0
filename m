@@ -1,58 +1,69 @@
-Return-Path: <linux-pci+bounces-10887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42DBD93E7A8
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:13:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 311E393E7B5
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:14:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1F5628631B
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:13:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D85291F22545
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:14:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B5061304AD;
-	Sun, 28 Jul 2024 16:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B188D13C3D2;
+	Sun, 28 Jul 2024 16:06:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QaQTXGss"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p142hoRO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5126B12FF65;
-	Sun, 28 Jul 2024 16:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876BC57333;
+	Sun, 28 Jul 2024 16:06:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722182771; cv=none; b=PdBZ3uDLg7YYMyjKtfOL4EjpBTOGo4HpFa4l/uiJw68xNUbX1nSHToyaLWWup70GO2QIaNRk3x+4bphutoh3aykmQNpiESLHeISGwR7u0Ttc+4/Yml+a4h5A8f4dfr071WVUX68jcczIWnz6XnY9Tf4f2t6fV7wPhgN+JL6Nxk4=
+	t=1722182797; cv=none; b=cVrfhAKhXKZmn4iZ999sXTUHxKaGUR44qWpLEaSdA1nJIf+DosB8IG5JN3KdVRmXsfUJnVuml8DGak1o/dZ1hd+tnvJlrHbir7y9mNq8OETS4TBI589/LDVBCo8rheNvNvDyWYiMjKbBIJDz+iZYt+hfkACJxV9QNF/rne9yslI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722182771; c=relaxed/simple;
-	bh=5bbPBNWEJ0TWEF17tF+gO8exwZoTsQqVPRyvBIYCeFw=;
+	s=arc-20240116; t=1722182797; c=relaxed/simple;
+	bh=jKGObsaoSq6SDMNOqHtFHc7KfiGGps0r/Ps6xmjQd9s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a1CEGkiK89YfAVWu3LyFhx3ryVGJ2qrEDh9GpFcNqaZSIiHusmEe6ySjUQd3OVsl+JxVw9ANftd0kfBEMqrtPYu0JOb69kKUu/odxEZtpa4x2ZKIlvwu3hVS3Rx4yrvVK/HKCCPo00d1UDVXH5Y80hO/2sDw7FHtu/a5yHkGud4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QaQTXGss; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD1DC4AF0B;
-	Sun, 28 Jul 2024 16:06:10 +0000 (UTC)
+	 MIME-Version:Content-Type; b=BGyeEJ23fHIkrkjirkcFZ9fsKATqotJrSd/HH7sR/isjEWmBUOrzV8UGKPcvCQtVhyQwsAEnRoSIYeXMPyEu5AZE3welbsjPATsspidP7mDKj2EQK9Vvt0KQqMjVgUJ1KwHWmRi7g02inH7u5pM0RN5ffDjFghobc0slJvpT4tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p142hoRO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF9E7C4AF0A;
+	Sun, 28 Jul 2024 16:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722182771;
-	bh=5bbPBNWEJ0TWEF17tF+gO8exwZoTsQqVPRyvBIYCeFw=;
+	s=k20201202; t=1722182797;
+	bh=jKGObsaoSq6SDMNOqHtFHc7KfiGGps0r/Ps6xmjQd9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QaQTXGss6hEFyD/nyZP3lCaoqdjnD8ciMx9DiDjLHOZ2KxY0rl4KLHgMhXBSIseZa
-	 xzY4O2o4ICX4fXAtTFBJNioh36vkhYfkwn8hwvI4x6PeW+ytmitHbp3E+eTKqWtVgC
-	 gCng2jCFwX+TNEaNrXf7ptzb7yMgmgukLGqWEGw0Qxqbiifa+KqLAnVSoqXyXGlS1q
-	 JLro1LOgC0kGUYB+FO4gGdt/jvPLu0izYL3cIwvq3GxI9+4Is72pmx7MwwDMWsgpIh
-	 icWThO024ODKVCd81obbA5echYx4W2kDyKCXTwhCZlYo9eRY2phIyxEpVE4SC2DVWu
-	 8z7wHXs2lggHw==
+	b=p142hoROMb7vOTXx6XuCXNMcg9XAzRhoLNJoGI8+PyIQMgD6MkYrL1qMSiwkSflW2
+	 mt0KuxOlYx+XlwnQT0ZzMMLQ+vXAT31SDxlYG2j7Apl93kOsVlXBGa//iDfUFMBm+X
+	 NigDedxjLrJYlW02GlsFr+Zfw78LQxZIaB3LIIC6QswlEedGxBPiJBmOVGI8QDVsB+
+	 2H7xydAqDKqIRwSQqywxz0PJ1kFC7lrhGcp94Vhn9wJreAvTSqQqkRnOaV3uHZsbEy
+	 UPZvtTSCyYGDnf/UmDJII2kP2NIrJ+kDbLG7G00HV5AKQSHyK0PR6XNJMjDgvxq4As
+	 g5t6JBPcDct2g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Kishon Vijay Abraham I <kishon@ti.com>,
+	Achal Verma <a-verma1@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mahesh@linux.ibm.com,
-	linuxppc-dev@lists.ozlabs.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	manivannan.sadhasivam@linaro.org,
+	cassel@kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	dlemoal@kernel.org,
+	yoshihiro.shimoda.uh@renesas.com,
+	amishin@t-argos.ru,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 13/23] PCI/DPC: Disable DPC service on suspend
-Date: Sun, 28 Jul 2024 12:04:54 -0400
-Message-ID: <20240728160538.2051879-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.10 18/23] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
+Date: Sun, 28 Jul 2024 12:04:59 -0400
+Message-ID: <20240728160538.2051879-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728160538.2051879-1-sashal@kernel.org>
 References: <20240728160538.2051879-1-sashal@kernel.org>
@@ -62,135 +73,129 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.10.2
 Content-Transfer-Encoding: 8bit
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 75c47c790f43c438761fc049fb9d438144a9db45 ]
+[ Upstream commit 86f271f22bbb6391410a07e08d6ca3757fda01fa ]
 
-If the link is powered off during suspend, electrical noise may cause
-errors that trigger DPC.  If the DPC interrupt is enabled and shares an IRQ
-with PME, that causes a spurious wakeup during suspend.
+Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
+(SPRZ452D_July 2018_Revised December 2019 [1]) mentions when an
+inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
+the bus may corrupt the packet payload and the corrupt data may
+cause associated applications or the processor to hang.
 
-Disable DPC triggering and the DPC interrupt during suspend to prevent
-this.  Clear DPC interrupt status before re-enabling DPC interrupts during
-resume so we don't get an interrupt for errors that occurred during the
-suspend/resume process.
+The workaround for Errata #i2037 is to limit the maximum read
+request size and maximum payload size to 128 bytes. Add workaround
+for Errata #i2037 here.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
-Link: https://lore.kernel.org/r/20240416043225.1462548-3-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-[bhelgaas: clear status on resume, add comments, commit log]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+The errata and workaround is applicable only to AM65x SR 1.0 and
+later versions of the silicon will have this fixed.
+
+[1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
+
+Link: https://lore.kernel.org/linux-pci/16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Achal Verma <a-verma1@ti.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 48 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 44 ++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index a668820696dc0..2b6ef7efa3c11 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -412,13 +412,44 @@ void pci_dpc_init(struct pci_dev *pdev)
- 	}
- }
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index d3a7d14ee685a..25e365c0c5c79 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -34,6 +34,11 @@
+ #define PCIE_DEVICEID_SHIFT	16
  
-+static void dpc_enable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	int dpc = pdev->dpc_cap;
-+	u16 ctl;
+ /* Application registers */
++#define PID				0x000
++#define RTL				GENMASK(15, 11)
++#define RTL_SHIFT			11
++#define AM6_PCI_PG1_RTL_VER		0x15
++
+ #define CMD_STATUS			0x004
+ #define LTSSM_EN_VAL		        BIT(0)
+ #define OB_XLAT_EN_VAL		        BIT(1)
+@@ -104,6 +109,8 @@
+ 
+ #define to_keystone_pcie(x)		dev_get_drvdata((x)->dev)
+ 
++#define PCI_DEVICE_ID_TI_AM654X		0xb00c
++
+ struct ks_pcie_of_data {
+ 	enum dw_pcie_device_mode mode;
+ 	const struct dw_pcie_host_ops *host_ops;
+@@ -525,7 +532,11 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
+ static void ks_pcie_quirk(struct pci_dev *dev)
+ {
+ 	struct pci_bus *bus = dev->bus;
++	struct keystone_pcie *ks_pcie;
++	struct device *bridge_dev;
+ 	struct pci_dev *bridge;
++	u32 val;
++
+ 	static const struct pci_device_id rc_pci_devids[] = {
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2HK),
+ 		 .class = PCI_CLASS_BRIDGE_PCI_NORMAL, .class_mask = ~0, },
+@@ -537,6 +548,11 @@ static void ks_pcie_quirk(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI_NORMAL, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
++	static const struct pci_device_id am6_pci_devids[] = {
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654X),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ 0, },
++	};
+ 
+ 	if (pci_is_root_bus(bus))
+ 		bridge = dev;
+@@ -558,10 +574,36 @@ static void ks_pcie_quirk(struct pci_dev *dev)
+ 	 */
+ 	if (pci_match_id(rc_pci_devids, bridge)) {
+ 		if (pcie_get_readrq(dev) > 256) {
+-			dev_info(&dev->dev, "limiting MRRS to 256\n");
++			dev_info(&dev->dev, "limiting MRRS to 256 bytes\n");
+ 			pcie_set_readrq(dev, 256);
+ 		}
+ 	}
 +
 +	/*
-+	 * Clear DPC Interrupt Status so we don't get an interrupt for an
-+	 * old event when setting DPC Interrupt Enable.
++	 * Memory transactions fail with PCI controller in AM654 PG1.0
++	 * when MRRS is set to more than 128 bytes. Force the MRRS to
++	 * 128 bytes in all downstream devices.
 +	 */
-+	pci_write_config_word(pdev, dpc + PCI_EXP_DPC_STATUS,
-+			      PCI_EXP_DPC_STATUS_INTERRUPT);
++	if (pci_match_id(am6_pci_devids, bridge)) {
++		bridge_dev = pci_get_host_bridge_device(dev);
++		if (!bridge_dev && !bridge_dev->parent)
++			return;
 +
-+	pci_read_config_word(pdev, dpc + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~PCI_EXP_DPC_CTL_EN_MASK;
-+	ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-+	pci_write_config_word(pdev, dpc + PCI_EXP_DPC_CTL, ctl);
-+}
++		ks_pcie = dev_get_drvdata(bridge_dev->parent);
++		if (!ks_pcie)
++			return;
 +
-+static void dpc_disable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	int dpc = pdev->dpc_cap;
-+	u16 ctl;
++		val = ks_pcie_app_readl(ks_pcie, PID);
++		val &= RTL;
++		val >>= RTL_SHIFT;
++		if (val != AM6_PCI_PG1_RTL_VER)
++			return;
 +
-+	/* Disable DPC triggering and DPC interrupts */
-+	pci_read_config_word(pdev, dpc + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-+	pci_write_config_word(pdev, dpc + PCI_EXP_DPC_CTL, ctl);
-+}
-+
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
- 	int status;
--	u16 ctl, cap;
-+	u16 cap;
- 
- 	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
-@@ -433,11 +464,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	}
- 
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
--
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~PCI_EXP_DPC_CTL_EN_MASK;
--	ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	dpc_enable(dev);
- 
- 	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
- 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-@@ -450,14 +477,21 @@ static int dpc_probe(struct pcie_device *dev)
- 	return status;
++		if (pcie_get_readrq(dev) > 128) {
++			dev_info(&dev->dev, "limiting MRRS to 128 bytes\n");
++			pcie_set_readrq(dev, 128);
++		}
++	}
  }
- 
--static void dpc_remove(struct pcie_device *dev)
-+static int dpc_suspend(struct pcie_device *dev)
- {
--	struct pci_dev *pdev = dev->port;
--	u16 ctl;
-+	dpc_disable(dev);
-+	return 0;
-+}
- 
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+static int dpc_resume(struct pcie_device *dev)
-+{
-+	dpc_enable(dev);
-+	return 0;
-+}
-+
-+static void dpc_remove(struct pcie_device *dev)
-+{
-+	dpc_disable(dev);
- }
- 
- static struct pcie_port_service_driver dpcdriver = {
-@@ -465,6 +499,8 @@ static struct pcie_port_service_driver dpcdriver = {
- 	.port_type	= PCIE_ANY_PORT,
- 	.service	= PCIE_PORT_SERVICE_DPC,
- 	.probe		= dpc_probe,
-+	.suspend	= dpc_suspend,
-+	.resume		= dpc_resume,
- 	.remove		= dpc_remove,
- };
+ DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
  
 -- 
 2.43.0
