@@ -1,58 +1,61 @@
-Return-Path: <linux-pci+bounces-10920-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A9B793E88C
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:33:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70EF093E88F
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:33:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 121461F21C4E
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:33:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A24831C2147E
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:33:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5DD9191F81;
-	Sun, 28 Jul 2024 16:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2BB0191F87;
+	Sun, 28 Jul 2024 16:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/94ZdHx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpRG4c39"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9FA7F48A;
-	Sun, 28 Jul 2024 16:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B737E7F7C3;
+	Sun, 28 Jul 2024 16:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722183059; cv=none; b=V+dDDqgG2/ulVOvE5I/GTVx4k57ZtI5JF2+rhovZ1XTAZv6vgHAXzUWw0u6BUCITx+kthVO6Y305ftn80u36AARTFMDAiPnvtTDyGo7LUdCNQHCE6nU/jrEq0fFHB0Nso15CS3Vg8YLl/OJNMWaFEb93D1U1XaHqETWdvZziLz4=
+	t=1722183061; cv=none; b=Ruw3Iz0HHkbRx2MjhqEarwSlaKRriW/4/T8VvqQM306fPTlYeDy81frMPfTNVJ/VbNxywurGsHuLtlDneHqm+rKTWdAQvrB/eoobEVCKrg/WTQQZ0cX+dLJy9Af6NmrmwPktZ3GxLq2Hyy+0+vKTJLmiZEZmcXfZtAxEMj+tUiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722183059; c=relaxed/simple;
-	bh=X6s4I4eC7Wnz1I6pC3l7IG/ytFfYQlSgaxQq0s4xUyU=;
+	s=arc-20240116; t=1722183061; c=relaxed/simple;
+	bh=9hJZqfJvZ/ItNCO/i/+eMRp83NXe8/a1Kq0rxkIkXBc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NCfmi3IjOC8DrK/EIzjpa85w7EquIfgCQXXZOYgt0YNeNnTKTQxM6O7pK4aG3CJD3pZchSFIo81w/7dNhZUZzbKbX68dRbwZhKV8BCCNHa0pDciaD7QdokopBqztHsOG4j+YsqPeo6udgHWHTGRozbqsa86FZVD9KTMhAY0Ym48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/94ZdHx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F50DC32782;
-	Sun, 28 Jul 2024 16:10:58 +0000 (UTC)
+	 MIME-Version; b=T0zqSQ1JuzcGqL7Uq5W1IzXXxwJS/67u+FI+bZjYP3vJ5OaK0KQ/YUFlnP782O82+OkiJgqMsTyK8Q5tLk24zGsdvbsFPbOS9uMIiPtOrTlkbzksOJ0aTzx8qCmgj8zgJfmOErwMHpR/3EyNRHdyASMhyoZEAsQ6dpTLypSMSUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpRG4c39; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF6DC4AF0B;
+	Sun, 28 Jul 2024 16:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722183059;
-	bh=X6s4I4eC7Wnz1I6pC3l7IG/ytFfYQlSgaxQq0s4xUyU=;
+	s=k20201202; t=1722183061;
+	bh=9hJZqfJvZ/ItNCO/i/+eMRp83NXe8/a1Kq0rxkIkXBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S/94ZdHx0EPrzI+MJST8/39WYrcsZy0hyto6G0UxuOEnKNrIo99G8OPul7ysrS7oV
-	 ToEguQb3B698FrlDyU1i2p9ru8ejNyhrdFd9XymA2HG7AV41d1kczVo51IBh2BcbxK
-	 HpciGu/D27RP5GmpmlXHBauX8xf68tPmwJmVakyPjJTLjP4bW6j91BJx/nwaqHaqDz
-	 kDl/6KUrIgtkbjdw7uRJjfLqu21BSGWSUvpUzp5VuS0guX0NUGJ6WiBSe6hC17Zbh3
-	 hd4IxuuPfJh9BiBdfxyuXEvfLcQb36PKmy7My1bxHNlmr94TK2ZuJpOrmtXAHdLA/L
-	 bHW/FMA+Hhoig==
+	b=rpRG4c39Sfah/blHhbifgXnqJCX9m/eEgeX54FRt5nXggvkLnV7n4VAcR+M1PIfOy
+	 RJOub2INXyxH+uZLNuuxZWFPRp+Nh2ykq144NiKEaF/0zYkItZEUv7pilWKgoSIX9I
+	 +I2+izP3ObR5pAL/oWugH1iQyp/PasRhyNNN4/GVgyLjR16QY2sggd6/uvBeJbH/yA
+	 xJuymOGk5CZc4QBoAdduW/d4WlhUozWl8b21NcnSXbIKE4CbUo2YBHz54cJ2SkZXfk
+	 Qtz/9T5jSCTYILcB587pa3SvS1QOurFadz3Q3TbS1Dv+m4beSs7NpeMcegMVTNf0qk
+	 JESEhFDSLCQcw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Keith Busch <kbusch@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mahesh@linux.ibm.com,
-	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 2/4] PCI/AER: Disable AER service on suspend
-Date: Sun, 28 Jul 2024 12:10:51 -0400
-Message-ID: <20240728161055.2054513-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 3/4] PCI: Add missing bridge lock to pci_bus_lock()
+Date: Sun, 28 Jul 2024 12:10:52 -0400
+Message-ID: <20240728161055.2054513-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240728161055.2054513-1-sashal@kernel.org>
 References: <20240728161055.2054513-1-sashal@kernel.org>
@@ -67,66 +70,161 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 4.19.319
 Content-Transfer-Encoding: 8bit
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit 5afc2f763edc5daae4722ee46fea4e627d01fa90 ]
+[ Upstream commit a4e772898f8bf2e7e1cf661a12c60a5612c4afab ]
 
-If the link is powered off during suspend, electrical noise may cause
-errors that are logged via AER.  If the AER interrupt is enabled and shares
-an IRQ with PME, that causes a spurious wakeup during suspend.
+One of the true positives that the cfg_access_lock lockdep effort
+identified is this sequence:
 
-Disable the AER interrupt during suspend to prevent this.  Clear error
-status before re-enabling IRQ interrupts during resume so we don't get an
-interrupt for errors that occurred during the suspend/resume process.
+  WARNING: CPU: 14 PID: 1 at drivers/pci/pci.c:4886 pci_bridge_secondary_bus_reset+0x5d/0x70
+  RIP: 0010:pci_bridge_secondary_bus_reset+0x5d/0x70
+  Call Trace:
+   <TASK>
+   ? __warn+0x8c/0x190
+   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+   ? report_bug+0x1f8/0x200
+   ? handle_bug+0x3c/0x70
+   ? exc_invalid_op+0x18/0x70
+   ? asm_exc_invalid_op+0x1a/0x20
+   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+   pci_reset_bus+0x1d8/0x270
+   vmd_probe+0x778/0xa10
+   pci_device_probe+0x95/0x120
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
-Link: https://lore.kernel.org/r/20240416043225.1462548-2-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-[bhelgaas: drop pci_ancestor_pr3_present() etc, commit log]
+Where pci_reset_bus() users are triggering unlocked secondary bus resets.
+Ironically pci_bus_reset(), several calls down from pci_reset_bus(), uses
+pci_bus_lock() before issuing the reset which locks everything *but* the
+bridge itself.
+
+For the same motivation as adding:
+
+  bridge = pci_upstream_bridge(dev);
+  if (bridge)
+    pci_dev_lock(bridge);
+
+to pci_reset_function() for the "bus" and "cxl_bus" reset cases, add
+pci_dev_lock() for @bus->self to pci_bus_lock().
+
+Link: https://lore.kernel.org/r/171711747501.1628941.15217746952476635316.stgit@dwillia2-xfh.jf.intel.com
+Reported-by: Imre Deak <imre.deak@intel.com>
+Closes: http://lore.kernel.org/r/6657833b3b5ae_14984b29437@dwillia2-xfh.jf.intel.com.notmuch
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+[bhelgaas: squash in recursive locking deadlock fix from Keith Busch:
+https://lore.kernel.org/r/20240711193650.701834-1-kbusch@meta.com]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Kalle Valo <kvalo@kernel.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/pci/pci.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 1563e22600eca..49680f83d8c37 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1509,6 +1509,22 @@ static int aer_probe(struct pcie_device *dev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 4f229cb5d2a9f..aa2be8d815048 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4957,10 +4957,12 @@ static void pci_bus_lock(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
+ 
++	pci_dev_lock(bus->self);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
+ 	}
+ }
+ 
+@@ -4972,8 +4974,10 @@ static void pci_bus_unlock(struct pci_bus *bus)
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
++	pci_dev_unlock(bus->self);
+ }
+ 
+ /* Return 1 on successful lock, 0 on contention */
+@@ -4981,15 +4985,15 @@ static int pci_bus_trylock(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
+ 
++	if (!pci_dev_trylock(bus->self))
++		return 0;
++
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		if (!pci_dev_trylock(dev))
+-			goto unlock;
+ 		if (dev->subordinate) {
+-			if (!pci_bus_trylock(dev->subordinate)) {
+-				pci_dev_unlock(dev);
++			if (!pci_bus_trylock(dev->subordinate))
+ 				goto unlock;
+-			}
+-		}
++		} else if (!pci_dev_trylock(dev))
++			goto unlock;
+ 	}
+ 	return 1;
+ 
+@@ -4997,8 +5001,10 @@ static int pci_bus_trylock(struct pci_bus *bus)
+ 	list_for_each_entry_continue_reverse(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
++	pci_dev_unlock(bus->self);
  	return 0;
  }
  
-+static int aer_suspend(struct pcie_device *dev)
-+{
-+	struct aer_rpc *rpc = get_service_data(dev);
-+
-+	aer_disable_rootport(rpc);
-+	return 0;
-+}
-+
-+static int aer_resume(struct pcie_device *dev)
-+{
-+	struct aer_rpc *rpc = get_service_data(dev);
-+
-+	aer_enable_rootport(rpc);
-+	return 0;
-+}
-+
- /**
-  * aer_root_reset - reset link on Root Port
-  * @dev: pointer to Root Port's pci_dev data structure
-@@ -1561,6 +1577,8 @@ static struct pcie_port_service_driver aerdriver = {
- 	.service	= PCIE_PORT_SERVICE_AER,
+@@ -5030,9 +5036,10 @@ static void pci_slot_lock(struct pci_slot *slot)
+ 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+ 		if (!dev->slot || dev->slot != slot)
+ 			continue;
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
+ 	}
+ }
  
- 	.probe		= aer_probe,
-+	.suspend	= aer_suspend,
-+	.resume		= aer_resume,
- 	.remove		= aer_remove,
- 	.error_resume	= aer_error_resume,
- 	.reset_link	= aer_root_reset,
+@@ -5058,14 +5065,13 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+ 		if (!dev->slot || dev->slot != slot)
+ 			continue;
+-		if (!pci_dev_trylock(dev))
+-			goto unlock;
+ 		if (dev->subordinate) {
+ 			if (!pci_bus_trylock(dev->subordinate)) {
+ 				pci_dev_unlock(dev);
+ 				goto unlock;
+ 			}
+-		}
++		} else if (!pci_dev_trylock(dev))
++			goto unlock;
+ 	}
+ 	return 1;
+ 
+@@ -5076,7 +5082,8 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 			continue;
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
+ 	return 0;
+ }
 -- 
 2.43.0
 
