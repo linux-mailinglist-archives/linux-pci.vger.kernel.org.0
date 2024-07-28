@@ -1,230 +1,110 @@
-Return-Path: <linux-pci+bounces-10891-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10892-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BEFB93E7C2
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99CE493E7CA
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 18:16:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DC391C20C73
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:15:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBA341C21410
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jul 2024 16:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E003140363;
-	Sun, 28 Jul 2024 16:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8000014388F;
+	Sun, 28 Jul 2024 16:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFBMRjEU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghYj+7ju"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB0A13FD83;
-	Sun, 28 Jul 2024 16:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B9641C64;
+	Sun, 28 Jul 2024 16:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722182809; cv=none; b=h9ABxMCV5AciEkbg5rHz3jq99yXkvBZ0kK9cyZPsnatWLyuCiDAwDjub2MumDvAqlnYSPfSDK0O+5z1X06Fy37knKEdww1y9Bor9M1toiqXJUvR5Vkv1jBZkwkK9NsrseZSvuTPAtkWik4mgMoIQOSlsa0b90YbjF9TFamc7OJI=
+	t=1722182832; cv=none; b=JBP0lZ6J35QYPpyXUn9B8a6E+49N9tSYmvPhxdnKwOJa7OzzGSQEFCtfmUhI6Flggrli6LHDT6lBuc8Tgfp5bqmKVF41RwkYiNHW2AFpJNRpaOrDIFTJlg492fGnj7oPHr8j95v3J8u0gQ8pKWGZ1LDKz/G1MUepNd0H+wDcMGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722182809; c=relaxed/simple;
-	bh=/lGRAITXtSpzwUJ7q32wIkYJ92q3Oyo0JBm3X1tuKws=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zv4Kuo9YqW6M5qLijB6gH1UatysxpvbkzkN374larfCBdUGcl/RFPk1iFhk8pBpd0qLk+oWXvoG9XwloNOhJ6nKamzeAwt23FMp2dMoQ6/fZHFoH/3s6GW2eubFa3K/E3x8lvMT2ATjtS1bv0HLqMAxZhT4+0FjXH+l4Gb2V6Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFBMRjEU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C83C4AF15;
-	Sun, 28 Jul 2024 16:06:47 +0000 (UTC)
+	s=arc-20240116; t=1722182832; c=relaxed/simple;
+	bh=cvZjx4tKvqb5Bi6SKxJps2POuHJes3dAJC2Sde15U1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dI8TCt77pZ8zxo4q3Phlv1d1L7LVU5z47GxgxWsR1WoKni1AW/cYq9obDphlN+xXyW3cVbsa/8f9/DjWtnSCeSi54q1+kRDcW8LFRsot5K1dU+QrqxEnfq0LstIYWYQfO9MWYotmJsIcbJ4beFDGPh8SdeZTEnKInzy5xIr/pow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghYj+7ju; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26202C116B1;
+	Sun, 28 Jul 2024 16:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722182808;
-	bh=/lGRAITXtSpzwUJ7q32wIkYJ92q3Oyo0JBm3X1tuKws=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aFBMRjEUSLNYG02sVuiIQXKDsUdP5IwLbMWYgkNhsyx1XGLaz/VRGICcjECKD8Txn
-	 vq5R9ZqWEQEjp3oFsNHhrepdBly1iMZ4IJA6RIV4xptX8NEylF877YA2P9WYQMg0YJ
-	 /T1lRLnKy/GTs5s0pLHMFfwqBBK6o+3VLxhwbKc6va334O3YUgNqKTAgPWU2Ccld4v
-	 uMn2BWMvQjAqKs2Bcx7OK4y1ngyj3VhkHtksoEnN4ebB26tJmCXkV9vKgERCqTl9m6
-	 mid2nprYsMJd9p1kAJcRSgDd8LyrKJNEJwtbss5Iu5kLYkkAGH14hUq0pFs5Ap1Aso
-	 zKfz/jSY1ZUEg==
+	s=k20201202; t=1722182832;
+	bh=cvZjx4tKvqb5Bi6SKxJps2POuHJes3dAJC2Sde15U1s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ghYj+7ju4IkM7hnH5N+52PhvcgVQ9QWZStuU9jdebHJaK4kb6MiVRhM+Yy2tRrmTL
+	 9N2wg6OJTZNlDHUNYQTEBb6OPgzeyHSe3drNblZkZ+fhiQuA3wAsg9BiBz3cV6m18v
+	 oaXPX7KMuiFSjidNPArfuoDds1psK7I2pBVhpAucDKQ7nAHqYrtVe3rlN9YjMi2t4M
+	 TAjg8ItOw1lq+5GbgRrGpWRtPlvhC2NF05ljIJW8jukPwFrwKKe7NhFC2FuKceg8k+
+	 QyKYrT/IIF6BVpYV6EOuYrUchPnzOIIsxjEzeC0V3C4IBUVCEb6Wqb1/Hh+/LHBJSl
+	 IF81zjCkHwoyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Imre Deak <imre.deak@intel.com>,
-	Keith Busch <kbusch@kernel.org>,
+Cc: Ajit Khaparde <ajit.khaparde@broadcom.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
+	Andy Gospodarek <gospo@broadcom.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 22/23] PCI: Add missing bridge lock to pci_bus_lock()
-Date: Sun, 28 Jul 2024 12:05:03 -0400
-Message-ID: <20240728160538.2051879-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 01/17] PCI: Add ACS quirk for Broadcom BCM5760X NIC
+Date: Sun, 28 Jul 2024 12:06:37 -0400
+Message-ID: <20240728160709.2052627-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240728160538.2051879-1-sashal@kernel.org>
-References: <20240728160538.2051879-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.2
+X-stable-base: Linux 6.6.43
 Content-Transfer-Encoding: 8bit
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Ajit Khaparde <ajit.khaparde@broadcom.com>
 
-[ Upstream commit a4e772898f8bf2e7e1cf661a12c60a5612c4afab ]
+[ Upstream commit 524e057b2d66b61f9b63b6db30467ab7b0bb4796 ]
 
-One of the true positives that the cfg_access_lock lockdep effort
-identified is this sequence:
+The Broadcom BCM5760X NIC may be a multi-function device.
 
-  WARNING: CPU: 14 PID: 1 at drivers/pci/pci.c:4886 pci_bridge_secondary_bus_reset+0x5d/0x70
-  RIP: 0010:pci_bridge_secondary_bus_reset+0x5d/0x70
-  Call Trace:
-   <TASK>
-   ? __warn+0x8c/0x190
-   ? pci_bridge_secondary_bus_reset+0x5d/0x70
-   ? report_bug+0x1f8/0x200
-   ? handle_bug+0x3c/0x70
-   ? exc_invalid_op+0x18/0x70
-   ? asm_exc_invalid_op+0x1a/0x20
-   ? pci_bridge_secondary_bus_reset+0x5d/0x70
-   pci_reset_bus+0x1d8/0x270
-   vmd_probe+0x778/0xa10
-   pci_device_probe+0x95/0x120
+While it does not advertise an ACS capability, peer-to-peer transactions
+are not possible between the individual functions. So it is ok to treat
+them as fully isolated.
 
-Where pci_reset_bus() users are triggering unlocked secondary bus resets.
-Ironically pci_bus_reset(), several calls down from pci_reset_bus(), uses
-pci_bus_lock() before issuing the reset which locks everything *but* the
-bridge itself.
+Add an ACS quirk for this device so the functions can be in independent
+IOMMU groups and attached individually to userspace applications using
+VFIO.
 
-For the same motivation as adding:
-
-  bridge = pci_upstream_bridge(dev);
-  if (bridge)
-    pci_dev_lock(bridge);
-
-to pci_reset_function() for the "bus" and "cxl_bus" reset cases, add
-pci_dev_lock() for @bus->self to pci_bus_lock().
-
-Link: https://lore.kernel.org/r/171711747501.1628941.15217746952476635316.stgit@dwillia2-xfh.jf.intel.com
-Reported-by: Imre Deak <imre.deak@intel.com>
-Closes: http://lore.kernel.org/r/6657833b3b5ae_14984b29437@dwillia2-xfh.jf.intel.com.notmuch
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-[bhelgaas: squash in recursive locking deadlock fix from Keith Busch:
-https://lore.kernel.org/r/20240711193650.701834-1-kbusch@meta.com]
+[kwilczynski: commit log]
+Link: https://lore.kernel.org/linux-pci/20240510204228.73435-1-ajit.khaparde@broadcom.com
+Signed-off-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Kalle Valo <kvalo@kernel.org>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ drivers/pci/quirks.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 35fb1f17a589c..bd3818c72ba29 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5441,10 +5441,12 @@ static void pci_bus_lock(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
- 
-+	pci_dev_lock(bus->self);
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_lock(dev);
- 		if (dev->subordinate)
- 			pci_bus_lock(dev->subordinate);
-+		else
-+			pci_dev_lock(dev);
- 	}
- }
- 
-@@ -5456,8 +5458,10 @@ static void pci_bus_unlock(struct pci_bus *bus)
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		if (dev->subordinate)
- 			pci_bus_unlock(dev->subordinate);
--		pci_dev_unlock(dev);
-+		else
-+			pci_dev_unlock(dev);
- 	}
-+	pci_dev_unlock(bus->self);
- }
- 
- /* Return 1 on successful lock, 0 on contention */
-@@ -5465,15 +5469,15 @@ static int pci_bus_trylock(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
- 
-+	if (!pci_dev_trylock(bus->self))
-+		return 0;
-+
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		if (!pci_dev_trylock(dev))
--			goto unlock;
- 		if (dev->subordinate) {
--			if (!pci_bus_trylock(dev->subordinate)) {
--				pci_dev_unlock(dev);
-+			if (!pci_bus_trylock(dev->subordinate))
- 				goto unlock;
--			}
--		}
-+		} else if (!pci_dev_trylock(dev))
-+			goto unlock;
- 	}
- 	return 1;
- 
-@@ -5481,8 +5485,10 @@ static int pci_bus_trylock(struct pci_bus *bus)
- 	list_for_each_entry_continue_reverse(dev, &bus->devices, bus_list) {
- 		if (dev->subordinate)
- 			pci_bus_unlock(dev->subordinate);
--		pci_dev_unlock(dev);
-+		else
-+			pci_dev_unlock(dev);
- 	}
-+	pci_dev_unlock(bus->self);
- 	return 0;
- }
- 
-@@ -5514,9 +5520,10 @@ static void pci_slot_lock(struct pci_slot *slot)
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		pci_dev_lock(dev);
- 		if (dev->subordinate)
- 			pci_bus_lock(dev->subordinate);
-+		else
-+			pci_dev_lock(dev);
- 	}
- }
- 
-@@ -5542,14 +5549,13 @@ static int pci_slot_trylock(struct pci_slot *slot)
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		if (!pci_dev_trylock(dev))
--			goto unlock;
- 		if (dev->subordinate) {
- 			if (!pci_bus_trylock(dev->subordinate)) {
- 				pci_dev_unlock(dev);
- 				goto unlock;
- 			}
--		}
-+		} else if (!pci_dev_trylock(dev))
-+			goto unlock;
- 	}
- 	return 1;
- 
-@@ -5560,7 +5566,8 @@ static int pci_slot_trylock(struct pci_slot *slot)
- 			continue;
- 		if (dev->subordinate)
- 			pci_bus_unlock(dev->subordinate);
--		pci_dev_unlock(dev);
-+		else
-+			pci_dev_unlock(dev);
- 	}
- 	return 0;
- }
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ec4277d7835b2..1bf1a83dabb93 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5092,6 +5092,10 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x1750, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x1751, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x1752, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_BROADCOM, 0x1760, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_BROADCOM, 0x1761, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_BROADCOM, 0x1762, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_BROADCOM, 0x1763, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+ 	/* Amazon Annapurna Labs */
+ 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
 -- 
 2.43.0
 
