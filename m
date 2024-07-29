@@ -1,247 +1,228 @@
-Return-Path: <linux-pci+bounces-10944-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10945-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7243793F3C5
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 13:14:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34F4493F40B
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 13:30:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA8741F2228C
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 11:14:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 568D71C21EA8
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 11:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CAA0145B06;
-	Mon, 29 Jul 2024 11:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953A41459E4;
+	Mon, 29 Jul 2024 11:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I7dUGmPZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbdgQhVJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9DE140363;
-	Mon, 29 Jul 2024 11:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8441448FA;
+	Mon, 29 Jul 2024 11:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722251654; cv=none; b=PeJjFxB65f4xS+8irshbjHMjMLMjmGsmQ+85gcImWe12TMAGnO735DPXKNqfm1oNdh7sSJDB7h3MN/QYi6roepGrYfB9XIgqO0/aBRpwHF/xSNyKCrnwwcpPFnGI6yeOi3N1rmywsA2B++8Bxvs3HkCjD6J8AgxB01mm3OHuykU=
+	t=1722252600; cv=none; b=JgLxhbrM1i/7xvjrduzwMWL+JvMI4sHeiA8GeV7sUPBZSfuj9wJI1sv2TEHMoysfsM6hjida+qhj3pjBYLg6FMOJ3HgTAt3uun/s8he9k77Q7bMd20IPcNqESpDxiqTK8XzQTLPklfwdyvArUhZClix+uJFs40jnFazgJp/chfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722251654; c=relaxed/simple;
-	bh=t7wX+aL1HlfiwcGy2buh3bECW1GJ9PGepZeKPA+JOp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P0Wky3JzPPHqYLmg6hCCLXOEItdb6Q86TeINHFQOLLdyW8ZUHQCsWOOI04erVkleoFyyzsii5NkiXBUhiYq2LCxbPGRcOrv11EZfyleF/aF2mhWmNUET2sQUT+pyGnRu27PZVsGIzyyLo+sqkxyI7XovTfZ/PljydE3dP0Bv2wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I7dUGmPZ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TAc8Cm001491;
-	Mon, 29 Jul 2024 11:14:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-transfer-encoding:in-reply-to; s=pp1; bh=1
-	gs6YnTcqP0KDMgj9iXPwFr3Dpb/8bcmwNBHWzaJYYs=; b=I7dUGmPZuFjYgLTif
-	kmcQYm9gLQbTC2gYu1LiD+AzTgn76nDLNeBbyEd6qWEAlNYb4hqpS0ZFiwb5OIKY
-	aCiKuXA/VDZPW4K3ryh+Nc3Vt3nGU80pREx7jajBTEN2dLtZ7rAZcvMGaXmh0R5d
-	HthGOxBdNJeoqHCN+k3+tV0FeYLKzr+ep51WpAjwzApmDyGmBTD5Nr7ck+IjJdzq
-	dblg1Tq+XJTivOp5o7OhBqHyD4ZiQXWh7oWkue8aSeltW/G+7sjbN8eMMfbvuLdr
-	NfAneQ2N4Z8dIcRgxFA4Dsl+7li3cxLzkm1KPD7O1dE3rqNXU6OZHAEVUyOvdyOv
-	dtzRQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40p10294b8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 11:13:59 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46TBDxH2029072;
-	Mon, 29 Jul 2024 11:13:59 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40p10294b5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 11:13:59 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46T9QucQ007479;
-	Mon, 29 Jul 2024 11:13:58 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40nb7txhp3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 11:13:58 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46TBDqpg56557926
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jul 2024 11:13:54 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BA0892004D;
-	Mon, 29 Jul 2024 11:13:52 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AEBB62004B;
-	Mon, 29 Jul 2024 11:13:49 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.109.198.40])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Jul 2024 11:13:49 +0000 (GMT)
-Date: Mon, 29 Jul 2024 16:43:43 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Lizhi Hou <lizhi.hou@amd.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Saravana Kannan <saravanak@google.com>,
-        Kowshik Jois B S <kowsjois@linux.ibm.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>, Nicholas Piggin <npiggin@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Message-ID: <6mjt477ltxhr4sudizyzbspkqb7yspxvnoiblzeiwxw5kwwsmq@bchicp4bmtzq>
-Mail-Followup-To: Lizhi Hou <lizhi.hou@amd.com>, 
-	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
-	Saravana Kannan <saravanak@google.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org, 
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
-	Nicholas Piggin <npiggin@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-References: <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
- <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
- <20240723162107.GA501469-robh@kernel.org>
- <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
- <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
- <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
- <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
- <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
- <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
- <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
+	s=arc-20240116; t=1722252600; c=relaxed/simple;
+	bh=jU5MdIjEGVQCjk1wsJHSVEQFdc3ni/pdNCW7HkOiyEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z9fsSVuJlbNiTlwDy6ae4LIau8hUlHUKqqRMqDZvjnoDcWnu3N+x3QWLLgAR5xM2rCVM+MEeLnEutrXoTHVwLbXWv3hD53rFAjsMXojqXLJCoSURGk54fGCi0rwleAZPvo5W4yxjUi4ndfmF86Mrchw6Hw+I9sriRlhWwhlz3ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbdgQhVJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42632C32786;
+	Mon, 29 Jul 2024 11:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722252599;
+	bh=jU5MdIjEGVQCjk1wsJHSVEQFdc3ni/pdNCW7HkOiyEc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dbdgQhVJc6pf0kEzta9tlx02VjbM+40HHBUHujn5XodAgJv0E/E1XhOUeW667HgWE
+	 2BKSA4ZsJ7B52CVSsXXCAo/6kT50ifGvBNdiWLHNKPcNHUEDcPyUgvjX1RDsLRJCHt
+	 AMFzLJ4jjeWSspJf8oFdczqHSTk6pfgIdtWYhsuvY97oru2WC6DMzEG6RO00+jdZhp
+	 G5CTPMIIHVQ4paD9bvQzvOcJfrJd2smBH8oiqgcOIONha3UKgdgryrHY92F5lV6xcH
+	 Zu6Tkgf65ydK2IHRC+wJiuOtkyt2QeiZrz3lZonSBReeyLG2sS/OKSmiMFnVqsazQ/
+	 DP4N4U1uqrKsQ==
+Message-ID: <d4bb01e9-0293-4d6a-a2c1-3d37b3a368ca@kernel.org>
+Date: Mon, 29 Jul 2024 20:29:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
+To: pstanner@redhat.com, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240725120729.59788-2-pstanner@redhat.com>
+ <6ce4c9f4-7c75-4451-8c6f-fe3d6a3dd913@kernel.org>
+ <ee44ea7ac760e73edad3f20b30b4d2fff66c1a85.camel@redhat.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <ee44ea7ac760e73edad3f20b30b4d2fff66c1a85.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rc17lGWPFBYXtbMfuL_DVAKA2x0JxuLl
-X-Proofpoint-GUID: 4tGW0z5h9ARYRTEuJ_avk15AcJCpM8FZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-29_09,2024-07-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407290073
 
-Hi Lizhi,
+On 7/27/24 03:43, pstanner@redhat.com wrote:
+>> That said, I do not see that as an issue in itself. What I fail to
+>> understand
+>> though is why that intx devres is not deleted on device teardown. I
+>> think this
+>> may have something to do with the fact that pcim_intx() always does
+>> "res->orig_intx = !enable;", that is, it assumes that if there is a
+>> call to
+>> pcim_intx(dev, 0), then it is because intx where enabled already,
+>> which I do not
+>> think is true for most drivers... So we endup with INTX being wrongly
+>> enabled on
+>> device teardown by pcim_intx_restore(), and because of that, the intx
+>> resource
+>> is not deleted ?
+> 
+> Spoiler: The device resources that have initially been created do get
+> deleted. Devres works as intended. The issue is that the forces of evil
+> invoke pci_intx() through another path, hidden behind an API, through
+> another devres callback.
+> 
+> So the device resource never gets deleated because it is *created* on
+> driver detach, when devres already ran.
 
-On 2024/07/26 11:45 AM, Lizhi Hou wrote:
-> 
-> On 7/26/24 10:52, Rob Herring wrote:
-> > On Thu, Jul 25, 2024 at 6:06 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
-> > > Hi Amit,
-> > > 
-> > > 
-> > > I try to follow the option which add a OF flag. If Rob is ok with this,
-> > > I would suggest to use it instead of V1 patch
-> > > 
-> > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > > index dda6092e6d3a..a401ed0463d9 100644
-> > > --- a/drivers/of/dynamic.c
-> > > +++ b/drivers/of/dynamic.c
-> > > @@ -382,6 +382,11 @@ void of_node_release(struct kobject *kobj)
-> > >                                  __func__, node);
-> > >           }
-> > > 
-> > > +       if (of_node_check_flag(node, OF_CREATED_WITH_CSET)) {
-> > > +               of_changeset_revert(node->data);
-> > > +               of_changeset_destroy(node->data);
-> > > +       }
-> > What happens if multiple nodes are created in the changeset?
-> Ok. multiple nodes will not work.
-> > 
-> > > +
-> > >           if (node->child)
-> > >                   pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
-> > >                           __func__, node->parent, node->full_name);
-> > > @@ -507,6 +512,7 @@ struct device_node *of_changeset_create_node(struct
-> > > of_changeset *ocs,
-> > >           np = __of_node_dup(NULL, full_name);
-> > >           if (!np)
-> > >                   return NULL;
-> > > +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
-> > This should be set where the data ptr is set.
-> 
-> Ok. It sounds the fix could be simplified to 3 lines change.
+That explains the issue :)
 
-Thanks for the patch. The hot-plug and hot-unplug of PCI device seem to work
-fine as expected. I see this patch would attempt to remove only the nodes which
-were created in `of_pci_make_dev_node()` with the help of the newly introduced
-flag, which looks good to me.
+>> Re-enabling intx on teardown is wrong I think, but that still does
+>> not explain
+>> why that resource is not deleted. I fail to see why.
+> 
+> You came very close to the truth ;)
+> 
+> With some help from my favorite coworker I did some tracing today and
+> found this when doing `rmmod ahci`:
+> 
+> => pci_intx
+> => pci_msi_shutdown
+> => pci_disable_msi
+> => devres_release_all
+> => device_unbind_cleanup
+> => device_release_driver_internal
+> => driver_detach
+> => bus_remove_driver
+> => pci_unregister_driver
+> => __do_sys_delete_module
+> => do_syscall_64
+> => entry_SYSCALL_64_after_hwframe
+> 
+> The SYSCALL is my `rmmod`.
+> 
+> As you can see, pci_intx() is invoked indirectly through
+> pci_disable_msi() – which gets invoked by devres, which is precisely
+> one reason why you could not find the suspicious pci_intx() call in the
+> ahci code base.
+> 
+> Now the question is: Who set up that devres callback which indirectly
+> calls pci_intx()?
+> 
+> It is indeed MSI, here in msi/msi.c:
+> 
+> static void pcim_msi_release(void *pcidev)
+> {
+>  struct pci_dev *dev = pcidev;
+> 
+>  dev->is_msi_managed = false;
+>  pci_free_irq_vectors(dev); // <-- calls pci_disable_msi(), which calls pci_intx(), which re-registers yet another devres callback
+> }
+> 
+> /*
+>  * Needs to be separate from pcim_release to prevent an ordering problem
+> 
+> ==> Oh, here they even had a warning about that interacting with devres somehow...
+> 
+>  * vs. msi_device_data_release() in the MSI core code.
+>  */
+> static int pcim_setup_msi_release(struct pci_dev *dev)
+> {
+>  int ret;
+> 
+>  if (!pci_is_managed(dev) || dev->is_msi_managed)
+>  return 0;
+> 
+>  ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
+>  if (ret)
+>  return ret;
+> 
+>  dev->is_msi_managed = true;
+>  return 0;
+> }
+> 
+> I don't know enough about AHCI to see where exactly it jumps into
+> these, but a candidate would be:
+>  * pci_enable_msi(), called among others in acard-ahci.c
+> 
+> Another path is:
+>    1. ahci_init_one() calls
+>    2. ahci_init_msi() calls
+>    3. pci_alloc_irq_vectors() calls
+>    4. pci_alloc_irq_vectors_affinity() calls
+>    5. __pci_enable_msi_range() OR __pci_enable_msix_range() call
+>    6. pci_setup_msi_context() calls
+>    7. pcim_setup_msi_release() which registers the callback to
+>       pci_intx()
 
-Also, since a call to `of_pci_make_dev_node()` from `pci_bus_add_device()`, that
-creates devices nodes only for bridge devices, is conditional on
-`pci_is_bridge()`, it only makes sense to retain the logical symmetry and call
-`of_pci_remove_node()` conditionally on `pci_is_bridge()` as well in
-`pci_stop_dev()`. Hence, I would like to propose the below change along with the
-above patch:
+ahci_init_one() is the function used by the default AHCI driver (ahci.ko), so
+this path is correct.
 
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index 910387e5bdbf..c6394bf562cd 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -23,7 +23,8 @@ static void pci_stop_dev(struct pci_dev *dev)
-                device_release_driver(&dev->dev);
-                pci_proc_detach_device(dev);
-                pci_remove_sysfs_dev_files(dev);
--               of_pci_remove_node(dev);
-+               if (pci_is_bridge(dev))
-+                       of_pci_remove_node(dev);
- 
-                pci_dev_assign_added(dev, false);
-        }
+> Ha!
+> 
+> I think I earned myself a Friday evening beer now 8-)
 
-Please let me know of your thoughts on this and based on that I can spin the v3
-of this patch.
+I was way ahead of you :)
 
-In addition to this, can this patch be taken as part of 6.11 as a bug fix?
+> Now the interesting question will be how the heck we're supposed to
+> clean that up.
 
-Thanks,
-Amit
+If pcim_intx() always gets called on device release, AND MSI/MSIX are also
+managed interrupts with a devres action on release, I would say that
+pcim_msi_release() should NOT lead to a path calling pci_intx(dev, 0), as that
+would create the intx devres again. But given the comment you point out above,
+it seems that there are some ordering constraints between disabling msi and intx
+? If that is the case, then may be this indeed will be tricky.
+
+> Another interesting question is: Did that only work by coincidence
+> during the last 15 years, or is it by design that the check in
+> pci_intx():
+> 
+> if (new != pci_command)
+> 
+> only evaluates to true if we are not in a detach path.
+
+I would say that it evaluates to true for any device using intx, which tend to
+be rare these days. In such case, then enabling on device attach and disabling
+on detach would lead to new != pci_command, including in the hidden intx disable
+path triggered by disabling msi. But the devres being recreated on detach
+definitely seem to depend on the disabling order though. So we may have been
+lucky indeed.
 
 > 
+> If it were coincidence, it would not have caused faults as it did now
+> with my recent work, because the old version did not allocate in
+> pci_intx().
 > 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 51e3dd0ea5ab..0b3ba1e1b18c 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -613,7 +613,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
->         struct device_node *np;
-> 
->         np = pci_device_to_OF_node(pdev);
-> -       if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-> +       if (!np || !of_node_check_flag(np, OF_CREATED_WITH_CSET))
->                 return;
->         pdev->dev.of_node = NULL;
-> 
-> @@ -672,6 +672,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->         if (ret)
->                 goto out_free_node;
-> 
-> +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
->         np->data = cset;
->         pdev->dev.of_node = np;
->         kfree(name);
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a0bedd038a05..a46317f6626e 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
->  #define OF_POPULATED_BUS       4 /* platform bus created for children */
->  #define OF_OVERLAY             5 /* allocated for an overlay */
->  #define OF_OVERLAY_FREE_CSET   6 /* in overlay cset being freed */
-> +#define OF_CREATED_WITH_CSET    7 /* created by of_changeset_create_node */
-> 
->  #define OF_BAD_ADDR    ((u64)-1)
+> But it could certainly have been racy and might run into a UAF since
+> the old pci_intx() would have worked on memory that is also managed by
+> devres, but has been registered at a different place. I guess that is
+> what that comment in the MSI code quoted above is hinting at.
 > 
 > 
-> Lizhi
+> Christoph indeed rightfully called it voodoo ^^
 > 
-> > 
-> > Rob
+> 
+> Cheers,
+> P.
+> 
+> 
+
+-- 
+Damien Le Moal
+Western Digital Research
+
 
