@@ -1,117 +1,247 @@
-Return-Path: <linux-pci+bounces-10943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A82AD93F2A3
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 12:28:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7243793F3C5
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 13:14:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52E2F1F22411
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 10:28:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA8741F2228C
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 11:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7C2143C6F;
-	Mon, 29 Jul 2024 10:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CAA0145B06;
+	Mon, 29 Jul 2024 11:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m5rgXWsM"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I7dUGmPZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA212143873;
-	Mon, 29 Jul 2024 10:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9DE140363;
+	Mon, 29 Jul 2024 11:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722248879; cv=none; b=kCeKt2ItW4qD1/hlodcbVjBYiW2GeU7NMlsb6JO5i40XbUG3V4FiCJ10cBaOHQ/zX6PjaxiI/7EdOZoMYNGp9YDAIdvCLWYB84QrZsuYseweT70x7ZtbKwgorrOphtieWBXHhfne16sqHxGt5DZ5V2Gh462unG06yNUsr1Wqfw8=
+	t=1722251654; cv=none; b=PeJjFxB65f4xS+8irshbjHMjMLMjmGsmQ+85gcImWe12TMAGnO735DPXKNqfm1oNdh7sSJDB7h3MN/QYi6roepGrYfB9XIgqO0/aBRpwHF/xSNyKCrnwwcpPFnGI6yeOi3N1rmywsA2B++8Bxvs3HkCjD6J8AgxB01mm3OHuykU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722248879; c=relaxed/simple;
-	bh=Bt99ge3UUZGPkVxOwjK0CeLHXnSXdbcs1gevqufOntg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ewr2AD7j6paN+I8bqNEoQmyZMdU7LvqZjImdhhpJWEJ7F5Oj+TkdmmvlBNnk10Ua3CrPd+Q2CU8SiMd+yj17urmISGPAeIeti7pEd87ArKXBRtn3B/KSlhEo0K7HbVmBZQuOHp/Y4wxU5herIlrzJ81zq6zurc0HzsY6sPNAAD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m5rgXWsM; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722248878; x=1753784878;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Bt99ge3UUZGPkVxOwjK0CeLHXnSXdbcs1gevqufOntg=;
-  b=m5rgXWsMaVGy12/4ilQY1djYu9Q37+mvkuxorQppjNccBnxkRHF69VSv
-   KiGdSSeAEX/hU5SpG3MOEduL9QUY1Z1EgXjoww8z3uk/1C5i//BbHdJJd
-   t2oCR7v6M8qgemiJyhWAaBBPQ0j8w2IfubWtIkOPvM1ytK1iEt5pHv+9a
-   fXp1Y3qljI8FV3X2CnMh/7cEf8AUzJLzAwAzdVlGduFBSyrl4iICI0xW+
-   u4Haa/T6xRwBjOXYkfKSn4Jl6x/qcm5AIjrTDB8FG+6V018IVCAnTxiB1
-   WhoAZcl/Kb4OBf6+PjVAvrleACduwARVe+WwKJy8veHt/Ka6WNKcZdXJQ
-   A==;
-X-CSE-ConnectionGUID: TGJvmAnvS4aKhXpdVNx+lw==
-X-CSE-MsgGUID: cwTsFYcJSZW1RrFCwrXejg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="37502565"
-X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="37502565"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 03:27:57 -0700
-X-CSE-ConnectionGUID: Ynsp7EQmRje2W4uZXxa9yQ==
-X-CSE-MsgGUID: ZV+fiUwNQXmPYSqHZqNgKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="77171478"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.151])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 03:27:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Jul 2024 13:27:44 +0300 (EEST)
-To: Matthew W Carlis <mattc@purestorage.com>
-cc: macro@orcam.me.uk, alex.williamson@redhat.com, bhelgaas@google.com, 
-    christophe.leroy@csgroup.eu, davem@davemloft.net, 
-    david.abdurachmanov@gmail.com, edumazet@google.com, kuba@kernel.org, 
-    leon@kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, 
-    linuxppc-dev@lists.ozlabs.org, Lukas Wunner <lukas@wunner.de>, 
-    mahesh@linux.ibm.com, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    mpe@ellerman.id.au, Netdev <netdev@vger.kernel.org>, npiggin@gmail.com, 
-    oohall@gmail.com, pabeni@redhat.com, pali@kernel.org, saeedm@nvidia.com, 
-    sr@denx.de, wilson@tuliptree.org
-Subject: Re: PCI: Work around PCIe link training failures
-In-Reply-To: <20240726080446.12375-1-mattc@purestorage.com>
-Message-ID: <914b7d34-9ed5-cd99-cb76-f6f8eccb842e@linux.intel.com>
-References: <20240724191830.4807-1-mattc@purestorage.com> <20240726080446.12375-1-mattc@purestorage.com>
+	s=arc-20240116; t=1722251654; c=relaxed/simple;
+	bh=t7wX+aL1HlfiwcGy2buh3bECW1GJ9PGepZeKPA+JOp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0Wky3JzPPHqYLmg6hCCLXOEItdb6Q86TeINHFQOLLdyW8ZUHQCsWOOI04erVkleoFyyzsii5NkiXBUhiYq2LCxbPGRcOrv11EZfyleF/aF2mhWmNUET2sQUT+pyGnRu27PZVsGIzyyLo+sqkxyI7XovTfZ/PljydE3dP0Bv2wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I7dUGmPZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TAc8Cm001491;
+	Mon, 29 Jul 2024 11:14:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=pp1; bh=1
+	gs6YnTcqP0KDMgj9iXPwFr3Dpb/8bcmwNBHWzaJYYs=; b=I7dUGmPZuFjYgLTif
+	kmcQYm9gLQbTC2gYu1LiD+AzTgn76nDLNeBbyEd6qWEAlNYb4hqpS0ZFiwb5OIKY
+	aCiKuXA/VDZPW4K3ryh+Nc3Vt3nGU80pREx7jajBTEN2dLtZ7rAZcvMGaXmh0R5d
+	HthGOxBdNJeoqHCN+k3+tV0FeYLKzr+ep51WpAjwzApmDyGmBTD5Nr7ck+IjJdzq
+	dblg1Tq+XJTivOp5o7OhBqHyD4ZiQXWh7oWkue8aSeltW/G+7sjbN8eMMfbvuLdr
+	NfAneQ2N4Z8dIcRgxFA4Dsl+7li3cxLzkm1KPD7O1dE3rqNXU6OZHAEVUyOvdyOv
+	dtzRQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40p10294b8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jul 2024 11:13:59 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46TBDxH2029072;
+	Mon, 29 Jul 2024 11:13:59 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40p10294b5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jul 2024 11:13:59 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46T9QucQ007479;
+	Mon, 29 Jul 2024 11:13:58 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40nb7txhp3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jul 2024 11:13:58 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46TBDqpg56557926
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Jul 2024 11:13:54 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BA0892004D;
+	Mon, 29 Jul 2024 11:13:52 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AEBB62004B;
+	Mon, 29 Jul 2024 11:13:49 +0000 (GMT)
+Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.109.198.40])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 29 Jul 2024 11:13:49 +0000 (GMT)
+Date: Mon, 29 Jul 2024 16:43:43 +0530
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Saravana Kannan <saravanak@google.com>,
+        Kowshik Jois B S <kowsjois@linux.ibm.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Lukas Wunner <lukas@wunner.de>, Nicholas Piggin <npiggin@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+Message-ID: <6mjt477ltxhr4sudizyzbspkqb7yspxvnoiblzeiwxw5kwwsmq@bchicp4bmtzq>
+Mail-Followup-To: Lizhi Hou <lizhi.hou@amd.com>, 
+	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org, 
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
+	Nicholas Piggin <npiggin@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+References: <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+ <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
+ <20240723162107.GA501469-robh@kernel.org>
+ <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
+ <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
+ <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
+ <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
+ <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
+ <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
+ <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: rc17lGWPFBYXtbMfuL_DVAKA2x0JxuLl
+X-Proofpoint-GUID: 4tGW0z5h9ARYRTEuJ_avk15AcJCpM8FZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-29_09,2024-07-26_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407290073
 
-On Fri, 26 Jul 2024, Matthew W Carlis wrote:
+Hi Lizhi,
 
-> On Mon, 22 Jul 2024, Maciej W. Rozycki wrote:
+On 2024/07/26 11:45 AM, Lizhi Hou wrote:
 > 
-> > The main reason is it is believed that it is the downstream device
-> > causing the issue, and obviously you can't fetch its ID if you can't
-> > negotiate link so as to talk to it in the first place.
+> On 7/26/24 10:52, Rob Herring wrote:
+> > On Thu, Jul 25, 2024 at 6:06 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
+> > > Hi Amit,
+> > > 
+> > > 
+> > > I try to follow the option which add a OF flag. If Rob is ok with this,
+> > > I would suggest to use it instead of V1 patch
+> > > 
+> > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> > > index dda6092e6d3a..a401ed0463d9 100644
+> > > --- a/drivers/of/dynamic.c
+> > > +++ b/drivers/of/dynamic.c
+> > > @@ -382,6 +382,11 @@ void of_node_release(struct kobject *kobj)
+> > >                                  __func__, node);
+> > >           }
+> > > 
+> > > +       if (of_node_check_flag(node, OF_CREATED_WITH_CSET)) {
+> > > +               of_changeset_revert(node->data);
+> > > +               of_changeset_destroy(node->data);
+> > > +       }
+> > What happens if multiple nodes are created in the changeset?
+> Ok. multiple nodes will not work.
+> > 
+> > > +
+> > >           if (node->child)
+> > >                   pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
+> > >                           __func__, node->parent, node->full_name);
+> > > @@ -507,6 +512,7 @@ struct device_node *of_changeset_create_node(struct
+> > > of_changeset *ocs,
+> > >           np = __of_node_dup(NULL, full_name);
+> > >           if (!np)
+> > >                   return NULL;
+> > > +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
+> > This should be set where the data ptr is set.
 > 
-> Have had some more time to look into this issue. So, I think the problem
-> with this change is that it is quite strict in its assumptions about what
-> it means when a device fails to train, but in an environment where hot-plug
-> is exercised frequently you are essentially bound have something interrupt
-> the link training. In the first case where we caught this problem our test
-> automation was doing some power cycle tortures on our endpoints. If you catch
-> the right timing the link will be forced down to Gen1 forever without some other
-> automation to recover you unless your device is the one single device in the
-> allowlist which had the hardware bug in the first place.
+> Ok. It sounds the fix could be simplified to 3 lines change.
+
+Thanks for the patch. The hot-plug and hot-unplug of PCI device seem to work
+fine as expected. I see this patch would attempt to remove only the nodes which
+were created in `of_pci_make_dev_node()` with the help of the newly introduced
+flag, which looks good to me.
+
+Also, since a call to `of_pci_make_dev_node()` from `pci_bus_add_device()`, that
+creates devices nodes only for bridge devices, is conditional on
+`pci_is_bridge()`, it only makes sense to retain the logical symmetry and call
+`of_pci_remove_node()` conditionally on `pci_is_bridge()` as well in
+`pci_stop_dev()`. Hence, I would like to propose the below change along with the
+above patch:
+
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index 910387e5bdbf..c6394bf562cd 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -23,7 +23,8 @@ static void pci_stop_dev(struct pci_dev *dev)
+                device_release_driver(&dev->dev);
+                pci_proc_detach_device(dev);
+                pci_remove_sysfs_dev_files(dev);
+-               of_pci_remove_node(dev);
++               if (pci_is_bridge(dev))
++                       of_pci_remove_node(dev);
+ 
+                pci_dev_assign_added(dev, false);
+        }
+
+Please let me know of your thoughts on this and based on that I can spin the v3
+of this patch.
+
+In addition to this, can this patch be taken as part of 6.11 as a bug fix?
+
+Thanks,
+Amit
+
 > 
-> I wonder if we can come up with some kind of alternative.
-
-The most obvious solution is to not leave the speed at Gen1 on failure in 
-Target Speed quirk but to restore the original Target Speed value. The 
-downside with that is if the current retraining interface (function) is 
-used, it adds delay. But the retraining functions could be reworked such 
-that the retraining is only triggered in case the Target Speed quirk 
-fails but we don't wait for its result (which will very likely fail 
-anyway).
-
--- 
- i.
-
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 51e3dd0ea5ab..0b3ba1e1b18c 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -613,7 +613,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
+>         struct device_node *np;
+> 
+>         np = pci_device_to_OF_node(pdev);
+> -       if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> +       if (!np || !of_node_check_flag(np, OF_CREATED_WITH_CSET))
+>                 return;
+>         pdev->dev.of_node = NULL;
+> 
+> @@ -672,6 +672,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>         if (ret)
+>                 goto out_free_node;
+> 
+> +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
+>         np->data = cset;
+>         pdev->dev.of_node = np;
+>         kfree(name);
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index a0bedd038a05..a46317f6626e 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
+>  #define OF_POPULATED_BUS       4 /* platform bus created for children */
+>  #define OF_OVERLAY             5 /* allocated for an overlay */
+>  #define OF_OVERLAY_FREE_CSET   6 /* in overlay cset being freed */
+> +#define OF_CREATED_WITH_CSET    7 /* created by of_changeset_create_node */
+> 
+>  #define OF_BAD_ADDR    ((u64)-1)
+> 
+> 
+> Lizhi
+> 
+> > 
+> > Rob
 
