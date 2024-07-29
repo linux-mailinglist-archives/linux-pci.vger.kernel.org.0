@@ -1,209 +1,308 @@
-Return-Path: <linux-pci+bounces-10981-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10982-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 997B193FC5F
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 19:22:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E650793FD3D
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 20:19:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FAF4280D73
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 17:22:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A969283240
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 18:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA7315ECD0;
-	Mon, 29 Jul 2024 17:21:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF03415ECC0;
+	Mon, 29 Jul 2024 18:19:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ns+vfzAQ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TiQ55A4X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36565028C;
-	Mon, 29 Jul 2024 17:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722273686; cv=none; b=MCo64GAzmR9/JdiBbbPKLHIDuRGG7j7Y7OZMY2KS/zMXjHOB9VBQMRpyAOqki2SIPyjXDxPq0cQ3QWQNslmInZVifihp3DHuCjgFlabqZ94fuq1+a0XGxYFgWg3CyN0DOnJGjW085fnTemTmjXsWLQfc0RKDsPQq8fOpxKMGUQo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722273686; c=relaxed/simple;
-	bh=4fQr//Ka7sTy/VMt7ggKFrz3+ahovq34k1sJWhkzznQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=r6BvVQa2tE0llxqL6VD5o9JsTRuBEsd7EulqbdD8RuMm+Golbi7MMdzQfQcUwHnWTVIZqzzVsJUfQX1hzuUIKoechG5c3Lq+YRTxhxQxPmA7NYXU5O7NGt/NNBxAOqz2bK2wdWmvBF2EQ8knx1isu3jyn0v12SpIIc9NjeaZ1Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ns+vfzAQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TAG9PJ030809;
-	Mon, 29 Jul 2024 17:19:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9cUy14n2UN04pp4Q33jv4wdH2wJt0tYU3Imvp2lZlLM=; b=Ns+vfzAQCwgtKVra
-	8A/9VBAiSvWr5yKACWl3Rmv3WHBLyn7ZW9CHE3dxZf5d1oTl2vT2oSu/GnIlAL7H
-	8sH5uRX6BE2vO9/f/6q8ygKf1sGCgGHtAN09N6WVCCFRgB0gWulr9M6W4+IDZ/Nm
-	NI416IfE7tRItLXkkmUqldb1cZIbg0Oerej+eVHT6vrrBSdiWnnYyG/4/SmlrE+6
-	TDYs1P7wwh9pTEOF/+C3+jlQq0NAY7054P/Pp8YnRndivu5ldJd6b3iuseGJ6RhU
-	BYYSOFgPWyOliQGnB+uM3rwzCtoGV6zcGdIay0SZqJ0m912WPsapab2K5zx95llD
-	1WJzYw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40mrfxn15u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 17:19:47 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46THJkIj017051
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 17:19:46 GMT
-Received: from [10.110.106.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 29 Jul
- 2024 10:19:45 -0700
-Message-ID: <925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com>
-Date: Mon, 29 Jul 2024 10:19:45 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78A078274;
+	Mon, 29 Jul 2024 18:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722277152; cv=fail; b=k7+ZZoMneYJkodHgWfskFHJYRkdnQ6mzESnUYAmXXhXZZu1qPKiDocMXBuYIYyRc+3s5JtZIHPFS/eVlY4iFj9bVg6aIwchzWH4v5j9NC5h3mRGk/TTWBe/13fTozXAQk3wH4fvL8ynzWjO1SvxWWl8yckzA+mwsXRd90YOvoMQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722277152; c=relaxed/simple;
+	bh=YC9CYDNIyz5ZxdmeUbCnc/UXc493pFg71jmgThtO6no=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JhC3dDJvlZx03Lll5jAye+FQBwsTdOspnDdi90iU7K6r6mbgqxvdTUGuTMmQC/+MmzTQeSK5Uq0UMxcrmGV055sFSTnGTz2zh/GBBUM9O/Lg5v6mQiiCZ/25igm/BKADj0kYFgBiqWTvgyDMs8NEv9ORgnWx7WS2uXK0Lkm2AQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TiQ55A4X; arc=fail smtp.client-ip=40.107.243.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x92+ig9NnRi6+CSVlL0IN7iyOhtUcpDi1u0YeH2uP6anUT8cwwHWnOHZfWmbYxRmMT3ufB6xWyoC0lk6a4iTzq5InXHC42iVsmgh+H6VrOeXDmzxCJk35M3ITBWeHajvcgJj/jX5aXpdANZrifQDXtI2K25JhYnK7NDwHe/E1DioPyOe73Chmie49z3fkhGeVDLxcuIgSpol4rEg/AxyBLFxwYi//MGiyiBKq7atszEswrA8vSc0ZbLFpbJObbwkLWfaAyq8ZEzR1VQXGtdV3wlT+v577+B8OyPIn4scx+eQSI29Pq01Km+OYAdcYjDiH+eU7zUUEhG+CBVCuJa1uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tDlIfwE8BsVW0wZ55q3xbfl/zAmQ8BQQHHEhA6iSgZg=;
+ b=HaFNkAZ3ixPJS/Mk2mKZJWZN8Gn1Sv/2xYZJfijACRKtRSvrjdpQKTQNBOg5w3naZesYClsHWPAbHn1e/mjtFjAR6J8rKLsAvM+4HsUEdP773fyBw9z1nsfpI6QtJc0s66qS4A27q5jnNUbn27eYRgwMvqnKhh43AHSG8l4JiNYy6yrLiUCz8tvwsvTBJNGuwh4zutP9cs1JHhSFRkzOg8z5eYAf01EgWpmEs6q0j/ri2oXBW6hcrAS/MSK6ug+kvO1DABCSsMQeVXlYswYAjZqkt3ca5rtBcu82wVBzCjWzgh6/5CtnYWw/5YtUQ61ZMhKPfVAKR7B7QsrIl2dj7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tDlIfwE8BsVW0wZ55q3xbfl/zAmQ8BQQHHEhA6iSgZg=;
+ b=TiQ55A4X1Z6GMYi+1rEDM/QoVfjYaQlRJs8Ork7O8gAjfcw9i1R9/sCwMxnYP+uYq8yey2viMe5HsiTbFMzhdPd4hYX1VMSgToWKHgIvnvKbPIC6pimgqqylrxfixH83T/Fc1Bepeu/yk2MPwIEQiuNwhXGlXLAtgr1zlaH4yVA=
+Received: from SJ0PR03CA0019.namprd03.prod.outlook.com (2603:10b6:a03:33a::24)
+ by CY5PR12MB6083.namprd12.prod.outlook.com (2603:10b6:930:29::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.27; Mon, 29 Jul
+ 2024 18:19:06 +0000
+Received: from SJ1PEPF00002310.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a:cafe::91) by SJ0PR03CA0019.outlook.office365.com
+ (2603:10b6:a03:33a::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.34 via Frontend
+ Transport; Mon, 29 Jul 2024 18:19:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00002310.mail.protection.outlook.com (10.167.242.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7828.19 via Frontend Transport; Mon, 29 Jul 2024 18:19:06 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 29 Jul
+ 2024 13:19:05 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 29 Jul
+ 2024 13:19:05 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 29 Jul 2024 13:19:04 -0500
+Message-ID: <8dade04c-609b-f69d-0809-4aa8fecd9b87@amd.com>
+Date: Mon, 29 Jul 2024 11:19:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
- host generic ECAM driver
-To: <will@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-        <manivannan.sadhasivam@linaro.org>, <cassel@kernel.org>,
-        <yoshihiro.shimoda.uh@renesas.com>, <s-vadapalli@ti.com>,
-        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
-        <amishin@t-argos.ru>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <Frank.Li@nxp.com>,
-        <ilpo.jarvinen@linux.intel.com>, <vidyas@nvidia.com>,
-        <marek.vasut+renesas@gmail.com>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC: <quic_ramkri@quicinc.com>, <quic_nkela@quicinc.com>,
-        <quic_shazhuss@quicinc.com>, <quic_msarkar@quicinc.com>,
-        <quic_nitegupt@quicinc.com>
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
 Content-Language: en-US
-From: Mayank Rana <quic_mrana@quicinc.com>
-In-Reply-To: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+To: Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>, "Saravana
+ Kannan" <saravanak@google.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kvm-ppc@vger.kernel.org>, Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+	Lukas Wunner <lukas@wunner.de>, Nicholas Piggin <npiggin@gmail.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, Vaibhav Jain <vaibhav@linux.ibm.com>,
+	<linuxppc-dev@lists.ozlabs.org>
+References: <20240723162107.GA501469-robh@kernel.org>
+ <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
+ <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
+ <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
+ <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
+ <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
+ <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
+ <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
+ <6mjt477ltxhr4sudizyzbspkqb7yspxvnoiblzeiwxw5kwwsmq@bchicp4bmtzq>
+ <af45d85c-2145-cbce-b91b-2aa70a9dcd0f@amd.com>
+ <vctizrpvsuy4ebrvmub756sxs2bridn6gkav55ehlz5gjlc44b@jyzymbydkut2>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <vctizrpvsuy4ebrvmub756sxs2bridn6gkav55ehlz5gjlc44b@jyzymbydkut2>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: j3DfV2Yq7u24d5QjiHxI1vJcR5BX8XOb
-X-Proofpoint-ORIG-GUID: j3DfV2Yq7u24d5QjiHxI1vJcR5BX8XOb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-29_15,2024-07-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 mlxlogscore=965 malwarescore=0
- bulkscore=0 phishscore=0 clxscore=1015 mlxscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407290116
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002310:EE_|CY5PR12MB6083:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7e81fcc-8500-48e5-06a3-08dcaffaeebc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S05hRXkycEhmT0haR0MxeUtqR0Z4TkpRdnNXZ1VzTVpNemJ5Y3k4dnZFdktB?=
+ =?utf-8?B?K0M0dFBSVjdOaktQZWk1Q1BvWXplc0hEQUdLZ1FRa2NUOTgwT1hJNXZmdTdK?=
+ =?utf-8?B?K0NTZDBXcUZyak12cHZpK0NwRlR1MGM0RGIxczdhSXdMRE5KRENNS2hrWnhT?=
+ =?utf-8?B?bERvN3hyNmZDa0RrYnFXdFl6OG9EK3dua2JOeWtRZDQ4MTRWN0pTU0t4ZHVm?=
+ =?utf-8?B?Z0w2eTdESGJVS09NOE9KNnUvU1JkbC9jQjZpMU9wK1l1NzV4SWhvMlBaNDBl?=
+ =?utf-8?B?Zld1dGwxaU0zUXIwSVYwQWZnaFlsMXFBWTJNemhMNlMyTGdqZnJxQzQrMmxa?=
+ =?utf-8?B?VGlmSnFjK09uYWhrbE9CaXRkOGpKaWhmTDdneG9BNkhYM2VneTdpZ0xXamQ3?=
+ =?utf-8?B?U1ZxUHRoSmtiUVVseWNSb3F1K2ZNYmk4Wm9xdmNnNHdRR0xDOXBGbmFKc0l3?=
+ =?utf-8?B?MExQVTJHZ05HTTBTdGNOM0hXcjN3cVhRRnlZWlpTdnM0NTZQZzlwR3VnL1JL?=
+ =?utf-8?B?WWI5cTVva3kyOUpkc2Q1MTJQZ0ZzUmE3WUlWY0JFV1IyeHR3ZEdBQ0ltL1Iy?=
+ =?utf-8?B?ekVVQUhSOHFaRjNlRFo0ZndZOWFuT2tTMVhtVzNPOTZjTEVpUjhiYWFqU1Ar?=
+ =?utf-8?B?Vm56NFhUODAzQzAzQSsyQ04wbWtiVzNiUUN0UnhiU1FYNnBKMkFmVGYxNWti?=
+ =?utf-8?B?NTYxWmR3MVhmRXNqOGFqUHJZYzlNMVFkTXZ5OXU2UUFuOVFGUHJ0TXpFTStD?=
+ =?utf-8?B?NFY2OXFTbFVFTmtNdnFwRHptY0hyMm5jME1BUEwyd3g2UlR6SmNab0pKTnRz?=
+ =?utf-8?B?enE1YURGeG84ckFDOUhXWjVqSjVKU0FISlNvSENZVmZrNnUxbXVWNllxU29u?=
+ =?utf-8?B?bzNCeTRMZlZIeXcvNE4vT2V4WkNTcGZ6S1EybUxKMTVsWHFwdW44bE1Ycllw?=
+ =?utf-8?B?cWVWNjdLU0lVSU1oNHYwejN5YjZqRHFGZWVnZVN0U2NwaG5NZHZ0ajVVZVhl?=
+ =?utf-8?B?T3hTZWpteTFNQXQyeEo2R0dYVURxaVh5U3BidDA1NEJ0RmQyQkxTRkNXcXgv?=
+ =?utf-8?B?VXFxaFJUS0N4VnpmeVZOU0daU0xicTg5Z09Yd1oxeHR0VDRYZERHdHNPN1RM?=
+ =?utf-8?B?aDV2UE1YRk5pQzRtWFg3cDQvZzFUTlNwMUxZN1VNeDdHbG5Nbm5EOGo1c2ty?=
+ =?utf-8?B?RWJLNzNtYkxzZDVQL1lTcFQ4MFNrR3VEaHdOalhlVFRuUCswdEY3aCtjMjFz?=
+ =?utf-8?B?Nnl5S3ZjY1dxVmljT0g2VHdOR2VOQTNUa3BXcHRpUjBrcUlZK1JiSnkrQUF5?=
+ =?utf-8?B?OFpHWHN6N283UXAyYURUU3B1N2JCSkZoUGt5MVJrd21wTkF6L3hJSG9tY1RU?=
+ =?utf-8?B?UXNJSE95L3BPZ3FZaysxWlE4U1U2MnZQMTU5U05OL0UxVEFJR21FbWtBakRI?=
+ =?utf-8?B?eG5HMmdGbWEyY0FxZy9JaXFnSktHMnhqTmhoWTR3MjBaL1ZBNmRTZnVGTWZD?=
+ =?utf-8?B?bzU4Q2h1Rmh4cDFPZ1ZPaTN4ZGJZcVArUElnR1B2Q3NoQVJqelg0ZUpDNzNp?=
+ =?utf-8?B?dU92UGNvcDVVUTVxTE1pZGFwNTVwanFzV1JtM25UYURBUlR0akQweUZBYlRT?=
+ =?utf-8?B?d2ovWmJQMmtST0NOWVlOYitCV1dmYWpOMnM2MVVYeW1Ic3JpTmlZN2dpVFA0?=
+ =?utf-8?B?R2lsOE14MGtWYjI1WGdHOFJNTzhMVHJWS01FQytrTm90OE50YTBYTFpMU2xF?=
+ =?utf-8?B?eGdhMmhLeWdjbDg3WlB3WEVibEx3MXYwY1VDdlR1SnVhK1E0SkVaM2x1Vng0?=
+ =?utf-8?B?a1FIdk9FOUF2eWtPblU0OGFDTUZrZWQ0L01rR2lFNnQ5NkEvM2xNZzJBaDRv?=
+ =?utf-8?B?dkJXeTJnamNQWnFsd2Q2Wnl2Sm9jVVNLWGIvS2J6a1RhVGt5Umtxbkk3L0ky?=
+ =?utf-8?B?bmE2blFweTVlVVpNWXJPL3R1bFVUSTc1VTI5M3BoN0htczZremVtTDk3SmJr?=
+ =?utf-8?B?eTdXYUlyZGZBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2024 18:19:06.0346
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7e81fcc-8500-48e5-06a3-08dcaffaeebc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002310.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6083
 
-Hi Bjorn / Mani
 
-Gentle ping for your review/feedback on this series.
-Thank you.
+On 7/29/24 09:55, Amit Machhiwal wrote:
+> Hi Lizhi,
+>
+> On 2024/07/29 09:47 AM, Lizhi Hou wrote:
+>> Hi Amit
+>>
+>> On 7/29/24 04:13, Amit Machhiwal wrote:
+>>> Hi Lizhi,
+>>>
+>>> On 2024/07/26 11:45 AM, Lizhi Hou wrote:
+>>>> On 7/26/24 10:52, Rob Herring wrote:
+>>>>> On Thu, Jul 25, 2024 at 6:06 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
+>>>>>> Hi Amit,
+>>>>>>
+>>>>>>
+>>>>>> I try to follow the option which add a OF flag. If Rob is ok with this,
+>>>>>> I would suggest to use it instead of V1 patch
+>>>>>>
+>>>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>>>>>> index dda6092e6d3a..a401ed0463d9 100644
+>>>>>> --- a/drivers/of/dynamic.c
+>>>>>> +++ b/drivers/of/dynamic.c
+>>>>>> @@ -382,6 +382,11 @@ void of_node_release(struct kobject *kobj)
+>>>>>>                                    __func__, node);
+>>>>>>             }
+>>>>>>
+>>>>>> +       if (of_node_check_flag(node, OF_CREATED_WITH_CSET)) {
+>>>>>> +               of_changeset_revert(node->data);
+>>>>>> +               of_changeset_destroy(node->data);
+>>>>>> +       }
+>>>>> What happens if multiple nodes are created in the changeset?
+>>>> Ok. multiple nodes will not work.
+>>>>>> +
+>>>>>>             if (node->child)
+>>>>>>                     pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
+>>>>>>                             __func__, node->parent, node->full_name);
+>>>>>> @@ -507,6 +512,7 @@ struct device_node *of_changeset_create_node(struct
+>>>>>> of_changeset *ocs,
+>>>>>>             np = __of_node_dup(NULL, full_name);
+>>>>>>             if (!np)
+>>>>>>                     return NULL;
+>>>>>> +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
+>>>>> This should be set where the data ptr is set.
+>>>> Ok. It sounds the fix could be simplified to 3 lines change.
+>>> Thanks for the patch. The hot-plug and hot-unplug of PCI device seem to work
+>>> fine as expected. I see this patch would attempt to remove only the nodes which
+>>> were created in `of_pci_make_dev_node()` with the help of the newly introduced
+>>> flag, which looks good to me.
+>>>
+>>> Also, since a call to `of_pci_make_dev_node()` from `pci_bus_add_device()`, that
+>>> creates devices nodes only for bridge devices, is conditional on
+>>> `pci_is_bridge()`, it only makes sense to retain the logical symmetry and call
+>>> `of_pci_remove_node()` conditionally on `pci_is_bridge()` as well in
+>>> `pci_stop_dev()`. Hence, I would like to propose the below change along with the
+>>> above patch:
+>>>
+>>> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+>>> index 910387e5bdbf..c6394bf562cd 100644
+>>> --- a/drivers/pci/remove.c
+>>> +++ b/drivers/pci/remove.c
+>>> @@ -23,7 +23,8 @@ static void pci_stop_dev(struct pci_dev *dev)
+>>>                   device_release_driver(&dev->dev);
+>>>                   pci_proc_detach_device(dev);
+>>>                   pci_remove_sysfs_dev_files(dev);
+>>> -               of_pci_remove_node(dev);
+>>> +               if (pci_is_bridge(dev))
+>>> +                       of_pci_remove_node(dev);
+>>>                   pci_dev_assign_added(dev, false);
+>>>           }
+>>>
+>>> Please let me know of your thoughts on this and based on that I can spin the v3
+>>> of this patch.
+>> As I mentioned, there are endpoints in pci quirks (pci/quirks.c) will also
+>> create nodes by of_pci_make_dev_node(). So please remove above two lines.
+> Sorry if I'm misinterpreting something here but as I mentioned,
+> `of_pci_make_dev_node()` is called only for bridge devices with check performed
+> via `pci_is_bridge()`, could you please elaborate more on why the same check
+> can't be put while removing the node via `of_pci_remove_node()`?
 
-Regards,
-Mayank
+For devices added in quirks, of_pci_make_dev_node() will be called 
+through pci_fixup_device().
 
-On 7/15/2024 11:13 AM, Mayank Rana wrote:
-> Based on previously received feedback, this patch series adds functionalities
-> with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
-> host root complex functionality on Qualcomm SA8775P auto platform.
-> 
-> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
-> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
-> 
-> 1. Interface to allow requesting firmware to manage system resources and performing
-> PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
-> 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
-> framework based power domain controls these operations)
-> 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
-> This MSI functionality is used with PCIe host generic driver after splitting existing MSI
-> functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
-> 
-> Below architecture is used on Qualcomm SA8775P auto platform to get ECAM compliant PCIe
-> controller based functionality. Here firmware VM based PCIe driver takes care of resource
-> management and performing PCIe link related handling (D0 and D3cold). Linux VM based PCIe
-> host generic driver uses power domain to request firmware VM to perform these operations
-> using SCMI interface.
-> ----------------
-> 
-> 
->                                     ┌────────────────────────┐
->                                     │                        │
->    ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐
->    │     Firmware VM      │         │                        │            │         Linux VM         │
->    │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │
->    │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE host    │    │
->    │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │  generic driver│    │
->    │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │
->    │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │
->    │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │
->    │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │
->    │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │
->    │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │
->    │               │  │   │         │                        │            │       │          │       │
->    └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘
->                    │  │             │                        │                    │          │
->                    │  │             └────────────────────────┘                    │          │
->                    │  │                                                           │          │
->                    │  │                                                           │          │
->                    │  │                                                           │          │
->                    │  │                                                           │IRQ       │HVC
->                IRQ │  │HVC                                                        │          │
->                    │  │                                                           │          │
->                    │  │                                                           │          │
->                    │  │                                                           │          │
-> ┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
-> │                                                                                                          │
-> │                                                                                                          │
-> │                                      HYPERVISOR                                                          │
-> │                                                                                                          │
-> │                                                                                                          │
-> │                                                                                                          │
-> └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
->                                                                                                              
->    ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐
->    │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │
->    │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │
->    └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘
->                                                                                                              
-> ----------
-> Changes in V2:
-> - Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
-> - Add power domain based functionality within existing ECAM driver
-> 
-> Tested:
-> - Validated NVME functionality with PCIe0 and PCIe1 on SA8775P-RIDE platform
-> 
-> Mayank Rana (7):
->    PCI: dwc: Move MSI related code to separate file
->    PCI: dwc: Add msi_ops to allow DBI based MSI register access
->    PCI: dwc: Add pcie-designware-msi driver kconfig option
->    dt-bindings: PCI: host-generic-pci: Add power-domains binding
->    PCI: host-generic: Add power domain based handling for PCIe controller
->    dt-bindings: PCI: host-generic-pci: Add snps,dw-pcie-ecam-msi binding
->    PCI: host-generic: Add dwc MSI based MSI functionality
-> 
->   .../devicetree/bindings/pci/host-generic-pci.yaml  |  64 +++
->   drivers/pci/controller/dwc/Kconfig                 |   8 +
->   drivers/pci/controller/dwc/Makefile                |   1 +
->   drivers/pci/controller/dwc/pci-keystone.c          |  12 +-
->   drivers/pci/controller/dwc/pcie-designware-host.c  | 438 ++-------------------
->   drivers/pci/controller/dwc/pcie-designware-msi.c   | 413 +++++++++++++++++++
->   drivers/pci/controller/dwc/pcie-designware-msi.h   |  63 +++
->   drivers/pci/controller/dwc/pcie-designware.c       |   1 +
->   drivers/pci/controller/dwc/pcie-designware.h       |  26 +-
->   drivers/pci/controller/dwc/pcie-rcar-gen4.c        |   1 +
->   drivers/pci/controller/dwc/pcie-tegra194.c         |   5 +-
->   drivers/pci/controller/pci-host-generic.c          | 127 +++++-
->   12 files changed, 723 insertions(+), 436 deletions(-)
->   create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.c
->   create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.h
-> 
+
+Lizhi
+
+>
+> Thanks,
+> Amit
+>
+>> Thanks,
+>>
+>> Lizhi
+>>
+>>> In addition to this, can this patch be taken as part of 6.11 as a bug fix?
+>>>
+>>> Thanks,
+>>> Amit
+>>>
+>>>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+>>>> index 51e3dd0ea5ab..0b3ba1e1b18c 100644
+>>>> --- a/drivers/pci/of.c
+>>>> +++ b/drivers/pci/of.c
+>>>> @@ -613,7 +613,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
+>>>>           struct device_node *np;
+>>>>
+>>>>           np = pci_device_to_OF_node(pdev);
+>>>> -       if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+>>>> +       if (!np || !of_node_check_flag(np, OF_CREATED_WITH_CSET))
+>>>>                   return;
+>>>>           pdev->dev.of_node = NULL;
+>>>>
+>>>> @@ -672,6 +672,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>>>>           if (ret)
+>>>>                   goto out_free_node;
+>>>>
+>>>> +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
+>>>>           np->data = cset;
+>>>>           pdev->dev.of_node = np;
+>>>>           kfree(name);
+>>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>>>> index a0bedd038a05..a46317f6626e 100644
+>>>> --- a/include/linux/of.h
+>>>> +++ b/include/linux/of.h
+>>>> @@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
+>>>>    #define OF_POPULATED_BUS       4 /* platform bus created for children */
+>>>>    #define OF_OVERLAY             5 /* allocated for an overlay */
+>>>>    #define OF_OVERLAY_FREE_CSET   6 /* in overlay cset being freed */
+>>>> +#define OF_CREATED_WITH_CSET    7 /* created by of_changeset_create_node */
+>>>>
+>>>>    #define OF_BAD_ADDR    ((u64)-1)
+>>>>
+>>>>
+>>>> Lizhi
+>>>>
+>>>>> Rob
 
