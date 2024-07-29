@@ -1,74 +1,92 @@
-Return-Path: <linux-pci+bounces-10934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4379593F121
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 11:30:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 061F793F146
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 11:37:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBAB81F22B2B
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 09:29:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83EE41F211A1
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 09:37:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BCD5142E6F;
-	Mon, 29 Jul 2024 09:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B667B78B4E;
+	Mon, 29 Jul 2024 09:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ptnM+vYC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="egQRsktC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A4B13B7BE;
-	Mon, 29 Jul 2024 09:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2FF770E1
+	for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 09:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722245363; cv=none; b=XOeUTLUrBY3avF6EKUc6dmeMt3qY+3bWPDl1r7EUPzOoYsJ9W5FzbCL+ZhMcRXuDaZx8Uing4WfN8OoLDJjleBBvuMDMbqlBH/K4TnmQNhbDKZSUR5MsQovmWwfN05986BFbjnB+T93Vm5PzhWzHd3Nis9UGcIt9NsTP+MDBqQw=
+	t=1722245819; cv=none; b=HhLeu1w/VyVYX/f0Cy5blQuQfHOcGpMKonAOtRUWdfvRJyU+sAWTjXflxlRapxV9y6Z+E9z0ci4rtARdxjlDLZy6PY2UNGwx8f1RHJim5WjYJRSED2zl8zwoKz79LXt2A24Z4OPFYruotorzys7CjDNth19/dYprkKrKLAIrIYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722245363; c=relaxed/simple;
-	bh=wxDXeJ/5FDwKLYNsZJ0UJ/CJu8TaQjVD0XHpl0xYpFc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RN9gGGF+jBwXJCA6f8tmthy9lIKWxxSLX5w+GGP2Eq4up/HsCrI+Mg68pgZ5VbYVyZKyvdlSthhykqKlGRSipq7iMo6Jje1yzWSqsFzhDUofI+QJmvl+7wd07x7BM8NgrmjtzchoFmF0d2w4zxChilwBW2FkQAPb8j32SO2cgdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ptnM+vYC; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46T9TAFq025699;
-	Mon, 29 Jul 2024 04:29:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1722245351;
-	bh=j0A5DuPXCW8kIo64gE9NE0q15LdOr6ia0mr3YO2tDiE=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ptnM+vYCSP3W5J4ergRrCNVP2ogB73Urza0NPpwrqElM1a7ITx2Mb/yyr3/ULlax8
-	 Ibsw1DK99iseGHjYsgB+6h8N/VjN0Tm0CEZ0YvS9JuiJaRBc6AvChlMPbQnrninAf1
-	 atdgdZ4dqyyLMwpN2kyLlpfanfvdHFa21GTgAioc=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46T9TAsA025888
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 29 Jul 2024 04:29:10 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
- Jul 2024 04:29:10 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 29 Jul 2024 04:29:10 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46T9Stc7087068;
-	Mon, 29 Jul 2024 04:29:06 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <vigneshr@ti.com>, <kishon@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 2/2] PCI: j721e: Enable ACSPCIE Refclk if "ti,syscon-acspcie-proxy-ctrl" exists
-Date: Mon, 29 Jul 2024 14:58:55 +0530
-Message-ID: <20240729092855.1945700-3-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240729092855.1945700-1-s-vadapalli@ti.com>
-References: <20240729092855.1945700-1-s-vadapalli@ti.com>
+	s=arc-20240116; t=1722245819; c=relaxed/simple;
+	bh=HzA7AEw0WWQvtM2aMWSpL9Zx3KaolqvcZTtnjqIEIJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MbjCzq5Mk4bgXXTsXa2nk/NHGc7SuvillEM+glTvnfEtgBhchS9tY5bn5PbnOkyyX0CGRcIWr0RuDbWkMDpzntypuOxV2jnr3YIaSUmP1Os7wWldkRZ5VxVHzUXx0ci/5rFwa6OnV0yDUg4OasdZQJ415jMhRZRs/ZLaYo3gVcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=egQRsktC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722245816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=emFTwdbhfJ2ShCITolW8giMz/g85BaR1blQHMfaFnpM=;
+	b=egQRsktCjRmabmHPIWXxy4/Nl2H1AGDGasil8ZmC/FOsF8JpzgG5VlO+3YLZDDSidgx1qj
+	ZzLZXQ8Od69Uu7DsFphI0jniYhLtLyqNZtEVYv4JEFYZrVxZX67iXFAwUy2nJQhgzGwgnj
+	4hF7wqnHtprWZDi3FVL/92ly9DCxl+8=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-267-DB20gkTkORuNwNX3zNoRmA-1; Mon, 29 Jul 2024 05:36:54 -0400
+X-MC-Unique: DB20gkTkORuNwNX3zNoRmA-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6b79fbc7ed2so7653276d6.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 02:36:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722245813; x=1722850613;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=emFTwdbhfJ2ShCITolW8giMz/g85BaR1blQHMfaFnpM=;
+        b=LCOTKxNosAU50pb+B0xBHV4QVh+VXXusV+faD3ephp1JKClQoVzEmreWuMOqOZ6vYf
+         r1x7WV3gXvcYt7GEgKYRqpWObFrLFme2WNN/0WDPKkqa58NtDy3epOJNL6++bFWzhbt5
+         w3faGEpWRH1F8C4/H2CPvL1JSvHp09D+MRQH2EWQN60vsfhoXD5T+EgPuzRaydl0t8rB
+         T+E0ABtZ8mRFgIRCNCfcxA18H+xdJ+wP59MfIP79t5UcH8CEHvZhGpsPcJBvHmwg2Gsz
+         +ayOzjgbZV2Xh8KHOjeuxnu2jdINfsD7luBeIxlZVbeVKlmldBNPVhwnl5fiGsnsacR5
+         XSlw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5b9mSoPW8JvEiIAK2lBZ9qEStnBc5wkQXLuMwJ7EEQsGVVoo41RUcIMs+IuOtqqSTkSx0bqbzeqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHjOoJnabEQs5yoeTvTOdj8c6AesxXiIN/+WqQoseGRfPltRUG
+	WvJPjJNOubqN8AxxozNmRBoyy97/UTGqy+JVSBYRI86FHbEWd63L/O0aS9YMfyRGGwRPovsIcwS
+	rA/sPB2OHVycZSOnCAtxfy+8egqfsjmCabxtRCWngaiZil/PIMbh92gno6A==
+X-Received: by 2002:ad4:5ccd:0:b0:6b2:af3c:f710 with SMTP id 6a1803df08f44-6bb3e1a8f83mr85445016d6.2.1722245813570;
+        Mon, 29 Jul 2024 02:36:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4gc3YQkLtpxEMrgaDxCfFPgN8uoswS+Zv8SfLImnsVcyFRGniiKYT5wxqKdMycWiPyBs5IQ==
+X-Received: by 2002:ad4:5ccd:0:b0:6b2:af3c:f710 with SMTP id 6a1803df08f44-6bb3e1a8f83mr85444936d6.2.1722245813183;
+        Mon, 29 Jul 2024 02:36:53 -0700 (PDT)
+Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb3fa94a16sm50047086d6.86.2024.07.29.02.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 02:36:52 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH 0/2] Use pcim_request_region() in vboxvideo
+Date: Mon, 29 Jul 2024 11:36:24 +0200
+Message-ID: <20240729093625.17561-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,104 +94,29 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The ACSPCIE module is capable of driving the reference clock required by
-the PCIe Endpoint device. It is an alternative to on-board and external
-reference clock generators. Enabling the output from the ACSPCIE module's
-PAD IO Buffers requires clearing the "PAD IO disable" bits of the
-ACSPCIE_PROXY_CTRL register in the CTRL_MMR register space.
+Hi everyone,
 
-Add support to enable the ACSPCIE reference clock output using the optional
-device-tree property "ti,syscon-acspcie-proxy-ctrl".
+Now that we've got the simplified PCI devres API available we can slowly
+start using it in drivers and step by step phase the more problematic
+API out.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+vboxvideo currently does not have a region request, so it is a suitable
+first user.
 
-v1:
-https://lore.kernel.org/r/20240715120936.1150314-4-s-vadapalli@ti.com/
-Changes since v1:
-- Addressed Bjorn's feedback at:
-  https://lore.kernel.org/r/20240725211841.GA859405@bhelgaas/
-  with the following changes:
-  1) Updated $subject and commit message to indicate that this patch
-  enables ACSPCIE reference clock output if the DT property is present.
-  2) Updated macro and comments to indicate that the BITS correspond to
-  disabling ACSPCIE output, due to which clearing them enables the
-  reference clock output.
-  3) Replaced "PAD" with "refclk" both in the function name and in the
-  error prints.
-  4) Wrapped lines to be within the 80 character limit to match the rest
-  of the driver.
+P.
 
- drivers/pci/controller/cadence/pci-j721e.c | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+Philipp Stanner (2):
+  PCI: Make pcim_request_region() a public function
+  drm/vboxvideo: Add PCI region request
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 85718246016b..ed42b2229483 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -44,6 +44,7 @@ enum link_status {
- #define J721E_MODE_RC			BIT(7)
- #define LANE_COUNT(n)			((n) << 8)
- 
-+#define ACSPCIE_PAD_DISABLE_MASK	GENMASK(1, 0)
- #define GENERATION_SEL_MASK		GENMASK(1, 0)
- 
- struct j721e_pcie {
-@@ -220,6 +221,34 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
- 	return ret;
- }
- 
-+static int j721e_enable_acspcie_refclk(struct j721e_pcie *pcie,
-+				       struct regmap *syscon)
-+{
-+	struct device *dev = pcie->cdns_pcie->dev;
-+	struct device_node *node = dev->of_node;
-+	u32 mask = ACSPCIE_PAD_DISABLE_MASK;
-+	struct of_phandle_args args;
-+	u32 val;
-+	int ret;
-+
-+	ret = of_parse_phandle_with_fixed_args(node,
-+					       "ti,syscon-acspcie-proxy-ctrl",
-+					       1, 0, &args);
-+	if (!ret) {
-+		/* Clear PAD IO disable bits to enable refclk output */
-+		val = ~(args.args[0]);
-+		ret = regmap_update_bits(syscon, 0, mask, val);
-+		if (ret)
-+			dev_err(dev, "failed to enable ACSPCIE refclk: %d\n",
-+				ret);
-+	} else {
-+		dev_err(dev,
-+			"ti,syscon-acspcie-proxy-ctrl has invalid arguments\n");
-+	}
-+
-+	return ret;
-+}
-+
- static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
- {
- 	struct device *dev = pcie->cdns_pcie->dev;
-@@ -259,6 +288,15 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
- 		return ret;
- 	}
- 
-+	/* Enable ACSPCIE refclk output if the optional property exists */
-+	syscon = syscon_regmap_lookup_by_phandle_optional(node,
-+						"ti,syscon-acspcie-proxy-ctrl");
-+	if (syscon) {
-+		ret = j721e_enable_acspcie_refclk(pcie, syscon);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	return 0;
- }
- 
+ drivers/gpu/drm/vboxvideo/vbox_main.c | 4 ++++
+ drivers/pci/devres.c                  | 1 +
+ drivers/pci/pci.h                     | 2 --
+ include/linux/pci.h                   | 1 +
+ 4 files changed, 6 insertions(+), 2 deletions(-)
+
 -- 
-2.40.1
+2.45.2
 
 
