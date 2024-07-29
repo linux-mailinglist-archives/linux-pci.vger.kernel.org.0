@@ -1,263 +1,209 @@
-Return-Path: <linux-pci+bounces-10980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4238493FBEA
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 18:56:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 997B193FC5F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 19:22:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 657471C21CE7
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 16:56:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FAF4280D73
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 17:22:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3443E16C690;
-	Mon, 29 Jul 2024 16:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA7315ECD0;
+	Mon, 29 Jul 2024 17:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q/L/+Tor"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ns+vfzAQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C047E78B50;
-	Mon, 29 Jul 2024 16:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36565028C;
+	Mon, 29 Jul 2024 17:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722272162; cv=none; b=twFcIq/T+9NkHYe9VcS5ZhJvMhUTvNT7QmhLSg1GljSt1B71Wlyc+cEbmRp5u+Bo5Dn7jO9ZggRMxYkDZGdpmky6d6rwMljpwQI3UIl+bldNO+hmK+WuigE4WQ0yKHIsUQg4inEq0uEwerA8nOGr2xs/M2GDRymm/EQ4Me5ZuO0=
+	t=1722273686; cv=none; b=MCo64GAzmR9/JdiBbbPKLHIDuRGG7j7Y7OZMY2KS/zMXjHOB9VBQMRpyAOqki2SIPyjXDxPq0cQ3QWQNslmInZVifihp3DHuCjgFlabqZ94fuq1+a0XGxYFgWg3CyN0DOnJGjW085fnTemTmjXsWLQfc0RKDsPQq8fOpxKMGUQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722272162; c=relaxed/simple;
-	bh=LbYRipITzNz2cVnITep0A0Bc9eCQQGDIEuZlBYENEn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GymaXlRkh0FOS76y2mry0YJ3OBs3F0GFaeUHKrQYsnINI1aAOpGwDarQOX4VP3clA3QPTI1GfrNSzVFGSQ3G/Ld7ZwuOIo7xsBlTqxBpjALB5PZSL+x47fg+LFYVD+mN1jRlvMUhc1QdYdNDCrvrgwX/VGnBynaEAyj/tklwOXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q/L/+Tor; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TGTfEt025061;
-	Mon, 29 Jul 2024 16:55:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-transfer-encoding:in-reply-to; s=pp1; bh=r
-	P7XGHo7glYOi1uyLM/8GrOjl/KJ3E+Se5g0xynW93M=; b=q/L/+Tor8gpPxGYCU
-	sx2wOiY9pezsvaCFFgrWpZ7Xb/w9iv/ibSvCKxizx2micTQmrdWYx2S1k+9V5koE
-	N7gO+ln3w9+mqZPnNfoDv1+AFKPov5rGDEvGO+Mfl24qZ/27C3E7sUR881Of0Nka
-	uXZ6fIYW1U775EhE3/5OyYEM8ZG0+LZrx4Lzo8mPWQESiIUkQ6iarvHm7ALZ8y4U
-	o3PsIh03FnYa7Yc314RIq+/qjYhUKch74uiK5pkupRLMqmu08vaLUnmb5smoPrHW
-	qPhN5phRn1glh5pA77tU2GLl6qcXkBUVwQgvFeFW493G90jCYoT/MA23B/dCQKsF
-	E6s0Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40pemu81g7-1
+	s=arc-20240116; t=1722273686; c=relaxed/simple;
+	bh=4fQr//Ka7sTy/VMt7ggKFrz3+ahovq34k1sJWhkzznQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=r6BvVQa2tE0llxqL6VD5o9JsTRuBEsd7EulqbdD8RuMm+Golbi7MMdzQfQcUwHnWTVIZqzzVsJUfQX1hzuUIKoechG5c3Lq+YRTxhxQxPmA7NYXU5O7NGt/NNBxAOqz2bK2wdWmvBF2EQ8knx1isu3jyn0v12SpIIc9NjeaZ1Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ns+vfzAQ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TAG9PJ030809;
+	Mon, 29 Jul 2024 17:19:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9cUy14n2UN04pp4Q33jv4wdH2wJt0tYU3Imvp2lZlLM=; b=Ns+vfzAQCwgtKVra
+	8A/9VBAiSvWr5yKACWl3Rmv3WHBLyn7ZW9CHE3dxZf5d1oTl2vT2oSu/GnIlAL7H
+	8sH5uRX6BE2vO9/f/6q8ygKf1sGCgGHtAN09N6WVCCFRgB0gWulr9M6W4+IDZ/Nm
+	NI416IfE7tRItLXkkmUqldb1cZIbg0Oerej+eVHT6vrrBSdiWnnYyG/4/SmlrE+6
+	TDYs1P7wwh9pTEOF/+C3+jlQq0NAY7054P/Pp8YnRndivu5ldJd6b3iuseGJ6RhU
+	BYYSOFgPWyOliQGnB+uM3rwzCtoGV6zcGdIay0SZqJ0m912WPsapab2K5zx95llD
+	1WJzYw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40mrfxn15u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 16:55:43 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46TGtgkL003055;
-	Mon, 29 Jul 2024 16:55:42 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40pemu81g1-1
+	Mon, 29 Jul 2024 17:19:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46THJkIj017051
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 16:55:42 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46TGUFWW007457;
-	Mon, 29 Jul 2024 16:55:41 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40nb7tyyvm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 16:55:41 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46TGtabm7733654
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jul 2024 16:55:38 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E6AEC20043;
-	Mon, 29 Jul 2024 16:55:35 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC6E720040;
-	Mon, 29 Jul 2024 16:55:32 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.195.41.40])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Jul 2024 16:55:32 +0000 (GMT)
-Date: Mon, 29 Jul 2024 22:25:28 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Lizhi Hou <lizhi.hou@amd.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Saravana Kannan <saravanak@google.com>,
-        Kowshik Jois B S <kowsjois@linux.ibm.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>, Nicholas Piggin <npiggin@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Message-ID: <vctizrpvsuy4ebrvmub756sxs2bridn6gkav55ehlz5gjlc44b@jyzymbydkut2>
-Mail-Followup-To: Lizhi Hou <lizhi.hou@amd.com>, 
-	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
-	Saravana Kannan <saravanak@google.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org, 
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
-	Nicholas Piggin <npiggin@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-References: <20240723162107.GA501469-robh@kernel.org>
- <a8d2e310-9446-6cfa-fe00-4ef83cdb6590@amd.com>
- <CAL_JsqJjhaLFm9jiswJTfi4yZFYGKJUdC+HV662RLWEkJjxACw@mail.gmail.com>
- <ac3aeec4-70fc-cd9e-498c-acab0b218d9b@amd.com>
- <p6cs4fxzistpyqkc5bv2sb76inrw7fterocdcu3snnyjpqydbr@thxna6v2umrl>
- <d20b78cd-ed34-3e5a-0176-c20ee5afd0db@amd.com>
- <CAL_JsqJAuVexFAz6gWWuTtX1Go-FnHe6vJapv0znHBERSCtv+Q@mail.gmail.com>
- <0b1be7b7-e65b-8d8e-0659-388dec303039@amd.com>
- <6mjt477ltxhr4sudizyzbspkqb7yspxvnoiblzeiwxw5kwwsmq@bchicp4bmtzq>
- <af45d85c-2145-cbce-b91b-2aa70a9dcd0f@amd.com>
+	Mon, 29 Jul 2024 17:19:46 GMT
+Received: from [10.110.106.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 29 Jul
+ 2024 10:19:45 -0700
+Message-ID: <925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com>
+Date: Mon, 29 Jul 2024 10:19:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
+ host generic ECAM driver
+To: <will@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+        <manivannan.sadhasivam@linaro.org>, <cassel@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>, <s-vadapalli@ti.com>,
+        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
+        <amishin@t-argos.ru>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <Frank.Li@nxp.com>,
+        <ilpo.jarvinen@linux.intel.com>, <vidyas@nvidia.com>,
+        <marek.vasut+renesas@gmail.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC: <quic_ramkri@quicinc.com>, <quic_nkela@quicinc.com>,
+        <quic_shazhuss@quicinc.com>, <quic_msarkar@quicinc.com>,
+        <quic_nitegupt@quicinc.com>
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+Content-Language: en-US
+From: Mayank Rana <quic_mrana@quicinc.com>
+In-Reply-To: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <af45d85c-2145-cbce-b91b-2aa70a9dcd0f@amd.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: zERw8w-BfFVdH2DDIJaNTMQ227-zUjP4
-X-Proofpoint-GUID: yHn67uTODD4v1Bvu00La6-lWVUPXglYb
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: j3DfV2Yq7u24d5QjiHxI1vJcR5BX8XOb
+X-Proofpoint-ORIG-GUID: j3DfV2Yq7u24d5QjiHxI1vJcR5BX8XOb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-29_15,2024-07-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 suspectscore=0 impostorscore=0 bulkscore=0 spamscore=0
- adultscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407290113
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=965 malwarescore=0
+ bulkscore=0 phishscore=0 clxscore=1015 mlxscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407290116
 
-Hi Lizhi,
+Hi Bjorn / Mani
 
-On 2024/07/29 09:47 AM, Lizhi Hou wrote:
-> Hi Amit
-> 
-> On 7/29/24 04:13, Amit Machhiwal wrote:
-> > Hi Lizhi,
-> > 
-> > On 2024/07/26 11:45 AM, Lizhi Hou wrote:
-> > > On 7/26/24 10:52, Rob Herring wrote:
-> > > > On Thu, Jul 25, 2024 at 6:06 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
-> > > > > Hi Amit,
-> > > > > 
-> > > > > 
-> > > > > I try to follow the option which add a OF flag. If Rob is ok with this,
-> > > > > I would suggest to use it instead of V1 patch
-> > > > > 
-> > > > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > > > > index dda6092e6d3a..a401ed0463d9 100644
-> > > > > --- a/drivers/of/dynamic.c
-> > > > > +++ b/drivers/of/dynamic.c
-> > > > > @@ -382,6 +382,11 @@ void of_node_release(struct kobject *kobj)
-> > > > >                                   __func__, node);
-> > > > >            }
-> > > > > 
-> > > > > +       if (of_node_check_flag(node, OF_CREATED_WITH_CSET)) {
-> > > > > +               of_changeset_revert(node->data);
-> > > > > +               of_changeset_destroy(node->data);
-> > > > > +       }
-> > > > What happens if multiple nodes are created in the changeset?
-> > > Ok. multiple nodes will not work.
-> > > > > +
-> > > > >            if (node->child)
-> > > > >                    pr_err("ERROR: %s() unexpected children for %pOF/%s\n",
-> > > > >                            __func__, node->parent, node->full_name);
-> > > > > @@ -507,6 +512,7 @@ struct device_node *of_changeset_create_node(struct
-> > > > > of_changeset *ocs,
-> > > > >            np = __of_node_dup(NULL, full_name);
-> > > > >            if (!np)
-> > > > >                    return NULL;
-> > > > > +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
-> > > > This should be set where the data ptr is set.
-> > > Ok. It sounds the fix could be simplified to 3 lines change.
-> > Thanks for the patch. The hot-plug and hot-unplug of PCI device seem to work
-> > fine as expected. I see this patch would attempt to remove only the nodes which
-> > were created in `of_pci_make_dev_node()` with the help of the newly introduced
-> > flag, which looks good to me.
-> > 
-> > Also, since a call to `of_pci_make_dev_node()` from `pci_bus_add_device()`, that
-> > creates devices nodes only for bridge devices, is conditional on
-> > `pci_is_bridge()`, it only makes sense to retain the logical symmetry and call
-> > `of_pci_remove_node()` conditionally on `pci_is_bridge()` as well in
-> > `pci_stop_dev()`. Hence, I would like to propose the below change along with the
-> > above patch:
-> > 
-> > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> > index 910387e5bdbf..c6394bf562cd 100644
-> > --- a/drivers/pci/remove.c
-> > +++ b/drivers/pci/remove.c
-> > @@ -23,7 +23,8 @@ static void pci_stop_dev(struct pci_dev *dev)
-> >                  device_release_driver(&dev->dev);
-> >                  pci_proc_detach_device(dev);
-> >                  pci_remove_sysfs_dev_files(dev);
-> > -               of_pci_remove_node(dev);
-> > +               if (pci_is_bridge(dev))
-> > +                       of_pci_remove_node(dev);
-> >                  pci_dev_assign_added(dev, false);
-> >          }
-> > 
-> > Please let me know of your thoughts on this and based on that I can spin the v3
-> > of this patch.
-> 
-> As I mentioned, there are endpoints in pci quirks (pci/quirks.c) will also
-> create nodes by of_pci_make_dev_node(). So please remove above two lines.
+Gentle ping for your review/feedback on this series.
+Thank you.
 
-Sorry if I'm misinterpreting something here but as I mentioned,
-`of_pci_make_dev_node()` is called only for bridge devices with check performed
-via `pci_is_bridge()`, could you please elaborate more on why the same check
-can't be put while removing the node via `of_pci_remove_node()`?
+Regards,
+Mayank
 
-Thanks,
-Amit
-
+On 7/15/2024 11:13 AM, Mayank Rana wrote:
+> Based on previously received feedback, this patch series adds functionalities
+> with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
+> host root complex functionality on Qualcomm SA8775P auto platform.
 > 
-> Thanks,
+> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
+> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
 > 
-> Lizhi
+> 1. Interface to allow requesting firmware to manage system resources and performing
+> PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
+> 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
+> framework based power domain controls these operations)
+> 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
+> This MSI functionality is used with PCIe host generic driver after splitting existing MSI
+> functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
 > 
-> > 
-> > In addition to this, can this patch be taken as part of 6.11 as a bug fix?
-> > 
-> > Thanks,
-> > Amit
-> > 
-> > > 
-> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > index 51e3dd0ea5ab..0b3ba1e1b18c 100644
-> > > --- a/drivers/pci/of.c
-> > > +++ b/drivers/pci/of.c
-> > > @@ -613,7 +613,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
-> > >          struct device_node *np;
-> > > 
-> > >          np = pci_device_to_OF_node(pdev);
-> > > -       if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-> > > +       if (!np || !of_node_check_flag(np, OF_CREATED_WITH_CSET))
-> > >                  return;
-> > >          pdev->dev.of_node = NULL;
-> > > 
-> > > @@ -672,6 +672,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
-> > >          if (ret)
-> > >                  goto out_free_node;
-> > > 
-> > > +       of_node_set_flag(np, OF_CREATED_WITH_CSET);
-> > >          np->data = cset;
-> > >          pdev->dev.of_node = np;
-> > >          kfree(name);
-> > > diff --git a/include/linux/of.h b/include/linux/of.h
-> > > index a0bedd038a05..a46317f6626e 100644
-> > > --- a/include/linux/of.h
-> > > +++ b/include/linux/of.h
-> > > @@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
-> > >   #define OF_POPULATED_BUS       4 /* platform bus created for children */
-> > >   #define OF_OVERLAY             5 /* allocated for an overlay */
-> > >   #define OF_OVERLAY_FREE_CSET   6 /* in overlay cset being freed */
-> > > +#define OF_CREATED_WITH_CSET    7 /* created by of_changeset_create_node */
-> > > 
-> > >   #define OF_BAD_ADDR    ((u64)-1)
-> > > 
-> > > 
-> > > Lizhi
-> > > 
-> > > > Rob
+> Below architecture is used on Qualcomm SA8775P auto platform to get ECAM compliant PCIe
+> controller based functionality. Here firmware VM based PCIe driver takes care of resource
+> management and performing PCIe link related handling (D0 and D3cold). Linux VM based PCIe
+> host generic driver uses power domain to request firmware VM to perform these operations
+> using SCMI interface.
+> ----------------
+> 
+> 
+>                                     ┌────────────────────────┐
+>                                     │                        │
+>    ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐
+>    │     Firmware VM      │         │                        │            │         Linux VM         │
+>    │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │
+>    │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE host    │    │
+>    │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │  generic driver│    │
+>    │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │
+>    │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │
+>    │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │
+>    │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │
+>    │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │
+>    │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │
+>    │               │  │   │         │                        │            │       │          │       │
+>    └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘
+>                    │  │             │                        │                    │          │
+>                    │  │             └────────────────────────┘                    │          │
+>                    │  │                                                           │          │
+>                    │  │                                                           │          │
+>                    │  │                                                           │          │
+>                    │  │                                                           │IRQ       │HVC
+>                IRQ │  │HVC                                                        │          │
+>                    │  │                                                           │          │
+>                    │  │                                                           │          │
+>                    │  │                                                           │          │
+> ┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
+> │                                                                                                          │
+> │                                                                                                          │
+> │                                      HYPERVISOR                                                          │
+> │                                                                                                          │
+> │                                                                                                          │
+> │                                                                                                          │
+> └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+>                                                                                                              
+>    ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐
+>    │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │
+>    │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │
+>    └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘
+>                                                                                                              
+> ----------
+> Changes in V2:
+> - Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
+> - Add power domain based functionality within existing ECAM driver
+> 
+> Tested:
+> - Validated NVME functionality with PCIe0 and PCIe1 on SA8775P-RIDE platform
+> 
+> Mayank Rana (7):
+>    PCI: dwc: Move MSI related code to separate file
+>    PCI: dwc: Add msi_ops to allow DBI based MSI register access
+>    PCI: dwc: Add pcie-designware-msi driver kconfig option
+>    dt-bindings: PCI: host-generic-pci: Add power-domains binding
+>    PCI: host-generic: Add power domain based handling for PCIe controller
+>    dt-bindings: PCI: host-generic-pci: Add snps,dw-pcie-ecam-msi binding
+>    PCI: host-generic: Add dwc MSI based MSI functionality
+> 
+>   .../devicetree/bindings/pci/host-generic-pci.yaml  |  64 +++
+>   drivers/pci/controller/dwc/Kconfig                 |   8 +
+>   drivers/pci/controller/dwc/Makefile                |   1 +
+>   drivers/pci/controller/dwc/pci-keystone.c          |  12 +-
+>   drivers/pci/controller/dwc/pcie-designware-host.c  | 438 ++-------------------
+>   drivers/pci/controller/dwc/pcie-designware-msi.c   | 413 +++++++++++++++++++
+>   drivers/pci/controller/dwc/pcie-designware-msi.h   |  63 +++
+>   drivers/pci/controller/dwc/pcie-designware.c       |   1 +
+>   drivers/pci/controller/dwc/pcie-designware.h       |  26 +-
+>   drivers/pci/controller/dwc/pcie-rcar-gen4.c        |   1 +
+>   drivers/pci/controller/dwc/pcie-tegra194.c         |   5 +-
+>   drivers/pci/controller/pci-host-generic.c          | 127 +++++-
+>   12 files changed, 723 insertions(+), 436 deletions(-)
+>   create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.c
+>   create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.h
+> 
 
