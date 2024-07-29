@@ -1,133 +1,117 @@
-Return-Path: <linux-pci+bounces-10927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9966293EB32
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 04:24:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6F9993ED05
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 07:42:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 528D2281A81
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 02:24:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15993B20C06
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 05:42:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C0F76F17;
-	Mon, 29 Jul 2024 02:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7359F81742;
+	Mon, 29 Jul 2024 05:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="IdFl1slG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CSTGPJ5T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEAF7580D
-	for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 02:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D76964D;
+	Mon, 29 Jul 2024 05:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722219892; cv=none; b=g8GiyspHuaO54eRMU9RH72yRPMYhrP48FAZkROgKLKRsxpom9TN4kIuRKUMRoeVuWwWAOkQm9npUsvY4G25LUI04jjRSEzWyYZxk3/q2Ex5IgVPXb4lJkRdTB6HJWyUFzGQuLQ5FQ4jsfOSGIr2i9b9ZKWcNtBqWW6v+yQBNQPs=
+	t=1722231722; cv=none; b=Z2rbP7V9AU/yV6jf11X+Q+GwgKG1tJ6aPm7c2i+0CytNX1C7eAYmSVgMH1E6rjuIuiQRqccgrAHbYMfqTlBxzQmGx3kb2Uasc984ZYpxc6WRHxi4uH2iO/r3sIuOvt8d3V75vSVsKVEimdAdsjKJhHf4xASSt1JZJ0xKqugZE2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722219892; c=relaxed/simple;
-	bh=7ZJr2qPLfzGOtmLOuiFRhw+vwX2H4pAlmFj8krEKhEM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aOetHluFmes4bMvLieg6oDLqMYVc1VwFFUdHoWcBs9OATUVRX31zmJjdFQl8bv+YsdKavuMd1BsDoqrBX3s0PPAjgvv4n6eJ2z+Dwgs/G9eV15AcFSYNuQ3UVFWL3YQREi49yjnCaLaN/WKFwrFpFwuk6u6RZ8v8fQJLMsBKrZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=IdFl1slG; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 125253F433
-	for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 02:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1722219882;
-	bh=CmV/ggYFbpcIV+CZdy96FFABIX7/zLLVJz8oRkArprU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=IdFl1slGPgpBr9Zc6tU6L0nGoAatNqDrUoyPTYNOdPoH0hr+DWuNhQLR16VUlnU92
-	 HQ4Hj7TTKXXw+/rziF/5dHcHjEP41+34apbt+iT/P/8g4pxnhmmiVJiOR1+BuwgOsy
-	 YmqVTX9rWb3JnyGBd5dl4K/xplr7CgzxFLZEYwlUxDkN9tfHLazDfdAv8dThb+82zD
-	 mbBlyMhEMMcVscQ06iwBdkonH0GK/50DK5jZEOUQwk9zoRYdJT042Kwn5iCqZIqSz2
-	 PN7Oeasardd9wopOQjOB3M7m+HnFHhfBrIMoxC4+2B1Xt4e07FmKAAg05OowCrsCN2
-	 3szr8ZrHp9wHA==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2c965f8f813so2640827a91.2
-        for <linux-pci@vger.kernel.org>; Sun, 28 Jul 2024 19:24:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722219880; x=1722824680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CmV/ggYFbpcIV+CZdy96FFABIX7/zLLVJz8oRkArprU=;
-        b=hrYgombcgBm7SxNLSL/7dCkD5Ke9shqSZ5wY2o3s2zzTBWoNmufzEbTXlW9BpmoSav
-         HI3eqQ+0x2cHCAJegRIL4VPQ94fOxK5QJrMOIemFhuPLouIDHBd0gURpg+1OdiMfXrxQ
-         kDdTemDSzZHSoCUD/Gsv0UAkmTm2WvL/j6EXzZZwyEuJ+xnFMAP9QE32ra2GctYOChjR
-         br3jK84/bmrodPuYmAR/nn3eDiVdRRO29LKbj3OUtHl/N3r4vZy6Xtfi4kKv+/hqXVIX
-         16pll74Fvav01mwTLbGromQ4AUkvAdEGblxFFKAm+3EAGSxa5SLD7cwitwmZdYkKEASK
-         Njlw==
-X-Gm-Message-State: AOJu0Yw1OkDGyx2qwQ0zJtpGXcuBqVlHV39lFlayMS/xJeRAZtLwH76C
-	E//6nrooy9u4Y+aHKml03n+1idGfRt1zurnI/iZYWMuhunHl/u4EMlKQmOgIHBhDhcUW5mdvOjG
-	shWseimp1o5Bx/GZnFWPTMYgtoXpm78xIanYBepRu1TnH3rIN0A0MtZzR1sI3zwbsjb8BrpTfPn
-	b2Suiva9bh9k1QmTfUKXM18xuRYMle8nXifC2Sa4zDOhaHlP7A
-X-Received: by 2002:a17:90a:930f:b0:2c9:9f06:bb2f with SMTP id 98e67ed59e1d1-2cf7e1a1d9amr4142250a91.6.1722219880411;
-        Sun, 28 Jul 2024 19:24:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH/6WcZAQCL48dKOKCaO7rysDJm1KdMhDjjZ+PcVCXVbVJvY9ZRBK8MHlWuqjtJ3TTvSJhg7qG5dMGCJwVj/sM=
-X-Received: by 2002:a17:90a:930f:b0:2c9:9f06:bb2f with SMTP id
- 98e67ed59e1d1-2cf7e1a1d9amr4142241a91.6.1722219880067; Sun, 28 Jul 2024
- 19:24:40 -0700 (PDT)
+	s=arc-20240116; t=1722231722; c=relaxed/simple;
+	bh=eN97W4AJl8VwFzZID1IWU9r6D2Aa8cVQYiFEoHJTaGk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCMArZn//sKaGfFf0aeJFM83GmCmXJ3XNObn3gRjL6YK6lzY5btyw0UJ7UYRDRteiT/LCpd3dMkWTX+a1a0Q+LNaMTNyBr9gAGEeivke8Rc96CHE7+P+GqplHhjCydrkA9Ur3TO8f1TMtmweOFi6G4DKrVhYqSFWpzjz1Szv4pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CSTGPJ5T; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46T5fbF3095616;
+	Mon, 29 Jul 2024 00:41:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1722231697;
+	bh=HgdeL/6Y64GlvcJmJ4VTLd40a0vZOfkawLINOafE49Y=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=CSTGPJ5TLaElvSWopyvQ0Y/RwgIR5a7C8rsfEaMPs0LaHBGKFhCitNzB5kbjHYekR
+	 UK2jCCO8jtq+qCBg1o8MLiKeoucwXHcSKaceYcRcijTQYvQFMQSXgjLudQU+bU3vPY
+	 mXmOJ6LT1E9ui5ernXp0JCtWPhLP/4Q9yboT/I/w=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46T5fbkO014713
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Jul 2024 00:41:37 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Jul 2024 00:41:37 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Jul 2024 00:41:37 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46T5faUe046404;
+	Mon, 29 Jul 2024 00:41:36 -0500
+Date: Mon, 29 Jul 2024 11:11:35 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Lee Jones <lee@kernel.org>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <vigneshr@ti.com>, <kishon@kernel.org>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: (subset) [PATCH 1/3] dt-bindings: mfd: syscon: Add
+ ti,j784s4-acspcie-proxy-ctrl compatible
+Message-ID: <a640435f-e840-48a8-9cf5-c796c7422070@ti.com>
+References: <20240715120936.1150314-1-s-vadapalli@ti.com>
+ <20240715120936.1150314-2-s-vadapalli@ti.com>
+ <172190301400.925833.12525656543896105526.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715214529.GA447149@bhelgaas>
-In-Reply-To: <20240715214529.GA447149@bhelgaas>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 29 Jul 2024 10:24:28 +0800
-Message-ID: <CAAd53p4pr5GPKj3RKbBScDFqUJ+2eCb+t3tuALKuhCigLfeeHg@mail.gmail.com>
-Subject: Re: Lack of _HPX after reset, DPC
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Austin Bolen <Austin.Bolen@dell.com>, Alex Williamson <alex.williamson@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <172190301400.925833.12525656543896105526.b4-ty@kernel.org>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Bjorn,
+On Thu, Jul 25, 2024 at 11:23:34AM +0100, Lee Jones wrote:
 
-On Tue, Jul 16, 2024 at 5:45=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> I think Linux is missing some important _HPX functionality.  Per ACPI
-> r6.5, sec 6.2.9,
->
->   OSPM uses the information returned by _HPX to determine how to
->   configure PCI Functions that are hot-plugged into the system, to
->   configure Functions not configured by the platform firmware during
->   initial system boot, and to configure Functions any time they lose
->   configuration space settings (e.g. OSPM issues a Secondary Bus
->   Reset/Function Level Reset or Downstream Port Containment is
->   triggered).
->
-> Linux currently *does* process _HPX for hot-added devices.
->
-> The spec doesn't call it out for boot-time enumeration, except for
-> "Functions not configured by the platform firmware during initial
-> system boot", but Linux does process _HPX for all devices enumerated
-> at boot-time because it's not clear how to identify devices that
-> weren't configured by firmware.
->
-> But AFAICT, Linux does not do anything with _HPX in the device reset,
-> AER, or DPC flows.  I don't have any problem reports that I can say
-> are caused by lack of _HPX after reset, but it seems like something we
-> should fix.
+Hello Lee,
 
-The consumer grade devices I checked don't have _HPX in the ACPI ASL.
-So I can't really delve into it any further.
+> On Mon, 15 Jul 2024 17:39:34 +0530, Siddharth Vadapalli wrote:
+> > The ACSPCIE_PROXY_CTRL registers within the CTRL_MMR space of TI's J784S4
+> > SoC are used to drive the reference clock to the PCIe Endpoint device via
+> > the PAD IO Buffers. Add the compatible for allowing the PCIe driver to
+> > obtain the regmap for the ACSPCIE_CTRL register within the System
+> > Controller device-tree node in order to enable the PAD IO Buffers.
+> > 
+> > The Technical Reference Manual for J784S4 SoC with details of the
+> > ASCPCIE_CTRL registers is available at:
+> > https://www.ti.com/lit/zip/spruj52
+> > 
+> > [...]
+> 
+> Applied, thanks!
+> 
+> [1/3] dt-bindings: mfd: syscon: Add ti,j784s4-acspcie-proxy-ctrl compatible
+>       commit: d86ce301dcf715ea2d5147bb013a29f722bf5d0b
 
-Kai-Heng
+I don't see the commit in the MFD tree [1] and Linux-Next. Therefore I
+am assuming that this patch was not committed and will be posting the v2
+series with this patch included.
 
->
-> If we could find a system with _HPX that does something interesting,
-> we might be able to demonstrate a defect by looking at a device before
-> and after a reset.
->
-> Bjorn
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=for-mfd-next
+
+Regards,
+Siddharth.
 
