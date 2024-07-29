@@ -1,82 +1,85 @@
-Return-Path: <linux-pci+bounces-10929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4181393EF45
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 10:00:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E70B93EF5F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 10:05:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74452B220FB
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 08:00:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 903CCB209BC
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 08:05:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F3B813664C;
-	Mon, 29 Jul 2024 08:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5A8136664;
+	Mon, 29 Jul 2024 08:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OsM0jrxM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UxVZWGew"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF82A126F1A
-	for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 08:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C24213AD22;
+	Mon, 29 Jul 2024 08:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722240018; cv=none; b=DUBMLFr7vrmazLvQmmJnyd+YzyWE0NN7833o9CK3tPqw1wZHFJoyifNHvd9UQKWcp0zDXDqBYz7aiTvGtzQMj7FH1osw9isMVO5XXY9vn12KOATgqOTB1ge9k/ITpOqF7READVBDISeDQ4S8jISqQEl8EKD79S+DfV1qvjdZX20=
+	t=1722240293; cv=none; b=ElmffQ6ZNP/YOoozVipVzdhUHIKRDre/CueP3eV3B3Op7FMwCg5jHzrFc/RnlW0xFLWbdx5HAwblkljzqcutFwlWIt5KGRV7dPpSeLvH97NEWUFBC71nS9c+8E56dXR4MN4pGwQtIyAbV4zDKG3fj+Wc05PA69UbW/OvAdky5Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722240018; c=relaxed/simple;
-	bh=gqig0ULABc5QTf6gdBxiwlVkiMz++/xWAu8P9nXm+Yg=;
+	s=arc-20240116; t=1722240293; c=relaxed/simple;
+	bh=kcplikNPTfJ49hcPkFXkshkzKNenhjH7qdszq0zdwLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gO6zJLCG9mpvL6igDMSFpKLjWAY4FlihIXxNdDsDaGaMWYgmwfZAxmxqXlmLBneiICZRXjb0k+hGzh3CM+508iHVUBwdXQWPxnEwy8a2nQWzicczfQzmo+F4C6msjMdJF3sJEGno8WnTOYinMS3oACXXh3BAnJZS2rDoRjtHTU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OsM0jrxM; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fc658b6b2eso20367115ad.0
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 01:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722240015; x=1722844815; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IZwZqPvJh4AbxW6ByMaS8C6OygwvpLTFq0TUS9PMs9s=;
-        b=OsM0jrxMcH1lzh5QcMOB8asjIQc+QjfBL6uJpRQY7BT2U8y97ZbvC0oFrfMsWmv1A1
-         KYKbk8lRImvcqG2z1pMAzSSSJRF6yjtgWNA4hwcMhpbLqOz2el+WBK1Pb2lRc62iaUO2
-         Afemw2GzVTUfO+gd9DDWp+vdTL+WoXfPjuPnVBtacl3XtiaRqi8lDgb9sLmLJgPDZLQV
-         UnmtWJlLN08QwnriLB2ZDWP6TK+bItfnt+Tz8EBuMDaVwflXPDnpwDdMmDoZqa6kSSIs
-         AlpUoplVANwRnNjSM4V/Fz/n7jSnik2MaG38d0IRaysUuEtmSQPZSX+llSncB5mxObto
-         DOlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722240015; x=1722844815;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IZwZqPvJh4AbxW6ByMaS8C6OygwvpLTFq0TUS9PMs9s=;
-        b=XUsTQotBAU/nUrVehwnoj6RBEZ6I4v+hq4N+T6diWT7dX/HaC2U4JyHTTY/hRtBwSp
-         zuIq1VCGvt/WW0GC+sAJ03kLgowdRwFJemaC91ryIHMKxV3dpo9SIBQcVMQuejXRivlt
-         HA5xfB7bBWR3d6uXxhMaISLfbSlJjISBSX2PRjfyCE9OPORlz/t/gMUw3qxY119ch+IR
-         K3Q+0SDHV2i9W3PRfVXZYq/f2wi3w5+Qkg0LYo3uOmsk+ABT89EilrDkA+Ca/fqooIn6
-         diD6Q+X53QTUqqBc51r8anW6+2/leqXHIOf5NOWZYN4mB+eKylW8tingU0PsO09SFhGF
-         ICZA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8SsQqCqtBEuKPVzYyK8E+x3+uOKeyIpAbmK/R3DmTOunSIm57w1jGNgJndphYBs90qUw+KZ3FD/g83/JdLzuJ7DliQAonV9Nw
-X-Gm-Message-State: AOJu0YygLQ0cU/iPyULZQgKmmo5XmBlmSTMT16BtPrrsF8+DtnX4ecyJ
-	Twx2hhEeqvIntlumAtW2bTNw2ApdWS4A9U/n/svQOSRShzuqvyLclJpRjNzhhQ==
-X-Google-Smtp-Source: AGHT+IGw6ntMSIZXrn+M7V9oFM6znOqalhya3M3rym9hvcc6pLj47+SXg29jXV6DF+nKd83PCONWsA==
-X-Received: by 2002:a17:903:22c2:b0:1fb:6663:b647 with SMTP id d9443c01a7336-1ff047e4486mr112315185ad.3.1722240014693;
-        Mon, 29 Jul 2024 01:00:14 -0700 (PDT)
-Received: from thinkpad ([117.213.101.9])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7fbd8d4sm76322585ad.271.2024.07.29.01.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jul 2024 01:00:14 -0700 (PDT)
-Date: Mon, 29 Jul 2024 13:30:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, robh@kernel.org
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	vigneshr@ti.com, kishon@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	stable@vger.kernel.org, ahalaney@redhat.com, srk@ti.com
-Subject: Re: [PATCH v2] PCI: j721e: Disable INTx mapping and swizzling
-Message-ID: <20240729080006.GA8698@thinkpad>
-References: <20240726135903.1255825-1-s-vadapalli@ti.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AnH5+DzoIPVDmCKET7wKgGw+BZo5RRqJ/M4U3BDPGvTf2BFPz2WJLYg89St3tg7XPZgxy54TsrJoS+pw08x5Qh/VP4Yr9E91UfttGZpkxMxXHp3b8UsbJ8/7Qx00x85ibDmsA4KwUpCubishkJB0WuVrqbBcTlMHDNzGMUsWucM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UxVZWGew; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722240292; x=1753776292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kcplikNPTfJ49hcPkFXkshkzKNenhjH7qdszq0zdwLw=;
+  b=UxVZWGewlwg5jRb4273nmtMej640HC366MRAzilKo8U1f0/QAPT7Audu
+   LDtPx2tkkpm64nHHUucoYgqpx0uyZDYmqx1JOAeEP+gdsJU7+QpvdD7iq
+   yfIA5wGOJkIS3dwnOBChJBhPlJIhTMlsemE1wsETUrM55tAMtRzUy5e0I
+   e8uVO+m7/hVzdqDIfd03ylhKIUj034ksnz1qk7pANZ+JM69XQPmWiI0fb
+   0UPgv9hFMvQSk+XwQJvo8Bznzg5c3UaOKXiQ9mwsNN90HW7G2rqYfeu1L
+   IeWrU0aF1okMDrSjwyQ4iAlir8UKyGBZTJtzNTuYO3cIr1dAbLa6CohWb
+   A==;
+X-CSE-ConnectionGUID: zJ5w6hXuQE6icunEl+h43A==
+X-CSE-MsgGUID: 3j/xbynCTI2AldUVbFkS6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="19859107"
+X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
+   d="scan'208";a="19859107"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 01:04:52 -0700
+X-CSE-ConnectionGUID: md5Tyjj9R7GXs2yfcRv6eA==
+X-CSE-MsgGUID: 41yRA9BTQn2WB+JnTw5Tew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
+   d="scan'208";a="58030907"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 29 Jul 2024 01:04:44 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 88D0F19E; Mon, 29 Jul 2024 11:04:41 +0300 (EEST)
+Date: Mon, 29 Jul 2024 11:04:41 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240729080441.GG1532424@black.fi.intel.com>
+References: <20240511043832.GD4162345@black.fi.intel.com>
+ <20240511054323.GE4162345@black.fi.intel.com>
+ <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
+ <ZkUcihZR_ZUUEsZp@wunner.de>
+ <20240516083017.GA1421138@black.fi.intel.com>
+ <20240516100315.GC1421138@black.fi.intel.com>
+ <CA+Y6NJH8vEHVtpVd7QB0UHZd=OSgX1F-QAwoHByLDjjJqpj7MA@mail.gmail.com>
+ <ZnvWTo1M_z0Am1QC@wunner.de>
+ <20240626085945.GA1532424@black.fi.intel.com>
+ <ZqZmleIHv1q3WvsO@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,102 +88,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240726135903.1255825-1-s-vadapalli@ti.com>
+In-Reply-To: <ZqZmleIHv1q3WvsO@wunner.de>
 
-On Fri, Jul 26, 2024 at 07:29:03PM +0530, Siddharth Vadapalli wrote:
-> Since the configuration of INTx (Legacy Interrupt) is not supported, set
-> the .map_irq and .swizzle_irq callbacks to NULL. This fixes the error:
->   of_irq_parse_pci: failed with rc=-22
-> when the pcieport driver attempts to setup INTx for the Host Bridge via
-> "pci_assign_irq()". The device-tree node of the Host Bridge doesn't
-> contain Legacy Interrupts. As a result, Legacy Interrupts are searched for
-> in the MSI Interrupt Parent of the Host Bridge with the help of
-> "of_irq_parse_raw()". Since the MSI Interrupt Parent of the Host Bridge
-> uses 3 interrupt cells while Legacy Interrupts only use 1, the search
-> for Legacy Interrupts is terminated prematurely by the "of_irq_parse_raw()"
-> function with the -EINVAL error code (rc=-22).
+On Sun, Jul 28, 2024 at 05:41:09PM +0200, Lukas Wunner wrote:
+> On Wed, Jun 26, 2024 at 11:59:45AM +0300, Mika Westerberg wrote:
+> > On Wed, Jun 26, 2024 at 10:50:22AM +0200, Lukas Wunner wrote:
+> > > On Mon, Jun 24, 2024 at 11:58:46AM -0400, Esther Shimanovich wrote:
+> > > > On Wed, May 15, 2024 at 4:45???PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > > > Could you add this to the command line:
+> > > > >   thunderbolt.dyndbg ignore_loglevel log_buf_len=10M
+> > > > >
+> > > > > and this to your kernel config:
+> > > > >   CONFIG_DYNAMIC_DEBUG=y
+> > > > >
+> > > > > You should see "... is associated with ..." messages in dmesg.
+> > > > 
+> > > > I tried Lukas's patches again, after enabling the Thunderbolt driver
+> > > > in the config and also verbose messages, so that I can see
+> > > > "thunderbolt:" messages, but it still never reaches the
+> > > > tb_pci_notifier_call function. I don't see "associated with" in any of
+> > > > the logs. The config on the image I am testing does not have the
+> > > > thunderbolt driver enabled by default, so this patch wouldn't help my
+> > > > use case even if I did manage to get it to work.
+> > > 
+> > > Mika, what do you make of this?  Are the ChromeBooks in question
+> > > using ICM-based tunneling instead of native tunneling?  I thought
+> > > this is all native nowadays and ICM is only used on older (pre-USB4)
+> > > products.
+> > 
+> > I think these are not Chromebooks. They are "regular" PCs with
+> > Thunderbolt 3 host controller which is ICM as you suggest.
+> > 
+> > There is still Maple Ridge and Tiger Lake (non-Chrome) that are ICM
+> > (firmware based connection manager) that are USB4 but everything after
+> > that is software based connection manager.
 > 
-> Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
-> Cc: stable@vger.kernel.org
-> Reported-by: Andrew Halaney <ahalaney@redhat.com>
-> Tested-by: Andrew Halaney <ahalaney@redhat.com>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-
-TBH, I'm not comfortable with this change. Because, the INTx compatibility
-_should_ come from the platform description (in this case DT) and not the
-driver. The default map_irq() function is supposed to check the existence of
-INTx and correctly report it. In this case the issue is, the platform is not
-supporting INTx, but of_irq_parse_pci() reports a dubious error:
-
-'of_irq_parse_pci: failed with rc=-22'
-
-instead of the actual error:
-
-`of_irq_parse_pci: no interrupt-map found, INTx interrupts not available'
-
-So I would say that the fix is in of_irq_parse_pci() implementation.
-of_irq_parse_pci() is supposed to find whether the PCIe controller is supporting
-INTx or not by parsing the 'interrupt-{map/extended}' properties till host
-bridge/controller node. But this API along with of_irq_parse_raw(), just walks
-up the tree till the top level interrupt controller and checks for INTx, which
-just feels wrong (that's why you are getting -EINVAL because of #interrupt-cells
-mismatch).
-
-I looked into the implementation over the weekend, but I'm not quite sure how to
-fix it though.
-
-Rob, perhaps you have any idea?
-
-- Mani
-
-> ---
+> Even with ICM, the DROM of the root switch seems to be retrieved:
 > 
-> Hello,
+>   icm_start()
+>     tb_switch_add()
+>       tb_drom_read()
 > 
-> This patch is based on commit
-> 1722389b0d86 Merge tag 'net-6.11-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> of Mainline Linux.
+> Assuming the DROM contains proper PCIe Upstream and Downstream Adapter
+> Entries, all the data needed to at least associate the PCIe Adapters
+> on the root switch should be there.  So I'm surprised Esther is not
+> seeing *any* messages.
 > 
-> v1:
-> https://lore.kernel.org/r/20240724065048.285838-1-s-vadapalli@ti.com
-> Changes since v1:
-> - Added "Cc: stable@vger.kernel.org" in the commit message.
-> - Based on Bjorn's feedback at:
->   https://lore.kernel.org/r/20240724162304.GA802428@bhelgaas/
->   the $subject and commit message have been updated. Additionally, the
->   comment in the driver has also been updated to specify "INTx" instead of
->   "Legacy Interrupts".
-> - Collected Tested-by tag from Andrew Halaney <ahalaney@redhat.com>:
->   https://lore.kernel.org/r/vj6vtjphpmqv6hcblaalr2m4bwjujjwvom6ca4bjdzcmgazyaa@436unrb2lav7/
-> 
-> Patch has been tested on J721e-EVM and J784S4-EVM.
-> 
-> Regards,
-> Siddharth.
-> 
->  drivers/pci/controller/cadence/pci-j721e.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index 85718246016b..eaa6cfeb03c7 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -417,6 +417,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  		if (!bridge)
->  			return -ENOMEM;
->  
-> +		/* INTx is not supported */
-> +		bridge->map_irq = NULL;
-> +		bridge->swizzle_irq = NULL;
-> +
->  		if (!data->byte_access_allowed)
->  			bridge->ops = &cdns_ti_pcie_host_ops;
->  		rc = pci_host_bridge_priv(bridge);
-> -- 
-> 2.40.1
-> 
+> Do the DROMs on ICM root switches generally lack PCIe Upstream and
+> Downstream Adapter Entries?
+> What am I missing?
 
--- 
-மணிவண்ணன் சதாசிவம்
+My guess is that they are not populated for ICM host router DROM
+entries. These are pretty much Apple stuff and USB4 dropped them
+completely in favour of the router operations.
 
