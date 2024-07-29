@@ -1,103 +1,105 @@
-Return-Path: <linux-pci+bounces-10970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9962293F83A
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 16:36:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BFD793F8B9
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 16:51:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C75D91C2206A
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 14:36:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3827E281D86
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 14:51:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 402F3187877;
-	Mon, 29 Jul 2024 14:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B3115538C;
+	Mon, 29 Jul 2024 14:51:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB29B187860;
-	Mon, 29 Jul 2024 14:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD933146580;
+	Mon, 29 Jul 2024 14:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722263278; cv=none; b=me+RYxMksE3VORYmHzJYa2A0hmsM7+Q0ywFgahuYKUiPTOZnQULgPkqBDqFQzFWnnj0X4CW5nWjV0J+pLXeGOzB0O4+Y4T0HQ4xsy69EcWDM4LwAVvzcNcb5FSjKR+egh3HThxQFkRxAbCm47UPkz3JCLSAs73KGf4RikilWJus=
+	t=1722264709; cv=none; b=QIrL70LHYU6lcAlRh17y07WfhGbM3+AbLsFHJlSjkqxI6dIp8CzxrKlUH+kZ9cMwBreLUnS2JgR1hQvgEenXbZxg2JiPX+zxYeYw0L9z0wnppRO651JqzfhEEWOnlyB40QuOQvBU/6O2+qYzsREWzmiIcd2ics4ZY9Q93Q4Vb8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722263278; c=relaxed/simple;
-	bh=vDORW42DYLZQwaRz1JRe/4e0oi7EknicdwRepT7tAko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MSiGP4CiPCbLRVJm64TjTMsGniScpZMKIu/Rj6SMWzrtNZUUZkT5Y9J0167ilTA/htbQHFBN94819haT2CWhXJLBd70hlNaJlgSwI4tPVRaIkWdAvXVzizvkZoLGgitmqu9DIEThEpMhALPuJ2OhYiXAgXteb8QH6AK29IyK+Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 921723000008D;
-	Mon, 29 Jul 2024 16:27:47 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7C259357A59; Mon, 29 Jul 2024 16:27:47 +0200 (CEST)
-Date: Mon, 29 Jul 2024 16:27:47 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v2 06/18] crypto: ecdsa - Support P1363 signature encoding
-Message-ID: <Zqem48z_qluJSI6j@wunner.de>
-References: <cover.1719771133.git.lukas@wunner.de>
- <d143bb81c65064654af926317f69e6578cf0cdb9.1719771133.git.lukas@wunner.de>
- <ZoHXyGwRzVvYkcTP@gondor.apana.org.au>
+	s=arc-20240116; t=1722264709; c=relaxed/simple;
+	bh=JwxZkruffVOFu0w1m6bzqfxuk0TYMxYEJc4mNatpIX0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VC+qxv6W7Q/TZCcRZ5N1XoHFJIRFwB7usivcB2ToB0TpNaczUjPwtvwIOPR0kxftU/p/BqVv8cHDLsSWkUyh6ziSFSUllFm6zg61IqPldlkBSVnnWemlOzWHnvIGFm7IQyPxXygYBrXQASnuc99f/eRHaqgpLCGBnwCwl8kSe5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 3FC4D92009C; Mon, 29 Jul 2024 16:51:37 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 3971892009B;
+	Mon, 29 Jul 2024 15:51:37 +0100 (BST)
+Date: Mon, 29 Jul 2024 15:51:37 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: Matthew W Carlis <mattc@purestorage.com>, alex.williamson@redhat.com, 
+    Bjorn Helgaas <bhelgaas@google.com>, christophe.leroy@csgroup.eu, 
+    "David S. Miller" <davem@davemloft.net>, david.abdurachmanov@gmail.com, 
+    edumazet@google.com, kuba@kernel.org, leon@kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, 
+    linux-rdma@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+    Lukas Wunner <lukas@wunner.de>, mahesh@linux.ibm.com, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, mpe@ellerman.id.au, 
+    Netdev <netdev@vger.kernel.org>, npiggin@gmail.com, oohall@gmail.com, 
+    pabeni@redhat.com, pali@kernel.org, saeedm@nvidia.com, sr@denx.de, 
+    Jim Wilson <wilson@tuliptree.org>
+Subject: Re: PCI: Work around PCIe link training failures
+In-Reply-To: <914b7d34-9ed5-cd99-cb76-f6f8eccb842e@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2407291540120.48387@angie.orcam.me.uk>
+References: <20240724191830.4807-1-mattc@purestorage.com> <20240726080446.12375-1-mattc@purestorage.com> <914b7d34-9ed5-cd99-cb76-f6f8eccb842e@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoHXyGwRzVvYkcTP@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Mon, Jul 01, 2024 at 08:10:16AM +1000, Herbert Xu wrote:
-> This should be implemented as a template.  Change ecdsa to use a
-> "raw" encoding for r/s and then implement x962 and p1363 as templates
-> which converts their respective encodings to the raw one.  You
-> would then use "x962(ecdsa-nist-XXX)" or "p1363(ecdsa-nist-XXX)"
-> to pick the encoding.
+On Mon, 29 Jul 2024, Ilpo Järvinen wrote:
 
-Understood, thank you for pointing me in the right direction.
+> > > The main reason is it is believed that it is the downstream device
+> > > causing the issue, and obviously you can't fetch its ID if you can't
+> > > negotiate link so as to talk to it in the first place.
+> > 
+> > Have had some more time to look into this issue. So, I think the problem
+> > with this change is that it is quite strict in its assumptions about what
+> > it means when a device fails to train, but in an environment where hot-plug
+> > is exercised frequently you are essentially bound have something interrupt
+> > the link training. In the first case where we caught this problem our test
+> > automation was doing some power cycle tortures on our endpoints. If you catch
+> > the right timing the link will be forced down to Gen1 forever without some other
+> > automation to recover you unless your device is the one single device in the
+> > allowlist which had the hardware bug in the first place.
+> > 
+> > I wonder if we can come up with some kind of alternative.
+> 
+> The most obvious solution is to not leave the speed at Gen1 on failure in 
+> Target Speed quirk but to restore the original Target Speed value. The 
+> downside with that is if the current retraining interface (function) is 
+> used, it adds delay. But the retraining functions could be reworked such 
+> that the retraining is only triggered in case the Target Speed quirk 
+> fails but we don't wait for its result (which will very likely fail 
+> anyway).
 
-I've just submitted a separate series for templatizing ecdsa
-signature decoding:
+ This is what I have also been thinking of.
 
-https://lore.kernel.org/r/cover.1722260176.git.lukas@wunner.de/
+ After these many years it took from the inception of this change until it 
+landed upstream I'm not sure anymore what my original idea was behind 
+leaving the link clamped on a retrain failure, but I think it was either 
+not to fiddle with the setting beyond the absolute necessity at hand 
+(which the scenarios such as Matthew's prove wrong) or to leave the 
+setting in a hope that training will eventually have succeeded (but it 
+seems to make little sense as there'll be nothing there to actually 
+observe the success unless the bus gets rescanned for another reason).
 
-Please let me know if this is what you had in mind.
+ I'll be at my lab towards the end of the week with a maintenance visit, 
+so I'll allocate some time to fiddle with this issue on that occasion and 
+implement such an update.
 
-Thanks!
-
-Lukas
+  Maciej
 
