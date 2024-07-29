@@ -1,245 +1,310 @@
-Return-Path: <linux-pci+bounces-10972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61C8393F8CD
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 16:56:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B205B93F94A
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 17:24:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D95D91F22B7F
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 14:56:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3AA81C219A3
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jul 2024 15:24:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5461C15538C;
-	Mon, 29 Jul 2024 14:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E70B156669;
+	Mon, 29 Jul 2024 15:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vzOH7zWh"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B53MDOMR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B2414601E;
-	Mon, 29 Jul 2024 14:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722264986; cv=fail; b=CWeFCpPV8plcHW2QyFHF4QT09NmmP7h9FCQeB5HFFjXrJVvIpY3VlN1sXwjxZN8kEwNv5uYNqNrbDEfE5x5fRzTl8+O56K1QUxtjxHhCWViPPf2gQs+PgUVvXtHLSAgnftzIYxp/fy7b3WWY+kQo0SYVpHQlmX2GezZb8KE2gsI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722264986; c=relaxed/simple;
-	bh=1lx0zeKt85HAfLuBZhwEMF9oJCZ71w3BFP3F5Cq1jfs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=M2uCOb7Tm24PrV+omF88CdWvkIjppJsWoYshQNM4ViVzPF9sgOqqaummpJpLTqnlIHFelz4h2PNvvw8IJtKW5oEvF3XqWANQDfOT2rHMjGrD9sAPWIsMgQGz1BPe8HmOLFdU41h5QYxBmlkWpOjG5bnXFbR+48q2eBkHDTNkuX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vzOH7zWh; arc=fail smtp.client-ip=40.107.237.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RFDFo4HdhAOyHQ50uSz//D4Lchs3lafmZSBuofmA9reVpua++Ey3LDsW3z+iMLTH2Ro2FGQkwZkh/zJ9TlNtvjUy0PNRR73oSRo3p1MSOggjLfhIvW56128La9SjHMs5M/IkDP3QjfR4n2OMlHlYIsguBX2Tmq/A5daCYVIZoF+lDGYxeoEFK2v36xpuQwhi+UjeQlBSeZnL5xPFRxDFUilWeWRGHG4qmg6IvwsKGdbavN/mPetNCVnspYI+BCUl5KbgB7GHRTMZ5m42Z4x/kGDEb0AeQODgbmyZwxJj7qQuc4ynj+C35Fpc9MUfp8V5wjkJX79hIcPlvsmMzesG2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+kFGOySOmrdvYRmqtjsjsDoBoX4Jgt5kgaQJuL0OfdU=;
- b=Giw/UTqBHZXBidpHZApX+uvw+T+DvitW4H3i4aosPRxnmP/WkU8gkNlL4GGOmEePfOu7y20fWcpTvNi65uvYNEoF0+3is2yxkDkbyLRCCgLqoPQGAQkBGRB5BGxFFqGJXCUs53Q6CrR/u2nlwFDZNW4G5EXStZ965ioSNj7KM0Z7/ihACdis5C3wFFCgGBeDTpDLZNA77OVeIp+lyYmPosgYxCsVzg3cDULLzyFWQctn7iPS5HwGa6WA/O9XrGlejwCwR9tvOwXv/G78+PdF+DKGRh+Hw8MFD++fdxd8Hqjq6lqOXod5pp1ZRb9k/+AOyoOUghuF24c9v4P7eYupVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+kFGOySOmrdvYRmqtjsjsDoBoX4Jgt5kgaQJuL0OfdU=;
- b=vzOH7zWhzFcIB+SSn0Kfwk0P4jQkl+fZhJOp2/bZMUidyUy3PhHuQOjVxKW6nYmTbxJzBznFda2Yns0pAIwUxg8Mhas82HbvIa03OqllaU2R61SAbw4dM2H54tXDwyUoaZNz7nR15M05BONPZ7ndq6+OIw7p5u8rIn0V89l7cpA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com (2603:10b6:5:1bb::24)
- by SN7PR12MB7450.namprd12.prod.outlook.com (2603:10b6:806:29a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.29; Mon, 29 Jul
- 2024 14:56:21 +0000
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475]) by DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475%4]) with mapi id 15.20.7807.026; Mon, 29 Jul 2024
- 14:56:21 +0000
-Message-ID: <c60a0d22-5002-49a4-8dc9-a7b689ed685f@amd.com>
-Date: Mon, 29 Jul 2024 09:56:18 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 03/10] PCI/TPH: Add pci=notph to prevent use of TPH
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org,
- Jonathan.Cameron@huawei.com, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- alex.williamson@redhat.com, gospo@broadcom.com, michael.chan@broadcom.com,
- ajit.khaparde@broadcom.com, somnath.kotur@broadcom.com,
- andrew.gospodarek@broadcom.com, manoj.panicker2@amd.com,
- Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev, horms@kernel.org,
- bagasdotme@gmail.com, bhelgaas@google.com
-References: <20240725212915.GA860294@bhelgaas>
-Content-Language: en-US
-From: Wei Huang <wei.huang2@amd.com>
-In-Reply-To: <20240725212915.GA860294@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0094.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:35e::14) To DM6PR12MB4877.namprd12.prod.outlook.com
- (2603:10b6:5:1bb::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A3A13C9A7
+	for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 15:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722266664; cv=none; b=NHuT6z+Yp1oJnLL/fcK7HSGueMN7KChZCFqRd69Itk/R/lUQhLkDCgSHz26W4O57E2ZP8y88qKYzU1Fc5tub7IOjUByBeSclefeLH5b1rIrcnNr7+7uqLi7nTX8RqppbH6hnxAZbhslhZ5epAERq0DOsDFAhfViMPzc5gegaeK0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722266664; c=relaxed/simple;
+	bh=+5jgNVVweCfvtasU26HTIekxF07BevkiA0hGiNuxclk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hy17hf0bgFZLM3yEKadYpxJcFXMl8Rz87iHqytlsP9Z3tJKeUKx2k06xfwHRljTc0EfEd2zfZCySuI3ngCDvb9gBsADBU91NODnBLcx2k4S+iAdYGqeE5ShcPoX+uIsVxk7IuAi4lrrvJHAIvJwA0S/XMLzhmncss9Tw15WU+vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=B53MDOMR; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ef25511ba9so29193981fa.0
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 08:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1722266660; x=1722871460; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uypyab18/Tk9ghN9C1+zgNq9FOnNpr6Y9ZpF09LuBMI=;
+        b=B53MDOMRqKwRVv2oPV33H7KhdF3MJ+KFEIFgwYcmrlcI4+JyXsZM4Q+5yQs2oljv+e
+         yRIArXjyMHcyWwT18NfLfOvbBmL2bg7kCqnFSKsata1lsT2c+0eQF7PMJ2F7ChNGXPiD
+         VKfpV1of7GFT4UYeErIuirvkxHGgqjp4q4wSc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722266660; x=1722871460;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Uypyab18/Tk9ghN9C1+zgNq9FOnNpr6Y9ZpF09LuBMI=;
+        b=Ya4WUKuQVErvc5jQBXKC1mv9gIotOz/2GLY187aUUSldwph6R4pkKPCqul4RBcqYNN
+         Y3+TeJNznPvEOvlrXmSMiIn8UFx+IaTfXRcIxHLQHVptYWxdKjUGzLeh9n5u6z6h1XNa
+         xOMVaxsBVg1OtIfvaJ0JNTsJBcCdPEd/Dg4PrfhXs+KeSaLmTlm7AaAinGzY1wpbQMJn
+         SuncD8H6v8swxm3KZXCqZwmGzWGEpwNd5j8W+DjN9Bn5sphlau3OTWVbRt8jVme2UthH
+         Nw+WO9aCuRYkE8ulrxzwntnPn6XJ7DaTus3hrn+rKvqme6piTfR851R9E3bKk5ojIzZo
+         sV+A==
+X-Gm-Message-State: AOJu0YydmSi/1Gz9rH/LN0sqD1PJWwIZtgMI17b6jt8bUaPm1M2qwWJL
+	MX5g88kMzAFF07LsddaAK0awNKr1wUy1jhO82EYKf6LrWT2QaJm7lJ09pweSo6upCkBnh7j9OWp
+	BX4tFMbSM2RNiNiMzqIe9l0uTFODNGD3eCQidBjdHh+AL5yc=
+X-Google-Smtp-Source: AGHT+IH0vpbCw0jo7vxBObrl1wvldYLE88ZP5DcaeGMMDQBuLmQRFG3gjcASk2kXHJC1vgYuNwMfaKH7HOaQMe+q6E0=
+X-Received: by 2002:ac2:4c56:0:b0:52e:9558:167c with SMTP id
+ 2adb3069b0e04-5309b6e1d9emr2381647e87.10.1722266660055; Mon, 29 Jul 2024
+ 08:24:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|SN7PR12MB7450:EE_
-X-MS-Office365-Filtering-Correlation-Id: 409a3310-5891-416e-15c9-08dcafde9bc1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VHRiSWVZY3hjNW9Ja1FIQUYrSVovOXhXZHI5T1VSRUxZS3lWOUxjOHAxRG1M?=
- =?utf-8?B?eGxTYjJyNEJHeTlGTEZpTUlLSkhLYXRVb3llOHlEU0U2b0tpWnR4TitYVkMr?=
- =?utf-8?B?RDVoRlhnd0lGZWZGZHEwdkRFTkdXODRWa0ZVMWFqRkRpU3NHQUVtY01GbXE4?=
- =?utf-8?B?K29RL2E4THh1YlFqNXZmNDBWUndqU0Y1TVY3b1lmTDJ3ZzlYcWxmMzhCZCtT?=
- =?utf-8?B?cVV4L3RtUy9MTGpEaVg1aHNtNXlvekVQT2sxcGEwemxZcnYxSmZlLytEQUor?=
- =?utf-8?B?R1BoM3Z3cmtQUGZMN0luYWdCcGJ0dzNIYzcrNTFiSSt6Wjl0TmNEYmkxOXN1?=
- =?utf-8?B?K1JIRXNXdjFmUFFzMUhmZDFGL1VTRS80RURQZHBvN2xVa2lMcldjdC9pQ0pB?=
- =?utf-8?B?QmlpLzZwTCtJM0F0N0MvZGg0ZVBLMVNJdmZCS0Q5NVduYlZpK0todE9UVEdE?=
- =?utf-8?B?cDhMNS9SN2QrL0dsZmQ4M0Z5Yzd0bm5acVFsNUo4b1NHaDBaem5odjFxdVNX?=
- =?utf-8?B?UE5TOGVWeGlSbEwrSmsyejF2UEtOdlNYK1N3WkQwcnB5NDcrcllobDRKUFRE?=
- =?utf-8?B?a0lJQXp1ZUFIME5NdEVWaFo4eVpRd292RGdZN3pNYkMvQTYyTTh3WFhNR2JI?=
- =?utf-8?B?N2QyNEtSeFBjVTlqN1JMQ2RXamI4V1FEdTdYR1hEdzQxYmlkQ1hWdWtqcnlo?=
- =?utf-8?B?dkZPU1UwOGxPVmJSUkxzMTVMNURUbWpFZGtIeTQvZTlpWExmdHV3K1NlYWh3?=
- =?utf-8?B?bndoTW9tSUlPbE8za0IrMTl6cVhqaWFienFpRVErRU01TmRhd2hUNFpXUkJ1?=
- =?utf-8?B?eTZneWZTWCtNUy9sY0hJWkxkdU5nc25FSHBxRjRDcWE1Z3JVaSt1SzFLZ1U1?=
- =?utf-8?B?RmIzUmdtOHFZQnQ0aEhiWk9DeG9iMFpNUU5wQnNjUnRYekxYL3VPczZ5M05h?=
- =?utf-8?B?T0ZCdEwwOHhHK0luczNMMGJhVEJUVUMvOVMvRFlRcFdXWm5jQ0YyYklSSTQx?=
- =?utf-8?B?MGxOWnBRMGdaa1V0OEh6b1AyejR1a2pGLzNBbXdTWGJ3b3NqSjdOazMrazUw?=
- =?utf-8?B?L21hQXJzblBWMmhUM05GQXpHTWZNUjNKb0laWWJmaHhpL3p4M0xEdmtJL1ZE?=
- =?utf-8?B?SjhTaHY5cHJISGtNN2hMYkRMT1R6V1dNQndkMEhlb0tvZm55em5ZTFZ3dU90?=
- =?utf-8?B?a3ZQWWlodlVYbEFZS1Q1NWxxNmp2aUZOMVNiUi92R1h3dEVmd3gzQUpkWUo3?=
- =?utf-8?B?dkZRMEppZWxUNDFQWGhWZUdZNS90d2tTUmZkcmMvQThBNXdqcWx5V1pKdkw2?=
- =?utf-8?B?NHkybGZVT3RiTEZEd2JQai9GdkVPNnFqbk1sY2hqR0RUQWZQbHRVSy9ZYjd0?=
- =?utf-8?B?cE43ZUFlQlBIWjE0dlM4QXhKcWtjbERxdDVacStaeHZZdmxIRnc5OWdZOFNG?=
- =?utf-8?B?WGNtOXVia0FCcm1vNHpZMkcvZVptNGlkT0hTZ1NBd2lRaituMlZEY0RRWTdm?=
- =?utf-8?B?RExLYzFmeVBqMEtKVWJyMU5uaWd2aks5UXJ3dkkwNFVRd00yVG1tUkZFbExJ?=
- =?utf-8?B?V1YwelFWblhKcjZ5c3I1eWVaUU1jQTF3N2tXWXhlanRtYkQxTytJZDliT1pY?=
- =?utf-8?B?Wmt6K2wyVkozNStyN3hhNU9JTmRNaWo2N1huUFBLWlNBNS9XcXpYa0dGYW1K?=
- =?utf-8?B?NTdqbEpFM0c3SkYvNWN3cWxOaml0aC9qcGhNM25OcmEwWFh1a2IvL2NpWlJV?=
- =?utf-8?B?WlNRYWZ0MDc3RXZyUzRZTGI3a3k1YTB6WjlTM3FPN2djVWNHaEtEMm5pc2ZH?=
- =?utf-8?B?bG5RVGlSWXl0aC8rN2NRQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MnJaUm9qSklKRHhBTjZodFhubkdReFlJUE9hSkdtL3p6b3ptbW1iZWpWWGxK?=
- =?utf-8?B?MzhsN2JONk02OFBtVFIyaTBPRmpPRENZenVjc0ZFTlp1bUVjWVZHdzBFaUFD?=
- =?utf-8?B?bENLM3RDdU9FWUR2dUxJU1VUYy8rR2UreHR5c3pMU0IydjFteUhmSmcyQ1dr?=
- =?utf-8?B?dWRXNms0NTU5U1pFN2R0S2RpbGRLQm5GWjlsQitYSEowcnVGZkFxSjQySndV?=
- =?utf-8?B?dW5tWFM2OGN2Yndabm5sUDlJblA2aWhiMFJuN2gzOVBiSEdwZDVhc25PUm5t?=
- =?utf-8?B?QXBHMExsTW43TW9ZK0EyVXAxN0hxc1FRc1FCK1lQRW9CVjVRMElSSitYeWhB?=
- =?utf-8?B?OW9HYmUybSt3Zm1lOGducGhNTjNaMGE0c0xBS1ZHOHFMdTd1a0RUYkRKVXFu?=
- =?utf-8?B?Ykgyckg3MnZZVjlpQk5TdUllQ0RnTklnVkxvQ2U4RWh3MmdFV1hNT0JRbmll?=
- =?utf-8?B?TU93SUVlVVV2dm9QcHlrWkhPSXRQQlBoRFJaWkJFdDNCNzVNQnFrY3Zla0pB?=
- =?utf-8?B?K00wOGJ0VlpiVDlhRTZxNXBLZTRXa0RBQVErdkhhMXNCTDlET0NIQy9lN0x0?=
- =?utf-8?B?U0ZLclN1dXN1Z1pBTEh3ZFU4Wjl4ZU0yL0U4VTZLbjg2cDJyalg4eHhvTHdw?=
- =?utf-8?B?ZXdiWVpLNi9FWGRiM2dXYndYcmQrU0Q3QXVMR2RzUDlRWXBKaDRnK3dXUW12?=
- =?utf-8?B?QlMzNjgzZ1JjQjdSQmJKY0cvTWVBMnJaZEtENGFMc3FFUzhSdTNSRzdCeTQ1?=
- =?utf-8?B?am13RFdWSXB3MzRrbS9RMEU4Q2J2RWlCd1AwNFppOVpTdmoxV0NMUkZpUFVa?=
- =?utf-8?B?K3NvdnlsV3NyRk1UTzN2N1VpVTh2TGl3cG5yYVFicGl0cHNuUXp4QXpwZTA4?=
- =?utf-8?B?S09pSFhVSVZONHgzeG8yR1YrdWtVMkJwZUhTN2tkejdiUXVwS0Zkbys0VUxj?=
- =?utf-8?B?K0k2NGVadXYzT2VPREhPVld3cUFiTi9JMWdDckU3ejI5anFLT1FBc3BYSGhw?=
- =?utf-8?B?ZmkyeUtOQm5tR2x0LzBvU2YxN1lVWGwzcFRtUVZFemRhUlpZMnRTeDRrVldG?=
- =?utf-8?B?bFNwR0NjaTNvZDZoQTJaT2wrMWZOekVHY29EbTN0YlZFK3pQWHdjVjF6RGdU?=
- =?utf-8?B?bEI4R1BPKzRuL000Z3VXbmduNVE3Y0c2bXZ1ZjhPbE16ZzlldERwUDlQQVdB?=
- =?utf-8?B?eVJZbUN1cFd4U2tWaVVrYnZPcnRCNFVKQnFxMVdBaFFIUVRkSEtQMzd3Wjc4?=
- =?utf-8?B?czc1dm0vT3orWW1McEI4aXFyZzk4R3plUUtIRkloYUF0WGJXZWdnWG1oRE1H?=
- =?utf-8?B?UmV6em5qTks3cWEyQ1hFVTNaTXJ3TkZyVWhNcXBreFNobFFoSWdNRHp2cTBR?=
- =?utf-8?B?VVd2TytERHZyZk0rZUw4WXlidGg3eTJwOS9NcW0rUUFWK3dsTFZFOVlQTHN4?=
- =?utf-8?B?ZEt6eUp0V3VLaWQwQm5McFFrSXkvbWVEZ1FGcjVEWUdETk1TMkYxcXdJcGdF?=
- =?utf-8?B?ZFBUTHRXdVYzMjVLZVNrUUxPREZCWldrZk5VU2pXTjJCUnEzZUNPUlIvRTlY?=
- =?utf-8?B?WjZuY2x2YVg5TDFMOXcvY0tYSG9LWS9PNTdaN2tnQXZDb3ROZm4vbHdneUZv?=
- =?utf-8?B?dFhMQ21jZlJnMjUreCtNY29RZlhjZWFISUJaczN0anhQd1hEUlRUTUp3MWRL?=
- =?utf-8?B?THE1V0RTMDk1SnpiZHlCMlFYRThwRE1UTDRQNHNyMlFOTVlBdHoySTA1MUM0?=
- =?utf-8?B?YjI4Y3B1T2dKcUFWcnJ4NzRKekVuRWhkMHFUSUYwYzFUSyszQk85RXdqUWc5?=
- =?utf-8?B?SXF1ckM0MVZ4RUpMZUtjem1VVjBZTmJsNVdGOUtqMTN3NitIdnZ2TTlEcXRD?=
- =?utf-8?B?UU1rSjJIWDFBSTJzZEh4dzBuYXQ3NEx1RENUaGRNQ256WnF3L2oyQkx3cERI?=
- =?utf-8?B?NFpGZVBaQWxENFZtSGZBVktmWi91Y3ZWUEc5UUYwSHo1cHoySHFia2Z6ZUdF?=
- =?utf-8?B?N1RMSjFSZ0dqM0tXRHRZZjJWeDQxN3ljamJRSmZEeXN4ZE9MUFQ2VXNWMHdR?=
- =?utf-8?B?blJMS3ZHL0I2M1ptU3dVVkZ5TXJsTGQ1MUxjSTVaL0tHR2VMWUVSTWx1TWZY?=
- =?utf-8?Q?PO5HlfWHl78ryR0N+2L3bmWVB?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 409a3310-5891-416e-15c9-08dcafde9bc1
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4877.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2024 14:56:21.2132
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 45KqJ/tUgD86FIvdst9dZwuKUfZdFvIXVMmbvj0EUxY7SFWJF/JX5AF+aWyqXkfn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7450
+References: <20240716213131.6036-1-james.quinlan@broadcom.com>
+ <20240716213131.6036-4-james.quinlan@broadcom.com> <20240725043111.GD2317@thinkpad>
+ <CA+-6iNz9R5uMogd6h+BkgRvKrsmyH2VXsGO_5e=6yqC=JzjigA@mail.gmail.com>
+ <20240726050423.GB2628@thinkpad> <CA+-6iNzpfh7_rXUEXNjZLCLQKu-e_bYMAO6PdKaxqReJRKjuAQ@mail.gmail.com>
+ <20240727064013.GA2974@thinkpad>
+In-Reply-To: <20240727064013.GA2974@thinkpad>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Mon, 29 Jul 2024 11:24:07 -0400
+Message-ID: <CA+-6iNwz5PD__OhDrOZWws8i-3uWELxk1hBb-xFt31gp0bi4Bg@mail.gmail.com>
+Subject: Re: [PATCH v4 03/12] PCI: brcmstb: Use common error handling code in brcm_pcie_probe()
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, bcm-kernel-feedback-list@broadcom.com, 
+	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000851252061e6474f8"
 
+--000000000000851252061e6474f8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Jul 27, 2024 at 2:40=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Fri, Jul 26, 2024 at 02:34:54PM -0400, Jim Quinlan wrote:
+> > On Fri, Jul 26, 2024 at 1:04=E2=80=AFAM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > On Thu, Jul 25, 2024 at 03:45:59PM -0400, Jim Quinlan wrote:
+> > > > On Thu, Jul 25, 2024 at 12:31=E2=80=AFAM Manivannan Sadhasivam
+> > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > >
+> > > > > On Tue, Jul 16, 2024 at 05:31:18PM -0400, Jim Quinlan wrote:
+> > > > > > o Move the clk_prepare_enable() below the resource allocations.
+> > > > > > o Add a jump target (clk_out) so that a bit of exception handli=
+ng can be
+> > > > > >   better reused at the end of this function implementation.
+> > > > > >
+> > > > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > > > > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> > > > > > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > > > > > ---
+> > > > > >  drivers/pci/controller/pcie-brcmstb.c | 29 +++++++++++++++----=
+--------
+> > > > > >  1 file changed, 16 insertions(+), 13 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pc=
+i/controller/pcie-brcmstb.c
+> > > > > > index c08683febdd4..c257434edc08 100644
+> > > > > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > > > > @@ -1613,31 +1613,30 @@ static int brcm_pcie_probe(struct platf=
+orm_device *pdev)
+> > > > > >
+> > > > > >       pcie->ssc =3D of_property_read_bool(np, "brcm,enable-ssc"=
+);
+> > > > > >
+> > > > > > -     ret =3D clk_prepare_enable(pcie->clk);
+> > > > > > -     if (ret) {
+> > > > > > -             dev_err(&pdev->dev, "could not enable clock\n");
+> > > > > > -             return ret;
+> > > > > > -     }
+> > > > > >       pcie->rescal =3D devm_reset_control_get_optional_shared(&=
+pdev->dev, "rescal");
+> > > > > > -     if (IS_ERR(pcie->rescal)) {
+> > > > > > -             clk_disable_unprepare(pcie->clk);
+> > > > > > +     if (IS_ERR(pcie->rescal))
+> > > > > >               return PTR_ERR(pcie->rescal);
+> > > > > > -     }
+> > > > > > +
+> > > > > >       pcie->perst_reset =3D devm_reset_control_get_optional_exc=
+lusive(&pdev->dev, "perst");
+> > > > > > -     if (IS_ERR(pcie->perst_reset)) {
+> > > > > > -             clk_disable_unprepare(pcie->clk);
+> > > > > > +     if (IS_ERR(pcie->perst_reset))
+> > > > > >               return PTR_ERR(pcie->perst_reset);
+> > > > > > +
+> > > > > > +     ret =3D clk_prepare_enable(pcie->clk);
+> > > > > > +     if (ret) {
+> > > > > > +             dev_err(&pdev->dev, "could not enable clock\n");
+> > > > > > +             return ret;
+> > > > > >       }
+> > > > > >
+> > > > > >       ret =3D reset_control_reset(pcie->rescal);
+> > > > > > -     if (ret)
+> > > > > > +     if (ret) {
+> > > > > >               dev_err(&pdev->dev, "failed to deassert 'rescal'\=
+n");
+> > > > > > +             goto clk_out;
+> > > > >
+> > > > > Please use a descriptive name for the err labels. Here this err p=
+ath disables
+> > > > > and unprepares the clk, so use 'clk_disable_unprepare'.
+> > > > ack
+> > > > >
+> > > > > > +     }
+> > > > > >
+> > > > > >       ret =3D brcm_phy_start(pcie);
+> > > > > >       if (ret) {
+> > > > > >               reset_control_rearm(pcie->rescal);
+> > > > > > -             clk_disable_unprepare(pcie->clk);
+> > > > > > -             return ret;
+> > > > > > +             goto clk_out;
+> > > > > >       }
+> > > > > >
+> > > > > >       ret =3D brcm_pcie_setup(pcie);
+> > > > > > @@ -1676,6 +1675,10 @@ static int brcm_pcie_probe(struct platfo=
+rm_device *pdev)
+> > > > > >
+> > > > > >       return 0;
+> > > > > >
+> > > > > > +clk_out:
+> > > > > > +     clk_disable_unprepare(pcie->clk);
+> > > > > > +     return ret;
+> > > > > > +
+> > > > >
+> > > > > This is leaking the resources. Move this new label below 'fail'.
+> > > > What resources is it leaking?  At "clk_out" the return value will b=
+e negative
+> > > > and only managed resources have been allocated at that juncture.
+> > > >
+> > >
+> > > Right, but what about the err path below this one? If that path is ta=
+ken, then
+> > > clks won't be released, right?
+> > No, that is the same situation.  The clock is originally allocated
+> > with "devm_clk_get_optional()", i.e. it is a managed resource.
+> >  If the probe fails, and it does in both of these error paths,
+> > Linux deallocates the newly formed device structure and all of its reso=
+urces.
+> > Perhaps I am missing something?
+> >
+>
+> No, I missed the fact that __brcm_pcie_remove() is freeing all resources.=
+ But
+> grouping all release functions in a single helper and using it in multipl=
+e err
+> paths even when the err path need not release everything the helper is
+> releasing, warrants trouble.
 
-On 7/25/24 16:29, Bjorn Helgaas wrote:
-> On Wed, Jul 24, 2024 at 03:05:59PM -0500, Wei Huang wrote:
->>
->>
->> On 7/23/24 17:41, Bjorn Helgaas wrote:
->>> On Wed, Jul 17, 2024 at 03:55:04PM -0500, Wei Huang wrote:
->>>> TLP headers with incorrect steering tags (e.g. caused by buggy driver)
->>>> can potentially cause issues when the system hardware consumes the tags.
->>>
->>> Hmm.  What kind of issues?  Crash?  Data corruption?  Poor
->>> performance?
->>
->> Not crash or functionality errors. Usually it is QoS related because of
->> resource competition. AMD has
-> 
-> Looks like you had more to say here?
+Got it, I will address this.
 
-I hit the send button too fast. What I wanted to say was there will be
-AMD QoS patches to control TPH. Note that they will be hooked up under
-x86/resctrl. Since they are AMD specific, it will be independent from
-PCIe subsystem code.
+Regards,
+Jim Quinlan
+Broadcom STB/CM
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
-> 
-> I *assume* that both the PH hint and the Steering Tags are only
-> *hints* and there's no excuse for hardware to corrupt anything (e.g.,
-> by omitting cache maintenance) even if the hint turns out to be wrong.
-> If that's the case, I assume "can potentially cause issues" really
-> just means "might lead to lower performance".  That's what I want to
-> clarify and confirm.
+--000000000000851252061e6474f8
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Corrrect, only QoS-related concerns. There won't be any correctness
-concerns.
-
-> 
->>>> Provide a kernel option, with related helper functions, to completely
->>>> prevent TPH from being enabled.
->>>
->>> Also would be nice to have a hint about the difference between "notph"
->>> and "nostmode".  Maybe that goes in the "nostmode" patch?  I'm not
->>> super clear on all the differences here.
->>
->> I can combine them. Here is the combination and it meaning based on TPH
->> Control Register values:
->>
->> Requestor Enable | ST Mode | Meaning
->> ---------------------------------------------------------------
->> 00               | xx      | TPH disabled (i.e. notph)
->> 01               | 00      | TPH enabled, NO ST Mode (i.e. nostmode)
->> 01 or 11         | 01      | Interrupt Vector mode
->> 01 or 11         | 10      | Device specific mode
->>
->> If you have any other thoughts on how to approach these modes, please
->> let me know.
-> 
-> IIRC, there's no interface in this series that reall does anything
-> with TPH per se; drivers would only use the ST-related things.
-> 
-> If that's the case, maybe "pci=notph" isn't needed yet.
-
-I can go with it. There will be a BIOS option to turn it off on AMD
-platform. I would expect similar options on other vendors' platforms. So
-I am not overly concerned about dropping pci=notph.
-
-> 
-> Bjorn
+MIIQbgYJKoZIhvcNAQcCoIIQXzCCEFsCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg3FMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
+MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
+rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
+aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
+e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
+cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
+MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
+KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
+/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
+TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
+YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
+b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
+CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
+BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
+jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
+9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
+/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
+jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
+AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
+dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
+MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
+IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
+XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
+J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
+nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBU0wggQ1oAMCAQICDEjuN1Vuw+TT9V/ygzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE3MTNaFw0yNTA5MTAxMjE3MTNaMIGO
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC0ppbSBRdWlubGFuMSkwJwYJKoZIhvcNAQkB
+FhpqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAKtQZbH0dDsCEixB9shqHxmN7R0Tywh2HUGagri/LzbKgXsvGH/LjKUjwFOQwFe4EIVds/0S
+hNqJNn6Z/DzcMdIAfbMJ7juijAJCzZSg8m164K+7ipfhk7SFmnv71spEVlo7tr41/DT2HvUCo93M
+7Hu+D3IWHBqIg9YYs3tZzxhxXKtJW6SH7jKRz1Y94pEYplGQLM+uuPCZaARbh+i0auVCQNnxgfQ/
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAWWPMFo9nBpPBz4RmGiQntDOAmXZdZ
+yUKy8LQpVWe//DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MjkxNTI0MjBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAmaygnzqh1ai5dqtbXgK8qxyhLGNjXCAf1J4j1EyLYS3MWQOJ
+qsAcBByBKM6bLfSOTpKqSyRzUGLpsjcv+ggfvgK2g8W4VS+okuvVxhaNzSdoWf+dtlKDygkXPhDQ
+Hvdy1pNH33IXPmCDku2MElg4aFTyeWYyZXN+yZc6G7Av9yIm/5Rp5OTY1wT05VGSrKq2pOLK5q6B
+QY+ns7euMpGogN9+F+AlO+4svvt4o8VKFk/y/qstJDOuT/6glh36ydvwwB6OapTPzzmneLekJVsK
+nEEn9rjp6/ZzVhag/4fXCMliWjwVf/HXNJYClRKSQKgs0/vw3+eMTeYQ1AZizr6NSQ==
+--000000000000851252061e6474f8--
 
