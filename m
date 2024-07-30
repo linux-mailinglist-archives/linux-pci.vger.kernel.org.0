@@ -1,312 +1,233 @@
-Return-Path: <linux-pci+bounces-11025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 830E694136A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 15:44:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAA9694181C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 18:19:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 102441F218FA
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 13:44:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEEC41C23086
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 16:19:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2651A08A6;
-	Tue, 30 Jul 2024 13:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E484189503;
+	Tue, 30 Jul 2024 16:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UtYS69Bm"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k5xYUVSM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2071.outbound.protection.outlook.com [40.107.236.71])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA6E1A0737;
-	Tue, 30 Jul 2024 13:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722347003; cv=fail; b=Q7Dwk6g6rgtjUqUBExH2cTFgy3EYCUoANBE93Wa59GGK7FdxPogVucHMq/8yAsHlugmgmZl+KNODPNVRHcCSylDhhLOmAj4Pq/mdR2Chl2dcL6VzRntJ7FrtOyJaEHMptfwpdmStZ+bQZD8VogQMJUA6A1aPQiuuAkOv5gbH30k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722347003; c=relaxed/simple;
-	bh=HdsN0sHVE4M5/RjC0GcRXT0unM9Q6sm44LV+ItizNMo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ddgwSfIKrzjwY2Y4LqoeJpixVs+4GPVQcesCm4nfk/Ifu/wsO+K71a+q5v7k31ZCteRkNdab1JKy/Z8P830vG2jXINIyHjqCkVNNrVgwG1EGrF/dYY3NeslNbpOA+gKlNgPych7znXEVsUEt0QTXt7rp3IF1kJI4dXIp8KRjvd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UtYS69Bm; arc=fail smtp.client-ip=40.107.236.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=en7Oj4IOmHU3lMoq348UlKcPPDD0dHRY71xPRrjRfyoTX66kT5VCUfruIuoZgTMBKRBCcBkRIoxBcJI7lELlLmzOaUGBBdJ7N0g5GenBhvqviMFVYcE9GPhskggyDmDx8pY+asurUG/5v4/smSYaBTYn3oHUI01cliCNGr/K8jZDkmpWfWYHyIqbfGUJNLfJyW3pvoCi/frvpTUeAoRkmelQmM2ogJygzABC75+pLlC6ZpGzQyxce0LxK4qj4M7EPEbx2nR8xUtBQhPndl3kUz+ywp1yoFhd0U3GpnMuRph+ec+/rt3kVb46wjkONWj2VL9q2DG3OTD1aXDJbo/Azw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TmeXdBkmT7zNUEHfrc60/eljTmO3aVoQe6MbYJZZXiQ=;
- b=GMGDBIJjJvBJZGGBZfiw8LuXa46D/7e8Hp1xBHucdNRibHnOdt6w0uiUKF0vMEB2JOrY8TNCbK5PTeoMntG1BfAPX4USpTgamCW64tGzk0BIAeWtaMSWQf26AJll/n0knGmF7r+SPFu5QBqIi8rXONv1RI90eVNQYHGPyeYlW7NdD9NoYp5zkglff+8opLejr/OA0snGuU1BkLhUdY9dmy4SQbwWDrOlyMaba6kJRfHZjnR5SUJ5Fdm9ayz9aDR9j0Fr39trrwLovV8m74HWhNiBMEMuOKISmyry1K6yNE2hmcxxPq9WQZFfdq1vgZhd4EhZSDsslvvW/z+zUeq75A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TmeXdBkmT7zNUEHfrc60/eljTmO3aVoQe6MbYJZZXiQ=;
- b=UtYS69BmPGXxyQuV0kxg1I/e9GzQdSrPdliJM+oUCy4fP7sCwv41DU3c8SC2l6t7EkpFRRjkDzJYJMAWFiUvnIytqEJFk35vPS4xGOq3TiYpaWihUvz7tciKW0wa3g66a0UUlruXP182r1Fwu3M1JAjVJ1GYpriTTThJYXQx7e6h/ytTic7sSU2rxKXA+jbTzF8Q2kowohBH2tVOm0bzOjOGApxcElQ1/vTqmxTUtEiXDKSfNoOsI/bBBg6i/hyxGgYdX/qfydImYcptflzLgHBJMIz1kQKMupyPM+yjaBwGoprGsA+jzNXpQAziYu2uwXTgbtceKxpkSOsa3rOhqA==
-Received: from PH0PR07CA0001.namprd07.prod.outlook.com (2603:10b6:510:5::6) by
- CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7828.21; Tue, 30 Jul 2024 13:43:17 +0000
-Received: from CY4PEPF0000EE3D.namprd03.prod.outlook.com
- (2603:10b6:510:5:cafe::9) by PH0PR07CA0001.outlook.office365.com
- (2603:10b6:510:5::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.35 via Frontend
- Transport; Tue, 30 Jul 2024 13:43:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CY4PEPF0000EE3D.mail.protection.outlook.com (10.167.242.15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7828.19 via Frontend Transport; Tue, 30 Jul 2024 13:43:17 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 30 Jul
- 2024 06:43:04 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 30 Jul
- 2024 06:43:04 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Tue, 30 Jul
- 2024 06:42:58 -0700
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
-CC: <netdev@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman
-	<gal@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>, John Stultz
-	<jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, "Anna-Maria
- Behnsen" <anna-maria@linutronix.de>, Frederic Weisbecker
-	<frederic@kernel.org>, <linux-kernel@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, Carolina Jubran
-	<cjubran@nvidia.com>, Bar Shapira <bshapira@nvidia.com>, Rahul Rameshbabu
-	<rrameshbabu@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>
-Subject: [PATCH net-next V3 3/3] net/mlx5: Implement PTM cross timestamping support
-Date: Tue, 30 Jul 2024 16:40:54 +0300
-Message-ID: <20240730134055.1835261-4-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240730134055.1835261-1-tariqt@nvidia.com>
-References: <20240730134055.1835261-1-tariqt@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395391A616E;
+	Tue, 30 Jul 2024 16:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722356243; cv=none; b=su73IAySVVUea4aRpKOyM0CE1Sh4iHVcgbJW9PyDUWSfQf6dCtv8bnxhn6QI0hgJDOA5f7QlYB66QsmLLJh+hGld8jmLYNQhY7Fgt+dO9m7Tj4aqRMBK/48zv7IIyWqhYHn68QsKhYbeazrY6P/9Ad5fNkx254Xm+bLw/qO3pdc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722356243; c=relaxed/simple;
+	bh=7JXPI2iBnUG0WTE2Z+Gj5u4QLeEEINdG6mSmYcBHRP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YlLPe2RbYIpNfJ9wmz1tc1qx+z58YptJHL2iNtWbA0kyTWxz7NAwx9uDPY/IQbttrHmz1slZX7RbiWcLVI9sCAHzr9Lcjk99qV+TuZwQsefr3J23wo40ZHkIdxA07vG9euGRp3bsSqDga/63lkhttpnSQp5ueBOdkZVCRGO5NZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k5xYUVSM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46UFpu4P031714;
+	Tue, 30 Jul 2024 16:16:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QtyNm11XvCD8/W1yH2YGAcKFdYxc9/J+Z+0y6mVs8ow=; b=k5xYUVSMZ7DuCB8q
+	DhzGz5jPFXf3E6U9/OpKwxFa58VvQ/q5tcXZAK8HIbD1lmgitNF6SWEaGxpiBnw9
+	F9S3NzSpr6dfqN88gVJ73Tb/xAr5flep7wEvDY7T/HIaZoQwWU1CgnHy6jePoc/E
+	wurTY8p6nYO8Gt9tzARYeXec7OVIL6FTabNZCWe4pL7pYKMEeVSoa3dsT/LJVp/1
+	x1hIvlA+lNuwFELxhI69+jOYn4iw08KUIPYr1crGfR7afyvRrnbTfifxrArsD1pO
+	iuur7bmasXRVjZ1br1+ySq8JsrBNjnug7aGslmMYIGlO8LeqFJh+0zshwAEXl9Bd
+	7efgEw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40pw441dut-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jul 2024 16:16:07 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46UGG6fm019079
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jul 2024 16:16:06 GMT
+Received: from [10.110.56.150] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 30 Jul
+ 2024 09:16:05 -0700
+Message-ID: <22f4ecb4-f955-4401-befc-cb27b4fa4c59@quicinc.com>
+Date: Tue, 30 Jul 2024 09:16:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
+ host generic ECAM driver
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <will@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+        <cassel@kernel.org>, <yoshihiro.shimoda.uh@renesas.com>,
+        <s-vadapalli@ti.com>, <u.kleine-koenig@pengutronix.de>,
+        <dlemoal@kernel.org>, <amishin@t-argos.ru>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <Frank.Li@nxp.com>,
+        <ilpo.jarvinen@linux.intel.com>, <vidyas@nvidia.com>,
+        <marek.vasut+renesas@gmail.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <quic_ramkri@quicinc.com>, <quic_nkela@quicinc.com>,
+        <quic_shazhuss@quicinc.com>, <quic_msarkar@quicinc.com>,
+        <quic_nitegupt@quicinc.com>
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+ <925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com>
+ <20240730053425.GB3122@thinkpad>
+Content-Language: en-US
+From: Mayank Rana <quic_mrana@quicinc.com>
+In-Reply-To: <20240730053425.GB3122@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3D:EE_|CY5PR12MB6429:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8241b21-0d47-42d7-bdca-08dcb09d9129
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gFMKzkNxudx9s8aDItwr+mER42SJb1YKXoPSNHETyBUH9Kv17gP7Zg6Ng2j5?=
- =?us-ascii?Q?zXt6Rp8OYLTPrzZ/q1XeoGYhONObJfoH9FdeJK8UalJVUQ9thy1I5tvujMT7?=
- =?us-ascii?Q?YEnWotkOMv143rbq4aa09ZwdHfIl4594snTQGC/u3VUkO0ks7IgniCMa5wAW?=
- =?us-ascii?Q?d7b2FaEwisaMvkO1zio2RN1CDQAzSv1+jfM/utO3i39CRUUERgQuCIkzBOhm?=
- =?us-ascii?Q?HY8MY66FfKndkKmM/dfQTcEDQh4+ITp2+tsBqvcNt9CZgW8gw9N1fEXBzlPS?=
- =?us-ascii?Q?4nKxRo8GQpvwXaHDRKl78q0RIIZvdSyZod/d/mIP7eP5rXb5rNK+HF8SB18E?=
- =?us-ascii?Q?EIzfr26PHFO4Kn2PfYfbhGFl+DCVAhFUB0WicQhP6rjrUPAQ3K7mzcBqSSCJ?=
- =?us-ascii?Q?/oqzLbK4Mh5AIGtb3so04Umqhqa1s+P6aXT9oNe441qQgGjFmMFQJzLG/szw?=
- =?us-ascii?Q?jKnOgS6pTSy7fNgUy8VtH8+vkFFhnq58dc/SnYE8I39mV2BRgd9JVh9n9gBL?=
- =?us-ascii?Q?i8208waT6wNyWYBSm2RNFKITTrOrT+8S7DCXMabxnf7LmULCtW7yLZrvZ8lQ?=
- =?us-ascii?Q?RkJZXiDbeLw75IrS9mY3oqkfdBEf1jkTMo7vG0KP81iOh7wY5XlkYrYQsKXW?=
- =?us-ascii?Q?kTYSG1XJjlys+3jQ5/KWZU/H7H+43VERaNBuk5SNhsXZ8Z41Y9dqpfXEoHr2?=
- =?us-ascii?Q?26xjEB2Tqmi5LK0fIZMx+WgUDxTEDXNqJIvXawuHY/9W8SmWfia0/1qBoKXK?=
- =?us-ascii?Q?M8XgQ7vks7wv78LikBKD4vADKi9hTYO6y0A64fwwbBdabcDjkTZHVWpXCBrE?=
- =?us-ascii?Q?0BnOwO5YaYjZ0IlLJ//qrGqF6YuOCOapj+0qd1BVyTvSIBZLeeeoEnjo42sP?=
- =?us-ascii?Q?Ku2q4OnX19IBMmxk5dQEo6V6xzuLF6lC+vlGkdU/OHpMaqmO2VdrhmYV5NHz?=
- =?us-ascii?Q?x/GCMTSvG9r/A60QWgJHQCYA3H7YWv1FUlfVK8P/Gw5wEDkIeO9GGkhcrcMb?=
- =?us-ascii?Q?KMcGI++P6/qzsZZy7pVK8waDU8N5l2Ipmz8xzdnDTJiUGTC0dtDCu4dz010I?=
- =?us-ascii?Q?gLRGQaxEUQYlg+Yq/9eApMyq6wfjL/Vu9NXEMzQ/+/TZZs4Z7VLLC0qaT0rm?=
- =?us-ascii?Q?AUinJI5ff+RHzK/jeDMyQb9lowj6VVwbgRWbqpOOau2saISanhwnOLwUiTWr?=
- =?us-ascii?Q?RVPz7XMkAcsCdNs+A2CqFbg+F54fgm2St3WjSgtm/+4lv1jSzMGosaBMN7sr?=
- =?us-ascii?Q?efZtCthNcG1uUTgN5TRoSl/NjkDYdvM+sjdZUZqzmc5eq23NtSM21sHFGub3?=
- =?us-ascii?Q?rKGO1YP28CxCHbVP0fRKEXlKm9bNyaRw/W92YynU1uP3ixi7AbvaNKtpvnne?=
- =?us-ascii?Q?QP/5xM716QjRjORlSkIZmWexREJBUlBCTJGElfwGu/xGYpyPb+2aa5nLq2By?=
- =?us-ascii?Q?zUjvpAzpsaW1cRLlpvj9AjuZ2cn93Z0u?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2024 13:43:17.0459
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8241b21-0d47-42d7-bdca-08dcb09d9129
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3D.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6429
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: I3RupqWLXtt-eDIMMr8AGmx975EvbPE_
+X-Proofpoint-ORIG-GUID: I3RupqWLXtt-eDIMMr8AGmx975EvbPE_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-30_13,2024-07-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=962 clxscore=1015
+ impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407300111
 
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
 
-Expose Precision Time Measurement support through related PTP ioctl.
 
-The performance of PTM on ConnectX-7 was evaluated using both real-time
-(RTC) and free-running (FRC) clocks under traffic and no traffic
-conditions. Tests with phc2sys measured the maximum offset values at a 50Hz
-rate, with and without PTM. 
+On 7/29/2024 10:34 PM, Manivannan Sadhasivam wrote:
+> On Mon, Jul 29, 2024 at 10:19:45AM -0700, Mayank Rana wrote:
+>> Hi Bjorn / Mani
+>>
+>> Gentle ping for your review/feedback on this series.
+>> Thank you.
+>>
+> 
+> I was waiting for your reply for my comment [1]. Because that will have
+> influence on this series.
+> 
+> - Mani
+> 
+> [1] https://lore.kernel.org/linux-pci/20240724095407.GA2347@thinkpad/
+ok. Thanks for above response, and suggesting that you are ok with 
+either new ECAM driver or updating PCIE qcom driver with ECAM mode as 
+well utilizing DWC specific functionality. I still believe having 
+separate PCIe QCOM ecam driver would be more useful and allow decoupling 
+dwc host specific code base.
 
-Results:
+I am requesting above if you can review current MSI split functionality, 
+and provide feedback on that.
 
-1. No traffic
-+-----+--------+--------+
-|     | No-PTM | PTM    |
-+-----+--------+--------+
-| FRC | 125 ns | <29 ns |
-+-----+--------+--------+
-| RTC | 248 ns | <34 ns |
-+-----+--------+--------+
-
-2. With traffic
-+-----+--------+--------+
-|     | No-PTM | PTM    |
-+-----+--------+--------+
-| FRC | 254 ns | <40 ns |
-+-----+--------+--------+
-| RTC | 255 ns | <45 ns |
-+-----+--------+--------+
-
-Signed-off-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Co-developed-by: Carolina Jubran <cjubran@nvidia.com>
-Signed-off-by: Carolina Jubran <cjubran@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
----
- .../ethernet/mellanox/mlx5/core/lib/clock.c   | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-index 0361741632a6..b306ae79bf97 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-@@ -38,6 +38,10 @@
- #include "lib/eq.h"
- #include "en.h"
- #include "clock.h"
-+#ifdef CONFIG_X86
-+#include <linux/timekeeping.h>
-+#include <linux/cpufeature.h>
-+#endif /* CONFIG_X86 */
- 
- enum {
- 	MLX5_PIN_MODE_IN		= 0x0,
-@@ -148,6 +152,87 @@ static int mlx5_set_mtutc(struct mlx5_core_dev *dev, u32 *mtutc, u32 size)
- 				    MLX5_REG_MTUTC, 0, 1);
- }
- 
-+#ifdef CONFIG_X86
-+static bool mlx5_is_ptm_source_time_available(struct mlx5_core_dev *dev)
-+{
-+	u32 out[MLX5_ST_SZ_DW(mtptm_reg)] = {0};
-+	u32 in[MLX5_ST_SZ_DW(mtptm_reg)] = {0};
-+	int err;
-+
-+	if (!MLX5_CAP_MCAM_REG3(dev, mtptm))
-+		return false;
-+
-+	err = mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MTPTM,
-+				   0, 0);
-+	if (err)
-+		return false;
-+
-+	return !!MLX5_GET(mtptm_reg, out, psta);
-+}
-+
-+static int mlx5_mtctr_syncdevicetime(ktime_t *device_time,
-+				     struct system_counterval_t *sys_counterval,
-+				     void *ctx)
-+{
-+	u32 out[MLX5_ST_SZ_DW(mtctr_reg)] = {0};
-+	u32 in[MLX5_ST_SZ_DW(mtctr_reg)] = {0};
-+	struct mlx5_core_dev *mdev = ctx;
-+	bool real_time_mode;
-+	u64 host, device;
-+	int err;
-+
-+	real_time_mode = mlx5_real_time_mode(mdev);
-+
-+	MLX5_SET(mtctr_reg, in, first_clock_timestamp_request,
-+		 MLX5_MTCTR_REQUEST_PTM_ROOT_CLOCK);
-+	MLX5_SET(mtctr_reg, in, second_clock_timestamp_request,
-+		 real_time_mode ? MLX5_MTCTR_REQUEST_REAL_TIME_CLOCK :
-+		 MLX5_MTCTR_REQUEST_FREE_RUNNING_COUNTER);
-+
-+	err = mlx5_core_access_reg(mdev, in, sizeof(in), out, sizeof(out), MLX5_REG_MTCTR,
-+				   0, 0);
-+	if (err)
-+		return err;
-+
-+	if (!MLX5_GET(mtctr_reg, out, first_clock_valid) ||
-+	    !MLX5_GET(mtctr_reg, out, second_clock_valid))
-+		return -EINVAL;
-+
-+	host = MLX5_GET64(mtctr_reg, out, first_clock_timestamp);
-+	*sys_counterval = (struct system_counterval_t) {
-+			.cycles = host,
-+			.cs_id = CSID_X86_ART,
-+			.use_nsecs = true,
-+	};
-+
-+	device = MLX5_GET64(mtctr_reg, out, second_clock_timestamp);
-+	if (real_time_mode)
-+		*device_time = ns_to_ktime(REAL_TIME_TO_NS(device >> 32, device & U32_MAX));
-+	else
-+		*device_time = mlx5_timecounter_cyc2time(&mdev->clock, device);
-+
-+	return 0;
-+}
-+
-+static int mlx5_ptp_getcrosststamp(struct ptp_clock_info *ptp,
-+				   struct system_device_crosststamp *cts)
-+{
-+	struct mlx5_clock *clock = container_of(ptp, struct mlx5_clock, ptp_info);
-+	struct system_time_snapshot history_begin = {0};
-+	struct mlx5_core_dev *mdev;
-+
-+	mdev = container_of(clock, struct mlx5_core_dev, clock);
-+
-+	if (!mlx5_is_ptm_source_time_available(mdev))
-+		return -EBUSY;
-+
-+	ktime_get_snapshot(&history_begin);
-+
-+	return get_device_system_crosststamp(mlx5_mtctr_syncdevicetime, mdev,
-+					     &history_begin, cts);
-+}
-+#endif /* CONFIG_X86 */
-+
- static u64 mlx5_read_time(struct mlx5_core_dev *dev,
- 			  struct ptp_system_timestamp *sts,
- 			  bool real_time)
-@@ -1034,6 +1119,12 @@ static void mlx5_init_timer_clock(struct mlx5_core_dev *mdev)
- 	if (MLX5_CAP_MCAM_REG(mdev, mtutc))
- 		mlx5_init_timer_max_freq_adjustment(mdev);
- 
-+#ifdef CONFIG_X86
-+	if (MLX5_CAP_MCAM_REG3(mdev, mtptm) &&
-+	    MLX5_CAP_MCAM_REG3(mdev, mtctr) && boot_cpu_has(X86_FEATURE_ART))
-+		clock->ptp_info.getcrosststamp = mlx5_ptp_getcrosststamp;
-+#endif /* CONFIG_X86 */
-+
- 	mlx5_timecounter_init(mdev);
- 	mlx5_init_clock_info(mdev);
- 	mlx5_init_overflow_period(clock);
--- 
-2.44.0
-
+Regards,
+Mayank
+> 
+>> Regards,
+>> Mayank
+>>
+>> On 7/15/2024 11:13 AM, Mayank Rana wrote:
+>>> Based on previously received feedback, this patch series adds functionalities
+>>> with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
+>>> host root complex functionality on Qualcomm SA8775P auto platform.
+>>>
+>>> Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
+>>> https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
+>>>
+>>> 1. Interface to allow requesting firmware to manage system resources and performing
+>>> PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
+>>> 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
+>>> framework based power domain controls these operations)
+>>> 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
+>>> This MSI functionality is used with PCIe host generic driver after splitting existing MSI
+>>> functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
+>>>
+>>> Below architecture is used on Qualcomm SA8775P auto platform to get ECAM compliant PCIe
+>>> controller based functionality. Here firmware VM based PCIe driver takes care of resource
+>>> management and performing PCIe link related handling (D0 and D3cold). Linux VM based PCIe
+>>> host generic driver uses power domain to request firmware VM to perform these operations
+>>> using SCMI interface.
+>>> ----------------
+>>>
+>>>
+>>>                                      ┌────────────────────────┐
+>>>                                      │                        │
+>>>     ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐
+>>>     │     Firmware VM      │         │                        │            │         Linux VM         │
+>>>     │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │
+>>>     │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE host    │    │
+>>>     │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │  generic driver│    │
+>>>     │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │
+>>>     │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │
+>>>     │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │
+>>>     │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │
+>>>     │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │
+>>>     │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │
+>>>     │               │  │   │         │                        │            │       │          │       │
+>>>     └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘
+>>>                     │  │             │                        │                    │          │
+>>>                     │  │             └────────────────────────┘                    │          │
+>>>                     │  │                                                           │          │
+>>>                     │  │                                                           │          │
+>>>                     │  │                                                           │          │
+>>>                     │  │                                                           │IRQ       │HVC
+>>>                 IRQ │  │HVC                                                        │          │
+>>>                     │  │                                                           │          │
+>>>                     │  │                                                           │          │
+>>>                     │  │                                                           │          │
+>>> ┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
+>>> │                                                                                                          │
+>>> │                                                                                                          │
+>>> │                                      HYPERVISOR                                                          │
+>>> │                                                                                                          │
+>>> │                                                                                                          │
+>>> │                                                                                                          │
+>>> └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+>>>     ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐
+>>>     │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │
+>>>     │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │
+>>>     └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘
+>>> ----------
+>>> Changes in V2:
+>>> - Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
+>>> - Add power domain based functionality within existing ECAM driver
+>>>
+>>> Tested:
+>>> - Validated NVME functionality with PCIe0 and PCIe1 on SA8775P-RIDE platform
+>>>
+>>> Mayank Rana (7):
+>>>     PCI: dwc: Move MSI related code to separate file
+>>>     PCI: dwc: Add msi_ops to allow DBI based MSI register access
+>>>     PCI: dwc: Add pcie-designware-msi driver kconfig option
+>>>     dt-bindings: PCI: host-generic-pci: Add power-domains binding
+>>>     PCI: host-generic: Add power domain based handling for PCIe controller
+>>>     dt-bindings: PCI: host-generic-pci: Add snps,dw-pcie-ecam-msi binding
+>>>     PCI: host-generic: Add dwc MSI based MSI functionality
+>>>
+>>>    .../devicetree/bindings/pci/host-generic-pci.yaml  |  64 +++
+>>>    drivers/pci/controller/dwc/Kconfig                 |   8 +
+>>>    drivers/pci/controller/dwc/Makefile                |   1 +
+>>>    drivers/pci/controller/dwc/pci-keystone.c          |  12 +-
+>>>    drivers/pci/controller/dwc/pcie-designware-host.c  | 438 ++-------------------
+>>>    drivers/pci/controller/dwc/pcie-designware-msi.c   | 413 +++++++++++++++++++
+>>>    drivers/pci/controller/dwc/pcie-designware-msi.h   |  63 +++
+>>>    drivers/pci/controller/dwc/pcie-designware.c       |   1 +
+>>>    drivers/pci/controller/dwc/pcie-designware.h       |  26 +-
+>>>    drivers/pci/controller/dwc/pcie-rcar-gen4.c        |   1 +
+>>>    drivers/pci/controller/dwc/pcie-tegra194.c         |   5 +-
+>>>    drivers/pci/controller/pci-host-generic.c          | 127 +++++-
+>>>    12 files changed, 723 insertions(+), 436 deletions(-)
+>>>    create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.c
+>>>    create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.h
+>>>
+> 
 
