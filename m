@@ -1,215 +1,207 @@
-Return-Path: <linux-pci+bounces-11003-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B7A79407A8
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 07:34:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47A7394094C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 09:16:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 002352837AF
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 05:34:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C05591F25245
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 07:16:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001D4145B21;
-	Tue, 30 Jul 2024 05:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E9A38B;
+	Tue, 30 Jul 2024 07:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WPvPNAaD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VdFhTRv5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C09D33D5
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jul 2024 05:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FA942AA5
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jul 2024 07:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722317678; cv=none; b=unS5rGA4jAVJGkfxKt4UDpzLTXQPSjM0kTxOyKowHUICx9Bbdol5kFB6fB2lSa4TRHWoqC7l0qXfrbgFJuQS8Lxx6dRlhngWvt/0/oOdJ2h3hTCQn+OF6ptUJ8VJak79U2zXSFGw0moi3THCjZob/lEtO7Yk0en9cl2mudGaZxw=
+	t=1722323791; cv=none; b=IEhr0M4yb0b2SrFEymAEx6lRZ2RETTjK1S+52P4ymviMPhtVv5b3jAnLG7+sBOxydFb5PfOZAtCaQGK06VzwL//qgn1nT0E8rBF9nnwAiGRXkTLS/7b2e4iqG+nd/COgHzRUBi7dVS2kH1BgqZsYuUeNjoNAREk0Hz0U7korK9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722317678; c=relaxed/simple;
-	bh=obTtu8yCGiQzYWEANDtTEneTZnFbPqR/b81jsuwOiSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TFtMHLFD9YYddylbMxwJil0LDFDYNDmgi6P8rWtCDSe2v1t00bzMNYn/9xCrxDAqhm/j4m0gmd1lJyrPTI4+scIwMRtxhCbJOqdzL2ww2J7/9DFhsAmSP1VmMSahnF8HgWisCoroZh1M+zs0f04qQ+iTYYJ/DEPeka4vj/0/fAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WPvPNAaD; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70d1d6369acso2630156b3a.0
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 22:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722317676; x=1722922476; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZXjlho4wBSwHFyzK9bIW7sXp0tOlujxkpVLREffcH/4=;
-        b=WPvPNAaDJN3FepcFjqvtdxQhVfg3zIVoP1K3FJ1Nl1wgdsdDSIZNUTBOQuaIXNCk0q
-         +IdUFqN75xFveF2vVGyIkYh4YVn3ti9xfxK39bCoKYHYNcYYMPr/hvgWXWiXlnihlWRB
-         +OGNvytH7XKs6glNMhBKH9Yfx9zbs+WyIiWuNlTLKfT+E27TRrrh8xXat264KVyAzKDs
-         QA2JhL29eUs20pXnh3bUci+FX3CJHsC2myAHuIsUSRv4rwN7qvskhxIw5L0cR1Y1M4TT
-         /5cRnPZdJOnAicEJ6L54+xHG0jGctis0UbF2htAUp/15mNmS8yxscCeyL3ah4qddEg2G
-         t/2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722317676; x=1722922476;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZXjlho4wBSwHFyzK9bIW7sXp0tOlujxkpVLREffcH/4=;
-        b=a3e/E2vWYEojtol6YyL/OYYJCcyBccNEflSPgMeM9r10L1htoXZ0yE9lwCjvnksVQB
-         ZjFzWrgtVK8hX2flhYCxeqIv31+kSBU22in6fT6h5xwcoVm4uikzHoO1uhozb9lf5ZJ7
-         cxVtr/ntM2AWBw+U5BJdzpRcy4jQN21AEnuWRZ93GJYye+MCq9dRdyuqvFwiHYm7luDo
-         KO+uglfLW89YjpTX4eJAk7t7e6a2YjOn8J1lpGrRjeypqjRMyY3+BCp9vpejjcDDpKKh
-         D4m33+8dDw4llMwfBiCCezTjvs9p1okbfmW0Q1imOHP3WzrHPrDaQsVX5n0g2Eq1ENWI
-         eM4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV/RKR36aYZUe5hSXQkRxp29Jl9Pk7AGqFnZg4Bs5UIrLKnlBAZX36BL0GEG/6Yf+ZqGHSNEeagVFmSnSfJ27WrZ5PAohZPleRH
-X-Gm-Message-State: AOJu0YzF5dB5wd0vUtQrOq1bzvdEVC+WJRdTj98eJvuS792PWKvxtLYd
-	ANF5LuSdYuJymBFO8gmH+XRbs37awrgRu80cEG3+PuKVYaeTuNPYEgaWHxJWgQ==
-X-Google-Smtp-Source: AGHT+IHjznNzzK5ouDVuu0+4tUv3yUuB+KegUke9hWBS111nZpI7c/Fz88EMH6/f6lI3nkpFPLtS5w==
-X-Received: by 2002:a05:6a20:244c:b0:1c4:6b0d:e992 with SMTP id adf61e73a8af0-1c4e47fcc13mr1618470637.22.1722317676457;
-        Mon, 29 Jul 2024 22:34:36 -0700 (PDT)
-Received: from thinkpad ([220.158.156.247])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7a9f7b7af58sm8169459a12.5.2024.07.29.22.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jul 2024 22:34:36 -0700 (PDT)
-Date: Tue, 30 Jul 2024 11:04:25 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mayank Rana <quic_mrana@quicinc.com>
-Cc: will@kernel.org, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com, cassel@kernel.org,
-	yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com,
-	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org,
-	amishin@t-argos.ru, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	Frank.Li@nxp.com, ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com,
-	marek.vasut+renesas@gmail.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
-	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
-	quic_nitegupt@quicinc.com
-Subject: Re: [PATCH V2 0/7] Add power domain and MSI functionality with PCIe
- host generic ECAM driver
-Message-ID: <20240730053425.GB3122@thinkpad>
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com>
+	s=arc-20240116; t=1722323791; c=relaxed/simple;
+	bh=ctXf1BziAUod9yruJJlhulCnCn9HMKVe1og7C/O65Tw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kjNElrl6IKojN1YT11/pOF/EdzSVIEZmmuzf+jiDp9MY90soie3FOA3if5TQ22Y2SpgDrXu++T3DQwEGbPPrm6OJX3ArgT60oklgNChey8Bde7cQROwlIFjCQNluYYSKzImnZjyb6dRkO4r98WgCmnRccvqHSoYlEYHnizEZP74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VdFhTRv5; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722323790; x=1753859790;
+  h=date:from:to:cc:subject:message-id;
+  bh=ctXf1BziAUod9yruJJlhulCnCn9HMKVe1og7C/O65Tw=;
+  b=VdFhTRv5Yxq2z4Z+GPoF+Cg/QGj5+s8K4y/znQZQJifsq8gkBarhPx+P
+   kMtfdaxPtUcKkTWJ1Ugkubl9GH3qOIzAsDAWkGC/AjeHBKppEjZAbgHgc
+   VizNcoyRXLUiZ1PEum7asfomMB0AYs3mzd7UAndg6wulcin4n9Fo5jeTf
+   GanOY46BXM4CVm3CP0HyQKROrdXsX1wtW7RAD5zmSn8WttbWN4EU+TH7l
+   Pcwf/ckQpxtZgoVDZ1ufjUqtjK1aAl0UIHDnUZSSjsxEdlTmro5ICgTDe
+   r5PzXUb9YW7+BKCScaGVCJYfCRoVR1uK9ZZQ2o7N6I/NKsk/PnI5WAa3H
+   g==;
+X-CSE-ConnectionGUID: e7BAhPF1RNmsvNchYKYdug==
+X-CSE-MsgGUID: K1gLPpTISC6BLrZJFDF6zQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11148"; a="30785210"
+X-IronPort-AV: E=Sophos;i="6.09,248,1716274800"; 
+   d="scan'208";a="30785210"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2024 00:16:29 -0700
+X-CSE-ConnectionGUID: rFNbTst1R7e3JnY8Iue3Yg==
+X-CSE-MsgGUID: lUY1jvXFQeC/sZzsChCbXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,248,1716274800"; 
+   d="scan'208";a="59319683"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 30 Jul 2024 00:16:28 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sYh5t-000sbY-2c;
+	Tue, 30 Jul 2024 07:16:25 +0000
+Date: Tue, 30 Jul 2024 15:15:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/affinity] BUILD SUCCESS
+ 51c3c92a1229b916195699c25c24d667178853a2
+Message-ID: <202407301546.gB2axACO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <925d1eca-975f-4eec-bdf8-ca07a892361a@quicinc.com>
 
-On Mon, Jul 29, 2024 at 10:19:45AM -0700, Mayank Rana wrote:
-> Hi Bjorn / Mani
-> 
-> Gentle ping for your review/feedback on this series.
-> Thank you.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/affinity
+branch HEAD: 51c3c92a1229b916195699c25c24d667178853a2  PCI: xilinx: Silence 'set affinity failed' warning
 
-I was waiting for your reply for my comment [1]. Because that will have
-influence on this series.
+elapsed time: 781m
 
-- Mani
+configs tested: 114
+configs skipped: 3
 
-[1] https://lore.kernel.org/linux-pci/20240724095407.GA2347@thinkpad/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> Regards,
-> Mayank
-> 
-> On 7/15/2024 11:13 AM, Mayank Rana wrote:
-> > Based on previously received feedback, this patch series adds functionalities
-> > with existing PCIe host generic ECAM driver (pci-host-generic.c) to get PCIe
-> > host root complex functionality on Qualcomm SA8775P auto platform.
-> > 
-> > Previously sent RFC patchset to have separate Qualcomm PCIe ECAM platform driver:
-> > https://lore.kernel.org/all/d10199df-5fb3-407b-b404-a0a4d067341f@quicinc.com/T/
-> > 
-> > 1. Interface to allow requesting firmware to manage system resources and performing
-> > PCIe Link up (devicetree binding in terms of power domain and runtime PM APIs is used in driver)
-> > 2. Performing D3 cold with system suspend and D0 with system resume (usage of GenPD
-> > framework based power domain controls these operations)
-> > 3. SA8775P is using Synopsys Designware PCIe controller which supports MSI controller.
-> > This MSI functionality is used with PCIe host generic driver after splitting existing MSI
-> > functionality from pcie-designware-host.c file into pcie-designware-msi.c file.
-> > 
-> > Below architecture is used on Qualcomm SA8775P auto platform to get ECAM compliant PCIe
-> > controller based functionality. Here firmware VM based PCIe driver takes care of resource
-> > management and performing PCIe link related handling (D0 and D3cold). Linux VM based PCIe
-> > host generic driver uses power domain to request firmware VM to perform these operations
-> > using SCMI interface.
-> > ----------------
-> > 
-> > 
-> >                                     ┌────────────────────────┐
-> >                                     │                        │
-> >    ┌──────────────────────┐         │     SHARED MEMORY      │            ┌──────────────────────────┐
-> >    │     Firmware VM      │         │                        │            │         Linux VM         │
-> >    │ ┌─────────┐          │         │                        │            │    ┌────────────────┐    │
-> >    │ │ Drivers │ ┌──────┐ │         │                        │            │    │   PCIE host    │    │
-> >    │ │ PCIE PHY◄─┤      │ │         │   ┌────────────────┐   │            │    │  generic driver│    │
-> >    │ │         │ │ SCMI │ │         │   │                │   │            │    │                │    │
-> >    │ │PCIE CTL │ │      │ ├─────────┼───►    PCIE        ◄───┼─────┐      │    └──┬──────────▲──┘    │
-> >    │ │         ├─►Server│ │         │   │    SHMEM       │   │     │      │       │          │       │
-> >    │ │Clk, Vreg│ │      │ │         │   │                │   │     │      │    ┌──▼──────────┴──┐    │
-> >    │ │GPIO,GDSC│ └─▲──┬─┘ │         │   └────────────────┘   │     └──────┼────┤PCIE SCMI Inst  │    │
-> >    │ └─────────┘   │  │   │         │                        │            │    └──▲──────────┬──┘    │
-> >    │               │  │   │         │                        │            │       │          │       │
-> >    └───────────────┼──┼───┘         │                        │            └───────┼──────────┼───────┘
-> >                    │  │             │                        │                    │          │
-> >                    │  │             └────────────────────────┘                    │          │
-> >                    │  │                                                           │          │
-> >                    │  │                                                           │          │
-> >                    │  │                                                           │          │
-> >                    │  │                                                           │IRQ       │HVC
-> >                IRQ │  │HVC                                                        │          │
-> >                    │  │                                                           │          │
-> >                    │  │                                                           │          │
-> >                    │  │                                                           │          │
-> > ┌─────────────────┴──▼───────────────────────────────────────────────────────────┴──────────▼──────────────┐
-> > │                                                                                                          │
-> > │                                                                                                          │
-> > │                                      HYPERVISOR                                                          │
-> > │                                                                                                          │
-> > │                                                                                                          │
-> > │                                                                                                          │
-> > └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-> >    ┌─────────────┐    ┌─────────────┐  ┌──────────┐   ┌───────────┐   ┌─────────────┐  ┌────────────┐
-> >    │             │    │             │  │          │   │           │   │  PCIE       │  │   PCIE     │
-> >    │   CLOCK     │    │   REGULATOR │  │   GPIO   │   │   GDSC    │   │  PHY        │  │ controller │
-> >    └─────────────┘    └─────────────┘  └──────────┘   └───────────┘   └─────────────┘  └────────────┘
-> > ----------
-> > Changes in V2:
-> > - Drop new PCIe Qcom ECAM driver, and use existing PCIe designware based MSI functionality
-> > - Add power domain based functionality within existing ECAM driver
-> > 
-> > Tested:
-> > - Validated NVME functionality with PCIe0 and PCIe1 on SA8775P-RIDE platform
-> > 
-> > Mayank Rana (7):
-> >    PCI: dwc: Move MSI related code to separate file
-> >    PCI: dwc: Add msi_ops to allow DBI based MSI register access
-> >    PCI: dwc: Add pcie-designware-msi driver kconfig option
-> >    dt-bindings: PCI: host-generic-pci: Add power-domains binding
-> >    PCI: host-generic: Add power domain based handling for PCIe controller
-> >    dt-bindings: PCI: host-generic-pci: Add snps,dw-pcie-ecam-msi binding
-> >    PCI: host-generic: Add dwc MSI based MSI functionality
-> > 
-> >   .../devicetree/bindings/pci/host-generic-pci.yaml  |  64 +++
-> >   drivers/pci/controller/dwc/Kconfig                 |   8 +
-> >   drivers/pci/controller/dwc/Makefile                |   1 +
-> >   drivers/pci/controller/dwc/pci-keystone.c          |  12 +-
-> >   drivers/pci/controller/dwc/pcie-designware-host.c  | 438 ++-------------------
-> >   drivers/pci/controller/dwc/pcie-designware-msi.c   | 413 +++++++++++++++++++
-> >   drivers/pci/controller/dwc/pcie-designware-msi.h   |  63 +++
-> >   drivers/pci/controller/dwc/pcie-designware.c       |   1 +
-> >   drivers/pci/controller/dwc/pcie-designware.h       |  26 +-
-> >   drivers/pci/controller/dwc/pcie-rcar-gen4.c        |   1 +
-> >   drivers/pci/controller/dwc/pcie-tegra194.c         |   5 +-
-> >   drivers/pci/controller/pci-host-generic.c          | 127 +++++-
-> >   12 files changed, 723 insertions(+), 436 deletions(-)
-> >   create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.c
-> >   create mode 100644 drivers/pci/controller/dwc/pcie-designware-msi.h
-> > 
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                        nsimosci_defconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                            hisi_defconfig   gcc-13.2.0
+arm                        keystone_defconfig   gcc-13.2.0
+arm                             pxa_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+hexagon                          allmodconfig   clang-20
+hexagon                          allyesconfig   clang-20
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240730   gcc-13
+i386         buildonly-randconfig-002-20240730   gcc-13
+i386         buildonly-randconfig-003-20240730   clang-18
+i386         buildonly-randconfig-004-20240730   clang-18
+i386         buildonly-randconfig-005-20240730   gcc-13
+i386         buildonly-randconfig-006-20240730   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240730   gcc-8
+i386                  randconfig-002-20240730   gcc-13
+i386                  randconfig-003-20240730   gcc-13
+i386                  randconfig-004-20240730   gcc-13
+i386                  randconfig-005-20240730   gcc-10
+i386                  randconfig-006-20240730   gcc-10
+i386                  randconfig-011-20240730   gcc-11
+i386                  randconfig-012-20240730   clang-18
+i386                  randconfig-013-20240730   clang-18
+i386                  randconfig-014-20240730   gcc-9
+i386                  randconfig-015-20240730   gcc-9
+i386                  randconfig-016-20240730   clang-18
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                     cu1000-neo_defconfig   gcc-13.2.0
+mips                           gcw0_defconfig   gcc-13.2.0
+mips                            gpr_defconfig   gcc-13.2.0
+mips                      maltaaprp_defconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                generic-64bit_defconfig   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                 canyonlands_defconfig   gcc-13.2.0
+powerpc                    sam440ep_defconfig   gcc-13.2.0
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   gcc-14.1.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   clang-20
+s390                              allnoconfig   gcc-14.1.0
+s390                             allyesconfig   clang-20
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   gcc-14.1.0
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-13.2.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                             espt_defconfig   gcc-13.2.0
+sh                          polaris_defconfig   gcc-13.2.0
+sh                          r7780mp_defconfig   gcc-13.2.0
+sh                          rsk7269_defconfig   gcc-13.2.0
+sh                           se7721_defconfig   gcc-13.2.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+um                               allmodconfig   clang-20
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-14.1.0
+um                               allyesconfig   gcc-13
+um                                  defconfig   gcc-14.1.0
+um                             i386_defconfig   gcc-14.1.0
+um                           x86_64_defconfig   gcc-14.1.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                    smp_lx200_defconfig   gcc-13.2.0
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
