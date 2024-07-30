@@ -1,179 +1,119 @@
-Return-Path: <linux-pci+bounces-11017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11020-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 707CA940F50
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 12:30:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BFE594100C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 12:56:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B38BB26D93
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 10:30:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D8D51C22255
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 10:56:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88078197A89;
-	Tue, 30 Jul 2024 10:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A3DB1953A3;
+	Tue, 30 Jul 2024 10:56:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE3A1993A4;
-	Tue, 30 Jul 2024 10:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61D91DA32;
+	Tue, 30 Jul 2024 10:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722335220; cv=none; b=emu5si1RqQx8KQkgBWXlrnXNd8xNJvfKP97IX9pbHQjRe3/eCF5jqrFsfox1HszJVtBnDvVABsRUAakYWHh0Hb6QW6HBlIolLiT04iXOBxzmjRPbYqPRroxPqbggPdoXD+6rg3UamvpBEHTRRnOmy/0G8sAHPPmSXpyq0mzeTJ8=
+	t=1722336974; cv=none; b=XqVwjcBCgOj2Y7URnvnvz962pT5mwQFQSGY4VwY0et6n67/ha7ajrfetjmxUwiWqjGt8zKIu9IpjWmq1E76+u/TB0dJCD8wh2Fv3qG01oTb2QI7K0EmgE/4v+1G9Ii84bbYHo7QX0HXQ0I7WKp1ie+HlENp0nFRgUt/QvSTCWC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722335220; c=relaxed/simple;
-	bh=SeMhm/249KMHkoxDrL9fdexhBto+hEl1x7aVk0yhivc=;
-	h=Message-ID:From:Date:Subject:MIME-Version:Content-Type:To:Cc; b=Hs5VAEl4mY3kTLIcNaOdPOm9Qbu8keYwihzvVMwZ1NLAcF4dNsj3fIkGzC8N0uhzyqfkDeyPzPGa1UWrrJnrKAauKSzrV+sBMB+Ltq2D4scPuuMarHGDvwR7eWHw+I9EseQDXER55Q61xPkQVbkfsXUh0jD4dwdKzjyTInUf+Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
+	s=arc-20240116; t=1722336974; c=relaxed/simple;
+	bh=LWkqXbpJPzQ1iJyfPF6IqW1+UWKTyl4FjmF8qqq7+8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cvDPhPkjH1WV7w9DXdHQW9lMjMhFN7dxdIR2+0CQfiNYfoOjC3dAQ69eySsnyfreyn00l2iyF0QeUAnSMCaNDj6/bd8LuxfnWg2wm7zziwljWwtUP0UrzTdBU+KGmOXXC20ZkXWc15cnsaxgpdmcJnIs0JELi3E9mRyk3NYe+Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id BC76110189E0F;
-	Tue, 30 Jul 2024 12:26:55 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with ESMTPSA id 8E4A460FA4AF;
-	Tue, 30 Jul 2024 12:26:55 +0200 (CEST)
-X-Mailbox-Line: From 4d4ac43578f9aad9d7eee85a51833ae5e4b7cdb3 Mon Sep 17 00:00:00 2001
-Message-ID: <4d4ac43578f9aad9d7eee85a51833ae5e4b7cdb3.1722335040.git.lukas@wunner.de>
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 47D45100FC263;
+	Tue, 30 Jul 2024 12:56:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 1BD2439C012; Tue, 30 Jul 2024 12:56:03 +0200 (CEST)
+Date: Tue, 30 Jul 2024 12:56:03 +0200
 From: Lukas Wunner <lukas@wunner.de>
-Date: Tue, 30 Jul 2024 12:26:55 +0200
-Subject: [PATCH 5.10-stable] PCI/DPC: Fix use-after-free on concurrent DPC and
- hot-removal
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Krzysztof Wilczynski <kwilczynski@kernel.org>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 5.10-stable 1/3] locking: Introduce __cleanup() based
+ infrastructure
+Message-ID: <ZqjGwy2Yo9QJx0RV@wunner.de>
+References: <3c1751533b20c5ece6ff2296c1d79ac7580200a0.1722331565.git.lukas@wunner.de>
+ <2024073039-palace-savings-1849@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>, Krzysztof Wilczynski <kwilczynski@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024073039-palace-savings-1849@gregkh>
 
-commit 11a1f4bc47362700fcbde717292158873fb847ed upstream.
+On Tue, Jul 30, 2024 at 11:40:28AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jul 30, 2024 at 11:30:51AM +0200, Lukas Wunner wrote:
+> > From: Peter Zijlstra <peterz@infradead.org>
+> > 
+> > commit 54da6a0924311c7cf5015533991e44fb8eb12773 upstream.
+> > 
+> > Use __attribute__((__cleanup__(func))) to build:
+> > 
+> >  - simple auto-release pointers using __free()
+> > 
+> >  - 'classes' with constructor and destructor semantics for
+> >    scope-based resource management.
+> > 
+> >  - lock guards based on the above classes.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > Link: https://lkml.kernel.org/r/20230612093537.614161713%40infradead.org
+> 
+> Do we really want this in 5.10?
 
-Keith reports a use-after-free when a DPC event occurs concurrently to
-hot-removal of the same portion of the hierarchy:
+I think so because we may have to apply a lot more patches between now
+and Dec 2026 which use __cleanup variable attributes.
 
-The dpc_handler() awaits readiness of the secondary bus below the
-Downstream Port where the DPC event occurred.  To do so, it polls the
-config space of the first child device on the secondary bus.  If that
-child device is concurrently removed, accesses to its struct pci_dev
-cause the kernel to oops.
+(Dec 2026 is EOL for 5.10 and 5.15.)
 
-That's because pci_bridge_wait_for_secondary_bus() neglects to hold a
-reference on the child device.  Before v6.3, the function was only
-called on resume from system sleep or on runtime resume.  Holding a
-reference wasn't necessary back then because the pciehp IRQ thread
-could never run concurrently.  (On resume from system sleep, IRQs are
-not enabled until after the resume_noirq phase.  And runtime resume is
-always awaited before a PCI device is removed.)
 
-However starting with v6.3, pci_bridge_wait_for_secondary_bus() is also
-called on a DPC event.  Commit 53b54ad074de ("PCI/DPC: Await readiness
-of secondary bus after reset"), which introduced that, failed to
-appreciate that pci_bridge_wait_for_secondary_bus() now needs to hold a
-reference on the child device because dpc_handler() and pciehp may
-indeed run concurrently.  The commit was backported to v5.10+ stable
-kernels, so that's the oldest one affected.
+> Are there any compiler versions that
+> 5.10 still has to support that will break with this?
 
-Add the missing reference acquisition.
+No, apparently not.
 
-Abridged stack trace:
+5.10 requires gcc >= 4.9 or clang >= 10.0.1
+5.15 requires gcc >= 5.1 or clang >= 10.0.1
 
-  BUG: unable to handle page fault for address: 00000000091400c0
-  CPU: 15 PID: 2464 Comm: irq/53-pcie-dpc 6.9.0
-  RIP: pci_bus_read_config_dword+0x17/0x50
-  pci_dev_wait()
-  pci_bridge_wait_for_secondary_bus()
-  dpc_reset_link()
-  pcie_do_recovery()
-  dpc_handler()
+I've looked through gcc docs and the first version mentioning __cleanup
+is gcc 3.3.6.
 
-Fixes: 53b54ad074de ("PCI/DPC: Await readiness of secondary bus after reset")
-Closes: https://lore.kernel.org/r/20240612181625.3604512-3-kbusch@meta.com/
-Link: https://lore.kernel.org/linux-pci/8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de
-Reported-by: Keith Busch <kbusch@kernel.org>
-Tested-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: stable@vger.kernel.org # v5.10+
----
- drivers/pci/pci.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+The situation around clang seems odd:  __cleanup isn't mentioned in their
+docs before 15.0.0, yet we're only requiring 13.0.1 in the just-released
+v6.10.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 530ced8f7abd..09d5fa637b98 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4817,7 +4817,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
- 				      int timeout)
- {
- 	struct pci_dev *child;
--	int delay;
-+	int delay, ret = 0;
- 
- 	if (pci_dev_is_disconnected(dev))
- 		return 0;
-@@ -4845,8 +4845,8 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
- 		return 0;
- 	}
- 
--	child = list_first_entry(&dev->subordinate->devices, struct pci_dev,
--				 bus_list);
-+	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
-+					     struct pci_dev, bus_list));
- 	up_read(&pci_bus_sem);
- 
- 	/*
-@@ -4856,7 +4856,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
- 	if (!pci_is_pcie(dev)) {
- 		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
- 		msleep(1000 + delay);
--		return 0;
-+		goto put_child;
- 	}
- 
- 	/*
-@@ -4877,7 +4877,7 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
- 	 * until the timeout expires.
- 	 */
- 	if (!pcie_downstream_port(dev))
--		return 0;
-+		goto put_child;
- 
- 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
- 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-@@ -4888,11 +4888,16 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
- 		if (!pcie_wait_for_link_delay(dev, true, delay)) {
- 			/* Did not train, no need to wait any further */
- 			pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
--			return -ENOTTY;
-+			ret = -ENOTTY;
-+			goto put_child;
- 		}
- 	}
- 
--	return pci_dev_wait(child, reset_type, timeout - delay);
-+	ret = pci_dev_wait(child, reset_type, timeout - delay);
-+
-+put_child:
-+	pci_dev_put(child);
-+	return ret;
- }
- 
- void pci_reset_secondary_bus(struct pci_dev *dev)
--- 
-2.43.0
 
+> Same for 5.15.y, I'm loath to apply this to older kernels without loads
+> of testing.
+
+I'm sorry, I don't have the resources to perform that amount of testing.
+I've sent you a backport of the PCI/DPC patch instead which avoids
+__cleanup.
+
+Thanks,
+
+Lukas
 
