@@ -1,108 +1,195 @@
-Return-Path: <linux-pci+bounces-11001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11002-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AECF940348
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 03:16:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A447794079E
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 07:29:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC0D81C210CF
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 01:16:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3385F1F239A5
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 05:29:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06B852905;
-	Tue, 30 Jul 2024 01:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E8D2114;
+	Tue, 30 Jul 2024 05:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d3OhfyW2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2CC28EB
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jul 2024 01:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C2833999
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jul 2024 05:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722302206; cv=none; b=aMZvnhIECKxYzh95Dzf87sWhASNTOoBczD7cbJh8ptMCJLej/wayOZh2sEhE9oXZZmvPt9v6jVYiPM8yZS5oKWErTu07dPMA8RfXQfpsryZK3anX+Dav2wso1wFeyZNNs7nyXpdds9ksM4wiOiiiYonJw1VRA4XysYN5yq6BorM=
+	t=1722317316; cv=none; b=n9W3lyzykIktsZv7VSJof6Vw5Etyy7EYSCTcNBFraoawPB2fQSyNnHCNEDnExWBkBTAf0Gybi8mkSGCh5y+OZDiQJg/zy9laQG3Xb+plGzBeb0A2PlEmGx6HwwoVEPA4XbiZs/OHMMV6MMMCqjhI8ozg0RiuRM8hT2bW2Q99fVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722302206; c=relaxed/simple;
-	bh=yfAXMyjDkdzcbj93j3URVw8D9ZOb/VV5Cmxxn/XaE68=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BW5evNjBt/iZdI6wXVfdgREe3uTPcNoI7XCMLflwCmcM/a5Fez0ix/2TfGLCbZm0PnSi3lkUkRU1Si8FBK+aBQowOsgsINSrHqA690QuvLlHNBAgyN11C/lwb/3tkMe2wGXeuvMSUQdB/TQUrr4D0f5BnodQVvzHZynCE6+fkn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WXxzC3qLpzPtDY;
-	Tue, 30 Jul 2024 09:12:23 +0800 (CST)
-Received: from kwepemd100012.china.huawei.com (unknown [7.221.188.214])
-	by mail.maildlp.com (Postfix) with ESMTPS id EC2F4180105;
-	Tue, 30 Jul 2024 09:16:40 +0800 (CST)
-Received: from localhost.huawei.com (10.90.30.45) by
- kwepemd100012.china.huawei.com (7.221.188.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 30 Jul 2024 09:16:40 +0800
-From: Jay Fang <f.fangjian@huawei.com>
-To: <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <jonathan.cameron@huawei.com>,
-	<dinghui@sangfor.com.cn>, <f.fangjian@huawei.com>, <prime.zeng@hisilicon.com>
-Subject: [PATCH] PCI/ASPM: Update ASPM sysfs on MFD function removal to avoid use-after-free
-Date: Tue, 30 Jul 2024 09:16:39 +0800
-Message-ID: <20240730011639.2590846-1-f.fangjian@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1722317316; c=relaxed/simple;
+	bh=I/hArHzezwMHygSBGZKIJygakxeKeGYNP7+toPqAVck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BeNBjpriBL1AkiH/tLBjgLSi7jFZs4UPaeQp9ePYfGrDc7xjV0wUchOqn6h1Vn9tVgzcpJQDFjB6UTeiXuCmO6CKi08o9Ev/amNT3WIoIxTaECp8W3Keq8WyHpfQMnGfYWAhIUyjovMEb6VslVHZA8nbod7kSP5wcmEP52SP1SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d3OhfyW2; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70d2b921cdfso3589692b3a.0
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jul 2024 22:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1722317314; x=1722922114; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uQ73Nu26HSzeMwdLS96TVqMFwbRQR3zAxrRk+Py+6Js=;
+        b=d3OhfyW2w4Fm+UcIQJ+qSiSVOQ6cQixCGt8qF4uJY3Di9IfSq1556qHSgnc+8ZQ5Wz
+         +ru9ErRZ4UHRpgWYrmIZtSAXvD19XYXTyv7I5j95/WSKhdUIF9z5xDE8tHNTxk6uLSgV
+         lrC+Fz87A983kxaZGR84WyhVvClGWtxjE9dQ5mRPFarFWOYK/MmvxRnN50CF+4CvqsGJ
+         YCo7+UmKIcrMv+GAEuLwlmj09tf1tm7zAihSPOSJ2BHtJeDsZDabA1EuvzG6lkxyipz1
+         aNAhWU1CY6nHhZulYOL/uuFWnMNEIV9p7t2lJh8fGcdinxtarWdpXdPViRJDZpy7fkPt
+         Hs9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722317314; x=1722922114;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uQ73Nu26HSzeMwdLS96TVqMFwbRQR3zAxrRk+Py+6Js=;
+        b=gDC6qs7HZDofE4ySOUPxcxLjs9uUheY/eHCY6XEag3petfq1wXqfH57dHbVLB6QgZv
+         togj4mqSRr/0WDer6dMSRA2DXVyIQbpv0D1JdqwoP2WxDmhn4W1QI2hBjHfMpgjoXwR0
+         k3bpFUsdL5/ZV5a1KI2SXt8/6Nfat2jej0oMY+c+SJFeoO4vGHjuQ115H65vDV5Jc/gt
+         GUwMcNw0i8JSSrLN7oRAIAiTdtdA/qWlngJnpKei1P7Bn+TRifB1SG/U/ESzBbRXxxGm
+         +mUUA0R5frR2eQeq64/VZ2KFls3m8oI7uleWi/ByOUri/7CS0EBMKfouOlHqR0x2tL2j
+         bhEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWab/l5aEVBz3yfLXQCcDi2dAIIMYu6S+diMFk0VobSYrON3Yx950NUg8B9EUarI1mffTpHb2TNffczDLpyur4II3RjJncii+J1
+X-Gm-Message-State: AOJu0YyKiXvltgTNcWuBE1iwkRlcgWrItZarztEETmkj9vheTIaix5uI
+	k6UM3UgTTETGCR7tbHcTh/9n9C/x3mP65s+ryUcUc7YseBWq8hhX+G5Bb6B+5A==
+X-Google-Smtp-Source: AGHT+IH9vr4QX72Nqgqbxh4pJHyfzr5/NJLlSS8+RP/jRaAQupKsB1CJOQcjgIa7g1FRUmLAVFbAHw==
+X-Received: by 2002:a05:6a21:78a9:b0:1c1:89f8:8609 with SMTP id adf61e73a8af0-1c4a0e15171mr12628871637.0.1722317314267;
+        Mon, 29 Jul 2024 22:28:34 -0700 (PDT)
+Received: from thinkpad ([220.158.156.247])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cdb738fd4csm11737713a91.3.2024.07.29.22.28.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 22:28:33 -0700 (PDT)
+Date: Tue, 30 Jul 2024 10:58:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+	paul.m.stillwell.jr@intel.com,
+	Jim Harris <james.r.harris@intel.com>
+Subject: Re: [PATCH] PCI: fixup PCI_INTERRUPT_LINE for VMD downstream devices
+Message-ID: <20240730052830.GA3122@thinkpad>
+References: <20240724170040.5193-1-nirmal.patel@linux.intel.com>
+ <20240724191030.GA806685@bhelgaas>
+ <20240725041013.GB2317@thinkpad>
+ <20240729130859.00006a5a@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd100012.china.huawei.com (7.221.188.214)
+In-Reply-To: <20240729130859.00006a5a@linux.intel.com>
 
-From 'commit 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal
-to avoid use-after-free")' we know that PCIe spec r6.0, sec 7.5.3.7,
-recommends that software program the same ASPM Control(pcie_link_state)
-value in all functions of multi-function devices, and free the
-pcie_link_state when any child function is removed.
+On Mon, Jul 29, 2024 at 01:08:59PM -0700, Nirmal Patel wrote:
+> On Thu, 25 Jul 2024 09:40:13 +0530
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> > On Wed, Jul 24, 2024 at 02:10:30PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Jul 24, 2024 at 10:00:40AM -0700, Nirmal Patel wrote:  
+> > > > VMD does not support legacy interrupts for devices downstream
+> > > > from a VMD endpoint. So initialize the PCI_INTERRUPT_LINE to 0
+> > > > for these devices to ensure we don't try to set up a legacy irq
+> > > > for them.  
+> > > 
+> > > s/legacy interrupts/INTx/
+> > > s/legacy irq/INTx/
+> > >   
+> > > > Note: This patch was proposed by Jim, I am trying to upstream it.
+> > > > 
+> > > > Signed-off-by: Jim Harris <james.r.harris@intel.com>
+> > > > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > > > ---
+> > > >  arch/x86/pci/fixup.c | 14 ++++++++++++++
+> > > >  1 file changed, 14 insertions(+)
+> > > > 
+> > > > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> > > > index b33afb240601..a3b34a256e7f 100644
+> > > > --- a/arch/x86/pci/fixup.c
+> > > > +++ b/arch/x86/pci/fixup.c
+> > > > @@ -653,6 +653,20 @@ static void quirk_no_aersid(struct pci_dev
+> > > > *pdev) DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL,
+> > > > PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
+> > > >  
+> > > > +#if IS_ENABLED(CONFIG_VMD)
+> > > > +/* 
+> > > > + * VMD does not support legacy interrupts for downstream devices.
+> > > > + * So PCI_INTERRPUT_LINE needs to be initialized to 0 to ensure
+> > > > OS
+> > > > + * doesn't try to configure a legacy irq.  
+> > > 
+> > > s/legacy interrupts/INTx/
+> > > s/PCI_INTERRPUT_LINE/PCI_INTERRUPT_LINE/
+> > >   
+> > > > + */
+> > > > +static void quirk_vmd_interrupt_line(struct pci_dev *dev)
+> > > > +{
+> > > > +	if (is_vmd(dev->bus))
+> > > > +		pci_write_config_byte(dev, PCI_INTERRUPT_LINE,
+> > > > 0); +}
+> > > > +DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID,
+> > > > quirk_vmd_interrupt_line);  
+> > > 
+> > > A quirk for every PCI device, even on systems without VMD, seems
+> > > like kind of a clumsy way to deal with this.
+> > > 
+> > > Conceptually, I would expect a host bridge driver (VMD acts like a
+> > > host bridge in this case) to know whether it supports INTx, and if
+> > > the driver knows it doesn't support INTx or it has no _PRT or DT
+> > > description of INTx routing to use, an attempt to configure INTx
+> > > should just fail naturally.
+> > > 
+> > > I don't claim this is how host bridge drivers actually work; I just
+> > > think it's the way they *should* work.
+> > >   
+> > 
+> > Absolutely! This patch is fixing the issue in a wrong place. There
+> > are existing DT based host bridge drivers that disable INTx due to
+> > lack of hardware capability. The driver just need to nullify
+> > pci_host_bridge::map_irq callback.
+> > 
+> > - Mani
+> > 
+> For VMD as a host bridge, pci_host_bridge::map_irq is null. Even all
+> VMD rootports' PCI_INTERRUPT_LINE registers are set to 0. 
 
-However, ASPM Control sysfs is still visible to other children even if it
-has been removed by any child function, and careless use it will
-trigger use-after-free error, e.g.:
+If map_irq is already NULL, then how INTx is being configured? In your patch
+description:
 
-  # lspci -tv
-    -[0000:16]---00.0-[17]--+-00.0  Device 19e5:0222
-                            \-00.1  Device 19e5:0222
-  # echo 1 > /sys/bus/pci/devices/0000:17:00.0/remove       // pcie_link_state will be released
-  # echo 1 > /sys/bus/pci/devices/0000:17:00.1/link/l1_aspm // will trigger error
+"So initialize the PCI_INTERRUPT_LINE to 0 for these devices to ensure we don't
+try to set up a legacy irq for them."
 
-  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
-  Call trace:
-   aspm_attr_store_common.constprop.0+0x10c/0x154
-   l1_aspm_store+0x24/0x30
-   dev_attr_store+0x20/0x34
-   sysfs_kf_write+0x4c/0x5c
+Who is 'we'? For sure the PCI core wouldn't set INTx in your case. Does 'we'
+refer to device firmware?
 
-We can solve this problem by updating the ASPM Control sysfs of all
-children immediately after ASPM Control have been freed.
+>Since VMD
+> doesn't explicitly set PCI_INTERRUPT_LINE register to 0 for all of its
+> sub-devices (i.e. NVMe), if some NVMes has non-zero value set for
+> PCI_INTERRUPT_LINE (i.e. 0xff) then some software like SPDK can read
+> it and make wrong assumption about INTx support.
+> 
 
-Fixes: 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal to avoid use-after-free")
-Signed-off-by: Jay Fang <f.fangjian@huawei.com>
----
- drivers/pci/pcie/aspm.c | 2 ++
- 1 file changed, 2 insertions(+)
+Is this statement is true (I haven't heard of before), then don't we need to set
+PCI_INTERRUPT_LINE to 0 for all devices irrespective of host bridge? 
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index cee2365e54b8..eee9e6739924 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1262,6 +1262,8 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 		pcie_config_aspm_path(parent_link);
- 	}
- 
-+	pcie_aspm_update_sysfs_visibility(parent);
-+
- 	mutex_unlock(&aspm_lock);
- 	up_read(&pci_bus_sem);
- }
+> Based Bjorn's and your suggestion, it might be better if VMD sets
+> PCI_INTERRUPT_LINE register for all of its sub-devices during VMD
+> enumeration.
+> 
+
+What about hotplug devices? 
+
+- Mani
+
 -- 
-2.33.0
-
+மணிவண்ணன் சதாசிவம்
 
