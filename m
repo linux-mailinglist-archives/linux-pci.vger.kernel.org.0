@@ -1,207 +1,145 @@
-Return-Path: <linux-pci+bounces-11004-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11005-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47A7394094C
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 09:16:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7B5A940A07
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 09:38:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C05591F25245
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 07:16:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73D4B285383
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jul 2024 07:38:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E9A38B;
-	Tue, 30 Jul 2024 07:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VdFhTRv5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8F71684AE;
+	Tue, 30 Jul 2024 07:37:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FA942AA5
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jul 2024 07:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3E915FCEB;
+	Tue, 30 Jul 2024 07:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722323791; cv=none; b=IEhr0M4yb0b2SrFEymAEx6lRZ2RETTjK1S+52P4ymviMPhtVv5b3jAnLG7+sBOxydFb5PfOZAtCaQGK06VzwL//qgn1nT0E8rBF9nnwAiGRXkTLS/7b2e4iqG+nd/COgHzRUBi7dVS2kH1BgqZsYuUeNjoNAREk0Hz0U7korK9o=
+	t=1722325077; cv=none; b=CoUwDphJ+ZuT8ID5zsKklf/wGhWYPPJ3cq3O6mxUWkJq7m1Ezl3YnBzUlBC5kSIA81EUvW+43dOZL+NLNkgXN3OO3aA9abGoArnEmGLMG9vqIxqaQKGKzCZBEKTajwtjQS6PsISylFqN6sGGp+XPgtOvP0YxLZLvzKrKK7CTW3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722323791; c=relaxed/simple;
-	bh=ctXf1BziAUod9yruJJlhulCnCn9HMKVe1og7C/O65Tw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kjNElrl6IKojN1YT11/pOF/EdzSVIEZmmuzf+jiDp9MY90soie3FOA3if5TQ22Y2SpgDrXu++T3DQwEGbPPrm6OJX3ArgT60oklgNChey8Bde7cQROwlIFjCQNluYYSKzImnZjyb6dRkO4r98WgCmnRccvqHSoYlEYHnizEZP74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VdFhTRv5; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722323790; x=1753859790;
-  h=date:from:to:cc:subject:message-id;
-  bh=ctXf1BziAUod9yruJJlhulCnCn9HMKVe1og7C/O65Tw=;
-  b=VdFhTRv5Yxq2z4Z+GPoF+Cg/QGj5+s8K4y/znQZQJifsq8gkBarhPx+P
-   kMtfdaxPtUcKkTWJ1Ugkubl9GH3qOIzAsDAWkGC/AjeHBKppEjZAbgHgc
-   VizNcoyRXLUiZ1PEum7asfomMB0AYs3mzd7UAndg6wulcin4n9Fo5jeTf
-   GanOY46BXM4CVm3CP0HyQKROrdXsX1wtW7RAD5zmSn8WttbWN4EU+TH7l
-   Pcwf/ckQpxtZgoVDZ1ufjUqtjK1aAl0UIHDnUZSSjsxEdlTmro5ICgTDe
-   r5PzXUb9YW7+BKCScaGVCJYfCRoVR1uK9ZZQ2o7N6I/NKsk/PnI5WAa3H
-   g==;
-X-CSE-ConnectionGUID: e7BAhPF1RNmsvNchYKYdug==
-X-CSE-MsgGUID: K1gLPpTISC6BLrZJFDF6zQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11148"; a="30785210"
-X-IronPort-AV: E=Sophos;i="6.09,248,1716274800"; 
-   d="scan'208";a="30785210"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2024 00:16:29 -0700
-X-CSE-ConnectionGUID: rFNbTst1R7e3JnY8Iue3Yg==
-X-CSE-MsgGUID: lUY1jvXFQeC/sZzsChCbXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,248,1716274800"; 
-   d="scan'208";a="59319683"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 30 Jul 2024 00:16:28 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sYh5t-000sbY-2c;
-	Tue, 30 Jul 2024 07:16:25 +0000
-Date: Tue, 30 Jul 2024 15:15:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/affinity] BUILD SUCCESS
- 51c3c92a1229b916195699c25c24d667178853a2
-Message-ID: <202407301546.gB2axACO-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1722325077; c=relaxed/simple;
+	bh=A4Yi/saUs5tqazp39zP7IFaLPBCUZcXp4PuQ3Iafx/s=;
+	h=Message-ID:From:Date:Subject:To:Cc; b=hni/ZHm85rYkgESxzJDqqB+95KwKzXWRlaiL6TY3NUzzKugCm1sgtuq9rj54OXEeAMiUnNxCAHklcZc2g09XeZ/yzORTs3su6tFvVGBuaI4FEtDTMKdsaMrCbngiu9Big3QdVOra9v1K5qr7wSZdq7Q8gC1p9P34I5ElTwNdZVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by mailout2.hostsharing.net (Postfix) with ESMTPS id E690110189C95;
+	Tue, 30 Jul 2024 09:37:47 +0200 (CEST)
+Received: from localhost (unknown [89.246.108.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by h08.hostsharing.net (Postfix) with ESMTPSA id C6E0B6024EDD;
+	Tue, 30 Jul 2024 09:37:47 +0200 (CEST)
+X-Mailbox-Line: From 2c01e143298db3e6ed75cd7cb4ac50310a6b290c Mon Sep 17 00:00:00 2001
+Message-ID: <2c01e143298db3e6ed75cd7cb4ac50310a6b290c.1722324537.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Tue, 30 Jul 2024 09:36:54 +0200
+Subject: [PATCH 6.1-stable 1/2] PCI: Introduce cleanup helpers for device
+ reference counts and locks
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org, linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>, Krzysztof Wilczynski <kwilczynski@kernel.org>, Ira Weiny <ira.weiny@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/affinity
-branch HEAD: 51c3c92a1229b916195699c25c24d667178853a2  PCI: xilinx: Silence 'set affinity failed' warning
+From: Ira Weiny <ira.weiny@intel.com>
 
-elapsed time: 781m
+commit ced085ef369af7a2b6da962ec2fbd01339f60693 upstream.
 
-configs tested: 114
-configs skipped: 3
+The "goto error" pattern is notorious for introducing subtle resource
+leaks. Use the new cleanup.h helpers for PCI device reference counts and
+locks.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Similar to the new put_device() and device_lock() cleanup helpers,
+__free(put_device) and guard(device), define the same for PCI devices,
+__free(pci_dev_put) and guard(pci_dev).  These helpers eliminate the
+need for "goto free;" and "goto unlock;" patterns. For example, A
+'struct pci_dev *' instance declared as:
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                        nsimosci_defconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                            hisi_defconfig   gcc-13.2.0
-arm                        keystone_defconfig   gcc-13.2.0
-arm                             pxa_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-hexagon                          allmodconfig   clang-20
-hexagon                          allyesconfig   clang-20
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240730   gcc-13
-i386         buildonly-randconfig-002-20240730   gcc-13
-i386         buildonly-randconfig-003-20240730   clang-18
-i386         buildonly-randconfig-004-20240730   clang-18
-i386         buildonly-randconfig-005-20240730   gcc-13
-i386         buildonly-randconfig-006-20240730   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240730   gcc-8
-i386                  randconfig-002-20240730   gcc-13
-i386                  randconfig-003-20240730   gcc-13
-i386                  randconfig-004-20240730   gcc-13
-i386                  randconfig-005-20240730   gcc-10
-i386                  randconfig-006-20240730   gcc-10
-i386                  randconfig-011-20240730   gcc-11
-i386                  randconfig-012-20240730   clang-18
-i386                  randconfig-013-20240730   clang-18
-i386                  randconfig-014-20240730   gcc-9
-i386                  randconfig-015-20240730   gcc-9
-i386                  randconfig-016-20240730   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                     cu1000-neo_defconfig   gcc-13.2.0
-mips                           gcw0_defconfig   gcc-13.2.0
-mips                            gpr_defconfig   gcc-13.2.0
-mips                      maltaaprp_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                generic-64bit_defconfig   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                 canyonlands_defconfig   gcc-13.2.0
-powerpc                    sam440ep_defconfig   gcc-13.2.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-14.1.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   clang-20
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-14.1.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                             espt_defconfig   gcc-13.2.0
-sh                          polaris_defconfig   gcc-13.2.0
-sh                          r7780mp_defconfig   gcc-13.2.0
-sh                          rsk7269_defconfig   gcc-13.2.0
-sh                           se7721_defconfig   gcc-13.2.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-13
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-14.1.0
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                    smp_lx200_defconfig   gcc-13.2.0
+    struct pci_dev *pdev __free(pci_dev_put) = NULL;
 
+...will automatically call pci_dev_put() if @pdev is non-NULL when @pdev
+goes out of scope (automatic variable scope). If a function wants to
+invoke pci_dev_put() on error, but return @pdev on success, it can do:
+
+    return no_free_ptr(pdev);
+
+...or:
+
+    return_ptr(pdev);
+
+For potential cleanup opportunity there are 587 open-coded calls to
+pci_dev_put() in the kernel with 65 instances within 10 lines of a goto
+statement with the CXL driver threatening to add another one.
+
+The guard() helper holds the associated lock for the remainder of the
+current scope in which it was invoked. So, for example:
+
+    func(...)
+    {
+        if (...) {
+            ...
+            guard(pci_dev); /* pci_dev_lock() invoked here */
+            ...
+        } /* <- implied pci_dev_unlock() triggered here */
+    }
+
+There are 15 invocations of pci_dev_unlock() in the kernel with 5
+instances within 10 lines of a goto statement. Again, the CXL driver is
+threatening to add another.
+
+Introduce these helpers to preclude the addition of new more error prone
+goto put; / goto unlock; sequences. For now, these helpers are used in
+drivers/cxl/pci.c to allow ACPI error reports to be fed back into the
+CXL driver associated with the PCI device identified in the report.
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Link: https://lore.kernel.org/r/20231220-cxl-cper-v5-8-1bb8a4ca2c7a@intel.com
+[djbw: rewrite changelog]
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ include/linux/pci.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4da7411da9ba..df73fb26b825 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1138,6 +1138,7 @@ int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
+ u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
+ struct pci_dev *pci_dev_get(struct pci_dev *dev);
+ void pci_dev_put(struct pci_dev *dev);
++DEFINE_FREE(pci_dev_put, struct pci_dev *, if (_T) pci_dev_put(_T))
+ void pci_remove_bus(struct pci_bus *b);
+ void pci_stop_and_remove_bus_device(struct pci_dev *dev);
+ void pci_stop_and_remove_bus_device_locked(struct pci_dev *dev);
+@@ -1746,6 +1747,7 @@ void pci_cfg_access_unlock(struct pci_dev *dev);
+ void pci_dev_lock(struct pci_dev *dev);
+ int pci_dev_trylock(struct pci_dev *dev);
+ void pci_dev_unlock(struct pci_dev *dev);
++DEFINE_GUARD(pci_dev, struct pci_dev *, pci_dev_lock(_T), pci_dev_unlock(_T))
+ 
+ /*
+  * PCI domain support.  Sometimes called PCI segment (eg by ACPI),
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
