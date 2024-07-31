@@ -1,68 +1,55 @@
-Return-Path: <linux-pci+bounces-11071-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11072-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96F819436B7
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 21:49:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C709F9436D0
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 22:02:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52206281C9F
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 19:49:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 869CC282660
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 20:02:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1114414AD3F;
-	Wed, 31 Jul 2024 19:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F297841C77;
+	Wed, 31 Jul 2024 20:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzwcgcEJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqKkrrHt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB1614831F;
-	Wed, 31 Jul 2024 19:49:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52A1381AD;
+	Wed, 31 Jul 2024 20:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722455370; cv=none; b=SNaGv/Wn2TrUhhVqWtfw1Mv1GnfDT5cVjs7EK5gi7tsBn2K1cMtubYpVgYTL/vmA/5HJVc+LeQH8FD1mv8VmQOfYX0m6ozAYbIXsXpRlDhP9iMA6WeQYIrzOqI0GAE8tEyYrLbQlXMqjNT9wGknm3p3O3DfqGK17hFAQw7Hmrfk=
+	t=1722456129; cv=none; b=eMlXUJMPsLCQG7TLr5xhjbZ2Y3SQ4t3zafCUDkGbPBeB06fQ/IJd4Z0rj72AHMB8OPObLRjzFcNBtVDXcHSr7Zr8KDiDmlCgtBiBQo6xXTEuGEqIN8ifvHboVN0nQpo/JcnzgzCE2VyK+eydLw563XFsDww5i8syuUrqb+mLNH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722455370; c=relaxed/simple;
-	bh=PUpvq4IvGstISJBnqSrlDq4K2g9I2Ugc4NXAsXQFQ+Y=;
+	s=arc-20240116; t=1722456129; c=relaxed/simple;
+	bh=QFiLxSsKfiwzKnzdvA9UzCQ3GD7o2VslezEJoqA4HVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=G4txADYvLFxqVv5LbsZjGY3IoMT6tb7uC6fxol3ckjKREWccI6gXGyIeMvsdjmV3dEPXjx2k220hylMdwHbHcmRsl4Awr8a7L6NyrH9Lhlv5QwOJTFaXfoYZQXHZzNQ9WvLANXFHxcZxDjoPJLU502VJd+EwtZizpA6fnVL37ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzwcgcEJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118DEC4AF09;
-	Wed, 31 Jul 2024 19:49:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=XI0ckh+5nVnwFabssXwEuzEEE0Ayn3tYbMi09FM/MI0ImG2l+3eGIU8WKtbj3USzBiq8kNsZ6vnCBkmsROdUV5GPvyQ1TTDEYTHfzR+81R3mBn/BdFv/XiEOnSCzOPiKtvet1KrWrJ9cW+NYNVEFxkyw7oqD2I93BqGPGv+QLrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqKkrrHt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0809EC4AF0E;
+	Wed, 31 Jul 2024 20:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722455369;
-	bh=PUpvq4IvGstISJBnqSrlDq4K2g9I2Ugc4NXAsXQFQ+Y=;
+	s=k20201202; t=1722456129;
+	bh=QFiLxSsKfiwzKnzdvA9UzCQ3GD7o2VslezEJoqA4HVc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FzwcgcEJ2HxUeoOcvMsJeNsPl6w9Kj08seE75vXEQtKYVaw9J5f5kGITSMChJ5ngg
-	 nyOup++1xb53SaOvf2JQ6WZNlC0k9CcImr85jS76aolvFVD1FC92psCq2PvJTtVh43
-	 JSm+TZmXzo9IqPIorv/zUDNb7zcBKywFNjDBjzOenBlkIy7+dBWQj4PvcAIYmwZWJd
-	 mnRfyHxi402vgsIw2XNgcy189EIbANEqBOYCgpV2Nbwbgkc9WXc2wGBBi/g4AHzyUm
-	 adI7kyJrsRNPmnjJPx8nunXdyVHshIdNVxYRsg7P4rs98iTyg7W80qr3kqBAvFNRer
-	 5IIcm7AENs1qQ==
-Date: Wed, 31 Jul 2024 14:49:27 -0500
+	b=uqKkrrHtsuA7xZEi7vhRur/0faE0uJd2OvFgdmLOxw0jwyAeOyvOUWTPUupxnO+Rf
+	 O8IKY2jfQ1bmISQrBjHJoAx6wy+C+z1/BEAbVPhnC62H/Gc0xUQyt/wihcu73mlQ+w
+	 ANtaA+10Zd0/PGOU+B/DohQFrl6F/bE9hyq+xkvvIqs9VurmzXRqR6oiPKdi+/YugE
+	 ObyNHYMpgN23K+C0g5wzyO6Q+uo9nBhruXxoGgwGQWq8kI3+OiNuwhgoPnhhXIuEuc
+	 uq0lS0izmC9X14OgV+3Zyx6qizU86xXQd3Gq3V7HhfzOOcKOyg3PBvNiJ1U6WGITNi
+	 4DjJif0hLTJSg==
+Date: Wed, 31 Jul 2024 15:02:07 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Haibo Xu <haibo1.xu@intel.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Drew Fustini <dfustini@tenstorrent.com>
-Subject: Re: [PATCH v7 08/17] ACPI: pci_link: Clear the dependencies after
- probe
-Message-ID: <20240731194927.GA78106@bhelgaas>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Make pcim_request_all_regions() a public
+ function
+Message-ID: <20240731200207.GA78649@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,65 +58,59 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240729142241.733357-9-sunilvl@ventanamicro.com>
+In-Reply-To: <20240731123454.22780-2-pstanner@redhat.com>
 
-On Mon, Jul 29, 2024 at 07:52:30PM +0530, Sunil V L wrote:
-> RISC-V platforms need to use dependencies between PCI host bridge, Link
-> devices and the interrupt controllers to ensure probe order. The
-> dependency is like below.
+On Wed, Jul 31, 2024 at 02:34:54PM +0200, Philipp Stanner wrote:
+> In order to remove the deprecated function
+> pcim_iomap_regions_request_all(), a few drivers need an interface to
+> request all BARs a PCI-Device offers.
 > 
-> Interrupt controller <-- Link Device <-- PCI Host bridge.
-> 
-> If there is no dependency added between Link device and PCI Host Bridge,
-> then the PCI end points can get probed prior to link device, unable to
-> get mapping for INTx.
+> Make pcim_request_all_regions() a public interface.
 
-This sentence is missing a word or something.  Maybe it's supposed to
-say something like this:
+pcim_iomap_regions_request_all() is only used by a dozen or so
+drivers.  Can we convert them all at once to consolidate reviewing
+them?  Or are the others harder so we have to do this piece-meal?
 
-  If there is no dependency between Link device and PCI Host Bridge,
-  then PCI devices may be probed prior to Link devices.  If a PCI
-  device is probed before its Link device, we won't be able to find
-  its INTx mapping.
-
-> So, add the link device's HID to dependency honor list and also clear it
-> after its probe.
-
-It looks like *this* patch only clears it after probe.  And the commit
-log doesn't say why we need to clear the dependency.
-
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 > ---
->  drivers/acpi/pci_link.c | 2 ++
->  drivers/acpi/scan.c     | 1 +
->  2 files changed, 3 insertions(+)
+>  drivers/pci/devres.c | 3 ++-
+>  include/linux/pci.h  | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index aa1038b8aec4..b727db968f33 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -748,6 +748,8 @@ static int acpi_pci_link_add(struct acpi_device *device,
->  	if (result)
->  		kfree(link);
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index 3780a9f9ec00..0ec2b23e6cac 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -932,7 +932,7 @@ static void pcim_release_all_regions(struct pci_dev *pdev)
+>   * desired, release individual regions with pcim_release_region() or all of
+>   * them at once with pcim_release_all_regions().
+>   */
+> -static int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+> +int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+>  {
+>  	int ret;
+>  	int bar;
+> @@ -950,6 +950,7 @@ static int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
 >  
-> +	acpi_dev_clear_dependencies(device);
-> +
->  	return result < 0 ? result : 1;
+>  	return ret;
 >  }
+> +EXPORT_SYMBOL(pcim_request_all_regions);
 >  
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 28a221f956d7..753539a1f26b 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -863,6 +863,7 @@ static const char * const acpi_honor_dep_ids[] = {
->  	"INTC10CF", /* IVSC (MTL) driver must be loaded to allow i2c access to camera sensors */
->  	"RSCV0001", /* RISC-V PLIC */
->  	"RSCV0002", /* RISC-V APLIC */
-> +	"PNP0C0F",  /* PCI Link Device */
->  	NULL
->  };
+>  /**
+>   * pcim_iomap_regions_request_all - Request all BARs and iomap specified ones
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 4cf89a4b4cbc..5b5856ba63e1 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2289,6 +2289,7 @@ static inline void pci_fixup_device(enum pci_fixup_pass pass,
+>  				    struct pci_dev *dev) { }
+>  #endif
 >  
+> +int pcim_request_all_regions(struct pci_dev *pdev, const char *name);
+>  void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen);
+>  void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
+>  void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
 > -- 
-> 2.43.0
+> 2.45.2
 > 
 
