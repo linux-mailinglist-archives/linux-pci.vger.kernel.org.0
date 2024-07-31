@@ -1,194 +1,190 @@
-Return-Path: <linux-pci+bounces-11032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11034-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E0FF942576
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 06:32:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 834E5942C60
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 12:50:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B75E228413F
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 04:32:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7CB11C21B1B
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 10:50:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCDD18AF9;
-	Wed, 31 Jul 2024 04:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB781AC44C;
+	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aAcQmm0M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H36moc9B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFB52905;
-	Wed, 31 Jul 2024 04:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C251A4B42;
+	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722400333; cv=none; b=OFRbTTZn8LpUKhxeFFNiyrvk7HZ1qw4Y+4NK4wZ83LdNsoJA0urN8A2Q4EVbIIvvL16/TZ/ksj4Vnd1TvwkqxJdbdeHaOxHCQW3iLGZdvhvV3RbZPMlnKom4XVVc1waSf8Z8GX0hfPYK9KopqQ71SsmmVtL8G0tjlmNkSbfUQNs=
+	t=1722423018; cv=none; b=u+rJzxk0ZCboiUWH41AM3zpKvs9A0Ho4Ji36NQIOH8d6yHHJzOiVGXWG+p24eNcSSAcmBkKTmLfy1oV/Zz5vSKqQ07ZvHc5AYcvVqsjb5pjA1l8JQYC238X7uU/u3oB/q+dRpXWt8OXS+qFjeIam/QvbtiSLTutxAtxJoxLYJo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722400333; c=relaxed/simple;
-	bh=h44KVnerduX9inrmeDUbCf9NxZrv1J7MvZZmRpuKDzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k19aQ372bFNULzwTAk79itZMZ2rpi/Oik5khUJRw6tK4oPh407oAeWRKJbZqUKcfjgam0whCXE1GgRBQ5Fcl4Q426Jg5OaL41v2irEaIeEsIDsmoRvuL4kk8eN2PrjZy0ATvN2fNOWcOCqCAbQXLJ+nhcCXtMEJkPHqvMQbTFx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aAcQmm0M; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46V3niD7018574;
-	Wed, 31 Jul 2024 04:32:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	eOw1SfT+lwxVj64zgTKra3HRzXSeZVXKizDkw6U7rVA=; b=aAcQmm0MxOrNe19l
-	GAfj2nsvcNCd9IlwFQxg6PCOegL3HwFPM6LShVo6lF3nfHoBKhkeU9MFY7VmN6lk
-	FjeHgMyvrfUsN+xBaxeJHZcrgOIPUxTymGgX/uautjVzi2WSYRUcz+ZEEXX2DkgP
-	IRTJTVw+n17pVbHeW+Yf1URNwSr/1BwLeCXgzuzjmMGDSkD2I8+A6N7eiQcDcFEa
-	4Lqu5nS9PBmH6TRznduyZ1UKyqzpu4fgMVqeraCB564ekWi7/cYuEUpYalAk7xV5
-	uM2A7Cl/JWehjyS+lwxAHc4p49uAIfgSJzedD3fqhX5m/w2eP/UUbLUQgvvOESZh
-	59dhMw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40ms96sy9y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jul 2024 04:32:03 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46V4W1qN014387
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jul 2024 04:32:01 GMT
-Received: from [10.216.9.150] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 30 Jul
- 2024 21:31:59 -0700
-Message-ID: <ea5e7343-af67-ceeb-3448-5fd7dee495e3@quicinc.com>
-Date: Wed, 31 Jul 2024 10:01:55 +0530
+	s=arc-20240116; t=1722423018; c=relaxed/simple;
+	bh=EAZazIW0ecVgv+rOZil0RH9jYexC29jp0No/WKnprf0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XvBuWWYaruUO5mF8frjsbwcllBmG5fCdDfAS0fikM7gb9RijwgsE5bqEO0B8XRIoMYZT8i2RDVXrfOKQbT0RxybXBoWqTAlXmr5ZJbzwubzHt8z/a6mKLAO3MjoUN4Yy02SqQP7NbvsfZZWIQzlVOnOJN15W5YyZ2ogNTIp71Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H36moc9B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 27B70C116B1;
+	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722423018;
+	bh=EAZazIW0ecVgv+rOZil0RH9jYexC29jp0No/WKnprf0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=H36moc9BV+kahFmRFhtx5LYTcdLcfrPW8tNkgsVH33t3QZI2KnkG9JS0w8bo7yLP2
+	 JEl7W/dix9sNDcLzjBjIMDK0fSbvh0ycOq6e9Sd7Xk52zG3EiGewWExtKwP5OuOxjo
+	 i3bwddG4zX9BInmc8hU/6q8DaNm92hKFKvcoHxaO80rjJ6aCTW6jIauVgyNPS9rKwp
+	 SHRIXSFbxqc/KvIPyLZLHpcdbmJV41I2AHMEoxMe80jlTFnogOhbVYjWuErkzeSOA9
+	 xswbtFRUaaa7kiJ/bjjF1m1leUnRarxDIwlbiPpWkV9JM8qjqOAxhEPEXpjzpyXfop
+	 X3rhrKRvp+U+A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12557C3DA7F;
+	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Subject: [PATCH v3 00/13] PCI: qcom: Enumerate endpoints based on Link up
+ event in 'global_irq' interrupt
+Date: Wed, 31 Jul 2024 16:20:03 +0530
+Message-Id: <20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] PCI: qcom-ep: Move controller cleanups to
- qcom_pcie_perst_deassert()
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240729122245.33410-1-manivannan.sadhasivam@linaro.org>
- <98264d15-fb30-32e0-7eba-72b3a50347e0@quicinc.com>
- <20240729135547.GA35559@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240729135547.GA35559@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: gQ6wWUIaVwIJw2oXYbROFUUIntJ2aJp-
-X-Proofpoint-GUID: gQ6wWUIaVwIJw2oXYbROFUUIntJ2aJp-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-31_01,2024-07-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 spamscore=0
- adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407310032
+X-B4-Tracking: v=1; b=H4sIANsWqmYC/33NTQ6CMBCG4auQrq3ptGDRlfcwLqA/MAnS2mKjI
+ dzdwkoT4/L9knlmJtEENJGcipkEkzCiG3OIXUFU34ydoahzE854ySRU1Cukd+VutHeTHx4dbZU
+ 2oEDoI1iSz3wwFp8bebnm7jFOLry2DwnW9Q+WgDJaWSEPlVK1FM15wLEJbu9CR1Yt8U9B/hB4F
+ iRowcq2BmnrL2FZljcDtfCn8wAAAA==
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4411;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=EAZazIW0ecVgv+rOZil0RH9jYexC29jp0No/WKnprf0=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmqhbdAmqAJqOStLYtTZAKIpiye+giwhygrdEV2
+ Wvf1wZlP8CJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZqoW3QAKCRBVnxHm/pHO
+ 9StlB/97VGY1SIflUmdYKUjob72nuIbOyt/JCdDZiZ1S2sVUD4nvm8+Ginjz251eBZHdVgnpt0W
+ 6Kq1t9SUC9isTYJSOaZ2cwtbR/P63oh+E/k7LtvJee7iLDAthJuEvlXaYK9k07v/mSx/pkmr3lt
+ bvVQS2Pdu9RH6QNzZ2qXuaWM66bIZz9RsEE00scXZYkDGDAHQQSeaBitwh4cXybh4mc/+7e0dVn
+ QsKPB/BZYhj2gRdZAOTyfAiGwe2595zG6YYtJrBkXStOKZWyldvxK3NY5AaQ8qTGipPTz258o2q
+ qPMhwP5MeLd3AgVndzRQ280e4NKqoJx7or/sDTwxkql6JvKA
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
+
+Hi,
+
+This series adds support to enumerate the PCIe endpoint devices using the Qcom
+specific 'Link up' event in 'global' IRQ. Historically, Qcom PCIe RC controllers
+lacked standard hotplug support. So when an endpoint is attached to the SoC,
+users have to rescan the bus manually to enumerate the device. But this can be
+avoided by rescanning the bus upon receiving 'Link up' event.
+
+Qcom PCIe RC controllers are capable of generating the 'global' SPI interrupt
+to the host CPUs. The device driver can use this interrupt to identify events
+such as PCIe link specific events, safety events etc...
+
+One such event is the PCIe Link up event generated when an endpoint is detected
+on the bus and the Link is 'up'. This event can be used to enumerate the
+endpoint devices.
+
+So add support for capturing the PCIe Link up event using the 'global' interrupt
+in the driver. Once the Link up event is received, the bus underneath the host
+bridge is scanned to enumerate PCIe endpoint devices.
+
+This series also has some cleanups to the Qcom PCIe EP controller driver for
+interrupt handling.
+
+NOTE: During v2 review, there was a discussion about removing the devices when
+'Link Down' event is received. But this needs some more investigation, so I'm
+planning to add it later.
+
+Testing
+=======
+
+This series is tested on Qcom SM8450 based development board that has 2 SoCs
+connected over PCIe.
+
+Merging Strategy
+================
+
+I'm expecting the binding and PCI driver changes to go through PCI tree and DTS
+patches through Qcom tree.
+
+- Mani
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v3:
+- Removed the usage of 'simulating hotplug' and just used 'Link up' as we are
+  not fully emulating the hotplug support
+- Fixed the build issue wtih CONFIG_PCI_DOMAINS_GENERIC
+- Moved the 'global' IRQ entry to last in the binding and also mentioned the ABI
+  break and its necessity in patch description.
+- Collected tags
+- Rebased on top of v6.11-rc1
+- Link to v2: https://lore.kernel.org/r/20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org
+
+Changes in v2:
+- Added CONFIG_PCI_DOMAINS_GENERIC guard for domain_nr
+- Switched to dev_WARN_ONCE() for unhandled interrupts
+- Squashed the 'linux,pci-domain' bindings patches into one
+- Link to v1: https://lore.kernel.org/r/20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org
+
+---
+Manivannan Sadhasivam (13):
+      PCI: qcom-ep: Drop the redundant masking of global IRQ events
+      PCI: qcom-ep: Reword the error message for receiving unknown global IRQ event
+      dt-bindings: PCI: pci-ep: Update Maintainers
+      dt-bindings: PCI: pci-ep: Document 'linux,pci-domain' property
+      PCI: endpoint: Assign PCI domain number for endpoint controllers
+      PCI: qcom-ep: Modify 'global_irq' and 'perst_irq' IRQ device names
+      ARM: dts: qcom: sdx55: Add 'linux,pci-domain' to PCIe EP controller node
+      ARM: dts: qcom: sdx65: Add 'linux,pci-domain' to PCIe EP controller node
+      arm64: dts: qcom: sa8775p: Add 'linux,pci-domain' to PCIe EP controller nodes
+      dt-bindings: PCI: qcom: Add 'global' interrupt
+      dt-bindings: PCI: qcom,pcie-sm8450: Add 'global' interrupt
+      PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt
+      arm64: dts: qcom: sm8450: Add 'global' interrupt to the PCIe RC node
+
+ Documentation/devicetree/bindings/pci/pci-ep.yaml  | 14 +++++-
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  4 +-
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  1 +
+ .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  | 10 ++--
+ arch/arm/boot/dts/qcom/qcom-sdx55.dtsi             |  1 +
+ arch/arm/boot/dts/qcom/qcom-sdx65.dtsi             |  1 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              |  2 +
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 12 +++--
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          | 21 +++++++--
+ drivers/pci/controller/dwc/pcie-qcom.c             | 55 +++++++++++++++++++++-
+ drivers/pci/endpoint/pci-epc-core.c                | 14 ++++++
+ include/linux/pci-epc.h                            |  2 +
+ 12 files changed, 120 insertions(+), 17 deletions(-)
+---
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+change-id: 20240715-pci-qcom-hotplug-bcde1c13d91f
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 
-
-On 7/29/2024 7:25 PM, Manivannan Sadhasivam wrote:
-> On Mon, Jul 29, 2024 at 05:58:31PM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 7/29/2024 5:52 PM, Manivannan Sadhasivam wrote:
->>> Currently, the endpoint cleanup function dw_pcie_ep_cleanup() and EPF
->>> deinit notify function pci_epc_deinit_notify() are called during the
->>> execution of qcom_pcie_perst_assert() i.e., when the host has asserted
->>> PERST#. But quickly after this step, refclk will also be disabled by the
->>> host.
->>>
->>> All of the Qcom endpoint SoCs supported as of now depend on the refclk from
->>> the host for keeping the controller operational. Due to this limitation,
->>> any access to the hardware registers in the absence of refclk will result
->>> in a whole endpoint crash. Unfortunately, most of the controller cleanups
->>> require accessing the hardware registers (like eDMA cleanup performed in
->>> dw_pcie_ep_cleanup(), powering down MHI EPF etc...). So these cleanup
->>> functions are currently causing the crash in the endpoint SoC once host
->>> asserts PERST#.
->>>
->>> One way to address this issue is by generating the refclk in the endpoint
->>> itself and not depending on the host. But that is not always possible as
->>> some of the endpoint designs do require the endpoint to consume refclk from
->>> the host (as I was told by the Qcom engineers).
->>>
->>> So let's fix this crash by moving the controller cleanups to the start of
->>> the qcom_pcie_perst_deassert() function. qcom_pcie_perst_deassert() is
->>> called whenever the host has deasserted PERST# and it is guaranteed that
->>> the refclk would be active at this point. So at the start of this function,
->>> the controller cleanup can be performed. Once finished, rest of the code
->>> execution for PERST# deassert can continue as usual.
->>>
->> How about doing the cleanup as part of pme turnoff message.
->> As host waits for L23 ready from the device side. we can use that time
->> to cleanup the host before sending L23 ready.
->>
-> 
-> Yes, but that's only applicable if the host properly powers down the device. But
-> it won't work in the case of host crash or host abrupt poweroff.
-> 
-> - Mani
-> 
-Ack.
-
-- Krishna Chaitanya.
->> - Krishna Chaitanya.
->>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>> ---
->>>    drivers/pci/controller/dwc/pcie-qcom-ep.c | 12 ++++++++++--
->>>    1 file changed, 10 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->>> index 2319ff2ae9f6..e024b4dcd76d 100644
->>> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->>> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->>> @@ -186,6 +186,8 @@ struct qcom_pcie_ep_cfg {
->>>     * @link_status: PCIe Link status
->>>     * @global_irq: Qualcomm PCIe specific Global IRQ
->>>     * @perst_irq: PERST# IRQ
->>> + * @cleanup_pending: Cleanup is pending for the controller (because refclk is
->>> + *                   needed for cleanup)
->>>     */
->>>    struct qcom_pcie_ep {
->>>    	struct dw_pcie pci;
->>> @@ -214,6 +216,7 @@ struct qcom_pcie_ep {
->>>    	enum qcom_pcie_ep_link_status link_status;
->>>    	int global_irq;
->>>    	int perst_irq;
->>> +	bool cleanup_pending;
->>>    };
->>>    static int qcom_pcie_ep_core_reset(struct qcom_pcie_ep *pcie_ep)
->>> @@ -389,6 +392,12 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
->>>    		return ret;
->>>    	}
->>> +	if (pcie_ep->cleanup_pending) {
->>> +		pci_epc_deinit_notify(pci->ep.epc);
->>> +		dw_pcie_ep_cleanup(&pci->ep);
->>> +		pcie_ep->cleanup_pending = false;
->>> +	}
->>> +
->>>    	/* Assert WAKE# to RC to indicate device is ready */
->>>    	gpiod_set_value_cansleep(pcie_ep->wake, 1);
->>>    	usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
->>> @@ -522,10 +531,9 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
->>>    {
->>>    	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
->>> -	pci_epc_deinit_notify(pci->ep.epc);
->>> -	dw_pcie_ep_cleanup(&pci->ep);
->>>    	qcom_pcie_disable_resources(pcie_ep);
->>>    	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
->>> +	pcie_ep->cleanup_pending = true;
->>>    }
->>>    /* Common DWC controller ops */
-> 
 
