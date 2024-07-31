@@ -1,256 +1,194 @@
-Return-Path: <linux-pci+bounces-11031-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11032-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3CD89424C1
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 05:07:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E0FF942576
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 06:32:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9A2B1C21227
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 03:07:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B75E228413F
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 04:32:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4E714F70;
-	Wed, 31 Jul 2024 03:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCDD18AF9;
+	Wed, 31 Jul 2024 04:32:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9Hsfb4h"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aAcQmm0M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D1417557
-	for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2024 03:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFB52905;
+	Wed, 31 Jul 2024 04:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722395267; cv=none; b=tF8pmd11mXfDAzwzQsMeVw6/BgcQKdr5KDCMAmBialnQf2Kgdt3epYB0HezEkyj7QslPikP15BJzb+OwOgy+cLpa2gRAe53IKL8NgPbkEsOIgpiFuz2LMGnHVnzT2EGE8JC3/8vpemdjfFVqhgp35EFpNJLZz3GGTbxuaMe4e8c=
+	t=1722400333; cv=none; b=OFRbTTZn8LpUKhxeFFNiyrvk7HZ1qw4Y+4NK4wZ83LdNsoJA0urN8A2Q4EVbIIvvL16/TZ/ksj4Vnd1TvwkqxJdbdeHaOxHCQW3iLGZdvhvV3RbZPMlnKom4XVVc1waSf8Z8GX0hfPYK9KopqQ71SsmmVtL8G0tjlmNkSbfUQNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722395267; c=relaxed/simple;
-	bh=tZY0sTkOgJiFYlD6wAAH/vhpb6b6H2KORObpPRp7fZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOQ05aSILCb+UoN12cOTciECeb9NAOtcC9dOTFSJUNVFZbgX+dYcF5B1txYGiKxldjg4m6qEi3XLQcQF3dW9h0GMgyVwGVOm7XLnMmjscn6wYXmCL6wQEAZ0cPzUYXiK8nU/h/sX1hzn2I5iMygZL9E/SdNQLFDNjuZ3ADLXD7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D9Hsfb4h; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-710439ad77dso972328b3a.2
-        for <linux-pci@vger.kernel.org>; Tue, 30 Jul 2024 20:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722395264; x=1723000064; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jwyoPMZxsNFKTFRkE6JH8wgDAmQgbfWEHLfDi/J7aQI=;
-        b=D9Hsfb4h1sWrQ/QWSQBdLijCTyB+LeEVPO46wSeOE6t86GnkeFpWmP8t3TBzrzHP8f
-         YBcVDB/Rg2vAMGm1eU7w/pmB4BzeQsWHChdhopqJaDKBVlAW+LeERnEanxsLdM5AhLjH
-         wpqYQsU+NfBZX6+BAZjB7tw0WQGKPPf5skH0ibTco6hUgQuQI33WQec/MPR6mSZAMlq3
-         5OwpbwjTxxaeZ1+T/t1/gfuzmYVddn8aRhz40T/kCtsgVTm0/FGwQxto5TJ97ICZR9jL
-         r3Blju3Y6MCzy1q/dCePHn9+4c1vz8IpJL0aZkCZ+TlpKwKvZao5kf8TW+Tt7CiPKAyZ
-         WquA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722395264; x=1723000064;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jwyoPMZxsNFKTFRkE6JH8wgDAmQgbfWEHLfDi/J7aQI=;
-        b=sIWxMth4zCtk8otFgruXlKMQueVO76nBwO35nwhrNAbBS3q8gWKyddNXLYngGF8x/8
-         xbQxVYJkW+uEPQZvwVMWIxz9+jZbXPWNzqjxA4oKz8A7d3RdL9n0zcMCfkgJyRVzTxS8
-         3kKpLnURHvsCcZoq0LwyQ0zEhDI6brqmiUeKUzmpeK20g6pvJH4E0dOMp9MtI94Zc5Jd
-         T2h1LohkxU3qLqI6U9wl/MghgeNkyv/GAin/xZBK+WnvSzrYoNYvahvNsDlMl+U8DgIw
-         S5NdCIOwxabRxgyb7MmoadVn/d2vT1L6KW6YjF8tRymvCCa9fCIGXWwCsGaofW2zclAW
-         +gQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMBdDvYrOAhCa7KMhFYqABVKG45kvMTqgohqQTqWNAbIK8awN7M+v3loGFx2x74DEt/uwjDlQM/UETGya7rOGNkuy1bZ88piiR
-X-Gm-Message-State: AOJu0YzdE7a79uhIznAyxFDFOZp6oG4s8zTAxq6ITlCYWb+Kwekq85ZO
-	h5N8nKYctaOrajkRIUMBZRUm3HKT4xCiv1yl6E+stHcgCHqLucgT+e/MUp54sA==
-X-Google-Smtp-Source: AGHT+IHN1wQLYqBUO/EYOhzqR2xCwSyhLaiBWcWWJvQUImT675lQovy5x4P+c/LWD8XAMjCdLBGgtA==
-X-Received: by 2002:aa7:8881:0:b0:70b:1d77:730a with SMTP id d2e1a72fcca58-70ecedbdec2mr13076658b3a.28.1722395264419;
-        Tue, 30 Jul 2024 20:07:44 -0700 (PDT)
-Received: from thinkpad ([220.158.156.247])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead812eaasm9097315b3a.105.2024.07.30.20.07.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 20:07:43 -0700 (PDT)
-Date: Wed, 31 Jul 2024 08:37:39 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-	paul.m.stillwell.jr@intel.com,
-	Jim Harris <james.r.harris@intel.com>
-Subject: Re: [PATCH] PCI: fixup PCI_INTERRUPT_LINE for VMD downstream devices
-Message-ID: <20240731030739.GA2248@thinkpad>
-References: <20240724170040.5193-1-nirmal.patel@linux.intel.com>
- <20240724191030.GA806685@bhelgaas>
- <20240725041013.GB2317@thinkpad>
- <20240729130859.00006a5a@linux.intel.com>
- <20240730052830.GA3122@thinkpad>
- <20240730105115.00004089@linux.intel.com>
+	s=arc-20240116; t=1722400333; c=relaxed/simple;
+	bh=h44KVnerduX9inrmeDUbCf9NxZrv1J7MvZZmRpuKDzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=k19aQ372bFNULzwTAk79itZMZ2rpi/Oik5khUJRw6tK4oPh407oAeWRKJbZqUKcfjgam0whCXE1GgRBQ5Fcl4Q426Jg5OaL41v2irEaIeEsIDsmoRvuL4kk8eN2PrjZy0ATvN2fNOWcOCqCAbQXLJ+nhcCXtMEJkPHqvMQbTFx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aAcQmm0M; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46V3niD7018574;
+	Wed, 31 Jul 2024 04:32:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eOw1SfT+lwxVj64zgTKra3HRzXSeZVXKizDkw6U7rVA=; b=aAcQmm0MxOrNe19l
+	GAfj2nsvcNCd9IlwFQxg6PCOegL3HwFPM6LShVo6lF3nfHoBKhkeU9MFY7VmN6lk
+	FjeHgMyvrfUsN+xBaxeJHZcrgOIPUxTymGgX/uautjVzi2WSYRUcz+ZEEXX2DkgP
+	IRTJTVw+n17pVbHeW+Yf1URNwSr/1BwLeCXgzuzjmMGDSkD2I8+A6N7eiQcDcFEa
+	4Lqu5nS9PBmH6TRznduyZ1UKyqzpu4fgMVqeraCB564ekWi7/cYuEUpYalAk7xV5
+	uM2A7Cl/JWehjyS+lwxAHc4p49uAIfgSJzedD3fqhX5m/w2eP/UUbLUQgvvOESZh
+	59dhMw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40ms96sy9y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jul 2024 04:32:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46V4W1qN014387
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jul 2024 04:32:01 GMT
+Received: from [10.216.9.150] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 30 Jul
+ 2024 21:31:59 -0700
+Message-ID: <ea5e7343-af67-ceeb-3448-5fd7dee495e3@quicinc.com>
+Date: Wed, 31 Jul 2024 10:01:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240730105115.00004089@linux.intel.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] PCI: qcom-ep: Move controller cleanups to
+ qcom_pcie_perst_deassert()
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240729122245.33410-1-manivannan.sadhasivam@linaro.org>
+ <98264d15-fb30-32e0-7eba-72b3a50347e0@quicinc.com>
+ <20240729135547.GA35559@thinkpad>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20240729135547.GA35559@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gQ6wWUIaVwIJw2oXYbROFUUIntJ2aJp-
+X-Proofpoint-GUID: gQ6wWUIaVwIJw2oXYbROFUUIntJ2aJp-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-31_01,2024-07-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 spamscore=0
+ adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407310032
 
-On Tue, Jul 30, 2024 at 10:51:15AM -0700, Nirmal Patel wrote:
-> On Tue, 30 Jul 2024 10:58:30 +0530
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+
+
+On 7/29/2024 7:25 PM, Manivannan Sadhasivam wrote:
+> On Mon, Jul 29, 2024 at 05:58:31PM +0530, Krishna Chaitanya Chundru wrote:
+>>
+>>
+>> On 7/29/2024 5:52 PM, Manivannan Sadhasivam wrote:
+>>> Currently, the endpoint cleanup function dw_pcie_ep_cleanup() and EPF
+>>> deinit notify function pci_epc_deinit_notify() are called during the
+>>> execution of qcom_pcie_perst_assert() i.e., when the host has asserted
+>>> PERST#. But quickly after this step, refclk will also be disabled by the
+>>> host.
+>>>
+>>> All of the Qcom endpoint SoCs supported as of now depend on the refclk from
+>>> the host for keeping the controller operational. Due to this limitation,
+>>> any access to the hardware registers in the absence of refclk will result
+>>> in a whole endpoint crash. Unfortunately, most of the controller cleanups
+>>> require accessing the hardware registers (like eDMA cleanup performed in
+>>> dw_pcie_ep_cleanup(), powering down MHI EPF etc...). So these cleanup
+>>> functions are currently causing the crash in the endpoint SoC once host
+>>> asserts PERST#.
+>>>
+>>> One way to address this issue is by generating the refclk in the endpoint
+>>> itself and not depending on the host. But that is not always possible as
+>>> some of the endpoint designs do require the endpoint to consume refclk from
+>>> the host (as I was told by the Qcom engineers).
+>>>
+>>> So let's fix this crash by moving the controller cleanups to the start of
+>>> the qcom_pcie_perst_deassert() function. qcom_pcie_perst_deassert() is
+>>> called whenever the host has deasserted PERST# and it is guaranteed that
+>>> the refclk would be active at this point. So at the start of this function,
+>>> the controller cleanup can be performed. Once finished, rest of the code
+>>> execution for PERST# deassert can continue as usual.
+>>>
+>> How about doing the cleanup as part of pme turnoff message.
+>> As host waits for L23 ready from the device side. we can use that time
+>> to cleanup the host before sending L23 ready.
+>>
 > 
-> > On Mon, Jul 29, 2024 at 01:08:59PM -0700, Nirmal Patel wrote:
-> > > On Thu, 25 Jul 2024 09:40:13 +0530
-> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > >   
-> > > > On Wed, Jul 24, 2024 at 02:10:30PM -0500, Bjorn Helgaas wrote:  
-> > > > > On Wed, Jul 24, 2024 at 10:00:40AM -0700, Nirmal Patel wrote:
-> > > > >  
-> > > > > > VMD does not support legacy interrupts for devices downstream
-> > > > > > from a VMD endpoint. So initialize the PCI_INTERRUPT_LINE to 0
-> > > > > > for these devices to ensure we don't try to set up a legacy
-> > > > > > irq for them.    
-> > > > > 
-> > > > > s/legacy interrupts/INTx/
-> > > > > s/legacy irq/INTx/
-> > > > >     
-> > > > > > Note: This patch was proposed by Jim, I am trying to upstream
-> > > > > > it.
-> > > > > > 
-> > > > > > Signed-off-by: Jim Harris <james.r.harris@intel.com>
-> > > > > > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> > > > > > ---
-> > > > > >  arch/x86/pci/fixup.c | 14 ++++++++++++++
-> > > > > >  1 file changed, 14 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> > > > > > index b33afb240601..a3b34a256e7f 100644
-> > > > > > --- a/arch/x86/pci/fixup.c
-> > > > > > +++ b/arch/x86/pci/fixup.c
-> > > > > > @@ -653,6 +653,20 @@ static void quirk_no_aersid(struct
-> > > > > > pci_dev *pdev)
-> > > > > > DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL,
-> > > > > > PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid); 
-> > > > > > +#if IS_ENABLED(CONFIG_VMD)
-> > > > > > +/* 
-> > > > > > + * VMD does not support legacy interrupts for downstream
-> > > > > > devices.
-> > > > > > + * So PCI_INTERRPUT_LINE needs to be initialized to 0 to
-> > > > > > ensure OS
-> > > > > > + * doesn't try to configure a legacy irq.    
-> > > > > 
-> > > > > s/legacy interrupts/INTx/
-> > > > > s/PCI_INTERRPUT_LINE/PCI_INTERRUPT_LINE/
-> > > > >     
-> > > > > > + */
-> > > > > > +static void quirk_vmd_interrupt_line(struct pci_dev *dev)
-> > > > > > +{
-> > > > > > +	if (is_vmd(dev->bus))
-> > > > > > +		pci_write_config_byte(dev,
-> > > > > > PCI_INTERRUPT_LINE, 0); +}
-> > > > > > +DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID,
-> > > > > > quirk_vmd_interrupt_line);    
-> > > > > 
-> > > > > A quirk for every PCI device, even on systems without VMD, seems
-> > > > > like kind of a clumsy way to deal with this.
-> > > > > 
-> > > > > Conceptually, I would expect a host bridge driver (VMD acts
-> > > > > like a host bridge in this case) to know whether it supports
-> > > > > INTx, and if the driver knows it doesn't support INTx or it has
-> > > > > no _PRT or DT description of INTx routing to use, an attempt to
-> > > > > configure INTx should just fail naturally.
-> > > > > 
-> > > > > I don't claim this is how host bridge drivers actually work; I
-> > > > > just think it's the way they *should* work.
-> > > > >     
-> > > > 
-> > > > Absolutely! This patch is fixing the issue in a wrong place. There
-> > > > are existing DT based host bridge drivers that disable INTx due to
-> > > > lack of hardware capability. The driver just need to nullify
-> > > > pci_host_bridge::map_irq callback.
-> > > > 
-> > > > - Mani
-> > > >   
-> > > For VMD as a host bridge, pci_host_bridge::map_irq is null. Even all
-> > > VMD rootports' PCI_INTERRUPT_LINE registers are set to 0.   
-> > 
-> > If map_irq is already NULL, then how INTx is being configured? In
-> > your patch description:
-> VMD uses MSIx.
-> > 
-> > "So initialize the PCI_INTERRUPT_LINE to 0 for these devices to
-> > ensure we don't try to set up a legacy irq for them."
-> > 
-> > Who is 'we'? For sure the PCI core wouldn't set INTx in your case.
-> > Does 'we' refer to device firmware?
-> > 
-> > >Since VMD
-> > > doesn't explicitly set PCI_INTERRUPT_LINE register to 0 for all of
-> > > its sub-devices (i.e. NVMe), if some NVMes has non-zero value set
-> > > for PCI_INTERRUPT_LINE (i.e. 0xff) then some software like SPDK can
-> > > read it and make wrong assumption about INTx support.
-> > >   
-> > 
-> > Is this statement is true (I haven't heard of before), then don't we
-> > need to set PCI_INTERRUPT_LINE to 0 for all devices irrespective of
-> > host bridge? 
-> Since VMD doesn't support legacy interrupt, BIOS sets
-> PCI_INTERRUPT_LINE registers to 0 for all of the VMD rootports but
-> not the NVMes'.
+> Yes, but that's only applicable if the host properly powers down the device. But
+> it won't work in the case of host crash or host abrupt poweroff.
 > 
-> According to PCIe base specs, "Values in this register are
-> programmed by system software and are system architecture specific.
-> The Function itself does not use this value; rather the value in this
-> register is used by device drivers and operating systems."
+> - Mani
 > 
-> We had an issue raised on us sometime back because some SSDs have 0xff
-> (i.e. Samsung) set to these registers by firmware and SPDK was reading
-> them when SSDs were behind VMD which led them to believe VMD had INTx
-> support enabled. After some testing, it made more sense to clear these
-> registers for all of the VMD owned devices.
+Ack.
+
+- Krishna Chaitanya.
+>> - Krishna Chaitanya.
+>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>> ---
+>>>    drivers/pci/controller/dwc/pcie-qcom-ep.c | 12 ++++++++++--
+>>>    1 file changed, 10 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>>> index 2319ff2ae9f6..e024b4dcd76d 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>>> @@ -186,6 +186,8 @@ struct qcom_pcie_ep_cfg {
+>>>     * @link_status: PCIe Link status
+>>>     * @global_irq: Qualcomm PCIe specific Global IRQ
+>>>     * @perst_irq: PERST# IRQ
+>>> + * @cleanup_pending: Cleanup is pending for the controller (because refclk is
+>>> + *                   needed for cleanup)
+>>>     */
+>>>    struct qcom_pcie_ep {
+>>>    	struct dw_pcie pci;
+>>> @@ -214,6 +216,7 @@ struct qcom_pcie_ep {
+>>>    	enum qcom_pcie_ep_link_status link_status;
+>>>    	int global_irq;
+>>>    	int perst_irq;
+>>> +	bool cleanup_pending;
+>>>    };
+>>>    static int qcom_pcie_ep_core_reset(struct qcom_pcie_ep *pcie_ep)
+>>> @@ -389,6 +392,12 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+>>>    		return ret;
+>>>    	}
+>>> +	if (pcie_ep->cleanup_pending) {
+>>> +		pci_epc_deinit_notify(pci->ep.epc);
+>>> +		dw_pcie_ep_cleanup(&pci->ep);
+>>> +		pcie_ep->cleanup_pending = false;
+>>> +	}
+>>> +
+>>>    	/* Assert WAKE# to RC to indicate device is ready */
+>>>    	gpiod_set_value_cansleep(pcie_ep->wake, 1);
+>>>    	usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
+>>> @@ -522,10 +531,9 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
+>>>    {
+>>>    	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+>>> -	pci_epc_deinit_notify(pci->ep.epc);
+>>> -	dw_pcie_ep_cleanup(&pci->ep);
+>>>    	qcom_pcie_disable_resources(pcie_ep);
+>>>    	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
+>>> +	pcie_ep->cleanup_pending = true;
+>>>    }
+>>>    /* Common DWC controller ops */
 > 
-
-This is a valuable information that should've been present in the patch
-description. Now I can understand the intention of your patch. Previously I
-couldn't.
-
-> > 
-> > > Based Bjorn's and your suggestion, it might be better if VMD sets
-> > > PCI_INTERRUPT_LINE register for all of its sub-devices during VMD
-> > > enumeration.
-> > >   
-> > 
-> > What about hotplug devices?
-> That is a good question and because of that I thought of putting the
-> fix in fixup.c. But I am open to your suggestion since fixup is not the
-> right place.
-> 
-
-How about the below change?
-
-diff --git a/drivers/pci/irq.c b/drivers/pci/irq.c
-index 4555630be9ec..140df1138f14 100644
---- a/drivers/pci/irq.c
-+++ b/drivers/pci/irq.c
-@@ -147,6 +147,13 @@ void pci_assign_irq(struct pci_dev *dev)
-        struct pci_host_bridge *hbrg = pci_find_host_bridge(dev->bus);
- 
-        if (!(hbrg->map_irq)) {
-+               /*
-+                * Some userspace applications like SPDK reads
-+                * PCI_INTERRUPT_LINE to decide whether INTx is enabled or not.
-+                * So write 0 to make sure they understand that INTx is disabled
-+                * for the device.
-+                */
-+               pci_write_config_byte(dev, PCI_INTERRUPT_LINE, 0);
-                pci_dbg(dev, "runtime IRQ mapping not provided by arch\n");
-                return;
-        }
-
-
-So this sets PCI_INTERRUPT_LINE to 0 for _all_ devices that don't support INTx.
-As per your explanation above, the issue you are seeing is not just applicable
-to VMD, but for all devices.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
