@@ -1,55 +1,58 @@
-Return-Path: <linux-pci+bounces-11072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C709F9436D0
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 22:02:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E597794370D
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 22:23:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 869CC282660
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 20:02:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B59A1C21189
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 20:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F297841C77;
-	Wed, 31 Jul 2024 20:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E1D4594A;
+	Wed, 31 Jul 2024 20:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqKkrrHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWAtc2tf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52A1381AD;
-	Wed, 31 Jul 2024 20:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26605182D8;
+	Wed, 31 Jul 2024 20:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722456129; cv=none; b=eMlXUJMPsLCQG7TLr5xhjbZ2Y3SQ4t3zafCUDkGbPBeB06fQ/IJd4Z0rj72AHMB8OPObLRjzFcNBtVDXcHSr7Zr8KDiDmlCgtBiBQo6xXTEuGEqIN8ifvHboVN0nQpo/JcnzgzCE2VyK+eydLw563XFsDww5i8syuUrqb+mLNH4=
+	t=1722457421; cv=none; b=D80mPbRHWAiUkPGO0ymKp22epQvuLiwR8tk083PI9mNK8rRzO31YRRWpAU5aujJiZi0gN4UYUpYB2uyhaPKQ25zzQEw0j2N1oeRY38G5xgLpy6Y2Ps9WKb4+wyM1FTb1L3GEYC11KP7vbMtWjQ/sAUXJblebsyN3vL6gd+5kzL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722456129; c=relaxed/simple;
-	bh=QFiLxSsKfiwzKnzdvA9UzCQ3GD7o2VslezEJoqA4HVc=;
+	s=arc-20240116; t=1722457421; c=relaxed/simple;
+	bh=AY5BnWdQ2yo2WR6h0ILx9cGNB0P+qWgeQPBR2YUHwvo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=XI0ckh+5nVnwFabssXwEuzEEE0Ayn3tYbMi09FM/MI0ImG2l+3eGIU8WKtbj3USzBiq8kNsZ6vnCBkmsROdUV5GPvyQ1TTDEYTHfzR+81R3mBn/BdFv/XiEOnSCzOPiKtvet1KrWrJ9cW+NYNVEFxkyw7oqD2I93BqGPGv+QLrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqKkrrHt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0809EC4AF0E;
-	Wed, 31 Jul 2024 20:02:08 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=ty+OpNk/mzU3FtRXcgyc7DdDy0oCrAIBIeW6/IipfmMT/Jd71LvyiHHOe20EOVPymQucYjfgq1B9FD9sisz1hWuoEYgxUzibAdsVwFV1XZ8Y2nHQLaX9vLTnr9KqoT0++VQAsVkCF3iAGqXr+J9cRFywx+evWXUmvtl+Hx01A0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWAtc2tf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D6FC116B1;
+	Wed, 31 Jul 2024 20:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722456129;
-	bh=QFiLxSsKfiwzKnzdvA9UzCQ3GD7o2VslezEJoqA4HVc=;
+	s=k20201202; t=1722457420;
+	bh=AY5BnWdQ2yo2WR6h0ILx9cGNB0P+qWgeQPBR2YUHwvo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=uqKkrrHtsuA7xZEi7vhRur/0faE0uJd2OvFgdmLOxw0jwyAeOyvOUWTPUupxnO+Rf
-	 O8IKY2jfQ1bmISQrBjHJoAx6wy+C+z1/BEAbVPhnC62H/Gc0xUQyt/wihcu73mlQ+w
-	 ANtaA+10Zd0/PGOU+B/DohQFrl6F/bE9hyq+xkvvIqs9VurmzXRqR6oiPKdi+/YugE
-	 ObyNHYMpgN23K+C0g5wzyO6Q+uo9nBhruXxoGgwGQWq8kI3+OiNuwhgoPnhhXIuEuc
-	 uq0lS0izmC9X14OgV+3Zyx6qizU86xXQd3Gq3V7HhfzOOcKOyg3PBvNiJ1U6WGITNi
-	 4DjJif0hLTJSg==
-Date: Wed, 31 Jul 2024 15:02:07 -0500
+	b=mWAtc2tfrspROl+zbHWZYl09LpX6URPVKntcxAbob7gPhpjZIerjxdwBfttMrXKu9
+	 MBZK5Bi1Ynl8UcdoMe0xNoUapMEzotKDii6M9r8ej82LINNVKENFATnIZhht6VR0fm
+	 8hgx6QLrj+NgFwRpixgXx2jSgNSQfZmPpOddURJSB7gWRluvJxG9sOWlHZrhs9QbAB
+	 iggB8gYwbL3hAiEBZ4a6N1gYgpfLdialV8foX5KcuaPXrKwWvgSprGiWBxkJSw1kMy
+	 qnfaSxzMSKIUnb+74rwPSWLnQIPwNdBomwYuCGBf1U4I6QmSRwy32a1xS35LUc+hYG
+	 a4l6/nmRF8Teg==
+Date: Wed, 31 Jul 2024 15:23:38 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: Make pcim_request_all_regions() a public
- function
-Message-ID: <20240731200207.GA78649@bhelgaas>
+To: matthew.gerlach@linux.intel.com
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	dinguyen@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>,
+	D@bhelgaas.smtp.subspace.kernel.org,
+	M@bhelgaas.smtp.subspace.kernel.org
+Subject: Re: [PATCH 7/7] pci: controller: pcie-altera: Add support for Agilex
+Message-ID: <20240731202338.GA78770@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,59 +61,112 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240731123454.22780-2-pstanner@redhat.com>
+In-Reply-To: <20240731143946.3478057-8-matthew.gerlach@linux.intel.com>
 
-On Wed, Jul 31, 2024 at 02:34:54PM +0200, Philipp Stanner wrote:
-> In order to remove the deprecated function
-> pcim_iomap_regions_request_all(), a few drivers need an interface to
-> request all BARs a PCI-Device offers.
-> 
-> Make pcim_request_all_regions() a public interface.
+In subject:
 
-pcim_iomap_regions_request_all() is only used by a dozen or so
-drivers.  Can we convert them all at once to consolidate reviewing
-them?  Or are the others harder so we have to do this piece-meal?
+  PCI: altera: Add Agilex support
 
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> ---
->  drivers/pci/devres.c | 3 ++-
->  include/linux/pci.h  | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index 3780a9f9ec00..0ec2b23e6cac 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -932,7 +932,7 @@ static void pcim_release_all_regions(struct pci_dev *pdev)
->   * desired, release individual regions with pcim_release_region() or all of
->   * them at once with pcim_release_all_regions().
->   */
-> -static int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
-> +int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+to match style of history.
+
+>  #define TLP_CFG_DW1(pcie, tag, be)	\
+> -	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+> +	(((TLP_REQ_ID((pcie)->root_bus_nr,  RP_DEVFN)) << 16) | ((tag) << 8) | (be))
+
+Seems OK, but unrelated to adding Agilex support, so it should be a
+separate patch.
+
+> +#define AGLX_RP_CFG_ADDR(pcie, reg)	\
+> +	(((pcie)->hip_base) + (reg))
+
+Fits on one line.
+
+> +#define AGLX_BDF_REG 0x00002004
+> +#define AGLX_ROOT_PORT_IRQ_STATUS 0x14c
+> +#define AGLX_ROOT_PORT_IRQ_ENABLE 0x150
+> +#define CFG_AER                   BIT(4)
+
+Indent values to match #defines above.
+
+>  static bool altera_pcie_hide_rc_bar(struct pci_bus *bus, unsigned int  devfn,
+>  				    int offset)
 >  {
->  	int ret;
->  	int bar;
-> @@ -950,6 +950,7 @@ static int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+> -	if (pci_is_root_bus(bus) && (devfn == 0) &&
+> -	    (offset == PCI_BASE_ADDRESS_0))
+> +	if (pci_is_root_bus(bus) && devfn == 0 && offset == PCI_BASE_ADDRESS_0)
+>  		return true;
+
+OK, but again unrelated to Agilex.
+
+> @@ -373,7 +422,7 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+>  	 * and update local copy of root bus number accordingly.
+>  	 */
+> -	if ((bus == pcie->root_bus_nr) && (where == PCI_PRIMARY_BUS))
+> +	if (bus == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+
+Ditto.
+
+> @@ -577,7 +731,7 @@ static void altera_wait_link_retrain(struct altera_pcie *pcie)
+>  			dev_err(dev, "link retrain timeout\n");
+>  			break;
+>  		}
+> -		udelay(100);
+> +		usleep_range(50, 150);
+
+Where do these values come from?  Needs a comment, ideally with a spec
+citation.
+
+How do we know a 50us delay is enough when we previously waited at
+least 100us?
+
+> @@ -590,7 +744,7 @@ static void altera_wait_link_retrain(struct altera_pcie *pcie)
+>  			dev_err(dev, "link up timeout\n");
+>  			break;
+>  		}
+> -		udelay(100);
+> +		usleep_range(50, 150);
+
+Ditto.
+
+> +static void aglx_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct altera_pcie *pcie;
+> +	struct device *dev;
+> +	u32 status;
+> +	int ret;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	pcie = irq_desc_get_handler_data(desc);
+> +	dev = &pcie->pdev->dev;
 >  
->  	return ret;
->  }
-> +EXPORT_SYMBOL(pcim_request_all_regions);
->  
->  /**
->   * pcim_iomap_regions_request_all - Request all BARs and iomap specified ones
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 4cf89a4b4cbc..5b5856ba63e1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2289,6 +2289,7 @@ static inline void pci_fixup_device(enum pci_fixup_pass pass,
->  				    struct pci_dev *dev) { }
->  #endif
->  
-> +int pcim_request_all_regions(struct pci_dev *pdev, const char *name);
->  void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen);
->  void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
->  void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
-> -- 
-> 2.45.2
-> 
+> +	status = readl(pcie->hip_base + pcie->pcie_data->port_conf_offset +
+> +		       pcie->pcie_data->port_irq_status_offset);
+> +	if (status & CFG_AER) {
+> +		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
+> +		if (ret)
+> +			dev_err_ratelimited(dev, "unexpected IRQ,\n");
+
+Was there supposed to be more data here, e.g., an IRQ %d or something?
+Or is it just a spurious "," at the end of the line?
+
+>  	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> -					&intx_domain_ops, pcie);
+> +						 &intx_domain_ops, pcie);
+
+Cleanup that should be in a separate patch.  *This* patch should have
+the absolute minimum required to enable Agilex to make it easier to
+review/backport/revert/etc.
+
+> +static const struct altera_pcie_data altera_pcie_3_0_f_tile_data = {
+> +	.ops = &altera_pcie_ops_3_0,
+> +	.version = ALTERA_PCIE_V3,
+> +	.cap_offset = 0x70,
+
+It looks like this is where the PCIe Capability is?  There's no way to
+discover this offset, e.g., by following the capability list like
+pci_find_capability() does?
+
+Bjorn
 
