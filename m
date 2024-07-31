@@ -1,162 +1,239 @@
-Return-Path: <linux-pci+bounces-11049-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 753A6942EAD
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 14:36:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A3E1942F04
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 14:48:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AB7628CAC6
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 12:36:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADE2B1C21F6D
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 12:48:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68ADC1AED46;
-	Wed, 31 Jul 2024 12:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D958A1B3722;
+	Wed, 31 Jul 2024 12:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7k2X5ph"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Omr9uNuc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2721AE87A
-	for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2024 12:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722429367; cv=none; b=Tz0wMjNs7VAii5yBcZXpBWpoD44D7Iv2r3LYo1yfeSFvyNFs8I/ay2aSsZpGkWBce726aBhjaLmF8/xyd7Y4wXFrYea9pgotOsi1iEFFEr9x7ylFlC29aUFW7kfOGcNRekQ+3mSfPMGA1EQEIwFhMdF1f3t1nwSG/k2ESvSkEXA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722429367; c=relaxed/simple;
-	bh=WlOOsz/BddjK9BJ8X1xSO57i4x404QClCnZqzgYNZWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hvnr0iIkgavCvdxWEIujbbLdLk21cjxDAa3may5lbF1FJE1Qyj5WQSlgwOPWWN9oEDztaVNDszyYi2b9vn2ibUaeslebKuuHY5xHwYNSUgv0ISHHCWVn6ZB8RULVddOXLr6bYz8u6hiwmVc1qyj/MQUj2NSHNzE9CllusSLIKKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f7k2X5ph; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722429364;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Cq15lFRqX254TiblEFswKviVqFepxkbmzwO8PyVaqY=;
-	b=f7k2X5ph9LLBStTLR3pMCOCEkdt89/0pQUf4ZPnc+a+Zg73eSpTzjw8JW6u5ZPJgv5Ph7k
-	KY8OuvlhxEYzC1yIrAvm43525wLeKIcc4YmytWcWjbDoBEENdXFgLjP1992I5jht9rFOVt
-	YFQBi5t1n8fYzvVJyzozOIcFGYPf3U8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-664-HwyGP1VMOW2nyBms5TLZrA-1; Wed, 31 Jul 2024 08:36:03 -0400
-X-MC-Unique: HwyGP1VMOW2nyBms5TLZrA-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-427feed9c71so6987385e9.0
-        for <linux-pci@vger.kernel.org>; Wed, 31 Jul 2024 05:36:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722429362; x=1723034162;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Cq15lFRqX254TiblEFswKviVqFepxkbmzwO8PyVaqY=;
-        b=Zpo5UgLyrgJrX/5s96IOsaSegYC9rGp7jasNDD2MoBAhWkJ+ZwWGBdXnJo/esljhE+
-         1TZ3HTciacOKyoTaTqzzysISbPQLBRfhstUTaYJcfBoEsmQYwXLUdzEN0VN4pCHq3GDt
-         MV6zukAD5OfnSq4yENT4TeBV8kpH/83MnDFLlcWIYIn6AiI6cJI/hB1w0SbI1PS79H/E
-         GxaOYIHcvIqmzSN9jmp/XGC2hcCwZyt5DB0LoVHCLJTxiDpZ8Mv+AOQrivQnVBl/l1Gt
-         v5dAumQrRgLPmoHThJtDIORU9muC11fUcCCKeI88zUmISE1kr6Dx+cmk/T/D+ZmFVdzJ
-         p01g==
-X-Forwarded-Encrypted: i=1; AJvYcCWGWlaKNhK3+uKddYhkQ0/ITJTBuimNZWRB8Btz2VAourzxgEoqCH8hjOAbdxTQsB2GldVnzJP7sr+RbOedDJ0XfjMozs6WFyiB
-X-Gm-Message-State: AOJu0YyN1zJPvD1d/VOMgt3kgc5cTvrUeql9jiqSjoJX5msDcMjffmEJ
-	CPoMZtgMRYkJyp1ZuSRIEajyLbH1nRC72ZsJwI4jAMxtpJ7IArIQA8rRYWpVePuqD1Ycllpkmhy
-	Lyr+W/dmfWOP+/4kAQ248jBizOMoZqdVy3g6Z9VvnjrDm3E0su56ZJ9h4TA==
-X-Received: by 2002:a05:6000:4014:b0:35f:2a75:91fd with SMTP id ffacd0b85a97d-36b34d24059mr7741549f8f.6.1722429362260;
-        Wed, 31 Jul 2024 05:36:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IERtyUidPwaNumRAOZZK4tOwj3EaThvDdekjFGdjXct9xc5jiS45HLvLSR1u6b2d6FlB8ESjg==
-X-Received: by 2002:a05:6000:4014:b0:35f:2a75:91fd with SMTP id ffacd0b85a97d-36b34d24059mr7741534f8f.6.1722429361686;
-        Wed, 31 Jul 2024 05:36:01 -0700 (PDT)
-Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b367c0829sm16925976f8f.17.2024.07.31.05.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jul 2024 05:36:01 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH 2/2] ata: ahci: Remove deprecated PCI functions
-Date: Wed, 31 Jul 2024 14:34:56 +0200
-Message-ID: <20240731123454.22780-4-pstanner@redhat.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240731123454.22780-2-pstanner@redhat.com>
-References: <20240731123454.22780-2-pstanner@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B1C1B1427;
+	Wed, 31 Jul 2024 12:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722430067; cv=fail; b=d1H/92vCu8Zl5FrlvQb1XkTn2+khyuRSLPfRqGaC5Lzbb7wwSO5iFJAnvxXBNZPk8c4cPvxcwwFI09mx0t3TkzN1vAWvC2jOGKyv+qmF6cUzLgWqzIlXtAHUwy9XS4wbGHKw2G9/NcU+xOv+VfFmTnBAA6EvfRS7KpURgBP6nzs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722430067; c=relaxed/simple;
+	bh=/a94/tLcTq0F2MKbH4YHNZNKNsVer5CYElZSgdDmCYM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hdaWtQoeTGWfqEGSxdHj91Ugqfu/Ra6FKxxFHhJVWp74/itbZjupt7sHpwd+t99aTYgRLzq6XxCfteMnRb/AvOWOvMZAZ5KzaPdmTMyJjoRGi9Or5/cMZuKeELF//hbjkaFzjrDm6zbhgR2SSJVPaz1xscFyM21HOG5HH0YwwRM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Omr9uNuc; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722430066; x=1753966066;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=/a94/tLcTq0F2MKbH4YHNZNKNsVer5CYElZSgdDmCYM=;
+  b=Omr9uNucWmhH2Gi+t+7JBw48+8gA+YSg0d0AJ7Dz5/n2YtBKCRttHtcQ
+   vFW8ykq6/qRJWB1Zv86xC3t/4ib0ABjNdFDR88zzln5qJ4TvVP25Ux8KO
+   JT1dBPiEt7M0dAnpXZL5z6Sacj+DB6Ddspi8rTgAlQYi3AKE5sFVXqkvT
+   JsdvlURsf7uHggwTF2lyzQd4KpWYktkx6FpXaOPa/9SWti4ST3HR9shiz
+   a5G8ZoU0ns7AbG8uQW5vKojKFN8bcaFr1RuvNPmdn2DsYvP1Qyn/EAKKd
+   ZUbtcwj6am3WtbrnYgUIeWbaF1mNZUiWvjfGKAQSdpRCHhQjXcfue1AzA
+   g==;
+X-CSE-ConnectionGUID: DCKKXuyuTPKjnXKylqzbjQ==
+X-CSE-MsgGUID: /fLZyZmiQsyRV6dQebxtNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11149"; a="20253145"
+X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
+   d="scan'208";a="20253145"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 05:47:45 -0700
+X-CSE-ConnectionGUID: sleV773UTfurEnvjzKycSA==
+X-CSE-MsgGUID: U46S+vTPSCqSXDJWeF0nIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
+   d="scan'208";a="54922003"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Jul 2024 05:47:45 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 31 Jul 2024 05:47:43 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 31 Jul 2024 05:47:43 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 31 Jul 2024 05:47:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qi6scNO22eaYJZGGCvTGBEp5Y9a5o2tEhbV/1hr+UGPKjkTci8b7Zd/1Y0GNe9abaVzapXdZFIqxRaWE4tInaod47U9oKDucYvxyIwrUqwxITlF9RHgcGHrumKRw6Fhr55GbWnQX5Z457w35/M+gkHjpeoy+jOvPTebEJcejDsLXjmO1b00PyNYHszg2t1HuMN/5WIKpbfyITf93gnlKrARquSnxhR20+4xYZR3b4QSuVtUnLKLlPVpJebQ3lWpBf1b4ipW62yxzUO5Pe89zg/RgXfQ7HHU8LrMk7SHUzA8WokYYAIEtval9G+LMIfwe3D4H0D2Q6S1J00v11sGRCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/hKBxsrbs2OxWbOmaLwx2aAeJonhSQ1O+aHHjnozs3w=;
+ b=y16M65cM68O3mZ+oR7B218woFGm0w7A/6gu8zDtA8CGka/yd4OvXoZ4maKCXV0zOozRZlwGCv4QG99LN063UirtppPXeMa353pACEmlzlMF8044Bg6rnNaIzEGAWAZjga52bythJYwTM2t9wbwriUx2JBQD7j1QtsGeOIJcCAcgWoGuCOmf18xRo3x97MX9R7RWBPFV5FdyWfHmcKMAXQJq1KBDlju3uWIzOhjPSxCD6aq2xhwXCVoJ4a9dJxklC10J4rs2bHOS5MYCKAUMctAC782A701RSjrjqhg/l6LpZq2lnxFBAl9SCczTMKghd0duvBgGo+q11S9KH5wp6tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MW4PR11MB5776.namprd11.prod.outlook.com (2603:10b6:303:183::9)
+ by DM4PR11MB8227.namprd11.prod.outlook.com (2603:10b6:8:184::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.19; Wed, 31 Jul
+ 2024 12:47:41 +0000
+Received: from MW4PR11MB5776.namprd11.prod.outlook.com
+ ([fe80::4bea:b8f6:b86f:6942]) by MW4PR11MB5776.namprd11.prod.outlook.com
+ ([fe80::4bea:b8f6:b86f:6942%6]) with mapi id 15.20.7807.026; Wed, 31 Jul 2024
+ 12:47:40 +0000
+Message-ID: <ead1f11f-c4af-421a-8e41-6a107ecbccbc@intel.com>
+Date: Wed, 31 Jul 2024 14:47:30 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next V3 1/3] net/mlx5: Add support for MTPTM and MTCTR
+ registers
+To: Tariq Toukan <tariqt@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Eric
+ Dumazet" <edumazet@google.com>
+CC: <netdev@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman
+	<gal@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>, John Stultz
+	<jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, "Anna-Maria
+ Behnsen" <anna-maria@linutronix.de>, Frederic Weisbecker
+	<frederic@kernel.org>, <linux-kernel@vger.kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, Carolina Jubran
+	<cjubran@nvidia.com>, Bar Shapira <bshapira@nvidia.com>, Rahul Rameshbabu
+	<rrameshbabu@nvidia.com>
+References: <20240730134055.1835261-1-tariqt@nvidia.com>
+ <20240730134055.1835261-2-tariqt@nvidia.com>
+Content-Language: en-US
+From: Wojciech Drewek <wojciech.drewek@intel.com>
+In-Reply-To: <20240730134055.1835261-2-tariqt@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BE1P281CA0084.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:78::11) To MW4PR11MB5776.namprd11.prod.outlook.com
+ (2603:10b6:303:183::9)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR11MB5776:EE_|DM4PR11MB8227:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7634f2ca-03cb-4df8-dd0f-08dcb15ef6d6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UFdyUndYU3ozakFlSW5qVjFvL0JoRG9JL1A3YmNqWTZlVkVlZEZ2ODFKMExD?=
+ =?utf-8?B?d3ROYkkralB1akFGUko3OU9IQjdMMWRZRDd4dXV5THd2eUFJSmF4UW1tVnNt?=
+ =?utf-8?B?V1NsdGppbnI2YjlhaGx3NGIzUlVMRFRUMGZVbjE4ZlRibzJDdHBOYWFad1Bq?=
+ =?utf-8?B?Q1hFdmVvNk14MHBvbHh3dnJ2S2ZkcFRZLzZWYW9MZGx6L1lwSnZ2SDZnL0l6?=
+ =?utf-8?B?WU0ySFdUQjR4N2FoUnR6djZhdjFpV0UwV3BYVGxSSC9BcmV0RVloeE1sYXVi?=
+ =?utf-8?B?YnlFYWdQY0NnRW1YaCs3YjIyRm55RHBuUVNYR2tVdktLajdVQ2gyckNTRlE0?=
+ =?utf-8?B?V1QyeVBVU2JwMnZ1NXRrRE9SbE5nbHhId2R4c3RrL2hvRjRwVWhiaHVRa3pW?=
+ =?utf-8?B?ckIzZDFYeENhOWF3NDE3WllWc0xTYnBMdUpsZ0h4ZFAwTWxuWFFqck9POFBm?=
+ =?utf-8?B?Z1lTbTBJVHc3SmhYRXVGRkNOdmIvRmJpeEU5aHpEZmsvclNsT3hTNE5tRS9n?=
+ =?utf-8?B?UWpJMWREMzA2REFTaWdpSWU2enRwVlBsZittWnhJcHNxRG5qWU5YQWtRWHNB?=
+ =?utf-8?B?Mzg2OUVJS20vV2xpN1FOd0hhUFJsaVJ3NGJnUWJrSk1hRzhuUHhZd1k4d3Uy?=
+ =?utf-8?B?UjNmVElJK2puN3dNZUJrYy9TOVR0UjN6QS8vWHlsMWdpekF1R0h4am1NOGlL?=
+ =?utf-8?B?TWl5UTlqVlpXV2tERHhrQ0NYc2JiQVF0VWZ0aTk2K2NTSVNxdFFjcTZzVGZF?=
+ =?utf-8?B?QnZMZ1F0QzljNldRdG5TcjFBSUY0bEdzYnZCK2pnWTZXUXNuVEpBTWRYTHM3?=
+ =?utf-8?B?ckJRUEMxUlB3MTNtb3NMU3phc2xnMGxJVEJ2elVGOGVJWUN2bSsyUnY1eXZL?=
+ =?utf-8?B?UU13WjNqUmdFcEJMejB2V0hjZTNoQlEya3VtM0w1Q2NyTkwvRUlyYjlKZXJX?=
+ =?utf-8?B?b2hZTDVsL2pLYjNBeTBOZGJWTWVSbVVVaG5DYUF5R1pCNXlVb2FmTjJEcTFI?=
+ =?utf-8?B?azJRTlhkZDUyek1HSVpTWUtSY1JHMjFrV3k4aU8zaFUrTjkrM2lmOTZQbjhZ?=
+ =?utf-8?B?KzN4NFh0dmRtK1lKc0NtaEpWZ0toVllMLzJmbktNWmRjdmxiRXFZSktxc2hF?=
+ =?utf-8?B?c3laSVBZL0d0ei81UjFIc2pmaFZuTFFVR01xSldnWWVLS2JYWWJ4L2FtaTVY?=
+ =?utf-8?B?bUlONXJKcU5KY1FmRnVzeXJEdnlLT2tXT1FKRW5XaGdyYUE0cCtlRUJLbWJs?=
+ =?utf-8?B?LzQ2cis4M3U3RzBkTTFBRzNKTWNxV2QyK0g0Yis3T3lVL3Z1RWltVWhEd0JO?=
+ =?utf-8?B?dWU0cFZsUFRvY1JIalR0UzIrclowNzlYcmdIYW54Tk1VMkxuUXY5bDhtRnE5?=
+ =?utf-8?B?RTdDeldPb3FSNFgxcWNjZUJtMTVubWY3MVRFd1ArTVpRWDI0N2RMVXBFVmhY?=
+ =?utf-8?B?UDNDWFYrVUlUWmlkMitEb1dQV2NrdzZHbzNOeVphVjduL3d4RjlIZ05FSGFD?=
+ =?utf-8?B?YzIyeFRZankyRFV2Mk5yc0RqVnpjQ2s0dGNuR1VTYzA2U0FvL3IybjNPKzlh?=
+ =?utf-8?B?RThHd1dCQnUzTWN5aEFkMG85b0VSak5rQ211QzlWRmROdWRWYlAza0pxQ0RX?=
+ =?utf-8?B?akt6QmxsZmVnSEJkaWhIRFUrUGpvWld1Smp5ZVliZEhScjltQ3lOV2QwNkZG?=
+ =?utf-8?B?cXdIMkxMN3NHNWpGdnQ5Nys1QU1kcTlhUDM0TTNYWFNWckRwL1EwSUt4WWo0?=
+ =?utf-8?B?T1FKWnZKeFB6Qzh5ZW5ENnVKb204cldtUmJ5b09KOUd1RGVZQmo1c3BoWmFB?=
+ =?utf-8?B?RkRlbkkxZU5GNmFNckR0UT09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB5776.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WWRIYVhRN1Z2OWM1QmlYb3NrR0NHUlJQclZBSkowWklpcjRXMTQ0V01YN29u?=
+ =?utf-8?B?aUF0WTN4TFU4NkU5eFVSRjlqSTdBd0tIYTMzekFpYzZBQ1Jmakh3S29GWUNx?=
+ =?utf-8?B?SjlDT05xL0dVM0xmVzJtdUtnVjdPanZNTjgwS0U4K2FRUzFZOERFTjlIVFBQ?=
+ =?utf-8?B?YldTbUlUaDVNZnUwdmJtRWRDN2hGQ1ZSeHQ3b3dONWlCbUdUZzBMd21ycUlr?=
+ =?utf-8?B?d0lmdFJuOXFiblh2di9JanE4c0FoSkZCWXVodHhxY3JSeVlMZVRFVzhlOXJi?=
+ =?utf-8?B?MW4zYWxmNkY5S2lwQ2JtWGhQVmY3WStpa2NtNnpvYThSZUhIUi96anVBakhq?=
+ =?utf-8?B?c1lEclRzSnVIVmlDZ3N1Rms3b3ZqRmFlZTJsdis2dm9ONWNXS1N4bTFyOEY3?=
+ =?utf-8?B?djRDWlhHYmlvOTEyMCtmYTZ1ZU1Rb1hFRW4vaXZlNW1TQyt5M0I5R1NFKzFS?=
+ =?utf-8?B?ZHJoNi9QOXE1a25HZ0pFa1paOHVvRS9OY2FjcU1adFJGTGJkZVNBREo5L1Ex?=
+ =?utf-8?B?cjlJOEMzQ1NudGdCNms3UXBtNXpubERUd1VYTFEwcjRlbXkxbHRaanQwT0hJ?=
+ =?utf-8?B?UDc4bWRHOEVmSDdYK1kvdy94VTRmUHJNNU1SZFdqZGR1Z2VnV1BiN0lxS2k3?=
+ =?utf-8?B?RjF0cjZFS0RnVjNQN3BRQjgyQk1OV3VBQkl0RGpuR0hhRS9QREtZUk4zTGxi?=
+ =?utf-8?B?dmhnRzZrNGorRmNxZnpoWlRWeHRyNlI5TWZ2bWVwa21QU0tjWTRCWVZOT0Z1?=
+ =?utf-8?B?aHpOeDhrK3N4Q3lyekppbitDSi9INUVkMlpnSEl4VVpuMmMwSVFSMGFQSUtV?=
+ =?utf-8?B?OER2ZERycHA5TW5VcG5veFM4VG11RytiWUVwUndRbVRwZlorTjE0WWYyZitZ?=
+ =?utf-8?B?MzVxaUh2bTR6cks0SE1BbVdHcVNhcE5EMGxUZWdEcVp6VHRPYVhJVk13R2N0?=
+ =?utf-8?B?QmhVQVFIeWpzV0VaUWFVZXk5Ui8vWWxCc1o0Z1l6RXdBMnpxZVZTR2xlWlB3?=
+ =?utf-8?B?djZUdkRsY2ZLTWUzWHlNSkt0b1IvN0ZFMGNZVnZ4VkQ5RGVhYWhHV2o2L1Iv?=
+ =?utf-8?B?aHVEaURRMGoyc3RPQ2lsR2hmZno1eDZRc1EvS09zczdnU3lmWVdHaHM3VFMv?=
+ =?utf-8?B?NExRZXVsRiszQ1J0RC9lWXRzK1dCMGNiR1lPNDlkUEhuVm9NV09YVFd6eWgz?=
+ =?utf-8?B?Z0R3Z21CdHQ4eTBTeFozTkE3REF0ZlVOQU1VWHhyUVY4S1JTRkR0NVV5UVR0?=
+ =?utf-8?B?dlNQVG1SM3JWenFTYURnMmV3MGV3dkU3MHhwYzZzWTk1akRGQmZOSWcwWjZh?=
+ =?utf-8?B?b2NlMDBBSmVPWFlNUHQrQnNpWEhxM0w1Vkp0SHhBc1JhQWxrcEg5OWVMQVVH?=
+ =?utf-8?B?Q0JUWXBiYjdqeGhBWk4xQmhaV0cySjRqYTBOUnZ1UTlzL3lCeVAxV1RBM1BM?=
+ =?utf-8?B?TVFucXRlOC9tU1I0TTZnbGRnUDM5Y2VodmdCMldpYW9pUWd2RklUU2wxdmcv?=
+ =?utf-8?B?czlWbEhlZStRR2kyc2hHUkFnMTA3TGszNjZBRjBMcGJUSFRPZmkvT2RGT1cw?=
+ =?utf-8?B?dys5NVVyYnMwUWdIM3hscHBtT29KQWFXSDU3YkNoNG9BZ1RzUkhialZsTWVG?=
+ =?utf-8?B?Q2pjUExlK3RQSHZWd1lOUmZqQVBMcTJnMTRIdkRQUUpMZmVEWXFmMUdvaUNv?=
+ =?utf-8?B?N1p3YjhNM3ZkSU10eG1QSEQ5N2hrcmNWWXBvUzFDTFNKWXByT0FNeHBVTmg3?=
+ =?utf-8?B?My9ncGFSVWFKcE1kbjVGcHQ4TTE2OVRQWlpYRXpYdmx3R0VYK0I4Ui9pZ3pl?=
+ =?utf-8?B?d3NUR1JobDBudS9NRWJkQStsT0FzekRKdDBCK09JNW9QcFJzUWNNQnpsRXF3?=
+ =?utf-8?B?c2JlNmZEZXdvcnJab0M2ZEh3dVNYWFlBeWlGeWlseEFhbnMxTnNPeFkzNStC?=
+ =?utf-8?B?TWdHc3d0bDlzVGJwM0ZMSE9Kek9Fa3Y4TWZMbFZ0M3F5d3FvT0d3MFFYMWVw?=
+ =?utf-8?B?L3VDVlZHVzdPVjdPVDJiM21WNUVVbWxXZ0lzUUhDMExmMHEwRUlxN3dkdS9r?=
+ =?utf-8?B?YTg3NU9TRlhya1FPNExzSitsTzR0elp5T2lGcVFQNnlNR09yeVA4dFBBRVZu?=
+ =?utf-8?B?VDNodXhySmp6dEF0d2pJQnpBWUZCanZSbjAyZTFhZEtrZ1RuUTkwZXlDSlNE?=
+ =?utf-8?B?NVE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7634f2ca-03cb-4df8-dd0f-08dcb15ef6d6
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB5776.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2024 12:47:40.8851
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UDfToYBH8jp4GZouCOjviTc0fmPmwApvEKNkk04xsuUZSjUGYCDNlH1GrEfpDbVy7wNFuUsJGV8r8frRS6Fvy4xdnuXn1i2UdP3At68jsjw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8227
+X-OriginatorOrg: intel.com
 
-pcim_iomap_regions_request_all() and pcim_iomap_table() have been
-deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-pcim_iomap_table(), pcim_iomap_regions_request_all()").
 
-Replace these functions in ahci with their successors,
-pcim_request_all_regions() and pcim_iomap().
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/ata/acard-ahci.c | 6 ++++--
- drivers/ata/ahci.c       | 6 ++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
+On 30.07.2024 15:40, Tariq Toukan wrote:
+> From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+> 
+> Make Management Precision Time Measurement (MTPTM) register and Management
+> Cross Timestamp (MTCTR) register usable in mlx5 driver.
+> 
+> Signed-off-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> ---
 
-diff --git a/drivers/ata/acard-ahci.c b/drivers/ata/acard-ahci.c
-index 547f56341705..3999305b5356 100644
---- a/drivers/ata/acard-ahci.c
-+++ b/drivers/ata/acard-ahci.c
-@@ -370,7 +370,7 @@ static int acard_ahci_init_one(struct pci_dev *pdev, const struct pci_device_id
- 	/* AHCI controllers often implement SFF compatible interface.
- 	 * Grab all PCI BARs just in case.
- 	 */
--	rc = pcim_iomap_regions_request_all(pdev, 1 << AHCI_PCI_BAR, DRV_NAME);
-+	rc = pcim_request_all_regions(pdev, DRV_NAME);
- 	if (rc == -EBUSY)
- 		pcim_pin_device(pdev);
- 	if (rc)
-@@ -386,7 +386,9 @@ static int acard_ahci_init_one(struct pci_dev *pdev, const struct pci_device_id
- 	if (!(hpriv->flags & AHCI_HFLAG_NO_MSI))
- 		pci_enable_msi(pdev);
- 
--	hpriv->mmio = pcim_iomap_table(pdev)[AHCI_PCI_BAR];
-+	hpriv->mmio = pcim_iomap(pdev, AHCI_PCI_BAR, 0);
-+	if (!hpriv->mmio)
-+		return -ENOMEM;
- 
- 	/* save initial config */
- 	ahci_save_initial_config(&pdev->dev, hpriv);
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index a05c17249448..905af6b68d80 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -1869,7 +1869,7 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	/* AHCI controllers often implement SFF compatible interface.
- 	 * Grab all PCI BARs just in case.
- 	 */
--	rc = pcim_iomap_regions_request_all(pdev, 1 << ahci_pci_bar, DRV_NAME);
-+	rc = pcim_request_all_regions(pdev, DRV_NAME);
- 	if (rc == -EBUSY)
- 		pcim_pin_device(pdev);
- 	if (rc)
-@@ -1893,7 +1893,9 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (ahci_sb600_enable_64bit(pdev))
- 		hpriv->flags &= ~AHCI_HFLAG_32BIT_ONLY;
- 
--	hpriv->mmio = pcim_iomap_table(pdev)[ahci_pci_bar];
-+	hpriv->mmio = pcim_iomap(pdev, ahci_pci_bar, 0);
-+	if (!hpriv->mmio)
-+		return -ENOMEM;
- 
- 	/* detect remapped nvme devices */
- 	ahci_remap_check(pdev, ahci_pci_bar, hpriv);
--- 
-2.45.2
+Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
 
+>  drivers/net/ethernet/mellanox/mlx5/core/fw.c |  1 +
+>  include/linux/mlx5/device.h                  |  7 +++-
+>  include/linux/mlx5/driver.h                  |  2 +
+>  include/linux/mlx5/mlx5_ifc.h                | 43 ++++++++++++++++++++
+>  4 files changed, 52 insertions(+), 1 deletion(-)
+> 
+
+<...>
 
