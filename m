@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-11056-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11057-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 578BE94323D
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 16:42:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 059C594323F
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 16:42:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E3441C22001
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 14:42:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3FDD2852F5
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 14:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA921BBBC7;
-	Wed, 31 Jul 2024 14:41:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D6C1BC08B;
+	Wed, 31 Jul 2024 14:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQWinuIW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B5iVYBMY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9521BBBE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF431BBBEE;
 	Wed, 31 Jul 2024 14:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722436895; cv=none; b=j8RYu9AhOlSc8+Yl/ILNvwXuy4SDh/9ORGLaWHxYgEFu181j2LGL1ltCfO2D4YL7oyMyJDySeP4bVCqE3VQOJgBZbEQ0UIDNxfr55HRxghvnKx4d9YTIR1MvYlfEjK8ERLIrefKF7WZ2h+uq1AzPkU0SgcfTvIxGgCQnZaKf01Q=
+	t=1722436895; cv=none; b=D6XVkTkFzUeha8IGkfMxj+9zpSZbtQe1H06E66gSAPDJVkdAqgu2jwA5UKPQvQCsqEYFoqDPPwm96nRubaT+o2dnyRu0O1P8uOwi2u+Ht4Ucr5cwuzxnwpUY/MbKDjT0hfa/Q31sn+CgqFH31zjaTPLdM6Ek9LeXkKRe2yxjF3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722436895; c=relaxed/simple;
-	bh=iPApjiNqmQ2J74sxfpDomVvZdzFkNgJyabB10mjKRKw=;
+	bh=WeHXlvN46r2cNionlBgjBIg0FLgejR9y2O7YvFWnqGs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gNCyR7VRk2/TZwh/aj5wBjCan0wbd+y54xkzw+dj2W3VxAXKfBOMz2OZ5rXIV3VvLqVKzdfcI2X6+aSAfZRSrJGywBRl+Kptu3ekKYgAZvOzM1mw77D4dXLyD16U81dtqAMuLi1NDT3aCwyGHFVc0JnjVrRnyTp0ZzynUau25eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQWinuIW; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=MsPlXd9YbXsnJEl7zolQAse8f4R13kpwu5qoQeYkOTDRjf7PgdvG+5mICI9uvVlHTOzxaoV9gx2ZhcOh2NIzOF2yCWtJsznvsAw36+nC3s2K9MUgwJOKFcP1No98p07LW6rAnkrS96VyrEVfmMiEZc2H+dPol5F37ZOc74WRb2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B5iVYBMY; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,28 +36,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1722436894; x=1753972894;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iPApjiNqmQ2J74sxfpDomVvZdzFkNgJyabB10mjKRKw=;
-  b=RQWinuIWmFet+IZD26PmS/sq3bTV6CX4v91HVkEMwTfOeyNr/36cwVIB
-   JAA6OEsAlll4pgJzA1dY14VCXiK2nu7XRIIL3uTX82KO25/mumMbxWPBC
-   U3z2FqL5VutbBiMXM0bVX6UjW4eTOVCKMY6j1DNttXF0wK9IRkEvegDfg
-   W8C0fBptc9ge2tVXtim3CxHJICMeLFhzg4Ux5acGQe44pzm86Dv1og/I+
-   DPZeeU+kNu5q1Jl9gMHD8+jrtkvk3ak7IXKrmTIFrKv7D1+ebmKyIV+0r
-   qmHtmDwjf3qOAsEQ+D+06Hhiv5MTVPR38PpDj6CCeis4y+fAhrOU5jGLf
-   w==;
-X-CSE-ConnectionGUID: qLlhnOBERqGkoy5Oia5RpQ==
-X-CSE-MsgGUID: V/5W3djsRsSYHwSRNMM1Sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="20479809"
+  bh=WeHXlvN46r2cNionlBgjBIg0FLgejR9y2O7YvFWnqGs=;
+  b=B5iVYBMYKyjh2/XMPMPNhrcJjIgmraKui41KY4D4H/MrG6JQPO7ZU8ii
+   JxbQkML/96fh6Yf+CQzno+CUVNeVGuDp2gkKwINfBTttxyoo99rp85VuL
+   CAea87z8nj4esoUCwpw3+7z9F39aLwA2dNDjZO37n567v9Q4OKI5hogak
+   BiDOyRiNMp+PmiliXGrprKfRV/YCgpVovnB+9xeJXaQZpDRthSVTJwuXH
+   KB+Xx1OvIUw6RFYgvCGWEehG2yJ0zLil69C39LO3qckw7g+V1VTV5MSGx
+   Qk4nOujY5F8ijJ1bbIPdLXSeM8Y4c38Izx9UcZY25T87RKvzhzQKwPdss
+   g==;
+X-CSE-ConnectionGUID: 67xgC+nvT8SUx4IlBH6Wcw==
+X-CSE-MsgGUID: XSXz0ilGRia5z/kiDswNMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="20479819"
 X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
-   d="scan'208";a="20479809"
+   d="scan'208";a="20479819"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 07:41:24 -0700
-X-CSE-ConnectionGUID: nmR2uBpZRayNT8BbaS8CKA==
-X-CSE-MsgGUID: IbMIqJCzS5GN0ItSnz9SMw==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 07:41:25 -0700
+X-CSE-ConnectionGUID: wwnOC70QRlWEbub1lu4p0g==
+X-CSE-MsgGUID: nvj4WLE0TAOHHunQzqzE9g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
-   d="scan'208";a="55295539"
+   d="scan'208";a="55295543"
 Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
-  by orviesa007.jf.intel.com with ESMTP; 31 Jul 2024 07:41:23 -0700
+  by orviesa007.jf.intel.com with ESMTP; 31 Jul 2024 07:41:24 -0700
 From: matthew.gerlach@linux.intel.com
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -70,11 +70,10 @@ To: lpieralisi@kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH 2/7] dt-bindings: PCI: altera: msi: Convert to YAML
-Date: Wed, 31 Jul 2024 09:39:41 -0500
-Message-Id: <20240731143946.3478057-3-matthew.gerlach@linux.intel.com>
+Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH 3/7] dt-bindings: PCI: altera: Add binding for Agilex
+Date: Wed, 31 Jul 2024 09:39:42 -0500
+Message-Id: <20240731143946.3478057-4-matthew.gerlach@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240731143946.3478057-1-matthew.gerlach@linux.intel.com>
 References: <20240731143946.3478057-1-matthew.gerlach@linux.intel.com>
@@ -88,138 +87,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-Convert the device tree bindings for the Altera PCIe MSI controller
-from text to YAML.
+Add the compatible bindings for the three variants of Agilex
+PCIe Hard IP.
 
 Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-v2: remove unused label
----
- .../bindings/pci/altera-pcie-msi.txt          | 27 --------
- .../bindings/pci/altr,msi-controller.yaml     | 65 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 66 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+ .../devicetree/bindings/pci/altr,pcie-root-port.yaml     | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-deleted file mode 100644
-index 9514c327d31b..000000000000
---- a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Altera PCIe MSI controller
--
--Required properties:
--- compatible:	should contain "altr,msi-1.0"
--- reg:		specifies the physical base address of the controller and
--		the length of the memory mapped region.
--- reg-names:	must include the following entries:
--		"csr": CSR registers
--		"vector_slave": vectors slave port region
--- interrupts:	specifies the interrupt source of the parent interrupt
--		controller. The format of the interrupt specifier depends on the
--		parent interrupt controller.
--- num-vectors:	number of vectors, range 1 to 32.
--- msi-controller:	indicates that this is MSI controller node
--
--
--Example
--msi0: msi@0xFF200000 {
--	compatible = "altr,msi-1.0";
--	reg = <0xFF200000 0x00000010
--		0xFF200010 0x00000080>;
--	reg-names = "csr", "vector_slave";
--	interrupt-parent = <&hps_0_arm_gic_0>;
--	interrupts = <0 42 4>;
--	msi-controller;
--	num-vectors = <32>;
--};
-diff --git a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml b/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-new file mode 100644
-index 000000000000..98814862d006
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2015, 2024, Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/altr,msi-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera PCIe MSI controller
-+
-+maintainers:
-+  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - altr,msi-1.0
-+
-+  reg:
-+    items:
-+      - description: CSR registers
-+      - description: Vectors slave port region
-+
-+  reg-names:
-+    items:
-+      - const: csr
-+      - const: vector_slave
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  msi-controller: true
-+
-+  num-vectors:
-+    description: number of vectors
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 32
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - msi-controller
-+  - num-vectors
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    msi@ff200000 {
-+        compatible = "altr,msi-1.0";
-+        reg = <0xff200000 0x00000010>,
-+              <0xff200010 0x00000080>;
-+        reg-names = "csr", "vector_slave";
-+        interrupt-parent = <&hps_0_arm_gic_0>;
-+        interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+        msi-controller;
-+        num-vectors = <32>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55ad37e73183..2faf57628973 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17596,7 +17596,7 @@ PCI MSI DRIVER FOR ALTERA MSI IP
- M:	Joyce Ooi <joyce.ooi@intel.com>
- L:	linux-pci@vger.kernel.org
- S:	Supported
--F:	Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-+F:	Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
- F:	drivers/pci/controller/pcie-altera-msi.c
+diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+index 52533fccc134..ca9691ec87d2 100644
+--- a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
++++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+@@ -12,9 +12,18 @@ maintainers:
  
- PCI MSI DRIVER FOR APPLIEDMICRO XGENE
+ properties:
+   compatible:
++    description: altr,pcie-root-port-1.0 is used for the Cyclone5
++      family of chips. The Stratix10 family of chips is supported
++      by altr,pcie-root-port-2.0. The Agilex family of chips has
++      three variants of PCIe Hard IP referred to as the f-tile, p-tile,
++      and r-tile.
++
+     enum:
+       - altr,pcie-root-port-1.0
+       - altr,pcie-root-port-2.0
++      - altr,pcie-root-port-3.0-f-tile
++      - altr,pcie-root-port-3.0-p-tile
++      - altr,pcie-root-port-3.0-r-tile
+ 
+   reg:
+     items:
 -- 
 2.34.1
 
