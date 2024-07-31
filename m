@@ -1,53 +1,52 @@
-Return-Path: <linux-pci+bounces-11035-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBA2C942C62
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 12:50:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FAEC942C5B
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 12:50:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A96B1C21AFE
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 10:50:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19B5C1F2701A
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jul 2024 10:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE8991AD3E6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE5CF1AC429;
 	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfAeW2Q3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qt823roh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80C41A7F79;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E382190473;
 	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722423018; cv=none; b=qEv/sreyniTbRlFlJIkDqWRQoeIcuIJSHlDj/EJPkvPhgyvew+Tgkpz1pv+qqrcKLrizIVCU9s2TnLwCBFKR54sGJF1lDhPJZNYkza9vMVx2SBiNSnOqvDc5lDddclSvH6QdCrWyJ93vwXHyIL2tbM7WqjmDXrXxjxDzvhIHMjI=
+	t=1722423018; cv=none; b=Xg8SZQCZ9PNDdW8HNu7mLh2ybTMlDm781jP05/OyNFJNe5eXFlonGOq1XJkH3lJzRpoSRO9pWpoyU9ZXh9ZeouDCuwfFDIv40grROCx/O1fezsXbqcbEIFgvXHXZz14UTxUf85ycdKbiPeRMv5EVj/xqcOfW5h/k9f9k0AYr5eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722423018; c=relaxed/simple;
-	bh=+Tkqhar4vQYGZIgL28NlgG1tVNG3i9So+0zA8BWKYOU=;
+	bh=Dynz9QHhPHZXKKO8GD6i2AnmK4GVgprdx9YpUpdCd88=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WG5NB+IMjyH4csRZKvmWoo2lHr0qO+g5C+1giO3yD/rL/WnUonbs/zfeE1PzrXnr6rklchuhMblGcVpxrr8u3dwOreBIYs1Vg+VhvsuM1lrmyY+aGWc6h3ipRmOP7ca5gCLlRpfLQrsS9KbE/svfcI70kOmGzxClCJCkpjtJYTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfAeW2Q3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D40BC4AF0C;
+	 In-Reply-To:To:Cc; b=bDmPSL68vKnTyEnn5C+n7K3JjjBibeuKdkWwQ6SiUsDwoYAnMMNqk61Eg1wWBhOi1UIo1eKo3j5j4I/BH4ZSs04vj1H2I7WZHBd0sJf+g3BWUw5vNgOIOAMHkT2c8UCBwksyfYoGPJMbW7jfYWVtBP6tUKv9VVC9p/lLuwZobOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qt823roh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5A06DC4AF15;
 	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1722423018;
-	bh=+Tkqhar4vQYGZIgL28NlgG1tVNG3i9So+0zA8BWKYOU=;
+	bh=Dynz9QHhPHZXKKO8GD6i2AnmK4GVgprdx9YpUpdCd88=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=sfAeW2Q3INQ/Wgs52gQOY7e1a3f0KB5NN3Z5uAAYgjsrcr/iQLUhnkMZgy54B93Os
-	 fNQUSkgrA8JM5BFdcUwT6L+Hvqq2WLFosiEJ0+VWmuN/QXVEOMhFo0OJPQCpD3qsfl
-	 RvyZ2vJ2ULqzxWbw11R8if+NG6dotqI0h1ExnQW2lFnWYOrxNQJM2I+22bocDd3JvL
-	 01o9NALX5HJXTdybl1UFZqwk1K9Q0Npp7DAHkUozkHjoU2PdkTtDSnjtEMuns1hIXF
-	 k7TW31csjRDJb1CWSvC5joQhApzn/Ig/laloVc+QbNdQiqtuZykfeyySTNbGRIL0eS
-	 2/7BhJTg4KeFA==
+	b=qt823rohYmRVJijVk2TGpSwApHT+m0YcM75pemMkauB0JNyiYj20EAfYS8nR35U2h
+	 gd7x9Z7e76PiKGeKfZ83l3gxRaZtIFuZIGXk9QE6B0pEjGifHbE4giw1bCgUH3ZUnr
+	 t7XndlamRYoE3VcZz0O7vgn2uszx1Gwk2O8Dszfeu0fOFXtPhhPZXoXxmAUG2MzF+x
+	 +U6fOqCSMAYW1KCz/jUnCFZnZLiXpBdSSDEux0D8LAqOAvCLa/i3UlBEeXduaFutQf
+	 BYOLjoSqV8hvWiDGTRjuX2q8rrRV0h8NSxyhhDuQjuF849VmBNifEeTZNJaYA+Aoom
+	 u6YIwEBRFsQ7Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3687BC52D6D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49116C52D54;
 	Wed, 31 Jul 2024 10:50:18 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Wed, 31 Jul 2024 16:20:05 +0530
-Subject: [PATCH v3 02/13] PCI: qcom-ep: Reword the error message for
- receiving unknown global IRQ event
+Date: Wed, 31 Jul 2024 16:20:06 +0530
+Subject: [PATCH v3 03/13] dt-bindings: PCI: pci-ep: Update Maintainers
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240731-pci-qcom-hotplug-v3-2-a1426afdee3b@linaro.org>
+Message-Id: <20240731-pci-qcom-hotplug-v3-3-a1426afdee3b@linaro.org>
 References: <20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org>
 In-Reply-To: <20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -69,19 +68,18 @@ To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
  Konrad Dybcio <konradybcio@kernel.org>
 Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1256;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1035;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=B8RUdvVv9QEg4h2fDtSWIh3luhRVOKTDULQMHpO/Rk0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmqhbiPvlBYFkyQTm0FUkbIjHMH/+/ZAg11HCjV
- xz5OPlMCDyJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZqoW4gAKCRBVnxHm/pHO
- 9fAkB/9WOZ4Pm2vf1vP5hHdw6Ggj3kP1To3Upq1DZPNUvBuxAfX3SX7dC3Ec1cwU48Ig/RWN8fR
- 4mB7xUJOFQa+XKdRaAp4nH/I39Pfnze4V4UZuoPuTMvZ6186dX4gm3alkr3ElT1RbwkKXLmUfMt
- Ml7vht4ZW7OgGLMCWTsNQDRUaddRLqmlrmyhniidJYOYFV/mzfO8HSXDkgwLh23sgVmLoqQ+zWI
- 5ttBWDYgVU55MHsvjIbhRaG3VJaSRo3CtuxjytmhZu5yJ7EoSDLBQSPzQNVXsPOcj0jLcqVD9uJ
- 2XmiqdsNSDOyUwy8/85yTfrnuvIoN1yGMptRMN+npS3NWfdc
+ bh=5QyilnsJ9fmtdU7GTZXO3WdPGs0Omyndpvk9fplsO9U=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmqhbiWXLtJTjlNETMDM7azE6UNNZ/+BSyYNgB2
+ PM0PCX5slWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZqoW4gAKCRBVnxHm/pHO
+ 9ZD7B/4nj0MZlzCQQDaBTKeZ+pE483Fs54t3lKiHBZlOYBnvaoG7FuJfxfVfXauKlHN4Hy/npdo
+ C+bGJAHJxyKGX7wqRJN9HybGr9xeTy7MK7y+yXdifFP3w1hWy8IWWJIoWKsE7YHOBLKrZ1XfHhU
+ iSDMnAbaBPrncZn2M8ZgcteoQUPCXfZpv8s5UfeNi+KncWpMN284N1our24zdgfTKg7UTI226+9
+ 5C8yM2dvlNaMR17hhohIeoKD5f0jtmiU65SOiyLtu2RkTSrXedIwOY2/Hp/fCPHPc2U2NyCxzR2
+ 6OmbqIoxFr1LqLmFQ490KkfbFmwXYWgYnZR9mpm8R2ex0Gbm
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -91,34 +89,30 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Current error message just prints the contents of PARF_INT_ALL_STATUS
-register as if like the IRQ event number. It could mislead the users.
-Reword it to make it clear that the error message is actually showing the
-interrupt status register to help debug spurious IRQ events.
+Kishon's TI email ID is not active anymore, so use his korg ID. Also, since
+I've been maintaining the PCI endpoint framework, I'm willing to maintain
+the DT binding as well. So add myself as the Co-maintainer.
 
-While at it, let's also switch over to dev_WARN_ONCE() so that any IRQ
-storm won't flood the kernel log buffer.
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 3 ++-
+ Documentation/devicetree/bindings/pci/pci-ep.yaml | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 972a90eba494..0bb0a056dd8f 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -679,7 +679,8 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
- 		dw_pcie_ep_linkup(&pci->ep);
- 		pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
- 	} else {
--		dev_err(dev, "Received unknown event: %d\n", status);
-+		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
-+			      status);
- 	}
+diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+index d1eef4825207..0b5456ee21eb 100644
+--- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+@@ -10,7 +10,8 @@ description: |
+   Common properties for PCI Endpoint Controller Nodes.
  
- 	return IRQ_HANDLED;
+ maintainers:
+-  - Kishon Vijay Abraham I <kishon@ti.com>
++  - Kishon Vijay Abraham I <kishon@kernel.org>
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ 
+ properties:
+   $nodename:
 
 -- 
 2.25.1
