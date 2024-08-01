@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-11114-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11115-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D38CE9450DF
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:40:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BEA59450E5
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:41:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 896BC282D41
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 16:40:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E10DC1F2A3AA
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 16:41:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8A551B5806;
-	Thu,  1 Aug 2024 16:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69801BDA9A;
+	Thu,  1 Aug 2024 16:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ByPNioin"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aXTZHb1J"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E201BC060
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 16:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE6E1B9B30
+	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 16:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722530164; cv=none; b=fC3i0Z94XnF2K9wW/StTuc1DsW1XYTk6ZVmFtNg9GoxeaX4Db2d50GltY4GtJhBPgNz4BgzMRfj3qRSAuUtQGiBDQr69Iqx/BnvBpekbWTlRGGz2/tzMyeD0cgfv/TMS/1+G6r2HVXv6JDBPqyZfk0bhBKiI7U8ZON4YMSkkvH0=
+	t=1722530213; cv=none; b=Mvm7VG1t5OZ31vN1aNzmB6UStEUNB7QYZeitBndak3hFRAKVIuViwGQozNOid9eiB5g/ThlvSOOjdjMetQT1bdDXTd/MeC88JT6a57P/H5tgzRDAr27u48ysf4gR5F3jziwqPpqGdp+TDMsiRPld2+gdV52re8vK5PzvLgMha4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722530164; c=relaxed/simple;
-	bh=5ZB90r+pHV9yVwJHQmZRzPSlgknTBF1ajbZuNTFiPAY=;
+	s=arc-20240116; t=1722530213; c=relaxed/simple;
+	bh=em1mA1BE54fq/8Qiri++FwND1MqAxny3D8dbh9JAnPA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CtxT+Woov4M3VmLGO9skD3ysonOeZWfi5n1qQvR5NUf4iAZAI5cbwUQagCzKSu4BEccDg3QXLiWR2oMDDfWZHV/TEKaF/kibwqAJI6Dl0MBfFSYAxmOXlKI9VCKunwIBLrvdQYR7p4N9bsJy7yJeQ6RHWjYDNBJyA65tEPP2em4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ByPNioin; arc=none smtp.client-ip=209.85.214.174
+	 In-Reply-To:Content-Type; b=pg2Dbwxuk+RxBdjJvuA9uMNpIVhEmbceUyfkatnQMHAOA3iIZ5IRXGhUNPqPnnoCQK25vhINK6W2wj7KEJJ5MRATpn8eKlRwumsSdm/d7VKMLGg/a4pdT/RRtUiMps42/a/j/1Vyj6UQ3A1RUI9t9rLFunulEl8WY7uZCZNayQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=aXTZHb1J; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fc566ac769so51329205ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 01 Aug 2024 09:36:03 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2cb53da06a9so1736342a91.0
+        for <linux-pci@vger.kernel.org>; Thu, 01 Aug 2024 09:36:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1722530163; x=1723134963; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1722530212; x=1723135012; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=atZpvsXspSbpncJOqsxwY4AP8Ik7TANHCt+zaS4EnHk=;
-        b=ByPNioinVMbtgBXekuFVTYnvH2JNinHuI8K8dYKCbd4eKwwZEPtZvPuRJ6PnWVjTVZ
-         9IauFaURCf7NATFiRO7z/9tQL9msbjXIidEHrDPYbEqB6EgBno2e/RrQm+wRi2B8/+vZ
-         MF58fRuG7uNcIsUJRQftcQDhC55ly/jmu6l5M=
+        bh=iLHyQpGZ97xDMnvhgT/vb6AyMcdwpqj4il9mZWgq/VA=;
+        b=aXTZHb1JAkFK/ep3OkD9W+yxLy+BviCAHQUGNmJFXC4JQgIUa3nVaKF+uwhOCR5sUk
+         p2SJ+aI9PeH78MqanI7h6r0NEPZnkiTpmKUQNFowUviFJO1vh9ZvOQ5UToZgQAgtslqy
+         EfsG4YUZBBfYfLE+Ml1nIegN9eGuUGMWdiTmQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722530163; x=1723134963;
+        d=1e100.net; s=20230601; t=1722530212; x=1723135012;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=atZpvsXspSbpncJOqsxwY4AP8Ik7TANHCt+zaS4EnHk=;
-        b=fsC/yTWP2wavrdSiqmg8Oruu0wwyApghTth6q4y0MZpdsrAuDj3QxqBkS85uvwNvQy
-         MkKU1sNlDODzXi+bBIVmS1Rr4XBBDP7KR7go686l/J2uCL3iDMIYg1F5/0mp1Yn9iIBQ
-         7MqJgjA8nA8XDqRxf10OJVVDK2VccUiV2frnjOrroWen0TIKoYgJ3tOmrUvLv6lRZU9C
-         Vu4PzvTWTv6woM27jU9SS+yhW5Oh8mcXXwGUM7H9//Ri+uc9/3GmevP3X9u9Sd2gSqxT
-         cCs/xBT+gthzcg1nR7UUWyhMlbvLZC9X17n4lNc2VFJOLWklFL1bdp8nuwxR/9U8MuiP
-         kirg==
-X-Forwarded-Encrypted: i=1; AJvYcCUct32vdTeO2cf05sYFH/gvnz0D530RQcbIp/0RFnT9jNRygWlqRVOunPBOksCKOiGwqCaXebK/oZ8BDdS8eAnoJQLUdP0rkOl1
-X-Gm-Message-State: AOJu0Yy+LyjcGQ+6JfQA0DzExcUGK6KIoOb6TPuiJUMHluQvS685p+do
-	3T43pijcC7fME9DfOaK6tuP1Ou0JeWlUYMNRCd7lHUH5/iFOAuVl1ZMzOC8FTA==
-X-Google-Smtp-Source: AGHT+IEV0K6EvVI+Tw4uQvCY+qNqO6h7fg7Kg6s+Vxrl1cuiYMx85QJ8Ay0rI1ohVbOt5/2nS6s1Sg==
-X-Received: by 2002:a17:903:1207:b0:1fd:66fd:4dae with SMTP id d9443c01a7336-1ff57262a3fmr11457695ad.3.1722530162751;
-        Thu, 01 Aug 2024 09:36:02 -0700 (PDT)
+        bh=iLHyQpGZ97xDMnvhgT/vb6AyMcdwpqj4il9mZWgq/VA=;
+        b=IiQkCwGF9y6mx8ACHzsgbwvlV75JLH6TM80J/hPkuY2YQMcl8WJ8USuSgPL8CA7PK8
+         zFBSMGy8XxvOeBeKnU+yptCVn+YBHOTIZ8ouA80HNt5guOG7qDY7f0Tdz/Y0/6TwG7oA
+         LsinIj2byVJHaEBxlpZ9pKSaSCigwkw1mVXiXsQ0c3w1TiK0/f5VZxwk7JaHf1v3p1XM
+         6GhUWLH64aOI49hT1dX2qv6hxsvG+EJKr7YZED7IWP74QC1IsBFoD8qIf8xTcmuiMepn
+         A0MvC+VjMY7N1EV0d3Ra48VqxJHsnYLZcuUOC0I/bs3JjGQtF7KbGCraHSe/kBUvaKoB
+         GoOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRv7uPtUy1UtAzqK2GulT0p0Jh9ZRw2bCf6/mxu9PJ+KHCaCyDWbTsl4vbxNb2YZTi4CmL6rwkuLJOv9MrG7FozYIaf05lnkDm
+X-Gm-Message-State: AOJu0YwALC1eVVmZSyc2QJfVVkWkkAskox6HqXKgBalJ+08oAhuB2L/K
+	EqE4EiUwHjMCzDN0Td579iGdwSa97Vxe2T08xHk4LTegyeiPhurbwa4S72UVKw==
+X-Google-Smtp-Source: AGHT+IHXuci+sTZSMUCBj5eUPCjwHAU9HQMlN9+pK4EtVlqys/N4mSTHfvkKJzr6ahefiQ9CPH5/hQ==
+X-Received: by 2002:a17:90b:4c0c:b0:2cf:f860:f13b with SMTP id 98e67ed59e1d1-2cffa292227mr782311a91.17.1722530211501;
+        Thu, 01 Aug 2024 09:36:51 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f19ec5sm820775ad.20.2024.08.01.09.35.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cffb090f34sm143491a91.13.2024.08.01.09.36.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Aug 2024 09:36:02 -0700 (PDT)
-Message-ID: <20f9a0f6-fff7-4eeb-8197-4bc9fdc147e2@broadcom.com>
-Date: Thu, 1 Aug 2024 09:35:50 -0700
+        Thu, 01 Aug 2024 09:36:50 -0700 (PDT)
+Message-ID: <8c7a1133-a6ab-49e2-9cff-b542c9882bcb@broadcom.com>
+Date: Thu, 1 Aug 2024 09:36:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,8 +74,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
- add 7712 SoC
+Subject: Re: [PATCH v5 02/12] dt-bindings: PCI: brcmstb: Add 7712 SoC
+ description
 To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
@@ -95,7 +95,7 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
  "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
  <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 References: <20240731222831.14895-1-james.quinlan@broadcom.com>
- <20240731222831.14895-2-james.quinlan@broadcom.com>
+ <20240731222831.14895-3-james.quinlan@broadcom.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -130,16 +130,15 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240731222831.14895-2-james.quinlan@broadcom.com>
+In-Reply-To: <20240731222831.14895-3-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 7/31/24 15:28, Jim Quinlan wrote:
-> o Change order of the compatible strings to be alphabetical
-> o Use "maxItems" where needed.
-> o Change maintainer: Nicolas has not been active for a while.  It also
->    makes sense for a Broadcom employee to be the maintainer as many of the
->    details are privy to Broadcom.
+> Add description for the 7712 SoC, a Broadcom STB sibling chip of the RPi 5.
+> The 7712 uses three reset controllers: rescal, for phy reset calibration;
+> bridge, for the bridge between the PCIe bus and the memory bus; and swinit,
+> which is a "soft" initialization of the PCIe HW.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
