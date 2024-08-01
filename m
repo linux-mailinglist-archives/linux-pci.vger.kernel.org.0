@@ -1,101 +1,59 @@
-Return-Path: <linux-pci+bounces-11135-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11136-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49E9A945257
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 19:56:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CC7294529E
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 20:15:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D7E31C230BA
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 17:56:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC4D4284A0F
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6E11B9B47;
-	Thu,  1 Aug 2024 17:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08044148FE6;
+	Thu,  1 Aug 2024 18:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBtGfO0Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iz5l7dUK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD651B32D9;
-	Thu,  1 Aug 2024 17:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D6414884E;
+	Thu,  1 Aug 2024 18:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722534970; cv=none; b=PP/dBVC5TE5EBqO5PbLsis0tCE6oU/RRcdZxOivbmvJIDNnHloBYd5Lki1mme458t/USKC4UD1TBVAqcuHON6mqUeIMR2TpNLKLA3ee9J4v59wXU8l62vKDLk60onXsRkWuukohpJjpO3H7GWjjJBDviyoumR0mZYwxdJbTrFyY=
+	t=1722536117; cv=none; b=tPqP8vTy/0JOhNEtymbtP+/bN43lRuRNUTnK5r9ZErXLEPlo/uCFXK+CwPQF+duXU2zP2o5JgMXryYRQroLcLhfmBXCQ3mSgz4vuumYqFyaEuG3/ZrRqv+Bwc8193JxiDVMfMIXIfDxle9sc3IKMRWxhzJqNsptLt105jQGspSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722534970; c=relaxed/simple;
-	bh=tvue2mYTfwnEUwml27Tmo8Nu3VBPB0p3/0YXnVpNxyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pbOCHfKbmalgwSO5o0nXhtxgB2Sltx0s5ify0vRiSCbKvMUwR5ed7LTQHhCXOY8L6su+D0NfIeyVFcVxR+1hjH4T6X/O7ZPcQ2ZVFYlJLBlW1esTxtmaSr3BHGuksuciO4RlQvyM0fdtdgtMU5QEACS0IOhaLoTgHdaVTaoJH+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iBtGfO0Q; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2eeb1051360so80958481fa.0;
-        Thu, 01 Aug 2024 10:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722534967; x=1723139767; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QrRMVRpNUsdGLYtVeQ+Si89ML1jZN7HWMBFx7Phtrik=;
-        b=iBtGfO0QRwOpmsaC71aEx+g3UZaZURyveGgrKo26D7DvUmwLxiaUKjTBaPYtpjwCYp
-         0ce8BzDnRWEza4HZuIdx1TxoFbYZadqhdbwvDRJSX+AIeeUn+u9ytWpkBxuBDoFKqu14
-         T0KaLy35w/gM2zezXQr770TxRSM/PBDTZgMSFudhxG2PNfesTfitqvJyrxdf0K4DNvFf
-         AMeXV2faiurvARavfnbhjCxI9Kg4mJhIIruAot5rnFcO8U2hwih5vC1ECz/MJVdSmodE
-         BPLgcXz30I3IRzGuPflqD8iJMayDfV4dnj0m3EGqUow5jJB0Gnezy5GEyxH5T36qhvXc
-         nUPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722534967; x=1723139767;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QrRMVRpNUsdGLYtVeQ+Si89ML1jZN7HWMBFx7Phtrik=;
-        b=n22IhfOjnefYd4yZhcaAIWYHTSW5l1Alm+BuuYJIPonsVhFkDHm2C0sHJ/WOY94bXd
-         J5wD6PL7t29UTstpTkKAJ35zp8itrdbu4Gfhz6pQeyjr+LNKTsnbl/Lh0dLvBKHG1GV8
-         BoVWXnRbvbKqUAGZlv7zylO0wuBN1RkAkzhmYEqbeqphtFF4OGwjQgprOpUvYWNftjm2
-         hRGwwl5MycXXIMvzErkueb3trViSMK4l0NKLkM+TOHJnVfHcEPgF2E5TS055uKX3tZhi
-         JJqHLK0VYoT3TndpO2YZDzxpnojbarjc5aIquEegYFGWlfrJ+jXXorYaKGQHTHPvYze7
-         vSgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMCKFZXYkDoQEoOunqeyqcQHe/0vQhd0TzRc9kVykTZxo8MOnYVznbEvrdD7E/mjJfINHWOmFvWTlBiMI=@vger.kernel.org, AJvYcCVJmWSc+dfhsqFxJgTR0Lspid2vXZdjhlBmdcukgUabb+/wwLQ2T7YXcB/k87vKofs9AnSHtvUwC0J/LWrT@vger.kernel.org, AJvYcCVRdDc4EMbm1Uu87v90YBUiApcqZcRMFRSJszHifm0MO/4WhmKwRN6LND9FnX9Grz+j+HRHqnuVmNtU@vger.kernel.org, AJvYcCVbeAXO9isKRLpKj7QPDdZK8Se/uADih+WGETPvdOUsQsTV4vd0I1/tTF4+qL0G0J/5a6x262UhxpjSM1VY@vger.kernel.org, AJvYcCWg/Q7aPWYwIpSvDVkapi6/0znq7FQP2RugZXNx6NsbUvgw6aUUaKaAZ132SCBsbn3JWJvAVNFNyCdo/tCtZ8g=@vger.kernel.org, AJvYcCX3744FySOLPtS8Xg8pMAK9OFepHlrGxk9w/T2KmW5Y61ZBeMu5XugMs/S1nVnItJiKtU3Om6SNBXy9@vger.kernel.org, AJvYcCXti2eaeI22vUGo8vvAZzgnKpSXE/Wwe+g3z74BA4/6sEGJqFaiFWxcib7FO1OZ6F1Wde41EMBHcwCtQHg=@vger.kernel.org, AJvYcCXz0KbFgY1SgM9H2ppBcPVQqWS4yQnQ1ElaXbeACBpdukgAL48+zB03CjxzhHFzsChAS0D1CigwTc/K@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOczApyo9oy2bUzvSBfRYUcUP48IQkcjAK/Vdrcl4o+iLm6hiZ
-	ih7Ednczjj4QGhWLa1Ipiv9b/Ff0W0NFG5EilpLJMjrP6h+/mLhj
-X-Google-Smtp-Source: AGHT+IHvjEgp8SzrbRoSN/aHtB0pDailmN+501lqd79ClZo8CZfX2mxC+K4sF5JPxDjOtcs/TSF3BQ==
-X-Received: by 2002:a2e:9689:0:b0:2ef:2d3a:e70a with SMTP id 38308e7fff4ca-2f15aa93150mr8058061fa.18.1722534966525;
-        Thu, 01 Aug 2024 10:56:06 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f15c431639sm153591fa.92.2024.08.01.10.56.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Aug 2024 10:56:06 -0700 (PDT)
-Date: Thu, 1 Aug 2024 20:56:02 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Damien Le Moal <dlemoal@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Boris Brezillon <bbrezillon@kernel.org>, Arnaud Ebalard <arno@natisbad.org>, 
-	Srujana Challa <schalla@marvell.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, Jon Mason <jdmason@kudzu.us>, 
-	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Kevin Cernekee <cernekee@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jie Wang <jie.wang@intel.com>, 
-	Adam Guerin <adam.guerin@intel.com>, Shashank Gupta <shashank.gupta@intel.com>, 
-	Damian Muszynski <damian.muszynski@intel.com>, Nithin Dabilpuram <ndabilpuram@marvell.com>, 
-	Bharat Bhushan <bbhushan2@marvell.com>, Johannes Berg <johannes.berg@intel.com>, 
-	Gregory Greenman <gregory.greenman@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, 
-	Yedidya Benshimol <yedidya.ben.shimol@intel.com>, Breno Leitao <leitao@debian.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, John Ogness <john.ogness@linutronix.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-ide@vger.kernel.org, qat-linux@intel.com, linux-crypto@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 07/10] ntb: idt: Replace deprecated PCI functions
-Message-ID: <gxl6trxfwcjsjbte5pg3334iqxofh2kau4fsfovdptibnng3jl@332tt4vrpo3o>
-References: <20240801174608.50592-1-pstanner@redhat.com>
- <20240801174608.50592-8-pstanner@redhat.com>
+	s=arc-20240116; t=1722536117; c=relaxed/simple;
+	bh=5znrj0EhunF6k3XbmNw8kPtsm/aXgUILrMyz5SSUYe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OqPQcaZKUo2udbCajRdMPX/8D68DY4qLst4yaLEjPBtJMf+2aVe8sxoH6RgM1bLKyc7rHApS/6DquHu2ZPxuFRLnWtC2qsz45DyepqP8YODGNv7sWr6mUITLIHEM1BACVXfVqxfyfKCGUbKrLnjalycyEa3jOaFV4UGA7mRV7sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iz5l7dUK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0412AC4AF0D;
+	Thu,  1 Aug 2024 18:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722536117;
+	bh=5znrj0EhunF6k3XbmNw8kPtsm/aXgUILrMyz5SSUYe4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iz5l7dUKFHc1K8g+lB3hienFaMQE36/5Z4RCxgi2wzFvq0+Jtx7ng/mCBg+df63Ou
+	 mUkzte9ScFCEIYmeCox1Njx0Ji40KTvUIh+FaTKQ0/QS8LMnLdBvI/TykPBOMBy4H1
+	 NPMft2xmslMwgsBBXplLp+MD7rLEEV7yzplaxJaMHn/0aFOWdwussQ7Yj+kE140v56
+	 quGSEULuY32e/Vy9ScQ3oZ/z/H3RcSCF42LeHiHkOtiXQ6kyx8TPE2tzUBkroYqD0o
+	 asDqIIAxqpIfOGD2NP9boZgMKIVjoMsGb912RjvSS5Y9F36UDA/0byrweyw2IPaSQ6
+	 EQPo3BQkPaI7A==
+Date: Thu, 1 Aug 2024 13:15:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Blazej Kucman <blazej.kucman@intel.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Subject: [GIT PULL] PCI fixes for v6.11
+Message-ID: <20240801181514.GA112131@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -104,60 +62,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240801174608.50592-8-pstanner@redhat.com>
 
-Hi Philipp
+The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
 
-On Thu, Aug 01, 2024 at 07:46:05PM +0200, Philipp Stanner wrote:
-> pcim_iomap_table() and pcim_iomap_regions_request_all() have been
-> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> pcim_iomap_table(), pcim_iomap_regions_request_all()").
-> 
-> Replace these functions with their successors, pcim_iomap() and
-> pcim_request_all_regions()
-> 
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
 
-Looking good to me. Thanks.
+are available in the Git repository at:
 
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.11-fixes-1
 
--Serge(y)
+for you to fetch changes up to 5560a612c20d3daacbf5da7913deefa5c31742f4:
 
-> ---
->  drivers/ntb/hw/idt/ntb_hw_idt.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-> index 48dfb1a69a77..f1b57d51a814 100644
-> --- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-> +++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-> @@ -2671,15 +2671,20 @@ static int idt_init_pci(struct idt_ntb_dev *ndev)
->  	 */
->  	pci_set_master(pdev);
->  
-> -	/* Request all BARs resources and map BAR0 only */
-> -	ret = pcim_iomap_regions_request_all(pdev, 1, NTB_NAME);
-> +	/* Request all BARs resources */
-> +	ret = pcim_request_all_regions(pdev, NTB_NAME);
->  	if (ret != 0) {
->  		dev_err(&pdev->dev, "Failed to request resources\n");
->  		goto err_clear_master;
->  	}
->  
-> -	/* Retrieve virtual address of BAR0 - PCI configuration space */
-> -	ndev->cfgspc = pcim_iomap_table(pdev)[0];
-> +	/* ioremap BAR0 - PCI configuration space */
-> +	ndev->cfgspc = pcim_iomap(pdev, 0, 0);
-> +	if (!ndev->cfgspc) {
-> +		dev_err(&pdev->dev, "Failed to ioremap BAR 0\n");
-> +		ret = -ENOMEM;
-> +		goto err_clear_master;
-> +	}
->  
->  	/* Put the IDT driver data pointer to the PCI-device private pointer */
->  	pci_set_drvdata(pdev, ndev);
-> -- 
-> 2.45.2
-> 
+  PCI: pciehp: Retain Power Indicator bits for userspace indicators (2024-08-01 12:58:03 -0500)
+
+N.B. These have been in linux-next since July 26; I updated the commit logs
+today to add a Tested-by and an error message.
+
+----------------------------------------------------------------
+- Fix a pci_intx() regression that caused driver reload to fail with
+  "Resources present before probing" (Philipp Stanner)
+
+- Fix a pciehp regression that clobbered the upper bits of RAID status LEDs
+  on NVMe devices behind an Intel VMD (Blazej Kucman)
+
+----------------------------------------------------------------
+Blazej Kucman (1):
+      PCI: pciehp: Retain Power Indicator bits for userspace indicators
+
+Philipp Stanner (1):
+      PCI: Fix devres regression in pci_intx()
+
+ drivers/pci/hotplug/pciehp_hpc.c |  4 +++-
+ drivers/pci/pci.c                | 15 ++++++++-------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
