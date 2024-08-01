@@ -1,98 +1,79 @@
-Return-Path: <linux-pci+bounces-11136-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11137-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CC7294529E
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 20:15:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 084769452D9
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 20:38:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC4D4284A0F
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:15:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3345C1C2029D
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:38:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08044148FE6;
-	Thu,  1 Aug 2024 18:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF26714A4DC;
+	Thu,  1 Aug 2024 18:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iz5l7dUK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fQa8BHM2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D6414884E;
-	Thu,  1 Aug 2024 18:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B9E14A4D6;
+	Thu,  1 Aug 2024 18:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722536117; cv=none; b=tPqP8vTy/0JOhNEtymbtP+/bN43lRuRNUTnK5r9ZErXLEPlo/uCFXK+CwPQF+duXU2zP2o5JgMXryYRQroLcLhfmBXCQ3mSgz4vuumYqFyaEuG3/ZrRqv+Bwc8193JxiDVMfMIXIfDxle9sc3IKMRWxhzJqNsptLt105jQGspSw=
+	t=1722537406; cv=none; b=BofUrFbLAr0158nMl00VN9pQJGVmj6DSdL0P9MBpn957WMIkQYHzedGbBUlbhg0ceNzMsLfecpyH4M98BHxpR+T5UJ9jtWy/BPXJa2mt+ds8fF5fbkmHrdSSEH9v6mCHbOMGKapB4EhLtntwGwEp0jxUbkgop49oUuKDsOvVKgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722536117; c=relaxed/simple;
-	bh=5znrj0EhunF6k3XbmNw8kPtsm/aXgUILrMyz5SSUYe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OqPQcaZKUo2udbCajRdMPX/8D68DY4qLst4yaLEjPBtJMf+2aVe8sxoH6RgM1bLKyc7rHApS/6DquHu2ZPxuFRLnWtC2qsz45DyepqP8YODGNv7sWr6mUITLIHEM1BACVXfVqxfyfKCGUbKrLnjalycyEa3jOaFV4UGA7mRV7sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iz5l7dUK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0412AC4AF0D;
-	Thu,  1 Aug 2024 18:15:15 +0000 (UTC)
+	s=arc-20240116; t=1722537406; c=relaxed/simple;
+	bh=Zlg4721NQS5/+FBXCbu9oVNq/L7l6OkL/o/WjbI8Lj0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=G1CaostSm+qz6Y1mpW64sJIEmZXwxmJGvZBht2qyYPj7OaXiRjGBMwhCqsxFFSmZGE+SYCLmWIPpYxiUZ6lS4AVhptR/8LQSkmf0Upc9pvH6A+dAYe3DCr9MFwscs5VWN+ojZ6VwK3u+icPpvUrmbYRbQzv0vgeaWqlg/IOcMMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fQa8BHM2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4C3EEC4AF0C;
+	Thu,  1 Aug 2024 18:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722536117;
-	bh=5znrj0EhunF6k3XbmNw8kPtsm/aXgUILrMyz5SSUYe4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=iz5l7dUKFHc1K8g+lB3hienFaMQE36/5Z4RCxgi2wzFvq0+Jtx7ng/mCBg+df63Ou
-	 mUkzte9ScFCEIYmeCox1Njx0Ji40KTvUIh+FaTKQ0/QS8LMnLdBvI/TykPBOMBy4H1
-	 NPMft2xmslMwgsBBXplLp+MD7rLEEV7yzplaxJaMHn/0aFOWdwussQ7Yj+kE140v56
-	 quGSEULuY32e/Vy9ScQ3oZ/z/H3RcSCF42LeHiHkOtiXQ6kyx8TPE2tzUBkroYqD0o
-	 asDqIIAxqpIfOGD2NP9boZgMKIVjoMsGb912RjvSS5Y9F36UDA/0byrweyw2IPaSQ6
-	 EQPo3BQkPaI7A==
-Date: Thu, 1 Aug 2024 13:15:14 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Blazej Kucman <blazej.kucman@intel.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: [GIT PULL] PCI fixes for v6.11
-Message-ID: <20240801181514.GA112131@bhelgaas>
+	s=k20201202; t=1722537406;
+	bh=Zlg4721NQS5/+FBXCbu9oVNq/L7l6OkL/o/WjbI8Lj0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=fQa8BHM2HKqzpKXt2MOr1XPHVqZu7iUqjd1n3CDbzn5OEsTy3obPBNbCZ1Kcf1j4E
+	 0/vCcwKdzSOkBmD1MHur4wU3/423sJvQiQXm8z+WqUA8A4RLveKiyN9G5U8dMqIZqN
+	 pkKQeww6uYtWJJhcpA/+Lpoof7E97JSDurX+F65C81J4skfYQ6AEyW7iEKLRSNa7qf
+	 WDkmaZF6xdJyHEN9H81pgK2Y9f6vRvExe+aW6IO0XiYcXtHMAnyJBEK/RT91Qb9nB4
+	 eWygtA/SdWG2wAo9ZXMk3/aVVR54E+BxG5yaEGKpcEYV680YfeHT4zVqwBiT03L7/k
+	 3mSKEOQDbJsYA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3B2D4C43619;
+	Thu,  1 Aug 2024 18:36:46 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v6.11
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240801181514.GA112131@bhelgaas>
+References: <20240801181514.GA112131@bhelgaas>
+X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240801181514.GA112131@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.11-fixes-1
+X-PR-Tracked-Commit-Id: 5560a612c20d3daacbf5da7913deefa5c31742f4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c0ecd6388360d930440cc5554026818895199923
+Message-Id: <172253740623.25955.6854334550105069611.pr-tracker-bot@kernel.org>
+Date: Thu, 01 Aug 2024 18:36:46 +0000
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Blazej Kucman <blazej.kucman@intel.com>, Philipp Stanner <pstanner@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
+The pull request you sent on Thu, 1 Aug 2024 13:15:14 -0500:
 
-  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
+> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.11-fixes-1
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c0ecd6388360d930440cc5554026818895199923
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.11-fixes-1
+Thank you!
 
-for you to fetch changes up to 5560a612c20d3daacbf5da7913deefa5c31742f4:
-
-  PCI: pciehp: Retain Power Indicator bits for userspace indicators (2024-08-01 12:58:03 -0500)
-
-N.B. These have been in linux-next since July 26; I updated the commit logs
-today to add a Tested-by and an error message.
-
-----------------------------------------------------------------
-- Fix a pci_intx() regression that caused driver reload to fail with
-  "Resources present before probing" (Philipp Stanner)
-
-- Fix a pciehp regression that clobbered the upper bits of RAID status LEDs
-  on NVMe devices behind an Intel VMD (Blazej Kucman)
-
-----------------------------------------------------------------
-Blazej Kucman (1):
-      PCI: pciehp: Retain Power Indicator bits for userspace indicators
-
-Philipp Stanner (1):
-      PCI: Fix devres regression in pci_intx()
-
- drivers/pci/hotplug/pciehp_hpc.c |  4 +++-
- drivers/pci/pci.c                | 15 ++++++++-------
- 2 files changed, 11 insertions(+), 8 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
