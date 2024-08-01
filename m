@@ -1,125 +1,143 @@
-Return-Path: <linux-pci+bounces-11107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20866944A4C
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 13:26:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 146DE944AE6
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 14:07:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C45291F2269F
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 11:26:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 42101B2704C
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 12:06:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59380189B9B;
-	Thu,  1 Aug 2024 11:26:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4898619F48D;
+	Thu,  1 Aug 2024 12:05:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CEC189B8C
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 11:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764FD19F48B
+	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 12:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722511561; cv=none; b=s+aDQSMGJ7PvEaGofKXaqz4RgDQgCdOkrZ3+WtiY8BZYibekop1oP3U0fnlz47epWWBVOOqpzpNrDw5oByvQttbs81QwquezIXYzjzJUso77qgE2YnTBfs9zrdeYrbVDLM0Cmn23WvDf2+21byhOSqO+Vza+sPf0zWDk8Jx04u4=
+	t=1722513955; cv=none; b=n18ilbSB9V2rdO3d53tOBf3METDTpTt43tVQnNsG1cOKW7fLZfPzyun2fGkFWX5sG/MqZgtU1k5p7Su9coPOC+w5KVsY52LvyLrsyjlWaBhUEzs7bYJb70Pzj36WnPfyYRl8Nh54D9FCIApbedm7gqNpdtCCLiKT9wMG0wmWkVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722511561; c=relaxed/simple;
-	bh=/0dossKx5ywew7cei/w9fnOqC4SSY82lDaJgie0JUW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TYe78wCnZCoCJMWN2jB6r3LZYdffPrwWRb6ZigkX73KmYtuvnYFNkyOKzewDRtVwXiWJSog/rr382KttzRsTE3mznmrsqJLoxKw9DVuNxcPWusgV49OCTjnN4yC/MfZEG4WzBYMkQKckEL1gDYfM3BVhwZ622QtTKqNBHV/KQ6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 244AF28141E80;
-	Thu,  1 Aug 2024 13:15:59 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 13C5B70E469; Thu,  1 Aug 2024 13:15:59 +0200 (CEST)
-Date: Thu, 1 Aug 2024 13:15:59 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-	linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Keith Busch <kbusch@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-Message-ID: <ZqtubzCKhDKFwVXM@wunner.de>
-References: <20240711083009.5580-1-mariusz.tkaczyk@linux.intel.com>
- <20240711083009.5580-3-mariusz.tkaczyk@linux.intel.com>
- <p6fjcdsvy74hrq7zgar4spyujnbs5rdhyizk7cymqhlmmeuhvt@4imcfutonal6>
- <20240731135117.00004ddf@linux.intel.com>
- <2pkbi2lc46hlpwaemujtxf4rm3hokmynp6rf3vnd6vb6biatp3@qhqmeuv3lbgi>
- <Zqpd0ZgkyQtbrkfd@wunner.de>
- <xarpkxhakscp4zgynu2xy67de7dlb6zk7myzmuh3htja7evose@nrtr46gkyni3>
+	s=arc-20240116; t=1722513955; c=relaxed/simple;
+	bh=3DrjXaCexd6uVRKqaKPpki0RUm5ceUzGxB1ISlIQvMM=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ektoYmHAhkp9XCecXj+dRKrPdpcEBituP7v3J1778alzGdRB+ACB2rbX4hpgelqLx20tIHsBOrY969SPl7zN3bvZXpRoyhB20xDU6oWWW1SKRDkLQUKmL8bso4Dmr+mAH0KQAMJxomJDcf1IURs3AwzaJONxZ1Nl6vIIJfgyL7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WZSN10LdVz1L9MX;
+	Thu,  1 Aug 2024 20:05:37 +0800 (CST)
+Received: from kwepemd100012.china.huawei.com (unknown [7.221.188.214])
+	by mail.maildlp.com (Postfix) with ESMTPS id B54B6140109;
+	Thu,  1 Aug 2024 20:05:49 +0800 (CST)
+Received: from [10.40.188.234] (10.40.188.234) by
+ kwepemd100012.china.huawei.com (7.221.188.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 1 Aug 2024 20:05:49 +0800
+Subject: Re: [PATCH] PCI/ASPM: Update ASPM sysfs on MFD function removal to
+ avoid use-after-free
+To: Bjorn Helgaas <helgaas@kernel.org>, Ding Hui <dinghui@sangfor.com.cn>
+CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>
+References: <20240731214606.GA83038@bhelgaas>
+From: Jay Fang <f.fangjian@huawei.com>
+Message-ID: <155bccea-2728-2a12-7fb5-5b811d04b04f@huawei.com>
+Date: Thu, 1 Aug 2024 20:05:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <xarpkxhakscp4zgynu2xy67de7dlb6zk7myzmuh3htja7evose@nrtr46gkyni3>
+In-Reply-To: <20240731214606.GA83038@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100012.china.huawei.com (7.221.188.214)
 
-On Thu, Aug 01, 2024 at 11:06:26AM +0200, Marek Behún wrote:
-> It is not my intention to be unreasonable, I am just asking questions.
-> I am sorry for getting into this discussion this late.
-
-Thanks for your understanding!
-
-> On Wed, Jul 31, 2024 at 05:52:49PM +0200, Lukas Wunner wrote:
-> > "Blinking" in the rx/tx activity context means that the LED is turned on
-> > when traffic is flowing and off when it is not flowing.  Because traffic
-> > is usually not flowing constantly, the LED is "blinking".
-> > 
-> > In the NPEM context, my understanding is "blinking" means the LED turns
-> > on or off *in a regular interval* to indicate that the corresponding
-> > NPEM bit has been set.
+On 2024/8/1 5:46, Bjorn Helgaas wrote:
+> On Tue, Jul 30, 2024 at 05:57:43PM +0800, Ding Hui wrote:
+>> On 2024/7/30 9:16, Jay Fang wrote:
+>>>  From 'commit 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal
+>>> to avoid use-after-free")' we know that PCIe spec r6.0, sec 7.5.3.7,
+>>> recommends that software program the same ASPM Control(pcie_link_state)
+>>> value in all functions of multi-function devices, and free the
+>>> pcie_link_state when any child function is removed.
+>>>
+>>> However, ASPM Control sysfs is still visible to other children even if it
+>>> has been removed by any child function, and careless use it will
+>>> trigger use-after-free error, e.g.:
+>>>
+>>>    # lspci -tv
+>>>      -[0000:16]---00.0-[17]--+-00.0  Device 19e5:0222
+>>>                              \-00.1  Device 19e5:0222
+>>>    # echo 1 > /sys/bus/pci/devices/0000:17:00.0/remove       // pcie_link_state will be released
+>>>    # echo 1 > /sys/bus/pci/devices/0000:17:00.1/link/l1_aspm // will trigger error
+>>>
+>>>    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
+>>>    Call trace:
+>>>     aspm_attr_store_common.constprop.0+0x10c/0x154
+>>>     l1_aspm_store+0x24/0x30
+>>>     dev_attr_store+0x20/0x34
+>>>     sysfs_kf_write+0x4c/0x5c
+>>>
+>>> We can solve this problem by updating the ASPM Control sysfs of all
+>>> children immediately after ASPM Control have been freed.
+>>>
+>>> Fixes: 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal to avoid use-after-free")
+>>> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
+>>> ---
+>>>   drivers/pci/pcie/aspm.c | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>>> index cee2365e54b8..eee9e6739924 100644
+>>> --- a/drivers/pci/pcie/aspm.c
+>>> +++ b/drivers/pci/pcie/aspm.c
+>>> @@ -1262,6 +1262,8 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>>>   		pcie_config_aspm_path(parent_link);
+>>>   	}
+>>> +	pcie_aspm_update_sysfs_visibility(parent);
+>>> +
+>>
+>> To be more rigorous, is there still a race window in
+>> aspm_attr_{show,store}_common or clkpm_{show,store} before updating
+>> the visibility, we can get an old or NULL pointer by
+>> pcie_aspm_get_link()?
 > 
-> Ah! So the LEDs states is not supposed to be managed by hardware,
-> but by software? From the userspace?
+> Yeah, I think we still have a problem even with this patch.
+If so, maybe we need a new solution to completely sovle this problem.
 
-Yes the LEDs will be controlled through ledmon(8), which is
-maintained by Mariusz.
+> 
+> For one thing, aspm_attr_store_common() captures the pointer from
+> pcie_aspm_get_link() before the critical section, so by the time it
+> *uses* the pointer, pcie_aspm_exit_link_state() may have freed the
+> link state.
+> 
+> And there are several other callers of pcie_aspm_get_link() that
+> either call it before a critical section or don't have a critical
+> section at all.
+> 
+> I think it may be a mistake to alloc/free the link state separately
+> from the pci_dev itself.
+> 
+>>>   	mutex_unlock(&aspm_lock);
+>>>   	up_read(&pci_bus_sem);
+>>>   }
+>>
+>> -- 
+>> Thanks,
+>> - Ding Hui
+>>
+> 
+> .
+> 
 
-Though conceivably any other piece of software will do as well.
-
-Basically the PCIe Base Spec defines registers to set/get LED states
-(NPEM).  And the PCI Firmware Spec defines an alternative ACPI _DSM
-interface to control the same LEDs.  The spec says ACPI _DSM shall
-be preferred over direct register access (NPEM) whenever _DSM is
-available.  The idea apparently being that a portion of the LEDs
-is under control of platform firmware and the remaining LEDs are
-under OS control.  And by using the _DSM interface, there are no
-conflicting register accesses by firmware and OS.
-
-The enclosure vendor is free to use e.g. LEDs which are on
-continuously, or they may choose to let certain LEDs blink in a
-regular interval.  E.g. the enclosure vendor may decide that the
-"failure" LED is red and blinks in a regular interval when its
-corresponding register bit is set so that it's easier for an
-administrator to identify the faulty drive in a rack full of
-other drives with tons of LEDs.
-
-Conceivably we could one day add a led_trigger for some or all
-of these LEDs.  Question is whether it makes sense.  Maybe if the
-nvme driver can detect a faulty drive it could trigger that the
-failure LED is lit up.  The design to use one led_classdev per
-register bit was chosen precisely to allow for such future
-extensions.
-
-Thanks,
-
-Lukas
 
