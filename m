@@ -1,124 +1,150 @@
-Return-Path: <linux-pci+bounces-11095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11096-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A525C943EFE
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 03:30:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63EA2943F48
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 03:36:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A36B1F212FC
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 01:30:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65084B263FB
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 01:36:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89391DE0E0;
-	Thu,  1 Aug 2024 00:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555F31C0A78;
+	Thu,  1 Aug 2024 00:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYQx16om"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJ0F9t9z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B88F1DE0DB;
-	Thu,  1 Aug 2024 00:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2641C0A74;
+	Thu,  1 Aug 2024 00:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722472530; cv=none; b=aGvcyACA2LZHeN4pZ2v+eWmJK94CSeL/KmK8tY3Mc8L6duPP4vrn5cMY1yb6viEzabTF5oZP3mZKJB338tohQJBPNpuj6MySMeSGY2sFs+aUGjKAX3DCaR40kFZ2dS3LFqzlCPVM8WBrWoq2nitiAZB0voArIpLj4kSzGyPDKFw=
+	t=1722472686; cv=none; b=t0wL/FUkhcBeG6f0nN+Nk2og0srSflVsRjAbFQYl4UXxNvXa70C0C9jTZobXcTf2VK1UUi2aYFK2abZR6z7M9NIdN4z5g816rpm3Q6Dhdiw/EkS5IVdw7xUDK3hkQN3U6W57u4TeB9Uz/OD/hZrAN1tJCyxelQ4EgA+WtMv0ERY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722472530; c=relaxed/simple;
-	bh=Lp/CkH9sWC8WcDgHAMzi3z91a5u20XsSX+ogEhcdnHo=;
+	s=arc-20240116; t=1722472686; c=relaxed/simple;
+	bh=+T3ciHa949uEkErt/yXJwrqiGPNj6zzhv94e/0Z2npo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pX23Nnwn9lMIUd3VFHHYEqz0zp7AM09COKpgNtxVImc3EJXR3mI0qvCO+OQ4wjVDniI1KpPHXSOK1HFxrZw88Niqxo4aXCboeTWSm5rdFBx/hmHcVG30RS5ZfC3a23GfV77cn+773V4NraZeD7Ip5Ey50HHSlC/X6r3FQYj8E+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYQx16om; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0963FC4AF0E;
-	Thu,  1 Aug 2024 00:35:28 +0000 (UTC)
+	 MIME-Version:Content-Type; b=QdiKupttaXuKyx+Ap9h0PbWK5zC9lyjz+RCrF7/LwOn7TQHzyGdt5dIEPz6x2+fvQ/ou1fvVF8Mfe7DXzw8rFQ2WkIrWZds71POCjUyNZ5y/iLj/ZoTHgq3xNh0fTxf5m2qfUqW1QB/zHH0eHhAC0KTAR5GuESO1uLLFVnv3DRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJ0F9t9z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99A1C32786;
+	Thu,  1 Aug 2024 00:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722472530;
-	bh=Lp/CkH9sWC8WcDgHAMzi3z91a5u20XsSX+ogEhcdnHo=;
+	s=k20201202; t=1722472686;
+	bh=+T3ciHa949uEkErt/yXJwrqiGPNj6zzhv94e/0Z2npo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XYQx16omu0xWhRkPSGksPfM8jtB2E8IUFsZE2b++hn7UMuiHis4yCUWuYbIsyeCPm
-	 5477vrmXqTwCnW+p14amOx45OMfkcamNJBnNOEHRcdnb221g4VDVbcSLNA/Y4i7qyX
-	 sh5SuYQCT7RtSIhsmn8Pjp5kHyRiJ3piBT2ZvtDZPbrgQVPJYF1ebC6qbK1oFg31J3
-	 YFrK+/uhxnitfqhamf0UoQPDvveEg0EoVXZDRXo5mpe0fjCWYF/u+XQAbd6LadckmK
-	 Y0q85Aw7drHNvEZQ8pSFpX+wsko6M7HX43LWLwhDJZlQJ4RDPXj+kyhLSsgKZAG8gu
-	 1m3MDC2F+xAHQ==
+	b=iJ0F9t9zj5tQ8XfayLsJKjsIbAK0TVBLUf4X8QxvbKd/foKT3IiKA9JVHpe271mxp
+	 4n2tOwZyFwuD8hlQu6Y+cTjobQ9o8GpNZ55ijO/0SRx91Df43wRa2o27RzEJ/rHC2L
+	 RW2VitbHiDQmIAUbvDJiXFpW743VVslbDRJvf8wHmH5RGNmbHMhQX6atxA9AjusgCT
+	 Uv7YFZfE98NX7z4bLtRl3PXbRaUz+XSHG0ijg9pwm2BNZOu2WDehFh7xv1Z80gqNv4
+	 T+Kc5uKkDmW7FiMy8wAo0sWtM0OpkMOTGNBF9Vy8Fbi9Ulq562RxLIQObhsVZd6jaL
+	 GukCcUMfif+YQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Krishna Kumar <krishnak@linux.ibm.com>,
-	Timothy Pearson <tpearson@raptorengineering.com>,
+Cc: Aleksandr Mishin <amishin@t-argos.ru>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
 	Sasha Levin <sashal@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org,
+	jonnyc@amazon.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 42/47] pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
-Date: Wed, 31 Jul 2024 20:31:32 -0400
-Message-ID: <20240801003256.3937416-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 19/38] PCI: al: Check IORESOURCE_BUS existence during probe
+Date: Wed, 31 Jul 2024 20:35:25 -0400
+Message-ID: <20240801003643.3938534-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240801003256.3937416-1-sashal@kernel.org>
-References: <20240801003256.3937416-1-sashal@kernel.org>
+In-Reply-To: <20240801003643.3938534-1-sashal@kernel.org>
+References: <20240801003643.3938534-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.164
+X-stable-base: Linux 5.10.223
 Content-Transfer-Encoding: 8bit
 
-From: Krishna Kumar <krishnak@linux.ibm.com>
+From: Aleksandr Mishin <amishin@t-argos.ru>
 
-[ Upstream commit 335e35b748527f0c06ded9eebb65387f60647fda ]
+[ Upstream commit a9927c2cac6e9831361e43a14d91277818154e6a ]
 
-The hotplug driver for powerpc (pci/hotplug/pnv_php.c) causes a kernel
-crash when we try to hot-unplug/disable the PCIe switch/bridge from
-the PHB.
+If IORESOURCE_BUS is not provided in Device Tree it will be fabricated in
+of_pci_parse_bus_range(), so NULL pointer dereference should not happen
+here.
 
-The crash occurs because although the MSI data structure has been
-released during disable/hot-unplug path and it has been assigned
-with NULL, still during unregistration the code was again trying to
-explicitly disable the MSI which causes the NULL pointer dereference and
-kernel crash.
+But that's hard to verify, so check for NULL anyway.
 
-The patch fixes the check during unregistration path to prevent invoking
-pci_disable_msi/msix() since its data structure is already freed.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Reported-by: Timothy Pearson <tpearson@raptorengineering.com>
-Closes: https://lore.kernel.org/all/1981605666.2142272.1703742465927.JavaMail.zimbra@raptorengineeringinc.com/
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240701074513.94873-2-krishnak@linux.ibm.com
+Link: https://lore.kernel.org/linux-pci/20240503125705.46055-1-amishin@t-argos.ru
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+[bhelgaas: commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/pnv_php.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-al.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index f4c2e6e01be04..e233f8402e8cc 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -38,7 +38,6 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
- 				bool disable_device)
+diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+index f973fbca90cf7..ac772fb11aa73 100644
+--- a/drivers/pci/controller/dwc/pcie-al.c
++++ b/drivers/pci/controller/dwc/pcie-al.c
+@@ -250,18 +250,24 @@ static struct pci_ops al_child_pci_ops = {
+ 	.write = pci_generic_config_write,
+ };
+ 
+-static void al_pcie_config_prepare(struct al_pcie *pcie)
++static int al_pcie_config_prepare(struct al_pcie *pcie)
  {
- 	struct pci_dev *pdev = php_slot->pdev;
--	int irq = php_slot->irq;
- 	u16 ctrl;
+ 	struct al_pcie_target_bus_cfg *target_bus_cfg;
+ 	struct pcie_port *pp = &pcie->pci->pp;
+ 	unsigned int ecam_bus_mask;
++	struct resource_entry *ft;
+ 	u32 cfg_control_offset;
++	struct resource *bus;
+ 	u8 subordinate_bus;
+ 	u8 secondary_bus;
+ 	u32 cfg_control;
+ 	u32 reg;
+-	struct resource *bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
  
- 	if (php_slot->irq > 0) {
-@@ -57,7 +56,7 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
- 		php_slot->wq = NULL;
- 	}
++	ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS);
++	if (!ft)
++		return -ENODEV;
++
++	bus = ft->res;
+ 	target_bus_cfg = &pcie->target_bus_cfg;
  
--	if (disable_device || irq > 0) {
-+	if (disable_device) {
- 		if (pdev->msix_enabled)
- 			pci_disable_msix(pdev);
- 		else if (pdev->msi_enabled)
+ 	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
+@@ -295,6 +301,8 @@ static void al_pcie_config_prepare(struct al_pcie *pcie)
+ 	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
+ 
+ 	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
++
++	return 0;
+ }
+ 
+ static int al_pcie_host_init(struct pcie_port *pp)
+@@ -313,7 +321,9 @@ static int al_pcie_host_init(struct pcie_port *pp)
+ 	if (rc)
+ 		return rc;
+ 
+-	al_pcie_config_prepare(pcie);
++	rc = al_pcie_config_prepare(pcie);
++	if (rc)
++		return rc;
+ 
+ 	return 0;
+ }
 -- 
 2.43.0
 
