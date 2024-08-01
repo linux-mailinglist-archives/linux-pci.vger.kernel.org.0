@@ -1,57 +1,54 @@
-Return-Path: <linux-pci+bounces-11144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11145-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E62BB9454CF
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 01:12:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 995A29454FA
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 01:44:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 237281C21900
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 23:12:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA0711C229BF
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 23:44:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D35014AD30;
-	Thu,  1 Aug 2024 23:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5634914D294;
+	Thu,  1 Aug 2024 23:43:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDu2DMAO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNJEQ/Vs"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B061482E2
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 23:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A78625757;
+	Thu,  1 Aug 2024 23:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722553968; cv=none; b=ngIQhhfNaVbbvIfZ52MJ8eyz2yRUV9LetNoqnwMMtvBI+2HbF2MLVfOFAZHJV8bR/PxxFeamchEvPHCxf63KDVGZLgLEmPE8hc3WqE9AR5NKgTnqjeaKya6KZt6ey1B29HjVSOQB1C3Hyz2cimwCiUyQnP75ji25mIJhXsjvlWE=
+	t=1722555839; cv=none; b=i/ml/cOvEkIEkVnOK5A5uF5JEPkL+LTWpZjJJlrn2WA9+ZSgDCZX65W2B8/yBH8D3I3vymHlmE1qodd3TwDDsA6bhswVUgRj7916ZXQMksQQml+6BhGxmZdgMF91gVdCr7rQyt5GHZf5YzYDaX2VgRivVrWl6YIAcgcDjNU94O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722553968; c=relaxed/simple;
-	bh=GuKccZNEcrusD82Kvvc8HvoAWdJiUIGMKPbJIKKTgbM=;
+	s=arc-20240116; t=1722555839; c=relaxed/simple;
+	bh=SzHZxUFqNTMwJ8KvcmNhUWoSQkRJhCngR3KcpXsTVtQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uKJl4hQATJan8fvH/tXwlblJ5c35YRRTacSnpeoTz77s0YR14nThYtA3pV9hCLGth37D72pCDSjr+1tU6NUm6hxkekvjbLwMIGg0R4w4SMTPqUeVZaZ3S2RkPmcux6+GWDIfUrHs0WPOiWGhrEi+9y38vwcFPRyQ1cZtBxQN7zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDu2DMAO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85857C32786;
-	Thu,  1 Aug 2024 23:12:47 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=RzRKleUcRZxolx4+Ja3Lb+GKqbJ3Ps0fUCh9vrVBcx9Nq/HLj8D3rhunHFlxy63qSKs3dN2jm28ZHvrcNLvvc92OoMjMdwjPiBORnP/wHAo57Zn0j2MR6ZrlQbND2FhdjCimiudHPrrsnq+D9El+ARFDfFLrknX+8mTQV/tJHtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNJEQ/Vs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FF0C32786;
+	Thu,  1 Aug 2024 23:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722553967;
-	bh=GuKccZNEcrusD82Kvvc8HvoAWdJiUIGMKPbJIKKTgbM=;
+	s=k20201202; t=1722555838;
+	bh=SzHZxUFqNTMwJ8KvcmNhUWoSQkRJhCngR3KcpXsTVtQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pDu2DMAOsGmaQaEuCYlNUTyz/CdVkn1RqIWAK7E4X+dXzNvM44Lrle3kANlIcAh8B
-	 k1uTYem9AVFwknxW+d/t41VeTgo+ay4lGQr6SvQ4zYHxKtqRoYK3oGEQ0ZvbwjfMqd
-	 +NHxCPqOSuPF5YXLcad+U2GWMRySe8vq68Nu4/9zPexwQKdmhULghgCpCv8lrDX5ZF
-	 fPKo9egX7EAfu4p1Vi6CFk7cqeQkDzyKHz97Dg+JosSr6hF2Ft7aL3o+9n7niGNRUx
-	 ZzEMIik2b99ZOMRliMiZjac7zIm6Ai2kV4xruNHdbnyyO154nxzMJ3+EYtflavYubZ
-	 IQ31fb9tggYpQ==
-Date: Thu, 1 Aug 2024 18:12:45 -0500
+	b=tNJEQ/VsvtHIHxdmKdpBRb3helOv8NpY3l32E6cWqkxuxoB1VS5vRgmOkFtn1EJ9q
+	 ZIxXUm0oqmHNdKDhk/aBQYyaxF/0UHh8fmOIXMgOaB6RshS65woz3yIE9M0NKrXU96
+	 6mc2kNXLbTzm2sqlpZl5kg0rwOBRUoDBzJ0SdGlGmkvJZOlpVK0F0D4E7JgGen3Da7
+	 o9T6xuoSHK9ApLJRsgxJKI40kXlZ64c+mDIv/Pc1+YSuoN/nkkWBqe2CZqfZHkLrNG
+	 IuLKDhGAEBO8D2ITYpwaxrfgTkquK55iqj+YGfD3fEcmuXjHhb3nzBvxB5bBXDiilz
+	 o9wKKtT9lUEEA==
+Date: Thu, 1 Aug 2024 18:43:56 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Ming Wang <wangming01@loongson.cn>
-Subject: Re: [PATCH] PCI: Prevent LS7A Bus Master clearing on kexec
-Message-ID: <20240801231245.GA127499@bhelgaas>
+To: steven <steven_ygui@163.com>
+Cc: linux-pci@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: does dtb not support pci acs enable?
+Message-ID: <20240801234356.GA128584@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,49 +57,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240726092829.2042624-1-chenhuacai@loongson.cn>
+In-Reply-To: <429b2adf.a5a3.190cb82e4ae.Coremail.steven_ygui@163.com>
 
-On Fri, Jul 26, 2024 at 05:28:29PM +0800, Huacai Chen wrote:
-> This is similar to commit 62b6dee1b44aa23b39355 ("PCI/portdrv: Prevent
-> LS7A Bus Master clearing on shutdown"), which prevents LS7A Bus Master
-> clearing on kexec.
+[+cc ARM, IOMMU folks; I don't know the answer, but maybe they do]
+
+On Fri, Jul 19, 2024 at 11:01:11PM +0800, steven wrote:
+> Hello,
 > 
-> Only skip Bus Master clearing on bridges because endpoint devices still
-> need it.
-
-I think we need some explanation here and a hint in the comment below
-about why this is needed.
-
-I guess the point is to work around the LS7A defect that clearing
-PCI_COMMAND_MASTER prevents MMIO requests from going downstream, and
-we may need to do that even after .shutdown(), e.g., to print console
-messages?
-
-And in this case we rely on .shutdown() for the downstream devices to
-disable interrupts and DMA?
-
-s/62b6dee1b44aa23b39355/62b6dee1b44a/
-
-> Signed-off-by: Ming Wang <wangming01@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/pci/pci-driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I am a new person in PCI, I am trying to do something for iommu
+> group on arm64 platform, I found if I boot the linux (5.10 kernel)
+> kernel using UEFI + ACPI, it will work correctly. But if I boot it
+> using UEFI + DTB, the iommu group not work, only one group present.
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index f412ef73a6e4..b7d3a4d8532f 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -517,7 +517,7 @@ static void pci_device_shutdown(struct device *dev)
->  	 * If it is not a kexec reboot, firmware will hit the PCI
->  	 * devices with big hammer and stop their DMA any way.
->  	 */
-> -	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> +	if (kexec_in_progress && !pci_is_bridge(pci_dev) && (pci_dev->current_state <= PCI_D3hot))
->  		pci_clear_master(pci_dev);
->  }
->  
-> -- 
-> 2.43.5
+> I read the code, found that pci_acs_enable is set to 1 during
+> acpi_init, but I can not find any code for dtb booting, so it will
+> return "disable_acs_redir " during call pci_enable_acs. 
+>
+> static void pci_enable_acs(struct pci_dev *dev)
+> {
+>     if (!pci_acs_enable)
+>         goto disable_acs_redir;
+> 
+>     if (!pci_dev_specific_enable_acs(dev))
+>         goto disable_acs_redir;
+> 
+>     pci_std_enable_acs(dev);
+> 
+> 
+> 
+> 
+> SO, is it not support in dtb?
 > 
 
