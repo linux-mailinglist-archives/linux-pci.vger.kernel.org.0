@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-11103-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11104-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC1059442DB
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 07:49:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC2E29442E0
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 07:50:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A3401F21F96
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 05:49:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75F16B23DF3
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 05:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C3B9158552;
-	Thu,  1 Aug 2024 05:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7824B158860;
+	Thu,  1 Aug 2024 05:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="os5QWxR+"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BkY7cwad"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B781B158542;
-	Thu,  1 Aug 2024 05:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74051586C7;
+	Thu,  1 Aug 2024 05:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722491330; cv=none; b=ouNkB7gFD9FO5c96X0cEloiQGb/0xsC8T/1FXWFuYXAvDKGHM8C5tk0gCRzLduakS0W/eBol8UHlgpq2OD9rWQ4Q6JEEUWbJ8FoSVZpgVEt6/n445QuVdWGt8eh1NNSeAcoAtTr8Qoy/Y1HTMthFJL22qgIt8geaOtX7dlJTNvA=
+	t=1722491332; cv=none; b=RisoAZJU3yU/8uRArblRkt24ld3AZ2Jf8gycsyEWQ/IQlFEP0e40/Tm0PI+hUy3B/zDdnbyrX1XbLwIEBiC/b+mxXkSZn7HnN/oeCDBWb/sd6TRLQVK65xGCp/1Ez+mLKX90xswNiIIBtqaFhOlh1/oewqW6bkkvFqayfIh2CDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722491330; c=relaxed/simple;
-	bh=IPhahkZ6qy7uRjZHpGdmaK0Lu+Kr00TpXw/OcLHYSfI=;
+	s=arc-20240116; t=1722491332; c=relaxed/simple;
+	bh=4UW2U2Zv+BwmO0Eq2QcY5eB47hRVENjgUnEEp9Kfoys=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H7Egv6XRwbJ+YpekVmTV5deobIAINw68R4uJf0qocHd5D9RVx0vNHVehMHxm/vWVJX3EoUK0Thpx1WiEBsREPZw0ucQxgAVHnUCM7JxeCpRAFuduvUQWu9X6pEHxPTpGBCQQB5+pRCI9aybK6L3oOG+6IBz/pBcaLoFQYyvh42g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=os5QWxR+; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=DllPnJfnraeOvNg0FxlWxGsWtg6v5vqQgEE3cpifpg9Jvmybo+3i4RbENvoeechIZq1zcB9+VkNYAzideQ3TxnqtWUYEKS6+CQpRcBWO8IzEjNQ7oydkFwd6TXj7jeiYVknCHL6s/JL+XfyWw8XrUnqID9bKraHyQqIbr2Q4xMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BkY7cwad; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46VMxS1A030520;
-	Thu, 1 Aug 2024 05:48:36 GMT
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4715SD2n017221;
+	Thu, 1 Aug 2024 05:48:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hGO9keNVUrvs9IXj4FJ+VEBdkTXZ7TVnpLE++TZrl9s=; b=os5QWxR+3BXCMtTN
-	AbMLiIuZNhyp5deKGmK9AefD2SqSwr0EdLGidwSVsNqgbdijxrKLY+pNHpB2AZUR
-	n+UMZ7NIPnEcSNOSaF13g8+IEoekh/JC2gUgr74LtuhZkCw6znEHiviUx1MvGXdA
-	NJmBGgO1/47nWLwIdnnGL1WFyfkkM6OP1CqO6um2eDoTn0fjPs0I9mf7dL+dLS5m
-	Jy06BuuFctVsux7a5NVpP4kAs2HTqTIaKfEA8WyUUGDJUg4uWwcTAbhAFwAXv3hq
-	qDdn7Jnziz2M4ez9rmhlLhKgypaiBnGVOno6P9r6jBbMf6opNsJYVsfmCk3Gj8o+
-	6QKaUA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40qm082qxn-1
+	ojv/MW/hnALXIzvv1N4k1DVtpaZISukCEWwmpcR4EOM=; b=BkY7cwad5DgNPGpe
+	FUy4IizyLD5nsLfsfDi0t4Gn2eELXZRj37YtAmE6ajmGogx/UR8nrCbjJ18BHsm+
+	kEdQvlXpKF1DDlKSK1kmly+VvXyPot/4VW1qAkk5VqpHzuWxZn3hLtmxji/an+uX
+	XIMrZhEMxiWOuuZtDZOqsI7+sKw5Qtln4vjy2P0j14fwOZRLc4I1tGnB1DuDJmh6
+	lG/GuWe1R9hBvVy6rOoogAfi+g3XDmRehY5VNg67nMJoupFuZskMKWC69ox7h+gt
+	YB85GbR1Yi+1cLZeemhaHsgKOqKuBqNxnV3Ag4Daz1T+hQFdK9H8rVwZkP26LN8/
+	yQ9M+A==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40msnedgp3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Aug 2024 05:48:35 +0000 (GMT)
+	Thu, 01 Aug 2024 05:48:40 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4715mZ1r011964
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4715mdHU019632
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 Aug 2024 05:48:35 GMT
+	Thu, 1 Aug 2024 05:48:39 GMT
 Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 31 Jul 2024 22:48:30 -0700
+ 15.2.1544.9; Wed, 31 Jul 2024 22:48:35 -0700
 From: Sricharan R <quic_srichara@quicinc.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -64,9 +64,9 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC: <quic_srichara@quicinc.com>
-Subject: [PATCH V7 3/4] arm64: dts: qcom: ipq9574: Enable PCIe PHYs and controllers
-Date: Thu, 1 Aug 2024 11:18:02 +0530
-Message-ID: <20240801054803.3015572-4-quic_srichara@quicinc.com>
+Subject: [PATCH V7 4/4] PCI: qcom: Add support for IPQ9574
+Date: Thu, 1 Aug 2024 11:18:03 +0530
+Message-ID: <20240801054803.3015572-5-quic_srichara@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240801054803.3015572-1-quic_srichara@quicinc.com>
 References: <20240801054803.3015572-1-quic_srichara@quicinc.com>
@@ -82,167 +82,51 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: oUrSxAYDY2AM5Dd0FUSsy3HYokUTDhMy
-X-Proofpoint-ORIG-GUID: oUrSxAYDY2AM5Dd0FUSsy3HYokUTDhMy
+X-Proofpoint-GUID: ct07kUGBkJfZ_zgcw7dPRZzjn-0M9bgx
+X-Proofpoint-ORIG-GUID: ct07kUGBkJfZ_zgcw7dPRZzjn-0M9bgx
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-01_02,2024-07-31_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=941 spamscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 phishscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408010031
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ spamscore=0 mlxscore=0 bulkscore=0 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408010032
 
 From: devi priya <quic_devipriy@quicinc.com>
 
-Enable the PCIe controller and PHY nodes corresponding to RDP 433.
+The IPQ9574 platform has four Gen3 PCIe controllers:
+two single-lane and two dual-lane based on SNPS core 5.70a.
 
+QCOM IP rev is 1.27.0 and Synopsys IP rev is 5.80a.
+Reuse all the members of 'ops_2_9_0'.
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
 Signed-off-by: devi priya <quic_devipriy@quicinc.com>
 Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 ---
- [V7] Fixed review comments from Konrad
+ [V7] Rebased on top of [1] to avoid DBI/ATU mirroring. With that dropped
+      the need for separate ops.
+ [1] https://lore.kernel.org/linux-arm-msm/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/
 
- arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts | 113 ++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-index 1bb8d96c9a82..165ebbb59511 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-@@ -8,6 +8,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include "ipq9574-rdp-common.dtsi"
- 
- / {
-@@ -15,6 +16,45 @@ / {
- 	compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
- };
- 
-+&pcie1_phy {
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	pinctrl-0 = <&pcie1_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 26 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 27 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie2_phy {
-+	status = "okay";
-+};
-+
-+&pcie2 {
-+	pinctrl-0 = <&pcie2_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 29 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 30 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie3_phy {
-+	status = "okay";
-+};
-+
-+&pcie3 {
-+	pinctrl-0 = <&pcie3_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 32 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 33 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
- &sdhc_1 {
- 	pinctrl-0 = <&sdc_default_state>;
- 	pinctrl-names = "default";
-@@ -28,6 +68,79 @@ &sdhc_1 {
- };
- 
- &tlmm {
-+
-+	pcie1_default: pcie1-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio25";
-+			function = "pcie1_clk";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio26";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio27";
-+			function = "pcie1_wake";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie2_default: pcie2-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio28";
-+			function = "pcie2_clk";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio29";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio30";
-+			function = "pcie2_wake";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie3_default: pcie3-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio31";
-+			function = "pcie3_clk";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio32";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio33";
-+			function = "pcie3_wake";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	sdc_default_state: sdc-default-state {
- 		clk-pins {
- 			pins = "gpio5";
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 6976efb8e2f0..e9371f945900 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1752,6 +1752,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+ 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+ 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
++	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
+ 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+ 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+ 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
 -- 
 2.34.1
 
