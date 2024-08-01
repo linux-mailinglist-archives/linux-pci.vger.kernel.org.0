@@ -1,133 +1,156 @@
-Return-Path: <linux-pci+bounces-11104-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11105-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC2E29442E0
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 07:50:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 421D094476D
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 11:06:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75F16B23DF3
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 05:50:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C25131F2163E
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 09:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7824B158860;
-	Thu,  1 Aug 2024 05:48:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70127157493;
+	Thu,  1 Aug 2024 09:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BkY7cwad"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iz8Mv62z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74051586C7;
-	Thu,  1 Aug 2024 05:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC4D481DD
+	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 09:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722491332; cv=none; b=RisoAZJU3yU/8uRArblRkt24ld3AZ2Jf8gycsyEWQ/IQlFEP0e40/Tm0PI+hUy3B/zDdnbyrX1XbLwIEBiC/b+mxXkSZn7HnN/oeCDBWb/sd6TRLQVK65xGCp/1Ez+mLKX90xswNiIIBtqaFhOlh1/oewqW6bkkvFqayfIh2CDY=
+	t=1722503192; cv=none; b=K/1su9Y0t1s2VyiVrHA05nHrBS3iWwp9ywhPjXOnUrdlE7sojHZ+KHO1hs3ucSWEDcBhD7AfOJi4najIkkfk+aK4Jt/xm/1saXCNXcfqLU+gbBsvp+2bqqI4vAak1gQckq9m610/RVzo6ckqvbjEH82PRSKtwyWZ31/Zd4QeWLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722491332; c=relaxed/simple;
-	bh=4UW2U2Zv+BwmO0Eq2QcY5eB47hRVENjgUnEEp9Kfoys=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DllPnJfnraeOvNg0FxlWxGsWtg6v5vqQgEE3cpifpg9Jvmybo+3i4RbENvoeechIZq1zcB9+VkNYAzideQ3TxnqtWUYEKS6+CQpRcBWO8IzEjNQ7oydkFwd6TXj7jeiYVknCHL6s/JL+XfyWw8XrUnqID9bKraHyQqIbr2Q4xMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BkY7cwad; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4715SD2n017221;
-	Thu, 1 Aug 2024 05:48:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ojv/MW/hnALXIzvv1N4k1DVtpaZISukCEWwmpcR4EOM=; b=BkY7cwad5DgNPGpe
-	FUy4IizyLD5nsLfsfDi0t4Gn2eELXZRj37YtAmE6ajmGogx/UR8nrCbjJ18BHsm+
-	kEdQvlXpKF1DDlKSK1kmly+VvXyPot/4VW1qAkk5VqpHzuWxZn3hLtmxji/an+uX
-	XIMrZhEMxiWOuuZtDZOqsI7+sKw5Qtln4vjy2P0j14fwOZRLc4I1tGnB1DuDJmh6
-	lG/GuWe1R9hBvVy6rOoogAfi+g3XDmRehY5VNg67nMJoupFuZskMKWC69ox7h+gt
-	YB85GbR1Yi+1cLZeemhaHsgKOqKuBqNxnV3Ag4Daz1T+hQFdK9H8rVwZkP26LN8/
-	yQ9M+A==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40msnedgp3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Aug 2024 05:48:40 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4715mdHU019632
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 Aug 2024 05:48:39 GMT
-Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 31 Jul 2024 22:48:35 -0700
-From: Sricharan R <quic_srichara@quicinc.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_srichara@quicinc.com>
-Subject: [PATCH V7 4/4] PCI: qcom: Add support for IPQ9574
-Date: Thu, 1 Aug 2024 11:18:03 +0530
-Message-ID: <20240801054803.3015572-5-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240801054803.3015572-1-quic_srichara@quicinc.com>
-References: <20240801054803.3015572-1-quic_srichara@quicinc.com>
+	s=arc-20240116; t=1722503192; c=relaxed/simple;
+	bh=6aMWoNQ1AHxN3Qg6oRvD95lqeA+pnqJgADeT2Gdyd94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lm/JE2dmg2WGL6GllHPlZDSQf0j4D0ZZio5cHtIxBqgTUuef/qEXMC6BW5SrN00DVx26xtvUHXnboq5zCAOyjORbS7z8BVRyQ11YJHlvJ8Zc8yhH7HasesHdjC9NLmo/xqhUTA9I9XTxZszTlcnZtEH+FDifDeCqq6+zjuRAFR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iz8Mv62z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B77C32786;
+	Thu,  1 Aug 2024 09:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722503191;
+	bh=6aMWoNQ1AHxN3Qg6oRvD95lqeA+pnqJgADeT2Gdyd94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iz8Mv62zizeFJKQcoB8+ONCMVbghBFd54atqU6y0/97bIY3QdzURdBlr/lKLcDsWq
+	 el/nvnVs84QhA00HKIceQc+LZTDGywm+wcIU2p+i5VQ4VdUuZDfXO3KEdpud/t5O08
+	 /TA/nh9ZGLQ7HhQUyi4nOrjkfqu62lhbNTscdeolB1/KpIZmogIudYUBL1SjG5sNeB
+	 5cTmvl2M0iY04cBdotf2FA7FUDz1rAcbXyoxXGYnwJiTwPVSkGKHMu0cyV53vOVddg
+	 sE4D4ym8+yaBu9ZBVUXp9zLAR+0eAXhPIA4YgwHoRKBz/RZ/Nb8Jn3VC20kCeUFoOw
+	 uyhFDzD18/iLg==
+Date: Thu, 1 Aug 2024 11:06:26 +0200
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, 
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>, linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Keith Busch <kbusch@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	Randy Dunlap <rdunlap@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <xarpkxhakscp4zgynu2xy67de7dlb6zk7myzmuh3htja7evose@nrtr46gkyni3>
+References: <20240711083009.5580-1-mariusz.tkaczyk@linux.intel.com>
+ <20240711083009.5580-3-mariusz.tkaczyk@linux.intel.com>
+ <p6fjcdsvy74hrq7zgar4spyujnbs5rdhyizk7cymqhlmmeuhvt@4imcfutonal6>
+ <20240731135117.00004ddf@linux.intel.com>
+ <2pkbi2lc46hlpwaemujtxf4rm3hokmynp6rf3vnd6vb6biatp3@qhqmeuv3lbgi>
+ <Zqpd0ZgkyQtbrkfd@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ct07kUGBkJfZ_zgcw7dPRZzjn-0M9bgx
-X-Proofpoint-ORIG-GUID: ct07kUGBkJfZ_zgcw7dPRZzjn-0M9bgx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-01_02,2024-07-31_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- spamscore=0 mlxscore=0 bulkscore=0 suspectscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408010032
+In-Reply-To: <Zqpd0ZgkyQtbrkfd@wunner.de>
 
-From: devi priya <quic_devipriy@quicinc.com>
+On Wed, Jul 31, 2024 at 05:52:49PM +0200, Lukas Wunner wrote:
+> On Wed, Jul 31, 2024 at 05:17:01PM +0200, Marek Behún wrote:
+> > On Wed, Jul 31, 2024 at 01:51:17PM +0200, Mariusz Tkaczyk wrote:
+> > > On Fri, 26 Jul 2024 09:29:36 +0200
+> > > Marek Behún <kabel@kernel.org> wrote:
+> > > 
+> > > > On Thu, Jul 11, 2024 at 10:30:08AM +0200, Mariusz Tkaczyk wrote:
+> > > > > Native PCIe Enclosure Management (NPEM, PCIe r6.1 sec 6.28) allows
+> > > > > managing LED in storage enclosures. NPEM is indication oriented
+> > > > > and it does not give direct access to LED. Although each of
+> > > > > the indications *could* represent an individual LED, multiple
+> > > > > indications could also be represented as a single,
+> > > > > multi-color LED or a single LED blinking in a specific interval.
+> > > > > The specification leaves that open.  
+> > > > 
+> > > > The specification leaves it open, but isn't there a way to determine
+> > > > how it is implemented? In ACPI, maybe?
+> > > 
+> > > What would be a point of that? There are blinking patterns standards for 2-LED
+> > > systems and 3-LED systems but NPEM is projected to not be limited to
+> > > the led system you have. I mean that we shouldn't try to determine what hardware
+> > > does - it belongs to hardware. Kernel task is just to read what NPEM registers
+> > > are presenting and trust it.
+> > 
+> > My point is about what a LED class device in kernel means, and what the brightness
+> > attribute means (in terms of intended behavior).
+> > One LED class device should represent one hardware LED (possibly multicolor), and
+> > nothing else.
+> > Setting the brightness attribute to the value of max_brightness should light the LED
+> > on, and setting it to 0 should light it off.
+> > So if on some device doing
+> >   echo 1 >brightness
+> > makes the LED for example blink, it is wrong.
+> > 
+> > That's why I am asking whether it is possible to determine what the hardware is
+> > doing from some description, like ACPI or device-tree.
+> 
+> The PCIe Base Specification and the PCI Firmware Specification do not
+> provide a way to query what the effect of a set bit will be.
+> 
+> We've had lengthy mailing list discussions how to represent NPEM bits
+> in the kernel.  Representing each bit as a distinct led_classdev seemed
+> like the most reasonable way and I thought we had reached consensus
+> on that.  Objecting against the chosen representation at this point,
+> not to mention without suggesting a better alternative, is unreasonable
+> from my point of view.
 
-The IPQ9574 platform has four Gen3 PCIe controllers:
-two single-lane and two dual-lane based on SNPS core 5.70a.
+There are lenghty mailing list discussions all the time, e.g. the
+multi-color LED framework took several years to work out. But yes, it
+was a pain...
 
-QCOM IP rev is 1.27.0 and Synopsys IP rev is 5.80a.
-Reuse all the members of 'ops_2_9_0'.
+It is not my intention to be unreasonable, I am just asking questions.
+I am sorry for getting into this discussion this late.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- [V7] Rebased on top of [1] to avoid DBI/ATU mirroring. With that dropped
-      the need for separate ops.
- [1] https://lore.kernel.org/linux-arm-msm/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/
+> I think it is reasonable to assume that usually each bit is a distinct
+> LED.  The spec doesn't rule out other form factors, such as multiple
+> bits being represented by distinct colors of a multi-color LED.
+> However I think such form factors will remain esoteric and theoretical
+> for the most part.  We need to be pragmatic here.
+> 
+> 
+> > If setting brightness to 1 makes some LED blink (without a LED trigger), than
+> > the device does not behave according to the LED class expectations.
+> [...]
+> > Look for example at the netdev trigger. Originally it was software only, and you
+> > could set it up so that it would for example blink on rx/tx activity of a network
+> > interface.
+> 
+> I think you're confusing two different things:
+> 
+> "Blinking" in the rx/tx activity context means that the LED is turned on
+> when traffic is flowing and off when it is not flowing.  Because traffic
+> is usually not flowing constantly, the LED is "blinking".
+> 
+> In the NPEM context, my understanding is "blinking" means the LED turns
+> on or off *in a regular interval* to indicate that the corresponding
+> NPEM bit has been set.
 
- drivers/pci/controller/dwc/pcie-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
+Ah! So the LEDs states is not supposed to be managed by hardware,
+but by software? From the userspace?
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 6976efb8e2f0..e9371f945900 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1752,6 +1752,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
--- 
-2.34.1
-
+Marek
 
