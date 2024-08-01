@@ -1,72 +1,71 @@
-Return-Path: <linux-pci+bounces-11115-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11116-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BEA59450E5
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:41:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 110BE9450FA
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:43:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E10DC1F2A3AA
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 16:41:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B3E1B2A7E7
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 16:41:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69801BDA9A;
-	Thu,  1 Aug 2024 16:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F4EE1B9B35;
+	Thu,  1 Aug 2024 16:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aXTZHb1J"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NIlANDKe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE6E1B9B30
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 16:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E611B32AA
+	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 16:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722530213; cv=none; b=Mvm7VG1t5OZ31vN1aNzmB6UStEUNB7QYZeitBndak3hFRAKVIuViwGQozNOid9eiB5g/ThlvSOOjdjMetQT1bdDXTd/MeC88JT6a57P/H5tgzRDAr27u48ysf4gR5F3jziwqPpqGdp+TDMsiRPld2+gdV52re8vK5PzvLgMha4Y=
+	t=1722530237; cv=none; b=HSF/rC88D1W6Pn4V/3cZlCEMeSzH6jCGcAWcj+DtR2orVbOBivjGx2baHLNZtnhhetJcXkfHRATfD5SzswwYWmYGhB9xcE0Xr6VZ9rSOv8Dg8eWg2y0EYCZGeNvfFi1bsNOBT0bMEhSYmRfwNN22GEn0750OuG/aeItHT7/tqD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722530213; c=relaxed/simple;
-	bh=em1mA1BE54fq/8Qiri++FwND1MqAxny3D8dbh9JAnPA=;
+	s=arc-20240116; t=1722530237; c=relaxed/simple;
+	bh=cmjllD7AIZPNe3EGU4iN5dQou1/Ep/pgmS0i1XzXO7Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pg2Dbwxuk+RxBdjJvuA9uMNpIVhEmbceUyfkatnQMHAOA3iIZ5IRXGhUNPqPnnoCQK25vhINK6W2wj7KEJJ5MRATpn8eKlRwumsSdm/d7VKMLGg/a4pdT/RRtUiMps42/a/j/1Vyj6UQ3A1RUI9t9rLFunulEl8WY7uZCZNayQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=aXTZHb1J; arc=none smtp.client-ip=209.85.216.48
+	 In-Reply-To:Content-Type; b=OA0AfVBjCfx2dTJYh6fVIHiE4zTWU7fulchCKb0K0p84loFlfqSMBflHYK8fSV4RA1dXrlm2wg4Oel2XMiYmHfa1o75W4gxykpp6JLHLGemhMUG/rJ8TcRwGmapB95OMPXSF+GJoJnc5kIzjHsGdT2NEIiFEC+vLWkVTQpW6JkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NIlANDKe; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2cb53da06a9so1736342a91.0
-        for <linux-pci@vger.kernel.org>; Thu, 01 Aug 2024 09:36:52 -0700 (PDT)
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7a263f6439eso4262507a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 01 Aug 2024 09:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1722530212; x=1723135012; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLHyQpGZ97xDMnvhgT/vb6AyMcdwpqj4il9mZWgq/VA=;
-        b=aXTZHb1JAkFK/ep3OkD9W+yxLy+BviCAHQUGNmJFXC4JQgIUa3nVaKF+uwhOCR5sUk
-         p2SJ+aI9PeH78MqanI7h6r0NEPZnkiTpmKUQNFowUviFJO1vh9ZvOQ5UToZgQAgtslqy
-         EfsG4YUZBBfYfLE+Ml1nIegN9eGuUGMWdiTmQ=
+        d=broadcom.com; s=google; t=1722530235; x=1723135035; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FCJYAv+dJVMHTeGACwSCEhnVsUtjj600R6s2G+DqcC0=;
+        b=NIlANDKehIda3uNj086F+Dom7twnZTUOi7pdh8dazhDCW6317XruYJdJjFKgxZZhhp
+         l6uiYtAij6vJCA2qznCvIijrRmjdGLDtjYPbI/tEX1X0pVIoiSvX46bKOpk/KdzZuNMw
+         GgANIEBsWOBKJNNI/swuZ969NdVZhvAtAgq7U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722530212; x=1723135012;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iLHyQpGZ97xDMnvhgT/vb6AyMcdwpqj4il9mZWgq/VA=;
-        b=IiQkCwGF9y6mx8ACHzsgbwvlV75JLH6TM80J/hPkuY2YQMcl8WJ8USuSgPL8CA7PK8
-         zFBSMGy8XxvOeBeKnU+yptCVn+YBHOTIZ8ouA80HNt5guOG7qDY7f0Tdz/Y0/6TwG7oA
-         LsinIj2byVJHaEBxlpZ9pKSaSCigwkw1mVXiXsQ0c3w1TiK0/f5VZxwk7JaHf1v3p1XM
-         6GhUWLH64aOI49hT1dX2qv6hxsvG+EJKr7YZED7IWP74QC1IsBFoD8qIf8xTcmuiMepn
-         A0MvC+VjMY7N1EV0d3Ra48VqxJHsnYLZcuUOC0I/bs3JjGQtF7KbGCraHSe/kBUvaKoB
-         GoOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXRv7uPtUy1UtAzqK2GulT0p0Jh9ZRw2bCf6/mxu9PJ+KHCaCyDWbTsl4vbxNb2YZTi4CmL6rwkuLJOv9MrG7FozYIaf05lnkDm
-X-Gm-Message-State: AOJu0YwALC1eVVmZSyc2QJfVVkWkkAskox6HqXKgBalJ+08oAhuB2L/K
-	EqE4EiUwHjMCzDN0Td579iGdwSa97Vxe2T08xHk4LTegyeiPhurbwa4S72UVKw==
-X-Google-Smtp-Source: AGHT+IHXuci+sTZSMUCBj5eUPCjwHAU9HQMlN9+pK4EtVlqys/N4mSTHfvkKJzr6ahefiQ9CPH5/hQ==
-X-Received: by 2002:a17:90b:4c0c:b0:2cf:f860:f13b with SMTP id 98e67ed59e1d1-2cffa292227mr782311a91.17.1722530211501;
-        Thu, 01 Aug 2024 09:36:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722530235; x=1723135035;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FCJYAv+dJVMHTeGACwSCEhnVsUtjj600R6s2G+DqcC0=;
+        b=qk5tu41EBztw0Ful4A4H9EmF/zFrFX34pOAxbzCOXrON041QsLjQlOH47JFNBWbSk6
+         Cb57nqP5Ple3I2pQrHLpXhJb4UWluMF4fXLOnAIL6Kmbw/3Ur/sFgrDA8WSx5j62TeRj
+         o+b8yiVNX316ejp2QsQyHfbrjgOf9v76R2KRqik4u6ejF9Si/Y16jCF3MxEPR8ctE89N
+         0d1kdZc/PVIxVeJ9Z9xsCNuiICO+rAS0i9m4CUte4RYgGRKiWAOgTQiAQKm+RP+conUy
+         lp3ZiH0NNAf916sJ3BwjdzUL2CDmyQvGehIVoQ2FdYUgSCirn/9t5Uec5IO2Nw46eyg8
+         YDRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVj++myGcT3DxacMpJ1JjdchpqiD5fXeyST5AMsj4+ZLhjgG4ZW8hD03LAeRlGwwL2avvFQd1yjsrYwQncycQhfnluf1g51wHdN
+X-Gm-Message-State: AOJu0YzFHSqP4E6UxhFLy/t6ifzfP23tpmGicVx2rgbkqhb78MF6J1+d
+	fZ6g02XVlgjyA3Th1NzgrLokC5r2+OoZhjHfag7PRdULojz4Fnan0Y1mLqzdzQ==
+X-Google-Smtp-Source: AGHT+IFi4XqpkJhuTWsmRfkmQJZplbZMkM9PNRQR0XHWty8mb0jI59IR96PLY0jkU+0GTx7LPnLO3Q==
+X-Received: by 2002:a05:6a20:914e:b0:1c6:91e1:f0fc with SMTP id adf61e73a8af0-1c699615856mr1171192637.48.1722530234981;
+        Thu, 01 Aug 2024 09:37:14 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cffb090f34sm143491a91.13.2024.08.01.09.36.46
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f5a4f3sm809905ad.93.2024.08.01.09.37.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Aug 2024 09:36:50 -0700 (PDT)
-Message-ID: <8c7a1133-a6ab-49e2-9cff-b542c9882bcb@broadcom.com>
-Date: Thu, 1 Aug 2024 09:36:45 -0700
+        Thu, 01 Aug 2024 09:37:14 -0700 (PDT)
+Message-ID: <4b26c2be-4755-486e-b7e4-e8460faf22c6@broadcom.com>
+Date: Thu, 1 Aug 2024 09:37:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,8 +73,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/12] dt-bindings: PCI: brcmstb: Add 7712 SoC
- description
+Subject: Re: [PATCH v5 03/12] PCI: brcmstb: Use common error handling code in
+ brcm_pcie_probe()
 To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
@@ -86,17 +85,14 @@ To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
+ Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
  "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
  <linux-rpi-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
 References: <20240731222831.14895-1-james.quinlan@broadcom.com>
- <20240731222831.14895-3-james.quinlan@broadcom.com>
-Content-Language: en-US
+ <20240731222831.14895-4-james.quinlan@broadcom.com>
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
@@ -130,15 +126,17 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240731222831.14895-3-james.quinlan@broadcom.com>
+In-Reply-To: <20240731222831.14895-4-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 7/31/24 15:28, Jim Quinlan wrote:
-> Add description for the 7712 SoC, a Broadcom STB sibling chip of the RPi 5.
-> The 7712 uses three reset controllers: rescal, for phy reset calibration;
-> bridge, for the bridge between the PCIe bus and the memory bus; and swinit,
-> which is a "soft" initialization of the PCIe HW.
+> o Move the clk_prepare_enable() below the resource allocations.
+> o Move the clk_prepare_enable() out of __brcm_pcie_remove() but
+>    add it to the end of brcm_pcie_remove().
+> o Add a jump target (clk_disable_unprepare) so that a bit of exception
+>    handling can be better reused at the end of this function implementation.
+> o Use dev_err_probe() where it makes sense.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
