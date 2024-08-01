@@ -1,59 +1,61 @@
-Return-Path: <linux-pci+bounces-11100-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11102-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4BD89442CE
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 07:48:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DFBA9442D5
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 07:49:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82478283E49
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 05:48:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10F651F22A06
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 05:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB1E13DDDB;
-	Thu,  1 Aug 2024 05:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D793715821A;
+	Thu,  1 Aug 2024 05:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DvodYHVr"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dKWDEkNh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E4B13D62F;
-	Thu,  1 Aug 2024 05:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4147013D62F;
+	Thu,  1 Aug 2024 05:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722491319; cv=none; b=NkOr/PjnCE+8N4H7nD9PtbI3nm6fOoA8tW19N760mqPhjewv3NafMbRhG9gYl3Ukukz/m6QzH2CvSBSVoIc2jI3YslkntJLvs4p/we2BpsKT3lCb7qvy/+Nl/LXqY0Iei0wbkXzaCKX+BWQzuDvmPawvwg1s1AY3w07aS84x9zU=
+	t=1722491325; cv=none; b=B2T/G1IrG9nfZmZ2Y8vepc0c4JXj2KEcFqXJssLAOoS4PfrFWC/m3X4GHOXyUaF+q1ohrkXBW4gyxBofh8qD4zKPgwq1J9pR7ChbF2shoClPgWh3rmG/wVkodPPugJlcIzRhCGEVqzikQ3GZPc+bAivCfB9Jj5RYYn3LEvkbtaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722491319; c=relaxed/simple;
-	bh=4Oi3TlIwbkpbXlafnRz5aqGDixiGI5TFcsOjgVMRHh4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bybQibn/cirUSY1Bzh6jLRRtLXvCpHwFQsdHPiMd87oHzQlfgTMeCJv/gLVnialvue38YuBO+GfvT9TGLpbWmDxi1irl2oq+blR/ejMg4GamXvepWTmcYCHYy7odvCMu/yOAytdvLWJ90V90oeEXf3/FN+D54SoNnW2LX27oQMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DvodYHVr; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1722491325; c=relaxed/simple;
+	bh=HRww8AFT74XwMikPlIa+yJyodREnJDAI/wvjvjD5cHc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pHtCDN+YivtVJjj7H9gbGmZLGJZdaE0m72f3beNm0YbBZ7lfQIWriQBe0Krn4aTWet+qqehfpzNWEWLDqLLQR0FY+oZYwPotUUvJ+rnZjlFU21Y1bouZPLhIQXGqt+rEVV1FzF7siCGGsHBaDoGjoJx7QHno1r5si8p64x1OvMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dKWDEkNh; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4711OmXU010039;
-	Thu, 1 Aug 2024 05:48:22 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4710OTgK010012;
+	Thu, 1 Aug 2024 05:48:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=vHAaWI3Ut3AytiltVZPSLF
-	fAZdB5xqKJCdLEWslzcJI=; b=DvodYHVrWBkyspXFpAyYuVq9VmkDR6at1HNwGG
-	A3jtS7fhlfKvZNwjMKv3XCgxMJ5BWg8/EIQHJ274W/J/pHg7GoNR2nnN9jrdN2qA
-	zq/E6nPRn6KTmHOf2+gEWvW740oB7BVet/rE3KTNNeGREPBE6BsL1Qe+JNIqKpK+
-	kEeWOyHoS82qPRkTDJbyzxiMKYaXNJ6144KxIIyYWa1tkXw/+5zZxwAhty8QN/1D
-	nLIGlJgFhjYb0Pv0S1x+zGhBZlPQ+RrccoRqboyisaNwstmmdCkoMoZzOU7Azav/
-	P3rtzA0gzMJVUNxfIC1+BeuMtkx75xyY+WQhdblmCdauXlGQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40qnbaakr2-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5tmIrHlyHSrFxq8tguGkzi2uakdoijh1Sm4arlSmcIw=; b=dKWDEkNhHMxF/UTm
+	b1JZd97pXaHbssmNkHxBdZ9yc2nJKHSrR3kOZQSTDMJ50593yP0OhlqEBox4ml85
+	gmVB633qYHctmIqfEkFIQRx2AdHVxni0lTPqhqd4TkhoO0ytYZerjpAczfDX5HFJ
+	u4WJalsmYE33/qaXFhYlJ5yX5PMplC/fzK3vWKPRVmXCAAdNxOLxCKfTHvyEXlUg
+	B/rk9arlKfNRm54IXi3HSOcg7tuhxJDgBEB9g6DpLf7YVW1QYtFm6iuJgiRohLSc
+	6DBmCA+x46+VL6yVh/kB1b2v3xVCpQlE5EKdlOAEz81bOCx0Fo6kRCoYHP+XP6PA
+	WLgfqA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40qnbaakrc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Aug 2024 05:48:22 +0000 (GMT)
+	Thu, 01 Aug 2024 05:48:26 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4715mKpi019296
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4715mPmM017818
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 Aug 2024 05:48:20 GMT
+	Thu, 1 Aug 2024 05:48:25 GMT
 Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 31 Jul 2024 22:48:16 -0700
+ 15.2.1544.9; Wed, 31 Jul 2024 22:48:20 -0700
 From: Sricharan R <quic_srichara@quicinc.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -62,10 +64,12 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC: <quic_srichara@quicinc.com>
-Subject: [PATCH V7 0/4] Add PCIe support for IPQ9574
-Date: Thu, 1 Aug 2024 11:17:59 +0530
-Message-ID: <20240801054803.3015572-1-quic_srichara@quicinc.com>
+Subject: [PATCH V7 1/4] dt-bindings: PCI: qcom: Document the IPQ9574 PCIe controller
+Date: Thu, 1 Aug 2024 11:18:00 +0530
+Message-ID: <20240801054803.3015572-2-quic_srichara@quicinc.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240801054803.3015572-1-quic_srichara@quicinc.com>
+References: <20240801054803.3015572-1-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,76 +82,113 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 8uIZrj58ON7ALV60yoFkfU2Ly_lVfYQ2
-X-Proofpoint-GUID: 8uIZrj58ON7ALV60yoFkfU2Ly_lVfYQ2
+X-Proofpoint-ORIG-GUID: AGXTLrFeEIPHiKjBV7BmHjuWs7BFfLR6
+X-Proofpoint-GUID: AGXTLrFeEIPHiKjBV7BmHjuWs7BFfLR6
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-01_02,2024-07-31_01,2024-05-17_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 mlxlogscore=908 phishscore=0 mlxscore=0
- impostorscore=0 clxscore=1011 suspectscore=0 adultscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ impostorscore=0 clxscore=1015 suspectscore=0 adultscore=0 spamscore=0
  malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2407110000 definitions=main-2408010032
 
-This series adds support for enabling the PCIe host devices (PCIe0, PCIe1,
-PCIe2, PCIe3) found on IPQ9574 platform. The PCIe0 & PCIe1 are 1-lane Gen3
-host and PCIe2 & PCIe3 are 2-lane Gen3 host.
+From: devi priya <quic_devipriy@quicinc.com>
 
-[V7]    - Fixed review comments from Konrad, Krysztof, Manivannan and picked up review tags
-          Rebased patch 4 on top of [1] for avoiding DBI/ATU mirroring
-          Both dt_binding_check and dtbs_check passed and tested on ipq9574-rdp433
+Document the PCIe controller on IPQ9574 platform.
 
-	  [1] - https://lore.kernel.org/linux-arm-msm/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/  
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: devi priya <quic_devipriy@quicinc.com>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+---
+ [V7] Picked up review tags
 
-[V6]
-        - Dropped patches [1] and [2] for clks, since its already merged.
-        - Addressed all comments from Krzysztof, Manivannan, Bjorn Helgaas.
-          Specifically dropped defining a new macro for SLV_ADDR_SPACE_SZ.
-          Letting it at reset value is fine.
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-          Both dt_binding_check and dtbs_check passed and tested on ipq9574-rdp433
-
-	[1] - https://patchwork.kernel.org/project/linux-pci/patch/20240512082858.1806694-2-quic_devipriy@quicinc.com/
-	[2] - https://patchwork.kernel.org/project/linux-pci/patch/20240512082858.1806694-3-quic_devipriy@quicinc.com/
-
-[V5]
-	Change logs are added to the respective patches
-	This series depends on the below series which adds support for
-	Interconnect driver[1] and fetching clocks from the Device Tree[2]
-	[1] - https://lore.kernel.org/linux-arm-msm/20240430064214.2030013-1-quic_varada@quicinc.com/
-	[2] - https://lore.kernel.org/linux-pci/20240417-pci-qcom-clk-bulk-v1-1-52ca19b3d6b2@linaro.org/
-[V4]
-https://lore.kernel.org/linux-arm-msm/20230528142111.GC2814@thinkpad/
-
-[V3]
-https://lore.kernel.org/linux-arm-msm/20230421124938.21974-1-quic_devipriy@quicinc.com/
-	- Dropped the phy driver and binding patches as they have been
-	  posted as a separate series.
-	- Dropped the pinctrl binding fix patch as it is unrelated to the series
-	  dt-bindings: pinctrl: qcom: Add few missing functions.
-	- Rebased on linux-next/master.
-	- Detailed change logs are added to the respective patches.
-
-[V2]
-https://lore.kernel.org/linux-arm-msm/20230404164828.8031-1-quic_devipriy@quicinc.com/
-	- Reordered the patches and split the board DT changes
-	  into a separate patch as suggested
-	- Detailed change logs are added to the respective patches
-[V1]
-https://lore.kernel.org/linux-arm-msm/20230214164135.17039-1-quic_devipriy@quicinc.com/
-
-devi priya (4):
-  dt-bindings: PCI: qcom: Document the IPQ9574 PCIe controller
-  arm64: dts: qcom: ipq9574: Add PCIe PHYs and controller nodes
-  arm64: dts: qcom: ipq9574: Enable PCIe PHYs and controllers
-  PCI: qcom: Add support for IPQ9574
-
- .../devicetree/bindings/pci/qcom,pcie.yaml    |  50 +++
- arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts   | 113 +++++
- arch/arm64/boot/dts/qcom/ipq9574.dtsi         | 421 +++++++++++++++++-
- drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
- 4 files changed, 581 insertions(+), 4 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index f867746b1ae5..2d61fb9f206d 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -26,6 +26,7 @@ properties:
+           - qcom,pcie-ipq8064-v2
+           - qcom,pcie-ipq8074
+           - qcom,pcie-ipq8074-gen3
++          - qcom,pcie-ipq9574
+           - qcom,pcie-msm8996
+           - qcom,pcie-qcs404
+           - qcom,pcie-sdm845
+@@ -161,6 +162,7 @@ allOf:
+             enum:
+               - qcom,pcie-ipq6018
+               - qcom,pcie-ipq8074-gen3
++              - qcom,pcie-ipq9574
+     then:
+       properties:
+         reg:
+@@ -397,6 +399,53 @@ allOf:
+             - const: axi_m_sticky # AXI Master Sticky reset
+             - const: axi_s_sticky # AXI Slave Sticky reset
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-ipq9574
++    then:
++      properties:
++        clocks:
++          minItems: 6
++          maxItems: 6
++        clock-names:
++          items:
++            - const: axi_m # AXI Master clock
++            - const: axi_s # AXI Slave clock
++            - const: axi_bridge
++            - const: rchng
++            - const: ahb
++            - const: aux
++
++        resets:
++          minItems: 8
++          maxItems: 8
++        reset-names:
++          items:
++            - const: pipe # PIPE reset
++            - const: sticky # Core Sticky reset
++            - const: axi_s_sticky # AXI Slave Sticky reset
++            - const: axi_s # AXI Slave reset
++            - const: axi_m_sticky # AXI Master Sticky reset
++            - const: axi_m # AXI Master reset
++            - const: aux # AUX Reset
++            - const: ahb # AHB Reset
++
++        interrupts:
++          minItems: 8
++        interrupt-names:
++          items:
++            - const: msi0
++            - const: msi1
++            - const: msi2
++            - const: msi3
++            - const: msi4
++            - const: msi5
++            - const: msi6
++            - const: msi7
++
+   - if:
+       properties:
+         compatible:
+@@ -507,6 +556,7 @@ allOf:
+                 - qcom,pcie-ipq8064v2
+                 - qcom,pcie-ipq8074
+                 - qcom,pcie-ipq8074-gen3
++                - qcom,pcie-ipq9574
+                 - qcom,pcie-qcs404
+     then:
+       required:
 -- 
 2.34.1
 
