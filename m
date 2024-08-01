@@ -1,159 +1,164 @@
-Return-Path: <linux-pci+bounces-11119-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11120-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D52AF9450F3
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:42:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41EAF945136
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 19:00:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 543EE1F2A4DA
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 16:42:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05FD9283B80
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 17:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B5D1B4C38;
-	Thu,  1 Aug 2024 16:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39FF71B8EB6;
+	Thu,  1 Aug 2024 17:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QrgBotrv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xe+u7jtr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8FA1AAE0B
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 16:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A65D1B4C5D;
+	Thu,  1 Aug 2024 17:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722530392; cv=none; b=rk9Ia6Bwgk2tkb8kDuKIrdHM7GFvxnq6UkIbIQZk9tSYVT7onYcb0YHrR4aWfFJ/mMEC41u80iEGrs28I6KFLmQv5itPULdjbrPgyZ6JIN3V+1Gs+hddsC61aMwZc5ks2jyVCon89ETRGyQprTEOk+pRpwmVAoqtx/OAv45uIxs=
+	t=1722531602; cv=none; b=PHugBsWE81zPiLaAXbDqVA+L67Ug9/iWnDMfMNhim6hxvbHf6V391E17S9rU5MgjerkDVlMEJf91bSSmR1ARL64XHKRpQXTDUON9bJgBDrs0iPC3p9lDFfyCTaemTY8tKPUAAzXQgFc+h7VU7Rvgw2XkeYGezv5TeRvbU1IT9pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722530392; c=relaxed/simple;
-	bh=aW+yw24QKP88WTD79MuAJZ7KUYCV+Xdm1MDXXAJ5l/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HTiE1lo/JwFyAswdb5PmtzrgOH/+KzKvQ0b4mAX9xPPyslyJlWVD+W79tAYyCHirv/LBXMFIrAUCk9RhVFqG1uy+8QYLXvdtFqCmvbnHrIANPkygHJR9NWS9xcGALPO+17uXruzRHyimt64c5VrwLVgBo7oCvVUW2aX+MQubVE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QrgBotrv; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7093ba310b0so2769684a34.2
-        for <linux-pci@vger.kernel.org>; Thu, 01 Aug 2024 09:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1722530390; x=1723135190; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BeRWGc49rA0cbsyfnYv2lqBGC7Ym0PaJzvtvRqlZSeE=;
-        b=QrgBotrv2dTfknohvsKO9dCBJJkNCXPMzgI9YKxiitHJgk0jkLFJyFTp01DlOLwLWO
-         e4N8PH9Pde7gPYEW/ozlrSAhp3YdneVmajmEXYhimEdXyJ11Zg/5YcUkgZ0M/c9r29TU
-         gtu9v7dtCQXbB3/0BhYCgLa4RtOfQ6j8qhQug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722530390; x=1723135190;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BeRWGc49rA0cbsyfnYv2lqBGC7Ym0PaJzvtvRqlZSeE=;
-        b=okiqkhob4u0M0B3bc0eoSSDgOSFGtUoxE9Y7IYmSLhX8U2kJaEavND0zt343+jXdF5
-         TGjgXaW+zQTfWtlFc6yyieImzQfKUHPpu6V6L//jdsNQYJwcETw/dPMkImmxcARrFQj6
-         H8lpAHDId+UDRev3TXALiOKaJB9ejhunA2ssYFp6S5WgarphkpX2+dVcl8gAy8vTVDgi
-         tyCtOuHHy1EaF+OEGOi3do+o+gV4bBVhQf2l8cPIX7MIkl28AMDxFoIwc9MIPx3pMx92
-         Gl7WkodKJXjWQMbwjDetY63qoW9QR32xT5xm9otpuNpZim1E4DjfIVK/VRW1dLNeUFLc
-         S7QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTc6K9fgtb/3GAPJ7Kznk+9aNYB2g/TOiRVTL5XF6BrBMCYp/snAIzt/kmBkgl2V8kqhXPum5M+PPiijHGgtDy63rBeF6Ck6nE
-X-Gm-Message-State: AOJu0YwzPJSASNMEJDFs2818UtlqyQu/3tvuNVgabCkOHvGi2gXGxepX
-	FZh+MWHnpD5GYKUA/9Puq9lmUb6bnc/Wa/BMXV9I7JbILAjNhRfTv5sr+AH73A==
-X-Google-Smtp-Source: AGHT+IHTLjSe4CM1bHyfWUSFEWK1u2FwUf2Nrg09R4P8bGlYpYia0doT5FCvFJ/hT3egJdz5sNRMIg==
-X-Received: by 2002:a05:6830:620c:b0:709:427e:e383 with SMTP id 46e09a7af769-709b996de01mr940071a34.27.1722530389700;
-        Thu, 01 Aug 2024 09:39:49 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb99b500e9sm206806d6.107.2024.08.01.09.39.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Aug 2024 09:39:49 -0700 (PDT)
-Message-ID: <e80553a4-723d-4b97-a0dc-3335b3991fc5@broadcom.com>
-Date: Thu, 1 Aug 2024 09:39:43 -0700
+	s=arc-20240116; t=1722531602; c=relaxed/simple;
+	bh=A/7RObg8Tzl1vD90LuvoQOcriMT+2Jss1+r/SM4KW0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tGIzfrj0CXPCYcQNTyf5dDB5rHoFpy7OiZ0cDZSl1jrEkYXScFPZ9JWsU9q6CAoHdG6aripeZCI5L/98+V6Wv24ZROgeyziE9+vwiZ9KZp1YUSAjDGDESLrB/DjIXsaDyJ/3+8+Nuxuzv80oXbQjXnMv8P9MHB30+1AFCjEKuew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xe+u7jtr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53023C32786;
+	Thu,  1 Aug 2024 17:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722531601;
+	bh=A/7RObg8Tzl1vD90LuvoQOcriMT+2Jss1+r/SM4KW0Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Xe+u7jtrOH5CGdYNy2kTw9DpuDLkwzzEi5EoDbbYjhQAmwGUvgkhctGYRLFQq3n1a
+	 CKml7FNT0Z1wEvu1CbY49ZfYjvC6ruVi79mfuhk9pobGvJJtyFNqpOZbnptU/hVHbF
+	 YSqBHCKqs6P9O2cBEGAX0nbJd9M/1nJSSAADfSMJpQf//WZiPyftLXWipsyK5BFcq6
+	 68uxzeyZYYjn6+tnhkC7j2owaEh7uQ8lynHBq5dCIIVB9cG12OI0OMwkE3d8lRpkdG
+	 N9pEIAw9PaUIB73n0jPrtI0tJgmyxh+tVymu3sT50X9f0qElnLelskrA3bk7yySKF2
+	 c16XipuV6gfYg==
+Date: Thu, 1 Aug 2024 11:59:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Gerd Bayer <gbayer@linux.ibm.com>, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: s390: Handle ARI on bus without associated struct
+ pci_dev
+Message-ID: <20240801165959.GA83976@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Refactor for chips with many
- regular inbound windows
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240731222831.14895-1-james.quinlan@broadcom.com>
- <20240731222831.14895-10-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240731222831.14895-10-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b06e8e396d64d7202f9a8aae91e0c556b344cc5b.camel@linux.ibm.com>
 
-On 7/31/24 15:28, Jim Quinlan wrote:
-> Provide support for new chips with multiple inbound windows while
-> keeping the legacy support for the older chips.
+On Tue, Jul 30, 2024 at 09:59:13PM +0200, Niklas Schnelle wrote:
+> On Tue, 2024-07-30 at 21:36 +0200, Niklas Schnelle wrote:
+> > On s390 PCI busses are virtualized and the downstream ports are
+> > invisible to the OS and struct pci_bus::self is NULL. This associated
+> > struct pci_dev is however relied upon in pci_ari_enabled() to check
+> > whether ARI is enabled for the bus. ARI is therefor always detected as
+> > disabled.
+> > 
+> > At the same time firmware on s390 always enables and relies upon ARI
+> > thus causing a mismatch. Moreover with per-PCI function pass-through
+> > there may exist busses with no function with devfn 0. For example
+> > a SR-IOV capable device with two PFs may have separate function
+> > dependency link chains for each of the PFs and their child VFs. In this
+> > case the OS may only see the second PF and its child VFs on a bus
+> > without a devfn 0 function. A situation which is also not supported by
+> > the common pci_configure_ari() code.
+> > 
+> > Dispite simply being a mismatch this causes problems as some PCI devices
+> > present a different SR-IOV topology depending on PCI_SRIOV_CTRL_ARI.
+> > 
+> > A similar mismatch may occur with SR-IOV when virtfn_add_bus() creates new
+> > busses with no associated struct pci_dev. Here too pci_ari_enabled()
+> > on these busses would return false even if ARI is actually used.
+> > 
+> > Prevent both mismatches by moving the ari_enabled flag from struct
+> > pci_dev to struct pci_bus making it independent from struct pci_bus::
+> > self. Let the bus inherit the ari_enabled state from its parent bus when
+> > there is no bridge device such that busses added by virtfn_add_bus()
+> > match their parent. For s390 set ari_enabled when the device supports
+> > ARI in the awareness that all PCIe ports on s390 systems are ARI
+> > capable.
+> > 
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > ---
+> >  arch/s390/pci/pci_bus.c | 12 ++++++++++++
+> >  drivers/pci/pci.c       |  4 ++--
+> >  drivers/pci/probe.c     |  1 +
+> >  include/linux/pci.h     |  4 ++--
+> >  4 files changed, 17 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+> > index daa5d7450c7d..021319438dad 100644
+> > --- a/arch/s390/pci/pci_bus.c
+> > +++ b/arch/s390/pci/pci_bus.c
+> > @@ -278,6 +278,18 @@ void pcibios_bus_add_device(struct pci_dev *pdev)
+> >  {
+> >  	struct zpci_dev *zdev = to_zpci(pdev);
+> >  
+> > +	/*
+> > +	 * On s390 PCI busses are virtualized and the bridge
+> > +	 * devices are invisible to the OS. Furthermore busses
+> > +	 * may exist without a devfn 0 function. Thus the normal
+> > +	 * ARI detection does not work. At the same time fw/hw
+> > +	 * has always enabled ARI when possible. Reflect the actual
+> > +	 * state by setting ari_enabled whenever a device on the bus
+> > +	 * supports it.
+> > +	 */
+> > +	if (pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ARI))
+> > +		zdev->zbus->bus->ari_enabled = 1;
+> > +
 > 
-> In existing chips there are three inbound windows with fixed purposes: the
-> first was for mapping SoC internal registers, the second was for memory,
-> and the third was for memory but with the endian swapped.  Typically, only
-> one window was used.
+> @Bjorn unstead of adding the above code to s390 specific code an
+> alternative I considered would be to modify pci_configure_ari() like
+> below. I tested this as well but wasn't sure if it is too much churn
+> especially the handling of the dev->devfn != 0 case. Then again it
+> might be nice to have this in common code.
 > 
-> Complicating the inbound window usage was the fact that the PCIe HW would
-> do a baroque internal mapping of system memory, and concatenate the regions
-> of multiple memory controllers.
+> @@ -3523,12 +3524,18 @@ void pci_configure_ari(struct pci_dev *dev)
+>         u32 cap;
+>         struct pci_dev *bridge;
 > 
-> Newer chips such as the 7712 and Cable Modem SOCs take a step forward and
-> drop the internal mapping while providing for multiple inbound windows.
-> This works in concert with the dma-ranges property, where each provided
-> range becomes an inbound window.
+> -       if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
+> +       if (pcie_ari_disabled || !pci_is_pcie(dev))
+> +               return;
+> +
+> +       if (dev->devfn && !hypervisor_isolated_pci_functions())
+>                 return;
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>         bridge = dev->bus->self;
+> -       if (!bridge)
+> +       if (!bridge) {
+> +               if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI))
+> +                       dev->bus->ari_enabled = 1;
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+In the generic case here, how do we know whether the invisible bridge
+leading here has ARI enabled?  If that's known to always be the case
+for s390, I understand that, but I don't understand the other cases
+(jailhouse, passthrough, etc).
 
+>                 return;
+> +       }
+> 
+>         pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
+>         if (!(cap & PCI_EXP_DEVCAP2_ARI))
+> 
 
