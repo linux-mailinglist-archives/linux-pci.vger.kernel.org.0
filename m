@@ -1,257 +1,152 @@
-Return-Path: <linux-pci+bounces-11138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDF66945314
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 20:58:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0983C945359
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 21:26:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DBF7B24480
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 18:58:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B12C1C22886
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 19:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E25A148FF7;
-	Thu,  1 Aug 2024 18:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A375C1494A4;
+	Thu,  1 Aug 2024 19:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1h98z+z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6NIROKx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C38514600B
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 18:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808E814A4C8;
+	Thu,  1 Aug 2024 19:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722538679; cv=none; b=H3kYp2/QIIrBeIa+Y8Og3I/FtgMO3OFOZqABmosmZTRH6GlpDGggwYAItS9bBBwrwcbbWWC0Dd7LVuf9C8jM3p4QsCviAOAYu5JF305CeGGvy0eOUmuPlS6LNMpHnZrFI5EbF1uZk0/2NGNdNzViKtSGNLzKDRic6Vzzqmfqg34=
+	t=1722540352; cv=none; b=dOILYgv0wSBMYvKcia8nMbcFFXFUaca7ndCWjoYXaRBUgt3Wt17csJlHXRgjRLjc+MrPv/4N2ZRLvp6tVc9a70J6ymPTIsXFYWQOiH47us5ZO2I/cB9HB3gc8gT0sq2LO7zMSmZ0MkU8i1i0jNWnDqRuazjlE/ZboNK1j0EECl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722538679; c=relaxed/simple;
-	bh=HfGZCBMjnMaj7E3RBWTIWBx/LeItCX41Dvl149NT7UQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=byJMw6zojyCwjq+OD99kbVc8K3mHyuxvaeXVrW/gXVCtxxPrXuB7Da71fICdEAaPqF7+Dfh0prSP+rQemCDQOgR3T+lXrEF831H8TsMBe2X6zrobuldiHOEWMaIsvLYhS0WVs1rcmzwDKSiAIXbpAzEGTndelITdOSyxL+cImvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1h98z+z; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722538679; x=1754074679;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HfGZCBMjnMaj7E3RBWTIWBx/LeItCX41Dvl149NT7UQ=;
-  b=Z1h98z+zCOkE94ZZMTYJh5AvBjUIpBl2ZJjPT/Rf7vRAUgDk2Sj279fb
-   jVqaHOpL3673YyMYImRkRQxoNPzz4X3X9fJ5A6UT5gVVs4FlELBvCnvSQ
-   3I0POQhUMhDVQw73S4n5rUa7/Bg0zb+iHnFhbyeK3q0WcvLNNUNVFqsHy
-   AM1efrCgHcmxrmKC7eZjWoPgsk4hP21/+NsYw7c5K5Zr5N+gJsojREPk8
-   qdCf3xqqz7DiFEMYp7x2aP2bjRrYqPVs3sxYXBTzXeSNOfetxjDn3oEAb
-   skXx8EuQE10W0cvZrDiqzmYlnGt0oFPyqIHpTXn2//jOAncDEGRvNmciG
-   Q==;
-X-CSE-ConnectionGUID: TfcWkgHeQ/64bSvtch1TOA==
-X-CSE-MsgGUID: /2Nto3t4RBS2RobTjaRWuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11151"; a="24293359"
-X-IronPort-AV: E=Sophos;i="6.09,255,1716274800"; 
-   d="scan'208";a="24293359"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2024 11:57:58 -0700
-X-CSE-ConnectionGUID: bp3ayUVQRgKdAGGcN/8HRQ==
-X-CSE-MsgGUID: bm+0en+oRf6+22Eb7Wz2tg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,255,1716274800"; 
-   d="scan'208";a="59462330"
-Received: from unknown (HELO localhost) ([10.2.132.131])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2024 11:57:57 -0700
-Date: Thu, 1 Aug 2024 11:57:56 -0700
-From: Nirmal Patel <nirmal.patel@linux.intel.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- paul.m.stillwell.jr@intel.com, Jim Harris <james.r.harris@intel.com>
-Subject: Re: [PATCH] PCI: fixup PCI_INTERRUPT_LINE for VMD downstream
- devices
-Message-ID: <20240801115756.0000272e@linux.intel.com>
-In-Reply-To: <20240731030739.GA2248@thinkpad>
-References: <20240724170040.5193-1-nirmal.patel@linux.intel.com>
-	<20240724191030.GA806685@bhelgaas>
-	<20240725041013.GB2317@thinkpad>
-	<20240729130859.00006a5a@linux.intel.com>
-	<20240730052830.GA3122@thinkpad>
-	<20240730105115.00004089@linux.intel.com>
-	<20240731030739.GA2248@thinkpad>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-w64-mingw32)
+	s=arc-20240116; t=1722540352; c=relaxed/simple;
+	bh=cU39jujCdmex9bpGlFXkLRQPjBhcGd9q1gPjCWRGd0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oRhJww8THJyziQSLaXsKrOSmVAaQiaAB5hXdWP+PtdBHuUiSvecq+55tLy2WuCodMxOkF70N3zdv4UVmdtRkby1vLFPr5ZmAvy9nKK18hGq6fbIK3Jz4r99ZwPQeeWkSDYIudRDcOFpORvESPAKKPmRB8nKkhXJtGl+9AYoFnUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6NIROKx; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52f01613acbso2841830e87.1;
+        Thu, 01 Aug 2024 12:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722540348; x=1723145148; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cidrkhLGUiPZTc8U8YS3BVSfOeWIBNfQ0TV+XmUHKgg=;
+        b=D6NIROKx51wfrocECWyZzN55PZDcmlOtr7engUV67/Ky1W79ife0OpxrEFOkhOlxIG
+         TkbbFOVN1HT5sOaDRY8iwoHJoPO3WXazkQx1Yk984p51lZGVHyKggTK1dPjlt9ICWKHd
+         JuJt8HDXlRqThIkpX1aZnjSm79Gim77cmxvJfqhuOd1Ct3or2isNUDZoLdVvfwdNcAI+
+         lHl5wsvLfJFVeeh5xc0JrbhLEz4oWIHolGSz+xVowiXIWk1xUZvTUslQUleFTm0l6LBE
+         yDh9vkQV98+elNZx6kZwvJC8AjBwBc7Vt2QLrsfYyNXl+pfpzolNmU+YL3n1cR5buwXb
+         0Oyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722540348; x=1723145148;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cidrkhLGUiPZTc8U8YS3BVSfOeWIBNfQ0TV+XmUHKgg=;
+        b=sqYz/RmjVc+jQx+77TdbFZf0hu5cn+2gchRYM+z6WkCaj/x9+Rv4yiekxKzPEvp/oy
+         dU8UUjoTfOgBVMACYhbY/nBzCTP834Qkgh3TH3FCNgDuf21bXbpR2DFumhowr3H0+5Dn
+         HzcelIIDNQT2mh0MGfVOfkfa6N8K092LCjZakZ4I60lZxQZQNlQeeHMwSnEZTdKn/tsO
+         ijdoBjfbIYXll2lDKRg5pR2b6ZrtqA7wwUcgPEBcAmLVz1XamiIaAW9/i3VgOPbV79SV
+         M4EwfE4bvRcxk7Jfb89MVttY3vBQI+J3BkvrAidhe5QcvxPUzq8vYLabOT8TlJc5xt1b
+         7Dlg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7x4mAnTtuqh3cAODfqMI4lh8dnE1/7MwGmxtMoKuk17jH5c5trV/SXNu3z+xii3hFLEW270kPPikMUsbzyiumt98qPxZMOZ8iyoL8HBV6haT8WmmRiiRlTDLn2SEC6DPdY6BLW5sG0qqJ9iftsrMn1OgmyA30RTB2xvrhf/wrgiITCCc99Q==
+X-Gm-Message-State: AOJu0Yx+lYeanEsF53GoGOu1g2ZvxaLsSoO7GZvC8MoWtfPu7/0wYxha
+	RaI8MbB99OAdujDn8Jnq+AOq9NstSw8cC+rHOyWqGVnor2Gv1AOu
+X-Google-Smtp-Source: AGHT+IGCA/ERDtKy8U4QriTd5rJAi8FLks5bqwQeFfPiYwMB2uLG+sVI7oDh3dauIIRaGt1xxpPafw==
+X-Received: by 2002:a05:6512:32c6:b0:52b:c233:113b with SMTP id 2adb3069b0e04-530b8d17bc4mr717812e87.15.1722540348004;
+        Thu, 01 Aug 2024 12:25:48 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530bba10f7dsm35678e87.112.2024.08.01.12.25.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Aug 2024 12:25:47 -0700 (PDT)
+Date: Thu, 1 Aug 2024 22:25:44 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+Cc: jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, 
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 1/2] PCI: dwc: Add dbi_phys_addr and atu_phys_addr to
+ struct dw_pcie
+Message-ID: <vbq3ma3xanu4budrrt7iwk7bh7evgmlgckpohqksuamf3odbee@mvox7krdugg3>
+References: <20240724022719.2868490-1-quic_pyarlaga@quicinc.com>
+ <20240724022719.2868490-2-quic_pyarlaga@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240724022719.2868490-2-quic_pyarlaga@quicinc.com>
 
-On Wed, 31 Jul 2024 08:37:39 +0530
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-
-> On Tue, Jul 30, 2024 at 10:51:15AM -0700, Nirmal Patel wrote:
-> > On Tue, 30 Jul 2024 10:58:30 +0530
-> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> >   
-> > > On Mon, Jul 29, 2024 at 01:08:59PM -0700, Nirmal Patel wrote:  
-> > > > On Thu, 25 Jul 2024 09:40:13 +0530
-> > > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > > >     
-> > > > > On Wed, Jul 24, 2024 at 02:10:30PM -0500, Bjorn Helgaas
-> > > > > wrote:    
-> > > > > > On Wed, Jul 24, 2024 at 10:00:40AM -0700, Nirmal Patel
-> > > > > > wrote: 
-> > > > > > > VMD does not support legacy interrupts for devices
-> > > > > > > downstream from a VMD endpoint. So initialize the
-> > > > > > > PCI_INTERRUPT_LINE to 0 for these devices to ensure we
-> > > > > > > don't try to set up a legacy irq for them.      
-> > > > > > 
-> > > > > > s/legacy interrupts/INTx/
-> > > > > > s/legacy irq/INTx/
-> > > > > >       
-> > > > > > > Note: This patch was proposed by Jim, I am trying to
-> > > > > > > upstream it.
-> > > > > > > 
-> > > > > > > Signed-off-by: Jim Harris <james.r.harris@intel.com>
-> > > > > > > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> > > > > > > ---
-> > > > > > >  arch/x86/pci/fixup.c | 14 ++++++++++++++
-> > > > > > >  1 file changed, 14 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> > > > > > > index b33afb240601..a3b34a256e7f 100644
-> > > > > > > --- a/arch/x86/pci/fixup.c
-> > > > > > > +++ b/arch/x86/pci/fixup.c
-> > > > > > > @@ -653,6 +653,20 @@ static void quirk_no_aersid(struct
-> > > > > > > pci_dev *pdev)
-> > > > > > > DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL,
-> > > > > > > PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid); 
-> > > > > > > +#if IS_ENABLED(CONFIG_VMD)
-> > > > > > > +/* 
-> > > > > > > + * VMD does not support legacy interrupts for downstream
-> > > > > > > devices.
-> > > > > > > + * So PCI_INTERRPUT_LINE needs to be initialized to 0 to
-> > > > > > > ensure OS
-> > > > > > > + * doesn't try to configure a legacy irq.      
-> > > > > > 
-> > > > > > s/legacy interrupts/INTx/
-> > > > > > s/PCI_INTERRPUT_LINE/PCI_INTERRUPT_LINE/
-> > > > > >       
-> > > > > > > + */
-> > > > > > > +static void quirk_vmd_interrupt_line(struct pci_dev *dev)
-> > > > > > > +{
-> > > > > > > +	if (is_vmd(dev->bus))
-> > > > > > > +		pci_write_config_byte(dev,
-> > > > > > > PCI_INTERRUPT_LINE, 0); +}
-> > > > > > > +DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID,
-> > > > > > > quirk_vmd_interrupt_line);      
-> > > > > > 
-> > > > > > A quirk for every PCI device, even on systems without VMD,
-> > > > > > seems like kind of a clumsy way to deal with this.
-> > > > > > 
-> > > > > > Conceptually, I would expect a host bridge driver (VMD acts
-> > > > > > like a host bridge in this case) to know whether it supports
-> > > > > > INTx, and if the driver knows it doesn't support INTx or it
-> > > > > > has no _PRT or DT description of INTx routing to use, an
-> > > > > > attempt to configure INTx should just fail naturally.
-> > > > > > 
-> > > > > > I don't claim this is how host bridge drivers actually
-> > > > > > work; I just think it's the way they *should* work.
-> > > > > >       
-> > > > > 
-> > > > > Absolutely! This patch is fixing the issue in a wrong place.
-> > > > > There are existing DT based host bridge drivers that disable
-> > > > > INTx due to lack of hardware capability. The driver just need
-> > > > > to nullify pci_host_bridge::map_irq callback.
-> > > > > 
-> > > > > - Mani
-> > > > >     
-> > > > For VMD as a host bridge, pci_host_bridge::map_irq is null.
-> > > > Even all VMD rootports' PCI_INTERRUPT_LINE registers are set to
-> > > > 0.     
-> > > 
-> > > If map_irq is already NULL, then how INTx is being configured? In
-> > > your patch description:  
-> > VMD uses MSIx.  
-> > > 
-> > > "So initialize the PCI_INTERRUPT_LINE to 0 for these devices to
-> > > ensure we don't try to set up a legacy irq for them."
-> > > 
-> > > Who is 'we'? For sure the PCI core wouldn't set INTx in your case.
-> > > Does 'we' refer to device firmware?
-> > >   
-> > > >Since VMD
-> > > > doesn't explicitly set PCI_INTERRUPT_LINE register to 0 for all
-> > > > of its sub-devices (i.e. NVMe), if some NVMes has non-zero
-> > > > value set for PCI_INTERRUPT_LINE (i.e. 0xff) then some software
-> > > > like SPDK can read it and make wrong assumption about INTx
-> > > > support. 
-> > > 
-> > > Is this statement is true (I haven't heard of before), then don't
-> > > we need to set PCI_INTERRUPT_LINE to 0 for all devices
-> > > irrespective of host bridge?   
-> > Since VMD doesn't support legacy interrupt, BIOS sets
-> > PCI_INTERRUPT_LINE registers to 0 for all of the VMD rootports but
-> > not the NVMes'.
-> > 
-> > According to PCIe base specs, "Values in this register are
-> > programmed by system software and are system architecture specific.
-> > The Function itself does not use this value; rather the value in
-> > this register is used by device drivers and operating systems."
-> > 
-> > We had an issue raised on us sometime back because some SSDs have
-> > 0xff (i.e. Samsung) set to these registers by firmware and SPDK was
-> > reading them when SSDs were behind VMD which led them to believe
-> > VMD had INTx support enabled. After some testing, it made more
-> > sense to clear these registers for all of the VMD owned devices.
-> >   
+On Tue, Jul 23, 2024 at 07:27:18PM -0700, Prudhvi Yarlagadda wrote:
+> Both DBI and ATU physical base addresses are needed by pcie_qcom.c
+> driver to program the location of DBI and ATU blocks in Qualcomm
+> PCIe Controller specific PARF hardware block.
 > 
-> This is a valuable information that should've been present in the
-> patch description. Now I can understand the intention of your patch.
-> Previously I couldn't.
+> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+> Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
+>  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
-> > >   
-> > > > Based Bjorn's and your suggestion, it might be better if VMD
-> > > > sets PCI_INTERRUPT_LINE register for all of its sub-devices
-> > > > during VMD enumeration.
-> > > >     
-> > > 
-> > > What about hotplug devices?  
-> > That is a good question and because of that I thought of putting the
-> > fix in fixup.c. But I am open to your suggestion since fixup is not
-> > the right place.
-> >   
-> 
-> How about the below change?
-> 
-> diff --git a/drivers/pci/irq.c b/drivers/pci/irq.c
-> index 4555630be9ec..140df1138f14 100644
-> --- a/drivers/pci/irq.c
-> +++ b/drivers/pci/irq.c
-> @@ -147,6 +147,13 @@ void pci_assign_irq(struct pci_dev *dev)
->         struct pci_host_bridge *hbrg = pci_find_host_bridge(dev->bus);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 1b5aba1f0c92..bc3a5d6b0177 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -112,6 +112,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+>  		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
+>  		if (IS_ERR(pci->dbi_base))
+>  			return PTR_ERR(pci->dbi_base);
+> +		pci->dbi_phys_addr = res->start;
+>  	}
 >  
->         if (!(hbrg->map_irq)) {
-> +               /*
-> +                * Some userspace applications like SPDK reads
-> +                * PCI_INTERRUPT_LINE to decide whether INTx is
-> enabled or not.
-> +                * So write 0 to make sure they understand that INTx
-> is disabled
-> +                * for the device.
-> +                */
-> +               pci_write_config_byte(dev, PCI_INTERRUPT_LINE, 0);
->                 pci_dbg(dev, "runtime IRQ mapping not provided by
-> arch\n"); return;
->         }
-> 
-> 
-> So this sets PCI_INTERRUPT_LINE to 0 for _all_ devices that don't
-> support INTx. As per your explanation above, the issue you are seeing
-> is not just applicable to VMD, but for all devices.
-> 
-> - Mani
-> 
+>  	/* DBI2 is mainly useful for the endpoint controller */
+> @@ -134,6 +135,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+>  			pci->atu_base = devm_ioremap_resource(pci->dev, res);
+>  			if (IS_ERR(pci->atu_base))
+>  				return PTR_ERR(pci->atu_base);
+> +			pci->atu_phys_addr = res->start;
+>  		} else {
+>  			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+>  		}
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 53c4c8f399c8..efc72989330c 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -407,8 +407,10 @@ struct dw_pcie_ops {
+>  struct dw_pcie {
+>  	struct device		*dev;
+>  	void __iomem		*dbi_base;
 
-Thanks for the suggestion. Let me test the changes.
+> +	phys_addr_t		dbi_phys_addr;
+>  	void __iomem		*dbi_base2;
+>  	void __iomem		*atu_base;
+> +	phys_addr_t		atu_phys_addr;
 
--nirmal
+What's the point in adding these fields to the generic DW PCIe private
+data if they are going to be used in the Qcom glue driver only?
+
+What about moving them to the qcom_pcie structure and initializing the
+fields in some place of the pcie-qcom.c driver?
+
+-Serge(y)
+
+>  	size_t			atu_size;
+>  	u32			num_ib_windows;
+>  	u32			num_ob_windows;
+> -- 
+> 2.25.1
+> 
+> 
 
