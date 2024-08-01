@@ -1,55 +1,63 @@
-Return-Path: <linux-pci+bounces-11122-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11123-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11A36945153
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 19:11:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E476F945169
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 19:23:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AAEC5B25716
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 17:11:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8206BB22D5A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Aug 2024 17:23:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6681B3F25;
-	Thu,  1 Aug 2024 17:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643CC1B3736;
+	Thu,  1 Aug 2024 17:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uc3vKdAz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFbNtxYw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166B816F8EB
-	for <linux-pci@vger.kernel.org>; Thu,  1 Aug 2024 17:11:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7F813D617;
+	Thu,  1 Aug 2024 17:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722532266; cv=none; b=gF8V+Fg4RJZYyY2YKCyzOST5d5oh9PtiYMs5GMjUlDBaVyta7EgHcXnlO//0aIl3HMTsEXjb39dc9c8JaLRhDspf/RxLdie/i9bSBR75YuyHdMN49jHsWPLzAurGzRQWdZ37IDgOdZTcIfzwzrTrhYwqilRmg3IM4YLJtDXD0iw=
+	t=1722532991; cv=none; b=i3TaRh0ZK3A3se8l/q7KRc4VupP6XpB6Z99GS+K6pmwrF27Ff5Q7weeq0GpKaE4GzAVq84b6PEDvuW/fvAN9ytnhKBhnJ7fnSqEQLBY/Wxg7S9CwoUjx1yONwGtvWEfis0cRHrNripRQA9o/feg7KuPlBZS+NVRpSakCDS1eGhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722532266; c=relaxed/simple;
-	bh=8Gd69M55Yq8ClmoS2DeBWlHOezvS8h7ecwWJ/wqNlFs=;
+	s=arc-20240116; t=1722532991; c=relaxed/simple;
+	bh=z+rHBSakfkAUUMkUP86CoxwQzOchgypmU/tHoTfiLwE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=F355Wi/6K5o8LA8Eh8zlNsh32Y8Q5x0qdIF07hcsq3Vms3PHTx0XJu+WkR7c+UkSECvnDYnW7hW/MJjJ1Q9xa6kcWWeGvD5Y1+XpPteNLeT05ZhqFbHHbv2+N1wXRqt1dV7RAZzvKa0zC+UGVSj06n+w5TmNi10mhccQEiGcDPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uc3vKdAz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BDCC32786;
-	Thu,  1 Aug 2024 17:11:05 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=jOWgeZFohkzEfRcjMMCZS8D82UyKZoghWdVL7SUY8SqVCTp9DHvlDBJ4k1tNHLvavJQvGRLm04/EAWGQhUq5FIUCZqWtFNLvTj9y4TgjOyL1/JqFdz3RxVFjfPYXjlinSjg5HnVk5XnRwZ6KT0ZXo6iamaSQkWAipd2Sr4D4soA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFbNtxYw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E97C32786;
+	Thu,  1 Aug 2024 17:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722532265;
-	bh=8Gd69M55Yq8ClmoS2DeBWlHOezvS8h7ecwWJ/wqNlFs=;
+	s=k20201202; t=1722532990;
+	bh=z+rHBSakfkAUUMkUP86CoxwQzOchgypmU/tHoTfiLwE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Uc3vKdAzBH7KrTIrpCrmIF7C1gTsWgtMXeI6EZWdqGB86tA+bv6f12TG2oDu4ychZ
-	 jEyUbN5/vk+gDueI4jWiV9Nw6zUP9irtJyA3htXmMsYZlwQmGNhYIT6khI3ipXz4pQ
-	 Nzaxj/cvSVljt7NHZVI2tAJcp65jt66iiTiAvkFiSC/1DP9EIDbQf60hEAPHS/LsP1
-	 mkUKasKV/ApNZBud0Y8fyfHLznWQrCR7HSQpzJ8XIVkn87oRrpHzgSkxQOyBEYsQLG
-	 7u1FCNLivZ4nDE3BesBZEwyMHJ6IjzdrS0WotClxpdIuioeWU3Cw2FRIa8rRpEEjJk
-	 pvdRzYKk9AWQw==
-Date: Thu, 1 Aug 2024 12:11:03 -0500
+	b=MFbNtxYwrExkO/cIxrI1ZV9gjIqBOGjY6Q0ZhTO7c/NE/xYTexN4FulcETSsjCV/K
+	 2XYD0Nf7Y36VMW7Hh9YcAYgAdUN9Jhs7ev1RujOs+PtTqZGck//IWV0VI17mYmhcMa
+	 gNTC0TyF4wgQeFsNgBo1ciNm9uZ1JzGhDEeIPHt5mYCOUI2exL/IrC2SvR3fONYmyT
+	 Rl8KkXMwQpq7FxTHK5obpgLPWXDRLCVBDlXgjXIC/OW/+J0X/CDJS1ouJA1jSuU57u
+	 7uY97rYTuu2aSA2dGr6puYoK6/vvCNjX+3yLYP/iOkzK0p90VgmleIzCQX1NzMVPxX
+	 RivHmDHuLoaaw==
+Date: Thu, 1 Aug 2024 12:23:08 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jay Fang <f.fangjian@huawei.com>
-Cc: Ding Hui <dinghui@sangfor.com.cn>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, jonathan.cameron@huawei.com,
-	prime.zeng@hisilicon.com
-Subject: Re: [PATCH] PCI/ASPM: Update ASPM sysfs on MFD function removal to
- avoid use-after-free
-Message-ID: <20240801171103.GA107989@bhelgaas>
+To: manivannan.sadhasivam@linaro.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH v3 06/13] PCI: qcom-ep: Modify 'global_irq' and
+ 'perst_irq' IRQ device names
+Message-ID: <20240801172308.GA109178@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,95 +66,83 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155bccea-2728-2a12-7fb5-5b811d04b04f@huawei.com>
+In-Reply-To: <20240731-pci-qcom-hotplug-v3-6-a1426afdee3b@linaro.org>
 
-On Thu, Aug 01, 2024 at 08:05:23PM +0800, Jay Fang wrote:
-> On 2024/8/1 5:46, Bjorn Helgaas wrote:
-> > On Tue, Jul 30, 2024 at 05:57:43PM +0800, Ding Hui wrote:
-> >> On 2024/7/30 9:16, Jay Fang wrote:
-> >>>  From 'commit 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal
-> >>> to avoid use-after-free")' we know that PCIe spec r6.0, sec 7.5.3.7,
-> >>> recommends that software program the same ASPM Control(pcie_link_state)
-> >>> value in all functions of multi-function devices, and free the
-> >>> pcie_link_state when any child function is removed.
-> >>>
-> >>> However, ASPM Control sysfs is still visible to other children even if it
-> >>> has been removed by any child function, and careless use it will
-> >>> trigger use-after-free error, e.g.:
-> >>>
-> >>>    # lspci -tv
-> >>>      -[0000:16]---00.0-[17]--+-00.0  Device 19e5:0222
-> >>>                              \-00.1  Device 19e5:0222
-> >>>    # echo 1 > /sys/bus/pci/devices/0000:17:00.0/remove       // pcie_link_state will be released
-> >>>    # echo 1 > /sys/bus/pci/devices/0000:17:00.1/link/l1_aspm // will trigger error
-> >>>
-> >>>    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
-> >>>    Call trace:
-> >>>     aspm_attr_store_common.constprop.0+0x10c/0x154
-> >>>     l1_aspm_store+0x24/0x30
-> >>>     dev_attr_store+0x20/0x34
-> >>>     sysfs_kf_write+0x4c/0x5c
-> >>>
-> >>> We can solve this problem by updating the ASPM Control sysfs of all
-> >>> children immediately after ASPM Control have been freed.
-> >>>
-> >>> Fixes: 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal to avoid use-after-free")
-> >>> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
-> >>> ---
-> >>>   drivers/pci/pcie/aspm.c | 2 ++
-> >>>   1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> >>> index cee2365e54b8..eee9e6739924 100644
-> >>> --- a/drivers/pci/pcie/aspm.c
-> >>> +++ b/drivers/pci/pcie/aspm.c
-> >>> @@ -1262,6 +1262,8 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
-> >>>   		pcie_config_aspm_path(parent_link);
-> >>>   	}
-> >>> +	pcie_aspm_update_sysfs_visibility(parent);
-> >>> +
-> >>
-> >> To be more rigorous, is there still a race window in
-> >> aspm_attr_{show,store}_common or clkpm_{show,store} before updating
-> >> the visibility, we can get an old or NULL pointer by
-> >> pcie_aspm_get_link()?
-> > 
-> > Yeah, I think we still have a problem even with this patch.
->
-> If so, maybe we need a new solution to completely sovle this problem.
+On Wed, Jul 31, 2024 at 04:20:09PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Currently, the IRQ device name for both of these IRQs doesn't have Qcom
+> specific prefix and PCIe domain number. This causes 2 issues:
+> 
+> 1. Pollutes the global IRQ namespace since 'global' is a common name.
+> 2. When more than one EP controller instance is present in the SoC, naming
+> conflict will occur.
+> 
+> Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
+> names to uniquely identify the IRQs and also to fix the above mentioned
+> issues.
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index 0bb0a056dd8f..d0a27fa6fdc8 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -711,8 +711,15 @@ static irqreturn_t qcom_pcie_ep_perst_irq_thread(int irq, void *data)
+>  static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
+>  					     struct qcom_pcie_ep *pcie_ep)
+>  {
+> +	struct device *dev = pcie_ep->pci.dev;
+> +	char *name;
+>  	int ret;
+>  
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_ep_global_irq%d",
+> +			      pcie_ep->pci.ep.epc->domain_nr);
+> +	if (!name)
+> +		return -ENOMEM;
 
-I think so.  The pcie_link_state struct is kind of problematic to
-begin with.  It basically encodes the PCI hierarchy again, even though
-the hierarchy is already completely described via struct pci_dev.
+I assume this is what shows up in /proc/interrupts?  I always wonder
+why it doesn't include dev_name().  A few drivers do that, but
+apparently it's not universally desirable.  It's sort of annoying
+that, e.g., we get a bunch of "aerdrv" interrupts with no clue which
+device they relate to.
 
-IMO only the ASPM and clock PM state is really new information.  I'm
-not convinced that we even need all of that (how can
-supported/enabled/capable/default/disabled *all* be useful and
-understandable?).  But even if we *do* need all of that, it's only 39
-bits of information per device.
-
-> > For one thing, aspm_attr_store_common() captures the pointer from
-> > pcie_aspm_get_link() before the critical section, so by the time it
-> > *uses* the pointer, pcie_aspm_exit_link_state() may have freed the
-> > link state.
-> > 
-> > And there are several other callers of pcie_aspm_get_link() that
-> > either call it before a critical section or don't have a critical
-> > section at all.
-> > 
-> > I think it may be a mistake to alloc/free the link state separately
-> > from the pci_dev itself.
-> > 
-> >>>   	mutex_unlock(&aspm_lock);
-> >>>   	up_read(&pci_bus_sem);
-> >>>   }
-> >>
-> >> -- 
-> >> Thanks,
-> >> - Ding Hui
-> >>
-> > 
-> > .
-> > 
+>  	pcie_ep->global_irq = platform_get_irq_byname(pdev, "global");
+>  	if (pcie_ep->global_irq < 0)
+>  		return pcie_ep->global_irq;
+> @@ -720,18 +727,23 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
+>  	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->global_irq, NULL,
+>  					qcom_pcie_ep_global_irq_thread,
+>  					IRQF_ONESHOT,
+> -					"global_irq", pcie_ep);
+> +					name, pcie_ep);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to request Global IRQ\n");
+>  		return ret;
+>  	}
+>  
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_ep_perst_irq%d",
+> +			      pcie_ep->pci.ep.epc->domain_nr);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+>  	pcie_ep->perst_irq = gpiod_to_irq(pcie_ep->reset);
+>  	irq_set_status_flags(pcie_ep->perst_irq, IRQ_NOAUTOEN);
+>  	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->perst_irq, NULL,
+>  					qcom_pcie_ep_perst_irq_thread,
+>  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> -					"perst_irq", pcie_ep);
+> +					name, pcie_ep);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to request PERST IRQ\n");
+>  		disable_irq(pcie_ep->global_irq);
+> 
+> -- 
+> 2.25.1
+> 
 > 
 
