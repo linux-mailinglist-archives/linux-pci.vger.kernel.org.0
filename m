@@ -1,248 +1,173 @@
-Return-Path: <linux-pci+bounces-11157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 055FF94573B
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 06:59:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91E3594575C
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 07:18:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34DFFB22247
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 04:59:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E86F28783A
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 05:18:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD88420B28;
-	Fri,  2 Aug 2024 04:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UHlCTWgS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7566F2E646;
+	Fri,  2 Aug 2024 05:18:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5B0DDA6;
-	Fri,  2 Aug 2024 04:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722574737; cv=fail; b=AopwWOuLi8QCc9EmJRwZ4ooI+ttdLb1zDOo6S5MaojaftX2X1mfB5nFj/ozSrDOfPftK/ZSO5gFZ/9Oh5B3qRVJeR/I6IqE+ywDFd5gb6LY6hiG13ZgYKMGXbZjP/NxXxdYZpVwjhEe++FeBcavxnQfD/81sSgJVDFu6YCzwhZY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722574737; c=relaxed/simple;
-	bh=dE0hWMrCRqRUgfRCQpQHdeGFe1/cj5qmYBbxNXkts08=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MT3p26bF/39rb++5jrB5cH3dwhS2p0h/Nois+lW3I5csyVuC6+dg3cSNxZRX+HJviN+h3VAKWPKwm3AoNfXm4/6mBW6RDkaB/TzOvlIHy2v5y4ftVzReN6XW/WbW90/xwhLwftWjFsS8zfu9NzmtHrm4CeUL/mxnVONwPNby9nA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UHlCTWgS; arc=fail smtp.client-ip=40.107.95.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yT4qdxmLPAz4lnM2zXpSNNZF9MXQbqetKYjXDEpASLXgL8Aw9ec6d/uHMFkHrlFf+K1K66jO82buWNKjiyBwB+rMJEYSKZQOMmXQ78MhtcNYuOOwu8umVM/IyLKwOdcYMMDsQqFqbZr4YT8AU0Bv4A9gT2ouHxieTd1bE5crplIE6+GH0GGOu8oXYUVpk9C1HxaUtU6H/18Uc5zzjh8Tn/Z8ti5YHG4PY8C8MDveOUJTe71Ug3BAssl6ugS9SSNOHvR9mE0Yc3zRjX3Gd1bqSSydKBu+WfBo6dobwVIFMnGk9PjyUxHqBij7dPFMTMGa6VL/006qAcXVt2FD7udmEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pLPnVVC+OWED6K5bkFTnM+PnNE3ZPWcp2851SVyK4Mw=;
- b=RrSauUp/9U82Yqkrv2cRF+l53/V8V/kgT6TvnZvoLe4dLsAEDLDOmWm4Bacp9xLn7KMVfTQNEhu2WKjYRwsrxbx9cpSXWNTma3OHpVWPmCoHmpKc/o/3JS778Xbn53L0RNIroNaGT4mHu34vYGkX1QCSerVfbjxImnN3+czpCmv9FnFEZxpEK9untgi+5OlmrFy8pYdXixtBSCnXGaPZ3gQ3oGSJhHcgNmOuaxIAIlShaEhouP77scGlcXfSoghuezB3uBBo3Xj9CoJpD6YMT0byOUkb230Pcca/SEL0LtfwKasSuvZVJ4SRuWAqRfzPQSnS4WB7eOlMecoi6wLndw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pLPnVVC+OWED6K5bkFTnM+PnNE3ZPWcp2851SVyK4Mw=;
- b=UHlCTWgS+EhT6GPUGtyGJBjxfzaNQfindQhVeeMJ0+8A9BytfGMZslLHbFr0wOJS3eRS//K2CDKyIWYZ0LlJmNk9l/CTVwPcrjH3eTJuqNnFN12tYpd5wPFYAg7dxIl1NvH3wPSPMu2WNpZw5TDi0dYg3Bpb088Nde+ByPAiQXM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com (2603:10b6:5:1bb::24)
- by MN0PR12MB6368.namprd12.prod.outlook.com (2603:10b6:208:3d2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.23; Fri, 2 Aug
- 2024 04:58:51 +0000
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475]) by DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475%4]) with mapi id 15.20.7828.023; Fri, 2 Aug 2024
- 04:58:50 +0000
-Message-ID: <2fc282b0-97e4-448c-a77e-0ed63746d0a1@amd.com>
-Date: Thu, 1 Aug 2024 23:58:46 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 06/10] PCI/TPH: Introduce API to retrieve TPH steering
- tags from ACPI
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org,
- Jonathan.Cameron@huawei.com, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- alex.williamson@redhat.com, gospo@broadcom.com, michael.chan@broadcom.com,
- ajit.khaparde@broadcom.com, somnath.kotur@broadcom.com,
- andrew.gospodarek@broadcom.com, manoj.panicker2@amd.com,
- Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev, horms@kernel.org,
- bagasdotme@gmail.com, bhelgaas@google.com
-References: <20240723222229.GA759742@bhelgaas>
-From: Wei Huang <wei.huang2@amd.com>
-Content-Language: en-US
-In-Reply-To: <20240723222229.GA759742@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR04CA0084.namprd04.prod.outlook.com
- (2603:10b6:805:f2::25) To DM6PR12MB4877.namprd12.prod.outlook.com
- (2603:10b6:5:1bb::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFC51C2BD;
+	Fri,  2 Aug 2024 05:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722575894; cv=none; b=i0cisxMM0G+WCnrNAZcGBI8CULO2Zdk2SijNYooJfG94V75FYajF+gg6HAka2X9WSQiW/nULBlBBQh2WpjAp9MNtXmajvPW4/YvJQuo2MpmMeReTG1T52R+raT27QQL42BG+8JzUuOverj3Vb/mVPyqalkCHCZoszn8AHVr6ns0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722575894; c=relaxed/simple;
+	bh=KBnywWN7spBgCoWrsqgsxLIdipGHzAll/sCSzpFWEyA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V6PBJPxYyNRdpa1+QI++EP6Uaj7Ic5N8lDlBxOu750aV1vb6PsDB47NO+e0mQo4YtIKeKw2RQItkK2r/RaM1R9qAHykyabTKAH45GKCGCdlV4Vg/RLPBe38ZYQ1CqKDho4vDlh1vTJpKogqow00pnlBCOIlEgmKPAwT+uH9qfJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58ef19aa69dso8253832a12.3;
+        Thu, 01 Aug 2024 22:18:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722575890; x=1723180690;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dj9j6buMhufweuDFvVlwLCMoSOMtU4O0dz381mpjwf4=;
+        b=fVC1DIR94NNYU3OwicWAq7JuTqBx2Slfqvu6fwMkG8PwRgxv4CiPqxov0qZLZyKnmX
+         hcLZvsOorqA6AjkylJR1YDQH9nkHh/b+7lLgqFbyIHQsWEEenZutANysa4UUZARWqsxk
+         TnfNDs4KkPNuYEp3RBsAqfzldshqJ4dlVkZ8khly7oTQ7YjRHXmujA8IV7I1AK5jReq0
+         gzaB6WeULr6x+cbi2ZKUgcSsL3QV1GRruU/ya+ZoUzrvTOVxc4UEs465WYUnsmcHi95V
+         pWqq5bnTu0XakZD46LhCVUo8WScHBjUbCsTIaqRh+jDBnCE05Jth8S70ArFvHlHLjz02
+         vmbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGOGiU24XCawof6ZBCwgDO0Vixg/XrgM1HQoguOAZnK+mbu2T10DLf05qW/MWgGy2vEu2DSKiyoM0vC0aFz5Rr4SqnxrDv8DomDbk9k9H7P7WJi+oS3fJl9F8fvcVkmuMsVWinNM9AuquMOCFHbkw2/iuQG2YC+W6cQBlNlFH1u2V0NikEAp2aHJ46wnn/PVc9j4JOHtp6K7Q7HA1VsZvNGupo/8wQFLFZfn9K3T1/83IBsXUluqnu9BYuAD2G0bT4wa1s4kuxz98uzfKJi/TZ/YHXen+Knuf2jjPn9jVcnQ7fUT5DhzhuIPTYeatViFCZECfwvDFc6zthqQ==
+X-Gm-Message-State: AOJu0Yxv3c+Y2kf+tnE1FMjI5e0we43oIRLvW5bv0K7Nhgs3BCc91Eqh
+	z488b60G4LoXJzNSHl+tpB8+bxLSG4k1dKgNyIIwkdoM9BpksYpdWKmCaadQ
+X-Google-Smtp-Source: AGHT+IEh5xEcJZskqc4PliKP+yyJGP+S6jENM5xVY36nf+NI5thZLVuR/7sYo+93sVyNAhnzwAgWVg==
+X-Received: by 2002:a17:907:7e92:b0:a7a:929f:c0c2 with SMTP id a640c23a62f3a-a7dc509f3a9mr168123766b.51.1722575890007;
+        Thu, 01 Aug 2024 22:18:10 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9ecb085sm52827166b.212.2024.08.01.22.18.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Aug 2024 22:18:09 -0700 (PDT)
+Message-ID: <8d2e03ac-2a08-4a25-9929-dad375afb738@kernel.org>
+Date: Fri, 2 Aug 2024 07:18:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|MN0PR12MB6368:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b241db1-aa1f-42ac-78a8-08dcb2afcc96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q1BnMDZPQXFWZ3hRd3BnWWVuYUVrakdwNTdwY1VrOUlaUWFqOEppdlRqbjEx?=
- =?utf-8?B?aFRoc2o4WTNuZFNlRjBtTWptRkRER1lPNHI3dno2NXpySGhzaWpERWpEbElr?=
- =?utf-8?B?bjRnUHpmTUVQekxJbUZ5L21YZnBXZzVYRFhiWHFZNDNObk4rSkhLSklJalJu?=
- =?utf-8?B?c3Y5ME45UWNqaHVYSnBrNEdwbkpnU1k0eGp6UFhPT2hYaGhGeXFCV0QyVmsz?=
- =?utf-8?B?OFZjcC9VVzRKYTNRMzljMU16Z2hWYXlTT3NWNW1xeXlRR3J5K2JwOHBxdTVJ?=
- =?utf-8?B?WEtGaUg5MjV3T2VEcWZJUC9aK21KN2VOYW9SbUIxRnovVVh6YVFHbnBRZjBo?=
- =?utf-8?B?VE1JT3ZFN0t6bVZONTBlM1UyQThTTHFWYmx2cmJwaU5sQitxRXFUV0dpdU13?=
- =?utf-8?B?UlVOWXh5UGU3a0RiV1BBdUZlczRKWnVnL21oeC9mNlBtNitEc1N5YXcrS2xW?=
- =?utf-8?B?TFA2ak5McnFNSTMvWEFEb3ZPQlZnaGlWWFZwcGcyMTh6eEFLQ1FoK1MzT2s2?=
- =?utf-8?B?dWNGc3hORlF2YXpLazdIMjZLNHV3azVXdFVzditSc0pqb2l0OHFRUVdCWExJ?=
- =?utf-8?B?Q1VPRnFUVUVKdVRIMEJQSldJTTRDU3NJcnJZMkVWeCthbXJTa0oxZGI2R0RV?=
- =?utf-8?B?Q2txcWNmVkVNbUhNZzFWdzQ5bVQ2RktwQnQ0Szk0RWFzMnZTdkJSWXBnSVpx?=
- =?utf-8?B?RXlZc0YvZVBzUThpdW9HQkwwUTRXVmowQmlIYzU4RldhZHJKU3AxZ0luYkQv?=
- =?utf-8?B?aDgzbGhwSlc3YmpXRE5nUXRXd1FLZ2d5ZFpoMTZLMVhQWGxEQTAwWHhSTStl?=
- =?utf-8?B?Q0NFNWliNUJreEtSRElORWxzNkRlTWZQRlRQdkxCdHU4ODJwZHFKc2xTWVEr?=
- =?utf-8?B?T1pEanppekI2WWkvZEo3WE8wRWxvZmIxTFhvM0s2Y2NwWnUyUUNBVjllOUZC?=
- =?utf-8?B?MVZTOU9BVW5Pa2JPRVFZZlJoSFpOVW1RUFRBdkZEeTJCVDBQUmtSdnRnSEls?=
- =?utf-8?B?TkxHQUM2Nk9EWlJ2SWJzcExKRmt6SktxeUFwMDkwcFIvYVRmK1VNb3BSZjFD?=
- =?utf-8?B?Yll3eVFKcTk2SWo2UHc3QU5QUC9PUmEwR1UxT2Vya1lOTW10Uy8zd2c5SEVN?=
- =?utf-8?B?d2pRYWt1VWJOdGM5OWR2RThEQTN1ejBTVDBNNXVuTTlMeGFpMFlwaEY4UVJv?=
- =?utf-8?B?VnN4a3d0ZDQ4M3J5bjFJNWw5QWFyUXVKVWRwRTlTYXQ1bndsME05eVc4VUl5?=
- =?utf-8?B?V0I4NjVYbkdLTUtWblJLcFlBNW9FTlVwTUw5TkJLQWNjZHZOU0FSekpHeThR?=
- =?utf-8?B?UFBKS1RsMVVLNE0venBmbVd5VGdhTmo0dlBQYjRqeXNNcXhpTGNpNklMSDhh?=
- =?utf-8?B?bTNwc1pOSGpnTDQxQ2Faak5odklWR3RwVUs0Zm1OMlgwOFRsRTdiZE1XVFg1?=
- =?utf-8?B?ODNKeGtDTG5OZzNoOWltZnlVb3ZaOVk1ZFB0c2lzU003a0NzRHdvUHp0Rjh5?=
- =?utf-8?B?Yy9qKy85bldwZWUvc0FyNHJkTkF0Mm85Q2lrRkRmaWVoam1nVTl0bjRpVUtn?=
- =?utf-8?B?NVFDN2V1ZDVadEowWDNTNkRYZERvaFZ3Y0gzSG14SWhUMlhlS1l6OS9iamRX?=
- =?utf-8?B?alAvRm84UGx0VkN3WFpjTFBYUllaN2IyZXgyUUF6YnptTVIzdC9DWU1lMWtK?=
- =?utf-8?B?MXhKY1ZIN2lyVC9mZVlpQUZSYXl6clBrMEtqbE9DM25xM3VJVWs3dDB2b2Ry?=
- =?utf-8?B?cGlrcXNIVVRMd3liZU5DeEF0R1FqY2hhRk1GTzJyYm5sOHhIN2ZZUGZaQ1dw?=
- =?utf-8?Q?g/uVaFXYDEoxoKC0Tbcxq3uQpJzS2wb0x6eMI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NHFVRzZTTzkxUCtOM0J1SnE1WVg0eEI0bVdHRnF3MkpMZ3FkQ09neUx3VHY4?=
- =?utf-8?B?WGZtRm5BWEh1QWJVMTNzWmNaOHRyRGY0Vm9HL2lISXdkOGdwZUJGMmplNTM4?=
- =?utf-8?B?OHpHaENlR2YvL2JTRVRJZVRKN2xqMXRWbkxKVVphMmgzd1BpWkdzbXBKak5o?=
- =?utf-8?B?WXJNQThJTVFmT3Zwbk55alNud2tXYllKbzhpNlI5bk5PS2MrNXh0djhEK0RZ?=
- =?utf-8?B?RzFpOW9ENHJTbXJscUkwSkthMmorL011Z1lOcEFRTVJySU9CV0xIeEphVmtx?=
- =?utf-8?B?a0FDMU1EQ2dFSGR4Nmk1c0tURFZpejB1czFYMTJxR3J6QURTdEVJaXk0Mis1?=
- =?utf-8?B?dEJENnBzU2lQeW0yMHZBMzZBWmdWVUZDZGNJVXVwM1JZTnBKVU0rMVo0Wmhp?=
- =?utf-8?B?NzU3WUdMaXlRQ1IwVDBnbHJ5MC96NWluMlNvd1UwY0xuV2k3OW5GamxhL3Fa?=
- =?utf-8?B?cDRIWEJTZy9LY0pieDdaWDF4Y2FxbkpncXE2R1MwbjdJRGoyZ3krN0xZNjBT?=
- =?utf-8?B?Ny8xbWxSQzBhdFI3VEJOY3AraUh6VHB2Y2kvelYxNkNIT1VGQUNMMFROTTlU?=
- =?utf-8?B?RGcza2gwTDhLUHZOMlJFZDhVTGg3UHAvdGVJZ0cwNDFrQXFxMXlseU5sSXNV?=
- =?utf-8?B?Smtzc2NzYUpyLythRmtSUDYzMU5EMkV1dFlQV1Myb2dsVzZacW92bXE1NmxR?=
- =?utf-8?B?ZDVZNlowRXBWazVJd2VkNzNhbXFmdDVsTlY3dW5paENUNXFtVUdiTXJCTE9v?=
- =?utf-8?B?a2d4N2pQWVN6NTRkMnJ2bld4SzNiWFZWV3lsMW9BNk1pTWZCRUo1SWlVVVhL?=
- =?utf-8?B?RXFRWTBrcjRSdU9oYmxTOTB3eWJOSWpYN1gyQ1ZCSmgxY1N5ai9yUk05NWJa?=
- =?utf-8?B?NUJLTHFYcWttcWZPbkt6TXVOUTVrQ1JFcGczczhrLzJkNmhFa2Q5a0JrbDZr?=
- =?utf-8?B?UkpRMnBvWmZZVUg3SFJjQjVraldnYkswdUwvcC9CTmlyY05QOXk0RzBwNTIw?=
- =?utf-8?B?OHZCS2FqemJKWTliRkVURjZwdjdWcDloV3hWMGJOZm5xeERXNndkVllIUjBx?=
- =?utf-8?B?RkhFazF1Y3pzWnFJMkxBSDBvU3MrNWhDRTFydEhEY215QldNNVlUQWtqV2Qr?=
- =?utf-8?B?dU01U1A4OG40SDVQbTFsYW15MEZJZmxBaXdmaXpXZjhMVzJkc09nOTN2ekc2?=
- =?utf-8?B?bEpUNEI4MUFhbklJY2UzT2dRMCtJS3FDNEVTVER6WWpaT0x6QXhYMkJIYVBh?=
- =?utf-8?B?SVZhVm45MTdhYmZHQjdRUmlEMVF3azdTZTdMZlY2TGR0SVZWQTQyaFgyaFNR?=
- =?utf-8?B?TlBTQkxWdzBYcU9CL2ZINVNCNmt4RG5nSEtLU1JML1JQaDFNZUQya3M3RFRO?=
- =?utf-8?B?MnVyZ1BGQXdnUmJJVGExc2RCUGhRQ0w0UFBqeHhDN2l3enBDaDdhVHRHVCtp?=
- =?utf-8?B?MERKMHBjcmlYVllJaXBWZEtoV3F5V0FhUTZCWXRVS0M3a09CMnU3NWhPR1VB?=
- =?utf-8?B?WCtsUStZMGFqSXpZZDFYWEVqTFhSaXk1VXNwSndYTmVNaE44TE14anU2OWY4?=
- =?utf-8?B?MXVCMFVFdUtheE55bE11R1J0SDdGMGgzQUZwQ29pV3FSelVPY3dNckhZMjV1?=
- =?utf-8?B?cGppODdmdlBsUGJzbXpKYW1QN3NXUFBMbUlueVE2WUd0RlYwZ1NFd0lNdXIz?=
- =?utf-8?B?R3hSY09RQmR3bjJDNTdVQWNxdkNOYXh5dy8rOHp0YWxPdlpWT3oxM1FpYzlW?=
- =?utf-8?B?SUFoMEROeW45RmQ2bmNCOWhPMHF4LzdDZmg4WGhlWkNKRWdick5KcnRSRk1Z?=
- =?utf-8?B?VHVKOSt4MHdJU3lCU0JsZmhKZHhBT3FFNWVFUEM3QjlGT0tldzQwblE4SDh0?=
- =?utf-8?B?RXZqNFlMOVJIZFQydlREaGo3bGcvenM3OVBrZDd4T3BjdGRhdm8wVWhRYmdp?=
- =?utf-8?B?Vnp5NWlGWmNHczI4Q3NuNjZLUGhWbGthYWJFZmZ5ZkZocW5TWWx6SWtpRGt5?=
- =?utf-8?B?YkxGZFpva012YmNubkErWEY0VncwWkh6UGxUVkdxZzVHYkNJcTRkTTNXN291?=
- =?utf-8?B?eFJ3emw4ZXBzRmRualFnUnl2VzlmMm9LeWdUL2RVd1FoMmtHQzJQN1REUW45?=
- =?utf-8?Q?1TC2bkfEfgk2Py674X25Fkzt3?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b241db1-aa1f-42ac-78a8-08dcb2afcc96
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4877.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2024 04:58:50.2109
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jgrcgEh40Jp8o0ny70wgRCWMqOR/hMamLEzZ+px1A0iu38hKl2Ln5ohXRQ0AQgSa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6368
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/10] serial: rp2: Remove deprecated PCI functions
+To: Philipp Stanner <pstanner@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ Boris Brezillon <bbrezillon@kernel.org>, Arnaud Ebalard <arno@natisbad.org>,
+ Srujana Challa <schalla@marvell.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Kalle Valo <kvalo@kernel.org>, Serge Semin <fancer.lancer@gmail.com>,
+ Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+ Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Kevin Cernekee <cernekee@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Mark Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Jie Wang <jie.wang@intel.com>, Adam Guerin <adam.guerin@intel.com>,
+ Shashank Gupta <shashank.gupta@intel.com>,
+ Damian Muszynski <damian.muszynski@intel.com>,
+ Nithin Dabilpuram <ndabilpuram@marvell.com>,
+ Bharat Bhushan <bbhushan2@marvell.com>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Gregory Greenman <gregory.greenman@intel.com>,
+ Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+ Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+ Breno Leitao <leitao@debian.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ John Ogness <john.ogness@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-ide@vger.kernel.org, qat-linux@intel.com,
+ linux-crypto@vger.kernel.org, linux-wireless@vger.kernel.org,
+ ntb@lists.linux.dev, linux-pci@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-sound@vger.kernel.org
+References: <20240801174608.50592-1-pstanner@redhat.com>
+ <20240801174608.50592-9-pstanner@redhat.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20240801174608.50592-9-pstanner@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On 7/23/24 17:22, Bjorn Helgaas wrote:
->> + * The st_info struct defines the steering tag returned by the firmware _DSM
->> + * method defined in PCI Firmware Spec r3.3, sect 4.6.15 "_DSM to Query Cache
->> + * Locality TPH Features"
+On 01. 08. 24, 19:46, Philipp Stanner wrote:
+> pcim_iomap_table() and pcim_iomap_regions_request_all() have been
+> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> pcim_iomap_table(), pcim_iomap_regions_request_all()").
 > 
-> I don't know what I'm missing, but my copy of the r3.3 spec, dated Jan
-> 20, 2021, doesn't have sec 4.6.15.
+> Replace these functions with their successors, pcim_iomap() and
+> pcim_request_all_regions()
 
-According to https://members.pcisig.com/wg/PCI-SIG/document/15470, the 
-revision has "4.6.15. _DSM to Query Cache Locality TPH Features". 
-PCI-SIG approved this ECN, but haven't merged it into PCI Firmware 
-Specification 3.3 yet.
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-<snip>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>   drivers/tty/serial/rp2.c | 12 +++++++-----
+>   1 file changed, 7 insertions(+), 5 deletions(-)
 
->> +
->> +/**
->> + * pcie_tph_get_st_from_acpi() - Retrieve steering tag for a specific CPU
->> + * using platform ACPI _DSM
-> 
-> 1) TPH and Steering Tags are not ACPI-specific, even though the only
-> current mechanism to learn the tags happens to be an ACPI _DSM, so I
-> think we should omit "acpi" from the name drivers use.
-> 
-> 2) The spec doesn't restrict Steering Tags to be for a CPU; it says
-> "processing resource such as a host processor or system cache
-> hierarchy ..."  But obviously this interface only comprehends an ACPI
-> CPU ID.  Maybe the function name should include "cpu".
+thanks,
+-- 
+js
+suse labs
 
-How about pcie_tph_get_st_for_cpu() or pcie_tph_retreive_st_for_cpu()?
-
->> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
->> index 854677651d81..b12a592f3d49 100644
->> --- a/include/linux/pci-tph.h
->> +++ b/include/linux/pci-tph.h
->> @@ -9,15 +9,27 @@
->>   #ifndef LINUX_PCI_TPH_H
->>   #define LINUX_PCI_TPH_H
->>   
->> +enum tph_mem_type {
->> +	TPH_MEM_TYPE_VM,	/* volatile memory type */
->> +	TPH_MEM_TYPE_PM		/* persistent memory type */
-> 
-> Where does this come from?  I don't see "vram" or "volatile" used in
-> the PCIe spec in this context.  Maybe this is from the PCI Firmware
-> spec?
-> 
-
-Yes, this is defined in the ECN mentioned above. Do you have concerns 
-about defining them here? If we want to remove it, then 
-pcie_tph_get_st_from_acpi() function can only support one memory type 
-(e.g. vram). Any advice?
-
->> +static inline int pcie_tph_get_st_from_acpi(struct pci_dev *dev, unsigned int cpu_acpi_uid,
->> +					    enum tph_mem_type tag_type, u8 req_enable,
->> +					    u16 *tag)
->> +{ return false; }
-> 
-> "false" is not "int".
-> 
-> Apparently you want to return "success" in this case, when
-> CONFIG_PCIE_TPH is not enabled?  I suggested leaving this non-exported
-> for now, which would mean removing this altogether.  But if/when we do
-> export it, I think maybe it should return error so a caller doesn't
-> assume it succeeded, since *tag will be garbage.
-> 
-> Bjorn
 
