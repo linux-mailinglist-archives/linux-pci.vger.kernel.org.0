@@ -1,233 +1,210 @@
-Return-Path: <linux-pci+bounces-11179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E79CA9459D7
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 10:25:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C38A3945ADA
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 11:22:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7126F280E93
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 08:25:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50F681F239B4
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 09:22:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B50361BF32E;
-	Fri,  2 Aug 2024 08:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790041DAC69;
+	Fri,  2 Aug 2024 09:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="egWRJE7R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+Tgt2u7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5331494DE
-	for <linux-pci@vger.kernel.org>; Fri,  2 Aug 2024 08:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915F31DAC61;
+	Fri,  2 Aug 2024 09:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722587097; cv=none; b=AiNsfUGxs3t4/a7NO4lism2JrUWoeWIXRemJAd7fj2lkN3yMm8eI+KG2oQ1py5oqHBQ+LaRxc6YVxnCJC0RR/4BJublx8HhAtNhhlOFVDlkHX/DiIBvJDJseoviJ3uc0wmcJX7uAXgYWfgkjgoUvaTaKvUu1JMdL7KTFj+SFDdg=
+	t=1722590569; cv=none; b=kwezrKROPws8MRjxL/vtvRodu0YuE0kPahULyY064TmaSv/XCHa9bu9/q7+ZbOuKbp6wWrR54V893Ald3Kr56/P8sKhs8pvLENH2K4PjpTvy68Vkrdwy/M1mE4L9nnCzw+abj+yOxdIjDMMRwRSzXMoLJjMMnWfZSHRMthY8kEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722587097; c=relaxed/simple;
-	bh=Z7B4ej6Mdj2+V0RtL74zqFZgEeI1PTkP8LnxQO89PYk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WhpRuTpax3MVqz72+N9BGPMKRUBj+HHIcDQ19MwFyZFIaqIReK1BWNfyJREA6Ay7eUsG7ZoiHPT2d01xRgfDhA3eb94jWVKaLj5gROZFuqkd6Cjor8/QAh6GyLEkgOe+lgq4aTjlIQU9fTpDEY3tvKkCLPYh7xJ8zmmqymjS8bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=egWRJE7R; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e0885b4f1d5so6432368276.1
-        for <linux-pci@vger.kernel.org>; Fri, 02 Aug 2024 01:24:55 -0700 (PDT)
+	s=arc-20240116; t=1722590569; c=relaxed/simple;
+	bh=Cg/MKCTgd7hojhmxXQb7ju0BBua/MVvhWfRNKo9kc9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8Z/YxxW/dU1J3o3XlJvUlyOtMT/T4rrCBhaXd9jebMdm+oVnA/dC8Ne8Ok6xGYieyfdGrVUe4BTBx1mKW8X4wnjbWRhvxGEIsyD8vnb8j1mtLyecBsKG7cBt1pccHnIQV4k3BXLZ+OseeX+DC/r0/36QNfjYWlUYefEoX28JZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+Tgt2u7; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52f042c15e3so2729831e87.0;
+        Fri, 02 Aug 2024 02:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1722587094; x=1723191894; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AiVreYMKSzML2GjOpf0xHyyUDslaxEFhmmZabXtLDM0=;
-        b=egWRJE7Rkbyb576pGvJFK+m4g0eXN9B79bWgElhZvmOHhz0+XfINr3EGYDp2Am0EMS
-         t/Xav6iM4+Q7MP4iAXtUiyly7Hx+zVGufFdwcSVjlF3ZaD5XRWr+Oio4oOGL/1+cW08y
-         CQcY8ukMlYHRxz53+Mqxty7tOt7YUe+lO2aGMkeM2US+gX270WxE1onS/HJsaPM2I1BY
-         fC5h6ayusGVWQpleQqpfCd7o/FN4LYbw5+QKJgCV9+UpksfAezC9a8wRiYXLaYiQgZti
-         2uYcIliUHgmqmjA54AjOecaCVN35RU2mSBRS1esLq+Edbote4B/5dl1eRhntmzB8oORM
-         i/Yg==
+        d=gmail.com; s=20230601; t=1722590566; x=1723195366; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ye5tA42uMBNtvT73KdG8A94PBs19ktzkMoJkqT5xskw=;
+        b=G+Tgt2u724xXWxeV+8GWWw7KJByFn9b90RX4Sm0p2n3Hn1gVOGrDrOkf4zzOTMMjEd
+         hl0MM8GSvSIvKn4D5gQ96ra6B2Wn0SXQi5Bsq9JFJDPekx7UupdoTS461QDeZabDsTx6
+         dp2mXEG2GbWP68w9H4yG7Nd9mzCPObtWGolCgSi6PrXm/1ItZ01J68R5IzqvBVq7vGla
+         DpoHeFylkBOsBOryEExW4Y9GmrqFbCNtSsm5GSqwzB/BHXIcgm07wB9fOQvwfRKbPGLl
+         Lf5R4dQtS9usJ3x0IW2pXpbeAGsDwQ0b2Pg7G6PObGk06/DVB1He517ZNjwtoCWPJbW+
+         ZL8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722587094; x=1723191894;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AiVreYMKSzML2GjOpf0xHyyUDslaxEFhmmZabXtLDM0=;
-        b=w5l3QEfTDqRbIzU9+lMAiYZxdfNgK+4fBcYtv3YIXTJobP/YwbyjhWbfutg4WimdQZ
-         ZbDeI/2e0xnJ1ON1Hu8oWtfntJJBGqHCfYBkZVqIla5FyRXX50qfFnjoJyFBBgF8rv8O
-         R1/Nyl6ZldFeKowpT/sRhLpd4K0wmXhauwdbbltMdfp+H7o5VD4p3lU5QahjUHwoFW9L
-         bROnBlwzQGK5M+Ikppgcv5Dc0UBmzhIMSmCB+SNm7VU+P3nLPqD+o43hZSwX8ctnKpkP
-         3qfstH/8+ajUmvnPb4NVDdfLhrwn6y9pSXg30pmDAaB4HFAhFc8XKwUvNFz7zw3OJZoN
-         Cseg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+mvB21n6w5z345S6O9cMuG7WZomQgJZ5W89Y5ohL0Qnga3O9eE0+mwsxSBCm2GQdfpBSf1TIybiaxR41zgwTA09YcY/hGnBZW
-X-Gm-Message-State: AOJu0YwUjqDH3xeUVfl7VcnDb+/F1+YUGm4rG1okDnuHX+8tk6PRhmPR
-	C0l9pqmDkwNsKR17OUnhlRKff65oQTTlinCDK2uPqMJ+OKiYg305GuPIZ4UgHNlpEV+BYEAJ2/r
-	KDEyw1uKZBI22EAuf2vnXJlmyCVjknrJq3PBU9w==
-X-Google-Smtp-Source: AGHT+IFIESiJEeEBTmmXQg27WfjMc+QvxNvI7xxd/zoyTg5h71etytPKHyRbnw2Zm4xe8fT6eIxxkkMgmg8pVXO8q4s=
-X-Received: by 2002:a05:6902:20c8:b0:e0b:d7da:ae01 with SMTP id
- 3f1490d57ef6-e0bde2c191emr3325333276.5.1722587094502; Fri, 02 Aug 2024
- 01:24:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722590566; x=1723195366;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ye5tA42uMBNtvT73KdG8A94PBs19ktzkMoJkqT5xskw=;
+        b=IL7kFH7bLcUL8rwUIxNaioW+U4RNb0mji1uW8vo+qx7wgJNfk/u8qK/XaazKPUzHQC
+         2jbw+YlYoLxVQQHCeZ6R4MpuxH4fuataERiIXL1eh4WamTf+et1LaOfnRCWAAD9xhGAa
+         nqRiYF8CtmJP7+sSGAfSLiaRuppG5jRf+KAe1iqI+AP/14RMV7puiJ3ICwvSgdyHMPD4
+         nKuXFt3+XJotHNBKyyxtLfTt7kl5ApmBWwOaFhi8WFEHNYWy7trYkH3O3gHZvq7orUOE
+         yv+vwyORROTXxQUwEdbbdyeYVAqGZB8VjWS61plADNg/kZfxUdxH7G7HifmekdsbL2AH
+         GohA==
+X-Forwarded-Encrypted: i=1; AJvYcCUExlCjb4buIFr1G0edXmO8Rg+/ZW27Y2apvZbP+MoAWnOd/MCjNCtkdhy4LG/JalHOBwq46tFelp0brkQwtmSwazNDYEwyu0aiyPefNHEM6xGa7mZRu2QXUF+GJjJhjfe1PZPi5EZazFgYtnZHqh210J6FvsKPqQFYFOWDUgaWmc6xepfY2Q==
+X-Gm-Message-State: AOJu0YwLOTkeqNpgOGzih1vlkYQyiyVxMJyA/4YdOj2ypgS+loG4DsiV
+	mLqcYyIobW4X+z0EU02bQapEcEyrPJHDF0zURh2y5zauynJjEGAI
+X-Google-Smtp-Source: AGHT+IHHynU+MvKkk5v8go0Stm9aPxO3OHJ73yl2a7M0njc/TuGYR9a+LcLadnndQkGuDNy47AS//Q==
+X-Received: by 2002:a05:6512:2206:b0:52f:c16d:5c6a with SMTP id 2adb3069b0e04-530b8d17b54mr1271536e87.16.1722590565143;
+        Fri, 02 Aug 2024 02:22:45 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530bba29dafsm175361e87.171.2024.08.02.02.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Aug 2024 02:22:44 -0700 (PDT)
+Date: Fri, 2 Aug 2024 12:22:41 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, 
+	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 1/2] PCI: dwc: Add dbi_phys_addr and atu_phys_addr to
+ struct dw_pcie
+Message-ID: <rw45lgwf5btlsr64okzk2e4rpd62fdyrou7u2c6lndozxjhdpq@qm5qx4dvw5ci>
+References: <20240724022719.2868490-1-quic_pyarlaga@quicinc.com>
+ <20240724022719.2868490-2-quic_pyarlaga@quicinc.com>
+ <vbq3ma3xanu4budrrt7iwk7bh7evgmlgckpohqksuamf3odbee@mvox7krdugg3>
+ <6d926346-1c24-4aee-85b1-ffb5a0df904b@quicinc.com>
+ <j62ox6yeemxng3swlnzkqpl4mos7zj4khui6rusrm7nqcpts6r@vmoddl4lchlt>
+ <20240802052206.GA4206@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240719075200.10717-2-jhp@endlessos.org> <20240719080255.10998-2-jhp@endlessos.org>
-In-Reply-To: <20240719080255.10998-2-jhp@endlessos.org>
-From: Jian-Hong Pan <jhp@endlessos.org>
-Date: Fri, 2 Aug 2024 16:24:18 +0800
-Message-ID: <CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com>
-Subject: Re: [PATCH v8 4/4] PCI/ASPM: Fix L1.2 parameters when enable link state
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, David Box <david.e.box@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Nirmal Patel <nirmal.patel@linux.intel.com>, 
-	Jonathan Derrick <jonathan.derrick@linux.dev>, 
-	Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240802052206.GA4206@thinkpad>
 
-Jian-Hong Pan <jhp@endlessos.org> =E6=96=BC 2024=E5=B9=B47=E6=9C=8819=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Currently, when enable link's L1.2 features with __pci_enable_link_state(=
-),
-> it configs the link directly without ensuring related L1.2 parameters, su=
-ch
-> as T_POWER_ON, Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have been
-> programmed.
->
-> This leads the link's L1.2 between PCIe Root Port and child device gets
-> wrong configs when a caller tries to enabled it.
->
-> Here is a failed example on ASUS B1400CEAE with enabled VMD:
->
-> 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe =
-Controller (rev 01) (prog-if 00 [Normal decode])
->     ...
->     Capabilities: [200 v1] L1 PM Substates
->         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_S=
-ubstates+
->                   PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50u=
-s
->         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->                    T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
->         L1SubCtl2: T_PwrOn=3D50us
->
-> 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 =
-NVMe SSD (rev 01) (prog-if 02 [NVM Express])
->     ...
->     Capabilities: [900 v1] L1 PM Substates
->         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_S=
-ubstates+
->                   PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10u=
-s
->         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->                    T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
->         L1SubCtl2: T_PwrOn=3D10us
->
-> According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the PCI=
-e
-> Root Port and the child NVMe, they should be programmed with the same
-> LTR1.2_Threshold value. However, they have different values in this case.
->
-> Invoke aspm_calc_l12_info() to program the L1.2 parameters properly befor=
-e
-> enable L1.2 bits of L1 PM Substates Control Register in
-> __pci_enable_link_state().
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
-> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> ---
-> v2:
-> - Prepare the PCIe LTR parameters before enable L1 Substates
->
-> v3:
-> - Only enable supported features for the L1 Substates part
->
-> v4:
-> - Focus on fixing L1.2 parameters, instead of re-initializing whole L1SS
->
-> v5:
-> - Fix typo and commit message
-> - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
->   aspm_get_l1ss_cap()"
->
-> v6:
-> - Skipped
->
-> v7:
-> - Pick back and rebase on the new version kernel
-> - Drop the link state flag check. And, always config link state's timing
->   parameters
->
-> v8:
-> - Because pcie_aspm_get_link() might return the link as NULL, move
->   getting the link's parent and child devices after check the link is
->   not NULL. This avoids NULL memory access.
->
->  drivers/pci/pcie/aspm.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 5db1044c9895..55ff1d26fcea 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1411,9 +1411,15 @@ EXPORT_SYMBOL(pci_disable_link_state);
->  static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool=
- locked)
->  {
->         struct pcie_link_state *link =3D pcie_aspm_get_link(pdev);
-> +       u32 parent_l1ss_cap, child_l1ss_cap;
-> +       struct pci_dev *parent, *child;
->
->         if (!link)
->                 return -EINVAL;
-> +
-> +       parent =3D link->pdev;
-> +       child =3D link->downstream;
-> +
->         /*
->          * A driver requested that ASPM be enabled on this device, but
->          * if we don't have permission to manage ASPM (e.g., on ACPI
-> @@ -1428,6 +1434,15 @@ static int __pci_enable_link_state(struct pci_dev =
-*pdev, int state, bool locked)
->         if (!locked)
->                 down_read(&pci_bus_sem);
->         mutex_lock(&aspm_lock);
-> +       /*
-> +        * Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON =
-and
-> +        * LTR_L1.2_THRESHOLD are programmed properly before enable bits =
-for
-> +        * L1.2, per PCIe r6.0, sec 5.5.4.
-> +        */
-> +       parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
-> +       child_l1ss_cap =3D aspm_get_l1ss_cap(child);
-> +       aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
-> +
->         link->aspm_default =3D pci_calc_aspm_enable_mask(state);
->         pcie_config_aspm_link(link, policy_to_aspm_state(link));
->
-> --
-> 2.45.2
->
+On Fri, Aug 02, 2024 at 10:52:06AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Aug 02, 2024 at 12:59:57AM +0300, Serge Semin wrote:
+> > On Thu, Aug 01, 2024 at 02:29:49PM -0700, Prudhvi Yarlagadda wrote:
+> > > Hi Serge,
+> > > 
+> > > Thanks for the review comment.
+> > > 
+> > > On 8/1/2024 12:25 PM, Serge Semin wrote:
+> > > > On Tue, Jul 23, 2024 at 07:27:18PM -0700, Prudhvi Yarlagadda wrote:
+> > > >> Both DBI and ATU physical base addresses are needed by pcie_qcom.c
+> > > >> driver to program the location of DBI and ATU blocks in Qualcomm
+> > > >> PCIe Controller specific PARF hardware block.
+> > > >>
+> > > >> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+> > > >> Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
+> > > >> ---
+> > > >>  drivers/pci/controller/dwc/pcie-designware.c | 2 ++
+> > > >>  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+> > > >>  2 files changed, 4 insertions(+)
+> > > >>
+> > > >> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > >> index 1b5aba1f0c92..bc3a5d6b0177 100644
+> > > >> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > >> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > >> @@ -112,6 +112,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+> > > >>  		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
+> > > >>  		if (IS_ERR(pci->dbi_base))
+> > > >>  			return PTR_ERR(pci->dbi_base);
+> > > >> +		pci->dbi_phys_addr = res->start;
+> > > >>  	}
+> > > >>  
+> > > >>  	/* DBI2 is mainly useful for the endpoint controller */
+> > > >> @@ -134,6 +135,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+> > > >>  			pci->atu_base = devm_ioremap_resource(pci->dev, res);
+> > > >>  			if (IS_ERR(pci->atu_base))
+> > > >>  				return PTR_ERR(pci->atu_base);
+> > > >> +			pci->atu_phys_addr = res->start;
+> > > >>  		} else {
+> > > >>  			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+> > > >>  		}
+> > > >> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > >> index 53c4c8f399c8..efc72989330c 100644
+> > > >> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > >> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > >> @@ -407,8 +407,10 @@ struct dw_pcie_ops {
+> > > >>  struct dw_pcie {
+> > > >>  	struct device		*dev;
+> > > >>  	void __iomem		*dbi_base;
+> > > > 
+> > > >> +	phys_addr_t		dbi_phys_addr;
+> > > >>  	void __iomem		*dbi_base2;
+> > > >>  	void __iomem		*atu_base;
+> > > >> +	phys_addr_t		atu_phys_addr;
+> > > > 
+> > > > What's the point in adding these fields to the generic DW PCIe private
+> > > > data if they are going to be used in the Qcom glue driver only?
+> > > > 
+> > > > What about moving them to the qcom_pcie structure and initializing the
+> > > > fields in some place of the pcie-qcom.c driver?
+> > > > 
+> > > > -Serge(y)
+> > > > 
+> > > 
+> > 
+> > > These fields were in pcie-qcom.c driver in the v1 patch[1] and
+> > > Manivannan suggested to move these fields to 'struct dw_pcie' so that duplication
+> > > of resource fetching code 'platform_get_resource_byname()' can be avoided.
+> > > 
+> > > [1] https://lore.kernel.org/linux-pci/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/T/#mf9843386d57e9003de983e24e17de4d54314ff73
+> > 
+> > Em, polluting the core driver structure with data not being used by
+> > the core driver but by the glue-code doesn't seem like a better
+> > alternative to additional platform_get_resource_byname() call in the
+> > glue-driver. I would have got back v1 version so to keep the core
+> > driver simpler. Bjorn?
+> > 
+> 
+> IDK how adding two fields which is very related to DWC code *pollutes* it. Since
+> there is already 'dbi_base', adding 'dbi_phys_addr' made sense to me even though
+> only glue drivers are using it. Otherwise, glue drivers have to duplicate the
+> platform_get_resource_byname() code which I find annoying.
 
-Hi Nirmal and Paul,
+I just explained why it was redundant:
+1. adding the fields expands the core private data size for _all_
+platforms for no reason. (a few bytes but still)
+2. the new fields aren't utilized by the core driver, but still
+defined in the core private data which is first confusing and
+second implicitly encourages the kernel developers to add another
+unused or even weakly-related fields in there.
+3. the new fields utilized in a single glue-driver and there is a small
+chance they will be used in another ones. Another story would have
+been if we had them used in more than one glue-driver...
 
-It will be great to have your review here.
+So from that perspective I find adding these fields to the driver core
+data less appropriate than duplicating the
+platform_get_resource_byname() call in a _single_ glue driver. It
+seems more reasonable to have them defined and utilized in the code
+that actually needs them, but not in the place that doesn't annoy you.)
 
-I had tried to "set the threshold value in vmd_pm_enable_quirk()"
-directly as Paul said [1].  However, it still needs to get the PCIe
-link from the PCIe device to set the threshold value.
-And, pci_enable_link_state_locked() gets the link. Then, it will be
-great to calculate and programm L1 sub-states' parameters properly
-before configuring the link's ASPM there.
+Anyway I read your v1 command and did understand your point in the
+first place. That's why my question was addressed to Bjorn.
 
-[1]: https://lore.kernel.org/linux-kernel/20240624081108.10143-2-jhp@endles=
-sos.org/T/#mc467498213fe1a6116985c04d714dae378976124
+Please also note the resource::start field is of the resource_size_t
+type. So wherever the fields are added, it's better to have them
+defined of that type instead.
 
-Jian-Hong Pan
+-Serge(y)
+
+> 
+> - Mani
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
