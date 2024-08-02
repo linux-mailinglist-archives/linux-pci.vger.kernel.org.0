@@ -1,65 +1,66 @@
-Return-Path: <linux-pci+bounces-11156-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11157-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2478E945717
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 06:29:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 055FF94573B
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 06:59:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5C0A1F242DE
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 04:29:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34DFFB22247
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 04:59:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548971C2A3;
-	Fri,  2 Aug 2024 04:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD88420B28;
+	Fri,  2 Aug 2024 04:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iQHT6o+K"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UHlCTWgS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E04D3D68;
-	Fri,  2 Aug 2024 04:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5B0DDA6;
+	Fri,  2 Aug 2024 04:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722572971; cv=fail; b=Wpsq0zBtkGssl2ar0R+LDynfptdkXhDkrPBBzvAXAgC44m+kbgQcaMbUpAiU6ZdC0KbDXR7LgcMNkSvmJDAF799EpjfYuFYYFl5QM4q3CNtD2NlCeu+R12N/l+FS/SPuwbz/TdembNe0Pnh/xSF5bGQPqTLaLJuxDKrjq1X3U2k=
+	t=1722574737; cv=fail; b=AopwWOuLi8QCc9EmJRwZ4ooI+ttdLb1zDOo6S5MaojaftX2X1mfB5nFj/ozSrDOfPftK/ZSO5gFZ/9Oh5B3qRVJeR/I6IqE+ywDFd5gb6LY6hiG13ZgYKMGXbZjP/NxXxdYZpVwjhEe++FeBcavxnQfD/81sSgJVDFu6YCzwhZY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722572971; c=relaxed/simple;
-	bh=NY1Pwm9QbiC/2ugtpxf1Anf6cvR9+QA/BcLCICxQ8FI=;
+	s=arc-20240116; t=1722574737; c=relaxed/simple;
+	bh=dE0hWMrCRqRUgfRCQpQHdeGFe1/cj5qmYBbxNXkts08=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aewDtAETpwPhVjwEpAQHQBKqXzNsFEThcir/87n1p+7D76uWSJylk2pHMcw7Xvwd1G0lUXOf+6hEYWrR727emuywJ1PXcn9paHzSQMjtsqcRxZPFOUwQQdAIVIabvFq0k9zrvLPVKByjxOXn4IEokqGyVkbZCWPYmI/gDBCLK2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iQHT6o+K; arc=fail smtp.client-ip=40.107.93.84
+	 Content-Type:MIME-Version; b=MT3p26bF/39rb++5jrB5cH3dwhS2p0h/Nois+lW3I5csyVuC6+dg3cSNxZRX+HJviN+h3VAKWPKwm3AoNfXm4/6mBW6RDkaB/TzOvlIHy2v5y4ftVzReN6XW/WbW90/xwhLwftWjFsS8zfu9NzmtHrm4CeUL/mxnVONwPNby9nA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UHlCTWgS; arc=fail smtp.client-ip=40.107.95.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YA0j7lH//fDlfhMhUdjJ7ZArbemIIouAmID5QheTSAb6V2M96NYrtNaR+iveRKywLXm5FIJCMdha8x1xsFcTpswcWwd6cpGsjk1Wx9mTzgENcbMuy4zeW/BNcmOKN8EVdgKcAR0zH9xp5qsCRu9rn04ZeUU5hlGbgaEvZzMkwitWJ+PfyRMCHhLgAcJgE2ZsUW8rHoZYuAO1wAkgBKUadAg+4XVnrR58YMBY5pDF3UApRLm4U/ZalDhklbXM03+rrOhVTd/T4XeMaKyR/+rRUOvvS/DFCEuLQrJ0uvDy7uBRemphbD34xCIvJPS+1KcKRQRX+IxXW+75idSXJCfFNw==
+ b=yT4qdxmLPAz4lnM2zXpSNNZF9MXQbqetKYjXDEpASLXgL8Aw9ec6d/uHMFkHrlFf+K1K66jO82buWNKjiyBwB+rMJEYSKZQOMmXQ78MhtcNYuOOwu8umVM/IyLKwOdcYMMDsQqFqbZr4YT8AU0Bv4A9gT2ouHxieTd1bE5crplIE6+GH0GGOu8oXYUVpk9C1HxaUtU6H/18Uc5zzjh8Tn/Z8ti5YHG4PY8C8MDveOUJTe71Ug3BAssl6ugS9SSNOHvR9mE0Yc3zRjX3Gd1bqSSydKBu+WfBo6dobwVIFMnGk9PjyUxHqBij7dPFMTMGa6VL/006qAcXVt2FD7udmEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kS9+W2UpWh+oOtM49TSwhlLUAN3qsDvQvd8XDcDwPxQ=;
- b=frXKgGrXOqTCHH/5+sCAbvVTMXHRMoiFE8vIyOj5O1k1M/JZddWJGFoyEvWiGdECP9H8gjlp8QM8qb6McqCo3RBz0zyl5fMwn8h0RGunVJvZX18QdzT5qAZlryA9Spv9zp8J4zXnf4E/XGANgxhu5zSW/Wb7ekt/6xrunZbuHvKC7hCaiqYkUtoehq0Een9cMvkT/9zIkWjgcpAaoG9PF0mBkRv0P8jhleUIva426M1nYWcxH/XbRZ1DeBcqBcA0J13uaxi8HhPl1L+hDC0hJuSfVxYEPz6wJMGKUKMYx23r3zS+3v1SjizP1ETLE0zUzGP+vpEDqZJP0KLI9oAWxQ==
+ bh=pLPnVVC+OWED6K5bkFTnM+PnNE3ZPWcp2851SVyK4Mw=;
+ b=RrSauUp/9U82Yqkrv2cRF+l53/V8V/kgT6TvnZvoLe4dLsAEDLDOmWm4Bacp9xLn7KMVfTQNEhu2WKjYRwsrxbx9cpSXWNTma3OHpVWPmCoHmpKc/o/3JS778Xbn53L0RNIroNaGT4mHu34vYGkX1QCSerVfbjxImnN3+czpCmv9FnFEZxpEK9untgi+5OlmrFy8pYdXixtBSCnXGaPZ3gQ3oGSJhHcgNmOuaxIAIlShaEhouP77scGlcXfSoghuezB3uBBo3Xj9CoJpD6YMT0byOUkb230Pcca/SEL0LtfwKasSuvZVJ4SRuWAqRfzPQSnS4WB7eOlMecoi6wLndw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kS9+W2UpWh+oOtM49TSwhlLUAN3qsDvQvd8XDcDwPxQ=;
- b=iQHT6o+KdnbmMVYyUOA+DQNLDT5sK17ql6gAKKLMz23mdBF0PSN3oLhgdMZXcJpnurqjXtPpXDSWT2j20gmmv/CXr453+Co0H1xVH/pdLoyKr5CiiZGUWYxhxIv5H+5kILIxfucO0acg2uQKy297BagX1bS14yKZ8/ivybL4MiM=
+ bh=pLPnVVC+OWED6K5bkFTnM+PnNE3ZPWcp2851SVyK4Mw=;
+ b=UHlCTWgS+EhT6GPUGtyGJBjxfzaNQfindQhVeeMJ0+8A9BytfGMZslLHbFr0wOJS3eRS//K2CDKyIWYZ0LlJmNk9l/CTVwPcrjH3eTJuqNnFN12tYpd5wPFYAg7dxIl1NvH3wPSPMu2WNpZw5TDi0dYg3Bpb088Nde+ByPAiQXM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB4877.namprd12.prod.outlook.com (2603:10b6:5:1bb::24)
- by SJ1PR12MB6076.namprd12.prod.outlook.com (2603:10b6:a03:45d::10) with
+ by MN0PR12MB6368.namprd12.prod.outlook.com (2603:10b6:208:3d2::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.22; Fri, 2 Aug
- 2024 04:29:27 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.23; Fri, 2 Aug
+ 2024 04:58:51 +0000
 Received: from DM6PR12MB4877.namprd12.prod.outlook.com
  ([fe80::92ad:22ff:bff2:d475]) by DM6PR12MB4877.namprd12.prod.outlook.com
  ([fe80::92ad:22ff:bff2:d475%4]) with mapi id 15.20.7828.023; Fri, 2 Aug 2024
- 04:29:26 +0000
-Message-ID: <65f25d99-bf27-4521-944e-7ebfe3447a14@amd.com>
-Date: Thu, 1 Aug 2024 23:29:22 -0500
+ 04:58:50 +0000
+Message-ID: <2fc282b0-97e4-448c-a77e-0ed63746d0a1@amd.com>
+Date: Thu, 1 Aug 2024 23:58:46 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 04/10] PCI/TPH: Add pci=nostmode to force No ST Mode
+Subject: Re: [PATCH V3 06/10] PCI/TPH: Introduce API to retrieve TPH steering
+ tags from ACPI
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, netdev@vger.kernel.org,
@@ -70,14 +71,14 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  andrew.gospodarek@broadcom.com, manoj.panicker2@amd.com,
  Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev, horms@kernel.org,
  bagasdotme@gmail.com, bhelgaas@google.com
-References: <20240723224408.GA779931@bhelgaas>
+References: <20240723222229.GA759742@bhelgaas>
 From: Wei Huang <wei.huang2@amd.com>
 Content-Language: en-US
-In-Reply-To: <20240723224408.GA779931@bhelgaas>
+In-Reply-To: <20240723222229.GA759742@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0103.namprd11.prod.outlook.com
- (2603:10b6:806:d1::18) To DM6PR12MB4877.namprd12.prod.outlook.com
+X-ClientProxiedBy: SN6PR04CA0084.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::25) To DM6PR12MB4877.namprd12.prod.outlook.com
  (2603:10b6:5:1bb::24)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -86,108 +87,162 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|SJ1PR12MB6076:EE_
-X-MS-Office365-Filtering-Correlation-Id: 952168f2-1b39-45ad-3dc9-08dcb2abb174
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|MN0PR12MB6368:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b241db1-aa1f-42ac-78a8-08dcb2afcc96
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VnBQcXk3cC81dHJsOEJpMW5FVVY3dlBxbnBWVkxSL2Q0UzBUM1ZVNDQ3bkFR?=
- =?utf-8?B?NXJZNWYzRDY4L0d5Umh5TlFpN0o1V1BHQ2dKSzRNTDBHMmRKOTY2MVlyWmpK?=
- =?utf-8?B?WkRFa0hDUklTaGYwSCs2Lzh6VncyYzNtQWpzdTNOb1YzQ1hab0tsOEpqQmha?=
- =?utf-8?B?MTJGd1Q1K3E5U2Ewekc2ckdzcDBJaFkvcm95RHN1d3BlelBUelhyczVpcmo3?=
- =?utf-8?B?QTQzZXVWaVducTRWbnNMVDQ5aEVuUGhYUzlaZkVob055cEpzNGZacVNIZGM5?=
- =?utf-8?B?Rkt4WmthS3I1aHBVVkhwaC84czRiTFYyejY0OTRkbFY3cDlOYVUrTkpFMUdV?=
- =?utf-8?B?aGdOL1NwZVEzOFM5M0VFTUtsT2xIeXlpakJ2MEZReUlPODFFckNFYndzbkRB?=
- =?utf-8?B?NEdLcjlRZ0dLcVJqMnhYWVBHOUNBVUlQY1ZXRG1mUzU1d3p4alkrLy9DN0tL?=
- =?utf-8?B?ekpKeEIrODFmVmVTWkVaV3pDQU9jREVwbVFUbjJrazFTVTJ1dTN4U1hwVzl4?=
- =?utf-8?B?WS9JVHNCbE8wY2NqRFZTRzFxa2RDRC9INE4rMkhBOXpzbWozb01CZllLRWkv?=
- =?utf-8?B?QXE0b2tmS0FmbTd4aFIrQWNaUTdYTXhLSWRNY3hZR2djVFJzdENZRkVLSzFC?=
- =?utf-8?B?QnV6TmdpaTdYbkhaTlJuTzF2VFpWTzVISng2Tm45cmhLRlF3bWplQUlndlFn?=
- =?utf-8?B?VlR1Rm5FTDRWSmppWXZGRkFyR3JNejZ5UmR4ZloxOVZKVUk4OVEvOGVxbzJB?=
- =?utf-8?B?MzRIYjdlUkRyZ1orWDlNMk4xNE80eTVxcElDRE5seDQxak4yS1pvdzRpcTZ3?=
- =?utf-8?B?c2hZQXIxRWs0VGV6TEVtT2h1Zlptc0ZJamZjaVZhUGgzK0YrL091R2JZNWJw?=
- =?utf-8?B?ZXhYUWdPZS9QYy9IYzB1QzdhMmdGQW81SWRjdmE2SFNMdzNTZUQxbktHUGF0?=
- =?utf-8?B?Tmp6eGNNY2dTVG14dFU2cXg1eld1TjBscVJRT3h0eXozazBRRkRMNllNc29a?=
- =?utf-8?B?NHJJbE9rZ2x2Y1o2cmN0cmZ4eU0xYTJQZDRHa3FVZ081eTVqbEkyMDNvWElK?=
- =?utf-8?B?b2xzMTM0eE1qMlFYczJLS0RSTDRYQjk0d3VqSjFtTStzeDZlTFl3bkJKUHA3?=
- =?utf-8?B?NzlOSi8xT29tWU9hVUFWZDQ0SzlIeFhOem9RU3oySGhIcGV6RCtOTFp4SjZW?=
- =?utf-8?B?WVE4amVGRXpTNnB6ZzY3OTM2WWxhbDlGZXczRjE2eko3RCtSaUltLzNObG00?=
- =?utf-8?B?eHJaL0tTS3ZrUlY3azVCTmFKYVRZa3pMU2duRktQOVY4WjJyQjQ1M3JUYlNQ?=
- =?utf-8?B?dXB4U1hjendXRk9DcGQ3OHBxaGtkcjdneU5XNkpyUDZXSEU2djQ1MklVYjVY?=
- =?utf-8?B?K0g3RVJyU25oeVIvM1RCdXBCdjRxWTI1ZWxHUTlnZU50b3A4Uk5Ed2ZWQUpR?=
- =?utf-8?B?ekJLQ3dIVkE1aWlmSFVzQTc4TUZsN1VwMWpsVVZIc3o0bEhqSml6MUVoMExk?=
- =?utf-8?B?c0gvTm4wM1NUVVcrbFkvdlpVUkY4ZEpwUU5NU0xBcFA1NXlWZFBqUmZBUnVX?=
- =?utf-8?B?UXV5RTRyQlRVakxTbFN6dTlXcG10Z0h1NWhpRS9tUEl1bmZ5b3lPdE1UYTF0?=
- =?utf-8?B?ZjFJRzN0amlkVGEvVnBTL255NUVrYVZtU3Q5TWZ1azl3bjBWL0RMbzdqdFBN?=
- =?utf-8?B?NmdJUzFRUDZEZEY2cEZ0VGNLYmJCM2VSZ0M5WFVQbC9iSFlsMSsvNHA2dy9w?=
- =?utf-8?B?SWtvemZuTlFXWFZ2MDFUQVFUZmFZb3oxRGJGb3ZFQTNvWFdXK0R1MEJ0S0hC?=
- =?utf-8?B?YTR0UVRSNzhwaFJWbEwxQT09?=
+	=?utf-8?B?Q1BnMDZPQXFWZ3hRd3BnWWVuYUVrakdwNTdwY1VrOUlaUWFqOEppdlRqbjEx?=
+ =?utf-8?B?aFRoc2o4WTNuZFNlRjBtTWptRkRER1lPNHI3dno2NXpySGhzaWpERWpEbElr?=
+ =?utf-8?B?bjRnUHpmTUVQekxJbUZ5L21YZnBXZzVYRFhiWHFZNDNObk4rSkhLSklJalJu?=
+ =?utf-8?B?c3Y5ME45UWNqaHVYSnBrNEdwbkpnU1k0eGp6UFhPT2hYaGhGeXFCV0QyVmsz?=
+ =?utf-8?B?OFZjcC9VVzRKYTNRMzljMU16Z2hWYXlTT3NWNW1xeXlRR3J5K2JwOHBxdTVJ?=
+ =?utf-8?B?WEtGaUg5MjV3T2VEcWZJUC9aK21KN2VOYW9SbUIxRnovVVh6YVFHbnBRZjBo?=
+ =?utf-8?B?VE1JT3ZFN0t6bVZONTBlM1UyQThTTHFWYmx2cmJwaU5sQitxRXFUV0dpdU13?=
+ =?utf-8?B?UlVOWXh5UGU3a0RiV1BBdUZlczRKWnVnL21oeC9mNlBtNitEc1N5YXcrS2xW?=
+ =?utf-8?B?TFA2ak5McnFNSTMvWEFEb3ZPQlZnaGlWWFZwcGcyMTh6eEFLQ1FoK1MzT2s2?=
+ =?utf-8?B?dWNGc3hORlF2YXpLazdIMjZLNHV3azVXdFVzditSc0pqb2l0OHFRUVdCWExJ?=
+ =?utf-8?B?Q1VPRnFUVUVKdVRIMEJQSldJTTRDU3NJcnJZMkVWeCthbXJTa0oxZGI2R0RV?=
+ =?utf-8?B?Q2txcWNmVkVNbUhNZzFWdzQ5bVQ2RktwQnQ0Szk0RWFzMnZTdkJSWXBnSVpx?=
+ =?utf-8?B?RXlZc0YvZVBzUThpdW9HQkwwUTRXVmowQmlIYzU4RldhZHJKU3AxZ0luYkQv?=
+ =?utf-8?B?aDgzbGhwSlc3YmpXRE5nUXRXd1FLZ2d5ZFpoMTZLMVhQWGxEQTAwWHhSTStl?=
+ =?utf-8?B?Q0NFNWliNUJreEtSRElORWxzNkRlTWZQRlRQdkxCdHU4ODJwZHFKc2xTWVEr?=
+ =?utf-8?B?T1pEanppekI2WWkvZEo3WE8wRWxvZmIxTFhvM0s2Y2NwWnUyUUNBVjllOUZC?=
+ =?utf-8?B?MVZTOU9BVW5Pa2JPRVFZZlJoSFpOVW1RUFRBdkZEeTJCVDBQUmtSdnRnSEls?=
+ =?utf-8?B?TkxHQUM2Nk9EWlJ2SWJzcExKRmt6SktxeUFwMDkwcFIvYVRmK1VNb3BSZjFD?=
+ =?utf-8?B?Yll3eVFKcTk2SWo2UHc3QU5QUC9PUmEwR1UxT2Vya1lOTW10Uy8zd2c5SEVN?=
+ =?utf-8?B?d2pRYWt1VWJOdGM5OWR2RThEQTN1ejBTVDBNNXVuTTlMeGFpMFlwaEY4UVJv?=
+ =?utf-8?B?VnN4a3d0ZDQ4M3J5bjFJNWw5QWFyUXVKVWRwRTlTYXQ1bndsME05eVc4VUl5?=
+ =?utf-8?B?V0I4NjVYbkdLTUtWblJLcFlBNW9FTlVwTUw5TkJLQWNjZHZOU0FSekpHeThR?=
+ =?utf-8?B?UFBKS1RsMVVLNE0venBmbVd5VGdhTmo0dlBQYjRqeXNNcXhpTGNpNklMSDhh?=
+ =?utf-8?B?bTNwc1pOSGpnTDQxQ2Faak5odklWR3RwVUs0Zm1OMlgwOFRsRTdiZE1XVFg1?=
+ =?utf-8?B?ODNKeGtDTG5OZzNoOWltZnlVb3ZaOVk1ZFB0c2lzU003a0NzRHdvUHp0Rjh5?=
+ =?utf-8?B?Yy9qKy85bldwZWUvc0FyNHJkTkF0Mm85Q2lrRkRmaWVoam1nVTl0bjRpVUtn?=
+ =?utf-8?B?NVFDN2V1ZDVadEowWDNTNkRYZERvaFZ3Y0gzSG14SWhUMlhlS1l6OS9iamRX?=
+ =?utf-8?B?alAvRm84UGx0VkN3WFpjTFBYUllaN2IyZXgyUUF6YnptTVIzdC9DWU1lMWtK?=
+ =?utf-8?B?MXhKY1ZIN2lyVC9mZVlpQUZSYXl6clBrMEtqbE9DM25xM3VJVWs3dDB2b2Ry?=
+ =?utf-8?B?cGlrcXNIVVRMd3liZU5DeEF0R1FqY2hhRk1GTzJyYm5sOHhIN2ZZUGZaQ1dw?=
+ =?utf-8?Q?g/uVaFXYDEoxoKC0Tbcxq3uQpJzS2wb0x6eMI=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SnR6ZkMwRG5wRnRpT2g3bXpMVXFhZ1ZRaVQ2S1JoYXY1UE1KODQzanJEM1lO?=
- =?utf-8?B?b1BqRFFWWXM1Ny9XWnB5UnBkZ2hrNzBRNlBYWCthbEQ4WW5DQzJoOHRGeUYz?=
- =?utf-8?B?cFpXMXU2cHlYMmdoUGRkY0JxMkIrYy8wVmpualNEeGVQR3NQY0V1QnlpOVc3?=
- =?utf-8?B?Q2NRd0FwTHVVUko3VTJoOENXMllHVmp6eS8wUFVnV3ZwbHAyd1dYZGt3dks0?=
- =?utf-8?B?Umw4MnN6YzlMRG1Xc0hUU1BpL1NDUGJPeWVUYnJrK1hMN0FqdzZwa3k1d2lC?=
- =?utf-8?B?bWxlTkVTZVA1MmVMVHFwWUNzTFB2TDZ4QVNoNnhQWko3QlhNT2FwQmh0VjE1?=
- =?utf-8?B?dUJKVGR2alpPV1JnVGF5Ryt6K2NJNWlLMHJ3RUk5R0w5UEx6MytRSUJnR0w2?=
- =?utf-8?B?ZzBmUVYxS1VnZWRIRVRhRVI2UFNscGFIUkhNVER3ZEZjUldZd3o1VW55anA3?=
- =?utf-8?B?VjgrUTdpY09HWFpwYW44T2VGRUxINFlIMjU1S0x2UWVuSVlVVmc4UzZpMENv?=
- =?utf-8?B?b3lzbkY1WmIweWxIazZKdVc2a3RaYVg5VnJvWmQ0VmRwdG5rN0JqN2RYaU8x?=
- =?utf-8?B?cjBMajJ3QXVkdCtVRHNROTVxdW1YWkxBRTF4NFhERXV6Znc4UXU4QTM2Z09G?=
- =?utf-8?B?N2JpYThNcndGSGs0ZU5QRzNOdGZRYnFKQ2hVNFpSWUduUEFjWjhmMjUxVVJm?=
- =?utf-8?B?VmRsNk5VVkFiQXVQMDNxZjR2MUR5WUw4Q0NoNlVIczdKckhneW9qRi9kaEpY?=
- =?utf-8?B?cCtTVWZqbEdSbjU0V3FiWWllRWcrRnNxenAwV2psWnMwZlllU2preW1HRG1F?=
- =?utf-8?B?M3pSKzJ6L1lpa2s5VGpyanZuODVFSWUwQjJLZ1RuRUU2UVJ6QWRHY3V2Yzcz?=
- =?utf-8?B?eW01dVFpbXJ0TEE2cGFxdGNyeHdPRXYxcGdReU5TQVFDNUpHWSt4MUppWEtv?=
- =?utf-8?B?VUJxZFdNeXFBeUp6V01rZHZicTJuU2dsMDQ5cTBHcVhMNnB4aHA3MEVPMm9K?=
- =?utf-8?B?TEY4b3ljQm1zcmpoMlRDenhwa1hOWDl2SU1NdlNMcnU2NUZ1UXEzdlJOL1ln?=
- =?utf-8?B?SURyOWhYUkNlMmtOUzNwQ2FVU1dxOXAzM2RQMmg5dHhDZ0NmMERsRTh0SFo1?=
- =?utf-8?B?TFBjdGR0d1Mwd0dhaHFKMUtuT01XYXNZU1N1b05EUEw5aWU3TGFIVU1FcDNJ?=
- =?utf-8?B?aGVRQS9Hd1AxbFBEL2h1NXZmRENwQWJEMXEwSVB4ZldkZU1lcDVrMlJVRXVK?=
- =?utf-8?B?dXF5blFnd1Z0VXdQbnRMcjhnbWp2WStSaWtmTHM5eTBiL21ZQVY0OFkzTGNu?=
- =?utf-8?B?WkVzL3VQRHlSNVNBd1pnYTFrWHBCVnFLL0lFYjA4YzNLMGV3ZGMrVzgrcnRL?=
- =?utf-8?B?K2IxUVRnTDZBZXR1K1hRVFl6R1YxbXFob01Jb3JXNkIrNmsxYnIyMVRmdUlv?=
- =?utf-8?B?QVhFcWFQWHZsa3F5bXNHOHBTekNPRUg5aWJzN2VkTzFaZ040eHllbVdRN0Vh?=
- =?utf-8?B?dExYVHN4cVNuT3hOUmFmcTk5MG5DcjcyZHoyZlZyaThDbTIvaytReU5rR1Y2?=
- =?utf-8?B?bjdHNWlaTnNWWGJMY0MrNkN2ZnhjVEJ5WlMyTnY1U1VMak15M21sSjFnQmdS?=
- =?utf-8?B?REJISEwxdmdBZm1zMkp5dVFzaWY5Z21QaU5TOXF6WmlMODMzS0VVbW5lblpR?=
- =?utf-8?B?K3BKZ0tLUGxzYkVFeXg3azNwYzJMeDNpNE5QZU83aGo0eWY1anVZbGR0SU1O?=
- =?utf-8?B?UDhxN0IzcU8xQnZRbXZEZWpCQzh4VEtHY3RnMTcxZ2pydmEyaDRmN3JrNVgz?=
- =?utf-8?B?SlJUOFg1cG9HNTZZdmkxNVB5dlNPaWpyWDVibFIwRHpCd3Vhb0NQL3JWRVNn?=
- =?utf-8?B?RDhFTWJkM1BERTQ5TFZWZWQ1M0YwRjllZER5bEhLeDgrYk1EL3AzaGpUOFZ1?=
- =?utf-8?B?a0ErN2R5bFBVR2t5cnNpaUREQTllanl0VEZyS0txRmdIUTlZeTNYdXpEaHRx?=
- =?utf-8?B?aXhFNm52aFJrM0ZzMXlqWmxlcUVBeUlzdTJmVERuSEcwbHllZVB2WkRBZ3gw?=
- =?utf-8?B?TDFoNzRQMitVRnVTWWJUVGZNQlJaaTd5dmRFU0duTGZ1UkJTSU0vNnRFUnlX?=
- =?utf-8?Q?owv2qWbc47MvX+DfhhGdnxtDq?=
+	=?utf-8?B?NHFVRzZTTzkxUCtOM0J1SnE1WVg0eEI0bVdHRnF3MkpMZ3FkQ09neUx3VHY4?=
+ =?utf-8?B?WGZtRm5BWEh1QWJVMTNzWmNaOHRyRGY0Vm9HL2lISXdkOGdwZUJGMmplNTM4?=
+ =?utf-8?B?OHpHaENlR2YvL2JTRVRJZVRKN2xqMXRWbkxKVVphMmgzd1BpWkdzbXBKak5o?=
+ =?utf-8?B?WXJNQThJTVFmT3Zwbk55alNud2tXYllKbzhpNlI5bk5PS2MrNXh0djhEK0RZ?=
+ =?utf-8?B?RzFpOW9ENHJTbXJscUkwSkthMmorL011Z1lOcEFRTVJySU9CV0xIeEphVmtx?=
+ =?utf-8?B?a0FDMU1EQ2dFSGR4Nmk1c0tURFZpejB1czFYMTJxR3J6QURTdEVJaXk0Mis1?=
+ =?utf-8?B?dEJENnBzU2lQeW0yMHZBMzZBWmdWVUZDZGNJVXVwM1JZTnBKVU0rMVo0Wmhp?=
+ =?utf-8?B?NzU3WUdMaXlRQ1IwVDBnbHJ5MC96NWluMlNvd1UwY0xuV2k3OW5GamxhL3Fa?=
+ =?utf-8?B?cDRIWEJTZy9LY0pieDdaWDF4Y2FxbkpncXE2R1MwbjdJRGoyZ3krN0xZNjBT?=
+ =?utf-8?B?Ny8xbWxSQzBhdFI3VEJOY3AraUh6VHB2Y2kvelYxNkNIT1VGQUNMMFROTTlU?=
+ =?utf-8?B?RGcza2gwTDhLUHZOMlJFZDhVTGg3UHAvdGVJZ0cwNDFrQXFxMXlseU5sSXNV?=
+ =?utf-8?B?Smtzc2NzYUpyLythRmtSUDYzMU5EMkV1dFlQV1Myb2dsVzZacW92bXE1NmxR?=
+ =?utf-8?B?ZDVZNlowRXBWazVJd2VkNzNhbXFmdDVsTlY3dW5paENUNXFtVUdiTXJCTE9v?=
+ =?utf-8?B?a2d4N2pQWVN6NTRkMnJ2bld4SzNiWFZWV3lsMW9BNk1pTWZCRUo1SWlVVVhL?=
+ =?utf-8?B?RXFRWTBrcjRSdU9oYmxTOTB3eWJOSWpYN1gyQ1ZCSmgxY1N5ai9yUk05NWJa?=
+ =?utf-8?B?NUJLTHFYcWttcWZPbkt6TXVOUTVrQ1JFcGczczhrLzJkNmhFa2Q5a0JrbDZr?=
+ =?utf-8?B?UkpRMnBvWmZZVUg3SFJjQjVraldnYkswdUwvcC9CTmlyY05QOXk0RzBwNTIw?=
+ =?utf-8?B?OHZCS2FqemJKWTliRkVURjZwdjdWcDloV3hWMGJOZm5xeERXNndkVllIUjBx?=
+ =?utf-8?B?RkhFazF1Y3pzWnFJMkxBSDBvU3MrNWhDRTFydEhEY215QldNNVlUQWtqV2Qr?=
+ =?utf-8?B?dU01U1A4OG40SDVQbTFsYW15MEZJZmxBaXdmaXpXZjhMVzJkc09nOTN2ekc2?=
+ =?utf-8?B?bEpUNEI4MUFhbklJY2UzT2dRMCtJS3FDNEVTVER6WWpaT0x6QXhYMkJIYVBh?=
+ =?utf-8?B?SVZhVm45MTdhYmZHQjdRUmlEMVF3azdTZTdMZlY2TGR0SVZWQTQyaFgyaFNR?=
+ =?utf-8?B?TlBTQkxWdzBYcU9CL2ZINVNCNmt4RG5nSEtLU1JML1JQaDFNZUQya3M3RFRO?=
+ =?utf-8?B?MnVyZ1BGQXdnUmJJVGExc2RCUGhRQ0w0UFBqeHhDN2l3enBDaDdhVHRHVCtp?=
+ =?utf-8?B?MERKMHBjcmlYVllJaXBWZEtoV3F5V0FhUTZCWXRVS0M3a09CMnU3NWhPR1VB?=
+ =?utf-8?B?WCtsUStZMGFqSXpZZDFYWEVqTFhSaXk1VXNwSndYTmVNaE44TE14anU2OWY4?=
+ =?utf-8?B?MXVCMFVFdUtheE55bE11R1J0SDdGMGgzQUZwQ29pV3FSelVPY3dNckhZMjV1?=
+ =?utf-8?B?cGppODdmdlBsUGJzbXpKYW1QN3NXUFBMbUlueVE2WUd0RlYwZ1NFd0lNdXIz?=
+ =?utf-8?B?R3hSY09RQmR3bjJDNTdVQWNxdkNOYXh5dy8rOHp0YWxPdlpWT3oxM1FpYzlW?=
+ =?utf-8?B?SUFoMEROeW45RmQ2bmNCOWhPMHF4LzdDZmg4WGhlWkNKRWdick5KcnRSRk1Z?=
+ =?utf-8?B?VHVKOSt4MHdJU3lCU0JsZmhKZHhBT3FFNWVFUEM3QjlGT0tldzQwblE4SDh0?=
+ =?utf-8?B?RXZqNFlMOVJIZFQydlREaGo3bGcvenM3OVBrZDd4T3BjdGRhdm8wVWhRYmdp?=
+ =?utf-8?B?Vnp5NWlGWmNHczI4Q3NuNjZLUGhWbGthYWJFZmZ5ZkZocW5TWWx6SWtpRGt5?=
+ =?utf-8?B?YkxGZFpva012YmNubkErWEY0VncwWkh6UGxUVkdxZzVHYkNJcTRkTTNXN291?=
+ =?utf-8?B?eFJ3emw4ZXBzRmRualFnUnl2VzlmMm9LeWdUL2RVd1FoMmtHQzJQN1REUW45?=
+ =?utf-8?Q?1TC2bkfEfgk2Py674X25Fkzt3?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 952168f2-1b39-45ad-3dc9-08dcb2abb174
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b241db1-aa1f-42ac-78a8-08dcb2afcc96
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4877.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2024 04:29:26.7594
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2024 04:58:50.2109
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uY+n6dTW0YT1UCZy3d8fdpaX2pFKjrpVToCnmbGx20xXf3y9RW+gTp/PkTr+D9Ab
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6076
+X-MS-Exchange-CrossTenant-UserPrincipalName: jgrcgEh40Jp8o0ny70wgRCWMqOR/hMamLEzZ+px1A0iu38hKl2Ln5ohXRQ0AQgSa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6368
 
-On 7/23/24 17:44, Bjorn Helgaas wrote:
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -4656,6 +4656,7 @@
->>   		norid		[S390] ignore the RID field and force use of
->>   				one PCI domain per PCI function
->>   		notph		[PCIE] Do not use PCIe TPH
->> +		nostmode	[PCIE] Force TPH to use No ST Mode
+
+
+On 7/23/24 17:22, Bjorn Helgaas wrote:
+>> + * The st_info struct defines the steering tag returned by the firmware _DSM
+>> + * method defined in PCI Firmware Spec r3.3, sect 4.6.15 "_DSM to Query Cache
+>> + * Locality TPH Features"
 > 
-> Needs a little more context here about what this means.  Users won't
-> know where to even look for "No ST Mode" unless they have a copy of
-> the spec.
+> I don't know what I'm missing, but my copy of the r3.3 spec, dated Jan
+> 20, 2021, doesn't have sec 4.6.15.
+
+According to https://members.pcisig.com/wg/PCI-SIG/document/15470, the 
+revision has "4.6.15. _DSM to Query Cache Locality TPH Features". 
+PCI-SIG approved this ECN, but haven't merged it into PCI Firmware 
+Specification 3.3 yet.
+
+<snip>
+
+>> +
+>> +/**
+>> + * pcie_tph_get_st_from_acpi() - Retrieve steering tag for a specific CPU
+>> + * using platform ACPI _DSM
+> 
+> 1) TPH and Steering Tags are not ACPI-specific, even though the only
+> current mechanism to learn the tags happens to be an ACPI _DSM, so I
+> think we should omit "acpi" from the name drivers use.
+> 
+> 2) The spec doesn't restrict Steering Tags to be for a CPU; it says
+> "processing resource such as a host processor or system cache
+> hierarchy ..."  But obviously this interface only comprehends an ACPI
+> CPU ID.  Maybe the function name should include "cpu".
+
+How about pcie_tph_get_st_for_cpu() or pcie_tph_retreive_st_for_cpu()?
+
+>> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+>> index 854677651d81..b12a592f3d49 100644
+>> --- a/include/linux/pci-tph.h
+>> +++ b/include/linux/pci-tph.h
+>> @@ -9,15 +9,27 @@
+>>   #ifndef LINUX_PCI_TPH_H
+>>   #define LINUX_PCI_TPH_H
+>>   
+>> +enum tph_mem_type {
+>> +	TPH_MEM_TYPE_VM,	/* volatile memory type */
+>> +	TPH_MEM_TYPE_PM		/* persistent memory type */
+> 
+> Where does this come from?  I don't see "vram" or "volatile" used in
+> the PCIe spec in this context.  Maybe this is from the PCI Firmware
+> spec?
 > 
 
-I can certainly add more description to talk about "No ST Mode". Also, 
-will "tph_nostmode" be better than "nostmode" in your opinion?
+Yes, this is defined in the ECN mentioned above. Do you have concerns 
+about defining them here? If we want to remove it, then 
+pcie_tph_get_st_from_acpi() function can only support one memory type 
+(e.g. vram). Any advice?
+
+>> +static inline int pcie_tph_get_st_from_acpi(struct pci_dev *dev, unsigned int cpu_acpi_uid,
+>> +					    enum tph_mem_type tag_type, u8 req_enable,
+>> +					    u16 *tag)
+>> +{ return false; }
+> 
+> "false" is not "int".
+> 
+> Apparently you want to return "success" in this case, when
+> CONFIG_PCIE_TPH is not enabled?  I suggested leaving this non-exported
+> for now, which would mean removing this altogether.  But if/when we do
+> export it, I think maybe it should return error so a caller doesn't
+> assume it succeeded, since *tag will be garbage.
+> 
+> Bjorn
 
