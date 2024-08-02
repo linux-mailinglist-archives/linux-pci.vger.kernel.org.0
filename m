@@ -1,229 +1,248 @@
-Return-Path: <linux-pci+bounces-11203-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11204-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16075946340
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 20:34:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BFB1946344
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 20:34:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42D88281D2B
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 18:34:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80DBC1F238AB
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 18:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4726B1ABED3;
-	Fri,  2 Aug 2024 18:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D59E1ABEC5;
+	Fri,  2 Aug 2024 18:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eOIY2KL0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwQlGMNU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FCA1ABEC5;
-	Fri,  2 Aug 2024 18:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41AB27F6
+	for <linux-pci@vger.kernel.org>; Fri,  2 Aug 2024 18:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722623637; cv=none; b=kJ3kxcNhhXeYdg9OqAVrUsmDvt2ghxaKrw4GYscXgTphcTfe09jkdQsw8DlgLvqkp4zU/Yod7IYU2oPqRo4okoMQqRwgH3Jy1gaPu0ajpgsKyaGkSSNOZf6fBFqGcXu1d630Xip2A1tKDly55L9gh4gu2ZSuv2qAVoRz7ramPDE=
+	t=1722623688; cv=none; b=qtKpG/xlAOsc8J6mKERwWHsMD9iSV1+V3/SL8mfhl0jhH6F1rQVevKdEmNmhSrsdbetKwwNQFnAqnIQAtb8IGS5p3f47ZBjbEtzeQVwoWEgifdMlqesOhvmQyr2we5CMsV1xWW5Mi70vtDaNm79aH1dQD+nM+6FkOtYtb7gckfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722623637; c=relaxed/simple;
-	bh=BajauQMNSbfUtm8LcbdMeVSE4P3qsHZATci5kJ54CbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OM5kfhU8To0GYhv38FUP1D4kU+w4fs1uLzRqKUqCWyDF6F0sRaXHLNQ6B8SucM1u95xVe0SFB5fSGr94IDG16L4BcCf2SnfytTSsjIvsbCLb49vzUO045OfC4wEGuqH8P9rxduHMaCGoCizLFwFmY8gKBHN1TBKiiQ8KnFQFOzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eOIY2KL0; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 472FS5im012496;
-	Fri, 2 Aug 2024 18:33:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-type
-	:content-transfer-encoding:mime-version; s=pp1; bh=elPlBGjEdya+l
-	t9bcuYyxNIb4Z4d3rD7n1uLu0NB8MI=; b=eOIY2KL0XU6G1Re5XYppob5wkQq9u
-	92974YGGFR11dOgk3SGoU4hxX/aT+IT+mrmfMaucLIb1kWJH5HXeFF6X9SjmYVWJ
-	tC8ZogXWlj3ZukRKUPpCQ4nlGl7mXmbN6SJj/aFrsuy4Lu78T/u/tZOJJZhA15Ym
-	E+VIVPLlsoX/2xGcGY6Y3j+zHZ6o0Jkce/Fi1WeRmiZHS4D60Khu1VsunrARcZCv
-	QKR7YvTfzRLhr573zyjVb8dZ7ovXfbYZo8JmPlAdSfTh2rPauw31c36PdjmvY7GT
-	H7U2BIB3UplonQAz9MbY9Y9V3J7QSt8SxkCd0SqRo+YZzOK0Dpprt0NvQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40s1pf0f3f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Aug 2024 18:33:41 +0000 (GMT)
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 472IXe8L015002;
-	Fri, 2 Aug 2024 18:33:40 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40s1pf0f3a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Aug 2024 18:33:40 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 472FwQBw011151;
-	Fri, 2 Aug 2024 18:33:39 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40ncqn8hp1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Aug 2024 18:33:39 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 472IXXiV34144994
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 Aug 2024 18:33:35 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6889C20040;
-	Fri,  2 Aug 2024 18:33:33 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B3C8420043;
-	Fri,  2 Aug 2024 18:33:29 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com.com (unknown [9.195.47.40])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  2 Aug 2024 18:33:29 +0000 (GMT)
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Lizhi Hou <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Amit Machhiwal <amachhiw@linux.ibm.com>,
-        Kowshik Jois B S <kowsjois@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>, kernel-team@lists.ubuntu.com,
-        Stefan Bader <stefan.bader@canonical.com>
-Subject: [PATCH v3] PCI: Fix crash during pci_dev hot-unplug on pseries KVM guest
-Date: Sat,  3 Aug 2024 00:03:25 +0530
-Message-ID: <20240802183327.1309020-1-amachhiw@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ooe2HdKMnjn5F104fmgW3kHKYsawc1RM
-X-Proofpoint-GUID: Uwml1BHK5GZUEjBjn1qqDSk0ZCJ_GEeZ
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1722623688; c=relaxed/simple;
+	bh=5v3MhyL1JtR3MyJ0DFt7EvSkUlrIfO7MG27S07MGv9A=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=SACLRBRVteDSc+/cYTawlsKpGFtv4CBMfU/DilgL5vnlZMnE7iBlQSC3cZMFxN7dy32AuM9oigorcfkfAvKlKQc1lzBbQ+T+8/JwrVRyRQMAXzp3XeTPozA5PJ7GlQjgZc9xqVHGfZNt8KkifV7gWg8Br+THLo6YSV75GjtLpBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwQlGMNU; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722623687; x=1754159687;
+  h=date:from:to:cc:subject:message-id;
+  bh=5v3MhyL1JtR3MyJ0DFt7EvSkUlrIfO7MG27S07MGv9A=;
+  b=MwQlGMNUYGKWHUdXyJhL0+Z+oT/R0RFDcXuH8umhFTugR59SXie9BUOk
+   mQiYyJYeMm5bHeYnL4J8T4mSUOJFOw8IHrRNCA23G2QoFSqZrNXyhFxH3
+   rQkjmp3XJXc2ibUGAeSzCh3IkKHFOgcVsustA9YjgQdVxjM0P5wYUWpZX
+   0mkTkunF8xwEpQo7VM0PKudBO9ZNyK+ssXpJfDLABIf7qj4Cs+8gI3/An
+   ZoMq1x4c+v6P7NsGHTDTHFsJM4h95ojShfBXkJVvGuv+TENqDO0S76U92
+   F2H3Gx+YNEaml7WUI0IK7IN0iyrGKyfxrmSH5gqRPpA9b02EJxs3v4IVi
+   A==;
+X-CSE-ConnectionGUID: uK1I6vD+TAaZsCD+hoSUbg==
+X-CSE-MsgGUID: CTZNXCdPRRyHmbUPY5gsIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11152"; a="31234274"
+X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
+   d="scan'208";a="31234274"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 11:34:46 -0700
+X-CSE-ConnectionGUID: 9Q5pMh5OQ5So4c+XMQBiGQ==
+X-CSE-MsgGUID: rzL4VeG9SfCakMg2/ZW9gA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
+   d="scan'208";a="55717719"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 02 Aug 2024 11:34:45 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sZx6w-000xHS-0m;
+	Fri, 02 Aug 2024 18:34:42 +0000
+Date: Sat, 03 Aug 2024 02:34:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ 5560a612c20d3daacbf5da7913deefa5c31742f4
+Message-ID: <202408030211.hrsI6BFs-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-02_14,2024-08-02_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- priorityscore=1501 spamscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- mlxlogscore=822 phishscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2408020127
 
-With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
-of a PCI device attached to a PCI-bridge causes following kernel Oops on
-a pseries KVM guest:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: 5560a612c20d3daacbf5da7913deefa5c31742f4  PCI: pciehp: Retain Power Indicator bits for userspace indicators
 
- RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
- Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
- BUG: Unable to handle kernel data access on read at 0x10ec00000048
- Faulting instruction address: 0xc0000000012d8728
- Oops: Kernel access of bad area, sig: 11 [#1]
- LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
-<snip>
- NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
- LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
- Call Trace:
- [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
- [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
- [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
- [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
- [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
- [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
- [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
- [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
- [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
- [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
- [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
- [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-<snip>
+elapsed time: 1447m
 
-A git bisect pointed this regression to be introduced via [1] that added
-a mechanism to create device tree nodes for parent PCI bridges when a
-PCI device is hot-plugged.
+configs tested: 155
+configs skipped: 3
 
-The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
-device-tree node associated with the pci_dev that was earlier
-hot-plugged and was attached under a pci-bridge. The PCI dev header
-`dev->hdr_type` being 0, results a conditional check done with
-`pci_is_bridge()` into false. Consequently, a call to
-`of_pci_make_dev_node()` to create a device node is never made. When at
-a later point in time, in the device node removal path, a memcpy is
-attempted in `__of_changeset_entry_invert()`; since the device node was
-never created, results in an Oops due to kernel read access to a bad
-address.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-To fix this issue, the patch introduces a new flag OF_CREATE_WITH_CSET
-to keep track of device nodes created via `of_pci_make_dev_node()` and
-later attempt to destroy only such device nodes which have this flag
-set.
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                          axs101_defconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                        nsimosci_defconfig   gcc-13.2.0
+arc                        vdk_hs38_defconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                        clps711x_defconfig   gcc-13.2.0
+arm                     davinci_all_defconfig   clang-20
+arm                                 defconfig   gcc-13.2.0
+arm                          exynos_defconfig   gcc-13.2.0
+arm                      integrator_defconfig   gcc-13.2.0
+arm                          ixp4xx_defconfig   clang-20
+arm                        mvebu_v7_defconfig   gcc-13.2.0
+arm                             rpc_defconfig   gcc-13.2.0
+arm                         s3c6400_defconfig   gcc-13.2.0
+arm                           sunxi_defconfig   gcc-13.2.0
+arm                    vt8500_v6_v7_defconfig   clang-20
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240802   gcc-13
+i386         buildonly-randconfig-002-20240802   gcc-13
+i386         buildonly-randconfig-003-20240802   gcc-13
+i386         buildonly-randconfig-004-20240802   gcc-13
+i386         buildonly-randconfig-005-20240802   gcc-13
+i386         buildonly-randconfig-006-20240802   gcc-13
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240802   gcc-13
+i386                  randconfig-002-20240802   gcc-13
+i386                  randconfig-003-20240802   gcc-13
+i386                  randconfig-004-20240802   gcc-13
+i386                  randconfig-005-20240802   gcc-13
+i386                  randconfig-006-20240802   gcc-13
+i386                  randconfig-011-20240802   gcc-13
+i386                  randconfig-012-20240802   gcc-13
+i386                  randconfig-013-20240802   gcc-13
+i386                  randconfig-014-20240802   gcc-13
+i386                  randconfig-015-20240802   gcc-13
+i386                  randconfig-016-20240802   gcc-13
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-13.2.0
+m68k                           virt_defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+microblaze                      mmu_defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                        bcm63xx_defconfig   gcc-13.2.0
+mips                           ip30_defconfig   gcc-13.2.0
+mips                malta_qemu_32r6_defconfig   gcc-13.2.0
+mips                      maltasmvp_defconfig   gcc-13.2.0
+mips                  maltasmvp_eva_defconfig   clang-20
+mips                          rb532_defconfig   clang-20
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                generic-64bit_defconfig   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                   bluestone_defconfig   clang-20
+powerpc                  iss476-smp_defconfig   clang-20
+powerpc                 linkstation_defconfig   clang-20
+powerpc                   lite5200b_defconfig   clang-20
+powerpc                       maple_defconfig   gcc-13.2.0
+powerpc                   microwatt_defconfig   clang-20
+powerpc                   microwatt_defconfig   gcc-13.2.0
+powerpc                    mvme5100_defconfig   clang-20
+powerpc                     rainier_defconfig   gcc-13.2.0
+powerpc                     sequoia_defconfig   gcc-13.2.0
+powerpc                         wii_defconfig   gcc-13.2.0
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   gcc-14.1.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   gcc-14.1.0
+s390                             allyesconfig   clang-20
+s390                                defconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-14.1.0
+sh                        edosk7760_defconfig   gcc-13.2.0
+sh                          rsk7269_defconfig   gcc-13.2.0
+sh                          sdk7786_defconfig   gcc-13.2.0
+sh                             sh03_defconfig   gcc-13.2.0
+sh                   sh7770_generic_defconfig   gcc-13.2.0
+sh                            titan_defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-14.1.0
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   gcc-14.1.0
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   gcc-14.1.0
+um                             i386_defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-14.1.0
+um                           x86_64_defconfig   gcc-14.1.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240802   gcc-8
+x86_64       buildonly-randconfig-002-20240802   gcc-8
+x86_64       buildonly-randconfig-003-20240802   gcc-8
+x86_64       buildonly-randconfig-004-20240802   gcc-8
+x86_64       buildonly-randconfig-005-20240802   gcc-8
+x86_64       buildonly-randconfig-006-20240802   gcc-8
+x86_64                              defconfig   clang-18
+x86_64                                  kexec   clang-18
+x86_64                randconfig-001-20240802   gcc-8
+x86_64                randconfig-002-20240802   gcc-8
+x86_64                randconfig-003-20240802   gcc-8
+x86_64                randconfig-004-20240802   gcc-8
+x86_64                randconfig-005-20240802   gcc-8
+x86_64                randconfig-006-20240802   gcc-8
+x86_64                randconfig-011-20240802   gcc-8
+x86_64                randconfig-012-20240802   gcc-8
+x86_64                randconfig-013-20240802   gcc-8
+x86_64                randconfig-014-20240802   gcc-8
+x86_64                randconfig-015-20240802   gcc-8
+x86_64                randconfig-016-20240802   gcc-8
+x86_64                randconfig-071-20240802   gcc-8
+x86_64                randconfig-072-20240802   gcc-8
+x86_64                randconfig-073-20240802   gcc-8
+x86_64                randconfig-074-20240802   gcc-8
+x86_64                randconfig-075-20240802   gcc-8
+x86_64                randconfig-076-20240802   gcc-8
+x86_64                          rhel-8.3-rust   clang-18
+x86_64                               rhel-8.3   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                  audio_kc705_defconfig   gcc-13.2.0
+xtensa                       common_defconfig   gcc-13.2.0
+xtensa                  nommu_kc705_defconfig   gcc-13.2.0
+xtensa                         virt_defconfig   gcc-13.2.0
 
-[1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
-
-Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
----
-Changes since v2:
-    * Drop v2 changes and introduce a different approach from Lizhi discussed
-      over the v2 of this patch
-    * V2: https://lore.kernel.org/all/20240715080726.2496198-1-amachhiw@linux.ibm.com/
-Changes since v1:
-    * Included Lizhi's suggested changes on V1
-    * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
-      part a bit in `of_pci_make_dev_node`
-	drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
-	  611 | void of_pci_free_node(struct device_node *np)
-	      |      ^~~~~~~~~~~~~~~~               
-	drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
-	drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
-	  696 | out_destroy_cset:       
-	      | ^~~~~~~~~~~~~~~~  
-    * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
-
- drivers/pci/of.c   | 3 ++-
- include/linux/of.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index dacea3fc5128..bc455370143e 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -653,7 +653,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
- 	struct device_node *np;
- 
- 	np = pci_device_to_OF_node(pdev);
--	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-+	if (!np || !of_node_check_flag(np, OF_CREATE_WITH_CSET))
- 		return;
- 	pdev->dev.of_node = NULL;
- 
-@@ -712,6 +712,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- 	if (ret)
- 		goto out_free_node;
- 
-+	of_node_set_flag(np, OF_CREATE_WITH_CSET);
- 	np->data = cset;
- 	pdev->dev.of_node = np;
- 	kfree(name);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 85b60ac9eec5..5faa5a1198c6 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
- #define OF_POPULATED_BUS	4 /* platform bus created for children */
- #define OF_OVERLAY		5 /* allocated for an overlay */
- #define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
-+#define OF_CREATE_WITH_CSET	7 /* Created by of_changeset_create_node */
- 
- #define OF_BAD_ADDR	((u64)-1)
- 
-
-base-commit: 948752d2e010e11b56a877975e7e9158d6d31823
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
