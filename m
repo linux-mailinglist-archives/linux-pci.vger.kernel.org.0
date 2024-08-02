@@ -1,139 +1,297 @@
-Return-Path: <linux-pci+bounces-11191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4510945E6B
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 15:13:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C781945EF9
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 15:59:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC8221C21524
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 13:13:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50CE31C2203B
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 13:59:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA6871DAC5F;
-	Fri,  2 Aug 2024 13:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b="LrTGrjyY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8569A1E4857;
+	Fri,  2 Aug 2024 13:59:09 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.ngn.tf (ngn.tf [193.106.196.85])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA421E3CC3;
-	Fri,  2 Aug 2024 13:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.106.196.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56F31E4879;
+	Fri,  2 Aug 2024 13:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722604404; cv=none; b=IrYi39nfZJ5p/mUoYEqTgFXV1duBv5WVeQ0e0HHYn7h9IWx9z1122/eVqVO5mJswtk4GIC2Nic2oVQSNQgH+Lwc8ZkHHzbcXV3ivj+TZC+xYDc2n6hTh25a8sIcgIUR+u18BeOWUPCoGkee+68w9p6+foUzuCh4BF8lWr3Blm+c=
+	t=1722607149; cv=none; b=pNuQbleJv/MfB2W8mgMjBjH67febJI+9VKZ9gK13sO/9ZU3hHsxi6V1j6agfQ6OddGz0fN6yTXF4SS6xM8qPox+s9KOq+51OiO5cF2nQNPLzSq2QnOtXTm5kpXaaMRZo7H9vF97A4RcNToNxH4WLlJxmwyttd+F5USU7rZY51mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722604404; c=relaxed/simple;
-	bh=3UFpgyCFVFFSP7w9ZXE06UkaNdzc2jHhYbdzI1pJgQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FkV0dmzQjzZn3ZzIQpJ7M0+kK75fYLY/gDAIPf0Q1ym4DN5vkDmjn/XmFdRUFSN8ez//PZ9m3KuJtS9QwJpbnCcuP/AR5XekJQwHRZeuQXzegUrOr6sGEQ/2BOCcQ/22OX0XYIWzPR8wMKRbHix7wZe9mZSJ9ZLXx9pdYZtarQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf; spf=pass smtp.mailfrom=ngn.tf; dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b=LrTGrjyY; arc=none smtp.client-ip=193.106.196.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ngn.tf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ngn.tf; s=mail;
-	t=1722604043; bh=3UFpgyCFVFFSP7w9ZXE06UkaNdzc2jHhYbdzI1pJgQs=;
-	h=From:To:Cc:Subject:References:In-Reply-To;
-	b=LrTGrjyYMCVWcXl95+FEVuYzzUu89hkK5NJ+BKjq0DtQq0fNGUjGekHQi5Q4QNCK/
-	 oan5fylRvA95e0gV4GsGHJse+lQE1p3+s23sn5V5ZuZMUQbW+fJ1nVdDg+/GN7smR1
-	 HzDZx0Qc3KCsq2tcEcZOB86C53Yjjos2hZx645nXr4oORTJwtubvpaP1Iepigm15fJ
-	 HZdgrcj7161B3LMgtWWUcQZQkNhY+DFOoEmTx32AjKxD/Q3O5NrYGzpZNXYhcgB/NP
-	 sHHJkxbZcI8xna015/ItpOhQ2Qqd6zjTY6Dh+WAx4BgOJjRJLOluFxMwq2HG/rQyTn
-	 OdNE2OXLR0qGQ==
-Date: Fri, 2 Aug 2024 16:06:09 +0300
-From: ngn <ngn@ngn.tf>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Nam Cao <namcao@linutronix.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: shpchp: Remove hpc_ops
-Message-ID: <ZqzZwRx0Fug4bcwv@archbtw>
-References: <Zp-XXVW4hlcMASEc@archbtw>
- <20240802000852.GA129961@bhelgaas>
+	s=arc-20240116; t=1722607149; c=relaxed/simple;
+	bh=xrPB0JRytqGqnV1j3GFVu3q7Owa1qlxF6nHLRsE9kVU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WzQDUN5B+MKw7SnD40X9YH/syq4v7Ekw1LaapMuQApl+3P5gcVGYcsKUQcqGdJ+NiiERv2M39guZ1C9/rm5wjhyO6+hjbIZFzLSvEtBY3b1dnF/RJWd4SR5/3sc/V9S1+4vVP1pq3Hg3VDTFJxci0uQdMK6jl14oBozoKzsXe90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wb6nG4wkcz6K6Lm;
+	Fri,  2 Aug 2024 21:56:18 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 78957140B3C;
+	Fri,  2 Aug 2024 21:58:57 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 Aug
+ 2024 14:58:57 +0100
+Date: Fri, 2 Aug 2024 14:58:56 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <peterz@infradead.org>, <torvalds@linux-foundation.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>, Jesse Brandeburg
+	<jesse.brandeburg@intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, "Jonathan
+ Corbet" <corbet@lwn.net>, <gregkh@linuxfoundation.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3] cleanup: Add usage and style documentation
+Message-ID: <20240802145856.00002717@Huawei.com>
+In-Reply-To: <171175585714.2192972.12661675876300167762.stgit@dwillia2-xfh.jf.intel.com>
+References: <171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com>
+	<171175585714.2192972.12661675876300167762.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240802000852.GA129961@bhelgaas>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Aug 01, 2024 at 07:08:52PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 23, 2024 at 02:43:25PM +0300, ngn wrote:
-> > Remove the hpc_ops struct from shpchp. This struct is unnecessary as
-> > no other hotplug controller implements it. A similar thing has already
-> > been done in pciehp with commit 82a9e79ef132 ("PCI: pciehp: remove hpc_ops")
-> 
-> > +++ b/drivers/pci/hotplug/shpchp_hpc.c
-> > @@ -167,7 +167,6 @@
-> >  
-> >  static irqreturn_t shpc_isr(int irq, void *dev_id);
-> >  static void start_int_poll_timer(struct controller *ctrl, int sec);
-> > -static int hpc_check_cmd_status(struct controller *ctrl);
-> >  
-> >  static inline u8 shpc_readb(struct controller *ctrl, int reg)
-> >  {
-> > @@ -317,7 +316,7 @@ static int shpc_write_cmd(struct slot *slot, u8 t_slot, u8 cmd)
-> >  	if (retval)
-> >  		goto out;
-> >  
-> > -	cmd_status = hpc_check_cmd_status(slot->ctrl);
-> > +	cmd_status = shpchp_check_cmd_status(slot->ctrl);
-> 
-> This rename looks like it should be a separate patch because it's not
-> part of removing hpc_ops.
+On Fri, 29 Mar 2024 16:48:48 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-I think hpc_check_cmd_status meant to be a part of the hpc_ops struct.
-Here is the original struct:
+> When proposing that PCI grow some new cleanup helpers for pci_dev_put()
+> and pci_dev_{lock,unlock} [1], Bjorn had some fundamental questions
+> about expectations and best practices. Upon reviewing an updated
+> changelog with those details he recommended adding them to documentation
+> in the header file itself.
+>=20
+> Add that documentation and link it into the rendering for
+> Documentation/core-api/.
+>=20
+> Link: http://lore.kernel.org/r/20240104183218.GA1820872@bhelgaas [1]
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> Cc: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Changes since v2:
+> * remove the unnecessary newlines around code examples further reducing
+>   the visual interruption of RST metadata (Jon)
+> * Fix a missing FILO=3D>LIFO conversion
+> * Fix a bug in the example
+> * Collect Jonathan's reviewed-by
+>=20
+> Review has been quiet on this thread for a few days so I think is the
+> final rev. Let me know if anything else to fix up.
 
-struct hpc_ops {
-	int (*power_on_slot)(struct slot *slot);
-	int (*slot_enable)(struct slot *slot);
-	int (*slot_disable)(struct slot *slot);
-	int (*set_bus_speed_mode)(struct slot *slot, enum pci_bus_speed speed);
-	int (*get_power_status)(struct slot *slot, u8 *status);
-	int (*get_attention_status)(struct slot *slot, u8 *status);
-	int (*set_attention_status)(struct slot *slot, u8 status);
-	int (*get_latch_status)(struct slot *slot, u8 *status);
-	int (*get_adapter_status)(struct slot *slot, u8 *status);
-	int (*get_adapter_speed)(struct slot *slot, enum pci_bus_speed *speed);
-	int (*get_prog_int)(struct slot *slot, u8 *prog_int);
-	int (*query_power_fault)(struct slot *slot);
-	void (*green_led_on)(struct slot *slot);
-	void (*green_led_off)(struct slot *slot);
-	void (*green_led_blink)(struct slot *slot);
-	void (*release_ctlr)(struct controller *ctrl);
-	int (*check_cmd_status)(struct controller *ctrl);
-};
+Would be good to either get more review, or this applied.
 
-As you can see it contains a pointer for check_cmd_status function,
-however the hpc_check_cmd_status was never assigned to it:
+Currently I'm pointing people at the email. Would much rather
+point them at the upstream docs!
 
-static const struct hpc_ops shpchp_hpc_ops = {
-	.power_on_slot			= hpc_power_on_slot,
-	.slot_enable			= hpc_slot_enable,
-	.slot_disable			= hpc_slot_disable,
-	.set_bus_speed_mode		= hpc_set_bus_speed_mode,
-	.set_attention_status	= hpc_set_attention_status,
-	.get_power_status		= hpc_get_power_status,
-	.get_attention_status	= hpc_get_attention_status,
-	.get_latch_status		= hpc_get_latch_status,
-	.get_adapter_status		= hpc_get_adapter_status,
+Jon, would you consider picking this up?
+>=20
+>  Documentation/core-api/cleanup.rst |    8 ++
+>  Documentation/core-api/index.rst   |    1=20
+>  include/linux/cleanup.h            |  136 ++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 145 insertions(+)
+>  create mode 100644 Documentation/core-api/cleanup.rst
+>=20
+> diff --git a/Documentation/core-api/cleanup.rst b/Documentation/core-api/=
+cleanup.rst
+> new file mode 100644
+> index 000000000000..527eb2f8ec6e
+> --- /dev/null
+> +++ b/Documentation/core-api/cleanup.rst
+> @@ -0,0 +1,8 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> +Scope-based Cleanup Helpers
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> +
+> +.. kernel-doc:: include/linux/cleanup.h
+> +   :doc: scope-based cleanup helpers
+> diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/in=
+dex.rst
+> index 7a3a08d81f11..2d2b3719567e 100644
+> --- a/Documentation/core-api/index.rst
+> +++ b/Documentation/core-api/index.rst
+> @@ -35,6 +35,7 @@ Library functionality that is used throughout the kerne=
+l.
+> =20
+>     kobject
+>     kref
+> +   cleanup
+>     assoc_array
+>     xarray
+>     maple_tree
+> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+> index c2d09bc4f976..5ffb2127e3ac 100644
+> --- a/include/linux/cleanup.h
+> +++ b/include/linux/cleanup.h
+> @@ -4,6 +4,142 @@
+> =20
+>  #include <linux/compiler.h>
+> =20
+> +/**
+> + * DOC: scope-based cleanup helpers
+> + *
+> + * The "goto error" pattern is notorious for introducing subtle resource
+> + * leaks. It is tedious and error prone to add new resource acquisition
+> + * constraints into code paths that already have several unwind
+> + * conditions. The "cleanup" helpers enable the compiler to help with
+> + * this tedium and can aid in maintaining LIFO (last in first out)
+> + * unwind ordering to avoid unintentional leaks.
+> + *
+> + * As drivers make up the majority of the kernel code base, here is an
+> + * example of using these helpers to clean up PCI drivers. The target of
+> + * the cleanups are occasions where a goto is used to unwind a device
+> + * reference (pci_dev_put()), or unlock the device (pci_dev_unlock())
+> + * before returning.
+> + *
+> + * The DEFINE_FREE() macro can arrange for PCI device references to be
+> + * dropped when the associated variable goes out of scope::
+> + *
+> + *	DEFINE_FREE(pci_dev_put, struct pci_dev *, if (_T) pci_dev_put(_T))
+> + *	...
+> + *	struct pci_dev *dev __free(pci_dev_put) =3D
+> + *		pci_get_slot(parent, PCI_DEVFN(0, 0));
+> + *
+> + * The above will automatically call pci_dev_put() if @dev is non-NULL
+> + * when @dev goes out of scope (automatic variable scope). If a function
+> + * wants to invoke pci_dev_put() on error, but return @dev (i.e. without
+> + * freeing it) on success, it can do::
+> + *
+> + *	return no_free_ptr(dev);
+> + *
+> + * ...or::
+> + *
+> + *	return_ptr(dev);
+> + *
+> + * The DEFINE_GUARD() macro can arrange for the PCI device lock to be
+> + * dropped when the scope where guard() is invoked ends::
+> + *
+> + *	DEFINE_GUARD(pci_dev, struct pci_dev *, pci_dev_lock(_T), pci_dev_unl=
+ock(_T))
+> + *	...
+> + *	guard(pci_dev)(dev);
+> + *
+> + * The lifetime of the lock obtained by the guard() helper follows the
+> + * scope of automatic variable declaration. Take the following example::
+> + *
+> + *	func(...)
+> + *	{
+> + *		if (...) {
+> + *			...
+> + *			guard(pci_dev)(dev); // pci_dev_lock() invoked here
+> + *			...
+> + *		} // <- implied pci_dev_unlock() triggered here
+> + *	}
+> + *
+> + * Observe the lock is held for the remainder of the "if ()" block not
+> + * the remainder of "func()".
+> + *
+> + * Now, when a function uses both __free() and guard(), or multiple
+> + * instances of __free(), the LIFO order of variable definition order
+> + * matters. GCC documentation says:
+> + *
+> + * "When multiple variables in the same scope have cleanup attributes,
+> + * at exit from the scope their associated cleanup functions are run in
+> + * reverse order of definition (last defined, first cleanup)."
+> + *
+> + * When the unwind order matters it requires that variables be defined
+> + * mid-function scope rather than at the top of the file.  Take the
+> + * following example and notice the bug highlighted by "!!"::
+> + *
+> + *	LIST_HEAD(list);
+> + *	DEFINE_MUTEX(lock);
+> + *
+> + *	struct object {
+> + *	        struct list_head node;
+> + *	};
+> + *
+> + *	static struct object *alloc_add(void)
+> + *	{
+> + *	        struct object *obj;
+> + *
+> + *	        lockdep_assert_held(&lock);
+> + *	        obj =3D kzalloc(sizeof(*obj), GFP_KERNEL);
+> + *	        if (obj) {
+> + *	                LIST_HEAD_INIT(&obj->node);
+> + *	                list_add(obj->node, &list):
+> + *	        }
+> + *	        return obj;
+> + *	}
+> + *
+> + *	static void remove_free(struct object *obj)
+> + *	{
+> + *	        lockdep_assert_held(&lock);
+> + *	        list_del(&obj->node);
+> + *	        kfree(obj);
+> + *	}
+> + *
+> + *	DEFINE_FREE(remove_free, struct object *, if (_T) remove_free(_T))
+> + *	static int init(void)
+> + *	{
+> + *	        struct object *obj __free(remove_free) =3D NULL;
+> + *	        int err;
+> + *
+> + *	        guard(mutex)(&lock);
+> + *	        obj =3D alloc_add();
+> + *
+> + *	        if (!obj)
+> + *	                return -ENOMEM;
+> + *
+> + *	        err =3D other_init(obj);
+> + *	        if (err)
+> + *	                return err; // remove_free() called without the lock!!
+> + *
+> + *	        no_free_ptr(obj);
+> + *	        return 0;
+> + *	}
+> + *
+> + * That bug is fixed by changing init() to call guard() and define +
+> + * initialize @obj in this order::
+> + *
+> + *	guard(mutex)(&lock);
+> + *	struct object *obj __free(remove_free) =3D alloc_add();
+> + *
+> + * Given that the "__free(...) =3D NULL" pattern for variables defined at
+> + * the top of the function poses this potential interdependency problem
+> + * the recommendation is to always define and assign variables in one
+> + * statement and not group variable definitions at the top of the
+> + * function when __free() is used.
+> + *
+> + * Lastly, given that the benefit of cleanup helpers is removal of
+> + * "goto", and that the "goto" statement can jump between scopes, the
+> + * expectation is that usage of "goto" and cleanup helpers is never
+> + * mixed in the same function. I.e. for a given routine, convert all
+> + * resources that need a "goto" cleanup to scope-based cleanup, or
+> + * convert none of them.
+> + */
+> +
+>  /*
+>   * DEFINE_FREE(name, type, free):
+>   *	simple helper macro that defines the required wrapper for a __free()
+>=20
 
-	.get_adapter_speed		= hpc_get_adapter_speed,
-	.get_prog_int			= hpc_get_prog_int,
-
-	.query_power_fault		= hpc_query_power_fault,
-	.green_led_on			= hpc_set_green_led_on,
-	.green_led_off			= hpc_set_green_led_off,
-	.green_led_blink		= hpc_set_green_led_blink,
-
-	.release_ctlr			= hpc_release_ctlr,
-};
-
-Which made me believe that this function supposed to be a part of the
-hpc_ops struct and whoever wrote the code added a pointer for it but
-then they forgot to assign the function to it during the actual
-definition of the struct. So I renamed it anyway.
 
