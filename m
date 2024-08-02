@@ -1,117 +1,144 @@
-Return-Path: <linux-pci+bounces-11195-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11196-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 888089461A7
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 18:15:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCD709461E6
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 18:41:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D84DB25393
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 16:15:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70BB5282374
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 16:41:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081E51A83B6;
-	Fri,  2 Aug 2024 16:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF01516BE11;
+	Fri,  2 Aug 2024 16:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="k5ayIbUi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8tiPVO8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E67C166F2E;
-	Fri,  2 Aug 2024 16:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B378A16BE02;
+	Fri,  2 Aug 2024 16:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722615250; cv=none; b=cqqL1JfeLvOjBw+vRrM4u3nsJ4aSRQ2WdNvEeJUayxF9ArZLFoHbuYPFyoxJfg7ShifZwiPoX3UMBA10vbsH00cAv2kfobSJRQ6kbYGCfxf/RTrgl4XOGXRxLszN5avU27O1PfNhJLGIChyDAnpI7nU22NSWUljYkGqN+qIqiCQ=
+	t=1722616906; cv=none; b=Vhgdm+ngvtnDaXeSF9OaSA8T0fkFUwYtVXB+Y1jOmS9kD8qygxXS8za4FYplV+sOGsXElohlTZdhwTPXI9O0BKODucasWYkxcM6aK8mPUSorWgBS/TCFe6uDfgiYgBsxcFO4HXLYlC94dnmJzqhNccomSstPDvw8Vd5StnP9ak4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722615250; c=relaxed/simple;
-	bh=7sCSXjk0kKxYzaCMC+RgwACo41h3WnpDWPFDeNoutj8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=chtn7RghEQXqBTcMJyPWlwlx5ueWDfp/Gjxya3GCZ881NmhybrTu7EZWBpWxKzGihnczjVveA8Q6s9D3Emf0i6BV58EQI/06Jh1vhTNNcSnQ5CvMFi0gYpxNkz1QmwJiQ+Ml0zj8K+VRo36+sWYY7nCB8u67zJqnO03Yng5M5eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=k5ayIbUi; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1722615115;
-	bh=o7kEQYLQyljSLraqYcnSwcOesk1zWEYaqOjNpRLHXHY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=k5ayIbUiyu6YMZ5jJLCuzsxYDpBaNiDAYROweR9M57GybXQBe3AqVjDqhU+r7DmYe
-	 nbmbeYhzNcV+L6mBLA8qXIfFrC7qi0pt7DyRAJIRPFqlVWRV0u2FuNlITDBmds6yyQ
-	 JvtQRBj7UR6gRVKWFGzvvbkMa/1e9+zuOX3gocPw=
-X-QQ-mid: bizesmtp82t1722615092tz25dnlq
-X-QQ-Originating-IP: WJS9rCXdtSElBMKBt8/rhaRnoONKese1XrFEBESY2FM=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 03 Aug 2024 00:11:30 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 12327301821540536056
-From: WangYuli <wangyuli@uniontech.com>
-To: bhelgaas@google.com,
-	siyuli@glenfly.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	guanwentao@uniontech.com,
-	linux@horizon.com,
-	pat-lkml@erley.org,
-	alex.williamson@redhat.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH] PCI: Add function 0 DMA alias quirk for Glenfly arise chip
-Date: Sat,  3 Aug 2024 00:11:09 +0800
-Message-ID: <DB918DA5CBA08DE8+20240802161109.240191-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.4
+	s=arc-20240116; t=1722616906; c=relaxed/simple;
+	bh=u8PgrutsRG1IBN6ocrR8XBsZqyyOLj5JqQ4VTfukrSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LjMgfh/HZpegrcsfyEkisDnhldTC5Mkdepry6pBrPzf8xz4ks223upblcknSuFJn/BkuNCn5FJ5hfM3ZvhChxf1/uga80y0/fD1V3VWZkWW6AyBP+UOp6VkjFthlgtc3ezyZlPEaoCK6bOiCS5lRLloi5jLhDqGi2dvbyGMlRpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8tiPVO8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DEC1C32782;
+	Fri,  2 Aug 2024 16:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722616905;
+	bh=u8PgrutsRG1IBN6ocrR8XBsZqyyOLj5JqQ4VTfukrSM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=r8tiPVO8vdMUokOLtVWTqvXh5HpE6K8s5h2z+TtmBb2zl27XeKP5iprxLWS4TTVqj
+	 0OI3L++4XvzfbO5zrmrOJwUr9mBgbUXv2LO4ko4n9jm7RvwMdhM2EENxRaoirnpcHY
+	 mw5lgC0xaOGd6gWyILSNVea3B1rig0BgYIVMnaYNO1CB2lthnZAyQ7Aw9zIz/8jaE5
+	 4eShQGFookFi/AsdDYjhDd0VjWGUL96WCSevh0XQeCW/obk0k7OO7g7nhS+rqogJca
+	 RrPq+DoJw0fyxmDB8JXM5lOxD4wA4GWvhGSe5LrXPUiZbpjOQmJ10dmB8MBEjhvI3H
+	 S5bbShNqDLtYw==
+Date: Fri, 2 Aug 2024 11:41:43 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: ngn <ngn@ngn.tf>
+Cc: Nam Cao <namcao@linutronix.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: shpchp: Remove hpc_ops
+Message-ID: <20240802164143.GA153790@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZqzZwRx0Fug4bcwv@archbtw>
 
-Add DMA support for audio function of Glenfly arise chip,
-which uses request id of function 0.
+On Fri, Aug 02, 2024 at 04:06:09PM +0300, ngn wrote:
+> On Thu, Aug 01, 2024 at 07:08:52PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Jul 23, 2024 at 02:43:25PM +0300, ngn wrote:
+> > > Remove the hpc_ops struct from shpchp. This struct is unnecessary as
+> > > no other hotplug controller implements it. A similar thing has already
+> > > been done in pciehp with commit 82a9e79ef132 ("PCI: pciehp: remove hpc_ops")
+> > 
+> > > +++ b/drivers/pci/hotplug/shpchp_hpc.c
+> > > @@ -167,7 +167,6 @@
+> > >  
+> > >  static irqreturn_t shpc_isr(int irq, void *dev_id);
+> > >  static void start_int_poll_timer(struct controller *ctrl, int sec);
+> > > -static int hpc_check_cmd_status(struct controller *ctrl);
+> > >  
+> > >  static inline u8 shpc_readb(struct controller *ctrl, int reg)
+> > >  {
+> > > @@ -317,7 +316,7 @@ static int shpc_write_cmd(struct slot *slot, u8 t_slot, u8 cmd)
+> > >  	if (retval)
+> > >  		goto out;
+> > >  
+> > > -	cmd_status = hpc_check_cmd_status(slot->ctrl);
+> > > +	cmd_status = shpchp_check_cmd_status(slot->ctrl);
+> > 
+> > This rename looks like it should be a separate patch because it's not
+> > part of removing hpc_ops.
+> 
+> I think hpc_check_cmd_status meant to be a part of the hpc_ops struct.
+> Here is the original struct:
+> 
+> struct hpc_ops {
+> 	int (*power_on_slot)(struct slot *slot);
+> 	int (*slot_enable)(struct slot *slot);
+> 	int (*slot_disable)(struct slot *slot);
+> 	int (*set_bus_speed_mode)(struct slot *slot, enum pci_bus_speed speed);
+> 	int (*get_power_status)(struct slot *slot, u8 *status);
+> 	int (*get_attention_status)(struct slot *slot, u8 *status);
+> 	int (*set_attention_status)(struct slot *slot, u8 status);
+> 	int (*get_latch_status)(struct slot *slot, u8 *status);
+> 	int (*get_adapter_status)(struct slot *slot, u8 *status);
+> 	int (*get_adapter_speed)(struct slot *slot, enum pci_bus_speed *speed);
+> 	int (*get_prog_int)(struct slot *slot, u8 *prog_int);
+> 	int (*query_power_fault)(struct slot *slot);
+> 	void (*green_led_on)(struct slot *slot);
+> 	void (*green_led_off)(struct slot *slot);
+> 	void (*green_led_blink)(struct slot *slot);
+> 	void (*release_ctlr)(struct controller *ctrl);
+> 	int (*check_cmd_status)(struct controller *ctrl);
+> };
+> 
+> As you can see it contains a pointer for check_cmd_status function,
+> however the hpc_check_cmd_status was never assigned to it:
+> 
+> static const struct hpc_ops shpchp_hpc_ops = {
+> 	.power_on_slot			= hpc_power_on_slot,
+> 	.slot_enable			= hpc_slot_enable,
+> 	.slot_disable			= hpc_slot_disable,
+> 	.set_bus_speed_mode		= hpc_set_bus_speed_mode,
+> 	.set_attention_status	= hpc_set_attention_status,
+> 	.get_power_status		= hpc_get_power_status,
+> 	.get_attention_status	= hpc_get_attention_status,
+> 	.get_latch_status		= hpc_get_latch_status,
+> 	.get_adapter_status		= hpc_get_adapter_status,
+> 
+> 	.get_adapter_speed		= hpc_get_adapter_speed,
+> 	.get_prog_int			= hpc_get_prog_int,
+> 
+> 	.query_power_fault		= hpc_query_power_fault,
+> 	.green_led_on			= hpc_set_green_led_on,
+> 	.green_led_off			= hpc_set_green_led_off,
+> 	.green_led_blink		= hpc_set_green_led_blink,
+> 
+> 	.release_ctlr			= hpc_release_ctlr,
+> };
+> 
+> Which made me believe that this function supposed to be a part of the
+> hpc_ops struct and whoever wrote the code added a pointer for it but
+> then they forgot to assign the function to it during the actual
+> definition of the struct. So I renamed it anyway.
 
-Signed-off-by: SiyuLi <siyuli@glenfly.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/pci/quirks.c    | 6 ++++++
- include/linux/pci_ids.h | 4 ++++
- 2 files changed, 10 insertions(+)
+Good point, thanks.  Applied to pci/hotplug for v6.12, thanks for your
+work!
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index a2ce4e08edf5..a6cb8b314fae 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4246,6 +4246,12 @@ static void quirk_dma_func0_alias(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe832, quirk_dma_func0_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
- 
-+/*
-+ * Some Glenfly chips use function 0 as the PCIe requester ID for DMA too.
-+ */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, PCI_DEVICE_ID_GLENFLY_ARISE10C0_AUDIO, quirk_dma_func0_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, PCI_DEVICE_ID_GLENFLY_ARISE1020_AUDIO, quirk_dma_func0_alias);
-+
- static void quirk_dma_func1_alias(struct pci_dev *dev)
- {
- 	if (PCI_FUNC(dev->devfn) != 1)
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index e388c8b1cbc2..35d2314cc433 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1654,6 +1654,10 @@
- #define PCI_DEVICE_ID_RICOH_R5C832	0x0832
- #define PCI_DEVICE_ID_RICOH_R5C843	0x0843
- 
-+#define PCI_VENDOR_ID_GLENFLY	    0x6766
-+#define PCI_DEVICE_ID_GLENFLY_ARISE10C0_AUDIO	 0x3D40
-+#define PCI_DEVICE_ID_GLENFLY_ARISE1020_AUDIO	 0x3D41
-+
- #define PCI_VENDOR_ID_DLINK		0x1186
- #define PCI_DEVICE_ID_DLINK_DGE510T	0x4c00
- 
--- 
-2.43.4
-
+Bjorn
 
