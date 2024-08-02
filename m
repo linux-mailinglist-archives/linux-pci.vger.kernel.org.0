@@ -1,192 +1,224 @@
-Return-Path: <linux-pci+bounces-11177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E026945918
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 09:43:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F4B5945967
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 10:01:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0711C1F21E58
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 07:43:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B39B2B21882
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 08:01:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D5C1BE86E;
-	Fri,  2 Aug 2024 07:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 696937EF04;
+	Fri,  2 Aug 2024 08:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ADpT8SDC"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gV+dy6Hb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OBpPn8MH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gV+dy6Hb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OBpPn8MH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864BF45020
-	for <linux-pci@vger.kernel.org>; Fri,  2 Aug 2024 07:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FE61EB4B6;
+	Fri,  2 Aug 2024 08:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722584609; cv=none; b=WTAFbIec9dcyAih4Q54J1gqacaDrI6+TFw/I11lhy72bXzdYKkZynulzZ86/oY1ooltWj2R2F1WDqWVBDc66Y1Jwy1ex3R7d++QpOMJc8R2RELe4xFT4SeR7zuw/PhpT1owpM9yCKjGm9oSa0UAU+JgZwc1ScvPYcvjhCQme1kc=
+	t=1722585688; cv=none; b=qZ26qQ2vdPystPMXSfynNlLMK1EGF4MdSQ1ptkak65prsW0Qb8Bj7kCwyRb3bZUkVCPjrIANvMOKYHja9XyvuSxqdNzLneKaQGDXQZ9dl5DHSZO6hAnf0z0RpFKL+0XJyf5m9sbvxORqva0zldNCimF/MD8pbsqa+jm/UfONi6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722584609; c=relaxed/simple;
-	bh=guXI55gF86E2Fne4JQyI51aRCrWAiOUf3c9HiCMWwgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUjgxbjOoOkYGQ6px7Vwzo/8peSWvsSpSn3IH4BOkDNoFuQkAiDV2THchKXrer8/Z1CU8yR3Q4wVLefMcTkrtvVHGrYprV4R1fgWkyUvFXFmbozPI6KMdeb43q50jzeD4XLzFeYbTpkXoG4OHkORTM/WbQGzHF5Q88fiS0+g560=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ADpT8SDC; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fd69e44596so21967525ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 02 Aug 2024 00:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722584607; x=1723189407; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cfFV4f3ZJY8hELRtpL4CzVeAVRtbalGeAhd5lHTSqtg=;
-        b=ADpT8SDCLBIbbrTKV4tXAjNXGp5mMtfisOWGvIaa52h1C0nYogri7914W/0QUJzdFc
-         cKXeUwAQdSJwaROvR2PNl/OONh3loH7Okf92KjUgt3oaRev7kovwSpAK+6VGwx7VWG4b
-         ea1Gvwkm0N0u9Qm94ZICE7jQl46jfJjdpy60sLThnAisvdL7T6XB8P3ujL83xqaVsNRE
-         JGuNFG9rFEsgiN8M6X+zbIwInXITJ/eczygxtw8QVVhSXeHOdcCsAJoAgURbYY08jV65
-         +quEQVklg0/zLRcpJjhUfKtDD8+heoO6siCArffVQcvHb93ad/c51vwu+Xk/mr4P0KcK
-         FhWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722584607; x=1723189407;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cfFV4f3ZJY8hELRtpL4CzVeAVRtbalGeAhd5lHTSqtg=;
-        b=PXuS+ijkfdSizjqEWDS7N6VonIXW1K2z7Fa9plaJQua0Zd0eKQFOPO/VlitNdMEm0O
-         WeIjnH1HG98nloGguFo8wp0i3ldc64V/Q1xA9/n5lN9aj4mGPHrwIegI0OM1rcCj14TE
-         HwSMb/sQAvIna+hAwrPxYb4CXm6mUA24xTeCuoOfup59C8SHSrBY6U3CRPZmPWYERs2f
-         E5vMPAfvnMA+0wFZP/HfTuAmfAR3zYDm+wO8gxU8PvJcT89B487rheFCAfKV25iuQ4Tu
-         LatLM0ImyTbrcQk7IUbVm7oJMiNawpnpArgx8bEaTgV2UbxHXU9uqPrEglURJIdfFaRL
-         hYzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWB4b60KBpQhEOvdtLoi9fsdWw9sw9IRApxI6CeBI19+59wqjmRoPxrDP12pF/EFdHlQfyW/12S0g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVK0PHGda6WRFJinTQqJyBFmUkycbowXKgickyt+WaGsaH/ZNV
-	A1O0jSRaRVRLk3q4Nq0fCC0UfsOBmN/mo1GG2sqxaUCJUpPzu5qjI3Nzps7M+A==
-X-Google-Smtp-Source: AGHT+IEunTnPjylhkwVdwv7PF5vhBnFBh+gzhM2Fmc7OHQ79TjhUuzg8HL5NTYnOuj3Qn0/m+c1Lqg==
-X-Received: by 2002:a17:902:650b:b0:1ff:3b0f:d5cd with SMTP id d9443c01a7336-1ff524920a3mr51154115ad.20.1722584606734;
-        Fri, 02 Aug 2024 00:43:26 -0700 (PDT)
-Received: from thinkpad ([120.60.54.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff59297c46sm10769725ad.258.2024.08.02.00.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 00:43:26 -0700 (PDT)
-Date: Fri, 2 Aug 2024 13:13:19 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: Re: [PATCH v3 06/13] PCI: qcom-ep: Modify 'global_irq' and
- 'perst_irq' IRQ device names
-Message-ID: <20240802074319.GA57846@thinkpad>
-References: <20240731-pci-qcom-hotplug-v3-6-a1426afdee3b@linaro.org>
- <20240801172308.GA109178@bhelgaas>
+	s=arc-20240116; t=1722585688; c=relaxed/simple;
+	bh=+RPF19zxpzjlvYCTbY+grIfPZrP90fYFntEOY8xsHMs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hSZr+tyc8gjXpT50cNqMsM6N2FxDJvJ/pETJnO/+1CTNK2yqEDKuk9LmrpUuSruvdumlKp3kLO95nYWDjN0C7fI3rTkux255h9h1PUW6ku8KT8UneW1TZxgSdMP9hmKG76d61xdQwwW93d0WYV9GlhH0R13VgMlKEiBaxMHvpdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gV+dy6Hb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OBpPn8MH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gV+dy6Hb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OBpPn8MH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AF21F2193C;
+	Fri,  2 Aug 2024 08:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1722585684; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4BS7F6/VnwHnr5d6vmx7l+U580Ch90URY4uXrae65JM=;
+	b=gV+dy6HbW8R3P7OG9uh6RP1bjX0DVZqjFjhTbWkrR9S7VP8Web/ce6ZKRSbjfDx72JBVOi
+	O+1JsszkXDGvbjaVYtwmNaGEGnMe453X7lcUhXPk+FnD3wZY6wl/dUwH++bAS4lBwq+p4y
+	H0/A+sRM7ZNvSD5SVj4y83dWMpROtws=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1722585684;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4BS7F6/VnwHnr5d6vmx7l+U580Ch90URY4uXrae65JM=;
+	b=OBpPn8MHCWvKZ7UJR8thx66+D8gmFu9DOUBW6ku1tH5yANcLOexdH1xlHzpMr2HdCc7xco
+	vOrWI2InCG9uByCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gV+dy6Hb;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=OBpPn8MH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1722585684; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4BS7F6/VnwHnr5d6vmx7l+U580Ch90URY4uXrae65JM=;
+	b=gV+dy6HbW8R3P7OG9uh6RP1bjX0DVZqjFjhTbWkrR9S7VP8Web/ce6ZKRSbjfDx72JBVOi
+	O+1JsszkXDGvbjaVYtwmNaGEGnMe453X7lcUhXPk+FnD3wZY6wl/dUwH++bAS4lBwq+p4y
+	H0/A+sRM7ZNvSD5SVj4y83dWMpROtws=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1722585684;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4BS7F6/VnwHnr5d6vmx7l+U580Ch90URY4uXrae65JM=;
+	b=OBpPn8MHCWvKZ7UJR8thx66+D8gmFu9DOUBW6ku1tH5yANcLOexdH1xlHzpMr2HdCc7xco
+	vOrWI2InCG9uByCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7C3351388E;
+	Fri,  2 Aug 2024 08:01:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Wo4KHVOSrGazDwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 02 Aug 2024 08:01:23 +0000
+Date: Fri, 02 Aug 2024 10:02:00 +0200
+Message-ID: <87ed77ic93.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,	Giovanni Cabiddu
+ <giovanni.cabiddu@intel.com>,	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,	Boris Brezillon
+ <bbrezillon@kernel.org>,	Arnaud Ebalard <arno@natisbad.org>,	Srujana Challa
+ <schalla@marvell.com>,	Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>,	Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>,	Kalle Valo <kvalo@kernel.org>,	Serge
+ Semin <fancer.lancer@gmail.com>,	Jon Mason <jdmason@kudzu.us>,	Dave Jiang
+ <dave.jiang@intel.com>,	Allen Hubbe <allenbh@gmail.com>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	Kevin Cernekee <cernekee@gmail.com>,	Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,	Jiri Slaby
+ <jirislaby@kernel.org>,	Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai
+ <tiwai@suse.com>,	Mark Brown <broonie@kernel.org>,	David Lechner
+ <dlechner@baylibre.com>,	Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <u.kleine-koenig@pengutronix.de>,	Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,	Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>,	Jie Wang <jie.wang@intel.com>,	Adam
+ Guerin <adam.guerin@intel.com>,	Shashank Gupta <shashank.gupta@intel.com>,
+	Damian Muszynski <damian.muszynski@intel.com>,	Nithin Dabilpuram
+ <ndabilpuram@marvell.com>,	Bharat Bhushan <bbhushan2@marvell.com>,	Johannes
+ Berg <johannes.berg@intel.com>,	Gregory Greenman
+ <gregory.greenman@intel.com>,	Emmanuel Grumbach
+ <emmanuel.grumbach@intel.com>,	Yedidya Benshimol
+ <yedidya.ben.shimol@intel.com>,	Breno Leitao <leitao@debian.org>,	Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,	John Ogness
+ <john.ogness@linutronix.de>,	Thomas Gleixner <tglx@linutronix.de>,
+	linux-doc@vger.kernel.org,	linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org,	qat-linux@intel.com,
+	linux-crypto@vger.kernel.org,	linux-wireless@vger.kernel.org,
+	ntb@lists.linux.dev,	linux-pci@vger.kernel.org,
+	linux-serial@vger.kernel.org,	linux-sound@vger.kernel.org
+Subject: Re: [PATCH 09/10] ALSA: korg1212: Replace deprecated PCI functions
+In-Reply-To: <20240801174608.50592-10-pstanner@redhat.com>
+References: <20240801174608.50592-1-pstanner@redhat.com>
+	<20240801174608.50592-10-pstanner@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240801172308.GA109178@bhelgaas>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: AF21F2193C
+X-Spam-Score: -1.81
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.81 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[lwn.net,kernel.org,intel.com,gondor.apana.org.au,davemloft.net,natisbad.org,marvell.com,linux.intel.com,gmail.com,kudzu.us,google.com,linuxfoundation.org,perex.cz,suse.com,baylibre.com,pengutronix.de,huawei.com,debian.org,linutronix.de,vger.kernel.org,lists.linux.dev];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLp4wjbahqp9imfp3xd18ktmsn)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCPT_COUNT_GT_50(0.00)[52];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim]
 
-On Thu, Aug 01, 2024 at 12:23:08PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jul 31, 2024 at 04:20:09PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Currently, the IRQ device name for both of these IRQs doesn't have Qcom
-> > specific prefix and PCIe domain number. This causes 2 issues:
-> > 
-> > 1. Pollutes the global IRQ namespace since 'global' is a common name.
-> > 2. When more than one EP controller instance is present in the SoC, naming
-> > conflict will occur.
-> > 
-> > Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
-> > names to uniquely identify the IRQs and also to fix the above mentioned
-> > issues.
-> > 
-> > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom-ep.c | 16 ++++++++++++++--
-> >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > index 0bb0a056dd8f..d0a27fa6fdc8 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > @@ -711,8 +711,15 @@ static irqreturn_t qcom_pcie_ep_perst_irq_thread(int irq, void *data)
-> >  static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
-> >  					     struct qcom_pcie_ep *pcie_ep)
-> >  {
-> > +	struct device *dev = pcie_ep->pci.dev;
-> > +	char *name;
-> >  	int ret;
-> >  
-> > +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_ep_global_irq%d",
-> > +			      pcie_ep->pci.ep.epc->domain_nr);
-> > +	if (!name)
-> > +		return -ENOMEM;
+On Thu, 01 Aug 2024 19:46:07 +0200,
+Philipp Stanner wrote:
 > 
-> I assume this is what shows up in /proc/interrupts?
-
-Yes.
-
-> I always wonder
-> why it doesn't include dev_name().  A few drivers do that, but
-> apparently it's not universally desirable.  It's sort of annoying
-> that, e.g., we get a bunch of "aerdrv" interrupts with no clue which
-> device they relate to.
+> pcim_iomap_table() and pcim_iomap_regions_request_all() have been
+> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> pcim_iomap_table(), pcim_iomap_regions_request_all()").
 > 
+> Replace these functions with their successors, pcim_iomap() and
+> pcim_request_all_regions()
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-dev_name() can be big at times. I wouldn't recommend to include it unless there
-are no other ways to differentiate between IRQs. Luckily PCIe has the domain
-number that we can use to differentiate these IRQs.
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-- Mani
+And feel free to take my ack to v2 if the further change will be only
+about the description, too :)
 
-> >  	pcie_ep->global_irq = platform_get_irq_byname(pdev, "global");
-> >  	if (pcie_ep->global_irq < 0)
-> >  		return pcie_ep->global_irq;
-> > @@ -720,18 +727,23 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
-> >  	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->global_irq, NULL,
-> >  					qcom_pcie_ep_global_irq_thread,
-> >  					IRQF_ONESHOT,
-> > -					"global_irq", pcie_ep);
-> > +					name, pcie_ep);
-> >  	if (ret) {
-> >  		dev_err(&pdev->dev, "Failed to request Global IRQ\n");
-> >  		return ret;
-> >  	}
-> >  
-> > +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_ep_perst_irq%d",
-> > +			      pcie_ep->pci.ep.epc->domain_nr);
-> > +	if (!name)
-> > +		return -ENOMEM;
-> > +
-> >  	pcie_ep->perst_irq = gpiod_to_irq(pcie_ep->reset);
-> >  	irq_set_status_flags(pcie_ep->perst_irq, IRQ_NOAUTOEN);
-> >  	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->perst_irq, NULL,
-> >  					qcom_pcie_ep_perst_irq_thread,
-> >  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> > -					"perst_irq", pcie_ep);
-> > +					name, pcie_ep);
-> >  	if (ret) {
-> >  		dev_err(&pdev->dev, "Failed to request PERST IRQ\n");
-> >  		disable_irq(pcie_ep->global_irq);
-> > 
-> > -- 
-> > 2.25.1
-> > 
-> > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+thanks,
+
+Takashi
+
+
+> ---
+>  sound/pci/korg1212/korg1212.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/pci/korg1212/korg1212.c b/sound/pci/korg1212/korg1212.c
+> index 5c2cac201a28..b5428ac34d3b 100644
+> --- a/sound/pci/korg1212/korg1212.c
+> +++ b/sound/pci/korg1212/korg1212.c
+> @@ -2106,7 +2106,7 @@ static int snd_korg1212_create(struct snd_card *card, struct pci_dev *pci)
+>          for (i=0; i<kAudioChannels; i++)
+>                  korg1212->volumePhase[i] = 0;
+>  
+> -	err = pcim_iomap_regions_request_all(pci, 1 << 0, "korg1212");
+> +	err = pcim_request_all_regions(pci, "korg1212");
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -2128,7 +2128,9 @@ static int snd_korg1212_create(struct snd_card *card, struct pci_dev *pci)
+>  		   korg1212->iomem2, iomem2_size,
+>  		   stateName[korg1212->cardState]);
+>  
+> -	korg1212->iobase = pcim_iomap_table(pci)[0];
+> +	korg1212->iobase = pcim_iomap(pci, 0, 0);
+> +	if (!korg1212->iobase)
+> +		return -ENOMEM;
+>  
+>  	err = devm_request_irq(&pci->dev, pci->irq, snd_korg1212_interrupt,
+>                            IRQF_SHARED,
+> -- 
+> 2.45.2
+> 
 
