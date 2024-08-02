@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-11200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAFBE94622F
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 19:00:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE05894623C
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 19:05:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 569981F220C5
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 17:00:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A1B128345D
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 17:05:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2881E1537DF;
-	Fri,  2 Aug 2024 17:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3856713634A;
+	Fri,  2 Aug 2024 17:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucaUQzek"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9/KQwt3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92821537D4;
-	Fri,  2 Aug 2024 17:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0702016BE3B;
+	Fri,  2 Aug 2024 17:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722618009; cv=none; b=Ros+Dnr1q0V6ChqR9qZoX2nlTnu7knBy5naDuYdMgoHOeb0a4kS8AX5BnF4bgFC13hsHxt647FaJFhUkLikKPZOqhjOUndc3FTe+F2XpALDpKxrXtsjFyp2p4sxwkRZxiGaEPNDOGXf8tMBz9vr3qpwoix4K9zmdkgARtn6QhIA=
+	t=1722618336; cv=none; b=ebJEwexfQfoDnDkP9L6ByRQ7LHc6SrKuelRZUbVHgMR7KXVNxWtJJVzeeBFSr7nS3Vg/0OdQXR9PrW50gZWrqiYwzxu377DjnH4v++du+mUdOt0X632IQZ2y09ypIQclmcAblzxjEd4Bp/hI8Rk+YymZn0Q7w9DGYenBykHwlKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722618009; c=relaxed/simple;
-	bh=uv7HuMEHgapOFg3wbd0WciOnlZwZFFkU091eYJlLtyo=;
+	s=arc-20240116; t=1722618336; c=relaxed/simple;
+	bh=BaaOUPxE63y8U8q+BOZAPvydLCLHsJUCTvZjvrGQvZ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H7aV6GL928K0tOIalrEZmoBX1UcI/uR1M8HNTjwdpswBQvtx0QVp0oydYU2klA0Kz7N9vIRCFW8FEL2HgfF+ydlb1pEbek8rRV8vEoXvvVLccW8DZPGFXnpuNQAIsgZrsB8bdKYo2LicBzgfg4FSxHj3BenopFb6fnaq86KVu/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucaUQzek; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B1DBC32782;
-	Fri,  2 Aug 2024 17:00:08 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=XpsJugMbbAgvACWbGjQFb2IAGkYWQ588jxHK5IKDCkjCGw8RmhK9oa48CvX8PAN1iKIwkL52Ru+kwAI4g0Av6KGU5gSTP3XUc+fSVjGXc0eIyNToUUBFSNui0Cupm97paFYJJiK61RYKIUe+jOzrls6ZlteQ3a//kAkdpmLelZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9/KQwt3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D70BC32782;
+	Fri,  2 Aug 2024 17:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722618008;
-	bh=uv7HuMEHgapOFg3wbd0WciOnlZwZFFkU091eYJlLtyo=;
+	s=k20201202; t=1722618335;
+	bh=BaaOUPxE63y8U8q+BOZAPvydLCLHsJUCTvZjvrGQvZ0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ucaUQzekFEkmK1AZqkWD+mq4tujaOHtDTGsy5aDsDY58Mn0coqpKpOhAYhd7ura+8
-	 i9nGtDvXVBmEG5TMJjL5ZOJto7B7szZMJDzpLPrbTbogdkvujcN4n0s7kawkDI+XnY
-	 x4/Ifxf1AtD90GKewQp3vccoVjyHFcHBIvKW5WGlfVHkqr3e8aA2XFbcIg40c2L+kz
-	 opRJ9rLuJntkTFIUOwc+h7YQen6oZ4+8cesIcSblE9HFqT0j5kgMHRZxZcdDLOOH07
-	 hwLojcKA4MfzNJOMiKSHZTERAf/ZWpg+tHzRKHPO9iEUvVS/1V1Nvelc2JqqSV+apY
-	 Nv4IWv6WGjCEw==
-Date: Fri, 2 Aug 2024 12:00:06 -0500
+	b=T9/KQwt37sTL2WfXrSrcgjOVRW4lUtEeZDNmaFAnoyofTA+GTIWkG1/EPzdhYTjg6
+	 QXsttm4dGSvDePi8ZRwkWdBeb7Gx6EPgHtc6ug5GqVtmzryX5zeylUoVJh3Bs1LYkU
+	 zlqp39zadhTPMqtapvnTbh5TThfpoSsGZUYO3GRDgslZNUEUrUCSi0yGHL9MnMZULr
+	 8AbR62F8hUyLyqk5xqSetopJ97MNTH3Zd8OMV33bSXoyOCYCDyW4q9t8HM9GOyTxFc
+	 TXi7sjV8mwxRDxDOvgS5mPxSrEFvLzwgg8YMyOdIiaJos8cF0CIvGwRAyT3Z9mFHpm
+	 wFY6iDbtF51RA==
+Date: Fri, 2 Aug 2024 12:05:33 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Wei Huang <wei.huang2@amd.com>
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -54,8 +54,8 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
 	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com,
 	bhelgaas@google.com
-Subject: Re: [PATCH V3 09/10] bnxt_en: Add TPH support in BNXT driver
-Message-ID: <20240802170006.GA154301@bhelgaas>
+Subject: Re: [PATCH V3 04/10] PCI/TPH: Add pci=nostmode to force No ST Mode
+Message-ID: <20240802170533.GA154363@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,33 +64,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <91a50d58-f9b3-4003-b694-6829c9bcb0a2@amd.com>
+In-Reply-To: <65f25d99-bf27-4521-944e-7ebfe3447a14@amd.com>
 
-On Fri, Aug 02, 2024 at 12:44:07AM -0500, Wei Huang wrote:
-> 
-> 
-> On 7/23/24 11:48, Bjorn Helgaas wrote:
-> > On Wed, Jul 17, 2024 at 03:55:10PM -0500, Wei Huang wrote:
-> > > From: Manoj Panicker <manoj.panicker2@amd.com>
-> > > 
-> > > Implement TPH support in Broadcom BNXT device driver by invoking
-> > > pcie_tph_set_st() function when interrupt affinity is changed.
+On Thu, Aug 01, 2024 at 11:29:22PM -0500, Wei Huang wrote:
+> On 7/23/24 17:44, Bjorn Helgaas wrote:
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -4656,6 +4656,7 @@
+> > >   		norid		[S390] ignore the RID field and force use of
+> > >   				one PCI domain per PCI function
+> > >   		notph		[PCIE] Do not use PCIe TPH
+> > > +		nostmode	[PCIE] Force TPH to use No ST Mode
 > > 
-> > *and* invoking pcie_tph_set_st() when setting up the IRQ in the first
-> > place, I guess?
-> > 
-> > I guess this gives a significant performance benefit?  The series
-> > includes "pci=nostmode" so the benefit can be quantified, so now I'm
-> > curious about what you measured :)
+> > Needs a little more context here about what this means.  Users won't
+> > know where to even look for "No ST Mode" unless they have a copy of
+> > the spec.
 > 
-> Using network benchmarks, three main metrics were measured: network latency,
-> network bandwidth, and memory bandwidth saving.
+> I can certainly add more description to talk about "No ST Mode". Also, will
+> "tph_nostmode" be better than "nostmode" in your opinion?
 
-I was hoping you could share actual percentage improvements to justify
-the new code.  If there's no improvement, obviously there would be no
-point in adding the code.  If there's significant improvement, it will
-encourage using this in other drivers, which will improve the code and
-testing for everybody.
-
-Bjorn
+I don't really care about the parameter name.  I think just spelling
+these out once, e.g., "PCIe TLP Processing Hints (TPH)" and "No ST
+Mode (Steering Tags must be all zeros)" is probably enough context.
 
