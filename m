@@ -1,106 +1,110 @@
-Return-Path: <linux-pci+bounces-11182-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11183-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED18D945BD9
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 12:13:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79CBC945D1A
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 13:19:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29A911C20D46
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 10:13:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F20F3B22D3C
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Aug 2024 11:19:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8561DB43A;
-	Fri,  2 Aug 2024 10:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1933C1DF69F;
+	Fri,  2 Aug 2024 11:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnNsIUHo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496E134B6;
-	Fri,  2 Aug 2024 10:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9891D0DF6;
+	Fri,  2 Aug 2024 11:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722593617; cv=none; b=dBz9WBcQd4CBe7e5e+mnKVUoC5f3UnN+5ZusjQqFOg8TyDgxYtTRocost2QRetjIYkf7w+ssA9h05BAmCFLIU6hHHT4PeU80Ezdc9Z5B4WnY3vWGdRLA0hRjA/qGDj2EPI+hBwX7h5h+58tWnDvHheSFCh8SFtWcj5Fovz2ZXS0=
+	t=1722597577; cv=none; b=LsbUsHJj93/mjtKDsNwFLWL+J+ghkW1eaDVw8PY+sHAZ7F9kC+q+mIHnTa5Bbuq9J6oermp02scWCWgezyPMXYwJOO+32eOlb5IyLFmOC7SPFyMBclW3GG4KI4Cnbe1v1PNVCpfN/XzDKc8GQgSA/fe8ClkcolQJDdujo2xOT4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722593617; c=relaxed/simple;
-	bh=CGgO4c4usttTcvDWQPDRc8NVgRBTwg+m6dDsG/vP5mI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ry26MRBS60IPZChxXSUXved8ZNCthqsho8MO0c8Z9tFJmpmDNfZneEk6ginwoEx134BabL+G17fF/nGv9joan1BNDPE/E0VyDaw63ltEraBhBDwa7v42pajbA8stMzEJwJ4rrfj7llFDJCPuFB109XOOjuLQBn2/NZsIm3m8NJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id D8088100DA1B8;
-	Fri,  2 Aug 2024 12:13:31 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id AD1C81135EE; Fri,  2 Aug 2024 12:13:31 +0200 (CEST)
-Date: Fri, 2 Aug 2024 12:13:31 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: manivannan.sadhasivam@linaro.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	mika.westerberg@linux.intel.com, Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all
- Devicetree based platforms
-Message-ID: <ZqyxS8spZ-ohsP3R@wunner.de>
-References: <20240802-pci-bridge-d3-v5-0-2426dd9e8e27@linaro.org>
- <20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org>
+	s=arc-20240116; t=1722597577; c=relaxed/simple;
+	bh=gqsBN6zqTFSD7ewAm2umxOvDKgjjv/CXfra6NQYMzFs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m1mCMpFFu4BLFwBo1RzBCJGkvjccVHEzVPKsQqoCI9V95xOWveqwQ/KmBnu7fkk4t1JHsPfES9b1IUc5juLx/lB3Q23aRw0ttLfNbfCRxy5UrZNz7yT82w9kkNTHFsi2G8+qoV9JCMV1YUXd3QXBRc0IlolGIaKV43BB1/6TlDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnNsIUHo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6712BC4AF0E;
+	Fri,  2 Aug 2024 11:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722597576;
+	bh=gqsBN6zqTFSD7ewAm2umxOvDKgjjv/CXfra6NQYMzFs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GnNsIUHo1U7Q3+q2lOTVERtnXZVaMZsF40tTkyBVjWoCk4WoOcEsyumPnyY8hOAAG
+	 bO4C0INU+Xu4XK6eZJe/pj6j5mOMKrT5KqxYcsaaXj4D4hD5b/b3UNtEt5jeNKKfca
+	 2/mrPxkD1b/bYY8HC9ME5+oH/XucAnkkB8Zej8MGGwUV4WNwa42ssGBNrhAp3f8Vfa
+	 lOv+N5xLHEOmn6z19a1tN8Zh1j8ihjqH4EqBEwnFxSRpdN7ZxBkOdBtzBb1JlbhqBe
+	 V05hr7Zmo0KunQDK/e5zI5IbUd/MY2Qbz9DwRu4JUIHxSf7T6OzQ/XTM9HPSEUqtoR
+	 j+2RacmTzqHWA==
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3db192667f5so838745b6e.2;
+        Fri, 02 Aug 2024 04:19:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTakE7VWQcc9Pq16SKTwrYZY6EAR2ToNzbl4bt1EWSI/DfZaHb9Y2Ehpi07uLDRNauD1g5XHi+ymLFW/aD@vger.kernel.org, AJvYcCWruGVJt1n1l7U/lmN4wwqikIljwm4mm4mays7cW4omUdyUWQIMjGoL/qRM/HkCTPKiUkQUqUEbdtxW@vger.kernel.org, AJvYcCXgshDPxv1ydBQITwXdGZzfYLiPCbg+TIoYpuiWCGNW83iWmgBX8ivhObpfy8XJiFbnzRYL0k1mrVX6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSeQnU6OPizdxqcWkSh7A6yoFyB8OG10h1Y6w4bZk/6FHFb3Ru
+	jih48Vq9GsRfsQ5JIEw29uStjDTiUvLgaxIMG0+v+CTSHjPMV6Ra2uEAMWNS3ab5D4opcBfUqC4
+	cxOk2JNaPUtY9WvDYyR8MF7mnxpY=
+X-Google-Smtp-Source: AGHT+IEFOJBPRGJ+jQDSEvY7zfLglLpbL6a2LYHNxsO87G/hgW3J4Eo6anzuRB7W2+CHwlIkOsxrmAvaFJkxfOT3+dA=
+X-Received: by 2002:a05:6870:2054:b0:260:ccfd:1eff with SMTP id
+ 586e51a60fabf-26891e9f29fmr1899588fac.7.1722597575722; Fri, 02 Aug 2024
+ 04:19:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org>
+References: <20240802-pci-bridge-d3-v5-0-2426dd9e8e27@linaro.org>
+ <20240802-pci-bridge-d3-v5-1-2426dd9e8e27@linaro.org> <Zqyro5mW-1kpFGQd@wunner.de>
+In-Reply-To: <Zqyro5mW-1kpFGQd@wunner.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 2 Aug 2024 13:19:24 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hw7C2dHC3yXAwya-KAjzYxU+QgavO_MkR9Rscsm_YHvg@mail.gmail.com>
+Message-ID: <CAJZ5v0hw7C2dHC3yXAwya-KAjzYxU+QgavO_MkR9Rscsm_YHvg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] PCI/portdrv: Make use of pci_dev::bridge_d3 for
+ checking the D3 possibility
+To: Lukas Wunner <lukas@wunner.de>, manivannan.sadhasivam@linaro.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, mika.westerberg@linux.intel.com, 
+	Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 02, 2024 at 11:25:03AM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> Unlike ACPI based platforms, there are no known issues with D3Hot for the
-> PCI bridges in the Devicetree based platforms. So let's allow the PCI
-> bridges to go to D3Hot during runtime. It should be noted that the bridges
-> need to be defined in Devicetree for this to work.
-[...]
-> +		if (state == PCI_D3hot && dev_of_node(&bridge->dev))
-> +			return true;
+On Fri, Aug 2, 2024 at 11:49=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+>
+> On Fri, Aug 02, 2024 at 11:25:00AM +0530, Manivannan Sadhasivam via B4 Re=
+lay wrote:
+> > PCI core is already caching the value of pci_bridge_d3_possible() in
+> > pci_dev::bridge_d3 during pci_pm_init(). Since the value is not going t=
+o
+> > change,
 
-For such a simple change which several parties are interested in,
-I think it would be better to move it to the front of the series.
+Is that really the case?
 
-Patch [1/4] looks like an optimization (using a cached value)
-which this patch doesn't depend on.  Patch [2/4] looks like a
-change of bikeshed color which isn't strictly necessary for
-this fourth patch either.  If you want to propose those changes,
-fine, but by making this fourth patch depend on them, you risk
-delaying its acceptance.  As an upstreaming strategy it's usually
-smarter to move potentially controversial or unnecessary material
-to the back of the series, or submit it separately if it can be
-applied standalone.
+Have you seen pci_bridge_d3_update()?
 
+> let's make use of the cached value.
+> [...]
+> > --- a/drivers/pci/pcie/portdrv.c
+> > +++ b/drivers/pci/pcie/portdrv.c
+> > @@ -702,7 +702,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+> >       dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
+> >                                          DPM_FLAG_SMART_SUSPEND);
+> >
+> > -     if (pci_bridge_d3_possible(dev)) {
+> > +     if (dev->bridge_d3) {
+>
+> I don't know if there was a reason to call pci_bridge_d3_possible()
+> (instead of using the cached value) on probe, remove and shutdown.
+>
+> The change is probably safe but it would still be good to get some
+> positive test results with Thunderbolt laptops etc to raise the
+> confidence.
 
-> Currently, D3Cold is not allowed since Vcc supply which is required for
-> transitioning the device to D3Cold is not exposed on all Devicetree based
-> platforms.
-
-The PCI core cannot put devices into D3cold without help from the
-platform.  Checking whether D3cold is possible (or allowed or
-whatever) thus requires asking platform support code via
-platform_pci_power_manageable(), platform_pci_choose_state() etc.
-
-I think patch [3/4] is a little confusing because it creates
-infrastructure to decide whether D3cold is supported (allowed?)
-but we already have that in the platform_pci_*() functions.
-So I'm not sure if patch [3/4] adds value.  I think generally
-speaking if D3hot isn't possible (allowed?), D3cold is assumed
-to not be possible either.
-
-Thanks,
-
-Lukas
+If I'm not mistaken, the change is not correct.
 
