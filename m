@@ -1,87 +1,82 @@
-Return-Path: <linux-pci+bounces-11232-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11233-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDAAC946953
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 13:00:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17EC1946963
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 13:10:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A363F282137
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 11:00:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4AEA91C20B59
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 11:10:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFACD1369AE;
-	Sat,  3 Aug 2024 11:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4D5C14EC52;
+	Sat,  3 Aug 2024 11:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOq/IScy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G3ElNFyv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA8D8120C
-	for <linux-pci@vger.kernel.org>; Sat,  3 Aug 2024 11:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E8514E2F6;
+	Sat,  3 Aug 2024 11:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722682836; cv=none; b=AfZCTMJu+XwYkIiqloEcTbC+F2tNZeSrqL0kNSvZJM/VpNOXaUmkM9yzedwItnD8lP6PwNKPpC/ClpJtVOhMzJD9tuXDNi6tcXS0jfJLPJ28lComFVS+BdBiDWLanqnRDonuwNLXEHjk1rFm6y5klJvAdtywkydgyOWl04nGbJA=
+	t=1722683409; cv=none; b=K3kymWgZeshG6E7tT7ww44evcB2/eYRaTMXUzDUtMhl6l1Cx5nk36Qh4ZbTQksneXf614zZG7KJy3XS7dtZlYb7BltkCX17wbOrdNjlflpmS52m8l4ktTeaXivUQrt2zmQygObrWrdSoDM3Gt9LmRwcPBFrWZqxXpdW+ajxCw0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722682836; c=relaxed/simple;
-	bh=MFgOs2G+h0wMmI4NbkwqSfooXFKz5XyVkrg1+abZ0kU=;
+	s=arc-20240116; t=1722683409; c=relaxed/simple;
+	bh=x3si7t6ipvGyzFV+5rMUKZh3I2NBFPG9mfGUanh83vw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WvK/XeDHzv0XNPa+B2Nc/VHeLiUe+rL3sf+RD5uyxITbE3do4fkEaNdK7HDghx2fFphfrBAxFTxAdnQZoE+NTNZ5ev81yqZJ/f3Qho9M3TkjeSNKLh/7hfdAsk5uRw2bCfE8EsXHk3+llEnk+tU+8M8DikUD/7Jr/V74uIqfytY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eOq/IScy; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f15dd0b489so23857301fa.3
-        for <linux-pci@vger.kernel.org>; Sat, 03 Aug 2024 04:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722682833; x=1723287633; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nNGT5r4BR2JSxtr0hpWaFKlHFXjUN1Qi2sHmX20c4mY=;
-        b=eOq/IScyQR9GLi+NWi+xJS64O8vCJED2GaFqC+WCHy5xx8lk5WPCHWjqmstJO7C/O2
-         FD7sUVZKZY3pYE1kIvvHpUimeVB+JAlTZzmGQVedBnMFjI6BlIG8N6z7rWS1s0sghU2S
-         ocO+1J8MvncI9Ej0ygxAoKHW6IvCjGkTox3Imp+UI9apIDhH8ejoiqIuypS9jvShBseh
-         bOyk2LvVXOeLAhZG4lrxf0QaeMLiP2/WYB3lr9uGyBpg9TEFsAHSakFOsxjTDZ3PGJ23
-         Rmw8uWUy4rwf8hVUNR1Teh5uMTLhNQp5su4dguFzYAvo/7yYfE2MHGm62/L/FIKDBTY5
-         yOmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722682833; x=1723287633;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nNGT5r4BR2JSxtr0hpWaFKlHFXjUN1Qi2sHmX20c4mY=;
-        b=P4Rr6t4VUFEaEiN1djG7YKaoS2iNzhKQ+KfJajs+fYQ0sR3W7u/CnfNfDQLOO/Sdyo
-         n1UzLFvtlrFRtPMO8QUYyBMVcaodozV8Eyz6eAWv2D76EdKSULNLzFKdMMoFNRbVxpkx
-         MkoZs9/VHLH+NbdGUcLoSc3kMsaavX2ng9pdFVnA9DF87KG3UUPZsvkaWPPg2AI/Dr2x
-         9EUj03aoSFqTdEgS7Ce4uDGdnB9GPtxFQv++1xG0vZhu+rZ5lsmKOCKoPG02yBK8Mvjd
-         jhKMG7P0oIoHxN8k03zvsEnDC/YEVhr5JRUdPS3C5Mj3SFfgg37evgyIUDeJ0REjjCXb
-         k81Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUCgAXfycJ8lwaSwMDjesDkg9tHS+KZz0ymumCHfblBo+rKJLUzfw11SMf9hb4a6I+ElkQAX6ndT48httwBRIS6eNkqCs53vCA9
-X-Gm-Message-State: AOJu0YwmZTtIjRyci/7gAvbI+Lao1lrVnH8qPqjuyHenHL9MbnqPQvzy
-	kRzsUNh6S45JrH+oRzDecvY/Q3kqTNrj+IdFjcxXp0aqkcCpQhgsTWGJLXP1Qdo=
-X-Google-Smtp-Source: AGHT+IGfVXpFlc9oFqW8lbiOI9PDtvzXyDErrPZE6WU7MV0jlGMNnbtS+ZF9QfuScaUolgfDoSnFQw==
-X-Received: by 2002:a05:6512:ba7:b0:52b:c0b1:ab9e with SMTP id 2adb3069b0e04-530bb367101mr4034661e87.5.1722682832568;
-        Sat, 03 Aug 2024 04:00:32 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530bba4a512sm469093e87.300.2024.08.03.04.00.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Aug 2024 04:00:32 -0700 (PDT)
-Date: Sat, 3 Aug 2024 14:00:30 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	andersson@kernel.org, quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
-Message-ID: <pku3ayi76246jmixuqdylkuqpb3k5z3ykn4hj2rjvcrhqrj3hb@yig6as3cph6p>
-References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RP0SW8DFXlvwje0CIKTnX3P1SbdQY7njQgQugEcZq5vTJROZMxQNzlsqd7laUxCHIEKLyuYag1edMjpX2+v7UHuup6QIBpOsfjiVJ9gqppCSTbNNYS+4oBNxSfuLl62Jl2/IO7cFvcVJnrRFn9SSgJW0pBwhuise0aHZuzgaT98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G3ElNFyv; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722683407; x=1754219407;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x3si7t6ipvGyzFV+5rMUKZh3I2NBFPG9mfGUanh83vw=;
+  b=G3ElNFyv+kmtVDPpfGoNOfXRPjPNXirScQT04R9ZW5I9W+mSXmfCtbZg
+   4Gr38IJqqfxuxDnk8EsL3vSkz8s1tEIJEMNl1ORfWMFNy3ckn94QWf18c
+   zcOy/uYYaEsS50A22IO5fza2FGmVqJidvXmagjXdLrDZesrowCN2A+wze
+   tA5EpBnr5+aEUM7iUs/W3uUOuOC/AOIdJ1qRRggOl15tk1e11sK9/xuKB
+   dFToqdO4jmcQxLiI35ibJ0lkUoUaUUdwIzmzuSNHx1b4H2We9IfORwsj6
+   2tLK91nsK1Q+oKf0YZ74yx8pUdvRwe3JgFdIACVMar5k2HR2Vdiv6gyTn
+   A==;
+X-CSE-ConnectionGUID: WNCmN0RiTfigdSOi0dT2wQ==
+X-CSE-MsgGUID: oC2zvLB/QuC0QPkEO+QpVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11152"; a="24466438"
+X-IronPort-AV: E=Sophos;i="6.09,260,1716274800"; 
+   d="scan'208";a="24466438"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2024 04:10:02 -0700
+X-CSE-ConnectionGUID: vbop2u3rS16WtPYntLB90A==
+X-CSE-MsgGUID: zuckd/NTQYq2l0XJmqlmmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,260,1716274800"; 
+   d="scan'208";a="55626183"
+Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 03 Aug 2024 04:09:59 -0700
+Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1saCe5-0000Ok-1V;
+	Sat, 03 Aug 2024 11:09:57 +0000
+Date: Sat, 3 Aug 2024 19:03:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	lukas@wunner.de, mika.westerberg@linux.intel.com,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v5 2/4] PCI: Rename pci_bridge_d3_possible() to
+ pci_bridge_d3_allowed()
+Message-ID: <202408031855.TEPJlfzl-lkp@intel.com>
+References: <20240802-pci-bridge-d3-v5-2-2426dd9e8e27@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,237 +85,103 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
+In-Reply-To: <20240802-pci-bridge-d3-v5-2-2426dd9e8e27@linaro.org>
 
-On Sat, Aug 03, 2024 at 08:52:47AM GMT, Krishna chaitanya chundru wrote:
-> Add binding describing the Qualcomm PCIe switch, QPS615,
-> which provides Ethernet MAC integrated to the 3rd downstream port
-> and two downstream PCIe ports.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,qps615.yaml       | 191 +++++++++++++++++++++
->  1 file changed, 191 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> new file mode 100644
-> index 000000000000..ea0c953ee56f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> @@ -0,0 +1,191 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm QPS615 PCIe switch
-> +
-> +maintainers:
-> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> +
-> +description: |
-> +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
-> +  ports. The 3rd downstream port has integrated endpoint device of
-> +  Ethernet MAC. Other two downstream ports are supposed to connect
-> +  to external device.
-> +
-> +  The QPS615 PCIe switch can be configured through I2C interface before
-> +  PCIe link is established to change FTS, ASPM related entry delays,
-> +  tx amplitude etc for better power efficiency and functionality.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - pci1179,0623
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  qcom,qps615-controller:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Reference to the I2C client used to do configure qps615
-> +
-> +  vdd18-supply: true
-> +
-> +  vdd09-supply: true
-> +
-> +  vddc-supply: true
-> +
-> +  vddio1-supply: true
-> +
-> +  vddio2-supply: true
-> +
-> +  vddio18-supply: true
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      GPIO controlling the RESX# pin.
-> +
-> +  qps615,axi-clk-freq-hz:
-> +    description:
-> +      AXI clock which internal bus of the switch.
+Hi Manivannan,
 
-Is it a clock or clock rate?
+kernel test robot noticed the following build errors:
 
-> +
-> +  qcom,l0s-entry-delay-ns:
-> +    description: Aspm l0s entry delay in nanoseconds.
+[auto build test ERROR on 705c1da8fa4816fb0159b5602fef1df5946a3ee2]
 
-I'd say, from the property name it is obvious that it comes in
-nanoseconds.
+url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-portdrv-Make-use-of-pci_dev-bridge_d3-for-checking-the-D3-possibility/20240803-074434
+base:   705c1da8fa4816fb0159b5602fef1df5946a3ee2
+patch link:    https://lore.kernel.org/r/20240802-pci-bridge-d3-v5-2-2426dd9e8e27%40linaro.org
+patch subject: [PATCH v5 2/4] PCI: Rename pci_bridge_d3_possible() to pci_bridge_d3_allowed()
+config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20240803/202408031855.TEPJlfzl-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240803/202408031855.TEPJlfzl-lkp@intel.com/reproduce)
 
-> +
-> +  qcom,l1-entry-delay-ns:
-> +    description: Aspm l1 entry delay in nanoseconds.
-> +
-> +  qcom,tx-amplitude-millivolt:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Change Tx Margin setting for low power consumption.
-> +
-> +  qcom,no-dfe:
-> +    type: boolean
-> +    description: Disables DFE (Decision Feedback Equalizer).
-> +
-> +  qcom,nfts:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description:
-> +      Fast Training Sequence (FTS) is the mechanism that
-> +      is used for bit and Symbol lock.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408031855.TEPJlfzl-lkp@intel.com/
 
-Doesn't help to understand what it is and what the value means.
+All errors (new ones prefixed by >>):
 
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: pci1179,0623
-> +      required:
-> +        - compatible
-> +    then:
-> +      required:
-> +        - vdd18-supply
-> +        - vdd09-supply
-> +        - vddc-supply
-> +        - vddio1-supply
-> +        - vddio2-supply
-> +        - vddio18-supply
-> +        - qcom,qps615-controller
-> +        - reset-gpios
-> +
-> +patternProperties:
-> +  "@1?[0-9a-f](,[0-7])?$":
-> +    type: object
-> +    $ref: qcom,qps615.yaml#
-> +    additionalProperties: true
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    pcie {
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +
-> +        pcie@0 {
-> +            device_type = "pci";
-> +            reg = <0x0 0x0 0x0 0x0 0x0>;
-> +
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            ranges;
-> +
-> +            pcie@0,0 {
-> +                compatible = "pci1179,0623";
-> +                reg = <0x10000 0x0 0x0 0x0 0x0>;
-> +                device_type = "pci";
-> +                #address-cells = <3>;
-> +                #size-cells = <2>;
-> +                ranges;
-> +
-> +                qcom,qps615-controller = <&qps615_controller>;
+   drivers/gpu/drm/radeon/radeon_atpx_handler.c: In function 'radeon_atpx_detect':
+>> drivers/gpu/drm/radeon/radeon_atpx_handler.c:568:59: error: 'struct pci_dev' has no member named 'bridge_d3'
+     568 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+         |                                                           ^~
+   drivers/gpu/drm/radeon/radeon_atpx_handler.c:578:59: error: 'struct pci_dev' has no member named 'bridge_d3'
+     578 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+         |                                                           ^~
+--
+   drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c: In function 'amdgpu_atpx_detect':
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c:628:59: error: 'struct pci_dev' has no member named 'bridge_d3'
+     628 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+         |                                                           ^~
+   drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c:638:59: error: 'struct pci_dev' has no member named 'bridge_d3'
+     638 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+         |                                                           ^~
+--
+   drivers/gpu/drm/nouveau/nouveau_acpi.c: In function 'nouveau_dsm_pci_probe':
+>> drivers/gpu/drm/nouveau/nouveau_acpi.c:229:32: error: 'struct pci_dev' has no member named 'bridge_d3'
+     229 |                 if (parent_pdev->bridge_d3)
+         |                                ^~
 
-Where is the corresponding device?
 
-> +
-> +                vdd18-supply = <&vdd>;
-> +                vdd09-supply = <&vdd>;
-> +                vddc-supply = <&vdd>;
-> +                vddio1-supply = <&vdd>;
-> +                vddio2-supply = <&vdd>;
-> +                vddio18-supply = <&vdd>;
-> +
-> +                reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-> +
-> +                pcie@1,0 {
-> +                    reg = <0x20800 0x0 0x0 0x0 0x0>;
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    device_type = "pci";
-> +                    ranges;
-> +
-> +                    qcom,no-dfe;
-> +                };
-> +
-> +                pcie@2,0 {
-> +                    reg = <0x21000 0x0 0x0 0x0 0x0>;
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    device_type = "pci";
-> +                    ranges;
-> +
-> +                    qcom,nfts = /bits/ 8 <10>;
-> +                };
-> +
-> +                pcie@3,0 {
-> +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    device_type = "pci";
-> +                    ranges;
-> +
-> +                    qcom,tx-amplitude-millivolt = <10>;
-> +
-> +                         pcie@0,0 {
+vim +568 drivers/gpu/drm/radeon/radeon_atpx_handler.c
 
-Wrong indentation.
-
-> +                              reg = <0x40000 0x0 0x0 0x0 0x0>;
-> +                              #address-cells = <3>;
-> +                              #size-cells = <2>;
-> +                              device_type = "pci";
-> +                              ranges;
-> +
-> +                              qcom,l1-entry-delay-ns = <10>;
-> +                         };
-> +
-> +                         pcie@0,1 {
-> +                              reg = <0x40100 0x0 0x0 0x0 0x0>;
-> +                              #address-cells = <3>;
-> +                              #size-cells = <2>;
-> +                              device_type = "pci";
-> +                              ranges;
-> +
-> +                              qcom,l0s-entry-delay-ns = <10>;
-> +                         };
-> +                };
-> +            };
-> +        };
-> +    };
-> 
-> -- 
-> 2.34.1
-> 
+6a9ee8af344e3b Dave Airlie  2010-02-01  545  
+82e029357d4726 Alex Deucher 2012-08-16  546  /**
+82e029357d4726 Alex Deucher 2012-08-16  547   * radeon_atpx_detect - detect whether we have PX
+82e029357d4726 Alex Deucher 2012-08-16  548   *
+82e029357d4726 Alex Deucher 2012-08-16  549   * Check if we have a PX system (all asics).
+82e029357d4726 Alex Deucher 2012-08-16  550   * Returns true if we have a PX system, false if not.
+82e029357d4726 Alex Deucher 2012-08-16  551   */
+6a9ee8af344e3b Dave Airlie  2010-02-01  552  static bool radeon_atpx_detect(void)
+6a9ee8af344e3b Dave Airlie  2010-02-01  553  {
+6a9ee8af344e3b Dave Airlie  2010-02-01  554  	char acpi_method_name[255] = { 0 };
+6a9ee8af344e3b Dave Airlie  2010-02-01  555  	struct acpi_buffer buffer = {sizeof(acpi_method_name), acpi_method_name};
+6a9ee8af344e3b Dave Airlie  2010-02-01  556  	struct pci_dev *pdev = NULL;
+6a9ee8af344e3b Dave Airlie  2010-02-01  557  	bool has_atpx = false;
+6a9ee8af344e3b Dave Airlie  2010-02-01  558  	int vga_count = 0;
+bcfdd5d5105087 Alex Deucher 2016-11-28  559  	bool d3_supported = false;
+bcfdd5d5105087 Alex Deucher 2016-11-28  560  	struct pci_dev *parent_pdev;
+6a9ee8af344e3b Dave Airlie  2010-02-01  561  
+6a9ee8af344e3b Dave Airlie  2010-02-01  562  	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev)) != NULL) {
+6a9ee8af344e3b Dave Airlie  2010-02-01  563  		vga_count++;
+6a9ee8af344e3b Dave Airlie  2010-02-01  564  
+6a9ee8af344e3b Dave Airlie  2010-02-01  565  		has_atpx |= (radeon_atpx_pci_probe_handle(pdev) == true);
+bcfdd5d5105087 Alex Deucher 2016-11-28  566  
+bcfdd5d5105087 Alex Deucher 2016-11-28  567  		parent_pdev = pci_upstream_bridge(pdev);
+bcfdd5d5105087 Alex Deucher 2016-11-28 @568  		d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+6a9ee8af344e3b Dave Airlie  2010-02-01  569  	}
+6a9ee8af344e3b Dave Airlie  2010-02-01  570  
+e9a4099a59cc59 Alex Deucher 2014-04-15  571  	/* some newer PX laptops mark the dGPU as a non-VGA display device */
+e9a4099a59cc59 Alex Deucher 2014-04-15  572  	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_OTHER << 8, pdev)) != NULL) {
+e9a4099a59cc59 Alex Deucher 2014-04-15  573  		vga_count++;
+e9a4099a59cc59 Alex Deucher 2014-04-15  574  
+e9a4099a59cc59 Alex Deucher 2014-04-15  575  		has_atpx |= (radeon_atpx_pci_probe_handle(pdev) == true);
+bcfdd5d5105087 Alex Deucher 2016-11-28  576  
+bcfdd5d5105087 Alex Deucher 2016-11-28  577  		parent_pdev = pci_upstream_bridge(pdev);
+bcfdd5d5105087 Alex Deucher 2016-11-28  578  		d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+e9a4099a59cc59 Alex Deucher 2014-04-15  579  	}
+e9a4099a59cc59 Alex Deucher 2014-04-15  580  
+6a9ee8af344e3b Dave Airlie  2010-02-01  581  	if (has_atpx && vga_count == 2) {
+492b49a2f21a7c Alex Deucher 2012-08-16  582  		acpi_get_name(radeon_atpx_priv.atpx.handle, ACPI_FULL_PATHNAME, &buffer);
+7ca85295d8cc28 Joe Perches  2017-02-28  583  		pr_info("vga_switcheroo: detected switching method %s handle\n",
+6a9ee8af344e3b Dave Airlie  2010-02-01  584  			acpi_method_name);
+6a9ee8af344e3b Dave Airlie  2010-02-01  585  		radeon_atpx_priv.atpx_detected = true;
+bcfdd5d5105087 Alex Deucher 2016-11-28  586  		radeon_atpx_priv.bridge_pm_usable = d3_supported;
+69ee9742f945cd Alex Deucher 2016-07-27  587  		radeon_atpx_init();
+6a9ee8af344e3b Dave Airlie  2010-02-01  588  		return true;
+6a9ee8af344e3b Dave Airlie  2010-02-01  589  	}
+6a9ee8af344e3b Dave Airlie  2010-02-01  590  	return false;
+6a9ee8af344e3b Dave Airlie  2010-02-01  591  }
+6a9ee8af344e3b Dave Airlie  2010-02-01  592  
 
 -- 
-With best wishes
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
