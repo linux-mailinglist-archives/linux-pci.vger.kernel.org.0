@@ -1,172 +1,165 @@
-Return-Path: <linux-pci+bounces-11219-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11222-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 179069466BC
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 03:22:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4372946712
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 05:27:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B529B1F22173
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 01:22:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 747E9281C15
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Aug 2024 03:27:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7016E54C;
-	Sat,  3 Aug 2024 01:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFFA5F9E8;
+	Sat,  3 Aug 2024 03:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ccWNSm/x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CDEF9EB;
-	Sat,  3 Aug 2024 01:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A60B67E;
+	Sat,  3 Aug 2024 03:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722648127; cv=none; b=gdGKUCTHAYhJod7SWCXji9pSk7utUK90jLhh61rEMtHVngQoJBMcIYZJKdGhdq3XKfd/uLRIyBxKFrbQw188t9oKpGk8v90IYew3I19+iyswgbb0JuW8PFaBPW7Vs5oYcroM8a69dVxlivonKvzrvWv5NEwxsYy4yNqK6/XSmoY=
+	t=1722655663; cv=none; b=fVCbg5oa8cZjjMBCe17WPged4UVpR6MPzTG3U/RBvRPWcPxZiO4smkKOIbNjBwPBAyyqv2ucpPLFi/FtK/NINwRlDVyOJV21SNWZCLOPZleRf8FvRcyFHuZMOH/jq9jEJecpvAEjrcpVpfxwSEqDlig/S6s5h6raT66IrJar/wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722648127; c=relaxed/simple;
-	bh=QlCsaxkmkBO+k1bZHDH4/wNRZHvnphdyZIE2BlUfQE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=esJvtFqF+9xWuawM2JCH9qy4/5K9IjVUUFqnAeNFdQA+nl3QHPRpIxRiHdOWWTTXu2UqcoBq+bkwHGLxRB514HMEAMFXkqzY54P9PjWvYIFTQtyoOcxY6OwGYSMcDVSyHr4JOMkaR80jOhcUQwcp6EUSoqCozix86D+yRu19Z60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fc4fcbb131so76093015ad.3;
-        Fri, 02 Aug 2024 18:22:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722648125; x=1723252925;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qBd1wMelZARBCVInJl3VCnspXuIwi7xicjkRlzE9arc=;
-        b=uCBruZ4slQxTNJpnvDkKbGVW4X0SE8Lfkp9LulvogbA6+qvim04ngCBx/B4kHxk65u
-         1qIQvbgYzON+94leSbvCEUqEZxflAV9p/1QhuM1THxjYlN4QNzZHFg1LYJt5dWyKD77n
-         KsJUhgi9XEcpTyFozPIKqGRRS/gXcAYVy6jkG+47SW1dSQAcP7D0ORfIowebenWcZBSB
-         AuBSq9gf+HXzj7Oz5mS65UAyBn1fYwxWWx+bsJxNMGTvm/Ls5j1W/rn+0o40+lUyJ3yZ
-         G373oa80VvjY9DAKpgfl/2xXWeoqBug11gxnIhoCAadlf61dgSnMGdB+NWo0VvhQH2Gu
-         VIUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOzDAFVKoaga7o1IAgWziDzezmqGavqJaKrus1adftzfKbOVlTgIK5W4yV3Ki6Dl5Voc3yZlE2mqPmioAJ5y/bCb9pK+66VhU5oq/faLvbKT2+H3KmHKOD2MPq2fO9Yc4VBHUMicTLij84HIdOZ7eC1a5d9rWc9X9d6uubJD5nQmSFcf3jixrpgumpD7QWd04amzSbBwz1yEuxxn40+fvgVB4JgBC0lfs2L1KJ3LIhpI0IEhCvdwu+Wewf/sE=
-X-Gm-Message-State: AOJu0YxwZybdp/7yTfau7iOxhlQuMhnti/W9ZD3aggR0MRWfse8sc5hf
-	MToQgQJuxG6s54w5D9hcpnkFLuCH2Qdl3cVFynDTL8dAChOt79oZ
-X-Google-Smtp-Source: AGHT+IEh3GRCAvALzlvd4U+F1tShJABMMoDoWNowR82KjXH9xwxziEaiwqMzhpgj6M2OlmS1YgXMiA==
-X-Received: by 2002:a17:902:ecc5:b0:1fd:8f66:b070 with SMTP id d9443c01a7336-1ff57464d40mr74676445ad.57.1722648125527;
-        Fri, 02 Aug 2024 18:22:05 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f6093fsm23731485ad.114.2024.08.02.18.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 18:22:05 -0700 (PDT)
-Date: Sat, 3 Aug 2024 01:22:03 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
-	kw@linux.com, kys@microsoft.com, lenb@kernel.org,
-	lpieralisi@kernel.org, mingo@redhat.com, rafael@kernel.org,
-	robh@kernel.org, tglx@linutronix.de, wei.liu@kernel.org,
-	will@kernel.org, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, ssengar@microsoft.com,
-	sunilmut@microsoft.com, vdso@hexbites.dev
-Subject: Re: [PATCH v3 4/7] arm64: hyperv: Boot in a Virtual Trust Level
-Message-ID: <Zq2GOzYAC8WdaUTk@liuwe-devbox-debian-v2>
-References: <20240726225910.1912537-1-romank@linux.microsoft.com>
- <20240726225910.1912537-5-romank@linux.microsoft.com>
+	s=arc-20240116; t=1722655663; c=relaxed/simple;
+	bh=AlC9MevRlL/TpTiYxQDUa1iezmoZv+bELpKfSQiVj6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dsAJsoQa1w8rUgDWWj0mQpXTfmvXUz4zpwmm5Qu4Cj8zmZOYI804ZAQ21LX2lar6tJEwjNy7lcRnm6HyWGGvm9qIS7zWiZAYqbBgcyO2Wfi+3XnXgWYnmx3HU+cnrO/NS+DFxxkaPfU0P+1/3GSJQGgoioFMTuGtL3A66Jz3iE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ccWNSm/x; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4731rZF1025815;
+	Sat, 3 Aug 2024 03:18:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fjwKW05/13jU/CIRlXQR2IzH+1VEj7F1lgkKNlQ3dHI=; b=ccWNSm/xVfqqxfPq
+	2+kr36O7S1UwLVgC4w4jLp4pJHnvpenODHoYoylwzuoCsjccxIY9weLUZAgwy7GC
+	1g9eBdf7jz7toMmaAtYMKN+GCjpZKgSEPuNNUorpg8HHdZpg+wueVusPIvv3yt40
+	+YmHtPouDZ77B+eXeN4s1YNLiD7GhB7Ah0NSnn6ELm3QoR+55NyUZADf3VZHEmSY
+	pCTuu7UycVqHIYCeKXT7xfjvZe1oEDCX9yS9cEzl1FkeOC64Tw7vZ7AP/ZriMPYP
+	4DuuKEKz0KZ2x1o38a5GPdXzHsKg4nJgMzREUf+dgSr3+x8q3F2lGKmTd8TdFiKn
+	Z6A1+g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40rjecb068-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 Aug 2024 03:18:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4733IXiN022877
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 3 Aug 2024 03:18:33 GMT
+Received: from [10.216.38.155] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 Aug 2024
+ 20:18:26 -0700
+Message-ID: <75dd875c-bc08-3f18-2f94-5d4c1851aff3@quicinc.com>
+Date: Sat, 3 Aug 2024 08:48:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240726225910.1912537-5-romank@linux.microsoft.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH RFC 7/7] pci: pwrctl: Add power control driver for qps615
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+CC: <quic_vbadigan@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com>
+ <20240626-qps615-v1-7-2ade7bd91e02@quicinc.com>
+ <0b60cd30-3337-46a0-87ca-4c75b7f1ef29@linaro.org>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <0b60cd30-3337-46a0-87ca-4c75b7f1ef29@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: v7YbLd4pW3ZL2gk_MpPo07BjRYI0ZBIc
+X-Proofpoint-ORIG-GUID: v7YbLd4pW3ZL2gk_MpPo07BjRYI0ZBIc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-02_20,2024-08-02_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 clxscore=1011 adultscore=0 suspectscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2408030020
 
-On Fri, Jul 26, 2024 at 03:59:07PM -0700, Roman Kisel wrote:
-> To run in the VTL mode, Hyper-V drivers have to know what
-> VTL the system boots in, and the arm64/hyperv code does not
-> update the variable that stores the value.
-> 
-> Update the variable to enable the Hyper-V drivers to boot
-> in the VTL mode and print the VTL the code runs in.
-> 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  arch/arm64/hyperv/Makefile        |  1 +
->  arch/arm64/hyperv/hv_vtl.c        | 13 +++++++++++++
->  arch/arm64/hyperv/mshyperv.c      |  4 ++++
->  arch/arm64/include/asm/mshyperv.h |  7 +++++++
->  4 files changed, 25 insertions(+)
->  create mode 100644 arch/arm64/hyperv/hv_vtl.c
-> 
-> diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
-> index 87c31c001da9..9701a837a6e1 100644
-> --- a/arch/arm64/hyperv/Makefile
-> +++ b/arch/arm64/hyperv/Makefile
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y		:= hv_core.o mshyperv.o
-> +obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
-> diff --git a/arch/arm64/hyperv/hv_vtl.c b/arch/arm64/hyperv/hv_vtl.c
-> new file mode 100644
-> index 000000000000..38642b7b6be0
-> --- /dev/null
-> +++ b/arch/arm64/hyperv/hv_vtl.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2024, Microsoft, Inc.
-> + *
-> + * Author : Roman Kisel <romank@linux.microsoft.com>
-> + */
-> +
-> +#include <asm/mshyperv.h>
-> +
-> +void __init hv_vtl_init_platform(void)
-> +{
-> +	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-> +}
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index 341f98312667..8fd04d6e4800 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -98,6 +98,10 @@ static int __init hyperv_init(void)
->  		return ret;
->  	}
->  
-> +	/* Find the VTL */
-> +	ms_hyperv.vtl = get_vtl();
-> +	hv_vtl_init_platform();
 
-It doesn't make sense to me because this function unconditionally prints
-Linux runs in Hyper-V Virtual Trust Level.
 
-Thanks,
-Wei.
-
-> +
->  	ms_hyperv_late_init();
->  
->  	hyperv_initialized = true;
-> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-> index a7a3586f7cb1..63d6bb6998fc 100644
-> --- a/arch/arm64/include/asm/mshyperv.h
-> +++ b/arch/arm64/include/asm/mshyperv.h
-> @@ -49,6 +49,13 @@ static inline u64 hv_get_msr(unsigned int reg)
->  				ARM_SMCCC_OWNER_VENDOR_HYP,	\
->  				HV_SMCCC_FUNC_NUMBER)
->  
-> +#ifdef CONFIG_HYPERV_VTL_MODE
-> +void __init hv_vtl_init_platform(void);
-> +int __init hv_vtl_early_init(void);
-> +#else
-> +static inline void __init hv_vtl_init_platform(void) {}
-> +#endif
-> +
->  #include <asm-generic/mshyperv.h>
->  
->  #define ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0	0x7948734d
-> -- 
-> 2.34.1
+On 6/26/2024 9:07 PM, Konrad Dybcio wrote:
+> On 26.06.2024 2:37 PM, Krishna chaitanya chundru wrote:
+>> QPS615 switch needs to configured after powering on and before
+>> PCIe link was up.
+>>
+>> As the PCIe controller driver already enables the PCIe link training
+>> at the host side, stop the link training.
+>> Otherwise the moment we turn on the switch it will participate in
+>> the link training and link may come before switch is configured through
+>> i2c.
+>>
+>> The switch can be configured different ways like changing de-emphasis
+>> settings of the switch, disabling unused ports etc and these settings
+>> can vary from board to board, for that reason the sequence is taken
+>> from the firmware file which contains the address of the slave, to address
+>> and data to be written to the switch. The driver reads the firmware file
+>> and parses them to apply those configurations to the switch.
+>>
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> ---
 > 
+> [...]
+> 
+>> +static int qcom_qps615_pwrctl_init(struct qcom_qps615_pwrctl_ctx *ctx)
+>> +{
+>> +	struct device *dev = ctx->pwrctl.dev;
+>> +	struct qcom_qps615_pwrctl_i2c_setting *set;
+>> +	const struct firmware *fw;
+>> +	const u8 *pos, *eof;
+>> +	int ret;
+>> +	u32 val;
+>> +
+>> +	ret = request_firmware(&fw, "qcom/qps615.bin", dev);
+> 
+> Is this driver only going to serve one model of the device, that will use
+> this specific firmware file, ever?
+> 
+> In other words, is QPS615 super special and no other chip like it will be
+> ever made?
+> 
+> [...]
+> 
+>> +
+>> +	bridge->ops->stop_link(bus);
+> 
+> This is turbo intrusive. What if there are more devices on this bus?
+> 
+The expectation of this API from the controller driver is to stop link
+training only when the link is not up.
+
+- krishna chaitanya.
+> Konrad
 
