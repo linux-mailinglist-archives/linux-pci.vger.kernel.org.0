@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-11245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88FCF946DA9
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Aug 2024 10:56:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87913946DB1
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Aug 2024 10:58:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08F201F214CA
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Aug 2024 08:56:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CCC8281061
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Aug 2024 08:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569A7200DB;
-	Sun,  4 Aug 2024 08:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB98422086;
+	Sun,  4 Aug 2024 08:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsNKR9/Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TreyUDPC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206991CF9B;
-	Sun,  4 Aug 2024 08:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0BB2135B;
+	Sun,  4 Aug 2024 08:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722761793; cv=none; b=Y05pcBZRq5v8C7z41/9ykDH0KJnkgRl9yadZQgVCkzVFZhcx67esdIYJ765rV4is94C74RPNMid9NcQXNhrVFr4Yd5bbfbUltgUyYB51OMQWZhiBzf/GYt7Nco7D0SFwXla8AGLLJFLr47fApFe7OHaRXW9M9e5jEHaYW3rwfwU=
+	t=1722761878; cv=none; b=H8aKaNLIdcG9RLSK74hM1J6cSK6zsiM6XAjC5BdQ663PyHKsdlbnnVSX1KrUxraFoa1FZktjZ5dO2PBpjBp00dniL7S8yPKR4lOm/b92+e3YIV/ofKH4N6EXowOTdhiNnJdySoZWQS4q5KXgfuv2k8Xz8u95aOgXs+HKcFPBmmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722761793; c=relaxed/simple;
-	bh=C3MGks8uGqnjnJDwU07PghmXaNZDVYrUpOrEWdzjbgs=;
+	s=arc-20240116; t=1722761878; c=relaxed/simple;
+	bh=1r85qcdUbfhXGrxKc4482D93gj8QKaeVkNspvjU7qmQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PbN8waunl6GtiJ3wpJU7e9mQIU3sa9nQ1vB9vEaAvFwZKzGKKzYvTGV1ZLV8mq4eu6SFnKkdcD96IY9JV3Jfp8kKbyenZ+SG+U/meXHRyaDmlZ2eMJfrqih5PVD2vYSyyMBSYiAgvC8DbEZXu7W0w2poKBCEgRqJjopEdojGHd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsNKR9/Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E2CC32786;
-	Sun,  4 Aug 2024 08:56:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Diic+KPL2sV83ucfe3+JBK3Ka0u6SslxZGLI0/YodL/zSodTaS57k9G/TuGUAj94tWVIlK14wqKAUlBGSxb6c16D/TUwRBWo/3mvSJJSoywKC1l9CmdLDCdOgHt8b/pdH7PMe2fnO6mca7c+yV7m28xvEcXFeHMKezMccmcp91A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TreyUDPC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCA71C32786;
+	Sun,  4 Aug 2024 08:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722761793;
-	bh=C3MGks8uGqnjnJDwU07PghmXaNZDVYrUpOrEWdzjbgs=;
+	s=k20201202; t=1722761878;
+	bh=1r85qcdUbfhXGrxKc4482D93gj8QKaeVkNspvjU7qmQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TsNKR9/Zrm/51wAscWgt3CG460zcYyk4Hw8jr3yMDIQRmVGfTgcGUXVuTtA5AWWfj
-	 l+qiyuRrgST4swpwEgXkcpHrcfiAG2zGsmrmzn7abldryIO802BG/seEM3GPtOvNte
-	 /qAv4KSMGuO+TkjFygtO04SJQcjFffDSkNGTlaqIe2pjG+akl0KHx1dzZHujOWFuBb
-	 ytjMKmB4bipwUsJrgVVNal2w3DJM1q0+loebkh2oxiQ4jm3XKT9G9eZaXZJdLtJIX7
-	 kOCPpWduBI8M+8vii2d6GrmibbK2EcB0yQ+FWOaxZVpsmmhaay8JIZcifocQaKV/Dj
-	 jj8Ago6/tQAnQ==
-Message-ID: <0cdaa0b2-ae50-40a1-abbb-7a6702d54ad5@kernel.org>
-Date: Sun, 4 Aug 2024 10:56:24 +0200
+	b=TreyUDPCwHnDcKgEcTw+w6e1TaICRZk1vV7BVYE+iuqBl8uz1cGnYWzs7PCA5Bywo
+	 AEofteTfDZ7eOFg/MCCN6Yxb/W8jb1A/Sj08ZtQQMiVdg259GT+BO/0gqSpVAjca9V
+	 8VPFjBFZWK8ijel+uosHJQD9SctQkq+Z2AoWuvw5rRHCi4SgHGfzsSh9HVrMBccE1T
+	 6KxJX0gGDeKkrNbU/INT/zQgpLRYyu3Ptym9oFuuxBi8Ttx3f/ke8x1rTnVwv8AecG
+	 WujdRBpvxmoY59zFPB69w4J6JlFlsZroz3rP3D5biDRrj7hRTon5fWeTBHxoPgSy+7
+	 l7hRdjSxbI0JQ==
+Message-ID: <fcfe1ce3-6835-44e8-807d-290a641813ed@kernel.org>
+Date: Sun, 4 Aug 2024 10:57:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
+Subject: Re: [PATCH v2 0/8] PCI: Enable Power and configure the QPS615 PCIe
+ switch
 To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -65,7 +66,6 @@ Cc: andersson@kernel.org, quic_vbadigan@quicinc.com,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,71 +111,54 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
+In-Reply-To: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
-> Add binding describing the Qualcomm PCIe switch, QPS615,
-> which provides Ethernet MAC integrated to the 3rd downstream port
-> and two downstream PCIe ports.
+> QPS615 is the PCIe switch which has one upstream and three downstream
+> ports. One of the downstream ports is used as endpoint device of Ethernet
+> MAC. Other two downstream ports are supposed to connect to external
+> device. One Host can connect to QPS615 by upstream port.
+> 
+> QPS615 switch power is controlled by the GPIO's. After powering on
+> the switch will immediately participate in the link training. if the
+> host is also ready by that time PCIe link will established. 
+> 
+> The QPS615 needs to configured certain parameters like de-emphasis,
+> disable unused port etc before link is established.
+> 
+> The device tree properties are parsed per node under pci-pci bridge in the
+> devicetree. Each node has unique bdf value in the reg property, driver
+> uses this bdf to differentiate ports, as there are certain i2c writes to
+> select particulat port.
+>  
+> As the controller starts link training before the probe of pwrctl driver,
+> the PCIe link may come up before configuring the switch itself.
+> To avoid this introduce two functions in pci_ops to start_link() &
+> stop_link() which will disable the link training if the PCIe link is
+> not up yet.
+> 
+> Now PCI pwrctl device is the child of the pci-pcie bridge, if we want
+> to enable the suspend resume for pwrctl device there may be issues
+> since pci bridge will try to access some registers in the config which
+> may cause timeouts or Un clocked access as the power can be removed in
+> the suspend of pwrctl driver.
+> 
+> To solve this make PCIe controller as parent to the pci pwr ctrl driver
+> and create devlink between host bridge and pci pwrctl driver so that
+> pci pwrctl driver will go suspend only after all the PCIe devices went
+> to suspend.
 > 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
->  .../devicetree/bindings/pci/qcom,qps615.yaml       | 191 +++++++++++++++++++++
->  1 file changed, 191 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> new file mode 100644
-> index 000000000000..ea0c953ee56f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> @@ -0,0 +1,191 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm QPS615 PCIe switch
-> +
-> +maintainers:
-> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> +
-> +description: |
-> +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
-> +  ports. The 3rd downstream port has integrated endpoint device of
-> +  Ethernet MAC. Other two downstream ports are supposed to connect
-> +  to external device.
-> +
-> +  The QPS615 PCIe switch can be configured through I2C interface before
-> +  PCIe link is established to change FTS, ASPM related entry delays,
-> +  tx amplitude etc for better power efficiency and functionality.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - pci1179,0623
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  qcom,qps615-controller:
+> Changes in V1:
+> - Fix the code as per the comments given.
 
-and now I see that you totally ignored comments. Repeating the same over
-and over is a waste of time.
+You did not implement the comments so such changelog is rather a joke.
+Respond to each comment from v1 and acknowledge it.
 
-<form letter>
-This is a friendly reminder during the review process.
-
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
-
-Thank you.
-</form letter>
-
+Then write detailed changelog.
 
 Best regards,
 Krzysztof
