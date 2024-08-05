@@ -1,183 +1,323 @@
-Return-Path: <linux-pci+bounces-11318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B203947EE7
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:01:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 968C3947F19
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:19:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D1B11F22293
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:01:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7AF7B23E08
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45FCD13C827;
-	Mon,  5 Aug 2024 16:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5ACC15B155;
+	Mon,  5 Aug 2024 16:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xi/lQ76t"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r6FDircP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEB64D8B7;
-	Mon,  5 Aug 2024 16:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A7EC2E3E5;
+	Mon,  5 Aug 2024 16:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722873712; cv=none; b=G+q9u67vrtpY19C/5FSKCdut9Vy33FFSAIVnw/FfYo3Sihr6K9AHqyZ8kpLQ7vLYhxCe9jyD5M8tWk78bEDymkUGFkRcrgjAg/r8a8dU5ljmeg+eWzdb8i0xmnomqoOgqT9igXArxGVe+O3DQJXXbaZlr3RgyHBxiSIvj6M0JWY=
+	t=1722874783; cv=none; b=HxlrxdzbKoCZ8TociS44LF6lfzbTJVN0lcNjfD1NhGmf5XqYsn+36DajX87CRFM3yC321OJIOnPR7Yj4bdrgHELmptftjPd+F9tXAh2I3JHUAnDIos2pQ4j7A6oAGe7uBEnojMxEzR2nBTj4aB4zAcM8HeXRspxayfXHRzYYSEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722873712; c=relaxed/simple;
-	bh=wQlaWS+ZJw+znmW/REtXUrDGbAzMh8uUsewhxjdkwIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p6OxXHjR0XNne1UTxwKBlO6epmBicC4Z9txChZ7xVi39SzuPuMAqLadAUgxwIn0G8unCLIV/0unlqR8emSsxzd+nGwmSyxryvdZe1DODIV4EKrf0l73uUXQ8wWDK8k6EwchKb0WZ7uemXUX2yRQLKHKwtA0dgQvEB2n7uQlBsB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xi/lQ76t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A712BC32782;
-	Mon,  5 Aug 2024 16:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722873711;
-	bh=wQlaWS+ZJw+znmW/REtXUrDGbAzMh8uUsewhxjdkwIU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Xi/lQ76trQtHCxk7rjn10khILW1A3BwjI4ze73DdvzYH00ssbgkJhFzSAO1KIdV+T
-	 l9o8sekqfaIs9E2WsdOuy/x7mDaZgCBNkyO0l+94u5vqkZYroJlBoNSPiC20Isc2hi
-	 lNb/KBXkNqaYcpgCH4CLKKCQiasCHb3nPTivxozIsNRpH7YuWSzn0jJoqndtq/Msd0
-	 60pJ4Lot/TZaqNjTCi0ObJB6mjX7F62lsEW0o44BXqXRWQLQWOroYOpRBXIgpx1iF0
-	 yxbMFewg1bUPcAX1boJ3fYSgNqCKmwysDPGUQRcCeqiDhX3Sd1vgRLZLcZ48zLL3Lj
-	 ICKBdzUEgVXKQ==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f16767830dso30468011fa.0;
-        Mon, 05 Aug 2024 09:01:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVDoHLQmQgpxOVTVOuoj6shc/HKZyZ9ID82qMdQ3nHkxz6cz6pN3gSbG2jSOdEYQAzG1uQHDDfkzWTfiOComkjCE18Ncsbldo9qY0cJoaFECpADXfTjm5tbdrSPQjGRDMRyvV4MQ44vVkYR2GoWA/ts4wJYIBGnADaargFHbQy+
-X-Gm-Message-State: AOJu0YyWBChKDj2qGPNQVawGAjrSH1YUeyCVB3n7ZmkjvsT1j/Tzvz+w
-	tlto4orRhZO0E0WA5m+HVrietxVi3xC7daU/v/1pKHx1lKQ0nvGzSNndYnc1QyHCX5HPQGV1Fgh
-	mpgRMCbIxdTXgIwyKXpglp1H2Aw==
-X-Google-Smtp-Source: AGHT+IF1QA0WkvZdYK3NgKnb5MSPFABqtD9PrMB9+H/W4psXiYBBzJeuRnqchv3x9eFCYkaDnOsHnRQmvcJbJ6tn/NI=
-X-Received: by 2002:a2e:8096:0:b0:2ef:3250:d0d4 with SMTP id
- 38308e7fff4ca-2f15ab5c7c8mr77836851fa.48.1722873710032; Mon, 05 Aug 2024
- 09:01:50 -0700 (PDT)
+	s=arc-20240116; t=1722874783; c=relaxed/simple;
+	bh=jE/ecRrzy84Gg1F8WWB3dmUjR5kbfyfULWcT3x+8Iso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YQRYk1SfTcMYNIZbC0p2AkwqBeOZ/DFyI2oJtDl0UA6JsMh8AhEdiXJf/uEGFQ1eJ1jgBT5cZPbYQoGkMcvxBidy8NXmtVdtVdhSf4+6Obht3D2xYczighKPYCSjSg+9gv0WVn69LkYFzjs91vAkS16dnsw0phwsngkmHa0jmOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r6FDircP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.186.190] (unknown [131.107.159.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 67E8820B7165;
+	Mon,  5 Aug 2024 09:19:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 67E8820B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1722874781;
+	bh=PnJhRU/o7zKptlxn1JF9R9grOV/DPueLnz5JS4Vzy4o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r6FDircPBBVCNGFeE+ojO03xhCdFnEeHq4tpakkmZQbuU8eJtxxNHCRnxQydUJ0Sx
+	 g/oPY85jaPGNkgE+UK86epvicFcnoCLk4AwUS6KjueNKRxGyl5G1P7KUK/ai11n05Z
+	 rXhkRDDlIN79paGXxwjOWLyetp74Tz5nZuZgS1wg=
+Message-ID: <8df77874-0852-4bc2-bf8d-aa7dca031736@linux.microsoft.com>
+Date: Mon, 5 Aug 2024 09:19:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240724065048.285838-1-s-vadapalli@ti.com> <20240724161916.GG3349@thinkpad>
- <20240725042001.GC2317@thinkpad> <93e864fb-cf52-4cc0-84a0-d689dd829afb@ti.com>
- <20240726115609.GF2628@thinkpad>
-In-Reply-To: <20240726115609.GF2628@thinkpad>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 5 Aug 2024 10:01:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ-mfU88E_Ri=BzH6nAFg405gkPPJTtjdp7UR2n96QMkw@mail.gmail.com>
-Message-ID: <CAL_JsqJ-mfU88E_Ri=BzH6nAFg405gkPPJTtjdp7UR2n96QMkw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, bhelgaas@google.com, lpieralisi@kernel.org, 
-	kw@linux.com, vigneshr@ti.com, kishon@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	stable@vger.kernel.org, ahalaney@redhat.com, srk@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/7] Drivers: hv: Provide arch-neutral implementation
+ of get_vtl()
+To: Michael Kelley <mhklinux@outlook.com>, "arnd@arndb.de" <arnd@arndb.de>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "kw@linux.com" <kw@linux.com>,
+ "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
+ <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "mingo@redhat.com" <mingo@redhat.com>, "rafael@kernel.org"
+ <rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
+ <will@kernel.org>, "linux-acpi@vger.kernel.org"
+ <linux-acpi@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "ssengar@microsoft.com" <ssengar@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
+ "vdso@hexbites.dev" <vdso@hexbites.dev>
+References: <20240726225910.1912537-1-romank@linux.microsoft.com>
+ <20240726225910.1912537-4-romank@linux.microsoft.com>
+ <SN6PR02MB415759676AEF931F030430FDD4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB415759676AEF931F030430FDD4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 26, 2024 at 5:56=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Thu, Jul 25, 2024 at 01:50:16PM +0530, Siddharth Vadapalli wrote:
-> > On Thu, Jul 25, 2024 at 09:50:01AM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Jul 24, 2024 at 09:49:21PM +0530, Manivannan Sadhasivam wrote=
-:
-> > > > On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote=
-:
-> > > > > Since the configuration of Legacy Interrupts (INTx) is not suppor=
-ted, set
-> > > > > the .map_irq and .swizzle_irq callbacks to NULL. This fixes the e=
-rror:
-> > > > >   of_irq_parse_pci: failed with rc=3D-22
-> > > > > due to the absence of Legacy Interrupts in the device-tree.
-> > > > >
-> > > >
-> > > > Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() w=
-ill bail out
-> > > > if 'map_irq' is set to NULL.
-> > > >
-> > >
-> > > Hold on. The errono of of_irq_parse_pci() is not -ENOENT. So the INTx=
- interrupts
-> > > are described in DT? Then why are they not supported?
-> >
-> > No, the INTx interrupts are not described in the DT. It is the pcieport
-> > driver that is attempting to setup INTx via "of_irq_parse_and_map_pci()=
-"
-> > which is the .map_irq callback. The sequence of execution leading to th=
-e
-> > error is as follows:
-> >
-> > pcie_port_probe_service()
-> >   pci_device_probe()
-> >     pci_assign_irq()
-> >       hbrg->map_irq
-> >         of_pciof_irq_parse_and_map_pci()
-> >         of_irq_parse_pci()
-> >           of_irq_parse_raw()
-> >             rc =3D -EINVAL
-> >             ...
-> >             [DEBUG] OF: of_irq_parse_raw: ipar=3D/bus@100000/interrupt-=
-controller@1800000, size=3D3
-> >             if (out_irq->args_count !=3D intsize)
-> >               goto fail
-> >                 return rc
-> >
-> > The call to of_irq_parse_raw() results in the Interrupt-Parent for the
-> > PCIe node in the device-tree being found via of_irq_find_parent(). The
-> > Interrupt-Parent for the PCIe node for MSI happens to be GIC_ITS:
-> > msi-map =3D <0x0 &gic_its 0x0 0x10000>;
-> > and the parent of GIC_ITS is:
-> > gic500: interrupt-controller@1800000
-> > which has the following:
-> > #interrupt-cells =3D <3>;
-> >
-> > The "size=3D3" portion of the DEBUG print above corresponds to the
-> > #interrupt-cells property above. Now, "out_irq->args_count" is set to 1
-> > as __assumed__ by of_irq_parse_pci() and mentioned as a comment in that
-> > function:
-> >       /*
-> >        * Ok, we don't, time to have fun. Let's start by building up an
-> >        * interrupt spec.  we assume #interrupt-cells is 1, which is sta=
-ndard
-> >        * for PCI. If you do different, then don't use that routine.
-> >        */
-> >
-> > In of_irq_parse_pci(), since the PCIe-Port driver doesn't have a
-> > device-tree node, the following doesn't apply:
-> >   dn =3D pci_device_to_OF_node(pdev);
-> > and we skip to the __assumption__ above and proceed as explained in the
-> > execution sequence above.
-> >
-> > If the device-tree nodes for the INTx interrupts were present, the
-> > "ipar" sequence to find the interrupt parent would be skipped and we
-> > wouldn't end up with the -22 (-EINVAL) error code.
-> >
-> > I hope this clarifies the relation between the -22 error code and the
-> > missing device-tree nodes for INTx.
-> >
->
-> Thanks for explaining the logic. Still I think the logic is flawed. Becau=
-se the
-> parent (host bridge) doesn't have 'interrupt-map', which means INTx is no=
-t
-> supported. But parsing one level up to the GIC node and not returning -EN=
-OENT
-> doesn't make sense to me.
->
-> Rob, what is your opinion on this behavior?
 
-Not sure I get the question. How should we handle/determine no INTx? I
-suppose that's either based on the platform (as this patch did) or by
-failing to parse the interrupts. The interrupt parsing code is pretty
-tricky as it has to deal with some ancient DTs, so I'm a little
-hesitant to rely on that failing. Certainly I wouldn't rely on a
-specific errno value. The downside to doing that is also if someone
-wants interrupts, but has an error in their DT, then all we can do is
-print 'INTx not supported' or something. So we couldn't fail probe as
-the common code wouldn't be able to distinguish. I suppose we could
-just check for 'interrupt-map' present in the host bridge node or not.
-Need to check the Marvell binding which is a bit weird with child
-nodes.
 
-Rob
+On 8/4/2024 8:02 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, July 26, 2024 3:59 PM
+>>
+>> To run in the VTL mode, Hyper-V drivers have to know what
+>> VTL the system boots in, and the arm64/hyperv code does not
+>> have the means to compute that.
+>>
+>> Refactor the code to hoist the function that detects VTL,
+>> make it arch-neutral to be able to employ it to get the VTL
+>> on arm64. Fix the hypercall output address in `get_vtl(void)`
+>> not to overlap with the hypercall input area to adhere to
+>> the Hyper-V TLFS.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   arch/x86/hyperv/hv_init.c          | 34 ---------------------
+>>   arch/x86/include/asm/hyperv-tlfs.h |  7 -----
+>>   drivers/hv/hv_common.c             | 47 ++++++++++++++++++++++++++++--
+>>   include/asm-generic/hyperv-tlfs.h  |  7 +++++
+>>   include/asm-generic/mshyperv.h     |  6 ++++
+>>   5 files changed, 58 insertions(+), 43 deletions(-)
+>>
+>> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+>> index 17a71e92a343..c350fa05ee59 100644
+>> --- a/arch/x86/hyperv/hv_init.c
+>> +++ b/arch/x86/hyperv/hv_init.c
+>> @@ -413,40 +413,6 @@ static void __init hv_get_partition_id(void)
+>>   	local_irq_restore(flags);
+>>   }
+>>
+>> -#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>> -static u8 __init get_vtl(void)
+>> -{
+>> -	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
+>> -	struct hv_get_vp_registers_input *input;
+>> -	struct hv_get_vp_registers_output *output;
+>> -	unsigned long flags;
+>> -	u64 ret;
+>> -
+>> -	local_irq_save(flags);
+>> -	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>> -	output = (struct hv_get_vp_registers_output *)input;
+>> -
+>> -	memset(input, 0, struct_size(input, element, 1));
+>> -	input->header.partitionid = HV_PARTITION_ID_SELF;
+>> -	input->header.vpindex = HV_VP_INDEX_SELF;
+>> -	input->header.inputvtl = 0;
+>> -	input->element[0].name0 = HV_X64_REGISTER_VSM_VP_STATUS;
+>> -
+>> -	ret = hv_do_hypercall(control, input, output);
+>> -	if (hv_result_success(ret)) {
+>> -		ret = output->as64.low & HV_X64_VTL_MASK;
+>> -	} else {
+>> -		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
+>> -		BUG();
+>> -	}
+>> -
+>> -	local_irq_restore(flags);
+>> -	return ret;
+>> -}
+>> -#else
+>> -static inline u8 get_vtl(void) { return 0; }
+>> -#endif
+>> -
+>>   /*
+>>    * This function is to be invoked early in the boot sequence after the
+>>    * hypervisor has been detected.
+>> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+>> index 3787d26810c1..9ee68eb8e6ff 100644
+>> --- a/arch/x86/include/asm/hyperv-tlfs.h
+>> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+>> @@ -309,13 +309,6 @@ enum hv_isolation_type {
+>>   #define HV_MSR_STIMER0_CONFIG	(HV_X64_MSR_STIMER0_CONFIG)
+>>   #define HV_MSR_STIMER0_COUNT	(HV_X64_MSR_STIMER0_COUNT)
+>>
+>> -/*
+>> - * Registers are only accessible via HVCALL_GET_VP_REGISTERS hvcall and
+>> - * there is not associated MSR address.
+>> - */
+>> -#define	HV_X64_REGISTER_VSM_VP_STATUS	0x000D0003
+>> -#define	HV_X64_VTL_MASK			GENMASK(3, 0)
+>> -
+>>   /* Hyper-V memory host visibility */
+>>   enum hv_mem_host_visibility {
+>>   	VMBUS_PAGE_NOT_VISIBLE		= 0,
+>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+>> index 9c452bfbd571..7d6c1523b0b5 100644
+>> --- a/drivers/hv/hv_common.c
+>> +++ b/drivers/hv/hv_common.c
+>> @@ -339,8 +339,8 @@ int __init hv_common_init(void)
+>>   	hyperv_pcpu_input_arg = alloc_percpu(void  *);
+>>   	BUG_ON(!hyperv_pcpu_input_arg);
+>>
+>> -	/* Allocate the per-CPU state for output arg for root */
+>> -	if (hv_root_partition) {
+>> +	/* Allocate the per-CPU state for output arg for root or a VTL */
+>> +	if (hv_root_partition || IS_ENABLED(CONFIG_HYPERV_VTL_MODE)) {
+>>   		hyperv_pcpu_output_arg = alloc_percpu(void *);
+>>   		BUG_ON(!hyperv_pcpu_output_arg);
+>>   	}
+>> @@ -656,3 +656,46 @@ u64 __weak hv_tdx_hypercall(u64 control, u64 param1, u64
+>> param2)
+>>   	return HV_STATUS_INVALID_PARAMETER;
+>>   }
+>>   EXPORT_SYMBOL_GPL(hv_tdx_hypercall);
+>> +
+>> +#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>> +u8 __init get_vtl(void)
+>> +{
+>> +	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
+>> +	struct hv_get_vp_registers_input *input;
+>> +	struct hv_get_vp_registers_output *output;
+>> +	unsigned long flags;
+>> +	u64 ret;
+>> +
+>> +	local_irq_save(flags);
+>> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>> +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> 
+> Rather than use the hyperv_pcpu_output_arg here, it's OK to
+> use a different area of the hyperv_pcpu_input_arg page.  For
+> example,
+> 
+> 	output = (void *)input + HV_HYP_PAGE_SIZE/2;
+> 
+> The TLFS does not require that the input and output be in
+> separate pages.
+> 
+> While using the hyperv_pcpu_output_arg is conceptually a
+> bit cleaner, doing so requires allocating a 4K page per CPU that
+> is not otherwise used. The VTL 2 code wants to be frugal with
+> memory, and this seems like a good step in that direction. :-)
+> 
+I agree on the both counts: the code looks conceptually cleaner now and 
+VTL2 wants to be frugal with memory, esp that the output hypercall page 
+is per-CPU so we have O(n) as the CPU count increases. Still, the output 
+page will be needed for VTL2 (say to get/set registers just as done 
+here). That said, with this patch we can achieve both the conceptual 
+cleanliness and being ready to grow more on the primitives being built 
+out in the VTL support patches.
+
+> The hyperv_pcpu_output_arg was added for the cases where up
+> to a full page is needed for input and output on the same hypercall.
+> So far, the only case of that is when running in the root partition.
+> 
+>> +
+>> +	memset(input, 0, struct_size(input, element, 1));
+>> +	input->header.partitionid = HV_PARTITION_ID_SELF;
+>> +	input->header.vpindex = HV_VP_INDEX_SELF;
+>> +	input->header.inputvtl = 0;
+>> +	input->element[0].name0 = HV_REGISTER_VSM_VP_STATUS;
+>> +
+>> +	ret = hv_do_hypercall(control, input, output);
+>> +	if (hv_result_success(ret)) {
+>> +		ret = output->as64.low & HV_VTL_MASK;
+>> +	} else {
+>> +		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
+>> +
+>> +		/*
+>> +		 * This is a dead end, something fundamental is broken.
+>> +		 *
+>> +		 * There is no sensible way of continuing as the Hyper-V drivers
+>> +		 * transitively depend via the vmbus driver on knowing which VTL
+>> +		 * they run in to establish communication with the host. The kernel
+>> +		 * is going to be worse off if continued booting than a panicked one,
+>> +		 * just hung and stuck, producing second-order failures, with neither
+>> +		 * a way to recover nor to provide expected services.
+>> +		 */
+>> +		BUG();
+>> +	}
+>> +
+>> +	local_irq_restore(flags);
+>> +	return ret;
+>> +}
+>> +#endif
+>> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+>> index 814207e7c37f..271c365973d6 100644
+>> --- a/include/asm-generic/hyperv-tlfs.h
+>> +++ b/include/asm-generic/hyperv-tlfs.h
+>> @@ -75,6 +75,13 @@
+>>   /* AccessTscInvariantControls privilege */
+>>   #define HV_ACCESS_TSC_INVARIANT			BIT(15)
+>>
+>> +/*
+>> + * This synthetic register is only accessible via the HVCALL_GET_VP_REGISTERS
+>> + * hvcall, and there is no an associated MSR on x86.
+> 
+> s/there is no an associated/there is no associated/
+> 
+Much appreciated, will fix this!
+
+>> + */
+>> +#define	HV_REGISTER_VSM_VP_STATUS	0x000D0003
+>> +#define	HV_VTL_MASK			GENMASK(3, 0)
+> 
+> Further down in hyperv-tlfs.h is a section devoted to register
+> definitions. It seems like this definition should go there in
+> numeric order, which is after HV_REGISTER_STIMER0_COUNT.
+> 
+Agreed, will fix, thanks!
+
+> Michael
+> 
+>> +
+>>   /*
+>>    * Group B features.
+>>    */
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index 8fe7aaab2599..85a5b8cb1702 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -315,4 +315,10 @@ static inline enum hv_isolation_type
+>> hv_get_isolation_type(void)
+>>   }
+>>   #endif /* CONFIG_HYPERV */
+>>
+>> +#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>> +u8 __init get_vtl(void);
+>> +#else
+>> +static inline u8 get_vtl(void) { return 0; }
+>> +#endif
+>> +
+>>   #endif
+>> --
+>> 2.34.1
+>>
+
+-- 
+Thank you,
+Roman
+
 
