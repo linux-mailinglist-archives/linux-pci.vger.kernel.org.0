@@ -1,228 +1,183 @@
-Return-Path: <linux-pci+bounces-11317-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11318-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2753947ED7
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 17:59:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B203947EE7
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:01:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 402211F23142
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 15:59:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D1B11F22293
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:01:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D24915B0FF;
-	Mon,  5 Aug 2024 15:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45FCD13C827;
+	Mon,  5 Aug 2024 16:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UCIUCw+b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xi/lQ76t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B813150269;
-	Mon,  5 Aug 2024 15:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEB64D8B7;
+	Mon,  5 Aug 2024 16:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722873564; cv=none; b=i/aNPOW89BCKO0ZV2/qO191JRGFRdCQ0hYPXT1xxtuPYclxrILozgFtku1mTKPZ5rgWj4zLpU2Bg/ZqLKtq4Wb+dEuDTmUwHpAfLbGg7c5y2vd1AaCClLKPBwFg7GH6LKtvuL2Ujv3vEaKKY086AaMi4XNI2hXRoN66/52TCz6Q=
+	t=1722873712; cv=none; b=G+q9u67vrtpY19C/5FSKCdut9Vy33FFSAIVnw/FfYo3Sihr6K9AHqyZ8kpLQ7vLYhxCe9jyD5M8tWk78bEDymkUGFkRcrgjAg/r8a8dU5ljmeg+eWzdb8i0xmnomqoOgqT9igXArxGVe+O3DQJXXbaZlr3RgyHBxiSIvj6M0JWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722873564; c=relaxed/simple;
-	bh=75kI4hEg8uJAREVEaJijoVpY1Wgr40yTtsUTK7O3seE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=R5Cdbh6c4TNqntNHWCPqCMA8oYIV0dCGvXRsn8zZ0CGjSKCgKlTCVKhVD9V3E9WUCu2gJQvAfB2r+oQVj6yzEeMWkJECb7n7DnJeHZna7NtbQATgaO6ZnbtNVxAHloXOAJXSgwDCsU9w4YC4Qj0Y/GhQPTYUZtUtXIW1BnBJHIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UCIUCw+b; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.186.190] (unknown [131.107.159.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0D44E20B7165;
-	Mon,  5 Aug 2024 08:59:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0D44E20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722873562;
-	bh=UAGmdAA2WtUJS/+pcUyV7r/YI1enF8FhONPxQhPstFU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=UCIUCw+bkrjSXeOdbhMzO/XwwDFYQZESDXytn/4uJccZRsXdwC1lDecS3Df/N+oub
-	 AnEILeN8i96cq6EWetu1QKCEaFTS/pLOiFEmwCXMoLwdUVAuUZFT/AS95lnO8b2Oyt
-	 NMLv/aPNtgbtCJTPzDK1nRZm5KbywaI3/VBjtXao=
-Message-ID: <8fc6f934-f8f3-442d-9354-0d1ab3092b63@linux.microsoft.com>
-Date: Mon, 5 Aug 2024 08:59:22 -0700
+	s=arc-20240116; t=1722873712; c=relaxed/simple;
+	bh=wQlaWS+ZJw+znmW/REtXUrDGbAzMh8uUsewhxjdkwIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p6OxXHjR0XNne1UTxwKBlO6epmBicC4Z9txChZ7xVi39SzuPuMAqLadAUgxwIn0G8unCLIV/0unlqR8emSsxzd+nGwmSyxryvdZe1DODIV4EKrf0l73uUXQ8wWDK8k6EwchKb0WZ7uemXUX2yRQLKHKwtA0dgQvEB2n7uQlBsB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xi/lQ76t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A712BC32782;
+	Mon,  5 Aug 2024 16:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722873711;
+	bh=wQlaWS+ZJw+znmW/REtXUrDGbAzMh8uUsewhxjdkwIU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Xi/lQ76trQtHCxk7rjn10khILW1A3BwjI4ze73DdvzYH00ssbgkJhFzSAO1KIdV+T
+	 l9o8sekqfaIs9E2WsdOuy/x7mDaZgCBNkyO0l+94u5vqkZYroJlBoNSPiC20Isc2hi
+	 lNb/KBXkNqaYcpgCH4CLKKCQiasCHb3nPTivxozIsNRpH7YuWSzn0jJoqndtq/Msd0
+	 60pJ4Lot/TZaqNjTCi0ObJB6mjX7F62lsEW0o44BXqXRWQLQWOroYOpRBXIgpx1iF0
+	 yxbMFewg1bUPcAX1boJ3fYSgNqCKmwysDPGUQRcCeqiDhX3Sd1vgRLZLcZ48zLL3Lj
+	 ICKBdzUEgVXKQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2f16767830dso30468011fa.0;
+        Mon, 05 Aug 2024 09:01:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVDoHLQmQgpxOVTVOuoj6shc/HKZyZ9ID82qMdQ3nHkxz6cz6pN3gSbG2jSOdEYQAzG1uQHDDfkzWTfiOComkjCE18Ncsbldo9qY0cJoaFECpADXfTjm5tbdrSPQjGRDMRyvV4MQ44vVkYR2GoWA/ts4wJYIBGnADaargFHbQy+
+X-Gm-Message-State: AOJu0YyWBChKDj2qGPNQVawGAjrSH1YUeyCVB3n7ZmkjvsT1j/Tzvz+w
+	tlto4orRhZO0E0WA5m+HVrietxVi3xC7daU/v/1pKHx1lKQ0nvGzSNndYnc1QyHCX5HPQGV1Fgh
+	mpgRMCbIxdTXgIwyKXpglp1H2Aw==
+X-Google-Smtp-Source: AGHT+IF1QA0WkvZdYK3NgKnb5MSPFABqtD9PrMB9+H/W4psXiYBBzJeuRnqchv3x9eFCYkaDnOsHnRQmvcJbJ6tn/NI=
+X-Received: by 2002:a2e:8096:0:b0:2ef:3250:d0d4 with SMTP id
+ 38308e7fff4ca-2f15ab5c7c8mr77836851fa.48.1722873710032; Mon, 05 Aug 2024
+ 09:01:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] PCI: hv: Get vPCI MSI IRQ domain from DT
-From: Roman Kisel <romank@linux.microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, dave.hansen@linux.intel.com, decui@microsoft.com,
- haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com, kys@microsoft.com,
- lenb@kernel.org, lpieralisi@kernel.org, mingo@redhat.com, rafael@kernel.org,
- robh@kernel.org, tglx@linutronix.de, will@kernel.org,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, ssengar@microsoft.com,
- sunilmut@microsoft.com, vdso@hexbites.dev
-References: <20240726225910.1912537-1-romank@linux.microsoft.com>
- <20240726225910.1912537-8-romank@linux.microsoft.com>
- <Zq2F-l2FWIrQ2Jt1@liuwe-devbox-debian-v2>
- <2679199c-3f73-4326-85ee-622541d26153@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <2679199c-3f73-4326-85ee-622541d26153@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240724065048.285838-1-s-vadapalli@ti.com> <20240724161916.GG3349@thinkpad>
+ <20240725042001.GC2317@thinkpad> <93e864fb-cf52-4cc0-84a0-d689dd829afb@ti.com>
+ <20240726115609.GF2628@thinkpad>
+In-Reply-To: <20240726115609.GF2628@thinkpad>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 5 Aug 2024 10:01:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ-mfU88E_Ri=BzH6nAFg405gkPPJTtjdp7UR2n96QMkw@mail.gmail.com>
+Message-ID: <CAL_JsqJ-mfU88E_Ri=BzH6nAFg405gkPPJTtjdp7UR2n96QMkw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kw@linux.com, vigneshr@ti.com, kishon@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	stable@vger.kernel.org, ahalaney@redhat.com, srk@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jul 26, 2024 at 5:56=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Thu, Jul 25, 2024 at 01:50:16PM +0530, Siddharth Vadapalli wrote:
+> > On Thu, Jul 25, 2024 at 09:50:01AM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, Jul 24, 2024 at 09:49:21PM +0530, Manivannan Sadhasivam wrote=
+:
+> > > > On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli wrote=
+:
+> > > > > Since the configuration of Legacy Interrupts (INTx) is not suppor=
+ted, set
+> > > > > the .map_irq and .swizzle_irq callbacks to NULL. This fixes the e=
+rror:
+> > > > >   of_irq_parse_pci: failed with rc=3D-22
+> > > > > due to the absence of Legacy Interrupts in the device-tree.
+> > > > >
+> > > >
+> > > > Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq() w=
+ill bail out
+> > > > if 'map_irq' is set to NULL.
+> > > >
+> > >
+> > > Hold on. The errono of of_irq_parse_pci() is not -ENOENT. So the INTx=
+ interrupts
+> > > are described in DT? Then why are they not supported?
+> >
+> > No, the INTx interrupts are not described in the DT. It is the pcieport
+> > driver that is attempting to setup INTx via "of_irq_parse_and_map_pci()=
+"
+> > which is the .map_irq callback. The sequence of execution leading to th=
+e
+> > error is as follows:
+> >
+> > pcie_port_probe_service()
+> >   pci_device_probe()
+> >     pci_assign_irq()
+> >       hbrg->map_irq
+> >         of_pciof_irq_parse_and_map_pci()
+> >         of_irq_parse_pci()
+> >           of_irq_parse_raw()
+> >             rc =3D -EINVAL
+> >             ...
+> >             [DEBUG] OF: of_irq_parse_raw: ipar=3D/bus@100000/interrupt-=
+controller@1800000, size=3D3
+> >             if (out_irq->args_count !=3D intsize)
+> >               goto fail
+> >                 return rc
+> >
+> > The call to of_irq_parse_raw() results in the Interrupt-Parent for the
+> > PCIe node in the device-tree being found via of_irq_find_parent(). The
+> > Interrupt-Parent for the PCIe node for MSI happens to be GIC_ITS:
+> > msi-map =3D <0x0 &gic_its 0x0 0x10000>;
+> > and the parent of GIC_ITS is:
+> > gic500: interrupt-controller@1800000
+> > which has the following:
+> > #interrupt-cells =3D <3>;
+> >
+> > The "size=3D3" portion of the DEBUG print above corresponds to the
+> > #interrupt-cells property above. Now, "out_irq->args_count" is set to 1
+> > as __assumed__ by of_irq_parse_pci() and mentioned as a comment in that
+> > function:
+> >       /*
+> >        * Ok, we don't, time to have fun. Let's start by building up an
+> >        * interrupt spec.  we assume #interrupt-cells is 1, which is sta=
+ndard
+> >        * for PCI. If you do different, then don't use that routine.
+> >        */
+> >
+> > In of_irq_parse_pci(), since the PCIe-Port driver doesn't have a
+> > device-tree node, the following doesn't apply:
+> >   dn =3D pci_device_to_OF_node(pdev);
+> > and we skip to the __assumption__ above and proceed as explained in the
+> > execution sequence above.
+> >
+> > If the device-tree nodes for the INTx interrupts were present, the
+> > "ipar" sequence to find the interrupt parent would be skipped and we
+> > wouldn't end up with the -22 (-EINVAL) error code.
+> >
+> > I hope this clarifies the relation between the -22 error code and the
+> > missing device-tree nodes for INTx.
+> >
+>
+> Thanks for explaining the logic. Still I think the logic is flawed. Becau=
+se the
+> parent (host bridge) doesn't have 'interrupt-map', which means INTx is no=
+t
+> supported. But parsing one level up to the GIC node and not returning -EN=
+OENT
+> doesn't make sense to me.
+>
+> Rob, what is your opinion on this behavior?
 
+Not sure I get the question. How should we handle/determine no INTx? I
+suppose that's either based on the platform (as this patch did) or by
+failing to parse the interrupts. The interrupt parsing code is pretty
+tricky as it has to deal with some ancient DTs, so I'm a little
+hesitant to rely on that failing. Certainly I wouldn't rely on a
+specific errno value. The downside to doing that is also if someone
+wants interrupts, but has an error in their DT, then all we can do is
+print 'INTx not supported' or something. So we couldn't fail probe as
+the common code wouldn't be able to distinguish. I suppose we could
+just check for 'interrupt-map' present in the host bridge node or not.
+Need to check the Marvell binding which is a bit weird with child
+nodes.
 
-On 8/5/2024 7:51 AM, Roman Kisel wrote:
-> 
-> 
-> On 8/2/2024 6:20 PM, Wei Liu wrote:
->> On Fri, Jul 26, 2024 at 03:59:10PM -0700, Roman Kisel wrote:
->>> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
->>> arm64. It won't be able to do that in the VTL mode where only DeviceTree
->>> can be used.
->>>
->>> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the 
->>> DeviceTree
->>> case, too.
->>>
->>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->>> ---
->>>   drivers/hv/vmbus_drv.c              | 23 +++++++-----
->>>   drivers/pci/controller/pci-hyperv.c | 55 +++++++++++++++++++++++++++--
->>>   include/linux/hyperv.h              |  2 ++
->>>   3 files changed, 69 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->>> index 7eee7caff5f6..038bd9be64b7 100644
->>> --- a/drivers/hv/vmbus_drv.c
->>> +++ b/drivers/hv/vmbus_drv.c
->>> @@ -45,7 +45,8 @@ struct vmbus_dynid {
->>>       struct hv_vmbus_device_id id;
->>>   };
->>> -static struct device  *hv_dev;
->>> +/* VMBus Root Device */
->>> +static struct device  *vmbus_root_device;
->>
->> You're changing the name of the variable. That should preferably be done
->> in a separate patch. That's going to make this patch shorter and easier
->> to review.
->>
-> Will fix in v4, thanks!
-> 
->>>   static int hyperv_cpuhp_online;
->>> @@ -80,9 +81,15 @@ static struct resource *fb_mmio;
->>>   static struct resource *hyperv_mmio;
->>>   static DEFINE_MUTEX(hyperv_mmio_lock);
->>> +struct device *get_vmbus_root_device(void)
->>> +{
->>> +    return vmbus_root_device;
->>> +}
->>> +EXPORT_SYMBOL_GPL(get_vmbus_root_device);
->>
->> I would like you to add "hv_" prefix to this exported symbol, or rename
->> it to "vmbus_get_root_device()".
->>
-Will do in v4, missed this suggestion in my first reply.
-
->>> +
->>>   static int vmbus_exists(void)
->>>   {
->>> -    if (hv_dev == NULL)
->>> +    if (vmbus_root_device == NULL)
->>>           return -ENODEV;
->>>       return 0;
->>> @@ -861,7 +868,7 @@ static int vmbus_dma_configure(struct device 
->>> *child_device)
->>>        * On x86/x64 coherence is assumed and these calls have no effect.
->>>        */
->>>       hv_setup_dma_ops(child_device,
->>> -        device_get_dma_attr(hv_dev) == DEV_DMA_COHERENT);
->>> +        device_get_dma_attr(vmbus_root_device) == DEV_DMA_COHERENT);
->>>       return 0;
->>>   }
->>> @@ -1892,7 +1899,7 @@ int vmbus_device_register(struct hv_device 
->>> *child_device_obj)
->>>                &child_device_obj->channel->offermsg.offer.if_instance);
->>>       child_device_obj->device.bus = &hv_bus;
->>> -    child_device_obj->device.parent = hv_dev;
->>> +    child_device_obj->device.parent = vmbus_root_device;
->>>       child_device_obj->device.release = vmbus_device_release;
->>>       child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
->>> @@ -2253,7 +2260,7 @@ static int vmbus_acpi_add(struct 
->>> platform_device *pdev)
->>>       struct acpi_device *ancestor;
->>>       struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
->>> -    hv_dev = &device->dev;
->>> +    vmbus_root_device = &device->dev;
->>>       /*
->>>        * Older versions of Hyper-V for ARM64 fail to include the _CCA
->>> @@ -2342,7 +2349,7 @@ static int vmbus_device_add(struct 
->>> platform_device *pdev)
->>>       struct device_node *np = pdev->dev.of_node;
->>>       int ret;
->>> -    hv_dev = &pdev->dev;
->>> +    vmbus_root_device = &pdev->dev;
->>>       ret = of_range_parser_init(&parser, np);
->>>       if (ret)
->>> @@ -2675,7 +2682,7 @@ static int __init hv_acpi_init(void)
->>>       if (ret)
->>>           return ret;
->>> -    if (!hv_dev) {
->>> +    if (!vmbus_root_device) {
->>>           ret = -ENODEV;
->>>           goto cleanup;
->>>       }
->>> @@ -2706,7 +2713,7 @@ static int __init hv_acpi_init(void)
->>>   cleanup:
->>>       platform_driver_unregister(&vmbus_platform_driver);
->>> -    hv_dev = NULL;
->>> +    vmbus_root_device = NULL;
->>>       return ret;
->>>   }
->>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/ 
->>> controller/pci-hyperv.c
->>> index 5992280e8110..cdecefd1f9bd 100644
->>> --- a/drivers/pci/controller/pci-hyperv.c
->>> +++ b/drivers/pci/controller/pci-hyperv.c
->>> @@ -50,6 +50,7 @@
->>>   #include <linux/irqdomain.h>
->>>   #include <linux/acpi.h>
->>>   #include <linux/sizes.h>
->>> +#include <linux/of_irq.h>
->>>   #include <asm/mshyperv.h>
->>>   /*
->>> @@ -887,6 +888,35 @@ static const struct irq_domain_ops 
->>> hv_pci_domain_ops = {
->>>       .activate = hv_pci_vec_irq_domain_activate,
->>>   };
->>> +#ifdef CONFIG_OF
->>> +
->>> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
->>> +{
->>> +    struct device_node *parent;
->>> +    struct irq_domain *domain;
->>> +
->>> +    parent = 
->>> of_irq_find_parent(to_platform_device(get_vmbus_root_device())- 
->>> >dev.of_node);
->>> +    domain = NULL;
->>> +    if (parent) {
->>> +        domain = irq_find_host(parent);
->>> +        of_node_put(parent);
->>> +    }
->>> +
->>
->> I cannot really comment on the ARM side of things around how this system
->> is set up. I will leave that to someone who's more familiar with the
->> matter to review.
->>
->> Thanks,
->> Wei.
-> 
-
--- 
-Thank you,
-Roman
-
+Rob
 
