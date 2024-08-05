@@ -1,147 +1,237 @@
-Return-Path: <linux-pci+bounces-11328-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CADD94802B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 19:18:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A07B948188
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 20:25:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C01731C222A0
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 17:18:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B30E1C21DF5
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:25:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877CD15ECC2;
-	Mon,  5 Aug 2024 17:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC782149DFC;
+	Mon,  5 Aug 2024 18:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMdR76CX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YG8HAlZg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503A015E5BD;
-	Mon,  5 Aug 2024 17:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9B1620;
+	Mon,  5 Aug 2024 18:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722878291; cv=none; b=Cqw1nKOIe4XiMdRZspkCwkwGalkkiQ9QtkwXGOKlI059/rTbZgVafGRjKunomcHDIQ9MJJMS5C2AnjClytMJHeQEOKj6obvj3+jL/yx3BKJQzQnB14SHJKKASs0bfRIIk9Do19FUrJuVQi17cxtEeNg4AIUwxee534VEoMQm8ns=
+	t=1722882302; cv=none; b=nRher+V7dcUwqg86JW6WeUFrlrLNGYLLdsQtsKz3N8Fyx4bM9nW1cHarONAcgxIUM2Yy1pc2TsENOE+oaAJy8lbbc3t24Gsjy1F91NqX2D+9hVJ/1aSGBtOWDNhcfTJ5n9XqOoO0zwgAkBvDSbZcfqLbrGvvk79JztVdrBJCwO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722878291; c=relaxed/simple;
-	bh=aqPHFht0h1h6CFOSYiIJSP0+ZfdrDcm2lDd1De0YOso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AhwX9h0eWUUbQsTsPsTpyln7A939l0lBgj/546r2LxJEeZGQTRVRW3sPiZxz0ef6HC7g63vkYqV9swLzy0vrrfaux5LDUVboF7R1m4qHXZzUMoJibMSVTN/aUS/px5epBlU6D16fmPybDfBd9abzrT9FfzfolEKyh5yEwVx7Fbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMdR76CX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5EB4C32782;
-	Mon,  5 Aug 2024 17:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722878291;
-	bh=aqPHFht0h1h6CFOSYiIJSP0+ZfdrDcm2lDd1De0YOso=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gMdR76CX7+cLlu146Y2zDfp8XSBcVFb5l1X4ttVGaxMiUJYyVTszI0VwTZUAu82mQ
-	 rTElSXv3SHr+jR7bcWUEyxJLPMVhLh834+rM/qJGC1FLC4SyLt55zriF6oOfMrAdci
-	 NHThQghNd7h/UfGCqZh4XO/jId+aVxImw/Em0t2Y+J35RzLMgtWhgsiz8xxD6ADYee
-	 gQ80z+xlMzGvBKP7IVav4lVgnoWF0xWSIEF9QP95Xc8EyKiP3O4i1lIIVU7cFWEKGg
-	 EW8S0uYe5aZAtwPn8418w6iskmE18rKILx+M7+LGynQebGLow98ZewrBEbn3akdUZn
-	 f5QC9cUAJs+NA==
-Message-ID: <90582c92-ca50-4776-918d-b7486cf942b0@kernel.org>
-Date: Mon, 5 Aug 2024 19:18:04 +0200
+	s=arc-20240116; t=1722882302; c=relaxed/simple;
+	bh=FXzVqenhzpdtHOcXatACMscpU64GG8a2FW3cWjhPU4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tecnlUwcsrcGjsjaE4QOMJWGqzPU88+U+w6TAHMHK61/9bwhAfhPYCW8HPHBAGlAfrkXk8/1JA+3P2l3392ygXvszpBL8gN+DBAxOFUw1DhxKalq57ymkWYI7yc5DMquAwyqNrUj95/61Uag3WBfFJtrJH3NPFQfpbzER4akb5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YG8HAlZg; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722882301; x=1754418301;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FXzVqenhzpdtHOcXatACMscpU64GG8a2FW3cWjhPU4c=;
+  b=YG8HAlZgxD/JjywpnJ7escHKts16euzYha0KbxseRvMQO7/6TZsp3Lmx
+   jIrOs6wNX4vjtGav+hD1Qg/5wr5Ihf0ndPhd1EnuvHezwMIrevkeBgulk
+   gnXUdbYYZ6n57p8aWmDcKPzWI34LllisMGAwL/nJP/s2YZ9iGCZvnAkiG
+   4I80dUf6rxbhiArUiQAOYEk1n26VRNRUcfr7viNa8DNH5eYCO0hiopj3X
+   KYa1uA8xBHsCMYB9D2+GERI16QOPhdBYViR2MP5nkheYn1ciXHI8CynjC
+   q8NLWJeNo8Ye+VTJEfpHD9o3VBzxM01LMS6+x0eNShgPGwYvcaHv03JlP
+   Q==;
+X-CSE-ConnectionGUID: Ds9TdhGpRVSc3IgUhVMDyw==
+X-CSE-MsgGUID: jtsJU53QT8iSvfzo0+SUnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="38319719"
+X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
+   d="scan'208";a="38319719"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 11:25:00 -0700
+X-CSE-ConnectionGUID: FsfLEgeoSMuZCBEOpjAveA==
+X-CSE-MsgGUID: 3n4634pQTdWQm1wruZFtJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
+   d="scan'208";a="60394620"
+Received: from unknown (HELO localhost) ([10.2.132.131])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 11:24:57 -0700
+Date: Mon, 5 Aug 2024 11:24:56 -0700
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>,
+ David Box <david.e.box@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Kuppuswamy Sathyanarayanan
+ <sathyanarayanan.kuppuswamy@linux.intel.com>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>, Paul M Stillwell Jr
+ <paul.m.stillwell.jr@intel.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux@endlessos.org
+Subject: Re: [PATCH v8 4/4] PCI/ASPM: Fix L1.2 parameters when enable link
+ state
+Message-ID: <20240805112456.00007cad@linux.intel.com>
+In-Reply-To: <CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com>
+References: <20240719075200.10717-2-jhp@endlessos.org>
+	<20240719080255.10998-2-jhp@endlessos.org>
+	<CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
-To: Bjorn Andersson <quic_bjorande@quicinc.com>,
- Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>,
- Jingoo Han <jingoohan1@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- andersson@kernel.org, quic_vbadigan@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
- <5f65905c-f1e4-4f52-ba7c-10c1a4892e30@kernel.org>
- <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
- <ZrEGypbL85buXEsO@hu-bjorande-lv.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ZrEGypbL85buXEsO@hu-bjorande-lv.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 05/08/2024 19:07, Bjorn Andersson wrote:
-> On Mon, Aug 05, 2024 at 09:41:26AM +0530, Krishna Chaitanya Chundru wrote:
->> On 8/4/2024 2:23 PM, Krzysztof Kozlowski wrote:
->>> On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
->>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> [..]
->>>> +  qps615,axi-clk-freq-hz:
->>>> +    description:
->>>> +      AXI clock which internal bus of the switch.
->>>
->>> No need, use CCF.
->>>
->> ack
-> 
-> This is a clock that's internal to the QPS615, so there's no clock
-> controller involved and hence I don't think CCF is applicable.
+On Fri, 2 Aug 2024 16:24:18 +0800
+Jian-Hong Pan <jhp@endlessos.org> wrote:
 
-AXI does not sound that internal. DT rarely needs to specify internal
-clock rates. What if you want to define rates for 20 clocks? Even
-clock-frequency is deprecated, so why this would be allowed?
-bus-frequency is allowed for buses, but that's not the case here, I guess?
+> Jian-Hong Pan <jhp@endlessos.org> =E6=96=BC 2024=E5=B9=B47=E6=9C=8819=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Currently, when enable link's L1.2 features with
+> > __pci_enable_link_state(), it configs the link directly without
+> > ensuring related L1.2 parameters, such as T_POWER_ON,
+> > Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have been
+> > programmed.
+> >
+> > This leads the link's L1.2 between PCIe Root Port and child device
+> > gets wrong configs when a caller tries to enabled it.
+> >
+> > Here is a failed example on ASUS B1400CEAE with enabled VMD:
+> >
+> > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
+> > PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
+> >     Capabilities: [200 v1] L1 PM Substates
+> >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
+> > L1_PM_Substates+ PortCommonModeRestoreTime=3D45us
+> > PortTPowerOnTime=3D50us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
+> > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
+> >         L1SubCtl2: T_PwrOn=3D50us
+> >
+> > 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
+> > SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
+> >     Capabilities: [900 v1] L1 PM Substates
+> >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > L1_PM_Substates+ PortCommonModeRestoreTime=3D32us
+> > PortTPowerOnTime=3D10us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
+> > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+> >         L1SubCtl2: T_PwrOn=3D10us
+> >
+> > According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on
+> > the PCIe Root Port and the child NVMe, they should be programmed
+> > with the same LTR1.2_Threshold value. However, they have different
+> > values in this case.
+> >
+> > Invoke aspm_calc_l12_info() to program the L1.2 parameters properly
+> > before enable L1.2 bits of L1 PM Substates Control Register in
+> > __pci_enable_link_state().
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > ---
+> > v2:
+> > - Prepare the PCIe LTR parameters before enable L1 Substates
+> >
+> > v3:
+> > - Only enable supported features for the L1 Substates part
+> >
+> > v4:
+> > - Focus on fixing L1.2 parameters, instead of re-initializing whole
+> > L1SS
+> >
+> > v5:
+> > - Fix typo and commit message
+> > - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
+> >   aspm_get_l1ss_cap()"
+> >
+> > v6:
+> > - Skipped
+> >
+> > v7:
+> > - Pick back and rebase on the new version kernel
+> > - Drop the link state flag check. And, always config link state's
+> > timing parameters
+> >
+> > v8:
+> > - Because pcie_aspm_get_link() might return the link as NULL, move
+> >   getting the link's parent and child devices after check the link
+> > is not NULL. This avoids NULL memory access.
+> >
+> >  drivers/pci/pcie/aspm.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 5db1044c9895..55ff1d26fcea 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -1411,9 +1411,15 @@ EXPORT_SYMBOL(pci_disable_link_state);
+> >  static int __pci_enable_link_state(struct pci_dev *pdev, int
+> > state, bool locked) {
+> >         struct pcie_link_state *link =3D pcie_aspm_get_link(pdev);
+> > +       u32 parent_l1ss_cap, child_l1ss_cap;
+> > +       struct pci_dev *parent, *child;
+> >
+> >         if (!link)
+> >                 return -EINVAL;
+> > +
+> > +       parent =3D link->pdev;
+> > +       child =3D link->downstream;
+> > +
+> >         /*
+> >          * A driver requested that ASPM be enabled on this device,
+> > but
+> >          * if we don't have permission to manage ASPM (e.g., on ACPI
+> > @@ -1428,6 +1434,15 @@ static int __pci_enable_link_state(struct
+> > pci_dev *pdev, int state, bool locked) if (!locked)
+> >                 down_read(&pci_bus_sem);
+> >         mutex_lock(&aspm_lock);
+> > +       /*
+> > +        * Ensure L1.2 parameters: Common_Mode_Restore_Times,
+> > T_POWER_ON and
+> > +        * LTR_L1.2_THRESHOLD are programmed properly before enable
+> > bits for
+> > +        * L1.2, per PCIe r6.0, sec 5.5.4.
+> > +        */
+> > +       parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
+> > +       child_l1ss_cap =3D aspm_get_l1ss_cap(child);
+> > +       aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
+> > +
+> >         link->aspm_default =3D pci_calc_aspm_enable_mask(state);
+> >         pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> >
+> > --
+> > 2.45.2
+> > =20
+>=20
+> Hi Nirmal and Paul,
+>=20
+> It will be great to have your review here.
+>=20
+> I had tried to "set the threshold value in vmd_pm_enable_quirk()"
+> directly as Paul said [1].  However, it still needs to get the PCIe
+> link from the PCIe device to set the threshold value.
+> And, pci_enable_link_state_locked() gets the link. Then, it will be
+> great to calculate and programm L1 sub-states' parameters properly
+> before configuring the link's ASPM there.
+>=20
+> [1]:
+> https://lore.kernel.org/linux-kernel/20240624081108.10143-2-jhp@endlessos=
+.org/T/#mc467498213fe1a6116985c04d714dae378976124
+>=20
+> Jian-Hong Pan
 
-Best regards,
-Krzysztof
+Hi Jian-Hong Pan,
 
+I am not an LTR, ASPM expert, but this part looks good to me.
+
+Can you explain why you decided to move pci_enable_link_state_locked()
+call down to out_state_change in vmd.c? Will it cause any issue if=20
+pci_find_ext_capability returns 0?
+
+Thanks
+-nirmal
 
