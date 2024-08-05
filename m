@@ -1,201 +1,213 @@
-Return-Path: <linux-pci+bounces-11301-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11302-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E1F947C9A
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:13:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62F2F947CD8
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:31:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 740B91F217D0
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 14:13:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A9BC4B22666
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 14:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DDE212EBCA;
-	Mon,  5 Aug 2024 14:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B67A78297;
+	Mon,  5 Aug 2024 14:31:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="q+A31pQZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ybdskc+3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012057.outbound.protection.outlook.com [52.103.2.57])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25401139CE3;
-	Mon,  5 Aug 2024 14:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722867181; cv=fail; b=Cc/g3q4bqGpli9ve+O1ldH/mAiM7KroycOmGAcmO+2UHBCtF9FIBiYUOK632YnRvRKmlAKwZtfEGZGB61v+rkevqO+r2SxG/KdQTnxC13nBXmVwvjWs/DGH0DVhQydl13O8oXzVknPF1jq8M4HTJWQcRata+os9Ox3Plx4iEJKg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722867181; c=relaxed/simple;
-	bh=q+Qlf4d/CGHKsuy1HT2+74gMu2UmkkiGr2bNk3UPs28=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mD4XHJtK1NYbKs9zmeaoYlcqi4/p5rDq2X6DbbBubTJEvG36CJri8wizn3z41nPBW8piF30CRsQ0TYO8NXl3dmFAKaHIeH+WO5RATrUEJyGVEIrMWtoboy0zVRAwA73VwQtpWdgauQVPpczJfxn6lm3ujLs3tcjklbkofY2+jiM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=q+A31pQZ; arc=fail smtp.client-ip=52.103.2.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KTpbertyn2Jof3Z57/QXUyqLWhsaMjT+4+9Pj0n31ZSCXQH8J35BShff3A5RjXxwO7e2szAbn2TFl40i61IYvw+DRv8ngQNdluYj8VgdMVGusKgJoAWQ4ruNjAJKWgjRl+QEOJf4MBYZ3d/7jQPe4QFHYJkSjXnTZ7fI4Z+e5mQBfyrI24xSUzo0DM2kPAfWElLuvXYontD51G/apKtczEnQOPECEeiY1RKHK0yz77/+vwiMJQzJ3r9lGTW5LWFDVieSqvrfj1+fx5NsXGH+viZZwabcdsQnyO2oTO2wDvqYQ9Fsa0CwrtD/G3Jak6lY7jpaWS1x9gQUSdHLqNi1OA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0+M04b7BgIER6F7iCEgjrg2kJ6k+WAI7Fg3Jx/fAhPs=;
- b=Ltz2VYeBpJ31oTs/EtwM7I6Sar3mO/Pnc4xfdmrm2UMa4Aky5Fw4PqmmdlTYbNAfbYHZmWrIwcmLSvrubhIEGWOkJCo0OgbKsJsqJdTUZ6k2OKh/kSk/6MIRDdFy2bdzUsTgA0eb11a371HgPA6m6enrRg8/u5tDFPYTAlKJjwytqY3TPD57eCkpcWaQy5Mm/uauw2fSpMYGsEp6gWi+wpxI1NXst3DC23ti8//G3oJQTF8Ub2urDTtSGWaLXjlrYKzDXoms8z82UGzGPSxBolGeT5IBYhL/1gtvqf9dq8G3w8CF7f4LRj3BGv2woNNTe0I+Qo68FeWiYUntwLjG9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0+M04b7BgIER6F7iCEgjrg2kJ6k+WAI7Fg3Jx/fAhPs=;
- b=q+A31pQZvsKLGP0LVth0U3kjLbt555GPehOtvRa+LJQcMvOSYUsERXomGqS+6PySjSlhTgHKvXxuMeOBKiS/ajahbNAu5Dbp4t40rRLhRgW/LPDye9SMeGR5rS3OKS+2eOa/UmZr9YLwaVpPXW0gsI6eRMZTe1KGkr44bufAVqzUgdzs/WwJUppLuaEjIOEvK1Q9brmPZ7xSqOSEeUkaDwT9zI1CUD1gsPEzVxk0BBTlUxu8FJ+07z/3hYsjo7YCzQCsY2pmp7dylxjGf1nq7Ej2uB9ld94ei9fLCOUNS3/Epw/rW7UWJ8sOepRXRqHg0UN6gIdJtOVwXU6FtZvaRQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by IA3PR02MB10589.namprd02.prod.outlook.com (2603:10b6:208:535::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.22; Mon, 5 Aug
- 2024 14:12:41 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%6]) with mapi id 15.20.7807.026; Mon, 5 Aug 2024
- 14:12:41 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>, Roman Kisel
-	<romank@linux.microsoft.com>
-CC: "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>, "kw@linux.com"
-	<kw@linux.com>, "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
-	<lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "ssengar@microsoft.com" <ssengar@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>, "vdso@hexbites.dev"
-	<vdso@hexbites.dev>
-Subject: RE: [PATCH v3 6/7] Drivers: hv: vmbus: Get the IRQ number from DT
-Thread-Topic: [PATCH v3 6/7] Drivers: hv: vmbus: Get the IRQ number from DT
-Thread-Index: AQHa36/Ax7vrWbxjOkqE907xHGTdubIYZA8AgABfOFA=
-Date: Mon, 5 Aug 2024 14:12:41 +0000
-Message-ID:
- <SN6PR02MB415701C313BD5E296393A29DD4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240726225910.1912537-1-romank@linux.microsoft.com>
- <20240726225910.1912537-7-romank@linux.microsoft.com>
- <20240805083024.GB31897@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To:
- <20240805083024.GB31897@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [KjvQz9zTnNR4Zn9QTpCYtX305timbdLV]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA3PR02MB10589:EE_
-x-ms-office365-filtering-correlation-id: 90fd52ca-3af2-420c-6a0e-08dcb558ab70
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799006|19110799003|461199028|440099028|3412199025|102099032;
-x-microsoft-antispam-message-info:
- RbdD8ftR0LvqD/8NYZoHbMRDkzf51h0QcvqBwp8U/CkAD4hg4whhikZ4TqG0BIvj1wHu7S5zWnyGZHuDxoPaEKOOvzBCa1oRB9fCjG3lZrcsYytGFUZxfQN3Jn0AYImLvCDaxvYTfc49DU8wfaEXjh/fms2yl4J0dI8vacSTLD4nc1xPy7aL9j/i9lYFhD2We5+e0PNATsb2zDktINvWc6sKlTfFQ2DPPibChTwjUEYAGI6zVQNuHnis49PqDPiYoJOmNz7FDLl99LJaGJykQV0O1sg0yfyr/eNJ/e/0j3PItP4+bz8tdT/hzZK057omFmOGcHodMSrD+fQofK1SMytGPXXs9FWuqUP16HrYn324MZ1sJCxZ+QMk1BHGcAbYpMPemV33Vt1kYkdgJdcXt/IJNxIGguN7G49OyODQsZ5ZWMYsKshBWqyi6aUy1/8gIsZLLZDD9OXhhmt3jfCcT5jZCgjDWG5vcQlQdw2XV9FDl5BnMP0Lx5mQbKWfgJlNjYRgOVxX0nQNwQO0C1JhCRX0+hFEa/Fuv3sE1y4lfVFFQ/G4/8gcmpfz8fNShY5WYhmOZ6hJgvkq0cGLvQXUeXjw0EfKGzhJSfo12ss+FG7Lc4GB/APW4xYLPCP4tzbVZJjZ9IOG4UAO5wQUmfcf2A==
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?HkZEZ/1H2Vr5pgZzeCJpGJV2+pTiKXbl7/LgYhjjH+9EPWTIXnzefcRvqyTJ?=
- =?us-ascii?Q?FNazZWVuNkZ6wdj4NxWcdbz3E8jHm0p2Kphl+SsM7rDboW7XKVmyidT2w11Z?=
- =?us-ascii?Q?JxaENh8hsGb3uN5/wZjzqaYdjMUPElQdOEM5gkIk96ncg8BuXVJ/uNkJ1yzT?=
- =?us-ascii?Q?1A3sd7a3lq6bTRWCsZ/wUw3ys2P/zeGcLy93EU+bQxxJvHBDGrQsXBMrtyoN?=
- =?us-ascii?Q?xsMLhjBr8SjpIiS46U9S2XulI0eAEYj50H5s7oRWtGw60VHzxVrJQHOyMKrp?=
- =?us-ascii?Q?bC7S9IrmDx3c2rn2hg+SRbKK08I4eU29IT90+B2vlUAMJaf9ht7lcwsdV5rZ?=
- =?us-ascii?Q?17NcS0dYwA/ylQqmdKYJW9Nq32G6EJr23hA+2F/1rnUA94C9YQnwZLgi7FFu?=
- =?us-ascii?Q?ztpMGin2USJst/JQI3kRuX1qNO9WDuh1xWTWs/Tws1KY+mi9dOOxfuAGmPGu?=
- =?us-ascii?Q?k26J6TLGQryfmy3UfmFR2op3Sj9puBabR5cws3Cu4KIpLT7IAzb9FHE+Qd7c?=
- =?us-ascii?Q?4DeWqTl6zORTJ+Mmvg1ZHLUMq1mwvahb9ef5ZSr7Tx+NHROoHcKP4fMG6Ubd?=
- =?us-ascii?Q?V5R1Zbxsa4S5eIVeKZts3QLteGqOlqJlz778zBSER8zudd6cup7kmEYL2A52?=
- =?us-ascii?Q?R6LoY3swH7n59g3Gai7xy5nJ54MPClOUTAEATPBzfZZRDjVjZq0Lu/FDbpld?=
- =?us-ascii?Q?cBnNYGpO+nGkClLvsV19tWx70591nhkc3jRjyUtoCUuR2yVEIgFzo08XSVPh?=
- =?us-ascii?Q?o2umBaVZ1lfEbPgbwzemZQWITUkL/ejPn58r325TzvR9TotYwklBC+pZQgRL?=
- =?us-ascii?Q?rtURAutDbF4yrSi0SWF7/sZRiywEKWx+rg/EQglJNUeC2bBKqfB7XId7iTSK?=
- =?us-ascii?Q?8/ZoNyk4VgcBSI+bfnfsGbTuhuruDVv4RLGRMZol2a8i9EwS0xnYTv2aSqER?=
- =?us-ascii?Q?IK6WSgZKQWakYvrI24nO2D6BRsL6IS6W2Zyj27ventnH6crBvCqR2Rv6k9dC?=
- =?us-ascii?Q?ekv3Oo13AyU610seqy5WXR3REMJomjFZKn+yw2kbP76w3ywlXHJeOa7hF3pC?=
- =?us-ascii?Q?XYeNAma8KSfTAi4Vx6OG6CBsmhF/LYKbze2fc0fwnZRB8O7sfaKeaC/7CPjm?=
- =?us-ascii?Q?LWV5xZtCxt3qGzbhAMfWqdO+kEWmNobc32bMbkhyRAF/bJxjRkO0sm5xubu0?=
- =?us-ascii?Q?w6vUuAAV/drxWaOGvvJiXOdgh5frnlvQ5Jpp5b1YHKRq5aU+ehpeb5Xsg98?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82CB39FE5;
+	Mon,  5 Aug 2024 14:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722868265; cv=none; b=Ihxiq5hP8Pqop9uzuSmVTv3kZF9zWqPBza/G5RLnVyTPZxzaNY5pgaxvWovR4SaaTdhsY+VZ3LUm1ujFquKLtvGYlxiJTN7h8JZOBPaW7FybNK04K+Ig7i/EjmLLEwO6ciuA7Vkl4O34/VlEEVsGaCyAw9fF1ms09pPNFtKMAFE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722868265; c=relaxed/simple;
+	bh=A+ejUO0ucuD8rkWcqVcgovmJzievlnCHGnch/v9cG6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YoXkcB0/kX2kQ9i+4nIE1AN/qXC9bzTlvKKWd/SZ4UyVcXgYj+62ogM/MvCbz95uQ8xHRIRRbmLpedvZIaKRRX8KQEgBzn4h1aRfUd6XX+KWdNoE35mKpxY45i74rOF9kVP5nVp7USo1PTajE/GzNGY6rKaPaAEZleDAmJziFnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ybdskc+3; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722868264; x=1754404264;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=A+ejUO0ucuD8rkWcqVcgovmJzievlnCHGnch/v9cG6Q=;
+  b=Ybdskc+3/m0tKVk3OZwFuzYNUfc9CI4smDJbDfMmlTEzuwpHeCn/O5oE
+   HMbL8vi9vV7KPmcWGumgksv2u85C6VBjAH5BMkXrVSAOGB/FEbd6wRT6l
+   aY89L0TkAsLbb76NbvwxLlonpoBPA0UL3bYNrVBdm1QngyVZWEiAedlNf
+   /GMmItJ8m2qx+H0Ej6Ao4/f56moFhjkV6li0dw9Kx8iVafyO4jmEqVjvl
+   iXxwmLQv65KycTTcmAOtLpKVD2eXCB+7WUdAvBpZmcUa9l6WDatFclBxW
+   MKsG68Fl+XnADzmI2CV+mRz8EMC8xqm9rjUUzd8Yt4Hdvx25JdrB1UhMz
+   Q==;
+X-CSE-ConnectionGUID: srJCOYTMS+iUpCXzW1Hn7g==
+X-CSE-MsgGUID: jyDrna/qT3+kmD2lb7ultw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="46236818"
+X-IronPort-AV: E=Sophos;i="6.09,264,1716274800"; 
+   d="scan'208";a="46236818"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 07:30:51 -0700
+X-CSE-ConnectionGUID: 6keIFrHNSxCUdsGhOh0BZw==
+X-CSE-MsgGUID: V3hkeNUJSjaoQEVDF9ySdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,264,1716274800"; 
+   d="scan'208";a="60546846"
+Received: from unknown (HELO localhost) ([10.2.132.131])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 07:30:49 -0700
+Date: Mon, 5 Aug 2024 07:30:47 -0700
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-pci@vger.kernel.org, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>, Pali =?UTF-8?Q?Roh=C3=A1r?= <pali@kernel.org>, Uwe
+ =?UTF-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Aleksandr
+ Mishin <amishin@t-argos.ru>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Anup Patel <apatel@ventanamicro.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Daire McNamara
+ <daire.mcnamara@microchip.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Hou Zhiqiang
+ <Zhiqiang.Hou@nxp.com>, Jianjun Wang <jianjun.wang@mediatek.com>, Jim
+ Quinlan <jim2101024@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Jisheng
+ Zhang <Jisheng.Zhang@synaptics.com>, Jon Hunter <jonathanh@nvidia.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>, Joyce Ooi
+ <joyce.ooi@intel.com>, Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Koichiro Den
+ <den@valinux.co.jp>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>, Marc Zyngier
+ <maz@kernel.org>, Michal Simek <michal.simek@amd.com>, Nicolas Saenz
+ Julienne <nsaenz@kernel.org>, Niklas Cassel <cassel@kernel.org>, Nipun
+ Gupta <nipun.gupta@amd.com>, Rob Herring <robh@kernel.org>, Ryder Lee
+ <ryder.lee@mediatek.com>, Shivamurthy Shastri
+ <shivamurthy.shastri@linutronix.de>, Siddharth Vadapalli
+ <s-vadapalli@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v4 12/15] PCI: vmd: Silence set affinity failed warning
+Message-ID: <20240805073047.0000286a@linux.intel.com>
+In-Reply-To: <20240723132958.41320-13-marek.vasut+renesas@mailbox.org>
+References: <20240723132958.41320-1-marek.vasut+renesas@mailbox.org>
+	<20240723132958.41320-13-marek.vasut+renesas@mailbox.org>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90fd52ca-3af2-420c-6a0e-08dcb558ab70
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2024 14:12:41.7171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR02MB10589
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, Augu=
-st 5, 2024 1:30 AM
->=20
-> On Fri, Jul 26, 2024 at 03:59:09PM -0700, Roman Kisel wrote:
-> > The VMBus driver uses ACPI for interrupt assignment on
-> > arm64 hence it won't function in the VTL mode where only
-> > DeviceTree can be used.
-> >
-> > Update the VMBus driver to discover interrupt configuration
-> > via DeviceTree and indicate DMA cache coherency.
-> >
-> > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > ---
-> >  drivers/hv/vmbus_drv.c | 49 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index 12a707ab73f8..7eee7caff5f6 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -2306,6 +2306,34 @@ static int vmbus_acpi_add(struct platform_device=
- *pdev)
-> >  }
-> >  #endif
-> >
-> > +static int __maybe_unused vmbus_set_irq(struct platform_device *pdev)
-> > +{
-> > +	struct irq_desc *desc;
-> > +	int irq;
-> > +
-> > +	irq =3D platform_get_irq(pdev, 0);
-> > +	if (irq =3D=3D 0) {
-> > +		pr_err("VMBus interrupt mapping failure\n");
-> > +		return -EINVAL;
-> > +	}
-> > +	if (irq < 0) {
-> > +		pr_err("VMBus interrupt data can't be read from DeviceTree, error %d=
-\n", irq);
-> > +		return irq;
-> > +	}
-> > +
-> > +	desc =3D irq_to_desc(irq);
->=20
-> irq_to_desc is not an exported symbol if CONFIG_SPARSE_IRQ is enabled. Th=
-is will
-> break the builds for HYPERV as module.
->=20
+On Tue, 23 Jul 2024 15:27:12 +0200
+Marek Vasut <marek.vasut+renesas@mailbox.org> wrote:
 
-Instead, use irq_get_irq_data(), then irqd_to_hwirq().
+> Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps
+> .irq_set_affinity unset and allows migrate_one_irq() code in
+> cpuhotplug.c to exit right away, without printing "IRQ...: set
+> affinity failed(-22)" warning.
+>=20
+> Remove .irq_set_affinity implementation which only return -EINVAL
+> from this controller driver.
+>=20
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> ---
+> Cc: "Krzysztof Wilczy=C5=84ski" <kw@linux.com>
+> Cc: "Pali Roh=C3=A1r" <pali@kernel.org>
+> Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+> Cc: Aleksandr Mishin <amishin@t-argos.ru>
+> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Cc: Anup Patel <apatel@ventanamicro.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Broadcom internal kernel review list
+> <bcm-kernel-feedback-list@broadcom.com> Cc: Daire McNamara
+> <daire.mcnamara@microchip.com> Cc: Damien Le Moal <dlemoal@kernel.org>
+> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+> Cc: Jim Quinlan <jim2101024@gmail.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Cc: Jon Hunter <jonathanh@nvidia.com>
+> Cc: Jonathan Derrick <jonathan.derrick@linux.dev>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Joyce Ooi <joyce.ooi@intel.com>
+> Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+> Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+> Cc: Koichiro Den <den@valinux.co.jp>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Michal Simek <michal.simek@amd.com>
+> Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
+> Cc: Niklas Cassel <cassel@kernel.org>
+> Cc: Nipun Gupta <nipun.gupta@amd.com>
+> Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
+> Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-rpi-kernel@lists.infradead.org
+> Cc: linux-tegra@vger.kernel.org
+> ---
+> V4: - New patch
+> ---
+>  drivers/pci/controller/vmd.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/vmd.c
+> b/drivers/pci/controller/vmd.c index a726de0af011f..bc849b0d9e8dc
+> 100644 --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -204,22 +204,11 @@ static void vmd_irq_disable(struct irq_data
+> *data) raw_spin_unlock_irqrestore(&list_lock, flags);
+>  }
+> =20
+> -/*
+> - * XXX: Stubbed until we develop acceptable way to not create
+> conflicts with
+> - * other devices sharing the same vector.
+> - */
+> -static int vmd_irq_set_affinity(struct irq_data *data,
+> -				const struct cpumask *dest, bool
+> force) -{
+> -	return -EINVAL;
+> -}
+> -
+>  static struct irq_chip vmd_msi_controller =3D {
+>  	.name			=3D "VMD-MSI",
+>  	.irq_enable		=3D vmd_irq_enable,
+>  	.irq_disable		=3D vmd_irq_disable,
+>  	.irq_compose_msi_msg	=3D vmd_compose_msi_msg,
+> -	.irq_set_affinity	=3D vmd_irq_set_affinity,
+>  };
+> =20
+>  static irq_hw_number_t vmd_get_hwirq(struct msi_domain_info *info,
+> @@ -326,7 +315,7 @@ static struct msi_domain_ops vmd_msi_domain_ops =3D
+> {=20
+>  static struct msi_domain_info vmd_msi_domain_info =3D {
+>  	.flags		=3D MSI_FLAG_USE_DEF_DOM_OPS |
+> MSI_FLAG_USE_DEF_CHIP_OPS |
+> -			  MSI_FLAG_PCI_MSIX,
+> +			  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX,
+>  	.ops		=3D &vmd_msi_domain_ops,
+>  	.chip		=3D &vmd_msi_controller,
+>  };
 
-Michael
+Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+
+Thanks.
 
