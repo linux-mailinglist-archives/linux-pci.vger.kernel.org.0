@@ -1,48 +1,47 @@
-Return-Path: <linux-pci+bounces-11303-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11304-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2134E947D12
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:44:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5083E947D37
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:52:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB973284FD9
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 14:44:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0D371F22008
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 14:52:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE4CA13B5A0;
-	Mon,  5 Aug 2024 14:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2252B13C8F9;
+	Mon,  5 Aug 2024 14:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhwFXUdc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="X8ffdVm0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B0558A5;
-	Mon,  5 Aug 2024 14:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0150813C684;
+	Mon,  5 Aug 2024 14:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722869036; cv=none; b=ecCt88Lb51NTl5KTKIAUFcoeFDpkn5WX9i3ShNyM/RG7dUpPXFJrOiKzwO8N6WFyEHV08GpO2JhFk69q77ibsqQkkWp6QeejHYnUoZ1bvs8fPdCKw0tP7c2fQjMa3eThfqHl2U0qIHIA4C0NXwM+tnV3zrzPT7ufhtN8qlqlcCA=
+	t=1722869481; cv=none; b=teCxQbrishUMDt6x4zyV4Fkc1XYI7VRkeo9oRA5fUfWh2XtSll1HaV57EM/GSWD0hulKI+jen5ExCt59RnXFA7zB39M6fkwe6DhrdDp/YTd/ww7FIGiKxiVES48oMPY6UR5c5o+tyOXlLaWBQYLPImCsxO4HjOiimTVG9VLtIdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722869036; c=relaxed/simple;
-	bh=RDd7LXNWyI8dLbgTJnRv0mo7Z2iZPu58iHmwyCUoTaY=;
+	s=arc-20240116; t=1722869481; c=relaxed/simple;
+	bh=7ykty8/x0wz5UdqrPTbpaCVE/KB7yVy+KsHezueQZPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aJGZ5dm13aGmP0O7HTXabJ+mjnu9NHfLS3gkesAq/G53Eq8UjktDiwVNggLbJbL8TiKQG8qPl2IQsjpis8JyWuf4IOjXQjw3IIaEjlsuWpG5VUutVHbA9VN1rb2r1OXaw0wVtrco4IQwwgpdH2qE0TE62tp8c9En/ItT0v7vDsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhwFXUdc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A7DDC4AF0B;
-	Mon,  5 Aug 2024 14:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722869036;
-	bh=RDd7LXNWyI8dLbgTJnRv0mo7Z2iZPu58iHmwyCUoTaY=;
+	 In-Reply-To:Content-Type; b=JZfO4wqSAWHw8B4wapcrT5vC9yBpv6P9zDyvDhIV7zhHksQiFcSSus/A+220W8YFz8nDdgg+6C8BLWmSJLYz6OG21KSZuhMk/njrhrg54k9NbPYacwhLR4OBmSUj33a94fWBcShHLpKHF0z4ATUrVAN9kiNUqilBN/hs/SL2FmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=X8ffdVm0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.186.190] (unknown [131.107.159.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3F41B20B7165;
+	Mon,  5 Aug 2024 07:51:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F41B20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1722869478;
+	bh=pauF332H9RYtwbTh4jt8TXNF4EdtpJCWqYxBIdY4ptU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UhwFXUdcNrtpnMMa/1QTtQkE0bA21VXl3Fc4af8kWdlc8unBDiYTTDSjQ1ap/1QIn
-	 1dQaGW6eZnZkVPfd/e8T8nJbpq4kR0lX/3VV7JYlQVDrIcDz4CwQdBCnWHCo/tzarK
-	 R5RehHnR522DBTQ87Nzjs65aqICZM1Xewm2QN8/ZNf2aJLmqvwNJna+uHJcCR8qZ+e
-	 sL6MvdDx485mq56jYkeVcvG2wK6VvG2rbMASofC6zLJVJ8Edvq0ak/mK5Hw0/dgG1L
-	 eIpjWXOEbsxWDVcwyXH7PA+QwwHZ1eSWcJbh+2WtiYO6Fh1Cn2W2h4iUKG0rqDmhPu
-	 z6/IkyI1QRl/A==
-Message-ID: <aa311052-deba-4d13-9ede-1d863a4f362e@kernel.org>
-Date: Mon, 5 Aug 2024 16:43:47 +0200
+	b=X8ffdVm0EwvH9cISLR9ZZZRKprEo04Um0VqddaKwHaaG5FXXTy/B3AVHowWL2FIkF
+	 vn6mm0I6ZO0vdpHX+1dlYa6XsD2FOGm9nrXMQFEXjkEePfTn662n16Sr99C7sAz/Ii
+	 ACauUgAQ7XzRLcxcOjk8N8fMfsudY9DdAsBUfPJI=
+Message-ID: <2679199c-3f73-4326-85ee-622541d26153@linux.microsoft.com>
+Date: Mon, 5 Aug 2024 07:51:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,108 +49,181 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>,
- Jingoo Han <jingoohan1@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: andersson@kernel.org, quic_vbadigan@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
- <5f65905c-f1e4-4f52-ba7c-10c1a4892e30@kernel.org>
- <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
- <58317fe2-fbea-400e-bd1d-8e64d1311010@kernel.org>
- <100e27d7-2714-89ca-4a98-fccaa5b07be3@quicinc.com>
- <c80ae784-c1f3-4046-9d86-d7e57bd93669@kernel.org>
- <7f48f71c-7f57-492c-47df-6aac1d3b794b@quicinc.com>
+Subject: Re: [PATCH v3 7/7] PCI: hv: Get vPCI MSI IRQ domain from DT
+To: Wei Liu <wei.liu@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, dave.hansen@linux.intel.com, decui@microsoft.com,
+ haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, mingo@redhat.com, rafael@kernel.org,
+ robh@kernel.org, tglx@linutronix.de, will@kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, ssengar@microsoft.com,
+ sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20240726225910.1912537-1-romank@linux.microsoft.com>
+ <20240726225910.1912537-8-romank@linux.microsoft.com>
+ <Zq2F-l2FWIrQ2Jt1@liuwe-devbox-debian-v2>
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <7f48f71c-7f57-492c-47df-6aac1d3b794b@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <Zq2F-l2FWIrQ2Jt1@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 05/08/2024 07:57, Krishna Chaitanya Chundru wrote:
+
+
+On 8/2/2024 6:20 PM, Wei Liu wrote:
+> On Fri, Jul 26, 2024 at 03:59:10PM -0700, Roman Kisel wrote:
+>> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
+>> arm64. It won't be able to do that in the VTL mode where only DeviceTree
+>> can be used.
 >>
-> Hi Krzysztof,
+>> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
+>> case, too.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c              | 23 +++++++-----
+>>   drivers/pci/controller/pci-hyperv.c | 55 +++++++++++++++++++++++++++--
+>>   include/linux/hyperv.h              |  2 ++
+>>   3 files changed, 69 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index 7eee7caff5f6..038bd9be64b7 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -45,7 +45,8 @@ struct vmbus_dynid {
+>>   	struct hv_vmbus_device_id id;
+>>   };
+>>   
+>> -static struct device  *hv_dev;
+>> +/* VMBus Root Device */
+>> +static struct device  *vmbus_root_device;
 > 
-> QPS615 has a 3 downstream ports and 1 upstream port as described below
-> diagram.
-> For this entire switch there are some supplies which we described in the
-> dt-binding (vdd18-supply, vdd09-supply etc) and one GPIO which controls
-> reset of the switch (reset-gpio). The switch hardware can configure the
-> individual ports DSP0, DSP1, DSP2, upstream port and also one integrated
-> ethernet endpoint which is connected to DSP2(I didn't mentioned in the
-> diagram) through I2C.
+> You're changing the name of the variable. That should preferably be done
+> in a separate patch. That's going to make this patch shorter and easier
+> to review.
 > 
-> The properties other than supplies,i2c client, reset gpio which
-> are added will be applicable for all the ports.
-> _______________________________________________________________
-> |   |i2c|                   QPS615       |Supplies||Resx gpio |
-> |   |___|              _________________ |________||__________|
-> |      ________________| Upstream port |_____________         |
-> |      |               |_______________|            |         |
-> |      |                       |                    |         |
-> |      |                       |                    |         |
-> |  ____|_____              ____|_____            ___|____     |
-> |  |DSP 0   |              | DSP 1  |            | DSP 2|     |
-> |  |________|              |________|            |______|     |
-> |_____________________________________________________________|
-> 
+Will fix in v4, thanks!
 
-I don't get why then properties should apply to main device node.
+>>   
+>>   static int hyperv_cpuhp_online;
+>>   
+>> @@ -80,9 +81,15 @@ static struct resource *fb_mmio;
+>>   static struct resource *hyperv_mmio;
+>>   static DEFINE_MUTEX(hyperv_mmio_lock);
+>>   
+>> +struct device *get_vmbus_root_device(void)
+>> +{
+>> +	return vmbus_root_device;
+>> +}
+>> +EXPORT_SYMBOL_GPL(get_vmbus_root_device);
+> 
+> I would like you to add "hv_" prefix to this exported symbol, or rename
+> it to "vmbus_get_root_device()".
+> 
+>> +
+>>   static int vmbus_exists(void)
+>>   {
+>> -	if (hv_dev == NULL)
+>> +	if (vmbus_root_device == NULL)
+>>   		return -ENODEV;
+>>   
+>>   	return 0;
+>> @@ -861,7 +868,7 @@ static int vmbus_dma_configure(struct device *child_device)
+>>   	 * On x86/x64 coherence is assumed and these calls have no effect.
+>>   	 */
+>>   	hv_setup_dma_ops(child_device,
+>> -		device_get_dma_attr(hv_dev) == DEV_DMA_COHERENT);
+>> +		device_get_dma_attr(vmbus_root_device) == DEV_DMA_COHERENT);
+>>   	return 0;
+>>   }
+>>   
+>> @@ -1892,7 +1899,7 @@ int vmbus_device_register(struct hv_device *child_device_obj)
+>>   		     &child_device_obj->channel->offermsg.offer.if_instance);
+>>   
+>>   	child_device_obj->device.bus = &hv_bus;
+>> -	child_device_obj->device.parent = hv_dev;
+>> +	child_device_obj->device.parent = vmbus_root_device;
+>>   	child_device_obj->device.release = vmbus_device_release;
+>>   
+>>   	child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
+>> @@ -2253,7 +2260,7 @@ static int vmbus_acpi_add(struct platform_device *pdev)
+>>   	struct acpi_device *ancestor;
+>>   	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+>>   
+>> -	hv_dev = &device->dev;
+>> +	vmbus_root_device = &device->dev;
+>>   
+>>   	/*
+>>   	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
+>> @@ -2342,7 +2349,7 @@ static int vmbus_device_add(struct platform_device *pdev)
+>>   	struct device_node *np = pdev->dev.of_node;
+>>   	int ret;
+>>   
+>> -	hv_dev = &pdev->dev;
+>> +	vmbus_root_device = &pdev->dev;
+>>   
+>>   	ret = of_range_parser_init(&parser, np);
+>>   	if (ret)
+>> @@ -2675,7 +2682,7 @@ static int __init hv_acpi_init(void)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	if (!hv_dev) {
+>> +	if (!vmbus_root_device) {
+>>   		ret = -ENODEV;
+>>   		goto cleanup;
+>>   	}
+>> @@ -2706,7 +2713,7 @@ static int __init hv_acpi_init(void)
+>>   
+>>   cleanup:
+>>   	platform_driver_unregister(&vmbus_platform_driver);
+>> -	hv_dev = NULL;
+>> +	vmbus_root_device = NULL;
+>>   	return ret;
+>>   }
+>>   
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index 5992280e8110..cdecefd1f9bd 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -50,6 +50,7 @@
+>>   #include <linux/irqdomain.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/sizes.h>
+>> +#include <linux/of_irq.h>
+>>   #include <asm/mshyperv.h>
+>>   
+>>   /*
+>> @@ -887,6 +888,35 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
+>>   	.activate = hv_pci_vec_irq_domain_activate,
+>>   };
+>>   
+>> +#ifdef CONFIG_OF
+>> +
+>> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
+>> +{
+>> +	struct device_node *parent;
+>> +	struct irq_domain *domain;
+>> +
+>> +	parent = of_irq_find_parent(to_platform_device(get_vmbus_root_device())->dev.of_node);
+>> +	domain = NULL;
+>> +	if (parent) {
+>> +		domain = irq_find_host(parent);
+>> +		of_node_put(parent);
+>> +	}
+>> +
+> 
+> I cannot really comment on the ARM side of things around how this system
+> is set up. I will leave that to someone who's more familiar with the
+> matter to review.
+> 
+> Thanks,
+> Wei.
 
-Best regards,
-Krzysztof
+-- 
+Thank you,
+Roman
 
 
