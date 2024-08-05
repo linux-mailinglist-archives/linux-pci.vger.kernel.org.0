@@ -1,87 +1,86 @@
-Return-Path: <linux-pci+bounces-11298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B306947BCE
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 15:27:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FB5C947BE5
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 15:36:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EAA11C21B7C
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 13:27:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C3191F21E6E
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 13:36:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A2415ADB4;
-	Mon,  5 Aug 2024 13:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46EEE2D030;
+	Mon,  5 Aug 2024 13:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n7tthhch"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H2FT/um3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA17B158DC0
-	for <linux-pci@vger.kernel.org>; Mon,  5 Aug 2024 13:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE64224B29
+	for <linux-pci@vger.kernel.org>; Mon,  5 Aug 2024 13:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722864422; cv=none; b=kTb7Tmh0pXVZIuemo74c40Au47hBtd2UFMv3Cr7OgwmnLgnCiqSltMwkywR9t5QIrNSR+urcxtKVxw+EjIjjUlNr5SESEDjKN5SeoPYxuXINExiqZhjthf6IfO9s3KRVx6keLYHjpHSBRROwsZngm2yXLNcB8zZIoy2HW2qr6is=
+	t=1722864964; cv=none; b=ErGz3eKMfPlhoawLIe3U/j0K4kEt0p9LLYoqOFCuK5niTJGuNTUGowSKlDIU4G/w1fZmXhdAnBroDl9aL2rYLGuuytDZ4NXZzpeimlR7T5MFcQgEVmw2DtM5r1bVboO4zfAjBkxh5idyp8Ljuh8qrc6aXyTHDuGpa1Y61KKd38o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722864422; c=relaxed/simple;
-	bh=IWUBYZKFodiMcv3oIFUFMpMXdjj6J3Hv+SilGiL2Ygg=;
+	s=arc-20240116; t=1722864964; c=relaxed/simple;
+	bh=deqBr+T59Bcyml2IfglYf2okf7dmsoF1EIG+G5SirCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucUIVUXsLZ5a0CTktPkGYvlEQLG4S7MdAk2gEtI050+EfHuUwVs6nPYldrFsAUQ9KkqS7DIzTaS/gbbSjtnWVfgNwpv5lReKqhEBEI/rb/ZltXTjOxLA9CEIwamC+bihF2HfnG6XIgUV5BHyTQMa5EIWY/v35/Bvbq4Htu7Gw+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n7tthhch; arc=none smtp.client-ip=209.85.210.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTDyBw3Ip1XCpA4yr9ajGxFcwXuqbeghU+FWV5tc5Yc0okLFAxqj7o4h66ruKWaDhmGxTDuX/0vXRq1BdAWG3f7lJ3t0pdN9vykcvxA02ezhVmNcItQn/bqA6Q7hXNOM8wF9VHeeyPgWjvucrd50mi92VnsGSuvTKyfipcg+PPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H2FT/um3; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70d150e8153so3696448b3a.0
-        for <linux-pci@vger.kernel.org>; Mon, 05 Aug 2024 06:27:00 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-70d2ae44790so7264474b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 05 Aug 2024 06:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722864420; x=1723469220; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1722864962; x=1723469762; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=boW2X/O80i4mmc0cFAkLsjKJVoJQSW+QaV7WBtj726I=;
-        b=n7tthhchVvUnUfrNlT5MWNvWD9a9Ed0nX5AtRD1c7uJjafJb82rb8I/YKTB4Zff9J5
-         O2HrCupK0e+6YKKnFQhING+s6Q6DlE75KfWHlNjfgnGHt5C6GVafLrG8p6N9roaXBDoo
-         FjWw6RgiXmrjwvkAQyCgidx+D7GnQzP+MeYCXjm+onTGLlqBf1GjnQmhiFeROWYFjE8W
-         vWqviQLlropDgxCw1Kejz/xnJC2DFCn6fNdZ4hLLXSBYxGq//3qtfwH3QYXpeFOuhAdo
-         6W/3GWcKqjFdqWlUdk9XE2/pEp9pIU3oUbkkIkac0+PGlBiPawU9RfKUAtmdohWLqOzC
-         HY9g==
+        bh=rN6Gcul3E2bfV10FS1hTUxZlfG84cp2ypd628Rjblcs=;
+        b=H2FT/um3RzxjN9oDN29Q26es14d1R4HfkoRcwr3m97UwuBalfJYRHebm42ho5YqqFf
+         /QgmSIjqECgy17ykSImfIqovk9kS5B+Xxxn9prmyt63qKfgFAneBi+Guig32qdQB+adc
+         LNhP2WPtmHwinW6bt3CBK2adE54e1UOdewj8EFo79pr005eTxCx3Wq+/+zzIgLPQOOAW
+         txTn8BDX2swRadagdMLG94KaFia4gcpr/Gp85/zMDdZ39oe39E7EKd90SduwPw/0XyDo
+         55vubkLYFWtZoaUCJsfUnz9SDqfXRcgTrI8P9mQDwVk4XTGDJxgxzzuOUZo9jQUq+/Dy
+         3A8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722864420; x=1723469220;
+        d=1e100.net; s=20230601; t=1722864962; x=1723469762;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=boW2X/O80i4mmc0cFAkLsjKJVoJQSW+QaV7WBtj726I=;
-        b=l0bNvU2PCYsWDoflVeVXxH30AvcPVLmlxKYhTrO2XCWgB78jhz5rUR5vJwxndpNIJd
-         5904Efd4ihQcxgfSUeH9PrkP2OqAtbBWosrrCPELRdRgZMNR9fHWX++CRUMGpIeWFmOL
-         7wH3tGVuT5o6Fi0jq8IQtwfgv8CiuQXJrGzs1dEaGwQsCwoXz7E8c/WnQsQqokRaYMLM
-         WGR2ijQifkyl2cmIG+RuZBZjAlLHkdWgQi971CufGfXNpnnrhR5rcV1esY1VxE5Q1jI/
-         JmTArSjXPNeZjPDI0HYGEn7gtqxLjU5h8HRiuw61AGz+qvOGeHmXMaI4q2kj+EDJ2Z6N
-         PYXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNK0q4I8l84GPfzy4kkaUDxjNFMGnAVgTH2zT6B434cdgXr8Gn+Szpfa0EPgLuqnzWQw84PlzaucxLzcXkROixuw9cqRNl3Udo
-X-Gm-Message-State: AOJu0YyQJ1I9PydFzlSV6YNDgJg1i8xRvuz5FWsOBSzpnK5yeux8yJEb
-	qhY6v4c2euyC7FISEn1QFo4tnRKe+fqtM0EbEk96YMz3KPDw9BvWvbwVRgbwcw==
-X-Google-Smtp-Source: AGHT+IF+PX69tcKP5upbCedTEm1/JTcYHUpIqoPq+4Lwl4bMcAcMu6iXishN/DPxfJX6IolIzg8qFQ==
-X-Received: by 2002:a05:6a20:12d1:b0:1c4:b2d8:43ed with SMTP id adf61e73a8af0-1c69a5f2f94mr17206193637.14.1722864420117;
-        Mon, 05 Aug 2024 06:27:00 -0700 (PDT)
+        bh=rN6Gcul3E2bfV10FS1hTUxZlfG84cp2ypd628Rjblcs=;
+        b=ikHGmwROcNbj9RP++qYMqFeWwpcKYHHVIN34vwSmoDjJx3BB9AyMHjSdg2nHgpKXwC
+         uUZ41K4ROj/LFUSW5V2iZfcw5PC4cFPeF6cuLULv8ulQW45uo8Yt4HHKuMmJTRJ82HFL
+         iPUYesJKH955I2FtaCsWXK6/Tcw24KNngkXNQTuUWdc2dX34zVI1n1UxRLVSpj4LyD6g
+         E1wIMAfS3572QfOk5AFYKxEEEZFQLrAqjdfDYrGX7WeED1+yXVk5iBweUXQ+fpgYjNqh
+         Bgfk20TZp4xRvy0x1W9uCInvv+uiqiheUoGvr9VF6eDv5ZdmkSvMaIdJ2r1mmlLVVu8F
+         YdiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX67htVjp8LZQecXfgsRdJVuso+I7yII43miFATbbHY1v++v16KhnDnWmFgV0JQr73AhLAVHp5DEjrpJ7sorA+qdK08IF3GHdU3
+X-Gm-Message-State: AOJu0Yz3c6X6bxlSHFmvwSXZdyFBapO51lDoybpVJFg/3JvqCJLGMjLv
+	Q1eyjPN0TYuoClCmWVf6ERyC4tCsx71PjjcRg4cHKcbCuG+uR5iSm9+4wi6/vg==
+X-Google-Smtp-Source: AGHT+IFoNCsEZXQAHNUKIBafzI7fNNpxmNX2K2ix9w1zj91Ywjl+lHWsxvc5LDXihwNMbH/uk3cmqg==
+X-Received: by 2002:a05:6a00:9143:b0:706:375e:220d with SMTP id d2e1a72fcca58-7106d04747cmr8068000b3a.30.1722864961872;
+        Mon, 05 Aug 2024 06:36:01 -0700 (PDT)
 Received: from thinkpad ([120.56.197.55])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed16cb3sm5576274b3a.179.2024.08.05.06.26.56
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed2d553sm5371438b3a.202.2024.08.05.06.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Aug 2024 06:26:59 -0700 (PDT)
-Date: Mon, 5 Aug 2024 18:56:53 +0530
+        Mon, 05 Aug 2024 06:36:00 -0700 (PDT)
+Date: Mon, 5 Aug 2024 19:05:55 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, lukas@wunner.de,
+	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
 	mika.westerberg@linux.intel.com, Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v5 2/4] PCI: Rename pci_bridge_d3_possible() to
- pci_bridge_d3_allowed()
-Message-ID: <20240805132653.GB7274@thinkpad>
-References: <20240802-pci-bridge-d3-v5-2-2426dd9e8e27@linaro.org>
- <202408031855.TEPJlfzl-lkp@intel.com>
+Subject: Re: [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all
+ Devicetree based platforms
+Message-ID: <20240805133555.GC7274@thinkpad>
+References: <20240802-pci-bridge-d3-v5-0-2426dd9e8e27@linaro.org>
+ <20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org>
+ <ZqyxS8spZ-ohsP3R@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,113 +90,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202408031855.TEPJlfzl-lkp@intel.com>
+In-Reply-To: <ZqyxS8spZ-ohsP3R@wunner.de>
 
-On Sat, Aug 03, 2024 at 07:03:56PM +0800, kernel test robot wrote:
-> Hi Manivannan,
+On Fri, Aug 02, 2024 at 12:13:31PM +0200, Lukas Wunner wrote:
+> On Fri, Aug 02, 2024 at 11:25:03AM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > Unlike ACPI based platforms, there are no known issues with D3Hot for the
+> > PCI bridges in the Devicetree based platforms. So let's allow the PCI
+> > bridges to go to D3Hot during runtime. It should be noted that the bridges
+> > need to be defined in Devicetree for this to work.
+> [...]
+> > +		if (state == PCI_D3hot && dev_of_node(&bridge->dev))
+> > +			return true;
 > 
-> kernel test robot noticed the following build errors:
+> For such a simple change which several parties are interested in,
+> I think it would be better to move it to the front of the series.
 > 
-> [auto build test ERROR on 705c1da8fa4816fb0159b5602fef1df5946a3ee2]
+> Patch [1/4] looks like an optimization (using a cached value)
+> which this patch doesn't depend on.  Patch [2/4] looks like a
+> change of bikeshed color which isn't strictly necessary for
+> this fourth patch either.  If you want to propose those changes,
+> fine, but by making this fourth patch depend on them, you risk
+> delaying its acceptance.  As an upstreaming strategy it's usually
+> smarter to move potentially controversial or unnecessary material
+> to the back of the series, or submit it separately if it can be
+> applied standalone.
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-portdrv-Make-use-of-pci_dev-bridge_d3-for-checking-the-D3-possibility/20240803-074434
-> base:   705c1da8fa4816fb0159b5602fef1df5946a3ee2
-> patch link:    https://lore.kernel.org/r/20240802-pci-bridge-d3-v5-2-2426dd9e8e27%40linaro.org
-> patch subject: [PATCH v5 2/4] PCI: Rename pci_bridge_d3_possible() to pci_bridge_d3_allowed()
-> config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20240803/202408031855.TEPJlfzl-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240803/202408031855.TEPJlfzl-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202408031855.TEPJlfzl-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/gpu/drm/radeon/radeon_atpx_handler.c: In function 'radeon_atpx_detect':
-> >> drivers/gpu/drm/radeon/radeon_atpx_handler.c:568:59: error: 'struct pci_dev' has no member named 'bridge_d3'
->      568 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
->          |                                                           ^~
->    drivers/gpu/drm/radeon/radeon_atpx_handler.c:578:59: error: 'struct pci_dev' has no member named 'bridge_d3'
->      578 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
->          |                                                           ^~
-> --
->    drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c: In function 'amdgpu_atpx_detect':
-> >> drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c:628:59: error: 'struct pci_dev' has no member named 'bridge_d3'
->      628 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
->          |                                                           ^~
->    drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c:638:59: error: 'struct pci_dev' has no member named 'bridge_d3'
->      638 |                 d3_supported |= parent_pdev && parent_pdev->bridge_d3;
->          |                                                           ^~
-> --
->    drivers/gpu/drm/nouveau/nouveau_acpi.c: In function 'nouveau_dsm_pci_probe':
-> >> drivers/gpu/drm/nouveau/nouveau_acpi.c:229:32: error: 'struct pci_dev' has no member named 'bridge_d3'
->      229 |                 if (parent_pdev->bridge_d3)
->          |                                ^~
 
-Ok, there seems to be a couple of drivers making use of pci_dev::bridge_d3 to
-check if D3Cold is supported or not. And this further strengthens the fact that
-PCI core should not rely on pci_bridge_d3_possible() as proposed in patch 1.
+Agree with you! Even after doing upstreaming for this much time, I tend to
+ignore this...
+
+> 
+> > Currently, D3Cold is not allowed since Vcc supply which is required for
+> > transitioning the device to D3Cold is not exposed on all Devicetree based
+> > platforms.
+> 
+> The PCI core cannot put devices into D3cold without help from the
+> platform.  Checking whether D3cold is possible (or allowed or
+> whatever) thus requires asking platform support code via
+> platform_pci_power_manageable(), platform_pci_choose_state() etc.
+> 
+> I think patch [3/4] is a little confusing because it creates
+> infrastructure to decide whether D3cold is supported (allowed?)
+> but we already have that in the platform_pci_*() functions.
+> So I'm not sure if patch [3/4] adds value.  I think generally
+> speaking if D3hot isn't possible (allowed?), D3cold is assumed
+> to not be possible either.
+> 
+
+Why? D3Hot is useful for runtime PM and if the platform doesn't want to do
+runtime PM, it can always skip D3Hot (not ideal though). But D3Cold is a power
+off state, and the platform may choose to use it for the case of system suspend.
+
+So I still feel that decoupling D3Hot and D3Cold is necessary.
 
 - Mani
-
-> 
-> 
-> vim +568 drivers/gpu/drm/radeon/radeon_atpx_handler.c
-> 
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  545  
-> 82e029357d4726 Alex Deucher 2012-08-16  546  /**
-> 82e029357d4726 Alex Deucher 2012-08-16  547   * radeon_atpx_detect - detect whether we have PX
-> 82e029357d4726 Alex Deucher 2012-08-16  548   *
-> 82e029357d4726 Alex Deucher 2012-08-16  549   * Check if we have a PX system (all asics).
-> 82e029357d4726 Alex Deucher 2012-08-16  550   * Returns true if we have a PX system, false if not.
-> 82e029357d4726 Alex Deucher 2012-08-16  551   */
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  552  static bool radeon_atpx_detect(void)
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  553  {
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  554  	char acpi_method_name[255] = { 0 };
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  555  	struct acpi_buffer buffer = {sizeof(acpi_method_name), acpi_method_name};
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  556  	struct pci_dev *pdev = NULL;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  557  	bool has_atpx = false;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  558  	int vga_count = 0;
-> bcfdd5d5105087 Alex Deucher 2016-11-28  559  	bool d3_supported = false;
-> bcfdd5d5105087 Alex Deucher 2016-11-28  560  	struct pci_dev *parent_pdev;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  561  
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  562  	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev)) != NULL) {
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  563  		vga_count++;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  564  
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  565  		has_atpx |= (radeon_atpx_pci_probe_handle(pdev) == true);
-> bcfdd5d5105087 Alex Deucher 2016-11-28  566  
-> bcfdd5d5105087 Alex Deucher 2016-11-28  567  		parent_pdev = pci_upstream_bridge(pdev);
-> bcfdd5d5105087 Alex Deucher 2016-11-28 @568  		d3_supported |= parent_pdev && parent_pdev->bridge_d3;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  569  	}
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  570  
-> e9a4099a59cc59 Alex Deucher 2014-04-15  571  	/* some newer PX laptops mark the dGPU as a non-VGA display device */
-> e9a4099a59cc59 Alex Deucher 2014-04-15  572  	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_OTHER << 8, pdev)) != NULL) {
-> e9a4099a59cc59 Alex Deucher 2014-04-15  573  		vga_count++;
-> e9a4099a59cc59 Alex Deucher 2014-04-15  574  
-> e9a4099a59cc59 Alex Deucher 2014-04-15  575  		has_atpx |= (radeon_atpx_pci_probe_handle(pdev) == true);
-> bcfdd5d5105087 Alex Deucher 2016-11-28  576  
-> bcfdd5d5105087 Alex Deucher 2016-11-28  577  		parent_pdev = pci_upstream_bridge(pdev);
-> bcfdd5d5105087 Alex Deucher 2016-11-28  578  		d3_supported |= parent_pdev && parent_pdev->bridge_d3;
-> e9a4099a59cc59 Alex Deucher 2014-04-15  579  	}
-> e9a4099a59cc59 Alex Deucher 2014-04-15  580  
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  581  	if (has_atpx && vga_count == 2) {
-> 492b49a2f21a7c Alex Deucher 2012-08-16  582  		acpi_get_name(radeon_atpx_priv.atpx.handle, ACPI_FULL_PATHNAME, &buffer);
-> 7ca85295d8cc28 Joe Perches  2017-02-28  583  		pr_info("vga_switcheroo: detected switching method %s handle\n",
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  584  			acpi_method_name);
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  585  		radeon_atpx_priv.atpx_detected = true;
-> bcfdd5d5105087 Alex Deucher 2016-11-28  586  		radeon_atpx_priv.bridge_pm_usable = d3_supported;
-> 69ee9742f945cd Alex Deucher 2016-07-27  587  		radeon_atpx_init();
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  588  		return true;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  589  	}
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  590  	return false;
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  591  }
-> 6a9ee8af344e3b Dave Airlie  2010-02-01  592  
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
 
 -- 
 மணிவண்ணன் சதாசிவம்
