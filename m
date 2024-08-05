@@ -1,237 +1,233 @@
-Return-Path: <linux-pci+bounces-11329-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11330-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A07B948188
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 20:25:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB5F794820A
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 21:05:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B30E1C21DF5
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:25:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E33D1F23428
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 19:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC782149DFC;
-	Mon,  5 Aug 2024 18:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6187716ABC6;
+	Mon,  5 Aug 2024 19:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YG8HAlZg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLd76+zy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9B1620;
-	Mon,  5 Aug 2024 18:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BCA2AD13;
+	Mon,  5 Aug 2024 19:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722882302; cv=none; b=nRher+V7dcUwqg86JW6WeUFrlrLNGYLLdsQtsKz3N8Fyx4bM9nW1cHarONAcgxIUM2Yy1pc2TsENOE+oaAJy8lbbc3t24Gsjy1F91NqX2D+9hVJ/1aSGBtOWDNhcfTJ5n9XqOoO0zwgAkBvDSbZcfqLbrGvvk79JztVdrBJCwO8=
+	t=1722884729; cv=none; b=gYQiL0Pj3RQOFcsA66PrR/SCufxJLVktIHLyNx/fq80bGunM5Au9FJ/Wq7RONqTgFELLEK/oVq8pjpZLT9Mmxmz+Fsrzm58aMTRz6ZXidMK4fr0RhTqyhiP1QcWdfkKOtebMzQZy6Qw825KWlHyiRkvneViF3iVK6lN3N9ZWbfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722882302; c=relaxed/simple;
-	bh=FXzVqenhzpdtHOcXatACMscpU64GG8a2FW3cWjhPU4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tecnlUwcsrcGjsjaE4QOMJWGqzPU88+U+w6TAHMHK61/9bwhAfhPYCW8HPHBAGlAfrkXk8/1JA+3P2l3392ygXvszpBL8gN+DBAxOFUw1DhxKalq57ymkWYI7yc5DMquAwyqNrUj95/61Uag3WBfFJtrJH3NPFQfpbzER4akb5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YG8HAlZg; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722882301; x=1754418301;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FXzVqenhzpdtHOcXatACMscpU64GG8a2FW3cWjhPU4c=;
-  b=YG8HAlZgxD/JjywpnJ7escHKts16euzYha0KbxseRvMQO7/6TZsp3Lmx
-   jIrOs6wNX4vjtGav+hD1Qg/5wr5Ihf0ndPhd1EnuvHezwMIrevkeBgulk
-   gnXUdbYYZ6n57p8aWmDcKPzWI34LllisMGAwL/nJP/s2YZ9iGCZvnAkiG
-   4I80dUf6rxbhiArUiQAOYEk1n26VRNRUcfr7viNa8DNH5eYCO0hiopj3X
-   KYa1uA8xBHsCMYB9D2+GERI16QOPhdBYViR2MP5nkheYn1ciXHI8CynjC
-   q8NLWJeNo8Ye+VTJEfpHD9o3VBzxM01LMS6+x0eNShgPGwYvcaHv03JlP
-   Q==;
-X-CSE-ConnectionGUID: Ds9TdhGpRVSc3IgUhVMDyw==
-X-CSE-MsgGUID: jtsJU53QT8iSvfzo0+SUnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="38319719"
-X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
-   d="scan'208";a="38319719"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 11:25:00 -0700
-X-CSE-ConnectionGUID: FsfLEgeoSMuZCBEOpjAveA==
-X-CSE-MsgGUID: 3n4634pQTdWQm1wruZFtJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,265,1716274800"; 
-   d="scan'208";a="60394620"
-Received: from unknown (HELO localhost) ([10.2.132.131])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 11:24:57 -0700
-Date: Mon, 5 Aug 2024 11:24:56 -0700
-From: Nirmal Patel <nirmal.patel@linux.intel.com>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>,
- David Box <david.e.box@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Kuppuswamy Sathyanarayanan
- <sathyanarayanan.kuppuswamy@linux.intel.com>, Mika Westerberg
- <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>,
- Jonathan Derrick <jonathan.derrick@linux.dev>, Paul M Stillwell Jr
- <paul.m.stillwell.jr@intel.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@endlessos.org
-Subject: Re: [PATCH v8 4/4] PCI/ASPM: Fix L1.2 parameters when enable link
- state
-Message-ID: <20240805112456.00007cad@linux.intel.com>
-In-Reply-To: <CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com>
-References: <20240719075200.10717-2-jhp@endlessos.org>
-	<20240719080255.10998-2-jhp@endlessos.org>
-	<CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-w64-mingw32)
+	s=arc-20240116; t=1722884729; c=relaxed/simple;
+	bh=cPCmldVPRgFeIxgMTiKS36c+Aixa8bS03HsjdsooKlI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=US5yQHHPuvPUIFcYOCjxMp76pt/PrFY76qXoIGJkJqL0WUeVoUYQPTb4fRZpLHq6KuJadTS3Uz1/jWj/s4XGsvmt967U8A1TOEpAIakz2DqLLbsl8S+K9NVlMKc2vU2eKAFkrBHk/uC13vc6uDonTI9Yi5Y8+bsLhCjSoAaA/Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLd76+zy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C95C4AF10;
+	Mon,  5 Aug 2024 19:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722884728;
+	bh=cPCmldVPRgFeIxgMTiKS36c+Aixa8bS03HsjdsooKlI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TLd76+zy5670BgKGblI39Qmaa62vVzSVaTi7TCqB5Ax3sAX92bbAkhp8AQ3TDlVA5
+	 +8Q9VQAYWUD7tb1RcfX7sCz1zlkXmF9oIEK07gXHtwYAwUwrF2gNuOpPEjz72WHYS/
+	 Dm6zGgWYeVHyexsd8saVdodiowLf9o/X3XJs3nyLSq2WgZMPj85g32k2KMEe++QJUa
+	 i4SGIOKAQiW1l+K1QbQOIatLKX1I0I+vKOAOocwzLBqTM7X3FcPSHv4GhJOXA+lJTG
+	 7APO4yabS0CR97bbmAQhrDSuvCvFPNVjooUQlVx1CBbDnSga5VGSyFI740XVmFgaSh
+	 dqnF2nr5Pg1JQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ef1c12ae23so121101011fa.0;
+        Mon, 05 Aug 2024 12:05:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVDiVQOlIjje0VAA0tnyN1J4+TB9m/MkofZcfR61ZOfnUC1ge+3TgfYItk18VbM14HmP54rA9z/KBO3d8niwdZDYqeVmtkj+F7z/9bzipInPkLQCBWPKRX4kcQ38Ep1AtqdxBB6M2bJfEXXPcrvqdiUnIupMdlwzi8HLZDQKj3O
+X-Gm-Message-State: AOJu0YxclMCV9XCATkELmLkIWqKRd6gIp97MqPcSDmLcousUa1aOLDQS
+	qLxhqoPXMJuucLq0p2dwYdLR9Kj8aHO0m6RBsMYfEjOTlK4OajYoV2eBIZh+ppr3Ba72sIjQtib
+	5258bnUFm6+LwEe3d6ir12a3QDQ==
+X-Google-Smtp-Source: AGHT+IET6gczs3GfflEbuJJZODloldeME4HEE+ZdKsBacwO7Aftaf7g/qzwvp1wwGmaiDZFabuyXcVsRNwH0G49eiLE=
+X-Received: by 2002:a2e:be2c:0:b0:2f1:8622:dc6b with SMTP id
+ 38308e7fff4ca-2f18622eb9dmr20197831fa.1.1722884727060; Mon, 05 Aug 2024
+ 12:05:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240724065048.285838-1-s-vadapalli@ti.com> <20240724161916.GG3349@thinkpad>
+ <20240725042001.GC2317@thinkpad> <93e864fb-cf52-4cc0-84a0-d689dd829afb@ti.com>
+ <20240726115609.GF2628@thinkpad> <CAL_JsqJ-mfU88E_Ri=BzH6nAFg405gkPPJTtjdp7UR2n96QMkw@mail.gmail.com>
+ <20240805164519.GF7274@thinkpad>
+In-Reply-To: <20240805164519.GF7274@thinkpad>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 5 Aug 2024 13:05:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKxF6yYTWbmU8SRhxemNMwErNViHuk05sLyFjFzssh=Eg@mail.gmail.com>
+Message-ID: <CAL_JsqKxF6yYTWbmU8SRhxemNMwErNViHuk05sLyFjFzssh=Eg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: j721e: Set .map_irq and .swizzle_irq to NULL
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kw@linux.com, vigneshr@ti.com, kishon@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	stable@vger.kernel.org, ahalaney@redhat.com, srk@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2 Aug 2024 16:24:18 +0800
-Jian-Hong Pan <jhp@endlessos.org> wrote:
+On Mon, Aug 5, 2024 at 10:45=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Mon, Aug 05, 2024 at 10:01:37AM -0600, Rob Herring wrote:
+> > On Fri, Jul 26, 2024 at 5:56=E2=80=AFAM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > On Thu, Jul 25, 2024 at 01:50:16PM +0530, Siddharth Vadapalli wrote:
+> > > > On Thu, Jul 25, 2024 at 09:50:01AM +0530, Manivannan Sadhasivam wro=
+te:
+> > > > > On Wed, Jul 24, 2024 at 09:49:21PM +0530, Manivannan Sadhasivam w=
+rote:
+> > > > > > On Wed, Jul 24, 2024 at 12:20:48PM +0530, Siddharth Vadapalli w=
+rote:
+> > > > > > > Since the configuration of Legacy Interrupts (INTx) is not su=
+pported, set
+> > > > > > > the .map_irq and .swizzle_irq callbacks to NULL. This fixes t=
+he error:
+> > > > > > >   of_irq_parse_pci: failed with rc=3D-22
+> > > > > > > due to the absence of Legacy Interrupts in the device-tree.
+> > > > > > >
+> > > > > >
+> > > > > > Do you really need to set 'swizzle_irq' to NULL? pci_assign_irq=
+() will bail out
+> > > > > > if 'map_irq' is set to NULL.
+> > > > > >
+> > > > >
+> > > > > Hold on. The errono of of_irq_parse_pci() is not -ENOENT. So the =
+INTx interrupts
+> > > > > are described in DT? Then why are they not supported?
+> > > >
+> > > > No, the INTx interrupts are not described in the DT. It is the pcie=
+port
+> > > > driver that is attempting to setup INTx via "of_irq_parse_and_map_p=
+ci()"
+> > > > which is the .map_irq callback. The sequence of execution leading t=
+o the
+> > > > error is as follows:
+> > > >
+> > > > pcie_port_probe_service()
+> > > >   pci_device_probe()
+> > > >     pci_assign_irq()
+> > > >       hbrg->map_irq
+> > > >         of_pciof_irq_parse_and_map_pci()
+> > > >         of_irq_parse_pci()
+> > > >           of_irq_parse_raw()
+> > > >             rc =3D -EINVAL
+> > > >             ...
+> > > >             [DEBUG] OF: of_irq_parse_raw: ipar=3D/bus@100000/interr=
+upt-controller@1800000, size=3D3
+> > > >             if (out_irq->args_count !=3D intsize)
+> > > >               goto fail
+> > > >                 return rc
+> > > >
+> > > > The call to of_irq_parse_raw() results in the Interrupt-Parent for =
+the
+> > > > PCIe node in the device-tree being found via of_irq_find_parent(). =
+The
+> > > > Interrupt-Parent for the PCIe node for MSI happens to be GIC_ITS:
+> > > > msi-map =3D <0x0 &gic_its 0x0 0x10000>;
+> > > > and the parent of GIC_ITS is:
+> > > > gic500: interrupt-controller@1800000
+> > > > which has the following:
+> > > > #interrupt-cells =3D <3>;
+> > > >
+> > > > The "size=3D3" portion of the DEBUG print above corresponds to the
+> > > > #interrupt-cells property above. Now, "out_irq->args_count" is set =
+to 1
+> > > > as __assumed__ by of_irq_parse_pci() and mentioned as a comment in =
+that
+> > > > function:
+> > > >       /*
+> > > >        * Ok, we don't, time to have fun. Let's start by building up=
+ an
+> > > >        * interrupt spec.  we assume #interrupt-cells is 1, which is=
+ standard
+> > > >        * for PCI. If you do different, then don't use that routine.
+> > > >        */
+> > > >
+> > > > In of_irq_parse_pci(), since the PCIe-Port driver doesn't have a
+> > > > device-tree node, the following doesn't apply:
+> > > >   dn =3D pci_device_to_OF_node(pdev);
+> > > > and we skip to the __assumption__ above and proceed as explained in=
+ the
+> > > > execution sequence above.
+> > > >
+> > > > If the device-tree nodes for the INTx interrupts were present, the
+> > > > "ipar" sequence to find the interrupt parent would be skipped and w=
+e
+> > > > wouldn't end up with the -22 (-EINVAL) error code.
+> > > >
+> > > > I hope this clarifies the relation between the -22 error code and t=
+he
+> > > > missing device-tree nodes for INTx.
+> > > >
+> > >
+> > > Thanks for explaining the logic. Still I think the logic is flawed. B=
+ecause the
+> > > parent (host bridge) doesn't have 'interrupt-map', which means INTx i=
+s not
+> > > supported. But parsing one level up to the GIC node and not returning=
+ -ENOENT
+> > > doesn't make sense to me.
+> > >
+> > > Rob, what is your opinion on this behavior?
+> >
+> > Not sure I get the question. How should we handle/determine no INTx? I
+> > suppose that's either based on the platform (as this patch did) or by
+>
+> Platform !=3D driver. Here the driver is making the call, but the platfor=
+m
+> capability should come from DT, no? I don't like the idea of disabling IN=
+Tx in
+> the driver because, the driver may support multiple SoCs and these capabi=
+lity
+> may differ between them. So the driver will end up just hardcoding the in=
+fo
+> which is already present in DT :/
 
-> Jian-Hong Pan <jhp@endlessos.org> =E6=96=BC 2024=E5=B9=B47=E6=9C=8819=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > Currently, when enable link's L1.2 features with
-> > __pci_enable_link_state(), it configs the link directly without
-> > ensuring related L1.2 parameters, such as T_POWER_ON,
-> > Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have been
-> > programmed.
-> >
-> > This leads the link's L1.2 between PCIe Root Port and child device
-> > gets wrong configs when a caller tries to enabled it.
-> >
-> > Here is a failed example on ASUS B1400CEAE with enabled VMD:
-> >
-> > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
-> > PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
-> >     Capabilities: [200 v1] L1 PM Substates
-> >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> > L1_PM_Substates+ PortCommonModeRestoreTime=3D45us
-> > PortTPowerOnTime=3D50us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
-> > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
-> >         L1SubCtl2: T_PwrOn=3D50us
-> >
-> > 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
-> > SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
-> >     Capabilities: [900 v1] L1 PM Substates
-> >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> > L1_PM_Substates+ PortCommonModeRestoreTime=3D32us
-> > PortTPowerOnTime=3D10us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
-> > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
-> >         L1SubCtl2: T_PwrOn=3D10us
-> >
-> > According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on
-> > the PCIe Root Port and the child NVMe, they should be programmed
-> > with the same LTR1.2_Threshold value. However, they have different
-> > values in this case.
-> >
-> > Invoke aspm_calc_l12_info() to program the L1.2 parameters properly
-> > before enable L1.2 bits of L1 PM Substates Control Register in
-> > __pci_enable_link_state().
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
-> > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> > ---
-> > v2:
-> > - Prepare the PCIe LTR parameters before enable L1 Substates
-> >
-> > v3:
-> > - Only enable supported features for the L1 Substates part
-> >
-> > v4:
-> > - Focus on fixing L1.2 parameters, instead of re-initializing whole
-> > L1SS
-> >
-> > v5:
-> > - Fix typo and commit message
-> > - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
-> >   aspm_get_l1ss_cap()"
-> >
-> > v6:
-> > - Skipped
-> >
-> > v7:
-> > - Pick back and rebase on the new version kernel
-> > - Drop the link state flag check. And, always config link state's
-> > timing parameters
-> >
-> > v8:
-> > - Because pcie_aspm_get_link() might return the link as NULL, move
-> >   getting the link's parent and child devices after check the link
-> > is not NULL. This avoids NULL memory access.
-> >
-> >  drivers/pci/pcie/aspm.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 5db1044c9895..55ff1d26fcea 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -1411,9 +1411,15 @@ EXPORT_SYMBOL(pci_disable_link_state);
-> >  static int __pci_enable_link_state(struct pci_dev *pdev, int
-> > state, bool locked) {
-> >         struct pcie_link_state *link =3D pcie_aspm_get_link(pdev);
-> > +       u32 parent_l1ss_cap, child_l1ss_cap;
-> > +       struct pci_dev *parent, *child;
-> >
-> >         if (!link)
-> >                 return -EINVAL;
-> > +
-> > +       parent =3D link->pdev;
-> > +       child =3D link->downstream;
-> > +
-> >         /*
-> >          * A driver requested that ASPM be enabled on this device,
-> > but
-> >          * if we don't have permission to manage ASPM (e.g., on ACPI
-> > @@ -1428,6 +1434,15 @@ static int __pci_enable_link_state(struct
-> > pci_dev *pdev, int state, bool locked) if (!locked)
-> >                 down_read(&pci_bus_sem);
-> >         mutex_lock(&aspm_lock);
-> > +       /*
-> > +        * Ensure L1.2 parameters: Common_Mode_Restore_Times,
-> > T_POWER_ON and
-> > +        * LTR_L1.2_THRESHOLD are programmed properly before enable
-> > bits for
-> > +        * L1.2, per PCIe r6.0, sec 5.5.4.
-> > +        */
-> > +       parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
-> > +       child_l1ss_cap =3D aspm_get_l1ss_cap(child);
-> > +       aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
-> > +
-> >         link->aspm_default =3D pci_calc_aspm_enable_mask(state);
-> >         pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> >
-> > --
-> > 2.45.2
-> > =20
->=20
-> Hi Nirmal and Paul,
->=20
-> It will be great to have your review here.
->=20
-> I had tried to "set the threshold value in vmd_pm_enable_quirk()"
-> directly as Paul said [1].  However, it still needs to get the PCIe
-> link from the PCIe device to set the threshold value.
-> And, pci_enable_link_state_locked() gets the link. Then, it will be
-> great to calculate and programm L1 sub-states' parameters properly
-> before configuring the link's ASPM there.
->=20
-> [1]:
-> https://lore.kernel.org/linux-kernel/20240624081108.10143-2-jhp@endlessos=
-.org/T/#mc467498213fe1a6116985c04d714dae378976124
->=20
-> Jian-Hong Pan
+Let me rephrase it to "a decision made within the driver" (vs.
+globally decided). That could be hardcoded (for now) or as match data
+based on compatible.
 
-Hi Jian-Hong Pan,
+> Moreover, the issue I'm seeing is, even if the platform doesn't support I=
+NTx (as
+> described by DT in this case), of_irq_parse_pci() doesn't report correct
+> error/log. So of_irq_parse_pci() definitely needs a fixup.
 
-I am not an LTR, ASPM expert, but this part looks good to me.
+Possibly. What's correct here?
 
-Can you explain why you decided to move pci_enable_link_state_locked()
-call down to out_state_change in vmd.c? Will it cause any issue if=20
-pci_find_ext_capability returns 0?
+There was some rework in 6.11 of the interrupt parsing. So it is
+possible something changed here. There's also this issue still
+pending:
 
-Thanks
--nirmal
+https://lore.kernel.org/all/2046da39e53a8bbca5166e04dfe56bd5.squirrel@_/
+
+> > or by
+> > failing to parse the interrupts. The interrupt parsing code is pretty
+> > tricky as it has to deal with some ancient DTs, so I'm a little
+> > hesitant to rely on that failing. Certainly I wouldn't rely on a
+> > specific errno value. The downside to doing that is also if someone
+> > wants interrupts, but has an error in their DT, then all we can do is
+> > print 'INTx not supported' or something. So we couldn't fail probe as
+> > the common code wouldn't be able to distinguish. I suppose we could
+> > just check for 'interrupt-map' present in the host bridge node or not.
+>
+> Yeah, as simple as that. But I don't know if that is globally applicable =
+to
+> all platforms.
+
+There's a lot of history and the interrupt parsing is fragile due to
+all the "interesting" DT interrupt hierarchies. So while I think it
+would work, that's just a guess. I'm open to trying it and seeing.
+
+Rob
 
