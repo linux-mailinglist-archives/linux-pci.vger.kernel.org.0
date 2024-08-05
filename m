@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-11265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8779894748B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 07:12:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD8DB947491
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 07:14:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A997F1C20C27
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 05:12:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 376111F2133A
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 05:14:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB56313D52A;
-	Mon,  5 Aug 2024 05:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52BCC13D52F;
+	Mon,  5 Aug 2024 05:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ARC0SswW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQrSf6XB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812F813AA2A;
-	Mon,  5 Aug 2024 05:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C0213AA2A;
+	Mon,  5 Aug 2024 05:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722834761; cv=none; b=bYWEi4L3EDI7rgvWrQsdGIMnQBPaq9omgJKySWIHlsTA8zSfTMNhqOhZRp3vyjiCMaTWNfp2T4OITTtr2HFkF7qQ+pDCycO65zYjZSucezBZzrzvdutVu/cskAGoyMMru7mmS+XcZJ88uWOit5hE6i6OewY++VoSbwvr6AetrFE=
+	t=1722834889; cv=none; b=uLlmpG6jfI6VqA5XkPS1ics/h7sOzK1qlkaFm+V/1R3cVUvB2rCu2sXyaz3gQAJkofWbWLTUdFCtq8exTAdX3wuIHBHiVSwpFeuyjWAyIj4/Y74XqdnefX2F5qbMivFGTjZoNmJQQ4Cr4XAWUYV36GTVaV0BvE1Bt2UVV/ahSf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722834761; c=relaxed/simple;
-	bh=IhH5nuPyDwoZsaaFTPa3BZyc0epnKqTW7vxZAe5GUh8=;
+	s=arc-20240116; t=1722834889; c=relaxed/simple;
+	bh=0G4aoTe1JXhYoa0T34uGuP6CCWlSlEjLdv6MWJ0CY8E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZG+kPUihvPXeKLxNSG97zOViEqCBUtiMXXHKY4/eBZyAxTtKEEDo+KqA5fMQpsT4JFQaHgfZLEKSwTvs4xfiz2b2ywD/w2dcroroIqgjkTi7bfTcUYWbeifhbwkHfIJXpCywsDvLqto1CsFOBrUNU9Z90z3hSSfUVmIFPVCoTSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ARC0SswW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE20AC32782;
-	Mon,  5 Aug 2024 05:12:35 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=lGil/7o5GrkteWPu3g1mAItGI2xEA7UGOQVRIA0EMtt6SQlo4YxZSnIwZWkwC8pSgyTR28lDMjaaAE2CczmUF5Gugn7V1c6Djq8XEJ9kK55/ZSDfNpCbDhUc+ZVy/YpqDCwRVcxYFzisKFdSlHBKqPKk7BJwxzHclQhKw4iYCns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQrSf6XB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB05C32782;
+	Mon,  5 Aug 2024 05:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722834761;
-	bh=IhH5nuPyDwoZsaaFTPa3BZyc0epnKqTW7vxZAe5GUh8=;
+	s=k20201202; t=1722834888;
+	bh=0G4aoTe1JXhYoa0T34uGuP6CCWlSlEjLdv6MWJ0CY8E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ARC0SswWMQU4M69RDdXtZ0i8+aMEukE9b5zZ+tTdf6T3QVBd+72SuPGDJepiR+cl+
-	 fJlT7PJ7wuMwIxbEjCG6TtRQnSjHXYUER9a3shXRIdKKYbyS78U4I/b/f2Gepvkq3/
-	 YJiyz2ap1RwmdMKbVzCI5IFhoDec8Pz/ysA97GYJI2JPYAgX6qdWZsIqhyBD2LsyxK
-	 v80sywhvFT3fstmn6qlNe31SN8pnQn9zabQfjer3q8wzD37eECxEK1yrPhLc6ZQEmE
-	 lUFp1FLkrxj5Limuk8NzIH3lbg0NWlVN6AereeThYRLgHhBBYFxrFHaGku1wycZCuK
-	 MdRmLG042myjw==
-Message-ID: <132a0367-596b-4ff2-b35c-e81e77f14340@kernel.org>
-Date: Mon, 5 Aug 2024 07:12:34 +0200
+	b=FQrSf6XBmf5f1hJDuLLdOIXyxNCjRttKZfAHDZoaXFTsTIS1fLQE8ZTgKanJvFVTc
+	 UF1AmioM8qRHn6rx7Tvr6s3at1rX34W7ciqQ1NbLEuLP68ChbNnDkQSCpqP89nPqL/
+	 Z2iPYv9m1WrOTNS82jaOu84sYneV1YJXUv3Gfk533/FLH+tQYvrDBQM9w0o8OQxEDY
+	 1zAS9XjzN+T1MfUiTp0IaGNFTfALkKiMsmMuGrUl84BBEnEBAM+KrADVs8RaX6b6RD
+	 bAdwSQHfdhJzzRIr1r1sDt+yKiCZ7HmT5k6AMDUuWHjZxV+UAam5PbldGMp/wn36kx
+	 5dvWULeXF9UTA==
+Message-ID: <58317fe2-fbea-400e-bd1d-8e64d1311010@kernel.org>
+Date: Mon, 5 Aug 2024 07:14:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,8 +66,8 @@ Cc: andersson@kernel.org, quic_vbadigan@quicinc.com,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
  <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
- <0cdaa0b2-ae50-40a1-abbb-7a6702d54ad5@kernel.org>
- <027dc9f7-6e0d-e331-8f90-92a3d56350ab@quicinc.com>
+ <5f65905c-f1e4-4f52-ba7c-10c1a4892e30@kernel.org>
+ <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -113,90 +113,77 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <027dc9f7-6e0d-e331-8f90-92a3d56350ab@quicinc.com>
+In-Reply-To: <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 05/08/2024 06:02, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 8/4/2024 2:26 PM, Krzysztof Kozlowski wrote:
->> On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
->>> Add binding describing the Qualcomm PCIe switch, QPS615,
->>> which provides Ethernet MAC integrated to the 3rd downstream port
->>> and two downstream PCIe ports.
->>>
->>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>> ---
->>>   .../devicetree/bindings/pci/qcom,qps615.yaml       | 191 +++++++++++++++++++++
->>>   1 file changed, 191 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
->>> new file mode 100644
->>> index 000000000000..ea0c953ee56f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
->>> @@ -0,0 +1,191 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pci/qcom,qps615.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Qualcomm QPS615 PCIe switch
->>> +
->>> +maintainers:
->>> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>> +
->>> +description: |
->>> +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
->>> +  ports. The 3rd downstream port has integrated endpoint device of
->>> +  Ethernet MAC. Other two downstream ports are supposed to connect
->>> +  to external device.
->>> +
->>> +  The QPS615 PCIe switch can be configured through I2C interface before
->>> +  PCIe link is established to change FTS, ASPM related entry delays,
->>> +  tx amplitude etc for better power efficiency and functionality.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - pci1179,0623
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  qcom,qps615-controller:
->>
->> and now I see that you totally ignored comments. Repeating the same over
->> and over is a waste of time.
->>
->> <form letter>
->> This is a friendly reminder during the review process.
->>
->> It seems my or other reviewer's previous comments were not fully
->> addressed. Maybe the feedback got lost between the quotes, maybe you
->> just forgot to apply it. Please go back to the previous discussion and
->> either implement all requested changes or keep discussing them.
->>
->> Thank you.
->> </form letter>
->>
->>
->> Best regards,
->> Krzysztof
->>
-> Hi Krzysztof,
-> 
-> In patch1 we are trying to add reference of i2c-adapter, you suggested
-> to use i2c-bus for that. we got comments on the driver code not to use
-> adapter and instead use i2c client reference. I felt i2c-bus is not
-> ideal to represent i2c client device so used this name.
+On 05/08/2024 06:11, Krishna Chaitanya Chundru wrote:
 
-You did not respond to comment of using i2c-bus, just silently decided
-to implement other property.
 
-Anyway, why i2c-bus is not suitable here? I am quite surprised...
+>>> +
+>>> +  qcom,nfts:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint8
+>>> +    description:
+>>> +      Fast Training Sequence (FTS) is the mechanism that
+>>> +      is used for bit and Symbol lock.
+>>
+>> What are the values? Why this is uint8?
+>>
+> These represents number of fast training sequence and doesn't have
+> any units and the maximum value for this is 0xFF only so we used
+> uint8.
+>> You described the desired Linux feature or behavior, not the actual
+>> hardware. The bindings are about the latter, so instead you need to
+>> rephrase the property and its description to match actual hardware
+>> capabilities/features/configuration etc.
+> ack.
+>>
+>>> +
+>>> +allOf:
+>>> +  - $ref: /schemas/pci/pci-bus-common.yaml#
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: pci1179,0623
+>>> +      required:
+>>> +        - compatible
+>>
+>> Why do you have entire if? You do not have multiple variants, drop.
+>>
+> The child nodes also referencing the qcom,qps615.yaml# node, I tried
+> to use this way to say "the below properties are for the required for
+> parent and optional for child".
+
+I don't understand how child device can be exactly the same as parent
+device. How does it look in terms of hardware? Pins and supplies?
+
+>>> +    then:
+>>> +      required:
+>>> +        - vdd18-supply
+>>> +        - vdd09-supply
+>>> +        - vddc-supply
+>>> +        - vddio1-supply
+>>> +        - vddio2-supply
+>>> +        - vddio18-supply
+>>> +        - qcom,qps615-controller
+>>> +        - reset-gpios
+>>> +
+>>> +patternProperties:
+>>> +  "@1?[0-9a-f](,[0-7])?$":
+>>> +    type: object
+>>> +    $ref: qcom,qps615.yaml#
+>>> +    additionalProperties: true
+>>
+>> Nope, drop pattern Properties or explain what is this.
+>>
+> the child nodes represent the downstream ports of the PCIe
+> switch which wants to use same properties that is why
+> I tried to use this pattern properties.
+
+Downstream port is not the same as device. Why downstream port has the
+same supplies? To which pins are they connected?
+
 
 
 
