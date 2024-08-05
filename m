@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-11262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEF99947450
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 06:19:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3FA6947453
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 06:19:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3A9E8B207E7
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 04:19:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6ADAF280A8E
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 04:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD2313D52B;
-	Mon,  5 Aug 2024 04:19:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95CFB13D52B;
+	Mon,  5 Aug 2024 04:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="orhs7ijc"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QpHXvxyP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F89182B9;
-	Mon,  5 Aug 2024 04:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EDD182B9;
+	Mon,  5 Aug 2024 04:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722831545; cv=none; b=Y1AqaRD+/dAviNFsptVG+QcGfLLBt0DtmK+7KEf9/2lJDrDccVpgOzfj7w4zSvLKkkOzf3jMVNlslyHfWcdTiUrBue8E24EmYWdKEqEbgnHP7blsMFdh5/BAsvykbGDgLfcwZjyuBLQr8bE/6d/NgED9Upg2nHkenATB7tJd9cw=
+	t=1722831587; cv=none; b=FpTkMgXhyWYF7vWwsJ01kxsbDdmYM9bYHzmZXiRLyWH8biQsZbRiwpGnlKTLjryKLYZJan4gndsC5l2D802RsNKfg8oyBOXqrfTMLtLTdhNS19jkeH/bJngqteJeWGrIxXr3cvMBKLjntCWY13V0xOiOEwSpu9FxoMABYkzoKLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722831545; c=relaxed/simple;
-	bh=TgjjUgnCspHV1FYRZGIAeX9BKSTM9zTuylKOSGViULw=;
+	s=arc-20240116; t=1722831587; c=relaxed/simple;
+	bh=7cOMV7VQBPqLJQvT+NALykIWPnus53f8gwiGWxc2Gjs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qb2d/MDYMCkcOY9Qc8gSNw3DRnrwTK2ecHdRICuOFGSndDqFw2jTzU8AmAIYv48sabGPmlLF2r9KgEW/65yTyKBU2Ctw3ABP/u9mvaLoEzSeBDyFYilVCHRvii/Yqtmdo+0A/Nj0b/a0ncIE6oeQo5TMYn1CVUDLpaAUCgGj+gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=orhs7ijc; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=Eb16GFx2M5jrm8Q5Cs+SV9A8vH6eySUqG29+CS+A4NxUceDcWDC1etaZAGUYStdg4CJ5omxafiqfD56fds5eyNDLSpKIb38dewJns46J1wH7huhjEnw2vO5sxRD5pQqGM3c98Kzsa+gEi99NWCBKvmrQM5xBxjkd2jWgIakOqRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QpHXvxyP; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4752VlfZ010967;
-	Mon, 5 Aug 2024 04:18:54 GMT
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4752VXXJ000440;
+	Mon, 5 Aug 2024 04:19:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8Q9xTk6LEYjMXAvpWV/OkfScyXPzQP7rfg7q5H+rjFU=; b=orhs7ijcwu6afQoV
-	Rz9QgUvQmoR76W2tYv1e6mC74jxN+ba8+kBlTqDsSl50eVY9EtaLz65uTH9XFEFD
-	I5KZXW4tfIJlZ6v1e1FZZmiEv1gqOHZsj7ivS9XKQe7CvNJeDfbyYevUULP5n4tD
-	6YLRXKiQa71++U+2+YhYtvyw0Hi8sVFLN4IaaSnylEaFO8S8AzcHStfRLL+cldO4
-	lcEgbl30AKdKv0MO2PJuzWQRfInIhPQXVGJQ9qDi7BLZJeWWlBsh167QlKR7g4XD
-	TqatqPecQUsilk0mYjOw+7UzqKJrrO3FwpmhyAO29t4m8S8YKIe2Zl9/rS8RuMhz
-	d92MJg==
+	HVLvPMw0luzApYNvqT+YqoGGGGnmBR1sIdmWnrRHtzY=; b=QpHXvxyPQvcrEXew
+	v0Bpec7j+k4aNkiFqhd4VV8BC//Bb7XQ+YdUTSHEBuELy/SoA2Xi0K+EBGJLflkg
+	qYVuHFEEQQYg7+JmoR/06sxx3S2/okNjlfRISERIUkqQ81ngOaQXy7kWD+l3uscg
+	+PYcTbxL0iE1GX4sRr9UKF7e0u01fSp/VA5Tng06yCLq19ddVLM8BvzqsaJPS5oh
+	ff2hDNOK9qVXxKZozyIyfg6MCguhE2cd8tnyGoEpWgChVIavZOPY9Q8BIr2Hv0Ps
+	XNTP7EJr+Y3XWm8V3D9gOQ9iPuc/3vPEsY8YTaucLbmWDZhhiM+W9KmMkYtgBrff
+	YQdfMQ==
 Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40sc4y2sxh-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40sbvgatw6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Aug 2024 04:18:54 +0000 (GMT)
+	Mon, 05 Aug 2024 04:19:37 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4754IrOd029096
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4754JZZT030319
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 Aug 2024 04:18:53 GMT
+	Mon, 5 Aug 2024 04:19:35 GMT
 Received: from [10.216.50.161] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 4 Aug 2024
- 21:18:47 -0700
-Message-ID: <a1981c4d-a81e-ecb3-bb81-b77d9c14789a@quicinc.com>
-Date: Mon, 5 Aug 2024 09:48:43 +0530
+ 21:19:30 -0700
+Message-ID: <efe6862e-21bd-cd11-1760-d97a67ec88b2@quicinc.com>
+Date: Mon, 5 Aug 2024 09:49:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,51 +69,52 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
 Subject: Re: [PATCH v2 0/8] PCI: Enable Power and configure the QPS615 PCIe
  switch
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
         <cros-qcom-dts-watchers@chromium.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>
-CC: <andersson@kernel.org>, <quic_vbadigan@quicinc.com>,
+        "Bartosz
+ Golaszewski" <brgl@bgdev.pl>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "Manivannan
+ Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+        <andersson@kernel.org>, <quic_vbadigan@quicinc.com>,
         <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
 References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <fcfe1ce3-6835-44e8-807d-290a641813ed@kernel.org>
+ <hq4ptnfy4bxc3javkjuos7tbncrjw2qa3znokx3ocu75ei5fhu@bgwryygnbcq2>
 From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <fcfe1ce3-6835-44e8-807d-290a641813ed@kernel.org>
+In-Reply-To: <hq4ptnfy4bxc3javkjuos7tbncrjw2qa3znokx3ocu75ei5fhu@bgwryygnbcq2>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: oHuJxT852NLvsL6W459IrhcSBVWerlcG
-X-Proofpoint-GUID: oHuJxT852NLvsL6W459IrhcSBVWerlcG
+X-Proofpoint-GUID: h3OpC0CcGsnXqB-x0-vnNPqzR-pmoFIh
+X-Proofpoint-ORIG-GUID: h3OpC0CcGsnXqB-x0-vnNPqzR-pmoFIh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-04_14,2024-08-02_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 mlxlogscore=763 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=871 adultscore=0 malwarescore=0 clxscore=1015
+ phishscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2407110000 definitions=main-2408050028
 
 
 
-On 8/4/2024 2:27 PM, Krzysztof Kozlowski wrote:
-> On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
+On 8/3/2024 4:26 PM, Dmitry Baryshkov wrote:
+> On Sat, Aug 03, 2024 at 08:52:46AM GMT, Krishna chaitanya chundru wrote:
 >> QPS615 is the PCIe switch which has one upstream and three downstream
 >> ports. One of the downstream ports is used as endpoint device of Ethernet
 >> MAC. Other two downstream ports are supposed to connect to external
@@ -153,15 +154,18 @@ On 8/4/2024 2:27 PM, Krzysztof Kozlowski wrote:
 >> Changes in V1:
 >> - Fix the code as per the comments given.
 > 
-> You did not implement the comments so such changelog is rather a joke.
-> Respond to each comment from v1 and acknowledge it.
+> This is not a proper changelog entry. It doesn't allow reviewers to
+> understand what actually happened. Could you please list your actual
+> changes in a reply and also include them in a changelog if there is a
+> need for v3.
 > 
-> Then write detailed changelog.
-> 
-> Best regards,
-> Krzysztof
-> 
-I will write a detailed changelog from v3 onwards spare me for this time.
-
+ack
 - Krishna Chaitanya.
+>> - Removed D3cold D0 sequence in suspend resume for now as it needs
+>>    seperate discussion.
+>> - change to dt approach for configuring the switch instead of request_firmware() approach
+>> - Link to v1: https://lore.kernel.org/linux-pci/20240626-qps615-v1-4-2ade7bd91e02@quicinc.com/T/
+>> ---
+>>
+> 
 
