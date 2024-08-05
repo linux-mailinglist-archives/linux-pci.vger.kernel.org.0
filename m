@@ -1,47 +1,48 @@
-Return-Path: <linux-pci+bounces-11325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF142947F9A
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:50:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 041DF947FC4
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 18:58:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E20B41C2180B
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:50:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85E241F217F3
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 16:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B4F02C684;
-	Mon,  5 Aug 2024 16:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C0A715C15C;
+	Mon,  5 Aug 2024 16:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b0cIbmyY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKiWMcy6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC3BB4CE13;
-	Mon,  5 Aug 2024 16:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD012AD13;
+	Mon,  5 Aug 2024 16:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722876639; cv=none; b=Ywh3b6k0E+HI0J0Ok10Dh/wYSLmVmxNVp8lqGcAc/5LBOMqkG841sMRxo6k3AZpFqqNZ6oIl3lbl/NmFlm5pLB5Whm3pHmZolaGnWRFBmIgXM+2mMaYYj2l3jFHkArY81+DF9np2C2E/CKxsbXzMl51sMv1mX7dM1/we/bf9r/Q=
+	t=1722877107; cv=none; b=mD4YJNUfkAiqtZIeHq3Xpv2sw4TNX/tbXQTMbs/DmQmc0T7p+GSFlTX2aQ+R+WD0wjMC2QovKyODP0uoAuLfHE/4TmRRYecQ0xtsEJGd9kQ0Lc5b6sWpEiML8MgjeJ5cHTaM47uQDFv6q7iVXmzhmOGcn0lN8FjEZaeCWH8kaQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722876639; c=relaxed/simple;
-	bh=zRPdf96RBAF77AeX5XbkzCPA6438Vbgd/UgiRhvChXI=;
+	s=arc-20240116; t=1722877107; c=relaxed/simple;
+	bh=e2Si5sut7DmttSWgVcMhrEheTHiHZQD91pGP51D3a5M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sMvJK4sKiOxYz5T3NTzvs3BZOlRsPUYmwPZKZNyOitAX1VaRmJlDwF6cRhFTxddNqGU6n3Ft8i7dQ/1FDy9+csxVxAzd9P9awjtqPqlWZnRKpJaGrrs8O35PCacvcniD8/wkuG4wwRr9o1HaJrdhTosMRUOg8IL9Q4RKW5r3As4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=b0cIbmyY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.186.190] (unknown [131.107.159.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id EC00D20B7165;
-	Mon,  5 Aug 2024 09:50:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EC00D20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722876637;
-	bh=uAp9WuXRmAP/u/QupU9OvjGgNMB7svwXsN4K6Bamr5g=;
+	 In-Reply-To:Content-Type; b=PZIenh0+Pq865vQ3N51I3wF5aLh20+HiWPcycBQ6vkovc0TuvcDRRm8Fl1h5OhZ8ste3z0BQAvLITdYSb77vVsLclqPZxzD4EqupzmsySsVFaNgj9T4IKNDpAazKE+uK42NkIXwZ40pNSLRiy7lKWXLtoSJlcnWWFwbhdpjl0Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKiWMcy6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5CBC32782;
+	Mon,  5 Aug 2024 16:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722877105;
+	bh=e2Si5sut7DmttSWgVcMhrEheTHiHZQD91pGP51D3a5M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b0cIbmyYqLAbSQcTHEEnL/mJJbPs0t8mESwi2BWGJqjTwzz85N2o7ggprQxIXI9z+
-	 zMehST3SDqRrpNzNyU9uHn3eKdabToQKGZTnR567zDf4rYWZ29fYZz9AP2T8QyKGhn
-	 Ms0vQzUStoYvXZexLFCTg1DWpDPXxVV/imJyw2CQ=
-Message-ID: <3398a7cb-b366-49e1-ae19-155490b4e42e@linux.microsoft.com>
-Date: Mon, 5 Aug 2024 09:50:37 -0700
+	b=AKiWMcy64InhcLTQ24/G3T0WvujPUfjZH+Q5FuI2TV7wPqhiYTL9nl1rC0j+g187x
+	 lKp6cu542YnVerTt7Ak1cgl6wyZXUYe6wJDy25W9fkhdcVF48o+JFSA0BcPrJ27cM1
+	 UxhzJ4R2yyg62FQ0oFXkCtzA7jiWlztOrBOZBCyjg1DlRG10OFUu/3XvSws1+jUjlq
+	 1G89ndf1U0BUmXbYKWex3pTbNGEJMPtT3yp/JlOd2M2GaKJQG1ybX6YQffJ/aAhBFC
+	 Gb/9qpDT2fEccUAQXAR/q5e/2Rmmx0WJf4UNDHNy5tEN3l1DgrOp15m/RSWLnzau3j
+	 uhp+SzvQtn9Ag==
+Message-ID: <76472034-82ed-4002-a21d-bd84a054d8dd@kernel.org>
+Date: Mon, 5 Aug 2024 18:58:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,189 +50,107 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] arm64: hyperv: Use SMC to detect hypervisor
- presence
-To: Michael Kelley <mhklinux@outlook.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "kw@linux.com" <kw@linux.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "rafael@kernel.org"
- <rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
- <will@kernel.org>, "linux-acpi@vger.kernel.org"
- <linux-acpi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "ssengar@microsoft.com" <ssengar@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "vdso@hexbites.dev" <vdso@hexbites.dev>
-References: <20240726225910.1912537-1-romank@linux.microsoft.com>
- <20240726225910.1912537-2-romank@linux.microsoft.com>
- <SN6PR02MB41573831866B7FC9E267D72DD4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ andersson@kernel.org, quic_vbadigan@quicinc.com,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
+ <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
+ <0cdaa0b2-ae50-40a1-abbb-7a6702d54ad5@kernel.org>
+ <027dc9f7-6e0d-e331-8f90-92a3d56350ab@quicinc.com>
+ <132a0367-596b-4ff2-b35c-e81e77f14340@kernel.org>
+ <ZrEAKxktYXFyxWXy@hu-bjorande-lv.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41573831866B7FC9E267D72DD4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZrEAKxktYXFyxWXy@hu-bjorande-lv.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 05/08/2024 18:39, Bjorn Andersson wrote:
+>>>
+>>> In patch1 we are trying to add reference of i2c-adapter, you suggested
+>>> to use i2c-bus for that. we got comments on the driver code not to use
+>>> adapter and instead use i2c client reference. I felt i2c-bus is not
+>>> ideal to represent i2c client device so used this name.
+>>
+>> You did not respond to comment of using i2c-bus, just silently decided
+>> to implement other property.
+>>
+> 
+> I guess you totally ignored my comment when you reviewed the previous
+> version, where I asked him to represent the device on said bus.
 
+Hm, Rob suggested i2c-bus, you as well:
+<<I'd prefer you call it "i2c-adapter" or perhaps "i2c-bus", because
+it's not "the switch controller".>>
 
-On 8/4/2024 8:01 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, July 26, 2024 3:59 PM
->>
->> The arm64 Hyper-V startup path relies on ACPI to detect
->> running under a Hyper-V compatible hypervisor. That
->> doesn't work on non-ACPI systems.
->>
->> Hoist the ACPI detection logic into a separate function,
->> use the new SMC added recently to Hyper-V to use in the
->> non-ACPI case.
-> 
-> Wording seems slightly messed up.  Perhaps:
-> 
->     Hoist the ACPI detection logic into a separate function. Then
->     use the new SMC added recently to Hyper-V in the non-ACPI
->     case.
-> 
-> Also, the phrase "the new SMC" seems a bit off to me.  The "Terms and
-> Abbreviations" section of the SMCCC specification defines "SMC" as
-> an instruction:
-> 
->     Secure Monitor Call. An Arm assembler instruction that causes an
->     exception that is taken synchronously into EL3.
-> 
-> More precisely, I think you mean a SMC "function identifier" that is
-> newly implemented by Hyper-V.  And the function identifier itself isn't
-> new; it's the Hyper-V implementation that's new.
-> 
-> Similar comment applies in the cover letter for this patch set, and
-> perhaps to the Subject line of this patch.
-> 
-Will fix the wording, appreciate your help with bringing this into the 
-best shape possible!
+and there was no response to any of these comments.
 
->>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> ---
->>   arch/arm64/hyperv/mshyperv.c      | 36 ++++++++++++++++++++++++++-----
->>   arch/arm64/include/asm/mshyperv.h |  5 +++++
->>   2 files changed, 36 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
->> index b1a4de4eee29..341f98312667 100644
->> --- a/arch/arm64/hyperv/mshyperv.c
->> +++ b/arch/arm64/hyperv/mshyperv.c
->> @@ -27,6 +27,34 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->>   	return 0;
->>   }
->>
->> +static bool hyperv_detect_via_acpi(void)
->> +{
->> +	if (acpi_disabled)
->> +		return false;
->> +#if IS_ENABLED(CONFIG_ACPI)
->> +	/* Hypervisor ID is only available in ACPI v6+. */
->> +	if (acpi_gbl_FADT.header.revision < 6)
->> +		return false;
->> +	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) == 0;
->> +#else
->> +	return false;
->> +#endif
->> +}
->> +
->> +static bool hyperv_detect_via_smc(void)
->> +{
->> +	struct arm_smccc_res res = {};
->> +
->> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
->> +		return false;
->> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
->> +
->> +	return res.a0 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0 &&
->> +		res.a1 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1 &&
->> +		res.a2 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2 &&
->> +		res.a3 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3;
->> +}
->> +
->>   static int __init hyperv_init(void)
->>   {
->>   	struct hv_get_vp_registers_output	result;
->> @@ -35,13 +63,11 @@ static int __init hyperv_init(void)
->>
->>   	/*
->>   	 * Allow for a kernel built with CONFIG_HYPERV to be running in
->> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
->> +	 * a non-Hyper-V environment.
->> +	 *
->>   	 * In such cases, do nothing and return success.
->>   	 */
->> -	if (acpi_disabled)
->> -		return 0;
->> -
->> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
->> +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smc())
->>   		return 0;
->>
->>   	/* Setup the guest ID */
->> diff --git a/arch/arm64/include/asm/mshyperv.h
->> b/arch/arm64/include/asm/mshyperv.h
->> index a975e1a689dd..a7a3586f7cb1 100644
->> --- a/arch/arm64/include/asm/mshyperv.h
->> +++ b/arch/arm64/include/asm/mshyperv.h
->> @@ -51,4 +51,9 @@ static inline u64 hv_get_msr(unsigned int reg)
->>
->>   #include <asm-generic/mshyperv.h>
->>
->> +#define ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0	0x7948734d
->> +#define ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1	0x56726570
->> +#define ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2	0
->> +#define ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3	0
->> +
 > 
-> Section 6.2 of the SMCCC specification says that the "Call UID Query"
-> returns a UUID. The above #defines look like an ASCII string is being
-> returned. Arguably the ASCII string can be treated as a set of 128 bits
-> just like a UUID, but it doesn't meet the spirit of the spec. Can Hyper-V
-> be changed to return a real UUID? While the distinction probably
-> won't make a material difference here, we've had problems in the past
-> with Hyper-V doing slightly weird things that later caused unexpected
-> trouble. Please just get it right. :-)
-> 
-The above values don't violate anything in the spec, and I think it 
-would be hard to give an example of what can be broken in the world by 
-using the above values. I do understand what you're saying when you 
-mention the UIDs & the spirit of the spec. Put on the quantitative 
-footing, the Shannon entropy of these values is much lower than that of 
-an UID. A cursory search in the kernel tree does turn up other UIDs that 
-don't look too random.
-
-As that is implemented only in the non-release versions, hardly someone 
-has taken a dependency on the specific values in their production code. 
-I guess that can be changed without causing any disturbance to the 
-customers, will report of any concerns though.
-
-> Michael
-> 
->>   #endif
->> --
->> 2.34.1
+>> Anyway, why i2c-bus is not suitable here? I am quite surprised...
 >>
+> 
+> I was not aware that i2c-bus was an acceptable solution, sorry for my
+> bad suggestion and guidance here.
 
--- 
-Thank you,
-Roman
+I think you suggested i2c-bus as well, but regardless what did you agree
+internally, response to Rob was expected.
+
+Best regards,
+Krzysztof
 
 
