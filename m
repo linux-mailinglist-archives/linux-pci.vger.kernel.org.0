@@ -1,85 +1,50 @@
-Return-Path: <linux-pci+bounces-11342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B195948560
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 00:15:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45173948663
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 01:54:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 282D91F2383F
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 22:15:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7275E1C2233D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 23:54:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07044152E12;
-	Mon,  5 Aug 2024 22:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD7916F260;
+	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ExG996eQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXz7yv/I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67905149C6A;
-	Mon,  5 Aug 2024 22:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657B014B06C;
+	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722896139; cv=none; b=BSMiJybkVXdju52biWapT2xqQeLTuX0hj4XehrbTuuGvvgpDkh/lLgyGcnTELO3YXDRYLfEt/sBIIO877dvIxwsbj4iUeQKgEfNKOhqLZHDo44H+yI/Z4QC5/LqJL6nRc3ZRYtZJbbB8Qh15sgezjGqjOanrvMQTb0rIlfIERiE=
+	t=1722902057; cv=none; b=ehtajq2rQae7JzWlDDpupY2YYDDcT2D6VU9d6dlw+V2pJNa+VRh7mPbGVn8Wx0xAAUdKIWsF3IRSpEjDOh/0Uc7G7avd1vLAQ3c9CDbQahu+jvi21e9gosMHDOT59mjdMXtIlocwatZnDkumJCA1tt2t7RvBuQZfTB1JaIqY+vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722896139; c=relaxed/simple;
-	bh=Qd9QtJL78qy4DZtivGdD9JK7nN9GwbtazNpwHPFdXFA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VP2UIjvOnme68PvzPBnV2EFH4u+iP8h4d/n4TGyYHf8MbaGeVZGj+nAkiCmNSOKLVe4bFwgzd/E2xJvuFHJThLxFgn9q0uhHMcUACS40i7wLweCQvJsQLCOzra80odSG0BmztmzdhMf0Ez2k+xjx+eWNvJZVrD3SEDN3yE+wmOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ExG996eQ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.159.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A133720B7165;
-	Mon,  5 Aug 2024 15:15:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A133720B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1722896137;
-	bh=G3dgLn42s1ul+udyzzDEMMSWft6zAfZ2rlnkvyFt+OI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ExG996eQVxnp55uEL3uhRAoHERbEJIYfxjRemCmsgZGiUBoZxjRCPZpKL5WD9jWyQ
-	 TSCGCpbSaUQLk3irbv0+SlRckxO/veFeFezDOCoQjrlAllSgRy5KT9xycRWAvauccK
-	 ibdf2bXQpbmQCqGbWC6LteHxJDIvJ+KUW+qKSSXk=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: mhklinux@outlook.com
-Cc: apais@microsoft.com,
-	arnd@arndb.de,
-	benhill@microsoft.com,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	kw@linux.com,
-	kys@microsoft.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	mingo@redhat.com,
-	rafael@kernel.org,
-	robh@kernel.org,
-	romank@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	ssengar@microsoft.com,
-	sunilmut@microsoft.com,
-	tglx@linutronix.de,
-	vdso@hexbites.dev,
-	wei.liu@kernel.org,
-	will@kernel.org,
-	x86@kernel.org
-Subject: RE: [PATCH v3 2/7] Drivers: hv: Enable VTL mode for arm64
-Date: Mon,  5 Aug 2024 15:15:37 -0700
-Message-Id: <20240805221537.383265-1-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <SN6PR02MB4157B22BD56677EFBD215D87D4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <SN6PR02MB4157B22BD56677EFBD215D87D4BE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=arc-20240116; t=1722902057; c=relaxed/simple;
+	bh=aDDyWum/RdGNYK5afYA6i1DTP/tBbriSvjj5iiczVac=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SeGOt6X+5SoJPzNtigp+TxQmFJJelfDbXNT0A6q7su1YnjE2L4NqvOkd2UK46iIJ/BicIWSw0kzlADZC7KDKHgYLK1rBMM/B4XX7rPUjCiSwYda1l8WeQLvRV488xzBmiAys1AH6Hnz+TfFo93ZmMUEW9wMfhhUuq2C4IVa8cII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXz7yv/I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 44328C4AF0B;
+	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722902057;
+	bh=aDDyWum/RdGNYK5afYA6i1DTP/tBbriSvjj5iiczVac=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=dXz7yv/Io6QrVNxsM0JL4QpoGMNo2sYX6Es1CEPOBPJfG9Jjsa0UJqAtYWWBqQeCj
+	 9vkplca+B5zlNDJgHYVb5/3BwwbM0Jl7uAqqPSRn+Ls1DcQ6gyQXYqkfozA39Fn/c5
+	 mWNlO3zmVf0zLKvKVOTRcc9XRmTz7FF2b3M8ifFOI6jkk88BhA74QA8je2Fs0KueFI
+	 zwbEPDBqW/9wklB6NDa0L1RatukjuvnUqDLJAQTTE3bfNW4gtYCi1epPmenE0lglPU
+	 98bmtchjhMs4wmQ6JIMRUaOxiuwFBFNWtiYLhI3yhZv5DbaVUfC3YyeqYHf8T6267G
+	 tYNy5iaUBjuDw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 343A6C433E9;
+	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,115 +52,50 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next V3 0/3] mlx5 PTM cross timestamping support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172290205721.12421.3111275453782018152.git-patchwork-notify@kernel.org>
+Date: Mon, 05 Aug 2024 23:54:17 +0000
+References: <20240730134055.1835261-1-tariqt@nvidia.com>
+In-Reply-To: <20240730134055.1835261-1-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, netdev@vger.kernel.org, saeedm@nvidia.com,
+ gal@nvidia.com, leonro@nvidia.com, jstultz@google.com, tglx@linutronix.de,
+ anna-maria@linutronix.de, frederic@kernel.org, linux-kernel@vger.kernel.org,
+ bhelgaas@google.com, linux-pci@vger.kernel.org, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ cjubran@nvidia.com, bshapira@nvidia.com, rrameshbabu@nvidia.com
 
-> > 
-> > On 8/4/2024 9:05 PM, Saurabh Singh Sengar wrote:
-> > > On Mon, Aug 05, 2024 at 03:01:58AM +0000, Michael Kelley wrote:
-> > >> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, July 26, 2024 3:59
-> > PM
-> > >>>
-> > >>> Kconfig dependencies for arm64 guests on Hyper-V require that be ACPI enabled,
-> > >>> and limit VTL mode to x86/x64. To enable VTL mode on arm64 as well, update the
-> > >>> dependencies. Since VTL mode requires DeviceTree instead of ACPI, don't require
-> > >>> arm64 guests on Hyper-V to have ACPI.
-> > >>>
-> > >>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > >>> ---
-> > >>>   drivers/hv/Kconfig | 6 +++---
-> > >>>   1 file changed, 3 insertions(+), 3 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> > >>> index 862c47b191af..a5cd1365e248 100644
-> > >>> --- a/drivers/hv/Kconfig
-> > >>> +++ b/drivers/hv/Kconfig
-> > >>> @@ -5,7 +5,7 @@ menu "Microsoft Hyper-V guest support"
-> > >>>   config HYPERV
-> > >>>   	tristate "Microsoft Hyper-V client drivers"
-> > >>>   	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
-> > >>> -		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
-> > >>> +		|| (ARM64 && !CPU_BIG_ENDIAN)
-> > >>>   	select PARAVIRT
-> > >>>   	select X86_HV_CALLBACK_VECTOR if X86
-> > >>>   	select OF_EARLY_FLATTREE if OF
-> > >>> @@ -15,7 +15,7 @@ config HYPERV
-> > >>>
-> > >>>   config HYPERV_VTL_MODE
-> > >>>   	bool "Enable Linux to boot in VTL context"
-> > >>> -	depends on X86_64 && HYPERV
-> > >>> +	depends on HYPERV
-> > >>>   	depends on SMP
-> > >>>   	default n
-> > >>>   	help
-> > >>> @@ -31,7 +31,7 @@ config HYPERV_VTL_MODE
-> > >>>
-> > >>>   	  Select this option to build a Linux kernel to run at a VTL other than
-> > >>>   	  the normal VTL0, which currently is only VTL2.  This option
-> > >>> -	  initializes the x86 platform for VTL2, and adds the ability to boot
-> > >>> +	  initializes the kernel to run in VTL2, and adds the ability to boot
-> > >>>   	  secondary CPUs directly into 64-bit context as required for VTLs other
-> > >>>   	  than 0.  A kernel built with this option must run at VTL2, and will
-> > >>>   	  not run as a normal guest.
-> > >>> --
-> > >>> 2.34.1
-> > >>>
-> > >>
-> > >> In v2 of this patch, I suggested [1] making a couple additional minor changes
-> > >> so that kernels built *without* HYPER_VTL_MODE would still require
-> > >> ACPI.  Did that suggestion not work out?  If that's the case, I'm curious
-> > >> about what goes wrong.
-> > >
-> > > Hi Michael/Roman,
-> > > I was considering making HYPERV_VTL_MODE depend on CONFIG_OF. That should
-> > address
-> > > above concern as well. Do you see any potential issue with it.
-> > >
-> > Michael,
-> > 
-> > I ran into a pretty gnarly recursive dependencies which in all fairness
-> > might stem from not being fluent enough in the Kconfig language. Any
-> > help of how to approach implementing your idea would be greatly appreciated!
-> > 
-> 
-> This is what I had in mind:
-> 
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -5,7 +5,8 @@ menu "Microsoft Hyper-V guest support"
- > config HYPERV
-        > tristate "Microsoft Hyper-V client drivers"
-        > depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
-> -               || (ACPI && ARM64 && !CPU_BIG_ENDIAN)
-> +               || (ARM64 && !CPU_BIG_ENDIAN)
-> +       depends on (ACPI || HYPERV_VTL_MODE)
-        > select PARAVIRT
-        > select X86_HV_CALLBACK_VECTOR if X86
-        > select OF_EARLY_FLATTREE if OF
-> @@ -15,7 +16,7 @@ config HYPERV
-> 
- > config HYPERV_VTL_MODE
-        > bool "Enable Linux to boot in VTL context"
-> -       depends on X86_64 && HYPERV
-> +       depends on X86_64
-        > depends on SMP
-        > default n
-        > help
-> 
-> HYPERV_VTL_MODE can now be selected independently of HYPERV.
-> The existing code should be such that even if someone is building a
-> random config and gets HYPERV_VTL_MODE without HYPERV, the
-> kernel will build and run in a non-Hyper-V environment and isn't
-> broken somehow.
-> 
-> For HYPERV to be selected, either ACPI must already be selected, or
-> HYPERV_VTL_MODE must already be selected. So "normal" kernels are
-> still enforced to require ACPI. But if building with HYPERV_VTL_MODE,
-> then ACPI is optional.
-> 
-Thanks a ton! Let me try this out for the (arch; VTL) build matrix :)
+Hello:
 
-> Saurabh's idea of adding "depends on OF" to HYPERV_VTL_MODE
-> should also work with these changes.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 30 Jul 2024 16:40:51 +0300 you wrote:
+> Hi,
 > 
-> I haven't fully tested the above with all the relevant combinations
-> on both x86 and arm64, but I think the logic makes sense.
+> This is V3. You can find V2 as part of a larger series here:
+> https://lore.kernel.org/netdev/d1dba3e1-2ecc-4fdf-a23b-7696c4bccf45@gmail.com/T/
+> 
+> This patchset by Rahul and Carolina adds PTM (Precision Time Measurement)
+> support to the mlx5 driver.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,V3,1/3] net/mlx5: Add support for MTPTM and MTCTR registers
+    https://git.kernel.org/netdev/net-next/c/7e45c1e9edc0
+  - [net-next,V3,2/3] net/mlx5: Add support for enabling PTM PCI capability
+    https://git.kernel.org/netdev/net-next/c/bec6d85d43eb
+  - [net-next,V3,3/3] net/mlx5: Implement PTM cross timestamping support
+    https://git.kernel.org/netdev/net-next/c/d17125fb0923
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
