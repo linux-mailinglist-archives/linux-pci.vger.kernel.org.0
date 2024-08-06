@@ -1,60 +1,66 @@
-Return-Path: <linux-pci+bounces-11356-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11357-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46F9E948FEB
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 15:03:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 046A7949336
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 16:36:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7719C1C210B0
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 13:03:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA835B243C4
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 14:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9351B1C57A9;
-	Tue,  6 Aug 2024 13:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E931D27A3;
+	Tue,  6 Aug 2024 14:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="cE+AUJ4q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AED1C3F08;
-	Tue,  6 Aug 2024 13:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A43B1D1F4E;
+	Tue,  6 Aug 2024 14:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722949367; cv=none; b=ChC+w5jvrG0J9AVVOXsijyAOfKpjQ0+Y+iCkZd5gAdvW170NUfDkQqgesNy32YM8QB4h6NlnZc7YMXl8/2G7uduWM/95CyXnqEjBKOAlUR3RU7DK1kZt1iEIv+IjRgJ+hLtTt6vZe70qU6HivhBM4ZlZNNR77bDtqf+vt4C1ESY=
+	t=1722954937; cv=none; b=KVpU8ja0bi3yyQ7etp+4N1j6F15mq3vqzoU9KcLUEb7jMSs/3YgUqxfXO3AoEszHJGo8RSbGfg/TLkHv5W9FJa9VO8CL2dox+CklAa/ORY7q/b5U7h/fBVKbrmiKmpjYoEeI+iRPhukSmb2Dgq07PvI+SzdlT06SD7H35yrsjdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722949367; c=relaxed/simple;
-	bh=QLbBnypIbU8z3vkmhXYCvE9K8LwGn4OIeMj+ESkXssc=;
+	s=arc-20240116; t=1722954937; c=relaxed/simple;
+	bh=Uw6HRtpZl8EfaERoyXUbtABtnWbIWcooNpV9YaxkyjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ilOl1Z2uCt9eSGep+wBjT0dwT/E/BFmLTdrcqeVHMR/o9N2p8tPtVA2XGTKK3xWY8pLWSjaUseuqzdf9E+RnUeW6dUonLmQTBVZt16y3uqWa4GkO0RT8d89RNjfA8aC5iTX2vCD1zPNx8XkQ+qdnZiibtIVEm2fz2jzqS2KR+HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id EE1382800B1BA;
-	Tue,  6 Aug 2024 15:02:39 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id DCB654AE4B; Tue,  6 Aug 2024 15:02:39 +0200 (CEST)
-Date: Tue, 6 Aug 2024 15:02:39 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	mika.westerberg@linux.intel.com, Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all
- Devicetree based platforms
-Message-ID: <ZrIe70Z7uFven8HH@wunner.de>
-References: <20240802-pci-bridge-d3-v5-0-2426dd9e8e27@linaro.org>
- <20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org>
- <ZqyxS8spZ-ohsP3R@wunner.de>
- <20240805133555.GC7274@thinkpad>
- <ZrHITXLkKrDbQKQp@wunner.de>
- <20240806124107.GB2968@thinkpad>
+	 Content-Type:Content-Disposition:In-Reply-To; b=u6bK28Dqnly2IagcoCMLP+dSgKIqCwnV1YvVSQwBX7InuL8Saec/Z/Iv5Ewscl8Kt2BH+b2S7efFD898XcNK39XwGuS9Rfgzdw8v0KRrFrNz+hPO/dNYFPwHbusyYEtt2JoWrxF0Wreddqk9jdpgK76rGcMlXXVnuc+E4DLOZhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=cE+AUJ4q; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 98A3220284;
+	Tue,  6 Aug 2024 16:35:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1722954924;
+	bh=fGtGysqRw2M+SB4BHIAeHaD7D+DJXET7byhHYZ12njk=; h=From:To:Subject;
+	b=cE+AUJ4qwRpoqscFcQYUl597p/+2xAYsBs0yS78ta+rfpc83a74oRDlV1dp0+C83m
+	 dphzyJryQhUYJJRO6jufn6x8Glz9z244tud7rZUnVy9f8WmjMNpUZulOBvWbzm6J5I
+	 MywqLZ1LhltSIoK5m/addWAtXzZYDeKkDjuYJH3WBiuBaqdVsVllmiz7QmY3UxX6vK
+	 g40oXQfHt29ufPMte6s4UJkLWfN43sNWzL7gd18mgAV2V02Fh82aw8nhNnBKxHHo5x
+	 LMTIG6NT2QZocJ3ora97d7bdjngueLyRv1ccY+c83wmwiR1L/p3l0IgOGct5jHOG5p
+	 kCM4a2JV4zZtA==
+Date: Tue, 6 Aug 2024 16:35:19 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Francesco Dolcini <francesco@dolcini.it>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] PCI: ti: k3: Fix TI J721E PERST# polarity
+Message-ID: <20240806143519.GA176293@francesco-nb>
+References: <20240703100036.17896-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,48 +69,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240806124107.GB2968@thinkpad>
+In-Reply-To: <20240703100036.17896-1-francesco@dolcini.it>
 
-On Tue, Aug 06, 2024 at 06:11:07PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Aug 06, 2024 at 08:53:01AM +0200, Lukas Wunner wrote:
-> > AFAICS we always program the device to go to D3hot and the platform
-> > then cuts power, thereby putting it into D3cold.  So D3hot is never
-> > skipped.  See __pci_set_power_state():
-> > 
-> > 	if (state == PCI_D3cold) {
-> > 		/*
-> > 		 * To put the device in D3cold, put it into D3hot in the native
-> > 		 * way, then put it into D3cold using platform ops.
-> > 		 */
-> > 		error = pci_set_low_power_state(dev, PCI_D3hot, locked);
-> > 
-> > 		if (pci_platform_power_transition(dev, PCI_D3cold))
-> > 			return error;
-> > 
+Hello Bjorn, Krzysztof W., Lorenzo
+
+On Wed, Jul 03, 2024 at 12:00:34PM +0200, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
 > 
-> This is applicable only to pci_set_power_state(), but AFAIK PCIe spec
-> doesn't mandate switching to D3Hot for entering D3Cold.
+> Fix PCIe PERST# signal polarity in TI J721E used on TI K3 machines.
+> 
+> PCIe PERST# needs to be de-asserted for PCIe to work, however, the driver is
+> doing the opposite and the device tree files are defining the signal with the
+> wrong polarity to cope with that. Fix both the driver and the affected DT
+> files.
 
-Per PCI Bus Power Management Interface Specification r1.2 sec 5.5 fig 5-1,
-the only supported state transition to D3cold is from D3hot.
+I just had a chat in IRC about this series with Nishanth. He agrees that
+this should be merged, even considering that this implies breaking the
+compatibility with old device tree blobs.
 
-Per PCIe r6.2 sec 5.2, "PM is compatible with the PCI Bus Power Management
-Interface Specification".
+However we should be sure that both patches get merged in a coordinated
+way, to avoid breaking stuff within the same kernel release.
 
-Granted, PCI-PM is an ancient spec, so I think anyone can be forgiven
-for not knowing its intricacies off-the-cuff. :)
+What would be your advise to move forward? Are you ok with the change?
+Should I split this series in 2 separated patch?
 
+Francesco
 
-> So the PCIe host controller drivers (especically non-ACPI platforms)
-> may just send PME_Turn_Off followed by removing the slot power
-> (which again is not controlled by pci_set_power_state())
-> as there are no non-ACPI related hooks as of now.
-
-Ideally, devicetree-based platforms should be brought into the
-platform_pci_*() fold to align them with ACPI and get common
-behavior across all platforms.
-
-Thanks,
-
-Lukas
 
