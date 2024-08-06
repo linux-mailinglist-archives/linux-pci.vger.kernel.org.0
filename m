@@ -1,314 +1,287 @@
-Return-Path: <linux-pci+bounces-11396-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11397-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86F8A949AED
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 00:08:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4228C949BAF
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 00:59:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8E4B1C21331
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 22:08:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F156728343E
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 22:59:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A7C17BB11;
-	Tue,  6 Aug 2024 22:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D68B3FE55;
+	Tue,  6 Aug 2024 22:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6gAuVTw"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XfiABRtP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0xGv57f+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tY9hLgOR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4c5OUOTa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B39917839E;
-	Tue,  6 Aug 2024 22:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261A93BB30;
+	Tue,  6 Aug 2024 22:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722981848; cv=none; b=buasxZPEK6Koyy+VoqhtBadrUmWe0UCm8lJqMDtf2ja+xuEk8HpoSq5lGlmKWkXAexvhFzybi7a8tHGEAYzoD8JZ/guVceq2YCBOBfbZkRO/E9tEq5+n6iWy0Qu+JM1rDkIqRp+VJUSk7hTo+s2eJELFPybKTqa4Wbiqk8sB0AM=
+	t=1722985139; cv=none; b=o5+VLJEmzJyq5SU7ZC8jDIl08jdFRuoxGECGAFOdF7TZ/9FpjqEJVyujFR55UDOMhHz/NUvE5cn3XE8j5U/a+iTr6gnRciZ7wF80rR2ohb09mFpm1JLmbmkZSVQJg9R8WhP0wXzS32+y2Jee9FGti90BPtrgYTYexoqCtplJyes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722981848; c=relaxed/simple;
-	bh=obPTo/kSA5CicZ+iGNDwRPbntktGZz+xY2ZRyCcB2lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MmISmOFOOvQOBSRESQBL/dJu1JP3mNvMHp0o11gbTzhvYc7HXM2A9NauEBWcwvo4h+YWbbb5TS0jLi5/98stUu01spCsTl4gqU6Np3gFEWdFb0k3SokhRUynezbdFCwuAycSRuKU1GWipzHDGhhhGmrq0FACvATTI5h3WM/jw1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6gAuVTw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D071AC32786;
-	Tue,  6 Aug 2024 22:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722981848;
-	bh=obPTo/kSA5CicZ+iGNDwRPbntktGZz+xY2ZRyCcB2lc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=K6gAuVTwA2JVNIatbPuMA71/jJL/NY00pNnZ//00cbMCcMNgl2FQcWKsK+YFbBhg/
-	 VAZSErNlm6iuqTLiO5FLQ+Cub431WLeLbPm6KiajWEtEuV+sMG0RtBMabvLFahTlJt
-	 B9db1/0US3Z4FHp+AGv5UCVwUvtgKzjw34Zz65fM7v4lY/bk2LJ3A+BDo5iAoAryjd
-	 ean/jieGxd705gsY1Y+7D699tL3WmFE5d4LnKpHagFUYQ/vBnU8KqK3cuxiylJX3rK
-	 O3UONiEfJKF+8G0Xo4tn2AlX90nidXlrhfyTH40wU2coELs/s4sAQi5vPBtdLbW2it
-	 dUEKq6UODzRMQ==
-Date: Tue, 6 Aug 2024 17:04:06 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Esther Shimanovich <eshimanovich@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Detect and trust built-in TBT chips
-Message-ID: <20240806220406.GA80520@bhelgaas>
+	s=arc-20240116; t=1722985139; c=relaxed/simple;
+	bh=KWj+SAl+YekNZVSswavwZEirGV4//jriXP7kbZSgpyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HsUs0z1CaJidbmkySA3w4P//HOMHlcFop9Uk05jHiWaDLhoGPvUJ/p0ROGwlzYot6tyNIB0PUyim4jtHfIL0nQqHNMUa8+YNfV7H776luxQECOMYVmf8FKGj9Qcz2YapFgd9xEjDEAAdeOZG+aQdps2tZVd5HFk7LLkn358Mm9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XfiABRtP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0xGv57f+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tY9hLgOR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4c5OUOTa; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C4F9B21B3C;
+	Tue,  6 Aug 2024 22:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1722985135; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
+	b=XfiABRtPLMaHoRKQvphIx87RFTwwZ96BmDDotBBciJcSmFJvmL643zjI5j4T8mcCNiqRjJ
+	VtgdVAnqPB+2bytm9R5jMiqBATk2sv960iTx6egBvN45KkII+J+CqXvQslmJnWwK2wr5Am
+	KaIJVIwhsPNccUGeaf1/V7Wd+T0fPN4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1722985135;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
+	b=0xGv57f+ST5tsYhRF5HPbqAYNklf66PVC3JreycYkjYme1z/xlPRAACiW6+OSXlo1HAkn0
+	Vh5eFsL6X4hURsCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tY9hLgOR;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4c5OUOTa
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1722985134; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
+	b=tY9hLgORSZWdKE/1VN35p5+YFWUtBBfM3zFMZto9hSp8qF4PYHBgY9mVm9O7Sdbj0q1K4W
+	QpkaaXkuwkrO6/AQDNkwLBKzecVgRE5zcYJJ+J4B6UuqrU2EUyvHxja0IaKq0FyFavqkVh
+	vKytt6wUbD+VKUXSgAj6IoLBJzZMuHU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1722985134;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
+	b=4c5OUOTaNy0e5NXA6RaD5Lox8c/6hOqMYWa0soNq7ycTHRw3vPifWGax4RY0MghhsH1unr
+	lxGb4weWr95yCCAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED7CD13770;
+	Tue,  6 Aug 2024 22:58:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CyDHN62qsmbEZAAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Tue, 06 Aug 2024 22:58:53 +0000
+Message-ID: <c77b6011-68e8-467c-9218-4fd4aa3e4ee3@suse.de>
+Date: Wed, 7 Aug 2024 01:58:53 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240806-trust-tbt-fix-v1-1-73ae5f446d5a@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Refactor for chips with many
+ regular inbound windows
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240731222831.14895-1-james.quinlan@broadcom.com>
+ <20240731222831.14895-10-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <20240731222831.14895-10-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Spam-Score: -4.50
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: C4F9B21B3C
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,linaro.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On Tue, Aug 06, 2024 at 09:39:11PM +0000, Esther Shimanovich wrote:
-> Some computers with CPUs that lack Thunderbolt features use discrete
-> Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
-> chips are located within the chassis; between the root port labeled
-> ExternalFacingPort and the USB-C port.
+Hi Jim,
 
-So is this fundamentally a firmware defect?  ACPI says a Root Port is
-an "ExternalFacingPort", but the Root Port is actually connected to an
-internal Thunderbolt chip, not an external connector?
 
-> These Thunderbolt PCIe devices should be labeled as fixed and trusted,
-> as they are built into the computer. Otherwise, security policies that
-> rely on those flags may have unintended results, such as preventing
-> USB-C ports from enumerating.
+On 8/1/24 01:28, Jim Quinlan wrote:
+> Provide support for new chips with multiple inbound windows while
+> keeping the legacy support for the older chips.
 > 
-> Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Esther Shimanovich <eshimanovich@chromium.org>
+> In existing chips there are three inbound windows with fixed purposes: the
+> first was for mapping SoC internal registers, the second was for memory,
+> and the third was for memory but with the endian swapped.  Typically, only
+> one window was used.
+> 
+> Complicating the inbound window usage was the fact that the PCIe HW would
+> do a baroque internal mapping of system memory, and concatenate the regions
+> of multiple memory controllers.
+> 
+> Newer chips such as the 7712 and Cable Modem SOCs take a step forward and
+> drop the internal mapping while providing for multiple inbound windows.
+> This works in concert with the dma-ranges property, where each provided
+> range becomes an inbound window.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 > ---
-> While working with devices that have discrete Thunderbolt chips, I
-> noticed that their internal TBT chips are inaccurately labeled as
-> untrusted and removable.
+>  drivers/pci/controller/pcie-brcmstb.c | 228 ++++++++++++++++++++------
+>  1 file changed, 177 insertions(+), 51 deletions(-)
 > 
-> I've observed that this issue impacts all computers with internal,
-> discrete Intel JHL Thunderbolt chips, such as JHL6240, JHL6340, JHL6540,
-> and JHL7540, across multiple device manufacturers such as Lenovo, Dell,
-> and HP.
-> 
-> This affects the execution of any downstream security policy that
-> relies on the "untrusted" or "removable" flags.
-> 
-> I initially submitted a quirk to resolve this, which was too small in
-> scope, and after some discussion, Mika proposed a more thorough fix:
-> https://lore.kernel.org/lkml/20240510052616.GC4162345@black.fi.intel.com/#r
-> I refactored it and am submitting as a new patch.
-> ---
->  drivers/pci/probe.c | 149 +++++++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 142 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index b14b9876c030..30de2f6da164 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1629,16 +1629,147 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
->  		dev->is_thunderbolt = 1;
->  }
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 4659208ae8da..0ecca3d9576f 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -75,15 +75,19 @@
+>  #define PCIE_MEM_WIN0_HI(win)	\
+>  		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
 >  
 > +/*
-> + * Checks if pdev is part of a PCIe switch that is directly below the
-> + * specified bridge.
+> + * NOTE: You may see the term "BAR" in a number of register names used by
+> + *   this driver.  The term is an artifact of when the HW core was an
+> + *   endpoint device (EP).  Now it is a root complex (RC) and anywhere a
+> + *   register has the term "BAR" it is related to an inbound window.
 > + */
-> +static bool pcie_switch_directly_under(struct pci_dev *bridge,
-> +				       struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *parent = pci_upstream_bridge(pdev);
 > +
-> +	/* If the device doesn't have a parent, it's not under anything.*/
-> +	if (!parent)
-> +		return false;
-
-Add blank line here.
-
-> +	/*
-> +	 * If the device has a PCIe type, that means it is part of a PCIe
-> +	 * switch.
-> +	 */
-> +	switch (pci_pcie_type(pdev)) {
-> +	case PCI_EXP_TYPE_UPSTREAM:
-> +		if (parent == bridge)
-> +			return true;
-> +		break;
-> +
-> +	case PCI_EXP_TYPE_DOWNSTREAM:
-> +		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
-> +			parent = pci_upstream_bridge(parent);
-> +			if (parent == bridge)
-> +				return true;
-> +		}
-> +		break;
-> +
-> +	case PCI_EXP_TYPE_ENDPOINT:
-> +		if (pci_pcie_type(parent) == PCI_EXP_TYPE_DOWNSTREAM) {
-
-This case is not part of a PCIe switch, so the comment above isn't
-quite right.
-
-> +			parent = pci_upstream_bridge(parent);
-> +			if (parent && pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
-> +				parent = pci_upstream_bridge(parent);
-> +				if (parent == bridge)
-> +					return true;
-> +			}
-> +		}
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
-> +{
-> +	struct fwnode_handle *fwnode;
-> +
-> +	/*
-> +	 * For USB4 the tunneled PCIe root or downstream ports are marked
-> +	 * with the "usb4-host-interface" property, so we look for that
-> +	 * first. This should cover the most cases.
-
-What is the source of this property?  ACPI?  DT?  Is there some spec
-we can cite that defines it?
-
-s/cover the most/cover most/
-
-> +	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
-> +				       "usb4-host-interface", 0);
-> +	if (!IS_ERR(fwnode)) {
-> +		fwnode_handle_put(fwnode);
-> +		return true;
-> +	}
-> +
-> +	/*
-> +	 * Any integrated Thunderbolt 3/4 PCIe root ports from Intel
-> +	 * before Alder Lake do not have the above device property so we
-> +	 * use their PCI IDs instead. All these are tunneled. This list
-> +	 * is not expected to grow.
-
-Is the "usb4-host-interface" property built into the hardware somehow?
-Or is this a statement about the firmware we expect to see with the
-parts listed below?
-
-> +	 */
-> +	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
-> +		switch (pdev->device) {
-> +		/* Ice Lake Thunderbolt 3 PCIe Root Ports */
-> +		case 0x8a1d:
-> +		case 0x8a1f:
-> +		case 0x8a21:
-> +		case 0x8a23:
-> +		/* Tiger Lake-LP Thunderbolt 4 PCIe Root Ports */
-> +		case 0x9a23:
-> +		case 0x9a25:
-> +		case 0x9a27:
-> +		case 0x9a29:
-> +		/* Tiger Lake-H Thunderbolt 4 PCIe Root Ports */
-> +		case 0x9a2b:
-> +		case 0x9a2d:
-> +		case 0x9a2f:
-> +		case 0x9a31:
-> +			return true;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static bool pcie_is_tunneled(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *parent, *root;
-> +
-> +	parent = pci_upstream_bridge(pdev);
-> +	/* If pdev doesn't have a parent, then there's no way it is tunneled.*/
-> +	if (!parent)
-> +		return false;
-> +
-> +	root = pcie_find_root_port(pdev);
-> +	/* If pdev doesn't have a root, then there's no way it is tunneled.*/
-> +	if (!root)
-> +		return false;
-> +
-> +	/* Internal PCIe devices are not tunneled. */
-> +	if (!root->external_facing)
-> +		return false;
-> +
-> +	/* Anything directly behind a "usb4-host-interface" is tunneled. */
-> +	if (pcie_has_usb4_host_interface(parent))
-> +		return true;
-> +
-> +	/*
-> +	 * Check if this is a discrete Thunderbolt/USB4 controller that is
-> +	 * directly behind the non-USB4 PCIe Root Port marked as
-> +	 * "ExternalFacingPort". These PCIe devices are used to add Thunderbolt
-> +	 * capabilities to CPUs that lack integrated Thunderbolt.
-> +	 * These are not behind a PCIe tunnel.
-
-I need more context to be convinced that this is a reliable heuristic.
-What keeps somebody from plugging a discrete Thunderbolt/USB4
-controller into an external port?  Maybe this just needs a sentence or
-two from Lukas's (?) helpful intro to tunneling?
-
-> +	if (pcie_switch_directly_under(root, pdev))
-> +		return false;
-> +
-> +	/* PCIe devices after the discrete chip are tunneled. */
-> +	return true;
-> +}
-> +
->  static void set_pcie_untrusted(struct pci_dev *dev)
->  {
-> -	struct pci_dev *parent;
-> +	struct pci_dev *parent = pci_upstream_bridge(dev);
+> +#define PCIE_BRCM_MAX_INBOUND_WINS			16
+>  #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
+>  #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
 >  
-> +	if (!parent)
-> +		return;
->  	/*
-> -	 * If the upstream bridge is untrusted we treat this device
-> +	 * If the upstream bridge is untrusted we treat this device as
->  	 * untrusted as well.
->  	 */
-> -	parent = pci_upstream_bridge(dev);
-> -	if (parent && (parent->untrusted || parent->external_facing))
-> +	if (parent->untrusted)
-> +		dev->untrusted = true;
+> -#define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
+> -#define  PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK		0x1f
+> -#define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
+> +#define PCIE_MISC_RC_BAR4_CONFIG_LO			0x40d4
+>  
+> -#define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
+> -#define  PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK		0x1f
+>  
+>  #define PCIE_MISC_MSI_BAR_CONFIG_LO			0x4044
+>  #define PCIE_MISC_MSI_BAR_CONFIG_HI			0x4048
+> @@ -130,6 +134,10 @@
+>  	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
+>  	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+>  
+> +#define PCIE_MISC_UBUS_BAR1_CONFIG_REMAP			0x40ac
+> +#define  PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK	BIT(0)
+> +#define PCIE_MISC_UBUS_BAR4_CONFIG_REMAP			0x410c
 > +
-> +	if (pcie_is_tunneled(dev))
->  		dev->untrusted = true;
+>  #define PCIE_MSI_INTR2_BASE		0x4500
+>  
+>  /* Offsets from INTR2_CPU and MSI_INTR2 BASE offsets */
+> @@ -217,12 +225,20 @@ enum pcie_type {
+>  	BCM4908,
+>  	BCM7278,
+>  	BCM2711,
+> +	BCM7712,
+> +};
+> +
+> +struct inbound_win {
+> +	u64 size;
+> +	u64 pci_offset;
+> +	u64 cpu_addr;
+>  };
+>  
+>  struct pcie_cfg_data {
+>  	const int *offsets;
+>  	const enum pcie_type type;
+>  	const bool has_phy;
+> +	unsigned int num_inbound_wins;
+>  	void (*perst_set)(struct brcm_pcie *pcie, u32 val);
+>  	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+>  };
+> @@ -274,6 +290,7 @@ struct brcm_pcie {
+>  	struct subdev_regulators *sr;
+>  	bool			ep_wakeup_capable;
+>  	bool			has_phy;
+> +	int			num_inbound_wins;
+
+Could you unify the type of num_inbound_wins field. I think u8 should be
+enough?
+
+>  };
+>  
+>  static inline bool is_bmips(const struct brcm_pcie *pcie)
+> @@ -789,23 +806,61 @@ static void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
+>  	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
 >  }
 >  
-> @@ -1646,8 +1777,10 @@ static void pci_set_removable(struct pci_dev *dev)
->  {
->  	struct pci_dev *parent = pci_upstream_bridge(dev);
->  
-> +	if (!parent)
-> +		return;
->  	/*
-> -	 * We (only) consider everything downstream from an external_facing
-> +	 * We (only) consider everything tunneled below an external_facing
->  	 * device to be removable by the user. We're mainly concerned with
->  	 * consumer platforms with user accessible thunderbolt ports that are
->  	 * vulnerable to DMA attacks, and we expect those ports to be marked by
-> @@ -1657,8 +1790,10 @@ static void pci_set_removable(struct pci_dev *dev)
->  	 * accessible to user / may not be removed by end user, and thus not
->  	 * exposed as "removable" to userspace.
->  	 */
-> -	if (parent &&
-> -	    (parent->external_facing || dev_is_removable(&parent->dev)))
-> +	if (dev_is_removable(&parent->dev))
-> +		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
+> -static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+> -							u64 *rc_bar2_size,
+> -							u64 *rc_bar2_offset)
+> +static inline void set_bar(struct inbound_win *b, int *count, u64 size,
+
+The number of BARs cannot be more than 256, could you make "count" an u8
+like the num_inbound_wins.
+
+> +			   u64 cpu_addr, u64 pci_offset)
+> +{
+> +	b->size = size;
+> +	b->cpu_addr = cpu_addr;
+> +	b->pci_offset = pci_offset;
+> +	(*count)++;
+> +}
 > +
-> +	if (pcie_is_tunneled(dev))
->  		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
->  }
->  
-> 
-> ---
-> base-commit: 3f386cb8ee9f04ff4be164ca7a1d0ef3f81f7374
-> change-id: 20240806-trust-tbt-fix-5f337fd9ec8a
-> 
-> Best regards,
-> -- 
-> Esther Shimanovich <eshimanovich@chromium.org>
-> 
+
+<cut>
+
+In case you send a new version please address the comments, otherwise
+
+Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+
+~Stan
 
