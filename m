@@ -1,100 +1,100 @@
-Return-Path: <linux-pci+bounces-11349-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11350-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24FB294899B
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 08:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A6029489A0
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 08:53:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5024280FE1
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 06:51:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03BDF285E35
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 06:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1848C1BB683;
-	Tue,  6 Aug 2024 06:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CE0rgNhV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD2D11BC9F7;
+	Tue,  6 Aug 2024 06:53:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2CE815B147;
-	Tue,  6 Aug 2024 06:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF1D15B147;
+	Tue,  6 Aug 2024 06:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722927080; cv=none; b=MjBSV9ZbhYGB6EwCs2XQTSM2Q6R2UO5kQ5SsvBq/fLn0uMnAEXpuGc19QXt7VghWIRObhKI4UlkBugXLN21vPS95JERrOLUtJHXkX0cnSJY+d6ejjBSTvoT3BPciRD3LSzy1qxd2xV1b/2C+mciCyTKkAjqEeShtAjbYYpnyWYA=
+	t=1722927187; cv=none; b=JZk5P2vk6o+ilSvBLCw0BCCFPBnkFoqQtgZM6o2kwgrrrIOCiugt1fQ/prMzX5UaQHshWUAOK3nHbL4loyxT3lmck+wh3SaacmV9ysC1aKXI3Qhrf6v2kDMcsuGVMLEglSuv4I2wBuJb88gx0T2vvM4mEGzgJzBEJ9tNgQFcCf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722927080; c=relaxed/simple;
-	bh=h+DeojCVC/NICWJOC06XfVPSavc/6auwVEn7lSTy6BQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iBOv6YekwZYu0YPnG8/hdhdjtyVsNPhybaMSrNP2FXwaYwgRW3/qS9mpohMgbl/qRh1ukvpGcYx/uwHjamn5JHYAMQmJMbcruhzn7j0yHaue2Not0IPalKhNOQEsfo06ThEJjj7hvUdd9g/dcw9FNJ89DpK1IT1CuLvqwJ3po/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=CE0rgNhV; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=fl+tN
-	pmNyji4s1//Vo+z9LPfct+I+zcp/W5+el3aMdM=; b=CE0rgNhVMx59c8zc6PuRY
-	DejPBQPrjtI4GYgDAVGbcZ5aMlS+KW5w3A8W32v0IvMlTnZMqsyaMSH0RMpnPStN
-	9ZaJReXEl91SSD8yRkRXfvmzAfEylFl0EL9/XV3eLAn6u7ogAs4FEstseaZx/SeP
-	bf9pFkB/DnXGC0WLVZX0vk=
-Received: from localhost.localdomain (unknown [116.128.244.169])
-	by gzga-smtp-mta-g2-4 (Coremail) with SMTP id _____wD3v__Mx7FmXV1hAA--.9145S2;
-	Tue, 06 Aug 2024 14:50:54 +0800 (CST)
-From: 412574090@163.com
-To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xiongxin@kylinos.cn,
-	weiyufeng <weiyufeng@kylinos.cn>
-Subject: [PATCH] PCI/ERR: Use PCI_POSSIBLE_ERROR() to check config reads
-Date: Tue,  6 Aug 2024 14:50:50 +0800
-Message-Id: <20240806065050.28725-1-412574090@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1722927187; c=relaxed/simple;
+	bh=XqxcGCRMECyTsBkrwwKzGy9qu0WpXUhddQXpzpKFkPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WaxOc7aMJ+y0S9hGNglJ14XWreWmH0EOLWdg/sW30ZmUegmt12m/ojJncSeAXZKdVQx36PKkUfI5TPyDUycNJsL6mvRL09RfO4ZOq/xH9IUXxIrIHnubUflKmhlam+I7qMSlcVqFe2+MCqTlkauJfff1arePqyOh7/7F3brCm0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id BCBC8300002A5;
+	Tue,  6 Aug 2024 08:53:01 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id A884E323E0; Tue,  6 Aug 2024 08:53:01 +0200 (CEST)
+Date: Tue, 6 Aug 2024 08:53:01 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	mika.westerberg@linux.intel.com, Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all
+ Devicetree based platforms
+Message-ID: <ZrHITXLkKrDbQKQp@wunner.de>
+References: <20240802-pci-bridge-d3-v5-0-2426dd9e8e27@linaro.org>
+ <20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org>
+ <ZqyxS8spZ-ohsP3R@wunner.de>
+ <20240805133555.GC7274@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3v__Mx7FmXV1hAA--.9145S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CrW8Jr4DGrW8GrWrGrWfKrg_yoW8Gry5pr
-	W5Jay3tF45tFyUJF4vv3yrWr909a9xKrWkGr1Ik3sru3Z0k345JrW3JF12qw12gFWkXF1I
-	vwn8XFs8X3WUAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jOEfOUUUUU=
-X-CM-SenderInfo: yursklauqziqqrwthudrp/1tbivhEzAGV4Ka3wbwAAsa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240805133555.GC7274@thinkpad>
 
-From: weiyufeng <weiyufeng@kylinos.cn>
+On Mon, Aug 05, 2024 at 07:05:55PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Aug 02, 2024 at 12:13:31PM +0200, Lukas Wunner wrote:
+> > The PCI core cannot put devices into D3cold without help from the
+> > platform.  Checking whether D3cold is possible (or allowed or
+> > whatever) thus requires asking platform support code via
+> > platform_pci_power_manageable(), platform_pci_choose_state() etc.
+> > 
+> > I think patch [3/4] is a little confusing because it creates
+> > infrastructure to decide whether D3cold is supported (allowed?)
+> > but we already have that in the platform_pci_*() functions.
+> > So I'm not sure if patch [3/4] adds value.  I think generally
+> > speaking if D3hot isn't possible (allowed?), D3cold is assumed
+> > to not be possible either.
+> 
+> Why? D3Hot is useful for runtime PM and if the platform doesn't want to do
+> runtime PM, it can always skip D3Hot (not ideal though).
 
-Use PCI_POSSIBLE_ERROR() to check the response we get when we read data
-from hardware.  This unifies PCI error response checking and makes error
-checks consistent and easier to find.
+AFAICS we always program the device to go to D3hot and the platform
+then cuts power, thereby putting it into D3cold.  So D3hot is never
+skipped.  See __pci_set_power_state():
 
-Signed-off-by: weiyufeng <weiyufeng@kylinos.cn>
----
- drivers/pci/hotplug/cpqphp_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+	if (state == PCI_D3cold) {
+		/*
+		 * To put the device in D3cold, put it into D3hot in the native
+		 * way, then put it into D3cold using platform ops.
+		 */
+		error = pci_set_low_power_state(dev, PCI_D3hot, locked);
 
-diff --git a/drivers/pci/hotplug/cpqphp_pci.c b/drivers/pci/hotplug/cpqphp_pci.c
-index e9f1fb333a71..718bc6cf12cb 100644
---- a/drivers/pci/hotplug/cpqphp_pci.c
-+++ b/drivers/pci/hotplug/cpqphp_pci.c
-@@ -138,7 +138,7 @@ static int PCI_RefinedAccessConfig(struct pci_bus *bus, unsigned int devfn, u8 o
- 
- 	if (pci_bus_read_config_dword(bus, devfn, PCI_VENDOR_ID, &vendID) == -1)
- 		return -1;
--	if (vendID == 0xffffffff)
-+	if (PCI_POSSIBLE_ERROR(vendID))
- 		return -1;
- 	return pci_bus_read_config_dword(bus, devfn, offset, value);
- }
-@@ -253,7 +253,7 @@ static int PCI_GetBusDevHelper(struct controller *ctrl, u8 *bus_num, u8 *dev_num
- 			*dev_num = tdevice;
- 			ctrl->pci_bus->number = tbus;
- 			pci_bus_read_config_dword(ctrl->pci_bus, *dev_num, PCI_VENDOR_ID, &work);
--			if (!nobridge || (work == 0xffffffff))
-+			if (!nobridge || PCI_POSSIBLE_ERROR(work))
- 				return 0;
- 
- 			dbg("bus_num %d devfn %d\n", *bus_num, *dev_num);
--- 
-2.25.1
+		if (pci_platform_power_transition(dev, PCI_D3cold))
+			return error;
 
+Thanks,
+
+Lukas
 
