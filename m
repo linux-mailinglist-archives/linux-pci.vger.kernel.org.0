@@ -1,50 +1,49 @@
-Return-Path: <linux-pci+bounces-11376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11CF2949800
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 21:07:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49C1094980B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 21:12:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC4B11F2184E
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 19:07:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A46F1C228C8
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 19:12:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B7F13C677;
-	Tue,  6 Aug 2024 19:07:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65B780025;
+	Tue,  6 Aug 2024 19:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QC8IPl6j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF7hcLy0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EE513B288;
-	Tue,  6 Aug 2024 19:07:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A6A4F8A0;
+	Tue,  6 Aug 2024 19:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722971225; cv=none; b=D6Gsa7uVFkqFZ5DpFzRPVYHIzHAsdizJgoNVhoW7Cun0NCHPwDBrdaJ8VQ8UN+SNOej6sv+m06EU8SKlncG4a8+IDH6uQJyUHY1gtIY5GTcG2V4nrmyviEXgGcAsQip5+/LDroMG9DWiTKGoW9oiH4aUF31Yt44/oporJxbCSyw=
+	t=1722971525; cv=none; b=Oi4axgJle2a3XjzbjRWEZsqJWSaIu8wNkj27kXXWqHTbccu/gjhhyqAi9i6zebJnog2ri2PQnv/INIZNz2d6AWwTpnmYzNXnys4OtggD9aMRMWFugTd4ON3fHsObSY5qozUVa5xviItWxvLMk3RciNKRLYYIREYGb5BcSpbsfW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722971225; c=relaxed/simple;
-	bh=WVKkU+/2pLfBtVPtjXmuMIcG0wlH5uxeowV0c0yZeJE=;
+	s=arc-20240116; t=1722971525; c=relaxed/simple;
+	bh=MUntDv2gD5+r+bQ9Gq55BzMlclzgUuGCotLVqMS29C8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pfIZRcKnLVQRtsXLYle3RaSKRnjcCJmrchitVil61oIxkDPF/l5CY5MotPILsXjIfl2Abt35JvKyqcYHj1JVqK5thYF5HDiqYrMmKHpZs7LIpIqxrrGC23kUCpToXd0P053FGuolv7n02bTnXh5nurVsMdp5V3nFBK3wOnUzUMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QC8IPl6j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC27C4AF10;
-	Tue,  6 Aug 2024 19:07:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=VpF/Sa0qzQQ6mxbfAbTAe1YM33E1/6HTXn72FNM3dLpty3eJcd8ma+ID7HDADqcXYOLiKDyVV9Gpn5V9QmuYWzgOvM7OV4TtYIDr218c4QIl8auvmIA1fX0Zz7e6vJFYwi6W6cylysNJiAip+U17f+vqPnAlhm7I30SMSgRcax8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF7hcLy0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF02C32786;
+	Tue,  6 Aug 2024 19:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722971225;
-	bh=WVKkU+/2pLfBtVPtjXmuMIcG0wlH5uxeowV0c0yZeJE=;
+	s=k20201202; t=1722971525;
+	bh=MUntDv2gD5+r+bQ9Gq55BzMlclzgUuGCotLVqMS29C8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QC8IPl6jpQTAT4L9Qp2WYsconTnPxPImCeRcw9tLpiGmNL1bhtGBiGX/9QOSRnotq
-	 1gE/Lp08Zn6AlJ6ud0+3Bb90QOkEj7+H+o0Dwr3sEmryl3+ZFzGrLNsBiJ0bUsw8W0
-	 D/WiXEwm327cndUskH0St8fwGWE1gRfDHWwQkU5peeLivHZh1XtgjeAt6YutfwHpNA
-	 rRFq++/MkCzOky8iJK5G7rsEWII8Lm6G9zApQAQ+wAK5feQGPoOXx01wEZ7vvndfQb
-	 8kl+NUc3u+UUmNeCcJM5VD5ZVI+GN1xBs+Uh2l02iipMxNKOD17e+q0ziEQrSxCk0M
-	 PZnbBjuuQSzRA==
-Date: Tue, 6 Aug 2024 14:07:02 -0500
+	b=eF7hcLy04y8SklVvaENBicO1NsGIl5KbsF37nza/Xt5zlCAp60c00afp8+p72rvpF
+	 Cgx0mn1gWokiW68mKXvEIdBD42b2TMdsmbs1wedysOqm8GPdmIjWTWUtknEaNcb1Lf
+	 Ta8NGJOWxvP/AG0e7t41JjEl8/EuNWUuTXSU1AdQiGAXT50L3OAMoG6qIw+nHHeF7L
+	 ktM/Ly8qy4L9NUBZIuBaFpmNYg/F8G097FtCkwdOAZEqRFJ+YqMY+7c8rfM3w1DSsA
+	 iIK68nGhgRl3bdpEfSw71nf6iXxoKUbo41sSuLBF06X6+kU9gSaN0Mpg6jXe2uIQvr
+	 pC+AviepEa6QA==
+Date: Tue, 6 Aug 2024 14:12:03 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
@@ -57,10 +56,11 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	andersson@kernel.org, quic_vbadigan@quicinc.com,
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/8] PCI: Change the parent to correctly represent
- pcie hierarchy
-Message-ID: <20240806190702.GA72614@bhelgaas>
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 7/8] PCI: qcom: Add support for host_stop_link() &
+ host_start_link()
+Message-ID: <20240806191203.GA73014@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,104 +69,103 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240803-qps615-v2-4-9560b7c71369@quicinc.com>
+In-Reply-To: <20240803-qps615-v2-7-9560b7c71369@quicinc.com>
 
-On Sat, Aug 03, 2024 at 08:52:50AM +0530, Krishna chaitanya chundru wrote:
-> Currently the pwrctl driver is child of pci-pci bridge driver,
-> this will cause issue when suspend resume is introduced in the pwr
-> control driver. If the supply is removed to the endpoint in the
-> power control driver then the config space access by the
-> pci-pci bridge driver can cause issues like Timeouts.
-
-If "pci-pci bridge driver" refers to portdrv, please use "portdrv" to
-avoid confusion.
-
-Can you be a little more specific about config accesses by the bridge
-driver?  Generally portdrv wouldn't touch devices below the bridge.
-It sounds like you've tripped over something here, so you probably
-have an example of a timeout.
-
-s/pcie/PCIe/ in subject, although it'd be nice if the whole subject
-could be a little more specific.  I don't think pwrctl is directly
-part of the PCIe hierarchy, so I don't quite understand what you're
-saying there.
-
-> For this reason change the parent to controller from pci-pci bridge.
+On Sat, Aug 03, 2024 at 08:52:53AM +0530, Krishna chaitanya chundru wrote:
+> For the switches like QPS615 which needs to configure it before
+> the PCIe link is established.
 > 
-> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+> if the link is not up assert the PERST# and disable LTSSM bit so
+> that PCIe controller will not participate in the link training
+> as part of host_stop_link().
+> 
+> De-assert the PERST# and enable LTSSM bit back in host_start_link().
+> 
+> Introduce ltssm_disable function op to stop the link training.
 
-Will need an ack from Bartosz, of course, since he added this.  Moved
-from cc: to to: list to make sure he sees this.
+pcie-qcom.c is a driver for a PCIe host controller.  Apparently QPS615
+is a switch in a hierarchy that could be below any PCIe host
+controller, so I'm missing the connection with pcie-qcom.c.
+
+Does this fix a problem that only occurs with pcie-qcom.c?  What
+happens if you put a QPS615 below some other controller?
 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
->  drivers/pci/bus.c         | 3 ++-
->  drivers/pci/pwrctl/core.c | 9 ++++++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 39 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 > 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 55c853686051..15b42f0f588f 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -328,6 +328,7 @@ void __weak pcibios_bus_add_device(struct pci_dev *pdev) { }
->   */
->  void pci_bus_add_device(struct pci_dev *dev)
->  {
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->  	struct device_node *dn = dev->dev.of_node;
->  	int retval;
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0180edf3310e..f4a6df53139c 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -233,6 +233,7 @@ struct qcom_pcie_ops {
+>  	void (*host_post_init)(struct qcom_pcie *pcie);
+>  	void (*deinit)(struct qcom_pcie *pcie);
+>  	void (*ltssm_enable)(struct qcom_pcie *pcie);
+> +	void (*ltssm_disable)(struct qcom_pcie *pcie);
+>  	int (*config_sid)(struct qcom_pcie *pcie);
+>  };
 >  
-> @@ -352,7 +353,7 @@ void pci_bus_add_device(struct pci_dev *dev)
->  
->  	if (dev_of_node(&dev->dev) && pci_is_bridge(dev)) {
->  		retval = of_platform_populate(dev_of_node(&dev->dev), NULL, NULL,
-> -					      &dev->dev);
-> +					      host->dev.parent);
-
-I'm not sure host->dev.parent is always valid.  There are
-pci_create_root_bus() callers that supply a NULL parent pointer.
-
->  		if (retval)
->  			pci_err(dev, "failed to populate child OF nodes (%d)\n",
->  				retval);
-> diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
-> index feca26ad2f6a..4f2ffa0b0a5f 100644
-> --- a/drivers/pci/pwrctl/core.c
-> +++ b/drivers/pci/pwrctl/core.c
-> @@ -11,6 +11,8 @@
->  #include <linux/property.h>
->  #include <linux/slab.h>
->  
-> +#include "../pci.h"
-> +
->  static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
->  			     void *data)
->  {
-> @@ -64,18 +66,23 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
->   */
->  int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
->  {
-> +	struct pci_bus *bus;
->  	int ret;
->  
->  	if (!pwrctl->dev)
->  		return -ENODEV;
->  
-> +	bus = pci_find_bus(of_get_pci_domain_nr(pwrctl->dev->parent->of_node), 0);
-> +	if (!bus)
-> +		return -ENODEV;
-> +
->  	pwrctl->nb.notifier_call = pci_pwrctl_notify;
->  	ret = bus_register_notifier(&pci_bus_type, &pwrctl->nb);
->  	if (ret)
->  		return ret;
->  
->  	pci_lock_rescan_remove();
-> -	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
-> +	pci_rescan_bus(bus);
->  	pci_unlock_rescan_remove();
->  
+> @@ -555,6 +556,41 @@ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
 >  	return 0;
+>  }
+>  
+> +static int qcom_pcie_host_start_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +
+> +	if (!dw_pcie_link_up(pcie->pci))  {
+> +		qcom_ep_reset_deassert(pcie);
+> +
+> +		if (pcie->cfg->ops->ltssm_enable)
+> +			pcie->cfg->ops->ltssm_enable(pcie);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_host_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +
+> +	if (!dw_pcie_link_up(pcie->pci))  {
+> +		qcom_ep_reset_assert(pcie);
+> +
+> +		if (pcie->cfg->ops->ltssm_disable)
+> +			pcie->cfg->ops->ltssm_disable(pcie);
+> +	}
+> +}
+> +
+> +static void qcom_pcie_2_3_2_ltssm_disable(struct qcom_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(pcie->parf + PARF_LTSSM);
+> +	val &= ~LTSSM_EN;
+> +	writel(val, pcie->parf + PARF_LTSSM);
+> +}
+> +
+>  static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+>  {
+>  	u32 val;
+> @@ -1306,6 +1342,7 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.host_post_init = qcom_pcie_host_post_init_2_7_0,
+>  	.deinit = qcom_pcie_deinit_2_7_0,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +	.ltssm_disable = qcom_pcie_2_3_2_ltssm_disable,
+>  	.config_sid = qcom_pcie_config_sid_1_9_0,
+>  };
+>  
+> @@ -1363,6 +1400,8 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  	.start_link = qcom_pcie_start_link,
+> +	.host_start_link = qcom_pcie_host_start_link,
+> +	.host_stop_link = qcom_pcie_host_stop_link,
+>  };
+>  
+>  static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
 > 
 > -- 
 > 2.34.1
