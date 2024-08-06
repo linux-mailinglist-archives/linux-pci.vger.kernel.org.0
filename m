@@ -1,180 +1,254 @@
-Return-Path: <linux-pci+bounces-11364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11365-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B77E6949473
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 17:24:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1F43949479
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 17:26:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F7662885F2
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 15:24:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89A39289773
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 15:26:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AA82A1CA;
-	Tue,  6 Aug 2024 15:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E8115E8B;
+	Tue,  6 Aug 2024 15:25:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PgWJN4FZ"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="EPSPNpfh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52D029422;
-	Tue,  6 Aug 2024 15:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339C32AE90
+	for <linux-pci@vger.kernel.org>; Tue,  6 Aug 2024 15:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722957878; cv=none; b=sfjtUWUt+/rFQ8EU1fCvAu4s40URQgGybd3PiFyX80jRQ2VqxijQ4XVMWCTjddhK82ri3RhtNewxLTjfFIiEgDFbSvxcKF9k3haHKM6H2hVU/leGuqeaItRs2omUhgqlXdGz9rKIqCe3m/2goyvZCbf7vcTvNQrrhQwhrUT+fgw=
+	t=1722957947; cv=none; b=Y6I7WihaXt3/8AMtAIevrxk4VZ32F1xYuAoStacPFKxsNRNKc4OERE3cAalw4ElFFlIQfbuOKqOJLmi97AEM5teq3Wlm2ZljIqoA7LJu4Tz+TaM2XXuHgu3JrhqkTVT7vSJWYE9H+WkGGhGMxZcIuRv8IqlNgYmapSElE3EWpDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722957878; c=relaxed/simple;
-	bh=cHoGW2bSRG+At92kJxjnX7sq3vyRzPsHjO31vLo1vkI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=b7rEHbxd3rfhahvqkevjyyYBIlS3tz2kyBZ42qXPMV10/hkJPQfdtS7A6LQ0WFMWvZpjs0BPSMy7wDFtvn7Wdzs5C5EqlUYDN4i7fCs3jUtajP2Y2FUDn+LWr+3EmzfBBJu365WDVX7yKW0u8ceTQFexDFsvFaLb3UYs66LdENo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PgWJN4FZ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722957877; x=1754493877;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=cHoGW2bSRG+At92kJxjnX7sq3vyRzPsHjO31vLo1vkI=;
-  b=PgWJN4FZxqZdrZFZPGD8MxklIDW3Kv6cLCXDyQwP7B98u4nb7lu18Ps+
-   bjm/GB89SpxkKBBoDh3P5jbXtNenWk7xVxLJJgJ/X9hIH7gOo4mdO9nc1
-   XjncLp8WVcTnPdRH9SReJLjnXUVgXkmoByzmQcgTAfAd7fMu+Y5RHOg/w
-   ZBQRYhgUrnQxcNanaX7UIHmKkLvQmC9r1KhYcoDWrhcCnFKgESndPtNnz
-   LOdhNF1+qzunl/kWHGUVBqnQKWH3qQUOyNxuwXkUUyoxzyQ3BotPLdWay
-   kJjDxIOzxQmfm0EZA/HH/LmMVmUP6LYd30AMUc656EiVGdCIQKI6+1GAT
-   Q==;
-X-CSE-ConnectionGUID: oLGx2vbwQhWtk6mMboxKXQ==
-X-CSE-MsgGUID: WBXMfaSgT1mGWyIXS2ECmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="23897074"
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="23897074"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:24:36 -0700
-X-CSE-ConnectionGUID: oP9xTk7ZTrW4WS64qv3ivQ==
-X-CSE-MsgGUID: JCS2pyk0T5OFgqyooeC4Mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="61177807"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.72])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:24:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 Aug 2024 18:24:26 +0300 (EEST)
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, 
-    cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-    Jingoo Han <jingoohan1@gmail.com>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    andersson@kernel.org, quic_vbadigan@quicinc.com, 
-    linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
-    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/8] PCI: Enable Power and configure the QPS615 PCIe
- switch
-In-Reply-To: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
-Message-ID: <f2cbdd06-0318-4be1-e8dc-b91ce103b34c@linux.intel.com>
-References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
+	s=arc-20240116; t=1722957947; c=relaxed/simple;
+	bh=900LQubH8X088PQcoK6a0R1nFpSkYEOfMMzBW84XtcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=odime726iBIrMV4daUpVtIaflrJE7RB7yY3onUeB9CYOLRQz40wwO1Swqu0g4UbbYlmHM7JNz3s1voF99KfghMwxUETzpu2P2OwJrpae2QlMf5WkrTwM/mjRqEoJCWBLpLe1hIiBBdRk6Td8RMcaWuChtm3nMBFYs/sjBNH8yTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=EPSPNpfh; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-81fb80d3887so29953639f.2
+        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2024 08:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1722957945; x=1723562745; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2hSFaWzu7k5+i7urG/rB+QN7qlxFaVHDeVcWBVMpJHI=;
+        b=EPSPNpfh2KnZAHOggU9OhZc2/HdqN0qQUSLkujWLKpg5flqKEGW2Ay/ZbKhs0ahw/Z
+         IcVjGMeCYEFATUeRAIICeoLwNQCbuWoD4rcHU06Kkqn9M1qklxTwsnEl9HYBcUfHvXcm
+         PXSLkiFK4A8ipp73EFdhhYv2jImqA0tRLlgrWZufrGygMpdTYHNXehYxfKFSQnDel8LU
+         Flm6qQgfiRQzT90F43Sb/dfa0LXGGxUOBlikQavPbx+AvGpFkNFZNWdqHU7Fi3rw2nyO
+         +rh/DTf+aWq6/LN/IUkN59qy7ogUmD9r/xfRKPQmrOfdFRfo0xdYQE5bTcEO2P2nel+m
+         +7FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722957945; x=1723562745;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2hSFaWzu7k5+i7urG/rB+QN7qlxFaVHDeVcWBVMpJHI=;
+        b=vIWt4bFeqzSgVP6SihQULkcmM5AP52l6MAftVQUk4FkHlpZJ3g316YDJCzNhzFGM+i
+         h9cjop2gMQDHLfhRvvlIyJ1n49U7TK1CmaP+Bc14lD0yG7xlSfWz8VIGnTXyeuqL+Y4B
+         yZFUs2t5QNYsFEhC9OODGxocI8Hh6Naji/TH/mK/CmYiRoLgqsQ94/433aCfgmx5mO2D
+         lU0WYxWhu53TGXYTpPUWnBfvjGrFYr7f166tVVoS2RQOZbl9svuaGLcFAfzJBPRipw81
+         6qbeqOlm5FZv9mPw1KJpuJI7xJoeSJs7PW8P9MNLDaWANTAfpj/fJ9DajPPYl+yB1AuJ
+         uZkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8zfCP7R8//dgRxUoe8lTkJ6INFqVPVA+0HXPTc5bVLPlLcjuoBRb+mnWT/SSvx0PgrbfVrCQVf4Ug/3Dw1HN+ZxM/hUgzhMgL
+X-Gm-Message-State: AOJu0Yx/gqT8sCsRaaqSRKFxpVJDL7oxtkESLOObwZZnLJz1mjdu/js0
+	E96eLQXlk86C+t4w4tRHA3w/xkCBOh/6t4kgOMpEb70RkVn+jIXbraFZJrAUCdv6Dc00xbpKZJG
+	+ZFC3EV/jG81Ji0vkstNth3Id004RQ9PWb+dhtg==
+X-Google-Smtp-Source: AGHT+IFRjj14ZK3zQwhUJXXLBufMqLIkirrDvsuwso/YZ1pLiuKaOUUkzxwFjczveLiPrX3RKPs/9rVwHlLGeDyxf6w=
+X-Received: by 2002:a05:6e02:1645:b0:39b:375a:f8b7 with SMTP id
+ e9e14a558f8ab-39b375afc45mr146160275ab.23.1722957945281; Tue, 06 Aug 2024
+ 08:25:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240729142241.733357-1-sunilvl@ventanamicro.com> <20240729142241.733357-15-sunilvl@ventanamicro.com>
+In-Reply-To: <20240729142241.733357-15-sunilvl@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Tue, 6 Aug 2024 20:55:34 +0530
+Message-ID: <CAAhSdy2ATNkx4cpMLpVrBUbxSG+WVbOFpMA8LQcMAE2jGSs4ng@mail.gmail.com>
+Subject: Re: [PATCH v7 14/17] irqchip/riscv-imsic-state: Create separate
+ function for DT
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Samuel Holland <samuel.holland@sifive.com>, 
+	Robert Moore <robert.moore@intel.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Haibo Xu <haibo1.xu@intel.com>, 
+	Atish Kumar Patra <atishp@rivosinc.com>, Drew Fustini <dfustini@tenstorrent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 3 Aug 2024, Krishna chaitanya chundru wrote:
+On Mon, Jul 29, 2024 at 7:54=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com=
+> wrote:
+>
+> While populating IMSIC global structure, many fields are initialized
+> using DT properties. Make the code which uses DT properties as separate
+> function so that it is easier to add ACPI support later. No
+> functionality added/changed.
+>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 
-> QPS615 is the PCIe switch which has one upstream and three downstream
-> ports. One of the downstream ports is used as endpoint device of Ethernet
-> MAC. Other two downstream ports are supposed to connect to external
-> device. One Host can connect to QPS615 by upstream port.
-> 
-> QPS615 switch power is controlled by the GPIO's. After powering on
-> the switch will immediately participate in the link training. if the
-> host is also ready by that time PCIe link will established. 
-> 
-> The QPS615 needs to configured certain parameters like de-emphasis,
-> disable unused port etc before link is established.
-> 
-> The device tree properties are parsed per node under pci-pci bridge in the
-> devicetree. Each node has unique bdf value in the reg property, driver
-> uses this bdf to differentiate ports, as there are certain i2c writes to
-> select particulat port.
->  
-> As the controller starts link training before the probe of pwrctl driver,
-> the PCIe link may come up before configuring the switch itself.
-> To avoid this introduce two functions in pci_ops to start_link() &
-> stop_link() which will disable the link training if the PCIe link is
-> not up yet.
+LGTM.
 
-???
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-This paragraph contradicts with itself. First it says link training starts 
-and the link may come up, and then it says opposite, that is, disable the 
-link training if the link is not up yet. So which way it is?
+Regards,
+Anup
 
-If link can come up, why do you need to disable link training at all? 
-Cannot you just trigger another link training after the configuration has 
-been done so the new configuration is captured? If not, why?
-
--- 
- i.
-
-> Now PCI pwrctl device is the child of the pci-pcie bridge, if we want
-> to enable the suspend resume for pwrctl device there may be issues
-> since pci bridge will try to access some registers in the config which
-> may cause timeouts or Un clocked access as the power can be removed in
-> the suspend of pwrctl driver.
-> 
-> To solve this make PCIe controller as parent to the pci pwr ctrl driver
-> and create devlink between host bridge and pci pwrctl driver so that
-> pci pwrctl driver will go suspend only after all the PCIe devices went
-> to suspend.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
-> Changes in V1:
-> - Fix the code as per the comments given.
-> - Removed D3cold D0 sequence in suspend resume for now as it needs
->   seperate discussion.
-> - change to dt approach for configuring the switch instead of request_firmware() approach
-> - Link to v1: https://lore.kernel.org/linux-pci/20240626-qps615-v1-4-2ade7bd91e02@quicinc.com/T/
-> ---
-> 
-> ---
-> Krishna chaitanya chundru (8):
->       dt-bindings: PCI: Add binding for qps615
->       dt-bindings: trivial-devices: Add qcom,qps615
->       arm64: dts: qcom: qcs6490-rb3gen2: Add node for qps615
->       PCI: Change the parent to correctly represent pcie hierarchy
->       PCI: Add new start_link() & stop_link function ops
->       PCI: dwc: Add support for new pci function op
->       PCI: qcom: Add support for host_stop_link() & host_start_link()
->       PCI: pwrctl: Add power control driver for qps615
-> 
->  .../devicetree/bindings/pci/qcom,qps615.yaml       | 191 ++++++
->  .../devicetree/bindings/trivial-devices.yaml       |   2 +
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       | 121 ++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi               |   2 +-
->  drivers/pci/bus.c                                  |   3 +-
->  drivers/pci/controller/dwc/pcie-designware-host.c  |  18 +
->  drivers/pci/controller/dwc/pcie-designware.h       |  16 +
->  drivers/pci/controller/dwc/pcie-qcom.c             |  39 ++
->  drivers/pci/pwrctl/Kconfig                         |   7 +
->  drivers/pci/pwrctl/Makefile                        |   1 +
->  drivers/pci/pwrctl/core.c                          |   9 +-
->  drivers/pci/pwrctl/pci-pwrctl-qps615.c             | 638 +++++++++++++++++++++
->  include/linux/pci.h                                |   2 +
->  13 files changed, 1046 insertions(+), 3 deletions(-)
-> ---
-> base-commit: 1722389b0d863056d78287a120a1d6cadb8d4f7b
-> change-id: 20240727-qps615-e2894a38d36f
-> 
-> Best regards,
-> 
+>  drivers/irqchip/irq-riscv-imsic-state.c | 97 ++++++++++++++-----------
+>  1 file changed, 55 insertions(+), 42 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/ir=
+q-riscv-imsic-state.c
+> index 5479f872e62b..f9e70832863a 100644
+> --- a/drivers/irqchip/irq-riscv-imsic-state.c
+> +++ b/drivers/irqchip/irq-riscv-imsic-state.c
+> @@ -510,6 +510,60 @@ static int __init imsic_matrix_init(void)
+>         return 0;
+>  }
+>
+> +static int __init imsic_populate_global_dt(struct fwnode_handle *fwnode,
+> +                                          struct imsic_global_config *gl=
+obal,
+> +                                          u32 *nr_parent_irqs)
+> +{
+> +       int rc;
+> +
+> +       /* Find number of guest index bits in MSI address */
+> +       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,guest-inde=
+x-bits",
+> +                                 &global->guest_index_bits);
+> +       if (rc)
+> +               global->guest_index_bits =3D 0;
+> +
+> +       /* Find number of HART index bits */
+> +       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,hart-index=
+-bits",
+> +                                 &global->hart_index_bits);
+> +       if (rc) {
+> +               /* Assume default value */
+> +               global->hart_index_bits =3D __fls(*nr_parent_irqs);
+> +               if (BIT(global->hart_index_bits) < *nr_parent_irqs)
+> +                       global->hart_index_bits++;
+> +       }
+> +
+> +       /* Find number of group index bits */
+> +       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-inde=
+x-bits",
+> +                                 &global->group_index_bits);
+> +       if (rc)
+> +               global->group_index_bits =3D 0;
+> +
+> +       /*
+> +        * Find first bit position of group index.
+> +        * If not specified assumed the default APLIC-IMSIC configuration=
+.
+> +        */
+> +       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-inde=
+x-shift",
+> +                                 &global->group_index_shift);
+> +       if (rc)
+> +               global->group_index_shift =3D IMSIC_MMIO_PAGE_SHIFT * 2;
+> +
+> +       /* Find number of interrupt identities */
+> +       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
+> +                                 &global->nr_ids);
+> +       if (rc) {
+> +               pr_err("%pfwP: number of interrupt identities not found\n=
+", fwnode);
+> +               return rc;
+> +       }
+> +
+> +       /* Find number of guest interrupt identities */
+> +       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-guest-=
+ids",
+> +                                 &global->nr_guest_ids);
+> +       if (rc)
+> +               global->nr_guest_ids =3D global->nr_ids;
+> +
+> +       return 0;
+> +}
+> +
+>  static int __init imsic_get_parent_hartid(struct fwnode_handle *fwnode,
+>                                           u32 index, unsigned long *harti=
+d)
+>  {
+> @@ -578,50 +632,9 @@ static int __init imsic_parse_fwnode(struct fwnode_h=
+andle *fwnode,
+>                 return -EINVAL;
+>         }
+>
+> -       /* Find number of guest index bits in MSI address */
+> -       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,guest-inde=
+x-bits",
+> -                                 &global->guest_index_bits);
+> +       rc =3D imsic_populate_global_dt(fwnode, global, nr_parent_irqs);
+>         if (rc)
+> -               global->guest_index_bits =3D 0;
+> -
+> -       /* Find number of HART index bits */
+> -       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,hart-index=
+-bits",
+> -                                 &global->hart_index_bits);
+> -       if (rc) {
+> -               /* Assume default value */
+> -               global->hart_index_bits =3D __fls(*nr_parent_irqs);
+> -               if (BIT(global->hart_index_bits) < *nr_parent_irqs)
+> -                       global->hart_index_bits++;
+> -       }
+> -
+> -       /* Find number of group index bits */
+> -       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-inde=
+x-bits",
+> -                                 &global->group_index_bits);
+> -       if (rc)
+> -               global->group_index_bits =3D 0;
+> -
+> -       /*
+> -        * Find first bit position of group index.
+> -        * If not specified assumed the default APLIC-IMSIC configuration=
+.
+> -        */
+> -       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-inde=
+x-shift",
+> -                                 &global->group_index_shift);
+> -       if (rc)
+> -               global->group_index_shift =3D IMSIC_MMIO_PAGE_SHIFT * 2;
+> -
+> -       /* Find number of interrupt identities */
+> -       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
+> -                                 &global->nr_ids);
+> -       if (rc) {
+> -               pr_err("%pfwP: number of interrupt identities not found\n=
+", fwnode);
+>                 return rc;
+> -       }
+> -
+> -       /* Find number of guest interrupt identities */
+> -       rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-guest-=
+ids",
+> -                                 &global->nr_guest_ids);
+> -       if (rc)
+> -               global->nr_guest_ids =3D global->nr_ids;
+>
+>         /* Sanity check guest index bits */
+>         i =3D BITS_PER_LONG - IMSIC_MMIO_PAGE_SHIFT;
+> --
+> 2.43.0
+>
 
