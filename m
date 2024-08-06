@@ -1,287 +1,401 @@
-Return-Path: <linux-pci+bounces-11397-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11398-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4228C949BAF
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 00:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F2D5949BBC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 01:01:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F156728343E
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 22:59:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BEA1D28816F
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 23:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D68B3FE55;
-	Tue,  6 Aug 2024 22:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3B416F27E;
+	Tue,  6 Aug 2024 23:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XfiABRtP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0xGv57f+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tY9hLgOR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4c5OUOTa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpUxnG3N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261A93BB30;
-	Tue,  6 Aug 2024 22:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0625D149DE2;
+	Tue,  6 Aug 2024 23:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722985139; cv=none; b=o5+VLJEmzJyq5SU7ZC8jDIl08jdFRuoxGECGAFOdF7TZ/9FpjqEJVyujFR55UDOMhHz/NUvE5cn3XE8j5U/a+iTr6gnRciZ7wF80rR2ohb09mFpm1JLmbmkZSVQJg9R8WhP0wXzS32+y2Jee9FGti90BPtrgYTYexoqCtplJyes=
+	t=1722985301; cv=none; b=Y1jd+49bbxnSbKdD4gCyantS6bTzIQuVV2tA++dkaJsdyoFa93M8p5CvVwdSnzs/9A7HoescdhMebxS//tF7t4JhGFtkMeY29aU2weWOkmF24fTInYb/gr7GtlYlKMByRs8NmlbB6F6ZTFVJknmCfMvXT9vKjhhbW8QNef/iSrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722985139; c=relaxed/simple;
-	bh=KWj+SAl+YekNZVSswavwZEirGV4//jriXP7kbZSgpyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HsUs0z1CaJidbmkySA3w4P//HOMHlcFop9Uk05jHiWaDLhoGPvUJ/p0ROGwlzYot6tyNIB0PUyim4jtHfIL0nQqHNMUa8+YNfV7H776luxQECOMYVmf8FKGj9Qcz2YapFgd9xEjDEAAdeOZG+aQdps2tZVd5HFk7LLkn358Mm9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XfiABRtP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0xGv57f+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tY9hLgOR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4c5OUOTa; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C4F9B21B3C;
-	Tue,  6 Aug 2024 22:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722985135; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
-	b=XfiABRtPLMaHoRKQvphIx87RFTwwZ96BmDDotBBciJcSmFJvmL643zjI5j4T8mcCNiqRjJ
-	VtgdVAnqPB+2bytm9R5jMiqBATk2sv960iTx6egBvN45KkII+J+CqXvQslmJnWwK2wr5Am
-	KaIJVIwhsPNccUGeaf1/V7Wd+T0fPN4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722985135;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
-	b=0xGv57f+ST5tsYhRF5HPbqAYNklf66PVC3JreycYkjYme1z/xlPRAACiW6+OSXlo1HAkn0
-	Vh5eFsL6X4hURsCA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tY9hLgOR;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4c5OUOTa
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1722985134; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
-	b=tY9hLgORSZWdKE/1VN35p5+YFWUtBBfM3zFMZto9hSp8qF4PYHBgY9mVm9O7Sdbj0q1K4W
-	QpkaaXkuwkrO6/AQDNkwLBKzecVgRE5zcYJJ+J4B6UuqrU2EUyvHxja0IaKq0FyFavqkVh
-	vKytt6wUbD+VKUXSgAj6IoLBJzZMuHU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1722985134;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1A3iGNjuoT+XHTMcslcpXcWmw5DrEYfcY8wDXr2okuc=;
-	b=4c5OUOTaNy0e5NXA6RaD5Lox8c/6hOqMYWa0soNq7ycTHRw3vPifWGax4RY0MghhsH1unr
-	lxGb4weWr95yCCAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED7CD13770;
-	Tue,  6 Aug 2024 22:58:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CyDHN62qsmbEZAAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Tue, 06 Aug 2024 22:58:53 +0000
-Message-ID: <c77b6011-68e8-467c-9218-4fd4aa3e4ee3@suse.de>
-Date: Wed, 7 Aug 2024 01:58:53 +0300
+	s=arc-20240116; t=1722985301; c=relaxed/simple;
+	bh=f1xiifrjh7vKfrNfmLwT2AO9GXKGE9rht8EESovRZ6w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l51iGUPc4s2p9PmjYxT7ZHqOjKns83gFDCPE7yEH2EspdnY0gAWI4VvzExxC4hMpm2rpaEB6+3haJFMh8aOeu5IZpyrn9sSuFzMbhIpSWdkz9cDtxaRFsbIK4psZMISzG8Od8kNkrsuX4Ab3T1/Lw0+yAMiJeTlOjg2RWAJh0Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HpUxnG3N; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc56fd4de1so2546335ad.0;
+        Tue, 06 Aug 2024 16:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722985299; x=1723590099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qC3rSICI9IoAuJIQSFewWSX2BQATF5BEMr9DE8NVX7U=;
+        b=HpUxnG3N3FFGPGWFaYyzDigE6WLyGC1g0paR6CvbFN5qrUf0Ean+Ml10qj6Z8heMYw
+         HJPvQql2ymvrBPPTrY4hhfTs6g8OlrI8IpfRwNq+R/ClDJKagGrE2ULXdcskLIEmOIoz
+         M655kaDVSeEfDNWHN2mNRczTrcMUG04oZYrT6DBLEwyEry33kRcgKNiVg030zuTlH7u+
+         vJhDoiAhaj8r5hCzM4ESudlKXBoDeCtBf8vlcoeL8NAvYQ0+q0Vq9gESldEWvcXBDxf0
+         JmHWaVNziJwvu7tGaeC5c+7SojytRTmCxoYh4o5Pt62gAkgOHq3KBkEFDg93nEu+NV/n
+         yL+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722985299; x=1723590099;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qC3rSICI9IoAuJIQSFewWSX2BQATF5BEMr9DE8NVX7U=;
+        b=sUPp1ASQ3ClTry4XFWF9gS4rLqukBnTiKzaXimM4X3Dje78hb6IxWb9memLe+alTst
+         IslW4Qq3biiiWLZhWaTFUT9/eDuhadnZq7VbHRzyitxPTHVzTGx/dj3+D9+p5vkhnT4D
+         SGjOhk/hXDftOX70ATJDl1ZbatvkfjDwi3izM3ruEnwSGwu8GNxMOYtA94C52mNmOCNc
+         s14eep4qSTbO5AaHzMyqToWrTbq0ly6ZZnKM5pFPEN/ROv8T4jScwa37TRI5lraLP7Hi
+         AQAKizjOnj0vtE8e5lYmyt2xcGz5d/KZzq8B2RbfAb5W1q7lohCDNmAhM6zyO+rjWwyU
+         4m1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUEQD3Kyaybr8ijsJJukjoO3fGXMK9OUbzBpPqQ8f/a4eXFpWabGEJWIuqLuJrzHhzFWmvXCAN0Bpqd1K+3QruWfaOugL77jxV0cN3WJ1X1cNDbpqsM1ao/vp0ybUzS0DjzZdBnpnXZ
+X-Gm-Message-State: AOJu0YxLWCknBqTBKUTqd4IF/1qwRwpLHrLVTO9GVM/cjzE0tAy70kqg
+	9JbOL3+YRwz3PomZ+fRepBYIjSc4KUaQ8TCXi+LQreXMvA0PhxDH
+X-Google-Smtp-Source: AGHT+IGQGq476FDad1g00jhCresKLvmhdVnks40yA57CXQpJny0xtG5Iqg7MOXiJR/olGoc1WqP55w==
+X-Received: by 2002:a17:902:da8d:b0:1fc:5b81:729f with SMTP id d9443c01a7336-200855706cemr4295465ad.32.1722985298865;
+        Tue, 06 Aug 2024 16:01:38 -0700 (PDT)
+Received: from toolbox.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff592b3997sm92780755ad.294.2024.08.06.16.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 16:01:37 -0700 (PDT)
+From: Alistair Francis <alistair23@gmail.com>
+X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
+To: bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	Jonathan.Cameron@huawei.com,
+	lukas@wunner.de
+Cc: alex.williamson@redhat.com,
+	christian.koenig@amd.com,
+	kch@nvidia.com,
+	gregkh@linuxfoundation.org,
+	logang@deltatee.com,
+	linux-kernel@vger.kernel.org,
+	alistair23@gmail.com,
+	chaitanyak@nvidia.com,
+	rdunlap@infradead.org,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v15 1/4] PCI/DOE: Rename DOE protocol to feature
+Date: Wed,  7 Aug 2024 09:01:15 +1000
+Message-ID: <20240806230118.1332763-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Refactor for chips with many
- regular inbound windows
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240731222831.14895-1-james.quinlan@broadcom.com>
- <20240731222831.14895-10-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20240731222831.14895-10-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Spam-Score: -4.50
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: C4F9B21B3C
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,linaro.org,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
 
-Hi Jim,
+DOE r1.1 replaced all occurrences of "protocol" with the term "feature"
+or "Data Object Type".
 
+PCIe r6.1 (which was published July 24) incorporated that change.
 
-On 8/1/24 01:28, Jim Quinlan wrote:
-> Provide support for new chips with multiple inbound windows while
-> keeping the legacy support for the older chips.
-> 
-> In existing chips there are three inbound windows with fixed purposes: the
-> first was for mapping SoC internal registers, the second was for memory,
-> and the third was for memory but with the endian swapped.  Typically, only
-> one window was used.
-> 
-> Complicating the inbound window usage was the fact that the PCIe HW would
-> do a baroque internal mapping of system memory, and concatenate the regions
-> of multiple memory controllers.
-> 
-> Newer chips such as the 7712 and Cable Modem SOCs take a step forward and
-> drop the internal mapping while providing for multiple inbound windows.
-> This works in concert with the dma-ranges property, where each provided
-> range becomes an inbound window.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 228 ++++++++++++++++++++------
->  1 file changed, 177 insertions(+), 51 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 4659208ae8da..0ecca3d9576f 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -75,15 +75,19 @@
->  #define PCIE_MEM_WIN0_HI(win)	\
->  		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
->  
-> +/*
-> + * NOTE: You may see the term "BAR" in a number of register names used by
-> + *   this driver.  The term is an artifact of when the HW core was an
-> + *   endpoint device (EP).  Now it is a root complex (RC) and anywhere a
-> + *   register has the term "BAR" it is related to an inbound window.
-> + */
-> +
-> +#define PCIE_BRCM_MAX_INBOUND_WINS			16
->  #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
->  #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
->  
-> -#define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
-> -#define  PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK		0x1f
-> -#define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
-> +#define PCIE_MISC_RC_BAR4_CONFIG_LO			0x40d4
->  
-> -#define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
-> -#define  PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK		0x1f
->  
->  #define PCIE_MISC_MSI_BAR_CONFIG_LO			0x4044
->  #define PCIE_MISC_MSI_BAR_CONFIG_HI			0x4048
-> @@ -130,6 +134,10 @@
->  	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
->  	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
->  
-> +#define PCIE_MISC_UBUS_BAR1_CONFIG_REMAP			0x40ac
-> +#define  PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK	BIT(0)
-> +#define PCIE_MISC_UBUS_BAR4_CONFIG_REMAP			0x410c
-> +
->  #define PCIE_MSI_INTR2_BASE		0x4500
->  
->  /* Offsets from INTR2_CPU and MSI_INTR2 BASE offsets */
-> @@ -217,12 +225,20 @@ enum pcie_type {
->  	BCM4908,
->  	BCM7278,
->  	BCM2711,
-> +	BCM7712,
-> +};
-> +
-> +struct inbound_win {
-> +	u64 size;
-> +	u64 pci_offset;
-> +	u64 cpu_addr;
->  };
->  
->  struct pcie_cfg_data {
->  	const int *offsets;
->  	const enum pcie_type type;
->  	const bool has_phy;
-> +	unsigned int num_inbound_wins;
->  	void (*perst_set)(struct brcm_pcie *pcie, u32 val);
->  	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->  };
-> @@ -274,6 +290,7 @@ struct brcm_pcie {
->  	struct subdev_regulators *sr;
->  	bool			ep_wakeup_capable;
->  	bool			has_phy;
-> +	int			num_inbound_wins;
+Rename the existing terms protocol with feature.
 
-Could you unify the type of num_inbound_wins field. I think u8 should be
-enough?
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+---
+v15:
+ - No changes
+v14:
+ - No changes
+v13:
+ - No changes
+v12:
+ - No changes
+v11:
+ - No changes
+v10:
+ - Split original patch into two
+v9:
+ - Rename two more DOE macros
+v8:
+ - Rename prot to feat as well
+v7:
+ - Initial patch
 
->  };
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
-> @@ -789,23 +806,61 @@ static void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
->  	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->  }
->  
-> -static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-> -							u64 *rc_bar2_size,
-> -							u64 *rc_bar2_offset)
-> +static inline void set_bar(struct inbound_win *b, int *count, u64 size,
+ drivers/pci/doe.c | 88 +++++++++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 44 deletions(-)
 
-The number of BARs cannot be more than 256, could you make "count" an u8
-like the num_inbound_wins.
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 652d63df9d22..f776f5304a3e 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -22,7 +22,7 @@
+ 
+ #include "pci.h"
+ 
+-#define PCI_DOE_PROTOCOL_DISCOVERY 0
++#define PCI_DOE_FEATURE_DISCOVERY 0
+ 
+ /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
+ #define PCI_DOE_TIMEOUT HZ
+@@ -43,7 +43,7 @@
+  *
+  * @pdev: PCI device this mailbox belongs to
+  * @cap_offset: Capability offset
+- * @prots: Array of protocols supported (encoded as long values)
++ * @feats: Array of features supported (encoded as long values)
+  * @wq: Wait queue for work item
+  * @work_queue: Queue of pci_doe_work items
+  * @flags: Bit array of PCI_DOE_FLAG_* flags
+@@ -51,14 +51,14 @@
+ struct pci_doe_mb {
+ 	struct pci_dev *pdev;
+ 	u16 cap_offset;
+-	struct xarray prots;
++	struct xarray feats;
+ 
+ 	wait_queue_head_t wq;
+ 	struct workqueue_struct *work_queue;
+ 	unsigned long flags;
+ };
+ 
+-struct pci_doe_protocol {
++struct pci_doe_feature {
+ 	u16 vid;
+ 	u8 type;
+ };
+@@ -66,7 +66,7 @@ struct pci_doe_protocol {
+ /**
+  * struct pci_doe_task - represents a single query/response
+  *
+- * @prot: DOE Protocol
++ * @feat: DOE Feature
+  * @request_pl: The request payload
+  * @request_pl_sz: Size of the request payload (bytes)
+  * @response_pl: The response payload
+@@ -78,7 +78,7 @@ struct pci_doe_protocol {
+  * @doe_mb: Used internally by the mailbox
+  */
+ struct pci_doe_task {
+-	struct pci_doe_protocol prot;
++	struct pci_doe_feature feat;
+ 	const __le32 *request_pl;
+ 	size_t request_pl_sz;
+ 	__le32 *response_pl;
+@@ -171,8 +171,8 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+ 		length = 0;
+ 
+ 	/* Write DOE Header */
+-	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->prot.vid) |
+-		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
++	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->feat.vid) |
++		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->feat.type);
+ 	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+ 	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+ 			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+@@ -217,12 +217,12 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+ 	int i = 0;
+ 	u32 val;
+ 
+-	/* Read the first dword to get the protocol */
++	/* Read the first dword to get the feature */
+ 	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
+-	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->prot.vid) ||
+-	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->prot.type)) {
+-		dev_err_ratelimited(&pdev->dev, "[%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
+-				    doe_mb->cap_offset, task->prot.vid, task->prot.type,
++	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->feat.vid) ||
++	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->feat.type)) {
++		dev_err_ratelimited(&pdev->dev, "[%x] expected [VID, Feature] = [%04x, %02x], got [%04x, %02x]\n",
++				    doe_mb->cap_offset, task->feat.vid, task->feat.type,
+ 				    FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+ 				    FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+ 		return -EIO;
+@@ -384,7 +384,7 @@ static void pci_doe_task_complete(struct pci_doe_task *task)
+ }
+ 
+ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
+-			     u8 *protocol)
++			     u8 *feature)
+ {
+ 	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+ 				    *index) |
+@@ -395,7 +395,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 	u32 response_pl;
+ 	int rc;
+ 
+-	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_PROTOCOL_DISCOVERY,
++	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_FEATURE_DISCOVERY,
+ 		     &request_pl_le, sizeof(request_pl_le),
+ 		     &response_pl_le, sizeof(response_pl_le));
+ 	if (rc < 0)
+@@ -406,7 +406,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 
+ 	response_pl = le32_to_cpu(response_pl_le);
+ 	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
+-	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
++	*feature = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
+ 			      response_pl);
+ 	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX,
+ 			   response_pl);
+@@ -414,12 +414,12 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 	return 0;
+ }
+ 
+-static void *pci_doe_xa_prot_entry(u16 vid, u8 prot)
++static void *pci_doe_xa_feat_entry(u16 vid, u8 prot)
+ {
+ 	return xa_mk_value((vid << 8) | prot);
+ }
+ 
+-static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
++static int pci_doe_cache_features(struct pci_doe_mb *doe_mb)
+ {
+ 	u8 index = 0;
+ 	u8 xa_idx = 0;
+@@ -438,11 +438,11 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
+ 			return rc;
+ 
+ 		pci_dbg(doe_mb->pdev,
+-			"[%x] Found protocol %d vid: %x prot: %x\n",
++			"[%x] Found feature %d vid: %x prot: %x\n",
+ 			doe_mb->cap_offset, xa_idx, vid, prot);
+ 
+-		rc = xa_insert(&doe_mb->prots, xa_idx++,
+-			       pci_doe_xa_prot_entry(vid, prot), GFP_KERNEL);
++		rc = xa_insert(&doe_mb->feats, xa_idx++,
++			       pci_doe_xa_feat_entry(vid, prot), GFP_KERNEL);
+ 		if (rc)
+ 			return rc;
+ 	} while (index);
+@@ -466,7 +466,7 @@ static void pci_doe_cancel_tasks(struct pci_doe_mb *doe_mb)
+  * @pdev: PCI device to create the DOE mailbox for
+  * @cap_offset: Offset of the DOE mailbox
+  *
+- * Create a single mailbox object to manage the mailbox protocol at the
++ * Create a single mailbox object to manage the mailbox feature at the
+  * cap_offset specified.
+  *
+  * RETURNS: created mailbox object on success
+@@ -485,7 +485,7 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 	doe_mb->pdev = pdev;
+ 	doe_mb->cap_offset = cap_offset;
+ 	init_waitqueue_head(&doe_mb->wq);
+-	xa_init(&doe_mb->prots);
++	xa_init(&doe_mb->feats);
+ 
+ 	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
+ 						dev_bus_name(&pdev->dev),
+@@ -508,11 +508,11 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 
+ 	/*
+ 	 * The state machine and the mailbox should be in sync now;
+-	 * Use the mailbox to query protocols.
++	 * Use the mailbox to query features.
+ 	 */
+-	rc = pci_doe_cache_protocols(doe_mb);
++	rc = pci_doe_cache_features(doe_mb);
+ 	if (rc) {
+-		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
++		pci_err(pdev, "[%x] failed to cache features : %d\n",
+ 			doe_mb->cap_offset, rc);
+ 		goto err_cancel;
+ 	}
+@@ -521,7 +521,7 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 
+ err_cancel:
+ 	pci_doe_cancel_tasks(doe_mb);
+-	xa_destroy(&doe_mb->prots);
++	xa_destroy(&doe_mb->feats);
+ err_destroy_wq:
+ 	destroy_workqueue(doe_mb->work_queue);
+ err_free:
+@@ -539,31 +539,31 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ static void pci_doe_destroy_mb(struct pci_doe_mb *doe_mb)
+ {
+ 	pci_doe_cancel_tasks(doe_mb);
+-	xa_destroy(&doe_mb->prots);
++	xa_destroy(&doe_mb->feats);
+ 	destroy_workqueue(doe_mb->work_queue);
+ 	kfree(doe_mb);
+ }
+ 
+ /**
+- * pci_doe_supports_prot() - Return if the DOE instance supports the given
+- *			     protocol
++ * pci_doe_supports_feat() - Return if the DOE instance supports the given
++ *			     feature
+  * @doe_mb: DOE mailbox capability to query
+- * @vid: Protocol Vendor ID
+- * @type: Protocol type
++ * @vid: Feature Vendor ID
++ * @type: Feature type
+  *
+- * RETURNS: True if the DOE mailbox supports the protocol specified
++ * RETURNS: True if the DOE mailbox supports the feature specified
+  */
+-static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
++static bool pci_doe_supports_feat(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ {
+ 	unsigned long index;
+ 	void *entry;
+ 
+-	/* The discovery protocol must always be supported */
+-	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_PROTOCOL_DISCOVERY)
++	/* The discovery feature must always be supported */
++	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_FEATURE_DISCOVERY)
+ 		return true;
+ 
+-	xa_for_each(&doe_mb->prots, index, entry)
+-		if (entry == pci_doe_xa_prot_entry(vid, type))
++	xa_for_each(&doe_mb->feats, index, entry)
++		if (entry == pci_doe_xa_feat_entry(vid, type))
+ 			return true;
+ 
+ 	return false;
+@@ -591,7 +591,7 @@ static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
+ 			       struct pci_doe_task *task)
+ {
+-	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
++	if (!pci_doe_supports_feat(doe_mb, task->feat.vid, task->feat.type))
+ 		return -EINVAL;
+ 
+ 	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
+@@ -637,8 +637,8 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ {
+ 	DECLARE_COMPLETION_ONSTACK(c);
+ 	struct pci_doe_task task = {
+-		.prot.vid = vendor,
+-		.prot.type = type,
++		.feat.vid = vendor,
++		.feat.type = type,
+ 		.request_pl = request,
+ 		.request_pl_sz = request_sz,
+ 		.response_pl = response,
+@@ -663,9 +663,9 @@ EXPORT_SYMBOL_GPL(pci_doe);
+  *
+  * @pdev: PCI device
+  * @vendor: Vendor ID
+- * @type: Data Object Type
++ * @prot: Data Object Type
+  *
+- * Find first DOE mailbox of a PCI device which supports the given protocol.
++ * Find first DOE mailbox of a PCI device which supports the given feature.
+  *
+  * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
+  */
+@@ -676,7 +676,7 @@ struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
+ 	unsigned long index;
+ 
+ 	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+-		if (pci_doe_supports_prot(doe_mb, vendor, type))
++		if (pci_doe_supports_feat(doe_mb, vendor, type))
+ 			return doe_mb;
+ 
+ 	return NULL;
+-- 
+2.45.2
 
-> +			   u64 cpu_addr, u64 pci_offset)
-> +{
-> +	b->size = size;
-> +	b->cpu_addr = cpu_addr;
-> +	b->pci_offset = pci_offset;
-> +	(*count)++;
-> +}
-> +
-
-<cut>
-
-In case you send a new version please address the comments, otherwise
-
-Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-
-~Stan
 
