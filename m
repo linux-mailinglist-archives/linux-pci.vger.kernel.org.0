@@ -1,61 +1,64 @@
-Return-Path: <linux-pci+bounces-11383-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11384-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1788394986D
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 21:36:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABE049498AA
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 21:55:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6FF91F22D77
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 19:36:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 682C02831E9
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 19:55:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C7814EC50;
-	Tue,  6 Aug 2024 19:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6U4GKhQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4050C81AC8;
+	Tue,  6 Aug 2024 19:55:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D7B14B06C;
-	Tue,  6 Aug 2024 19:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE6A83CC7;
+	Tue,  6 Aug 2024 19:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722972987; cv=none; b=TWQSlTxuLFDDGlE6JXZZLd4qy45O+chU4dxVEajlRFbN5n3toap5ccd3KtivaBOKFUjH7FZ49GoJBfJmhnX3H3BNL8mQwN5L4DPDNG77D392+liJPQdHFzVGPk60dUFSKQVvc2Ju/OUnrC+v7KEFPVRy5pd2bLrTvy6dPFgcho8=
+	t=1722974151; cv=none; b=QnpSfDJ3hb2NbogzuCCD6iaftLvR25NkHpW+FkGnuiHCBQ6Tmnk13Mdim0EE3HYJ4sPu64dZJcZZQZiPqiDyNzJUBMj2+W1WT2e40bjL1LY3j0HZCbvjF50pDYG4L5A4nkcIZPHZ0q3Eri+72Fi/agRcl/tKkO1QwT2YFHyfca0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722972987; c=relaxed/simple;
-	bh=sc3W7vyVOLMiqCp+8siDA6OhvxTfa07DqrM7vyqqtQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=CfN0yGqEzCTAtFb/XG/Ql3Ky3sYzbHEArbh+IzARCLXm79tT7qWTb8xajawqt1JIz8fWBtW7BRYM8kh/YT2dQgaFE91Oa1D91m577Aj12DoZIGI+o9t8Ha+kLZ9Zc/qzkodm58O4XMpYWdJ+7OmadU8cvjGDva6sK1r0+ohf+W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6U4GKhQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19283C32786;
-	Tue,  6 Aug 2024 19:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722972984;
-	bh=sc3W7vyVOLMiqCp+8siDA6OhvxTfa07DqrM7vyqqtQg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=J6U4GKhQHq2r95nPZIN9AKQw9uIc/m8Px1mUUL+OGd4whSuOa5T4JhCQQRm7ykbds
-	 m+dtVS1i8WQG+TsI3DraVl4ByJpQn4qZfG2tdczdw7QF175p2sPq0TL0IG5rtNiLgv
-	 I6A156sj3pWp9tXQ9yH941Y30ueG3eFuVRJqThW5DtwMhrs8uOf9JiJMuGMqZoSkBx
-	 DmaR8SZRW5ioUcan5fjVwDeJM4IwrR8Fw5NGU+JfMQrrpSwVmCvngbvdrD3Wmij3yy
-	 fW1S2QapgzIzfvg5fNgpETIZjQ1erBNGLbPSkFNo18oxxMMk4lyZ5fStAxuMSpGU9C
-	 tjIdDX5I4WsuA==
-Date: Tue, 6 Aug 2024 14:36:22 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Matthew W Carlis <mattc@purestorage.com>
-Cc: macro@orcam.me.uk, alex.williamson@redhat.com, bhelgaas@google.com,
-	davem@davemloft.net, david.abdurachmanov@gmail.com,
-	edumazet@google.com, kuba@kernel.org, leon@kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	lukas@wunner.de, mahesh@linux.ibm.com,
-	mika.westerberg@linux.intel.com, netdev@vger.kernel.org,
-	npiggin@gmail.com, oohall@gmail.com, pabeni@redhat.com,
-	pali@kernel.org, saeedm@nvidia.com, sr@denx.de,
-	wilson@tuliptree.org
-Subject: Re: PCI: Work around PCIe link training failures
-Message-ID: <20240806193622.GA74589@bhelgaas>
+	s=arc-20240116; t=1722974151; c=relaxed/simple;
+	bh=dL2N3yb65R/Dn4NmNYogk6zxi7X0vIRCP39vrKB1QT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2P3fgWPAfwZ3JuOnRKyu21TiLe6ce25wOz7P/jbK/xuVQL9T+iQPUlMlURbJd+fcBiX8X44VrLFrQ4ZT5XIGDON5RERfTDI2jNJq3MYb4qvBr5fEZh9UfCiGSf19mzeqa7q55tocCUOlofW+xCJPlRp+8getlGre15Vq0ralk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id CEAA0100DA1D9;
+	Tue,  6 Aug 2024 21:55:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8B9104F18D; Tue,  6 Aug 2024 21:55:38 +0200 (CEST)
+Date: Tue, 6 Aug 2024 21:55:38 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	linux-pci@vger.kernel.org, Alistair Francis <alistair23@gmail.com>,
+	Jonathan.Cameron@huawei.com, alex.williamson@redhat.com,
+	christian.koenig@amd.com, kch@nvidia.com,
+	gregkh@linuxfoundation.org, logang@deltatee.com,
+	chaitanyak@nvidia.com, rdunlap@infradead.org,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Sebastian Ott <sebott@redhat.com>
+Subject: Re: [PATCH] s390/pci: Stop usurping pdev->dev.groups
+Message-ID: <ZrJ_uqL-2wf3wV9d@wunner.de>
+References: <7b970f7923e373d1b23784721208f93418720485.1722870934.git.lukas@wunner.de>
+ <20240806193055.GA73910@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,29 +67,36 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240806000659.30859-1-mattc@purestorage.com>
+In-Reply-To: <20240806193055.GA73910@bhelgaas>
 
-On Mon, Aug 05, 2024 at 06:06:59PM -0600, Matthew W Carlis wrote:
-> Hello again. I just realized that my first response to this thread two weeks
-> ago was not actually starting from the end of the discussion. I hope I found
-> it now... Must say sorry for this I am still figuring out how to follow these
-> threads.
-> I need to ask if we can either revert this patch or only modify the quirk to
-> only run on the device in mention (ASMedia ASM2824). We have now identified
-> it as causing devices to get stuck at Gen1 in multiple generations of our
-> hardware & across product lines on ports were hot-plug is common. To be a
-> little more specific it includes Intel root ports and Broadcomm PCIe switch
-> ports and also Microchip PCIe switch ports.
-> The most common place where we see our systems getting stuck at Gen1 is with
-> device power cycling. If a device is powered on and then off quickly then the
-> link will of course fail to train & the consequence here is that the port is
-> forced to Gen1 forever. Does anybody know why the patch will only remove the
-> forced Gen1 speed from the ASMedia device?
+[cc += Konstantin]
 
-Thanks for keeping this thread alive.  I don't know the fix, but it
-does seem like this series made wASMedia ASM2824 work better but
-caused regressions elsewhere, so maybe we just need to accept that
-ASM2824 is slightly broken and doesn't work as well as it should.
+On Tue, Aug 06, 2024 at 02:30:55PM -0500, Bjorn Helgaas wrote:
+> On Mon, Aug 05, 2024 at 05:24:05PM +0200, Lukas Wunner wrote:
+> > Bjorn suggests using pdev->dev.groups for attribute_groups constructed
+> > on PCI device enumeration:
+> > 
+> >    "Is it feasible to build an attribute group in pci_doe_init() and
+> >     add it to dev->groups so device_add() will automatically add them?"
+> >     https://msgid.link/20231019165829.GA1381099@bhelgaas
+> 
+> Huh, another new archive link format.  I guess I need to be educated
+> about this.  I see 127734e23aed ("Documentation: best practices for
+> using Link trailers"), which added the only mentions in the tree,
+> although it only mentions "https://patch.msgid.link" and specifically
+> in the context of the origin of a patch, which leaves it clear as mud
+> for me.
 
-Bjorn
+I merely chose that because it's shorter than lore.kernel.org and makes
+it more obvious that it's a Message-ID link to the mailing list archive.
+
+I'm not sure whether that goes against any best practices associated
+with the msgid.link domain and whether it's going to work as long as
+lore.kernel.org.  Hopefully Konstantin can comment on that.
+
+Otherwise feel free to replace when applying.
+
+Thanks,
+
+Lukas
 
