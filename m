@@ -1,101 +1,121 @@
-Return-Path: <linux-pci+bounces-11343-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11344-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45173948663
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 01:54:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD3F94867F
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 02:07:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7275E1C2233D
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Aug 2024 23:54:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29127B21072
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 00:07:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD7916F260;
-	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3DC625;
+	Tue,  6 Aug 2024 00:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXz7yv/I"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gyi6PiAf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657B014B06C;
-	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19D12C80
+	for <linux-pci@vger.kernel.org>; Tue,  6 Aug 2024 00:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722902057; cv=none; b=ehtajq2rQae7JzWlDDpupY2YYDDcT2D6VU9d6dlw+V2pJNa+VRh7mPbGVn8Wx0xAAUdKIWsF3IRSpEjDOh/0Uc7G7avd1vLAQ3c9CDbQahu+jvi21e9gosMHDOT59mjdMXtIlocwatZnDkumJCA1tt2t7RvBuQZfTB1JaIqY+vg=
+	t=1722902829; cv=none; b=IH4J5ZCY8BQ+F/uyS+hnt2oE2G1Gi9zFuzVCGZGg3kMivQHahq2ATs9X31fQUCIYmBlx4yQ97ec5mwj3j1Fa9Ap3sKlBlnJTk1g+luHtsxj0UAOeo3U8tJNELNv1IlF3aJB1xuLoglfi4ksCaX7lotQlKN/G6TZTqkYXgohGcog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722902057; c=relaxed/simple;
-	bh=aDDyWum/RdGNYK5afYA6i1DTP/tBbriSvjj5iiczVac=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=SeGOt6X+5SoJPzNtigp+TxQmFJJelfDbXNT0A6q7su1YnjE2L4NqvOkd2UK46iIJ/BicIWSw0kzlADZC7KDKHgYLK1rBMM/B4XX7rPUjCiSwYda1l8WeQLvRV488xzBmiAys1AH6Hnz+TfFo93ZmMUEW9wMfhhUuq2C4IVa8cII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXz7yv/I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 44328C4AF0B;
-	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722902057;
-	bh=aDDyWum/RdGNYK5afYA6i1DTP/tBbriSvjj5iiczVac=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=dXz7yv/Io6QrVNxsM0JL4QpoGMNo2sYX6Es1CEPOBPJfG9Jjsa0UJqAtYWWBqQeCj
-	 9vkplca+B5zlNDJgHYVb5/3BwwbM0Jl7uAqqPSRn+Ls1DcQ6gyQXYqkfozA39Fn/c5
-	 mWNlO3zmVf0zLKvKVOTRcc9XRmTz7FF2b3M8ifFOI6jkk88BhA74QA8je2Fs0KueFI
-	 zwbEPDBqW/9wklB6NDa0L1RatukjuvnUqDLJAQTTE3bfNW4gtYCi1epPmenE0lglPU
-	 98bmtchjhMs4wmQ6JIMRUaOxiuwFBFNWtiYLhI3yhZv5DbaVUfC3YyeqYHf8T6267G
-	 tYNy5iaUBjuDw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 343A6C433E9;
-	Mon,  5 Aug 2024 23:54:17 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1722902829; c=relaxed/simple;
+	bh=NAHTjQgD4+zmcG5S0XfaQDNArJDKgMYBVIZNZ/aJ1Cc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=gzN6P7rQlMlyVD/bLZERN//Hq/PseflYe1p68rq36jz3E8/4bLGN+mkObFmEeNqXImJFp+hZXsUES3Z3e43GVZjYIp8Uebw4o+SjCcx+uNOiPmOZOF7ceZhALdQUvLla7K/wtF5Q3OExbaLupMjniOzSnlGLUAMOOnjnhVj8ESA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=gyi6PiAf; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2cd5e3c27c5so10366a91.3
+        for <linux-pci@vger.kernel.org>; Mon, 05 Aug 2024 17:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1722902827; x=1723507627; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NAHTjQgD4+zmcG5S0XfaQDNArJDKgMYBVIZNZ/aJ1Cc=;
+        b=gyi6PiAfpTtg5/so2yw0etJtg2QCDRm8C0zEyRpp9tdYYZlbvY45jCuW3P89Zpwopt
+         +cnFDTINueWp+L/5E3/qv2aFbrYs17cCr4CqBiQ3e7cvEEIb3Wz5gTxXalBbSiCDpR/w
+         xVl5q/ddOKEqwazgi/HGgdIludwMX34FoTOT1w56qRoF5wtZGPymdkRbiX0RxgTN25vZ
+         B6fQ76RwoD/Qtilp3hdUl2NatvZGRZN1X+g9nr9UQBLuZHFniEp38VK4KEg5STQDVu5x
+         T/6oFOUd3eNN5S09pxYbCFAQMKkwswndM1f2nQzFbdWd8WbKadK5jjnxIBMk69Z4YwZQ
+         t/BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722902827; x=1723507627;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAHTjQgD4+zmcG5S0XfaQDNArJDKgMYBVIZNZ/aJ1Cc=;
+        b=SHB3gfZQfIRqs0xrhV0YELUqmKMwSWxSX61DuXBxpUAB3w0HYc9AlCm880RSFiiPnP
+         BEF8AD+X8MUwa3nzbNA12bTTIV5QL9a4WF3VZzs7EonjREykRhiuje9BxlJ+NrqR1QJb
+         Vx6UJJa/iw+GegpxV+L9Xr7s1HJhkTKYIiB57KarfkNB5EqB4Ir63RkhpIBRMU6S79eb
+         rH6ET+9OFnSC8s64jUkSQ76MZqvaNvbQXVTTVws9QFDO5PIrRrpzq8q2ESvSOCMifsNF
+         LaF/fy63HgsyZSPgUfAT7Ec2rwIqrQvzdccjGH92IG34WCBO5YMda9L2j9A94Yzy36eN
+         yeuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlRyv0slJPjTa2buBPKAfvWSo+c+zuAaVRP0vmDekGjSFyPlT57XXU7eGqVhbMfk0ntjNxVUo0LvYcfIL2GJHYKZsOEz6wGoOd
+X-Gm-Message-State: AOJu0YxafVpuS0ArOJa2d2tcpgqT1KGanBkrCke/8X88tHq2CVYueCVU
+	gA/G4Jrtw60NzZQh6CiGGpOJQL6rnDWcLdNN7skO9UEq1RFC5VbwLEDaO1XmnNI=
+X-Google-Smtp-Source: AGHT+IEQSHScRjfnGvU+Fw05tXfpsc+P5lXsv6/4ahugCBzY43bWRk3MpQCenDGZj1yYOONAG+y5yA==
+X-Received: by 2002:a17:90b:1e04:b0:2c9:8b33:318f with SMTP id 98e67ed59e1d1-2cff94143damr11644050a91.11.1722902826882;
+        Mon, 05 Aug 2024 17:07:06 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2cffb388ecesm7730694a91.49.2024.08.05.17.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Aug 2024 17:07:06 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: alex.williamson@redhat.com,
+	bhelgaas@google.com,
+	davem@davemloft.net,
+	david.abdurachmanov@gmail.com,
+	edumazet@google.com,
+	helgaas@kernel.org,
+	kuba@kernel.org,
+	leon@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lukas@wunner.de,
+	mahesh@linux.ibm.com,
+	mika.westerberg@linux.intel.com,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	oohall@gmail.com,
+	pabeni@redhat.com,
+	pali@kernel.org,
+	saeedm@nvidia.com,
+	sr@denx.de,
+	wilson@tuliptree.org
+Subject: PCI: Work around PCIe link training failures
+Date: Mon,  5 Aug 2024 18:06:59 -0600
+Message-Id: <20240806000659.30859-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <alpine.DEB.2.21.2306201040200.14084@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2306201040200.14084@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next V3 0/3] mlx5 PTM cross timestamping support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172290205721.12421.3111275453782018152.git-patchwork-notify@kernel.org>
-Date: Mon, 05 Aug 2024 23:54:17 +0000
-References: <20240730134055.1835261-1-tariqt@nvidia.com>
-In-Reply-To: <20240730134055.1835261-1-tariqt@nvidia.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, netdev@vger.kernel.org, saeedm@nvidia.com,
- gal@nvidia.com, leonro@nvidia.com, jstultz@google.com, tglx@linutronix.de,
- anna-maria@linutronix.de, frederic@kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, linux-pci@vger.kernel.org, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- cjubran@nvidia.com, bshapira@nvidia.com, rrameshbabu@nvidia.com
 
-Hello:
+Hello again. I just realized that my first response to this thread two weeks
+ago was not actually starting from the end of the discussion. I hope I found
+it now... Must say sorry for this I am still figuring out how to follow these
+threads.
+I need to ask if we can either revert this patch or only modify the quirk to
+only run on the device in mention (ASMedia ASM2824). We have now identified
+it as causing devices to get stuck at Gen1 in multiple generations of our
+hardware & across product lines on ports were hot-plug is common. To be a
+little more specific it includes Intel root ports and Broadcomm PCIe switch
+ports and also Microchip PCIe switch ports.
+The most common place where we see our systems getting stuck at Gen1 is with
+device power cycling. If a device is powered on and then off quickly then the
+link will of course fail to train & the consequence here is that the port is
+forced to Gen1 forever. Does anybody know why the patch will only remove the
+forced Gen1 speed from the ASMedia device?
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 30 Jul 2024 16:40:51 +0300 you wrote:
-> Hi,
-> 
-> This is V3. You can find V2 as part of a larger series here:
-> https://lore.kernel.org/netdev/d1dba3e1-2ecc-4fdf-a23b-7696c4bccf45@gmail.com/T/
-> 
-> This patchset by Rahul and Carolina adds PTM (Precision Time Measurement)
-> support to the mlx5 driver.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,V3,1/3] net/mlx5: Add support for MTPTM and MTCTR registers
-    https://git.kernel.org/netdev/net-next/c/7e45c1e9edc0
-  - [net-next,V3,2/3] net/mlx5: Add support for enabling PTM PCI capability
-    https://git.kernel.org/netdev/net-next/c/bec6d85d43eb
-  - [net-next,V3,3/3] net/mlx5: Implement PTM cross timestamping support
-    https://git.kernel.org/netdev/net-next/c/d17125fb0923
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+- Matt
 
