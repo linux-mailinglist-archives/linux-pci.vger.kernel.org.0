@@ -1,205 +1,217 @@
-Return-Path: <linux-pci+bounces-11386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D8E19498BC
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 22:01:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD16B9498CB
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 22:06:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23C801F2305D
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 20:01:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B2E3B244A8
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 20:06:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4042D7D40B;
-	Tue,  6 Aug 2024 20:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62832811F7;
+	Tue,  6 Aug 2024 20:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YirUaony"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="viv2J3mj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B10338DD8;
-	Tue,  6 Aug 2024 20:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC907580A
+	for <linux-pci@vger.kernel.org>; Tue,  6 Aug 2024 20:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722974462; cv=none; b=uiawXHNKnnhZT7wnYgkpmKN2BXI7fMxxgXSM89ScUMlW3Hzy6Oa7FZTOfrvCAsDKV4tUK2Q0PBYTvdHkLNlQMIhMayM7eRwcenNEEts8nhogVE2nF36dt9S7MW+BleNbehbZrY7TapZWojy62nm1nE9KMhau7Fn3N3++EzCksJY=
+	t=1722974777; cv=none; b=Pk968vHx8BOQJuLPfKsDukghUS3dDjTj2Vo4Q743oRY2Xk+Z6y9O8FxJgPIHT9Vd1u7w1hSBKjH9Ov22LGdLLtFS1Z8VtpDJBLEQNS8iK8V2dslKKOv8iimbZz2VCDwLRsVaTGlpyreBJGEQO8TL3lnMFkCRH66/T+4j1KV34LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722974462; c=relaxed/simple;
-	bh=t/hN2y1XYKOsn2IY/TkVfglq3EKviiTjFSjUkFXXSXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=d7w3gccldK/LY/prCr/NSh+uBPkkgw7Ete5TXNDBFeTjn9s3DENRI9WCrl5XhfKs97jFekX0HTbOgB7XYV+EPvt3U/U8AA1c641V8ht/1SiOZaNrhspFqx5apK3kFENdn+L37xwOQJFpxIr+804GUWp31ORKULtZ5itsZwElaCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YirUaony; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54973C4AF0C;
-	Tue,  6 Aug 2024 20:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722974461;
-	bh=t/hN2y1XYKOsn2IY/TkVfglq3EKviiTjFSjUkFXXSXA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YirUaonym+NqN0rn16gxCaQZnUdURBfBbcCtm04Th4BJn6KIoX/5HL8SMT0Ani+tV
-	 3Z9Z48AFin+sbKkc6+MdfBdBuWxqCGysVXgsHafFmqh9n1gi2iPEnyTbuT0gWPx5tK
-	 Dj0rjzr4MMd4FRrRU9ePNjJrRDRL/hmHk5VDzemdUNxHPzRcJ5iVoa2uHb8Lgkw1NF
-	 2rZlSRWiCHINPSFjKBxWVYYp5JOS7G1lpmrZ+gEh+RifTI/GzNEDCtc5wXeE59BpXC
-	 5J51YO0gLxSo0r5h/JXKyUmK2Rca8+IZNyfIoBXMrb8ID2Pg/UdEnkbJH3Kj/WS81k
-	 gEHnuoZcQSURA==
-Date: Tue, 6 Aug 2024 15:00:59 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Amit Machhiwal <amachhiw@linux.ibm.com>, Rob Herring <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Vaibhav Jain <vaibhav@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-	Kowshik Jois B S <kowsjois@linux.ibm.com>,
-	Lukas Wunner <lukas@wunner.de>, kernel-team@lists.ubuntu.com,
-	Stefan Bader <stefan.bader@canonical.com>
-Subject: Re: [PATCH v3] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Message-ID: <20240806200059.GA74866@bhelgaas>
+	s=arc-20240116; t=1722974777; c=relaxed/simple;
+	bh=yQ0Giu6ZLYVh/LdTs+T3ZUjf0YBIJKRB4yekea9RufM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eRWrZEDR6IiGeuqpkbPogSL4G0OzwCp+W+itU0UqxF3b0Z2u5UMhNM+TefFw99hDFAnvnXIbrw0WLTY04pwmGNBuNeAy/CP9AD8G9gkQ9KY+AUTrHBFUIEVP5ApFCqdTpSl0ZlmmZQndPPr6TTa5/Qr4A8SsDv81XD8+1Wer/Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=viv2J3mj; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52efabf5d7bso1433271e87.1
+        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2024 13:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1722974772; x=1723579572; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qihk0Nf6L1RJUimkyU5cI4Ujv7ORPdsY3hk78Fc0UME=;
+        b=viv2J3mjVRY4K7f6bzPA2MoZVIU7KxEo/mP9ZW5qFQK+qEealwlYiZlkMmEdnStn5s
+         hjDlsQy65dwwsxYXz1wTrgoC6lLSiKbgp5fa4BDQjTVHTJNwVNrnSjX+6emwYQ4qLAy/
+         zjfD0I+dqvXdoLmQXD526J3YWmGWW2fvpM0tM2bhH4m+CKczgx0kF+913V2Q+reELXYG
+         JZ50ZMWFp0ce1BU2O8SorRKt18wOBARRbexO73nHfQNs8MDmeq+SH0DvZtnEUY8yYeSi
+         hiW8unr1+CzKUb3JvIYRnWWWklle+AV7z5brSmtN4xmU+3Ny9XQHgue621aUXNJF88pA
+         F6Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722974772; x=1723579572;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qihk0Nf6L1RJUimkyU5cI4Ujv7ORPdsY3hk78Fc0UME=;
+        b=sjNy7p06fjFQsUQKbHa4fUOnTXQ/GXoMTf7aEAWtecPv08P3ZPYq+AYnC0h7nwMEQa
+         NacHe1q9nYdbRH0wyxu28AhjVyS5iXOfWl599ZxuTxiqrvzFnmVr5ikMJKy2blJtxJ4+
+         7i7/wsdFeCfdaNUfRBwsrhfNDOaNx5Onks6ysL3rUf6W9SJ9TvIIDvQceQj1Lp/fHZBf
+         F9RB3nX2YNvJRg+SWsRxnI2uMt7YghES0z4lE07loHqCzIY+yqgHXWKadYvKEKSrF3hm
+         wytlCeXp4sXSjs4x9GJnHwDMQtlP3FXeoJy2n+O/piYo5hXvTW11Q0WB6/0w3tB3QdjK
+         8j6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWzzC1LWg6sjoxz65M/bE9dMrv/Z5zuNVYDQF50ka89tVRlAmm0QdgwXA8KymZJGanRDMCLKRarAkcQRQZwojdhHfRijCMoBmRl
+X-Gm-Message-State: AOJu0Yyw8GhDKV+LdKKusGQ+WHGQeVWh9CtSjDU9VI08liNnVMKO2Jrp
+	Ntz4vjhY2qOA50LW276CQzAlHbTMx1kI6XWyeu9UUHVKXiOjK87cIHuOiC3n71QZ8hYx0totrra
+	X2fzznOF3qybz37ssgn0v1qfqzP/0Cmgouq+8TQ==
+X-Google-Smtp-Source: AGHT+IFP7XQq6yFQZWCucBvitOmg1bLISrkcsDvqOEgO7fLkeug1MfJiguAhwxWA1ITFyBJJVj9DcL+Xi7dAcrBSaO0=
+X-Received: by 2002:a05:6512:2389:b0:52f:cce4:51f3 with SMTP id
+ 2adb3069b0e04-530bb3bd8abmr11750075e87.44.1722974772149; Tue, 06 Aug 2024
+ 13:06:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240802183327.1309020-1-amachhiw@linux.ibm.com>
+References: <20240803-qps615-v2-4-9560b7c71369@quicinc.com> <20240806190702.GA72614@bhelgaas>
+In-Reply-To: <20240806190702.GA72614@bhelgaas>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 6 Aug 2024 22:06:00 +0200
+Message-ID: <CAMRc=Mc3J_CRHSsU1ZowJxrx6V3Uici6iuJtTfR63Wt3xLrqAg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] PCI: Change the parent to correctly represent pcie hierarchy
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, cros-qcom-dts-watchers@chromium.org, 
+	Jingoo Han <jingoohan1@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, andersson@kernel.org, 
+	quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 03, 2024 at 12:03:25AM +0530, Amit Machhiwal wrote:
-> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
-> of a PCI device attached to a PCI-bridge causes following kernel Oops on
-> a pseries KVM guest:
+On Tue, Aug 6, 2024 at 9:07=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> On Sat, Aug 03, 2024 at 08:52:50AM +0530, Krishna chaitanya chundru wrote=
+:
+> > Currently the pwrctl driver is child of pci-pci bridge driver,
+> > this will cause issue when suspend resume is introduced in the pwr
+> > control driver. If the supply is removed to the endpoint in the
+> > power control driver then the config space access by the
+> > pci-pci bridge driver can cause issues like Timeouts.
+>
+> If "pci-pci bridge driver" refers to portdrv, please use "portdrv" to
+> avoid confusion.
+>
+> Can you be a little more specific about config accesses by the bridge
+> driver?  Generally portdrv wouldn't touch devices below the bridge.
+> It sounds like you've tripped over something here, so you probably
+> have an example of a timeout.
+>
+> s/pcie/PCIe/ in subject, although it'd be nice if the whole subject
+> could be a little more specific.  I don't think pwrctl is directly
+> part of the PCIe hierarchy, so I don't quite understand what you're
+> saying there.
+>
+> > For this reason change the parent to controller from pci-pci bridge.
+> >
+> > Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+>
+> Will need an ack from Bartosz, of course, since he added this.  Moved
+> from cc: to to: list to make sure he sees this.
+>
 
-What is unique about pseries here?  There's nothing specific to
-pseries in the patch, so I would expect this to be a generic problem
-on any arch.
+I would drop the Fixes tag altogether. This is a change in
+implementation but it doesn't really fix a bug or regression.
 
->  RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
->  Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
->  BUG: Unable to handle kernel data access on read at 0x10ec00000048
+Other than that: please feel free to add
 
-Weird address.  I would expect NULL or something.  Where did this
-non-NULL pointer come from?
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
->  Faulting instruction address: 0xc0000000012d8728
->  Oops: Kernel access of bad area, sig: 11 [#1]
->  LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
-> <snip>
->  NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
->  LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
->  Call Trace:
->  [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
->  [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
->  [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
->  [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
->  [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
->  [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
->  [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
->  [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
->  [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
->  [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
->  [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
->  [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-> <snip>
-> 
-> A git bisect pointed this regression to be introduced via [1] that added
-> a mechanism to create device tree nodes for parent PCI bridges when a
-> PCI device is hot-plugged.
-> 
-> The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
-> device-tree node associated with the pci_dev that was earlier
-> hot-plugged and was attached under a pci-bridge. The PCI dev header
-> `dev->hdr_type` being 0, results a conditional check done with
-> `pci_is_bridge()` into false. Consequently, a call to
-> `of_pci_make_dev_node()` to create a device node is never made. When at
-> a later point in time, in the device node removal path, a memcpy is
-> attempted in `__of_changeset_entry_invert()`; since the device node was
-> never created, results in an Oops due to kernel read access to a bad
-> address.
+I will also review the pwrctl part of the series shortly.
 
-I'm sure this description is 100% correct, but it's at such a low
-level that it doesn't really help understand the underlying design
-problem.
+Bart
 
-Will need an ack from Rob.
-
-> To fix this issue, the patch introduces a new flag OF_CREATE_WITH_CSET
-> to keep track of device nodes created via `of_pci_make_dev_node()` and
-> later attempt to destroy only such device nodes which have this flag
-> set.
-> 
-> [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
-> ---
-> Changes since v2:
->     * Drop v2 changes and introduce a different approach from Lizhi discussed
->       over the v2 of this patch
->     * V2: https://lore.kernel.org/all/20240715080726.2496198-1-amachhiw@linux.ibm.com/
-> Changes since v1:
->     * Included Lizhi's suggested changes on V1
->     * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
->       part a bit in `of_pci_make_dev_node`
-> 	drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
-> 	  611 | void of_pci_free_node(struct device_node *np)
-> 	      |      ^~~~~~~~~~~~~~~~               
-> 	drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
-> 	drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
-> 	  696 | out_destroy_cset:       
-> 	      | ^~~~~~~~~~~~~~~~  
->     * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
-> 
->  drivers/pci/of.c   | 3 ++-
->  include/linux/of.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index dacea3fc5128..bc455370143e 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -653,7 +653,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
->  	struct device_node *np;
->  
->  	np = pci_device_to_OF_node(pdev);
-> -	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-> +	if (!np || !of_node_check_flag(np, OF_CREATE_WITH_CSET))
->  		return;
->  	pdev->dev.of_node = NULL;
-
-of_pci_remove_node() goes on to call of_changeset_revert() and
-of_changeset_destroy().  of_pci_remove_node() has nothing PCI-specific
-in it.
-
-There are a few other callers of of_changeset_destroy(), but they
-don't look anything like of_pci_remove_node().  Seems like there
-should be some similarity across the callers, so it makes me a little
-nervous that there isn't.
-
-> @@ -712,6 +712,7 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->  	if (ret)
->  		goto out_free_node;
->  
-> +	of_node_set_flag(np, OF_CREATE_WITH_CSET);
->  	np->data = cset;
->  	pdev->dev.of_node = np;
->  	kfree(name);
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 85b60ac9eec5..5faa5a1198c6 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -153,6 +153,7 @@ extern struct device_node *of_stdout;
->  #define OF_POPULATED_BUS	4 /* platform bus created for children */
->  #define OF_OVERLAY		5 /* allocated for an overlay */
->  #define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
-> +#define OF_CREATE_WITH_CSET	7 /* Created by of_changeset_create_node */
-
-Follow existing capitalization style.
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > ---
+> >  drivers/pci/bus.c         | 3 ++-
+> >  drivers/pci/pwrctl/core.c | 9 ++++++++-
+> >  2 files changed, 10 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 55c853686051..15b42f0f588f 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -328,6 +328,7 @@ void __weak pcibios_bus_add_device(struct pci_dev *=
+pdev) { }
+> >   */
+> >  void pci_bus_add_device(struct pci_dev *dev)
+> >  {
+> > +     struct pci_host_bridge *host =3D pci_find_host_bridge(dev->bus);
+> >       struct device_node *dn =3D dev->dev.of_node;
+> >       int retval;
+> >
+> > @@ -352,7 +353,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >
+> >       if (dev_of_node(&dev->dev) && pci_is_bridge(dev)) {
+> >               retval =3D of_platform_populate(dev_of_node(&dev->dev), N=
+ULL, NULL,
+> > -                                           &dev->dev);
+> > +                                           host->dev.parent);
+>
+> I'm not sure host->dev.parent is always valid.  There are
+> pci_create_root_bus() callers that supply a NULL parent pointer.
+>
+> >               if (retval)
+> >                       pci_err(dev, "failed to populate child OF nodes (=
+%d)\n",
+> >                               retval);
+> > diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
+> > index feca26ad2f6a..4f2ffa0b0a5f 100644
+> > --- a/drivers/pci/pwrctl/core.c
+> > +++ b/drivers/pci/pwrctl/core.c
+> > @@ -11,6 +11,8 @@
+> >  #include <linux/property.h>
+> >  #include <linux/slab.h>
+> >
+> > +#include "../pci.h"
+> > +
+> >  static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long =
+action,
+> >                            void *data)
+> >  {
+> > @@ -64,18 +66,23 @@ static int pci_pwrctl_notify(struct notifier_block =
+*nb, unsigned long action,
+> >   */
+> >  int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
+> >  {
+> > +     struct pci_bus *bus;
+> >       int ret;
+> >
+> >       if (!pwrctl->dev)
+> >               return -ENODEV;
+> >
+> > +     bus =3D pci_find_bus(of_get_pci_domain_nr(pwrctl->dev->parent->of=
+_node), 0);
+> > +     if (!bus)
+> > +             return -ENODEV;
+> > +
+> >       pwrctl->nb.notifier_call =3D pci_pwrctl_notify;
+> >       ret =3D bus_register_notifier(&pci_bus_type, &pwrctl->nb);
+> >       if (ret)
+> >               return ret;
+> >
+> >       pci_lock_rescan_remove();
+> > -     pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
+> > +     pci_rescan_bus(bus);
+> >       pci_unlock_rescan_remove();
+> >
+> >       return 0;
+> >
+> > --
+> > 2.34.1
+> >
 
