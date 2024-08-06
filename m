@@ -1,171 +1,174 @@
-Return-Path: <linux-pci+bounces-11375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90154949743
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 20:00:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11CF2949800
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 21:07:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46154284D4E
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 18:00:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC4B11F2184E
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Aug 2024 19:07:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF4F554FAD;
-	Tue,  6 Aug 2024 18:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B7F13C677;
+	Tue,  6 Aug 2024 19:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+D90PX5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QC8IPl6j"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5EC41C85
-	for <linux-pci@vger.kernel.org>; Tue,  6 Aug 2024 18:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EE513B288;
+	Tue,  6 Aug 2024 19:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722967243; cv=none; b=S+IFe89y9KjVBJ2yOcr5gVv1YKnvYApnWDiInZweIOyVKuj2MAnwJ/7BdbqGbtJESp+y24Iom87jaMZjYnME/hqHaXHR53Go1A16VwzmJdb6LoCVWEgk8p/yuZPGAEiNg2mZOlj3vNJURPyJ90frW2Znq3tDmHXDtSMwcHI7rng=
+	t=1722971225; cv=none; b=D6Gsa7uVFkqFZ5DpFzRPVYHIzHAsdizJgoNVhoW7Cun0NCHPwDBrdaJ8VQ8UN+SNOej6sv+m06EU8SKlncG4a8+IDH6uQJyUHY1gtIY5GTcG2V4nrmyviEXgGcAsQip5+/LDroMG9DWiTKGoW9oiH4aUF31Yt44/oporJxbCSyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722967243; c=relaxed/simple;
-	bh=HcZRgKCvbpS5ATqTFaTPK4WAzIscpRPd+oYFZhl/kk8=;
+	s=arc-20240116; t=1722971225; c=relaxed/simple;
+	bh=WVKkU+/2pLfBtVPtjXmuMIcG0wlH5uxeowV0c0yZeJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Uv1qskl3IagEPSOf8PFbzw6bzV3JIO8wZ0B5gVTJX886ewLlJt58Ro2poVeGMgUyQbbuSFZYWdr83HYAemuQF7+i5noCJMycqkBHupwzZfE7rzN+xrb0ZusWkWPHbzQ0Mk+1CS1fsEirEPaJdR8VDagsQYk26Q8WbKjyzxP0vk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+D90PX5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED90CC32786;
-	Tue,  6 Aug 2024 18:00:42 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=pfIZRcKnLVQRtsXLYle3RaSKRnjcCJmrchitVil61oIxkDPF/l5CY5MotPILsXjIfl2Abt35JvKyqcYHj1JVqK5thYF5HDiqYrMmKHpZs7LIpIqxrrGC23kUCpToXd0P053FGuolv7n02bTnXh5nurVsMdp5V3nFBK3wOnUzUMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QC8IPl6j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC27C4AF10;
+	Tue,  6 Aug 2024 19:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722967243;
-	bh=HcZRgKCvbpS5ATqTFaTPK4WAzIscpRPd+oYFZhl/kk8=;
+	s=k20201202; t=1722971225;
+	bh=WVKkU+/2pLfBtVPtjXmuMIcG0wlH5uxeowV0c0yZeJE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=l+D90PX5//B9g+gq9MQaUpXezMEOKGb9E+8s4SCm/8lzKC+S8EEYVLynouNqXp/+E
-	 s3oaMkJVGn86MTM+Mlz4QobKbJvXUXhe84UsBp3abJvmEjv9BelCLY/37meEJgOoqu
-	 Gc+rojTz5MdI2JSyvL3HshcQWIS/ucdv1Io189U19VFmva5dfKDsSEjjD7Yjtbn/nS
-	 FnArNhZHGfsrKO7/xP5pt5/cT5sYjZrmmd8uQKLmA75pu3M7iGMOo5oR0oZAs41Mtx
-	 1Y/kVTzPC/DipIqZUx6X2aMAc6ECPDj8iGIqKK4rxJlcLQ5ZFjGj2jD/Ztdb6bzTYR
-	 JgYnjcwJ6ltqA==
-Date: Tue, 6 Aug 2024 13:00:40 -0500
+	b=QC8IPl6jpQTAT4L9Qp2WYsconTnPxPImCeRcw9tLpiGmNL1bhtGBiGX/9QOSRnotq
+	 1gE/Lp08Zn6AlJ6ud0+3Bb90QOkEj7+H+o0Dwr3sEmryl3+ZFzGrLNsBiJ0bUsw8W0
+	 D/WiXEwm327cndUskH0St8fwGWE1gRfDHWwQkU5peeLivHZh1XtgjeAt6YutfwHpNA
+	 rRFq++/MkCzOky8iJK5G7rsEWII8Lm6G9zApQAQ+wAK5feQGPoOXx01wEZ7vvndfQb
+	 8kl+NUc3u+UUmNeCcJM5VD5ZVI+GN1xBs+Uh2l02iipMxNKOD17e+q0ziEQrSxCk0M
+	 PZnbBjuuQSzRA==
+Date: Tue, 6 Aug 2024 14:07:02 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jay Fang <f.fangjian@huawei.com>, Ding Hui <dinghui@sangfor.com.cn>,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com
-Subject: Re: [PATCH] PCI/ASPM: Update ASPM sysfs on MFD function removal to
- avoid use-after-free
-Message-ID: <20240806180040.GA71065@bhelgaas>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	andersson@kernel.org, quic_vbadigan@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/8] PCI: Change the parent to correctly represent
+ pcie hierarchy
+Message-ID: <20240806190702.GA72614@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1bd06c63-f97a-1608-d291-c34e8d357973@linux.intel.com>
+In-Reply-To: <20240803-qps615-v2-4-9560b7c71369@quicinc.com>
 
-On Tue, Aug 06, 2024 at 07:38:27PM +0300, Ilpo Järvinen wrote:
-> On Thu, 1 Aug 2024, Bjorn Helgaas wrote:
-> > On Thu, Aug 01, 2024 at 08:05:23PM +0800, Jay Fang wrote:
-> > > On 2024/8/1 5:46, Bjorn Helgaas wrote:
-> > > > On Tue, Jul 30, 2024 at 05:57:43PM +0800, Ding Hui wrote:
-> > > >> On 2024/7/30 9:16, Jay Fang wrote:
-> > > >>>  From 'commit 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal
-> > > >>> to avoid use-after-free")' we know that PCIe spec r6.0, sec 7.5.3.7,
-> > > >>> recommends that software program the same ASPM Control(pcie_link_state)
-> > > >>> value in all functions of multi-function devices, and free the
-> > > >>> pcie_link_state when any child function is removed.
-> > > >>>
-> > > >>> However, ASPM Control sysfs is still visible to other children even if it
-> > > >>> has been removed by any child function, and careless use it will
-> > > >>> trigger use-after-free error, e.g.:
-> > > >>>
-> > > >>>    # lspci -tv
-> > > >>>      -[0000:16]---00.0-[17]--+-00.0  Device 19e5:0222
-> > > >>>                              \-00.1  Device 19e5:0222
-> > > >>>    # echo 1 > /sys/bus/pci/devices/0000:17:00.0/remove       // pcie_link_state will be released
-> > > >>>    # echo 1 > /sys/bus/pci/devices/0000:17:00.1/link/l1_aspm // will trigger error
-> > > >>>
-> > > >>>    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
-> > > >>>    Call trace:
-> > > >>>     aspm_attr_store_common.constprop.0+0x10c/0x154
-> > > >>>     l1_aspm_store+0x24/0x30
-> > > >>>     dev_attr_store+0x20/0x34
-> > > >>>     sysfs_kf_write+0x4c/0x5c
-> > > >>>
-> > > >>> We can solve this problem by updating the ASPM Control sysfs of all
-> > > >>> children immediately after ASPM Control have been freed.
-> > > >>>
-> > > >>> Fixes: 456d8aa37d0f ("PCI/ASPM: Disable ASPM on MFD function removal to avoid use-after-free")
-> > > >>> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
-> > > >>> ---
-> > > >>>   drivers/pci/pcie/aspm.c | 2 ++
-> > > >>>   1 file changed, 2 insertions(+)
-> > > >>>
-> > > >>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > >>> index cee2365e54b8..eee9e6739924 100644
-> > > >>> --- a/drivers/pci/pcie/aspm.c
-> > > >>> +++ b/drivers/pci/pcie/aspm.c
-> > > >>> @@ -1262,6 +1262,8 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
-> > > >>>   		pcie_config_aspm_path(parent_link);
-> > > >>>   	}
-> > > >>> +	pcie_aspm_update_sysfs_visibility(parent);
-> > > >>> +
-> > > >>
-> > > >> To be more rigorous, is there still a race window in
-> > > >> aspm_attr_{show,store}_common or clkpm_{show,store} before updating
-> > > >> the visibility, we can get an old or NULL pointer by
-> > > >> pcie_aspm_get_link()?
-> > > > 
-> > > > Yeah, I think we still have a problem even with this patch.
-> > >
-> > > If so, maybe we need a new solution to completely sovle this problem.
-> > 
-> > I think so.  The pcie_link_state struct is kind of problematic to
-> > begin with.  It basically encodes the PCI hierarchy again, even though
-> > the hierarchy is already completely described via struct pci_dev.
-> > 
-> > IMO only the ASPM and clock PM state is really new information.  I'm
-> > not convinced that we even need all of that (how can
-> > supported/enabled/capable/default/disabled *all* be useful and
-> > understandable?).  But even if we *do* need all of that, it's only 39
-> > bits of information per device.
-> 
-> Hi all,
-> 
-> To me, the most natural place for the link-related information such as 
-> ASPM state would be inside struct pci_bus.
+On Sat, Aug 03, 2024 at 08:52:50AM +0530, Krishna chaitanya chundru wrote:
+> Currently the pwrctl driver is child of pci-pci bridge driver,
+> this will cause issue when suspend resume is introduced in the pwr
+> control driver. If the supply is removed to the endpoint in the
+> power control driver then the config space access by the
+> pci-pci bridge driver can cause issues like Timeouts.
 
-Good point, that probably would make sense.
+If "pci-pci bridge driver" refers to portdrv, please use "portdrv" to
+avoid confusion.
 
-> I actually did already take a look into migrating ASPM data there but the
-> way pcie_link_state is currently looked up through pci_dev (from both 
-> ends of the link) seemed to make the conversion somewhat messy so I 
-> postponed creating the patch for the migration.
+Can you be a little more specific about config accesses by the bridge
+driver?  Generally portdrv wouldn't touch devices below the bridge.
+It sounds like you've tripped over something here, so you probably
+have an example of a timeout.
+
+s/pcie/PCIe/ in subject, although it'd be nice if the whole subject
+could be a little more specific.  I don't think pwrctl is directly
+part of the PCIe hierarchy, so I don't quite understand what you're
+saying there.
+
+> For this reason change the parent to controller from pci-pci bridge.
 > 
-> But it's certainly a change I'd like to see if somebody wants to look into 
-> it.
+> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+
+Will need an ack from Bartosz, of course, since he added this.  Moved
+from cc: to to: list to make sure he sees this.
+
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/bus.c         | 3 ++-
+>  drivers/pci/pwrctl/core.c | 9 ++++++++-
+>  2 files changed, 10 insertions(+), 2 deletions(-)
 > 
-> > > > For one thing, aspm_attr_store_common() captures the pointer from
-> > > > pcie_aspm_get_link() before the critical section, so by the time it
-> > > > *uses* the pointer, pcie_aspm_exit_link_state() may have freed the
-> > > > link state.
-> > > > 
-> > > > And there are several other callers of pcie_aspm_get_link() that
-> > > > either call it before a critical section or don't have a critical
-> > > > section at all.
-> > > > 
-> > > > I think it may be a mistake to alloc/free the link state separately
-> > > > from the pci_dev itself.
-> > > > 
-> > > >>>   	mutex_unlock(&aspm_lock);
-> > > >>>   	up_read(&pci_bus_sem);
-> > > >>>   }
-> > > >>
-> > > >> -- 
-> > > >> Thanks,
-> > > >> - Ding Hui
-> > > >>
-> > > > 
-> > > > .
-> > > > 
-> > > 
-> > 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 55c853686051..15b42f0f588f 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -328,6 +328,7 @@ void __weak pcibios_bus_add_device(struct pci_dev *pdev) { }
+>   */
+>  void pci_bus_add_device(struct pci_dev *dev)
+>  {
+> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+>  	struct device_node *dn = dev->dev.of_node;
+>  	int retval;
+>  
+> @@ -352,7 +353,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+>  
+>  	if (dev_of_node(&dev->dev) && pci_is_bridge(dev)) {
+>  		retval = of_platform_populate(dev_of_node(&dev->dev), NULL, NULL,
+> -					      &dev->dev);
+> +					      host->dev.parent);
+
+I'm not sure host->dev.parent is always valid.  There are
+pci_create_root_bus() callers that supply a NULL parent pointer.
+
+>  		if (retval)
+>  			pci_err(dev, "failed to populate child OF nodes (%d)\n",
+>  				retval);
+> diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
+> index feca26ad2f6a..4f2ffa0b0a5f 100644
+> --- a/drivers/pci/pwrctl/core.c
+> +++ b/drivers/pci/pwrctl/core.c
+> @@ -11,6 +11,8 @@
+>  #include <linux/property.h>
+>  #include <linux/slab.h>
+>  
+> +#include "../pci.h"
+> +
+>  static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
+>  			     void *data)
+>  {
+> @@ -64,18 +66,23 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
+>   */
+>  int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
+>  {
+> +	struct pci_bus *bus;
+>  	int ret;
+>  
+>  	if (!pwrctl->dev)
+>  		return -ENODEV;
+>  
+> +	bus = pci_find_bus(of_get_pci_domain_nr(pwrctl->dev->parent->of_node), 0);
+> +	if (!bus)
+> +		return -ENODEV;
+> +
+>  	pwrctl->nb.notifier_call = pci_pwrctl_notify;
+>  	ret = bus_register_notifier(&pci_bus_type, &pwrctl->nb);
+>  	if (ret)
+>  		return ret;
+>  
+>  	pci_lock_rescan_remove();
+> -	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
+> +	pci_rescan_bus(bus);
+>  	pci_unlock_rescan_remove();
+>  
+>  	return 0;
+> 
+> -- 
+> 2.34.1
+> 
 
