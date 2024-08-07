@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-11405-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11406-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1E53949DF1
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 04:53:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C29A949DF3
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 04:54:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 634321F22E52
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 02:53:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B8BA1C21257
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 02:54:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C90017AE0E;
-	Wed,  7 Aug 2024 02:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 333411E495;
+	Wed,  7 Aug 2024 02:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TCqXbPeT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RtwXg5AH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C04E372
-	for <linux-pci@vger.kernel.org>; Wed,  7 Aug 2024 02:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9014A848E
+	for <linux-pci@vger.kernel.org>; Wed,  7 Aug 2024 02:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722999189; cv=none; b=EoSFDDvlxkLz0n3o7QuN+oGcwfKdr1n/DBbRAg8L3+p2dwyWFn992arRK2cTZhDTUaKAtaJDgh99BBx0/DdoVLDpagnWyAs0/pHQMDkglQd2ILnb1dTBz3v916MDoAM+9iT+bE/cmfbpnCvQ0Bf8miD48/LaRBcj/0S+x86q7Js=
+	t=1722999274; cv=none; b=p/L2VHm8CIPZGVJMXpRQgjGNWxBMZgMZsMipeC9aq94LhQUeA3nq6c+7638/FpVoklNXNkl9G+fCjQ3mco+uAE0AN76Rqc6RxtSaR3sUcvsPnbWeyyghP8HNp1XM/IYEowiLU1HLUfkHGbj8CtuiF5NufJHbfCNOjKNKjd1XoeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722999189; c=relaxed/simple;
-	bh=Vs+yRqnsnTYiBhgxijbw0m5004WaG/JwP8yyfpt0My4=;
+	s=arc-20240116; t=1722999274; c=relaxed/simple;
+	bh=UEYdL6BiqNkjuEsoZrCtybf+BkwaYQKzgsqMHJRTOJM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DPOBexmlNDNTmIzkPDe9A6qLn6ztmxQBQyfL96lJ2NaVHShBsHlG7qsXI3TL2PnPjQX/wLb6MhNikRblb46clH5ZtEmF0PtcTt5tfy7Yh58oKC8FgEQJEZZ/uI0bZQwq6933bbkIJXOAF8p1cHi/7EOnRsHKg2R1fGTn1lLo5+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TCqXbPeT; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=a+p5rtgjsw2dSI+BNyFZcq88n3RlluiPBg5KB2z6NhVt2bfLMwaVFgHZcHdu+69haMZo4riaU5SxsCGzCuDQEsGz1rBLdvRQnVEonG9C9bV8b8Bcw+ihgXCEx90kVoESkPt5VWrAt2o0G8sUr2P+l1dAmtbHDr3bg9tMTIRZkVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RtwXg5AH; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fc692abba4so13442475ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2024 19:53:06 -0700 (PDT)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7a1843b4cdbso1038193a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2024 19:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722999186; x=1723603986; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1722999272; x=1723604072; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=rxNTPURWQk7/dc/jj+R3PwdiQ6MWMSIu7JR1EjXWtLw=;
-        b=TCqXbPeTj9OLeJ6lF25Fzk4nAwCiIntKF+KYUaS0fvUKJjzFVzDFu02e5sXLfR1Att
-         MUHLt235TFs8kZSpu0cVNqy4OrYoDJVESvr4zfQ2sqvuhxIAuV/caDgnet0GbwHcQBmt
-         aoAZd0pV3w0VikEiznvXlnl0jRh+guvcf4rD+nXsqWznlJA1950TGPcNErIuk3AV3NuI
-         IgLxJ0nGRhb+vyXcBqE7UtBC7sytWG2lwputkKBSwxW5EY08nCZ/pcUQSkuicoygkNCQ
-         w1VCmAVFDNGEqqBLEEZNJkVh9LgOQI12P/ULph/Hrm+aX/B2vgid5ovPeQ3l8jLB9rcY
-         IHeQ==
+        bh=PzP6P7jRClmLKoX/zmWy4IvF4yzdI1M2oWohKmGOdlU=;
+        b=RtwXg5AH5bO5c6OKs526yTgz95apYkoDX1LNan/gNYjrGCxI2F7Z4kAiPORUNkpsrz
+         Uy2bEEuc+q8zMBKWjf+koEqw1GLjX4kT8bhXnLFiaRTUQ+VMXLBo3tt9tuPk/UvjBofr
+         c4bp8HIeyDwZbMTV2K3ePwdUNexVaX/VSoCZdT2WhiqnKafr4ryMk18tFUQDGkMSfe6W
+         6jX371INTCughS7m1OG0tR3eBdN+uE6u5G1CnplPW3ndVbxPjNYdP/LOVbPQTLdNU8RQ
+         61RLMsJW+hvMKSKStDMheVGrsMGHmmthx4cmouwT+XbjbXEY9NxH1rNs7Nc3aq71+rzX
+         QTYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722999186; x=1723603986;
+        d=1e100.net; s=20230601; t=1722999272; x=1723604072;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rxNTPURWQk7/dc/jj+R3PwdiQ6MWMSIu7JR1EjXWtLw=;
-        b=U8y+KITtzOLnEP0DtDozoM4xHT4G/5imI1DoX+Z7oYQcLNp97oF6WzwTNf1L5L7Y43
-         OpP59uIqK9m2URtVY4w0f7idBp1H+Fl9G5S4z4g1QSdFLtJX5AiZ2C84Uin970km2IKc
-         JHxeUV0qZq+frIEHJbj5zZq4MlKYn6ykje4oUtDUusU8lH/MEJcOokmyRoHZlz31LPZy
-         ZyPfxlkAQtvqHLgWdxAjcF2st3Za+EVLF5vo1sxnF5XH10iF5wI5Y22Ew1lEtyiL8tut
-         ESQzjz8u4faTq0Hy2rgxgGV95GatFkV5ajWY9v3cAXiBgPu+6ftlSUT6tWl9lwDrXc9k
-         fy4A==
-X-Gm-Message-State: AOJu0YxoL0A0jiQeUp28H3f0qaaQDyCZTFs9iUf9ybJqoeJuPP1VCOTp
-	0gHA5RpLersqW21Ka77dB03ZRwtP34baPN4SxhHfLMcN7w8AVt3zGzcEjKwPyg==
-X-Google-Smtp-Source: AGHT+IExm1nyHNpY2Df0ueTbO0F5rX3vC1NzqDjMXBn0ObX2Q18HN9I7GSRRDFbcDAWCC26CjfW4JQ==
-X-Received: by 2002:a17:902:e802:b0:1fb:5c3d:b8c3 with SMTP id d9443c01a7336-1ff57262fa6mr180863515ad.4.1722999185616;
-        Tue, 06 Aug 2024 19:53:05 -0700 (PDT)
+        bh=PzP6P7jRClmLKoX/zmWy4IvF4yzdI1M2oWohKmGOdlU=;
+        b=m3uFANcFxG/qmhVf5sIArVqzOnTelznsWkCMMmoW2S7jirycVwUV+Vo6aIT/zP7cnI
+         RFd5qWSeP0r40L7/YjE/0Zxeh35ApvjYs7eLPM4CuxyCtPGRd06SG6829tSoMu4sjHdY
+         1mrtSJkA4N59GBjYXJvaV4JSxVjVe5NbGF6yFS4/DkefIANS7UwCNXbTCRhPpBrQG8jQ
+         msXr+75byzL8vs3T6coCB+PX/N0vo7ejyhAb9bIT87QagCUotYvBz9pCAJ15MuIRj55Y
+         097KyuXojCaIlM7xvmNZpYVmxnpIumx9Smc4jfNcTnechwbMLq/i2C90QqsBrEOtOUOo
+         s/3g==
+X-Gm-Message-State: AOJu0YwMP5Tovh11e909ldf7r6cTkCdDJJLON+lNAPOrb84zW19a+8Im
+	5GxIcxgg2GdNxRszNxTLFR94/M07/oABl5Z5f/T2Cxb+C6dZ1viqScbZdExFZA==
+X-Google-Smtp-Source: AGHT+IGDGjPoQZeMECEmhH67AI5SImkYnGCx2Jb6OA/XvWaCIb6UIZpaUoEU2T8qCZV1fYjeSaqAPA==
+X-Received: by 2002:a05:6a20:d80d:b0:1c4:c305:121b with SMTP id adf61e73a8af0-1c6995aa85fmr18467603637.29.1722999271499;
+        Tue, 06 Aug 2024 19:54:31 -0700 (PDT)
 Received: from thinkpad ([120.60.72.69])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff5929abd1sm94465395ad.271.2024.08.06.19.53.00
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ec400e4sm7589256b3a.62.2024.08.06.19.54.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 19:53:05 -0700 (PDT)
-Date: Wed, 7 Aug 2024 08:22:52 +0530
+        Tue, 06 Aug 2024 19:54:31 -0700 (PDT)
+Date: Wed, 7 Aug 2024 08:24:23 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Jim Quinlan <james.quinlan@broadcom.com>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -86,7 +86,7 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	open list <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v5 03/12] PCI: brcmstb: Use common error handling code in
  brcm_pcie_probe()
-Message-ID: <20240807025252.GE3412@thinkpad>
+Message-ID: <20240807025423.GF3412@thinkpad>
 References: <20240731222831.14895-1-james.quinlan@broadcom.com>
  <20240731222831.14895-4-james.quinlan@broadcom.com>
 Precedence: bulk
@@ -108,6 +108,13 @@ On Wed, Jul 31, 2024 at 06:28:17PM -0400, Jim Quinlan wrote:
 >   handling can be better reused at the end of this function implementation.
 > o Use dev_err_probe() where it makes sense.
 > 
+
+Thanks for using the imperative tone. It would be nice to have the patch
+description as a single paragraph in a continuous manner instead of bullet
+points.
+
+- Mani
+
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 > ---
 >  drivers/pci/controller/pcie-brcmstb.c | 34 ++++++++++++---------------
@@ -194,18 +201,12 @@ On Wed, Jul 31, 2024 at 06:28:17PM -0400, Jim Quinlan wrote:
 > +clk_disable_unprepare:
 > +	clk_disable_unprepare(pcie->clk);
 > +
-
-TBH, this is not improving the code readability. __brcm_pcie_remove() used to
-free all the resources and now you just moved clk_disable_unprepare() out of it
-to save 2 lines in probe(). And you ended up calling clk_disable_unprepare()
-separately in brcm_pcie_remove().
-
-So please remove the label and call clk_disable_unprepare() in the error path
-(just 2 instances) and continue to use __brcm_pcie_remove() to free all
-resources (I would've preferred to have separate error labels instead of calling
-__brcm_pcie_remove() though, but not this).
-
-- Mani
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
