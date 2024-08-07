@@ -1,191 +1,265 @@
-Return-Path: <linux-pci+bounces-11409-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11410-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74729949E00
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 05:05:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0C88949ECD
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 06:23:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E95E81F221AA
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 03:05:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E90D1B2157A
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 04:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 260C11C27;
-	Wed,  7 Aug 2024 03:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003421E505;
+	Wed,  7 Aug 2024 04:23:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eUaT/j2i"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="EkggeDjq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE4F1E495
-	for <linux-pci@vger.kernel.org>; Wed,  7 Aug 2024 03:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1EA15D5BB
+	for <linux-pci@vger.kernel.org>; Wed,  7 Aug 2024 04:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722999916; cv=none; b=S76sHJSp269XUBPh8nLRTrYudyEWSeUy5i055Bdu6kHTI7y+lYlGH/QTXn1UEoq7YsG15J2betMJPHswAbweXmH3rBjOzsb4okRDGatPjd4fnhMzmM/BC3AM6A0PYsMuHsxdAUZt1EpQUKN+xaAUAifTgLiw/CtjU+RNq7lxJys=
+	t=1723004625; cv=none; b=t2P6Fai2IPKeG3c7Bmg1sCN5dJBc8rpGFGY4LsTxtxsGbJLMrz9CPBCDvb0G6xXnm1otyAIt7im82u53sZeEMC1YjIjadz/324HiQaE1K6reIztjk+11RYQ37+vFvdJKZAix9V3/txzRgfpCXSFRSTMYv2+kGArZAH5NYghQBHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722999916; c=relaxed/simple;
-	bh=IAFfJ1Li8XPBsF74nZL5cGbdPLoi9/uMZjoWpQfZvG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dyIHDe5ax0eZ9teV9fbFqMDSNtXrfZW2ER37DNG+C/dczlfM5egZGyjd4tNM6ZcgQ0Mu744fE3e153kY53NGpDKYHKn7pVkJmm+hAWBJnMCLgCLUmoPzq0tslFLEKv8U8dTXn1SRuqBkj41S4uJHk3qyAlnc/CChmQ3peqoR57Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eUaT/j2i; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70cec4aa1e4so949991b3a.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2024 20:05:14 -0700 (PDT)
+	s=arc-20240116; t=1723004625; c=relaxed/simple;
+	bh=DF4YLkT2dkO0DglIRwHWPUhwg+ixGdpdsVWTjspnx/o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HpAwhQW7S3Tpmdecp4IiEHnbOlZSuKT+ADzD7cw/20Qxcxp4RlMGBc9lY4x1OHHB4tOqxqO7NJFDia16DVXfGtpEXJuH5ZekVbEZlNG/qiEN+44aD18c8l63Mrwwk1KKXJiuM+jZQGj8HfyA1pdZgfTZ/kNtbpk3daZbSavy0dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=EkggeDjq; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-66a048806e6so14318497b3.3
+        for <linux-pci@vger.kernel.org>; Tue, 06 Aug 2024 21:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722999914; x=1723604714; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ktkwfuDEJhx5sflfI2OvQPuNv1Een1+08srx34A5940=;
-        b=eUaT/j2iqmTe3DvqIWjTwkLHVaweo3IKD03oUUampQxO4EiftxeHSd2pBfUGJvvOrs
-         q2SID8gxFFTkf78AHX9z5vk1tlUkc4GbX4qpEl98y+dXkZ+RvAXNxz707QFMfA+UnhQ/
-         VL1xzFDco2aycXYaY39nzYlsURWjOc9YWlCj5QEHca8WqIEnoIjYkWu8QjyoFb1VxUbk
-         qtC403b8TSdo1ezSzjPx4FimLYeR1BcB5lV2KBjzjHpd3cdQN/Ee+k8XYAgmxgCVXa/r
-         BnWQOh+88V5I9ijDDZVyUT0MTYAgPuarVjvLXB7Cv1iXjtqe5LqeSIoR4MP4FoehDVrO
-         kjeQ==
+        d=endlessos.org; s=google; t=1723004623; x=1723609423; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nvR20d9ERYh3Ig9cFYU+v14Ff7CSOV7+SjTSWjYgNGo=;
+        b=EkggeDjqftvNw8dNN/QefH9ZaIW+1+dWAz2dZ45HEFTsABc6zVW0H7WflUh3lOIHz+
+         P8YoQnzkaRHcv3ODiGzsSMNyDGtKBKh22Q9lePLHgQK0FQ+TXasCNMNgeVsdoGQb7lMq
+         D1q0/K7MDtx0cO0sIYaQLzc5e8PQNKUygisoXjNjYfhBv1OKYNDXFQo9TqhxAhoScCIO
+         zutSZVpqcUBZpogshwA6id+PvSBqzytLhcaWTD2GaTCNLGFSKSoGbwI9rtW9IdPpksDG
+         OblBzwTSgR5MGo1sWbY5m2Zg1tOD8nIe8Y/aSCZyuVIPWp91E0Xv5DULoHsxYQ8k4osC
+         011Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722999914; x=1723604714;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktkwfuDEJhx5sflfI2OvQPuNv1Een1+08srx34A5940=;
-        b=dJnGYtKZ6XGFuAkwY2OV/mwQaerUhRxmRnvKLdp7k7914+Vldkp9L2VQch00837+Vx
-         fmlmoZBVoVMD5qe+L5kDj2uFEwnW+NkDzTCJmqDpEepWJDLrdooslyHHi4CUPnzy1Tz1
-         WIL4zAd5tGSfoDO9u7BLMWpbbvt+p/lOr1lTgUYE9qvSSrurMG/GEePyQGCWbnLg8kgH
-         suFJwKe5Ppw/sDYHAgW1hN2LBF+YNhw5f0deF6WjZXeLrpKnSqWel1kONWV9zGM+Z364
-         DJvv2/D8N+L20u7z3w9ElVAR4YOATvlhabLyJLWlY8cLVrztGNcx7uK9+P0C/yDjmAUJ
-         espw==
-X-Gm-Message-State: AOJu0Yy+9zj4lCdciHMlFHVPhmntb2RmMp9dOqXeOl6+PTyNgaxlbfSk
-	/CXPJ4h+Fftozoka4Q9PqCdXsMsQGwyZy3qsd7MeagOd7+96d92/Cq2D6Sl7pA==
-X-Google-Smtp-Source: AGHT+IHeBBB9HZdLy26QExMAW0qOHs0KBnu6vbFxqKF47qSsZ46yR0Ql9vqC7kMPYTC0pjfebwTrUA==
-X-Received: by 2002:a05:6a00:170b:b0:710:bd4b:8b96 with SMTP id d2e1a72fcca58-710bd4b964emr856276b3a.28.1722999913813;
-        Tue, 06 Aug 2024 20:05:13 -0700 (PDT)
-Received: from thinkpad ([120.60.72.69])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b762e9f5cdsm7616512a12.2.2024.08.06.20.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 20:05:13 -0700 (PDT)
-Date: Wed, 7 Aug 2024 08:35:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 08/12] PCI: brcmstb: Don't conflate the reset rescal
- with phy ctrl
-Message-ID: <20240807030502.GI3412@thinkpad>
-References: <20240731222831.14895-1-james.quinlan@broadcom.com>
- <20240731222831.14895-9-james.quinlan@broadcom.com>
+        d=1e100.net; s=20230601; t=1723004623; x=1723609423;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nvR20d9ERYh3Ig9cFYU+v14Ff7CSOV7+SjTSWjYgNGo=;
+        b=hzdicNaVTLzLdT4TNDm9rGRuS+keIFNczxGAvC3uMCj0FcTSSP535iUKF8LUcOhCxn
+         TomxYr6qhz/FgMMinS0uMU4/9kJvnzTca3DyYd3j6vq83z526qhD4meQWfiYE1EaIiIR
+         dNRf2mVYJQ6xONrYrwk7y49sOWPX4PhC38U52Lg4r8N+aAHTcBDwdejGs4zwnbppyK4x
+         vI4XBMpA95rdXo5tufAAGRkLCmo5RZ0VAO1pR6Pgh5aN9+2nCbibDxnpVSdN2p6VcZ8s
+         Au9ZEr2w3Xctnqgd23oov55rcY8uRze+zAbHgq/zNDxt60Xnv0wLPS/5NFuvkzFfiEIi
+         LQxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGEUtULb5YCZT6t0IDemVAA3h1qTw5q72sZOZbpHwg2UdCRqlpeyeCd1PtfCb3U93jdrTQrRDf1lUvk4AFOfjPvDoGqtdxghj6
+X-Gm-Message-State: AOJu0YwIaT3Wrb8J91c5JJMoYmFrg9xfEveClDWiCrUQ4luWYbJZ6Dgr
+	crL5WYRPpWidHuQ1i4dUVpm8Ggh0p/y0iug+0cNBozcp0ZUdemH86v6P9DX6v9jhpYWU8zMw8dK
+	2bLqY7uqeR7han92+hK6qSkgEvAkj6d08tn3q2A==
+X-Google-Smtp-Source: AGHT+IFvTpixASaAP4xWWgQqjnNaP7m3tey7jFG8JbB1XlcOznYi4oLBuRU+2Lnv87Umzp1CJIcF/1QlHwBKcKC6VuI=
+X-Received: by 2002:a05:6902:2b0d:b0:e0b:4aa4:1704 with SMTP id
+ 3f1490d57ef6-e0bde2909f8mr21646461276.18.1723004622627; Tue, 06 Aug 2024
+ 21:23:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240731222831.14895-9-james.quinlan@broadcom.com>
+References: <20240719075200.10717-2-jhp@endlessos.org> <20240719080255.10998-2-jhp@endlessos.org>
+ <CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com> <20240805112456.00007cad@linux.intel.com>
+In-Reply-To: <20240805112456.00007cad@linux.intel.com>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Wed, 7 Aug 2024 12:23:06 +0800
+Message-ID: <CAPpJ_ecuWkFZoriVyQxXV3dn-pAxDus-8vVwFMdhjpS5H2cfpw@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] PCI/ASPM: Fix L1.2 parameters when enable link state
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>, 
+	David Box <david.e.box@linux.intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, 
+	Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux@endlessos.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 31, 2024 at 06:28:22PM -0400, Jim Quinlan wrote:
-> Add a "has_phy" field indicating that the internal phy has SW control that
-> requires configuration.  Some previous chips only required the firing of
-> the "rescal" reset controller.  This change requires us to give the 7216
-> SoC its own cfg_data structure.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Nirmal Patel <nirmal.patel@linux.intel.com> =E6=96=BC 2024=E5=B9=B48=E6=9C=
+=886=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:25=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> On Fri, 2 Aug 2024 16:24:18 +0800
+> Jian-Hong Pan <jhp@endlessos.org> wrote:
+>
+> > Jian-Hong Pan <jhp@endlessos.org> =E6=96=BC 2024=E5=B9=B47=E6=9C=8819=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Currently, when enable link's L1.2 features with
+> > > __pci_enable_link_state(), it configs the link directly without
+> > > ensuring related L1.2 parameters, such as T_POWER_ON,
+> > > Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have been
+> > > programmed.
+> > >
+> > > This leads the link's L1.2 between PCIe Root Port and child device
+> > > gets wrong configs when a caller tries to enabled it.
+> > >
+> > > Here is a failed example on ASUS B1400CEAE with enabled VMD:
+> > >
+> > > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
+> > > PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
+> > >     Capabilities: [200 v1] L1 PM Substates
+> > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
+> > > L1_PM_Substates+ PortCommonModeRestoreTime=3D45us
+> > > PortTPowerOnTime=3D50us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
+> > > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
+> > >         L1SubCtl2: T_PwrOn=3D50us
+> > >
+> > > 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
+> > > SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
+> > >     Capabilities: [900 v1] L1 PM Substates
+> > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > > L1_PM_Substates+ PortCommonModeRestoreTime=3D32us
+> > > PortTPowerOnTime=3D10us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
+> > > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+> > >         L1SubCtl2: T_PwrOn=3D10us
+> > >
+> > > According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on
+> > > the PCIe Root Port and the child NVMe, they should be programmed
+> > > with the same LTR1.2_Threshold value. However, they have different
+> > > values in this case.
+> > >
+> > > Invoke aspm_calc_l12_info() to program the L1.2 parameters properly
+> > > before enable L1.2 bits of L1 PM Substates Control Register in
+> > > __pci_enable_link_state().
+> > >
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > ---
+> > > v2:
+> > > - Prepare the PCIe LTR parameters before enable L1 Substates
+> > >
+> > > v3:
+> > > - Only enable supported features for the L1 Substates part
+> > >
+> > > v4:
+> > > - Focus on fixing L1.2 parameters, instead of re-initializing whole
+> > > L1SS
+> > >
+> > > v5:
+> > > - Fix typo and commit message
+> > > - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
+> > >   aspm_get_l1ss_cap()"
+> > >
+> > > v6:
+> > > - Skipped
+> > >
+> > > v7:
+> > > - Pick back and rebase on the new version kernel
+> > > - Drop the link state flag check. And, always config link state's
+> > > timing parameters
+> > >
+> > > v8:
+> > > - Because pcie_aspm_get_link() might return the link as NULL, move
+> > >   getting the link's parent and child devices after check the link
+> > > is not NULL. This avoids NULL memory access.
+> > >
+> > >  drivers/pci/pcie/aspm.c | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > index 5db1044c9895..55ff1d26fcea 100644
+> > > --- a/drivers/pci/pcie/aspm.c
+> > > +++ b/drivers/pci/pcie/aspm.c
+> > > @@ -1411,9 +1411,15 @@ EXPORT_SYMBOL(pci_disable_link_state);
+> > >  static int __pci_enable_link_state(struct pci_dev *pdev, int
+> > > state, bool locked) {
+> > >         struct pcie_link_state *link =3D pcie_aspm_get_link(pdev);
+> > > +       u32 parent_l1ss_cap, child_l1ss_cap;
+> > > +       struct pci_dev *parent, *child;
+> > >
+> > >         if (!link)
+> > >                 return -EINVAL;
+> > > +
+> > > +       parent =3D link->pdev;
+> > > +       child =3D link->downstream;
+> > > +
+> > >         /*
+> > >          * A driver requested that ASPM be enabled on this device,
+> > > but
+> > >          * if we don't have permission to manage ASPM (e.g., on ACPI
+> > > @@ -1428,6 +1434,15 @@ static int __pci_enable_link_state(struct
+> > > pci_dev *pdev, int state, bool locked) if (!locked)
+> > >                 down_read(&pci_bus_sem);
+> > >         mutex_lock(&aspm_lock);
+> > > +       /*
+> > > +        * Ensure L1.2 parameters: Common_Mode_Restore_Times,
+> > > T_POWER_ON and
+> > > +        * LTR_L1.2_THRESHOLD are programmed properly before enable
+> > > bits for
+> > > +        * L1.2, per PCIe r6.0, sec 5.5.4.
+> > > +        */
+> > > +       parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
+> > > +       child_l1ss_cap =3D aspm_get_l1ss_cap(child);
+> > > +       aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
+> > > +
+> > >         link->aspm_default =3D pci_calc_aspm_enable_mask(state);
+> > >         pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> > >
+> > > --
+> > > 2.45.2
+> > >
+> >
+> > Hi Nirmal and Paul,
+> >
+> > It will be great to have your review here.
+> >
+> > I had tried to "set the threshold value in vmd_pm_enable_quirk()"
+> > directly as Paul said [1].  However, it still needs to get the PCIe
+> > link from the PCIe device to set the threshold value.
+> > And, pci_enable_link_state_locked() gets the link. Then, it will be
+> > great to calculate and programm L1 sub-states' parameters properly
+> > before configuring the link's ASPM there.
+> >
+> > [1]:
+> > https://lore.kernel.org/linux-kernel/20240624081108.10143-2-jhp@endless=
+os.org/T/#mc467498213fe1a6116985c04d714dae378976124
+> >
+> > Jian-Hong Pan
+>
+> Hi Jian-Hong Pan,
+>
+> I am not an LTR, ASPM expert, but this part looks good to me.
+>
+> Can you explain why you decided to move pci_enable_link_state_locked()
+> call down to out_state_change in vmd.c?
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The idea is setting all LTR related parameters before enabling the ASPM fea=
+ture.
 
-- Mani
+> Will it cause any issue if pci_find_ext_capability returns 0?
 
-> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 1ae66c639186..4659208ae8da 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -222,6 +222,7 @@ enum pcie_type {
->  struct pcie_cfg_data {
->  	const int *offsets;
->  	const enum pcie_type type;
-> +	const bool has_phy;
->  	void (*perst_set)(struct brcm_pcie *pcie, u32 val);
->  	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->  };
-> @@ -272,6 +273,7 @@ struct brcm_pcie {
->  	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->  	struct subdev_regulators *sr;
->  	bool			ep_wakeup_capable;
-> +	bool			has_phy;
->  };
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
-> @@ -1311,12 +1313,12 @@ static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
->  
->  static inline int brcm_phy_start(struct brcm_pcie *pcie)
->  {
-> -	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-> +	return pcie->has_phy ? brcm_phy_cntl(pcie, 1) : 0;
->  }
->  
->  static inline int brcm_phy_stop(struct brcm_pcie *pcie)
->  {
-> -	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-> +	return pcie->has_phy ? brcm_phy_cntl(pcie, 0) : 0;
->  }
->  
->  static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> @@ -1559,12 +1561,20 @@ static const struct pcie_cfg_data bcm2711_cfg = {
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  };
->  
-> +static const struct pcie_cfg_data bcm7216_cfg = {
-> +	.offsets	= pcie_offset_bcm7278,
-> +	.type		= BCM7278,
-> +	.perst_set	= brcm_pcie_perst_set_7278,
-> +	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
-> +	.has_phy	= true,
-> +};
-> +
->  static const struct of_device_id brcm_pcie_match[] = {
->  	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
->  	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
->  	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
->  	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-> -	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-> +	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7216_cfg },
->  	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
->  	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
->  	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
-> @@ -1612,6 +1622,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  	pcie->type = data->type;
->  	pcie->perst_set = data->perst_set;
->  	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
-> +	pcie->has_phy = data->has_phy;
->  
->  	pcie->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(pcie->base))
-> -- 
-> 2.17.1
-> 
+If pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR) in
+vmd_pm_enable_quirk() returns 0, then the device is not a PCIe device.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Then, it goes to:
+...
+pci_enable_link_state_locked()
+  __pci_enable_link_state()
+
+__pci_enable_link_state() uses pcie_aspm_get_link() to get the link
+between the PCIe bridge and the PCIe device.  And,
+pcie_aspm_get_link() returns the link as a barrier.  If
+pcie_aspm_get_link() does not get the link, then the device is a PCIe
+bridge, or not a PCIe device.  Because the link is NULL,
+__pci_enable_link_state() returns with -EINVAL directly and will not
+configure/enable ASPM things.
+
+Jian-Hong Pan
 
