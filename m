@@ -1,374 +1,156 @@
-Return-Path: <linux-pci+bounces-11425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3EEE94A522
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 12:10:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACDD594A5A6
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 12:35:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30C121F217D2
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 10:10:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60FDD283D9C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 10:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 438581D363A;
-	Wed,  7 Aug 2024 10:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C88401C823D;
+	Wed,  7 Aug 2024 10:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TUPmhRdW"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LkMztfYY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2149.outbound.protection.outlook.com [40.92.63.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C19F1C6899;
-	Wed,  7 Aug 2024 10:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723025416; cv=none; b=kRCch11xVMBJn936x0toT5sfSLAcItxTLE3jub6sfY9yJYnS/eQQxOaNvME8biqssA2BBRixi3vCnouZd7U8DWYRmCjThrJRGqkwC5n4PmDHO8uL05EZlPW5uZTADSXMPCsVNaiA6c2EYRG1epfwgkowq9WCt9Pp5W9OC/VmvHs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723025416; c=relaxed/simple;
-	bh=3geILOQKguehSc6CHYFbtZK9lmxQOnTTa3CMyswIst4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QfLrY3GQ4Uka9aykRWFuoP73fzYsez9Q5avIKEBtP1QBZo5OlExY1Q65OdY7a74vxgUDnlWm2McnJRzfvCugZbxO9A2hnYop8cLSsgo3J++2utPRHKIonoKfQz5jOYGfoukGh5zNGjAvjAUzd86dG5kLSbzw87urV2sabGQAvew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TUPmhRdW; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C0821BF203;
-	Wed,  7 Aug 2024 10:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1723025403;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5BGqJI/ev/belov1hsrruBFGrYZxU1Unm6iwJDXADo=;
-	b=TUPmhRdWjO9JNhnOiRGL61xQIzPr5WsceG2EwvtaTxyj8uRQI95g+daK4eu9DM/BqXSzkK
-	8YNzgK3ImrLELTqobMwZ/7xfMMBl6IFDXVPea6GvQP1qbhCHCdSQz47hWiYHt8v01wasRY
-	rpWo2J0qeMP0Vm7L4lv4eMnRdSe5tz26dB7dL6Hs8hGtkQ2Dpdigm7AhZIAriO7AUQOX5A
-	jCYfHm2gS+/o+Od7CegM/vgVVOCdlKaneFthnJMxnu4l90ya2cMtx8lJPk9zFz/psPQVvc
-	9jH5QhFLfBwlPgLTYF8Ufg8xQzJOxvngmPLExruVRGcVqdLvMB1Pfv7l2G6ThQ==
-Date: Wed, 7 Aug 2024 12:09:56 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman
- <horms@kernel.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
- Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring
- <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 1/8] misc: Add support for LAN966x PCI device
-Message-ID: <20240807120956.30c8264e@bootlin.com>
-In-Reply-To: <CAHp75VdtFET87R9DZbz27vEeyv4K5bn7mxDCnBVdpFVJ=j6qtg@mail.gmail.com>
-References: <20240805101725.93947-1-herve.codina@bootlin.com>
-	<20240805101725.93947-2-herve.codina@bootlin.com>
-	<CAHp75VdtFET87R9DZbz27vEeyv4K5bn7mxDCnBVdpFVJ=j6qtg@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E85B1DE850;
+	Wed,  7 Aug 2024 10:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.63.149
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723026894; cv=fail; b=AHJAHzy5xtdkopWRvn0RWi/0C20KzUxDt6yvhn7v14KwYkJTxrEsc/qLWZS10sDOyyXmKBdihHcYlonRzi7JcANQyeTbEBzpJjMuHMwzJRlWg2FkXNm1P7sLZlsBOarFPp9PRuQjQ0NK8d7B7Wa1a/H3cLkBDQzInYKEzAceogA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723026894; c=relaxed/simple;
+	bh=gObhk9HOoBUNhrxYszi1Bqyh6mG1w1UWwTkyhWVnTpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IttyV8z47uem2Lsl6xlVmQUHlePii1Gyv2QJYt3aOUkXHNWe1yaXl/R+5y7dWi0FLXpXAVG48Kj9/UKmLMGf397BcP8IqVi8P6unCMc2JqK4ryj/Gr/DHK4TskjOkbeoEzz/rvUqCjZuJioIdcCC6P+EfyHvQOXD4BffcZjCwEM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LkMztfYY; arc=fail smtp.client-ip=40.92.63.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y78YFkOHNft7wkvYRS0oppNkjRPZRA5hVJ9h4TliICm6nZ3k3f+r19Qma/p28VOFADwSgCHJnp+4JenJjvMmwOJvQ8XzSbD09tGFq8Ou1y8akXLAnPUJkTzamV7CJx3yPQvEgbR3O3zpM5Qs4neCVFB9l7gwqdCvyE657f7R/pk1KQPEs8m8QqHZ5xDhwQN/VIWmo+S/LpVflJlGqd8BW7nTfc3gX81FXLxCZnwPmmum9zzH0h10W9li3EaxsBdnxN4MbnbCly8wOBKKBoOKOz7yHkeIFwNKw+pJXBPZdSlv1mAujqnfWKPE25LpI+e1d0JzJjPjwgKy0LXO7PW4Cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jc64NMqjVqFVtD2kwzA5vBtoGZO7hh1ntoQlX942Le8=;
+ b=PeptpU0H88asgjQuzHc+Yj0imrXcq4ussXcZLHLOtqz6uG7jidmQW70m0bHZ9/HFuUVe/Xn8NGh/mZFO/HWLyjGakKuRO+B8Ztnu3OZfmUq257k8Wf11cTT7hkuX8wNg95FhCxfPHKK8c5u4XubrYSfZTNuMyRpStScHCIqbqMccKWA7E2oS8KmI0rVomK1uUQ96uS+qJUjunpG/+5G2Gs8TCegUwWjArJhNUbFw9syQi4XZrvfoLWnsvd034Whqcr2uuaYzp5gbPdPBI56WuViVXejBCGg+O8CucxOrJf6z99OUj7LRKUzNDVnL+hZk1sYnjeqQtIo8kIk/mpjpXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jc64NMqjVqFVtD2kwzA5vBtoGZO7hh1ntoQlX942Le8=;
+ b=LkMztfYYgUhmHaZPAm13QmAbarN9eCh54IVQE7PLwUyWU/AT6FgjNIegjZLnfDNOkhV9TDKbkj6yeQEH/acuLp+gItMLS0S0fHrY8KwzdeAEwIAoyzSX8/5cShrKq+NJPKEGig04nvNIgfEGYXS9yJmo7lOIXKGBZ2BBLnbFiNe6jV1/E4pMD7lVVEY7/lge0n/hRqh/z05iomoPx7d0FMC4yBuM0FBCc6xlQugMc4CKcEyGR7fDGR+2LH8t4pA/PWKTo92RvTphe6mMgM1yKJoKDReKh6AUV0IrtZFTPKePPBC1Xrgr53NQiJe/1EedbW76Tie2PI2l2BXd2QFxcg==
+Received: from SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM (2603:10c6:10:282::13)
+ by SY0P300MB0482.AUSP300.PROD.OUTLOOK.COM (2603:10c6:10:286::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.27; Wed, 7 Aug
+ 2024 10:34:48 +0000
+Received: from SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM
+ ([fe80::e2eb:8ff3:d300:b6ad]) by SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM
+ ([fe80::e2eb:8ff3:d300:b6ad%7]) with mapi id 15.20.7849.008; Wed, 7 Aug 2024
+ 10:34:48 +0000
+From: Ian <4dark@outlook.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ian Ding <4dark@outlook.com>
+Subject: [PATCH] PCI: Adjust pci_sysfs_init() to device_initcall
+Date: Wed,  7 Aug 2024 18:34:34 +0800
+Message-ID:
+ <SY0P300MB04687548090B73E40AF97D8897B82@SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.41.0.windows.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [OtbyeTUW71tGr391ImJ8Dvo8mbB3NCy/]
+X-ClientProxiedBy: TYCP286CA0168.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c6::18) To SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM
+ (2603:10c6:10:282::13)
+X-Microsoft-Original-Message-ID: <20240807103434.1400-1-4dark@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SY0P300MB0468:EE_|SY0P300MB0482:EE_
+X-MS-Office365-Filtering-Correlation-Id: f989046a-949a-49b1-d356-08dcb6cc8f96
+X-MS-Exchange-SLBlob-MailProps:
+	9IecXKUgicBN3jMkX1QgqrETGOe1DjntLB/hVfvRsee/vLFGE9nFn31mjCGhhRi/Ry5MPrk12VrQOQbNL2bt0CSS0Dn5qL8988Nlb8bPCkXbFbhv3hT5ntNr4oL37L6ZeaAu9xpOicqMZH4lj0kaYDFI9SVLE9JyVdp45zSjK3n0MVw8hw3qIREnZd1Eq6iiGl3gtgms1fuy4xDBVf2vvOosOg7PQzikE8irKBtwp/HPShXrheKH7z1S+6e6O7wjV8VVWh4nZKyn6Wx2YoBt7f6mvvEUfd5uoHB52BoHAPyG7T9nnZdXdqo//2pm1sbd3VQ7xdZFG0nc6jUnFNcGx6lbng1MXGh2VpthSnP+9Db81mEMR6WNpbejijJJ0/mQy6+2g/HokDsdIOA+KLgHn/1tslxGFja8YJ/yKN3aExVeMu/2n46xmBoIx/HIOfWHVB5lhiv6nFYDagpe9sy955U8xzqJELBbaxJgE+CWEOVRwrDuK919uVnM9KSOxpgHClQvpAAqat9++Dvu1sHgu3XbkPoqwBas9kDB1hMF9980z/ebUvZSP6mU6ChGXUMbmVP7vz/L/z0gWsXsEKnF7Gqq9QLN1kuZNUhHV176humP9cO3jm7/MD4RqsGInhriCulPpNxcmQF537kBVcuk4+rY34eLHH9M9xBMzT9wd79s0PYiADn0zbTBpTMrq78pS01tw7qbq8/oSl1wXYQHJREVjyktI4OxP/3IH3wFd7dXIXO6oqDmjA==
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|19110799003|461199028|8060799006|5072599009|440099028|3412199025|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	SkxqCeZEc7Om/UFWH7IoBY9HtsNr6WsrluLHWYtOiKctgW38RfAYL/oeTV5oCF6KUiKonBd5u+fMUCsoOsoHTNZAGShRkhk05DDWgckgLofGrMTeT4e1rzPqdRR2PTjQu0x6FnOeO3mRJNZt7kofmgf7Emu/FVn9kumbGoSoqtVty1ZyRM83zw144zSOWb3xCGkKRGecl9+hkEjHkGh5n5YkafidO150xFlv2ODsiLJiFzPg4qnj858JNIdONV4t/LgkLU1lEI8xUkjon2TcPIcEDJ2cr8Prx/zVLlL0R0sfY4p1+LAC6GtVpZfBL/1gjbWGRLDD8+bqx5J4ed0LcRJTTiOD9lAaJH+QIFRyOt8v79N+J5p7gQkY2S3/uVBwCmVDQB5TyWElfwSQVFn4O+BahbEsw0vqfTgtAin5tuH+VviE/VklaO3Gdtn/757heaVyzLa+bjqgX8hWhJlMcJahSWgvr8tS1jpf/58l+xDTMx9vY/hxeLDMZrSqpfdYhZqB6rshOy0Qni+FGLQxxHrqVvUU92taRwTmPsZTMuQf14T+ncDecXnIdghAGaTgT41qNj10g1wHIIoHA52jYeR4S4dTfUQW2o5lWHH1+v9+2/UGi4Fz63rwVs2cAo7iGn7pLYe/d8YlCrCw1tqVIyut8Yu4D/7KPu1gjswhzghkvlIN6H4KKo2tbfxOweby9GUXX9rlr5GAzOSebopRxQ==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tPa+TTnJKEnojaIlSCGRPFa/0r7DbqRcFADdl99MRUW/sejmjsOoVAorFAsu?=
+ =?us-ascii?Q?GfI3k2N2YYAvV1eZzteQPD6HBb62JZ2jMxlboh6IOvi7tUvo7cS0sZ2Z/wO0?=
+ =?us-ascii?Q?2v0ORB0Vr/r2S+FyFk17Np2eL5mI0mt0dZ3bu7Zd2jMVPKVQ3EO/o13v8DgC?=
+ =?us-ascii?Q?qaN5RrSJe21NxGtaVf1mk+vIEvH0ndQIXSrQYDTHsC+KjJ/1qtKq2OGZrA9t?=
+ =?us-ascii?Q?SkdW4ITaxGEoMP+AE/H8U9CL2FR8L2IrLSZz5HOLZqh22BXE4JpxabHFE68v?=
+ =?us-ascii?Q?pfe2EJwNLLbwvO0giqZBVeWLCHoy2riRJAS/OG++RKzEftJDaxXyubFlRYlV?=
+ =?us-ascii?Q?8s466w7PvotZTkGFujNJeF77ZsvjnLtr1jLaT1ubzY3HN82RvnRrx98IHuIM?=
+ =?us-ascii?Q?W2r9lyaOgsiNiJpiJfuzJD0enNSEuRwhoHHF048JvMWJN0iyvo8HXm3dNsIW?=
+ =?us-ascii?Q?TcXBwtkWS9/IWVoDLwkJgu/+/B/fySxu5HIJZ0OB6P0FpGNFQf55Vw8YfUve?=
+ =?us-ascii?Q?UEtjvwAnY5yOns6ijqBQWhJnolMfn1dYQaLqIVG076XA45kMggA57lfy9dzs?=
+ =?us-ascii?Q?WjamNmlhMDx47JJIBOTSQOX1kFzxvKjxPk+FkLt8tiI5BMMHSbFIUPqlSiYW?=
+ =?us-ascii?Q?bX9q1YepwuKX/bnpItd9T8vQXS3t1Ao+xyumCnOTfFIPAkDVoSCLAaMOrwvq?=
+ =?us-ascii?Q?o1Fhg0BohEJEXMxIMMauOhDS1xcnWtDAQS1ekVkuv8hhYP0zClaAThU6buG+?=
+ =?us-ascii?Q?4BHpDEx9Vu2i9SD0gRgjBV4YAX+92J6sYTYZXrcBEGxGHTzNZCSYOGmoqykC?=
+ =?us-ascii?Q?7XutS/3ZKwNppirq6qhxr6iXgXQgPsoUMIob5s/of5PIcYcTugsRaJrlYA47?=
+ =?us-ascii?Q?Odo2IyUg/QO/U9AawKyZBx16FcFFTlMpLH5psIgC82bQtc5xIGlS+kjC5Q8f?=
+ =?us-ascii?Q?awKO2cwo4TOoXtk1PtKNokbUfLtqPqtAZe2ucbJMeM+/nwHJrfxwei/Uy0LO?=
+ =?us-ascii?Q?MGw9KyU1hlILcSYfCuyj2Ib47dlRs9nQLhOnUZnvLkXcZ1xXq5qymjZyHAud?=
+ =?us-ascii?Q?Kz8QAt/BizEvv0+IppMlQNNv4hM/72y12d+EUatAtqSSuoA1fdO1kua3noiR?=
+ =?us-ascii?Q?0uBzceYHFwBHE6fVgYZszL3mTS9yzi8jHaU5+nFiI9WGFki68AfO2y0i52zM?=
+ =?us-ascii?Q?Gg6PMJjL6lfsu3YE2cD/vb3t3WO5DBdF3p9nGIeuaF6nQxmjNJRiUKlDM54?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f989046a-949a-49b1-d356-08dcb6cc8f96
+X-MS-Exchange-CrossTenant-AuthSource: SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2024 10:34:48.4176
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY0P300MB0482
 
-Hi Andy,
+From: Ian Ding <4dark@outlook.com>
 
-On Mon, 5 Aug 2024 22:13:38 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+When the controller driver uses async probe
+(.probe_type = PROBE_PREFER_ASYNCHRONOUS), pci_host_probe() is not
+guaranteed to run before pci_sysfs_init(), kernel may call
+pci_create_sysfs_dev_files() twice in pci_sysfs_init() and
+pci_host_probe() -> pci_bus_add_device(), and dump stack:
 
-> On Mon, Aug 5, 2024 at 12:19 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Add a PCI driver that handles the LAN966x PCI device using a device-tree
-> > overlay. This overlay is applied to the PCI device DT node and allows to
-> > describe components that are present in the device.
-> >
-> > The memory from the device-tree is remapped to the BAR memory thanks to
-> > "ranges" properties computed at runtime by the PCI core during the PCI
-> > enumeration.
-> >
-> > The PCI device itself acts as an interrupt controller and is used as the
-> > parent of the internal LAN966x interrupt controller to route the
-> > interrupts to the assigned PCI INTx interrupt.  
-> 
-> ...
-> 
-> + device.h
+    sysfs: cannot create duplicate filename
 
-Will be added.
+Signed-off-by: Ian Ding <4dark@outlook.com>
+---
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > +#include <linux/irq.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>  
-> 
-> > +#include <linux/pci.h>  
-> 
-> > +#include <linux/pci_ids.h>  
-> 
-> AFAIU pci_ids..h is guaranteed to be included by pci.h, but having it
-> here explicitly doesn't make it worse, so up to you.
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index dd0d9d9bc..bef25fecb 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1534,7 +1534,7 @@ static int __init pci_sysfs_init(void)
+ 
+ 	return 0;
+ }
+-late_initcall(pci_sysfs_init);
++device_initcall(pci_sysfs_init);
+ 
+ static struct attribute *pci_dev_dev_attrs[] = {
+ 	&dev_attr_boot_vga.attr,
+-- 
+2.25.1
 
-I will keep pci_ids.h
-
-> 
-> > +#include <linux/slab.h>  
-> 
-> ...
-> 
-> > +static irqreturn_t pci_dev_irq_handler(int irq, void *data)
-> > +{
-> > +       struct pci_dev_intr_ctrl *intr_ctrl = data;
-> > +       int ret;
-> > +
-> > +       ret = generic_handle_domain_irq(intr_ctrl->irq_domain, 0);
-> > +       return IRQ_RETVAL(!ret);  
-> 
-> Hmm... I dunno if it was me who suggested IRQ_RETVAL() here, but it
-> usually makes sense for the cases where ret is not inverted.
-> 
-> Perhaps
-> 
->   if (ret)
->     return NONE;
->   return HANDLED;
-> 
-> is slightly better in this case?
-
-Right. I will use a more compact version:
-  return ret ? IRQ_NONE : IRQ_HANDLED;
-
-> 
-> > +}  
-> 
-> ...
-> 
-> > +static struct pci_dev_intr_ctrl *pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-> > +{
-> > +       struct pci_dev_intr_ctrl *intr_ctrl;
-> > +       struct fwnode_handle *fwnode;
-> > +       int ret;  
-> 
-> > +       if (!pdev->irq)
-> > +               return ERR_PTR(-EOPNOTSUPP);  
-> 
-> Before even trying to get it via APIs? (see below as well)
-> Also, when is it possible to have 0 here?
-
-pdev->irq can be 0 if the PCI device did not request any IRQ
-(i.e. PCI_INTERRUPT_PIN in PCI config header is 0).
-
-I use that to check whether or not INTx is supported.
-
-Even if this code is present in the LAN966x PCI driver, it can be use as a
-starting point for other drivers and may be moved to a common part in the
-future.
-
-Do you think I should remove it ?
-
-If keeping it is fine, I will add a comment.
-
-> 
-> > +       fwnode = dev_fwnode(&pdev->dev);
-> > +       if (!fwnode)
-> > +               return ERR_PTR(-ENODEV);
-> > +
-> > +       intr_ctrl = kmalloc(sizeof(*intr_ctrl), GFP_KERNEL);  
-> 
-> Hmm... Why not use __free()?
-
-Well, just because I am not used to using __free() and I didn't think
-about it.
-
-I will use it in the next operation.
-
-> 
-> > +       if (!intr_ctrl)
-> > +               return ERR_PTR(-ENOMEM);
-> > +
-> > +       intr_ctrl->pci_dev = pdev;
-> > +
-> > +       intr_ctrl->irq_domain = irq_domain_create_linear(fwnode, 1, &pci_dev_irq_domain_ops,
-> > +                                                        intr_ctrl);
-> > +       if (!intr_ctrl->irq_domain) {
-> > +               pci_err(pdev, "Failed to create irqdomain\n");
-> > +               ret = -ENOMEM;
-> > +               goto err_free_intr_ctrl;
-> > +       }  
-> 
-> > +       ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_INTX);
-> > +       if (ret < 0) {
-> > +               pci_err(pdev, "Unable alloc irq vector (%d)\n", ret);
-> > +               goto err_remove_domain;
-> > +       }  
-> 
-> I am wondering if you even need this in case you want solely INTx.
-
-I have the feeling that it is needed.
-pci_alloc_irq_vectors() will call pci_intx() which in turn enables INT
-clearing PCI_COMMAND_INTX_DISABLE flag in the PCI_COMMAND config word.
-
-> 
-> > +       intr_ctrl->irq = pci_irq_vector(pdev, 0);  
-> 
-> Don't remember documentation by heart for this, but the implementation
-> suggests that it can be called without the above for retrieving INTx.
-
-So, with the above said, I will keep both pci_alloc_irq_vectors() and
-pci_irq_vector() calls.
-
-> 
-> > +       ret = request_irq(intr_ctrl->irq, pci_dev_irq_handler, IRQF_SHARED,
-> > +                         dev_name(&pdev->dev), intr_ctrl);  
-> 
-> pci_name() ? (IIRC the macro name)
-
-Indeed, will be changed.
-
-> 
-> > +       if (ret) {
-> > +               pci_err(pdev, "Unable to request irq %d (%d)\n", intr_ctrl->irq, ret);
-> > +               goto err_free_irq_vector;
-> > +       }
-> > +
-> > +       return intr_ctrl;
-> > +
-> > +err_free_irq_vector:
-> > +       pci_free_irq_vectors(pdev);
-> > +err_remove_domain:
-> > +       irq_domain_remove(intr_ctrl->irq_domain);
-> > +err_free_intr_ctrl:
-> > +       kfree(intr_ctrl);
-> > +       return ERR_PTR(ret);
-> > +}  
-> 
-> ...
-> 
-> > +static void devm_pci_dev_remove_intr_ctrl(void *data)
-> > +{  
-> 
-> > +       struct pci_dev_intr_ctrl *intr_ctrl = data;  
-> 
-> It can be eliminated
-> 
-> static void devm_pci_...(void *intr_ctrl)
-
-I will update.
-
-> 
-> > +       pci_dev_remove_intr_ctrl(intr_ctrl);
-> > +}  
-> 
-> ...
-> 
-> > +static int lan966x_pci_load_overlay(struct lan966x_pci *data)
-> > +{
-> > +       u32 dtbo_size = __dtbo_lan966x_pci_end - __dtbo_lan966x_pci_begin;
-> > +       void *dtbo_start = __dtbo_lan966x_pci_begin;
-> > +       int ret;
-> > +
-> > +       ret = of_overlay_fdt_apply(dtbo_start, dtbo_size, &data->ovcs_id, dev_of_node(data->dev));
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       return 0;  
-> 
-> return of_overlay_fdt_apply() ?
-
-Yes indeed.
-
-> 
-> > +}  
-> 
-> ...
-> 
-> > +static int lan966x_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       struct lan966x_pci *data;
-> > +       int ret;
-> > +
-> > +       /*
-> > +        * On ACPI system, fwnode can point to the ACPI node.
-> > +        * This driver needs an of_node to be used as the device-tree overlay
-> > +        * target. This of_node should be set by the PCI core if it succeeds in
-> > +        * creating it (CONFIG_PCI_DYNAMIC_OF_NODES feature).
-> > +        * Check here for the validity of this of_node.
-> > +        */
-> > +       if (!dev_of_node(dev)) {  
-> 
-> > +               dev_err(dev, "Missing of_node for device\n");
-> > +               return -EINVAL;  
-> 
-> return dev_err_probe() ?
-
-Yes, I will update.
-
-> 
-> > +       }
-> > +
-> > +       /* Need to be done before devm_pci_dev_create_intr_ctrl.
-> > +        * It allocates an IRQ and so pdev->irq is updated.
-> > +        */
-> > +       ret = pcim_enable_device(pdev);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       ret = devm_pci_dev_create_intr_ctrl(pdev);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> > +       if (!data)
-> > +               return -ENOMEM;
-> > +
-> > +       pci_set_drvdata(pdev, data);
-> > +       data->dev = dev;
-> > +
-> > +       ret = lan966x_pci_load_overlay(data);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       pci_set_master(pdev);
-> > +
-> > +       ret = of_platform_default_populate(dev_of_node(dev), NULL, dev);
-> > +       if (ret)
-> > +               goto err_unload_overlay;
-> > +
-> > +       return 0;
-> > +
-> > +err_unload_overlay:
-> > +       lan966x_pci_unload_overlay(data);
-> > +       return ret;
-> > +}  
-> 
-> ...
-> 
-> > +#include <dt-bindings/clock/microchip,lan966x.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/mfd/atmel-flexcom.h>
-> > +#include <dt-bindings/phy/phy-lan966x-serdes.h>  
-> 
-> > +#include <dt-bindings/gpio/gpio.h>  
-> 
-> Alphabetical order?
-
-Yes indeed.
-
-Thanks for the review.
-
-Best regards,
-Hervé
 
