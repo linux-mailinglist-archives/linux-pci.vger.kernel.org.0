@@ -1,134 +1,177 @@
-Return-Path: <linux-pci+bounces-11432-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11433-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94CF994A7B4
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 14:29:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97B7994A89B
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 15:29:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4C9D1C212BC
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 12:29:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 420361F20EDE
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 13:29:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B2B11E4F1E;
-	Wed,  7 Aug 2024 12:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731561E7A51;
+	Wed,  7 Aug 2024 13:29:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InALkeYZ"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QKrFc1+1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971171E2101;
-	Wed,  7 Aug 2024 12:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68E61BDAB0;
+	Wed,  7 Aug 2024 13:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723033789; cv=none; b=gmjLz8pHQ69fdjveLvpyhqqoZYTup70wQgIbIkGizTKCYRomFtZyWqrJdUIqAPB3NzqeLipFvCfyeKPxUWzq+5h9AIXmaGwTgjgEh9NEucoP3CHztOnpSSsY+tupYuiZ1cBe8YeHym7EZOP4tnV4q1ED9lARNNczNdbWfi+EtOA=
+	t=1723037384; cv=none; b=eTFm6R2COhlBG3CEkfji2ZwNvXfMkMU2ELnrTWEe2qx8rncNlpTcYDvZuyZGCwgvw9ggWrQ4aJWx3/fjiLr5wVwLzrTOrhzaINw/R1Kltfpf76JzeQidYfS7e11EzntVNRX8E8AUxwwD3fig1IpUF3jzwtl6xpvNmLxPQHG8B/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723033789; c=relaxed/simple;
-	bh=pgiw/PXddMIrw7PyP7Ctp5k5rWWWnsIDF+Ip6XS+nU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZzoORiD1yz9tT3ci4ojS6G3PoP5o69TTrCXcG82pT891swkeglRd1vt3XIminrliQw3W2VGIluoUm/ZppkMpewdlUIibTlmI+IM+tmjfq5BfBLbSHsj60KcJ+9ZmqajG02lL2AVg0a6PmiJi6LQ7MbTUoNg7kQ5w5bYJuQaEP+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=InALkeYZ; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ff4568676eso18167975ad.0;
-        Wed, 07 Aug 2024 05:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723033787; x=1723638587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kx32xTT3Lmjn28QqG28xI58RScq11tK0yTOGRh/oOE4=;
-        b=InALkeYZdPu7jCgUElCeuRW7/X+R2krN6fMJH1gEVVsB4UbInj2c0Ooarc6fN/k8kT
-         ievk/lYeMiUhSnFjtq95iG5YMMJdslV66z1UhXW2s/2zVZ0zOwYpnf3706VEHtyUHWfv
-         kcongexK6KJxH2NXVnLNhRPoPS4Vefe9fGl/Jtxm7RmrISF02ThK9/0U3ciltXsBsv34
-         kQRcC8JrARXadCNmLanmPKcvX5RsBajVkOpjqXSP+nkFBXhqnA21g7NtiR69Uxnvqgfe
-         BszFKuqyaZzbp5H3eaRDeLm1pZR4u1fJltd41WhCyVRM7GeEKbUF4T54smQiVMufSdD8
-         lAJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723033787; x=1723638587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kx32xTT3Lmjn28QqG28xI58RScq11tK0yTOGRh/oOE4=;
-        b=dYaYB9tsDZMnUYEr2Zn1rBpLaIUDm3SQcms18AUNb+t4BmtRygAm34TSQ5ADdHIZfv
-         7JbGWDNGqh5fMyUruvdNVwCpADdHW1xkpspC7Sj0wFAbmd0S43J3U+qF6Nfq9IquJ4oJ
-         G9S3AdE1xiGXoI6XabmOoT+oNkLGuj2UI08mi2bY4JFIll1I94uO/pOIH8++KsSPCQvF
-         NAIEzzqhyQNzgSKoSLIwIY7PJfotoVIAE8bimmQLdQNyQfHsCELmTUHWHvicCeOCsSUg
-         ayPwFZLB6heBDkYFfDFhmoVlZdqr/fNSNXZIZO/nkslPllT05OTrKv6x+fSyqoUY/2SL
-         Yw5w==
-X-Forwarded-Encrypted: i=1; AJvYcCW8Pyla9kVCKpvfKinCIe7OwyKSGaKmR2P/BnEI8xXZsDtI/6FPmdzrSq1eu/AvRdutV7OybMtJMf86addMoOGp3dtJscYXwSGnepnQ9EdPiva/OlqCwcooKwmjOxvJBmEiBXuA0sd1b0RLrf1YX4iOjlb4jAffpVz6ZWRD5D5mMXiTRFKjI+0QmnVMPFZ3wbHgo1hJuBn15XeXMg==
-X-Gm-Message-State: AOJu0YxCV01I5As8SLNZieWb0JM8BSnXPIR4YpwQvjSQxQAfDgFxl4vc
-	NIjTLNUYMjJESwKprCWoxWM/bcwCmgl4iaVtUSKRXF8ULiXgAnvweg+Ajf7To1BVChgAefpto2w
-	50daulzASN3fXqoJ/7iJ/+q9a2AA=
-X-Google-Smtp-Source: AGHT+IHX/Io8BGEe/ckylAL2OpQEtD0KNkWtQjYnygkiTok5unepYcDXoXJVkqfRWDMR5n7NAPzxYbxjWVzJl5nWASc=
-X-Received: by 2002:a17:903:41d2:b0:1fd:9d0c:9996 with SMTP id
- d9443c01a7336-1ff572d4738mr263854185ad.35.1723033786674; Wed, 07 Aug 2024
- 05:29:46 -0700 (PDT)
+	s=arc-20240116; t=1723037384; c=relaxed/simple;
+	bh=qM9AJoWa5VmLYkAsAiKwksrHXv6FKgyEFWqPkI2GMqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uU9roS21g7mC+2Zb6R9AWTp4usfu79HF2wCJBEec129f4pusLr+LnUI5glG4J+PYvzV4sVTHFO/LKAa/tkaZ6JmnPbF9KhB2T3bDRgZ2UJkGeXOelrHD4/QBeUDugWr4V8+nrB7uJhhDAMGIj86ibHkOSct+xGkWKX9OL0xSwy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QKrFc1+1; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BF49FF803;
+	Wed,  7 Aug 2024 13:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1723037373;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cVTsGVO8WsmaD67opd83BfGFsRJNsmaLrq0szd22Jso=;
+	b=QKrFc1+1fIuGLesvgymIYwFwPnJVb+rjl/ZP2BoUrhJkQHOAu3stwDe1XaFP5f1eyJMV7Z
+	wFUrzvoCkJYAueAKr2mIol3f3K3XFnHB3lxhNmt73ny2WI/AA+vHckq86dKEJbVn8ZVTVP
+	fopVlsEIQ58rnvRhdDkm7fmuAUlvS2UPUxpGQt4oct1orI9nBrxSWPSwmG9Ie8+QR78NQ+
+	VQLK1LZZBKe5OaArKNDpzmXOn7Q0AyHGbd1bW8c7tpMilCRP7IHd69jdY9f1enEjVKs75E
+	WeC790m5b+uinjI8a4yCuVB45CSGfeUpl4gkjgfMvqsnv0jz1uiwlbo14cMdBg==
+Date: Wed, 7 Aug 2024 15:29:27 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman
+ <horms@kernel.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
+ Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
+ <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring
+ <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <clement.leger@bootlin.com>
+Subject: Re: [PATCH v4 3/8] mfd: syscon: Add reference counting and device
+ managed support
+Message-ID: <20240807152927.22e40284@bootlin.com>
+In-Reply-To: <CAHp75VfKXEyHF25xRq8EDp5SeBdyPHLgzw=4s1xkjer=sNu7aw@mail.gmail.com>
+References: <20240805101725.93947-1-herve.codina@bootlin.com>
+	<20240805101725.93947-4-herve.codina@bootlin.com>
+	<CAHp75VfKXEyHF25xRq8EDp5SeBdyPHLgzw=4s1xkjer=sNu7aw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240806193622.GA74589@bhelgaas> <20240807084348.12304-1-mattc@purestorage.com>
- <alpine.DEB.2.21.2408070956520.61955@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2408070956520.61955@angie.orcam.me.uk>
-From: "Oliver O'Halloran" <oohall@gmail.com>
-Date: Wed, 7 Aug 2024 22:29:35 +1000
-Message-ID: <CAOSf1CHo66dxmChrx97+tfKSE=JM_NzrgdUF_Y4kFabnu3qotQ@mail.gmail.com>
-Subject: Re: PCI: Work around PCIe link training failures
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Matthew W Carlis <mattc@purestorage.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-pci@vger.kernel.org, mahesh@linux.ibm.com, edumazet@google.com, 
-	sr@denx.de, leon@kernel.org, linux-rdma@vger.kernel.org, helgaas@kernel.org, 
-	kuba@kernel.org, pabeni@redhat.com, Jim Wilson <wilson@tuliptree.org>, 
-	linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com, alex.williamson@redhat.com, 
-	Bjorn Helgaas <bhelgaas@google.com>, mika.westerberg@linux.intel.com, 
-	david.abdurachmanov@gmail.com, saeedm@nvidia.com, 
-	linux-kernel@vger.kernel.org, lukas@wunner.de, netdev@vger.kernel.org, 
-	pali@kernel.org, "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, Aug 7, 2024 at 9:14=E2=80=AFPM Maciej W. Rozycki <macro@orcam.me.uk=
-> wrote:
->
-> On Wed, 7 Aug 2024, Matthew W Carlis wrote:
->
-> > > it does seem like this series made wASMedia ASM2824 work better but
-> > > caused regressions elsewhere, so maybe we just need to accept that
-> > > ASM2824 is slightly broken and doesn't work as well as it should.
+Hi Andy,
+
+On Mon, 5 Aug 2024 22:20:56 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Mon, Aug 5, 2024 at 12:19 PM Herve Codina <herve.codina@bootlin.com> wrote:
 > >
-> > One of my colleagues challenged me to provide a more concrete example
-> > where the change will cause problems. One such configuration would be n=
-ot
-> > implementing the Power Controller Control in the Slot Capabilities Regi=
-ster.
-> > Then, Powering off the slot via out-of-band interfaces would result in =
-the
-> > kernel forcing the DSP to Gen1 100% of the time as far as I can tell.
-> > The aspect of this force to Gen1 that is the most concerning to my team=
- is
-> > that it isn't cleaned up even if we replaced the EP with some other EP.
->
->  Why does that happen?
->
->  For the quirk to trigger, the link has to be down and there has to be th=
-e
-> LBMS Link Status bit set from link management events as per the PCIe spec
-> while the link was previously up, and then both of that while rescanning
-> the PCIe device in question, so there's a lot of conditions to meet.  Is
-> it the case that in your setup there is no device at this point, but one
-> gets plugged in later?
+> > From: Clément Léger <clement.leger@bootlin.com>
+> >
+> > Syscon releasing is not supported.
+> > Without release function, unbinding a driver that uses syscon whether
+> > explicitly or due to a module removal left the used syscon in a in-use
+> > state.
+> >
+> > For instance a syscon_node_to_regmap() call from a consumer retrieve a  
+> 
+> retrieves?
 
-My read was that Matt is essentially doing a surprise hot-unplug by
-removing power to the card without notifying the OS. I thought the
-LBMS bit wouldn't be set in that case since the link goes down rather
-than changes speed, but the spec is a little vague and that appears to
-be happening in Matt's testing. It might be worth disabling the
-workaround if the port has the surprise hotplug capability bit set.
-It's fairly common for ports on NVMe drive backplanes to have it set
-and a lot of people would be unhappy about those being forced to Gen 1
-by accident.
+Indeed, will be fixed.
+
+> 
+> > syscon regmap instance. Internally, syscon_node_to_regmap() can create
+> > syscon instance and add it to the existing syscon list. No API is
+> > available to release this syscon instance, remove it from the list and
+> > free it when it is not used anymore.
+> >
+> > Introduce reference counting in syscon in order to keep track of syscon
+> > usage using syscon_{get,put}() and add a device managed version of
+> > syscon_regmap_lookup_by_phandle(), to automatically release the syscon
+> > instance on the consumer removal.  
+> 
+> ...
+> 
+> > -       if (!syscon)
+> > +       if (!syscon) {
+> >                 syscon = of_syscon_register(np, check_res);
+> > +               if (IS_ERR(syscon))
+> > +                       return ERR_CAST(syscon);
+> > +       } else {
+> > +               syscon_get(syscon);
+> > +       }  
+> 
+>   if (syscon)
+>     return syscon_get();
+> 
+> ?
+> 
+> > +       return syscon;  
+
+Yes and further more, I will remove also the unneeded IS_ERR() and ERR_CAST().
+This will lead to just:
+
+	if (syscon)
+		return syscon_get(syscon);
+
+	return of_syscon_register(np, check_res);
+
+> 
+> ...
+> 
+> > +static struct regmap *__devm_syscon_get(struct device *dev,
+> > +                                       struct syscon *syscon)
+> > +{
+> > +       struct syscon **ptr;
+> > +
+> > +       if (IS_ERR(syscon))
+> > +               return ERR_CAST(syscon);
+> > +
+> > +       ptr = devres_alloc(devm_syscon_release, sizeof(struct syscon *), GFP_KERNEL);
+> > +       if (!ptr) {
+> > +               syscon_put(syscon);
+> > +               return ERR_PTR(-ENOMEM);
+> > +       }
+> > +
+> > +       *ptr = syscon;
+> > +       devres_add(dev, ptr);
+> > +
+> > +       return syscon->regmap;  
+> 
+> Can't the devm_add_action_or_reset() be used in this case? If so,
+> perhaps a comment to explain why?
+
+There is no reason to avoid the use of devm_add_action_or_reset() here.
+So, I will use it in the next iteration.
+
+Thanks for your review.
+
+Best regards,
+Hervé
 
