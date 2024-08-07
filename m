@@ -1,54 +1,60 @@
-Return-Path: <linux-pci+bounces-11457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11BA694B116
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 22:16:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F3C094B136
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 22:24:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE3531F21EE1
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 20:16:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D10021F22677
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 20:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85A5D145B16;
-	Wed,  7 Aug 2024 20:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3EC314262C;
+	Wed,  7 Aug 2024 20:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6vNrSRw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPTA7ShV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545CB14535E;
-	Wed,  7 Aug 2024 20:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F8913DDC0;
+	Wed,  7 Aug 2024 20:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723061769; cv=none; b=l8ELbI6jHKJ+39ZfPuQBiWXpV36HMnBZXNfRUwzR1TGXhqsFKP6I1onTRpCOK/3b5TkETJRlvcOo6Hko9CBWvcwPeBjUf9a6GhBlwBFqOdDTsUaGX1izuDR9q5T+9gilxjeHOpyImBE9wnYOjbw+vnDSAfkeBeFzGNfKxLXZsHQ=
+	t=1723062273; cv=none; b=tMz7QZKTNVEsho3F64xmFMLKSlQfyuz9YlCIVlZYHnuFX2kacGt3gz8PCqZnjA273lU3820MnbQaZpRJpM76KNuaoZN3WQsz/GBhNE/bhzEXDgcTr1Fi28nimwjhTBU6J6yB4R410+JSirPJs/dzVfDngho7iWjnI0/aGK8PPtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723061769; c=relaxed/simple;
-	bh=7/OqWItGPKI+OQj8DnkDipK910zUpsiUMnfkGAvKhj0=;
+	s=arc-20240116; t=1723062273; c=relaxed/simple;
+	bh=WhdvMlgdDlpl6/yYw+oeDJrQrSgrjDN8HpP89wMcaVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jkaHk+lBS5W1SKr2px6+ki75AL8tCCFij9HEpB17rhwX+AfitJerX5VYPBaMJFjoDMuNs1dzYjIV8/2XVDaiGaczc9zo7de8C4j1qQNkQI8XcUaZhVf6WSB8Uj913RT9rLTOLY55kqlSAQ5fJAnNNHpkJCUNgTActucNZLdgTy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6vNrSRw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E5AC32781;
-	Wed,  7 Aug 2024 20:16:08 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=lxX6rMPLfDHo+22X9D2klOj0LkBUN2MI8z9naB10c9a/9asxWlr8UYlxB3L72mtc3JPZf9a/gCoFGOOrlgsc6sk3oAJ2j+HH8Qc15XDJ93xxplqLcIVVMJdNJpWM3NIrV5uB+nohmhuWyCT7v727UF9XJvef5m0sGAYKJezWxXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPTA7ShV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E743AC32781;
+	Wed,  7 Aug 2024 20:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723061769;
-	bh=7/OqWItGPKI+OQj8DnkDipK910zUpsiUMnfkGAvKhj0=;
+	s=k20201202; t=1723062273;
+	bh=WhdvMlgdDlpl6/yYw+oeDJrQrSgrjDN8HpP89wMcaVc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=D6vNrSRwJ6aMsuhPmuTj0mg2dUCuk21SY8Y7L+p2LHXcXlBlkljr3ej8+yJo3tdzb
-	 P5fXJ9T4rlXO4SGEoB3dUtoi6Dv5PzxEXRP8rIV8PdDYdO3glZfn+LMdgWAOA2e86N
-	 gN0gnxfBuoG6vDEM0mHBO0yuzUMm1iLReXBShkCDoOTQBUgOch2ZmFPSuoJph9oIFh
-	 hquq65b7AYTAQg3FG+OoqXhhJh2UWXop9tR9S/ILGogkP2IgbzgghvU0UJoV30wAP3
-	 iVNezflE2DmH4LnqVZW980UvFhf3aEj9JKVXO2/EDQZYB/5dVa66CRWVd/0aRc5QIf
-	 0XBx+VfHdogbA==
-Date: Wed, 7 Aug 2024 15:16:06 -0500
+	b=sPTA7ShVYhR8gI8KdprRkeCzVxvZunB+J3GmAVos+F3Wgqa/v1hTNCZd3GlhLfSV6
+	 LKKceC4Au/0ZT6pdBMd2h+FgGGX7zkaO5hp5tDtAaH2lYU6hwu22GgIOG03JGngml6
+	 6602kCvN01yVUa23o/x0F2SnuZ9TMl37WThbF8zwv4BeYbkENHjyNaiVHKZnWk2t06
+	 hvqbFogbMvkJlztxXmZNSdmJkFn/DRR02HYXuQRVYd9BcBgbMvP32VwYCcppD0XFtm
+	 FXEv4QvRSEp4sLDfRQ8KXrb4ODoJAPerX/jkrxcaz2Oo8N8O/0YWYrhDOw/GMqtcPY
+	 mGjyNFWR+L0hQ==
+Date: Wed, 7 Aug 2024 15:24:31 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ian <4dark@outlook.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH] PCI: Adjust pci_sysfs_init() to device_initcall
-Message-ID: <20240807201606.GA109435@bhelgaas>
+To: Philipp Stanner <pstanner@redhat.com>, Dave Airlie <airlied@redhat.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Deprecate pcim_iomap_regions() in favor of
+ pcim_iomap_region()
+Message-ID: <20240807202431.GA110503@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,60 +63,93 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SY0P300MB04687548090B73E40AF97D8897B82@SY0P300MB0468.AUSP300.PROD.OUTLOOK.COM>
+In-Reply-To: <20240807083018.8734-2-pstanner@redhat.com>
 
-[+cc Krzysztof]
+On Wed, Aug 07, 2024 at 10:30:18AM +0200, Philipp Stanner wrote:
+> pcim_iomap_regions() is a complicated function that uses a bit mask to
+> determine the BARs the user wishes to request and ioremap. Almost all
+> users only ever set a single bit in that mask, making that mechanism
+> questionable.
+> 
+> pcim_iomap_region() is now available as a more simple replacement.
+> 
+> Make pcim_iomap_region() a public function.
+> 
+> Mark pcim_iomap_regions() as deprecated.
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-On Wed, Aug 07, 2024 at 06:34:34PM +0800, Ian wrote:
-> From: Ian Ding <4dark@outlook.com>
-> 
-> When the controller driver uses async probe
-> (.probe_type = PROBE_PREFER_ASYNCHRONOUS), pci_host_probe() is not
-> guaranteed to run before pci_sysfs_init(), kernel may call
-> pci_create_sysfs_dev_files() twice in pci_sysfs_init() and
-> pci_host_probe() -> pci_bus_add_device(), and dump stack:
-> 
->     sysfs: cannot create duplicate filename
-> 
-> Signed-off-by: Ian Ding <4dark@outlook.com>
+The interesting part of this little series is in ast_drv.c, but there
+may be similar conversions for other drivers coming as well.
+
+To avoid races during the merge window, I propose merging this via the
+PCI tree so I can ensure that any other conversions happen after
+pcim_iomap_region() becomes public.
+
+That would require an ack from Dave.  But if you'd rather take this
+yourself, Dave, here's my ack for the PCI piece:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
 > ---
->  drivers/pci/pci-sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/devres.c | 8 ++++++--
+>  include/linux/pci.h  | 2 ++
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index dd0d9d9bc..bef25fecb 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1534,7 +1534,7 @@ static int __init pci_sysfs_init(void)
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index 3780a9f9ec00..89ec26ea1501 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -728,7 +728,7 @@ EXPORT_SYMBOL(pcim_iounmap);
+>   * Mapping and region will get automatically released on driver detach. If
+>   * desired, release manually only with pcim_iounmap_region().
+>   */
+> -static void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
+> +void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
+>  				       const char *name)
+>  {
+>  	int ret;
+> @@ -761,6 +761,7 @@ static void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
 >  
->  	return 0;
+>  	return IOMEM_ERR_PTR(ret);
 >  }
-> -late_initcall(pci_sysfs_init);
-> +device_initcall(pci_sysfs_init);
-
-This is certainly a problem that needs to be solved, but I don't think
-this approach is necessarily safe.
-
-There's a long discussion about some of the issues at
-https://lore.kernel.org/linux-pci/20200716110423.xtfyb3n6tn5ixedh@pali/t/#u
-
-The goal is to remove pci_sysfs_init() completely, but we haven't
-quite got there yet.
-
-Since that thread, Krzysztof has made great progress by converting
-most sysfs files to static attributes, e.g.,
-
-  506140f9c06b ("PCI/sysfs: Convert "index", "acpi_index", "label" to static attributes")
-  d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
-  f42c35ea3b13 ("PCI/sysfs: Convert "reset" to static attribute")
-  527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
-  e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute")
-
-but there are still a couple things left.
-
->  static struct attribute *pci_dev_dev_attrs[] = {
->  	&dev_attr_boot_vga.attr,
+> +EXPORT_SYMBOL(pcim_iomap_region);
+>  
+>  /**
+>   * pcim_iounmap_region - Unmap and release a PCI BAR
+> @@ -783,7 +784,7 @@ static void pcim_iounmap_region(struct pci_dev *pdev, int bar)
+>  }
+>  
+>  /**
+> - * pcim_iomap_regions - Request and iomap PCI BARs
+> + * pcim_iomap_regions - Request and iomap PCI BARs (DEPRECATED)
+>   * @pdev: PCI device to map IO resources for
+>   * @mask: Mask of BARs to request and iomap
+>   * @name: Name associated with the requests
+> @@ -791,6 +792,9 @@ static void pcim_iounmap_region(struct pci_dev *pdev, int bar)
+>   * Returns: 0 on success, negative error code on failure.
+>   *
+>   * Request and iomap regions specified by @mask.
+> + *
+> + * This function is DEPRECATED. Do not use it in new code.
+> + * Use pcim_iomap_region() instead.
+>   */
+>  int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name)
+>  {
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 4cf89a4b4cbc..fc30176d28ca 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2292,6 +2292,8 @@ static inline void pci_fixup_device(enum pci_fixup_pass pass,
+>  void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen);
+>  void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
+>  void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
+> +void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
+> +				       const char *name);
+>  int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
+>  int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
+>  				   const char *name);
 > -- 
-> 2.25.1
+> 2.45.2
 > 
 
