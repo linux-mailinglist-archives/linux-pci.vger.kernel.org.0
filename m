@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-11434-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11435-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 479FB94A952
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 16:04:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15F1794A982
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 16:11:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F03EC288FC5
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 14:04:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7BDB2B2943E
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Aug 2024 14:11:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0FB926AC3;
-	Wed,  7 Aug 2024 14:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 538AC28399;
+	Wed,  7 Aug 2024 14:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qDnIpEkq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cTkkFEZi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DB82F3E
-	for <linux-pci@vger.kernel.org>; Wed,  7 Aug 2024 14:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6592BD0D
+	for <linux-pci@vger.kernel.org>; Wed,  7 Aug 2024 14:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723039462; cv=none; b=t3rJ+D7KZ+wVMqVWmY9RITYyCLUd26a52lWB4N7znxIl183O/nEzdRtKh3sj0ApYZnMWWcTKStaa9ajdDTlIgRXmnyIVcvD4Ag0a1eK1uIOKW7zmzNYWiBszuFJeyGz3v3E7rVxV2kqYtv2sVjVw6+/W7Y2t08Lfukiiawx9T/s=
+	t=1723039897; cv=none; b=jRnE3xMxDWqHrwlTPz0TsEiw3Ra59jWFqgmzGD5MNtLvry7fBNoa2c8FLAVDFb09zxDrN0lwAsZ54Vo8hX4wt4q4y73bHcLuWyV6D/xn5mDp+kKBfOen0WctdlwdADtbnVbHKPRH016ovPSXZNRkLbewT9jrcAaHYHhAcoY1LVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723039462; c=relaxed/simple;
-	bh=Oqk8W19JQLH4RO4d5JGfPj00g2qyw+4MbBGPwBzSI24=;
+	s=arc-20240116; t=1723039897; c=relaxed/simple;
+	bh=YGJIzKe9bPUamv33TRtk3adS2klN2aPE5f8iLZyx3ew=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TfSnFj16Z8SQO0JLvJbdTKuTJcFPuafBSwLYZhmmZ0Dqnk08lV3uwbix0pln8a1q4ghTMZocFzcZx/SBvBMEeZ88a8eLiLKDLkIDU+24StlyaGlhseCV/ZEKCtHcAUkEw0CsIr4rN8RFxesl3B82NKQtFYh1AoO0mHSHcai24hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qDnIpEkq; arc=none smtp.client-ip=209.85.210.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=GtokmIFYTk/3rwvNR+QoKjhDgpdO+Ig2iflAB/3h2Lh1a8gmlta/X6N/26BAyjf+y9GYHoMmrQvbijTOVZEkcBWaKLxWiCDic/0BItQQjV+P9/5fkJ9eGIG52UFtsbLTq3cPFv5miQqDUzuNzh/I+L6bvhgYBIzbzoYrjXn4a40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cTkkFEZi; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7105043330aso1657972b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 07 Aug 2024 07:04:20 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70d399da0b5so1494981b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 07 Aug 2024 07:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723039460; x=1723644260; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1723039895; x=1723644695; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=S4jdBKTpkGJfqspl209rtfslRr/0REL1PGCVruLPf3A=;
-        b=qDnIpEkqdvJYJuk5IBWteE3haOu5jr8E1ARejxODpEEHY9GL32VcenW/hlAx/5lJpy
-         +eHydnbEHlwOr0SmBnMiBFlEWWSIlQeqLBkQRx2sG1qBUwHA6Q8ZeQ5Fy2D38vEdOx8X
-         yrcSR11qNpVH6V+XRSBHkqIe4hbSAdYIgZ9EaN+yd4xsB4di5WQnWqHZDhNOCPzUR30c
-         dyzF6cwo2BtqW3H8A3TSHRZ8IDOx10kN7ZbS3qngfFXL/r+MWuNABxY3WNlnPPyGyQTw
-         gJor9IeBHG690ZHsVpMdNj5L/gACBl5WrbqVBwuzdRvETZu1OmrAzZ9sVHF51UUEd5CF
-         2OsA==
+        bh=rimw5Jn9uH+cdYJjb+50EhdPc5GlcLFDSEPep8LTiow=;
+        b=cTkkFEZi4uxgju6ytG/iQaEckyKiSxKaVNDn8Ykixf1w36GISpicieaG1p37ek/DF/
+         oDVjszsmivuTDprnxJFDNmvNj76mYzdFiWGIsqu402DBTNQG1mMFrCwXSsZlLkAv6LC2
+         bmzjoQ/p1/yFy3eiu3tj8iNkzCO19/nve14DBISHMbYiLLkzmImf5VttoW6NSXbKuZt6
+         wWMnB3HBAffz9jAmmdQOgbg9XjMCsLPlgZXFv7R7lMFIzYkaqgzuv7DuJ4A4e4TW7irW
+         e5uoPyRqxkeKEV3l462sG9qNTi7mZQjU2XVcSRe3A2+e9FkgTrxjdjoJ+SxjrxUcaCM5
+         wRoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723039460; x=1723644260;
+        d=1e100.net; s=20230601; t=1723039895; x=1723644695;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4jdBKTpkGJfqspl209rtfslRr/0REL1PGCVruLPf3A=;
-        b=RACiNQgIk53t/OF6A5GF2+vXvK8LalTQ5Y2NzPLc75x6BDFLL4/Xigj9ljEQVv/3lj
-         ShuWFlr4dGGyUx4zl57fTFFYsLtpR6GNMhvL2IxcWmrgEChTazXsl3Lg+mypHZEGS2be
-         JdV+T+7lZEFSo49gKONVX4e6YX/yaqNYJfokUNM/pa9+7ojh8kDlXwj6Q+4N2h8uuxEu
-         hRDVZX/0S9bwKNfFSoFI59135DApyDkNwmoJWhj2vCtiMjdT3AmoS1bBSF+ZO+BhAjfU
-         2ldDg+DhxX++Q5XSmScMDiPkemCrbPhKLI6reSfSY+87Q34/wTtjNGojroFF6hKrKQ29
-         8zbg==
-X-Gm-Message-State: AOJu0YxgGYLz5bxAP1A4r0wC9pHBIL+lyyoQeSvSkbYCXfoZ8whXL7rm
-	Og1K3/okw/1iyqbdlZplJPdbxfaoOe9D93kMFlIT7iz0zBMtvEqQhghb9MWvyQ==
-X-Google-Smtp-Source: AGHT+IEfwCrKxsc3cHSMIAQKhdIc5MLETyvAQqowAavJWS2lY9QKae7V+EsgYnJuZ0xAlo6Yhy54gw==
-X-Received: by 2002:a05:6a00:21cc:b0:70a:efd7:ada1 with SMTP id d2e1a72fcca58-7106cfe02abmr20049148b3a.17.1723039459919;
-        Wed, 07 Aug 2024 07:04:19 -0700 (PDT)
+        bh=rimw5Jn9uH+cdYJjb+50EhdPc5GlcLFDSEPep8LTiow=;
+        b=QBUGfEYC8QHKxTC+Al1tgmMJMcYng70K2q3WOOU0cow7G4YmpOCEuH0VfWulorliwS
+         WEi7PgdlU723DlgHVdunzyVdr4NlLNvSbLW27K3C+GMY3jI9sUTF2lRBMA/dzZ4QGRAq
+         WNG+sAjDl46TPEPPZzFALyOpN+zT20q6mHajAGPRB5bcMouczm1RpLSRKx8gMXMidfEd
+         M1Ly+n4XRzcbaye+X8YNH+s78J+86vHDTYjz9GpNUnLUhInbSXgHgHmA+e8KcwkxEeXN
+         a58SqgXfdPt37ABI0dghRDmj/UUNfSulkSdgFKGGNF0eftn6FyJ7FKFziSTn+gVbVL7f
+         cTIA==
+X-Gm-Message-State: AOJu0Yxo2fI3z1us6U3j1L6PkiGYyV4YYaDqqJ/1zKqOSRGbWnBxYKd1
+	YJodFttsEdciB6JUGWJD6VMXHzmM2JNwCPzYFSx6dgEc3jjlMMwmE9a2+p0omA==
+X-Google-Smtp-Source: AGHT+IGodAwSN1lMhVJFTLhKee9VbLa7+wzCnQRfzZCvZUvMjJkNY3ENmfDIA5EFtx44ruALqfnj2g==
+X-Received: by 2002:a05:6a20:12cd:b0:1c4:919f:368d with SMTP id adf61e73a8af0-1c69966bacamr27493687637.49.1723039894907;
+        Wed, 07 Aug 2024 07:11:34 -0700 (PDT)
 Received: from thinkpad ([120.60.60.211])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed3389bsm8408159b3a.213.2024.08.07.07.04.14
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7109d5e0318sm4277892b3a.121.2024.08.07.07.11.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 07:04:19 -0700 (PDT)
-Date: Wed, 7 Aug 2024 19:34:01 +0530
+        Wed, 07 Aug 2024 07:11:34 -0700 (PDT)
+Date: Wed, 7 Aug 2024 19:41:17 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Jim Quinlan <james.quinlan@broadcom.com>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -80,14 +80,15 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Refactor for chips with many
- regular inbound windows
-Message-ID: <20240807140401.GJ3412@thinkpad>
+Subject: Re: [PATCH v5 10/12] PCI: brcmstb: Check return value of all
+ reset_control_xxx calls
+Message-ID: <20240807141117.GK3412@thinkpad>
 References: <20240731222831.14895-1-james.quinlan@broadcom.com>
- <20240731222831.14895-10-james.quinlan@broadcom.com>
+ <20240731222831.14895-11-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,293 +98,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240731222831.14895-10-james.quinlan@broadcom.com>
+In-Reply-To: <20240731222831.14895-11-james.quinlan@broadcom.com>
 
-On Wed, Jul 31, 2024 at 06:28:23PM -0400, Jim Quinlan wrote:
-> Provide support for new chips with multiple inbound windows while
-> keeping the legacy support for the older chips.
-> 
-> In existing chips there are three inbound windows with fixed purposes: the
-> first was for mapping SoC internal registers, the second was for memory,
-> and the third was for memory but with the endian swapped.  Typically, only
-> one window was used.
-> 
-> Complicating the inbound window usage was the fact that the PCIe HW would
-> do a baroque internal mapping of system memory, and concatenate the regions
-> of multiple memory controllers.
-> 
-> Newer chips such as the 7712 and Cable Modem SOCs take a step forward and
-> drop the internal mapping while providing for multiple inbound windows.
-> This works in concert with the dma-ranges property, where each provided
-> range becomes an inbound window.
+On Wed, Jul 31, 2024 at 06:28:24PM -0400, Jim Quinlan wrote:
+> Always check the return value for invocations of reset_control_xxx() and
+> propagate the error to the next level.  Although the current functions
+> in reset-brcmstb.c cannot fail, this may someday change.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+
+One comment below. With that addressed,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 228 ++++++++++++++++++++------
->  1 file changed, 177 insertions(+), 51 deletions(-)
+>  drivers/pci/controller/pcie-brcmstb.c | 102 ++++++++++++++++++--------
+>  1 file changed, 73 insertions(+), 29 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 4659208ae8da..0ecca3d9576f 100644
+> index 0ecca3d9576f..c4ceb1823a79 100644
 > --- a/drivers/pci/controller/pcie-brcmstb.c
 > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -75,15 +75,19 @@
->  #define PCIE_MEM_WIN0_HI(win)	\
->  		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
->  
-> +/*
-> + * NOTE: You may see the term "BAR" in a number of register names used by
-> + *   this driver.  The term is an artifact of when the HW core was an
-> + *   endpoint device (EP).  Now it is a root complex (RC) and anywhere a
-> + *   register has the term "BAR" it is related to an inbound window.
-> + */
-> +
-> +#define PCIE_BRCM_MAX_INBOUND_WINS			16
->  #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
->  #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
->  
-> -#define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
-> -#define  PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK		0x1f
-> -#define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
-> +#define PCIE_MISC_RC_BAR4_CONFIG_LO			0x40d4
->  
-> -#define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
-> -#define  PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK		0x1f
->  
->  #define PCIE_MISC_MSI_BAR_CONFIG_LO			0x4044
->  #define PCIE_MISC_MSI_BAR_CONFIG_HI			0x4048
-> @@ -130,6 +134,10 @@
->  	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
->  	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
->  
-> +#define PCIE_MISC_UBUS_BAR1_CONFIG_REMAP			0x40ac
-> +#define  PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK	BIT(0)
-> +#define PCIE_MISC_UBUS_BAR4_CONFIG_REMAP			0x410c
-> +
->  #define PCIE_MSI_INTR2_BASE		0x4500
->  
->  /* Offsets from INTR2_CPU and MSI_INTR2 BASE offsets */
-> @@ -217,12 +225,20 @@ enum pcie_type {
->  	BCM4908,
->  	BCM7278,
->  	BCM2711,
-> +	BCM7712,
-> +};
-> +
-> +struct inbound_win {
-> +	u64 size;
-> +	u64 pci_offset;
-> +	u64 cpu_addr;
->  };
->  
->  struct pcie_cfg_data {
->  	const int *offsets;
->  	const enum pcie_type type;
->  	const bool has_phy;
-> +	unsigned int num_inbound_wins;
->  	void (*perst_set)(struct brcm_pcie *pcie, u32 val);
->  	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->  };
-> @@ -274,6 +290,7 @@ struct brcm_pcie {
->  	struct subdev_regulators *sr;
->  	bool			ep_wakeup_capable;
->  	bool			has_phy;
-> +	int			num_inbound_wins;
->  };
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
-> @@ -789,23 +806,61 @@ static void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
->  	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->  }
->  
-> -static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-> -							u64 *rc_bar2_size,
-> -							u64 *rc_bar2_offset)
-> +static inline void set_bar(struct inbound_win *b, int *count, u64 size,
-> +			   u64 cpu_addr, u64 pci_offset)
 
-There is no need to pass 'inline' keyword in a .c file. Making a function inline
-is upto the discretion of the compiler.
+[...]
 
-Also, set_bar() is quite misleading as you are not setting any BAR but just
-populating the inbound_win struct. So how about, "add_inbound_window()"?
-
-> +{
-> +	b->size = size;
-> +	b->cpu_addr = cpu_addr;
-> +	b->pci_offset = pci_offset;
-> +	(*count)++;
-> +}
-> +
-> +static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
-> +				      struct inbound_win inbound_wins[])
+>  static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
+> @@ -1478,9 +1514,12 @@ static int brcm_pcie_suspend_noirq(struct device *dev)
 >  {
+>  	struct brcm_pcie *pcie = dev_get_drvdata(dev);
 >  	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> +	u64 pci_offset, cpu_addr, size = 0, tot_size = 0;
->  	struct resource_entry *entry;
->  	struct device *dev = pcie->dev;
->  	u64 lowest_pcie_addr = ~(u64)0;
-> -	int ret, i = 0;
-> -	u64 size = 0;
-> +	int ret, i = 0, n = 0;
+> -	int ret;
+> +	int ret, rret;
 > +
-> +	/*
-> +	 * The HW registers (and PCIe) use order-1 numbering for BARs. As
-> +	 * such, we have inbound_wins[0] unused and BAR1 starts at inbound_wins[1].
-> +	 */
-
-Instead of wasting one array entry, you can start the array from 0 and just
-decrement the index where needed? Like,
-
-	reg_offset = brcm_bar_reg_offset(i - 1);
-
-> +	struct inbound_win *b_begin = &inbound_wins[1];
-> +	struct inbound_win *b = b_begin;
-> +
-> +	/*
-> +	 * STB chips beside 7712 disable the first inbound window default.
-> +	 * Rather being mapped to system memory it is mapped to the
-> +	 * internal registers of the SoC.  This feature is deprecated, has
-> +	 * security considerations, and is not implemented in our modern
-> +	 * SoCs.
-> +	 */
-> +	if (pcie->type != BCM7712)
-> +		set_bar(b++, &n, 0, 0, 0);
+> +	ret = brcm_pcie_turn_off(pcie);
+> +	if (ret)
+> +		return ret;
 >  
->  	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
->  		u64 pcie_beg = entry->res->start - entry->offset;
-> +		u64 cpu_beg = entry->res->start;
-
-What does 'beg' mean?
-
->  
-> -		size += entry->res->end - entry->res->start + 1;
-> +		size = resource_size(entry->res);
-> +		tot_size += size;
->  		if (pcie_beg < lowest_pcie_addr)
->  			lowest_pcie_addr = pcie_beg;
-> +		/*
-> +		 * 7712 and newer chips may have many BARs, with each
-> +		 * offering a non-overlapping viewport to system memory.
-> +		 * That being said, each BARs size must still be a power of
-> +		 * two.
-> +		 */
-> +		if (pcie->type == BCM7712)
-> +			set_bar(b++, &n, size, cpu_beg, pcie_beg);
-> +
-> +		if (n > pcie->num_inbound_wins)
-> +			break;
->  	}
->  
->  	if (lowest_pcie_addr == ~(u64)0) {
-> @@ -813,13 +868,20 @@ static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  		return -EINVAL;
->  	}
->  
-> +	/*
-> +	 * 7712 and newer chips do not have an internal memory mapping system
-> +	 * that enables multiple memory controllers.  As such, it can return
-> +	 * now w/o doing special configuration.
-> +	 */
-> +	if (pcie->type == BCM7712)
-> +		return n;
-> +
->  	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
->  						  PCIE_BRCM_MAX_MEMC);
-> -
->  	if (ret <= 0) {
->  		/* Make an educated guess */
->  		pcie->num_memc = 1;
-> -		pcie->memc_size[0] = 1ULL << fls64(size - 1);
-> +		pcie->memc_size[0] = 1ULL << fls64(tot_size - 1);
->  	} else {
->  		pcie->num_memc = ret;
->  	}
-> @@ -828,10 +890,15 @@ static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  	for (i = 0, size = 0; i < pcie->num_memc; i++)
->  		size += pcie->memc_size[i];
->  
-> -	/* System memory starts at this address in PCIe-space */
-> -	*rc_bar2_offset = lowest_pcie_addr;
-> -	/* The sum of all memc views must also be a power of 2 */
-> -	*rc_bar2_size = 1ULL << fls64(size - 1);
-> +	/* Our HW mandates that the window size must be a power of 2 */
-> +	size = 1ULL << fls64(size - 1);
-> +
-> +	/*
-> +	 * For STB chips, the BAR2 cpu_addr is hardwired to the start
-> +	 * of system memory, so we set it to 0.
-> +	 */
-> +	cpu_addr = 0;
-> +	pci_offset = lowest_pcie_addr;
->  
+> -	brcm_pcie_turn_off(pcie);
 >  	/*
->  	 * We validate the inbound memory view even though we should trust
-> @@ -866,25 +933,90 @@ static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  	 *   outbound memory @ 3GB). So instead it will  start at the 1x
->  	 *   multiple of its size
->  	 */
-> -	if (!*rc_bar2_size || (*rc_bar2_offset & (*rc_bar2_size - 1)) ||
-> -	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
-> -		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off 0x%llx\n",
-> -			*rc_bar2_size, *rc_bar2_offset);
-> +	if (!size || (pci_offset & (size - 1)) ||
-> +	    (pci_offset < SZ_4G && pci_offset > SZ_2G)) {
-> +		dev_err(dev, "Invalid inbound_win2_offset/size: size 0x%llx, off 0x%llx\n",
-> +			size, pci_offset);
->  		return -EINVAL;
->  	}
->  
-> -	return 0;
-> +	/* Enable inbound window 2, the main inbound window for STB chips */
-> +	set_bar(b++, &n, size, cpu_addr, pci_offset);
-> +
-> +	/*
-> +	 * Disable inbound window 3.  On some chips presents the same
-> +	 * window as #2 but the data appears in a settable endianness.
-> +	 */
-> +	set_bar(b++, &n, 0, 0, 0);
-> +
-> +	return n;
-> +}
-> +
-> +static u32 brcm_bar_reg_offset(int bar)
-> +{
-> +	if (bar <= 3)
-> +		return PCIE_MISC_RC_BAR1_CONFIG_LO + 8 * (bar - 1);
-> +	else
-> +		return PCIE_MISC_RC_BAR4_CONFIG_LO + 8 * (bar - 4);
-> +}
-> +
-> +static u32 brcm_ubus_reg_offset(int bar)
-> +{
-> +	if (bar <= 3)
-> +		return PCIE_MISC_UBUS_BAR1_CONFIG_REMAP + 8 * (bar - 1);
-> +	else
-> +		return PCIE_MISC_UBUS_BAR4_CONFIG_REMAP + 8 * (bar - 4);
-> +}
-> +
-> +static void set_inbound_win_registers(struct brcm_pcie *pcie,
-> +				      const struct inbound_win *inbound_wins,
-> +				      int num_inbound_wins)
-> +{
-> +	void __iomem *base = pcie->base;
-> +	int i;
-> +
-> +	for (i = 1; i <= num_inbound_wins; i++) {
-> +		u64 pci_offset = inbound_wins[i].pci_offset;
-> +		u64 cpu_addr = inbound_wins[i].cpu_addr;
-> +		u64 size = inbound_wins[i].size;
-> +		u32 reg_offset = brcm_bar_reg_offset(i);
-> +		u32 tmp = lower_32_bits(pci_offset);
-> +
-> +		u32p_replace_bits(&tmp, brcm_pcie_encode_ibar_size(size),
-> +				  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK);
-> +
-> +		/* Write low */
-> +		writel(tmp, base + reg_offset);
+>  	 * If brcm_phy_stop() returns an error, just dev_err(). If we
+>  	 * return the error it will cause the suspend to fail and this is a
+> @@ -1509,7 +1548,10 @@ static int brcm_pcie_suspend_noirq(struct device *dev)
+>  						     pcie->sr->supplies);
+>  			if (ret) {
+>  				dev_err(dev, "Could not turn off regulators\n");
+> -				reset_control_reset(pcie->rescal);
+> +				rret = reset_control_reset(pcie->rescal);
+> +				if (rret)
+> +					dev_err(dev, "failed to reset 'rascal' controller ret=%d\n",
+> +						rret);
 
-Can you use writel_relaxed() instead? Here and below. I don't see a necessity to
-use the barrier that comes with non-relaxed version of writel.
+I don't think it is really necessary to capture the return value in err path.
+Unable to turn off the regulator itself is fatal, so we could just assert reset
+and hope for the best.
 
 - Mani
 
