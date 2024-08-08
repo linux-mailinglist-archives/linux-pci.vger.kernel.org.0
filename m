@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-11491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12BD494C1C5
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 17:48:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C14E094C1C9
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 17:48:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEFCF1F2688D
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 15:48:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77E6D1F2383E
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 15:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD1C190676;
-	Thu,  8 Aug 2024 15:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F1C191497;
+	Thu,  8 Aug 2024 15:47:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Vcg8Duyd"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FTcbuWxF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBD3190041;
-	Thu,  8 Aug 2024 15:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F2818FDC5;
+	Thu,  8 Aug 2024 15:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723132066; cv=none; b=p57HKlWCv/uQ9RJ2jHkk3CoqIwMQuTpcKdysOeKoi5dNmGUzOcFGNhP2Ib9omlDruJi4RZLoTcJzeBgoXjmVWYcFTDEsMfw3aCxStUJcGKFazncnmMVgTW7Q+01gJ4CnYmSJ+vGxlSyo2Fk8tfHUuZGxGzAsiWK1tBQ/9Sz/clQ=
+	t=1723132068; cv=none; b=rRGV5oeXLOHzhXdJRwSn384snpIq5aaEoKPlEeVOFSrV/CPeXzUOvin+l+F1Dt1VAf4j2l3/WCRQTpfiCDq/sdHJtOTd8k1uhbjEFeRFJDMo2YuL3awARW3VmR7h8I/E4OkKpR4kms/VkHF59HL8lJW458w+4M24j5sVGqE6xRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723132066; c=relaxed/simple;
-	bh=E2Nmsu/7HYQLnn0sN5b1S2heBsMjF3oRWqAoBIGaDBE=;
+	s=arc-20240116; t=1723132068; c=relaxed/simple;
+	bh=A3wCMdYHNoumXNzbYsxpr8D8ELhXRhnFZU9NU1TgzT8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lE+NDJgTu+p2p4q/jTQyIllBNy2nXXVU0w2jV50cFVgPEgKT9azSauQ8HAh1vo+eiXTooj0G5xVc0lEJfltsydSktjExerYQyGqd9LrN1oPZgliSMmaL0VD2mIqpzcYxRpPAZI/MlbvDTrFxN+25dOX59Qh5MBSlzm1DU1tqYB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Vcg8Duyd; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version:Content-Type; b=Vy4wpgzW9YmP+9youzDzDSpeZEg8Jk97oRntH/zslkDolT6sOTpJHOWtdYb2aUTkSubAGkYUHZWioQvvyHZraI7hqdonKzAhZTU2uu59MArfUX5Rnm5O2SgybfY6MaU5g01Q/acFlhMHufhPBFs+hc4B+HwJNt+FVUX1PjZHrgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FTcbuWxF; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 3872C20004;
-	Thu,  8 Aug 2024 15:47:41 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id DF16920005;
+	Thu,  8 Aug 2024 15:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1723132062;
+	t=1723132064;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bOAN8DOKAutpcJ98IdSxdr6GKYFYp22/ixh21amGeTg=;
-	b=Vcg8DuydljpuNR5hTNztMMGCiq7I8VrHVWGbV3B6vXEcHtayKmxa/IFDG1SgNTRaleBdgv
-	A5Mkvh8v4S6VZzwDs3uyOT3jvZhvUPOddhXDNwnnXXB5gTQ2hRGvrOv1zkqCMOzw+BXK5z
-	pjm8/p2a9aLTStvXuhcODHdaiozBLUmIpZeNjsNLncGHFEg5D5gn7aUY5PhGde8C8K2dPS
-	Cnmz/3RlsL7j262NZfVeu+02yBpOy3Gv9NKx6gcOX9RK0sX/aeh63FTPCJ/PTytkQPEq2R
-	OnlUaju9SAtslezLLgGMOayba6ZyNKRtK7GI8nZwc3BP235A4yLO4YnAD2PEdA==
+	bh=yVeQ7PlO4X+v9TEpBxk1CG/ZinM6HCdKh29wvuZH2Tk=;
+	b=FTcbuWxFusgrheVlDMoEMACUixHpdCsRJyishEUKw8xgblCZ9vgyqaRT2BRVLksUi9OcnJ
+	4QkWOarfhAkgfbcRntuVJYthY9XYpkcLVDWMuGAaJ0glsxNN5w6HRW3OEeVXkndqAgjOUu
+	QcwkFG1eP/jdxPj71z35zbOdRWddKecqnI72kjWAEvsgtHqYQCR1fdkK1MSJsL51MdloR1
+	nYeQRyCVHtVKxs1w4DNHuM4zUcNxdzr2IX/ppRh39SitDDcA9zL2x2qmCmoAL3YrNkSslt
+	6sym2fMpxQirze+Y8Qij4+tWHBxtOfV6edr9zSh+CZ+eJSWD136cy8ctPuPnyQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Geert Uytterhoeven <geert@linux-m68k.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -79,9 +79,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>
-Subject: [PATCH v5 7/8] reset: core: add get_device()/put_device on rcdev
-Date: Thu,  8 Aug 2024 17:46:56 +0200
-Message-ID: <20240808154658.247873-8-herve.codina@bootlin.com>
+Subject: [PATCH v5 8/8] reset: mchp: sparx5: set the dev member of the reset controller
+Date: Thu,  8 Aug 2024 17:46:57 +0200
+Message-ID: <20240808154658.247873-9-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240808154658.247873-1-herve.codina@bootlin.com>
 References: <20240808154658.247873-1-herve.codina@bootlin.com>
@@ -97,40 +97,28 @@ X-GND-Sasl: herve.codina@bootlin.com
 
 From: Clément Léger <clement.leger@bootlin.com>
 
-Since the rcdev structure is allocated by the reset controller drivers
-themselves, they need to exists as long as there is a consumer. A call to
-module_get() is already existing but that does not work when using
-device-tree overlays. In order to guarantee that the underlying reset
-controller device does not vanish while using it, add a get_device() call
-when retrieving a reset control from a reset controller device and a
-put_device() when releasing that control.
+In order to guarantee the device will not be deleted by the reset
+controller consumer, set the dev member of the reset controller.
 
 Signed-off-by: Clément Léger <clement.leger@bootlin.com>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 ---
- drivers/reset/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/reset/reset-microchip-sparx5.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index dba74e857be6..999c3c41cf21 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -812,6 +812,7 @@ __reset_control_get_internal(struct reset_controller_dev *rcdev,
- 	kref_init(&rstc->refcnt);
- 	rstc->acquired = acquired;
- 	rstc->shared = shared;
-+	get_device(rcdev->dev);
+diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
+index c4fe65291a43..1ef2aa1602e3 100644
+--- a/drivers/reset/reset-microchip-sparx5.c
++++ b/drivers/reset/reset-microchip-sparx5.c
+@@ -117,6 +117,7 @@ static int mchp_sparx5_reset_probe(struct platform_device *pdev)
+ 		return err;
  
- 	return rstc;
- }
-@@ -826,6 +827,7 @@ static void __reset_control_release(struct kref *kref)
- 	module_put(rstc->rcdev->owner);
- 
- 	list_del(&rstc->list);
-+	put_device(rstc->rcdev->dev);
- 	kfree(rstc);
- }
- 
+ 	ctx->rcdev.owner = THIS_MODULE;
++	ctx->rcdev.dev = &pdev->dev;
+ 	ctx->rcdev.nr_resets = 1;
+ 	ctx->rcdev.ops = &sparx5_reset_ops;
+ 	ctx->rcdev.of_node = dn;
 -- 
 2.45.0
 
