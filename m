@@ -1,145 +1,163 @@
-Return-Path: <linux-pci+bounces-11473-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11474-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E472F94B636
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 07:22:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0BF94B6BE
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 08:31:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 124511C22AA8
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 05:22:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6613284104
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 06:31:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC8E13D501;
-	Thu,  8 Aug 2024 05:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 654B2187FE5;
+	Thu,  8 Aug 2024 06:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eMlLmrLE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFRtuBlf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BC612C81F;
-	Thu,  8 Aug 2024 05:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5E0181328
+	for <linux-pci@vger.kernel.org>; Thu,  8 Aug 2024 06:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723094560; cv=none; b=Bke7iVnZKFl6G1E9ZtJ08/s39XfL0TduhTTcqff81mAf5NKDBW10SxbJyFtqV2+OLDZjCmkgFqYsMdMSKIDpffTdGIL8yqn5ufMfAceP1MLFgXmXB06GEJ1zkI8isjfsUHB5OGtNzBNOOLAXF7ly//b5maE9/DxZaMIGQz0vG90=
+	t=1723098671; cv=none; b=an7RTRC0WfgbZQPr1Daf7WsYldXDeLH+4gkyKxZ9jrI2Xpo4CSp7YAO1QWBXad0UzLCWBVOyyy8xaIBWjR/+yr6gaX0ylE4+Qpf7znPRSwDOphFnUCpWo6Hx2Ae5ObfFPs8yZWpcsIY6Ty7BSuuWmsyYzHOY722l12293W68xns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723094560; c=relaxed/simple;
-	bh=OR9sMnXhltK5Nzt6J/HOUDA9VXJNDusH9+iC2H7NInU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JC9ZK/J/YEojTfDXowsjAbTBbCfzAhqzBzCYi5vzkYT6xDpfrtvpK+KrRsBBx27CyoLG5zukU8vjYrZJ01OiCB8yJB7OJbwVsLjUcsoBOivN++3f+wibJ63PEPSXVAUFiwT1d+suJzkoAusFguOIqEAZBBllAN5SCznmjVbJr50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eMlLmrLE; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723094559; x=1754630559;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OR9sMnXhltK5Nzt6J/HOUDA9VXJNDusH9+iC2H7NInU=;
-  b=eMlLmrLEItC5/vQaeAgjYxySCDeByTs7R1g2udQVuBRd6sZ1EI82r7s9
-   eQYKoSsiWxal+XlCG4RbiF6v+Ew8YmrooNGGJ2s3xSbQIkVcnI7uO3z1q
-   WCaTIoCKBJdm/0ZGWu1E4bFlKKhu0CP98QnUm7qkmooulEhQ3i9vq+17E
-   e1UUc1D9zEyeFlFivIRpPKmBowl9TrGZfcTBVd/SD84fgb57YzgBojs+O
-   ENZSnprchs3w4YMiyXrDvlbE42bnAujqFkV5sfudgxhn4KhyeOFBeZ3D8
-   DJpFkbrOkIBWJ3XSHVRpKiP6h34VAXWK1VYl8ThdlJXvDFqy1Y+vJQvZn
-   g==;
-X-CSE-ConnectionGUID: dO/0CJYJR0Kd0xkQoaOQvQ==
-X-CSE-MsgGUID: AIjFWZ0VTHeK9HyxzRJG4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="31774401"
-X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
-   d="scan'208";a="31774401"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2024 22:22:38 -0700
-X-CSE-ConnectionGUID: /dCktr84QOuGGRQWTzad4w==
-X-CSE-MsgGUID: z6tVcbHdSi2+cVnKK5TcLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
-   d="scan'208";a="80328287"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 07 Aug 2024 22:22:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id E81BF206; Thu, 08 Aug 2024 08:22:33 +0300 (EEST)
-Date: Thu, 8 Aug 2024 08:22:33 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rajat Jain <rajatja@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Detect and trust built-in TBT chips
-Message-ID: <20240808052233.GI1532424@black.fi.intel.com>
-References: <20240806-trust-tbt-fix-v1-1-73ae5f446d5a@chromium.org>
- <20240806220406.GA80520@bhelgaas>
+	s=arc-20240116; t=1723098671; c=relaxed/simple;
+	bh=8tcV6h51qTImYpVkN/XYbqQUsKUdeQdzBSWpJGgvF2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hrcszrorekO+w61LJ/pmcRJBh9xo/jRR0WvfxL82iYFn98CvarJyqktf1TM5D98DlbLlrD58s+zKTKV2QlIQuD6beEoofq0xNOE1qfDaDZg2ba80mdi1mkfwGIb57d2YIXJPWHkTyh0Hp8w7Or5Gi1UvClvs/29Yx+DQQX+13Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EFRtuBlf; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc65329979so6870525ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 07 Aug 2024 23:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723098668; x=1723703468; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uL02WkDHX6MB6U3tlx7TFw4sDSoGDOr7FVNC/xGND0g=;
+        b=EFRtuBlfxR6nc4Hg3OD7yMr7IwCyft5fiUEENZvPoCJeGsEJHr7SbT6taKPblynriB
+         ldBAmtanuIfDs3sKyDeYZmFK5U+DLQ/yjnfYCYfmp6XYMaqP4oYa6SgA4RsrMCoOA1oO
+         uvnQZiMO8ltU5j2XoEhlH0LIe+0jQCHkYnNs3uaTh7Cb2JVPU02SwUOy1lAeASTdRg9X
+         kUGu6RfpHMGAZFrDg9W9GCnxfz0p5HfJCGcmF2Z6GQ6W3SYuT8Nvlo7grFhrqQDpia9L
+         nApdLqIuKrCR3NLax1S0MOkJbuGNngZb2g4k3IuVuqOlF5O1kBEllh6eeZgnfwTAWNgg
+         kAIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723098668; x=1723703468;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uL02WkDHX6MB6U3tlx7TFw4sDSoGDOr7FVNC/xGND0g=;
+        b=U0xbvdeDPi76gpFxH9yFDV1esLKbtqWVNqIuOnHl5rnZUkqcQfzR4qYxFk3ozBY4HL
+         OxVcVWKYUYqKvibY3OUcp7FF7BYV0/CDG4Ub1V7tGIe5VkCGN559JIWuXBbzlBEJ5ES6
+         un8qkx/t8dDRvO0i/QXhZSG0Vw/dkn1O6XFyvnbP2trBWM/Dou3mCFq5oyAjdUW5DlFh
+         dDdA9iiKHbSASj/ne2pBOhxRTYowtIb+gzANClI8Xp9WCqFnGUCoS8MuOnLgM7TGVSek
+         4kpYdvtxGxgqJ34iqfyNeh4mPBey2wpQqmIRc0XMYPql11JBdyzRcaJlbFd4rtcgnTVy
+         0+Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXc/GMCRSCIoRnF7g6oAFvBcBsAz06z8sOi9neTw3qd5dxT8zQ9qVD9g7vpquQMrM4Vysxs+11x8oszAUoesPwXAYKeFFm4fYpy
+X-Gm-Message-State: AOJu0YxGkYfOX7F6DIyQp2N5oF0ch4Z3KbS/p5op5jgpO7YpBW0zg9AM
+	yq5nFckeONqtpeL9q0HIuGQaHnZ1SlO0NnVzi+8IHb5X7ONwmrz30DrnCsmPTrwoJZ5qDNyN244
+	=
+X-Google-Smtp-Source: AGHT+IGQt0i5NhwN7Ci91sWmaz9DV0yumS/TmjkZMx5oG6iE3KgHew5o9t+jkvkw0fUPz38IFnljNw==
+X-Received: by 2002:a17:903:120b:b0:1fc:3daa:52 with SMTP id d9443c01a7336-20095224ad2mr14708325ad.11.1723098668125;
+        Wed, 07 Aug 2024 23:31:08 -0700 (PDT)
+Received: from localhost.localdomain ([120.60.136.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff5929ad84sm116520415ad.270.2024.08.07.23.31.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Aug 2024 23:31:07 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: lpieralisi@kernel.org,
+	kw@linux.com
+Cc: robh@kernel.org,
+	bhelgaas@google.com,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] PCI: qcom-ep: Disable MHI RAM data parity error interrupt for SA8775P SoC
+Date: Thu,  8 Aug 2024 12:00:57 +0530
+Message-Id: <20240808063057.7394-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240806220406.GA80520@bhelgaas>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 06, 2024 at 05:04:06PM -0500, Bjorn Helgaas wrote:
-> > +static bool pcie_is_tunneled(struct pci_dev *pdev)
-> > +{
-> > +	struct pci_dev *parent, *root;
-> > +
-> > +	parent = pci_upstream_bridge(pdev);
-> > +	/* If pdev doesn't have a parent, then there's no way it is tunneled.*/
-> > +	if (!parent)
-> > +		return false;
-> > +
-> > +	root = pcie_find_root_port(pdev);
-> > +	/* If pdev doesn't have a root, then there's no way it is tunneled.*/
-> > +	if (!root)
-> > +		return false;
-> > +
-> > +	/* Internal PCIe devices are not tunneled. */
-> > +	if (!root->external_facing)
-> > +		return false;
-> > +
-> > +	/* Anything directly behind a "usb4-host-interface" is tunneled. */
-> > +	if (pcie_has_usb4_host_interface(parent))
-> > +		return true;
-> > +
-> > +	/*
-> > +	 * Check if this is a discrete Thunderbolt/USB4 controller that is
-> > +	 * directly behind the non-USB4 PCIe Root Port marked as
-> > +	 * "ExternalFacingPort". These PCIe devices are used to add Thunderbolt
-> > +	 * capabilities to CPUs that lack integrated Thunderbolt.
-> > +	 * These are not behind a PCIe tunnel.
-> 
-> I need more context to be convinced that this is a reliable heuristic.
-> What keeps somebody from plugging a discrete Thunderbolt/USB4
-> controller into an external port?
+SA8775P SoC has support for the hardware parity check feature on the MHI
+RAM (entity that holds MHI registers etc...). But due to a hardware bug in
+the parity check logic, the data parity error interrupt is getting
+generated all the time when using MHI. So the hardware team has suggested
+disabling the parity check error to workaround the hardware bug.
 
-In case of integrated host controller the above function returns true for
-anything connected behind its tunneled PCIe root ports so if you plug in
-a discrete controller into that it will be treated as tunneled and gets
-full IOMMU mappings.
+So let's mask the parity error interrupt in PARF_INT_ALL_5_MASK register.
 
-In case of discrete host controller there are two ways. With USB4 the above
-function finds "usb4-host-interface" firmware description and returns
-true the discrete controller you plug in will be treated as tunneled and
-gets full IOMMU mappings.
+Fixes: 58d0d3e032b3 ("PCI: qcom-ep: Add support for SA8775P SOC")
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-With non-USB4 (that's Thunderbolt 3 and below) discrete host controller we
-have root->external_facing true (it is marked with "ExternalFacingPort"
-firmware property) the check below fails because the discrete controller
-you plug in is not directly under that so it will be treated as tunneled
-and gets full IOMMU mappings.
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..a9b263f749b6 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -58,6 +58,7 @@
+ #define PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L2	0xc88
+ #define PARF_DEVICE_TYPE			0x1000
+ #define PARF_BDF_TO_SID_CFG			0x2c00
++#define PARF_INT_ALL_5_MASK			0x2dcc
+ 
+ /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
+ #define PARF_INT_ALL_LINK_DOWN			BIT(1)
+@@ -127,6 +128,9 @@
+ /* PARF_CFG_BITS register fields */
+ #define PARF_CFG_BITS_REQ_EXIT_L1SS_MSI_LTR_EN	BIT(1)
+ 
++/* PARF_INT_ALL_5_MASK fields */
++#define PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR	BIT(0)
++
+ /* ELBI registers */
+ #define ELBI_SYS_STTS				0x08
+ #define ELBI_CS2_ENABLE				0xa4
+@@ -158,10 +162,12 @@ enum qcom_pcie_ep_link_status {
+  * struct qcom_pcie_ep_cfg - Per SoC config struct
+  * @hdma_support: HDMA support on this SoC
+  * @override_no_snoop: Override NO_SNOOP attribute in TLP to enable cache snooping
++ * @disable_mhi_ram_parity_check: Disable MHI RAM data parity error check
+  */
+ struct qcom_pcie_ep_cfg {
+ 	bool hdma_support;
+ 	bool override_no_snoop;
++	bool disable_mhi_ram_parity_check;
+ };
+ 
+ /**
+@@ -480,6 +486,12 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+ 	      PARF_INT_ALL_LINK_UP | PARF_INT_ALL_EDMA;
+ 	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_MASK);
+ 
++	if (pcie_ep->cfg && pcie_ep->cfg->disable_mhi_ram_parity_check) {
++		val = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_5_MASK);
++		val &= ~PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR;
++		writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_5_MASK);
++	}
++
+ 	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to complete initialization: %d\n", ret);
+@@ -901,6 +913,7 @@ static void qcom_pcie_ep_remove(struct platform_device *pdev)
+ static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
+ 	.hdma_support = true,
+ 	.override_no_snoop = true,
++	.disable_mhi_ram_parity_check = true,
+ };
+ 
+ static const struct of_device_id qcom_pcie_ep_match[] = {
+-- 
+2.25.1
 
->  Maybe this just needs a sentence or
-> two from Lukas's (?) helpful intro to tunneling?
-> 
-> > +	if (pcie_switch_directly_under(root, pdev))
-> > +		return false;
-> > +
-> > +	/* PCIe devices after the discrete chip are tunneled. */
-> > +	return true;
-> > +}
 
