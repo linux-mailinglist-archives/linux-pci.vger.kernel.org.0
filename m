@@ -1,157 +1,121 @@
-Return-Path: <linux-pci+bounces-11467-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11468-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6429E94B4D9
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 04:08:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EDC694B4E4
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 04:13:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D27051F231D3
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 02:08:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1176728418F
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 02:13:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38197D2E5;
-	Thu,  8 Aug 2024 02:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5624F9460;
+	Thu,  8 Aug 2024 02:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gP1BKuTw"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="k5o5+I7a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4F7C8D1
-	for <linux-pci@vger.kernel.org>; Thu,  8 Aug 2024 02:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52EB7DF78;
+	Thu,  8 Aug 2024 02:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723082885; cv=none; b=T76w05PRWccDxoSnbWSHexj5HVz2Kueq2AAyh2YfDPJ2LksYtB+1rpsiCFh3Zx6KuP9rXY5JeUgqk/8JLfx2XxK35H2VEKRknS9YC05Ua5h3ag1FTmjzVSiFGJsFA7NOFAtZE2WxkwdYxNOLX7+N15ay3qhldDMDsT41tbH4ecM=
+	t=1723083196; cv=none; b=L4TvW+ZTJN1ZX9SYPGq/9twYpE0mU7r7oOAowzh8u2vaHOMbJDv65H2VZLzDscrc2idr7Z658gYPNOKArv1zQQ/0zz/WSHu5u07Mmit8axQ8gLM9Zkbf5X7gI+zSs/lIfZUxKmMfa+xk+SPqlctgqzAkj35Ucy6jJNrO1lB1vPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723082885; c=relaxed/simple;
-	bh=l9YwhAKHI/Hi3XQCTqsr2QfZizhIngyNc507Z4rw21M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TKme6GXMLcWg+0chc6CxbyYRdazy0naEnFdayiX8B/0XW8VADW2e8ZOyNHfHCAgl5tR1/HzhT/l7gGMqUEGMaBI6oZhIp1QZIv59jJI5FWC6LuQE4q2UA6O591MTz8S70HCp85frkdK0o4WdYku+i79d9slXWP4WrFaOGgCsVDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=gP1BKuTw; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70d1fb6c108so415000b3a.3
-        for <linux-pci@vger.kernel.org>; Wed, 07 Aug 2024 19:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1723082883; x=1723687683; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l9YwhAKHI/Hi3XQCTqsr2QfZizhIngyNc507Z4rw21M=;
-        b=gP1BKuTw+a+yYDiqsW1MJHfHlmB8GPulJPULgQzB5celpZpb9Ti454ujZ+RFQXZfa1
-         YmP0Z9i6A3OSBh40hTHnRnM2zBzJamYh5qaemwe4SzqhD0+3xvZ8He8Fw0JCW87p/YA3
-         VJaVXdfcjbAenwxpZYV1YrUJtZvuVPFmgWSMmX4XGFCTXmuu/A5HbExq4S3750JgDa8S
-         x910lGYUW3EAwQ145Xux96IWYNyt0a2o6BR4JJj1Kw3lffjucuXS07HDB3LILqpp340i
-         whZhSP7E9KfXNowcpLYccFy8wM5J/jNOnakMRug6nnhDYDun9UqVmkBhAd5WTijxCnTY
-         ECLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723082883; x=1723687683;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9YwhAKHI/Hi3XQCTqsr2QfZizhIngyNc507Z4rw21M=;
-        b=WkFgTN0ozyBm1KWZMm+FqCrjaNW3/MyIb+WZn5ulrGyn/dh/FESL/Wc1tlmWbuCy8Q
-         tVXkRnthfIxo0k9LgNA7KWEnOpTECYtka9Ff/my+biCVlrYmw1bxQCuLoM97Q3XBHBR+
-         INEJ6GyVuaEsy8MpIe7QrwklpBnhQW0+MBeP4SX3Ldzy5b39ezIhHEcwazpNC/eT+qwV
-         42MYoUHC3Q7vxbhl/gf3NuwOgepccIzXia6ytErtZP4jtEDwB9MohYGUFpd63O/VlmXV
-         o/mRl2HMDs6G2GqyXoiILSkq/kbobWtUKu4xHZc16VFO6fCqwjd1Tkfls6rpOeZr8daJ
-         Rupg==
-X-Forwarded-Encrypted: i=1; AJvYcCVw+TWzK1WUnIx1ew2GXcnNw0t8za0BJZS3PwD1JAsN0mnUIEpvHu/h7pj9apT2IzWos8aU0E4hTNnOeTJuNM9OFJPDDfcA6IBO
-X-Gm-Message-State: AOJu0YxT6uapzwPPuEyhZcLNSTnSy0I25vVWj8nh9U/V6icIjm+F03UA
-	6OWyaPJqPrRqtOZ4l1Wn32HSdXaOxDfbDailR0i5en9M1BBAmJ7v3cKX1TXg5zQ=
-X-Google-Smtp-Source: AGHT+IHrHVJyd5GUPNY5EbdWEh8M+WDzur8o6xEuv0h5JmUwie9vm1fBjf/yn0ON4rdG2GZrCOmcYA==
-X-Received: by 2002:a05:6a00:2e1c:b0:706:742a:1c3b with SMTP id d2e1a72fcca58-710cad8df81mr620125b3a.8.1723082882674;
-        Wed, 07 Aug 2024 19:08:02 -0700 (PDT)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.129])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-710cb2e56e0sm161141b3a.153.2024.08.07.19.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 19:08:02 -0700 (PDT)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: macro@orcam.me.uk
-Cc: alex.williamson@redhat.com,
-	bhelgaas@google.com,
-	davem@davemloft.net,
-	david.abdurachmanov@gmail.com,
-	edumazet@google.com,
-	helgaas@kernel.org,
-	kuba@kernel.org,
-	leon@kernel.org,
+	s=arc-20240116; t=1723083196; c=relaxed/simple;
+	bh=tyD5vs3mOIkUVXbSmuXmJ+XPJxiVZS225LbV3CxUg8w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ao90IcocohzVnrqyu9x4+BhQBIJLfL0MM/rP77cI9913zS/SAslHntpMrXBlf7JMvWXseC5Fo+J/hMCxip/IRAfXouZeYsLLyiCAZXknNNcWV8xiJi/oWlM/Z7V6B7i688q/kGTWSpRG1ZPVeW/Ic9qT5nkM4a6iYzNPOKOguuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=k5o5+I7a; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=0uUS1mbrT0GFBr5kKfwam9cXdDE28lHd2w/B3ulUFSM=;
+	b=k5o5+I7a6LKDXhG9LDIY2L51oItGEvTvbKQ6qc2QODQa9jj3acA/cW7Wgvj2M9
+	qJQNFhFd2FEwSAS4P+jQWG0TkdGZjcDDIlCxT1MvDVuu6/TpGRhvslRGE1zdZMfq
+	TfMrB1tf5MPMke5mEnwLVcIVezIJ2Nxkxar2pqnRXq5w4=
+Received: from localhost.localdomain (unknown [111.48.58.13])
+	by gzga-smtp-mta-g3-5 (Coremail) with SMTP id _____wD3XzOXKbRmg4gKGQ--.53944S2;
+	Thu, 08 Aug 2024 10:12:40 +0800 (CST)
+From: 412574090@163.com
+To: helgaas@kernel.org
+Cc: bhelgaas@google.com,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	lukas@wunner.de,
-	mahesh@linux.ibm.com,
-	mattc@purestorage.com,
-	mika.westerberg@linux.intel.com,
-	netdev@vger.kernel.org,
-	npiggin@gmail.com,
-	oohall@gmail.com,
-	pabeni@redhat.com,
-	pali@kernel.org,
-	saeedm@nvidia.com,
-	sr@denx.de,
-	wilson@tuliptree.org
-Subject: PCI: Work around PCIe link training failures
-Date: Wed,  7 Aug 2024 20:07:53 -0600
-Message-Id: <20240808020753.16282-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <alpine.DEB.2.21.2408071241160.61955@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2408071241160.61955@angie.orcam.me.uk>
+	xiongxin@kylinos.cn
+Subject: Re: [PATCH] PCI: Add PCI_EXT_CAP_ID_PL_64GT define
+Date: Thu,  8 Aug 2024 10:12:39 +0800
+Message-Id: <20240808021239.24428-1-412574090@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240806175905.GA70868@bhelgaas>
+References: <20240806175905.GA70868@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3XzOXKbRmg4gKGQ--.53944S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tF4kCF1xArWrKrykWF18AFb_yoW8ZFWxpr
+	s8ZF1jyr4UJanF93Z3Awn8KryjqwnayFnag3yagrnIyFy3Gw1xK3Z29rZIka4SqrZ7tF1a
+	qrn2qryrCayjvFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRg18QUUUUU=
+X-CM-SenderInfo: yursklauqziqqrwthudrp/1tbivh01AGV4Kc49GwAAsK
 
-On Wed, 7 Aug 2024 22:29:35 +1000 Oliver O'Halloran Wrote
-> My read was that Matt is essentially doing a surprise hot-unplug by
-> removing power to the card without notifying the OS. I thought the
-> LBMS bit wouldn't be set in that case since the link goes down rather
-> than changes speed, but the spec is a little vague and that appears to
-> be happening in Matt's testing. It might be worth disabling the
-> workaround if the port has the surprise hotplug capability bit set.
+> On Tue, Aug 06, 2024 at 10:27:46AM +0800, 412574090@163.com wrote:
+> > From: weiyufeng <weiyufeng@kylinos.cn>
+> > 
+> > PCIe r6.0, sec 7.7.7.1, defines a new 64.0 GT/s PCIe Extended Capability
+> > ID,Add the define for PCI_EXT_CAP_ID_PL_64GT for drivers that will want
+> > this whilst doing Gen6 accesses.
+> > 
+> > Signed-off-by: weiyufeng <weiyufeng@kylinos.cn>
+> > ---
+> >  include/uapi/linux/pci_regs.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > index 94c00996e633..cc875534dae1 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -741,6 +741,7 @@
+> >  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> >  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+> >  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+> > +#define PCI_EXT_CAP_ID_PL_64GT  0x31    /* Physical Layer 64.0 GT/s */
+>
+> It probably makes sense to add this (with the corrections noted by
+> Ilpo), but I *would* like to see where it's used.
+>
+> I asked a similar question at
+> https://lore.kernel.org/all/20230531095713.293229-1-ben.dooks@codethink.co.uk/
+> when we added PCI_EXT_CAP_ID_PL_32GT, but never got a specific
+> response.  I don't really want to end up with drivers doing their own
+> thing if it's something that could be done in the PCI core and shared.
+>
+PCI_EXT_CAP_ID_PL_32GT and PCI_EXT_CAP_ID_PL_64GT have not used now,but 
+PCI_EXT_CAP_ID_PL_16GT have usage example,in drivers/pci/controller/dwc/pcie-tegra194.c
+function config_gen3_gen4_eq_presets():
 
-Most of the systems I have are using downstream port containment which does
-not recommend setting the Hot-Plug Surprise in Slot Capabilities & therefore
-we do not. The first time we noticed an issue with this patch was in test
-automation which was power cycling the endpoints & injecting uncorrectable
-errors to ensure our hosts are robust in the face of PCIe chaos & that they
-will recover. Later we started to see other teams on other products
-encountering the same bug in simpler cases where humans turn on and off
-EP power for development purposes. Although we are not using Hot-Plug Surprise
-we are often triggering DPC on the Surprise Down Uncorrectable Error when
-we hit this Gen1 issue.
+offset = dw_pcie_find_ext_capability(pci,
+				     PCI_EXT_CAP_ID_PL_16GT) +
+		PCI_PL_16GT_LE_CTRL;
 
-On Wed, 7 Aug 2024 12:14:13 +0100 Maciej W. Rozycki Wrote
-> For the quirk to trigger, the link has to be down and there has to be the
-> LBMS Link Status bit set from link management events as per the PCIe spec
-> while the link was previously up, and then both of that while rescanning
-> the PCIe device in question, so there's a lot of conditions to meet.
+PCI_EXT_CAP_ID_PL_32GT and PCI_EXT_CAP_ID_PL_64GT could be used while need to
+get this similar attribute。
 
-If there is nothing clearing the bit then why is there any expectation that
-it wouldn't be set? We have 20/30/40 endpoints in a host that can be hot-removed,
-hot-added at any point in time in any combination & its often the case that
-the system uptime be hundreds of days. Eventually the bit will just become set
-as a result of time and scale.
+> >  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
+> >  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+> >  
+> > -- 
+> > 2.25.1
+> > 
+--
+Thanks,
 
-On Wed, 7 Aug 2024 12:14:13 +0100 Maciej W. Rozycki Wrote
-> The reason for this is safety: it's better to have a link run at 2.5GT/s
-> than not at all, and from the nature of the issue there is no guarantee
-> that if you remove the speed clamp, then the link won't go back into the
-> infinite retraining loop that the workaround is supposed to break.
-
-I guess I don't really understand why it wouldn't be safe for every device
-other than the ASMedia since they aren't the device that had the issue in the
-first place. The main problem in my mind is the system doesn't actually have to
-be retraining at all, it can occur the first time you replace a device or
-power cycle the device or the first time the device goes into DPC & comes back.
-If the quirk simply returned without doing anything when the ASMedia is not in the
-allow-list it would make me more at ease. I can also imagine some other implementations
-that would work well, but it doesn't seem correct that we could only give a single
-opportunity to a device before forcing it to live at Gen1. Perhaps it should be
-aware of the rate or a count or something...
-
-I can only assume that there will be more systems that start to run into issues
-with the patch as they strive to keep up with LTS & they exercise the hot-plug
-path.
+weiyufeng
 
 
