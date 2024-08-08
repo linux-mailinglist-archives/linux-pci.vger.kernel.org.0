@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-11500-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11501-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C98C94C239
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 18:03:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A263594C23C
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 18:03:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF428282CF8
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 16:02:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BB2F283505
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 16:03:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA23119048A;
-	Thu,  8 Aug 2024 16:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48AFE190679;
+	Thu,  8 Aug 2024 16:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KQRrvXis"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="T3czJqX4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2046.outbound.protection.outlook.com [40.107.105.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C809719006A;
-	Thu,  8 Aug 2024 16:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ABB190497;
+	Thu,  8 Aug 2024 16:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723132959; cv=fail; b=cb7Sf3dcoI/xDfy+vmvJ//qT5BLUAtIb/pevyp6ohZbBNnFPjzQKpeHgFIgiucqrUcTYkjLcsEvsdKnlBSHzbe1GPL7WMChbW8qyLkGHbiELQn6BKNOOmbbtk3HNZyt1hAEfDzIX3NH2YT8IPWDTxyr9tgjg2eO2kRjQ0aL73Xc=
+	t=1723132962; cv=fail; b=q78CFxzJrifWck1zHBbQyuWVHAt1RRi8g4TSJ4MFyBsoi8HnDJ9trxGcCFZdm8YSrwlZgaIoIm+EROU9MmDpzjzjdzw+kHvTLam9Br+JErVNnIo22x+QNTM8QLaDE8bbbnKaSXw76t04OUicfWvWS1rhhYXE14EtUDOBrJ19If0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723132959; c=relaxed/simple;
-	bh=Fjsw1eklAH3brtKur4IyIvkZwhLOemMsR1sI7TJczJs=;
+	s=arc-20240116; t=1723132962; c=relaxed/simple;
+	bh=IT58rxx6GAnzyh6EZ4QitPY28FLzxZxYWgpVhHaKNbo=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=O3y3704W/4hd2IRcqE6qxVWj5m5hXle6uwA2851fF7ta5t6bW9SfkmOWbXgGXKb8jLn1eU/O+jWfG1s/XZ0ZZEIuLh5dK/EHmcqBAH1AXPt0k1GBXF6yL6dw9WxTEj4mgF6cA6TDnJ+OsE3hCmDagnTXh8vuwvBbZX1SXn5WeWE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KQRrvXis; arc=fail smtp.client-ip=40.107.105.46
+	 To:Cc:MIME-Version; b=VQ2qeD3oDETUzAgbjDS+osex9C/lAXKuqp7SKbDo0+2/Fs+/c1p082xDmvwbOcQh6O9jHMf9dg/Qt0Cx7IvFpUVgFDhV4tT4gCg/c78Qsbhbu6MjJ/skPWQQmIpVR9TjEIHcjfMDnU7T+59n8sMX6eM+Pxvrj+HH65IrL/B5/Z4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=T3czJqX4; arc=fail smtp.client-ip=40.107.105.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IJYVKu5Mb42hbv6uCwL016QCwzDftV/uGXA5bS62gyv6fyRbDcqZHMqvngBddzGolunlxuU0WprMKoB+FtPhD2q4QFWItD+eMe4QCXBWr6WBmCyyQHJj9p3AwPtkdqf606aP03vRWdMnzrkAoI7Ermw53vUw3YEB4TVgGuQHfFgDs8Z/Fppc1VKm1Juk28MnfSQSeRgVd9amDSbluCM969rUTCgu646lymN50wG6EsVsPDn7ldAtRH1iyKkR7gv6nbE6daaNUS0mf2b8l109A1UKy+6XF/BByVshnz+L8VnF/wDw6O+gIeIMS0w6RLWgPBL6lpWxUqdHyi5d76JubQ==
+ b=pzrnY5HF0W8ogN0zOWUOUn/ZrK3cadnA9WOS9nL8eYtu5lUFdva/9zSvrB52lrhVty0VXcbOm6rJGJmy3DmK6B9No8ZE1ABmhqg39oeXCYJHekYSCWK4lyDH9nDTjQ1EC50ZGRMKX2Z9mZF2FNop7c0KPfGJUG/n5WzZ8rjhpMnxKoHb7jQtfQW60P4IpdpWl7sIFQU+tYmmeW1lH9XaYKTH5m9FFflBL9GcYDYTjENNTz1phhUfYLmhPCGPlpmD5NJ1UTxuPi5Ju+JIabZiwpHCT+AolihaSIk92+YwDjvnr1GiU93qZtts1tptosKtRlUVYBg/kOPhWCAa+tFPMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4FHeOONCAtaWvv/ZqClQkjTmDTlr7Yp7M+U2uyq8VpI=;
- b=MtXIHk92L1TdGV8jLzbwnPD0/CJ3XSE4Viwj2dJoX5swesLvN10gVKdDzd7OMRro8vexSOqXf2dkKDl4qp62/QjgQbPwBBtMx32cV2Smiq0rqXpJHHrIqj0pwar5GLa7TB16RtYYHXKrnm4LdJbzQcLOtkg4UWBHzXR7rw554qPzqQZOOz6Os8Xndv6miO+td0yKQFhfKiceoyw9cqnanRspZ1jKggXzs2REMr7aqYemQyP8l8mTWtY++WIyFC1lFjOaHrjibLkjZ43TOnKk9FSgkSfGe3z0U4KqfxLaAj4cdt99DiElqmuIu0Bje5iHJF8Yijl/BKG0ri4/s8mByA==
+ bh=WJffP1cPktpVmM6FnqFa8Gx/n+Dxs02ZuGkd1H1Qokg=;
+ b=s/Bav082vPtLrLAAtdHNYyMeyNWM2jZyyhlQC3/k08TIYIp+lPNxR53+er0uw4P0RRMzociLF38nJSI5w7hDz7VYIu55UHv/9PFMjOeoBr/c3/0IssyqpqU2Hww1N5KizdI8LQ71ftt0vUF3QgJP39Re+EZ8PCq25qU5u8i9zNPWQ6U7swHxtt8gmHNcejDs3tTNZ7yLAmF44z1r97oD3iM0G9H3iaMtobKIOI0nEuwSuAg1YklbKteGAIoZLFMKGu1yZQBy9RpjarlIwGePQyZGDT9wui00RdbslGU3Hc/K7q6eiJP6f6/cs6lkd5cLPZS2W7Q8A3Cul3rycw4pHA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4FHeOONCAtaWvv/ZqClQkjTmDTlr7Yp7M+U2uyq8VpI=;
- b=KQRrvXisfXuJK4AOslS6vzl7LAY3KzG+Q2W+aXFHOavQM4OFY+BaEmvUB4faCRkSPvatjZpGbbjfuPSYSG0qdpRBc+rXf3hhbVBGQKTov2tVl01D21dk5E1Vru4SKkFElB5hnf1/6XsgzQ8hslHuUeECwoZ7X0fRt8LIo1/P04C1G7xuFfrYpJRxw0s2dKfDS4yFdPQQLqFkOMIJI2iDpA9O7nLr5pZodxOd2pZBHBpFrLLn0k9W9HPM5c0suJiEUYKcVxf+NLKI5J1heIO8lAHoAJb8ZLx7YspzWeYvm2orIvvTazBFeQFTyV1PXUSTF8+gnlhqxiMxpMVEcWFx+w==
+ bh=WJffP1cPktpVmM6FnqFa8Gx/n+Dxs02ZuGkd1H1Qokg=;
+ b=T3czJqX4GvSP+6kVMkU9gvHDG293FMn0f+1nQokV+jqiPml8xyN1KxU1Chjwhb5W4CInVo8tmaDbaw/YsDKwLcykJaX0o9KeY2eGvR5l0kwWkCJBrO5kxHTj9XUQA+IUiaOVen+u2QZW7P/hq/kpfmofcrpJJW9k8yWMYjSUwVp4S59vnUG+yun946bhzT1iXsncwvXeCa3LRj6ff2gdppus+yJtXZ/Eu/lem8ezjsBpmY839tMIG+adsSalkJpg3p5Xst5uJZS08y8gV7ub6XtWZZlEQVO3faToR/YehRwHcgbAXn5uQxkkN1DrHhGYW+a/ZSaV4JTAxMk4EJZS3w==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by PA4PR04MB9568.eurprd04.prod.outlook.com (2603:10a6:102:26e::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.27; Thu, 8 Aug
- 2024 16:02:34 +0000
+ 2024 16:02:37 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.7828.023; Thu, 8 Aug 2024
- 16:02:34 +0000
+ 16:02:37 +0000
 From: Frank Li <Frank.Li@nxp.com>
-Date: Thu, 08 Aug 2024 12:02:15 -0400
-Subject: [PATCH 2/4] dt-bindings: PCI: drop layerscape-pcie-gen4.txt
+Date: Thu, 08 Aug 2024 12:02:16 -0400
+Subject: [PATCH 3/4] PCI: mobiveil: Drop layerscape-gen4 support
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240808-mobivel_cleanup-v1-2-f4f6ea5b16de@nxp.com>
+Message-Id: <20240808-mobivel_cleanup-v1-3-f4f6ea5b16de@nxp.com>
 References: <20240808-mobivel_cleanup-v1-0-f4f6ea5b16de@nxp.com>
 In-Reply-To: <20240808-mobivel_cleanup-v1-0-f4f6ea5b16de@nxp.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -73,11 +73,11 @@ Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
  Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723132945; l=3123;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1723132945; l=8722;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=Fjsw1eklAH3brtKur4IyIvkZwhLOemMsR1sI7TJczJs=;
- b=V79uxI5yLTOnwy3tTqodIBKDWcW7Jav45+EAtetvr3DivBpj1bYai79YmiSkyETwznmur1Q7b
- 5HYx4fDNRWoCsKW6HrslkHERb+eGekQ9gfEMnk/KuUlQrC4JYmO2eIu
+ bh=IT58rxx6GAnzyh6EZ4QitPY28FLzxZxYWgpVhHaKNbo=;
+ b=CVEdZtYbfOsojj7KEEMR0N7pWndr+FXQoZ0k5Lhm0NO//dtiaGzO/1CiYKX3feUIdqKm+QMH0
+ ZDtcy0ZlO+QDCAs9ZUhA91jS6EfVP3V+IMLyOrf21mPmILC3jxSXmd3
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-ClientProxiedBy: SJ0PR13CA0203.namprd13.prod.outlook.com
@@ -91,163 +91,397 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB9568:EE_
-X-MS-Office365-Filtering-Correlation-Id: 751f02fc-b7c7-4eda-b17c-08dcb7c3845a
+X-MS-Office365-Filtering-Correlation-Id: ccec03b4-715d-4c7a-7413-08dcb7c38638
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|7416014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y1BscnNmMVlJVUNTNTB5Sklab2tKWW42VEh1aU9NZURzNVE0VjVDYTNrN1E3?=
- =?utf-8?B?OWprbUl3cmpUWW5FSkQrMEUrYmZpSFRVVWlod2ZPNU5xZ2F6dzN4K0xGdlRh?=
- =?utf-8?B?ZC9CeXFWTmJxamcyVVFyMnpTUHFlL1JBZno1WENhVitCcVU1anpyT1gxS280?=
- =?utf-8?B?b2o4V0poaXZMSEVFODVsaU0yajljRWpwZThwaGdTVzZscUlIK2hzRUVkZG9m?=
- =?utf-8?B?dnc0ZEptVkJMZHpFRmpkcjVGekNYRUc2TjNpcEFhZ3UyUlBTNVBKM3Qzcm5Z?=
- =?utf-8?B?all4cWZzbmgwMmhSbWovcldmOEhTa2pJU2E4VjVWZFE5OG9QNThUUnNCWUZp?=
- =?utf-8?B?UWhwUGkxdm92UzlabUQ5bjVHejEvY2VyQU5kQUU1SUVnWEVtbE14VGNZMW1r?=
- =?utf-8?B?alRsejNvMkNwSkpsSm9QeDlHczh2cUcyaSs4dGQrdmZKRmRYUzh5cE5UZmc3?=
- =?utf-8?B?dThGUGxTYnMzSjJWcHloVmpHRDN0eWZYcEhFODV3STFTdnBkRWU4d01Lc05L?=
- =?utf-8?B?YU81Q0x6SUpNUXN4OTJmL3VTeDRQU2JVSzNtZlB5T3VLOHpPZHR0aDZDVitI?=
- =?utf-8?B?dDhWN2ZHaEZ5bFVQaGZIRmd4QU1kcVdSK3lEL3dqVmYyR0xnaDhHNnc4UlF3?=
- =?utf-8?B?cG9EZ2QrWnB5eXQxV3JpZTB4KzlQRGQzYnlCbjJDODFOZnNxanMvVU5CdTc1?=
- =?utf-8?B?SStKWWtRMlMxcWN4bDVxaE9LUStLM1hHL2luZnI1UjRGOVplanAvME9sV3BN?=
- =?utf-8?B?eEVqQi90Y3lzdmNQSlNGbU5CNUhrak0xWDIweVEvRVY4cGU1NWl0NkpOWDlU?=
- =?utf-8?B?aGtOWmNQM2dmbmVJNkF1d2JhNk1xR1BsRlBmSSsrcnU1bEEraURBajdURlpR?=
- =?utf-8?B?V3dBa0ZnSEhPVTlRRmd2UFd6aitvWjlpSVlMeUdqUHc2MnBFNXdxQWwvQnpL?=
- =?utf-8?B?enM0MG5HUVZIN21XWElweUhBR0NxcXlHRXkxOExPOExjVnhiVEFxMExSeTMr?=
- =?utf-8?B?Lzkxci81RG9tUFZPMU0zQXlRc0xyeG45UFRrUVN1aFVCVVBIRWgrcWZ6d21W?=
- =?utf-8?B?Ui9xaWpEMWZLdC81REU0K2llSmZmQUs1VlVWUXVrMFpyaHFYdUNLd0thTXpL?=
- =?utf-8?B?V2ZObFRRTE5sV3RFTmU1Yzg4bE9ETFpRWFZ2K2Jlb0FVNTl2ZnU0YTRBVU0z?=
- =?utf-8?B?VFBwbUhoSGFzNTRxOGl6eWpjT0UvUnZsR1V0cXBlb1dsZlpkVHlFUUY0dzJa?=
- =?utf-8?B?NXB5dWFqdnE0UGpKSGFWY1FpUGE0ZVpVVEFBY2YrL3RBeHRKSThEUFM3dUlt?=
- =?utf-8?B?NEk3Qit2QmdIbFVwWit6UURZNmVFSkY0d2dGbDRhZm03TzV5ZkNWbG4yU2VY?=
- =?utf-8?B?Tm16ZjhybnpqSG9COHprOEJHNnBuU25Od21GUHBNOVJuaVg5cll4c0NPZ0x5?=
- =?utf-8?B?SS9uSXpvY2VKK0pVdHpTL1lnaXBURUpFQ1ZMbVhndkI0em9VRUJEcW5yemc0?=
- =?utf-8?B?ZVpvWnBOOFFMTmtMSmZnQ3htVWtURlM3K0lOd1FBdGlvZFowMXpwOC9CaUU4?=
- =?utf-8?B?L05VMDBnanhZZnhvOHoraHRFdi8xNVRGaU5TZmhCbU9RRlhkQWVvT0tIZE9P?=
- =?utf-8?B?SllrOCtNbkhiZHNGUk1kSjhBNHZvN0lOV1BMZDhkRkM4UWJKRDhmREtqNTRM?=
- =?utf-8?B?NGRsL0t2K0tJdXhQdDdSYWdEQTEwNkRvTzVCNzlhcVJtK3I0NzRDTGh0TFJt?=
- =?utf-8?B?Z3pNcU92ci9NaEJ4Y1A0Q05HNjNHSTV0TWxxNFB3Qi9jM21ORkFYNnpSa3A3?=
- =?utf-8?B?eEpiU1dIREI0czBWY2hKYjRrbjIrV2w3N2M4TGtQNEpyaEtXNWRaT3NZUlhy?=
- =?utf-8?B?WkltWTJpbzdqMDRxajM5cU9MZ1Y3UlAxckY1M1hUTUY4S2c9PQ==?=
+	=?utf-8?B?WEtrUGFHNUpmQXhENHJlR3hIbzNINU9yTk9Iek4vZWVLMzNxd0s2Q2VGYnBu?=
+ =?utf-8?B?NkFiQzI5ekU3THMxZWZSeWxoYkdkaUwwM1djSmhzNkxnS29sTFJzdHJGMEdC?=
+ =?utf-8?B?Y0dvMVlRZXJxNE5Qd0Yxd3ZwT2YvR0xObnMvbzZZWWxESTB2VFFRc3pCMFk2?=
+ =?utf-8?B?YXZjSFFWNElYVUpGSldoYVd4RzNTQ1ZRZjNpN0ZVQ1dhMkFJQVNsRm9qOG1D?=
+ =?utf-8?B?b29rZWgyM1hJdjQzVklPd2h6WVRuWk8vdEQ0dlhlN21kZUxMS3pCL21kT2Np?=
+ =?utf-8?B?dmpLUHQwV1krZk5oYnNydXBOaVJUR2NMN0VZOGFNL01JRUhEOWU5bkI4T0x4?=
+ =?utf-8?B?UnR1TitlU1FuOVBrUU5mUjI5RTRPRTVtYy9nVE9qTFFCTHZza3NKcmFFOHE1?=
+ =?utf-8?B?SURydHU5UFFQa1RYYnc0RGJmSldDWGU0SXdiVG5uNDZ1TUpUQ2d0OHM2SW41?=
+ =?utf-8?B?a2xvOTdlYVUvbld3UTZzY2gxVkRIc2g5SzU2VW1XUkJuV3l3VjVRbStBT1lz?=
+ =?utf-8?B?bXhIMW1BTTVkbFhsbmpnVG1KbFBiUXVBRTZLNHc5clV6azY1cFVkRitCaHA2?=
+ =?utf-8?B?ZGxGaFVvdzRiR3EyZG1KL1E3ZTFIQmQ5UUFwRnUvMzV6UHBMVnhXMEhtellw?=
+ =?utf-8?B?czVMdXJLS1dWQmovckluQ05WOVNlcFkyczA2d3JMTC9KUEZyc3RBQ051SUNJ?=
+ =?utf-8?B?TVJvVTBJNmkweU11Y2dUcjNzQTdQQkt3Y3pYaUVESVgwMExvc05BWFJqbmZR?=
+ =?utf-8?B?QW1LS3Qrd2VaTWtyWU9oYVBjcWNMVHlvQ3hOUHNZUmRmMVY2OXlBNFJiSnky?=
+ =?utf-8?B?SlU1U3pCcXZKVVozQWR3RVZGeVdUMWxhT0FSVVFJclgxa20zaG04Mk5CVmFa?=
+ =?utf-8?B?K0ZKUjN6K3Qvb2REVVRGeWoxUGEzNUpIVVRxTmtJUUE3aWpISHVhQlRqRkZi?=
+ =?utf-8?B?a1ZDNjV3T3YxWS9iUkYreGMwRUpvb2E1VnZoaVZZRHBzSERncWgxUnF4NHEx?=
+ =?utf-8?B?SmI2QXFqek5qdGNHQ0QxcC9EN1V2REpmVFJmcElPZTJmeHpSZk5HKzJ0MnZE?=
+ =?utf-8?B?eXh2YWoraS9tMnQ2emhPWnA4N0kvV3JzLzF6TStDSS9zNHFhaTZKNW1nOHdk?=
+ =?utf-8?B?RG4vYStVTU5BSFVFU3ZMV2YxUXRmRS9EZis1ZWsrWEQwalJtVmlZVFVKTENX?=
+ =?utf-8?B?ZnBqTENpYlZaSTRUbjRtUDNvN250a2YweHB1VE5Qd1BoK2NETzNRUnNZN040?=
+ =?utf-8?B?dmx3Q0tIMlpjM0M1MWhGV29tRTk5OXliQi8veE9zelVOYUxrdlNzblIwY0hL?=
+ =?utf-8?B?RlU3VFQ3SWkxU1BUcENJdy81dUE1T2Nwcm84K21jZGZORW1yd0Q4Vm00N0x0?=
+ =?utf-8?B?Unp6dXFiRnRNYzM2ZHROZ3VCUnFVNjk0TkQ4enJNY2krVHFsTHV3TGdPWFBB?=
+ =?utf-8?B?aEJwd3JhVWFaclVESTVEQW5lZ1RWU2JCVFovTHdNUHlLbnVic2Zzb04wck80?=
+ =?utf-8?B?VEhtQWxmSitTRmphaGR4WHM1T3ZqL2lDVHhIZnRSNjJRRHRKdkd0dXBQc0pL?=
+ =?utf-8?B?QmlQbWVxMGJBbWM2dEIrK00weHlpd0UySmk4SjNlVm1zOXgvS0krY0MwTVFs?=
+ =?utf-8?B?ZWlRZExOcVA4eFZtRUZTWnBmcytQRUYzZ1hXbHlYTy9QV1F4YmpscDZEeEda?=
+ =?utf-8?B?WXkyWjM1Sk10UzZ3SDVvc0xYZ1lCWnJNRzhaVWVtLzlwZFB2RHA2ME5ZVzFo?=
+ =?utf-8?B?Q3JBdlNqZVhuUjdoZHlMdkRNcWRxNHQwd1A4dTQ0OW9wTFF2QjlkcG80SjR3?=
+ =?utf-8?B?M3FIcVpGcTREL2FjTXFMSGN3WFk5OGpDdEZtQmRhTEs4dTR0Um5qeCttZ0dP?=
+ =?utf-8?B?SVhrbld6RkZrU1N2M04xeWliN2Q4dzJFTTZITWtrMU1hb3c9PQ==?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(7416014)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MVZUZ1pEWDUrRENoNXZpMHl6UlJTdllEd3Z0K2U3M2dLa0l2QXZZYk9OQUNU?=
- =?utf-8?B?c1h1akxhbE1oUWJKRDM2dTUxNDQ0NXVESmNyS1l1elVla2lzZGVtdE9xWG4v?=
- =?utf-8?B?RkpXMU1pNmh6N0hLL1doNkVsOU4wSDBpMmp6RGEwNWhHV2pZU1g2Q1ZFVFFE?=
- =?utf-8?B?NGRSMyt6R0Z6RVZUZmxEYUpFWUFLYmdWRlBCQktWcW4rK2R2L2kyWERjM3M4?=
- =?utf-8?B?ZzlMZ0E1RTFEMEZEdUFVdjh3cUZuR3NWY0pLNnVIK3NuZHhEeFVtekkxQndj?=
- =?utf-8?B?b0hZcmpLOWk0UFVlSDlIWWd4YkVDeDMxNXNTc2J5T1I3MGJsVnhoemlkRUtm?=
- =?utf-8?B?cSt2VHJVblNRVURLWjRHVTJMTjJWb1g4NndYWmNnaU9uUU5aMTc2MENQemtk?=
- =?utf-8?B?d2ZZWnZxR0NzWllJVjRBV0lxQmUweTFwWEdaSVd3VjNvKzNKNVl6WForM2VC?=
- =?utf-8?B?OXF3eGg4cmpzZFJjMlVZWjFHYnFkSStEL3liQ29JMTE4c0NTOHMyYW0rOVNP?=
- =?utf-8?B?Y3MxZ0ZFOVJ3Uk9VbkhtZ2F2a3pCMkdGS1U1SVpxcWFGQTJ1bXVFY0xUeVh4?=
- =?utf-8?B?SzJPVDFyMXRIYXlhQU5DSXducGhyMG5HTy90YTBlSEhsZk5mZ2xXRHhDck1M?=
- =?utf-8?B?VVVGUCt1WDNtNEZ4Q0NSSVBKREcyejhVN2wxbmloOWpmZGp3dmhXTVZFaGl5?=
- =?utf-8?B?UVJQa2dxeFlPMVB4SExDWTZpQ2ZwN0VSZHRjZDRUcXFNZG1QcUxaTVRUV3R1?=
- =?utf-8?B?TTA1Z3MzZWVsdVZrdmV3b3RWQ25qeVc0Q3J1NStRSzh2QVlBelduc2twa0ps?=
- =?utf-8?B?UStSOVRyYmthR3JHQlB3TStsNmZ5WFhYK2pnQ2hPeTFpSFNxaVVBZlJwcEs4?=
- =?utf-8?B?cytFeGpHa3pNM084QzNxS0xqNDRuUE9taTYyMzl0aWxQbWIwdDVXWjlyVzQ5?=
- =?utf-8?B?VDRJc2tlQW5wcUxEdkxidjg2SGtKNmZBUkNYYXp4T3k2YmNFdlhXNHZyVDgy?=
- =?utf-8?B?cmtzWE0rRkZKbzFTNUt3VWdUanJuQTRSUFBJOUNDNHdRZ1llejJQSlQzMnNW?=
- =?utf-8?B?a3Y4d3BzeGEvTERnaHlPbkFyVUJNZXVyb0JtaFY1S3psRkRVeHJQblJRZTJB?=
- =?utf-8?B?YTAwNUxqTFNlSUpWdE1NMjh5akdxN1phMkJjQk8yMithbjlrNHNXaCtHRU1Z?=
- =?utf-8?B?Z3htdEVkZ1RMY0wvcURBcUx0ei9LSWNRNEV6TlIwU0lyVElZYmRBZjR0bjNu?=
- =?utf-8?B?VDZSUFZDWXhsMnkxODVoV2dWMUttZ3VxNk1PakZTR01FUjU4akZrNXArYzNt?=
- =?utf-8?B?MWxIc3BWd0RqbDJvUzZjN2dnN0N3T3M4SkxxeWw0TkVJMVdwRy80Z0ZRdDV2?=
- =?utf-8?B?TUk1WkVlTzc0cWNCaDFFcDZ5K1R6c0JyREg5T2pZNzVIUmtSOWRXNm5TczlS?=
- =?utf-8?B?eUcxdlFKYW1KYU5qUTNOZG9tZ0xTek4wMzlhN0d5OWJFS1N5Vmh4YWRXa09C?=
- =?utf-8?B?VEVFcUFzdUVJNUNUUXJZSDZVa09lZXZSdmJWTGJzblFqVjRCRTRsbmYxVk52?=
- =?utf-8?B?bEt4NGlxcFZBUXBtN2NoKzRPYjNiYU1ZdDJKNVFUQlFQRlJORGNJS3krZUpo?=
- =?utf-8?B?ZTQ3SVpTc3ZodWtHZ2NRNUs5QXozK2JlNXJFbnBFeE9GTHlGMW1JVE1XbkFz?=
- =?utf-8?B?dThKdm0zMGM2UTdLT290ZGsyRENWazNKM2VEdk9EUHl1UklpelIwbVZwaktj?=
- =?utf-8?B?SWpGZlliTiswdFFLMTNIekljaTBFMHpLMm0rRUViMGpRSHhPaGNEV3orQlBv?=
- =?utf-8?B?am42SmRBazNRaGlnU0o0akoxSE5FUnRzMnhDcHhPdVErWXdNdDlMQ0Vaa0Ex?=
- =?utf-8?B?V1h0bXh3ZmFKQWk3cTJCenllUS9hQVo5aHg0TkdCMTduakZxNDJRM2VDdm1l?=
- =?utf-8?B?VnE1cVZPT1NMQjNqNXdGaHJwV0NsWHNTWTdjOE5tclpxdk52SDJKTXl0dzNn?=
- =?utf-8?B?c2txV1B2RmJpUC96SzQ3NnJvelFVcEc4bnFqaU1rWklHQVo4bi9tM2pSN2hl?=
- =?utf-8?B?WG9CQStsYmRVQVRBOE80TkEwckRYT2RDektTTnZ3d21MWWRqeCs0V2VHTUxE?=
- =?utf-8?Q?Hb04tUKY7p4jLlTMSZ2b9MpsY?=
+	=?utf-8?B?YTFLUUY5dnZOdFhmNnhLdjhQb1BVWmVjbHVsMkt1SW15T2ZKK09UZUhneG8y?=
+ =?utf-8?B?bW5yN2hOQzNiWDJIZmoxWkZNbGt0TDcySkZBTnI3RE83Z2VXczh3M2RRWDFK?=
+ =?utf-8?B?N2krNXV2L3F2T3JWYTdveEljS0pja3owYjB1NFlYdk9yRmtGTjFwTTB2aTFU?=
+ =?utf-8?B?QnkzUmwxejJVb1VGcUh4NjBkZHE1VXFQdEtzc21WeXduSlVBQ2krN2M2S1Z2?=
+ =?utf-8?B?NHBLZksvUUhKZjY1U1dLMXF0cEtBZWNzRUhCd1FRS2xJVnFsR0ZleFV6USs2?=
+ =?utf-8?B?VTRSdCthRjJ1QmtMbGVsbi94TDYrRGkwR3RxSjUyaitpNFZsZEVWVkFjMjJK?=
+ =?utf-8?B?WWNqUWk0TUZhYWR1dk4xV1hDTldwdWNhUzl5bHVOWHNiVmk5L2EzSHVNTGcz?=
+ =?utf-8?B?ck11QmwwVC9uUGNBRjlKMzZPMUJPeWFSZUJOMEVsVlpwNkxnaGVEZUtROWYw?=
+ =?utf-8?B?cHl1VVJabFVoZXB1MjZLV3grWTJ0K09lcCtKUGw0WTQzUUIrZFcwd2EzbXAy?=
+ =?utf-8?B?bzVyK2k5REp5bW9YY091VkNpaVVJUFdFSGpINjc3b1hld2VNS3UvcjlBRS8v?=
+ =?utf-8?B?N1FnWkRVZmxzdVpHRC9vMEttcVppY283WGtPSVBCTDFMZ21hUkwrK3I2Njdy?=
+ =?utf-8?B?WTVqeUVnUGQ3N2JnVDd6UjA2bkRMcUdkbVFlT3NvMlBhbHBtOEZCS0dtVHZY?=
+ =?utf-8?B?WUVvUERCVTRFOUxucXd3QVU2YlJzcVErQWx4eWU2UWtjbVRTbUM1ajU5dEFn?=
+ =?utf-8?B?MEw0Z2ZBaW43dVRXNGNlN0tUVHJLdFVJNDY0a05NcVNVeHVxUHJKUTBQS3B6?=
+ =?utf-8?B?L285aGlVMnpkdHFKY0pHK1pHUkN2TjF4RktRelpGeitPaVZSNWlYSzhpQU04?=
+ =?utf-8?B?aktFQUE1N1R4UkdSNHhTZHJjcVh0MFQwZE5rYlN3blhuYmhOZXdhRk9SWmVa?=
+ =?utf-8?B?MHJzK01ONEdZaXoyaDNkbmtQNzUvOC8zenhOMnJLWkQxcjBoRmFMSDYyUkFP?=
+ =?utf-8?B?bkFjTzF0RUp0WUdTYkVSQnJYSmZxSDhYS3dkMHJucVJaLzdqbWp4MGRGbmkv?=
+ =?utf-8?B?ek5jdVNoQmdxUDZVUFhtODFkb0ZaaFpuRjRQbzY0RTdXaVlkcklPRVd3WGhJ?=
+ =?utf-8?B?V3hKMS8zVHZ2MVlkZkFhTmZyTEwwMCtQVHJlOFlKS0lobDc5dDE2Ync1RnRZ?=
+ =?utf-8?B?MzlXRE9lM0swUGhSeUtYeGlhaVpZc2RIUFFXRFdNc2xjem9mL002TjJNZjMx?=
+ =?utf-8?B?NitkYTJ3Z3o5a0N6aHhDamRBV2lsbHVVUjFkbE1YYjNFdHYrS0xOVFRGMHNp?=
+ =?utf-8?B?OHBjMkRIZTZUMS9YcUtEcDJReFNXM3JJQ2FtYUNKakJ4OWtZVkRaU0JqMEMz?=
+ =?utf-8?B?Z1V6M3ZsR2dHYm1qMjRJMGYrTUhhRWNLc0d0ZThJNHVQRVlDb0VXM2xoTHdj?=
+ =?utf-8?B?NVVWQko5N1hZc1hZcXhWbXlDN1pZS0dGUUdZRHVnZnZMazNLT0JVR1Q1eGNk?=
+ =?utf-8?B?WThLbGJOOTFvSEZqbWRHQjRBbHVSQ0NmN1BpYjdyQXdwc2RqU2JBUmZ3ZXVE?=
+ =?utf-8?B?cWdFQ09VeDJGZ0YxL3E0Q29RTUJ6dmQvNTVFN0tra3YzdW9hSC9uV280eS93?=
+ =?utf-8?B?Rk1uVVZvNW91aG13akp1L2FpbnFKUDk5eHo3VkNUQW9DNGZXR28wOWZxdXlI?=
+ =?utf-8?B?V09uVmtrWFJ4L1RQY1YvTFZrQUNXbDE5T3ZCN2VXalJlYitZNTg3elgyNTRy?=
+ =?utf-8?B?N0dGeWU3TkEzTjFnMnczbENIUnNjNGs1R3Y2ZzBPQWwxeDBwUmJIVEx1SlZN?=
+ =?utf-8?B?WU1memZKSmtES2lFdkZZVUZFT0dSYTNDQTkzbWZvYW5RckJLdmFaUjdBaWN4?=
+ =?utf-8?B?VkQ4c3B1aEMweFE2OHY2K0JOSVhWM2lxR1dtbmFLMkY0ekh5RDRqaFdVejlL?=
+ =?utf-8?B?QjduNTJ6ZllGT0lMRUNWb2x5bm9BeFlBRmRiTURXMmwxZU0zMlZ6WGh4NUNZ?=
+ =?utf-8?B?S0gwazFQQmQwZzM3TXZTZHJ3bkZCdmJPSDBkK1E5MHRyK3J4OVlpZmxiYUhV?=
+ =?utf-8?B?VS93UE50cHZoMWJtbHpPenJzU3k1OVBKN2h4aW9MMG55OXA2V2owSEtKMmE5?=
+ =?utf-8?Q?Ev/vuiJegY2mKEN4mwyphtk7w?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 751f02fc-b7c7-4eda-b17c-08dcb7c3845a
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccec03b4-715d-4c7a-7413-08dcb7c38638
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2024 16:02:34.7582
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2024 16:02:37.8813
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iDVZlq+rSassN4PCcJYswdYBuA9HVZS9AgYpc1NMqwuq2leEMhEKp+IUFJKn3ZN1SdK1F+ZkTL791U7RZ+hUBA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: b94emaEUeI6CX+U693s7I7g1uCh6DH82v12/lOL2JJqWqoRK9H1shfL/gzZiLSg90n+3+VUQn6SMyqdgvSOyPg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9568
 
-lx2160 rev1 use mobivel PCIe controller and switch to designware PCIe
-controller at rev2, which is mass production version. So drop unused
-document.
+Only lx2160 rev1 use mobiveil PCIe controller. Rev2 switch to designware
+PCIe controller. Rev2 is mass production chip and Rev1 will be not
+supported. So drop related code.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- .../bindings/pci/layerscape-pcie-gen4.txt          | 52 ----------------------
- 1 file changed, 52 deletions(-)
+ drivers/pci/controller/mobiveil/Kconfig            |   9 -
+ drivers/pci/controller/mobiveil/Makefile           |   1 -
+ .../pci/controller/mobiveil/pcie-layerscape-gen4.c | 255 ---------------------
+ 3 files changed, 265 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+diff --git a/drivers/pci/controller/mobiveil/Kconfig b/drivers/pci/controller/mobiveil/Kconfig
+index 58ce034f701ab..89b8ce9e1262f 100644
+--- a/drivers/pci/controller/mobiveil/Kconfig
++++ b/drivers/pci/controller/mobiveil/Kconfig
+@@ -11,15 +11,6 @@ config PCIE_MOBIVEIL_HOST
+ 	depends on PCI_MSI
+ 	select PCIE_MOBIVEIL
+ 
+-config PCIE_LAYERSCAPE_GEN4
+-	bool "Freescale Layerscape Gen4 PCIe controller"
+-	depends on ARCH_LAYERSCAPE || COMPILE_TEST
+-	depends on PCI_MSI
+-	select PCIE_MOBIVEIL_HOST
+-	help
+-	  Say Y here if you want PCIe Gen4 controller support on
+-	  Layerscape SoCs.
+-
+ config PCIE_MOBIVEIL_PLAT
+ 	bool "Mobiveil AXI PCIe controller"
+ 	depends on ARCH_ZYNQMP || COMPILE_TEST
+diff --git a/drivers/pci/controller/mobiveil/Makefile b/drivers/pci/controller/mobiveil/Makefile
+index 99d879de32d6e..9fb6d1c6504dc 100644
+--- a/drivers/pci/controller/mobiveil/Makefile
++++ b/drivers/pci/controller/mobiveil/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
+ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) += pcie-mobiveil-host.o
+ obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
+-obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
+diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
 deleted file mode 100644
-index b40fb5d15d3d9..0000000000000
---- a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+index 5af22bee913bd..0000000000000
+--- a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
 +++ /dev/null
-@@ -1,52 +0,0 @@
--NXP Layerscape PCIe Gen4 controller
+@@ -1,255 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * PCIe Gen4 host controller driver for NXP Layerscape SoCs
+- *
+- * Copyright 2019-2020 NXP
+- *
+- * Author: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+- */
 -
--This PCIe controller is based on the Mobiveil PCIe IP and thus inherits all
--the common properties defined in mobiveil-pcie.txt.
+-#include <linux/kernel.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
+-#include <linux/of_pci.h>
+-#include <linux/of_platform.h>
+-#include <linux/of_irq.h>
+-#include <linux/of_address.h>
+-#include <linux/pci.h>
+-#include <linux/platform_device.h>
+-#include <linux/resource.h>
+-#include <linux/mfd/syscon.h>
+-#include <linux/regmap.h>
 -
--Required properties:
--- compatible: should contain the platform identifier such as:
--  "fsl,lx2160a-pcie"
--- reg: base addresses and lengths of the PCIe controller register blocks.
--  "csr_axi_slave": Bridge config registers
--  "config_axi_slave": PCIe controller registers
--- interrupts: A list of interrupt outputs of the controller. Must contain an
--  entry for each entry in the interrupt-names property.
--- interrupt-names: It could include the following entries:
--  "intr": The interrupt that is asserted for controller interrupts
--  "aer": Asserted for aer interrupt when chip support the aer interrupt with
--	 none MSI/MSI-X/INTx mode,but there is interrupt line for aer.
--  "pme": Asserted for pme interrupt when chip support the pme interrupt with
--	 none MSI/MSI-X/INTx mode,but there is interrupt line for pme.
--- dma-coherent: Indicates that the hardware IP block can ensure the coherency
--  of the data transferred from/to the IP block. This can avoid the software
--  cache flush/invalid actions, and improve the performance significantly.
--- msi-parent : See the generic MSI binding described in
--  Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+-#include "pcie-mobiveil.h"
 -
--Example:
+-/* LUT and PF control registers */
+-#define PCIE_LUT_OFF			0x80000
+-#define PCIE_PF_OFF			0xc0000
+-#define PCIE_PF_INT_STAT		0x18
+-#define PF_INT_STAT_PABRST		BIT(31)
 -
--	pcie@3400000 {
--		compatible = "fsl,lx2160a-pcie";
--		reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
--		       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
--		reg-names = "csr_axi_slave", "config_axi_slave";
--		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
--			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
--			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
--		interrupt-names = "aer", "pme", "intr";
--		#address-cells = <3>;
--		#size-cells = <2>;
--		device_type = "pci";
--		apio-wins = <8>;
--		ppio-wins = <8>;
--		dma-coherent;
--		bus-range = <0x0 0xff>;
--		msi-parent = <&its>;
--		ranges = <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>;
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
--				<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
--				<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
--				<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
--	};
+-#define PCIE_PF_DBG			0x7fc
+-#define PF_DBG_LTSSM_MASK		0x3f
+-#define PF_DBG_LTSSM_L0			0x2d /* L0 state */
+-#define PF_DBG_WE			BIT(31)
+-#define PF_DBG_PABR			BIT(27)
+-
+-#define to_ls_g4_pcie(x)		platform_get_drvdata((x)->pdev)
+-
+-struct ls_g4_pcie {
+-	struct mobiveil_pcie pci;
+-	struct delayed_work dwork;
+-	int irq;
+-};
+-
+-static inline u32 ls_g4_pcie_pf_readl(struct ls_g4_pcie *pcie, u32 off)
+-{
+-	return ioread32(pcie->pci.csr_axi_slave_base + PCIE_PF_OFF + off);
+-}
+-
+-static inline void ls_g4_pcie_pf_writel(struct ls_g4_pcie *pcie,
+-					u32 off, u32 val)
+-{
+-	iowrite32(val, pcie->pci.csr_axi_slave_base + PCIE_PF_OFF + off);
+-}
+-
+-static int ls_g4_pcie_link_up(struct mobiveil_pcie *pci)
+-{
+-	struct ls_g4_pcie *pcie = to_ls_g4_pcie(pci);
+-	u32 state;
+-
+-	state = ls_g4_pcie_pf_readl(pcie, PCIE_PF_DBG);
+-	state =	state & PF_DBG_LTSSM_MASK;
+-
+-	if (state == PF_DBG_LTSSM_L0)
+-		return 1;
+-
+-	return 0;
+-}
+-
+-static void ls_g4_pcie_disable_interrupt(struct ls_g4_pcie *pcie)
+-{
+-	struct mobiveil_pcie *mv_pci = &pcie->pci;
+-
+-	mobiveil_csr_writel(mv_pci, 0, PAB_INTP_AMBA_MISC_ENB);
+-}
+-
+-static void ls_g4_pcie_enable_interrupt(struct ls_g4_pcie *pcie)
+-{
+-	struct mobiveil_pcie *mv_pci = &pcie->pci;
+-	u32 val;
+-
+-	/* Clear the interrupt status */
+-	mobiveil_csr_writel(mv_pci, 0xffffffff, PAB_INTP_AMBA_MISC_STAT);
+-
+-	val = PAB_INTP_INTX_MASK | PAB_INTP_MSI | PAB_INTP_RESET |
+-	      PAB_INTP_PCIE_UE | PAB_INTP_IE_PMREDI | PAB_INTP_IE_EC;
+-	mobiveil_csr_writel(mv_pci, val, PAB_INTP_AMBA_MISC_ENB);
+-}
+-
+-static int ls_g4_pcie_reinit_hw(struct ls_g4_pcie *pcie)
+-{
+-	struct mobiveil_pcie *mv_pci = &pcie->pci;
+-	struct device *dev = &mv_pci->pdev->dev;
+-	u32 val, act_stat;
+-	int to = 100;
+-
+-	/* Poll for pab_csb_reset to set and PAB activity to clear */
+-	do {
+-		usleep_range(10, 15);
+-		val = ls_g4_pcie_pf_readl(pcie, PCIE_PF_INT_STAT);
+-		act_stat = mobiveil_csr_readl(mv_pci, PAB_ACTIVITY_STAT);
+-	} while (((val & PF_INT_STAT_PABRST) == 0 || act_stat) && to--);
+-	if (to < 0) {
+-		dev_err(dev, "Poll PABRST&PABACT timeout\n");
+-		return -EIO;
+-	}
+-
+-	/* clear PEX_RESET bit in PEX_PF0_DBG register */
+-	val = ls_g4_pcie_pf_readl(pcie, PCIE_PF_DBG);
+-	val |= PF_DBG_WE;
+-	ls_g4_pcie_pf_writel(pcie, PCIE_PF_DBG, val);
+-
+-	val = ls_g4_pcie_pf_readl(pcie, PCIE_PF_DBG);
+-	val |= PF_DBG_PABR;
+-	ls_g4_pcie_pf_writel(pcie, PCIE_PF_DBG, val);
+-
+-	val = ls_g4_pcie_pf_readl(pcie, PCIE_PF_DBG);
+-	val &= ~PF_DBG_WE;
+-	ls_g4_pcie_pf_writel(pcie, PCIE_PF_DBG, val);
+-
+-	mobiveil_host_init(mv_pci, true);
+-
+-	to = 100;
+-	while (!ls_g4_pcie_link_up(mv_pci) && to--)
+-		usleep_range(200, 250);
+-	if (to < 0) {
+-		dev_err(dev, "PCIe link training timeout\n");
+-		return -EIO;
+-	}
+-
+-	return 0;
+-}
+-
+-static irqreturn_t ls_g4_pcie_isr(int irq, void *dev_id)
+-{
+-	struct ls_g4_pcie *pcie = (struct ls_g4_pcie *)dev_id;
+-	struct mobiveil_pcie *mv_pci = &pcie->pci;
+-	u32 val;
+-
+-	val = mobiveil_csr_readl(mv_pci, PAB_INTP_AMBA_MISC_STAT);
+-	if (!val)
+-		return IRQ_NONE;
+-
+-	if (val & PAB_INTP_RESET) {
+-		ls_g4_pcie_disable_interrupt(pcie);
+-		schedule_delayed_work(&pcie->dwork, msecs_to_jiffies(1));
+-	}
+-
+-	mobiveil_csr_writel(mv_pci, val, PAB_INTP_AMBA_MISC_STAT);
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static int ls_g4_pcie_interrupt_init(struct mobiveil_pcie *mv_pci)
+-{
+-	struct ls_g4_pcie *pcie = to_ls_g4_pcie(mv_pci);
+-	struct platform_device *pdev = mv_pci->pdev;
+-	struct device *dev = &pdev->dev;
+-	int ret;
+-
+-	pcie->irq = platform_get_irq_byname(pdev, "intr");
+-	if (pcie->irq < 0)
+-		return pcie->irq;
+-
+-	ret = devm_request_irq(dev, pcie->irq, ls_g4_pcie_isr,
+-			       IRQF_SHARED, pdev->name, pcie);
+-	if (ret) {
+-		dev_err(dev, "Can't register PCIe IRQ, errno = %d\n", ret);
+-		return  ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static void ls_g4_pcie_reset(struct work_struct *work)
+-{
+-	struct delayed_work *dwork = container_of(work, struct delayed_work,
+-						  work);
+-	struct ls_g4_pcie *pcie = container_of(dwork, struct ls_g4_pcie, dwork);
+-	struct mobiveil_pcie *mv_pci = &pcie->pci;
+-	u16 ctrl;
+-
+-	ctrl = mobiveil_csr_readw(mv_pci, PCI_BRIDGE_CONTROL);
+-	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
+-	mobiveil_csr_writew(mv_pci, ctrl, PCI_BRIDGE_CONTROL);
+-
+-	if (!ls_g4_pcie_reinit_hw(pcie))
+-		return;
+-
+-	ls_g4_pcie_enable_interrupt(pcie);
+-}
+-
+-static const struct mobiveil_rp_ops ls_g4_pcie_rp_ops = {
+-	.interrupt_init = ls_g4_pcie_interrupt_init,
+-};
+-
+-static const struct mobiveil_pab_ops ls_g4_pcie_pab_ops = {
+-	.link_up = ls_g4_pcie_link_up,
+-};
+-
+-static int __init ls_g4_pcie_probe(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct pci_host_bridge *bridge;
+-	struct mobiveil_pcie *mv_pci;
+-	struct ls_g4_pcie *pcie;
+-	struct device_node *np = dev->of_node;
+-	int ret;
+-
+-	if (!of_parse_phandle(np, "msi-parent", 0)) {
+-		dev_err(dev, "Failed to find msi-parent\n");
+-		return -EINVAL;
+-	}
+-
+-	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
+-
+-	pcie = pci_host_bridge_priv(bridge);
+-	mv_pci = &pcie->pci;
+-
+-	mv_pci->pdev = pdev;
+-	mv_pci->ops = &ls_g4_pcie_pab_ops;
+-	mv_pci->rp.ops = &ls_g4_pcie_rp_ops;
+-	mv_pci->rp.bridge = bridge;
+-
+-	platform_set_drvdata(pdev, pcie);
+-
+-	INIT_DELAYED_WORK(&pcie->dwork, ls_g4_pcie_reset);
+-
+-	ret = mobiveil_pcie_host_probe(mv_pci);
+-	if (ret) {
+-		dev_err(dev, "Fail to probe\n");
+-		return  ret;
+-	}
+-
+-	ls_g4_pcie_enable_interrupt(pcie);
+-
+-	return 0;
+-}
+-
+-static const struct of_device_id ls_g4_pcie_of_match[] = {
+-	{ .compatible = "fsl,lx2160a-pcie", },
+-	{ },
+-};
+-
+-static struct platform_driver ls_g4_pcie_driver = {
+-	.driver = {
+-		.name = "layerscape-pcie-gen4",
+-		.of_match_table = ls_g4_pcie_of_match,
+-		.suppress_bind_attrs = true,
+-	},
+-};
+-
+-builtin_platform_driver_probe(ls_g4_pcie_driver, ls_g4_pcie_probe);
 
 -- 
 2.34.1
