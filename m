@@ -1,113 +1,141 @@
-Return-Path: <linux-pci+bounces-11475-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11476-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E08F394B8AE
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 10:13:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB3AB94B8EB
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 10:22:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 64758B2721E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 08:13:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DB471F20CAA
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 08:22:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FB251891BB;
-	Thu,  8 Aug 2024 08:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2428188CB7;
+	Thu,  8 Aug 2024 08:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+OsZ9bY"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OU6xRf2s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A65F18950E
-	for <linux-pci@vger.kernel.org>; Thu,  8 Aug 2024 08:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB11145336;
+	Thu,  8 Aug 2024 08:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723104756; cv=none; b=TP+1H6ZMJUHv3ecli253ODcAxAp3ASkapack88zdOYWVtiDQARmbeEdwsVoHdziPz9bM4og7rROEU7IQb3S8LePUxMjpVRem8QrqpRsqOKtjrWrtchuUnDOVfpU6ips0DtE/RMFTxI9PtUf/3m+W8MwzzLeqNSxuYJqL5lh9N88=
+	t=1723105356; cv=none; b=QtsfFcwrsy0pLfFa2qmOZZcGcfQrZJdPWhaN9zGQ7cN+sHTw/FgCVAsdBM2wZ9GBc5T1B5kxuCyj6Ael2sAriqMH1IlFtxmtF9k54KtwcpZI2r+MT4T9lvduLwLlfplxYa7eIBSnM+idKf6HJ9Ne3ETkmNrmn/wf4mAN6XZMyAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723104756; c=relaxed/simple;
-	bh=jgHwr9Okfk2sRqCjWHFXlZf9bF+lKonWrMQM1FrvR+8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JrngPGIA6XH1jH+yZSbbAe9eVS5StyOWEVbKlB7+BRb3qOp30r8mEnzS0ltON7/kHR3zJK5GXR8Dr6Xe5vhhjwCRzqsbqWQMWYuJGmqhp4qVSOCzk4QygPNSvUm3JPEXn4IeZTJN3/8uJxQTsHqQPAG9sruoBsVRojoFkpzSAco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+OsZ9bY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9DEC32782;
-	Thu,  8 Aug 2024 08:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723104755;
-	bh=jgHwr9Okfk2sRqCjWHFXlZf9bF+lKonWrMQM1FrvR+8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=s+OsZ9bYS+ihavXQiZLf9Dc+jQe+TFXhg36/Z/BdFzPerYG9dsNFHpRVAUwNK3c8O
-	 Up91Xv3MoIAU/RsSrv/5HIEc+BFYn6hHDfgZPC/V0iiMRFWOWF4DddfGhprZtd0K3q
-	 ZyUeZj61C9NgEwjCDSf9u1GUu6VjxJJwr3CVSSXtPIzsv+4s/CWJnJTrBTEn2wkhHP
-	 0mt4lg38vrfBpw4RabhJ/Xoe6Ko/IIlpc7wF8SXALAkzBnZAitzbvtsDdcshy8+A2K
-	 UJCDVEpVu6AUcryzzd6Ze6BlYFCiDo5jS4GtJG40kkjP+bMS2Y1DB8kZfxNY4E+mfm
-	 ZbPS3ExzlQ0Qw==
-From: Mark Brown <broonie@kernel.org>
-To: alsa-devel@alsa-project.org, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: tiwai@suse.de, Bjorn Helgaas <bhelgaas@google.com>, 
- linux-pci@vger.kernel.org
-In-Reply-To: <20240612065858.53041-1-pierre-louis.bossart@linux.intel.com>
-References: <20240612065858.53041-1-pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add PantherLake support
-Message-Id: <172310475315.457425.16058679808608700383.b4-ty@kernel.org>
-Date: Thu, 08 Aug 2024 09:12:33 +0100
+	s=arc-20240116; t=1723105356; c=relaxed/simple;
+	bh=2488M6qNYP0lwXNFrjsG9Nh3hWzY6hPo+i/FhLpDmgg=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=set2lDYWFBV8y9DBPENfSINRGJ3OCYH+khOCWw0bVR4DLb8AzIuZsY1ftHFxMzjg09Bnt5XP/h4jZ5DStSuc6a19UenOD4lqYU5lvcl3mK0nlYCo1HNhGWGFaDvlCLwNbbD7AP9sV/latrdvTUM51MsdeBNl/H7KxTbRxuiheuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OU6xRf2s; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1723105354; x=1754641354;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=2488M6qNYP0lwXNFrjsG9Nh3hWzY6hPo+i/FhLpDmgg=;
+  b=OU6xRf2sycuTHp1a+aRayHftlnknPA/eb/ouu3vicxCGyMLSPQCaDt0R
+   H6wv2IDQx9Yzet5+gGrsrhIK8DSIavmmjNsfsEg9ZozUShAAjZ+EqRKeD
+   OzJ0MbCa4U3UBX0/tbdekzduigczpDKLLFKdQlG1wt6HuIsigIRSF3/yN
+   452pm4vXLgAzEyFBDlykEbehaVVL0t88xGCAI8MTkGYUMoY1sMJhsIIVI
+   5O1O7Bk76eCxM0qkNnPwwiQnVsOQtZp2vk3VJtLN5Nvn9r5REoLoyIwFO
+   Q/+gUO8BydMGJE1GXxhhqBU5mtCAkBPN2Wbefx8hgERncS1LWDqaIAvys
+   A==;
+X-CSE-ConnectionGUID: Je4g5QipTv6hZwyDxvIfog==
+X-CSE-MsgGUID: ztRBfumgSjOF5Sno8g7hyw==
+X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
+   d="scan'208";a="30208235"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Aug 2024 01:22:33 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 8 Aug 2024 01:22:28 -0700
+Received: from DEN-DL-M31857.microsemi.net (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 8 Aug 2024 01:22:23 -0700
+Message-ID: <f97296c967211a6a8f6f40996e3ed74b76bad935.camel@microchip.com>
+Subject: Re: [PATCH v4 8/8] reset: mchp: sparx5: set the dev member of the
+ reset controller
+From: Steen Hegelund <steen.hegelund@microchip.com>
+To: Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven
+	<geert@linux-m68k.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Simon
+ Horman" <horms@kernel.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+	<dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>, Daniel Machon
+	<daniel.machon@microchip.com>, <UNGLinuxDriver@microchip.com>, Rob Herring
+	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, "Andrew
+ Lunn" <andrew@lunn.ch>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>, "Allan
+ Nielsen" <allan.nielsen@microchip.com>, Luca Ceresoli
+	<luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?ISO-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
+Date: Thu, 8 Aug 2024 10:22:23 +0200
+In-Reply-To: <20240805101725.93947-9-herve.codina@bootlin.com>
+References: <20240805101725.93947-1-herve.codina@bootlin.com>
+	 <20240805101725.93947-9-herve.codina@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-37811
 
-On Wed, 12 Jun 2024 08:58:53 +0200, Pierre-Louis Bossart wrote:
-> Add initial support for the PantherLake platform, and initial ACPI
-> configurations.
-> 
-> This patchset depends on the first patch of "[PATCH 0/3] ALSA/PCI: add
-> PantherLake audio support"
-> 
-> Bard Liao (2):
->   ASoC: Intel: soc-acpi-intel-ptl-match: add rt711-sdca table
->   ASoC: Intel: soc-acpi-intel-ptl-match: Add rt722 support
-> 
-> [...]
+Hi Herve,
 
-Applied to
+On Mon, 2024-08-05 at 12:17 +0200, Herve Codina wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you
+> know the content is safe
+>=20
+> From: Cl=C3=A9ment L=C3=A9ger <clement.leger@bootlin.com>
+>=20
+> In order to guarantee the device will not be deleted by the reset
+> controller consumer, set the dev member of the reset controller.
+>=20
+> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <clement.leger@bootlin.com>
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+> =C2=A0drivers/reset/reset-microchip-sparx5.c | 1 +
+> =C2=A01 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/reset/reset-microchip-sparx5.c
+> b/drivers/reset/reset-microchip-sparx5.c
+> index c4fe65291a43..1ef2aa1602e3 100644
+> --- a/drivers/reset/reset-microchip-sparx5.c
+> +++ b/drivers/reset/reset-microchip-sparx5.c
+> @@ -117,6 +117,7 @@ static int mchp_sparx5_reset_probe(struct
+> platform_device *pdev)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 return err;
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ctx->rcdev.owner =3D THIS_MODU=
+LE;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ctx->rcdev.dev =3D &pdev->dev;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ctx->rcdev.nr_resets =3D 1;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ctx->rcdev.ops =3D &sparx5_res=
+et_ops;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ctx->rcdev.of_node =3D dn;
+> --
+> 2.45.0
+>=20
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Looks good to me.
 
-Thanks!
+Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 
-[1/5] ASoC: SOF: Intel: add PTL specific power control register
-      commit: 42b4763ab301c5604343aa49774426d5005711a3
-[2/5] ASoC: SOF: Intel: add initial support for PTL
-      commit: 3f8c8027775901c13d1289b4c54e024d3d5d982a
-[3/5] ASoC: Intel: soc-acpi: add PTL match tables
-      commit: 6a965fbaac461564ae74dbfe6d9c9e9de65ea67a
-[4/5] ASoC: Intel: soc-acpi-intel-ptl-match: add rt711-sdca table
-      commit: 77a6869afbbfad0db297e9e4b9233aac209d5385
-[5/5] ASoC: Intel: soc-acpi-intel-ptl-match: Add rt722 support
-      commit: 2786d3f4943c472c10dd630ec3e0a1a892181562
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+BR
+Steen
 
