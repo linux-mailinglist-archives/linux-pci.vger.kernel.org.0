@@ -1,163 +1,113 @@
-Return-Path: <linux-pci+bounces-11474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A0BF94B6BE
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 08:31:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E08F394B8AE
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 10:13:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6613284104
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 06:31:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 64758B2721E
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Aug 2024 08:13:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 654B2187FE5;
-	Thu,  8 Aug 2024 06:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FB251891BB;
+	Thu,  8 Aug 2024 08:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFRtuBlf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+OsZ9bY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5E0181328
-	for <linux-pci@vger.kernel.org>; Thu,  8 Aug 2024 06:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A65F18950E
+	for <linux-pci@vger.kernel.org>; Thu,  8 Aug 2024 08:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723098671; cv=none; b=an7RTRC0WfgbZQPr1Daf7WsYldXDeLH+4gkyKxZ9jrI2Xpo4CSp7YAO1QWBXad0UzLCWBVOyyy8xaIBWjR/+yr6gaX0ylE4+Qpf7znPRSwDOphFnUCpWo6Hx2Ae5ObfFPs8yZWpcsIY6Ty7BSuuWmsyYzHOY722l12293W68xns=
+	t=1723104756; cv=none; b=TP+1H6ZMJUHv3ecli253ODcAxAp3ASkapack88zdOYWVtiDQARmbeEdwsVoHdziPz9bM4og7rROEU7IQb3S8LePUxMjpVRem8QrqpRsqOKtjrWrtchuUnDOVfpU6ips0DtE/RMFTxI9PtUf/3m+W8MwzzLeqNSxuYJqL5lh9N88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723098671; c=relaxed/simple;
-	bh=8tcV6h51qTImYpVkN/XYbqQUsKUdeQdzBSWpJGgvF2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hrcszrorekO+w61LJ/pmcRJBh9xo/jRR0WvfxL82iYFn98CvarJyqktf1TM5D98DlbLlrD58s+zKTKV2QlIQuD6beEoofq0xNOE1qfDaDZg2ba80mdi1mkfwGIb57d2YIXJPWHkTyh0Hp8w7Or5Gi1UvClvs/29Yx+DQQX+13Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EFRtuBlf; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc65329979so6870525ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 07 Aug 2024 23:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723098668; x=1723703468; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uL02WkDHX6MB6U3tlx7TFw4sDSoGDOr7FVNC/xGND0g=;
-        b=EFRtuBlfxR6nc4Hg3OD7yMr7IwCyft5fiUEENZvPoCJeGsEJHr7SbT6taKPblynriB
-         ldBAmtanuIfDs3sKyDeYZmFK5U+DLQ/yjnfYCYfmp6XYMaqP4oYa6SgA4RsrMCoOA1oO
-         uvnQZiMO8ltU5j2XoEhlH0LIe+0jQCHkYnNs3uaTh7Cb2JVPU02SwUOy1lAeASTdRg9X
-         kUGu6RfpHMGAZFrDg9W9GCnxfz0p5HfJCGcmF2Z6GQ6W3SYuT8Nvlo7grFhrqQDpia9L
-         nApdLqIuKrCR3NLax1S0MOkJbuGNngZb2g4k3IuVuqOlF5O1kBEllh6eeZgnfwTAWNgg
-         kAIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723098668; x=1723703468;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uL02WkDHX6MB6U3tlx7TFw4sDSoGDOr7FVNC/xGND0g=;
-        b=U0xbvdeDPi76gpFxH9yFDV1esLKbtqWVNqIuOnHl5rnZUkqcQfzR4qYxFk3ozBY4HL
-         OxVcVWKYUYqKvibY3OUcp7FF7BYV0/CDG4Ub1V7tGIe5VkCGN559JIWuXBbzlBEJ5ES6
-         un8qkx/t8dDRvO0i/QXhZSG0Vw/dkn1O6XFyvnbP2trBWM/Dou3mCFq5oyAjdUW5DlFh
-         dDdA9iiKHbSASj/ne2pBOhxRTYowtIb+gzANClI8Xp9WCqFnGUCoS8MuOnLgM7TGVSek
-         4kpYdvtxGxgqJ34iqfyNeh4mPBey2wpQqmIRc0XMYPql11JBdyzRcaJlbFd4rtcgnTVy
-         0+Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXc/GMCRSCIoRnF7g6oAFvBcBsAz06z8sOi9neTw3qd5dxT8zQ9qVD9g7vpquQMrM4Vysxs+11x8oszAUoesPwXAYKeFFm4fYpy
-X-Gm-Message-State: AOJu0YxGkYfOX7F6DIyQp2N5oF0ch4Z3KbS/p5op5jgpO7YpBW0zg9AM
-	yq5nFckeONqtpeL9q0HIuGQaHnZ1SlO0NnVzi+8IHb5X7ONwmrz30DrnCsmPTrwoJZ5qDNyN244
-	=
-X-Google-Smtp-Source: AGHT+IGQt0i5NhwN7Ci91sWmaz9DV0yumS/TmjkZMx5oG6iE3KgHew5o9t+jkvkw0fUPz38IFnljNw==
-X-Received: by 2002:a17:903:120b:b0:1fc:3daa:52 with SMTP id d9443c01a7336-20095224ad2mr14708325ad.11.1723098668125;
-        Wed, 07 Aug 2024 23:31:08 -0700 (PDT)
-Received: from localhost.localdomain ([120.60.136.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff5929ad84sm116520415ad.270.2024.08.07.23.31.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 23:31:07 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: lpieralisi@kernel.org,
-	kw@linux.com
-Cc: robh@kernel.org,
-	bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] PCI: qcom-ep: Disable MHI RAM data parity error interrupt for SA8775P SoC
-Date: Thu,  8 Aug 2024 12:00:57 +0530
-Message-Id: <20240808063057.7394-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1723104756; c=relaxed/simple;
+	bh=jgHwr9Okfk2sRqCjWHFXlZf9bF+lKonWrMQM1FrvR+8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JrngPGIA6XH1jH+yZSbbAe9eVS5StyOWEVbKlB7+BRb3qOp30r8mEnzS0ltON7/kHR3zJK5GXR8Dr6Xe5vhhjwCRzqsbqWQMWYuJGmqhp4qVSOCzk4QygPNSvUm3JPEXn4IeZTJN3/8uJxQTsHqQPAG9sruoBsVRojoFkpzSAco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+OsZ9bY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9DEC32782;
+	Thu,  8 Aug 2024 08:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723104755;
+	bh=jgHwr9Okfk2sRqCjWHFXlZf9bF+lKonWrMQM1FrvR+8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=s+OsZ9bYS+ihavXQiZLf9Dc+jQe+TFXhg36/Z/BdFzPerYG9dsNFHpRVAUwNK3c8O
+	 Up91Xv3MoIAU/RsSrv/5HIEc+BFYn6hHDfgZPC/V0iiMRFWOWF4DddfGhprZtd0K3q
+	 ZyUeZj61C9NgEwjCDSf9u1GUu6VjxJJwr3CVSSXtPIzsv+4s/CWJnJTrBTEn2wkhHP
+	 0mt4lg38vrfBpw4RabhJ/Xoe6Ko/IIlpc7wF8SXALAkzBnZAitzbvtsDdcshy8+A2K
+	 UJCDVEpVu6AUcryzzd6Ze6BlYFCiDo5jS4GtJG40kkjP+bMS2Y1DB8kZfxNY4E+mfm
+	 ZbPS3ExzlQ0Qw==
+From: Mark Brown <broonie@kernel.org>
+To: alsa-devel@alsa-project.org, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: tiwai@suse.de, Bjorn Helgaas <bhelgaas@google.com>, 
+ linux-pci@vger.kernel.org
+In-Reply-To: <20240612065858.53041-1-pierre-louis.bossart@linux.intel.com>
+References: <20240612065858.53041-1-pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add PantherLake support
+Message-Id: <172310475315.457425.16058679808608700383.b4-ty@kernel.org>
+Date: Thu, 08 Aug 2024 09:12:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-37811
 
-SA8775P SoC has support for the hardware parity check feature on the MHI
-RAM (entity that holds MHI registers etc...). But due to a hardware bug in
-the parity check logic, the data parity error interrupt is getting
-generated all the time when using MHI. So the hardware team has suggested
-disabling the parity check error to workaround the hardware bug.
+On Wed, 12 Jun 2024 08:58:53 +0200, Pierre-Louis Bossart wrote:
+> Add initial support for the PantherLake platform, and initial ACPI
+> configurations.
+> 
+> This patchset depends on the first patch of "[PATCH 0/3] ALSA/PCI: add
+> PantherLake audio support"
+> 
+> Bard Liao (2):
+>   ASoC: Intel: soc-acpi-intel-ptl-match: add rt711-sdca table
+>   ASoC: Intel: soc-acpi-intel-ptl-match: Add rt722 support
+> 
+> [...]
 
-So let's mask the parity error interrupt in PARF_INT_ALL_5_MASK register.
+Applied to
 
-Fixes: 58d0d3e032b3 ("PCI: qcom-ep: Add support for SA8775P SOC")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 236229f66c80..a9b263f749b6 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -58,6 +58,7 @@
- #define PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L2	0xc88
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_CFG			0x2c00
-+#define PARF_INT_ALL_5_MASK			0x2dcc
- 
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
- #define PARF_INT_ALL_LINK_DOWN			BIT(1)
-@@ -127,6 +128,9 @@
- /* PARF_CFG_BITS register fields */
- #define PARF_CFG_BITS_REQ_EXIT_L1SS_MSI_LTR_EN	BIT(1)
- 
-+/* PARF_INT_ALL_5_MASK fields */
-+#define PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR	BIT(0)
-+
- /* ELBI registers */
- #define ELBI_SYS_STTS				0x08
- #define ELBI_CS2_ENABLE				0xa4
-@@ -158,10 +162,12 @@ enum qcom_pcie_ep_link_status {
-  * struct qcom_pcie_ep_cfg - Per SoC config struct
-  * @hdma_support: HDMA support on this SoC
-  * @override_no_snoop: Override NO_SNOOP attribute in TLP to enable cache snooping
-+ * @disable_mhi_ram_parity_check: Disable MHI RAM data parity error check
-  */
- struct qcom_pcie_ep_cfg {
- 	bool hdma_support;
- 	bool override_no_snoop;
-+	bool disable_mhi_ram_parity_check;
- };
- 
- /**
-@@ -480,6 +486,12 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 	      PARF_INT_ALL_LINK_UP | PARF_INT_ALL_EDMA;
- 	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_MASK);
- 
-+	if (pcie_ep->cfg && pcie_ep->cfg->disable_mhi_ram_parity_check) {
-+		val = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_5_MASK);
-+		val &= ~PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR;
-+		writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_5_MASK);
-+	}
-+
- 	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
- 	if (ret) {
- 		dev_err(dev, "Failed to complete initialization: %d\n", ret);
-@@ -901,6 +913,7 @@ static void qcom_pcie_ep_remove(struct platform_device *pdev)
- static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
- 	.hdma_support = true,
- 	.override_no_snoop = true,
-+	.disable_mhi_ram_parity_check = true,
- };
- 
- static const struct of_device_id qcom_pcie_ep_match[] = {
--- 
-2.25.1
+Thanks!
+
+[1/5] ASoC: SOF: Intel: add PTL specific power control register
+      commit: 42b4763ab301c5604343aa49774426d5005711a3
+[2/5] ASoC: SOF: Intel: add initial support for PTL
+      commit: 3f8c8027775901c13d1289b4c54e024d3d5d982a
+[3/5] ASoC: Intel: soc-acpi: add PTL match tables
+      commit: 6a965fbaac461564ae74dbfe6d9c9e9de65ea67a
+[4/5] ASoC: Intel: soc-acpi-intel-ptl-match: add rt711-sdca table
+      commit: 77a6869afbbfad0db297e9e4b9233aac209d5385
+[5/5] ASoC: Intel: soc-acpi-intel-ptl-match: Add rt722 support
+      commit: 2786d3f4943c472c10dd630ec3e0a1a892181562
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
 
