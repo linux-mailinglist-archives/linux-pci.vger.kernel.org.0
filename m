@@ -1,472 +1,166 @@
-Return-Path: <linux-pci+bounces-11550-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11551-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D22794D32B
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 17:15:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D940894D408
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 17:56:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A863283CE2
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 15:15:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CC761F21E66
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 15:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69EF7198A11;
-	Fri,  9 Aug 2024 15:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E2F8198A2F;
+	Fri,  9 Aug 2024 15:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EG2Ajj4k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgcvN8n5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F411991BB;
-	Fri,  9 Aug 2024 15:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754E7168B8;
+	Fri,  9 Aug 2024 15:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723216448; cv=none; b=S4jP1vKeE29fPq8Gb6ffPdDFpE/1gxpLlQoEXjHeY82oOSr6vjlnesubGfsi0lHtS/TW68K2Be76A284VXcAUR5kAlJK/06YUSt1jp+yS+Slod7Sey9HshHPdZD5iv1FwevjXf1fyTlHf4utT/xOlZfuSH+amKxrPZxMlOoZWe0=
+	t=1723218963; cv=none; b=qT0uX0b4ZyCpLJIMPNezadvcy0nI7baGIx9AdT0u9nJWT9AlLSBdZ07Epy/BS2SlfUILxEtzceHwuguYV7rmTEXGPzZYsj8HgvJuE07Gor0OOG/AwWtEZKXmC/bMlmzdKQAqb0ykq1F4ous7dyfMT29pa4/chMcmVutxObN1Jiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723216448; c=relaxed/simple;
-	bh=obBXREvOsgwRvF/z3uY/uYRbwzmaDRLYab42op22cI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uc6+8Zs2zk63Fr1l+htIrfDwbu7nKHn4C+u3/0ZMFcLZgLCpIU+q/tJz4YNEOfUVhQLERVwCW3zkfBvJ3X0p+Vbai6zDFv8bUNrPd3/U81ectWrXNRbJ4zFtZ5olnvnzjKDP8ljTGENWdAK9y/EZLALSv5VzoMeYH1lBQ9CIsqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EG2Ajj4k; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1723218963; c=relaxed/simple;
+	bh=OnZ/XKvESL+KOqBHUml6q9GBQ4whpdRFBOLSr7/OVvY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NlwRdSCvLJr47akMX515cFA4R8wceAd7zE/k+7J8Nb2UEdUciq/KchiaBR//8swlHhoqa3JwuMYeWg8scbgrKrkuUAuAW/pBcBA0DN2c8HC1V1fCVnhgQwLiHF0QOl8TK84Eugu1Qh72njcPAcOttYnyxC/xHKmZ1YM2zSJtCnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WgcvN8n5; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723216447; x=1754752447;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=obBXREvOsgwRvF/z3uY/uYRbwzmaDRLYab42op22cI0=;
-  b=EG2Ajj4k+xRcfDF401DC8b460pZM5FzrK/k+Oh49uC6ST4IZxGYHVeb4
-   yBzHuUuHLcGB7jlHl+AotvV1VKeX+Hhs8porJMep7RpdHcfP65hKPTmBw
-   9uke+RSTZSDbvw65VIPMhoNJ6/ri40U4JS3qLxopZpsg6gh5wCc0Pbnu6
-   /dyYQo/cD7OL2ug0oTR9XM5jCcV9XvgGT0lY1WhQGnp6K+Ly70Hu+cteU
-   YA0U1xsHoNf1mWitHJibVPvHeU+Q28j8kpd/72c8TUatzERngF1B/rFAV
-   vjx+veBK5iAAascMNTB1Cg8XqUQdHgyqMvlRwqFZW9u+G/2tU95/dCo5l
+  t=1723218962; x=1754754962;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OnZ/XKvESL+KOqBHUml6q9GBQ4whpdRFBOLSr7/OVvY=;
+  b=WgcvN8n5niV8vkwTvdmxy5TGzFULXv0dH/OWueSXbu633YHC7pmBcxQq
+   tcG/YD+qE7X1+zlWH/qbWfdEHfTXMKsrTxcOK4yCuLv03vay78f0O0z9r
+   Bn1ch925bTvx56ULYmtcJ2QNY/ZR9L192KG7kXiSlLpT46wQAvGD8+F5B
+   yx4al8+wE6sy2o2jKaRSCsIokV4qReTQTM/sHqlcoubnJ7SY9oWoxwLWr
+   wEpXGftAFltlObZbZ6mbPV27YyAV95kC/KGiOQVIcNdUfypg8Z1LEIKiR
+   Cuf2wMLzcI9YMSdhy1D3mLiXJKRgiiCK/pkMCItbDuD9yUrUzWOsm1Ees
    w==;
-X-CSE-ConnectionGUID: 7uJ3Jrl2TZ2vC4Rq0GLM6g==
-X-CSE-MsgGUID: OezGywoKSKOEm3wlLb60lw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="21368895"
+X-CSE-ConnectionGUID: vnAbsRHZTQeHW9izcxw4EA==
+X-CSE-MsgGUID: ubDrxqUXTDeHqj7vsOB3RQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="21056342"
 X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="21368895"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:14:07 -0700
-X-CSE-ConnectionGUID: sjxMwh9DS66eDItf/lbZBw==
-X-CSE-MsgGUID: oVFMj1gzSp61oGQgw8VkYA==
+   d="scan'208";a="21056342"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:56:01 -0700
+X-CSE-ConnectionGUID: ztPBdIXkTmKV62b/0Z5qhg==
+X-CSE-MsgGUID: qpvnwexlT4qMwbZTiOK9YA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="57485974"
-Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
-  by orviesa010.jf.intel.com with ESMTP; 09 Aug 2024 08:14:05 -0700
-From: matthew.gerlach@linux.intel.com
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	dinguyen@kernel.org,
-	joyce.ooi@intel.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>,
-	D@web.codeaurora.org, M@web.codeaurora.org,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v2 7/7] PCI: altera: Add Agilex support
-Date: Fri,  9 Aug 2024 10:12:13 -0500
-Message-Id: <20240809151213.94533-8-matthew.gerlach@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240809151213.94533-1-matthew.gerlach@linux.intel.com>
-References: <20240809151213.94533-1-matthew.gerlach@linux.intel.com>
+   d="scan'208";a="62243814"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.119])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:55:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 9 Aug 2024 18:55:56 +0300 (EEST)
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
+ quirk
+In-Reply-To: <alpine.DEB.2.21.2408091327390.61955@angie.orcam.me.uk>
+Message-ID: <42afa3ee-4429-90e4-9e98-18a0d30c0a3c@linux.intel.com>
+References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk> <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com> <d5f14b8f-f935-5d5e-e098-f2e78a2766c6@linux.intel.com>
+ <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk> <d9f6efe3-3e99-0e4b-0d1c-5dc3442c2419@linux.intel.com> <a0b070b7-14ce-7cc5-4e6c-6e15f3fcab75@linux.intel.com> <alpine.DEB.2.21.2408091327390.61955@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-969202318-1723218956=:1401"
 
-From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Add PCIe root port controller support Agilex family of chips.
+--8323328-969202318-1723218956=:1401
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
----
-v2:
- - Match historical style of subject.
- - Remove unrelated changes.
- - Fix indentation.
----
- drivers/pci/controller/pcie-altera.c | 246 ++++++++++++++++++++++++++-
- 1 file changed, 237 insertions(+), 9 deletions(-)
+On Fri, 9 Aug 2024, Maciej W. Rozycki wrote:
 
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index ef73baefaeb9..05ba66825325 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -78,9 +78,19 @@
- #define S10_TLP_FMTTYPE_CFGWR0		0x45
- #define S10_TLP_FMTTYPE_CFGWR1		0x44
- 
-+#define AGLX_RP_CFG_ADDR(pcie, reg)	(((pcie)->hip_base) + (reg))
-+#define AGLX_RP_SECONDARY(pcie)		\
-+	readb(AGLX_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
-+
-+#define AGLX_BDF_REG			0x00002004
-+#define AGLX_ROOT_PORT_IRQ_STATUS	0x14c
-+#define AGLX_ROOT_PORT_IRQ_ENABLE	0x150
-+#define CFG_AER				BIT(4)
-+
- enum altera_pcie_version {
- 	ALTERA_PCIE_V1 = 0,
- 	ALTERA_PCIE_V2,
-+	ALTERA_PCIE_V3,
- };
- 
- struct altera_pcie {
-@@ -103,6 +113,11 @@ struct altera_pcie_ops {
- 			   int size, u32 *value);
- 	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 busno,
- 			    int where, int size, u32 value);
-+	int (*ep_read_cfg)(struct altera_pcie *pcie, u8 busno,
-+			   unsigned int devfn, int where, int size, u32 *value);
-+	int (*ep_write_cfg)(struct altera_pcie *pcie, u8 busno,
-+			    unsigned int devfn, int where, int size, u32 value);
-+	void (*rp_isr)(struct irq_desc *desc);
- };
- 
- struct altera_pcie_data {
-@@ -113,6 +128,9 @@ struct altera_pcie_data {
- 	u32 cfgrd1;
- 	u32 cfgwr0;
- 	u32 cfgwr1;
-+	u32 port_conf_offset;
-+	u32 port_irq_status_offset;
-+	u32 port_irq_enable_offset;
- };
- 
- struct tlp_rp_regpair_t {
-@@ -132,6 +150,28 @@ static inline u32 cra_readl(struct altera_pcie *pcie, const u32 reg)
- 	return readl_relaxed(pcie->cra_base + reg);
- }
- 
-+static inline void cra_writew(struct altera_pcie *pcie, const u32 value,
-+			      const u32 reg)
-+{
-+	writew_relaxed(value, pcie->cra_base + reg);
-+}
-+
-+static inline u32 cra_readw(struct altera_pcie *pcie, const u32 reg)
-+{
-+	return readw_relaxed(pcie->cra_base + reg);
-+}
-+
-+static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
-+			      const u32 reg)
-+{
-+	writeb_relaxed(value, pcie->cra_base + reg);
-+}
-+
-+static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
-+{
-+	return readb_relaxed(pcie->cra_base + reg);
-+}
-+
- static bool altera_pcie_link_up(struct altera_pcie *pcie)
- {
- 	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
-@@ -146,6 +186,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
- 	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
- }
- 
-+static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
-+{
-+	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
-+				   pcie->pcie_data->cap_offset +
-+				   PCI_EXP_LNKSTA);
-+
-+	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
-+}
-+
- /*
-  * Altera PCIe port uses BAR0 of RC's configuration space as the translation
-  * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
-@@ -426,6 +475,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
- 	return PCIBIOS_SUCCESSFUL;
- }
- 
-+static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
-+			    int size, u32 *value)
-+{
-+	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
-+
-+	switch (size) {
-+	case 1:
-+		*value = readb(addr);
-+		break;
-+	case 2:
-+		*value = readw(addr);
-+		break;
-+	default:
-+		*value = readl(addr);
-+		break;
-+	}
-+
-+	/* interrupt pin not programmed in hardware, set to INTA */
-+	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
-+		*value = 0x01;
-+	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
-+		*value |= 0x0100;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
-+			     int where, int size, u32 value)
-+{
-+	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
-+
-+	switch (size) {
-+	case 1:
-+		writeb(value, addr);
-+		break;
-+	case 2:
-+		writew(value, addr);
-+		break;
-+	default:
-+		writel(value, addr);
-+		break;
-+	}
-+
-+	/*
-+	 * Monitor changes to PCI_PRIMARY_BUS register on root port
-+	 * and update local copy of root bus number accordingly.
-+	 */
-+	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
-+		pcie->root_bus_nr = value & 0xff;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
-+			     unsigned int devfn, int where, int size, u32 value)
-+{
-+	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
-+	if (busno > AGLX_RP_SECONDARY(pcie))
-+		where |= (1 << 12); /* type 1 */
-+
-+	switch (size) {
-+	case 1:
-+		cra_writeb(pcie, value, where);
-+		break;
-+	case 2:
-+		cra_writew(pcie, value, where);
-+		break;
-+	default:
-+		cra_writel(pcie, value, where);
-+			break;
-+	}
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
-+			    unsigned int devfn, int where, int size, u32 *value)
-+{
-+	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
-+	if (busno > AGLX_RP_SECONDARY(pcie))
-+		where |= (1 << 12); /* type 1 */
-+
-+	switch (size) {
-+	case 1:
-+		*value = cra_readb(pcie, where);
-+		break;
-+	case 2:
-+		*value = cra_readw(pcie, where);
-+		break;
-+	default:
-+		*value = cra_readl(pcie, where);
-+		break;
-+	}
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
- static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
- 				 unsigned int devfn, int where, int size,
- 				 u32 *value)
-@@ -438,6 +584,10 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
- 		return pcie->pcie_data->ops->rp_read_cfg(pcie, where,
- 							 size, value);
- 
-+	if (pcie->pcie_data->ops->ep_read_cfg)
-+		return pcie->pcie_data->ops->ep_read_cfg(pcie, busno, devfn,
-+							where, size, value);
-+
- 	switch (size) {
- 	case 1:
- 		byte_en = 1 << (where & 3);
-@@ -482,6 +632,10 @@ static int _altera_pcie_cfg_write(struct altera_pcie *pcie, u8 busno,
- 		return pcie->pcie_data->ops->rp_write_cfg(pcie, busno,
- 						     where, size, value);
- 
-+	if (pcie->pcie_data->ops->ep_write_cfg)
-+		return pcie->pcie_data->ops->ep_write_cfg(pcie, busno, devfn,
-+						     where, size, value);
-+
- 	switch (size) {
- 	case 1:
- 		data32 = (value & 0xff) << shift;
-@@ -660,7 +814,30 @@ static void altera_pcie_isr(struct irq_desc *desc)
- 				dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n", bit);
- 		}
- 	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void aglx_isr(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct altera_pcie *pcie;
-+	struct device *dev;
-+	u32 status;
-+	int ret;
-+
-+	chained_irq_enter(chip, desc);
-+	pcie = irq_desc_get_handler_data(desc);
-+	dev = &pcie->pdev->dev;
- 
-+	status = readl(pcie->hip_base + pcie->pcie_data->port_conf_offset +
-+		       pcie->pcie_data->port_irq_status_offset);
-+	if (status & CFG_AER) {
-+		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
-+		if (ret)
-+			dev_err_ratelimited(dev, "unexpected IRQ\n");
-+	}
-+	writel(CFG_AER, (pcie->hip_base + pcie->pcie_data->port_conf_offset +
-+			 pcie->pcie_data->port_irq_status_offset));
- 	chained_irq_exit(chip, desc);
- }
- 
-@@ -695,9 +872,9 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
- 	if (IS_ERR(pcie->cra_base))
- 		return PTR_ERR(pcie->cra_base);
- 
--	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
--		pcie->hip_base =
--			devm_platform_ioremap_resource_byname(pdev, "Hip");
-+	if (pcie->pcie_data->version == ALTERA_PCIE_V2 ||
-+	    pcie->pcie_data->version == ALTERA_PCIE_V3) {
-+		pcie->hip_base = devm_platform_ioremap_resource_byname(pdev, "Hip");
- 		if (IS_ERR(pcie->hip_base))
- 			return PTR_ERR(pcie->hip_base);
- 	}
-@@ -707,7 +884,7 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
- 	if (pcie->irq < 0)
- 		return pcie->irq;
- 
--	irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
-+	irq_set_chained_handler_and_data(pcie->irq, pcie->pcie_data->ops->rp_isr, pcie);
- 	return 0;
- }
- 
-@@ -720,6 +897,7 @@ static const struct altera_pcie_ops altera_pcie_ops_1_0 = {
- 	.tlp_read_pkt = tlp_read_packet,
- 	.tlp_write_pkt = tlp_write_packet,
- 	.get_link_status = altera_pcie_link_up,
-+	.rp_isr = altera_pcie_isr,
- };
- 
- static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
-@@ -728,6 +906,16 @@ static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
- 	.get_link_status = s10_altera_pcie_link_up,
- 	.rp_read_cfg = s10_rp_read_cfg,
- 	.rp_write_cfg = s10_rp_write_cfg,
-+	.rp_isr = altera_pcie_isr,
-+};
-+
-+static const struct altera_pcie_ops altera_pcie_ops_3_0 = {
-+	.rp_read_cfg = aglx_rp_read_cfg,
-+	.rp_write_cfg = aglx_rp_write_cfg,
-+	.get_link_status = aglx_altera_pcie_link_up,
-+	.ep_read_cfg = aglx_ep_read_cfg,
-+	.ep_write_cfg = aglx_ep_write_cfg,
-+	.rp_isr = aglx_isr,
- };
- 
- static const struct altera_pcie_data altera_pcie_1_0_data = {
-@@ -750,11 +938,44 @@ static const struct altera_pcie_data altera_pcie_2_0_data = {
- 	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
- };
- 
-+static const struct altera_pcie_data altera_pcie_3_0_f_tile_data = {
-+	.ops = &altera_pcie_ops_3_0,
-+	.version = ALTERA_PCIE_V3,
-+	.cap_offset = 0x70,
-+	.port_conf_offset = 0x14000,
-+	.port_irq_status_offset = AGLX_ROOT_PORT_IRQ_STATUS,
-+	.port_irq_enable_offset = AGLX_ROOT_PORT_IRQ_ENABLE,
-+};
-+
-+static const struct altera_pcie_data altera_pcie_3_0_p_tile_data = {
-+	.ops = &altera_pcie_ops_3_0,
-+	.version = ALTERA_PCIE_V3,
-+	.cap_offset = 0x70,
-+	.port_conf_offset = 0x104000,
-+	.port_irq_status_offset = AGLX_ROOT_PORT_IRQ_STATUS,
-+	.port_irq_enable_offset = AGLX_ROOT_PORT_IRQ_ENABLE,
-+};
-+
-+static const struct altera_pcie_data altera_pcie_3_0_r_tile_data = {
-+	.ops = &altera_pcie_ops_3_0,
-+	.version = ALTERA_PCIE_V3,
-+	.cap_offset = 0x70,
-+	.port_conf_offset = 0x1300,
-+	.port_irq_status_offset = 0x0,
-+	.port_irq_enable_offset = 0x4,
-+};
-+
- static const struct of_device_id altera_pcie_of_match[] = {
- 	{.compatible = "altr,pcie-root-port-1.0",
- 	 .data = &altera_pcie_1_0_data },
- 	{.compatible = "altr,pcie-root-port-2.0",
- 	 .data = &altera_pcie_2_0_data },
-+	{.compatible = "altr,pcie-root-port-3.0-f-tile",
-+	 .data = &altera_pcie_3_0_f_tile_data },
-+	{.compatible = "altr,pcie-root-port-3.0-p-tile",
-+	 .data = &altera_pcie_3_0_p_tile_data },
-+	{.compatible = "altr,pcie-root-port-3.0-r-tile",
-+	 .data = &altera_pcie_3_0_r_tile_data },
- 	{},
- };
- 
-@@ -792,11 +1013,18 @@ static int altera_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	/* clear all interrupts */
--	cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
--	/* enable all interrupts */
--	cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
--	altera_pcie_host_init(pcie);
-+	if (pcie->pcie_data->version == ALTERA_PCIE_V1 ||
-+	    pcie->pcie_data->version == ALTERA_PCIE_V2) {
-+		/* clear all interrupts */
-+		cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
-+		/* enable all interrupts */
-+		cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
-+		altera_pcie_host_init(pcie);
-+	} else if (pcie->pcie_data->version == ALTERA_PCIE_V3) {
-+		writel(CFG_AER,
-+		       pcie->hip_base + pcie->pcie_data->port_conf_offset +
-+		       pcie->pcie_data->port_irq_enable_offset);
-+	}
- 
- 	bridge->sysdata = pcie;
- 	bridge->busnr = pcie->root_bus_nr;
--- 
-2.34.1
+> On Wed, 7 Feb 2024, Ilpo J=C3=A4rvinen wrote:
+>=20
+> > > > > Because if it is constantly picking another speed, it would mean =
+you get=20
+> > > > > LBMS set over and over again, no? If that happens 34-35 times per=
+ second,=20
+> > > > > it should be set already again when we get into that quirk becaus=
+e there=20
+> > > > > was some wait before it gets called.
+> > > >=20
+> > > >  I'll see if I can experiment with the hardware over the next coupl=
+e of=20
+> > > > days and come back with my findings.
+> > >=20
+> > > Okay thanks.
+> >=20
+> > One point I'd be very interested to know if the link actually comes up=
+=20
+> > successfully (even if briefly) because this has large implications whet=
+her=20
+> > the quirk can actually be invoked from the bandwidth controller code.
+>=20
+>  That was more than a couple of days, sorry about it.  I have now been=20
+> able to verify that LBMS keeps getting reasserted over and over again as=
+=20
+> the device goes through the infinite link training dance.  I haven't ever=
+=20
+> observed the link to become active in the course.  Here's a short log of=
+=20
+> commands repeatedly entered at the command prompt:
+>=20
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5011
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5812
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5811
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5812
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5011
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5811
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5811
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5812
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5812
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5811
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5811
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5812
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5812
+> # setpci -s 02:03.0 CAP_EXP+0x12.W
+> 5811
+>=20
+> As you can see the Link Training bit oscillates as I previously reported=
+=20
+> and noted in the introduction to `pcie_failed_link_retrain', and also the=
+=20
+> Current Link Speed field flips between 2.5GT/s and 5GT/s.
 
+Okay, thanks for testing. I suppose that test wasn't done in a busy loop=20
+(it might not be easy capture very short link up state if there was any=20
+such period when testing it by manually launching that command a few=20
+times)?
+
+
+--=20
+ i.
+
+--8323328-969202318-1723218956=:1401--
 
