@@ -1,58 +1,65 @@
-Return-Path: <linux-pci+bounces-11563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11564-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EEDD94D7C2
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 21:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2754994D7D0
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 22:02:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 919441C2298C
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 19:57:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C4441C228CC
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 20:02:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59F961607B7;
-	Fri,  9 Aug 2024 19:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE7815A851;
+	Fri,  9 Aug 2024 20:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8M+CAKx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJ60u4Gw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8541465BA;
-	Fri,  9 Aug 2024 19:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ED126AD4;
+	Fri,  9 Aug 2024 20:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723233450; cv=none; b=qk3YLPYCN7oP6xQfnTpd+IRX/onEGqIpyjLPLks0mkA4WVAPvMQXLMT8pEIeHAfbsIsKMqkBSdYMBj6OFrhMQJJw5Dh4ahCc0Okiahny3dKQFfWB4o8PK6UIA+XC2vZy0YyAQ7LhEQ/iU5kp7sYpXzMRFa0r7Y9VuLMa/SpNV2k=
+	t=1723233727; cv=none; b=pALxQowM/FCrnB+QB4kB60YGqoeZWz1TABKIvuhJMgNMlQt77xATPpXiq8vu7EIUANcOSAVXKROsD0GXQnug8LTc/tXTpIaPhA6ytlPfvkXBsb/U5gVH6hSa25sCvX3IVwBpe1yUibJjJRrxO1dU0gzFDYl0X3AALBL7IllTCe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723233450; c=relaxed/simple;
-	bh=BZiCec9p249HTHunjRa3pP4QNirpr7DiyThJAsr0WDw=;
+	s=arc-20240116; t=1723233727; c=relaxed/simple;
+	bh=aV5MT+chLmmO/yfLIXBie+rc9GKsrR27EwydQ6MxIk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jxk5Vyu5Oaw0ztyTlMHvMZ3us9DtN6mxPhC0iDELDwMoV9jU5ryqbLauZbR2qOGXEXa0L3dvoWNaaxSyTijXJA6wiWpGbl5qTKtBM+BLTW0d0xNdzt4k8xwvJvq21SpfwY+nwTn4yVAMV8O3mfjCAbHwoErJ9Nn9qMq/dVgPKFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8M+CAKx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71D9AC32782;
-	Fri,  9 Aug 2024 19:57:29 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Q5Sk1oakdzv1gndFkNeG3KkYMyHV1bNOjlhpKqy9aE0rMfnZt8QLacZWZSE4Rdi0Lar0QTohjuPeiDz8LGxAIKqJ7XX1Wnmw3zsphOR1huybnZQM5Irl8rGCxHeLMWI2mTY1QcOl1BE1qngiZajr/qy4KYsd7vXP5da+ipoVwL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJ60u4Gw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07ED0C32782;
+	Fri,  9 Aug 2024 20:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723233449;
-	bh=BZiCec9p249HTHunjRa3pP4QNirpr7DiyThJAsr0WDw=;
+	s=k20201202; t=1723233727;
+	bh=aV5MT+chLmmO/yfLIXBie+rc9GKsrR27EwydQ6MxIk0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=h8M+CAKxvC4ze2u0D4yAA2PsF6RgKV4O8WrvxwdDDWUTdT3dvSG6mgzEC+RiWfEHg
-	 I9oO0S0BBWr5EApKE/NcsUKTRp1VeswhbXh4Q98geIczLx7kulEzJjQl+6ISK4Pgpc
-	 6D08EDSuvUUIaXpOQjYBlVUxqWP9ZKbZUvfF7cQCdiz3b21ad6goHY3QuPJFglznqq
-	 AJ2sI97XuvBKXOhjRPC5ZI7uHnt3lCBqKO7ZdyxYsp+YmN+W/hbWu2Rj/Dd/GqFYyY
-	 QtKMm/Kccrq4/XbMiMum0wQsBWFv/tBvkJwSpuxd1zUB6awXWOUVJJUHFtTKTFJ0kF
-	 3/UpFMTKWaj6Q==
-Date: Fri, 9 Aug 2024 14:57:27 -0500
+	b=eJ60u4Gw6utirW/v97vb3jPe9DIs1l3F/PLMXIg8Jl/Y5FNYRLpUNzCg7Y2XudtVN
+	 9TtCt+4c/sAe8JJltLc3pfUxZ0kcOIj1SPTXqbSAhj5DEhoB8+Q8leNsFDuCM0FvZr
+	 nW+BQQiwTSDKW0JiID4h2qeDEUEJP7VKm10CvapvyTrPVhoSCYl7r33stukFPvBbei
+	 KtKEyg5KuYJpclrvB5+mLl9APmjR9YbqTMUY0bRUJ767FuUmtnI30wMUT5iAf4Kj4N
+	 XnMSlUyf0Ju0oIWLQIYF+m1cJoD2MIi+mr6v79U3oexi2/T5csY0T/h+TUesGLbPpl
+	 385LU9scnxaIw==
+Date: Fri, 9 Aug 2024 15:02:05 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Matthew W Carlis <mattc@purestorage.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] PCI: Rework error reporting with PCIe failed link
- retraining
-Message-ID: <20240809195727.GA209985@bhelgaas>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	linux-pci@vger.kernel.org, Alistair Francis <alistair23@gmail.com>,
+	Jonathan.Cameron@huawei.com, alex.williamson@redhat.com,
+	christian.koenig@amd.com, kch@nvidia.com,
+	gregkh@linuxfoundation.org, logang@deltatee.com,
+	chaitanyak@nvidia.com, rdunlap@infradead.org,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Sebastian Ott <sebott@redhat.com>
+Subject: Re: [PATCH] s390/pci: Stop usurping pdev->dev.groups
+Message-ID: <20240809200205.GA210335@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,50 +68,151 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2408091017050.61955@angie.orcam.me.uk>
+In-Reply-To: <7b970f7923e373d1b23784721208f93418720485.1722870934.git.lukas@wunner.de>
 
-On Fri, Aug 09, 2024 at 02:24:40PM +0100, Maciej W. Rozycki wrote:
-> Hi,
+On Mon, Aug 05, 2024 at 05:24:05PM +0200, Lukas Wunner wrote:
+> Bjorn suggests using pdev->dev.groups for attribute_groups constructed
+> on PCI device enumeration:
 > 
->  This is v2 superseding a patch series originally posted here: 
-> <https://lore.kernel.org/r/alpine.DEB.2.21.2402092125070.2376@angie.orcam.me.uk/>.
+>    "Is it feasible to build an attribute group in pci_doe_init() and
+>     add it to dev->groups so device_add() will automatically add them?"
+>     https://msgid.link/20231019165829.GA1381099@bhelgaas
 > 
->  This patch series addresses issues observed by Ilpo as reported here: 
-> <https://lore.kernel.org/r/aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com/>, 
-> one with excessive delays happening when `pcie_failed_link_retrain' is 
-> called, but link retraining has not been actually attempted, and another 
-> one with an API misuse caused by a merge mistake.
+> Unfortunately on s390, pcibios_device_add() usurps pdev->dev.groups for
+> arch-specific attribute_groups, preventing its use for anything else.
 > 
->  It also addresses an issue observed by Matthew as discussed here: 
-> <https://lore.kernel.org/r/20240806000659.30859-1-mattc@purestorage.com/> 
-> and here: 
-> <https://lore.kernel.org/r/20240722193407.23255-1-mattc@purestorage.com/>. 
-> where a stale LBMS bit state causes `pcie_failed_link_retrain', in the 
-> absence of a downstream device, to leave the link stuck at the 2.5GT/s 
-> speed rate, which then negatively impacts devices plugged in in the 
-> future.
+> Introduce an ARCH_PCI_DEV_GROUPS macro which arches can define in
+> <asm/pci.h>.  The macro is visible in drivers/pci/pci-sysfs.c through
+> the inclusion of <linux/pci.h>, which in turn includes <asm/pci.h>.
 > 
->  See individual change description for further details; 1/4 and 2/4 are 
-> new changes, 3/4 supersedes: 
-> <https://patchwork.kernel.org/project/linux-pci/patch/alpine.DEB.2.21.2402100045590.2376@angie.orcam.me.uk/>, 
-> and 4/4 supersedes: 
-> <https://patchwork.kernel.org/project/linux-pci/patch/alpine.DEB.2.21.2402100048440.2376@angie.orcam.me.uk/>.
+> On s390, define the macro to the three attribute_groups previously
+> assigned to pdev->dev.groups.  Thereby pdev->dev.groups is made
+> available for use by the PCI core.
 > 
->  These changes have been verified with a SiFive HiFive Unmatched system, 
-> also using a small debug change to verify that the state of the LBMS bit 
-> is clear at the exit from `pcie_failed_link_retrain'.
+> As a side effect, arch/s390/pci/pci_sysfs.c no longer needs to be
+> compiled into the kernel if CONFIG_SYSFS=n.
 > 
->  Ilpo, since 3/4 and 4/4 have only been trivially updated and their 
-> combined effect is not changed even I chose to retain your Reviewed-by 
-> tags from v1.  Let me know if you disagree and what to do so you don't.
-> 
->  I apologise to take so long, it's been a tough period to me load-wise.
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-Applied to pci/enumeration for v6.12, thanks for all this debugging
-and work.
+Applied with Niklas' ack to pci/sysfs for v6.12, thanks!
 
-Matthew, let me know if this addresses the problems you saw, and I can
-add your tested-by if appropriate.
-
-Bjorn
+> ---
+>  arch/s390/include/asm/pci.h |  9 ++++++++-
+>  arch/s390/pci/Makefile      |  3 ++-
+>  arch/s390/pci/pci.c         |  1 -
+>  arch/s390/pci/pci_sysfs.c   | 14 ++++----------
+>  drivers/pci/pci-sysfs.c     |  5 +++++
+>  5 files changed, 19 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+> index 30820a6..9d920ce 100644
+> --- a/arch/s390/include/asm/pci.h
+> +++ b/arch/s390/include/asm/pci.h
+> @@ -191,7 +191,14 @@ static inline bool zdev_enabled(struct zpci_dev *zdev)
+>  	return (zdev->fh & (1UL << 31)) ? true : false;
+>  }
+>  
+> -extern const struct attribute_group *zpci_attr_groups[];
+> +extern const struct attribute_group zpci_attr_group;
+> +extern const struct attribute_group pfip_attr_group;
+> +extern const struct attribute_group zpci_ident_attr_group;
+> +
+> +#define ARCH_PCI_DEV_GROUPS &zpci_attr_group,		 \
+> +			    &pfip_attr_group,		 \
+> +			    &zpci_ident_attr_group,
+> +
+>  extern unsigned int s390_pci_force_floating __initdata;
+>  extern unsigned int s390_pci_no_rid;
+>  
+> diff --git a/arch/s390/pci/Makefile b/arch/s390/pci/Makefile
+> index 0547a10..2c21f03 100644
+> --- a/arch/s390/pci/Makefile
+> +++ b/arch/s390/pci/Makefile
+> @@ -3,7 +3,8 @@
+>  # Makefile for the s390 PCI subsystem.
+>  #
+>  
+> -obj-$(CONFIG_PCI)	+= pci.o pci_irq.o pci_clp.o pci_sysfs.o \
+> +obj-$(CONFIG_PCI)	+= pci.o pci_irq.o pci_clp.o \
+>  			   pci_event.o pci_debug.o pci_insn.o pci_mmio.o \
+>  			   pci_bus.o pci_kvm_hook.o
+>  obj-$(CONFIG_PCI_IOV)	+= pci_iov.o
+> +obj-$(CONFIG_SYSFS)	+= pci_sysfs.o
+> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+> index cff4838..bd9624c 100644
+> --- a/arch/s390/pci/pci.c
+> +++ b/arch/s390/pci/pci.c
+> @@ -587,7 +587,6 @@ int pcibios_device_add(struct pci_dev *pdev)
+>  	if (pdev->is_physfn)
+>  		pdev->no_vf_scan = 1;
+>  
+> -	pdev->dev.groups = zpci_attr_groups;
+>  	zpci_map_resources(pdev);
+>  
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
+> index 0f4f1e8..1f81f6f 100644
+> --- a/arch/s390/pci/pci_sysfs.c
+> +++ b/arch/s390/pci/pci_sysfs.c
+> @@ -197,7 +197,7 @@ static umode_t zpci_index_is_visible(struct kobject *kobj,
+>  	NULL,
+>  };
+>  
+> -static struct attribute_group zpci_ident_attr_group = {
+> +const struct attribute_group zpci_ident_attr_group = {
+>  	.attrs = zpci_ident_attrs,
+>  	.is_visible = zpci_index_is_visible,
+>  };
+> @@ -223,7 +223,7 @@ static umode_t zpci_index_is_visible(struct kobject *kobj,
+>  	NULL,
+>  };
+>  
+> -static struct attribute_group zpci_attr_group = {
+> +const struct attribute_group zpci_attr_group = {
+>  	.attrs = zpci_dev_attrs,
+>  	.bin_attrs = zpci_bin_attrs,
+>  };
+> @@ -235,14 +235,8 @@ static umode_t zpci_index_is_visible(struct kobject *kobj,
+>  	&dev_attr_segment3.attr,
+>  	NULL,
+>  };
+> -static struct attribute_group pfip_attr_group = {
+> +
+> +const struct attribute_group pfip_attr_group = {
+>  	.name = "pfip",
+>  	.attrs = pfip_attrs,
+>  };
+> -
+> -const struct attribute_group *zpci_attr_groups[] = {
+> -	&zpci_attr_group,
+> -	&pfip_attr_group,
+> -	&zpci_ident_attr_group,
+> -	NULL,
+> -};
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 40cfa71..5d0f4db 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -31,6 +31,10 @@
+>  #include <linux/aperture.h>
+>  #include "pci.h"
+>  
+> +#ifndef ARCH_PCI_DEV_GROUPS
+> +#define ARCH_PCI_DEV_GROUPS
+> +#endif
+> +
+>  static int sysfs_initialized;	/* = 0 */
+>  
+>  /* show configuration fields */
+> @@ -1624,6 +1628,7 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+>  	&pci_dev_acpi_attr_group,
+>  #endif
+>  	&pci_dev_resource_resize_group,
+> +	ARCH_PCI_DEV_GROUPS
+>  	NULL,
+>  };
+>  
+> -- 
+> 2.43.0
+> 
 
