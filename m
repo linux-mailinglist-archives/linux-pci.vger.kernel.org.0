@@ -1,86 +1,85 @@
-Return-Path: <linux-pci+bounces-11525-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11526-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6641D94CAD4
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 08:57:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 779EB94CAD8
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 08:58:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC69C1F22FF6
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 06:57:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 378192812CF
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 06:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60A216D32D;
-	Fri,  9 Aug 2024 06:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57E1216CD25;
+	Fri,  9 Aug 2024 06:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLcxYlAX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icugcXWv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDC417BA0;
-	Fri,  9 Aug 2024 06:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E086B16D338;
+	Fri,  9 Aug 2024 06:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723186629; cv=none; b=QfgLub+Ysk6EfLFt4mZq1YqjnV+ebsyv6qDKQdsksM3U1xylSFCSnugh83CjVOQhxC/nWaujfjTc3gjSHPrCHUwJY1PAFUAoGLq8fztVOeZ9HkE0AfqPgtOnTQy0LlniDRoiINK9rPYMuNfKJ1FY5gneRR16+tLngXiRhC6LgC4=
+	t=1723186719; cv=none; b=OGnutdtb8oyqbt3/NSzKGWM8+2JQIUabDWqK7z5JGBJ94CCip59WY0wtEIRS6RtjKQy28wx+GYPffbWuhuyZ5oB9iZV4kCN0HcjawvfpqJpk6I/D0s7zA8HSuJ26wwIn+SfWVjq0B453rV+PT3ldiqMQOjtSCXG0jPlfd9VlTSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723186629; c=relaxed/simple;
-	bh=4BYMtvrFkWft4VF3qOA2EAHmHrcZvd3X8JPCiCXIIT4=;
+	s=arc-20240116; t=1723186719; c=relaxed/simple;
+	bh=+bxn97L5U0jovluQjgn3cx2MdOyOfAmSYZM+tbGjxcg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ijqStvhSXtEmZ/Yy0l43WkpFpvLnIHiONcdmAbb/6GiKW6Hi7BrTavYbe+WWpP5BFgdEd2ZACe6M+EWXxbWnVb4a3ojTSyw1iIR3Ooggq6BlFiC+XhImQnz9A5+dV0jLZ73SzPo0dLm4E08b2NAMIYohry/3LAkHoYR8O11wm/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLcxYlAX; arc=none smtp.client-ip=209.85.128.177
+	 To:Cc:Content-Type; b=ZXMQnVH8cpJ4tiUX8F2goVnenIF1S2VdMf6INIDbzijzaIZ8qhkBjK6QtxGPkeS+ISPOgF+RLAq6EIgC7UrE889aHwx2u1ZdfpdA2Pd0vBmAZ1Rbj2vzGbSI89mDM0QpSnXDbPhAUVieQmVQRseNi5MW4KvMGIGlaIeH/uREBT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=icugcXWv; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-69483a97848so17518817b3.2;
-        Thu, 08 Aug 2024 23:57:08 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6510c0c8e29so16712327b3.0;
+        Thu, 08 Aug 2024 23:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723186627; x=1723791427; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723186717; x=1723791517; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4jmfk+N8lnkJ31s/xtnjyZBy7/TmtAb8EqeBk3hSGJk=;
-        b=PLcxYlAXfZt2wesloCumDDyIXpcB3iSvJEx4HwcKwO/tOIFldbwmP8+rLceLddCwcA
-         gpwIXegHUGflRkMitZRBiAlj0jWDyQ4Z+HtnRn6E1Rb81K1liQ51D34HafP8EVNmhNG2
-         DpWznotr0we9mfKLLe9iqKbedcjdFj5MrUil2InwS70COC7MpQcuszu2c2VgjfrhM4dm
-         Tt1s/qmASYPss2f6cY0NEj9Kj9kpzCaL9w3YcOK4b9ot+DL17b++EYeR3j2NkHwjLVoe
-         8aghriMk7oCdWdYkk9DPfNeUY0uPXpD8fX+nmX5HJpWRVUNc5NnMRAzXgSWn61vteTEB
-         VYYQ==
+        bh=+bxn97L5U0jovluQjgn3cx2MdOyOfAmSYZM+tbGjxcg=;
+        b=icugcXWv+r9/Yc7iF4ApE4N/26tbMs/QhDwOoWtv7UHT6BExKMvweZFVrXDXkxoL3P
+         2ks59NLIEF/AMBivwTj37NYZkGIKGDSUSOoS+ppeimgaGNDyrOWu+74ZbZdBBzDwXVI2
+         W3dTVWkO05yjOZOLM5r5GQDJ7BYe2oykLk/PfZM1cFQnoGfJ1oWY6sZqlN0HEZFu9xGR
+         PF5f2jcwx1LlQpXb4ohkG33v7N+RCXto5DFa9sltrIjR/58hQCQL3uwGr7MUoWiBUkAN
+         jdqbGyeZN70YWL935MleAw54QdcznvUDDgwOHAHX4+JS5YA9Hih+F7ywtpzTuMdXeZPn
+         r+hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723186627; x=1723791427;
+        d=1e100.net; s=20230601; t=1723186717; x=1723791517;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4jmfk+N8lnkJ31s/xtnjyZBy7/TmtAb8EqeBk3hSGJk=;
-        b=LNpUTwAStccYP95xQHBVH0Sywd2oAUb/q2t506slgUQ6dgesjscGumSToYvEukNF4J
-         S1Mof2GfeoVLOFzQKDd2drfOVfZ5lITeSDC9dRTOJ9AifwQNni57Cb/Nt/Jv0aVl0+VI
-         x6Hg2YAs6mJRAwJQjqixFq09k/0kfjC8Wr/3IlquoaTNo8DFSLjFluWBrCaHTWIIdb1l
-         5JTkvBbPw8trtj9fsHxWFfZafNME0yTW0HN26SIBBPwq7imPl0oMrN+29iY6041fkxtE
-         K9GYupfxWHIC9e1drlrM3nK2Y2Cjvq3mHTGOh113OfsvPYInPw35rktovhlccWWaT5Ca
-         tvnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWi/o4mZkuEiIa4Kt1fWDCZULQ1XCOCxwzCq6Lnav/KFpmdgc+5avPMK53RRFJoRfsdjDLmzUthLfg4PSyJ45nOcllsZmbGwQIQ0VgtL4SiTOmwlZiAsU1O5ntb4YKkyrMIrdsO3VIh
-X-Gm-Message-State: AOJu0Yz5u7l15eYVuoZKzH3Hw19Om/cKox2G+RicRz6DsRTDWliZg1pk
-	vz86CcGwUO5ZnghSY0u4JqW1TckB4ivvzLpkqRC3D6mtY4GnQ7blgxIveea1YK6I98V5OPk8m+6
-	9o/5xAJ0oOAgu6XRsAJHT+5T1p6s=
-X-Google-Smtp-Source: AGHT+IFG0LtAc7u/qVux14X9MtoXA0Qoi0exqz+CEOrr2KAWwbKJzOlKJZFp+lxKjI43LLTKBfXKNEg8L7pIX8bsFQY=
-X-Received: by 2002:a05:6902:983:b0:e0b:ba20:7f87 with SMTP id
- 3f1490d57ef6-e0eb99807bamr761791276.25.1723186627120; Thu, 08 Aug 2024
- 23:57:07 -0700 (PDT)
+        bh=+bxn97L5U0jovluQjgn3cx2MdOyOfAmSYZM+tbGjxcg=;
+        b=xDisQ7WGnR50eFho/hIkRdfE8CwteE7j5b70cchfKX9sXXhBtAbI9BD0wGU+C6gsYO
+         Q7e2xhXvvM8QAXgyvlOhmXSGXrz/b0WmVIoRd6zzQxho8b0e+0QNbvtwmVGi6vktEdnr
+         bEYnG+VVZHl0XEAblIFAqB6pC+Su2UeRxDdM+5Sn8ySWLI58PIs1FPxSj0Uvlp5MilQz
+         WV2JBLkuDw9xXIHikRtIoSPAJ7jtqRT3W2X5oJAnyLzt9cs9xL/Gjxc68iDRPNhN5IrD
+         RemrH+mvw+9/3jqV1OFjhjaHBS1LgsGNAE79N+8z34EmxH69J1lhP6bhTJzsIe8GaiCo
+         QyyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUdb5+bV1mFXtGt6XscnI01QZvmYv7hTfbZU79djHls9w8tc1cH+/2ani7R4q/gfiyobCQ3220suqX4WFW0/7oMW6rL09baEkVEtltU3a7verwiOLd1NyjOuXu9cOnNeQCe/6OP3TH
+X-Gm-Message-State: AOJu0Yy64//7YqlTosKTxgT9q2qnm0kqTYYYaZ5EvBpSuLzhwlOJqBzm
+	fVbNot+x1GkcntKi42wLLW18OQc2SAFzdfcbwdXPt9hgIMk2KbqHZsuoaC9g8OoG7aX7G9Z/l1Z
+	vueKfPidKl8tmv21clGVrSwowxjc=
+X-Google-Smtp-Source: AGHT+IGCdlIhf/gSlPZiFWzLSwIS6W3p+Q5jsx4eyh8as6SsULfzMey0q4qy5+vvZxORjfzvWv3Eg8Dm3aS7oSC+XsU=
+X-Received: by 2002:a05:6902:2683:b0:e0e:b200:a222 with SMTP id
+ 3f1490d57ef6-e0eb9a18415mr707067276.38.1723186716780; Thu, 08 Aug 2024
+ 23:58:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240806162756.607002-1-rick.wertenbroek@gmail.com> <20240806191541.GA73196@bhelgaas>
-In-Reply-To: <20240806191541.GA73196@bhelgaas>
+References: <20240806162756.607002-1-rick.wertenbroek@gmail.com> <7a44e4cb-9f91-47e3-badc-8c6d406d1ea0@kernel.org>
+In-Reply-To: <7a44e4cb-9f91-47e3-badc-8c6d406d1ea0@kernel.org>
 From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date: Fri, 9 Aug 2024 08:56:29 +0200
-Message-ID: <CAAEEuhp2Cm3ujGB_C3Z7XwQh1whP9BcdT+WOT3w+sa-CK9p3fA@mail.gmail.com>
+Date: Fri, 9 Aug 2024 08:58:00 +0200
+Message-ID: <CAAEEuho9oyoyGjbWB0qLPEjjC71cnp2hSuzZ=QNQMfaLDodOtA@mail.gmail.com>
 Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Move DMA check into
  read/write/copy functions
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rick.wertenbroek@heig-vd.ch, dlemoal@kernel.org, 
-	alberto.dassatti@heig-vd.ch, 
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: rick.wertenbroek@heig-vd.ch, alberto.dassatti@heig-vd.ch, 
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
 	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Niklas Cassel <cassel@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
@@ -88,43 +87,18 @@ Cc: rick.wertenbroek@heig-vd.ch, dlemoal@kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 6, 2024 at 9:15=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
+On Wed, Aug 7, 2024 at 6:08=E2=80=AFPM Damien Le Moal <dlemoal@kernel.org> =
+wrote:
 >
-> On Tue, Aug 06, 2024 at 06:27:54PM +0200, Rick Wertenbroek wrote:
-> > The test for a DMA transfer was done in pci_epf_test_cmd_handler, which
-> > if not supported would lead to the endpoint function just printing an
-> > error message and waiting for further commands. This would leave the
 >
-> I guess it's the *test* that prints the error message?  Is this the
-> "Cannot transfer data using DMA" message?
+> While at it, can we change this message to be clear, e.g. "DMA not suppor=
+ted".
+> "Cannot ..." is vague and does not state the reason why it cannot be done=
+ :)
+>
 
-That is the error message, the error message is printed by the
-endpoint function, on the endpoint device. On the host side, nothing
-happens; the test program just hangs because the driver waits
-indefinitely. With the change I proposed, the test program completes
-the test and will display "NOT OKAY" as normal when a test fails.
-
->
-> > host side PCI driver waiting for an interrupt because the call to
-> > pci_epf_test_raise_irq is skipped. The host side driver
-> > drivers/misc/pci_endpoint_test.c would hang indefinitely when sending
-> > a transfer request with DMA if the endpoint does not support it.
-> > This is because wait_for_completion() is used in the host side driver.
-> >
-> > Move the DMA check into the read/write/copy functions so that they
-> > report a transfer (IO) error so that pci_epf_test_raise_irq() is
-> > called when a transfer with DMA is requested, even if unsupported.
->
-> Add "()" after function names above, as you did for
-> pci_epf_test_raise_irq().
-
-I will add this.
-
->
-> > The host side driver will still report an error on transfer thanks
-> > to the checksum, because no data was moved, but will not hang anymore
-> > waiting for an interrupt that will never arrive.
+I can change this, it makes sense to make the message clearer, I'll
+add this change to the v2.
 
 Thanks.
 Regards,
