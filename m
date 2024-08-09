@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-11548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97BA294D325
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 17:15:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64E8F94D328
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 17:15:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 538A42833F1
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 15:15:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1683D1F23958
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 15:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 925F8199239;
-	Fri,  9 Aug 2024 15:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8F6F199389;
+	Fri,  9 Aug 2024 15:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AXC1B1xw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQ26WB8m"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4A51991B1;
-	Fri,  9 Aug 2024 15:14:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A6F19884D;
+	Fri,  9 Aug 2024 15:14:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723216445; cv=none; b=ZZMbZI5iR0ZBryGaXzR7O7FASec9jvy9NUcSRLKg394Fjib1/9DZ0A2dntZCFylx9v8qwqc3U/7Aat5tcHLCw4rgYr+7vfAT6z7V8lxYCC0HqHJOWQ12Gd60hl4BXQYcRCAl/hj2Bb3cu9AEXkwfVNJG384Yn7RFtyW1t2EFBwk=
+	t=1723216446; cv=none; b=pFTfDW0q2FkeLCo/vHD3/Au+9CBQN2x8DoIJTyLkk3sq66aX8Hd6kALr8Liun5idK2DFAdPFiBva6NXyI629cqjs4fMtYFTFpT5WiYfaN6eiwllnAmMGqpdI5OCUuIZHZvITaEQaDX0xO31XZQfRMPsc6B46DRilkzOlVSJgg0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723216445; c=relaxed/simple;
-	bh=pyCHX0eHmXM+xHEr4bbrhtQTxmEVPLXG3e5xq8xkcVw=;
+	s=arc-20240116; t=1723216446; c=relaxed/simple;
+	bh=qvUWQkwJmRUXN+G/kJ1hSJKZ0bKGrK3pdK6NDsJPqK0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FlH5mawmnDbwGrz3SP6FESxc1cPw+pttZ79x/iBKH2+YpGgWWtdFyhiNdiCaai1MSk2IMxHMQiexUBwd6l1/xy48+CigCJqSw9u/sU6UFgsXx5X8JoD81nWBfP7SL0w66OJ0OsoRlarBb7E9Q1EVkj666eFWhnNVTzNFqLn4ecE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AXC1B1xw; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=WOwouVUtD26h7RYPqp+4D5UREDMfy4Z82xflCV9EdRGNgAm4n9jtRN4qTUF2cv7nWXC/1YkD0/wRRBcnU6vLY/TyxBeumj//JY1ffZdYnuKpgNIq+/jO5wk2S0uUMF6vNM+plmyOq4W3/qhPlocSJvyuoYQEpPg0pdOtJcMeeiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQ26WB8m; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723216444; x=1754752444;
+  t=1723216445; x=1754752445;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pyCHX0eHmXM+xHEr4bbrhtQTxmEVPLXG3e5xq8xkcVw=;
-  b=AXC1B1xwxRe0OqOV/VDPiiBmWWqF4Lh5tJXQq0zTRdINnC5LA/QY8SVq
-   oe42D5fDw8VXVnepRuYqd9w01nGFjzYyFY8PkprkJ5illtJaRKlsZqRLY
-   tNseoPLDyKAQkO3xh4z2RSa62rkRXx+kqVEmWpdSOD5YpRbpw6nA4kBSt
-   sIWzIMeeNHOlg0MP4y9nebqiy8x0NGJ5hOQAojS5PEb7ySeZZM+MRFm23
-   B/9KYpa5f/MOsgNIef4vxcxufEl0ZR6yyDNln+aguLOROEvPk9K5EWzor
-   o1rEcKFnZ4BRw16nFpuToBn9YWNQ/2g+g/WOT7lZjvdhpOlHRJZuvL0uL
-   Q==;
-X-CSE-ConnectionGUID: v0NCl1k4QtKRVXKUlyfXSQ==
-X-CSE-MsgGUID: oLesjH3UTkqfXXW3OBDj5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="21368883"
+  bh=qvUWQkwJmRUXN+G/kJ1hSJKZ0bKGrK3pdK6NDsJPqK0=;
+  b=RQ26WB8m9s7fjlpUrXagm3nKYcGLRNqOIFUmc311K8k7WHQfwQzt7w+Q
+   Sa8vp3bFnqj5/Dn1GwNutTUMyjB4zmFJTMNV6DPzlj7Zqoc+OJsdrety5
+   hdoRNKHbO0UtJcee9kqxcSSiIkwqnlVfm+d1tZ7U5BrX03gtqoscs2aFx
+   voQDd+r2FNFRdVvCZ6J/AuVn3PEwASmwCVGY/UdNiC1pkt5XBi55So+bu
+   OUcXzzMXHSF30igznUAKHxh6ttubMph8lBQS983p+/beB6UM6RqVbmK6S
+   GuSD0LVgPNbapNsPtFn9wLJMdgZ4qZycITvQqcyR7nQ3qWDci4VzfJ+FV
+   A==;
+X-CSE-ConnectionGUID: Pqg5lRnrTjGwkmzVOvMINg==
+X-CSE-MsgGUID: wF9tWSd7R6eFB05DLMsprA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="21368890"
 X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="21368883"
+   d="scan'208";a="21368890"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:14:04 -0700
-X-CSE-ConnectionGUID: mz0NPJmKR4SOG9fFpEGAUQ==
-X-CSE-MsgGUID: bNCPxOqGS4+Q6yIwG74HfQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:14:05 -0700
+X-CSE-ConnectionGUID: 9xvmIFktQbm1fFWpSAE/2A==
+X-CSE-MsgGUID: OTjUcCJgQt6WNr7TmSfHMw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="57485966"
+   d="scan'208";a="57485971"
 Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
-  by orviesa010.jf.intel.com with ESMTP; 09 Aug 2024 08:14:03 -0700
+  by orviesa010.jf.intel.com with ESMTP; 09 Aug 2024 08:14:04 -0700
 From: matthew.gerlach@linux.intel.com
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -71,9 +71,9 @@ To: lpieralisi@kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v2 5/7] arm64: dts: agilex: add dtsi for PCIe Root Port
-Date: Fri,  9 Aug 2024 10:12:11 -0500
-Message-Id: <20240809151213.94533-6-matthew.gerlach@linux.intel.com>
+Subject: [PATCH v2 6/7] arm64: dts: agilex: add dts enabling PCIe Root Port
+Date: Fri,  9 Aug 2024 10:12:12 -0500
+Message-Id: <20240809151213.94533-7-matthew.gerlach@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240809151213.94533-1-matthew.gerlach@linux.intel.com>
 References: <20240809151213.94533-1-matthew.gerlach@linux.intel.com>
@@ -87,78 +87,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-Add the base device tree for support of the PCIe Root Port
-for the Agilex family of chips.
+Add a device tree enabling PCIe Root Port support on
+an Agilex F-series Development Kit which has the
+P-tile variant PCIe IP.
 
 Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 ---
-v2:
- - Rename node to fix schema check error.
----
- .../intel/socfpga_agilex_pcie_root_port.dtsi  | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+ arch/arm64/boot/dts/intel/Makefile               |  1 +
+ .../socfpga_agilex7f_socdk_pcie_root_port.dts    | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+index d39cfb723f5b..737e81c3c3f7 100644
+--- a/arch/arm64/boot/dts/intel/Makefile
++++ b/arch/arm64/boot/dts/intel/Makefile
+@@ -2,6 +2,7 @@
+ dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_n6000.dtb \
+ 				socfpga_agilex_socdk.dtb \
+ 				socfpga_agilex_socdk_nand.dtb \
++				socfpga_agilex7f_socdk_pcie_root_port.dtb \
+ 				socfpga_agilex5_socdk.dtb \
+ 				socfpga_n5x_socdk.dtb
+ dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
 new file mode 100644
-index 000000000000..50f131f5791b
+index 000000000000..76a989ba6a44
 --- /dev/null
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
-@@ -0,0 +1,55 @@
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+@@ -0,0 +1,16 @@
 +// SPDX-License-Identifier:     GPL-2.0
 +/*
 + * Copyright (C) 2024, Intel Corporation
 + */
-+&soc0 {
-+	aglx_hps_bridges: fpga-bus@80000000 {
-+		compatible = "simple-bus";
-+		reg = <0x80000000 0x20200000>,
-+		      <0xf9000000 0x00100000>;
-+		reg-names = "axi_h2f", "axi_h2f_lw";
-+		#address-cells = <0x2>;
-+		#size-cells = <0x1>;
-+		ranges = <0x00000000 0x00000000 0x80000000 0x00040000>,
-+			 <0x00000000 0x10000000 0x90100000 0x0ff00000>,
-+			 <0x00000000 0x20000000 0xa0000000 0x00200000>,
-+			 <0x00000001 0x00010000 0xf9010000 0x00008000>,
-+			 <0x00000001 0x00018000 0xf9018000 0x00000080>,
-+			 <0x00000001 0x00018080 0xf9018080 0x00000010>;
 +
-+		pcie_0_pcie_aglx: pcie@200000000 {
-+			reg = <0x00000000 0x10000000 0x10000000>,
-+			      <0x00000001 0x00010000 0x00008000>,
-+			      <0x00000000 0x20000000 0x00200000>;
-+			reg-names = "Txs", "Cra", "Hip";
-+			interrupt-parent = <&intc>;
-+			interrupts = <GIC_SPI 0x14 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <0x1>;
-+			device_type = "pci";
-+			bus-range = <0x0000000 0x000000ff>;
-+			ranges = <0x82000000 0x00000000 0x00100000 0x00000000 0x10000000 0x00000000 0x0ff00000>;
-+			msi-parent = <&pcie_0_msi_irq>;
-+			#address-cells = <0x3>;
-+			#size-cells = <0x2>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_0_pcie_aglx 0 0 0 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_0_pcie_aglx 0 0 0 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_0_pcie_aglx 0 0 0 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_0_pcie_aglx 0 0 0 0x4>;
-+			status = "disabled";
-+		};
++#include "socfpga_agilex_socdk.dts"
++#include "socfpga_agilex_pcie_root_port.dtsi"
 +
-+		pcie_0_msi_irq: msi@10008080 {
-+			compatible = "altr,msi-1.0";
-+			reg = <0x00000001 0x00018080 0x00000010>,
-+			      <0x00000001 0x00018000 0x00000080>;
-+			reg-names = "csr", "vector_slave";
-+			interrupt-parent = <&intc>;
-+			interrupts = <GIC_SPI 0x13 IRQ_TYPE_LEVEL_HIGH>;
-+			msi-controller;
-+			num-vectors = <0x20>;
-+			status = "disabled";
-+		};
-+	};
++&pcie_0_pcie_aglx {
++	status = "okay";
++	compatible = "altr,pcie-root-port-3.0-p-tile";
++};
++
++&pcie_0_msi_irq {
++	status = "okay";
 +};
 -- 
 2.34.1
