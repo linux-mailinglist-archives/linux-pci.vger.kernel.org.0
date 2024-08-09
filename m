@@ -1,166 +1,147 @@
-Return-Path: <linux-pci+bounces-11551-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11552-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D940894D408
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 17:56:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FFA194D610
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 20:10:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CC761F21E66
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 15:56:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABD911F23C70
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Aug 2024 18:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E2F8198A2F;
-	Fri,  9 Aug 2024 15:56:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C44145B3F;
+	Fri,  9 Aug 2024 18:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgcvN8n5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy8bqaIN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754E7168B8;
-	Fri,  9 Aug 2024 15:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2556413D512;
+	Fri,  9 Aug 2024 18:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723218963; cv=none; b=qT0uX0b4ZyCpLJIMPNezadvcy0nI7baGIx9AdT0u9nJWT9AlLSBdZ07Epy/BS2SlfUILxEtzceHwuguYV7rmTEXGPzZYsj8HgvJuE07Gor0OOG/AwWtEZKXmC/bMlmzdKQAqb0ykq1F4ous7dyfMT29pa4/chMcmVutxObN1Jiw=
+	t=1723227010; cv=none; b=ssjSAnjSbeNvXY0h025YOE86ZN79RTdpFtYJy5kEE3qLKae6NuD3Lniye1dFvOMu1j/RPrlqB39+CHXE8EvLxXFMTJLIKWjfB5NsNPgCEQg7KS/G3qUZc9iGGokE4yA2Z/yHvdRU1HAmQzxBafU+o4rKiW26g2BY3+WDxVhcbgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723218963; c=relaxed/simple;
-	bh=OnZ/XKvESL+KOqBHUml6q9GBQ4whpdRFBOLSr7/OVvY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NlwRdSCvLJr47akMX515cFA4R8wceAd7zE/k+7J8Nb2UEdUciq/KchiaBR//8swlHhoqa3JwuMYeWg8scbgrKrkuUAuAW/pBcBA0DN2c8HC1V1fCVnhgQwLiHF0QOl8TK84Eugu1Qh72njcPAcOttYnyxC/xHKmZ1YM2zSJtCnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WgcvN8n5; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723218962; x=1754754962;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OnZ/XKvESL+KOqBHUml6q9GBQ4whpdRFBOLSr7/OVvY=;
-  b=WgcvN8n5niV8vkwTvdmxy5TGzFULXv0dH/OWueSXbu633YHC7pmBcxQq
-   tcG/YD+qE7X1+zlWH/qbWfdEHfTXMKsrTxcOK4yCuLv03vay78f0O0z9r
-   Bn1ch925bTvx56ULYmtcJ2QNY/ZR9L192KG7kXiSlLpT46wQAvGD8+F5B
-   yx4al8+wE6sy2o2jKaRSCsIokV4qReTQTM/sHqlcoubnJ7SY9oWoxwLWr
-   wEpXGftAFltlObZbZ6mbPV27YyAV95kC/KGiOQVIcNdUfypg8Z1LEIKiR
-   Cuf2wMLzcI9YMSdhy1D3mLiXJKRgiiCK/pkMCItbDuD9yUrUzWOsm1Ees
-   w==;
-X-CSE-ConnectionGUID: vnAbsRHZTQeHW9izcxw4EA==
-X-CSE-MsgGUID: ubDrxqUXTDeHqj7vsOB3RQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="21056342"
-X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="21056342"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:56:01 -0700
-X-CSE-ConnectionGUID: ztPBdIXkTmKV62b/0Z5qhg==
-X-CSE-MsgGUID: qpvnwexlT4qMwbZTiOK9YA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="62243814"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.119])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 08:55:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 9 Aug 2024 18:55:56 +0300 (EEST)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
- quirk
-In-Reply-To: <alpine.DEB.2.21.2408091327390.61955@angie.orcam.me.uk>
-Message-ID: <42afa3ee-4429-90e4-9e98-18a0d30c0a3c@linux.intel.com>
-References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk> <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com> <d5f14b8f-f935-5d5e-e098-f2e78a2766c6@linux.intel.com>
- <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk> <d9f6efe3-3e99-0e4b-0d1c-5dc3442c2419@linux.intel.com> <a0b070b7-14ce-7cc5-4e6c-6e15f3fcab75@linux.intel.com> <alpine.DEB.2.21.2408091327390.61955@angie.orcam.me.uk>
+	s=arc-20240116; t=1723227010; c=relaxed/simple;
+	bh=ps6unyElBa8V3B369PXGF09PFDZoznk+uwxeku8zQRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvzRySTQWB529ACU8lN0VVOIBhJJbvL0gu2yND5+zRP9Q3xqz2h+Kllv4OKkiptgm9pH9lpxsQ/Q2tPHWvkVCi+1JTkRZvl2gJbk6KVsGkSS8M+knQmsGjr8UsvzqNJeRVkCZQx9TuCV5GO4aO48jNy0ppEwL2ZI4UiU3YfsvLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gy8bqaIN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4122AC32782;
+	Fri,  9 Aug 2024 18:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723227009;
+	bh=ps6unyElBa8V3B369PXGF09PFDZoznk+uwxeku8zQRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gy8bqaINlNhZfAv6ihJGwo7i1eC0/Pum9J0j8PcRxdxX7NU17seqO6TBsKSZn4uWs
+	 UCzGjpOlvDqXU/tSp3q2ildCLBO8WIHigzX0o5KDMf2eJWk6S/thINKdEfK/JttYW7
+	 VKx7e7gh/YHi25D/+CEDGXD5lvIHOM2TOrJT0A63j9Rbf5sKxuPkKyZKFUh4OPyPyy
+	 JlGdTEXuOUMd8l583sT/a8LbwiVTOGHJCiycAbzCfiD6Yczvu17Cz8Jj8nnDmWZOMg
+	 aLc7K0hGu9mqHt02kdxLmwk7kZEiq9YYLOFIVf56VnZO20q1vSNbPQele6UPpTZBfA
+	 HHhIwcbi4gzAg==
+Date: Fri, 9 Aug 2024 12:10:07 -0600
+From: Rob Herring <robh@kernel.org>
+To: Thippeswamy Havalige <thippesw@amd.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, thippeswamy.havalige@amd.com,
+	linux-arm-kernel@lists.infradead.org, michal.simek@amd.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: xilinx-xdma: Add schemas for
+ Xilinx QDMA PCIe Root Port Bridge
+Message-ID: <20240809181007.GA967711-robh@kernel.org>
+References: <20240809060955.1982335-1-thippesw@amd.com>
+ <20240809060955.1982335-2-thippesw@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-969202318-1723218956=:1401"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240809060955.1982335-2-thippesw@amd.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Aug 09, 2024 at 11:39:54AM +0530, Thippeswamy Havalige wrote:
+> Add YAML devicetree schemas for Xilinx QDMA Soft IP PCIe Root Port
+> Bridge.
+> 
+> Signed-off-by: Thippeswamy Havalige <thippesw@amd.com>
+> ---
+>  .../devicetree/bindings/pci/xlnx,xdma-host.yaml    | 36 ++++++++++++++++++++--
+>  1 file changed, 34 insertions(+), 2 deletions(-)
+> ---
+> changes in v3
+> - constrain the new entry to only the new compatible.
+> - Remove example.
+> 
+> changes in v2
+> - update dt node label with pcie.
+> ---
+> diff --git a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+> index 2f59b3a..f1efd919 100644
+> --- a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+> @@ -14,10 +14,21 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    const: xlnx,xdma-host-3.00
+> +    enum:
+> +      - xlnx,xdma-host-3.00
+> +      - xlnx,qdma-host-3.00
 
---8323328-969202318-1723218956=:1401
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Kind of odd that both IP have the exact same version number. Please 
+explain in the commit message where it comes from. If you just copied it 
+from the previous one, then nak.
 
-On Fri, 9 Aug 2024, Maciej W. Rozycki wrote:
-
-> On Wed, 7 Feb 2024, Ilpo J=C3=A4rvinen wrote:
->=20
-> > > > > Because if it is constantly picking another speed, it would mean =
-you get=20
-> > > > > LBMS set over and over again, no? If that happens 34-35 times per=
- second,=20
-> > > > > it should be set already again when we get into that quirk becaus=
-e there=20
-> > > > > was some wait before it gets called.
-> > > >=20
-> > > >  I'll see if I can experiment with the hardware over the next coupl=
-e of=20
-> > > > days and come back with my findings.
-> > >=20
-> > > Okay thanks.
-> >=20
-> > One point I'd be very interested to know if the link actually comes up=
-=20
-> > successfully (even if briefly) because this has large implications whet=
-her=20
-> > the quirk can actually be invoked from the bandwidth controller code.
->=20
->  That was more than a couple of days, sorry about it.  I have now been=20
-> able to verify that LBMS keeps getting reasserted over and over again as=
-=20
-> the device goes through the infinite link training dance.  I haven't ever=
-=20
-> observed the link to become active in the course.  Here's a short log of=
-=20
-> commands repeatedly entered at the command prompt:
->=20
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5011
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5812
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5811
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5812
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5011
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5811
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5811
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5812
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5812
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5811
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5811
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5812
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5812
-> # setpci -s 02:03.0 CAP_EXP+0x12.W
-> 5811
->=20
-> As you can see the Link Training bit oscillates as I previously reported=
-=20
-> and noted in the introduction to `pcie_failed_link_retrain', and also the=
-=20
-> Current Link Speed field flips between 2.5GT/s and 5GT/s.
-
-Okay, thanks for testing. I suppose that test wasn't done in a busy loop=20
-(it might not be easy capture very short link up state if there was any=20
-such period when testing it by manually launching that command a few=20
-times)?
-
-
---=20
- i.
-
---8323328-969202318-1723218956=:1401--
+>  
+>    reg:
+> -    maxItems: 1
+> +    items:
+> +      - description: configuration region and XDMA bridge register.
+> +      - description: QDMA bridge register.
+> +    minItems: 1
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cfg
+> +      - const: breg
+> +    minItems: 1
+>  
+>    ranges:
+>      maxItems: 2
+> @@ -76,6 +87,27 @@ required:
+>    - "#interrupt-cells"
+>    - interrupt-controller
+>  
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - xlnx,qdma-host-3.00
+> +then:
+> +  properties:
+> +    reg:
+> +      minItems: 2
+> +    reg-names:
+> +      minItems: 2
+> +  required:
+> +    - reg-names
+> +else:
+> +  properties:
+> +    reg:
+> +      maxItems: 1
+> +    reg-names:
+> +      maxItems: 1
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
+> -- 
+> 1.8.3.1
+> 
 
