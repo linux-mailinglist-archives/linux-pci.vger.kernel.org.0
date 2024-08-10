@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-11567-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11568-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B1B594DD5D
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 16:54:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 434F694DD66
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 16:58:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EF441C20E1A
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 14:54:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB2ABB216DD
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 14:58:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83F4D158548;
-	Sat, 10 Aug 2024 14:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C571607AA;
+	Sat, 10 Aug 2024 14:58:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgk4m3n7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AO2mn4sq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2701C28E;
-	Sat, 10 Aug 2024 14:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589B11C28E;
+	Sat, 10 Aug 2024 14:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723301683; cv=none; b=WhrexSlVji4PsF59CjOcNPynKv1cev6OpLLFxetWyUyDa8Ikl1d1+B3nKnZzC0EEkjNzBFMQaLvBkbjhTakAfEYEaJ5W0zF3fE6c1Nf8io2DYsZ07Zall4j/eyfEgrpWE5oh6lTIF0Y2uOT3Ip7Z45PRWweJ/IhHn+3Hdyv6GP8=
+	t=1723301890; cv=none; b=UJupg+5X9e5PlRZsw6q5rRz9Nu6oYIU/kVubfnJsotvthyov5YSuL/+w30G5zAKphJaM29pnOuUuF4xc2sPEZa/hOM5BBSOKQwacNLvTcUBUhy4sKTOYmcOs2SzyMIKOJYR54YLlI7+mpwYNJHB4lUPZFzyIxWLPa4K60RB/3Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723301683; c=relaxed/simple;
-	bh=i5faAfY8CFitdC36y8mNAPCMzF3C6Ryfh7vGJncQYK4=;
+	s=arc-20240116; t=1723301890; c=relaxed/simple;
+	bh=6wn6WZKBhkPS5cUhZTFdPMVnY1vO7KQWfsp8NGIT5xA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ru219LmA22OZIjHnv3jymffvUcXWXu7lzT9y9v/Rae1HypN5bz3y3apq/qX+pNIECjCAJkOqAubRMtEwRxbS4CfNBsO7uwMW8YF2WbROmZowVsS/Ds6hgaIAS96mzZem6JSIEaOxNfIkQ4srSHyLPoEtEQNvLzzKBzZ4yC4pkdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgk4m3n7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3575AC32781;
-	Sat, 10 Aug 2024 14:54:39 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=m48T7Kd3jZMSSaPQfzwPJFYImNJr/E1PXCKZL6wvw+YFy8uxIi/Xk3S4Ai6KYHmVSGyd6sqL1e5f4DIydkulEi2U5wmOIDtlzfBikktInIfWiGmVBc59YZtG4h18OvhujYuVo1aeaBHXWNDzE7CJctVR26vdrY2LL4giVulDJBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AO2mn4sq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A48DC32781;
+	Sat, 10 Aug 2024 14:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723301682;
-	bh=i5faAfY8CFitdC36y8mNAPCMzF3C6Ryfh7vGJncQYK4=;
+	s=k20201202; t=1723301888;
+	bh=6wn6WZKBhkPS5cUhZTFdPMVnY1vO7KQWfsp8NGIT5xA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dgk4m3n7GBtoX0QpGw6R8YCjUHpE28tUGgMT5K95BhyNQS+rLGRKUZMr3M/QbaDrA
-	 bl3x8YgVmxqkNim6h/Xdd8JQP0LU6JsOMGb4c6aCBo8USDmSO+ThomvWo222BCUehp
-	 Q7R8h6uYtjOJ1nrXG/ux5DPi5XHNWG2DhAShfyOtdY+DFNIIONOGUzPo+AqZBs0Bn/
-	 e8UYQGA39mItQ2vJBcMJtysVwpEHu5CI2ZERfee61wGbN5WNUSHT/4uOSO9jqVGNbo
-	 OfexeyhGZCwjrE0qEi+MlYImnmpwYNvM/Bl2Juc13N4Cz/m8SEyI2BsjiMFpDCvgvg
-	 BUgj42jVG8IUw==
-Message-ID: <ee1fcd3f-3409-4016-b54e-cf069a45d85f@kernel.org>
-Date: Sat, 10 Aug 2024 16:54:37 +0200
+	b=AO2mn4sq81SOsVbByRT5/wdbcZy16A6Wi9ViOr1JcoL0IVyOJVGZBs0hX/YVZNMGX
+	 eDqKqjoTdDEBVcyF534iI8Vy8oLafTEIFPD02Tdgna2O6kyuZvIkPnp24NJLKmvpsq
+	 TVAk7fz7x2ofZGjG9kRf5gsNzN+KKB4TKkfcwDEZY2pJwCmKo55BDf4SwmDvGnNE5W
+	 NR2qthubdmyhpLx+5mSojbcY0vwsYagAnRKIx+HL6HAlUpS97PRkgRnV5apPT0qEt7
+	 b1Oc1ytVrONPnr6JFrh6S8sQvdxYxkcJxxdD2bsDzwYwV4lsXX93r4m01f8wcnNROE
+	 QoB0c4417CeJQ==
+Message-ID: <4191344c-c59b-4dda-8fc1-b8a34aaf25e6@kernel.org>
+Date: Sat, 10 Aug 2024 16:58:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] MAINTAINERS: drop NXP LAYERSCAPE GEN4 CONTROLLER
+Subject: Re: [PATCH 1/4] dt-bindings: PCI: layerscape-pci: drop compatible
+ string fsl,lx2160a-pcie
 To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -59,9 +60,9 @@ To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>,
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, imx@lists.linux.dev
 References: <20240808-mobivel_cleanup-v1-0-f4f6ea5b16de@nxp.com>
- <20240808-mobivel_cleanup-v1-4-f4f6ea5b16de@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <20240808-mobivel_cleanup-v1-1-f4f6ea5b16de@nxp.com>
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -105,23 +106,22 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240808-mobivel_cleanup-v1-4-f4f6ea5b16de@nxp.com>
+In-Reply-To: <20240808-mobivel_cleanup-v1-1-f4f6ea5b16de@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/08/2024 18:02, Frank Li wrote:
-> LX2160 Rev1 use mobivel PCIe controller, but Rev2 switch to designware
-> PCIe controller. Rev2 is mass production chip. Rev1 will not be maintained
-> so drop maintainer information for that.
+> fsl,lx2160a-pcie compatible is used for mobivel according to
+> Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> 
+> fsl,layerscape-pcie.yaml is used for designware PCIe controller binding. So
+> drop it.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  MAINTAINERS | 8 --------
->  1 file changed, 8 deletions(-)
 
-This should not be separate commit. There is no single point in that.
-The moment you remove driver, the entry becomes pointless, so should be
-removed THE SAME time.
+Fixes tag? You added during conversion which was neither explained in
+commit msg (and commit must point such differences from pure conversion)
+nor needed.
 
 Best regards,
 Krzysztof
