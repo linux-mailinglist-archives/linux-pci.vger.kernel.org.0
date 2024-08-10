@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-11568-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11569-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 434F694DD66
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 16:58:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B24B194DD69
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 17:01:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB2ABB216DD
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 14:58:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E62BDB21723
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Aug 2024 15:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C571607AA;
-	Sat, 10 Aug 2024 14:58:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B5D215854D;
+	Sat, 10 Aug 2024 15:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AO2mn4sq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lni4Q5VP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589B11C28E;
-	Sat, 10 Aug 2024 14:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C2D22F19;
+	Sat, 10 Aug 2024 15:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723301890; cv=none; b=UJupg+5X9e5PlRZsw6q5rRz9Nu6oYIU/kVubfnJsotvthyov5YSuL/+w30G5zAKphJaM29pnOuUuF4xc2sPEZa/hOM5BBSOKQwacNLvTcUBUhy4sKTOYmcOs2SzyMIKOJYR54YLlI7+mpwYNJHB4lUPZFzyIxWLPa4K60RB/3Dk=
+	t=1723302055; cv=none; b=gnFkGZbdAmtnfyHZJO913zZ/834JwOkEfSZ++0yFHy3I9P4RUQc2jmkoisyjTobwOgLRljqNt8UhOBD2P39veMnfWRH2I5jti47TnlJZDA63IJUyNBrcHlGeEq2PtCn9lCopdFw2VaRYDI5g9zh7Ec/FLfOFP4B7cPl+N7RtHU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723301890; c=relaxed/simple;
-	bh=6wn6WZKBhkPS5cUhZTFdPMVnY1vO7KQWfsp8NGIT5xA=;
+	s=arc-20240116; t=1723302055; c=relaxed/simple;
+	bh=Ur754HDmrWB0vCa+GwIqFkJxCo01Kl71MkTuYp/UhA4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m48T7Kd3jZMSSaPQfzwPJFYImNJr/E1PXCKZL6wvw+YFy8uxIi/Xk3S4Ai6KYHmVSGyd6sqL1e5f4DIydkulEi2U5wmOIDtlzfBikktInIfWiGmVBc59YZtG4h18OvhujYuVo1aeaBHXWNDzE7CJctVR26vdrY2LL4giVulDJBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AO2mn4sq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A48DC32781;
-	Sat, 10 Aug 2024 14:58:04 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Bi5v7eGOZSZbSMIz/VtKKrEKUVcUakBZMjbe9pnVNEceSTYOzT2ZrGDeeOAISx8YB8E1ql4SCBPyjTu7v0BeMzPPM7kIIVxnDcO0wT76AC/9eOi44D/V1Ml2N4rM6HSrMgOsTIFrFmd27njdkgPzBcw9TKGlH2YYe13oR/yJyQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lni4Q5VP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E40C32781;
+	Sat, 10 Aug 2024 15:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723301888;
-	bh=6wn6WZKBhkPS5cUhZTFdPMVnY1vO7KQWfsp8NGIT5xA=;
+	s=k20201202; t=1723302054;
+	bh=Ur754HDmrWB0vCa+GwIqFkJxCo01Kl71MkTuYp/UhA4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AO2mn4sq81SOsVbByRT5/wdbcZy16A6Wi9ViOr1JcoL0IVyOJVGZBs0hX/YVZNMGX
-	 eDqKqjoTdDEBVcyF534iI8Vy8oLafTEIFPD02Tdgna2O6kyuZvIkPnp24NJLKmvpsq
-	 TVAk7fz7x2ofZGjG9kRf5gsNzN+KKB4TKkfcwDEZY2pJwCmKo55BDf4SwmDvGnNE5W
-	 NR2qthubdmyhpLx+5mSojbcY0vwsYagAnRKIx+HL6HAlUpS97PRkgRnV5apPT0qEt7
-	 b1Oc1ytVrONPnr6JFrh6S8sQvdxYxkcJxxdD2bsDzwYwV4lsXX93r4m01f8wcnNROE
-	 QoB0c4417CeJQ==
-Message-ID: <4191344c-c59b-4dda-8fc1-b8a34aaf25e6@kernel.org>
-Date: Sat, 10 Aug 2024 16:58:02 +0200
+	b=Lni4Q5VPn2CaBYAM4k+9fzUkGkwY12wt5rLExKEilSV1YcSk0q3uFddpPIF2lb3DB
+	 afDNWx09wmZ+nnkyvwtpLP0E31PDtvTrvkeO/N/JmdJD0mfyTuWxJTZQaRXa8FwoQl
+	 cbIytWdyU4bxnoaes5Fr3wTDBWGthkxIEYAgwnUdSJGSfwj5GXYrv+TJFB7g1nr3Nn
+	 NanpmyVYFtn3UlCD+El7YjJsDohbpYKv6bIS6JSHRyOu2yBNf7xW423f0R9f3ZeAQn
+	 Pr6vNaxOAhDuxux1GmRrjwnf0EB5Yie6PtEo3y+4yd/IeFlc5BrMSurecZ5wMhL7Q3
+	 /ANHYmCCrgsVg==
+Message-ID: <876d79d3-acf7-442e-b7fb-89df00a5fd18@kernel.org>
+Date: Sat, 10 Aug 2024 17:00:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: PCI: layerscape-pci: drop compatible
- string fsl,lx2160a-pcie
+Subject: Re: [PATCH 2/4] dt-bindings: PCI: drop layerscape-pcie-gen4.txt
 To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -60,9 +59,9 @@ To: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>,
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, imx@lists.linux.dev
 References: <20240808-mobivel_cleanup-v1-0-f4f6ea5b16de@nxp.com>
- <20240808-mobivel_cleanup-v1-1-f4f6ea5b16de@nxp.com>
-Content-Language: en-US
+ <20240808-mobivel_cleanup-v1-2-f4f6ea5b16de@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -106,22 +105,38 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240808-mobivel_cleanup-v1-1-f4f6ea5b16de@nxp.com>
+In-Reply-To: <20240808-mobivel_cleanup-v1-2-f4f6ea5b16de@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/08/2024 18:02, Frank Li wrote:
-> fsl,lx2160a-pcie compatible is used for mobivel according to
-> Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> 
-> fsl,layerscape-pcie.yaml is used for designware PCIe controller binding. So
-> drop it.
+> lx2160 rev1 use mobivel PCIe controller and switch to designware PCIe
+> controller at rev2, which is mass production version. So drop unused
+> document.
+
+Compatible is still used. Also, wrong order of patches. Dropping
+bindings is THE LAST patch.
+
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../bindings/pci/layerscape-pcie-gen4.txt          | 52 ----------------------
+>  1 file changed, 52 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> deleted file mode 100644
+> index b40fb5d15d3d9..0000000000000
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> +++ /dev/null
+> @@ -1,52 +0,0 @@
+> -NXP Layerscape PCIe Gen4 controller
+> -
+> -This PCIe controller is based on the Mobiveil PCIe IP and thus inherits all
+> -the common properties defined in mobiveil-pcie.txt.
 
-Fixes tag? You added during conversion which was neither explained in
-commit msg (and commit must point such differences from pure conversion)
-nor needed.
+So this explains all the confusion about your DTS patches, but this was
+nowwhere explained! Nothing here mentions DTS users. Nothing in DTS
+patch mentions dropping bindings with rationale.
 
 Best regards,
 Krzysztof
