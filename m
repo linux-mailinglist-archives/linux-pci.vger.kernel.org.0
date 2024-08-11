@@ -1,92 +1,95 @@
-Return-Path: <linux-pci+bounces-11579-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11580-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC52594DF98
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2024 04:24:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 201DE94DF9A
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2024 04:24:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BB57B20A2A
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2024 02:24:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB9B32819B7
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Aug 2024 02:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54063A955;
-	Sun, 11 Aug 2024 02:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18ECE56A;
+	Sun, 11 Aug 2024 02:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ToQ0VKOR"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1TnvNGmp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2077.outbound.protection.outlook.com [40.107.244.77])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FC979F3;
-	Sun, 11 Aug 2024 02:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152F479F4;
+	Sun, 11 Aug 2024 02:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723343048; cv=fail; b=sPgK8ruX+bZaTlhAsR13c6ZgtrMVPKPrnJjD2Lu+pQekBcYGVpi51irSoe/ucwPvlaYIt86A8a0knItlnvm440tvNWY36B3tcSbIgX/ETx2LpuNzjTo4ZIyLZWE+wEm4wnVHACNz3X6Dd9NrU/qPzaLhq+mTvF4ER2sscko6c78=
+	t=1723343049; cv=fail; b=Ucoq4L1A2G+gq07ny2euc4vJx3H8CGd/2ghB+Tz08mHeEZtIcevA8xQgYHUFcVNB2Fs2Psz69+XVZa6pN64GU/eYk/Zxz0nlKkGxxl2wNGIli/Xpcyr2nQI5Yhdzwx1FnB6yCGBSqy10BG8h/9X7fk6IySMV7VH6SS1lhvv48A0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723343048; c=relaxed/simple;
-	bh=g8bPGD+gKdADeORUOgReuWBfLKimrg1gOTWxU7G4VAs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CHnGjm5KeKBufy8fs3J2Zdud4wjp9cOUgO6+YQvK4yHm0Up1zGISXOpVwIbns1jMGVDIDUAzAmfbCcBdDagAnhcssq+70Ijq7mgQNGw4Y2vdN7e9Vton2BE4jrNcMbFHI7E+NNSKuSukLFiA4qqeO2fv0uIgTDm0aHwDzCHRh3w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ToQ0VKOR; arc=fail smtp.client-ip=40.107.244.77
+	s=arc-20240116; t=1723343049; c=relaxed/simple;
+	bh=KIJJCML5y4MGXhZG5CnTcpRn80+GmFEf3I8cKdJgXgQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VeQE/qvbGSssLigUrMhxLC5nhej4VbZzujNGPN4JAcegeDRKX7k4Ist9cS6OiwyiLUgoPCaoSHjN7Y+pdiQXKwPpECuYk6NCp9XAjK/dzzg88w+wH1IWTZ/b6u0AvDgJPBTFC+uvem4EDClf3u1N4CyXzklum1wtmWXnLe2qpuA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1TnvNGmp; arc=fail smtp.client-ip=40.107.92.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cqECRGYD8SspnE0pCYZph5zGGGHTNjUC1SnmTm6y8JFKOjsn8Wm+Dsyh0EOMLCJeyZPnoJ1HAH3dbWoR8ZSMwioKpgvzZXVk36E4KIQoF9IZv2XhI3o53KzjK7kqzXMXvHz33ZSF4F7YQ/LQzNZiPyqi7XTqHFx0DVz7Zcu1wl+b5CmODyLTDYWiBUXwRSBqJx/K3us3rOskGCk/tSr50enjjH4q97j10rsaQOM3TxK27iV5t0LDgidDiRVkA+ugd3rMIhjXSRjGZ567FpVQTyAeOhgFXb/p6VEhk5UnZ+B099BRsw7UoEsI+spS0M71/x91KuTc7Tt2JIMkJ1/sbQ==
+ b=OBTNzUHd+MCEl8jj0OFLktEgzZXTctqvt5/qZOs7f3A60hQr51ElT/ceIcrwK7odXPbFFhUkZuMLNaZFm4hxsIBrbmsQjn5h8DQcinPVxua3upqDDL0rlpSzJMp7sNcQ5CvF6824/uL4I6/f7scOgCA9IYxBZjsKXtZaJeklZoARfX03gG1EfvtkVxoytASyGi0EdeR4n6AkeZptFU9jSoRd70jJkAso22R7PcNmmye5tl0kO9xIFT20PqXY2YguI0TQLAgkvyDFAb3XO3rbEoC+wee8EBDc4Q8wnJT4511KyqbXPqouyqw8yzD/rInRBYS8vJ9zks0JUtGRYwT0nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YZtWp+vNbFxljbkic3U3abJ+DosqPxaZcwHlr44sMLY=;
- b=ixqqfTvOlo74qkHcgJYMBpkoYddfSy3zPi49zZFsUvOB4oF/Sq+LGOgKBEnBqQCMJDkwrNjvwMAAC7ffVODBee4AvHDtYU/wpKycQbZO4cGuW11G3kCIAHIDqCLi0D9r6nCQEBGr4Mvd1DFckOqs4z+dTnP90mr/ucfvVzI54oL9knDbRMvd1/zDRICX9ixqDYuF2TIzPmBNhbEM7Ps8i6GBc5WVvYhk88oSxZn/IfceeIxe71oeYibuohF4QWjU01+szESbXi9Jq3hiajeLAg+xxBG8YB6Ah7BhdgCgTokcefIukkg+lrCs63dJRXiIRwm3HiGn0iZRJRAlB9Wvgg==
+ bh=rDn4YgdMskOZ62kHhogOexozy6HtcQbqMppXEvwAX5o=;
+ b=r1hWbc2dmaUdVlmZ6gK01kpIgoPMVCjNqIvirRAUOdBZbxLcwfh3H4U6qdC4g4FPf96WeJuekcrTZ+/5vsOYlJxMcZv+E91R6KTtxZ5f0u0r/w1lgOsGRU3Pu/7CRDoRLnN7O2W/jXGoAWk1EsiBHk7ucYNzLyyu/tYbgz9rG9tuxde9aHQI7l2ITzCKp28kKNKNNI6A6UQNYa9kmh4jr+MwTEmvcLwJR8vLa+5YFP4mGUnZ1gaknybhChKSFiBHz/jDXHwzrZfTuVnWpf82LAEhjIFUspOno0bkDYzGrd0UqQlyjOIA7DA3Sy9lWdb2MS+2EOKXL/uLxMeo3Jm2bg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YZtWp+vNbFxljbkic3U3abJ+DosqPxaZcwHlr44sMLY=;
- b=ToQ0VKORPkTxWmh5Z8tKr0dxJOh/wrGW8HxTlALMJLkYa74WSV9IiA0MJuCmUeN5NWNIyKTL88zjfxedcEvHjPWsnmxWP+Vcl+XcjP0AjvYIHr4X9I8GV7EZhSjRSn1uSwf85B3/3nn/IWag3gOSDpyFRycyFrqkkGYnpbUTl/Q=
-Received: from BN1PR13CA0003.namprd13.prod.outlook.com (2603:10b6:408:e2::8)
- by SA1PR12MB7152.namprd12.prod.outlook.com (2603:10b6:806:2b2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.17; Sun, 11 Aug
- 2024 02:23:59 +0000
-Received: from BL6PEPF00020E64.namprd04.prod.outlook.com
- (2603:10b6:408:e2:cafe::4c) by BN1PR13CA0003.outlook.office365.com
- (2603:10b6:408:e2::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.19 via Frontend
- Transport; Sun, 11 Aug 2024 02:23:59 +0000
+ bh=rDn4YgdMskOZ62kHhogOexozy6HtcQbqMppXEvwAX5o=;
+ b=1TnvNGmpL2quJrAUVS4089clvptAzZJ82QiayRSjaki8WKn7oBiGBOO87Z5CJ/fCzzuS5e1uFyGe24wvBX1IJtSIq3zW23elKQ927Fz8icneDD6k74UYHteUiRoC6tfaEXbAa/eJZMO0lvV+tZ4FqST+PdkpdUH5VA4idJSOwBg=
+Received: from BN9PR03CA0089.namprd03.prod.outlook.com (2603:10b6:408:fc::34)
+ by DS0PR12MB6389.namprd12.prod.outlook.com (2603:10b6:8:cf::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7849.17; Sun, 11 Aug 2024 02:24:03 +0000
+Received: from BN2PEPF000044AC.namprd04.prod.outlook.com
+ (2603:10b6:408:fc:cafe::c9) by BN9PR03CA0089.outlook.office365.com
+ (2603:10b6:408:fc::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.33 via Frontend
+ Transport; Sun, 11 Aug 2024 02:24:03 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00020E64.mail.protection.outlook.com (10.167.249.25) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN2PEPF000044AC.mail.protection.outlook.com (10.167.243.107) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7849.8 via Frontend Transport; Sun, 11 Aug 2024 02:23:59 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.7849.8 via Frontend Transport; Sun, 11 Aug 2024 02:24:03 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 10 Aug
- 2024 21:23:58 -0500
+ 2024 21:24:03 -0500
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
  (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 10 Aug
- 2024 21:23:58 -0500
+ 2024 21:24:02 -0500
 Received: from xhdbharatku40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Sat, 10 Aug 2024 21:23:55 -0500
+ Transport; Sat, 10 Aug 2024 21:23:59 -0500
 From: Thippeswamy Havalige <thippesw@amd.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
 	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <michal.simek@amd.com>, <linux-arm-kernel@lists.infradead.org>,
-	Thippeswamy Havalige <thippesw@amd.com>
-Subject: [PATCH v4 0/2] Add support for Xilinx XDMA Soft IP as Root Port
-Date: Sun, 11 Aug 2024 07:53:43 +0530
-Message-ID: <20240811022345.1178203-1-thippesw@amd.com>
+	Thippeswamy Havalige <thippesw@amd.com>, Conor Dooley
+	<conor.dooley@microchip.com>
+Subject: [PATCH v4 1/2] dt-bindings: PCI: xilinx-xdma: Add schemas for Xilinx QDMA PCIe Root Port Bridge
+Date: Sun, 11 Aug 2024 07:53:44 +0530
+Message-ID: <20240811022345.1178203-2-thippesw@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240811022345.1178203-1-thippesw@amd.com>
+References: <20240811022345.1178203-1-thippesw@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,66 +102,127 @@ Received-SPF: None (SATLEXMB05.amd.com: thippesw@amd.com does not designate
  permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E64:EE_|SA1PR12MB7152:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2dbe6bce-c70a-470a-af78-08dcb9aca896
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AC:EE_|DS0PR12MB6389:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3eec6e90-c03b-4f67-538c-08dcb9acaaf8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|36860700013|82310400026|376014;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yYVH7JDNWl8tQ/UUyZXwwVACJdSerZo1DK8gy9zczbNDr1emfJ+B3l05K7qw?=
- =?us-ascii?Q?HIu3O9jclJUK7GYrjx0NFBkia5hEHzZYytR0F1O7yQvj4G7HgQChLOey4snl?=
- =?us-ascii?Q?i0shZnvYGQBeXNUi4wcjg6CXyIPUmaRMaifhMbXqtSc4jQaYKAR0Tu6fd78T?=
- =?us-ascii?Q?63X6bMrGsH0NzqC6z4yeNyJLGUs+o5aNb/yeslut/pbOKgLr/OXRfCw6B3qC?=
- =?us-ascii?Q?7D48dB3E8q8HBISJrh0rm2FcDt1oY3z+hvEgQlCDJTOdQ9htCRz2bxeU/rpO?=
- =?us-ascii?Q?07VNas8AEIsbviYoMlIvQDcYeFSSNIytqaXrkwWTqlwVHz5G02WME+62dcqw?=
- =?us-ascii?Q?1N+KeF/jn+xxdr5TbSuLCTKay7ELaEJePCpeDqITEB/9wzeq3mGT/FHn+UPY?=
- =?us-ascii?Q?9TuIgti3nQpDxHhWB2lQbWHrYiOfP8VPR8IFXa5hNgHTQZhHYuy+9Ouv0u3G?=
- =?us-ascii?Q?yof1+zcuCR96ZgCKdy2023BoVXhUAjm6A0sjjkpJwb1J9vrJyYnlqJqX4Axj?=
- =?us-ascii?Q?aM6deNkZ7GQj2S6W1s1pQYcYImL02QDGEizgdxs8Bv/9MHVLHjDN7fB/EK5R?=
- =?us-ascii?Q?DzDrCbtjD5erBahZeM7/gXdgiItUdh4Mj4rPNCulK0Fw3gTuimCGTREf//Oa?=
- =?us-ascii?Q?nECDGVkm+B+sc8NEX3Ig8TAFw1TCq4QGNLA4z7gqNzPl/m+cIWims6QPIWmr?=
- =?us-ascii?Q?iGHhJfTlTWbvv+UDDqM6XVRFngfDuT9xl5ZGzJixA0Gu5CEGW1i2wK8z2FLV?=
- =?us-ascii?Q?tSW6JOaEZ7uDhSUGVqy3m0pRNfDIAilg2EwAuKyzDP0Tdqm/6al8+iVSqJI5?=
- =?us-ascii?Q?oU059QD1K260qsVZhxnKARVA3M5MUC+NQSIP2FQQxmeYOJ/CcvOoxHOmW9cI?=
- =?us-ascii?Q?QHbxKrmh8/ajVh2QpBtbSfHA9ZjLkLLnU8haOFuOHu/UbT4HUnLjClWhI8YD?=
- =?us-ascii?Q?HcUVpbDkIYfUOZXUw7+E9Nr9aU1X5prJZwwaL2iLKpdSSZQctWrz+0nLlF+2?=
- =?us-ascii?Q?V76+GNAe4+CB97ZAvChxFq2O9p4MaNQOJPquqX3Wi55UGp5jvMCO5+Mek3xh?=
- =?us-ascii?Q?kvwhqbtIbDmdto9BIDyl8N01GrgD4cGuCTJeCRCPMcJR7yJGPCku9LnxGEGX?=
- =?us-ascii?Q?H81nnavOq+7lC16FCGuw1qoyeuHT0VelLUYn9bwkV34D+AWbOiLPf4+Q9c2q?=
- =?us-ascii?Q?zeP7ZfTVUpJQuFK/VkGFHyVe1Nck7nqIkSj4YS+LXAR63BuwW7FKZrLvN+9d?=
- =?us-ascii?Q?VPuPOA/8zmImTega588c6+BPlUXkK8Bq2X6z+L36nfb9a7QZ2A8R73gtbWNx?=
- =?us-ascii?Q?gEyFMZhQg7IdHLS4hcRsHXmGHr1onMtZDb1or26bWMcqdd1VgfySlJ0avHx6?=
- =?us-ascii?Q?Yi7aXTiF+EYyLYYFwerX1HpRrqDISR3dwCX/d8K5nrfk6E634Ev8wqY1GrOA?=
- =?us-ascii?Q?rDdEVU2kwVMymXwZIoAIDeeS2lU5W6K2?=
+	=?us-ascii?Q?5Sjr9ImFpCwroRjD6U4PSWOoAv3YKu73okZ7+fbHqdUQPuRCs9eRluBeBM++?=
+ =?us-ascii?Q?o6Oj57ky4VPC7tZoe2hMZzlKQXZB8Y8RbXqBXIw+uA1Y84+cWSB/F7HoitEk?=
+ =?us-ascii?Q?g/8/j7WPI4FfhwJT94pk/ImMrzx3L7PNzizwi8aPuNF0iih62xw23+qsXsbO?=
+ =?us-ascii?Q?x6hPARF1vmQLLj81IygBGq1kiDIrD7DK76S39shC+RbQhU9pmc3DslSynBzX?=
+ =?us-ascii?Q?XJUuTIpTU1v3DvaI8G5WAM1ft47oIwle2j+LdaUHx90tK2HXN1TCI0ZbKJMM?=
+ =?us-ascii?Q?++9OLDgIefudCMwvX20qi/To+oz/iZM0lGilj/bXtsWVNOnWoLM/70M6m4AC?=
+ =?us-ascii?Q?2fWOBtPbXzsv2O0v1SxJbhFOU+vG+Rc74+AEoFMmBm+Dawillp6ElcHDjMk4?=
+ =?us-ascii?Q?eAOx7/kcWVN2xInry73jHJxQk7KNZX2RpqGbs3ai76yN96KmtKPLTVx7MI4E?=
+ =?us-ascii?Q?0GpGqyztnSHExLwdc0onkX2vamG/DQE8fjoRSzsYavsu7NEY/2zdZjUEOy+b?=
+ =?us-ascii?Q?h+hkOUEUG7F3+fhNJTO47ZI4c2lI+I5GsZ/Mtiy84RMC7tTcvuwQqlf9R3Mf?=
+ =?us-ascii?Q?c8zjFEwbLKMKuzhvl87lm9ravbvr+Zl96sZjzVYCDs9kMEJ3YeVo39wH2J05?=
+ =?us-ascii?Q?N3PEe4hXxBP4FsP1l/8A8PCBgaaDMnvyEBs1xGekf75ZotHkwlB/5+7kg7Wo?=
+ =?us-ascii?Q?K7Gc8eBTojGc8TtN3XRDJLSMO2esXL/skQkez3bgfHA3+M4+ayo7otFCI7Lo?=
+ =?us-ascii?Q?YeK/e6g2kOh8sYW7q1y5IKMMr1zXoySekrLIpJogsMJmZv9jHsZf570hK8DM?=
+ =?us-ascii?Q?ysDev2QnLY5EXw8DYzHSG1HXQxipCw5AqU3lKhGlHsUx9Vs5frmlm2pzny9X?=
+ =?us-ascii?Q?17sQB3bek1dLELV6Jmm3snLLY4Jqj7KjW8RN9M7ObrDu6YiDgptvyUiBB+83?=
+ =?us-ascii?Q?ZIJ904sikJyNOJmBqOTX+cgUiTK+JQWqb1LqOlJhQwoKONVytnpTwtVgANMO?=
+ =?us-ascii?Q?7xzWilX2RcjVqpPEeoXFM78h/BBEknrILsyVeXTvaieqdB5kIR3a20DkGa8i?=
+ =?us-ascii?Q?ZIAQj3jZZNk/Z/sXfEx4qn7XqUeF3XqRHghugUmKSOI3uLHT4achbEN//EEw?=
+ =?us-ascii?Q?vtz4ThSZUnnK7qjwOMaDv0+Eq4fp46y6+B2TJrONQcyWFrkTkYcJP/Z1+lqo?=
+ =?us-ascii?Q?i2bLl+9O3+KywtHQl/5hKC8NiPmCKMDeVClLUjFcMwmn5qtV2dQinz9hT/Tj?=
+ =?us-ascii?Q?YE1I079j+4DtAr0CF5bGUuO5IrOpvY257dW42tAtTFdDbSPbQy5cpVlchykV?=
+ =?us-ascii?Q?MHWQokuDNRkgtjdVjO1rvuk5VfTjCFnoUA4WjcOdoF6lIJ7yiIG0vfz5e1Wr?=
+ =?us-ascii?Q?SSNv0en2NtTZj1RBRjxf3NYAhHMhPPG1RiprEZOc3Bi7Mlp57vcAN2zDgAkl?=
+ =?us-ascii?Q?ekZicIY6jU3cSDfe5midKB2Q5rkSjP8o?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2024 02:23:59.3103
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2024 02:24:03.2901
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2dbe6bce-c70a-470a-af78-08dcb9aca896
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3eec6e90-c03b-4f67-538c-08dcb9acaaf8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E64.namprd04.prod.outlook.com
+	BN2PEPF000044AC.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7152
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6389
 
-This series of patch add support for Xilinx QDMA Soft IP as Root Port.
+Add YAML devicetree schemas for Xilinx QDMA Soft IP PCIe Root Port
+Bridge version 3.0.
 
-The Xilinx QDMA Soft IP support's 32 bit and 64bit BAR's.
-As Root Port it supports MSI and legacy interrupts.
+Signed-off-by: Thippeswamy Havalige <thippesw@amd.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../bindings/pci/xlnx,xdma-host.yaml          | 36 +++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
+---
+changes in v4
+- update IP version 
 
-Thippeswamy Havalige (2):
-  dt-bindings: PCI: xilinx-xdma: Add schemas for Xilinx QDMA PCIe Root
-    Port Bridge
-  PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+changes in v3
+- constrain the new entry to only the new compatible.
+- Remove example.
 
- .../bindings/pci/xlnx,xdma-host.yaml          | 36 ++++++++++++-
- drivers/pci/controller/pcie-xilinx-dma-pl.c   | 54 ++++++++++++++++++-
- 2 files changed, 87 insertions(+), 3 deletions(-)
-
+changes in v2
+- update dt node label with pcie.
+---
+diff --git a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+index 2f59b3a73dd2..f1efd919c351 100644
+--- a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
++++ b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+@@ -14,10 +14,21 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: xlnx,xdma-host-3.00
++    enum:
++      - xlnx,xdma-host-3.00
++      - xlnx,qdma-host-3.00
+ 
+   reg:
+-    maxItems: 1
++    items:
++      - description: configuration region and XDMA bridge register.
++      - description: QDMA bridge register.
++    minItems: 1
++
++  reg-names:
++    items:
++      - const: cfg
++      - const: breg
++    minItems: 1
+ 
+   ranges:
+     maxItems: 2
+@@ -76,6 +87,27 @@ required:
+   - "#interrupt-cells"
+   - interrupt-controller
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - xlnx,qdma-host-3.00
++then:
++  properties:
++    reg:
++      minItems: 2
++    reg-names:
++      minItems: 2
++  required:
++    - reg-names
++else:
++  properties:
++    reg:
++      maxItems: 1
++    reg-names:
++      maxItems: 1
++
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.34.1
 
