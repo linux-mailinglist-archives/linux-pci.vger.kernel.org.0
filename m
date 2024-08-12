@@ -1,205 +1,267 @@
-Return-Path: <linux-pci+bounces-11601-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11602-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98B9F94F67B
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2024 20:16:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DC5094F688
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2024 20:20:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1E171F2493C
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2024 18:16:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1195B20ED3
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Aug 2024 18:20:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E79F187870;
-	Mon, 12 Aug 2024 18:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687DD1898F3;
+	Mon, 12 Aug 2024 18:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNTKb7cE"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HJsxaMic"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E010A16EB7A
-	for <linux-pci@vger.kernel.org>; Mon, 12 Aug 2024 18:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B59916EB7A
+	for <linux-pci@vger.kernel.org>; Mon, 12 Aug 2024 18:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723486575; cv=none; b=dBhk6hXYpMc1fNYpqmC8C4wcw8l71B/E8vUBX479K1Fm6yDtGbLa3XMz+T/1gXaCPMqAQdW+fKKjUHVHALpqwh5ofYh7Qbe2SBNQXQRs3BghG7lV5OQi8z2Q0o99U/2UrKdF61Fnf5V1Ht6GaSea+9trGmeooZ0s/2wy867l9xU=
+	t=1723486827; cv=none; b=cRCD04CZ2CJpDC59hd73hImnWJaGrRtEg2Nu/CJ36MD8BbVJe0RW4QRbw64vMaia+P2aFdiN89xVSRJ1/olLjIHLHjAwr8AyyzQ93Ybf+GucEJ44DCLkqq1PfN+19XYc8ueZ08rZtkEu6qBnCTAikIyDJVzd1o6pxeETrhfg0Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723486575; c=relaxed/simple;
-	bh=w4mmnkbUQyC+3Ff/oXNqR2TgwvhhjDG3ND1sxdUTW2Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UU55BdnxnZ4bbuDUHIFwBmuLHNGztBIaoh1ssf95pC9/GMx6QeAx2Zg1oN/XqJRu9Cwdo1bItQ5reE1uUw/5z8b6feSPQ5EveVrnaOLhRkO4a2On7cL3F/ZUF/e9AWgWmDu+nWVELBmfExkwpUYOU1L766F+wY4wmLxv6YCwiKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZNTKb7cE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723486572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SdkF0C2zVbB066Bu4nbcfORzCEZVZFrzFyLmGHaFIHU=;
-	b=ZNTKb7cEVocNuuMGObIWjYqDiBH/bqB32JOyKtMIGrBv2pn2nn/lbt1deF/c4ITuV+wCMX
-	Hjt/FdwWzf/dIvkC18j0TvHdgdpuIPMmK65S6bNsgnXbocOvkWfMqP+29ZidDVTwEJ01tV
-	9NW4CS4Qppzy3PggArXDj0wh6b5886Y=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-257-mRp9SFvQMTiNPSX8PEUJfg-1; Mon, 12 Aug 2024 14:16:11 -0400
-X-MC-Unique: mRp9SFvQMTiNPSX8PEUJfg-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-428f1b437ecso8935955e9.1
-        for <linux-pci@vger.kernel.org>; Mon, 12 Aug 2024 11:16:11 -0700 (PDT)
+	s=arc-20240116; t=1723486827; c=relaxed/simple;
+	bh=rArC0baWENHv/jxYDmdE3Mo9xk/o7+IJQj3xqoBtoCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fgdVJSWMynK34qs5P4BJcZT9+OJDr8PDLIXljonSyvaSd0Vyq/5kU/xCQcr9DjuifhOYFCDj+GzBO6TNqJqQ5V3jnpLny6XRJt8RK7yvxoHl34IQDscdb+oiMw16syXa/eEVxlTkf5yKisXGyTLNDCzmsfj6wLEo+ntGATOxSFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HJsxaMic; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52f04b3cb33so9357987e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 12 Aug 2024 11:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1723486824; x=1724091624; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tMGvGgHmXXp/UnuzxA5CQe6odzq4R2lTHL5np/dJEVw=;
+        b=HJsxaMicNRokz3+eIE23s4asv4VxvqAy3z4IR8m5lHOfXtg0R6xHjktjCREXWdz8dY
+         mFippD4glHMmkMWzmqTauqHVXC1KTf1xiCjTWiiaMKkadOeovgvsUQLGX88R++alkAtc
+         MnGmZyqqR9ra4Fnd8+0X0bb4XlHhyLMsBtZcA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723486570; x=1724091370;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SdkF0C2zVbB066Bu4nbcfORzCEZVZFrzFyLmGHaFIHU=;
-        b=GEddMJ2UwJwr6gRlcNTPawXIqq8ajHugZuiKfBVgqc2lxZbvKRwPkuA62hJmFXsz4w
-         CALooSjtcxJpS6ipmuHwNN8gaNeBhOjjpKHDzb+nqb2g2/1siUP6Xfo7x1GiUFHS7v+p
-         kLztB2aikLoixds/FazWyGlWK8QY22wEIiuB/AI3E7ZmqvrPDzVxrcPEhBKCAIkkC2jb
-         YCusc0oABpsKoIhnsyLPLhxTNCrJVXk1GqXaYD9Z/KzxMvMs8FsUVO6PSe/jsd5uz81o
-         +ApckbL+wv9Za+vLVDVDh85RrvdLrq8fvULDdJ5kNNKYkJx9j0QGfBfEwWJRsbJ1/PuZ
-         124g==
-X-Forwarded-Encrypted: i=1; AJvYcCXM8W5SgnHyoezMbLs897M6Wq3woo0mPw6ZQQAIYCHOAhJdLWkNuzp3088PB/6sivaAkmCmYvY7aio=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS6F1C9ngCa7JSFHmqqjnrrFVUOd7VoU1PP+7+YglBtQ3bTed5
-	I7SOJUjpGMNtBHV5uyd2zeO9KQUB5kuEFB5fTZ4Kj4hYl26N/+biQa9o8TIKBu/avvcZTNs1Ezr
-	Fr8o7hndAse1T8Radn90W5vbMkg+KRd7+2eo+4CODsCRcZ+vV/88vYVzd1g==
-X-Received: by 2002:a05:6000:1f89:b0:35f:2584:76e9 with SMTP id ffacd0b85a97d-3716ccd6d04mr588778f8f.2.1723486570219;
-        Mon, 12 Aug 2024 11:16:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEk4syqNza/9kyyQE6dwwthidXy5tZvgm37dWORCESuvttYgk7Yi7KbYqY7kGz7zl7a7deUuQ==
-X-Received: by 2002:a05:6000:1f89:b0:35f:2584:76e9 with SMTP id ffacd0b85a97d-3716ccd6d04mr588770f8f.2.1723486569679;
-        Mon, 12 Aug 2024 11:16:09 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:2d02:8a00:2d28:15cf:9c1d:ae3d? (200116b82d028a002d2815cf9c1dae3d.dip.versatel-1u1.de. [2001:16b8:2d02:8a00:2d28:15cf:9c1d:ae3d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429c750393asm111238125e9.1.2024.08.12.11.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Aug 2024 11:16:09 -0700 (PDT)
-Message-ID: <70a70c74be9ba1a6ae6297ac646fa82600d9296c.camel@redhat.com>
-Subject: Re: [PATCH v2 04/10] crypto: marvell - replace deprecated PCI
- functions
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>,  Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org, 
- linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org
-Date: Mon, 12 Aug 2024 20:16:07 +0200
-In-Reply-To: <Zrow42L9dYC6tSZr@smile.fi.intel.com>
-References: <20240805080150.9739-2-pstanner@redhat.com>
-	 <20240805080150.9739-6-pstanner@redhat.com>
-	 <Zrow42L9dYC6tSZr@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+        d=1e100.net; s=20230601; t=1723486824; x=1724091624;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tMGvGgHmXXp/UnuzxA5CQe6odzq4R2lTHL5np/dJEVw=;
+        b=uMPTp45zyfAlr4ajvjv0Dkzhlhi0ke/Vdyprzbx/paPbWsN37xLaDgv8nYrmOOR/HH
+         INStNyHjKM8HBADmqXK101YCY0iCj3U0MK5iCI2jB6zpEMdoVV8Q4r+4eDDV83atf8W5
+         99oi/NbNijMuE2s/hBEMAwaSdUC3OlM6hOyY7lCv0EVG0rKz9PMfTx1EHzzmPmiWq5ZQ
+         n/dS5+Ap4EWgycqa51QqZFt2wTjf9NitAd7jePi3CP+SONPdOdWxeDec7H1InSktw+f8
+         CmfxZ9Oe9tD80nLyqdoTxyiV5bQbMDYmidtq7OgT64AwIF6h9wu0Rx/fYK4dx7zcseVr
+         IJDQ==
+X-Gm-Message-State: AOJu0YwVmW7y/F+K0rS//kL021eIMGH5MBKb4R7S1N1aM9gY3fU6uQmE
+	o9xfSTZDqOjKgtrFXGWi7L5WIEHg6eW4JPRDfsisVjtRGoWmnvAWf0VvtWdTvryOWvXWvtX7cp+
+	T8jrDKM9HluXTdouyQAV5RZh/ee5AhugZ2F3g
+X-Google-Smtp-Source: AGHT+IEEVoY71P6fmiW/X2j2ziaQ+gsKVaQfDTTPL3dWtGXIWVAcvZUsLGbDdQ/tJioNgOc3tZ11wLvOjU68jmDsGDU=
+X-Received: by 2002:a05:6512:15a5:b0:52c:e05f:9052 with SMTP id
+ 2adb3069b0e04-53213681999mr882415e87.47.1723486823453; Mon, 12 Aug 2024
+ 11:20:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240731222831.14895-1-james.quinlan@broadcom.com>
+ <20240731222831.14895-11-james.quinlan@broadcom.com> <20240807141117.GK3412@thinkpad>
+In-Reply-To: <20240807141117.GK3412@thinkpad>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Mon, 12 Aug 2024 14:20:11 -0400
+Message-ID: <CA+-6iNxpFXAyEMri=30kDu8irZeUoJ7iVO6P_PfV4br1=GEigA@mail.gmail.com>
+Subject: Re: [PATCH v5 10/12] PCI: brcmstb: Check return value of all
+ reset_control_xxx calls
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, bcm-kernel-feedback-list@broadcom.com, 
+	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000ec9dc9061f808bf2"
 
-Yo Andy!
+--000000000000ec9dc9061f808bf2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-08-12 at 18:57 +0300, Andy Shevchenko wrote:
-> (Reduced Cc list a lot)
->=20
-> On Mon, Aug 05, 2024 at 10:01:31AM +0200, Philipp Stanner wrote:
-> > pcim_iomap_table() and pcim_iomap_regions_request_all() have been
-> > deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI:
-> > Deprecate
-> > pcim_iomap_table(), pcim_iomap_regions_request_all()").
-> >=20
-> > Replace these functions with their successors, pcim_iomap() and
-> > pcim_request_all_regions()
->=20
-> Missing period at the end.
+On Wed, Aug 7, 2024 at 10:11=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Wed, Jul 31, 2024 at 06:28:24PM -0400, Jim Quinlan wrote:
+> > Always check the return value for invocations of reset_control_xxx() an=
+d
+> > propagate the error to the next level.  Although the current functions
+> > in reset-brcmstb.c cannot fail, this may someday change.
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>
+> One comment below. With that addressed,
+>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> > Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 102 ++++++++++++++++++--------
+> >  1 file changed, 73 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index 0ecca3d9576f..c4ceb1823a79 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+>
+> [...]
+>
+> >  static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
+> > @@ -1478,9 +1514,12 @@ static int brcm_pcie_suspend_noirq(struct device=
+ *dev)
+> >  {
+> >       struct brcm_pcie *pcie =3D dev_get_drvdata(dev);
+> >       struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(pcie=
+);
+> > -     int ret;
+> > +     int ret, rret;
+> > +
+> > +     ret =3D brcm_pcie_turn_off(pcie);
+> > +     if (ret)
+> > +             return ret;
+> >
+> > -     brcm_pcie_turn_off(pcie);
+> >       /*
+> >        * If brcm_phy_stop() returns an error, just dev_err(). If we
+> >        * return the error it will cause the suspend to fail and this is=
+ a
+> > @@ -1509,7 +1548,10 @@ static int brcm_pcie_suspend_noirq(struct device=
+ *dev)
+> >                                                    pcie->sr->supplies);
+> >                       if (ret) {
+> >                               dev_err(dev, "Could not turn off regulato=
+rs\n");
+> > -                             reset_control_reset(pcie->rescal);
+> > +                             rret =3D reset_control_reset(pcie->rescal=
+);
+> > +                             if (rret)
+> > +                                     dev_err(dev, "failed to reset 'ra=
+scal' controller ret=3D%d\n",
+> > +                                             rret);
+>
+> I don't think it is really necessary to capture the return value in err p=
+ath.
+> Unable to turn off the regulator itself is fatal, so we could just assert=
+ reset
+> and hope for the best.
 
-ACK
+Hi Mani,
 
->=20
-> ...
->=20
-> > - /* Map PF's configuration registers */
-> > - err =3D pcim_iomap_regions_request_all(pdev, 1 <<
-> > PCI_PF_REG_BAR_NUM,
-> > - =C2=A0=C2=A0=C2=A0=C2=A0 OTX2_CPT_DRV_NAME);
-> > + err =3D pcim_request_all_regions(pdev, OTX2_CPT_DRV_NAME);
-> > =C2=A0 if (err) {
-> > - dev_err(dev, "Couldn't get PCI resources 0x%x\n", err);
-> > + dev_err(dev, "Couldn't request PCI resources 0x%x\n", err);
-> > =C2=A0 goto clear_drvdata;
-> > =C2=A0 }
->=20
-> I haven't looked at the implementation differences of those two, but
-> would it
-> be really an equivalent change now?
+I'm not sure what you would like changed.  Failure to turn off the
+regulators isn't  necessarily fatal, it's when they cannot be turned
+on that is fatal.
 
-Well, if I weren't convinced that it's 100% equivalent I weren't
-posting it :)
+There can be two failures here: failure to turn off regulators and
+failure to reset the "rascal" reset.  Since I can only return one
+error value, I print the other value via dev_err().
 
-pcim_iomap_regions_request_all() already uses
-pcim_request_all_regions() internally.
-
-The lines you quote here are not equivalent to the old version, but in
-combination with the following lines the functionality is identical:
-   1. Request all regions
-   2. ioremap BAR OTX2_CPT_BAR_NUM
-
->=20
-> Note, the resource may be requested, OR mapped, OR both.
-
-Negative, that is not how pcim_iomap_regions_request_all() works. That
-overengineered function requests *all* PCI BARs and ioremap()s those
-specified in the bit mask.
-
-If you don't set a bit, you'll request all regions and ioremap() none.
-However you choose to use it, it will always request all regions and
-map between 0 and PCI_STD_NUM_BARS.
+Regards,
+Jim Quinlan
+Broadcom STB/CM
 
 
-> In accordance with the
-> naming above I assume that this is not equivalent change with
-> potential
-> breakages.
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
-The nasty thing of us in PCI is that you more or less already use the
-code above anyways, because in v6.11 I reworked most of
-drivers/pci/devres.c, so pcim_iomap_regions_request_all() uses both
-pcim_request_all_regions() and pcim_iomap() in precisely that order
-already.
+--000000000000ec9dc9061f808bf2
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-The only hypothetical breakages which are not already in v6.11 anyways
-I could imagine are:
- * Someone complaining about changed error codes in case of failure
- * Someone racing between the calls to pcim_request_all_regions() and
-   pcim_iomap(). But that's why the region request is actually there in
-   the first place, to block off drivers competing for the same
-   resource. And AFAIU probe() functions don't race anyways.
-
-Anything I might have overlooked?
-
-P.
-
->=20
->=20
-> > - cptpf->reg_base =3D pcim_iomap_table(pdev)[PCI_PF_REG_BAR_NUM];
-> > + /* Map PF's configuration registers */
-> > + cptpf->reg_base =3D pcim_iomap(pdev, PCI_PF_REG_BAR_NUM, 0);
-> > + if (!cptpf->reg_base) {
-> > + err =3D -ENOMEM;
-> > + dev_err(dev, "Couldn't ioremap PCI resource 0x%x\n", err);
-> > + goto clear_drvdata;
-> > + }
->=20
-> (Yes, I see this).
->=20
-> ...
->=20
-> > --- a/drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c
-> > +++ b/drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c
->=20
-> Ditto. here.
->=20
-
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAWW8gZqJtRyhMl7qxJ4JnBj5sYYilG
+95hwJlq6H/5dYDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA4
+MTIxODIwMjRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEATgZDgY//p9goH4dZ3K19LxNjPMjEEMYsxvUWEW8MwD/YurT5
++5Glea3XbOX/tHCxFXR1CHkYBw3TD+J9OgISsanHM3siyE4XyAt7QwIrqy2zwYa3tI8+0kdRu6Dq
+Bzs4nK2XU6LeL56wEqNzGerzS7i6YxjkFIjDsFYYe2XklwzLLMekYseHpff3I5G26WwZxAO+TdZX
+zXI6yiqGVnzq9o9lQBXNdkcWmKrfJ3/e3E0vtuTLexXRq4053bGFFnoQCcRd/qfkj7RvtpUVlF1H
+jQ6dQus012QsgOtPbgnwBRz72olDRbjjPoH6e0L91D0E+Rl78o+JWEQgt796J2IsRQ==
+--000000000000ec9dc9061f808bf2--
 
