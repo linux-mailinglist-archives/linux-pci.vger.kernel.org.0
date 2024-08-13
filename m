@@ -1,151 +1,103 @@
-Return-Path: <linux-pci+bounces-11640-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11641-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D603950A0F
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 18:24:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31D3E950A39
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 18:33:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AEAB2822C1
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 16:24:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2534283539
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 16:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81558168C20;
-	Tue, 13 Aug 2024 16:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 598051A2C1E;
+	Tue, 13 Aug 2024 16:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJuhP42r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwBxoiBs"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5785C61FCF;
-	Tue, 13 Aug 2024 16:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255851A2C18;
+	Tue, 13 Aug 2024 16:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723566276; cv=none; b=T3+5XeMVEivGS9jWzE5JNMIR1Ye8AZc4vAFuk59nhv8tSZFXhOaNMC1pRH3tE/G4DnlQYFPr6FDmwUKv6BN5pX6fK6U/RJ0MG0BmwT/Q/75FmbPXU6bgMu8nsQyjOvNO2XVCigGiuf3bM8F9Ce00EJ8EIHKjDE3UwUxCaX2er2s=
+	t=1723566774; cv=none; b=eu6Plh38gbqzxdL6rd11rTUuMB+FNJsgfp1Db6Dx1kx48V6X5BbPsw+ZlYCYEQzb95HdAAxHK1xiAnJceNCOcy32GrE87ZvsjMyIl3fx+UMdTiYpfJvvkCwlapXYRcfqCytHDsHKzAprTr6LeYDDgElouavUxhC4ogKTk6p3Rmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723566276; c=relaxed/simple;
-	bh=HupQmP8H2Hew13JPIhJg7yB7LdydKs96S/l0u/WlCTk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qMJJ3w0Hs+OZO5r7RUaC9U+eGyCHprBN+1LikTrtbNKYdJPYZjfT0sD9Jl9s2tSvXZwrr08enbi+hcoX0hjRL94kom4+hpaOehIRYGdD04NE0//JVLggSIvYUeg6MMsSjAWJ+/+h/ZFWYIcdxrR3HiFgWhOMBGuOUnXi4TYZQ9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJuhP42r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E6FE9C4AF0B;
-	Tue, 13 Aug 2024 16:24:35 +0000 (UTC)
+	s=arc-20240116; t=1723566774; c=relaxed/simple;
+	bh=Kbdfzn/ZdPj0XIrrD6C/Hpkw88aQjKyO1BNvwwISy6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mRywQKfs6SZN8irSQ2Fe33nEXWN8JHUohREZJ3f90kfLtnwzF0mEk7cjyCO1db5MgK2HHuoBOTfbNS3SCTvsLHO7m88/UR/qWwbEOCNOvmDzVLHB+WW4LGfJKqmMVwpMtIykSsfm/S1zXUS+jrubxbNWqDSSarcgfVRVfGGYjnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwBxoiBs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4634EC4AF11;
+	Tue, 13 Aug 2024 16:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723566276;
-	bh=HupQmP8H2Hew13JPIhJg7yB7LdydKs96S/l0u/WlCTk=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=uJuhP42r7U+o7TqDdsdH+cmPeopEBOkq2bp+yvJedSLhmXr9wL1Uw/Y0PoBf703+V
-	 4Zdt0t5GMn7Fpt81d4EAeqJdCraPuspSiwTowpnaWcecyNQSMROIyNmqY1kDznKNKG
-	 MefOi4P5fSTP9u7qxGOZrVwHBLbPZTMbnZIsi1mYlJfa5++RCvArwIrF3Wubqmi5f9
-	 aaPIwPqiLu264Hbr9izTn2ZDbSFPOs0DdJ3OHdmAD7s+0dh75YOm0xbaIx976CYMuW
-	 guUWjPicqvefOpXb46ymIwLr6mjJmNuiXjrFu9dtuG8EC6Lcp5ZGJt1tIW5tFDWMQZ
-	 /5DEuGL5P+qoQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5A3C52D7C;
-	Tue, 13 Aug 2024 16:24:35 +0000 (UTC)
-From: Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>
-Date: Wed, 14 Aug 2024 00:24:20 +0800
-Subject: [PATCH] ACPI: PCI: check if the io space is page aligned
+	s=k20201202; t=1723566773;
+	bh=Kbdfzn/ZdPj0XIrrD6C/Hpkw88aQjKyO1BNvwwISy6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lwBxoiBsBuh7e5l3TSpyvue+rKJnz9Dh3AWCsJcyadupJ9IrzqJ8Y+0g1RxUddk4i
+	 9MEluCXzd61wHutZbUeQ+9k/mGy6DOsW7StjapsMU9MW+9qp+o/JS/8LyUBR57Ppqk
+	 5xtC8iES35WghvelhEKjoKDQamc+zZjYRVYIWbS/s0A+ibCYTibn/ntBXri7Otztm5
+	 digZiTtpfMWRZkkWMCTULLIsp8DUp+V0YL3YqFiFtgMpsbsZZh/t0fM1d2SBvlgSy/
+	 xCB5ihCiy8SmeHlhDg3F8ieMeAb0zbjzhlkcCA+V6eyWodqB+rLjFJHgOFp6gg+SkY
+	 kVOY/x4jY+fFg==
+Date: Tue, 13 Aug 2024 10:32:51 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: shawnguo@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	conor+dt@kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+	l.stach@pengutronix.de, krzk+dt@kernel.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and
+ "atu" for i.MX8M PCIe Endpoint
+Message-ID: <172356674865.1170023.6976932909595509588.robh@kernel.org>
+References: <1723534943-28499-1-git-send-email-hongxing.zhu@nxp.com>
+ <1723534943-28499-2-git-send-email-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240814-check_pci_probe_res-v1-1-122ee07821ab@gmail.com>
-X-B4-Tracking: v=1; b=H4sIALSIu2YC/x3M0QpAQBBG4VfRXNtiCHkVaWP9mBTbbElt3t3m8
- rs4J1KACgL1WSTFLUGuM6HMM3L7dG4wsiQTF1wXXVkZt8Md1juxXq8ZVhEMt6jQLGvLM1MqvWK
- V578O4/t+XtUqAGUAAAA=
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
- Miao Wang <shankerwangmiao@gmail.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2104;
- i=shankerwangmiao@gmail.com; h=from:subject:message-id;
- bh=DWlqRiPe/fYjvNSchc34mMH7Q4Dr/qB1v12rnVJlSKs=;
- b=owEBbQKS/ZANAwAKAbAx48p7/tluAcsmYgBmu4jBfTWgmYDF3W+Yt0apBYRG6e7gwIu0EY6zA
- 47PZgNAN+mJAjMEAAEKAB0WIQREqPWPgPJBxluezBOwMePKe/7ZbgUCZruIwQAKCRCwMePKe/7Z
- bhowEADDH2kpqzTz4n37l0QOBIHDygNvWr9UJFn3DVnUaEp9kxAJ/5p5rc347ZwF+qYvcCFty1Z
- yET9MdWuOHxgPoE+ujcPMqvANyfoSpD1ZmaMjmHr1kP7fi0iPraFWbwSkOBagx6Kj8xK8Cxd582
- ZuvP3DK2keZ78PF4HZE7lZkOr+MjxAZ8lSL1TdkIRe2UsdRu0WA0/s+QN0ZsfUIwnRFiME+JHOJ
- msH4Hqumm/rH0wt/jkiKa+LRuSHr4c+K9aB9LEvL3Pt832Yal/GYWWEuYjFGXqXuSGUgrKu+W32
- UW+Ld860zXGsScoHrZmrQykHmhZcWKlUbBzcMlT0ul1giWXiWYgTp4yDrBgfyfRhR0sLIWha9l5
- gN9fvEjPmoZCgnEp+8oc5ELNFGrFxFQOEiXUIb70IEfb1U5c0pB1I5sxkdj6e8mnmFblGgwcgJP
- Lis1rJvtIdWZKVyFD6yCWO9ZD6d7plMUTphSCMEqaRcDLOvxgWQF+SSQB8sI95WrcYHZ3YLgclS
- WlBszCfzc9bpJUxIYQR1jBLjKiIaDEnViBXYaU1+FKBf1DU+xdxWUzIFV3jpK3E6F9Dp4cO3vU5
- yZ0HWYizm4+i6wcK5ndOz/j0B7HTPF/0x9OQfY7divv8+ePl2g/1JweBpDfYHX8/uAiBrNIIW8u
- y8OJaxoNeu7CP0g==
-X-Developer-Key: i=shankerwangmiao@gmail.com; a=openpgp;
- fpr=6FAEFF06B7D212A774C60BFDFA0D166D6632EF4A
-X-Endpoint-Received: by B4 Relay for shankerwangmiao@gmail.com/default with
- auth_id=189
-X-Original-From: Miao Wang <shankerwangmiao@gmail.com>
-Reply-To: shankerwangmiao@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1723534943-28499-2-git-send-email-hongxing.zhu@nxp.com>
 
-From: Miao Wang <shankerwangmiao@gmail.com>
 
-When the IO resource given by _CRS method is not page aligned, serious
-problems will happen because the mis-aligend address is passed down to
-pci_remap_iospace, then to vmap_page_range, and finally to
-vmap_pte_range, where the length bewteen addr and end is expected to be
-divisible by PAGE_SIZE, or the loop will overrun till the pfn_none check
-fails.
+On Tue, 13 Aug 2024 15:42:20 +0800, Richard Zhu wrote:
+> Add reg-name: "dbi2", "atu" for i.MX8M PCIe Endpoint.
+> 
+> For i.MX8M PCIe EP, the dbi2 and atu addresses are pre-defined in the
+> driver. This method is not good.
+> 
+> In commit b7d67c6130ee ("PCI: imx6: Add iMX95 Endpoint (EP) support"),
+> Frank suggests to fetch the dbi2 and atu from DT directly. This commit is
+> preparation to do that for i.MX8M PCIe EP.
+> 
+> These changes wouldn't break driver function. When "dbi2" and "atu"
+> properties are present, i.MX PCIe driver would fetch the according base
+> addresses from DT directly. If only two reg properties are provided, i.MX
+> PCIe driver would fall back to the old method.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml  | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
 
-Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
----
- drivers/acpi/pci_root.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index d0bfb3706801..58fc64757bde 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -858,7 +858,7 @@ static void acpi_pci_root_validate_resources(struct device *dev,
- 	}
- }
- 
--static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
-+static void acpi_pci_root_remap_iospace(struct acpi_device *device,
- 			struct resource_entry *entry)
- {
- #ifdef PCI_IOBASE
-@@ -868,7 +868,15 @@ static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
- 	resource_size_t length = resource_size(res);
- 	unsigned long port;
- 
--	if (pci_register_io_range(fwnode, cpu_addr, length))
-+	if (!PAGE_ALIGNED(cpu_addr) || !PAGE_ALIGNED(length) ||
-+		!PAGE_ALIGNED(pci_addr)) {
-+		dev_err(device->dev,
-+			FW_BUG "I/O resource %pR or its offset %pa is not page aligned\n",
-+			res, &entry->offset);
-+		goto err;
-+	}
-+
-+	if (pci_register_io_range(&device->fwnode, cpu_addr, length))
- 		goto err;
- 
- 	port = pci_address_to_pio(cpu_addr);
-@@ -910,7 +918,7 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
- 	else {
- 		resource_list_for_each_entry_safe(entry, tmp, list) {
- 			if (entry->res->flags & IORESOURCE_IO)
--				acpi_pci_root_remap_iospace(&device->fwnode,
-+				acpi_pci_root_remap_iospace(device,
- 						entry);
- 
- 			if (entry->res->flags & IORESOURCE_DISABLED)
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
----
-base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
-change-id: 20240813-check_pci_probe_res-27e3e6df72b2
+If a tag was not added on purpose, please state why and what changed.
 
-Best regards,
--- 
-Miao Wang <shankerwangmiao@gmail.com>
+Missing tags:
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
 
 
 
