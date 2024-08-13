@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-11623-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11624-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D2D8950069
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 10:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA329950074
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 10:54:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5B371F235F0
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 08:53:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73E5D1F2373B
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 08:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764F713B797;
-	Tue, 13 Aug 2024 08:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071BC16F8E9;
+	Tue, 13 Aug 2024 08:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPewhiLQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HE1AXiet"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426D7137C2A;
-	Tue, 13 Aug 2024 08:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29BD14A086;
+	Tue, 13 Aug 2024 08:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723539186; cv=none; b=bTI5xL+p0dQonIczEgO++jXIUzrzuuj5tQuRoabP/bnaxbx9uksiawXJHdyS8dh/yXBI79oMBIfMExaA2gK3QNmxqsp2+eAxEC7y01UMIJcJ5So5LT0JEWcEEVGYjX/426TdFhcZHOaOb+/HbGpQWzF4nlCf6spN/+xihVkvmqk=
+	t=1723539262; cv=none; b=DLCxIPNa00RVbCdKbVmLly/9hAfXlHiLqMbPfiWqd0QitoCvrryNArDXfoK9Xfjk0zpB+0zo15Ugp0SZo4YptA6P9p8PvVFpbBZt/Fhz6MqhUxlb9dSsWn1bJbmLJlJ+TdVmrpdc+0sP9hN5+kGSf+BDi5NmSOzidHlBWQLpZw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723539186; c=relaxed/simple;
-	bh=k6q09zXUlDia54jq/xKGzXJnGQ0guxklfvHLKZai6vs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lcQRcXvxe28dEr4FOpkS1Y28+Fo0PS6TsySyH4NzwhpcOXYzb5Mf2OkP3chkK/kLwF0bR5nlTXiBkFwEgHUdIwmAY4sb8ElLPAYM7reOIc/JGWg39tHf8kAW1jEEMLOO3r5x0VUGo5VHrhyUC1Eceep5n3NEyPZemjjRb+7rp70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPewhiLQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC3FC4AF0B;
-	Tue, 13 Aug 2024 08:53:01 +0000 (UTC)
+	s=arc-20240116; t=1723539262; c=relaxed/simple;
+	bh=NSrF1UDXr33JssMJaL6HcAqjM2Dy/z+Z99e09mLYOFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=suGeAt/d64lTXT+En0d0RsAniKxofbF5IKOyC0iw44QpKK+2d5AivscRxtZIWz8XoKBTdvp3d8tQQpr45RJYYHEIOvkYdckSZ+Xnuhq0Gl8joqTTzc9M0KpHXA0v09WevX3q8TbG4gxnbF47OndK7mashdY1ZjKw0oV9BUFdqqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HE1AXiet; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12BAC4AF09;
+	Tue, 13 Aug 2024 08:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723539185;
-	bh=k6q09zXUlDia54jq/xKGzXJnGQ0guxklfvHLKZai6vs=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=MPewhiLQDuK/OGZhVrwrM1oi2ilFKvSUOVQZFfRPVTykplfF3sne2SAET6ST5rS2j
-	 4vhlG631/au8jNncfrv9KX/E6Gr/YtjJq99wIMibiwAlqtdpimCLz5zWBnK4CJdcuu
-	 3gFA9ayMTlAod2aBSxvqhzJ5QKK7hfPLtGqM1zr+m7Hn0biS+N1jUJ8jM3xa1zqPaw
-	 YjcCRQSX6ACrKYZcyq/CrEng4+v7oaX4jATF2qx8rNCxtre4ONKc7K0mOLxeQuMI4h
-	 raqmUEpujWbot2TitH/7jTVcc05hL4vGcxLw7N7T+Cecz2Qnes+piiZHUFnlPZIIoL
-	 Z+hPAyXtIYR5w==
-Message-ID: <851c0b45-26d4-4790-93d3-b5be0c0b100c@kernel.org>
-Date: Tue, 13 Aug 2024 10:52:59 +0200
+	s=k20201202; t=1723539262;
+	bh=NSrF1UDXr33JssMJaL6HcAqjM2Dy/z+Z99e09mLYOFw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HE1AXiet6eU09dzfWs3ZTldG3MspiVQ6IIyx+ehu27BZHdKBU1lpQkRqQuhaZsSfz
+	 A0z7L5nm4LMo+AKMOW2f1/qLDFs6sA3fbNjCN6pB4jBhUgVC4Yze3cPkl/WDh/RLQ2
+	 hMeHCW13+RrEu4rHPdA1fhM8dX+J7wsQJ5EnQ12bTRFj+9x7ed1CpINzzGhK8IIWfN
+	 P/B+DbQ0PsevwdJ2HjH2IuLPaF67stAIadPOPRy/t4GwanU6zSAtPwl3EXxzmO3BOc
+	 86hk7Qpf/K47KNx4UoEfW+/nYZXfOA6ehzy6rkYpB48/gyE18SfPIZ7eZzI/jyDFjS
+	 4W2uvLjcswUbA==
+Message-ID: <cc845521-8547-4db6-b729-c4d3f1fa6125@kernel.org>
+Date: Tue, 13 Aug 2024 10:54:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,16 +50,16 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and
- "atu" for i.MX8M PCIe Endpoint
+Subject: Re: [PATCH v5 2/4] arm64: dts: imx8mq: Add dbi2 and atu reg for
+ i.MX8MQ PCIe EP
 To: Richard Zhu <hongxing.zhu@nxp.com>, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, shawnguo@kernel.org, l.stach@pengutronix.de
 Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  kernel@pengutronix.de, imx@lists.linux.dev
 References: <1723534943-28499-1-git-send-email-hongxing.zhu@nxp.com>
- <1723534943-28499-2-git-send-email-hongxing.zhu@nxp.com>
+ <1723534943-28499-3-git-send-email-hongxing.zhu@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -104,19 +104,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <1723534943-28499-2-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <1723534943-28499-3-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/08/2024 09:42, Richard Zhu wrote:
-> Add reg-name: "dbi2", "atu" for i.MX8M PCIe Endpoint.
+> Add dbi2 and iatu reg for i.MX8MQ PCIe EP.
 > 
 > For i.MX8M PCIe EP, the dbi2 and atu addresses are pre-defined in the
 > driver. This method is not good.
 > 
 > In commit b7d67c6130ee ("PCI: imx6: Add iMX95 Endpoint (EP) support"),
 > Frank suggests to fetch the dbi2 and atu from DT directly. This commit is
-> preparation to do that for i.MX8M PCIe EP.
+> preparation to do that for i.MX8MQ PCIe EP.
 > 
 > These changes wouldn't break driver function. When "dbi2" and "atu"
 > properties are present, i.MX PCIe driver would fetch the according base
@@ -126,32 +126,8 @@ On 13/08/2024 09:42, Richard Zhu wrote:
 > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 > Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-This is some random tagging! You add tags, then drop, then add other
-people. No, it does not work like this.
-
-Where was this tag given?
-
-Where are other tags?
-
-Why did you drop them? Why this is not explained?
-
-<form letter>
-This is a friendly reminder during the review process.
-
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
-
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
+Stop adding fake tags. This never happened. If it happened, provide lore
+link.
 
 Best regards,
 Krzysztof
