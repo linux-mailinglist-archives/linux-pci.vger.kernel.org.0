@@ -1,67 +1,69 @@
-Return-Path: <linux-pci+bounces-11656-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11657-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 179DA950DE4
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 22:26:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 243DD950DEA
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 22:27:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B72611F23736
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 20:26:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57DD61C20E7F
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Aug 2024 20:27:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09BB71A7044;
-	Tue, 13 Aug 2024 20:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2651A7042;
+	Tue, 13 Aug 2024 20:27:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AF31A7047;
-	Tue, 13 Aug 2024 20:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D5C5588E;
+	Tue, 13 Aug 2024 20:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723580751; cv=none; b=juzeVIQTkXox5QbKrLPnBL5DSdQbO2UU5SMJ4JuqKxUJc5vogSLRQzbWroP2h5Nfau6syBc+82XdWLnyhdsuQiblFwuDBxiF43Rh97bJ0bq5kK++5vBP8PXXvc7d+niltVy+aj8IzMFI8jC7d7DeZiLY0A3MKH2eaf3l5UNql8w=
+	t=1723580866; cv=none; b=RYoFvNvcTlbr8foEIHeQETmmGGoBVoxhZmhDQI8ab0LPmaS+UNlaI10Jwy7UbLAc4BoO+RL33/2UVvdoAOW1c60fukmT0uBHxDGSFumeYE3pUnUqmF4+b26YjUEbl5i1u/+9e+hOtDPdGrXfycwC5DbpkTbYMOB+LwnEtB8TZLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723580751; c=relaxed/simple;
-	bh=z44RztmMtf5SITglTxONm/jYUCjvFDooxkvRIMfeOGo=;
+	s=arc-20240116; t=1723580866; c=relaxed/simple;
+	bh=wIy6hQHxspI+wcpnPtoI8TfqxEpDh9hvlQKiAdVbkdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rj+LEycMhrrCZwBbfFo0C5qppU+4kgCuKz+NcKzlPRg0GfEljClSBhzaCS+AzvlJH34qZfw9tt6SaQnPLNRky9B89JcDSqWkbdwcL+kfIEpGaYUPnZzpqn+EazxH7DzsD9kZruGxryc/pOBx62FKADh2YXEBE4+W4WzaVDFYdmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHf8E1/kesQkrj2YCpOl2c3WuiVgV99N4FoytO9Gr1evkoBZ3rW3JEkskPB0OztYloKTfQY46+hAgbtnkSoyLOukpOYSKKCOebpJI1sIJ/+eJNst5m6YjNXHg+kNxg0cZxnspgvADuxkND3kZzTxaAs6dmapeMmQtHS/iDsRfiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ff4568676eso57101595ad.0;
-        Tue, 13 Aug 2024 13:25:50 -0700 (PDT)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7a1be7b7bb5so4276941a12.0;
+        Tue, 13 Aug 2024 13:27:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723580750; x=1724185550;
+        d=1e100.net; s=20230601; t=1723580864; x=1724185664;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yV0uIj9ZiP/YeZH/VpPgdI6zY7QFHUilTAHYpLb2t6Q=;
-        b=op0JWIrsE/zT8eBk9z3qGXsdbsbS2NMgVBBjs6HtsO0TX/YeCp8N2fLix2KcclwotW
-         SC456gdIv0+IoUM8KVWc4Z4BXPzXvUBDNSv8izpIwSGYaEjPhCNm1vlw/ZF0e4zcPO8r
-         PttsYUQMKjm1pgaGTjTbAEMo7Its0YvMzZ4SJ7KvAP1gaH62A5IDx7VksosSVQUJX1Wn
-         +i+7GITekaFmjxYtZu4r8lJXT/LNHjKW+OlmxnkrUcs2SgkOft5HV6WZiHJF135AfgMa
-         iVYBP/hd9H3ZHMNQuxWnTu9O7lUXMVbF8hrZffHRK5vkvvDE6gN31EYaEt8ex+d//LGS
-         2vGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoTvfgMcA9sD3iwRLdkr+UcPudTXXm6rM4YLMGw0ClVAQdutHXcA9MB/8vVMnv9KicVAnkpdbPqq7PeFpOUPJ3ghfMD2gtIUN04YKwgyLqmOS4AnS6oNvsWyctjwNp4nhGkTS/taImf8hD0eLv6P2Sy4IwBBPSIPTsHue1VIyLge+YhXbauA==
-X-Gm-Message-State: AOJu0Yzm4quN+lIkW/0+8bScT/UMtIh65tWD5gQvkwAX7GXDwSwTKJN+
-	1j0QczhKNIX4WoOxV6fh2Zhthbq7lz1tJ+PaLP+vUtnulg3ECMjY
-X-Google-Smtp-Source: AGHT+IFPHJgjFA+x8OjfXI7lztWMo3R/k3TEX5vSm0aeHgFpmHiP833wBXYNGxb8GBXBaDY3CMP51A==
-X-Received: by 2002:a17:903:2312:b0:1fb:8620:c0bd with SMTP id d9443c01a7336-201d63aa520mr8568325ad.15.1723580749905;
-        Tue, 13 Aug 2024 13:25:49 -0700 (PDT)
+        bh=TNPi+Cpzin8dakwAyUxxHZPROQtJHgSY7+Fd1TdbD60=;
+        b=Ry6UaG4sLcU0H5s6WBJl5FFCT04zKdkJ40LnadE54zPrJrlf1AD9fSeNo8HRpLvC+t
+         lozEq8hfl7qr4WixBnLOGOIMaEL8bVt1GVVCKK190+Ls5gzy8s1q1C8Z6W6uNa2Q2F5E
+         YJaSVNl7nSgRP1ITRFHwpcqWZyKauNSuHfm486BZo/XMx4T9E6aCZwOvp2fCPr9/GOj7
+         RL+6GcDpQT1DwW7viwtyB7441s2MwTRDyodktgvkVlLSjsF9+0LgJzY/pnAkryUrzLD0
+         /krv3K0GMQbidk74oICFYejmHhjQpzFX45xN80l2CHY0Okaxi1/UWAiVli0QTmjELKJv
+         Px2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUnSA891mXtQ1N7ndLQD+OOAPRCiP0d1dobk/9io1NwkFjOnXCl0QfHM7IFjUAkavV4ONaNFtck/kawKfdcCyp+e2NwRryIuTgvBa9x4ZajOqCZFElGtBCW2PxGWygAzxeAMUQtjlXERUOqRx/80eZxrTsiOXAJI0OiKK/GjJDK86Uj2ekHZw==
+X-Gm-Message-State: AOJu0YyE9fFtf4TFM3YRPOOlhF3ftyfVQCZmg0tMAJFz3xv/MMxp31Nm
+	TBpHWEqjTxSOyRUXISu8mDUJFhEGWXOkmhnAMIQ+lOyHmQswbp4K
+X-Google-Smtp-Source: AGHT+IHLjWCyQm6vs7ZbrVQjCv3bW2BI7tHz/nq0hQhOZlzsoMFv6rBfiw9WfNOKGpA/yz2nK2FjpA==
+X-Received: by 2002:a17:903:1c9:b0:1fc:2ee3:d46f with SMTP id d9443c01a7336-201d638d797mr10262175ad.11.1723580863988;
+        Tue, 13 Aug 2024 13:27:43 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201cd14ac7csm17523045ad.108.2024.08.13.13.25.48
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201cd1bd7dfsm17580695ad.232.2024.08.13.13.27.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2024 13:25:49 -0700 (PDT)
-Date: Wed, 14 Aug 2024 05:25:47 +0900
+        Tue, 13 Aug 2024 13:27:43 -0700 (PDT)
+Date: Wed, 14 Aug 2024 05:27:41 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
-Message-ID: <20240813202547.GC1922056@rocinante>
+Message-ID: <20240813202741.GD1922056@rocinante>
 References: <20240727090604.24646-1-manivannan.sadhasivam@linaro.org>
+ <uk7ooezo3c3jiz2ayvfqatudpvzx6ofooc2vtpgzbembpg4y66@7tuow5vkxf55>
+ <20240813170247.GA26796@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,28 +72,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240727090604.24646-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20240813170247.GA26796@thinkpad>
 
 Hello,
 
-> Starting from commit 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure
-> for drivers requiring refclk from host"), all the hardware register access
-> (like DBI) were moved to dw_pcie_ep_init_registers() which gets called only
-> in qcom_pcie_perst_deassert() i.e., only after the endpoint received refclk
-> from host.
+[...]
+> > > So there is no need to enable the endpoint resources (like clk, regulators,
+> > > PHY) during probe(). Hence, remove the call to qcom_pcie_enable_resources()
+> > > helper from probe(). This was added earlier because dw_pcie_ep_init() was
+> > > doing DBI access, which is not done now.
+> > 
+> > ... moreover his makes PCIe EP fail on some of the platforms as powering
+> > on PHY requires refclk from the RC side, which is not enabled at the
+> > probe time.
+> > 
 > 
-> So there is no need to enable the endpoint resources (like clk, regulators,
-> PHY) during probe(). Hence, remove the call to qcom_pcie_enable_resources()
-> helper from probe(). This was added earlier because dw_pcie_ep_init() was
-> doing DBI access, which is not done now.
-> 
-> While at it, let's also call dw_pcie_ep_deinit() in err path to deinit the
-> EP controller in the case of failure.
+> Yeah. I hope Bjorn/Krzysztof could add this to the commit message while
+> applying.
 
-Applied to controller/qcom, thank you!
-
-[1/1] PCI: qcom-ep: Do not enable resources during probe()
-      https://git.kernel.org/pci/pci/c/cd0b3e13ec30
+No worries. Added to the commit log.
 
 	Krzysztof
 
