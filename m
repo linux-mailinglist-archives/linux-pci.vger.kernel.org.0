@@ -1,203 +1,411 @@
-Return-Path: <linux-pci+bounces-11682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F4C19524F3
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 23:49:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9510A952535
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 00:05:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55388B23664
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 21:49:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F91B1F22FE7
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 22:05:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0384A1C7B9F;
-	Wed, 14 Aug 2024 21:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CED4145B00;
+	Wed, 14 Aug 2024 22:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbOP4YxA"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E4CMS5Dr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B4E1C579B
-	for <linux-pci@vger.kernel.org>; Wed, 14 Aug 2024 21:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EA9139CE3;
+	Wed, 14 Aug 2024 22:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723672172; cv=none; b=OdD9KCuHdrR6ly4lDZ5fMGFwtz0zBtmO/oIRmmCg76FFi0ehGtm7+ftcE9X0hXrAlPYtgizUSpxzXMZ6BSlV+SoUCSRDoSQY2d3yTRSPPhw9IqH9SF74vCRaDQcZMeopgBZpIja7KuT97dj5MDPppIKFkYSZPOvnXZaUFxdgO4U=
+	t=1723673126; cv=none; b=rvktqBHQ3laLnRGNjRaO9iRe3EISObzZEWnFjSrwquF7XNW4Cyn89yf1BE4h0ZzGVPcP/KjvQHlocxLAnLjHxF/cifA8UwfCW3bPnG4Eql6XbFJd2OrrLIQR8ZudujDrfZzKiOCGo/VWnyujBTGVbFfAhQmu6vKyDDx8c3XDlUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723672172; c=relaxed/simple;
-	bh=IJdWgjQXxvBMKvDMNNrGBEu8socBYNX1yfFX9H9rqrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tbDxpPmqpLHEuBLLnj/0rhZ22bs8eepx60zm1J6MFWUna3s1EmBPHRzi7+y5lC415GdsMjjqOYTfjJiu0Oao2zkN+AIt130czpXuGvvHNeyfBHdKKJtYkaIUTHzq4X8qxVe6ixMSsZ/OLL8dJn/L+FHnedS0qx15YQRGJV0FY6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbOP4YxA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3776EC32786;
-	Wed, 14 Aug 2024 21:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723672172;
-	bh=IJdWgjQXxvBMKvDMNNrGBEu8socBYNX1yfFX9H9rqrQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kbOP4YxAodh0HA+gNSBUm0Z9Ti32s+bCgjhGj4j6EcaL7dBgYaeyHOIfpvGEguTNl
-	 49Bn5eM2pKU5navV7J+fQzYMs/RraUHfF5M90U/uV3VllGyzl99Halomky0fTvb+xd
-	 hPb2I5vNLLGZiUhSc+b1uFDUgCkocI5QJ8I9ryvhnQkkqTfgz8nPh8pJiUeu4WMDPt
-	 3i9I+vf5Xfy8RM2qj7Vj0TpbXPCQYDg+0KYIFWFf2v/03wZ8rYHOpIw2HEyBOVKdSU
-	 1aw86PxMrCribWvyXuc4Du6Q6NwVf9kBaYgdYDHObo8fwbgkYjSNrR2irD+i6+yW9p
-	 Mf4+pi3E9OcVQ==
-Date: Wed, 14 Aug 2024 16:49:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
-	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-Message-ID: <20240814214930.GA5507@bhelgaas>
+	s=arc-20240116; t=1723673126; c=relaxed/simple;
+	bh=3TeTHhtlVF+HT3Kzug+vcVhUSuKGRJequxjUXzsIPmI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AuN78T4hmlmjG9Z0vFdZVbIfGgvEBlrQyCJc9LxwcNEsRO2NsWlJwyVXLWMo9DBbiVglxC2qWO6ssoMDUCHaa62euV9i8kb431DYRDkAavHLjNYkuT0qkqrGf4N2fggXOYYLr9xI8CQuO95kyyo8US2H+rcdGWt8Qulo4Sc3EWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E4CMS5Dr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EJqSh9016363;
+	Wed, 14 Aug 2024 22:04:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=KAiR7NA6x+Ein79OOkruur
+	Pzx7CD/sjJO2mJmtnsKWg=; b=E4CMS5Dr26u4QAsuyx2hHp3GKBvEK6ViWGwz+v
+	cLisnRP3ejZ/LDTKFnFiLiqDfZcnFgvTT7tZKx5egKEyqirIASbjbwf8PL+RLkpM
+	9CiGK94U4V8REHZNnkK6i1TVCjk1IonYeZqmKp4HicJK57BTpJa8ajEfM28f4TkR
+	TZBn8kFUGqfPhY2Jk0agjvErtU+GFGPiF0t5C7ko5+ETgKW2aVIJMN+qYBCU17Qn
+	BKCpHuN/7+hc2P0d/cH8CeDHyfmuQ5GfsKbHfjAK8cKamcLRg4u+eCnY+KU/+Ap3
+	1tgmmpI2eaiKBG05ojA6gJCyQAEHdutrpBpC3FT1HQcyLXtw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41134eg82k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Aug 2024 22:04:56 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47EM4tRs030306
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Aug 2024 22:04:55 GMT
+Received: from hu-pyarlaga-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 14 Aug 2024 15:04:55 -0700
+From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <quic_mrana@quicinc.com>
+Subject: [PATCH v4] PCI: qcom: Disable mirroring of DBI and iATU register space in BAR region
+Date: Wed, 14 Aug 2024 15:03:38 -0700
+Message-ID: <20240814220338.1969668-1-quic_pyarlaga@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240814122900.13525-3-mariusz.tkaczyk@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: RohhCJV1xzeBXph8iu9gzPSU9FERpgK2
+X-Proofpoint-GUID: RohhCJV1xzeBXph8iu9gzPSU9FERpgK2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-14_18,2024-08-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 spamscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408140152
 
-On Wed, Aug 14, 2024 at 02:28:59PM +0200, Mariusz Tkaczyk wrote:
-> Native PCIe Enclosure Management (NPEM, PCIe r6.1 sec 6.28) allows
-> managing LED in storage enclosures. NPEM is indication oriented
-> and it does not give direct access to LED. Although each of
-> the indications *could* represent an individual LED, multiple
-> indications could also be represented as a single,
-> multi-color LED or a single LED blinking in a specific interval.
-> The specification leaves that open.
-> ...
+PARF hardware block which is a wrapper on top of DWC PCIe controller
+mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
+register to get the size of the memory block to be mirrored and uses
+PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
+address of DBI and ATU space inside the memory block that is being
+mirrored.
 
-> Driver is projected to be exclusive NPEM extended capability manager.
-> It waits up to 1 second after imposing new request, it doesn't verify if
-> controller is busy before write, assuming that mutex lock gives protection
-> from concurrent updates. 
+When a memory region which is located above the SLV_ADDR_SPACE_SIZE
+boundary is used for BAR region then there could be an overlap of DBI and
+ATU address space that is getting mirrored and the BAR region. This
+results in DBI and ATU address space contents getting updated when a PCIe
+function driver tries updating the BAR/MMIO memory region. Reference
+memory map of the PCIe memory region with DBI and ATU address space
+overlapping BAR region is as below.
 
-> Driver is not registered if _DSM LED management
-> is available.
+                        |---------------|
+                        |               |
+                        |               |
+        ------- --------|---------------|
+           |       |    |---------------|
+           |       |    |       DBI     |
+           |       |    |---------------|---->DBI_BASE_ADDR
+           |       |    |               |
+           |       |    |               |
+           |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
+           |    BAR/MMIO|---------------|
+           |    Region  |       ATU     |
+           |       |    |---------------|---->ATU_BASE_ADDR
+           |       |    |               |
+        PCIe       |    |---------------|
+        Memory     |    |       DBI     |
+        Region     |    |---------------|---->DBI_BASE_ADDR
+           |       |    |               |
+           |    --------|               |
+           |            |               |---->SLV_ADDR_SPACE_SIZE
+           |            |---------------|
+           |            |       ATU     |
+           |            |---------------|---->ATU_BASE_ADDR
+           |            |               |
+           |            |---------------|
+           |            |       DBI     |
+           |            |---------------|---->DBI_BASE_ADDR
+           |            |               |
+           |            |               |
+        ----------------|---------------|
+                        |               |
+                        |               |
+                        |               |
+                        |---------------|
 
-IMO we should drop this sentence (more details below).
+Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
+used for BAR region which is why the above mentioned issue is not
+encountered. This issue is discovered as part of internal testing when we
+tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
+we are trying to fix this.
 
-> NPEM is a PCIe extended capability so it should be registered in
-> pcie_init_capabilities() but it is not possible due to LED dependency.
-> Parent pci_device must be added earlier for led_classdev_register()
-> to be successful. NPEM does not require configuration on kernel side, it
-> is safe to register LED devices later.
-> 
-> Link: https://members.pcisig.com/wg/PCI-SIG/document/19849 [1]
+As PARF hardware block mirrors DBI and ATU register space after every
+PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, program
+maximum possible size to this register by writing 0x80000000 to it(it
+considers only powers of 2 as values) to avoid mirroring DBI and ATU to
+BAR/MMIO region. Write the physical base address of DBI and ATU register
+blocks to PARF_DBI_BASE_ADDR (default 0x0) and PARF_ATU_BASE_ADDR (default
+0x1000) respectively to make sure DBI and ATU blocks are at expected
+memory locations.
 
-I can update this myself, no need to repost just for this, but I think
-these links are pointless because they're useless except for PCI-SIG
-members, and I don't want to rely them being permalinks anyway.
+The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
+and PARF_ATU_BASE_ADDR are applicable for platforms that use Qcom IP
+rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
+PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for Qcom IP rev 2.3.3.
+PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for Qcom
+IP rev 1.0.0, 2.3.2 and 2.4.0. Update init()/post_init() functions of the
+respective Qcom IP versions to program applicable PARF_DBI_BASE_ADDR,
+PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR register offsets. Update
+the SLV_ADDR_SPACE_SZ macro to 0x80000000 to set highest bit in
+PARF_SLV_ADDR_SPACE_SIZE register.
 
-A reference like "PCIe r6.1" is universally and permanently
-meaningful.
+Cache DBI and iATU physical addresses in 'struct dw_pcie' so that
+pcie_qcom.c driver can program these addresses in the PARF_DBI_BASE_ADDR
+and PARF_ATU_BASE_ADDR registers.
 
-> +struct npem {
-> +	struct pci_dev *dev;
-> +	const struct npem_ops *ops;
-> +	struct mutex lock;
-> +	u16 pos;
-> +	u32 supported_indications;
-> +	u32 active_indications;
-> +
-> +	/*
-> +	 * Use lazy loading for active_indications to not play with initcalls.
-> +	 * It is needed to allow _DSM initialization on DELL platforms, where
-> +	 * ACPI_IPMI must be loaded first.
-> +	 */
-> +	unsigned int active_inds_initialized:1;
+Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v4:
+- Updated the subject line as suggested by Manivannan Sadhasivam.
+- Updated commit message as suggested by Manivannan Sadhasivam.
+- Modified the register offsets to be in lowercase for hex as
+  suggested by Manivannan Sadhasivam.
+- Squashed the patches as suggested by Bjorn Helgaas.
+- Added a comment regarding the CPU physical addresses being programmed
+  to PARF registers as suggested by Bjorn Helgaas.
+- Updated the type of 'dbi_phys_addr' and 'atu_phys_addr' fileds to
+  resource_size_t as suggested by Serge Semin.
+- Changed the value being programmed to PARF_SLV_ADDR_SPACE_SIZE
+  register from all 0xFs to setting 0x80000000 as this register
+  only considers powers of 2 as value. Updated the commit message to
+  reflect the same.
+- Link to v3: https://lore.kernel.org/linux-pci/20240724022719.2868490-1-quic_pyarlaga@quicinc.com/T/
 
-What's going on here?  I hope we can at least move this to the _DSM
-patch since it seems related to that, not to the NPEM capability.  I
-don't understand the initcall reference or what "lazy loading" means.
+Changes in v3:
+- Updated the functions qcom_pcie_configure_dbi_atu_base() and
+  qcom_pcie_configure_dbi_base() to make having 'dbi_phys_addr' mandatory
+  before programming PARF_SLV_ADDR_SPACE_SIZE register as suggested by
+  Mayank Rana.
+- Link to v2: https://lore.kernel.org/linux-pci/20240718051258.1115271-1-quic_pyarlaga@quicinc.com/T/
 
-Is there some existing ACPI ordering that guarantees ACPI_IPMI happens
-first?  Why do we need some Dell-specific thing here?
+Changes in v2:
+- Updated commit message as suggested by Bjorn Helgaas.
+- Updated function name from qcom_pcie_avoid_dbi_atu_mirroring()
+  to qcom_pcie_configure_dbi_atu_base() as suggested by Bjorn Helgaas.
+- Removed check for pdev in qcom_pcie_configure_dbi_atu_base() as
+  suggested by Bjorn Helgaas.
+- Moved the qcom_pcie_configure_dbi_atu_base() call in the
+  qcom_pcie_init_2_7_0() to the same place where PARF_DBI_BASE_ADDR
+  register is being programmed as suggested by Bjorn Helgaas.
+- Added 'dbi_phys_addr', 'atu_phys_addr' in the 'struct dw_pcie' to store
+  the physical addresses of dbi, atu base registers in
+  dw_pcie_get_resources() as suggested by Manivannan Sadhasivam.
+- Added separate functions qcom_pcie_configure_dbi_atu_base() and
+  qcom_pcie_configure_dbi_base() to program PARF register of different
+  PARF versions. This is to disable DBI mirroring in all Qualcomm PCIe
+  controllers as suggested by Manivannan Sadhasivam.
+- Link to v1: https://lore.kernel.org/linux-pci/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/T/
 
-What is ACPI_IPMI?  I guess it refers to the "acpi_ipmi" module,
-acpi_ipmi.c?
+Tested:
+- Validated NVME functionality with PCIe6a on x1e80100 platform.
+- Validated WiFi functionality with PCIe4 on x1e80100 platform.
 
-> +#define DSM_GUID GUID_INIT(0x5d524d9d, 0xfff9, 0x4d4b,  0x8c, 0xb7, 0x74, 0x7e,\
-> +			   0xd5, 0x1e, 0x19, 0x4d)
-> +#define GET_SUPPORTED_STATES_DSM	1
-> +#define GET_STATE_DSM			2
-> +#define SET_STATE_DSM			3
-> +
-> +static const guid_t dsm_guid = DSM_GUID;
-> +
-> +static bool npem_has_dsm(struct pci_dev *pdev)
-> +{
-> +	acpi_handle handle;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return false;
-> +
-> +	return acpi_check_dsm(handle, &dsm_guid, 0x1,
-> +			      BIT(GET_SUPPORTED_STATES_DSM) |
-> +			      BIT(GET_STATE_DSM) | BIT(SET_STATE_DSM));
-> +}
+ drivers/pci/controller/dwc/pcie-designware.c |  2 +
+ drivers/pci/controller/dwc/pcie-designware.h |  2 +
+ drivers/pci/controller/dwc/pcie-qcom.c       | 72 ++++++++++++++++----
+ 3 files changed, 61 insertions(+), 15 deletions(-)
 
-> +void pci_npem_create(struct pci_dev *dev)
-> +{
-> +	const struct npem_ops *ops = &npem_ops;
-> +	int pos = 0, ret;
-> +	u32 cap;
-> +
-> +	if (!npem_has_dsm(dev)) {
-> +		pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_NPEM);
-> +		if (pos == 0)
-> +			return;
-> +
-> +		if (pci_read_config_dword(dev, pos + PCI_NPEM_CAP, &cap) != 0 ||
-> +		    (cap & PCI_NPEM_CAP_CAPABLE) == 0)
-> +			return;
-> +	} else {
-> +		/*
-> +		 * OS should use the DSM for LED control if it is available
-> +		 * PCI Firmware Spec r3.3 sec 4.7.
-> +		 */
-> +		return;
-> +	}
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 1b5aba1f0c92..bc3a5d6b0177 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -112,6 +112,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+ 		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
+ 		if (IS_ERR(pci->dbi_base))
+ 			return PTR_ERR(pci->dbi_base);
++		pci->dbi_phys_addr = res->start;
+ 	}
+ 
+ 	/* DBI2 is mainly useful for the endpoint controller */
+@@ -134,6 +135,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+ 			pci->atu_base = devm_ioremap_resource(pci->dev, res);
+ 			if (IS_ERR(pci->atu_base))
+ 				return PTR_ERR(pci->atu_base);
++			pci->atu_phys_addr = res->start;
+ 		} else {
+ 			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+ 		}
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 53c4c8f399c8..e518f81ea80c 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -407,8 +407,10 @@ struct dw_pcie_ops {
+ struct dw_pcie {
+ 	struct device		*dev;
+ 	void __iomem		*dbi_base;
++	resource_size_t		dbi_phys_addr;
+ 	void __iomem		*dbi_base2;
+ 	void __iomem		*atu_base;
++	resource_size_t		atu_phys_addr;
+ 	size_t			atu_size;
+ 	u32			num_ib_windows;
+ 	u32			num_ob_windows;
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 0180edf3310e..4d74d1b652be 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -45,6 +45,7 @@
+ #define PARF_PHY_REFCLK				0x4c
+ #define PARF_CONFIG_BITS			0x50
+ #define PARF_DBI_BASE_ADDR			0x168
++#define PARF_SLV_ADDR_SPACE_SIZE		0x16c
+ #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+ #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+ #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+@@ -52,8 +53,13 @@
+ #define PARF_LTSSM				0x1b0
+ #define PARF_SID_OFFSET				0x234
+ #define PARF_BDF_TRANSLATE_CFG			0x24c
+-#define PARF_SLV_ADDR_SPACE_SIZE		0x358
++#define PARF_DBI_BASE_ADDR_V2			0x350
++#define PARF_DBI_BASE_ADDR_V2_HI		0x354
++#define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
++#define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
+ #define PARF_NO_SNOOP_OVERIDE			0x3d4
++#define PARF_ATU_BASE_ADDR			0x634
++#define PARF_ATU_BASE_ADDR_HI			0x638
+ #define PARF_DEVICE_TYPE			0x1000
+ #define PARF_BDF_TO_SID_TABLE_N			0x2000
+ #define PARF_BDF_TO_SID_CFG			0x2c00
+@@ -108,7 +114,7 @@
+ #define PHY_RX0_EQ(x)				FIELD_PREP(GENMASK(26, 24), x)
+ 
+ /* PARF_SLV_ADDR_SPACE_SIZE register value */
+-#define SLV_ADDR_SPACE_SZ			0x10000000
++#define SLV_ADDR_SPACE_SZ			0x80000000
+ 
+ /* PARF_MHI_CLOCK_RESET_CTRL register fields */
+ #define AHB_CLK_EN				BIT(0)
+@@ -324,6 +330,50 @@ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+ }
+ 
++static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
++{
++	struct dw_pcie *pci = pcie->pci;
++
++	if (pci->dbi_phys_addr) {
++		/*
++		 * PARF_DBI_BASE_ADDR register is in CPU domain and require to
++		 * be programmed with CPU physical address.
++		 */
++		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
++							PARF_DBI_BASE_ADDR);
++		writel(SLV_ADDR_SPACE_SZ, pcie->parf +
++						PARF_SLV_ADDR_SPACE_SIZE);
++	}
++}
++
++static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
++{
++	struct dw_pcie *pci = pcie->pci;
++
++	if (pci->dbi_phys_addr) {
++		/*
++		 * PARF_DBI_BASE_ADDR_V2 and PARF_ATU_BASE_ADDR registers are
++		 * in CPU domain and require to be programmed with CPU
++		 * physical addresses.
++		 */
++		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
++							PARF_DBI_BASE_ADDR_V2);
++		writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
++						PARF_DBI_BASE_ADDR_V2_HI);
++
++		if (pci->atu_phys_addr) {
++			writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
++							PARF_ATU_BASE_ADDR);
++			writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
++							PARF_ATU_BASE_ADDR_HI);
++		}
++
++		writel(0x0, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
++		writel(SLV_ADDR_SPACE_SZ, pcie->parf +
++					PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
++	}
++}
++
+ static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
+ {
+ 	u32 val;
+@@ -540,8 +590,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+ 
+ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+ {
+-	/* change DBI base address */
+-	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
++	qcom_pcie_configure_dbi_base(pcie);
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+@@ -628,8 +677,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+ 	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+-	/* change DBI base address */
+-	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
++	qcom_pcie_configure_dbi_base(pcie);
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+ 	val = readl(pcie->parf + PARF_SYS_CTRL);
+@@ -811,13 +859,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+ 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+ 	u32 val;
+ 
+-	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+-
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+-	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
++	qcom_pcie_configure_dbi_atu_base(pcie);
+ 
+ 	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+ 		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+@@ -913,8 +959,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+-	/* change DBI base address */
+-	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
++	qcom_pcie_configure_dbi_atu_base(pcie);
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+ 	val = readl(pcie->parf + PARF_SYS_CTRL);
+@@ -1123,14 +1168,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+ 	u32 val;
+ 	int i;
+ 
+-	writel(SLV_ADDR_SPACE_SZ,
+-		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+-
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+-	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
++	qcom_pcie_configure_dbi_atu_base(pcie);
+ 
+ 	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+ 	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+-- 
+2.25.1
 
-I know this is sort of a transient state since the next patch adds
-full _DSM support, but I do think (a) the fact that NPEM will stop
-working simply because firmware adds _DSM support is unexpected
-behavior, and (b) npem_has_dsm() and the other ACPI-related stuff
-would fit better in the next patch.  It's a little strange to have
-them mixed here.
-
-> +++ b/include/uapi/linux/pci_regs.h
-> ...
-
-> +#define PCI_NPEM_CAP	0x04 /* NPEM capability register */
-> +#define	 PCI_NPEM_CAP_CAPABLE		0x00000001 /* NPEM Capable */
-> +
-> +#define PCI_NPEM_CTRL	0x08 /* NPEM control register */
-> +#define	 PCI_NPEM_CTRL_ENABLE		0x00000001 /* NPEM Enable */
-
-Spaces instead of tabs after #define, as you did below (mostly), would
-make the diff prettier.
-
-> +#define  PCI_NPEM_CMD_RESET		0x00000002 /* NPEM Reset Command */
-> +#define  PCI_NPEM_IND_OK		0x00000004 /* NPEM indication OK */
-> +#define  PCI_NPEM_IND_LOCATE		0x00000008 /* NPEM indication Locate */
-> ...
-
-> +#define PCI_NPEM_STATUS	0x0c /* NPEM status register */
-> +#define	 PCI_NPEM_STATUS_CC		0x00000001 /* NPEM Command completed */
-
-Ditto.
-
-Bjorn
 
