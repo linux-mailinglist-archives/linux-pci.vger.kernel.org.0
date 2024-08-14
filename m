@@ -1,163 +1,175 @@
-Return-Path: <linux-pci+bounces-11667-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D25AB951A92
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 14:09:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6248E951AD0
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 14:28:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2740B21843
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 12:09:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 945B6B2115B
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 12:28:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE1ED1AC44E;
-	Wed, 14 Aug 2024 12:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 011CF1B0111;
+	Wed, 14 Aug 2024 12:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgjNepPV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DtXbiuR/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C492B1AC43D;
-	Wed, 14 Aug 2024 12:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5531A00F3
+	for <linux-pci@vger.kernel.org>; Wed, 14 Aug 2024 12:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723637358; cv=none; b=m/XaNJNYusRwVkc5JViBfW+xzmgYIbZuH1Ghmkc1ZHfB8V/uChFOsq0hdQPQmwPUS+3zAgWsuKS0+giYjCYhgduUgCTVBxennbK/UF2CD0HGBPDZ1CT2maHZ3turnkfGRMm8BePVFwhgo5z4h7wHm404uT6O/uoXNHHd4aeIeIQ=
+	t=1723638478; cv=none; b=WaSkf2YBtkpvWPcHO0GvMInjqtDmR/BW8u7Ue8BB0MPj2JIYet8i7FnurmEiAIh3ib8cSHxf3dqSSlvnmQS4hdUvTFnfkOEjIRw5uCBd/w+YGJbItqFkNCm97OOblln+4MPdxrd7XzRW5vu9noKXFKzkh+QWJUUDgtONHTj8Qww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723637358; c=relaxed/simple;
-	bh=xlfWgzKDkuKv1C0s0YOZ4CXTd4OnPGuxZGUNwfZUY0g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TSRPif4XIssv3UAheugyYSKf+7DO2AmN2UjTSyrhSV807PYK0tSuDZ6gsHoHhPgKoxG12IZJ8nkkPzc6zscAg52TM1w27UUumPjxiasyJOus4SXaMBjjCgLO4EzcnxcxtgNG6FmXYihPc1l3lvud6hvYWLq9VfXuJVVwEXq72xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgjNepPV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9852EC32786;
-	Wed, 14 Aug 2024 12:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723637358;
-	bh=xlfWgzKDkuKv1C0s0YOZ4CXTd4OnPGuxZGUNwfZUY0g=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=MgjNepPVWjJ+N/hSvJhguEja90bnkFN0GyconPb/wlg6umFM3no5p/wcZZlZndasW
-	 8HOj74vJMpSkmd8Qd6dOYT4zcbfSuEwys36CGnwqe6Z0nfVIMmO9srPQhBsTuWDi73
-	 vN1olpgeIUVqjT8OaTqeS2xSsAZXxe3moA79GXXxzcyvdLiOFaC8jk+I8AsPQMIwAS
-	 X0TtZ/AafY0DNLS0YtpCT7f0PgnM97IkqtkvO5YewSJKhU9dUkA51FBNOnR+c7qU/q
-	 GkDihFODg6/GiSWoIcUCwz8hjDJ+YFIWdgBZwXcateqmoLoiikP1mbwfKZuETaq/bZ
-	 RH07TLrC5L66Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7727CC3DA4A;
-	Wed, 14 Aug 2024 12:09:18 +0000 (UTC)
-From: Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>
-Date: Wed, 14 Aug 2024 20:09:15 +0800
-Subject: [PATCH v3] ACPI: PCI: check if the root io space is page aligned
+	s=arc-20240116; t=1723638478; c=relaxed/simple;
+	bh=ZRU+QTLnI/iy/xaKdrquHdEbdCwKrGniABpCjA1yO0o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sOL+NpEV+PPOZ1WWgY3DDaD1NrY7K8nPLkhBeuIDt7eO4gksIgTjBEOMjG9hMieDooWKFu/dtwwQzNe5rXHEvjurupebPO727JkfyxQE65e457Df0nur5ybHPpM9DzRcd8ma1a2Giwx7ePolz4pzvNYP452/rOwjJY9KEY0ryhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DtXbiuR/; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723638477; x=1755174477;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZRU+QTLnI/iy/xaKdrquHdEbdCwKrGniABpCjA1yO0o=;
+  b=DtXbiuR/vFrQq/dfFdyB5CWSE/Ea3XpiwGluMX9T3iXq4MWj8sFcvW2t
+   Uz07W73J7W4SZ/UGjHK5jbwfGGlw7V1m/buWw6x3mxhyI3+gWQPD641gl
+   rMb9AvdBZuTaCbGemgmQur5hODU6ziNhZfkalAIgbDRDisbeWVLmdYvhH
+   YNAnkOgJ9Iy9eDA5eRH0Svkmyhrhk8Z2xaBCCFkdgOaHFSoQGhW0uG+G5
+   Gfgpew2JcLxCT3nhT0106Pz0oYysowevSSpc5VD2CpzBqyYgOduaVfFZ7
+   uzI1eJ/KdNZrAuDQA7tqnAOyPRUdMgbPzxGg/qNSCOOTzKtKW4cDVVqnE
+   g==;
+X-CSE-ConnectionGUID: /rkv64D2T/yNyQQQjXal9Q==
+X-CSE-MsgGUID: TT/DudQsTg6j7us9KzCD9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="33256464"
+X-IronPort-AV: E=Sophos;i="6.10,145,1719903600"; 
+   d="scan'208";a="33256464"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 05:27:56 -0700
+X-CSE-ConnectionGUID: VszXL5pHQRyoUl9nsk/eLg==
+X-CSE-MsgGUID: 0e4rLMKMT66VpQ/Dm1ipAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,145,1719903600"; 
+   d="scan'208";a="82232940"
+Received: from mtkaczyk-dev.igk.intel.com ([10.102.108.41])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 05:27:53 -0700
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: linux-pci@vger.kernel.org
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Christoph Hellwig <hch@lst.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Marek Behun <marek.behun@nic.cz>,
+	Pavel Machek <pavel@ucw.cz>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v6 0/3] PCIe Enclosure LED Management
+Date: Wed, 14 Aug 2024 14:28:57 +0200
+Message-Id: <20240814122900.13525-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240814-check_pci_probe_res-v3-1-b6eaa6f99032@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAGqevGYC/43NwQrCMAyA4VeRnq206XCdJ99DZLRdtgXdOlopy
- ti72w08CB4kpz+QLzOLGAgjO+1mFjBRJD/mUPsdc70ZO+TU5GYgoBBaKu56dLd6clRPwVusA0Y
- OJSo8Nm0JFli+nAK29NzUyzV3T/Hhw2t7kuS6/XjFTy9JngcAUZQapLHnbjB0Pzg/sNVL8IcB2
- TBCOe0qW1T6y1iW5Q2WAXdS+gAAAA==
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
- Miao Wang <shankerwangmiao@gmail.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2630;
- i=shankerwangmiao@gmail.com; h=from:subject:message-id;
- bh=6oaDNHVrPEVfrCvEohkLob23Ms2FvyIxaW/2/yHOdZk=;
- b=owEBbQKS/ZANAwAKAbAx48p7/tluAcsmYgBmvJ5s3R3lWYU++7rDe2YItFtoK9N19W9fB8rFh
- +JIF/fxAUmJAjMEAAEKAB0WIQREqPWPgPJBxluezBOwMePKe/7ZbgUCZryebAAKCRCwMePKe/7Z
- buu7D/0RUBWCuBb/D16VR1j48OX8MdQFr3MObTJy3QPPNy0Frv+Um02juwAU1oiYtuj//VGhmOo
- 2OcUjRRfgXtxGU4IMr4iejr9831igP+Zsk4xcm8stA3bbTY9ogo28RdVwKG2L+VBOLfndG5PPuK
- yNErQUOAsDBVb4ep+r2CRiy37nfh9eZfbyxyosCarQZ31Svdt5RjbmR8iUYGxyGL3qYAMdVKapi
- mVLJijvvpg4Zo7FmE0PADOE2Sqr1RvM/nRrJu62CR+Z9Mn4Tc/N6qZoAp+jBEvNfAjeuvmziWXJ
- JxxCio+kHESbt1y8gB5zHkzy03JcRBuAk4m1T64wkmmhb39pKQuPoc30QUbyHQj8/iJ1zEatEJl
- gpeK0kzFsK0RfSrowh0vP7QrNAwMONZ4TDbYQfkZ3kGnoUFtdWnqiqojMZWzNF1Xf8irOd68UST
- vVUEO/zcuQgcZe/Bzymeo9EA3UH0Jzl+JTfRcTm2aRaZYbWBZSK1aKj+lHNCDVKNaylachEhpq+
- DkqBQ3qgtZFq/qdwK88j5KdRU8veIOxc9dGk0oM8//Mzz0BIdBx6yEHGAUUwja20dQUaDYmlDtO
- s9OBDGHfPtTAEgW3BmQD01VFV+J9a3U0uyvCD1+NGoVqzri7xJHnd4Lvhy0/ISvhVTJlSKLEYqC
- o6ly6PS1nboHxZg==
-X-Developer-Key: i=shankerwangmiao@gmail.com; a=openpgp;
- fpr=6FAEFF06B7D212A774C60BFDFA0D166D6632EF4A
-X-Endpoint-Received: by B4 Relay for shankerwangmiao@gmail.com/default with
- auth_id=189
-X-Original-From: Miao Wang <shankerwangmiao@gmail.com>
-Reply-To: shankerwangmiao@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Miao Wang <shankerwangmiao@gmail.com>
+Patchset is named as PCIe Enclosure LED Management because it adds two
+features:
+- Native PCIe Enclosure Management (NPEM)
+- PCIe SSD Status LED Management (DSM)
 
-When the IO resource given by _CRS method is not page aligned, especially
-when the page size is larger than 4KB, serious problems will happen
-because the misaligned address is passed down to pci_remap_iospace(),
-then to vmap_page_range(), and finally to vmap_pte_range(), where the
-length between addr and end is expected to be divisible by PAGE_SIZE, or
-the loop will overrun till the pfn_none check fails.
+Both are pattern oriented standards, they tell which "indication"
+should blink. It doesn't control physical LED or pattern visualization.
 
-Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
----
-Changes in v3:
-- Adjust code formatting.
-- Reword the commit message for further description of the possible reason
-  leading to misaligned IO resource addresses.
-- Link to v2: https://lore.kernel.org/r/20240814-check_pci_probe_res-v2-1-a03c8c9b498b@gmail.com
+Overall, driver is simple but it was not simple to fit it into interfaces
+we have in kernel (We considered leds and enclosure interfaces). It reuses
+leds interface, this approach seems to be the best because:
+- leds are actively maintained, no new interface added.
+- leds do not require any extensions, enclosure needs to be adjusted first.
 
-Changes in v2:
-- Sorry for posting out the draft version in V1, fixed a silly compiling issue.
-- Link to v1: https://lore.kernel.org/r/20240814-check_pci_probe_res-v1-1-122ee07821ab@gmail.com
----
- drivers/acpi/pci_root.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+There are trade-offs:
+- "brightness" is the name of sysfs file to control led. It is not
+  natural to use brightness to set patterns, that is why multiple led
+  devices are created (one per indication);
+- Update of one led may affect other leds, led triggers may not work
+  as expected.
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index d0bfb3706801..a425e93024f2 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -858,7 +858,7 @@ static void acpi_pci_root_validate_resources(struct device *dev,
- 	}
- }
- 
--static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
-+static void acpi_pci_root_remap_iospace(struct acpi_device *device,
- 			struct resource_entry *entry)
- {
- #ifdef PCI_IOBASE
-@@ -868,7 +868,15 @@ static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
- 	resource_size_t length = resource_size(res);
- 	unsigned long port;
- 
--	if (pci_register_io_range(fwnode, cpu_addr, length))
-+	if (!PAGE_ALIGNED(cpu_addr) || !PAGE_ALIGNED(length) ||
-+	    !PAGE_ALIGNED(pci_addr)) {
-+		dev_err(&device->dev,
-+			FW_BUG "I/O resource %pR or its offset %pa is not page aligned\n",
-+			res, &entry->offset);
-+		goto err;
-+	}
-+
-+	if (pci_register_io_range(&device->fwnode, cpu_addr, length))
- 		goto err;
- 
- 	port = pci_address_to_pio(cpu_addr);
-@@ -910,7 +918,7 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
- 	else {
- 		resource_list_for_each_entry_safe(entry, tmp, list) {
- 			if (entry->res->flags & IORESOURCE_IO)
--				acpi_pci_root_remap_iospace(&device->fwnode,
-+				acpi_pci_root_remap_iospace(device,
- 						entry);
- 
- 			if (entry->res->flags & IORESOURCE_DISABLED)
+Changes from v1:
+- Renamed "pattern" to indication.
+- DSM support added.
+- fixed nits reported by Bjorn.
 
----
-base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
-change-id: 20240813-check_pci_probe_res-27e3e6df72b2
+Changes from v2:
+- Introduce lazy loading to allow DELL _DSM quirks to work, reported by
+  Stuart.
+- leds class initcall moved up in Makefile, proposed by Dan.
+- fix other nits reported by Dan and Iipo.
 
-Best regards,
+Changes from v3:
+- Remove unnecessary packed attr.
+- Fix doc issue reported by lkp.
+- Fix read_poll_timeout() error handling reported by Iipo.
+- Minor fixes reported by Christoph.
+
+Changes from v4:
+- Use 0 / 1 instead of LED_OFF/LED_ON, suggested by Marek.
+- Documentation added, suggested by Bjorn.
+
+Change from v5:
+- Remove unnecessary _packed, reported by Christoph.
+- Changed "led" to "LED" and other typos suggested by Randy.
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Tested-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Marek Behun <marek.behun@nic.cz>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
+Link: https://lore.kernel.org/linux-pci/20240813113024.17938-1-mariusz.tkaczyk@linux.intel.com
+
+Mariusz Tkaczyk (3):
+  leds: Init leds class earlier
+  PCI/NPEM: Add Native PCIe Enclosure Management support
+  PCI/NPEM: Add _DSM PCIe SSD status LED management
+
+ Documentation/ABI/testing/sysfs-bus-pci |  72 +++
+ drivers/Makefile                        |   4 +-
+ drivers/pci/Kconfig                     |   9 +
+ drivers/pci/Makefile                    |   1 +
+ drivers/pci/npem.c                      | 590 ++++++++++++++++++++++++
+ drivers/pci/pci.h                       |   8 +
+ drivers/pci/probe.c                     |   2 +
+ drivers/pci/remove.c                    |   2 +
+ include/linux/pci.h                     |   3 +
+ include/uapi/linux/pci_regs.h           |  35 ++
+ 10 files changed, 725 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/npem.c
+
 -- 
-Miao Wang <shankerwangmiao@gmail.com>
-
+2.35.3
 
 
