@@ -1,44 +1,48 @@
-Return-Path: <linux-pci+bounces-11679-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11677-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 080D195220F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 20:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7614B9521CC
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 20:05:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93BF12861BA
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 18:29:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32B28284021
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 18:05:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DA791BD038;
-	Wed, 14 Aug 2024 18:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69FC41BD036;
+	Wed, 14 Aug 2024 18:05:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="bfFmdQ2J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAb8PMIL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1017.netease.com (mail-m1017.netease.com [154.81.10.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993F21B0111;
-	Wed, 14 Aug 2024 18:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388D21BD018;
+	Wed, 14 Aug 2024 18:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723660185; cv=none; b=i4v/KXGERPBYFgpcKC5rOZxW8WUErujdG8hxiWBUopIIn5iww0Ad0sTsimU0OQJ825xR8vBAYebsz4RXdPIrbAadaqWftO3nG1rHyt6OJCyy8QkfuXaad4mzEON0Z5zkXd2ee3HzGyjn+/ZS/3I5RvW9r01zLQhwfc0IgyhN4Ew=
+	t=1723658721; cv=none; b=KTx9ToHU4Jvd8hdF7VAdzapXMR1v0+ugLU/tn6Gt85Q+Be6zFtrCaFKWItixAs4qMbXTL30hgo1G6F4Cn3Er40aq1eDJIPXOhgb/I/ZyZ+8mZ3mTndS8J1SDe9fxWSJ4L4C77SDv1UpbQxeSXLka+vNsxhRLC0gffzbgkF5bd4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723660185; c=relaxed/simple;
-	bh=Y9c/XLRJlf8KnnkMcsULdAtCn226wo9wTDZfFWWtVBs=;
-	h=Message-ID:Date:MIME-Version:Cc:To:From:Subject:Content-Type; b=t2vI1oPb/7HdOC/bZ0yu+jVPUfEdRUZnAJ2EdzBOx0VzOxvQuulmEf1KpMqK1i+swwvJETOxgIdhkgSIgHOAgc+LXCssz4Md49/0WjZgywNt+w/+3PfS88Zml/JtjNFiY94LzKFhOHS5f+1acd91TmrRob+DkOZEJJsZ6Z4sbU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=bfFmdQ2J; arc=none smtp.client-ip=154.81.10.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-DKIM-Signature: a=rsa-sha256;
-	b=bfFmdQ2JOyRtEM8Haweg5FGlJmlqS4Jm/rCbQjBX08K827IQQQFjQw9nMddgOGtkZNosiOSkCXQFIwIJLREmr/gJZIAYlykkK4xF0cT2nKiAOlMmkmRHPD6Qf7UX+7n6g04xqJLN9HwMIiLStj2HhueMbA6CT0Tt1PQJXVAmL2k=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=o8T7XJcjR9eOeMW62BDQdgaQ5z2uFScakm2eov4tfpQ=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.45] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id B090C460862;
-	Wed, 14 Aug 2024 18:12:38 +0800 (CST)
-Message-ID: <3dd691bc-d13d-483b-96d1-7aae79ea6671@rock-chips.com>
-Date: Wed, 14 Aug 2024 18:12:38 +0800
+	s=arc-20240116; t=1723658721; c=relaxed/simple;
+	bh=ByaQEa/ebQJriGDv5RGZ5LDmAhNxf5CNIh7glEZdx4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kPV7/B8eQ9k6aGfYGU4dTn/sYW4p+vjrJ5ZeB8iCWcFpE5GC9ken6blMGuKc6oVInTos/T8KwCJUWBg74PpkyMI0iCj3A/0VjsCjjfAUzv0AvRJaA7AOj9CKCnXFFPBf1jSSyMT3E3wEFKa4jJFhov5GW4oygMZ9LvPogGwhspQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAb8PMIL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64248C4AF0A;
+	Wed, 14 Aug 2024 18:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723658720;
+	bh=ByaQEa/ebQJriGDv5RGZ5LDmAhNxf5CNIh7glEZdx4k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VAb8PMIL3qxPtUnV9WWo9uG1rQUOVdT5Cq3UOCZ3WlMmpAZMDzFK/ey9LA1j1Cds3
+	 Jd60+UFUohuBtig72vX5e/I5pRkk086w2XL4jBCp0fO21ukHe2U8ZW6w4lqND/FAdn
+	 a2tlJOJCx/oXmJetW8CifmUT8C2LRAoS2DmoldRwVTLT3fXOq/6q/hfSEdIU8XwSeN
+	 K3RAJJFpGIckkg429Kuc0fN0iqjkmqY4FsEUjCAhwmVYVZF35w/SU3QzYo9MEc7knF
+	 Ilrbmmb1MLrufMAivXJZLrCIFAOVEfCtsOM04y4jY3LdKzYu7MOK4YHKqjhtnsBgEC
+	 kmIYtg10Z4dYg==
+Message-ID: <a139a9dd-65b5-45cc-9537-ce0914936101@kernel.org>
+Date: Wed, 14 Aug 2024 20:05:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -46,61 +50,105 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Subject: Re: [PATCH v5 01/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
+ add 7712 SoC
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jingoo Han <jingoohan1@gmail.com>,
- "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Language: en-GB
-To: Andrey Smirnov <andrew.smirnov@gmail.com>,
- Jisheng Zhang <jszhang@kernel.org>, Joao Pinto <Joao.Pinto@synopsys.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [v4,05/11] PCI: dwc: imx6: Share PHY debug register definitions
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240731222831.14895-1-james.quinlan@broadcom.com>
+ <20240731222831.14895-2-james.quinlan@broadcom.com>
+ <e1002187-fca0-455c-840c-32489e5eadb4@kernel.org>
+ <CA+-6iNzDcF3pA1T3FuGNS4NPn1RrjHxxAVStN6t++xDsx-wUXQ@mail.gmail.com>
+ <c5b0e395-7f2b-4dca-9764-83d0878e99c6@kernel.org>
+ <CA+-6iNwgC8RtXu3g70kH8Lkw=LHT-6MtAbt=ZReq_wXp9nF6VA@mail.gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CA+-6iNwgC8RtXu3g70kH8Lkw=LHT-6MtAbt=ZReq_wXp9nF6VA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUMYGFZPTkxMGU9CSxhPHh1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a915060139903aekunmb090c460862
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCo6KRw*NzIzH01WKAoMNRYW
-	GFEwFAxVSlVKTElITUhLSE5CQkpMVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUhKQ0o3Bg++
 
-Hi folks,
+On 14/08/2024 19:35, Jim Quinlan wrote:
+>> I understand that this was not clear, but you never came with a question
+>> what did I mean.
+> 
+> Hello Krzysztof,
+> 
+> Sorry to bother you again but I want this to be clear.  This commit
+> contains the changes:
+> 
+> 1. alphabetical order of compatible strings
+> 2. maxItems
 
-       DWC PCIe driver introduced a default method to check link up for
-DWC controller. However, this is broken by test and can't work 100%
-reliably. It was first added by commit 1 and fixed by commit 2. Finally
-commit 3 moved PHY debug regs to PCIE_PORT_DEBUG1 which checks
-cxpl_debug_info[63:32].
+Only this one to new commit, because this is a functional change.
 
-Quoted from DWC databook, section 8.2.3 AXI Bridge Initialization, 
-Clocking and Reset:
+> 3.  maintainer change
 
-"In RC Mode, your AXI application must not generate any MEM or I/O
-requests, until the host software has enabled the Memory Space Enable
-(MSE), and IO Space Enable (ISE) bits respectively. Your RC application
-should not generate CFG requests until it has confirmed that the link is
-up by sampling the smlh_link_up and rdlh_link_up outputs."
+All others are rather trivial or organizational, so they could stay in
+one commit.
 
+> 
+> Do you want  me to split off 3 since it is not a "cleanup"?  If not,
+> please specify.
+> 
+Best regards,
+Krzysztof
 
-So the problem is very clear that cxpl_debug_info from DWC core is
-missing rdlh_link_up. So reading PCIE_PORT_DEBUG1 and check smlh_link_up
-isn't enough. But I don't know what PCIE_PHY_DEBUG_R1 means. Does it
-means both of smlh_link_up and rdlh_link_up? If yes, than commit 3 
-should be removed. Otherwise it was broken already from the beginning
-commit 1.
-
-[1]: commit dac29e6c5460 ("PCI: designware: Add default link up check if
-sub-driver doesn't override")
-
-[2]: commit 01c076732e82 ("PCI: designware: Check LTSSM training bit
-before deciding link is up")
-
-[3]: commit 60ef4b072ba0 ("PCI: dwc: imx6: Share PHY debug register
-definitions")
 
