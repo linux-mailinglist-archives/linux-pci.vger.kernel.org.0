@@ -1,73 +1,56 @@
-Return-Path: <linux-pci+bounces-11674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94827951F76
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 18:08:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7C02952021
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 18:37:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6125FB289C2
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 16:03:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 261E81C217E8
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 16:37:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4315C1E53A;
-	Wed, 14 Aug 2024 16:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59BA61B3748;
+	Wed, 14 Aug 2024 16:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4UWZB3H"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/xMr0H5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A371B86CA
-	for <linux-pci@vger.kernel.org>; Wed, 14 Aug 2024 16:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A3C1B86D1;
+	Wed, 14 Aug 2024 16:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723651368; cv=none; b=lInQrSwAAbRkvJ+Jrp5aF2jYbyT1dyInqyozNbyl8LqtVfXISyruLanKJWlEvs9c5LFnXzVolMgepJT3tp/G7SjRbimMDvObdyT4HVZ+Y6p6zmKR6oTTYk1G84erWMS0zY5zdSy2jPLEnsr9DpmgwCkD1QshZYhXy10VC7WmB68=
+	t=1723653434; cv=none; b=dfG/dVXFewKZlgXfUndyNK1mucbHT7hCBy3ks3h4IQVDpRWoOWl5W6zRCYTZyf+3HojPAwqw0qAquZhgeSoU1saL3k3dxH6h2hUi1lcmBmw72zldHImkk64NYsppU0HeHPJeYuQPf+U2ss2cLUd61oV9a4Hf/1MMny7+Kw1PMsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723651368; c=relaxed/simple;
-	bh=dVpYbSMwXXH5xaDgXM/6yoVCQVcak2/YQIaWaKraFgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=D7Csw9vZ/ie3cEGONF6z8CP94KIhel++ane9pA4DTCf03rLnWJ8sEBjlIO64xz/9AQljD1mVDEXt1Vu+LzIYOkvoLctM/v4poRKub+HXctDEVPLwltwpa6KB58oUca7SqHpzWme4yH0l07rvKXorHL81oRb+ZqAfyWM3iklR/zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4UWZB3H; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723651366; x=1755187366;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dVpYbSMwXXH5xaDgXM/6yoVCQVcak2/YQIaWaKraFgc=;
-  b=N4UWZB3HMun/rh/BVRCB5kwErFOVFvwzsnwNAzFxEHs2B72GbP27cs4T
-   2fxmSUcpEOaGboe8LCsRpfgGfOfkT5wMpAxV4b0AwTKGiq9AfW+eIMbcs
-   KXiurgnfQUnHv29jh0OmUmknDt8F/ky1Nx2yLV5t9xcNCiKoKn5t9oPle
-   nY9EHMJL+B6aL/Hn5klIISruUawpoD46yI1VKjenqEjJoQtgcppQeePLA
-   s4YclLVG0v1Nw8laoazS5guUIugv0uvH+r85RYDEtSuUMQ19vfmF/wQ79
-   6Zsi1mET5g4RrwBFHxvYf3yd3AO7hCPrzXsEbsWSGbgUmfRkBRYY9qdCZ
-   A==;
-X-CSE-ConnectionGUID: d4gDsD7uTACG9TvzlPszmw==
-X-CSE-MsgGUID: Y3T6kZrORviFl10CywFbGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="22029427"
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="22029427"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 09:02:15 -0700
-X-CSE-ConnectionGUID: wyXDO9UUTGG6g+AoFlOFKQ==
-X-CSE-MsgGUID: 3bLHnk8oQ9qvpACNRQhblw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="89766454"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 14 Aug 2024 09:02:14 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1seGRv-0002Hu-1h;
-	Wed, 14 Aug 2024 16:02:11 +0000
-Date: Thu, 15 Aug 2024 00:01:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/qcom] BUILD SUCCESS
- 6d27436b41d4e756565b4fdf93eda300df59cee5
-Message-ID: <202408150056.1GFLHTr6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1723653434; c=relaxed/simple;
+	bh=6RJi14OWFncm4pr5rNS4VYJAxaixOf/qt2UvNYUHlGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=imBJmMron4OiiUlDfQkMc9OeFFmcvrIQAzs1S8w+WxOoy5k0rtermgLf4+zOm3FBemsLv5lY8zqh6Xc2PjwDhYU9ZWVb1f0JF4OSHeuVs2U23172XMtGQIPm26E47FhY89hD7OSxuvsLXoTFm3z3DOtM7VbIMvr2LXnG2552YBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/xMr0H5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66712C116B1;
+	Wed, 14 Aug 2024 16:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723653433;
+	bh=6RJi14OWFncm4pr5rNS4VYJAxaixOf/qt2UvNYUHlGs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=h/xMr0H5zKif+MNaGHUajjGxNuAubvRat9btd7tMkvLATRe/2ui4G16qWnZzYjfEb
+	 4kpuHeHKjnJva71CApWlQVD/H/JzFWrOS21FSgW4MS2oLS+Xn7vU6qbjGoQHsrIPbA
+	 jCyDz1h3r7h3nyAr8K/qOJOsjo0OIWagkkhFXRocNXhGsljX2vZwlLhtE+mnCEqJ1x
+	 vFFBDyCiAdwjGVOwx9VAnLl6E7JDI+9umBueXOAMDwfsqg/h33Tkrm4Ua/shR1RIpP
+	 9ecFpA0WM60CQ1hzgM7SqvIUvnKgLMK/Wlo9QIBNXbwo/8r6rTQS4JELFnEY2yn6zd
+	 NpSAEniob9nhg==
+Date: Wed, 14 Aug 2024 11:37:11 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: shankerwangmiao@gmail.com
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3] ACPI: PCI: check if the root io space is page aligned
+Message-ID: <20240814163711.GA351420@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,237 +58,106 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240814-check_pci_probe_res-v3-1-b6eaa6f99032@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
-branch HEAD: 6d27436b41d4e756565b4fdf93eda300df59cee5  PCI: qcom-ep: Disable MHI RAM data parity error interrupt for SA8775P SoC
+[+cc linux-mm for vmap page alignment checking question]
 
-elapsed time: 1178m
+On Wed, Aug 14, 2024 at 08:09:15PM +0800, Miao Wang via B4 Relay wrote:
+> From: Miao Wang <shankerwangmiao@gmail.com>
+> 
+> When the IO resource given by _CRS method is not page aligned, especially
+> when the page size is larger than 4KB, serious problems will happen
+> because the misaligned address is passed down to pci_remap_iospace(),
+> then to vmap_page_range(), and finally to vmap_pte_range(), where the
+> length between addr and end is expected to be divisible by PAGE_SIZE, or
+> the loop will overrun till the pfn_none check fails.
 
-configs tested: 216
-configs skipped: 8
+What does this problem look like to a user?  Panic, oops, hang,
+warning backtrace?  I assume this is not a regression, but maybe
+something you tripped over because of a BIOS defect?  Does this need
+to be backported to stable kernels?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It seems sort of weird to me that all those vmap_*_range() functions
+take the full page address (not a PFN) and depend on the addr/size
+being page-aligned, but they don't validate the alignment.  But I'm
+not a VM person and I suppose there's a reason for passing the full
+address.
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240814   gcc-13.2.0
-arc                   randconfig-002-20240814   gcc-13.2.0
-arc                           tb10x_defconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-20
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-14.1.0
-arm                         assabet_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                            dove_defconfig   gcc-12.4.0
-arm                            hisi_defconfig   gcc-12.4.0
-arm                          moxart_defconfig   gcc-12.4.0
-arm                         mv78xx0_defconfig   gcc-12.4.0
-arm                       omap2plus_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240814   gcc-13.2.0
-arm                   randconfig-002-20240814   gcc-13.2.0
-arm                   randconfig-003-20240814   gcc-13.2.0
-arm                   randconfig-004-20240814   gcc-13.2.0
-arm                           sunxi_defconfig   gcc-13.2.0
-arm                         wpcm450_defconfig   gcc-12.4.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240814   gcc-13.2.0
-arm64                 randconfig-002-20240814   gcc-13.2.0
-arm64                 randconfig-003-20240814   gcc-13.2.0
-arm64                 randconfig-004-20240814   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240814   gcc-13.2.0
-csky                  randconfig-002-20240814   gcc-13.2.0
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   clang-20
-hexagon                          allyesconfig   clang-20
-i386                             alldefconfig   gcc-12.4.0
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-12
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-12
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-12
-i386         buildonly-randconfig-001-20240814   clang-18
-i386         buildonly-randconfig-002-20240814   clang-18
-i386         buildonly-randconfig-003-20240814   clang-18
-i386         buildonly-randconfig-004-20240814   clang-18
-i386         buildonly-randconfig-005-20240814   clang-18
-i386         buildonly-randconfig-005-20240814   gcc-12
-i386         buildonly-randconfig-006-20240814   clang-18
-i386         buildonly-randconfig-006-20240814   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240814   clang-18
-i386                  randconfig-002-20240814   clang-18
-i386                  randconfig-002-20240814   gcc-12
-i386                  randconfig-003-20240814   clang-18
-i386                  randconfig-003-20240814   gcc-12
-i386                  randconfig-004-20240814   clang-18
-i386                  randconfig-005-20240814   clang-18
-i386                  randconfig-006-20240814   clang-18
-i386                  randconfig-011-20240814   clang-18
-i386                  randconfig-011-20240814   gcc-12
-i386                  randconfig-012-20240814   clang-18
-i386                  randconfig-012-20240814   gcc-12
-i386                  randconfig-013-20240814   clang-18
-i386                  randconfig-014-20240814   clang-18
-i386                  randconfig-014-20240814   gcc-11
-i386                  randconfig-015-20240814   clang-18
-i386                  randconfig-015-20240814   gcc-12
-i386                  randconfig-016-20240814   clang-18
-i386                  randconfig-016-20240814   gcc-12
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240814   gcc-13.2.0
-loongarch             randconfig-002-20240814   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                         amcore_defconfig   gcc-12.4.0
-m68k                                defconfig   gcc-13.2.0
-m68k                        mvme16x_defconfig   gcc-12.4.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-14.1.0
-mips                       bmips_be_defconfig   gcc-13.2.0
-mips                      pic32mzda_defconfig   gcc-13.2.0
-mips                         rt305x_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240814   gcc-13.2.0
-nios2                 randconfig-002-20240814   gcc-13.2.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-openrisc                  or1klitex_defconfig   gcc-12.4.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240814   gcc-13.2.0
-parisc                randconfig-002-20240814   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                      katmai_defconfig   gcc-12.4.0
-powerpc                      katmai_defconfig   gcc-13.2.0
-powerpc                 mpc837x_rdb_defconfig   gcc-13.2.0
-powerpc                      ppc44x_defconfig   gcc-13.2.0
-powerpc                       ppc64_defconfig   gcc-12.4.0
-powerpc               randconfig-002-20240814   gcc-13.2.0
-powerpc               randconfig-003-20240814   gcc-13.2.0
-powerpc                 xes_mpc85xx_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240814   gcc-13.2.0
-powerpc64             randconfig-002-20240814   gcc-13.2.0
-powerpc64             randconfig-003-20240814   gcc-13.2.0
-riscv                            allmodconfig   clang-20
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-14.1.0
-riscv                 randconfig-001-20240814   gcc-13.2.0
-riscv                 randconfig-002-20240814   gcc-13.2.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   clang-20
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-13.2.0
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240814   gcc-13.2.0
-s390                  randconfig-002-20240814   gcc-13.2.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                          landisk_defconfig   gcc-13.2.0
-sh                            migor_defconfig   gcc-12.4.0
-sh                          polaris_defconfig   gcc-12.4.0
-sh                    randconfig-001-20240814   gcc-13.2.0
-sh                    randconfig-002-20240814   gcc-13.2.0
-sh                          rsk7269_defconfig   gcc-13.2.0
-sh                      rts7751r2d1_defconfig   gcc-12.4.0
-sh                          sdk7780_defconfig   gcc-13.2.0
-sh                           sh2007_defconfig   gcc-12.4.0
-sh                     sh7710voipgw_defconfig   gcc-12.4.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc                       sparc64_defconfig   gcc-12.4.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240814   gcc-13.2.0
-sparc64               randconfig-002-20240814   gcc-13.2.0
-um                               allmodconfig   clang-20
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-12
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240814   gcc-13.2.0
-um                    randconfig-002-20240814   gcc-13.2.0
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240814   clang-18
-x86_64       buildonly-randconfig-002-20240814   clang-18
-x86_64       buildonly-randconfig-003-20240814   clang-18
-x86_64       buildonly-randconfig-004-20240814   clang-18
-x86_64       buildonly-randconfig-005-20240814   clang-18
-x86_64       buildonly-randconfig-006-20240814   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-11
-x86_64                randconfig-001-20240814   clang-18
-x86_64                randconfig-002-20240814   clang-18
-x86_64                randconfig-003-20240814   clang-18
-x86_64                randconfig-004-20240814   clang-18
-x86_64                randconfig-005-20240814   clang-18
-x86_64                randconfig-006-20240814   clang-18
-x86_64                randconfig-011-20240814   clang-18
-x86_64                randconfig-012-20240814   clang-18
-x86_64                randconfig-013-20240814   clang-18
-x86_64                randconfig-014-20240814   clang-18
-x86_64                randconfig-015-20240814   clang-18
-x86_64                randconfig-016-20240814   clang-18
-x86_64                randconfig-071-20240814   clang-18
-x86_64                randconfig-072-20240814   clang-18
-x86_64                randconfig-073-20240814   clang-18
-x86_64                randconfig-074-20240814   clang-18
-x86_64                randconfig-075-20240814   clang-18
-x86_64                randconfig-076-20240814   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240814   gcc-13.2.0
-xtensa                randconfig-002-20240814   gcc-13.2.0
+But it does mean that other users of vmap_page_range() are also
+potentially susceptible to this issue, e.g., vmap(), vm_map_ram(),
+ioremap_page_range(), etc., so I'm not sure that
+acpi_pci_root_remap_iospace() is the best place to check the
+alignment.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
+> ---
+> Changes in v3:
+> - Adjust code formatting.
+> - Reword the commit message for further description of the possible reason
+>   leading to misaligned IO resource addresses.
+> - Link to v2: https://lore.kernel.org/r/20240814-check_pci_probe_res-v2-1-a03c8c9b498b@gmail.com
+> 
+> Changes in v2:
+> - Sorry for posting out the draft version in V1, fixed a silly compiling issue.
+> - Link to v1: https://lore.kernel.org/r/20240814-check_pci_probe_res-v1-1-122ee07821ab@gmail.com
+> ---
+>  drivers/acpi/pci_root.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d0bfb3706801..a425e93024f2 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -858,7 +858,7 @@ static void acpi_pci_root_validate_resources(struct device *dev,
+>  	}
+>  }
+>  
+> -static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
+> +static void acpi_pci_root_remap_iospace(struct acpi_device *device,
+>  			struct resource_entry *entry)
+>  {
+>  #ifdef PCI_IOBASE
+> @@ -868,7 +868,15 @@ static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
+>  	resource_size_t length = resource_size(res);
+>  	unsigned long port;
+>  
+> -	if (pci_register_io_range(fwnode, cpu_addr, length))
+> +	if (!PAGE_ALIGNED(cpu_addr) || !PAGE_ALIGNED(length) ||
+> +	    !PAGE_ALIGNED(pci_addr)) {
+> +		dev_err(&device->dev,
+> +			FW_BUG "I/O resource %pR or its offset %pa is not page aligned\n",
+> +			res, &entry->offset);
+> +		goto err;
+> +	}
+> +
+> +	if (pci_register_io_range(&device->fwnode, cpu_addr, length))
+>  		goto err;
+
+This change verifies alignment for the ACPI case that leads to the
+pci_remap_iospace() -> vmap_page_range() -> vmap_pte_range() path, but 
+there are others even in drivers/pci/, e.g., pci_remap_iospace() is
+also used in the DT path, where I suppose a defective DT could cause a
+similar issue.
+
+>  	port = pci_address_to_pio(cpu_addr);
+> @@ -910,7 +918,7 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
+>  	else {
+>  		resource_list_for_each_entry_safe(entry, tmp, list) {
+>  			if (entry->res->flags & IORESOURCE_IO)
+> -				acpi_pci_root_remap_iospace(&device->fwnode,
+> +				acpi_pci_root_remap_iospace(device,
+>  						entry);
+>  
+>  			if (entry->res->flags & IORESOURCE_DISABLED)
+> 
+> ---
+> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+> change-id: 20240813-check_pci_probe_res-27e3e6df72b2
+> 
+> Best regards,
+> -- 
+> Miao Wang <shankerwangmiao@gmail.com>
+> 
+> 
 
