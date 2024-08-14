@@ -1,411 +1,434 @@
-Return-Path: <linux-pci+bounces-11683-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11684-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9510A952535
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 00:05:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F812952537
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 00:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F91B1F22FE7
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 22:05:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 355B61C203B8
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Aug 2024 22:05:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CED4145B00;
-	Wed, 14 Aug 2024 22:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8E6149C6F;
+	Wed, 14 Aug 2024 22:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E4CMS5Dr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzeIAHSA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EA9139CE3;
-	Wed, 14 Aug 2024 22:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B46149C69;
+	Wed, 14 Aug 2024 22:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723673126; cv=none; b=rvktqBHQ3laLnRGNjRaO9iRe3EISObzZEWnFjSrwquF7XNW4Cyn89yf1BE4h0ZzGVPcP/KjvQHlocxLAnLjHxF/cifA8UwfCW3bPnG4Eql6XbFJd2OrrLIQR8ZudujDrfZzKiOCGo/VWnyujBTGVbFfAhQmu6vKyDDx8c3XDlUc=
+	t=1723673128; cv=none; b=gkekwPqTAEir93b0h2UXRvVVovv046dZvcfBODB2ROSbdarCCORxHqS+5NWnHZrdKS1lkb7TXje+rqPcpucMPQFw5gAYOOoFmpw+EY3UC9JjfnPDmnh5XDNNoZYL2mrWwp1geECo6xCwxTQIZglEAp3R9k8iGxrgrjnVwe9YcY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723673126; c=relaxed/simple;
-	bh=3TeTHhtlVF+HT3Kzug+vcVhUSuKGRJequxjUXzsIPmI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AuN78T4hmlmjG9Z0vFdZVbIfGgvEBlrQyCJc9LxwcNEsRO2NsWlJwyVXLWMo9DBbiVglxC2qWO6ssoMDUCHaa62euV9i8kb431DYRDkAavHLjNYkuT0qkqrGf4N2fggXOYYLr9xI8CQuO95kyyo8US2H+rcdGWt8Qulo4Sc3EWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E4CMS5Dr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EJqSh9016363;
-	Wed, 14 Aug 2024 22:04:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=KAiR7NA6x+Ein79OOkruur
-	Pzx7CD/sjJO2mJmtnsKWg=; b=E4CMS5Dr26u4QAsuyx2hHp3GKBvEK6ViWGwz+v
-	cLisnRP3ejZ/LDTKFnFiLiqDfZcnFgvTT7tZKx5egKEyqirIASbjbwf8PL+RLkpM
-	9CiGK94U4V8REHZNnkK6i1TVCjk1IonYeZqmKp4HicJK57BTpJa8ajEfM28f4TkR
-	TZBn8kFUGqfPhY2Jk0agjvErtU+GFGPiF0t5C7ko5+ETgKW2aVIJMN+qYBCU17Qn
-	BKCpHuN/7+hc2P0d/cH8CeDHyfmuQ5GfsKbHfjAK8cKamcLRg4u+eCnY+KU/+Ap3
-	1tgmmpI2eaiKBG05ojA6gJCyQAEHdutrpBpC3FT1HQcyLXtw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41134eg82k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Aug 2024 22:04:56 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47EM4tRs030306
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 Aug 2024 22:04:55 GMT
-Received: from hu-pyarlaga-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 14 Aug 2024 15:04:55 -0700
-From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_mrana@quicinc.com>
-Subject: [PATCH v4] PCI: qcom: Disable mirroring of DBI and iATU register space in BAR region
-Date: Wed, 14 Aug 2024 15:03:38 -0700
-Message-ID: <20240814220338.1969668-1-quic_pyarlaga@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1723673128; c=relaxed/simple;
+	bh=/eyLRLDlp8r8LXHVDKIuiOzcvlXLulclSteHEeFFbEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=GX+r9XJ8SN0GD2wGASfZQb2+TNna5D5ftj9823PqOZEhpjOehCvWsk87cCn4V2lUKpUaR3waqlsJ0hVjBUz10AUHoCBCxWCBA/+j8bnPst9vgHYAS9Lvlz8tNiCx/oaQRq+40lR0m+4px15yoez2YHHaPFA9U/IHBRsSAD1FnU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzeIAHSA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848A5C4AF10;
+	Wed, 14 Aug 2024 22:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723673128;
+	bh=/eyLRLDlp8r8LXHVDKIuiOzcvlXLulclSteHEeFFbEk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nzeIAHSAIeUOu02BjNNFIFm6Upe0RuxT1cxSHfjBQJCXHoNs0jqIHACwOCY1NDouJ
+	 NRNoyDusZrPyWrIjhp7eAO2+HwBLp1teATcolC4q3h4mXvfsuT0JGDfKvU4jwkCOq9
+	 KMELQizUwhjyGwC8w4wYk9DGfAB68Sz5FgZHDisNXZYiZi7inzQWTHoBf8e2+VN+94
+	 R7CKisV5V6MH0n0Bls0f2f0lHIEpZnXn7pGGo/sZ3Nun58HDpM4/AUGZxr/wrns8kG
+	 0nSVumqqUJCxDJannO8UUZfpARO94BGUTdvfOGezaoZk7RC4MO9OiBYdcq5ijQgN9M
+	 d4Dck2DAtVszA==
+Date: Wed, 14 Aug 2024 17:05:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Stewart Hildebrand <stewart.hildebrand@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] PCI: Align small BARs
+Message-ID: <20240814220525.GA11399@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: RohhCJV1xzeBXph8iu9gzPSU9FERpgK2
-X-Proofpoint-GUID: RohhCJV1xzeBXph8iu9gzPSU9FERpgK2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-14_18,2024-08-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1011 mlxscore=0 spamscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408140152
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88b86f1a-76e2-491f-bbd8-5d9332659d01@amd.com>
 
-PARF hardware block which is a wrapper on top of DWC PCIe controller
-mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
-register to get the size of the memory block to be mirrored and uses
-PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
-address of DBI and ATU space inside the memory block that is being
-mirrored.
+[+cc Alex, kvm list since this topic is of general interest for
+passthrough; thread begins at
+https://lore.kernel.org/r/20240807151723.613742-1-stewart.hildebrand@amd.com]
 
-When a memory region which is located above the SLV_ADDR_SPACE_SIZE
-boundary is used for BAR region then there could be an overlap of DBI and
-ATU address space that is getting mirrored and the BAR region. This
-results in DBI and ATU address space contents getting updated when a PCIe
-function driver tries updating the BAR/MMIO memory region. Reference
-memory map of the PCIe memory region with DBI and ATU address space
-overlapping BAR region is as below.
+On Wed, Aug 14, 2024 at 09:55:26AM -0400, Stewart Hildebrand wrote:
+> On 8/8/24 17:53, Bjorn Helgaas wrote:
+> > On Wed, Aug 07, 2024 at 11:17:17AM -0400, Stewart Hildebrand wrote:
+> >> In this context, "small" is defined as less than max(SZ_4K, PAGE_SIZE).
+> >>
+> >> Issues observed when small BARs are not sufficiently aligned are:
+> >>
+> >> 1. Devices to be passed through (to e.g. a Xen HVM guest) with small
+> >> BARs require each memory BAR to be page aligned. Currently, the only way
+> >> to guarantee this alignment from a user perspective is to fake the size
+> >> of the BARs using the pci=resource_alignment= option. This is a bad user
+> >> experience, and faking the BAR size is not always desirable. For
+> >> example, pcitest is a tool that is useful for PCI passthrough validation
+> >> with Xen, but pcitest fails with a fake BAR size.
+> > 
+> > I guess this is the "money" patch for the main problem you're solving,
+> > i.e., passthrough to a guest doesn't work as you want?
+> 
+> Haha, yup!
+> 
+> > Is it the case that if you have two BARs in the same page, a device
+> > can't be passed through to a guest at all?
+> 
+> If the conditions are just right, passing through such a device could
+> maybe work, but in practice it's problematic and unlikely to work
+> reliably across different configurations.
+> 
+> Let me show example 1, from a real device that I'm working with.
+> Scrubbed/partial output from lspci -vv, from the host's point of view:
+> 
+> 	Region 0: Memory at d1924600 (32-bit, non-prefetchable) [size=256]
+> 	Region 1: Memory at d1924400 (32-bit, non-prefetchable) [size=512]
+> 	Region 2: Memory at d1924000 (32-bit, non-prefetchable) [size=1K]
+> 	Region 3: Memory at d1920000 (32-bit, non-prefetchable) [size=16K]
+> 	Region 4: Memory at d1900000 (32-bit, non-prefetchable) [size=128K]
+> 	Region 5: Memory at d1800000 (32-bit, non-prefetchable) [size=1M]
+> 	Capabilities: [b0] MSI-X: Enable- Count=2 Masked-
+> 		Vector table: BAR=0 offset=00000080
+> 		PBA: BAR=0 offset=00000090
+> 	Capabilities: [200 v1] Single Root I/O Virtualization (SR-IOV)
+> 		IOVCap:	Migration-, Interrupt Message Number: 000
+> 		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy+
+> 		IOVSta:	Migration-
+> 		Initial VFs: 4, Total VFs: 4, Number of VFs: 0, Function Dependency Link: 00
+> 		VF offset: 6, stride: 1, Device ID: 0100
+> 		Supported Page Size: 00000553, System Page Size: 00000001
+> 		Region 0: Memory at 00000000d0800000 (64-bit, non-prefetchable)
+> 		VF Migration: offset: 00000000, BIR: 0
+> 	Kernel driver in use: pci-endpoint-test
+> 	Kernel modules: pci_endpoint_test
+> 
+> BARs 0, 1, and 2 are small, and the host firmware placed them on the
+> same page. The host firmware did not page align the BARs.
+> 
+> The hypervisor can only map full pages. The hypervisor cannot map
+> partial pages. It cannot map a guest page offset from a host page where
+> the offset is smaller than PAGE_SIZE.
+> 
+> To pass this device through (physfn) as-is, the hypervisor would need to
+> preserve the page offsets of each BAR and propagate them to the guest,
+> taking translation into account. The guest (both firmware + OS)
+> necessarily has to preserve the offsets as well. If the page offsets
+> aren't preserved, the guest would be accessing the wrong data.
+> 
+> We can't reliably predict what the guest behavior will be.
+> 
+> SeaBIOS aligns BARs to 4k [1].
+> 
+> [1] https://review.coreboot.org/plugins/gitiles/seabios/+/refs/tags/rel-1.16.3/src/fw/pciinit.c#28
+> 
+> Xen's hvmloader does not align BARs to 4k. A patch was submitted to fix
+> this, but it wasn't merged upstream [2].
+> 
+> [2] https://lore.kernel.org/xen-devel/20200117110811.43321-1-roger.pau@citrix.com/
+> 
+> Arm guests don't usually have firmware to initialize BARs, so it's
+> usually up to the OS (which may or may not be Linux).
+> 
+> The point is that there is not a consistent BAR initialization
+> strategy/convention in the ecosystem when it comes to small BARs.
+> 
+> The host doesn't have a way to enforce the guest always map the small
+> BARs at the required offsets. IMO the most sensible thing to do is not
+> impose any sort of arbitrary page offset requirements on guests because
+> it happened to suit the host.
+> 
+> If the host were to use fake BAR sizes via the current
+> pci=resource_alignment=... option, the fake BAR size would propagate to
+> the guest (lying to the guest), pcitest would break, and the guest can't
+> do anything about it.
+> 
+> To avoid these problems, small BARs should be predictably page aligned
+> in both host and guest.
 
-                        |---------------|
-                        |               |
-                        |               |
-        ------- --------|---------------|
-           |       |    |---------------|
-           |       |    |       DBI     |
-           |       |    |---------------|---->DBI_BASE_ADDR
-           |       |    |               |
-           |       |    |               |
-           |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
-           |    BAR/MMIO|---------------|
-           |    Region  |       ATU     |
-           |       |    |---------------|---->ATU_BASE_ADDR
-           |       |    |               |
-        PCIe       |    |---------------|
-        Memory     |    |       DBI     |
-        Region     |    |---------------|---->DBI_BASE_ADDR
-           |       |    |               |
-           |    --------|               |
-           |            |               |---->SLV_ADDR_SPACE_SIZE
-           |            |---------------|
-           |            |       ATU     |
-           |            |---------------|---->ATU_BASE_ADDR
-           |            |               |
-           |            |---------------|
-           |            |       DBI     |
-           |            |---------------|---->DBI_BASE_ADDR
-           |            |               |
-           |            |               |
-        ----------------|---------------|
-                        |               |
-                        |               |
-                        |               |
-                        |---------------|
+Right, all the above makes sense to me.  I was fishing to see if vfio,
+etc., actually checked for two BARs in the same page and disallowed
+passthrough if that happened, but it doesn't sound like it.  It sounds
+like things will just break, e.g., guest accesses data at incorrect
+offsets, etc.
 
-Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
-used for BAR region which is why the above mentioned issue is not
-encountered. This issue is discovered as part of internal testing when we
-tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
-we are trying to fix this.
+> > Or is it just that all
+> > devices with BARs that share a page have to be passed through to the
+> > same guest, sort of like how lack of ACS can force several devices to
+> > be in the same IOMMU isolation group?
+> 
+> This case is much worse. If two devices have BARs sharing a page in a
+> passthrough scenario, it's a security issue because guest can access
+> data of another device. See XSA-461 / CVE-2024-31146 [3]. Aside: I was
+> unaware that there was a XSA/CVE associated with this until after the
+> embargo was lifted.
 
-As PARF hardware block mirrors DBI and ATU register space after every
-PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, program
-maximum possible size to this register by writing 0x80000000 to it(it
-considers only powers of 2 as values) to avoid mirroring DBI and ATU to
-BAR/MMIO region. Write the physical base address of DBI and ATU register
-blocks to PARF_DBI_BASE_ADDR (default 0x0) and PARF_ATU_BASE_ADDR (default
-0x1000) respectively to make sure DBI and ATU blocks are at expected
-memory locations.
+Yes.  IIUC, vfio etc *could* check for devices sharing a page and
+force them to be passed through together, which I suppose would
+mitigate this CVE.  But they don't in fact check.
 
-The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
-and PARF_ATU_BASE_ADDR are applicable for platforms that use Qcom IP
-rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
-PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for Qcom IP rev 2.3.3.
-PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for Qcom
-IP rev 1.0.0, 2.3.2 and 2.4.0. Update init()/post_init() functions of the
-respective Qcom IP versions to program applicable PARF_DBI_BASE_ADDR,
-PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR register offsets. Update
-the SLV_ADDR_SPACE_SZ macro to 0x80000000 to set highest bit in
-PARF_SLV_ADDR_SPACE_SIZE register.
+> [3] https://lore.kernel.org/xen-devel/E1seE0f-0001zO-Nj@xenbits.xenproject.org/
+> 
+> For completeness, see example 2:
+> 
+> 01:00.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
+>         Subsystem: Red Hat, Inc. QEMU Virtual Machine
+>         Flags: fast devsel
+>         Memory at fe800000 (32-bit, non-prefetchable) [size=4K]
+>         I/O ports at c000 [size=256]
+>         Memory at 7050000000 (64-bit, prefetchable) [size=32]
+> 
+> 01:01.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
+>         Subsystem: Red Hat, Inc. QEMU Virtual Machine
+>         Flags: fast devsel
+>         Memory at fe801000 (32-bit, non-prefetchable) [size=4K]
+>         I/O ports at c100 [size=256]
+>         Memory at 7050000020 (64-bit, prefetchable) [size=32]
+> 
+> 01:02.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
+>         Subsystem: Red Hat, Inc. QEMU Virtual Machine
+>         Flags: fast devsel
+>         Memory at fe802000 (32-bit, non-prefetchable) [size=4K]
+>         I/O ports at c200 [size=256]
+>         Memory at 7050000040 (64-bit, prefetchable) [size=32]
+> 
+> 01:03.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
+>         Subsystem: Red Hat, Inc. QEMU Virtual Machine
+>         Flags: fast devsel
+>         Memory at fe803000 (32-bit, non-prefetchable) [size=4K]
+>         I/O ports at c300 [size=256]
+>         Memory at 7040000000 (64-bit, prefetchable) [size=256M]
+> 
+> This example can reproduced with Qemu's pci-testdev and a SeaBIOS hack.
+> Add this to your usual qemu-system-x86_64 args:
+> 
+>     -device pcie-pci-bridge,id=pcie.1 \
+>     -device pci-testdev,bus=pcie.1,membar=32 \
+>     -device pci-testdev,bus=pcie.1,membar=32 \
+>     -device pci-testdev,bus=pcie.1,membar=32 \
+>     -device pci-testdev,bus=pcie.1,membar=268435456
+> 
+> Apply this SeaBIOS hack:
+> 
+> diff --git a/src/fw/pciinit.c b/src/fw/pciinit.c
+> index b3e359d7..769007a4 100644
+> --- a/src/fw/pciinit.c
+> +++ b/src/fw/pciinit.c
+> @@ -25,7 +25,7 @@
+>  #include "util.h" // pci_setup
+>  #include "x86.h" // outb
+> 
+> -#define PCI_DEVICE_MEM_MIN    (1<<12)  // 4k == page size
+> +#define PCI_DEVICE_MEM_MIN    (0)
+>  #define PCI_BRIDGE_MEM_MIN    (1<<21)  // 2M == hugepage size
+>  #define PCI_BRIDGE_IO_MIN      0x1000  // mandated by pci bridge spec
+> 
+> 
+> If you want to trigger the bridge window realloc (where BAR alignments
+> currently get lost), also apply this hack to SeaBIOS in the same file:
+> 
+> @@ -1089,6 +1089,7 @@ pci_region_map_one_entry(struct pci_region_entry *entry, u64 addr)
+>          pci_config_writew(bdf, PCI_MEMORY_LIMIT, limit >> PCI_MEMORY_SHIFT);
+>      }
+>      if (entry->type == PCI_REGION_TYPE_PREFMEM) {
+> +        limit = addr + PCI_BRIDGE_MEM_MIN - 1;
+>          pci_config_writew(bdf, PCI_PREF_MEMORY_BASE, addr >> PCI_PREF_MEMORY_SHIFT);
+>          pci_config_writew(bdf, PCI_PREF_MEMORY_LIMIT, limit >> PCI_PREF_MEMORY_SHIFT);
+>          pci_config_writel(bdf, PCI_PREF_BASE_UPPER32, addr >> 32);
+> 
+> > I think the subject should mention the problem to help motivate this.
+> > 
+> > The fact that we address this by potentially reassigning every BAR of
+> > every device, regardless of whether the admin even wants to pass
+> > through a device to a guest, seems a bit aggressive to me.
+> 
+> Patch [7/8] should limit the impact somewhat, but yes, it's quite
+> aggressive... Perhaps such a change in default should be paired with the
+> ability to turn it off via pci=realloc=off (or similar), and/or Kconfig.
 
-Cache DBI and iATU physical addresses in 'struct dw_pcie' so that
-pcie_qcom.c driver can program these addresses in the PARF_DBI_BASE_ADDR
-and PARF_ATU_BASE_ADDR registers.
+I'm frankly pretty scared about reassigning every BAR by default.
+Maybe my fear is unfounded, but I suspect things will break.
 
-Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-Changes in v4:
-- Updated the subject line as suggested by Manivannan Sadhasivam.
-- Updated commit message as suggested by Manivannan Sadhasivam.
-- Modified the register offsets to be in lowercase for hex as
-  suggested by Manivannan Sadhasivam.
-- Squashed the patches as suggested by Bjorn Helgaas.
-- Added a comment regarding the CPU physical addresses being programmed
-  to PARF registers as suggested by Bjorn Helgaas.
-- Updated the type of 'dbi_phys_addr' and 'atu_phys_addr' fileds to
-  resource_size_t as suggested by Serge Semin.
-- Changed the value being programmed to PARF_SLV_ADDR_SPACE_SIZE
-  register from all 0xFs to setting 0x80000000 as this register
-  only considers powers of 2 as value. Updated the commit message to
-  reflect the same.
-- Link to v3: https://lore.kernel.org/linux-pci/20240724022719.2868490-1-quic_pyarlaga@quicinc.com/T/
+I'd be more comfortable if users had to specify a new option to get
+this behavior, because then they would be aware of what they changed
+and would be able to change back if it didn't work.  Or maybe if we
+checked for page sharing and prevented passthrough in that case.
 
-Changes in v3:
-- Updated the functions qcom_pcie_configure_dbi_atu_base() and
-  qcom_pcie_configure_dbi_base() to make having 'dbi_phys_addr' mandatory
-  before programming PARF_SLV_ADDR_SPACE_SIZE register as suggested by
-  Mayank Rana.
-- Link to v2: https://lore.kernel.org/linux-pci/20240718051258.1115271-1-quic_pyarlaga@quicinc.com/T/
-
-Changes in v2:
-- Updated commit message as suggested by Bjorn Helgaas.
-- Updated function name from qcom_pcie_avoid_dbi_atu_mirroring()
-  to qcom_pcie_configure_dbi_atu_base() as suggested by Bjorn Helgaas.
-- Removed check for pdev in qcom_pcie_configure_dbi_atu_base() as
-  suggested by Bjorn Helgaas.
-- Moved the qcom_pcie_configure_dbi_atu_base() call in the
-  qcom_pcie_init_2_7_0() to the same place where PARF_DBI_BASE_ADDR
-  register is being programmed as suggested by Bjorn Helgaas.
-- Added 'dbi_phys_addr', 'atu_phys_addr' in the 'struct dw_pcie' to store
-  the physical addresses of dbi, atu base registers in
-  dw_pcie_get_resources() as suggested by Manivannan Sadhasivam.
-- Added separate functions qcom_pcie_configure_dbi_atu_base() and
-  qcom_pcie_configure_dbi_base() to program PARF register of different
-  PARF versions. This is to disable DBI mirroring in all Qualcomm PCIe
-  controllers as suggested by Manivannan Sadhasivam.
-- Link to v1: https://lore.kernel.org/linux-pci/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/T/
-
-Tested:
-- Validated NVME functionality with PCIe6a on x1e80100 platform.
-- Validated WiFi functionality with PCIe4 on x1e80100 platform.
-
- drivers/pci/controller/dwc/pcie-designware.c |  2 +
- drivers/pci/controller/dwc/pcie-designware.h |  2 +
- drivers/pci/controller/dwc/pcie-qcom.c       | 72 ++++++++++++++++----
- 3 files changed, 61 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 1b5aba1f0c92..bc3a5d6b0177 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -112,6 +112,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
- 		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
- 		if (IS_ERR(pci->dbi_base))
- 			return PTR_ERR(pci->dbi_base);
-+		pci->dbi_phys_addr = res->start;
- 	}
- 
- 	/* DBI2 is mainly useful for the endpoint controller */
-@@ -134,6 +135,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
- 			pci->atu_base = devm_ioremap_resource(pci->dev, res);
- 			if (IS_ERR(pci->atu_base))
- 				return PTR_ERR(pci->atu_base);
-+			pci->atu_phys_addr = res->start;
- 		} else {
- 			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
- 		}
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 53c4c8f399c8..e518f81ea80c 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -407,8 +407,10 @@ struct dw_pcie_ops {
- struct dw_pcie {
- 	struct device		*dev;
- 	void __iomem		*dbi_base;
-+	resource_size_t		dbi_phys_addr;
- 	void __iomem		*dbi_base2;
- 	void __iomem		*atu_base;
-+	resource_size_t		atu_phys_addr;
- 	size_t			atu_size;
- 	u32			num_ib_windows;
- 	u32			num_ob_windows;
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..4d74d1b652be 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -45,6 +45,7 @@
- #define PARF_PHY_REFCLK				0x4c
- #define PARF_CONFIG_BITS			0x50
- #define PARF_DBI_BASE_ADDR			0x168
-+#define PARF_SLV_ADDR_SPACE_SIZE		0x16c
- #define PARF_MHI_CLOCK_RESET_CTRL		0x174
- #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-@@ -52,8 +53,13 @@
- #define PARF_LTSSM				0x1b0
- #define PARF_SID_OFFSET				0x234
- #define PARF_BDF_TRANSLATE_CFG			0x24c
--#define PARF_SLV_ADDR_SPACE_SIZE		0x358
-+#define PARF_DBI_BASE_ADDR_V2			0x350
-+#define PARF_DBI_BASE_ADDR_V2_HI		0x354
-+#define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
-+#define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
- #define PARF_NO_SNOOP_OVERIDE			0x3d4
-+#define PARF_ATU_BASE_ADDR			0x634
-+#define PARF_ATU_BASE_ADDR_HI			0x638
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_TABLE_N			0x2000
- #define PARF_BDF_TO_SID_CFG			0x2c00
-@@ -108,7 +114,7 @@
- #define PHY_RX0_EQ(x)				FIELD_PREP(GENMASK(26, 24), x)
- 
- /* PARF_SLV_ADDR_SPACE_SIZE register value */
--#define SLV_ADDR_SPACE_SZ			0x10000000
-+#define SLV_ADDR_SPACE_SZ			0x80000000
- 
- /* PARF_MHI_CLOCK_RESET_CTRL register fields */
- #define AHB_CLK_EN				BIT(0)
-@@ -324,6 +330,50 @@ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
- 	dw_pcie_dbi_ro_wr_dis(pci);
- }
- 
-+static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pci->dbi_phys_addr) {
-+		/*
-+		 * PARF_DBI_BASE_ADDR register is in CPU domain and require to
-+		 * be programmed with CPU physical address.
-+		 */
-+		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-+							PARF_DBI_BASE_ADDR);
-+		writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-+						PARF_SLV_ADDR_SPACE_SIZE);
-+	}
-+}
-+
-+static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pci->dbi_phys_addr) {
-+		/*
-+		 * PARF_DBI_BASE_ADDR_V2 and PARF_ATU_BASE_ADDR registers are
-+		 * in CPU domain and require to be programmed with CPU
-+		 * physical addresses.
-+		 */
-+		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-+							PARF_DBI_BASE_ADDR_V2);
-+		writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
-+						PARF_DBI_BASE_ADDR_V2_HI);
-+
-+		if (pci->atu_phys_addr) {
-+			writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
-+							PARF_ATU_BASE_ADDR);
-+			writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
-+							PARF_ATU_BASE_ADDR_HI);
-+		}
-+
-+		writel(0x0, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
-+		writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-+					PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
-+	}
-+}
-+
- static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
- {
- 	u32 val;
-@@ -540,8 +590,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
- 
- static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
- {
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_base(pcie);
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
-@@ -628,8 +677,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_base(pcie);
- 
- 	/* MAC PHY_POWERDOWN MUX DISABLE  */
- 	val = readl(pcie->parf + PARF_SYS_CTRL);
-@@ -811,13 +859,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 
--	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
- 		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-@@ -913,8 +959,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	/* MAC PHY_POWERDOWN MUX DISABLE  */
- 	val = readl(pcie->parf + PARF_SYS_CTRL);
-@@ -1123,14 +1168,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
- 	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
--- 
-2.25.1
-
+> > Previously we haven't trusted our reassignment machinery enough to
+> > enable it all the time, so we still have the "pci=realloc" parameter.
+> > By default, I don't think we even move devices around to make space
+> > for a BAR that we failed to allocate.
+> 
+> One exception is SR-IOV device resources when
+> CONFIG_PCI_REALLOC_ENABLE_AUTO=y.
+> 
+> > I agree "pci=resource_alignment=" is a bit user-unfriendly, and I
+> > don't think it solves the problem unless we apply it to every device
+> > in the system.
+> 
+> Right.
+> 
+> >> 2. Devices with multiple small BARs could have the MSI-X tables located
+> >> in one of its small BARs. This may lead to the MSI-X tables being mapped
+> >> in the same 4k region as other data. The PCIe 6.1 specification (section
+> >> 7.7.2 MSI-X Capability and Table Structure) says we probably should
+> >> avoid that.
+> > 
+> > If you're referring to this:
+> > 
+> >   If a Base Address Register or entry in the Enhanced Allocation
+> >   capability that maps address space for the MSI-X Table or MSI-X PBA
+> >   also maps other usable address space that is not associated with
+> >   MSI-X structures, locations (e.g., for CSRs) used in the other
+> >   address space must not share any naturally aligned 4-KB address
+> >   range with one where either MSI-X structure resides. This allows
+> >   system software where applicable to use different processor
+> >   attributes for MSI-X structures and the other address space.
+> 
+> Yes, that's the correct reference.
+> 
+> > I think this is technically a requirement about how space within a
+> > single BAR should be organized, not about how multiple BARs should be
+> > assigned.  I don't think this really adds to the case for what you're
+> > doing, so we could just drop it.
+> 
+> I'm OK to drop the reference to the spec. For completeness, example 1
+> above was what led me to mention it: This device has the MSI-X tables
+> located in BAR 0, which is mapped in the same 4k region as other data.
+> 
+> >> To improve the user experience (i.e. don't require the user to specify
+> >> pci=resource_alignment=), and increase conformance to PCIe spec, set the
+> >> default minimum resource alignment of memory BARs to the greater of 4k
+> >> or PAGE_SIZE.
+> >>
+> >> Quoting the comment in
+> >> drivers/pci/pci.c:pci_request_resource_alignment(), there are two ways
+> >> we can increase the resource alignment:
+> >>
+> >> 1) Increase the size of the resource.  BARs are aligned on their
+> >>    size, so when we reallocate space for this resource, we'll
+> >>    allocate it with the larger alignment.  This also prevents
+> >>    assignment of any other BARs inside the alignment region, so
+> >>    if we're requesting page alignment, this means no other BARs
+> >>    will share the page.
+> >>
+> >>    The disadvantage is that this makes the resource larger than
+> >>    the hardware BAR, which may break drivers that compute things
+> >>    based on the resource size, e.g., to find registers at a
+> >>    fixed offset before the end of the BAR.
+> >>
+> >> 2) Retain the resource size, but use IORESOURCE_STARTALIGN and
+> >>    set r->start to the desired alignment.  By itself this
+> >>    doesn't prevent other BARs being put inside the alignment
+> >>    region, but if we realign *every* resource of every device in
+> >>    the system, none of them will share an alignment region.
+> >>
+> >> Changing pcibios_default_alignment() results in the second method of
+> >> alignment with IORESOURCE_STARTALIGN.
+> >>
+> >> The new default alignment may be overridden by arches by implementing
+> >> pcibios_default_alignment(), or by the user on a per-device basis with
+> >> the pci=resource_alignment= option (although this reverts to using
+> >> IORESOURCE_SIZEALIGN).
+> >>
+> >> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+> >> ---
+> >> Preparatory patches in this series are prerequisites to this patch.
+> >>
+> >> v2->v3:
+> >> * new subject (was: "PCI: Align small (<4k) BARs")
+> >> * clarify 4k vs PAGE_SIZE in commit message
+> >>
+> >> v1->v2:
+> >> * capitalize subject text
+> >> * s/4 * 1024/SZ_4K/
+> >> * #include <linux/sizes.h>
+> >> * update commit message
+> >> * use max(SZ_4K, PAGE_SIZE) for alignment value
+> >> ---
+> >>  drivers/pci/pci.c | 8 +++++++-
+> >>  1 file changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >> index af34407f2fb9..efdd5b85ea8c 100644
+> >> --- a/drivers/pci/pci.c
+> >> +++ b/drivers/pci/pci.c
+> >> @@ -31,6 +31,7 @@
+> >>  #include <asm/dma.h>
+> >>  #include <linux/aer.h>
+> >>  #include <linux/bitfield.h>
+> >> +#include <linux/sizes.h>
+> >>  #include "pci.h"
+> >>  
+> >>  DEFINE_MUTEX(pci_slot_mutex);
+> >> @@ -6484,7 +6485,12 @@ struct pci_dev __weak *pci_real_dma_dev(struct pci_dev *dev)
+> >>  
+> >>  resource_size_t __weak pcibios_default_alignment(void)
+> >>  {
+> >> -	return 0;
+> >> +	/*
+> >> +	 * Avoid MSI-X tables being mapped in the same 4k region as other data
+> >> +	 * according to PCIe 6.1 specification section 7.7.2 MSI-X Capability
+> >> +	 * and Table Structure.
+> >> +	 */
+> > 
+> > I think this is sort of a "spec compliance" comment that is not the
+> > *real* reason we want to do this, i.e., it doesn't say that by doing
+> > this we can pass through more devices to guests.
+> > 
+> > Doing this in pcibios_default_alignment() ends up being a very
+> > non-obvious way to make this happen.  We have to:
+> > 
+> >   - Know what the purpose of this is, and the current comment doesn't
+> >     point to that.
+> > 
+> >   - Look at all the implementations of pcibios_default_alignment()
+> >     (thanks, powerpc).
+> > 
+> >   - Trace up through pci_specified_resource_alignment(), which
+> >     contains a bunch of code that is not relevant to this case and
+> >     always just returns PAGE_SIZE.
+> > 
+> >   - Trace up again to pci_reassigndev_resource_alignment() to see
+> >     where this finally applies to the resources we care about.  The
+> >     comment here about "check if specified PCI is target device" is
+> >     actively misleading for the passthrough usage.
+> > 
+> > I hate adding new kernel parameters, but I kind of think this would be
+> > easier if we added one that mentioned passthrough or guests and tested
+> > it directly in pci_reassigndev_resource_alignment().
+> > 
+> > This would also be a way to avoid the "Can't reassign resources to
+> > host bridge" warning that I think we're going to see all the time.
+> 
+> I did actually prepare a pci=resource_alignment=all patch, but I
+> hesitated to send it because of the discussion at [4]. I'll send it with
+> the next revision of the series.
+> 
+> [4] https://lore.kernel.org/linux-pci/20160929115422.GA31048@localhost/
+> 
+> I'd like to also propose introducing a Kconfig option, e.g.
+> CONFIG_PCI_PAGE_ALIGN_BARS, selectable by menuconfig or other usual
+> means.
+> 
+> >> +	return max(SZ_4K, PAGE_SIZE);
+> >>  }
+> >>  
+> >>  /*
+> >> -- 
+> >> 2.46.0
+> >>
+> 
 
