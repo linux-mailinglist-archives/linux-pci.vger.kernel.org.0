@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-11728-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11729-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20D09953DBA
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 01:00:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 563DF953DBB
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 01:00:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2B4C28A108
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 22:59:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 798751C251D5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 23:00:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 175AA156F3B;
-	Thu, 15 Aug 2024 22:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B86157492;
+	Thu, 15 Aug 2024 22:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UVEfIt0h"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X+CDAl+G"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945A615B548
-	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 22:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F311715C149
+	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 22:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723762696; cv=none; b=Ba8+7xz3lbfGFLKCUtI5EBQXaxtz8JSuhMMcKqmqLo/xAVx6/h54iEa2yRWuf/+vJ8dC3Cj7imbY0GITNsq7EIu/8TgA3MkCBW1QzV8vtxdSdmcuNjnLHs486J0am9Y/RCbTcedQrkqqHdf3BDQIfeYm5a4ZJMD3VYiwXpRTjSo=
+	t=1723762699; cv=none; b=VCTUheTxZVpJWH1K9/OmzkzfvB6h0DhUMKq6GgXW61Rw7AM1fOmqHQY0qyfJn5Tr6fQtTHvcUAD/paIRpTtSElinS2Kq6pRDwiVyBPWL8zwkGLItuVHWa9WVy6r2nWZAwXNTMzJ/ybH0lWGvULfHwuJwLxjWaM74s3GlyMM2kKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723762696; c=relaxed/simple;
-	bh=lHnevVJCu9Mk5lZpd4na9lfqYzTto76VEITcdURZh8g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=I2PQWgzfFgyUb6WzVLmtWqDQt6Gpif4IHED6DPHbCkcOYRkczpd13sy51T/vjWTF7X9Lpgbo7O/TrOZYZv286eJhL0bwl4v6mwPDm+lfMW04KG7M1JMpxcR22Z8e5vceupZL8Y4UvNvRvW1ZFv5+FFEQ4Kk0Ot4MTE8mHaOKKQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=UVEfIt0h; arc=none smtp.client-ip=209.85.215.179
+	s=arc-20240116; t=1723762699; c=relaxed/simple;
+	bh=k9ctnk5g8I0lDggXHrYQC2/ar/iD1Ws5eLoaKtJY80k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=eEHhpRo2f2LV+RPi+bERKWNi1Ily5yVnc72TEq+cDojw/jdv3MKnUizjHtbyHJKjRLZNepAgNGT7xdGwYqEacIfk1CbhEb+xM3d4ppEyTc6wvAYYCj25l2HoOarOPBujj8w8Jh6hnLj1H+QmKK6wLPrrcFETrUb02H2yjWVhGSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=X+CDAl+G; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7c6aee8e8daso966680a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 15:58:14 -0700 (PDT)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7bb75419123so1158742a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 15:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1723762693; x=1724367493; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1723762697; x=1724367497; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Sw/y1YudoYw0z5x3kyJbYb7Us6/Aelo6uwQtXJHsCTc=;
-        b=UVEfIt0hwLai606zN7zV1QXJ45E3TgMvCJcCKfWwHpswsbiwlAmpxdH1usbiccqZo/
-         I/jFPRJN2o1KF4sQRJA7zwrWZy8XVHt9waisMPHdUeEWc1UxC72SA3ZHACql7lPaqXxG
-         jiZwmrQzWXYbcsHiqOHqx5dXh0JAnnfMhja1Y=
+        bh=+BQ+hMl9ONnW8tvoJ3Oktqj2IgfP2NARVxel81Lp090=;
+        b=X+CDAl+GKpXYuG/UALk7CoPbavU5EB9ECREZIF3y/525OQch4kR4NRoNveYx+Mu37P
+         IReAcLL8xLd/mXLl3HHeYpzjAVsm10EidvbLsLWSM+AyRR/UxMpc0+0FY9ibc/B1nPZL
+         F7ggwBceStkEgaP47QarFuhGW7a9tY5NM80zY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723762693; x=1724367493;
+        d=1e100.net; s=20230601; t=1723762697; x=1724367497;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sw/y1YudoYw0z5x3kyJbYb7Us6/Aelo6uwQtXJHsCTc=;
-        b=EqhkXFDcQn1dyYdygQnMs+YNjl0GxXEKV1X72YtMSvh2FHYhBiucSaS1evBAnbBV4Z
-         2agWSnXH633scgGB0zw0BRfkszozHQwMTkpAmqYMQvzE/PiZqOq17vfNCbXnRj0om74m
-         VXQ5guBB5iDzABgHKpayE/RAl8+VPZh4rvhmFTJCJu0/ZRDQqY65Ho3rNUE0StlsX9Vd
-         9AgF/7UnwPAqvkwwCFmtCmv5LLqUfZ1UzEZpyfP1Kqcf88sq2bxQOLuWEIvdMU7tvfPN
-         0/hExZQaIIIqxJxef0Rm3sPyTC9HbSEJoVo7Eedz9keysC37/pYkxo5FvkDINDtGXdIx
-         Rj9A==
-X-Gm-Message-State: AOJu0Yz2Ue+rbSYUDjp9D5b4rOaPUGtKETYuH80LU0o1cX2JeBVeiTRX
-	pE+ECrHaOmoMQcabEXshlqQuZUoivPAVdEITroFHVBKSuPzTN7z/huD/gpU2pQTMp6uyp3cFI22
-	+q1Ek3Qlax0SLORAYL5igWBr3v6jo5X+WJajMX9mkZm9jPaL0m9nWq4PbDspvGoQha2+6tDYQ0x
-	qv3pQY0HeACRVjybjqmvSXVhayjY2wZFvzmrauDYeMMNAiQA==
-X-Google-Smtp-Source: AGHT+IGe2VnSskgWUeuQ6btU4om0yhswtchJFUKGi72EMM35kbN0Vl7eoIcl778qfal49Wwzmi+SJA==
-X-Received: by 2002:a17:90a:34c1:b0:2c9:81fd:4c27 with SMTP id 98e67ed59e1d1-2d3dfc61a9bmr1382610a91.14.1723762692574;
-        Thu, 15 Aug 2024 15:58:12 -0700 (PDT)
+        bh=+BQ+hMl9ONnW8tvoJ3Oktqj2IgfP2NARVxel81Lp090=;
+        b=qbhKJDzeNyiCUhy7imY/wf5uzD2qa3+frOpnCN0196u3xWNqQ8nmhVjI/ATPITJ2pa
+         G3WXpDzIR/jAJAH/feiwRmEZCWEt+qcRlmKRY0CzYherT8r6/KYJs+aETZBMo1HDttrN
+         ZgPgeMMzGpHoWwewSL4JHKmyjAszS/joq9Uyaau9/dFfTgbd/EHVBbAwyu9Btp7pYSp3
+         oPgn0Q4JVqFplEFPkIgrrYuqOocQ14lCupttwxUUrVxqeCW44xxzqTL+OcpxsbjB2do5
+         iAdKBX8wBZdtHukfKjwSBGPAjzfuK15iHTSTw6HdDF4heOt+Yecw3wtiY0raUtM5vY4w
+         kv3A==
+X-Gm-Message-State: AOJu0YxxNSe1dWRWaeOAqoVgMj0RVBlf6bvvFboveKv3BwGNVUIeBgqv
+	fvDpqQq1qZsFbONy8nwwMUNJ03ytaOyDEEDSTzEzEtXkst+lzTPAsc1hsmzBY/octGHzXrTsLgd
+	W6Ptf3grAllfvkgTIAUnM+Ro3qQTvrE3Lon8ZKmtOELGcvEkv81yic0OJ1OdaA1BIYFTJfLyI0b
+	5uY68gSFShRhVf8+UIaypEdQSfBnLweJLrxUjZc1qtUtvZYg==
+X-Google-Smtp-Source: AGHT+IErUTWDwWFK0h+Hr/lyOmtdpeoyiaayvI83suBfnCF8UuoMqGihR0FBCkhQ3DfTxE9v075Ujg==
+X-Received: by 2002:a17:90b:1011:b0:2c9:8b33:3191 with SMTP id 98e67ed59e1d1-2d3dfc6bc52mr1211488a91.11.1723762696285;
+        Thu, 15 Aug 2024 15:58:16 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e2e6b2d1sm373997a91.18.2024.08.15.15.58.09
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e2e6b2d1sm373997a91.18.2024.08.15.15.58.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2024 15:58:12 -0700 (PDT)
+        Thu, 15 Aug 2024 15:58:15 -0700 (PDT)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -81,9 +81,9 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 09/13] PCI: brcmstb: Don't conflate the reset rescal with phy ctrl
-Date: Thu, 15 Aug 2024 18:57:22 -0400
-Message-Id: <20240815225731.40276-10-james.quinlan@broadcom.com>
+Subject: [PATCH v6 10/13] PCI: brcmstb: Refactor for chips with many regular inbound windows
+Date: Thu, 15 Aug 2024 18:57:23 -0400
+Message-Id: <20240815225731.40276-11-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240815225731.40276-1-james.quinlan@broadcom.com>
 References: <20240815225731.40276-1-james.quinlan@broadcom.com>
@@ -93,81 +93,444 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-Add a "has_phy" field indicating that the internal phy has SW control that
-requires configuration.  Some previous chips only required the firing of
-the "rescal" reset controller.  This change requires us to give the 7216
-SoC its own cfg_data structure.
+Provide support for new chips with multiple inbound windows while
+keeping the legacy support for the older chips.
+
+In existing chips there are three inbound windows with fixed purposes: the
+first was for mapping SoC internal registers, the second was for memory,
+and the third was for memory but with the endian swapped.  Typically, only
+one window was used.
+
+Complicating the inbound window usage was the fact that the PCIe HW would
+do a baroque internal mapping of system memory, and concatenate the regions
+of multiple memory controllers.
+
+Newer chips such as the 7712 and Cable Modem SOCs take a step forward and
+drop the internal mapping while providing for multiple inbound windows.
+This works in concert with the dma-ranges property, where each provided
+range becomes an inbound window.
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 235 ++++++++++++++++++++------
+ 1 file changed, 181 insertions(+), 54 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 51b715fbf3a9..2431c5a75cde 100644
+index 2431c5a75cde..c5d3a5e9e0fc 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -222,6 +222,7 @@ enum pcie_type {
+@@ -75,15 +75,19 @@
+ #define PCIE_MEM_WIN0_HI(win)	\
+ 		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
+ 
++/*
++ * NOTE: You may see the term "BAR" in a number of register names used by
++ *   this driver.  The term is an artifact of when the HW core was an
++ *   endpoint device (EP).  Now it is a root complex (RC) and anywhere a
++ *   register has the term "BAR" it is related to an inbound window.
++ */
++
++#define PCIE_BRCM_MAX_INBOUND_WINS			16
+ #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
+ #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
+ 
+-#define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
+-#define  PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK		0x1f
+-#define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
++#define PCIE_MISC_RC_BAR4_CONFIG_LO			0x40d4
+ 
+-#define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
+-#define  PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK		0x1f
+ 
+ #define PCIE_MISC_MSI_BAR_CONFIG_LO			0x4044
+ #define PCIE_MISC_MSI_BAR_CONFIG_HI			0x4048
+@@ -130,6 +134,10 @@
+ 	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
+ 	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+ 
++#define PCIE_MISC_UBUS_BAR1_CONFIG_REMAP			0x40ac
++#define  PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK	BIT(0)
++#define PCIE_MISC_UBUS_BAR4_CONFIG_REMAP			0x410c
++
+ #define PCIE_MSI_INTR2_BASE		0x4500
+ 
+ /* Offsets from INTR2_CPU and MSI_INTR2 BASE offsets */
+@@ -217,12 +225,20 @@ enum pcie_type {
+ 	BCM4908,
+ 	BCM7278,
+ 	BCM2711,
++	BCM7712,
++};
++
++struct inbound_win {
++	u64 size;
++	u64 pci_offset;
++	u64 cpu_addr;
+ };
+ 
  struct pcie_cfg_data {
  	const int *offsets;
  	const enum pcie_type type;
-+	const bool has_phy;
+ 	const bool has_phy;
++	u8 num_inbound_wins;
  	void (*perst_set)(struct brcm_pcie *pcie, u32 val);
  	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
  };
-@@ -272,6 +273,7 @@ struct brcm_pcie {
- 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+@@ -274,6 +290,7 @@ struct brcm_pcie {
  	struct subdev_regulators *sr;
  	bool			ep_wakeup_capable;
-+	bool			has_phy;
+ 	bool			has_phy;
++	u8			num_inbound_wins;
  };
  
  static inline bool is_bmips(const struct brcm_pcie *pcie)
-@@ -1311,12 +1313,12 @@ static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
- 
- static inline int brcm_phy_start(struct brcm_pcie *pcie)
- {
--	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-+	return pcie->has_phy ? brcm_phy_cntl(pcie, 1) : 0;
+@@ -396,7 +413,7 @@ static void brcm_pcie_set_gen(struct brcm_pcie *pcie, int gen)
  }
  
- static inline int brcm_phy_stop(struct brcm_pcie *pcie)
+ static void brcm_pcie_set_outbound_win(struct brcm_pcie *pcie,
+-				       unsigned int win, u64 cpu_addr,
++				       u8 win, u64 cpu_addr,
+ 				       u64 pcie_addr, u64 size)
  {
--	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-+	return pcie->has_phy ? brcm_phy_cntl(pcie, 0) : 0;
+ 	u32 cpu_addr_mb_high, limit_addr_mb_high;
+@@ -789,23 +806,62 @@ static void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
+ 	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
  }
  
- static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-@@ -1559,12 +1561,20 @@ static const struct pcie_cfg_data bcm2711_cfg = {
+-static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+-							u64 *rc_bar2_size,
+-							u64 *rc_bar2_offset)
++static void add_inbound_win(struct inbound_win *b, u8 *count, u64 size,
++			    u64 cpu_addr, u64 pci_offset)
++{
++	b->size = size;
++	b->cpu_addr = cpu_addr;
++	b->pci_offset = pci_offset;
++	(*count)++;
++}
++
++static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
++				      struct inbound_win inbound_wins[])
+ {
+ 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++	u64 pci_offset, cpu_addr, size = 0, tot_size = 0;
+ 	struct resource_entry *entry;
+ 	struct device *dev = pcie->dev;
+ 	u64 lowest_pcie_addr = ~(u64)0;
+ 	int ret, i = 0;
+-	u64 size = 0;
++	u8 n = 0;
++
++	/*
++	 * The HW registers (and PCIe) use order-1 numbering for BARs. As
++	 * such, we have inbound_wins[0] unused and BAR1 starts at inbound_wins[1].
++	 */
++	struct inbound_win *b_begin = &inbound_wins[1];
++	struct inbound_win *b = b_begin;
++
++	/*
++	 * STB chips beside 7712 disable the first inbound window default.
++	 * Rather being mapped to system memory it is mapped to the
++	 * internal registers of the SoC.  This feature is deprecated, has
++	 * security considerations, and is not implemented in our modern
++	 * SoCs.
++	 */
++	if (pcie->type != BCM7712)
++		add_inbound_win(b++, &n, 0, 0, 0);
+ 
+ 	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+-		u64 pcie_beg = entry->res->start - entry->offset;
++		u64 pcie_start = entry->res->start - entry->offset;
++		u64 cpu_start = entry->res->start;
+ 
+-		size += entry->res->end - entry->res->start + 1;
+-		if (pcie_beg < lowest_pcie_addr)
+-			lowest_pcie_addr = pcie_beg;
++		size = resource_size(entry->res);
++		tot_size += size;
++		if (pcie_start < lowest_pcie_addr)
++			lowest_pcie_addr = pcie_start;
++		/*
++		 * 7712 and newer chips may have many BARs, with each
++		 * offering a non-overlapping viewport to system memory.
++		 * That being said, each BARs size must still be a power of
++		 * two.
++		 */
++		if (pcie->type == BCM7712)
++			add_inbound_win(b++, &n, size, cpu_start, pcie_start);
++
++		if (n > pcie->num_inbound_wins)
++			break;
+ 	}
+ 
+ 	if (lowest_pcie_addr == ~(u64)0) {
+@@ -813,13 +869,20 @@ static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+ 		return -EINVAL;
+ 	}
+ 
++	/*
++	 * 7712 and newer chips do not have an internal memory mapping system
++	 * that enables multiple memory controllers.  As such, it can return
++	 * now w/o doing special configuration.
++	 */
++	if (pcie->type == BCM7712)
++		return n;
++
+ 	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
+ 						  PCIE_BRCM_MAX_MEMC);
+-
+ 	if (ret <= 0) {
+ 		/* Make an educated guess */
+ 		pcie->num_memc = 1;
+-		pcie->memc_size[0] = 1ULL << fls64(size - 1);
++		pcie->memc_size[0] = 1ULL << fls64(tot_size - 1);
+ 	} else {
+ 		pcie->num_memc = ret;
+ 	}
+@@ -828,10 +891,15 @@ static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+ 	for (i = 0, size = 0; i < pcie->num_memc; i++)
+ 		size += pcie->memc_size[i];
+ 
+-	/* System memory starts at this address in PCIe-space */
+-	*rc_bar2_offset = lowest_pcie_addr;
+-	/* The sum of all memc views must also be a power of 2 */
+-	*rc_bar2_size = 1ULL << fls64(size - 1);
++	/* Our HW mandates that the window size must be a power of 2 */
++	size = 1ULL << fls64(size - 1);
++
++	/*
++	 * For STB chips, the BAR2 cpu_addr is hardwired to the start
++	 * of system memory, so we set it to 0.
++	 */
++	cpu_addr = 0;
++	pci_offset = lowest_pcie_addr;
+ 
+ 	/*
+ 	 * We validate the inbound memory view even though we should trust
+@@ -866,25 +934,90 @@ static int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+ 	 *   outbound memory @ 3GB). So instead it will  start at the 1x
+ 	 *   multiple of its size
+ 	 */
+-	if (!*rc_bar2_size || (*rc_bar2_offset & (*rc_bar2_size - 1)) ||
+-	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
+-		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off 0x%llx\n",
+-			*rc_bar2_size, *rc_bar2_offset);
++	if (!size || (pci_offset & (size - 1)) ||
++	    (pci_offset < SZ_4G && pci_offset > SZ_2G)) {
++		dev_err(dev, "Invalid inbound_win2_offset/size: size 0x%llx, off 0x%llx\n",
++			size, pci_offset);
+ 		return -EINVAL;
+ 	}
+ 
+-	return 0;
++	/* Enable inbound window 2, the main inbound window for STB chips */
++	add_inbound_win(b++, &n, size, cpu_addr, pci_offset);
++
++	/*
++	 * Disable inbound window 3.  On some chips presents the same
++	 * window as #2 but the data appears in a settable endianness.
++	 */
++	add_inbound_win(b++, &n, 0, 0, 0);
++
++	return n;
++}
++
++static u32 brcm_bar_reg_offset(int bar)
++{
++	if (bar <= 3)
++		return PCIE_MISC_RC_BAR1_CONFIG_LO + 8 * (bar - 1);
++	else
++		return PCIE_MISC_RC_BAR4_CONFIG_LO + 8 * (bar - 4);
++}
++
++static u32 brcm_ubus_reg_offset(int bar)
++{
++	if (bar <= 3)
++		return PCIE_MISC_UBUS_BAR1_CONFIG_REMAP + 8 * (bar - 1);
++	else
++		return PCIE_MISC_UBUS_BAR4_CONFIG_REMAP + 8 * (bar - 4);
++}
++
++static void set_inbound_win_registers(struct brcm_pcie *pcie,
++				      const struct inbound_win *inbound_wins,
++				      u8 num_inbound_wins)
++{
++	void __iomem *base = pcie->base;
++	int i;
++
++	for (i = 1; i <= num_inbound_wins; i++) {
++		u64 pci_offset = inbound_wins[i].pci_offset;
++		u64 cpu_addr = inbound_wins[i].cpu_addr;
++		u64 size = inbound_wins[i].size;
++		u32 reg_offset = brcm_bar_reg_offset(i);
++		u32 tmp = lower_32_bits(pci_offset);
++
++		u32p_replace_bits(&tmp, brcm_pcie_encode_ibar_size(size),
++				  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK);
++
++		/* Write low */
++		writel_relaxed(tmp, base + reg_offset);
++		/* Write high */
++		writel_relaxed(upper_32_bits(pci_offset), base + reg_offset + 4);
++
++		/*
++		 * Most STB chips:
++		 *     Do nothing.
++		 * 7712:
++		 *     All of their BARs need to be set.
++		 */
++		if (pcie->type == BCM7712) {
++			/* BUS remap register settings */
++			reg_offset = brcm_ubus_reg_offset(i);
++			tmp = lower_32_bits(cpu_addr) & ~0xfff;
++			tmp |= PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK;
++			writel_relaxed(tmp, base + reg_offset);
++			tmp = upper_32_bits(cpu_addr);
++			writel_relaxed(tmp, base + reg_offset + 4);
++		}
++	}
+ }
+ 
+ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ {
+-	u64 rc_bar2_offset, rc_bar2_size;
++	struct inbound_win inbound_wins[PCIE_BRCM_MAX_INBOUND_WINS];
+ 	void __iomem *base = pcie->base;
+ 	struct pci_host_bridge *bridge;
+ 	struct resource_entry *entry;
+ 	u32 tmp, burst, aspm_support;
+-	int num_out_wins = 0;
+-	int ret, memc;
++	u8 num_out_wins = 0, num_inbound_wins = 0;
++	int memc;
+ 
+ 	/* Reset the bridge */
+ 	pcie->bridge_sw_init_set(pcie, 1);
+@@ -933,17 +1066,16 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK);
+ 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
+ 
+-	ret = brcm_pcie_get_rc_bar2_size_and_offset(pcie, &rc_bar2_size,
+-						    &rc_bar2_offset);
+-	if (ret)
+-		return ret;
++	num_inbound_wins = brcm_pcie_get_inbound_wins(pcie, inbound_wins);
++	if (num_inbound_wins < 0)
++		return num_inbound_wins;
++
++	set_inbound_win_registers(pcie, inbound_wins, num_inbound_wins);
+ 
+-	tmp = lower_32_bits(rc_bar2_offset);
+-	u32p_replace_bits(&tmp, brcm_pcie_encode_ibar_size(rc_bar2_size),
+-			  PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK);
+-	writel(tmp, base + PCIE_MISC_RC_BAR2_CONFIG_LO);
+-	writel(upper_32_bits(rc_bar2_offset),
+-	       base + PCIE_MISC_RC_BAR2_CONFIG_HI);
++	if (!brcm_pcie_rc_mode(pcie)) {
++		dev_err(pcie->dev, "PCIe RC controller misconfigured as Endpoint\n");
++		return -EINVAL;
++	}
+ 
+ 	tmp = readl(base + PCIE_MISC_MISC_CTRL);
+ 	for (memc = 0; memc < pcie->num_memc; memc++) {
+@@ -965,25 +1097,12 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	 * 4GB or when the inbound area is smaller than 4GB (taking into
+ 	 * account the rounding-up we're forced to perform).
+ 	 */
+-	if (rc_bar2_offset >= SZ_4G || (rc_bar2_size + rc_bar2_offset) < SZ_4G)
++	if (inbound_wins[2].pci_offset >= SZ_4G ||
++	    (inbound_wins[2].size + inbound_wins[2].pci_offset) < SZ_4G)
+ 		pcie->msi_target_addr = BRCM_MSI_TARGET_ADDR_LT_4GB;
+ 	else
+ 		pcie->msi_target_addr = BRCM_MSI_TARGET_ADDR_GT_4GB;
+ 
+-	if (!brcm_pcie_rc_mode(pcie)) {
+-		dev_err(pcie->dev, "PCIe RC controller misconfigured as Endpoint\n");
+-		return -EINVAL;
+-	}
+-
+-	/* disable the PCIe->GISB memory window (RC_BAR1) */
+-	tmp = readl(base + PCIE_MISC_RC_BAR1_CONFIG_LO);
+-	tmp &= ~PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK;
+-	writel(tmp, base + PCIE_MISC_RC_BAR1_CONFIG_LO);
+-
+-	/* disable the PCIe->SCB memory window (RC_BAR3) */
+-	tmp = readl(base + PCIE_MISC_RC_BAR3_CONFIG_LO);
+-	tmp &= ~PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK;
+-	writel(tmp, base + PCIE_MISC_RC_BAR3_CONFIG_LO);
+ 
+ 	/* Don't advertise L0s capability if 'aspm-no-l0s' */
+ 	aspm_support = PCIE_LINK_STATE_L1;
+@@ -1034,7 +1153,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 		num_out_wins++;
+ 	}
+ 
+-	/* PCIe->SCB endian mode for BAR */
++	/* PCIe->SCB endian mode for inbound window */
+ 	tmp = readl(base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+ 	u32p_replace_bits(&tmp, PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN,
+ 		PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK);
+@@ -1516,6 +1635,7 @@ static const struct pcie_cfg_data generic_cfg = {
+ 	.type		= GENERIC,
+ 	.perst_set	= brcm_pcie_perst_set_generic,
  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++	.num_inbound_wins = 3,
  };
  
-+static const struct pcie_cfg_data bcm7216_cfg = {
-+	.offsets	= pcie_offset_bcm7278,
-+	.type		= BCM7278,
-+	.perst_set	= brcm_pcie_perst_set_7278,
-+	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
-+	.has_phy	= true,
-+};
-+
+ static const struct pcie_cfg_data bcm7425_cfg = {
+@@ -1523,6 +1643,7 @@ static const struct pcie_cfg_data bcm7425_cfg = {
+ 	.type		= BCM7425,
+ 	.perst_set	= brcm_pcie_perst_set_generic,
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++	.num_inbound_wins = 3,
+ };
+ 
+ static const struct pcie_cfg_data bcm7435_cfg = {
+@@ -1530,6 +1651,7 @@ static const struct pcie_cfg_data bcm7435_cfg = {
+ 	.type		= BCM7435,
+ 	.perst_set	= brcm_pcie_perst_set_generic,
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++	.num_inbound_wins = 3,
+ };
+ 
+ static const struct pcie_cfg_data bcm4908_cfg = {
+@@ -1537,6 +1659,7 @@ static const struct pcie_cfg_data bcm4908_cfg = {
+ 	.type		= BCM4908,
+ 	.perst_set	= brcm_pcie_perst_set_4908,
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++	.num_inbound_wins = 3,
+ };
+ 
+ static const int pcie_offset_bcm7278[] = {
+@@ -1552,6 +1675,7 @@ static const struct pcie_cfg_data bcm7278_cfg = {
+ 	.type		= BCM7278,
+ 	.perst_set	= brcm_pcie_perst_set_7278,
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
++	.num_inbound_wins = 3,
+ };
+ 
+ static const struct pcie_cfg_data bcm2711_cfg = {
+@@ -1559,6 +1683,7 @@ static const struct pcie_cfg_data bcm2711_cfg = {
+ 	.type		= BCM2711,
+ 	.perst_set	= brcm_pcie_perst_set_generic,
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++	.num_inbound_wins = 3,
+ };
+ 
+ static const struct pcie_cfg_data bcm7216_cfg = {
+@@ -1567,6 +1692,7 @@ static const struct pcie_cfg_data bcm7216_cfg = {
+ 	.perst_set	= brcm_pcie_perst_set_7278,
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
+ 	.has_phy	= true,
++	.num_inbound_wins = 3,
+ };
+ 
  static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
- 	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
- 	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
- 	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
--	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-+	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7216_cfg },
- 	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
- 	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
- 	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
-@@ -1612,6 +1622,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	pcie->type = data->type;
+@@ -1623,6 +1749,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
  	pcie->perst_set = data->perst_set;
  	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
-+	pcie->has_phy = data->has_phy;
+ 	pcie->has_phy = data->has_phy;
++	pcie->num_inbound_wins = data->num_inbound_wins;
  
  	pcie->base = devm_platform_ioremap_resource(pdev, 0);
  	if (IS_ERR(pcie->base))
