@@ -1,83 +1,140 @@
-Return-Path: <linux-pci+bounces-11700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A690F953704
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 17:21:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BADF39537AB
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 17:54:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 598A528CC07
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 15:21:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F75F1F2634D
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 15:54:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 977B51ABEC8;
-	Thu, 15 Aug 2024 15:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A2E71AD9FB;
+	Thu, 15 Aug 2024 15:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DdIwG3+V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB6F1AC427
-	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 15:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB6E1B1417
+	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 15:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723735294; cv=none; b=dFG+PdADUdEguutP+otaMbPnRWk49i9yEOHYbN/LWsj7VsCycvUqIpgw9UKNcdMPBVI9F7A6WdYL3y7/Jc0refSJmNi19NfBZ289TvYvzfJwdE9ugqjJkMbIucYuPrAf9N/ctrSufvB/A1VxnDpVvZMULW+gfE4SoDlmpQPOvvw=
+	t=1723737234; cv=none; b=K0VW+7QGKkllb+4cTzXc4d6l6fK0MoGNZsfISuHIZR1UY+4p7V6CQ35IY8rkBPwf+RC9T+UK04dy0v7wYj7y15lKQrk3FfHR9UxudN1VqK3TYfON2x+fsfWZmueyQ9mEgzuEm8ZOGYsGsdAf8Npljqc0hO7fLetaD5lgOhA5do8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723735294; c=relaxed/simple;
-	bh=7Sg4mRJIrrPGtR8cl+cm63uElcG3JGhEYqtiTWvtzng=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=soG1pMLnTTT1NVoukyufjgWDANRQtFPhkDCc+SjdciE6/WYg7k2wamIFbGMg0T0x5SbU33HqMA+U5huaR4+fhzvCpJHjZlHKd+yKTW+GDxsdzADY9VXAiLMI8M0ArndmKJ/sPqVLcG4QkzCFoWykPOEFMaO6Dc6yYFiR5VQKzJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wl8071PmTz6D92M;
-	Thu, 15 Aug 2024 23:18:31 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E22D9140119;
-	Thu, 15 Aug 2024 23:21:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 15 Aug
- 2024 16:21:27 +0100
-Date: Thu, 15 Aug 2024 16:21:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Keith Busch <kbusch@meta.com>
-CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>, <lukas@wunner.de>,
-	<mika.westerberg@linux.intel.com>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH RFC 8/8] pci: use finer grain locking for bus protection
-Message-ID: <20240815162126.00006cb7@Huawei.com>
-In-Reply-To: <20240722151936.1452299-9-kbusch@meta.com>
-References: <20240722151936.1452299-1-kbusch@meta.com>
-	<20240722151936.1452299-9-kbusch@meta.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1723737234; c=relaxed/simple;
+	bh=F5oZlzKS7LV0vco3hf6kzYpAppwKPAa4bDeIJnmZJCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ts86yxDTtGirBbZGkta+wH7DTPdAihcyyrlrWxRVTtyxwtiQ9xztN6hHNg3aUm+zIDPcQed6bKX8p9lIZPOqRGefJnQv04qU7jTWLyaIXYaAjobYwTtHof61qV7Z3NGKuyzkFRQCLrpsSjSMeAytK6ATYbcbkx6VwgUWaix/+PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DdIwG3+V; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7c3ebba7fbbso887739a12.1
+        for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 08:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723737231; x=1724342031; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=v8FkPO3LPGoGF13VvZyZHk15TI2ex5hx7elWLr/UyXk=;
+        b=DdIwG3+VmFraA5PEa7AUBmnsXNRhX/DgXdzpSu7SdBaGs5R9rBhpaMeTL/PXRLHclB
+         LL2/1R6C5ry/uPrzgmiS1HAcl7tOv4mefPWr6vCUSCnXtR+/5jrqMnNVi7Aar3J1NHjQ
+         AkDx6LOqv0JBWdW8ttbHuPZMiy9WWnw6Yf3/2itNi7VeNd0RYon6LECVD2gNcb7bH2L4
+         IeX/jHJmRBTKF2g3ts1z7IJSPMaggSXTfDD2qRRPzwQJDQ3n2BaWUvDg97CM5inpiQ8v
+         snAw7SbqjhfP9wWu7qvX48nwmw0tEAIlFkiNIhTPyDuVGgVscxalp4PPqXgSHFU5Jytk
+         Rmug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723737231; x=1724342031;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v8FkPO3LPGoGF13VvZyZHk15TI2ex5hx7elWLr/UyXk=;
+        b=k1pbuN4Um/AfPgBs/Xk2GbGJ+Tc8YsUaXNpNtUOOJbE9+R95/SLG/5xPWdWwMs4jse
+         pou8lyOT4xTw6Q/X8c3TEKeOgq24qJksDexXNm9Ci1tpu6n5sdkVCpJoqBYEz9KBUXg5
+         U5vABRUvCOMvuISzt00tBDpgB7twNdxYE+8Uibzh4BqG8i8yhCK5CTKOVBVeUBoNON6i
+         qfa0w5/1wnbRWWQ6GP6SML6uT8iB4pyzITFHH0a1L9VHg5weVdHk3vY+/xatrd5bLdXC
+         suSW/cdpniD8S70X059OyFyu7LXQloaUoFGZONys7AwE2TrKambSvHm2dnYKst7kdKof
+         ylow==
+X-Forwarded-Encrypted: i=1; AJvYcCWQEbxyPhK5VZ3BGGTjrgSh84oWBTfJzQqytnf2EuIljD6/aLSny4OXFUKelaEg+aYnWZhPxSarjUitZI5SeSXFVBjFMUD92a64
+X-Gm-Message-State: AOJu0Yzn5cKi8z0JOh/LX2HlwVaCGW+ThqtyCVn/I2Pw8AJMF+9LyY6u
+	XMMkuO3UG18rPVjWxsT2bf4Yt4yv9CfzJjD12H57MLwWl7NkvAa0mGKHN8wwsQ==
+X-Google-Smtp-Source: AGHT+IFFhMzPsFhY6B8IutZ/NT80L7w/pSH6eUiPk5JneBgDCW93h41FVTkK8Xj+zNfxYMkf+hjWEA==
+X-Received: by 2002:a17:90a:d517:b0:2cf:28c1:4cc2 with SMTP id 98e67ed59e1d1-2d3dfc1f4d7mr97707a91.3.1723737230823;
+        Thu, 15 Aug 2024 08:53:50 -0700 (PDT)
+Received: from thinkpad ([36.255.17.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d396a59287sm3068691a91.0.2024.08.15.08.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2024 08:53:50 -0700 (PDT)
+Date: Thu, 15 Aug 2024 21:23:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Zhiqiang.Hou@nxp.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH 4/4] MAINTAINERS: drop NXP LAYERSCAPE GEN4 CONTROLLER
+Message-ID: <20240815155343.GC2562@thinkpad>
+References: <20240808-mobivel_cleanup-v1-0-f4f6ea5b16de@nxp.com>
+ <20240808-mobivel_cleanup-v1-4-f4f6ea5b16de@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240808-mobivel_cleanup-v1-4-f4f6ea5b16de@nxp.com>
 
-On Mon, 22 Jul 2024 08:19:36 -0700
-Keith Busch <kbusch@meta.com> wrote:
-
-> From: Keith Busch <kbusch@kernel.org>
+On Thu, Aug 08, 2024 at 12:02:17PM -0400, Frank Li wrote:
+> LX2160 Rev1 use mobivel PCIe controller, but Rev2 switch to designware
+> PCIe controller. Rev2 is mass production chip. Rev1 will not be maintained
+> so drop maintainer information for that.
 > 
-> The global rescan_remove lock has deadlocks during concurrent removals
-> because it is used within interrupt handlers. Use a bus specific lock
-> instead.
+
+Instead of suddenly removing the code and breaking users, you can just mark the
+driver as 'Obsolete' in MAINTAINERS. Then after some point of time, we could
+hopefully remove.
+
+- Mani
+
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  MAINTAINERS | 8 --------
+>  1 file changed, 8 deletions(-)
 > 
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1e71f97fb6749..9b683899cd088 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17556,14 +17556,6 @@ S:	Supported
+>  F:	Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+>  F:	drivers/pci/controller/pci-tegra.c
+>  
+> -PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
+> -M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> -L:	linux-pci@vger.kernel.org
+> -L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> -S:	Maintained
+> -F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> -F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+> -
+>  PCI DRIVER FOR PLDA PCIE IP
+>  M:	Daire McNamara <daire.mcnamara@microchip.com>
+>  L:	linux-pci@vger.kernel.org
+> 
+> -- 
+> 2.34.1
+> 
+> 
 
-Looks reasonable to me. I'm not particularly confident on this one
-so more eyes (plus testing) would be good.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Jonathan
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
