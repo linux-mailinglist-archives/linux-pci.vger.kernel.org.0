@@ -1,158 +1,121 @@
-Return-Path: <linux-pci+bounces-11705-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11706-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 277FA95382D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 18:25:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD11495389F
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 18:55:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D21EB285096
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 16:25:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DE3A1F24CD8
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 16:55:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E063C37703;
-	Thu, 15 Aug 2024 16:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767091BB683;
+	Thu, 15 Aug 2024 16:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OXUsAW6o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LRrXGGKv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522B21AD401
-	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 16:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4F61AC89F;
+	Thu, 15 Aug 2024 16:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723739107; cv=none; b=XZ6SbEF+prMwDIB0V+91ZmPtFTrw861nIlpCwT0JWWwvXM/BK05BrLxE//YD/eJ9yLW0WT1km5YHvyhinV/BTannZbI4glvbctl7Z5QosK37kaEed6AYUMHQW0CP9/LWnpmtUeAGiboTJqI3XnINAYC2CqEt0FIVs3jPadQcYME=
+	t=1723740897; cv=none; b=M4vmBdEtPZMCN36gsYk2ihiKJD0/Xfg49lH2FkfdUuLFsGUZKTf3aa5Z51B3+mT3Yxk7+Kh2KQxlRzZuCLtPjz6LC6Aak65b1lJncbkiiUhUVvaidsiiIcLUZ+WZMI/Pa7gCCdgFUp/9Id2RTVe4Jxm5k5buo5q5C4rVQzpdBSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723739107; c=relaxed/simple;
-	bh=NoNuEvn7tp8Jic3j78xm1TiJXcYt5TFN3+CibXhlwvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7jyUsvQKEoHiSCmpjAt2bwArlIgQb2Q1MXuVnpSjeLDWg82Kgy5pjJo3rrZ8qqO21qbys0TGwGyWumzz7OTtXoNDSHgfdInsQWx5zu7BkMjmY7Q6TvswzQMk5sl1FcDx4jbm6xkUy+1HxtLyhVwKHd3XeNCD4CgqEKyV6K6y8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OXUsAW6o; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2d3c0d587e4so804386a91.2
-        for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 09:25:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723739106; x=1724343906; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fkUGIQbwRXV6Lq2jowcyGfccaaCLPz7bWJxbdPn9n30=;
-        b=OXUsAW6oISN0a//3b2BnhG1lXxQFPs8FE5ap77EdCEFQVzg5ZwUI1iM4918+CO6tXa
-         tQzUsj1Us5HkXHpItX6mF9qR9wJ1bkNuNloN/yCkJJXOTXf/ZVJextekGuc9y6s0CwjN
-         AUe35Fu0/RcvqjE8bsOP47a1y0iuUYby7YsJAlawlIMERrDIkrkzQlDUvWiBiZYBmY0W
-         3JKohUj2OR0RTlhYy6otHME2j+a4At3MVTIIOVfMsv/tl5cZRl/TE8OFYLplCXJOnphx
-         92HCQ8QYoohXTSkOrxZWmBjG22h2VcQ8/fPsFyrruhxM6g58m8WM2xESnWAbDRR8rSnH
-         zv7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723739106; x=1724343906;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkUGIQbwRXV6Lq2jowcyGfccaaCLPz7bWJxbdPn9n30=;
-        b=Pos8mVJyqszFsrkVIP9F4oiOQ/8QrdjcX+Fx1m7IUbMOlkcyD7r1QRZ5O0PMidf6Zl
-         DRW7Xn6Bx9Wk5WX0IVnAw61bEkIxXM8YglmrCpWwzxScREEA2z9MEVuT+tTiTVqKXrST
-         bij4+hPyLOQ5JihRKdo51LMMhX33ehL8WFKXaR5G+S9aJUWosxG9qebFgUQw2Q4LlD6l
-         Q16lmKzLQARU38Ow51pS9RPwzvt2xleqhI20TOzbj9UadsO6gFzpEiZe4K+D1AvEY0H9
-         nbHg+HcsoyIQHdsK/If9T3+kRWJE4ylk5/s+AP4q5wjP0v4jwmLppYdmi06Emvo3WvUn
-         Y+KA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzYjT3dOlHs/Z/UnVBoGEtsOLoxIpmueh06W9RX4576aUSjjMfkKphiBgf3V2qOcD7P/mLNSRQrimrtI20/H1+hs1Am6y/cDgR
-X-Gm-Message-State: AOJu0Yyfzr5gp6GEGEl4rKsu9Had+ElgEaIVNbFUpLmw1U888KhrzJXY
-	jTKA+wH0tuvPf+xLbpXS63yZUkenAJTTG2cTrKiu6IKD6wf6LKqFmrRn9+n+pg==
-X-Google-Smtp-Source: AGHT+IEf9BWPqw66jhhiHQthvPGpBzvSfL+a+8WG13ziSXvFf+QiYJM8a8qmItiT1VexAhIkaMs9OQ==
-X-Received: by 2002:a17:90b:ec1:b0:2bd:7e38:798e with SMTP id 98e67ed59e1d1-2d3dfff5d77mr163380a91.28.1723739105668;
-        Thu, 15 Aug 2024 09:25:05 -0700 (PDT)
-Received: from thinkpad ([36.255.17.34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3ac7ca30bsm3787522a91.7.2024.08.15.09.25.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2024 09:25:04 -0700 (PDT)
-Date: Thu, 15 Aug 2024 21:54:59 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] PCI: rockchip: Refactor
- rockchip_pcie_disable_clocks function signature
-Message-ID: <20240815162459.GG2562@thinkpad>
-References: <20240625104039.48311-1-linux.amoon@gmail.com>
- <20240625104039.48311-3-linux.amoon@gmail.com>
+	s=arc-20240116; t=1723740897; c=relaxed/simple;
+	bh=IiPzfdWFgV0eFejeB6ZgwPQvx5KEkij5IPIckyotfGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ZGGyLYpFSjkHuqz//LpEfiIRAZrDz0HlCLHrUKipkU5s3ApzDlg0lXLRbFIEg6AmeKx+WU0awg1CsCBQd7cmB1x1Cy8Pc5Bea5SbDGXh/vgEpsI5GatP4NCzYs9/M+ml1ec0ZnjOotBnf+dcC5nPfxKtPa4MFRv18a280n6modY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LRrXGGKv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C229C32786;
+	Thu, 15 Aug 2024 16:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723740896;
+	bh=IiPzfdWFgV0eFejeB6ZgwPQvx5KEkij5IPIckyotfGw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LRrXGGKv/Ob6pDzpiGhCvdq6OfYsfOVLADcN/nyjFbYAmczqidpNVYdEQUoVtQuDz
+	 ChkMI67z9//iFI/QYpqw4M65OHTaMHmFh+bj0exWUxl/RxKdZSawi2GTTXZg7rApmP
+	 idYeviqb4Z2sFWO19bppOfEnb+yk7rF+denFid9e+YNNrXcraFvM18rSfGwevefXOe
+	 sMi28B30d/p1DWmW8YOa5+VATfU1GPzxQzy5fWIBDze4X2ncWeVNpADlF1ZcG7gm9A
+	 eLw2B3e+6e69+vS+4aDay0OVH8x9DGctq7r8riOuiMA294TrXpFws8fVGZ4kmJsX+u
+	 tTBBcPEXZiD/w==
+Date: Thu, 15 Aug 2024 11:54:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Richard Gong <richard.gong@amd.com>
+Cc: bp@alien8.de, bhelgaas@google.com, yazen.ghannam@amd.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH] x86/amd_nb: Add a new PCI ID for AMD family 1Ah model 60h
+Message-ID: <20240815165454.GA49023@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240625104039.48311-3-linux.amoon@gmail.com>
+In-Reply-To: <20240815151240.3132382-1-richard.gong@amd.com>
 
-On Tue, Jun 25, 2024 at 04:10:34PM +0530, Anand Moon wrote:
-> Updated rockchip_pcie_disable_clocks function to accept
-> a struct rockchip pointer instead of a void pointer.
+On Thu, Aug 15, 2024 at 10:12:40AM -0500, Richard Gong wrote:
+> Add a new PCI ID for Device 18h and Function 4.
 > 
+> Signed-off-by: Richard Gong <richard.gong@amd.com>
+> ---
+> (Without this device ID, amd-atl driver failed to load)
 
-Please use imperative tone in all patch descriptions.
-
-s/Updated/Update
-
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-
-With above,
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
+"amd-atl" does not appear in the source, so I don't know what it is.
 
 > ---
-> v4: None
-> v3: None
-> v2: None
-> ---
->  drivers/pci/controller/pcie-rockchip.c | 4 +---
->  drivers/pci/controller/pcie-rockchip.h | 2 +-
->  2 files changed, 2 insertions(+), 4 deletions(-)
+>  arch/x86/kernel/amd_nb.c | 1 +
+>  include/linux/pci_ids.h  | 1 +
+>  2 files changed, 2 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-> index 024308bb6ac8..81deb7fc6882 100644
-> --- a/drivers/pci/controller/pcie-rockchip.c
-> +++ b/drivers/pci/controller/pcie-rockchip.c
-> @@ -272,10 +272,8 @@ int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip)
->  }
->  EXPORT_SYMBOL_GPL(rockchip_pcie_enable_clocks);
->  
-> -void rockchip_pcie_disable_clocks(void *data)
-> +void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip)
->  {
-> -	struct rockchip_pcie *rockchip = data;
-> -
->  	clk_bulk_disable_unprepare(ROCKCHIP_NUM_CLKS, rockchip->clks);
->  }
->  EXPORT_SYMBOL_GPL(rockchip_pcie_disable_clocks);
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index 27e951b41b80..3330b1e55dcd 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -354,7 +354,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip);
->  int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
->  void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
->  int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
-> -void rockchip_pcie_disable_clocks(void *data);
-> +void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip);
->  void rockchip_pcie_cfg_configuration_accesses(
->  		struct rockchip_pcie *rockchip, u32 type);
->  
+> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> index 61eadde08511..7566d2c079c2 100644
+> --- a/arch/x86/kernel/amd_nb.c
+> +++ b/arch/x86/kernel/amd_nb.c
+> @@ -125,6 +125,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M78H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_DF_F4) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_DF_F4) },
+>  	{}
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 91182aa1d2ec..d7abfa5beaec 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -581,6 +581,7 @@
+>  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3 0x12c3
+>  #define PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3 0x16fb
+>  #define PCI_DEVICE_ID_AMD_1AH_M60H_DF_F3 0x124b
+> +#define PCI_DEVICE_ID_AMD_1AH_M60H_DF_F4 0x124c
+
+From include/linux/pci_ids.h:
+
+ *      Do not add new entries to this file unless the definitions
+ *      are shared between multiple drivers.
+
+Maybe there's some value in having this definition in pci_ids.h as
+opposed to adding a definition in amd_nb.c, where there are many
+similar definitions?
+
+Can't tell from this commit log.
+
+Obviously this isn't adding any new *functionality*, so it would be
+nice if amd_nb.c could be written so it would require updates only
+when the programming model changes, not for every new chip.
+
+Preaching to the choir, I know.
+
+>  #define PCI_DEVICE_ID_AMD_1AH_M70H_DF_F3 0x12bb
+>  #define PCI_DEVICE_ID_AMD_MI200_DF_F3	0x14d3
+>  #define PCI_DEVICE_ID_AMD_MI300_DF_F3	0x152b
 > -- 
-> 2.44.0
+> 2.43.0
 > 
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
 
