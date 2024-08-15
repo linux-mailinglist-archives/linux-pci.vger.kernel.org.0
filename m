@@ -1,184 +1,106 @@
-Return-Path: <linux-pci+bounces-11689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D93495290A
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 07:50:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 113A8952914
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 07:57:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB5B91C21897
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 05:50:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBB62282649
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 05:57:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AA0017625C;
-	Thu, 15 Aug 2024 05:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE32176AA3;
+	Thu, 15 Aug 2024 05:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="SKMzwMfT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EC43A1DB
-	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 05:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0CE146A6D
+	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 05:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723701043; cv=none; b=jfip07QD9SbijntmCWz4Xajhh52sL8xycHpdlz2eYXKn8I4NcF6/OzGx7SEWB2tV2EtGIf+8jrjMEufFJ2Z+1T6IaLgjTpDc1cHZ7FH/ppNmfWkypJijJDjtL98KGqWF6+zxdNg5Nd1x+NDr0E8OEA/DU1DfB9Ct5OphGiQvMUA=
+	t=1723701461; cv=none; b=OwDWmWzFDrUdY95cXudFhpYSy8kgiuYJ+MD76KCMV/tfzpBHUFfzBJOjA32PfNv/Pthx+f5JAuuMuVPbsiYw+Gg4mdPh4jxzYYru6yDdeNMrH0Uu0nhAiHkyDkijhaSncmbJAUBPzDl89qVvHtJKwvcjavfv+qv6yXOP7AuHv04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723701043; c=relaxed/simple;
-	bh=35pYZWUPg0zh7krYU5OW0G1XRRT/6XzgLNFiX45CMac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jN9FO4WaC+rMkHM0hFtGzecqWIxo5uvnSgAaRGpKA1jgGZFFgOAEmqNNwOrYwLdBszstXbA05HZ7XUK2DuU7AGYVVGC1azsoYLZEvtZ7oKWhF9C7mEUXqUp1PJangBiG3D9wyx3uKlfUbXLOFfg+Jr09HZGxdFtzaySzwNV31wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 18F03100DECB7;
-	Thu, 15 Aug 2024 07:45:10 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id D0CFD31BB10; Thu, 15 Aug 2024 07:45:09 +0200 (CEST)
-Date: Thu, 15 Aug 2024 07:45:09 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-	linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
-	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-Message-ID: <Zr2V5XqTAMSiEDJ-@wunner.de>
-References: <20240814122900.13525-3-mariusz.tkaczyk@linux.intel.com>
- <20240814214930.GA5507@bhelgaas>
+	s=arc-20240116; t=1723701461; c=relaxed/simple;
+	bh=mXZeQr2Vr+9zCthY+fysuNbATVG4BXJathKzP9Zd7Z8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=mSBkHz5m2BO0tRG8AwS8JXYuh14dSXveVbXgdH4qQIjkBGcJ3QZ2njXsXiR3U3zAT02q4w8RvM6xb5OvAWfPqp9gPnrVrlx7XqY6XyqziPFQqwwkPIvW04ye9v14oOSA9b1r0fumXLTlhRP1UBQ2dBgu7LD2SksYuFG/NOqgtbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=SKMzwMfT; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-201f2b7fe0dso1689915ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 14 Aug 2024 22:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1723701459; x=1724306259; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EP1p3+2gvbnxYrGCFl4PMjke3zRORbnj8Xo4kAg7C0E=;
+        b=SKMzwMfTSRXvAUUz28wtvt+H3KNiGicyr/QOmZVxfcyLhfLbGuuGlaVHhXKKMlQUON
+         VHpouH0uCl2XC7EksKpdTqPCepbFaw9W2jOwIEmpBzESRrD0sEwiTYoGOAMLOIrYgQ1n
+         HVlZisW68Xn+8T9bpoWtzYw/GkrqOwBdp0t/Uh+Xi+GhO4g2NxZKBttCGJEaHyQrJ3tO
+         t9D7JLDfuHxWmj4O7CU3BxF+zAjljfAzdREt36Qw2DagT025HlcvyRnQ2mmsNTpp8qjg
+         t1akNTWGkxsblixsIhECMx5cs1L8WAXHV25p/IR+aqZlxoVBdY7d/x2zt4pYNmuisHdS
+         45qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723701459; x=1724306259;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EP1p3+2gvbnxYrGCFl4PMjke3zRORbnj8Xo4kAg7C0E=;
+        b=MYgtkKfaEdAd4vPINhjeZRU3akJ03Ia3W6qlMvknVy+zw0jz+g8czzMQ1r4r132RnZ
+         JOAcIARevQjqNlJ128PDsp4euj94hsN334Fpi0TWRguJvnA402zdLUAc81BlCkGFHsQ8
+         jmJwYcSI/v4l5Y7MrS+ETB8QfbvZkV9Ger7o8Bto7/4S2Jzrp4G8krPI0Kk5Mxf7HehZ
+         VF1cmMRQpQcn+eB+OzzLJxSPosutjWUkguCpRC0X3dcm3y1nrY6YiH/LYTsWDCSzo+MY
+         nJfFwmLyn4ohmndUlK2jffJGxv5P0/beLx4lmGBT2LrMDLY5opMpq13vk9BDHb0rp0Hi
+         cSiw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwgHSJbqFSnIjSUBAx+Z6wPnIzZLbnZMuSNouArUmgby/oE6a/OGMaXEfOrmjkiPex3ef0lr7v3m1RjRDI75iU0MafIq6ZTBdb
+X-Gm-Message-State: AOJu0YzypYlKE47ar/q5FbAo1NIfWPWfu5YpMz5Btp5eE6iRI5M8Sn06
+	eUjS9Z+HM+d+ogPEVydaHHUAUQe0DE/B4adKdwe2QN3BCkV1bA4hPcFD3/PZkK0=
+X-Google-Smtp-Source: AGHT+IHy998p3ercTXCMwdNoj95acF7XreRaGMhWKLw6A40uieiN+1tbJNN5OB1UrtU/Ge5cDx60pA==
+X-Received: by 2002:a17:903:244e:b0:1fb:4701:be6a with SMTP id d9443c01a7336-201d63b40a2mr61068905ad.20.1723701458884;
+        Wed, 14 Aug 2024 22:57:38 -0700 (PDT)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-201f031bc36sm4875625ad.100.2024.08.14.22.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2024 22:57:38 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	mattc@purestorage.com,
+	mika.westerberg@linux.intel.com,
+	oohall@gmail.com
+Subject: Re: [PATCH v2 2/4] PCI: Revert to the original speed after PCIe failed link retraining
+Date: Wed, 14 Aug 2024 23:57:32 -0600
+Message-Id: <20240815055732.25252-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <alpine.DEB.2.21.2408091204580.61955@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2408091204580.61955@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240814214930.GA5507@bhelgaas>
 
-On Wed, Aug 14, 2024 at 04:49:30PM -0500, Bjorn Helgaas wrote:
-> On Wed, Aug 14, 2024 at 02:28:59PM +0200, Mariusz Tkaczyk wrote:
-> > +	/*
-> > +	 * Use lazy loading for active_indications to not play with initcalls.
-> > +	 * It is needed to allow _DSM initialization on DELL platforms, where
-> > +	 * ACPI_IPMI must be loaded first.
-> > +	 */
-> > +	unsigned int active_inds_initialized:1;
-> 
-> What's going on here?  I hope we can at least move this to the _DSM
-> patch since it seems related to that, not to the NPEM capability.  I
-> don't understand the initcall reference or what "lazy loading" means.
+Sorry past few days have been struggling to buy some time to look at these. Every
+time I go into the store and ask for more time they try to give me phone cards.
+Its an improvement to restore the "capable" link speed & in this case I think we're
+also enabling a user to have over-ridden it if they were to write the register
+by hand. Its nice to give every potentially "new" device a chance at achieving
+its full potential.
+A little outside of the scope of this patch, but I was wondering if the logline
+should be a warn level logline? I don't honestly know what a "normal" level is
+for the pci system. Also, instead of saying  "retraining ... at 2.5GT/s\n",
+would it be more clear if it said "forcing downstream link to 2.5GT/s". In my mind
+its more clear that an action has been taken which produces a potentially less
+than unexpected speed.
 
-In previous iterations of this series, the status of all LEDs was
-read on PCI device enumeration.  That was done so that when user space
-reads the brightness is sysfs, it gets the correct value.  The value
-is cached, it's not re-read from the register on every brightness read.
+I can test this patch on a couple of systems, but I need a week or so to
+get it done...
 
-(It's not guaranteed that all LEDs are off on enumeration.  E.g. boot
-firmware may have fiddled with them, or the enclosure itself may have
-turned some of them on by itself, typically the "ok" LED.)
+Reviewed-by: Matthew Carlis <mattc@purestorage.com>
 
-However Stuart reported issues when the _DSM interface is used on
-Dell servers, because the _DSM requires IPMI drivers to access the
-NPEM registers.  He got a ton of errors when LED status was read on
-enumeration because that was simply too early.  Start of thread:
-
-https://lore.kernel.org/all/05455f36-7027-4fd6-8af7-4fe8e483f25c@gmail.com/
-
-The solution is to read LED status lazily, when brightness is read
-or written for the first time through sysfs.  At that point, IPMI
-drivers are typically loaded.  Stuart reported success with this
-approach.  There is still a possibility that users may see issues
-if they access brightness before IPMI drivers are loaded.  Those
-drivers may be modules and user space might overzealously try to
-access brightness before they're loaded.  Or user space may prevent
-them from loading by blacklisting or not installing them.  In which
-case users get to keep the pieces.
-
-We discussed various alternative approaches in the above-linked thread
-but concluded that this pragmatic solution is the simplest that does
-the job for all but the most pathological use cases.
-
-We wanted to make this work on Dell servers, but at the same time
-minimize the contortions that we need to go through to accommodate
-their quirky implementation.
-
-The code uses lazy initialization of LED status even in the native
-NPEM case because it would make the code more complex to use early
-initialization for direct NPEM register access and lazy initialization
-for _DSM-mediated register access.
-
-
-> Is there some existing ACPI ordering that guarantees ACPI_IPMI happens
-> first?  Why do we need some Dell-specific thing here?
-> 
-> What is ACPI_IPMI?  I guess it refers to the "acpi_ipmi" module,
-> acpi_ipmi.c?
-
-As it turned out in the above-linked thread, just forcing ACPI_IPMI=y
-for NPEM is not sufficient because additional (Dell-specific) IPMI
-drivers need to be loaded as well for NPEM register access to work
-through _DSM.
-
-
-> > +void pci_npem_create(struct pci_dev *dev)
-> > +{
-> > +	const struct npem_ops *ops = &npem_ops;
-> > +	int pos = 0, ret;
-> > +	u32 cap;
-> > +
-> > +	if (!npem_has_dsm(dev)) {
-> > +		pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_NPEM);
-> > +		if (pos == 0)
-> > +			return;
-> > +
-> > +		if (pci_read_config_dword(dev, pos + PCI_NPEM_CAP, &cap) != 0 ||
-> > +		    (cap & PCI_NPEM_CAP_CAPABLE) == 0)
-> > +			return;
-> > +	} else {
-> > +		/*
-> > +		 * OS should use the DSM for LED control if it is available
-> > +		 * PCI Firmware Spec r3.3 sec 4.7.
-> > +		 */
-> > +		return;
-> > +	}
-> 
-> I know this is sort of a transient state since the next patch adds
-> full _DSM support, but I do think (a) the fact that NPEM will stop
-> working simply because firmware adds _DSM support is unexpected
-> behavior, and (b) npem_has_dsm() and the other ACPI-related stuff
-> would fit better in the next patch.  It's a little strange to have
-> them mixed here.
-
-PCI Firmware Spec r3.3 sec 4.7 says:
-
-   "OSPM should use this _DSM when available. If this _DSM is not
-    available, OSPM should use Native PCIe Enclosure Management (NPEM)
-    or SCSI Enclosure Services (SES) instead, if available."
-
-I realize that a "should" is not a "must", so Linux would in principle
-be allowed to use direct register access despite presence of the _DSM.
-
-However that doesn't feel safe.  If the _DSM is present, I think it's
-fair to assume that the platform firmware wants to control at least
-a portion of the LEDs itself.  Accessing those LEDs directly, behind the
-platform firmware's back, may cause issues.  Not exposing the LEDs
-to the user in the _DSM case therefore seems safer.
-
-Which is why the ACPI stuff to query for _DSM presence is already in
-this patch instead of the succeeding one.
-
-Thanks,
-
-Lukas
 
