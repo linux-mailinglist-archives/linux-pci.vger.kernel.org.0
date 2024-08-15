@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-11695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66E1B95351C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 16:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9D01953627
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 16:49:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 997801C25222
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 14:34:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27CFD1C25336
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 14:49:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8D0A1DFFB;
-	Thu, 15 Aug 2024 14:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A172B3214;
+	Thu, 15 Aug 2024 14:49:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC39563D5
-	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 14:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CE31AC8B7
+	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 14:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723732439; cv=none; b=GJkWzsW+Chz0rKr2vPjS7S1dPXbR85QeUgEvfnuTBt79WKq0BLQ72sFgxyWTI9mKzNFWhWm0b8LUwrpZcTQXMhtrzqtE9gNIl5J7pe3aX8tCcWCUmCLCsONKg0EyEqgCxVUJW1EEKQl6949kAx3Kpo5XQq5orHXS1yzPkLGETr0=
+	t=1723733354; cv=none; b=ruWww8yS8X06F7HEg1BCR+x+dKsuo1gfKF9HlNGmeyhlfFtE75sa7cSwy1itTw+PBJBZH2wYp56Q11mgj7Jj51kZH2nC3S+QZfKbyGJh+blB62Wq7Y0GjskJ7gsjlRu3j1wF1JpjUhD8HVXrL+lR7F5P/lRGbHg/TJGafj1sF9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723732439; c=relaxed/simple;
-	bh=/9gJ04uCiwPbqZpssq46mFQUdbnj1ijZoFIC+Ny0uTQ=;
+	s=arc-20240116; t=1723733354; c=relaxed/simple;
+	bh=Zu9P5riTXSE9aPJQ7IneRmBIQMxsR2Awdaf43TsJtBQ=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lS+3l9Blq9WIBnpqhQL6T7oQ5IP+UOAZrFl8oA4637CU0DvqnH81ZfAoKkD7ekmB/6OvM8Z3f4Rk8P2J1jEpXb4TJ2n9zTblwVS1VwJ+2LW0D7fC7QyT4MrBx8Z4O9btxrzvzGjtnCLnjGlqSTTT/IRrOz/4DiSl5e74F9QIjPI=
+	 MIME-Version:Content-Type; b=g9PEXkDRCiJLdW/LmQvu36JqkRy9eTRjgEgeG98nOGk3ubfqMti7/jiakvaIEb1DyYY5aqV1Gq+Nw7AFjL90E13h1JUOMuzf08Xrm4GLBdNzk2Ih/ndFjKfsNYyNL6w+wA9eboUSimGb6UFoquO2j15nD9A5zboo263Bgymelvs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wl6wp2vz8z6FGsg;
-	Thu, 15 Aug 2024 22:30:34 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wl7Gq6xhSz6K9BF;
+	Thu, 15 Aug 2024 22:46:11 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id E152A140119;
-	Thu, 15 Aug 2024 22:33:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A3B81140119;
+	Thu, 15 Aug 2024 22:49:08 +0800 (CST)
 Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 15 Aug
- 2024 15:33:53 +0100
-Date: Thu, 15 Aug 2024 15:33:52 +0100
+ 2024 15:49:08 +0100
+Date: Thu, 15 Aug 2024 15:49:06 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Keith Busch <kbusch@meta.com>
 CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>, <lukas@wunner.de>,
 	<mika.westerberg@linux.intel.com>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH RFC 4/8] pci: walk bus recursively
-Message-ID: <20240815153352.0000364c@Huawei.com>
-In-Reply-To: <20240722151936.1452299-5-kbusch@meta.com>
+Subject: Re: [PATCH RFC 6/8] pci: add helpers for stop and remove bus
+Message-ID: <20240815154906.00006586@Huawei.com>
+In-Reply-To: <20240722151936.1452299-7-kbusch@meta.com>
 References: <20240722151936.1452299-1-kbusch@meta.com>
-	<20240722151936.1452299-5-kbusch@meta.com>
+	<20240722151936.1452299-7-kbusch@meta.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -59,90 +59,125 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 22 Jul 2024 08:19:32 -0700
+On Mon, 22 Jul 2024 08:19:34 -0700
 Keith Busch <kbusch@meta.com> wrote:
 
 > From: Keith Busch <kbusch@kernel.org>
 > 
-> The original implementation purposefully chose a non-recursive walk,
-> presumably as a precaution on stack use. We do recursive bus walking in
-> other places though. For example:
-> 
->   pci_bus_resettable
->   pci_stop_bus_device
->   pci_remove_bus_device
->   pci_bus_allocate_dev_resources
-> 
-> So, recursive pci bus walking is well tested and safe, and the
-> implementation is easier to follow. The motivation for changing it now
-> is to make it easier to introduce finer grain locking in the future.
+> There are repeated patterns of tearing down pci buses, so combine to
+> helper functions and use these.
+There are some subtle changes in ordering in here. I'm not
+immediately convinced by all of them.
+
+Perhaps this should be broken down further so we get the direct
+code replacements that are easy to review, the movement of calls
+to different functions (e.g. addition of pci_clear_bus() in 
+pci_remove_bus() and dropping that call, or the code that it matches
+in two other places).
+
+
 > 
 > Signed-off-by: Keith Busch <kbusch@kernel.org>
-Trivial naming question inline. Otherwise LGTM
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 > ---
->  drivers/pci/bus.c | 34 ++++++++++------------------------
->  1 file changed, 10 insertions(+), 24 deletions(-)
+>  drivers/pci/remove.c | 46 +++++++++++++++++++++++---------------------
+>  1 file changed, 24 insertions(+), 22 deletions(-)
 > 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 7c07a141e8772..b7208e644c79f 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -389,37 +389,23 @@ void pci_bus_add_devices(const struct pci_bus *bus)
->  }
->  EXPORT_SYMBOL(pci_bus_add_devices);
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index 8284ab20949c9..288162a11ab19 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -4,6 +4,9 @@
+>  #include <linux/of_platform.h>
+>  #include "pci.h"
 >  
-> -static void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
-> +static int __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
-Keeping the parameter name of 'top' seems less than intuitive
-now this is recursive as on the recursions it is no longer the top.
-Maybe just call it bus?  That will make this diff really confusing however.
-
->  			   void *userdata)
+> +static void pci_stop_bus(struct pci_bus *bus);
+> +static void pci_remove_bus_device(struct pci_dev *dev);
+> +
+>  static void pci_free_resources(struct pci_dev *dev)
 >  {
->  	struct pci_dev *dev;
-> -	struct pci_bus *bus;
-> -	struct list_head *next;
-> -	int retval;
-> +	int ret = 0;
->  
-> -	bus = top;
-> -	next = top->devices.next;
-> -	for (;;) {
-> -		if (next == &bus->devices) {
-> -			/* end of this bus, go up or finish */
-> -			if (bus == top)
-> +	list_for_each_entry(dev, &top->devices, bus_list) {
-> +		ret = cb(dev, userdata);
-> +		if (ret)
-> +			break;
-> +		if (dev->subordinate) {
-> +			ret = __pci_walk_bus(dev->subordinate, cb, userdata);
-> +			if (ret)
->  				break;
-> -			next = bus->self->bus_list.next;
-> -			bus = bus->self->bus;
-> -			continue;
->  		}
-> -		dev = list_entry(next, struct pci_dev, bus_list);
-> -		if (dev->subordinate) {
-> -			/* this is a pci-pci bridge, do its devices next */
-> -			next = dev->subordinate->devices.next;
-> -			bus = dev->subordinate;
-> -		} else
-> -			next = dev->bus_list.next;
-> -
-> -		retval = cb(dev, userdata);
-> -		if (retval)
-> -			break;
->  	}
-> +	return ret;
+>  	struct resource *res;
+> @@ -45,8 +48,17 @@ static void pci_destroy_dev(struct pci_dev *dev)
+>  	put_device(&dev->dev);
 >  }
 >  
->  /**
+> +static void pci_clear_bus(struct pci_bus *bus)
+> +{
+> +	struct pci_dev *dev, *next;
+> +
+> +	list_for_each_entry_safe(dev, next, &bus->devices, bus_list)
+> +		pci_remove_bus_device(dev);
+> +}
+> +
+>  void pci_remove_bus(struct pci_bus *bus)
+>  {
+> +	pci_clear_bus(bus);
+So this is replacing the list_for_each_entry_safe block that
+was previously in pci_remove_root_bus / pci_remove_bus_device but there
+are other callers of this function such as in xen-pcifront.c which
+are going to see this change.
+
+>  	pci_proc_detach_bus(bus);
+>  
+>  	down_write(&pci_bus_sem);
+> @@ -66,7 +78,15 @@ EXPORT_SYMBOL(pci_remove_bus);
+
+>  
+>  static void pci_remove_bus_device(struct pci_dev *dev)
+>  {
+>  	struct pci_bus *bus = dev->subordinate;
+> -	struct pci_dev *child, *tmp;
+>  
+>  	if (bus) {
+> -		list_for_each_entry_safe(child, tmp,
+> -					 &bus->devices, bus_list)
+> -			pci_remove_bus_device(child);
+> -
+>  		pci_remove_bus(bus);
+>  		dev->subordinate = NULL;
+>  	}
+> -
+Grumpy reviewer hat.  Unrelated change.
+
+>  	pci_destroy_dev(dev);
+>  }
+>  
+> @@ -129,16 +138,13 @@ EXPORT_SYMBOL_GPL(pci_stop_and_remove_bus_device_locked);
+>  
+>  void pci_stop_root_bus(struct pci_bus *bus)
+>  {
+> -	struct pci_dev *child, *tmp;
+>  	struct pci_host_bridge *host_bridge;
+>  
+>  	if (!pci_is_root_bus(bus))
+>  		return;
+>  
+>  	host_bridge = to_pci_host_bridge(bus->bridge);
+> -	list_for_each_entry_safe_reverse(child, tmp,
+> -					 &bus->devices, bus_list)
+> -		pci_stop_bus_device(child);
+> +	pci_stop_bus(bus);
+>  
+>  	/* stop the host bridge */
+>  	device_release_driver(&host_bridge->dev);
+> @@ -147,16 +153,12 @@ EXPORT_SYMBOL_GPL(pci_stop_root_bus);
+>  
+>  void pci_remove_root_bus(struct pci_bus *bus)
+>  {
+> -	struct pci_dev *child, *tmp;
+>  	struct pci_host_bridge *host_bridge;
+>  
+>  	if (!pci_is_root_bus(bus))
+>  		return;
+>  
+>  	host_bridge = to_pci_host_bridge(bus->bridge);
+> -	list_for_each_entry_safe(child, tmp,
+> -				 &bus->devices, bus_list)
+> -		pci_remove_bus_device(child);
+>  
+>  #ifdef CONFIG_PCI_DOMAINS_GENERIC
+>  	/* Release domain_nr if it was dynamically allocated */
 
 
