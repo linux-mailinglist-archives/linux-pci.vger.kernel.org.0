@@ -1,245 +1,184 @@
-Return-Path: <linux-pci+bounces-11688-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11689-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48E70952885
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 06:29:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D93495290A
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 07:50:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A41A7B242DF
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 04:29:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB5B91C21897
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Aug 2024 05:50:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7EAC3A268;
-	Thu, 15 Aug 2024 04:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXxLDXGe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AA0017625C;
+	Thu, 15 Aug 2024 05:50:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457D42C182;
-	Thu, 15 Aug 2024 04:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EC43A1DB
+	for <linux-pci@vger.kernel.org>; Thu, 15 Aug 2024 05:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723696144; cv=none; b=juKv2CDw400Ck/D2CIYn3PkTibZlB15gs/9NyrUnpcn1ClTsF/wAcLQ3Qxua/0j74uD94biX2W7vchfqmbTYv7VnePwDgqrpcyEoa7Q5WDE3swNxCu2/Vb6Ai/YQlrnWoXha66Bqy1sikPDmd7FqQGJXBImspsGXEaxSOOBbQ0A=
+	t=1723701043; cv=none; b=jfip07QD9SbijntmCWz4Xajhh52sL8xycHpdlz2eYXKn8I4NcF6/OzGx7SEWB2tV2EtGIf+8jrjMEufFJ2Z+1T6IaLgjTpDc1cHZ7FH/ppNmfWkypJijJDjtL98KGqWF6+zxdNg5Nd1x+NDr0E8OEA/DU1DfB9Ct5OphGiQvMUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723696144; c=relaxed/simple;
-	bh=N8DYGBmbnKeKlw+uJt+PzZWIwngcTg2XH1U8WyHClSY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=fLUErmLm/4WLfNI7vbjRhRl7xT/SLi5Nhj9sQ2eyr5Dqzvot45RcHyFSUwzc9cR3LlRJdFHpryssY2no5J7g1X3XxRGq9oyRcDMBlH2VlBiLau1hPsGBIAkxmdmE9GIitumj2/vWB6tzzV+fDiwiYXuIKULioZ9873CFqC1tF0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GXxLDXGe; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2d1daa2577bso371267a91.2;
-        Wed, 14 Aug 2024 21:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723696142; x=1724300942; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VFLslw7cUuZWfGL4McVvZQx5aa0QedRZOUE2A7L2GMU=;
-        b=GXxLDXGetybRTcjjx+YHq8paENUWM8KNRT71prE7Xn/Aj3cx3dXkx+OujhvBSOfCOV
-         D0EVSgWuSc+Ia9hqI2dLXaOFID2FZ7Ob75n5KhU02xMBEn0ZOsmrh+F8VnGohukpraD3
-         N2pWHOt+5i+bmGZJpAi3KHkLgvEZl/7uXYBHDXYH9o8JFAJY6gcKtHxnvFz1rTnHY6cQ
-         7TGinzeKeN2bkJN+zcsHKJRJwPIOKHjUa0yrcl477oyvXDwKdDDQQGU1FknJLS+sWLia
-         jWgLWRWnsUTXoOlfCAqFHJDAVSZP4vlahE/9uR0jwVadyFUKCxr/4qSn5jFT/MbKnbFw
-         OIfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723696142; x=1724300942;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VFLslw7cUuZWfGL4McVvZQx5aa0QedRZOUE2A7L2GMU=;
-        b=f+ItYnLnDYJVu48f5LJGkurabaXeeeKJdpQD4oJY3ZIY2YKzFx7vn4Fd6wwHbZZRJe
-         3b5Lc5UpMHQdOi1sBShA7qUgQGKbtGPIICOa740YNZQwdGSkoYTThTFpbHjdVg4C/4oQ
-         LTtX7ubY911BGGGqqYhDVk35j2OqdOooxv5P19Q5KRdz01R3mXZ2Ke1JWQX/FQJNRQht
-         doS7X5K1XbMpqMhmeXh6QUmSbx0AB/JziPv32iC9PZV135AUTzpzTmTKsHbe6WYTilRq
-         DcCYHGiC2jwqiUtuZwh1VLjSgTKdZJpAxaTpljJqft0KyppLAQP8fo1Y+7fpDOYpSEXC
-         Ne4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWYJo6i97Uyft4jnJc9JrkGB13VOUDn8XatB4pIXyH55aq2i61vEXLKrZTCsvsFJ/BXREs+EDh1109cKyiEqjnYsDmfWwL1cmAZnPbd0KYLHOrlQKm7+pAgkmoafDcDuAZPwwpbRw==
-X-Gm-Message-State: AOJu0Yz+aOdXEq6L7YIygfe945J5zdVS6tPb5IXXB/MWClUu/Z5pspQk
-	BXzIw8UDNjpO/6c+JskU3sb9TRtQRibftCmnM+0r/vK2pUgJ4d9D
-X-Google-Smtp-Source: AGHT+IFY9vXcQcIZcdE97WC6zB//oh2Tta9UfS2JDs4QwCFUFQd2HCWfJ5naFWtlIJriWpRLHCXkCw==
-X-Received: by 2002:a17:90a:be0b:b0:2d3:c2a9:1c07 with SMTP id 98e67ed59e1d1-2d3c2a91cd6mr2222565a91.9.1723696142142;
-        Wed, 14 Aug 2024 21:29:02 -0700 (PDT)
-Received: from smtpclient.apple (v133-130-115-230.a046.g.tyo1.static.cnode.io. [133.130.115.230])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3ac7f21d2sm2655982a91.28.2024.08.14.21.28.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 14 Aug 2024 21:29:01 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1723701043; c=relaxed/simple;
+	bh=35pYZWUPg0zh7krYU5OW0G1XRRT/6XzgLNFiX45CMac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jN9FO4WaC+rMkHM0hFtGzecqWIxo5uvnSgAaRGpKA1jgGZFFgOAEmqNNwOrYwLdBszstXbA05HZ7XUK2DuU7AGYVVGC1azsoYLZEvtZ7oKWhF9C7mEUXqUp1PJangBiG3D9wyx3uKlfUbXLOFfg+Jr09HZGxdFtzaySzwNV31wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 18F03100DECB7;
+	Thu, 15 Aug 2024 07:45:10 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D0CFD31BB10; Thu, 15 Aug 2024 07:45:09 +0200 (CEST)
+Date: Thu, 15 Aug 2024 07:45:09 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
+	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <Zr2V5XqTAMSiEDJ-@wunner.de>
+References: <20240814122900.13525-3-mariusz.tkaczyk@linux.intel.com>
+ <20240814214930.GA5507@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH v3] ACPI: PCI: check if the root io space is page aligned
-From: Miao Wang <shankerwangmiao@gmail.com>
-In-Reply-To: <20240814163711.GA351420@bhelgaas>
-Date: Thu, 15 Aug 2024 12:28:44 +0800
-Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>,
- linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org,
- linux-mm@kvack.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <86348A3F-6AF4-4DC0-ACF5-08EC52E3828C@gmail.com>
-References: <20240814163711.GA351420@bhelgaas>
-To: Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240814214930.GA5507@bhelgaas>
 
-Hi,
+On Wed, Aug 14, 2024 at 04:49:30PM -0500, Bjorn Helgaas wrote:
+> On Wed, Aug 14, 2024 at 02:28:59PM +0200, Mariusz Tkaczyk wrote:
+> > +	/*
+> > +	 * Use lazy loading for active_indications to not play with initcalls.
+> > +	 * It is needed to allow _DSM initialization on DELL platforms, where
+> > +	 * ACPI_IPMI must be loaded first.
+> > +	 */
+> > +	unsigned int active_inds_initialized:1;
+> 
+> What's going on here?  I hope we can at least move this to the _DSM
+> patch since it seems related to that, not to the NPEM capability.  I
+> don't understand the initcall reference or what "lazy loading" means.
 
-> 2024=E5=B9=B48=E6=9C=8815=E6=97=A5 00:37=EF=BC=8CBjorn Helgaas =
-<helgaas@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> [+cc linux-mm for vmap page alignment checking question]
->=20
-> On Wed, Aug 14, 2024 at 08:09:15PM +0800, Miao Wang via B4 Relay =
-wrote:
->> From: Miao Wang <shankerwangmiao@gmail.com>
->>=20
->> When the IO resource given by _CRS method is not page aligned, =
-especially
->> when the page size is larger than 4KB, serious problems will happen
->> because the misaligned address is passed down to pci_remap_iospace(),
->> then to vmap_page_range(), and finally to vmap_pte_range(), where the
->> length between addr and end is expected to be divisible by PAGE_SIZE, =
-or
->> the loop will overrun till the pfn_none check fails.
->=20
-> What does this problem look like to a user?  Panic, oops, hang,
-> warning backtrace?  I assume this is not a regression, but maybe
-> something you tripped over because of a BIOS defect?  Does this need
-> to be backported to stable kernels?
+In previous iterations of this series, the status of all LEDs was
+read on PCI device enumeration.  That was done so that when user space
+reads the brightness is sysfs, it gets the correct value.  The value
+is cached, it's not re-read from the register on every brightness read.
 
-Panic, or actually BUG in vmap_pte_range() at the =
-!pte_none(ptep_get(pte))
-check, since misaligned addresses will cause the loop in vmap_pte_range
-overrun and finally reach one of the already mapped pages. This happens =
-on
-a LS2k2000 machine, the buggy firmware of which declares the IO space of
-the PCI root controller as follows:
+(It's not guaranteed that all LEDs are off on enumeration.  E.g. boot
+firmware may have fiddled with them, or the enclosure itself may have
+turned some of them on by itself, typically the "ok" LED.)
 
-  QWordIO (ResourceProducer, MinFixed, MaxFixed, PosDecode, EntireRange,
-      0x0000000000000000, // Granularity
-      0x0000000000004000, // Range Minimum
-      0x0000000000009FFF, // Range Maximum
-      0x000000FDFC000000, // Translation Offset
-      0x0000000000006000, // Length
-      ,, , TypeStatic, DenseTranslation)
+However Stuart reported issues when the _DSM interface is used on
+Dell servers, because the _DSM requires IPMI drivers to access the
+NPEM registers.  He got a ton of errors when LED status was read on
+enumeration because that was simply too early.  Start of thread:
 
-At first, I thought there might be some overlapping address spaces. But =
-when
-I added some debug output in vmap_page_range(), I realized that it was
-because a loop overrun.
+https://lore.kernel.org/all/05455f36-7027-4fd6-8af7-4fe8e483f25c@gmail.com/
 
-Normally, loongarch64 kernel is compiled using 16K page size, and thus =
-the
-length here is not page aligned. I tested my patch using a virtual =
-machine
-with a deliberately modified DSDT table to reproduce this issue.
+The solution is to read LED status lazily, when brightness is read
+or written for the first time through sysfs.  At that point, IPMI
+drivers are typically loaded.  Stuart reported success with this
+approach.  There is still a possibility that users may see issues
+if they access brightness before IPMI drivers are loaded.  Those
+drivers may be modules and user space might overzealously try to
+access brightness before they're loaded.  Or user space may prevent
+them from loading by blacklisting or not installing them.  In which
+case users get to keep the pieces.
 
-> It seems sort of weird to me that all those vmap_*_range() functions
-> take the full page address (not a PFN) and depend on the addr/size
-> being page-aligned, but they don't validate the alignment.  But I'm
-> not a VM person and I suppose there's a reason for passing the full
-> address.
-Ah, I also have this question.
->=20
-> But it does mean that other users of vmap_page_range() are also
-> potentially susceptible to this issue, e.g., vmap(), vm_map_ram(),
-> ioremap_page_range(), etc., so I'm not sure that
-> acpi_pci_root_remap_iospace() is the best place to check the
-> alignment.
-My first idea was that the misaligned address is introduced from DSDT
-table and the check would be better to be done inside the ACPI system.
-However, lets wait for replies from  linux-mm to decide where should be
-the best place.
->=20
->> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
->> ---
->> Changes in v3:
->> - Adjust code formatting.
->> - Reword the commit message for further description of the possible =
-reason
->>  leading to misaligned IO resource addresses.
->> - Link to v2: =
-https://lore.kernel.org/r/20240814-check_pci_probe_res-v2-1-a03c8c9b498b@g=
-mail.com
->>=20
->> Changes in v2:
->> - Sorry for posting out the draft version in V1, fixed a silly =
-compiling issue.
->> - Link to v1: =
-https://lore.kernel.org/r/20240814-check_pci_probe_res-v1-1-122ee07821ab@g=
-mail.com
->> ---
->> drivers/acpi/pci_root.c | 14 +++++++++++---
->> 1 file changed, 11 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index d0bfb3706801..a425e93024f2 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -858,7 +858,7 @@ static void =
-acpi_pci_root_validate_resources(struct device *dev,
->> }
->> }
->>=20
->> -static void acpi_pci_root_remap_iospace(struct fwnode_handle =
-*fwnode,
->> +static void acpi_pci_root_remap_iospace(struct acpi_device *device,
->> struct resource_entry *entry)
->> {
->> #ifdef PCI_IOBASE
->> @@ -868,7 +868,15 @@ static void acpi_pci_root_remap_iospace(struct =
-fwnode_handle *fwnode,
->> resource_size_t length =3D resource_size(res);
->> unsigned long port;
->>=20
->> - if (pci_register_io_range(fwnode, cpu_addr, length))
->> + if (!PAGE_ALIGNED(cpu_addr) || !PAGE_ALIGNED(length) ||
->> +     !PAGE_ALIGNED(pci_addr)) {
->> + dev_err(&device->dev,
->> + FW_BUG "I/O resource %pR or its offset %pa is not page aligned\n",
->> + res, &entry->offset);
->> + goto err;
->> + }
->> +
->> + if (pci_register_io_range(&device->fwnode, cpu_addr, length))
->> goto err;
->=20
-> This change verifies alignment for the ACPI case that leads to the
-> pci_remap_iospace() -> vmap_page_range() -> vmap_pte_range() path, but=20=
+We discussed various alternative approaches in the above-linked thread
+but concluded that this pragmatic solution is the simplest that does
+the job for all but the most pathological use cases.
 
-> there are others even in drivers/pci/, e.g., pci_remap_iospace() is
-> also used in the DT path, where I suppose a defective DT could cause a
-> similar issue.
->=20
->> port =3D pci_address_to_pio(cpu_addr);
->> @@ -910,7 +918,7 @@ int acpi_pci_probe_root_resources(struct =
-acpi_pci_root_info *info)
->> else {
->> resource_list_for_each_entry_safe(entry, tmp, list) {
->> if (entry->res->flags & IORESOURCE_IO)
->> - acpi_pci_root_remap_iospace(&device->fwnode,
->> + acpi_pci_root_remap_iospace(device,
->> entry);
->>=20
->> if (entry->res->flags & IORESOURCE_DISABLED)
->>=20
->> ---
->> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
->> change-id: 20240813-check_pci_probe_res-27e3e6df72b2
->>=20
->> Best regards,
->> --=20
->> Miao Wang <shankerwangmiao@gmail.com>
+We wanted to make this work on Dell servers, but at the same time
+minimize the contortions that we need to go through to accommodate
+their quirky implementation.
+
+The code uses lazy initialization of LED status even in the native
+NPEM case because it would make the code more complex to use early
+initialization for direct NPEM register access and lazy initialization
+for _DSM-mediated register access.
 
 
+> Is there some existing ACPI ordering that guarantees ACPI_IPMI happens
+> first?  Why do we need some Dell-specific thing here?
+> 
+> What is ACPI_IPMI?  I guess it refers to the "acpi_ipmi" module,
+> acpi_ipmi.c?
+
+As it turned out in the above-linked thread, just forcing ACPI_IPMI=y
+for NPEM is not sufficient because additional (Dell-specific) IPMI
+drivers need to be loaded as well for NPEM register access to work
+through _DSM.
+
+
+> > +void pci_npem_create(struct pci_dev *dev)
+> > +{
+> > +	const struct npem_ops *ops = &npem_ops;
+> > +	int pos = 0, ret;
+> > +	u32 cap;
+> > +
+> > +	if (!npem_has_dsm(dev)) {
+> > +		pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_NPEM);
+> > +		if (pos == 0)
+> > +			return;
+> > +
+> > +		if (pci_read_config_dword(dev, pos + PCI_NPEM_CAP, &cap) != 0 ||
+> > +		    (cap & PCI_NPEM_CAP_CAPABLE) == 0)
+> > +			return;
+> > +	} else {
+> > +		/*
+> > +		 * OS should use the DSM for LED control if it is available
+> > +		 * PCI Firmware Spec r3.3 sec 4.7.
+> > +		 */
+> > +		return;
+> > +	}
+> 
+> I know this is sort of a transient state since the next patch adds
+> full _DSM support, but I do think (a) the fact that NPEM will stop
+> working simply because firmware adds _DSM support is unexpected
+> behavior, and (b) npem_has_dsm() and the other ACPI-related stuff
+> would fit better in the next patch.  It's a little strange to have
+> them mixed here.
+
+PCI Firmware Spec r3.3 sec 4.7 says:
+
+   "OSPM should use this _DSM when available. If this _DSM is not
+    available, OSPM should use Native PCIe Enclosure Management (NPEM)
+    or SCSI Enclosure Services (SES) instead, if available."
+
+I realize that a "should" is not a "must", so Linux would in principle
+be allowed to use direct register access despite presence of the _DSM.
+
+However that doesn't feel safe.  If the _DSM is present, I think it's
+fair to assume that the platform firmware wants to control at least
+a portion of the LEDs itself.  Accessing those LEDs directly, behind the
+platform firmware's back, may cause issues.  Not exposing the LEDs
+to the user in the _DSM case therefore seems safer.
+
+Which is why the ACPI stuff to query for _DSM presence is already in
+this patch instead of the succeeding one.
+
+Thanks,
+
+Lukas
 
