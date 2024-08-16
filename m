@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-11745-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11746-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 209A595428C
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 09:17:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D572F954292
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 09:18:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A07561F21408
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 07:17:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CB2CB22293
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 07:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5800679DC7;
-	Fri, 16 Aug 2024 07:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D514C86131;
+	Fri, 16 Aug 2024 07:18:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="slELu6+L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BwZt48UV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2537710E
-	for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 07:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBDE82C8E
+	for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 07:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723792658; cv=none; b=a8SwwjPtDu2T2rfYJAtknGM9rER599hyU+jFClmgZzLLIDWfHYSohCkPUjgluKzo7QYL8udBLvv0zl6xkuLMd33ecamb8MEn3bAcctXoPnEcfTKzfW4EkmTNNtS3Yj9AonLH9rvKY2zsbjT4pEqxwbe5ly6s1HyO0GEcRkXhe98=
+	t=1723792710; cv=none; b=Z+abDEwYCg51OyHZl7bwlDf8+34KY60Puh3kdSyc07hb8cuf/neEL14ki7jYvGSlUZSKxK78rGYGLkZiQLODfGwI6b+bMzhfqZGpyF7PxiyHY19rPUpdL8vcgySULdLNFTZRTYvgzD2kY9ca3CbYoRjQyu+Qp/Pvmgjj4AJLtOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723792658; c=relaxed/simple;
-	bh=VFcqDuwbb1mS0aCP+juK7aY9YZYGb2PrM9d03V2DQaw=;
+	s=arc-20240116; t=1723792710; c=relaxed/simple;
+	bh=kcwHckwk7JPYFiJqUA+xJfq8FMBOp3MJvtwdXSdhHbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahNb0H2Lj6bugHGHwp5TDWUhUdP8QXjeCnS716n84zy5ldp9pqJObdB3/9n/fXyZvsHr1LSdnJ71Zq7IpwV17/U3RWgbXfNCqjgyRttRM87EkU7u+9zLIvdVtjZj6tKNhWDZYwsd9FKv3gnZB/pXmJNFhbCWIk6RWPIR8ywVfg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=slELu6+L; arc=none smtp.client-ip=209.85.210.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=aVYFbWuDY1o5AUqKJLiadfU7L+CdhW39Kj5ul9kLdzyMUdbXcoYLTKfEsAG4cWFK+ktY2qhsUaRu28VbgmX6YHoNynk/31981Ep9PBpNYBekyY/k8Z1dY5cjNlnz2Il2u4vTwmiIat2/sRML9jQ9lFG0mVfmQHDGpI7z5XY+tWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BwZt48UV; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70d2b921cd1so1462386b3a.1
-        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 00:17:36 -0700 (PDT)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7a1be7b7bb5so1343878a12.0
+        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 00:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723792656; x=1724397456; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1723792708; x=1724397508; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=CeC8mjQI9mRuC2JdpWZ62HhXL0mgU7iY1ydTgTfi4uk=;
-        b=slELu6+L3DW1IdMvX3j+AxOqyQb2FC8HsjTArrIe18Jbr/4S6NYLIpzTcRd5nI8e4M
-         8W/17E7pvXqRlhGmmhj2pvODGbGCmP9qLnOPwb6yTTeEPWuzkbrqxwPSMGvq4ewJ4gvU
-         rQduZIleYOR8xxPwZhoyd6YqfCDvrM6L18UVt+EuRXuG+WWzpuzO4DhSvBO1WZQtA5FK
-         nkVFKCLR8VR7rSx/X3fck/ahYRWXvbbt5D2d3bpEGsU6zX0rZ5BQAvddcsKxu0RhI6vc
-         qtMgfuHf3PWJPbGgzp2MN0D0HqMAA382QhrzE1wxX3qa0XRfHP5u2t9aVRvr4bP6CMOK
-         Y90g==
+        bh=0Yp5hMnzY0MppJ+YTjzvAfDTWaoEJOMYLebj+UdYxJM=;
+        b=BwZt48UVLXUhlQbI5JfvFYkiVDfJWuBL0i3El1Wn5V8uPoxCTE+lzLJpFQI1w26ep8
+         n0f1HSMzJGvUKh/U4FteRdoYnpPecxEKiudSKNsVIohrqpO2kWwZVjh0OXU0FwJPkecH
+         j6LznelEWOsB5Ak84/qIK06TUOp41X1t5lFsNP13jZFl3EElRmUGtba8VuoTlepkmHXd
+         +QLrrXgOC51dXo4o4C51x0qEyzkQxZ3Qfja39WmfH7pYhbitNgpA6laPF8ByROy6+nT/
+         nDmz89m5Xam888WiyCN4JMHZU0mpYtNu1Zn7eW2qYEkePg3BNeOcn0X8fH6JjYUF73xv
+         KC3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723792656; x=1724397456;
+        d=1e100.net; s=20230601; t=1723792708; x=1724397508;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CeC8mjQI9mRuC2JdpWZ62HhXL0mgU7iY1ydTgTfi4uk=;
-        b=PeqIPl4Aw+bpYTu9A0BYPAEQj6fmze7KZwpdrzzgIfYinIoxXykjsSKe80icM6OL59
-         EDd3y9MlpOb0TFR4oiwLGwOqUiORrxBSkxDh2X41gljBTr7YiQSykCr7KZp5dkbwnkab
-         Q6GhHfFOS/JPnZx6YKH94nQwTVB87TkFGFApLrg3w5qefF1t5sIZq1Z0E1m3esL9vQLn
-         oXD1nGpiM9Bb6gw84tvqXaA1pPvwFg8d5xmQTgi469dorwGv2fkM8qT/Vq0QdCmeqokL
-         D0b7zzYjpRXOuLn6dF6BjB4uFnJd+UaUmD3bL6cY7yhc24Xue/FEWkVT58RtenTrvZDq
-         e/Ww==
-X-Gm-Message-State: AOJu0YzghdZ3bbV+rwTc+sUBoo/7B19p9g87StQ8BN1O+Z46zvD9mqvB
-	fVQ7/CIk+RZZuhQlTr1JcB3mRHNZ5M1YAVTVuGw9biBku6hmrFJWa33NBoLNYA==
-X-Google-Smtp-Source: AGHT+IGKLvQtGvO4lzGIbWD3EY/i3WZJIYkvPxiLMSnRmqwUy9frZivlpbQNfsvhRvaFBhms1yPX1g==
-X-Received: by 2002:a05:6a00:2d15:b0:704:2563:5079 with SMTP id d2e1a72fcca58-713c4f3426dmr2892107b3a.27.1723792655800;
-        Fri, 16 Aug 2024 00:17:35 -0700 (PDT)
+        bh=0Yp5hMnzY0MppJ+YTjzvAfDTWaoEJOMYLebj+UdYxJM=;
+        b=sVBtp63wPw6dkSuSh3YLWEi28Pwr6IspKr5UUDgEiOWvlCQmrBbZ3H/U/Ymdlw9Wxs
+         SEyu5Xmjh3LchRv3x0CKTs/aK3a5W5p5lC5b+CKz8pLTfqUuT8d5OyZKlgQ1urUDhn0/
+         wNCN6ctho8EDLQ7v+dBwUGaSkuE6UUqEX5ouzK0EsWw26HoZLKbUYnJs4MmRnTdvOB/v
+         nbS+21loKVuTQylAES4DPpZHtRoue55XmZaUMzll7O8IbxXqgalcMW3Q19CXOjHrlqa1
+         PYcfWr5VHfEEpwI/MRwYI+wNN4l6IeGwVME6FBUmBTg4+UZScMyFNrPSBE+gaQvPbIr0
+         TrbA==
+X-Gm-Message-State: AOJu0YwOmEvmyOXVaOb/0I2JI5JlK6YfptS3XAQxPYID9aPvhMm0vxEl
+	wc639tsrNuYvwKkGrBiygnTCC0HjGNMJLJZL3bI0W5NA8FN8q+Y/ccT1VQPvfg==
+X-Google-Smtp-Source: AGHT+IE/Ce9TzANMbRw4Oif4Tj5G9vXLEWWJGupTaGJORK1OjwraaIu/dqcDdcuoU4RkUacM7S0xiw==
+X-Received: by 2002:a05:6a21:3983:b0:1c1:e75a:5504 with SMTP id adf61e73a8af0-1c904faaeefmr2746336637.15.1723792707938;
+        Fri, 16 Aug 2024 00:18:27 -0700 (PDT)
 Received: from thinkpad ([36.255.17.34])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7c6b6364e76sm2342468a12.81.2024.08.16.00.17.30
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef5229sm2056273b3a.107.2024.08.16.00.18.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 00:17:35 -0700 (PDT)
-Date: Fri, 16 Aug 2024 12:47:29 +0530
+        Fri, 16 Aug 2024 00:18:27 -0700 (PDT)
+Date: Fri, 16 Aug 2024 12:48:22 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Jim Quinlan <james.quinlan@broadcom.com>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -76,18 +76,14 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Stanimir Varbanov <svarbanov@suse.de>,
 	Krzysztof Kozlowski <krzk@kernel.org>,
 	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 12/13] PCI: brcmstb: Change field name from 'type' to
- 'soc_base'
-Message-ID: <20240816071729.GN2331@thinkpad>
+	open list <linux-kernel@vger.kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 00/13] PCI: brcnstb: Enable STB 7712 SOC
+Message-ID: <20240816071822.GO2331@thinkpad>
 References: <20240815225731.40276-1-james.quinlan@broadcom.com>
- <20240815225731.40276-13-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,211 +93,171 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240815225731.40276-13-james.quinlan@broadcom.com>
+In-Reply-To: <20240815225731.40276-1-james.quinlan@broadcom.com>
 
-On Thu, Aug 15, 2024 at 06:57:25PM -0400, Jim Quinlan wrote:
-> The 'type' field used in the driver to discern SoC differences is
-> confusing; change it to the more apt 'soc_base'.  The 'base' is because
-> some SoCs have the same characteristics as previous SoCs so it is
-> convenient to classify them in the same group.
+On Thu, Aug 15, 2024 at 06:57:13PM -0400, Jim Quinlan wrote:
+> V6 Changes
+>   o Commit "Refactor for chips with many regular inbound windows"
+>     -- Use u8 for anything storing/counting # inbound windows (Stan)
+>     -- s/set_bar/add_inbound_win/g (Manivannan)
+>     -- Drop use of "inline" (Manivannan)
+>     -- Change cpu_beg to cpu_start, same with pcie_beg. (Manivannan)
+>     -- Used writel_relaxed() (Manivannan)
+>   o Use swinit reset if available
+>     -- Proper use of dev_err_probe() (Stan)
+>   o Commit "Use common error handling code in brcm_pcie_probe()"
+>     -- Rewrite commit msg in paragraph form (Manivannan)
+>     -- Refactor error path at end of probe func (Manivannan)
+>     -- Proper use of dev_err_probe() (Stan)
+>   o New commit "dt-bindings: PCI: Change brcmstb maintainer and cleanup"
+>     -- Break out maintainer change and small cleanup into a
+>        separate commit (Krzysztof)
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Looks like you've missed adding the review tags...
 
 - Mani
 
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 42 +++++++++++++--------------
->  1 file changed, 21 insertions(+), 21 deletions(-)
+> V5 Changes:
+>   o All commits: Use imperative voice in commit subjects/messages
+>        (Manivannan)
+>   o Commit "PCI: brcmstb: Enable 7712 SOCs"
+>     -- Augment commit message to include PCIe details and revision.
+>        (Manivannan)
+>   o Commit "PCI: brcmstb: Change field name from 'type' to 'model'"
+>     -- Instead of "model" use "soc_base" (Manivannan)
+>   o Commit "PCI: brcmstb: Refactor for chips with many regular inbound BARs"
+>     -- Get rid of the confusing "BAR" variable names and types and use
+>        something like "inbound_win". (Manivannan)
+>   o Commit "PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE..."
+>     -- Mention in the commit message that this change is in preparation
+>        for the 7712 SoC. (Manivannan)
+>   o Commit: "PCI: brcmstb: Use swinit reset if available"
+>     -- Change reset name "swinit" to "swinit_reset" (Manivannan)
+>     -- Add 1us delay for reset (Manivannan)
+>     -- Use dev_err_probe() (Multiple reviewers)
+>   o Commit "PCI: brcmstb: Use bridge reset if available"
+>     -- Change reset name "bridge" to "bridge_reset" (Manivannan)
+>     -- The Reset API can take NULL so need need to test variable
+>        before calling (Manivannan)
+>     -- Added a call to bridge_sw_init_set() method in probe()
+>        as some registers cannot be accessed w/o this. (JQ)
+>   o Commit "PCI: brcmstb: Use common error handling code in ..."
+>     -- Use more descriptive goto label (Manivannan)
+>     -- Refactor error paths to be less encumbered (Manivannan)
+>     -- Use dev_err_probe() (Multiple reviewers)
+>   o Commits "dt-bindings: PCI: brcmstb: ..."
+>     -- Specify the "resets" and "reset-names" in the same manner
+>        as does qcom,ufs.yaml specifies "clocks" and
+>        "clock-names" (Krzysztof)
+>     -- Drop reset desccriptions as they were pretty content-free
+>        anyhow. (Krzysztof)
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index d19eeeed623b..26e8f544da4c 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -218,7 +218,7 @@ enum {
->  	PCIE_INTR2_CPU_BASE,
->  };
->  
-> -enum pcie_type {
-> +enum pcie_soc_base {
->  	GENERIC,
->  	BCM7425,
->  	BCM7435,
-> @@ -236,7 +236,7 @@ struct inbound_win {
->  
->  struct pcie_cfg_data {
->  	const int *offsets;
-> -	const enum pcie_type type;
-> +	const enum pcie_soc_base soc_base;
->  	const bool has_phy;
->  	u8 num_inbound_wins;
->  	int (*perst_set)(struct brcm_pcie *pcie, u32 val);
-> @@ -277,7 +277,7 @@ struct brcm_pcie {
->  	u64			msi_target_addr;
->  	struct brcm_msi		*msi;
->  	const int		*reg_offsets;
-> -	enum pcie_type		type;
-> +	enum pcie_soc_base	soc_base;
->  	struct reset_control	*rescal;
->  	struct reset_control	*perst_reset;
->  	struct reset_control	*bridge_reset;
-> @@ -295,7 +295,7 @@ struct brcm_pcie {
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
->  {
-> -	return pcie->type == BCM7435 || pcie->type == BCM7425;
-> +	return pcie->soc_base == BCM7435 || pcie->soc_base == BCM7425;
->  }
->  
->  /*
-> @@ -861,7 +861,7 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
->  	 * security considerations, and is not implemented in our modern
->  	 * SoCs.
->  	 */
-> -	if (pcie->type != BCM7712)
-> +	if (pcie->soc_base != BCM7712)
->  		add_inbound_win(b++, &n, 0, 0, 0);
->  
->  	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> @@ -878,7 +878,7 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
->  		 * That being said, each BARs size must still be a power of
->  		 * two.
->  		 */
-> -		if (pcie->type == BCM7712)
-> +		if (pcie->soc_base == BCM7712)
->  			add_inbound_win(b++, &n, size, cpu_start, pcie_start);
->  
->  		if (n > pcie->num_inbound_wins)
-> @@ -895,7 +895,7 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
->  	 * that enables multiple memory controllers.  As such, it can return
->  	 * now w/o doing special configuration.
->  	 */
-> -	if (pcie->type == BCM7712)
-> +	if (pcie->soc_base == BCM7712)
->  		return n;
->  
->  	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-> @@ -1018,7 +1018,7 @@ static void set_inbound_win_registers(struct brcm_pcie *pcie,
->  		 * 7712:
->  		 *     All of their BARs need to be set.
->  		 */
-> -		if (pcie->type == BCM7712) {
-> +		if (pcie->soc_base == BCM7712) {
->  			/* BUS remap register settings */
->  			reg_offset = brcm_ubus_reg_offset(i);
->  			tmp = lower_32_bits(cpu_addr) & ~0xfff;
-> @@ -1046,7 +1046,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		return ret;
->  
->  	/* Ensure that PERST# is asserted; some bootloaders may deassert it. */
-> -	if (pcie->type == BCM2711) {
-> +	if (pcie->soc_base == BCM2711) {
->  		ret = pcie->perst_set(pcie, 1);
->  		if (ret) {
->  			pcie->bridge_sw_init_set(pcie, 0);
-> @@ -1077,9 +1077,9 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	 */
->  	if (is_bmips(pcie))
->  		burst = 0x1; /* 256 bytes */
-> -	else if (pcie->type == BCM2711)
-> +	else if (pcie->soc_base == BCM2711)
->  		burst = 0x0; /* 128 bytes */
-> -	else if (pcie->type == BCM7278)
-> +	else if (pcie->soc_base == BCM7278)
->  		burst = 0x3; /* 512 bytes */
->  	else
->  		burst = 0x2; /* 512 bytes */
-> @@ -1676,7 +1676,7 @@ static const int pcie_offsets_bmips_7425[] = {
->  
->  static const struct pcie_cfg_data generic_cfg = {
->  	.offsets	= pcie_offsets,
-> -	.type		= GENERIC,
-> +	.soc_base	= GENERIC,
->  	.perst_set	= brcm_pcie_perst_set_generic,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  	.num_inbound_wins = 3,
-> @@ -1684,7 +1684,7 @@ static const struct pcie_cfg_data generic_cfg = {
->  
->  static const struct pcie_cfg_data bcm7425_cfg = {
->  	.offsets	= pcie_offsets_bmips_7425,
-> -	.type		= BCM7425,
-> +	.soc_base	= BCM7425,
->  	.perst_set	= brcm_pcie_perst_set_generic,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  	.num_inbound_wins = 3,
-> @@ -1692,7 +1692,7 @@ static const struct pcie_cfg_data bcm7425_cfg = {
->  
->  static const struct pcie_cfg_data bcm7435_cfg = {
->  	.offsets	= pcie_offsets,
-> -	.type		= BCM7435,
-> +	.soc_base	= BCM7435,
->  	.perst_set	= brcm_pcie_perst_set_generic,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  	.num_inbound_wins = 3,
-> @@ -1700,7 +1700,7 @@ static const struct pcie_cfg_data bcm7435_cfg = {
->  
->  static const struct pcie_cfg_data bcm4908_cfg = {
->  	.offsets	= pcie_offsets,
-> -	.type		= BCM4908,
-> +	.soc_base	= BCM4908,
->  	.perst_set	= brcm_pcie_perst_set_4908,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  	.num_inbound_wins = 3,
-> @@ -1716,7 +1716,7 @@ static const int pcie_offset_bcm7278[] = {
->  
->  static const struct pcie_cfg_data bcm7278_cfg = {
->  	.offsets	= pcie_offset_bcm7278,
-> -	.type		= BCM7278,
-> +	.soc_base	= BCM7278,
->  	.perst_set	= brcm_pcie_perst_set_7278,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
->  	.num_inbound_wins = 3,
-> @@ -1724,7 +1724,7 @@ static const struct pcie_cfg_data bcm7278_cfg = {
->  
->  static const struct pcie_cfg_data bcm2711_cfg = {
->  	.offsets	= pcie_offsets,
-> -	.type		= BCM2711,
-> +	.soc_base	= BCM2711,
->  	.perst_set	= brcm_pcie_perst_set_generic,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  	.num_inbound_wins = 3,
-> @@ -1732,7 +1732,7 @@ static const struct pcie_cfg_data bcm2711_cfg = {
->  
->  static const struct pcie_cfg_data bcm7216_cfg = {
->  	.offsets	= pcie_offset_bcm7278,
-> -	.type		= BCM7278,
-> +	.soc_base	= BCM7278,
->  	.perst_set	= brcm_pcie_perst_set_7278,
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
->  	.has_phy	= true,
-> @@ -1789,7 +1789,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  	pcie->dev = &pdev->dev;
->  	pcie->np = np;
->  	pcie->reg_offsets = data->offsets;
-> -	pcie->type = data->type;
-> +	pcie->soc_base = data->soc_base;
->  	pcie->perst_set = data->perst_set;
->  	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
->  	pcie->has_phy = data->has_phy;
-> @@ -1867,7 +1867,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		goto fail;
->  
->  	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
-> -	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
-> +	if (pcie->soc_base == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
->  		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
->  		ret = -ENODEV;
->  		goto fail;
-> @@ -1882,7 +1882,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	bridge->ops = pcie->type == BCM7425 ? &brcm7425_pcie_ops : &brcm_pcie_ops;
-> +	bridge->ops = pcie->soc_base == BCM7425 ? &brcm7425_pcie_ops : &brcm_pcie_ops;
->  	bridge->sysdata = pcie;
->  
->  	platform_set_drvdata(pdev, pcie);
+> V4 Changes:
+>   o Commit "Check return value of all reset_control_xxx calls"
+>     -- Blank line before "return" (Stan)
+>   o Commit "Use common error handling code in brcmstb_probe()"
+>     -- Drop the "Fixes" tag (Stan)
+>   o Commit "dt-bindings: PCI ..."
+>     -- Separate the main commit into two: cleanup and adding the
+>        7712 SoC (Krzysztof)
+>     -- Fold maintainer change commit into cleanup change (Krzysztof)
+>     -- Use minItems/maxItems where appropriate (Krzysztof)
+>     -- Consistent order of resets/reset-names in decl and usage
+>        (Krzysztof)
+> 
+> V3 Changes:
+>   o Commit "Enable 7712 SOCs"
+>     -- Move "model" check from outside to inside func (Stan)
+>   o Commit "Check return value of all reset_control_xxx calls"
+>     -- Propagate errors up the chain instead of ignoring them (Stan)
+>   o Commit "Refactor for chips with many regular inbound BARs"
+>     -- Nine suggestions given, nine implemented (Stan)
+>   o Commit "Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific"
+>     -- Drop tab, add parens around macro params in expression (Stan)
+>   o Commit "Use swinit reset if available"
+>     -- Treat swinit the same as other reset controllers (Stan)
+>        Stan suggested to use dev_err_probe() for getting resources
+>        but I will defer that to future series (if that's okay).
+>   o Commit "Get resource before we start asserting resets"
+>     -- Squash this with previous commit (Stan)
+>   o Commit "Use "clk_out" error path label"
+>     -- Move clk_prepare_enable() after getting resouurces (Stan)
+>     -- Change subject to "Use more common error handling code in
+>        brcm_pcie_probe()" (Markus)
+>     -- Use imperative commit description (Markus)
+>     -- "Fixes:" tag added for missing error return. (Markus)
+>   o Commit "dt-bindings: PCI ..."
+>     -- Split off maintainer change in separate commit.
+>     -- Tried to accomodate Krzysztof's requests, I'm not sure I
+>        have succeeded.  Krzysztof, please see [1] below.
+>   
+>   [1] Wrt the YAML of brcmstb PCIe resets, here is what I am trying
+>       to describe:
+> 
+>       CHIP       NUM_RESETS    NAMES
+>       ====       ==========    =====
+>       4908       1             perst
+>       7216       1             rescal
+>       7712       3             rescal, bridge, swinit
+>       Others     0             -
+> 
+> 
+> V2 Changes (note: four new commits):
+>   o Commit "dt-bindings: PCI ..."
+>     -- s/Adds/Add/, fix spelling error (Bjorn)
+>     -- Order compatible strings alphabetically (Krzysztof)
+>     -- Give definitions first then rules (Krzysztof)
+>     -- Add reason for change in maintainer (Krzysztof)
+>   o Commit "Use swinit reset if available"
+>     -- no need for "else" clause (Philipp)
+>     -- fix improper use of dev_err_probe() (Philipp) 
+>   o Commit "Use "clk_out" error path label"
+>     -- Improve commit message (Bjorn)
+>   o Commit "PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific"
+>     -- Improve commit subject line (Bjorn)
+>   o Commit (NEW) -- Change field name from 'type' to 'model'
+>     -- Added as requested (Stanimir)
+>   o Commit (NEW) -- Check return value of all reset_control_xxx calls
+>     -- Added as requested (Stanimir)
+>   o Commit (NEW) "Get resource before we start asserting reset controllers"
+>     -- Added as requested (Stanimir)
+>   o Commit (NEW) -- "Remove two unused constants from driver"
+> 
+> 
+> V1:
+>   This submission is for the Broadcom STB 7712, sibling SOC of the RPi5 chip.
+>   Stanimir has already submitted a patch "Add PCIe support for bcm2712" for
+>   the RPi version of the SOC.  It is hoped that Stanimir will allow us to
+>   submit this series first and subsequently rebase his patch(es).
+> 
+>   The largest commit, "Refactor for chips with many regular inbound BARs"
+>   affects both the STB and RPi SOCs.  It allows for multiple inbound ranges
+>   where previously only one was effectively used.  This feature will also
+>   be present in future STB chips, as well as Broadcom's Cable Modem group.
+> 
+> Jim Quinlan (13):
+>   dt-bindings: PCI: Change brcmstb maintainer and cleanup
+>   dt-bindings: PCI: Use maxItems for reset controllers
+>   dt-bindings: PCI: brcmstb: Add 7712 SoC description
+>   PCI: brcmstb: Use common error handling code in brcm_pcie_probe()
+>   PCI: brcmstb: Use bridge reset if available
+>   PCI: brcmstb: Use swinit reset if available
+>   PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets
+>     SoC-specific
+>   PCI: brcmstb: Remove two unused constants from driver
+>   PCI: brcmstb: Don't conflate the reset rescal with phy ctrl
+>   PCI: brcmstb: Refactor for chips with many regular inbound windows
+>   PCI: brcmstb: Check return value of all reset_control_xxx calls
+>   PCI: brcmstb: Change field name from 'type' to 'soc_base'
+>   PCI: brcmstb: Enable 7712 SOCs
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+>  drivers/pci/controller/pcie-brcmstb.c         | 513 +++++++++++++-----
+>  2 files changed, 412 insertions(+), 141 deletions(-)
+> 
+> 
+> base-commit: e724918b3786252b985b0c2764c16a57d1937707
 > -- 
 > 2.17.1
 > 
