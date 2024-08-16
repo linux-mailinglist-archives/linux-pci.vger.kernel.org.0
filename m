@@ -1,267 +1,186 @@
-Return-Path: <linux-pci+bounces-11746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D572F954292
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 09:18:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 419A895440D
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 10:25:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CB2CB22293
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 07:18:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1D1B1F21C9C
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 08:25:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D514C86131;
-	Fri, 16 Aug 2024 07:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 250F913F45F;
+	Fri, 16 Aug 2024 08:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BwZt48UV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8dHoJEC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBDE82C8E
-	for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 07:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C869A1386BF
+	for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723792710; cv=none; b=Z+abDEwYCg51OyHZl7bwlDf8+34KY60Puh3kdSyc07hb8cuf/neEL14ki7jYvGSlUZSKxK78rGYGLkZiQLODfGwI6b+bMzhfqZGpyF7PxiyHY19rPUpdL8vcgySULdLNFTZRTYvgzD2kY9ca3CbYoRjQyu+Qp/Pvmgjj4AJLtOg=
+	t=1723796603; cv=none; b=LzD3yUu45YpJcdDbAo88YLxDE/KuHS+xXiZctAeB7qmClWQt1uZRm3ZpT+USXJZeNqPrf23v3TgGCpX6kiju8cr3dwd6pUmPSjJ1591n05N+GHKGwRPRqD1C8JXm0eqLdVKYrNMuOMkE+iBVCKIq6+gb4bY8kcGiQk486aB6RWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723792710; c=relaxed/simple;
-	bh=kcwHckwk7JPYFiJqUA+xJfq8FMBOp3MJvtwdXSdhHbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVYFbWuDY1o5AUqKJLiadfU7L+CdhW39Kj5ul9kLdzyMUdbXcoYLTKfEsAG4cWFK+ktY2qhsUaRu28VbgmX6YHoNynk/31981Ep9PBpNYBekyY/k8Z1dY5cjNlnz2Il2u4vTwmiIat2/sRML9jQ9lFG0mVfmQHDGpI7z5XY+tWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BwZt48UV; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7a1be7b7bb5so1343878a12.0
-        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 00:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723792708; x=1724397508; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0Yp5hMnzY0MppJ+YTjzvAfDTWaoEJOMYLebj+UdYxJM=;
-        b=BwZt48UVLXUhlQbI5JfvFYkiVDfJWuBL0i3El1Wn5V8uPoxCTE+lzLJpFQI1w26ep8
-         n0f1HSMzJGvUKh/U4FteRdoYnpPecxEKiudSKNsVIohrqpO2kWwZVjh0OXU0FwJPkecH
-         j6LznelEWOsB5Ak84/qIK06TUOp41X1t5lFsNP13jZFl3EElRmUGtba8VuoTlepkmHXd
-         +QLrrXgOC51dXo4o4C51x0qEyzkQxZ3Qfja39WmfH7pYhbitNgpA6laPF8ByROy6+nT/
-         nDmz89m5Xam888WiyCN4JMHZU0mpYtNu1Zn7eW2qYEkePg3BNeOcn0X8fH6JjYUF73xv
-         KC3w==
+	s=arc-20240116; t=1723796603; c=relaxed/simple;
+	bh=4A0ETd89A4IfgAb0abySs/aZMqbIWPs9HprUGPN5QFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PyzqWwwgj5KPGR/ddPfVAqTvzGJPuDy0reOhm9UCXLgCRrRIa6t4kOkeLZ+8yDVjgFDo0MWxo72AyDd05hLUEs8695vkYj25VfwP2/EK+CmGxsdbL58Boj6nD2Hx45Fr+olGQ+FjIkQUavIecuHrWw9EVWD9SaUh6/4G4CKMFVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U8dHoJEC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723796599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TrimoxVS1Kj7egtxDkUB7ViRlj0uS++glrAveWNoQyY=;
+	b=U8dHoJECwwm+gKRsyEyCry920d56qngyEgf6rE/81PpLTpAveI7nHOZTYg2fcT/3CYN5mN
+	1TlLrQEpjY1nLBKq44SVgBPl+hwYwnPZXtL/FaXV+zsw5rRGNQEQf08BEn2Pq8eQdl6H4N
+	VEMV1irrGk46eDQWE0lJFxy+NPtMKo8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-100-rFyVdZMCMkCOC_2NrxDM4A-1; Fri, 16 Aug 2024 04:23:18 -0400
+X-MC-Unique: rFyVdZMCMkCOC_2NrxDM4A-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-428fb085cc3so3172485e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 01:23:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723792708; x=1724397508;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Yp5hMnzY0MppJ+YTjzvAfDTWaoEJOMYLebj+UdYxJM=;
-        b=sVBtp63wPw6dkSuSh3YLWEi28Pwr6IspKr5UUDgEiOWvlCQmrBbZ3H/U/Ymdlw9Wxs
-         SEyu5Xmjh3LchRv3x0CKTs/aK3a5W5p5lC5b+CKz8pLTfqUuT8d5OyZKlgQ1urUDhn0/
-         wNCN6ctho8EDLQ7v+dBwUGaSkuE6UUqEX5ouzK0EsWw26HoZLKbUYnJs4MmRnTdvOB/v
-         nbS+21loKVuTQylAES4DPpZHtRoue55XmZaUMzll7O8IbxXqgalcMW3Q19CXOjHrlqa1
-         PYcfWr5VHfEEpwI/MRwYI+wNN4l6IeGwVME6FBUmBTg4+UZScMyFNrPSBE+gaQvPbIr0
-         TrbA==
-X-Gm-Message-State: AOJu0YwOmEvmyOXVaOb/0I2JI5JlK6YfptS3XAQxPYID9aPvhMm0vxEl
-	wc639tsrNuYvwKkGrBiygnTCC0HjGNMJLJZL3bI0W5NA8FN8q+Y/ccT1VQPvfg==
-X-Google-Smtp-Source: AGHT+IE/Ce9TzANMbRw4Oif4Tj5G9vXLEWWJGupTaGJORK1OjwraaIu/dqcDdcuoU4RkUacM7S0xiw==
-X-Received: by 2002:a05:6a21:3983:b0:1c1:e75a:5504 with SMTP id adf61e73a8af0-1c904faaeefmr2746336637.15.1723792707938;
-        Fri, 16 Aug 2024 00:18:27 -0700 (PDT)
-Received: from thinkpad ([36.255.17.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef5229sm2056273b3a.107.2024.08.16.00.18.24
+        d=1e100.net; s=20230601; t=1723796597; x=1724401397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TrimoxVS1Kj7egtxDkUB7ViRlj0uS++glrAveWNoQyY=;
+        b=YwoOmlipT8c6Atu71XjTc8dSvnWKumek6aj+aBbZ2lyI/Nq5OBdoH/KKx5W/Hlt+GI
+         DJzW5GRpdkp+t0pF7mUliKEsMkk6EiuAw3ikWERVCXo8ZhKmgHPlYQHfubWptBP81pvB
+         GwNrCB4LaYit3f28Tc3SxdX4PzPZml5zoXZmCiokcl/F0RF+9RdtYRX7jX5p8uEYFHeL
+         xdwY6nwUlDZg/ARpGCHDkX5K50YUXIu8REVCr3Q23iqGsYp+3025MNvbKmrFYfU9BIBW
+         D4gh4Goa+Nif0+mb1Lnqxt+7j/T9ak9SE5BtowaZXLucUQXNhHxThifieuH5c8CXOfpC
+         fzRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUU4EhIUpEn5AnTHPxkt/5bjPIAZLrYKFNLl2YUHO3S4a0kZzVbyNbRYZwnxQQ3u1/Bds8rV6Vqy/aEp4wSBFRq5g0+Kbu6ZGbo
+X-Gm-Message-State: AOJu0YxI6Uub/Uo8Ki+kDOjJaCn5rp7eQ+3YUNvPbq9wEhWu5wC8EXO0
+	NO05qoU/0GraR0cP6XzMNOzWnGMuv+/fKFmMVW+0QmS2BfnKmU/d5Oxv0qm82fI04m0/kLmutvo
+	mHSMJS2x3hr3RZwq0es7VTWn7c9ZX1PJVIFZe8/8tqB8d7jc2feCV3301+A==
+X-Received: by 2002:a05:600c:3ba3:b0:426:5f08:542b with SMTP id 5b1f17b1804b1-429ed630745mr8194115e9.0.1723796597035;
+        Fri, 16 Aug 2024 01:23:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHv8X8ePSzchNamGEsYdfB/6Vd1EEN507cd6x8fbad0HupSX3+xiP7ZxfNzBVa2X9ALcjUjSQ==
+X-Received: by 2002:a05:600c:3ba3:b0:426:5f08:542b with SMTP id 5b1f17b1804b1-429ed630745mr8193805e9.0.1723796596484;
+        Fri, 16 Aug 2024 01:23:16 -0700 (PDT)
+Received: from eisenberg.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429ded367ebsm71461355e9.25.2024.08.16.01.23.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 00:18:27 -0700 (PDT)
-Date: Fri, 16 Aug 2024 12:48:22 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Fri, 16 Aug 2024 01:23:16 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jie Wang <jie.wang@intel.com>,
+	Shashank Gupta <shashank.gupta@intel.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Adam Guerin <adam.guerin@intel.com>,
+	Tero Kristo <tero.kristo@linux.intel.com>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Arnaud Ebalard <arno@natisbad.org>,
+	Srujana Challa <schalla@marvell.com>,
+	Nithin Dabilpuram <ndabilpuram@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Breno Leitao <leitao@debian.org>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 00/13] PCI: brcnstb: Enable STB 7712 SOC
-Message-ID: <20240816071822.GO2331@thinkpad>
-References: <20240815225731.40276-1-james.quinlan@broadcom.com>
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qat-linux@intel.com,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v3 00/10] Remove pcim_iomap_regions_request_all()
+Date: Fri, 16 Aug 2024 10:22:52 +0200
+Message-ID: <20240816082304.14115-1-pstanner@redhat.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240815225731.40276-1-james.quinlan@broadcom.com>
 
-On Thu, Aug 15, 2024 at 06:57:13PM -0400, Jim Quinlan wrote:
-> V6 Changes
->   o Commit "Refactor for chips with many regular inbound windows"
->     -- Use u8 for anything storing/counting # inbound windows (Stan)
->     -- s/set_bar/add_inbound_win/g (Manivannan)
->     -- Drop use of "inline" (Manivannan)
->     -- Change cpu_beg to cpu_start, same with pcie_beg. (Manivannan)
->     -- Used writel_relaxed() (Manivannan)
->   o Use swinit reset if available
->     -- Proper use of dev_err_probe() (Stan)
->   o Commit "Use common error handling code in brcm_pcie_probe()"
->     -- Rewrite commit msg in paragraph form (Manivannan)
->     -- Refactor error path at end of probe func (Manivannan)
->     -- Proper use of dev_err_probe() (Stan)
->   o New commit "dt-bindings: PCI: Change brcmstb maintainer and cleanup"
->     -- Break out maintainer change and small cleanup into a
->        separate commit (Krzysztof)
-> 
+I removed a ton of people from CC and only kept those who's approval is
+pending.
 
-Looks like you've missed adding the review tags...
 
-- Mani
+Changes in v3:
+  - Add missing full stops to commit messages (Andy).
 
-> V5 Changes:
->   o All commits: Use imperative voice in commit subjects/messages
->        (Manivannan)
->   o Commit "PCI: brcmstb: Enable 7712 SOCs"
->     -- Augment commit message to include PCIe details and revision.
->        (Manivannan)
->   o Commit "PCI: brcmstb: Change field name from 'type' to 'model'"
->     -- Instead of "model" use "soc_base" (Manivannan)
->   o Commit "PCI: brcmstb: Refactor for chips with many regular inbound BARs"
->     -- Get rid of the confusing "BAR" variable names and types and use
->        something like "inbound_win". (Manivannan)
->   o Commit "PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE..."
->     -- Mention in the commit message that this change is in preparation
->        for the 7712 SoC. (Manivannan)
->   o Commit: "PCI: brcmstb: Use swinit reset if available"
->     -- Change reset name "swinit" to "swinit_reset" (Manivannan)
->     -- Add 1us delay for reset (Manivannan)
->     -- Use dev_err_probe() (Multiple reviewers)
->   o Commit "PCI: brcmstb: Use bridge reset if available"
->     -- Change reset name "bridge" to "bridge_reset" (Manivannan)
->     -- The Reset API can take NULL so need need to test variable
->        before calling (Manivannan)
->     -- Added a call to bridge_sw_init_set() method in probe()
->        as some registers cannot be accessed w/o this. (JQ)
->   o Commit "PCI: brcmstb: Use common error handling code in ..."
->     -- Use more descriptive goto label (Manivannan)
->     -- Refactor error paths to be less encumbered (Manivannan)
->     -- Use dev_err_probe() (Multiple reviewers)
->   o Commits "dt-bindings: PCI: brcmstb: ..."
->     -- Specify the "resets" and "reset-names" in the same manner
->        as does qcom,ufs.yaml specifies "clocks" and
->        "clock-names" (Krzysztof)
->     -- Drop reset desccriptions as they were pretty content-free
->        anyhow. (Krzysztof)
-> 
-> V4 Changes:
->   o Commit "Check return value of all reset_control_xxx calls"
->     -- Blank line before "return" (Stan)
->   o Commit "Use common error handling code in brcmstb_probe()"
->     -- Drop the "Fixes" tag (Stan)
->   o Commit "dt-bindings: PCI ..."
->     -- Separate the main commit into two: cleanup and adding the
->        7712 SoC (Krzysztof)
->     -- Fold maintainer change commit into cleanup change (Krzysztof)
->     -- Use minItems/maxItems where appropriate (Krzysztof)
->     -- Consistent order of resets/reset-names in decl and usage
->        (Krzysztof)
-> 
-> V3 Changes:
->   o Commit "Enable 7712 SOCs"
->     -- Move "model" check from outside to inside func (Stan)
->   o Commit "Check return value of all reset_control_xxx calls"
->     -- Propagate errors up the chain instead of ignoring them (Stan)
->   o Commit "Refactor for chips with many regular inbound BARs"
->     -- Nine suggestions given, nine implemented (Stan)
->   o Commit "Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific"
->     -- Drop tab, add parens around macro params in expression (Stan)
->   o Commit "Use swinit reset if available"
->     -- Treat swinit the same as other reset controllers (Stan)
->        Stan suggested to use dev_err_probe() for getting resources
->        but I will defer that to future series (if that's okay).
->   o Commit "Get resource before we start asserting resets"
->     -- Squash this with previous commit (Stan)
->   o Commit "Use "clk_out" error path label"
->     -- Move clk_prepare_enable() after getting resouurces (Stan)
->     -- Change subject to "Use more common error handling code in
->        brcm_pcie_probe()" (Markus)
->     -- Use imperative commit description (Markus)
->     -- "Fixes:" tag added for missing error return. (Markus)
->   o Commit "dt-bindings: PCI ..."
->     -- Split off maintainer change in separate commit.
->     -- Tried to accomodate Krzysztof's requests, I'm not sure I
->        have succeeded.  Krzysztof, please see [1] below.
->   
->   [1] Wrt the YAML of brcmstb PCIe resets, here is what I am trying
->       to describe:
-> 
->       CHIP       NUM_RESETS    NAMES
->       ====       ==========    =====
->       4908       1             perst
->       7216       1             rescal
->       7712       3             rescal, bridge, swinit
->       Others     0             -
-> 
-> 
-> V2 Changes (note: four new commits):
->   o Commit "dt-bindings: PCI ..."
->     -- s/Adds/Add/, fix spelling error (Bjorn)
->     -- Order compatible strings alphabetically (Krzysztof)
->     -- Give definitions first then rules (Krzysztof)
->     -- Add reason for change in maintainer (Krzysztof)
->   o Commit "Use swinit reset if available"
->     -- no need for "else" clause (Philipp)
->     -- fix improper use of dev_err_probe() (Philipp) 
->   o Commit "Use "clk_out" error path label"
->     -- Improve commit message (Bjorn)
->   o Commit "PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific"
->     -- Improve commit subject line (Bjorn)
->   o Commit (NEW) -- Change field name from 'type' to 'model'
->     -- Added as requested (Stanimir)
->   o Commit (NEW) -- Check return value of all reset_control_xxx calls
->     -- Added as requested (Stanimir)
->   o Commit (NEW) "Get resource before we start asserting reset controllers"
->     -- Added as requested (Stanimir)
->   o Commit (NEW) -- "Remove two unused constants from driver"
-> 
-> 
-> V1:
->   This submission is for the Broadcom STB 7712, sibling SOC of the RPi5 chip.
->   Stanimir has already submitted a patch "Add PCIe support for bcm2712" for
->   the RPi version of the SOC.  It is hoped that Stanimir will allow us to
->   submit this series first and subsequently rebase his patch(es).
-> 
->   The largest commit, "Refactor for chips with many regular inbound BARs"
->   affects both the STB and RPi SOCs.  It allows for multiple inbound ranges
->   where previously only one was effectively used.  This feature will also
->   be present in future STB chips, as well as Broadcom's Cable Modem group.
-> 
-> Jim Quinlan (13):
->   dt-bindings: PCI: Change brcmstb maintainer and cleanup
->   dt-bindings: PCI: Use maxItems for reset controllers
->   dt-bindings: PCI: brcmstb: Add 7712 SoC description
->   PCI: brcmstb: Use common error handling code in brcm_pcie_probe()
->   PCI: brcmstb: Use bridge reset if available
->   PCI: brcmstb: Use swinit reset if available
->   PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets
->     SoC-specific
->   PCI: brcmstb: Remove two unused constants from driver
->   PCI: brcmstb: Don't conflate the reset rescal with phy ctrl
->   PCI: brcmstb: Refactor for chips with many regular inbound windows
->   PCI: brcmstb: Check return value of all reset_control_xxx calls
->   PCI: brcmstb: Change field name from 'type' to 'soc_base'
->   PCI: brcmstb: Enable 7712 SOCs
-> 
->  .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
->  drivers/pci/controller/pcie-brcmstb.c         | 513 +++++++++++++-----
->  2 files changed, 412 insertions(+), 141 deletions(-)
-> 
-> 
-> base-commit: e724918b3786252b985b0c2764c16a57d1937707
-> -- 
-> 2.17.1
-> 
+Changes in v2:
+  - Fix a bug in patch №4 ("crypto: marvell ...") where an error code
+    was not set before printing it. (Me)
+  - Apply Damien's Reviewed- / Acked-by to patches 1, 2 and 10. (Damien)
+  - Apply Serge's Acked-by to patch №7. (Serge)
+  - Apply Jiri's Reviewed-by to patch №8. (Jiri)
+  - Apply Takashi Iwai's Reviewed-by to patch №9. (Takashi)
+
+
+Hi all,
+
+the PCI subsystem is currently working on cleaning up its devres API. To
+do so, a few functions will be replaced with better alternatives.
+
+This series removes pcim_iomap_regions_request_all(), which has been
+deprecated already, and accordingly replaces the calls to
+pcim_iomap_table() (which were only necessary because of
+pcim_iomap_regions_request_all() in the first place) with calls to
+pcim_iomap().
+
+Would be great if you can take a look whether this behaves as you
+intended for your respective component.
+
+Cheers,
+Philipp
+
+Philipp Stanner (10):
+  PCI: Make pcim_request_all_regions() a public function
+  ata: ahci: Replace deprecated PCI functions
+  crypto: qat - replace deprecated PCI functions
+  crypto: marvell - replace deprecated PCI functions
+  intel_th: pci: Replace deprecated PCI functions
+  wifi: iwlwifi: replace deprecated PCI functions
+  ntb: idt: Replace deprecated PCI functions
+  serial: rp2: Replace deprecated PCI functions
+  ALSA: korg1212: Replace deprecated PCI functions
+  PCI: Remove pcim_iomap_regions_request_all()
+
+ .../driver-api/driver-model/devres.rst        |  1 -
+ drivers/ata/acard-ahci.c                      |  6 +-
+ drivers/ata/ahci.c                            |  6 +-
+ drivers/crypto/intel/qat/qat_420xx/adf_drv.c  | 11 +++-
+ drivers/crypto/intel/qat/qat_4xxx/adf_drv.c   | 11 +++-
+ .../marvell/octeontx2/otx2_cptpf_main.c       | 14 +++--
+ .../marvell/octeontx2/otx2_cptvf_main.c       | 13 ++--
+ drivers/hwtracing/intel_th/pci.c              |  9 ++-
+ .../net/wireless/intel/iwlwifi/pcie/trans.c   | 16 ++---
+ drivers/ntb/hw/idt/ntb_hw_idt.c               | 13 ++--
+ drivers/pci/devres.c                          | 59 +------------------
+ drivers/tty/serial/rp2.c                      | 12 ++--
+ include/linux/pci.h                           |  3 +-
+ sound/pci/korg1212/korg1212.c                 |  6 +-
+ 14 files changed, 76 insertions(+), 104 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.46.0
+
 
