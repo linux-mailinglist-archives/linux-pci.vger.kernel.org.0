@@ -1,103 +1,97 @@
-Return-Path: <linux-pci+bounces-11758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11759-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 937F795453B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 11:13:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5E0E954872
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 14:02:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C601A1C20D2E
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 09:13:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A888B2126D
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 12:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA62B13DDD1;
-	Fri, 16 Aug 2024 09:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56A2B156F44;
+	Fri, 16 Aug 2024 12:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOFg711Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2RSKImg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9891713DBBF;
-	Fri, 16 Aug 2024 09:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C235156C62;
+	Fri, 16 Aug 2024 12:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723799568; cv=none; b=VMUCMxRAc+lN/eoGx7I2k8Iq/XjWnG4GECWBgIaTdEodA2hLNoYi+jfuSKCG4mZ9wIJXQb8ZZxS4NJNsUyLR9ZZH7vFQVbmJtDaiqfcXVCB9cKVVujynK4c6sf9INfZ6LeNMpXqzCwIdA0StA2YV+9geFJtfdK5bnwNJmOEFKDQ=
+	t=1723809737; cv=none; b=SUiCf26YyCS0gx+VclLdsHd9N6mXiys8/bQm6fPvXUqOYg7Np2gEWo7tqOi1hcKmYVki0z3Pe97NGjg66Pv9ChsWIpRDiQ6XDtcHgZExmEyoTXx0PweHb1HLOt74JrfUTMTurqxG5E+Ti0DJ/6vcGmRN+I87zQjEaTE97u4teS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723799568; c=relaxed/simple;
-	bh=pE5KrhJEFY9/bCRrBwsiQIZ1HfJZEZWnZP+tor9EZ5I=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=WaBvWRuOaoKyFMdiKjfFyAuGwBCPDD7LrbUxYFilDdp3/IXt0Femg6UrZvslmEOcYJCAzp1kgp0xpQREHt9SD7dGUZOF3Aak/Cju5YDByCb45zHmSmAIks7PfGvAW/Pze011ZswfgQlIU8c+h4aZbwHLsPBOTK5L/ND1//8p9Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOFg711Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7A3C4AF09;
-	Fri, 16 Aug 2024 09:12:41 +0000 (UTC)
+	s=arc-20240116; t=1723809737; c=relaxed/simple;
+	bh=NAmwEWrgEf+Xp0/OzBzRsBFn/oVvGfylhZy2WMC9EQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nxRgFpD4HQkg86qa7hOYsnukq/ig4LYMMwFzdhC6oZxpPkeOdNdYpmvTmnYKcvrJUZfOUsbG21XFf3/6VflqC3LGnvYt6Q46dKXvH7SGOkCiWJSU7/bKj+siLaijUThBglKvKqc0FTkCw6i3uMFIc/cJK9fRmXDwyFN2W1QTzCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2RSKImg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B79C32782;
+	Fri, 16 Aug 2024 12:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723799568;
-	bh=pE5KrhJEFY9/bCRrBwsiQIZ1HfJZEZWnZP+tor9EZ5I=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=JOFg711YWxgNq6qOJ1zg3vPBTyfziyukZMWg8y/NjOaW/eIEMsg5wZIQsKdlCjVs+
-	 XiV5/zKix6JGrbnOzNPFvsvtK8yE4CfxTzSEypXVe4Ton5wwvcdk45tzvMkATA0CRd
-	 rMBCMjgPOzrUFleWBNSzTtaXubAWz/6CWr5cmg2wT7DXjzX/kOe8RXJ2+Pctcl8cuA
-	 /bPvzhiMTz0qivwIXKOEQt8ZKrfIbf9w6DkGwGTndz7izbsVs9iNFjdzPP97GA0f5q
-	 DP7OXE8jdICIGlO1DSIRqfOvtHwv8MBzIT5jWtj9bG7Xge0RaJEfX+/8oaURe4EXY1
-	 rqjGRj9NV4k6g==
-From: Kalle Valo <kvalo@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,  Herbert Xu
- <herbert@gondor.apana.org.au>,  "David S. Miller" <davem@davemloft.net>,
-  Andy Shevchenko <andriy.shevchenko@linux.intel.com>,  Jie Wang
- <jie.wang@intel.com>,  Shashank Gupta <shashank.gupta@intel.com>,  Adam
- Guerin <adam.guerin@intel.com>,  Tero Kristo
- <tero.kristo@linux.intel.com>,  Boris Brezillon <bbrezillon@kernel.org>,
-  Arnaud Ebalard <arno@natisbad.org>,  Srujana Challa
- <schalla@marvell.com>,  Nithin Dabilpuram <ndabilpuram@marvell.com>,
-  Bharat Bhushan <bbhushan2@marvell.com>,  Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,  Miri Korenblit
- <miriam.rachel.korenblit@intel.com>,  Johannes Berg
- <johannes.berg@intel.com>,  Gregory Greenman <gregory.greenman@intel.com>,
-  Emmanuel Grumbach <emmanuel.grumbach@intel.com>,  Yedidya Benshimol
- <yedidya.ben.shimol@intel.com>,  Breno Leitao <leitao@debian.org>,
-  Jonathan Corbet <corbet@lwn.net>,  Bjorn Helgaas <bhelgaas@google.com>,
-  Mark Brown <broonie@kernel.org>,  David Lechner <dlechner@baylibre.com>,
-  Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  qat-linux@intel.com,
-  linux-crypto@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-wireless@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 06/10] wifi: iwlwifi: replace deprecated PCI functions
-References: <20240816082304.14115-1-pstanner@redhat.com>
-	<20240816082304.14115-7-pstanner@redhat.com>
-Date: Fri, 16 Aug 2024 12:12:39 +0300
-In-Reply-To: <20240816082304.14115-7-pstanner@redhat.com> (Philipp Stanner's
-	message of "Fri, 16 Aug 2024 10:22:58 +0200")
-Message-ID: <875xs0ygoo.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1723809736;
+	bh=NAmwEWrgEf+Xp0/OzBzRsBFn/oVvGfylhZy2WMC9EQ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=P2RSKImg22nJX7hkwvDhXT7+YEwoUOIAeY9XxL1yg0atED+iYid176F7wK2trLE55
+	 KcxP5X1g99/tgPUO/T+Dr2SloE2Q5RxiY4yX7l8U+6Q/975KOppck+xXN10q7rBgbI
+	 xU5M7Eivqe42ATTqfzhdCrzbEsk1rpAoq3FrSH1TK+qvW5P5h8RqJ/yR0rjeP77us0
+	 cnJ5iU7QICiQkFxQnSftt/jFcrPsEaWDBARXX8BBMcBkiZJRnxSbHUbH97WZdoBJQV
+	 jtRhZG/tXxm50JUoVZHS8RzlYG+YRuW7SAvp8zLLNBc9SboEbCREaIeq6R0kJglJqy
+	 RyGIsIAQ/LxEg==
+Date: Fri, 16 Aug 2024 07:02:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
+Message-ID: <20240816120214.GA65249@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240816053757.GF2331@thinkpad>
 
-Philipp Stanner <pstanner@redhat.com> writes:
+On Fri, Aug 16, 2024 at 11:07:57AM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Aug 15, 2024 at 01:15:57PM -0500, Bjorn Helgaas wrote:
+> > On Sat, Jul 27, 2024 at 02:36:04PM +0530, Manivannan Sadhasivam wrote:
+> > > Starting from commit 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure
+> > > for drivers requiring refclk from host"), all the hardware register access
+> > > (like DBI) were moved to dw_pcie_ep_init_registers() which gets called only
+> > > in qcom_pcie_perst_deassert() i.e., only after the endpoint received refclk
+> > > from host.
+> > > 
+> > > So there is no need to enable the endpoint resources (like clk, regulators,
+> > > PHY) during probe(). Hence, remove the call to qcom_pcie_enable_resources()
+> > > helper from probe(). This was added earlier because dw_pcie_ep_init() was
+> > > doing DBI access, which is not done now.
+> > > 
+> > > While at it, let's also call dw_pcie_ep_deinit() in err path to deinit the
+> > > EP controller in the case of failure.
+> > 
+> > Is this v6.11 material?  If so, we need a little more justification
+> > than "no need to enable".
+> 
+> That's why I asked to merge the comment from Dmitry:
+> 
+> "...moreover his makes PCIe EP fail on some of the platforms as powering on PHY
+> requires refclk from the RC side, which is not enabled at the probe time."
 
-> pcim_iomap_table() and pcim_iomap_regions_request_all() have been
-> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> pcim_iomap_table(), pcim_iomap_regions_request_all()").
->
-> Replace these functions with their successors, pcim_iomap() and
-> pcim_request_all_regions().
->
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+The patch was posted and described basically as a cleanup of something
+that was unnecessary but not harmful, which is not post-merge window
+material.
 
-No response from Intel but looks good from my point of view:
+If it is in fact a critical fix, that needs to be the central point of
+the commit log, not something tacked on with "moreover" or
+"additionally".  And we need something like a Fixes: tag so we know
+when the problem was introduced and where to backport this.
 
-Acked-by: Kalle Valo <kvalo@kernel.org>
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Bjorn
 
