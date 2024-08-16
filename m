@@ -1,66 +1,70 @@
-Return-Path: <linux-pci+bounces-11777-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11778-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3CBF955358
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 00:34:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A41E955392
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 00:59:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D61871C2202D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 22:34:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 543D72849DC
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 22:59:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEE141465A1;
-	Fri, 16 Aug 2024 22:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65EA6145B2D;
+	Fri, 16 Aug 2024 22:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="LC9URQnh"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="AmsXAnYr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F4F146591;
-	Fri, 16 Aug 2024 22:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C195147C71;
+	Fri, 16 Aug 2024 22:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723847633; cv=none; b=dF2yNWx2H3mPEHUI0RAOFYzK1v9dIvT+TNok31qnr1uxbXTpGnwiTVlw4i68tBGH4spkQZyr9kT7I79APbajUzcjU1NBnLTNL6LUJsWLelV5SYmjLJC3y9+gMKENKEvhvuOGdzpX/sQSg0o7Thhk4fg/gMvsua7eM7ZrAP3r8WU=
+	t=1723849162; cv=none; b=c7Z5PD3kJj83qjGV/Edb7UtDwlCY6dP5VocfNBy7aMz53Cqxcb31OxQEkWGM/bmZym7u6pRRSpm0sijBPjygNHtM8gxY/5J/hy5gDn5M8AJB0+NRzsmqcTFbpoB1CsxKzbYIGKuOzGva624dAICJhd/hk+gDEEM85gDJxB3cijY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723847633; c=relaxed/simple;
-	bh=IfNRY/5p/VGWMH1PPfGSlnef7rDTkdN4OX4eIbjfXlQ=;
+	s=arc-20240116; t=1723849162; c=relaxed/simple;
+	bh=MsQ2JWBXJTOT4TDjz8UgKQmbAmGvjsYJNgpqjaaygvQ=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hVcMfS9t1HkC9yLcmdGVIxnQ3OjlHMVxjJjxvOhCJgch/4StUDhgT1le6FgDvjmdCVmycnKTWb/Hr+Jps/kZdfyX1mf1wvKW3ddRL8EZn1XdwUVYC2PAyT9RqRLCjE2quCbLRq99P1Y4yIp6J2V6jcyFWWqcfJt5Xch/wu5iWDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=LC9URQnh; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 450FA418AB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1723847631; bh=uKFpj34a6+64O4rYy8zGYGv+iPIAbdox/mIVfquOJEI=;
+	 MIME-Version:Content-Type; b=Kqo//K/fx4LPxFg+aEF4NZc+IsAIQlSPhbAi+U3RictnKFKEdAdGo6BhWBej5gncgyaILWU8e1O+c7xGGCOdH6n+YncGVvAiWN4M+yVS83spO6gXigVZr0YJY/F4gMGKFKQZUKbh3wL3MdhxqiQjtEZikgqXvlPuccPZch9fOIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=AmsXAnYr; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1723849156;
+	bh=roYcbEwUkCK44wHMpRdhuKBnVEwlCVBSQUtDw2Hz8SQ=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=LC9URQnhhmh8OIdIfQW3Dv7x2OdSawBZIUuEqVHr1kP/FUG7qGC+oaXLtI9i3KitV
-	 Lhg+Xv6FXQQ3bM7Pkh7grDd3Y7uRQtuIIxrjWoIuvpUa1pfiLYiHBAT831QndB/rI9
-	 31Qohq81Mp1OTpFJBTnGAtMwvj9DcOMZFoKZu70v/90GpyAKn1D8QvxPesVgFKaIdK
-	 9UGMsem0ehgoFlrxOx6BAxjXvWesWhaCd8eEDOxjdhG/w+19Fk3zqNw48etwxVZqQB
-	 7E4lagf2ACa6kNgcmobW91MV4AeWQWScebJwhH4WI0Udy18ULTaTVXl0zoBL2X2hLK
-	 hUIZ/ofJV58iA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	b=AmsXAnYrY7hw3WpwHZSqkOCASktJ+k24PxqopHBvkPLi7tL4eqiMGX1vl5Q89z9wP
+	 8tIbivB12uj9UCXGgQtlB41h3EwVZcgoiI/jZTU7cshhYc+tISuLvHlK4M9HkHU0Zg
+	 4i7stxOCnT0f8dxqG0Pzpcb9wlfbRYRiDTMo0U2iUw1RMIrkUflE5zGcIzOhIacfYp
+	 Uk2k/gT7vOuHZieR3s8j4N8v7KmFKFaxCoN4gC64XvSN145UbGNntsdA25H5DQEtyr
+	 jsp9ZnCSVk30IwL5Wp6RZF40Iwak19xzJB+P40Pkhmvvvj99sqDcsAQfGjI2flpb+s
+	 segbiMtOphFnA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 450FA418AB;
-	Fri, 16 Aug 2024 22:33:51 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Philipp Stanner <pstanner@redhat.com>, Mark Brown <broonie@kernel.org>,
- David Lechner <dlechner@baylibre.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Philipp Stanner <pstanner@redhat.com>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Bjorn Helgaas
- <bhelgaas@google.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH RESEND] Documentation: devres: fix error about PCI devres
-In-Reply-To: <20240809095248.14220-2-pstanner@redhat.com>
-References: <20240809095248.14220-2-pstanner@redhat.com>
-Date: Fri, 16 Aug 2024 16:33:50 -0600
-Message-ID: <87plq8hzch.fsf@trenco.lwn.net>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Wly9G30LYz4wb0;
+	Sat, 17 Aug 2024 08:59:14 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Amit Machhiwal <amachhiw@linux.ibm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou
+ <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>, Vaibhav Jain
+ <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Vaidyanathan
+ Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S
+ <kowsjois@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>,
+ kernel-team@lists.ubuntu.com, Stefan Bader <stefan.bader@canonical.com>
+Subject: Re: [PATCH v3] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+In-Reply-To: <20240816180441.81f4d694-3b-amachhiw@linux.ibm.com>
+References: <20240806200059.GA74866@bhelgaas> <87h6bm1ngo.fsf@mail.lhotse>
+ <20240816180441.81f4d694-3b-amachhiw@linux.ibm.com>
+Date: Sat, 17 Aug 2024 08:59:13 +1000
+Message-ID: <87o75s2hxa.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,30 +73,61 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Philipp Stanner <pstanner@redhat.com> writes:
-
-> The documentation states that pcim_enable_device() will make "all PCI
-> ops" managed. This is totally false, only a small subset of PCI
-> functions become managed that way. Implicating otherwise has caused at
-> least one bug so far, namely in commit 8558de401b5f ("drm/vboxvideo: use
-> managed pci functions").
+Amit Machhiwal <amachhiw@linux.ibm.com> writes:
+> On 2024/08/15 01:20 PM, Michael Ellerman wrote:
+>> Bjorn Helgaas <helgaas@kernel.org> writes:
+>> > On Sat, Aug 03, 2024 at 12:03:25AM +0530, Amit Machhiwal wrote:
+>> >> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+>> >> of a PCI device attached to a PCI-bridge causes following kernel Oops on
+>> >> a pseries KVM guest:
+>> >
+>> > What is unique about pseries here?  There's nothing specific to
+>> > pseries in the patch, so I would expect this to be a generic problem
+>> > on any arch.
+>> >
+>> >>  RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+>> >>  Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
+>> >>  BUG: Unable to handle kernel data access on read at 0x10ec00000048
+>> >
+>> > Weird address.  I would expect NULL or something.  Where did this
+>> > non-NULL pointer come from?
+>> 
+>> It originally comes from np->data, which is supposed to be an
+>> of_changeset.
+>> 
+>> The powerpc code also uses np->data for the struct pci_dn pointer, see
+>> pci_add_device_node_info().
+>> 
+>> I wonder if that's why it's non-NULL?
 >
-> Change the function summary so the functions dangerous behavior becomes
-> obvious.
->
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> ---
-> +CC PCI and Bjorn.
->
-> Bjorn, btw. neither PCI nor you are printed by getmaintainers for the
-> touched document. Possibly one might want to think about fixing that
-> somehow.
-> But I don't think it's a huge deal.
-> ---
->  Documentation/driver-api/driver-model/devres.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I'm also looking into the code to figure out where's that value coming from. I
+> will update as soon as I get there.
 
-Applied, thanks.
+Thanks.
+ 
+>> Amit, do we have exact steps to reproduce this? I poked around a bit but
+>> couldn't get it to trigger.
+>
+> Sure, below are the steps:
+>
+> 1. Set CONFIG_PCI_DYNAMIC_OF_NODES=y in the kernel config and compile (Fedora
+>    has it disabled in it's distro config, Ubuntu has it enabled but will have it
+>    disabled in the next update)
+>
+> 2. If you are using Fedora cloud images, make sure you've these packages
+>    installed:
+>     $ rpm -qa | grep -e 'ppc64-diag\|powerpc-utils'
+>     powerpc-utils-core-1.3.11-6.fc40.ppc64le
+>     powerpc-utils-1.3.11-6.fc40.ppc64le
+>     ppc64-diag-rtas-2.7.9-6.fc40.ppc64le
+>     ppc64-diag-2.7.9-6.fc40.ppc64le
+>
+> 3. Hotplug a pci device as follows:
+>     virsh attach-interface <domain_name> bridge --source virbr0
 
-jon
+I don't use virsh :)
+
+Any idea how to do it with just qemu monitor commands?
+
+cheers
 
