@@ -1,135 +1,177 @@
-Return-Path: <linux-pci+bounces-11739-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC9E6954223
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 08:54:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19D9B954245
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 09:03:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 254B01C247EC
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 06:54:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E0D728836C
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 07:03:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E10613A899;
-	Fri, 16 Aug 2024 06:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6C4981AB6;
+	Fri, 16 Aug 2024 07:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYaeBQTP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3KshPEM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541A113A87E;
-	Fri, 16 Aug 2024 06:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC6839F7
+	for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 07:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723791183; cv=none; b=G3MCOaiM2vCkBI0yBJrJhoKF2HnH49fSDiw2pVIRQ/bcW28Ujqhxq5eBUEN5vMKlsntrztNulCeC5Awx/c8f0t2uE1xntnf+mPtyk54FjT+KboAH1qCd6DU4fpmcKXfKa7IBEYotTxs/jmG3UoktjWchBSNytY2dTCPGQ5OOTUk=
+	t=1723791771; cv=none; b=dKC83Q4emHhG6g/anLLmAe1ZQuwv2VThlWPQNybhvfAMTktGx4E8JfHUB/XeQZzNWZeR+NTcYGSFNISrjfA3/MOKus1JmpIaQkalv/DgBpehTrL+UJwc6b07sB92iBskb97rFj/+PU0N0deM6TMR1vT3K10fTSSrIyUO1+BYe3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723791183; c=relaxed/simple;
-	bh=xqrGiFB7i013Y5oqj+iN9qGBcGCJHR+f3OOTpk9Ug24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TAClI/Q1a9o1Tp/DXGd7SisygeK06PcbevrTA9k0DrAs8unOGZXa2RQXLO3T0+fhErlb7fzxOoKvoBBmsyA5Fc721MX1DLLroZtHKfRPEbuhe8XoHwsz79skZXBj9XfFcuQCa/puXlU56wOhwiZiFcdjikv/N+W62cNU7ka/iIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYaeBQTP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C59ADC32782;
-	Fri, 16 Aug 2024 06:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723791182;
-	bh=xqrGiFB7i013Y5oqj+iN9qGBcGCJHR+f3OOTpk9Ug24=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sYaeBQTPwhLygtD5SEM88tWhILiT7+acGJTJMW53t0ef8fNjlFDXpvXI/Ny4LUM3l
-	 oN7icm3/0BUR8CKOQVgQz5BkhfPGHQOny0xJYqp24OLll9/aj0rR271JScvtkGxsVR
-	 xpSlbnC3P8GdrxDSgA4ZiNHRbqgPApGhkQLIsTl2YQmKq8GMi/3m1hk9NmeMcIeOyv
-	 LZKBlSR1aSNS+Uhhg3xNQ6NHi8+6gced/63HeHKCfE1ccHmN6wbJluZtDu98Spy4TT
-	 JcGWnBhFPaZW1+HTg7GQdwUV/CtDCEu5aGHgQLdWk0s02VMM0/llRpTdC1gadKEbFC
-	 DtgGi2fzX44ZQ==
-Message-ID: <45a60690-4754-4499-8728-162138d0c3f9@kernel.org>
-Date: Fri, 16 Aug 2024 08:52:54 +0200
+	s=arc-20240116; t=1723791771; c=relaxed/simple;
+	bh=Ink2gD/nTViZpjsrRGnQ7qam2nLz4NZOfHv30m+P8Bk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzULp+jcR8kVk7ILI7vztO29Mtgd8hm7UADyt4ZgIwUvS/7f/UYLH8cpyfZJpfEz+8no69qIYLHnGWQd1YHgziWHncTW7WL++C2wk7v50Ydgof4eiCOieP9MA1QKULIgUkkw0FfDay1qanLuoTtc7nbpnzFz/LjzTp7MHZEX+Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v3KshPEM; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-27022a3536dso171416fac.2
+        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 00:02:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723791769; x=1724396569; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/2Z+3RNB2QpPIGic+9pjYyfWRgiiZ2uqgv5Hgxzn04Y=;
+        b=v3KshPEMj79gJv8K+fRWcjFug8+l3kSrJhScYpWvvIDpIbDbFg+ihAXVXITlE7KVnP
+         UK3QCMvCeVjkcTth12pdN6RPXEHxM7u/WDjl+eoLzkEiJB41NC7duPhCbHLEkThW0Qzy
+         XtoCliCTtAfFdwHVMBDJZjfcJuwwNzvjXXQ86VudCV0qrtLVvKg2rhlQNkXWoZIsCXjz
+         MFJZ4F1VgLPse9FGUIxqrxY9FK3VLc6ceqcf1T9fgwcpm2RALzD9FimqKGGNqTYuaxz7
+         FXf5Iip5NMqZ2BJxo2pK1GLExcoI1NRg6PeFUWuwrGjDCNXxK8D5Sw/OC32OQlzPKC8N
+         i0zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723791769; x=1724396569;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/2Z+3RNB2QpPIGic+9pjYyfWRgiiZ2uqgv5Hgxzn04Y=;
+        b=LpTInLxpg4pfkiJseS84VpXBfvs0OUUuJm7SY3mH30LhjcoNjarWsG9kowuoQMyumZ
+         sJOkypBpt/q9yMolSMVWoUtrsK8rApfA656e9/OoXmQushJr3FJOW+x5W0XwKubEUvT8
+         0gYifhh8dmq2aBsJtSinElZGw72vonX6axCk0jwUfjFE94tAEH6x5SlQ9mMA+PJSQ5Sq
+         GLfMFCuikQz73DPKtD44vtaInFikq4fdUimRYbyjj17/1+/1/6XjjJtWqPYStf348WeL
+         0FuwPnZvp1xP9r/9RFCdD7lRWO3ZCKdtNqBu9EvBhj7SjThbMHcdPOS86yXrEAmf7hO0
+         WWCg==
+X-Gm-Message-State: AOJu0YxXH31aEyCjIHmO/1kkLYO7H9betjrGE816FhkKW/PyZavCXu4z
+	mVPuypMQP3Is7EH/+s5tnmTEh7xfv+0+5SCYsn3rmRvkGIxa/osHEPndi6MYlw==
+X-Google-Smtp-Source: AGHT+IFNDYdQwGyEIqqhP9q7fz+e2TnS80Sfaxe+R84yxpxfEKiriLW+niboArdJkp12iogF4qfi0w==
+X-Received: by 2002:a05:6871:6108:b0:261:1e3f:777c with SMTP id 586e51a60fabf-2701c3deca1mr2054038fac.27.1723791769013;
+        Fri, 16 Aug 2024 00:02:49 -0700 (PDT)
+Received: from thinkpad ([36.255.17.34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127af1708asm2031815b3a.154.2024.08.16.00.02.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2024 00:02:48 -0700 (PDT)
+Date: Fri, 16 Aug 2024 12:32:42 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 04/13] PCI: brcmstb: Use common error handling code in
+ brcm_pcie_probe()
+Message-ID: <20240816070242.GI2331@thinkpad>
+References: <20240815225731.40276-1-james.quinlan@broadcom.com>
+ <20240815225731.40276-5-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 02/13] dt-bindings: PCI: Use maxItems for reset
- controllers
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240815225731.40276-1-james.quinlan@broadcom.com>
- <20240815225731.40276-3-james.quinlan@broadcom.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240815225731.40276-3-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240815225731.40276-5-james.quinlan@broadcom.com>
 
-On 16/08/2024 00:57, Jim Quinlan wrote:
-> Provide the maxItem property for the reset controllers and drop their
-> superfluous descriptions.
+On Thu, Aug 15, 2024 at 06:57:17PM -0400, Jim Quinlan wrote:
+> Refactor the error handling in the bottom half of the probe
+> function for readability.  The invocation of clk_prepare_enable()
+> is moved lower in the function and this simplifies a couple
+> of return paths.  dev_err_probe() is also used when it is apt.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Best regards,
-Krzysztof
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 25 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index c08683febdd4..790a149f6581 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1613,25 +1613,23 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  
+>  	pcie->ssc = of_property_read_bool(np, "brcm,enable-ssc");
+>  
+> -	ret = clk_prepare_enable(pcie->clk);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "could not enable clock\n");
+> -		return ret;
+> -	}
+>  	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+> -	if (IS_ERR(pcie->rescal)) {
+> -		clk_disable_unprepare(pcie->clk);
+> +	if (IS_ERR(pcie->rescal))
+>  		return PTR_ERR(pcie->rescal);
+> -	}
+> +
+>  	pcie->perst_reset = devm_reset_control_get_optional_exclusive(&pdev->dev, "perst");
+> -	if (IS_ERR(pcie->perst_reset)) {
+> -		clk_disable_unprepare(pcie->clk);
+> +	if (IS_ERR(pcie->perst_reset))
+>  		return PTR_ERR(pcie->perst_reset);
+> -	}
+>  
+> -	ret = reset_control_reset(pcie->rescal);
+> +	ret = clk_prepare_enable(pcie->clk);
+>  	if (ret)
+> -		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> +		return dev_err_probe(&pdev->dev, ret, "could not enable clock\n");
+> +
+> +	ret = reset_control_reset(pcie->rescal);
+> +	if (ret) {
+> +		clk_disable_unprepare(pcie->clk);
+> +		return dev_err_probe(&pdev->dev, ret, "failed to deassert 'rescal'\n");
+> +	}
+>  
+>  	ret = brcm_phy_start(pcie);
+>  	if (ret) {
+> @@ -1678,6 +1676,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>  
+>  fail:
+>  	__brcm_pcie_remove(pcie);
+> +
 
+Irrelevant change in this patch.
+
+- Mani
+
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
