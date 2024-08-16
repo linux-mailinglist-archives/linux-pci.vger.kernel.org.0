@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-11738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D271954221
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 08:54:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC9E6954223
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 08:54:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 364191F21C65
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 06:54:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 254B01C247EC
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Aug 2024 06:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B431F84FAD;
-	Fri, 16 Aug 2024 06:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E10613A899;
+	Fri, 16 Aug 2024 06:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5QceN2y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYaeBQTP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AEF81AB1;
-	Fri, 16 Aug 2024 06:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541A113A87E;
+	Fri, 16 Aug 2024 06:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723791150; cv=none; b=OSDbvwHVzK/7TqUn2Q7Z8JRLmUBzfm9sACfVIGplymSUTyPajMW4AOHEmRd5MpjgJON17G2jUSoJeZiM4pKtBZCwLpNPWFWE9o3Y7Pu2kebV51JP47wKSskQIwZvVjOdSzw9MwI4dXnkeMSTFyZqhWYBSd8aK3NGSu1/yM58sUU=
+	t=1723791183; cv=none; b=G3MCOaiM2vCkBI0yBJrJhoKF2HnH49fSDiw2pVIRQ/bcW28Ujqhxq5eBUEN5vMKlsntrztNulCeC5Awx/c8f0t2uE1xntnf+mPtyk54FjT+KboAH1qCd6DU4fpmcKXfKa7IBEYotTxs/jmG3UoktjWchBSNytY2dTCPGQ5OOTUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723791150; c=relaxed/simple;
-	bh=jGUWDst3LDZtfstJY0tKbJkJfFirkitZ+F1QIW3rm7Y=;
+	s=arc-20240116; t=1723791183; c=relaxed/simple;
+	bh=xqrGiFB7i013Y5oqj+iN9qGBcGCJHR+f3OOTpk9Ug24=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tB6rQ0t0BdUBWXzRjVnK6YxkXu8G791W0c5fWowlMlhmSVGM/0hI9GGK/F5xue6vdOJNHXbkJU17wLqfEX9+LYal5/6Ack5zh44fqq8fZC3fQf5Bd/fb2stotgV8NUwHJBQRdoq2OzZqg/91HTOSe4WhClamir8dKehHEyzXk7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5QceN2y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5B9C32782;
-	Fri, 16 Aug 2024 06:52:24 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=TAClI/Q1a9o1Tp/DXGd7SisygeK06PcbevrTA9k0DrAs8unOGZXa2RQXLO3T0+fhErlb7fzxOoKvoBBmsyA5Fc721MX1DLLroZtHKfRPEbuhe8XoHwsz79skZXBj9XfFcuQCa/puXlU56wOhwiZiFcdjikv/N+W62cNU7ka/iIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYaeBQTP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C59ADC32782;
+	Fri, 16 Aug 2024 06:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723791150;
-	bh=jGUWDst3LDZtfstJY0tKbJkJfFirkitZ+F1QIW3rm7Y=;
+	s=k20201202; t=1723791182;
+	bh=xqrGiFB7i013Y5oqj+iN9qGBcGCJHR+f3OOTpk9Ug24=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p5QceN2ylI6+lCBOVGWseJexABUcA//P2ePTdkRiGPsZ7bhB9+WShJ8D3ol1JD03o
-	 Ca1OUt5L9PWX6je5Nr/9CdyqOziRYFXHMWuSRM83ZRr8Fs70WLbG1vTFa2XllAGjra
-	 kM3JqnEeXQhkJ3fVA4TmmhsVwzLqPK+NY1Z7JJaLoTdvJpJtHarrSQe/ikgTo75tD3
-	 ktvNfTL6LBA3YsfVdbWyYEooS2kFpBNi0hSCdPohse3L0QZ2P1LRVtTFVTkL2MdNsr
-	 U8UM6aAQNbTN9gKQTJOFlek0UplXAIPSHZYmrA0FmL9RMe0dihBcDn1SEsg1SW/Q+G
-	 +3wGYR7NXPdxA==
-Message-ID: <e7b2707b-d056-49f9-83f0-18cc8155f8c8@kernel.org>
-Date: Fri, 16 Aug 2024 08:52:22 +0200
+	b=sYaeBQTPwhLygtD5SEM88tWhILiT7+acGJTJMW53t0ef8fNjlFDXpvXI/Ny4LUM3l
+	 oN7icm3/0BUR8CKOQVgQz5BkhfPGHQOny0xJYqp24OLll9/aj0rR271JScvtkGxsVR
+	 xpSlbnC3P8GdrxDSgA4ZiNHRbqgPApGhkQLIsTl2YQmKq8GMi/3m1hk9NmeMcIeOyv
+	 LZKBlSR1aSNS+Uhhg3xNQ6NHi8+6gced/63HeHKCfE1ccHmN6wbJluZtDu98Spy4TT
+	 JcGWnBhFPaZW1+HTg7GQdwUV/CtDCEu5aGHgQLdWk0s02VMM0/llRpTdC1gadKEbFC
+	 DtgGi2fzX44ZQ==
+Message-ID: <45a60690-4754-4499-8728-162138d0c3f9@kernel.org>
+Date: Fri, 16 Aug 2024 08:52:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/13] dt-bindings: PCI: Change brcmstb maintainer and
- cleanup
+Subject: Re: [PATCH v6 02/13] dt-bindings: PCI: Use maxItems for reset
+ controllers
 To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
@@ -64,14 +64,14 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
  "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
  <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
  "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
  <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 References: <20240815225731.40276-1-james.quinlan@broadcom.com>
- <20240815225731.40276-2-james.quinlan@broadcom.com>
+ <20240815225731.40276-3-james.quinlan@broadcom.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -117,16 +117,13 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240815225731.40276-2-james.quinlan@broadcom.com>
+In-Reply-To: <20240815225731.40276-3-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 16/08/2024 00:57, Jim Quinlan wrote:
-> Change maintainer: Nicolas has not been active for a while.
-> It also makes sense for a Broadcom employee to be the
-> maintainer as many of the details are privy to Broadcom.
-> 
-> Also, alphabetize the compatible strings.
+> Provide the maxItem property for the reset controllers and drop their
+> superfluous descriptions.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
