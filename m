@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-11781-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11782-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7016B955534
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 05:18:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C540955536
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 05:22:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D3DE1C20F22
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 03:18:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0E1C2822E2
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 03:22:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CDCE11C83;
-	Sat, 17 Aug 2024 03:18:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9AA326AED;
+	Sat, 17 Aug 2024 03:22:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBDMNFmA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKAq/xkR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A845210F7;
-	Sat, 17 Aug 2024 03:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365C2F507;
+	Sat, 17 Aug 2024 03:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723864715; cv=none; b=Lsy53EaXvkIMhFkRdzM/qzZMFe7d253USo/ndY8u2K6jnlARX7zoRY9I/HVKW8E0V/XJpZLANfOc5h529o+tljlqOJ+EMS2OAwjZBUAh6owGPRfkyEgu+/Kw6qiK+xWk/lSCv58IfixS88lJ+NC7w2r3WY0k6cjWfVUnceofEhM=
+	t=1723864964; cv=none; b=iLEe5cWGXedgsSzJT9SF0/hR7LVXpoCeienMc64bXz18+d+cGz2P1og0X+RuscS7Rz+4KpRX1k1BgvAdYRoyALeEkZoNE4+2Ob7djmlN5FO5wB6df/38MK5TKxCXxX6LR4E265dQc2fQ2M72JKLg1hUBqeVEWkiP+vz7c32Nd1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723864715; c=relaxed/simple;
+	s=arc-20240116; t=1723864964; c=relaxed/simple;
 	bh=PK1gtm+3JXc0XeI/lpDSKVfzle9AZFrvPpYDWKo8t1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YH6+jK+NK+tcqL6ZCxtjXkIsiRmFupE4I94+cPpUdT0OGs9zm4wQw5lePjDwYS3g9qdM3ExMItAjN6KLfuvB1tT22LrOKg8A+5uF2UCsucBE5eKg3ZVxCflTZqhfq+q1kYSRGGzZ4012zyAIViYTRIol6ywY8h5JcOytnkvQp/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MBDMNFmA; arc=none smtp.client-ip=209.85.214.182
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SqcoeXr3IR+veUjMBRB1jZICstMjV8QW7WYcNg1nqPpOE/B9juW0beqkcNNMprZq2is24YkmmK99t/h8umilWen8KhZ1a3QP/wpyufYOgA2TNLZH9kxi0eWBFkV+lDyG5Ju19K9Pa0Qt8iPCfxPOiNdHJgfeJ0wHDeO1T8rnahI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKAq/xkR; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20227ba378eso51495ad.0;
-        Fri, 16 Aug 2024 20:18:33 -0700 (PDT)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70cec4aa1e4so1767623b3a.1;
+        Fri, 16 Aug 2024 20:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723864713; x=1724469513; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723864962; x=1724469762; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=vuEKBbm6jzfUML/VgRcrXFhdwGGxYBzUG3C/0kVpiDc=;
-        b=MBDMNFmAqHFsMlbYfG8nTChu6LmRX8CdC2MC09BmVOp1nQnATE1O6Q5Pj86jWawqqE
-         0yMb7w6CmNTNXhk6KmNN6708LDsKrb+gGn3kKYWIGWbDjNVJXFfWQWAl3h2ADRIGkfYE
-         3ICGNRzyNGUAh50I68GJgvxfqtRXNvuaZBkTHHF4kXLw5WITezmv7ov+fxgPWwWwDBBL
-         5GfY4Lg4tJBYt9KWnP7RLGNw5r0gcbIoVxgjIANIPxyvn933nXSxyq47ZPYczlWqcGuO
-         S2DYLOUjhatiTsdiPP4VqPW2Z13qtBpnSnCVAq/NxTUpAeZt+76UwQx6BVim0OjV9tlq
-         RXhA==
+        b=IKAq/xkRk/3x8yjI49JuuSO8RnZ0HS5xswTGZmfzd9z4iFWThEzWKVE8/xvtjJpDlF
+         BAnOkD1P9QswHsxXUwKwWt/2+dNizjPsvWxghL8G3JhG56ET4zYb1Qifx7ruVwXhzGIe
+         52jfGMQsuG/wnQNrqO9UPe4e9076pK9eEjZHJ8Qi8q+Uu+rkJgSu2IsWkote3BD81ois
+         I1tijZtlMuf0z1lfYvLjFEpuPOizvLKRcMBsv2Ptm1/bnULMYDvkNVCrKzMsk00UJ1v3
+         yPRmX0lFhUKzxqMCvrDJbA+x+gdWhE//jrGxfOTYwQ9NAPb6AsCOVtVJtwVzbyUlwdV/
+         GvoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723864713; x=1724469513;
+        d=1e100.net; s=20230601; t=1723864962; x=1724469762;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=vuEKBbm6jzfUML/VgRcrXFhdwGGxYBzUG3C/0kVpiDc=;
-        b=e+/VVCxawXMozleSzhWPhovVumS/k/hur90TJRxNQm3rviUIaib7xRGBrLu0n5jB3B
-         O9zGy7gQQgeF2JDjf73qaslTiYXbSYvPCTWsUc+aX/z7NLGqD+wwn4nirg6EmwrZij2V
-         sliYw0cPzZiPowBuKDmhEDL3Crai5RXEVWkeiBRRVAaVUOidyUrHaV+8ZJiZc6PvzU+a
-         CQcdYU8BEhprcqyjFWKIzn4oxMygEr7DPtozZFmOQmbfM8iqL4bdirmmH72i1Jzx6X9d
-         mLCDTnDK8U0uyRe7571ZycgJtG58QMDXUEOL4fGFYwHSoHQV/cUeU0usbolNZNccPFAY
-         jXWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNBpx7ZcEWrFg6B8sErPTu6ezqXEjekNTsH4Bx2vUEt98040Bvemj1D8jBqpqziSHHVeuxffTSY5wJ5t3uJo84Nl7tjWriBRbqzA28QWC/tsm5kqd2QqhGlbJiop9E8rcYLpZzQyWd
-X-Gm-Message-State: AOJu0YxrXCkGxae6HtGYseZNQoLTo4SIEog4uAXJfkYsGTawsWB8qxK6
-	BnaPKwTiOyecrchbHNWeqiFuzg1tHRsNTOnJX+moXKIWBwOJVIxF
-X-Google-Smtp-Source: AGHT+IGBdcnWj3Ytjsg9a2o0sYeEDzfMIbjF4qgKVXw7PBKoef1Y7BS9PViToKtj+Ayv6Ll1r+xUNg==
-X-Received: by 2002:a17:902:e752:b0:1fd:684f:ca72 with SMTP id d9443c01a7336-20203ea74a7mr49271445ad.25.1723864712745;
-        Fri, 16 Aug 2024 20:18:32 -0700 (PDT)
+        b=i6nI3ng/CdpGdkaACP2Yl7gJfaVcuZTmG+XRxS/ZCdL9X0/x6o6/SeTDETA5EQuQc2
+         9T4dThMzAkcqbMOcwoFbMNM0a2D/2UowHkNbviiKCB/q3iSZ7jJ4godKmzwZY7Hqb2IK
+         sOwoiQ8OJHs3n2CYlJiLw7I/MQpLE+BA44slKm4fR6P0JSqmdvR0lARF01cUb9rbiYmD
+         n49K6y96ttdchu3p/Mh+O5Szh1/b700GKD/1Lj0WYdK0+9Lla7QhgzEpjiYIPEMMp3Fy
+         igTCggVRPGHOXfd2kdDVh05ekzWszn3h0Y1MyjqQSgUcaZG7CCeWswKSqdl5bpjls2vX
+         UtJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXewx2APurvGTyEQr7AWBhKO8P0R86b2whYamzr1I9s66bl8eaQSik1xDKVxxOhVkS7/bcJ7syU/xNNBhjqNPFbE4K2mPk/CwPdh2mAnW43xP1tXApemqXDkQgmjpOL+La60CJk/+Bj
+X-Gm-Message-State: AOJu0YyxN4SCmhhJvH2j7lksSt+iJikgB4lZRE3GjTBR3Bfm5FuVxZr9
+	cBREV6kqMvRGG5/VS9ERPKSlfZONawlAyq35rPkNdqAUpldfvVu62rmsi2Pd
+X-Google-Smtp-Source: AGHT+IEbao6TQprQVW2pxjTIigzWQzbzajV9N2mFttq/cDQvfVXiT6BHISHYdHCgFd+zojQOma7g8g==
+X-Received: by 2002:a05:6a20:9f04:b0:1c0:f785:b2d4 with SMTP id adf61e73a8af0-1c90504841dmr5448847637.47.1723864962237;
+        Fri, 16 Aug 2024 20:22:42 -0700 (PDT)
 Received: from localhost.localdomain ([187.120.159.46])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2020b9ed5bfsm16509505ad.274.2024.08.16.20.18.30
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127ae07443sm3286878b3a.48.2024.08.16.20.22.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 20:18:32 -0700 (PDT)
+        Fri, 16 Aug 2024 20:22:41 -0700 (PDT)
 From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
 To: scott@spiteful.org,
 	bhelgaas@google.com,
@@ -74,9 +74,9 @@ To: scott@spiteful.org,
 Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: hotplug: check the return of hotplug bridge In some pci drivers, when the pci bridge is added if the process return an error, the drivers don't check this and continue your execute normally. Then, this patch change this drivers for check return of pci_hp_add_bridge(), and if has an error, then the drivers call goto lable , free your mutex and return the error for your caller.
-Date: Sat, 17 Aug 2024 00:18:15 -0300
-Message-ID: <20240817031817.6762-1-trintaeoitogc@gmail.com>
+Subject: [PATCH] PCI: hotplug: check the return of hotplug bridge  In some pci drivers, when the pci bridge is added if the process return an error, the drivers don't check this and continue your execute normally. Then, this patch change this drivers for check return of pci_hp_add_bridge(), and if has an error, then the drivers call goto lable , free your mutex and return the error for your caller.
+Date: Sat, 17 Aug 2024 00:22:27 -0300
+Message-ID: <20240817032228.6844-1-trintaeoitogc@gmail.com>
 X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
