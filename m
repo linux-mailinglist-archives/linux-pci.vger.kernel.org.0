@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-11786-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11785-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C47B95559A
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 07:39:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91D97955595
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 07:39:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90E291F23136
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 05:39:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DAC1284FBD
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 05:39:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99FC613664E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6433212DD8A;
 	Sat, 17 Aug 2024 05:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GA+g27nS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcOiw5D1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660BD12FB0A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3194B12CDAE;
 	Sat, 17 Aug 2024 05:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723873150; cv=none; b=Albf8nPisZSBlTJMTTGP82JwrHrGsGEYsII/skh0s5ypOekigvsgyU5r85R9WYJd5jf3ul0mTZ11jnv/3LvJHAXW/8+6BS/oH0KjJR84aEZ0xJ21N0j9dZGTbbov312YSF4FrB3c7AwoOdWw0YYo+t0ZGShSdhdecQUkqX0qMbY=
+	t=1723873150; cv=none; b=BPwbONsNs1zP2WQRZf44mYJu7TFf3JSb/hX7Gkb1lHuEQ5bzLqy3SYEyCsVAudBK7FfkMyvoZSMBzo/El4Q4qJP0rQd2BEn8nVVIruipjp8JzscBt6lYyfCfU9vHwJ2k76ENX4UQhVmjNwnY+1wsb0xvVW3zQS87BlKqDaGzp1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723873150; c=relaxed/simple;
-	bh=L/27oyOVLbdmCNH9AknEU1c/3ghg8UF/LJ6ONoZ4cx4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t4CwFua+LQfWZHgq68H3YZaN4H5H+fdUc5DWfzwOFt6f9QsKqGaIV+rJlXMfPTPHuTRZhR7TQS+PCTn5zWEdDJJrEuE5WIU14b6v2sEUbJU5DPl6TUgIxw7jKOFftAsPHGz9CflGgZEdBJDWHytO0ToZlschefMdS28upC5V8BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GA+g27nS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DDA6CC4AF0F;
+	bh=yf9FdTdpAmRzTboazqCuWYiQmHn0VcsXn9pYUoXpsI0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ldyhZe/WfR4wOjSkBfxXyGx7sMlkvEPwDAhNrHDgq36mEUa7qXDmgoh5k+v1SmCksSUTWlDXxxk+trhgNtauAjmuZJGIAfmeWr+nxwaUYtZeDPRRwAx2bLsOp5YNAyz/yHtSoiF0IXyu050ANP846aLst2+bp/kgtBzKZhuy+lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcOiw5D1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EED45C4AF0D;
 	Sat, 17 Aug 2024 05:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723873149;
-	bh=L/27oyOVLbdmCNH9AknEU1c/3ghg8UF/LJ6ONoZ4cx4=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=GA+g27nSGJyvwV98rp+I2FTrd3esE38DlJHaQxgwNFf/qZoSB9eGxll0OD1LyW2OC
-	 Z6TY+iF4QP4pLtoxsS4YPATeyywISDTruws+/wVEndamCapc35mliHgj9zNhGfy8Oi
-	 8CtCbENfZ/2nzEtOssoHMhiNQ2iOQHdNkYOwaVVyKPaqt013hWvA93O4OQI4xzwXeN
-	 JO4YCNtltKCRiHqmMV/YpBkjbUGqPeXNGgAcYxoQCCG0MZBfSs9FjeTlPZo+Qcg7I7
-	 sD7HED61pY0AKNsjdvCSBkYwkSzQtJscHXgWH4nr3kYPyrgmaXQSnKTLgbg1yfIUjF
-	 bx3FjnH1VGweA==
+	s=k20201202; t=1723873150;
+	bh=yf9FdTdpAmRzTboazqCuWYiQmHn0VcsXn9pYUoXpsI0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=pcOiw5D1oaq3hZEfD5Kuf0RDeUIKxlNtVarcdO7vzsoi6BlH3tqaOppmFKdWfanP5
+	 5P4Cq+HuzOws5NyNWdlmpm1MqK7VLrl3bejNaT12aKn+n2YulBiYjvTsTG9kK5BepB
+	 cFcTCbmzMVfIuFyyWOLJRYOW8lFSFu1XuYDBonERYhOeHyPv3XvU/9txszYg5wcxPp
+	 1dJfckEs00Z48hl4Hfqt0TyrdbkhOF1hr55pgCtSsJXmpHzmYo7sV7zt9Y/MTlU2E2
+	 AysESoT5KfvLf1EJOrpIoN06MyK2RbCMD2M58P06SwDUJMYsaLqk34VGMkfjoyQpYY
+	 w6CsQFozsZJiA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD783C52D7F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC97C531DC;
 	Sat, 17 Aug 2024 05:39:08 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Subject: [PATCH 0/2] PCI: {qcom-ep/tegra194}: Move endpoint cleanups to
- PERST# deassert handler
-Date: Sat, 17 Aug 2024 11:09:02 +0530
-Message-Id: <20240817-pci-qcom-ep-cleanup-v1-0-d6b958226559@linaro.org>
+Date: Sat, 17 Aug 2024 11:09:03 +0530
+Subject: [PATCH 1/2] PCI: qcom-ep: Move controller cleanups to
+ qcom_pcie_perst_deassert()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,9 +56,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHY3wGYC/x3MQQqAIBBA0avErBtQMZSuEi1CpxooNaUIorsnL
- d/i/wcKZaYCffNAposLx1Ah2wbcOoWFkH01KKG0sNJgcoyHiztSQrfRFM6ERgujO1LSWwO1TJl
- mvv/rML7vB4Z5YAFlAAAA
+Message-Id: <20240817-pci-qcom-ep-cleanup-v1-1-d6b958226559@linaro.org>
+References: <20240817-pci-qcom-ep-cleanup-v1-0-d6b958226559@linaro.org>
+In-Reply-To: <20240817-pci-qcom-ep-cleanup-v1-0-d6b958226559@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
  Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
@@ -69,16 +69,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-tegra@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1346;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2892;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=L/27oyOVLbdmCNH9AknEU1c/3ghg8UF/LJ6ONoZ4cx4=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmwDd5oSWJNpFaLg/slHpFuZZnWAOUt1u//hPmY
- mKDHR5xbhuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZsA3eQAKCRBVnxHm/pHO
- 9d1sB/0WCIUlcJV87RKQ5qCtkHnD2ovZLEYil0rw3RCSmWyK//H4Tzkm9kMpbjxaISonGlWLOnm
- ThYAn02ruelSxvKg7TJOHjpRgtJ6CzXGfSammhX3XpzUgTL3ABNUpUgInAS60cHyyp4J3w4bzp3
- L+FWiGeX2mRVyt34Q1P7NgAiH8v2PGGYamFooJOYWTodSNEObHGoKZlZvrgaR9KrO9ODIox6Qm7
- zfSPmFIoKAO3uqB8ZNjkCGl2OcB26VQA7fKpr/LTqJo/82aU84DvZaqFa2/0r2mvHdiLrZdMOp2
- fMm/7p9QsGr5f3u2IhcFpTtLrxHqijs42qulAHGwT7e6B21a
+ bh=nvYCXsJUQRNDkqxK/5DBlZ4jMTQnZ2mxPzwj87Woaa0=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmwDd5ePjMmYbGHoJRMqAkEyHBuWUKDeDATP5+w
+ WMHgGtevCiJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZsA3eQAKCRBVnxHm/pHO
+ 9VOpB/91/N2nyY5n8uTAftgnS5juJq4oggVmjQnDI7XsNORmjlPDF1LLdGkbQc6QHqmfzVfgK7d
+ JwBIW3vZ6eWm38vHFHTRmqgMieA6jOvjtIduaxVFm3PxWv0tieA9vR38EUyZ5qv7kSPZGcbopFK
+ oVtiXHA8Kn0dl7zlwnPWgyk6AoKmuUaQJYL3jD67d5pJYFJ68SdHEQEOpCZH4GkeYG2cscEH9a2
+ 0StE0TzFf/8dIfynpqqANOz9U5aBCncRZyUCrRUxUjgW+iYIxgxv8vbsHb3OB8NZtpa+crsDEIH
+ Ik5Wmxww9YynsitHpa3IUXiD9/Q3/EkWszY58pz7zXpQWxF1
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -86,41 +86,70 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reply-To: manivannan.sadhasivam@linaro.org
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This series moves the call to endpoint cleanup functions (dw_pcie_ep_cleanup()
-pci_epc_deinit_notify()) to PERST# deassert handler in qcom-ep and tegra194
-drivers. It aims to fix a crash that is seen with Qcom endpoint SoCs when host
-asserts PERST# and the cleanup functions are called without refclk.
+Currently, the endpoint cleanup function dw_pcie_ep_cleanup() and EPF
+deinit notify function pci_epc_deinit_notify() are called during the
+execution of qcom_pcie_perst_assert() i.e., when the host has asserted
+PERST#. But quickly after this step, refclk will also be disabled by the
+host.
 
-During the review of v1 [1], Bjorn suggested fixing up tegra194 driver as well
-as both drivers share the same design and require refclk from host for
-operation.
+All of the Qcom endpoint SoCs supported as of now depend on the refclk from
+the host for keeping the controller operational. Due to this limitation,
+any access to the hardware registers in the absence of refclk will result
+in a whole endpoint crash. Unfortunately, most of the controller cleanups
+require accessing the hardware registers (like eDMA cleanup performed in
+dw_pcie_ep_cleanup(), powering down MHI EPF etc...). So these cleanup
+functions are currently causing the crash in the endpoint SoC once host
+asserts PERST#.
 
-Testing
-=======
+One way to address this issue is by generating the refclk in the endpoint
+itself and not depending on the host. But that is not always possible as
+some of the endpoint designs do require the endpoint to consume refclk from
+the host (as I was told by the Qcom engineers).
 
-The Qcom patch is tested on SM8450 development board. For tegra194, I'm
-expecting someone in the Cc list or the community will do the testing.
+So let's fix this crash by moving the controller cleanups to the start of
+the qcom_pcie_perst_deassert() function. qcom_pcie_perst_deassert() is
+called whenever the host has deasserted PERST# and it is guaranteed that
+the refclk would be active at this point. So at the start of this function
+(after enabling resources), the controller cleanup can be performed. Once
+finished, rest of the code execution for PERST# deassert can continue as
+usual.
 
-[1] https://lore.kernel.org/linux-pci/20240815224717.GA53536@bhelgaas/
-
+Fixes: 473b2cf9c4d1 ("PCI: endpoint: Introduce 'epc_deinit' event and notify the EPF drivers")
+Fixes: 570d7715eed8 ("PCI: dwc: ep: Introduce dw_pcie_ep_cleanup() API for drivers supporting PERST#")
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
-Manivannan Sadhasivam (2):
-      PCI: qcom-ep: Move controller cleanups to qcom_pcie_perst_deassert()
-      PCI: tegra194: Move controller cleanups to pex_ep_event_pex_rst_deassert()
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- drivers/pci/controller/dwc/pcie-qcom-ep.c  | 6 ++++--
- drivers/pci/controller/dwc/pcie-tegra194.c | 7 ++++---
- 2 files changed, 8 insertions(+), 5 deletions(-)
----
-base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
-change-id: 20240817-pci-qcom-ep-cleanup-740745e21d87
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..5d31285685b6 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -389,6 +389,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+ 		return ret;
+ 	}
+ 
++	/* Perform cleanup that requires refclk */
++	pci_epc_deinit_notify(pci->ep.epc);
++	dw_pcie_ep_cleanup(&pci->ep);
++
+ 	/* Assert WAKE# to RC to indicate device is ready */
+ 	gpiod_set_value_cansleep(pcie_ep->wake, 1);
+ 	usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
+@@ -522,8 +526,6 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
+ {
+ 	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+ 
+-	pci_epc_deinit_notify(pci->ep.epc);
+-	dw_pcie_ep_cleanup(&pci->ep);
+ 	qcom_pcie_disable_resources(pcie_ep);
+ 	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
+ }
 
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.25.1
 
 
 
