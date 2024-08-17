@@ -1,235 +1,252 @@
-Return-Path: <linux-pci+bounces-11780-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11781-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD0139554C2
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 04:02:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7016B955534
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 05:18:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27D862834DD
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 02:01:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D3DE1C20F22
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 03:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE1A4A33;
-	Sat, 17 Aug 2024 02:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CDCE11C83;
+	Sat, 17 Aug 2024 03:18:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZGB1l0j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBDMNFmA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7C38BE5
-	for <linux-pci@vger.kernel.org>; Sat, 17 Aug 2024 02:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A845210F7;
+	Sat, 17 Aug 2024 03:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723860116; cv=none; b=otmD9YGakhcocFbJKgBi8zqMeU5QJ92iX3SC6lG2UXTmTvbY0amLdzHSbRUDRKZznSuMHTjb6SSf0OwU+fAH9pjtS/O7xGlcf29k2eFKMUn4Vqc1FNRYzIEvDx+lW3/PsTslyYOM98k7/HlEIfvV+xuGDlOaFdfrfcs4Z4GhxBQ=
+	t=1723864715; cv=none; b=Lsy53EaXvkIMhFkRdzM/qzZMFe7d253USo/ndY8u2K6jnlARX7zoRY9I/HVKW8E0V/XJpZLANfOc5h529o+tljlqOJ+EMS2OAwjZBUAh6owGPRfkyEgu+/Kw6qiK+xWk/lSCv58IfixS88lJ+NC7w2r3WY0k6cjWfVUnceofEhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723860116; c=relaxed/simple;
-	bh=v+Pi/DblEZO86qBIJLP05oOr943epaXJ3fCxDeK2Vxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hsrc8rKb6G8d2fOtnNN2OqZd03xpIZPvGMYWWAjBj8k8T5AnNbbrjwGOxui8XUD4rpy6utPr+b7qDAsxfvqGMfN7GMZ5SBKmKOXvBUWoJrOcagzl0Vu2dRddwYqDi/++cGLppezxRwUiC1mEDxIqbJs+Or4hQnWVgwCXQ+agmwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IZGB1l0j; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fd9e6189d5so23606465ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 16 Aug 2024 19:01:54 -0700 (PDT)
+	s=arc-20240116; t=1723864715; c=relaxed/simple;
+	bh=PK1gtm+3JXc0XeI/lpDSKVfzle9AZFrvPpYDWKo8t1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YH6+jK+NK+tcqL6ZCxtjXkIsiRmFupE4I94+cPpUdT0OGs9zm4wQw5lePjDwYS3g9qdM3ExMItAjN6KLfuvB1tT22LrOKg8A+5uF2UCsucBE5eKg3ZVxCflTZqhfq+q1kYSRGGzZ4012zyAIViYTRIol6ywY8h5JcOytnkvQp/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MBDMNFmA; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20227ba378eso51495ad.0;
+        Fri, 16 Aug 2024 20:18:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723860114; x=1724464914; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XuZHGi+VXRXi9xw2FZMQ0Jmzs5dQDajQPPg4POCnbZc=;
-        b=IZGB1l0j8lC112iWMQVlWXduYrPGdwLrgQRC3C7o+ePwDNzp8eZzNwyT/qIl750DR8
-         lKPhCpa395RNQ1SKHmYyNU0axFfZKHcXxUwM0upVxgA/5UoSomokuxie0SykPDSSEANX
-         dWQDgv3By7qJ1l7DKSLPMbBEk3nqfkfUjFixUpt/wXyAHqT4mFL70N/ElyEzMy2YEPWn
-         2wERF1vY/DDM1jTMaceE7XI1TIG5xArYZJGU4MCyvuFutC/FX6EiwY432gAmrcQIoknk
-         WJaDnZms3gANkHDQkDmodS1/hUfmf2td+DzH/CBvYUcHumsfhAnB4JJ6cgydmuycfAh6
-         jA3Q==
+        d=gmail.com; s=20230601; t=1723864713; x=1724469513; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vuEKBbm6jzfUML/VgRcrXFhdwGGxYBzUG3C/0kVpiDc=;
+        b=MBDMNFmAqHFsMlbYfG8nTChu6LmRX8CdC2MC09BmVOp1nQnATE1O6Q5Pj86jWawqqE
+         0yMb7w6CmNTNXhk6KmNN6708LDsKrb+gGn3kKYWIGWbDjNVJXFfWQWAl3h2ADRIGkfYE
+         3ICGNRzyNGUAh50I68GJgvxfqtRXNvuaZBkTHHF4kXLw5WITezmv7ov+fxgPWwWwDBBL
+         5GfY4Lg4tJBYt9KWnP7RLGNw5r0gcbIoVxgjIANIPxyvn933nXSxyq47ZPYczlWqcGuO
+         S2DYLOUjhatiTsdiPP4VqPW2Z13qtBpnSnCVAq/NxTUpAeZt+76UwQx6BVim0OjV9tlq
+         RXhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723860114; x=1724464914;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XuZHGi+VXRXi9xw2FZMQ0Jmzs5dQDajQPPg4POCnbZc=;
-        b=Jr4ZCoRBBkysmFI9/Imi5+wnCBUf6Rnkz/1k2dSsybHm5t/2bTdriWYOkVICWJtCXv
-         QQ+gtJ4CiIRUDte/wUhLoHZKQRXB4MGR+MZiDurnNcHRhyEEg4m1E+xQjiauCSyVz1Fq
-         nuyaX4f/sButXOX4C9uQl4ZPOiRAcTD4yIhLkAJ4TApPx/N8lhJtPjSDDNx285Rcl82P
-         FUAI1iSNsvKzHkjpM5YSIxTLKxtDszsWd4+e0uxnGtF4z0WAodmEioilKFE9CliX/zO6
-         vR5T6sSUwR9Cdq4e4bh8uGgH4I56H7uz/DvrAr6SH6K8kS6DggdUc79OIBHGKyeiDg4W
-         4ZEw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3wLx45lmpj/yarlMKqxnhn9aK6Vr2EqQ0ljyJ/Hf0uSWpZgSCfP9ELHHRitPIZo/5w137QOtRzCfdUbq5UpVlYqBiuG+Qm0bz
-X-Gm-Message-State: AOJu0YzRnho2VxDNm4kZdryYIACMme0RZVzBQRmwD1jqS9RrP+CWC8ki
-	zJa7dITR/Y3YjoKznmmXIbP55/eDiNnTCtSLnQAvop9Ya8foXojVdfwVZkyK0w==
-X-Google-Smtp-Source: AGHT+IFwmOfQtJuDzzmgmOvtl7O/FhQchBC4mBKDDin3MuTQxZ1JMs78w5nvcLwydyOTJkhqaRxPgw==
-X-Received: by 2002:a17:902:e747:b0:1fd:69d6:856d with SMTP id d9443c01a7336-20203e84504mr47263195ad.17.1723860114095;
-        Fri, 16 Aug 2024 19:01:54 -0700 (PDT)
-Received: from thinkpad ([220.158.156.146])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f0320f85sm31116245ad.113.2024.08.16.19.01.51
+        d=1e100.net; s=20230601; t=1723864713; x=1724469513;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vuEKBbm6jzfUML/VgRcrXFhdwGGxYBzUG3C/0kVpiDc=;
+        b=e+/VVCxawXMozleSzhWPhovVumS/k/hur90TJRxNQm3rviUIaib7xRGBrLu0n5jB3B
+         O9zGy7gQQgeF2JDjf73qaslTiYXbSYvPCTWsUc+aX/z7NLGqD+wwn4nirg6EmwrZij2V
+         sliYw0cPzZiPowBuKDmhEDL3Crai5RXEVWkeiBRRVAaVUOidyUrHaV+8ZJiZc6PvzU+a
+         CQcdYU8BEhprcqyjFWKIzn4oxMygEr7DPtozZFmOQmbfM8iqL4bdirmmH72i1Jzx6X9d
+         mLCDTnDK8U0uyRe7571ZycgJtG58QMDXUEOL4fGFYwHSoHQV/cUeU0usbolNZNccPFAY
+         jXWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNBpx7ZcEWrFg6B8sErPTu6ezqXEjekNTsH4Bx2vUEt98040Bvemj1D8jBqpqziSHHVeuxffTSY5wJ5t3uJo84Nl7tjWriBRbqzA28QWC/tsm5kqd2QqhGlbJiop9E8rcYLpZzQyWd
+X-Gm-Message-State: AOJu0YxrXCkGxae6HtGYseZNQoLTo4SIEog4uAXJfkYsGTawsWB8qxK6
+	BnaPKwTiOyecrchbHNWeqiFuzg1tHRsNTOnJX+moXKIWBwOJVIxF
+X-Google-Smtp-Source: AGHT+IGBdcnWj3Ytjsg9a2o0sYeEDzfMIbjF4qgKVXw7PBKoef1Y7BS9PViToKtj+Ayv6Ll1r+xUNg==
+X-Received: by 2002:a17:902:e752:b0:1fd:684f:ca72 with SMTP id d9443c01a7336-20203ea74a7mr49271445ad.25.1723864712745;
+        Fri, 16 Aug 2024 20:18:32 -0700 (PDT)
+Received: from localhost.localdomain ([187.120.159.46])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2020b9ed5bfsm16509505ad.274.2024.08.16.20.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 19:01:53 -0700 (PDT)
-Date: Sat, 17 Aug 2024 07:31:48 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Vidya Sagar <vidyas@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH] PCI: qcom-ep: Move controller cleanups to
- qcom_pcie_perst_deassert()
-Message-ID: <20240817020148.7oyvgc7e452dafg5@thinkpad>
-References: <20240816050029.GA2331@thinkpad>
- <20240816191222.GA69867@bhelgaas>
+        Fri, 16 Aug 2024 20:18:32 -0700 (PDT)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: scott@spiteful.org,
+	bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	wsa+renesas@sang-engineering.com,
+	lukas@wunner.de
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: hotplug: check the return of hotplug bridge In some pci drivers, when the pci bridge is added if the process return an error, the drivers don't check this and continue your execute normally. Then, this patch change this drivers for check return of pci_hp_add_bridge(), and if has an error, then the drivers call goto lable , free your mutex and return the error for your caller.
+Date: Sat, 17 Aug 2024 00:18:15 -0300
+Message-ID: <20240817031817.6762-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240816191222.GA69867@bhelgaas>
 
-On Fri, Aug 16, 2024 at 02:12:22PM -0500, Bjorn Helgaas wrote:
-> On Fri, Aug 16, 2024 at 10:30:29AM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Aug 15, 2024 at 05:47:17PM -0500, Bjorn Helgaas wrote:
-> > > [+cc Vidya, Jon since tegra194 does similar things]
-> > > 
-> > > On Mon, Jul 29, 2024 at 05:52:45PM +0530, Manivannan Sadhasivam wrote:
-> > > > Currently, the endpoint cleanup function dw_pcie_ep_cleanup() and EPF
-> > > > deinit notify function pci_epc_deinit_notify() are called during the
-> > > > execution of qcom_pcie_perst_assert() i.e., when the host has asserted
-> > > > PERST#. But quickly after this step, refclk will also be disabled by the
-> > > > host.
-> > > > 
-> > > > All of the Qcom endpoint SoCs supported as of now depend on the refclk from
-> > > > the host for keeping the controller operational. Due to this limitation,
-> > > > any access to the hardware registers in the absence of refclk will result
-> > > > in a whole endpoint crash. Unfortunately, most of the controller cleanups
-> > > > require accessing the hardware registers (like eDMA cleanup performed in
-> > > > dw_pcie_ep_cleanup(), powering down MHI EPF etc...). So these cleanup
-> > > > functions are currently causing the crash in the endpoint SoC once host
-> > > > asserts PERST#.
-> > > > 
-> > > > One way to address this issue is by generating the refclk in the endpoint
-> > > > itself and not depending on the host. But that is not always possible as
-> > > > some of the endpoint designs do require the endpoint to consume refclk from
-> > > > the host (as I was told by the Qcom engineers).
-> > > > 
-> > > > So let's fix this crash by moving the controller cleanups to the start of
-> > > > the qcom_pcie_perst_deassert() function. qcom_pcie_perst_deassert() is
-> > > > called whenever the host has deasserted PERST# and it is guaranteed that
-> > > > the refclk would be active at this point. So at the start of this function,
-> > > > the controller cleanup can be performed. Once finished, rest of the code
-> > > > execution for PERST# deassert can continue as usual.
-> > > 
-> > > What makes this v6.11 material?  Does it fix a problem we added in
-> > > v6.11-rc1?
-> > 
-> > No, this is not a 6.11 material, but the rest of the patches I
-> > shared offline.
-> 
-> For reference, the patches you shared offline are:
-> 
->   PCI: qcom: Use OPP only if the platform supports it
->   PCI: qcom-ep: Do not enable resources during probe()
->   PCI: qcom-ep: Disable MHI RAM data parity error interrupt for SA8775P SoC
->   PCI: qcom-ep: Move controller cleanups to qcom_pcie_perst_deassert()
-> 
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/pci/hotplug/cpci_hotplug_pci.c | 7 +++++--
+ drivers/pci/hotplug/cpqphp_pci.c       | 9 ++++++---
+ drivers/pci/hotplug/ibmphp_core.c      | 8 ++++++--
+ drivers/pci/hotplug/pciehp_pci.c       | 7 +++++--
+ drivers/pci/hotplug/shpchp_pci.c       | 7 +++++--
+ drivers/pci/probe.c                    | 9 ++++++---
+ 6 files changed, 33 insertions(+), 14 deletions(-)
 
-And then the note...
-
-"last one is not strictly a 6.11 material, but rest are"
-
-Sorry if that confused you. I shouldn't have mentioned this patch anyway.
-
-> > > Is there a Fixes: commit?
-> > 
-> > Hmm, the controller addition commit could be the valid fixes tag.
-> > 
-> > > This patch essentially does this:
-> > > 
-> > >   qcom_pcie_perst_assert
-> > > -   pci_epc_deinit_notify
-> > > -   dw_pcie_ep_cleanup
-> > >     qcom_pcie_disable_resources
-> > > 
-> > >   qcom_pcie_perst_deassert
-> > > +   if (pcie_ep->cleanup_pending)
-> > > +     pci_epc_deinit_notify(pci->ep.epc);
-> > > +     dw_pcie_ep_cleanup(&pci->ep);
-> > >     dw_pcie_ep_init_registers
-> > >     pci_epc_init_notify
-> > > 
-> > > Maybe it makes sense to call both pci_epc_deinit_notify() and
-> > > pci_epc_init_notify() from the PERST# deassert function, but it makes
-> > > me question whether we really need both.
-> > 
-> > There is really no need to call pci_epc_deinit_notify() during the first
-> > deassert (i.e., during the ep boot) because there are no cleanups to be done.
-> > It is only needed during a successive PERST# assert + deassert.
-> > 
-> > > pcie-tegra194.c has a similar structure:
-> > > 
-> > >   pex_ep_event_pex_rst_assert
-> > >     pci_epc_deinit_notify
-> > >     dw_pcie_ep_cleanup
-> > > 
-> > >   pex_ep_event_pex_rst_deassert
-> > >     dw_pcie_ep_init_registers
-> > >     pci_epc_init_notify
-> > > 
-> > > Is there a reason to make them different, or could/should a similar
-> > > change be made to tegra?
-> > 
-> > Design wise both drivers are similar, so it could apply. I didn't
-> > spin a patch because if testing of tegra driver gets delayed (I've
-> > seen this before), then I do not want to stall merging the whole
-> > series. 
-> 
-> It can and should be separate patches, one per driver.  But I don't
-> want to end up with the drivers being needlessly different.
-> 
-
-Ok. Let me spin a patch for that driver also.
-
-> > For Qcom it is important to get this merged asap to avoid
-> > the crash.
-> 
-> If this is not v6.11 material, there's time to work this out.
-> 
-> > > > +	if (pcie_ep->cleanup_pending) {
-> > > 
-> > > Do we really need this flag?  I assume the cleanup functions could
-> > > tell whether any previous setup was done?
-> > 
-> > Not so. Some cleanup functions may trigger a warning if attempted to do it
-> > before 'setup'. I think dw_edma_remove() that is part of dw_pcie_ep_cleanup()
-> > does that IIRC.
-> 
-> It looks safe to me:
-> 
->   dw_pcie_ep_cleanup
->     dw_pcie_edma_remove
->       dw_edma_remove(chip = &pci->edma)       # struct dw_pcie *pci
->         dev = chip->dev
->         dw = chip->dw
->         if (!dw)
->           return -ENODEV
-> 
-> but if not, it could probably be made safe by adding a NULL pointer
-> check and/or a "chip->dw = NULL" at the right spot.
-> 
-> We hardly have any cleanup functions affected by "cleanup_pending", so
-> I think we can decide that they should be safe before 'setup' and just
-> make it so.
-> 
-
-I just tested by removing the cleanup flag and it doesn't seem to scream. Maybe
-the issue I saw previously was unrelated.
-
-- Mani
-
+diff --git a/drivers/pci/hotplug/cpci_hotplug_pci.c b/drivers/pci/hotplug/cpci_hotplug_pci.c
+index 6c48066acb44..2d3256795eab 100644
+--- a/drivers/pci/hotplug/cpci_hotplug_pci.c
++++ b/drivers/pci/hotplug/cpci_hotplug_pci.c
+@@ -269,8 +269,11 @@ int cpci_configure_slot(struct slot *slot)
+ 	parent = slot->dev->bus;
+ 
+ 	for_each_pci_bridge(dev, parent) {
+-		if (PCI_SLOT(dev->devfn) == PCI_SLOT(slot->devfn))
+-			pci_hp_add_bridge(dev);
++		if (PCI_SLOT(dev->devfn) == PCI_SLOT(slot->devfn)) {
++			ret = pci_hp_add_bridge(dev);
++			if (ret)
++				goto out;
++		}
+ 	}
+ 
+ 	pci_assign_unassigned_bridge_resources(parent->self);
+diff --git a/drivers/pci/hotplug/cpqphp_pci.c b/drivers/pci/hotplug/cpqphp_pci.c
+index e9f1fb333a71..5f6ce2c6385a 100644
+--- a/drivers/pci/hotplug/cpqphp_pci.c
++++ b/drivers/pci/hotplug/cpqphp_pci.c
+@@ -70,7 +70,7 @@ static void __iomem *detect_HRT_floating_pointer(void __iomem *begin, void __iom
+ int cpqhp_configure_device(struct controller *ctrl, struct pci_func *func)
+ {
+ 	struct pci_bus *child;
+-	int num;
++	int num, ret = 0;
+ 
+ 	pci_lock_rescan_remove();
+ 
+@@ -97,7 +97,10 @@ int cpqhp_configure_device(struct controller *ctrl, struct pci_func *func)
+ 	}
+ 
+ 	if (func->pci_dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+-		pci_hp_add_bridge(func->pci_dev);
++		ret = pci_hp_add_bridge(func->pci_dev);
++		if (ret)
++			goto out;
++
+ 		child = func->pci_dev->subordinate;
+ 		if (child)
+ 			pci_bus_add_devices(child);
+@@ -107,7 +110,7 @@ int cpqhp_configure_device(struct controller *ctrl, struct pci_func *func)
+ 
+  out:
+ 	pci_unlock_rescan_remove();
+-	return 0;
++	return ret;
+ }
+ 
+ 
+diff --git a/drivers/pci/hotplug/ibmphp_core.c b/drivers/pci/hotplug/ibmphp_core.c
+index 197997e264a2..73a593c2993b 100644
+--- a/drivers/pci/hotplug/ibmphp_core.c
++++ b/drivers/pci/hotplug/ibmphp_core.c
+@@ -663,6 +663,7 @@ static int ibm_configure_device(struct pci_func *func)
+ 	int num;
+ 	int flag = 0;	/* this is to make sure we don't double scan the bus,
+ 					for bridged devices primarily */
++	int ret = 0;
+ 
+ 	pci_lock_rescan_remove();
+ 
+@@ -690,7 +691,10 @@ static int ibm_configure_device(struct pci_func *func)
+ 		}
+ 	}
+ 	if (!(flag) && (func->dev->hdr_type == PCI_HEADER_TYPE_BRIDGE)) {
+-		pci_hp_add_bridge(func->dev);
++		ret = pci_hp_add_bridge(func->dev);
++		if (ret)
++			goto out;
++
+ 		child = func->dev->subordinate;
+ 		if (child)
+ 			pci_bus_add_devices(child);
+@@ -698,7 +702,7 @@ static int ibm_configure_device(struct pci_func *func)
+ 
+  out:
+ 	pci_unlock_rescan_remove();
+-	return 0;
++	return ret;
+ }
+ 
+ /*******************************************************
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+index 65e50bee1a8c..0c4873c2ef3c 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -58,8 +58,11 @@ int pciehp_configure_device(struct controller *ctrl)
+ 		goto out;
+ 	}
+ 
+-	for_each_pci_bridge(dev, parent)
+-		pci_hp_add_bridge(dev);
++	for_each_pci_bridge(dev, parent) {
++		ret = pci_hp_add_bridge(dev);
++		if (ret)
++			goto out;
++	}
+ 
+ 	pci_assign_unassigned_bridge_resources(bridge);
+ 	pcie_bus_configure_settings(parent);
+diff --git a/drivers/pci/hotplug/shpchp_pci.c b/drivers/pci/hotplug/shpchp_pci.c
+index 36db0c3c4ea6..7db0ce966f1d 100644
+--- a/drivers/pci/hotplug/shpchp_pci.c
++++ b/drivers/pci/hotplug/shpchp_pci.c
+@@ -48,8 +48,11 @@ int shpchp_configure_device(struct slot *p_slot)
+ 	}
+ 
+ 	for_each_pci_bridge(dev, parent) {
+-		if (PCI_SLOT(dev->devfn) == p_slot->device)
+-			pci_hp_add_bridge(dev);
++		if (PCI_SLOT(dev->devfn) == p_slot->device) {
++			ret = pci_hp_add_bridge(dev);
++			if (ret)
++				goto out;
++		}
+ 	}
+ 
+ 	pci_assign_unassigned_bridge_resources(bridge);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b14b9876c030..2418998820dc 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -3363,9 +3363,10 @@ int pci_hp_add_bridge(struct pci_dev *dev)
+ 		if (!pci_find_bus(pci_domain_nr(parent), busnr))
+ 			break;
+ 	}
++
+ 	if (busnr-- > end) {
+ 		pci_err(dev, "No bus number available for hot-added bridge\n");
+-		return -1;
++		return -ENODEV;
+ 	}
+ 
+ 	/* Scan bridges that are already configured */
+@@ -3380,8 +3381,10 @@ int pci_hp_add_bridge(struct pci_dev *dev)
+ 	/* Scan bridges that need to be reconfigured */
+ 	pci_scan_bridge_extend(parent, dev, busnr, available_buses, 1);
+ 
+-	if (!dev->subordinate)
+-		return -1;
++	if (!dev->subordinate) {
++		pci_err(dev, "No dev subordinate\n");
++		return -ENODEV;
++	}
+ 
+ 	return 0;
+ }
 -- 
-மணிவண்ணன் சதாசிவம்
+2.46.0
+
 
