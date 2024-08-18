@@ -1,196 +1,129 @@
-Return-Path: <linux-pci+bounces-11792-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11793-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2A3995592E
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 19:41:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7E60955DEF
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Aug 2024 19:29:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD7551C20B01
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Aug 2024 17:41:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 329A2B2139C
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Aug 2024 17:29:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A16C133;
-	Sat, 17 Aug 2024 17:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F9414F108;
+	Sun, 18 Aug 2024 17:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="efjNRCeT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fyJtI0Ne";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="efjNRCeT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fyJtI0Ne"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pKk1X/sw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF95440C;
-	Sat, 17 Aug 2024 17:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0631EB36
+	for <linux-pci@vger.kernel.org>; Sun, 18 Aug 2024 17:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723916515; cv=none; b=ZqGmEWFaRHDv50nZHs3E2o1RhIjBVz9zrBZXJvLXOhTrwZQDICnb1p0RdGllErVMPcBpqPv6gOlBjtB67pTWXXoQOoei8glKgJOmt0IZ5wM5xx/QD+wJYuj5i2nwtC/Ddxb8eDGtGwjE1n+LV6I6cKWCSYvEyGyxqrGIZ0MCUNA=
+	t=1724002132; cv=none; b=splXc2gRLLqiN9hMk9ZtCOuh3gDhai3cCuwK9p/6lEuf5lsUO9s+1E4flwynx66ZH+FiMOE/NBg6AJgr/CewLXFpmK/qUWV6BrNsMgbH/NPAJv9PIMXGwVWFjV7/Rcv//4CoOCek8GJaD0VMGNe6gcv864H+KyAoBXbZREVpsFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723916515; c=relaxed/simple;
-	bh=jtqDTtNajvInU5FR+593dp7wIWkfBEwX/qDLvacvdGU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gke0JMDcAC3wHc5jrv44Wi9iqj/TDd1E1GBn2xoy0WIKxJvqVLvKCozmygBQMBcLFWu2cgAXPHpEoEWW0Yx1LZwTyQFcYomckUvia6y1KxsJMdSEyPkv3O9GUwsbVnDu9Bfybq5Mpno8qU/KzpJFECECA/1/fpOBHpFuLcUcxNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=efjNRCeT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fyJtI0Ne; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=efjNRCeT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fyJtI0Ne; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 45F4220233;
-	Sat, 17 Aug 2024 17:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1723916506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVJWcYecUYFD2wvA80Jm7qXMKv1nO73ux4O2gMSc0l8=;
-	b=efjNRCeT06TaE2zT9OdcsxWe+em4oIyhgfp0atysl8mwt9tLlqtJz2CjFYu1nWCbW25eyu
-	eF5ogRAUlKyUxXL6ceoaKEMQB0hBIs/yxfayavEkxE4LhvE5E7FRa8jo1l5uHVYCLSAidf
-	2ulZneqPT/tKQ95GyhRFVapqbmHpYp8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1723916506;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVJWcYecUYFD2wvA80Jm7qXMKv1nO73ux4O2gMSc0l8=;
-	b=fyJtI0NeM10LedJTJL22uWlCRNpI6huGDudR1Ms5Dslf/+wt34IF99AglPFyMvWYJHRmUc
-	MSayPAyjbz8C4bAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1723916506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVJWcYecUYFD2wvA80Jm7qXMKv1nO73ux4O2gMSc0l8=;
-	b=efjNRCeT06TaE2zT9OdcsxWe+em4oIyhgfp0atysl8mwt9tLlqtJz2CjFYu1nWCbW25eyu
-	eF5ogRAUlKyUxXL6ceoaKEMQB0hBIs/yxfayavEkxE4LhvE5E7FRa8jo1l5uHVYCLSAidf
-	2ulZneqPT/tKQ95GyhRFVapqbmHpYp8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1723916506;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVJWcYecUYFD2wvA80Jm7qXMKv1nO73ux4O2gMSc0l8=;
-	b=fyJtI0NeM10LedJTJL22uWlCRNpI6huGDudR1Ms5Dslf/+wt34IF99AglPFyMvWYJHRmUc
-	MSayPAyjbz8C4bAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6B90113991;
-	Sat, 17 Aug 2024 17:41:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Dc64F9ngwGZ0BgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Sat, 17 Aug 2024 17:41:45 +0000
-Message-ID: <1a6d6972-f2db-4d44-b79c-811ba44368f0@suse.de>
-Date: Sat, 17 Aug 2024 20:41:29 +0300
+	s=arc-20240116; t=1724002132; c=relaxed/simple;
+	bh=EcLybmfw+0g9pG7qN2rZISIWYbjARPz79yYF0pURgRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KGzYGnCvSsrDE93GMcoYk1HU0DWAMLXwbITfIfAT7p6RjEQZoXoz/xRyiUr+ZYJ5q93Re8o2enYG7WWvGCeGAPbOEo7lJaGIJcSuo0YtBagfKfWHAJZMUS1yczBgOr0zJ9bq4CR4Rw6ATnx2jtt+vbvZ8xPRbs+D7b6cUO893nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pKk1X/sw; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-371a9bea8d4so646347f8f.2
+        for <linux-pci@vger.kernel.org>; Sun, 18 Aug 2024 10:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724002129; x=1724606929; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GNx0581gmw5KmVnKNMArHkHEaJIxEm4/jRsnasy6Iao=;
+        b=pKk1X/swdl2oN+2bNpUL5GH7qs4Ir4Cgl7LUFUkNE/562P1P/ui1Jib+Q88VxAIgb9
+         /jSdiQSVxOeddjSASj4ktt1tDxLEzXdVzHhCGLdLO5I6vCXF+HtYyuzBJFabrWfpHaaK
+         6P+eSRT5tdh3Ly4sBzReo0jdKyhaEGmkZ4jekegK0KF+5UT6fWW2yQeVaITVAuww6pl3
+         Z65Ywt3UbN98sQ9CFk6tXyg01er/bw5utj0jY0/7GiMTo+tKbN5XCMLxfkHhFrdl6xni
+         tl99lm2DNlB3uzROAwPOZJMyFDLrhbL0xX11zd2ASHCsCqVLUFPXRBOaSdCqVvhd/OJx
+         1ZWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724002129; x=1724606929;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GNx0581gmw5KmVnKNMArHkHEaJIxEm4/jRsnasy6Iao=;
+        b=JdgdD9VMyFw8i2F6wEE5KGNi1Ubx+8PKbZnjI6sLlEb2RSuRLT4vahpzkygs4Df2RY
+         ZK3MGBJrRtEjqtQ8zc0OaAl+8FFpOTiCbsMr+vkPHQRV7mJcteZyn5dJSXlou3ShZwWd
+         O5wV8jedfRrMbbVp9DwBdNGlo3xYBb+JOFmm3MbqodKIQIC85i2cU672S4WAljdrA6ST
+         /QQs35pnznR212vUvceEMTvvy+cYoQ8Js5lDKt0ba+Ixit691WO8+8t1cAFWOwDXh0Qw
+         AE/YgAm+C7c0sHOlfepORvSVADv85/P5w4zMtViGrqRLJMSd7fIFvWjmWGYWJjIOPOmX
+         oQYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVyeYO9Kjy33Z6d/stL8bAPmFYW98uTAf9XBOHLbCeZlTTcDu5bE+iEpDwiFgc2m4RuQmzdV9Xc7PRQQMtkFf496AgjS/k1PZwm
+X-Gm-Message-State: AOJu0YxKsdwLuvz5JCJsz3qHqi6hlrcPauafaD7xsa5uX9aKPKuj9IsA
+	uBD6sNkwcYls+Qgh4gMpSKCKstjtUenkdylg9zFWuigsXtQchpVFXy6QOwdrWRQ=
+X-Google-Smtp-Source: AGHT+IHhIVY0bWR2O7mz+r0RXXbWCwIx/u27MbcgBTwXx1CRg5LFhEFV+GL/Fw9bSLQnd+XYkgRWkw==
+X-Received: by 2002:adf:f285:0:b0:371:888d:7aaa with SMTP id ffacd0b85a97d-371946b1ae9mr5217302f8f.49.1724002128655;
+        Sun, 18 Aug 2024 10:28:48 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.215.209])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3718983a31csm8518541f8f.17.2024.08.18.10.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Aug 2024 10:28:48 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: PCI: hisilicon,kirin-pcie: add top-level constraints
+Date: Sun, 18 Aug 2024 19:28:41 +0200
+Message-ID: <20240818172843.121787-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240815225731.40276-1-james.quinlan@broadcom.com>
- <20240815225731.40276-6-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20240815225731.40276-6-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,linaro.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
-X-Spam-Score: -4.30
+Content-Transfer-Encoding: 8bit
 
-Hi Jim,
+Properties with variable number of items per each device are expected to
+have widest constraints in top-level "properties:" block and further
+customized (narrowed) in "if:then:".  Add missing top-level constraints
+for clock-names and reset-names.
 
-On 8/16/24 01:57, Jim Quinlan wrote:
-> The 7712 SOC has a bridge reset which can be described in the device tree.
-> Use it if present.  Otherwise, continue to use the legacy method to reset
-> the bridge.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 24 +++++++++++++++++++-----
->  1 file changed, 19 insertions(+), 5 deletions(-)
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/pci/hisilicon,kirin-pcie.yaml          | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+index c9f04999c9cf..e863519f3161 100644
+--- a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+@@ -37,7 +37,8 @@ properties:
+     minItems: 3
+     maxItems: 4
+ 
+-  clocks: true
++  clocks:
++    maxItems: 5
+ 
+   clock-names:
+     items:
+-- 
+2.43.0
 
-One problem though on RPi5 (bcm2712).
-
-With this series applied + my WIP patches for enablement of PCIe on
-bcm2712 when enable the pcie1 and pcie2 root ports in dts, I see kernel
-boot stuck on pcie2 enumeration and I have to add this [1] to make it
-work again.
-
-Some more info about resets used:
-
-pcie0 @ 100000:
-	resets = <&bcm_reset 5>, <&bcm_reset 42>, <&pcie_rescal>;
-	reset-names = "swinit", "bridge", "rescal";
-
-pcie1 @ 110000:
-	resets = <&bcm_reset 7>, <&bcm_reset 43>, <&pcie_rescal>;
-	reset-names = "swinit", "bridge", "rescal";
-
-pcie2 @ 120000:
-	resets = <&bcm_reset 9>, <&bcm_reset 44>, <&pcie_rescal>;
-	reset-names = "swinit", "bridge", "rescal";
-
-
-I changed "swinit" reset for pcie2 to <&bcm_reset 9> (it is 32 in
-downstream rpi kernel) because otherwise I'm unable to enumerate RP1
-south bridge at all.
-
-Any help will be appreciated.
-
-~Stan
-
-[1]
-https://github.com/raspberrypi/linux/blob/rpi-6.11.y/drivers/pci/controller/pcie-brcmstb.c#L1711
 
