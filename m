@@ -1,118 +1,187 @@
-Return-Path: <linux-pci+bounces-11840-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11841-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A3F59573B2
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 20:43:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDA11957427
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 21:07:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DA961C23436
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 18:43:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8688C28472B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 19:07:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BFA718A6BC;
-	Mon, 19 Aug 2024 18:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052AE26AD3;
+	Mon, 19 Aug 2024 19:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SCtttJRn"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b56IQb7G"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0DF18A6A5
-	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 18:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF201D54EE
+	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 19:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724092756; cv=none; b=NFFPMGtPvMUBGhgL9jrOJT2ENZsmkgDgU2d5zKukA9WZju9EFh0Cr28ZNW4ycssNeS6+drbP/5LIm2UjwIcT5zk0/MYtCAWYkS6Lh5annbzf7qb79106NMtKz+G7gAjc1mhWlKUGrbF+o9WWSe/8lPFfP5zz+Y0ohQDRcHeJjCk=
+	t=1724094445; cv=none; b=GdTXWOZyTunHYkXyonBQqHFIWb+1WO1CN6ECBl17V6qrssQVIkmIDna+wlInVNPWW6wZKMf+qXfkeKzz0Qmn5fNGuNkSmHg/3jS80kMlG9CG4+IEd2zc1v4Y2tIjO1x7Z3sVIerB0nFLzHLUZq2Wa2ltz43ESJ5Xg8KCOi1+lB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724092756; c=relaxed/simple;
-	bh=SWpGCGgfSTInA73Lkq9d3XSm6SVeqmrSlW6/NUDvBMM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ry/eryGcOR23WZb1kCr+tJvZxeVQ5Cyef0V3nCTUKms540duq+Q5IsW73y0R89smtsGYp7VMkUq5ZiRoIeW6YHNcvp66rNCrghMef0o5IayXuXdyGUQSSsAZbC50HeRnSa+6G6fLvZtXH1G7/zHzq9X2kEH7hsv77u7atQm5zqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SCtttJRn; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53212e0aa92so5204113e87.0
-        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 11:39:14 -0700 (PDT)
+	s=arc-20240116; t=1724094445; c=relaxed/simple;
+	bh=U96aCh+kP+kD8HG1T/BEmI0F1FivyXuALxhPoL/bQTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k2JcorHPe8yK0WjNcAUwPqLC9s0f7zjc4+LtO19g1SeGEdIeBBFmCEd9+3Ly05qcr37dpety8ll1RvEuR2eIfl29VmhMji+H2Jdlr6Sn/uQ+jTiNFBS9gn5GyzKkxbqD5y1cFTnA6uUREskL1o50GUk9D4U7y3avgFqCX790uwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=b56IQb7G; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-201d5af11a4so43406235ad.3
+        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 12:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724092753; x=1724697553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SWpGCGgfSTInA73Lkq9d3XSm6SVeqmrSlW6/NUDvBMM=;
-        b=SCtttJRnlJKd16RTxmcFD1U1owjkDsprv8a39TbNtF0p7lRdNaz4bt2Y/UuGzNTQSk
-         8U9A9sMQ9KpCMdmc/+PSBvJczvHgSLsMVStporF4BgdFU+eYloTd8SzMF+uHJUsQ/EMF
-         Lghuw209b+k1qh/6WaQYAjAF5v/kLHXAmxC8nKOfk/yZRnHUrIiwgkxq/MLHOFEp1nN6
-         Rp0sPapA5U5xZEq528Ye1J7ZNQaOOi5Oj4FVDWB4wR/lz7hN0lTvoisqq0ggAplAyGx5
-         jiV6MVc7z9A5vP6t/JjxeulgAQOb4wyCZWceNYHvNBgDE04PPpKhruYD9pZgNN38AMi4
-         d1UA==
+        d=broadcom.com; s=google; t=1724094444; x=1724699244; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=PigGVeP9fWkt2ziYkYFY4MjVKS0wO7lePaduv9u4Eqs=;
+        b=b56IQb7GiFfRzsRwfSI9B9lrU9cYRpC11+nXc5cU4kUm41c1fP4ISxVr3z51KiuBQ1
+         IbEPr5OAllU9DQ5d/MrCT3wb533ObnHyuZ30rqLXuavS9xPDCcbhi4NFALmWokUgFyue
+         IYUpRTdcDbZ0CwPqn2EaGoM91L6piWqcP+a/8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724092753; x=1724697553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SWpGCGgfSTInA73Lkq9d3XSm6SVeqmrSlW6/NUDvBMM=;
-        b=L2g9hRUwxF0yOUQ/xjPadG3axS36ekZ+jwjRHJ5DbRp2/8iPaFrMSYBmt0sHWWloOF
-         a/SfYWdiRRKL1O44VDiIHukA890aH1ECv8vEbXXr2WdGJTAEUrvqTigK+gva7fbG8u04
-         +dfQuTS4GkC0Jvf1qwPZu11zJbySRNX25HGNVzoWo6VE4sR/PtwaI9y6zzFjlbIpwciO
-         rP+Oi/SvgV0OGDbqWdhahMy7aRxsMDOYoyWKYI4DtGDGFRswmJjfH1BUE1KqdnLVzcO5
-         i6FswE7+z7jkFhPZet9V/LIBOqkcfmljRZpc2rKC9/oVz7i3Cvw9Vo9U11DI62tr5JJc
-         5l6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU1jyXUQqLuvFR/rvHpNp04zdwmeOUAf0gNr9jocuFbYOOyNeaJfI3ZYKE0JHIo3T79kRxViwF34zPeRb20xvFZAn+pB2iCrTrA
-X-Gm-Message-State: AOJu0Yzaijzb/W+N9FPmR642eZPDvwCWePgrjo10ip+ExM7vPXYL7OXD
-	J4CX2BTStEbUHzGGEeCGG1OYLcZSKEffyazJQ9gaNdk1Uo4e8/FdvHZx+VB48QKU48MmUaA1jR0
-	b/3NwhbkXaZxOWXOd6k1dKvYFOSYsH3pspFgnVQ==
-X-Google-Smtp-Source: AGHT+IHelUVu+3Ik9JdWKk+zeumpW2YAF7qu0Ohxq5buMaU2cv0DmlPnfzkmnuU6AUlGRzMu60+m9UNlwGENsdtWTIk=
-X-Received: by 2002:a05:6512:3e22:b0:533:d3e:16e6 with SMTP id
- 2adb3069b0e04-5331c6af14dmr8387737e87.25.1724092752397; Mon, 19 Aug 2024
- 11:39:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724094444; x=1724699244;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PigGVeP9fWkt2ziYkYFY4MjVKS0wO7lePaduv9u4Eqs=;
+        b=OB5rm7QVvkE26QjtY76ByX5P0FwEX9HNjgAz/yM+JTDoeODYvC2BdkB1CY0hO5PFT7
+         WISXPVVdtPKhNLXlQ/d6/HSCPN7kH55KpgXge/WOWf8QvjOl/6JSgujiYRvkumQSJIs9
+         oYf94pTQVyFzP4wwbKIETrYTiBfQECmf/3ruiMZNU7+qr1t5+PmbqnzNe0giQ3m9uVRb
+         Tdyad7jur6vBfSTs472dVEetrlMnueGVH8DXOYiRdIGoDoiDsA/UK1dcueQ1zaIZ+5DO
+         Lzh4SrkrI7OTquCNBhDIH6QIDcZxhuiOMGXPxxgPguF3dfC0E0q7EAhxCSrsPYrhFhSG
+         nPMw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+0iChX9/0GNv5Vjv0fFm1Wad79dtwDINUHLFQjBHtiUvcvsiqmr4v4sB5sUKkKErUwszZNbdT+XIwcbDTu88WStRejP8esUMu
+X-Gm-Message-State: AOJu0YztsQwLPdxn+bQULdGE6b//Xkp7t0yajtO8+yOtRNmCzmaWCLEN
+	/pRp330tWciVVJmR5vVyiOtBPPOSlDH0wnlhbHxsyBZ+M835XQ+NZrTumd1ICw==
+X-Google-Smtp-Source: AGHT+IF9wcR96nk7xMM8w89wfnQA/EQxKY3IP0cKcgJ9JF3OmqhV1jwCwzeWkcKXLmnxTxXDKv82vw==
+X-Received: by 2002:a17:903:2307:b0:1fd:a5a2:5838 with SMTP id d9443c01a7336-20203e5518fmr178728535ad.6.1724094443559;
+        Mon, 19 Aug 2024 12:07:23 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f03793b6sm65373135ad.127.2024.08.19.12.07.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Aug 2024 12:07:22 -0700 (PDT)
+Message-ID: <2fb74b23-a862-4b1c-b1e1-a3e3abc4571b@broadcom.com>
+Date: Mon, 19 Aug 2024 12:07:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240819165148.58201-2-pstanner@redhat.com> <20240819165148.58201-7-pstanner@redhat.com>
-In-Reply-To: <20240819165148.58201-7-pstanner@redhat.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 19 Aug 2024 20:39:01 +0200
-Message-ID: <CAMRc=MdLsLeXqm+40wb4O2PmNX9C-g0is13berDF6yDQ1EBh+w@mail.gmail.com>
-Subject: Re: [PATCH 5/9] gpio: Replace deprecated PCI functions
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, 
-	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Alvaro Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Hannes Reinecke <hare@suse.de>, 
-	Damien Le Moal <dlemoal@kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
+To: Stanimir Varbanov <svarbanov@suse.de>,
+ Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240815225731.40276-1-james.quinlan@broadcom.com>
+ <20240815225731.40276-6-james.quinlan@broadcom.com>
+ <1a6d6972-f2db-4d44-b79c-811ba44368f0@suse.de>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <1a6d6972-f2db-4d44-b79c-811ba44368f0@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 19, 2024 at 6:53=E2=80=AFPM Philipp Stanner <pstanner@redhat.co=
-m> wrote:
->
-> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by the
-> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> pcim_iomap_table(), pcim_iomap_regions_request_all()").
->
-> Replace those functions with calls to pcim_iomap_region().
->
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> ---
+On 8/17/24 10:41, Stanimir Varbanov wrote:
+> Hi Jim,
+> 
+> On 8/16/24 01:57, Jim Quinlan wrote:
+>> The 7712 SOC has a bridge reset which can be described in the device tree.
+>> Use it if present.  Otherwise, continue to use the legacy method to reset
+>> the bridge.
+>>
+>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>> ---
+>>   drivers/pci/controller/pcie-brcmstb.c | 24 +++++++++++++++++++-----
+>>   1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> 
+> One problem though on RPi5 (bcm2712).
+> 
+> With this series applied + my WIP patches for enablement of PCIe on
+> bcm2712 when enable the pcie1 and pcie2 root ports in dts, I see kernel
+> boot stuck on pcie2 enumeration and I have to add this [1] to make it
+> work again.
+> 
+> Some more info about resets used:
+> 
+> pcie0 @ 100000:
+> 	resets = <&bcm_reset 5>, <&bcm_reset 42>, <&pcie_rescal>;
+> 	reset-names = "swinit", "bridge", "rescal";
+> 
+> pcie1 @ 110000:
+> 	resets = <&bcm_reset 7>, <&bcm_reset 43>, <&pcie_rescal>;
+> 	reset-names = "swinit", "bridge", "rescal";
+> 
+> pcie2 @ 120000:
+> 	resets = <&bcm_reset 9>, <&bcm_reset 44>, <&pcie_rescal>;
+> 	reset-names = "swinit", "bridge", "rescal"; >
+> 
+> I changed "swinit" reset for pcie2 to <&bcm_reset 9> (it is 32 in
+> downstream rpi kernel) because otherwise I'm unable to enumerate RP1
+> south bridge at all.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The value 9 is unused, so I suppose it does not really hurt to use it, 
+but it is also unlikely to achieve what you desire. 32 is the correct 
+value since pcie2_sw_init is bit 0 within SW_INIT_1 (second bank of resets).
+
+The file link you provided appears to be lacking support for the 
+"swinit" reset line, is that intentional? I don't think you can assume 
+this will work without.
+-- 
+Florian
+
 
