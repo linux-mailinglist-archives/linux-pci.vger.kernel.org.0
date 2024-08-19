@@ -1,225 +1,191 @@
-Return-Path: <linux-pci+bounces-11806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 795CB956960
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 13:34:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 711D7956A38
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 14:01:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3007B28327A
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 11:34:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7DB6B2388B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 12:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAEF163AA7;
-	Mon, 19 Aug 2024 11:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A13C4165F17;
+	Mon, 19 Aug 2024 12:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HL2ztUyN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQTgy4zO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F84167D83;
-	Mon, 19 Aug 2024 11:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6EE13DBA0;
+	Mon, 19 Aug 2024 12:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724067272; cv=none; b=U2nq8t4eqCcSYw5ys9eGoimg7voJkY2UdOzh1isaOiNbxfPB9ArNJE8Z/V0f3LLbepW0c95SioeEf5141z2/PW7Ckd++14Z/HwVcKjE1pVYwTimi8oMqRxYZd3770hs3xI6bzoouKjAkTw8mfXUzcgNf3kE5B336hTGrOVJltXk=
+	t=1724068896; cv=none; b=qyvQ+nQwZ81489UlrdVg+jY4uXCLRO63gaf+7rkFs03zuW2PCgTgJJerKW79/fwm97uL+ChUOrCGjXlDXOmtDFOgqgDXftD1cV7Iqw6I+ji6+CCFQjzYRF246lqYVe9DgeyulNBIxObMr2lg0K3F1Q9u8Ba7LTdYCLI1t93MR2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724067272; c=relaxed/simple;
-	bh=malUEUP13/IZNGpr+qi6kyLlVM4LzUUH3UWhcU+50PQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HJXMRb0ftQiNx6Z1wMgOwjHwlKn5GJRx7PlfArgpM/IyuO7xAdtHWio6+cmmTj3Curws8IRmNWl778bBPr4ga3cwhwHdU1KXc8lMtmwADgAEM/4sPX/CISm2huuPgACMpri3C8hNYhDVje0SUeIW9QIl8NO+Ta1N4Cu1pl0G/Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HL2ztUyN; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47JA19qd027356;
-	Mon, 19 Aug 2024 11:34:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=UsqDIMpxDyemRi4fPPsg3jRzMi1
-	OTL9ET/Uu1vaJCGc=; b=HL2ztUyNsMroxcQqGesnYXyjwOaobOAHrRdJdhWS0Vc
-	cIDdfOs7afU1fMD292vRj4tee3vSeer/2UbUegXnDwWZnl0ghVcQ5D1Yc0cpwc3t
-	MzmjstUQm/v734SWkhsyvAr0P8XVnkBoRvLLnYTXhIoytzDxfI55ssT0M0PBuYJK
-	tLwcQzTAj05qrgFR9utA6QP9jJ85US6zRcgvR63aTfJt8RCToDljYTXSJjkdW6BN
-	QGx/m7mEE1gok/j2OWbECQ/Lzoax1ejPZr9dxF4T0TgWG5tMIgWHloiNFvRf1PfR
-	n2mMXqJZNOVa5RSge2hua7auyjBaYBEw8Tf76Qe4Kkw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412mc4g26v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Aug 2024 11:34:00 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47JBXxq2006657;
-	Mon, 19 Aug 2024 11:33:59 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412mc4g26p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Aug 2024 11:33:59 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47JA0j1g030060;
-	Mon, 19 Aug 2024 11:33:58 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4138dm5n4y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Aug 2024 11:33:58 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47JBXr8a43647404
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Aug 2024 11:33:55 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B8CF20040;
-	Mon, 19 Aug 2024 11:33:53 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA5F320049;
-	Mon, 19 Aug 2024 11:33:47 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.195.39.27])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 19 Aug 2024 11:33:47 +0000 (GMT)
-Date: Mon, 19 Aug 2024 17:03:42 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lizhi Hou <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Kowshik Jois B S <kowsjois@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>, kernel-team@lists.ubuntu.com,
-        Stefan Bader <stefan.bader@canonical.com>
-Subject: Re: [PATCH v3] PCI: Fix crash during pci_dev hot-unplug on pseries
- KVM guest
-Message-ID: <20240819165310.cab26333-b8-amachhiw@linux.ibm.com>
-Mail-Followup-To: Michael Ellerman <mpe@ellerman.id.au>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lizhi Hou <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>, 
-	Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
-	Lukas Wunner <lukas@wunner.de>, kernel-team@lists.ubuntu.com, 
-	Stefan Bader <stefan.bader@canonical.com>
-References: <20240806200059.GA74866@bhelgaas>
- <87h6bm1ngo.fsf@mail.lhotse>
- <20240816180441.81f4d694-3b-amachhiw@linux.ibm.com>
- <87o75s2hxa.fsf@mail.lhotse>
+	s=arc-20240116; t=1724068896; c=relaxed/simple;
+	bh=9FMe2E36njetavmaIaeBUbP3/ypPX2kaswZqmd1RdWc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FRjXAnaJ+PeYMp0DxjOUHLwWlsIJbFP+w14wVLtEb+Ttao6OMuiq7WWcFiGHBGa0rubNegByIWovuirMMcCjITVBXteh71A0tDHSyg6PLpWKKH2lokncSY/YzlcEc0k7qf4ZFi2kfPvzkUeEDDC45aNKtdxiP7c8oKD3YgCw8qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HQTgy4zO; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5a10835487fso6425621a12.1;
+        Mon, 19 Aug 2024 05:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724068893; x=1724673693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zqIJnZhOkzwlhHlFmquqUgF5P4b6JO1W6PZDA+8kgtI=;
+        b=HQTgy4zOeyhr/6u+dQTvrFp61x4bKZRi1KUsJoJYav3xTWf41Ce3ZaddwtcxYijl5W
+         zywmIymlOutxLcWk9mYVc9/afntpHBnNHL4H0O81H1uPJCekrlVhRJM+lCUO7GK/lfzo
+         KYuh4VtmUTd56DQMsxSyVcsXs77yr2fGd0GFWCm8aagdSi2gRLCoWKRd8StNlnUAYV0G
+         Nt6H1HxW537eLFPSrCk8UwWdZu+j4ck954m8m1xbLeHqYLaZ30YK56epbwfM2pag07T6
+         I6THhQxbldY9K7UFQQaCtAYuP0xuEGwQekR0Y713X5EdnlTd4TPCd0smKLvqyniR5KRt
+         62/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724068893; x=1724673693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zqIJnZhOkzwlhHlFmquqUgF5P4b6JO1W6PZDA+8kgtI=;
+        b=UKoqzEJCNVBFyY25TF+XR+ydzwNS8PDUFVe1PAT5nOUp2vc9XGGgRTm9iGANvpDmtC
+         dEzp6QcgQJyk54lIJ5T6WpAJx+tHTip0u9hX4deBPFm/PVbsMwqc+twckEfDJCqVpVOC
+         K7RDarmAmK/29zxD7jPVjF9s/K0dxs1nr9YY0Ye+5wt6IePWr8/dVL8JYLv2baLYf0eJ
+         jNcre4FZP5HEoprvT1bz8Xz5wtfyzfs9djp7K5aaDzNN8P/wGmEs/c9MyVpd4620ze3D
+         vsiW89+PdCnWM2kWRrKUlJYAlF3Ep4bsSA9rLe8VINXj+Jpm0gUoUqlg6G5d32HnPo+m
+         mSvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhBLaUdnpKADl8Liu6v/2ec2gccWsmGuOi+v2uXN2NGbbs4RL9YdUFLwJ+TK31jJMGNdH/U5Ct+rb5QGMIXr2fY/qo5gewX0GDCUwO7aYQOOFMu+ddp3NZ8Ne1xFPHz9PL3VkVONyk
+X-Gm-Message-State: AOJu0Yyt6kqHBki8+IFajMPrn4fA7hH06pLu6wXpPUa8X8n0NcEvANI9
+	cAaYVDZ0oQesJ7QYL/irK8OGccdYnr4JZnQHBlV0nYsDZZHh2DP8
+X-Google-Smtp-Source: AGHT+IHctpArOY8ZZmCUzbJXS5jZn+B9sz/9xRjEY8w0f1US2wIXF4pzMZ9gF8s2dGf/17SJpsbTKg==
+X-Received: by 2002:a17:907:96a4:b0:a83:7ecb:1d1f with SMTP id a640c23a62f3a-a8392a03bc1mr738483066b.46.1724068892325;
+        Mon, 19 Aug 2024 05:01:32 -0700 (PDT)
+Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c6777sm634559366b.10.2024.08.19.05.01.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2024 05:01:31 -0700 (PDT)
+From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+To: rick.wertenbroek@heig-vd.ch
+Cc: dlemoal@kernel.org,
+	alberto.dassatti@heig-vd.ch,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: endpoint: pci-epf-test: Move DMA check into read/write/copy functions
+Date: Mon, 19 Aug 2024 14:01:10 +0200
+Message-Id: <20240819120112.23563-1-rick.wertenbroek@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o75s2hxa.fsf@mail.lhotse>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: R8VUjQv28xiQn-SzJOjpJVh2xfSErgDy
-X-Proofpoint-GUID: Fexqrs0yQr5cj37s8xkX5FhhOebrt9J9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-19_10,2024-08-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 bulkscore=0
- mlxscore=100 clxscore=1015 priorityscore=1501 mlxlogscore=-999
- adultscore=0 phishscore=0 impostorscore=0 suspectscore=0 spamscore=100
- lowpriorityscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2408190077
+Content-Transfer-Encoding: 8bit
 
-Hi Michael,
+The pci-epf-test PCI endpoint function /drivers/pci/endpoint/function/pci-epf_test.c
+is meant to be used in a PCI endpoint device inside a host computer with
+the host side driver: /drivers/misc/pci_endpoint_test.c.
 
-On 2024/08/17 08:59 AM, Michael Ellerman wrote:
-> Amit Machhiwal <amachhiw@linux.ibm.com> writes:
-> > On 2024/08/15 01:20 PM, Michael Ellerman wrote:
-> >> Bjorn Helgaas <helgaas@kernel.org> writes:
-> >> > On Sat, Aug 03, 2024 at 12:03:25AM +0530, Amit Machhiwal wrote:
-> >> >> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
-> >> >> of a PCI device attached to a PCI-bridge causes following kernel Oops on
-> >> >> a pseries KVM guest:
-> >> >
-> >> > What is unique about pseries here?  There's nothing specific to
-> >> > pseries in the patch, so I would expect this to be a generic problem
-> >> > on any arch.
-> >> >
-> >> >>  RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
-> >> >>  Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
-> >> >>  BUG: Unable to handle kernel data access on read at 0x10ec00000048
-> >> >
-> >> > Weird address.  I would expect NULL or something.  Where did this
-> >> > non-NULL pointer come from?
-> >> 
-> >> It originally comes from np->data, which is supposed to be an
-> >> of_changeset.
-> >> 
-> >> The powerpc code also uses np->data for the struct pci_dn pointer, see
-> >> pci_add_device_node_info().
-> >> 
-> >> I wonder if that's why it's non-NULL?
-> >
-> > I'm also looking into the code to figure out where's that value coming from. I
-> > will update as soon as I get there.
-> 
-> Thanks.
->  
-> >> Amit, do we have exact steps to reproduce this? I poked around a bit but
-> >> couldn't get it to trigger.
-> >
-> > Sure, below are the steps:
-> >
-> > 1. Set CONFIG_PCI_DYNAMIC_OF_NODES=y in the kernel config and compile (Fedora
-> >    has it disabled in it's distro config, Ubuntu has it enabled but will have it
-> >    disabled in the next update)
-> >
-> > 2. If you are using Fedora cloud images, make sure you've these packages
-> >    installed:
-> >     $ rpm -qa | grep -e 'ppc64-diag\|powerpc-utils'
-> >     powerpc-utils-core-1.3.11-6.fc40.ppc64le
-> >     powerpc-utils-1.3.11-6.fc40.ppc64le
-> >     ppc64-diag-rtas-2.7.9-6.fc40.ppc64le
-> >     ppc64-diag-2.7.9-6.fc40.ppc64le
-> >
-> > 3. Hotplug a pci device as follows:
-> >     virsh attach-interface <domain_name> bridge --source virbr0
-> 
-> I don't use virsh :)
+The host side driver can request read/write/copy transactions from the
+endpoint function and expects an IRQ from the endpoint function once
+the read/write/copy transaction is finished. These can be issued with or
+without DMA enabled. If the host side driver requests a read/write/copy
+transaction with DMA enabled and the endpoint function does not support
+DMA, the endpoint would only print an error message and wait for further
+commands without sending an IRQ because pci_epf_test_raise_irq() is
+skipped in pci_epf_test_cmd_handler(). This results in the host side
+driver hanging indefinitely waiting for the IRQ.
 
-No worries. Fortunately, we do have a way to do it with qemu monitor.
+Move the DMA check into the pci_epf_test_read()/write()/copy() functions
+so that they report a transfer (IO) error and that pci_epf_test_raise_irq()
+is called when a transfer with DMA is requested, even if unsupported.
 
-> 
-> Any idea how to do it with just qemu monitor commands?
-> 
+The host side driver will no longer hang but report an error on transfer
+(printing "NOT OKAY") thanks to the checksum because no data was moved.
 
-1. Boot the guest with the below included in the qemu cmdline:
+Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 29 +++++++++++++++----
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-    -netdev bridge,id=<net_name>,br=virbr0,helper=/usr/libexec/qemu-bridge-helper
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 7c2ed6eae53a..ec0f79383521 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -314,6 +314,17 @@ static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
+ 		 (u64)ts.tv_sec, (u32)ts.tv_nsec, rate);
+ }
+ 
++static int pci_epf_test_check_dma(struct pci_epf_test *epf_test,
++				   struct pci_epf_test_reg *reg)
++{
++	if ((READ_ONCE(reg->flags) & FLAG_USE_DMA) &&
++	    !epf_test->dma_supported) {
++		dev_err(&epf_test->epf->dev, "DMA transfer not supported\n");
++		return -EIO;
++	}
++	return 0;
++}
++
+ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 			      struct pci_epf_test_reg *reg)
+ {
+@@ -327,6 +338,10 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 	struct device *dev = &epf->dev;
+ 	struct pci_epc *epc = epf->epc;
+ 
++	ret = pci_epf_test_check_dma(epf_test, reg);
++	if (ret)
++		goto err;
++
+ 	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+ 	if (!src_addr) {
+ 		dev_err(dev, "Failed to allocate source address\n");
+@@ -423,6 +438,10 @@ static void pci_epf_test_read(struct pci_epf_test *epf_test,
+ 	struct pci_epc *epc = epf->epc;
+ 	struct device *dma_dev = epf->epc->dev.parent;
+ 
++	ret = pci_epf_test_check_dma(epf_test, reg);
++	if (ret)
++		goto err;
++
+ 	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+ 	if (!src_addr) {
+ 		dev_err(dev, "Failed to allocate address\n");
+@@ -507,6 +526,10 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
+ 	struct pci_epc *epc = epf->epc;
+ 	struct device *dma_dev = epf->epc->dev.parent;
+ 
++	ret = pci_epf_test_check_dma(epf_test, reg);
++	if (ret)
++		goto err;
++
+ 	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+ 	if (!dst_addr) {
+ 		dev_err(dev, "Failed to allocate address\n");
+@@ -647,12 +670,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+ 	WRITE_ONCE(reg->command, 0);
+ 	WRITE_ONCE(reg->status, 0);
+ 
+-	if ((READ_ONCE(reg->flags) & FLAG_USE_DMA) &&
+-	    !epf_test->dma_supported) {
+-		dev_err(dev, "Cannot transfer data using DMA\n");
+-		goto reset_handler;
+-	}
+-
+ 	if (reg->irq_type > IRQ_TYPE_MSIX) {
+ 		dev_err(dev, "Failed to detect IRQ type\n");
+ 		goto reset_handler;
+-- 
+2.25.1
 
-2. Once the guest boots, run the below command on qemu monitor to hot-plug a pci
-   device:
-
-    device_add rtl8139,netdev=<net_name>,mac=52:54:00:88:31:28,id=<net_id>
-
-    dmesg
-    =====
-    [  116.968210] pci 0000:00:01.0: [10ec:8139] type 00 class 0x020000 conventional PCI endpoint
-    [  116.969260] pci 0000:00:01.0: BAR 0 [io  0x10000-0x100ff]
-    [  116.969904] pci 0000:00:01.0: BAR 1 [mem 0x00000000-0x000000ff]
-    [  116.970745] pci 0000:00:01.0: ROM [mem 0x00000000-0x0003ffff pref]
-    [  116.971456] pci 0000:00:01.0: No hypervisor support for SR-IOV on this device, IOV BARs disabled.
-    [  116.972583] pci 0000:00:01.0: Adding to iommu group 0
-    [  116.978466] pci 0000:00:01.0: ROM [mem 0x200080080000-0x2000800bffff pref]: assigned
-    [  116.979347] pci 0000:00:01.0: BAR 0 [io  0x10400-0x104ff]: assigned
-    [  116.980063] pci 0000:00:01.0: BAR 1 [mem 0x200080001000-0x2000800010ff]: assigned
-    [  117.017187] 8139cp: 8139cp: 10/100 PCI Ethernet driver v1.3 (Mar 22, 2004)
-    [  117.018577] 8139cp 0000:00:01.0: enabling device (0000 -> 0003)
-    [  117.025414] 8139cp 0000:00:01.0 eth1: RTL-8139C+ at 0x00000000fbf09e59, 52:54:00:88:31:28, IRQ 26
-    [  117.051028] 8139too: 8139too Fast Ethernet driver 0.9.28
-    [  117.076577] 8139cp 0000:00:01.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
-
-3. Try hot-unplug of the device to recreate the kernel Oops.
-
-    device_del <net_id>
-
-Thanks,
-Amit
-
-> cheers
 
