@@ -1,189 +1,225 @@
-Return-Path: <linux-pci+bounces-11805-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11806-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01DCB95664C
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 11:05:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 795CB956960
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 13:34:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 277851C21647
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 09:05:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3007B28327A
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 11:34:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2DB115ECC1;
-	Mon, 19 Aug 2024 09:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAEF163AA7;
+	Mon, 19 Aug 2024 11:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PprDPzzL"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HL2ztUyN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784F15C125;
-	Mon, 19 Aug 2024 09:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F84167D83;
+	Mon, 19 Aug 2024 11:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724058279; cv=none; b=ladVCd+xnN5r8/a+N/TLuWSSPk3e0J3qVlaTkNw7DbsgIIjFFk12UTxOJOX75d39tWrRQVxl9kg+Zuj8ahx8kQscFcDK7vzZwA+x9tVynS0V8TahPQKdd8aHiW7jY1tnZUNk9+PSMMZOyyEvy0F0CZGo8YllLRSI/9c4jd6aeo0=
+	t=1724067272; cv=none; b=U2nq8t4eqCcSYw5ys9eGoimg7voJkY2UdOzh1isaOiNbxfPB9ArNJE8Z/V0f3LLbepW0c95SioeEf5141z2/PW7Ckd++14Z/HwVcKjE1pVYwTimi8oMqRxYZd3770hs3xI6bzoouKjAkTw8mfXUzcgNf3kE5B336hTGrOVJltXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724058279; c=relaxed/simple;
-	bh=k0kc+QTAqBx5aRP9ejxkGxkgN/n6bbv6rD4rzOSvbiU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J/Quk3K5bs/7myP6Yd8uKRIgD3mAFFFbxPQ81tmZEiwhWKBzPIve+Sr8qlmj00R4imfr60FGXT8tFvrWSHn7h86nOcj7vwmMDQH8Ykh/DC6/g3jTY5sCXWu08QuCyxmPdmtwGRxU0uMH5Tr7qxsdMMU/UVAC2L4O7MD7fY7yM2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PprDPzzL; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4281ca54fd3so32334195e9.2;
-        Mon, 19 Aug 2024 02:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724058276; x=1724663076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zR4Ofv19bSC63uSv19yH+Zec5wT7Br2CN3wzGxETKgc=;
-        b=PprDPzzLxkbTok9EGMHFB3aPhCflcz9gdKT+evFd3teAQWrIOSnsW22VlCjL7Gv3jM
-         Uv3fqo7KkI8namMjVscV9wtlpysF4pJKNaCvEzHL0KsibWZ8DtCGA9cu+0Yr+OvFPGgM
-         YzS3BSeN5mTNea7/sA7jDVLpNqejP/LlGmu6nAXqjO+nHh3hC9bC6OqE+OWbPpYiu2+M
-         ryUoRHqPAVmGOmkWvPxMIfozACbS+Dz+3Jx9hnofIFVMGEO5D401qbAmh4VOqgUcTLaS
-         1ND++K8xd8QrNUVDSQ7+gYhs56JfFdrQP/Zop+rN+/QA8Pvg/9wtBo6J6pFLJvN9zM+1
-         XhVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724058276; x=1724663076;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zR4Ofv19bSC63uSv19yH+Zec5wT7Br2CN3wzGxETKgc=;
-        b=bSwNxN75mVb7Lfg6vp/cd4Hy74NsIUFtYBXrfGEBRwzgMhFNkou4ys46FFtUYOOoYr
-         os6BTWGlsz3zIw/eIwYLryVr4NBEvhgKC5NB/eMCuJ8GtUo8XqKslwtBAZ7Sdbkjnvuc
-         rj/NPwb/V3dvesAE54jVs28jLcLzvfp09KaMZLpbCOMXaRMhVNRGcse1DmaWoYHw45pT
-         0NiqTcijnzUX17OuCXCelrmOsOikb3t4S9+kXeGrPPmeBEYykhUilYo9ZbAWSSW5uhiq
-         R4iZH1RrqT8fjYhFA4GouaNzCRfH1R4HeGMR0velNb8MPG0b0pCv1YzemmWQel9XgtrZ
-         Rk7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWkrp5EwQLzg2C2lReq3EgpaNvnU3sahdOCop5K3hwH8JxvqfSbBywmDWtuDjo/Bhjy/ZWYJdBochjuc4omhU1ZMLyNT0OsGItiwts0
-X-Gm-Message-State: AOJu0YywMu1MFelPAclsVyyCNEaDIOCl6VwgMhFaaMLfxPp3pKy4mVJM
-	EbqLpKUuGUwz1VM6ABJC2rKnn6zQ8m3QuWkBUSoW7EIbCkv/HgmL
-X-Google-Smtp-Source: AGHT+IH7JYzrD4WQ2IczOX6U7P1voHwlgUZmPc1foVjQrG13R7Z0iK1/sLxIgbdwHptG5vYiK5hczA==
-X-Received: by 2002:a05:600c:4712:b0:426:5fbe:bf75 with SMTP id 5b1f17b1804b1-429ed7d1eccmr71255425e9.23.1724058276061;
-        Mon, 19 Aug 2024 02:04:36 -0700 (PDT)
-Received: from eichest-laptop.toradex.int ([2a02:168:af72:0:a64c:8731:e4fb:38f1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429ded19627sm154672095e9.5.2024.08.19.02.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 02:04:35 -0700 (PDT)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: hongxing.zhu@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	francesco.dolcini@toradex.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: [PATCH v1 3/3] PCI: imx6: reset link on resume
-Date: Mon, 19 Aug 2024 11:03:19 +0200
-Message-ID: <20240819090428.17349-4-eichest@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240819090428.17349-1-eichest@gmail.com>
-References: <20240819090428.17349-1-eichest@gmail.com>
+	s=arc-20240116; t=1724067272; c=relaxed/simple;
+	bh=malUEUP13/IZNGpr+qi6kyLlVM4LzUUH3UWhcU+50PQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HJXMRb0ftQiNx6Z1wMgOwjHwlKn5GJRx7PlfArgpM/IyuO7xAdtHWio6+cmmTj3Curws8IRmNWl778bBPr4ga3cwhwHdU1KXc8lMtmwADgAEM/4sPX/CISm2huuPgACMpri3C8hNYhDVje0SUeIW9QIl8NO+Ta1N4Cu1pl0G/Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HL2ztUyN; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47JA19qd027356;
+	Mon, 19 Aug 2024 11:34:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pp1; bh=UsqDIMpxDyemRi4fPPsg3jRzMi1
+	OTL9ET/Uu1vaJCGc=; b=HL2ztUyNsMroxcQqGesnYXyjwOaobOAHrRdJdhWS0Vc
+	cIDdfOs7afU1fMD292vRj4tee3vSeer/2UbUegXnDwWZnl0ghVcQ5D1Yc0cpwc3t
+	MzmjstUQm/v734SWkhsyvAr0P8XVnkBoRvLLnYTXhIoytzDxfI55ssT0M0PBuYJK
+	tLwcQzTAj05qrgFR9utA6QP9jJ85US6zRcgvR63aTfJt8RCToDljYTXSJjkdW6BN
+	QGx/m7mEE1gok/j2OWbECQ/Lzoax1ejPZr9dxF4T0TgWG5tMIgWHloiNFvRf1PfR
+	n2mMXqJZNOVa5RSge2hua7auyjBaYBEw8Tf76Qe4Kkw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412mc4g26v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Aug 2024 11:34:00 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47JBXxq2006657;
+	Mon, 19 Aug 2024 11:33:59 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412mc4g26p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Aug 2024 11:33:59 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47JA0j1g030060;
+	Mon, 19 Aug 2024 11:33:58 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4138dm5n4y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Aug 2024 11:33:58 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47JBXr8a43647404
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Aug 2024 11:33:55 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B8CF20040;
+	Mon, 19 Aug 2024 11:33:53 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA5F320049;
+	Mon, 19 Aug 2024 11:33:47 +0000 (GMT)
+Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.195.39.27])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 19 Aug 2024 11:33:47 +0000 (GMT)
+Date: Mon, 19 Aug 2024 17:03:42 +0530
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lizhi Hou <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Kowshik Jois B S <kowsjois@linux.ibm.com>,
+        Lukas Wunner <lukas@wunner.de>, kernel-team@lists.ubuntu.com,
+        Stefan Bader <stefan.bader@canonical.com>
+Subject: Re: [PATCH v3] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+Message-ID: <20240819165310.cab26333-b8-amachhiw@linux.ibm.com>
+Mail-Followup-To: Michael Ellerman <mpe@ellerman.id.au>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lizhi Hou <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>, 
+	Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
+	Lukas Wunner <lukas@wunner.de>, kernel-team@lists.ubuntu.com, 
+	Stefan Bader <stefan.bader@canonical.com>
+References: <20240806200059.GA74866@bhelgaas>
+ <87h6bm1ngo.fsf@mail.lhotse>
+ <20240816180441.81f4d694-3b-amachhiw@linux.ibm.com>
+ <87o75s2hxa.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o75s2hxa.fsf@mail.lhotse>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: R8VUjQv28xiQn-SzJOjpJVh2xfSErgDy
+X-Proofpoint-GUID: Fexqrs0yQr5cj37s8xkX5FhhOebrt9J9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-19_10,2024-08-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 bulkscore=0
+ mlxscore=100 clxscore=1015 priorityscore=1501 mlxlogscore=-999
+ adultscore=0 phishscore=0 impostorscore=0 suspectscore=0 spamscore=100
+ lowpriorityscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2408190077
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Hi Michael,
 
-According to the https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf errata,
-the i.MX6Q PCIe controller does not support suspend/resume. So suspend
-and resume was omitted. However, this does not seem to work because it
-looks like the PCIe link is still expecting a reset. If we do not reset
-the link, we end up with a frozen system after resume. The last message
-we see is:
-ath10k_pci 0000:01:00.0: Unable to change power state from D3hot to D0,
-device inaccessible
+On 2024/08/17 08:59 AM, Michael Ellerman wrote:
+> Amit Machhiwal <amachhiw@linux.ibm.com> writes:
+> > On 2024/08/15 01:20 PM, Michael Ellerman wrote:
+> >> Bjorn Helgaas <helgaas@kernel.org> writes:
+> >> > On Sat, Aug 03, 2024 at 12:03:25AM +0530, Amit Machhiwal wrote:
+> >> >> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+> >> >> of a PCI device attached to a PCI-bridge causes following kernel Oops on
+> >> >> a pseries KVM guest:
+> >> >
+> >> > What is unique about pseries here?  There's nothing specific to
+> >> > pseries in the patch, so I would expect this to be a generic problem
+> >> > on any arch.
+> >> >
+> >> >>  RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+> >> >>  Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
+> >> >>  BUG: Unable to handle kernel data access on read at 0x10ec00000048
+> >> >
+> >> > Weird address.  I would expect NULL or something.  Where did this
+> >> > non-NULL pointer come from?
+> >> 
+> >> It originally comes from np->data, which is supposed to be an
+> >> of_changeset.
+> >> 
+> >> The powerpc code also uses np->data for the struct pci_dn pointer, see
+> >> pci_add_device_node_info().
+> >> 
+> >> I wonder if that's why it's non-NULL?
+> >
+> > I'm also looking into the code to figure out where's that value coming from. I
+> > will update as soon as I get there.
+> 
+> Thanks.
+>  
+> >> Amit, do we have exact steps to reproduce this? I poked around a bit but
+> >> couldn't get it to trigger.
+> >
+> > Sure, below are the steps:
+> >
+> > 1. Set CONFIG_PCI_DYNAMIC_OF_NODES=y in the kernel config and compile (Fedora
+> >    has it disabled in it's distro config, Ubuntu has it enabled but will have it
+> >    disabled in the next update)
+> >
+> > 2. If you are using Fedora cloud images, make sure you've these packages
+> >    installed:
+> >     $ rpm -qa | grep -e 'ppc64-diag\|powerpc-utils'
+> >     powerpc-utils-core-1.3.11-6.fc40.ppc64le
+> >     powerpc-utils-1.3.11-6.fc40.ppc64le
+> >     ppc64-diag-rtas-2.7.9-6.fc40.ppc64le
+> >     ppc64-diag-2.7.9-6.fc40.ppc64le
+> >
+> > 3. Hotplug a pci device as follows:
+> >     virsh attach-interface <domain_name> bridge --source virbr0
+> 
+> I don't use virsh :)
 
-Besides resetting the link, we also need to enable msi again, otherwise
-DMA access will not work and we can still end up with a frozen system.
-With these changes we can suspend and resume the system properly with a
-PCIe device attached. This was tested with a Compex WLE900VX miniPCIe
-Wifi module.
+No worries. Fortunately, we do have a way to do it with qemu monitor.
 
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 45 ++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+> 
+> Any idea how to do it with just qemu monitor commands?
+> 
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index f17561791e35a..751243f4c519e 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1213,14 +1213,57 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
- 	return 0;
- }
- 
-+static int imx6_pcie_reset_link(struct imx6_pcie *imx6_pcie)
-+{
-+	int ret;
-+
-+	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-+			   IMX6Q_GPR1_PCIE_TEST_PD, 1 << 18);
-+	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-+			   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
-+
-+	/* Reset the PCIe device */
-+	gpiod_set_value_cansleep(imx6_pcie->reset_gpiod, 1);
-+
-+	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
-+	if (ret) {
-+		dev_err(imx6_pcie->pci->dev, "unable to enable pcie ref clock\n");
-+		return ret;
-+	}
-+
-+	imx6_pcie_deassert_reset_gpio(imx6_pcie);
-+
-+	/*
-+	 * Setup the root complex again and enable msi. Without this PCIe will
-+	 * not work in msi mode and drivers will crash if they try to access
-+	 * the device memory area
-+	 */
-+	dw_pcie_setup_rc(&imx6_pcie->pci->pp);
-+	if (pci_msi_enabled()) {
-+		u32 val;
-+		u8 offset = dw_pcie_find_capability(imx6_pcie->pci, PCI_CAP_ID_MSI);
-+
-+		val = dw_pcie_readw_dbi(imx6_pcie->pci, offset + PCI_MSI_FLAGS);
-+		val |= PCI_MSI_FLAGS_ENABLE;
-+		dw_pcie_writew_dbi(imx6_pcie->pci, offset + PCI_MSI_FLAGS, val);
-+	}
-+
-+	return 0;
-+}
-+
- static int imx6_pcie_resume_noirq(struct device *dev)
- {
- 	int ret;
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
- 	struct dw_pcie_rp *pp = &imx6_pcie->pci->pp;
- 
-+	/*
-+	 * Even though the i.MX6Q does not support suspend/resume, we need to
-+	 * reset the link after resume or the memory mapped PCIe I/O space will
-+	 * be inaccessible. This will cause the system to freeze.
-+	 */
- 	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
--		return 0;
-+		return imx6_pcie_reset_link(imx6_pcie);
- 
- 	ret = imx6_pcie_host_init(pp);
- 	if (ret)
--- 
-2.43.0
+1. Boot the guest with the below included in the qemu cmdline:
 
+    -netdev bridge,id=<net_name>,br=virbr0,helper=/usr/libexec/qemu-bridge-helper
+
+2. Once the guest boots, run the below command on qemu monitor to hot-plug a pci
+   device:
+
+    device_add rtl8139,netdev=<net_name>,mac=52:54:00:88:31:28,id=<net_id>
+
+    dmesg
+    =====
+    [  116.968210] pci 0000:00:01.0: [10ec:8139] type 00 class 0x020000 conventional PCI endpoint
+    [  116.969260] pci 0000:00:01.0: BAR 0 [io  0x10000-0x100ff]
+    [  116.969904] pci 0000:00:01.0: BAR 1 [mem 0x00000000-0x000000ff]
+    [  116.970745] pci 0000:00:01.0: ROM [mem 0x00000000-0x0003ffff pref]
+    [  116.971456] pci 0000:00:01.0: No hypervisor support for SR-IOV on this device, IOV BARs disabled.
+    [  116.972583] pci 0000:00:01.0: Adding to iommu group 0
+    [  116.978466] pci 0000:00:01.0: ROM [mem 0x200080080000-0x2000800bffff pref]: assigned
+    [  116.979347] pci 0000:00:01.0: BAR 0 [io  0x10400-0x104ff]: assigned
+    [  116.980063] pci 0000:00:01.0: BAR 1 [mem 0x200080001000-0x2000800010ff]: assigned
+    [  117.017187] 8139cp: 8139cp: 10/100 PCI Ethernet driver v1.3 (Mar 22, 2004)
+    [  117.018577] 8139cp 0000:00:01.0: enabling device (0000 -> 0003)
+    [  117.025414] 8139cp 0000:00:01.0 eth1: RTL-8139C+ at 0x00000000fbf09e59, 52:54:00:88:31:28, IRQ 26
+    [  117.051028] 8139too: 8139too Fast Ethernet driver 0.9.28
+    [  117.076577] 8139cp 0000:00:01.0 eth1: link up, 100Mbps, full-duplex, lpa 0x05E1
+
+3. Try hot-unplug of the device to recreate the kernel Oops.
+
+    device_del <net_id>
+
+Thanks,
+Amit
+
+> cheers
 
