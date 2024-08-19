@@ -1,241 +1,107 @@
-Return-Path: <linux-pci+bounces-11797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCB56956336
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 07:32:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89600956588
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 10:24:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71EE4280D45
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 05:32:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 467E1283133
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 08:24:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CF3614AD2E;
-	Mon, 19 Aug 2024 05:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A8B315B10A;
+	Mon, 19 Aug 2024 08:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="pbNP/UWv"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="08VAi1KM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93D742A8F
-	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 05:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716D715B0EB
+	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 08:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724045543; cv=none; b=p5IaOW7mCIFO8ojgivNRBOWOiUcu2IaI+EaNjZzY//2dN/2+53X033aM+YzXCcCLJ7pIpOMBB8AIBZVPkd0XYX4anITJX43avl30s8Mg/XH0Hm5XcCtUJRdCIobavhf73pQFGHLU13lGH9LGS4EOdTlPfCs9vjbeI+gHGtsTTPs=
+	t=1724055891; cv=none; b=tTb/WKxLdKwXozf0BFx8Fr9zD5ul/HTZg2szgUoAvXleNMEYCbkJmMgY7YRNNj5qivP2ll4M5tqE8thyBO+FJS4c4GUJ4v8NNHP0viPrySpHSrBHAlaBReHWll1UPiWCMoasicqqpsPKiWJclaNnvu4Hv+70+Jfjn2yY8lQNkbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724045543; c=relaxed/simple;
-	bh=Yr2UJFtjMk51Pu9AFYzUDgjNMF0ekArNACfcgk2Anc8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V1cZz0YGfJMz2vO6qXQ6z0QNHpcRexo6+rFxpgkPoWljgiO9tns0RbQERDfAztLwkN9VDGF6y/9qjabrIbO45KhzpO4ol0j37yRlNLhTG9lE1fWDJjPIIK0+g6LtZTEE3LIk/gZVWbnfAGlwtwy2vbVGljtddvJaN+lWaZP1DNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=pbNP/UWv; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 1E9EA3F365
-	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 05:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1724045530;
-	bh=EXKeDjFAdMe+uEA7JaK4+hwIgSwG6+Aev5N69M36HiM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=pbNP/UWvYuEsS/U3QzenyIxViHy2V+rJ3727HYgMrs7U3BaSYwdqUU9uhjd7rlXMk
-	 C+UsT8Nh+J7oKiNoT6hF0WecSiUrFJTjLU6NIV8w67+PFwaSDrnjCEpLvsf03Tfvai
-	 xzXjxIUMyPYTPT9tB43zYRwo/MCyoFrjddtsnOprH6t3F522+MeKTmH4zeMAUvxDPz
-	 xHT3sTJMd02XCp6j+7CVWE/VMySB4QRQkL02/3UHfG9dpMYHGeJXxeB/r/+0lw4VSf
-	 T9E5muu5NL04RtCYgT7RUJHMbFfM4RVTraR50U3hKRiQnnxgaNKjXa2jkVQJ8gyGfO
-	 rYp5EObKsxAHQ==
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-70d14709555so2983749b3a.2
-        for <linux-pci@vger.kernel.org>; Sun, 18 Aug 2024 22:32:10 -0700 (PDT)
+	s=arc-20240116; t=1724055891; c=relaxed/simple;
+	bh=FamuYlAjig7+R6Qx10U1TbALvNH2O6j/k6jsgrIpL4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ph6mKb0xuxs86GXsln1iI93BB2JdA0nryVH8wcFBkYeTSsy0CPxi+LoIIg7DoinkIlGWjYLfQsXEP5lzVZUhvlPq25atz+m8qPW5FGDeY/VUJ3gkazwckDRFm2LEoOV0/+8H8K5XcFEdipidZfEoN/T185Uf15sTdnywBhJpjEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=08VAi1KM; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-429c4a4c6a8so32770765e9.0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 01:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724055888; x=1724660688; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RIBDwkrvQYglDtNL2nrORHa/NryU/QKFWL2iAI/C8cU=;
+        b=08VAi1KMRzBdh1Sm5t3/O3XyGvbaQvSOw1Yrc1HFqy0ZLgmIrtKx8Ygfp7emW7RYSi
+         s6pxV0nIji+n6L15ze95PDIFIkP6lteaYSN8iI1TRyPDzk8Lz9Kjpi1qUfJ1Sw9KqJ7m
+         n0nFoPWPYYgcXciDOXhE2BycmpwWHAetqc6NsYO7yES3wukNIgPBx4h+428VmU4ykDKo
+         9+qHBvU4nR+OA15qXSkjARYI8Um/GWdVoUVZ3aUwoIvZx7Wo1MMZrNbqaHXjnhMKGQo8
+         0UKlPYdXhKOoRbPrNPrFHQfUGmuQGyas5cOqtl/gA2NYjKKDwGPnFSIUS932dsbEEQ6R
+         /RWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724045528; x=1724650328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EXKeDjFAdMe+uEA7JaK4+hwIgSwG6+Aev5N69M36HiM=;
-        b=rv3nIdnNz/PTeFzo9utQxrbVNs+1jztCNElVATxUAXA3Ss+R3ILZQpWV8/RLuAUBan
-         QKoQliKOIifsMkIOtRy9CHeQzV6P948ULs20kE8ncdsMTYQiLuWo/WeZVDAKaTryiV+G
-         f+bneOklgQBL5o8Lu/rg0FgrXWCcgLlaXqfTScoXw+dsZCDPZYUXfmpNwMOYTu7SdMhI
-         pgmDendJh0KuqR0ylaVIZD7MosfFUg62hEtkIS/VzBt6ZVI4XMrcoEQ3UlVHek+PAROM
-         PCm4HIfO6+S0IB13wIm8ef2ZxJBwUP6Mr62Z3/z1BRldcfywcugJJ7Tqii+5O1rrxZZ4
-         335A==
-X-Forwarded-Encrypted: i=1; AJvYcCWbWmblC3+L1+RKtoCsNRbYaCDsaM1hqpbOKJOmPvVS0YUBgV2Iyy5iTUG4Kb59+duqvFBe5cD9zlzSYcJc3du9t5qybzxC+HU5
-X-Gm-Message-State: AOJu0YzL3gLsRGHs6H+vKtK3N019RENXHmiR+k+5zvflWHlQv4YXr63Z
-	Hg24mU2oAFNflll+oWlmRN0A9n6ffTTEKyFThQvUK7Gf+NNE+ZiJFt3y7pVCwmMrwxMJtr9kX26
-	GY7X5gi5at2gwyxiv348l076NBsMaf5R89woqzLWK/B0u7Wx0h6S78mJKPgwu0QhtnQDqgnQc7/
-	+Ip+QMxvUwdgAh5Rm8PIVHR90PKSYt/mK98Z2zLUAnF+xWIYIkXIBt/M6w6z8=
-X-Received: by 2002:a05:6300:4043:b0:1c6:a65f:299 with SMTP id adf61e73a8af0-1c904f90ef2mr8573474637.21.1724045528373;
-        Sun, 18 Aug 2024 22:32:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFfY1mtazXzvZPKZXXvEgIN+BPCkjkxzP+b9taeLr8aFfpOnp+saDdQQE2L5lAzaE36b0XelSvG/TaA3sAYPBU=
-X-Received: by 2002:a05:6300:4043:b0:1c6:a65f:299 with SMTP id
- adf61e73a8af0-1c904f90ef2mr8573458637.21.1724045527922; Sun, 18 Aug 2024
- 22:32:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724055888; x=1724660688;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RIBDwkrvQYglDtNL2nrORHa/NryU/QKFWL2iAI/C8cU=;
+        b=IAmaiJT5W9HxVA1DDvaWdH6ZVHpu7nee+aK4Vr1t2Dh567HJMIj83dENp7CM6hIRuv
+         gXjWE9Pw4mg/JMu3FBmwX43kmzLIiQS4Smu5yrQwlKAUBIYOQ8qlEd0DNRkN0XqYH1ho
+         qiTeGbD1egEbjOpor1qbGerWSBZlmOCi0Xy+C8s3pBKQ/Kv8MuhXNzzWGqIoGPIiCy4a
+         trL5kNcyJlHUrbXoZcmujlB0tTsZN06WJkY2GWJoVRXrNoY0LO1ilGzezvcU+J2eRYI+
+         uL2IRWKFK8U3lbG2Z7uBsmZ0uTHmm7prfaTHuETSnrxNKjcXlGwrqaATF5MJuMIbjhTQ
+         WGqg==
+X-Gm-Message-State: AOJu0Yx1lt+Gl3vK10CFh8SON1gdH3pkC878+pCPk7yqkz0eu4c8LVrn
+	1a0C0msc6uDJ97B9ywnlJoUPfSy0Qybg6OYLWvMxtqb/tsztKuu6/bSLzkxfn30s92IoysxfR1X
+	s/Z0=
+X-Google-Smtp-Source: AGHT+IFroE0AUVn42490Pv0WzAZonKNG3nvovJgY3AqmZF1oVEGmbJKI8gbrCaahPK6xzDdxQAgNmw==
+X-Received: by 2002:a05:600c:1c24:b0:427:9a8f:9717 with SMTP id 5b1f17b1804b1-429ed620183mr78741815e9.0.1724055888127;
+        Mon, 19 Aug 2024 01:24:48 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7b55:8f70:3ecb:b4ac])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429ded7d5a9sm153441175e9.43.2024.08.19.01.24.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2024 01:24:47 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2 0/2] PCI/pwrctl: fixes for v6.11
+Date: Mon, 19 Aug 2024 10:24:42 +0200
+Message-ID: <20240819082445.10248-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530085227.91168-1-kai.heng.feng@canonical.com> <20240816222800.GA75500@bhelgaas>
-In-Reply-To: <20240816222800.GA75500@bhelgaas>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 19 Aug 2024 13:31:55 +0800
-Message-ID: <CAAd53p7bdcJNH_XNNvSjon_=S_q-xaUBuctxXGabb7BKKh9eZA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: ASPM: Allow OS to configure ASPM where BIOS is
- incapable of
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nirmal.patel@linux.intel.com, 
-	jonathan.derrick@linux.dev, ilpo.jarvinen@linux.intel.com, 
-	david.e.box@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 17, 2024 at 6:28=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Thu, May 30, 2024 at 04:52:26PM +0800, Kai-Heng Feng wrote:
-> > Since commit f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM
-> > and LTR"), ASPM is configured for NVMe devices enabled in VMD domain.
-> >
-> > However, that doesn't cover the case when FADT has ACPI_FADT_NO_ASPM
-> > set.
-> >
-> > So add a new attribute to bypass aspm_disabled so OS can configure ASPM=
-.
-> >
-> > Fixes: f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and LT=
-R")
-> > Link: https://lore.kernel.org/linux-pm/218aa81f-9c6-5929-578d-8dc15f83d=
-d48@panix.com/
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/pci/pcie/aspm.c | 8 ++++++--
-> >  include/linux/pci.h     | 1 +
-> >  2 files changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index cee2365e54b8..e719605857b1 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -1416,8 +1416,12 @@ static int __pci_enable_link_state(struct pci_de=
-v *pdev, int state, bool locked)
-> >        * the _OSC method), we can't honor that request.
-> >        */
-> >       if (aspm_disabled) {
-> > -             pci_warn(pdev, "can't override BIOS ASPM; OS doesn't have=
- ASPM control\n");
-> > -             return -EPERM;
-> > +             if (aspm_support_enabled && pdev->aspm_os_control)
-> > +                     pci_info(pdev, "BIOS can't program ASPM, let OS c=
-ontrol it\n");
-> > +             else {
-> > +                     pci_warn(pdev, "can't override BIOS ASPM; OS does=
-n't have ASPM control\n");
-> > +                     return -EPERM;
->
-> 1) I dislike having this VMD-specific special case in the generic
-> code.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This can be generalized to "FDAT doesn't want OS to touch ASPM but
-exceptions should be made" like external PCIe devices connected via
-Thunderbolt:
-https://lore.kernel.org/linux-pci/20230615070421.1704133-1-kai.heng.feng@ca=
-nonical.com/
+Here are two fixes addressing issues with PCI pwrctl detected in some
+corner-cases.
 
->
-> 2) I think the "BIOS can't program ASPM ..." message is a little bit
-> misleading.  We're making the assumption that BIOS doesn't know about
-> devices below the VMD bridge, but we really don't know that.  BIOS
-> *could* have a VMD driver, and it could configure ASPM below the VMD.
-> We're just assuming that it doesn't.
->
-> It's also a little bit too verbose -- I think we get this message for
-> *every* device below VMD?  Maybe the vmd driver could print something
-> about ignoring the ACPI FADT "PCIe ASPM Controls" bit once per VMD?
-> Then it's clearly connected to something firmware folks know about.
+v1 -> v2:
+- use the scoped variant of for_each_child_of_node() to fix a memory
+  leak in patch 1/2
 
-Will do in next revision.
+Bartosz Golaszewski (2):
+  PCI: don't rely on of_platform_depopulate() for reused OF-nodes
+  PCI/pwrctl: put the bus rescan on a different thread
 
->
-> 3) The code ends up looking like this:
->
->   if (aspm_disabled) {
->     if (aspm_support_enabled && pdev->aspm_os_control)
->       pci_info(pdev, "BIOS can't program ASPM, let OS control it\n");
->     else {
->       pci_warn(pdev, "can't override BIOS ASPM; OS doesn't have ASPM cont=
-rol\n");
->       return -EPERM;
->     }
->   }
->
-> and I think it's confusing to check "aspm_support_enabled" and
-> "pdev->aspm_os_control" after we've already decided that ASPM is
-> sort of disabled by "aspm_disabled".
->
-> Plus, we're left with questions about all the *other* tests of
-> "aspm_disabled" in pcie_aspm_sanity_check(),
-> pcie_aspm_pm_state_change(), pcie_aspm_powersave_config_link(),
-> __pci_disable_link_state(), etc.  Why do they *not* need this change?
+ drivers/pci/pwrctl/core.c              | 26 +++++++++++++++++++++++---
+ drivers/pci/pwrctl/pci-pwrctl-pwrseq.c |  2 +-
+ drivers/pci/remove.c                   | 16 +++++++++++++++-
+ include/linux/pci-pwrctl.h             |  3 +++
+ 4 files changed, 42 insertions(+), 5 deletions(-)
 
-They all need similar change, yes.
+-- 
+2.43.0
 
->
-> And what about pcie_aspm_init_link_state()?  Why doesn't *it* pay
-> attention to "aspm_disabled"?  It's all very complicated.
-
-It's already very complicated by aspm_disabled, aspm_force and
-aspm_support_enabled.
-We should define the relation between _OSC/FADT/driver/user override, etc.
-
-Probably some helper functions to determine the ASPM status, instead
-of checking aspm_disabled and aspm_support_enabled directly.
-
->
-> This is similar in some ways to native_aer, native_pme, etc., which we
-> negotiate with _OSC.  I wonder if we could make something similar for
-> this, since it's another case where we want to make something specific
-> to a host bridge instead of global.
-
-I thinks it's possible by adding a new flag, but how should
-pcie_aspm_init_link_state() check it? Adding a new parameter or find
-the host bridge to check the new flag?
-
->
-> > +             }
-> >       }
-> >
-> >       if (!locked)
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index fb004fd4e889..58cbd4bea320 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -467,6 +467,7 @@ struct pci_dev {
-> >       unsigned int    no_command_memory:1;    /* No PCI_COMMAND_MEMORY =
-*/
-> >       unsigned int    rom_bar_overlap:1;      /* ROM BAR disable broken=
- */
-> >       unsigned int    rom_attr_enabled:1;     /* Display of ROM attribu=
-te enabled? */
-> > +     unsigned int    aspm_os_control:1;      /* Display of ROM attribu=
-te enabled? */
->
-> Comment is wrong (but I hope we can avoid a per-device bit anyway).
-
-Will make it right in next revision.
-
-Kai-Heng
-
->
-> >       pci_dev_flags_t dev_flags;
-> >       atomic_t        enable_cnt;     /* pci_enable_device has been cal=
-led */
-> >
-> > --
-> > 2.43.0
-> >
 
