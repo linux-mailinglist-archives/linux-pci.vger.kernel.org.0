@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-11832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11833-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 764CF95730A
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 20:22:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C1A9957317
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 20:23:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C6041F237B2
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 18:22:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF4BA1C229A9
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 18:23:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D84188CC8;
-	Mon, 19 Aug 2024 18:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DBE189505;
+	Mon, 19 Aug 2024 18:23:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F1F481B3;
-	Mon, 19 Aug 2024 18:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F110184535;
+	Mon, 19 Aug 2024 18:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724091739; cv=none; b=tZwvwX+oJO8+iHPK3HHWTPjDE2SCFddT0ycmj3BbrPV/mUMl6M2M2soWo6iRZ6JTN95iK8HDbbS1rWTvjEeQUQAY9FKRTJwx6sAc5gQ+bd/BcoXRx40WnaWOoH4D5dzGkSKMWI3ZcglFZWrmTES+g/XUEmXY5orilmRt6wdiE1A=
+	t=1724091800; cv=none; b=dS9Twy/GNwlMDZKlDpNJDsGgfeT0dbUqlc1bxpvZUEX0fXFfVTsE3sTVbu10zMA0GbRTwXWbyg9ILS6S8HVDyAv4qzCo8MJ/weMOZeetzmM4/2K/3O8HRCsVSQxRDrTK4Qr/spG3vaV2dptpa1ih7NEdF2oxp/Ux5ScXvwwkFMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724091739; c=relaxed/simple;
-	bh=TGitQyiTjXlGP5lHOJs59Bp25CgPkMnI84I+U/lfLvw=;
+	s=arc-20240116; t=1724091800; c=relaxed/simple;
+	bh=rYHYVjwNltxRc0NQfhGa9cxFkidpIwmC1FrntLAkVdM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZYnmwPpW5N/4dJTFZxE8CPpqe39lXFsO1qABg7GgC78y+8m1EnmGe0vP0f0CSBxDx2x5Ig6SBMoRiyPgnT8wi4K6yuo5D5Vyw35oBJ0eHZkHPU5Pb3v1iETYLtIdnmvC+syLcz+ZEjIN5kwjYwgmqh54YUhLFejGIxjLzIt8nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=RentfNWui91QgbjsltAg2W9ED942v+1rmJP3AhuUwB3YjJ+HWdH3hQ5DtykPojA6iH+yJ0qghxW51orS2bjNYDoNynmNla2TX2LHSixEmWTg4mnuJnTKiphoFZQPuRkvLHCo0te9r9hV22S+LaInBjTfGBO6Vhfm5+9i/NttUKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: K06BtlvzSWaAGlzlOdKngQ==
-X-CSE-MsgGUID: RjMcjyVcR7ObbXHTjkQI7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11169"; a="22170851"
+X-CSE-ConnectionGUID: qxxqGO8USrmVDdMWYoTBYg==
+X-CSE-MsgGUID: c1JAyl20Qw2UuGqFE14A0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11169"; a="21978730"
 X-IronPort-AV: E=Sophos;i="6.10,159,1719903600"; 
-   d="scan'208";a="22170851"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:22:17 -0700
-X-CSE-ConnectionGUID: uGiiHJy3T12f/c0Gx8z1pg==
-X-CSE-MsgGUID: MExTNVA3QwSs5bB5Xi2stg==
+   d="scan'208";a="21978730"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:23:17 -0700
+X-CSE-ConnectionGUID: XkARKoIRTcORDaYxqpbKFQ==
+X-CSE-MsgGUID: VphTfyoEQBOqHmf0XrYtig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,159,1719903600"; 
-   d="scan'208";a="65278665"
+   d="scan'208";a="65145870"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:22:09 -0700
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:23:09 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andy@kernel.org>)
-	id 1sg712-0000000H2FI-2CHY;
-	Mon, 19 Aug 2024 21:22:04 +0300
-Date: Mon, 19 Aug 2024 21:22:04 +0300
+	id 1sg720-0000000H2GW-3cCJ;
+	Mon, 19 Aug 2024 21:23:04 +0300
+Date: Mon, 19 Aug 2024 21:23:04 +0300
 From: Andy Shevchenko <andy@kernel.org>
 To: Philipp Stanner <pstanner@redhat.com>
 Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
@@ -81,10 +81,10 @@ Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
 	virtualization@lists.linux.dev
-Subject: Re: [PATCH 5/9] gpio: Replace deprecated PCI functions
-Message-ID: <ZsONTFn2A6AuIFEa@smile.fi.intel.com>
+Subject: Re: [PATCH 6/9] ethernet: cavium: Replace deprecated PCI functions
+Message-ID: <ZsONiNkdXGMKMbRL@smile.fi.intel.com>
 References: <20240819165148.58201-2-pstanner@redhat.com>
- <20240819165148.58201-7-pstanner@redhat.com>
+ <20240819165148.58201-8-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,17 +93,27 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240819165148.58201-7-pstanner@redhat.com>
+In-Reply-To: <20240819165148.58201-8-pstanner@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Aug 19, 2024 at 06:51:45PM +0200, Philipp Stanner wrote:
-> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by the
-> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+On Mon, Aug 19, 2024 at 06:51:46PM +0200, Philipp Stanner wrote:
+> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
+> the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
 > pcim_iomap_table(), pcim_iomap_regions_request_all()").
 > 
-> Replace those functions with calls to pcim_iomap_region().
+> Replace these functions with the function pcim_iomap_region().
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+...
+
+cavium_ptp_probe()
+
+> -	pcim_iounmap_regions(pdev, 1 << PCI_PTP_BAR_NO);
+> +	pcim_iounmap_region(pdev, PCI_PTP_BAR_NO);
+>  
+>  error_free:
+>  	devm_kfree(dev, clock);
+
+Both are questionable. Why do we need either of them?
 
 -- 
 With Best Regards,
