@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-11833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11834-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C1A9957317
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 20:23:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 326FF95733C
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 20:29:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF4BA1C229A9
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 18:23:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2EFD285803
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 18:29:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DBE189505;
-	Mon, 19 Aug 2024 18:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E82C61898EF;
+	Mon, 19 Aug 2024 18:28:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F110184535;
-	Mon, 19 Aug 2024 18:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D0C18950C;
+	Mon, 19 Aug 2024 18:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724091800; cv=none; b=dS9Twy/GNwlMDZKlDpNJDsGgfeT0dbUqlc1bxpvZUEX0fXFfVTsE3sTVbu10zMA0GbRTwXWbyg9ILS6S8HVDyAv4qzCo8MJ/weMOZeetzmM4/2K/3O8HRCsVSQxRDrTK4Qr/spG3vaV2dptpa1ih7NEdF2oxp/Ux5ScXvwwkFMU=
+	t=1724092138; cv=none; b=PNuPTKUcuaKYtBmL6mvrMyTGRa6QDlo2xMYSSKBlDORnky748QkgSK7qwsX/SPStZ9K9bATYJ4O7yLdy3MkvzPcJjSz/JZE8PLXEd6kvW+eHFlq7lCrFlPTOn2PfLXkED7rZp2g3A1xtHJ2RmBPGB0f6nji4UY5RXniH+x2YV/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724091800; c=relaxed/simple;
-	bh=rYHYVjwNltxRc0NQfhGa9cxFkidpIwmC1FrntLAkVdM=;
+	s=arc-20240116; t=1724092138; c=relaxed/simple;
+	bh=3OpP+bqhJVDHcSAxWOKFA44A8FB0Ov6BwD42gecA730=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RentfNWui91QgbjsltAg2W9ED942v+1rmJP3AhuUwB3YjJ+HWdH3hQ5DtykPojA6iH+yJ0qghxW51orS2bjNYDoNynmNla2TX2LHSixEmWTg4mnuJnTKiphoFZQPuRkvLHCo0te9r9hV22S+LaInBjTfGBO6Vhfm5+9i/NttUKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=JPMAsXIPNn4XiVzByTs7Oylv/tcfhc3L9OQg/uDhaI92/NhB/2IXAEIDfXPdSdz6bZan4T8+sHejSOBMiLouxCYuvtnQIhGuC0lJ1gguvATAdaRpkSzf707cAK6PV107U4di/cXjrLW0lNAuAaiVACr7AU7+TMZmYBjo6KGJYHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: qxxqGO8USrmVDdMWYoTBYg==
-X-CSE-MsgGUID: c1JAyl20Qw2UuGqFE14A0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11169"; a="21978730"
+X-CSE-ConnectionGUID: 7YV4mK3NRiCET6IxkR2q6A==
+X-CSE-MsgGUID: 3oM5lze7RRC6ztkkgUoXZg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11169"; a="22203761"
 X-IronPort-AV: E=Sophos;i="6.10,159,1719903600"; 
-   d="scan'208";a="21978730"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:23:17 -0700
-X-CSE-ConnectionGUID: XkARKoIRTcORDaYxqpbKFQ==
-X-CSE-MsgGUID: VphTfyoEQBOqHmf0XrYtig==
+   d="scan'208";a="22203761"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:28:56 -0700
+X-CSE-ConnectionGUID: UAbUuDuoSZiYgbMBfvamlQ==
+X-CSE-MsgGUID: 2DCcbPAkTEGqJBxULC2sWw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,159,1719903600"; 
-   d="scan'208";a="65145870"
+   d="scan'208";a="61024672"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:23:09 -0700
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 11:28:47 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andy@kernel.org>)
-	id 1sg720-0000000H2GW-3cCJ;
-	Mon, 19 Aug 2024 21:23:04 +0300
-Date: Mon, 19 Aug 2024 21:23:04 +0300
+	id 1sg77S-0000000H2MX-2AEd;
+	Mon, 19 Aug 2024 21:28:42 +0300
+Date: Mon, 19 Aug 2024 21:28:42 +0300
 From: Andy Shevchenko <andy@kernel.org>
 To: Philipp Stanner <pstanner@redhat.com>
 Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
@@ -81,10 +81,10 @@ Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
 	virtualization@lists.linux.dev
-Subject: Re: [PATCH 6/9] ethernet: cavium: Replace deprecated PCI functions
-Message-ID: <ZsONiNkdXGMKMbRL@smile.fi.intel.com>
+Subject: Re: [PATCH 7/9] ethernet: stmicro: Simplify PCI devres usage
+Message-ID: <ZsOO2uuGmD97Mocj@smile.fi.intel.com>
 References: <20240819165148.58201-2-pstanner@redhat.com>
- <20240819165148.58201-8-pstanner@redhat.com>
+ <20240819165148.58201-9-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,27 +93,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240819165148.58201-8-pstanner@redhat.com>
+In-Reply-To: <20240819165148.58201-9-pstanner@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Aug 19, 2024 at 06:51:46PM +0200, Philipp Stanner wrote:
-> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
-> the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+On Mon, Aug 19, 2024 at 06:51:47PM +0200, Philipp Stanner wrote:
+> stmicro uses PCI devres in the wrong way. Resources requested
+> through pcim_* functions don't need to be cleaned up manually in the
+> remove() callback or in the error unwind path of a probe() function.
+> 
+> Moreover, there is an unnecessary loop which only requests and ioremaps
+> BAR 0, but iterates over all BARs nevertheless.
+> 
+> Furthermore, pcim_iomap_regions() and pcim_iomap_table() have been
+> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
 > pcim_iomap_table(), pcim_iomap_regions_request_all()").
 > 
-> Replace these functions with the function pcim_iomap_region().
+> Replace these functions with pcim_iomap_region().
+> 
+> Remove the unnecessary manual pcim_* cleanup calls.
+> 
+> Remove the unnecessary loop over all BARs.
 
 ...
 
-cavium_ptp_probe()
+loongson_dwmac_probe()
 
-> -	pcim_iounmap_regions(pdev, 1 << PCI_PTP_BAR_NO);
-> +	pcim_iounmap_region(pdev, PCI_PTP_BAR_NO);
->  
->  error_free:
->  	devm_kfree(dev, clock);
+> +	memset(&res, 0, sizeof(res));
+> +	res.addr = pcim_iomap_region(pdev, 0, pci_name(pdev));
+> +	if (IS_ERR(res.addr)) {
+> +		ret = PTR_ERR(res.addr);
+> +		goto err_disable_device;
 
-Both are questionable. Why do we need either of them?
+It seems your series reveals issues in the error paths of .probe():s
+in many drivers...
+
+If we use pcim variant to enable device, why do we need to explicitly
+disable it?
+
+>  	}
+
+...
+
+loongson_dwmac_remove()
+
+>  	pci_disable_msi(pdev);
+>  	pci_disable_device(pdev);
+
+Not sure why we need these either...
 
 -- 
 With Best Regards,
