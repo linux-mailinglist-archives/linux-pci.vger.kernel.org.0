@@ -1,79 +1,81 @@
-Return-Path: <linux-pci+bounces-11799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11800-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86F5195658A
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 10:25:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF5C795658C
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 10:25:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D73A1F22CC0
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 08:25:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5EFB91F23074
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Aug 2024 08:25:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7BDC15B12B;
-	Mon, 19 Aug 2024 08:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C83A15B55E;
+	Mon, 19 Aug 2024 08:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fhuborTy"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="shwREonM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120F915B0F1
-	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 08:24:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAAC15B11D
+	for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 08:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724055892; cv=none; b=WPXVpLy3bI+Jhpke6tR1wvpc8Nsc37eKgC7jpUvkS3XN/GC//kkEr3jHlPFN5bjTN8/YJpEZZ254tRCB1SEmvnb6GnB2ubpJFsRE+hT5LD4VlbWvr4CYOOmP58PYEtOi8ONP75PSiFo+Ixax4frpvFEHiVtFkz3DJeqGZ2oiyxM=
+	t=1724055894; cv=none; b=JmgSv7MVDb5TvgGyr0CeergvaF6nw/2oLXqS5naM5CYq02VGjwafjvZWHjZzr7b8WWGlfWqyHhPOalqgXQLCpOQbOWfR0eqaZ9w4ohy5Ze79cXXuLBqftKZbv5kIr3TyXAAGHebBrBPXwGSCy+las/msqdThvy/PoDvNEYGcAbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724055892; c=relaxed/simple;
-	bh=24lOSJFmDWSkbEY8pH1NA7VSnBzPb51HRS0H0RNheRs=;
+	s=arc-20240116; t=1724055894; c=relaxed/simple;
+	bh=VlEWS+I2qBUoAZu3MZiZFqikaq4uXZWuP6/ITJZxiQk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OVcGyHxcVTldv7mxNFbI6CfSDEd7ONNKFyyHIEKra/EZ1WydtuTeuwrCX5C85iIx6wIifVlLGrxWucvrf/DssbsOoIaXgrjj+6dMVS3EPUL683Y7VDK3oD/JFaa41vGBEepPM3GX5g84kiSPQgVpcQa4xSTnwQ+K95WgRxuY2Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fhuborTy; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=hQLQ77jcpDd9JbGJMi0SKo0oEyUwOz9mDBlRMYv0tZpVSPtVfDLWFaGClB/G3EjdIa1GxbBKrAM6HVUDawPzbSUiunl+uLfQbaLx2jWEeXNxeqMV0whjeILitcMZ/5nB+7SQ9Jpj4jEOo+e5kvh1UHBbFWKhfOHfVzFbjQkreHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=shwREonM; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4280bbdad3dso31050385e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 01:24:50 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42816ca797fso32652325e9.2
+        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 01:24:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724055889; x=1724660689; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724055891; x=1724660691; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RsWIrIhsv9dmLthRnTrPqZ1IbzhzCJfuEFPNZfJR6+k=;
-        b=fhuborTyYqccLryBrNrsKUm2N+QK+jV1abwJRKSzHVa5d2xUPhz/GA3wQDQZ9a9Bgr
-         av6loILOl3aqiBnPxdKyCqe6ByMej7zmSHApJwTQoZMPDz9makerFx2IZqO4nFCBP7de
-         IYC+ur8IByK4kRVClOormeYqZ/4cyakRQBUXqoXCPCiQ2jLLnULF+tkC7YY3lB3j9VaO
-         MCghMcw6ECTxtOzrIX/XqjR0S3IS08rtLhHoVIZQL7Htg5wvdDH++fz92Gmt8YI+GvnW
-         TdipLYPszOoCWiMYQUymbZ2BmzByIsNj4u0b+yLDdefI7zqxlSxl4EGUc8yZj5ngef8f
-         syCw==
+        bh=Ns4EUZZ3nTL5odSKliuQhTwD1CbjvkOmQ7rToMzAA/s=;
+        b=shwREonM23gbHLe1N7T/9wHhpCdWBD+QzoZnEleGkDhR0J78aNDGBmKUm1Atx69m/P
+         cfVD/cbkLRwFV2INk70RfEeBYrd55Gxue8+7OOaBgTm+/yZWivSbW9IAlfSvJA1oQwFj
+         wSk0/M6YuABQ9RKPCI2If9ExNunKh5YHkEznfEsXmXIBhSLnZ4CHwjzl/4S0TV0DyL8K
+         +BQyK1uXCOW8r0WWC1GfIUF5o/ruiteOWjZWWOBA7JanC+ZGU+YYbZt+SVXrWX/CPxHH
+         5VZhHfE6cBz8OV85O39vZ2cpKAAMUeLMDng70ak/kC2sVCzHndIQhv36zkLSPvEa2a7o
+         wWZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724055889; x=1724660689;
+        d=1e100.net; s=20230601; t=1724055891; x=1724660691;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RsWIrIhsv9dmLthRnTrPqZ1IbzhzCJfuEFPNZfJR6+k=;
-        b=W0a9z5XekZU7nqlx4p+x8mfOMzD1howaOyC8hp7rx4tAJX7RV/NZ27Xy05KSuAUQPr
-         Lf4YkAkvVNntNAFVqcgus5gR2gWQW3y4jD89OVjp99OnimGl/MvqjqIGY9gzUH316uZB
-         uqDEVslRTk8x+RZgE2xp2AWmfdKay77OjyR7JTq8fBM6o8g1TInm7h0ESbsBGCM0iBs1
-         HpQxkWZ8mYuWXD/3d3QZrFXclYlaOC+BCZti0Y6u92me58PZ4o/rKGwUKiNpIWoaow8x
-         Fj1cNYfwJr0yda8zJ9Axo7NpYnEmwvkyIn7o0MyAiRDkMXUdGxQprzMU5CL77hJ7BBSN
-         ZMGA==
-X-Gm-Message-State: AOJu0Yz9EnQMahkd+tHK5ViDMIeeFV0rfpTAbihO8gMKqlcfOSaI3wvQ
-	EDvseEag44dKFzZeQUDfa/bHx7M9rvi8p6YMGGKDNJ3YPLyX3YeStMyJcm84ySs=
-X-Google-Smtp-Source: AGHT+IG3x4XBmoZj8H1/pCkgv2vjfiq22n06VmxlFxNkSHZodygEHM7HxQYQNuYyUVRiIJ17qglPgA==
-X-Received: by 2002:a5d:6602:0:b0:371:939e:9845 with SMTP id ffacd0b85a97d-3719464595cmr5946403f8f.23.1724055888810;
-        Mon, 19 Aug 2024 01:24:48 -0700 (PDT)
+        bh=Ns4EUZZ3nTL5odSKliuQhTwD1CbjvkOmQ7rToMzAA/s=;
+        b=I53WGCuvo7/KqkDR0yy86cdJdLr34JyBvrh9AszlCRJ4IqdY4WS55s9kTuPTgcu77X
+         7Pa8JsA0qhvhhGz+JczLs//U2cRj5+5PW0AfuBG2GvgzvRgy8xkD7AI/3Slx1tUXD4zX
+         v2RxkRv50WEwUB2s0UXxMCdcQVqgoj/A7GAlCnz8KBE2HrK8EOTnVr3idveN9grbewLp
+         e+Qto1CIsWNezcopLBn/VF2UwcWjWolis9+7Bg6/XGS+KEnSPnca3zYd4YANFdlchG/h
+         T9cds3SHtDNprzLeHDVUMGl05ivm51VvaRcYw7aVCetMQiqSJf6rTw5GR502ZkMFYnBM
+         ykng==
+X-Gm-Message-State: AOJu0YwynElJGJwNbLIJNjFrandEhAAuO+jNfJ5FeVKkV6DJI+D7yX63
+	PMIntgC4mDBMBj9ofPqwidRJWm3Mc+zipojBe2T1drONA2RsBfqfsQ0alMd8yp5Qh7YeIZjIZmY
+	f2j0=
+X-Google-Smtp-Source: AGHT+IFVgF7niGJvoZowan0lPbSxtB3YSrW7+PmIqFLoVMhdafkr+QrJoILTdYPsvFiGEZpxfsdYjw==
+X-Received: by 2002:a5d:6602:0:b0:368:3194:8a85 with SMTP id ffacd0b85a97d-3719431769amr7258735f8f.7.1724055890365;
+        Mon, 19 Aug 2024 01:24:50 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7b55:8f70:3ecb:b4ac])
         by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429ded7d5a9sm153441175e9.43.2024.08.19.01.24.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 01:24:48 -0700 (PDT)
+        Mon, 19 Aug 2024 01:24:49 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 1/2] PCI: don't rely on of_platform_depopulate() for reused OF-nodes
-Date: Mon, 19 Aug 2024 10:24:43 +0200
-Message-ID: <20240819082445.10248-2-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH v2 2/2] PCI/pwrctl: put the bus rescan on a different thread
+Date: Mon, 19 Aug 2024 10:24:44 +0200
+Message-ID: <20240819082445.10248-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240819082445.10248-1-brgl@bgdev.pl>
 References: <20240819082445.10248-1-brgl@bgdev.pl>
@@ -87,59 +89,104 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-of_platform_depopulate() doesn't play nice with reused OF nodes - it
-ignores the ones that are not marked explicitly as populated and it may
-happen that the PCI device goes away before the platform device in which
-case the PCI core clears the OF_POPULATED bit. We need to
-unconditionally unregister the platform devices for child nodes when
-stopping the PCI device.
+If we trigger the bus rescan from sysfs, we'll try to lock the PCI
+rescan mutex recursively and deadlock - the platform device will be
+populated and probed on the same thread that handles the sysfs write.
 
-Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
+Add a workqueue to the pwrctl code on which we schedule the rescan for
+controlled PCI devices. While at it: add a new interface for
+initializing the pwrctl context where we'd now assign the parent device
+address and initialize the workqueue.
+
+Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+Reported-by: Konrad Dybcio <konradybcio@kernel.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pci/remove.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/pci/pwrctl/core.c              | 26 +++++++++++++++++++++++---
+ drivers/pci/pwrctl/pci-pwrctl-pwrseq.c |  2 +-
+ include/linux/pci-pwrctl.h             |  3 +++
+ 3 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index 910387e5bdbf..c7092a34a5f6 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/pci.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/of_platform.h>
- #include "pci.h"
+diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
+index feca26ad2f6a..01d913b60316 100644
+--- a/drivers/pci/pwrctl/core.c
++++ b/drivers/pci/pwrctl/core.c
+@@ -48,6 +48,28 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
+ 	return NOTIFY_DONE;
+ }
  
-@@ -16,13 +17,26 @@ static void pci_free_resources(struct pci_dev *dev)
- 
- static void pci_stop_dev(struct pci_dev *dev)
- {
-+	struct platform_device *pdev;
++static void rescan_work_func(struct work_struct *work)
++{
++	struct pci_pwrctl *pwrctl = container_of(work, struct pci_pwrctl, work);
 +
- 	pci_pme_active(dev, false);
- 
- 	if (pci_dev_is_added(dev)) {
--		of_platform_depopulate(&dev->dev);
- 		device_release_driver(&dev->dev);
- 		pci_proc_detach_device(dev);
- 		pci_remove_sysfs_dev_files(dev);
++	pci_lock_rescan_remove();
++	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
++	pci_unlock_rescan_remove();
++}
 +
-+		if (dev_of_node(&dev->dev)) {
-+			for_each_child_of_node_scoped(dev_of_node(&dev->dev),
-+						      child) {
-+				pdev = of_find_device_by_node(child);
-+				if (pdev) {
-+					of_device_unregister(pdev);
-+					of_node_clear_flag(child, OF_POPULATED);
-+				}
-+			}
-+		}
++/**
++ * pci_pwrctl_init() - Initialize the PCI power control context struct
++ *
++ * @pwrctl: PCI power control data
++ * @dev: Parent device
++ */
++void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev)
++{
++	pwrctl->dev = dev;
++	INIT_WORK(&pwrctl->work, rescan_work_func);
++}
++EXPORT_SYMBOL_GPL(pci_pwrctl_init);
 +
- 		of_pci_remove_node(dev);
+ /**
+  * pci_pwrctl_device_set_ready() - Notify the pwrctl subsystem that the PCI
+  * device is powered-up and ready to be detected.
+@@ -74,9 +96,7 @@ int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
+ 	if (ret)
+ 		return ret;
  
- 		pci_dev_assign_added(dev, false);
+-	pci_lock_rescan_remove();
+-	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
+-	pci_unlock_rescan_remove();
++	schedule_work(&pwrctl->work);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+index c7a113a76c0c..f07758c9edad 100644
+--- a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
++++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+@@ -50,7 +50,7 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	data->ctx.dev = dev;
++	pci_pwrctl_init(&data->ctx, dev);
+ 
+ 	ret = devm_pci_pwrctl_device_set_ready(dev, &data->ctx);
+ 	if (ret)
+diff --git a/include/linux/pci-pwrctl.h b/include/linux/pci-pwrctl.h
+index 45e9cfe740e4..0d23dddf59ec 100644
+--- a/include/linux/pci-pwrctl.h
++++ b/include/linux/pci-pwrctl.h
+@@ -7,6 +7,7 @@
+ #define __PCI_PWRCTL_H__
+ 
+ #include <linux/notifier.h>
++#include <linux/workqueue.h>
+ 
+ struct device;
+ struct device_link;
+@@ -41,8 +42,10 @@ struct pci_pwrctl {
+ 	/* Private: don't use. */
+ 	struct notifier_block nb;
+ 	struct device_link *link;
++	struct work_struct work;
+ };
+ 
++void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev);
+ int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl);
+ void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl);
+ int devm_pci_pwrctl_device_set_ready(struct device *dev,
 -- 
 2.43.0
 
