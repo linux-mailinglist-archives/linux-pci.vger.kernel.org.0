@@ -1,142 +1,196 @@
-Return-Path: <linux-pci+bounces-11857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64D01957F1F
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 09:11:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74414957F4A
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 09:22:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20960282296
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 07:11:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE9BEB21896
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 07:22:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00CD16A39E;
-	Tue, 20 Aug 2024 07:11:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A424618E36D;
+	Tue, 20 Aug 2024 07:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyvIS06c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2q70F6C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B307A175D53;
-	Tue, 20 Aug 2024 07:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAE1188CBB
+	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 07:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724137872; cv=none; b=PFirZqY2EJ2qaArnAsHdDRZRnihz0P6BNTQpT05gNKHxGTLoncxY1vBBErblBOKGZ486NZE2fHP+23/0mGuSXFkoAbGpYAUeeiIo7yvQl3C+pkO4qbVxxHeGserNuagLqEGGEj9MaHgtqYQE6KmmzYiMJL973gC2ll2W2OL0blg=
+	t=1724138529; cv=none; b=I9QCf60kXfN8zxtD7HGmDBA0jl45ik9dpTtemFdA9+xywof+B/kPfvs70JWqejuO2rdNfbqToE2B9xGoT/wW71nt5UPcv7n3vEFQiwjiKoGYQIrOlPKEcAZFH8+01Gme6Yj0xi7s5te0JfinB/m+k7/KAXy20NcELxZlauI7KWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724137872; c=relaxed/simple;
-	bh=3ZWDWg1t1D+RPYXx8gzEfFQ5ALhL8sunlbJK3VRGTZ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DwRoMKgbeajToKnz6fxbVnxBiEnMYHX5vKvZHTNHh+dlb3PuViIa9+AzneAnrbNIwLmrCLflUNf1aTwp8p0eO0z6olJABK7XC7OauWSGZLOZqxEylyDKk2TY17PRalAQI2prpH9HjgZ/N4PDkLrRcjy09t5mljaSBgcOyh4yXgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lyvIS06c; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52f04b3cb33so1974671e87.0;
-        Tue, 20 Aug 2024 00:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724137869; x=1724742669; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Sw1EjNYYqXKw/3E3cBIyLqgir2CEwE1gKz7qYZh+Og=;
-        b=lyvIS06cxw4NfmxKfN7WwRs03xYajn/kQ32Mo25TuBQmAv694bTeBKhC+xmOyQuMoc
-         oBf6SBl8KC9RUxChxpASSHgcPIVKAM0YY0J554ozEMrwHH868jsAO8R34UpFlOU/EvFh
-         QWpVwJ+/oQcJE0E7hqlUyqm69SQ6854xVnWy3wDknq9m2jobtMr5dSZa7MHxIQjyqGgt
-         IddpQGvsmtstOF5OJVCvclVhlkbXGSOLUqW2V6KkQujhdGZpHDFysqoqEv8rAV8eLTVc
-         N1Z+eggYp3kCu+PRs9uWyK9itjOZd/uLBJHqZftQufBJwRRMKKh74cdKfSFvKJWwvp3r
-         XoXg==
+	s=arc-20240116; t=1724138529; c=relaxed/simple;
+	bh=CwAJcF6bJ+g48Ud2pzdceQkOvdF0s36dJmUP+WwsYDg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gtHUNCE8OpZxHqWXv/QgeJnW2eiMogk9i5gdZAzWTyunUrBjHEMkiIW1r71arlgiZgs31l58+vJII+UXnx5Z4wTrRp2JcCScAUJJxr5jatSjZii3u3/F60gYrg1V5nSpeleCk9pIZ/nCNFrGTpVDApbtbhho39jcVgTT37EAL9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F2q70F6C; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724138527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ASIEWrzHXogS2+yni6jFmR1o/WYm2ANcxSxU4DhoyQc=;
+	b=F2q70F6C6i4n2LFBptboSqzVFALyoTAy9csRmXhdSSn6o46l1t446t4axzzVjswKXLxAVn
+	wddazw23VQL2/fyuBqWC8gtZSMHhkE/GrQGruUaGLqhpwQgdQznFQV9t8afYWSNfcT/VK8
+	w/AUoDlvjS0G6DTMzHAPkzkjJwDELAQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-324-67UQld_VNe6n-CeyySWqAQ-1; Tue, 20 Aug 2024 03:22:04 -0400
+X-MC-Unique: 67UQld_VNe6n-CeyySWqAQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42808f5d32aso9509635e9.2
+        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 00:22:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724137869; x=1724742669;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Sw1EjNYYqXKw/3E3cBIyLqgir2CEwE1gKz7qYZh+Og=;
-        b=HuL6Hpxc92WzjoLohNyOM+UL4OwxhlpaQ4qguFpI1PkeiN0WB4I+fiYzxSFjIXciWc
-         NMtCmjIhWx3EbFbGEE5lt0Pd4hmXovyzNlzBGjlRKXGqri1sIaXyi/mhXAIfHXKgEK1W
-         dGMacii8JWsdqYGBme7hwgVBskfm5QvTYNekiUKNe911tGmW9QxQoiiBvekAKFBFrko0
-         LOiKWb4jVwcYHKXR0KQz43fmPy8aZfw5PWBHxMGBGgLvmVUtQGkd/KeU/91DJWzb6ncU
-         aUuZP3pSWIOlOc+bEOpKN3tg2zBlzp/lkNuKKivE7FvheSxicusASqXmMZMMvIXM+YV4
-         7wqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjDww1HEujF3IoepVvoo/qhg/uGAoO5lgr55/BQC2ETOLool0lxlHmYqdH3TIu3p4KtYtEyXGMSVRs1ABBvFeI0NUDgyFv4S76BGTosTCjKnWMF16yABtNWsn6zeXc9BGJB8VbsCT3
-X-Gm-Message-State: AOJu0YzSnq03kZI/KFf53HjySfm65oulp1qh1keWQKgYCKx5W1VFD9Ub
-	Mp87bZKxyohI9wL610BLFX1CuDrLyDbfSEMa3yFijjy62DZkQj6X
-X-Google-Smtp-Source: AGHT+IHVphgqtob1LvNuVkik6YiXOUNTJb0JOmhDREdgGVTXDU7L0ioy5P/bpyldI/ncOZmJHfX9OA==
-X-Received: by 2002:a05:6512:2820:b0:52c:cd77:fe03 with SMTP id 2adb3069b0e04-5331c6a1794mr11560695e87.14.1724137868162;
-        Tue, 20 Aug 2024 00:11:08 -0700 (PDT)
-Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c6639sm721911666b.7.2024.08.20.00.11.07
+        d=1e100.net; s=20230601; t=1724138523; x=1724743323;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ASIEWrzHXogS2+yni6jFmR1o/WYm2ANcxSxU4DhoyQc=;
+        b=BP8M7bYmQs+Kw5iprYKAILjCm1JwD2DphqDW1GQCJT83USWI16wbVDOKERGke+5qeQ
+         5kvrUiP7+Ue5lZaV6HBJbDrE+frcTVIhGfONvwu+xwL+VqDMuQaJ4IrjPWllJeNyfpIS
+         4jM1HoFo0RofnAETRhCtXxvL+ahG92mqi5csQ/PAplSfyA+/NtceCGRJdnkj3WiN52TZ
+         w9FogjbvtBHJvW/H4arLyMSzD/Z2YqAIicC/cChiwmx1M67pGRxb9Md3Q5lWllGfifo2
+         D4LhPSluPntzOf3qTPNJoX01AATHhNkBXAGC4TD9bVO7FLBKwGPHzo7GxPNF1R+RKpB/
+         NHjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWROSZLTA+162gNkk1FDEKPyOCkezKPZI9eLIcpaL/Qz6kl8IMjGFoKr6vHcUVUEbIPlWwDHW117lsFsoTtQoiOhb5WluW+y5l2
+X-Gm-Message-State: AOJu0Yz3aaDTAA8vODMaFsIBFMYl2//ofzMGwrbQHaTLr7zsvRFJ04zU
+	LHzxt5DQCFRkur5JH9bacLlmAFF6VrNWZx193V1YOB9lVWvPOhEu9PMfCP5LX0SAqAqsqjk7b3L
+	Tpzq9foxjG2lftju/FX7P0G728OShzTYYwyoZp3bWytI8MiYLuXR6ov9yiQ==
+X-Received: by 2002:a05:600c:1ca9:b0:425:65b1:abb4 with SMTP id 5b1f17b1804b1-429ed62f54cmr55368115e9.0.1724138522953;
+        Tue, 20 Aug 2024 00:22:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGtu6sXluOG26PWy70qwsbDcaM81TTK+UTUTvyjs1U84scjqTgJELEGk3SrTeSIfdGLnjJpqA==
+X-Received: by 2002:a05:600c:1ca9:b0:425:65b1:abb4 with SMTP id 5b1f17b1804b1-429ed62f54cmr55367605e9.0.1724138522431;
+        Tue, 20 Aug 2024 00:22:02 -0700 (PDT)
+Received: from eisenberg.fritz.box ([2001:16b8:3dcc:1f00:bec1:681e:45eb:77e2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429eeadfafbsm130634445e9.47.2024.08.20.00.22.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 00:11:07 -0700 (PDT)
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-To: rick.wertenbroek@heig-vd.ch
-Cc: dlemoal@kernel.org,
-	alberto.dassatti@heig-vd.ch,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] PCI: endpoint: pci-epf-test: Call pci_epf_test_raise_irq() on failed DMA check
-Date: Tue, 20 Aug 2024 09:10:58 +0200
-Message-Id: <20240820071100.211622-2-rick.wertenbroek@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240820071100.211622-1-rick.wertenbroek@gmail.com>
-References: <20240820071100.211622-1-rick.wertenbroek@gmail.com>
+        Tue, 20 Aug 2024 00:22:02 -0700 (PDT)
+Message-ID: <267a021781f59d6efe798dbca63f29dd25359f2d.camel@redhat.com>
+Subject: Re: [PATCH 4/9] block: mtip32xx: Replace deprecated PCI functions
+From: Philipp Stanner <pstanner@redhat.com>
+To: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao
+ <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, Moritz Fischer
+ <mdf@kernel.org>,  Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko
+ <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Alvaro
+ Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Richard Cochran
+ <richardcochran@gmail.com>, Mark Brown <broonie@kernel.org>, David Lechner
+ <dlechner@baylibre.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <u.kleine-koenig@pengutronix.de>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>,  Hannes Reinecke <hare@suse.de>, Damien Le
+ Moal <dlemoal@kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>, "Martin K.
+ Petersen" <martin.petersen@oracle.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-fpga@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
+ virtualization@lists.linux.dev
+Date: Tue, 20 Aug 2024 09:22:00 +0200
+In-Reply-To: <20240819165148.58201-6-pstanner@redhat.com>
+References: <20240819165148.58201-2-pstanner@redhat.com>
+	 <20240819165148.58201-6-pstanner@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The pci-epf-test PCI endpoint function /drivers/pci/endpoint/function/pci-epf_test.c
-is meant to be used in a PCI endpoint device connected to a host computer
-with the host side driver: /drivers/misc/pci_endpoint_test.c.
+On Mon, 2024-08-19 at 18:51 +0200, Philipp Stanner wrote:
+> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
+> the
+> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> pcim_iomap_table(), pcim_iomap_regions_request_all()").
+>=20
+> In mtip32xx, these functions can easily be replaced by their
+> respective
+> successors, pcim_request_region() and pcim_iomap(). Moreover, the
+> driver's call to pcim_iounmap_regions() is not necessary, because
+> it's
+> invoked in the remove() function. Cleanup can, hence, be performed by
+> PCI devres automatically.
+>=20
+> Replace pcim_iomap_regions() and pcim_iomap_table().
+>=20
+> Remove the call to pcim_iounmap_regions().
+>=20
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+> =C2=A0drivers/block/mtip32xx/mtip32xx.c | 11 ++++++-----
+> =C2=A01 file changed, 6 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/block/mtip32xx/mtip32xx.c
+> b/drivers/block/mtip32xx/mtip32xx.c
+> index c6ef0546ffc9..c7da6090954e 100644
+> --- a/drivers/block/mtip32xx/mtip32xx.c
+> +++ b/drivers/block/mtip32xx/mtip32xx.c
+> @@ -2716,7 +2716,9 @@ static int mtip_hw_init(struct driver_data *dd)
+> =C2=A0	int rv;
+> =C2=A0	unsigned long timeout, timetaken;
+> =C2=A0
+> -	dd->mmio =3D pcim_iomap_table(dd->pdev)[MTIP_ABAR];
+> +	dd->mmio =3D pcim_iomap(dd->pdev, MTIP_ABAR, 0);
+> +	if (!dd->mmio)
+> +		return -ENOMEM;
+> =C2=A0
+> =C2=A0	mtip_detect_product(dd);
+> =C2=A0	if (dd->product_type =3D=3D MTIP_PRODUCT_UNKNOWN) {
+> @@ -3726,9 +3728,9 @@ static int mtip_pci_probe(struct pci_dev *pdev,
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	/* Map BAR5 to memory. */
+> -	rv =3D pcim_iomap_regions(pdev, 1 << MTIP_ABAR,
+> MTIP_DRV_NAME);
+> +	rv =3D pcim_request_region(pdev, 1, MTIP_DRV_NAME);
 
-The host side driver can request read/write/copy transactions from the
-endpoint function and expects an IRQ from the endpoint function once
-the read/write/copy transaction is finished. These can be issued with or
-without DMA enabled. If the host side driver requests a read/write/copy
-transaction with DMA enabled and the endpoint function does not support
-DMA, the endpoint would only print an error message and wait for further
-commands without sending an IRQ because pci_epf_test_raise_irq() is
-skipped in pci_epf_test_cmd_handler(). This results in the host side
-driver hanging indefinitely waiting for the IRQ.
+That's a bug here, btw.
+Should be MTIP_ABAR instead of 1.
 
-Call pci_epf_test_raise_irq() when a transfer with DMA is requested but
-DMA is unsupported. The host side driver will no longer hang but report
-an error on transfer (printing "NOT OKAY") thanks to the checksum because
-no data was moved.
+Will fix in v2.
 
-Clarify the error message in the endpoint function as "Cannot ..." is
-vague and does not state the reason why it cannot be done.
+P.
 
-Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 7c2ed6eae53a..b02193cef06e 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -649,7 +649,8 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
- 
- 	if ((READ_ONCE(reg->flags) & FLAG_USE_DMA) &&
- 	    !epf_test->dma_supported) {
--		dev_err(dev, "Cannot transfer data using DMA\n");
-+		dev_err(dev, "DMA transfer not supported\n");
-+		pci_epf_test_raise_irq(epf_test, reg);
- 		goto reset_handler;
- 	}
- 
--- 
-2.25.1
+> =C2=A0	if (rv < 0) {
+> -		dev_err(&pdev->dev, "Unable to map regions\n");
+> +		dev_err(&pdev->dev, "Unable to request regions\n");
+> =C2=A0		goto iomap_err;
+> =C2=A0	}
+> =C2=A0
+> @@ -3849,7 +3851,7 @@ static int mtip_pci_probe(struct pci_dev *pdev,
+> =C2=A0		drop_cpu(dd->work[2].cpu_binding);
+> =C2=A0	}
+> =C2=A0setmask_err:
+> -	pcim_iounmap_regions(pdev, 1 << MTIP_ABAR);
+> +	pcim_release_region(pdev, MTIP_ABAR);
+> =C2=A0
+> =C2=A0iomap_err:
+> =C2=A0	kfree(dd);
+> @@ -3925,7 +3927,6 @@ static void mtip_pci_remove(struct pci_dev
+> *pdev)
+> =C2=A0
+> =C2=A0	pci_disable_msi(pdev);
+> =C2=A0
+> -	pcim_iounmap_regions(pdev, 1 << MTIP_ABAR);
+> =C2=A0	pci_set_drvdata(pdev, NULL);
+> =C2=A0
+> =C2=A0	put_disk(dd->disk);
 
 
