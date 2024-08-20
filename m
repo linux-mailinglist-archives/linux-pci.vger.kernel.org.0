@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-11852-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11853-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CFBB957EAC
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 08:52:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5302957EEF
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 09:05:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1449B1F24E1C
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 06:52:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D90E282E52
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 07:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BC71A29A;
-	Tue, 20 Aug 2024 06:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FAD016A39E;
+	Tue, 20 Aug 2024 07:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa+TIK05"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qgr86Ido"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF9218E36D;
-	Tue, 20 Aug 2024 06:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB2316C86B;
+	Tue, 20 Aug 2024 07:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724136768; cv=none; b=aPCKZdWtaaC0ZGxHYFpc15XNXJYPlh0PS6xhyse64gQUe2l4vkF0GEWDqniaN8fMt4MWsJOLAdPTyxEdPaH1ykeHKcnxAiWNq4OC9X+IMPaUnxofKrCHeklBvXcJN+9jBLcjm8P+S2Qyln/FNthzhlmN4aIYta9qUxoFmj6pWG0=
+	t=1724137516; cv=none; b=tI1jutmf4v1tMf3dgLwsuYo1oF91ShWS1klHnT/HXDJEiap35pNlLzZSkiwe0BoKNeSDAILhV0UDpYxjes8gZMsKRWikfxpEVrDf0HV5BOgiERMMkZp2X2iatkhm4VAyKCHHUz/VpEfkpaaDsJVMyxsVvJpygyUyLgsVTqfsHkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724136768; c=relaxed/simple;
-	bh=kWsd6UbBrZMTLutzNp0qbaqrK9LVosbs/UMeb/ewGpI=;
+	s=arc-20240116; t=1724137516; c=relaxed/simple;
+	bh=GsHRckNHt4lJ18tJSAvBaZnn5/7CpkZCR8qpOQghqmQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iK3dtsLO5rYZtpJlsLgtqNHP+fe+lMQ/kNYfjznBsJwo0vOvik0KINUt93hXWDtTVBiCmc1wJDs/iBxjk0dd98XceRWs5J+RF1SZtRH8nr2NwBNfbYICCAWqe7Z344eZ9u6tpLKfvvvsInUVFgXdI2g6tc91kpahC7i6XfmCjjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sa+TIK05; arc=none smtp.client-ip=209.85.167.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zn/8UuxzdVIV/L1BJO3gIXGWOENkveA1q/p1avwhwitbQD03RkztsN6pRTzcMOCicAIbawZUHInWS90HbQGh93+VUYAVUGIBy9soEhg6MCPfCm7jX/vYcbbyKWnIaVD1dqHhJ/sXbFoDjx/+mPc5YzR+5+2KzKM7qJTu6RigQD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qgr86Ido; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53310b07267so6791741e87.3;
-        Mon, 19 Aug 2024 23:52:46 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a7d2a9a23d9so595770966b.3;
+        Tue, 20 Aug 2024 00:05:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724136765; x=1724741565; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724137513; x=1724742313; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B0fnzpeczoVILcPKkO8zLBXL0D6BHapuvSYzKwE9Niw=;
-        b=Sa+TIK05uMAJjp19pOShP1R4m+OROacmxyfs7yANjXv/fg2QiARMUougfNtpBuH80L
-         n6oDzOz88S6pWvzM8Et4HNcPve5m/ODMdotUHauZik4FGNt4wnjMPFVE+alEMSyqmKpy
-         Mk2AUfBfPwKHOE25AkOM1pBxY8zRO64qNkjCCt4Kvj61pLy3O6YvQ7xt24vx2tYxzcrP
-         F2HYui4SIn45jNwMeo/KUyvTmmFc7oKUSlSuLfRjE2jEVGEwbSdPjdQMi16gWdoNHy9w
-         qq2hoezAsbhZWQXn+56HXhzUzJuCm/iOy+akn8xKd86SGfWIXBdiOaREmj7f2aMhB64I
-         vGIw==
+        bh=LsF6Nk9oBlSWv0G1oFX6tHfAMXIERFk3AxXMBDi43S4=;
+        b=Qgr86Idoue0yKAoNbyl2enbIj8V8VruQ16K65VGI2Hyly/MFr0Zb2prBnFuygIQqn4
+         mzwxrMx/GpCPW7ZFRF3e8ameUDB3FQdgerXFqkF6DuzI0W0cpUjXRo//x6lJWv/EIWpF
+         C8xDSjZ05hHiJN+om3Wu/oPfM/pyy9lMp6rFYIfFxf909jqxQQYT0DSaajKC7gZhFuzZ
+         m0z0DYk+3V9Wuq1W+/J97CCoTBz1SAfA0oPOJn99Hxth+snFEQzNLJRpBUlbe0jPi80B
+         ofGcUoCl0MCoDKV5kKcn0OmzO1Bn8tE1MsfY2Qxg7ZIlsCF2Vz8E9t493Bm5mgSEHP/j
+         spyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724136765; x=1724741565;
+        d=1e100.net; s=20230601; t=1724137513; x=1724742313;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B0fnzpeczoVILcPKkO8zLBXL0D6BHapuvSYzKwE9Niw=;
-        b=b+lG472WEgYTc0uXUWniAmS2LWFtp8Oq6n0OF/CsE0QgfVmXUJi2hc2tPV7llY4sIf
-         eXJs2YV08NYeUNaqnLT2C6YzFPmnrrJaftZT6+ZnT2nNejmcQ2ufu4ITN0Y3b6e0mq+H
-         cVleec5fnISnpZS24U9qbcW9apO+J/LqfWgcAJHmIs00e2Meqif4+g3xiWw7KVV12NEg
-         AGizgbGFUuya0ss1O8hhkHlZE1fMmbo67Wj9uCL+7GIUWPe36DHTnKcR/BYH7MO6xmFW
-         nEP7OnGdoGA7Fust+NhQXSEXpNWc8ivwS8VNkPnL9DZhNQCk1+di2WxBA0tAHl1EgbGu
-         fYeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXb34MRCv0Z2Ra0dH+Udaxq544wgGIWDD6pEwxtQ4zeFqxmy/h78Sq4WigKU6puj6+B5aeZi9MP4i3k@vger.kernel.org, AJvYcCXin5jl0lVc7xjJuwAjEpBlTDjMd5B09vUvTs3FEDMYtErXhi6fb7+pwUMB53gip1LQnz2xmQFMqo2W9F4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJi4RJxHbyfjtbBMM9KqUAx3tsnio4n70Hy4P+hOjpbQSpPLpe
-	/9+h5rIKmc7oUGuWXCjPA93O5M76TQoSEodCLADid9wF8SPKs3OP
-X-Google-Smtp-Source: AGHT+IFovNs2nwZnc1lJwCKr78P7Vc8jgqy02le1EmeWWeioP/zLobADP3e48VyNL9RyjxcDN+vlHg==
-X-Received: by 2002:a05:6512:3da6:b0:52c:e119:7f1 with SMTP id 2adb3069b0e04-5331c6e3b3fmr10786119e87.51.1724136764869;
-        Mon, 19 Aug 2024 23:52:44 -0700 (PDT)
+        bh=LsF6Nk9oBlSWv0G1oFX6tHfAMXIERFk3AxXMBDi43S4=;
+        b=EhIxVHWDKJXWr2WUYgkB73MvMA4253qWUSLveNozCHgl5E3ylGIVNQa0gB2UqiiIYz
+         Fh4Q0gXt5Y7vB5qE1+u25X9QpBd/Rp/0Nx/AqZJUOqvYSrTLqMKoVjJ6+VhUjX5A1ULZ
+         NB5svM6keHfDBvuj7TgBuUIwhsaqnZMj3tKFaIXxe4O80BakW+fLkQVHn3ghCPe+5J5I
+         O/zfJfRxSudWxF8xK45j5fCsYfc0g8X7x60guA65oX0Om+ki5koskmj7GhPoHtYCoB+3
+         oV8lYahbYQ4sa3+KQ2Nh3u3d488sNfa7OP3rQzY2fvlxH34IW/bvTS7pb1EI2jwbbacL
+         HiSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEZOS6oGDHKwoNtlwVllqIfGFYVlj403lEIbZ1YMWVWMT/XwqDOIOQtpiMr7eLOWhYBKEzp6fIEzop1n6LxftvWrVMV14BdZjydLIutvVQ5pKhyx2pB+S5776HA7gw7Uphq1Dj/hFX
+X-Gm-Message-State: AOJu0YwQB26aKbNkLBPLoEtdCVvZagqogmaKlmz5DefOGTnL1OBUXDCl
+	Mezq30L6fbIH8vn3FFqUSBcvZkJFYOVIAgDHWJqNEEhIR95EZBbQ
+X-Google-Smtp-Source: AGHT+IGIdq3GdLoqQGTFyWn1TS/t53HJCAInq/O8v+Afgq7IVNwWy6BOOUHntTjFl6AEvA9/pKq7NQ==
+X-Received: by 2002:a17:907:e221:b0:a71:ddb8:9394 with SMTP id a640c23a62f3a-a8392957bd8mr965538566b.40.1724137512903;
+        Tue, 20 Aug 2024 00:05:12 -0700 (PDT)
 Received: from eichest-laptop ([77.109.188.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a838394645dsm728973666b.144.2024.08.19.23.52.43
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c7444sm725745566b.6.2024.08.20.00.05.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 23:52:43 -0700 (PDT)
-Date: Tue, 20 Aug 2024 08:52:41 +0200
+        Tue, 20 Aug 2024 00:05:12 -0700 (PDT)
+Date: Tue, 20 Aug 2024 09:05:10 +0200
 From: Stefan Eichenberger <eichest@gmail.com>
 To: Frank Li <Frank.li@nxp.com>
 Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
@@ -74,11 +74,13 @@ Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
 	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
 	festevam@gmail.com, francesco.dolcini@toradex.com,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] PCI: imx6: reset link after suspend/resume
-Message-ID: <ZsQ9OWdCS5o96VN2@eichest-laptop>
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: Re: [PATCH v1 3/3] PCI: imx6: reset link on resume
+Message-ID: <ZsRAJrWTxKCol7-g@eichest-laptop>
 References: <20240819090428.17349-1-eichest@gmail.com>
- <ZsNXDq/kidZdyhvD@lizhi-Precision-Tower-5810>
+ <20240819090428.17349-4-eichest@gmail.com>
+ <ZsNZMdhhpGqXdJ+w@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,40 +89,134 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZsNXDq/kidZdyhvD@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZsNZMdhhpGqXdJ+w@lizhi-Precision-Tower-5810>
 
-On Mon, Aug 19, 2024 at 10:30:38AM -0400, Frank Li wrote:
-> On Mon, Aug 19, 2024 at 11:03:16AM +0200, Stefan Eichenberger wrote:
-> > On the i.MX6Quad (not QuadPlus), the PCIe link does not work after a
-> > suspend/resume cycle. Worse, the PCIe memory mapped I/O isn't accessible
-> > at all, so the system freezes when a PCIe driver tries to access its I/O
-> > space. The only way to get resume working again is to reset the PCIe
-> > link, similar to what is done on devices that support suspend/resume.
-> > Through trial and error, we found that something about the PCIe
-> > reference clock does not work as expected after a resume. We could not
-> > figure out if it is disabled (even though the registers still say it is
-> > enabled), or if it is somehow unstable or has some hiccups. With the
-> > workaround introduced in this patch series, we were able to fully resume
-> > a Compex WLE900VX (ath10k) miniPCIe Wifi module and an Intel AX200 M.2
-> > Wifi module. If there is a better way or other ideas on how to fix this
-> > problem, please let us know. We are aware that resetting the link should
-> > not be necessary, but we could not find a better solution. More
-> > interestingly, even the SoCs that support suspend/resume according to
-> > the i.MX erratas seem to reset the link on resume in
-> > imx6_pcie_host_init, so we hope this might be a valid workaround.
+On Mon, Aug 19, 2024 at 10:39:45AM -0400, Frank Li wrote:
+> On Mon, Aug 19, 2024 at 11:03:19AM +0200, Stefan Eichenberger wrote:
+> > From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 > >
-> > Stefan Eichenberger (3):
-> >   PCI: imx6: Add a function to deassert the reset gpio
-> >   PCI: imx6: move the wait for clock stabilization to enable ref clk
-> >   PCI: imx6: reset link on resume
+> > According to the https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf errata,
 > 
-> Thanks you for your patch, but it may have conflict with
-> https://lore.kernel.org/linux-pci/Zr4XG6r+HnbIlu8S@lizhi-Precision-Tower-5810/T/#t
+> Can you show errata number here?
 > 
 
-Thanks a lot for the hint. I will have a look at the series and see if I
-can adapt my changes including your suggestions.
+I will include it in the next version of the patch. If I understand it
+correct it is ERR005723.
 
-Regards,
-Stefan
+> > the i.MX6Q PCIe controller does not support suspend/resume. So suspend
+> > and resume was omitted. However, this does not seem to work because it
+> > looks like the PCIe link is still expecting a reset. If we do not reset
+> > the link, we end up with a frozen system after resume. The last message
+> > we see is:
+> > ath10k_pci 0000:01:00.0: Unable to change power state from D3hot to D0,
+> > device inaccessible
+> >
+> > Besides resetting the link, we also need to enable msi again, otherwise
+> > DMA access will not work and we can still end up with a frozen system.
+> > With these changes we can suspend and resume the system properly with a
+> > PCIe device attached. This was tested with a Compex WLE900VX miniPCIe
+> > Wifi module.
+> >
+> > Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-imx6.c | 45 ++++++++++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > index f17561791e35a..751243f4c519e 100644
+> > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > @@ -1213,14 +1213,57 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
+> >  	return 0;
+> >  }
+> >
+> > +static int imx6_pcie_reset_link(struct imx6_pcie *imx6_pcie)
+> > +{
+> > +	int ret;
+> > +
+> > +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> > +			   IMX6Q_GPR1_PCIE_TEST_PD, 1 << 18);
+> > +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> > +			   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
+> > +
+> > +	/* Reset the PCIe device */
+> > +	gpiod_set_value_cansleep(imx6_pcie->reset_gpiod, 1);
+> > +
+> > +	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
+> > +	if (ret) {
+> > +		dev_err(imx6_pcie->pci->dev, "unable to enable pcie ref clock\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	imx6_pcie_deassert_reset_gpio(imx6_pcie);
+> 
+> In my patch https://lore.kernel.org/linux-pci/Zr4XG6r+HnbIlu8S@lizhi-Precision-Tower-5810/T/#mc5f38934b6cef95eca90f1a6a63b3193e45179de
+> 
+> imx6qp_pcie_core_reset() and imx6q_pcie_core_reset() is not symatic for
+> assert/desert() to match origin code. I plan fix it after above patch
+> merged.
+> 
+> Does it work if make above code symatic?
+> 
+
+I will give it a try with your patches applied and let you know.
+
+> > +
+> > +	/*
+> > +	 * Setup the root complex again and enable msi. Without this PCIe will
+> > +	 * not work in msi mode and drivers will crash if they try to access
+> > +	 * the device memory area
+> > +	 */
+> > +	dw_pcie_setup_rc(&imx6_pcie->pci->pp);
+> > +	if (pci_msi_enabled()) {
+> > +		u32 val;
+> > +		u8 offset = dw_pcie_find_capability(imx6_pcie->pci, PCI_CAP_ID_MSI);
+> > +
+> > +		val = dw_pcie_readw_dbi(imx6_pcie->pci, offset + PCI_MSI_FLAGS);
+> > +		val |= PCI_MSI_FLAGS_ENABLE;
+> > +		dw_pcie_writew_dbi(imx6_pcie->pci, offset + PCI_MSI_FLAGS, val);
+> > +	}
+> 
+> there are already have imx6_pcie_msi_save_restore(imx6_pcie, true); in
+> suspend/resume, why need addtional one here?
+> 
+
+I took the part from the probe function and added it here. I will see if
+I can rework that part.
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int imx6_pcie_resume_noirq(struct device *dev)
+> >  {
+> >  	int ret;
+> >  	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
+> >  	struct dw_pcie_rp *pp = &imx6_pcie->pci->pp;
+> >
+> > +	/*
+> > +	 * Even though the i.MX6Q does not support suspend/resume, we need to
+> > +	 * reset the link after resume or the memory mapped PCIe I/O space will
+> > +	 * be inaccessible. This will cause the system to freeze.
+> > +	 */
+> >  	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
+> > -		return 0;
+> > +		return imx6_pcie_reset_link(imx6_pcie);
+> 
+> If reset everything, I supposed we can add IMX6_PCIE_FLAG_SUPPORTS_SUSPEND
+> at driver data.
+> 
+
+This didn't work for the current version. It seems we do too much in the
+suspend function and therefore it is still not working. However, maybe
+it is really better to just add the flag and try to make suspend/resume
+work by using the function pointers you introduced. I will have a look
+at it, thanks.
+
+> >
+> >  	ret = imx6_pcie_host_init(pp);
+> >  	if (ret)
+> > --
+> > 2.43.0
+> >
 
