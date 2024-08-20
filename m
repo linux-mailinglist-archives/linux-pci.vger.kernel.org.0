@@ -1,567 +1,381 @@
-Return-Path: <linux-pci+bounces-11898-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11899-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8B60958B4C
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 17:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DDC64958C0A
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 18:16:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60474281DBB
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 15:29:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94D90284660
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 16:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07DC819EECF;
-	Tue, 20 Aug 2024 15:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43DC53A8F0;
+	Tue, 20 Aug 2024 16:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="AbEMx8am"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIhiBCTQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB68928FA;
-	Tue, 20 Aug 2024 15:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB2D1B86E3;
+	Tue, 20 Aug 2024 16:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724167716; cv=none; b=OUn/kpRO0o4ZvtMaKjD9bChqdgHn0uDPTh4IAjiMbZULfGQWWGIjQqNjlFs4HoKolbfm+efZy0PuMdrgf/75DWRPnD4yhiJh4MmuIbih7fAEFcCmnZ7LsGmHgU5b6zEE+Fw5GJ+9Y/YWDfE/Nx8BmNsd+weSrSFBSsh3GFqWI5s=
+	t=1724170545; cv=none; b=k6GWlhVuKw4U7flbOncZt18MPPp3byOSJAlPbME2RrVQUua92dvZlsKiiB+qFpnE7OryeRf1lC3PlI1LqM81HkJferPB9r+os9GZI1kEeXyk6FMw8mBkJM5oSN09h3KGeF1PprjZoDGGsNSKvLFeL54+8dXq+Zgr3AnB5gieff0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724167716; c=relaxed/simple;
-	bh=3RTWcyWh1C6aJMbcWNCgiul0YaIwmJNKWjSGyPHCdsQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QLEcOjREtvygT3uR7HjKjY46fJ6aHRWNESOW8WLGm6vKju8bJI/kFnJuUvNXN7WsKuXH/lDdFpNnCdETnUWTLUVpCnKmNQbkOhUp0F2rBfWP5FQjoVzA+xpWWM8C8g8SpoVW1JRfg4lE6KdYeSKKqPJ7aeneAINHO5kwXXR883o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=AbEMx8am; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47KFJHuC030109;
-	Tue, 20 Aug 2024 08:28:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=MqQDZFkeKJRPylubu7HRvd/
-	UoAm5nVYe06qtxhgXfoQ=; b=AbEMx8amQKqUKUFYakKSuqmHA4eSG1+9ir1jmDd
-	NGQVgx0RCHqTcTyKjW6EDqrbsu0VbmKvDG0273w4gcS8iSs33Yckn810Fe+uQNwU
-	xU3Jn5RbOlPDiqH3U2fxsInubUYHNJv3nk4jXtUSP8ieKBfRFfBieQMIO+9JbVM1
-	mFTaStQ2RlqHAgFHGvJa+fDipdUHr0qkpVS2Uhpq8Ndw8VzdACm8xBOv/a+jq77Q
-	IB6cR9FQcySOjvt1lAKN4n0ZQ+bNY1UJimBsrTIHYAqfsFrJLT6EifNYAbBHys0b
-	LRGfA/MnNooFxwZ3rbTJcTix8fGVP5fefU6EEFoLo5gMW2g==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 414vhjrdgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Aug 2024 08:28:14 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 20 Aug 2024 08:28:13 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 20 Aug 2024 08:28:13 -0700
-Received: from localhost.localdomain (unknown [10.28.34.29])
-	by maili.marvell.com (Postfix) with ESMTP id 6C5373F7089;
-	Tue, 20 Aug 2024 08:28:10 -0700 (PDT)
-From: Shijith Thotton <sthotton@marvell.com>
-To: <bhelgaas@google.com>
-CC: Shijith Thotton <sthotton@marvell.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jerinj@marvell.com>,
-        <schalla@marvell.com>, <vattunuru@marvell.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "D Scott
- Phillips" <scott@os.amperecomputing.com>
-Subject: [PATCH] PCI: hotplug: Add OCTEON PCI hotplug controller driver
-Date: Tue, 20 Aug 2024 20:57:20 +0530
-Message-ID: <20240820152734.642533-1-sthotton@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1724170545; c=relaxed/simple;
+	bh=VPOpWT+bAqv0FsPUqqDpxjM34TFjksmf3pyQA+6hdBs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LBspZpJqb/syU+3pCJaJFPqKowLUHF9Foi/+5SPn95sPXeowUOzDnDgrek6biZkt3xFCxoL6eQERvXw7jyxx+CmCvXbZYS6uFFxNDEhfB/oU3Ont/jJAgM0uYQaMJKNKw+cROS367CbGH77DqQ9s/eb00xKDKOHc4xlCIGo7b1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIhiBCTQ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724170543; x=1755706543;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=VPOpWT+bAqv0FsPUqqDpxjM34TFjksmf3pyQA+6hdBs=;
+  b=iIhiBCTQeijBVoMzIgiKEwCQ6cPrjDxw/6qvxqLQLCbWVUGGDwyOz/4Z
+   g0BfobRPDJRNgAaihd8P9Eb90Gjv9Hlu5Le7qzL7YUV0oAI1OFc4eYf+D
+   BOoYm8Z7ThlSBY9b9ivllcunLaonX5jtskh+BJktbRWadqW/LH8wubm8T
+   UE4WyIk4kPINocCxqgt0mz/Mgl6nj5Fr++Hk28kWDDVTpHFgZ76EWOvm/
+   JyUxZzoxyKp0lEj8IMU8jXvUMGGa5vT5SU5WsMTvrS+OwPO/owGk8x5JC
+   b5FiLCuM4jKnWnKNxEXD3PF0k0LYriGRNrFMY2LrLknvUDwsUAkiUXRHL
+   Q==;
+X-CSE-ConnectionGUID: UYUB/7IbQNquFyL7FIymYg==
+X-CSE-MsgGUID: KqCmo3/JTb+Zgiuvr+QZxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="33052919"
+X-IronPort-AV: E=Sophos;i="6.10,162,1719903600"; 
+   d="scan'208";a="33052919"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2024 09:14:02 -0700
+X-CSE-ConnectionGUID: gSfXkD3HQquJFvx+j3ebXg==
+X-CSE-MsgGUID: haPKNuHmTZ26blMLPKGZ5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,162,1719903600"; 
+   d="scan'208";a="60428954"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2024 09:13:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 Aug 2024 19:13:56 +0300 (EEST)
+To: Esther Shimanovich <eshimanovich@chromium.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, 
+    "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, iommu@lists.linux.dev, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI: Detect and trust built-in Thunderbolt chips
+In-Reply-To: <20240815-trust-tbt-fix-v3-1-6ba01865d54c@chromium.org>
+Message-ID: <2af37d5d-ec82-d4fb-9ee5-5a3e47790122@linux.intel.com>
+References: <20240815-trust-tbt-fix-v3-1-6ba01865d54c@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: X0MkABHVyGHHt12RZPcVnryh1RH13ep4
-X-Proofpoint-GUID: X0MkABHVyGHHt12RZPcVnryh1RH13ep4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-20_11,2024-08-19_03,2024-05-17_01
+Content-Type: text/plain; charset=US-ASCII
 
-This patch introduces a PCI hotplug controller driver for the OCTEON
-PCIe device, a multi-function PCIe device where the first function acts
-as a hotplug controller. It is equipped with MSI-x interrupts to notify
-the host of hotplug events from the OCTEON firmware.
+On Thu, 15 Aug 2024, Esther Shimanovich wrote:
 
-The driver facilitates the hotplugging of non-controller functions
-within the same device. During probe, non-controller functions are
-removed and registered as PCI hotplug slots. The slots are added back
-only upon request from the device firmware. The driver also allows the
-enabling and disabling of the slots via sysfs slot entries, provided by
-the PCI hotplug framework.
+> Some computers with CPUs that lack Thunderbolt features use discrete
+> Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
+> chips are located within the chassis; between the root port labeled
+> ExternalFacingPort and the USB-C port.
+> 
+> These Thunderbolt PCIe devices should be labeled as fixed and trusted,
+> as they are built into the computer. Otherwise, security policies that
+> rely on those flags may have unintended results, such as preventing
+> USB-C ports from enumerating.
+> 
+> Detect the above scenario through the process of elimination.
+> 
+> 1) Integrated Thunderbolt host controllers already have Thunderbolt
+>    implemented, so anything outside their external facing root port is
+>    removable and untrusted.
+> 
+>    Detect them using the following properties:
+> 
+>      - Most integrated host controllers have the usb4-host-interface
+>        ACPI property, as described here:
+> Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
+> 
+>      - Integrated Thunderbolt PCIe root ports before Alder Lake do not
+>        have the usb4-host-interface ACPI property. Identify those with
+>        their PCI IDs instead.
+> 
+> 2) If a root port does not have integrated Thunderbolt capabilities, but
+>    has the ExternalFacingPort ACPI property, that means the manufacturer
+>    has opted to use a discrete Thunderbolt host controller that is
+>    built into the computer.
+> 
+>    This host controller can be identified by virtue of being located
+>    directly below an external-facing root port that lacks integrated
+>    Thunderbolt. Label it as trusted and fixed.
+> 
+>    Everything downstream from it is untrusted and removable.
+> 
+> The ExternalFacingPort ACPI property is described here:
+> Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
+> 
+> Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Esther Shimanovich <eshimanovich@chromium.org>
+> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+> While working with devices that have discrete Thunderbolt chips, I
+> noticed that their internal TBT chips are inaccurately labeled as
+> untrusted and removable.
+> 
+> I've observed that this issue impacts all computers with internal,
+> discrete Intel JHL Thunderbolt chips, such as JHL6240, JHL6340, JHL6540,
+> and JHL7540, across multiple device manufacturers such as Lenovo, Dell,
+> and HP.
+> 
+> This affects the execution of any downstream security policy that
+> relies on the "untrusted" or "removable" flags.
+> 
+> I initially submitted a quirk to resolve this, which was too small in
+> scope, and after some discussion, Mika proposed a more thorough fix:
+> https://lore.kernel.org/lkml/20240510052616.GC4162345@black.fi.intel.com
+> I refactored it and am submitting as a new patch.
+> ---
+> Changes in v3:
+> - Incorporated minor edits suggested by Mika Westerberg.
+> - Mika Westerberg tested patch (more details in v2 link)
+> - Added "reviewed-by" and "tested-by" lines
+> - Link to v2: https://lore.kernel.org/r/20240808-trust-tbt-fix-v2-1-2e34a05a9186@chromium.org
+> 
+> Changes in v2:
+> - I clarified some comments, and made minor fixins
+> - I also added a more detailed description of implementation into the
+>   commit message
+> - Added Cc recipients Mike recommended
+> - Link to v1: https://lore.kernel.org/r/20240806-trust-tbt-fix-v1-1-73ae5f446d5a@chromium.org
+> ---
+>  drivers/pci/probe.c | 153 +++++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 146 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index b14b9876c030..308d5a0e5c51 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1629,25 +1629,160 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+>  		dev->is_thunderbolt = 1;
+>  }
+>  
+> +/*
+> + * Checks if pdev is part of a PCIe switch that is directly below the
+> + * specified bridge.
+> + */
+> +static bool pcie_switch_directly_under(struct pci_dev *bridge,
+> +				       struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *parent = pci_upstream_bridge(pdev);
+> +
+> +	/* If the device doesn't have a parent, it's not under anything.*/
 
-Signed-off-by: Shijith Thotton <sthotton@marvell.com>
-Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
----
+Missing space.
 
-This patch introduces a PCI hotplug controller driver for OCTEON PCIe hotplug
-controller. The OCTEON PCIe device is a multi-function device where the first
-function acts as a PCI hotplug controller.
+> +	if (!parent)
+> +		return false;
+> +
+> +	/*
+> +	 * If the device has a PCIe type, check if it is below the
+> +	 * corresponding PCIe switch components (if applicable). Then check
+> +	 * if its upstream port is directly beneath the specified bridge.
+> +	 */
+> +	switch (pci_pcie_type(pdev)) {
+> +	case PCI_EXP_TYPE_UPSTREAM:
+> +		if (parent == bridge)
+> +			return true;
 
-              +--------------------------------+
-              |           Root Port            |
-              +--------------------------------+
-                              |
-                             PCIe
-                              |
-+---------------------------------------------------------------+
-|              OCTEON PCIe Multifunction Device                 |
-+---------------------------------------------------------------+
-            |                    |              |            |
-            |                    |              |            |
-+---------------------+  +----------------+  +-----+  +----------------+
-|      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
-| (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
-+---------------------+  +----------------+  +-----+  +----------------+
-            |
-            |
-+-------------------------+
-|   Controller Firmware   |
-+-------------------------+
+return parent == bridge; ?
 
-The hotplug controller driver facilitates the hotplugging of non-controller
-functions in the same device. During the probe of the driver, the non-controller
-function are removed and registered as PCI hotplug slots. They are added back
-only upon request from the device firmware. The driver also allows the user to
-enable/disable the functions using sysfs slot entries provided by PCI hotplug
-framework.
+> +		break;
+> +
+> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> +		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
 
-This solution adopts a hardware + software approach for several reasons:
+It would be slightly easier to follow the logic if code uses reverse logic
+and returns false immediately when the decision is known. (Will also help 
+the indentation levels especially in the last case block).
 
-1. To reduce hardware implementation cost. Supporting complete hotplug
-   capability within the card would require a PCI switch implemented within.
+> +			parent = pci_upstream_bridge(parent);
+> +			if (parent == bridge)
+> +				return true;
+> +		}
+> +		break;
+> +
+> +	case PCI_EXP_TYPE_ENDPOINT:
+> +		if (pci_pcie_type(parent) == PCI_EXP_TYPE_DOWNSTREAM) {
+> +			parent = pci_upstream_bridge(parent);
+> +			if (parent && pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
+> +				parent = pci_upstream_bridge(parent);
+> +				if (parent == bridge)
+> +					return true;
+> +			}
+> +		}
+> +		break;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +
+> +	/*
+> +	 * For USB4, the tunneled PCIe root or downstream ports are marked
+> +	 * with the "usb4-host-interface" ACPI property, so we look for
+> +	 * that first. This should cover most cases.
+> +	 */
+> +	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
+> +				       "usb4-host-interface", 0);
+> +	if (!IS_ERR(fwnode)) {
+> +		fwnode_handle_put(fwnode);
+> +		return true;
+> +	}
+> +
+> +	/*
+> +	 * Any integrated Thunderbolt 3/4 PCIe root ports from Intel
+> +	 * before Alder Lake do not have the "usb4-host-interface"
+> +	 * property so we use their PCI IDs instead. All these are
+> +	 * tunneled. This list is not expected to grow.
+> +	 */
+> +	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+> +		switch (pdev->device) {
+> +		/* Ice Lake Thunderbolt 3 PCIe Root Ports */
+> +		case 0x8a1d:
+> +		case 0x8a1f:
+> +		case 0x8a21:
+> +		case 0x8a23:
+> +		/* Tiger Lake-LP Thunderbolt 4 PCIe Root Ports */
+> +		case 0x9a23:
+> +		case 0x9a25:
+> +		case 0x9a27:
+> +		case 0x9a29:
+> +		/* Tiger Lake-H Thunderbolt 4 PCIe Root Ports */
+> +		case 0x9a2b:
+> +		case 0x9a2d:
+> +		case 0x9a2f:
+> +		case 0x9a31:
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static bool pcie_is_tunneled(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *parent, *root;
+> +
+> +	parent = pci_upstream_bridge(pdev);
+> +	/* If pdev doesn't have a parent, then there's no way it is tunneled.*/
 
-2. In the multi-function device, non-controller functions can act as emulated
-   devices. The firmware can dynamically enable or disable them at runtime.
+Missing space.
 
-3. Not all root ports support PCI hotplug. This approach provides greater
-   flexibility and compatibility across different hardware configurations.
+> +	if (!parent)
+> +		return false;
+> +
+> +	root = pcie_find_root_port(pdev);
+> +	/* If pdev doesn't have a root, then there's no way it is tunneled.*/
 
-The hotplug controller function is lightweight and is equipped with MSI-x
-interrupts to notify the host about hotplug events. Upon receiving an
-interrupt, the hotplug register is read, and the required function is enabled
-or disabled.
+Missing space.
 
-This driver will be beneficial for managing PCI hotplug events on the OCTEON
-PCIe device without requiring complex hardware solutions.
+Though instead of near identical repeat, I'd combine those two comments 
+into something along the lines of:
 
- MAINTAINERS                    |   6 +
- drivers/pci/hotplug/Kconfig    |  10 +
- drivers/pci/hotplug/Makefile   |   1 +
- drivers/pci/hotplug/octep_hp.c | 351 +++++++++++++++++++++++++++++++++
- 4 files changed, 368 insertions(+)
- create mode 100644 drivers/pci/hotplug/octep_hp.c
+/* pdev without a parent or Root Port is never tunneled. */
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 42decde38320..7b5a618eed1c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13677,6 +13677,12 @@ R:	schalla@marvell.com
- R:	vattunuru@marvell.com
- F:	drivers/vdpa/octeon_ep/
- 
-+MARVELL OCTEON HOTPLUG CONTROLLER DRIVER
-+R:	Shijith Thotton <sthotton@marvell.com>
-+R:	Vamsi Attunuru <vattunuru@marvell.com>
-+S:	Supported
-+F:	drivers/pci/hotplug/octep_hp.c
-+
- MATROX FRAMEBUFFER DRIVER
- L:	linux-fbdev@vger.kernel.org
- S:	Orphan
-diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-index 1472aef0fb81..2e38fd25f7ef 100644
---- a/drivers/pci/hotplug/Kconfig
-+++ b/drivers/pci/hotplug/Kconfig
-@@ -173,4 +173,14 @@ config HOTPLUG_PCI_S390
- 
- 	  When in doubt, say Y.
- 
-+config HOTPLUG_PCI_OCTEONEP
-+	bool "OCTEON PCI device Hotplug controller driver"
-+	depends on HOTPLUG_PCI
-+	help
-+	  Say Y here if you have an OCTEON PCIe device with a hotplug
-+	  controller. This driver enables the non-controller functions of the
-+	  device to be registered as hotplug slots.
-+
-+	  When in doubt, say N.
-+
- endif # HOTPLUG_PCI
-diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
-index 240c99517d5e..40aaf31fe338 100644
---- a/drivers/pci/hotplug/Makefile
-+++ b/drivers/pci/hotplug/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_HOTPLUG_PCI_RPA)		+= rpaphp.o
- obj-$(CONFIG_HOTPLUG_PCI_RPA_DLPAR)	+= rpadlpar_io.o
- obj-$(CONFIG_HOTPLUG_PCI_ACPI)		+= acpiphp.o
- obj-$(CONFIG_HOTPLUG_PCI_S390)		+= s390_pci_hpc.o
-+obj-$(CONFIG_HOTPLUG_PCI_OCTEONEP)	+= octep_hp.o
- 
- # acpiphp_ibm extends acpiphp, so should be linked afterwards.
- 
-diff --git a/drivers/pci/hotplug/octep_hp.c b/drivers/pci/hotplug/octep_hp.c
-new file mode 100644
-index 000000000000..efeb542d4993
---- /dev/null
-+++ b/drivers/pci/hotplug/octep_hp.c
-@@ -0,0 +1,351 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright (C) 2024 Marvell. */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/pci_hotplug.h>
-+#include <linux/slab.h>
-+
-+#define OCTEP_HP_INTR_OFFSET(x) (0x20400 + ((x) << 4))
-+#define OCTEP_HP_INTR_VECTOR(x) (16 + (x))
-+#define OCTEP_HP_DRV_NAME       "octep_hp"
-+
-+/* Interrupt vectors for hotplug enable and disable events. */
-+enum octep_hp_vec_type {
-+	OCTEP_HP_VEC_ENA,
-+	OCTEP_HP_VEC_DIS,
-+};
-+
-+struct octep_hp_cmd {
-+	struct list_head list;
-+	enum octep_hp_vec_type vec_type;
-+	u64 slot_mask;
-+};
-+
-+struct octep_hp_slot {
-+	struct list_head list;
-+	struct hotplug_slot slot;
-+	u16 slot_number;
-+	struct pci_dev *hp_pdev;
-+	unsigned int hp_devfn;
-+	struct octep_hp_controller *ctrl;
-+};
-+
-+struct octep_hp_controller {
-+	void __iomem *base;
-+	struct pci_dev *pdev;
-+	struct work_struct work;
-+	struct list_head slot_list;
-+	struct mutex slot_lock; /* Protects slot_list */
-+	struct list_head hp_cmd_list;
-+	spinlock_t hp_cmd_lock; /* Protects hp_cmd_list */
-+};
-+
-+static void octep_hp_enable_pdev(struct octep_hp_controller *hp_ctrl, struct octep_hp_slot *hp_slot)
-+{
-+	mutex_lock(&hp_ctrl->slot_lock);
-+	if (hp_slot->hp_pdev) {
-+		dev_dbg(&hp_slot->hp_pdev->dev, "Slot %u already enabled\n", hp_slot->slot_number);
-+		mutex_unlock(&hp_ctrl->slot_lock);
-+		return;
-+	}
-+
-+	/* Scan the device and add it to the bus */
-+	hp_slot->hp_pdev = pci_scan_single_device(hp_ctrl->pdev->bus, hp_slot->hp_devfn);
-+	pci_bus_assign_resources(hp_ctrl->pdev->bus);
-+	pci_bus_add_device(hp_slot->hp_pdev);
-+
-+	dev_dbg(&hp_slot->hp_pdev->dev, "Enabled slot %u\n", hp_slot->slot_number);
-+	mutex_unlock(&hp_ctrl->slot_lock);
-+}
-+
-+static void octep_hp_disable_pdev(struct octep_hp_controller *hp_ctrl,
-+				  struct octep_hp_slot *hp_slot)
-+{
-+	mutex_lock(&hp_ctrl->slot_lock);
-+	if (!hp_slot->hp_pdev) {
-+		dev_dbg(&hp_ctrl->pdev->dev, "Slot %u already disabled\n", hp_slot->slot_number);
-+		mutex_unlock(&hp_ctrl->slot_lock);
-+		return;
-+	}
-+
-+	dev_dbg(&hp_slot->hp_pdev->dev, "Disabling slot %u\n", hp_slot->slot_number);
-+
-+	/* Remove the device from the bus */
-+	pci_stop_and_remove_bus_device_locked(hp_slot->hp_pdev);
-+	hp_slot->hp_pdev = NULL;
-+	mutex_unlock(&hp_ctrl->slot_lock);
-+}
-+
-+static int octep_hp_enable_slot(struct hotplug_slot *slot)
-+{
-+	struct octep_hp_slot *hp_slot = container_of(slot, struct octep_hp_slot, slot);
-+
-+	octep_hp_enable_pdev(hp_slot->ctrl, hp_slot);
-+	return 0;
-+}
-+
-+static int octep_hp_disable_slot(struct hotplug_slot *slot)
-+{
-+	struct octep_hp_slot *hp_slot = container_of(slot, struct octep_hp_slot, slot);
-+
-+	octep_hp_disable_pdev(hp_slot->ctrl, hp_slot);
-+	return 0;
-+}
-+
-+static struct hotplug_slot_ops octep_hp_slot_ops = {
-+	.enable_slot = octep_hp_enable_slot,
-+	.disable_slot = octep_hp_disable_slot,
-+};
-+
-+#define SLOT_NAME_SIZE 16
-+static int octep_hp_register_slot(struct octep_hp_controller *hp_ctrl, struct pci_dev *pdev,
-+				  u16 slot_number)
-+{
-+	char slot_name[SLOT_NAME_SIZE];
-+	struct octep_hp_slot *hp_slot;
-+	int ret;
-+
-+	hp_slot = kzalloc(sizeof(*hp_slot), GFP_KERNEL);
-+	if (!hp_slot)
-+		return -ENOMEM;
-+
-+	hp_slot->ctrl = hp_ctrl;
-+	hp_slot->hp_pdev = pdev;
-+	hp_slot->hp_devfn = pdev->devfn;
-+	hp_slot->slot_number = slot_number;
-+	hp_slot->slot.ops = &octep_hp_slot_ops;
-+
-+	snprintf(slot_name, SLOT_NAME_SIZE, "octep_hp_%u", slot_number);
-+	ret = pci_hp_register(&hp_slot->slot, hp_ctrl->pdev->bus, PCI_SLOT(pdev->devfn), slot_name);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register hotplug slot %u\n", slot_number);
-+		kfree(hp_slot);
-+		return ret;
-+	}
-+
-+	octep_hp_disable_pdev(hp_ctrl, hp_slot);
-+	list_add_tail(&hp_slot->list, &hp_ctrl->slot_list);
-+
-+	return 0;
-+}
-+
-+static bool octep_hp_slot(struct octep_hp_controller *hp_ctrl, struct pci_dev *pdev)
-+{
-+	/* Check if the PCI device can be hotplugged */
-+	return pdev != hp_ctrl->pdev && pdev->bus == hp_ctrl->pdev->bus &&
-+		PCI_SLOT(pdev->devfn) == PCI_SLOT(hp_ctrl->pdev->devfn);
-+}
-+
-+static void octep_hp_cmd_handler(struct octep_hp_controller *hp_ctrl, struct octep_hp_cmd *hp_cmd)
-+{
-+	struct octep_hp_slot *hp_slot;
-+
-+	/* Enable or disable the slots based on the slot mask */
-+	list_for_each_entry(hp_slot, &hp_ctrl->slot_list, list) {
-+		if (hp_cmd->slot_mask & BIT(hp_slot->slot_number)) {
-+			if (hp_cmd->vec_type == OCTEP_HP_VEC_ENA)
-+				octep_hp_enable_pdev(hp_ctrl, hp_slot);
-+			else
-+				octep_hp_disable_pdev(hp_ctrl, hp_slot);
-+		}
-+	}
-+}
-+
-+static void octep_hp_work_handler(struct work_struct *work)
-+{
-+	struct octep_hp_controller *hp_ctrl = container_of(work, struct octep_hp_controller, work);
-+	struct octep_hp_cmd *hp_cmd;
-+	unsigned long flags;
-+
-+	/* Process all the hotplug commands */
-+	spin_lock_irqsave(&hp_ctrl->hp_cmd_lock, flags);
-+	while (!list_empty(&hp_ctrl->hp_cmd_list)) {
-+		hp_cmd = list_first_entry(&hp_ctrl->hp_cmd_list, struct octep_hp_cmd, list);
-+		list_del(&hp_cmd->list);
-+		spin_unlock_irqrestore(&hp_ctrl->hp_cmd_lock, flags);
-+
-+		octep_hp_cmd_handler(hp_ctrl, hp_cmd);
-+		kfree(hp_cmd);
-+
-+		spin_lock_irqsave(&hp_ctrl->hp_cmd_lock, flags);
-+	}
-+	spin_unlock_irqrestore(&hp_ctrl->hp_cmd_lock, flags);
-+}
-+
-+static irqreturn_t octep_hp_intr_handler(int irq, void *data)
-+{
-+	struct octep_hp_controller *hp_ctrl = data;
-+	struct pci_dev *pdev = hp_ctrl->pdev;
-+	enum octep_hp_vec_type vec_type;
-+	struct octep_hp_cmd *hp_cmd;
-+	u64 slot_mask;
-+
-+	vec_type = pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_ENA)) == irq ?
-+		OCTEP_HP_VEC_ENA : OCTEP_HP_VEC_DIS;
-+
-+	slot_mask = readq(hp_ctrl->base + OCTEP_HP_INTR_OFFSET(vec_type));
-+	if (!slot_mask) {
-+		dev_err(&pdev->dev, "Invalid slot mask %llx\n", slot_mask);
-+		return IRQ_HANDLED;
-+	}
-+
-+	hp_cmd = kzalloc(sizeof(*hp_cmd), GFP_ATOMIC);
-+	if (!hp_cmd)
-+		return IRQ_HANDLED;
-+
-+	hp_cmd->slot_mask = slot_mask;
-+	hp_cmd->vec_type = vec_type;
-+
-+	/* Add the command to the list and schedule the work */
-+	spin_lock(&hp_ctrl->hp_cmd_lock);
-+	list_add_tail(&hp_cmd->list, &hp_ctrl->hp_cmd_list);
-+	spin_unlock(&hp_ctrl->hp_cmd_lock);
-+	schedule_work(&hp_ctrl->work);
-+
-+	/* Clear the interrupt */
-+	writeq(slot_mask, hp_ctrl->base + OCTEP_HP_INTR_OFFSET(vec_type));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void octep_hp_deregister_slots(struct octep_hp_controller *hp_ctrl)
-+{
-+	struct octep_hp_slot *hp_slot, *tmp;
-+
-+	/* Deregister all the hotplug slots */
-+	list_for_each_entry_safe(hp_slot, tmp, &hp_ctrl->slot_list, list) {
-+		pci_hp_deregister(&hp_slot->slot);
-+		octep_hp_enable_pdev(hp_ctrl, hp_slot);
-+		list_del(&hp_slot->list);
-+		kfree(hp_slot);
-+	}
-+}
-+
-+static void octep_hp_controller_cleanup(void *data)
-+{
-+	struct octep_hp_controller *hp_ctrl = data;
-+
-+	pci_free_irq_vectors(hp_ctrl->pdev);
-+	flush_work(&hp_ctrl->work);
-+	octep_hp_deregister_slots(hp_ctrl);
-+}
-+
-+static int octep_hp_controller_setup(struct pci_dev *pdev, struct octep_hp_controller *hp_ctrl)
-+{
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable PCI device\n");
-+		return ret;
-+	}
-+
-+	ret = pcim_iomap_regions(pdev, BIT(0), OCTEP_HP_DRV_NAME);
-+	if (ret) {
-+		dev_err(dev, "Failed to request MMIO region\n");
-+		return ret;
-+	}
-+
-+	pci_set_master(pdev);
-+	pci_set_drvdata(pdev, hp_ctrl);
-+
-+	INIT_LIST_HEAD(&hp_ctrl->slot_list);
-+	INIT_LIST_HEAD(&hp_ctrl->hp_cmd_list);
-+	mutex_init(&hp_ctrl->slot_lock);
-+	spin_lock_init(&hp_ctrl->hp_cmd_lock);
-+	INIT_WORK(&hp_ctrl->work, octep_hp_work_handler);
-+
-+	hp_ctrl->pdev = pdev;
-+	hp_ctrl->base = pcim_iomap_table(pdev)[0];
-+	if (!hp_ctrl->base) {
-+		dev_err(dev, "Failed to get device resource map\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = pci_alloc_irq_vectors(pdev, 1, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_DIS) + 1,
-+				    PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to alloc MSI-X vectors");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action(dev, octep_hp_controller_cleanup, hp_ctrl);
-+	if (ret) {
-+		dev_err(dev, "Failed to add action for controller cleanup\n");
-+		return ret;
-+	}
-+
-+	ret = devm_request_irq(dev, pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_ENA)),
-+			       octep_hp_intr_handler, 0, "octep_hp_ena", hp_ctrl);
-+	if (ret) {
-+		dev_err(dev, "Failed to register slot enable interrupt handle\n");
-+		return ret;
-+	}
-+
-+	ret = devm_request_irq(dev, pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_DIS)),
-+			       octep_hp_intr_handler, 0, "octep_hp_dis", hp_ctrl);
-+	if (ret) {
-+		dev_err(dev, "Failed to register slot disable interrupt handle\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int octep_hp_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct octep_hp_controller *hp_ctrl;
-+	struct pci_dev *tmp_pdev = NULL;
-+	u16 slot_number = 0;
-+	int ret;
-+
-+	hp_ctrl = devm_kzalloc(&pdev->dev, sizeof(*hp_ctrl), GFP_KERNEL);
-+	if (!hp_ctrl)
-+		return -ENOMEM;
-+
-+	ret = octep_hp_controller_setup(pdev, hp_ctrl);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to setup octep controller\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Register all hotplug slots. Hotplug controller is the first function of the PCI device.
-+	 * The hotplug slots are the remaining functions of the PCI device. They are removed from
-+	 * the bus and are added back when the hotplug event is triggered.
-+	 */
-+	for_each_pci_dev(tmp_pdev) {
-+		if (octep_hp_slot(hp_ctrl, tmp_pdev)) {
-+			ret = octep_hp_register_slot(hp_ctrl, tmp_pdev, slot_number++);
-+			if (ret) {
-+				dev_err(&pdev->dev, "Failed to register hotplug slots.\n");
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+#define OCTEP_DEVID_HP_CONTROLLER 0xa0e3
-+static struct pci_device_id octep_hp_pci_map[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_DEVID_HP_CONTROLLER) },
-+	{ 0 },
-+};
-+
-+static struct pci_driver octep_hp = {
-+	.name     = OCTEP_HP_DRV_NAME,
-+	.id_table = octep_hp_pci_map,
-+	.probe    = octep_hp_pci_probe,
-+};
-+
-+module_pci_driver(octep_hp);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Marvell");
-+MODULE_DESCRIPTION("OCTEON PCIe device hotplug controller driver");
 -- 
-2.25.1
+ i.
+
+> +	if (!root)
+> +		return false;
+> +
+> +	/* Internal PCIe devices are not tunneled. */
+> +	if (!root->external_facing)
+> +		return false;
+> +
+> +	/* Anything directly behind a "usb4-host-interface" is tunneled. */
+> +	if (pcie_has_usb4_host_interface(parent))
+> +		return true;
+> +
+> +	/*
+> +	 * Check if this is a discrete Thunderbolt/USB4 controller that is
+> +	 * directly behind the non-USB4 PCIe Root Port marked as
+> +	 * "ExternalFacingPort". Those are not behind a PCIe tunnel.
+> +	 */
+> +	if (pcie_switch_directly_under(root, pdev))
+> +		return false;
+> +
+> +	/* PCIe devices after the discrete chip are tunneled. */
+> +	return true;
+> +}
+> +
+>  static void set_pcie_untrusted(struct pci_dev *dev)
+>  {
+> -	struct pci_dev *parent;
+> +	struct pci_dev *parent = pci_upstream_bridge(dev);
+>  
+> +	if (!parent)
+> +		return;
+>  	/*
+> -	 * If the upstream bridge is untrusted we treat this device
+> +	 * If the upstream bridge is untrusted we treat this device as
+>  	 * untrusted as well.
+>  	 */
+> -	parent = pci_upstream_bridge(dev);
+> -	if (parent && (parent->untrusted || parent->external_facing))
+> +	if (parent->untrusted)
+>  		dev->untrusted = true;
+> +
+> +	if (pcie_is_tunneled(dev)) {
+> +		pci_dbg(dev, "marking as untrusted\n");
+> +		dev->untrusted = true;
+> +	}
+>  }
+>  
+>  static void pci_set_removable(struct pci_dev *dev)
+>  {
+>  	struct pci_dev *parent = pci_upstream_bridge(dev);
+>  
+> +	if (!parent)
+> +		return;
+>  	/*
+> -	 * We (only) consider everything downstream from an external_facing
+> +	 * We (only) consider everything tunneled below an external_facing
+>  	 * device to be removable by the user. We're mainly concerned with
+>  	 * consumer platforms with user accessible thunderbolt ports that are
+>  	 * vulnerable to DMA attacks, and we expect those ports to be marked by
+> @@ -1657,9 +1792,13 @@ static void pci_set_removable(struct pci_dev *dev)
+>  	 * accessible to user / may not be removed by end user, and thus not
+>  	 * exposed as "removable" to userspace.
+>  	 */
+> -	if (parent &&
+> -	    (parent->external_facing || dev_is_removable(&parent->dev)))
+> +	if (dev_is_removable(&parent->dev))
+> +		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
+> +
+> +	if (pcie_is_tunneled(dev)) {
+> +		pci_dbg(dev, "marking as removable\n");
+>  		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
+> +	}
+>  }
+>  
+>  /**
+> 
+> ---
+> base-commit: 3f386cb8ee9f04ff4be164ca7a1d0ef3f81f7374
+> change-id: 20240806-trust-tbt-fix-5f337fd9ec8a
+> 
+> Best regards,
+> 
 
 
