@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-11887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11889-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A21958993
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 16:37:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E50895899E
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 16:37:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C0841F21E89
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 14:37:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0261283B3D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 14:37:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50773192B8D;
-	Tue, 20 Aug 2024 14:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591F3194094;
+	Tue, 20 Aug 2024 14:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OBt2Yz4g"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R2Bb2H5g"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE25B191F8B
-	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 14:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26094155C80
+	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 14:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724164580; cv=none; b=iuwHrxITabaE5D7ku8c6V+qwd+aoHG4dX31FN/gt28WpmqhHwyrB1s+ns6MqGAAqvhC+1K4ylGuqVuxnKgGlRW8+dQgcp0M5KFVuPzCr3gXUUBKfGBqJ0MVs/Y4RDnDcxVNNDSdUlsgjrbL6+2UTGLzX0bC+t5pGt1ZeME40dLQ=
+	t=1724164582; cv=none; b=YAnPjn1wnLs616vVfS1KM5m4YrszVfncUAzDTX6Q68B/Ng76FiGa2hoHIYRVdpmGs/MNuZB2X1XzCHdyWFT0ko5ojkCeb4azdlr79iuEQB+gk5SaRTyFjOHNn4wVS3PHsre0hnm/lrcwdcFHfCotIYsgM9jXJ1U+fesLzkA91ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724164580; c=relaxed/simple;
-	bh=q6AxTSV6o67QZGmu1De3KVOHFHwIyt9xfYvx5cSg08g=;
+	s=arc-20240116; t=1724164582; c=relaxed/simple;
+	bh=5S2rS93fK6yMvjrCCxzHJ+5LjG17CGjTYW//cVGBTKI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VGFcozcoJLEl3E3jyiXX+2AFLqPhD/hnJ2rEZXUfkeMVlyqwd0auUn0sP5vGfbK/Oki2SAmH1NzKorz5sl1YlvOcLTlSW6P3Xw0m9vJ93LOwjGWEzckdvPC+9i0coUaPkwTdDRTKE7PCqo5Xu+i+cb2Tyv4O+VulfCds415UeXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OBt2Yz4g; arc=none smtp.client-ip=209.85.218.46
+	 MIME-Version; b=HdUFuoEdrA9dTvuqhPBDREE1V5lVMIC3l3mTqwKKaxFWBu0uyAUYVgmb3Ju1QUONIaNH3Qx1YeuZd0NlJcqJXKkDwTfiUZMcfjPN340mRpKS9m2w7HehN6G0dVA740EI+McaUKINiWWD8ncpQJzreSPE5YnVpXhVZ3gaCdFlXTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R2Bb2H5g; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a7a8a4f21aeso673513166b.2
-        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 07:36:17 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a83869373b6so575261766b.2
+        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 07:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724164576; x=1724769376; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1724164577; x=1724769377; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ME6qWihrqgDhoFw7rnf+emxGVj4+uhQv8Lp27J8mM3c=;
-        b=OBt2Yz4gPOMRq8IuUHlM6jT+kyEJo2uPy+0KVFagEkCoQY5zZxCD7YT6IQF2fvooPv
-         U90Il88N8AR+3ubMh7C3JNAprpj5sjawGm8zCY3ZXoDqRQ4r3nVT2l49oScdS7qtmWua
-         82CMkvnhnnvPtU38MsAB0FkohaP+e/3c7JUN94XeK7ANHGmSiE4JDX7LxhQ3sqG1tqXy
-         SZagTQ3c1U82hSiIOqci3mxMqmnEJiqJ/azZS7jwYCmvsHGjN4pVwQA89hrUljgcL93r
-         k7E6adMmksKiblAwLbHLonXGd7F6YCdRPpujnOhhvj93DGR82SZzBr501qmnO4bUn4r5
-         yTLA==
+        bh=rh2Q70Yw8J0M3uUvlLdvsQJ7GpaTom9Aupmo76o5wP8=;
+        b=R2Bb2H5gXS+3BDftGOGlZCQ+Wyo82Qnw9HqTASkf2sDMPnuFWG0xuyUgR/syYMrosP
+         pwO//CoCHBjRUsreF885hRlCpEvIpc/fm7whEAEprK6EFXrB0SgnU2lDVY8d7JE54aCO
+         ncF9+z3rq97EY5v2DK5N9SeyDjpVysq+sXsCeeUIHjsXaPzeTdxjhR2hoqYS3oce4wJK
+         qXq+YaaY0HsVqMr/yC+C6ZM6Q/Qa+vyIJg+zxq5VirqAmvILbfUvQQfgBZvTstj9yKz5
+         dO05yQIytoyHtAVx191MkqyQDjCsIuToqWyKZZkjwoGmlBjKlMBfqFjsOTVwwHbppGZW
+         rqDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724164576; x=1724769376;
+        d=1e100.net; s=20230601; t=1724164577; x=1724769377;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ME6qWihrqgDhoFw7rnf+emxGVj4+uhQv8Lp27J8mM3c=;
-        b=dYjeHCPKxMfXjhkCbEydiOiOJkxu/d2BguM/zVUkcMJBGowlMCMQ6ruSt2uVwyraf0
-         gecEOylqI5jSEIW4SiDH5yOg3gfHTUAKyn61lDMy/OCJGcyPCgBJQvfGrp9PdVumUjxr
-         +CBjOaX5+23BBYQmxd6S6D3Ux0zjmR2xiWnI88ErIfvk71gKXoTvHYRktpE4W2PGxfKn
-         eYZ9EC3YTyNMrwZE9BTHudPsMAJDMr6s/SC9wPvhcms/hRPiaadqrAUU/7y+6tS/7KNu
-         GU56h63PqZ/eI3/zidLZ05UDPqRp65idbttLbeQk0Dy8rg+1EXbV1HN8rmp4jU8b3VZt
-         iAVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUD4ewVQidusW53z87EQznVexyjhKbxW2fchOXGLqbEj+32h41CZhmZAd4Ck4V9sjU+nZBFbfmlvw0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxRUys/EE+Mw3CtmgFvEdIqeVksho4eD/V47kEFC+AWBV3DYs/
-	EnoBvk+Oaidyj8Yfu9p1HsvKWmlMjBa+f3zJ0is0sfc/pmgnZRtJVCJ4KfY5oLA=
-X-Google-Smtp-Source: AGHT+IF2qH4dP28P5IO8gpA7s40UNOYyhDmMrqE5VSKZ2OTtvuPVd4Y6Vq1UjJSJsr78+uOKo4LfAw==
-X-Received: by 2002:a17:907:6d0b:b0:a7d:3ce8:131c with SMTP id a640c23a62f3a-a8392a49776mr1063754666b.62.1724164575530;
-        Tue, 20 Aug 2024 07:36:15 -0700 (PDT)
+        bh=rh2Q70Yw8J0M3uUvlLdvsQJ7GpaTom9Aupmo76o5wP8=;
+        b=mQ3nFmTjpMamkCZLL0yAy808+2/oz5x5G7ipwSEHnTb9HvNa2DZO1VhlStiyWObhr5
+         vlGvuL2C67cQobExUDQ7j01vUa0mPYtS+Z5bjMB3+zlJ7X6osz/rd3womSH8NdARMwVz
+         g+2f/vdITooLr0i2oE+Yr1wsbhTPRa2EfOHNYZfhIw64/hPaMA5LG7QYiYKFBfyEjj1g
+         ErFB3yjO2FNknLyOFS8xY6UPZeBteE1vunvD+i99fdY0W/f5+M3hnEwXV55COshFs1Z/
+         GUYnEYjkuvoy4b1i8MIk2Wo7SPvYhfmCfbK3Ok+bvVqd6x+78RrVPfQ7CbwPc7QXfSpM
+         C0Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGXUBpgSud2IreBu5UTjv3XdBtzdNXV0ZF6ctMhwuYui34bxEzCoHVPGxk1YbSxROV7XPYMp9+kNPxVi/gyjPXtWpHX2o2Has5
+X-Gm-Message-State: AOJu0Yz4QeDetYF2nDLdNk0ujGcabd7MAJafQ6vgzHnCLoS6O+pnKW0N
+	lo0PtcSDKTpwOwgy3gkhg5KTN8Upfsi4ySOJMe7aUBmM/ILxxdJy7XNHct3Lhg0=
+X-Google-Smtp-Source: AGHT+IEGycq7Zes7rT7OOvl2flOQqrkeiAZAc96Hg1g64tQ+uh8+RnXT78ievbR0WEcFfugVqWJabQ==
+X-Received: by 2002:a17:906:d7cb:b0:a7a:c256:3cf with SMTP id a640c23a62f3a-a839292f3fdmr1084910466b.24.1724164576436;
+        Tue, 20 Aug 2024 07:36:16 -0700 (PDT)
 Received: from localhost ([87.13.33.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838cfd5esm768068266b.78.2024.08.20.07.36.14
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83839355f5sm766076166b.106.2024.08.20.07.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 07:36:15 -0700 (PDT)
+        Tue, 20 Aug 2024 07:36:16 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -103,9 +103,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Lee Jones <lee@kernel.org>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 04/11] of: address: Preserve the flags portion on 1:1 dma-ranges mapping
-Date: Tue, 20 Aug 2024 16:36:06 +0200
-Message-ID: <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+Subject: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being discarded after init
+Date: Tue, 20 Aug 2024 16:36:07 +0200
+Message-ID: <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1724159867.git.andrea.porta@suse.com>
 References: <cover.1724159867.git.andrea.porta@suse.com>
@@ -117,36 +117,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
-translations. In this specific case, rhe current behaviour is to zero out
-the entire specifier so that the translation could be carried on as an
-offset from zero.  This includes address specifier that has flags (e.g.
-PCI ranges).
-Once the flags portion has been zeroed, the translation chain is broken
-since the mapping functions will check the upcoming address specifier
-against mismatching flags, always failing the 1:1 mapping and its entire
-purpose of always succeeding.
-Set to zero only the address portion while passing the flags through.
+The special section .dtb.init.rodata contains dtb and dtbo compiled
+as objects inside the kernel and ends up in .init.data sectiion that
+will be discarded early after the init phase. This is a problem for
+builtin drivers that apply dtb overlay at runtime since this happens
+later (e.g. during bus enumeration) and also for modules that should
+be able to do it dynamically during runtime.
+Move the dtb section to .data.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/of/address.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/asm-generic/vmlinux.lds.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index d669ce25b5f9..5a6d55a67aa8 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -443,7 +443,8 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
- 	}
- 	if (ranges == NULL || rlen == 0) {
- 		offset = of_read_number(addr, na);
--		memset(addr, 0, pna * 4);
-+		/* copy the address while preserving the flags */
-+		memset(addr + pbus->flag_cells, 0, (pna - pbus->flag_cells) * 4);
- 		pr_debug("empty ranges; 1:1 translation\n");
- 		goto finish;
- 	}
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index ad6afc5c4918..3ae9097774b0 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -365,6 +365,7 @@
+ 	TRACE_PRINTKS()							\
+ 	BPF_RAW_TP()							\
+ 	TRACEPOINT_STR()						\
++	KERNEL_DTB()							\
+ 	KUNIT_TABLE()
+ 
+ /*
+@@ -683,7 +684,6 @@
+ 	TIMER_OF_TABLES()						\
+ 	CPU_METHOD_OF_TABLES()						\
+ 	CPUIDLE_METHOD_OF_TABLES()					\
+-	KERNEL_DTB()							\
+ 	IRQCHIP_OF_MATCH_TABLE()					\
+ 	ACPI_PROBE_TABLE(irqchip)					\
+ 	ACPI_PROBE_TABLE(timer)						\
 -- 
 2.35.3
 
