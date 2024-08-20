@@ -1,233 +1,227 @@
-Return-Path: <linux-pci+bounces-11903-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11904-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A74BF958E10
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 20:31:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F5D1958F66
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 23:02:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D614EB20EEC
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 18:31:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 159E51F2280E
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 21:02:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F22146D6B;
-	Tue, 20 Aug 2024 18:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81EA614B061;
+	Tue, 20 Aug 2024 21:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XG/5LE3T"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YETrMDkV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B3EEAC5
-	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 18:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724178697; cv=none; b=Y6u8kMzSBSz3shhgueXRVcCs5MeiC2h9k2xW3siM5bwsigvaI+JA2+8aIM6ioBaizM4naXNPmouk79WkWlbV+0T7GDV0siB4ejYL5bdX/54YCEMozLP0QhD+utOCf+WCYuiAEcSYNaRus/XZF8vL996vquzA+sr5j0elKY90ebI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724178697; c=relaxed/simple;
-	bh=XSYdjKiKvyThLATmIh9N2JQAPLRS7wiEijXbWwiDs/M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BN3gZVO9cn+XayOX7rbNVywE3scuCXwkNCP4JtyB7tRwnoBtsI4jCKjRqMmJfwWvT2UqTvH2xYzoeWaWlUX4VhjLoTNRlyruDaoD/o5hn96I0h1pFuJ+mSX/9gwcw4VO/f9lYVdLL0JDtnNWErX2wZgY9QS++KoadYU6/ekAHT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XG/5LE3T; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7a94478a4eso1183909966b.1
-        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 11:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724178693; x=1724783493; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C07kwkQPZHrXmRCk/7LVIjuwNmyBogh+obKLGkkmYFE=;
-        b=XG/5LE3T3o+gzqyCCzm34nba+qmCfXalrQDA360AoPJk3mlkvXoCh6/QfeZvip7m88
-         mjk3ucHDwb1pAgb+EPb5v+NwSsgFfp+LTToHWPRvGmwFGhvSKgH6uKsBqTSHIcq7ayfe
-         igGCVo7l+Anll1eM0oRtiUphZEDoR+Sfvkjr7iCAN4UCUx7MlAUSS1Ogur2VJ3W9YkXg
-         rtoaO1gBhVsVxBa3dMTKrMgQ7EwAJDPFJPhjFa5I97vK/G9xcmb35+CrJ9aJ/gqkTBWF
-         O6g9ox9cp3GKkztqS2IAN3YAPU5DLU1qODsl1PoGrL1fZ+bCdUMj0TPUOTv3TRdDIgx9
-         CLKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724178693; x=1724783493;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C07kwkQPZHrXmRCk/7LVIjuwNmyBogh+obKLGkkmYFE=;
-        b=P4mI0OMwPBrHaz5B0+vH2MztZJ7erPZDRHIXr/Qb354x8HITVpwCBYgtQI+VN34Sur
-         jLd4g0BFIZov0O+U+kim5yYAHm4LkSAH5tgJDNDKOttGKFFHpNyM1HjqPqYhwAAuaiMu
-         +LytWrLlakSNEEWnhtLb4KalWttlAeShKh2c3H1z8OZDkjp/bUjq/YAmfs7wSGnhhFau
-         eoL3zIFKTN5xhwNB5Pw2BnmPtzZR7EBLHt7nunJDIUCTyC2W51XQONSGIxXlgLDIlMWC
-         u4NE/tskjr2jZsUa1s/xw9VoxEc0NPQc99DiqTV0aRVLVabDvp64S18JjzOKBj9Io+bV
-         gGsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURTR4XcH3MqQGJGWztjqaKKRFFq2Z37t/5tICWyvx7qtGThkdEqJOXAIx9h1gR7H7TPaDkMdqbazU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw7FxJG9EkmkC6fbTK7p5dwCCYTYB3lGwJnYx4CjNy3c/VBf3l
-	QQH6gqfhlTq8DraVIu76/krq9YrrhVK4r2ek/wdYqCxhGZf1xZ3vMuPZlsGawfM=
-X-Google-Smtp-Source: AGHT+IGOs6VYvfV4LBlh3n6XPG9LIKhdxKViotPxcCB+fUrUkrU6+w914efXSB1ZJv8NT+vGMTojLg==
-X-Received: by 2002:a17:907:1b13:b0:a86:6a9a:d719 with SMTP id a640c23a62f3a-a866a9adcddmr29207866b.29.1724178693023;
-        Tue, 20 Aug 2024 11:31:33 -0700 (PDT)
-Received: from localhost ([87.13.33.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a838396940fsm796113566b.189.2024.08.20.11.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 11:31:32 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 20 Aug 2024 20:31:38 +0200
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 10/11] net: macb: Add support for RP1's MACB variant
-Message-ID: <ZsThCh45-WX_TDmP@apocalypse>
-Mail-Followup-To: Andrew Lunn <andrew@lunn.ch>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
- <c33fe03d-2097-4d26-b3db-8a3d6c793cd1@lunn.ch>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BF249626
+	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 21:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724187715; cv=fail; b=MC2hZgwSMzvxxjI2aTGzeuhRrv2sDl8BmGtjfZWjarEs5Hs7amyRuvoaipDkWvKh0M7nUvU56a1rRbNPIwnf4j4jG8aMfJgXhr+63+Kd0a9eHRWAOPXArWh9sxCrz+J0YJ6+8Q8j5WcoLY4p1d+JuFUMajJblwyC27qSh2qBzHY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724187715; c=relaxed/simple;
+	bh=+PizGFl9aKF0/dC15YCcCs0NhC2N4LtBiHhDvomqk6o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ij+xUxDMWdnTGSu5uCBGue2E9kVR2zWMQrV9NQjGeGZOfnaO+pfV0ZFtbIM8O1VicDT+ctp1udbKxiju23ClFJWZa8bbCRsF74vk9A463hoGSWQaBi0I5nzBL25CwkUe6/btF8hTlf1VsP1WFoZb/von9arI1h4aME2NcHv4Zds=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YETrMDkV; arc=fail smtp.client-ip=40.107.220.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UeVE57Mg52Kkszd1kQho+2dRdFoWM9xg1Uwfsr71i8pWRDcKyVaRdPcaG2XCRH/v5ju72+MqEZG1IunLDbZFrSxIigqWVry0T8McK1XQ1AEFa/8JrYdNr3+a19WEnKOeWCmTcjOB3IhwSy6grntnqD/llxPdXM8GFbchQknjILicMv+/rz20i2me4XvGh8CRMuEWYBrGYyP4M3SB0pDroILF+ud4kKJ0J0cSJi8hEAdei05KBi/pFKvSAi6uBXNgxxKMM9xkKPGtKUoP2bfaLylK21+bLgcvRBQANF9GUjteNzmmb2BJ7+hmw9ash2Q7eHRTEItMhCK+Lf1duVAUGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ebun0T8aGHHzy4tOYPeBPTUdry7ssm+15GP/y3mwk+U=;
+ b=FNrw/qKK2Al30G3BG6v/tlOvt6GfsYWfuuB5Wn6+K0NULpHDxGaDncUAJ9nt/m78SDxr41Ev28g+UIf7kFl5+mMqOaxgmSqt27UvsrRcWojcsO2Gk81czf+imKE5mYxVRY6dbcdYYe0+q8GTMrRt5StQoVXApaMeKvnGFM5nC10igEgRx7/3YW7E6izK2O/zamubrfDAC66w1lSLcTmLppp+A5En4QEMTPQsCz1z0/8MDh2/SGzHKRz3kzZismoAfN2DnTmrTYZufso7Z1MjXLUm/A5vl4hzlX0BhH/ZyI8ArOiobJ2GLf4wa2rLwq/4a7hhy6hPfxNbZ4tIJj471A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ebun0T8aGHHzy4tOYPeBPTUdry7ssm+15GP/y3mwk+U=;
+ b=YETrMDkVE5Efak+9bIxnwHG1RaKJUOJTGJSm4oxFLE3Bpz/f+8m3M6aojRIETEjHSt7l3ce8G/WtkWTNVF8jDJrtHIyLSXOAqU+LMoIlUE46UrbVm620pFYc4JptjwZB1Gp3Cl5gp3SMdchuOZZMYuc/tIgBhggoLuSdrw0M72E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH7PR12MB7281.namprd12.prod.outlook.com (2603:10b6:510:208::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21; Tue, 20 Aug
+ 2024 21:01:51 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7875.016; Tue, 20 Aug 2024
+ 21:01:51 +0000
+Message-ID: <37796ec8-12a6-4807-b19a-888afee0777c@amd.com>
+Date: Tue, 20 Aug 2024 16:01:58 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/PCI: Fix Null pointer dereference after call to
+ pcie_find_root_port()
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org
+References: <20240812205159.GA294028@bhelgaas>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240812205159.GA294028@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0023.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::28) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c33fe03d-2097-4d26-b3db-8a3d6c793cd1@lunn.ch>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB7281:EE_
+X-MS-Office365-Filtering-Correlation-Id: 45571a11-d0fc-4628-ed84-08dcc15b5002
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TmdpUzBGVVNiRHhVekV0VFVvdGZLdHJqTEpOUXNUWkxYWE1ZQU5DdWMrNHFU?=
+ =?utf-8?B?TGlranl0V1hJZkN0VVg5RWhyS3prbmU5QXBpMGs2aWpOR2hOUVVrUGtGVkFa?=
+ =?utf-8?B?TnNic3loK2RQeG41U1d3TnNRdkV5S0ZhcmJ0OUxjNkhpL1ZIQTZXRmtsOVc5?=
+ =?utf-8?B?dzdSSG5qM0hFTjJlOUlDelpPSWNvdEdDeG9yZVJJdW1Ick1rZmllYlA0Y1p2?=
+ =?utf-8?B?bGhnbWZSckhXNjlsYTVLNlJIVVNiOWpQanFtM3J6ZWRQbjd0QVdUTEN4UXEr?=
+ =?utf-8?B?Yk5SZTUyZFU2ZFFsa2JMR01JRzI5Q1hSWnBNY2NqTE0zK0FyMmwwTE9ZY080?=
+ =?utf-8?B?Nyt6dFoxRGJaSTF2UEh3Rk1rSTBJbHpmMnJTaG1oL0lmVk81aWNZZ2JIZVFG?=
+ =?utf-8?B?L3lYbEpQUG1nd3NDaEhGOStsbVFwUVBhNzBBNVN2UTZUUmJsSzhqV0p1VGxJ?=
+ =?utf-8?B?VnNINmNEd0J2azNJSTVMck53dm42UU42WGUzN09EdGFxUUh1MDNSU3VmQUZp?=
+ =?utf-8?B?SXhZc2JqRFNKUVJCZVZvekE1U0pXY3h3cnBzT3N1azhESm1WbXFQN01lb3N2?=
+ =?utf-8?B?L1AwVktLSy9GcXpzNXIwRXFhTkEwNnkyOWQ3UlorVTZyV1I5bnFUOHBjTnlu?=
+ =?utf-8?B?YmdqcDBwejU5Z2JEc0dUWWk5RHhSbDMrR1VVY1AwbXFZbWJvS3AwTDg0N1FH?=
+ =?utf-8?B?VkVDOGFsQ3gwNFBYZWRqV2RzeFk0MzNPL3JtWWdjOTE5dDJRVHZBL1R2S3RS?=
+ =?utf-8?B?UjZmdncyWVl2TnFSM2VaLzN0MjBBSmQ3RHdHbWNTRFR6OFE1YkZMYlFHM1NZ?=
+ =?utf-8?B?VjB4b2NRWmthNGh1Q2NTbUJHVm1JTEIra0YvckR3dW1tTjdYdFkrWE93UjZB?=
+ =?utf-8?B?TVh5cFplMjhwYTFvVmpZR3RHRVhpamViekw1UFdpeUlNajVSaWVCYmRPS2VO?=
+ =?utf-8?B?dlFLbUVRS21LajhCUzFDcjJJQW5vUy82NFJhbkVUT0tuRTFzUUhxNDQ4elU3?=
+ =?utf-8?B?YW4wQm5ac3hCOWgxQzA4S2lQcGZCNEo0UUFPVEs4d3p1eHF5bmFhWE5zVW4z?=
+ =?utf-8?B?Z0pQejBZeGlJclBqZFFaZi9JcGg5QnM4bmhxR2xpZmVVYks1cXlLT3VsRnVF?=
+ =?utf-8?B?TXIvZE13ZWN5cjM1NEFHcHN5aEdzM1VFY1JPNlRhN1JDTWNLd04waFZCLzFo?=
+ =?utf-8?B?aGcyeWM3MkFmUWdDWVNiRmNYOHY3eVYyZjh0a2hhUnJkL3VxOWxCalR3T2Ny?=
+ =?utf-8?B?enM0dFN2dVlUMmhmb0lJa2dxSVVyaVlLS3J3UmJpTjVkSkltK2YwVUVNVzRE?=
+ =?utf-8?B?cE9KMVlkOVNrb1FoSWZET0RXR1FYV3MyVnpKSzZ2ZXBTd1JyVjdMU3VQU1Bs?=
+ =?utf-8?B?MTZOTGVmSTN1dHBnN1pZZVpmVXkycHlzS0FNVGJ5c3J1U3JWOVIxNXh5dzM3?=
+ =?utf-8?B?aVo2c2t6VWVqd2MxQUo4UGlQZUpzVDhPaklXWGtVSFp3ZVJKblZ3L3NCMzZS?=
+ =?utf-8?B?eUxweVlSQkE1TzBPQzlrRklNQWtYQzIzaitGTE5xbTZEVXVGNWJZenFYYUJo?=
+ =?utf-8?B?VytuNW16aFVZZFpXTXkxTDFPSWVXUmczUEZ5RVNsL1d0RW5YNDNtY1c5Tm91?=
+ =?utf-8?B?YzUwejBrWHh2K2hYNHZSUlAxc3BINDgyaExYbEowUHVRQkNqeGtXbkVqMnhn?=
+ =?utf-8?B?dkJ4Y0JpV1FSZ0Y5ZjE2STVZZXBGa3JyK3VZcXdpQXN4VlVKNkdBaldzc3JR?=
+ =?utf-8?B?SERLcDd3R0pncWxUWUkyUFVNSFV2b214RlphLzNoMmRxcHJvNDZEdVBaSWIw?=
+ =?utf-8?B?cFNwRkRFZzhZcmhhczhGZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?elZNS3V3eS9sZUh4OUZWN0dBZDE4eVp3VGJXWnBISCtkUGZmWis1ekgzTnhF?=
+ =?utf-8?B?OFVHR0NPbWxkeDNLeXc3dDU3bkhnQU80R2l3TVErOEJFYzE5dGdSeGdJY3Bm?=
+ =?utf-8?B?NnNsS3N6NUxTOWt1WGlJVVdjQ0pCMmVMWjJxOWVMVjFXRWVBS1MzNEJ0MjVq?=
+ =?utf-8?B?SHhBdm1PY3JhTDk5cEtpaXMyMjJlbTZxYjB1amxuTFlqN1ZGR0ZndjZ2SDFX?=
+ =?utf-8?B?WXd0OG5GcEp6WnhwU3hYeURkU3V4TFpaQ1Bac3lHZ1BsYlV1V2IxelRud1pC?=
+ =?utf-8?B?OWU3MStseWt3UFFiRHlSbU5UTUNXQlFvUHJCVEpLRUlrSzZzTVpXR2ttVkRR?=
+ =?utf-8?B?dXprbnZUOU90QlFsamx2Vk9hOUc4aTZWR3M4QUVxVUc2b0lET3o3UUNJbzVE?=
+ =?utf-8?B?dDB0eVRtZzZSZmtZdDFwd0Z1aTFzZ2tkS2ZVZEhHV2s1RTdHYjZRVzU2dURs?=
+ =?utf-8?B?Mkovb0VLWW9lNUY3VHJlYnBESkNUTEFoVEVkRVRhcWdGYWFzREYzRnF5SzJJ?=
+ =?utf-8?B?VjFJbllWbWFFNys2WVp1RCt0WkVtUC90QmNuZzY1MnVaSXdyV3VibS8yeWkx?=
+ =?utf-8?B?V0NoQy9JYmVhSVZ5eHdPNGxMU2VMTElWNS9vUjZ4bkYwWFhiMnpGY0lHV3hE?=
+ =?utf-8?B?eURDbWV5V0NIUUdKbCs0R2lISkNIZW5oUmx2YmtWRHNhVkM2OFlsRysvUDNT?=
+ =?utf-8?B?VkJ2RHRNWndQQUY1Mms5UmNBcTVLUlFuWnR1a0xtbXNSS0tvVXVrNXBHY3Fm?=
+ =?utf-8?B?UHhUUmovcVN1OUhTZjdaRC8xU2xJSWFYMWZKc2VpV05kdVFFNkRKMEFaSCti?=
+ =?utf-8?B?NjZMZjhEcDk3M1ptTEtHbndzWUFLaG53V2ErOUN5d0VJelphVXM2MWRzbkRL?=
+ =?utf-8?B?WnFtNHBFRzhUaTV0MlRZMHdhUWlWOU1qUDMxSmxBZTRDaGNaV2w4dVkzbUh1?=
+ =?utf-8?B?WVUyMDhRU0dMZ1RUZmtsaVFDdU1JOEJUcjlOb3lrZ3dMVmZPZDd5Y1N6d2Ji?=
+ =?utf-8?B?U1UvMGR5cjBieU5LYW4raVYvOUZETHVvY1FGQlppQmNMMzZOVEdKNWhsZ1hV?=
+ =?utf-8?B?RmNrV3JVRFpXbzBTVnRNRnAyNERwa002d2VqSG1KMWtqTkZYWFJ2eWFac1NN?=
+ =?utf-8?B?SVAvdk9CRUtLVEZKVFRpZkFoRUkwQzZOQjA2YVJZT3pWemdGUWt3NWtzNVZB?=
+ =?utf-8?B?bE5TK3NUck1PRVNieGxQeVU5K2lPMUVqYlIrbW9MUElUR3gvYnliSkxuZWts?=
+ =?utf-8?B?K1VJbGNLWnVhYkZ6aHVPZUVTZ3JKdFV4YWJIQ0pONXZkTnpPSlp4S2s3V040?=
+ =?utf-8?B?TDlqQWRXaDVPemVVeGZHcnJtME5BL1JsSHUzSjhIaEppamR3V1IyRE1Yclll?=
+ =?utf-8?B?bDM5YkxDMjM1bVZGd3JHRjl0cW8xV3l3ZnI5NzJyZnVVbE9aemFFSHFubEtj?=
+ =?utf-8?B?OThmSVFIandVQUt5RHlQNGIvTzg5QkM0ZGx0U3B0Z2Z6dFJIQUZnS1VySWM5?=
+ =?utf-8?B?dWFlTStNL204Rld3TEwzVkczUHFhVUx4ajAxTm9WK2U3UjRVOEtEQ044Rjlm?=
+ =?utf-8?B?djBxektJTnZxQnVFSi84OVhoWnFQbXY2UFJnSnVtUDl3bDVHd0FmWUxqZUpo?=
+ =?utf-8?B?eEJEM1M0U3FzQlZTcFRQaWc2ZmVLcGhiaGhDSHRWamF4UUFsYzZTRW44MDF0?=
+ =?utf-8?B?RE04Z1kvQnNrSkxHK0FnWVF1d0RHRU5JeEd2cFlzUTA5d3UrL0VRUW9ZQ2ls?=
+ =?utf-8?B?UU1Bd1lFV1h5elNSL3BsM2pGMThNY0dobGtGbXg4WGc0YlVlQ2VyU3ordTlG?=
+ =?utf-8?B?aEpmMDJNcDg5THN3OEQ3YkZoYmVQZ0NBWnRSZllDeTBhWFJKRUlNNUI3SmpB?=
+ =?utf-8?B?eEJUSzVOdHJzT0phZ3V6ZnRiaHQzVEtQS3dIUlFZS1pnU25xZEVmR0diWjQv?=
+ =?utf-8?B?SUdHRkV0cmgxZnlmS3hLVUdXQmJ2Q2NKTms3WWxoWW9NdkxCT2U2ZXU3RXlS?=
+ =?utf-8?B?QWZpbG4zWS9lcy85MjVETlhSUzNRZCsydnFxOXJHS3V2cmVydWR1cWpCdVl1?=
+ =?utf-8?B?MFNjaVlSN0VERUdiZ2ZTbTltdFNhKzliR2k4NUZ2cXNHcHZ1R0R0ZFh1TDdv?=
+ =?utf-8?Q?nTbbDnZnSkLPxw+DFT21TD2S9?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45571a11-d0fc-4628-ed84-08dcc15b5002
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2024 21:01:50.9939
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4eMIALbZuDcMUw14kT3xM2K0I0pZgOzm1D+29rtjtyM+6dMpFEhpUn7XeVYco4v7Q2pHdm5zj7qRWX7dbsjC1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7281
 
-Hi Andrew,
+On 8/12/2024 15:51, Bjorn Helgaas wrote:
+> [+cc Mario, 7d08f21f8c63 author]
+> 
+> On Mon, Aug 12, 2024 at 01:26:59PM -0700, Samasth Norway Ananda wrote:
+>> If pcie_find_root_port() is unable to locate a root port, it will return
+>> NULL. This NULL pointer needs to be handled before trying to dereference.
+>>
+>> Fixes: 7d08f21f8c63 ("x86/PCI: Avoid PME from D3hot/D3cold for AMD Rembrandt and Phoenix USB4")
+>> Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+>> ---
+>>   arch/x86/pci/fixup.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+>> index b33afb240601..98a9bb92d75c 100644
+>> --- a/arch/x86/pci/fixup.c
+>> +++ b/arch/x86/pci/fixup.c
+>> @@ -980,7 +980,7 @@ static void amd_rp_pme_suspend(struct pci_dev *dev)
+>>   		return;
+>>   
+>>   	rp = pcie_find_root_port(dev);
+>> -	if (!rp->pm_cap)
+>> +	if (!rp || !rp->pm_cap)
+> 
+> Seems reasonable.  I suspect we haven't seen problems because these
+> quirks are limited to Device IDs that are all PCIe, but I think we
+> should check on principle and because it may be copied elsewhere where
+> it *does* matter.
 
-On 17:13 Tue 20 Aug     , Andrew Lunn wrote:
-> > +static unsigned int txdelay = 35;
-> > +module_param(txdelay, uint, 0644);
-> 
-> Networking does not like module parameters.
-> 
-> This is also unused in this patch! So i suggest you just delete it.
-> 
-> > +
-> >  /* This structure is only used for MACB on SiFive FU540 devices */
-> >  struct sifive_fu540_macb_mgmt {
-> >  	void __iomem *reg;
-> > @@ -334,7 +337,7 @@ static int macb_mdio_wait_for_idle(struct macb *bp)
-> >  	u32 val;
-> >  
-> >  	return readx_poll_timeout(MACB_READ_NSR, bp, val, val & MACB_BIT(IDLE),
-> > -				  1, MACB_MDIO_TIMEOUT);
-> > +				  100, MACB_MDIO_TIMEOUT);
-> >  }
->   
-> Please take this patch out of the series, and break it up. This is one
-> patch, with a good explanation why you need 1->100.
-> 
-> >  static int macb_mdio_read_c22(struct mii_bus *bus, int mii_id, int regnum)
-> > @@ -493,6 +496,19 @@ static int macb_mdio_write_c45(struct mii_bus *bus, int mii_id,
-> >  	return status;
-> >  }
-> >  
-> > +static int macb_mdio_reset(struct mii_bus *bus)
-> > +{
-> > +	struct macb *bp = bus->priv;
-> > +
-> > +	if (bp->phy_reset_gpio) {
-> > +		gpiod_set_value_cansleep(bp->phy_reset_gpio, 1);
-> > +		msleep(bp->phy_reset_ms);
-> > +		gpiod_set_value_cansleep(bp->phy_reset_gpio, 0);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static void macb_init_buffers(struct macb *bp)
-> >  {
-> >  	struct macb_queue *queue;
-> > @@ -969,6 +985,7 @@ static int macb_mii_init(struct macb *bp)
-> >  	bp->mii_bus->write = &macb_mdio_write_c22;
-> >  	bp->mii_bus->read_c45 = &macb_mdio_read_c45;
-> >  	bp->mii_bus->write_c45 = &macb_mdio_write_c45;
-> > +	bp->mii_bus->reset = &macb_mdio_reset;
-> 
-> This is one patch.
-> 
-> >  	snprintf(bp->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
-> >  		 bp->pdev->name, bp->pdev->id);
-> >  	bp->mii_bus->priv = bp;
-> > @@ -1640,6 +1657,11 @@ static int macb_rx(struct macb_queue *queue, struct napi_struct *napi,
-> >  
-> >  		macb_init_rx_ring(queue);
-> >  		queue_writel(queue, RBQP, queue->rx_ring_dma);
-> > +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-> > +		if (bp->hw_dma_cap & HW_DMA_CAP_64B)
-> > +			macb_writel(bp, RBQPH,
-> > +				    upper_32_bits(queue->rx_ring_dma));
-> > +#endif
-> 
-> How does this affect a disto kernel? Do you actually need the #ifdef?
-> What does bp->hw_dma_cap contain when CONFIG_ARCH_DMA_ADDR_T_64BIT is
-> not defined?
-> 
-> Again, this should be a patch of its own, with a good commit message.
-> 
-> Interrupt coalescing should be a patch of its own, etc.
-> 
->     Andrew
->
+Yeah totally agree, if nothing else it prevents copy/paste mistakes.
 
-Thanks for the feedback, I agree on all the observations. Please do note
-however that, as mentioned in the cover letter, this patch is not intended
-to be included upstream and is provided just as a quick way for anyone
-interested in testing the RP1 functionality using the Ethernet MAC. 
-As such, this patch has not been polished nor splitted into manageable bits.
-Ii'm taknge note of your comments however and will come back to them in a
-future patch that deals specifically with macb.
+HOWEVER I don't think this needs to be a "Fixes" tag because there is no 
+problem in THIS code on the applicable systems.  Those PCI devices are 
+always attached to a root port.  So Bjorn I would suggest stripping the 
+Fixes tag when committing.
 
-Many thanks,
-Andrea
- 
-> ---
-> pw-bot: cr
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+
+> 
+>>   		return;
+>>   
+>>   	rp->pme_support &= ~((PCI_PM_CAP_PME_D3hot|PCI_PM_CAP_PME_D3cold) >>
+>> @@ -994,7 +994,7 @@ static void amd_rp_pme_resume(struct pci_dev *dev)
+>>   	u16 pmc;
+>>   
+>>   	rp = pcie_find_root_port(dev);
+>> -	if (!rp->pm_cap)
+>> +	if (!rp || !rp->pm_cap)
+>>   		return;
+>>   
+>>   	pci_read_config_word(rp, rp->pm_cap + PCI_PM_PMC, &pmc);
+>> -- 
+>> 2.45.2
+>>
+
 
