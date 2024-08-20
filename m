@@ -1,87 +1,87 @@
-Return-Path: <linux-pci+bounces-11849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9873E957CE4
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 07:52:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7F1D957D34
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 08:00:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21B26B20A14
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 05:52:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 645D2284147
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 06:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30A3E43AA8;
-	Tue, 20 Aug 2024 05:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7131494A0;
+	Tue, 20 Aug 2024 06:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TilFGu0W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SVubNwED"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857741BF2B
-	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 05:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BB95338D
+	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 06:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724133138; cv=none; b=XoXWjdVIvXGymgcKQ7Ky5oDxs1wxtOz0frnScalaOb1EetQPgI2sCD+RQE8CYcRFsHy2RigbXL+J+Hz3ntn7QSu7DJe7hrLOvxWx+RsNGfTxoR8twt9NVye/1m7qBlNEv47J22TqKdmNaQaFxiIRratqgaG5eFgGM60kp20rkpE=
+	t=1724133626; cv=none; b=ar78sOAZdUKSIXQ/V4+CQpFDvkkefHW9xrvGFoVuFHp1c/6pNh4larCdeuQeDopXNzH6cSPWp7xZngKFBFBHYcb18v4M2RVtdeZmleailuK4suNmRHi8eqzuJTiwmFltN2DoGVonhniCIMDTHUEKxKdMK1+G2ofk6chEU55jQ1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724133138; c=relaxed/simple;
-	bh=DLK5ItQpzxghqBx4flWmDJes7nJFtU1awddB31t1t/g=;
+	s=arc-20240116; t=1724133626; c=relaxed/simple;
+	bh=sF3PRRiLeL/D5znM6gXQZ3NeF2qGdjIeuDfpPWTothE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z3LqHIbAd+RFf3GpIUIb3ZgdcysmsI39rMlKXlH8PpiF+veJyIMzfu6eRbrkLjUT2EOwqfSwmaRqqSkqdBtAB9B4YRvXfx93giroDx45SLJofsh+VUNFzybRYf433qqJyjjp1+0nm5nsrM0hMBLpqF4khEShOhi0CgIXCoaBkPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TilFGu0W; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=cMr6CqTcc2kGEgs005Fs6qLw5ne3dIp+Txur23MnFhVqIMzhiJtHnRbAMlqTlNbgupDeZ/t59LgRU4IiVeAARr+8YXs1/vkBVAZM5QdEzpsxq1VkdvnopN15hFxsQUMlQ2yVkmSLpjoWyn3Xzth7OHyefRaJ1D1ci3+fB3/fzig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SVubNwED; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-713f3b4c9f7so1360638b3a.2
-        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 22:52:16 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7126c9cb6deso3123176b3a.0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Aug 2024 23:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724133136; x=1724737936; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1724133624; x=1724738424; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=boJ5GhilqsNI0J+v1vrM4G45uO2RgryBQBYvfmNmTfE=;
-        b=TilFGu0WCCzRLw4uqCpcjYTiQQnlv3rY+YsTXrIYWSk8sthig2wzwIX1Xs3rtOrXOr
-         3msEFRKBCDYyALNbG4pMkKHSh83c1lE/dCah2avh22j7/pdFMt4tKVVLOY+q6Z6lZdm6
-         fllTCVK4d1KwYB7iMYMuLh6AhytjXXwRN1ES//TTPf36IOwQVhPvPOB25MaW0W16Ks0g
-         dnt2wQ5n6P2yH2cueA4nixhvmnxgyfaGFNr0ONO1vFa2GhJ0FYtdMH9lcmXTz8mujMc1
-         lDqIxZ6jiTKg6Zj1HP859reM2TFNtQqOsGfc6z0PveqPW4yO4qVMwUYspBPskYOSYBjx
-         z5Pw==
+        bh=lgLMdruNV2huc5fRfMZfd6Ggx0Cp1DwK5971y3VUjeQ=;
+        b=SVubNwED69a/mXs1SjT0rjRq1WPUZ0detoMNm4mzDGId+IuW7LsyU2+8mJDHN+9UlA
+         +Nx/n7yOYkzbra1aXxdICCB7VeAhcGjs4eiffZ4DMFoY5PfvTxmrwZdxjZJ2ZAOjBDuy
+         1xH7H1ATRN1fS8wAPKD8+wPkj6bCyDkmaqGGsazK0s24NwHvvFMlSKBCq8FnYAW36SxP
+         7WBW996b0+s+utBRglB49u7IN5L2eTAwYreXxnKJKKlWS/d6byeBo0Gh4vWdQoTwlUcu
+         c0Bvmlkv/mSLa7IhS1JwoGUC55GNXa9dbnpoicKz2LFo2vBJ7npsHBTHpi4osoRh5njv
+         xO6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724133136; x=1724737936;
+        d=1e100.net; s=20230601; t=1724133624; x=1724738424;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=boJ5GhilqsNI0J+v1vrM4G45uO2RgryBQBYvfmNmTfE=;
-        b=Ko80H61n5tybrM8HvhT/9yjBXq/mlYMfnl07vX/ENd1x9jgZ6nkt5da4vZdMa6NVoy
-         HCYxVmt72FpuD+L/CNbJMtpYR8VicpMqhnWRSGteIZOEhZqgqw4zElNSg67qOaesD4Tc
-         LPjYtUO9S02mZ/gLFlYwinP094faFI2MHnmohupJVOMtfk9zI534f3G+LSKrzDdSjhLi
-         Dxg2AsSLiqahkYEY15x+IjEnwhNCMcV/bcsHGFZZcuzO5hFgVJM93Tbvk06v+YxlGbWg
-         XMPlVLsPAzUrvXBnxqtPn09uJyTBJR8PxyscGNOIoanzlKfjJjhgngTabTbPMWIWUWoa
-         QYqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXieElGhUWsIhGh+uy3f0L3tDOb/Cf3xu/q14oUfF3O0p106poFtRG3yGvcFsuwH1XSuUO0CKLODWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZXBgVi+uCh0DMSyTqbfwdaRxhJJtZ+FedbkoM6hT+rXmRdwQ+
-	qQA6/ElgoTlT7FYupe0ajSz8jKAhW5gvJf/k+s6X5rh11oz3dKohdQHBFo/uBQ==
-X-Google-Smtp-Source: AGHT+IExg7cB/Xy0vOL//UAkuMnPPxBv49gmpCMa8JbsqU5untaUwshPv3OFJbbDot/5OFyk9/K5YA==
-X-Received: by 2002:a05:6a20:2d22:b0:1bd:1e06:9db4 with SMTP id adf61e73a8af0-1c904f88a2emr17776636637.19.1724133135685;
-        Mon, 19 Aug 2024 22:52:15 -0700 (PDT)
+        bh=lgLMdruNV2huc5fRfMZfd6Ggx0Cp1DwK5971y3VUjeQ=;
+        b=WqzDtXnwurkaUuKj5LZwrYm83x71pSOg3aVShlE2n0YaJAEB/MfscyQy2aOmTA7ZkB
+         d8xFdNYYtjvU3bngsZCvpUTcmfpiwcUABJkKVtyn8mJPFJS5PpEccLyJ18v2g4y4DkTW
+         i6WlBjUTfb3yHXe8Lt6s0b0bp5NBdPGtFDPJuWu4hls3dZBUsnpVn/F6yNhShT2YN36u
+         5U7L05WFptfuQ35UJvJ3ehcRw72oks2MEYErCuItSYWIn7F2f6yrWOvleI/Fw/BT8lyk
+         Gw+TgrZCUXjyB3sg/MAzxqk9mRMR7aTRv3+gHk0rtp4Iv8/9cEBpgY9c0JKuJ4OSOlwK
+         0PUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxj+Fl7oACtUhS5ek7f60XIF0YR9C/qgIOusX11PKgzpyUDWVopXmF34kSbPOgxWq7vlQd7hKuxUu60qHGL1s9heX5raLg8Yyf
+X-Gm-Message-State: AOJu0YyKO+dLZXSm8LiZeuKDPA6pYzqfTYgZcTb89moeKK5vjiPgmGV0
+	ONSW2rFKgcKMkZTno8okW9F9l1USO5TySIbar+zrJqVg3uIf23FHqInMH6HFjA==
+X-Google-Smtp-Source: AGHT+IGMZLlXvU8CAUAv9DT+q3r5OtQYUBhXTxRSLpbUg/fgZlURHFtLGiA10dUYE7hx79M25yG/rA==
+X-Received: by 2002:a05:6a00:928e:b0:706:74b7:9d7d with SMTP id d2e1a72fcca58-713c4f19e9amr15133166b3a.25.1724133624443;
+        Mon, 19 Aug 2024 23:00:24 -0700 (PDT)
 Received: from thinkpad ([120.60.128.138])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f02faa03sm71137595ad.19.2024.08.19.22.52.11
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127af3c380sm7489929b3a.203.2024.08.19.23.00.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 22:52:15 -0700 (PDT)
-Date: Tue, 20 Aug 2024 11:22:08 +0530
+        Mon, 19 Aug 2024 23:00:24 -0700 (PDT)
+Date: Tue, 20 Aug 2024 11:30:08 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Cc: rick.wertenbroek@heig-vd.ch, dlemoal@kernel.org,
-	alberto.dassatti@heig-vd.ch,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Niklas Cassel <cassel@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Move DMA check into
- read/write/copy functions
-Message-ID: <20240820055208.g6iorjl4uhl2jq45@thinkpad>
-References: <20240819120112.23563-1-rick.wertenbroek@gmail.com>
+To: Oliver Neukum <oneukum@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	lukas@wunner.de, mika.westerberg@linux.intel.com,
+	Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v5 3/4] PCI: Decouple D3Hot and D3Cold handling for
+ bridges
+Message-ID: <20240820060008.jbghpqibbohbemfz@thinkpad>
+References: <20240802-pci-bridge-d3-v5-0-2426dd9e8e27@linaro.org>
+ <20240802-pci-bridge-d3-v5-3-2426dd9e8e27@linaro.org>
+ <2c5dd04f-8ac0-41eb-a11d-cc48c898c8f3@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,109 +91,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240819120112.23563-1-rick.wertenbroek@gmail.com>
+In-Reply-To: <2c5dd04f-8ac0-41eb-a11d-cc48c898c8f3@suse.com>
 
-On Mon, Aug 19, 2024 at 02:01:10PM +0200, Rick Wertenbroek wrote:
-> The pci-epf-test PCI endpoint function /drivers/pci/endpoint/function/pci-epf_test.c
-> is meant to be used in a PCI endpoint device inside a host computer with
-> the host side driver: /drivers/misc/pci_endpoint_test.c.
+On Mon, Aug 19, 2024 at 02:44:43PM +0200, Oliver Neukum wrote:
+> On 02.08.24 07:55, Manivannan Sadhasivam via B4 Relay wrote:
+> 
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -1434,7 +1434,7 @@ void pci_acpi_setup(struct device *dev, struct acpi_device *adev)
+> >   	 * reason is that the bridge may have additional methods such as
+> >   	 * _DSW that need to be called.
+> >   	 */
+> > -	if (pci_dev->bridge_d3_allowed)
+> > +	if (pci_dev->bridge_d3cold_allowed && pci_dev->bridge_d3hot_allowed)
+> 
+> Are you sure you want to require both capabilities here?
 > 
 
-s/inside/connected to
-
-> The host side driver can request read/write/copy transactions from the
-> endpoint function and expects an IRQ from the endpoint function once
-> the read/write/copy transaction is finished. These can be issued with or
-> without DMA enabled. If the host side driver requests a read/write/copy
-> transaction with DMA enabled and the endpoint function does not support
-> DMA, the endpoint would only print an error message and wait for further
-> commands without sending an IRQ because pci_epf_test_raise_irq() is
-> skipped in pci_epf_test_cmd_handler(). This results in the host side
-> driver hanging indefinitely waiting for the IRQ.
-> 
-
-TBH, it doesn't make sense to control the endpoint DMA from host. Host should
-just issue the transfer command, and let the endpoint use DMA or memcpy based on
-its capability.
-
-> Move the DMA check into the pci_epf_test_read()/write()/copy() functions
-> so that they report a transfer (IO) error and that pci_epf_test_raise_irq()
-> is called when a transfer with DMA is requested, even if unsupported.
-> 
-> The host side driver will no longer hang but report an error on transfer
-> (printing "NOT OKAY") thanks to the checksum because no data was moved.
-> 
-> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 29 +++++++++++++++----
->  1 file changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 7c2ed6eae53a..ec0f79383521 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -314,6 +314,17 @@ static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
->  		 (u64)ts.tv_sec, (u32)ts.tv_nsec, rate);
->  }
->  
-> +static int pci_epf_test_check_dma(struct pci_epf_test *epf_test,
-> +				   struct pci_epf_test_reg *reg)
-> +{
-> +	if ((READ_ONCE(reg->flags) & FLAG_USE_DMA) &&
-> +	    !epf_test->dma_supported) {
-> +		dev_err(&epf_test->epf->dev, "DMA transfer not supported\n");
-> +		return -EIO;
-> +	}
-> +	return 0;
-> +}
-> +
->  static void pci_epf_test_copy(struct pci_epf_test *epf_test,
->  			      struct pci_epf_test_reg *reg)
->  {
-> @@ -327,6 +338,10 @@ static void pci_epf_test_copy(struct pci_epf_test *epf_test,
->  	struct device *dev = &epf->dev;
->  	struct pci_epc *epc = epf->epc;
->  
-> +	ret = pci_epf_test_check_dma(epf_test, reg);
-> +	if (ret)
-> +		goto err;
-> +
->  	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
->  	if (!src_addr) {
->  		dev_err(dev, "Failed to allocate source address\n");
-> @@ -423,6 +438,10 @@ static void pci_epf_test_read(struct pci_epf_test *epf_test,
->  	struct pci_epc *epc = epf->epc;
->  	struct device *dma_dev = epf->epc->dev.parent;
->  
-> +	ret = pci_epf_test_check_dma(epf_test, reg);
-> +	if (ret)
-> +		goto err;
-> +
->  	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
->  	if (!src_addr) {
->  		dev_err(dev, "Failed to allocate address\n");
-> @@ -507,6 +526,10 @@ static void pci_epf_test_write(struct pci_epf_test *epf_test,
->  	struct pci_epc *epc = epf->epc;
->  	struct device *dma_dev = epf->epc->dev.parent;
->  
-> +	ret = pci_epf_test_check_dma(epf_test, reg);
-> +	if (ret)
-> +		goto err;
-> +
->  	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
->  	if (!dst_addr) {
->  		dev_err(dev, "Failed to allocate address\n");
-> @@ -647,12 +670,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  	WRITE_ONCE(reg->command, 0);
->  	WRITE_ONCE(reg->status, 0);
->  
-> -	if ((READ_ONCE(reg->flags) & FLAG_USE_DMA) &&
-> -	    !epf_test->dma_supported) {
-> -		dev_err(dev, "Cannot transfer data using DMA\n");
-> -		goto reset_handler;
-
-Why can't you just set the status and trigger the IRQ here itself? This avoids
-duplicating the check inside each command handler.
+Wakeup is common for both D3Hot and D3Cold, isn't it?
 
 - Mani
 
