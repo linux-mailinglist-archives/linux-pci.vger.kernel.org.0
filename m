@@ -1,84 +1,109 @@
-Return-Path: <linux-pci+bounces-11883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0A0A95887F
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 16:05:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82A2A95897D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 16:36:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 685AC284BBC
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 14:05:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 905B3B21267
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Aug 2024 14:36:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AF1A1917D6;
-	Tue, 20 Aug 2024 14:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D655191F6D;
+	Tue, 20 Aug 2024 14:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C44z1zFQ"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KKXDE6+V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394BC1917F1;
-	Tue, 20 Aug 2024 14:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1951917C2
+	for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 14:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724162709; cv=none; b=HyJfAstbVzMmxeb2W6PkcQt5G+7CBM2pohPsaUIPLF7u5Qs8YRlrtlLGLBjNSp/sgaK+pYilk8WNFQa+cwD7dLaq4og2faYC8LIpFRhoB+6xSD5l+iRBm+HKj24lN/ydgjl0yomOplqzthurNKu6ikMrJkf7EwQMUDScOqs4T+I=
+	t=1724164576; cv=none; b=Yk0lRFW/m/lYRdYxW2eEykSGzCMBjdL2GexGdL77osjuAQNPp7M5nkQDT2be8g/RFIYTY01vEF8IQ9tKYsVTKDDw3aESQtPGkF6JPvQk18PXKOxy/GlmX9hI1ig8pqb6N0UNaYDk7tM352825pYkD44MyDEDgtOe2P/QLYCLYa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724162709; c=relaxed/simple;
-	bh=GY1Zzrx7cTTeDwEgR46i0zevjI7E6ZV8mQxL73UdiPM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T8QbXC7nZhu8/qciZEKvK+oZQw2mIYYWQijTzig2TQr+cxhD5to0WFboyO6DmLoq4oBV+MH6ixbtU7qo5Ovgo0DtlmN4ktdk7yWZeySuuLriPPmuqyb3CnNimSTfvUc5aNsgn42ITvEiNTBsE/6DoaGao/wgKyLdX+WCKRvUBS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C44z1zFQ; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2f3eabcd293so10682081fa.2;
-        Tue, 20 Aug 2024 07:05:06 -0700 (PDT)
+	s=arc-20240116; t=1724164576; c=relaxed/simple;
+	bh=nbes6SGqdEbR+eyIYqDvar9JyRtfpfTelp/Kn/mm0qE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=E1XTuqBr2p3MwxE7GZBa/z+3y1wW2UolhD0/uU6NxYhMSIylE0C138F9fcCFnaPnoHZPzIeZId9da/9y/oN7/l0KJR/qwbgZQrV5cETdNSUjSwLGqb8M4Bosupy+hwEzDNu79IKSzvjhToNN72D5ZL0hxg3lKQ+eVc4lBhlWbNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KKXDE6+V; arc=none smtp.client-ip=209.85.167.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-52efdf02d13so7406976e87.2
+        for <linux-pci@vger.kernel.org>; Tue, 20 Aug 2024 07:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724162705; x=1724767505; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EpVsKFQ5NF4ow0WMsc/fFRx9SO54pTzDAAtSk8M82To=;
-        b=C44z1zFQH9yaDM+HCDJMLeduhx82OSuxd/9uq45ll57mED2k87IMhBB/LnyCYhyP2p
-         /H2Oz9j4Mc97AW36j2ceZvrFAQsW5bmizhSwWbuNOmk78WjaoJA/PwcRI/LrC5o3F2Ea
-         UONWBzTGf7KAjFnfYyqZI82VTmHtNtWhnqm2Hp84CKCk1kmP1r55QvWC724p0Q6bLRTS
-         35OtAyE6TVWD3YKJ0ar55nqebJccEis+13OwTilWCqoI8NtPyTfTHKA+yGMuKOICuDGk
-         gO1SWM0eGi3AA8+a9ZrH3HApi4Gqz7oZOzShHcYTbeajst39hNNX2ZHPmr0f48jIemOo
-         UlNQ==
+        d=suse.com; s=google; t=1724164572; x=1724769372; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfyTQeSSkPZ+QzWWZU+FNyyT4+itZMzr8DmOygd/33U=;
+        b=KKXDE6+VlWxMwU68/tuVqlu9RQlRNHMaF6Z34J4PJ43FtC60HeUzBrXTUP7Q4DIfeS
+         PWxXfLORCxZm0LrljfFDH5dyMGxyQTOL/SVSxyfYROYqimYM7f4F1eWtgXa3Fbiaxelw
+         8Y40wOmM+3QUMM5gVacy+l5unwQ5urO4uvVAniDP81If5tIfVU00Fw+X6GDF2nxALs4O
+         9c15gcz4VvGTG+a8mv3n2xTM73n9H0v73rwnNhKVZB+gE1snnUKU6iEtX3A8y5Ujenxj
+         zgdWfDihJHN8JpMj/C3S8WhSZ99tTeJcP/ry6D4+0WIb4YdiGbG1JdCnDK6TWgtahFyz
+         ecAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724162705; x=1724767505;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EpVsKFQ5NF4ow0WMsc/fFRx9SO54pTzDAAtSk8M82To=;
-        b=mKm3PRPdrDbXvJ0uRLJcz7nb9sM/x2PF7GV9XRy2dtbHqDwLJEg0FrR60XH/bQp4Ua
-         TKvR1zuGLpDriqVwkyXTtBcsiGl7q4Qpm4U++diXEyT3XJjc87lex6+Rg2jVenvfQs07
-         MegT00ajvRfHo16FdaJU4RWMdyTekqxCexDVcKhRM7mqGm+632d60o/By7vJARWEf5RQ
-         P1QVXglb7bBDt6GqCYeA5rZZRM5NINqr5ZNG7x97OeFtbYy+cjnV7OBi+PX6gMUga2tL
-         n5ZlWdFArdKMVEtw5ShivVr9/BQdnYODtdY5s9KhJQ7LcFGe+KqTBN60YE8ufnDvNOvc
-         EsiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXV3KTuEdwFK1hDhOJL2WYvk+njDVmIzOR3qr8KoF0uwzpD0HLkbi5VKTs/SQsZsMbBuHXJJ1jNKLuK9ZgbkafxYcZA3Z/Gm+JI5iiBEw3Xe9wasIvCIcLagyi4V+86MSz0+h9+dNGz
-X-Gm-Message-State: AOJu0YxDMMpHN9Kg70RRd31z7Gf5DfbIEO1LGgGFoeUbfAVMc55o6/97
-	U06L7/Z+z7Md9bzjUGdaqavJtcISLj9R1GkD82rskeknau5nAy6Rb9ifLupf
-X-Google-Smtp-Source: AGHT+IFY1TsBmitACLqYyEqO/YS03tngiajm+rIfQ7sMYhGmY0hDJjdKGRTr8cL35/r6R0VF/c0Rgg==
-X-Received: by 2002:a05:651c:544:b0:2f1:a7f8:810f with SMTP id 38308e7fff4ca-2f3be5de18cmr100618031fa.36.1724162704707;
-        Tue, 20 Aug 2024 07:05:04 -0700 (PDT)
-Received: from SP-RaptorLake.dyn.int.numascale.com (fwa5c9b-54.bb.online.no. [88.92.155.54])
-        by smtp.googlemail.com with ESMTPSA id 38308e7fff4ca-2f3b77039ffsm17908081fa.77.2024.08.20.07.05.03
+        d=1e100.net; s=20230601; t=1724164572; x=1724769372;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfyTQeSSkPZ+QzWWZU+FNyyT4+itZMzr8DmOygd/33U=;
+        b=wfvpwHBE9Jq+KEmVAbZu3rGBkuC1a9Xc2UKoSonTMXRDjA2HUgFjekqcWGRWUkaRvg
+         77eGg6XrbqjdzfU7gnHhv0dcewlAf/ehF4AovaGPXjs9SlCvIMGDgaA0sZfAkVf15Zaw
+         4FfkhG1f4k1iGwh1O2H7pDqcol45cXFofv6xyA6wid71s+hHWM5jgemhIk4hJYKQJCcz
+         MPGncwzixt5i9SCE4xxqubzFTRv8bQANoBbWP2n08m3bHA5hKMUCzZI0eaXFbewKMvnn
+         fGNr1mCeAcGogD2eae5wBJT+vjpCAez4vAdszQz4Zp8PYrETO72huSsDnwWILGY9E0Le
+         J7pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVQqjgZfAwvfCZPa9eY7bYrjYcSjfOiaKObQ7gkFoeIUf/xrS9EAUD32iWPEZIQATDW4rNJ5JopmX1n5ufuH1NNPsUY9UUhZ2S
+X-Gm-Message-State: AOJu0YxDyslc9f8JTDlV96D9IJW8k+y1ib5UKqrp2s+MwaNiYlIdwsy0
+	dA9RYSHjSFrbL4DUNd6CReKujPTXakQto6cpJ2GhJgssh2/cPmi4VU8IREqu8Hk=
+X-Google-Smtp-Source: AGHT+IFLUQVFBJiZPnU1UIStc9VMSRLEpQuaGd1PxEKJ/fpKdzW6906wlGxbUZmW87C0ek7drDgHNg==
+X-Received: by 2002:a05:6512:3b8b:b0:52e:fa5f:b6a7 with SMTP id 2adb3069b0e04-5331c6a0569mr10710062e87.13.1724164571458;
+        Tue, 20 Aug 2024 07:36:11 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a838396940fsm772692466b.189.2024.08.20.07.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 07:05:04 -0700 (PDT)
-From: Steffen Persvold <spersvold@gmail.com>
-To: Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Tue, 20 Aug 2024 07:36:11 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: spersvold@gmail.com,
-	linux-pci@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: host-generic: Fix NULL pointer dereference on 32-bit CAM systems
-Date: Tue, 20 Aug 2024 16:04:23 +0200
-Message-Id: <20240820140423.29410-1-spersvold@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Tue, 20 Aug 2024 16:36:02 +0200
+Message-ID: <cover.1724159867.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,143 +112,123 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CAM (legacy) host drivers also need to refer to pci_ecam_add_bus and
-pci_ecam_remove_bus functions to get mapped resources on 32-bit systems.
-This is because 32-bit systems have separate iomap resources per bus
-segment and pci_ecam_add_bus is the one that sets that up. Move the
-pci_ecam_ops for CAM mode to ecam.c so we can refer the static functions.
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, 
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
 
-This fixes :
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+Followup patches should add support for the several peripherals contained
+in RP1.
 
-[    1.356001] pci-host-generic 30000000.pci: host bridge /soc/pci@30000000 ranges:
-[    1.365324] pci-host-generic 30000000.pci:      MEM 0x0040000000..0x004fffffff -> 0x0040000000
-[    1.375556] pci-host-generic 30000000.pci:      MEM 0x0050000000..0x006fffffff -> 0x0050000000
-[    1.386132] pci-host-generic 30000000.pci: ECAM at [mem 0x30000000-0x30ffffff] for [bus 00-ff]
-[    1.399490] pci-host-generic 30000000.pci: PCI host bridge to bus 0000:00
-[    1.407073] pci_bus 0000:00: root bus resource [bus 00-ff]
-[    1.413648] pci_bus 0000:00: root bus resource [mem 0x40000000-0x4fffffff]
-[    1.421718] pci_bus 0000:00: root bus resource [mem 0x50000000-0x6fffffff pref]
-[    1.430647] Unable to handle kernel NULL pointer dereference at virtual address 00000800
-[    1.439441] Oops [#1]
-[    1.442152] CPU: 0 PID: 1 Comm: swapper Not tainted 6.9.7+ #43
-[    1.448753] Hardware name: Digilent Nexys-Video-A7 RV32 (DT)
-[    1.454968] epc : pci_generic_config_read+0x40/0xb0
-[    1.460652]  ra : pci_generic_config_read+0x2c/0xb0
-[    1.466322] epc : c038db9c ra : c038db88 sp : c1c3bc20
-[    1.472095]  gp : c18726d0 tp : c1c5c000 t0 : 0000006e
-[    1.477859]  t1 : 00000063 t2 : 00000000 s0 : c1c3bc30
-[    1.483604]  s1 : 00000004 a0 : 00000800 a1 : 00000800
-[    1.489348]  a2 : 00000000 a3 : 00000008 a4 : c1d15800
-[    1.495090]  a5 : 00000002 a6 : 0000008a a7 : c1809ec0
-[    1.500844]  s2 : c1c3bc38 s3 : 0000ea60 s4 : 00000008
-[    1.506600]  s5 : c1ce4a00 s6 : 00000006 s7 : c11c7460
-[    1.512353]  s8 : 00000008 s9 : c0800108 s10: 00000000
-[    1.518095]  s11: 00000000 t3 : 3ffff7ff t4 : 00000000
-[    1.523833]  t5 : 00000001 t6 : 00000000
-[    1.528252] status: 00000100 badaddr: 00000800 cause: 0000000d
-[    1.534729] [<c038db9c>] pci_generic_config_read+0x40/0xb0
-[    1.541096] [<c038da04>] pci_bus_read_config_dword+0x50/0xb0
-[    1.547623] [<c0391e94>] pci_bus_generic_read_dev_vendor_id+0x3c/0x1ec
-[    1.555010] [<c039245c>] pci_scan_single_device+0xa4/0x11c
-[    1.561273] [<c0392570>] pci_scan_slot+0x9c/0x23c
-[    1.566716] [<c039388c>] pci_scan_child_bus_extend+0x58/0x2f4
-[    1.573275] [<c0393db0>] pci_scan_root_bus_bridge+0x64/0xe8
-[    1.579650] [<c0393e54>] pci_host_probe+0x20/0xc8
-[    1.585104] [<c03bc6f4>] pci_host_common_probe+0x144/0x1e4
-[    1.591396] [<c042ec20>] platform_probe+0x54/0x9c
-[    1.596957] [<c042b5c8>] really_probe+0xbc/0x418
-[    1.602367] [<c042bb0c>] __driver_probe_device+0x70/0xfc
-[    1.608507] [<c042bbe0>] driver_probe_device+0x48/0xf0
-[    1.614487] [<c042be98>] __driver_attach+0xbc/0x264
-[    1.620190] [<c0428d04>] bus_for_each_dev+0x84/0xf8
-[    1.625868] [<c042aeec>] driver_attach+0x28/0x38
-[    1.631269] [<c042a510>] bus_add_driver+0x140/0x278
-[    1.636956] [<c042cf48>] driver_register+0x70/0x15c
-[    1.642666] [<c042e8f8>] __platform_driver_register+0x28/0x38
-[    1.649332] [<c081b694>] gen_pci_driver_init+0x24/0x34
-[    1.655241] [<c0801424>] do_one_initcall+0x88/0x164
-[    1.660943] [<c0801768>] kernel_init_freeable+0x1dc/0x264
-[    1.667199] [<c0699f34>] kernel_init+0x28/0x138
-[    1.672578] [<c06a0b5c>] ret_from_fork+0x14/0x24
-[    1.678399] Code: 0463 0605 0793 0010 8663 04f4 0793 0020 8663 02f4 (2503) 0005
-[    1.686462] ---[ end trace 0000000000000000 ]---
-[    1.691591] Kernel panic - not syncing: Fatal exception
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
 
-Signed-off-by: Steffen Persvold <spersvold@gmail.com>
----
- drivers/pci/controller/pci-host-generic.c | 11 +----------
- drivers/pci/ecam.c                        | 13 +++++++++++++
- include/linux/pci-ecam.h                  |  3 +++
- 3 files changed, 17 insertions(+), 10 deletions(-)
+The patches are ordered as follows:
 
-diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-index 41cb6a05..3b7da1c3 100644
---- a/drivers/pci/controller/pci-host-generic.c
-+++ b/drivers/pci/controller/pci-host-generic.c
-@@ -14,15 +14,6 @@
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
- 
--static const struct pci_ecam_ops gen_pci_cfg_cam_bus_ops = {
--	.bus_shift	= 16,
--	.pci_ops	= {
--		.map_bus	= pci_ecam_map_bus,
--		.read		= pci_generic_config_read,
--		.write		= pci_generic_config_write,
--	}
--};
--
- static bool pci_dw_valid_device(struct pci_bus *bus, unsigned int devfn)
- {
- 	struct pci_config_window *cfg = bus->sysdata;
-@@ -58,7 +49,7 @@ static const struct pci_ecam_ops pci_dw_ecam_bus_ops = {
- 
- static const struct of_device_id gen_pci_of_match[] = {
- 	{ .compatible = "pci-host-cam-generic",
--	  .data = &gen_pci_cfg_cam_bus_ops },
-+	  .data = &pci_generic_cam_ops },
- 
- 	{ .compatible = "pci-host-ecam-generic",
- 	  .data = &pci_generic_ecam_ops },
-diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-index 1c40d250..97430664 100644
---- a/drivers/pci/ecam.c
-+++ b/drivers/pci/ecam.c
-@@ -208,6 +208,19 @@ const struct pci_ecam_ops pci_generic_ecam_ops = {
- };
- EXPORT_SYMBOL_GPL(pci_generic_ecam_ops);
- 
-+/* CAM ops */
-+const struct pci_ecam_ops pci_generic_cam_ops = {
-+	.bus_shift	= 16,
-+	.pci_ops	= {
-+		.add_bus	= pci_ecam_add_bus,
-+		.remove_bus	= pci_ecam_remove_bus,
-+		.map_bus	= pci_ecam_map_bus,
-+		.read		= pci_generic_config_read,
-+		.write		= pci_generic_config_write,
-+	}
-+};
-+EXPORT_SYMBOL_GPL(pci_generic_cam_ops);
-+
- #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
- /* ECAM ops for 32-bit access only (non-compliant) */
- const struct pci_ecam_ops pci_32b_ops = {
-diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-index 3a4860bd..7ebec8ce 100644
---- a/include/linux/pci-ecam.h
-+++ b/include/linux/pci-ecam.h
-@@ -77,6 +77,9 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus, unsigned int devfn,
- /* default ECAM ops */
- extern const struct pci_ecam_ops pci_generic_ecam_ops;
- 
-+/* default CAM ops */
-+extern const struct pci_ecam_ops pci_generic_cam_ops;
-+
- #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
- extern const struct pci_ecam_ops pci_32b_ops;	/* 32-bit accesses only */
- extern const struct pci_ecam_ops pci_32b_read_ops; /* 32-bit read only */
+-PATCHES 1 and 2: add binding schemas for clock and gpio peripherals 
+ found in RP1. They are needed to support the other peripherals, e.g.
+ the ethernet mac depends on a clock generated by RP1 and the phy is
+ reset though the on-board gpio controller.
+
+-PATCHES 3, 4 and 5: preparatory patches that fix the address mapping
+ translation (especially wrt dma-ranges) and permit to place the dtbo
+ binary blob to be put in non transient section.
+
+-PATCH 6 and 7: add clock and gpio device drivers.
+
+-PATCH 8: this is the main patch to support RP1 chipset and peripherals
+ enabling through dtb overlay. It contains the dtso since its intimately
+ coupled with the driver and will be linked in as binary blob in the driver
+ obj, but of course it can be easily split in a separate patch if the
+ maintainer feels it so. The real dtso is in devicetree folder while
+ the dtso in driver folder is just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+
+-PATCH 9: add the relevant kernel CONFIG_ options to defconfig.
+
+-PATCHES 10 and 11: these (still unpolished) patches are not intended to
+ be upstreamed (yet), they serve just as a test reference to be able to
+ use the ethernet MAC contained in RP1.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been alredy promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Please note that albeit this patchset has no prerequisites in order to
+be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
+PCIe controller (see [5]) in order to work at runtime.
+
+Many thanks,
+Andrea della Porta
+
+Link:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+
+Andrea della Porta (11):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  PCI: of_property: Sanitize 32 bit PCI address parsed from DT
+  of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+  vmlinux.lds.h: Preserve DTB sections from being discarded after init
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers as built-in
+  net: macb: Add support for RP1's MACB variant
+  arm64: dts: rp1: Add support for MACB contained in RP1
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   87 +
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  177 ++
+ MAINTAINERS                                   |   12 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |  175 ++
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/Kconfig                           |    9 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1655 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   20 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.c                    |  333 ++++
+ drivers/misc/rp1/rp1-pci.dtso                 |    8 +
+ drivers/net/ethernet/cadence/macb.h           |   25 +
+ drivers/net/ethernet/cadence/macb_main.c      |  152 +-
+ drivers/of/address.c                          |    3 +-
+ drivers/pci/of_property.c                     |    5 +-
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   10 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  719 +++++++
+ include/asm-generic/vmlinux.lds.h             |    2 +-
+ include/dt-bindings/clock/rp1.h               |   56 +
+ include/dt-bindings/misc/rp1.h                |  235 +++
+ include/linux/pci_ids.h                       |    3 +
+ 26 files changed, 3692 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.c
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/rp1.h
+ create mode 100644 include/dt-bindings/misc/rp1.h
+
 -- 
-2.40.1
+2.35.3
 
 
