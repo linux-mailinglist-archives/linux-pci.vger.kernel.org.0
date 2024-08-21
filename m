@@ -1,134 +1,228 @@
-Return-Path: <linux-pci+bounces-11931-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11932-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AC5C959725
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 11:31:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63F9F959790
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 12:18:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B22C328356A
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 09:29:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 907E01F213EA
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 10:18:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903EC1ACDF5;
-	Wed, 21 Aug 2024 08:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEm6wTWm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6BAD1A4AC0;
+	Wed, 21 Aug 2024 08:38:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E706A199FAB;
-	Wed, 21 Aug 2024 08:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136E61A2874;
+	Wed, 21 Aug 2024 08:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724228582; cv=none; b=EV1qKizG/Ab9oYNI62uVyBBBOQAY3nqyklnV1tp2ayYKrMtkcginjY+lQwXRZ6V/h06ih8F9/N6hOcpxZ40PlVjT4mjxIniJztOS5hkjgTnOcgtQZakzwpw0dW9tG4iqK3+4K/XWCnSwSrrpQ//zTc8WyCtfnYoDSiR/Bhipztg=
+	t=1724229531; cv=none; b=WvDa9kJV1j2o9AhXWiZp40Az/IrEfaasr/sO90L9nL4jyH66OCiFW+j23B3Nb/L2OYJhS2l2QOzZfsRM9TxVm36wm38myUHPDqyFRa2oeo1kVvCFKjte0vS7jYwnew6TxgfCLplSYdfY+W4JkNuHFCkZhcHKjX04PMZGZ35A/y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724228582; c=relaxed/simple;
-	bh=cEHplF4jMNpHGE9hNUkCPOYDmxJtkGT5UCfOE9j7f2M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eS31hjdilCSp6vgjBn9FamDIlpOqCw/uRwZWdevWpqHhpU9VbbpZYypKFylElNi+CYFaQN6hlmdlwcKRGjA0fEbWaROHtJnkulTQQHx2125ODxiZ7Bk7PiMqfhPSnTW4o94mC5ykmWC2sezCcyft/gAwEZnIY7UAAQ8dHPNpoes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eEm6wTWm; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1724229531; c=relaxed/simple;
+	bh=5P/c/jaSjzeI/MhOgIKhlzzyIqWq3b0zhScQFwa+lio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j+H88AScGJLrBkPSqG21fnuvj0VYIm/qetHL0Lk6Zx3ErEbD6diRNiEavRP5XcivQr0NASELpJWgXICDZuk0+Qy+IYAWRch+5W46qpf7ApFjBi5FJE9W9N4GUhHVL2n2G4RKay0N8oIUr1iZ/+6UXZULd00DbVsCd6lNApCruD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a8384008482so675260566b.2;
-        Wed, 21 Aug 2024 01:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724228579; x=1724833379; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQJjqDz75DIjtI14ka6f6g6hkoeor8vPcSYTvVZiR7E=;
-        b=eEm6wTWmpdEFVa1+7sOEYUH7pUOj9auodfV4fKOTt4ZG4oYl88E7k8p8Vpcky+Xc95
-         91zbQg5PtjpvJKt/GRLedCXXYzbdu1fm9LPmbWAGcvMpVYOr1tqtaO+KK/JJ4qIYuXCC
-         3m1owZf4IXS3L8QzxYryffgdipg9pFLTT+G+eieuv2QjQ8tJvEvNlS/hT1JGi39LhJNW
-         hyrvF7Gb46MEUaGdA9aLl9rfz+sCtSxivotA490HqaxnuC1enleDyf/llrayxppPGDzY
-         +tnRz/RnAM6zLgPrwQdUWjNQ4FdAiji44dnfuKqZTJhNYXNmH6WEdwls41tkM0bD2Fr0
-         YuoA==
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-37182eee02dso307589f8f.1;
+        Wed, 21 Aug 2024 01:38:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724228579; x=1724833379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MQJjqDz75DIjtI14ka6f6g6hkoeor8vPcSYTvVZiR7E=;
-        b=bDdS59gfH8Wfo4B/ekL4rjCbi9c4vnxgfPKDskyjIK2Ci9flpqdol/OHvltVhNWvx3
-         WUoyghbSHMCn6x2sneiKDNdx41LzTXRTZjAn6pa+q/hzRAIFTTh6QthHlZEHk6jW+yxG
-         fklP5d5eD9WA2EkaVyVC60J4KJYr+va7X5okHVfEEo0k15HgGV3Q6wL37UuTodLLp9fJ
-         UPBDhoxaJCHPkt/8W6fRR7FCPBK3iLmGV21sLiG45vMW+LcU6snB4gy46erivMVABefL
-         xtrVWoK5pAlcKNZ05hg9nFZca2D9DKyka7jHofNetUOlW+XPBVkh1HjcdBmU7euhP/bA
-         v1jg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSC0VMPAXFtu8RQWcWA5jIkJ/fKocYm4vtpgGqhMq6Ce5eem2Ac2apfZ68F+8Yn4I9ZHLa0BB2@vger.kernel.org, AJvYcCVlgqbue+NxjWOnb7qU2TS9uAPdVeb9Nw7qHbHQ1w9nid074AwhTHqpCOTmhuZ0lYmi9Jd9u8pWHdoQHqxG@vger.kernel.org, AJvYcCWPwPeigNGay4JTcCWJ5IEXAdoXJjYTQDt39CwIFfLu0VB0qhPqpXiXNsR2UPziltcvd/4qqDKxfCQuBA==@vger.kernel.org, AJvYcCWdLEJo3UUWoeHJYByDhmXRj74eqBsKJec9bdJiC55f8pQgMYIaOAwM15XNBMNLquuSZzMicbKhF5rLww==@vger.kernel.org, AJvYcCX+1+tOMSEH2twv5kJ10Lh6TAnIu2SpUwTBk+odX1Gw7bgJjTinXwO02Y+YIEmSpsZuibefrQNd1CXOEA==@vger.kernel.org, AJvYcCXQMuddb6zHcmUQtpTOPPJu/po0UgoErfNr3iXwmA6QvARx38CF+/kKZyItP6I0urm1uoUEzkbVZyvw@vger.kernel.org, AJvYcCXaOvO+fniBkwVcdRliFDhPOSLdIbnH2gJ4e0Y2GB1sEkvb5QiZGW2Mawlt9g8PL09wFgE51cNUg547@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5cv9MS7v4SBzlZTACddW/e5emWp0XDmNO9xkNE0YB1+4hrd41
-	N2Q2w5x8UktOmIi8dgnCbGCythcX1wAxojxDJ89mtGhUOSPnLRzLIUms94/9+TabKlJT9ei12FC
-	sJ06O6wrySmy3gVCp0pPJc8GlfSU=
-X-Google-Smtp-Source: AGHT+IFIFdj7MeWYmPsiZH+WByhUHnKbrwVECRxS82N0iKD7flWPDhWf1z7riSsL+51FW+V5a66YfnwTfRw3oCdVfqc=
-X-Received: by 2002:a17:907:f784:b0:a7a:9d1e:3b25 with SMTP id
- a640c23a62f3a-a866f36312emr101512566b.30.1724228578962; Wed, 21 Aug 2024
- 01:22:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724229528; x=1724834328;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IA4cbeI3jpf2hMQGC2S0v8mEm6wI1ZVlkyXbFIyoQFE=;
+        b=OQLT005mCtUT5Dpk9xaUvblzBsthzCqADXjQX0IZHR6uPcKIOWpsMuOrWoCnGsBE2H
+         UzPC8PUEZkn3fVLx7zKP+qUQAV5W9snIdw/SoA7ggBZaaPFKgD1SwQqrQAJ0FHCComdX
+         l/Dw+g2V993Nw0zyESAeTJB+vXPLJ9E860WbE8UNrWfiy70eYbBBUmtCFFdjwXgNb67Z
+         lS5swVfV1VpRUIDOXpV9xW4LehoUYvsmjOdbDpctoPLaokS3yyg3tadoqge1TyYau0Xy
+         j1O7Pl4o1CmXgPlCQl7SA/bM3cHh9y6rbCiBsDWcJ/+ItPBnWqkiHASkNfqRRIbAXRM6
+         EFBA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3J3X1U+ondWMnG2ElSau/4zZPr1I/2PiHUQ9k4D0iBRHVLnJeXVqa/UCngUO0vimkdmNDcr3uri7c@vger.kernel.org, AJvYcCV3+G63DlmDbL/hLVv5gTnONe8+vkfe+xZ+N0F713/8xENn1NePsZ0g3Db6CFN7VWRptg0Ux0Gkek81@vger.kernel.org, AJvYcCWA0WJP/1Eefn57pyGnC4Mmq+nBhega9UzS1yNihjKqZZ6HpTy9oSUE2cJ/6+xV05Le8RURPheze/bihQ==@vger.kernel.org, AJvYcCWtRNxGI5eBr9O9wlO9l/PBEQd5bDQ4XnsRlJapNLzvL+WHIi38BYRAnzVvLyIY8lH4uFInaGFLYkVx3Xfw@vger.kernel.org, AJvYcCXClIQn+G/m8KDvXj7bW731UKX4JHGQNIVJqjDS73s1YJbFHZMubr0C12ZWz3UGKFzfu1EgPCU8GLnZ@vger.kernel.org, AJvYcCXVGb+vGygdZTcvvQDk4KiLSq4O07jDamJAm1Ph39CUSGC8A1HdvEYtbLscv1xeJh0DkyDkO5MY2k6D6Q==@vger.kernel.org, AJvYcCXolWJoENTDZqFREa3o0yjxoeNXRgl5dG2Mmjdn2C7GakGyTqE7gDuxuhvHjpNn0Z5PNnL9awq6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxbevy9ABiGVnnhutvkAftQ1vQGE9MfO5L0JDAg3WWpsEsDYESp
+	j+4yGIPOUQHru3rtfTsZ4UwAdErfJL2ktAUofgZE/drrwo9e8CKO
+X-Google-Smtp-Source: AGHT+IHXLag70+EkUrHg+KlcK65OfqLHIOBumUqGGpky9bmcM8OGLMbTFiG3PRa2CgHtrTzQlZwJdw==
+X-Received: by 2002:a5d:6592:0:b0:366:595c:ca0c with SMTP id ffacd0b85a97d-372fde0fd3bmr790859f8f.24.1724229528033;
+        Wed, 21 Aug 2024 01:38:48 -0700 (PDT)
+Received: from krzk-bin ([178.197.215.209])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-371898b8ad6sm15074573f8f.114.2024.08.21.01.38.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 01:38:47 -0700 (PDT)
+Date: Wed, 21 Aug 2024 10:38:43 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, 
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240821071842.8591-2-pstanner@redhat.com> <20240821071842.8591-4-pstanner@redhat.com>
-In-Reply-To: <20240821071842.8591-4-pstanner@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 21 Aug 2024 11:22:22 +0300
-Message-ID: <CAHp75Vey-zwZG3FrU2fr0ZiQXBO7SV4UfoeutVwVPfk6vKvuTw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] fpga/dfl-pci.c: Replace deprecated PCI functions
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, 
-	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Alvaro Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-fpga@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
 
-On Wed, Aug 21, 2024 at 10:19=E2=80=AFAM Philipp Stanner <pstanner@redhat.c=
-om> wrote:
->
-> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by the
-> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> pcim_iomap_table(), pcim_iomap_regions_request_all()").
->
-> Port dfl-pci.c to the successor, pcim_iomap_region().
->
-> Consistently, replace pcim_iounmap_regions() with pcim_iounmap_region().
+On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> The RaspberryPi RP1 is ia PCI multi function device containing
+> peripherals ranging from Ethernet to USB controller, I2C, SPI
+> and others.
+> Implement a bare minimum driver to operate the RP1, leveraging
+> actual OF based driver implementations for the on-borad peripherals
+> by loading a devicetree overlay during driver probe.
+> The peripherals are accessed by mapping MMIO registers starting
+> from PCI BAR1 region.
+> As a minimum driver, the peripherals will not be added to the
+> dtbo here, but in following patches.
+> 
+> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  MAINTAINERS                           |   2 +
+>  arch/arm64/boot/dts/broadcom/rp1.dtso | 152 ++++++++++++
 
->  static void __iomem *cci_pci_ioremap_bar0(struct pci_dev *pcidev)
->  {
-> -       if (pcim_iomap_regions(pcidev, BIT(0), DRV_NAME))
-> +       void __iomem *bar0;
+Do not mix DTS with drivers.
+
+These MUST be separate.
+
+>  drivers/misc/Kconfig                  |   1 +
+>  drivers/misc/Makefile                 |   1 +
+>  drivers/misc/rp1/Kconfig              |  20 ++
+>  drivers/misc/rp1/Makefile             |   3 +
+>  drivers/misc/rp1/rp1-pci.c            | 333 ++++++++++++++++++++++++++
+>  drivers/misc/rp1/rp1-pci.dtso         |   8 +
+>  drivers/pci/quirks.c                  |   1 +
+>  include/linux/pci_ids.h               |   3 +
+>  10 files changed, 524 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+>  create mode 100644 drivers/misc/rp1/Kconfig
+>  create mode 100644 drivers/misc/rp1/Makefile
+>  create mode 100644 drivers/misc/rp1/rp1-pci.c
+>  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 67f460c36ea1..1359538b76e8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19119,9 +19119,11 @@ F:	include/uapi/linux/media/raspberrypi/
+>  RASPBERRY PI RP1 PCI DRIVER
+>  M:	Andrea della Porta <andrea.porta@suse.com>
+>  S:	Maintained
+> +F:	arch/arm64/boot/dts/broadcom/rp1.dtso
+>  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+>  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+>  F:	drivers/clk/clk-rp1.c
+> +F:	drivers/misc/rp1/
+>  F:	drivers/pinctrl/pinctrl-rp1.c
+>  F:	include/dt-bindings/clock/rp1.h
+>  F:	include/dt-bindings/misc/rp1.h
+> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> new file mode 100644
+> index 000000000000..d80178a278ee
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 > +
-> +       bar0 =3D pcim_iomap_region(pcidev, 0, DRV_NAME);
-> +       if (IS_ERR(bar0))
->                 return NULL;
->
-> -       return pcim_iomap_table(pcidev)[0];
-> +       return bar0;
->  }
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/clock/rp1.h>
+> +#include <dt-bindings/misc/rp1.h>
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +	fragment@0 {
+> +		target-path="";
+> +		__overlay__ {
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			rp1: rp1@0 {
+> +				compatible = "simple-bus";
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				interrupt-controller;
+> +				interrupt-parent = <&rp1>;
+> +				#interrupt-cells = <2>;
+> +
+> +				// ranges and dma-ranges must be provided by the includer
+> +				ranges = <0xc0 0x40000000
+> +					  0x01/*0x02000000*/ 0x00 0x00000000
+> +					  0x00 0x00400000>;
 
-Now this becomes an unneeded wrapper on pcim_ioremap_region(). Can we
-kill this helper completely?
+Are you 100% sure you do not have here dtc W=1 warnings?
 
---=20
-With Best Regards,
-Andy Shevchenko
+> +
+> +				dma-ranges =
+> +				// inbound RP1 1x_xxxxxxxx -> PCIe 1x_xxxxxxxx
+> +					     <0x10 0x00000000
+> +					      0x43000000 0x10 0x00000000
+> +					      0x10 0x00000000>;
+> +
+> +				clk_xosc: clk_xosc {
+
+Nope, switch to DTS coding style.
+
+> +					compatible = "fixed-clock";
+> +					#clock-cells = <0>;
+> +					clock-output-names = "xosc";
+> +					clock-frequency = <50000000>;
+> +				};
+> +
+> +				macb_pclk: macb_pclk {
+> +					compatible = "fixed-clock";
+> +					#clock-cells = <0>;
+> +					clock-output-names = "pclk";
+> +					clock-frequency = <200000000>;
+> +				};
+> +
+> +				macb_hclk: macb_hclk {
+> +					compatible = "fixed-clock";
+> +					#clock-cells = <0>;
+> +					clock-output-names = "hclk";
+> +					clock-frequency = <200000000>;
+> +				};
+> +
+> +				rp1_clocks: clocks@c040018000 {
+
+Why do you mix MMIO with non-MMIO nodes? This really does not look
+correct.
+
+> +					compatible = "raspberrypi,rp1-clocks";
+> +					#clock-cells = <1>;
+> +					reg = <0xc0 0x40018000 0x0 0x10038>;
+
+Wrong order of properties - see DTS coding style.
+
+> +					clocks = <&clk_xosc>;
+> +					clock-names = "xosc";
+
+Best regards,
+Krzysztof
+
 
