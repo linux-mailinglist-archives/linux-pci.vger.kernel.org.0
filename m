@@ -1,174 +1,165 @@
-Return-Path: <linux-pci+bounces-11954-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11955-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC20959EF6
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 15:43:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C779959F06
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 15:49:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BBDDB272CE
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 13:43:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C70F6B211AD
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 13:49:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 222911AD5DF;
-	Wed, 21 Aug 2024 13:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6988B1AD5CE;
+	Wed, 21 Aug 2024 13:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdWjgVWs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOxsU67/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B971A4ADA;
-	Wed, 21 Aug 2024 13:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7391A4B6D;
+	Wed, 21 Aug 2024 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724247778; cv=none; b=lhy3vidZWX6XEEHHhVZ1aJXYNwMeHsiB8YSf49LAAgAfkt7BS2oE0fo7H78IYKR8HPjDSH025qwasDj4dBmYCVHAO+v9Vf8Gi9dSoUHceCbHMecxNJA64K77buYl6rOiFWn1P4a4MVBKNmUE8We4tXOrIfm3kmmTzEZd2r1HIFI=
+	t=1724248178; cv=none; b=juVhxOi18AwGgSGAcMw2154wkwAyOaj8iH7bXbjoS4ulL0qPl08pdxN4cH50DukErh41hHi5YuRxPKYQFg3VHCog1hdZr9nslfcEx66PaRPsnFZ5+DU58OtNUfiEzZta+/tkoJEWw32aKcjrzoSE9DCcthgzU1MZ3CZHhp6yReQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724247778; c=relaxed/simple;
-	bh=THhE5eMnjlNKxQ/R+oGQK3EpvB9KEoAA4Y/el7UyCgc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=qHZbKCM+iW36IWepI1qV4IK3O7qU8eVZ3fNiMC1Z8/DiV4epcNPfn0HkHZZVBU3rgYZoQjmEv6fUd/2Zl3X0iLY1oqyhaBIv30HOslxTN8wsJNvDl9JZ/uTimXRZDeP1LlRFwWfpDKWygoBC8x0tHB9Kziv23BkHsJYKrJuyz8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdWjgVWs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C26C32782;
-	Wed, 21 Aug 2024 13:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724247777;
-	bh=THhE5eMnjlNKxQ/R+oGQK3EpvB9KEoAA4Y/el7UyCgc=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=gdWjgVWsHis3krlbmQZ3X58rj8MsjRM1ldVftrS82nR67XO9gkDMSWmV4mjNersqt
-	 Cm/vJl3tAEb+1jV3iL7kICq6Vd30uPtwc/LgrqOvo/0p39YdXB+JY4//E1Uxqu9dFH
-	 GaF06vqkKCkP7I15FnBE/WwLLlgtUeqjdL+pxtJ8Rrc98zmECQrrcWugU98PlHr0xv
-	 EEmpRrbkzfvpLlS6WH0ojzR5c/B71UbhFdHQYz0kXhwT0LyQgbAxNfWd2FsMyVCzPi
-	 HC1vpoU5nDkNpbkqF8T8cISPeCyIlcevgZ3C3Et+mpWH0JJElDQB8funuTwZaBnVWJ
-	 ki8IS+/1FqBuA==
-Message-ID: <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
-Date: Wed, 21 Aug 2024 15:42:45 +0200
+	s=arc-20240116; t=1724248178; c=relaxed/simple;
+	bh=AEJbp7hVLecs4V0ZKO8ceLa7mXoNjWImzSmkrnUPgOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omIB3F1Uw4T9d99OZZ4XgIS90KpIYa77ZCBUqJzxMG77guORTcNvI3+CdnZwjARYPdMw//3YeKXk6Mpys4itdilmdzSZ7QNbEnvjqFSgtbqbg07n4e7mhGRpmEnQWxd7p+P+I6SzQLeg8YqGNZdCxbwV7p9NT6MldGDo8ObU2js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOxsU67/; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724248177; x=1755784177;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AEJbp7hVLecs4V0ZKO8ceLa7mXoNjWImzSmkrnUPgOE=;
+  b=DOxsU67/rCKzojykqJy6WvHcRCLtORlTzBU8btIq0yI53O11FQhunQL4
+   AYt1iP3mLdRAHZVTlXEIbQA3ZTl8hmSF0m67nVkO17CQ3fLOD4OJvLvfg
+   JD0jDI3kGzpikb73CpnSpxrLC4vkL7MXQFCpLcvcu6FZRfDqYYQl06D0g
+   dwjBN5/mRTSOpriD0mCpUTob5CgsaWyvFxPLCqJeP9bMFWH+q8RSHAeIU
+   Ru8DRyS62nUJDLvWOQR6Ym7/N9jqRCbDB91cO9Qm/lSjaPKKYhGyLnWOv
+   PLRqvyZvrm6RVTlEc6bYFVprEkzt9szU76N8HlOADm9WkhOVzJT4GTIr2
+   Q==;
+X-CSE-ConnectionGUID: S5eaNH+6RU6YfBo6MqQ7Cw==
+X-CSE-MsgGUID: pCXSUqf2RPekPddislqeUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="22771102"
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="22771102"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 06:49:36 -0700
+X-CSE-ConnectionGUID: qQN1NnVwSJaGDM1H9I+faQ==
+X-CSE-MsgGUID: gQShTbnhQUK/iNTWuJgBxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="61120963"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 21 Aug 2024 06:49:34 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sgliN-000BQK-1P;
+	Wed, 21 Aug 2024 13:49:31 +0000
+Date: Wed, 21 Aug 2024 21:49:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shijith Thotton <sthotton@marvell.com>, bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, Shijith Thotton <sthotton@marvell.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jerinj@marvell.com, schalla@marvell.com, vattunuru@marvell.com,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	D Scott Phillips <scott@os.amperecomputing.com>
+Subject: Re: [PATCH] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+Message-ID: <202408212127.ed49pQkJ-lkp@intel.com>
+References: <20240820152734.642533-1-sthotton@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
- DT overlay
-To: Andrea della Porta <andrea.porta@suse.com>
-References: <cover.1724159867.git.andrea.porta@suse.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <cover.1724159867.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240820152734.642533-1-sthotton@marvell.com>
 
-On 20/08/2024 16:36, Andrea della Porta wrote:
-> RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
-> a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, 
-> etc.) whose registers are all reachable starting from an offset from the
-> BAR address.  The main point here is that while the RP1 as an endpoint
-> itself is discoverable via usual PCI enumeraiton, the devices it contains
-> are not discoverable and must be declared e.g. via the devicetree.
-> 
-> This patchset is an attempt to provide a minimum infrastructure to allow
-> the RP1 chipset to be discovered and perpherals it contains to be added
-> from a devictree overlay loaded during RP1 PCI endpoint enumeration.
-> Followup patches should add support for the several peripherals contained
-> in RP1.
-> 
-> This work is based upon dowstream drivers code and the proposal from RH
-> et al. (see [1] and [2]). A similar approach is also pursued in [3].
+Hi Shijith,
 
-Looking briefly at findings it seems this was not really tested by
-automation and you expect reviewers to find issues which are pointed out
-by tools. That's not nice approach. Reviewer's time is limited, while
-tools do it for free. And the tools are free - you can use them without
-any effort.
+kernel test robot noticed the following build errors:
 
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.11-rc4 next-20240821]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Please run standard kernel tools for static analysis, like coccinelle,
-smatch and sparse, and fix reported warnings. Also please check for
-warnings when building with W=1. Most of these commands (checks or W=1
-build) can build specific targets, like some directory, to narrow the
-scope to only your code. The code here looks like it needs a fix. Feel
-free to get in touch if the warning is not clear.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shijith-Thotton/PCI-hotplug-Add-OCTEON-PCI-hotplug-controller-driver/20240820-233005
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240820152734.642533-1-sthotton%40marvell.com
+patch subject: [PATCH] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20240821/202408212127.ed49pQkJ-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240821/202408212127.ed49pQkJ-lkp@intel.com/reproduce)
 
-Please run scripts/checkpatch.pl and fix reported warnings. Then please
-run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
-Some warnings can be ignored, especially from --strict run, but the code
-here looks like it needs a fix. Feel free to get in touch if the warning
-is not clear.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408212127.ed49pQkJ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/pci/hotplug/octep_hp.c: In function 'octep_hp_intr_handler':
+>> drivers/pci/hotplug/octep_hp.c:190:21: error: implicit declaration of function 'readq'; did you mean 'readl'? [-Wimplicit-function-declaration]
+     190 |         slot_mask = readq(hp_ctrl->base + OCTEP_HP_INTR_OFFSET(vec_type));
+         |                     ^~~~~
+         |                     readl
+>> drivers/pci/hotplug/octep_hp.c:210:9: error: implicit declaration of function 'writeq'; did you mean 'writel'? [-Wimplicit-function-declaration]
+     210 |         writeq(slot_mask, hp_ctrl->base + OCTEP_HP_INTR_OFFSET(vec_type));
+         |         ^~~~~~
+         |         writel
 
 
-Best regards,
-Krzysztof
+vim +190 drivers/pci/hotplug/octep_hp.c
 
+   178	
+   179	static irqreturn_t octep_hp_intr_handler(int irq, void *data)
+   180	{
+   181		struct octep_hp_controller *hp_ctrl = data;
+   182		struct pci_dev *pdev = hp_ctrl->pdev;
+   183		enum octep_hp_vec_type vec_type;
+   184		struct octep_hp_cmd *hp_cmd;
+   185		u64 slot_mask;
+   186	
+   187		vec_type = pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_ENA)) == irq ?
+   188			OCTEP_HP_VEC_ENA : OCTEP_HP_VEC_DIS;
+   189	
+ > 190		slot_mask = readq(hp_ctrl->base + OCTEP_HP_INTR_OFFSET(vec_type));
+   191		if (!slot_mask) {
+   192			dev_err(&pdev->dev, "Invalid slot mask %llx\n", slot_mask);
+   193			return IRQ_HANDLED;
+   194		}
+   195	
+   196		hp_cmd = kzalloc(sizeof(*hp_cmd), GFP_ATOMIC);
+   197		if (!hp_cmd)
+   198			return IRQ_HANDLED;
+   199	
+   200		hp_cmd->slot_mask = slot_mask;
+   201		hp_cmd->vec_type = vec_type;
+   202	
+   203		/* Add the command to the list and schedule the work */
+   204		spin_lock(&hp_ctrl->hp_cmd_lock);
+   205		list_add_tail(&hp_cmd->list, &hp_ctrl->hp_cmd_list);
+   206		spin_unlock(&hp_ctrl->hp_cmd_lock);
+   207		schedule_work(&hp_ctrl->work);
+   208	
+   209		/* Clear the interrupt */
+ > 210		writeq(slot_mask, hp_ctrl->base + OCTEP_HP_INTR_OFFSET(vec_type));
+   211	
+   212		return IRQ_HANDLED;
+   213	}
+   214	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
