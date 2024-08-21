@@ -1,78 +1,85 @@
-Return-Path: <linux-pci+bounces-11961-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11962-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BB4B95A154
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 17:25:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4D8395A1D2
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 17:49:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B8B5285EDB
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 15:25:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E53D11C24FE8
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 15:49:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00EF814D435;
-	Wed, 21 Aug 2024 15:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AAE91C86E6;
+	Wed, 21 Aug 2024 15:41:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtZjkQ1J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHQsrtmd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFD014A4EA;
-	Wed, 21 Aug 2024 15:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278D51C6F5B;
+	Wed, 21 Aug 2024 15:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724253883; cv=none; b=CLOukCxOROp0r+CkMiyGqBAQIhMiGa8Q+ZUgCqOgRdOkMjAfT4qTtGQDaDLL2laxbKcQs2qfXDFSdT4Z9InjWJwoxzvZVa0s5bElxZum6tcbOmSQRuFbKOoIeykOL3IAP90szW/R2RKUY39/IGrtO9pK/249+BHoNNqqmMgZCQc=
+	t=1724254867; cv=none; b=mTxrHdfZkX2/cfDOH1+DF5nG5fnuxAc3ydSrlalBF7foJOAGqNs+Ku4r+DDyKGMn8apujPBadX53jf0TdGKztymQCVXa7OZV0FuPeoibE/SoT4zg7q0OtOnAYURYDDXuEJLMyJx1WR7mFjQXD6eXxtL8ugndw5psehuazqGCkOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724253883; c=relaxed/simple;
-	bh=1ZjtB2qfgq/kDPmIlWye3dfIwc8C55gZjyVxcfwSetA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A103vzlgwJlPw7BDmsJpRrrOpgTe8UdNr7sNemR23iJflgsLzjSt4Ho9kSX8alzayWBvSx9ptasOHmR9PwtgI4TfAKgSkFxqOmhyyfpM1aSSjNHjZXeXIAl+CNT3huGkfuW1FO69yXrNvr9005zye4XHhvOs0hbjnOKgHYQlw0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtZjkQ1J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6A2C32786;
-	Wed, 21 Aug 2024 15:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724253883;
-	bh=1ZjtB2qfgq/kDPmIlWye3dfIwc8C55gZjyVxcfwSetA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TtZjkQ1JoqTb6Y/uUb/+73JdcHZH9WrH/IHzsTJfRG26ORrRRXSHBUa3Ueb/e9SOb
-	 k+YJ0KHOXTGtYG5oazohYwVwQQK3KDEf/71BUc7OXOdTJlVctngwIuzs1C7lde3MAJ
-	 pOkDSlsc+fkPkwpLUeIcPRhz8rIzG5YpUUSjE4eFZTv5Ru4EgJPTmgquBbi2iVyxUh
-	 C9U5Ua+xUG0hSc+Wj/prm44j9A3uSlbySmXCbjYORNrb9ll2z/NTmnAWCB0ivJqWDj
-	 SwHlMZ5c2nYJuioTX1efrHNcneRaN9R8CdTYDaqgpWaDSBzN320A/M3P/+osCa1kUz
-	 7lcpXCYz5QVmQ==
-Date: Wed, 21 Aug 2024 10:24:41 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <20240821152441.GA222583@bhelgaas>
+	s=arc-20240116; t=1724254867; c=relaxed/simple;
+	bh=vzRjhS7+octK36jnSe580srSV99gX3ihUMa3REwO3yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MYU+rMko3klTN28Idim+TQvqKGmX61fW2nPJDHgKPdDwfHuGSzyg8eb4dtyTJ4YrNZY+tI2JQNORoEv2EcbILU7P+AiHyPmbqMTsedckIn4oPmoPFJxa7gtRAQ7ARyQDa1h+7em5ih3fmdya7mrWLGFCJHEo8IWw28EhwBZkGMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jHQsrtmd; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-428163f7635so59899875e9.2;
+        Wed, 21 Aug 2024 08:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724254863; x=1724859663; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnCSiun9t/RJbFPil7xi9PoRJLxM8vFSfSVVmmvO+8g=;
+        b=jHQsrtmd2fYKoxHwVglckexH8VMLonuVgxF2B+D5jv3i8/ZJSwHwF5fOFP8VZHU21R
+         2jxQ44t2wTk+exvQiBRgkbQiwf+1C1KaOIJfhArdlgILZ5wJ8baM7qLh051rhQ88+F0+
+         vhpPROEZ/d2NZOwr3Y/vjfmCuX/9e4CTkuP0VIesXKbmqsE/dKvu4FJ59u6ZOduM4CX4
+         CJMDXsWLOfDyOnyT5bGh7bgKMw0lPpITm3yA2lY7HcXCaCyXayb5fFK/JtIY8ififwSE
+         1LMlUo4N2FBaE/07+gE1DhME0zjtq2eaoqmi1QQ+3wwtni/3c8Vp6fiMTLmnbz4OraEq
+         y2XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724254863; x=1724859663;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gnCSiun9t/RJbFPil7xi9PoRJLxM8vFSfSVVmmvO+8g=;
+        b=cWyiOqFgoHtlupSf6ErTFZzSiKhQY0ZggC8T85/oCfDG9Nz3PVN6kuJGoCT4SwWYv4
+         xOzlX+yifAOR06fHED2riZlq67ZdY6RsKBQbYCM0TTi1O3lLPMIYTYi/EJDbha2JGjxO
+         SNe9NvyHvc+AQ21drqIQtTmri0CVirj+ypCFy/LmaW/x0YGkF2oWnLgHKodHVbNPYCT0
+         bPK4WVp2XZHlqOyenB2NJEjTT1RFePGq6ASUg7faYVvlJC+ftylwJbX6aA3OzKJkuqbB
+         +/FfmeKSoV4+y+F3Qoq4Yyd5jNZ0hLhpuHI5vBIenC6tTsG+ulgzIb4ljG318n6gtcwT
+         1vBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPFcjbUE7aMwaHAcC3QQxmVQ8RPVD71cOH3R6q1UYDPtXbCSWMlpaiG6RrRhOHH/gExKcruigWY9iiJUQ=@vger.kernel.org, AJvYcCVjgb4cxK5FQjye+qCeMHYiWZDJH/7sY7SgdFHbwpGFmQBk9o8OFLN1tBUqQpW/NFYAKx3xMzZm8x5B@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbfLpC/XZYADJ8ARkl11399BAsF/6EGKoUgW663HftYfMA4Swk
+	/9A/EremAM5HVLRje1JgzDXUe0cau6rRt3w6RsOfbh0Hnqh2SEg+
+X-Google-Smtp-Source: AGHT+IEhSjD1LCYAF1BY6Yws5oSCUl4XcCH6YisKu0nEYXjpoTyvoA5zAhxtl6MA01Q3OJCdSh2Z5A==
+X-Received: by 2002:a5d:650b:0:b0:371:9362:c286 with SMTP id ffacd0b85a97d-372fd577056mr1685838f8f.4.1724254862883;
+        Wed, 21 Aug 2024 08:41:02 -0700 (PDT)
+Received: from eichest-laptop ([2a02:168:af72:0:ce3a:abb4:426f:fe4a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-371a937a5f4sm11682371f8f.51.2024.08.21.08.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 08:41:02 -0700 (PDT)
+Date: Wed, 21 Aug 2024 17:41:00 +0200
+From: Stefan Eichenberger <eichest@gmail.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, francesco.dolcini@toradex.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] PCI: imx6: reset link after suspend/resume
+Message-ID: <ZsYKjFXHDVr8tz9K@eichest-laptop>
+References: <20240819090428.17349-1-eichest@gmail.com>
+ <ZsNXDq/kidZdyhvD@lizhi-Precision-Tower-5810>
+ <ZsQ9OWdCS5o96VN2@eichest-laptop>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,78 +88,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8b4fa91380fc4754ea80f47330c613e4f6b6592c.1724159867.git.andrea.porta@suse.com>
+In-Reply-To: <ZsQ9OWdCS5o96VN2@eichest-laptop>
 
-On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
-> The of_pci_set_address() function parse devicetree PCI range specifier
+Hi Frank,
 
-s/parse/parses/ ? 
-
-> assuming the address is 'sanitized' at the origin, i.e. without checking
-> whether the incoming address is 32 or 64 bit has specified in the flags.
-> In this way an address with no OF_PCI_ADDR_SPACE_MEM64 set in the flagss
-
-s/flagss/flags/
-
-> could leak through and the upper 32 bits of the address will be set too,
-> and this violates the PCI specs stating that ion 32 bit address the upper
-
-s/ion/in/
-
-> bit should be zero.
-
-I don't understand this code, so I'm probably missing something.  It
-looks like the interesting path here is:
-
-  of_pci_prop_ranges
-    res = &pdev->resource[...];
-    for (j = 0; j < num; j++) {
-      val64 = res[j].start;
-      of_pci_set_address(..., val64, 0, flags, false);
- +      if (OF_PCI_ADDR_SPACE_MEM64)
- +        prop[1] = upper_32_bits(val64);
- +      else
- +        prop[1] = 0;
-
-OF_PCI_ADDR_SPACE_MEM64 tells us about the size of the PCI bus
-address, but the address (val64) is a CPU physical address, not a PCI
-bus address, so I don't understand why of_pci_set_address() should use
-OF_PCI_ADDR_SPACE_MEM64 to clear part of the CPU address.
-
-Add blank lines between paragraphs.
-
-> This could cause mapping translation mismatch on PCI devices (e.g. RP1)
-> that are expected to be addressed with a 64 bit address while advertising
-> a 32 bit address in the PCI config region.
-> Add a check in of_pci_set_address() to set upper 32 bits to zero in case
-> the address has no 64 bit flag set.
-
-Is this an indication of a DT error?  Have you seen this cause a
-problem?  If so, what does it look like to a user?  I.e., how could a
-user find this patch if they saw a problem?
-
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  drivers/pci/of_property.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On Tue, Aug 20, 2024 at 08:52:41AM +0200, Stefan Eichenberger wrote:
+> On Mon, Aug 19, 2024 at 10:30:38AM -0400, Frank Li wrote:
+> > On Mon, Aug 19, 2024 at 11:03:16AM +0200, Stefan Eichenberger wrote:
+> > > On the i.MX6Quad (not QuadPlus), the PCIe link does not work after a
+> > > suspend/resume cycle. Worse, the PCIe memory mapped I/O isn't accessible
+> > > at all, so the system freezes when a PCIe driver tries to access its I/O
+> > > space. The only way to get resume working again is to reset the PCIe
+> > > link, similar to what is done on devices that support suspend/resume.
+> > > Through trial and error, we found that something about the PCIe
+> > > reference clock does not work as expected after a resume. We could not
+> > > figure out if it is disabled (even though the registers still say it is
+> > > enabled), or if it is somehow unstable or has some hiccups. With the
+> > > workaround introduced in this patch series, we were able to fully resume
+> > > a Compex WLE900VX (ath10k) miniPCIe Wifi module and an Intel AX200 M.2
+> > > Wifi module. If there is a better way or other ideas on how to fix this
+> > > problem, please let us know. We are aware that resetting the link should
+> > > not be necessary, but we could not find a better solution. More
+> > > interestingly, even the SoCs that support suspend/resume according to
+> > > the i.MX erratas seem to reset the link on resume in
+> > > imx6_pcie_host_init, so we hope this might be a valid workaround.
+> > >
+> > > Stefan Eichenberger (3):
+> > >   PCI: imx6: Add a function to deassert the reset gpio
+> > >   PCI: imx6: move the wait for clock stabilization to enable ref clk
+> > >   PCI: imx6: reset link on resume
+> > 
+> > Thanks you for your patch, but it may have conflict with
+> > https://lore.kernel.org/linux-pci/Zr4XG6r+HnbIlu8S@lizhi-Precision-Tower-5810/T/#t
+> > 
 > 
-> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-> index 5a0b98e69795..77865facdb4a 100644
-> --- a/drivers/pci/of_property.c
-> +++ b/drivers/pci/of_property.c
-> @@ -60,7 +60,10 @@ static void of_pci_set_address(struct pci_dev *pdev, u32 *prop, u64 addr,
->  	prop[0] |= flags | reg_num;
->  	if (!reloc) {
->  		prop[0] |= OF_PCI_ADDR_FIELD_NONRELOC;
-> -		prop[1] = upper_32_bits(addr);
-> +		if (FIELD_GET(OF_PCI_ADDR_FIELD_SS, flags) == OF_PCI_ADDR_SPACE_MEM64)
-> +			prop[1] = upper_32_bits(addr);
-> +		else
-> +			prop[1] = 0;
->  		prop[2] = lower_32_bits(addr);
->  	}
->  }
-> -- 
-> 2.35.3
-> 
+> Thanks a lot for the hint. I will have a look at the series and see if I
+> can adapt my changes including your suggestions.
+
+I did some more tests with your series applied. Everything works as
+expected on an i.MX8M Plus. However, the i.MX6Quad PCIe link still does
+not work after a resume. I could trace the issues back to the following
+functions, besides that we could use the same suspend/resume function as
+for the other i.MX SoCs.
+
+In suspend the follwoing function is causing issues:
+imx_pcie_stop_link(imx_pcie->pci);
+
+In resume the following functions are causing issues:
+imx_pcie->drvdata->init_phy(imx_pcie); // in imx_pcie_host_init
+imx_pcie_start_link(imx_pcie->pci);
+
+I think the second one makes sense because I could not stop the link I
+should not start it again. But why is also the init_phy function
+failing? Are they required to setup the link? 
+
+The messages I get when the system resumes are:
+[   50.176212] Enabling non-boot CPUs ...
+[   50.194446] CPU1 is up
+[   50.198087] CPU2 is up
+[   50.201746] CPU3 is up
+[   50.563710] imx6q-pcie 1ffc000.pcie: Read DBI address failed
+
+After the last message the system hangs. It seems this happens because
+the PCIe I/O mem is not accessible anymore.
+
+Do you have an idea what could cause imx_pcie_stop_link to break the
+link on resume? Without calling them the link is working fine after
+resuming and the drivers can access the PCIe I/O mem.
+
+Thanks,
+Stefan
 
