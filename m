@@ -1,112 +1,153 @@
-Return-Path: <linux-pci+bounces-11950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11952-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E1A0959CB8
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 15:03:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0A2F959E7F
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 15:18:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 358221F217A2
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 13:03:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F924B22584
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 13:18:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DA33199FB8;
-	Wed, 21 Aug 2024 13:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28BC196C86;
+	Wed, 21 Aug 2024 13:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="J7wL/N1H"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt5sU611"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DBB199942;
-	Wed, 21 Aug 2024 13:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A268F188A33;
+	Wed, 21 Aug 2024 13:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724245378; cv=none; b=bmKg8mmdN4LtS4gg+Mu+LNVjAGAprLG59vGgWyqKjHp9u60IKldxymfzgs4xbk4kBCJAIhaSjh1TLYF1k/rons5l52Y45CAoXaOKzYl8Qgyr9SkYFumcH9Jl9/I0ls+UxLB0LgBExuZlDOAHPuOhs7MO0OydxjbqYp8hcNEITSQ=
+	t=1724246286; cv=none; b=jOc8l4I/GUfnFxhMpeDryu5GDu0Fp2h7eRyQOhE478+aUfkBxlBXdwRJSQOz44UYZ2e3/AFIHi1q5byaMcJZyAe9CG+X0pEUs4PBaSYhiXvP4R9MX7XB2p6TraOav4uHiV+HGvOgifzMtV4fNTM8FK+edkgT1k3oeSmmKCb//Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724245378; c=relaxed/simple;
-	bh=AAJU18OBl8o8+iDmdG41Ki05MWpShLtTzqE+u3kWNwI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ifvoKFiqadZCUMjcgddI3RN0bd/vL4gO2rm/QUZ7s6bgPy/kpYx99s5lA95Ocdn03+su0J+blweUAyXlVY9Cd1I+3HNxDkqCJxoLTI+0mqlaXFjyaC4gmBwFR30Jxss5XRULuXQlw2JMpmnazuYDmhlfDh01xUtW2cccE5K5Luc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=J7wL/N1H; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1724245377; x=1755781377;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AAJU18OBl8o8+iDmdG41Ki05MWpShLtTzqE+u3kWNwI=;
-  b=J7wL/N1HWM5vEpitBr7Wvq6eBMFqiX+jkwglIPubJyNwWYtlttVstm0G
-   W9GjL6x9yhr7S81JVdsQEjhSQ6r/yKKEfqj0/cSvuuiIfST0sPfKzxzQO
-   TK6v4Yve/l2OhrY2oPJrV+P1oR5nsrODQI0PhkrJOcuasvUPQ0QzvqVpG
-   HZm4Vu+0BIH4ftZvdHiOV79iJ1FnnAjCZSMEN5Iusiy69iEmYV7wNi6b9
-   YbSZ7yroOb+3kWZmudurtffM+miwcKTW/q0MPmBTIyR/tjb9lkn39jxPL
-   oLlF5FwSVStMshqGKvNnYpzrYlnMDZLReyWxWtZvEp8BITxl8kOSX7QyD
-   g==;
-X-CSE-ConnectionGUID: hYt9Btb/Rtq04w/yiOUfIw==
-X-CSE-MsgGUID: lyWViQzjSR+R7G3o33eTUg==
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="30743856"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Aug 2024 06:02:53 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 21 Aug 2024 06:02:38 -0700
-Received: from daire-X570.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 21 Aug 2024 06:02:35 -0700
-From: <daire.mcnamara@microchip.com>
-To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
-	<ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v8 3/3] dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
-Date: Wed, 21 Aug 2024 14:02:17 +0100
-Message-ID: <20240821130217.957424-4-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240821130217.957424-1-daire.mcnamara@microchip.com>
-References: <20240821130217.957424-1-daire.mcnamara@microchip.com>
+	s=arc-20240116; t=1724246286; c=relaxed/simple;
+	bh=4J5Z1SoLstMKvuEFmueN5cD92XhXbF48rhCyXiWqfc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5FWs69e56flx3XlUUxnvB41e7bPd5vI1bKKTEccrSV8205l4Xx3Hy9xdic75KfsqrEwRqyTcJzsESdjAa+9EUPdjSRIU4HgI3w8oAB9ah67MhFxQyVTKFylWyb8kvSXNTVLb7sIsZeqDXxbQpwl2Am+LVB7B/rxu4dgW45Y+Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt5sU611; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D13AC32782;
+	Wed, 21 Aug 2024 13:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724246286;
+	bh=4J5Z1SoLstMKvuEFmueN5cD92XhXbF48rhCyXiWqfc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gt5sU611t1gy+i8JnErfPLmmKuJIbmOK6bDfgnJfFMunesDxEgSJWKQHJH7HorUt2
+	 KWMOlcQ2O1Y2uFn29Q9JrGDY84kKO6op6X2DWdH0So1eEgpqTG1GhN4NgBAPFFYjR3
+	 6iQ8eTcht9a9xvQEVwWrUygQ9Gc7PxiX1Zd3Cm8WKs8qT7kAKv90AZ4QRmEnyxazHL
+	 Mo5+8Rox6+uBq9xMTj6WH7xnRuesauC+3GrfvSULC9u/Vm/wW431RGkU17h/qsRTI0
+	 GoXlW0w4qVTdOb4tgA679+OVfJJO9DHJuJiU8Cx2HwVAKabf9gbL6BvtxF+vMe/BTP
+	 CrKWiO7SWrtqw==
+Date: Wed, 21 Aug 2024 14:17:57 +0100
+From: Simon Horman <horms@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 06/11] clk: rp1: Add support for clocks provided by RP1
+Message-ID: <20240821131757.GB6387@kernel.org>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <a378cc652b7e92b4022141dd2f20711e1771eb72.1724159867.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a378cc652b7e92b4022141dd2f20711e1771eb72.1724159867.git.andrea.porta@suse.com>
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Tue, Aug 20, 2024 at 04:36:08PM +0200, Andrea della Porta wrote:
+> RaspberryPi RP1 is an MFD providing, among other peripherals, several
+> clock generators and PLLs that drives the sub-peripherals.
+> Add the driver to support the clock providers.
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-PolarFire SoC may be configured in a way that requires non-coherent DMA
-handling. On RISC-V, buses are coherent by default & the dma-noncoherent
-property is required to denote buses or devices that are non-coherent.
+...
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+> diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
+> new file mode 100644
+> index 000000000000..d18e711c0623
+> --- /dev/null
+> +++ b/drivers/clk/clk-rp1.c
+> @@ -0,0 +1,1655 @@
+> +// SPDX-License-Identifier: GPL
 
-diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-index 612633ba59e2..5f5f2b25d797 100644
---- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-@@ -44,6 +44,8 @@ properties:
-     items:
-       pattern: '^fic[0-3]$'
- 
-+  dma-coherent: true
-+
-   ranges:
-     minItems: 1
-     maxItems: 3
--- 
-2.34.1
+checkpatch says:
 
+WARNING: 'SPDX-License-Identifier: GPL' is not supported in LICENSES/...
+
+...
+
+> +static int rp1_clock_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +	struct rp1_clock *clock = container_of(hw, struct rp1_clock, hw);
+> +	struct rp1_clockman *clockman = clock->clockman;
+> +	const struct rp1_clock_data *data = clock->data;
+> +	u32 ctrl, sel;
+> +
+> +	spin_lock(&clockman->regs_lock);
+> +	ctrl = clockman_read(clockman, data->ctrl_reg);
+> +
+> +	if (index >= data->num_std_parents) {
+> +		/* This is an aux source request */
+> +		if (index >= data->num_std_parents + data->num_aux_parents)
+
+It looks like &clockman->regs_lock needs to be unlocked here.
+
+Flagged by Smatch, Sparse. and Coccinelle.
+
+> +			return -EINVAL;
+> +
+> +		/* Select parent from aux list */
+> +		ctrl = set_register_field(ctrl, index - data->num_std_parents,
+> +					  CLK_CTRL_AUXSRC_MASK,
+> +					  CLK_CTRL_AUXSRC_SHIFT);
+> +		/* Set src to aux list */
+> +		ctrl = set_register_field(ctrl, AUX_SEL, data->clk_src_mask,
+> +					  CLK_CTRL_SRC_SHIFT);
+> +	} else {
+> +		ctrl = set_register_field(ctrl, index, data->clk_src_mask,
+> +					  CLK_CTRL_SRC_SHIFT);
+> +	}
+> +
+> +	clockman_write(clockman, data->ctrl_reg, ctrl);
+> +	spin_unlock(&clockman->regs_lock);
+> +
+> +	sel = rp1_clock_get_parent(hw);
+> +	WARN(sel != index, "(%s): Parent index req %u returned back %u\n",
+> +	     data->name, index, sel);
+> +
+> +	return 0;
+> +}
+
+...
 
