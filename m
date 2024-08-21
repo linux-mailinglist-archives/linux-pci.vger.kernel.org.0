@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-11977-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11978-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E62095A6F1
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 23:43:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA8FF95A7F7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 00:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11BAAB20757
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 21:43:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66C351F23431
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 22:56:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6100B175D59;
-	Wed, 21 Aug 2024 21:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F88170A2A;
+	Wed, 21 Aug 2024 22:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhjPjrLs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZ1gLvI5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F80F13A3E8;
-	Wed, 21 Aug 2024 21:43:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE98168497;
+	Wed, 21 Aug 2024 22:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724276595; cv=none; b=lUKPW5yYsd7xGD5U/g+j6ZQ5jdpeJQ3c7ZGB6AOXl/6nt63mQ1fVRepcZgnsMnfjMeA2BN/TX67i5K1VFYkNhk2ndVPg10CyV/2koO8XwfXB6quF0nvA01DeWovrlx+OdL5edD0LadkYKaUbSU8V9jeDevIXwah2emqGYa6h0Ng=
+	t=1724280981; cv=none; b=JNkIYbk1EhdmOzFVv8lv21M8HbQ0GxINrQB1MAkp3YZakY7/fp/qeBxa65AVj5UAgqlCyh3vdv/MK4B4QiGM+ksk0jZfli8z9MPp9uYVK35airs1FzaEP2RMz29qMmb0n0fPnyc99ar1+FcXW2ylCEtGxP+/r9jgN5J4rrIEdq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724276595; c=relaxed/simple;
-	bh=0Yu32Y2Y97+J7V2U2AZCL0+qw3bl5E2OZ9XQy9g/wxI=;
+	s=arc-20240116; t=1724280981; c=relaxed/simple;
+	bh=QS2Ib4T21p6k4K9gt4wWAlkpn73A3GjnZGc6t988xho=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sSAKvsdY9OclugnwZkyDsrV6a+pz+59AWAPKsYXeT7zEqY+yPwfYvEe0CaIUmN6hxv2IxUTGqOOo3VxV1MsQSf0/y5uHz0gtph+4MxjmjwVRiSpDQ8LlrapCy2dyMDog9fPV5H9mXvjv6LCjppvm1guyB6TizODK0hZOizYN2Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhjPjrLs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66549C32781;
-	Wed, 21 Aug 2024 21:43:14 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=q0m2h7iCS3L4UzEC7gVG73O6hA7nB6VP6cYkyCBjTRDotqW90uzUkIU8W69Vhso2RKtPHOdNQNzwmMQzRS1j5Y7vw4jhs1l1tRmZ+DWvjgVynhfhSqKPFMyDmPsFazA7TOYsRiazGseByaj94zVXvvx4ZtEY2IbrZ5xcG2NnyyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZ1gLvI5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1421C32781;
+	Wed, 21 Aug 2024 22:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724276594;
-	bh=0Yu32Y2Y97+J7V2U2AZCL0+qw3bl5E2OZ9XQy9g/wxI=;
+	s=k20201202; t=1724280981;
+	bh=QS2Ib4T21p6k4K9gt4wWAlkpn73A3GjnZGc6t988xho=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OhjPjrLsmnbkOEwzQ9TSQaOGfhTR81foJZIrjn0jymdJ+DsxoJcgziNLu+BGWtDNN
-	 s8/2P9SG/UL0N0I4n/zenqFhKZy+RdEm288mPAHUHy7z+BJmrk+loKShjm/EU/3GcL
-	 iYjRgE/CEVnsy8cNEaMZBfT6eYkgsD3bydNA8R+jwhITiKi8KaMj1GVTjGHWhVWV11
-	 KzqtRREbV7A9NVOQ5sABE8OGsfW9ad8dJ2WxZqFWh2NSNeeLgFAGExDKKf6NQYiYXF
-	 slZHRazBltWpNdsA+eCG6oi1lYoowuOqOMyo39nRRvGrW9I+AWhRYBk5nJC1jkWAXn
-	 5YlrqUOysjyNA==
-Date: Wed, 21 Aug 2024 16:43:12 -0500
+	b=eZ1gLvI5JC54qmUhnGBj8jKiVmWN/YEnnyb3xUIyTUOtOukjBz0zLmf7+R58AahbH
+	 ul044o/DW/Z5qWaUkssXvdFJcknqnVCjqwDOfFYsHAhKS37r/8nOFRlz07ekI9E9bN
+	 ymx5M0wF42nmRbDBZcg6WUv1tsCwht+sECMOKzYVQugDwAZX//Ky+ry3uJPLUnvbp4
+	 +2aI4dmV4xfExhYwBBIkmjiktvB4hfR0l2lNMtSijR2DdR3hlFXPlHYKC2Y9HVYom9
+	 doKP9S2aWRZhgdNkg9OwPQ6pSNmVOabs2NKUCzFXk32Qmy3veDZUjJoCZ1OdOZjxei
+	 HgQnVAXNymISw==
+Date: Wed, 21 Aug 2024 17:56:18 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom-ep: Move controller cleanups to
- qcom_pcie_perst_deassert()
-Message-ID: <20240821214312.GA270533@bhelgaas>
+Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
+Message-ID: <20240821225618.GA270826@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,52 +59,83 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240813202837.GE1922056@rocinante>
+In-Reply-To: <20240813202547.GC1922056@rocinante>
 
-On Wed, Aug 14, 2024 at 05:28:37AM +0900, Krzysztof Wilczyński wrote:
-> > Currently, the endpoint cleanup function dw_pcie_ep_cleanup() and EPF
-> > deinit notify function pci_epc_deinit_notify() are called during the
-> > execution of qcom_pcie_perst_assert() i.e., when the host has asserted
-> > PERST#. But quickly after this step, refclk will also be disabled by the
-> > host.
+On Wed, Aug 14, 2024 at 05:25:47AM +0900, Krzysztof Wilczyński wrote:
+> > Starting from commit 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure
+> > for drivers requiring refclk from host"), all the hardware register access
+> > (like DBI) were moved to dw_pcie_ep_init_registers() which gets called only
+> > in qcom_pcie_perst_deassert() i.e., only after the endpoint received refclk
+> > from host.
 > > 
-> > All of the Qcom endpoint SoCs supported as of now depend on the refclk from
-> > the host for keeping the controller operational. Due to this limitation,
-> > any access to the hardware registers in the absence of refclk will result
-> > in a whole endpoint crash. Unfortunately, most of the controller cleanups
-> > require accessing the hardware registers (like eDMA cleanup performed in
-> > dw_pcie_ep_cleanup(), powering down MHI EPF etc...). So these cleanup
-> > functions are currently causing the crash in the endpoint SoC once host
-> > asserts PERST#.
+> > So there is no need to enable the endpoint resources (like clk, regulators,
+> > PHY) during probe(). Hence, remove the call to qcom_pcie_enable_resources()
+> > helper from probe(). This was added earlier because dw_pcie_ep_init() was
+> > doing DBI access, which is not done now.
 > > 
-> > One way to address this issue is by generating the refclk in the endpoint
-> > itself and not depending on the host. But that is not always possible as
-> > some of the endpoint designs do require the endpoint to consume refclk from
-> > the host (as I was told by the Qcom engineers).
-> > 
-> > So let's fix this crash by moving the controller cleanups to the start of
-> > the qcom_pcie_perst_deassert() function. qcom_pcie_perst_deassert() is
-> > called whenever the host has deasserted PERST# and it is guaranteed that
-> > the refclk would be active at this point. So at the start of this function,
-> > the controller cleanup can be performed. Once finished, rest of the code
-> > execution for PERST# deassert can continue as usual.
+> > While at it, let's also call dw_pcie_ep_deinit() in err path to deinit the
+> > EP controller in the case of failure.
 > 
 > Applied to controller/qcom, thank you!
 > 
-> [1/1] PCI: qcom-ep: Move controller cleanups to qcom_pcie_perst_deassert()
->       https://git.kernel.org/pci/pci/c/6960cdc1ef97
+> [1/1] PCI: qcom-ep: Do not enable resources during probe()
+>       https://git.kernel.org/pci/pci/c/cd0b3e13ec30
 
-I dropped this for now, looking for a new simpler version without
-"cleanup_pending" and a similar change for tegra194 (separate patch).
+I think we do need this, but I dropped it for now pending a commit log
+that says "we're fixing a crash" and explains how.
 
-I think it's still an open question whether both
-pci_epc_deinit_notify() and pci_epc_init_notify() are needed, but that
-should be separate and I don't think that would fix a crash.
+The current log says "869bc5253406 moved hardware register access like
+DBI to dw_pcie_ep_init_registers()", but 869bc5253406 actually moved a
+bunch of register accesses from dw_pcie_ep_init() to
+dw_pcie_ep_init_complete(), and a subsequent patch renamed
+dw_pcie_ep_init_complete() to dw_pcie_ep_init_registers().  I did
+eventually figure out the rename, but it took a while to make that
+leap.
 
-You said this was not strictly v6.11 material, but it does fix a
-crash, and it only touches the endpoint driver, so ... it seems like a
-possible candidate, especially if we can identify a recent commit that
-caused the crash.
+It also says dw_pcie_ep_init_registers() is called only from
+qcom_pcie_perst_deassert(), but obviously all drivers call it.  I
+think what you meant is that on qcom and tegra194,
+dw_pcie_ep_init_registers() isn't called from .probe(); it's called
+later because they require refclk to access the registers, so qcom and
+tegra194 call it after PERST# is deasserted, because then refclk is
+available.
+
+Trying to understand the 869bc5253406 reference: I guess the
+point is that the dw_pcie_ep_init_registers() work depends on
+qcom_pcie_enable_resources(), and before 869bc5253406, that work was
+done by qcom_pcie_ep_probe() calling dw_pcie_ep_init(), so it had to
+call qcom_pcie_enable_resources() first.
+
+But after 869bc5253406, dw_pcie_ep_init_registers() is done in
+qcom_pcie_perst_deassert(), which already calls
+qcom_pcie_enable_resources().  So qcom_pcie_ep_probe() no longer needs
+to call qcom_pcie_enable_resources().
+
+As far as the *crash*, phy_power_on() has been called from
+qcom_pcie_ep_probe() since the very beginning in f55fee56a631 ("PCI:
+qcom-ep: Add Qualcomm PCIe Endpoint controller driver").  But
+apparently on some new platforms phy_power_on() depends on refclk and
+(I assume) it causes a crash when done from qcom_pcie_ep_probe().
+
+So I would think the commit log should look something like this:
+
+  PCI: qcom-ep: Postpone PHY power-on until refclk available
+
+  qcom_pcie_enable_resources() is called by qcom_pcie_ep_probe() and
+  powers on PHYs.  On new platforms like X, Y, Z, this depends on
+  refclk from the RC, which may not be available at the time of
+  qcom_pcie_ep_probe(), so this causes a crash in the qcom-ep driver.
+
+  qcom_pcie_enable_resources() is already called by
+  qcom_pcie_perst_deassert() when PERST# is deasserted, and refclk is
+  available at that time.
+
+  Remove the unnecessary call from qcom_pcie_ep_probe() to prevent the
+  crash on X, Y, Z.
+
+Although I do have the question of what happens if the RC deasserts
+PERST# before qcom-ep is loaded.  We probably don't execute
+qcom_pcie_perst_deassert() in that case, so how does the init happen?
 
 Bjorn
 
