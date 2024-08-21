@@ -1,270 +1,366 @@
-Return-Path: <linux-pci+bounces-11913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38B499593B0
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 06:43:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EFBF959419
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 07:34:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B08821F230B9
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 04:43:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C73C4B2142E
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 05:34:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E9EB15C13E;
-	Wed, 21 Aug 2024 04:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D9816849A;
+	Wed, 21 Aug 2024 05:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/sbYVJl"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1YDhg97x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C57486AFA;
-	Wed, 21 Aug 2024 04:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724215432; cv=none; b=riSm9x+tDOGF7DFmc7SioDYQj9XiHPWUeZcNJVXz6cBiETiJaxsmUm25Yb5Pnz7Kt+OelFbaZja/bMsUcwMoq0szEeDfrKpIpUBlhY8yGH7b6maIwDkrxoFcm9nfVckE6yMwoArN+Vnvf18M+fUgsBExJSIDUg1BYV8fDFSPSU0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724215432; c=relaxed/simple;
-	bh=BUl4WZIOTp6bRjoAcLxbr7UyBflCBjbx7CEstH05xZM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=UeP5nG1Dbwx4toW7G8orQ9j937XXX6E6iGTOPGtV/meXB5fsmWG9IQb5AGk/pNUiHhPR479Eaix2gcYCAxPdSGiWWs95DgUWaHtYNKBZIobWBC5zzaCqqBmnpCZ5LN5XWUAH6xon1oPninuoPqrXfkFlek3O3qlHXg+antQK4j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/sbYVJl; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7cd894e2adfso10025a12.2;
-        Tue, 20 Aug 2024 21:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724215430; x=1724820230; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3P3Hk9XNXX67Z9XxlANZXs0svzlSvZih1xysLj6CbmM=;
-        b=Y/sbYVJlFZxTX3oThZIboCR5RSl50Kl/tc4h1RstX3ght+ue8dwYI4UME6M9NDRhkO
-         9LkmwLu0xX5L48rOVkl+e41jC4opWgZFqDw9PmAOLBcsyzRmkPYbr5RuJ4usmalrUFY8
-         x/Sm4Ol5hrciUWewAKHAYw3CBy9COu6Nb+yhuLXt54n1ZOYJgu3cGaZwWb7LfLA1xhL/
-         JUEGEnLqn86bcBZHs2VZh8QM8g0Kb6aKTH8krri5wDMciW/vo6RywHkEPB/EW+s3FzQL
-         akIGvKWAihSJu6A1XR3kDJb9Jjn09zUBBXlncG9AzsS5IPnRyC+G5DCUeoqU1jhlkiwQ
-         7Few==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724215430; x=1724820230;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3P3Hk9XNXX67Z9XxlANZXs0svzlSvZih1xysLj6CbmM=;
-        b=tajJBa63tFSsChv569eu0lWVYGzNHzd6+W11/TbTjI8r/CTHCWg0oJrhFpvxvxrex1
-         su5xE5YMRE4CeY3PyAYeXh6aHYqDv3yS22zNKbMJAa8QrU1VB0ZjgzIjKsK3gPakSmkn
-         XPlD3WckX65AJJRzpVhabzmyp9Gr6waeiS4f4z3ywes0SpQk+3unlIt2nobwHat3AyfI
-         XIU7MJALtV3AU1+LQh3516u8bVA6CEh9t9b5TYT/B5LLY3zfm9FXQo+98dXRiI6cgBvX
-         JimXxRaaHbv/UKo/RZNx5EvCLUtsPIQ79Ijo3KjcWxxDsk2N2SbDhJr7C9CLPaz7UMqz
-         0ywQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGt1yRj4WROo/GkA0+8vOfkeIK/bFbvEqj7WVln/MfL6jH/vdkHUjIwhfyqo2PbPTdX8nwzXce4M+p@vger.kernel.org, AJvYcCUL/DpzFE6Mt3U4uqpV/CfYwnoKc4lG4GZCM1EcYqOsQq7frb+0Yem2kAfxKsi4bmXdNnAjiNoMeX8T@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuGU2CCZ82pDNYJoC4hld9ZWQP/oJkF+zxK4QW8JQbvr8lVWXV
-	kKV8/mCtaqEEMMLclLc2TQsbcAp/6PjrjNvvYan/9MH7v7kLmkZN
-X-Google-Smtp-Source: AGHT+IH+ozAZ+jz6m72kC+HtpaDsVUaOzExvPIGhiOIYtJTBStrUt/otPT/jHSUZPA+86wGWbG9jHQ==
-X-Received: by 2002:a05:6a20:3951:b0:1c4:84ee:63d1 with SMTP id adf61e73a8af0-1cad82e8cf0mr944326637.9.1724215429403;
-        Tue, 20 Aug 2024 21:43:49 -0700 (PDT)
-Received: from smtpclient.apple (v133-130-115-230.a046.g.tyo1.static.cnode.io. [133.130.115.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f038b43dsm85164685ad.210.2024.08.20.21.43.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2024 21:43:48 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7994979D1;
+	Wed, 21 Aug 2024 05:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724218460; cv=fail; b=feSW4Ei9wjzC5VdtfnLyURf3WalCCU5pQPgV2UG2d3LaeKxexiGgOt70ZVpX7nmLcruSofrlpfPenRpsSjX2Er6bttejuktTs2kYQ7PuWMR+ygvPcj3Zx+ZzStunjj+hKi0Haro/p1T4mX68nN5Oei4Vx6uDsn7RTF7tBIt68II=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724218460; c=relaxed/simple;
+	bh=qyebF4nw36iPXPg+YPvlIU1TKEfbXHQ9WxeTsBdPiXA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=C1N4OPZvUfu5ICLFqGhVRZzwJu8j3lLJyRFQ7z058VKfhV4mnplmeG9tQefG2SZ5ca/e+xuZyk+5Ld+Ggs3n4geL3a1FnLcMRENXIbUP8F0u5igV3z1ZpFHi463J2bnaOLEHz9q5iUjrrZ2pJzPOWSi9uYBnhX0AfJOTa3axIPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1YDhg97x; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PXlAhk0r316y28jptNagV+B9zJNE7281X7Ie/gFnhUxSelIUeqQ+GBnbLu+1f/Pfk9aqrV89szRiw5qKP0vnALnUBZm0c0szTPnRFbtL1MCH2lxEehuXiK+VRKPNDkQZUeVf8OjZroAqY9sdxir1FN7QNZ9Q923LEiYxLoiJSreAU5FEssd57PyR4FNHe5bBOhJcwo/qgfiKeTjVUiv3JneDjmBd2fiCvHCZfyNFVDx+hBaqXTIWilQPMtH4/Wwql4Kw9CXJGspipTOgUfM9fMiTjNzx5ODE0vCTLJowOnMdI6BEezGEEqoRPCoBZB7imM7g9lb4CjSQ0DM4p83MJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+VCjjhRYl+cex8qmh/i52ElTNI4p/8K/Bu5NsCPVB+8=;
+ b=lyJ7Rx51lBvgQRaRaw9afkRmScUODUq7Lcvss4jRd80Wi+0Rj6/6ZxT4qJCEuRFjeH4UUMppG58mIhWVY2MMFnU1dW+Ck9O/cQsGHhmQAa61xBasO2Zz30424ucK1O7tx3t0uSQpxtzwkqwnc09k0t8vqWQ/HBuApozcqKPM1DDSjhR+uv2mnm1RFujKciKaDbHN6Bv7A5Odc0BRGMIJROpjvOdtT64F3nS25wjrRmooRtmTa8tH2D76K1ZR2B3w6PvdCa+qxKN2yO2Zbeus0HQGNymfVJAcM9dxFnt/DhUXYkPP/lZ21ZUdPAfiS1Ebgwb8eClxrhoSYPx747+r4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+VCjjhRYl+cex8qmh/i52ElTNI4p/8K/Bu5NsCPVB+8=;
+ b=1YDhg97xpTdFrdGcEg3hKy0szqc/YDk6PEJ7qlD8OiIcPFmOX06hodNvOQU246g5o/hafL+sHb6hdbHakWG3G5dm2TzZKrzG6o0juBL3K9JCmpDYcFgMSrfrtFfzjAN35hi31CX16LL3PyBnR97EyN6lcSOIqSX+7jH63h6bCms=
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
+ by PH0PR12MB7983.namprd12.prod.outlook.com (2603:10b6:510:28e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.18; Wed, 21 Aug
+ 2024 05:34:12 +0000
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3%7]) with mapi id 15.20.7875.018; Wed, 21 Aug 2024
+ 05:34:12 +0000
+From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "Simek, Michal" <michal.simek@amd.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v4 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+Thread-Topic: [PATCH v4 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port
+ driver
+Thread-Index: AQHa65WTirLKPezFCEeaPEvmYIB3ZLIxQDKg
+Date: Wed, 21 Aug 2024 05:34:11 +0000
+Message-ID:
+ <SN7PR12MB7201A15E2FB9B8A9E8E6BAA98B8E2@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20240811022345.1178203-1-thippesw@amd.com>
+ <20240811022345.1178203-3-thippesw@amd.com>
+In-Reply-To: <20240811022345.1178203-3-thippesw@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|PH0PR12MB7983:EE_
+x-ms-office365-filtering-correlation-id: e0ec9bcb-a9d3-49ff-6540-08dcc1a2e325
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?vcK4imBM3JAc0XrCmZ4QkVOHmSgQZh9kWlz87fhXksL55IeIKf5m7GlJ1OxF?=
+ =?us-ascii?Q?zsChF+nd0Z2y1F5r4SFIstgOdnz2xXeCMUqeNyNqwYo9hTFPZi0/oYiEqG+9?=
+ =?us-ascii?Q?iUSCflJtX5ooYqAdaLxfDkXsaE7mvE+bCZnU5j2EYUegexvWC2G7OJSKFibQ?=
+ =?us-ascii?Q?0e1yEoHVCfh6r8xp5iGGDnUph/hlTF0JXOxbzR6mg6KLwcA5pxR6U+DNNDdJ?=
+ =?us-ascii?Q?vvx9IdmId0MMLdGxu0Y+9SC02zSwHHZNY91wjYdgk/cjh5/0gzI6/5Mhv5QA?=
+ =?us-ascii?Q?4AUWdbg7fA6qKRPL0W1G5hkCbLAvSJGp937BpuBsvyevikkCrYAICNOxEuxu?=
+ =?us-ascii?Q?2FIPUBFY7Tw3eTkpnXkwnVqdpZ9SWuT5vNrkugxZ0RAqboh7pitkthBNglUt?=
+ =?us-ascii?Q?LK5Ali7eG+HPUZv/PzwlCT6E52O+p3KeLgFbg4LJHKHO1K6DTRuEAQ6nhy8p?=
+ =?us-ascii?Q?7gaDOHwaGpijKQcqbnmobn9ji8WqkBc/tQmummv1mTWp+aAhKqWBE2K5EGGn?=
+ =?us-ascii?Q?+O3FDnKSUfHAW1Woaj69R/1IXfa6IFET8Oip7ajC32cOm2W/fMOxk6JPElEi?=
+ =?us-ascii?Q?HD8UC7Ecg79kOyPuN9Fu+cBIP5x6fKzechOpI5Qfb7kxGxdNIo/Pi/7yL6Cy?=
+ =?us-ascii?Q?6ovBeQWRmQC4C+SdiKFdlEsduJh7uO8bQ581N5eqonSkGrSFFwUUs+AkTVkL?=
+ =?us-ascii?Q?PxmPUmKaNTglyViQ3sutQR/2V9dt+/x+pVNNSqFrSRUnzPsCmj5Xrk8c4WEr?=
+ =?us-ascii?Q?9VlTKiZL5fyYfEsIcdoE2FouqPar2k94LFHS6gXLZ2oercJ1R6FIdzIpeQpH?=
+ =?us-ascii?Q?gWS8nIuvKWtdssoLyZ/mSmNmLyfsFwHYJyTdbLDiFk1EC5g2vE2hWSRptFwM?=
+ =?us-ascii?Q?SwIt6CstlSTBWHdBiXSiPEYxLETjoS2P2MowzMq4sf/9r4A5Ck+tF/IlOGJZ?=
+ =?us-ascii?Q?mJT1S/SlCJVWz/KLt/+xdDKKeM852EmTamNpncqnGbkD0wcB/lMTAeHNql/L?=
+ =?us-ascii?Q?OPlZ+d0yhb6xcGlXLdJTm5N5ykJlNSUE+/jOGD1NljC0TrCwxfZzOTRdASvZ?=
+ =?us-ascii?Q?sHLiwIHce1TrC9Vm+argPElknvRjjDOnu3r2/XuASz6nZn1Iq31HZRxvXaM0?=
+ =?us-ascii?Q?iIvA4PMSYYj5IuGXTAaMA50SV192AGWnintV4GcgtyYeTRi90ICCBs4gRUAT?=
+ =?us-ascii?Q?O/GCG1fLAdVH6vJ026eAMPopDK6fDYuzz6IXkEjZXsUTgoONF4uW/UZTKiC5?=
+ =?us-ascii?Q?SWC6U6zYZ1//K9h82+VwkJEVxwFVyue0OWarX2BzpLtYOKO8+J8GMLk2uuYU?=
+ =?us-ascii?Q?UD+6Yd1iInROxr39dCNW94IOwRh0msnHGjWeU/QIfTm2ALfSz30EWZgMX3fa?=
+ =?us-ascii?Q?kNfC9eDT6kg/7U6VL2P6solpDH9wmRaqkZA4HTYNgikb+1peBFACrFuft8KP?=
+ =?us-ascii?Q?iPNEfMtYgh4=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fYiiE/qFfeysQhvHjiF7eUOBGdasy3X9qIKn4fqTatOHPIqHbl2KOYY9Ti7d?=
+ =?us-ascii?Q?JytnbWGrIZ/Z6vlVAid9rFtZ7ECUV/L+um7uNg+lBbwfAUv6pjpwprOyZsIg?=
+ =?us-ascii?Q?8AkronkelrW8zbLI5e28VDAaHi2j6T/2OhQkulzuf4xVfxJDrdbOenInbEQp?=
+ =?us-ascii?Q?whsq6aTqfyaErTtWXOzvDoO0mrCPNUgGyvUxqzNm75aBXJR2BK/7F7BKoADc?=
+ =?us-ascii?Q?0xaGknVWUtT5a1+HBmHRomxjpjfghOyZNbN7AoOA/WoeW2LgeGxfZf+kpo2O?=
+ =?us-ascii?Q?ZhXRb7XwKei1RHkI1JFjNud/Z9amKPZ/v6LcZ28AJgj6eFChed6Ay8GnJiUz?=
+ =?us-ascii?Q?I9lqN8+EpcqJejayBmudNkbAG1qXjN91yJPvEWbrzCKVt4CqCg1ow6JVe0Tq?=
+ =?us-ascii?Q?sM1WV+OCHn2NceK9XTWW68JplnOvfXBmCUnC+nMX40LrPJimG7NquXBmPgtu?=
+ =?us-ascii?Q?bM9D3MFgNEE4IbE9inAbUMbLOpaDnfVmZLQ1R2ambGr4wNUaQN9dcFqDu04m?=
+ =?us-ascii?Q?hrAIBF1HpPdBYTpj+0BBSgpnkbU3F7I/t2T1LwyL72Jqu8HBzhpvZWa7C8rm?=
+ =?us-ascii?Q?hQ6jBeF1pZUegcRIP0TAT7g5EBCWLbW1JOZP8yQyLgF0AAa5B/OZLz2RI8nu?=
+ =?us-ascii?Q?QALUR6hO+bjARS5wqRdS80dzHFTQ4J9OmX4FCGHe52/CbJdRI0kYnuYhFnAB?=
+ =?us-ascii?Q?XGK++5LP0bgzvS0cTWz3ooDDidiuiOTLmeacuD7T2CJkb1P77gl//fZCYFOe?=
+ =?us-ascii?Q?Sqs/3CRyUzTKXevWN3kjVQIBmt0TcxOTdx5hZVCa5PVD/SgpHDih2Hpn/ant?=
+ =?us-ascii?Q?XvpvVa3Nr20eQTXZEYUfypY1jyvsrR5BPQx7Q5VXHRbKLLTwX9K5CbOiM06j?=
+ =?us-ascii?Q?V4gdsCV4Gwlpzzmk7xRafIPN16x9Llt43Cr3iY+Ibyp5VRiGf/PE2ybpv6Gp?=
+ =?us-ascii?Q?eIoxp9bISxAemGhLmEemTWVTvMmSm3PX+oG/7ZpSz/Bn95gjOi9oMgFJmO3L?=
+ =?us-ascii?Q?/uhTVitiYlHEBBlUq/wu4QZnbID9WtkvwW4PEMfr5DmBs//yfLLvhgK+RW3I?=
+ =?us-ascii?Q?L+tYLPry2rmWZkl9gLlhrY+DFxIrYo2jmXrsoz829BmR8HX/2YJjigCinzU8?=
+ =?us-ascii?Q?FBbKNdla/M94dG8Vfc+oTbHM0YrLKRfJYdTIGyy9N2etOqtQYbiTwdixRLKY?=
+ =?us-ascii?Q?urY3mDAOgoHPjnUFiJQxiLcpixwqeREO8PJ4oj3fvh8/wwtQKqfddjJsTQd4?=
+ =?us-ascii?Q?vHL/49CPpd43ayezCAP2nZfevIms0ifFkmlGTnRRSe/IkrMgpEXM1vbZ5zOy?=
+ =?us-ascii?Q?VM3BwOjEy2hC7rWA196Z+AvmaB5ql13jiKlOGvgV4uOtppG+ASfsHMpqrOsj?=
+ =?us-ascii?Q?VCu8N0ycgWTVTukHHC0qqX8363L9OQEB/D81b0kYIkbbdeeEvR0mJb5M1S0T?=
+ =?us-ascii?Q?fj2aqAAoqGUZZeZEmbvWPoR6KZmczKJ+Ym6dMTsyYDsjGkFkhw6SSq/LhSFR?=
+ =?us-ascii?Q?cHoKvGjfoErL6Rwtd1iVz0cAKj0xhn1wEKes2RaOtGZJr6S9WgbnTCH/LU3L?=
+ =?us-ascii?Q?bEgDEPTtNPo9MmeoeZI=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH v3] ACPI: PCI: check if the root io space is page aligned
-From: Miao Wang <shankerwangmiao@gmail.com>
-In-Reply-To: <86348A3F-6AF4-4DC0-ACF5-08EC52E3828C@gmail.com>
-Date: Wed, 21 Aug 2024 12:43:32 +0800
-Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>,
- linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org,
- linux-mm@kvack.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F6307927-BCC8-4F61-A089-B26555D51E45@gmail.com>
-References: <20240814163711.GA351420@bhelgaas>
- <86348A3F-6AF4-4DC0-ACF5-08EC52E3828C@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0ec9bcb-a9d3-49ff-6540-08dcc1a2e325
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2024 05:34:11.9297
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kbA1WraMzeKT4r1i2OEKukL2lsPkFj5mB0J6i3wbTd5X9u8kVQWPmTdHrsARMZj0fyBIW5LznNZnY00wQSTmpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7983
 
-Sorry for directly looping Andrew in. I think Andrew may be familiar =
-with
-the code in question.
+Hi Bjorn,
 
-Some backgrounds: Mis-aligned addresses from ACPI table can pass along=20=
+Can you please update this patch.
 
-pci_remap_iospace() -> vmap_page_range() -> vmap_pte_range() path, =
-leading to a
-loop overrun in vmap_pte_range(). Bjorn and I wonder why all those
-vmap_*_range() functions don't validate the alignment, assuming the =
-addresses
-page-aligned. We want to know the best place to do this check.
+Regards,
+Thippeswamy H
 
-> 2024=E5=B9=B48=E6=9C=8815=E6=97=A5 12:28=EF=BC=8CMiao Wang =
-<shankerwangmiao@gmail.com> =E5=86=99=E9=81=93=EF=BC=9A
+> -----Original Message-----
+> From: Thippeswamy Havalige <thippesw@amd.com>
+> Sent: Sunday, August 11, 2024 7:54 AM
+> To: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; linux-
+> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: Simek, Michal <michal.simek@amd.com>; linux-arm-
+> kernel@lists.infradead.org; Havalige, Thippeswamy
+> <thippeswamy.havalige@amd.com>
+> Subject: [PATCH v4 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port drive=
+r
 >=20
-> Hi,
+> Add support for Xilinx QDMA Soft IP core as Root Port.
 >=20
->> 2024=E5=B9=B48=E6=9C=8815=E6=97=A5 00:37=EF=BC=8CBjorn Helgaas =
-<helgaas@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->>=20
->> [+cc linux-mm for vmap page alignment checking question]
->>=20
->> On Wed, Aug 14, 2024 at 08:09:15PM +0800, Miao Wang via B4 Relay =
-wrote:
->>> From: Miao Wang <shankerwangmiao@gmail.com>
->>>=20
->>> When the IO resource given by _CRS method is not page aligned, =
-especially
->>> when the page size is larger than 4KB, serious problems will happen
->>> because the misaligned address is passed down to =
-pci_remap_iospace(),
->>> then to vmap_page_range(), and finally to vmap_pte_range(), where =
-the
->>> length between addr and end is expected to be divisible by =
-PAGE_SIZE, or
->>> the loop will overrun till the pfn_none check fails.
->>=20
->> What does this problem look like to a user?  Panic, oops, hang,
->> warning backtrace?  I assume this is not a regression, but maybe
->> something you tripped over because of a BIOS defect?  Does this need
->> to be backported to stable kernels?
+> The Versal Prime devices support QDMA soft IP module in programmable
+> logic.
 >=20
-> Panic, or actually BUG in vmap_pte_range() at the =
-!pte_none(ptep_get(pte))
-> check, since misaligned addresses will cause the loop in =
-vmap_pte_range
-> overrun and finally reach one of the already mapped pages. This =
-happens on
-> a LS2k2000 machine, the buggy firmware of which declares the IO space =
-of
-> the PCI root controller as follows:
+> The integrated QDMA Soft IP block has integrated bridge function that can
+> act as PCIe Root Port.
 >=20
->  QWordIO (ResourceProducer, MinFixed, MaxFixed, PosDecode, =
-EntireRange,
->      0x0000000000000000, // Granularity
->      0x0000000000004000, // Range Minimum
->      0x0000000000009FFF, // Range Maximum
->      0x000000FDFC000000, // Translation Offset
->      0x0000000000006000, // Length
->      ,, , TypeStatic, DenseTranslation)
+> Signed-off-by: Thippeswamy Havalige <thippesw@amd.com>
+> ---
+>  drivers/pci/controller/pcie-xilinx-dma-pl.c | 54 ++++++++++++++++++++-
+>  1 file changed, 53 insertions(+), 1 deletion(-)
+> ---
+> changes in v4:
+> - none
 >=20
-> At first, I thought there might be some overlapping address spaces. =
-But when
-> I added some debug output in vmap_page_range(), I realized that it was
-> because a loop overrun.
+> changes in v3:
+> - Modify macro value to lower case.
+> - Change return type based QDMA compatible.
 >=20
-> Normally, loongarch64 kernel is compiled using 16K page size, and thus =
-the
-> length here is not page aligned. I tested my patch using a virtual =
-machine
-> with a deliberately modified DSDT table to reproduce this issue.
+> changes in v2:
+> - Add description for struct pl_dma_pcie
+> ---
+> diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> index 5be5dfd8398f..1ea6a1d265bb 100644
+> --- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/msi.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
 >=20
->> It seems sort of weird to me that all those vmap_*_range() functions
->> take the full page address (not a PFN) and depend on the addr/size
->> being page-aligned, but they don't validate the alignment.  But I'm
->> not a VM person and I suppose there's a reason for passing the full
->> address.
-> Ah, I also have this question.
->>=20
->> But it does mean that other users of vmap_page_range() are also
->> potentially susceptible to this issue, e.g., vmap(), vm_map_ram(),
->> ioremap_page_range(), etc., so I'm not sure that
->> acpi_pci_root_remap_iospace() is the best place to check the
->> alignment.
-> My first idea was that the misaligned address is introduced from DSDT
-> table and the check would be better to be done inside the ACPI system.
-> However, lets wait for replies from  linux-mm to decide where should =
-be
-> the best place.
->>=20
->>> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
->>> ---
->>> Changes in v3:
->>> - Adjust code formatting.
->>> - Reword the commit message for further description of the possible =
-reason
->>> leading to misaligned IO resource addresses.
->>> - Link to v2: =
-https://lore.kernel.org/r/20240814-check_pci_probe_res-v2-1-a03c8c9b498b@g=
-mail.com
->>>=20
->>> Changes in v2:
->>> - Sorry for posting out the draft version in V1, fixed a silly =
-compiling issue.
->>> - Link to v1: =
-https://lore.kernel.org/r/20240814-check_pci_probe_res-v1-1-122ee07821ab@g=
-mail.com
->>> ---
->>> drivers/acpi/pci_root.c | 14 +++++++++++---
->>> 1 file changed, 11 insertions(+), 3 deletions(-)
->>>=20
->>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->>> index d0bfb3706801..a425e93024f2 100644
->>> --- a/drivers/acpi/pci_root.c
->>> +++ b/drivers/acpi/pci_root.c
->>> @@ -858,7 +858,7 @@ static void =
-acpi_pci_root_validate_resources(struct device *dev,
->>> }
->>> }
->>>=20
->>> -static void acpi_pci_root_remap_iospace(struct fwnode_handle =
-*fwnode,
->>> +static void acpi_pci_root_remap_iospace(struct acpi_device *device,
->>> struct resource_entry *entry)
->>> {
->>> #ifdef PCI_IOBASE
->>> @@ -868,7 +868,15 @@ static void acpi_pci_root_remap_iospace(struct =
-fwnode_handle *fwnode,
->>> resource_size_t length =3D resource_size(res);
->>> unsigned long port;
->>>=20
->>> - if (pci_register_io_range(fwnode, cpu_addr, length))
->>> + if (!PAGE_ALIGNED(cpu_addr) || !PAGE_ALIGNED(length) ||
->>> +     !PAGE_ALIGNED(pci_addr)) {
->>> + dev_err(&device->dev,
->>> + FW_BUG "I/O resource %pR or its offset %pa is not page aligned\n",
->>> + res, &entry->offset);
->>> + goto err;
->>> + }
->>> +
->>> + if (pci_register_io_range(&device->fwnode, cpu_addr, length))
->>> goto err;
->>=20
->> This change verifies alignment for the ACPI case that leads to the
->> pci_remap_iospace() -> vmap_page_range() -> vmap_pte_range() path, =
-but=20
->> there are others even in drivers/pci/, e.g., pci_remap_iospace() is
->> also used in the DT path, where I suppose a defective DT could cause =
-a
->> similar issue.
->>=20
->>> port =3D pci_address_to_pio(cpu_addr);
->>> @@ -910,7 +918,7 @@ int acpi_pci_probe_root_resources(struct =
-acpi_pci_root_info *info)
->>> else {
->>> resource_list_for_each_entry_safe(entry, tmp, list) {
->>> if (entry->res->flags & IORESOURCE_IO)
->>> - acpi_pci_root_remap_iospace(&device->fwnode,
->>> + acpi_pci_root_remap_iospace(device,
->>> entry);
->>>=20
->>> if (entry->res->flags & IORESOURCE_DISABLED)
->>>=20
->>> ---
->>> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
->>> change-id: 20240813-check_pci_probe_res-27e3e6df72b2
->>>=20
->>> Best regards,
->>> --=20
->>> Miao Wang <shankerwangmiao@gmail.com>
-
+>  #include "../pci.h"
+>  #include "pcie-xilinx-common.h"
+> @@ -71,10 +72,24 @@
+>=20
+>  /* Phy Status/Control Register definitions */
+>  #define XILINX_PCIE_DMA_REG_PSCR_LNKUP	BIT(11)
+> +#define QDMA_BRIDGE_BASE_OFF		0xcd8
+>=20
+>  /* Number of MSI IRQs */
+>  #define XILINX_NUM_MSI_IRQS	64
+>=20
+> +enum xilinx_pl_dma_version {
+> +	XDMA,
+> +	QDMA,
+> +};
+> +
+> +/**
+> + * struct xilinx_pl_dma_variant - PL DMA PCIe variant information
+> + * @version: DMA version
+> + */
+> +struct xilinx_pl_dma_variant {
+> +	enum xilinx_pl_dma_version version;
+> +};
+> +
+>  struct xilinx_msi {
+>  	struct irq_domain	*msi_domain;
+>  	unsigned long		*bitmap;
+> @@ -88,6 +103,7 @@ struct xilinx_msi {
+>   * struct pl_dma_pcie - PCIe port information
+>   * @dev: Device pointer
+>   * @reg_base: IO Mapped Register Base
+> + * @cfg_base: IO Mapped Configuration Base
+>   * @irq: Interrupt number
+>   * @cfg: Holds mappings of config space window
+>   * @phys_reg_base: Physical address of reg base
+> @@ -97,10 +113,12 @@ struct xilinx_msi {
+>   * @msi: MSI information
+>   * @intx_irq: INTx error interrupt number
+>   * @lock: Lock protecting shared register access
+> + * @variant: PL DMA PCIe version check pointer
+>   */
+>  struct pl_dma_pcie {
+>  	struct device			*dev;
+>  	void __iomem			*reg_base;
+> +	void __iomem			*cfg_base;
+>  	int				irq;
+>  	struct pci_config_window	*cfg;
+>  	phys_addr_t			phys_reg_base;
+> @@ -110,16 +128,23 @@ struct pl_dma_pcie {
+>  	struct xilinx_msi		msi;
+>  	int				intx_irq;
+>  	raw_spinlock_t			lock;
+> +	const struct xilinx_pl_dma_variant   *variant;
+>  };
+>=20
+>  static inline u32 pcie_read(struct pl_dma_pcie *port, u32 reg)
+>  {
+> +	if (port->variant->version =3D=3D QDMA)
+> +		return readl(port->reg_base + reg +
+> QDMA_BRIDGE_BASE_OFF);
+> +
+>  	return readl(port->reg_base + reg);
+>  }
+>=20
+>  static inline void pcie_write(struct pl_dma_pcie *port, u32 val, u32 reg=
+)
+>  {
+> -	writel(val, port->reg_base + reg);
+> +	if (port->variant->version =3D=3D QDMA)
+> +		writel(val, port->reg_base + reg +
+> QDMA_BRIDGE_BASE_OFF);
+> +	else
+> +		writel(val, port->reg_base + reg);
+>  }
+>=20
+>  static inline bool xilinx_pl_dma_pcie_link_up(struct pl_dma_pcie *port)
+> @@ -173,6 +198,9 @@ static void __iomem
+> *xilinx_pl_dma_pcie_map_bus(struct pci_bus *bus,
+>  	if (!xilinx_pl_dma_pcie_valid_device(bus, devfn))
+>  		return NULL;
+>=20
+> +	if (port->variant->version =3D=3D QDMA)
+> +		return port->cfg_base + PCIE_ECAM_OFFSET(bus->number,
+> devfn, where);
+> +
+>  	return port->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn,
+> where);
+>  }
+>=20
+> @@ -731,6 +759,15 @@ static int xilinx_pl_dma_pcie_parse_dt(struct
+> pl_dma_pcie *port,
+>=20
+>  	port->reg_base =3D port->cfg->win;
+>=20
+> +	if (port->variant->version =3D=3D QDMA) {
+> +		port->cfg_base =3D port->cfg->win;
+> +		res =3D platform_get_resource_byname(pdev,
+> IORESOURCE_MEM, "breg");
+> +		port->reg_base =3D devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(port->reg_base))
+> +			return PTR_ERR(port->reg_base);
+> +		port->phys_reg_base =3D res->start;
+> +	}
+> +
+>  	err =3D xilinx_request_msi_irq(port);
+>  	if (err) {
+>  		pci_ecam_free(port->cfg);
+> @@ -760,6 +797,8 @@ static int xilinx_pl_dma_pcie_probe(struct
+> platform_device *pdev)
+>  	if (!bus)
+>  		return -ENODEV;
+>=20
+> +	port->variant =3D of_device_get_match_data(dev);
+> +
+>  	err =3D xilinx_pl_dma_pcie_parse_dt(port, bus->res);
+>  	if (err) {
+>  		dev_err(dev, "Parsing DT failed\n");
+> @@ -791,9 +830,22 @@ static int xilinx_pl_dma_pcie_probe(struct
+> platform_device *pdev)
+>  	return err;
+>  }
+>=20
+> +static const struct xilinx_pl_dma_variant xdma_host =3D {
+> +	.version =3D XDMA,
+> +};
+> +
+> +static const struct xilinx_pl_dma_variant qdma_host =3D {
+> +	.version =3D QDMA,
+> +};
+> +
+>  static const struct of_device_id xilinx_pl_dma_pcie_of_match[] =3D {
+>  	{
+>  		.compatible =3D "xlnx,xdma-host-3.00",
+> +		.data =3D &xdma_host,
+> +	},
+> +	{
+> +		.compatible =3D "xlnx,qdma-host-3.00",
+> +		.data =3D &qdma_host,
+>  	},
+>  	{}
+>  };
+> --
+> 2.34.1
 
 
