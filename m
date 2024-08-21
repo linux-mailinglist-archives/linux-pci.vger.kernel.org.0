@@ -1,66 +1,65 @@
-Return-Path: <linux-pci+bounces-11958-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11959-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D7F9959FF4
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 16:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B748095A054
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 16:48:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F689B22BF7
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 14:33:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10F74B20D4C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 14:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9D0418E353;
-	Wed, 21 Aug 2024 14:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D3A79B84;
+	Wed, 21 Aug 2024 14:48:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NJkynuV6"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dx6yT99V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6081607B0
-	for <linux-pci@vger.kernel.org>; Wed, 21 Aug 2024 14:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FF11D12EB
+	for <linux-pci@vger.kernel.org>; Wed, 21 Aug 2024 14:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724250791; cv=none; b=T1PMf9RYOWeqThkkKtTpp0ykU0qiL+YJei5MnDDL3LhxaXJQyxWIqCVK/5pvGmdMOiqsnyjHWGXhCx3M7o37OshbUtj1utJUTg+y4dxBoVETzq0ndGdkG4pUdLuWdOAsDCIC1zIcKbiFb3UzorDVLL3rtAxSTAbg8DFvRwJig8k=
+	t=1724251698; cv=none; b=rhBXbeO6L9tl2mUuTLgk2uiGq0pFtLDwO32YvZEIGU0Pxr2fmtpgoXJmhop36Kvx5cbYOITdX8qobVmi3c/0MlwG19iycdABnouVTWC5l1icOwZo5SgGjLKwzI6ea9cSs3f/sMEjOPJneImNI5+vqnqioMdDk6HtXsAcC1b2lmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724250791; c=relaxed/simple;
-	bh=qhZ1KPlSrzfpCzOcKFq5hXaoTCc2yqhFKI2QxlgCRWQ=;
+	s=arc-20240116; t=1724251698; c=relaxed/simple;
+	bh=1/56Frw52L6l47uYnX56Ku2U+SA7vGzQojk0TuJaHss=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q9Xgp+a3vnn9icqu1nPz/oms+efaRdGzfcCgD/iSLl5FlmGh1T4ZT7iIBnEUGX/9qv/UQ2EnPulS16H9Y6q433XTp/a7bytCC54U6227uuZ0lrvp9phcwYBaE2wTHWEYpMM87qEvgdfbi74Ha77Z3CZuzmutFgMNAPOfRyCTqZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NJkynuV6; arc=none smtp.client-ip=209.85.167.43
+	 To:Cc:Content-Type; b=GGUo1CzBEYPA4cfhay1EK0+OwKusWjGnwJpsluutFd2aHxp6MdtkLVJjhu4Us1P0ZurFP8fowijZqKA9ANG1q0oAc6NMZZsk+9aLkdnz8avLwcPWwehmF73A8hsbrUMxn52gRiUQjM1gIjdGsA+cZMTvqjT1fFkVe57zuCyrbgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=dx6yT99V; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-533461323cdso1804815e87.2
-        for <linux-pci@vger.kernel.org>; Wed, 21 Aug 2024 07:33:09 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53349d3071eso816313e87.2
+        for <linux-pci@vger.kernel.org>; Wed, 21 Aug 2024 07:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1724250788; x=1724855588; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1724251694; x=1724856494; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5i5gFoI2vYtCuhBq77xQoWmsn7LpduM17tHEzjgn3PQ=;
-        b=NJkynuV6Ilz+UFWAFNS+4ZsyGjSn09ct1c+4VxsnFZTLiYFVN+6RRZ+IWB/+20Td/h
-         8zA8owNTl2z72G3tERMTYedKj6LcDSXdkhQj7pMfhN3od2ip/mfx7Jssru27Jd/lX4cu
-         FGmKaHK6e4DP2ULiBKg1PkYgcl2bsUupBiAOk=
+        bh=p/77tg3T2R5E1hwpFn01BJ/m9yQxCA8mfGLap6CCgTU=;
+        b=dx6yT99VOIPLzv7msuqU6mH92B7t8G2VtNbs0Iqsl1cRXRsPMd9jjpCgpIyu17JtAw
+         tvbmZ1CxkmUmu3kftvQozpV2NG8yNE+XgQSJqXF5PRWvmcxVjJspC066Lr1VB0ic6pRi
+         6BD0GSovgQkY2bcnkanmN1nLOigcm5duehsKY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724250788; x=1724855588;
+        d=1e100.net; s=20230601; t=1724251694; x=1724856494;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5i5gFoI2vYtCuhBq77xQoWmsn7LpduM17tHEzjgn3PQ=;
-        b=kXrRuN60FSXpT0uqzMCY7dFPHxfRmXHZcU7niKmv0NLVQwSEG+i1oPFd9VlSbWSqUp
-         0bkutNLe6KgMb25nc4Dr+ACp1tsp6KfW4cMJpPTG4FMgqfo6UmMSPPQbpATZQ76GEJDS
-         WUwnENqXBohzg6dOePsvKM2V50hDIIv2tf1bm8Xni9mkuX0OWHOfKtw4hvMqyKjGB3Lx
-         mNpHjjF5HWOoQFx24MEzKbb2q3fwbrNOnlJrSdHHDwnvLmnZsGMQnQCSm1kDbXnoUE1Q
-         jptrIaddWq1Xr7H4Wcqn2X1bMNKw6WEf+gF/XwtdZI+ERZ9JFTdT5VZvwjevYgVuaJIw
-         GdLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWITFZIRUoTcOkbfArx3UGFybbz9xTKJmYSnaiSHuYEGZgUKepPqnLke4DBU2iPLxqPvUMYxeo978A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2CrtcO0r9dx7EUMV47SwDXeTFDsxce0rZ3q0jyFYJKsjiGEhr
-	kOJiIzM94yyW8r2G5M+7yUSMTRjd3hQn1+ivRWr/sbWs2TvXr3CM658/Ee2pqdyQUzc1EIwHT0g
-	NxS8tUb5W3D5shrhkEjkdiYCBXvenVv6Hjl7B
-X-Google-Smtp-Source: AGHT+IF4ViaT9SDgYMT6c87n/ULlma8hp8hJkiUY7HZkSV/BLlfVWhsKb0VJg+KIu78dk9fw8Sp9FMgzhE9q5wfhXVc=
-X-Received: by 2002:a05:6512:234a:b0:533:4620:ebfb with SMTP id
- 2adb3069b0e04-5334855e001mr1710052e87.21.1724250787663; Wed, 21 Aug 2024
- 07:33:07 -0700 (PDT)
+        bh=p/77tg3T2R5E1hwpFn01BJ/m9yQxCA8mfGLap6CCgTU=;
+        b=rA485ZpMGVtxC03PSf5DWd4ahOBK16ZDab06PwA67bx9nLOD0xmGO2ID992cfKVmIR
+         lrYGG5Pt2y/3n9YbnAWU9ueAkOPG1a5f3JeKKDhl3PQefHwwfaHTkgCXZgh3wybwYVip
+         alL3qiFPrnZRKwXsWv+KA0+qMzfSti3EyU2o1sR3N5gqwvZf+JeDw+huUG5A1LI+EXaZ
+         2XDtMRyAYJ9w12rm1KjYTDzvvz8f3AylWcaTqajAsd6MvzIte/UyCzlDAXgHyJn8Gyyo
+         yanOPQxi4kBYwWva/Dcw/bFuwgWiK48fvsGmKWGBhGAhNM6YIC4pZlDe/lkOyeBlQFTn
+         Yoyg==
+X-Gm-Message-State: AOJu0YxlQEhp+AZPWnAMZYNsVfjAcM7Hzh1eGntunIOyGKQq/JNM/33U
+	5wJmkYL9Q2DJBPOwQzEOt4j1tLk98RrMmGFp4J+B0VNXi39Aem3ExAr5ntKZZZUuD7sOQ46HyGx
+	qukvZezGbriNGtcIMUYy3L9eyfY+VRuo9QIa1
+X-Google-Smtp-Source: AGHT+IG1y2MmAccCkm0s+lM9ZdlKEskPGKqtpfAB1ceK0gIt3IJDL4uT2HvRETWefkTvKhmUsfsdDGT/meplTcZMZQo=
+X-Received: by 2002:a05:6512:3b0a:b0:52c:dbc6:8eb0 with SMTP id
+ 2adb3069b0e04-533485575e5mr1931720e87.21.1724251693555; Wed, 21 Aug 2024
+ 07:48:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,106 +68,185 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240815225731.40276-1-james.quinlan@broadcom.com>
  <20240815225731.40276-6-james.quinlan@broadcom.com> <1a6d6972-f2db-4d44-b79c-811ba44368f0@suse.de>
- <2fb74b23-a862-4b1c-b1e1-a3e3abc4571b@broadcom.com> <51eff793-2b72-4e1c-a86e-149f17d08279@suse.de>
-In-Reply-To: <51eff793-2b72-4e1c-a86e-149f17d08279@suse.de>
+ <CA+-6iNxFotwXW4Cc31daT+KwE_LEdAR=pcpsg_3Ng0ep1vYLBA@mail.gmail.com>
+ <76b528f8-88e2-4954-94cf-7e0933b4ad03@suse.de> <CA+-6iNykVzd1do=dHDVD3_prJkvfRbA2U-DsLFhSA2S48L_A8A@mail.gmail.com>
+ <87b38984-0a54-4773-ba20-3445d9c9c149@suse.de>
+In-Reply-To: <87b38984-0a54-4773-ba20-3445d9c9c149@suse.de>
 From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Wed, 21 Aug 2024 10:32:55 -0400
-Message-ID: <CA+-6iNw0fa5_FApPX5r_4K69ZMLyUKz4fT+5kDL4FcfTv=OUvA@mail.gmail.com>
+Date: Wed, 21 Aug 2024 10:48:01 -0400
+Message-ID: <CA+-6iNwJZ+OfYaCBBx04-hO1FmpDE36uJWd1jYvaVs_o4iwWqA@mail.gmail.com>
 Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
 To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, linux-pci@vger.kernel.org, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Cyril Brulebois <kibi@debian.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, bcm-kernel-feedback-list@broadcom.com, 
+	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
 	Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
 	open list <linux-kernel@vger.kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000c22c040620326bea"
+	boundary="000000000000c27a47062032a187"
 
---000000000000c22c040620326bea
+--000000000000c27a47062032a187
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 20, 2024 at 7:38=E2=80=AFPM Stanimir Varbanov <svarbanov@suse.d=
+On Tue, Aug 20, 2024 at 7:42=E2=80=AFPM Stanimir Varbanov <svarbanov@suse.d=
 e> wrote:
 >
-> Hi Florian,
+> Hi Jim,
 >
-> On 8/19/24 22:07, Florian Fainelli wrote:
-> > On 8/17/24 10:41, Stanimir Varbanov wrote:
+> On 8/20/24 00:49, Jim Quinlan wrote:
+> > On Mon, Aug 19, 2024 at 3:39=E2=80=AFPM Stanimir Varbanov <svarbanov@su=
+se.de> wrote:
+> >>
 > >> Hi Jim,
 > >>
-> >> On 8/16/24 01:57, Jim Quinlan wrote:
-> >>> The 7712 SOC has a bridge reset which can be described in the device
-> >>> tree.
-> >>> Use it if present.  Otherwise, continue to use the legacy method to
-> >>> reset
-> >>> the bridge.
+> >> On 8/19/24 21:09, Jim Quinlan wrote:
+> >>> On Sat, Aug 17, 2024 at 1:41=E2=80=AFPM Stanimir Varbanov <svarbanov@=
+suse.de> wrote:
+> >>>>
+> >>>> Hi Jim,
+> >>>>
+> >>>> On 8/16/24 01:57, Jim Quinlan wrote:
+> >>>>> The 7712 SOC has a bridge reset which can be described in the devic=
+e tree.
+> >>>>> Use it if present.  Otherwise, continue to use the legacy method to=
+ reset
+> >>>>> the bridge.
+> >>>>>
+> >>>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> >>>>> ---
+> >>>>>  drivers/pci/controller/pcie-brcmstb.c | 24 +++++++++++++++++++----=
+-
+> >>>>>  1 file changed, 19 insertions(+), 5 deletions(-)
+> >>>>
+> >>>> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> >>>>
+> >>>> One problem though on RPi5 (bcm2712).
+> >>>>
+> >>>> With this series applied + my WIP patches for enablement of PCIe on
+> >>>> bcm2712 when enable the pcie1 and pcie2 root ports in dts, I see ker=
+nel
+> >>>> boot stuck on pcie2 enumeration and I have to add this [1] to make i=
+t
+> >>>> work again.
+> >>>>
+> >>>> Some more info about resets used:
+> >>>>
+> >>>> pcie0 @ 100000:
+> >>>>         resets =3D <&bcm_reset 5>, <&bcm_reset 42>, <&pcie_rescal>;
+> >>>>         reset-names =3D "swinit", "bridge", "rescal";
+> >>>>
+> >>>> pcie1 @ 110000:
+> >>>>         resets =3D <&bcm_reset 7>, <&bcm_reset 43>, <&pcie_rescal>;
+> >>>>         reset-names =3D "swinit", "bridge", "rescal";
+> >>>>
+> >>>> pcie2 @ 120000:
+> >>>>         resets =3D <&bcm_reset 9>, <&bcm_reset 44>, <&pcie_rescal>;
+> >>>>         reset-names =3D "swinit", "bridge", "rescal";
+> >>>>
+> >>>>
+> >>>> I changed "swinit" reset for pcie2 to <&bcm_reset 9> (it is 32 in
+> >>>> downstream rpi kernel) because otherwise I'm unable to enumerate RP1
+> >>>> south bridge at all.
+> >>>>
+> >>>> Any help will be appreciated.
 > >>>
-> >>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> >>> ---
-> >>>   drivers/pci/controller/pcie-brcmstb.c | 24 +++++++++++++++++++-----
-> >>>   1 file changed, 19 insertions(+), 5 deletions(-)
+> >>> Hi Stan,
+> >>> Let me look into this.  Why is one of the controllers turning off --
+> >>> is it not populated with a device?
 > >>
-> >> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-> >>
-> >> One problem though on RPi5 (bcm2712).
-> >>
-> >> With this series applied + my WIP patches for enablement of PCIe on
-> >> bcm2712 when enable the pcie1 and pcie2 root ports in dts, I see kerne=
-l
-> >> boot stuck on pcie2 enumeration and I have to add this [1] to make it
-> >> work again.
-> >>
-> >> Some more info about resets used:
-> >>
-> >> pcie0 @ 100000:
-> >>     resets =3D <&bcm_reset 5>, <&bcm_reset 42>, <&pcie_rescal>;
-> >>     reset-names =3D "swinit", "bridge", "rescal";
-> >>
-> >> pcie1 @ 110000:
-> >>     resets =3D <&bcm_reset 7>, <&bcm_reset 43>, <&pcie_rescal>;
-> >>     reset-names =3D "swinit", "bridge", "rescal";
-> >>
-> >> pcie2 @ 120000:
-> >>     resets =3D <&bcm_reset 9>, <&bcm_reset 44>, <&pcie_rescal>;
-> >>     reset-names =3D "swinit", "bridge", "rescal"; >
-> >>
-> >> I changed "swinit" reset for pcie2 to <&bcm_reset 9> (it is 32 in
-> >> downstream rpi kernel) because otherwise I'm unable to enumerate RP1
-> >> south bridge at all.
+> >> Yes, I enabled pcie1 but no PCI endpoint devices attached on the
+> >> expansion connector.
 > >
-> > The value 9 is unused, so I suppose it does not really hurt to use it,
-> > but it is also unlikely to achieve what you desire. 32 is the correct
-> > value since pcie2_sw_init is bit 0 within SW_INIT_1 (second bank of
-> > resets).
->
-> Good to know that 9 is not the proper reset line, thank you.
->
-> Unfortunately, I'm unable to make it work with the proper reset line (32)=
-.
->
+> > Hi Stan,
 > >
-> > The file link you provided appears to be lacking support for the
-> > "swinit" reset line, is that intentional? I don't think you can assume
+> > I looked at our similar STB chip that has a rescal controller and
+> > multiple PCIe controllers and it doesn't have this problem.  Our 7712
+> > doesn't  have this problem either, only because it only has one PCIe
+> > controller.
+> >
+> > However, using my 7712 and unbinding the device (invokes
+> > brcm_pcie_remove()) shows me behavior similar to yours (2712).  What I
+> > do is read the rescal registers after the unbind, and they will either
+> > be dead or alive.  If I comment out the
+> > "pcie->bridge_sw_init_set(pcie, 1);" call, the rescal is still dead
+> > after unbind.  However if I comment out that AND the
+> > "clk_disable_unprepare(pcie->clk);" call,  the rescal registers remain
+> > alive after unbind.
 >
-> No idea why downstream RPi kernel does not use swinit reset.
+> Thank you. No idea why the clock is not used on 2712 (or at least it is
+> not populated on RPi downstream kernel.
 
-I found out accidentally that one does not need this (swinit) to
-properly function.
+Hi Stan,
+
+Most of the clocks on the STB chips come up active so one does not
+have to turn them on and off to have the device function.  It helps
+power savings to do this although I'm not sure it is significant.
 >
-> > this will work without.
+> >
+> > Perhaps you don't see the dependence on the PCIe clocks if the 2712
+> > does not give the PCIe node a clock property and instead keeps its
+> > clocks on all of the time.  In that case I would think that your
+> > solution would be fine.
 >
-> If I do not populate swinit in PCIe DT node it works i.e. PCI
-> enumeration is working and RP1 south-bridge is functional.
+> What you mean by my solution? The one where avoiding assert of
+> bridge_reset at link [1] bellow?
+
+Yes.
+>
+> If so, I still cannot understand the relation between bridge_reset and
+> rescal as the comment mentions:
+>
+> "Shutting down this bridge on pcie1 means accesses to rescal block will
+> hang the chip if another RC wants to assert/deassert rescal".
+
+I was just describing my observations; this should not be happening.
+I would say it is a HW bug for the 2712.  I can file a bug against the
+2712 but that will not help us right now.  From what I was told by HW,
+asserting the PCIe1 bridge reset does not affect the rescal settings,
+but it does freeze access to the rescal registers, and that is game
+over for the other PCIe controllers accessing the rescal registers.
+
+Regards,
+Jim Quinlan
+Broadcom STB/CM
+
 >
 > ~Stan
+> you
+> > Regards,
+> > Jim Quinlan
+> > Broadcom STB/CM
+> >
+> >
+> >
+> >>
+> >>>
+> >>> As you probably know the 7712 only has access to PCIe1.  But we do
+> >>> have another chip with two controllers and I will try to reproduce
+> >>> your failure and get to the bottom of it.
+> >>
+> >> Thank you for the help.
+> >>
+> >> ~Stan
+> >>
+> >>>
+> >>> Regards,
+> >>> Jim Quinlan
+> >>> Broadcom STB/CM
+> >>>>
+> >>>> ~Stan
+> >>>>
+> >>>> [1]
+> >>>> https://github.com/raspberrypi/linux/blob/rpi-6.11.y/drivers/pci/con=
+troller/pcie-brcmstb.c#L1711
 
---000000000000c22c040620326bea
+--000000000000c27a47062032a187
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -239,14 +317,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBsN9hmCpKPCe+FG31U9YLWdEdVHLWV
-HPdIf8pUMxB+NTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA4
-MjExNDMzMDhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDH5ke2d8fZQRgRsQWQxHpKsXJvAUM0
+hKazEBMNGD+f8DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA4
+MjExNDQ4MTRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAPccYSj1XdwviRgZnnBIhWtdGGoVKpZtCnfINY7y7kNp2H9pu
-uhkVphE4Rha6qBwYSDt+7np1DRI7utwBL8tk/VRL+0T3+TRZk1cWxRqk8lKzPhmp2zf9tluysOr1
-hmBuwZKIZpfZzRki8D5F54N8lV5TnpFPrj+KQ2JbnuZWWnr2Uiewu0OyA+aNP2KVwVjw5dz1oEUd
-rGjalq6BHHF2dajEmvDd3WjKBw2PnMts952A2nWZg+tv/w9Ij5aWI6krn3aC6zOSsrsYtcn6bFAn
-OwoMnfn782VaLJ1TeaO10f7MeclE3Kjd4efS3Dsa1+nPFCo4MrDD7mQLnHRQTxMnIA==
---000000000000c22c040620326bea--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAVGyFKvocvZeS5bcu/xW6W8B6Ujroy3GQ7vXJHu6ZkjWsY9GQ
+B1HQccghcbYFl2C44+PyxcCQJTfF4A01sdj4TV5HwuYl9NpFAEqbxQfjf25RzNSn6966EGNNMiit
+KHQdYNNiy13c5DClb8UP9YQdVxm7IJtDIcXlsxGtnZIN0YkIi448Y4nYX19/o7zPO9bc5jgQhkvl
+KfVc0JsAr/M0Mscz8i0pHpHHDXjei57oMt0F/3rEWMHK3KjoZWxMmP1pIs4ojaLibcvGIUsMHBb4
+90ezwa5Qkwx+yTWefk7Uk2SFFykPhfnc4Tniydt/3byhAhCqBm1Te27ncW5tKuriWA==
+--000000000000c27a47062032a187--
 
