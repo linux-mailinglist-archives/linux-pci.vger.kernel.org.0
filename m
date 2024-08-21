@@ -1,128 +1,140 @@
-Return-Path: <linux-pci+bounces-11973-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11974-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18A9295A3B0
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 19:17:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EC5C95A3EE
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 19:33:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D43CB2290D
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 17:17:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C2B51F230BE
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 17:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F314F1B2EC7;
-	Wed, 21 Aug 2024 17:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD94A1509B0;
+	Wed, 21 Aug 2024 17:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJTLsnpj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkJ6e/Pe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A4F1B2EC1;
-	Wed, 21 Aug 2024 17:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F69B13BAC2;
+	Wed, 21 Aug 2024 17:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724260634; cv=none; b=rMhkqRjXKI0JynYadHBwWvuTdoI3N2snYZhzfuLnM73e3qMaSvnZNDLs1dsFeMLBML4Reoaeg7BHkJ7b/VZi/o705iaGVbuvDs60fjmjILeyRLigQqNZ6Qk9Xs6VLjj0VOjkQjWFm9IS8pY6BNfLlSYe26m7YzQHkuyLkUzCxuk=
+	t=1724261600; cv=none; b=J6aRpQWJqLk4e4SibBBX5fxuQKgT8ixxta9m5UE7dnKfq7a3AKkU3Ch+XBpwtGZ256+LUiarzJz4nsg/+nSHRj88sEZgdFm2sMSvfaMgkEtayVf9lmzNiHdvI8qDsbf5ZQWPVTCEXREmqAbRLBWa67ZbIi71cpkHqghkJGwWBl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724260634; c=relaxed/simple;
-	bh=TyLDjhy0ttfEqSAKwvAE+TyPIIdCunxanaRtbGipG5M=;
+	s=arc-20240116; t=1724261600; c=relaxed/simple;
+	bh=qmp6M+GC6HC1KEys7IlErpZQ/40MKJuWueQq7xQBifM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZVjigY9+PzUB3YrL3D+c3tXmj+vJOmeUw1CXLs8f4TYRgZ7QvnQFTX/tAJ+AxMsZgaeFfuGIKLeehqaysoKc58Fwc2qBsrljVaL5EzA+zJ4J2F9wIx8b+m2ChTlWmo5bRPE0kNXtSd/XtJ0kpqRsx0D8yWq78Qlm/ZMEtDPb7gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJTLsnpj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB952C4AF13;
-	Wed, 21 Aug 2024 17:17:13 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=IgkIYggqyD8326LAB3geNnN0/w2egdCqplSPV3cZmgcdz8FaXvr5qScjMV+EiP6tLuQFfAT2ZHYXRIy9GKjym6WSkh1H1NsF2T3tcJTJUEj64Iwfo4ciq2w/Ew5Mcc/MdsB7kwCcAkS6Hg50fJE/L+2y/9XsyG9vuIUZYE/FOy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkJ6e/Pe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4DCC32781;
+	Wed, 21 Aug 2024 17:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724260634;
-	bh=TyLDjhy0ttfEqSAKwvAE+TyPIIdCunxanaRtbGipG5M=;
+	s=k20201202; t=1724261600;
+	bh=qmp6M+GC6HC1KEys7IlErpZQ/40MKJuWueQq7xQBifM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qJTLsnpjPRqw2Ttkye4zhRT+sOXS+tl57VHKXelnWv3O7OBcK2j5giznTCNDhbh08
-	 p3IeqfBKs7F4uCML5CV6CnX6DHasaRCEu5T4EJ/l0Z7S2OqkNQFbkMIY0vnObJU8mn
-	 YNf8XF8pOJQqpP8tb9+QveomFi/RdyWwIkBPrw50iKGfUyItrnBZFZTP5sp3QJgxke
-	 7/7iVj4GsMlKXWShUb+gUA0Q9rIew6ROkd5K5LSwJGuw2TsfZpya9yRr0Ggj5xCtFI
-	 KyR5dop6W2A8B7veBSpMRvqsVWycCTgMHYnKw5ET2QvqLbvhPhFHqtzWYgS54A4elg
-	 maLXDuhkXoYLA==
-Date: Wed, 21 Aug 2024 12:17:12 -0500
+	b=MkJ6e/PeKtpSJSSRzfLkTyA5Ibc3waQHdfAlOOwseejeU7iIY8DVvt91KYE8JdFW+
+	 ONnng2wt52kZL9Dth0ZN1kqoO33SkW0agSYntUuYI3RsiZbjTQynFh8byFv8yPA4CU
+	 gToJDZjqCmNhjgl5pzPKd/564fkGsjYFB28F+UTLpM8Mw7kt0hE/pDqr9N3emggAGb
+	 0qtUPMSqbk+q39dVxlGdAjz2Wga1gh9J1VhPhtsbP1BbR11O5IkOoWgxZ/AxSfsvKz
+	 UMCDu8MFoKjgKfLVN3SgaKblL97UFdBC6YIJxhpDQTLdjsYigGvUZHN3CNTdCUFdEw
+	 Yh4dTNh3223Vw==
+Date: Wed, 21 Aug 2024 12:33:18 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: daire.mcnamara@microchip.com
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	conor.dooley@microchip.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v8 2/3] PCI: microchip: Fix inbound address translation
- tables
-Message-ID: <20240821171712.GA256242@bhelgaas>
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	mani@kernel.org, quic_msarkar@quicinc.com,
+	quic_kraravin@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Refactor common code
+Message-ID: <20240821173318.GA260075@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240821130217.957424-3-daire.mcnamara@microchip.com>
+In-Reply-To: <20240821170917.21018-2-quic_schintav@quicinc.com>
 
-On Wed, Aug 21, 2024 at 02:02:16PM +0100, daire.mcnamara@microchip.com wrote:
-> From: Daire McNamara <daire.mcnamara@microchip.com>
-> 
-> On Microchip PolarFire SoC the PCIe Root Port can be behind one of three
-> general purpose Fabric Interface Controller (FIC) buses that encapsulates
-> an AXI-S bus. Depending on which FIC(s) the Root Port is connected
-> through to CPU space, and what address translation is done by that FIC,
-> the Root Port driver's inbound address translation may vary.
-> 
-> For all current supported designs and all future expected designs,
-> inbound address translation done by a FIC on PolarFire SoC varies
-> depending on whether PolarFire SoC in operating in coherent DMA mode or
-> noncoherent DMA mode.
+On Wed, Aug 21, 2024 at 10:08:42AM -0700, Shashank Babu Chinta Venkata wrote:
+> Refactor common code from RC(Root Complex) and EP(End Point)
+> drivers and move them to a common driver. This acts as placeholder
+> for common source code for both drivers, thus avoiding duplication.
 
-s/in operating/is operating/
+Much of this seems to be replacing qcom_pcie_icc_opp_update() and
+qcom_pcie_ep_icc_update() with qcom_pcie_common_icc_update().
 
-> The setup of the outbound address translation tables in the Root Port
-> driver only needs to handle these two cases.
-> 
-> Setup the inbound address translation tables to one of two address
-> translations, depending on whether the rootport is being used with coherent
-> DMA or noncoherent DMA.
+That seems worthwhile and it would be helpful if the commit log called
+that out so we'd know what to look for in the patch.
 
-s/rootport/Root Port/ to match above
+I think the qcom_pcie_common_icc_init() rework would be more
+understandable if it were in its own patch and not mixed in here.
 
-> +static void mc_pcie_setup_inbound_atr(int window_index, u64 axi_addr, u64 pcie_addr, u64 size)
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> @@ -0,0 +1,88 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2014-2015, 2020 The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2015, 2021 Linaro Limited.
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + *
 
-Most of this file fits in 80 columns, maybe these new decls could, too.
+Spurious blank line.
 
-> +static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
+> + */
 
-> @@ -525,13 +529,20 @@ void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  	val = upper_32_bits(pci_addr);
->  	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->  	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
+> +struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const char *path)
+> +{
+> +	struct icc_path *icc_p;
+> +
+> +	icc_p = devm_of_icc_get(pci->dev, path);
+> +	return icc_p;
+
+  return devm_of_icc_get(pci->dev, path);
+
 > +}
-> +EXPORT_SYMBOL_GPL(plda_pcie_setup_window);
+> +EXPORT_SYMBOL_GPL(qcom_pcie_common_icc_get_resource);
+> +
+> +int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc, u32 bandwidth)
+> +{
+> +	int ret;
+> +
+> +	ret = icc_set_bw(icc, 0, bandwidth);
+> +	if (ret) {
+> +		dev_err(pci->dev, "Failed to set interconnect bandwidth: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
 
-I think the caller that needs this export is in a previous patch?
+The callers also check and log similar messages.  I don't see the
+point.
 
-I wish we didn't need to export symbols like these since they're
-really private to the driver, but I didn't look into the module
-structure here.
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pcie_common_icc_init);
 
-Also, I get this error when building after both patch 1/3 and 2/3:
+These both seem of dubious value.
 
-  drivers/pci/controller/plda/pcie-microchip-host.c:617:5: error: no previous prototype for ‘mc_pcie_setup_iomems’ [-Werror=missing-prototypes]
-    617 | int mc_pcie_setup_iomems(struct pci_host_bridge *bridge,
-	|     ^~~~~~~~~~~~~~~~~~~~
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
 
-> +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> @@ -355,6 +355,11 @@ static int starfive_pcie_host_init(struct plda_pcie_rp *plda)
->  	 */
->  	plda_pcie_set_pref_win_64bit(plda);
->  
-> +	/*
-> +	 * Setup the inbound address translation
-> +	 */
+Do we need "-common" in the filename?  Seems like "pcie-qcom.h" would
+be enough.  I *hope* we don't someday need both a "pcie-qcom.h and a
+"pcie-qcom-common.h"; that seems like it would really be overkill.
 
-Could be a single-line comment: /* Setup the ... */
-
-> +	plda_pcie_setup_inbound_address_translation(plda);
+Bjorn
 
