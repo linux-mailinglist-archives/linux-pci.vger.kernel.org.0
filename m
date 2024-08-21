@@ -1,444 +1,387 @@
-Return-Path: <linux-pci+bounces-11943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD142959A85
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 13:46:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C5D6959AEE
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 13:57:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66EE428164C
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 11:46:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1AED1C21D99
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Aug 2024 11:57:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31B181B2515;
-	Wed, 21 Aug 2024 11:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B0C51A2867;
+	Wed, 21 Aug 2024 11:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2G/y1bM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082F1192D81;
-	Wed, 21 Aug 2024 11:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034E9188A3C;
+	Wed, 21 Aug 2024 11:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724239457; cv=none; b=sPb3RiHWCmTPxDULpRlIsAEI3cpYtXbq5y7XHa2qxgNzZxb5+hVEzzq4EAaROWCP1GLNcCCbAiuND6EEnttQCMtAjbe3Nxet93xJUIn9j5czOLp3luNIGNfG9MCuppyOUFEJ2ULFgHRKhTre/ZPkvw4UlkXRumuSbDWAvVfFDN4=
+	t=1724240788; cv=none; b=islA0Q9oKOsE6H1129XSpOIRAdJpjLYxxcbHxZ6TaA7pDop9HNISQOtMRH6QnTre3kEGyULWP4XTq22e/8yvOFNjGTzmNm+XTfVS9Se5yp6Hxotnr0kSNfA/6EgqKsDaetgtvNbg0DEyoCCYeP0agYXdG/ar/rupkukQj3mPiMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724239457; c=relaxed/simple;
-	bh=Vv5b6IR/Y6okpE2hQ0fTrckCYoKzUxTTe+QktVKVSQ4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ea1nSGxFNHZRL6+bCh1zX6R5A0uyqJPRHUkOgyi9rRgUs+Y3cL157bYxGzeuZWMiPdNxHeu6U/c0k9ZqbSOdLxg7j+RfApZTMlb0Wi5AlzX5QsxIp+IGZXFsugMRSxa3iUdhYQGn/6gorVHdDLxvjXN/Ld6UruX1oOgcCaz5S5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WpkRP38Ttz6D8XR;
-	Wed, 21 Aug 2024 19:21:05 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 42D35140A36;
-	Wed, 21 Aug 2024 19:24:11 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 Aug
- 2024 12:24:05 +0100
-Date: Wed, 21 Aug 2024 12:24:04 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Shijith Thotton <sthotton@marvell.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <jerinj@marvell.com>, <schalla@marvell.com>,
-	<vattunuru@marvell.com>, "Rafael J. Wysocki" <rafael@kernel.org>, D Scott
- Phillips <scott@os.amperecomputing.com>, Philipp Stanner
-	<pstanner@redhat.com>
-Subject: Re: [PATCH] PCI: hotplug: Add OCTEON PCI hotplug controller driver
-Message-ID: <20240821122404.00001a71@Huawei.com>
-In-Reply-To: <20240820152734.642533-1-sthotton@marvell.com>
-References: <20240820152734.642533-1-sthotton@marvell.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1724240788; c=relaxed/simple;
+	bh=WMV4dGFtHRsMdGbR2t0cIKkZrN1IsuFG4Za9AEuHTRw=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mi8ZrWtkbxyQmyokHMhJksVvq82bXYlkO/NVrmA3+E0//6SOkGmQMJ5aZh8Q9FmKIh+Y3XRFW7MoXYxYmSuBBgBr9Xb1xSAw1HODi+MP35O2vgkfRtg7DnxfL6xaXZwlTvJAAYfezphFnNpVC0+v2lV9p31PgziL3wdyLHS6YfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2G/y1bM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184C6C32782;
+	Wed, 21 Aug 2024 11:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724240787;
+	bh=WMV4dGFtHRsMdGbR2t0cIKkZrN1IsuFG4Za9AEuHTRw=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=r2G/y1bMyDsrn/29xVktY1F46ZX1ZKor91MvYUGiPhlQ/pwuxV/1c0wTvT/ylUDSl
+	 9BBy09XZgbyDNor2+WyK9oOQnPkY1FnNhRDAC6ClFaSePQbYyB0hR1qhuKTYz8qBnq
+	 qHmWeJA15MJL4rrye2JVqnFiqwSxoOARKEJguvzTt/4DcztdtbMDtH0iw+64DttJhM
+	 foLuSUPDleQWrjJJ2RCjOthIiqGyvwQKmJ9ZIgzJbnyZgyoAIVa0ULthwUi5P1G0Zm
+	 9degnT1bf3Ag7E4hmIx8Xod4j73NrXI0hOWM/pG2Rp5IAWDefxO+mmif2NIN0txw7t
+	 gRzupXR5uo6LA==
+Date: Wed, 21 Aug 2024 12:46:18 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
+Message-ID: <20240821-exception-nearby-5adeaaf0178b@spud>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
+ <20240820-baritone-delegate-5711f7a0bc76@spud>
+ <ZsTfoC3aKLdmFPCL@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-
-On Tue, 20 Aug 2024 20:57:20 +0530
-Shijith Thotton <sthotton@marvell.com> wrote:
-
-> This patch introduces a PCI hotplug controller driver for the OCTEON
-> PCIe device, a multi-function PCIe device where the first function acts
-> as a hotplug controller. It is equipped with MSI-x interrupts to notify
-> the host of hotplug events from the OCTEON firmware.
-> 
-> The driver facilitates the hotplugging of non-controller functions
-> within the same device. During probe, non-controller functions are
-> removed and registered as PCI hotplug slots. The slots are added back
-> only upon request from the device firmware. The driver also allows the
-> enabling and disabling of the slots via sysfs slot entries, provided by
-> the PCI hotplug framework.
-> 
-> Signed-off-by: Shijith Thotton <sthotton@marvell.com>
-> Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
-I was curious, so drive by review.
-
-What was Vamsi's involvement?  Given Shijith sent this
-I'd guess co developer?  In which Co-developed-by tag
-should be used.
-
-Various random comments on things inline.
-
-> ---
-> 
-> This patch introduces a PCI hotplug controller driver for OCTEON PCIe hotplug
-> controller. The OCTEON PCIe device is a multi-function device where the first
-> function acts as a PCI hotplug controller.
-> 
->               +--------------------------------+
->               |           Root Port            |
->               +--------------------------------+
->                               |
->                              PCIe
->                               |
-> +---------------------------------------------------------------+
-> |              OCTEON PCIe Multifunction Device                 |
-> +---------------------------------------------------------------+
->             |                    |              |            |
->             |                    |              |            |
-> +---------------------+  +----------------+  +-----+  +----------------+
-> |      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
-> | (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
-> +---------------------+  +----------------+  +-----+  +----------------+
->             |
->             |
-> +-------------------------+
-> |   Controller Firmware   |
-> +-------------------------+
-> 
-> The hotplug controller driver facilitates the hotplugging of non-controller
-> functions in the same device. During the probe of the driver, the non-controller
-> function are removed and registered as PCI hotplug slots. They are added back
-> only upon request from the device firmware. The driver also allows the user to
-> enable/disable the functions using sysfs slot entries provided by PCI hotplug
-> framework.
-> 
-> This solution adopts a hardware + software approach for several reasons:
-> 
-> 1. To reduce hardware implementation cost. Supporting complete hotplug
->    capability within the card would require a PCI switch implemented within.
-> 
-> 2. In the multi-function device, non-controller functions can act as emulated
->    devices. The firmware can dynamically enable or disable them at runtime.
-> 
-> 3. Not all root ports support PCI hotplug. This approach provides greater
->    flexibility and compatibility across different hardware configurations.
-> 
-> The hotplug controller function is lightweight and is equipped with MSI-x
-> interrupts to notify the host about hotplug events. Upon receiving an
-> interrupt, the hotplug register is read, and the required function is enabled
-> or disabled.
-> 
-> This driver will be beneficial for managing PCI hotplug events on the OCTEON
-> PCIe device without requiring complex hardware solutions.
-> 
->  MAINTAINERS                    |   6 +
->  drivers/pci/hotplug/Kconfig    |  10 +
->  drivers/pci/hotplug/Makefile   |   1 +
->  drivers/pci/hotplug/octep_hp.c | 351 +++++++++++++++++++++++++++++++++
->  4 files changed, 368 insertions(+)
->  create mode 100644 drivers/pci/hotplug/octep_hp.c
-> 
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eD3kkNo53rLLXBRC"
+Content-Disposition: inline
+In-Reply-To: <ZsTfoC3aKLdmFPCL@apocalypse>
 
 
-> diff --git a/drivers/pci/hotplug/octep_hp.c b/drivers/pci/hotplug/octep_hp.c
-> new file mode 100644
-> index 000000000000..efeb542d4993
-> --- /dev/null
-> +++ b/drivers/pci/hotplug/octep_hp.c
-> @@ -0,0 +1,351 @@
+--eD3kkNo53rLLXBRC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +struct octep_hp_controller {
-> +	void __iomem *base;
-> +	struct pci_dev *pdev;
-> +	struct work_struct work;
-> +	struct list_head slot_list;
-> +	struct mutex slot_lock; /* Protects slot_list */
-> +	struct list_head hp_cmd_list;
-> +	spinlock_t hp_cmd_lock; /* Protects hp_cmd_list */
-> +};
+On Tue, Aug 20, 2024 at 08:25:36PM +0200, Andrea della Porta wrote:
+> Hi Conor,
+>=20
+> On 17:19 Tue 20 Aug     , Conor Dooley wrote:
+> > On Tue, Aug 20, 2024 at 04:36:03PM +0200, Andrea della Porta wrote:
+> > > Add device tree bindings for the clock generator found in RP1 multi
+> > > function device, and relative entries in MAINTAINERS file.
+> > >=20
+> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > ---
+> > >  .../clock/raspberrypi,rp1-clocks.yaml         | 87 +++++++++++++++++=
+++
+> > >  MAINTAINERS                                   |  6 ++
+> > >  include/dt-bindings/clock/rp1.h               | 56 ++++++++++++
+> > >  3 files changed, 149 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/clock/raspberry=
+pi,rp1-clocks.yaml
+> > >  create mode 100644 include/dt-bindings/clock/rp1.h
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-=
+clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clock=
+s.yaml
+> > > new file mode 100644
+> > > index 000000000000..b27db86d0572
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.=
+yaml
+> > > @@ -0,0 +1,87 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: RaspberryPi RP1 clock generator
+> > > +
+> > > +maintainers:
+> > > +  - Andrea della Porta <andrea.porta@suse.com>
+> > > +
+> > > +description: |
+> > > +  The RP1 contains a clock generator designed as three PLLs (CORE, A=
+UDIO,
+> > > +  VIDEO), and each PLL output can be programmed though dividers to g=
+enerate
+> > > +  the clocks to drive the sub-peripherals embedded inside the chipse=
+t.
+> > > +
+> > > +  Link to datasheet:
+> > > +  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: raspberrypi,rp1-clocks
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  '#clock-cells':
+> > > +    description:
+> > > +      The index in the assigned-clocks is mapped to the output clock=
+ as per
+> > > +      definitions in dt-bindings/clock/rp1.h.
+> > > +    const: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - '#clock-cells'
+> > > +  - clocks
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/rp1.h>
+> > > +
+> > > +    rp1 {
+> > > +        #address-cells =3D <2>;
+> > > +        #size-cells =3D <2>;
+> > > +
+> > > +        rp1_clocks: clocks@18000 {
+> >=20
+> > The unit address does not match the reg property. I'm surprised that
+> > dtc doesn't complain about that.
+>=20
+> Agreed. I'll update the address with the reg value in the next release
+>=20
+> >=20
+> > > +            compatible =3D "raspberrypi,rp1-clocks";
+> > > +            reg =3D <0xc0 0x40018000 0x0 0x10038>;
+> >=20
+> > This is a rather oddly specific size. It leads me to wonder if this
+> > region is inside some sort of syscon area?
+>=20
+> >From downstream source code and RP1 datasheet it seems that the last add=
+ressable
+> register is at 0xc040028014 while the range exposed through teh devicetre=
+e ends
+> up at 0xc040028038, so it seems more of a little safe margin. I wouldn't =
+say it
+> is a syscon area since those register are quite specific for video clock
+> generation and not to be intended to be shared among different peripheral=
+s.
+> Anyway, the next register aperture is at 0xc040030000 so I would say we c=
+an=20
+> extend the clock mapped register like the following:
+>=20
+> reg =3D <0xc0 0x40018000 0x0 0x18000>;
+>=20
+> if you think it is more readable.
 
-> +static void octep_hp_disable_pdev(struct octep_hp_controller *hp_ctrl,
-> +				  struct octep_hp_slot *hp_slot)
-> +{
-> +	mutex_lock(&hp_ctrl->slot_lock);
+I don't care=20
+> > > +            #clock-cells =3D <1>;
+> > > +            clocks =3D <&clk_xosc>;
+> > > +
+> > > +            assigned-clocks =3D <&rp1_clocks RP1_PLL_SYS_CORE>,
+>=20
+> > FWIW, I don't think any of these assigned clocks are helpful for the
+> > example. That said, why do you need to configure all of these assigned
+> > clocks via devicetree when this node is the provider of them?
+>=20
+> Not sure to understand what you mean here, the example is there just to
+> show how to compile the dt node, maybe you're referring to the fact that
+> the consumer should setup the clock freq?
 
-guard(mutex)(&hp_ctrl->slot_lock);
+I suppose, yeah. I don't think a particular configuration is relevant
+for the example binding, but simultaneously don't get why you are
+assigning the rate for clocks used by audio devices or ethernet in the
+clock provider node.
 
-Same for other simple cases where we can avoid explicit unlock in error paths
-+ main path.
+> Consider that the rp1-clocks
+> is coupled to the peripherals contained in the same RP1 chip so there is
+> not much point in letting the peripherals set the clock to their leisure.
 
+How is that any different to the many other SoCs in the kernel?
 
-> +	if (!hp_slot->hp_pdev) {
-> +		dev_dbg(&hp_ctrl->pdev->dev, "Slot %u already disabled\n", hp_slot->slot_number);
-> +		mutex_unlock(&hp_ctrl->slot_lock);
-> +		return;
-> +	}
-> +
-> +	dev_dbg(&hp_slot->hp_pdev->dev, "Disabling slot %u\n", hp_slot->slot_number);
-> +
-> +	/* Remove the device from the bus */
-> +	pci_stop_and_remove_bus_device_locked(hp_slot->hp_pdev);
-> +	hp_slot->hp_pdev = NULL;
-> +	mutex_unlock(&hp_ctrl->slot_lock);
-> +}
+> > > +                              <&rp1_clocks RP1_PLL_AUDIO_CORE>,
+> > > +                              /* RP1_PLL_VIDEO_CORE and dividers are=
+ now managed by VEC,DPI drivers */
+> >=20
+> > Comments like this also do not seem relevant to the binding.
+>=20
+> Agreed, will drop in the next release.
+>=20
+> >=20
+> >=20
+> > Cheers,
+> > Conor.
+> >
+>=20
+> Many thanks,
+> Andrea
+> =20
+> >=20
+> > > +                              <&rp1_clocks RP1_PLL_SYS>,
+> > > +                              <&rp1_clocks RP1_PLL_SYS_SEC>,
+> > > +                              <&rp1_clocks RP1_PLL_AUDIO>,
+> > > +                              <&rp1_clocks RP1_PLL_AUDIO_SEC>,
+> > > +                              <&rp1_clocks RP1_CLK_SYS>,
+> > > +                              <&rp1_clocks RP1_PLL_SYS_PRI_PH>,
+> > > +                              /* RP1_CLK_SLOW_SYS is used for the fr=
+equency counter (FC0) */
+> > > +                              <&rp1_clocks RP1_CLK_SLOW_SYS>,
+> > > +                              <&rp1_clocks RP1_CLK_SDIO_TIMER>,
+> > > +                              <&rp1_clocks RP1_CLK_SDIO_ALT_SRC>,
+> > > +                              <&rp1_clocks RP1_CLK_ETH_TSU>;
+> > > +
+> > > +            assigned-clock-rates =3D <1000000000>, // RP1_PLL_SYS_CO=
+RE
+> > > +                                   <1536000000>, // RP1_PLL_AUDIO_CO=
+RE
+> > > +                                   <200000000>,  // RP1_PLL_SYS
+> > > +                                   <125000000>,  // RP1_PLL_SYS_SEC
+> > > +                                   <61440000>,   // RP1_PLL_AUDIO
+> > > +                                   <192000000>,  // RP1_PLL_AUDIO_SEC
+> > > +                                   <200000000>,  // RP1_CLK_SYS
+> > > +                                   <100000000>,  // RP1_PLL_SYS_PRI_=
+PH
+> > > +                                   /* Must match the XOSC frequency =
+*/
+> > > +                                   <50000000>, // RP1_CLK_SLOW_SYS
+> > > +                                   <1000000>, // RP1_CLK_SDIO_TIMER
+> > > +                                   <200000000>, // RP1_CLK_SDIO_ALT_=
+SRC
+> > > +                                   <50000000>; // RP1_CLK_ETH_TSU
+> > > +        };
+> > > +    };
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 42decde38320..6e7db9bce278 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -19116,6 +19116,12 @@ F:	Documentation/devicetree/bindings/media/r=
+aspberrypi,pispbe.yaml
+> > >  F:	drivers/media/platform/raspberrypi/pisp_be/
+> > >  F:	include/uapi/linux/media/raspberrypi/
+> > > =20
+> > > +RASPBERRY PI RP1 PCI DRIVER
+> > > +M:	Andrea della Porta <andrea.porta@suse.com>
+> > > +S:	Maintained
+> > > +F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.ya=
+ml
+> > > +F:	include/dt-bindings/clock/rp1.h
+> > > +
+> > >  RC-CORE / LIRC FRAMEWORK
+> > >  M:	Sean Young <sean@mess.org>
+> > >  L:	linux-media@vger.kernel.org
+> > > diff --git a/include/dt-bindings/clock/rp1.h b/include/dt-bindings/cl=
+ock/rp1.h
+> > > new file mode 100644
+> > > index 000000000000..1ed67b8a5229
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/clock/rp1.h
+> > > @@ -0,0 +1,56 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
+> > > +/*
+> > > + * Copyright (C) 2021 Raspberry Pi Ltd.
+> > > + */
+> > > +
+> > > +#define RP1_PLL_SYS_CORE		0
+> > > +#define RP1_PLL_AUDIO_CORE		1
+> > > +#define RP1_PLL_VIDEO_CORE		2
+> > > +
+> > > +#define RP1_PLL_SYS			3
+> > > +#define RP1_PLL_AUDIO			4
+> > > +#define RP1_PLL_VIDEO			5
+> > > +
+> > > +#define RP1_PLL_SYS_PRI_PH		6
+> > > +#define RP1_PLL_SYS_SEC_PH		7
+> > > +#define RP1_PLL_AUDIO_PRI_PH		8
+> > > +
+> > > +#define RP1_PLL_SYS_SEC			9
+> > > +#define RP1_PLL_AUDIO_SEC		10
+> > > +#define RP1_PLL_VIDEO_SEC		11
+> > > +
+> > > +#define RP1_CLK_SYS			12
+> > > +#define RP1_CLK_SLOW_SYS		13
+> > > +#define RP1_CLK_DMA			14
+> > > +#define RP1_CLK_UART			15
+> > > +#define RP1_CLK_ETH			16
+> > > +#define RP1_CLK_PWM0			17
+> > > +#define RP1_CLK_PWM1			18
+> > > +#define RP1_CLK_AUDIO_IN		19
+> > > +#define RP1_CLK_AUDIO_OUT		20
+> > > +#define RP1_CLK_I2S			21
+> > > +#define RP1_CLK_MIPI0_CFG		22
+> > > +#define RP1_CLK_MIPI1_CFG		23
+> > > +#define RP1_CLK_PCIE_AUX		24
+> > > +#define RP1_CLK_USBH0_MICROFRAME	25
+> > > +#define RP1_CLK_USBH1_MICROFRAME	26
+> > > +#define RP1_CLK_USBH0_SUSPEND		27
+> > > +#define RP1_CLK_USBH1_SUSPEND		28
+> > > +#define RP1_CLK_ETH_TSU			29
+> > > +#define RP1_CLK_ADC			30
+> > > +#define RP1_CLK_SDIO_TIMER		31
+> > > +#define RP1_CLK_SDIO_ALT_SRC		32
+> > > +#define RP1_CLK_GP0			33
+> > > +#define RP1_CLK_GP1			34
+> > > +#define RP1_CLK_GP2			35
+> > > +#define RP1_CLK_GP3			36
+> > > +#define RP1_CLK_GP4			37
+> > > +#define RP1_CLK_GP5			38
+> > > +#define RP1_CLK_VEC			39
+> > > +#define RP1_CLK_DPI			40
+> > > +#define RP1_CLK_MIPI0_DPI		41
+> > > +#define RP1_CLK_MIPI1_DPI		42
+> > > +
+> > > +/* Extra PLL output channels - RP1B0 only */
+> > > +#define RP1_PLL_VIDEO_PRI_PH		43
+> > > +#define RP1_PLL_AUDIO_TERN		44
+> > > --=20
+> > > 2.35.3
+> > >=20
+>=20
+>=20
 
-> +#define SLOT_NAME_SIZE 16
-> +static int octep_hp_register_slot(struct octep_hp_controller *hp_ctrl, struct pci_dev *pdev,
-> +				  u16 slot_number)
-> +{
-> +	char slot_name[SLOT_NAME_SIZE];
-> +	struct octep_hp_slot *hp_slot;
-> +	int ret;
-> +
-> +	hp_slot = kzalloc(sizeof(*hp_slot), GFP_KERNEL);
-> +	if (!hp_slot)
-> +		return -ENOMEM;
-> +
-> +	hp_slot->ctrl = hp_ctrl;
-> +	hp_slot->hp_pdev = pdev;
-> +	hp_slot->hp_devfn = pdev->devfn;
-> +	hp_slot->slot_number = slot_number;
-> +	hp_slot->slot.ops = &octep_hp_slot_ops;
-> +
-> +	snprintf(slot_name, SLOT_NAME_SIZE, "octep_hp_%u", slot_number);
-> +	ret = pci_hp_register(&hp_slot->slot, hp_ctrl->pdev->bus, PCI_SLOT(pdev->devfn), slot_name);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register hotplug slot %u\n", slot_number);
-> +		kfree(hp_slot);
-> +		return ret;
-		return dev_err_probe() in here as well.
+--eD3kkNo53rLLXBRC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	}
-> +
-> +	octep_hp_disable_pdev(hp_ctrl, hp_slot);
-> +	list_add_tail(&hp_slot->list, &hp_ctrl->slot_list);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool octep_hp_slot(struct octep_hp_controller *hp_ctrl, struct pci_dev *pdev)
-> +{
-> +	/* Check if the PCI device can be hotplugged */
-> +	return pdev != hp_ctrl->pdev && pdev->bus == hp_ctrl->pdev->bus &&
-> +		PCI_SLOT(pdev->devfn) == PCI_SLOT(hp_ctrl->pdev->devfn);
-> +}
-> +
-> +static void octep_hp_cmd_handler(struct octep_hp_controller *hp_ctrl, struct octep_hp_cmd *hp_cmd)
+-----BEGIN PGP SIGNATURE-----
 
-Line break as that's getting long for little reason.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsXTdgAKCRB4tDGHoIJi
+0kLKAQC535sjoiTm1nVjrfWgTOd6n9yLyJcuMXMSBYYjbBLvdAD+PDOHUfTtzjNr
+QMANmxNh/c4BZ8btKjAD28A7nvtqGAU=
+=945/
+-----END PGP SIGNATURE-----
 
-> +{
-> +	struct octep_hp_slot *hp_slot;
-> +
-> +	/* Enable or disable the slots based on the slot mask */
-> +	list_for_each_entry(hp_slot, &hp_ctrl->slot_list, list) {
-> +		if (hp_cmd->slot_mask & BIT(hp_slot->slot_number)) {
-> +			if (hp_cmd->vec_type == OCTEP_HP_VEC_ENA)
-> +				octep_hp_enable_pdev(hp_ctrl, hp_slot);
-> +			else
-> +				octep_hp_disable_pdev(hp_ctrl, hp_slot);
-> +		}
-> +	}
-> +}
-> +
-> +static void octep_hp_work_handler(struct work_struct *work)
-> +{
-> +	struct octep_hp_controller *hp_ctrl = container_of(work, struct octep_hp_controller, work);
-
-Add a line break.
-
-> +	struct octep_hp_cmd *hp_cmd;
-> +	unsigned long flags;
-
-...
-
-> +
-> +static void octep_hp_deregister_slots(struct octep_hp_controller *hp_ctrl)
-> +{
-> +	struct octep_hp_slot *hp_slot, *tmp;
-> +
-> +	/* Deregister all the hotplug slots */
-> +	list_for_each_entry_safe(hp_slot, tmp, &hp_ctrl->slot_list, list) {
-> +		pci_hp_deregister(&hp_slot->slot);
-> +		octep_hp_enable_pdev(hp_ctrl, hp_slot);
-> +		list_del(&hp_slot->list);
-> +		kfree(hp_slot);
-
-As below, maybe just register cleanup for one slot at a time.
-That will need a bit of magic to get form the slot to the hp_ctrl though.
-
-Plus point is simpler logic to follow.
-
-
-> +	}
-> +}
-> +
-> +static void octep_hp_controller_cleanup(void *data)
-> +{
-> +	struct octep_hp_controller *hp_ctrl = data;
-> +
-> +	pci_free_irq_vectors(hp_ctrl->pdev);
-> +	flush_work(&hp_ctrl->work);
-I'd prefer to see this broken up so we have
-simple steps.
-1. Add action 1 in probe.
-2. Add cleanup for action 1 in probe
-3. Add action 2 in probe etc.
-
-Otherwise it can be a bit tricky to review.
-
-> +	octep_hp_deregister_slots(hp_ctrl);
-
-This is particular is no where near the place where the
-slots are registered.
-May be better to register one cleanup function call
-per slot as then it will also be nice and simple to follow.
-
-
-> +}
-> +
-> +static int octep_hp_controller_setup(struct pci_dev *pdev, struct octep_hp_controller *hp_ctrl)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable PCI device\n");
-Only called from probe, so
-		return dev_err_probe()
-
-> +		return ret;
-> +	}
-> +
-> +	ret = pcim_iomap_regions(pdev, BIT(0), OCTEP_HP_DRV_NAME);
-Given there is a patch on list deprecating this, reconsider.
-https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
-+CC Philipp
-
-
-> +	if (ret) {
-> +		dev_err(dev, "Failed to request MMIO region\n");
-> +		return ret;
-
-Same thing on return dev_err_probe here and later.
-
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +	pci_set_drvdata(pdev, hp_ctrl);
-> +
-> +	INIT_LIST_HEAD(&hp_ctrl->slot_list);
-> +	INIT_LIST_HEAD(&hp_ctrl->hp_cmd_list);
-> +	mutex_init(&hp_ctrl->slot_lock);
-> +	spin_lock_init(&hp_ctrl->hp_cmd_lock);
-> +	INIT_WORK(&hp_ctrl->work, octep_hp_work_handler);
-> +
-> +	hp_ctrl->pdev = pdev;
-> +	hp_ctrl->base = pcim_iomap_table(pdev)[0];
-> +	if (!hp_ctrl->base) {
-> +		dev_err(dev, "Failed to get device resource map\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = pci_alloc_irq_vectors(pdev, 1, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_DIS) + 1,
-> +				    PCI_IRQ_MSIX);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to alloc MSI-X vectors");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_add_action(dev, octep_hp_controller_cleanup, hp_ctrl);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add action for controller cleanup\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_ENA)),
-> +			       octep_hp_intr_handler, 0, "octep_hp_ena", hp_ctrl);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register slot enable interrupt handle\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(OCTEP_HP_VEC_DIS)),
-> +			       octep_hp_intr_handler, 0, "octep_hp_dis", hp_ctrl);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register slot disable interrupt handle\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int octep_hp_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct octep_hp_controller *hp_ctrl;
-> +	struct pci_dev *tmp_pdev = NULL;
-> +	u16 slot_number = 0;
-> +	int ret;
-> +
-> +	hp_ctrl = devm_kzalloc(&pdev->dev, sizeof(*hp_ctrl), GFP_KERNEL);
-> +	if (!hp_ctrl)
-> +		return -ENOMEM;
-> +
-> +	ret = octep_hp_controller_setup(pdev, hp_ctrl);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to setup octep controller\n");
-> +		return ret;
-return dev_err_probe()
-actually no. Drop it. There are more informative error prints for all the
-conditions. We probably don't care that the end result is this specific
-function fails (more than an irq request failed etc).
-
-
-> +	}
-> +
-> +	/*
-> +	 * Register all hotplug slots. Hotplug controller is the first function of the PCI device.
-> +	 * The hotplug slots are the remaining functions of the PCI device. They are removed from
-> +	 * the bus and are added back when the hotplug event is triggered.
-> +	 */
-> +	for_each_pci_dev(tmp_pdev) {
-> +		if (octep_hp_slot(hp_ctrl, tmp_pdev)) {
-What IIpo said on this.  No one likes deep indent ;)
-> +			ret = octep_hp_register_slot(hp_ctrl, tmp_pdev, slot_number++);
-> +			if (ret) {
-> +				dev_err(&pdev->dev, "Failed to register hotplug slots.\n");
-> +				return ret;
-
-return dev_err_probe();
-
-Cleaner in general even if no chance of deferral.
-
-
-
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +#define OCTEP_DEVID_HP_CONTROLLER 0xa0e3
-> +static struct pci_device_id octep_hp_pci_map[] = {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_DEVID_HP_CONTROLLER) },
-> +	{ 0 },
-
-{ }
-Is sufficient. I can't remember if that's common style in PCI or not though.
-
-> +};
-
+--eD3kkNo53rLLXBRC--
 
