@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-12045-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12046-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19BD295BFC3
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 22:43:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 507C195BFC7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 22:44:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 901271F2061D
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 20:43:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 765B81C23330
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 20:44:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB58414D6FE;
-	Thu, 22 Aug 2024 20:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 212981D1F6F;
+	Thu, 22 Aug 2024 20:42:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2uiLj2H3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="joVyEbG5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2043.outbound.protection.outlook.com [40.107.95.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445591CC8AC;
-	Thu, 22 Aug 2024 20:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E991D0DF9;
+	Thu, 22 Aug 2024 20:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724359365; cv=fail; b=WtwH8vef87ME59OqtR0mXf2Xwae3E+04Q3OtaiccWuNxXut71i2QcpH9h/TlwWoihwfEGExhCtgnCkJohXD6NaZPkagjd5V0dsqB9RlIL8GK8QEtFRh5xU1/q9tWEHktWvjtafoyCmrswi6HnN1ZIIbU51lXnqk8gzjDBEvewWo=
+	t=1724359374; cv=fail; b=A2htLuxFAVNzHhMKdrhocn3WYB0x/6Dx26pywkzQJJkGzZFe7KTKxVnsyR26eXKsYBSnVn8v0Vq2wq2TCC+Z6Aj6S/fk8O4QyKAjzBSzuxa4RuSOvo1/DoHNoL6jA+tw3TTLoyFSDRQ1DxiB+CTUdB6DBquG0UJbOrbLzdkRORw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724359365; c=relaxed/simple;
-	bh=EfUdOXOHmwrEOJ7RZBur6oecPHjnFsGocyzVQ2AWUhk=;
+	s=arc-20240116; t=1724359374; c=relaxed/simple;
+	bh=ysBYaKmuV2CiAKRG8LXBhMR8hLqWcYsa0EijbBj8O4o=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZGmG4r9GjVnrZND944jgHQ10P1PcYqXTdPRIYKWCBlmV1MTo7xVgUVhEMfhABvrq+tT7O8Yz69IyCQ62+f6jI4eecA98cLf5CcjARIJkCh/BHquVIGz6kuO5xj4q0gLFEl7rCxUuyn31wtGBcLS3gOO5o/l8A6nPXzgqHBSJvhA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2uiLj2H3; arc=fail smtp.client-ip=40.107.220.66
+	 MIME-Version:Content-Type; b=t0zoD+J4aoQMzU2nSR69vNotHDgYCn0Di2719ZsmVU/Tv2sFdsMXlrHUwSv0JSK8UGAMHLkZvwC1kb4R1u0bQX9CD++auDRfmsqEAUmzCKDwa6rNckSFF/UuP8P8fsDJVs1OBKOf1611OT1LzbdSFcLj7OCx1WRuwUfZVQvLov8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=joVyEbG5; arc=fail smtp.client-ip=40.107.95.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ltSaKkHSNfLCW3CTXW8xiZnZEx2xIXhnKKS8YQ+0KvwSea4iP8x4hPDXsHkL5HAuIsrTG8gg23yBEft8mtqjEQBStIUdkoBHsLpe7vAdDiH2zTJeDvwIOfvckxczJ9l1XySd2qWGtKMEIZEzDHdn+IsWrjxaVQNkF1FkQ6Xvyr3OY1v+vUzqVFNxFeF8Bxg6Adsgh/shEoeyUHrJ8o/u78UraXjpPqwT8B+XXRvhyc/D1OP9iOhmaJeFVcq4YiBOE7OqzMxRAQMQs67EAYQD/E74JvLG3SEx1m+UhnoPoWVUSU8/HFyWhZPIpUp3e7/eelqfDqatpOsEoP1Y2tu8rQ==
+ b=BO81POAIOSEpofIjv30WX8DD4GgL8dr1r3EKo6agMQuWnVW4QM7CH5RjncveAWvFs68sIO1oy44m/W0LB4pNYVLOVmKrC/UZSvw8ZRAGAscnIVqUh7NQkvV565PwDOfJZYDJxFpucgAO+qjrAChA2DT1uMQFS2iGj9MA2cFLUjbK/cxisDA4DK+UPF5Ca9GYzsX2DXDZ4/erFXiSr28R+aV7Zf8o5Zz2pUbVYBBY5Sg1R2U1RnVKzPp2aMHI8b/RvnHo8vKO+YLlgaTZaxPTtluzGPPI73uI6zC7jhaSr0dTJnjh2S8ICBDIO2REHJTYLwTbd5Z4LVbdPg2nsPtxLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BFxjTIRgbaMpDJrHdXXnF2MLO26fcyA8SkAVyNDXhUs=;
- b=fxqYleoK+iOnmNDJOmj5UPbhEfpNM4XDfQoFNIhcVAc9KYwx/WIwryesRYJtXJn+U46RrXtrVm015dtSqSdClMwzOYOCXHVj3gCD9lnWZmDJ97WgkrPrOVMqm2xp9njcPmsb1v0BY44+ZnIyDRnROUTM59/41Thla3TqmwFy02wYJ6a1ABw+lwIDG9QU/EFskbWtreBk2/+vFN4yOSNT/bm73UMDQqj6Mr5iwVt5wpb/Rn26/Ud+Vs2kRR2qhvn4DdvqqYaoCjusw4njqnjPjSeQFBYPrlVeuMuvC+ms6iOSRV//oo76NT5xiLugqbIny7Tnn0Q8c74VGknQLths2Q==
+ bh=XmxK14t2ZYd+bJqSgCt8gkWac3sxRoapV8YMXB4gn34=;
+ b=d7NrDj8du27pvUpYQQZ3OUyBZ3yXt+FkrwxE5pJ4uJDPoDnZwwsNmeyCWreIFSdJswyR0XsxbVvO54/58nITpDm3102AebD1Mpr2vp6xKmRVTVouF1CPnyXVS3feE9nJsr8/s/UpNFIvs7Fv2iDilp4iHEiZiD27mVJzNIeX3E2cV5ipO0B/O6FikPCjB0hz5IO782aiJ+I6TBm8HcM5rGlx1qDJKyzvu68uHiWjqlCqgLdKGQm/NEkPQdZghjb/QXHZkL9HKTzYvWapofdhUmWgvH6E5BPXlG92hPoEGuRiI3aWFxolntG4IzC9w2MuGkfmVc4tT+z3E7kwYVTFMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BFxjTIRgbaMpDJrHdXXnF2MLO26fcyA8SkAVyNDXhUs=;
- b=2uiLj2H3ROfisczne8p+WM+7MUreaHblrvKEjb3Q0xV5+0b71TUjbHpVK2D79r9J/tN6eqJlC59Kg/2m1P34egtOpEhPCbzPYBwM+nDwsWzdRqpVTRCJ+UAL3tDuY0wKaPFywQUSskaEu761zTN+YxecnNMRM3cB53A7PZmnnuc=
-Received: from SJ0PR03CA0362.namprd03.prod.outlook.com (2603:10b6:a03:3a1::7)
- by SJ0PR12MB6967.namprd12.prod.outlook.com (2603:10b6:a03:44b::6) with
+ bh=XmxK14t2ZYd+bJqSgCt8gkWac3sxRoapV8YMXB4gn34=;
+ b=joVyEbG52b1dpaaMdg6gCQGdUj1e73i9ZsP4wfZtcBoTryjZ4/hT4mF76krTctYeyaqjh5Ie78P5gEHLaPRGL4rUK1JMa/Geerm9mSYQTlc1c3G6m62Z83vbSb+JnvLEu9NZ36N468Z+0u7RHenq+bdrEPgLs9LeS+cESN2UHTQ=
+Received: from SJ0PR03CA0377.namprd03.prod.outlook.com (2603:10b6:a03:3a1::22)
+ by DM6PR12MB4188.namprd12.prod.outlook.com (2603:10b6:5:215::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19; Thu, 22 Aug
- 2024 20:42:38 +0000
-Received: from CO1PEPF000075ED.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::3c) by SJ0PR03CA0362.outlook.office365.com
- (2603:10b6:a03:3a1::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19 via Frontend
- Transport; Thu, 22 Aug 2024 20:42:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.18; Thu, 22 Aug
+ 2024 20:42:49 +0000
+Received: from CO1PEPF000075F0.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::a1) by SJ0PR03CA0377.outlook.office365.com
+ (2603:10b6:a03:3a1::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.16 via Frontend
+ Transport; Thu, 22 Aug 2024 20:42:49 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000075ED.mail.protection.outlook.com (10.167.249.36) with Microsoft
+ CO1PEPF000075F0.mail.protection.outlook.com (10.167.249.39) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7897.11 via Frontend Transport; Thu, 22 Aug 2024 20:42:37 +0000
+ 15.20.7897.11 via Frontend Transport; Thu, 22 Aug 2024 20:42:49 +0000
 Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 22 Aug
- 2024 15:42:35 -0500
+ 2024 15:42:47 -0500
 From: Wei Huang <wei.huang2@amd.com>
 To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
@@ -82,9 +82,9 @@ CC: <Jonathan.Cameron@Huawei.com>, <helgaas@kernel.org>, <corbet@lwn.net>,
 	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>,
 	<bhelgaas@google.com>, <lukas@wunner.de>, <paul.e.luse@intel.com>,
 	<jing2.liu@intel.com>
-Subject: [PATCH V4 06/12] PCI/TPH: Add pcie_tph_enabled() to check TPH state
-Date: Thu, 22 Aug 2024 15:41:14 -0500
-Message-ID: <20240822204120.3634-7-wei.huang2@amd.com>
+Subject: [PATCH V4 07/12] PCI/TPH: Add pcie_tph_set_st_entry() to set ST tag
+Date: Thu, 22 Aug 2024 15:41:15 -0500
+Message-ID: <20240822204120.3634-8-wei.huang2@amd.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240822204120.3634-1-wei.huang2@amd.com>
 References: <20240822204120.3634-1-wei.huang2@amd.com>
@@ -100,53 +100,56 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075ED:EE_|SJ0PR12MB6967:EE_
-X-MS-Office365-Filtering-Correlation-Id: 592de166-6ff1-40dd-d62e-08dcc2eaf54e
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075F0:EE_|DM6PR12MB4188:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1829079-1b13-4e00-2137-08dcc2eafc5b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024;
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HNoiXdXLpvA2Wf4PmI08c1HeSJ3vj+imOIbZ21pK/jfDLVGGrWJI78VMZC3I?=
- =?us-ascii?Q?K+0aa/kJhlnjovV21lckj4sH65mYQ/+jdtaZ+RjM5D8fc1A+avpvmktfFdgy?=
- =?us-ascii?Q?it+Rqinl6u1EuypT/unUqBUcx/1Xx7bCqqUewV3lFJ3yyApdRaRHt7WkWWyi?=
- =?us-ascii?Q?qSvQ3ead66SOp7dubkvt/yVR8F7KUD5QHaJYVvW5p19YyDW29H4D7fjX15vV?=
- =?us-ascii?Q?sSas67OyiYmZzJ/WEm9OhsJR/PPgYHFPQu9p/OUODdDb+XjQ++7sjt0kkE/I?=
- =?us-ascii?Q?ucWRjhItUb3oINEbzeBULcE36oyaiGucI/qkyJImmbO2PIUfBm/VSxvl6d4m?=
- =?us-ascii?Q?SVzvUmO2ZYhCEJZb57CGEQcUzUB0B7aNyNbzgEGlO/TEMKQm3T5phQt3mIGV?=
- =?us-ascii?Q?8C8Jj0mBrUQA4Rxiq7tIPKrWq60Pwf3hNOmdM6bVjOBADkOPCST8J2JR+3Lq?=
- =?us-ascii?Q?vTm2bVdultU1BE6/RYYkiUyUXDDOSuIufteKIovVXgtbaUNM1EZBUwqZfcRA?=
- =?us-ascii?Q?yIz12grRbjFHI0MuoQHrmNC63PjdprCOcjMQiy3XhANX8M2u0swUX3tOXTE4?=
- =?us-ascii?Q?sZz4BkpBm/VhwXMpMUH4D7jU6sjFl+5yDylHWcCIp0Xbl2QMxv4lffBkZEtp?=
- =?us-ascii?Q?w9tVq40XpoIShUSXYUVciULuNJF/oOFcPsTZIRbv5kW568oKCV50F67z+/+G?=
- =?us-ascii?Q?96oQ0VWxvetB9G6+/tXgK3dp7Yi6m8tFfzz+EvAYQlLWywB4RSGTGfShea+t?=
- =?us-ascii?Q?CWg80cQOSgnh5RGy2hpsSBAbnOKy6iOrCupZmsWLzGF1InB6CIVGMJyJ2HRm?=
- =?us-ascii?Q?mTbH+XcFLJWMoSUynIQZH6uOVc5Jj87nSi2GlRyLAKIhfVk0pykOpp4s28zx?=
- =?us-ascii?Q?L3NU/y9CeKyYkkf+jubslUL6WxsjVhO1xvIwFj8xBSIhJqe0hVQhlUL2JOEs?=
- =?us-ascii?Q?jxokHmnVoWaIyJGIip0nfqwBode/mNLtdo9nWhb7y4m6fX1iuSWmAsQK7Wsn?=
- =?us-ascii?Q?X2gtf7JIcL0Z82TH4swXU2/RryNk/yFl6Q9sbwAzox+av/tiYkpxsUA/neQm?=
- =?us-ascii?Q?kKBRNyjZcDs9JCcf5uKGvUtsCjGk12JjXVpK2Ld3aQG1hXZ2EZi7FeQUk+yk?=
- =?us-ascii?Q?KX6zn1VMlZ+ZxLgGtLYaFJypozUiQc1BFFen0kT/A/H5vB6LOIGwKY6qLmYw?=
- =?us-ascii?Q?aykhsby6+eihHfuZXmoeKweNGrcnIJwPK3j5jqvDV83lLSZtBvikLJ0vhDcT?=
- =?us-ascii?Q?q3NsIi5X1WRCKg295dTNwFgX0gp2IsPQCbsFyCzm6Z6wSk5vMGm53j/BP1WT?=
- =?us-ascii?Q?pdw77wGnvQU/TQ6KQUCVCankX7Ludx2I8HoM5yPCL61J+NuGHt1R/DhUKlvN?=
- =?us-ascii?Q?36F/qzyU9tzzrh8pJSt+fJ9dUZ8B1aRHxM/HeQIjHXZdkc72hmV32QAkGC7M?=
- =?us-ascii?Q?ouBRa1ScX012A518Dv9e/fMaEwtR13Gi?=
+	=?us-ascii?Q?o3Irm1ATT4/oAnFRDAcv1OWCX52jODnnGvSyrOIRahS9zNwnhaZD6/e7hAb9?=
+ =?us-ascii?Q?VGG3Y2D/tpWUzGaD53uu+jONJw6LG3WHvNxj+8mH7GTWYL3vhX5xGZxFsntg?=
+ =?us-ascii?Q?dbSiyk65nPlXRHT6uPuPmXfsUdcdb/O62S3KIQ4avmF7ORHzQ5UXjg16aYV6?=
+ =?us-ascii?Q?LaWGZw6gn+b832lli3sH9ThDzxGLlqYR1JgNAWogfvG4v4s8nz05PNLvKgbg?=
+ =?us-ascii?Q?zrclip9zK9ETH6L6aCkCf0cvDgtBluM3lMSfPZH9cWVqpIymA3PcAj/9TDSf?=
+ =?us-ascii?Q?9hQAdmW3BjGA8gKRKRoHSHD0n7+IuX8pvqQteg2S2q4ceOUeW7Uge67eHMYr?=
+ =?us-ascii?Q?CDkUuoFi3/Xs66ngjpacfqJG/CW5dBKiVnC5sf8oxwg4IYlEToPKI++jYoAm?=
+ =?us-ascii?Q?DTESCHW+w1Rj4mRFPCpXz4R3mnRxYGWf23DHy+9uy/K4qs7w3p/MB7bOto61?=
+ =?us-ascii?Q?0VTcYJkiAzrmTSveC1uIomF3zflyHcDTmJO3yVIS/y84SEELNGsRBSzyP1JU?=
+ =?us-ascii?Q?z2e2rLhB0GnW5ZBtv1vP3o4coiAGXMbIVbq+91SyvzAGjVndTuA0v8tOAhQ2?=
+ =?us-ascii?Q?IK7irhnJuZia0IIhfRkNr+5vwiJ1YfljLm2S/sSsZgaLX7c8HJEWnsjr6XaC?=
+ =?us-ascii?Q?AXACS8mCzNp/WQ682dc06eiJU5OtvYMQLqSf2qFlT4GUk3f/z4dZt7RCG5kW?=
+ =?us-ascii?Q?Q5pCHyGmdRh+fU0xrGc15BFTIfQ1nP6D2hGfItNmaiYL/82stug3a4Ul9kO4?=
+ =?us-ascii?Q?EAJwcryhtINGQ8FwDVXfzpC6VSAY/v0yvrJB1NCBwiZLZQc8bepGQgaz3JN9?=
+ =?us-ascii?Q?F9+9lz1VcNeZmgG4VUTzLdE7iAM+vlvZlusLYVDVYI8W2bVSUyA/KnDQsq7U?=
+ =?us-ascii?Q?4p+7H5wWNBkbH9FUo6GSeY8Dq4eQConQSDBg0p6HBugv2O2rcc6S/Biy0VW1?=
+ =?us-ascii?Q?14XutgE7o+f+et8HQhcbKe9sg3k19771YAQyGD18Y5+v1ggJgOQEUA8haGiZ?=
+ =?us-ascii?Q?mKQEamxHcx5F/uRfuPGdWZS+HibZg4hh9vmarfmcCgDBZ4V0QvQj4Z4KCBfD?=
+ =?us-ascii?Q?l4hQ2jkabnFN9ohTS0ioXLg4jPBLp+HKoqNVkD0SQ4O9euCxHZUQFxvF4W2I?=
+ =?us-ascii?Q?nsPiTLj9TfPgaDdLtfQrXqNh7g+P31Hj7c3/LK4BDW0C2elp6SITxjBIUGHW?=
+ =?us-ascii?Q?73iXX6G5UoAAtzpmO+ulhJ3O8F0lURkbAxWrqXgm9IokwA6i4XPUOPfS7fv3?=
+ =?us-ascii?Q?91+ZZ6HfaIZfof61N3bAniVxw/xCtTaLwyWHcot64AQTEyxI28L4cgnRmiO+?=
+ =?us-ascii?Q?12Gc0bi22goSmP3luxlme5Ew7e+Zzrh3kn/i3dYObE+P5TuTpQGTOtnUG7nX?=
+ =?us-ascii?Q?K79eOviPnep/gGdiDKcx04q1/3fL/wlcCUFhOI8U4o9rY2yrEpJuEogIhNZ/?=
+ =?us-ascii?Q?EBvR0Q77cFNy6ALzdGMlb7mTqEAzHmEM?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:42:37.2550
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:42:49.0170
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 592de166-6ff1-40dd-d62e-08dcc2eaf54e
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1829079-1b13-4e00-2137-08dcc2eafc5b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075ED.namprd03.prod.outlook.com
+	CO1PEPF000075F0.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6967
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4188
 
-Check if TPH has been enabled on a device.
+Add a function to update the device's steering tags. Depending on the
+ST table location, the tags will be automatically written into the
+device's MSI-X table or into the ST table located in the TPH Extended
+Capability space.
 
 Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
 Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
@@ -155,50 +158,221 @@ Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
 Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
 Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
 ---
- drivers/pci/pcie/tph.c  | 12 ++++++++++++
- include/linux/pci-tph.h |  2 ++
- 2 files changed, 14 insertions(+)
+ drivers/pci/pcie/tph.c  | 161 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci-tph.h |   5 ++
+ 2 files changed, 166 insertions(+)
 
 diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-index 08ce4fdeb160..d949930e7e78 100644
+index d949930e7e78..82189361a2ee 100644
 --- a/drivers/pci/pcie/tph.c
 +++ b/drivers/pci/pcie/tph.c
-@@ -40,6 +40,18 @@ static u8 get_rp_completer_type(struct pci_dev *pdev)
+@@ -8,10 +8,24 @@
+  */
+ #include <linux/pci.h>
+ #include <linux/bitfield.h>
++#include <linux/msi.h>
+ #include <linux/pci-tph.h>
+ 
+ #include "../pci.h"
+ 
++/* Update the TPH Requester Enable field of TPH Control Register */
++static void set_ctrl_reg_req_en(struct pci_dev *pdev, u8 req_type)
++{
++	u32 reg;
++
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, &reg);
++
++	reg &= ~PCI_TPH_CTRL_REQ_EN_MASK;
++	reg |= FIELD_PREP(PCI_TPH_CTRL_REQ_EN_MASK, req_type);
++
++	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, reg);
++}
++
+ static u8 get_st_modes(struct pci_dev *pdev)
+ {
+ 	u32 reg;
+@@ -22,6 +36,37 @@ static u8 get_st_modes(struct pci_dev *pdev)
+ 	return reg;
+ }
+ 
++static u32 get_st_table_loc(struct pci_dev *pdev)
++{
++	u32 reg;
++
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
++
++	return FIELD_GET(PCI_TPH_CAP_LOC_MASK, reg);
++}
++
++/*
++ * Return the size of ST table. If ST table is not in TPH Requester Extended
++ * Capability space, return 0. Otherwise return the ST Table Size + 1.
++ */
++static u16 get_st_table_size(struct pci_dev *pdev)
++{
++	u32 reg;
++	u32 loc;
++
++	/* Check ST table location first */
++	loc = get_st_table_loc(pdev);
++
++	/* Convert loc to match with PCI_TPH_LOC_* defined in pci_regs.h */
++	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
++	if (loc != PCI_TPH_LOC_CAP)
++		return 0;
++
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
++
++	return FIELD_GET(PCI_TPH_CAP_ST_MASK, reg) + 1;
++}
++
+ /* Return device's Root Port completer capability */
+ static u8 get_rp_completer_type(struct pci_dev *pdev)
+ {
+@@ -40,6 +85,122 @@ static u8 get_rp_completer_type(struct pci_dev *pdev)
  	return FIELD_GET(PCI_EXP_DEVCAP2_TPH_COMP_MASK, reg);
  }
  
-+/**
-+ * pcie_tph_enabled - Check whether TPH is enabled in device
-+ * @pdev: PCI device
-+ *
-+ * Return: true if TPH is enabled, otherwise false
-+ */
-+bool pcie_tph_enabled(struct pci_dev *pdev)
++/* Write ST to MSI-X vector control reg - Return 0 if OK, otherwise -errno */
++static int write_tag_to_msix(struct pci_dev *pdev, int msix_idx, u16 tag)
 +{
-+	return pdev->tph_enabled;
++	struct msi_desc *msi_desc = NULL;
++	void __iomem *vec_ctrl;
++	u32 val, mask;
++	int err = 0;
++
++	msi_lock_descs(&pdev->dev);
++
++	/* Find the msi_desc entry with matching msix_idx */
++	msi_for_each_desc(msi_desc, &pdev->dev, MSI_DESC_ASSOCIATED) {
++		if (msi_desc->msi_index == msix_idx)
++			break;
++	}
++
++	if (!msi_desc) {
++		err = -ENXIO;
++		goto err_out;
++	}
++
++	/* Get the vector control register (offset 0xc) pointed by msix_idx */
++	vec_ctrl = pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
++	vec_ctrl += PCI_MSIX_ENTRY_VECTOR_CTRL;
++
++	val = readl(vec_ctrl);
++	mask = PCI_MSIX_ENTRY_CTRL_ST_LOWER | PCI_MSIX_ENTRY_CTRL_ST_UPPER;
++	val &= ~mask;
++	val |= FIELD_PREP(mask, tag);
++	writel(val, vec_ctrl);
++
++	/* Read back to flush the update */
++	val = readl(vec_ctrl);
++
++err_out:
++	msi_unlock_descs(&pdev->dev);
++	return err;
 +}
-+EXPORT_SYMBOL(pcie_tph_enabled);
++
++/* Write tag to ST table - Return 0 if OK, otherwise errno */
++static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
++{
++	int st_table_size;
++	int offset;
++
++	/* Check if index is out of bound */
++	st_table_size = get_st_table_size(pdev);
++	if (index >= st_table_size)
++		return -ENXIO;
++
++	offset = pdev->tph_cap + PCI_TPH_BASE_SIZEOF + index * sizeof(u16);
++
++	return pci_write_config_word(pdev, offset, tag);
++}
++
++/**
++ * pcie_tph_set_st_entry() - Set Steering Tag in the ST table entry
++ * @pdev: PCI device
++ * @index: ST table entry index
++ * @tag: Steering Tag to be written
++ *
++ * This function will figure out the proper location of ST table, either in
++ * the MSI-X table or in the TPH Extended Capability space, and write the
++ * Steering Tag into the ST entry pointed by index.
++ *
++ * Returns: 0 if success, otherwise negative value (-errno)
++ */
++int pcie_tph_set_st_entry(struct pci_dev *pdev, unsigned int index, u16 tag)
++{
++	u32 loc;
++	int err = 0;
++
++	if (!pdev->tph_cap)
++		return -EINVAL;
++
++	if (!pdev->tph_enabled)
++		return -EINVAL;
++
++	/* No need to write tag if device is in "No ST Mode" */
++	if (pdev->tph_mode == PCI_TPH_NO_ST_MODE)
++		return 0;
++
++	/* Disable TPH before updating ST to avoid potential instability as
++	 * cautioned in PCIe r6.2, sec 6.17.3, "ST Modes of Operation"
++	 */
++	set_ctrl_reg_req_en(pdev, PCI_TPH_REQ_DISABLE);
++
++	loc = get_st_table_loc(pdev);
++	/* Convert loc to match with PCI_TPH_LOC_* defined in pci_regs.h */
++	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
++
++	switch (loc) {
++	case PCI_TPH_LOC_MSIX:
++		err = write_tag_to_msix(pdev, index, tag);
++		break;
++	case PCI_TPH_LOC_CAP:
++		err = write_tag_to_st_table(pdev, index, tag);
++		break;
++	default:
++		err = -EINVAL;
++	}
++
++	if (err) {
++		pcie_disable_tph(pdev);
++		return err;
++	}
++
++	set_ctrl_reg_req_en(pdev, pdev->tph_mode);
++
++	pci_dbg(pdev, "set steering tag: %s table, index=%d, tag=%#04x\n",
++		(loc == PCI_TPH_LOC_MSIX) ? "MSI-X" : "ST", index, tag);
++
++	return 0;
++}
++EXPORT_SYMBOL(pcie_tph_set_st_entry);
 +
  /**
-  * pcie_disable_tph - Turn off TPH support for device
+  * pcie_tph_enabled - Check whether TPH is enabled in device
   * @pdev: PCI device
 diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-index 422d395ade68..50e05cdfbc43 100644
+index 50e05cdfbc43..a0c93b97090a 100644
 --- a/include/linux/pci-tph.h
 +++ b/include/linux/pci-tph.h
-@@ -10,10 +10,12 @@
+@@ -10,11 +10,16 @@
  #define LINUX_PCI_TPH_H
  
  #ifdef CONFIG_PCIE_TPH
-+bool pcie_tph_enabled(struct pci_dev *pdev);
++int pcie_tph_set_st_entry(struct pci_dev *pdev,
++			  unsigned int index, u16 tag);
+ bool pcie_tph_enabled(struct pci_dev *pdev);
  void pcie_disable_tph(struct pci_dev *pdev);
  int pcie_enable_tph(struct pci_dev *pdev, int mode);
  int pcie_tph_modes(struct pci_dev *pdev);
  #else
-+static inline bool pcie_tph_enabled(struct pci_dev *pdev) { return false; }
++static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
++					unsigned int index, u16 tag)
++{ return -EINVAL; }
+ static inline bool pcie_tph_enabled(struct pci_dev *pdev) { return false; }
  static inline void pcie_disable_tph(struct pci_dev *pdev) { }
  static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
- { return -EINVAL; }
 -- 
 2.45.1
 
