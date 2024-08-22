@@ -1,167 +1,435 @@
-Return-Path: <linux-pci+bounces-11989-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11990-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 979BB95B139
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 11:14:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76CCB95B1C7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 11:36:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0ED531F22D32
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 09:14:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EA13285A60
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 09:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B57917084F;
-	Thu, 22 Aug 2024 09:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590D917C7C6;
+	Thu, 22 Aug 2024 09:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V7caCqqM"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DW+82SUT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1061C6B5;
-	Thu, 22 Aug 2024 09:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E887E0E8
+	for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 09:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724318040; cv=none; b=gEYr6d2NvHbSB3BKr3qEyjrzYnyLlIrsIMduWL7nNv2s6HqrNpjS6ePcFerH3PYeCRj63uhjX4laNg2navusq6Bt29K6+9sBCBwVfxwY7nfSiP89S5UTI9xPegmBmKa1JjQlwl/gEi3aPhRDSKZMyG7vbfCdJOt57JUeJyPJPEA=
+	t=1724319351; cv=none; b=RrClpDR0LmGV+3Yba05CplxU4JkHsfkM6a+7iwmT9wVxYoc/P0ZBFpzbc8/vX2TXVqZgU1GRYGpZN+onlinpqSz0azICvysKPHXXmAgcwmyWlttap/a8uS1a2RiwQ4XbCLNdjUxjYg1j+D9vLFPxeE+JiqNtgMexihedmTJhqGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724318040; c=relaxed/simple;
-	bh=rXJDC/w4XjnwLzyRijLVTTmhmJ4yQ3CslilWco2rv6k=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Tz45pqbFWFoIbndxt6qAWkPo9AjIiewm/wquwaUjLZH2rOPV62o9xmNQFLYehdYr0aMc9bnbZu8zZsKgUTw2bkBuGIKTQtfOFO71XM9+I2ROfmhqzLf9Qmtzf7lvZ5MQ0z/b/wJkxwcY+1jeBlfqA6zQOvZE1jILgWe1HtyknFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V7caCqqM; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724318038; x=1755854038;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rXJDC/w4XjnwLzyRijLVTTmhmJ4yQ3CslilWco2rv6k=;
-  b=V7caCqqMxlkANDQ1xUYyiDNGL1ZDPvcH9xUar9m9yos+kgLomzZkrAAh
-   j9dO1TN0M0XPmiGK/V1Bmlk3bobFq33EllfvWKIPJHJmpPupl3WtRkKGP
-   2Z/Jnqs+KkZflaiP/woC7e83Vh76WiHkwASwpgh/a3NQbB/IBnAvJBqvK
-   NfrGtDzU9VWMZ4S08Rs9QyoYaPkmuIN16vXraqrUtZLA7kdVQdCuH/yxI
-   lATt4DaR/fhhNsT05TS5zzCT/eJnH/ae4VqmUztSmaPqUMMNLkpCI9eg0
-   o6fC7UkN4RB78cFI9uQT28z4tOygY6nIaVclqHD79GbiOLM/kDj1AYBYW
-   g==;
-X-CSE-ConnectionGUID: zoWFvNXYR06DQH0HXJOtuA==
-X-CSE-MsgGUID: Bw2F8JzyTaOpzIAjgna9dg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="33873346"
-X-IronPort-AV: E=Sophos;i="6.10,166,1719903600"; 
-   d="scan'208";a="33873346"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 02:13:52 -0700
-X-CSE-ConnectionGUID: S+E1D7ZnRjW/IPV7cEyJNQ==
-X-CSE-MsgGUID: RJkoOjyvRU+QjwiXZzaeEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,166,1719903600"; 
-   d="scan'208";a="61702096"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.82])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 02:13:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 22 Aug 2024 12:13:45 +0300 (EEST)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Matthew W Carlis <mattc@purestorage.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] PCI: Revert to the original speed after PCIe
- failed link retraining
-In-Reply-To: <alpine.DEB.2.21.2408091204580.61955@angie.orcam.me.uk>
-Message-ID: <58809d75-34c1-fc4f-3884-76301a8b5976@linux.intel.com>
-References: <alpine.DEB.2.21.2408091017050.61955@angie.orcam.me.uk> <alpine.DEB.2.21.2408091204580.61955@angie.orcam.me.uk>
+	s=arc-20240116; t=1724319351; c=relaxed/simple;
+	bh=Yt0SGBdvkoQALbkyTLGjUsIfe+e/jGTFEfTctg8D1mQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CV/DG9H0eUjzSHUP5EQKeR7FAKtWkrZgfv3w8Kyg9Tzm0K2L1o8iQL6ddQ5B4xuT7HxexaodhJKNidy6YminaSu/KFo1XmRQIFRUtNH6+362ztOpnOtupLVVgfhgfl0XohJgym9DMG4LtUeX7ed0+25rjTAAyHz9sPqdZ0WSH6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DW+82SUT; arc=none smtp.client-ip=209.85.218.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-a7a9cf7d3f3so91520666b.1
+        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 02:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724319346; x=1724924146; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5as64V3nQXJvuAvKv0T+XO2CQeSqsYWKkMYHqmyR0EU=;
+        b=DW+82SUTh0cCpgBUqBkw1ax3sFYCut/Pfm/3UCEO675HxYn022XQSMC88UhZ9UTbYN
+         WP2SfYdp0ayLVFIR85I6U5KIK0rKf6SpyyOoAgPtlIE/ylWaO8akVD/3yk3M321Wj3TH
+         Ydkz0qohGwVkEu5tGevvxSko4ABoZ0tVdbSGxvD15bCzsPU4yauHf7xvNOxwXprS782c
+         zGkaAERzJIF/pTNQzAIRTEQWMU+CsfxXGwe4lye2nLPzwjKUKUmRcNUh9UExSC/uswQ6
+         arRg82mbrhTsAWK9MShnd9zCQE/G5iXBIhkd39/eCytrjbqapDA8h1rqZ8GihVnW8eft
+         l8tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724319346; x=1724924146;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5as64V3nQXJvuAvKv0T+XO2CQeSqsYWKkMYHqmyR0EU=;
+        b=aXmY7AlVLcPMwKehzg7Mdq+X31dG3nwkNl9FpO4t7u+ANqiJFo53c1tcIYdQAcjswO
+         W0wEYp1SIYLdKpwSlUvIqGNkJnw2c3iQTHyKsbQNHjiU3btisr6sggl2a4SQ6Yrh4XjE
+         lnPPavBlq3/YhAP9XEHq88QICec00Hy5KJH4qVS3AwuJxpgHLYB3iIaS2gJZDlhB+3Xj
+         e/e1iRt6A178w56t7Rn/M3y+kHKqkZEydyFE1bhkNz1tiyvq1TIx5DoBnMnIB2V4HK5+
+         HHleBPMQosZxDxp5J5JBRuh9rm+KUuxTPVp5u7DXMI/IvRLS9WqKbpMl5WM0nsKQ/nnt
+         5CFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2QznLIve7USpop183aZpRmuADdK15h21logdhQis2LbB4fKDqbbUT0f5WICSAhPYbkvhd7vrjgQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw++Qs9WB2TY+wUCfOWX+R9BIB9e88pECMUuPwwLRLCvcDIWIEH
+	+7du0CEejl+3h7rI9NzXDyx4hv0ch5H3C1M/RPUYutI+IAVxTsVjQawb524XvCg=
+X-Google-Smtp-Source: AGHT+IFOY/EtR8WQw5iC60MgtfJT6RPxhSE4K08Yn6ESgwiAUbm+IoOrlNo+vVu7HeKvVsEjzl1GNA==
+X-Received: by 2002:a17:906:d26a:b0:a77:e48d:bae with SMTP id a640c23a62f3a-a866f3615cbmr397450866b.28.1724319345495;
+        Thu, 22 Aug 2024 02:35:45 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f2a5903sm91837266b.78.2024.08.22.02.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2024 02:35:45 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 22 Aug 2024 11:35:51 +0200
+To: Conor Dooley <conor@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
+Message-ID: <ZscGdxgoNJrifSgk@apocalypse>
+Mail-Followup-To: Conor Dooley <conor@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
+ <20240820-baritone-delegate-5711f7a0bc76@spud>
+ <ZsTfoC3aKLdmFPCL@apocalypse>
+ <20240821-exception-nearby-5adeaaf0178b@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240821-exception-nearby-5adeaaf0178b@spud>
 
-On Fri, 9 Aug 2024, Maciej W. Rozycki wrote:
+Hi Conor,
 
-> When `pcie_failed_link_retrain' has failed to retrain the link by hand 
-> it leaves the link speed restricted to 2.5GT/s, which will then affect 
-> any device that has been plugged in later on, which may not suffer from 
-> the problem that caused the speed restriction to have been attempted.  
-> Consequently such a downstream device will suffer from an unnecessary 
-> communication throughput limitation and therefore performance loss.
+On 12:46 Wed 21 Aug     , Conor Dooley wrote:
+> On Tue, Aug 20, 2024 at 08:25:36PM +0200, Andrea della Porta wrote:
+> > Hi Conor,
+> > 
+> > On 17:19 Tue 20 Aug     , Conor Dooley wrote:
+> > > On Tue, Aug 20, 2024 at 04:36:03PM +0200, Andrea della Porta wrote:
+> > > > Add device tree bindings for the clock generator found in RP1 multi
+> > > > function device, and relative entries in MAINTAINERS file.
+> > > > 
+> > > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > > ---
+> > > >  .../clock/raspberrypi,rp1-clocks.yaml         | 87 +++++++++++++++++++
+> > > >  MAINTAINERS                                   |  6 ++
+> > > >  include/dt-bindings/clock/rp1.h               | 56 ++++++++++++
+> > > >  3 files changed, 149 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > >  create mode 100644 include/dt-bindings/clock/rp1.h
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..b27db86d0572
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > > @@ -0,0 +1,87 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: RaspberryPi RP1 clock generator
+> > > > +
+> > > > +maintainers:
+> > > > +  - Andrea della Porta <andrea.porta@suse.com>
+> > > > +
+> > > > +description: |
+> > > > +  The RP1 contains a clock generator designed as three PLLs (CORE, AUDIO,
+> > > > +  VIDEO), and each PLL output can be programmed though dividers to generate
+> > > > +  the clocks to drive the sub-peripherals embedded inside the chipset.
+> > > > +
+> > > > +  Link to datasheet:
+> > > > +  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: raspberrypi,rp1-clocks
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  '#clock-cells':
+> > > > +    description:
+> > > > +      The index in the assigned-clocks is mapped to the output clock as per
+> > > > +      definitions in dt-bindings/clock/rp1.h.
+> > > > +    const: 1
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - '#clock-cells'
+> > > > +  - clocks
+> > > > +
+> > > > +additionalProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/rp1.h>
+> > > > +
+> > > > +    rp1 {
+> > > > +        #address-cells = <2>;
+> > > > +        #size-cells = <2>;
+> > > > +
+> > > > +        rp1_clocks: clocks@18000 {
+> > > 
+> > > The unit address does not match the reg property. I'm surprised that
+> > > dtc doesn't complain about that.
+> > 
+> > Agreed. I'll update the address with the reg value in the next release
+> > 
+> > > 
+> > > > +            compatible = "raspberrypi,rp1-clocks";
+> > > > +            reg = <0xc0 0x40018000 0x0 0x10038>;
+> > > 
+> > > This is a rather oddly specific size. It leads me to wonder if this
+> > > region is inside some sort of syscon area?
+> > 
+> > >From downstream source code and RP1 datasheet it seems that the last addressable
+> > register is at 0xc040028014 while the range exposed through teh devicetree ends
+> > up at 0xc040028038, so it seems more of a little safe margin. I wouldn't say it
+> > is a syscon area since those register are quite specific for video clock
+> > generation and not to be intended to be shared among different peripherals.
+> > Anyway, the next register aperture is at 0xc040030000 so I would say we can 
+> > extend the clock mapped register like the following:
+> > 
+> > reg = <0xc0 0x40018000 0x0 0x18000>;
+> > 
+> > if you think it is more readable.
 > 
-> Remove the speed restriction then and revert the Link Control 2 register 
-> to its original state if link retraining with the speed restriction in 
-> place has failed.  Retrain the link again afterwards to remove any 
-> residual state, ignoring the result as it's supposed to fail anyway.
+> I don't care
+
+Ack.
+
+> > > > +            #clock-cells = <1>;
+> > > > +            clocks = <&clk_xosc>;
+> > > > +
+> > > > +            assigned-clocks = <&rp1_clocks RP1_PLL_SYS_CORE>,
+> > 
+> > > FWIW, I don't think any of these assigned clocks are helpful for the
+> > > example. That said, why do you need to configure all of these assigned
+> > > clocks via devicetree when this node is the provider of them?
+> > 
+> > Not sure to understand what you mean here, the example is there just to
+> > show how to compile the dt node, maybe you're referring to the fact that
+> > the consumer should setup the clock freq?
 > 
-> Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
-> Reported-by: Matthew W Carlis <mattc@purestorage.com>
-> Link: https://lore.kernel.org/r/20240806000659.30859-1-mattc@purestorage.com/
-> Link: https://lore.kernel.org/r/20240722193407.23255-1-mattc@purestorage.com/
-> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-> Cc: stable@vger.kernel.org # v6.5+
-> ---
-> New change in v2.
-> ---
->  drivers/pci/quirks.c |   11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> I suppose, yeah. I don't think a particular configuration is relevant
+> for the example binding, but simultaneously don't get why you are
+> assigning the rate for clocks used by audio devices or ethernet in the
+> clock provider node.
+>
+
+Honestly I don't have a strong preference here, I can manage to do some tests
+moving the clock rate settings inside the consumer nodes but I kinda like
+the curernt idea of a centralized node where clocks are setup beforehand.
+In RP1 the clock generator and peripherals such as ethernet are all on-board
+and cannot be rewired in any other way so the devices are not standalone
+consumer in their own right (such it would be an ethernet chip wired to an
+external CPU). But of course this is debatable, on the other hand the current
+approach of provider/consumer is of course very clean. I'm just wondering
+wthether you think I should take action on this or we can leave it as it is.
+Please see also below.
+
+> > Consider that the rp1-clocks
+> > is coupled to the peripherals contained in the same RP1 chip so there is
+> > not much point in letting the peripherals set the clock to their leisure.
 > 
-> linux-pcie-failed-link-retrain-fail-unclamp.diff
-> Index: linux-macro/drivers/pci/quirks.c
-> ===================================================================
-> --- linux-macro.orig/drivers/pci/quirks.c
-> +++ linux-macro/drivers/pci/quirks.c
-> @@ -66,7 +66,7 @@
->   * apply this erratum workaround to any downstream ports as long as they
->   * support Link Active reporting and have the Link Control 2 register.
->   * Restrict the speed to 2.5GT/s then with the Target Link Speed field,
-> - * request a retrain and wait 200ms for the data link to go up.
-> + * request a retrain and check the result.
->   *
->   * If this turns out successful and we know by the Vendor:Device ID it is
->   * safe to do so, then lift the restriction, letting the devices negotiate
-> @@ -74,6 +74,10 @@
->   * firmware may have already arranged and lift it with ports that already
->   * report their data link being up.
->   *
-> + * Otherwise revert the speed to the original setting and request a retrain
-> + * again to remove any residual state, ignoring the result as it's supposed
-> + * to fail anyway.
-> + *
->   * Return TRUE if the link has been successfully retrained, otherwise FALSE.
->   */
->  bool pcie_failed_link_retrain(struct pci_dev *dev)
-> @@ -92,6 +96,8 @@ bool pcie_failed_link_retrain(struct pci
->  	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->  	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
->  	    PCI_EXP_LNKSTA_LBMS) {
-> +		u16 oldlnkctl2 = lnkctl2;
-> +
->  		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
->  
->  		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
-> @@ -100,6 +106,9 @@ bool pcie_failed_link_retrain(struct pci
->  
->  		if (pcie_retrain_link(dev, false)) {
->  			pci_info(dev, "retraining failed\n");
-> +			pcie_capability_write_word(dev, PCI_EXP_LNKCTL2,
-> +						   oldlnkctl2);
-> +			pcie_retrain_link(dev, false);
+> How is that any different to the many other SoCs in the kernel?
 
-Hi again all,
+In fact, it isn't. Please take a look at:
+ 
+arch/arm/boot/dts/st/stm32mp15xx-dhcom-som.dtsi
+arch/arm/boot/dts/ti/omap/omap44xx-clocks.dtsi
+arch/arm/boot/dts/ti/omap/dra7xx-clocks.dtsi
+arch/arm/boot/dts/nxp/imx/imx7d-zii-rpu2.dts
 
-While rebasing the bandwidth controller patches, I revisited this line and 
-realized using false for use_lt is not optimal here.
+and probably many others... they use the same approach, so I assumed it is at
+least reasonable to assign the clock rate this way.
 
-It would definitely seem better to use LT (true) in this case because it 
-likely results in much shorter wait. In hotplug cases w/o a peer device, 
-DLLLA will just make the wait last until the timeout, whereas LT would 
-short-circuit the training almost right away I think (mostly guessing with 
-limited knowledge about LTSSM). We are no longer even expecting the link 
-to come up at this point so using DLLLA seems illogical.
 
-Do you agree?
+Many thanks,
+Andrea
 
--- 
- i.
+> 
+> > > > +                              <&rp1_clocks RP1_PLL_AUDIO_CORE>,
+> > > > +                              /* RP1_PLL_VIDEO_CORE and dividers are now managed by VEC,DPI drivers */
+> > > 
+> > > Comments like this also do not seem relevant to the binding.
+> > 
+> > Agreed, will drop in the next release.
+> > 
+> > > 
+> > > 
+> > > Cheers,
+> > > Conor.
+> > >
+> > 
+> > Many thanks,
+> > Andrea
+> >  
+> > > 
+> > > > +                              <&rp1_clocks RP1_PLL_SYS>,
+> > > > +                              <&rp1_clocks RP1_PLL_SYS_SEC>,
+> > > > +                              <&rp1_clocks RP1_PLL_AUDIO>,
+> > > > +                              <&rp1_clocks RP1_PLL_AUDIO_SEC>,
+> > > > +                              <&rp1_clocks RP1_CLK_SYS>,
+> > > > +                              <&rp1_clocks RP1_PLL_SYS_PRI_PH>,
+> > > > +                              /* RP1_CLK_SLOW_SYS is used for the frequency counter (FC0) */
+> > > > +                              <&rp1_clocks RP1_CLK_SLOW_SYS>,
+> > > > +                              <&rp1_clocks RP1_CLK_SDIO_TIMER>,
+> > > > +                              <&rp1_clocks RP1_CLK_SDIO_ALT_SRC>,
+> > > > +                              <&rp1_clocks RP1_CLK_ETH_TSU>;
+> > > > +
+> > > > +            assigned-clock-rates = <1000000000>, // RP1_PLL_SYS_CORE
+> > > > +                                   <1536000000>, // RP1_PLL_AUDIO_CORE
+> > > > +                                   <200000000>,  // RP1_PLL_SYS
+> > > > +                                   <125000000>,  // RP1_PLL_SYS_SEC
+> > > > +                                   <61440000>,   // RP1_PLL_AUDIO
+> > > > +                                   <192000000>,  // RP1_PLL_AUDIO_SEC
+> > > > +                                   <200000000>,  // RP1_CLK_SYS
+> > > > +                                   <100000000>,  // RP1_PLL_SYS_PRI_PH
+> > > > +                                   /* Must match the XOSC frequency */
+> > > > +                                   <50000000>, // RP1_CLK_SLOW_SYS
+> > > > +                                   <1000000>, // RP1_CLK_SDIO_TIMER
+> > > > +                                   <200000000>, // RP1_CLK_SDIO_ALT_SRC
+> > > > +                                   <50000000>; // RP1_CLK_ETH_TSU
+> > > > +        };
+> > > > +    };
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > index 42decde38320..6e7db9bce278 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -19116,6 +19116,12 @@ F:	Documentation/devicetree/bindings/media/raspberrypi,pispbe.yaml
+> > > >  F:	drivers/media/platform/raspberrypi/pisp_be/
+> > > >  F:	include/uapi/linux/media/raspberrypi/
+> > > >  
+> > > > +RASPBERRY PI RP1 PCI DRIVER
+> > > > +M:	Andrea della Porta <andrea.porta@suse.com>
+> > > > +S:	Maintained
+> > > > +F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > > +F:	include/dt-bindings/clock/rp1.h
+> > > > +
+> > > >  RC-CORE / LIRC FRAMEWORK
+> > > >  M:	Sean Young <sean@mess.org>
+> > > >  L:	linux-media@vger.kernel.org
+> > > > diff --git a/include/dt-bindings/clock/rp1.h b/include/dt-bindings/clock/rp1.h
+> > > > new file mode 100644
+> > > > index 000000000000..1ed67b8a5229
+> > > > --- /dev/null
+> > > > +++ b/include/dt-bindings/clock/rp1.h
+> > > > @@ -0,0 +1,56 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
+> > > > +/*
+> > > > + * Copyright (C) 2021 Raspberry Pi Ltd.
+> > > > + */
+> > > > +
+> > > > +#define RP1_PLL_SYS_CORE		0
+> > > > +#define RP1_PLL_AUDIO_CORE		1
+> > > > +#define RP1_PLL_VIDEO_CORE		2
+> > > > +
+> > > > +#define RP1_PLL_SYS			3
+> > > > +#define RP1_PLL_AUDIO			4
+> > > > +#define RP1_PLL_VIDEO			5
+> > > > +
+> > > > +#define RP1_PLL_SYS_PRI_PH		6
+> > > > +#define RP1_PLL_SYS_SEC_PH		7
+> > > > +#define RP1_PLL_AUDIO_PRI_PH		8
+> > > > +
+> > > > +#define RP1_PLL_SYS_SEC			9
+> > > > +#define RP1_PLL_AUDIO_SEC		10
+> > > > +#define RP1_PLL_VIDEO_SEC		11
+> > > > +
+> > > > +#define RP1_CLK_SYS			12
+> > > > +#define RP1_CLK_SLOW_SYS		13
+> > > > +#define RP1_CLK_DMA			14
+> > > > +#define RP1_CLK_UART			15
+> > > > +#define RP1_CLK_ETH			16
+> > > > +#define RP1_CLK_PWM0			17
+> > > > +#define RP1_CLK_PWM1			18
+> > > > +#define RP1_CLK_AUDIO_IN		19
+> > > > +#define RP1_CLK_AUDIO_OUT		20
+> > > > +#define RP1_CLK_I2S			21
+> > > > +#define RP1_CLK_MIPI0_CFG		22
+> > > > +#define RP1_CLK_MIPI1_CFG		23
+> > > > +#define RP1_CLK_PCIE_AUX		24
+> > > > +#define RP1_CLK_USBH0_MICROFRAME	25
+> > > > +#define RP1_CLK_USBH1_MICROFRAME	26
+> > > > +#define RP1_CLK_USBH0_SUSPEND		27
+> > > > +#define RP1_CLK_USBH1_SUSPEND		28
+> > > > +#define RP1_CLK_ETH_TSU			29
+> > > > +#define RP1_CLK_ADC			30
+> > > > +#define RP1_CLK_SDIO_TIMER		31
+> > > > +#define RP1_CLK_SDIO_ALT_SRC		32
+> > > > +#define RP1_CLK_GP0			33
+> > > > +#define RP1_CLK_GP1			34
+> > > > +#define RP1_CLK_GP2			35
+> > > > +#define RP1_CLK_GP3			36
+> > > > +#define RP1_CLK_GP4			37
+> > > > +#define RP1_CLK_GP5			38
+> > > > +#define RP1_CLK_VEC			39
+> > > > +#define RP1_CLK_DPI			40
+> > > > +#define RP1_CLK_MIPI0_DPI		41
+> > > > +#define RP1_CLK_MIPI1_DPI		42
+> > > > +
+> > > > +/* Extra PLL output channels - RP1B0 only */
+> > > > +#define RP1_PLL_VIDEO_PRI_PH		43
+> > > > +#define RP1_PLL_AUDIO_TERN		44
+> > > > -- 
+> > > > 2.35.3
+> > > > 
+> > 
+> > 
+
 
 
