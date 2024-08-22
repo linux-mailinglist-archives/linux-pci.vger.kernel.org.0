@@ -1,256 +1,150 @@
-Return-Path: <linux-pci+bounces-12015-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12016-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B0E395B876
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 16:33:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A545095B895
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 16:36:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BB081C23B85
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 14:33:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C47951C21AB2
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 14:35:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD0891CBEB1;
-	Thu, 22 Aug 2024 14:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B99F21CBEB6;
+	Thu, 22 Aug 2024 14:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KlMgK1+Z"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="neM6rCS1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612711CBEA1
-	for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 14:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0487B1CB329;
+	Thu, 22 Aug 2024 14:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724337197; cv=none; b=FymbWd5Uq6t04pr0Vt/f/mfe0Bv1PZ68o85CNik+9VeNIHY7J4alQfeSblVRypQz2BbTfBarKRdC1KjmFGj8pvCeVHkRuUXJQ4VbG7dSfeEoutbvRrV4iI0mKeMt3WHbf4hDxY4kg08QfC3WgFb/0MhJ2vlh5zuarSqHsmCQ8C0=
+	t=1724337356; cv=none; b=L/xhq6zQ8cbPd+F1iCDcpS/G/YkpoQP9Zg+PSgOBsn02Xjn+rQDt8zyVKsFhag0fXv/O8ImhMR8XwrngjHc3WyeEVA2UXAM5wNA43oRfoEUFzN52nXdZlpd+cRfXtfUV3kS+MkWNC0UZ8l56fAQIFBiu19NQBFxuPItHxAOlZSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724337197; c=relaxed/simple;
-	bh=lJiyZmPpFea0ifOYh7ueNldJecB7Zjvj1rYiFraP0eY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJTTgP7Otlxh2en3MrnR/bjfZsuEEZxvT9adtuwFoIPOyH5ob4BgWqs//eyHCx3J9JVE+Lx74O+ksPLAQRoHpktt02ZBhMeRv0GqTAG7zBor+bL0Yy3XTe9AJ69tiJJB0BW7GrtCw86q6kCclLck5YT+51nOJYdoVFqpHGi5ucQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KlMgK1+Z; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5334b0e1a8eso1208743e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 07:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724337193; x=1724941993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u+CLCXO1loNtRQ1zQxG3QmaE354XOPvXqx3+a/56H5k=;
-        b=KlMgK1+ZJX2PwEjc15lymt9JjPEEkJLEpJ5Jbh0XYP1aCy4sKK8iu0d7fNB2hfHG5q
-         BSEFRBHH3N/KqFGaCjF4x6sHeB3XZpGEP1x630+kuFZwpqR8UPj6fwx5/xWe5pqIs8Ki
-         aR0do2b0QAngexNeJpL3b+PAKvzqvx2XqJtR+gnElIOdIt2bE+8Bbp7BVp6WdhuXK1vp
-         H5Gg+4MpJthkwgwAPRO/bnshHgeTggRao+NqNasZaQd8xq0RGVI1thyC11M4NUfGQnO9
-         aP9rSQfv72u7mmOMDuAlCcarbqqPnX0nnTA5lhAvmBu1GqCpdIGG5f2EI/8o2HS2rw7l
-         7SLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724337193; x=1724941993;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u+CLCXO1loNtRQ1zQxG3QmaE354XOPvXqx3+a/56H5k=;
-        b=avaVJ4VIfA69Y6c45m0HWLuHNShjBiHLG0KHrV6VFVbt7uwhDcQ7ZHT2QYyHSuiIiZ
-         UmhMV8PM/DbhpNV7Pl09Y/NVtBY4qLGqiZiK20St0tk4uk7HjKpk5o2NrLCYfEPvMN/Q
-         f/kyGg0EeskzOZtzawNppVhtIOuY35QQEe4ZfqsucsyRH6KGGR8SfdXC8sN0inWvSLG1
-         VjORsK1h9sFddhdup+ap58rpvkYmM4XB/87Jw1aETi0wghcPFqM0UgT0gRmf10FQvhyd
-         g91+6/o03pPfshWakkVXH/tb8XM9jUiBxs/6+1X7Ie+snZVWbGJPSFv5wmBCZiYT81ST
-         AF+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUyy/D3XCvLNCKNiM3MYB8B/KTcMhpW9gxO3D1JeyyrfWudbB81osGblJwmTD/p98xVeJImhUj6J+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh11DlZEQqDM74nlOwVDr9Q71b5HXbnwiqKcHvmnEyCPkU9J4G
-	RT/luLY5mYQZiAO81m5WFbt3I9Dmgk2pRBUptdfQnpPDxGv3+apSn/85WiN03qA=
-X-Google-Smtp-Source: AGHT+IHoBb72Bk0r3OFdWAjawuoYWFCtIMjCbazUFrv8zVo0YW75cua2rVkEy/AiDyfokhDrVrMdgw==
-X-Received: by 2002:a05:6512:159d:b0:52c:9906:fa33 with SMTP id 2adb3069b0e04-53348592143mr3936405e87.43.1724337192756;
-        Thu, 22 Aug 2024 07:33:12 -0700 (PDT)
-Received: from localhost ([87.13.33.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f222af5sm128629666b.41.2024.08.22.07.33.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 07:33:12 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 22 Aug 2024 16:33:18 +0200
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <ZsdMLgf2U-CRpnH4@apocalypse>
-Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
- <400486cd-e23c-4501-98c0-aa999aa45f75@kernel.org>
+	s=arc-20240116; t=1724337356; c=relaxed/simple;
+	bh=PjN1v1ZgupBNIKpW9Fc12Vy49RxRfMabNrj+qsYjiGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ds0r7gITdJFGumD135IJpRCfXL45rYtg3G3yy7Kuy0bikCMYdIW0bIMJ/zcDHYpKGB5teNbjQ/SeXrkEP3Mz+cEcegnuXms8l0APAHqBP7MAsV1z8RO1gLWJBTmQTI/xK0qs2dCQ/yaNn/5M9DOik2UN522IpTn5EnYBoo9vkKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=neM6rCS1; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id h8tQstrBMiKc3h8tQsUpzP; Thu, 22 Aug 2024 16:34:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1724337277;
+	bh=hgzwBNoQY1MSKy8JqHT/xV1IQZfbcxzXziAOuuVi2Sk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=neM6rCS1kmMJzPrHHqX9sK83O4PsWimcoBx2ciYUu4jh26tfT2sMCE4s40UqlTBAH
+	 4pFKq4KHjULk2fe4+fZ6VRyJeAMgtIfp+oGyCLsXgB/r4SDqjIC/klUcXqwPb+3hQq
+	 ADRdhkenk9OWOrEaS8Hwi6UcoL5ewwojw0zKgoHhyvgrV2QhZTBwmYx8O2aZ0e2M88
+	 ZbXlyF72bZipSOn5Vm9AiwL51amFk+l6PuHU3X+CkjQbwkYfL10zN0jD1hSy2FovO+
+	 n7u40WNIDo7cZt+P9gzfX3w8nCFiCUTY/aW2H2xUer/PM7tucP4iPsw8K9YXBmfbtp
+	 C7vH87XzyANow==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 22 Aug 2024 16:34:37 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <81de3898-9af7-4ad1-80ef-68d1f60d4c28@wanadoo.fr>
+Date: Thu, 22 Aug 2024 16:34:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <400486cd-e23c-4501-98c0-aa999aa45f75@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/9] vdpa: solidrun: Fix UB bug with devres
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: alexandre.torgue@foss.st.com, alvaro.karsz@solid-run.com,
+ andy@kernel.org, axboe@kernel.dk, bhelgaas@google.com, brgl@bgdev.pl,
+ broonie@kernel.org, christophe.jaillet@wanadoo.fr, corbet@lwn.net,
+ davem@davemloft.net, dlechner@baylibre.com, dlemoal@kernel.org,
+ edumazet@google.com, eperezma@redhat.com, hao.wu@intel.com, hare@suse.de,
+ jasowang@redhat.com, joabreu@synopsys.com, kch@nvidia.com, kuba@kernel.org,
+ linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, mcoquelin.stm32@gmail.com,
+ mdf@kernel.org, mst@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com,
+ richardcochran@gmail.com, stable@vger.kernel.org, trix@redhat.com,
+ u.kleine-koenig@pengutronix.de, virtualization@lists.linux.dev,
+ xuanzhuo@linux.alibaba.com, yilun.xu@intel.com
+References: <20240822134744.44919-1-pstanner@redhat.com>
+ <20240822134744.44919-8-pstanner@redhat.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240822134744.44919-8-pstanner@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
-
-On 16:20 Wed 21 Aug     , Krzysztof Kozlowski wrote:
-> On 21/08/2024 10:38, Krzysztof Kozlowski wrote:
-> > On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+Le 22/08/2024 à 15:47, Philipp Stanner a écrit :
+> In psnet_open_pf_bar() and snet_open_vf_bar() a string later passed to
+> pcim_iomap_regions() is placed on the stack. Neither
+> pcim_iomap_regions() nor the functions it calls copy that string.
 > 
-> ...
+> Should the string later ever be used, this, consequently, causes
+> undefined behavior since the stack frame will by then have disappeared.
 > 
-> >>  drivers/misc/Kconfig                  |   1 +
-> >>  drivers/misc/Makefile                 |   1 +
-> >>  drivers/misc/rp1/Kconfig              |  20 ++
-> >>  drivers/misc/rp1/Makefile             |   3 +
-> >>  drivers/misc/rp1/rp1-pci.c            | 333 ++++++++++++++++++++++++++
-> >>  drivers/misc/rp1/rp1-pci.dtso         |   8 +
-> >>  drivers/pci/quirks.c                  |   1 +
-> >>  include/linux/pci_ids.h               |   3 +
-> >>  10 files changed, 524 insertions(+)
-> >>  create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
-> >>  create mode 100644 drivers/misc/rp1/Kconfig
-> >>  create mode 100644 drivers/misc/rp1/Makefile
-> >>  create mode 100644 drivers/misc/rp1/rp1-pci.c
-> >>  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
-> >>
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 67f460c36ea1..1359538b76e8 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -19119,9 +19119,11 @@ F:	include/uapi/linux/media/raspberrypi/
-> >>  RASPBERRY PI RP1 PCI DRIVER
-> >>  M:	Andrea della Porta <andrea.porta@suse.com>
-> >>  S:	Maintained
-> >> +F:	arch/arm64/boot/dts/broadcom/rp1.dtso
-> >>  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-> >>  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
-> >>  F:	drivers/clk/clk-rp1.c
-> >> +F:	drivers/misc/rp1/
-> >>  F:	drivers/pinctrl/pinctrl-rp1.c
-> >>  F:	include/dt-bindings/clock/rp1.h
-> >>  F:	include/dt-bindings/misc/rp1.h
-> >> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
-> >> new file mode 100644
-> >> index 000000000000..d80178a278ee
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
-> >> @@ -0,0 +1,152 @@
-> >> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> >> +
-> >> +#include <dt-bindings/gpio/gpio.h>
-> >> +#include <dt-bindings/interrupt-controller/irq.h>
-> >> +#include <dt-bindings/clock/rp1.h>
-> >> +#include <dt-bindings/misc/rp1.h>
-> >> +
-> >> +/dts-v1/;
-> >> +/plugin/;
-> >> +
-> >> +/ {
-> >> +	fragment@0 {
-> >> +		target-path="";
-> >> +		__overlay__ {
-> >> +			#address-cells = <3>;
-> >> +			#size-cells = <2>;
-> >> +
-> >> +			rp1: rp1@0 {
-> >> +				compatible = "simple-bus";
-> >> +				#address-cells = <2>;
-> >> +				#size-cells = <2>;
-> >> +				interrupt-controller;
-> >> +				interrupt-parent = <&rp1>;
-> >> +				#interrupt-cells = <2>;
-> >> +
-> >> +				// ranges and dma-ranges must be provided by the includer
-> >> +				ranges = <0xc0 0x40000000
-> >> +					  0x01/*0x02000000*/ 0x00 0x00000000
-> >> +					  0x00 0x00400000>;
-> > 
-> > Are you 100% sure you do not have here dtc W=1 warnings?
+> Fix the bug by allocating the strings on the heap through
+> devm_kasprintf().
 > 
-> One more thing, I do not see this overlay applied to any target, which
-> means it cannot be tested. You miss entry in Makefile.
->
-
-The dtso is intended to be built from driver/misc/rp1/Makefile as it will
-be included in the driver obj:
-
---- /dev/null
-+++ b/drivers/misc/rp1/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+rp1-pci-objs                   := rp1-pci.o rp1-pci.dtbo.o
-+obj-$(CONFIG_MISC_RP1)         += rp1-pci.o
-
-and not as part of the dtb system, hence it's m issing in
-arch/arm64/boot/dts/broadcom/Makefile.
-
-On the other hand:
-
-#> make W=1 CHECK_DTBS=y broadcom/rp1.dtbo
-  DTC     arch/arm64/boot/dts/broadcom/rp1.dtbo
-arch/arm64/boot/dts/broadcom/rp1.dtso:37.24-42.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/clk_xosc: missing or empty reg/ranges property
-arch/arm64/boot/dts/broadcom/rp1.dtso:44.26-49.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_pclk: missing or empty reg/ranges property
-arch/arm64/boot/dts/broadcom/rp1.dtso:51.26-56.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_hclk: missing or empty reg/ranges property
-arch/arm64/boot/dts/broadcom/rp1.dtso:14.15-173.5: Warning (avoid_unnecessary_addr_size): /fragment@0/__overlay__: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-
-seems to do the checks, unless I'm missing something.
-
-Thanks,
-Andrea
-
-> Best regards,
-> Krzysztof
+> Cc: stable@vger.kernel.org	# v6.3
+> Fixes: 51a8f9d7f587 ("virtio: vdpa: new SolidNET DPU driver.")
+> Reported-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Closes: https://lore.kernel.org/all/74e9109a-ac59-49e2-9b1d-d825c9c9f891@wanadoo.fr/
+> Suggested-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>   drivers/vdpa/solidrun/snet_main.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/vdpa/solidrun/snet_main.c b/drivers/vdpa/solidrun/snet_main.c
+> index 99428a04068d..67235f6190ef 100644
+> --- a/drivers/vdpa/solidrun/snet_main.c
+> +++ b/drivers/vdpa/solidrun/snet_main.c
+> @@ -555,7 +555,7 @@ static const struct vdpa_config_ops snet_config_ops = {
+>   
+>   static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
+>   {
+> -	char name[50];
+> +	char *name;
+>   	int ret, i, mask = 0;
+>   	/* We don't know which BAR will be used to communicate..
+>   	 * We will map every bar with len > 0.
+> @@ -573,7 +573,10 @@ static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
+>   		return -ENODEV;
+>   	}
+>   
+> -	snprintf(name, sizeof(name), "psnet[%s]-bars", pci_name(pdev));
+> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "psnet[%s]-bars", pci_name(pdev));
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+>   	ret = pcim_iomap_regions(pdev, mask, name);
+>   	if (ret) {
+>   		SNET_ERR(pdev, "Failed to request and map PCI BARs\n");
+> @@ -590,10 +593,12 @@ static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
+>   
+>   static int snet_open_vf_bar(struct pci_dev *pdev, struct snet *snet)
+>   {
+> -	char name[50];
+> +	char *name;
+>   	int ret;
+>   
+> -	snprintf(name, sizeof(name), "snet[%s]-bar", pci_name(pdev));
+> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "psnet[%s]-bars", pci_name(pdev));
+
+s/psnet/snet/
+
+> +	if (!name)
+> +		return -ENOMEM;
+>   	/* Request and map BAR */
+>   	ret = pcim_iomap_regions(pdev, BIT(snet->psnet->cfg.vf_bar), name);
+>   	if (ret) {
+
 
