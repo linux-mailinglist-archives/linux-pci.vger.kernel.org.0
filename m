@@ -1,232 +1,241 @@
-Return-Path: <linux-pci+bounces-12029-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 205A295BBBC
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 18:23:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E376595BCAE
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 19:04:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41A421C2025B
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 16:23:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 919852854BE
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 17:04:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F40619DF99;
-	Thu, 22 Aug 2024 16:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8615F1CE6FD;
+	Thu, 22 Aug 2024 17:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHkvnzvX"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="giMR6uKQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011051.outbound.protection.outlook.com [52.101.65.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05348282FC;
-	Thu, 22 Aug 2024 16:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724343792; cv=none; b=UMdsxxKIgfEwAR/rY3tTUIAKp6F8WtN5BfkRJJrWx6yxf1XWAHyimQKrCRWAJh0P2cxU7lbzcrPHaqk47NG3RO3WBstDrwJNBVBOyvPS8+pry9ICzTXu4QlzgZ/8dgPoH14S+p1e9b2xVf3TuInoaLcjk1Iw8TOgpao87O0mJQg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724343792; c=relaxed/simple;
-	bh=43L7DnNwf5PKhCn45ifgPN7YWE34/X02RDZibv66tIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q5rR223E0ZvdW1Fyvhr18jhEa66QZF/Tpdhl52ga2GaCM96In6gN2J29Q3mG3i0tB/yfklXoIMbdvH2fECyf10jvUHONL6mNhP+YdcNFsoVmZmpZ4PStgKA1kYmHMO/TPi67xEcj4Z6KA0Mk7TC692WE1VjimwGG6jqOII9CtEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHkvnzvX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FF9C4AF16;
-	Thu, 22 Aug 2024 16:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724343791;
-	bh=43L7DnNwf5PKhCn45ifgPN7YWE34/X02RDZibv66tIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NHkvnzvXwnE6uzWrZj3r8QS7huQYHl6lQUYwWj4Ch6u/DQaoBdkprt3nE9whm0XSC
-	 JWfdoCkn9uQ738thQ7Mf/GZEsOdygoyA+HjgYQ0h26/08YxBQuRIt1bED2mvFsLWA2
-	 scH8G+pyi8FaQ7GdKEkbagnrT6FWj73l8KtMriASbVskJTkAYw1F6FsW/RWTbIHvPe
-	 SXq1hj00pqD/luPofnGZmKPkEliydpp3cN1c6VdnGZcx0rKHA4Ur2p/H7lvE0EHVrR
-	 fqKFZmx0krWiok3jMAx+j3eBlhzlsKJY8zkTwnfAH5mKumXoQXrX/8svvLsQtysEbO
-	 Qckd+tLlb+xUw==
-Date: Thu, 22 Aug 2024 17:23:02 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
- bindings
-Message-ID: <20240822-refutable-railroad-a3f111ab1e3f@spud>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
- <20240820-baritone-delegate-5711f7a0bc76@spud>
- <ZsTfoC3aKLdmFPCL@apocalypse>
- <20240821-exception-nearby-5adeaaf0178b@spud>
- <ZscGdxgoNJrifSgk@apocalypse>
- <399ff156-ffc9-4d50-8e5f-a86dc82da2fa@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562B21CCB4D;
+	Thu, 22 Aug 2024 17:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724346211; cv=fail; b=PqZp9ytBzLM9e2eMZuLUhYnD8r6Lg0C3hF2Ic4psMLnSdeNf2YQJbXHhPf3EE2GvkEm/ZQsvcdrwk+gUanZHzl20Hkvvv6/nSemtCZTXC3Nzg7vBvH4hucIaX9SBEP/wdxh445rmxBTGpbR1w1cLLIKsF+5YtAD2+rWCfugW9RE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724346211; c=relaxed/simple;
+	bh=MYCdttdHndW2NLiLL4IGh/IxF6HEJcu2gWB5ZG1Ufbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=iySLqVOWhrOjFcRooqJRUunDy4PC+J3Z0No0RA6gOWzfZtaH+HCrXRKVYKQ1ix0cfOUAYQPoo0OGVZr+a9Jb+/vDK1ximU/vA69cP1sfBt8vgYpOi3bNuSaVrBNCjhJx84q0IZvT0NMpMV9bPH7sD0t8ZLBFmQKmyBG0Zh7pgRQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=giMR6uKQ; arc=fail smtp.client-ip=52.101.65.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MJaNyBNl1PeXmU/pu5M+z5fQ2I89BeIubzl78oWqQ9o2AHC2jFdhRBQduB9SfvnWU41kxJQ9EqDNWcp6SsBylgS1H+W08XD0LHJp8ruNho9+zBdkkgdOzF0ANe7nfo4vJVcpq/dXrli383vNi0VB3KzPdGOpZFxXCi1BtpGVhEdtNxeuGJXCkg6pidGlkBZbpupcL33OnF5ahXfHss8ovAxRRumlloMBAfb6q7y3+vJTyTjcinUwahtDDVcMugvX8xJgglDIS+WLDQcfzZrRK3DkPQd2R0SzNpv5/I7LAsn0WHpGtwEQ+CrRnuNdQu7UB1MocpJAEbvSixUufJ6Lcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PiRQMPr5Tx2NBqAwwQGc4pFs/EcmFdEPpyrn1MLsmX4=;
+ b=U6gnEB4rbnaTWbRVloTLSmQ6/Hl2rgi397vlH3yUhrIiUKfu+gvTUVR1jSLvMJRCSX1H85oYdwHwnvdq4P4bp1dLEdiDSOz/nTo9uNMg7SRYdqC7upZ8AJhQW8GTJg65JWOCnwmSmNtHTLIQaW971lLUrUYjSVW9VPfvNBr9s1zpkEcoGbXsLNwbqml4W59daScTWiMSaUm1sftNpHeAukFSL+jXplDuV/ZoNowoXInaxzbvIEABYQFJmMAzRFT9eZkPnoX1X4V0MrVn21JgwSq2W2T593qvS2fPQowIzIWF6wTUdznDdyfV0RK5ZCYO+wfe/7PPkznmPk17+GUuQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PiRQMPr5Tx2NBqAwwQGc4pFs/EcmFdEPpyrn1MLsmX4=;
+ b=giMR6uKQ7yjy7bAmFiy2GLSZANcNNsnziazFy+XqVYNGDRjAc6Rd9/V0cfq+P6LsSBrXVuTR/Q2fvGKnszP8h3Y3APw8QI7hrxBP20/TjYwgip9ojP6hBW40bKdJpINrqcgAr7qmSBqRxA7gFY9rUa7KW3dcud1sJ0GsBX5LaPguQaxtu71oS22MgxUwr09TZivTjwiKDwxineSR0XCG7p0nnQXqW2GiLeVCnucYO8OUV7ecI/1LBxqgmMP1FYywXHoXjajYDlqXr+hXFBIDE9WWEImxdHlxumBVyJUC3oxywUBDYQyqCO2aedyIillk19KkHmnlxeDKsyWP0iOJVw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM9PR04MB8876.eurprd04.prod.outlook.com (2603:10a6:20b:40b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19; Thu, 22 Aug
+ 2024 17:03:26 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.7875.019; Thu, 22 Aug 2024
+ 17:03:26 +0000
+Date: Thu, 22 Aug 2024 13:03:15 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org, Jason Liu <jason.hui.liu@nxp.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v8 00/11] PCI: imx6: Fix\rename\clean up and add lut
+ information for imx95
+Message-ID: <ZsdvUwuvmW/+Agwd@lizhi-Precision-Tower-5810>
+References: <20240729-pci2_upstream-v8-0-b68ee5ef2b4d@nxp.com>
+ <ZrKIotkhvAnt87fX@lizhi-Precision-Tower-5810>
+ <20240807023814.GD3412@thinkpad>
+ <Zr4XG6r+HnbIlu8S@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zr4XG6r+HnbIlu8S@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: BY1P220CA0008.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:59d::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MUECiN+fSdL5Fn4Y"
-Content-Disposition: inline
-In-Reply-To: <399ff156-ffc9-4d50-8e5f-a86dc82da2fa@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8876:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06800868-150e-4d33-b8ec-08dcc2cc5699
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T0N0Q3p3MmdzVUJrUDEwR0JuajZBK2d1emRBeFVKVTJYQldRVDFsbnh0OG1W?=
+ =?utf-8?B?eWRvK0N3dUVuZ0R3bVVlckt3RzRza2duWWozV2lmTjN6Yk03aW53R0hTMnFV?=
+ =?utf-8?B?UHU3UTVHREZ3U1JYWUhvTHYzK1VGajdrOThqdytEdEFwR0h6bXgyS3FTTUlm?=
+ =?utf-8?B?N2FiWGxDSkRmZjRFK2xrMmMrdFc2NUZqSUlEK2lOL2hUQ1I2RDN6KzlLUnFk?=
+ =?utf-8?B?dmkwZWVvSTc3bDVRNjZHNUF1dlJMT2dZUGFmS0pxMlZWNlIwd1ZvblVJdFpQ?=
+ =?utf-8?B?QUVFbStWbzlMY3JZeE03S25EZzdOMi9QQ1ZkcXQ0OHI4OE91aWw5dDgxalVD?=
+ =?utf-8?B?MWdOT1Bqc2lrc3hrUTE1Uy9QNUQ2d3o2U0VHRFhMWFVXQVlROHdBZmoxV3Rr?=
+ =?utf-8?B?bE1HVzh5dXRlMmlzOFBXdmZqRWZOUVhZL3E2WndVMTQ0R3JXVytBSzF6Qzdq?=
+ =?utf-8?B?WHh4ZDhEMHV4ZkJHY3JaenNDNzJ3Rm5wSXZydElTaHhGb2w0RG4wMU5iSzZw?=
+ =?utf-8?B?Mkd6L3g3TnRkR291b3d4MDhyZFRBeDAwdVcyMVBQVEwwa1RQV1o2bnV6RmY1?=
+ =?utf-8?B?UE1sTVhZNlBkR3BtRVdQUnFReVNtTnl2V1ExbXBjWGhDN1UyNVVPeXJNVEx5?=
+ =?utf-8?B?Z0NpSWR5MndiWEYxZkFuRURwNGx1N3F3MjEwdmc0WHdjcmJQaHR1QzZZY1VU?=
+ =?utf-8?B?cSszS2FaOTdkdVlUZ2dRN01HZ0N1V1NnR0VMK2w0U3FnSTIzbjF1amlKUTdq?=
+ =?utf-8?B?bFRhbGhTUlM4MWVGR293cVdRQUExWENlQXoyQ2hNUkN0VWFKdVRoSW84T0gv?=
+ =?utf-8?B?V1BXTDIxTVhodHdyNTI2SXQ1SUJ0VGdXOWlWVy9jSkthNDhuNGxtblpIQXdJ?=
+ =?utf-8?B?TERKQUp0U0FhUWhiZk9mMXBNOXZ0SEtLMHlaOXliU21lbnM5S1RTYWxEeWVk?=
+ =?utf-8?B?NFNnMGx4MExoY0NTY3VWR0NPNk5HYU80QW02UkUyZ2JtRmEzVjlXYU0vbjlW?=
+ =?utf-8?B?K1RHUVFpNkpVaVd6T2FGS2ZOSnNHdVM3RC9qM24wR1ZpMWZGb3k2RFhBMDFn?=
+ =?utf-8?B?bUczNHdlYmo0c3hvMkx3Y0JFZHhkakR4K0VIY1A1MU9xUXQ0RDFISnhzWUVq?=
+ =?utf-8?B?ZjN3RUR1U1VMaHZUMk5hRjhESmFzRXdCeTdNL2xjYVYwNVhHSmpHSUprYVBv?=
+ =?utf-8?B?ZVg1ZWZBRUN3QXVvNXJ1eWkwZ3VlVERJcFMwS0d6UnhZNmU1dTN2SDl5OStO?=
+ =?utf-8?B?UXMxcTV1emxuTkJzWUJrTXlXS3ZFTjIxa2V2SkJnNi9QdWQ1dlorL0wyL2F5?=
+ =?utf-8?B?K05aS3QybVJVZWY2RndLRUprMXNWcDRqaVFsMlZOdXZFMlROd252NDY0R0ZR?=
+ =?utf-8?B?M1B5WWgwbDYrbjVtNG5YVVpHVnpRQ1p5dGJxWGI3OGRCWUo5aDJMa0prdzN6?=
+ =?utf-8?B?bXk2T3pkS3N2TkU2MTVDdGwrYzBoYVhLcDlKQVN2QzExRksrbTBacVVkQ2hG?=
+ =?utf-8?B?YW02eE5Bd3cyaENONjNSRmJuK0xVbU0yeXFWT3Q3ZEpVb2Ywc2wrUEdVbk80?=
+ =?utf-8?B?U3EzU1NGZlNnL0hhVzhoaFFPNjlKa2Q3MHp3MnFpaDZhQzJzVkN4QlU4a1dX?=
+ =?utf-8?B?MER6N05SQkFGRmIwZ1V4b3VobnNsbUpyODBXRUJDYU5JTlI2SDRKMHBuRVFL?=
+ =?utf-8?B?a0tlRU5SSnVhbzdQaHpaRzN1d2J3Nk9rYXFNaWpWMFRNbjFmM1VvLzgvQjZv?=
+ =?utf-8?B?ckEyeHZFamRZMGZ5ekxkY2QxS05aVXlGMVJmZUwvREdqQzFSTEVOMHY3bGND?=
+ =?utf-8?B?OFU5aitEYUUxSVRFcUU4R3h6WnRuYzhQcnJYUkVoTjZxTUgrL0UyZmZNZ0Fk?=
+ =?utf-8?B?UnpvZUdxaW81NWV4YldHNjhMZnZjczZibTJwb3BTd2JOQlE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NTBhZE0zR1QzVGpsRzVwRnpUYjY4UE9FalIrT1lqamc3dkxCZDh5cmtzOCtR?=
+ =?utf-8?B?aVFMRW90Q0IxdytkR0EwY2JZb3ZHUy8yZEE4NVF6dmFFVUxVZ0ZMM3lmbDZG?=
+ =?utf-8?B?dUhVTUlESlcvbE12MUFXcVVMVlZwdE5GNWpwMVVveEs5cTJkdE9BcWZiSzIv?=
+ =?utf-8?B?R1ZDUjZqL1Q4ai92Ymd2QjNudFJTdnBGcmJBRGJGRmV4VmcrQnZFZDRoamx6?=
+ =?utf-8?B?Z0I0Zk5vYmtmcmpISmVkS3RXWCtwaFJBeUcvUXJvOFkwRmlLNzYrWm5FblZW?=
+ =?utf-8?B?SFVqOHN1WGljYU9EblppWUsxdTViZTdUL3puZ3EzZzFzeVpzTTVBTW50K2xD?=
+ =?utf-8?B?cm13WVVUbXZkaHlxT0JiT2wxTjZGM2pEd1g1VjRudmsxdVlCL1VpazR1Tjc3?=
+ =?utf-8?B?KzlOYVFRTG00Z1c2UW5adDlodEFYc2g0aFZxR3VnREhYdjZJUTRBUVRPdlJx?=
+ =?utf-8?B?S2lrSHQwUW1vTUNiR2JFK2c0VnpBcU4xL1VPME1uRzhqaWdEWlhNTVUraUJj?=
+ =?utf-8?B?Wi9vVjQ5VTE5aTF1VGFZM2hQbS9ya0hGYm1LVjdvc0tpQmd5ek1LT2xWK2U0?=
+ =?utf-8?B?YjFBdUtLK3k0UGVOWmliaG90MkZBczU5MVlKYzdHeU1GMEZvVmJYM0dIdnBL?=
+ =?utf-8?B?WDZpaGVZcjMzUnRSbjJKUWhtQVZhK3N4djh1Y3BCenNmbXg3WVk3YVJhNDlz?=
+ =?utf-8?B?bnBXeHZzRWxZZWdIdHJXRGhLajMwR1g5TjlHbEt5aWNvejNvTlFiV1NESFFU?=
+ =?utf-8?B?c0NoUjhzaGFuOFdpdjJGTmVTbVkyTGhQSFUvbU54enRlcFhEbHZoWmROZ3lI?=
+ =?utf-8?B?UVVJYnZ3M21nM3ZBN3J4RkZwM0xxb1g4WnN6QjRxSW9GdUhzcmxsYlpPNDZ5?=
+ =?utf-8?B?Z3ZtTmRmdEJTeUk5ZUtVSFQzRW5IekhiYTJDWGlqTDhwUjR0VldZbVNBeUdY?=
+ =?utf-8?B?NjFNYTExTG5ybkY4UEYrMlZBNkJ3SmxjWnpyUkh1WFFLbXhUcG5ZUklPRCt4?=
+ =?utf-8?B?SjFQeHlXaDFJdlROMmtpUUVLNWo1R1pCL2UzQVJWUVNwRW5LZmpxd0VsZ0NW?=
+ =?utf-8?B?K0ZrY2hxNlRZTUM2STd1YW91MTcraHR6QXlNQmVTNXc4czVLL0hMWmx1Nndq?=
+ =?utf-8?B?dFpLRFd2VjlvRFMvaXFEZ3h1VnVDU0loR3pLai9rVHZ1bWp1eWt5anZpaEx4?=
+ =?utf-8?B?Rk5PeHdXdVpidzlzaW9EOGZIYnJFZHYrUG5aeW9CVkNJR3dZdlAvaEFNN3d5?=
+ =?utf-8?B?OUQvR2lqWmRmT0xNT1l3M3R2anNNRWtISFNUMFR4VEpFZDZZRS9yVVR2WDMx?=
+ =?utf-8?B?Ynh6ZUoxWWpoaGY2S3JVWlR2QkoyQ1BEdUhXZWh5cWJ4SkoyWDZFUjRENEV0?=
+ =?utf-8?B?eDBlbmhSbHgveDg1aG4zUVlhVm55djhLSlRuSERqQUZheGJjMDlDbGZXUlM1?=
+ =?utf-8?B?ODR4UkZOTmR5NDk3T24yRjllbW5Vb3hSZFRVSjVFbjFWNGVnVVZ2bUNPejB4?=
+ =?utf-8?B?Z0llZTFGS1BKcThmQUdoWXVNSWhrdnVzMzg3YnBKRXZjV0VzMlZsWmJLUm5h?=
+ =?utf-8?B?RXV2UGdBS0pZWVo5aTB0UGNUaFczL2dTcFY2UEhOaTM2Y1JWQnQ1MnMrRFJ4?=
+ =?utf-8?B?SkcrdExlYzM5NmY0TFlzY1hySHZ5VXl5aEoyOXVsc1J5TE0vRE9rNFlGT1da?=
+ =?utf-8?B?ZGRxRVFoenhLWDRxRkpWRWx6Z1k5MUphZDh6M3dRRkZYNzRkeXdCRzJ6RURL?=
+ =?utf-8?B?NFhJNEo5WUNhZ01tYUNQdTZlc0g1dWhNYytMK2tTMHhkTXZZYnZjUmIwUmxs?=
+ =?utf-8?B?bDJHUGlxVExObDRlbjd6NVA4N1NyZCs0QXdHTDZMMTFoaDluQ1dlcU5ubVA5?=
+ =?utf-8?B?MW9yaG1EWkx0QU5hREN1QUxJdjNjSXd4anJGa0xLcGMrbFZNU0JKeG9yN0xU?=
+ =?utf-8?B?NFQ5T1RkZXdTTG9zZURIOGJVTUM5K2ppZUZPckNrMHJkUXUySXZuQzRVcFU2?=
+ =?utf-8?B?U0xyUXJxM1R2aFBXRDYzbU8zSXZJSlpOWlRuWlNHTXdOUExhNTR1RnEzUFpw?=
+ =?utf-8?B?NXF0K3ptV0k1aW4yVDRLSGtyNCt2aUxHOTV6RmlNaUpqSnNKTjQ3czRnbTFB?=
+ =?utf-8?Q?XUz4g53ziIn8m18SUUifdIECy?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06800868-150e-4d33-b8ec-08dcc2cc5699
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 17:03:26.3174
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YDWfYuI/eZSZU4+mB6yeJ7mL/Eyiw6XuGCMKUF0ZmErGIl+PVnNtYpNPs5sHlmDBedfzUzd7Rv5XLeRPbh5wcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8876
 
+On Thu, Aug 15, 2024 at 10:56:27AM -0400, Frank Li wrote:
+> On Wed, Aug 07, 2024 at 08:08:14AM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Aug 06, 2024 at 04:33:38PM -0400, Frank Li wrote:
+> > > On Mon, Jul 29, 2024 at 04:18:07PM -0400, Frank Li wrote:
+> > > > Fixed 8mp EP mode problem.
+> > > >
+> > > > imx6 actaully for all imx chips (imx6*, imx7*, imx8*, imx9*). To avoid
+> > > > confuse, rename all imx6_* to imx_*, IMX6_* to IMX_*. pci-imx6.c to
+> > > > pci-imx.c to avoid confuse.
+> > > >
+> > > > Using callback to reduce switch case for core reset and refclk.
+> > > >
+> > > > Base on linux 6.11-rc1
+> > > >
+> ....
+> > >
+> > > Manivannan:
+> > >
+> > > 	Do you have chance to review these again? Only few patch without
+> > > your review tag.
+> > >
+> >
+> > Done, series LGTM.
+>
+> Krzysztof Wilczyński and Bjorn Helgaas
+>
+> Could you please take care these patches, which Mani already reviewed?
+> I still have some, which depend on these.
+>
+> Frank
 
---MUECiN+fSdL5Fn4Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Krzysztof Wilczyński:
+	Any update?
 
-On Thu, Aug 22, 2024 at 11:52:27AM +0200, Krzysztof Kozlowski wrote:
+Frank
 
-> >>>>> +examples:
-> >>>>> +  - |
-> >>>>> +    #include <dt-bindings/clock/rp1.h>
-> >>>>> +
-> >>>>> +    rp1 {
-> >>>>> +        #address-cells =3D <2>;
-> >>>>> +        #size-cells =3D <2>;
-> >>>>> +
-> >>>>> +        rp1_clocks: clocks@18000 {
-> >>>>
-> >>>> The unit address does not match the reg property. I'm surprised that
-> >>>> dtc doesn't complain about that.
-> >>>
-> >>> Agreed. I'll update the address with the reg value in the next release
-> >>>
-> >>>>
-> >>>>> +            compatible =3D "raspberrypi,rp1-clocks";
-> >>>>> +            reg =3D <0xc0 0x40018000 0x0 0x10038>;
-> >>>>
-> >>>> This is a rather oddly specific size. It leads me to wonder if this
-> >>>> region is inside some sort of syscon area?
-> >>>
-> >>> >From downstream source code and RP1 datasheet it seems that the last=
- addressable
-> >>> register is at 0xc040028014 while the range exposed through teh devic=
-etree ends
-> >>> up at 0xc040028038, so it seems more of a little safe margin. I would=
-n't say it
-> >>> is a syscon area since those register are quite specific for video cl=
-ock
-> >>> generation and not to be intended to be shared among different periph=
-erals.
-> >>> Anyway, the next register aperture is at 0xc040030000 so I would say =
-we can=20
-> >>> extend the clock mapped register like the following:
-> >>>
-> >>> reg =3D <0xc0 0x40018000 0x0 0x18000>;
-> >>>
-> >>> if you think it is more readable.
-> >>
-> >> I don't care
-> >=20
-> > Ack.
-> >=20
-> >>>>> +            #clock-cells =3D <1>;
-> >>>>> +            clocks =3D <&clk_xosc>;
-> >>>>> +
-> >>>>> +            assigned-clocks =3D <&rp1_clocks RP1_PLL_SYS_CORE>,
-> >>>
-> >>>> FWIW, I don't think any of these assigned clocks are helpful for the
-> >>>> example. That said, why do you need to configure all of these assign=
-ed
-> >>>> clocks via devicetree when this node is the provider of them?
-> >>>
-> >>> Not sure to understand what you mean here, the example is there just =
-to
-> >>> show how to compile the dt node, maybe you're referring to the fact t=
-hat
-> >>> the consumer should setup the clock freq?
-> >>
-> >> I suppose, yeah. I don't think a particular configuration is relevant
-> >> for the example binding, but simultaneously don't get why you are
-> >> assigning the rate for clocks used by audio devices or ethernet in the
-> >> clock provider node.
-> >>
-> >=20
-> > Honestly I don't have a strong preference here, I can manage to do some=
- tests
-> > moving the clock rate settings inside the consumer nodes but I kinda li=
-ke
-> > the curernt idea of a centralized node where clocks are setup beforehan=
-d.
-> > In RP1 the clock generator and peripherals such as ethernet are all on-=
-board
-> > and cannot be rewired in any other way so the devices are not standalone
-> > consumer in their own right (such it would be an ethernet chip wired to=
- an
-> > external CPU). But of course this is debatable, on the other hand the c=
-urrent
-> > approach of provider/consumer is of course very clean. I'm just wonderi=
-ng
-> > wthether you think I should take action on this or we can leave it as i=
-t is.
-> > Please see also below.
-> >=20
-> >>> Consider that the rp1-clocks
-> >>> is coupled to the peripherals contained in the same RP1 chip so there=
- is
-> >>> not much point in letting the peripherals set the clock to their leis=
-ure.
-> >>
-> >> How is that any different to the many other SoCs in the kernel?
-> >=20
-> > In fact, it isn't. Please take a look at:
-> > =20
-> > arch/arm/boot/dts/st/stm32mp15xx-dhcom-som.dtsi
-> > arch/arm/boot/dts/ti/omap/omap44xx-clocks.dtsi
-> > arch/arm/boot/dts/ti/omap/dra7xx-clocks.dtsi
-> > arch/arm/boot/dts/nxp/imx/imx7d-zii-rpu2.dts
-> >=20
-> > and probably many others... they use the same approach, so I assumed it=
- is at
-> > least reasonable to assign the clock rate this way.
->=20
-> Please do not bring some ancient DTS, not really worked on, as example.
-> stm32 could is moderately recent but dra and omap are not.
-
-Right, there may be some examples like this, but there are many many
-other SoCs where clocks are also not re-wireable, that do not. To me
-this line of argument is akin to the clock driver calling enable on all
-of the clocks because "all of the peripherals are always on the SoC".
-The peripheral is the actual consumer of the clock that quote-unquote
-wants the particular rate, not the clock provider, so having the rate
-assignments in the consumers is the only thing that makes sense to me.
-
-
-
---MUECiN+fSdL5Fn4Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsdl5gAKCRB4tDGHoIJi
-0qOXAQD5rgYw5/X4Ja91lG6uIEE1SemLGNR402ItvyyoKoxd1wEAwHPc8uJHiM0U
-N6HspNFbOaRmU2j/vypiAMrlT9GH6A0=
-=ar8E
------END PGP SIGNATURE-----
-
---MUECiN+fSdL5Fn4Y--
+>
+>
+> >
+> > - Mani
+> >
+> > > Frank
+> > >
+> > > >
+> ...
+> >
+> > --
+> > மணிவண்ணன் சதாசிவம்
 
