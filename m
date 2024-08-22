@@ -1,159 +1,169 @@
-Return-Path: <linux-pci+bounces-11998-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11999-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88BF695B34A
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 12:59:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE24A95B409
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 13:39:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 012B11C22B73
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 10:59:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 42DB9B21B02
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 11:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAEC183CA0;
-	Thu, 22 Aug 2024 10:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 904731C93DA;
+	Thu, 22 Aug 2024 11:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQMoJo0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZURnvNva"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B59166F3D
-	for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 10:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0764017A584;
+	Thu, 22 Aug 2024 11:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724324346; cv=none; b=i523Qz+aimRSpeDW5iEoY3tGAdXfRGgzVbZVPbHe6cAwqBpiKddffialcCeDxXn5ciAX/T7Zo1P0fHJBRN4hvqqgOLftl3GjZ3dvK8yzZiAWcF4VmTJZ9oyuY7jcd50l30I+W0P9P61MBgoGA8iF/ZoHAvUC4UwPrAKSv/yYcW4=
+	t=1724326769; cv=none; b=KnwEPPBpkmGmC51R5Y+eRKYmvxjAKMg74XJXUNP8craMcTARhMs3R2ahz2wS+4WSFMHCfT6bghR3wCBslrsnY1DN2UIZZ1PbuWXl7Sj8pZVYzdEBOUWDKYaE7Ed73EgrzE4ZpgJUQcACSKGXxIPcsB7MQ46vLNm4wyDoF2tKyhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724324346; c=relaxed/simple;
-	bh=X2aDawbwMPIx4BXYK3siJFaIvVYE9aya68VEcb9AzqM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=WUinBL5i/NXdkhJiH2se2a0D+qweNdw0nkZvxCYkdKNUeybcSQhrvzZ6QJu1oW5XlRzBscnBSK1xOuyX0NyjhmWMAGfhBTokMtOMvGIb+JqEPXlOpaGRDJNJVWL45TUlnf1b9WmdVny4A8ZxnPeP3e9169wKT7WEwcbVgvtvPdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQMoJo0/; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724324344; x=1755860344;
-  h=date:from:to:cc:subject:message-id;
-  bh=X2aDawbwMPIx4BXYK3siJFaIvVYE9aya68VEcb9AzqM=;
-  b=FQMoJo0/omLO0CBqFhH+ncOh7TNppUaJvMKx8lSs01Q5k7iqnbh73kpg
-   d5EGAHuzdTu6w6rbPxcW0Aj8WkxulPd9NNPLbHG43CcWDtByNbDerzuJ4
-   z46ZKU8QKW1cAJjjYSJEVnJCOu9eyFeVGcdovODJzbtm0ywJLJgYpZGv8
-   OPxBcf44E18gyIJeJmLDnhJrkDB55qIJFr2/90cmOUoE1k8CRa3nFyGsw
-   MFrXKVN60Ja06tlXytVxt6Ncm+4TRbeDJ3Mb3J9LgleI2nZ+wIJUmtBLM
-   tmTFGX9x4wa8fEL/3I+0cVYrwJZa6LMyd+CFwagoQAdmbYZvHRNgi1/Sk
-   w==;
-X-CSE-ConnectionGUID: BDASTvncTeeB5WOn7wmgwg==
-X-CSE-MsgGUID: q7nVuCBhRz+MTxSqTWGzAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="26481779"
-X-IronPort-AV: E=Sophos;i="6.10,166,1719903600"; 
-   d="scan'208";a="26481779"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 03:59:04 -0700
-X-CSE-ConnectionGUID: svauxlCbRCak9RIZQuNkJw==
-X-CSE-MsgGUID: w4jdgRmNTp6X0BJUl4iXag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,166,1719903600"; 
-   d="scan'208";a="61258390"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 22 Aug 2024 03:59:02 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sh5Wt-000CgO-2z;
-	Thu, 22 Aug 2024 10:58:59 +0000
-Date: Thu, 22 Aug 2024 18:58:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- dbc3171194403d0d40e4bdeae666f6e76e428b53
-Message-ID: <202408221857.yYLurFbz-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1724326769; c=relaxed/simple;
+	bh=dPpAf2f8GYYIxADJv/jtNYiSKT9rmaEvZ5LE3eLI6QU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J/0qr3cqeUEa4mU3Ymvt7oJ9p65ozHfg0a9jXRiCM/Il2CEn/jlFBSUJqWY7ivJOSKziH3FVdnJ3pwBN0eapBCpqKRMlzR7OPIazrzrL5CMZSbVwvoNBQsTMJZCXUPZfCc14CPc/nODfMN4RC3hNhLxs6fGVtkSnzArizFEvFrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZURnvNva; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5d5c324267aso439717eaf.0;
+        Thu, 22 Aug 2024 04:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724326767; x=1724931567; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gmjfksgEDmh9vuwfLcrudGOyf/12SvsWpQHttrw7Ot8=;
+        b=ZURnvNvaIhyLofZTOD2sQYK+yOlguPzuJNcilu0PZjbfo5jgHJK1ugTiVL3eLvox7P
+         GPen8lwbiRCDA1lHAcq7Zm7vYdoYg2PEHH4oluePpkjqVQQB7AoSDnyuEcGvJ25G7bA3
+         jb/iT+QnhR6yr721kdyM/yjlxilXKP09me607+8MbgeKtRoccS4k4COWxIMcmtjAdYSd
+         AfSMjrBcqw7ZxTEyqbuIkUn9+FoKvaUYyg72nI2m8Awu0z+EmRnY/VdInyTQDLZkR21t
+         1MXBC6+8Dm0bUsLllW/teeVYUtC3Huw6K301dJVaLRmeSPpNJm+H6eoth/Aoku4I/1On
+         M3+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724326767; x=1724931567;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gmjfksgEDmh9vuwfLcrudGOyf/12SvsWpQHttrw7Ot8=;
+        b=QBFq8j0yq2Bot8ZiwMGssEr3PRaZ0G9Vhndt4COP1/OYGRyRb1IyfISDxu8kA+w7A8
+         66uLQJHApx2PheJPrlnGb8JBZ0ndm+DqSpdfOxEjpPHsIFqiC37lMLn0MRkyytv/W1Sl
+         E69qIRNRe3XJ01IpLQHIkDbae59+QyYwVoGyJgdS+3+HqxqQaMY+XrSQyr4UspDNNMmR
+         b/P0HVnNoNjOqY8LTz2D0RvQ58xv6alm36Ne+6+uUplKgoQ2BX16zmlqxCNSFFC0NQ/W
+         dIJkL5/gfAQLoBkR10HaDIH/0FHFLm1gxtMgbBLUP89yWUsU6S0xoDwnyf7TPma78kHa
+         G9xg==
+X-Forwarded-Encrypted: i=1; AJvYcCU30BwE8I8qKns3Jdn/XDxLuyDgoJIOz7zTeh4tE4mThVCfa1MRc38I3yFVWXJ5CZthgtpbPdSLroE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySJq8nzz7CqZEsVKs5aks+0Hj4S8B/+GH/B0zKIHkb6EHbQAJB
+	oswYkJBrdGJuXPr8sGPnb8kTp0ygJ96MUFTa+3cdocaCU8P41ZzPbgLHoVgk2XeaX7FT9h0Bqby
+	ld2iWuVELuGTpN2V8MDToucrY61U=
+X-Google-Smtp-Source: AGHT+IGycQLK5BHPohGjOdsl1/QhBeJTpPJvVnDeYLgwWgnP6LUzKuyzq1DZ1dz4PM12E5lNPXbXEuJC5eHHhOVQbMw=
+X-Received: by 2002:a05:6870:3925:b0:270:2548:7d77 with SMTP id
+ 586e51a60fabf-2737ef0216emr5993446fac.16.1724326766867; Thu, 22 Aug 2024
+ 04:39:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240822102952.1656027-1-bo.wu@vivo.com>
+In-Reply-To: <20240822102952.1656027-1-bo.wu@vivo.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 22 Aug 2024 17:09:11 +0530
+Message-ID: <CANAwSgS2-JnnpO0dZd2bLWuKOMpbzJWTL+0Qg=ogs_-RTe8rfg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: armada8k: change to use devm_clk_get_enabled() helpers
+To: Wu Bo <bo.wu@vivo.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Wu Bo <wubo.oduw@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: dbc3171194403d0d40e4bdeae666f6e76e428b53  x86/PCI: Check pcie_find_root_port() return for NULL
+Hi Wu Bo,
 
-elapsed time: 845m
+On Thu, 22 Aug 2024 at 15:51, Wu Bo <bo.wu@vivo.com> wrote:
+>
+> Make the code cleaner and avoid call clk_disable_unprepare()
+>
+> Signed-off-by: Wu Bo <bo.wu@vivo.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 29 ++++++----------------
+>  1 file changed, 7 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index b5c599ccaacf..48009098fa6b 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -284,36 +284,25 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>
+>         pcie->pci = pci;
+>
+> -       pcie->clk = devm_clk_get(dev, NULL);
+> +       pcie->clk = devm_clk_get_enabled(dev, NULL);
+>         if (IS_ERR(pcie->clk))
+>                 return PTR_ERR(pcie->clk);
+I feel you can use  return dev_err_probe(dev, PTR_ERR((pcie->clk);
+>
+> -       ret = clk_prepare_enable(pcie->clk);
+> -       if (ret)
+> -               return ret;
+> -
+> -       pcie->clk_reg = devm_clk_get(dev, "reg");
+> -       if (pcie->clk_reg == ERR_PTR(-EPROBE_DEFER)) {
+> -               ret = -EPROBE_DEFER;
+> -               goto fail;
+> -       }
+> -       if (!IS_ERR(pcie->clk_reg)) {
+> -               ret = clk_prepare_enable(pcie->clk_reg);
+> -               if (ret)
+> -                       goto fail_clkreg;
+> -       }
+> +       pcie->clk_reg = devm_clk_get_enabled(dev, "reg");
+> +       if (pcie->clk_reg == ERR_PTR(-EPROBE_DEFER))
+> +               return -EPROBE_DEFER;
+>
+  same here dev_err_probe(dev, PTR_ERR((pcie->clk_reg));
 
-configs tested: 66
-configs skipped: 128
+>         /* Get the dw-pcie unit configuration/control registers base. */
+>         base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
+>         pci->dbi_base = devm_pci_remap_cfg_resource(dev, base);
+>         if (IS_ERR(pci->dbi_base)) {
+>                 ret = PTR_ERR(pci->dbi_base);
+> -               goto fail_clkreg;
+> +               goto out;
+>         }
+>
+>         ret = armada8k_pcie_setup_phys(pcie);
+>         if (ret)
+> -               goto fail_clkreg;
+> +               goto out;
+>
+>         platform_set_drvdata(pdev, pcie);
+>
+> @@ -325,11 +314,7 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>
+>  disable_phy:
+>         armada8k_pcie_disable_phys(pcie);
+> -fail_clkreg:
+> -       clk_disable_unprepare(pcie->clk_reg);
+> -fail:
+> -       clk_disable_unprepare(pcie->clk);
+> -
+> +out:
+>         return ret;
+>  }
+>
+Thanks
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc-13.3.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240822   gcc-12
-i386         buildonly-randconfig-002-20240822   gcc-12
-i386         buildonly-randconfig-003-20240822   gcc-12
-i386         buildonly-randconfig-004-20240822   gcc-12
-i386         buildonly-randconfig-005-20240822   gcc-12
-i386         buildonly-randconfig-006-20240822   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240822   gcc-12
-i386                  randconfig-002-20240822   gcc-12
-i386                  randconfig-003-20240822   gcc-12
-i386                  randconfig-004-20240822   gcc-12
-i386                  randconfig-005-20240822   gcc-12
-i386                  randconfig-006-20240822   gcc-12
-i386                  randconfig-011-20240822   gcc-12
-i386                  randconfig-012-20240822   gcc-12
-i386                  randconfig-013-20240822   gcc-12
-i386                  randconfig-014-20240822   gcc-12
-i386                  randconfig-015-20240822   gcc-12
-i386                  randconfig-016-20240822   gcc-12
-loongarch                        allmodconfig   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-openrisc                          allnoconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-20
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-13.3.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240822   gcc-12
-x86_64       buildonly-randconfig-002-20240822   gcc-12
-x86_64       buildonly-randconfig-003-20240822   gcc-12
-x86_64       buildonly-randconfig-004-20240822   gcc-12
-x86_64       buildonly-randconfig-005-20240822   gcc-12
-x86_64       buildonly-randconfig-006-20240822   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                randconfig-001-20240822   gcc-12
-x86_64                randconfig-002-20240822   gcc-12
-x86_64                randconfig-003-20240822   gcc-12
-x86_64                randconfig-004-20240822   gcc-12
-x86_64                randconfig-005-20240822   gcc-12
-x86_64                randconfig-006-20240822   gcc-12
-x86_64                randconfig-011-20240822   gcc-12
-x86_64                randconfig-012-20240822   gcc-12
-x86_64                randconfig-013-20240822   gcc-12
-x86_64                randconfig-014-20240822   gcc-12
-x86_64                randconfig-015-20240822   gcc-12
-x86_64                randconfig-016-20240822   gcc-12
-x86_64                randconfig-071-20240822   gcc-12
-x86_64                randconfig-072-20240822   gcc-12
-x86_64                randconfig-073-20240822   gcc-12
-x86_64                randconfig-074-20240822   gcc-12
-x86_64                randconfig-075-20240822   gcc-12
-x86_64                randconfig-076-20240822   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-Anand
+> --
+> 2.25.1
+>
+>
 
