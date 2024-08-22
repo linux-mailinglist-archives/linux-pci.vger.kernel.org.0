@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-12049-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A038695BFD5
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 22:45:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBAA495BFDB
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 22:45:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 575E1284132
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 20:45:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0F2B1C236A9
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 20:45:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729581D1F4E;
-	Thu, 22 Aug 2024 20:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19EE51D279E;
+	Thu, 22 Aug 2024 20:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b1rODSUN"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZijJeHgm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2070.outbound.protection.outlook.com [40.107.223.70])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2055.outbound.protection.outlook.com [40.107.102.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FE61D1726;
-	Thu, 22 Aug 2024 20:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD461D1726;
+	Thu, 22 Aug 2024 20:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724359413; cv=fail; b=av/Yuol/oo+K7GXH62s3HdryU6/bNak4tVcpSng0zCfHTUyghwR8nVrrPeNePKrY8z2HwvG2NJ2FDWsRP+lPxgs+4DeogFOmyZTHPgezvbY+sy6GIgI0qKcI86yt9LxgXfd2atiL6RndqAoLsxZcL1TUMjou9O0JawvDxuIqO04=
+	t=1724359421; cv=fail; b=efpL27RGrVnJG9oKGi81hzKCVO12EwUOIJGWcyc/WzrhthYVIlXrY4CaFDLf/N8qTa2LSSzQW/DNytgUhbCmdeGzhLR1KxT4gTn6SSzgZwj7X+n59xYR3bkB9NLdi719AeB6DNueYrU0vbHC7GDvvrqMCq6DLmMv2UrkV1lJGDU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724359413; c=relaxed/simple;
-	bh=UgB7UbuKvXBpdONd15kK//IZLjtAnTlhoGrNWvF8ayA=;
+	s=arc-20240116; t=1724359421; c=relaxed/simple;
+	bh=ojiNqcbNmSLQVg/A8B/QPA1ivsPeQvkTyq/kWhj4esg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hgalKlME7UvrdPla83ouV5JcidYkJSs5HBURy6B1di8fkq4/9lrDsyH0QSqSxYKuj9lYfDUKEibTRdRcGTSIrAg508WmCk6iZfsgVYBx4B6DECasu8qnKbdu1kKB0U6PzVgRntHU7JzKl4T69S4adV9kalTVuZ1HcWFlRDTfMO8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b1rODSUN; arc=fail smtp.client-ip=40.107.223.70
+	 MIME-Version:Content-Type; b=pS6s8T8MZiKUKllsz0lffmcq8N4goAZjHSPX1u0U2lZbxqu0V9+3OpRjBPgy3twbgm2zT1jsUSC3tvXQ/MxuQ+L20XjAOaxq+JjHN7igKfc0R0W1lX6bkt3csvv0p0dKRHCb6XQrKfwl0ZJ+HnC6KvdQb3sfrJsu2rUiZiqECU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZijJeHgm; arc=fail smtp.client-ip=40.107.102.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cu+GZFKFr7Z9YxlsmwZtbjLF1chBN8aMp38f5Fx3oyetrHKgp0voNS0WvthAz9SwTe/G0qaQlZeve5QZ+43KOq4TsX8EEITnI/L+nKTxg5vqSfga+1NHm7wlOdo8PIClLJmAhOptK9rkSRUa8hvjLMZt+77SNxRsafpX2byWOMVG6BR+FGA1UZELOkAfR/XjCYQxwZzYkbbWh+NlmXkMHnZxlEtdA/5kjzNCJne/5ZLXJS1kOQpcrTYLO7cFIkTCbzlyz+LLtMgQ2i2BTUAyq/zCr8PN9Mfo0yofyR4K1mrVjEQVcw/0FT74ORZtj4n8wtkyous/jcqB8fuvfweKNw==
+ b=ZTksz7qWMqY46cP8b99OMoW8wkhRgfU1MWcxkUEpgpreZ5A4sbjAdvg7o9KdYFrP9vCTnvQZ28CH+XmMJvsxunyWPGkL0hZfLjylITKXjRUnLcp4RSm2DNa3lQjXzjbXO90ZLL3Z2IV1Wn/Z3LKETpZ9Y9Sqwg+cqxiIfmpS+jBRrpfDNAAzKYlHcd4LNgDJL605lrW0yr1QOXyw7Rl4/aTajvc6+KaZKEBCPn6O430Kai1WAm2obFfkpXjgbfx1y4trP1sYynMYDOZqpe+HJerT1MUA+izysxcmKy3mgFGWVLRWl/+hsZZ2aFJe1L+weJN2+RNBeEJLynHKUwGnWQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HzVoIMKuwHwM4kRfqn+mcm06D5WgK0PdGib+32oNs6A=;
- b=X9fpVTA5B5lQu31T0Dnl6vTFDgM6atXMjGOO8xSt57rua8xL/vPgJG9JtRMsYeBTELQsxG+DxTtNlG5ePMJLb+/I9ypwJJUyqJsqtiAb9ZPjNgZQJVfzKbsegAzHZ8vrGPGP7ZkBNSujrZxNeBJbR8dAamIxJjkU7wZHtHempfR127fRqZh1ca12xNX6xdKNN41gVjGGsoNYeSJw4JsuNKCogkT6tlUxabiMtaGWSqH7WMCLmZnRc+P6mIsDfsQ7IT2JZJhMQBTI7y+i1hjQ6P1VUcQ4m1k0+8w39x0+Dupv59X3qepFhO6GVhfPrK4QFLJKtvXADbAKavBTAsnDqA==
+ bh=B+G3BWJJ1jj7LIMRbC9aMihk2XTyPQkizDvWAIfQ7Tw=;
+ b=Y2gWNF3W2p1sIg+t0jiiRERy1bcIYcOJdTaLhAi//5lK4t0k4kwnd3JSgxX4i5XlPk8cF1yuAPVwhtxKXyZhuqkwcEbQLSpzQMDLNplFnfJgw5OGr1gGHSLfBZI6KhFvSjrMO6JfvdpeFG2rY4Be08vsdrENQqLgCTm4luccozBm3vi5Fuii7gqa9TDORs14eBSScAIvGu/Z2cYYb+WacLgvDtXPQMAH1Or3h/ceE0q4OKHqLYVSXqxqORKj4/AOAApi+Ut3yLEuCVjFK9T1qqX1RKzhU3w0wDV3Smj4be/q88GiLUammqDp2GRdB1vuq85ZaPcSjet7LnUIC5cbRw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HzVoIMKuwHwM4kRfqn+mcm06D5WgK0PdGib+32oNs6A=;
- b=b1rODSUNRPn2mI2hxJMazxObdhNiBBSfI6710u6+MLkhv9UEYZgbrOXaIiA/j9eUjMOgSbzPtZKa8TPgESbu1gjGlEljWyMYhgTuk+qtOCgFJE//pnqanDF+iax/g9CYNCITkShkKbpfYI2/u3xvfIaACiQuxkppp3ViBCtxLpE=
-Received: from SJ0PR03CA0375.namprd03.prod.outlook.com (2603:10b6:a03:3a1::20)
- by SA0PR12MB7089.namprd12.prod.outlook.com (2603:10b6:806:2d5::18) with
+ bh=B+G3BWJJ1jj7LIMRbC9aMihk2XTyPQkizDvWAIfQ7Tw=;
+ b=ZijJeHgmRWckpRBJ/vI/4WCJhqAiNdb0fl/9H86rOgKxQBUWA1jdKgpH3iE8Zc97BmVQDcLdg0ZF4xhgSP1qtoF3rRGTibETgrMiZD1AN7ee1UWugKqxaa5stbj+h9BAW+Jp0N1RMvawaceIDLrh7beahBTMmBx0MlMmkk0LWgM=
+Received: from MW4PR03CA0297.namprd03.prod.outlook.com (2603:10b6:303:b5::32)
+ by SJ2PR12MB8943.namprd12.prod.outlook.com (2603:10b6:a03:547::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.17; Thu, 22 Aug
- 2024 20:43:24 +0000
-Received: from CO1PEPF000075F0.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::bd) by SJ0PR03CA0375.outlook.office365.com
- (2603:10b6:a03:3a1::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19; Thu, 22 Aug
+ 2024 20:43:35 +0000
+Received: from CO1PEPF000075F3.namprd03.prod.outlook.com
+ (2603:10b6:303:b5:cafe::a9) by MW4PR03CA0297.outlook.office365.com
+ (2603:10b6:303:b5::32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19 via Frontend
- Transport; Thu, 22 Aug 2024 20:43:24 +0000
+ Transport; Thu, 22 Aug 2024 20:43:34 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000075F0.mail.protection.outlook.com (10.167.249.39) with Microsoft
+ CO1PEPF000075F3.mail.protection.outlook.com (10.167.249.42) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7897.11 via Frontend Transport; Thu, 22 Aug 2024 20:43:23 +0000
+ 15.20.7897.11 via Frontend Transport; Thu, 22 Aug 2024 20:43:34 +0000
 Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 22 Aug
- 2024 15:43:21 -0500
+ 2024 15:43:33 -0500
 From: Wei Huang <wei.huang2@amd.com>
 To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
@@ -82,9 +82,9 @@ CC: <Jonathan.Cameron@Huawei.com>, <helgaas@kernel.org>, <corbet@lwn.net>,
 	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>,
 	<bhelgaas@google.com>, <lukas@wunner.de>, <paul.e.luse@intel.com>,
 	<jing2.liu@intel.com>
-Subject: [PATCH V4 10/12] PCI/TPH: Add pci=nostmode to force TPH No ST Mode
-Date: Thu, 22 Aug 2024 15:41:18 -0500
-Message-ID: <20240822204120.3634-11-wei.huang2@amd.com>
+Subject: [PATCH V4 11/12] bnxt_en: Add TPH support in BNXT driver
+Date: Thu, 22 Aug 2024 15:41:19 -0500
+Message-ID: <20240822204120.3634-12-wei.huang2@amd.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240822204120.3634-1-wei.huang2@amd.com>
 References: <20240822204120.3634-1-wei.huang2@amd.com>
@@ -100,152 +100,215 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075F0:EE_|SA0PR12MB7089:EE_
-X-MS-Office365-Filtering-Correlation-Id: 600e753c-2e11-4817-d178-08dcc2eb1118
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075F3:EE_|SJ2PR12MB8943:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49c29be6-6341-495e-20fa-08dcc2eb17a8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|7416014|1800799024|36860700013;
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|7416014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aAqEPtYLkJxV19IVKBEcczZuy0HODJn1neK1DEPxUuWEBt8cpKUdG5KzRbmz?=
- =?us-ascii?Q?o4BHvCv3XAejgGTRZcfoFPJVARSn6lQfBiUPyCbxy6UsLkrcLUwGgCRM2cjd?=
- =?us-ascii?Q?/wSIVObQuYffGgxWhDvoEEaKt9E9JhWb5cKAx7fRScj4txmBfnzHi0ly0VVy?=
- =?us-ascii?Q?fLDnVqw8fym+mPRtiFuVD5Dx/4ZNWvPqETPA4u4fWtN7bgII9IO4S6DZZLzr?=
- =?us-ascii?Q?fQlvJEY69UyHymjIZoKooPs5e7fz7SaFUy5nsGKQjiS7R3cROoRGMMCq5sSl?=
- =?us-ascii?Q?kQXQdG0zPXFKeySK8ze1q4tWcafZPeo4HELAv66a2c3nGBz/O9PSQ9QzZA09?=
- =?us-ascii?Q?WG0e+ahls8GDxLudtMqkrdAtLmOw1GdzfBiEinMcbfN57YcTfNXLYxV1419R?=
- =?us-ascii?Q?xZsiJ/JQJxdFLW5TeGvhirNbFm7BWt+QWkHHKkN40JK8OIPR5Kkgv5M7Tgvx?=
- =?us-ascii?Q?2DMzmthsbn+9K3Yavx8NMh/iswJ+TbyJiY5Rh2HT2ah6IRfzKy5vfxh1NOzE?=
- =?us-ascii?Q?zHIAQEz04VCCZcoS/h0jttfFZ4LNdWGRsngqh7euMaqdq4WPVEodCAkKjIJO?=
- =?us-ascii?Q?dveVpl0nSfgOHqxdWIUGkL8xEjYOigMpSuKaYTH1BsLASRLLTRDjIKHtyCrA?=
- =?us-ascii?Q?q6hk+A4Z1p0fW4K5K07Qm5Ago6I94cRigsJqf8sbBK6gNaSjSW5vNvnr6Git?=
- =?us-ascii?Q?Gv09Hz77/d//16RTscEC9i+3ThZ004LoPeFxxADi2jF1KChne7Dp24OadJ2l?=
- =?us-ascii?Q?CDeVT5BoHjU5MWjwJ5g5zWEOn9EiOaM8+diy6xqtvjGQfArgHs2tdldG9346?=
- =?us-ascii?Q?KQC56NfNy7BPFlG+sRmG6pdYUAJ5BMSHc2XwRHpB0/Zr7ab7Y1sXwLlWl1Ll?=
- =?us-ascii?Q?xj1mpqnLQeqt2asQVcZpf59XsdjYB0P7NkET4LvCiGjUZDnSxFBZTSbEgTcz?=
- =?us-ascii?Q?ViHOxLuH48NARGIBBTHc1JZNAmDz/A5hzgqaqRqmCdDZGTMIWTTgAV8pX5sp?=
- =?us-ascii?Q?eG5yhsZBTq+u7/evRTn0/vFCig0N0bftWWZ/5NcK+nGSYzeVK5Xs9RzZ45L5?=
- =?us-ascii?Q?NNSCa5aHkbPxkQQzQdtSl9TqJPKTq1WHy4W4i7OxhuEZoSxMCpAPQ96gKVmP?=
- =?us-ascii?Q?AbCubi3amAfyRj2h9+E0mNL46s0UVc2aG8OZO8YkKgfzOYsgU0thrD1eTGjo?=
- =?us-ascii?Q?yh9sW9af0LNt8QPZzs0TAaF2dn53jpsI8p6WfQI2KYFEbrTTV7Te2SeDF/nU?=
- =?us-ascii?Q?MK+HkQsz2vYb2RLAwxSZvZoObT0qxrArJogO6HCUZKiQHIPEnzXj01torLPB?=
- =?us-ascii?Q?TAtPrIq6ASog+5vIcgmg1V8aCDB/kmGk+WRUPopNyCeijt6Ls2h72VA8r3Ux?=
- =?us-ascii?Q?6GItGitFY6eCuRbVK1hX7S4AVX12MBrTJFjwzt+yE0cGzyG7Wt0ihbwKFvLb?=
- =?us-ascii?Q?qTg0vzI6O42KUOne3h5IqLm3VCtB/wso?=
+	=?us-ascii?Q?QpM5mbQ4dbSg9AMn+VuU7viVaQF/9Y8rx6p3STrkV+V/mTVZJX6nLuO1Kwb2?=
+ =?us-ascii?Q?7fxBcBEn3qkTJV8RqXsAPM0CE3mien31zqiepUM+ugKBH2OROztRo4hCdCLY?=
+ =?us-ascii?Q?3v1WcRXbK/aaIwdLs4dJ2eKZFs7G17g/1x/o9b4HsHZ+UsQ7E2LXgY0Ascni?=
+ =?us-ascii?Q?AjAceDaB68aiQMOn24GvImALVAVwAL/LquOski8zxQz77LT8lFsUHtJR9/PN?=
+ =?us-ascii?Q?TE+BAedN+LjKEtWdNIO9Ldj7mdcP3uB7S0dpypYmjyHuqV4Fk+9mMsxK1VEW?=
+ =?us-ascii?Q?opfYMiNciFQtZjkFlwbWcbJlxf4H4v05JxyEobY0QZ98ImdnEWXfdJ6w5xR+?=
+ =?us-ascii?Q?+0DwjeO0XcRO40zymlh9fAHGsbVAkP7DLqmnr4TThsh0xDltz72y4BeJHIn7?=
+ =?us-ascii?Q?lVX/C3rWvlMsndWLu0Nf3Y127ZjdY8ATzDMMvbQV3rkAaKmSoJ29zGwZdLK1?=
+ =?us-ascii?Q?q3osZcewVHH783pYVOtQUhfF4QhKa4pyj+MxQnon0uONAYmWL968LaeUhL1B?=
+ =?us-ascii?Q?bDh95nCgi2Vq/vGHH7OOpQ+6m2Q0XADO9ej363cu0GSomHvQYKQBWZRgMuTK?=
+ =?us-ascii?Q?nVo0SSqJ0WFYqfulOdzOcrV5b+ZpdSNHUGMTGjp4D7XpcxrryzYUGcbyfZgC?=
+ =?us-ascii?Q?JLFEVzViQjoJYmJMSefXOcwOZRroCMQd14Tqrue42RDWfPOCPm0bAImmGnDQ?=
+ =?us-ascii?Q?DiDryGAX+6yetyEZ2+kt4cEFJqND78y+syxUTFLHgnARCOSVWILgu9YsH2Gf?=
+ =?us-ascii?Q?wp24IP65ZSdzZyYOBRd/QRlkXXlxLiPz8V6n7gWQMmIyG1AacVEPOkm3mVdZ?=
+ =?us-ascii?Q?K9xWesuVM1y5IR8v1KAaFWEMzXlJe7QzSOZl+BbeeC0fRLTueEYcKumLLOaF?=
+ =?us-ascii?Q?ueX1tYqqY73vqEaaAT6tjCCbnmJz3qM0Ft77Y6DdtjmwjMtTUZuQpCSxebhN?=
+ =?us-ascii?Q?7fIArzYDrO/QoVZScawEfDSd1yKYMcR4AlhaYo/SuVVxYePY5IexCVd/dYDW?=
+ =?us-ascii?Q?xFnTSi/528Yz501SgJUzFRUZz0dK2a472jfcR4ThkX1oIWVtJD8CvdE8CdU2?=
+ =?us-ascii?Q?6ML405Wwdgyr/eCHLRF0SxjdT3W6FVt5fy2O6QnSNMVxLwj7Qv3UHF9Pljp8?=
+ =?us-ascii?Q?qhN68yCmJ3/1nJy17oV0t8zJi+bZbahZPtVWdCsF9GaUpuuBIE5HYNjbTpJ9?=
+ =?us-ascii?Q?zVOSJjiFGZ+UxWebR1RHjyg/eWWMJzetvU93oT4lDxZ8CKp5H2atjizo2RoM?=
+ =?us-ascii?Q?xLG3xFFv0E33E7hCChfQwzB/3HqyUqVCy6cVDTwlMvit0DA2plf5lj8HQPZD?=
+ =?us-ascii?Q?Hzpfmz5kbTUoJuyipMOrPqEzInQbWxXffdcYj0GcT6S0XjZzqOCiNfWgYRji?=
+ =?us-ascii?Q?J1kKfxTNXOdOQlisgY9In9SlzVPINIdBZLlFaoudO9EYeqWoerM6x+Evf6AA?=
+ =?us-ascii?Q?sivQiF/lnVGrzScW82gZc/99SwiYHUlY?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:43:23.8147
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:43:34.7890
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 600e753c-2e11-4817-d178-08dcc2eb1118
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49c29be6-6341-495e-20fa-08dcc2eb17a8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075F0.namprd03.prod.outlook.com
+	CO1PEPF000075F3.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7089
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8943
 
-When "No ST mode" is enabled, endpoint devices can generate TPH headers
-but with all steering tags treated as zero. A steering tag of zero is
-interpreted as "using the default policy" by the root complex. This is
-essential to quantify the benefit of Steering Tags for some given
-workloads.
+From: Manoj Panicker <manoj.panicker2@amd.com>
 
-Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
-Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
+Implement TPH support in Broadcom BNXT device driver. The driver uses
+TPH functions to retrieve and configure the device's Steering Tags when
+its interrupt affinity is being changed.
+
+Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
+Signed-off-by: Manoj Panicker <manoj.panicker2@amd.com>
 Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
 Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
 Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  3 +++
- drivers/pci/pci.c                               |  2 ++
- drivers/pci/pci.h                               |  2 ++
- drivers/pci/pcie/tph.c                          | 12 ++++++++++++
- 4 files changed, 19 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 78 +++++++++++++++++++++++
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h |  4 ++
+ 2 files changed, 82 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f1384c7b59c9..ed2ee97cf7fb 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4617,6 +4617,9 @@
- 		nomio		[S390] Do not use MIO instructions.
- 		norid		[S390] ignore the RID field and force use of
- 				one PCI domain per PCI function
-+		nostmode	[PCIE] If PCIe TPH Processing Hints (TPH) is
-+				enabled, this kernel option forces all Steering
-+				Tags to be treated as zero (aka "No ST Mode").
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index ffa74c26ee53..5903cd36b54d 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -55,6 +55,7 @@
+ #include <net/page_pool/helpers.h>
+ #include <linux/align.h>
+ #include <net/netdev_queues.h>
++#include <linux/pci-tph.h>
  
- 	pcie_aspm=	[PCIE] Forcibly enable or ignore PCIe Active State Power
- 			Management.
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1e4960994b1a..88aabac354c0 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6870,6 +6870,8 @@ static int __init pci_setup(char *str)
- 				pci_no_domains();
- 			} else if (!strncmp(str, "noari", 5)) {
- 				pcie_ari_disabled = true;
-+			} else if (!strncmp(str, "nostmode", 8)) {
-+				pci_tph_set_nostmode();
- 			} else if (!strncmp(str, "cbiosize=", 9)) {
- 				pci_cardbus_io_size = memparse(str + 9, &str);
- 			} else if (!strncmp(str, "cbmemsize=", 10)) {
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index d7c7f86e8705..54d74f5ff861 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -574,10 +574,12 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
- #ifdef CONFIG_PCIE_TPH
- void pci_restore_tph_state(struct pci_dev *dev);
- void pci_save_tph_state(struct pci_dev *dev);
-+void pci_tph_set_nostmode(void);
- void pci_tph_init(struct pci_dev *dev);
- #else
- static inline void pci_restore_tph_state(struct pci_dev *dev) { }
- static inline void pci_save_tph_state(struct pci_dev *dev) { }
-+static inline void pci_tph_set_nostmode(void) { }
- static inline void pci_tph_init(struct pci_dev *dev) { }
- #endif
- 
-diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-index b228ef5b7948..f723352adcf5 100644
---- a/drivers/pci/pcie/tph.c
-+++ b/drivers/pci/pcie/tph.c
-@@ -48,6 +48,8 @@ union st_info {
- 	u64 value;
- };
- 
-+static bool pci_tph_nostmode;
-+
- static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
- 			   union st_info *info)
- {
-@@ -433,6 +435,10 @@ int pcie_enable_tph(struct pci_dev *pdev, int mode)
- 		return -EINVAL;
- 	}
- 
-+	/* Honor "nostmode" kernel parameter */
-+	if (pci_tph_nostmode)
-+		pdev->tph_mode = PCI_TPH_NO_ST_MODE;
-+
- 	/* Get req_type supported by device and its Root Port */
- 	reg = pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
- 	if (FIELD_GET(PCI_TPH_CAP_EXT_TPH, reg))
-@@ -545,6 +551,12 @@ void pci_save_tph_state(struct pci_dev *pdev)
- 	}
+ #include "bnxt_hsi.h"
+ #include "bnxt.h"
+@@ -10821,6 +10822,58 @@ int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
+ 	return 0;
  }
  
-+void pci_tph_set_nostmode(void)
++static void __bnxt_irq_affinity_notify(struct irq_affinity_notify *notify,
++				       const cpumask_t *mask)
 +{
-+	pci_tph_nostmode = true;
-+	pr_info("PCIe TPH No ST Mode is enabled\n");
++	struct bnxt_irq *irq;
++	u16 tag;
++
++	irq = container_of(notify, struct bnxt_irq, affinity_notify);
++	cpumask_copy(irq->cpu_mask, mask);
++
++	if (pcie_tph_get_cpu_st(irq->bp->pdev, TPH_MEM_TYPE_VM,
++				cpumask_first(irq->cpu_mask), &tag))
++		return;
++
++	if (pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, tag))
++		return;
++
++	if (netif_running(irq->bp->dev)) {
++		rtnl_lock();
++		bnxt_close_nic(irq->bp, false, false);
++		bnxt_open_nic(irq->bp, false, false);
++		rtnl_unlock();
++	}
 +}
 +
- void pci_tph_init(struct pci_dev *pdev)
++static void __bnxt_irq_affinity_release(struct kref __always_unused *ref)
++{
++}
++
++static void bnxt_release_irq_notifier(struct bnxt_irq *irq)
++{
++	irq_set_affinity_notifier(irq->vector, NULL);
++}
++
++static void bnxt_register_irq_notifier(struct bnxt *bp, struct bnxt_irq *irq)
++{
++	struct irq_affinity_notify *notify;
++
++	/* Nothing to do if TPH is not enabled */
++	if (!pcie_tph_enabled(bp->pdev))
++		return;
++
++	irq->bp = bp;
++
++	/* Register IRQ affinility notifier */
++	notify = &irq->affinity_notify;
++	notify->irq = irq->vector;
++	notify->notify = __bnxt_irq_affinity_notify;
++	notify->release = __bnxt_irq_affinity_release;
++
++	irq_set_affinity_notifier(irq->vector, notify);
++}
++
+ static void bnxt_free_irq(struct bnxt *bp)
  {
- 	pdev->tph_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_TPH);
+ 	struct bnxt_irq *irq;
+@@ -10843,11 +10896,17 @@ static void bnxt_free_irq(struct bnxt *bp)
+ 				free_cpumask_var(irq->cpu_mask);
+ 				irq->have_cpumask = 0;
+ 			}
++
++			bnxt_release_irq_notifier(irq);
++
+ 			free_irq(irq->vector, bp->bnapi[i]);
+ 		}
+ 
+ 		irq->requested = 0;
+ 	}
++
++	/* Disable TPH support */
++	pcie_disable_tph(bp->pdev);
+ }
+ 
+ static int bnxt_request_irq(struct bnxt *bp)
+@@ -10870,6 +10929,13 @@ static int bnxt_request_irq(struct bnxt *bp)
+ 	if (!(bp->flags & BNXT_FLAG_USING_MSIX))
+ 		flags = IRQF_SHARED;
+ 
++	/* Enable TPH support as part of IRQ request */
++	if (pcie_tph_modes(bp->pdev) & PCI_TPH_CAP_INT_VEC) {
++		rc = pcie_enable_tph(bp->pdev, PCI_TPH_CAP_INT_VEC);
++		if (rc)
++			netdev_warn(bp->dev, "failed enabling TPH support\n");
++	}
++
+ 	for (i = 0, j = 0; i < bp->cp_nr_rings; i++) {
+ 		int map_idx = bnxt_cp_num_to_irq_num(bp, i);
+ 		struct bnxt_irq *irq = &bp->irq_tbl[map_idx];
+@@ -10893,8 +10959,10 @@ static int bnxt_request_irq(struct bnxt *bp)
+ 
+ 		if (zalloc_cpumask_var(&irq->cpu_mask, GFP_KERNEL)) {
+ 			int numa_node = dev_to_node(&bp->pdev->dev);
++			u16 tag;
+ 
+ 			irq->have_cpumask = 1;
++			irq->msix_nr = map_idx;
+ 			cpumask_set_cpu(cpumask_local_spread(i, numa_node),
+ 					irq->cpu_mask);
+ 			rc = irq_set_affinity_hint(irq->vector, irq->cpu_mask);
+@@ -10904,6 +10972,16 @@ static int bnxt_request_irq(struct bnxt *bp)
+ 					    irq->vector);
+ 				break;
+ 			}
++
++			bnxt_register_irq_notifier(bp, irq);
++
++			/* Init ST table entry */
++			if (pcie_tph_get_cpu_st(irq->bp->pdev, TPH_MEM_TYPE_VM,
++						cpumask_first(irq->cpu_mask),
++						&tag))
++				break;
++
++			pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, tag);
+ 		}
+ 	}
+ 	return rc;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+index 6bbdc718c3a7..ae1abcc1bddf 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -1224,6 +1224,10 @@ struct bnxt_irq {
+ 	u8		have_cpumask:1;
+ 	char		name[IFNAMSIZ + 2];
+ 	cpumask_var_t	cpu_mask;
++
++	struct bnxt	*bp;
++	int		msix_nr;
++	struct irq_affinity_notify affinity_notify;
+ };
+ 
+ #define HWRM_RING_ALLOC_TX	0x1
 -- 
 2.45.1
 
