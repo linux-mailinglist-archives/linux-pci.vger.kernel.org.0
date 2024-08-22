@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-12047-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12048-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8438295BFCD
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 22:44:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5978F95BFD3
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 22:44:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04F281F247FF
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 20:44:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1813B22FCF
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 20:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A3F1D175E;
-	Thu, 22 Aug 2024 20:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433691D2F78;
+	Thu, 22 Aug 2024 20:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KlbZbgJd"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5sjDDvQ0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2049.outbound.protection.outlook.com [40.107.96.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CED91D0DFA;
-	Thu, 22 Aug 2024 20:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9585B1D1F4C;
+	Thu, 22 Aug 2024 20:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724359388; cv=fail; b=YtBvSlHliTw/fmfuS2Y5BztRxjfVTANPbu/4lcAbw0TY8WC3onGy6zk1qZPwgSM81ieVfihdsRqGFL6HnwpVsejsNp2lILkg+SUsWvlB/W0aUEIAwqWprF9fhzo6FrZmrEXLt85476UZx0yggW23UI5zWfO0pzkdGB/tyQ8EM4M=
+	t=1724359398; cv=fail; b=s8+T/pS+aWHHdxH3v/AZevH/JJvtvtd3SBzhM0Gyq4HuEA0BNg9JcsIizXuY5lWLUEPEapMSdUxuybUgjMngsYp116vvEE/y4GtXt/2fW5Z3NPHukRzTJkShTFNL9znMy376BY9ITUtluw49mjP7+iZi/hzV1mecX5uYb3cnOCE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724359388; c=relaxed/simple;
-	bh=lGpezmEHBOftE9zul+gS+ggitrrrojjj86m3gCKd2+c=;
+	s=arc-20240116; t=1724359398; c=relaxed/simple;
+	bh=kVgWI7X5t9BwUKtMkwSy1K2pMBwxdUOBS+x2JO2o/TY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IXKnUpWnKlO6AFz1p/bx6JpPFl4kNB6+YzXmNGO10ha29GUT+yoo6UOm1rUsv3XXX7cJ19vgtLqJYpKNltY53nYkrjGVwxqf/iJVEIb5s7gMoTbbqeRTonxSfzeVsVgAWKxAa9OLeenlXBae2NWjgmzKPFjikOCNsgSu2776/Lg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KlbZbgJd; arc=fail smtp.client-ip=40.107.220.57
+	 MIME-Version:Content-Type; b=qubO9oFl1LXWGL+Gn3tuSOaNxZZVo9fQXNPE5VTnL4QQNvtgiIKw0+bx0i+tACWyIZJXjUOp/IV9tYmCyQ8OA2iSFT2bl8Zcpaxzu3g6pHKpgFbMPW/fiY42DYWBlCKIsAjtcQ1mm+zHQjdpKqquJxK9mrWikJqxGHV8czTlwTE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5sjDDvQ0; arc=fail smtp.client-ip=40.107.96.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rkUO4z7cKpr+n61c7T5/badry6Wb9zxQ6Ll9VmU3M13g0hRy5k3TRCK+GxkqLYiSxcWMt58Z43Z8n2DwG5ylK1CFA2SHxAGr9GhustU3CA09lf5Famp+xp3JA7vOXNyudrF/XvW6vTjbyytEUzABlx3dym1qVpo3X3Wij8m72IFGXhryjqXADqmt3jnCR5WKuzERXJ/pytq0yNXQCZVlYElHUTESD/ElN9OR4L3EcTFrOPc+e3IIoPs5VyZTwSkU6uxxR2WCFvcjCJXAF96Kv5QbvQbbF15H5R5UnQco0JrZQZBhNVTDYAifBsb42SFYjlh5vYFVP1QLV2JH3JJL1A==
+ b=B2+Q8l/nRljVmrPj60EjQk/LC3IxlZDiVvnuISoDD3/AuOmtA5RSyMDWxi6DAHNt1SJoqnxHXhislg3b94mvyulDqAN5f5mm30IO2RxxnzjLpIoY0HROnbIYPCPq6fXOKY01vFyQKcvJXFHc56/mEGRtwxtj74FsPorbSOuGBK/xoj6Nu560y87zhUs/+VBSoQFoP9mmmGQcVBIJJPPrImWzF2ZyskrX2bMEkn0gSm1Ch9pBPd/IozpiF8jMeg7HUhH1IXpWPvXcX0UynY4jgV2ih3dBS8J3mI2qg+o8M60zwqtD9Bo/Q0ld3M6Suw5kO1vN3YBWUajGo1QfiPv6fg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0tkxORMkLIo/2S9Hc7kF7joPZYPPHM8oLKAMMHTDOVk=;
- b=X/PsdgRSB5+Sv9IWqRc1DWCrqaaMRZujnsHuniSv8zCj6khnQNx7NK03dhS9a8jE6LF8LHVLJ+65I12B4aQPT8RAOBMg9kyB3NEJEZnZdZqhl/FfWSyyJHBN6yCO52NAr6FLtkSaPPMo/rCxj5kmc8tNApd+ssQUlD52+3C9SojxE7pwiqw0L6t5KQmw+XCi2SCUeBAsAdJQce/oW/q8c6BuiXhhWrxKTaiIwtITlQ1yh1k58orMarDpT9cDv/cF8a0dSJCGRaWatyyspLU0UUtTSywIA3AVsD1XLHJ8F37og8B9+aYQvcbwY29yL+C+qtrw3QVwXsWG/2xFRxHGrQ==
+ bh=F8+wjjQWSuFUEWnxu2YLMGcrlUzuzhg00LNygpB8jVQ=;
+ b=hutk2SQx4FB++M4Gtsm0jTstvguj+ZXvaYU4RQx34FUBEvbdXkZfm+myjr6x9HbAzqpe0ViV92aBFKtqrzPmorepsp1gu/i1WGVCyi8Dx1t2SdEL7DhODo/8o6AjtTnJndMaNex+sbE6L7CGv84yS+/EsGJdflO3V7kgVMKxSCbnwa600Din/eK+jJHRbfZhWMFrTqaNtrK7nnaUnVXeIPZTxeO4LT4cxf8GAWrRZhQrVOPBrkQv/0wUDmR/q7lOqv5pDzxXEA9pW+0UFKhXiv1GAJMud3kw/OeGAwn+Gnvy51PPqdzX2+6HYDymNG1KeulI1i+Yd2+mV+WDSoJNWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0tkxORMkLIo/2S9Hc7kF7joPZYPPHM8oLKAMMHTDOVk=;
- b=KlbZbgJdPBLDDV/JWlnk4o+rXbro03rHjQJLxmqcGR7dCLDYWMUOb541bsrCPnHFsKxTm86uQoHnR9LudCyyBL9gebhBWdM+LW1oMsUY2snYUsCGhOuUH9arqiDy45ogrHANlOC1eRN2cmSfuh9yCKgdRoQPNNqiBpeW1ZTLJyE=
-Received: from MW4PR03CA0271.namprd03.prod.outlook.com (2603:10b6:303:b5::6)
- by IA1PR12MB6257.namprd12.prod.outlook.com (2603:10b6:208:3e7::13) with
+ bh=F8+wjjQWSuFUEWnxu2YLMGcrlUzuzhg00LNygpB8jVQ=;
+ b=5sjDDvQ06TmjJTnsVAs8FfSdcGAaOYJhAihOPZd7jiR8p6DAU6Ojv0Jtl55CRg/anr8C8E71o+zUbAYsadfH8qraYlZcehhAbNBRxVwjm3fegXUth9VfSpgzZoaSb6WwSvgMojeA7OXcBelryhGoCJ0up3Oq15cTZziSAtJg1tk=
+Received: from MW4PR03CA0273.namprd03.prod.outlook.com (2603:10b6:303:b5::8)
+ by IA1PR12MB8407.namprd12.prod.outlook.com (2603:10b6:208:3d9::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19; Thu, 22 Aug
- 2024 20:43:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21; Thu, 22 Aug
+ 2024 20:43:12 +0000
 Received: from CO1PEPF000075F3.namprd03.prod.outlook.com
- (2603:10b6:303:b5:cafe::38) by MW4PR03CA0271.outlook.office365.com
- (2603:10b6:303:b5::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21 via Frontend
- Transport; Thu, 22 Aug 2024 20:43:01 +0000
+ (2603:10b6:303:b5:cafe::5c) by MW4PR03CA0273.outlook.office365.com
+ (2603:10b6:303:b5::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.19 via Frontend
+ Transport; Thu, 22 Aug 2024 20:43:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -65,11 +65,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CO1PEPF000075F3.mail.protection.outlook.com (10.167.249.42) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7897.11 via Frontend Transport; Thu, 22 Aug 2024 20:43:01 +0000
+ 15.20.7897.11 via Frontend Transport; Thu, 22 Aug 2024 20:43:11 +0000
 Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 22 Aug
- 2024 15:42:58 -0500
+ 2024 15:43:10 -0500
 From: Wei Huang <wei.huang2@amd.com>
 To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
@@ -82,9 +82,9 @@ CC: <Jonathan.Cameron@Huawei.com>, <helgaas@kernel.org>, <corbet@lwn.net>,
 	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>,
 	<bhelgaas@google.com>, <lukas@wunner.de>, <paul.e.luse@intel.com>,
 	<jing2.liu@intel.com>
-Subject: [PATCH V4 08/12] PCI/TPH: Add pcie_tph_get_cpu_st() to get ST tag
-Date: Thu, 22 Aug 2024 15:41:16 -0500
-Message-ID: <20240822204120.3634-9-wei.huang2@amd.com>
+Subject: [PATCH V4 09/12] PCI/TPH: Add save/restore support for TPH
+Date: Thu, 22 Aug 2024 15:41:17 -0500
+Message-ID: <20240822204120.3634-10-wei.huang2@amd.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240822204120.3634-1-wei.huang2@amd.com>
 References: <20240822204120.3634-1-wei.huang2@amd.com>
@@ -100,285 +100,180 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075F3:EE_|IA1PR12MB6257:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9930b35-ca96-4c6c-a157-08dcc2eb03ab
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075F3:EE_|IA1PR12MB8407:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8110dab8-7f6c-4a4e-93b5-08dcc2eb0a11
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
+	BCL:0;ARA:13230040|7416014|1800799024|376014|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sIe9L44ToC+uSLN13ZpmCgadKrh3LQgm+1mM1xxXS3kqM/NEKKjvZk7wWJq8?=
- =?us-ascii?Q?lRW+xZBE+Gwzzr2gKW17oGkfE4oeCJTMzgFEStgW/HWAJfTyyyLWXqoSkjGs?=
- =?us-ascii?Q?5dNaR1x5xQM63ZoZuYD9ogRfgyTOXnu8h4w+ZEhWQmc3wtPCtho0bPRWp5gn?=
- =?us-ascii?Q?4BgjcX4G6GlSe9v3IlIcxjR630bU75eM8F3Ue6pjMkc37tM4rofhffDyZubi?=
- =?us-ascii?Q?K+Y69gsBn8zlrkQDxdyUHM4KGSAv3ck77xsmjCZtc+NrLlnQ/uJfoSFF669p?=
- =?us-ascii?Q?L3HmbMquSMIkZJPMKCNnLy73f7Jvq3hcBlz1I85nSzh+www5Qej/QJmeRLpD?=
- =?us-ascii?Q?bbke3KpxLmEaE/h9COhSzxUZ9R1o/0h4MUrcvseoH4BwUFvEEfOxjuQ2yovf?=
- =?us-ascii?Q?UxO0QGKNLQ8XDNRMpCKbEm0VTGoXMscZRRlmURHdYxu7dDUvJnD3tD3aB1a6?=
- =?us-ascii?Q?v1AohT1EhqsQhcn/U84u26XZjDKaYvJo/SYl3z3FMfCFvU6xudVR5atRtGe1?=
- =?us-ascii?Q?AEjOr38DUcShoWV+uYNW7pJfvNyC5o71Z/NF5IMgsYdK/JQpvprzM8IqeyJ5?=
- =?us-ascii?Q?NN4ezSMexWCeMfplMRzeE4iC8aWIClxN7nRrAMrW1i/toTdyhZ0uG3xTHyXM?=
- =?us-ascii?Q?TORn3rgh4NNZ1eUjTFTUCMYYV2mOpRlElDP5KzA9TvUbqoSD5uvXusV0tdnN?=
- =?us-ascii?Q?qLCtPCpilv2phf3eehSwGjIu8OmH+Aw9ZjyYaZYM+E/ZHReY0jCdPcFq7Xjl?=
- =?us-ascii?Q?JDVbt4MZST76nO/hiO7E/nfyUC3FcS/dNZrnXo9nsIhCpkBxBKbto3SmF1sg?=
- =?us-ascii?Q?+KJJTLXsYJqo+qnbKrjAlNyxP05J8gXLgdNdBwFieYWRDXaAG9OMP3MFlybd?=
- =?us-ascii?Q?AcFMX/ym/CAlfyG1UXAm0uYtNfnMVUZhagoMEYNQLMo4eP3vvd7qhu18j5sM?=
- =?us-ascii?Q?/LQVP+VCHaUhPoOntFrHOBFUSszfTH3G6Kg0iEbWSVfwNmBvZZOHEcarrXtj?=
- =?us-ascii?Q?TAlphyGuZmAMDHQX+AS1gsB7pAFXcwxCgWPWyXz0pAxqcr3AlCmiuQYKn8U3?=
- =?us-ascii?Q?7cQ/IcVkYHvZOpGiWTU1AnqR7R4/qFDQN7VtAIgcSRW4QqEGstZ6W8AjUydF?=
- =?us-ascii?Q?X0q/Y3hRzAX0uJyLTUl+gWzMsusakKe96kL9QAeVoq5Y9lD6coUb8E8OXFTB?=
- =?us-ascii?Q?eLQ8RjNhykgNilc6e+aBmkrkREHfPXmJRppECN+mOCdl0CcrPUAXYUnXkcqo?=
- =?us-ascii?Q?LulS7k0A8Sg5RCCN7tA0n3/gjFanOhDQ5YIPav6//RqkHuZMOTo9LmkOi5og?=
- =?us-ascii?Q?CfOovGPHHtP1jbDumA35lHGuF710VMEm5HLmmAR/CKYqcWFHSS4f50OGo51o?=
- =?us-ascii?Q?IkquTg21OtD+WzVjf53A0JkArBEgKolp2oXUEdl63BTmN1yWQVqrrRIr/I6o?=
- =?us-ascii?Q?3RrP4zOtBW3v3VBCMdJA/rL6MMBgxTqM?=
+	=?us-ascii?Q?SsAZy2qflMc7eaVpv/lb7qT80GrxO45enJy3nMO4hfVmQyVS8zCFXbyVPOBl?=
+ =?us-ascii?Q?8rKMWbna9QLOa+ZhMfYqJ0OrPcvIlx67zVb0E37wsZvnQKbNPFOSRKJn57xj?=
+ =?us-ascii?Q?BW5XXAZEIKj6J6WogDOQdFdfXih9K3x5MAIYl8DYoRN2dXiuIBF+gd4kMlQI?=
+ =?us-ascii?Q?Mzy/1LwYEoETT6Lh3XBMhF6HawWSBEWK7TAp2g2cwGoa/dknGhLVkR0aYrrg?=
+ =?us-ascii?Q?v7Ro3GJT1vXGz8J+8VpHzLV/w7dvq6igMppXWgIsxuRDvpKQT36FTDz4lV7p?=
+ =?us-ascii?Q?275RdR9YVb4ZE5aGkqC6afCSQ7QzX6er/gOic42pEnttwDapHJAgG9kO8jmr?=
+ =?us-ascii?Q?t7woiWawgLxo3K4e/A4+CtCrhCCp9sr1FhkbIDptHtusID2gzLAStRtbhg+/?=
+ =?us-ascii?Q?upRPCqD8Qc2+rjBIJsmxZA+ZOHhaT8IfBmaSwSguiAKOym7H8+cgNrRXH2HK?=
+ =?us-ascii?Q?k4Zy016cENbGPKiwYe/rW5dFlW5zUhGmu0/C9gMHl/M6tq9+7gNVKyQr7FHE?=
+ =?us-ascii?Q?zst6xihPj5JjW00VPA//BLZjMOBKzlnflo34++YKa1K06aUXLsBaz1Oj+oYC?=
+ =?us-ascii?Q?LlVR7+DRkW9EoE93fIv12HRZTebim4lsu/SrpkkI9f5o5Dh1y6bTQWp6WqPa?=
+ =?us-ascii?Q?XQ/3YUeLzy51di2pnedFIbEPEuF74BxG3PaxHz5/8KVBeN3v/1FsXCeoI0dz?=
+ =?us-ascii?Q?+W7Sg9ufyUB1I/4QfumLs3xSSrRrsNNqwmFeZxNsh5jEDPmL7tfxXomDJGHV?=
+ =?us-ascii?Q?4XYyhGRqijLueyd4ugQ/LOxJXecZczGZqc/xeUHe4iXaBodN9sC7RdMx+zqW?=
+ =?us-ascii?Q?vTXNra2WT6UvdAeicWHvZij9d5gi0TcXpXcyw3iuAhUP8bAWh7dgVc5GW4QU?=
+ =?us-ascii?Q?RMSy9oJNsw9fzOcEGSkQLKkAEVrbCuRnMJp1g/o5udYPuioCRCWwIyPd2+IS?=
+ =?us-ascii?Q?g6dKxNrh4EIMZc1QUxQooem8j97pDOBcnSN1emm8tQXByt6CRsxZMqRneEmx?=
+ =?us-ascii?Q?t4l4dCjz5UjY+xZaqx4Jx+hg8sIV6rLctj1Z5jqcLa8ih/O0DnMRWn1r61YV?=
+ =?us-ascii?Q?RZzW+aiff5DWfphkXV+ohNkkxVdO3pNGIvun2MpKhywfblSIPjIwfvbgzwiR?=
+ =?us-ascii?Q?73MVKJ4mRwtcPIso56wrRlku0msW7DB3nIQcYHTZA+yjuYzvqHE4GnCwv+fS?=
+ =?us-ascii?Q?ba/HVCsI6q7b7nny8eHbmvv9ZAm9155wczFo7kvmJvNGRGALRr1BBXaI8A+c?=
+ =?us-ascii?Q?9eNxXYr7oFMszzxbZYIkOBNn8HoviCQHb/9NCtL1nSmAkbk7gEkJWhIMnzJX?=
+ =?us-ascii?Q?NKvt3x+B9zSfakCqF+HcMyLew8oRrbpdiu8/uWrYrxKAUC778o7UAOiEjlv7?=
+ =?us-ascii?Q?PowD1k1eOKJcRPF4bBvPJ8MZODaUZina8H7Ly1DoNBcNbCui2mByq5xWXiUC?=
+ =?us-ascii?Q?AukymEYZK2Up74zkGFFH/7Al33PIs2aJ?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:43:01.2575
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:43:11.9920
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9930b35-ca96-4c6c-a157-08dcc2eb03ab
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8110dab8-7f6c-4a4e-93b5-08dcc2eb0a11
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CO1PEPF000075F3.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6257
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8407
 
-Allow a caller to retrieve Steering Tags for a target memory that is
-associated with a specific CPU. The caller must provided two parameters,
-memory type and CPU UID, when calling this function. The tag is
-retrieved by invoking ACPI _DSM of the device's Root Port device.
+From: Paul Luse <paul.e.luse@linux.intel.com>
 
-Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
-Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
+Save and restore the configuration space for TPH capability to preserve
+the settings during PCI reset. The settings include the TPH control
+register and the ST table if present.
+
+Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
-Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
+Co-developed-by: Jing Liu <jing2.liu@intel.com>
+Signed-off-by: Jing Liu <jing2.liu@intel.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
 ---
- drivers/pci/pcie/tph.c  | 154 ++++++++++++++++++++++++++++++++++++++++
- include/linux/pci-tph.h |  18 +++++
- 2 files changed, 172 insertions(+)
+ drivers/pci/pci.c      |  2 ++
+ drivers/pci/pci.h      |  4 +++
+ drivers/pci/pcie/tph.c | 62 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 68 insertions(+)
 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e3a49f66982d..1e4960994b1a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1813,6 +1813,7 @@ int pci_save_state(struct pci_dev *dev)
+ 	pci_save_dpc_state(dev);
+ 	pci_save_aer_state(dev);
+ 	pci_save_ptm_state(dev);
++	pci_save_tph_state(dev);
+ 	return pci_save_vc_state(dev);
+ }
+ EXPORT_SYMBOL(pci_save_state);
+@@ -1917,6 +1918,7 @@ void pci_restore_state(struct pci_dev *dev)
+ 	pci_restore_vc_state(dev);
+ 	pci_restore_rebar_state(dev);
+ 	pci_restore_dpc_state(dev);
++	pci_restore_tph_state(dev);
+ 	pci_restore_ptm_state(dev);
+ 
+ 	pci_aer_clear_status(dev);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 289eddfe350b..d7c7f86e8705 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -572,8 +572,12 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
+ #endif /* CONFIG_PCI_IOV */
+ 
+ #ifdef CONFIG_PCIE_TPH
++void pci_restore_tph_state(struct pci_dev *dev);
++void pci_save_tph_state(struct pci_dev *dev);
+ void pci_tph_init(struct pci_dev *dev);
+ #else
++static inline void pci_restore_tph_state(struct pci_dev *dev) { }
++static inline void pci_save_tph_state(struct pci_dev *dev) { }
+ static inline void pci_tph_init(struct pci_dev *dev) { }
+ #endif
+ 
 diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-index 82189361a2ee..5bd194fb425e 100644
+index 5bd194fb425e..b228ef5b7948 100644
 --- a/drivers/pci/pcie/tph.c
 +++ b/drivers/pci/pcie/tph.c
-@@ -7,12 +7,125 @@
-  *     Wei Huang <wei.huang2@amd.com>
-  */
- #include <linux/pci.h>
-+#include <linux/pci-acpi.h>
- #include <linux/bitfield.h>
- #include <linux/msi.h>
- #include <linux/pci-tph.h>
- 
- #include "../pci.h"
- 
-+/*
-+ * The st_info struct defines the Steering Tag (ST) info returned by the
-+ * firmware _DSM method defined in the approved ECN for PCI Firmware Spec,
-+ * available at https://members.pcisig.com/wg/PCI-SIG/document/15470.
-+ *
-+ * @vm_st_valid:  8-bit ST for volatile memory is valid
-+ * @vm_xst_valid: 16-bit extended ST for volatile memory is valid
-+ * @vm_ph_ignore: 1 => PH was and will be ignored, 0 => PH should be supplied
-+ * @vm_st:        8-bit ST for volatile mem
-+ * @vm_xst:       16-bit extended ST for volatile mem
-+ * @pm_st_valid:  8-bit ST for persistent memory is valid
-+ * @pm_xst_valid: 16-bit extended ST for persistent memory is valid
-+ * @pm_ph_ignore: 1 => PH was and will be ignored, 0 => PH should be supplied
-+ * @pm_st:        8-bit ST for persistent mem
-+ * @pm_xst:       16-bit extended ST for persistent mem
-+ */
-+union st_info {
-+	struct {
-+		u64 vm_st_valid : 1;
-+		u64 vm_xst_valid : 1;
-+		u64 vm_ph_ignore : 1;
-+		u64 rsvd1 : 5;
-+		u64 vm_st : 8;
-+		u64 vm_xst : 16;
-+		u64 pm_st_valid : 1;
-+		u64 pm_xst_valid : 1;
-+		u64 pm_ph_ignore : 1;
-+		u64 rsvd2 : 5;
-+		u64 pm_st : 8;
-+		u64 pm_xst : 16;
-+	};
-+	u64 value;
-+};
-+
-+static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
-+			   union st_info *info)
-+{
-+	switch (req_type) {
-+	case PCI_TPH_REQ_TPH_ONLY: /* 8-bit tag */
-+		switch (mem_type) {
-+		case TPH_MEM_TYPE_VM:
-+			if (info->vm_st_valid)
-+				return info->vm_st;
-+			break;
-+		case TPH_MEM_TYPE_PM:
-+			if (info->pm_st_valid)
-+				return info->pm_st;
-+			break;
-+		}
-+		break;
-+	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
-+		switch (mem_type) {
-+		case TPH_MEM_TYPE_VM:
-+			if (info->vm_xst_valid)
-+				return info->vm_xst;
-+			break;
-+		case TPH_MEM_TYPE_PM:
-+			if (info->pm_xst_valid)
-+				return info->pm_xst;
-+			break;
-+		}
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
-+#define TPH_ST_DSM_FUNC_INDEX	0xF
-+static acpi_status tph_invoke_dsm(acpi_handle handle, u32 cpu_uid,
-+				  union st_info *st_out)
-+{
-+	union acpi_object arg3[3], in_obj, *out_obj;
-+
-+	if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 7,
-+			    BIT(TPH_ST_DSM_FUNC_INDEX)))
-+		return AE_ERROR;
-+
-+	/* DWORD: feature ID (0 for processor cache ST query) */
-+	arg3[0].integer.type = ACPI_TYPE_INTEGER;
-+	arg3[0].integer.value = 0;
-+
-+	/* DWORD: target UID */
-+	arg3[1].integer.type = ACPI_TYPE_INTEGER;
-+	arg3[1].integer.value = cpu_uid;
-+
-+	/* QWORD: properties, all 0's */
-+	arg3[2].integer.type = ACPI_TYPE_INTEGER;
-+	arg3[2].integer.value = 0;
-+
-+	in_obj.type = ACPI_TYPE_PACKAGE;
-+	in_obj.package.count = ARRAY_SIZE(arg3);
-+	in_obj.package.elements = arg3;
-+
-+	out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 7,
-+				    TPH_ST_DSM_FUNC_INDEX, &in_obj);
-+	if (!out_obj)
-+		return AE_ERROR;
-+
-+	if (out_obj->type != ACPI_TYPE_BUFFER) {
-+		ACPI_FREE(out_obj);
-+		return AE_ERROR;
-+	}
-+
-+	st_out->value = *((u64 *)(out_obj->buffer.pointer));
-+
-+	ACPI_FREE(out_obj);
-+
-+	return AE_OK;
-+}
-+
- /* Update the TPH Requester Enable field of TPH Control Register */
- static void set_ctrl_reg_req_en(struct pci_dev *pdev, u8 req_type)
- {
-@@ -140,6 +253,47 @@ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
- 	return pci_write_config_word(pdev, offset, tag);
+@@ -483,6 +483,68 @@ int pcie_tph_modes(struct pci_dev *pdev)
  }
+ EXPORT_SYMBOL(pcie_tph_modes);
  
-+/**
-+ * pcie_tph_get_cpu_st() - Retrieve Steering Tag for a target memory associated
-+ * with a specific CPU
-+ * @pdev: PCI device
-+ * @mem_type: target memory type (volatile or persistent RAM)
-+ * @cpu_uid: associated CPU id
-+ * @tag: Steering Tag to be returned
-+ *
-+ * This function returns the Steering Tag for a target memory that is
-+ * associated with a specific CPU as indicated by cpu_uid.
-+ *
-+ * Returns 0 if success, otherwise negative value (-errno)
-+ */
-+int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
-+			unsigned int cpu_uid, u16 *tag)
++void pci_restore_tph_state(struct pci_dev *pdev)
 +{
-+	struct pci_dev *rp;
-+	acpi_handle rp_acpi_handle;
-+	union st_info info;
++	struct pci_cap_saved_state *save_state;
++	int num_entries, i, offset;
++	u16 *st_entry;
++	u32 *cap;
 +
-+	rp = pcie_find_root_port(pdev);
-+	if (!rp || !rp->bus || !rp->bus->bridge)
-+		return -ENODEV;
++	if (!pdev->tph_cap)
++		return;
 +
-+	rp_acpi_handle = ACPI_HANDLE(rp->bus->bridge);
++	if (!pdev->tph_enabled)
++		return;
 +
-+	if (tph_invoke_dsm(rp_acpi_handle, cpu_uid, &info) != AE_OK) {
-+		*tag = 0;
-+		return -EINVAL;
++	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_TPH);
++	if (!save_state)
++		return;
++
++	/* Restore control register and all ST entries */
++	cap = &save_state->cap.data[0];
++	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, *cap++);
++	st_entry = (u16 *)cap;
++	offset = PCI_TPH_BASE_SIZEOF;
++	num_entries = get_st_table_size(pdev);
++	for (i = 0; i < num_entries; i++) {
++		pci_write_config_word(pdev, pdev->tph_cap + offset,
++				      *st_entry++);
++		offset += sizeof(u16);
 +	}
-+
-+	*tag = tph_extract_tag(mem_type, pdev->tph_req_type, &info);
-+
-+	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu_uid=%d, tag=%#04x\n",
-+		(mem_type == TPH_MEM_TYPE_VM) ? "volatile" : "persistent",
-+		cpu_uid, *tag);
-+
-+	return 0;
 +}
-+EXPORT_SYMBOL(pcie_tph_get_cpu_st);
 +
- /**
-  * pcie_tph_set_st_entry() - Set Steering Tag in the ST table entry
-  * @pdev: PCI device
-diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-index a0c93b97090a..c9f33688b9a9 100644
---- a/include/linux/pci-tph.h
-+++ b/include/linux/pci-tph.h
-@@ -9,9 +9,23 @@
- #ifndef LINUX_PCI_TPH_H
- #define LINUX_PCI_TPH_H
- 
-+/*
-+ * According to the ECN for PCI Firmware Spec, Steering Tag can be different
-+ * depending on the memory type: Volatile Memory or Persistent Memory. When a
-+ * caller query about a target's Steering Tag, it must provide the target's
-+ * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/document/15470.
-+ */
-+enum tph_mem_type {
-+	TPH_MEM_TYPE_VM,	/* volatile memory */
-+	TPH_MEM_TYPE_PM		/* persistent memory */
-+};
++void pci_save_tph_state(struct pci_dev *pdev)
++{
++	struct pci_cap_saved_state *save_state;
++	int num_entries, i, offset;
++	u16 *st_entry;
++	u32 *cap;
 +
- #ifdef CONFIG_PCIE_TPH
- int pcie_tph_set_st_entry(struct pci_dev *pdev,
- 			  unsigned int index, u16 tag);
-+int pcie_tph_get_cpu_st(struct pci_dev *dev,
-+			enum tph_mem_type mem_type,
-+			unsigned int cpu_uid, u16 *tag);
- bool pcie_tph_enabled(struct pci_dev *pdev);
- void pcie_disable_tph(struct pci_dev *pdev);
- int pcie_enable_tph(struct pci_dev *pdev, int mode);
-@@ -20,6 +34,10 @@ int pcie_tph_modes(struct pci_dev *pdev);
- static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
- 					unsigned int index, u16 tag)
- { return -EINVAL; }
-+static inline int pcie_tph_get_cpu_st(struct pci_dev *dev,
-+				      enum tph_mem_type mem_type,
-+				      unsigned int cpu_uid, u16 *tag)
-+{ return -EINVAL; }
- static inline bool pcie_tph_enabled(struct pci_dev *pdev) { return false; }
- static inline void pcie_disable_tph(struct pci_dev *pdev) { }
- static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
++	if (!pdev->tph_cap)
++		return;
++
++	if (!pdev->tph_enabled)
++		return;
++
++	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_TPH);
++	if (!save_state)
++		return;
++
++	/* Save control register */
++	cap = &save_state->cap.data[0];
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, cap++);
++
++	/* Save all ST entries in extended capability structure */
++	st_entry = (u16 *)cap;
++	offset = PCI_TPH_BASE_SIZEOF;
++	num_entries = get_st_table_size(pdev);
++	for (i = 0; i < num_entries; i++) {
++		pci_read_config_word(pdev, pdev->tph_cap + offset,
++				     st_entry++);
++		offset += sizeof(u16);
++	}
++}
++
+ void pci_tph_init(struct pci_dev *pdev)
+ {
+ 	pdev->tph_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_TPH);
 -- 
 2.45.1
 
