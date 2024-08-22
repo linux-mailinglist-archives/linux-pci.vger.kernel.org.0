@@ -1,86 +1,55 @@
-Return-Path: <linux-pci+bounces-12023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12024-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60CE795B908
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 16:50:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CC3E95B9E3
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 17:17:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05F9E1F26ECD
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 14:50:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D4DF1C21B64
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 15:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 566DA1CC171;
-	Thu, 22 Aug 2024 14:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 328CA3BB25;
+	Thu, 22 Aug 2024 15:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIwl65FS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90B81C8FC9;
-	Thu, 22 Aug 2024 14:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BF62CCAA;
+	Thu, 22 Aug 2024 15:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724338241; cv=none; b=j/CAOQi2nAFoZ6jSy57iIPu4gBQu7Z8Fk3C+52NfwJp3eoXnS2M9k2d/QsqxCs6ZOjBVzQZVWmdODqNZbY/VMO5lit8pn/ngKMC7fAVxcI+BRDLs+evbuwZCQQ8xNmBl2ydhSbKO/DLm54/eaf+yzi4ioZ09hGd9DOtyZuaXFug=
+	t=1724339821; cv=none; b=QPE9mMJ33RSkbR2LlrjXp9meBY1audIMP94PdPOcALIVEW4RgbiCRIu+FRJN2WqzNj1moRX1zPuC83G/BYr3Izhh0nRxhh1IxJSfjlxB2qg+YR2XeM3NXR0sxMvX0C1y4JrxC3EiNNYZfmzL8g8SIWO4sQperTAWidfxaGmfKKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724338241; c=relaxed/simple;
-	bh=dl3kb68HcduOqK5lkZHdmPl+lK4j2kU52a/fqW62vRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QFly1iJbSofTFnBEggT1ZSM4sEjuGikXQrklYbVU3hA1wjlgelZA8SnjOY5hjEkfvKQzGDDKFF/OG2LmjfPPjrlb/ohIrBHg96EppNgSUU1F8QnTJoPLpzePRptB+YK7daqvhQKAf0pdBdEzNrdMZhhXzgwrkKphL5YAiOND0g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 2WjSmbAMTE2WMIvFHMedDg==
-X-CSE-MsgGUID: lYjJJJqkT5mRy1ndIfkf6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22886625"
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="22886625"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 07:50:36 -0700
-X-CSE-ConnectionGUID: gRGZt8Q+TzmbySdyJ/62Vw==
-X-CSE-MsgGUID: R5o12bjCSma3zXw3NSRBWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="92270919"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 07:50:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1sh98X-00000000U9R-0pzE;
-	Thu, 22 Aug 2024 17:50:05 +0300
-Date: Thu, 22 Aug 2024 17:50:04 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alvaro Karsz <alvaro.karsz@solid-run.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH v3 0/9] PCI: Remove pcim_iounmap_regions()
-Message-ID: <ZsdQHMXRJOQkEN4-@smile.fi.intel.com>
-References: <20240822134744.44919-1-pstanner@redhat.com>
+	s=arc-20240116; t=1724339821; c=relaxed/simple;
+	bh=6MzyrLk662e38FzPLcufarsBm2Sb6mLumpo7mjlQ/9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=UTjZ0cigoUFiR46S6pHX9PmqEqC2uDXgT8dqv+aFAoC60gyt9sozY0Y+pbQrYNZbHwNOinFfrnw4B2kXjhGg2f/u5RObOqdwHuTvOhEMAsBXPv2i/sIR+dBxzJtZgBWm+qMmOnhCKKkdVNyzsf6VRZpQ8AtMekrWs+1IzJZjxI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIwl65FS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8D0C32782;
+	Thu, 22 Aug 2024 15:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724339820;
+	bh=6MzyrLk662e38FzPLcufarsBm2Sb6mLumpo7mjlQ/9o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RIwl65FSGRsY7r4QBp8NgZcC2DkVtfPKtx72QTMqQJ0XT/krTZqlO/HmJ4DlDddop
+	 WZRnQmHw8QGtTNJmkNQG5u15HWpUqHqL4E08NkdxgrL4mbO/1SKrohJcYJnrV9Mmk6
+	 66B2nSr8TgRh0keKvrndQDSAqHEyHP90e5/SMbTJ2dCwhzGEsgGtXDGDuqNpT/s9NO
+	 YOqtka9e/aY0wozYIlf+6+5xb0t7L3Y8b0+ahwmyUA3AS+B66bmx1BFEy5CGHVR4qR
+	 qodWY/cuSwaYNGGVxA1+behj2Ono3fOzgiTNBCOtdOQ9cdk/QwGonTqFv9FnJBlIRc
+	 6VOtbIZDSEVYw==
+Date: Thu, 22 Aug 2024 10:16:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
+Message-ID: <20240822151658.GA305162@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,24 +58,34 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240822134744.44919-1-pstanner@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240822064823.x26bjqev6ye32v5j@thinkpad>
 
-On Thu, Aug 22, 2024 at 03:47:32PM +0200, Philipp Stanner wrote:
+On Thu, Aug 22, 2024 at 12:18:23PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Aug 21, 2024 at 05:56:18PM -0500, Bjorn Helgaas wrote:
+> ...
 
-> Important things first:
-> This series is based on [1] and [2] which Bjorn Helgaas has currently
-> queued for v6.12 in the PCI tree.
+> > Although I do have the question of what happens if the RC deasserts
+> > PERST# before qcom-ep is loaded.  We probably don't execute
+> > qcom_pcie_perst_deassert() in that case, so how does the init happen?
 > 
-> This series shall remove pcim_iounmap_regions() in order to make way to
-> remove its brother, pcim_iomap_regions().
+> PERST# is a level trigger signal. So even if the host has asserted
+> it before EP booted, the level will stay low and ep will detect it
+> while booting.
 
-For the non-commented ones (by me or by others)
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+The PERST# signal itself is definitely level oriented.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm still skeptical about the *interrupt* from the PCIe controller
+being level-triggered, as I mentioned here:
+https://lore.kernel.org/r/20240815224735.GA57931@bhelgaas
 
+tegra194 is also dwc-based and has a similar PERST# interrupt but it's
+edge-triggered (tegra_pcie_ep_pex_rst_irq()), which I think is a
+cleaner implementation.  Then you don't have to remember the current
+state, switch between high and low trigger, worry about races and
+missing a pulse, etc.
 
+> If it is an edge trigger signal, then ep wouldn't be able to catch
+> it as you suspected.
+
+Bjorn
 
