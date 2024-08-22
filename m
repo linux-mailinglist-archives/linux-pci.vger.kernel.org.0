@@ -1,83 +1,78 @@
-Return-Path: <linux-pci+bounces-12026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3DF895BAAB
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 17:40:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 000A395BB1A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 17:56:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0ECF31C23B5C
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 15:40:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 780E21F2241A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 15:56:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674E41CCB31;
-	Thu, 22 Aug 2024 15:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34E41CDA2F;
+	Thu, 22 Aug 2024 15:53:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDKM1Ijh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lq6IpVGn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75CD1CCB23
-	for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 15:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54261CDA24;
+	Thu, 22 Aug 2024 15:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724341234; cv=none; b=DkqWiOU19+47jAZyJ2wgC8TIvWk1YSyh6COLl4ovY/czHVViNThpRIxTcY2shLvi1BTLVKtwUmJb0Lwgn/5n9qyjbwsVuWR0ev5LxosWoVdFQ14dviyJSzJbbrS0b3f3HONrDKR6016PWo4oqiBlMEAEX69GINC5fqeGtml4IiI=
+	t=1724342015; cv=none; b=ctSQvv3OB76dKM9NzKgU84O4sq0G7KgRbf7F1yNr9gXIDwRhqvOY5yhzaqCxPshvUgpdvfRJo0CJYUHfnlw3GEp8MmkQzIkHQvkmPfkc+dOeRzdvnyYegTJOfxz4T5bVQ6xjZAM2WEi9nwF5HR2IsVQvvG1AkhT3PcniCrSF0Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724341234; c=relaxed/simple;
-	bh=gnMXHCyoDE9vbwim3cGbGNLNjI3qarrddxCiDj8YqDA=;
+	s=arc-20240116; t=1724342015; c=relaxed/simple;
+	bh=i6d40Ft1FfFBzZ7bSfPOqc5aaJVCiXXzv0Xe4MizKvw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqN7sUNt6DNi+EdYPUMXZScjXkOG1Z8mBdxfq1wO+XuRtdK+9XCOU+yBadYyMrioiPFXih9fUZrlEndprMPeeFGQjtEsZqoCE0lN07pmt+Ic0WW5c9VJvadnU0CnhQ9//Grv2G28UExk0PBWpOwbo0zaJA0ocGqdIOE5QSFRkVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cDKM1Ijh; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7142014d8dfso837488b3a.3
-        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 08:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724341232; x=1724946032; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rcgKP848ia1sT1sKBh7wuDzcHKmUYL/7jg4d8zl6Hms=;
-        b=cDKM1IjhDVvHFpx6nEQNuaRTYt5xPn095zVhgkJ0UqEZqBLYMBymksDcQRqJ/UfLcx
-         SaqCqlZFYuH8jNJsdVuCYpVDwRpBDml6fJsRHRzT7JTc7Q/H0hTLGfmtJoupxGywepXo
-         dJT6IL0Mtx58ig2RBvxH74N7R8nrPKiD21+zbvt6naJIe53Ld8U5rLRVk7oyyozhjiI+
-         +uAG5jzTNrGQFbcUa8v3kNk+a39wfoO9M/jqDjHgcBT4YxsiJLOKi6ECuWUqEr+GgOL6
-         Up9g446TvQ4sIbqV7LeB2H0mHfw3a3y0DJp2LpZxVESUtdJHwo5hTJkdVI44bVquiZks
-         QF/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724341232; x=1724946032;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rcgKP848ia1sT1sKBh7wuDzcHKmUYL/7jg4d8zl6Hms=;
-        b=u9ImrYZTEGsG4YzbqnDJwl3yVFT5u4KGCnXQreHcB8z/vqcp4NLxP2Ph09N3lrE8xO
-         1GzPBRke2QG26nZhLzkerfpd3/1UCRCRTSDsAxhUUloVdcgrIf65qVkDBQTiMU++Zsrm
-         /kpBVKH81xlaX5jK5KsC6ckDKeHNrZC8aK08e8GZXalRt5RTPgUPrafBhrDelbtiBBny
-         nsmU0lgFRoUWCcOk9kJxJS/xBycHpDl06QAYS2ZkGAoGAAwAtXZsrpppYw4FK3g5Y2Yz
-         NWB+x1PE5RHwq/BkayC6vdWv+hHjw91B9YrLcKRUX5lp5c2z4txCiZH71eFH6udXxdMT
-         3HwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqC7S0rTbksQy8jF7Z7Wfui4COLUXCtWGORZb/jo4O/GaXx/L3rewVdP9ZU8uGnlae1OUwZm1Lx24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXaS3N631//Kx0dld4M0WGYOpQBhozqwUa8r85mHAHu4hSDmd6
-	M3j9fI570uOPrifsGxFgVxtpu7j1ShHUeNeBa9DwDDDH5/cgwxlULfnZ5RqdBA==
-X-Google-Smtp-Source: AGHT+IE2G3Hs7GA0300yVurm4pOpFE7mOVKX/CIwEm6VxYXzrdlmjeMZBBsFwSh2A1fDefS4FryaVw==
-X-Received: by 2002:a05:6a20:7f90:b0:1ca:da81:a3ef with SMTP id adf61e73a8af0-1caeb1808a9mr3093356637.3.1724341231993;
-        Thu, 22 Aug 2024 08:40:31 -0700 (PDT)
-Received: from thinkpad ([120.60.60.148])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71434335fe1sm1522247b3a.200.2024.08.22.08.40.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 08:40:31 -0700 (PDT)
-Date: Thu, 22 Aug 2024 21:10:25 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
-Message-ID: <20240822154025.vfl6mippkz3duimg@thinkpad>
-References: <20240822064823.x26bjqev6ye32v5j@thinkpad>
- <20240822151658.GA305162@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBLPO5k5LfVpDxAZ6l8QUnqFAgRBSEhuCemkj85ViwLXAtjwqMM5WQ8X3bR/+GazjnMEpv+X/at2epPxgqSn4+h5qTuKWrrRtuvPqmAdB9q0raRAa+QPsDjm0Jnm6xgvvlrlrv93KyNG9pvQnF6E1hwdflzjFvrDc13xhqTQpmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lq6IpVGn; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724342014; x=1755878014;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i6d40Ft1FfFBzZ7bSfPOqc5aaJVCiXXzv0Xe4MizKvw=;
+  b=lq6IpVGnCxjpBK/7evRbXWE/a6srp89wdkCuKvJ11C60W4PmR6xmGB29
+   NU+TGGvmQzDZGHklhJLOx0hHMO6c5yPvi74Tm6L3qXu1NGT7M2h2Yb00e
+   phNJzEmme/JUbsJv1cH5dxLdMu19Lj7/tF0ldOI4xwAD8v4JltnuCvBi5
+   0K670S2K0s4KpSKYoLD4p+6jst27cuAEDhY2+ng+NMtaEnR04Ku67My+f
+   jDHyRcYFAJVqNTPH6QoR/QsBcptUvHrhHQdcaAnjZAaZBhRniK2Cdwmal
+   IRzlbhUWTSpfPw1szcPddpv1d8jOo/+WWKP6SlDn7lZeQLNXZ0ArYQjlx
+   g==;
+X-CSE-ConnectionGUID: IK614i3aQKKYnU/qg5kaFg==
+X-CSE-MsgGUID: zhkD+LWvTHS9+ZDIJ8nouw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="33434539"
+X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
+   d="scan'208";a="33434539"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 08:53:33 -0700
+X-CSE-ConnectionGUID: FRzc4wwdSkypV/nXRQEJfA==
+X-CSE-MsgGUID: uoo5XAYHTGWXq5HsH7eS1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
+   d="scan'208";a="66326218"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 22 Aug 2024 08:53:30 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 4B9422F2; Thu, 22 Aug 2024 18:53:29 +0300 (EEST)
+Date: Thu, 22 Aug 2024 18:53:29 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rajat Jain <rajatja@google.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	iommu@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Detect and trust built-in Thunderbolt chips
+Message-ID: <20240822155329.GI1532424@black.fi.intel.com>
+References: <20240815-trust-tbt-fix-v3-1-6ba01865d54c@chromium.org>
+ <6da512d2-464d-40fa-9d05-02928246ddba@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,53 +81,212 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240822151658.GA305162@bhelgaas>
+In-Reply-To: <6da512d2-464d-40fa-9d05-02928246ddba@amd.com>
 
-On Thu, Aug 22, 2024 at 10:16:58AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 22, 2024 at 12:18:23PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Aug 21, 2024 at 05:56:18PM -0500, Bjorn Helgaas wrote:
-> > ...
-> 
-> > > Although I do have the question of what happens if the RC deasserts
-> > > PERST# before qcom-ep is loaded.  We probably don't execute
-> > > qcom_pcie_perst_deassert() in that case, so how does the init happen?
+Hi,
+
+On Thu, Aug 22, 2024 at 10:29:55AM -0500, Mario Limonciello wrote:
+> On 8/15/2024 14:07, Esther Shimanovich wrote:
+> > Some computers with CPUs that lack Thunderbolt features use discrete
+> > Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
+> > chips are located within the chassis; between the root port labeled
+> > ExternalFacingPort and the USB-C port.
 > > 
-> > PERST# is a level trigger signal. So even if the host has asserted
-> > it before EP booted, the level will stay low and ep will detect it
-> > while booting.
+> > These Thunderbolt PCIe devices should be labeled as fixed and trusted,
+> > as they are built into the computer. Otherwise, security policies that
+> > rely on those flags may have unintended results, such as preventing
+> > USB-C ports from enumerating.
+> > 
+> > Detect the above scenario through the process of elimination.
+> > 
+> > 1) Integrated Thunderbolt host controllers already have Thunderbolt
+> >     implemented, so anything outside their external facing root port is
+> >     removable and untrusted.
+> > 
+> >     Detect them using the following properties:
+> > 
+> >       - Most integrated host controllers have the usb4-host-interface
+> >         ACPI property, as described here:
+> > Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
+> > 
+> >       - Integrated Thunderbolt PCIe root ports before Alder Lake do not
+> >         have the usb4-host-interface ACPI property. Identify those with
+> >         their PCI IDs instead.
+> > 
+> > 2) If a root port does not have integrated Thunderbolt capabilities, but
+> >     has the ExternalFacingPort ACPI property, that means the manufacturer
+> >     has opted to use a discrete Thunderbolt host controller that is
+> >     built into the computer.
+> > 
+> >     This host controller can be identified by virtue of being located
+> >     directly below an external-facing root port that lacks integrated
+> >     Thunderbolt. Label it as trusted and fixed.
+> > 
+> >     Everything downstream from it is untrusted and removable.
+> > 
+> > The ExternalFacingPort ACPI property is described here:
+> > Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
+> > 
+> > Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Signed-off-by: Esther Shimanovich <eshimanovich@chromium.org>
+> > Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> > While working with devices that have discrete Thunderbolt chips, I
+> > noticed that their internal TBT chips are inaccurately labeled as
+> > untrusted and removable.
+> > 
+> > I've observed that this issue impacts all computers with internal,
+> > discrete Intel JHL Thunderbolt chips, such as JHL6240, JHL6340, JHL6540,
+> > and JHL7540, across multiple device manufacturers such as Lenovo, Dell,
+> > and HP.
+> > 
+> > This affects the execution of any downstream security policy that
+> > relies on the "untrusted" or "removable" flags.
+> > 
+> > I initially submitted a quirk to resolve this, which was too small in
+> > scope, and after some discussion, Mika proposed a more thorough fix:
+> > https://lore.kernel.org/lkml/20240510052616.GC4162345@black.fi.intel.com
+> > I refactored it and am submitting as a new patch.
 > 
-> The PERST# signal itself is definitely level oriented.
+> My apologies on my delayed response, I've been OOO a while.
 > 
-> I'm still skeptical about the *interrupt* from the PCIe controller
-> being level-triggered, as I mentioned here:
-> https://lore.kernel.org/r/20240815224735.GA57931@bhelgaas
+> I had a test with this patch on an AMD Phoenix system on top of 6.11-rc4.  I
+> am noticing that with it, it's now flagging an internal PCI host bridge as
+> untrusted.  I added some extra debugging and it falls through to the last
+> case of pcie_is_tunneled() where it returns true.
 > 
-
-Sorry, that comment got buried into my inbox. So didn't get a chance to respond.
-
-> tegra194 is also dwc-based and has a similar PERST# interrupt but it's
-> edge-triggered (tegra_pcie_ep_pex_rst_irq()), which I think is a
-> cleaner implementation.  Then you don't have to remember the current
-> state, switch between high and low trigger, worry about races and
-> missing a pulse, etc.
+> Here is the topology of the system:
 > 
+> -[0000:00]-+-00.0
+>            +-00.2
+>            +-01.0
+>            +-01.3-[01]----00.0
+>            +-02.0
+>            +-02.1-[02]----00.0
+>            +-02.4-[03]----00.0
+>            +-03.0
+>            +-03.1-[04-62]--
+>            +-04.0
+>            +-04.1-[63-c1]--
+>            +-08.0
+>            +-08.1-[c2]--+-00.0
+>            |            +-00.1
+>            |            +-00.2
+>            |            +-00.3
+>            |            +-00.4
+>            |            +-00.5
+>            |            +-00.6
+>            |            \-00.7
+>            +-08.2-[c3]--+-00.0
+>            |            \-00.1
+>            +-08.3-[c4]--+-00.0
+>            |            +-00.3
+>            |            +-00.4
+>            |            +-00.5
+>            |            \-00.6
+>            +-14.0
+>            +-14.3
+>            +-18.0
+>            +-18.1
+>            +-18.2
+>            +-18.3
+>            +-18.4
+>            +-18.5
+>            +-18.6
+>            \-18.7
+> 
+> Here are the details of all devices on the system:
+> 
+> 00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14e8]
+> 00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Device [1022:14e9]
+> 00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ea]
+> 00:01.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ee]
+> 00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ea]
+> 00:02.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ee]
+> 00:02.4 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ee]
+> 00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ea]
+> 00:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 19h
+> USB4/Thunderbolt PCIe tunnel [1022:14ef]
+> 00:04.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ea]
+> 00:04.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Family 19h
+> USB4/Thunderbolt PCIe tunnel [1022:14ef]
+> 00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14ea]
+> 00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14eb]
+> 00:08.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14eb]
+> 00:08.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14eb]
+> 00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus
+> Controller [1022:790b] (rev 71)
+> 00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge
+> [1022:790e] (rev 51)
+> 00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f0]
+> 00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f1]
+> 00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f2]
+> 00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f3]
+> 00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f4]
+> 00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f5]
+> 00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f6]
+> 00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:14f7]
+> 01:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+> RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller [10ec:8168]
+> (rev 1c)
+> 02:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS5261 PCI
+> Express Card Reader [10ec:5261] (rev 01)
+> 03:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co Ltd
+> NVMe SSD Controller PM9A1/PM9A3/980PRO [144d:a80a]
+> c2:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc.
+> [AMD/ATI] Phoenix1 [1002:15bf] (rev 03)
+> c2:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI]
+> Rembrandt Radeon High Definition Audio Controller [1002:1640]
+> c2:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD]
+> Family 19h (Model 74h) CCP/PSP 3.0 Device [1022:15c7]
+> c2:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:15b9]
+> c2:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:15ba]
+> c2:00.5 Multimedia controller [0480]: Advanced Micro Devices, Inc. [AMD]
+> ACP/ACP3X/ACP6x Audio Coprocessor [1022:15e2] (rev 63)
+> c2:00.6 Audio device [0403]: Advanced Micro Devices, Inc. [AMD] Family
+> 17h/19h HD Audio Controller [1022:15e3]
+> c2:00.7 Signal processing controller [1180]: Advanced Micro Devices, Inc.
+> [AMD] Device [1022:164a]
+> c3:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc.
+> [AMD] Device [1022:14ec]
+> c3:00.1 Signal processing controller [1180]: Advanced Micro Devices, Inc.
+> [AMD] AMD IPU Device [1022:1502]
+> c4:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc.
+> [AMD] Device [1022:14ec]
+> c4:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:15c0]
+> c4:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device
+> [1022:15c1]
+> c4:00.5 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Pink
+> Sardine USB4/Thunderbolt NHI controller #1 [1022:1668]
+> c4:00.6 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Pink
+> Sardine USB4/Thunderbolt NHI controller #2 [1022:1669]
+> 
+> Here's the snippet from the kernel log with the patch in place.  You can see
+> it flagged 00:02.0 as untrusted and removable, but it definitely isn't.
 
-I did try to mimic what tegra194 did when I wrote the qcom-ep driver, but it
-didn't work. If we use the level triggered interrupt as edge, the interrupt will
-be missed if we do not listen at the right time (when PERST# goes from high to
-low and vice versa).
-
-I don't know how tegra194 interrupt controller is wired up, but IIUC they will
-need to boot the endpoint first and then host to catch the PERST# interrupt.
-Otherwise, the endpoint will never see the interrupt until host toggles it
-again.
-
-But there is no point in forcing this ordering and that was the reason why I
-went with the level triggered approach.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Is it marked as ExternalFacingPort in the ACPI tables?
 
