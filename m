@@ -1,153 +1,144 @@
-Return-Path: <linux-pci+bounces-11983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-11984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D48FD95AF32
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 09:24:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7040995AF85
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 09:42:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CA67287742
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 07:24:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C55D283237
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Aug 2024 07:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194C617E473;
-	Thu, 22 Aug 2024 07:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A29E3165F10;
+	Thu, 22 Aug 2024 07:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8diliVK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7MPBGFC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7AC16D4EF;
-	Thu, 22 Aug 2024 07:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05260154448
+	for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 07:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724311229; cv=none; b=JuozqwAludBFVXcSGS+DUHKurxD99gTARDiISuKgF8vRIeV50+UM+R8AGXTWx2TSbwYHhuJr3yOlJqJoq7o9FjING6B8K8HyiYigbTrIAD87hEoTpzSUiW0wxmkdbVP1AC4VltzFEdyduzmRu0cBuEcRuSuOtbjcXaZ0sB/h1IQ=
+	t=1724312539; cv=none; b=YHCtbNLEKt/7ApjC8OF2kUdCUlipa/Kd+f3QN24yJ74h7clRQUrPJDOG0Nrj0ov/1Hwo1xcteRPuIGY02qfDDWPv9+lbgFBua6NXw0Ksh0MaiIMhIDZVWLMWbcHNybQRjefOjV2sme32oBNvJjvodhp3CrwAKVyCBPKqgqWtDDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724311229; c=relaxed/simple;
-	bh=ZOF0WR1Gj3nT85Z5d4gkd1GJQUYFz/eHTeRA23t5mn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=frNzFO071WNYeIy6xNCMtOQJOHIh9zyENmSiMaQOjZec/3r6KQ+qQxfIACoJyM0wWmkD5JmQyw1xa2fY5vazUvzrtAncRuiQVOSATNYryltZed686bZgNyngvOlcpvD49p7WNq5RZ44Oo5ltbWdDhldBrjMGavNVyw8VZYlOkAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R8diliVK; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5bef295a429so814725a12.2;
-        Thu, 22 Aug 2024 00:20:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724311225; x=1724916025; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EZJLE47NxLo6eiTCM83oiOz2FzGL7nsxAHhhkcrrTiE=;
-        b=R8diliVKYAGlgq7fGrrDi+wtUyzL49fh2pxv92fw0acEoDHbCNKloFSmFwVji5UbFD
-         V51jfdWVmnn7NKvPgBjYdC+9d57rdinWOMs8RgYXCEruH/yn70HTWXoNB0TEOyVozalu
-         WsB3mVyS66NSjZdCcVI+ZE+EJyY05441RvjgyhLPX0C6qRVB8xna+VV5lL9DbV4d04FF
-         z4NWRT31A1AU3mnOeWtE6UYIkM43IpjIgtxxawu7DMbfPTTaotP+s4AZ66hNYRLSnySg
-         nLoNX5UztFsophbcQcyvvgaVeMhdM4ZZsaFdBpMD8SrC1sehn8cpengrQsh4rIT5/q/r
-         cYsw==
+	s=arc-20240116; t=1724312539; c=relaxed/simple;
+	bh=YSAwNeyg69fJMyPt1ovAVwmgX6pw6P+wSZYD+y6HIIE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QY+1wDFqEu13tg4gpRmjEUAIbCb4RlGpX/mHrEkjKw0/2hNgxYYDf8ozLW6Ld/TlrZuApUEQUWpye48V6DZA7BMggtGTIZLXyoG64Aks6bCMkaqsHCg6czZdWTWeauttj7decSNybXFQWeLV6/uwQvMp+T1fjNWLLbGhNpSLGFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C7MPBGFC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724312536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Qeaxowy9FkN+6LhQhAJTapPp7jhqCmRI6C39kG4kUWo=;
+	b=C7MPBGFCeNoijvxu8WyAf7xwngnUJBAhSm0a0oNAvYx1pcwnSTzbqpdPby50dRceN80VeQ
+	FOBWft+DCoVnU1RzVwK+Wh+h1VoylvJEB2tOA/lbFZa9RuybosDRJGJAyTm38IgJcswHbO
+	ZVtMje/SBKhMZGqDYqvJKcxs/mOaV6I=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-319-G0m7Si3XPt6cguLJAz5y0A-1; Thu, 22 Aug 2024 03:42:15 -0400
+X-MC-Unique: G0m7Si3XPt6cguLJAz5y0A-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7a66bf35402so59161885a.3
+        for <linux-pci@vger.kernel.org>; Thu, 22 Aug 2024 00:42:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724311225; x=1724916025;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EZJLE47NxLo6eiTCM83oiOz2FzGL7nsxAHhhkcrrTiE=;
-        b=wSPFXCiAftKZLeruTE9YFZtqsTzAIIbzL2upIaRcshRWzOUweWCWrK3y6HQxyFa75L
-         QrfUzFfFLyctBcI0m/kKDXsd3JbWl24hokElAZb3ML4YLPcvr63Cl5wGsxcKWbEkEX5p
-         wvtU/ANx16KClw8l/dAqPAwtSkbXJlI9+0H8vS3CnGJcJVeVUeLm40KUaEfKxyA/gvqL
-         nYt+dueaWm0qUAQfEGW8UnMZCBvfDLGWm7X5ARKnX/w91j6kqLp5tShoEAeeV9t4LQuq
-         6gegWohN2N5C5HcOBH8spxMNcbKX8zyOIBnDjXH3FiaJpTTE1FTFhdrRt9fw0ScX4YC7
-         QU+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUFn7O58xi+a3RTgHTnmPxcRmAL/d4GI7FWpynsuT+uawab3ccaVG1sn6nRRiq39GlKdNhqnbAsnf14@vger.kernel.org, AJvYcCVQkX4wP0p+xuYA9Bqhnirz7xFYcuXroqHlkd3Js91RtuyS2pMl9xhFkI4nNAuWpGSZ08g54bNfYXPJ06M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTphznkjMBd3s4fsqtyzUFF/tiWIpm1QsmI6BTpFsyJo6LKOkI
-	aIYU8YUqO0qmzTmm3nQgNR+Nyj4295W00vftz6OLDkDVxZY+rvVj
-X-Google-Smtp-Source: AGHT+IGxy+zKNyZnjMAmFsnzCP6StW+jFRGcpYePiTJJdxdrkAiZFUr29/nyIwkAIZWWVtSNyOXfvg==
-X-Received: by 2002:a05:6402:3713:b0:5a0:c6bc:9f5a with SMTP id 4fb4d7f45d1cf-5bf1f284c4bmr2262367a12.38.1724311225164;
-        Thu, 22 Aug 2024 00:20:25 -0700 (PDT)
-Received: from eichest-laptop ([2a02:168:af72:0:daa9:644d:3c2:44bb])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c044ddc0e6sm530789a12.19.2024.08.22.00.20.24
+        d=1e100.net; s=20230601; t=1724312534; x=1724917334;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qeaxowy9FkN+6LhQhAJTapPp7jhqCmRI6C39kG4kUWo=;
+        b=Hx7aMNY2EFjGl6TJ9h8Dh7dOd8S2XIV6uOC1iWP4om6pfA9qnpFen0vgupZpMjaSLT
+         z+nuEoNP5L7lg4PlPx3EJWBV+w4RgY5PVusF4DoXr8ZP3k6oHKZO2zuPGncgKJsReHfm
+         cPoGsXmAoekNSHryoD3Irpn2KnBG2culXhGw+bRdeP4SDO33750rUCJPIQIcGaFfrXPH
+         uD67unpTfQf/ggs2SZDyhJnuEdkQ6VFUuOIgwZA20eDjr/CYOx+6DVBiXz59ce4L1I5M
+         IKpGDnycgbO1qObTH6mCeptvqvjamnSvgov1LiZQ8wZYqt7+ej4Q1wG2K4yA+MeiXgcJ
+         4cKQ==
+X-Gm-Message-State: AOJu0YzxyVaXevrkcNUR4d7rhE2CBzY4oGxXERRQRNV8ttsuEwxKNTCr
+	+r7Df2f5wPJJfza/teZ60lb2cw35YcCvmJpj1NDivQFoON5ldc2wX4XrWW8lTsRdljkq9EXIjdT
+	yFKa36gF2bGFCHninEvuhmoKkTSEhJ8VAN9i0817MOJhIlR67+a+zOCo35A==
+X-Received: by 2002:a05:620a:2914:b0:7a2:16f:a7d4 with SMTP id af79cd13be357-7a680b37624mr84907185a.59.1724312534570;
+        Thu, 22 Aug 2024 00:42:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHLpDWyP0WjL1P9bD8La920CyTDVGs9PsV5ciIX2srhEQbPEJBV6oZrk7ge23TddAvxRqFXpw==
+X-Received: by 2002:a05:620a:2914:b0:7a2:16f:a7d4 with SMTP id af79cd13be357-7a680b37624mr84905485a.59.1724312534158;
+        Thu, 22 Aug 2024 00:42:14 -0700 (PDT)
+Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a67f3199dasm42993085a.15.2024.08.22.00.42.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 00:20:24 -0700 (PDT)
-Date: Thu, 22 Aug 2024 09:20:23 +0200
-From: Stefan Eichenberger <eichest@gmail.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, francesco.dolcini@toradex.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] PCI: imx6: reset link after suspend/resume
-Message-ID: <Zsbmt1Q-CpsO4gp9@eichest-laptop>
-References: <20240819090428.17349-1-eichest@gmail.com>
- <ZsNXDq/kidZdyhvD@lizhi-Precision-Tower-5810>
- <ZsQ9OWdCS5o96VN2@eichest-laptop>
- <ZsYKjFXHDVr8tz9K@eichest-laptop>
- <ZsYbAMR72/TsnxoA@lizhi-Precision-Tower-5810>
+        Thu, 22 Aug 2024 00:42:13 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH] PCI: Deprecate pcim_pin_device()
+Date: Thu, 22 Aug 2024 09:38:16 +0200
+Message-ID: <20240822073815.12365-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZsYbAMR72/TsnxoA@lizhi-Precision-Tower-5810>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 21, 2024 at 12:51:12PM -0400, Frank Li wrote:
-> On Wed, Aug 21, 2024 at 05:41:00PM +0200, Stefan Eichenberger wrote:
-> > Hi Frank,
-> >
-> > On Tue, Aug 20, 2024 at 08:52:41AM +0200, Stefan Eichenberger wrote:
-> > > On Mon, Aug 19, 2024 at 10:30:38AM -0400, Frank Li wrote:
-> > > > On Mon, Aug 19, 2024 at 11:03:16AM +0200, Stefan Eichenberger wrote:
-> > > > > On the i.MX6Quad (not QuadPlus), the PCIe link does not work after a
-> > > > > suspend/resume cycle. Worse, the PCIe memory mapped I/O isn't accessible
-> > > > > at all, so the system freezes when a PCIe driver tries to access its I/O
-> > > > > space. The only way to get resume working again is to reset the PCIe
-> > > > > link, similar to what is done on devices that support suspend/resume.
-> > > > > Through trial and error, we found that something about the PCIe
-> > > > > reference clock does not work as expected after a resume. We could not
-> > > > > figure out if it is disabled (even though the registers still say it is
-> > > > > enabled), or if it is somehow unstable or has some hiccups. With the
-> > > > > workaround introduced in this patch series, we were able to fully resume
-> > > > > a Compex WLE900VX (ath10k) miniPCIe Wifi module and an Intel AX200 M.2
-> > > > > Wifi module. If there is a better way or other ideas on how to fix this
-> > > > > problem, please let us know. We are aware that resetting the link should
-> > > > > not be necessary, but we could not find a better solution. More
-> > > > > interestingly, even the SoCs that support suspend/resume according to
-> > > > > the i.MX erratas seem to reset the link on resume in
-> > > > > imx6_pcie_host_init, so we hope this might be a valid workaround.
-> > > > >
-> > > > > Stefan Eichenberger (3):
-> > > > >   PCI: imx6: Add a function to deassert the reset gpio
-> > > > >   PCI: imx6: move the wait for clock stabilization to enable ref clk
-> > > > >   PCI: imx6: reset link on resume
-> > > >
-> > > > Thanks you for your patch, but it may have conflict with
-> > > > https://lore.kernel.org/linux-pci/Zr4XG6r+HnbIlu8S@lizhi-Precision-Tower-5810/T/#t
-> > > >
-> > >
-> > > Thanks a lot for the hint. I will have a look at the series and see if I
-> > > can adapt my changes including your suggestions.
-> >
-> > I did some more tests with your series applied. Everything works as
-> > expected on an i.MX8M Plus. However, the i.MX6Quad PCIe link still does
-> > not work after a resume. I could trace the issues back to the following
-> > functions, besides that we could use the same suspend/resume function as
-> > for the other i.MX SoCs.
-> 
-> Upstream 6q pci don't support suspend/resume.
-> 
->  [IMX6Q] = {
->                 .variant = IMX6Q,
->                 .flags = IMX_PCIE_FLAG_IMX_PHY |
->                          IMX_PCIE_FLAG_IMX_SPEED_CHANGE,
-> 
-> If you add some code, can you post your patch(mark as RFC) then let me to
-> check.
+Since commit f748a07a0b64 ("PCI: Remove legacy pcim_release()") the only
+thing pcim_enable_device() does is set up the cleanup callback
+pcim_disable_device(); the only thing this function in turn does is to
+disable the device if it has not been pinned through pcim_pin_device().
 
-Sure, I will wait until your series is merged and then try to come up
-with an RFC for suspend/resume on i.MX6Quad. Maybe we could use the same
-mechanism as for the downstream kernel where they just toggle the
-IMX6Q_GPR1_PCIE_TEST_PD bit?
-https://github.com/nxp-imx/linux-imx/commit/4e92355e1f79d225ea842511fcfd42b343b32995
+Previously, pcim_enable_device() had set up several cleanup callbacks to
+iounmap BARs etc., which made pcim_pin_device() necessary. All of that
+is now done through separate interfaces, however.
+
+Consequently, everyone who does not want the device to be disabled on
+driver detach can now simply use pci_enable_device() instead of
+pcim_enable_device().
+
+Mark pcim_pin_device() as deprecated.
+
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+I am aware that there are only 16 callers.
+Porting them right away is a bit tricky, though, since you'd have to
+replace their pcim_enable_device(), which still activates
+pci_dev.is_managed, which still affects the code in pci.c
+
+So I'd prefer to postpone removing pcim_pin_device() until my ATA
+cleanup series is done. All that might take a few releases.
+
+P.
+---
+ drivers/pci/devres.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 3780a9f9ec00..87a125cc5207 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -520,11 +520,15 @@ int pcim_enable_device(struct pci_dev *pdev)
+ EXPORT_SYMBOL(pcim_enable_device);
+ 
+ /**
+- * pcim_pin_device - Pin managed PCI device
++ * pcim_pin_device - Pin managed PCI device (DEPRECATED)
+  * @pdev: PCI device to pin
+  *
+  * Pin managed PCI device @pdev. Pinned device won't be disabled on driver
+  * detach. @pdev must have been enabled with pcim_enable_device().
++ *
++ * This function is DEPRECATED. Do not use it in new code. If you want the
++ * device to remain enabled after driver detach, just use pci_enable_device()
++ * instead of pcim_enable_device().
+  */
+ void pcim_pin_device(struct pci_dev *pdev)
+ {
+-- 
+2.46.0
+
 
