@@ -1,212 +1,260 @@
-Return-Path: <linux-pci+bounces-12075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09B9B95C8CA
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:06:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 505C695C939
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:29:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE69428314F
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 09:06:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C2131C221AD
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 09:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD028149C79;
-	Fri, 23 Aug 2024 09:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7D0514B97A;
+	Fri, 23 Aug 2024 09:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VE0Q1rfe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgFo/qYo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC88E1442F4;
-	Fri, 23 Aug 2024 09:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5EF139D00;
+	Fri, 23 Aug 2024 09:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724403996; cv=none; b=Fy0ANJpqTZN1T2cuvz7+yEljMEZSdE7oaoYqKmikmi1pfFn86JctOWg6VJuUmyYkvIsKKPGNMO8NRj54tmPJYfRIlRiXI9U7r3JRzKM+z/3hNPtZdqv/vATK6kdSweHzrK+sUyZThOnuHXbGN6h6foDLuTBE59FaDMWHgKA0bv0=
+	t=1724405357; cv=none; b=kcTl9XptH1LSFbDRfC9CJDJgdDXy/MXSRIzxZ7IcJSxmgmDvzO+W9cesD2ibN6nM+yp3/UxWgLngTu7vTGiy8JGhhIg6Pj0DKfKQ+e6fW2Y0LbCTmpLsBZfCG+9TDAJgk2cd0P6qjMcfBE30YXVPJ4OIQNwxdw1y4Oki5vapM/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724403996; c=relaxed/simple;
-	bh=E0K9BVlAinKOdFlygcfsApTpKAoMe644T1TVWtyM6E4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DjOvuiQE1b0JsQOyH+yRaHJFjEZLVA2S7mDDXDqJN9Ug930y8cM8jz87mYziTcxJYwMvEO/fJjhtXGBIhgRDxmWH7y5KOlWcYpM3xZVueFpLZhTuiakP0LsBPmXQMtxA3C5BDC9IDgSjWIF/rah+MYsMMXkuNUfX1u3l79Man4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VE0Q1rfe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4035C32786;
-	Fri, 23 Aug 2024 09:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724403996;
-	bh=E0K9BVlAinKOdFlygcfsApTpKAoMe644T1TVWtyM6E4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VE0Q1rfeKUR/o1bPbuT8w8OB8ooEPzB3TipQjnSeKQVp07nKbkZR2E7eIPFZo81zN
-	 obOC6larKQbQVKTuLYMutOWGQmMCZaebkxQLSKO51VDUtU7A+kHKwkg4yOMNmFm0EB
-	 GfAyvDqZA29DdOPt9aZwap2py1vSc6DBd9c0nCvtxgjIT16Y+f2Ea6xsOTEU9tb1JX
-	 5NzY+7RAM14KO4YUn0TqJVgnWhwSjQgRyRhCbO4NBNKd+IzYEB/4BZd7p+B1pK7zVH
-	 AYBdcExzgg+46gIVeCTaRIZ42ArXnmWtiJQUgPlNRQaENWZ4tPnhoMdMoJZ5594b/g
-	 HHaEekzTtlbjQ==
-Message-ID: <7969b2e6-1046-4bd4-bdfe-d2bc12a1db1b@kernel.org>
-Date: Fri, 23 Aug 2024 11:06:28 +0200
+	s=arc-20240116; t=1724405357; c=relaxed/simple;
+	bh=2Yb/HipWs9Hwj3qIpBvkIqiRNPZPBVsVKcsw8IFvcmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BrUjU5/wA9ZrgA5yuaODjj9of18kORp7ykQlMfuFpL7FQFz1zuhI6CLWqyQ544tbz/U8XZna2OyGpdifqH8D4fiv77iXZcaTsDoNyBZJCx4Cr7GCCmF3XBtMm6Q21N6WnuCJfoqna71NgV53vQigj7anR2gpOsBhFZKVBg0OWi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgFo/qYo; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5334c4cc17fso2380700e87.2;
+        Fri, 23 Aug 2024 02:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724405354; x=1725010154; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HJZgnLkJ3O5ij2lr4uMh4xPM1CMCZfKHy3jKVr/xmOI=;
+        b=HgFo/qYoLzAoq+HpYvLgMdKJgQseuoxiGMdFRoxkUrAr+h4nkJ/tvseYg8Bf+6qp66
+         BUYMbgIWqpxXbXjeCNzB7KTJq3DjXG9CMjMYZr2pUkAptE7PCeEmY5lzVszQOWNHQnSs
+         XU/nDnkuIiI262KkE2jc9XDZS3ERHMw85cjD1AeKtrJVJrlxeptmnwt0l/Jnhm8k01h2
+         XmxfveTfmMSK1+tA3Yrofar0rhg7jsG4ExD0Y2Gvn12Zt4/ng1IXMT1pt+2eFmH4Wjky
+         PEr/za14HsQe6J+MNwNPG5KlWWq4w9I+zbtXmStxZGAouCxg/Tzijg1DvrMHmblievQQ
+         IKtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724405354; x=1725010154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HJZgnLkJ3O5ij2lr4uMh4xPM1CMCZfKHy3jKVr/xmOI=;
+        b=hfuzfQ+uVm72kM7QLOdpG15cAef0nqSCq0auCkKgSSCG3o8JUx9nHLXW++d0pTxETE
+         eKAq5BaHYXNE7o//r7OaGJC8UAbfP1OboyZr29gVb1wmO5JeWFg8rW9oVicKR8tfUHf+
+         4J16HPY6gD3w59q08p/tPUjDz6gMXfZ68D805jBWayvfDDgUgg4UKPVqBNkkJ4imZxY8
+         4YL8Mti917ZsoVjSybDT1kKqTkBKTV0hgTn7M9FjkXOQIfbt692b65oUM0Sjzg65BX9O
+         pQtJxo2kdPzcmNoAMC7FZosqRraUhBHbK172oemK+lfGLCLWO6Ek/Kab1/FrOtHTWbwe
+         lIEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUC+TbkvymhQNrcuaXQXMZ8mIX1MjKEcR1PPU7pHTqSjyDGXig4uW3Bhcms3XbcQPh5xLPtbn2HmMDZhQ==@vger.kernel.org, AJvYcCUjknvbAg39I6oolWZ/KULjtdgdYzBTOrldy5sdMqUqU1s/HArPhECLa6MH3okdfr2YmdGeTtPwZ7HI4g==@vger.kernel.org, AJvYcCUld2lrUIfjCTi9grwDWOHiAG0W8d567XvcKoWZx8u7KEQxbuQToXjq9Cn9KwWCiT0XVy+FydAAsdR9WdMy@vger.kernel.org, AJvYcCVI/Q8xs5fq2pJWa3v3ucT/Dpdm2gexu+vED+/mV9Y2a3JiiCiIiwSVFJRjwbqrFOr5xuIyQi7fcLLM@vger.kernel.org, AJvYcCW/EBBDf2OzNrU+ulJFaWyNpo5Cw8hFoLc6Wk15H+gl7Hmsbc5MHXSQ/+0lvfEGFbHVKDKXBGzH@vger.kernel.org, AJvYcCW2W1+MJGJaJNCq+mcAcZ6Vi5cVjJoFqOj6bN9ALkYWjRrHColFREkjE/E/bTzv3epC5LoIrQ9w8ErX@vger.kernel.org, AJvYcCXRwrHxOQ4JCPLIJB9JMWcSYTP5ysrqXxzkmNfdkm8mKEjeVhDwLWhDKzyIjjOgHAHEkUVeFtJE9UvXSg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzkWgATOzuYMwoaGPu4Kx0WNIxb0JHWq3p1ZBpHBLCjyGWDule
+	LEnIa9f94lyRdMRSLjGSfK9/x+WZRdJ1s1T5UDDae2zyd/UyA6YM
+X-Google-Smtp-Source: AGHT+IHqOXJOWHb79RTihzE3on1iV74tjWvNfm3tTmK51dxtJorj4SeUP8Xl+KghIyqpPSU2ZAidYw==
+X-Received: by 2002:a05:6512:ba2:b0:533:3223:df91 with SMTP id 2adb3069b0e04-53438773a9emr1245520e87.24.1724405353307;
+        Fri, 23 Aug 2024 02:29:13 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5334ea5d9e6sm494618e87.226.2024.08.23.02.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 02:29:12 -0700 (PDT)
+Date: Fri, 23 Aug 2024 12:29:09 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, 
+	Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, 
+	Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Alvaro Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Damien Le Moal <dlemoal@kernel.org>, 
+	Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH v3 6/9] ethernet: stmicro: Simplify PCI devres usage
+Message-ID: <6q4pcpyqqt6mhj422pfkgggvwu7jhweu5446y6prcjgjql6xeq@jztt7z4fr6rg>
+References: <20240822134744.44919-1-pstanner@redhat.com>
+ <20240822134744.44919-7-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
- Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>,
- Jingoo Han <jingoohan1@gmail.com>, andersson@kernel.org,
- quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
- <5f65905c-f1e4-4f52-ba7c-10c1a4892e30@kernel.org>
- <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
- <ZrEGypbL85buXEsO@hu-bjorande-lv.qualcomm.com>
- <90582c92-ca50-4776-918d-b7486cf942b0@kernel.org>
- <20240808120109.GA18983@thinkpad>
- <cb69c01b-08d0-40a1-9ea2-215979fb98c8@kernel.org>
- <20240808124121.GB18983@thinkpad>
- <c5bae58c-4200-40d3-94c6-669d2ee131d4@kernel.org>
- <20240822140956.unt45fgpleqwniwa@thinkpad>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240822140956.unt45fgpleqwniwa@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240822134744.44919-7-pstanner@redhat.com>
 
-On 22/08/2024 16:09, Manivannan Sadhasivam wrote:
-> On Thu, Aug 08, 2024 at 03:06:28PM +0200, Krzysztof Kozlowski wrote:
->> On 08/08/2024 14:41, Manivannan Sadhasivam wrote:
->>> On Thu, Aug 08, 2024 at 02:13:01PM +0200, Krzysztof Kozlowski wrote:
->>>> On 08/08/2024 14:01, Manivannan Sadhasivam wrote:
->>>>> On Mon, Aug 05, 2024 at 07:18:04PM +0200, Krzysztof Kozlowski wrote:
->>>>>> On 05/08/2024 19:07, Bjorn Andersson wrote:
->>>>>>> On Mon, Aug 05, 2024 at 09:41:26AM +0530, Krishna Chaitanya Chundru wrote:
->>>>>>>> On 8/4/2024 2:23 PM, Krzysztof Kozlowski wrote:
->>>>>>>>> On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
->>>>>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
->>>>>>> [..]
->>>>>>>>>> +  qps615,axi-clk-freq-hz:
->>>>>>>>>> +    description:
->>>>>>>>>> +      AXI clock which internal bus of the switch.
->>>>>>>>>
->>>>>>>>> No need, use CCF.
->>>>>>>>>
->>>>>>>> ack
->>>>>>>
->>>>>>> This is a clock that's internal to the QPS615, so there's no clock
->>>>>>> controller involved and hence I don't think CCF is applicable.
->>>>>>
->>>>>> AXI does not sound that internal.
->>>>>
->>>>> Well, AXI is applicable to whatever entity that implements it. We mostly seen it
->>>>> in ARM SoCs (host), but in this case the PCIe switch also has a microcontroller
->>>>> /processor of some sort, so AXI is indeed relevant for it. The naming actually
->>>>> comes from the switch's i2c register name that is being configured in the driver
->>>>> based on this property value.
->>>>>
->>>>>> DT rarely needs to specify internal
->>>>>> clock rates. What if you want to define rates for 20 clocks? Even
->>>>>> clock-frequency is deprecated, so why this would be allowed?
->>>>>> bus-frequency is allowed for buses, but that's not the case here, I guess?
->>>>>>
->>>>>
->>>>> This clock frequency is for the switch's internal AXI bus that runs at default
->>>>> 200MHz. And this property is used to specify a frequency that is configured over
->>>>> the i2c interface so that the switch's AXI bus can operate in a low frequency
->>>>> there by reducing the power consumption of the switch.
->>>>>
->>>>> It is not strictly needed for the switch operation, but for power optimization.
->>>>> So this property can also be dropped for the initial submission and added later
->>>>> if you prefer.
->>>>
->>>> So if the clock rate can change, why this is static in DTB? Or why this
->>>> is configurable per-board?
->>>>
->>>
->>> Because, board manufacturers can change the frequency depending on the switch
->>> configuration (enablement of DSP's etc...)
->>>
->>>> There is a reason why clock-frequency property is not welcomed and you
->>>> are re-implementing it.
->>>>
->>>
->>> Hmm, I'm not aware that 'clock-frequency' is not encouraged these days. So you
->>> are suggesting to change the rate in the driver itself based on the switch
->>> configuration? If so, what difference does it make?
->>
->> Based on the switch, other clocks, votes etc. whatever is reasonable
->> there. In most cases, not sure if this one here as well, devices can
->> operate on different clock frequencies thus specifying fixed frequency
->> in the DTS is simplification and lack of flexibility. It is chosen by
->> people only because it is easier for them but then they come back with
->> ABI issues when it turns out they need to switch to some dynamic control.
->>
+Hi Philipp
+
+On Thu, Aug 22, 2024 at 03:47:38PM +0200, Philipp Stanner wrote:
+> stmicro uses PCI devres in the wrong way. Resources requested
+> through pcim_* functions don't need to be cleaned up manually in the
+> remove() callback or in the error unwind path of a probe() function.
 > 
-> Atleast for this device, this frequency is going to be static. Because, the
-> device itself cannot change the frequency, only the host driver can. That too is
-> only possible before enumerating the device. So there is no way the frequency is
-> going to change dynamically.
+> Moreover, there is an unnecessary loop which only requests and ioremaps
+> BAR 0, but iterates over all BARs nevertheless.
+> 
+> Furthermore, pcim_iomap_regions() and pcim_iomap_table() have been
+> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> pcim_iomap_table(), pcim_iomap_regions_request_all()").
+> 
+> Replace these functions with pcim_iomap_region().
+> 
+> Remove the unnecessary manual pcim_* cleanup calls.
+> 
+> Remove the unnecessary loop over all BARs.
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-We have assigned-clocks properties for this... but there are no clock
-inputs here, so maybe it is not applicable? What generates this internal
-AXI clock? Does it have internal oscillator?
+Thanks for the series. But please note the network subsystem
+dev-process requires to submit the cleanup/feature changes on top of
+the net-next tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
 
-So many questions and nothing in the property description helps to
-understand this.
+Just recently a Yanteng' (+cc) series
+https://lore.kernel.org/netdev/cover.1723014611.git.siyanteng@loongson.cn/
+was merged in which significantly refactored the Loongson MAC driver.
+Seeing your patch isn't based on these changes, there is a high
+probability that the patch won't get cleanly applied onto the
+net-next tree. So please either rebase your patch onto the net-next
+tree, or at least merge in the Yanteng' series in your tree and
+rebase the patch onto it and let's hope there have been no other
+conflicting patches merged in into the net-next tree.
 
-Best regards,
-Krzysztof
+-Serge(y)
 
+
+> ---
+>  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 25 +++++--------------
+>  .../net/ethernet/stmicro/stmmac/stmmac_pci.c  | 18 +++++--------
+>  2 files changed, 12 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index 9e40c28d453a..5d42a9fad672 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -50,7 +50,7 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+>  	struct plat_stmmacenet_data *plat;
+>  	struct stmmac_resources res;
+>  	struct device_node *np;
+> -	int ret, i, phy_mode;
+> +	int ret, phy_mode;
+>  
+>  	np = dev_of_node(&pdev->dev);
+>  
+> @@ -88,14 +88,11 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+>  		goto err_put_node;
+>  	}
+>  
+> -	/* Get the base address of device */
+> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> -		if (pci_resource_len(pdev, i) == 0)
+> -			continue;
+> -		ret = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
+> -		if (ret)
+> -			goto err_disable_device;
+> -		break;
+> +	memset(&res, 0, sizeof(res));
+> +	res.addr = pcim_iomap_region(pdev, 0, pci_name(pdev));
+> +	if (IS_ERR(res.addr)) {
+> +		ret = PTR_ERR(res.addr);
+> +		goto err_disable_device;
+>  	}
+>  
+>  	plat->bus_id = of_alias_get_id(np, "ethernet");
+> @@ -116,8 +113,6 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+>  
+>  	loongson_default_data(plat);
+>  	pci_enable_msi(pdev);
+> -	memset(&res, 0, sizeof(res));
+> -	res.addr = pcim_iomap_table(pdev)[0];
+>  
+>  	res.irq = of_irq_get_byname(np, "macirq");
+>  	if (res.irq < 0) {
+> @@ -158,18 +153,10 @@ static void loongson_dwmac_remove(struct pci_dev *pdev)
+>  {
+>  	struct net_device *ndev = dev_get_drvdata(&pdev->dev);
+>  	struct stmmac_priv *priv = netdev_priv(ndev);
+> -	int i;
+>  
+>  	of_node_put(priv->plat->mdio_node);
+>  	stmmac_dvr_remove(&pdev->dev);
+>  
+> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> -		if (pci_resource_len(pdev, i) == 0)
+> -			continue;
+> -		pcim_iounmap_regions(pdev, BIT(i));
+> -		break;
+> -	}
+> -
+>  	pci_disable_msi(pdev);
+>  	pci_disable_device(pdev);
+>  }
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> index 352b01678c22..f89a8a54c4e8 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> @@ -188,11 +188,11 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
+>  		return ret;
+>  	}
+>  
+> -	/* Get the base address of device */
+> +	/* Request the base address BAR of device */
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		if (pci_resource_len(pdev, i) == 0)
+>  			continue;
+> -		ret = pcim_iomap_regions(pdev, BIT(i), pci_name(pdev));
+> +		ret = pcim_request_region(pdev, i, pci_name(pdev));
+>  		if (ret)
+>  			return ret;
+>  		break;
+> @@ -205,7 +205,10 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
+>  		return ret;
+>  
+>  	memset(&res, 0, sizeof(res));
+> -	res.addr = pcim_iomap_table(pdev)[i];
+> +	/* Get the base address of device */
+> +	res.addr = pcim_iomap(pdev, i, 0);
+> +	if (!res.addr)
+> +		return -ENOMEM;
+>  	res.wol_irq = pdev->irq;
+>  	res.irq = pdev->irq;
+>  
+> @@ -231,16 +234,7 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
+>   */
+>  static void stmmac_pci_remove(struct pci_dev *pdev)
+>  {
+> -	int i;
+> -
+>  	stmmac_dvr_remove(&pdev->dev);
+> -
+> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> -		if (pci_resource_len(pdev, i) == 0)
+> -			continue;
+> -		pcim_iounmap_regions(pdev, BIT(i));
+> -		break;
+> -	}
+>  }
+>  
+>  static int __maybe_unused stmmac_pci_suspend(struct device *dev)
+> -- 
+> 2.46.0
+> 
+> 
 
