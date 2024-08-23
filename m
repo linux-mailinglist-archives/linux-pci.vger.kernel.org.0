@@ -1,55 +1,57 @@
-Return-Path: <linux-pci+bounces-12143-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12144-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E26095D8F6
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 00:04:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3673295D919
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 00:10:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17571B210B7
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 22:04:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE26A1F23367
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 22:10:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 428AB1C86E4;
-	Fri, 23 Aug 2024 22:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B027194C8F;
+	Fri, 23 Aug 2024 22:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0GIUvrF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ghjmg0XJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142DB191F6B;
-	Fri, 23 Aug 2024 22:04:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F69189B89;
+	Fri, 23 Aug 2024 22:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724450679; cv=none; b=W6YJ45+sKsKHvZeEeNxl8O8Q5E6k5AXBQ/6tsfm2Xp+A2OuVcDP+inu1aRaZN2pwEkHthVJeeardPJrukNEHiXVAVjsiZfbE83JwyRAv3su0GoKTdsaZjNnxA+KrsOOrFQfo1s1OoUBBuLk51lAWmj0IalL5zzjhrn+fwRIjh14=
+	t=1724451025; cv=none; b=kqjU1RDNvSy4hreKXbCt9I7SjLUWVdo6lnYogAyEqKzKo2pMV5SUmqeaczoX320EBa63pY1qka/JdWMQWw51q2iUnQmOOmE3XUG7UQ9VGVSq94uL8QHRMBE6Z4RPGo6MHYLzQDPyTocdhI6RItb255AOv/mGyaNdKbwUc9q3qYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724450679; c=relaxed/simple;
-	bh=sOlJNt/5c8Tti76v1n49s0eMhAqmyUoYvBQpT3/63iw=;
+	s=arc-20240116; t=1724451025; c=relaxed/simple;
+	bh=NJcXayjTbzsChmOeToGMlIG/vnfPC/xi03r9HY6Yrxs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nKHUA85GaIRzA5mnyPb8um8UkG9p4p99ergC2jUTnu8Rz1FamW8yOPQrvzX9TwLFi92t8GrMsZq3HkpZ4lKJxXEB+jUmtElXtIyjup69EqLqoGOL4gtN9fBOUhwWsmKg0UEZA1AAsKeb10nhgHPIyz8k0fnVjHKkOGmKfcOQ82U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0GIUvrF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D2E6C4AF09;
-	Fri, 23 Aug 2024 22:04:38 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=cv7PUm6CWkklg6baJrM8MzkEycJjKfKz9pJwvcXWlYJErFlZli0HiXiUwog6EU1slizSG9fzCvN9cOJFEmBu5MeEgjdmA7WpoaJaOdndkfkTeMrg37RRmnLqeMSbGtcSYor/j36uITPhliqS85gPURX2TEOBwoON+o1E/+7zv24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ghjmg0XJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E729C32786;
+	Fri, 23 Aug 2024 22:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724450678;
-	bh=sOlJNt/5c8Tti76v1n49s0eMhAqmyUoYvBQpT3/63iw=;
+	s=k20201202; t=1724451023;
+	bh=NJcXayjTbzsChmOeToGMlIG/vnfPC/xi03r9HY6Yrxs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=m0GIUvrFPOyEVZhaqCcLPsT3YYIF0gj8VeSwK6EDF2BeJmSdE1/NX8wGZ5PTVN8Gc
-	 I/XEwJ8xILDRraxWzFbzoDYlh14JAEOuX29IGL1epmBvcmtTnxgwdeOsgATdXP92Dg
-	 yjIT0MckINcQ35Uz8wliKIRgiOsIKf+2c4P265C3K9JLJ8wA0w6luL9cOzv8RTgknl
-	 qAmDEbZIikugVGnACgJ9XYxU4OKbpCWgTJ75X8TSH/xssxeJrjvVxwLn4KkA/TqBCy
-	 4e32l57W24Sk3bbjP9ZGykzx3weT+QurgxW0CyPeiaLpxODCtrwM26K3+m5mXKgNKy
-	 Sf7wl0gx0/lDQ==
-Date: Fri, 23 Aug 2024 17:04:36 -0500
+	b=Ghjmg0XJOEfV2A1r6aMLzQkNkE2pbaKSoildozqPY0Lhm1EmbH4Vmk2/W6H72WTH5
+	 2hCEXZLy4IGjD378d1MWwIRT80Xiw45MW82LcM4czSR4T4F/oBAooJGALPjRYVk7xe
+	 jSPCtEXPlF8zPojUPSMjNlyJVfcZIMz4Cge4hh5x14ulioeV4HYXOFZSeaYm+Fst1y
+	 qqRtto+2aGWOFyGCc0PadpPzc3wFK3z6t4rwHPzg4u+sPFSxpQLdfX35a32uf3KJ60
+	 LRxI9uKGMpWEEbPp//hrrZbJizydFJs3f9W85BQQ7FtmuD9Kqn99ZBdHXpasA4PRnb
+	 1s9/hI9avZ4+w==
+Date: Fri, 23 Aug 2024 17:10:21 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
-Message-ID: <20240823220436.GA387844@bhelgaas>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 1/2] PCI: don't rely on of_platform_depopulate() for
+ reused OF-nodes
+Message-ID: <20240823221021.GA388724@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,76 +60,71 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240823044133.b27cgioefsg4sjlr@thinkpad>
+In-Reply-To: <20240823093323.33450-2-brgl@bgdev.pl>
 
-On Fri, Aug 23, 2024 at 10:11:33AM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Aug 22, 2024 at 12:31:33PM -0500, Bjorn Helgaas wrote:
-> > On Thu, Aug 22, 2024 at 09:10:25PM +0530, Manivannan Sadhasivam wrote:
-> > > On Thu, Aug 22, 2024 at 10:16:58AM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Aug 22, 2024 at 12:18:23PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Wed, Aug 21, 2024 at 05:56:18PM -0500, Bjorn Helgaas wrote:
-> > > > > ...
-> > > > 
-> > > > > > Although I do have the question of what happens if the RC deasserts
-> > > > > > PERST# before qcom-ep is loaded.  We probably don't execute
-> > > > > > qcom_pcie_perst_deassert() in that case, so how does the init happen?
-> > > > > 
-> > > > > PERST# is a level trigger signal. So even if the host has asserted
-> > > > > it before EP booted, the level will stay low and ep will detect it
-> > > > > while booting.
-> > > > 
-> > > > The PERST# signal itself is definitely level oriented.
-> > > > 
-> > > > I'm still skeptical about the *interrupt* from the PCIe controller
-> > > > being level-triggered, as I mentioned here:
-> > > > https://lore.kernel.org/r/20240815224735.GA57931@bhelgaas
-> > > 
-> > > Sorry, that comment got buried into my inbox. So didn't get a chance
-> > > to respond.
-> > > 
-> > > > tegra194 is also dwc-based and has a similar PERST# interrupt but
-> > > > it's edge-triggered (tegra_pcie_ep_pex_rst_irq()), which I think
-> > > > is a cleaner implementation.  Then you don't have to remember the
-> > > > current state, switch between high and low trigger, worry about
-> > > > races and missing a pulse, etc.
-> > > 
-> > > I did try to mimic what tegra194 did when I wrote the qcom-ep
-> > > driver, but it didn't work. If we use the level triggered interrupt
-> > > as edge, the interrupt will be missed if we do not listen at the
-> > > right time (when PERST# goes from high to low and vice versa).
-> > > 
-> > > I don't know how tegra194 interrupt controller is wired up, but IIUC
-> > > they will need to boot the endpoint first and then host to catch the
-> > > PERST# interrupt.  Otherwise, the endpoint will never see the
-> > > interrupt until host toggles it again.
-> > 
-> > Having to control the boot ordering of endpoint and host is definitely
-> > problematic.
-> > 
-> > What is the nature of the crash when we try to enable the PHY when
-> > Refclk is not available?  The endpoint has no control over when the
-> > host asserts/deasserts PERST#.  If PERST# happens to be asserted while
-> > the endpoint is enabling the PHY, and this causes some kind of crash
-> > that the endpoint driver can't easily recover from, that's a serious
-> > robustness problem.
+[+to Rob]
+
+On Fri, Aug 23, 2024 at 11:33:22AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> The whole endpoint SoC crashes if the refclk is not available during
-> phy_power_on() as the PHY driver tries to access some register on Dmitry's
-> platform (I did not see this crash on SM8450 SoC though).
+> of_platform_depopulate() doesn't play nice with reused OF nodes - it
+> ignores the ones that are not marked explicitly as populated and it may
+> happen that the PCI device goes away before the platform device in which
+> case the PCI core clears the OF_POPULATED bit. We need to
+> unconditionally unregister the platform devices for child nodes when
+> stopping the PCI device.
+
+Rob, any concerns with this?
+
+> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/pci/remove.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> If we keep the enable_resources() during probe() then the race condition you
-> observed above could apply. So removing that from probe() will also make the
-> race condition go away,
-
-Example:
-
-  1) host deasserts PERST#
-  2) qcom-ep handles PERST# IRQ
-  3) qcom_pcie_ep_perst_irq_thread() calls qcom_pcie_perst_deassert()
-  4) host asserts PERST#, Refclk no longer valid
-  5) qcom_pcie_perst_deassert() calls qcom_pcie_enable_resources()
-  6) qcom_pcie_enable_resources() enables PHY
-
-I don't see what prevents the PERST# assertion at 4.  It sounds like
-the endpoint SoC crashes at 6.
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index 910387e5bdbf..4770cb87e3f0 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -1,7 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/pci.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +
+>  #include "pci.h"
+>  
+>  static void pci_free_resources(struct pci_dev *dev)
+> @@ -14,12 +17,25 @@ static void pci_free_resources(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> +static int pci_pwrctl_unregister(struct device *dev, void *data)
+> +{
+> +	struct device_node *pci_node = data, *plat_node = dev_of_node(dev);
+> +
+> +	if (dev_is_platform(dev) && plat_node && plat_node == pci_node) {
+> +		of_device_unregister(to_platform_device(dev));
+> +		of_node_clear_flag(plat_node, OF_POPULATED);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void pci_stop_dev(struct pci_dev *dev)
+>  {
+>  	pci_pme_active(dev, false);
+>  
+>  	if (pci_dev_is_added(dev)) {
+> -		of_platform_depopulate(&dev->dev);
+> +		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
+> +				      pci_pwrctl_unregister);
+>  		device_release_driver(&dev->dev);
+>  		pci_proc_detach_device(dev);
+>  		pci_remove_sysfs_dev_files(dev);
+> -- 
+> 2.43.0
+> 
 
