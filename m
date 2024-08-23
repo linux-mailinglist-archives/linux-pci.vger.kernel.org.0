@@ -1,640 +1,232 @@
-Return-Path: <linux-pci+bounces-12067-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12068-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AD3095C4D4
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 07:23:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 858B895C4E4
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 07:30:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF82F1F2606E
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 05:23:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DA0E286312
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 05:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7658F39FD8;
-	Fri, 23 Aug 2024 05:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AE5B4C62B;
+	Fri, 23 Aug 2024 05:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="bNwSI4M8"
+	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="UUKCoWkp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15A52D030;
-	Fri, 23 Aug 2024 05:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724390598; cv=none; b=LNsKgJ7pM80KMlyCOdFBTGW+UYr4dhQxjCE7YROSb+KzT6NzIwGxM593oeKSsHzbGVK3mQFoPO+Ope+tjUI4T+4Y34ZDh5yE/ei1enceBhzBKOHQcw4URu/GOWyISuNZ5h0ESdM6MxwV9HzLNmJFyycXcP0XLVhkEHv7ROh/cu4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724390598; c=relaxed/simple;
-	bh=+BHWP6cJ0n2Mlqh15oqgvPuXNEm2En7fluhLy9ALQnQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ALCtjbO+nCasK/riULfvNvCC5FCBOORe9wEf+5CGCaQ546mF+7UiMQuKk67sUS87U3fm6Q9ORt3qch39De+3eJsenJfaFZ9lVoickpER6JADvcT708yaThKj+qM33IOftt9XK2mZBkhCA+5JpJsnP69DdocSKmBiUOiVfqvR8CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=bNwSI4M8; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4C2C190;
+	Fri, 23 Aug 2024 05:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724391010; cv=fail; b=gm/dLGB5EORBUcXdK9MLdjr+CKR4YvclrLfvzW3aQzUj1I4V06xibUBZRyZLD063DJOuz6bVDzDtlL124kRg478OSSDqwPVmTUE1ticbCRJoeZgBf/42+6ll6be+a6RcwEpMz4FP5VUVPKO0Y9/KgOcIgSPJmBBiHnNsC68W2Rg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724391010; c=relaxed/simple;
+	bh=E3rwdrTWl7n8PUMs6uM4p/afiRmwiTt81dv2/PBAJgQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HxR55MWeppfq6O5xExYuo8ynxA/0f2kSrlwX1QR3flnFaGH0yyf9XpfKJ9lClY8p2IRWTT4U8YpwgFbXqEz9qCs/OXa2Dt7m/mv/EXojqGt5urarLHHxybcAIvwDplwzkzQln0iINX3fpxsqQJoUDbbJVAdvzBRKmNU0xuSW/wQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=UUKCoWkp; arc=fail smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47N1nwEC018836;
-	Thu, 22 Aug 2024 22:22:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=c
-	ghSDEDWE5Jw5vwxMjrLExwQyMfLD4fw48+eElkPyuQ=; b=bNwSI4M8x70h06lhK
-	VroyufrjhD8SUqcXWGgSt05KhXlwcIZUE3hVFTTKwiuHZxRVh/ypaKgMFC/BaJzx
-	AwxYDDT5EojUmcavrCDXG6RNr2TmQ8BCU2O34Zn0NclQsmuUCUwqKisJsMwojdbc
-	eD7MuD/8wXsQeDWu10OqmCdhBYkAZYz2B11UMuUgVuwHpUeULxkbJqL5Mt0kAyPO
-	Ytf24ThvF8GTkE2I3r5QTkT4fLZIC/l+L22yK0RWqbyKkeWWO3XFYUiiuhdN7+g7
-	isp7Mt1pFQUoM/iK1ylJWtB8m6xSOk7KRraWr5E2ppgOedfBmJ4OJmIYkem2XRk4
-	ugW7Q==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 416gyhrh7u-1
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47MLLfRp015606;
+	Thu, 22 Aug 2024 22:29:52 -0700
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 41650uuxpp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Aug 2024 22:22:58 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 22 Aug 2024 22:22:56 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 22 Aug 2024 22:22:56 -0700
-Received: from localhost.localdomain (unknown [10.28.34.29])
-	by maili.marvell.com (Postfix) with ESMTP id 091D93F7069;
-	Thu, 22 Aug 2024 22:22:52 -0700 (PDT)
+	Thu, 22 Aug 2024 22:29:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Cu3PWTSrQq26ttmpZYs9uLF6ttE5fHpYH4oZ1AfkfSI+04E+TZwrdooVl2LGT0obfQIPbsa7NngGzZBmm77JqHPhu1OTsPemKRsRSC4V70DBkvgmdO8hveiHNopgtCkz2QPHUf6/W4iCqaHUgThZJCxp3y6H6VHoWsO/ffgHYgiQmWO7jtH1/hX1Ni0nQoOhpX9ist5FgmuwM857k+X3LoX+aC77DlNBQMvbXMcOHLotMI936PJxDUmH+smMco2tBfUcfmF9Gsiv7GTxUQ9jGJV/ZaQ68dM4uIJ/oBq9epMhbccaPMr3eYRGj+Ta6/EfTTkletENIboqhiRQ8IMGvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E3rwdrTWl7n8PUMs6uM4p/afiRmwiTt81dv2/PBAJgQ=;
+ b=fiuh0XKG79Xn5SIeU8x9UowKUjJcirAYfk6G/yleeebP1LJjpofmSBA8fVGOqad04URvkVycZI11GW6E/qxPxBnPEQPH4o0WEKOub4kc6Qx0Fd3BAHZH0ByoXztM6JMixxU7NVdw8HxJu53C7vMay1za7ovhpzdAja2J9I0dnMOONvYin9Uw3jK75SHZoBinZqNTN2MECPPEMOFKVGdf65Yk5FaF45owvxgV2h+9uUrYJwgdGrxoTUQmuYgm++0vy7Rl2xEzi1+cY00NBG8OBTEWE/e1CbeIuYc1rlYcprydgKhRaWQnHhQwJDaLEeRn+wBbkPFiJjkaokzOHM9m7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E3rwdrTWl7n8PUMs6uM4p/afiRmwiTt81dv2/PBAJgQ=;
+ b=UUKCoWkpDCJk44zL3q3irlu3QI9vXyPED8B5x6SgBSGRpQwIFh9QXXRqQ3ftDbXnyI+gkDEFEL0Kvxyvxm1UCI7LghJtVH92yGlMTi4u6jzl1E+JhBrX1D8TxgkcpcdSBUzAUppR1b9z9jBwzfy/RKocXMCcBMjigJdsmz8argQ=
+Received: from PH0PR18MB4425.namprd18.prod.outlook.com (2603:10b6:510:ef::13)
+ by CH3PR18MB5512.namprd18.prod.outlook.com (2603:10b6:610:15d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.18; Fri, 23 Aug
+ 2024 05:29:46 +0000
+Received: from PH0PR18MB4425.namprd18.prod.outlook.com
+ ([fe80::424f:7fcf:ce0d:45c4]) by PH0PR18MB4425.namprd18.prod.outlook.com
+ ([fe80::424f:7fcf:ce0d:45c4%6]) with mapi id 15.20.7897.014; Fri, 23 Aug 2024
+ 05:29:46 +0000
 From: Shijith Thotton <sthotton@marvell.com>
-To: <bhelgaas@google.com>
-CC: Shijith Thotton <sthotton@marvell.com>, <ilpo.jarvinen@linux.intel.com>,
-        <Jonathan.Cameron@Huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <rafael@kernel.org>,
-        <scott@os.amperecomputing.com>, <jerinj@marvell.com>,
-        <schalla@marvell.com>, <vattunuru@marvell.com>
-Subject: [PATCH v2] PCI: hotplug: Add OCTEON PCI hotplug controller driver
-Date: Fri, 23 Aug 2024 10:52:19 +0530
-Message-ID: <20240823052251.1087505-1-sthotton@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <PH0PR18MB442535D2828B701CD84A3994D98E2@PH0PR18MB4425.namprd18.prod.outlook.com>
-References: <PH0PR18MB442535D2828B701CD84A3994D98E2@PH0PR18MB4425.namprd18.prod.outlook.com>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        Jerin Jacob <jerinj@marvell.com>,
+        Srujana
+ Challa <schalla@marvell.com>,
+        Vamsi Krishna Attunuru <vattunuru@marvell.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        D Scott Phillips
+	<scott@os.amperecomputing.com>,
+        Philipp Stanner <pstanner@redhat.com>
+Subject: RE: [PATCH] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+Thread-Topic: [PATCH] PCI: hotplug: Add OCTEON PCI hotplug controller driver
+Thread-Index: AQHa9KKDy6MeBzMkf0aF99RoTKPmg7I0UD3w
+Date: Fri, 23 Aug 2024 05:29:46 +0000
+Message-ID:
+ <PH0PR18MB44258270BCAF802C8B3398B5D9882@PH0PR18MB4425.namprd18.prod.outlook.com>
+References: <20240820152734.642533-1-sthotton@marvell.com>
+ <20240821122404.00001a71@Huawei.com>
+ <PH0PR18MB4425BE8D3F5F9C5114D8C289D98F2@PH0PR18MB4425.namprd18.prod.outlook.com>
+In-Reply-To:
+ <PH0PR18MB4425BE8D3F5F9C5114D8C289D98F2@PH0PR18MB4425.namprd18.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR18MB4425:EE_|CH3PR18MB5512:EE_
+x-ms-office365-filtering-correlation-id: 901f7973-83a3-4eff-fea7-08dcc334999b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UmZqNWlhcGVGTWxDczkzSTNyc3ZheTh2YmNNV2x2Q3lwdnczVDluT2tUN2FP?=
+ =?utf-8?B?ZXJHQlNkcnU2TVFLcGhkSDBSemovRU1ad3RUeDZYYWlhQ2g1eWtweTVwYjhF?=
+ =?utf-8?B?VHVDSEh2WEs0SkF6VjNpM0RHRnBQTUJXOTlKYkFnMi9vZDNSRE55THh4anRy?=
+ =?utf-8?B?djArSlhEc3lIcjdYQ0VlTGFiNFNXbGdTaTk2bGhNRFl1UFpjQzZWakgrU3Br?=
+ =?utf-8?B?N211OWFkSGFiQmZBTmFUeFJ0OVJaL0gvTDV0bndQZzBWN1F0cFZPUkR1MkJX?=
+ =?utf-8?B?Qk94V2J6VUs4OFlyU0M4aXlMT2g0bEFvdjhaOU96V0YzdU1XeUs4V0JISFdt?=
+ =?utf-8?B?cDNGRXVYRFBtdWIvNUU3OUNrZkhyWWFmTCtDd1RNSlJ6T0hFaEYyUzlkbGlF?=
+ =?utf-8?B?OFVjL0ZrSUpFT1Q5SzhqWmIxYVVzdnZod3lkZExaZWpwWE5uTHRwR3RoZUlM?=
+ =?utf-8?B?aFIrTUFVTzNOS2tnNlZiY1oxM1ZnazRMOUVLbEJCUDdEZUI2Q2pYRzRYbStm?=
+ =?utf-8?B?N1FJSDZuWGpweGNybG5TcGVrZXVFYkMvcnZRQ29sVjA1bkRPckpSdHFxUUZ4?=
+ =?utf-8?B?SHdSYVZMM3hseExlamRnNmVBMW9Ocm85Qk5xemNML082L2lFbUxCN2xGejV1?=
+ =?utf-8?B?VUZXRFZ3OWxVejNrSzBNb0VGVEJyNkhYaXRvcUFuNzhhQ1lHNFJmYjhUQlhS?=
+ =?utf-8?B?YTFydlNNeEZSWkhRU2lyRXBwdm4xdis3WS9PRFdzVmFYNUx5RGNKUE1ESzhH?=
+ =?utf-8?B?U3FKczR4dm1NS2FtUVY2MnBOZVlvRWU5d2l5Y0ZoaXhQYllTWWIrYlh6Z1Ur?=
+ =?utf-8?B?N2pVeUQrSWFDalIxa2FFSnpnYW5sZHIvUHpiOCtmV2IrRUlabDQ1L1JNWHNM?=
+ =?utf-8?B?bysxZHhWalFZU28xSjdFQldETHBVZ0p2Z3p2VzJzOURmemp1SkdsRUcwa1pj?=
+ =?utf-8?B?WlJmK0JLWTQ1bTRPRm1iSkJFZkFOS3R4UlV0bDN5NEltNHhINCtNeHg4Nzli?=
+ =?utf-8?B?OVU3WHN3OEhkWVhkWWdBdStuUU1KRTVWdHBmVDhFZ1Vva0tUMGlneHJBcXpB?=
+ =?utf-8?B?dC96WTRwdnE2TURsVG1aMmcwcyt2Q0F6MlFDbHVjbW53OGJTeW9XNmhWMkpF?=
+ =?utf-8?B?Z0NmdWNOVTN3WWxsUU91US9Zd0NBNzdKZnZWMVlRZUV4SmxYRWg5UHhVYWJZ?=
+ =?utf-8?B?K2hEUXNKM1Y5WFVHV0xPRTZpUXNLSGYvKzlrN0FoL21LU1BzalRSTDZjbzNy?=
+ =?utf-8?B?aUVuUzZVbkhSanRwekV1MC84SXNRMEs2Y0NxMGlsSkN5L0J0RFFBQ1JUZTE0?=
+ =?utf-8?B?SUJSYXZBV1Fsc1dnRDJUbkpWWWkyN01odDZzZm5QYUJydzd3MmtNWS8ycHho?=
+ =?utf-8?B?ZHRDN1h0UjQ0a09MZGE5VUhSR2JjbndYS1RSYm5ZK3l5eE9vV3VjQVRWUUdJ?=
+ =?utf-8?B?Q1p0T3kvNVNFbSt3NHlWMFhXeXVkUzgveWFJY3pnaEhuOFE3dUhGb2Y2Z0Ey?=
+ =?utf-8?B?RjZKaUdZNHV4OUZmNFk5b1BWZlEySDVJSHJRNzhBeFBvbGNPTU5qaUUvTm9j?=
+ =?utf-8?B?VlNrS3FJMmNEakJ4dXdOS3k3bVR0b3A3S3NOcmlaZXduVDBmVFhxKys3WGh0?=
+ =?utf-8?B?NGRMeVFOOG1QZzRMUVdoNXIwYkttK1lvOERRUzI1OENMUHVxOVM2ME5lOXZQ?=
+ =?utf-8?B?dnJKZHhFM1k3a21OQjRFNWxkUFE5NGUwaEJWMG5GSGJMb3VQbUczd1dMY0lv?=
+ =?utf-8?B?akJvVHZSME9xZEFvVVFlbjNuTHNjZHRpbnFsSEJoK0FnTEpJRDF1T3lyRDJ4?=
+ =?utf-8?B?VmgzNGdhSTN2Yk9kUDI1eEJHL2VveFBKQ2NaZzB4RVE4d0RWK3o2bzBSaEN6?=
+ =?utf-8?B?WTlyYXk5Vzk1cnlYR0pqdFhJTE9sdGZ4elptWXp2Z28wQUE9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR18MB4425.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TWxGSHdOMEMzTjVzM1dubU9VRmkyUmZQZUhwcWc2TXNaaWtWTnhGeUJlVTdR?=
+ =?utf-8?B?cEpxV21UcjI4bDVMOWNleVQwcHl4Zi9BYXpVYkhDYnFmaWpyLzZrcTJkVjFk?=
+ =?utf-8?B?ZkRiSEY0YlFsR0hTQjk3UDlDY05GU3hOWGsyTTRNbkF0ak1rSFBpM3lHZzFn?=
+ =?utf-8?B?Qmt6Y3BMMk5NVitpekFXcEJERG9Dd05Fblk2eXZacEYwM1AwRmFEZXNPeHFY?=
+ =?utf-8?B?MWx2ZE1NNE5jRjl0VSswb3hQUjFvajM4U3luK0VEWmRHSnd2aU9IQk95VXRt?=
+ =?utf-8?B?QnZMWnFwNDBQTGFvYnpsMDJEZFhKK0ZZSnRDUjVwMG9ZelVjanJDck1TNUZG?=
+ =?utf-8?B?dmhWN0lISGNRWnZKRWNyeHRHQ3VDMlVBMUZ5ZEpRTGF0NGVUVk5mdFB2OEEr?=
+ =?utf-8?B?Q0lQTGQxV0lseThzQVBXMURwMmZIaW1sdm1WUmdOMngxUEhmZmM1OStGQTI5?=
+ =?utf-8?B?QjlpZ0p0NHZTNXNzRmI2bm84a0l4QmRwWjErUFNPY1BsZWhJeUZueXI3TzFB?=
+ =?utf-8?B?MnhZS1N4YUFZR2lETVFQZnpsRmRZLzlmUytoK0FzWUp2L2NFcUxXN0UvdVBP?=
+ =?utf-8?B?MzFWL1VuODY4MTBsbDJyZVV2MzBDcHA4Q3ZBUWFlSVd1NUlMd2l3R21uR0RV?=
+ =?utf-8?B?ZjdxMWpjelBUdjlqY2lGZlZDVG5yWS9sNmE4YWd5eWVVQkJ0VlhWZVhhcWF6?=
+ =?utf-8?B?Z3Judk5PM0E4aGpCVlp1SnhFR3lZSm5ZeG9BaUE2akpxQlRWZGNTTForUmNy?=
+ =?utf-8?B?Rm56VTk2aitRUzg4OHBmWFFhbnBlTjcvT0VBYmQ3R3VsbXlaMEYvWDdKNktw?=
+ =?utf-8?B?dTlRU3hYekxLWWY1WThDUktaN1kwOTRSa0ZWUDBYWi9kWDFNajh6ek1VUzFx?=
+ =?utf-8?B?Z1plUFZQT3NUN2R1ZDMrNi9RbnhYRlFEbWgwWWZuOE9LTjlWUDl5OVFyTE16?=
+ =?utf-8?B?N2hnd0kyVXdLSDhkazluOGF3UlJaS1NKTGJpQmY5SkJHNFNBYVJJTXpmbkha?=
+ =?utf-8?B?TnRCbnBrbzV0REs5eVVKV0JDNXJKaHhQQUlFeTVmRm94K0FuYitQaS9RMGZR?=
+ =?utf-8?B?UHB0TThsSGprWGhlOGhldGpCQWp4a281V1pzMC9uN056U2FmQlE0N1lXQnpu?=
+ =?utf-8?B?eVFKdmRnZWRkaDZVUHZsZEJDSXNNK09MRTV1cEZyZ0hEV1dHUGNBTGRBQ00x?=
+ =?utf-8?B?UElTUUNmUENLWm1SZ0xKVTUvTm1kRDNGRlE3MVdEWnpzaDR1cFVEd2tFemRY?=
+ =?utf-8?B?ZW91YUU1dElRY1RYVTRuOHVhamx5V0V5Z2IxWlZHcXhuL2FJSi9Edkt4UDFw?=
+ =?utf-8?B?eDc2R09ob2tmOVdDTWpIV1I0Y1RCYUZzL0I0bDBGeFduODIwYXVOSWZ3emJz?=
+ =?utf-8?B?MmE3UFV1TDFyaEhYSVhPVUFqUWxTRkROWHJpcGVMaFZuUStTRFpoWlZQNE96?=
+ =?utf-8?B?T2VpYjBnejUrYk8xMFMxWjdOUkhaVWQwZnlLT2dLdWExdmFnZ2Q1SjU2YjhS?=
+ =?utf-8?B?OFpLTEE0Z1R2ajJSa3RaWC9UbGg1aEVWUmJEa1ZWSjllNnJ1MVphU3RCUU4w?=
+ =?utf-8?B?S1dydC85UU5RU1JsM1Nqbk8wN010WXdaVlU3akJQendFNFZvM3c5Mng5bTk5?=
+ =?utf-8?B?R004ZXhmMHNXQ2h5blljUE9IWC9pZThKNjEwMDdkUzJ0dmQxclNSSHl2NDlp?=
+ =?utf-8?B?UklmSFRtRW1sZjlvUUM3VE1IenRsTVJpOEptSUNKQUZCc0xRRmlQYy9jMFVq?=
+ =?utf-8?B?QmlJZnZKNVU5bTF3aWdFUWRENHNjU2JOM29teU1qNG8rL3B5NDNaUTlrbk9B?=
+ =?utf-8?B?SllkcEtwY1ZYMWg3LzNCWlJHOVkvS2hwTEhCKzU2aEEwZ2hPU1BqYWtKV1Bi?=
+ =?utf-8?B?STRHRHoyNUxudTNWa0tYdGVzNjhPLzQ1Y0dmeW43SHgxN0ViUzFrT1Jtb3Bu?=
+ =?utf-8?B?SERKbFVvOGF4UXpDNWlOMTd3bVhiWnV5NTFsUjVjYzFOd1JaaFZ3YkZrNTJq?=
+ =?utf-8?B?YmE1MDZhV0FzUERQVWxtSnZ6YzdXaldVMzliM0xtMEZMWmhrYXhqWkErOUhS?=
+ =?utf-8?B?WUVWc0NYUnYxSE5KK3FlSTgxV2lWcTJmc2E4WVByc2NZYXpMOXM5eTRsWDFB?=
+ =?utf-8?Q?FcabdcVsqTrfPRTbzmE03sfMi?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: lbpicGsdVb3U3fl1_4Ghmixiro_YukDW
-X-Proofpoint-ORIG-GUID: lbpicGsdVb3U3fl1_4Ghmixiro_YukDW
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR18MB4425.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 901f7973-83a3-4eff-fea7-08dcc334999b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2024 05:29:46.2264
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xN44TOVed6ckiXHpgyhywGIl/o8sUIR7aqwdh6/6f4AFrFn8/7+I3S/VQdi17yyO/Cjt4IDs7B+xXFgFvpa9oA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR18MB5512
+X-Proofpoint-GUID: grkKdHT3lLXJC5idMgSyVZVO37bc3VY_
+X-Proofpoint-ORIG-GUID: grkKdHT3lLXJC5idMgSyVZVO37bc3VY_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-23_02,2024-08-22_01,2024-05-17_01
 
-This patch introduces a PCI hotplug controller driver for the OCTEON
-PCIe device, a multi-function PCIe device where the first function acts
-as a hotplug controller. It is equipped with MSI-x interrupts to notify
-the host of hotplug events from the OCTEON firmware.
-
-The driver facilitates the hotplugging of non-controller functions
-within the same device. During probe, non-controller functions are
-removed and registered as PCI hotplug slots. The slots are added back
-only upon request from the device firmware. The driver also allows the
-enabling and disabling of the slots via sysfs slot entries, provided by
-the PCI hotplug framework.
-
-Signed-off-by: Shijith Thotton <sthotton@marvell.com>
-Co-developed-by: Vamsi Attunuru <vattunuru@marvell.com>
-Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
----
-
-This patch introduces a PCI hotplug controller driver for OCTEON PCIe hotplug
-controller. The OCTEON PCIe device is a multi-function device where the first
-function acts as a PCI hotplug controller.
-
-              +--------------------------------+
-              |           Root Port            |
-              +--------------------------------+
-                              |
-                             PCIe
-                              |
-+---------------------------------------------------------------+
-|              OCTEON PCIe Multifunction Device                 |
-+---------------------------------------------------------------+
-            |                    |              |            |
-            |                    |              |            |
-+---------------------+  +----------------+  +-----+  +----------------+
-|      Function 0     |  |   Function 1   |  | ... |  |   Function 7   |
-| (Hotplug controller)|  | (Hotplug slot) |  |     |  | (Hotplug slot) |
-+---------------------+  +----------------+  +-----+  +----------------+
-            |
-            |
-+-------------------------+
-|   Controller Firmware   |
-+-------------------------+
-
-The hotplug controller driver facilitates the hotplugging of non-controller
-functions in the same device. During the probe of the driver, the non-controller
-function are removed and registered as PCI hotplug slots. They are added back
-only upon request from the device firmware. The driver also allows the user to
-enable/disable the functions using sysfs slot entries provided by PCI hotplug
-framework.
-
-This solution adopts a hardware + software approach for several reasons:
-
-1. To reduce hardware implementation cost. Supporting complete hotplug
-   capability within the card would require a PCI switch implemented within.
-
-2. In the multi-function device, non-controller functions can act as emulated
-   devices. The firmware can dynamically enable or disable them at runtime.
-
-3. Not all root ports support PCI hotplug. This approach provides greater
-   flexibility and compatibility across different hardware configurations.
-
-The hotplug controller function is lightweight and is equipped with MSI-x
-interrupts to notify the host about hotplug events. Upon receiving an
-interrupt, the hotplug register is read, and the required function is enabled
-or disabled.
-
-This driver will be beneficial for managing PCI hotplug events on the OCTEON
-PCIe device without requiring complex hardware solutions.
-
-Changes in v2:
-- Added missing include files.
-- Used dev_err_probe() for error handling.
-- Used guard() for mutex locking.
-- Splited cleanup actions and added per-slot cleanup action.
-- Fixed coding style issues.
-- Added co-developed-by tag.
-
- MAINTAINERS                    |   6 +
- drivers/pci/hotplug/Kconfig    |  10 +
- drivers/pci/hotplug/Makefile   |   1 +
- drivers/pci/hotplug/octep_hp.c | 412 +++++++++++++++++++++++++++++++++
- 4 files changed, 429 insertions(+)
- create mode 100644 drivers/pci/hotplug/octep_hp.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 42decde38320..7b5a618eed1c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13677,6 +13677,12 @@ R:	schalla@marvell.com
- R:	vattunuru@marvell.com
- F:	drivers/vdpa/octeon_ep/
- 
-+MARVELL OCTEON HOTPLUG CONTROLLER DRIVER
-+R:	Shijith Thotton <sthotton@marvell.com>
-+R:	Vamsi Attunuru <vattunuru@marvell.com>
-+S:	Supported
-+F:	drivers/pci/hotplug/octep_hp.c
-+
- MATROX FRAMEBUFFER DRIVER
- L:	linux-fbdev@vger.kernel.org
- S:	Orphan
-diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-index 1472aef0fb81..2e38fd25f7ef 100644
---- a/drivers/pci/hotplug/Kconfig
-+++ b/drivers/pci/hotplug/Kconfig
-@@ -173,4 +173,14 @@ config HOTPLUG_PCI_S390
- 
- 	  When in doubt, say Y.
- 
-+config HOTPLUG_PCI_OCTEONEP
-+	bool "OCTEON PCI device Hotplug controller driver"
-+	depends on HOTPLUG_PCI
-+	help
-+	  Say Y here if you have an OCTEON PCIe device with a hotplug
-+	  controller. This driver enables the non-controller functions of the
-+	  device to be registered as hotplug slots.
-+
-+	  When in doubt, say N.
-+
- endif # HOTPLUG_PCI
-diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
-index 240c99517d5e..40aaf31fe338 100644
---- a/drivers/pci/hotplug/Makefile
-+++ b/drivers/pci/hotplug/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_HOTPLUG_PCI_RPA)		+= rpaphp.o
- obj-$(CONFIG_HOTPLUG_PCI_RPA_DLPAR)	+= rpadlpar_io.o
- obj-$(CONFIG_HOTPLUG_PCI_ACPI)		+= acpiphp.o
- obj-$(CONFIG_HOTPLUG_PCI_S390)		+= s390_pci_hpc.o
-+obj-$(CONFIG_HOTPLUG_PCI_OCTEONEP)	+= octep_hp.o
- 
- # acpiphp_ibm extends acpiphp, so should be linked afterwards.
- 
-diff --git a/drivers/pci/hotplug/octep_hp.c b/drivers/pci/hotplug/octep_hp.c
-new file mode 100644
-index 000000000000..3ac90ffff564
---- /dev/null
-+++ b/drivers/pci/hotplug/octep_hp.c
-@@ -0,0 +1,412 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright (C) 2024 Marvell. */
-+
-+#include <linux/cleanup.h>
-+#include <linux/container_of.h>
-+#include <linux/delay.h>
-+#include <linux/dev_printk.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pci.h>
-+#include <linux/pci_hotplug.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/workqueue.h>
-+
-+#define OCTEP_HP_INTR_OFFSET(x) (0x20400 + ((x) << 4))
-+#define OCTEP_HP_INTR_VECTOR(x) (16 + (x))
-+#define OCTEP_HP_DRV_NAME "octep_hp"
-+
-+/*
-+ * Type of MSI-X interrupts.
-+ * The macros OCTEP_HP_INTR_VECTOR and OCTEP_HP_INTR_OFFSET are used to
-+ * generate the vector and offset for an interrupt type.
-+ */
-+enum octep_hp_intr_type {
-+	OCTEP_HP_INTR_INVALID = -1,
-+	OCTEP_HP_INTR_ENA,
-+	OCTEP_HP_INTR_DIS,
-+	OCTEP_HP_INTR_MAX,
-+};
-+
-+struct octep_hp_cmd {
-+	struct list_head list;
-+	enum octep_hp_intr_type intr_type;
-+	u64 intr_val;
-+};
-+
-+struct octep_hp_slot {
-+	struct list_head list;
-+	struct hotplug_slot slot;
-+	u16 slot_number;
-+	struct pci_dev *hp_pdev;
-+	unsigned int hp_devfn;
-+	struct octep_hp_controller *ctrl;
-+};
-+
-+struct octep_hp_intr_info {
-+	enum octep_hp_intr_type type;
-+	int number;
-+	char name[16];
-+};
-+
-+struct octep_hp_controller {
-+	void __iomem *base;
-+	struct pci_dev *pdev;
-+	struct octep_hp_intr_info intr[OCTEP_HP_INTR_MAX];
-+	struct work_struct work;
-+	struct list_head slot_list;
-+	struct mutex slot_lock; /* Protects slot_list */
-+	struct list_head hp_cmd_list;
-+	spinlock_t hp_cmd_lock; /* Protects hp_cmd_list */
-+};
-+
-+static void octep_hp_enable_pdev(struct octep_hp_controller *hp_ctrl,
-+				 struct octep_hp_slot *hp_slot)
-+{
-+	guard(mutex)(&hp_ctrl->slot_lock);
-+	if (hp_slot->hp_pdev) {
-+		dev_dbg(&hp_slot->hp_pdev->dev, "Slot %u already enabled\n",
-+			hp_slot->slot_number);
-+		return;
-+	}
-+
-+	/* Scan the device and add it to the bus */
-+	hp_slot->hp_pdev = pci_scan_single_device(hp_ctrl->pdev->bus,
-+						  hp_slot->hp_devfn);
-+	pci_bus_assign_resources(hp_ctrl->pdev->bus);
-+	pci_bus_add_device(hp_slot->hp_pdev);
-+
-+	dev_dbg(&hp_slot->hp_pdev->dev, "Enabled slot %u\n",
-+		hp_slot->slot_number);
-+}
-+
-+static void octep_hp_disable_pdev(struct octep_hp_controller *hp_ctrl,
-+				  struct octep_hp_slot *hp_slot)
-+{
-+	guard(mutex)(&hp_ctrl->slot_lock);
-+	if (!hp_slot->hp_pdev) {
-+		dev_dbg(&hp_ctrl->pdev->dev, "Slot %u already disabled\n",
-+			hp_slot->slot_number);
-+		return;
-+	}
-+
-+	dev_dbg(&hp_slot->hp_pdev->dev, "Disabling slot %u\n",
-+		hp_slot->slot_number);
-+
-+	/* Remove the device from the bus */
-+	pci_stop_and_remove_bus_device_locked(hp_slot->hp_pdev);
-+	hp_slot->hp_pdev = NULL;
-+}
-+
-+static int octep_hp_enable_slot(struct hotplug_slot *slot)
-+{
-+	struct octep_hp_slot *hp_slot =
-+		container_of(slot, struct octep_hp_slot, slot);
-+
-+	octep_hp_enable_pdev(hp_slot->ctrl, hp_slot);
-+	return 0;
-+}
-+
-+static int octep_hp_disable_slot(struct hotplug_slot *slot)
-+{
-+	struct octep_hp_slot *hp_slot =
-+		container_of(slot, struct octep_hp_slot, slot);
-+
-+	octep_hp_disable_pdev(hp_slot->ctrl, hp_slot);
-+	return 0;
-+}
-+
-+static struct hotplug_slot_ops octep_hp_slot_ops = {
-+	.enable_slot = octep_hp_enable_slot,
-+	.disable_slot = octep_hp_disable_slot,
-+};
-+
-+#define SLOT_NAME_SIZE 16
-+static struct octep_hp_slot *
-+octep_hp_register_slot(struct octep_hp_controller *hp_ctrl,
-+		       struct pci_dev *pdev, u16 slot_number)
-+{
-+	char slot_name[SLOT_NAME_SIZE];
-+	struct octep_hp_slot *hp_slot;
-+	int ret;
-+
-+	hp_slot = kzalloc(sizeof(*hp_slot), GFP_KERNEL);
-+	if (!hp_slot)
-+		return ERR_PTR(-ENOMEM);
-+
-+	hp_slot->ctrl = hp_ctrl;
-+	hp_slot->hp_pdev = pdev;
-+	hp_slot->hp_devfn = pdev->devfn;
-+	hp_slot->slot_number = slot_number;
-+	hp_slot->slot.ops = &octep_hp_slot_ops;
-+
-+	snprintf(slot_name, sizeof(slot_name), "octep_hp_%u", slot_number);
-+	ret = pci_hp_register(&hp_slot->slot, hp_ctrl->pdev->bus,
-+			      PCI_SLOT(pdev->devfn), slot_name);
-+	if (ret) {
-+		kfree(hp_slot);
-+		return ERR_PTR(ret);
-+	}
-+
-+	list_add_tail(&hp_slot->list, &hp_ctrl->slot_list);
-+	octep_hp_disable_pdev(hp_ctrl, hp_slot);
-+
-+	return hp_slot;
-+}
-+
-+static void octep_hp_deregister_slot(void *data)
-+{
-+	struct octep_hp_slot *hp_slot = data;
-+	struct octep_hp_controller *hp_ctrl = hp_slot->ctrl;
-+
-+	pci_hp_deregister(&hp_slot->slot);
-+	octep_hp_enable_pdev(hp_ctrl, hp_slot);
-+	list_del(&hp_slot->list);
-+	kfree(hp_slot);
-+}
-+
-+static bool octep_hp_is_slot(struct octep_hp_controller *hp_ctrl,
-+			     struct pci_dev *pdev)
-+{
-+	/* Check if the PCI device can be hotplugged */
-+	return pdev != hp_ctrl->pdev && pdev->bus == hp_ctrl->pdev->bus &&
-+	       PCI_SLOT(pdev->devfn) == PCI_SLOT(hp_ctrl->pdev->devfn);
-+}
-+
-+static void octep_hp_cmd_handler(struct octep_hp_controller *hp_ctrl,
-+				 struct octep_hp_cmd *hp_cmd)
-+{
-+	struct octep_hp_slot *hp_slot;
-+
-+	/*
-+	 * Enable or disable the slots based on the slot mask.
-+	 * intr_val is a bit mask where each bit represents a slot.
-+	 */
-+	list_for_each_entry(hp_slot, &hp_ctrl->slot_list, list) {
-+		if (!(hp_cmd->intr_val & BIT(hp_slot->slot_number)))
-+			continue;
-+
-+		if (hp_cmd->intr_type == OCTEP_HP_INTR_ENA)
-+			octep_hp_enable_pdev(hp_ctrl, hp_slot);
-+		else
-+			octep_hp_disable_pdev(hp_ctrl, hp_slot);
-+	}
-+}
-+
-+static void octep_hp_work_handler(struct work_struct *work)
-+{
-+	struct octep_hp_controller *hp_ctrl;
-+	struct octep_hp_cmd *hp_cmd;
-+	unsigned long flags;
-+
-+	hp_ctrl = container_of(work, struct octep_hp_controller, work);
-+
-+	/* Process all the hotplug commands */
-+	spin_lock_irqsave(&hp_ctrl->hp_cmd_lock, flags);
-+	while (!list_empty(&hp_ctrl->hp_cmd_list)) {
-+		hp_cmd = list_first_entry(&hp_ctrl->hp_cmd_list,
-+					  struct octep_hp_cmd, list);
-+		list_del(&hp_cmd->list);
-+		spin_unlock_irqrestore(&hp_ctrl->hp_cmd_lock, flags);
-+
-+		octep_hp_cmd_handler(hp_ctrl, hp_cmd);
-+		kfree(hp_cmd);
-+
-+		spin_lock_irqsave(&hp_ctrl->hp_cmd_lock, flags);
-+	}
-+	spin_unlock_irqrestore(&hp_ctrl->hp_cmd_lock, flags);
-+}
-+
-+static enum octep_hp_intr_type octep_hp_intr_type(struct octep_hp_intr_info *intr,
-+						  int irq)
-+{
-+	enum octep_hp_intr_type type;
-+
-+	for (type = OCTEP_HP_INTR_ENA; type < OCTEP_HP_INTR_MAX; type++) {
-+		if (intr[type].number == irq)
-+			return type;
-+	}
-+
-+	return OCTEP_HP_INTR_INVALID;
-+}
-+
-+static irqreturn_t octep_hp_intr_handler(int irq, void *data)
-+{
-+	struct octep_hp_controller *hp_ctrl = data;
-+	struct pci_dev *pdev = hp_ctrl->pdev;
-+	enum octep_hp_intr_type type;
-+	struct octep_hp_cmd *hp_cmd;
-+	u64 intr_val;
-+
-+	type = octep_hp_intr_type(hp_ctrl->intr, irq);
-+	if (type == OCTEP_HP_INTR_INVALID) {
-+		dev_err(&pdev->dev, "Invalid interrupt %d\n", irq);
-+		return IRQ_HANDLED;
-+	}
-+
-+	/* Read and clear the interrupt */
-+	intr_val = readq(hp_ctrl->base + OCTEP_HP_INTR_OFFSET(type));
-+	writeq(intr_val, hp_ctrl->base + OCTEP_HP_INTR_OFFSET(type));
-+
-+	hp_cmd = kzalloc(sizeof(*hp_cmd), GFP_ATOMIC);
-+	if (!hp_cmd)
-+		return IRQ_HANDLED;
-+
-+	hp_cmd->intr_val = intr_val;
-+	hp_cmd->intr_type = type;
-+
-+	/* Add the command to the list and schedule the work */
-+	spin_lock(&hp_ctrl->hp_cmd_lock);
-+	list_add_tail(&hp_cmd->list, &hp_ctrl->hp_cmd_list);
-+	spin_unlock(&hp_ctrl->hp_cmd_lock);
-+	schedule_work(&hp_ctrl->work);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void octep_hp_irq_cleanup(void *data)
-+{
-+	struct octep_hp_controller *hp_ctrl = data;
-+
-+	pci_free_irq_vectors(hp_ctrl->pdev);
-+	flush_work(&hp_ctrl->work);
-+}
-+
-+static int octep_hp_request_irq(struct octep_hp_controller *hp_ctrl,
-+				enum octep_hp_intr_type type)
-+{
-+	struct pci_dev *pdev = hp_ctrl->pdev;
-+	struct octep_hp_intr_info *intr;
-+	int irq;
-+
-+	irq = pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(type));
-+	if (irq < 0)
-+		return irq;
-+
-+	intr = &hp_ctrl->intr[type];
-+	intr->number = irq;
-+	intr->type = type;
-+	snprintf(intr->name, sizeof(intr->name), "octep_hp_%d", type);
-+
-+	return devm_request_irq(&pdev->dev, irq, octep_hp_intr_handler,
-+				IRQF_SHARED, intr->name, hp_ctrl);
-+}
-+
-+static int octep_hp_controller_setup(struct pci_dev *pdev,
-+				     struct octep_hp_controller *hp_ctrl)
-+{
-+	struct device *dev = &pdev->dev;
-+	enum octep_hp_intr_type type;
-+	int ret;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to enable PCI device\n");
-+
-+	ret = pcim_iomap_regions(pdev, BIT(0), OCTEP_HP_DRV_NAME);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to map PCI device region\n");
-+
-+	pci_set_master(pdev);
-+	pci_set_drvdata(pdev, hp_ctrl);
-+
-+	INIT_LIST_HEAD(&hp_ctrl->slot_list);
-+	INIT_LIST_HEAD(&hp_ctrl->hp_cmd_list);
-+	mutex_init(&hp_ctrl->slot_lock);
-+	spin_lock_init(&hp_ctrl->hp_cmd_lock);
-+	INIT_WORK(&hp_ctrl->work, octep_hp_work_handler);
-+
-+	hp_ctrl->pdev = pdev;
-+	hp_ctrl->base = pcim_iomap_table(pdev)[0];
-+	if (!hp_ctrl->base)
-+		return dev_err_probe(dev, -ENODEV, "Failed to get device resource map\n");
-+
-+	ret = pci_alloc_irq_vectors(pdev, 1,
-+				    OCTEP_HP_INTR_VECTOR(OCTEP_HP_INTR_MAX),
-+				    PCI_IRQ_MSIX);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to alloc MSI-X vectors\n");
-+
-+	ret = devm_add_action(&pdev->dev, octep_hp_irq_cleanup, hp_ctrl);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to add IRQ cleanup action\n");
-+
-+	for (type = OCTEP_HP_INTR_ENA; type < OCTEP_HP_INTR_MAX; type++) {
-+		ret = octep_hp_request_irq(hp_ctrl, type);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Failed to request IRQ for vector %d\n",
-+					     OCTEP_HP_INTR_VECTOR(type));
-+	}
-+
-+	return 0;
-+}
-+
-+static int octep_hp_pci_probe(struct pci_dev *pdev,
-+			      const struct pci_device_id *id)
-+{
-+	struct octep_hp_controller *hp_ctrl;
-+	struct pci_dev *tmp_pdev = NULL;
-+	struct octep_hp_slot *hp_slot;
-+	u16 slot_number = 0;
-+	int ret;
-+
-+	hp_ctrl = devm_kzalloc(&pdev->dev, sizeof(*hp_ctrl), GFP_KERNEL);
-+	if (!hp_ctrl)
-+		return -ENOMEM;
-+
-+	ret = octep_hp_controller_setup(pdev, hp_ctrl);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Register all hotplug slots. Hotplug controller is the first function
-+	 * of the PCI device. The hotplug slots are the remaining functions of
-+	 * the PCI device. They are removed from the bus and are added back when
-+	 * the hotplug event is triggered.
-+	 */
-+	for_each_pci_dev(tmp_pdev) {
-+		if (!octep_hp_is_slot(hp_ctrl, tmp_pdev))
-+			continue;
-+
-+		hp_slot = octep_hp_register_slot(hp_ctrl, tmp_pdev, slot_number);
-+		if (IS_ERR(hp_slot))
-+			return dev_err_probe(&pdev->dev, PTR_ERR(hp_slot),
-+					     "Failed to register hotplug slot %u\n",
-+					     slot_number);
-+
-+		ret = devm_add_action(&pdev->dev, octep_hp_deregister_slot,
-+				      hp_slot);
-+		if (ret)
-+			return dev_err_probe(&pdev->dev, ret,
-+					     "Failed to add action for deregistering slot %u\n",
-+					     slot_number);
-+		slot_number++;
-+	}
-+
-+	return 0;
-+}
-+
-+#define OCTEP_DEVID_HP_CONTROLLER 0xa0e3
-+static struct pci_device_id octep_hp_pci_map[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, OCTEP_DEVID_HP_CONTROLLER) },
-+	{ },
-+};
-+
-+static struct pci_driver octep_hp = {
-+	.name = OCTEP_HP_DRV_NAME,
-+	.id_table = octep_hp_pci_map,
-+	.probe = octep_hp_pci_probe,
-+};
-+
-+module_pci_driver(octep_hp);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Marvell");
-+MODULE_DESCRIPTION("OCTEON PCIe device hotplug controller driver");
--- 
-2.25.1
-
+Pj4+IFRoaXMgcGF0Y2ggaW50cm9kdWNlcyBhIFBDSSBob3RwbHVnIGNvbnRyb2xsZXIgZHJpdmVy
+IGZvciB0aGUgT0NURU9ODQo+Pj4gUENJZSBkZXZpY2UsIGEgbXVsdGktZnVuY3Rpb24gUENJZSBk
+ZXZpY2Ugd2hlcmUgdGhlIGZpcnN0IGZ1bmN0aW9uIGFjdHMNCj4+PiBhcyBhIGhvdHBsdWcgY29u
+dHJvbGxlci4gSXQgaXMgZXF1aXBwZWQgd2l0aCBNU0kteCBpbnRlcnJ1cHRzIHRvIG5vdGlmeQ0K
+Pj4+IHRoZSBob3N0IG9mIGhvdHBsdWcgZXZlbnRzIGZyb20gdGhlIE9DVEVPTiBmaXJtd2FyZS4N
+Cj4+Pg0KPj4+IFRoZSBkcml2ZXIgZmFjaWxpdGF0ZXMgdGhlIGhvdHBsdWdnaW5nIG9mIG5vbi1j
+b250cm9sbGVyIGZ1bmN0aW9ucw0KPj4+IHdpdGhpbiB0aGUgc2FtZSBkZXZpY2UuIER1cmluZyBw
+cm9iZSwgbm9uLWNvbnRyb2xsZXIgZnVuY3Rpb25zIGFyZQ0KPj4+IHJlbW92ZWQgYW5kIHJlZ2lz
+dGVyZWQgYXMgUENJIGhvdHBsdWcgc2xvdHMuIFRoZSBzbG90cyBhcmUgYWRkZWQgYmFjaw0KPj4+
+IG9ubHkgdXBvbiByZXF1ZXN0IGZyb20gdGhlIGRldmljZSBmaXJtd2FyZS4gVGhlIGRyaXZlciBh
+bHNvIGFsbG93cyB0aGUNCj4+PiBlbmFibGluZyBhbmQgZGlzYWJsaW5nIG9mIHRoZSBzbG90cyB2
+aWEgc3lzZnMgc2xvdCBlbnRyaWVzLCBwcm92aWRlZCBieQ0KPj4+IHRoZSBQQ0kgaG90cGx1ZyBm
+cmFtZXdvcmsuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBTaGlqaXRoIFRob3R0b24gPHN0aG90
+dG9uQG1hcnZlbGwuY29tPg0KPj4+IFNpZ25lZC1vZmYtYnk6IFZhbXNpIEF0dHVudXJ1IDx2YXR0
+dW51cnVAbWFydmVsbC5jb20+DQo+Pkkgd2FzIGN1cmlvdXMsIHNvIGRyaXZlIGJ5IHJldmlldy4N
+Cj4+DQo+PldoYXQgd2FzIFZhbXNpJ3MgaW52b2x2ZW1lbnQ/ICBHaXZlbiBTaGlqaXRoIHNlbnQg
+dGhpcw0KPj5JJ2QgZ3Vlc3MgY28gZGV2ZWxvcGVyPyAgSW4gd2hpY2ggQ28tZGV2ZWxvcGVkLWJ5
+IHRhZw0KPj5zaG91bGQgYmUgdXNlZC4NCj4+DQouLi4NCj4+PiArfQ0KPj4+ICsNCj4+PiArc3Rh
+dGljIGludCBvY3RlcF9ocF9jb250cm9sbGVyX3NldHVwKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBz
+dHJ1Y3QNCj4+b2N0ZXBfaHBfY29udHJvbGxlciAqaHBfY3RybCkNCj4+PiArew0KPj4+ICsJc3Ry
+dWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4+PiArCWludCByZXQ7DQo+Pj4gKw0KPj4+
+ICsJcmV0ID0gcGNpbV9lbmFibGVfZGV2aWNlKHBkZXYpOw0KPj4+ICsJaWYgKHJldCkgew0KPj4+
+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBQQ0kgZGV2aWNlXG4iKTsNCj4+T25s
+eSBjYWxsZWQgZnJvbSBwcm9iZSwgc28NCj4+CQlyZXR1cm4gZGV2X2Vycl9wcm9iZSgpDQo+Pg0K
+Pj4+ICsJCXJldHVybiByZXQ7DQo+Pj4gKwl9DQo+Pj4gKw0KPj4+ICsJcmV0ID0gcGNpbV9pb21h
+cF9yZWdpb25zKHBkZXYsIEJJVCgwKSwgT0NURVBfSFBfRFJWX05BTUUpOw0KPj5HaXZlbiB0aGVy
+ZSBpcyBhIHBhdGNoIG9uIGxpc3QgZGVwcmVjYXRpbmcgdGhpcywgcmVjb25zaWRlci4NCj4+IGh0
+dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI0MDgwNzA4MzAxOC44NzM0LTItDQo+cHN0YW5u
+ZXJAcmVkaGF0LmNvbS8NCj4+K0NDIFBoaWxpcHANCj4+DQo+DQo+T2theS4gVGhlIEFQSSBpcyBh
+dmFpbGFibGUgaW4gb3JpZ2luL2RldnJlcyBicmFuY2guICBXaWxsIHJlYmFzZSBvbiB0b3Agb2Yg
+aXQuDQo+DQoNCkkgZm9yZ290IGFib3V0IHRoZSBrZXJuZWwgdGVzdCByb2JvdC4NCkknbGwgaG9s
+ZCBvZmYgb24gbWFraW5nIHRoaXMgY2hhbmdlIHVudGlsIHRoZSBwYXRjaCBpcyBtZXJnZWQgaW50
+byBwY2kvbmV4dC4NCg0KDQo=
 
