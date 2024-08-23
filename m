@@ -1,54 +1,61 @@
-Return-Path: <linux-pci+bounces-12131-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12132-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44C8195D4A7
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 19:47:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 578F095D4DB
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 20:04:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8C421F22B0D
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 17:47:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8910D1C22622
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 18:04:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37F8418D64F;
-	Fri, 23 Aug 2024 17:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EAE218FDD6;
+	Fri, 23 Aug 2024 18:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/wnBe5s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvkvwJes"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1030A188A12;
-	Fri, 23 Aug 2024 17:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D5318BBB6;
+	Fri, 23 Aug 2024 18:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724435232; cv=none; b=AS1qBWAwOTCy+AN3eWOSmCWnAXNCIYjGn5vzvxcM+bE7+iAFfcWuclb92bE7Pn7crRh5OW2Yx+78o4HhHTad7R9n4fvP0LMjqINYSTkXAIeJXATBQXKOVDG6Um3K5UF57QMepQ34HYW/PP9hZa56XnWmCiPBz9w6Dfa071+kQYc=
+	t=1724436286; cv=none; b=DoTgk9/FPY0Fi3Sia3mDEI7XLQ0Ez8R5L+Oy0TMGq7NfPuumgbXgBz1qIXhqEfL2jus/aC+Q/2cvShxwV/2dZll10sr/pY2mn3xWUL4xFpWjBoiStksnoLkwR+RbAtp/XdfLj68NbdnlhvJ/mjBlZgdvB6b1vs3udhVbr2i313k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724435232; c=relaxed/simple;
-	bh=7ze++N9tAqQa+Vfl2HhIKMb98yr0SEaVJcjB5T/i8MA=;
+	s=arc-20240116; t=1724436286; c=relaxed/simple;
+	bh=d7EGDtbN0hddOp+GDsOFauqRCeZzmJJsvv0km29SQIc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Ym5bvvB3Bv2oipOb4xBc7OeLwNXSxobCXV6fCwIQMIijw8l8aNu4IA1YKQvrSmlILxLPETzDWJzXrt6fGWjj1cjXN1AvvYZvbL4PDGVGtDhGMag/hvRaNNgwLv5j35rQQMswb0MoI4Y227dDCcKaBDwBqPROqPkAES1Mhtkc38Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/wnBe5s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A20C32786;
-	Fri, 23 Aug 2024 17:47:11 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=PoZlg3l8P4I0QKNTO9uY8u5ZyW5ZqSWWfE3mw6V0+H9zC+QbfQSEqaDsqkA3NDvzk2HKJZj6lKim78jrloe86KcGtMpg/qkLb8W3BdW+iS/DOj1LfSI6yIM82uH2SGSncRufem60aJZkeGxyFo5JswBM1kyA6jWQ+vdGYEP7GCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvkvwJes; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDECC32786;
+	Fri, 23 Aug 2024 18:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724435231;
-	bh=7ze++N9tAqQa+Vfl2HhIKMb98yr0SEaVJcjB5T/i8MA=;
+	s=k20201202; t=1724436285;
+	bh=d7EGDtbN0hddOp+GDsOFauqRCeZzmJJsvv0km29SQIc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=R/wnBe5szUSqLSLq6C5ICB/yz51hjIp1iPiDRh/iQPa7c57g6vB0joavp+YxoNS0q
-	 4GzcZfNxqi2e3mV3mg6ynO3aqVTemsRNXxLZHMbfGlFh6mCN6O9JT5dn4OzpgPnJ56
-	 wRgIFVdH6iglqZpDPlyOGAJocWcpaPKGI3+k98/gAzBYCg63K8Te2dtRwdntmdKhka
-	 RPIoFoleh9+aSY+LujEQ3IZ/Zzf6ZVlad4yNdG11s20HaYR9UeUVtQ7lcIANYHAlRR
-	 yV+yUTDvEUXVYaSC/DkgaUX1q1cFezBhrlZkce8D+h8cRST3lj/OYmmPG0qGTMxRPt
-	 oWKitiOVrTI7Q==
-Date: Fri, 23 Aug 2024 12:47:09 -0500
+	b=FvkvwJesdwBPVPM7AA3zo0dE2WvhjVkNcX1N3e/rX3fiQmKQZACYs4k2CyQ5Tr9I8
+	 SWs+3NhBAC69xMi1OZ8QswayfZHfEyUDkAg+sZz4gBK2Tp5z2SEFsZbxlJpVgEWsti
+	 0aUAP5T4k5oueG57eWeT4/6w5aoliawtcI6D6xXiG8D0s9ICSLGsbPFW/jqbiTNb4J
+	 MKVc+5KtSBV+nW2NXU9C5CFxLHVRiF0/1wzmMbeEOlJ922+Pj7h0Wf9kt1Ne+x9gEF
+	 RKcKPoNDjE0G9wpYrASHWfnhywJAR4LxPhEZdkxNgSzq1M34w3WHmrY8iWqno7j54L
+	 IVDb+gApIaAHw==
+Date: Fri, 23 Aug 2024 13:04:42 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kunwu Chan <kunwu.chan@linux.dev>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kunwu Chan <chentao@kylinos.cn>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] PCI: Make pci_bus_type constant
-Message-ID: <20240823174709.GA375542@bhelgaas>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: bhelgaas@google.com, siyuli@glenfly.com, perex@perex.cz, tiwai@suse.com,
+	pierre-louis.bossart@linux.intel.com,
+	maarten.lankhorst@linux.intel.com, peter.ujfalusi@linux.intel.com,
+	kai.vehmanen@linux.intel.com, rsalvaterra@gmail.com,
+	suijingfeng@loongson.cn, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+	jasontao@glenfly.com, reaperlioc@glenfly.com,
+	guanwentao@uniontech.com, linux@horizon.com, pat-lkml@erley.org,
+	alex.williamson@redhat.com
+Subject: Re: [PATCH v2] PCI: Add function 0 DMA alias quirk for Glenfly arise
+ chip
+Message-ID: <20240823180442.GA377418@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,56 +64,76 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240823074202.139265-1-kunwu.chan@linux.dev>
+In-Reply-To: <CA2BBD087345B6D1+20240823095708.3237375-1-wangyuli@uniontech.com>
 
-On Fri, Aug 23, 2024 at 03:42:01PM +0800, Kunwu Chan wrote:
-> From: Kunwu Chan <chentao@kylinos.cn>
+On Fri, Aug 23, 2024 at 05:57:08PM +0800, WangYuli wrote:
+> Add DMA support for audio function of Glenfly arise chip,
+> which uses request id of function 0.
 > 
-> Since commit d492cc2573a0 ("driver core: device.h: make struct
-> bus_type a const *"), the driver core can properly handle constant
-> struct bus_type, move the pci_bus_type variable to be a constant
-> structure as well, placing it into read-only memory which can not be
-> modified at runtime.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> Link: https://lore.kernel.org/all/20240822185617.GA344785@bhelgaas/
+> Signed-off-by: SiyuLi <siyuli@glenfly.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 
-Applied to pci/misc for v6.12, thanks!
+Applied with Takashi's reviewed-by to pci/iommu for v6.12, thanks!
+
+I changed the hex to lower-case to match nearby code and dropped the
+#defines for PCI_DEVICE_ID_GLENFLY_ARISE10C0_AUDIO and
+PCI_DEVICE_ID_GLENFLY_ARISE1020_AUDIO since they aren't used.
+If those values are used in more places than the quirk, we can add
+them and use the #defines in all the places.
 
 > ---
->  drivers/pci/pci-driver.c | 2 +-
->  include/linux/pci.h      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/quirks.c      | 6 ++++++
+>  include/linux/pci_ids.h   | 4 ++++
+>  sound/pci/hda/hda_intel.c | 2 +-
+>  3 files changed, 11 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index f412ef73a6e4..35270172c833 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1670,7 +1670,7 @@ static void pci_dma_cleanup(struct device *dev)
->  		iommu_device_unuse_default_domain(dev);
->  }
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index dd75c7646bb7..7aad5311326d 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4259,6 +4259,12 @@ static void quirk_dma_func0_alias(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe832, quirk_dma_func0_alias);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
 >  
-> -struct bus_type pci_bus_type = {
-> +const struct bus_type pci_bus_type = {
->  	.name		= "pci",
->  	.match		= pci_bus_match,
->  	.uevent		= pci_uevent,
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 4246cb790c7b..0d6c1c089aca 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1098,7 +1098,7 @@ enum pcie_bus_config_types {
+> +/*
+> + * Some Glenfly chips use function 0 as the PCIe requester ID for DMA too.
+> + */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, 0x3D40, quirk_dma_func0_alias);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, 0x3D41, quirk_dma_func0_alias);
+> +
+>  static void quirk_dma_func1_alias(struct pci_dev *dev)
+>  {
+>  	if (PCI_FUNC(dev->devfn) != 1)
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index e388c8b1cbc2..536465196d09 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2661,6 +2661,10 @@
+>  #define PCI_DEVICE_ID_DCI_PCCOM8	0x0002
+>  #define PCI_DEVICE_ID_DCI_PCCOM2	0x0004
 >  
->  extern enum pcie_bus_config_types pcie_bus_config;
->  
-> -extern struct bus_type pci_bus_type;
-> +extern const struct bus_type pci_bus_type;
->  
->  /* Do NOT directly access these two variables, unless you are arch-specific PCI
->   * code, or PCI core code. */
+> +#define PCI_VENDOR_ID_GLENFLY	    0x6766
+> +#define PCI_DEVICE_ID_GLENFLY_ARISE10C0_AUDIO	 0x3D40
+> +#define PCI_DEVICE_ID_GLENFLY_ARISE1020_AUDIO	 0x3D41
+> +
+>  #define PCI_VENDOR_ID_INTEL		0x8086
+>  #define PCI_DEVICE_ID_INTEL_EESSC	0x0008
+>  #define PCI_DEVICE_ID_INTEL_HDA_CML_LP	0x02c8
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index b33602e64d17..e8958a464647 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -2671,7 +2671,7 @@ static const struct pci_device_id azx_ids[] = {
+>  	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS |
+>  	  AZX_DCAPS_PM_RUNTIME },
+>  	/* GLENFLY */
+> -	{ PCI_DEVICE(0x6766, PCI_ANY_ID),
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_GLENFLY, PCI_ANY_ID),
+>  	  .class = PCI_CLASS_MULTIMEDIA_HD_AUDIO << 8,
+>  	  .class_mask = 0xffffff,
+>  	  .driver_data = AZX_DRIVER_GFHDMI | AZX_DCAPS_POSFIX_LPIB |
 > -- 
-> 2.41.0
+> 2.43.4
 > 
 
