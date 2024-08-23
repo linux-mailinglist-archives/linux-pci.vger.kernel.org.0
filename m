@@ -1,137 +1,54 @@
-Return-Path: <linux-pci+bounces-12130-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12131-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A180695D418
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 19:16:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44C8195D4A7
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 19:47:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 570852842AE
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 17:16:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8C421F22B0D
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 17:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5426A18E035;
-	Fri, 23 Aug 2024 17:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37F8418D64F;
+	Fri, 23 Aug 2024 17:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fXIE0q43"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/wnBe5s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D7E18C330
-	for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 17:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1030A188A12;
+	Fri, 23 Aug 2024 17:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724433358; cv=none; b=iSVSycmKZhQZyjhe+ceRtV4ifmkJjurhYmA3balwv8TAPgzeRD9AeII274nGnJN+EzrUvzAVLIPCfUVLFBy2EDV38DyLItLKCQk/av6mJMSjXpsBuVSsxO2zsNV0/wXqK44j4DBTaQ8zVwxqoG7wiqsZFI7YG9RX1yMwCd5BoR0=
+	t=1724435232; cv=none; b=AS1qBWAwOTCy+AN3eWOSmCWnAXNCIYjGn5vzvxcM+bE7+iAFfcWuclb92bE7Pn7crRh5OW2Yx+78o4HhHTad7R9n4fvP0LMjqINYSTkXAIeJXATBQXKOVDG6Um3K5UF57QMepQ34HYW/PP9hZa56XnWmCiPBz9w6Dfa071+kQYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724433358; c=relaxed/simple;
-	bh=VPZAtg08Wy5/FG+Kj/wTZuQQZpFnItvR2PIwTa5Vc/I=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxdDQO4RTVBBVxwNodgUXlQSKJcaRtWtdtzN8Vq3OEaboI6hlE6/CsUIhu4o40CraSSmFmMnCxGGGy+VjOyECcVFy0CFfVHY51ReOyPk1r1aGAytvBau8KB+5ObCY5e7gGxSTn2FsH6V50TnPBkPOIaLN2kOTEeN/mktBmlZycs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fXIE0q43; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5bf0261f162so2927844a12.0
-        for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 10:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724433355; x=1725038155; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q5kboO0j45Is859BAgD4iFoFAta2hgxS6Xgur8E+680=;
-        b=fXIE0q43JG/afuGoJEo+1ZFmAZyWLPTmqGuQgqMJ/4lFrRm0qZuHBzQqU5pb+FghpW
-         h9I+J8sE1cbOerZ1XocD/Dsjwv0sbkDb32VVtnF1twJKGQ21qxpF9uoorvT2sCcHwf+f
-         E68DXoobn8xvzK4zt9C+WC6FwLmWrhsoMdKaO9jWeCLyYa4VSPEBQifovEROjvrizcCJ
-         zdYaEmq2IsAmQ6sS1DHygrF7Deu/CD1RCjMmo5B0fHQbG3J5ndKE/SQDnbvlvUfpdMbU
-         1mEq6JtTvaicqO++blC68QVaO4O2PyziwJPlE3P24TJ8Dfy6CkEplcuE68KAAQANAHAi
-         nrMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724433355; x=1725038155;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q5kboO0j45Is859BAgD4iFoFAta2hgxS6Xgur8E+680=;
-        b=w1iNaYPk7L2IchZoJzAju0tnz1iTlaqC05tFsNFsMcL2VeJnX8hM2yVqsPpJcKHYfX
-         vwt8e12q7/lyc5khv/1hVTZgWIPxr6wXNrddefbXwS3pWr9HW+kCKBdF0UH1Qz5FlHoD
-         enTnoKt59GdPcrluhM3zKlfjrNJoEqzaXM14sDbRmAPJlLVFIwdHysTiWIcLEjP+I9WZ
-         m5h7L9kDDJyJjkI5Cmxasumbuo/flXMc18uQtnCDN4BYZqYdp8ws+Ome4Q9ZC9VklUZe
-         p0SAsnS5AgVNT0jkRiD5gh0ZDOsegPZLkPVqIhhMbiE3DWhGnnQ3+seyCeh/b+0YU+g5
-         OKdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf1WECaKf42U8uNI4PzfyTwbtk174Qkh7vSnXtdSj0Ek+DQhwoEVXzF8+WFClK44thDNlqgmo9cOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoJCm4Pzx9kS9nuZZEhN9puq7gPuGGvpxMA+pyg8/+nIOd5qIE
-	cU+xMm3U/Wrm2cRdfiYKQYgcKvowYfuFXl8zGc/nC/BNDeidXP5sYHcDPTvkGH4=
-X-Google-Smtp-Source: AGHT+IGi+ju94qIZV+5dh+FC4edd1LJS/Rb5jnDSsIsgwxHk/+itiIP1aidxM/8be626D3wcbLPt/A==
-X-Received: by 2002:a17:907:2d0a:b0:a86:7199:af37 with SMTP id a640c23a62f3a-a86a54f142dmr198119466b.58.1724433354052;
-        Fri, 23 Aug 2024 10:15:54 -0700 (PDT)
-Received: from localhost ([87.13.33.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f4862e8sm287339466b.173.2024.08.23.10.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 10:15:53 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 23 Aug 2024 19:16:00 +0200
-To: Simon Horman <horms@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 07/11] pinctrl: rp1: Implement RaspberryPi RP1 gpio
- support
-Message-ID: <ZsjD0C8oYmUi5I7n@apocalypse>
-Mail-Followup-To: Simon Horman <horms@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <eb39a5f3cefff2a1240a18a255dac090af16f223.1724159867.git.andrea.porta@suse.com>
- <20240821132754.GC6387@kernel.org>
+	s=arc-20240116; t=1724435232; c=relaxed/simple;
+	bh=7ze++N9tAqQa+Vfl2HhIKMb98yr0SEaVJcjB5T/i8MA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Ym5bvvB3Bv2oipOb4xBc7OeLwNXSxobCXV6fCwIQMIijw8l8aNu4IA1YKQvrSmlILxLPETzDWJzXrt6fGWjj1cjXN1AvvYZvbL4PDGVGtDhGMag/hvRaNNgwLv5j35rQQMswb0MoI4Y227dDCcKaBDwBqPROqPkAES1Mhtkc38Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/wnBe5s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A20C32786;
+	Fri, 23 Aug 2024 17:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724435231;
+	bh=7ze++N9tAqQa+Vfl2HhIKMb98yr0SEaVJcjB5T/i8MA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=R/wnBe5szUSqLSLq6C5ICB/yz51hjIp1iPiDRh/iQPa7c57g6vB0joavp+YxoNS0q
+	 4GzcZfNxqi2e3mV3mg6ynO3aqVTemsRNXxLZHMbfGlFh6mCN6O9JT5dn4OzpgPnJ56
+	 wRgIFVdH6iglqZpDPlyOGAJocWcpaPKGI3+k98/gAzBYCg63K8Te2dtRwdntmdKhka
+	 RPIoFoleh9+aSY+LujEQ3IZ/Zzf6ZVlad4yNdG11s20HaYR9UeUVtQ7lcIANYHAlRR
+	 yV+yUTDvEUXVYaSC/DkgaUX1q1cFezBhrlZkce8D+h8cRST3lj/OYmmPG0qGTMxRPt
+	 oWKitiOVrTI7Q==
+Date: Fri, 23 Aug 2024 12:47:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kunwu Chan <kunwu.chan@linux.dev>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Kunwu Chan <chentao@kylinos.cn>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] PCI: Make pci_bus_type constant
+Message-ID: <20240823174709.GA375542@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -140,37 +57,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240821132754.GC6387@kernel.org>
+In-Reply-To: <20240823074202.139265-1-kunwu.chan@linux.dev>
 
-On 14:27 Wed 21 Aug     , Simon Horman wrote:
-> On Tue, Aug 20, 2024 at 04:36:09PM +0200, Andrea della Porta wrote:
-> > The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
-> > Add minimum support for the gpio only portion. The driver is in
-> > pinctrl folder since upcoming patches will add the pinmux/pinctrl
-> > support where the gpio part can be seen as an addition.
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+On Fri, Aug 23, 2024 at 03:42:01PM +0800, Kunwu Chan wrote:
+> From: Kunwu Chan <chentao@kylinos.cn>
 > 
-> ...
+> Since commit d492cc2573a0 ("driver core: device.h: make struct
+> bus_type a const *"), the driver core can properly handle constant
+> struct bus_type, move the pci_bus_type variable to be a constant
+> structure as well, placing it into read-only memory which can not be
+> modified at runtime.
 > 
-> > diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> ...
-> 
-> > +const struct rp1_iobank_desc rp1_iobanks[RP1_NUM_BANKS] = {
-> > +	/*         gpio   inte    ints     rio    pads */
-> > +	{  0, 28, 0x0000, 0x011c, 0x0124, 0x0000, 0x0004 },
-> > +	{ 28,  6, 0x4000, 0x411c, 0x4124, 0x4000, 0x4004 },
-> > +	{ 34, 20, 0x8000, 0x811c, 0x8124, 0x8000, 0x8004 },
-> > +};
-> 
-> rp1_iobanks seems to only be used in this file.
-> If so, it should be static.
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
 
-Fixed, thanks.
+Applied to pci/misc for v6.12, thanks!
 
+> ---
+>  drivers/pci/pci-driver.c | 2 +-
+>  include/linux/pci.h      | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Flagged by Sparse.
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index f412ef73a6e4..35270172c833 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1670,7 +1670,7 @@ static void pci_dma_cleanup(struct device *dev)
+>  		iommu_device_unuse_default_domain(dev);
+>  }
+>  
+> -struct bus_type pci_bus_type = {
+> +const struct bus_type pci_bus_type = {
+>  	.name		= "pci",
+>  	.match		= pci_bus_match,
+>  	.uevent		= pci_uevent,
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 4246cb790c7b..0d6c1c089aca 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1098,7 +1098,7 @@ enum pcie_bus_config_types {
+>  
+>  extern enum pcie_bus_config_types pcie_bus_config;
+>  
+> -extern struct bus_type pci_bus_type;
+> +extern const struct bus_type pci_bus_type;
+>  
+>  /* Do NOT directly access these two variables, unless you are arch-specific PCI
+>   * code, or PCI core code. */
+> -- 
+> 2.41.0
 > 
-> ...
 
