@@ -1,158 +1,187 @@
-Return-Path: <linux-pci+bounces-12090-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12091-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5422095CC2E
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 14:14:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5A3C95CC4E
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 14:28:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10A4F286142
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 12:14:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C2C9286B45
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 12:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 711F118455B;
-	Fri, 23 Aug 2024 12:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58285185935;
+	Fri, 23 Aug 2024 12:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwCGwkUh"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Taxvtad9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A112D14B966;
-	Fri, 23 Aug 2024 12:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C64185606;
+	Fri, 23 Aug 2024 12:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724415236; cv=none; b=idj0fMyrv2pJY5uk8Rl4MJ1oQU2Hl347BMhM2QxE+MVyw6xOykdfpKRcN4kc8BDU358Zto+3aILAk4g+2F0cVlp2S8uSa3D5mzWiAP0Vq+h6+z9dbB7Mi4EaI0WpEngoQtXMzPV9LQgmEjRI3fteAeQtktSthKats7j9ubMUv+8=
+	t=1724416077; cv=none; b=M77yjyLxSdovcuC/I2+CmauvTI07r53CCq2h40WYFA7RQmfyFLoVXBcnNj/JRXwoforcHlc0JCKFRsTL0BgTL4nQX3FxToLu5ixZLw0/dv9t60UtDu0FE9HkgEx/w7ARb5t+IBP5qoE2LSQuh9CplGbdHdftoWdZTdOqpjJltjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724415236; c=relaxed/simple;
-	bh=mI3ViYU8W1c0NrAvrNrIid+Oc/raH35FJcXxkoolBEU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pE2N15HOxX1XZlQd3gbzmqFu84aQQMz/zvOCykGusrw9qS8Pr+6zThrpn37QbTfvalZY80LklYU90TSyKrB+qr2sRDG6Aua96eRAJ7cA52M9XaKYfhoy/+vk+LGUyPeeBLNGBdV/nHg8LdCVqNbzLby7MMDodYypeETQ5NBw8lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwCGwkUh; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724416077; c=relaxed/simple;
+	bh=bMnoAKpPCIVQRex724ASfJoSY6zASK62deCO9e3JAHI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f06wJqitNCWC8vCSJ3CF0Vb5pMc7lAqFJSjFxZbZ2WB20x+TY7jnwJqKmy59m8NVC6UUN2k7A+z2i20T8If7dzxDLr65bvn+idqsA5GZzCMZ52F053AYzGEDg1xV3iVOUqKO7sLppfrA0W1FwX7cWiif4/kpnxrjt7GEmiRUmkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Taxvtad9; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724415235; x=1755951235;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mI3ViYU8W1c0NrAvrNrIid+Oc/raH35FJcXxkoolBEU=;
-  b=bwCGwkUh00CYrxgnmYQUJ1oCAKU24DgBjUcgwK3CVYAUG7oc3yE6MHeP
-   OwdR/sLBxKmiABAspWOBHC2T3ykkIjVCTwtDVHNc3sRNIk0YvfQO18Qk/
-   frfz7IGgPXX/VwjnetjkGe/UKncB08BO9i0vNvrHc5Co7wl3Ord7FzLQZ
-   WAX0Q8P45TSs2z2u+fWRFckEQSLa/F/01tRC8Bifb+WqQjyQ3baawT02y
-   2NWFx5+/c19owr1Pchw64sIKOjeY9Pd6vuxGHSXfaUS3Ui1CwYAoAEnfC
-   tcCMC6NGoHdM07/K/r0HN8evbvfAvv+Apk0/jOvLDPEXtf1VrIRtLJ+xy
-   g==;
-X-CSE-ConnectionGUID: emD5+ooARM+MlpXE2I/Jiw==
-X-CSE-MsgGUID: Kdiqp6X9T629nsvXYDM+9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="33447535"
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1724416075; x=1755952075;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bMnoAKpPCIVQRex724ASfJoSY6zASK62deCO9e3JAHI=;
+  b=Taxvtad9tmvHLMkqiHt7NtO86MWzHZe9jNhBCQOaE0kh0QaMDovJFIxt
+   ROsUvOOagD14dyTZKm7VS5gSDbSYRIjglQ6Kz998H1TfD+OtN7Q2j8DSK
+   vVLCMAbnsbnue8WLRfZmcb5ImmnFXYAthGX6SH3Uq+0GBVcM8qBt5fAqU
+   4PReJwvrSAcaTYZ5jebi4w3XjFDDpyu5Z2YgH0PiPtC4sbbFrNRVYfBUz
+   vaJUQdjCNcFgjsNP6geiz0yViF0rnRLD/Y8kHNnWj5xjzErxsalr/7ybx
+   oKKR3+ZvpCBthZD1gnWmKi4Vm9HAPaA11aQlHC2yQxYmQOZWafna7bUOT
+   A==;
+X-CSE-ConnectionGUID: rDZOZxKYRGu2u+L6hg58hQ==
+X-CSE-MsgGUID: N2EUElwYRp2RS+7dariFpA==
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="33447535"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 05:13:54 -0700
-X-CSE-ConnectionGUID: mzmHBCBVTn+fu6CMuLBL1Q==
-X-CSE-MsgGUID: f3uiEE9IQ5agqORUqnP1jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="61787720"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.2])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 05:13:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 23 Aug 2024 15:13:46 +0300 (EEST)
-To: Mario Limonciello <superm1@kernel.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Mathias Nyman <mathias.nyman@intel.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>, 
-    Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v4 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in
- pci_dev_wait()
-In-Reply-To: <20240823042508.1057791-4-superm1@kernel.org>
-Message-ID: <764e053f-4d6c-14ab-b0f4-fac22f90bf2e@linux.intel.com>
-References: <20240823042508.1057791-1-superm1@kernel.org> <20240823042508.1057791-4-superm1@kernel.org>
+   d="scan'208";a="198251692"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Aug 2024 05:27:53 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 23 Aug 2024 05:27:27 -0700
+Received: from daire-X570.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Fri, 23 Aug 2024 05:27:25 -0700
+From: <daire.mcnamara@microchip.com>
+To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
+	<ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v9 0/3] Fix address translations on MPFS PCIe controller
+Date: Fri, 23 Aug 2024 13:27:14 +0100
+Message-ID: <20240823122717.1159133-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, 22 Aug 2024, Mario Limonciello wrote:
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> A device that has gone through a reset may return a value in PCI_COMMAND
-> but that doesn't mean it's finished transitioning to D0.  On devices that
-> support power management explicitly check PCI_PM_CTRL on everything but
-> system resume to ensure the transition happened.
-> 
-> Devices that don't support power management and system resume will
-> continue to use PCI_COMMAND.
+Hi all,
 
-It feels part of the coverletter text would belong into this patch.
+On Microchip PolarFire SoC (MPFS), the PCIe controller is connected to the
+CPU via one of three Fabric Interface Connectors (FICs).  Each FIC present
+to the CPU complex as 64-bit AXI-M and 64-bit AXI-S.  To preserve
+compatibility with other PolarFire family members, the PCIe controller is
+connected to its encapsulating FIC via a 32-bit AXI-M and 32-bit AXI-S
+interface.
 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/pci.c | 28 ++++++++++++++++++++--------
->  1 file changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e4a7f5dfe6bf4..b7717155e2fd0 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1308,21 +1308,33 @@ static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_type, int
->  	 * the read (except when CRS SV is enabled and the read was for the
->  	 * Vendor ID; in that case it synthesizes 0x0001 data).
->  	 *
-> -	 * Wait for the device to return a non-CRS completion.  Read the
-> -	 * Command register instead of Vendor ID so we don't have to
-> -	 * contend with the CRS SV value.
-> +	 * Wait for the device to return a non-CRS completion.  On devices
-> +	 * that support PM control and on waits that aren't part of system
-> +	 * resume read the PM control register to ensure the device has
-> +	 * transitioned to D0.  On devices that don't support PM control,
-> +	 * or during system resume read the command register to instead of
-> +	 * Vendor ID so we don't have to contend with the CRS SV value.
->  	 */
->  	for (;;) {
-> -		u32 id;
-> -
->  		if (pci_dev_is_disconnected(dev)) {
->  			pci_dbg(dev, "disconnected; not waiting\n");
->  			return -ENOTTY;
->  		}
->  
-> -		pci_read_config_dword(dev, PCI_COMMAND, &id);
-> -		if (!PCI_POSSIBLE_ERROR(id))
-> -			break;
-> +		if (dev->pm_cap && reset_type != PCI_DEV_WAIT_RESUME) {
-> +			u16 pmcsr;
-> +
-> +			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> +			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
-> +				(pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
+Each FIC is implemented in FPGA logic and can incorporate logic along its 64-bit
+AXI-M to 32-bit AXI-M chain (including address translation) and, likewise, along
+its 32-bit AXI-S to 64-bit AXI-S chain (again including address translation).
 
-Misleading indentation.
+In order to reduce the potential support space for the PCIe controller in
+this environment, MPFS supports certain reference designs for these address
+translations: reference designs for cache-coherent memory accesses
+and reference designs for non-cache-coherent memory accesses. The precise
+details of these reference designs and associated customer guidelines
+recommending that customers adhere to the addressing schemes used in those
+reference designs are available from Microchip, but the implication for the
+PCIe controller address translation between CPU-space and PCIe-space are:
 
+For outbound address translation, the PCIe controller address translation tables
+are treated as if they are 32-bit only.  Any further address translation must
+be done in FPGA fabric.
+
+For inbound address translation, the PCIe controller is configurable for two
+cases:
+* In the case of cache-coherent designs, the base of the AXI-S side of the
+  address translation must be set to 0 and the size should be 4 GiB wide. The
+  FPGA fabric must complete any address translations based on that 0-based
+  address translation.
+* In the case of non-cache coherent designs, the base of AXI-S side of the
+  address translation must be set to 0x8000'0000 and the size shall be 2 GiB
+  wide.  The FPGA fabric must complete any address translation based on that
+  0x80000000 base.
+
+So, for example, in the non-cache-coherent case, with a device tree property
+that maps an inbound range from 0x10'0000'0000 in PCIe space to 0x10'0000'0000
+in CPU space, the PCIe rootport will translate a PCIe address of 0x10'0000'0000
+to an intermediate 32-bit AXI-S address of 0x8000'0000 and the FIC is
+responsible for translating that intermediate 32-bit AXI-S address of
+0x8000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+And similarly, for example, in the cache-coherent case, with a device tree
+property that maps an inbound range from 0x10'0000'0000 in PCIe space to
+0x10'0000'0000 in CPU space, the PCIe rootport will translate a PCIe address
+of 0x10'0000'0000 to an intermediate 32-bit AXI-S address of 0x0000'0000 and
+the FIC is responsible for translating that intermediate 32-bit AXI-S address
+of 0x0000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+See https://lore.kernel.org/all/20220902142202.2437658-1-daire.mcnamara@microchip.com/T/
+for backstory.
+
+Changes since v8:
+- Edits suggested by BHelgass and Ilpo Jarvinen
+- Dropped the setup_inbound_atr u64 change (passing on openrisc 32-bit without it)
+
+Changes since v7:
+- Rebased on top of 6.11rc1
+
+Changes since v6:
+- Added Reviewed-by: Ilpo tag to outbound patch
+- Fixed typos/capitalisation/etc as suggested by Ilpo
+
+Changes since v5:
+- Reverted setup_inbound_atr size parameter to u64 as ci system reported
+  SZ_4G getting truncated to 0 on mips when I try to use size_t or resource_size_t.
+  Added Acked-by tags
+
+Changes since v4:
+- Added more cleanups suggested by Ilpo Jarvinen
+  Added cleanups for inbound v4 and outbound v3.
+
+Changes since v3:
+- Added nice cleanups suggested by Ilpo Jarvinen
+
+Changes since v2:
+- Added <Signed-off-by: tag>
+
+Changes since v1:
+- added bindings patch to allow dma-noncoherent
+- changed a size_t to u64 to pass 32-bit compile tests
+- allowed 64-bit outbound pcie translations
+- tied PCIe side of eCAM translation table to 0
+
+Conor Dooley (1):
+  dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
+
+Daire McNamara (2):
+  PCI: microchip: Fix outbound address translation tables
+  PCI: microchip: Fix inbound address translation tables
+
+ .../bindings/pci/microchip,pcie-host.yaml     |   2 +
+ .../pci/controller/plda/pcie-microchip-host.c | 123 +++++++++++++++++-
+ drivers/pci/controller/plda/pcie-plda-host.c  |  17 ++-
+ drivers/pci/controller/plda/pcie-plda.h       |   6 +-
+ drivers/pci/controller/plda/pcie-starfive.c   |   3 +
+ 5 files changed, 142 insertions(+), 9 deletions(-)
+
+
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
 -- 
- i.
+2.34.1
 
-> +				break;
-> +		} else {
-> +			u32 id;
-> +
-> +			pci_read_config_dword(dev, PCI_COMMAND, &id);
-> +			if (!PCI_POSSIBLE_ERROR(id))
-> +				break;
-> +		}
->  
->  		if (delay > timeout) {
->  			pci_warn(dev, "not ready %dms after %s; giving up\n",
-> 
 
