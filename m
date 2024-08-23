@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-12088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3FE095CBCD
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 13:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C399B95CC0B
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 14:07:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D91291C23E03
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:57:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00C751C2092B
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 12:07:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A562718756A;
-	Fri, 23 Aug 2024 11:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B6C1185606;
+	Fri, 23 Aug 2024 12:07:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="epQqbInX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnpeNykl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99D1187847;
-	Fri, 23 Aug 2024 11:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C77184550;
+	Fri, 23 Aug 2024 12:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724414227; cv=none; b=d5aCalg8ettDfRRMm1Y40FtcSikG+MP09vPQXMgnVmJUOi/FGhqGtksbeXYkE9n0kAMtL5n9TLOhRWEsHKn25YmIl2dHL6y9gDJu5yuzWWwfz5fqYSHpoCZuSRUXc9NcVB8aWuUV51ukhr58kKwFHLATMR+RsnajRcGJKoBTYJg=
+	t=1724414840; cv=none; b=WedkJr1WVV0sVIYw9A/zlo+eltnMqBxUqRj2TfoMksRLqs1OOXTRnu7BxawLgM4oWtxw+pa/JBEXNAVC7CshA+giuc68t+tI7/zaYYBhU6aSkzxFyfXJ4CROdlYuKSJz7s+9y9MF7unqclS7xkMqBaWRZ/MGvb9EhSmv2cONGT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724414227; c=relaxed/simple;
-	bh=B97GWLVIdXC8TO85HGWaNAJLewjppBPRRXHX3Hkk548=;
+	s=arc-20240116; t=1724414840; c=relaxed/simple;
+	bh=GmmITxJvuf72+kfLPPaBWOkkyO9Pa4/VVNNaJ/o/los=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NJkXuaiLH/O4kdGm4ZbHckaa4EbwFAdwoySmhft3t1izi2W0pMa92LxnqsS0CwZW56I6uVROa/4wqHvVoxUbgkE+jmVvR/Y8LRVMIRA0Lv2kfZN/Lt7QkYwM5eHwwYlotYL1laCmUGa4h3Pvm55wmoyN8kDQyD6DHceYyFl3c4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=epQqbInX; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version:Content-Type; b=Pj5GUzg0RHrnL0neNv04q3+BIW3BqprnL1Z3BIrstsisIl0y1VdpFRXjDWYI2aeB9Ig2G6am9uNdhsn9hHcJKBk7QwXS9KNhfVxP9q9R3zGppCjpw23E4yh6ZQXGf+Qd9fSA7xXH+3i64JMlijBJsmzGINoFLd283/01kvxs3Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnpeNykl; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724414226; x=1755950226;
+  t=1724414839; x=1755950839;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=B97GWLVIdXC8TO85HGWaNAJLewjppBPRRXHX3Hkk548=;
-  b=epQqbInXTelM3z3EDTcd6HUEJ9GB9j7byl4onE+CFuz1PHqFkRMSV0Pu
-   +dpecNiy8ywD4veJ8AgiYnxvUoLqwC+mlM5g8i16+ebLjOXEkbqeSO9mL
-   bHqIJPKP4id7+VdSwKAJb+hy2aeUC7rA8MccROdhIK2pxevC1Np5H0K0+
-   93BAFF5alHlCVxTwBksfuJh3li1DMsB3UfXRDQ1yLKViN0XbFbS89xerE
-   32qkmPsTEwPj1VneXJmN9Lk3ZKLjgWxWPafbIRMC+4T26V5AN+gK260H3
-   Yzzxdn81+C3SNUb67AYX1BxRziGbCpVR5/GOLMfMBRlyEn1wjicEqUT9t
+   references:mime-version:content-id;
+  bh=GmmITxJvuf72+kfLPPaBWOkkyO9Pa4/VVNNaJ/o/los=;
+  b=gnpeNyklvVx8h/lQ24/byJzvc0loNkG8u3574SHOWqaMw8d+O8g4ci3i
+   F89jY9nHbcUFtBppyyx/YQ5oh6yfp5L47KWkiZdWz6xkb/YRfoeXVQ1vf
+   QstDqwVatE9W91rflPfrC05Jh1rdeXGYbix2UnjIsuPknejUWnfq6F4nU
+   8RFLhmmnec9lOOllFeDJrblceO4GCXckP3kR8QR1hIFN8nKlMMgAG4kg4
+   NAP/8lGAl4P2+V9kaNdEf/NK1JbFz94/Qp0vuUYtw9TrDXdvyrjyp7qHw
+   7aDSFRrRtvl3RDXLkkKwcIisrr+Bh4WWV7ovPPJo1VmOSNyb9phCn3rm4
    Q==;
-X-CSE-ConnectionGUID: RWOg8lZjQPawO02aUzmE9g==
-X-CSE-MsgGUID: cvSDkiiST7SsaKZWa2GbiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22690773"
+X-CSE-ConnectionGUID: dL7IDij2RviuwpwenSDjwA==
+X-CSE-MsgGUID: ybTqT4IDTvK609CxLBpKPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="23033119"
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="22690773"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 04:57:05 -0700
-X-CSE-ConnectionGUID: r/YtzQ8RTOyZyCATh1WQYg==
-X-CSE-MsgGUID: XAaZUiFDRwuQt1zj6QYP4A==
+   d="scan'208";a="23033119"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 05:07:18 -0700
+X-CSE-ConnectionGUID: K4oJ9jpPRMOJQTS2At7iLQ==
+X-CSE-MsgGUID: 5ouiCCrSRR2Qlpwz6QBFpw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="84960961"
+   d="scan'208";a="62501211"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.2])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 04:57:01 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 05:07:14 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 23 Aug 2024 14:56:57 +0300 (EEST)
+Date: Fri, 23 Aug 2024 15:07:10 +0300 (EEST)
 To: Mario Limonciello <superm1@kernel.org>
 cc: Bjorn Helgaas <bhelgaas@google.com>, 
     Mathias Nyman <mathias.nyman@intel.com>, 
@@ -70,236 +70,99 @@ cc: Bjorn Helgaas <bhelgaas@google.com>,
     Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
     Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v4 1/5] PCI: Use an enum for reset type in
- pci_dev_wait()
-In-Reply-To: <20240823042508.1057791-2-superm1@kernel.org>
-Message-ID: <9b8626c8-46fd-6e2d-12ad-592889128172@linux.intel.com>
-References: <20240823042508.1057791-1-superm1@kernel.org> <20240823042508.1057791-2-superm1@kernel.org>
+Subject: Re: [PATCH v4 3/5] PCI: Verify functions currently in D3cold have
+ entered D0
+In-Reply-To: <20240823042508.1057791-5-superm1@kernel.org>
+Message-ID: <561b6865-cba3-d640-b56d-072d06b94026@linux.intel.com>
+References: <20240823042508.1057791-1-superm1@kernel.org> <20240823042508.1057791-5-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-979799848-1724414217=:2230"
+Content-Type: multipart/mixed; BOUNDARY="8323328-1541883532-1724414664=:2230"
+Content-ID: <0c5fdc0a-f1cf-5b47-eac4-adb56783f51c@linux.intel.com>
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-979799848-1724414217=:2230
-Content-Type: text/plain; charset=UTF-8
+--8323328-1541883532-1724414664=:2230
+Content-Type: text/plain; CHARSET=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <f1fc49f7-b589-1d47-a5a9-af0ac9fe67d5@linux.intel.com>
 
 On Thu, 22 Aug 2024, Mario Limonciello wrote:
 
 > From: Mario Limonciello <mario.limonciello@amd.com>
 >=20
-> A string is passed to all callers of pci_dev_wait() which is utilized
-> to demonstrate what kind of reset happened when there was a problem.
+> It is reported that USB4 routers and downstream devices may behave
+> incorrectly if a dock cable is plugged in at approximately the time that
+> the autosuspend_delay is configured. In this situation the device has
+> attempted to enter D3cold, but didn't finish D3cold entry when the PCI
+> core tried to transition it back to D0.
 >=20
-> This doesn't allow making the behavior for different reset types
-> conditional though. Lay some plumbing to allow making comparisons of
-> reset types with integers instead. No functional changes.
+> Empirically measuring this situation an "aborted" D3cold exit takes
+> ~60ms and a "normal" D3cold exit takes ~6ms.
 >=20
-> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> The PCI-PM 1.2 spec specifies that the restore time for functions
+> in D3cold is either 'Full context restore or boot latency'.
+>=20
+> As PCIe r6.0 sec 5.8 specifies that the device will have gone
+> through a conventional reset, it may take some time for the
+> device to be ready.
+>=20
+> Wait up to 1 sec as specified in PCIe r6.0 sec 6.6.1 for a device
+> in D3cold to return to D0.
+>=20
+> Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 11 +++++++++++
+>  drivers/pci/pci.h |  1 +
+>  2 files changed, 12 insertions(+)
+>=20
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b7717155e2fd0..7e861b6923d0a 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1425,6 +1425,17 @@ int pci_power_up(struct pci_dev *dev)
+>  =09else if (state =3D=3D PCI_D2)
+>  =09=09udelay(PCI_PM_D2_DELAY);
+> =20
+> +=09/*
+> +=09 * D3cold -> D0 will have gone through a conventional reset and may n=
+eed
+> +=09 * time to be ready.
+> +=09 */
+> +=09if (dev->current_state =3D=3D PCI_D3cold) {
+> +=09=09int ret;
+> +
+> +=09=09ret =3D pci_dev_wait(dev, PCI_DEV_WAIT_D3COLD_D0, PCI_RESET_WAIT);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09}
+>  end:
+>  =09dev->current_state =3D PCI_D0;
+>  =09if (need_restore)
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 477257e843952..a675f5d55f298 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -11,6 +11,7 @@ enum pci_reset_type {
+>  =09PCI_DEV_WAIT_BUS_RESET,
+>  =09PCI_DEV_WAIT_RESUME,
+>  =09PCI_DEV_WAIT_DPC,
+> +=09PCI_DEV_WAIT_D3COLD_D0,
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Don't you need to add a string for this too? :-/
+
+I wonder if it would be prudent to add PCI_DEV_WAIT_MAX and=20
+use static_assert() for the sizeof the pci_reset_types[] in patch 1 to=20
+autodetect mismatch (though it won't help if something is added in the=20
+middle of the list).
 
 --=20
  i.
-
-> ---
-> v3->v4:
->  * Use index-based array initialization format for pci_reset_types
->  * Fix LKP reported sparse issue
-> ---
->  drivers/pci/pci-driver.c |  2 +-
->  drivers/pci/pci.c        | 29 +++++++++++++++++++----------
->  drivers/pci/pci.h        | 11 ++++++++++-
->  drivers/pci/pcie/dpc.c   |  2 +-
->  4 files changed, 31 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index f412ef73a6e4b..ac3cfbfa137d9 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -572,7 +572,7 @@ static void pci_pm_bridge_power_up_actions(struct pci=
-_dev *pci_dev)
->  {
->  =09int ret;
-> =20
-> -=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
-> +=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, PCI_DEV_WAIT_RESUM=
-E);
->  =09if (ret) {
->  =09=09/*
->  =09=09 * The downstream link failed to come up, so mark the
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ffaaca0978cbc..e4a7f5dfe6bf4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -181,6 +181,15 @@ static int __init pcie_port_pm_setup(char *str)
->  }
->  __setup("pcie_port_pm=3D", pcie_port_pm_setup);
-> =20
-> +static const char * const pci_reset_types[] =3D {
-> +=09[PCI_DEV_WAIT_FLR] =3D "FLR",
-> +=09[PCI_DEV_WAIT_AF_FLR] =3D "AF_FLR",
-> +=09[PCI_DEV_WAIT_D3HOT_D0] =3D "PM D3HOT->D0",
-> +=09[PCI_DEV_WAIT_BUS_RESET] =3D "bus reset",
-> +=09[PCI_DEV_WAIT_RESUME] =3D "resume",
-> +=09[PCI_DEV_WAIT_DPC] =3D "DPC",
-> +};
-> +
->  /**
->   * pci_bus_max_busnr - returns maximum PCI bus number of given bus' chil=
-dren
->   * @bus: pointer to PCI bus structure to search
-> @@ -1279,7 +1288,7 @@ void pci_resume_bus(struct pci_bus *bus)
->  =09=09pci_walk_bus(bus, pci_resume_one, NULL);
->  }
-> =20
-> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeo=
-ut)
-> +static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_t=
-ype, int timeout)
->  {
->  =09int delay =3D 1;
->  =09bool retrain =3D false;
-> @@ -1317,7 +1326,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
-reset_type, int timeout)
-> =20
->  =09=09if (delay > timeout) {
->  =09=09=09pci_warn(dev, "not ready %dms after %s; giving up\n",
-> -=09=09=09=09 delay - 1, reset_type);
-> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
->  =09=09=09return -ENOTTY;
->  =09=09}
-> =20
-> @@ -1330,7 +1339,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
-reset_type, int timeout)
->  =09=09=09=09}
->  =09=09=09}
->  =09=09=09pci_info(dev, "not ready %dms after %s; waiting\n",
-> -=09=09=09=09 delay - 1, reset_type);
-> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
->  =09=09}
-> =20
->  =09=09msleep(delay);
-> @@ -1339,10 +1348,10 @@ static int pci_dev_wait(struct pci_dev *dev, char=
- *reset_type, int timeout)
-> =20
->  =09if (delay > PCI_RESET_WAIT)
->  =09=09pci_info(dev, "ready %dms after %s\n", delay - 1,
-> -=09=09=09 reset_type);
-> +=09=09=09 pci_reset_types[reset_type]);
->  =09else
->  =09=09pci_dbg(dev, "ready %dms after %s\n", delay - 1,
-> -=09=09=09reset_type);
-> +=09=09=09pci_reset_types[reset_type]);
-> =20
->  =09return 0;
->  }
-> @@ -4536,7 +4545,7 @@ int pcie_flr(struct pci_dev *dev)
->  =09 */
->  =09msleep(100);
-> =20
-> -=09return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
-> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_FLR, PCIE_RESET_READY_POLL_MS);
->  }
->  EXPORT_SYMBOL_GPL(pcie_flr);
-> =20
-> @@ -4603,7 +4612,7 @@ static int pci_af_flr(struct pci_dev *dev, bool pro=
-be)
->  =09 */
->  =09msleep(100);
-> =20
-> -=09return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
-> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_AF_FLR, PCIE_RESET_READY_POLL_M=
-S);
->  }
-> =20
->  /**
-> @@ -4648,7 +4657,7 @@ static int pci_pm_reset(struct pci_dev *dev, bool p=
-robe)
->  =09pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
->  =09pci_dev_d3_sleep(dev);
-> =20
-> -=09return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
-> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_D3HOT_D0, PCIE_RESET_READY_POLL=
-_MS);
->  }
-> =20
->  /**
-> @@ -4822,7 +4831,7 @@ static int pci_bus_max_d3cold_delay(const struct pc=
-i_bus *bus)
->   * Return 0 on success or -ENOTTY if the first device on the secondary b=
-us
->   * failed to become accessible.
->   */
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
-ype)
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
-t_type reset_type)
->  {
->  =09struct pci_dev *child __free(pci_dev_put) =3D NULL;
->  =09int delay;
-> @@ -4959,7 +4968,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *=
-dev)
->  =09=09=09      __builtin_return_address(0));
->  =09pcibios_reset_secondary_bus(dev);
-> =20
-> -=09return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
-> +=09return pci_bridge_wait_for_secondary_bus(dev, PCI_DEV_WAIT_BUS_RESET)=
-;
->  }
->  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
-> =20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 79c8398f39384..477257e843952 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -4,6 +4,15 @@
-> =20
->  #include <linux/pci.h>
-> =20
-> +enum pci_reset_type {
-> +=09PCI_DEV_WAIT_FLR,
-> +=09PCI_DEV_WAIT_AF_FLR,
-> +=09PCI_DEV_WAIT_D3HOT_D0,
-> +=09PCI_DEV_WAIT_BUS_RESET,
-> +=09PCI_DEV_WAIT_RESUME,
-> +=09PCI_DEV_WAIT_DPC,
-> +};
-> +
->  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
->  #define MAX_NR_DEVFNS 256
-> =20
-> @@ -137,7 +146,7 @@ void pci_msi_init(struct pci_dev *dev);
->  void pci_msix_init(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
-ype);
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
-t_type reset_type);
-> =20
->  static inline void pci_wakeup_event(struct pci_dev *dev)
->  {
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 2b6ef7efa3c11..95cd985244729 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -174,7 +174,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
->  =09pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
->  =09=09=09      PCI_EXP_DPC_STATUS_TRIGGER);
-> =20
-> -=09if (pci_bridge_wait_for_secondary_bus(pdev, "DPC")) {
-> +=09if (pci_bridge_wait_for_secondary_bus(pdev, PCI_DEV_WAIT_DPC)) {
->  =09=09clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
->  =09=09ret =3D PCI_ERS_RESULT_DISCONNECT;
->  =09} else {
->=20
---8323328-979799848-1724414217=:2230--
+--8323328-1541883532-1724414664=:2230--
 
