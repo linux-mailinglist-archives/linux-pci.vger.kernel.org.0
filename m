@@ -1,108 +1,121 @@
-Return-Path: <linux-pci+bounces-12140-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12141-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 354E095D84A
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 23:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62C3295D856
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 23:13:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A2E2B216CF
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 21:03:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A5DA5B20E40
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 21:13:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA32186E3B;
-	Fri, 23 Aug 2024 21:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978441C7B91;
+	Fri, 23 Aug 2024 21:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="me4fsmzV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbuk5SJz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E8C7D401
-	for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 21:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A521191F8F;
+	Fri, 23 Aug 2024 21:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724446984; cv=none; b=B77aCqVQ/WuSzbl8iKyEgFnYNl9Yq5wPM9+8WhyLKdixJFnIURSLTQQ/oi0d/eB6lg9jzffz8P+DleDlVbqBBl4yDphtbVhtwqxtKw8LWTm3XCF+ouKTMRIUYWGdSseeU1xYqjMUOZXQCmiHm2YMzBg5j447UZ/GwMNXcgZGyKw=
+	t=1724447576; cv=none; b=KtM7ybLVpDq46oeTWh/89t5MDZ+3Uso6Kv3sBFn9e9LiEIiY2RDHT4Hpv2ZEre6a53sGr30s4yYFmxKQw62NCqDwkNfoZNEsOgAiNtZ7JxmSXLBuEJlxWbmJj2vggd+AhjaZKv68TxRIOC6MVppDa98ypVSOrPe/M6MKC0QIs5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724446984; c=relaxed/simple;
-	bh=dF9dkzodItU/CO+qAZGmCor1MDbLY68eG0ctBSD3Vu0=;
+	s=arc-20240116; t=1724447576; c=relaxed/simple;
+	bh=LQKVwpMp7vYA/2Gg3LUgcaCHxAp/8DRrdXx+MEYslWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sLvZsQat0mmxt4l7ep48owzsIkvKZNQoSKSXCtlYZPcqKD3+vo3x1vNItctF6Adbj+XEZ0Kg0VJIkA3SOhX5d+KcMWXrcCqBTlfykwzD0PVY1z3cTGLHfyWq1nP2zAlxZJ+CbzVXrqu7sbhLGvaGHqUFClyj0ew4pm7+sbftkAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=me4fsmzV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2750C32786;
-	Fri, 23 Aug 2024 21:03:03 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=DYBvvoEECnWl3k4xVdKkLnOh/P/9lC3e2xzR0uZm0AIQTd688wcCKOA9q7rAbo/8OEC6edchDOVfD8KwonybgDACVEevXRG8g8461mRD/Esmz6HFdtPSpxhrkPx2qPbSdI6VkneGAjlxONa1PHaswAkc9Oceozfn3zpn7GjUqsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbuk5SJz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DBCC32786;
+	Fri, 23 Aug 2024 21:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724446984;
-	bh=dF9dkzodItU/CO+qAZGmCor1MDbLY68eG0ctBSD3Vu0=;
+	s=k20201202; t=1724447576;
+	bh=LQKVwpMp7vYA/2Gg3LUgcaCHxAp/8DRrdXx+MEYslWw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=me4fsmzVVf4OVsI/llD8pcOv+OI2K6rkiO5vZzU4fDZ1dmLJehHNncB0Oiik7SY04
-	 vo66zd4MrpApiVTrX4CG7viAAQQjar4lP2RKgNVDYlXP+kr6taXHXhDdrge2NYw8Km
-	 DSEs9GAGo3pX8yx3dlbZpya/DGAWkg9wtN7p/pl6+uCjq8up7M/mjp4rTBEJi2T8CM
-	 1aWyVqq9T5A2gwaZrZHOW3Z6VG4jkl5LcDj41TkDdd+MtxUkmtSnQU90e1Pbzqe2rD
-	 7DrZL8MEo/pg4xe5Simfi1zSOBIHySKJbPi5fFbMVowy/D/f1if6U1gHDdkTJL6gto
-	 yTocp+al8ZHUQ==
-Date: Fri, 23 Aug 2024 16:03:01 -0500
+	b=mbuk5SJza3vHmCXtGndQ8oEDK7MBiyMz4VouiWT+mqiiY5jDaeYJAOW59W+l77ETJ
+	 oXbZQ5RBjQhPxLWF8t8rY04hTbsX0g/bEhVKRiwI7f1v2/jWQtM9iWmv+VRFVBNIjN
+	 4mXxeSFgr/AA8GQYvRZgrbEXEs2uEfuR/1zd0d6ELHFPpMhLv8Bcs3N6hHTX5gekPB
+	 J2xIc+hLnO5iqhgEDKk5I5ASwcJ1YMy6sXSucn01WE1duzkAFdvfc79bw3a8YW98yE
+	 YUuNmSWjcaZku45kDm/bjdXstlEsevYYk5o42x9zDdJgxjO7zZFqOqeT65+jj77+J1
+	 QlTUTZp14oHdQ==
+Date: Fri, 23 Aug 2024 16:12:54 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Erin_Tsao@wistron.com
-Cc: Linux-PCI Mailing List <linux-pci@vger.kernel.org>,
-	Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-Subject: Re: Issue about PCI physical slot fetch incorrect number
-Message-ID: <20240823210301.GA385342@bhelgaas>
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	iommu@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
+Message-ID: <20240823211254.GA385934@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <mj+md-20240823.185024.10254.nikam@ucw.cz>
+In-Reply-To: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
 
-Hi Erin, thanks for your question.
+On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
+> Some computers with CPUs that lack Thunderbolt features use discrete
+> Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
+> chips are located within the chassis; between the root port labeled
+> ExternalFacingPort and the USB-C port.
 
-On Fri, Aug 23, 2024 at 08:51:58PM +0200, Martin Mareš wrote:
-> Hi!
+Is this a firmware defect?  I asked this before, and I interpret your
+answer of "ExternalFacingPort is not 100% accurate all of the time" as
+"yes, this is a firmware defect."  That should be part of the commit
+log and code comments.
+
+We (of course) have to work around firmware defects, but workarounds
+need to be labeled as such instead of masquerading as generic code.
+
+> These Thunderbolt PCIe devices should be labeled as fixed and trusted,
+> as they are built into the computer. Otherwise, security policies that
+> rely on those flags may have unintended results, such as preventing
+> USB-C ports from enumerating.
 > 
-> > This is Erin from Taiwan. I have a question about physical slot
-> > number.  Currently we are working on the PCIE slot number
-> > assigning by PCIE switch. In the PCIe slot assignment process, the
-> > slot numbers are assigned to bridges first, and then the end
-> > devices fetch the slot ID from the bridge in the upper layer.
-> > 
-> > I have observed that under our PCIE switch, GPUs will create a
-> > bridge before reaching the end device. If GPUs also fetch the slot
-> > ID from the upper bridge layer, they may retrieve incorrect
-> > values.
-> > 
-> > Our GPU will get the physical slot number with number “0”, and
-> > show the slot number “0”、”0-1” , etc.
-> > May I ask
-> > 
-> >   1.  Why GPU will fetch the slot number “0”? Is the slot number
-> >   assigned to GPU related to any register? Or can we set any bit
-> >   to fetch the right number?
-> >
-> >   2.  Is there any possible for us not to show the physical slot
-> >   number of GPU?
+> Detect the above scenario through the process of elimination.
+> 
+> 1) Integrated Thunderbolt host controllers already have Thunderbolt
+>    implemented, so anything outside their external facing root port is
+>    removable and untrusted.
+> 
+>    Detect them using the following properties:
+> 
+>      - Most integrated host controllers have the usb4-host-interface
+>        ACPI property, as described here:
+> Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
+> 
+>      - Integrated Thunderbolt PCIe root ports before Alder Lake do not
+>        have the usb4-host-interface ACPI property. Identify those with
+>        their PCI IDs instead.
+> 
+> 2) If a root port does not have integrated Thunderbolt capabilities, but
+>    has the ExternalFacingPort ACPI property, that means the manufacturer
+>    has opted to use a discrete Thunderbolt host controller that is
+>    built into the computer.
 
-Can you supply logs showing what you see and what's incorrect?
+Unconvincing.  If a Root Port has an external connector, is it
+impossible to plug in a Thunderbolt device to that connector?  I
+assume the wires from a Root Port could be traces on a PCB to a
+soldered-down Thunderbolt controller, OR could be wires to a connector
+where a Thunderbolt controller could be plugged in.  How could we tell
+the difference?
 
-For example, if lspci is showing the wrong thing, can you provide the
-complete output of "sudo lspci -vv" and indicate which things are
-wrong?
-
-If the kernel dmesg log is wrong, can you supply that output and point
-out what's wrong?
-
-Also, I think slots are exposed in /sys, so please include the output
-of "grep . /sys/bus/pci/slots/*/address".
-
-Slot numbering is messy because there are several sources of
-information, e.g., the Physical Slot Number in the Slot Capabilities
-register, SMBIOS table, ACPI _DSM methods, etc., and they are not all
-coordinated.  So the kernel goes to some trouble to come up with a
-unique "slot number" for each slot.
-
-Bjorn
+>    This host controller can be identified by virtue of being located
+>    directly below an external-facing root port that lacks integrated
+>    Thunderbolt. Label it as trusted and fixed.
+> 
+>    Everything downstream from it is untrusted and removable.
+> 
+> The ExternalFacingPort ACPI property is described here:
+> Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
 
