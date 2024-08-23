@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-12125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9B8595D1D4
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 17:43:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C803C95D207
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 17:50:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E47911C22602
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 15:43:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A03F3B2BE12
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 15:43:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F8818E03D;
-	Fri, 23 Aug 2024 15:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 558B31922E9;
+	Fri, 23 Aug 2024 15:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sE02QXZ6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7D5BNAk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875EC18E02E;
-	Fri, 23 Aug 2024 15:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2A91922DA;
+	Fri, 23 Aug 2024 15:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724427638; cv=none; b=YuTXeoLqoF6nlkOc6o3aZ2qRoCOjumRhaeuqJ6HerFzE3AhBlzFt43PvaEBGDxQ/Z6Smex1IETAkey5yYdjEsmOgcHn85gD4QlV+kVsnv01V2kfmzr7yIjfF4OzlgpunhBwPlrVTcuYfYDCFqkemIKHVeLz2nsUrL8YIhMeMvtg=
+	t=1724427640; cv=none; b=HZmE4GaLqDTdzKfKDBe4Tao2Bz1a8/dYRIgO+7ATNw2C+pyvUNQ4M/1mJnBzn+DbClEUs5CUAbTqzo35/6FPnJXyBilJ3kl/jYr5V8ak8aVxIMApEkqHHmENSfoyE5eqUx2qSke+GG5IrSAVJNIa6NPzJdTRdrjqFx/27DwZHSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724427638; c=relaxed/simple;
-	bh=YJmRm6eClwNstoqHflRiHBsbT7/PRWVFpj8/WSZOKdo=;
+	s=arc-20240116; t=1724427640; c=relaxed/simple;
+	bh=JWSRlz8uRX9VxLn24AvyMy0LwzF2iYqEImctSnL1LEw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tO5K/QdRZqkuomrYRsoZhBm2vHvQ3u8oQKkHVhOhDOVceoKGKDRqNYq1PCdy7pkFGmpXT0/g2auOI6C/9fn+Jk93Pr8kj20ryDRQckANSrD60fspHMyNizw1v4n/+7OzXToxiWQGsrVPViublvdtBgtJxgLLJdXSBMmmav4n+1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sE02QXZ6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53538C32786;
-	Fri, 23 Aug 2024 15:40:37 +0000 (UTC)
+	 MIME-Version; b=o1qy4/UnaqUVsbht6hcSAmfC/n0nJ9aA+BHi0oBri/qjFfgFUo/pmuvPUwRO/ITEjZ+eGbgdFSUgGj4Ar79GlGPAkXO1GsMuCicr8KeO5i+sJ8sRPXLoVzhyPoHv1/WyrNyezVvz/VqFydO+lEwfUmpvoiuiqDjQYx5pQr2q6l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7D5BNAk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7346C4AF09;
+	Fri, 23 Aug 2024 15:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724427638;
-	bh=YJmRm6eClwNstoqHflRiHBsbT7/PRWVFpj8/WSZOKdo=;
+	s=k20201202; t=1724427639;
+	bh=JWSRlz8uRX9VxLn24AvyMy0LwzF2iYqEImctSnL1LEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sE02QXZ6vCH+ZswKAXP1QFPKq4YIXoEhi9DL5+GGh3/LYf0ck85HwXH9Bb7ANB2hH
-	 p8nsEyd+BIeFJ4FwI0lNBInLh1NEXf1/g+pfI3VQYx8CABeGU7QvCxH2RsTZrxhv3B
-	 5pyttE55xwzH1FVUB85kT5PU5SQhH9wOdGq0EjSxmJkFqN9mof3S+CgX3JtHFnsqLW
-	 W8y2F+r6V9rjfcyCGo+N3E0IZbs28x2mGAhbGhyvENvuK9Nl6LwF0dZ41g+NFZjcLX
-	 mzGuo1xMuW13sMLLTvp6IReUMTYIZ2qgj7m2PQNR3CHtHs7/+fP87k7RQkak7Pg0iM
-	 THifJ8CwmOMyA==
+	b=B7D5BNAkww4RHwj1geA+tvLT1y0kMHkp6UTmal1kX5VWSAQCRQ21aS63yLPEcGnpB
+	 zuI6nVHIvS3IRwPHp2qVtnY9X6z922BcFrLf5EkjJ8EF2xjHCSrLyMB8EXPaMxhb0X
+	 PPRhOq8dSotJNLSJmZhbXetvdC+Dg+hli4jMzMzSHGU+68W1WI2hNFCZ8BR8925WAl
+	 NMTN6QuvhwC9nR2g8+E/lEZlSuJ03TvleAUbXaiR+9eWO+jx3BUdhUvx5mVywYY1sg
+	 tEHadAC7eZUqD5JER8XeWnmDinDtF0s27BQyVySSWuwifxmdblsaCOVJg2tTV+UGuN
+	 pYEUwrQloI/yw==
 From: Mario Limonciello <superm1@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Mathias Nyman <mathias.nyman@intel.com>,
@@ -53,9 +53,9 @@ Cc: "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v5 3/5] PCI: Verify functions currently in D3cold have entered D0
-Date: Fri, 23 Aug 2024 10:40:21 -0500
-Message-ID: <20240823154023.360234-4-superm1@kernel.org>
+Subject: [PATCH v5 4/5] PCI: Allow Ryzen XHCI controllers into D3cold and drop delays
+Date: Fri, 23 Aug 2024 10:40:22 -0500
+Message-ID: <20240823154023.360234-5-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240823154023.360234-1-superm1@kernel.org>
 References: <20240823154023.360234-1-superm1@kernel.org>
@@ -65,81 +65,78 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Mario Limonciello <mario.limonciello@amd.com>
 
-It is reported that USB4 routers and downstream devices may behave
-incorrectly if a dock cable is plugged in at approximately the time that
-the autosuspend_delay is configured. In this situation the device has
-attempted to enter D3cold, but didn't finish D3cold entry when the PCI
-core tried to transition it back to D0.
+As the PCI core now has a delay after D3cold exit, the Ryzen XHCI
+controllers that were quirked to not use D3cold and to add a delay
+on D3hot no longer need these quirks.
 
-Empirically measuring this situation an "aborted" D3cold exit takes
-~60ms and a "normal" D3cold exit takes ~6ms.
+Drop both the PCI and XHCI sets of quirks.
 
-The PCI-PM 1.2 spec specifies that the restore time for functions
-in D3cold is either 'Full context restore or boot latency'.
-
-As PCIe r6.0 sec 5.8 specifies that the device will have gone
-through a conventional reset, it may take some time for the
-device to be ready.
-
-Wait up to 1 sec as specified in PCIe r6.0 sec 6.6.1 for a device
-in D3cold to return to D0.
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
-v4->v5:
- * Add missing string for new pci_reset_type
----
- drivers/pci/pci.c | 12 ++++++++++++
- drivers/pci/pci.h |  1 +
- 2 files changed, 13 insertions(+)
+ drivers/pci/quirks.c        | 17 -----------------
+ drivers/usb/host/xhci-pci.c | 11 -----------
+ 2 files changed, 28 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f032a4aaec268..02d94e0527e6a 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -188,6 +188,7 @@ static const char * const pci_reset_types[] = {
- 	[PCI_DEV_WAIT_BUS_RESET] = "bus reset",
- 	[PCI_DEV_WAIT_RESUME] = "resume",
- 	[PCI_DEV_WAIT_DPC] = "DPC",
-+	[PCI_DEV_WAIT_D3COLD_D0] = "D3cold->D0",
- };
- static_assert(ARRAY_SIZE(pci_reset_types) == PCI_DEV_WAIT_MAX);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index a2ce4e08edf5a..3480a0445ff50 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2059,23 +2059,6 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+ 			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8,
+ 			      quirk_nvidia_hda_pm);
  
-@@ -1426,6 +1427,17 @@ int pci_power_up(struct pci_dev *dev)
- 	else if (state == PCI_D2)
- 		udelay(PCI_PM_D2_DELAY);
+-/*
+- * Ryzen5/7 XHCI controllers fail upon resume from runtime suspend or s2idle.
+- * https://bugzilla.kernel.org/show_bug.cgi?id=205587
+- *
+- * The kernel attempts to transition these devices to D3cold, but that seems
+- * to be ineffective on the platforms in question; the PCI device appears to
+- * remain on in D3hot state. The D3hot-to-D0 transition then requires an
+- * extended delay in order to succeed.
+- */
+-static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
+-{
+-	quirk_d3hot_delay(dev, 20);
+-}
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1639, quirk_ryzen_xhci_d3hot);
+-
+ #ifdef CONFIG_X86_IO_APIC
+ static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
+ {
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index dc1e345ab67ea..d726810a04838 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -316,10 +316,6 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 		(pdev->device == PCI_DEVICE_ID_AMD_PROMONTORYA_1)))
+ 		xhci->quirks |= XHCI_U2_DISABLE_WAKE;
  
-+	/*
-+	 * D3cold -> D0 will have gone through a conventional reset and may need
-+	 * time to be ready.
-+	 */
-+	if (dev->current_state == PCI_D3cold) {
-+		int ret;
-+
-+		ret = pci_dev_wait(dev, PCI_DEV_WAIT_D3COLD_D0, PCI_RESET_WAIT);
-+		if (ret)
-+			return ret;
-+	}
- end:
- 	dev->current_state = PCI_D0;
- 	if (need_restore)
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index be06c38342c76..6a48419924ea1 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -11,6 +11,7 @@ enum pci_reset_type {
- 	PCI_DEV_WAIT_BUS_RESET,
- 	PCI_DEV_WAIT_RESUME,
- 	PCI_DEV_WAIT_DPC,
-+	PCI_DEV_WAIT_D3COLD_D0,
- 	PCI_DEV_WAIT_MAX,
- };
+-	if (pdev->vendor == PCI_VENDOR_ID_AMD &&
+-		pdev->device == PCI_DEVICE_ID_AMD_RENOIR_XHCI)
+-		xhci->quirks |= XHCI_BROKEN_D3COLD_S2I;
+-
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
+ 		xhci->quirks |= XHCI_INTEL_HOST;
+@@ -752,13 +748,6 @@ static int xhci_pci_suspend(struct usb_hcd *hcd, bool do_wakeup)
+ 	if (xhci->quirks & XHCI_COMP_MODE_QUIRK)
+ 		pci_d3cold_disable(pdev);
+ 
+-#ifdef CONFIG_SUSPEND
+-	/* d3cold is broken, but only when s2idle is used */
+-	if (pm_suspend_target_state == PM_SUSPEND_TO_IDLE &&
+-	    xhci->quirks & (XHCI_BROKEN_D3COLD_S2I))
+-		pci_d3cold_disable(pdev);
+-#endif
+-
+ 	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
+ 		xhci_pme_quirk(hcd);
  
 -- 
 2.43.0
