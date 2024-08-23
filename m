@@ -1,195 +1,208 @@
-Return-Path: <linux-pci+bounces-12079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12080-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 478FD95C94D
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:33:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7966395C963
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:40:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CAB8B1F21A18
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 09:33:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F2F31C21E97
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 09:40:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B243157465;
-	Fri, 23 Aug 2024 09:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D84214B97A;
+	Fri, 23 Aug 2024 09:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GProBBiS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TXcAiR0s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5458314B97B
-	for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 09:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCD16BFA5
+	for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 09:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724405618; cv=none; b=tUtRwO0V+7FuJESkYEBSdmTgPfORJQrd3OYA0JQugVpqwiZCu/tdWbzoZYtl+6Oop8ZNSzcualrXRnPMx2txtfO+uXEQhFslZmpG96nDUiROYELK/UINLpBP+Omgd4wMuvtJw/ejOylw94YPbXcaHb+3BrZOeoIdPPl+2w+y+7k=
+	t=1724406048; cv=none; b=XpXKoHooCPQbF651a619FkdjPtYUUbBvIQGdxzfNfWooYX2qrkyPb4Jv09xc9hCy+2pESKi5Oe8InSjKU4ZYPwFX6SDQUlq87P0MBAOu0S4iksqQqdAf0CdnkUhk2C6ZPnLM4a+a7hDqghAzTZ+1ZjXiwZpk1x5gAjKFlcvZ78o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724405618; c=relaxed/simple;
-	bh=VlEWS+I2qBUoAZu3MZiZFqikaq4uXZWuP6/ITJZxiQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=chZgT1Ntl9hGrbCvi3I7uhysNKpV3dfMAietzPyZXhu81NTA+CZ9f48K12olsQ4kcne3jVbzhT0oqD/llCKkO6Oe7AZ4pabY8iR/rT+TSDdK+DSvL+DNUSPyyfDZ0iQFiy8BdhZgoBqrzl7Q8J5H42DSEWwa2u620KVCmDQ8UEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GProBBiS; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4281d812d3eso17555255e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 02:33:37 -0700 (PDT)
+	s=arc-20240116; t=1724406048; c=relaxed/simple;
+	bh=QYKrgYPSt+PzLBYRBlCaV98ntftxVKjhU9ZHUca4mVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TqU9jM4HyMEUFT3KJww8RS6ng50uEi5RRLzMXO7hraNGC5jvm+gzmfgHx6NdFDyh4OdDV75IYXBH4RzYFmyzgHGf0TdiVmoIjyFhIbgBxNVsMc9lPeyZzUDWtAkZJqF8jOAUkpRdnnsbOuxJXvSEhnN/zzRQtjYwyfX7OovgAbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TXcAiR0s; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7cd8d2731d1so1233835a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 02:40:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724405616; x=1725010416; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ns4EUZZ3nTL5odSKliuQhTwD1CbjvkOmQ7rToMzAA/s=;
-        b=GProBBiSE10kSUudTPOUq83MZLnurR8SZLXlzMtQjWYn72Hd1C5o+Mh2ZhzBxYv6Oj
-         xYhVMCxw8k4i8pZSc9UR7DH+gqgAzm4PoD5u9EMumGDFsVghYtxe6CzAuOWiBk54dXTu
-         EC/GZ6XHOU/eQ32Oh+5NtVeVbmzdX2SMkSM2vGni1Zo+TvpiXpuuGB2NkcWUO8pN0J0U
-         E8k0dYTuIKoz27Q1GOH3B3jpo7kb8kPCCmDRA+ZVz7L/hhQPZF6PVoruCRbAkNmIHRZT
-         uY1szmYClOEf8D3+xXi3Aq+HNnn5rA+/gHKpR0tkP+aBfr4nQBZBLobu6Dxx1HEdd7rt
-         Gy0w==
+        d=linaro.org; s=google; t=1724406046; x=1725010846; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I126+cKdGYbZIz3R6I4V2r9+Vz0iXJ8BxplRUfjmS60=;
+        b=TXcAiR0sz/g6kZ02mOdW+P0V+CjOU3uCvuTtsZZ6DeTi17acFp/vMjlJxuMtQY6EjF
+         zcJqARm+PyWcQBR6ggCUsanJBslV2EiFNnXwOv6Iyj2B+CQtoQs+DyShvA+xV672lpyd
+         K9PjnnD4i0OsRjeXoY8ceaO3RxmLxokYV7QW2NpvxUozC/eqKvdGo13KKdBD/NWX90HN
+         /ZDBG4/GZZWbwX+B8UbQgbSjEKuATW83qpM0XI+8ziIII24WOKsTVuWgLW6CdhVfElPv
+         xReixBgQa9VWJmQB7xpREUeCxafOJnloaiJvIxbXQa+yRDx9QPUqEZaAdHD4McJNbbTV
+         WWdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724405616; x=1725010416;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ns4EUZZ3nTL5odSKliuQhTwD1CbjvkOmQ7rToMzAA/s=;
-        b=DD2p+u8x4RpnRb4wTdSJnMbSVRIVK2WAISMeUFVlst1yggu3eLmZLP1SxfkhrknTy1
-         zsQxUlvuunoA+Dnxb7XghfTQKy7CHB0ngHbalyEA1Ph9WHweyw0WZ1ABqGeafAXKmUDJ
-         KGrTcWagjItSSX2ljGbnLv73myluv9HmQJwm+Os13vTrkIDVZD76XGaLSFjlRTa5o/de
-         dC4t58uSS4Tx/YOr+yf5b2cTY3KpYYl0kLW65c/bHMaCH+8dj2jtR7GvrFCuIdssuGHY
-         G39A5PDSNIf1dom21AYw0znYYLEX0eH1HGa7pfT1pj2pqS3Bb+PoNKPGmpAXD164e7XQ
-         3bkw==
-X-Gm-Message-State: AOJu0Yzc+fnoYS4sq+3QtPfzhkHbj4o1C5wy0JMfxM3kfKcnAFmPzKK9
-	Q5wVvMGyzvvHhZRGpZSalpSABevcYfCmPu8B6RayA2WHGlSnVvY4WBmTh2cquHh/W/eOH/RUrqL
-	QLEI=
-X-Google-Smtp-Source: AGHT+IFDN6ciVAxxG2thf6jNJ/OndV0vdP06G8DkZr6xUCbixfP6dzAPR8cgPbEm9FRU4nH0OyFf6g==
-X-Received: by 2002:a05:600c:35cd:b0:428:15b0:c8dd with SMTP id 5b1f17b1804b1-42acd57c113mr12461705e9.20.1724405615130;
-        Fri, 23 Aug 2024 02:33:35 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:58fc:2464:50b0:90c5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42abee86d5esm87612035e9.15.2024.08.23.02.33.33
+        d=1e100.net; s=20230601; t=1724406046; x=1725010846;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I126+cKdGYbZIz3R6I4V2r9+Vz0iXJ8BxplRUfjmS60=;
+        b=fGnlbTPrY5R3kq+Lm0Uw8niYopTgpnXSga64Utt7hd+fiJWnODZFPUth3GDR4g7gE9
+         5Dp1t32ugNKcyiZoZ4GZI7iUrmuS26xi8/do4YxRhUY9gOuwZfo50Ke1tMcahVDC5J4z
+         2JUqLfkRYWQlqPTeQA3C+n/IX3iM45QBI55g0G2mX2js3C9HChxX2OlXw3c1RXUzbD4T
+         BWEYMWImnUB3o7YuuuQOHCgIcOLKi01sriJVfwYMoTRuJNTDIyyYH6dDW4E2hNtROfpr
+         PGLS+oKJHT8jdFsQrxVprBdFvHhBeAUd7LzmS6yiPr6GDyjzV32072BF/erlmE51oOl5
+         M9jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMZYPn57QkVwQLsjwidYWFXx76lOHvrzl3NsfLqOSeRS0MANS+agvYWddAB1puFVX3ygFq4TseTaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5Mp2dJLP5LrbMjG3OMv2x938VKVwhGDxg6kXwojlEE0sbE2Iu
+	cO/diGVN+A9h5O8j//jEcKDcDooAQWsjfTv52/qtP7iDKUCbcRuscKUhnf/xCA==
+X-Google-Smtp-Source: AGHT+IEZ7oVQVdI6VEXdebOFtS4lQUtfFu5fTDd3UmD/IV+0quZsPl84jbflNGtuVTHo4x2PWVlhRw==
+X-Received: by 2002:a05:6a21:4a4c:b0:1c4:b302:ad14 with SMTP id adf61e73a8af0-1cc8b49b962mr1602960637.24.1724406045766;
+        Fri, 23 Aug 2024 02:40:45 -0700 (PDT)
+Received: from thinkpad ([120.60.60.148])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20385580810sm24903965ad.105.2024.08.23.02.40.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 02:33:33 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-pci@vger.kernel.org,
+        Fri, 23 Aug 2024 02:40:45 -0700 (PDT)
+Date: Fri, 23 Aug 2024 15:10:28 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jingoo Han <jingoohan1@gmail.com>, andersson@kernel.org,
+	quic_vbadigan@quicinc.com, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: [PATCH v3 2/2] PCI/pwrctl: put the bus rescan on a different thread
-Date: Fri, 23 Aug 2024 11:33:23 +0200
-Message-ID: <20240823093323.33450-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240823093323.33450-1-brgl@bgdev.pl>
-References: <20240823093323.33450-1-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
+Message-ID: <20240823094028.7xul4eoiexey5xjm@thinkpad>
+References: <5f65905c-f1e4-4f52-ba7c-10c1a4892e30@kernel.org>
+ <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
+ <ZrEGypbL85buXEsO@hu-bjorande-lv.qualcomm.com>
+ <90582c92-ca50-4776-918d-b7486cf942b0@kernel.org>
+ <20240808120109.GA18983@thinkpad>
+ <cb69c01b-08d0-40a1-9ea2-215979fb98c8@kernel.org>
+ <20240808124121.GB18983@thinkpad>
+ <c5bae58c-4200-40d3-94c6-669d2ee131d4@kernel.org>
+ <20240822140956.unt45fgpleqwniwa@thinkpad>
+ <7969b2e6-1046-4bd4-bdfe-d2bc12a1db1b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7969b2e6-1046-4bd4-bdfe-d2bc12a1db1b@kernel.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Aug 23, 2024 at 11:06:28AM +0200, Krzysztof Kozlowski wrote:
+> On 22/08/2024 16:09, Manivannan Sadhasivam wrote:
+> > On Thu, Aug 08, 2024 at 03:06:28PM +0200, Krzysztof Kozlowski wrote:
+> >> On 08/08/2024 14:41, Manivannan Sadhasivam wrote:
+> >>> On Thu, Aug 08, 2024 at 02:13:01PM +0200, Krzysztof Kozlowski wrote:
+> >>>> On 08/08/2024 14:01, Manivannan Sadhasivam wrote:
+> >>>>> On Mon, Aug 05, 2024 at 07:18:04PM +0200, Krzysztof Kozlowski wrote:
+> >>>>>> On 05/08/2024 19:07, Bjorn Andersson wrote:
+> >>>>>>> On Mon, Aug 05, 2024 at 09:41:26AM +0530, Krishna Chaitanya Chundru wrote:
+> >>>>>>>> On 8/4/2024 2:23 PM, Krzysztof Kozlowski wrote:
+> >>>>>>>>> On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
+> >>>>>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> >>>>>>> [..]
+> >>>>>>>>>> +  qps615,axi-clk-freq-hz:
+> >>>>>>>>>> +    description:
+> >>>>>>>>>> +      AXI clock which internal bus of the switch.
+> >>>>>>>>>
+> >>>>>>>>> No need, use CCF.
+> >>>>>>>>>
+> >>>>>>>> ack
+> >>>>>>>
+> >>>>>>> This is a clock that's internal to the QPS615, so there's no clock
+> >>>>>>> controller involved and hence I don't think CCF is applicable.
+> >>>>>>
+> >>>>>> AXI does not sound that internal.
+> >>>>>
+> >>>>> Well, AXI is applicable to whatever entity that implements it. We mostly seen it
+> >>>>> in ARM SoCs (host), but in this case the PCIe switch also has a microcontroller
+> >>>>> /processor of some sort, so AXI is indeed relevant for it. The naming actually
+> >>>>> comes from the switch's i2c register name that is being configured in the driver
+> >>>>> based on this property value.
+> >>>>>
+> >>>>>> DT rarely needs to specify internal
+> >>>>>> clock rates. What if you want to define rates for 20 clocks? Even
+> >>>>>> clock-frequency is deprecated, so why this would be allowed?
+> >>>>>> bus-frequency is allowed for buses, but that's not the case here, I guess?
+> >>>>>>
+> >>>>>
+> >>>>> This clock frequency is for the switch's internal AXI bus that runs at default
+> >>>>> 200MHz. And this property is used to specify a frequency that is configured over
+> >>>>> the i2c interface so that the switch's AXI bus can operate in a low frequency
+> >>>>> there by reducing the power consumption of the switch.
+> >>>>>
+> >>>>> It is not strictly needed for the switch operation, but for power optimization.
+> >>>>> So this property can also be dropped for the initial submission and added later
+> >>>>> if you prefer.
+> >>>>
+> >>>> So if the clock rate can change, why this is static in DTB? Or why this
+> >>>> is configurable per-board?
+> >>>>
+> >>>
+> >>> Because, board manufacturers can change the frequency depending on the switch
+> >>> configuration (enablement of DSP's etc...)
+> >>>
+> >>>> There is a reason why clock-frequency property is not welcomed and you
+> >>>> are re-implementing it.
+> >>>>
+> >>>
+> >>> Hmm, I'm not aware that 'clock-frequency' is not encouraged these days. So you
+> >>> are suggesting to change the rate in the driver itself based on the switch
+> >>> configuration? If so, what difference does it make?
+> >>
+> >> Based on the switch, other clocks, votes etc. whatever is reasonable
+> >> there. In most cases, not sure if this one here as well, devices can
+> >> operate on different clock frequencies thus specifying fixed frequency
+> >> in the DTS is simplification and lack of flexibility. It is chosen by
+> >> people only because it is easier for them but then they come back with
+> >> ABI issues when it turns out they need to switch to some dynamic control.
+> >>
+> > 
+> > Atleast for this device, this frequency is going to be static. Because, the
+> > device itself cannot change the frequency, only the host driver can. That too is
+> > only possible before enumerating the device. So there is no way the frequency is
+> > going to change dynamically.
+> 
+> We have assigned-clocks properties for this... but there are no clock
+> inputs here, so maybe it is not applicable? What generates this internal
+> AXI clock? Does it have internal oscillator?
+> 
 
-If we trigger the bus rescan from sysfs, we'll try to lock the PCI
-rescan mutex recursively and deadlock - the platform device will be
-populated and probed on the same thread that handles the sysfs write.
+I do not have access to the device schematics, but based on my knowledge there
+should be an internal oscillator for the device. But the device also gets the
+refclk from PCIe bus, but I don't know if that is somehow used as a parent of
+AXI bus or not.
 
-Add a workqueue to the pwrctl code on which we schedule the rescan for
-controlled PCI devices. While at it: add a new interface for
-initializing the pwrctl context where we'd now assign the parent device
-address and initialize the workqueue.
+Going by the AXI bus terminology, I would assume that the frequency of this come
+from the internal oscillator in the device.
 
-Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
-Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pci/pwrctl/core.c              | 26 +++++++++++++++++++++++---
- drivers/pci/pwrctl/pci-pwrctl-pwrseq.c |  2 +-
- include/linux/pci-pwrctl.h             |  3 +++
- 3 files changed, 27 insertions(+), 4 deletions(-)
+And this is common on many PCIe devices, but they never mentioned in DT (well we
+do not define PCIe devices in DT usually), but Qcom wants to control the
+frequency of the device's internal clock to optimize the power consumption of
+the device. Unfortunately, the device firmware is not doing its job as expected.
 
-diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
-index feca26ad2f6a..01d913b60316 100644
---- a/drivers/pci/pwrctl/core.c
-+++ b/drivers/pci/pwrctl/core.c
-@@ -48,6 +48,28 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
- 	return NOTIFY_DONE;
- }
- 
-+static void rescan_work_func(struct work_struct *work)
-+{
-+	struct pci_pwrctl *pwrctl = container_of(work, struct pci_pwrctl, work);
-+
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
-+	pci_unlock_rescan_remove();
-+}
-+
-+/**
-+ * pci_pwrctl_init() - Initialize the PCI power control context struct
-+ *
-+ * @pwrctl: PCI power control data
-+ * @dev: Parent device
-+ */
-+void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev)
-+{
-+	pwrctl->dev = dev;
-+	INIT_WORK(&pwrctl->work, rescan_work_func);
-+}
-+EXPORT_SYMBOL_GPL(pci_pwrctl_init);
-+
- /**
-  * pci_pwrctl_device_set_ready() - Notify the pwrctl subsystem that the PCI
-  * device is powered-up and ready to be detected.
-@@ -74,9 +96,7 @@ int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
- 	if (ret)
- 		return ret;
- 
--	pci_lock_rescan_remove();
--	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
--	pci_unlock_rescan_remove();
-+	schedule_work(&pwrctl->work);
- 
- 	return 0;
- }
-diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-index c7a113a76c0c..f07758c9edad 100644
---- a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-+++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-@@ -50,7 +50,7 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	data->ctx.dev = dev;
-+	pci_pwrctl_init(&data->ctx, dev);
- 
- 	ret = devm_pci_pwrctl_device_set_ready(dev, &data->ctx);
- 	if (ret)
-diff --git a/include/linux/pci-pwrctl.h b/include/linux/pci-pwrctl.h
-index 45e9cfe740e4..0d23dddf59ec 100644
---- a/include/linux/pci-pwrctl.h
-+++ b/include/linux/pci-pwrctl.h
-@@ -7,6 +7,7 @@
- #define __PCI_PWRCTL_H__
- 
- #include <linux/notifier.h>
-+#include <linux/workqueue.h>
- 
- struct device;
- struct device_link;
-@@ -41,8 +42,10 @@ struct pci_pwrctl {
- 	/* Private: don't use. */
- 	struct notifier_block nb;
- 	struct device_link *link;
-+	struct work_struct work;
- };
- 
-+void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev);
- int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl);
- void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl);
- int devm_pci_pwrctl_device_set_ready(struct device *dev,
+- Mani
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
