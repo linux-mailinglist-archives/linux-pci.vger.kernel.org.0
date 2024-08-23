@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-12074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 147B795C8BB
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:01:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B9B95C8CA
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 11:06:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54BC1B25582
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 09:01:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE69428314F
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 09:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B51C1149002;
-	Fri, 23 Aug 2024 09:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD028149C79;
+	Fri, 23 Aug 2024 09:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeoW3Cxl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VE0Q1rfe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804AB142E9D;
-	Fri, 23 Aug 2024 09:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC88E1442F4;
+	Fri, 23 Aug 2024 09:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724403705; cv=none; b=uHLTJcqI6uGFHU8NzklU3HHkR+9/kfumvV49rLCrMeKfjHsk5HgGQXTAQRJMevsDAGKqz27v54SUMMG9AQIWyqHgZVz6+fzK1n/SOKSr0c66clNQtPQpkbz/wm4r/INcTvjJ+FHkFwpD7YESLkE/U2jWdY1MPZVblwUGCCrWONM=
+	t=1724403996; cv=none; b=Fy0ANJpqTZN1T2cuvz7+yEljMEZSdE7oaoYqKmikmi1pfFn86JctOWg6VJuUmyYkvIsKKPGNMO8NRj54tmPJYfRIlRiXI9U7r3JRzKM+z/3hNPtZdqv/vATK6kdSweHzrK+sUyZThOnuHXbGN6h6foDLuTBE59FaDMWHgKA0bv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724403705; c=relaxed/simple;
-	bh=KkcSMeNxc4lVjiUv4GeEvtjyVDjWqimlUOO02y+9qaU=;
+	s=arc-20240116; t=1724403996; c=relaxed/simple;
+	bh=E0K9BVlAinKOdFlygcfsApTpKAoMe644T1TVWtyM6E4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XFpT3XW/cVoXWw1o/T63/MjRqdhxb8WCFO6rORtBEOZZwfBKslueIJV4moIes0DwQgOV16mfs/mZh3qH0IinFcpB9xATVquzSgXmpDMXONYbEi12gWXBDEMy9hLfEJTT5eEvvdEqScRnJiQu5Tdm4A9yytaIuYNCuKvWpuduNIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeoW3Cxl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 796F7C4AF09;
-	Fri, 23 Aug 2024 09:01:39 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=DjOvuiQE1b0JsQOyH+yRaHJFjEZLVA2S7mDDXDqJN9Ug930y8cM8jz87mYziTcxJYwMvEO/fJjhtXGBIhgRDxmWH7y5KOlWcYpM3xZVueFpLZhTuiakP0LsBPmXQMtxA3C5BDC9IDgSjWIF/rah+MYsMMXkuNUfX1u3l79Man4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VE0Q1rfe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4035C32786;
+	Fri, 23 Aug 2024 09:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724403705;
-	bh=KkcSMeNxc4lVjiUv4GeEvtjyVDjWqimlUOO02y+9qaU=;
+	s=k20201202; t=1724403996;
+	bh=E0K9BVlAinKOdFlygcfsApTpKAoMe644T1TVWtyM6E4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KeoW3CxllBiLGl0NdCeWyHNIm9F5ZDPOuMv2D6Y0LdDsfAT2/wPJOLj+Z4ddjAvtG
-	 Ai69cpz2VaNE8viKXngzKZ6TQrA13mC/2zPCq1nu2O01cx4S5rGT2bMxcHCDhw8361
-	 vBqVdLBYlQDI27Ccpwf2TFzAlsFUfxM8Y79thUxuxpHWKeYNXw+qOM41YeJX0UL/Gf
-	 SqQHjQzMKIMhrPWKtFTEcTUHMJQMw7DRd24pQnUOPG55z0jeU98DM1i89BUMDzF//o
-	 +ajSAY369+fkL2oMYBHwpvNpe70DyDu1KZnHGU4qwuRVMhflYrMDZd+33padegWT2a
-	 jyg8g3jL3Q5Jg==
-Message-ID: <9cff09b0-d039-4e65-b6dc-57adaf94c12e@kernel.org>
-Date: Fri, 23 Aug 2024 11:01:37 +0200
+	b=VE0Q1rfeKUR/o1bPbuT8w8OB8ooEPzB3TipQjnSeKQVp07nKbkZR2E7eIPFZo81zN
+	 obOC6larKQbQVKTuLYMutOWGQmMCZaebkxQLSKO51VDUtU7A+kHKwkg4yOMNmFm0EB
+	 GfAyvDqZA29DdOPt9aZwap2py1vSc6DBd9c0nCvtxgjIT16Y+f2Ea6xsOTEU9tb1JX
+	 5NzY+7RAM14KO4YUn0TqJVgnWhwSjQgRyRhCbO4NBNKd+IzYEB/4BZd7p+B1pK7zVH
+	 AYBdcExzgg+46gIVeCTaRIZ42ArXnmWtiJQUgPlNRQaENWZ4tPnhoMdMoJZ5594b/g
+	 HHaEekzTtlbjQ==
+Message-ID: <7969b2e6-1046-4bd4-bdfe-d2bc12a1db1b@kernel.org>
+Date: Fri, 23 Aug 2024 11:06:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +52,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/8] dt-bindings: PCI: Add binding for qps615
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
@@ -68,12 +69,13 @@ References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
  <20240803-qps615-v2-1-9560b7c71369@quicinc.com>
  <5f65905c-f1e4-4f52-ba7c-10c1a4892e30@kernel.org>
  <f8985c98-82a5-08c3-7095-c864516b66b9@quicinc.com>
- <58317fe2-fbea-400e-bd1d-8e64d1311010@kernel.org>
- <100e27d7-2714-89ca-4a98-fccaa5b07be3@quicinc.com>
- <c80ae784-c1f3-4046-9d86-d7e57bd93669@kernel.org>
- <7f48f71c-7f57-492c-47df-6aac1d3b794b@quicinc.com>
- <aa311052-deba-4d13-9ede-1d863a4f362e@kernel.org>
- <20240822141622.tw7vcoc4ciwbydsw@thinkpad>
+ <ZrEGypbL85buXEsO@hu-bjorande-lv.qualcomm.com>
+ <90582c92-ca50-4776-918d-b7486cf942b0@kernel.org>
+ <20240808120109.GA18983@thinkpad>
+ <cb69c01b-08d0-40a1-9ea2-215979fb98c8@kernel.org>
+ <20240808124121.GB18983@thinkpad>
+ <c5bae58c-4200-40d3-94c6-669d2ee131d4@kernel.org>
+ <20240822140956.unt45fgpleqwniwa@thinkpad>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,58 +121,90 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240822141622.tw7vcoc4ciwbydsw@thinkpad>
+In-Reply-To: <20240822140956.unt45fgpleqwniwa@thinkpad>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/08/2024 16:16, Manivannan Sadhasivam wrote:
-> On Mon, Aug 05, 2024 at 04:43:47PM +0200, Krzysztof Kozlowski wrote:
->> On 05/08/2024 07:57, Krishna Chaitanya Chundru wrote:
+On 22/08/2024 16:09, Manivannan Sadhasivam wrote:
+> On Thu, Aug 08, 2024 at 03:06:28PM +0200, Krzysztof Kozlowski wrote:
+>> On 08/08/2024 14:41, Manivannan Sadhasivam wrote:
+>>> On Thu, Aug 08, 2024 at 02:13:01PM +0200, Krzysztof Kozlowski wrote:
+>>>> On 08/08/2024 14:01, Manivannan Sadhasivam wrote:
+>>>>> On Mon, Aug 05, 2024 at 07:18:04PM +0200, Krzysztof Kozlowski wrote:
+>>>>>> On 05/08/2024 19:07, Bjorn Andersson wrote:
+>>>>>>> On Mon, Aug 05, 2024 at 09:41:26AM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>>>> On 8/4/2024 2:23 PM, Krzysztof Kozlowski wrote:
+>>>>>>>>> On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
+>>>>>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+>>>>>>> [..]
+>>>>>>>>>> +  qps615,axi-clk-freq-hz:
+>>>>>>>>>> +    description:
+>>>>>>>>>> +      AXI clock which internal bus of the switch.
+>>>>>>>>>
+>>>>>>>>> No need, use CCF.
+>>>>>>>>>
+>>>>>>>> ack
+>>>>>>>
+>>>>>>> This is a clock that's internal to the QPS615, so there's no clock
+>>>>>>> controller involved and hence I don't think CCF is applicable.
+>>>>>>
+>>>>>> AXI does not sound that internal.
+>>>>>
+>>>>> Well, AXI is applicable to whatever entity that implements it. We mostly seen it
+>>>>> in ARM SoCs (host), but in this case the PCIe switch also has a microcontroller
+>>>>> /processor of some sort, so AXI is indeed relevant for it. The naming actually
+>>>>> comes from the switch's i2c register name that is being configured in the driver
+>>>>> based on this property value.
+>>>>>
+>>>>>> DT rarely needs to specify internal
+>>>>>> clock rates. What if you want to define rates for 20 clocks? Even
+>>>>>> clock-frequency is deprecated, so why this would be allowed?
+>>>>>> bus-frequency is allowed for buses, but that's not the case here, I guess?
+>>>>>>
+>>>>>
+>>>>> This clock frequency is for the switch's internal AXI bus that runs at default
+>>>>> 200MHz. And this property is used to specify a frequency that is configured over
+>>>>> the i2c interface so that the switch's AXI bus can operate in a low frequency
+>>>>> there by reducing the power consumption of the switch.
+>>>>>
+>>>>> It is not strictly needed for the switch operation, but for power optimization.
+>>>>> So this property can also be dropped for the initial submission and added later
+>>>>> if you prefer.
 >>>>
->>> Hi Krzysztof,
+>>>> So if the clock rate can change, why this is static in DTB? Or why this
+>>>> is configurable per-board?
+>>>>
 >>>
->>> QPS615 has a 3 downstream ports and 1 upstream port as described below
->>> diagram.
->>> For this entire switch there are some supplies which we described in the
->>> dt-binding (vdd18-supply, vdd09-supply etc) and one GPIO which controls
->>> reset of the switch (reset-gpio). The switch hardware can configure the
->>> individual ports DSP0, DSP1, DSP2, upstream port and also one integrated
->>> ethernet endpoint which is connected to DSP2(I didn't mentioned in the
->>> diagram) through I2C.
+>>> Because, board manufacturers can change the frequency depending on the switch
+>>> configuration (enablement of DSP's etc...)
 >>>
->>> The properties other than supplies,i2c client, reset gpio which
->>> are added will be applicable for all the ports.
->>> _______________________________________________________________
->>> |   |i2c|                   QPS615       |Supplies||Resx gpio |
->>> |   |___|              _________________ |________||__________|
->>> |      ________________| Upstream port |_____________         |
->>> |      |               |_______________|            |         |
->>> |      |                       |                    |         |
->>> |      |                       |                    |         |
->>> |  ____|_____              ____|_____            ___|____     |
->>> |  |DSP 0   |              | DSP 1  |            | DSP 2|     |
->>> |  |________|              |________|            |______|     |
->>> |_____________________________________________________________|
+>>>> There is a reason why clock-frequency property is not welcomed and you
+>>>> are re-implementing it.
+>>>>
 >>>
+>>> Hmm, I'm not aware that 'clock-frequency' is not encouraged these days. So you
+>>> are suggesting to change the rate in the driver itself based on the switch
+>>> configuration? If so, what difference does it make?
 >>
->> I don't get why then properties should apply to main device node.
+>> Based on the switch, other clocks, votes etc. whatever is reasonable
+>> there. In most cases, not sure if this one here as well, devices can
+>> operate on different clock frequencies thus specifying fixed frequency
+>> in the DTS is simplification and lack of flexibility. It is chosen by
+>> people only because it is easier for them but then they come back with
+>> ABI issues when it turns out they need to switch to some dynamic control.
 >>
 > 
-> The problem here is, we cannot differentiate between main device node and the
-> upstream node. Typically the differentiation is not needed because no one cared
-> about configuring the upstream port. But this PCIe switch is special (as like
-> most of the Qcom peripherals).
-> 
-> I agree that if we don't differentiate then it also implies that all main node
-> properties are applicable to upstream port and vice versa. But AFAIK, upstream
-> port is often considered as the _device_ itself as it shares the same bus
-> number.
+> Atleast for this device, this frequency is going to be static. Because, the
+> device itself cannot change the frequency, only the host driver can. That too is
+> only possible before enumerating the device. So there is no way the frequency is
+> going to change dynamically.
 
-Well, above diagram shows supplies being part of the entire device, not
-each port. That's confusing. Based on diagram, downstream ports do not
-have any supplies... and what exactly do they supply? Let's look at
-vdd18 and vdd09 which sound main supplies of the entire device. In
-context of port: what exactly do they power? Which part of the port?
+We have assigned-clocks properties for this... but there are no clock
+inputs here, so maybe it is not applicable? What generates this internal
+AXI clock? Does it have internal oscillator?
+
+So many questions and nothing in the property description helps to
+understand this.
 
 Best regards,
 Krzysztof
