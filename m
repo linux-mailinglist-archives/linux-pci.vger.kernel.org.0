@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-12145-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2760495D928
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 00:17:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2563695D92B
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 00:19:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5CDB2847BB
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 22:17:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5587A1C21EBF
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 22:19:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16661C7B9A;
-	Fri, 23 Aug 2024 22:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66981C86F4;
+	Fri, 23 Aug 2024 22:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlqI+Glc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ke59IqoH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C728192590;
-	Fri, 23 Aug 2024 22:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC8192590;
+	Fri, 23 Aug 2024 22:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724451452; cv=none; b=Uk/XgGAX+7W50CriN3YHomZNcGogFE5/z0jjI+lJCJPIefjdkWS+puVsKdHiP4tqgJWN7gMPCep6rzqxuA7hrGb+z+JSugh8Vwl/uVCrIK0Nv1jaNDWKXMTBzXEHhJx6od7uZIY1EwfblQdu7L8oBSQBrbdB5/iTPq+BGcZbR64=
+	t=1724451540; cv=none; b=YDOYoBlNpwUuJWVnyzlFsv44rGRE3igc03MbmoQ9C40z2ZTvmtN/EtmKcZgb/h9PS1OMwwmiV5LzOWcW45egOFAYrti9q7i83qbH/eAt42BfPhxzLOqvo+5cfERbyy4woWnQ0TbGkc+JiBdQq6q28i0AmQ44aQJ+P4Jmha5CLkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724451452; c=relaxed/simple;
-	bh=WrEHdYXMheRANM0DatLMvX4pMsTiurjv8WMBfTIYxso=;
+	s=arc-20240116; t=1724451540; c=relaxed/simple;
+	bh=CywqaPcWvNQMLuUnkX/D3hSMUqm1ICaLWW3Thh45dw0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HZPIXt7RuqB0dmIE9srvJWGIxaQzQFTsnZJNLvjWU9LJKJ+SlFrbjgR/rWAEg9JqtUnP6kBdKaFoPLpL9GmS6odQycrmv+t6gYISIgHCZl2iVKQ8Usk05UVwK2IK05bzevF5hyPpv/KIJs8+g1r80Kzw3rrLBlh1faySQDh7Vv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlqI+Glc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0807C32786;
-	Fri, 23 Aug 2024 22:17:31 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=kGB69gOlD+bjn4IxgiCng93LO7P4yjzW4sLz20NZHiNMMtouPuL1ucyxevdyMJvc0tuUlh1PSw86Sa4xUnJRrTBj7JDsoFTmDn/P0kTp/01qGZKC8T2RaQl4AVxmkOBA1w+80eDMaQwHJHlyFWs7/OqqXLDhbt+RXqmaMOn1M9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ke59IqoH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2EEEC32786;
+	Fri, 23 Aug 2024 22:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724451452;
-	bh=WrEHdYXMheRANM0DatLMvX4pMsTiurjv8WMBfTIYxso=;
+	s=k20201202; t=1724451540;
+	bh=CywqaPcWvNQMLuUnkX/D3hSMUqm1ICaLWW3Thh45dw0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KlqI+Glc+XQz0zORkjdVFVUhmb2H/2xhQ6lBbW3waQyNaPjZJDENcdZHJdW62/p9t
-	 vgwygPQNYYaXsSRpOVUEdsK7UWzCiVQlamN5jMvxfTq0Rw5qNdHCnTS/gW9CCXJMvm
-	 0HD9qYyl1Gik2li7mMQKDAv3uSHu0njirsMqyKKhWiSL7gOYGx9vAIV44l7Abdvfj5
-	 J10EhJXt0Sw13K+IMFDoB81e/F7RkwTdFIg+qkALK3TjhQCxqGuxjJQjZPGHwojJeP
-	 ok9zCfywGtGqB+f19BX0sYaW4MCc5SVfYWsuaR08CdKrhJh014Go4cqeay2coeEEqt
-	 LGyBBEdg14aaQ==
-Date: Fri, 23 Aug 2024 17:17:30 -0500
+	b=ke59IqoHdwWW2oE3BIQfAPs3rJONg0ExI12ZbP2VJ3exAtt+JA8hSSFaHb4YWKGqr
+	 J4UY4PAUQ77lcGUt+zbx6JnqWjkmVUHqGtJY/fWZEYU4Ag3zaFbKi5HtuNIc6c7sRd
+	 TutZaZheyRE3bD1YWuq6+5nQBaFqDDus9M5RWtfoEnAtmxg5r4JM1DiVX3IU9o92iX
+	 j1tetuYvZubPZ/rYU/vntqkHWoqRuQ5vj8iLBD8s161gcQ1nVb/uPjMZaD8B5B7gH4
+	 xSfNFkqgaVVpTABmbMf990VUELduRPL44tT0tc0jg31JWVc+gPY3Wpc2r6cWeyDF7i
+	 Kfq82khHDTTMg==
+Date: Fri, 23 Aug 2024 17:18:57 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Alexey Kardashevskiy <aik@amd.com>
 Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
@@ -56,9 +56,9 @@ Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
 	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
 	Nikunj A Dadhania <nikunj@amd.com>,
 	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC PATCH 01/21] tsm-report: Rename module to reflect what it
- does
-Message-ID: <20240823221730.GA391170@bhelgaas>
+Subject: Re: [RFC PATCH 02/21] pci/doe: Define protocol types and make those
+ public
+Message-ID: <20240823221857.GA391220@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,12 +67,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240823132137.336874-2-aik@amd.com>
+In-Reply-To: <20240823132137.336874-3-aik@amd.com>
 
-On Fri, Aug 23, 2024 at 11:21:15PM +1000, Alexey Kardashevskiy wrote:
+Run "git log --oneline" and follow the drivers/pci capitalization
+convention.
 
-Include the text from the title here so the commit log is
-self-contained.
+On Fri, Aug 23, 2024 at 11:21:16PM +1000, Alexey Kardashevskiy wrote:
+> Already public pci_doe() takes a protocol type argument.
+> PCIe 6.0 defines three, define them in a header for use with pci_doe().
 
-> And release the name for TSM to be used for TDISP-associated code.
+Include section number, e.g., PCIe r6.0, sec xxx.
+
+Rewrap to fill 75 columns (or add a blank line if you intend two
+paragraphs).
 
