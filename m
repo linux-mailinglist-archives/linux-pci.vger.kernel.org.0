@@ -1,283 +1,179 @@
-Return-Path: <linux-pci+bounces-12137-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12138-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C8A495D5FB
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 21:18:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EFF895D642
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 21:54:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4577B2235B
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 19:18:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1A6E1C21081
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 19:54:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8401B18592E;
-	Fri, 23 Aug 2024 19:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C037D1925BC;
+	Fri, 23 Aug 2024 19:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUwXpyWv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6TuGExr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28D88F6B
-	for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 19:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9206F1885B9;
+	Fri, 23 Aug 2024 19:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724440721; cv=none; b=Q+cDjpWZ//eFO2D6/J+4nOCDL+jDgSv7cEfCJLBo5vvmOcLVBHFL88T6hpaw/kw/63xg3r1C3jCW67hwuhoycHeO1ONcFF5DrWfB6Tfd98JUpLiVP/PkEYCFqV0HUoYd3q+Bp3bdBXu0bQr/J9aaSY6yQu5MpNWLi0qrrYc9xoY=
+	t=1724442843; cv=none; b=IxyAY23JHjkxBTAEOKR9ZCTf50C8PNQuyyTV1u1YwPiWO7w0xJxmishOPeU59KbcRzQcEJh8Re25HUreVlj15gNk4Yte3rbSx6KolbsQQPwonI2unFZfHH/uhqc9wFID/bsSZH5YPGLS1A5MAIE30BVcKEddFlaiyheKVm15BaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724440721; c=relaxed/simple;
-	bh=eezO9eOgAyNsuRcweMJfcBIpNi9J1OT+MOb6N+Wwf54=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Fbc8KzGJZkhX/LXtpwJXhCwFEd0HKqWfgCcDqmVElnUL9bqq1L40FK4JxSyIkffr2RfgEfsuwR1iEk2/Vq0bICXrA/OUx/BOBCbvYBHAikJ4WrfWLykL//rLtzP+zFa4KKNLoWZWRbVx586x+eb+c/U2BowKHLYnVTadlM0W3WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUwXpyWv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724440720; x=1755976720;
-  h=date:from:to:cc:subject:message-id;
-  bh=eezO9eOgAyNsuRcweMJfcBIpNi9J1OT+MOb6N+Wwf54=;
-  b=aUwXpyWvwakBiQDUNDN0v4cSaT5OuFSTq1bFMVJCHqKF/28UCYMJiVWB
-   TbJcCf5EHCaLyx6AUVKaSf6xVJDTQrB8e0HVeV3ECoWw61wVMWC7i+wGo
-   i8pJ9CeRtj/8qo2rHKyjp6PEdiQEe7hbEZjAhwd5870yNg0GlsSitWYAh
-   79/yYD8TeaN0oVlL3sKA+UbBJA9TKmY/3QrdNBiHvU455sZOf083upM+Y
-   Eb3mypSX27u+p+PRPiYrXfFBw4bGbs+zafTnGQiW1oCpTgBpHualJL5Bs
-   YI1/72mPv8BVVCpgg35fc2bziiMWc9ruIuRbHjI2Wr+fKbuR2x1cm7UlF
-   Q==;
-X-CSE-ConnectionGUID: 0yoeYi3bQ2qDPKYv4o/PPw==
-X-CSE-MsgGUID: ceuhttuWQweDtiZ9yRsGuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="23094746"
-X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="23094746"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 12:18:39 -0700
-X-CSE-ConnectionGUID: zw73w1r4Q6WiBI5SJeeR7g==
-X-CSE-MsgGUID: 6IG1PlJSTzuq1C8U6arQ5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="61904304"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 23 Aug 2024 12:18:38 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1shZnv-000DyE-2p;
-	Fri, 23 Aug 2024 19:18:35 +0000
-Date: Sat, 24 Aug 2024 03:17:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/xilinx] BUILD SUCCESS
- 308a40fb8fd9cfb1aa7d44f79980dfaef1a6c72f
-Message-ID: <202408240354.VyloEn65-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1724442843; c=relaxed/simple;
+	bh=FbLzJM1sevygIw62wwjrGDZMa5dNQfyCcprINFgo/Dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EqDrdxDL54QSVFJ01AdLthlw5h8RlufiPcqTc9MvGVtjbVp+wVUaVgEwJNUOBcZpGe6ofNWe5orflfske0QgyJ/XcSCm7SPuh7S13UYzK0WynS7ejSfRfPuJx7HGs1LCi3dvsoi2rqEjUNOVGrjCEkb6W8zaVnIKAizosFp4HRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6TuGExr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC22C32786;
+	Fri, 23 Aug 2024 19:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724442843;
+	bh=FbLzJM1sevygIw62wwjrGDZMa5dNQfyCcprINFgo/Dc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=U6TuGExrg/rj/EK/jeeQeNKcTWby1eVjRt66rDgTcfJ36+bWzhpyFozet0x4dfXOc
+	 5ic8+xJMH/nNfm0ScBx3wJJOWGOcvIE6LB30/pMsYuagsqGfEfWCC3ZkbRpCAxAhGJ
+	 0nlNozgSgDoeAFE8ij0ibdbhEItHq81aYAj1Cnxwp3XxIbb+/KEAwLdDU6TVC1hmhe
+	 sznAVkC8x4yCyVyXJ0BZDOohq/xNB6BSrREDFuVbmfa6Sdy+SOTGxJzPXSkj466GQR
+	 LFGqm3dW5Y4L0LMaKkUaGVXDcspi3WGBWEfLwuYzLdaqJgs9i6v66fEQIPDymx4Iae
+	 IEyPUTS10tB3g==
+Date: Fri, 23 Aug 2024 14:54:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Mathias Nyman <mathias.nyman@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+	Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Duc Dang <ducdang@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH v5 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in
+ pci_dev_wait()
+Message-ID: <20240823195400.GA377553@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240823154023.360234-3-superm1@kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/xilinx
-branch HEAD: 308a40fb8fd9cfb1aa7d44f79980dfaef1a6c72f  PCI: xilinx-nwl: Add PHY support
+[+cc Duc, Alex]
 
-elapsed time: 1459m
+On Fri, Aug 23, 2024 at 10:40:20AM -0500, Mario Limonciello wrote:
+> If a dock is plugged in at the same time as autosuspend delay then this
+> can cause malfunctions in the USB4 stack. This happens because the
+> device is still in D3cold at the time that the PCI core handed
+> control back to the USB4 stack.
 
-configs tested: 190
-configs skipped: 4
+I assume the USB device in question is in the dock that was hot-added?
+This patch suggests that pci_dev_wait() has waited for a read of
+PCI_COMMAND to respond with something other than ~0, but the device is
+still in D3cold.  I suppose we got to pci_dev_wait() via
+pci_pm_bridge_power_up_actions() calling
+pci_bridge_wait_for_secondary_bus(), since I wouldn't expect a reset
+in the hot-add case.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> A device that has gone through a reset may return a value in PCI_COMMAND
+> but that doesn't mean it's finished transitioning to D0.  For evices that
+> support power management explicitly check PCI_PM_CTRL on everything but
+> system resume to ensure the transition happened.
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                      axs103_smp_defconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                     haps_hs_smp_defconfig   gcc-13.2.0
-arc                     nsimosci_hs_defconfig   gcc-13.2.0
-arc                 nsimosci_hs_smp_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240823   gcc-13.2.0
-arc                   randconfig-002-20240823   gcc-13.2.0
-arc                        vdk_hs38_defconfig   gcc-13.2.0
-arc                    vdk_hs38_smp_defconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                         axm55xx_defconfig   gcc-13.2.0
-arm                         bcm2835_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                          exynos_defconfig   gcc-13.2.0
-arm                           imxrt_defconfig   gcc-13.2.0
-arm                      integrator_defconfig   gcc-13.2.0
-arm                         lpc32xx_defconfig   gcc-13.2.0
-arm                          pxa3xx_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240823   gcc-13.2.0
-arm                   randconfig-002-20240823   gcc-13.2.0
-arm                   randconfig-003-20240823   gcc-13.2.0
-arm                   randconfig-004-20240823   gcc-13.2.0
-arm                             rpc_defconfig   gcc-13.2.0
-arm                        vexpress_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240823   gcc-13.2.0
-arm64                 randconfig-002-20240823   gcc-13.2.0
-arm64                 randconfig-003-20240823   gcc-13.2.0
-arm64                 randconfig-004-20240823   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240823   gcc-13.2.0
-csky                  randconfig-002-20240823   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240823   clang-18
-i386         buildonly-randconfig-002-20240823   clang-18
-i386         buildonly-randconfig-003-20240823   clang-18
-i386         buildonly-randconfig-004-20240823   clang-18
-i386         buildonly-randconfig-005-20240823   clang-18
-i386         buildonly-randconfig-006-20240823   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240823   clang-18
-i386                  randconfig-002-20240823   clang-18
-i386                  randconfig-003-20240823   clang-18
-i386                  randconfig-004-20240823   clang-18
-i386                  randconfig-005-20240823   clang-18
-i386                  randconfig-006-20240823   clang-18
-i386                  randconfig-011-20240823   clang-18
-i386                  randconfig-012-20240823   clang-18
-i386                  randconfig-013-20240823   clang-18
-i386                  randconfig-014-20240823   clang-18
-i386                  randconfig-015-20240823   clang-18
-i386                  randconfig-016-20240823   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240823   gcc-13.2.0
-loongarch             randconfig-002-20240823   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-m68k                          hp300_defconfig   gcc-13.2.0
-m68k                            q40_defconfig   gcc-13.2.0
-m68k                           virt_defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                            gpr_defconfig   gcc-13.2.0
-mips                           ip32_defconfig   gcc-13.2.0
-mips                     loongson2k_defconfig   gcc-13.2.0
-mips                        vocore2_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240823   gcc-13.2.0
-nios2                 randconfig-002-20240823   gcc-13.2.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-openrisc                    or1ksim_defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240823   gcc-13.2.0
-parisc                randconfig-002-20240823   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                    amigaone_defconfig   gcc-13.2.0
-powerpc                      katmai_defconfig   gcc-13.2.0
-powerpc                     ksi8560_defconfig   gcc-13.2.0
-powerpc                      mgcoge_defconfig   gcc-13.2.0
-powerpc                     mpc512x_defconfig   gcc-13.2.0
-powerpc               mpc834x_itxgp_defconfig   gcc-13.2.0
-powerpc                      pcm030_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240823   gcc-13.2.0
-powerpc               randconfig-002-20240823   gcc-13.2.0
-powerpc                     skiroot_defconfig   gcc-13.2.0
-powerpc                    socrates_defconfig   gcc-13.2.0
-powerpc                  storcenter_defconfig   gcc-13.2.0
-powerpc                     taishan_defconfig   gcc-13.2.0
-powerpc                     tqm8548_defconfig   gcc-13.2.0
-powerpc                     tqm8560_defconfig   gcc-13.2.0
-powerpc                 xes_mpc85xx_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240823   gcc-13.2.0
-powerpc64             randconfig-002-20240823   gcc-13.2.0
-powerpc64             randconfig-003-20240823   gcc-13.2.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-14.1.0
-riscv                 randconfig-001-20240823   gcc-13.2.0
-riscv                 randconfig-002-20240823   gcc-13.2.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-20
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240823   gcc-13.2.0
-s390                  randconfig-002-20240823   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                  defconfig   gcc-14.1.0
-sh                    randconfig-001-20240823   gcc-13.2.0
-sh                    randconfig-002-20240823   gcc-13.2.0
-sh                           se7206_defconfig   gcc-13.2.0
-sh                           se7721_defconfig   gcc-13.2.0
-sh                        sh7757lcr_defconfig   gcc-13.2.0
-sh                        sh7785lcr_defconfig   gcc-13.2.0
-sh                            titan_defconfig   gcc-13.2.0
-sh                          urquell_defconfig   gcc-13.2.0
-sparc                       sparc64_defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240823   gcc-13.2.0
-sparc64               randconfig-002-20240823   gcc-13.2.0
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240823   gcc-13.2.0
-um                    randconfig-002-20240823   gcc-13.2.0
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240823   gcc-12
-x86_64       buildonly-randconfig-002-20240823   gcc-12
-x86_64       buildonly-randconfig-003-20240823   gcc-12
-x86_64       buildonly-randconfig-004-20240823   gcc-12
-x86_64       buildonly-randconfig-005-20240823   gcc-12
-x86_64       buildonly-randconfig-006-20240823   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                randconfig-001-20240823   gcc-12
-x86_64                randconfig-002-20240823   gcc-12
-x86_64                randconfig-003-20240823   gcc-12
-x86_64                randconfig-004-20240823   gcc-12
-x86_64                randconfig-005-20240823   gcc-12
-x86_64                randconfig-006-20240823   gcc-12
-x86_64                randconfig-011-20240823   gcc-12
-x86_64                randconfig-012-20240823   gcc-12
-x86_64                randconfig-013-20240823   gcc-12
-x86_64                randconfig-014-20240823   gcc-12
-x86_64                randconfig-015-20240823   gcc-12
-x86_64                randconfig-016-20240823   gcc-12
-x86_64                randconfig-071-20240823   gcc-12
-x86_64                randconfig-072-20240823   gcc-12
-x86_64                randconfig-073-20240823   gcc-12
-x86_64                randconfig-074-20240823   gcc-12
-x86_64                randconfig-075-20240823   gcc-12
-x86_64                randconfig-076-20240823   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                randconfig-001-20240823   gcc-13.2.0
-xtensa                randconfig-002-20240823   gcc-13.2.0
-xtensa                    smp_lx200_defconfig   gcc-13.2.0
-xtensa                    xip_kc705_defconfig   gcc-13.2.0
+s/evices/devices/
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Devices that don't support power management and system resume will
+> continue to use PCI_COMMAND.
+
+Is there a bugzilla or other report with more details that we can
+include here?
+
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v4->v5:
+>  * Fix misleading indentation
+>  * Amend commit message
+> ---
+>  drivers/pci/pci.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 1e219057a5069..f032a4aaec268 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1309,21 +1309,33 @@ static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_type, int
+>  	 * the read (except when CRS SV is enabled and the read was for the
+>  	 * Vendor ID; in that case it synthesizes 0x0001 data).
+>  	 *
+> -	 * Wait for the device to return a non-CRS completion.  Read the
+> -	 * Command register instead of Vendor ID so we don't have to
+> -	 * contend with the CRS SV value.
+> +	 * Wait for the device to return a non-CRS completion.  On devices
+> +	 * that support PM control and on waits that aren't part of system
+> +	 * resume read the PM control register to ensure the device has
+> +	 * transitioned to D0.  On devices that don't support PM control,
+> +	 * or during system resume read the command register to instead of
+> +	 * Vendor ID so we don't have to contend with the CRS SV value.
+>  	 */
+>  	for (;;) {
+> -		u32 id;
+> -
+>  		if (pci_dev_is_disconnected(dev)) {
+>  			pci_dbg(dev, "disconnected; not waiting\n");
+>  			return -ENOTTY;
+>  		}
+>  
+> -		pci_read_config_dword(dev, PCI_COMMAND, &id);
+> -		if (!PCI_POSSIBLE_ERROR(id))
+> -			break;
+> +		if (dev->pm_cap && reset_type != PCI_DEV_WAIT_RESUME) {
+> +			u16 pmcsr;
+> +
+> +			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> +			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
+> +			    (pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
+> +				break;
+> +		} else {
+> +			u32 id;
+> +
+> +			pci_read_config_dword(dev, PCI_COMMAND, &id);
+> +			if (!PCI_POSSIBLE_ERROR(id))
+> +				break;
+> +		}
+
+What is the rationale behind using PCI_PM_CTRL in some cases and
+PCI_COMMAND in others?  Is there some spec language we can cite for
+this?
+
+IIUC, pci_dev_wait() waits for a device to be ready after a reset
+(FLR, D3hot->D0 transition for devices where No_Soft_Reset is clear,
+DPC) and after power-up from D3cold (pci_pm_bridge_power_up_actions()).
+I think device readiness in all of these cases is covered by PCIe
+r6.0, sec 6.6.1.
+
+If the Root Port above the device supports Configuration RRS Software
+Visibility, I think we probably should use that here instead of either
+PCI_COMMAND or PCI_PM_CTRL.  SR-IOV VFs don't implement Vendor ID,
+which might complicate this a little.  But it niggles in my mind that
+there may be some other problem beyond that.  Maybe Alex remembers.
+
+Anyway, if we meet the requirements of sec 6.6.1, the device should be
+ready to respond to config requests, and I assume that also means
+the device is in D0.
+
+>  		if (delay > timeout) {
+>  			pci_warn(dev, "not ready %dms after %s; giving up\n",
+> -- 
+> 2.43.0
+> 
 
