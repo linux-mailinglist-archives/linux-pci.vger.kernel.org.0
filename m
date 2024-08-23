@@ -1,61 +1,144 @@
-Return-Path: <linux-pci+bounces-12132-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 578F095D4DB
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 20:04:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83CB395D542
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 20:21:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8910D1C22622
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 18:04:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33986281331
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Aug 2024 18:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EAE218FDD6;
-	Fri, 23 Aug 2024 18:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4E8E1922C7;
+	Fri, 23 Aug 2024 18:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvkvwJes"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fwyGoh1x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D5318BBB6;
-	Fri, 23 Aug 2024 18:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CE3191F62
+	for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 18:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724436286; cv=none; b=DoTgk9/FPY0Fi3Sia3mDEI7XLQ0Ez8R5L+Oy0TMGq7NfPuumgbXgBz1qIXhqEfL2jus/aC+Q/2cvShxwV/2dZll10sr/pY2mn3xWUL4xFpWjBoiStksnoLkwR+RbAtp/XdfLj68NbdnlhvJ/mjBlZgdvB6b1vs3udhVbr2i313k=
+	t=1724437293; cv=none; b=OBcP0sid7lPLTcRc8GrFb6aCTEutXUSXbhIY84nPUvQgFCRLTUuZe4ROUGToeNM2w871OWIBTUKe6SWfOwl1J6UySv7nOKM2T5AJYsCelSITp1Q0pmekDzLWr4mhvzhCb/66p5/nTJYPmKg/ZXKCvarXRxNZnBUJvlghT9+lSjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724436286; c=relaxed/simple;
-	bh=d7EGDtbN0hddOp+GDsOFauqRCeZzmJJsvv0km29SQIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PoZlg3l8P4I0QKNTO9uY8u5ZyW5ZqSWWfE3mw6V0+H9zC+QbfQSEqaDsqkA3NDvzk2HKJZj6lKim78jrloe86KcGtMpg/qkLb8W3BdW+iS/DOj1LfSI6yIM82uH2SGSncRufem60aJZkeGxyFo5JswBM1kyA6jWQ+vdGYEP7GCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvkvwJes; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDECC32786;
-	Fri, 23 Aug 2024 18:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724436285;
-	bh=d7EGDtbN0hddOp+GDsOFauqRCeZzmJJsvv0km29SQIc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FvkvwJesdwBPVPM7AA3zo0dE2WvhjVkNcX1N3e/rX3fiQmKQZACYs4k2CyQ5Tr9I8
-	 SWs+3NhBAC69xMi1OZ8QswayfZHfEyUDkAg+sZz4gBK2Tp5z2SEFsZbxlJpVgEWsti
-	 0aUAP5T4k5oueG57eWeT4/6w5aoliawtcI6D6xXiG8D0s9ICSLGsbPFW/jqbiTNb4J
-	 MKVc+5KtSBV+nW2NXU9C5CFxLHVRiF0/1wzmMbeEOlJ922+Pj7h0Wf9kt1Ne+x9gEF
-	 RKcKPoNDjE0G9wpYrASHWfnhywJAR4LxPhEZdkxNgSzq1M34w3WHmrY8iWqno7j54L
-	 IVDb+gApIaAHw==
-Date: Fri, 23 Aug 2024 13:04:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: bhelgaas@google.com, siyuli@glenfly.com, perex@perex.cz, tiwai@suse.com,
-	pierre-louis.bossart@linux.intel.com,
-	maarten.lankhorst@linux.intel.com, peter.ujfalusi@linux.intel.com,
-	kai.vehmanen@linux.intel.com, rsalvaterra@gmail.com,
-	suijingfeng@loongson.cn, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	jasontao@glenfly.com, reaperlioc@glenfly.com,
-	guanwentao@uniontech.com, linux@horizon.com, pat-lkml@erley.org,
-	alex.williamson@redhat.com
-Subject: Re: [PATCH v2] PCI: Add function 0 DMA alias quirk for Glenfly arise
- chip
-Message-ID: <20240823180442.GA377418@bhelgaas>
+	s=arc-20240116; t=1724437293; c=relaxed/simple;
+	bh=jVB1jWsmi+mWuFfri64okGdk5rpVup7RQiSy6BxP4uY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B3t92Fpu6FdMqXxi0RzFdKZUYlQtXZkAwfKlrynZrUV9t1/K3mUtVR6VxgI/FeRoZI53dm+rNY+bt5XbgLezoXuLZj+NWtePoTweR/YD2iYRveQ5aBCBN/God80mAIvoStwZiB9XVgdqnkljZeLBDJzf6Smwpj02VSCEyPtQm+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fwyGoh1x; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-533488ffaddso2959115e87.1
+        for <linux-pci@vger.kernel.org>; Fri, 23 Aug 2024 11:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724437289; x=1725042089; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FICRI5lzPDPrWMcBNEaOg3XU9oTCEC3UNpnHrqnVnWY=;
+        b=fwyGoh1xgS7/u0NwaRSthfO/EDwxdbr8jJYUDp9TiJnvOXZFnuMnzGyYOnXDfvulxM
+         N1+FjERM3zeeOk7OTap4fCA/3HTuQB2O8HdrU+JA1UxhGl+erkyEFP2UL+Iv83vuijWI
+         ukEXgKMHPlAW3hsW3hGx/40+kqVKuBEeVc8umevlA7BcTG1yyxHAhuEXhtYmdqvfxo1X
+         9TiCmG7cbU0FotFuh9pJDtWINLvNP3+0QfBZmgapLPNB886brSFgyiX1GwfhtIXkpa3s
+         ehbDNIbm/ZGsoZga8H0AOMgOZR+vWd+ZFGoKZorqdp5luEP/3uLEDfqbtUHXqiHtV5EO
+         bBaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724437289; x=1725042089;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FICRI5lzPDPrWMcBNEaOg3XU9oTCEC3UNpnHrqnVnWY=;
+        b=ctGg3VeNXLxAdyGYFGK7MLG8CAnl+WD95nfdl8OVKx910qVR4jDqv+4oL3pAtGdeBF
+         BmT9aQkEllxOOUprLus787aYN6rfax+5J0pBYDLRR8vjBqa9tS3mzz8jJXUATqkNEIty
+         99oV2/eUtq4tzgA1ZWbmzQMRQrKT0Xmu4KKUrG0Z7XqhZ/ToBXzIEg+aYDaN/+qiS34B
+         hg/u9RrP6tvobRIOpj6q2B12hCKQcqrbIrPZdyKwTi+NNRZIRCLAcsP4JT7TK7pMCVzM
+         C1dc7ioLEVUmNq1v9DlbDdfV7K1FXs+6YbGFcoE0p/nLdHvhGxWlcnG0kJ6XATgKKH9z
+         UlkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRf5zTtgCDofrRI/KJ+o+0UQCO2o2qfmFt4oB4gziq3LJnATq3HqgobyAg515Cql//hhFojTQMx/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk4HsfSKf1sMCCnmjwe9IEFVieEN7SjuedXEf1wv9IAbIv50cp
+	vmWrupd0d6jlXmvfPEuED81B1eSOo8v+gukRFi6w4qifzmf7jJgMscp35z4l+PI=
+X-Google-Smtp-Source: AGHT+IHGMmpORef4vYjLxEDkG4MSJEX/JfR9cTLIAj6QepyUfSPuFPKAHVyeeB5MysQZc4aa4suv7g==
+X-Received: by 2002:a05:6512:3e1b:b0:533:d3e:16e6 with SMTP id 2adb3069b0e04-53438784950mr2355588e87.25.1724437288497;
+        Fri, 23 Aug 2024 11:21:28 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f299d9asm292716766b.60.2024.08.23.11.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 11:21:28 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Fri, 23 Aug 2024 20:21:34 +0200
+To: Conor Dooley <conor@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
+Message-ID: <ZsjTLhgubiMN5BXm@apocalypse>
+Mail-Followup-To: Conor Dooley <conor@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
+ <20240820-baritone-delegate-5711f7a0bc76@spud>
+ <ZsTfoC3aKLdmFPCL@apocalypse>
+ <20240821-exception-nearby-5adeaaf0178b@spud>
+ <ZscGdxgoNJrifSgk@apocalypse>
+ <399ff156-ffc9-4d50-8e5f-a86dc82da2fa@kernel.org>
+ <20240822-refutable-railroad-a3f111ab1e3f@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,76 +147,113 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA2BBD087345B6D1+20240823095708.3237375-1-wangyuli@uniontech.com>
+In-Reply-To: <20240822-refutable-railroad-a3f111ab1e3f@spud>
 
-On Fri, Aug 23, 2024 at 05:57:08PM +0800, WangYuli wrote:
-> Add DMA support for audio function of Glenfly arise chip,
-> which uses request id of function 0.
+Hi Conor and Krzysztof,
+
+On 17:23 Thu 22 Aug     , Conor Dooley wrote:
+> On Thu, Aug 22, 2024 at 11:52:27AM +0200, Krzysztof Kozlowski wrote:
 > 
-> Link: https://lore.kernel.org/all/20240822185617.GA344785@bhelgaas/
-> Signed-off-by: SiyuLi <siyuli@glenfly.com>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-
-Applied with Takashi's reviewed-by to pci/iommu for v6.12, thanks!
-
-I changed the hex to lower-case to match nearby code and dropped the
-#defines for PCI_DEVICE_ID_GLENFLY_ARISE10C0_AUDIO and
-PCI_DEVICE_ID_GLENFLY_ARISE1020_AUDIO since they aren't used.
-If those values are used in more places than the quirk, we can add
-them and use the #defines in all the places.
-
-> ---
->  drivers/pci/quirks.c      | 6 ++++++
->  include/linux/pci_ids.h   | 4 ++++
->  sound/pci/hda/hda_intel.c | 2 +-
->  3 files changed, 11 insertions(+), 1 deletion(-)
+> > >>>>> +examples:
+> > >>>>> +  - |
+> > >>>>> +    #include <dt-bindings/clock/rp1.h>
+> > >>>>> +
+> > >>>>> +    rp1 {
+> > >>>>> +        #address-cells = <2>;
+> > >>>>> +        #size-cells = <2>;
+> > >>>>> +
+> > >>>>> +        rp1_clocks: clocks@18000 {
+> > >>>>
+> > >>>> The unit address does not match the reg property. I'm surprised that
+> > >>>> dtc doesn't complain about that.
+> > >>>
+> > >>> Agreed. I'll update the address with the reg value in the next release
+> > >>>
+> > >>>>
+> > >>>>> +            compatible = "raspberrypi,rp1-clocks";
+> > >>>>> +            reg = <0xc0 0x40018000 0x0 0x10038>;
+> > >>>>
+> > >>>> This is a rather oddly specific size. It leads me to wonder if this
+> > >>>> region is inside some sort of syscon area?
+> > >>>
+> > >>> >From downstream source code and RP1 datasheet it seems that the last addressable
+> > >>> register is at 0xc040028014 while the range exposed through teh devicetree ends
+> > >>> up at 0xc040028038, so it seems more of a little safe margin. I wouldn't say it
+> > >>> is a syscon area since those register are quite specific for video clock
+> > >>> generation and not to be intended to be shared among different peripherals.
+> > >>> Anyway, the next register aperture is at 0xc040030000 so I would say we can 
+> > >>> extend the clock mapped register like the following:
+> > >>>
+> > >>> reg = <0xc0 0x40018000 0x0 0x18000>;
+> > >>>
+> > >>> if you think it is more readable.
+> > >>
+> > >> I don't care
+> > > 
+> > > Ack.
+> > > 
+> > >>>>> +            #clock-cells = <1>;
+> > >>>>> +            clocks = <&clk_xosc>;
+> > >>>>> +
+> > >>>>> +            assigned-clocks = <&rp1_clocks RP1_PLL_SYS_CORE>,
+> > >>>
+> > >>>> FWIW, I don't think any of these assigned clocks are helpful for the
+> > >>>> example. That said, why do you need to configure all of these assigned
+> > >>>> clocks via devicetree when this node is the provider of them?
+> > >>>
+> > >>> Not sure to understand what you mean here, the example is there just to
+> > >>> show how to compile the dt node, maybe you're referring to the fact that
+> > >>> the consumer should setup the clock freq?
+> > >>
+> > >> I suppose, yeah. I don't think a particular configuration is relevant
+> > >> for the example binding, but simultaneously don't get why you are
+> > >> assigning the rate for clocks used by audio devices or ethernet in the
+> > >> clock provider node.
+> > >>
+> > > 
+> > > Honestly I don't have a strong preference here, I can manage to do some tests
+> > > moving the clock rate settings inside the consumer nodes but I kinda like
+> > > the curernt idea of a centralized node where clocks are setup beforehand.
+> > > In RP1 the clock generator and peripherals such as ethernet are all on-board
+> > > and cannot be rewired in any other way so the devices are not standalone
+> > > consumer in their own right (such it would be an ethernet chip wired to an
+> > > external CPU). But of course this is debatable, on the other hand the current
+> > > approach of provider/consumer is of course very clean. I'm just wondering
+> > > wthether you think I should take action on this or we can leave it as it is.
+> > > Please see also below.
+> > > 
+> > >>> Consider that the rp1-clocks
+> > >>> is coupled to the peripherals contained in the same RP1 chip so there is
+> > >>> not much point in letting the peripherals set the clock to their leisure.
+> > >>
+> > >> How is that any different to the many other SoCs in the kernel?
+> > > 
+> > > In fact, it isn't. Please take a look at:
+> > >  
+> > > arch/arm/boot/dts/st/stm32mp15xx-dhcom-som.dtsi
+> > > arch/arm/boot/dts/ti/omap/omap44xx-clocks.dtsi
+> > > arch/arm/boot/dts/ti/omap/dra7xx-clocks.dtsi
+> > > arch/arm/boot/dts/nxp/imx/imx7d-zii-rpu2.dts
+> > > 
+> > > and probably many others... they use the same approach, so I assumed it is at
+> > > least reasonable to assign the clock rate this way.
+> > 
+> > Please do not bring some ancient DTS, not really worked on, as example.
+> > stm32 could is moderately recent but dra and omap are not.
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index dd75c7646bb7..7aad5311326d 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4259,6 +4259,12 @@ static void quirk_dma_func0_alias(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe832, quirk_dma_func0_alias);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
->  
-> +/*
-> + * Some Glenfly chips use function 0 as the PCIe requester ID for DMA too.
-> + */
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, 0x3D40, quirk_dma_func0_alias);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, 0x3D41, quirk_dma_func0_alias);
-> +
->  static void quirk_dma_func1_alias(struct pci_dev *dev)
->  {
->  	if (PCI_FUNC(dev->devfn) != 1)
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index e388c8b1cbc2..536465196d09 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2661,6 +2661,10 @@
->  #define PCI_DEVICE_ID_DCI_PCCOM8	0x0002
->  #define PCI_DEVICE_ID_DCI_PCCOM2	0x0004
->  
-> +#define PCI_VENDOR_ID_GLENFLY	    0x6766
-> +#define PCI_DEVICE_ID_GLENFLY_ARISE10C0_AUDIO	 0x3D40
-> +#define PCI_DEVICE_ID_GLENFLY_ARISE1020_AUDIO	 0x3D41
-> +
->  #define PCI_VENDOR_ID_INTEL		0x8086
->  #define PCI_DEVICE_ID_INTEL_EESSC	0x0008
->  #define PCI_DEVICE_ID_INTEL_HDA_CML_LP	0x02c8
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index b33602e64d17..e8958a464647 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -2671,7 +2671,7 @@ static const struct pci_device_id azx_ids[] = {
->  	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS |
->  	  AZX_DCAPS_PM_RUNTIME },
->  	/* GLENFLY */
-> -	{ PCI_DEVICE(0x6766, PCI_ANY_ID),
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_GLENFLY, PCI_ANY_ID),
->  	  .class = PCI_CLASS_MULTIMEDIA_HD_AUDIO << 8,
->  	  .class_mask = 0xffffff,
->  	  .driver_data = AZX_DRIVER_GFHDMI | AZX_DCAPS_POSFIX_LPIB |
-> -- 
-> 2.43.4
+> Right, there may be some examples like this, but there are many many
+> other SoCs where clocks are also not re-wireable, that do not. To me
+> this line of argument is akin to the clock driver calling enable on all
+> of the clocks because "all of the peripherals are always on the SoC".
+> The peripheral is the actual consumer of the clock that quote-unquote
+> wants the particular rate, not the clock provider, so having the rate
+> assignments in the consumers is the only thing that makes sense to me.
 > 
+> 
+
+I'll try to cook something that move the rate definition to the consumer
+side, then.
+
+Many thanks,
+Andrea
 
