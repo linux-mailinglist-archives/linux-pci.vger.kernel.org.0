@@ -1,149 +1,127 @@
-Return-Path: <linux-pci+bounces-12151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12154-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3653A95DB78
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 06:26:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3A5095DC67
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 09:22:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1350B23F93
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 04:26:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07C0F1C21379
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 07:22:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 157183987D;
-	Sat, 24 Aug 2024 04:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8B92A8D0;
+	Sat, 24 Aug 2024 07:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lg9Tf/ws"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qg1YFWNA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A27EAD0;
-	Sat, 24 Aug 2024 04:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8319A1EA73;
+	Sat, 24 Aug 2024 07:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724473602; cv=none; b=qov95gxWrHfKlxo3KvAtSTsmHl9N/KrdvUulB+jMYXyTrjrPnqQk1hlrXshIDyhXT9Un/1IqupwgsEpTGcGSMxyFQxitk9v5YoSRxX3J8uJ1QnfL8cr6FZ9cBEBvZyDatcTj/N9Qk1c73GOVfYgTK7HMC3PPin7clTaMoytez3E=
+	t=1724484120; cv=none; b=BcSsqS85mCP2Hl7duVJhyBv6mi/6CH8EtAY2Q8r5Eu0Hdh8GD/rQEaUKR7/R0spneYkH2KELu9x1maGicmJRmlUjJzXS12f8xNRfn+Vxq7k7+K32+GP7+ZJMd95qm1JPHZVnY/WJqcW4d7lFlv+1F8tWCGYx7WKC1zM+Em44kgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724473602; c=relaxed/simple;
-	bh=40GlEPNurYWTPJrHrKMNmjjvmAN4H33EaCA2SPTdpiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t2XWqmy92POZQSQRfMv0sFyBCkS72ADoB6MbI589z74kTBl7XswgLOyVXoSImTvoxsp3guDvZ3cWC/Q2ojgVGAs1oX+GuEmAG6nLBzSfRDYMXvCi8MawpurgOKcS6QrnUskkM2XgxHR9GjUufIDgvgZDdTHJ13sIUz0devq/sHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lg9Tf/ws; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724473600; x=1756009600;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=40GlEPNurYWTPJrHrKMNmjjvmAN4H33EaCA2SPTdpiw=;
-  b=lg9Tf/wsmK4/ioVGMljUcyC78GBlP7sHrhd2QwHpA/+Qb/rvbFf2Xs1d
-   7XCQkv38bd3OfiNVcMyWtfXZ3dBAmwStaBzoyyF1+Sfmvvjvz/39j1Nxl
-   fpHOHI1+DZmqlLKE1h6sxBc3m1v5ciOX9GGUTtjVotNWlMtHWpk3mmFb+
-   76FMcynC69a43N6jt7OlR6WcFtTUXdq1O8De/nBYEwgHiYKS+pdqxkBZP
-   PFRzv72SGI9KxYnkUkKRFRhdDvQM6BxF9NIyEahv0bY4TCkj7c95nWF2h
-   Y4TSU22cZgKKXfjQFYBRxJ66mbArh1oZ6A+UEs/ht/2V7ZG3sJXFaAwLm
-   Q==;
-X-CSE-ConnectionGUID: aNIVscdIT2eCHjZq3vi+Cw==
-X-CSE-MsgGUID: IWSzamgvTuiYHmJN65sHeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="13188269"
-X-IronPort-AV: E=Sophos;i="6.10,172,1719903600"; 
-   d="scan'208";a="13188269"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 21:26:39 -0700
-X-CSE-ConnectionGUID: dqpdH3fxQnq9MiSUYdVs8Q==
-X-CSE-MsgGUID: gPFp6PdTSbKwUx3ojwzGwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,172,1719903600"; 
-   d="scan'208";a="66938134"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 23 Aug 2024 21:26:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 631CA27C; Sat, 24 Aug 2024 07:26:35 +0300 (EEST)
-Date: Sat, 24 Aug 2024 07:26:35 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rajat Jain <rajatja@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	iommu@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
-Message-ID: <20240824042635.GM1532424@black.fi.intel.com>
-References: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
- <20240823211254.GA385934@bhelgaas>
+	s=arc-20240116; t=1724484120; c=relaxed/simple;
+	bh=tXyryG63dPBdeemA6SlMHRobqdlPhVPxegQQarntW6Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ppOFcboBOtj6yhzUswG5zXWkgIjpZBPTfnf91jI60nWIedvMTnJ1BZOC8pyQdmD01knuIZKpSEkiYXpDdPwMb7076su66W1TsMUOJjfwgmf26iczHt0uLu4tgED6IB6LVBUi3bkShD6PMIoSn4APT4wPzu862gUbePp9rQttr0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qg1YFWNA; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 47O7Lf0K065162;
+	Sat, 24 Aug 2024 02:21:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1724484101;
+	bh=ODPIDf4BAemrhSs5Esn8hvNfqijRS+PSG4hA/zWEYHM=;
+	h=From:To:CC:Subject:Date;
+	b=qg1YFWNAN/K2+CrCpnjMlOm1buTP7WWXHJ17jTwCTSHqtoUeratPgrwrBhmSwaFls
+	 ZRBsT3AtdexdyeTcGd1L1MjR1FURLTIwkv/T3QTaIoxUs+7bjuikVpeEAVnOLWhAjg
+	 ilRqpFQ4bRdb21C2D5yIo02OQ+yolo7je+m4MG94=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 47O7LfGQ026118
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 24 Aug 2024 02:21:41 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 24
+ Aug 2024 02:21:40 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 24 Aug 2024 02:21:40 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 47O7LaJQ114055;
+	Sat, 24 Aug 2024 02:21:36 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <vigneshr@ti.com>, <kishon@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>
+CC: <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <stable@vger.kernel.org>, <u-kumar1@ti.com>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH] PCI: dra7xx: Fix threaded IRQ handler registration
+Date: Sat, 24 Aug 2024 12:51:35 +0530
+Message-ID: <20240824072135.9691-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240823211254.GA385934@bhelgaas>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Aug 23, 2024 at 04:12:54PM -0500, Bjorn Helgaas wrote:
-> On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
-> > Some computers with CPUs that lack Thunderbolt features use discrete
-> > Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
-> > chips are located within the chassis; between the root port labeled
-> > ExternalFacingPort and the USB-C port.
-> 
-> Is this a firmware defect?  I asked this before, and I interpret your
-> answer of "ExternalFacingPort is not 100% accurate all of the time" as
-> "yes, this is a firmware defect."  That should be part of the commit
-> log and code comments.
-> 
-> We (of course) have to work around firmware defects, but workarounds
-> need to be labeled as such instead of masquerading as generic code.
-> 
-> > These Thunderbolt PCIe devices should be labeled as fixed and trusted,
-> > as they are built into the computer. Otherwise, security policies that
-> > rely on those flags may have unintended results, such as preventing
-> > USB-C ports from enumerating.
-> > 
-> > Detect the above scenario through the process of elimination.
-> > 
-> > 1) Integrated Thunderbolt host controllers already have Thunderbolt
-> >    implemented, so anything outside their external facing root port is
-> >    removable and untrusted.
-> > 
-> >    Detect them using the following properties:
-> > 
-> >      - Most integrated host controllers have the usb4-host-interface
-> >        ACPI property, as described here:
-> > Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
-> > 
-> >      - Integrated Thunderbolt PCIe root ports before Alder Lake do not
-> >        have the usb4-host-interface ACPI property. Identify those with
-> >        their PCI IDs instead.
-> > 
-> > 2) If a root port does not have integrated Thunderbolt capabilities, but
-> >    has the ExternalFacingPort ACPI property, that means the manufacturer
-> >    has opted to use a discrete Thunderbolt host controller that is
-> >    built into the computer.
-> 
-> Unconvincing.  If a Root Port has an external connector, is it
-> impossible to plug in a Thunderbolt device to that connector?  I
-> assume the wires from a Root Port could be traces on a PCB to a
-> soldered-down Thunderbolt controller, OR could be wires to a connector
-> where a Thunderbolt controller could be plugged in.  How could we tell
-> the difference?
+Commit da87d35a6e51 ("PCI: dra7xx: Use threaded IRQ handler for
+"dra7xx-pcie-main" IRQ") switched from devm_request_irq() to
+devm_request_threaded_irq(). In this process, the "handler" and the
+"thread_fn" parameters were erroneously interchanged, with "NULL" being
+passed as the "handler" and "dra7xx_pcie_irq_handler()" being registered
+as the function to be called in a threaded interrupt context.
 
-You are talking about soldered down controller vs. add-in card (e.g PCIe
-slot)? We don't really distinguish those. The whole ExternalFacingPort
-and the like IOMMU protection is meant for exposed hot-pluggable ports
-on your laptop such as Type-C where a malicious charger for instance may
-have a PCIe endpoint that steals your secrets. Not something that
-requires dissasembly, opening the system cover and plugging in the
-controller, connecting all the wires etc.
+Fix this by interchanging the "handler" and "thread_fn" parameters.
+While at it, correct the indentation.
 
-(We have also an additional "line of defence" in Linux because we do not
-automatically create any PCIe tunnels and this is something user can
-even disable completely [there is a flip in GNOME settings that disables
-PCIe tunneling completely, which can be turned on whenever you are
-travelling for instance]).
+Fixes: da87d35a6e51 ("PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ")
+Cc: <stable@vger.kernel.org>
+Reported-by: Udit Kumar <u-kumar1@ti.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+
+Hello,
+
+This patch is based on commit
+d2bafcf224f3 Merge tag 'cgroup-for-6.11-rc4-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup
+of Mainline Linux.
+
+Regards,
+Siddharth.
+
+ drivers/pci/controller/dwc/pci-dra7xx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 4fe3b0cb72ec..4c64ac27af40 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -849,8 +849,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	dra7xx->mode = mode;
+ 
+-	ret = devm_request_threaded_irq(dev, irq, NULL, dra7xx_pcie_irq_handler,
+-			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
++	ret = devm_request_threaded_irq(dev, irq, dra7xx_pcie_irq_handler, NULL,
++					IRQF_SHARED, "dra7xx-pcie-main",
++					dra7xx);
+ 	if (ret) {
+ 		dev_err(dev, "failed to request irq\n");
+ 		goto err_gpio;
+-- 
+2.40.1
+
 
