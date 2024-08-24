@@ -1,55 +1,88 @@
-Return-Path: <linux-pci+bounces-12159-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12160-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 066CA95DEE7
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 18:12:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0C9595DEEC
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 18:16:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B007C282F88
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 16:12:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E67E282F39
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 16:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A77376E9;
-	Sat, 24 Aug 2024 16:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD0C2AF1D;
+	Sat, 24 Aug 2024 16:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKE+kTU1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hu1GeOvK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BBE2AD0F;
-	Sat, 24 Aug 2024 16:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F04929422;
+	Sat, 24 Aug 2024 16:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724515957; cv=none; b=FIlk4LZyRuu4eEBpHz6g9hjkVZ4uJF9gE7pKwoI2pQKVHqzMXcTkcRz0PgHSW2SSPMrp9ekOhy3NPQ8Xhd5p607ERtlpgzSX/A5A7wSAw3/48bb6cXmDHJucsFL+WlyOVHqah3I5R5/mBkSpLt3fBzi0Z3cyrYtvmBKZpUDkl7w=
+	t=1724516175; cv=none; b=NPpFYzLgGYIsisI2dLk315zu7RHhf8iRwUnuPuWbabybo4YfUJvkXBB4OQVTu50cDdcerXBhe4PBjdPPj95Wf08Umu0QyIe0qXmgrzJ4PKUd+3mRNvla/JX+FojGDqQd0XCqMV4TZTGM4v8QfY6BzoxGwZdL37CDJexj2MvwzVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724515957; c=relaxed/simple;
-	bh=XfcQFjPpEXffdqMYF5gM2PxhYLu+aE9KAENjS4qqD5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SEXnqpd3H6d/jaHmGOlp8Jqz7ONf1cCI6j+KwYlyPaZiU+VkDW/zwlL1hkp4Qmbp2lb5FCf9LnkQlMN4gChEQIKtkhdGQx6JJCQS6SRH5xUfEvt2VgZ2qdVwFYzAW0sSS2EvxSeHb5HmjCvTM0QGUXmoDBzXaadzx6QL0mRqAsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CKE+kTU1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D7A7C32781;
-	Sat, 24 Aug 2024 16:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724515956;
-	bh=XfcQFjPpEXffdqMYF5gM2PxhYLu+aE9KAENjS4qqD5Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CKE+kTU1bOp7Ni0DIucadU5r416oXNQzmaIb7T3+gaEhMIh6RCNZEZgykXbJeGA9o
-	 ikGUfAi7B6phJpsxIzN3QC1rMzDj6pzqu/stFxjPf/v1poKBySAt5nEaV2r/Gn7vD6
-	 GrpCZ8djg2xQ6DERGnsPc6j0xo+g1lOfgEfvS2NFfuVZNIaKWW6P1LfBmRvwkdvOPn
-	 Xj0mXOQujnf32Y/J7huOhMuLDwDBbe9/g9btYB1rKl+iJjj2w7FO2nRVBihP8f0d0l
-	 ZREWY9GViU5bk0fKgZMwDu+x+u6RaYzEnlfxEadwISS8KTihZL7+tolYp+z2/m7fxR
-	 7+u1XamISrngA==
-Date: Sat, 24 Aug 2024 11:12:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
-Message-ID: <20240824161234.GA411277@bhelgaas>
+	s=arc-20240116; t=1724516175; c=relaxed/simple;
+	bh=5npEBL0N5rPhX3B2EfF8IFc285nRsHadiz1RjjaWL/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLCCRDQC759nrjP9o6b8isJgsO58rlqhyvW4nOnVFu3McHUDJ+vklUvtVXegk5EU+a+7JdGwiYWPrYh8/bsupymCvBjCOGAK69Obj+HWh7PkRUwU3jZhzh0Hbc0vZFRgQPC243vFhBTgDVV+fH63maAFGPmagAOd0d/oEtq0Chw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hu1GeOvK; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724516173; x=1756052173;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5npEBL0N5rPhX3B2EfF8IFc285nRsHadiz1RjjaWL/U=;
+  b=hu1GeOvKjeyW3kNoef0xrmtdRcL5/1AVu2BQwLGgjKHSaU+n51RCCLt3
+   qLqFGkollv5nhcb9Dj8+ycrY1uM37BKBE6Om1vukUVr81Dv9wfXJjSk8M
+   9chO5/CuM04+M8q7+tswCdObgFrtZ4E9y73Bg987odyIHI0X7f/5kJ2CC
+   ZAYg1gHYhxy3I9qN6gRDP5SW2/rJGdLn++7kbjGt6euzDoD897qj7m+CV
+   FPilAtebjMei6u8u8nx1zZB+b0Emy7ChyYhWAoi9MZ9o2U8HXQ9gii+pF
+   PlO5Ap4UOQmGJIYka2cm/DAKBnEFvw0YMH0fsBY/2wsypFT/qJ75AMOA7
+   w==;
+X-CSE-ConnectionGUID: 3B8zq2/tTBKg5Cv3OmZWKg==
+X-CSE-MsgGUID: dgS0Gw4MSvm/SKHV0qcsrA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="26746293"
+X-IronPort-AV: E=Sophos;i="6.10,173,1719903600"; 
+   d="scan'208";a="26746293"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2024 09:16:13 -0700
+X-CSE-ConnectionGUID: J0vPG9XxRUKOTBqkmAGLcw==
+X-CSE-MsgGUID: FBFCYa8eTWWkXBpfMNzgWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,173,1719903600"; 
+   d="scan'208";a="66418332"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 24 Aug 2024 09:16:08 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1shtQr-000Eb5-2p;
+	Sat, 24 Aug 2024 16:16:05 +0000
+Date: Sun, 25 Aug 2024 00:15:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
+	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	mani@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	quic_msarkar@quicinc.com, quic_kraravin@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Refactor common code
+Message-ID: <202408242300.2ECtncwN-lkp@intel.com>
+References: <20240821170917.21018-2-quic_schintav@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,103 +91,92 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240824021946.s5jbzvysjxl5dcvt@thinkpad>
+In-Reply-To: <20240821170917.21018-2-quic_schintav@quicinc.com>
 
-On Sat, Aug 24, 2024 at 07:49:46AM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Aug 23, 2024 at 05:04:36PM -0500, Bjorn Helgaas wrote:
-> > On Fri, Aug 23, 2024 at 10:11:33AM +0530, Manivannan Sadhasivam wrote:
-> > > On Thu, Aug 22, 2024 at 12:31:33PM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Aug 22, 2024 at 09:10:25PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Thu, Aug 22, 2024 at 10:16:58AM -0500, Bjorn Helgaas wrote:
-> > > > > > On Thu, Aug 22, 2024 at 12:18:23PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > On Wed, Aug 21, 2024 at 05:56:18PM -0500, Bjorn Helgaas wrote:
-> > > > > > > ...
-> > > > > > 
-> > > > > > > > Although I do have the question of what happens if the RC deasserts
-> > > > > > > > PERST# before qcom-ep is loaded.  We probably don't execute
-> > > > > > > > qcom_pcie_perst_deassert() in that case, so how does the init happen?
-> > > > > > > 
-> > > > > > > PERST# is a level trigger signal. So even if the host has asserted
-> > > > > > > it before EP booted, the level will stay low and ep will detect it
-> > > > > > > while booting.
-> > > > > > 
-> > > > > > The PERST# signal itself is definitely level oriented.
-> > > > > > 
-> > > > > > I'm still skeptical about the *interrupt* from the PCIe controller
-> > > > > > being level-triggered, as I mentioned here:
-> > > > > > https://lore.kernel.org/r/20240815224735.GA57931@bhelgaas
-> > > > > 
-> > > > > Sorry, that comment got buried into my inbox. So didn't get a chance
-> > > > > to respond.
-> > > > > 
-> > > > > > tegra194 is also dwc-based and has a similar PERST# interrupt but
-> > > > > > it's edge-triggered (tegra_pcie_ep_pex_rst_irq()), which I think
-> > > > > > is a cleaner implementation.  Then you don't have to remember the
-> > > > > > current state, switch between high and low trigger, worry about
-> > > > > > races and missing a pulse, etc.
-> > > > > 
-> > > > > I did try to mimic what tegra194 did when I wrote the qcom-ep
-> > > > > driver, but it didn't work. If we use the level triggered interrupt
-> > > > > as edge, the interrupt will be missed if we do not listen at the
-> > > > > right time (when PERST# goes from high to low and vice versa).
-> > > > > 
-> > > > > I don't know how tegra194 interrupt controller is wired up, but IIUC
-> > > > > they will need to boot the endpoint first and then host to catch the
-> > > > > PERST# interrupt.  Otherwise, the endpoint will never see the
-> > > > > interrupt until host toggles it again.
-> > > > 
-> > > > Having to control the boot ordering of endpoint and host is definitely
-> > > > problematic.
-> > > > 
-> > > > What is the nature of the crash when we try to enable the PHY when
-> > > > Refclk is not available?  The endpoint has no control over when the
-> > > > host asserts/deasserts PERST#.  If PERST# happens to be asserted while
-> > > > the endpoint is enabling the PHY, and this causes some kind of crash
-> > > > that the endpoint driver can't easily recover from, that's a serious
-> > > > robustness problem.
-> > > 
-> > > The whole endpoint SoC crashes if the refclk is not available during
-> > > phy_power_on() as the PHY driver tries to access some register on Dmitry's
-> > > platform (I did not see this crash on SM8450 SoC though).
+Hi Shashank,
 
-I don't think the nature of this crash has been explained, so I don't
-know whether it's a recoverable situation or not.
+kernel test robot noticed the following build errors:
 
-> > > If we keep the enable_resources() during probe() then the race
-> > > condition you observed above could apply. So removing that from
-> > > probe() will also make the race condition go away,
-> > 
-> > Example:
-> > 
-> >   1) host deasserts PERST#
-> >   2) qcom-ep handles PERST# IRQ
-> >   3) qcom_pcie_ep_perst_irq_thread() calls qcom_pcie_perst_deassert()
-> >   4) host asserts PERST#, Refclk no longer valid
-> >   5) qcom_pcie_perst_deassert() calls qcom_pcie_enable_resources()
-> >   6) qcom_pcie_enable_resources() enables PHY
-> > 
-> > I don't see what prevents the PERST# assertion at 4.  It sounds like
-> > the endpoint SoC crashes at 6.
-> 
-> IDK why host would quickly assert the PERST# after deasserting
-> during probe() unless someone intentionally does that from host
-> side.
+[auto build test ERROR on pci/next]
+[also build test ERROR on linus/master v6.11-rc4]
+[cannot apply to pci/for-linus next-20240823]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I think the host is allowed to assert PERST# at any arbitrary time, so
-an endpoint should be able to handle it no matter when it happens.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shashank-Babu-Chinta-Venkata/PCI-qcom-Refactor-common-code/20240822-011229
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240821170917.21018-2-quic_schintav%40quicinc.com
+patch subject: [PATCH v5 1/3] PCI: qcom: Refactor common code
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240824/202408242300.2ECtncwN-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240824/202408242300.2ECtncwN-lkp@intel.com/reproduce)
 
-> If that happens then there is a possibility of the endpoint SoC
-> crash, but I'm not sure how we can avoid that.
-> 
-> But what this patch fixes is a crash occuring in a sane scenario:
-> 
-> 1) Endpoint boots first (no refclk from host)
-> 2) Probe() calls qcom_pcie_enable_resources() --> Crash
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408242300.2ECtncwN-lkp@intel.com/
 
-I agree with this, although I think it's more of a band-aid than a
-complete solution.  I don't have access to any SoC or PCIe controller
-docs, so maybe this is a hardware design problem and this is the best
-we can do.
+All errors (new ones prefixed by >>):
 
-Bjorn
+>> drivers/pci/controller/dwc/pcie-qcom-ep.c:321:55: error: too few arguments to function call, expected 3, have 2
+     321 |         ret = qcom_pcie_common_icc_init(pci, pcie_ep->icc_mem);
+         |               ~~~~~~~~~~~~~~~~~~~~~~~~~                      ^
+   drivers/pci/controller/dwc/pcie-qcom-common.h:14:5: note: 'qcom_pcie_common_icc_init' declared here
+      14 | int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem, u32 bandwidth);
+         |     ^                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+
+
+vim +321 drivers/pci/controller/dwc/pcie-qcom-ep.c
+
+   295	
+   296	static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
+   297	{
+   298		struct dw_pcie *pci = &pcie_ep->pci;
+   299		int ret;
+   300	
+   301		ret = clk_bulk_prepare_enable(pcie_ep->num_clks, pcie_ep->clks);
+   302		if (ret)
+   303			return ret;
+   304	
+   305		ret = qcom_pcie_ep_core_reset(pcie_ep);
+   306		if (ret)
+   307			goto err_disable_clk;
+   308	
+   309		ret = phy_init(pcie_ep->phy);
+   310		if (ret)
+   311			goto err_disable_clk;
+   312	
+   313		ret = phy_set_mode_ext(pcie_ep->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_EP);
+   314		if (ret)
+   315			goto err_phy_exit;
+   316	
+   317		ret = phy_power_on(pcie_ep->phy);
+   318		if (ret)
+   319			goto err_phy_exit;
+   320	
+ > 321		ret = qcom_pcie_common_icc_init(pci, pcie_ep->icc_mem);
+   322		if (ret) {
+   323			dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+   324				ret);
+   325			goto err_phy_off;
+   326		}
+   327	
+   328		return 0;
+   329	
+   330	err_phy_off:
+   331		phy_power_off(pcie_ep->phy);
+   332	err_phy_exit:
+   333		phy_exit(pcie_ep->phy);
+   334	err_disable_clk:
+   335		clk_bulk_disable_unprepare(pcie_ep->num_clks, pcie_ep->clks);
+   336	
+   337		return ret;
+   338	}
+   339	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
