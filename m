@@ -1,113 +1,138 @@
-Return-Path: <linux-pci+bounces-12155-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12156-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A0E795DC9A
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 09:49:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE46B95DCD8
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 10:03:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 969E91C20EDC
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 07:49:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C125B22CBE
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 08:03:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611A714BF86;
-	Sat, 24 Aug 2024 07:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE54C43AAE;
+	Sat, 24 Aug 2024 08:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="R/zH4zc4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XrxHxbwd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4BF7DA73
-	for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 07:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8559717C64;
+	Sat, 24 Aug 2024 08:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724485773; cv=none; b=TcBFv7171yHbEomTccDIzIa0fCYnSp7FURArxNpr8DM7MxvRWYuf2uAXDjC5y5WLnjubhAdSF+QFMVRtsE6z8vwqCwIs6u2fxIa6UTvGdaw/66HZLKcTon5BYLq+lDeepiBUI4oYjzZkGAg/TufGFo1WvwXXkx9Gc91bfceFpvA=
+	t=1724486601; cv=none; b=mliGkhdBIUI1GzASeK1etW2LOZ5NZsWDHGWczro6gKERiN81W8tAmGTZgjSqmqpHpuew5nOFOV7P4re6EhxZyDo1P5ywJy6mgqKShmoTkmSku9KeKwh/2rqOKxr7DQ3HpKQx9CNdKnSbhsVADCDCmsoc11x1kB1isGdmysPFfdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724485773; c=relaxed/simple;
-	bh=HREQGiwAc/VsLWwFPrGHtcKGp2yjAPvNK0qtWYsBowM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F+bfnQUaoe7fs91PSw3/ExkgEbi4aV+59zn965xa41S8MUFPdAoDD/CbbUv8TKhJI7QUg2sz+IY5kCx+wkjTUsF+6wKzEcsbIi67djN9z3TCbrRwzewsBIk58U3YbX0DETJCuo70vBp65JvqSW6l3Co+5RBWpnVfX20g8VSJzVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=R/zH4zc4; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2f401c20b56so23999541fa.0
-        for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 00:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724485770; x=1725090570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HREQGiwAc/VsLWwFPrGHtcKGp2yjAPvNK0qtWYsBowM=;
-        b=R/zH4zc4bP2yF/AK+tPmMjgVrv/Tty5CtKjkTyMtljGHNm2yOfHhL33HUtUKFueLOF
-         5VYsciyUEOubFBghBWzDKXqHa9P+G812b7RLkDI3yKovoUEIIdsCFDtJ0ySE8XnIFsAq
-         F8swFV05fO5mPyNH2/FYYolZTB+vVNPsYme2mh+SaLPgXYLCTS5jblx9m2lJNJyxEloR
-         EHh/ogUK4RoqHf2B+D3j7pkLwj7uol+V+FJNQIjh04CoOhQLP8IlNhv9Sq8PZlhQcSFC
-         JisuS/V2/9VJS20Kuv4xbYCq/V139U0MuQ7HYuQmG6ApCcqa+5SZIu65u7672lwD82yt
-         jRqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724485770; x=1725090570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HREQGiwAc/VsLWwFPrGHtcKGp2yjAPvNK0qtWYsBowM=;
-        b=LDLiHT2IxcPy/xiQdXk8vTbjZpN6nDALpnAFuwcvJR8mdxepSF/IS0bA7QMeGsVmtG
-         q6xX7UK7LWnXn0gMa4bFe2iYIcHahqpYBBz0NyK9HkGOX6PwzkgHsDLbPxzF31mJA4N/
-         cPECzr6FDett2FWOfjx6kc9SNfOLY1P9/jqufZ/KwsdaQcfRIcnJoHe6nLglIf7PqtVW
-         IEzER9vm5QVtqmGk4NJuKkUkg8wMl18d9SaFycF0RHjS91WQa8pUDMa+r7jPV4snXIX1
-         5/7AjXoW6JmNi48qPVkXQAtjnBtpasdBYrzlnWEi5DEWQDKgbHNN3zQYh1a6e/1ct2xE
-         nrBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpUf/wDMulpGjgQXMDISc6NNt8pkdPfEWMxNIt9DAb8czBdBGo4mEAZmRGBTTn2PFVBl2N91gZqfI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhjoR0iZGvA7xrMwzAVbbrE1DGAUBaqFzNMdfyH7oXgl4laHUm
-	hISJuYaLVVDey0T29WQGVeCfVSzxOGUeumWZZQyGGAtCND9q9vxDwAqC6xeQ+I0jRwCYP7uoAbx
-	kmSiaYKuYMiK79EI6kjTDAUZpPLogc07wT8Y3Mg==
-X-Google-Smtp-Source: AGHT+IG+0lv4Myqhs3Z3ZKs3hv6fvoNsLhEo0OCNFNkwdCRR/OmwAVMGHTiPL+FnYwIC0uKprgMqo9YYMzCtRC9DcJo=
-X-Received: by 2002:a05:6512:3987:b0:533:3fc8:43fb with SMTP id
- 2adb3069b0e04-534382dd1dbmr1844440e87.0.1724485768956; Sat, 24 Aug 2024
- 00:49:28 -0700 (PDT)
+	s=arc-20240116; t=1724486601; c=relaxed/simple;
+	bh=Oonr6zAF6H9aEQKo/F4fPRZWoC89oZI3itd6rXfNKy8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dbo6vVQOJWPAX2nQBHsbuSGF3mSIrsrr1hDm2t/KeGxg/t93QgtVYoVfr4RSCiaECFW2KuCimiqPQt1Ti4elTuC01Z/n5C98ftsm7VdRrZw12w309S1roq0xBuub0USlvAXKtAZmm4+YzR8clXEWclpA34NUaK+Y54gPWNOr3DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XrxHxbwd; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 47O834rj007492;
+	Sat, 24 Aug 2024 03:03:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1724486584;
+	bh=JjIU+fG3i8/0ImnUk4UN7EPAzC6Ypf67afrlG+gIa8k=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=XrxHxbwdCKCphGT9RLb2r3JYIA71L59IGC0TgvyFhe0e8g2QT4WWHXYsGs9DOG45v
+	 xowY/FcG1XotawIWCz8EaeqBU9ztrkSjaALnkx9zWNT4T1zlZRxdLj7Fdl2V4f6QN3
+	 oSXe2j+BcbgiBhenW+E1hACrV5g9q2NQhiI0YRig=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 47O834VC055259
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 24 Aug 2024 03:03:04 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 24
+ Aug 2024 03:03:04 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 24 Aug 2024 03:03:03 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 47O832rQ022960;
+	Sat, 24 Aug 2024 03:03:03 -0500
+Date: Sat, 24 Aug 2024 13:33:02 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <vigneshr@ti.com>, <kishon@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>
+CC: <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <stable@vger.kernel.org>, <u-kumar1@ti.com>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: Re: [PATCH] PCI: dra7xx: Fix threaded IRQ handler registration
+Message-ID: <d4789281-7eb3-4cde-aa1f-35f979484575@ti.com>
+References: <20240824072135.9691-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240823093323.33450-2-brgl@bgdev.pl> <20240823221021.GA388724@bhelgaas>
-In-Reply-To: <20240823221021.GA388724@bhelgaas>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sat, 24 Aug 2024 09:49:17 +0200
-Message-ID: <CAMRc=Meb0jWxwxA16g2FKXESF-oNjO_HQNZEQhwd2JTxb5q-cg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: don't rely on of_platform_depopulate() for
- reused OF-nodes
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240824072135.9691-1-s-vadapalli@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sat, Aug 24, 2024 at 12:10=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> [+to Rob]
->
-> On Fri, Aug 23, 2024 at 11:33:22AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > of_platform_depopulate() doesn't play nice with reused OF nodes - it
-> > ignores the ones that are not marked explicitly as populated and it may
-> > happen that the PCI device goes away before the platform device in whic=
-h
-> > case the PCI core clears the OF_POPULATED bit. We need to
-> > unconditionally unregister the platform devices for child nodes when
-> > stopping the PCI device.
->
-> Rob, any concerns with this?
->
+On Sat, Aug 24, 2024 at 12:51:35PM +0530, Siddharth Vadapalli wrote:
 
-If there will be any concerns: I'm OoO next week so I'll only be able
-to address them on September 2nd.
+Kindly ignore this patch. Sorry for the noise. I was debugging an issue
+and this patch fixed it. But the cause of the issue is probably a race
+condition.
 
-Bart
+Regards,
+Siddharth.
+
+> Commit da87d35a6e51 ("PCI: dra7xx: Use threaded IRQ handler for
+> "dra7xx-pcie-main" IRQ") switched from devm_request_irq() to
+> devm_request_threaded_irq(). In this process, the "handler" and the
+> "thread_fn" parameters were erroneously interchanged, with "NULL" being
+> passed as the "handler" and "dra7xx_pcie_irq_handler()" being registered
+> as the function to be called in a threaded interrupt context.
+> 
+> Fix this by interchanging the "handler" and "thread_fn" parameters.
+> While at it, correct the indentation.
+> 
+> Fixes: da87d35a6e51 ("PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ")
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Udit Kumar <u-kumar1@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> 
+> Hello,
+> 
+> This patch is based on commit
+> d2bafcf224f3 Merge tag 'cgroup-for-6.11-rc4-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup
+> of Mainline Linux.
+> 
+> Regards,
+> Siddharth.
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 4fe3b0cb72ec..4c64ac27af40 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -849,8 +849,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+>  	}
+>  	dra7xx->mode = mode;
+>  
+> -	ret = devm_request_threaded_irq(dev, irq, NULL, dra7xx_pcie_irq_handler,
+> -			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
+> +	ret = devm_request_threaded_irq(dev, irq, dra7xx_pcie_irq_handler, NULL,
+> +					IRQF_SHARED, "dra7xx-pcie-main",
+> +					dra7xx);
+>  	if (ret) {
+>  		dev_err(dev, "failed to request irq\n");
+>  		goto err_gpio;
+> -- 
+> 2.40.1
+> 
 
