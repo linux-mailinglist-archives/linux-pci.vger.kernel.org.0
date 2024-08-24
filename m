@@ -1,206 +1,270 @@
-Return-Path: <linux-pci+bounces-12162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B42CC95DF02
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 18:35:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D78E95DF56
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 20:03:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 322811F21E4C
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 16:35:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 971781C20D1C
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 18:03:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B611D17B438;
-	Sat, 24 Aug 2024 16:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67C2C210FB;
+	Sat, 24 Aug 2024 18:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQ2bRgcU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C+DGcHyN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4C6E555
-	for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 16:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CBF20B0F
+	for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 18:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724517261; cv=none; b=I3817Pda4+01ze0D6aRnoL2VGVYOiiy64D6taGG1Aq4pi/tcfgUczDpvQ5AnFlMDBJImr7SAoNpML9dTFtntO28dWLpBZf7oA/i8BKvJGA+LrKPcWeASE7vYhTL7Pa8HoOLVs7nMZV+vOEoJudX3BHoQBWutekW/DjiyEAzDU4k=
+	t=1724522594; cv=none; b=TDgXF92TBh/g5RME32qKjYaczUz2s/Ul8xbHzsgc9ACKEhaBqrTKQBJjkwJIVCmNHHTaAyW+x8gyrmh8lRLfsTyrwJRBRjsfyf6VcEr9bucjDSNursEccO8wec3uSCFwZm6dwRgGvwwsyi+euMhtPMG2e+/n05n4ABjm6puq7Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724517261; c=relaxed/simple;
-	bh=VcVQOc1gJJE9inqoroUckPQ6d4aDsf9mjtCNHnj3dxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLkXDya/I/8Q5EFD8mSZ1/CLZU4cB2/K/YNH7C988UFqhkUEuUANnIJD35KGniVS9lnZPxCLfaHV5opt0TWeB11sOv8pAFUB1hxzV8ekMGGZNvwrVj8Nsp9gY4kl5dGKcR/WLkfcPw9yqepbsn66bCM9s19C4nAmvhzD1DWUSkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EQ2bRgcU; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2d3d0b06a2dso2438056a91.0
-        for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 09:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724517259; x=1725122059; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XUKd8TW71RsWpnd0GbWn6h2v6e8v27iVaD09f+k/+78=;
-        b=EQ2bRgcUQzN+s0iNO0NXCtL2LaSoQITFW1wnKXnTRSJU3zqv5HOFCo5SahXRAbrPjp
-         Im4rla9DUqWFnKl4qi70PKnnPc8prwn3tshR1GrUmb2nU+Y0WtUkoDgqrlinSfh2O3JY
-         KjtspVQxkDYTpZqCrFWfNwESbwmpCrmOl2GgobmyqaAAINXexR+f9q0R979gIBTrO7M0
-         zNvvYfwREnbFDpjhbNuGtIEz6j0FJm/3tRR4RtHY3op5F2P+x+jf4aWBF3SbheVeC4+h
-         P7uzdqiUgjgmszDdyZI21VjxW+Sr6R8j4I859HoQzhFvBvb9+R5F23Aud0BMZyzDeCN+
-         xvCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724517259; x=1725122059;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XUKd8TW71RsWpnd0GbWn6h2v6e8v27iVaD09f+k/+78=;
-        b=DeFT/9Jef3qKznQBUl007t8CCFT+VvfqwOT33Nk3BKbQ5XlJsKk9q6tP/P6aZS68uy
-         DYlN0Dt/ucsrfENlz9HSIACc/JwO7gGemdB2QG1dG2n7qjorV7a48Que8vdTS4uq7kym
-         RFkcO1Wg/M/REJloi1oJjhLP4fU+pcknISmF+2JAE+Q9VXokfweQ8d0EeMMtadnNqwKB
-         f/IGygi4W//D6iGuNHvVQT/sqcirmIuuNgAJxy7tpx1Fu/54jXIaOPByyItJslfqVBGa
-         kddQJMGXf4KcJtaQUjc8QvBaeEe8/oOM2jhfGM1H3ccVP8DCaXzotDqfKPSwe1YgQ28i
-         JR/A==
-X-Forwarded-Encrypted: i=1; AJvYcCV5gZ9EmUphChvVrZcYcTV3Qwc9bscRMZxv8A+DkYMCLvKIFbH+0oi2l87Euui6JVYXf+5UJUACIsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9i0j08K+MzNnV/ZoQhNCba4sU9vHP7JK6+yMKTWnLW3WLNYiq
-	ypWpb9V8JV+kNH5JMZ4e/z2arO+dkOevHRkLxun1u2h8PCraZVZ9nttxltyW9kAJrIvfneFQBMk
-	=
-X-Google-Smtp-Source: AGHT+IHJSoWVuCArmfalBXWeHEhioLVFHCv4Tn6JcUEk+XfUQRJGTJvfmdGFUDGcBr8uZO6FwgOSdQ==
-X-Received: by 2002:a17:90a:c694:b0:2d3:b60c:45e7 with SMTP id 98e67ed59e1d1-2d646d1db91mr6172384a91.32.1724517259333;
-        Sat, 24 Aug 2024 09:34:19 -0700 (PDT)
-Received: from thinkpad ([220.158.156.53])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d5eb9049b0sm8660325a91.17.2024.08.24.09.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2024 09:34:18 -0700 (PDT)
-Date: Sat, 24 Aug 2024 22:04:14 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+	s=arc-20240116; t=1724522594; c=relaxed/simple;
+	bh=IWnM4lg7EJXXk/3WKKtUsww2BUKfQInMq/okV7pJym4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Hem2LZUZzKSv+gGxNo2/sPkGT2veImbGAVvorQgzJ8xlCVQxF47hV6GkWOVgsLS5wcKOHkAXjXywX5XTcXJp1neNUfIXKCwDQjv9r0XWO29tMzC3NiPYC8aaomhLOZ4/IQMBSLG3fEuODbp7wmgavipXCgsMKlZFlQnhxyEPVBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C+DGcHyN; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724522592; x=1756058592;
+  h=date:from:to:cc:subject:message-id;
+  bh=IWnM4lg7EJXXk/3WKKtUsww2BUKfQInMq/okV7pJym4=;
+  b=C+DGcHyNHEixbMw02c2QfThG67JPFqzt/YSd3lqCKrPuTeNi/haozLX9
+   V4rW7MTdMzBd+9cY6yh5edJPJmrVAQrUAvMhgJLN76TwdKFXYTPCT+/fl
+   AezNWd9egqwUSYlk7P5iQzH9dbIPrrKshOt/8bbkToDuDuRKV4SDhhtMN
+   travHYy4nteBmZSy9ovxMe9p+iwyUrS6Ap/p4yvl4L5LKZR42xC8kKI+y
+   z1PjcG0sRrgTx4PPdzrjJ2HAHWAzikDUgicPlTH6vYiOp737boLqeTHod
+   3xO2nAuPoCWzpYYOYh3G91E+UeSli5y0szTe3RzaWgbIg2siTjQWuUIaI
+   A==;
+X-CSE-ConnectionGUID: SNa9zF/NQTqABzkX2BZpBg==
+X-CSE-MsgGUID: +aePFVbMRmih8B1WFbSPpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="25879782"
+X-IronPort-AV: E=Sophos;i="6.10,173,1719903600"; 
+   d="scan'208";a="25879782"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2024 11:03:11 -0700
+X-CSE-ConnectionGUID: y7C/lG9DSzigWxso76xqcQ==
+X-CSE-MsgGUID: KvyyCEOjQna2bKWnvWxTtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,173,1719903600"; 
+   d="scan'208";a="62094738"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 24 Aug 2024 11:03:11 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1shv6S-000Ef2-2C;
+	Sat, 24 Aug 2024 18:03:08 +0000
+Date: Sun, 25 Aug 2024 02:03:01 +0800
+From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
-Message-ID: <20240824163414.osqnxii2imbo62he@thinkpad>
-References: <20240824021946.s5jbzvysjxl5dcvt@thinkpad>
- <20240824161234.GA411277@bhelgaas>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ 8a48281cfa7f380707d42b649acda3ea36348697
+Message-ID: <202408250258.pNB2Oxwa-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240824161234.GA411277@bhelgaas>
 
-On Sat, Aug 24, 2024 at 11:12:34AM -0500, Bjorn Helgaas wrote:
-> On Sat, Aug 24, 2024 at 07:49:46AM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Aug 23, 2024 at 05:04:36PM -0500, Bjorn Helgaas wrote:
-> > > On Fri, Aug 23, 2024 at 10:11:33AM +0530, Manivannan Sadhasivam wrote:
-> > > > On Thu, Aug 22, 2024 at 12:31:33PM -0500, Bjorn Helgaas wrote:
-> > > > > On Thu, Aug 22, 2024 at 09:10:25PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Thu, Aug 22, 2024 at 10:16:58AM -0500, Bjorn Helgaas wrote:
-> > > > > > > On Thu, Aug 22, 2024 at 12:18:23PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > On Wed, Aug 21, 2024 at 05:56:18PM -0500, Bjorn Helgaas wrote:
-> > > > > > > > ...
-> > > > > > > 
-> > > > > > > > > Although I do have the question of what happens if the RC deasserts
-> > > > > > > > > PERST# before qcom-ep is loaded.  We probably don't execute
-> > > > > > > > > qcom_pcie_perst_deassert() in that case, so how does the init happen?
-> > > > > > > > 
-> > > > > > > > PERST# is a level trigger signal. So even if the host has asserted
-> > > > > > > > it before EP booted, the level will stay low and ep will detect it
-> > > > > > > > while booting.
-> > > > > > > 
-> > > > > > > The PERST# signal itself is definitely level oriented.
-> > > > > > > 
-> > > > > > > I'm still skeptical about the *interrupt* from the PCIe controller
-> > > > > > > being level-triggered, as I mentioned here:
-> > > > > > > https://lore.kernel.org/r/20240815224735.GA57931@bhelgaas
-> > > > > > 
-> > > > > > Sorry, that comment got buried into my inbox. So didn't get a chance
-> > > > > > to respond.
-> > > > > > 
-> > > > > > > tegra194 is also dwc-based and has a similar PERST# interrupt but
-> > > > > > > it's edge-triggered (tegra_pcie_ep_pex_rst_irq()), which I think
-> > > > > > > is a cleaner implementation.  Then you don't have to remember the
-> > > > > > > current state, switch between high and low trigger, worry about
-> > > > > > > races and missing a pulse, etc.
-> > > > > > 
-> > > > > > I did try to mimic what tegra194 did when I wrote the qcom-ep
-> > > > > > driver, but it didn't work. If we use the level triggered interrupt
-> > > > > > as edge, the interrupt will be missed if we do not listen at the
-> > > > > > right time (when PERST# goes from high to low and vice versa).
-> > > > > > 
-> > > > > > I don't know how tegra194 interrupt controller is wired up, but IIUC
-> > > > > > they will need to boot the endpoint first and then host to catch the
-> > > > > > PERST# interrupt.  Otherwise, the endpoint will never see the
-> > > > > > interrupt until host toggles it again.
-> > > > > 
-> > > > > Having to control the boot ordering of endpoint and host is definitely
-> > > > > problematic.
-> > > > > 
-> > > > > What is the nature of the crash when we try to enable the PHY when
-> > > > > Refclk is not available?  The endpoint has no control over when the
-> > > > > host asserts/deasserts PERST#.  If PERST# happens to be asserted while
-> > > > > the endpoint is enabling the PHY, and this causes some kind of crash
-> > > > > that the endpoint driver can't easily recover from, that's a serious
-> > > > > robustness problem.
-> > > > 
-> > > > The whole endpoint SoC crashes if the refclk is not available during
-> > > > phy_power_on() as the PHY driver tries to access some register on Dmitry's
-> > > > platform (I did not see this crash on SM8450 SoC though).
-> 
-> I don't think the nature of this crash has been explained, so I don't
-> know whether it's a recoverable situation or not.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: 8a48281cfa7f380707d42b649acda3ea36348697  PCI: Make pci_bus_type constant
 
-I will add this info in the commit message.
+elapsed time: 1445m
 
-> > > > If we keep the enable_resources() during probe() then the race
-> > > > condition you observed above could apply. So removing that from
-> > > > probe() will also make the race condition go away,
-> > > 
-> > > Example:
-> > > 
-> > >   1) host deasserts PERST#
-> > >   2) qcom-ep handles PERST# IRQ
-> > >   3) qcom_pcie_ep_perst_irq_thread() calls qcom_pcie_perst_deassert()
-> > >   4) host asserts PERST#, Refclk no longer valid
-> > >   5) qcom_pcie_perst_deassert() calls qcom_pcie_enable_resources()
-> > >   6) qcom_pcie_enable_resources() enables PHY
-> > > 
-> > > I don't see what prevents the PERST# assertion at 4.  It sounds like
-> > > the endpoint SoC crashes at 6.
-> > 
-> > IDK why host would quickly assert the PERST# after deasserting
-> > during probe() unless someone intentionally does that from host
-> > side.
-> 
-> I think the host is allowed to assert PERST# at any arbitrary time, so
-> an endpoint should be able to handle it no matter when it happens.
-> 
-> > If that happens then there is a possibility of the endpoint SoC
-> > crash, but I'm not sure how we can avoid that.
-> > 
-> > But what this patch fixes is a crash occuring in a sane scenario:
-> > 
-> > 1) Endpoint boots first (no refclk from host)
-> > 2) Probe() calls qcom_pcie_enable_resources() --> Crash
-> 
-> I agree with this, although I think it's more of a band-aid than a
-> complete solution.  I don't have access to any SoC or PCIe controller
-> docs, so maybe this is a hardware design problem and this is the best
-> we can do.
-> 
+configs tested: 177
+configs skipped: 8
 
-I agree. But AFAIK there is no way endpoint can avoid this crash unless it
-generates its own clock. I did some investigation on the SRIS support and able
-to get it work in my local branch.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I will try to upstream that feature for the currerntly supported Qcom SoCs in
-endpoint mode. But Qcom told me that non-SRIS mode is also required by some
-customers, so unfortunately we cannot make it as the default operating mode.
-
-- Mani
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                        nsim_700_defconfig   gcc-13.2.0
+arc                   randconfig-001-20240824   gcc-13.2.0
+arc                   randconfig-002-20240824   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                       aspeed_g4_defconfig   clang-20
+arm                                 defconfig   gcc-13.2.0
+arm                      footbridge_defconfig   gcc-13.2.0
+arm                          gemini_defconfig   clang-20
+arm                      integrator_defconfig   clang-20
+arm                       multi_v4t_defconfig   gcc-13.2.0
+arm                        mvebu_v5_defconfig   clang-20
+arm                   randconfig-001-20240824   gcc-13.2.0
+arm                   randconfig-002-20240824   gcc-13.2.0
+arm                   randconfig-003-20240824   gcc-13.2.0
+arm                   randconfig-004-20240824   gcc-13.2.0
+arm                        spear3xx_defconfig   gcc-13.2.0
+arm                           spitz_defconfig   clang-20
+arm                           sunxi_defconfig   gcc-13.2.0
+arm                        vexpress_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240824   gcc-13.2.0
+arm64                 randconfig-002-20240824   gcc-13.2.0
+arm64                 randconfig-003-20240824   gcc-13.2.0
+arm64                 randconfig-004-20240824   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240824   gcc-13.2.0
+csky                  randconfig-002-20240824   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240824   clang-18
+i386         buildonly-randconfig-002-20240824   clang-18
+i386         buildonly-randconfig-003-20240824   clang-18
+i386         buildonly-randconfig-004-20240824   clang-18
+i386         buildonly-randconfig-005-20240824   clang-18
+i386         buildonly-randconfig-006-20240824   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240824   clang-18
+i386                  randconfig-002-20240824   clang-18
+i386                  randconfig-003-20240824   clang-18
+i386                  randconfig-004-20240824   clang-18
+i386                  randconfig-005-20240824   clang-18
+i386                  randconfig-006-20240824   clang-18
+i386                  randconfig-011-20240824   clang-18
+i386                  randconfig-012-20240824   clang-18
+i386                  randconfig-013-20240824   clang-18
+i386                  randconfig-014-20240824   clang-18
+i386                  randconfig-015-20240824   clang-18
+i386                  randconfig-016-20240824   clang-18
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240824   gcc-13.2.0
+loongarch             randconfig-002-20240824   gcc-13.2.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                       bmips_be_defconfig   gcc-13.2.0
+mips                         cobalt_defconfig   clang-20
+mips                 decstation_r4k_defconfig   gcc-13.2.0
+mips                      loongson3_defconfig   gcc-13.2.0
+mips                          rb532_defconfig   clang-20
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240824   gcc-13.2.0
+nios2                 randconfig-002-20240824   gcc-13.2.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240824   gcc-13.2.0
+parisc                randconfig-002-20240824   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                    amigaone_defconfig   gcc-13.2.0
+powerpc                      bamboo_defconfig   gcc-13.2.0
+powerpc                      cm5200_defconfig   clang-20
+powerpc                     ep8248e_defconfig   clang-20
+powerpc                    gamecube_defconfig   clang-20
+powerpc                      katmai_defconfig   clang-20
+powerpc                 mpc837x_rdb_defconfig   gcc-13.2.0
+powerpc                      pasemi_defconfig   clang-20
+powerpc                      pcm030_defconfig   clang-20
+powerpc                     powernv_defconfig   clang-20
+powerpc                      ppc64e_defconfig   clang-20
+powerpc               randconfig-001-20240824   gcc-13.2.0
+powerpc                     tqm8548_defconfig   clang-20
+powerpc                     tqm8555_defconfig   clang-20
+powerpc                         wii_defconfig   clang-20
+powerpc64             randconfig-001-20240824   gcc-13.2.0
+powerpc64             randconfig-002-20240824   gcc-13.2.0
+powerpc64             randconfig-003-20240824   gcc-13.2.0
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   gcc-14.1.0
+riscv                 randconfig-001-20240824   gcc-13.2.0
+riscv                 randconfig-002-20240824   gcc-13.2.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   gcc-14.1.0
+s390                             allyesconfig   clang-20
+s390                          debug_defconfig   clang-20
+s390                                defconfig   gcc-14.1.0
+s390                  randconfig-001-20240824   gcc-13.2.0
+s390                  randconfig-002-20240824   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-14.1.0
+sh                          landisk_defconfig   gcc-13.2.0
+sh                    randconfig-001-20240824   gcc-13.2.0
+sh                    randconfig-002-20240824   gcc-13.2.0
+sh                          rsk7203_defconfig   gcc-13.2.0
+sh                        sh7785lcr_defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240824   gcc-13.2.0
+sparc64               randconfig-002-20240824   gcc-13.2.0
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   gcc-14.1.0
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   gcc-14.1.0
+um                             i386_defconfig   gcc-14.1.0
+um                    randconfig-001-20240824   gcc-13.2.0
+um                    randconfig-002-20240824   gcc-13.2.0
+um                           x86_64_defconfig   gcc-14.1.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240824   clang-18
+x86_64       buildonly-randconfig-002-20240824   clang-18
+x86_64       buildonly-randconfig-003-20240824   clang-18
+x86_64       buildonly-randconfig-004-20240824   clang-18
+x86_64       buildonly-randconfig-005-20240824   clang-18
+x86_64       buildonly-randconfig-006-20240824   clang-18
+x86_64                              defconfig   clang-18
+x86_64                randconfig-001-20240824   clang-18
+x86_64                randconfig-002-20240824   clang-18
+x86_64                randconfig-003-20240824   clang-18
+x86_64                randconfig-004-20240824   clang-18
+x86_64                randconfig-005-20240824   clang-18
+x86_64                randconfig-006-20240824   clang-18
+x86_64                randconfig-011-20240824   clang-18
+x86_64                randconfig-012-20240824   clang-18
+x86_64                randconfig-013-20240824   clang-18
+x86_64                randconfig-014-20240824   clang-18
+x86_64                randconfig-015-20240824   clang-18
+x86_64                randconfig-016-20240824   clang-18
+x86_64                randconfig-071-20240824   clang-18
+x86_64                randconfig-072-20240824   clang-18
+x86_64                randconfig-073-20240824   clang-18
+x86_64                randconfig-074-20240824   clang-18
+x86_64                randconfig-075-20240824   clang-18
+x86_64                randconfig-076-20240824   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240824   gcc-13.2.0
+xtensa                randconfig-002-20240824   gcc-13.2.0
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
