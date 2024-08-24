@@ -1,129 +1,206 @@
-Return-Path: <linux-pci+bounces-12161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12162-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F325D95DEF3
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 18:20:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B42CC95DF02
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 18:35:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EC4B1F21E31
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 16:20:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 322811F21E4C
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Aug 2024 16:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F15B39FCF;
-	Sat, 24 Aug 2024 16:20:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B611D17B438;
+	Sat, 24 Aug 2024 16:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQkTiIup"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQ2bRgcU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A7729422;
-	Sat, 24 Aug 2024 16:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4C6E555
+	for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 16:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724516445; cv=none; b=t58FvluxJ8IV3uQBO2uQGF5t6wAC8ueTqFWOXAp2E7IudBrYHuT/9AndSdyQAQQSl8qSe7SAYPp4eDWcH3bbD66zlCVMNEa9sgQoQbVt+Kouf8CCZYt4+6aRny+/G0rBDhCJ81siH0BYjM+O+2U/Uu50cXpUiOvrjZ9O53Rh1ZE=
+	t=1724517261; cv=none; b=I3817Pda4+01ze0D6aRnoL2VGVYOiiy64D6taGG1Aq4pi/tcfgUczDpvQ5AnFlMDBJImr7SAoNpML9dTFtntO28dWLpBZf7oA/i8BKvJGA+LrKPcWeASE7vYhTL7Pa8HoOLVs7nMZV+vOEoJudX3BHoQBWutekW/DjiyEAzDU4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724516445; c=relaxed/simple;
-	bh=4rNI7CjGB+bnr4YbBzsADFxzkV0n2pJVKnmY1DUCoX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=X/b07ZxlI3zt9jlcXuAxcJzX6pLkzglXpN5u8G9ybjsbbjPqNVb8xlNJ5nJv8SjgfhUkbHPQ+8gxmx75K9lJGBzVY+Bvbwr99kvMNr0JAHCTT/fAP+fY5uJCW4X6HYlG6Ge6OJx5u7Q1O0wvfKcVRDjb3SVs4LzhF619DqW1ec0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQkTiIup; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 430E5C32781;
-	Sat, 24 Aug 2024 16:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724516444;
-	bh=4rNI7CjGB+bnr4YbBzsADFxzkV0n2pJVKnmY1DUCoX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GQkTiIupJPchZZootglVD2UK/QSNanVaEIqCHfjcuHYBIch8WDBZJKvxq6zjkh7PO
-	 vx9ygHGVOMWl/k8Anvf9rCZlvke0zbJDTtWZtOEKkv4vwAWnciC9Mvw0tbdMSokgbT
-	 d1OGeDfy54m/3bfVYvu+SppuytFD21Bzo/Kd0AP/3iPLZy89PMjEbxXbmJstfSWMfS
-	 GMiRFqalQUuFha1MqzxEYyTZzOHeTAydNfgsao/y35O/JmDObOE4FRB8YvLPHWSIsy
-	 TjgiJ5JBWloaFqpknbYunxW+pUv+S8maIfWKEYsZlPM1olEHaxTgDLozx4ObaGqasz
-	 +XanfGedfSL6g==
-Date: Sat, 24 Aug 2024 11:20:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rajat Jain <rajatja@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	iommu@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
-Message-ID: <20240824162042.GA411509@bhelgaas>
+	s=arc-20240116; t=1724517261; c=relaxed/simple;
+	bh=VcVQOc1gJJE9inqoroUckPQ6d4aDsf9mjtCNHnj3dxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLkXDya/I/8Q5EFD8mSZ1/CLZU4cB2/K/YNH7C988UFqhkUEuUANnIJD35KGniVS9lnZPxCLfaHV5opt0TWeB11sOv8pAFUB1hxzV8ekMGGZNvwrVj8Nsp9gY4kl5dGKcR/WLkfcPw9yqepbsn66bCM9s19C4nAmvhzD1DWUSkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EQ2bRgcU; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2d3d0b06a2dso2438056a91.0
+        for <linux-pci@vger.kernel.org>; Sat, 24 Aug 2024 09:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724517259; x=1725122059; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XUKd8TW71RsWpnd0GbWn6h2v6e8v27iVaD09f+k/+78=;
+        b=EQ2bRgcUQzN+s0iNO0NXCtL2LaSoQITFW1wnKXnTRSJU3zqv5HOFCo5SahXRAbrPjp
+         Im4rla9DUqWFnKl4qi70PKnnPc8prwn3tshR1GrUmb2nU+Y0WtUkoDgqrlinSfh2O3JY
+         KjtspVQxkDYTpZqCrFWfNwESbwmpCrmOl2GgobmyqaAAINXexR+f9q0R979gIBTrO7M0
+         zNvvYfwREnbFDpjhbNuGtIEz6j0FJm/3tRR4RtHY3op5F2P+x+jf4aWBF3SbheVeC4+h
+         P7uzdqiUgjgmszDdyZI21VjxW+Sr6R8j4I859HoQzhFvBvb9+R5F23Aud0BMZyzDeCN+
+         xvCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724517259; x=1725122059;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XUKd8TW71RsWpnd0GbWn6h2v6e8v27iVaD09f+k/+78=;
+        b=DeFT/9Jef3qKznQBUl007t8CCFT+VvfqwOT33Nk3BKbQ5XlJsKk9q6tP/P6aZS68uy
+         DYlN0Dt/ucsrfENlz9HSIACc/JwO7gGemdB2QG1dG2n7qjorV7a48Que8vdTS4uq7kym
+         RFkcO1Wg/M/REJloi1oJjhLP4fU+pcknISmF+2JAE+Q9VXokfweQ8d0EeMMtadnNqwKB
+         f/IGygi4W//D6iGuNHvVQT/sqcirmIuuNgAJxy7tpx1Fu/54jXIaOPByyItJslfqVBGa
+         kddQJMGXf4KcJtaQUjc8QvBaeEe8/oOM2jhfGM1H3ccVP8DCaXzotDqfKPSwe1YgQ28i
+         JR/A==
+X-Forwarded-Encrypted: i=1; AJvYcCV5gZ9EmUphChvVrZcYcTV3Qwc9bscRMZxv8A+DkYMCLvKIFbH+0oi2l87Euui6JVYXf+5UJUACIsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9i0j08K+MzNnV/ZoQhNCba4sU9vHP7JK6+yMKTWnLW3WLNYiq
+	ypWpb9V8JV+kNH5JMZ4e/z2arO+dkOevHRkLxun1u2h8PCraZVZ9nttxltyW9kAJrIvfneFQBMk
+	=
+X-Google-Smtp-Source: AGHT+IHJSoWVuCArmfalBXWeHEhioLVFHCv4Tn6JcUEk+XfUQRJGTJvfmdGFUDGcBr8uZO6FwgOSdQ==
+X-Received: by 2002:a17:90a:c694:b0:2d3:b60c:45e7 with SMTP id 98e67ed59e1d1-2d646d1db91mr6172384a91.32.1724517259333;
+        Sat, 24 Aug 2024 09:34:19 -0700 (PDT)
+Received: from thinkpad ([220.158.156.53])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d5eb9049b0sm8660325a91.17.2024.08.24.09.34.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Aug 2024 09:34:18 -0700 (PDT)
+Date: Sat, 24 Aug 2024 22:04:14 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom-ep: Do not enable resources during probe()
+Message-ID: <20240824163414.osqnxii2imbo62he@thinkpad>
+References: <20240824021946.s5jbzvysjxl5dcvt@thinkpad>
+ <20240824161234.GA411277@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240824042635.GM1532424@black.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240824161234.GA411277@bhelgaas>
 
-On Sat, Aug 24, 2024 at 07:26:35AM +0300, Mika Westerberg wrote:
-> On Fri, Aug 23, 2024 at 04:12:54PM -0500, Bjorn Helgaas wrote:
-> > On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
-> > > Some computers with CPUs that lack Thunderbolt features use discrete
-> > > Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
-> > > chips are located within the chassis; between the root port labeled
-> > > ExternalFacingPort and the USB-C port.
-> > 
-> > Is this a firmware defect?  I asked this before, and I interpret your
-> > answer of "ExternalFacingPort is not 100% accurate all of the time" as
-> > "yes, this is a firmware defect."  That should be part of the commit
-> > log and code comments.
-> > 
-> > We (of course) have to work around firmware defects, but workarounds
-> > need to be labeled as such instead of masquerading as generic code.
-> > 
-> > > These Thunderbolt PCIe devices should be labeled as fixed and trusted,
-> > > as they are built into the computer. Otherwise, security policies that
-> > > rely on those flags may have unintended results, such as preventing
-> > > USB-C ports from enumerating.
-> > > 
-> > > Detect the above scenario through the process of elimination.
-> > > 
-> > > 1) Integrated Thunderbolt host controllers already have Thunderbolt
-> > >    implemented, so anything outside their external facing root port is
-> > >    removable and untrusted.
-> > > 
-> > >    Detect them using the following properties:
-> > > 
-> > >      - Most integrated host controllers have the usb4-host-interface
-> > >        ACPI property, as described here:
-> > > Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
-> > > 
-> > >      - Integrated Thunderbolt PCIe root ports before Alder Lake do not
-> > >        have the usb4-host-interface ACPI property. Identify those with
-> > >        their PCI IDs instead.
-> > > 
-> > > 2) If a root port does not have integrated Thunderbolt capabilities, but
-> > >    has the ExternalFacingPort ACPI property, that means the manufacturer
-> > >    has opted to use a discrete Thunderbolt host controller that is
-> > >    built into the computer.
-> > 
-> > Unconvincing.  If a Root Port has an external connector, is it
-> > impossible to plug in a Thunderbolt device to that connector?  I
-> > assume the wires from a Root Port could be traces on a PCB to a
-> > soldered-down Thunderbolt controller, OR could be wires to a connector
-> > where a Thunderbolt controller could be plugged in.  How could we tell
-> > the difference?
+On Sat, Aug 24, 2024 at 11:12:34AM -0500, Bjorn Helgaas wrote:
+> On Sat, Aug 24, 2024 at 07:49:46AM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Aug 23, 2024 at 05:04:36PM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Aug 23, 2024 at 10:11:33AM +0530, Manivannan Sadhasivam wrote:
+> > > > On Thu, Aug 22, 2024 at 12:31:33PM -0500, Bjorn Helgaas wrote:
+> > > > > On Thu, Aug 22, 2024 at 09:10:25PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > On Thu, Aug 22, 2024 at 10:16:58AM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Thu, Aug 22, 2024 at 12:18:23PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > > On Wed, Aug 21, 2024 at 05:56:18PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > ...
+> > > > > > > 
+> > > > > > > > > Although I do have the question of what happens if the RC deasserts
+> > > > > > > > > PERST# before qcom-ep is loaded.  We probably don't execute
+> > > > > > > > > qcom_pcie_perst_deassert() in that case, so how does the init happen?
+> > > > > > > > 
+> > > > > > > > PERST# is a level trigger signal. So even if the host has asserted
+> > > > > > > > it before EP booted, the level will stay low and ep will detect it
+> > > > > > > > while booting.
+> > > > > > > 
+> > > > > > > The PERST# signal itself is definitely level oriented.
+> > > > > > > 
+> > > > > > > I'm still skeptical about the *interrupt* from the PCIe controller
+> > > > > > > being level-triggered, as I mentioned here:
+> > > > > > > https://lore.kernel.org/r/20240815224735.GA57931@bhelgaas
+> > > > > > 
+> > > > > > Sorry, that comment got buried into my inbox. So didn't get a chance
+> > > > > > to respond.
+> > > > > > 
+> > > > > > > tegra194 is also dwc-based and has a similar PERST# interrupt but
+> > > > > > > it's edge-triggered (tegra_pcie_ep_pex_rst_irq()), which I think
+> > > > > > > is a cleaner implementation.  Then you don't have to remember the
+> > > > > > > current state, switch between high and low trigger, worry about
+> > > > > > > races and missing a pulse, etc.
+> > > > > > 
+> > > > > > I did try to mimic what tegra194 did when I wrote the qcom-ep
+> > > > > > driver, but it didn't work. If we use the level triggered interrupt
+> > > > > > as edge, the interrupt will be missed if we do not listen at the
+> > > > > > right time (when PERST# goes from high to low and vice versa).
+> > > > > > 
+> > > > > > I don't know how tegra194 interrupt controller is wired up, but IIUC
+> > > > > > they will need to boot the endpoint first and then host to catch the
+> > > > > > PERST# interrupt.  Otherwise, the endpoint will never see the
+> > > > > > interrupt until host toggles it again.
+> > > > > 
+> > > > > Having to control the boot ordering of endpoint and host is definitely
+> > > > > problematic.
+> > > > > 
+> > > > > What is the nature of the crash when we try to enable the PHY when
+> > > > > Refclk is not available?  The endpoint has no control over when the
+> > > > > host asserts/deasserts PERST#.  If PERST# happens to be asserted while
+> > > > > the endpoint is enabling the PHY, and this causes some kind of crash
+> > > > > that the endpoint driver can't easily recover from, that's a serious
+> > > > > robustness problem.
+> > > > 
+> > > > The whole endpoint SoC crashes if the refclk is not available during
+> > > > phy_power_on() as the PHY driver tries to access some register on Dmitry's
+> > > > platform (I did not see this crash on SM8450 SoC though).
 > 
-> You are talking about soldered down controller vs. add-in card (e.g PCIe
-> slot)? We don't really distinguish those.
+> I don't think the nature of this crash has been explained, so I don't
+> know whether it's a recoverable situation or not.
+> 
 
-That's kind of my point.  We're depending on the platform using
-ExternalFacingPort to tell us whether there's an external connector,
-and in this case it sounds like the platform is lying to us.
+I will add this info in the commit message.
 
-What about PCI_EXP_FLAGS_SLOT?  If a discrete Thunderbolt controller
-is built into the platform, maybe there would be no reason for the
-Root Port to set Slot Implemented and provide the Slot Capabilities/
-Control/Status registers.
+> > > > If we keep the enable_resources() during probe() then the race
+> > > > condition you observed above could apply. So removing that from
+> > > > probe() will also make the race condition go away,
+> > > 
+> > > Example:
+> > > 
+> > >   1) host deasserts PERST#
+> > >   2) qcom-ep handles PERST# IRQ
+> > >   3) qcom_pcie_ep_perst_irq_thread() calls qcom_pcie_perst_deassert()
+> > >   4) host asserts PERST#, Refclk no longer valid
+> > >   5) qcom_pcie_perst_deassert() calls qcom_pcie_enable_resources()
+> > >   6) qcom_pcie_enable_resources() enables PHY
+> > > 
+> > > I don't see what prevents the PERST# assertion at 4.  It sounds like
+> > > the endpoint SoC crashes at 6.
+> > 
+> > IDK why host would quickly assert the PERST# after deasserting
+> > during probe() unless someone intentionally does that from host
+> > side.
+> 
+> I think the host is allowed to assert PERST# at any arbitrary time, so
+> an endpoint should be able to handle it no matter when it happens.
+> 
+> > If that happens then there is a possibility of the endpoint SoC
+> > crash, but I'm not sure how we can avoid that.
+> > 
+> > But what this patch fixes is a crash occuring in a sane scenario:
+> > 
+> > 1) Endpoint boots first (no refclk from host)
+> > 2) Probe() calls qcom_pcie_enable_resources() --> Crash
+> 
+> I agree with this, although I think it's more of a band-aid than a
+> complete solution.  I don't have access to any SoC or PCIe controller
+> docs, so maybe this is a hardware design problem and this is the best
+> we can do.
+> 
 
-Bjorn
+I agree. But AFAIK there is no way endpoint can avoid this crash unless it
+generates its own clock. I did some investigation on the SRIS support and able
+to get it work in my local branch.
+
+I will try to upstream that feature for the currerntly supported Qcom SoCs in
+endpoint mode. But Qcom told me that non-SRIS mode is also required by some
+customers, so unfortunately we cannot make it as the default operating mode.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
