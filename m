@@ -1,63 +1,56 @@
-Return-Path: <linux-pci+bounces-12178-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12179-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 035CB95E3EB
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 16:29:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2BE395E3F8
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 16:42:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD83B1C20AF5
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 14:29:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 00F8AB20ECC
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 14:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFEB915573C;
-	Sun, 25 Aug 2024 14:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D18B155320;
+	Sun, 25 Aug 2024 14:42:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C0D2AD15;
-	Sun, 25 Aug 2024 14:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34602320C;
+	Sun, 25 Aug 2024 14:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724596187; cv=none; b=WcDtJ09NHCzX+efTickYtVR9hGl+xVXSQMqlidC6kqy2QjBMi8RNv2RgXUpIkYUaY4dxHdToMAI+Ch+FlOPxosdRf0SwA335e+00IDvY5HcQ8RrYCZ9uAe4+U9sa+u/FA62ds/xKLMwWX4ppMz9Z+O/SCGfsdE2mlp/49WPATa8=
+	t=1724596950; cv=none; b=kn0FxRVOF4mF6XOt/iSnEUmeozr12aL5Fzk0g8mVDKlKHrgHprjwujRsAGX2IpSM0Cd67aIwamtEBjJ0b2cGBccUeDXL6HqbvuhPq5ITcXiZvn1Ehajnb9Xbtsq6E2joOtOeLXO4uegLXC8lKpnsBh7aKFvnzaSTZ4z9aVL+8Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724596187; c=relaxed/simple;
-	bh=hkUw4CN+PllqJm92DaOyGtZOxUYqKkH4lgEa3f3vRA4=;
+	s=arc-20240116; t=1724596950; c=relaxed/simple;
+	bh=GFKNlmSu3GWJZfej888LPMpOgEYnF4XHx//K2cXP4s0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjCvMuMJJ+njfkDKfJNtwQa1FIDIjYcLrF7h6lSkpbnS9PU9/BHtRrq1u1vSM2RaGQ1ePK2/t0WDY5nmyKt9wAzfhFcvrthAp0SnBskIIHAdoXS+k7ddhSjlR32wPHqOnl2lu1pJDWpap8N3DK6SgrxHR1kP8ypP4ZVkDZYwvr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+	 Content-Type:Content-Disposition:In-Reply-To; b=ivh0cRQfzCP+r0wjzd/M0gX1axfxnmsl9ZMhdQtJHIvCZBOZq/2xB7pt9g2i43AQ68NKa20RenOd3KFDMWr9uj2oUi/z0QogDqWiPKCNlqyb2J+wPejewEmm3ha2TaYMIGH/ZbMG6Lyi0UndTSokmpVRy/OCSMknbVZMo6HEafg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1E68030000085;
-	Sun, 25 Aug 2024 16:29:35 +0200 (CEST)
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id BB4442800B3D2;
+	Sun, 25 Aug 2024 16:42:18 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E3915356236; Sun, 25 Aug 2024 16:29:34 +0200 (CEST)
-Date: Sun, 25 Aug 2024 16:29:34 +0200
+	id 94612356259; Sun, 25 Aug 2024 16:42:18 +0200 (CEST)
+Date: Sun, 25 Aug 2024 16:42:18 +0200
 From: Lukas Wunner <lukas@wunner.de>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
 	Mario Limonciello <mario.limonciello@amd.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-Message-ID: <Zss_zqsJOZKes1Dp@wunner.de>
-References: <20240511054323.GE4162345@black.fi.intel.com>
- <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
- <ZkUcihZR_ZUUEsZp@wunner.de>
- <20240516083017.GA1421138@black.fi.intel.com>
- <20240516100315.GC1421138@black.fi.intel.com>
- <CA+Y6NJH8vEHVtpVd7QB0UHZd=OSgX1F-QAwoHByLDjjJqpj7MA@mail.gmail.com>
- <ZnvWTo1M_z0Am1QC@wunner.de>
- <20240626085945.GA1532424@black.fi.intel.com>
- <ZqZmleIHv1q3WvsO@wunner.de>
- <20240729080441.GG1532424@black.fi.intel.com>
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	iommu@lists.linux.dev,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
+Message-ID: <ZstCyti3FHZIeFO8@wunner.de>
+References: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,48 +59,86 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240729080441.GG1532424@black.fi.intel.com>
+In-Reply-To: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
 
-On Mon, Jul 29, 2024 at 11:04:41AM +0300, Mika Westerberg wrote:
-> On Sun, Jul 28, 2024 at 05:41:09PM +0200, Lukas Wunner wrote:
-> > Do the DROMs on ICM root switches generally lack PCIe Upstream and
-> > Downstream Adapter Entries?
-> 
-> My guess is that they are not populated for ICM host router DROM
-> entries. These are pretty much Apple stuff and USB4 dropped them
-> completely in favour of the router operations.
+On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +
+> +	/*
+> +	 * For USB4, the tunneled PCIe root or downstream ports are marked
+> +	 * with the "usb4-host-interface" ACPI property, so we look for
+> +	 * that first. This should cover most cases.
+> +	 */
+> +	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
+> +				       "usb4-host-interface", 0);
 
-I note that Microsoft specifies a "usb4-port-number" for PCIe Downstream
-Adapters as well as DP and USB ports:
+This is all ACPI only, so it should either be #ifdef'ed to CONFIG_ACPI
+or moved to drivers/pci/pci-acpi.c.
 
-https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
+Alternatively, it could be moved to arch/x86/pci/ because ACPI can also
+be enabled on arm64 or riscv but the issue seems to only affect x86.
 
-Presumably the "usb4-port-number" allows for associating a
-pci_dev with a tb_port.  So that's a third way to do that,
-on top of DROM entries and the USB4 router operation.
 
-What I don't quite understand is whether the "usb4-port-number"
-is only present on PCIe Adapters of the Host Router or whether
-it can also exist on PCIe Adapters of Device Routers?
+>  static void set_pcie_untrusted(struct pci_dev *dev)
+>  {
+> -	struct pci_dev *parent;
+> +	struct pci_dev *parent = pci_upstream_bridge(dev);
+>  
+> +	if (!parent)
+> +		return;
+>  	/*
+> -	 * If the upstream bridge is untrusted we treat this device
+> +	 * If the upstream bridge is untrusted we treat this device as
+>  	 * untrusted as well.
+>  	 */
+> -	parent = pci_upstream_bridge(dev);
+> -	if (parent && (parent->untrusted || parent->external_facing))
+> +	if (parent->untrusted)
+>  		dev->untrusted = true;
+> +
+> +	if (pcie_is_tunneled(dev)) {
+> +		pci_dbg(dev, "marking as untrusted\n");
+> +		dev->untrusted = true;
+> +	}
+>  }
 
-I would also like to know whether "usb4-port-number" is set on
-the machines that Esther's quirk seeks to fix?
+I think you want to return in the "if (parent->untrusted)" case
+because there's no need to double-check pcie_is_tunneled(dev)
+if you've already determined that the device is untrusted.
 
-I found this DSDT of an unknown Lenovo model which does not have
-"usb4-port-number" set on any PCIe Adapters, only on USB ports:
 
-https://gist.github.com/64kramsystem/ab2410f081a4f47d4a205699828ab2f9
+>  static void pci_set_removable(struct pci_dev *dev)
+>  {
+>  	struct pci_dev *parent = pci_upstream_bridge(dev);
+>  
+> +	if (!parent)
+> +		return;
+>  	/*
+> -	 * We (only) consider everything downstream from an external_facing
+> +	 * We (only) consider everything tunneled below an external_facing
+>  	 * device to be removable by the user. We're mainly concerned with
+>  	 * consumer platforms with user accessible thunderbolt ports that are
+>  	 * vulnerable to DMA attacks, and we expect those ports to be marked by
+> @@ -1657,9 +1784,13 @@ static void pci_set_removable(struct pci_dev *dev)
+>  	 * accessible to user / may not be removed by end user, and thus not
+>  	 * exposed as "removable" to userspace.
+>  	 */
+> -	if (parent &&
+> -	    (parent->external_facing || dev_is_removable(&parent->dev)))
+> +	if (dev_is_removable(&parent->dev))
+> +		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
+> +
+> +	if (pcie_is_tunneled(dev)) {
+> +		pci_dbg(dev, "marking as removable\n");
+>  		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
+> +	}
+>  }
 
-I assumed that my solution to this problem would not be viable as
-we seem to be lacking port numbers for Host Router PCIe Adapters.
-Those are needed to associate a pci_dev with a tb_port on the
-Host Router and adjust its "untrusted" and "external_facing"
-properties.
-
-However if we do have the "usb4-port-number" on Host Router
-PCIe Adapters, then my solution would still be viable and
-I could look into adding support for the "usb4-port-number"
-property to it.
+Same here, return in the "if (dev_is_removable(&parent->dev))" case.
 
 Thanks,
 
