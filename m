@@ -1,32 +1,32 @@
-Return-Path: <linux-pci+bounces-12179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2BE395E3F8
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 16:42:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8D6D95E40E
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 17:06:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 00F8AB20ECC
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 14:42:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6ECD21F21647
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Aug 2024 15:06:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D18B155320;
-	Sun, 25 Aug 2024 14:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75DBF13E02E;
+	Sun, 25 Aug 2024 15:06:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34602320C;
-	Sun, 25 Aug 2024 14:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC356EB7D;
+	Sun, 25 Aug 2024 15:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724596950; cv=none; b=kn0FxRVOF4mF6XOt/iSnEUmeozr12aL5Fzk0g8mVDKlKHrgHprjwujRsAGX2IpSM0Cd67aIwamtEBjJ0b2cGBccUeDXL6HqbvuhPq5ITcXiZvn1Ehajnb9Xbtsq6E2joOtOeLXO4uegLXC8lKpnsBh7aKFvnzaSTZ4z9aVL+8Po=
+	t=1724598367; cv=none; b=X3eeG9QsrOpqLkXK4tagFVuWqBXJFpebQUCuGR0l50s89Rba80cNEmofq7o394yQvse37aXDjDC0lVHnG+X0/yvEY541mU+Y80uXuVfd9WFnaI+SelOGKq2UhP8TDSKUIx7OtFov9796Q7GSvc6HKfn2gi/bUaRq2xpb1SZEgho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724596950; c=relaxed/simple;
-	bh=GFKNlmSu3GWJZfej888LPMpOgEYnF4XHx//K2cXP4s0=;
+	s=arc-20240116; t=1724598367; c=relaxed/simple;
+	bh=+YVTh7204SngQT2akyPA2USmN9XLTvizFZxyOqYwioQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ivh0cRQfzCP+r0wjzd/M0gX1axfxnmsl9ZMhdQtJHIvCZBOZq/2xB7pt9g2i43AQ68NKa20RenOd3KFDMWr9uj2oUi/z0QogDqWiPKCNlqyb2J+wPejewEmm3ha2TaYMIGH/ZbMG6Lyi0UndTSokmpVRy/OCSMknbVZMo6HEafg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+	 Content-Type:Content-Disposition:In-Reply-To; b=tK1WqhcMQXKA6I+LW3Loi+UADQiTUX7x4lOsNmJ6stN+PJ2dWnPbPkJOcR2ln5Xg6Nrxlz4N1i2QPfxQhPFG/amH3zT9JfvlszN0saQpifZEUtartIKB2gR/mlN6KOnkBqS952dsHRaQ36e33o9D8uhQMicl2H9EEh5SX5IKZeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
@@ -34,23 +34,23 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id BB4442800B3D2;
-	Sun, 25 Aug 2024 16:42:18 +0200 (CEST)
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id B7341100D9414;
+	Sun, 25 Aug 2024 16:57:03 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 94612356259; Sun, 25 Aug 2024 16:42:18 +0200 (CEST)
-Date: Sun, 25 Aug 2024 16:42:18 +0200
+	id 59439356248; Sun, 25 Aug 2024 16:57:03 +0200 (CEST)
+Date: Sun, 25 Aug 2024 16:57:03 +0200
 From: Lukas Wunner <lukas@wunner.de>
-To: Esther Shimanovich <eshimanovich@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rajat Jain <rajatja@google.com>,
 	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	iommu@lists.linux.dev,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
-Message-ID: <ZstCyti3FHZIeFO8@wunner.de>
-References: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
+Subject: Re: [PATCH] PCI: Detect and trust built-in TBT chips
+Message-ID: <ZstGP0EgttNAxjp2@wunner.de>
+References: <20240806-trust-tbt-fix-v1-1-73ae5f446d5a@chromium.org>
+ <20240806220406.GA80520@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,86 +59,49 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
+In-Reply-To: <20240806220406.GA80520@bhelgaas>
 
-On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
-> +{
-> +	struct fwnode_handle *fwnode;
-> +
-> +	/*
-> +	 * For USB4, the tunneled PCIe root or downstream ports are marked
-> +	 * with the "usb4-host-interface" ACPI property, so we look for
-> +	 * that first. This should cover most cases.
-> +	 */
-> +	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
-> +				       "usb4-host-interface", 0);
+On Tue, Aug 06, 2024 at 05:04:06PM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 06, 2024 at 09:39:11PM +0000, Esther Shimanovich wrote:
+> > Some computers with CPUs that lack Thunderbolt features use discrete
+> > Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
+> > chips are located within the chassis; between the root port labeled
+> > ExternalFacingPort and the USB-C port.
+> 
+> So is this fundamentally a firmware defect?  ACPI says a Root Port is
+> an "ExternalFacingPort", but the Root Port is actually connected to an
+> internal Thunderbolt chip, not an external connector?
 
-This is all ACPI only, so it should either be #ifdef'ed to CONFIG_ACPI
-or moved to drivers/pci/pci-acpi.c.
+We're the victim of an ambiguity in Microsoft's spec here:
 
-Alternatively, it could be moved to arch/x86/pci/ because ACPI can also
-be enabled on arm64 or riscv but the issue seems to only affect x86.
+The spec says that ExternalFacingPort is used to identify externally
+exposed PCIe hierarchies.  But the spec mandates that the property
+shall only exist under the Root Port ACPI device scope.
 
+OEMs follow that spec to a T by specifying ExternalFacingPort below
+the Root Port, even though the Root Port itself is not external facing
+but connects to a discrete Thunderbolt controller which is soldered down
+to the mainboard.  In reality the external facing ports extend from the
+discrete controller, but Microsoft's spec doesn't allow marking them
+as such.
 
->  static void set_pcie_untrusted(struct pci_dev *dev)
->  {
-> -	struct pci_dev *parent;
-> +	struct pci_dev *parent = pci_upstream_bridge(dev);
->  
-> +	if (!parent)
-> +		return;
->  	/*
-> -	 * If the upstream bridge is untrusted we treat this device
-> +	 * If the upstream bridge is untrusted we treat this device as
->  	 * untrusted as well.
->  	 */
-> -	parent = pci_upstream_bridge(dev);
-> -	if (parent && (parent->untrusted || parent->external_facing))
-> +	if (parent->untrusted)
->  		dev->untrusted = true;
-> +
-> +	if (pcie_is_tunneled(dev)) {
-> +		pci_dbg(dev, "marking as untrusted\n");
-> +		dev->untrusted = true;
-> +	}
->  }
+Here's the relevant spec language:
 
-I think you want to return in the "if (parent->untrusted)" case
-because there's no need to double-check pcie_is_tunneled(dev)
-if you've already determined that the device is untrusted.
+   "This ACPI object enables the operating system to identify externally
+    exposed PCIe hierarchies, such as Thunderbolt. This object must be
+    implemented in the Root Port ACPI device scope.
 
+    Note: On systems shipping with Windows 10, version 1803, this object
+    should only be implemented on PCIe Root Ports of Thunderbolt hierarchies."
 
->  static void pci_set_removable(struct pci_dev *dev)
->  {
->  	struct pci_dev *parent = pci_upstream_bridge(dev);
->  
-> +	if (!parent)
-> +		return;
->  	/*
-> -	 * We (only) consider everything downstream from an external_facing
-> +	 * We (only) consider everything tunneled below an external_facing
->  	 * device to be removable by the user. We're mainly concerned with
->  	 * consumer platforms with user accessible thunderbolt ports that are
->  	 * vulnerable to DMA attacks, and we expect those ports to be marked by
-> @@ -1657,9 +1784,13 @@ static void pci_set_removable(struct pci_dev *dev)
->  	 * accessible to user / may not be removed by end user, and thus not
->  	 * exposed as "removable" to userspace.
->  	 */
-> -	if (parent &&
-> -	    (parent->external_facing || dev_is_removable(&parent->dev)))
-> +	if (dev_is_removable(&parent->dev))
-> +		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
-> +
-> +	if (pcie_is_tunneled(dev)) {
-> +		pci_dbg(dev, "marking as removable\n");
->  		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
-> +	}
->  }
+    https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
 
-Same here, return in the "if (dev_is_removable(&parent->dev))" case.
+It's probably safe to assume that Microsoft intended the ExternalFacingPort
+property to only be used on SoC-integrated Thunderbolt controllers,
+in which case a Root Port is indeed external facing.  But that didn't
+stop OEMs from also specifying the property on Root Ports above
+soldered-down discrete Thunderbolt controllers.  The spec doesn't
+explicitly forbid that.
 
 Thanks,
 
