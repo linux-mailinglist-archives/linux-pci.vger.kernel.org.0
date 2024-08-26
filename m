@@ -1,111 +1,238 @@
-Return-Path: <linux-pci+bounces-12195-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12196-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3B4A95ECF0
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:18:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D04EA95EEB1
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 12:43:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AA70282074
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:18:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78A471F23170
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 10:43:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627511422BF;
-	Mon, 26 Aug 2024 09:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A21714A4D9;
+	Mon, 26 Aug 2024 10:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gs5VIHMv"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r9Ikr3Ct";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BAxxJn6a";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r9Ikr3Ct";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BAxxJn6a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC14813FD66;
-	Mon, 26 Aug 2024 09:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60328149E1A;
+	Mon, 26 Aug 2024 10:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724663929; cv=none; b=lZCQbtFXyLmFUWDg5yMeFeq+HI3sPH6flIahkNt20CDJNK7A92410BEDCiWjeoouh23xABTLQTzL9MvPNvl280xcVWN+rvXK5kkhACBgZs5f9xjTPgJwEsfo2NnNbzKVwznGBawhDG5t00DKdq4dc4koMdazcPeFDH8ZEBu5GC8=
+	t=1724668984; cv=none; b=cr+J7tjkxjAcuI/02aq4z2SB5qObObdMsTeHkGwVVRrwR2ERFBF1decMAD0aB7Ks0MFa0itMBvfgUeIH5YytZWNWqBWJQdzqqXKQvhYCXA9FbTw1lADQxziqoOtKVsWD9XY4V2OlvCb7k99xfm+qnPbX7APGgPYEILXd9BMmTCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724663929; c=relaxed/simple;
-	bh=8siODDACXT+fimTC/2UB/6V4VeORso2YfO6qi6K2GWM=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=afs6z3McbWuimXB49jR/TQfR39D/UKvZ2Tr5Jh3DltWkUeAK1RuppSSsw/FiqvGsyUgjxR6DdN3xBQZVSGOT/7edunrCiarxJymc0P6LJtJVQU0nDO6LX3cCjtXYbTTbhMQv9O3LPplnS187QPlmCsZqLQmQUBwFGcU6NlUCE2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gs5VIHMv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E4DC4FF01;
-	Mon, 26 Aug 2024 09:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1724663928;
-	bh=8siODDACXT+fimTC/2UB/6V4VeORso2YfO6qi6K2GWM=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=gs5VIHMv8spP85k6bkA+JhcXCek1/3703narVXeBPqZtMt1jtyHyoWE9679L411Oz
-	 I8+vkPjwCkJ+oqW7JJHDZ7adTeUNO9w9ZYY9tY7LeQpb7zmz3D3F9NXS7oBHJGmBc0
-	 0tF0LtV6MOGtqaXVly3GK+32b34WVP5kT4BwLhcw=
-Date: Mon, 26 Aug 2024 11:18:45 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <2024082635-demeanor-yanking-dfc5@gregkh>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <2024082420-secluding-rearrange-fcfd@gregkh>
- <ZsxF1ZvsrJbmWzQH@apocalypse>
+	s=arc-20240116; t=1724668984; c=relaxed/simple;
+	bh=1brX3O7x4wkvzi0J22DQwcBg4eRs8a8tbYnzdpvAW6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PpNEgpQ4ahAOlXzIPJFawhXBDS9xIEi0xZQR+Bjg/XUvpmBigT+g0T1om0SiBcUIbBXyHsI8RC0ovWdd0/PKUIs6y8Fs95A/NuBcOMQzzjvIFutGpgyVxo7mqFn/jUgsWpQm37WsdYPSsyRb8EzXwt7EkB+Xfr3ha7jGcd5hwc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r9Ikr3Ct; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BAxxJn6a; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r9Ikr3Ct; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BAxxJn6a; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 79D571F84E;
+	Mon, 26 Aug 2024 10:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1724668981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8o4dfymYY/wib3L9jCOJLwWWj+pNHwBE6TGr3wDvdME=;
+	b=r9Ikr3CtvlxgOUbCPsfQeCAbOIBv38TZPe1XteitqhFoxmQFbd7aY8yAqEbCEEh2xRsqdn
+	XjBdeutawKH9OAHU24L0HCpbEsVig3SnmX4zEqQv2ePmulPDNQEUXOxOYhXmVBJ8ls79cA
+	gXnn6AF9qisy5csGzxngcARJn+/5Lms=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1724668981;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8o4dfymYY/wib3L9jCOJLwWWj+pNHwBE6TGr3wDvdME=;
+	b=BAxxJn6acrcSse7W9zFjVxOgvP07ZnpIBhIEIAT6a9MoK7oeO65KrSPjWVYXjcrbysp7Qs
+	3Z94xHXKroT5a6Bw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=r9Ikr3Ct;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BAxxJn6a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1724668981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8o4dfymYY/wib3L9jCOJLwWWj+pNHwBE6TGr3wDvdME=;
+	b=r9Ikr3CtvlxgOUbCPsfQeCAbOIBv38TZPe1XteitqhFoxmQFbd7aY8yAqEbCEEh2xRsqdn
+	XjBdeutawKH9OAHU24L0HCpbEsVig3SnmX4zEqQv2ePmulPDNQEUXOxOYhXmVBJ8ls79cA
+	gXnn6AF9qisy5csGzxngcARJn+/5Lms=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1724668981;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8o4dfymYY/wib3L9jCOJLwWWj+pNHwBE6TGr3wDvdME=;
+	b=BAxxJn6acrcSse7W9zFjVxOgvP07ZnpIBhIEIAT6a9MoK7oeO65KrSPjWVYXjcrbysp7Qs
+	3Z94xHXKroT5a6Bw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8378C13724;
+	Mon, 26 Aug 2024 10:43:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2UOBHTRczGaJCAAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Mon, 26 Aug 2024 10:43:00 +0000
+Message-ID: <3bb5c6db-11d9-4e65-a581-1a7f6945450a@suse.de>
+Date: Mon, 26 Aug 2024 13:42:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZsxF1ZvsrJbmWzQH@apocalypse>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
+To: Jim Quinlan <james.quinlan@broadcom.com>,
+ Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240815225731.40276-1-james.quinlan@broadcom.com>
+ <20240815225731.40276-6-james.quinlan@broadcom.com>
+ <1a6d6972-f2db-4d44-b79c-811ba44368f0@suse.de>
+ <CA+-6iNxFotwXW4Cc31daT+KwE_LEdAR=pcpsg_3Ng0ep1vYLBA@mail.gmail.com>
+ <76b528f8-88e2-4954-94cf-7e0933b4ad03@suse.de>
+ <CA+-6iNykVzd1do=dHDVD3_prJkvfRbA2U-DsLFhSA2S48L_A8A@mail.gmail.com>
+ <87b38984-0a54-4773-ba20-3445d9c9c149@suse.de>
+ <CA+-6iNwJZ+OfYaCBBx04-hO1FmpDE36uJWd1jYvaVs_o4iwWqA@mail.gmail.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <CA+-6iNwJZ+OfYaCBBx04-hO1FmpDE36uJWd1jYvaVs_o4iwWqA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 79D571F84E
+X-Spam-Score: -6.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-6.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,google.com,arm.com,debian.org,linaro.org,broadcom.com,gmail.com,linux.com,pengutronix.de,lists.infradead.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Aug 26, 2024 at 11:07:33AM +0200, Andrea della Porta wrote:
-> Hi Greg,
+Hi Jim,
+
+<cut>
+
 > 
-> On 09:53 Sat 24 Aug     , Greg Kroah-Hartman wrote:
-> > On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
-> > > --- a/include/linux/pci_ids.h
-> > > +++ b/include/linux/pci_ids.h
-> > > @@ -2610,6 +2610,9 @@
-> > >  #define PCI_VENDOR_ID_TEKRAM		0x1de1
-> > >  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
-> > >  
-> > > +#define PCI_VENDOR_ID_RPI		0x1de4
-> > > +#define PCI_DEVICE_ID_RP1_C0		0x0001
-> > 
-> > Minor thing, but please read the top of this file.  As you aren't using
-> > these values anywhere outside of this one driver, there's no need to add
-> > these values to pci_ids.h.  Just keep them local to the .c file itself.
-> >
+> Hi Stan,
 > 
-> Thanks, I've read the top part of that file. The reason I've declared those
-> two macroes in pci_ids.h is that I'm using them both in the
-> main driver (rp1-pci.c) and in drivers/pci/quirks.c.
+> Most of the clocks on the STB chips come up active so one does not
+> have to turn them on and off to have the device function.  It helps
+> power savings to do this although I'm not sure it is significant.
+>>
+>>>
+>>> Perhaps you don't see the dependence on the PCIe clocks if the 2712
+>>> does not give the PCIe node a clock property and instead keeps its
+>>> clocks on all of the time.  In that case I would think that your
+>>> solution would be fine.
+>>
+>> What you mean by my solution? The one where avoiding assert of
+>> bridge_reset at link [1] bellow?
+> 
+> Yes.
+>>
+>> If so, I still cannot understand the relation between bridge_reset and
+>> rescal as the comment mentions:
+>>
+>> "Shutting down this bridge on pcie1 means accesses to rescal block will
+>> hang the chip if another RC wants to assert/deassert rescal".
+> 
+> I was just describing my observations; this should not be happening.
+> I would say it is a HW bug for the 2712.  I can file a bug against the
+> 2712 but that will not help us right now.  From what I was told by HW,
+> asserting the PCIe1 bridge reset does not affect the rescal settings,
+> but it does freeze access to the rescal registers, and that is game
+> over for the other PCIe controllers accessing the rescal registers.
 
-Ah, missed that, sorry, nevermind.
+Good findings, thank you.
 
-greg k-h
+The problem comes from this snippet from brcm_pcie_probe() :
+
+	ret = pci_host_probe(bridge);
+	if (!ret && !brcm_pcie_link_up(pcie))
+		ret = -ENODEV;
+
+	if (ret) {
+		brcm_pcie_remove(pdev);
+		return ret;
+	}
+
+Even when pci_host_probe() is successful the .probe will fail if there
+are no endpoint devices on this root port bus. This is the case when
+probing pcie1 port which is the one with external connector. Cause the
+probe is failing we call reset_control_rearm(rescal) from
+brcm_pcie_remove(), after that during .probe of pcie2 (the root port
+where RP1 south-bridge is attached) reset_control_reset(rescal) will
+issue rescal reset thus rescal-reset driver will stuck on read/write
+registers.
+
+I think we have to drop this link-up check and allow the probe to finish
+successfully. Even that there no PCI devices attached to bus we want the
+root port to be visible by lspci tool. This will solve partially the
+issue with accessing rescal reset-controller registers after asserting
+bridge_reset. The other part of the problem will be solved by remove the
+invocation of reset_control_rearm(rescal) from __brcm_pcie_remove().
+That way only the first probed root port will issue rescal reset and
+every next probe will not try to reset rescal because we do not call
+_rearm(rescal).
+
+What do you think?
+
+~Stan
 
