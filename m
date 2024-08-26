@@ -1,187 +1,111 @@
-Return-Path: <linux-pci+bounces-12194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62DC595ECE9
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:17:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3B4A95ECF0
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:18:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A0972819AA
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:17:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AA70282074
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:18:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E0413CA9C;
-	Mon, 26 Aug 2024 09:17:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627511422BF;
+	Mon, 26 Aug 2024 09:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g7vqHooc"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gs5VIHMv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11E58172A;
-	Mon, 26 Aug 2024 09:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC14813FD66;
+	Mon, 26 Aug 2024 09:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724663821; cv=none; b=UGJM6aQgF/4FYMsbM1FYle+ceQOBg5eGBuDs2I83d53RXHjXl7POXgQMaszioq4dGXxTN24Q7Xc3fCXjkiSso+N6D1xTXkVx8YMvKtmsj7kobRj+ciKMPaVgQuvvfsbVL2bj0cFNub70QrYC8QNpXKrTml9TJtdOFDbQnGpxiCg=
+	t=1724663929; cv=none; b=lZCQbtFXyLmFUWDg5yMeFeq+HI3sPH6flIahkNt20CDJNK7A92410BEDCiWjeoouh23xABTLQTzL9MvPNvl280xcVWN+rvXK5kkhACBgZs5f9xjTPgJwEsfo2NnNbzKVwznGBawhDG5t00DKdq4dc4koMdazcPeFDH8ZEBu5GC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724663821; c=relaxed/simple;
-	bh=ucDCZHH9q43sDJFvaNUh5wuUi566REaO2LKCT0DkCAg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SyKimAkACJGv+9KyoSlgdbDtGje2q6I/N54wvViKWsl8yBDkIvmgj0ACKRugPQ264XXbM0mYEdi8XnpXeUin4Dl8w7xVFDAur3vDihCoJI07OQrU+IV++81YKzQh0gV/c/HCuvQzyQvXsY7qGCLyljIEz9Ldy2QD5fDkz29J7Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g7vqHooc; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724663820; x=1756199820;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ucDCZHH9q43sDJFvaNUh5wuUi566REaO2LKCT0DkCAg=;
-  b=g7vqHoocBcalJqDNgOK0+nHSeqEM5FCNiuRy3nhD9FBauCx5SW5r99d9
-   Q/ZoXTa1aO+PE5qw3fl8KsmZPRMvQI5eADH+XgxZaaUqesvoWrTny0jC+
-   eLPY2R6uM1rd9C4vtuuTyGFEsftQO5vUR0F/3nysdq2r0mcD2bj6od69B
-   YzCSu5NDdP0L9MKiTsZbzIanid7apy47OlqCXw7XzPxzQGYivLCxs3gSF
-   D0NpOUXDNJ1PU/XoMld1eHIXpSX92IngbJzUoocqynfSxBmXDGZdhQmNV
-   3cdT0phbHcC2hRwHXId3TwbBrrjFkrimW9R/WCd6s3WQzJY9BugtGQ3GW
-   w==;
-X-CSE-ConnectionGUID: VaLPiWrWS1e86g5acCPPSQ==
-X-CSE-MsgGUID: 5ZXgTWc3RyKTjYTP4sNT6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11175"; a="23229363"
-X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
-   d="scan'208";a="23229363"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 02:16:59 -0700
-X-CSE-ConnectionGUID: etMzg08HQ0KODBTDShMejA==
-X-CSE-MsgGUID: r5Cz6iMDTRu6Bbf26H+RvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
-   d="scan'208";a="93253478"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.174])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 02:16:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Aug 2024 12:16:51 +0300 (EEST)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Matthew W Carlis <mattc@purestorage.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] PCI: Revert to the original speed after PCIe
- failed link retraining
-In-Reply-To: <alpine.DEB.2.21.2408251412590.30766@angie.orcam.me.uk>
-Message-ID: <db382712-8b71-3f1c-bffd-7b35921704c7@linux.intel.com>
-References: <alpine.DEB.2.21.2408251354540.30766@angie.orcam.me.uk> <alpine.DEB.2.21.2408251412590.30766@angie.orcam.me.uk>
+	s=arc-20240116; t=1724663929; c=relaxed/simple;
+	bh=8siODDACXT+fimTC/2UB/6V4VeORso2YfO6qi6K2GWM=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afs6z3McbWuimXB49jR/TQfR39D/UKvZ2Tr5Jh3DltWkUeAK1RuppSSsw/FiqvGsyUgjxR6DdN3xBQZVSGOT/7edunrCiarxJymc0P6LJtJVQU0nDO6LX3cCjtXYbTTbhMQv9O3LPplnS187QPlmCsZqLQmQUBwFGcU6NlUCE2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gs5VIHMv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E4DC4FF01;
+	Mon, 26 Aug 2024 09:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1724663928;
+	bh=8siODDACXT+fimTC/2UB/6V4VeORso2YfO6qi6K2GWM=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=gs5VIHMv8spP85k6bkA+JhcXCek1/3703narVXeBPqZtMt1jtyHyoWE9679L411Oz
+	 I8+vkPjwCkJ+oqW7JJHDZ7adTeUNO9w9ZYY9tY7LeQpb7zmz3D3F9NXS7oBHJGmBc0
+	 0tF0LtV6MOGtqaXVly3GK+32b34WVP5kT4BwLhcw=
+Date: Mon, 26 Aug 2024 11:18:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <2024082635-demeanor-yanking-dfc5@gregkh>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <2024082420-secluding-rearrange-fcfd@gregkh>
+ <ZsxF1ZvsrJbmWzQH@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-639461899-1724663811=:1013"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZsxF1ZvsrJbmWzQH@apocalypse>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Aug 26, 2024 at 11:07:33AM +0200, Andrea della Porta wrote:
+> Hi Greg,
+> 
+> On 09:53 Sat 24 Aug     , Greg Kroah-Hartman wrote:
+> > On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> > > --- a/include/linux/pci_ids.h
+> > > +++ b/include/linux/pci_ids.h
+> > > @@ -2610,6 +2610,9 @@
+> > >  #define PCI_VENDOR_ID_TEKRAM		0x1de1
+> > >  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
+> > >  
+> > > +#define PCI_VENDOR_ID_RPI		0x1de4
+> > > +#define PCI_DEVICE_ID_RP1_C0		0x0001
+> > 
+> > Minor thing, but please read the top of this file.  As you aren't using
+> > these values anywhere outside of this one driver, there's no need to add
+> > these values to pci_ids.h.  Just keep them local to the .c file itself.
+> >
+> 
+> Thanks, I've read the top part of that file. The reason I've declared those
+> two macroes in pci_ids.h is that I'm using them both in the
+> main driver (rp1-pci.c) and in drivers/pci/quirks.c.
 
---8323328-639461899-1724663811=:1013
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Ah, missed that, sorry, nevermind.
 
-On Sun, 25 Aug 2024, Maciej W. Rozycki wrote:
-
-> When `pcie_failed_link_retrain' has failed to retrain the link by hand=20
-> it leaves the link speed restricted to 2.5GT/s, which will then affect=20
-> any device that has been plugged in later on, which may not suffer from=
-=20
-> the problem that caused the speed restriction to have been attempted. =20
-> Consequently such a downstream device will suffer from an unnecessary=20
-> communication throughput limitation and therefore performance loss.
->=20
-> Remove the speed restriction then and revert the Link Control 2 register=
-=20
-> to its original state if link retraining with the speed restriction in=20
-> place has failed.  Retrain the link again afterwards so as to remove any=
-=20
-> residual state, waiting on LT rather than DLLLA to avoid an excessive=20
-> delay and ignoring the result as this training is supposed to fail anyway=
-=2E
->=20
-> Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
-> Reported-by: Matthew W Carlis <mattc@purestorage.com>
-> Link: https://lore.kernel.org/r/20240806000659.30859-1-mattc@purestorage.=
-com/
-> Link: https://lore.kernel.org/r/20240722193407.23255-1-mattc@purestorage.=
-com/
-> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-> Cc: stable@vger.kernel.org # v6.5+
-> ---
-> Changes from v2:
->=20
-> - Wait on LT rather than DLLLA with clean-up retraining with the speed=20
->   restriction lifted, so as to avoid an excessive delay as it's supposed=
-=20
->   to fail anyway.
->=20
-> New change in v2.
-> ---
->  drivers/pci/quirks.c |   11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->=20
-> linux-pcie-failed-link-retrain-fail-unclamp.diff
-> Index: linux-macro/drivers/pci/quirks.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-macro.orig/drivers/pci/quirks.c
-> +++ linux-macro/drivers/pci/quirks.c
-> @@ -66,7 +66,7 @@
->   * apply this erratum workaround to any downstream ports as long as they
->   * support Link Active reporting and have the Link Control 2 register.
->   * Restrict the speed to 2.5GT/s then with the Target Link Speed field,
-> - * request a retrain and wait 200ms for the data link to go up.
-> + * request a retrain and check the result.
->   *
->   * If this turns out successful and we know by the Vendor:Device ID it i=
-s
->   * safe to do so, then lift the restriction, letting the devices negotia=
-te
-> @@ -74,6 +74,10 @@
->   * firmware may have already arranged and lift it with ports that alread=
-y
->   * report their data link being up.
->   *
-> + * Otherwise revert the speed to the original setting and request a retr=
-ain
-> + * again to remove any residual state, ignoring the result as it's suppo=
-sed
-> + * to fail anyway.
-> + *
->   * Return TRUE if the link has been successfully retrained, otherwise FA=
-LSE.
->   */
->  bool pcie_failed_link_retrain(struct pci_dev *dev)
-> @@ -92,6 +96,8 @@ bool pcie_failed_link_retrain(struct pci
->  =09pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->  =09if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) =3D=3D
->  =09    PCI_EXP_LNKSTA_LBMS) {
-> +=09=09u16 oldlnkctl2 =3D lnkctl2;
-> +
->  =09=09pci_info(dev, "broken device, retraining non-functional downstream=
- link at 2.5GT/s\n");
-> =20
->  =09=09lnkctl2 &=3D ~PCI_EXP_LNKCTL2_TLS;
-> @@ -100,6 +106,9 @@ bool pcie_failed_link_retrain(struct pci
-> =20
->  =09=09if (pcie_retrain_link(dev, false)) {
->  =09=09=09pci_info(dev, "retraining failed\n");
-> +=09=09=09pcie_capability_write_word(dev, PCI_EXP_LNKCTL2,
-> +=09=09=09=09=09=09   oldlnkctl2);
-> +=09=09=09pcie_retrain_link(dev, true);
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
-
---8323328-639461899-1724663811=:1013--
+greg k-h
 
