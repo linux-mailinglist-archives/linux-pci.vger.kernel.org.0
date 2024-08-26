@@ -1,199 +1,206 @@
-Return-Path: <linux-pci+bounces-12187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBA4C95E94F
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 08:55:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E8B095EB3C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 10:02:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CA491C211AA
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 06:55:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 438381C2287C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 08:02:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 524B44F215;
-	Mon, 26 Aug 2024 06:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UpbVYSvP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A31B13AA2B;
+	Mon, 26 Aug 2024 07:55:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED0B82D7F
-	for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 06:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DD42D052;
+	Mon, 26 Aug 2024 07:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724655332; cv=none; b=SrnsusCveGcAE0UrhcjhJyHs771lDe44sCHmYduyBlgpvAW2Vq/HofoAt1Ob+N/SzMyofzmZBvKJie6Qx3WjiIBE20JYQfZfdS79A4mUCqf/KU1iTYQSb3L7vM71B6sCg2mCTuxoQJ9InjxczRUn7ohp7C1wnNx8tR6Gl//WQ1Y=
+	t=1724658914; cv=none; b=C8RB2WqBgvtGzw9cajE4ObpkChubjypLLvg4sg/lCDG0fM8elENxk74x9q0zVDJumh6HH90HbbdIJwgH/Wm8k0fsjCbQpFEFhck97ARybm8t3SepQcPDMz2Dt2YF8KkxVZIf+oTZS6dP0eB7AtXl+lS93Su3WczSf6qoL7LCcsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724655332; c=relaxed/simple;
-	bh=QYLmQ33xF9IhHkHlckYjtaDgAb8yn61cdSbD9bi4KjQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HRp7+vE5K58irSIHmIoC4uWUS+l6JJBG4Xa1NyORksdH1RDW6wjfmG7O/p4PMbTc+dP9Add9D0FvQWzXr3qk2UZopkuH/LNJlHiiNIUwokxF4/jC0uHv131pbuhAz0PJlg0kxCpmomk+mPADy1hwsUEE1AOeTeWFp+FevDxdhiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UpbVYSvP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724655329;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O2z2TGSU/AHVRPl6zHGllpDM2MIUry+mfdVEnD5XzqM=;
-	b=UpbVYSvPyT0tafBdOoMnqr4sM0eXYD7K/y9wZkpRfVBQzyBexwxZ6zzZ06Oez+8RnKHOWJ
-	aNbVgZ4VhUW5z7J3HCXXddd1oLDUCPsydy/fo8U46NwFIi5GupFjwei1fYgS5ou7CgIbCX
-	EMFGoW6LXeFeTLri6Lh2khRPZf3Lfu8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-270-SeREwANLN-mpBSaXhMUrIw-1; Mon, 26 Aug 2024 02:55:27 -0400
-X-MC-Unique: SeREwANLN-mpBSaXhMUrIw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42817980766so37737065e9.3
-        for <linux-pci@vger.kernel.org>; Sun, 25 Aug 2024 23:55:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724655326; x=1725260126;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O2z2TGSU/AHVRPl6zHGllpDM2MIUry+mfdVEnD5XzqM=;
-        b=k3+GlkwDMcEm/PMjZUS5AWHuDDGcSgayxfu6F7sfs3yxPZgKyNWx03Fm9qOTAKAAjR
-         df81nGhGIAJYMqyOWSNBm5xHLcPlRuVtPQUMZ4NelTVeWoN//DgIFSSp2QS3e1srZXk3
-         HWUXcFAxrydp1bK6l0YGxtUdSq+nS7zucDDmEZtkbmuZlsXIUSWSo9u7+4DrtT6YBrUB
-         rXGqg0oLyzEFofQinA/iKDam0MOnRq1HvXIsoZd6fEQaD68ml7JDKKMHVDOVSwD3Cl/6
-         9FVz82Ek1g/+COhgdGWHtSXtZF/yCq0CjWMgpcdFJhgbeAV5YhYN5YcqQr+ILQWcIIMR
-         jEGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVf1O3g8Cw3VKpTj0+4LSA889c3+WX1PQPApnfRNZ/XSTXaL7Zmy5Hk16H8t5K3VdM5Z5DY4aC+Maw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHBj1AHH25QH8nSTroRcdOq1HyheyEmlISpIN2yJfA+A5ySRWL
-	fOKFgXCEIQ+UWoZN5BVeLbM5gh2M5SPLB3PNpOAlpQpjAuiDphFOMrtWNQkxnyYD+rwK3j30cHR
-	NwfQGdHeJmhNafVR9IEj30RuVKAiOFuSiemrHiOR4nrkrji11egkAbSIt2Q==
-X-Received: by 2002:a05:600c:3b05:b0:428:1d27:f3db with SMTP id 5b1f17b1804b1-42b8925903bmr48419385e9.35.1724655326193;
-        Sun, 25 Aug 2024 23:55:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHDbFRllMEQMy18KUHdwX+H4HgEvRwxNEXxmAF22JEUYmhjpbjXAt/FXNy3VJHqD5ffhjLW9Q==
-X-Received: by 2002:a05:600c:3b05:b0:428:1d27:f3db with SMTP id 5b1f17b1804b1-42b8925903bmr48419155e9.35.1724655325664;
-        Sun, 25 Aug 2024 23:55:25 -0700 (PDT)
-Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42abef81777sm178404725e9.27.2024.08.25.23.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2024 23:55:25 -0700 (PDT)
-Message-ID: <23f1b79be57f1a4d6ce0806fa149d687c2c6d275.camel@redhat.com>
-Subject: Re: [PATCH v3 7/9] vdpa: solidrun: Fix UB bug with devres
-From: Philipp Stanner <pstanner@redhat.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: alexandre.torgue@foss.st.com, alvaro.karsz@solid-run.com,
- andy@kernel.org,  axboe@kernel.dk, bhelgaas@google.com, brgl@bgdev.pl,
- broonie@kernel.org,  corbet@lwn.net, davem@davemloft.net,
- dlechner@baylibre.com, dlemoal@kernel.org,  edumazet@google.com,
- eperezma@redhat.com, hao.wu@intel.com, hare@suse.de,  jasowang@redhat.com,
- joabreu@synopsys.com, kch@nvidia.com, kuba@kernel.org, 
- linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-block@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, mcoquelin.stm32@gmail.com, 
- mdf@kernel.org, mst@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com, 
- richardcochran@gmail.com, stable@vger.kernel.org, trix@redhat.com, 
- u.kleine-koenig@pengutronix.de, virtualization@lists.linux.dev, 
- xuanzhuo@linux.alibaba.com, yilun.xu@intel.com
-Date: Mon, 26 Aug 2024 08:55:22 +0200
-In-Reply-To: <81de3898-9af7-4ad1-80ef-68d1f60d4c28@wanadoo.fr>
-References: <20240822134744.44919-1-pstanner@redhat.com>
-	 <20240822134744.44919-8-pstanner@redhat.com>
-	 <81de3898-9af7-4ad1-80ef-68d1f60d4c28@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1724658914; c=relaxed/simple;
+	bh=jJiYC1g7DDJ2SI7n4ZqSQeOupm9HEWP+pCn4FZGr1Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ErCntOiqEDbJBMQqsFdRvevLdtLUZIUn7FEItOXB5+J3hBcRGcZj+WfTpX784R4JeAGXiGBWaPULiSZGXsOT4iV3x2jgo9zCk86Q6gVdcTUoI6kyLVCi5kfnNW10jBo6cRVg1npCFYO8W/qxAkf4jTw2QbeYxRq2mOHmXqC1+uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4CFC8CDD4;
+	Mon, 26 Aug 2024 07:55:08 +0000 (UTC)
+Date: Mon, 26 Aug 2024 13:25:05 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	mani@kernel.org, quic_msarkar@quicinc.com,
+	quic_kraravin@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] PCI: qcom: Add equalization settings for 16 GT/s
+Message-ID: <20240826075505.zg3tr7abs5rotkjo@thinkpad>
+References: <20240821170917.21018-1-quic_schintav@quicinc.com>
+ <20240821170917.21018-3-quic_schintav@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240821170917.21018-3-quic_schintav@quicinc.com>
 
-On Thu, 2024-08-22 at 16:34 +0200, Christophe JAILLET wrote:
-> Le 22/08/2024 =C3=A0 15:47, Philipp Stanner a =C3=A9crit=C2=A0:
-> > In psnet_open_pf_bar() and snet_open_vf_bar() a string later passed
-> > to
-> > pcim_iomap_regions() is placed on the stack. Neither
-> > pcim_iomap_regions() nor the functions it calls copy that string.
-> >=20
-> > Should the string later ever be used, this, consequently, causes
-> > undefined behavior since the stack frame will by then have
-> > disappeared.
-> >=20
-> > Fix the bug by allocating the strings on the heap through
-> > devm_kasprintf().
-> >=20
-> > Cc: stable@vger.kernel.org	# v6.3
-> > Fixes: 51a8f9d7f587 ("virtio: vdpa: new SolidNET DPU driver.")
-> > Reported-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > Closes:
-> > https://lore.kernel.org/all/74e9109a-ac59-49e2-9b1d-d825c9c9f891@wanado=
-o.fr/
-> > Suggested-by: Andy Shevchenko <andy@kernel.org>
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > =C2=A0 drivers/vdpa/solidrun/snet_main.c | 13 +++++++++----
-> > =C2=A0 1 file changed, 9 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/vdpa/solidrun/snet_main.c
-> > b/drivers/vdpa/solidrun/snet_main.c
-> > index 99428a04068d..67235f6190ef 100644
-> > --- a/drivers/vdpa/solidrun/snet_main.c
-> > +++ b/drivers/vdpa/solidrun/snet_main.c
-> > @@ -555,7 +555,7 @@ static const struct vdpa_config_ops
-> > snet_config_ops =3D {
-> > =C2=A0=20
-> > =C2=A0 static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet
-> > *psnet)
-> > =C2=A0 {
-> > -	char name[50];
-> > +	char *name;
-> > =C2=A0=C2=A0	int ret, i, mask =3D 0;
-> > =C2=A0=C2=A0	/* We don't know which BAR will be used to communicate..
-> > =C2=A0=C2=A0	 * We will map every bar with len > 0.
-> > @@ -573,7 +573,10 @@ static int psnet_open_pf_bar(struct pci_dev
-> > *pdev, struct psnet *psnet)
-> > =C2=A0=C2=A0		return -ENODEV;
-> > =C2=A0=C2=A0	}
-> > =C2=A0=20
-> > -	snprintf(name, sizeof(name), "psnet[%s]-bars",
-> > pci_name(pdev));
-> > +	name =3D devm_kasprintf(&pdev->dev, GFP_KERNEL, "psnet[%s]-
-> > bars", pci_name(pdev));
-> > +	if (!name)
-> > +		return -ENOMEM;
-> > +
-> > =C2=A0=C2=A0	ret =3D pcim_iomap_regions(pdev, mask, name);
-> > =C2=A0=C2=A0	if (ret) {
-> > =C2=A0=C2=A0		SNET_ERR(pdev, "Failed to request and map PCI
-> > BARs\n");
-> > @@ -590,10 +593,12 @@ static int psnet_open_pf_bar(struct pci_dev
-> > *pdev, struct psnet *psnet)
-> > =C2=A0=20
-> > =C2=A0 static int snet_open_vf_bar(struct pci_dev *pdev, struct snet
-> > *snet)
-> > =C2=A0 {
-> > -	char name[50];
-> > +	char *name;
-> > =C2=A0=C2=A0	int ret;
-> > =C2=A0=20
-> > -	snprintf(name, sizeof(name), "snet[%s]-bar",
-> > pci_name(pdev));
-> > +	name =3D devm_kasprintf(&pdev->dev, GFP_KERNEL, "psnet[%s]-
-> > bars", pci_name(pdev));
->=20
-> s/psnet/snet/
+On Wed, Aug 21, 2024 at 10:08:43AM -0700, Shashank Babu Chinta Venkata wrote:
+> During high data transmission rates such as 16 GT/s , there is an
+> increased risk of signal loss due to poor channel quality and
+> interference. This can impact receiver's ability to capture signals
+> accurately. Hence, signal compensation is achieved through appropriate
+> lane equalization settings at both transmitter and receiver. This will
+> result in increased PCIe signal strength.
+> 
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.h  | 12 ++++++
+>  drivers/pci/controller/dwc/pcie-qcom-common.c | 37 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  3 ++
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  3 ++
+>  5 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 53c4c8f399c8..50265a2fbb9f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -126,6 +126,18 @@
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+>  
+> +#define GEN3_EQ_CONTROL_OFF			0x8a8
+> +#define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
+> +#define GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE	BIT(4)
+> +#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC	GENMASK(23, 8)
+> +#define GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL	BIT(24)
+> +
+> +#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
+> +#define GEN3_EQ_FMDC_T_MIN_PHASE23		GENMASK(4, 0)
+> +#define GEN3_EQ_FMDC_N_EVALS			GENMASK(9, 5)
+> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA	GENMASK(13, 10)
+> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA	GENMASK(17, 14)
+> +
+>  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+>  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> index 1d8992147bba..e085075557cd 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> @@ -15,6 +15,43 @@
+>  #include "pcie-designware.h"
+>  #include "pcie-qcom-common.h"
+>  
+> +void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
+> +{
+> +	u32 reg;
+> +
+> +	/*
+> +	 * GEN3_RELATED_OFF register is repurposed to apply equalization
+> +	 * settings at various data transmission rates through registers
+> +	 * namely GEN3_EQ_*. RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF
+> +	 * determines data rate for which this equalization settings are
+> +	 * applied.
+> +	 */
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+> +	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+> +	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+> +	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0x1);
+> +	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+> +	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+> +		GEN3_EQ_FMDC_N_EVALS |
+> +		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+> +		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
+> +	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+> +		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+> +		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+> +		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
+> +	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+> +	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
+> +		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
+> +		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
+> +		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
+> +	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
+> +
+>  struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const char *path)
+>  {
+>  	struct icc_path *icc_p;
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
+> index 897fa18e618a..c281582de12c 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-common.h
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
+> @@ -13,3 +13,4 @@
+>  struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const char *path);
+>  int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem, u32 bandwidth);
+>  void qcom_pcie_common_icc_update(struct dw_pcie *pci, struct icc_path *icc_mem);
+> +void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index e1860026e134..823e33a4d745 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -455,6 +455,9 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+>  		goto err_disable_resources;
+>  	}
+>  
+> +	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
 
-sharp eyes ;)
+Abel reported that 'pci->link_gen' is not updated unless the 'max-link-speed'
+property is set in DT on his platform. I fixed that issue locally and this
+series will depend on those patches.
 
-Thx,
-P.
+Provided that you are having issues with your build environment as discussed
+offline, I'd like to take over the series to combine my patches and address the
+review comments. Let me know if you are OK with this or not.
 
->=20
-> > +	if (!name)
-> > +		return -ENOMEM;
-> > =C2=A0=C2=A0	/* Request and map BAR */
-> > =C2=A0=C2=A0	ret =3D pcim_iomap_regions(pdev, BIT(snet->psnet-
-> > >cfg.vf_bar), name);
-> > =C2=A0=C2=A0	if (ret) {
->=20
+- Mani
 
+> +		qcom_pcie_common_set_16gt_eq_settings(pci);
+> +
+>  	/*
+>  	 * The physical address of the MMIO region which is exposed as the BAR
+>  	 * should be written to MHI BASE registers.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index ee32590f1506..829b34391af1 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -280,6 +280,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+>  {
+>  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+>  
+> +	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
+> +		qcom_pcie_common_set_16gt_eq_settings(pci);
+> +
+>  	/* Enable Link Training state machine */
+>  	if (pcie->cfg->ops->ltssm_enable)
+>  		pcie->cfg->ops->ltssm_enable(pcie);
+> -- 
+> 2.46.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
