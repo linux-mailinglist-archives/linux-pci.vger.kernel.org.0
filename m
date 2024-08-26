@@ -1,137 +1,176 @@
-Return-Path: <linux-pci+bounces-12191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0630595ECA7
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:05:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5265E95ECB4
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:07:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B7821C20D62
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:05:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84F131C21721
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD3C7404B;
-	Mon, 26 Aug 2024 09:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F116F13AD3F;
+	Mon, 26 Aug 2024 09:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wistron.com header.i=@wistron.com header.b="LVgYUfzO"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KAfhreAF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx08-00575502.pphosted.com (mx08-00575502.pphosted.com [143.55.149.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6013C84047
-	for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 09:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=143.55.149.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD19B145A03
+	for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 09:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724663133; cv=none; b=BopP6kI66oWND6D+GAfTjJlo1RprRdwyLMRKvM2HV/xgHvnzNruE2gfRHb86cvoI13Eehs9vTGrjAFkiEkZ30dvWH1Y3XpCoj6XDtO/A+kn9zVLHre/1UJvdbiJrjHb4cDs48wXB/htASFCHyYKhBlm2cFIvSR+SqfmAs/4rENs=
+	t=1724663251; cv=none; b=COpbpSyLNRbmO7HwxfTPaJ5oy9kQ1yjnSFSF1sKHvF39mVpu59o4NK5HYhvJcudSa67Pf6NpaFYZvLQ7aU7UsvskGrbqeDyEWAnjWxDBsxuW6OlN2oTQGpzEGFWJjOQNz6HxJZfW9SlCVUTVqAJqzmr2OXoXDMMX7PHnGR3migg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724663133; c=relaxed/simple;
-	bh=MxDcoU4xfXf34O226iO4nTxxURjv2FjOwdCqkDH/FJc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=BEEHJjWUZZJh6uK4G2O+qqU7Z1HWIGrr7z/5DJ2PWn+SCGRUvrHBRq5MIm5pFh00XTZcR2CvpdP/+iwjgMK1fo8Lz8coAXU+8Ng/18gfQJ8OLcqr1jZsoOetlUW+QrM/kpeaqP0nzQDf04VX7IxgxSUYs+G2zTH4qKZJo7lf3Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wistron.com; spf=pass smtp.mailfrom=wistron.com; dkim=pass (2048-bit key) header.d=wistron.com header.i=@wistron.com header.b=LVgYUfzO; arc=none smtp.client-ip=143.55.149.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wistron.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wistron.com
-Received: from pps.filterd (m0320709.ppops.net [127.0.0.1])
-	by mx08-00575502.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47PNLMXN000556;
-	Mon, 26 Aug 2024 17:05:27 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wistron.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=POD111722; bh=
-	MxDcoU4xfXf34O226iO4nTxxURjv2FjOwdCqkDH/FJc=; b=LVgYUfzOBFgu10jf
-	jkqOsQKfdYsIotmPGuVGfgIiiDg/EjAvJN9NbIboFH2prV8vghju/POFlv+5OnsY
-	PaUdifFU/ivz7b0X56cityeVohNRHus0aSyfi3cRsitih+s/G/HeFDL+V2wwcLOH
-	iVFDL06aAla0k1JpjYsNnPefqzZ2dTYpg6mkXNq7GhN1gFTZm5cBCwSNLsDgITO3
-	l8zHcCks0nJcH+6QosXxFmw2KAr8QFkTTJhmeyc7sCpmriuqtQ9wmRohgZ4XLrMg
-	cdFveoOGkAzscmBhmKLMMJ70S42w4/QQkQ5sLfZgjSiRz9bV55cBVozX5ChuDYKt
-	HqfU2A==
-Received: from exchapp02.whq.wistron ([103.200.3.46])
-	by mx08-00575502.pphosted.com (PPS) with ESMTPS id 417m8a2cwn-48
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 26 Aug 2024 17:05:26 +0800 (WST)
-Received: from EXCHAPP02.whq.wistron (10.37.38.25) by EXCHAPP02.whq.wistron
- (10.37.38.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Mon, 26 Aug
- 2024 17:05:21 +0800
-Received: from EXCHAPP02.whq.wistron ([fe80::a868:98a2:1a02:a09e]) by
- EXCHAPP02.whq.wistron ([fe80::a868:98a2:1a02:a09e%5]) with mapi id
- 15.01.2507.037; Mon, 26 Aug 2024 17:05:21 +0800
-From: <Erin_Tsao@wistron.com>
-To: <mj@ucw.cz>
-CC: <linux-pci@vger.kernel.org>
-Subject: RE: Issue about PCI physical slot fetch incorrect number
-Thread-Topic: Issue about PCI physical slot fetch incorrect number
-Thread-Index: Adr1PvX6/qcTVDyjSamqZ+r0sIAGuAAC4PIAAJMcP4A=
-Date: Mon, 26 Aug 2024 09:05:21 +0000
-Message-ID: <706e4367f1724a9cad739a1b88618791@wistron.com>
-References: <a600fc09c06d4ca28b045668ad1e63cb@wistron.com>
- <mj+md-20240823.185024.10254.nikam@ucw.cz>
-In-Reply-To: <mj+md-20240823.185024.10254.nikam@ucw.cz>
-Accept-Language: en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-snts-smtp: D6E396C5ED51EA47370597927C3400C6FE1C00668DB2E2D815AC84944C5089422000:8
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1724663251; c=relaxed/simple;
+	bh=lj01/f2LiyRrUvTSa8/RM+ENuLL5BYJU8hMdCYL8sIg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0PZ9cbyD87QPAhbQDVEvJR8DXjbSHbn34Z7jkSh7mYYY/3mcXx3DAeUjDd74cYi/nyQLZvwYyyjbJdLfXRMgX2qHeVs3VrbRPcshAl7YyPEvoh5terj0MuLlyk+YSvdJPWH/y5wqZwAQ3gLy11NKkbjM4aNromk6zYhdlWZi/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KAfhreAF; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f3f163e379so64275161fa.3
+        for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 02:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724663248; x=1725268048; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UqD5UWcEcVPtLKNughX5xFAsztARfJbyIdaLj7krJ48=;
+        b=KAfhreAFNj29HjT2HRVug5yGbYqg+uXm/EbHaYsfpbUSmXpiiMp08OJpvLccNsKg6z
+         53wRQAOco+Vc83bcSDlU7TzqK67Ajf03FnhkGDXqkGBA92jGKv5eM7HrWhJmj2Ke/GRK
+         3naiX76Odxc44hk3Ag9NgW0nAmv4o1HaTXaCAo2yAG5/KLoU3/BF3ttU1XQldTxODXv2
+         EW58aG/icuOW58s1stk5ivp43KqABTq77vJBj352iqoFbkskE+eJw8ZLJhg6mG8NsJpj
+         e0bcY6FkT/RszqswcmBql1PCylwC+LPG3I8fKde+hmE1gPlpSxR0SfnvubaNW/OK4Xns
+         6tdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724663248; x=1725268048;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UqD5UWcEcVPtLKNughX5xFAsztARfJbyIdaLj7krJ48=;
+        b=Wqvb76tzzzQ0hlTCCEeeuwswne84NoN3okXOi/rVON+ZUAqVdjPPwptb46DsPo/o5L
+         X4BUsqezLaiTeU3rawJNkokldl/dC3hjUfJKJ2VF+Jq2aNUp/fCzcRxdvNAY0kE/6swg
+         hXUKK04vkAe+7u9Df9c15FZ9D2s0ygrsRJ18UAwsNTvgywAPfoAQauLcdvxnYBh17PDL
+         Rp5PAD1bZHHsgcsKdZRRxvQiXMykjnFkYWFVNGrjphtPxHjnJodZFPTP8/jYi6/c2X3N
+         9Zd+/k5wOUTQA+TpCDjO9/knqCLlfppsq6M0jPihOgTQM/UpTE4Vy6sdaX7dXWybYu+A
+         sZ2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWJF5/s1mmPoV4Et/YMqM8zNx60p1PcPY4qLrYx4gGGMV9Sp/vz6IljReX19+HYZtzN24TlPL+0B9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqIcM+vqxpWB4vib0FxGG2onvPrhIj8V+6uHgipn4XEnPPpIft
+	5O8mtV22mB6dvDhMigGPuCuHrnW8JDLpsNGd1olS7xX9of0H7NM9IOIdhsKe1jc=
+X-Google-Smtp-Source: AGHT+IEK0yN2RYKBDuaStUQnXKZRjXxJWE9pErYm6IieseugH4NhuZzdiuxipurv3igkJJwF0aMRAw==
+X-Received: by 2002:a2e:b892:0:b0:2f3:cf43:c2a8 with SMTP id 38308e7fff4ca-2f4f579e8eamr76624181fa.42.1724663247306;
+        Mon, 26 Aug 2024 02:07:27 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f2205e1sm652753666b.12.2024.08.26.02.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2024 02:07:26 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 26 Aug 2024 11:07:33 +0200
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <ZsxF1ZvsrJbmWzQH@apocalypse>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <2024082420-secluding-rearrange-fcfd@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-GUID: WUX0Orq9L5JfHHhSw-fa3zA9-3Mzmo4m
-X-Proofpoint-ORIG-GUID: WUX0Orq9L5JfHHhSw-fa3zA9-3Mzmo4m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-23_14,2024-08-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 bulkscore=0 clxscore=1031 malwarescore=0 impostorscore=0
- adultscore=0 phishscore=0 mlxlogscore=700 suspectscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408260071
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024082420-secluding-rearrange-fcfd@gregkh>
 
-SGkgTWFydGluLA0KVGhhbmtzIGZvciBoZWxwaW5nIG1lIGZvcndhcmRpbmcgdGhlIG1haWwuDQpI
-b3BlIHRvIGhhdmUgZ29vZCBuZXdzIGZyb20gdGhlbS4NCg0KV2lzaCB5b3UgaGF2ZSBhIGdvb2Qg
-ZGF5IQ0KDQpCUiwNCkVyaW4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IE1h
-cnRpbiBNYXJlxaEgPG1qQHVjdy5jej4gDQpTZW50OiBTYXR1cmRheSwgQXVndXN0IDI0LCAyMDI0
-IDI6NTIgQU0NClRvOiBFcmluIFRzYW8vV0hRL1dpc3Ryb24gPEVyaW5fVHNhb0B3aXN0cm9uLmNv
-bT4NCkNjOiBMaW51eC1QQ0kgTWFpbGluZyBMaXN0IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
-Pg0KU3ViamVjdDogUmU6IElzc3VlIGFib3V0IFBDSSBwaHlzaWNhbCBzbG90IGZldGNoIGluY29y
-cmVjdCBudW1iZXINCg0KSGkhDQoNCj4gVGhpcyBpcyBFcmluIGZyb20gVGFpd2FuLiBJIGhhdmUg
-YSBxdWVzdGlvbiBhYm91dCBwaHlzaWNhbCBzbG90IG51bWJlci4NCj4gQ3VycmVudGx5IHdlIGFy
-ZSB3b3JraW5nIG9uIHRoZSBQQ0lFIHNsb3QgbnVtYmVyIGFzc2lnbmluZyBieSBQQ0lFIHN3aXRj
-aC4gSW4gdGhlIFBDSWUgc2xvdCBhc3NpZ25tZW50IHByb2Nlc3MsIHRoZSBzbG90IG51bWJlcnMg
-YXJlIGFzc2lnbmVkIHRvIGJyaWRnZXMgZmlyc3QsIGFuZCB0aGVuIHRoZSBlbmQgZGV2aWNlcyBm
-ZXRjaCB0aGUgc2xvdCBJRCBmcm9tIHRoZSBicmlkZ2UgaW4gdGhlIHVwcGVyIGxheWVyLg0KPiAN
-Cj4gSSBoYXZlIG9ic2VydmVkIHRoYXQgdW5kZXIgb3VyIFBDSUUgc3dpdGNoLCBHUFVzIHdpbGwg
-Y3JlYXRlIGEgYnJpZGdlIGJlZm9yZSByZWFjaGluZyB0aGUgZW5kIGRldmljZS4gSWYgR1BVcyBh
-bHNvIGZldGNoIHRoZSBzbG90IElEIGZyb20gdGhlIHVwcGVyIGJyaWRnZSBsYXllciwgdGhleSBt
-YXkgcmV0cmlldmUgaW5jb3JyZWN0IHZhbHVlcy4NCj4gDQo+IE91ciBHUFUgd2lsbCBnZXQgdGhl
-IHBoeXNpY2FsIHNsb3QgbnVtYmVyIHdpdGggbnVtYmVyIOKAnDDigJ0sIGFuZCBzaG93IHRoZSBz
-bG90IG51bWJlciDigJww4oCd44CB4oCdMC0x4oCdICwgZXRjLg0KPiBNYXkgSSBhc2sNCj4gDQo+
-ICAgMS4gIFdoeSBHUFUgd2lsbCBmZXRjaCB0aGUgc2xvdCBudW1iZXIg4oCcMOKAnT8gSXMgdGhl
-IHNsb3QgbnVtYmVyIGFzc2lnbmVkIHRvIEdQVSByZWxhdGVkIHRvIGFueSByZWdpc3Rlcj8gT3Ig
-Y2FuIHdlIHNldCBhbnkgYml0IHRvIGZldGNoIHRoZSByaWdodCBudW1iZXI/DQo+ICAgMi4gIElz
-IHRoZXJlIGFueSBwb3NzaWJsZSBmb3IgdXMgbm90IHRvIHNob3cgdGhlIHBoeXNpY2FsIHNsb3Qg
-bnVtYmVyIG9mIEdQVT8NCj4gDQo+IEkgaGF2ZSBjaGVja2VkIHdpdGggdGhlIGNvZGUgb24gdGhl
-IGdpdCwgdW5mb3J0dW5hdGVseSBJIGRpZG7igJl0IG9idGFpbiBhbnkgYW5zd2VyLg0KPiBJdCB3
-aWxsIHJlYWxseSBiZSBoZWxwZnVsIHRvIGdldCB0aGUgcmVzcG9uc2UgZnJvbSB5b3UuDQo+IEhv
-cGUgdG8gaGVhciBmcm9tIHlvdSBzb29uLCB0aGFua3MgaW4gYWR2YW5jZS4NCg0KSXQncyBhIGxv
-bmcgbG9uZyB0aW1lIHNpbmNlIEkgd2FzIHRoZSBtYWludGFpbmVyIG9mIHRoZSBQQ0kgbGF5ZXIg
-aW4gdGhlIGtlcm5lbC4gTm93IEkgbWFpbnRhaW4ganVzdCB0aGUgUENJIHV0aWxpdGllcyB3aGlj
-aCBkaXNwbGF5IHdoYXRldmVyIHRoZSBrZXJuZWwgdGVsbHMgdGhlbS4NCg0KSSBhbSBmb3J3YXJk
-aW5nIHlvdXIgcXVlc3Rpb24gdG8gdGhlIGxpbnV4LXBjaSBtYWlsaW5nIGxpc3Qgd2hlcmUgaXQg
-aG9wZWZ1bGx5IGZpbmRzIGEgYmV0dGVyIGF1ZGllbmNlLg0KDQoJCQkJTWFydGluDQoKLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tClRoaXMgZW1haWwgY29udGFp
-bnMgY29uZmlkZW50aWFsIG9yIGxlZ2FsbHkgcHJpdmlsZWdlZCBpbmZvcm1hdGlvbiBhbmQgaXMg
-Zm9yIHRoZSBzb2xlIHVzZSBvZiBpdHMgaW50ZW5kZWQgcmVjaXBpZW50LgpBbnkgdW5hdXRob3Jp
-emVkIHJldmlldywgdXNlLCBjb3B5aW5nIG9yIGRpc3RyaWJ1dGlvbiBvZiB0aGlzIGVtYWlsIG9y
-IHRoZSBjb250ZW50IG9mIHRoaXMgZW1haWwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4KSWYgeW91
-IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgeW91IG1heSByZXBseSB0byB0aGUgc2Vu
-ZGVyIGFuZCBzaG91bGQgZGVsZXRlIHRoaXMgZS1tYWlsIGltbWVkaWF0ZWx5LgotLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+Hi Greg,
+
+On 09:53 Sat 24 Aug     , Greg Kroah-Hartman wrote:
+> On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2610,6 +2610,9 @@
+> >  #define PCI_VENDOR_ID_TEKRAM		0x1de1
+> >  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
+> >  
+> > +#define PCI_VENDOR_ID_RPI		0x1de4
+> > +#define PCI_DEVICE_ID_RP1_C0		0x0001
+> 
+> Minor thing, but please read the top of this file.  As you aren't using
+> these values anywhere outside of this one driver, there's no need to add
+> these values to pci_ids.h.  Just keep them local to the .c file itself.
+>
+
+Thanks, I've read the top part of that file. The reason I've declared those
+two macroes in pci_ids.h is that I'm using them both in the
+main driver (rp1-pci.c) and in drivers/pci/quirks.c.
+
+I suppose I could move DECLARE_PCI_FIXUP_FINAL() inside rp1-pci.c to keep
+those two defines local, but judging from the number of entries of
+DECLARE_PCI_FIXP_FINAL found in quirks.c versus the occurences found in
+respective driver, I assumed the preferred way was to place it in quirks.c.
+
+Many thanks,
+Andrea
+
+ 
+> thanks,
+> 
+> greg k-h
 
