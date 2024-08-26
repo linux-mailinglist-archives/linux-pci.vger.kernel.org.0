@@ -1,176 +1,187 @@
-Return-Path: <linux-pci+bounces-12192-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12194-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5265E95ECB4
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:07:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62DC595ECE9
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 11:17:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84F131C21721
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:07:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A0972819AA
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 09:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F116F13AD3F;
-	Mon, 26 Aug 2024 09:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E0413CA9C;
+	Mon, 26 Aug 2024 09:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KAfhreAF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g7vqHooc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD19B145A03
-	for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 09:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11E58172A;
+	Mon, 26 Aug 2024 09:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724663251; cv=none; b=COpbpSyLNRbmO7HwxfTPaJ5oy9kQ1yjnSFSF1sKHvF39mVpu59o4NK5HYhvJcudSa67Pf6NpaFYZvLQ7aU7UsvskGrbqeDyEWAnjWxDBsxuW6OlN2oTQGpzEGFWJjOQNz6HxJZfW9SlCVUTVqAJqzmr2OXoXDMMX7PHnGR3migg=
+	t=1724663821; cv=none; b=UGJM6aQgF/4FYMsbM1FYle+ceQOBg5eGBuDs2I83d53RXHjXl7POXgQMaszioq4dGXxTN24Q7Xc3fCXjkiSso+N6D1xTXkVx8YMvKtmsj7kobRj+ciKMPaVgQuvvfsbVL2bj0cFNub70QrYC8QNpXKrTml9TJtdOFDbQnGpxiCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724663251; c=relaxed/simple;
-	bh=lj01/f2LiyRrUvTSa8/RM+ENuLL5BYJU8hMdCYL8sIg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0PZ9cbyD87QPAhbQDVEvJR8DXjbSHbn34Z7jkSh7mYYY/3mcXx3DAeUjDd74cYi/nyQLZvwYyyjbJdLfXRMgX2qHeVs3VrbRPcshAl7YyPEvoh5terj0MuLlyk+YSvdJPWH/y5wqZwAQ3gLy11NKkbjM4aNromk6zYhdlWZi/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KAfhreAF; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f3f163e379so64275161fa.3
-        for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 02:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724663248; x=1725268048; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UqD5UWcEcVPtLKNughX5xFAsztARfJbyIdaLj7krJ48=;
-        b=KAfhreAFNj29HjT2HRVug5yGbYqg+uXm/EbHaYsfpbUSmXpiiMp08OJpvLccNsKg6z
-         53wRQAOco+Vc83bcSDlU7TzqK67Ajf03FnhkGDXqkGBA92jGKv5eM7HrWhJmj2Ke/GRK
-         3naiX76Odxc44hk3Ag9NgW0nAmv4o1HaTXaCAo2yAG5/KLoU3/BF3ttU1XQldTxODXv2
-         EW58aG/icuOW58s1stk5ivp43KqABTq77vJBj352iqoFbkskE+eJw8ZLJhg6mG8NsJpj
-         e0bcY6FkT/RszqswcmBql1PCylwC+LPG3I8fKde+hmE1gPlpSxR0SfnvubaNW/OK4Xns
-         6tdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724663248; x=1725268048;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UqD5UWcEcVPtLKNughX5xFAsztARfJbyIdaLj7krJ48=;
-        b=Wqvb76tzzzQ0hlTCCEeeuwswne84NoN3okXOi/rVON+ZUAqVdjPPwptb46DsPo/o5L
-         X4BUsqezLaiTeU3rawJNkokldl/dC3hjUfJKJ2VF+Jq2aNUp/fCzcRxdvNAY0kE/6swg
-         hXUKK04vkAe+7u9Df9c15FZ9D2s0ygrsRJ18UAwsNTvgywAPfoAQauLcdvxnYBh17PDL
-         Rp5PAD1bZHHsgcsKdZRRxvQiXMykjnFkYWFVNGrjphtPxHjnJodZFPTP8/jYi6/c2X3N
-         9Zd+/k5wOUTQA+TpCDjO9/knqCLlfppsq6M0jPihOgTQM/UpTE4Vy6sdaX7dXWybYu+A
-         sZ2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJF5/s1mmPoV4Et/YMqM8zNx60p1PcPY4qLrYx4gGGMV9Sp/vz6IljReX19+HYZtzN24TlPL+0B9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqIcM+vqxpWB4vib0FxGG2onvPrhIj8V+6uHgipn4XEnPPpIft
-	5O8mtV22mB6dvDhMigGPuCuHrnW8JDLpsNGd1olS7xX9of0H7NM9IOIdhsKe1jc=
-X-Google-Smtp-Source: AGHT+IEK0yN2RYKBDuaStUQnXKZRjXxJWE9pErYm6IieseugH4NhuZzdiuxipurv3igkJJwF0aMRAw==
-X-Received: by 2002:a2e:b892:0:b0:2f3:cf43:c2a8 with SMTP id 38308e7fff4ca-2f4f579e8eamr76624181fa.42.1724663247306;
-        Mon, 26 Aug 2024 02:07:27 -0700 (PDT)
-Received: from localhost ([87.13.33.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f2205e1sm652753666b.12.2024.08.26.02.07.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2024 02:07:26 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 26 Aug 2024 11:07:33 +0200
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <ZsxF1ZvsrJbmWzQH@apocalypse>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <2024082420-secluding-rearrange-fcfd@gregkh>
+	s=arc-20240116; t=1724663821; c=relaxed/simple;
+	bh=ucDCZHH9q43sDJFvaNUh5wuUi566REaO2LKCT0DkCAg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SyKimAkACJGv+9KyoSlgdbDtGje2q6I/N54wvViKWsl8yBDkIvmgj0ACKRugPQ264XXbM0mYEdi8XnpXeUin4Dl8w7xVFDAur3vDihCoJI07OQrU+IV++81YKzQh0gV/c/HCuvQzyQvXsY7qGCLyljIEz9Ldy2QD5fDkz29J7Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g7vqHooc; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724663820; x=1756199820;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ucDCZHH9q43sDJFvaNUh5wuUi566REaO2LKCT0DkCAg=;
+  b=g7vqHoocBcalJqDNgOK0+nHSeqEM5FCNiuRy3nhD9FBauCx5SW5r99d9
+   Q/ZoXTa1aO+PE5qw3fl8KsmZPRMvQI5eADH+XgxZaaUqesvoWrTny0jC+
+   eLPY2R6uM1rd9C4vtuuTyGFEsftQO5vUR0F/3nysdq2r0mcD2bj6od69B
+   YzCSu5NDdP0L9MKiTsZbzIanid7apy47OlqCXw7XzPxzQGYivLCxs3gSF
+   D0NpOUXDNJ1PU/XoMld1eHIXpSX92IngbJzUoocqynfSxBmXDGZdhQmNV
+   3cdT0phbHcC2hRwHXId3TwbBrrjFkrimW9R/WCd6s3WQzJY9BugtGQ3GW
+   w==;
+X-CSE-ConnectionGUID: VaLPiWrWS1e86g5acCPPSQ==
+X-CSE-MsgGUID: 5ZXgTWc3RyKTjYTP4sNT6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11175"; a="23229363"
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="23229363"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 02:16:59 -0700
+X-CSE-ConnectionGUID: etMzg08HQ0KODBTDShMejA==
+X-CSE-MsgGUID: r5Cz6iMDTRu6Bbf26H+RvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="93253478"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.174])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 02:16:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Aug 2024 12:16:51 +0300 (EEST)
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+cc: Matthew W Carlis <mattc@purestorage.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] PCI: Revert to the original speed after PCIe
+ failed link retraining
+In-Reply-To: <alpine.DEB.2.21.2408251412590.30766@angie.orcam.me.uk>
+Message-ID: <db382712-8b71-3f1c-bffd-7b35921704c7@linux.intel.com>
+References: <alpine.DEB.2.21.2408251354540.30766@angie.orcam.me.uk> <alpine.DEB.2.21.2408251412590.30766@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024082420-secluding-rearrange-fcfd@gregkh>
+Content-Type: multipart/mixed; boundary="8323328-639461899-1724663811=:1013"
 
-Hi Greg,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 09:53 Sat 24 Aug     , Greg Kroah-Hartman wrote:
-> On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -2610,6 +2610,9 @@
-> >  #define PCI_VENDOR_ID_TEKRAM		0x1de1
-> >  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
-> >  
-> > +#define PCI_VENDOR_ID_RPI		0x1de4
-> > +#define PCI_DEVICE_ID_RP1_C0		0x0001
-> 
-> Minor thing, but please read the top of this file.  As you aren't using
-> these values anywhere outside of this one driver, there's no need to add
-> these values to pci_ids.h.  Just keep them local to the .c file itself.
->
+--8323328-639461899-1724663811=:1013
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thanks, I've read the top part of that file. The reason I've declared those
-two macroes in pci_ids.h is that I'm using them both in the
-main driver (rp1-pci.c) and in drivers/pci/quirks.c.
+On Sun, 25 Aug 2024, Maciej W. Rozycki wrote:
 
-I suppose I could move DECLARE_PCI_FIXUP_FINAL() inside rp1-pci.c to keep
-those two defines local, but judging from the number of entries of
-DECLARE_PCI_FIXP_FINAL found in quirks.c versus the occurences found in
-respective driver, I assumed the preferred way was to place it in quirks.c.
+> When `pcie_failed_link_retrain' has failed to retrain the link by hand=20
+> it leaves the link speed restricted to 2.5GT/s, which will then affect=20
+> any device that has been plugged in later on, which may not suffer from=
+=20
+> the problem that caused the speed restriction to have been attempted. =20
+> Consequently such a downstream device will suffer from an unnecessary=20
+> communication throughput limitation and therefore performance loss.
+>=20
+> Remove the speed restriction then and revert the Link Control 2 register=
+=20
+> to its original state if link retraining with the speed restriction in=20
+> place has failed.  Retrain the link again afterwards so as to remove any=
+=20
+> residual state, waiting on LT rather than DLLLA to avoid an excessive=20
+> delay and ignoring the result as this training is supposed to fail anyway=
+=2E
+>=20
+> Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+> Reported-by: Matthew W Carlis <mattc@purestorage.com>
+> Link: https://lore.kernel.org/r/20240806000659.30859-1-mattc@purestorage.=
+com/
+> Link: https://lore.kernel.org/r/20240722193407.23255-1-mattc@purestorage.=
+com/
+> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> Cc: stable@vger.kernel.org # v6.5+
+> ---
+> Changes from v2:
+>=20
+> - Wait on LT rather than DLLLA with clean-up retraining with the speed=20
+>   restriction lifted, so as to avoid an excessive delay as it's supposed=
+=20
+>   to fail anyway.
+>=20
+> New change in v2.
+> ---
+>  drivers/pci/quirks.c |   11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> linux-pcie-failed-link-retrain-fail-unclamp.diff
+> Index: linux-macro/drivers/pci/quirks.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-macro.orig/drivers/pci/quirks.c
+> +++ linux-macro/drivers/pci/quirks.c
+> @@ -66,7 +66,7 @@
+>   * apply this erratum workaround to any downstream ports as long as they
+>   * support Link Active reporting and have the Link Control 2 register.
+>   * Restrict the speed to 2.5GT/s then with the Target Link Speed field,
+> - * request a retrain and wait 200ms for the data link to go up.
+> + * request a retrain and check the result.
+>   *
+>   * If this turns out successful and we know by the Vendor:Device ID it i=
+s
+>   * safe to do so, then lift the restriction, letting the devices negotia=
+te
+> @@ -74,6 +74,10 @@
+>   * firmware may have already arranged and lift it with ports that alread=
+y
+>   * report their data link being up.
+>   *
+> + * Otherwise revert the speed to the original setting and request a retr=
+ain
+> + * again to remove any residual state, ignoring the result as it's suppo=
+sed
+> + * to fail anyway.
+> + *
+>   * Return TRUE if the link has been successfully retrained, otherwise FA=
+LSE.
+>   */
+>  bool pcie_failed_link_retrain(struct pci_dev *dev)
+> @@ -92,6 +96,8 @@ bool pcie_failed_link_retrain(struct pci
+>  =09pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+>  =09if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) =3D=3D
+>  =09    PCI_EXP_LNKSTA_LBMS) {
+> +=09=09u16 oldlnkctl2 =3D lnkctl2;
+> +
+>  =09=09pci_info(dev, "broken device, retraining non-functional downstream=
+ link at 2.5GT/s\n");
+> =20
+>  =09=09lnkctl2 &=3D ~PCI_EXP_LNKCTL2_TLS;
+> @@ -100,6 +106,9 @@ bool pcie_failed_link_retrain(struct pci
+> =20
+>  =09=09if (pcie_retrain_link(dev, false)) {
+>  =09=09=09pci_info(dev, "retraining failed\n");
+> +=09=09=09pcie_capability_write_word(dev, PCI_EXP_LNKCTL2,
+> +=09=09=09=09=09=09   oldlnkctl2);
+> +=09=09=09pcie_retrain_link(dev, true);
 
-Many thanks,
-Andrea
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
- 
-> thanks,
-> 
-> greg k-h
+--=20
+ i.
+
+
+--8323328-639461899-1724663811=:1013--
 
