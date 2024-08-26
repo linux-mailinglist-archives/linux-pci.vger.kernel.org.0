@@ -1,181 +1,317 @@
-Return-Path: <linux-pci+bounces-12200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11DDF95F058
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 14:03:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D90B395F104
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 14:14:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66FC4B20BBA
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 12:03:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 670311F22AA8
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Aug 2024 12:14:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA35156241;
-	Mon, 26 Aug 2024 12:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE80F18D65B;
+	Mon, 26 Aug 2024 12:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="l6iJXWjC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYPHoJVh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B316E153824
-	for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 12:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C12172798;
+	Mon, 26 Aug 2024 12:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724673814; cv=none; b=j1y7OTdOYMMRwAoZs6wzGlmij6xAcuZekanOomAu2HS9e3t7oDQDZE+S8EtfYEzNyUQ+mbUj+1nJd/rmBfS9ZyqxWujSmpoaK3Ct8ZMzAtUUrH0b7OLJh1ucOCuTRvHg5IBmEEsMwrBq4yEE9a9jAEgRUcB+CXRSUczYT7lVG/g=
+	t=1724674257; cv=none; b=B1GSpu4en7Vw4eNHQQ9GzmfGn+HwCYV79rgxDskhbDAP/x/tvkPPdeIz+P+yRRaGVumb+dI1YadUYLD7YnYBj3bPqlHsFb26M7dMNeOQvxWQh3Kjoc/XRxbbhXWBu5lYeyh1DkcC9jH+iT7sCuGZGJGWaJ0Ua9K3Ce7gzJnxdNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724673814; c=relaxed/simple;
-	bh=snM5Rm0gMzlD08AvqsH0+c3YOt73h0syTAjhL8mg4zU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GgOkC/UepIMo6sWT62TRPzuCiN1/KQ7ex5PnhXkCS5XPE3m94Jiq2NlA/q2F3RS68Aall0lqCzoSFGuezBsvTSDZ02RI80iJcqruHlUOwYZAe4yj9+Iq+VgqxSrcjWPkx649uLlnIC2EarfLcL+UPnUqsBTsPUOsVNYUUZG1ffY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=l6iJXWjC; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 851603F327
-	for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 12:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1724673809;
-	bh=ajfaokdeZHRMyKn6mvHqNgguJUu0Q4E54DToJ/+4STQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=l6iJXWjC15i57Dy0NGNJVULqcbC34v2Jx983q8ssp0iwHzcXrM9g5K5Yyj0vhvCVT
-	 pZESuBQpya1mVE7PMbMkoG3pLXndp9TxLEQhT9lBAvNgzSUrhyPvSOQKyNz5IG5nlE
-	 q2VYGWVoOqkrD2h0l4ItlXNCK1OkzjDpUSBbm+JsmCSXqXJeoH+3wxUR315B3Gw6xT
-	 zY4VepLC3O9eqWFSvwnGKo9Za+C/519nsT4daXZZcztBlzO1Vs5JdSoB023MKwetcY
-	 5K537UObarwAierriG9ZB4YqlOZSvHEX+lGsWCoTUMtD3drvD5bTv1q073IdIkrlGE
-	 8LgMviDbDHYfQ==
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2d5dafe951eso4742042a91.3
-        for <linux-pci@vger.kernel.org>; Mon, 26 Aug 2024 05:03:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724673808; x=1725278608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ajfaokdeZHRMyKn6mvHqNgguJUu0Q4E54DToJ/+4STQ=;
-        b=N94SUBNFt64L0bTz5/uZKrENr/EhyOG0WWHjUd8zRTdI+jKUA0aKH4GimfbC6xoZ8X
-         Ons2tlfQyYEkSwfwHqNbSgV7l+NByO8mxV80APwLLSdsy0vmMpVitNCes3oW7LHJ9olz
-         uhas4ZQf+uEkYcXj6AeNUu8c5UQOp7pZYNeO5/WvY5E/DJ5caRHdSzk9YkQ8XRp4b0eq
-         vXntQqEFBmLetPv503VzPZ0IOF2qtjSmkL0BrrQOhUt9ycCyExvZEp9zt5ahrqyPXUe9
-         OkK/g3GnGTbZ50AMDcvCSm0ZzFw4LPcGZO8RVf1HWg/NZU6m54uxuJes0YS1TO8MRsAA
-         DN4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ/AE/rP36fnn/4eh18IFvQrDkgv5ZFn5PbMYFkI1rLdsnjhrUn8q78l7TZLFui2NM/4u3qPL5MyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwijIqEl7h2xswIoEToYWzaLsXK1veN8Y2kz44nTR3A/3W1Nwb/
-	F1ZGioefTsTTCavgpKk9vCd1R0+7eZr1WQJzHif/l/5IQjHB/Q1q4pn34dlSS2pi+r0q7V/T7IO
-	gIqtiYOmgNTvECqJlnN+PP1bnEHXd0FoeNimvXCRqeZaSpLXe6HZ7B7uLo00CxnWx/w5bBd99Zr
-	2hekydsCql8WNdgUOJtp5YiRhSmYyCz/P9yt1tAdzXUA/oJZEEwDulvRrD
-X-Received: by 2002:a17:90b:3144:b0:2d3:c8ed:f0be with SMTP id 98e67ed59e1d1-2d646d0ae37mr8318604a91.28.1724673807971;
-        Mon, 26 Aug 2024 05:03:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxdSvdFt9fVbKAhweGqLpVEbbex/kMjEPiDlJ1rpZiXNZAj2f5L37oaVUXyQSovQsgnz8J0WOkVwo6b700X+g=
-X-Received: by 2002:a17:90b:3144:b0:2d3:c8ed:f0be with SMTP id
- 98e67ed59e1d1-2d646d0ae37mr8318575a91.28.1724673807557; Mon, 26 Aug 2024
- 05:03:27 -0700 (PDT)
+	s=arc-20240116; t=1724674257; c=relaxed/simple;
+	bh=XoNvGZEd0jn83AcWVePGvHhp0KOl9p5SiFsphjRpmvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msSiAX9NiI0yOM4HqgTEp0qun8cjK9iUHVjX6syTcFSHhnzxpWXeaW3AouNNa+llErLwDGexkesrnobznFycZV3Em3cM0+8klJLBc7XijK8GuwUR5/A1diQD+UC4UIVyJ4MQDgJOngRua+VetwSMI+zW/CGVUQE3HxTDbI2n2Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYPHoJVh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F30C4DE1A;
+	Mon, 26 Aug 2024 12:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724674257;
+	bh=XoNvGZEd0jn83AcWVePGvHhp0KOl9p5SiFsphjRpmvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BYPHoJVhVrTUQVg624ssVlJGmQJD/+H8HzNNE9dKy7zrKQjG3Gxarcg37xJf+jA1/
+	 P9MkH+KVzhMNWFDHOw1MTPvGwZgV0LWc69OZsNOTEC0sR9yXM2oYk3a8s9Y4+y6g+E
+	 T6hh5FJicCaukVpFSoNdRoeaWLbq/OcWXtFaKkhnev4zsTGQv38nr5ibwRsPtRvpRV
+	 dkGV6iuaIH3rr307QJSOMHt16Z0lociUZZoIzFp8qR/IAN4fZ57NAgEvKT1p1DLLPP
+	 cnT4rLLVbS/xuQSGdOep35JXh7p1meEkz97rSTuU7u61Xu1Ys6VTVJLuetQXrKMZR3
+	 9rOf/IXrRwDag==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1siYYr-000000002Pq-3ak2;
+	Mon, 26 Aug 2024 14:11:06 +0200
+Date: Mon, 26 Aug 2024 14:11:05 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	mani@kernel.org, quic_msarkar@quicinc.com,
+	quic_kraravin@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Refactor common code
+Message-ID: <Zsxw2RIfLxEfgYN8@hovoldconsulting.com>
+References: <20240821170917.21018-1-quic_schintav@quicinc.com>
+ <20240821170917.21018-2-quic_schintav@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240712062411.35732-1-kai.heng.feng@canonical.com> <6685e124-4a7d-44bb-80a9-fc5fa51269a9@amd.com>
-In-Reply-To: <6685e124-4a7d-44bb-80a9-fc5fa51269a9@amd.com>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 26 Aug 2024 20:03:15 +0800
-Message-ID: <CAAd53p5d6=m9MzC5pRS8HJSP54tiTxMBLR-Nd=fE2Tf2Sf+mpQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI/PM: Put devices to low power state on shutdown
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: bhelgaas@google.com, mika.westerberg@linux.intel.com, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240821170917.21018-2-quic_schintav@quicinc.com>
 
-On Fri, Aug 23, 2024 at 3:28=E2=80=AFAM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 7/12/2024 01:24, Kai-Heng Feng wrote:
-> > Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
-> > connected.
-> >
-> > The following error message can be found during shutdown:
-> > pcieport 0000:00:1d.0: AER: Correctable error message received from 000=
-0:09:04.0
-> > pcieport 0000:09:04.0: PCIe Bus Error: severity=3DCorrectable, type=3DD=
-ata Link Layer, (Receiver ID)
-> > pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=3D0000008=
-0/00002000
-> > pcieport 0000:09:04.0:    [ 7] BadDLLP
-> >
-> > Calling aer_remove() during shutdown can quiesce the error message,
-> > however the spurious wakeup still happens.
-> >
-> > The issue won't happen if the device is in D3 before system shutdown, s=
-o
-> > putting device to low power state before shutdown to solve the issue.
-> >
-> > I don't have a sniffer so this is purely guesswork, however I believe
-> > putting device to low power state it's the right thing to do.
->
-> KH,
->
-> I did testing with your patch along with a few others, and found that it
-> does the best job to put a majority of devices into a low power state
-> properly.
->
-> I have the details of what happens at S5 outlined on this Gist:
-> https://gist.github.com/superm1/f8f81e52f5b1d55b64493fdaec38e31c
->
-> * KH column is this patch.
-> * ML column is
-> https://lore.kernel.org/linux-usb/43594a1c-c0dd-4ae1-b2c4-f5198e3fe951@am=
-d.com/T/#m03d0b36f86fb4722009b24a8ee547011128db80b
-> * FS column is 0fab972eef49 being applied again
->
-> I also have power testing data from an OEM's system that shows that it
-> improves things well enough that a previously failing energy star
-> certification is now passing.
+On Wed, Aug 21, 2024 at 10:08:42AM -0700, Shashank Babu Chinta Venkata wrote:
+> Refactor common code from RC(Root Complex) and EP(End Point)
 
-Thanks a lot for the testing.
+Space before open parentheses, please (again).
 
-Bjorn, do you think this patch is in good form to get included in next -rc1=
-?
+> drivers and move them to a common driver. This acts as placeholder
+> for common source code for both drivers, thus avoiding duplication.
+> 
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 
-Kai-Heng
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> new file mode 100644
+> index 000000000000..1d8992147bba
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> @@ -0,0 +1,88 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2014-2015, 2020 The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2015, 2021 Linaro Limited.
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 
->
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
->
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D219036
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >   drivers/pci/pci-driver.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index af2996d0d17f..4c6f66f3eb54 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev=
-)
-> >       if (drv && drv->shutdown)
-> >               drv->shutdown(pci_dev);
-> >
-> > +     /*
-> > +      * If driver already changed device's power state, it can mean th=
-e
-> > +      * wakeup setting is in place, or a workaround is used. Hence kee=
-p it
-> > +      * as is.
-> > +      */
-> > +     if (!kexec_in_progress && pci_dev->current_state =3D=3D PCI_D0)
-> > +             pci_prepare_to_sleep(pci_dev);
-> > +
-> >       /*
-> >        * If this is a kexec reboot, turn off Bus Master bit on the
-> >        * device to tell it to not continue to do DMA. Don't touch
->
+Again, you can't claim copyright for just moving code around.
+
+> + *
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/units.h>
+> +
+> +#include "../../pci.h"
+> +#include "pcie-designware.h"
+> +#include "pcie-qcom-common.h"
+> +
+> +struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const char *path)
+> +{
+> +	struct icc_path *icc_p;
+> +
+> +	icc_p = devm_of_icc_get(pci->dev, path);
+> +	return icc_p;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pcie_common_icc_get_resource);
+> +
+> +int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc, u32 bandwidth)
+> +{
+> +	int ret;
+> +
+> +	ret = icc_set_bw(icc, 0, bandwidth);
+> +	if (ret) {
+> +		dev_err(pci->dev, "Failed to set interconnect bandwidth: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pcie_common_icc_init);
+
+As I already pointed out, these helpers seems to be of very little worth
+and just hides what is really going on (e.g. that the resources are
+device managed). Please consider dropping them.
+
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
+> new file mode 100644
+> index 000000000000..897fa18e618a
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2014-2015, 2020 The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2015, 2021 Linaro Limited.
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+
+Same copyright issue here.
+
+> + */
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define QCOM_PCIE_LINK_SPEED_TO_BW(speed) \
+> +		Mbps_to_icc(PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]))
+> +
+> +struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const char *path);
+> +int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem, u32 bandwidth);
+> +void qcom_pcie_common_icc_update(struct dw_pcie *pci, struct icc_path *icc_mem);
+
+Compile guards still missing, despite me pointing that out before.
+
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index 236229f66c80..e1860026e134 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+  
+> -	ret = icc_set_bw(pcie_ep->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+> +	ret = qcom_pcie_common_icc_init(pci, pcie_ep->icc_mem);
+
+Does not even compile, as reported by the build bots.
+
+> -static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+> -{
+> -	struct dw_pcie *pci = pcie->pci;
+> -	int ret;
+> -
+> -	pcie->icc_mem = devm_of_icc_get(pci->dev, "pcie-mem");
+> -	if (IS_ERR(pcie->icc_mem))
+> -		return PTR_ERR(pcie->icc_mem);
+> -
+> -	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
+> -	if (IS_ERR(pcie->icc_cpu))
+> -		return PTR_ERR(pcie->icc_cpu);
+> -	/*
+> -	 * Some Qualcomm platforms require interconnect bandwidth constraints
+> -	 * to be set before enabling interconnect clocks.
+> -	 *
+> -	 * Set an initial peak bandwidth corresponding to single-lane Gen 1
+> -	 * for the pcie-mem path.
+> -	 */
+> -	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+> -	if (ret) {
+> -		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+> -			ret);
+> -		return ret;
+> -	}
+> -
+> -	/*
+> -	 * Since the CPU-PCIe path is only used for activities like register
+> -	 * access of the host controller and endpoint Config/BAR space access,
+> -	 * HW team has recommended to use a minimal bandwidth of 1KBps just to
+> -	 * keep the path active.
+> -	 */
+> -	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
+> -	if (ret) {
+> -		dev_err(pci->dev, "Failed to set bandwidth for CPU-PCIe interconnect path: %d\n",
+> -			ret);
+> -		icc_set_bw(pcie->icc_mem, 0, 0);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+
+Just keep this function as is.
+
+> -static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
+> -{
+> -	u32 offset, status, width, speed;
+> -	struct dw_pcie *pci = pcie->pci;
+> -	unsigned long freq_kbps;
+> -	struct dev_pm_opp *opp;
+> -	int ret, freq_mbps;
+> -
+> -	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> -	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
+> -
+> -	/* Only update constraints if link is up. */
+> -	if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> -		return;
+> -
+> -	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+> -	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
+> -
+> -	if (pcie->icc_mem) {
+> -		ret = icc_set_bw(pcie->icc_mem, 0,
+> -				 width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+> -		if (ret) {
+> -			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+> -				ret);
+> -		}
+> -	} else {
+> -		freq_mbps = pcie_dev_speed_mbps(pcie_link_speed[speed]);
+> -		if (freq_mbps < 0)
+> -			return;
+> -
+> -		freq_kbps = freq_mbps * KILO;
+> -		opp = dev_pm_opp_find_freq_exact(pci->dev, freq_kbps * width,
+> -						 true);
+> -		if (!IS_ERR(opp)) {
+> -			ret = dev_pm_opp_set_opp(pci->dev, opp);
+> -			if (ret)
+> -				dev_err(pci->dev, "Failed to set OPP for freq (%lu): %d\n",
+> -					freq_kbps * width, ret);
+> -			dev_pm_opp_put(opp);
+> -		}
+> -	}
+> -}
+
+Maybe it's worth trying to generalise this, but probably not. Either
+way, I don't think the gen4 stability *fixes* should depend on this (the
+gen4 nvme link on x1e80100 is currently broken and depends on the later
+changes in this series).
+
+Please consider dropping all this, mostly bogus, refactoring and just
+get the gen4 fixes in first.
+
+> -
+>  static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
+>  {
+>  	struct qcom_pcie *pcie = (struct qcom_pcie *)dev_get_drvdata(s->private);
+> @@ -1561,6 +1472,18 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> +	pcie->icc_mem = qcom_pcie_common_icc_get_resource(pcie->pci, "pcie-mem");
+> +	if (IS_ERR_OR_NULL(pcie->icc_mem)) {
+
+This will break machines which don't have this path. NULL is valid here.
+
+> +		ret = PTR_ERR(pcie->icc_mem);
+> +		goto err_pm_runtime_put;
+> +	}
+> +
+> +	pcie->icc_cpu = qcom_pcie_common_icc_get_resource(pcie->pci, "cpu-pcie");
+> +	if (IS_ERR_OR_NULL(pcie->icc_cpu)) {
+
+Same here.
+
+> +		ret = PTR_ERR(pcie->icc_cpu);
+> +		goto err_pm_runtime_put;
+> +	}
+> +
+>  	/* OPP table is optional */
+>  	ret = devm_pm_opp_of_add_table(dev);
+>  	if (ret && ret != -ENODEV) {
+
+> @@ -1681,7 +1629,8 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+>  		ret = icc_disable(pcie->icc_cpu);
+>  		if (ret)
+> -			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
+> +			dev_err(dev,
+> +			"Failed to disable CPU-PCIe interconnect path: %d\n", ret);
+
+Unrelated, bogus change.
+
+Johan
 
