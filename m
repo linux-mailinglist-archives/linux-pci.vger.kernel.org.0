@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-12245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2135960193
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 08:26:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACCF096019C
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 08:27:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D5BF1F22AC5
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 06:26:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 694AF282FE9
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 06:27:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95DAA156886;
-	Tue, 27 Aug 2024 06:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C371422D4;
+	Tue, 27 Aug 2024 06:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLtCluKm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQVmn9YG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A5D14373F;
-	Tue, 27 Aug 2024 06:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EC133CFC;
+	Tue, 27 Aug 2024 06:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724739951; cv=none; b=klo2bEeeTuD7tlhNTP4G8HgEBUjEDElTgGE3sWuIsYidT30aWN3EPKnLNryNJO3DifxcJxJ/eRwXLLkBHsBpmZSqGudHddm9UhIn9shkoI1dHqp+63slEEYEsD9VhA6eax462Cc8lYa9Po+SyAUA99eBsOQN0Y/0O+lzasyzKs4=
+	t=1724740062; cv=none; b=JAS0VB7WB4/jXRjjfkZpsnV09x2h8khubW6wRM5A39atg5BfNooEfkQkEg8CfO3RxhqxxjUJdDEoN9He8koy4phi9ecqSqjqo4u3gQeXHnGnUvg9TiXmAO0NEufgdaF741tdk7MvvrxxUBpINVyoP143hhb0f24wIgAlFp2qedM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724739951; c=relaxed/simple;
-	bh=fN1ZnF3+bANyj6nCHUeB1Vt6rRnkOrtSXJk+7r0jQKY=;
+	s=arc-20240116; t=1724740062; c=relaxed/simple;
+	bh=lq0ooS8TfOdhCz9BfpL7TIlbaqhjsSyuKwzJ4JP4Gkc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IDlBCUPfWPv7M9c/CE4D4iBKjxhFdBqcXq6yUX006tXTFpy3r9fzWaUChcC2hkOYNqziAArnDZEwSbjNj9eFu/AqAMRSF70IZF0tlbB392V+mmXyniLIeFl+eS5mKwpcyzC3yYeVQnr5JYwR7eX5gdEIv3MOW5tQTrULhPKRmf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLtCluKm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB670C4FF63;
-	Tue, 27 Aug 2024 06:25:49 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXE7EY+le6aoxMxrygiE8CJl2/MuBGvOBj0U4znQndnpStp6uDouRhok1e8s8B6PmRXhUPZv46qpDZiVgWL2FxWjkU+SH66m5YPLvIXt98X2kORSA+AhE29KAuBONte+UnUusMBrnwLciFPIdpLSPjDiGNPz+GjGBWWMU+ERv+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQVmn9YG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445C1C8B7AC;
+	Tue, 27 Aug 2024 06:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724739950;
-	bh=fN1ZnF3+bANyj6nCHUeB1Vt6rRnkOrtSXJk+7r0jQKY=;
+	s=k20201202; t=1724740061;
+	bh=lq0ooS8TfOdhCz9BfpL7TIlbaqhjsSyuKwzJ4JP4Gkc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QLtCluKmvD0oXuf6N1ljeQMDrLNkQny4MvNscJbGF2J9y3EvvCTNBZN/NqLCzGDpP
-	 fU5Vk2okwhe3QGihz7Lgf8gwKk2Y2Sg50Sj163jeOJspkybovyygXxMudrdf14K8dc
-	 Ma7bUVWq9bdphXUWiL0iuwX1DxHPHOLujQ6GBGaoQg/uOMrICoClDQDiteZfRJmxl7
-	 /+KGZk9JavCq2QFlSVAIqPbkbuD/6Kukll60DFRuopF8cTUUNhfazAezT/0phK0Gni
-	 g2DS3Zs5IOH3r3KwWQDZNQ4PIVqaxQoKprtecnjf4X0OeLxEdlFlPjONs+BeNtBzjD
-	 eV3O1G+QBAEfQ==
-Date: Tue, 27 Aug 2024 08:25:47 +0200
+	b=gQVmn9YG6XM+90vlPAqRatnRa8LaM8MjhdYi1RMid8R7bTwH8bqqRjoBTjRgAxqx0
+	 6VUXAANOS14etlla05mVRcZh9xSlgxENxq2tmWHbILYxzjYmtKsSJowmZSVkWUTVf3
+	 E9DJ2/Pnf2QQWQwwhF0XdYbqikonzThvRGsdo6SIyeQOk849JhBE54b27dStDThAgv
+	 qd7GawPSXipEwTlaVs6pa4t4UinFw84q/Y+wqtir1NxIVFKJB4XQ8SzFKcq89o2Q0j
+	 yUE5OqhT9vBC5x849wEv6MYM01RWs/grcoe3skcxcr5IqxdjwPk0UpvpOwvajFofrr
+	 PCOASFcUBcffw==
+Date: Tue, 27 Aug 2024 08:27:38 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Sricharan R <quic_srichara@quicinc.com>
 Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
@@ -50,10 +50,11 @@ Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
 	p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com, 
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, robimarko@gmail.com
-Subject: Re: [PATCH V2 3/6] phy: qcom: Introduce PCIe UNIPHY 28LP driver
-Message-ID: <svraqyrvmyfvezj6zuzsoc5cy3lqklwxkmjdloquj2v4r5ik72@xnbaoigiikeu>
+Subject: Re: [PATCH V2 1/6] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe
+ uniphy
+Message-ID: <q7s3iv5plsfbk75d3ecjjpcqc7ywwc2ygekfozty52lejvui4z@dpyhwken7a6y>
 References: <20240827045757.1101194-1-quic_srichara@quicinc.com>
- <20240827045757.1101194-4-quic_srichara@quicinc.com>
+ <20240827045757.1101194-2-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,47 +63,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240827045757.1101194-4-quic_srichara@quicinc.com>
+In-Reply-To: <20240827045757.1101194-2-quic_srichara@quicinc.com>
 
-On Tue, Aug 27, 2024 at 10:27:54AM +0530, Sricharan R wrote:
+On Tue, Aug 27, 2024 at 10:27:52AM +0530, Sricharan R wrote:
 > From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 > 
-> Add Qualcomm PCIe UNIPHY 28LP driver support present
-> in Qualcomm IPQ5018 SoC and the phy init sequence.
+> Document the Qualcomm UNIPHY PCIe 28LP present in IPQ5018.
 > 
 > Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
 > Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+> [v2]  Fixed filename, title, fixed clock-name, reset-names
 
-...
+OK, I see detailed changelog in commit, not in cover letter, so this
+solves my previous comment.
 
-> +static int qcom_uniphy_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct qcom_uniphy_pcie *phy;
-> +	int ret;
-> +	struct phy *generic_phy;
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = of_node_get(dev->of_node);
-> +
-> +	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, phy);
-> +	phy->dev = &pdev->dev;
-> +
-> +	phy->data = of_device_get_match_data(dev);
-> +	if (!phy->data)
-> +		return -EINVAL;
-> +
-> +	ret = qcom_uniphy_pcie_get_resources(pdev, phy);
-> +	if (ret < 0)
-> +		dev_err_probe(&pdev->dev, ret, "Failed to get resources:\n");
-
-What the hell happened here? Read my review one more time and then git
-grep for usage of dev_err_probe.
-
-NAK.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
