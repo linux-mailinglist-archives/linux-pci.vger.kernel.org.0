@@ -1,123 +1,133 @@
-Return-Path: <linux-pci+bounces-12277-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E8BF960A04
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 14:25:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97825960A23
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 14:26:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 040DB1F21CDB
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:25:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 231FAB22B5F
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:26:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 035481B4C55;
-	Tue, 27 Aug 2024 12:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803E61B5825;
+	Tue, 27 Aug 2024 12:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aKG8e5Hm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="J+l6ucgX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004E21B3F35;
-	Tue, 27 Aug 2024 12:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749211B5310
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724761498; cv=none; b=WEPet+5c5f9QNXJ6E6h/YnySu2OpQRofoT0PnCKd4/qfVZFEZCmfNQ50deDtVWfokSiox12tKAvWwpVn6EuDFhNx1VVOTGY1QOq7Kqzj03rIKVVxGraUw24x/7+UvATWRX6TT9oX+nJoruAnpaZRSM06/EeIQiOQARbXyYL3lN4=
+	t=1724761575; cv=none; b=L+28p0wx3+kg+MqrCy+YX0ItQBxC4V44VssW8+d80wxOS8uaPUhmA3Im+sa/k27ICmSWNO5VfsW/+WFQf7+pORHRxEdBxo8sr82TvZk/R+Kr4OaCPJCNlz4lqmIWu4kODtHKJLt7SVT15GUrZ7ujEg/2c+Ct+35cR/nA7rXey6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724761498; c=relaxed/simple;
-	bh=jFHcTYxKauKn2j4L1ebE8sDM6pDpVTJdYTkal9P+V2E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=moW2Gzc2DlL9LW4d5MtuzN+1HHLtoyQZ9t3gv35zYPTs3m5mcmIIrTBB+w6hldzg0HZGpzl5NeaAbJ3GOLZQGz4WoHo3AxoQ83OXRZhHHci6I5knVIDzjYnfNg/cZX5DrW7N437bMkrk6ff3b1fimEakUQruhbV1RkIg7gVloXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aKG8e5Hm; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 47RCOecH092068;
-	Tue, 27 Aug 2024 07:24:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1724761480;
-	bh=Jxki9UuRPZGgt+9UKSYU76B9FROiegSaoeKr9g9BOz4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=aKG8e5HmJLcG0AdEFGK6Nx9YhpT/Jn6ycieCkLnedh8WtcxdRnwzOcA+hbwjJAOrp
-	 W/cvjWzlWtbrjXA8iFltjB/5sqZT++5bL7cttTSO8lcGxnrakYgZdbSYwDo1Z4h0Ft
-	 5eMOs6jNZ5ZKqbzmhcxbssiCJsX+fmnQkHYnWTN4=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 47RCOeL7051182
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 27 Aug 2024 07:24:40 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- Aug 2024 07:24:39 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 Aug 2024 07:24:40 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 47RCONYE011388;
-	Tue, 27 Aug 2024 07:24:34 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <vigneshr@ti.com>, <kishon@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>, <j-keerthy@ti.com>
-CC: <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <stable@vger.kernel.org>, <u-kumar1@ti.com>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH 2/2] PCI: dra7xx: Fix error handling when IRQ request fails in probe
-Date: Tue, 27 Aug 2024 17:54:22 +0530
-Message-ID: <20240827122422.985547-3-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240827122422.985547-1-s-vadapalli@ti.com>
-References: <20240827122422.985547-1-s-vadapalli@ti.com>
+	s=arc-20240116; t=1724761575; c=relaxed/simple;
+	bh=N8luI6m17f9UGxB1zqffdu5fVSAFGP7sDjStDenGE5E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BDoIh0zckyzwFb94UodfDTeICD9j8CvttPHdmYY4HaHVN+Us0e5waMiSuS96/Sui3fO+exbB02CDSqACPdnmDl8Fzm9s1tN4zraLV9YZoR8uDisdbdQhGKF7AqdT5qi2pGH5xKl/jAn353uCKdSnCWRG20x1Iv4eKuSdXuqW8DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=J+l6ucgX; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-533496017f8so7231244e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 05:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724761571; x=1725366371; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N8luI6m17f9UGxB1zqffdu5fVSAFGP7sDjStDenGE5E=;
+        b=J+l6ucgXQ9Bi68T8HT0X8eTK0GN6saZ1qMcZaBuiD6us8fnxCstoPtHlUiy6/nVZl4
+         oF/7R73S56fjN1Lo07YYPa6BOrzR2WYEszYEmOQyqcwp0Q9Cj7LQrKQ1L+h5a/qOjipH
+         txQQrRwkZfVJF3Uwq9pTB/wy8sl3pBd6rzMLyPiuW4fTjKaTrMarHeV7DeE5AhZ0ixJ5
+         /n7tSu6RfhmGoviinI8DNRIKCw1yjH1/nOsJT9cbAGH/0iy7Af4UPxY3PfuclZlEqzDd
+         y1DEBoSJi8MGldzmWnMk99DF1vPCJyYpqcgL42KXfXWfKwp5cwcKTCOOnXkOuCJahqYz
+         j8dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724761571; x=1725366371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N8luI6m17f9UGxB1zqffdu5fVSAFGP7sDjStDenGE5E=;
+        b=vBndQGm4S7gHclwXj3NUpwgTLalPizXr9gnJCBSPcPM4gw9R81V3U/6S40Rjhol5Hp
+         DhoE2SewhwlG38f6vOXpMeIVSOuW5DzxSByvWaxmVGGhylLckIYdxturbhok2GuCcV2r
+         sZiVowF/oBKzWZzbqLpgp5fMD64XpS0Dwr/sTpvJDh2urWm7cEh7UpDI9TBPRcH+jaVJ
+         pkoAM7LXkZ89M2VhKTuJmMBh74+aXeoINtpyLYlZvu4rwbIabhB5AzrLq1x9js4OdwCZ
+         OhnZeUSoETCWMoaFz6EbEbxVHwTrJ5h5fjch60d/YEDkxOTtU1PHl0Rieg6QOEQMn3ak
+         RuTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVMS+MQFfo4eJb4Bn+LFlWlDvjAnJQiOo8Tu3aoH4NfHs+Az9hd0v+DFSOUNPiNSWl5TEX5uC1ZYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH1LnZeUQOxkKHocBhE1Mj2zr3iCM+B0hkeAuGwperautHWlxH
+	n+vXkOg+VUJ8KufpLU7aeAx0C/8pfUeFIaOA5nqf/c+rI4yTumlNAKljcfzMrWOPKzh0E9U2e3M
+	+ND/csVPDjnTY6EvYMJXuQXdvP/sRwZ/iXke5lw==
+X-Google-Smtp-Source: AGHT+IGo8I6lkFpmzVs/WSLJJyIYmtHBUkiVnpQ0LCHAI677pSb1r7klQMhowNn1vb9+UzmURuvd/q8rYc415hB5bYc=
+X-Received: by 2002:a05:6512:39c4:b0:52c:9e25:978d with SMTP id
+ 2adb3069b0e04-5343885f5d8mr9249284e87.45.1724761570408; Tue, 27 Aug 2024
+ 05:26:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240823093323.33450-1-brgl@bgdev.pl> <20240823093323.33450-2-brgl@bgdev.pl>
+ <20240827084012.rjbfk4dhumunhaaa@thinkpad>
+In-Reply-To: <20240827084012.rjbfk4dhumunhaaa@thinkpad>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 27 Aug 2024 14:25:58 +0200
+Message-ID: <CAMRc=Mfd08i0NFsuf=igJRJszDNfLyHf+bf6ExjNYxX41CMdWA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PCI: don't rely on of_platform_depopulate() for
+ reused OF-nodes
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit d4c7d1a089d6 ("PCI: dwc: dra7xx: Push request_irq() call to the
-bottom of probe") moved the IRQ request for "dra7xx-pcie-main" towards
-the end of dra7xx_pcie_probe(). However, the error handling does not take
-into account the initialization performed by either dra7xx_add_pcie_port()
-or dra7xx_add_pcie_ep(), depending on the mode of operation. Fix the error
-handling to address this.
+On Tue, Aug 27, 2024 at 10:40=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> + Rob
+>
+> On Fri, Aug 23, 2024 at 11:33:22AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > of_platform_depopulate() doesn't play nice with reused OF nodes - it
+> > ignores the ones that are not marked explicitly as populated and it may
+> > happen that the PCI device goes away before the platform device in whic=
+h
+> > case the PCI core clears the OF_POPULATED bit. We need to
+> > unconditionally unregister the platform devices for child nodes when
+> > stopping the PCI device.
+> >
+>
+> It sounds like the fix is in of_platform_depopulate() itself and this pat=
+ch
+> works around the API issue in PCI driver.
+>
+> Rob, is that correct?
+>
+> - Mani
 
-Fixes: d4c7d1a089d6 ("PCI: dwc: dra7xx: Push request_irq() call to the bottom of probe")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+of_platform_depopulate() has more issues than just that. For one: it's
+asymmetric to of_platform_populate() as it takes a struct device as
+argument and not a device node. This causes issues for users like TI
+aemif that call of_platform_populate() on nodes without the compatible
+property that are never consumed by any device. AFAIK there's
+currently no way to depopulate them.
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 20fb50741f3d..5c62e1a3ba52 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -854,11 +854,17 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
- 					"dra7xx-pcie-main", dra7xx);
- 	if (ret) {
- 		dev_err(dev, "failed to request irq\n");
--		goto err_gpio;
-+		goto err_deinit;
- 	}
- 
- 	return 0;
- 
-+err_deinit:
-+	if (dra7xx->mode == DW_PCIE_RC_TYPE)
-+		dw_pcie_host_deinit(&dra7xx->pci->pp);
-+	else
-+		dw_pcie_ep_deinit(&dra7xx->pci->ep);
-+
- err_gpio:
- err_get_sync:
- 	pm_runtime_put(dev);
--- 
-2.40.1
+In this particular case I think that the OF_POPULATED bit should not
+be set when the PCI device is created but only when the platform
+device is.
 
+However I'm afraid to change the semantics of of_platform_depopulate()
+et al for all users so I'm more inclined to have this fix in v6.11 to
+avoid releasing non functional code (pwrctl devices not being removed)
+and then possibly introduce a new variant of of_platform_depopulate()
+that would work slightly differently.
+
+Bart
 
