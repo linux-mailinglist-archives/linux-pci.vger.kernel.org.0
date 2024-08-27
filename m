@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-12314-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12312-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27324961802
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 21:29:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38927961801
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 21:29:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A4581C235E3
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 19:29:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FBA0B21FBB
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 19:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBE41CFEDC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47CE577117;
 	Tue, 27 Aug 2024 19:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="aaGYMfky"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Tg36DlMg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5AB1D2F57
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 19:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77291D2F51
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 19:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724786939; cv=none; b=meKHgDlE5u6KbpVjfkS3oxPKWGo5rTAhSqi5dtcUvh3RXL2uM0H49E2qr2L5n6nWV1AIVkv5IQlg503FVWEFEenc1KRiTgqwNEX8ch4ZJfkKDwCKQLf+/Drymy377sxOqN7rR9e1LYkPR1uxATm8b+/9YNpasJEk8AWX1t0YxvU=
+	t=1724786939; cv=none; b=kC/nU4kbbPIwtlDObBBxj8mkCf4yHleVMalTrKqR6AJV5lK0KEturl05oTmDEf160XAD2FXX5bAo3DPmpumbLUFWRPHQZOlIhm5iWgEBSMTGubwoQJApFLmfNPHwKB2aLz8MlU5IzEptJ64BT9FZzq9hkSYPoTO2koekTviQk+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724786939; c=relaxed/simple;
-	bh=JDfE9CIsszTUANv/Le/pSmFyHBszZN8y5lRLIf6i61k=;
+	bh=tiCvGxXvIf6qJhtNJtaD3ZmT4CUNupTzQaXTk64jKdU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aG0dPnSfh8PoZsAK7zaoWnQprpW+0hkxjuklT4fUFIFiLVUU7gIxT9U95CM4YZ0n2U4LnP0Pehkbu9CpKrvQsYGg2MGfsZVWRtb7Ehm7XK2wbXUn0hoBQaT5F6ra+kbWgTMNZb0sefuMntxX0mEfXe3xWceEVto01BBztHCd4iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=aaGYMfky; arc=none smtp.client-ip=67.231.145.42
+	 MIME-Version:Content-Type; b=Z5F/bgdki9Cn/MeqQKwUfOlSciqKn0CD9ZRh7AD/Jk+A4WVmGvpl+mb1czpghjwiwqw7H0uJZLQwrAOCqbMI9t3Vy+G4K1ygG43quH0XSUd3zOcSJiJLMhv4yT9vJN0mxb/mVxK0KPSiYrQ5D5aPdf1XUgf541KjdtI/Kxw3WJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Tg36DlMg; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47RDnVV2017853
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47RIpS0q023565
 	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:57 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	s2048-2021-q4; bh=pcChgNId+NSWU9SFBhOkY9Q04FHA7eNvEe/eAp23sCQ=; b=
-	aaGYMfkyLkgo7MvoXwCyeu+5QU5XumVJCqv72Z8GjEt5mNJH9tpVvZ5rX7PrwwvI
-	+RHOamohYhBCbcKsjqVoOwV6uznnZ8PJx6LFPJZ3ud49RHRKb3zYoDhmc+fwsTBL
-	2Qxeit5nz6RewmPh69O56JcdPxrnUXxxpYokWMSlr9LGg9/Dlx9BAra67PiI3fUH
-	MOe5ZwgGko8itYMPNmagDSEvHFVLAAwya7C+KukVH04NAVkfNlqcD2guvT6QJN6o
-	EWLQJ4Vm3HqKmff0zIv/Z2bESA4Ehi0fWLXimXJVj9Aj87/NOdtgpnABjKWWPBNe
-	okzOy0e8lOpENsoiGQuZGg==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4193s562hh-5
+	s2048-2021-q4; bh=WtLjBrrKmUt0MuqC5UcDaN4lAOZ5FTZEdBCR44av+GY=; b=
+	Tg36DlMgYN+c2AeEM8N/WBUNKuH/ix68+aPOhKvZpna2N9UR6rd2nV2Aev1V+xCM
+	MaRxYM9wCshkqLum8ikdRSIuzHT/Aj1H6Ez2X1mCz8Yo+1M1mxdx3JhlEwHx9igQ
+	+rMa0GMSIDNDvA1F5oVXc+6MJJw3pej5MZ3/GyfK23zgYlJdV/qGakqJEN9dyDqm
+	6ESuSZsT+D8SB7nobWDDl59b/KJAhLMrv6KIe0MoffWNdWV+Yfv2jqvno4AOWmQE
+	apW83l9rleknvOZSzcxv0VFp8pDFu47t1wVmUok8OyoEj/C6+q2FCQCH7pEWkSsl
+	K53JPnCDs5rdOAj7+ycyKw==
+Received: from maileast.thefacebook.com ([163.114.130.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 419meg8836-9
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:57 -0700 (PDT)
-Received: from twshared16760.32.frc3.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+Received: from twshared26656.07.ash9.facebook.com (2620:10d:c0a8:1c::1b) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Tue, 27 Aug 2024 19:28:32 +0000
+ 15.2.1544.11; Tue, 27 Aug 2024 19:28:38 +0000
 Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 7DB68124FD703; Tue, 27 Aug 2024 12:28:27 -0700 (PDT)
+	id 87F00124FD705; Tue, 27 Aug 2024 12:28:27 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>
 CC: Keith Busch <kbusch@kernel.org>,
         Jonathan Cameron
 	<Jonathan.Cameron@huawei.com>
-Subject: [PATCHv2 4/5] pci: walk bus recursively
-Date: Tue, 27 Aug 2024 12:28:25 -0700
-Message-ID: <20240827192826.710031-5-kbusch@meta.com>
+Subject: [PATCHv2 5/5] pci: unexport pci_walk_bus_locked
+Date: Tue, 27 Aug 2024 12:28:26 -0700
+Message-ID: <20240827192826.710031-6-kbusch@meta.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20240827192826.710031-1-kbusch@meta.com>
 References: <20240827192826.710031-1-kbusch@meta.com>
@@ -74,88 +74,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-GUID: ksnOr2nSpYOCeh8P_hfqQfpIyZ8DYBDO
-X-Proofpoint-ORIG-GUID: ksnOr2nSpYOCeh8P_hfqQfpIyZ8DYBDO
+X-Proofpoint-GUID: cENQFERb-aGWNtV2iUKz4qiZ0sdsl5oK
+X-Proofpoint-ORIG-GUID: cENQFERb-aGWNtV2iUKz4qiZ0sdsl5oK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-27_10,2024-08-27_01,2024-05-17_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-The original implementation purposefully chose a non-recursive walk,
-presumably as a precaution on stack use. We do recursive bus walking in
-other places though. For example:
-
-  pci_bus_resettable
-  pci_stop_bus_device
-  pci_remove_bus_device
-  pci_bus_allocate_dev_resources
-
-So, recursive pci bus walking is well tested and safe, and the
-implementation is easier to follow. The motivation for changing it now
-is to make it easier to introduce finer grain locking in the future.
+There's only one user of this, and it's internal, so no need to export
+it.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- drivers/pci/bus.c | 36 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 25 deletions(-)
+ drivers/pci/bus.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 7c07a141e8772..8491e9c7f0586 100644
+index 8491e9c7f0586..30620f3bb0e2d 100644
 --- a/drivers/pci/bus.c
 +++ b/drivers/pci/bus.c
-@@ -389,37 +389,23 @@ void pci_bus_add_devices(const struct pci_bus *bus)
- }
- EXPORT_SYMBOL(pci_bus_add_devices);
+@@ -435,7 +435,6 @@ void pci_walk_bus_locked(struct pci_bus *top, int (*c=
+b)(struct pci_dev *, void *
 =20
--static void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev=
- *, void *),
--			   void *userdata)
-+static int __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev =
-*, void *),
-+			  void *userdata)
+ 	__pci_walk_bus(top, cb, userdata);
+ }
+-EXPORT_SYMBOL_GPL(pci_walk_bus_locked);
+=20
+ struct pci_bus *pci_bus_get(struct pci_bus *bus)
  {
- 	struct pci_dev *dev;
--	struct pci_bus *bus;
--	struct list_head *next;
--	int retval;
-+	int ret =3D 0;
-=20
--	bus =3D top;
--	next =3D top->devices.next;
--	for (;;) {
--		if (next =3D=3D &bus->devices) {
--			/* end of this bus, go up or finish */
--			if (bus =3D=3D top)
-+	list_for_each_entry(dev, &top->devices, bus_list) {
-+		ret =3D cb(dev, userdata);
-+		if (ret)
-+			break;
-+		if (dev->subordinate) {
-+			ret =3D __pci_walk_bus(dev->subordinate, cb, userdata);
-+			if (ret)
- 				break;
--			next =3D bus->self->bus_list.next;
--			bus =3D bus->self->bus;
--			continue;
- 		}
--		dev =3D list_entry(next, struct pci_dev, bus_list);
--		if (dev->subordinate) {
--			/* this is a pci-pci bridge, do its devices next */
--			next =3D dev->subordinate->devices.next;
--			bus =3D dev->subordinate;
--		} else
--			next =3D dev->bus_list.next;
--
--		retval =3D cb(dev, userdata);
--		if (retval)
--			break;
- 	}
-+	return ret;
- }
-=20
- /**
 --=20
 2.43.5
 
