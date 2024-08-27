@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-12310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12314-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F70D9617FC
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 21:28:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27324961802
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 21:29:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1A5B2855F0
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 19:28:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A4581C235E3
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 19:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422861D2F51;
-	Tue, 27 Aug 2024 19:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBE41CFEDC;
+	Tue, 27 Aug 2024 19:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="UVnSOxMA"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="aaGYMfky"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF4377117
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 19:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5AB1D2F57
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 19:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724786927; cv=none; b=my1laPKNJp3epm0LVjJBmV1c94EJZe8Z2pQNi+PWoVpuuXOY9uCDykBxAD1SL25rEspAcxTz4GQFE9a5RooEmsCJ+XBddFdYmtFw+cuUuYoYAI3y5h+KY/SZ8u+gipSk/m+hdEBZSTuKjy4XIwsbdOXxRZWz1PvFE8kNIAzQzYI=
+	t=1724786939; cv=none; b=meKHgDlE5u6KbpVjfkS3oxPKWGo5rTAhSqi5dtcUvh3RXL2uM0H49E2qr2L5n6nWV1AIVkv5IQlg503FVWEFEenc1KRiTgqwNEX8ch4ZJfkKDwCKQLf+/Drymy377sxOqN7rR9e1LYkPR1uxATm8b+/9YNpasJEk8AWX1t0YxvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724786927; c=relaxed/simple;
-	bh=E/+qtStYpXpXCDrSVIHwjtv5rEAN0n5iq+3C1UWmc9g=;
+	s=arc-20240116; t=1724786939; c=relaxed/simple;
+	bh=JDfE9CIsszTUANv/Le/pSmFyHBszZN8y5lRLIf6i61k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DxKopLF9GJxvyweJcHXaeww3ctXmBN2B+oDITXNicDFli0kGrs6wGIlgq6qcUGuG85UP1+06snTBdlEYWgK6Tkm7ZdaRVr7IzTBM/KmSQSNmq2ELOwu6pXGHzAH+hsSBBEtUu6cr62VcKdQWrVUdmk0RAFF6jVwqu2VMJcnpSv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=UVnSOxMA; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=aG0dPnSfh8PoZsAK7zaoWnQprpW+0hkxjuklT4fUFIFiLVUU7gIxT9U95CM4YZ0n2U4LnP0Pehkbu9CpKrvQsYGg2MGfsZVWRtb7Ehm7XK2wbXUn0hoBQaT5F6ra+kbWgTMNZb0sefuMntxX0mEfXe3xWceEVto01BBztHCd4iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=aaGYMfky; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-	by m0001303.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 47RFt2T1007760
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:44 -0700
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47RDnVV2017853
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:57 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	s2048-2021-q4; bh=DDxZ4ogSCd5XQxO5J8cTxC2SVOCKfOWZBaBLDzSX5Cc=; b=
-	UVnSOxMAtWMy0Sec3114qlqDl3beYToEjJJ7wZfkg0HK5WQnUcvbNPYoGceRCFLt
-	BMsDMrxmbxjNQGjjh4itlLT3JjbZESw7cTTPT9pZaCP5qS55stdLuGuXxvq3kPqk
-	kKi7lEEGHcsASjtTBdBmDmIXbQA6MhJSk6kdne0w/K9C1Q+0o2mehPWPucuXhEey
-	xsfDZLE3jJnP2hAO8gwWkXKVkIVCNqjBAE2F2oY7CYY/rpFGEGxv6M0+9C9dyXdN
-	tSLx/lteAogxBjvm9wLe7tTWPoAB/d44ykKHL/TQdMaRQWBTA+TeP0UfZfQ1yqDh
-	dY/Zxw4AJhQ8eC/Mg6Uxdw==
+	s2048-2021-q4; bh=pcChgNId+NSWU9SFBhOkY9Q04FHA7eNvEe/eAp23sCQ=; b=
+	aaGYMfkyLkgo7MvoXwCyeu+5QU5XumVJCqv72Z8GjEt5mNJH9tpVvZ5rX7PrwwvI
+	+RHOamohYhBCbcKsjqVoOwV6uznnZ8PJx6LFPJZ3ud49RHRKb3zYoDhmc+fwsTBL
+	2Qxeit5nz6RewmPh69O56JcdPxrnUXxxpYokWMSlr9LGg9/Dlx9BAra67PiI3fUH
+	MOe5ZwgGko8itYMPNmagDSEvHFVLAAwya7C+KukVH04NAVkfNlqcD2guvT6QJN6o
+	EWLQJ4Vm3HqKmff0zIv/Z2bESA4Ehi0fWLXimXJVj9Aj87/NOdtgpnABjKWWPBNe
+	okzOy0e8lOpENsoiGQuZGg==
 Received: from mail.thefacebook.com ([163.114.134.16])
-	by m0001303.ppops.net (PPS) with ESMTPS id 419hv0spkq-2
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4193s562hh-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:44 -0700 (PDT)
-Received: from twshared12613.02.ash9.facebook.com (2620:10d:c085:208::7cb7) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:57 -0700 (PDT)
+Received: from twshared16760.32.frc3.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Tue, 27 Aug 2024 19:28:42 +0000
+ 15.2.1544.11; Tue, 27 Aug 2024 19:28:32 +0000
 Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 7396A124FD701; Tue, 27 Aug 2024 12:28:27 -0700 (PDT)
+	id 7DB68124FD703; Tue, 27 Aug 2024 12:28:27 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>
 CC: Keith Busch <kbusch@kernel.org>,
         Jonathan Cameron
 	<Jonathan.Cameron@huawei.com>
-Subject: [PATCHv2 3/5] pci: move the walk bus lock to where its needed
-Date: Tue, 27 Aug 2024 12:28:24 -0700
-Message-ID: <20240827192826.710031-4-kbusch@meta.com>
+Subject: [PATCHv2 4/5] pci: walk bus recursively
+Date: Tue, 27 Aug 2024 12:28:25 -0700
+Message-ID: <20240827192826.710031-5-kbusch@meta.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20240827192826.710031-1-kbusch@meta.com>
 References: <20240827192826.710031-1-kbusch@meta.com>
@@ -74,80 +74,88 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-GUID: QpTHNjuKcVZZ-NbstagAGRVSBhF3Ni3Z
-X-Proofpoint-ORIG-GUID: QpTHNjuKcVZZ-NbstagAGRVSBhF3Ni3Z
+X-Proofpoint-GUID: ksnOr2nSpYOCeh8P_hfqQfpIyZ8DYBDO
+X-Proofpoint-ORIG-GUID: ksnOr2nSpYOCeh8P_hfqQfpIyZ8DYBDO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-08-27_10,2024-08-27_01,2024-05-17_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-Simplify the common function by removing an unnecessary parameter that
-can be more easily handled in the only caller that wants it.
+The original implementation purposefully chose a non-recursive walk,
+presumably as a precaution on stack use. We do recursive bus walking in
+other places though. For example:
+
+  pci_bus_resettable
+  pci_stop_bus_device
+  pci_remove_bus_device
+  pci_bus_allocate_dev_resources
+
+So, recursive pci bus walking is well tested and safe, and the
+implementation is easier to follow. The motivation for changing it now
+is to make it easier to introduce finer grain locking in the future.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- drivers/pci/bus.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/pci/bus.c | 36 +++++++++++-------------------------
+ 1 file changed, 11 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index e41dfece0d969..7c07a141e8772 100644
+index 7c07a141e8772..8491e9c7f0586 100644
 --- a/drivers/pci/bus.c
 +++ b/drivers/pci/bus.c
-@@ -390,7 +390,7 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+@@ -389,37 +389,23 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+ }
  EXPORT_SYMBOL(pci_bus_add_devices);
 =20
- static void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev=
+-static void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev=
  *, void *),
--			   void *userdata, bool locked)
-+			   void *userdata)
+-			   void *userdata)
++static int __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev =
+*, void *),
++			  void *userdata)
  {
  	struct pci_dev *dev;
- 	struct pci_bus *bus;
-@@ -398,8 +398,6 @@ static void __pci_walk_bus(struct pci_bus *top, int (=
-*cb)(struct pci_dev *, void
- 	int retval;
+-	struct pci_bus *bus;
+-	struct list_head *next;
+-	int retval;
++	int ret =3D 0;
 =20
- 	bus =3D top;
--	if (!locked)
--		down_read(&pci_bus_sem);
- 	next =3D top->devices.next;
- 	for (;;) {
- 		if (next =3D=3D &bus->devices) {
-@@ -422,8 +420,6 @@ static void __pci_walk_bus(struct pci_bus *top, int (=
-*cb)(struct pci_dev *, void
- 		if (retval)
- 			break;
+-	bus =3D top;
+-	next =3D top->devices.next;
+-	for (;;) {
+-		if (next =3D=3D &bus->devices) {
+-			/* end of this bus, go up or finish */
+-			if (bus =3D=3D top)
++	list_for_each_entry(dev, &top->devices, bus_list) {
++		ret =3D cb(dev, userdata);
++		if (ret)
++			break;
++		if (dev->subordinate) {
++			ret =3D __pci_walk_bus(dev->subordinate, cb, userdata);
++			if (ret)
+ 				break;
+-			next =3D bus->self->bus_list.next;
+-			bus =3D bus->self->bus;
+-			continue;
+ 		}
+-		dev =3D list_entry(next, struct pci_dev, bus_list);
+-		if (dev->subordinate) {
+-			/* this is a pci-pci bridge, do its devices next */
+-			next =3D dev->subordinate->devices.next;
+-			bus =3D dev->subordinate;
+-		} else
+-			next =3D dev->bus_list.next;
+-
+-		retval =3D cb(dev, userdata);
+-		if (retval)
+-			break;
  	}
--	if (!locked)
--		up_read(&pci_bus_sem);
++	return ret;
  }
 =20
  /**
-@@ -441,7 +437,9 @@ static void __pci_walk_bus(struct pci_bus *top, int (=
-*cb)(struct pci_dev *, void
-  */
- void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void =
-*), void *userdata)
- {
--	__pci_walk_bus(top, cb, userdata, false);
-+	down_read(&pci_bus_sem);
-+	__pci_walk_bus(top, cb, userdata);
-+	up_read(&pci_bus_sem);
- }
- EXPORT_SYMBOL_GPL(pci_walk_bus);
-=20
-@@ -449,7 +447,7 @@ void pci_walk_bus_locked(struct pci_bus *top, int (*c=
-b)(struct pci_dev *, void *
- {
- 	lockdep_assert_held(&pci_bus_sem);
-=20
--	__pci_walk_bus(top, cb, userdata, true);
-+	__pci_walk_bus(top, cb, userdata);
- }
- EXPORT_SYMBOL_GPL(pci_walk_bus_locked);
-=20
 --=20
 2.43.5
 
