@@ -1,132 +1,140 @@
-Return-Path: <linux-pci+bounces-12264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D3B6960759
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:23:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEDF0960787
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:33:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B113B1F22490
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 10:23:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73226B21984
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 10:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4265A15B541;
-	Tue, 27 Aug 2024 10:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A0419CD07;
+	Tue, 27 Aug 2024 10:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh1CYYRF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKvyi+Gh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1238F8F54;
-	Tue, 27 Aug 2024 10:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEF2182B2;
+	Tue, 27 Aug 2024 10:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724754222; cv=none; b=IPSoXJC8QWIHBXm9+zFKp+ciig/7Ql2crnc9NU8JSxKdlQCUeSCo8ZCZtNKYaf/Pj9nUJuMaxOduJQfZs4o0KIq4sgqgQ+yNkRnBFG7WS9uwgVBnFS99xFfIeMbCB3d7AOzjpLLRhgwDWliTpQWSksZombJb71xsmFJass/Oyg8=
+	t=1724754791; cv=none; b=ACWvXlWtYnqNOhCnf4EaPpWk26TeE1q73jf9BXBk8t0r+tiQ7hSLqzUjTA94k3nNMkYyreR5UKzeGuDPo24o3Zjk9bz4dZ6YUqDna18GQVGU2ieQOgTMH5GjyncBZwOHGcbKqYsE0S4f4R10hJFkLLRSfNUwIgCC06pNPTUvKNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724754222; c=relaxed/simple;
-	bh=FmVs2H9fVl8fLd76/0s13jcKNXHjR7KwW4GTUDCgZwI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bwvG/gLlmM1ZFOrUoH6NauseVlv/KrlfYML3Qaassh69eWKg/uT874JRp8/KmIXnhm2RMyEb4TXzjwb1o6Lhd367XRz+39Tx0IGnk5J+sgCm7SsEEzssZBbIC3yFBEDVgaE1goJTyzuSv+ddcKIviTLjZHM2/kfArhPTdN59w1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh1CYYRF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95322C8B7A0;
-	Tue, 27 Aug 2024 10:23:40 +0000 (UTC)
+	s=arc-20240116; t=1724754791; c=relaxed/simple;
+	bh=cR7h+2R2D+Lq9NcV2CvzH83tJKg5LBeLkWoEq+6UNSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GcM+qcub1RUvBT2FP4X20AqQlYtY9yVbGuMIWAXYQCX8DHFzqczvlsai3C39lTPtc5nnQlqen6dBHIQU5D2ywqUfzSoafbSwQfFUGBHTaiQ5nirmSAZVayph0S5uabR7SSrlXvLK1W86VZ4YYoHT9rLram52HVPnpwwBybFxd9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKvyi+Gh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D693EC8B7A4;
+	Tue, 27 Aug 2024 10:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724754220;
-	bh=FmVs2H9fVl8fLd76/0s13jcKNXHjR7KwW4GTUDCgZwI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oh1CYYRFQwf5jTLB4Z/z0FIiLTnD8Te0npL99FxV8r3sxNKXsbJvXjS98Si2TR2WJ
-	 T6ZlRX3GYyjvyQLEMAwzzccsVQCTW9qXzOyZjtSWupPJ4enIaYPK0kXuSNeKy7J9EY
-	 el08cH5eJpAgvdapcX2pfiYyJahSXBvKG/Wo9VazQbQo0e5ZaWvP4hR25wg51MkLbP
-	 pe99biHsx6BeBlLPYaXKLBj/K47cYG0a7RzFxT9eQj8FYOn1reTJFCbzTo4UTm8jR0
-	 zP3BdzMCt0z/Mv5lnguS1p/e3P7JOgd1uP7MzoS5gxffo3EW9Sce0/8rwiVP4NwLWz
-	 BVaEEEQLQYItg==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ef27bfd15bso53759681fa.2;
-        Tue, 27 Aug 2024 03:23:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVKl8uInj5xOlBhhvvYE4a8MM9fS31eMwclhOTqQ4NreP4VZIouTneGMzVnKddipBer0zWhQw1Qqvv@vger.kernel.org, AJvYcCVEBXoNqDA5u1tUekbW843QR4svF5sVf53s3xBl9pi0oByRUezddkK1qdJ8/8CIxER0+5hkfFC2eNUp@vger.kernel.org, AJvYcCWrQtO18ozlOyKT8+H4MYvrr8jrDUP0yIHpK7D1l1qz4GHXJTjqauL1tbXxYJDMRSOm0hW0oMndXS6ZFy/T@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTnqzH4VCcBlnSIjf7YqtRpfBFUIkECEigOULWjKeACitvWu3a
-	uasOHUWM4EvknAdcBptSqt/NeN5XOYc/Pte6fywwhY8O7PBc9+9GWICCxgVN/SMa8t74rT+4awJ
-	9zsHcnSq6zhUHObazxsnMRbns8AU=
-X-Google-Smtp-Source: AGHT+IG8JqpafPZFJda1gwsxLaFO95Z3if+yPodfh+gkWBoK4uXw0HSkZtO/iat3COUmo3EiHSR2/ZVuezlgoUt1lak=
-X-Received: by 2002:a2e:a547:0:b0:2f0:1d51:a8fa with SMTP id
- 38308e7fff4ca-2f514b987f9mr18065741fa.30.1724754218921; Tue, 27 Aug 2024
- 03:23:38 -0700 (PDT)
+	s=k20201202; t=1724754791;
+	bh=cR7h+2R2D+Lq9NcV2CvzH83tJKg5LBeLkWoEq+6UNSY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aKvyi+Ghqx4bemzetoDEKzGX5EfXUIegPXeuzyAzG5HZtSvGqpul8p8ML276Jw3hM
+	 FYzZjrEoHp51Qhmib+lF8rhtP6GVxreg1qCAOldPfVZiHGA4e+sYODDxkMUbr00TDd
+	 9hJ/TZ//ufr3P06s47kYc7TB6nLetewf27CLaRIfinh/iLw0YqNO2UM/jxjMj7Wn5d
+	 UKGb0RydTOFcMo6jdqmjWDTm29BdepBpKtQ4pvk9Aax5CeHvk8e2r3UEUKJLMs+VZw
+	 RBRJ+dirqwBQIu7/0XgetatDFswfjdZtSqVZUbZY4nr6i3C01RWUni7fRizE7CrHwp
+	 tg8P+t5jhNKrQ==
+Message-ID: <2d3f3da1-713e-4378-b87d-11f10f0f9590@kernel.org>
+Date: Tue, 27 Aug 2024 12:33:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240823002422.3056599-1-avadhut.naik@amd.com>
-In-Reply-To: <20240823002422.3056599-1-avadhut.naik@amd.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 27 Aug 2024 12:23:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFUDy3qSp5q3UxWkuSCLwJ3O3SaFN25f+9tojJL=sFNJQ@mail.gmail.com>
-Message-ID: <CAMj1kXFUDy3qSp5q3UxWkuSCLwJ3O3SaFN25f+9tojJL=sFNJQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/cper: Print correctable AER information
-To: Avadhut Naik <avadhut.naik@amd.com>
-Cc: linux-efi@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	james.morse@arm.com, tony.luck@intel.com, ilpo.jarvinen@linux.intel.com, 
-	ira.weiny@intel.com, yazen.ghannam@amd.com, avadnaik@amd.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] phy: qcom: qmp: Add phy register and clk setting for
+ x1e80100 PCIe3
+To: Qiang Yu <quic_qianyu@quicinc.com>, manivannan.sadhasivam@linaro.org,
+ vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
+ konradybcio@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, abel.vesa@linaro.org,
+ quic_msarkar@quicinc.com, quic_devipriy@quicinc.com
+Cc: dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
+ neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
+ <20240827063631.3932971-4-quic_qianyu@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@kernel.org>
+In-Reply-To: <20240827063631.3932971-4-quic_qianyu@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 23 Aug 2024 at 02:24, Avadhut Naik <avadhut.naik@amd.com> wrote:
->
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
->
-> Currently, cper_print_pcie() only logs Uncorrectable Error Status, Mask
-> and Severity registers along with the TLP header.
->
-> If a correctable error is received immediately preceding or following an
-> Uncorrectable Fatal Error, its information is lost since Correctable
-> Error Status and Mask registers are not logged.
->
-> As such, to avoid skipping any possible error information, Correctable
-> Error Status and Mask registers should also be logged.
->
-> Additionally, ensure that AER information is also available through
-> cper_print_pcie() for Correctable and Uncorrectable Non-Fatal Errors.
->
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> Tested-by: Avadhut Naik <avadhut.naik@amd.com>
-> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+On 27.08.2024 8:36 AM, Qiang Yu wrote:
+> Currently driver supports only x4 lane based functionality using tx/rx and
+> tx2/rx2 pair of register sets. To support 8 lane functionality with PCIe3,
+> PCIe3 related QMP PHY provides additional programming which are available
+> as txz and rxz based register set. Hence adds txz and rxz based registers
+> usage and programming sequences. Phy register setting for txz and rxz will
+> be applied to all 8 lanes. Some lanes may have different settings on
+> several registers than txz/rxz, these registers should be programmed after
+> txz/rxz programming sequences completing.
+> 
+> Besides, PCIe3 related QMP PHY also requires addtional clk, which is named
+> as clkref_en. Hence, add this clk into qmp_pciephy_clk_l so that it can be
+> easily parsed from devicetree during init.
+> 
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 > ---
->  drivers/firmware/efi/cper.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
 
-Queued for v6.12 - thanks.
+[...]
 
+> +static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x8_pcie_rx_tbl[] = {
+> +	QMP_PHY_INIT_CFG_LANE(QSERDES_V6_20_RX_DFE_CTLE_POST_CAL_OFFSET, 0x3a, 1),
 
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 7d2cdd9e2227..b69e68ef3f02 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-> @@ -434,12 +434,17 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
->         "%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
->         pfx, pcie->bridge.secondary_status, pcie->bridge.control);
->
-> -       /* Fatal errors call __ghes_panic() before AER handler prints this */
-> -       if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
-> -           (gdata->error_severity & CPER_SEV_FATAL)) {
-> +       /*
-> +        * Print all valid AER info. Record may be from BERT (boot-time) or GHES (run-time).
-> +        *
-> +        * Fatal errors call __ghes_panic() before AER handler prints this.
-> +        */
-> +       if (pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) {
->                 struct aer_capability_regs *aer;
->
->                 aer = (struct aer_capability_regs *)pcie->aer_info;
-> +               printk("%saer_cor_status: 0x%08x, aer_cor_mask: 0x%08x\n",
-> +                      pfx, aer->cor_status, aer->cor_mask);
->                 printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
->                        pfx, aer->uncor_status, aer->uncor_mask);
->                 printk("%saer_uncor_severity: 0x%08x\n",
->
-> base-commit: fdf969bbceb389f5a7c69e226daf2cb724ea66ba
-> --
-> 2.34.1
->
+1 -> BIT(0)
+
+[...]
+
+> +	/* Set to true for programming all 8 lanes using txz/rxz registers */
+> +	bool lane_broadcasting;
+
+This is unnecessary because you call qmp_configure_lane conditionally,
+but that function has a nullcheck built in
+
+> +
+>  	/* resets to be requested */
+>  	const char * const *reset_list;
+>  	int num_resets;
+> @@ -2655,6 +2815,8 @@ struct qmp_pcie {
+>  	void __iomem *rx;
+>  	void __iomem *tx2;
+>  	void __iomem *rx2;
+> +	void __iomem *txz;
+> +	void __iomem *rxz;
+>  	void __iomem *ln_shrd;
+>  
+>  	void __iomem *port_b;
+> @@ -2700,7 +2862,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>  
+>  /* list of clocks required by phy */
+>  static const char * const qmp_pciephy_clk_l[] = {
+> -	"aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
+> +	"aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux", "clkref_en",
+
+Why not just put in TCSR_PCIE_8L_CLKREF_EN as "ref"? It's downstream
+of the XO anyway.
+
+[...]
+
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> @@ -3700,6 +3907,11 @@ static void qmp_pcie_init_registers(struct qmp_pcie *qmp, const struct qmp_phy_c
+>  
+>  	qmp_configure(qmp->dev, serdes, tbls->serdes, tbls->serdes_num);
+>  
+> +	if (cfg->lane_broadcasting) {
+
+All these ifs can be unconditional
+
+Konrad
 
