@@ -1,84 +1,85 @@
-Return-Path: <linux-pci+bounces-12259-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12260-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F9F69604A0
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 10:40:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21EC39604FD
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 10:56:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C47F2821FF
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 08:40:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE38A28121F
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 08:56:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85616197A97;
-	Tue, 27 Aug 2024 08:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DD2158DD0;
+	Tue, 27 Aug 2024 08:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k1M3jX64"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aiGdvWAv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C70114A90
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 08:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859A6198A2A
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 08:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724748021; cv=none; b=VEKrCYzEr2Fc18VVNtx4c8mEJyzjrm/B8V9Xh0ji9RuTQXkawOevKTncwsZV7aQ/AczecJLJDuwzbqwWpp2+EWqEzd9JcoakH4ejT+pbYJ09ZJKHI3T6BP8IYYc4vzG2uO3kC5Ndp87Ytq1V0QhiFFvLF4GFmaBVdhe+j9MYu+k=
+	t=1724748985; cv=none; b=J6H/MofnDUBbWmN2fRl+nOhFf6apbsqyFH3sUIPrBTcUHvaLYZizHDbWVIQNsIGrzFofJbefOv9KsmhLatNRs8LkT6/OuaArdsMeMGG5JU8RuvgMSH+LLZCf360HblcqOpk9Tb2LA61uWwfTGTzJfzAvh0xbiubW2PoLrRuuhM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724748021; c=relaxed/simple;
-	bh=9QN525WlZ9Yo78qHKye9xARuQKaUPonHRP2LxByxEI0=;
+	s=arc-20240116; t=1724748985; c=relaxed/simple;
+	bh=KnshcSSjPgWEKcRoguKRkHR8KeIvH8sTByntzoFaFYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hjCIh1UQpmE+CokjWw9q6e3vrSf53aseWCM1AORP7zyaBbIzUjYujtmRVJGtcM5O0/xoLqeXrkXEC34d5rsE+TdJiEYFDV/YbtB3mNVqQMGVTBS1HjVMeECZNWlcSRy5c1y4k7fO1ZpioPlBP2bQU1uMUImTxo7kYXsTGWgBnmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k1M3jX64; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qy4g4KJ/gKXuoytYF6ls0KUn1fN6iR7ECTHCADMV+yK1RDdRC97e6U2F2aHKoayRfUj889ofUQvwkcKpvmEIYcFcK8KDbtFrw7mvDWqfdh93vXApHMR7LuyD7SNMXaQxOs6mlMF9w+DqKAHKeuv/0MsutDsG3hq06pIlgUYDoww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aiGdvWAv; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-71433096e89so4437818b3a.3
-        for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 01:40:18 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20223b5c1c0so46736965ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 01:56:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724748018; x=1725352818; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1724748983; x=1725353783; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=W5DWQ30yzJUOL5OR+PUaG1BUHvOl8uCgiA5aV3iacTk=;
-        b=k1M3jX64MIjnUEN7qmAYqW/1DnJyTYBYOVmqRAZ6JurokW2w0FetjuABcJAEdiXYBe
-         1hqQWUxqp0DTAmSQvZMOBJpzuhSjGpQN8wo8a3CyOE9p6isgrqnpfMYpXVwfkvJo2r04
-         Hyx9p6MnKwMfiq23y/Mg4P33LWDe4zzmUeQdfibmStwEKlIGrf4xd+KVItcGZoCjLb37
-         vUyM1dUZFpZJgu80Fi8gKEgsSub3nxAFXPutqDyxaeVE2uMGhQzvcbE2WFY1Qf17PqaJ
-         7HQoABLNxada2DR3pSvtVznde30I7Lvbpm7989jO5utH6Y1dC5dLrLeLlq8oYiAn+CtP
-         SFrQ==
+        bh=MCjpA1BkM7XAvfhNc3VnANr4WtSUCNv2xJfm2SvPqTg=;
+        b=aiGdvWAvtwTFE24lYyjFqyUeCcb+TLREeHNipukypn6EvDdulIT9kwKJjIIVA7hSJp
+         Zw80wXQkveCs/iMWfAp0igykj1dv790iSxJrsueLDQ+xWJNZBu6vuyfPUH6YtXAcdmU6
+         JstcY3SNb/6co/8cuoF9tIk/uo9h6jj+qTmDXrYkeh4NJvDcc9PAiHyD0svhJXxAeg4I
+         gsMt76Ivr1OVVlATZ6L+CK0snXKdIzd6S8scN2ovlsAtTSuSf6bGvsv2qBTGGA3hKPE1
+         I0FURsQO+bDIb6XrZA2JOucHPgupyV1L/nWDnduZZOAfRX3xLwwMAD5vML5FekoJ5edK
+         hAZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724748018; x=1725352818;
+        d=1e100.net; s=20230601; t=1724748983; x=1725353783;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W5DWQ30yzJUOL5OR+PUaG1BUHvOl8uCgiA5aV3iacTk=;
-        b=ubFsyAUeMDwwD1H/Wz9UyYY9xvtU1QgAZQ7RtTDxDBzg7as4sbKbcaFhMUBunymYoJ
-         QyU/crz1gLedpuQKobLA0cPLRqdctHW4JTbWjEXL0MfbXeh5/amUwPbzvsv+3NPMzjfv
-         uw+rFFPiiIToj025M9qOWMk9MyMC1ss9WpaqacCwMTtNeTH0rTKrILotQhkodWlswdQF
-         QGq7ESZrivm327vcJh1xLCPgFHNGjHsLXz/4CVR7zVTss5huF1SR+SYcJRz5lpWi8wiY
-         PuYLrE0yIqsz6CIAgNf0rLMjYtbWSWOcv6TWWL+9U4V2CMXWO8oz7lgnC34rdZ9k8D5X
-         mCXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUl6w7CK4sqMZ6QdHDTjCBmaA5GHwHPlcNvEqyvSvPJfZifa0bBGwxIMhpVu9T+p7bjfFOsYosyzCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyuq/MNbmFEoutTirfoDjVHJ2tCafNEl4DfwVBAFEqWyb2m9CIU
-	e2Ua/fQdWFPTzVeCrRD56xcVBJ2AEBQC8O5hG4uUD5A34e0qHVF/4mY7d/wG/Q==
-X-Google-Smtp-Source: AGHT+IG2iISKIuVAXaWnpPKXfM3PnhSGzIjpbXAu2gNEwo5d6yOloFEy2S4aiVBjPvBY9Z0qfA7pcw==
-X-Received: by 2002:a05:6a21:e591:b0:1be:c5ab:7388 with SMTP id adf61e73a8af0-1ccc08f1814mr2112530637.25.1724748018278;
-        Tue, 27 Aug 2024 01:40:18 -0700 (PDT)
+        bh=MCjpA1BkM7XAvfhNc3VnANr4WtSUCNv2xJfm2SvPqTg=;
+        b=Ro0z6D443GONySobPU5qssAx9gCs4JVwoxapzZudteRwtzrRKiQg4lxyiAM3ESPt9K
+         sLMFZ+irch2fkT4XvZ9YUPNNLSKV1tggOM3Qqeyvn2CXFYOuC0Nb0hwaLJRyGdt33iuD
+         8g2DB7w33lJ7V1ppjd34wnca4zp/df37BIJ7MlBeJVLB7vFZnGUGc8JvywjgDzuFYDKt
+         ZZb0aV4KQzT1ofqSlmDOl1yQM9KAecP5eZ/Vmd3/hUXn2LpFSpQuCfiAmpQz2krsfnk2
+         qJO3q/nGVM6HMhJERFWXhX/A+0VmzOUV8rMe6WNkdfmi7p+Md9r9MOBTK4nuB5OlkMpX
+         xrnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzaQ+3dHVv5+S1u4xazjc66oaxK9SkjiOZMiYqCANiZ1rkVWMyeyfdHEEqJEt9WRv2QKt6GexRSk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+ovtnFVpF1OQ620Q8qwGdX08YqDvznr2Ou5CgT7+VDlmM1x5e
+	RdciY4q9zinfQTPfqJLy0naPIU5CCwTmUSfKg9CVzvV8bi0gDCzWOtzAC1SIzg==
+X-Google-Smtp-Source: AGHT+IE1rgR8+yyQWa5wIANJNMpAX1XXUQS+uZ8+XMfk9HlE0GmezrZblJ8U8iol6/Rz0qEIFUedJg==
+X-Received: by 2002:a17:903:1210:b0:203:a115:59a2 with SMTP id d9443c01a7336-204df50677fmr30875585ad.54.1724748982807;
+        Tue, 27 Aug 2024 01:56:22 -0700 (PDT)
 Received: from thinkpad ([117.213.96.164])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-203859f02e0sm78678985ad.250.2024.08.27.01.40.15
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20385ae512bsm78756345ad.259.2024.08.27.01.56.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2024 01:40:17 -0700 (PDT)
-Date: Tue, 27 Aug 2024 14:10:12 +0530
+        Tue, 27 Aug 2024 01:56:22 -0700 (PDT)
+Date: Tue, 27 Aug 2024 14:26:16 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 1/2] PCI: don't rely on of_platform_depopulate() for
- reused OF-nodes
-Message-ID: <20240827084012.rjbfk4dhumunhaaa@thinkpad>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Subject: Re: [PATCH v3 2/2] PCI/pwrctl: put the bus rescan on a different
+ thread
+Message-ID: <20240827085616.v3xzrgyojxd746bv@thinkpad>
 References: <20240823093323.33450-1-brgl@bgdev.pl>
- <20240823093323.33450-2-brgl@bgdev.pl>
+ <20240823093323.33450-3-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,76 +89,132 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240823093323.33450-2-brgl@bgdev.pl>
+In-Reply-To: <20240823093323.33450-3-brgl@bgdev.pl>
 
-+ Rob
-
-On Fri, Aug 23, 2024 at 11:33:22AM +0200, Bartosz Golaszewski wrote:
+On Fri, Aug 23, 2024 at 11:33:23AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> of_platform_depopulate() doesn't play nice with reused OF nodes - it
-> ignores the ones that are not marked explicitly as populated and it may
-> happen that the PCI device goes away before the platform device in which
-> case the PCI core clears the OF_POPULATED bit. We need to
-> unconditionally unregister the platform devices for child nodes when
-> stopping the PCI device.
+> If we trigger the bus rescan from sysfs, we'll try to lock the PCI
+
+I think the first 'we' is user and second 'we' is PCI and pwrctl drivers. If so,
+it should be spelled out to make it clear.
+
+> rescan mutex recursively and deadlock - the platform device will be
+> populated and probed on the same thread that handles the sysfs write.
 > 
 
-It sounds like the fix is in of_platform_depopulate() itself and this patch
-works around the API issue in PCI driver.
+A little bit rewording could help here:
 
-Rob, is that correct?
+'When a user triggers a rescan from sysfs, sysfs code acquires the
+pci_rescan_remove_lock during the start of the rescan. Then if a platform
+device is created, pwrctl driver may get probed to control the power to the
+device and it will also try to acquire the same lock to do the rescan after
+powering up the device. And this will cause a deadlock.'
+
+> Add a workqueue to the pwrctl code on which we schedule the rescan for
+> controlled PCI devices. While at it: add a new interface for
+> initializing the pwrctl context where we'd now assign the parent device
+> address and initialize the workqueue.
+> 
+> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+> Reported-by: Konrad Dybcio <konradybcio@kernel.org>
+
+Don't we need 'Closes' link these days? I hope this is reported in ML.
+
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+With above changes,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  drivers/pci/remove.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+>  drivers/pci/pwrctl/core.c              | 26 +++++++++++++++++++++++---
+>  drivers/pci/pwrctl/pci-pwrctl-pwrseq.c |  2 +-
+>  include/linux/pci-pwrctl.h             |  3 +++
+>  3 files changed, 27 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index 910387e5bdbf..4770cb87e3f0 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -1,7 +1,10 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/pci.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +
->  #include "pci.h"
->  
->  static void pci_free_resources(struct pci_dev *dev)
-> @@ -14,12 +17,25 @@ static void pci_free_resources(struct pci_dev *dev)
->  	}
+> diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
+> index feca26ad2f6a..01d913b60316 100644
+> --- a/drivers/pci/pwrctl/core.c
+> +++ b/drivers/pci/pwrctl/core.c
+> @@ -48,6 +48,28 @@ static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
+>  	return NOTIFY_DONE;
 >  }
 >  
-> +static int pci_pwrctl_unregister(struct device *dev, void *data)
+> +static void rescan_work_func(struct work_struct *work)
 > +{
-> +	struct device_node *pci_node = data, *plat_node = dev_of_node(dev);
+> +	struct pci_pwrctl *pwrctl = container_of(work, struct pci_pwrctl, work);
 > +
-> +	if (dev_is_platform(dev) && plat_node && plat_node == pci_node) {
-> +		of_device_unregister(to_platform_device(dev));
-> +		of_node_clear_flag(plat_node, OF_POPULATED);
-> +	}
-> +
-> +	return 0;
+> +	pci_lock_rescan_remove();
+> +	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
+> +	pci_unlock_rescan_remove();
 > +}
 > +
->  static void pci_stop_dev(struct pci_dev *dev)
->  {
->  	pci_pme_active(dev, false);
+> +/**
+> + * pci_pwrctl_init() - Initialize the PCI power control context struct
+> + *
+> + * @pwrctl: PCI power control data
+> + * @dev: Parent device
+> + */
+> +void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev)
+> +{
+> +	pwrctl->dev = dev;
+> +	INIT_WORK(&pwrctl->work, rescan_work_func);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_pwrctl_init);
+> +
+>  /**
+>   * pci_pwrctl_device_set_ready() - Notify the pwrctl subsystem that the PCI
+>   * device is powered-up and ready to be detected.
+> @@ -74,9 +96,7 @@ int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
+>  	if (ret)
+>  		return ret;
 >  
->  	if (pci_dev_is_added(dev)) {
-> -		of_platform_depopulate(&dev->dev);
-> +		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
-> +				      pci_pwrctl_unregister);
->  		device_release_driver(&dev->dev);
->  		pci_proc_detach_device(dev);
->  		pci_remove_sysfs_dev_files(dev);
+> -	pci_lock_rescan_remove();
+> -	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
+> -	pci_unlock_rescan_remove();
+> +	schedule_work(&pwrctl->work);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+> index c7a113a76c0c..f07758c9edad 100644
+> --- a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+> +++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+> @@ -50,7 +50,7 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	data->ctx.dev = dev;
+> +	pci_pwrctl_init(&data->ctx, dev);
+>  
+>  	ret = devm_pci_pwrctl_device_set_ready(dev, &data->ctx);
+>  	if (ret)
+> diff --git a/include/linux/pci-pwrctl.h b/include/linux/pci-pwrctl.h
+> index 45e9cfe740e4..0d23dddf59ec 100644
+> --- a/include/linux/pci-pwrctl.h
+> +++ b/include/linux/pci-pwrctl.h
+> @@ -7,6 +7,7 @@
+>  #define __PCI_PWRCTL_H__
+>  
+>  #include <linux/notifier.h>
+> +#include <linux/workqueue.h>
+>  
+>  struct device;
+>  struct device_link;
+> @@ -41,8 +42,10 @@ struct pci_pwrctl {
+>  	/* Private: don't use. */
+>  	struct notifier_block nb;
+>  	struct device_link *link;
+> +	struct work_struct work;
+>  };
+>  
+> +void pci_pwrctl_init(struct pci_pwrctl *pwrctl, struct device *dev);
+>  int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl);
+>  void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl);
+>  int devm_pci_pwrctl_device_set_ready(struct device *dev,
 > -- 
 > 2.43.0
 > 
