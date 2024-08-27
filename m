@@ -1,110 +1,214 @@
-Return-Path: <linux-pci+bounces-12312-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12315-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38927961801
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 21:29:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E670A961821
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 21:44:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FBA0B21FBB
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 19:29:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7A940B2231F
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 19:44:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47CE577117;
-	Tue, 27 Aug 2024 19:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF1B1D2F5E;
+	Tue, 27 Aug 2024 19:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Tg36DlMg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVXWTM4u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77291D2F51
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 19:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4E5132132;
+	Tue, 27 Aug 2024 19:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724786939; cv=none; b=kC/nU4kbbPIwtlDObBBxj8mkCf4yHleVMalTrKqR6AJV5lK0KEturl05oTmDEf160XAD2FXX5bAo3DPmpumbLUFWRPHQZOlIhm5iWgEBSMTGubwoQJApFLmfNPHwKB2aLz8MlU5IzEptJ64BT9FZzq9hkSYPoTO2koekTviQk+g=
+	t=1724787855; cv=none; b=FlUwrIaRDEMoV5bs2uFAeVVXPypGOkaxdAVGsyNMRjFWBioH3c3MnE3UDKJ3BYedPMrJNs9+oGDZd6QHUvxcPAXLtxiH68V1DhyzlE8phzij61ATJumzoZBBTqV9H9Q92vDw3OvCRfWhsZVW8A1KuAOIO9C7kuL4T4X2z21oTHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724786939; c=relaxed/simple;
-	bh=tiCvGxXvIf6qJhtNJtaD3ZmT4CUNupTzQaXTk64jKdU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z5F/bgdki9Cn/MeqQKwUfOlSciqKn0CD9ZRh7AD/Jk+A4WVmGvpl+mb1czpghjwiwqw7H0uJZLQwrAOCqbMI9t3Vy+G4K1ygG43quH0XSUd3zOcSJiJLMhv4yT9vJN0mxb/mVxK0KPSiYrQ5D5aPdf1XUgf541KjdtI/Kxw3WJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Tg36DlMg; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47RIpS0q023565
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:57 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	s2048-2021-q4; bh=WtLjBrrKmUt0MuqC5UcDaN4lAOZ5FTZEdBCR44av+GY=; b=
-	Tg36DlMgYN+c2AeEM8N/WBUNKuH/ix68+aPOhKvZpna2N9UR6rd2nV2Aev1V+xCM
-	MaRxYM9wCshkqLum8ikdRSIuzHT/Aj1H6Ez2X1mCz8Yo+1M1mxdx3JhlEwHx9igQ
-	+rMa0GMSIDNDvA1F5oVXc+6MJJw3pej5MZ3/GyfK23zgYlJdV/qGakqJEN9dyDqm
-	6ESuSZsT+D8SB7nobWDDl59b/KJAhLMrv6KIe0MoffWNdWV+Yfv2jqvno4AOWmQE
-	apW83l9rleknvOZSzcxv0VFp8pDFu47t1wVmUok8OyoEj/C6+q2FCQCH7pEWkSsl
-	K53JPnCDs5rdOAj7+ycyKw==
-Received: from maileast.thefacebook.com ([163.114.130.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 419meg8836-9
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:28:57 -0700 (PDT)
-Received: from twshared26656.07.ash9.facebook.com (2620:10d:c0a8:1c::1b) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Tue, 27 Aug 2024 19:28:38 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 87F00124FD705; Tue, 27 Aug 2024 12:28:27 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>
-CC: Keith Busch <kbusch@kernel.org>,
-        Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>
-Subject: [PATCHv2 5/5] pci: unexport pci_walk_bus_locked
-Date: Tue, 27 Aug 2024 12:28:26 -0700
-Message-ID: <20240827192826.710031-6-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240827192826.710031-1-kbusch@meta.com>
-References: <20240827192826.710031-1-kbusch@meta.com>
+	s=arc-20240116; t=1724787855; c=relaxed/simple;
+	bh=cWcqou7ktN+DCizj7qq+pkUDcuFVknbvf6n2uiD2GNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KcVmg1NAobmRj93A7QgikQRG/Z048o/BbBxv2nB6Nzr5r4SrkYlmiTwLtD9iYAC8aq1fxzUwYOAgw2lZxOfCzphyuZjgh4x1aoYaR5xdlFxsDO6YAt/Km7/G9UQ0E31rpNUXQejEE8EVhFzMWliCtwnN37+nNxTeysBgCBy4LIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVXWTM4u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58737C4DE02;
+	Tue, 27 Aug 2024 19:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724787854;
+	bh=cWcqou7ktN+DCizj7qq+pkUDcuFVknbvf6n2uiD2GNE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FVXWTM4u9sZttTcUE+5fzLJWeHh+0hh9XefscDDXkwF19uJgVsH0qQIqVzOX/zrI8
+	 4tjVXH6JD7RkSpe8ijrhQURQntHnrzeG0aYbS5sE7skHIdMg00Nb+j5HsOIMSR2K0m
+	 pvNh6aL8fqVR3B5jgl9KtisTuXDEOd7XP77zbntZkEwsyFbAoM7DGzHAN+kzE6C/mv
+	 8C4P7YpUlsNDzHtgIB4Qy+nipzbzvK+UBMciZYt8sjY7F90azJjbIWLLX5hWapNYsU
+	 ZTGcZAa1SxNpbPEgAlMtufN7zUJaGRXpbDXeaClQgqvu+kTR2AUSSw9+QN9r7eGQo2
+	 dNFqB9kIg05uw==
+Date: Tue, 27 Aug 2024 14:44:12 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>, Gary Li <Gary.Li@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mathias Nyman <mathias.nyman@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+	Daniel Drake <drake@endlessos.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Duc Dang <ducdang@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in
+ pci_dev_wait()
+Message-ID: <20240827194412.GA526339@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: cENQFERb-aGWNtV2iUKz4qiZ0sdsl5oK
-X-Proofpoint-ORIG-GUID: cENQFERb-aGWNtV2iUKz4qiZ0sdsl5oK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-27_10,2024-08-27_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f43d44f2-004d-4b67-8db9-2f474c3e6d30@amd.com>
 
-From: Keith Busch <kbusch@kernel.org>
+[+cc Rafael for ACPI power transition from D3cold to D0 delay]
 
-There's only one user of this, and it's internal, so no need to export
-it.
+On Mon, Aug 26, 2024 at 02:16:34PM -0500, Mario Limonciello wrote:
+> On 8/23/2024 14:54, Bjorn Helgaas wrote:
+> > On Fri, Aug 23, 2024 at 10:40:20AM -0500, Mario Limonciello wrote:
+> > > If a dock is plugged in at the same time as autosuspend delay
+> > > then this can cause malfunctions in the USB4 stack. This happens
+> > > because the device is still in D3cold at the time that the PCI
+> > > core handed control back to the USB4 stack.
+> ...
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/pci/bus.c | 1 -
- 1 file changed, 1 deletion(-)
+> > > A device that has gone through a reset may return a value in
+> > > PCI_COMMAND but that doesn't mean it's finished transitioning to
+> > > D0.  For devices that support power management explicitly check
+> > > PCI_PM_CTRL on everything but system resume to ensure the
+> > > transition happened.
+> ...
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 8491e9c7f0586..30620f3bb0e2d 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -435,7 +435,6 @@ void pci_walk_bus_locked(struct pci_bus *top, int (*c=
-b)(struct pci_dev *, void *
-=20
- 	__pci_walk_bus(top, cb, userdata);
- }
--EXPORT_SYMBOL_GPL(pci_walk_bus_locked);
-=20
- struct pci_bus *pci_bus_get(struct pci_bus *bus)
- {
---=20
-2.43.5
+> > > Devices that don't support power management and system resume
+> > > will continue to use PCI_COMMAND.
 
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -1309,21 +1309,33 @@ static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_type, int
+> > >   	 * the read (except when CRS SV is enabled and the read was for the
+> > >   	 * Vendor ID; in that case it synthesizes 0x0001 data).
+> > >   	 *
+> > > -	 * Wait for the device to return a non-CRS completion.  Read the
+> > > -	 * Command register instead of Vendor ID so we don't have to
+> > > -	 * contend with the CRS SV value.
+> > > +	 * Wait for the device to return a non-CRS completion.  On devices
+> > > +	 * that support PM control and on waits that aren't part of system
+> > > +	 * resume read the PM control register to ensure the device has
+> > > +	 * transitioned to D0.  On devices that don't support PM control,
+> > > +	 * or during system resume read the command register to instead of
+> > > +	 * Vendor ID so we don't have to contend with the CRS SV value.
+> > >   	 */
+> > >   	for (;;) {
+> > > -		u32 id;
+> > > -
+> > >   		if (pci_dev_is_disconnected(dev)) {
+> > >   			pci_dbg(dev, "disconnected; not waiting\n");
+> > >   			return -ENOTTY;
+> > >   		}
+> > > -		pci_read_config_dword(dev, PCI_COMMAND, &id);
+> > > -		if (!PCI_POSSIBLE_ERROR(id))
+> > > -			break;
+> > > +		if (dev->pm_cap && reset_type != PCI_DEV_WAIT_RESUME) {
+> > > +			u16 pmcsr;
+> > > +
+> > > +			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > +			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
+> > > +			    (pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
+> > > +				break;
+> > > +		} else {
+> > > +			u32 id;
+> > > +
+> > > +			pci_read_config_dword(dev, PCI_COMMAND, &id);
+> > > +			if (!PCI_POSSIBLE_ERROR(id))
+> > > +				break;
+> > > +		}
+> > 
+> > What is the rationale behind using PCI_PM_CTRL in some cases and
+> > PCI_COMMAND in others?
+> 
+> We saw a deadlock during resume from suspend when PCI_PM_CTRL was used for
+> all cases that supported dev->pm_cap.
+> 
+> > Is there some spec language we can cite for
+> > this?
+> 
+> Perhaps it being a "cold reset" during resume?
+> 
+> > IIUC, pci_dev_wait() waits for a device to be ready after a reset
+> > (FLR, D3hot->D0 transition for devices where No_Soft_Reset is clear,
+> > DPC) and after power-up from D3cold (pci_pm_bridge_power_up_actions()).
+> > I think device readiness in all of these cases is covered by PCIe
+> > r6.0, sec 6.6.1.
+> ...
+
+> > If the Root Port above the device supports Configuration RRS
+> > Software Visibility, I think we probably should use that here
+> > instead of either PCI_COMMAND or PCI_PM_CTRL.
+> 
+> I did check and in this case the root port the USB4 routers are
+> connected to support this.
+> 
+> How do you think this should be done instead?
+> 
+> > SR-IOV VFs don't implement Vendor ID, which might complicate this
+> > a little.  But it niggles in my mind that there may be some other
+> > problem beyond that.  Maybe Alex remembers.
+> > 
+> > Anyway, if we meet the requirements of sec 6.6.1, the device
+> > should be ready to respond to config requests, and I assume that
+> > also means the device is in D0.
+> 
+> Within that section there is a quote to point out:
+> 
+> "
+> To allow components to perform internal initialization, system
+> software must wait a specified minimum period following exit from a
+> Conventional Reset of one or more devices before it is permitted to
+> issue Configuration Requests to those devices
+> "
+> 
+> In pci_power_up() I don't really see any hardcoded delays
+> specifically for this case of leaving D3cold. The PCI PM spec
+> specifies that it will take "Full context restore or boot latency".
+> I don't think it's reasonable to have NO delay.
+
+I agree, leaving D3cold means "applying power to the device", and PCIe
+r6.0, sec 6.6.1, says that's a Fundamental Reset:
+
+  A Fundamental Reset must occur following the application of power to
+  the component. This is called a Cold Reset.
+
+So we need a delay similar to what we do in
+pci_bridge_wait_for_secondary_bus().  I don't know whether that is
+supposed to happen somewhere on the ACPI side or in the PCI side, but
+my inclination would be the PCI side because the delay isn't really
+platform-specific, it's specified by the PCI specs, and the OS needs
+to manage the RRS Software Visibility retries and features like
+Readiness Notifications.
+
+pci_set_low_power_state() contains corresponding delays for putting
+devices in D1, D2, and D3hot.
+
+Maybe the D3cold -> D0 delays should be in
+platform_pci_set_power_state()?  I think pci_power_up() is the only
+caller that sets the state to D0, and it assumes the device is
+Configuration Ready when platform_pci_set_power_state() returns:
+
+  pci_power_up
+    platform_pci_set_power_state
+    pci_read_config_word(PCI_PM_CTRL)
+
+So I think we need basically the same delays and pci_dev_wait() stuff
+in this path.
+
+Bjorn
 
