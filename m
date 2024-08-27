@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-12266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 341A69607AF
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:42:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9A39960818
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 13:02:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52BE81C223C0
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 10:42:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A42061C223E7
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 11:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5CBC19EEAF;
-	Tue, 27 Aug 2024 10:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0541319E7FF;
+	Tue, 27 Aug 2024 11:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXpe/BeC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWnmJFwM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809A8149E0E;
-	Tue, 27 Aug 2024 10:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7323158D9C;
+	Tue, 27 Aug 2024 11:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724755352; cv=none; b=M9rNvr2nEONhI88pUYx9dGaJZ6eV9y3IOYgEZfrsB29D+TgaKfg9fvcbtXWCGJHgXT94ITnzAPy5O4hz33r9KzDUL/+fpRSbPPP8ONJUkCVehrdDl969Cc04vmjo239b1UyZlxSeZ2qAnzk7TcxPaSVmh0l3jsT5icIPCssmuII=
+	t=1724756559; cv=none; b=hHdn0mYO9yuuTzOlOyltszUKRT/NApAOnGxqa+cyVmnvBDKsozdeAEb5LOWvBX0rQ0/XMjWSP0cbKd7oc8yeZJMVe/tM9j3JKlgD9Lyx2hyXkINvK6RHwK5EkhHCCxwPTWPjLW5JMhpt3jqp3MB1xDgMf88xKBZF84x2ujRd4S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724755352; c=relaxed/simple;
-	bh=P11y2Il6+3Jb8mnyXTSgji9V0QqiqJkuHWp8Rnzmnr8=;
+	s=arc-20240116; t=1724756559; c=relaxed/simple;
+	bh=AdxxyU7osmJMtOozW5BsXf+2/zQypAfNNaF3yzunBVk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mA53mQyTJyPHu2rON4xfK/0T2FggbJ5dVRWdb03sWxuA7sN8g2yMGQIJYFvViAxguxJ7TEwM9gIES0/gJTsJ4QV3YDBEa30+FLB9/+PqR6Mxrf97lujig4pZGoJ8HHYCjVTDWM4ELYSOUS9CInkKQKCLz+bYIzUTe1UFDYvQ4AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXpe/BeC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A98C8B7B1;
-	Tue, 27 Aug 2024 10:42:23 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=S/UA9w5MpZ2UHP7yfayW+/19xibTZAlfLAKaL1prOIYsF3TxIzu7RYatDkC1V4kAnt6lfawT7pUWcYp2FOAFzP9Rd2TDgRRwM6B/zZQAIQC+kyKsgZq6T1IJ+/zPI6YYArPF9ycbUvxLx877UoZ77R8rMq1x2jpEBALD77CrnM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWnmJFwM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CCA7C8B7A0;
+	Tue, 27 Aug 2024 11:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724755351;
-	bh=P11y2Il6+3Jb8mnyXTSgji9V0QqiqJkuHWp8Rnzmnr8=;
+	s=k20201202; t=1724756559;
+	bh=AdxxyU7osmJMtOozW5BsXf+2/zQypAfNNaF3yzunBVk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qXpe/BeC0gmds0QZGm5M3CnZaRX6pdjD5TwOixdqfWPxKIub1gLsAs7aDv0+8uQ95
-	 /ajaGibnWMsHBy2aaP/9AVzCqbyvWcOD20VQ6EEkX9NNonfW5lqXx6HgwQiw/DbgnU
-	 Iwesg+IVNCTZOA2vqAl3NbC/HarwqUl/RYMuFZhATv8551s0HjOOCiMp+Fytw31Zxn
-	 KdukH25cM1bynkxx1oevhAI6YSdqnZA//xtjckq3w2WDHEoA11QUWU0XnHxm7RKhv4
-	 eEQcxaQ4zJrM9/Q1NeFU9OOxwK4RCGo4OUTHgsHzd8aJfxKKDzJzr5ImL4+TWuHAxO
-	 lPAKqPhQ3O0Fw==
-Message-ID: <41d4bc67-e47c-4b6e-a620-b83f48f43103@kernel.org>
-Date: Tue, 27 Aug 2024 12:42:21 +0200
+	b=fWnmJFwMfvSprxmKFgXSpRKb2p6ZxhMsPV+1W75GynZLR7cYyCHoF2/5c6NKrBLug
+	 oQjbcA0JCpLRSQXh/SwKhW4UuOrUP0GaMChkPVPom7YSoL4889apIwavlckTM8kTQD
+	 PQqGO3HegTX9dcaqzYmXKnbO5pG0xwwdnDVpySOBfjskKyvbBeU2emKSkS+SzIL5N+
+	 V5iN9YtvertY+9qj7EI/r+Abt0WlFwupNDvTM/Fhvn17A/XAwOSSYCcrrunMAjXxLv
+	 q/8xla2Cl1AxeIsSZ5ySnt0+vNGU1vuZf9D/UmQvvgYTvCWkqlXTqewQMFnekfvl/I
+	 u2wB68YFyTwPA==
+Message-ID: <52b32254-8468-4fba-8357-0edc54dee129@kernel.org>
+Date: Tue, 27 Aug 2024 13:02:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] arm64: dts: qcom: x1e80100: Add support for PCIe3 on
- x1e80100
+Subject: Re: [PATCH 8/8] PCI: qcom: Add support to PCIe slot power supplies
 To: Qiang Yu <quic_qianyu@quicinc.com>, manivannan.sadhasivam@linaro.org,
  vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
  konradybcio@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
@@ -63,200 +62,71 @@ Cc: dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
  linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-clk@vger.kernel.org
 References: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
- <20240827063631.3932971-5-quic_qianyu@quicinc.com>
+ <20240827063631.3932971-9-quic_qianyu@quicinc.com>
 Content-Language: en-US
 From: Konrad Dybcio <konradybcio@kernel.org>
-In-Reply-To: <20240827063631.3932971-5-quic_qianyu@quicinc.com>
+In-Reply-To: <20240827063631.3932971-9-quic_qianyu@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27.08.2024 8:36 AM, Qiang Yu wrote:
-> Describe PCIe3 controller and PHY. Also add required system resources like
-> regulators, clocks, interrupts and registers configuration for PCIe3.
+> On platform x1e80100 QCP, PCIe3 is a standard x8 form factor. Hence, add
+> support to use 3.3v, 3.3v aux and 12v regulators.
 > 
 > Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 > ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 205 ++++++++++++++++++++++++-
->  1 file changed, 204 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 52 +++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index 74b694e74705..55b81e7de1c7 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -744,7 +744,7 @@ gcc: clock-controller@100000 {
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6f953e32d990..59fb415dfeeb 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -248,6 +248,8 @@ struct qcom_pcie_cfg {
+>  	bool no_l0s;
+>  };
 >  
->  			clocks = <&bi_tcxo_div2>,
->  				 <&sleep_clk>,
-> -				 <0>,
-> +				 <&pcie3_phy>,
->  				 <&pcie4_phy>,
->  				 <&pcie5_phy>,
->  				 <&pcie6a_phy>,
-> @@ -2879,6 +2879,209 @@ mmss_noc: interconnect@1780000 {
->  			#interconnect-cells = <2>;
->  		};
+> +#define QCOM_PCIE_SLOT_MAX_SUPPLIES			3
+> +
+>  struct qcom_pcie {
+>  	struct dw_pcie *pci;
+>  	void __iomem *parf;			/* DT parf */
+> @@ -260,6 +262,7 @@ struct qcom_pcie {
+>  	struct icc_path *icc_cpu;
+>  	const struct qcom_pcie_cfg *cfg;
+>  	struct dentry *debugfs;
+> +	struct regulator_bulk_data slot_supplies[QCOM_PCIE_SLOT_MAX_SUPPLIES];
+>  	bool suspended;
+>  	bool use_pm_opp;
+>  };
+> @@ -1174,6 +1177,41 @@ static int qcom_pcie_link_up(struct dw_pcie *pci)
+>  	return !!(val & PCI_EXP_LNKSTA_DLLLA);
+>  }
 >  
-> +		pcie3: pci@1bd0000 {
-> +			device_type = "pci";
-> +			compatible = "qcom,pcie-x1e80100";
-> +			reg = <0 0x01bd0000 0 0x3000>,
-> +			      <0 0x78000000 0 0xf1d>,
-> +			      <0 0x78000f40 0 0xa8>,
-> +			      <0 0x78001000 0 0x1000>,
-> +			      <0 0x78100000 0 0x100000>;
-> +			reg-names = "parf",
-> +				    "dbi",
-> +				    "elbi",
-> +				    "atu",
-> +				    "config";
+> +static int qcom_pcie_enable_slot_supplies(struct qcom_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(pcie->slot_supplies),
+> +				    pcie->slot_supplies);
+> +	if (ret < 0)
+> +		dev_err(pci->dev, "Failed to enable slot regulators\n");
 
-There's a "mhi" region at 0x01bd3000, 0x1000-wide too, please add it
-
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0 0x00000000 0 0x78200000 0 0x100000>,
-> +				 <0x02000000 0 0x78300000 0 0x78300000 0 0x3d00000>;
-
-There's 64bit BAR space as well:
-
-<0x03000000 0x7 0x40000000 0x7 0x40000000 0x0 0x40000000>;
-
-> +			bus-range = <0 0xff>;
-
-0x00 please
+return dev_err_probe would be a good call.. probably more so below,
+but won't hurt to use here too
 
 > +
-> +			dma-coherent;
+> +	return ret;
+> +}
 > +
-> +			linux,pci-domain = <3>;
-> +			num-lanes = <8>;
-> +
-> +			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 836 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 671 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi0",
-> +					  "msi1",
-> +					  "msi2",
-> +					  "msi3",
-> +					  "msi4",
-> +					  "msi5",
-> +					  "msi6",
-> +					  "msi7";
-> +
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc 0 0 0 220 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 2 &intc 0 0 0 221 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 3 &intc 0 0 0 237 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 4 &intc 0 0 0 238 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			clocks = <&gcc GCC_PCIE_3_PIPE_CLK_SRC>,
+> +static void qcom_pcie_disable_slot_supplies(struct qcom_pcie *pcie)
+> +{
+> +	regulator_bulk_disable(ARRAY_SIZE(pcie->slot_supplies),
+> +			       pcie->slot_supplies);
+> +}
 
-We don't toggle source clocks from dt, this is upstream of the pipe
-div clocks and is taken care of by the common clock framework,
-please drop.
-
-> +				 <&gcc GCC_PCIE_3_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_3_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_3_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_3_SLV_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_3_SLV_Q2A_AXI_CLK>,
-> +				 <&gcc GCC_CFG_NOC_PCIE_ANOC_SOUTH_AHB_CLK>,
-
-GCC_CFG_NOC_PCIE_ANOC_NORTH_AHB_CLK
-
-> +				 <&gcc GCC_CNOC_PCIE_NORTH_SF_AXI_CLK>;
-> +			clock-names = "pipe_clk_src",
-> +				      "aux",
-> +				      "cfg",
-> +				      "bus_master",
-> +				      "bus_slave",
-> +				      "slave_q2a",
-> +				      "noc_aggr",
-> +				      "cnoc_sf_axi";
-> +
-> +			assigned-clocks = <&gcc GCC_PCIE_3_AUX_CLK>;
-> +			assigned-clock-rates = <19200000>;
-> +
-> +			interconnects = <&pcie_south_anoc MASTER_PCIE_3 QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-> +					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-> +					 &cnoc_main SLAVE_PCIE_3 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "pcie-mem",
-> +					     "cpu-pcie";
-> +
-> +			resets = <&gcc GCC_PCIE_3_BCR>,
-> +				 <&gcc GCC_PCIE_3_LINK_DOWN_BCR>;
-> +			reset-names = "pci",
-> +				      "link_down";
-> +
-> +			power-domains = <&gcc GCC_PCIE_3_GDSC>;
-> +
-> +			phys = <&pcie3_phy>;
-> +			phy-names = "pciephy";
-> +
-> +			operating-points-v2 = <&pcie3_opp_table>;
-> +
-> +			status = "disabled";
-> +
-> +			pcie3_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				/* GEN 1 x1 */
-> +				opp-2500000 {
-> +					opp-hz = /bits/ 64 <2500000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <250000 1>;
-> +				};
-> +
-> +				/* GEN 1 x2 and GEN 2 x1 */
-> +				opp-5000000 {
-> +					opp-hz = /bits/ 64 <5000000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <500000 1>;
-> +				};
-> +
-> +				/* GEN 1 x4 and GEN 2 x2*/
-
-Missing ' '
-
-> +				opp-10000000 {
-> +					opp-hz = /bits/ 64 <10000000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <1000000 1>;
-> +				};
-> +
-> +				/* GEN 1 x8 and GEN 2 X4 */
-
-Inconsistent capitalization, please use lowercase 'x'
-
-[...]
-
-> +		pcie3_phy: phy@1be0000 {
-> +			compatible = "qcom,x1e80100-qmp-gen4x8-pcie-phy";
-> +			reg = <0 0x01be0000 0 0x10000>;
-> +
-> +			clocks = <&gcc GCC_PCIE_3_AUX_CLK>,
-
-This clock doesn't belong here, the PHY is clocked by PHY_AUX
-
-> +				 <&gcc GCC_PCIE_3_CFG_AHB_CLK>,
-> +				 <&rpmhcc RPMH_CXO_CLK>,
-
-This is unnecessary as commented before
-
-> +				 <&gcc GCC_PCIE_3_PHY_RCHNG_CLK>,
-> +				 <&gcc GCC_PCIE_3_PHY_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_3_PIPE_CLK>,
-> +				 <&gcc GCC_PCIE_3_PIPEDIV2_CLK>,
-> +				 <&tcsr TCSR_PCIE_8L_CLKREF_EN>;
-
-This should be the 'ref' here
+This I feel like is overly abstracted
 
 Konrad
 
