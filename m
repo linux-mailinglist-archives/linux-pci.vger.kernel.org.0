@@ -1,167 +1,160 @@
-Return-Path: <linux-pci+bounces-12281-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12282-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62D2F960A72
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 14:33:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02BD8960A80
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 14:34:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87DE61C22CA5
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:33:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B104B283D0C
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CF71BFDFC;
-	Tue, 27 Aug 2024 12:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421401BC9E3;
+	Tue, 27 Aug 2024 12:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNMjNWho"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eltcPPAs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAFE1BF812;
-	Tue, 27 Aug 2024 12:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3D71BC073
+	for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 12:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724761904; cv=none; b=MaAx87LBx4bIOO7Nf026fm85ELGnpifhmxNvTdWEh1m2i4vWPwBUCDMN3I0RbS2qIP3EfK6wfUEKHaVZAeBYC0KVB5CcynZrMMq3Wb1NDSOGOml1wTWIEicbeaDU2bgIDlCCi1zZfeUOzFz3Ip1F8Jcoo15EoK0jzGvg4k+tD5U=
+	t=1724761966; cv=none; b=pxfIaqUY3xGKNrTXIaOY//EJuGBQaKW28/5zRCxFcO/xrZlpBcj5zfXC69oFCm67cjfkCT6+iMSbwjBY0EQqdkls93ADdYmqhxfv8INZrbfEl5BsFYD4Ru9Aqk/cV+XmgZUO976v8DuJ8n1BCsCjkUpSpDctkY7K8yymu1xCbGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724761904; c=relaxed/simple;
-	bh=qmMzGnC28ZCDh31+2GefMmB0QMXAHDZVokWKSX+jKyU=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=amyFdVdDVROEhtwJtqlTOlBEnGDFhHdmbBjlnApfyFQj701o/R8ijFGnQT3EDUR0qJ9Wy5TE0GF2bLQBEQ9h40N1pcnhne9HD/vKSvYWqeRrrFreoi2YYDyf08teUpsBb5+uawZBNyrYe23wgbGUUYoOnzt70OkA4XK4YtVo8ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNMjNWho; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCAAC6104D;
-	Tue, 27 Aug 2024 12:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724761903;
-	bh=qmMzGnC28ZCDh31+2GefMmB0QMXAHDZVokWKSX+jKyU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=gNMjNWhoZffSOv1un8ggYbJD221iCDLPRhGXySnV4I9D0LpvMrLudiopVGiQHN41h
-	 sIBQFWvONGMXeFUFsvTLZ4Ug1Jk986Qn8V/R0P6HPX4mCfVarAnDYwW0/qkFeI52C5
-	 01CzjlyjSbdqLE57f0Z7YxxcQUqPP+SMMfHtgYmXU+gqDJ+wswLxRVol2yYOpC351t
-	 qK2N/HKBi6FJkb2HVNv6vR1SOwo3hokVVhnBRqlcjvuQSR4QX+OeVvg7kT6TdWJvpy
-	 1+b9n3YM4Im9LXRIM2j4UWAmCnOVb797kw4jDDohWQHpwNRuMGm0w7oCdc+o7+8r3l
-	 FWDFBNRa0Xctw==
-Date: Tue, 27 Aug 2024 07:31:41 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1724761966; c=relaxed/simple;
+	bh=jhywql0i1Igm4tZ6CC7w55Fwugmoo13oCgW+x0dMPQ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n95GA0QmwI/SwoRhY+ApPV3h9E+7l12sf3I3CIHCsISLtzIV9fSkLIKOxTubZZ/aWElF+Q6Z04swt3lGpyQ3qXgXGFj62Zfi5nYqTcu4X9XaabWpzKCdKmHJBIb/0oqv5zGxWEjIMIjlQ8YyuaQiK7lYCsZ4wrWKqJLSr+jl22c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=eltcPPAs; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-44fe106616eso30575971cf.1
+        for <linux-pci@vger.kernel.org>; Tue, 27 Aug 2024 05:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1724761963; x=1725366763; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L5jbjcbxUPPj9zYNKoE0eIYQhFCqfcFcc1QbGEVtWHE=;
+        b=eltcPPAstBJtZH8QFntLp0I/pWn4YHqczytIEQkcPd7iiEItdv3j/3XpqWwPlItvFL
+         7/hHVFecyCwYbBVrYqdlkz//9cpvlFlNi/IAKnq2QFml4PWKxQrfTrPKGzuJATygeCwh
+         zE7NUOSz2v59vJ0Oa1ahgEUL75DT6EEtPBzUtaQrh12O7vYDLAkyRuBFTWGghT3Gks2L
+         9Z/SH91xHU3DnMlmM17SAM84YLRihiwl42aMac+oVBuwoKwEBwmawI9qogYHyHU616+j
+         VGnqbW0MsHXPuv5UZLCvLf7zVoytsUX6evHriaE0F/Y2O9RG3NyHIkPzAQ4ionOOHizM
+         Kmnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724761963; x=1725366763;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L5jbjcbxUPPj9zYNKoE0eIYQhFCqfcFcc1QbGEVtWHE=;
+        b=wWUbRiAD+vRGJmxdi6tnjj8PVB6vdEAZ0tWFveMjcnMIxKlKUPdx0Jo8aTnHYPZbcO
+         LWJjPgUBHQ84hCPvFixMF5EctuDKCx5bTfas4L7ho8LAPGnnqxKgw2DzLhCeY2ogcIXu
+         SmqLgkbfafeXKNv/O9qRa6wotuXZUOWKaltGQWtwbrv9XYe5Pbd4M9thyD5Q48M98zb2
+         fJzuO3aPVK71O1Lbb14O9sdT73bON2ND+ol6FUfz8GgayDeE1fpHOlA/TXE4K0HwqwWe
+         NWfT74unGYdwgpHv+LlnfwU/8efejYcwwTEdHEFV0LzGm+1n4z7cFh5ggnBZKRxYULgi
+         2gAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmTPoQadPfpGNzh/qWD63Ep6OnjwB4aY3h7UxTNNtSbqDFdsd6q+Vv4dF3Beq/BU+zXEiPIlF7THc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZpSYdmo622KH42WL9ywf8VRIMNpFyDy+s2zcMwOyOh0ki0DY2
+	zldhpN3JmnHMobw1o0DaYONcs1Hbi3osAogw0fmFWuUqnGt+eDs1xurI66KNNBM=
+X-Google-Smtp-Source: AGHT+IFgABoyQ7opyAvWPQnFZTXKyke+4HJ1twIgh/+mRitM/qVkX72/Bi45aDM2XOpCwlcFx8pYwA==
+X-Received: by 2002:a05:6214:4381:b0:6c1:6a2e:afc6 with SMTP id 6a1803df08f44-6c16dc36d53mr159756336d6.15.1724761963298;
+        Tue, 27 Aug 2024 05:32:43 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c162dd1cfdsm55802226d6.129.2024.08.27.05.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2024 05:32:42 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sivNK-000dsU-Aq;
+	Tue, 27 Aug 2024 09:32:42 -0300
+Date: Tue, 27 Aug 2024 09:32:42 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	pratikrajesh.sampat@amd.com, michael.day@amd.com,
+	david.kaplan@amd.com, dhaval.giani@amd.com,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC PATCH 07/21] pci/tdisp: Introduce tsm module
+Message-ID: <20240827123242.GM3468552@ziepe.ca>
+References: <20240823132137.336874-1-aik@amd.com>
+ <20240823132137.336874-8-aik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, vkoul@kernel.org, 
- dmitry.baryshkov@linaro.org, sboyd@kernel.org, neil.armstrong@linaro.org, 
- linux-clk@vger.kernel.org, conor+dt@kernel.org, 
- linux-arm-msm@vger.kernel.org, andersson@kernel.org, kw@linux.com, 
- manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, 
- konradybcio@kernel.org, abel.vesa@linaro.org, quic_devipriy@quicinc.com, 
- linux-pci@vger.kernel.org, quic_msarkar@quicinc.com, 
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
- kishon@kernel.org, krzk+dt@kernel.org
-In-Reply-To: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
-References: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
-Message-Id: <172476183902.3553327.3757950028426438486.robh@kernel.org>
-Subject: Re: [PATCH 0/8] Add support for PCIe3 on x1e80100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240823132137.336874-8-aik@amd.com>
 
+On Fri, Aug 23, 2024 at 11:21:21PM +1000, Alexey Kardashevskiy wrote:
+> The module responsibilities are:
+> 1. detect TEE support in a device and create nodes in the device's sysfs
+> entry;
+> 2. allow binding a PCI device to a VM for passing it through in a trusted
+> manner;
 
-On Mon, 26 Aug 2024 23:36:23 -0700, Qiang Yu wrote:
-> This series add support for PCIe3 on x1e80100.
-> 
-> PCIe3 needs additional set of clocks, regulators and new set of PCIe QMP
-> PHY configuration compare other PCIe instances on x1e80100. Hence add
-> required resource configuration and usage for PCIe3.
-> 
-> Qiang Yu (8):
->   phy: qcom-qmp: pcs-pcie: Add v6.30 register offsets
->   phy: qcom-qmp: pcs: Add v6.30 register offsets
->   phy: qcom: qmp: Add phy register and clk setting for x1e80100 PCIe3
->   arm64: dts: qcom: x1e80100: Add support for PCIe3 on x1e80100
->   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the X1E80100
->     QMP PCIe PHY Gen4 x8
->   clk: qcom: gcc-x1e80100: Fix halt_check for pipediv2 clocks
->   arm64: dts: qcom: x1e80100-qcp: Add power supply and sideband signal
->     for pcie3
->   PCI: qcom: Add support to PCIe slot power supplies
-> 
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  18 +-
->  arch/arm64/boot/dts/qcom/x1e80100-qcp.dts     | 116 +++++++++
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 205 +++++++++++++++-
->  drivers/clk/qcom/gcc-x1e80100.c               |  10 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        |  52 +++-
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 222 +++++++++++++++++-
->  .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h    |  25 ++
->  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h |  19 ++
->  8 files changed, 657 insertions(+), 10 deletions(-)
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h
-> 
-> --
-> 2.34.1
-> 
-> 
-> 
+Binding devices to VMs and managing their lifecycle is the purvue of
+VFIO and iommufd, it should not be exposed via weird sysfs calls like
+this. You can't build the right security model without being inside
+the VFIO context.
 
+As I said in the other email, it seems like the PSP and the iommu
+driver need to coordinate to ensure the two DTEs are consistent, and
+solve the other sequencing problems you seem to have.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+I'm not convinced this should be in some side module - it seems like
+this is possibly more logically integrated as part of the iommu..
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+> +static ssize_t tsm_dev_connect_store(struct device *dev, struct device_attribute *attr,
+> +				     const char *buf, size_t count)
+> +{
+> +	struct tsm_dev *tdev = tsm_dev_get(dev);
+> +	unsigned long val;
+> +	ssize_t ret = -EIO;
+> +
+> +	if (kstrtoul(buf, 0, &val) < 0)
+> +		ret = -EINVAL;
+> +	else if (val && !tdev->connected)
+> +		ret = tsm_dev_connect(tdev, tsm.private_data, val);
+> +	else if (!val && tdev->connected)
+> +		ret = tsm_dev_reclaim(tdev, tsm.private_data);
+> +
+> +	if (!ret)
+> +		ret = count;
+> +
+> +	tsm_dev_put(tdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static ssize_t tsm_dev_connect_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	struct tsm_dev *tdev = tsm_dev_get(dev);
+> +	ssize_t ret = sysfs_emit(buf, "%u\n", tdev->connected);
+> +
+> +	tsm_dev_put(tdev);
+> +	return ret;
+> +}
+> +
+> +static DEVICE_ATTR_RW(tsm_dev_connect);
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+Please do a much better job explaining the uAPIS you are trying to
+build in all the commit messages and how you expect them to be used.
 
-  pip3 install dtschema --upgrade
+Picking this stuff out of a 6k loc series is a bit tricky
 
-
-New warnings running 'make CHECK_DTBS=y qcom/x1e80100-qcp.dtb' for 20240827063631.3932971-1-quic_qianyu@quicinc.com:
-
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: reg: [[0, 29163520, 0, 12288], [0, 2013265920, 0, 3869], [0, 2013269824, 0, 168], [0, 2013270016, 0, 4096], [0, 2014314496, 0, 1048576]] is too short
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'config'] is too short
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clocks: [[53, 348], [53, 84], [53, 86], [53, 87], [53, 94], [53, 95], [53, 22], [53, 33]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:0: 'aux' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:1: 'cfg' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:2: 'bus_master' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:3: 'bus_slave' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:4: 'slave_q2a' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:5: 'noc_aggr' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:6: 'cnoc_sf_axi' was expected
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names: ['pipe_clk_src', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'noc_aggr', 'cnoc_sf_axi'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: phy@1be0000: clock-names:4: 'pipe' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: phy@1be0000: clock-names:5: 'pipediv2' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: phy@1be0000: clock-names:6: 'phy_aux' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pmic@3: gpio@8800: 'pm_sde7_aux_3p3', 'pm_sde7_main_3p3' do not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: gpio@8800: 'pm_sde7_aux_3p3', 'pm_sde7_main_3p3' do not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pmic@8: gpio@8800: 'pcie_x8_12v_on' does not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: gpio@8800: 'pcie_x8_12v_on' does not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
-
-
-
-
-
+Jason
 
