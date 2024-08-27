@@ -1,212 +1,167 @@
-Return-Path: <linux-pci+bounces-12280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88BB8960A37
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 14:28:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62D2F960A72
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 14:33:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC822B238C8
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:28:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87DE61C22CA5
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Aug 2024 12:33:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BC21B5336;
-	Tue, 27 Aug 2024 12:28:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CF71BFDFC;
+	Tue, 27 Aug 2024 12:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNMjNWho"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC391A0B1D;
-	Tue, 27 Aug 2024 12:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAFE1BF812;
+	Tue, 27 Aug 2024 12:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724761690; cv=none; b=jCvNDxRSE4hrhD/+gygNaJcIaG96qtKVrWA7KebiI1RnmBKHDf0JermILtacQQ8dmmhlc+osnfNnjLd8fQEEmPx0u/JppQr8G2kvEIVMUDuyBKrL/Qm/jgS6zszDaBMEYBvo+GMFY0MvntErNAQxAprvX6Pqh+BeNdGZ0L5wjxw=
+	t=1724761904; cv=none; b=MaAx87LBx4bIOO7Nf026fm85ELGnpifhmxNvTdWEh1m2i4vWPwBUCDMN3I0RbS2qIP3EfK6wfUEKHaVZAeBYC0KVB5CcynZrMMq3Wb1NDSOGOml1wTWIEicbeaDU2bgIDlCCi1zZfeUOzFz3Ip1F8Jcoo15EoK0jzGvg4k+tD5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724761690; c=relaxed/simple;
-	bh=6fsIWFvAiWEYMCXofaPi8CMMAtphgdXaPI/TiGK15Ko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mj/umvI9WmjCL9Y04o5N8UFiouMw9e+dlhgmSQvq6iJ2UBYDYRyyrghUsJs73hCMUiFPLZ2znOj1fCyJ5iiXWxl0YF5SQXNiJHfnITwCZ6XVj4BqcDs1wrlfn6oTV5QSMyxv/ajWtnc8ViBLTUU2We6/fOqpHkWOljvlEiUSJ8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 556F31FB66;
-	Tue, 27 Aug 2024 12:28:06 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4298713A44;
-	Tue, 27 Aug 2024 12:28:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QQI1DFXGzWZsYgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Tue, 27 Aug 2024 12:28:05 +0000
-Message-ID: <9b7cff3f-7d22-4bb5-a56e-11d93bd11456@suse.de>
-Date: Tue, 27 Aug 2024 15:27:56 +0300
+	s=arc-20240116; t=1724761904; c=relaxed/simple;
+	bh=qmMzGnC28ZCDh31+2GefMmB0QMXAHDZVokWKSX+jKyU=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=amyFdVdDVROEhtwJtqlTOlBEnGDFhHdmbBjlnApfyFQj701o/R8ijFGnQT3EDUR0qJ9Wy5TE0GF2bLQBEQ9h40N1pcnhne9HD/vKSvYWqeRrrFreoi2YYDyf08teUpsBb5+uawZBNyrYe23wgbGUUYoOnzt70OkA4XK4YtVo8ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNMjNWho; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCAAC6104D;
+	Tue, 27 Aug 2024 12:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724761903;
+	bh=qmMzGnC28ZCDh31+2GefMmB0QMXAHDZVokWKSX+jKyU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=gNMjNWhoZffSOv1un8ggYbJD221iCDLPRhGXySnV4I9D0LpvMrLudiopVGiQHN41h
+	 sIBQFWvONGMXeFUFsvTLZ4Ug1Jk986Qn8V/R0P6HPX4mCfVarAnDYwW0/qkFeI52C5
+	 01CzjlyjSbdqLE57f0Z7YxxcQUqPP+SMMfHtgYmXU+gqDJ+wswLxRVol2yYOpC351t
+	 qK2N/HKBi6FJkb2HVNv6vR1SOwo3hokVVhnBRqlcjvuQSR4QX+OeVvg7kT6TdWJvpy
+	 1+b9n3YM4Im9LXRIM2j4UWAmCnOVb797kw4jDDohWQHpwNRuMGm0w7oCdc+o7+8r3l
+	 FWDFBNRa0Xctw==
+Date: Tue, 27 Aug 2024 07:31:41 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
-To: Jim Quinlan <james.quinlan@broadcom.com>,
- Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240815225731.40276-1-james.quinlan@broadcom.com>
- <20240815225731.40276-6-james.quinlan@broadcom.com>
- <1a6d6972-f2db-4d44-b79c-811ba44368f0@suse.de>
- <CA+-6iNxFotwXW4Cc31daT+KwE_LEdAR=pcpsg_3Ng0ep1vYLBA@mail.gmail.com>
- <76b528f8-88e2-4954-94cf-7e0933b4ad03@suse.de>
- <CA+-6iNykVzd1do=dHDVD3_prJkvfRbA2U-DsLFhSA2S48L_A8A@mail.gmail.com>
- <87b38984-0a54-4773-ba20-3445d9c9c149@suse.de>
- <CA+-6iNwJZ+OfYaCBBx04-hO1FmpDE36uJWd1jYvaVs_o4iwWqA@mail.gmail.com>
- <3bb5c6db-11d9-4e65-a581-1a7f6945450a@suse.de>
- <CA+-6iNy7souF-BZHV1sBk2nx04LwshB=6amnOixfPPza96RmWw@mail.gmail.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <CA+-6iNy7souF-BZHV1sBk2nx04LwshB=6amnOixfPPza96RmWw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 556F31FB66
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, vkoul@kernel.org, 
+ dmitry.baryshkov@linaro.org, sboyd@kernel.org, neil.armstrong@linaro.org, 
+ linux-clk@vger.kernel.org, conor+dt@kernel.org, 
+ linux-arm-msm@vger.kernel.org, andersson@kernel.org, kw@linux.com, 
+ manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, 
+ konradybcio@kernel.org, abel.vesa@linaro.org, quic_devipriy@quicinc.com, 
+ linux-pci@vger.kernel.org, quic_msarkar@quicinc.com, 
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kishon@kernel.org, krzk+dt@kernel.org
+In-Reply-To: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
+References: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
+Message-Id: <172476183902.3553327.3757950028426438486.robh@kernel.org>
+Subject: Re: [PATCH 0/8] Add support for PCIe3 on x1e80100
 
-Hi Jim,
 
-On 8/26/24 17:17, Jim Quinlan wrote:
-> On Mon, Aug 26, 2024 at 6:43 AM Stanimir Varbanov <svarbanov@suse.de> wrote:
->>
->> Hi Jim,
->>
->> <cut>
->>
->>>
->>> Hi Stan,
->>>
->>> Most of the clocks on the STB chips come up active so one does not
->>> have to turn them on and off to have the device function.  It helps
->>> power savings to do this although I'm not sure it is significant.
->>>>
->>>>>
->>>>> Perhaps you don't see the dependence on the PCIe clocks if the 2712
->>>>> does not give the PCIe node a clock property and instead keeps its
->>>>> clocks on all of the time.  In that case I would think that your
->>>>> solution would be fine.
->>>>
->>>> What you mean by my solution? The one where avoiding assert of
->>>> bridge_reset at link [1] bellow?
->>>
->>> Yes.
->>>>
->>>> If so, I still cannot understand the relation between bridge_reset and
->>>> rescal as the comment mentions:
->>>>
->>>> "Shutting down this bridge on pcie1 means accesses to rescal block will
->>>> hang the chip if another RC wants to assert/deassert rescal".
->>>
->>> I was just describing my observations; this should not be happening.
->>> I would say it is a HW bug for the 2712.  I can file a bug against the
->>> 2712 but that will not help us right now.  From what I was told by HW,
->>> asserting the PCIe1 bridge reset does not affect the rescal settings,
->>> but it does freeze access to the rescal registers, and that is game
->>> over for the other PCIe controllers accessing the rescal registers.
->>
->> Good findings, thank you.
->>
->> The problem comes from this snippet from brcm_pcie_probe() :
->>
->>         ret = pci_host_probe(bridge);
->>         if (!ret && !brcm_pcie_link_up(pcie))
->>                 ret = -ENODEV;
->>
->>         if (ret) {
->>                 brcm_pcie_remove(pdev);
->>                 return ret;
->>         }
->>
->> Even when pci_host_probe() is successful the .probe will fail if there
->> are no endpoint devices on this root port bus. This is the case when
->> probing pcie1 port which is the one with external connector. Cause the
->> probe is failing we call reset_control_rearm(rescal) from
->> brcm_pcie_remove(), after that during .probe of pcie2 (the root port
->> where RP1 south-bridge is attached) reset_control_reset(rescal) will
->> issue rescal reset thus rescal-reset driver will stuck on read/write
->> registers.
->>
->> I think we have to drop this link-up check and allow the probe to finish
->> successfully. Even that there no PCI devices attached to bus we want the
->> root port to be visible by lspci tool.
+On Mon, 26 Aug 2024 23:36:23 -0700, Qiang Yu wrote:
+> This series add support for PCIe3 on x1e80100.
 > 
-> Hi Stan,
+> PCIe3 needs additional set of clocks, regulators and new set of PCIe QMP
+> PHY configuration compare other PCIe instances on x1e80100. Hence add
+> required resource configuration and usage for PCIe3.
 > 
-> What is gained by having only the root bridge shown by lspci?  We do
-> not support PCIe hotplug so why have lspci reporting a bridge with no
-> devices?
+> Qiang Yu (8):
+>   phy: qcom-qmp: pcs-pcie: Add v6.30 register offsets
+>   phy: qcom-qmp: pcs: Add v6.30 register offsets
+>   phy: qcom: qmp: Add phy register and clk setting for x1e80100 PCIe3
+>   arm64: dts: qcom: x1e80100: Add support for PCIe3 on x1e80100
+>   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the X1E80100
+>     QMP PCIe PHY Gen4 x8
+>   clk: qcom: gcc-x1e80100: Fix halt_check for pipediv2 clocks
+>   arm64: dts: qcom: x1e80100-qcp: Add power supply and sideband signal
+>     for pcie3
+>   PCI: qcom: Add support to PCIe slot power supplies
 > 
-> The reason we do this is to save power -- when we see no device we
-> turn off the clocks, put things in reset (e.g. bridge), and turn off
-> the regulators.  We have SoCs with multiple controllers  and they
-> cannot afford to be supplying power to controllers with non-populated
-> sockets; these may be products that are trying to conform to mandated
-> energy-mode specifications.
-
-I totally agree, although I do not see power consumption significantly
-increased. Also I checked all other PCI controller drivers and no one
-else doing this.
-
+>  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  18 +-
+>  arch/arm64/boot/dts/qcom/x1e80100-qcp.dts     | 116 +++++++++
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 205 +++++++++++++++-
+>  drivers/clk/qcom/gcc-x1e80100.c               |  10 +-
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  52 +++-
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 222 +++++++++++++++++-
+>  .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h    |  25 ++
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h |  19 ++
+>  8 files changed, 657 insertions(+), 10 deletions(-)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h
 > 
->  This will solve partially the
->> issue with accessing rescal reset-controller registers after asserting
->> bridge_reset. The other part of the problem will be solved by remove the
->> invocation of reset_control_rearm(rescal) from __brcm_pcie_remove().
->> That way only the first probed root port will issue rescal reset and
->> every next probe will not try to reset rescal because we do not call
->> _rearm(rescal).
+> --
+> 2.34.1
 > 
-> In theory I agree with the above -- it should probably not be invoking
-> the rearm() when it is being deactivated.  However, I am concerned
-> about a controller(s) going into s2 suspend/resume or unbind/bind.
+> 
+> 
 
-In fact not calling rearm() from __brcm_pcie_remove() is not enough
-because the .probe will fail thus rescal reset will loose it's instance
-and next probed pcie root port will issue rescal reset again.
 
-I'd stick with avoiding assert of bridge_reset from brcm_pcie_turn_off()
-for now, and this will be true only for bcm2712.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-~Stan
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y qcom/x1e80100-qcp.dtb' for 20240827063631.3932971-1-quic_qianyu@quicinc.com:
+
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: reg: [[0, 29163520, 0, 12288], [0, 2013265920, 0, 3869], [0, 2013269824, 0, 168], [0, 2013270016, 0, 4096], [0, 2014314496, 0, 1048576]] is too short
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'config'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clocks: [[53, 348], [53, 84], [53, 86], [53, 87], [53, 94], [53, 95], [53, 22], [53, 33]] is too long
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:0: 'aux' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:1: 'cfg' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:2: 'bus_master' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:3: 'bus_slave' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:4: 'slave_q2a' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:5: 'noc_aggr' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names:6: 'cnoc_sf_axi' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: clock-names: ['pipe_clk_src', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'noc_aggr', 'cnoc_sf_axi'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pci@1bd0000: Unevaluated properties are not allowed ('operating-points-v2', 'opp-table' were unexpected)
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: phy@1be0000: clock-names:4: 'pipe' was expected
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: phy@1be0000: clock-names:5: 'pipediv2' was expected
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: phy@1be0000: clock-names:6: 'phy_aux' was expected
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pmic@3: gpio@8800: 'pm_sde7_aux_3p3', 'pm_sde7_main_3p3' do not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: gpio@8800: 'pm_sde7_aux_3p3', 'pm_sde7_main_3p3' do not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: pmic@8: gpio@8800: 'pcie_x8_12v_on' does not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: gpio@8800: 'pcie_x8_12v_on' does not match any of the regexes: '-hog(-[0-9]+)?$', '-state$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
+
+
+
+
+
 
