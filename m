@@ -1,98 +1,153 @@
-Return-Path: <linux-pci+bounces-12384-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12385-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F6BE963353
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 23:00:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9A8D963390
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 23:06:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADE78283CCD
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 21:00:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 085951C22131
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 21:06:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A001A76B5;
-	Wed, 28 Aug 2024 20:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9551AE02F;
+	Wed, 28 Aug 2024 21:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Am3bSmvS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fo4IHB6N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C990224D7;
-	Wed, 28 Aug 2024 20:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2172F1AD9C1
+	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 21:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724878788; cv=none; b=COrKHdxxyzJOK0RbsyOj30co2yW/zA7IZvVPUO8IXpX3N2cJTqGZ7x1GwWwGWHNDNzzX+VNDAa5iN0RiERJDRt5Jqb4J6VNeMMApomynyokbxPus6pXrnc+fzbPMLcGTaL5AqykvIczBJQiH9LcJh5/0uQyoAZuCnJi+4+7jV0k=
+	t=1724879140; cv=none; b=UtyhM6dGuDJ8q7oWQB3KtZhmJaiDKs95nw09NvcpqquPca/oCpgm/tRW0MR2h6oqD+AWN3BKK0oqqAxC6Xq3XDZDARV4F+JWCJhV3Fs6i1POaJScLMpyD4anuU20DScgKDKWTtw0nSMzkQTEM6Wh7E3QBZr7P/qZkuoJTSd1AV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724878788; c=relaxed/simple;
-	bh=1/GAOnHCTc9FvaAIyApVEWEmUkKEJDAQPCaFu34QnDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Jp0YycBDCITc/+xX8A6/zTydTrgsQOcN5S7FdSZsAljGV3xwgDmRR5ar1M4dhSAyd/Tg4ju/XeCN1hGUHohevTEQ3W0XSVfZNpOSF9FDexDrZ+XefW+dGxpk/7j2trl3yYNyENGca7iKhYBCnFz2lQ2x6hQyYbtrW7fES1ZxjDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Am3bSmvS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A434AC4CEC0;
-	Wed, 28 Aug 2024 20:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724878788;
-	bh=1/GAOnHCTc9FvaAIyApVEWEmUkKEJDAQPCaFu34QnDo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Am3bSmvSjXmOD2FngAf2E5bg1pIa/7/WFO/A66SrIST++xJqVJbMukfTGGi1h+/Le
-	 uYLIpmTp/IxZ7aBorqs27XbFKCBlhJYihNs99DswCbA1hs5f3KKPDW4LY1qPApS6Nt
-	 2CfNaTEmUdqoQ8LJadytY2PKr1VjfXxFU2C/pw0+8J6kJu+rvqncSPSc8/OXYr9LTp
-	 Q+ipATiyQMne0dIsEFHN/+7KcvrMuay4aDA6Lq534njSoq8mgTbmg7i0MnMWNQkJOM
-	 lBqahUeH9IvRkl/DnyXcyK7OeQUEz+T9NP+ypL9WdWkmkxzZ7tvhQtczidOLpp8PMR
-	 mhMpXMcqyxN6A==
-Date: Wed, 28 Aug 2024 15:59:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	robh@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v2] PCI: qcom-ep: Enable controller resources like PHY
- only after refclk is available
-Message-ID: <20240828205945.GA37767@bhelgaas>
+	s=arc-20240116; t=1724879140; c=relaxed/simple;
+	bh=O9b/h1jt0My8mMuBRswwTJvmsfyAIhLbUG7uWzm2irg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bAlF707fDA21wo7s8i7kUk3S5sxHB6sEohQkYdEv3jvw8qxDzeTsz3hVSQKojVs8mtQRUOogGGMWS0VMJb2ejidQ+rJWFtfQ2CMngSALgYrbEGO8u6wTb+dn5XCF8YaOYrJq33phzKWk0EVxkpgvQ1HPtZ616K/dR/W8ozDG+7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Fo4IHB6N; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2703967b10cso4823281fac.0
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 14:05:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1724879138; x=1725483938; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HA3aO0qLDpyT16ckHiIzKiYud21+kmk7/MoRxGGoBJw=;
+        b=Fo4IHB6NCoGzvsJJqULklTZvWvol7Y/v+5q8/0qNXa48J6LXS+eiHop5OyDtQ60wr2
+         EJpanHwA4sSdVujAG4QlMpm39HFESTi3WnYlnWjiy6edWJR+2p1Rewk9kxukn733u2yn
+         L93+1GnowxhJ5spXjZ60f588Lu74BDFigKqm4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724879138; x=1725483938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HA3aO0qLDpyT16ckHiIzKiYud21+kmk7/MoRxGGoBJw=;
+        b=tIw7d1fmT8MJIrzfaCjsuweMuvY74KnbtGPSPtHPLzBIIdYiiTTFcM2I/TXAXu6253
+         xJl/xS5X2wRHwvb10P+foBjXcIduZ6JNV2GAp8xHgieqWZDSkRqpsBV8fSgXQofUdtOC
+         99+cQuWF/spYjKnKXWR8+G7weJHCBaYVVm0KLbZEYpTs69tLpJFSA07zv5oxelRb5aay
+         RlLtejhr2xiGc/WrqTpkfZOfV79qTvngtPYT2Ag4O/fpeILEagEf9EAvJCjFeY25P5Ht
+         EflW8zx3TGZp9dQrDcsKoz5wjo1mxRRW21AAj+Vs8de2HmZOSum4WA6LRv+HJYUO6z8K
+         ailw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOAvLiA/ADxpQqb22evrDNZTkwpVXqkQCY/2jUuhCM1BqGTyZQLHuwJR5ESn1WggetRfjWwV7udZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4H6CCy+Rg5Etp5iQi7q3JeZ/Lt30et38ylTwwkC//OEFjLTqw
+	bsP0qrYgEZGLlpIGjXFPsYIo+wo4GMoHlbKycdKfSPN/hNXZPTsKYsTlkeWOPo4NQzs1QQsNR4n
+	gk8RIaSMePo2Urc2JQBFpeBsbEVL2hDdPxHHb
+X-Google-Smtp-Source: AGHT+IFkr3UUR7vNkihwV0658E6D/8y47NeG4vVj6D6jdZc4LVGV+LUY7bY+mTRSOKkQNEJpatTy/+JmHeXTT68DFDY=
+X-Received: by 2002:a05:6870:d6a3:b0:264:956e:6207 with SMTP id
+ 586e51a60fabf-2779013e008mr992999fac.27.1724879138177; Wed, 28 Aug 2024
+ 14:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240828140108.5562-1-manivannan.sadhasivam@linaro.org>
+References: <20240824042635.GM1532424@black.fi.intel.com> <20240824162042.GA411509@bhelgaas>
+In-Reply-To: <20240824162042.GA411509@bhelgaas>
+From: Esther Shimanovich <eshimanovich@chromium.org>
+Date: Wed, 28 Aug 2024 17:05:27 -0400
+Message-ID: <CA+Y6NJEm8UH5H1zE1Kgz9sKcv2xKKUzR5n=xNdOqyBYocyyCgg@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Rajat Jain <rajatja@google.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	iommu@lists.linux.dev, Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 28, 2024 at 07:31:08PM +0530, Manivannan Sadhasivam wrote:
-> qcom_pcie_enable_resources() is called by qcom_pcie_ep_probe() and it
-> enables the controller resources like clocks, regulator, PHY. On one of the
-> new unreleased Qcom SoC, PHY enablement depends on the active refclk. And
-> on all of the supported Qcom endpoint SoCs, refclk comes from the host
-> (RC). So calling qcom_pcie_enable_resources() without refclk causes the
-> whole SoC crash on the new SoC.
-> 
-> qcom_pcie_enable_resources() is already called by
-> qcom_pcie_perst_deassert() when PERST# is deasserted, and refclk is
-> available at that time.
-> 
-> Hence, remove the unnecessary call to qcom_pcie_enable_resources() from
-> qcom_pcie_ep_probe() to prevent the crash.
-> 
-> Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
-> Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> 
-> Changes in v2:
-> 
-> - Changed the patch description to mention the crash clearly as suggested by
->   Bjorn
+On Sat, Aug 24, 2024 at 12:20=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> On Sat, Aug 24, 2024 at 07:26:35AM +0300, Mika Westerberg wrote:
+> > On Fri, Aug 23, 2024 at 04:12:54PM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
+> > > > Some computers with CPUs that lack Thunderbolt features use discret=
+e
+> > > > Thunderbolt chips to add Thunderbolt functionality. These Thunderbo=
+lt
+> > > > chips are located within the chassis; between the root port labeled
+> > > > ExternalFacingPort and the USB-C port.
+> > >
+> > > Is this a firmware defect?  I asked this before, and I interpret your
+> > > answer of "ExternalFacingPort is not 100% accurate all of the time" a=
+s
+> > > "yes, this is a firmware defect."  That should be part of the commit
+> > > log and code comments.
+> > >
 
-Clearly mentioning the crash as rationale for the change is *part* of
-what I was looking for.
+I like how Lukas explained it here:
+https://lore.kernel.org/all/ZstGP0EgttNAxjp2@wunner.de/
 
-The rest, just as important, is information about what sort of crash
-this is, because I hope and suspect the crash is recoverable, and we
-*should* recover from it because PERST# may occur at arbitrary times,
-so trying to avoid it is never going to be reliable.
+It's a bit unclear whether this is firmware implemented incorrectly or
+the spec not being specific enough.
+Being that I see this interpretation of the spec on all devices with
+discrete Thunderbolt chips (across different manufacturers)--that
+makes me think that this is an ambiguity on the spec's part.
 
-Bjorn
+Given that, how do you suggest I modify the commit log and code comments?
+
+> > > > 2) If a root port does not have integrated Thunderbolt capabilities=
+, but
+> > > >    has the ExternalFacingPort ACPI property, that means the manufac=
+turer
+> > > >    has opted to use a discrete Thunderbolt host controller that is
+> > > >    built into the computer.
+> > >
+> > > Unconvincing.  If a Root Port has an external connector, is it
+> > > impossible to plug in a Thunderbolt device to that connector?  I
+> > > assume the wires from a Root Port could be traces on a PCB to a
+> > > soldered-down Thunderbolt controller, OR could be wires to a connecto=
+r
+> > > where a Thunderbolt controller could be plugged in.  How could we tel=
+l
+> > > the difference?
+> >
+We may assume this both because of how the spec is worded, and how
+I've seen it implemented in the case of a discrete Thunderbolt
+controller, across all cases.
+https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie=
+-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4=
+-to-usb4-host-routers
+
+"ExternalFacingPort" is only used when there is an externally exposed
+PCIe hierarchy. (Never otherwise)
+I don't know any other examples of externally exposed PCIe hierarchies
+other than Thunderbolt.
+Therefore I assume, that if there is "ExternalFacingPort", that means
+the device has Thunderbolt capabilities.
+If we have confirmed that the device has no integrated thunderbolt
+capabilities, that means the device MUST expect a discrete thunderbolt
+chip outside of its ExternalFacing root port.
+
+That is my understanding of this. Also let me know how I can reword
+here as well.
 
