@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-12356-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12355-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE4CE962CC5
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:46:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 987C0962CC2
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:46:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DE231F2481B
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:46:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1D5E1C239B2
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:46:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08F91A38DE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAF11A2C22;
 	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oU13eOsi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGx2A7iH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C6F1A2573;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C241A2572;
 	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724859984; cv=none; b=j4L+Qha6eo6mPkjXpxod9H59voy+h42YR28SqQdkP7w6cnpmkUyFhZ/LG9Q13HCobui5LiLvk9eNtw1g22r0oZx1ZycAAxknLcLIuVnplgtAbvAqzMdhNsD5x4W46hEHEGN5P2JmVsPQ83koUOdFFHM/GmJGVVdJboCzv+fxDDs=
+	t=1724859984; cv=none; b=UB1mMpnbm66qwejxZK0uqetg8+w4DuQZsnnAjJLeUrXqXokXeCYmXNqXBKsszu3ea3i7eIlujKzdJvVRsvC6oKOBoOunDaMtvhVQrDNZpXjn8jBBpySZY1EsmuQrOazqpU/+wml3Wz4OLkDE21oiD2/Q4CpfUMo6me8HDjGSsdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724859984; c=relaxed/simple;
-	bh=/0egYTr5ShlYzFc5fPufNhKrQdIPFsVyuFZm+VJjZew=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K3n+xxZcJdV201lFyXInFPe5DFnoGSMSm+9na7KcP7r/IoVtneSf5GZ9JIWheNlN/qmYs259Zg9nnm6bbFyBOEhBY3slH4Ocy06k8allvn4gEy8bMpTVQOnKWEIkQJ7oxtzdV6N1oaejN5100kNE+cyhIauDEmmETm8SLHRXr4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oU13eOsi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1104DC4CEC7;
+	bh=wkgVf0vCUGHv6W2n+sOka0AmnpoDk4tVlRsVgJuMb+Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hppK+GXIutGVJzfEVvBzXW7kSJ6D44GXUNXvr29ocfEnXeXCpdH2KhCn5xtvqIlHTc1f3hV2Otg3fgLKa1aQIvo1+YZlyDmCeJhkI8Zx6BxyL0gs6z8StBBXsceKMmCcIG15XZvFBFwtFkNyS0j6WTmxWrTikht8fgKkiNVQu8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGx2A7iH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 27AE5C4CECC;
 	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1724859984;
-	bh=/0egYTr5ShlYzFc5fPufNhKrQdIPFsVyuFZm+VJjZew=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=oU13eOsiw7kyfs9OY8XY2o605DXdUa/+Ps/8ooLIDc9W2c1iponTiVc0//Pc0XzQm
-	 Nzbtzt81Qf2B0J1C7nj9HdzMLHQyRSE4O9k/XcQDvJYCl9OOsMbtcYN5nlG64HmMld
-	 wY4nYINUMtYseg6OBSHqITVUPdsott4tqA0a+ec1VbA08YlPHJyJJyb2tdZabYUj7a
-	 JJvJeZF61jqBIF6Pm5DOUYItmjzOEgHrvvI6FiPsrFnU325otpOvh4XO+s7phcSKMX
-	 VFySUko/hS+2PWMZBqNg5qWm+8xR5aYw+Q+kp5guHXy1t/dQt2b1AUDjSGJiUiw9VC
-	 QFGCJYYuC80Lw==
+	bh=wkgVf0vCUGHv6W2n+sOka0AmnpoDk4tVlRsVgJuMb+Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=TGx2A7iH7c0OnzQ0oG7vvsDvZro0UT2830+BsoOysgJef9cQFwDY+8RZCNA2e70oa
+	 0BIhtmMPqc4rUvCK/bQlyBYvieirqQlZiIFp5a8VwzZvrIZcTSFw1Wq/uAcCoclvkH
+	 H2Y2GWf9Vft+zo8zDGjEACOSgcHCuWZc5lfttCTZKpNUukALlgLmTqB4ks/3nmgmC+
+	 566stUL/tacvtZqQQ6hG6gbb/EH/0wJPt6DGZTPF3TNm6qglIfUO+7FAknYv1eHqft
+	 N1Drc3+dJf1DqyazGsm554w7QOop1j6AtJ4Zn5rxpIw86fLUWNFuBpEDcHOByGVzy9
+	 nliiCPAAliJ9g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04992C5B557;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13708C5B55E;
 	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Subject: [PATCH v4 00/12] PCI: qcom: Enumerate endpoints based on Link up
- event in 'global_irq' interrupt
-Date: Wed, 28 Aug 2024 21:16:10 +0530
-Message-Id: <20240828-pci-qcom-hotplug-v4-0-263a385fbbcb@linaro.org>
+Date: Wed, 28 Aug 2024 21:16:11 +0530
+Subject: [PATCH v4 01/12] PCI: qcom-ep: Drop the redundant masking of
+ global IRQ events
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,10 +56,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEJGz2YC/33NTQ6CMBCG4auQrq1h2kLRlfcwLkp/oAlSbLHRE
- O5uYYWRuHy/ZJ6ZUNDe6oDO2YS8jjZY16dghwzJVvSNxlalRiQnLOdQ4EFa/JDujls3Dt2zwbV
- UGiRQdQKD0tngtbGvlbzeUrc2jM6/1w8RlvUPFgHnuDCUl4WUFafi0tleeHd0vkGLFslW4DsCS
- QIHRXNWV8BN9SPQjUBhR6BJEMBIKYzSmtZfwjzPH3xq61M1AQAA
+Message-Id: <20240828-pci-qcom-hotplug-v4-1-263a385fbbcb@linaro.org>
+References: <20240828-pci-qcom-hotplug-v4-0-263a385fbbcb@linaro.org>
+In-Reply-To: <20240828-pci-qcom-hotplug-v4-0-263a385fbbcb@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
  Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
@@ -73,16 +72,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4619;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1288;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=/0egYTr5ShlYzFc5fPufNhKrQdIPFsVyuFZm+VJjZew=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmz0ZKdobnw0+XoDweO1CjN0nuSx++Yf1PY2OQg
- baAjzayEcKJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZs9GSgAKCRBVnxHm/pHO
- 9VTKB/wNH+RvTSPDjfbPGoOWUBQ3OiHjHbKsVCVsP+PwaVRLhK//KyHolZHQYKNPzZehtYA6W46
- yGW8+q77Z882zzVDsEGcjBrfe7fpfXEzzRjRkxU+vW9j/ysuALG81/t+UHgrMXHjHU2SvNx3oKy
- OLCyJIJdgbuBMZxv4jULvC4jq60DXDv9S3dTUqIFvWlFMu75Ez7foF5bs87VhCAD58GNlt53peO
- ev269wGqF/QuEvKqpm49S3c3NwM7vn34dMHfxsS9awBEHfZy54bBrKeEwuvKvfLYbOBNYCPQx0T
- KuXpGgYpU3J84Z89FQVInpFpFWCJyzjK1JXBvVYhn2Jbsq15
+ bh=dIwxxT9MwJPav4RVeIZrg0i1F93yyMgBj6gEWSQjRyU=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmz0ZKTql9/9UmlcG+Npy4IRg4LA68vHTpVm2b0
+ w8p9An1P6mJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZs9GSgAKCRBVnxHm/pHO
+ 9b3mB/9sX+pg62jn7h5KxdyPMuPEU+Ut3hxhl94VOzC5toY93fuBpVtHvcMpMA5ZNa2cb19bMu7
+ hu8fmadaUbbw5pZZsbcELIzNHLV43sKlxdW21EIWnVFBg1QCN2ri4S9zl+nKb7QdVyY3xPiTsHM
+ Lf3K9p6wDZ+oR5Dlea+vnRrmF8tk3j0EUqYWoxMrzXNHNkw9+I/uMsuvTLQIp4W9mJoL38gR0Bq
+ kSkdLDivlXUmnFhxHI+6n9qTHHuVhswjpl/+5DZe2kVcz/830JDPmL96x38aw2GE/mvdRYtHEXP
+ RaPCocE5msPu6L9J+oUja0z7O2OSu2niy/ebgpRhccP3ZUJN
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -90,106 +89,40 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reply-To: manivannan.sadhasivam@linaro.org
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This series adds support to enumerate the PCIe endpoint devices using the Qcom
-specific 'Link up' event in 'global' IRQ. Historically, Qcom PCIe RC controllers
-lacked standard hotplug support. So when an endpoint is attached to the SoC,
-users have to rescan the bus manually to enumerate the device. But this can be
-avoided by rescanning the bus upon receiving 'Link up' event.
+Once the events are disabled in PARF_INT_ALL_MASK register, only the
+enabled events will generate global IRQ. So there is no need to do the
+masking again in the IRQ handler, drop it.
 
-Qcom PCIe RC controllers are capable of generating the 'global' SPI interrupt
-to the host CPUs. The device driver can use this interrupt to identify events
-such as PCIe link specific events, safety events etc...
+If there are any spurious IRQs getting generated, they will be reported
+using the existing dev_err() in the handler.
 
-One such event is the PCIe Link up event generated when an endpoint is detected
-on the bus and the Link is 'up'. This event can be used to enumerate the
-endpoint devices.
-
-So add support for capturing the PCIe Link up event using the 'global' interrupt
-in the driver. Once the Link up event is received, the bus underneath the host
-bridge is scanned to enumerate PCIe endpoint devices.
-
-This series also has some cleanups to the Qcom PCIe EP controller driver for
-interrupt handling.
-
-NOTE: During v2 review, there was a discussion about removing the devices when
-'Link Down' event is received. But this needs some more investigation, so I'm
-planning to add it later.
-
-Testing
-=======
-
-This series is tested on Qcom SM8450 based development board that has 2 SoCs
-connected over PCIe.
-
-Merging Strategy
-================
-
-I'm expecting the binding and PCI driver changes to go through PCI tree and DTS
-patches through Qcom tree.
-
-- Mani
-
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
-Changes in v4:
-- Fixed the indendation issue reported by Kbot
-- Merged the bindings patch adding global IRQ into one as suggested by Rob
-- Collected review tag
-- Link to v3: https://lore.kernel.org/r/20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Changes in v3:
-- Removed the usage of 'simulating hotplug' and just used 'Link up' as we are
-  not fully emulating the hotplug support
-- Fixed the build issue wtih CONFIG_PCI_DOMAINS_GENERIC
-- Moved the 'global' IRQ entry to last in the binding and also mentioned the ABI
-  break and its necessity in patch description.
-- Collected tags
-- Rebased on top of v6.11-rc1
-- Link to v2: https://lore.kernel.org/r/20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..972a90eba494 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -647,11 +647,9 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+ 	struct dw_pcie *pci = &pcie_ep->pci;
+ 	struct device *dev = pci->dev;
+ 	u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
+-	u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
+ 	u32 dstate, val;
+ 
+ 	writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+-	status &= mask;
+ 
+ 	if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
+ 		dev_dbg(dev, "Received Linkdown event\n");
 
-Changes in v2:
-- Added CONFIG_PCI_DOMAINS_GENERIC guard for domain_nr
-- Switched to dev_WARN_ONCE() for unhandled interrupts
-- Squashed the 'linux,pci-domain' bindings patches into one
-- Link to v1: https://lore.kernel.org/r/20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org
-
----
-Manivannan Sadhasivam (12):
-      PCI: qcom-ep: Drop the redundant masking of global IRQ events
-      PCI: qcom-ep: Reword the error message for receiving unknown global IRQ event
-      dt-bindings: PCI: pci-ep: Update Maintainers
-      dt-bindings: PCI: pci-ep: Document 'linux,pci-domain' property
-      PCI: endpoint: Assign PCI domain number for endpoint controllers
-      PCI: qcom-ep: Modify 'global_irq' and 'perst_irq' IRQ device names
-      ARM: dts: qcom: sdx55: Add 'linux,pci-domain' to PCIe EP controller node
-      ARM: dts: qcom: sdx65: Add 'linux,pci-domain' to PCIe EP controller node
-      arm64: dts: qcom: sa8775p: Add 'linux,pci-domain' to PCIe EP controller nodes
-      dt-bindings: PCI: qcom,pcie-sm8450: Add 'global' interrupt
-      PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt
-      arm64: dts: qcom: sm8450: Add 'global' interrupt to the PCIe RC node
-
- Documentation/devicetree/bindings/pci/pci-ep.yaml  | 14 +++++-
- .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  4 +-
- .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  1 +
- .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  | 10 ++--
- arch/arm/boot/dts/qcom/qcom-sdx55.dtsi             |  1 +
- arch/arm/boot/dts/qcom/qcom-sdx65.dtsi             |  1 +
- arch/arm64/boot/dts/qcom/sa8775p.dtsi              |  2 +
- arch/arm64/boot/dts/qcom/sm8450.dtsi               | 12 +++--
- drivers/pci/controller/dwc/pcie-qcom-ep.c          | 21 +++++++--
- drivers/pci/controller/dwc/pcie-qcom.c             | 55 +++++++++++++++++++++-
- drivers/pci/endpoint/pci-epc-core.c                | 14 ++++++
- include/linux/pci-epc.h                            |  2 +
- 12 files changed, 120 insertions(+), 17 deletions(-)
----
-base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
-change-id: 20240715-pci-qcom-hotplug-bcde1c13d91f
-
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.25.1
 
 
 
