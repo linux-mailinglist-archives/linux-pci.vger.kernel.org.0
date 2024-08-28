@@ -1,111 +1,164 @@
-Return-Path: <linux-pci+bounces-12346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31ED6962961
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:55:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8382096298F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 16:01:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBF3E1F25045
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 13:55:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D7562863DE
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 14:01:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D618188CAF;
-	Wed, 28 Aug 2024 13:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A34D17556B;
+	Wed, 28 Aug 2024 14:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aFHlWmaf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA4F18801E;
-	Wed, 28 Aug 2024 13:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDA31DA53
+	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 14:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724853297; cv=none; b=p+9iJaiV17tNmO5aa7M5JTUc12qhy75Ezg77zf+rOkX2E0kp6gSkOZrYsmWpl9/qZREcqLlDgV3kXd1llPv+SJVsodEgQAX8wrEWoM4nYu0QVI9VRkusvNhYikMUUdsxCidPGv6wXHBOz5z4MwABDQj7mDjVKrRxqQt9ysqiIdM=
+	t=1724853677; cv=none; b=t8hAJa1H5r+zA7DsURyHaShA8bwGXE35LBmL0e53L0sSinMpsuU5wg8mvDjA6nLXByjIP3v8Wf1mXKy2TW2AfuGCpoE2vSensvuGlWAAW3kLKp99p4Raoqe9EbiP9jdXAe+i/PksyFkuXx445hsabwJtJPniViCg6NXWYIfF5bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724853297; c=relaxed/simple;
-	bh=F1Jo7BH5OwhaSaFdA3taRByWkWSgKRB+CgkFv6y/++g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oltg7Lkob9UpercaD1t+KNeS6ad1cD+U8RydBJip43C+DAXwShTZiBAXkWqEZbFW9nEhgCZc8Kb3LYwRYNKlpc97IjEFbb7sboMOgAmUF9mwg02UhI1p3WvocFgfxYl/H3IBKiYVCSRkomY8OVOUJVeCSvNacZ2i7J7jfTuDw0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv5Rp09ZYz6K5r0;
-	Wed, 28 Aug 2024 21:51:34 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 51655140AA7;
-	Wed, 28 Aug 2024 21:54:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
- 2024 14:54:51 +0100
-Date: Wed, 28 Aug 2024 14:54:51 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>, "Suravee
- Suthikulpanit" <suravee.suthikulpanit@amd.com>, Alex Williamson
-	<alex.williamson@redhat.com>, Dan Williams <dan.j.williams@intel.com>,
-	<pratikrajesh.sampat@amd.com>, <michael.day@amd.com>, <david.kaplan@amd.com>,
-	<dhaval.giani@amd.com>, Santosh Shukla <santosh.shukla@amd.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, "Michael Roth" <michael.roth@amd.com>, Alexander
- Graf <agraf@suse.de>, "Nikunj A Dadhania" <nikunj@amd.com>, Vasant Hegde
-	<vasant.hegde@amd.com>, "Lukas Wunner" <lukas@wunner.de>
-Subject: Re: [RFC PATCH 03/21] pci: Define TEE-IO bit in PCIe device
- capabilities
-Message-ID: <20240828145451.000050c1@Huawei.com>
-In-Reply-To: <20240823132137.336874-4-aik@amd.com>
-References: <20240823132137.336874-1-aik@amd.com>
-	<20240823132137.336874-4-aik@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1724853677; c=relaxed/simple;
+	bh=BTtzqPzO0t+7wWTHddLrdegYKAIzymAX02fOEEtPbMI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZPrPYQIJUVQzaJFE/ZHgSDcR43nS/PyoVPlk1EBzbu9ncczdy/4aibDWiQz+3Usi7plvj3Db/5axj6Q7pcp0wA5xnj66Uf0sinLXWlZEpq+OM0QT+0Bnh89vY9xoY8gn4BIlJOzVY50ol5EbvhqMzD51YCbVvkLU8UpOv190iPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aFHlWmaf; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-202376301e6so53291695ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 07:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724853676; x=1725458476; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DYFYQpwLL3S6B0ystutneqrbwAqmW6XeGYic6IuwKpg=;
+        b=aFHlWmafZy6DYLDOcSyaQZ8GBP23v09uK5A5t+sbNgMpGSr8ULf1oDI27aAGmwWbQy
+         k7qt706+u0qStqNfsoY3OGPczImYyLLumyiHWrTGBSTbzwxj1u3IP2BYO5CvFGoy8gVE
+         +Egnwh2YhaT1tzS6rvpJ2gQ+0/Mj/x4ZjwAE9duutT21Cv9I2QkIexQG45kiFTLsWtNA
+         V0cFTXZjPKLGDMuGLG9DcrNRspyOnHeoRknXCHhmzDjQZoKesofGWYU9LvdwZuI4n2QS
+         Q4r8np+BvQgDtTkpNr47k3bYp0c1DbT8XUzX9oMrbRp0v0CCLv/xeY6jr/GzVJ4Gm0TG
+         42LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724853676; x=1725458476;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DYFYQpwLL3S6B0ystutneqrbwAqmW6XeGYic6IuwKpg=;
+        b=hH0V6UkN8sRVPH7AEPy5ydsqRBXR0XG2Y8xnG469uyMDEWiuuVUys2YMkQXNM7mHLC
+         xQLo0JJAOSGCseT2VJrO/pymLGBN3WVg+28OsIzPTL9evf9uMCSS2EH7+idSIAhk0VWW
+         idoyJFbIqz6QNKqZBEFmzCVn83Ba48uFhuvw1qre1lllVzU9hzlD+aDyAx7TuA9gItEG
+         oZaHyAx1e9ZGzV3BSDaB6MWWJST/ucwFhPuqZUMVNWEhlP/sX7Fi7jT5mj7g3b1XdIv8
+         zDaU+EL4AA+9OZmMtW1W+a4uoXw7CnIVV7GpTH6iQsOuMldYAhHDyWy1zJSP82owrJfG
+         DPpg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0yGd8r6N6vhkRhqY+vdLKyxukbXfyJuQJMVIIjourDgSJO+o6qg1bV2uRMvb1d7h9z6m6+BA/N8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4+CHVkvxjhNkwWgglo2QBbEUNOizz3eytK6XgE5N01l5akaT+
+	pV4YrIPCHky1VeJmxUN2LoPq5JBwFmGcVDS+tiSPIDKqUeq3Rlf4sfb9LcjleQ==
+X-Google-Smtp-Source: AGHT+IHwv3ejBWHIDQYjJKWg81MlCmfrB3seGvlnlt4iahbPWBTGa03FBqUkyGHHWiYWCnBZ8GuGNA==
+X-Received: by 2002:a17:902:ecd1:b0:1f7:1655:825c with SMTP id d9443c01a7336-2039e4ca7c3mr172368485ad.36.1724853675466;
+        Wed, 28 Aug 2024 07:01:15 -0700 (PDT)
+Received: from localhost.localdomain ([120.56.198.191])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2038557e7cfsm99564255ad.83.2024.08.28.07.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 07:01:15 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2] PCI: qcom-ep: Enable controller resources like PHY only after refclk is available
+Date: Wed, 28 Aug 2024 19:31:08 +0530
+Message-Id: <20240828140108.5562-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Fri, 23 Aug 2024 23:21:17 +1000
-Alexey Kardashevskiy <aik@amd.com> wrote:
+qcom_pcie_enable_resources() is called by qcom_pcie_ep_probe() and it
+enables the controller resources like clocks, regulator, PHY. On one of the
+new unreleased Qcom SoC, PHY enablement depends on the active refclk. And
+on all of the supported Qcom endpoint SoCs, refclk comes from the host
+(RC). So calling qcom_pcie_enable_resources() without refclk causes the
+whole SoC crash on the new SoC.
 
-> A new bit #30 from the PCI Express Device Capabilities Register is defined
-> in PCIe 6.1 as "TEE Device Interface Security Protocol (TDISP)".
-No it isn't.
+qcom_pcie_enable_resources() is already called by
+qcom_pcie_perst_deassert() when PERST# is deasserted, and refclk is
+available at that time.
 
-TEE-IO supported - When Set, this bit indicates the Function implements the TEE-IO
-functionality as described by ....
+Hence, remove the unnecessary call to qcom_pcie_enable_resources() from
+qcom_pcie_ep_probe() to prevent the crash.
 
-So it is defined as TEE-IO not TDISP even though that definition is in the
-TDISP section fo the spec.
+Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
 
-As Bjorn said, spec reference.
+Changes in v2:
 
-Jonathan
+- Changed the patch description to mention the crash clearly as suggested by
+  Bjorn
+- Added the Fixes tag
 
-> 
-> Define the macro.
-> 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> ---
->  include/uapi/linux/pci_regs.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 94c00996e633..0011a301b8c5 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -498,6 +498,7 @@
->  #define  PCI_EXP_DEVCAP_PWR_VAL	0x03fc0000 /* Slot Power Limit Value */
->  #define  PCI_EXP_DEVCAP_PWR_SCL	0x0c000000 /* Slot Power Limit Scale */
->  #define  PCI_EXP_DEVCAP_FLR     0x10000000 /* Function Level Reset */
-> +#define  PCI_EXP_DEVCAP_TEE_IO  0x40000000 /* TEE-IO Supported (TDISP) */
->  #define PCI_EXP_DEVCTL		0x08	/* Device Control */
->  #define  PCI_EXP_DEVCTL_CERE	0x0001	/* Correctable Error Reporting En. */
->  #define  PCI_EXP_DEVCTL_NFERE	0x0002	/* Non-Fatal Error Reporting Enable */
+Bjorn: This is not going to be a 6.11 material as it is not fixing a regression
+introduced in 6.11 (offending commit got merged in 6.10). So please merge this
+patch for 6.12.
+
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..2319ff2ae9f6 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -846,21 +846,15 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = qcom_pcie_enable_resources(pcie_ep);
+-	if (ret) {
+-		dev_err(dev, "Failed to enable resources: %d\n", ret);
+-		return ret;
+-	}
+-
+ 	ret = dw_pcie_ep_init(&pcie_ep->pci.ep);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to initialize endpoint: %d\n", ret);
+-		goto err_disable_resources;
++		return ret;
+ 	}
+ 
+ 	ret = qcom_pcie_ep_enable_irq_resources(pdev, pcie_ep);
+ 	if (ret)
+-		goto err_disable_resources;
++		goto err_ep_deinit;
+ 
+ 	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
+ 	if (!name) {
+@@ -877,8 +871,8 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
+ 	disable_irq(pcie_ep->global_irq);
+ 	disable_irq(pcie_ep->perst_irq);
+ 
+-err_disable_resources:
+-	qcom_pcie_disable_resources(pcie_ep);
++err_ep_deinit:
++	dw_pcie_ep_deinit(&pcie_ep->pci.ep);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
 
