@@ -1,101 +1,139 @@
-Return-Path: <linux-pci+bounces-12391-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12392-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D817C9633CA
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 23:25:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C49B396340F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 23:40:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 907482835BA
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 21:25:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 038D51C21861
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 21:40:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A8A1ABEBB;
-	Wed, 28 Aug 2024 21:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C059167D97;
+	Wed, 28 Aug 2024 21:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KF6P6F3X"
+	dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b="fk7ne8jk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3836515C146;
-	Wed, 28 Aug 2024 21:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE8815ADB3
+	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 21:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724880312; cv=none; b=LLRUBM0F/r4BLDPYD+uUJMipaVW2xbv44eTPzwA5AfMjWZ9OnxVsT5wzWMlah5SS29fUnbwKWZReTkyVrDNOW5oT8ylgAlJ99D8EN8XtML+U1vG/8SkHXUU7ycZwWscbshAwRbvSQIe/jQ81CqpXiEfdCDyMJGrL7BY98uFuqJM=
+	t=1724881250; cv=none; b=kFA4u3sKRrVA6n4X+OkdgNK7qTBEicUsj58+NIlXyJVconwpQzU1CXRT3wsvqKAeJWPCr5oYrPdJosxqyXO7rWc3MTa2jyyut4q7mQBaOfHUHxadVUV/7lLe9orI1cleGCyF4pOCCp27tC7KNzW21jRHy2g1E1heTNwC754+wao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724880312; c=relaxed/simple;
-	bh=BIrLiphukfW+vmOHt6jiLTZupXYGWDly0fj1I+2oBHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Rwtcr6LEN2QrZDdAOGkC8r+sEOWXKrexJomOUEphqEoVOhF3IT7vKE9Rcd9BKHbnlEnx/4zPnWSPXpnYZbzl++Nr9gCm0u2i2m0ws0MQcTo1SLSQluluAtli/qvb498JS26eezMv2Di5qGOUycGtLhVRhthq7vSDPYpx3gMqIbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KF6P6F3X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA9DC4CEC0;
-	Wed, 28 Aug 2024 21:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724880311;
-	bh=BIrLiphukfW+vmOHt6jiLTZupXYGWDly0fj1I+2oBHQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KF6P6F3Xskomdh1xkvtAKsQwZnTWX6mLMDwo76fbv3gpYyY/n6srkPOB+zm/OWsJt
-	 6rNhc6VsURHh3aVW1Q3rsrXhybIJ3HdtC1gDeIrQUH0efRKC2O/WkIFCMLLwE4UNb4
-	 03uSkfJ5rTXJreX5RK1OgFfTV3XTBiz5NIeMIYw0NMeEN2z172FpLUEDSicPQ649P1
-	 77jDy/cc4tWjttQwNdJ5i9WllUTAtCsd9bBaaPux4TPzXFoDP5m/jxikD/+RGY3hxZ
-	 XMsQ5u7+NB3lPdiubyUWvkWSmsu6p1/ahCc29T+5g9Y3qPTPUABg8rd9PZQUhi8ii1
-	 ZrtaK7WPJPQow==
-Date: Wed, 28 Aug 2024 16:25:09 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yue Haibing <yuehaibing@huawei.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 -next] PCI: Remove two unused declarations
-Message-ID: <20240828212509.GA39447@bhelgaas>
+	s=arc-20240116; t=1724881250; c=relaxed/simple;
+	bh=Q5vt2lRYknOiO5WwmmBEHpfQwSJ6ie94dKuvRYWOpaU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ThrbpZindrNLPT/sHMjy/+Mu85XnuDs0KL44O03oS4fILyPOmT489gNoNBsJGgXBc01P2GwhAI3/ySTeXaymHn8TxlntsZa354ZsC/JgzJ/G+p5f7Zzo1vf7cwjjZqRu+xvY28DQqMPXsRShxgRBPxfQrMY1d1XaXIZXXbgpBMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b=fk7ne8jk; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5334b0e1a8eso9431179e87.0
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 14:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks.com; s=google; t=1724881245; x=1725486045; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2X3roa5chx4luM9bkYl+SqKxlmwe71OedtuNu3j22GE=;
+        b=fk7ne8jkGXRFldD9bews7mbu6GGi0FuVwvXv0KXBASyIEIrjS51Iwf0Oa9yd/HdnSb
+         ZJBk0Z1Ix05XJpoZEU1Tgi+E5GZ3tlG2Rdmsd2+3pzUIzytDTSSXTdHXbBa7ydOW9m0i
+         OP+/lTYDOqmi43LhCVVEJ7oWpYWuttHjkA5R6JtGg0DZ/iWR7vxenMKZI+TXIYHoWtei
+         GhtrpwkE80Q9FleIUdWegC8OBXBAFjVaT8iZR8n/+Vl1iXMZdhW+kdF8lweCty3QTsm1
+         za19c1fb90v2U3mLa3V5e8Dr6YSR/ZyJ/2uUbRLsICK5jEI5YqBRQFKe/KTZZ8pGyaCg
+         frBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724881245; x=1725486045;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2X3roa5chx4luM9bkYl+SqKxlmwe71OedtuNu3j22GE=;
+        b=Z89Cfq4yo154V6dE0i/pL02664Hi0B/1ebq1JZmXAiJCSG9D4cwJHhufkLtmVvsWpP
+         uPRVAQ4VLmOTHk1Z57Jf8WPXNDpwmVhePG4ZlJMnX8NTqk3wqJQRLsU76OE1MJOuhD8D
+         7oEVlH6Ti7NYwIQCB22LWQAYjl5VWjse8fwkqx4g8kaoE05ZuC8ajHbfqosYLuqv+HMf
+         FZsWMGI6uyB/zd22hrsuXLtALwmm6mn7ry4jJTG7yh2qw24RvsW6U1EX7Ji5b1BiVYTm
+         1ljrWJQchJHhaQbBKG5AdnWUrvyy2129gCuPgxWJujlU3nNIhU5UhFfAWC1h8r7eyfvM
+         zhMA==
+X-Gm-Message-State: AOJu0YxDZsNA7if6gBnpSJxEB7ahcSv2MpVfAvnGLp5o+dOeNcX+i0M0
+	OHlp4L2gnppOfo6oMXKwMX02s4Rj1YQRRin4zAidmB39cFIMqs+ZoQrEpflLkoi3/EdHJMeJyCT
+	B1yBGdiobtjYIbCo4Ry9VzEqBUMQTL2eo1l4T7xWO+3q8qhAqYLQ=
+X-Google-Smtp-Source: AGHT+IEMcI12zvFnbLjpoL8O/vm2pVIsX+Is/g4NkBMtGE4gFMElRHR7bl4Ip/8PUZfBeP6vx0BbM1PabNKJCa264kE=
+X-Received: by 2002:a05:6512:ea1:b0:52e:9b68:d2da with SMTP id
+ 2adb3069b0e04-5353e549b97mr327767e87.9.1724881244671; Wed, 28 Aug 2024
+ 14:40:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240824100331.586036-1-yuehaibing@huawei.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Wed, 28 Aug 2024 14:40:33 -0700
+Message-ID: <CAJ+vNU2YVpQ=csr-O65L_pcNFWbFMvHK4XO44cbfUfPKwuw6vg@mail.gmail.com>
+Subject: legacy PCI device behind a bridge not getting a valid IRQ on imx host controller
+To: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Aug 24, 2024 at 06:03:31PM +0800, Yue Haibing wrote:
-> Commit b67ea76172d4 ("PCI / ACPI / PM: Platform support for PCI PME
-> wake-up") declared but never implemented __pci_pme_wakeup().
-> Commit fd00faa375fb ("PCI/VPD: Embed struct pci_vpd in struct pci_dev")
-> removed pci_vpd_release() but leave declaration.
-> 
-> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Greetings,
 
-Split into two patches (PCI/PM and PCI/VPD) and applied to pci/misc
-for v6.12, thank you!
+I have a user that is using an IMX8MM SoC (dwc controller) with a
+miniPCIe card that has a PEX8112 PCI-to-PCIe bridge to a legacy PCI
+device and the device is not getting a valid interrupt.
 
-> ---
-> v2: Add pci_vpd_release() history
-> ---
->  drivers/pci/pci.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 0e9b1c7b94a5..4c284c55a0c5 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -124,7 +124,6 @@ void pcie_clear_device_status(struct pci_dev *dev);
->  void pcie_clear_root_pme_status(struct pci_dev *dev);
->  bool pci_check_pme_status(struct pci_dev *dev);
->  void pci_pme_wakeup_bus(struct pci_bus *bus);
-> -int __pci_pme_wakeup(struct pci_dev *dev, void *ign);
->  void pci_pme_restore(struct pci_dev *dev);
->  bool pci_dev_need_resume(struct pci_dev *dev);
->  void pci_dev_adjust_pme(struct pci_dev *dev);
-> @@ -169,7 +168,6 @@ static inline bool pcie_downstream_port(const struct pci_dev *dev)
->  }
->  
->  void pci_vpd_init(struct pci_dev *dev);
-> -void pci_vpd_release(struct pci_dev *dev);
->  extern const struct attribute_group pci_dev_vpd_attr_group;
->  
->  /* PCI Virtual Channel */
-> -- 
-> 2.34.1
-> 
+The PCI bus looks like this:
+00.00.0: 16c3:abcd (rev 01)
+01:00.0: 10b5:8112
+^^^ PEX8112 x1 Lane PCI bridge
+02:00.0: 4ddc:1a00
+02:01.0: 4ddc:1a00
+^^^ PCI devices
+
+lspci -vvv -s 02:00.0:
+02:00.0 Communication controller: ILC Data Device Corp Device 1a00 (rev 10)
+        Subsystem: ILC Data Device Corp Device 1a00
+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium
+>TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 0
+        Region 0: Memory at 18100000 (32-bit, non-prefetchable)
+[disabled] [size=256K]
+        Region 1: Memory at 18180000 (32-bit, non-prefetchable)
+[disabled] [size=4K]
+^^^ 'Interrupt: pin A routed to IRQ 0' is wrong
+
+I found an old thread from 2019 on an NVidia forum [1] where the same
+thing occurred and Nvidia's solution was a patch to the dwc driver to
+call pci_fixup_irqs():
+diff --git a/drivers/pci/dwc/pcie-designware-host.c
+b/drivers/pci/dwc/pcie-designware-host.c
+index ec2e4a61aa4e..a72ba177a5fd 100644
+--- a/drivers/pci/dwc/pcie-designware-host.c
++++ b/drivers/pci/dwc/pcie-designware-host.c
+@@ -477,6 +477,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+        if (pp->ops->scan_bus)
+                pp->ops->scan_bus(pp);
+
++       pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
++
+        pci_bus_size_bridges(bus);
+        pci_bus_assign_resources(bus);
+
+Since that time the pci/dwc drivers have changed quite a bit;
+pci_fixup_irqs() was changed to pci_assign_irq() called now from
+pcie_device_probe() and dw_pcie_host_init() calls commit init
+functions.
+
+While I don't have the particular card in hand described above yet to
+test with, I did manage to reproduce this on an imx6dl soc (same dwc
+controller and driver) connected to a TI XIO2001 with an Intel I210
+behind it and see the exact same issue.
+
+Does anyone understand why legacy PCI interrupt mapping behind a
+bridge isn't working here?
+
+Best regards,
+
+Tim
+[1] https://forums.developer.nvidia.com/t/xavier-not-routing-pci-interrupts-across-pex8112-bridge/78556
 
