@@ -1,130 +1,109 @@
-Return-Path: <linux-pci+bounces-12369-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12370-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E77F3962D12
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:56:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0051F962DFA
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 18:59:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 862402816FE
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:56:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30DC91C21B2B
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 16:59:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E88C1A2573;
-	Wed, 28 Aug 2024 15:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4111A4B9F;
+	Wed, 28 Aug 2024 16:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sX2n0duJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rh1O4V0y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA651A0718
-	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 15:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99330481B3;
+	Wed, 28 Aug 2024 16:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724860605; cv=none; b=Sry7pefYS852cZyc0ZjkDWhv4xEzSeg1vqYTuCQlhKSXQ6jyclC1H6v84bfC90vs4tUZ92Q/ZmgjLEJKMNQLWmTt9/5oogSbwX4JuUR3eyCZGsFX4yz3GvessbVvhrJoY9DqqFXARRmTWrrNUFlnkJJ1K5dohsfXu/UPFxWLf9s=
+	t=1724864380; cv=none; b=Xm9dTZZebM2UpHheAVV28GyRS6b2mkqdFxVaGrmt6ceE1ly4bNh7fkjYvbB5QDhwa0TtoRJc0YHAJ+Ayo8PYwTG/ZkA/NzWEoMDzQ3yUtCDThYl2RonVuoM3Tv71B2JmyyitI/pawFQOuFkJncxzAr3DBfzIa6SvPWB3bXknSwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724860605; c=relaxed/simple;
-	bh=Ha443Pq2LngSA20OziuuGQGi6nUNi6iYRZM2MkylOO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z04/Is8KU7xaPv/R9qC6nkq9GwQo4MZ1b6PBHguhQqt9ZiioUboHOvU9Y4hAAm9JuTUtgMrGJuf4uNwrfsv64clkqFDwQ1yXm0K34S3YLMdx0DjB0dg+QPFjFKi2VfiJBUhsb7fVTUklJaAabcz3X3SkRfZih/3EHzz0CTpqUAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sX2n0duJ; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2d3c99033d6so5471769a91.0
-        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 08:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724860603; x=1725465403; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VzVMjubsXQCh1YcY4QckKt6HfzKqtuiKGKXcXqML8yg=;
-        b=sX2n0duJShyRJqm5NGRUuLOd6isUcIr0iLp8Jc3pXBNNK1+fPrsPnbPmnlV9M9DwqY
-         1R5z/fS0UMK1QzV3iuNslafeRcFgkL1IEsPeZ2UJF0E9owNEY7tEVdlSNuQkWlfu4D6W
-         W05kqFbXhuM8e7EDuh4q80x4jC1Gfit96VEQkZbHKxNO+iThgXMl5+ycSaQum17gXsir
-         mZMdeGV4Hk8HsrFLMxw+pLgh4+9gC1oLqu/KPpxLg68njYBGGB3ABna0sPBiuLZQS11e
-         abjtMU6gzcC8rXVkfthhtN1OUkAwRJACsP97Iy4ZbNIeZ0sRJdrmN29xbJN6oVs1w6vv
-         5Jag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724860603; x=1725465403;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VzVMjubsXQCh1YcY4QckKt6HfzKqtuiKGKXcXqML8yg=;
-        b=mjPz8LooKTCPUTiQACoO1auBoGDVeVHR/y8VfOFVqddW9BPON16vV5ZP/rp+PxqDNk
-         j9mrZNRQQopWL8U9M1Fae7iPX9fF3wWKTby9os+cYiOT0V6h7PwnDMCMgFafw2v2lvU7
-         DpQeh6cFINHwuImA4PGy0YzsGLuXwedubdOPKNldlfmDeR02Zced3fUu8TX3IOhNRBtD
-         C6Dqws6BznGDv1FjBkEk+DfYUU6/Oi0dTX3OnbHsyr13JxcMMfn/XsCtcu4cyDHYwUEp
-         UCNVGgGEORgNIHNzhNCbyCeGh7zT7pjEC/lVMnPxHR05O4bvjPAAaW0vshEIEC35Vs7p
-         4Axw==
-X-Forwarded-Encrypted: i=1; AJvYcCV++HuybyNZcf/lTb3Xu1LhhbrHl4l4Z8cvLEFWLZPSWmJPxaOmOnmLLtFgY+uDIX4AjfK3p6IZWRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmrxv6bCqt8Rt2orpK3R6m8Cb7ZYPICtt4pZJ2ca+22daNuGyq
-	BogJNOyt5R6n7y+AkajEWztUnihh+Xy8ma30ucFptjO1RS/y8Z4vz8DQDL+yq5gPnJZ+YKUFpkE
-	=
-X-Google-Smtp-Source: AGHT+IHoBh/R3NhFvQxnxjpX4sSKSIInFXQsHDevtRTDsYf9qeMu8m9SSATPa4QNXdhopEzMjpEdFQ==
-X-Received: by 2002:a17:90b:378c:b0:2d3:cc31:5fdc with SMTP id 98e67ed59e1d1-2d8440b0a19mr2559107a91.5.1724860603111;
-        Wed, 28 Aug 2024 08:56:43 -0700 (PDT)
-Received: from thinkpad ([120.56.198.191])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d84462f19asm2042577a91.34.2024.08.28.08.56.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2024 08:56:42 -0700 (PDT)
-Date: Wed, 28 Aug 2024 21:26:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: joyce.ooi@intel.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: altera: Replace TLP_REQ_ID() with macro
- PCI_DEVID()
-Message-ID: <20240828155638.y76h73cb4rcbvg36@thinkpad>
-References: <20240828104202.3683491-1-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1724864380; c=relaxed/simple;
+	bh=U5xX3GKkr2d12yI98udKBMU21MXMZn5AJOW3Mtt8gfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Gu2DEj8Qx/BdfiBYWyNPT0NysIEOMX3G2CsK/WvXWHTokXccWRap3ydQeClSzuIOx3g127YYesQ7GDI2YJ8MY1oXtrDUo4n6l3gv7Fvfjv/A6PQ/RB/lcC3wejvTxD6MCPL0jfQBS1oc20EKEZwv+tUoHRaSc6f42jhzFgfEhvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rh1O4V0y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E450BC4CEC4;
+	Wed, 28 Aug 2024 16:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724864380;
+	bh=U5xX3GKkr2d12yI98udKBMU21MXMZn5AJOW3Mtt8gfg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rh1O4V0yAJ1jqMwSkI6kFQAL+oedHMuMG43hvZ20PlfiNLn34GoWBHKOl4EI6tLYB
+	 n17cv2alts3tH8KfcpM4Nj+VHTHcSQVv9TGEdB64IMcutNsG6rYz3lsQqx3O8rU05Y
+	 NM3d9VI3ZXuBknjEPZyoFu8OamdZIgZlOuGszoBG9iY8i4Eu+KwvVRVqh20V2KY5Ww
+	 4Bb/pwcvPMolcKsSTZ/y3eTMfa0+o8/qIUR3KDj73tWf/yIsCMzkqjdFCpcOPhAXlB
+	 aO9nD1ooe9tPNNQRcW3XT8NJYhYZJrXy3mGphNFp1GtBEiqeaClR8RHyOg4pwoXLZJ
+	 40mFdxedxJlDg==
+Date: Wed, 28 Aug 2024 11:59:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"open list:PCI DRIVER FOR IMX6" <linux-pci@vger.kernel.org>,
+	"moderated list:PCI DRIVER FOR IMX6" <linux-arm-kernel@lists.infradead.org>,
+	"open list:PCI DRIVER FOR IMX6" <imx@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] MAINTAINERS: PCI: Add mail list imx@lists.linux.dev
+ for NXP PCI controller
+Message-ID: <20240828165937.GA26021@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240828104202.3683491-1-ruanjinjie@huawei.com>
+In-Reply-To: <20240826202740.970015-1-Frank.Li@nxp.com>
 
-On Wed, Aug 28, 2024 at 06:42:02PM +0800, Jinjie Ruan wrote:
-> The TLP_REQ_ID's function is same as current PCI_DEVID()
-> macro, replace it.
+On Mon, Aug 26, 2024 at 04:27:39PM -0400, Frank Li wrote:
+> Add imx mail list imx@lists.linux.dev for PCI controller of NXP chips
+> (Layerscape and iMX).
 > 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
+Applied to for-linus for v6.11, thanks!
 
 > ---
->  drivers/pci/controller/pcie-altera.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index ef73baefaeb9..650b2dd81c48 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -55,12 +55,11 @@
->  #define TLP_READ_TAG			0x1d
->  #define TLP_WRITE_TAG			0x10
->  #define RP_DEVFN			0
-> -#define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
->  #define TLP_CFG_DW0(pcie, cfg)		\
->  		(((cfg) << 24) |	\
->  		  TLP_PAYLOAD_SIZE)
->  #define TLP_CFG_DW1(pcie, tag, be)	\
-> -	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
-> +	(((PCI_DEVID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
->  #define TLP_CFG_DW2(bus, devfn, offset)	\
->  				(((bus) << 24) | ((devfn) << 16) | (offset))
->  #define TLP_COMP_STATUS(s)		(((s) >> 13) & 7)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 11272143484ca..22125a392251b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17545,6 +17545,7 @@ M:	Roy Zang <roy.zang@nxp.com>
+>  L:	linuxppc-dev@lists.ozlabs.org
+>  L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +L:	imx@lists.linux.dev
+>  S:	Maintained
+>  F:	drivers/pci/controller/dwc/*layerscape*
+>  
+> @@ -17571,6 +17572,7 @@ M:	Richard Zhu <hongxing.zhu@nxp.com>
+>  M:	Lucas Stach <l.stach@pengutronix.de>
+>  L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +L:	imx@lists.linux.dev
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
+>  F:	Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
 > -- 
 > 2.34.1
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
 
