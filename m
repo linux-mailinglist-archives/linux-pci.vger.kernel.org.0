@@ -1,485 +1,195 @@
-Return-Path: <linux-pci+bounces-12353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12356-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1A7F962C8F
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:39:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE4CE962CC5
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:46:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6DEA1C2427B
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:39:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DE231F2481B
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:46:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79840172767;
-	Wed, 28 Aug 2024 15:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08F91A38DE;
+	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oU13eOsi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DE813C3D5;
-	Wed, 28 Aug 2024 15:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C6F1A2573;
+	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724859579; cv=none; b=PeHskwIk3Ke7PIwqsTJjcJd0Dl6H54+cVn9a3/m77BvwyJ4o6U1tmh1BYRWvNZItNo40bcrhikFTazvy0L0/+PGEnvwNu1uGhN4zcyqqIXBY+C8uGMIW/k+WcZXMW5w/4bP565771PaFPxRqlnni7e/hk+g9QnG7eVfyS8g/KCc=
+	t=1724859984; cv=none; b=j4L+Qha6eo6mPkjXpxod9H59voy+h42YR28SqQdkP7w6cnpmkUyFhZ/LG9Q13HCobui5LiLvk9eNtw1g22r0oZx1ZycAAxknLcLIuVnplgtAbvAqzMdhNsD5x4W46hEHEGN5P2JmVsPQ83koUOdFFHM/GmJGVVdJboCzv+fxDDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724859579; c=relaxed/simple;
-	bh=xbdydoh2u22vINByRrRMIya2lqnh9w4150zXJqURBUw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OMq2Uv3WDywh7xtz9dX0IEiW4E7YJ9v81bWMRLNGwT9vFQCeo9uH0qIP6yHTlftZwhZ0qKHMKs6Nrv2DYhw0ZirZGVQWmsWDuUkvhiHnXJqBMcrXVx0KDXaQ6jWLaFVlTbVeYi3DMLdAfufC0fBMtcwrondRe6/omGT7XADpAvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv7mZ3bWYz6K99Y;
-	Wed, 28 Aug 2024 23:36:14 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 236191400D4;
-	Wed, 28 Aug 2024 23:39:33 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
- 2024 16:39:32 +0100
-Date: Wed, 28 Aug 2024 16:39:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>, "Suravee
- Suthikulpanit" <suravee.suthikulpanit@amd.com>, Alex Williamson
-	<alex.williamson@redhat.com>, Dan Williams <dan.j.williams@intel.com>,
-	<pratikrajesh.sampat@amd.com>, <michael.day@amd.com>, <david.kaplan@amd.com>,
-	<dhaval.giani@amd.com>, Santosh Shukla <santosh.shukla@amd.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, "Michael Roth" <michael.roth@amd.com>, Alexander
- Graf <agraf@suse.de>, "Nikunj A Dadhania" <nikunj@amd.com>, Vasant Hegde
-	<vasant.hegde@amd.com>, "Lukas Wunner" <lukas@wunner.de>
-Subject: Re: [RFC PATCH 08/21] crypto/ccp: Implement SEV TIO firmware
- interface
-Message-ID: <20240828163931.0000673b@Huawei.com>
-In-Reply-To: <20240823132137.336874-9-aik@amd.com>
-References: <20240823132137.336874-1-aik@amd.com>
-	<20240823132137.336874-9-aik@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1724859984; c=relaxed/simple;
+	bh=/0egYTr5ShlYzFc5fPufNhKrQdIPFsVyuFZm+VJjZew=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K3n+xxZcJdV201lFyXInFPe5DFnoGSMSm+9na7KcP7r/IoVtneSf5GZ9JIWheNlN/qmYs259Zg9nnm6bbFyBOEhBY3slH4Ocy06k8allvn4gEy8bMpTVQOnKWEIkQJ7oxtzdV6N1oaejN5100kNE+cyhIauDEmmETm8SLHRXr4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oU13eOsi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1104DC4CEC7;
+	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724859984;
+	bh=/0egYTr5ShlYzFc5fPufNhKrQdIPFsVyuFZm+VJjZew=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=oU13eOsiw7kyfs9OY8XY2o605DXdUa/+Ps/8ooLIDc9W2c1iponTiVc0//Pc0XzQm
+	 Nzbtzt81Qf2B0J1C7nj9HdzMLHQyRSE4O9k/XcQDvJYCl9OOsMbtcYN5nlG64HmMld
+	 wY4nYINUMtYseg6OBSHqITVUPdsott4tqA0a+ec1VbA08YlPHJyJJyb2tdZabYUj7a
+	 JJvJeZF61jqBIF6Pm5DOUYItmjzOEgHrvvI6FiPsrFnU325otpOvh4XO+s7phcSKMX
+	 VFySUko/hS+2PWMZBqNg5qWm+8xR5aYw+Q+kp5guHXy1t/dQt2b1AUDjSGJiUiw9VC
+	 QFGCJYYuC80Lw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04992C5B557;
+	Wed, 28 Aug 2024 15:46:24 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Subject: [PATCH v4 00/12] PCI: qcom: Enumerate endpoints based on Link up
+ event in 'global_irq' interrupt
+Date: Wed, 28 Aug 2024 21:16:10 +0530
+Message-Id: <20240828-pci-qcom-hotplug-v4-0-263a385fbbcb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-B4-Tracking: v=1; b=H4sIAEJGz2YC/33NTQ6CMBCG4auQrq1h2kLRlfcwLkp/oAlSbLHRE
+ O5uYYWRuHy/ZJ6ZUNDe6oDO2YS8jjZY16dghwzJVvSNxlalRiQnLOdQ4EFa/JDujls3Dt2zwbV
+ UGiRQdQKD0tngtbGvlbzeUrc2jM6/1w8RlvUPFgHnuDCUl4WUFafi0tleeHd0vkGLFslW4DsCS
+ QIHRXNWV8BN9SPQjUBhR6BJEMBIKYzSmtZfwjzPH3xq61M1AQAA
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4619;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=/0egYTr5ShlYzFc5fPufNhKrQdIPFsVyuFZm+VJjZew=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmz0ZKdobnw0+XoDweO1CjN0nuSx++Yf1PY2OQg
+ baAjzayEcKJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZs9GSgAKCRBVnxHm/pHO
+ 9VTKB/wNH+RvTSPDjfbPGoOWUBQ3OiHjHbKsVCVsP+PwaVRLhK//KyHolZHQYKNPzZehtYA6W46
+ yGW8+q77Z882zzVDsEGcjBrfe7fpfXEzzRjRkxU+vW9j/ysuALG81/t+UHgrMXHjHU2SvNx3oKy
+ OLCyJIJdgbuBMZxv4jULvC4jq60DXDv9S3dTUqIFvWlFMu75Ez7foF5bs87VhCAD58GNlt53peO
+ ev269wGqF/QuEvKqpm49S3c3NwM7vn34dMHfxsS9awBEHfZy54bBrKeEwuvKvfLYbOBNYCPQx0T
+ KuXpGgYpU3J84Z89FQVInpFpFWCJyzjK1JXBvVYhn2Jbsq15
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-On Fri, 23 Aug 2024 23:21:22 +1000
-Alexey Kardashevskiy <aik@amd.com> wrote:
+Hi,
 
-> Implement SEV TIO PSP command wrappers in sev-dev-tio.c, these make
-> SPDM calls and store the data in the SEV-TIO-specific structs.
-> 
-> Implement tsm_ops for the hypervisor, the TSM module will call these
-> when loaded on the host and its tsm_set_ops() is called. The HV ops
-> are implemented in sev-dev-tsm.c.
-> 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-Superficial comments online inline.
+This series adds support to enumerate the PCIe endpoint devices using the Qcom
+specific 'Link up' event in 'global' IRQ. Historically, Qcom PCIe RC controllers
+lacked standard hotplug support. So when an endpoint is attached to the SoC,
+users have to rescan the bus manually to enumerate the device. But this can be
+avoided by rescanning the bus upon receiving 'Link up' event.
 
-Jonathan
+Qcom PCIe RC controllers are capable of generating the 'global' SPI interrupt
+to the host CPUs. The device driver can use this interrupt to identify events
+such as PCIe link specific events, safety events etc...
 
-> ---
->  drivers/crypto/ccp/Makefile      |    2 +
->  arch/x86/include/asm/sev.h       |   20 +
->  drivers/crypto/ccp/sev-dev-tio.h |  105 ++
->  drivers/crypto/ccp/sev-dev.h     |    2 +
->  include/linux/psp-sev.h          |   60 +
->  drivers/crypto/ccp/sev-dev-tio.c | 1565 ++++++++++++++++++++
->  drivers/crypto/ccp/sev-dev-tsm.c |  397 +++++
->  drivers/crypto/ccp/sev-dev.c     |   10 +-
->  8 files changed, 2159 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/ccp/Makefile b/drivers/crypto/ccp/Makefile
-> index 394484929dae..d9871465dd08 100644
-> --- a/drivers/crypto/ccp/Makefile
-> +++ b/drivers/crypto/ccp/Makefile
-> @@ -11,6 +11,8 @@ ccp-$(CONFIG_PCI) += sp-pci.o
->  ccp-$(CONFIG_CRYPTO_DEV_SP_PSP) += psp-dev.o \
->                                     sev-dev.o \
->                                     tee-dev.o \
-> +				   sev-dev-tio.o \
-> +				   sev-dev-tsm.o \
-spaces vs tabs. I guess go for consistency.
+One such event is the PCIe Link up event generated when an endpoint is detected
+on the bus and the Link is 'up'. This event can be used to enumerate the
+endpoint devices.
 
->                                     platform-access.o \
->                                     dbc.o \
->                                     hsti.o
+So add support for capturing the PCIe Link up event using the 'global' interrupt
+in the driver. Once the Link up event is received, the bus underneath the host
+bridge is scanned to enumerate PCIe endpoint devices.
 
-> diff --git a/drivers/crypto/ccp/sev-dev-tio.c b/drivers/crypto/ccp/sev-dev-tio.c
-> new file mode 100644
-> index 000000000000..42741b17c747
-> --- /dev/null
-> +++ b/drivers/crypto/ccp/sev-dev-tio.c
-> @@ -0,0 +1,1565 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+This series also has some cleanups to the Qcom PCIe EP controller driver for
+interrupt handling.
 
-> +static size_t sla_dobj_id_to_size(u8 id)
-> +{
-> +	size_t n;
-> +
-> +	BUILD_BUG_ON(sizeof(struct spdm_dobj_hdr_resp) != 0x10);
-> +	switch (id) {
-> +	case SPDM_DOBJ_ID_REQ:
-> +		n = sizeof(struct spdm_dobj_hdr_req);
-> +		break;
-> +	case SPDM_DOBJ_ID_RESP:
-> +		n = sizeof(struct spdm_dobj_hdr_resp);
-> +		break;
-> +	case SPDM_DOBJ_ID_CERTIFICATE:
-> +		n = sizeof(struct spdm_dobj_hdr_cert);
-> +		break;
-> +	case SPDM_DOBJ_ID_MEASUREMENT:
-> +		n = sizeof(struct spdm_dobj_hdr_meas);
-> +		break;
-> +	case SPDM_DOBJ_ID_REPORT:
-> +		n = sizeof(struct spdm_dobj_hdr_report);
-> +		break;
-> +	default:
-> +		WARN_ON(1);
-> +		n = 0;
-> +		break;
-> +	}
-> +
-> +	return n;
+NOTE: During v2 review, there was a discussion about removing the devices when
+'Link Down' event is received. But this needs some more investigation, so I'm
+planning to add it later.
 
-Early returns will make this more readable.
+Testing
+=======
 
-> +}
+This series is tested on Qcom SM8450 based development board that has 2 SoCs
+connected over PCIe.
 
+Merging Strategy
+================
 
-> +/**
-> + * struct sev_data_tio_dev_connect - TIO_DEV_CONNECT
-> + *
-> + * @length: Length in bytes of this command buffer.
-> + * @spdm_ctrl: SPDM control structure defined in Section 5.1.
-> + * @device_id: The PCIe Routing Identifier of the device to connect to.
-> + * @root_port_id: The PCIe Routing Identifier of the root port of the device.
-> + * @segment_id: The PCIe Segment Identifier of the device to connect to.
+I'm expecting the binding and PCI driver changes to go through PCI tree and DTS
+patches through Qcom tree.
 
-Doesn't seem to be there.
+- Mani
 
-> + * @dev_ctx_sla: Scatter list address of the device context buffer.
-> + * @tc_mask: Bitmask of the traffic classes to initialize for SEV-TIO usage.
-> + *           Setting the kth bit of the TC_MASK to 1 indicates that the traffic
-> + *           class k will be initialized.
-> + * @cert_slot: Slot number of the certificate requested for constructing the SPDM session.
-> + * @ide_stream_id: IDE stream IDs to be associated with this device.
-> + *                 Valid only if corresponding bit in TC_MASK is set.
-> + */
-> +struct sev_data_tio_dev_connect {
-> +	u32 length;
-> +	u32 reserved1;
-> +	struct spdm_ctrl spdm_ctrl;
-> +	u8 reserved2[8];
-> +	struct sla_addr_t dev_ctx_sla;
-> +	u8 tc_mask;
-> +	u8 cert_slot;
-> +	u8 reserved3[6];
-> +	u8 ide_stream_id[8];
-> +	u8 reserved4[8];
-> +} __packed;
-> +
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes in v4:
+- Fixed the indendation issue reported by Kbot
+- Merged the bindings patch adding global IRQ into one as suggested by Rob
+- Collected review tag
+- Link to v3: https://lore.kernel.org/r/20240731-pci-qcom-hotplug-v3-0-a1426afdee3b@linaro.org
 
+Changes in v3:
+- Removed the usage of 'simulating hotplug' and just used 'Link up' as we are
+  not fully emulating the hotplug support
+- Fixed the build issue wtih CONFIG_PCI_DOMAINS_GENERIC
+- Moved the 'global' IRQ entry to last in the binding and also mentioned the ABI
+  break and its necessity in patch description.
+- Collected tags
+- Rebased on top of v6.11-rc1
+- Link to v2: https://lore.kernel.org/r/20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org
 
-> +/**
-> + * struct sev_data_tio_guest_request - TIO_GUEST_REQUEST command
-> + *
-> + * @length: Length in bytes of this command buffer
-> + * @spdm_ctrl: SPDM control structure defined in Chapter 2.
+Changes in v2:
+- Added CONFIG_PCI_DOMAINS_GENERIC guard for domain_nr
+- Switched to dev_WARN_ONCE() for unhandled interrupts
+- Squashed the 'linux,pci-domain' bindings patches into one
+- Link to v1: https://lore.kernel.org/r/20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org
 
-Some more fields that aren't documented.  They all should be for
-kernel-doc or the scripts will moan. 
-I'd just run the script and fixup all the warnings and errors.
+---
+Manivannan Sadhasivam (12):
+      PCI: qcom-ep: Drop the redundant masking of global IRQ events
+      PCI: qcom-ep: Reword the error message for receiving unknown global IRQ event
+      dt-bindings: PCI: pci-ep: Update Maintainers
+      dt-bindings: PCI: pci-ep: Document 'linux,pci-domain' property
+      PCI: endpoint: Assign PCI domain number for endpoint controllers
+      PCI: qcom-ep: Modify 'global_irq' and 'perst_irq' IRQ device names
+      ARM: dts: qcom: sdx55: Add 'linux,pci-domain' to PCIe EP controller node
+      ARM: dts: qcom: sdx65: Add 'linux,pci-domain' to PCIe EP controller node
+      arm64: dts: qcom: sa8775p: Add 'linux,pci-domain' to PCIe EP controller nodes
+      dt-bindings: PCI: qcom,pcie-sm8450: Add 'global' interrupt
+      PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt
+      arm64: dts: qcom: sm8450: Add 'global' interrupt to the PCIe RC node
 
+ Documentation/devicetree/bindings/pci/pci-ep.yaml  | 14 +++++-
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  4 +-
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  1 +
+ .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  | 10 ++--
+ arch/arm/boot/dts/qcom/qcom-sdx55.dtsi             |  1 +
+ arch/arm/boot/dts/qcom/qcom-sdx65.dtsi             |  1 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              |  2 +
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 12 +++--
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          | 21 +++++++--
+ drivers/pci/controller/dwc/pcie-qcom.c             | 55 +++++++++++++++++++++-
+ drivers/pci/endpoint/pci-epc-core.c                | 14 ++++++
+ include/linux/pci-epc.h                            |  2 +
+ 12 files changed, 120 insertions(+), 17 deletions(-)
+---
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+change-id: 20240715-pci-qcom-hotplug-bcde1c13d91f
 
-> + * @gctx_paddr: system physical address of guest context page
-> + * @tdi_ctx_paddr: SPA of page donated by hypervisor
-> + * @req_paddr: system physical address of request page
-> + * @res_paddr: system physical address of response page
-> + */
-> +struct sev_data_tio_guest_request {
-> +	u32 length;				/* In */
-> +	u32 reserved;
-> +	struct spdm_ctrl spdm_ctrl;		/* In */
-> +	struct sla_addr_t dev_ctx_sla;
-> +	struct sla_addr_t tdi_ctx_sla;
-> +	u64 gctx_paddr;
-> +	u64 req_paddr;				/* In */
-> +	u64 res_paddr;				/* In */
-> +} __packed;
-> +
-
-
-
-> +int sev_tio_tdi_status(struct tsm_dev_tio *dev_data, struct tsm_tdi_tio *tdi_data,
-> +		       struct tsm_spdm *spdm)
-> +{
-> +	struct sev_tio_tdi_status_data *data = (struct sev_tio_tdi_status_data *) dev_data->data;
-> +	struct sev_data_tio_tdi_status status = {
-> +		.length = sizeof(status),
-> +		.dev_ctx_sla = dev_data->dev_ctx,
-> +		.tdi_ctx_sla = tdi_data->tdi_ctx,
-> +	};
-> +	int ret;
-> +
-> +	if (IS_SLA_NULL(dev_data->dev_ctx) || IS_SLA_NULL(tdi_data->tdi_ctx))
-> +		return -ENXIO;
-> +
-> +	memset(data, 0, sizeof(*data));
-> +
-> +	spdm_ctrl_init(spdm, &status.spdm_ctrl, dev_data);
-> +	status.status_paddr = __psp_pa(data);
-> +
-> +	ret = sev_tio_do_cmd(SEV_CMD_TIO_TDI_STATUS, &status, sizeof(status),
-> +			     &dev_data->psp_ret, dev_data, spdm);
-> +
-> +	return ret;
-
-return sev_tio_do_cmd()
-
-Same in other similar cases.
-
-> +}
-
-
-> diff --git a/drivers/crypto/ccp/sev-dev-tsm.c b/drivers/crypto/ccp/sev-dev-tsm.c
-> new file mode 100644
-> index 000000000000..a11dea482d4b
-> --- /dev/null
-> +++ b/drivers/crypto/ccp/sev-dev-tsm.c
-> @@ -0,0 +1,397 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +// Interface to CCP/SEV-TIO for generic PCIe TDISP module
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-doe.h>
-> +#include <linux/tsm.h>
-> +
-> +#include <linux/smp.h>
-> +#include <asm/sev-common.h>
-> +
-> +#include "psp-dev.h"
-> +#include "sev-dev.h"
-> +#include "sev-dev-tio.h"
-> +
-> +static int mkret(int ret, struct tsm_dev_tio *dev_data)
-> +{
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (dev_data->psp_ret == SEV_RET_SUCCESS)
-> +		return 0;
-> +
-> +	pr_err("PSP returned an error %d\n", dev_data->psp_ret);
-I'm not totally convinced this is worth while vs simply checking
-at call sites.
-
-> +	return -EINVAL;
-> +}
-> +
-> +static int dev_connect(struct tsm_dev *tdev, void *private_data)
-> +{
-> +	u16 device_id = pci_dev_id(tdev->pdev);
-> +	u16 root_port_id = 0; // FIXME: this is NOT PCI id, need to figure out how to calculate this
-> +	u8 segment_id = tdev->pdev->bus ? pci_domain_nr(tdev->pdev->bus) : 0;
-> +	struct tsm_dev_tio *dev_data = tdev->data;
-> +	int ret;
-> +
-> +	if (!dev_data) {
-> +		dev_data = kzalloc(sizeof(*dev_data), GFP_KERNEL);
-> +		if (!dev_data)
-> +			return -ENOMEM;
-> +
-> +		ret = sev_tio_dev_create(dev_data, device_id, root_port_id, segment_id);
-> +		if (ret)
-> +			goto free_exit;
-> +
-> +		tdev->data = dev_data;
-> +	}
-...
-
-> +
-> +free_exit:
-> +	sev_tio_dev_reclaim(dev_data, &tdev->spdm);
-> +	kfree(dev_data);
-
-Correct to free even if not allocated here?
-Perhaps a comment if so.
-
-> +
-> +	return ret;
-> +}
-> +
-
-
-> +static int ide_refresh(struct tsm_dev *tdev, void *private_data)
-> +{
-> +	struct tsm_dev_tio *dev_data = tdev->data;
-> +	int ret;
-> +
-> +	if (!dev_data)
-> +		return -ENODEV;
-> +
-> +	ret = sev_tio_ide_refresh(dev_data, &tdev->spdm);
-> +
-> +	return ret;
-
-	return sev_tio_ide_refresh()
-
-> +}
-
-> +
-> +static int tdi_create(struct tsm_tdi *tdi)
-> +{
-> +	struct tsm_tdi_tio *tdi_data = tdi->data;
-> +	int ret;
-> +
-> +	if (tdi_data)
-> +		return -EBUSY;
-> +
-> +	tdi_data = kzalloc(sizeof(*tdi_data), GFP_KERNEL);
-> +	if (!tdi_data)
-> +		return -ENOMEM;
-> +
-> +	ret = sev_tio_tdi_create(tdi->tdev->data, tdi_data, pci_dev_id(tdi->pdev),
-> +				 tdi->rseg, tdi->rseg_valid);
-> +	if (ret)
-> +		kfree(tdi_data);
-	if (ret) {
-		kfree(tdi_data);
-		return ret;
-	}
-
-	tid->data = tdi_data;
-
-	return 0;
-
-is slightly longer but a more standard form so easier to review.
-
-> +	else
-> +		tdi->data = tdi_data;
-> +
-> +	return ret;
-> +}
-> +
-
-> +
-> +static int guest_request(struct tsm_tdi *tdi, u32 guest_rid, u64 kvmid, void *req_data,
-
-Probably wrap nearer 80 chars.
-
-> +			 enum tsm_tdisp_state *state, void *private_data)
-> +{
-> +	struct tsm_dev_tio *dev_data = tdi->tdev->data;
-> +	struct tio_guest_request *req = req_data;
-> +	int ret;
-> +
-> +	if (!tdi->data)
-> +		return -EFAULT;
-> +
-> +	if (dev_data->cmd == 0) {
-> +		ret = sev_tio_guest_request(&req->data, guest_rid, kvmid,
-> +					    dev_data, tdi->data, &tdi->tdev->spdm);
-> +		req->fw_err = dev_data->psp_ret;
-
-If the above returned an error is psp_ret always set? I think not.
-So maybe separate if (ret) condition, then set this and finally call
-the code below.
-
-> +		ret = mkret(ret, dev_data);
-> +		if (ret > 0)
-> +			return ret;
-> +	} else if (dev_data->cmd == SEV_CMD_TIO_GUEST_REQUEST) {
-> +		ret = sev_tio_continue(dev_data, &tdi->tdev->spdm);
-> +		ret = mkret(ret, dev_data);
-> +		if (ret > 0)
-> +			return ret;
-> +	}
-> +
-> +	if (dev_data->cmd == 0 && state) {
-> +		ret = sev_tio_tdi_status(tdi->tdev->data, tdi->data, &tdi->tdev->spdm);
-> +		ret = mkret(ret, dev_data);
-> +		if (ret > 0)
-> +			return ret;
-> +	} else if (dev_data->cmd == SEV_CMD_TIO_TDI_STATUS) {
-> +		ret = sev_tio_continue(dev_data, &tdi->tdev->spdm);
-> +		ret = mkret(ret, dev_data);
-> +		if (ret > 0)
-> +			return ret;
-> +
-> +		ret = sev_tio_tdi_status_fin(tdi->tdev->data, tdi->data, state);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int tdi_status(struct tsm_tdi *tdi, void *private_data, struct tsm_tdi_status *ts)
-> +{
-> +	struct tsm_dev_tio *dev_data = tdi->tdev->data;
-> +	int ret;
-> +
-> +	if (!tdi->data)
-> +		return -ENODEV;
-> +
-> +#if 0 /* Not implemented yet */
-> +	if (dev_data->cmd == 0) {
-> +		ret = sev_tio_tdi_info(tdi->tdev->data, tdi->data, ts);
-> +		ret = mkret(ret, dev_data);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +#endif
-> +
-> +	if (dev_data->cmd == 0) {
-> +		ret = sev_tio_tdi_status(tdi->tdev->data, tdi->data, &tdi->tdev->spdm);
-> +		ret = mkret(ret, dev_data);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = sev_tio_tdi_status_fin(tdi->tdev->data, tdi->data, &ts->state);
-
-Given code as it stands. Might as well return here.
-
-> +	} else if (dev_data->cmd == SEV_CMD_TIO_TDI_STATUS) {
-Making this just an if.
-
-> +		ret = sev_tio_continue(dev_data, &tdi->tdev->spdm);
-> +		ret = mkret(ret, dev_data);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = sev_tio_tdi_status_fin(tdi->tdev->data, tdi->data, &ts->state);
-and here.
-
-> +	} else {
-
-Making this the inline code as no need for else.
-
-> +		pci_err(tdi->pdev, "Wrong state, cmd 0x%x in flight\n",
-> +			dev_data->cmd);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +struct tsm_ops sev_tsm_ops = {
-> +	.dev_connect = dev_connect,
-> +	.dev_reclaim = dev_reclaim,
-> +	.dev_status = dev_status,
-> +	.ide_refresh = ide_refresh,
-> +	.tdi_bind = tdi_bind,
-> +	.tdi_reclaim = tdi_reclaim,
-> +	.guest_request = guest_request,
-> +	.tdi_status = tdi_status,
-> +};
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 
 
