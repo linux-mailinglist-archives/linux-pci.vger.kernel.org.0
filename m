@@ -1,146 +1,189 @@
-Return-Path: <linux-pci+bounces-12367-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12368-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18DEF962D00
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:52:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F6DB962D0A
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:54:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D0021C20C1B
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:52:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9F1A2824B8
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:54:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C180E1A2573;
-	Wed, 28 Aug 2024 15:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D5ieMxB+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014321A2567;
+	Wed, 28 Aug 2024 15:54:48 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3870018756D
-	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 15:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FA71A0718;
+	Wed, 28 Aug 2024 15:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724860344; cv=none; b=g6ZFTV9I8xwqUN0Ig8BK6vFeOh0fLihyX4zpndRSRpVs1Zsk2lRtMrKyy0NlwUHggoAIRtbr6go8XQLMCWeGW9/5PJZvM1/L2ex7OTRq9ObIpHyQrOEGjwq+cNtY1wTGFtmfa2Puaf0ZNpC5zduXlSIyQyS0JHShmPRXpOi+mVE=
+	t=1724860487; cv=none; b=pR9Tp38vnfx1X1u2s8twoxQRXalK/8a4PFWLs7JXzGTTSDnvFlByXaOAiXU6moh+6h9Racj+aHRCsHkSQiLquPxuBjV8SaU813XIL1yKThFfENIqKHo7iRZo3xi2QFDfuTRaOqiZx2x6D8vC+gVLD7B2a99FUghU5WeSRA41rmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724860344; c=relaxed/simple;
-	bh=AYwJsPFJTs+BMyQDHjSBUGoJbZSElw/swWIE6XYBz38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N1L7mZa/w8IwwuUl0xiyIhAsIX12up1RZAred+cq3HNsm7QbcebLVuAwonH6T92xY2IHT7dJgryVLEdo0wrJUV+yw+vjwRQBBvVZ25cC3Uq50ezu5mhi5EkoD47ZhzHdJNRv//p9tUX+UL41kh9uxYQkeY3OJC/qGkryoPtCwok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D5ieMxB+; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fee6435a34so47991855ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 08:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724860342; x=1725465142; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ftzkSWbFvLJ9948dQ8TVsavC0mFp50UvDV94rVgLQ2k=;
-        b=D5ieMxB+8jlaaVGNpIWduVsHlNFpIqCSgy736Vrmb5V7d4upg4KJNCwjHJnJoGx1Tz
-         Ixx9U82Lf2mZUEr+YV9P/h7SCT43KRcFYN6vEln9Jz34yON15iLtfzOu375s65bUf2c0
-         +9ugFN6tBHQZli7WBsitkgiVLotuPcwAp4NwS4pFCVLL0Ku1o/c0KQr1l1/Pi1T+fxvG
-         /P0IcK8/QChufejp+qVNFfzExS2uKP+S/u4Dn8lXbIegfljt2z49B8WyLI5HYXuke7SE
-         8lJab0D9WR6pKI1G4oY2zr81BbOYJx6btQHaNAZ0a1BcqofzJI741IuIXuFZWj2zm/is
-         /3Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724860342; x=1725465142;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ftzkSWbFvLJ9948dQ8TVsavC0mFp50UvDV94rVgLQ2k=;
-        b=K22ELjrvPX4C69ofEhvupCyaExzRtLoCGmOuLoLYaxiicEq1OU13+biTy2gRgaoVcM
-         ilCU5qopyl+cypwT4mgY6J8gUfvl23DYd3F8VSLHNWIIAfBiGBVCLHVKW5tyFvWOjfl8
-         XxL3dLqYy5SD09MiUSEG2ghDziw25edsQ/d/uVq+tdtr3vLKTdaAU37dy3wu3JONy7FN
-         zofLJOOGRehOXtyjot1e+C/CIVFLBnYDrzEFw05GX5HwO6LgpGza1ky0T53HWTGnqSOf
-         FB5CU6U7/GrtHZXkpfdqTVDukZJFJFWTMgPPlBcat0c1hILN1GO9+BNtp6MU7Z23WQBn
-         EOAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWVosNn9Otm/HPv8skMh/7h2sy3xxxQBQq51VEO8f1FSFIwaP4jSR3Oxr4wY480K7yLCSZdvrzfbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3Vt+YxCTzZ8685b+5IWuaiw7OcSxP7fNU1+6/sUQdvg0pXyMs
-	qVbzpv3rr+DnacZbLnO/s1iwcOCgIiNVhfT0CEemxzzCnaVv1teQQ2WoLCaOQQ==
-X-Google-Smtp-Source: AGHT+IFgo/cUJQwlwSXIoPmB/Y0s5lv+ozTSguIks56E+QNBK2Z1wW4Eku59mqPReTGV1Hr4ehcyCw==
-X-Received: by 2002:a17:903:230b:b0:200:aa31:dc8d with SMTP id d9443c01a7336-2039e52cb0fmr191870685ad.63.1724860342472;
-        Wed, 28 Aug 2024 08:52:22 -0700 (PDT)
-Received: from thinkpad ([120.56.198.191])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20385564b6csm100745445ad.27.2024.08.28.08.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2024 08:52:22 -0700 (PDT)
-Date: Wed, 28 Aug 2024 21:22:17 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	lukas@wunner.de, mika.westerberg@linux.intel.com,
-	Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v5 3/4] PCI: Decouple D3Hot and D3Cold handling for
- bridges
-Message-ID: <20240828155217.jccpmcgvizqomj4x@thinkpad>
-References: <20240802-pci-bridge-d3-v5-3-2426dd9e8e27@linaro.org>
- <20240821014559.GA236134@bhelgaas>
+	s=arc-20240116; t=1724860487; c=relaxed/simple;
+	bh=yfqlcQMZu+JGvpJjxkp4NEwud7Bw+0cvsJjSeYSV/1k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YEScmY7fc0X3EugBrs8CvVHBpWTY41Hvsyktat0LaNBqWhrSQkYjQP42ml2Dw0j0FuhScpyGGrIYAWBF7WnVVSx35tVqaIDeYZiGnIYULuViNOylBT8tXtEg7KAWmu8dYP/7k6i78Z68AhZCLQnHAqlKB0SG1Mal15P5OGGL8tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv86619BBz6H8D7;
+	Wed, 28 Aug 2024 23:51:26 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E0231400D4;
+	Wed, 28 Aug 2024 23:54:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
+ 2024 16:54:41 +0100
+Date: Wed, 28 Aug 2024 16:54:40 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alexey Kardashevskiy <aik@amd.com>
+CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>, "Suravee
+ Suthikulpanit" <suravee.suthikulpanit@amd.com>, Alex Williamson
+	<alex.williamson@redhat.com>, Dan Williams <dan.j.williams@intel.com>,
+	<pratikrajesh.sampat@amd.com>, <michael.day@amd.com>, <david.kaplan@amd.com>,
+	<dhaval.giani@amd.com>, Santosh Shukla <santosh.shukla@amd.com>, Tom Lendacky
+	<thomas.lendacky@amd.com>, "Michael Roth" <michael.roth@amd.com>, Alexander
+ Graf <agraf@suse.de>, "Nikunj A Dadhania" <nikunj@amd.com>, Vasant Hegde
+	<vasant.hegde@amd.com>, "Lukas Wunner" <lukas@wunner.de>
+Subject: Re: [RFC PATCH 17/21] coco/sev-guest: Implement the guest side of
+ things
+Message-ID: <20240828165440.0000211a@Huawei.com>
+In-Reply-To: <20240823132137.336874-18-aik@amd.com>
+References: <20240823132137.336874-1-aik@amd.com>
+	<20240823132137.336874-18-aik@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240821014559.GA236134@bhelgaas>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, Aug 20, 2024 at 08:45:59PM -0500, Bjorn Helgaas wrote:
-> On Fri, Aug 02, 2024 at 11:25:02AM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Currently, there is no proper distinction between D3Hot and D3Cold while
-> > handling the power management for PCI bridges. For instance,
-> > pci_bridge_d3_allowed() API decides whether it is allowed to put the
-> > bridge in D3, but it doesn't explicitly specify whether D3Hot or D3Cold
-> > is allowed in a scenario. This often leads to confusion and may be prone
-> > to errors.
-> > 
-> > So let's split the D3Hot and D3Cold handling where possible. The current
-> > pci_bridge_d3_allowed() API is now split into pci_bridge_d3hot_allowed()
-> > and pci_bridge_d3cold_allowed() APIs and used in relevant places.
-> 
-> s/So let's split/Split/
-> 
-> > Also, pci_bridge_d3_update() API is now renamed to
-> > pci_bridge_d3cold_update() since it was only used to check the possibility
-> > of D3Cold.
-> > 
-> > Note that it is assumed that only D3Hot needs to be checked while
-> > transitioning the bridge during runtime PM and D3Cold in other places. In
-> > the ACPI case, wakeup is now only enabled if both D3Hot and D3Cold are
-> > allowed for the bridge.
-> > 
-> > Still, there are places where just 'd3' is used opaquely, but those are
-> > hard to distinguish, hence left for future cleanups.
-> 
-> The spec does use "D3Hot/D3Cold" (with Hot/Cold capitalized and
-> subscripted), but most Linux doc and comments use "D3hot" and
-> "D3cold", so I think we should stick with the Linux convention (it's
-> not 100%, but it's a pretty big majority).
-> 
-> > -	if (pci_dev->bridge_d3_allowed)
-> > +	if (pci_dev->bridge_d3cold_allowed && pci_dev->bridge_d3hot_allowed)
-> 
-> Much of this patch is renames that could be easily reviewed.  But
-> there are a few things like this that are not simple renames.  Can you
-> split out these non-rename things to their own patch(es) with their
-> own explanations?
-> 
+On Fri, 23 Aug 2024 23:21:31 +1000
+Alexey Kardashevskiy <aik@amd.com> wrote:
 
-I can, but I do not want these cleanups/refactoring to delay merging the patch
-4. Are you OK if I just send it standalone and work on the refactoring as a
-separate series?
+> Define tsm_ops for the guest and forward the ops calls to the HV via
+> SVM_VMGEXIT_SEV_TIO_GUEST_REQUEST.
+> Do the attestation report examination and enable MMIO.
+> 
+> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+More trivial stuff.
 
-- Mani
+> diff --git a/drivers/virt/coco/sev-guest/sev_guest_tio.c b/drivers/virt/coco/sev-guest/sev_guest_tio.c
+> new file mode 100644
+> index 000000000000..33a082e7f039
+> --- /dev/null
+> +++ b/drivers/virt/coco/sev-guest/sev_guest_tio.c
+> @@ -0,0 +1,513 @@
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+
+> +static int tio_tdi_sdte_write(struct tsm_tdi *tdi, struct snp_guest_dev *snp_dev, bool invalidate)
+> +{
+> +	struct snp_guest_crypto *crypto = snp_dev->crypto;
+> +	size_t resp_len = sizeof(struct tio_msg_sdte_write_rsp) + crypto->a_len;
+> +	struct tio_msg_sdte_write_rsp *rsp = kzalloc(resp_len, GFP_KERNEL);
+> +	struct tio_msg_sdte_write_req req = {
+> +		.guest_device_id = pci_dev_id(tdi->pdev),
+> +		.sdte.vmpl = 0,
+> +		.sdte.vtom = tsm_vtom,
+> +		.sdte.vtom_en = 1,
+> +		.sdte.iw = 1,
+> +		.sdte.ir = 1,
+> +		.sdte.v = 1,
+> +	};
+> +	u64 fw_err = 0;
+> +	u64 bdfn = pci_dev_id(tdi->pdev);
+> +	int rc;
+> +
+> +	BUILD_BUG_ON(sizeof(struct sdte) * 8 != 512);
+> +
+> +	if (invalidate)
+> +		memset(&req, 0, sizeof(req));
+
+Little odd to fill it then zero it.  Maybe just fill it
+if !invalidate
+
+> +
+> +	pci_notice(tdi->pdev, "SDTE write vTOM=%lx", (unsigned long) req.sdte.vtom << 21);
+> +
+> +	if (!rsp)
+
+I'd allocate rsp down here as then obvious what is going on.
+
+> +		return -ENOMEM;
+> +
+> +	rc = handle_tio_guest_request(snp_dev, TIO_MSG_SDTE_WRITE_REQ,
+> +			       &req, sizeof(req), rsp, resp_len,
+> +			       NULL, NULL, &bdfn, NULL, &fw_err);
+> +	if (rc) {
+> +		pci_err(tdi->pdev, "SDTE write failed with 0x%llx\n", fw_err);
+> +		goto free_exit;
+> +	}
+> +
+> +free_exit:
+> +	/* The response buffer contains the sensitive data, explicitly clear it. */
+> +	memzero_explicit(&rsp, sizeof(resp_len));
+> +	kfree(rsp);
+
+kfree_sensitive() perhaps?
+
+> +	return rc;
+> +}
+
+> +static int sev_guest_tdi_validate(struct tsm_tdi *tdi, bool invalidate, void *private_data)
+> +{
+> +	struct snp_guest_dev *snp_dev = private_data;
+> +	struct tsm_tdi_status ts = { 0 };
+> +	int ret;
+> +
+> +	if (!tdi->report) {
+> +		ret = tio_tdi_status(tdi, snp_dev, &ts);
+> +
+> +		if (ret || !tdi->report) {
+> +			pci_err(tdi->pdev, "No report available, ret=%d", ret);
+> +			if (!ret && tdi->report)
+> +				ret = -EIO;
+> +			return ret;
+I'd split the error paths to simplify the logic.
+		if (ret) {
+			pci_err(tdi->pdev, "No report available, ret=%d", ret);
+			return ret;
+		}
+		if (!tdi->report) {
+			pci_err(... some more meaningful message)
+			return -EIO;
+> +		}
+> +
+> +		if (ts.state != TDISP_STATE_RUN) {
+> +			pci_err(tdi->pdev, "Not in RUN state, state=%d instead", ts.state);
+> +			return -EIO;
+> +		}
+> +	}
+> +
+> +	ret = tio_tdi_sdte_write(tdi, snp_dev, invalidate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tio_tdi_mmio_validate(tdi, snp_dev, invalidate);
+
+return tio_tdi_mmio_validate();
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+
 
