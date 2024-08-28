@@ -1,124 +1,200 @@
-Return-Path: <linux-pci+bounces-12388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E1B79633B3
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 23:15:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4C719633BD
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 23:19:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8BBE1F214A5
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 21:15:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA2F11C2178F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 21:19:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 366831ABEC8;
-	Wed, 28 Aug 2024 21:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ACC11AD3FB;
+	Wed, 28 Aug 2024 21:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TBiLe0vj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVFp21+B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A945C1C
-	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 21:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE0C1AD3F2;
+	Wed, 28 Aug 2024 21:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724879737; cv=none; b=JYBgp1SZZujcIJyl5yBhQTPQZ2HgE1niii+bQXuOOZYAkeGF5h0bJzJXpw7y3+cPJzFvTq9Cxzrwqll5QJx4NtyxAOq64BNz3e5/fDeJLw7OpmXTqEyAFR/1g+9j6P/JNiDXr18Qqw0gH4yT/D1MnvPWNHUirt38qI2QQjEpke8=
+	t=1724879950; cv=none; b=YOoKS1RbMvmO9PP1j51+m6S2CKyd4boHnFkP8WE22lDmW2MdBOFwWaLjk9ITOkCZBYiTLR9UdJTprjayt+SFaa2eNCMR+fLmpTHoE/hPbIunAif3ekVLamR9vWHP9+272YLsYJ6YIcNxVrsDcLXm29/hIAT/vGfrdx4dQpmt8OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724879737; c=relaxed/simple;
-	bh=rZ0hzRuydgbsTmzNxJW5qDg7GgFGEViAZUQW/xwoQg8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OAG+63GaeNUncjy5rDjOqYv4PAuz7oIiR8rb4BKYU1+gaEaxafTcuUgB2net0NG6FkbGPc2TC7OXUKEbxDN3r1AL/pPIGRQB1OlDkbne7OITB+848+cE8Pm78/8EEXjvEJmNE+T2650hGS37LwFHkiCac1IbS2qbH09Rr1IWit0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TBiLe0vj; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3df07543ed5so27871b6e.0
-        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 14:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1724879735; x=1725484535; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wroWp6ZdRx4y4EGEIviQ1d0CtpBbTRnZ8bxPpcNXhAI=;
-        b=TBiLe0vjaf36ftvRiYxFcrVq1iqjr+3zy/fT7Q1yy1IzCUD7zT6gYvsEqx/wrTVQvl
-         ymSRKKT3tUCTieMWMlrtdw+ErPwKK/cH70D5XUutZU6QHTUFDcWhoKInR3Hz4ykwjKFi
-         wCMkK22euHZamSB3MBO0WqGEIG0W3SBMdmUMo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724879735; x=1725484535;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wroWp6ZdRx4y4EGEIviQ1d0CtpBbTRnZ8bxPpcNXhAI=;
-        b=WlfdAFoYCUbvUGbJH7K5sxZM8s7tZ6htNXFgdCjfa13nDm1cCAwYh8RW0OWKpGInS/
-         /JaOlXRM6Og5tYn/Dxd5dMV3bamHsLDilA/AN4fTY2WKeWVZjk50FAmdcsejmQwgOEug
-         lNaDOM8I0lT9G3BPadNAW5k0VbzENI4Hn8P6fimVBUDE6UhIriA6b9gQdjt8WQn1qU1c
-         uCCMtJX4achO/Ct3FfR7VkAX53/P50js2eGH8EEJq8r49svZ5gHvpMFtHsWZTuDIJErd
-         1oP9Mz8dPafHeM969ratpSwnj7B5qzxds9umah8POQRkQRayFjoUbdIubDJqRqN7MnPq
-         jGUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4MR/hC+j+KkxPZol2y0qRmOzzGpTULBjlq9NREp/9sYDawi97qnHa00PUpzAFcjOPpBM+AqzbKmg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXuve4ZvxHU0hfsDiGx/a6yOaKHMZj8EncE3nkEQkGdCQi1Lsw
-	84DImKZeUpc7qS6jkemovxwH9r+YPlo7ZM4zqxj6f6oS7wmBGwTWLFVSbDbFDzpRD1gyrGyZEl5
-	o+VE2LLBrW2fs4UHnGAwODPu6BddMoFgcTtw7
-X-Google-Smtp-Source: AGHT+IHpc1TwQ/elzvJfTT8LvKlPqSoX8Jgij02Zkapj6rbYbejYym0vJh0kKtUwFwrIDA0pdyfbKUIckcCIzSc/5qU=
-X-Received: by 2002:a05:6870:1586:b0:260:ebf7:d0e7 with SMTP id
- 586e51a60fabf-277900cfd7dmr1020924fac.15.1724879734799; Wed, 28 Aug 2024
- 14:15:34 -0700 (PDT)
+	s=arc-20240116; t=1724879950; c=relaxed/simple;
+	bh=49PHB8qyunhNwkqPu8maqVRtY1UPnUcFp4zqIf0kXcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uueqbK8OjbdiMtBr7cjiijbBaieYKm86fK4RL5xs11C+7V8tI14dxrvFZ+ZGNhTosyI4hsLlnODXZu7Vo4XB7cQusiqd8loXRPdJirxgJlu1e4gnkq64HPna4PHGGOd1BThu8qssFznKAO9NK9FayNpiQ3PL95zoRao1sCo4wo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVFp21+B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E37C4CEC3;
+	Wed, 28 Aug 2024 21:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724879949;
+	bh=49PHB8qyunhNwkqPu8maqVRtY1UPnUcFp4zqIf0kXcY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=pVFp21+BRU63IIpfRMbslg+8XpR0EjCfJpCQik0ChLei1TqYjx+Huu9B+GgR30ELW
+	 FDqVR2GpORk5bS++6AD4hEBeA14/Br+lrgnv7rfsp2HnPJcxwG+sJmd2mhWEHjFWtd
+	 e8h38p7fw54LCX1XFpK/lzWHBTCTzw1jr46hC21QyuasPUC50Xq2F5jDXbGh1bqnQL
+	 S8/NSn1O2jHXHY0mUd+cD8vX2tauqBnjYQQIVaD0Wv11BQnJ2ygq7UlIj9e+zdI3sw
+	 tWjZB3RwR7tOTO+LYTqQNBDxpUUbCK3FbBguUI/FPvFN3a/RSMMIigUe8Xxq8AaYvT
+	 E76oUpgeyQPoQ==
+Date: Wed, 28 Aug 2024 16:19:06 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, vigneshr@ti.com,
+	kishon@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH v3 2/2] PCI: j721e: Enable ACSPCIE Refclk if
+ "ti,syscon-acspcie-proxy-ctrl" exists
+Message-ID: <20240828211906.GA38267@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org> <ZstCyti3FHZIeFO8@wunner.de>
-In-Reply-To: <ZstCyti3FHZIeFO8@wunner.de>
-From: Esther Shimanovich <eshimanovich@chromium.org>
-Date: Wed, 28 Aug 2024 17:15:24 -0400
-Message-ID: <CA+Y6NJE1p-nidmCZzJ7j-mJAmCLmC2q2meUf-5FFSWofWES-qA@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	iommu@lists.linux.dev, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240827055548.901285-3-s-vadapalli@ti.com>
 
-On Sun, Aug 25, 2024 at 10:49=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wro=
-te:
->
-> On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
-> > +{
-> > +     struct fwnode_handle *fwnode;
-> > +
-> > +     /*
-> > +      * For USB4, the tunneled PCIe root or downstream ports are marke=
-d
-> > +      * with the "usb4-host-interface" ACPI property, so we look for
-> > +      * that first. This should cover most cases.
-> > +      */
-> > +     fwnode =3D fwnode_find_reference(dev_fwnode(&pdev->dev),
-> > +                                    "usb4-host-interface", 0);
->
-> This is all ACPI only, so it should either be #ifdef'ed to CONFIG_ACPI
-> or moved to drivers/pci/pci-acpi.c.
->
-> Alternatively, it could be moved to arch/x86/pci/ because ACPI can also
-> be enabled on arm64 or riscv but the issue seems to only affect x86.
+On Tue, Aug 27, 2024 at 11:25:48AM +0530, Siddharth Vadapalli wrote:
+> The ACSPCIE module is capable of driving the reference clock required by
+> the PCIe Endpoint device. It is an alternative to on-board and external
+> reference clock generators. Enabling the output from the ACSPCIE module's
+> PAD IO Buffers requires clearing the "PAD IO disable" bits of the
+> ACSPCIE_PROXY_CTRL register in the CTRL_MMR register space.
+> 
+> Add support to enable the ACSPCIE reference clock output using the optional
+> device-tree property "ti,syscon-acspcie-proxy-ctrl".
+> 
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> 
+> v2:
+> https://lore.kernel.org/r/20240729092855.1945700-3-s-vadapalli@ti.com/
+> Changes since v2:
+> - Rebased patch on next-20240826.
+> 
+> v1:
+> https://lore.kernel.org/r/20240715120936.1150314-4-s-vadapalli@ti.com/
+> Changes since v1:
+> - Addressed Bjorn's feedback at:
+>   https://lore.kernel.org/r/20240725211841.GA859405@bhelgaas/
+>   with the following changes:
+>   1) Updated $subject and commit message to indicate that this patch
+>   enables ACSPCIE reference clock output if the DT property is present.
+>   2) Updated macro and comments to indicate that the BITS correspond to
+>   disabling ACSPCIE output, due to which clearing them enables the
+>   reference clock output.
+>   3) Replaced "PAD" with "refclk" both in the function name and in the
+>   error prints.
+>   4) Wrapped lines to be within the 80 character limit to match the rest
+>   of the driver.
+> 
+>  drivers/pci/controller/cadence/pci-j721e.c | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 85718246016b..ed42b2229483 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -44,6 +44,7 @@ enum link_status {
+>  #define J721E_MODE_RC			BIT(7)
+>  #define LANE_COUNT(n)			((n) << 8)
+>  
+> +#define ACSPCIE_PAD_DISABLE_MASK	GENMASK(1, 0)
+>  #define GENERATION_SEL_MASK		GENMASK(1, 0)
+>  
+>  struct j721e_pcie {
+> @@ -220,6 +221,34 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+>  	return ret;
+>  }
+>  
+> +static int j721e_enable_acspcie_refclk(struct j721e_pcie *pcie,
+> +				       struct regmap *syscon)
+> +{
+> +	struct device *dev = pcie->cdns_pcie->dev;
+> +	struct device_node *node = dev->of_node;
+> +	u32 mask = ACSPCIE_PAD_DISABLE_MASK;
+> +	struct of_phandle_args args;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(node,
+> +					       "ti,syscon-acspcie-proxy-ctrl",
+> +					       1, 0, &args);
+> +	if (!ret) {
+> +		/* Clear PAD IO disable bits to enable refclk output */
+> +		val = ~(args.args[0]);
+> +		ret = regmap_update_bits(syscon, 0, mask, val);
+> +		if (ret)
+> +			dev_err(dev, "failed to enable ACSPCIE refclk: %d\n",
+> +				ret);
+> +	} else {
+> +		dev_err(dev,
+> +			"ti,syscon-acspcie-proxy-ctrl has invalid arguments\n");
+> +	}
 
-Thanks for the feedback! Adding an #ifdef to CONFIG_ACPI seems more
-straightforward, but I do like the idea of not having unnecessary code
-run on non-x86 systems.
+I should have mentioned this the first time, but this would be easier
+to read if structured as:
 
-I'd appreciate some guidance here. How would I move a portion of a
-function into a completely different location in the kernel src?
-Could you show me an example?
-I'm assuming you'd want me to write another function elsewhere.
-Shouldn't it be in some existing file in
-`include/linux/platform_data/x86`? I don't see `arch/x86/pci/`
-included anywhere.
-Or would CONFIG_X86 be sufficient? (instead of or in addition to CONFIG_ACP=
-I?)
+  ret = of_parse_phandle_with_fixed_args(...);
+  if (ret) {
+    dev_err(...);
+    return ret;
+  }
+
+  /* Clear PAD IO disable bits to enable refclk output */
+  val = ~(args.args[0]);
+  ret = regmap_update_bits(syscon, 0, mask, val);
+  if (ret) {
+    dev_err(...);
+    return ret;
+  }
+
+  return 0;
+
+> +	return ret;
+> +}
+> +
+>  static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->cdns_pcie->dev;
+> @@ -259,6 +288,15 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> +	/* Enable ACSPCIE refclk output if the optional property exists */
+> +	syscon = syscon_regmap_lookup_by_phandle_optional(node,
+> +						"ti,syscon-acspcie-proxy-ctrl");
+> +	if (syscon) {
+> +		ret = j721e_enable_acspcie_refclk(pcie, syscon);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	return 0;
+
+Not as dramatic here, but I think the following would be a little
+simpler since the final "return" isn't used for two purposes
+((1) syscon property absent, (2) syscon present and refclk
+successfully enabled):
+
+  syscon = syscon_regmap_lookup_by_phandle_optional(...);
+  if (!syscon)
+    return 0;
+
+  return j721e_enable_acspcie_refclk(...);
+
+>  }
+>  
+> -- 
+> 2.40.1
+> 
 
