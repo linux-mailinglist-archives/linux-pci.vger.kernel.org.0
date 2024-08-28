@@ -1,189 +1,130 @@
-Return-Path: <linux-pci+bounces-12368-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12369-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F6DB962D0A
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:54:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E77F3962D12
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 17:56:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9F1A2824B8
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:54:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 862402816FE
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Aug 2024 15:56:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014321A2567;
-	Wed, 28 Aug 2024 15:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E88C1A2573;
+	Wed, 28 Aug 2024 15:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sX2n0duJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FA71A0718;
-	Wed, 28 Aug 2024 15:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA651A0718
+	for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 15:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724860487; cv=none; b=pR9Tp38vnfx1X1u2s8twoxQRXalK/8a4PFWLs7JXzGTTSDnvFlByXaOAiXU6moh+6h9Racj+aHRCsHkSQiLquPxuBjV8SaU813XIL1yKThFfENIqKHo7iRZo3xi2QFDfuTRaOqiZx2x6D8vC+gVLD7B2a99FUghU5WeSRA41rmY=
+	t=1724860605; cv=none; b=Sry7pefYS852cZyc0ZjkDWhv4xEzSeg1vqYTuCQlhKSXQ6jyclC1H6v84bfC90vs4tUZ92Q/ZmgjLEJKMNQLWmTt9/5oogSbwX4JuUR3eyCZGsFX4yz3GvessbVvhrJoY9DqqFXARRmTWrrNUFlnkJJ1K5dohsfXu/UPFxWLf9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724860487; c=relaxed/simple;
-	bh=yfqlcQMZu+JGvpJjxkp4NEwud7Bw+0cvsJjSeYSV/1k=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YEScmY7fc0X3EugBrs8CvVHBpWTY41Hvsyktat0LaNBqWhrSQkYjQP42ml2Dw0j0FuhScpyGGrIYAWBF7WnVVSx35tVqaIDeYZiGnIYULuViNOylBT8tXtEg7KAWmu8dYP/7k6i78Z68AhZCLQnHAqlKB0SG1Mal15P5OGGL8tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Wv86619BBz6H8D7;
-	Wed, 28 Aug 2024 23:51:26 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8E0231400D4;
-	Wed, 28 Aug 2024 23:54:42 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
- 2024 16:54:41 +0100
-Date: Wed, 28 Aug 2024 16:54:40 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>, "Suravee
- Suthikulpanit" <suravee.suthikulpanit@amd.com>, Alex Williamson
-	<alex.williamson@redhat.com>, Dan Williams <dan.j.williams@intel.com>,
-	<pratikrajesh.sampat@amd.com>, <michael.day@amd.com>, <david.kaplan@amd.com>,
-	<dhaval.giani@amd.com>, Santosh Shukla <santosh.shukla@amd.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, "Michael Roth" <michael.roth@amd.com>, Alexander
- Graf <agraf@suse.de>, "Nikunj A Dadhania" <nikunj@amd.com>, Vasant Hegde
-	<vasant.hegde@amd.com>, "Lukas Wunner" <lukas@wunner.de>
-Subject: Re: [RFC PATCH 17/21] coco/sev-guest: Implement the guest side of
- things
-Message-ID: <20240828165440.0000211a@Huawei.com>
-In-Reply-To: <20240823132137.336874-18-aik@amd.com>
-References: <20240823132137.336874-1-aik@amd.com>
-	<20240823132137.336874-18-aik@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1724860605; c=relaxed/simple;
+	bh=Ha443Pq2LngSA20OziuuGQGi6nUNi6iYRZM2MkylOO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z04/Is8KU7xaPv/R9qC6nkq9GwQo4MZ1b6PBHguhQqt9ZiioUboHOvU9Y4hAAm9JuTUtgMrGJuf4uNwrfsv64clkqFDwQ1yXm0K34S3YLMdx0DjB0dg+QPFjFKi2VfiJBUhsb7fVTUklJaAabcz3X3SkRfZih/3EHzz0CTpqUAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sX2n0duJ; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2d3c99033d6so5471769a91.0
+        for <linux-pci@vger.kernel.org>; Wed, 28 Aug 2024 08:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724860603; x=1725465403; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VzVMjubsXQCh1YcY4QckKt6HfzKqtuiKGKXcXqML8yg=;
+        b=sX2n0duJShyRJqm5NGRUuLOd6isUcIr0iLp8Jc3pXBNNK1+fPrsPnbPmnlV9M9DwqY
+         1R5z/fS0UMK1QzV3iuNslafeRcFgkL1IEsPeZ2UJF0E9owNEY7tEVdlSNuQkWlfu4D6W
+         W05kqFbXhuM8e7EDuh4q80x4jC1Gfit96VEQkZbHKxNO+iThgXMl5+ycSaQum17gXsir
+         mZMdeGV4Hk8HsrFLMxw+pLgh4+9gC1oLqu/KPpxLg68njYBGGB3ABna0sPBiuLZQS11e
+         abjtMU6gzcC8rXVkfthhtN1OUkAwRJACsP97Iy4ZbNIeZ0sRJdrmN29xbJN6oVs1w6vv
+         5Jag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724860603; x=1725465403;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VzVMjubsXQCh1YcY4QckKt6HfzKqtuiKGKXcXqML8yg=;
+        b=mjPz8LooKTCPUTiQACoO1auBoGDVeVHR/y8VfOFVqddW9BPON16vV5ZP/rp+PxqDNk
+         j9mrZNRQQopWL8U9M1Fae7iPX9fF3wWKTby9os+cYiOT0V6h7PwnDMCMgFafw2v2lvU7
+         DpQeh6cFINHwuImA4PGy0YzsGLuXwedubdOPKNldlfmDeR02Zced3fUu8TX3IOhNRBtD
+         C6Dqws6BznGDv1FjBkEk+DfYUU6/Oi0dTX3OnbHsyr13JxcMMfn/XsCtcu4cyDHYwUEp
+         UCNVGgGEORgNIHNzhNCbyCeGh7zT7pjEC/lVMnPxHR05O4bvjPAAaW0vshEIEC35Vs7p
+         4Axw==
+X-Forwarded-Encrypted: i=1; AJvYcCV++HuybyNZcf/lTb3Xu1LhhbrHl4l4Z8cvLEFWLZPSWmJPxaOmOnmLLtFgY+uDIX4AjfK3p6IZWRE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmrxv6bCqt8Rt2orpK3R6m8Cb7ZYPICtt4pZJ2ca+22daNuGyq
+	BogJNOyt5R6n7y+AkajEWztUnihh+Xy8ma30ucFptjO1RS/y8Z4vz8DQDL+yq5gPnJZ+YKUFpkE
+	=
+X-Google-Smtp-Source: AGHT+IHoBh/R3NhFvQxnxjpX4sSKSIInFXQsHDevtRTDsYf9qeMu8m9SSATPa4QNXdhopEzMjpEdFQ==
+X-Received: by 2002:a17:90b:378c:b0:2d3:cc31:5fdc with SMTP id 98e67ed59e1d1-2d8440b0a19mr2559107a91.5.1724860603111;
+        Wed, 28 Aug 2024 08:56:43 -0700 (PDT)
+Received: from thinkpad ([120.56.198.191])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d84462f19asm2042577a91.34.2024.08.28.08.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 08:56:42 -0700 (PDT)
+Date: Wed, 28 Aug 2024 21:26:38 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: joyce.ooi@intel.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: altera: Replace TLP_REQ_ID() with macro
+ PCI_DEVID()
+Message-ID: <20240828155638.y76h73cb4rcbvg36@thinkpad>
+References: <20240828104202.3683491-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240828104202.3683491-1-ruanjinjie@huawei.com>
 
-On Fri, 23 Aug 2024 23:21:31 +1000
-Alexey Kardashevskiy <aik@amd.com> wrote:
-
-> Define tsm_ops for the guest and forward the ops calls to the HV via
-> SVM_VMGEXIT_SEV_TIO_GUEST_REQUEST.
-> Do the attestation report examination and enable MMIO.
+On Wed, Aug 28, 2024 at 06:42:02PM +0800, Jinjie Ruan wrote:
+> The TLP_REQ_ID's function is same as current PCI_DEVID()
+> macro, replace it.
 > 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-More trivial stuff.
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-> diff --git a/drivers/virt/coco/sev-guest/sev_guest_tio.c b/drivers/virt/coco/sev-guest/sev_guest_tio.c
-> new file mode 100644
-> index 000000000000..33a082e7f039
-> --- /dev/null
-> +++ b/drivers/virt/coco/sev-guest/sev_guest_tio.c
-> @@ -0,0 +1,513 @@
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+- Mani
 
+> ---
+>  drivers/pci/controller/pcie-altera.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index ef73baefaeb9..650b2dd81c48 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -55,12 +55,11 @@
+>  #define TLP_READ_TAG			0x1d
+>  #define TLP_WRITE_TAG			0x10
+>  #define RP_DEVFN			0
+> -#define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
+>  #define TLP_CFG_DW0(pcie, cfg)		\
+>  		(((cfg) << 24) |	\
+>  		  TLP_PAYLOAD_SIZE)
+>  #define TLP_CFG_DW1(pcie, tag, be)	\
+> -	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+> +	(((PCI_DEVID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+>  #define TLP_CFG_DW2(bus, devfn, offset)	\
+>  				(((bus) << 24) | ((devfn) << 16) | (offset))
+>  #define TLP_COMP_STATUS(s)		(((s) >> 13) & 7)
+> -- 
+> 2.34.1
+> 
 
-> +static int tio_tdi_sdte_write(struct tsm_tdi *tdi, struct snp_guest_dev *snp_dev, bool invalidate)
-> +{
-> +	struct snp_guest_crypto *crypto = snp_dev->crypto;
-> +	size_t resp_len = sizeof(struct tio_msg_sdte_write_rsp) + crypto->a_len;
-> +	struct tio_msg_sdte_write_rsp *rsp = kzalloc(resp_len, GFP_KERNEL);
-> +	struct tio_msg_sdte_write_req req = {
-> +		.guest_device_id = pci_dev_id(tdi->pdev),
-> +		.sdte.vmpl = 0,
-> +		.sdte.vtom = tsm_vtom,
-> +		.sdte.vtom_en = 1,
-> +		.sdte.iw = 1,
-> +		.sdte.ir = 1,
-> +		.sdte.v = 1,
-> +	};
-> +	u64 fw_err = 0;
-> +	u64 bdfn = pci_dev_id(tdi->pdev);
-> +	int rc;
-> +
-> +	BUILD_BUG_ON(sizeof(struct sdte) * 8 != 512);
-> +
-> +	if (invalidate)
-> +		memset(&req, 0, sizeof(req));
-
-Little odd to fill it then zero it.  Maybe just fill it
-if !invalidate
-
-> +
-> +	pci_notice(tdi->pdev, "SDTE write vTOM=%lx", (unsigned long) req.sdte.vtom << 21);
-> +
-> +	if (!rsp)
-
-I'd allocate rsp down here as then obvious what is going on.
-
-> +		return -ENOMEM;
-> +
-> +	rc = handle_tio_guest_request(snp_dev, TIO_MSG_SDTE_WRITE_REQ,
-> +			       &req, sizeof(req), rsp, resp_len,
-> +			       NULL, NULL, &bdfn, NULL, &fw_err);
-> +	if (rc) {
-> +		pci_err(tdi->pdev, "SDTE write failed with 0x%llx\n", fw_err);
-> +		goto free_exit;
-> +	}
-> +
-> +free_exit:
-> +	/* The response buffer contains the sensitive data, explicitly clear it. */
-> +	memzero_explicit(&rsp, sizeof(resp_len));
-> +	kfree(rsp);
-
-kfree_sensitive() perhaps?
-
-> +	return rc;
-> +}
-
-> +static int sev_guest_tdi_validate(struct tsm_tdi *tdi, bool invalidate, void *private_data)
-> +{
-> +	struct snp_guest_dev *snp_dev = private_data;
-> +	struct tsm_tdi_status ts = { 0 };
-> +	int ret;
-> +
-> +	if (!tdi->report) {
-> +		ret = tio_tdi_status(tdi, snp_dev, &ts);
-> +
-> +		if (ret || !tdi->report) {
-> +			pci_err(tdi->pdev, "No report available, ret=%d", ret);
-> +			if (!ret && tdi->report)
-> +				ret = -EIO;
-> +			return ret;
-I'd split the error paths to simplify the logic.
-		if (ret) {
-			pci_err(tdi->pdev, "No report available, ret=%d", ret);
-			return ret;
-		}
-		if (!tdi->report) {
-			pci_err(... some more meaningful message)
-			return -EIO;
-> +		}
-> +
-> +		if (ts.state != TDISP_STATE_RUN) {
-> +			pci_err(tdi->pdev, "Not in RUN state, state=%d instead", ts.state);
-> +			return -EIO;
-> +		}
-> +	}
-> +
-> +	ret = tio_tdi_sdte_write(tdi, snp_dev, invalidate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tio_tdi_mmio_validate(tdi, snp_dev, invalidate);
-
-return tio_tdi_mmio_validate();
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
