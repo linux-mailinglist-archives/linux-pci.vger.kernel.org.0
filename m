@@ -1,138 +1,100 @@
-Return-Path: <linux-pci+bounces-12427-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12428-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0EA29643B9
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 14:02:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11BF49643CD
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 14:03:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1DEBB22686
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:02:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 453C01C249B8
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:03:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6CF7192B96;
-	Thu, 29 Aug 2024 12:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65DA18E756;
+	Thu, 29 Aug 2024 12:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gToss/rZ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i/EgZHri"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5338193073
-	for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 12:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D9E193078
+	for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 12:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724932915; cv=none; b=GX+K9Ym+1FwKj4r6GVhGDrl2TGqlGcAY0KsK6kXsLxPmowlL7ZwCgflfoPgotAFYoMtfbX5Sw8B8mQl1eo7Yb+SPmrR67A+JVl6FpvZwBAlUL/xcE6gILt4dEg0v/M7V+QPH/5AF2pbLLuGx8BThUeQ4KqojR/zoBTcUjW3ZXCw=
+	t=1724933016; cv=none; b=k1q9zuooYE0iKcZCfEcb0hCsbeMo+jbi45fx8aqeiL2DP0EXG6z2Ij6GZyPnIxfkNXWFrkDq49t0yEogbqcfiblKJ74TmQz/5bNRxBLpdDZXQMXYGdDtRKDtPu2hxvTVQF6uh5p+wlGrztxU/WQtoZ52ZNpmEQgIz88cgTkyYac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724932915; c=relaxed/simple;
-	bh=fOZO2d20iA45ijbTFXi/g1LkvqA+AHUmsj+CK1eEIxw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qa6Se8b9l8YfLe3KTopcEPstw0PtpVHJHQ0bV+6mogSUfSHZuvsHhtkVWDR0kNpy/EF8GHmVZR4hu9UqqZ6+dw6+gV7tdvWxOTnJ5FUUPkouHR8vG19GoiXRMo0ir4hIBCGIi4o4XvK06EmWeY0JBki5W62E3ZaQv1ttot8wubI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gToss/rZ; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a8696e9bd24so65298366b.0
-        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 05:01:53 -0700 (PDT)
+	s=arc-20240116; t=1724933016; c=relaxed/simple;
+	bh=u8awxGC8APLD2fBPkfXwUnekJ7v92Iejds6q48zmlhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bb52CEK6NrGUzE0cghLfYu317JtKvfT//MvEFagvNskGabHcA2pDjPO3LkkHhqNs4wes8vnHe0cFO3KpYmKVsEGQntWbeouu8UB2LWV2Xd8EZPHqGar6FEcMF7GQP8x7iwMiO7xDuP3P9KAGhYQv2wsHbDv2qErNd4qzb9ziooc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=i/EgZHri; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7a1d984ed52so35659985a.0
+        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 05:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724932912; x=1725537712; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mXBtr/JbiSQG7W9JfMUYCtQfQyKUiftjthV/2nojugU=;
-        b=gToss/rZvgKVjfAPyacL/q76YmsCND4RSc+aZ2fGN9apgKW2KWpDoeRDWPAZnSBlqQ
-         mIxSU8x1ZPW//YSICJDua82zbgukZ9NzqnHfc69WdqzKHpZLKAYOnQCBbxwP/hRyGOyZ
-         m1+Pr4NezMRbmuARSjLinJrBWmlBPkR1u8hUIvJKA0RmcZ59bxkDMydo8nXjE7AcNQ9t
-         2FFoSazdfqV3ibXedxh3OzfH8Y4+9cvckn/uyvxXFZL7mqsyS3w6jj3V/XdRH/Eb/xG6
-         k4EPzxy2RvVDMFFyv98ukloFIGKNWasVr5iKaaZ4dE+LL8cSlp9OtJyDMuwLxLlPyGQA
-         qngA==
+        d=ziepe.ca; s=google; t=1724933013; x=1725537813; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u8awxGC8APLD2fBPkfXwUnekJ7v92Iejds6q48zmlhU=;
+        b=i/EgZHriZ6kTmaN5sGZDm9IPBwNnj9JlGLIS9QnwdDwdk9AlsUB/9L53pGIyeBjrs2
+         fAtSRAJpgxgezOstDLvGiJvC8oGN8geZGko5WypLQDs1MxmJZrrWpns8WeHZi9KNnF9a
+         GRYoOJeQq9O7KiBygnaBX9+vb0wjE0VNayYKsydMSAsh97/pVPJDtugVz/9thz2STDf3
+         1D2thxTgcb3ZBdgmeJcn9IVagW1B1dyd6O1rRleswMb44wAkoTDSlAsEHNbcDycF8ukb
+         nHXkaW20vN5+lVab8l4CIOmkzxVVMf+Gwmfofdg1oSpJXwDQSu5GY4h1TY12NGodfFFn
+         owoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724932912; x=1725537712;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXBtr/JbiSQG7W9JfMUYCtQfQyKUiftjthV/2nojugU=;
-        b=DV11nsY3ZrvINmUWMYAGF8Yy1M80Hl9vz+9eUt0GAMcTyTjSLdGjGgqmagzaKw0Zrx
-         ieJ9A9kq+f0fiXprTFhxRDzQcdG6vy6d3JaTyflls7n+yVoGoBzGtZ+FwcIz0D2WVOU0
-         IPqMAlNmRPB94Ynwg1RWLR9hcnKRHzyH83xJPrU4AcUdbe5QlMHH9bz5qR92F2QkWbSL
-         40Lv7loSmzKqNrzUMcKwIFLGFVZxcZtk26Xkx/zuRfdGBM1+CFVcKxe7mQPalWcF7Omq
-         uR6aY3DJtDV5yaaNtVx3Xfxez9r/l3z/HfI2rZQ+Ag5+CbuBV5+Fvs5EjqBqJOnv7CL/
-         MCEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUD4zL7hYxx7jvmtjo/i7+SDiTuWJXw9hPsnxva4SsKwkDGMChkQmvlkpsgLedX2L0KW6KYypy68zc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp8qBStyHHWVDTu3kxPZrclRvgX5ULqcPXLWlCdVz/7jkyaPuu
-	BZfOzWDYQOqqkyzGSD85PR5eNcV0XVf+aaI8XcX9gYSxsWPGiXLdDsfV3XaA3Fs=
-X-Google-Smtp-Source: AGHT+IFsyk0IWnaZFMb265yPeWvESMoqgeE3DSP8XvW62AVSUHg1bVi4x43hO0c3ITnEgvBmjx2LDg==
-X-Received: by 2002:a17:907:9708:b0:a80:7ce0:8b2a with SMTP id a640c23a62f3a-a897f84d44cmr193846766b.19.1724932909698;
-        Thu, 29 Aug 2024 05:01:49 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989021960sm71432166b.79.2024.08.29.05.01.49
+        d=1e100.net; s=20230601; t=1724933013; x=1725537813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u8awxGC8APLD2fBPkfXwUnekJ7v92Iejds6q48zmlhU=;
+        b=a7Pgqe0SDITpCVC/vCqU246h8KBrtpTMB25gB0+8y2FBM4SgdRZLa6KvYumQFwY84k
+         cQQiziVkCgfrlP/T2CU5akAxPCglkT8w09fKaoN8sfmDRJjntk+0nCGSHBp897SF9pWa
+         2qMwXLq8ewhuqW2gUTJ3RVeUAqyIjoTE0JxFWlxB3lio0xoa/9dPe8NW6fez/zrCaJqv
+         GCfKPCVr73eHskSYhS7LhFSJfx0Xnb7bR4n+FhunrU+r5U8i4CdoOMbDelH0UvHkhTVy
+         Lo513xbIPzYiB7tGe0kqsmfwEolhcv95cs1p2STOSoHZ2TpV5bGXV50sGcAqdFilBsBn
+         qE4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX5PTc96Fwlqa7Eacoq45C7smqBW6UPMvwnpUv2n2aN2lq8TDDYMVLeS5qf0vBOAfcg8w5c+amBBJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO4e6A+J83Zp1XbpfnXsoAUjEIOkk1UtnBW8+//ZYv5KO/wj/J
+	eTeOjngcnvCXCSpWo5ECJfAcTnOc78oLR80fHlg/NEOE+4Ic9K+8WQCwmRWqg74=
+X-Google-Smtp-Source: AGHT+IGh1eftOELfePw5LBn8NrYfzH+v7ipL5QEhLmSsHv26fcAASM8yAzTbd5l6W1iebV1DkwTkvg==
+X-Received: by 2002:a05:620a:4409:b0:7a1:e41e:4d5c with SMTP id af79cd13be357-7a8042668b8mr337112085a.59.1724933010626;
+        Thu, 29 Aug 2024 05:03:30 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806d3944esm44767985a.80.2024.08.29.05.03.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 05:01:49 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 29 Aug 2024 14:01:54 +0200
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
- DT overlay
-Message-ID: <ZtBjMpMGtA4WfDij@apocalypse>
-Mail-Followup-To: Andrew Lunn <andrew@lunn.ch>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
- <Zsb_ZeczWd-gQ5po@apocalypse>
- <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
+        Thu, 29 Aug 2024 05:03:29 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sjds7-007TEL-WF;
+	Thu, 29 Aug 2024 09:03:28 -0300
+Date: Thu, 29 Aug 2024 09:03:27 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, kvm@vger.kernel.org,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	pratikrajesh.sampat@amd.com, michael.day@amd.com,
+	david.kaplan@amd.com, dhaval.giani@amd.com,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC PATCH 07/21] pci/tdisp: Introduce tsm module
+Message-ID: <20240829120327.GT3468552@ziepe.ca>
+References: <20240823132137.336874-1-aik@amd.com>
+ <20240823132137.336874-8-aik@amd.com>
+ <20240827123242.GM3468552@ziepe.ca>
+ <6e9e4945-8508-4f48-874e-9150fd2e38f3@amd.com>
+ <20240828234240.GR3468552@ziepe.ca>
+ <66cfba391a779_31daf294a5@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240829000910.GS3468552@ziepe.ca>
+ <66cfbec0352ca_47347294af@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -141,47 +103,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
+In-Reply-To: <66cfbec0352ca_47347294af@dwillia2-xfh.jf.intel.com.notmuch>
 
-Hi Andrew,
+On Wed, Aug 28, 2024 at 05:20:16PM -0700, Dan Williams wrote:
 
-On 15:04 Thu 22 Aug     , Andrew Lunn wrote:
-> > WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
-> > #673: FILE: drivers/pinctrl/pinctrl-rp1.c:600:
-> > +                               return -ENOTSUPP;
-> > 
-> > This I must investigate: I've already tried to fix it before sending the patchset
-> > but for some reason it wouldn't work, so I planned to fix it in the upcoming 
-> > releases.
-> 
-> ENOTSUPP is an NFS error. It should not be used outside for NFS. You
-> want EOPNOTSUPP.
+> I encourage those folks need to read the actual hardware specs, not just
+> the PCI spec. As far as I know there is only one host platform
+> implementation that allows IDE establishment and traffic flow for T=0
+> cases. So it is not yet trending to be a common thing that the PCI core
+> can rely upon.
 
-Ack.
+I think their perspective is this is the only path to do certain
+things in PCI land (from a packet on the wire perspective) so they
+would expect the platforms to align eventually if the standards go
+that way..
 
-> 
->  
-> > WARNING: externs should be avoided in .c files
-> > #331: FILE: drivers/misc/rp1/rp1-pci.c:58:
-> > +extern char __dtbo_rp1_pci_begin[];
-> > 
-> > True, but in this case we don't have a symbol that should be exported to other
-> > translation units, it just needs to be referenced inside the driver and
-> > consumed locally. Hence it would be better to place the extern in .c file.
->  
-> Did you try making it static.
-
-The dtso is compiled into an obj and linked with the driver which is in
-a different transaltion unit. I'm not aware on other ways to include that
-symbol without declaring it extern (the exception being some hackery 
-trick that compile the dtso into a .c file to be included into the driver
-main source file). 
-Or probably I'm not seeing what you are proposing, could you please elaborate
-on that?
-
-Many thanks,
-Andrea
-
-> 
-> 	Andrew
+Jason
 
