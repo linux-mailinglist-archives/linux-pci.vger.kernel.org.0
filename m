@@ -1,199 +1,142 @@
-Return-Path: <linux-pci+bounces-12425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47CE6964259
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:54:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9DDE964340
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 13:40:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C3AF1C24853
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 10:54:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19C0C1C245E5
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 11:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFD58191496;
-	Thu, 29 Aug 2024 10:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A75191F63;
+	Thu, 29 Aug 2024 11:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EDlQzT32"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1Yahnon1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE54419148D;
-	Thu, 29 Aug 2024 10:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC451BC4E;
+	Thu, 29 Aug 2024 11:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724928827; cv=none; b=o3gw17x5tbT4jRcz6SBCbD45JMfgU8hLvq5VdPUx4YHSqES8QbMhfdAQO+lcdy306dZ3/almj/UXwN2a4HGVP1zFNOmVuEsEu+1wufrh//i5N+MeyF6MPEPJk9WlQp+UxfUo1TcdXUrxRHQ1qGkgx3Hei62fluZG1HYMHaCxgAs=
+	t=1724931626; cv=none; b=qZDA3Fn2x3ujQWUtPYxjrP40tXczncJ06h4JdlhWES5gbRgdV6nDxbJU6Xbkdv48WZKmjupAt0gSsFUQnA7OYOrAg0eOWjNGxGxO8v9gDsiA97Og2pDP79qZ3MBQnL1OWHIeYo2W7jfKq0FZ9hL4s+6aYA0z6Nt7VuhlMnC1PcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724928827; c=relaxed/simple;
-	bh=W+d9Jim0nEEIZkLVc5JOyipYeC6MdWhZ9+Fm9Fk3Q5M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RP9LvFEHXWtiDA4Ri7XUwsx9FU5Xjr/wBkcxVfU/N1IoNoaOklecaY34tlxfgf/D0RPb8sJ+nHX/50JYtJMSfGIVEuvayN+EhLGn1TEpYU1/p924KXb13+3KOp8i2VXL4tgExRj7ru7q99TeeSKBnOKOuNsyo2/DAk9XlMr/b0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EDlQzT32; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 47TArVR3026554;
-	Thu, 29 Aug 2024 05:53:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1724928811;
-	bh=8hOk9PuXGBpXAe2XkNZFCwoENS4wBkLV7iENTvnk1I4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=EDlQzT32Mz6oq9+jtgsZgmL9v+wcg96oHj9WDJ8XE6URUq1dMZpG39PGrHVx49EaK
-	 Wmdam/9N2SMNL9iYcE7WZfqARpPZO95UZI+RUsno2P48IbMd9W6fEzV9ieYyKd1575
-	 7LE2O15zToL+A7z4jU6eAFBdONh8H6bAWkd1bV8Q=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 47TArUEs081129
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 29 Aug 2024 05:53:31 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
- Aug 2024 05:53:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 29 Aug 2024 05:53:30 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 47TArHpT070385;
-	Thu, 29 Aug 2024 05:53:26 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vigneshr@ti.com>,
-        <kishon@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v4 2/2] PCI: j721e: Enable ACSPCIE Refclk if "ti,syscon-acspcie-proxy-ctrl" exists
-Date: Thu, 29 Aug 2024 16:23:16 +0530
-Message-ID: <20240829105316.1483684-3-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240829105316.1483684-1-s-vadapalli@ti.com>
-References: <20240829105316.1483684-1-s-vadapalli@ti.com>
+	s=arc-20240116; t=1724931626; c=relaxed/simple;
+	bh=SFVuAL2kD4CosY9oMHphCuK5CtjbXsRN4j2TZuO5WPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c00j7fuVJGSGAgW22/PEnOiCqFnJLjOcbPVsmjJkmAYdBSSjDSTwDlrrt8uVV8dWt46n4UabBN2W09dafBcVH4beLs/8RSRBGOY48WcoDT2hKPfXMX/ovZG58l4RxDb1VjBdZOJ4ssHdUyxPPE/Xrgb1wlHqh08eH+cd5ZCvH/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1Yahnon1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD2BFC4CEC1;
+	Thu, 29 Aug 2024 11:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1724931625;
+	bh=SFVuAL2kD4CosY9oMHphCuK5CtjbXsRN4j2TZuO5WPM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1Yahnon1cwdpHcFslui6nXemu1HsuN1J5l5QGjELumFP+DH5dDvti75Pp36GWcgtV
+	 MfZGb9JYzsqJs+IbGl73ztb8nfr+2PTlfieWeSWAeJMUMCiABF8wUCtGzXfjVmWaBg
+	 LfToVKb5X4YvTI6rrGgMWhvbUaNjvkFMRVdqVtM8=
+Date: Thu, 29 Aug 2024 13:40:21 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	guanwentao@uniontech.com, Chen Baozi <chenbaozi@phytium.com.cn>,
+	Wang Zhimin <wangzhimin1179@phytium.com.cn>,
+	Chen Zhenhua <chenzhenhua@phytium.com.cn>,
+	Wang Yinfeng <wangyinfeng@phytium.com.cn>,
+	Jiakun Shuai <shuaijiakun1288@phytium.com.cn>
+Subject: Re: [PATCH v2] usb: xHCI: add XHCI_RESET_ON_RESUME quirk for Phytium
+ xHCI host
+Message-ID: <2024082907-earthy-strategic-bfd5@gregkh>
+References: <196A709D168A9A04+20240829095028.345047-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <196A709D168A9A04+20240829095028.345047-1-wangyuli@uniontech.com>
 
-The ACSPCIE module is capable of driving the reference clock required by
-the PCIe Endpoint device. It is an alternative to on-board and external
-reference clock generators. Enabling the output from the ACSPCIE module's
-PAD IO Buffers requires clearing the "PAD IO disable" bits of the
-ACSPCIE_PROXY_CTRL register in the CTRL_MMR register space.
+On Thu, Aug 29, 2024 at 05:50:28PM +0800, WangYuli wrote:
+> The resume operation of Phytium Px210 xHCI host would failed
+> to restore state. Use the XHCI_RESET_ON_RESUME quirk to skip
+> it and reset the controller after resume.
+> 
+> Co-developed-by: Chen Baozi <chenbaozi@phytium.com.cn>
+> Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
+> Co-developed-by: Wang Zhimin <wangzhimin1179@phytium.com.cn>
+> Signed-off-by: Wang Zhimin <wangzhimin1179@phytium.com.cn>
+> Co-developed-by: Chen Zhenhua <chenzhenhua@phytium.com.cn>
+> Signed-off-by: Chen Zhenhua <chenzhenhua@phytium.com.cn>
+> Co-developed-by: Wang Yinfeng <wangyinfeng@phytium.com.cn>
+> Signed-off-by: Wang Yinfeng <wangyinfeng@phytium.com.cn>
+> Co-developed-by: Jiakun Shuai <shuaijiakun1288@phytium.com.cn>
+> Signed-off-by: Jiakun Shuai <shuaijiakun1288@phytium.com.cn>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  drivers/usb/host/xhci-pci.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index b5705ed01d83..fabae8420ce9 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -55,6 +55,9 @@
+>  #define PCI_DEVICE_ID_INTEL_ALDER_LAKE_PCH_XHCI		0x51ed
+>  #define PCI_DEVICE_ID_INTEL_ALDER_LAKE_N_PCH_XHCI	0x54ed
+>  
+> +#define PCI_VENDOR_ID_PHYTIUM		0x1db7
+> +#define PCI_DEVICE_ID_PHYTIUM_XHCI			0xdc27
+> +
+>  /* Thunderbolt */
+>  #define PCI_DEVICE_ID_INTEL_MAPLE_RIDGE_XHCI		0x1138
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_XHCI	0x15b5
+> @@ -407,6 +410,10 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  	if (pdev->vendor == PCI_VENDOR_ID_VIA)
+>  		xhci->quirks |= XHCI_RESET_ON_RESUME;
+>  
+> +	if (pdev->vendor == PCI_VENDOR_ID_PHYTIUM ||
+> +	    pdev->device == PCI_DEVICE_ID_PHYTIUM_XHCI)
+> +		xhci->quirks |= XHCI_RESET_ON_RESUME;
+> +
+>  	/* See https://bugzilla.kernel.org/show_bug.cgi?id=79511 */
+>  	if (pdev->vendor == PCI_VENDOR_ID_VIA &&
+>  			pdev->device == 0x3432)
+> -- 
+> 2.43.4
+> 
+> 
 
-Add support to enable the ACSPCIE reference clock output using the optional
-device-tree property "ti,syscon-acspcie-proxy-ctrl".
+Hi,
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-v3:
-https://lore.kernel.org/r/20240827055548.901285-3-s-vadapalli@ti.com/
-Changes since v3:
-- Rebased patch on next-20240829.
-- Addressed Bjorn's feedback at:
-  https://lore.kernel.org/r/20240828211906.GA38267@bhelgaas/
-  with the following changes:
-  1) Updated the implementation of j721e_enable_acspcie_refclk() by
-  reducing the nested IF conditions to make it easier to read.
-  2) Updated the section invoking j721e_enable_acspcie_refclk() within
-  j721e_pcie_ctrl_init() by returning 0 if "ti,syscon-acspcie-proxy-ctrl"
-  isn't present and returning j721e_enable_acspcie_refclk() otherwise.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-v2:
-https://lore.kernel.org/r/20240729092855.1945700-3-s-vadapalli@ti.com/
-Changes since v2:
-- Rebased patch on next-20240826.
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-v1:
-https://lore.kernel.org/r/20240715120936.1150314-4-s-vadapalli@ti.com/
-Changes since v1:
-- Addressed Bjorn's feedback at:
-  https://lore.kernel.org/r/20240725211841.GA859405@bhelgaas/
-  with the following changes:
-  1) Updated $subject and commit message to indicate that this patch
-  enables ACSPCIE reference clock output if the DT property is present.
-  2) Updated macro and comments to indicate that the BITS correspond to
-  disabling ACSPCIE output, due to which clearing them enables the
-  reference clock output.
-  3) Replaced "PAD" with "refclk" both in the function name and in the
-  error prints.
-  4) Wrapped lines to be within the 80 character limit to match the rest
-  of the driver.
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
- drivers/pci/controller/cadence/pci-j721e.c | 39 +++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 85718246016b..7f7732e2dcaa 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -44,6 +44,7 @@ enum link_status {
- #define J721E_MODE_RC			BIT(7)
- #define LANE_COUNT(n)			((n) << 8)
- 
-+#define ACSPCIE_PAD_DISABLE_MASK	GENMASK(1, 0)
- #define GENERATION_SEL_MASK		GENMASK(1, 0)
- 
- struct j721e_pcie {
-@@ -220,6 +221,36 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
- 	return ret;
- }
- 
-+static int j721e_enable_acspcie_refclk(struct j721e_pcie *pcie,
-+				       struct regmap *syscon)
-+{
-+	struct device *dev = pcie->cdns_pcie->dev;
-+	struct device_node *node = dev->of_node;
-+	u32 mask = ACSPCIE_PAD_DISABLE_MASK;
-+	struct of_phandle_args args;
-+	u32 val;
-+	int ret;
-+
-+	ret = of_parse_phandle_with_fixed_args(node,
-+					       "ti,syscon-acspcie-proxy-ctrl",
-+					       1, 0, &args);
-+	if (ret) {
-+		dev_err(dev,
-+			"ti,syscon-acspcie-proxy-ctrl has invalid arguments\n");
-+		return ret;
-+	}
-+
-+	/* Clear PAD IO disable bits to enable refclk output */
-+	val = ~(args.args[0]);
-+	ret = regmap_update_bits(syscon, 0, mask, val);
-+	if (ret) {
-+		dev_err(dev, "failed to enable ACSPCIE refclk: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
- {
- 	struct device *dev = pcie->cdns_pcie->dev;
-@@ -259,7 +290,13 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
- 		return ret;
- 	}
- 
--	return 0;
-+	/* Enable ACSPCIE refclk output if the optional property exists */
-+	syscon = syscon_regmap_lookup_by_phandle_optional(node,
-+						"ti,syscon-acspcie-proxy-ctrl");
-+	if (!syscon)
-+		return 0;
-+
-+	return j721e_enable_acspcie_refclk(pcie, syscon);
- }
- 
- static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
--- 
-2.40.1
-
+greg k-h's patch email bot
 
