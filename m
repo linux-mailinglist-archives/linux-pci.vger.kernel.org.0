@@ -1,244 +1,306 @@
-Return-Path: <linux-pci+bounces-12421-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12422-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB1549640FE
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:11:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8F39964105
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:13:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81FFE28254F
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 10:11:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66FE21F2435A
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 10:13:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D1C718DF67;
-	Thu, 29 Aug 2024 10:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7838A15FA93;
+	Thu, 29 Aug 2024 10:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lur3fVn3"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EFf9BlrQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E701155303;
-	Thu, 29 Aug 2024 10:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F4718E039
+	for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 10:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724926280; cv=none; b=UpRX4en7MSvby/T7CY9XcRysWkHxpY1y2dC4+dRfWIr5zUy6u/c+A8FuopPkLpdUSDPyHSC0kaLZ+hwyMWX2APgkrruyYsPvhb3lYHUd9g64c7VkcPRGN5XgWRLGkyFPpmqqCYd2LQLIBbqOrFPq1j+3eCYi+W4/Y6ICDNrnZeA=
+	t=1724926417; cv=none; b=OybmsV8TFmn7icz/bklXqzNz83thpz0DD/bXAcwFB6wh56foRd4ploSumuvOo7agEn8K1Y6endNectno9/jvKwSqlkh4EnviJHF5tdlMOubECaHVqbFH0h0Ma7IV/SK5wu0Sivy3cVUlI5PFG1GvYDIeuNwe0xKqm80J+AcUJTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724926280; c=relaxed/simple;
-	bh=94IiuIvOyuRU0qMnj7v0g0Xw4A2gYZ1syGqXRZ+CIaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQtmo2eqlId7KGPLHFKaahu5HgHXkFM8XYDdHi1pQe/mLQm8VhBv6bcf9thwCrwDMEBRcz52A8f8Oi5XyE0XmXkc1ncC7/P+8Iqd1BqIuh4zQ4FE1XEwD1zwcwsqr6lUjTsjBURBmyarLU8hJ2Arj/ou/r+kde3/4hTZkzly9PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lur3fVn3; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724926279; x=1756462279;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=94IiuIvOyuRU0qMnj7v0g0Xw4A2gYZ1syGqXRZ+CIaU=;
-  b=Lur3fVn3K0P+DXtLjRblEZhhvxJ0prfShysdZO6Nn+43ePTKCOm5uYLu
-   oXP9aMmgBArS4lGWyMq3cT7b5Me7EpfXZ8k/T467uKgmFQtbyiBZvzDpL
-   YTe8U4lidfpX7+KR0QZAGitSuoGct+++35MDesc8ER38BgMQDzieCjPBA
-   Ptfw8AogfsapkJZiURO8TEz6xC6O/xtk0eK5yQwhoSsYMyA8HOtDBE4Jv
-   GeOAvKz2zRilJ4NJw4NOr2d6nFL/3Unn8wP8oEjRmWWsg1zXGI1EOb8qT
-   YgA3Gmrl1QoGuLpoK3RQXt3BcxNkzp05siloz2fVcW8yZ4cGo1cW4ZYzB
-   w==;
-X-CSE-ConnectionGUID: 3MVVDX6bSCKF/KaUjR7ocQ==
-X-CSE-MsgGUID: E/3WAqCQT+mZSZNJwxUpHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="48890783"
-X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="48890783"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 03:11:18 -0700
-X-CSE-ConnectionGUID: Ajut8FPHT1+YMFmHPeQN8g==
-X-CSE-MsgGUID: uJo872E1Td+a1ZuXluMi9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="63726679"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa010.fm.intel.com with ESMTP; 29 Aug 2024 03:11:14 -0700
-Date: Thu, 29 Aug 2024 18:08:47 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	pratikrajesh.sampat@amd.com, michael.day@amd.com,
-	david.kaplan@amd.com, dhaval.giani@amd.com,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC PATCH 11/21] KVM: SEV: Add TIO VMGEXIT and bind TDI
-Message-ID: <ZtBIr5IrnZF4z3cp@yilunxu-OptiPlex-7050>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-12-aik@amd.com>
+	s=arc-20240116; t=1724926417; c=relaxed/simple;
+	bh=E51GhEQQOg1HwuEGkHFf6XEayoGU7GbLDFfQdiuKKcM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m7rqZmIxTRDWbouaHgogxi43FKt9tP+4Bo4+6YqrHr4qTV82xb9k0VZvlDkGnXN8tFWdh7ZrWaUdMVBgkUO2l3qwhktXQ+f77ZfrixXzoKLY3WwlS1iZ71SMZmBU+p06XwG5WsAsvLtaR/hxLSTmxb0iO3aXFzWRNwIOslsgwe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EFf9BlrQ; arc=none smtp.client-ip=209.85.208.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lj1-f196.google.com with SMTP id 38308e7fff4ca-2f4f8742138so5615851fa.0
+        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 03:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724926413; x=1725531213; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ly3H9TdfQqHUrvW8I+Z7YT7Eu7iCs1+6axXuLh+lXi0=;
+        b=EFf9BlrQc1AUZnb2Cbw3FEzBBokazssTC1Ex7yAljpIy3nR7KRJrXL3Su939n+yhNN
+         hMsVwIvLX50OAHopRCnCEYkT6pfKo2Hoo+w0mdNVPBPCKp6O/UGJOCjtQOc1Q3NaOtOr
+         8KInLhK0uoGK5DHT9ajX1W5lFPyL2BtVzak0+LnCE0f07wejtC0YtFQcW0jnf/xe7YXP
+         pHm1EowrsLN0zdIILGpQocez3TwnkJmHzN0rDHZcS97pOWaHfRT+h1qSLLy52ZLye8AY
+         ByQc5PE4YyxPoIZjHot81VqvXr5jSPATj7/wMSn6QGelH7bq5QMABSgR58EWpI1y3byU
+         fCdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724926413; x=1725531213;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ly3H9TdfQqHUrvW8I+Z7YT7Eu7iCs1+6axXuLh+lXi0=;
+        b=ed5Z5VYC5mD954s9KDgY7bRjSPu/cT3msSGw6lhzjMT6+D5ofHxB10ulTlqF/yVi1j
+         5ST4O6ShTP/NyrKedn6Vrd/bVU+lfbTtrktCjIgoGp3ZuIBVTWeAJC8tVj8EBCcR1Aky
+         qFAturfhG9zc81hrWroe7C8gEmuFo80qiUawi1eSu339IZttgRneRzmNJXcjCK0XmOU5
+         bb2LyuVaydAGEYiNiLGpEVv7Jq8Xzyge8kJB11o6r0bt0HgCXv5++TpCpBw4FVRHojSG
+         XFE1DPuNFq6jWvOdO1eP1uQuRtV+RC0Z1haNN+gjXJeHbermoRobpkV6UFtWtFOLm8h1
+         9cQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWScqDjQyt372CS+/sA2eUVUT44q95Bf0e1I7u+xFNGMdmp4BXTDHMQQVMcKvLmiQeGtpZ3VI6dyLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsGgsatpCAAaTMKhZ05WubB2szvjZy7f7J/V6xPPqgOW9qGms9
+	oZ9kqC55mQ7OopRsecBJCFRyEkUD1uj27kUyeXlh9QtZYhscW80B0m9sJjvzxlw=
+X-Google-Smtp-Source: AGHT+IHdj0Gax8cLl5ferCv8ike/PKOlbdGFRkbWcfI4fVRlQt52wlkGm5gMUFs+5U5W7ciTlZ/YtA==
+X-Received: by 2002:a05:651c:2207:b0:2f0:1f06:2b43 with SMTP id 38308e7fff4ca-2f6108a7771mr19344571fa.41.1724926412637;
+        Thu, 29 Aug 2024 03:13:32 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c7c2d0sm524452a12.45.2024.08.29.03.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2024 03:13:32 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 29 Aug 2024 12:13:38 +0200
+To: Rob Herring <robh@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
+ dma-ranges mapping
+Message-ID: <ZtBJ0jIq-QrTVs1m@apocalypse>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+ <20240821001618.GA2309328-robh@kernel.org>
+ <ZsWi86I1KG91fteb@apocalypse>
+ <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240823132137.336874-12-aik@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
 
-> diff --git a/virt/kvm/vfio.c b/virt/kvm/vfio.c
-> index 76b7f6085dcd..a4e9db212adc 100644
-> --- a/virt/kvm/vfio.c
-> +++ b/virt/kvm/vfio.c
-> @@ -15,6 +15,7 @@
->  #include <linux/slab.h>
->  #include <linux/uaccess.h>
->  #include <linux/vfio.h>
-> +#include <linux/tsm.h>
->  #include "vfio.h"
->  
->  #ifdef CONFIG_SPAPR_TCE_IOMMU
-> @@ -29,8 +30,14 @@ struct kvm_vfio_file {
->  #endif
->  };
->  
-> +struct kvm_vfio_tdi {
-> +	struct list_head node;
-> +	struct vfio_device *vdev;
-> +};
-> +
->  struct kvm_vfio {
->  	struct list_head file_list;
-> +	struct list_head tdi_list;
->  	struct mutex lock;
->  	bool noncoherent;
->  };
-> @@ -80,6 +87,22 @@ static bool kvm_vfio_file_is_valid(struct file *file)
->  	return ret;
->  }
->  
-> +static struct vfio_device *kvm_vfio_file_device(struct file *file)
-> +{
-> +	struct vfio_device *(*fn)(struct file *file);
-> +	struct vfio_device *ret;
-> +
-> +	fn = symbol_get(vfio_file_device);
-> +	if (!fn)
-> +		return NULL;
-> +
-> +	ret = fn(file);
-> +
-> +	symbol_put(vfio_file_device);
-> +
-> +	return ret;
-> +}
-> +
->  #ifdef CONFIG_SPAPR_TCE_IOMMU
->  static struct iommu_group *kvm_vfio_file_iommu_group(struct file *file)
->  {
-> @@ -297,6 +320,103 @@ static int kvm_vfio_set_file(struct kvm_device *dev, long attr,
->  	return -ENXIO;
->  }
->  
-> +static int kvm_dev_tsm_bind(struct kvm_device *dev, void __user *arg)
-> +{
-> +	struct kvm_vfio *kv = dev->private;
-> +	struct kvm_vfio_tsm_bind tb;
-> +	struct kvm_vfio_tdi *ktdi;
-> +	struct vfio_device *vdev;
-> +	struct fd fdev;
-> +	int ret;
-> +
-> +	if (copy_from_user(&tb, arg, sizeof(tb)))
-> +		return -EFAULT;
-> +
-> +	ktdi = kzalloc(sizeof(*ktdi), GFP_KERNEL_ACCOUNT);
-> +	if (!ktdi)
-> +		return -ENOMEM;
-> +
-> +	fdev = fdget(tb.devfd);
-> +	if (!fdev.file)
-> +		return -EBADF;
-> +
-> +	ret = -ENOENT;
-> +
-> +	mutex_lock(&kv->lock);
-> +
-> +	vdev = kvm_vfio_file_device(fdev.file);
-> +	if (vdev) {
-> +		ret = kvm_arch_tsm_bind(dev->kvm, vdev->dev, tb.guest_rid);
-> +		if (!ret) {
-> +			ktdi->vdev = vdev;
-> +			list_add_tail(&ktdi->node, &kv->tdi_list);
-> +		} else {
-> +			vfio_put_device(vdev);
-> +		}
-> +	}
-> +
-> +	fdput(fdev);
-> +	mutex_unlock(&kv->lock);
-> +	if (ret)
-> +		kfree(ktdi);
-> +
-> +	return ret;
-> +}
-> +
-> +static int kvm_dev_tsm_unbind(struct kvm_device *dev, void __user *arg)
-> +{
-> +	struct kvm_vfio *kv = dev->private;
-> +	struct kvm_vfio_tsm_bind tb;
-> +	struct kvm_vfio_tdi *ktdi;
-> +	struct vfio_device *vdev;
-> +	struct fd fdev;
-> +	int ret;
-> +
-> +	if (copy_from_user(&tb, arg, sizeof(tb)))
-> +		return -EFAULT;
-> +
-> +	fdev = fdget(tb.devfd);
-> +	if (!fdev.file)
-> +		return -EBADF;
-> +
-> +	ret = -ENOENT;
-> +
-> +	mutex_lock(&kv->lock);
-> +
-> +	vdev = kvm_vfio_file_device(fdev.file);
-> +	if (vdev) {
-> +		list_for_each_entry(ktdi, &kv->tdi_list, node) {
-> +			if (ktdi->vdev != vdev)
-> +				continue;
-> +
-> +			kvm_arch_tsm_unbind(dev->kvm, vdev->dev);
-> +			list_del(&ktdi->node);
-> +			kfree(ktdi);
-> +			vfio_put_device(vdev);
-> +			ret = 0;
-> +			break;
-> +		}
-> +		vfio_put_device(vdev);
-> +	}
-> +
-> +	fdput(fdev);
-> +	mutex_unlock(&kv->lock);
-> +	return ret;
-> +}
-> +
-> +static int kvm_vfio_set_device(struct kvm_device *dev, long attr,
-> +			       void __user *arg)
-> +{
-> +	switch (attr) {
-> +	case KVM_DEV_VFIO_DEVICE_TDI_BIND:
-> +		return kvm_dev_tsm_bind(dev, arg);
+Hi Rob,
 
-I think the TDI bind operation should be under the control of the device
-owner (i.e. VFIO driver), rather than in this bridge driver. The TDI bind
-means TDI would be transitioned to CONFIG_LOCKED state, and a bunch of
-device configurations breaks the state (TDISP spec 11.4.5/8/9). So the
-VFIO driver should be fully aware of the TDI bind and manage unwanted
-breakage.
+On 16:29 Mon 26 Aug     , Rob Herring wrote:
+> On Wed, Aug 21, 2024 at 3:19 AM Andrea della Porta
+> <andrea.porta@suse.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On 19:16 Tue 20 Aug     , Rob Herring wrote:
+> > > On Tue, Aug 20, 2024 at 04:36:06PM +0200, Andrea della Porta wrote:
+> > > > A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
+> > > > translations. In this specific case, rhe current behaviour is to zero out
+> > >
+> > > typo
+> >
+> > Fixed, thanks!
+> >
+> > >
+> > > > the entire specifier so that the translation could be carried on as an
+> > > > offset from zero.  This includes address specifier that has flags (e.g.
+> > > > PCI ranges).
+> > > > Once the flags portion has been zeroed, the translation chain is broken
+> > > > since the mapping functions will check the upcoming address specifier
+> > >
+> > > What does "upcoming address" mean?
+> >
+> > Sorry for the confusion, this means "address specifier (with valid flags) fed
+> > to the translating functions and for which we are looking for a translation".
+> > While this address has some valid flags set, it will fail the translation step
+> > since the ranges it is matched against have flags zeroed out by the 1:1 mapping
+> > condition.
+> >
+> > >
+> > > > against mismatching flags, always failing the 1:1 mapping and its entire
+> > > > purpose of always succeeding.
+> > > > Set to zero only the address portion while passing the flags through.
+> > >
+> > > Can you point me to what the failing DT looks like. I'm puzzled how
+> > > things would have worked for anyone.
+> > >
+> >
+> > The following is a simplified and lightly edited) version of the resulting DT
+> > from RPi5:
+> >
+> >  pci@0,0 {
+> >         #address-cells = <0x03>;
+> >         #size-cells = <0x02>;
+> >         ......
+> >         device_type = "pci";
+> >         compatible = "pci14e4,2712\0pciclass,060400\0pciclass,0604";
+> >         ranges = <0x82000000 0x00 0x00   0x82000000 0x00 0x00   0x00 0x600000>;
+> >         reg = <0x00 0x00 0x00   0x00 0x00>;
+> >
+> >         ......
+> >
+> >         rp1@0 {
+> 
+> What does 0 represent here? There's no 0 address in 'ranges' below.
+> Since you said the parent is a PCI-PCI bridge, then the unit-address
+> would have to be the PCI devfn and you are missing 'reg' (or omitted
+> it).
 
-Thanks,
-Yilun
+There's no reg property because the registers for RP1 are addressed
+starting at 0x40108000 offset from BAR1. The devicetree specs says
+that a missing reg node should not have any unit address specified
+(and AFAIK there's no other special directives for simple-bus specified
+in dt-bindings). 
+I've added @0 just to get rid of the following warning:
+
+ Warning (unit_address_vs_reg): /fragment@0/__overlay__/rp1: node has
+ a reg or ranges property, but no unit name 
+
+coming from make W=1 CHECK_DTBS=y broadcom/rp1.dtbo.
+This is the exact same approach used by Bootlin patchset from:
+
+https://lore.kernel.org/all/20240808154658.247873-2-herve.codina@bootlin.com/
+
+replied here below for convenience:
+
++	pci-ep-bus@0 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/*
++		 * map @0xe2000000 (32MB) to BAR0 (CPU)
++		 * map @0xe0000000 (16MB) to BAR1 (AMBA)
++		 */
++		ranges = <0xe2000000 0x00 0x00 0x00 0x2000000
++		          0xe0000000 0x01 0x00 0x00 0x1000000>;
+
+Also, I think it's not possible to know the devfn in advance, since the
+DT part is pre-compiled as an overlay while the devfn number is coming from
+bus enumeration.
+Since the registers for sub-peripherals will start (as stated in ranges
+property) from 0xc040000000, I'd be inclined to use rp1@c040000000 as the
+node name and address unit. Is it feasible?
+
+> 
+> >                 #address-cells = <0x02>;
+> >                 #size-cells = <0x02>;
+> >                 compatible = "simple-bus";
+> 
+> The parent is a PCI-PCI bridge. Child nodes have to be PCI devices and
+> "simple-bus" is not a PCI device.
+
+The simple-bus is needed to automatically traverse and create platform
+devices in of_platform_populate(). It's true that RP1 is a PCI device,
+but sub-peripherals of RP1 are platform devices so I guess this is
+unavoidable right now.
+
+> 
+> The assumption so far with all of this is that you have some specific
+> PCI device (and therefore a driver). The simple-buses under it are
+> defined per BAR. Not really certain if that makes sense in all cases,
+> but since the address assignment is dynamic, it may have to. I'm also
+> not completely convinced we should reuse 'simple-bus' here or define
+> something specific like 'pci-bar-bus' or something.
+
+Good point. Labeling a new bus for this kind of 'appliance' could be
+beneficial to unify the dt overlay approach, and I guess it could be
+adopted by the aforementioned Bootlin's Microchip patchset too.
+However, since the difference with simple-bus would be basically non
+existent, I believe that this could be done in a future patch due to
+the fact that the dtbo is contained into the driver itself, so we do
+not suffer from the proliferation that happens when dtb are managed
+outside.
+
+> 
+> >                 ranges = <0xc0 0x40000000   0x01 0x00 0x00   0x00 0x400000>;
+> >                 dma-ranges = <0x10 0x00   0x43000000 0x10 0x00   0x10 0x00>;
+> >                 ......
+> >         };
+> >  };
+> >
+> > The pci@0,0 bridge node is automatically created by virtue of
+> > CONFIG_PCI_DYNAMIC_OF_NODES, and has no dma-ranges, hence it implies 1:1 dma
+> > mappings (flags for this mapping are set to zero).  The rp1@0 node has
+> > dma-ranges with flags set (0x43000000). Since 0x43000000 != 0x00 any translation
+> > will fail.
+> 
+> It's possible that we should fill in 'dma-ranges' when making these
+> nodes rather than supporting missing dma-ranges here.
+
+I really think that filling dma-ranges for dynamically created pci
+nodes would be the correct approach.
+However, IMHO this does not imply that we could let inconsistent
+address (64 bit addr with 32 flag bit set) laying around the 
+translation chain, and fixing that is currently working fine. I'd
+be then inclined to say the proposed change is outside the scope
+of the present patchset and to postpone it to a future patch.
+
+Many thanks,
+Andrea
+
+> 
+> Rob
 
