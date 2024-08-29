@@ -1,127 +1,157 @@
-Return-Path: <linux-pci+bounces-12462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12463-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 539CD9652CB
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 00:21:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A50F965350
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 01:12:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A63B284A09
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 22:21:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDAC3B21C5F
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 23:12:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85EAD18C009;
-	Thu, 29 Aug 2024 22:21:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAB151B5EDB;
+	Thu, 29 Aug 2024 23:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b="aa2Uv5b8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf/U8N6N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7287418B479
-	for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 22:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21A4156F41;
+	Thu, 29 Aug 2024 23:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724970090; cv=none; b=iOT67rDi42cp7VmZ0ulnon57lBonBw/V4VrTyskj3DrShKqYj2nz9akLMBf6WETm6/42S7nNvwvmbY+H5c0AndG8NpL0ALYr9rahsWTnyoS09YUr6bMSpDrvMlkV9zUzox3WkbD1DVnpjrQDOblJzclhMwHS0K+B4I416Oe5rWs=
+	t=1724973153; cv=none; b=oW9wu5N8dgVNPcFJwpab5HMa/lPztWb13NIs6csnOUP4QJ+H58yMqAUElFRPYrZl0o7++w/6kAJFpn6Mf0Ry05W1872LwxOgwqgx0iXOSsviMPBBgzPiu9UC40Ft6uY0h0pXI91gHKsBu1ZB+eh+Sxn2702SkOhgQX0UDw8u1J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724970090; c=relaxed/simple;
-	bh=hDXXfgSzcBVLRFNJCdo0qpNRK4cTXtvKfXqqK4IgeLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rbIRfmEeeFDReHS6qSXD7RcILwFyt7kgWWvC4bYstKFFzStJWx2k2o+sbDHOhJw4ja17Do1Sgta2L5shIlZPN0okegqucg4bOd4HqdQAAYshlKzXGDXb1mXnYPEZ3jAxIKMXkNVOWuhhq5LlMZqxUGatJG8gK+lpRCilIlHzanE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b=aa2Uv5b8; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a8679f534c3so129730266b.0
-        for <linux-pci@vger.kernel.org>; Thu, 29 Aug 2024 15:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks.com; s=google; t=1724970087; x=1725574887; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QECDMdJ+lHOgQ9efmHZ8bnkzPO30uxGiYqu1KLc8bfk=;
-        b=aa2Uv5b8Nn/LNoU+vcdpFr0pTuuNjLCl3OS6LN9s4QoXXGwrZUYk4cifsBugHIREhf
-         b6fRQJ+is7iy+WD5g8iki/EY/S9DHrY1ji2o21yVOZfSmT14zxU/bHIrDAGM0ky0NWuE
-         Ia4JfoaTwMvdb0FjS32rHTVTQX9KkL+SzzL3Ut/eLeXIbCxLqPOKOK8B/+ryX6GZSDqK
-         y9TVI7zfwUwtvIsBVOqRwHDHEr3J/P9jYSBSwtLSB335i05kFPDdtNAx8e8LoRFFxsNu
-         EtMdNN6gien4PdKmBrFKL87hfa02ZZTpB9edUTr1YHPYUPakuFYvJejs6q7o1lTYLBvV
-         NU+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724970087; x=1725574887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QECDMdJ+lHOgQ9efmHZ8bnkzPO30uxGiYqu1KLc8bfk=;
-        b=c3VEd17uIoiOrBHqBRZczZf8nRHex8PdVdBlE/tViG0KSPQyK4msYn49RON80Paw9i
-         /WJ+OY7mb3J6XXiI/4YRW4ShoAZ7tbxu0EbdaBdjWXMdYtMZQhC2lZ8hARGaT5UB6jdC
-         u84zPJbVHWAXWIzM5/mvmLvXNtgE7LIVxOXiAf7M04DXbLhNjttC6BfeXvxaE1/zcC1r
-         5bt26Ajk45xLUaQA2qjrlXsRkz1VE72jRf3Zt9v8TNGCAKkC38e8znFZoMHNgo2mmwE8
-         WTn/9zzqzBiYrlO1s+ok8apuUzpvqOS53009jgi8h3UwfHOc4jfILU/y3x6bUMrlPdp9
-         Y/Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8sXnV7uFwrwHSPU3EclimNfjvjXWKXTRB/rw+2G+toDT3SG898ytWIxrUJC3YGWJhteZgf1f2nA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdzBru8aAgmgN1+/bw26XDmYD4HD5ojdRiSzas3hpNzd9O1N50
-	wIoqu96twhvHkLC9uIGR0zDjUJOnSK+i7rtRBJCk0SuLQAUolM8+NkagOZQ8B/FPbM+WV4Tc1bw
-	G8bJ+nomYjeUQ42W72FgweAvNS0RTXjLaxcswQA==
-X-Google-Smtp-Source: AGHT+IH/93yes96vCW4TS8ZZfhhFB1ipyDYhEMVHylyuce6VRmAFe4ybjoXooO5Oq2RAnyN85c16nsh1uamui6Dkcdc=
-X-Received: by 2002:a17:907:e92:b0:a80:7193:bd88 with SMTP id
- a640c23a62f3a-a897f8f78a4mr341486266b.36.1724970086051; Thu, 29 Aug 2024
- 15:21:26 -0700 (PDT)
+	s=arc-20240116; t=1724973153; c=relaxed/simple;
+	bh=/PcuXPhR5JHXjlSBD42UFBik+2SOUe13X7fQXLHk1kY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=blc9C/h0E/XncWlwC3p0+LZ2ou+0/jhuW8FJfsAqfAcqsfuwsSyuortskA8YNOTuFZbylG8LE8UUXWy+M+4zjraRfRX+zFrlRKq1NWqxmmgKATyrJQOsNTC5/Mr61b9agCEegAlpl2Yfq+lEZPeC3HVgPQ/YzXd0IiFAy4iTqDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf/U8N6N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD80C4CEC1;
+	Thu, 29 Aug 2024 23:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724973153;
+	bh=/PcuXPhR5JHXjlSBD42UFBik+2SOUe13X7fQXLHk1kY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Vf/U8N6Nl87Sx/bUQNIu9UbCWUa4z2HJ/8nEOjR46BfB4bBnusWUDq7OpNrqzp2DY
+	 N5eQvnhU8u5cP3pigdQ5+hDfzYWM5l++6O+BiTQlVMOcU3LOTwIg3zsfQEoiQgPzP+
+	 XtgL8beWIAFCqLwWRSL3OC0li9rFiuBkmDHdjl1UnKwEh2qLxFCDHnbdUJT2SE/yrG
+	 4Hjim6mb3kCmy6BVO3V9YxJ78b1kMab/ea2x/ptqozg12his6gL7xf2D0ZfgY1zGvr
+	 8kQtrx/isC3cz67kGg4Adj8qxb7VBYNWuetkdvWbk/IIm4cVHPutQcbJa3ANdZvBL5
+	 ihSWLACiRD44w==
+Date: Thu, 29 Aug 2024 18:12:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: linux-pci@vger.kernel.org,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Duc Dang <ducdang@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	"Li, Gary" <Gary.Li@amd.com>
+Subject: Re: [RFC PATCH 0/3] PCI: Use Configuration RRS to wait for device
+ ready
+Message-ID: <20240829231231.GA80290@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZtDrjl3b8yhumk+A@lizhi-Precision-Tower-5810> <20240829220005.GA81596@bhelgaas>
-In-Reply-To: <20240829220005.GA81596@bhelgaas>
-From: Tim Harvey <tharvey@gateworks.com>
-Date: Thu, 29 Aug 2024 15:21:13 -0700
-Message-ID: <CAJ+vNU0taRj3PgP1tgcK68C++x93XO-aitvn42Pmk3EoWuj7OA@mail.gmail.com>
-Subject: Re: legacy PCI device behind a bridge not getting a valid IRQ on imx
- host controller
-To: Bjorn Helgaas <helgaas@kernel.org>, Frank Li <frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab893fd1-6a90-4a39-963a-111dbdc9f720@amd.com>
 
-On Thu, Aug 29, 2024 at 3:00=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Thu, Aug 29, 2024 at 05:43:42PM -0400, Frank Li wrote:
-> > On Thu, Aug 29, 2024 at 04:22:35PM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Aug 28, 2024 at 02:40:33PM -0700, Tim Harvey wrote:
-> > > > Greetings,
-> > > >
-> > > > I have a user that is using an IMX8MM SoC (dwc controller) with a
-> > > > miniPCIe card that has a PEX8112 PCI-to-PCIe bridge to a legacy PCI
-> > > > device and the device is not getting a valid interrupt.
-> > >
-> > > Does pci-imx6.c support INTx at all?
-> >
-> > Yes, dwc controller map INTx message to 4 irq lines, which connect to G=
-IC.
-> > we tested it by add nomsi in kernel command line.
->
-> Thanks, Frank.  Can you point me to the dwc code where this happens?
-> Maybe I can remember this for next time or add a comment to help
-> people find it.
->
-> Bjorn
+On Wed, Aug 28, 2024 at 05:26:32PM -0500, Mario Limonciello wrote:
+> On 8/28/2024 16:42, Bjorn Helgaas wrote:
+> > On Wed, Aug 28, 2024 at 04:24:01PM -0500, Mario Limonciello wrote:
+> > > On 8/27/2024 18:48, Bjorn Helgaas wrote:
+> > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > 
+> > > > After a device reset, pci_dev_wait() waits for a device to become
+> > > > completely ready by polling the PCI_COMMAND register.  The spec envisions
+> > > > that software would instead poll for the device to stop responding to
+> > > > config reads with Completions with Request Retry Status (RRS).
+> > > > 
+> > > > Polling PCI_COMMAND leads to hardware retries that are invisible to
+> > > > software and the backoff between software retries doesn't work correctly.
+> > > > 
+> > > > Root Ports are not required to support the Configuration RRS Software
+> > > > Visibility feature that prevents hardware retries and makes the RRS
+> > > > Completions visible to software, so this series only uses it when available
+> > > > and falls back to PCI_COMMAND polling when it's not.
+> > > > 
+> > > > This is completely untested and posted for comments.
+> > > > 
+> > > > Bjorn Helgaas (3):
+> > > >     PCI: Wait for device readiness with Configuration RRS
+> > > >     PCI: aardvark: Correct Configuration RRS checking
+> > > >     PCI: Rename CRS Completion Status to RRS
+> > > > 
+> > > >    drivers/bcma/driver_pci_host.c             | 10 ++--
+> > > >    drivers/pci/controller/dwc/pcie-tegra194.c | 18 +++---
+> > > >    drivers/pci/controller/pci-aardvark.c      | 64 +++++++++++-----------
+> > > >    drivers/pci/controller/pci-xgene.c         |  6 +-
+> > > >    drivers/pci/controller/pcie-iproc.c        | 18 +++---
+> > > >    drivers/pci/pci-bridge-emul.c              |  4 +-
+> > > >    drivers/pci/pci.c                          | 41 +++++++++-----
+> > > >    drivers/pci/pci.h                          | 11 +++-
+> > > >    drivers/pci/probe.c                        | 33 +++++------
+> > > >    include/linux/bcma/bcma_driver_pci.h       |  2 +-
+> > > >    include/linux/pci.h                        |  1 +
+> > > >    include/uapi/linux/pci_regs.h              |  6 +-
+> > > >    12 files changed, 117 insertions(+), 97 deletions(-)
+> > > 
+> > > Although this looks like a useful series, I'm sorry to say but
+> > > this doesn't solve the issue that Gary and I raised.  We double
+> > > checked today and found that reading the vendor ID works just
+> > > fine at this time.
+> > 
+> > Thanks for testing that.
+> 
+> Sure.
+> 
+> > > I think that we're still better off polling PCI_PM_CTRL to
+> > > "wait" for D0 after the state change from D3cold.
+> > 
+> > Is there some spec justification for polling PCI_PM_CTRL?  I'm
+> > dubious about doing that just because "it works" in this
+> > situation, unless we have some better understanding about *why* it
+> > works and whether all devices are supposed to work that way.
+> 
+> I mentioned this a little bit in my patch 3/5 in my submission.  The
+> issue isn't "normal" D3cold exit that is fully settled down.  That
+> takes ~6ms from measurements.  The issue is how long it takes for
+> D3cold *entry* followed by *exit*.
 
-Bjorn and Frank,
+I think we should have this conversation in the context of your series
+(https://lore.kernel.org/r/20240823154023.360234-1-superm1@kernel.org)
+because PCI_PM_CTRL questions are more relevant there, so I'll respond
+there.
 
-I provided some misinformation regarding IMX6 - my original testing
-was flawed. When testing the IMX6DL linked to a XIO2001 with a legacy
-PCI device behind it the device driver is given an appropriate legacy
-IRQ.
-
-Regarding IMX8MM linked to a PEX8112 bridge with a legacy PCI device
-behind it; the user gets a -28 (ENOSPC) when requesting an IRQ from
-the driver but I don't have the hardware or the driver for that in
-hand so I need to wait for more details. I don't see any reason why
-this case would not work as it works on an IMX6DL.
-
-Best Regards,
-
-Tim
+> When this issue occurs it's tied with a tight loop of runtime PM
+> entry and exit happening in that short window.  That's why it can be
+> tripped by unplugging a dock, waiting until ~approximately
+> autosuspend delay and plugging it back in.  If you catch the right
+> timing then the USB4 router is still on its way down to D3cold.
+> 
+> In terms of a way to match this problem to the spec, the closest I
+> could think is PCI-PM spec.
+> 
+> But I do see in the PCI-PM spec that the delay for D0->D3hot should
+> be 10ms.  In the Linux kernel implementation __pci_set_power_state()
+> when called with D3cold calls pci_set_low_power_state() which does
+> wait 10ms followed by using the platform to remove power.
+> 
+> I can't find any timing requirements for D3hot->D3cold transition
+> though.
+> 
+> I would hypothesize that if we injected a longer delay on the "other
+> end" for the D3cold transition entry it would solve this issue as
+> well though.
 
