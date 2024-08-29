@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-12424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 272D3964255
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:54:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47CE6964259
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 12:54:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5837A1C24A73
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 10:54:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C3AF1C24853
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 10:54:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECB4618FDD8;
-	Thu, 29 Aug 2024 10:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFD58191496;
+	Thu, 29 Aug 2024 10:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XKFQYFP/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EDlQzT32"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D008418E049;
-	Thu, 29 Aug 2024 10:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE54419148D;
+	Thu, 29 Aug 2024 10:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724928823; cv=none; b=s3DtLyYUOutRRM/4GWelHr6qzx1tvCbggnSDF38Wi9pf8WbbFYx2iKf5j9niz5GGfXrEor3/jOiN3tShqF+4gM3ak4ommJpcWnqheeStXcSse5TUye2CjqClpR0jIqfYtEkBo5je6yw4EK/3iMKRT7RhtBAdbwcDdHk/YGQdRTc=
+	t=1724928827; cv=none; b=o3gw17x5tbT4jRcz6SBCbD45JMfgU8hLvq5VdPUx4YHSqES8QbMhfdAQO+lcdy306dZ3/almj/UXwN2a4HGVP1zFNOmVuEsEu+1wufrh//i5N+MeyF6MPEPJk9WlQp+UxfUo1TcdXUrxRHQ1qGkgx3Hei62fluZG1HYMHaCxgAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724928823; c=relaxed/simple;
-	bh=eOjWmCGYkQaExPYAYn5LNam43OtntIsPkUhHFa6JZ04=;
+	s=arc-20240116; t=1724928827; c=relaxed/simple;
+	bh=W+d9Jim0nEEIZkLVc5JOyipYeC6MdWhZ9+Fm9Fk3Q5M=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ebrrswgJDXfT+BGufxIisyQRZkyLl3z53FMa3zqT7uCTERfr8z+7LX1ffNL9tZAye3JyaHaxZ0a1lVQsGipHmZtqvjPEFGUMwvVetxDxJXHbheGKQ6Y2h35Rxhg0qGlfUvHo46tDT1cDFFOZFbev55QegAzkY4I5AHVn8iBweQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XKFQYFP/; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=RP9LvFEHXWtiDA4Ri7XUwsx9FU5Xjr/wBkcxVfU/N1IoNoaOklecaY34tlxfgf/D0RPb8sJ+nHX/50JYtJMSfGIVEuvayN+EhLGn1TEpYU1/p924KXb13+3KOp8i2VXL4tgExRj7ru7q99TeeSKBnOKOuNsyo2/DAk9XlMr/b0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EDlQzT32; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 47TArQma032249;
-	Thu, 29 Aug 2024 05:53:26 -0500
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 47TArVR3026554;
+	Thu, 29 Aug 2024 05:53:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1724928806;
-	bh=X6RXbw20GMJ0FoF1xqS2/F+/UvIx5MHp6Kk6m8ysDCo=;
+	s=ti-com-17Q1; t=1724928811;
+	bh=8hOk9PuXGBpXAe2XkNZFCwoENS4wBkLV7iENTvnk1I4=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=XKFQYFP/E8eq0P0FF45Ww9UGBbixsAHNuClSA+LVjFJUcWr83b6X2UYX9+CVqfDfL
-	 l78Id94C7BXb4nxuj+JsasOFYYd3ekumbiMIlaWw7Hhxz2pT5uolFWA2zbRW9OmmV0
-	 uWQ5iyqO2Yn5te/wNjjTgqcnJlq0l7qMDhSlpV+w=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 47TArQCp081111
+	b=EDlQzT32Mz6oq9+jtgsZgmL9v+wcg96oHj9WDJ8XE6URUq1dMZpG39PGrHVx49EaK
+	 Wmdam/9N2SMNL9iYcE7WZfqARpPZO95UZI+RUsno2P48IbMd9W6fEzV9ieYyKd1575
+	 7LE2O15zToL+A7z4jU6eAFBdONh8H6bAWkd1bV8Q=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 47TArUEs081129
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 29 Aug 2024 05:53:26 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 29 Aug 2024 05:53:31 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
- Aug 2024 05:53:26 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2024 05:53:30 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 29 Aug 2024 05:53:26 -0500
+ Frontend Transport; Thu, 29 Aug 2024 05:53:30 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 47TArHpS070385;
-	Thu, 29 Aug 2024 05:53:22 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 47TArHpT070385;
+	Thu, 29 Aug 2024 05:53:26 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
         <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
@@ -64,9 +64,9 @@ To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
 CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v4 1/2] dt-bindings: PCI: ti,j721e-pci-host: Add ACSPCIE proxy control property
-Date: Thu, 29 Aug 2024 16:23:15 +0530
-Message-ID: <20240829105316.1483684-2-s-vadapalli@ti.com>
+Subject: [PATCH v4 2/2] PCI: j721e: Enable ACSPCIE Refclk if "ti,syscon-acspcie-proxy-ctrl" exists
+Date: Thu, 29 Aug 2024 16:23:16 +0530
+Message-ID: <20240829105316.1483684-3-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240829105316.1483684-1-s-vadapalli@ti.com>
 References: <20240829105316.1483684-1-s-vadapalli@ti.com>
@@ -80,61 +80,119 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add the "ti,syscon-acspcie-proxy-ctrl" device-tree property which is
-used to obtain a reference to the ACSPCIE Proxy Control register along
-with the details of the PAD IO Buffer output enable bits.
+The ACSPCIE module is capable of driving the reference clock required by
+the PCIe Endpoint device. It is an alternative to on-board and external
+reference clock generators. Enabling the output from the ACSPCIE module's
+PAD IO Buffers requires clearing the "PAD IO disable" bits of the
+ACSPCIE_PROXY_CTRL register in the CTRL_MMR register space.
 
-The ACSPCIE Proxy Control register is used to drive the reference clock
-for the PCIe Endpoint device via the PAD IO Buffers of the ACSPCIE module.
-The ACSPCIE module can be used as an alternative to either an on-board
-clock generator or an external clock generator for providing the reference
-clock to the PCIe Endpoint device.
+Add support to enable the ACSPCIE reference clock output using the optional
+device-tree property "ti,syscon-acspcie-proxy-ctrl".
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 
 v3:
-https://lore.kernel.org/r/20240827055548.901285-2-s-vadapalli@ti.com/
+https://lore.kernel.org/r/20240827055548.901285-3-s-vadapalli@ti.com/
 Changes since v3:
 - Rebased patch on next-20240829.
+- Addressed Bjorn's feedback at:
+  https://lore.kernel.org/r/20240828211906.GA38267@bhelgaas/
+  with the following changes:
+  1) Updated the implementation of j721e_enable_acspcie_refclk() by
+  reducing the nested IF conditions to make it easier to read.
+  2) Updated the section invoking j721e_enable_acspcie_refclk() within
+  j721e_pcie_ctrl_init() by returning 0 if "ti,syscon-acspcie-proxy-ctrl"
+  isn't present and returning j721e_enable_acspcie_refclk() otherwise.
 
 v2:
-https://lore.kernel.org/r/20240729092855.1945700-2-s-vadapalli@ti.com/
+https://lore.kernel.org/r/20240729092855.1945700-3-s-vadapalli@ti.com/
 Changes since v2:
 - Rebased patch on next-20240826.
 
 v1:
-https://lore.kernel.org/r/20240715120936.1150314-3-s-vadapalli@ti.com/
+https://lore.kernel.org/r/20240715120936.1150314-4-s-vadapalli@ti.com/
 Changes since v1:
-- Collected Acked-by tag from:
-  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-  https://lore.kernel.org/r/1caa0c9a-1de7-41db-be2b-557b49f4a248@kernel.org/
+- Addressed Bjorn's feedback at:
+  https://lore.kernel.org/r/20240725211841.GA859405@bhelgaas/
+  with the following changes:
+  1) Updated $subject and commit message to indicate that this patch
+  enables ACSPCIE reference clock output if the DT property is present.
+  2) Updated macro and comments to indicate that the BITS correspond to
+  disabling ACSPCIE output, due to which clearing them enables the
+  reference clock output.
+  3) Replaced "PAD" with "refclk" both in the function name and in the
+  error prints.
+  4) Wrapped lines to be within the 80 character limit to match the rest
+  of the driver.
 
- .../devicetree/bindings/pci/ti,j721e-pci-host.yaml     | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pci/controller/cadence/pci-j721e.c | 39 +++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index 15a2658ceeef..69b499c96c71 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -38,6 +38,16 @@ properties:
-       - const: reg
-       - const: cfg
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 85718246016b..7f7732e2dcaa 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -44,6 +44,7 @@ enum link_status {
+ #define J721E_MODE_RC			BIT(7)
+ #define LANE_COUNT(n)			((n) << 8)
  
-+  ti,syscon-acspcie-proxy-ctrl:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
-+      - items:
-+          - description: Phandle to the ACSPCIE Proxy Control Register
-+          - description: Bitmask corresponding to the PAD IO Buffer
-+                         output enable fields (Active Low).
-+    description: Specifier for enabling the ACSPCIE PAD outputs to drive
-+                 the reference clock to the Endpoint device.
++#define ACSPCIE_PAD_DISABLE_MASK	GENMASK(1, 0)
+ #define GENERATION_SEL_MASK		GENMASK(1, 0)
+ 
+ struct j721e_pcie {
+@@ -220,6 +221,36 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+ 	return ret;
+ }
+ 
++static int j721e_enable_acspcie_refclk(struct j721e_pcie *pcie,
++				       struct regmap *syscon)
++{
++	struct device *dev = pcie->cdns_pcie->dev;
++	struct device_node *node = dev->of_node;
++	u32 mask = ACSPCIE_PAD_DISABLE_MASK;
++	struct of_phandle_args args;
++	u32 val;
++	int ret;
 +
-   ti,syscon-pcie-ctrl:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     items:
++	ret = of_parse_phandle_with_fixed_args(node,
++					       "ti,syscon-acspcie-proxy-ctrl",
++					       1, 0, &args);
++	if (ret) {
++		dev_err(dev,
++			"ti,syscon-acspcie-proxy-ctrl has invalid arguments\n");
++		return ret;
++	}
++
++	/* Clear PAD IO disable bits to enable refclk output */
++	val = ~(args.args[0]);
++	ret = regmap_update_bits(syscon, 0, mask, val);
++	if (ret) {
++		dev_err(dev, "failed to enable ACSPCIE refclk: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+ {
+ 	struct device *dev = pcie->cdns_pcie->dev;
+@@ -259,7 +290,13 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+ 		return ret;
+ 	}
+ 
+-	return 0;
++	/* Enable ACSPCIE refclk output if the optional property exists */
++	syscon = syscon_regmap_lookup_by_phandle_optional(node,
++						"ti,syscon-acspcie-proxy-ctrl");
++	if (!syscon)
++		return 0;
++
++	return j721e_enable_acspcie_refclk(pcie, syscon);
+ }
+ 
+ static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
 -- 
 2.40.1
 
