@@ -1,58 +1,91 @@
-Return-Path: <linux-pci+bounces-12417-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12418-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 113EB964031
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 11:33:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDEA6964059
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 11:38:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92E88B2164A
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 09:33:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F00FC1C24736
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 09:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5551818CBE5;
-	Thu, 29 Aug 2024 09:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACBA118E341;
+	Thu, 29 Aug 2024 09:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V0k1Ed0p"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40A9189BA3;
-	Thu, 29 Aug 2024 09:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C08418E053;
+	Thu, 29 Aug 2024 09:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724923980; cv=none; b=oBfs/ZpnACQAJwqmAIExg1IksnvjYw0G1Dr3KP0Dm81Gb/IUTJcnYWznZnSNcviMLpQazUaog/DFXe2u0K4yDhPizNTtoY5Rpuz69nOhoXbqliymfu0t3CUaFoa9RPGtpnipjvEfEuU9Zg36NLdYRae/7GSdS/7IABbXWMaiVuI=
+	t=1724924249; cv=none; b=EwPhNAXX04cX2lc4JXeB5K5WsWmEKxxHN71CM9e/7dD7LmN/wqdAxXto+BVxQd7UgWZaDoZ3SvpMZqY0jv7EHYsMbTrK8uVUqtSpSY0awzoxj9Vh0sPH1g0vmf4+M97pMMSHJWnti1FZoqQBNJMUevYLf1cTX9AAVfs41x1Nw58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724923980; c=relaxed/simple;
-	bh=yGCID0GCiA9pXFJg0fO8tvyOnGozjM+tId2ELiGSJsw=;
+	s=arc-20240116; t=1724924249; c=relaxed/simple;
+	bh=AsQiOUdqeFNaOGTs/WOSOkZKmODY99yIldxyKcZ3eP0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ic5en6ndqL4xYsJtIsE1PxM1VBludjpODUDnZqCY2NyXdxbIDfp44c9rYqJ0AZdBPaDJhjC68Jcj9QNz36js0fTf+MZv3uLq3LTlrIxWt5JTEG+zoQ7b/ggxfqUUUyOW3WlM8Fo70zcz1uS/Xixs3ciaDWZpszSq/3+XQl5W/oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8E4AF28036B3A;
-	Thu, 29 Aug 2024 11:32:47 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 676935B1ED; Thu, 29 Aug 2024 11:32:47 +0200 (CEST)
-Date: Thu, 29 Aug 2024 11:32:47 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Esther Shimanovich <eshimanovich@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	iommu@lists.linux.dev,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
-Message-ID: <ZtBAP4TayLmdiya_@wunner.de>
-References: <20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org>
- <ZstCyti3FHZIeFO8@wunner.de>
- <CA+Y6NJE1p-nidmCZzJ7j-mJAmCLmC2q2meUf-5FFSWofWES-qA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bhv+ZT3+21VCb11jLa+Cp1S09uKA2eX6gFDTvg5RzYviJMHi36eIOGJbvuc0YmedZmJhfaNELYIIAAzANva822WQbVwpvqOP5Y7cZwHnM2gO7c9bFqN7N23XJrdvO6LYBBVB10uZBK/v4975UJvECZb4PyrWJ9+L34xaLVkXCAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V0k1Ed0p; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724924248; x=1756460248;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AsQiOUdqeFNaOGTs/WOSOkZKmODY99yIldxyKcZ3eP0=;
+  b=V0k1Ed0p0KORm8YAKC0XRtqNSJIYuGZrws9omNF9KysP02l0cRzkhwrn
+   HWVWJtt9gdZskHmY5G3/Jk3EZSwtaBnoBOH2UklQ6T1d1Wbiy1QPKXiez
+   Klwnw4f28KljQlLZDy/Olv2loWU3yYfBCjLPNLiucXRawDUvDUxadZaKS
+   6U9FRXrckYY3lzaUwDomvOPx9cPZyQbPn3+DHAyPsJcFR455CKkIWUdnK
+   Kfgv+VZSK+hR2iTielyxo0uqLXF8DXpXu0PS6R1lUo06zpLwwtEQXre9l
+   zporukM29EO/MLxTR+e9TdTT6SXVdDiFoutkhpBLx7DHRkzVoCOdlAfSp
+   Q==;
+X-CSE-ConnectionGUID: 3yZuAta4SMKGeBQbx9v8ZQ==
+X-CSE-MsgGUID: IUtGT53vTAebkk91XGYfcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="34659697"
+X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
+   d="scan'208";a="34659697"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 02:37:28 -0700
+X-CSE-ConnectionGUID: +v6HzWNLTYGlHe9yRXv/xg==
+X-CSE-MsgGUID: nuiL9r1NRTaSeHbvhO9P7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
+   d="scan'208";a="63859002"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa006.jf.intel.com with ESMTP; 29 Aug 2024 02:37:23 -0700
+Date: Thu, 29 Aug 2024 17:34:52 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"pratikrajesh.sampat@amd.com" <pratikrajesh.sampat@amd.com>,
+	"michael.day@amd.com" <michael.day@amd.com>,
+	"david.kaplan@amd.com" <david.kaplan@amd.com>,
+	"dhaval.giani@amd.com" <dhaval.giani@amd.com>,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>,
+	"david@redhat.com" <david@redhat.com>
+Subject: Re: [RFC PATCH 12/21] KVM: IOMMUFD: MEMFD: Map private pages
+Message-ID: <ZtBAvKyWWiF5mYqc@yilunxu-OptiPlex-7050>
+References: <20240823132137.336874-1-aik@amd.com>
+ <20240823132137.336874-13-aik@amd.com>
+ <BN9PR11MB5276D14D4E3F9CB26FBDE36C8C8B2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20240826123024.GF3773488@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,83 +94,59 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+Y6NJE1p-nidmCZzJ7j-mJAmCLmC2q2meUf-5FFSWofWES-qA@mail.gmail.com>
+In-Reply-To: <20240826123024.GF3773488@nvidia.com>
 
-On Wed, Aug 28, 2024 at 05:15:24PM -0400, Esther Shimanovich wrote:
-> On Sun, Aug 25, 2024 at 10:49???AM Lukas Wunner <lukas@wunner.de> wrote:
-> > On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
-> > > --- a/drivers/pci/probe.c
-> > > +++ b/drivers/pci/probe.c
-> > > +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
-> > > +{
-> > > +     struct fwnode_handle *fwnode;
-> > > +
-> > > +     /*
-> > > +      * For USB4, the tunneled PCIe root or downstream ports are marked
-> > > +      * with the "usb4-host-interface" ACPI property, so we look for
-> > > +      * that first. This should cover most cases.
-> > > +      */
-> > > +     fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
-> > > +                                    "usb4-host-interface", 0);
-> >
-> > This is all ACPI only, so it should either be #ifdef'ed to CONFIG_ACPI
-> > or moved to drivers/pci/pci-acpi.c.
-> >
-> > Alternatively, it could be moved to arch/x86/pci/ because ACPI can also
-> > be enabled on arm64 or riscv but the issue seems to only affect x86.
+On Mon, Aug 26, 2024 at 09:30:24AM -0300, Jason Gunthorpe wrote:
+> On Mon, Aug 26, 2024 at 08:39:25AM +0000, Tian, Kevin wrote:
+> > > IOMMUFD calls get_user_pages() for every mapping which will allocate
+> > > shared memory instead of using private memory managed by the KVM and
+> > > MEMFD.
+> > > 
+> > > Add support for IOMMUFD fd to the VFIO KVM device's KVM_DEV_VFIO_FILE
+> > > API
+> > > similar to already existing VFIO device and VFIO group fds.
+> > > This addition registers the KVM in IOMMUFD with a callback to get a pfn
+> > > for guest private memory for mapping it later in the IOMMU.
+> > > No callback for free as it is generic folio_put() for now.
+> > > 
+> > > The aforementioned callback uses uptr to calculate the offset into
+> > > the KVM memory slot and find private backing pfn, copies
+> > > kvm_gmem_get_pfn() pretty much.
+> > > 
+> > > This relies on private pages to be pinned beforehand.
+> > > 
+> > 
+> > There was a related discussion [1] which leans toward the conclusion
+> > that the IOMMU page table for private memory will be managed by
+> > the secure world i.e. the KVM path.
 > 
-> Thanks for the feedback! Adding an #ifdef to CONFIG_ACPI seems more
-> straightforward, but I do like the idea of not having unnecessary code
-> run on non-x86 systems.
+> It is still effectively true, AMD's design has duplication, the RMP
+> table has the mappings to validate GPA and that is all managed in the
+> secure world.
 > 
-> I'd appreciate some guidance here. How would I move a portion of a
-> function into a completely different location in the kernel src?
-> Could you show me an example?
+> They just want another copy of that information in the unsecure world
+> in the form of page tables :\
+> 
+> > btw going down this path it's clearer to extend the MAP_DMA
+> > uAPI to accept {gmemfd, offset} than adding a callback to KVM.
+> 
+> Yes, we want a DMA MAP from memfd sort of API in general. So it should
+> go directly to guest memfd with no kvm entanglement.
 
-One way to do this would be to move pcie_is_tunneled(),
-pcie_has_usb4_host_interface() and pcie_switch_directly_under()
-to arch/x86/pci/acpi.c.
+A uAPI like ioctl(MAP_DMA, gmemfd, offset, iova) still means userspace
+takes control of the IOMMU mapping in the unsecure world. But as
+mentioned, the unsecure world mapping is just a "copy" and has no
+generic meaning without the CoCo-VM context. Seems no need for userspace
+to repeat the "copy" for IOMMU.
 
-Rename pcie_is_tunneled() to arch_pci_dev_is_removable() and remove
-the "static" declaration specifier from that function.
-
-Add a function declaration for arch_pci_dev_is_removable() to
-include/linux/pci.h.
-
-Add a __weak arch_pci_dev_is_removable() function which just returns
-false in drivers/pci/probe.c right above pci_set_removable().
-
-And that's it.
-
-See pcibios_device_add() for an example.
-
-That's one way to do it.  It ensures that the code is only compiled
-on x86 and only if CONFIG_ACPI=y.  Basically the linker picks the
-arch_pci_dev_is_removable() in arch/x86/pci/acpi.c, or the empty
-__weak function of the same name on !x86 or if CONFIG_ACPI=n.
-
-An alternative approach would involve using an empty static inline.
-I think the difference is that an empty static inline is optimized
-away by the compiler, whereas the empty __weak function is not
-optimized away by the compiler, but may be optimized away by the
-linker if CONFIG_LTO=y.
-
-For the static inline it's basically the same but you omit the
-__weak arch_pci_dev_is_removable() in drivers/pci/probe.c and
-instead constrain the function declaration in include/linux/pci.h to:
-#if defined(CONFIG_X86) && defined(CONFIG_ACPI)
-...and the #else branch would contain the empty static inline
-which just returns false.
-
-See pci_mmcfg_early_init() for an example.
-
-Maybe the empty static inline is better because then the entire
-"if (arch_pci_dev_is_removable(...))" clause can be optimized away
-without reliance on CONFIG_LTO=y.
-
-I hope I haven't confused you completely.
+Maybe userspace could just find a way to link the KVM context to IOMMU
+at the first place, then let KVM & IOMMU directly negotiate the mapping
+at runtime.
 
 Thanks,
+Yilun
 
-Lukas
+> 
+> Jason
+> 
 
