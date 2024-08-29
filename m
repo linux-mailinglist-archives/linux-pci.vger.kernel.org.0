@@ -1,67 +1,66 @@
-Return-Path: <linux-pci+bounces-12410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12411-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59F23963D23
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 09:34:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4448963D46
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 09:39:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F6F21C22724
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 07:34:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 605821F22E6F
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 07:39:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71B818755F;
-	Thu, 29 Aug 2024 07:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADA161487D1;
+	Thu, 29 Aug 2024 07:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="NkTyj2o/"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="oHpyCG8h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2079.outbound.protection.outlook.com [40.107.20.79])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2053.outbound.protection.outlook.com [40.107.21.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39B715B57B;
-	Thu, 29 Aug 2024 07:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D99D446D1;
+	Thu, 29 Aug 2024 07:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724916863; cv=fail; b=TPesK202ow3BvMvTpcVJGOOqgNU+BSyW/rh0IOy4YDN8ui7SS2Dluq6KkRw/V888CzGzAUGx9+BiweUS9Zat4jg/w8+Zu7mqc/370qmipv3R3V+lMuq+yBBRV6M6WQFH2AKpi7k0NIHrSj2wkFMINjqTL41+WpN5TomEkrcElv8=
+	t=1724917143; cv=fail; b=ZZAyADc7C24IX+N2QutMPAmw0sh9s9+qmfnkenOg5sxGiB9cn1opkCuiYIm6t64v8qQKrTrVTX50cpFTJFHZcCWJNeVqSJ7vEmp5eCTjNp3qWfPpYlEU/JrceEnPLCKG2sgSExCFJHh3SfpoT3jLcdVQhwZRKNVrPUEsYoWlOoo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724916863; c=relaxed/simple;
-	bh=53NNl/AHumPVV1xvSNDhNmk4hadZmgSs43tSMQe9Jdo=;
+	s=arc-20240116; t=1724917143; c=relaxed/simple;
+	bh=MQLqrY/6j/YfcKiTJ+NmMmxD7bFEyGoVlMZ9E5oIQOU=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qmq41KHpjkl9WxJilKluoPkUg6dqhpQjNEb/GnOmCKkdY7dHUDjqTlD/ocmzPW1hAAl/HEpuibEesbLlcg5yIWoBJGXnLPk1b7lKs2LqmsLCR7qBbuSDze5+fXXs+nB5T3YLFkHn+5uvpCs8qNCBOBEyTRzYUqa6od8ASYTrSXY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=NkTyj2o/; arc=fail smtp.client-ip=40.107.20.79
+	 Content-Type:MIME-Version; b=hkzClMGQScoa400T4CYKQg1YMRbnEmzTGe8Cb1tbLQhTmnV4aKk9BypizkUmMfM7TauPBxFUAFQWfXgXbGDFvU2oVqhyHkBgGduP07qrDIEPHLgL6/8w3dsxntqrjuLkAWLYCXeLvOvqVmqqZQ9EUhJd5bGlpBMfQyuLH+BbqOM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=oHpyCG8h; arc=fail smtp.client-ip=40.107.21.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bKW1galr5ORf1j8R5MbhQM/U0L1uD6xrxzMqUcDl8btpFOU/KWxGlTVrzDgRbExWy+jl6SnGUp3VTqgZcxkAVaHQa8qitP+H4y74tXALlFaq/9YhUeRPGcM8PM97H9MWEe7jT5jA1Is2jTJm4WnlwObiF/JOW2U6XuWaixaC9pKZPlr9FrlekJevkTSKFLooACH6UdjjXwDHlqi2VYzrlLbYZPES4FAyHl73t6/kA+bgz3UQ657Wr6MIyb+xYZPwdrKdL+RgxaRI/RAXCVQaBJJ9IUW1tapgD77v2arLyqUuI3MdJT2tL4652t7Vtfp9MFNaNtVz9R97KJlnvhyGdQ==
+ b=BqOvL7jjVNRffX3l7ntziNIZC4SP7HN65/I0e0isML6ulQi/3OewXTiC/YnH2hXbnpa5+Qiuf1qZoHfcjUSp6z47uadwF4UmTLd2sCri5B5uqr+fAbIwRg/H8fd8dGqjLi30Q8OErCEXp7FQx6TiCrnKN9qSVsO0eSfzN875ZGzun44RTDFlTux7rmPHn0MmBFdGIEEhSgSYDmzLTjjIsWuDZ/jBpzLQTM87H6UaQ38390RRId6JcrXN41R5WS/0NmtX1eUnbUgVrY5pMuxxirwPHZNyLwnKnuj/WVqYhis5tCrON3oocim13UKcf76ecXGLwwDK7ZN8iMSv7Cne+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fig+XcQyGCrVm7dXCI7z3IDJdEXi0zxLaKnN85Bzqa8=;
- b=XlrXPiJ+q3Uy3bZxuZki6dyhC6E6dzCWYrTlWoOCeGuj2AA/br3HPi86RSr4JqidbcLtZqKh4uS0uRWxqZJ38RzpC2japNJ8SyKPr2XjVMfOfUM18xbk9tjOHdCSvfa9YBF14WrTWq2LpgBdUGc+1r3SEgb+yLPZLp/xhy5JPCQbhF5VHz3QBecYv8RiBk6u8QE2qJbVjtRTGRrPfHMhE71hwNt3Tas/DZWXFLDLI7yNsRu5E7ohkmNkbRt3AvhCYQPle5WoM3tK+Gqgmo9CIamDa3c6rGG8S4kPDCtDqP5TAdL5RE8WzsmJAiNA8eYTVIq4sZfG5xdPj93cRuaFng==
+ bh=XkIeePlUQZRhpEX1YqJSCIS8mGtBfUQxv3gAxAaRTzM=;
+ b=xtZcXlkCD5VjAfoAOD0mATTnre8ooPqFb+fwmtT6iw66m3rpxitD3a7xqCgQykDifXzitcWzL3CosFnEAk39+8svB7F5k6gaXNEiNcCx2JphDNoUGK6s7nxKr4RXwu0hxIP3eqPXDHlBarit+949EqcDzXo/5YZpfDgLgmEepjbhQgJncoyLvEczQYggj/4HMTQOX6aDIw/kkfp9VKn56kHu/SD7cqt7lZZqjyLWAttK8KiJcr4CaTdbw+fgmTl45a2fciGjc0XRdKuDDsFp+ewFb2xoGx37I8lHH5wdGQOj5NX5wcbsik5srFCVrsX7YDmbUFN8rNagZaYKC3nnIQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
  dkim=pass header.d=siemens.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fig+XcQyGCrVm7dXCI7z3IDJdEXi0zxLaKnN85Bzqa8=;
- b=NkTyj2o/VOntSwcef10XkJ3KmgD7dUNBlEJyuDtZbRe5iPBori9aNkv52zW+gOXueEtydNzEJpB8rcdYYK4zsR//QKQ+pJfn2Ip/sLq9F19GFeYrpFncU2deoJ/AlhLkX5Myulo2qYmxsDqUyo6BlCFWmX7z8DD72qhW0fjeS1rXddVoHY9l8GuR6ONDiFARXE9xunHcud3kMUcuCuU3u6Tu5YTRFS27hf/BNsJ6eVviuToucNXYI2esoCSztSWmlpboKyy7jJS57VFAgh8z9K354L3j8hpmBSPGthjerODCePnrKUyIhDRKcO3cG+KXgJvEiqv0Iw9TI+jWL6QE6g==
+ bh=XkIeePlUQZRhpEX1YqJSCIS8mGtBfUQxv3gAxAaRTzM=;
+ b=oHpyCG8haWfWhMdyCb60at9EJdEnpFM1gTTkker46SVBFDGmk8qu+Y2qAihtMr8JL39gIoCoWVVh6wFtHjqP00EaWRMLYT45dNSBcSmolb04/HJWgBmmERVn+igLjEd+WBTqZoNj6W68cYCI4hRqjE+0CR5++EBr8h7jxs/yeiAnucZYDZit3/zBQMa40Wsqp//GTwQGMjjOd+FYGPdNxO6O7M8ns97zIpMF9VTnxx7qWOzGGPs/QmrvmFi5Q5fSdx0UCplohHshes84jXmFAPyB1hRh21pOoRrc8spsGtQkgU72sm65F3v8RIbXFerdIo00HLrg87AcxIbjHIlafg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=siemens.com;
 Received: from GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:76::15)
- by DU0PR10MB6876.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:465::11) with
+ by AS1PR10MB5529.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:474::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27; Thu, 29 Aug
- 2024 07:34:18 +0000
+ 2024 07:38:57 +0000
 Received: from GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::7fc:74bb:a781:a286]) by GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::7fc:74bb:a781:a286%5]) with mapi id 15.20.7897.027; Thu, 29 Aug 2024
- 07:34:18 +0000
-Message-ID: <d215ba71-c652-4c2c-aa19-7c7613a9dd4d@siemens.com>
-Date: Thu, 29 Aug 2024 09:34:15 +0200
+ 07:38:57 +0000
+Message-ID: <df7d3134-302d-45ed-ba72-b5473ac5e3aa@siemens.com>
+Date: Thu, 29 Aug 2024 09:38:54 +0200
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/7] arm64: dts: ti: k3-am65-main: Add VMAP registers
- to PCI root complexes
+Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: ti,am65: Extend for use with PVU
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
  Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
@@ -70,10 +69,13 @@ Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-pci@vger.kernel.org, Siddharth Vadapalli <s-vadapalli@ti.com>,
  Bao Cheng Su <baocheng.su@siemens.com>, Hua Qian Li
- <huaqian.li@siemens.com>, Diogo Ivo <diogo.ivo@siemens.com>
+ <huaqian.li@siemens.com>, Diogo Ivo <diogo.ivo@siemens.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
 References: <cover.1724868080.git.jan.kiszka@siemens.com>
- <988ddd76b742240d42aa2733ad92c6e7b82a3f0e.1724868080.git.jan.kiszka@siemens.com>
- <bsxsk3zy5wyao7ljdf37idff4jf5g3gsp7amkywbm7z55vrt4j@fz4x4vjkfehm>
+ <752fb193661bb5e60e5aae6f87704784cbad145d.1724868080.git.jan.kiszka@siemens.com>
+ <2tc4eistthjifxsedwux3x7c52xlhkt5d3h2pcbe3glzzga6pg@bvbbsghc57zu>
 From: Jan Kiszka <jan.kiszka@siemens.com>
 Content-Language: en-US
 Autocrypt: addr=jan.kiszka@siemens.com; keydata=
@@ -119,11 +121,11 @@ Autocrypt: addr=jan.kiszka@siemens.com; keydata=
  qH4kDzsqKX8zzTzfAWFxrkXA/kFpR3JsMzNmvextkN2kOLCCHkym0zz5Y3vxaYtbXG2wTrqJ
  8WpkWIE8STUhQa9AkezgucXN7r6uSrzW8IQXxBInZwFIyBgM0f/fzyNqzThFT15QMrYUqhhW
  ZffO4PeNJOUYfXdH13A6rbU0y6xE7Okuoa01EqNi9yqyLA8gPgg/DhOpGtK8KokCsdYsTbk=
-In-Reply-To: <bsxsk3zy5wyao7ljdf37idff4jf5g3gsp7amkywbm7z55vrt4j@fz4x4vjkfehm>
+In-Reply-To: <2tc4eistthjifxsedwux3x7c52xlhkt5d3h2pcbe3glzzga6pg@bvbbsghc57zu>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0024.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c9::15) To GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR0P281CA0004.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::9) To GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:150:76::15)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -132,128 +134,180 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR10MB6186:EE_|DU0PR10MB6876:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd31b9b0-cec2-4c92-5c09-08dcc7fcfda5
+X-MS-TrafficTypeDiagnostic: GV2PR10MB6186:EE_|AS1PR10MB5529:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7fa4793-9ace-4b3e-78e6-08dcc7fda438
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VnNFMnYveE5BcXNvN1RRS1podGJ4SFRaaVMvbDQra1huMFlxRXBuZTZiNFg3?=
- =?utf-8?B?ZitENEVjL1dzUmh5dmVTekJnN2R2TmErWXhid25VOG9yQXN3UFc4QXlPVm4v?=
- =?utf-8?B?ZGJkQlUrS21FN0N6MDNsS0JoUUNJc08rTW83SUt3cjV3MEMxVEJ2d3R4RWIv?=
- =?utf-8?B?MHB2ekNlaUJ6bjFodUdsUDVXbXlsOWwvN3FGeE80TklnOCtQQ0J0YVBRaXFP?=
- =?utf-8?B?Y0FuTHBhUVFTTlpHQXJWbEhuQlV1SmpCRlpsZjBGRjZLbXZyYzNFR1AzcjN4?=
- =?utf-8?B?TTRUYk8yQ3hqMWRGYjNPWXlZUHZJaDBwQVhLT201VTROQnNDdlFKekJIZ1h0?=
- =?utf-8?B?eTBDNFlyYkJRYmdyNlNXOUdJZzNyVVlENkFZVi92OHBwbjZ6OUNwSmFGWFNm?=
- =?utf-8?B?T2QwVWc5RWx6Z2JPSm51YTAxa0dVellKbDBpRkVMRHV5MGJMTkRudFFKVkhM?=
- =?utf-8?B?TTExSi9iZHNkTC8yMXdXcHJNRS9NUElxdjdnNFdrbzhUa2JiMnRieWxIbmFP?=
- =?utf-8?B?YUVtSFQzU3hJaUVkZHY4S2s2RVNJUEROb0tNNnNWWGhsTUpQOFJyekdUZGFF?=
- =?utf-8?B?MmRPT3ZrNlB0UnA0NXc0cmFPSXY1dnFGQitoWnhleUdMVzhUUmFqUXEwN3Rs?=
- =?utf-8?B?RWx1NUFZcW1tK0ZBYlh4VnJzeWkvN1I0dkVLV2dIMnNoZXMrMWk4THNUcktn?=
- =?utf-8?B?K3pacU0xQnpyd3J5cnh6ckFWM0dOZEVQajJsNklBYjgwTXJmRWk5S281b1J5?=
- =?utf-8?B?a1NxNmRiR09KbHd6RjFYejQ2VkdoM3E4RVlWY3RFWE1iTzRPTkdKeHVYRlhC?=
- =?utf-8?B?TWxJRDZ5cytDY1pvZ2oyYUprSXBEbHU0a3RzYWs1UTdtQUI4cXpERXpEcG03?=
- =?utf-8?B?ejk0UkdRSXZVU2RCSitrL2kxWDhzVjlNUXVHOGFOdi9QSW54bHZ2dUxmRHpk?=
- =?utf-8?B?Z0o2clp0d1plVXJLak5GdWlhVWREQU11OEE3ZjNvSXg5ek8wamhXdlpOSUN3?=
- =?utf-8?B?V25Xb00zL0FLM1lJc2ZiZ21aSGt5RVJELzNVakJwbVlhS1pBN01JaUphQm9t?=
- =?utf-8?B?bFhnTnN3VG15REVsNzdIc3BmLzlxNFZnWWJKWEwydUEwU2RZSUVlZGtNVzN3?=
- =?utf-8?B?cXcyWDl2TFk2TW9qUTlEdStpK29PN2tua1JlUmV5b0lQd3U0VDBrRFdOYm1k?=
- =?utf-8?B?MjhCbk9JUjNoeFpPMWp2QWNPV3hTeUxSZTZ2VktaWTRpYUx4eWdnNGp2Y3di?=
- =?utf-8?B?b2UrYUN0NTUwRmxZTlJFTGR4bXNuclUwOTk0dEttajlKVkdFRDVDajJ1RTIv?=
- =?utf-8?B?YndIVzVtczdUalVrSUphQ0lhRnRHMUE2N3l0c1ROVWJNb1NsaVF5VjFUQUxz?=
- =?utf-8?B?STNOWnZjSGJyeGlIdmpGZWNUZlorYWFRdldQUnV0a25MOGF4WmpFaDBER21n?=
- =?utf-8?B?d1ZNWmlyNVdVTkZqczdDZ1pxaXlQSWtsVTRzZGVrK1JxdGc5QWFDWmFMei96?=
- =?utf-8?B?TUoreHhGNHpnQnJDSFFsNlA1WE5xT04zc1E1aFBLU2JSTDdIMnlQcnB4dWhl?=
- =?utf-8?B?TXdnM3Byc2x4aisrZTF3bDJtZWhJbzNwaGJhSjhLV2pXd0xIeXZRa3dyU2dX?=
- =?utf-8?B?WElId1BROEF1ZlNwTjEwaDVVT3RkbkpEUjVGRnlhQjR1cWdnZTUxcGU0dE1S?=
- =?utf-8?B?NWpibjBCMERUQUlzVG9zWFhncVFteFp6b1VFdldzSys0VzVxb3FTTEJPandF?=
- =?utf-8?B?dGNpazUzRUtpWEZpekZ0d1VpTGFYL3lxY1JhYkY5NXdUcFdOM3ZTSnZic1Nx?=
- =?utf-8?B?UmxWcjdjVk9HVHdhMVdMQT09?=
+	=?utf-8?B?L0xNSGQ5UytPS1piZmNkWEpzVXF0RDg5L0JEYVl0d1ZDMkVrLzdTUEhMYlMw?=
+ =?utf-8?B?OGkyZ2pFR0srYU1PQjFlL05vc0xQWksybEZ6WTNVbVcrTGpBZHNBVWhMQUFN?=
+ =?utf-8?B?UHB3cHR3czVYcGUvYmsyWDVlTjJ0dzZpNWlsL3pmNjhOTzk4S050TzNZYVNZ?=
+ =?utf-8?B?ZWNpd3pibDFnMENSVWpDT2dYL09hQjJnMmF4OGs1dnpsVVJ5ZmhQTGRZelVB?=
+ =?utf-8?B?enMwWnJQZ2pkUHVCSHpXekdHSjhDWWhsNk1BbmowblNTSmdVK0c3YXBweGZo?=
+ =?utf-8?B?NEk1NFlDOCthSStCeXRNc3I4RDlDMFhsTFl5bnplbjA4NzlvSGcrSWRteDJM?=
+ =?utf-8?B?emFhUUQvU280Z1FkNUcybDNhTTU0eUVKM0hjTzRMOUswZC9BU3QwbWVuTHBQ?=
+ =?utf-8?B?R0hDTDhtMTZ5TDJpWXJPd2JtR05YWTJRM0FveVpWYnZydm55YU03dWtsQlp6?=
+ =?utf-8?B?OHlGU2Z1dkRHQ0U0eUJKQVZpbTU3U0hYcFMxRXMySUlaeXFXeTdYdFBsWUVU?=
+ =?utf-8?B?L1Jna1FyejA5cURlUkdKMUF2bTBRSFRpT08rK2lzbStLZitZV0dnVU9xNmYv?=
+ =?utf-8?B?YVJhTlBDcDZpYVlUNkp5VGk4Qnp0Z3lpekJmeEk4Nzl3SGx6cXNPalUvcWRm?=
+ =?utf-8?B?QXpDRnkzSjN3UklGRzRJdmcyYXpNdVA0ZUVUYk9XTWUzbmxZTHY3SXVKUlRX?=
+ =?utf-8?B?ZW14dDNBRy80b1RZRzZlYlhwRkZ5YlZWeWRTWWpxei9ZRERMNDZhcXA0RFZ0?=
+ =?utf-8?B?UHJoY09WazdyYVE4WEVHenNWTFRuT1Rvd0ZxalJucDFnSzBtQ2ZXb1lNeFFa?=
+ =?utf-8?B?dCttQS9ma1p4MTB3UW5iSStIK3doYjdyeDcveUtuZGZ5UmF4M1NsYUF0Ukhu?=
+ =?utf-8?B?ZmVsM0crc1Y0VGxFY0dQb1N3TnhRZEh1NXpmNnQvb0U4dXVHdEpqUXhnT1N6?=
+ =?utf-8?B?d2tRZHpsbUtNamkzb3Aya0QyN0VUajJkMnQwenFsSk9HNWlqSWZvd3F6QTdW?=
+ =?utf-8?B?RkRRMlpTV3ZFMFhCVXYzUTNIUDF3RVMwellqbkQ3RzRWWlJmSU9iMU9SckpP?=
+ =?utf-8?B?VXBZOUJBOUduWDd5bDQyK0lmUDRZdWNkRWJlTkJObEhmSmg4amRtQ1JzbTJV?=
+ =?utf-8?B?cVlGbnVjaGxjZ1pVTjVLK1JaMHlsSm9CSXBFakxWZytVZTQyWGgrVFRjOGZj?=
+ =?utf-8?B?KzJPMlB4TG5BYkFCMjhKWmhyajRoMWxPaFhaNWwyekVGbjBOb2ZSR2JyOHpL?=
+ =?utf-8?B?aUNCOGdhOGNxSWh3ODNLZUNxUzdvMXYzRkNBWHBINUZtRmV3M01DKzI3SS9D?=
+ =?utf-8?B?YVRCVnc4TEIyR2wxYTRmTDZlby9Kbnhib2NteG9qS2FJT05pb0hMcUxvNC9Z?=
+ =?utf-8?B?czZ5TGRORmwxZ2RRVXp3clQwZnBOZkVWanhZa0JkNnJxS1dZMGxCcnFaUnpN?=
+ =?utf-8?B?b1pMV1ZwTm5lZ3R1SHdkL05Rb3J2US9mTlh2ZVdTREwxNi9vT3BWdElndjBN?=
+ =?utf-8?B?T1FlalRMVDV5TCtOQVlpSnZKS1dvT0c0SXR6RTJlcEorQUhtMmV0MlBocmdX?=
+ =?utf-8?B?UXgrYzRyQWVQclk0emFQejNxVGlxRFlSendPc1JUNk5CZWJZdjZYL0ZOQWdp?=
+ =?utf-8?B?QzJNZ3ZoTGN0RmlYRmtVbytjUVdPT1owd2RtSUlmYU1GU3E5aWN0YzJFbzFP?=
+ =?utf-8?B?aTdicGJCRkQzL1VlZGx1TkNwNXpvTHZFSG9rbXcrVy9xUWZpWjVUVDd1eldR?=
+ =?utf-8?Q?bliwnDW1433RQrlfwI=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UEtJMzVqNVYvUmthT3haSy9lajl0TmcydVhYcmdaZHltZXFUR2YvMVZsc002?=
- =?utf-8?B?MUlyNUpKYTJzT2RzbFBGaEw0bWNoOXNqbjVWbUVaUlNPSVdERDIycU1tKyt4?=
- =?utf-8?B?ZVhqUXVoNDJTeVlxTWZjWjZqRnVndUJrMUNvY1JDZHNvTHFsZnFic1kvTzdS?=
- =?utf-8?B?OTVwRGFPaEdmS1VDcW0wTE00RzZGdERhb3ZiWm1rVExNWUZpS2E1clpJdzl1?=
- =?utf-8?B?T0pmQmtLMVQ1L1lKNGQycEJTSXYzalBHUXNGVW5LeFkyckFrTW15b24vTjJj?=
- =?utf-8?B?K2NFMWFYTTNBNkYvYkw3TUlNRGZEMUlPeGY3eFJQQ2FVc2tLQ0NJd01IcFFw?=
- =?utf-8?B?T1I1cy9OQ2Iyd0lEODBYK1QrRzdac0U2ekRJbmw2Z3UzZU0vMlFHMm5LUkFz?=
- =?utf-8?B?K0VSTXBDY0l0OUJYTG5EUGdXOCsweWdNbU1rczRGR0NTejdoNW5ZTEdZbUgy?=
- =?utf-8?B?SVpzWWp1QXQ3UmtKWEJ6NklueVR5ODhOd2o0ekpvUkhLcXZySllSYzM4QkdZ?=
- =?utf-8?B?V1pMTWh5b3RTUW1jNk54dmV5aUE4d04yN1d2bVRkSzlHMitHdzh3akdWSm9s?=
- =?utf-8?B?S2tWMjBWQlJTLzVDNGY5YytDREV5cURKQ2xQMXFUaXRKd3U2M0N3NjZ2cEdC?=
- =?utf-8?B?aTdremQwUHJLNFJXVXBkdTdVZ2JvdURFL2J1U3RyWGJYZ3JQSkV5OGVkZCtK?=
- =?utf-8?B?NkFybWJQSmJhRG52aEE1NnU1d09aRy84WnIzdVRyc1A0QTJncEQ2TEhZVkpp?=
- =?utf-8?B?TXc0M2N2UXB1THJSaWpiRjhsdlo4clhxVXoxd0M2cTNScEVibjdPdUNmY2Qr?=
- =?utf-8?B?M1VtbUF2REhkN0N5R003RERnU0NoRzd5YVZmZFFNSkJyaW1NMUVqNnQ4YkMx?=
- =?utf-8?B?cE9xUFBDSlpuMU5oWWt6UnlUSC9TL0VUTzkwK21jYU05eVlTOHprOVhMeThn?=
- =?utf-8?B?K0txN1ZlakF4SHJYdVVYZk1CRndFRW81WDNGZ0dyczRudUlBbmxiNm1ZUXNH?=
- =?utf-8?B?U0R1TU0zZFNranFOMVNrQWdlUG9XRklqWDlGbGpXbjhzeEJxTUZ4QlBYM2lY?=
- =?utf-8?B?YnJaT1NOR3ZGNlZvMGdFRW1Qb0ZqMUZ0aitLckpFeWp3K2dyaDV1RDRFUml3?=
- =?utf-8?B?bzk2bkJuMjZ5Rlh0VFUvZWVnenkzRFpBZW1sRUdSQWdHVStZcGRhbVlDSE9h?=
- =?utf-8?B?SElGMnNTWEw4aWhNTjEvZlQ4NSs5Sml5WTlHZ2pUQTJTUzZxV3hIbUhZeTJX?=
- =?utf-8?B?SzQ3VUZFaCtUSEcrUmJVTWU3VjNsQ2JWWklveFd5bEJ0YTFxckthR0tnN2dS?=
- =?utf-8?B?anhYTFZRUlNlcmlOS1FHYVlqL2hMckpLdnRDMGhGMVpqeEUvNjJoOW1SYXhO?=
- =?utf-8?B?Tml2L0dOb0g1WlhCeGZmQklCSXY3UGpzZEtOdWlhY1IwSGZRZU90eTE3LzVo?=
- =?utf-8?B?L2thWkZZbStPVnJubG1lQUxOWTVHT0dVUTZLQk40MTZBaFBDVk11ZG40bEF4?=
- =?utf-8?B?TUFET1ErWWt6ZzlrSVBUTkFQUnVKVkVkc1dkb1luSDhJMzR1UkhKcWRSV1F4?=
- =?utf-8?B?OGU1c1JLYnZ4cmFmUjNSdkJhM01YeUFXeGkzWFJ6ZFV1TmpjQWdObDgrVHdQ?=
- =?utf-8?B?amlpVEZiSWtxeTFRMEQ0VFIyQmhEQ2hFcDVCOGluTUh3SXBGMDNidEZ4cElL?=
- =?utf-8?B?dkdUakIwYzNzUWtZS25aTmFnUjZUZ0JKUDMrQjVPYkJpQjNxV1RnNjZmMVgw?=
- =?utf-8?B?UmJwbGdUZXZ3b0pndTdPVE1xWGdrbGF2L1d2OTMycXVDM2YyQjJwODEwSkI0?=
- =?utf-8?B?OVV1K2JLZlByWmt6eFcvaWNDSXd2Mko3clhRSTRMbHRvOXhES1oxcmlLbHlq?=
- =?utf-8?B?eEhuanZZMU5vdzlmUFRVK0l3ZVVXWXpOcitxRVF4MEp6Y1lrNkgzaU1RZFJ3?=
- =?utf-8?B?d2txdFRYMHpNaGdoRlhkTzlsYXBGSzhPTGVQOTVGM1ZxRllMdGhhSmZpTk4v?=
- =?utf-8?B?L0JMdW1JOS9WSTVrb3dtcklRWEJJMlNMV21wQTk1dnFrTzAyWVhJL0d0MVQw?=
- =?utf-8?B?WnhzZU44TjdZb2UrKzRXYitOUnVzTk85Y1JBa2RyejNRRmFvSXZxOWFGeWxU?=
- =?utf-8?Q?QAUQAq/C8fbepZR13r51SRs7t?=
+	=?utf-8?B?dDNmV1dBRGtEb29XTWpZeklGNXR4anh2MFhuTVh6ZmJoeDAwMXB0K3pqS2d3?=
+ =?utf-8?B?NW9uTlJJd2RhTU4zdFlLY0VrS2RIRWx5QWxnKy9taldRUWw3ZExvMTdyeTJz?=
+ =?utf-8?B?b1lkWGVjcS9GK3pEbkdURVpXNUNQdTNURWdvRmk5QTc3ZGNLVEZuaE5MK2Zv?=
+ =?utf-8?B?anBXOFhmM3lMK3ZxNUNlQmZhRXlHay8rd2NpL3dJVUN0VjVCREpDSWNNUzdH?=
+ =?utf-8?B?bkN4NmhFaCtmUFZDRzZaaUdnelhnd0RHeXEwUXVUSE1IdFRiY1AwOGhvWmlV?=
+ =?utf-8?B?amFjWEtNbkFwMUpMaU5XUXlMK1FLWGlMdUd4aUp5Z2hUMmpFYXRzMHI4Rzdz?=
+ =?utf-8?B?TTQ1NU1iMzdkTmJMN0hxdWxMNE1xZVY3Y0VEVno2MCtVUW9kUWVlVTFFNy84?=
+ =?utf-8?B?VW1wQTRtTGJzeFBuYzV1SHNnNHpjUHhuc3kxazMzWklORlI3SGY0Q3BnbDYv?=
+ =?utf-8?B?cTRjdHptaTB4bWNaaEVuMWkxRjNLV2hzK0QyN25TeG9FOHJqWTd6amtOWHZt?=
+ =?utf-8?B?NnR3dVFWTjlKVTVsK3cvcU8zQ2U2U3pnano5QmNtSHNqSFRYSzVRbDBKYVlX?=
+ =?utf-8?B?T0hzc055Z3A1UEhmMnZMRWxGTTdVdktpL24xbkxJVmtIc3RyRVNRNVkxUnEx?=
+ =?utf-8?B?WkFyU29RNmZNWk5kTnNPa250MCszeUZjL0RGSmVsR3NXNmNkY05NL24yRUtV?=
+ =?utf-8?B?NzFmTWIwaHQ0RGc2V29PZGZlL3h6Vy9TbTQ0T1NFRGxNM2ZSVWIwV0MvZ2gr?=
+ =?utf-8?B?dmVNVW1WREY1N1YxK2wzcjFQZFNSL2x2YVA5L3lkT05odE10K21mRXRpWWU4?=
+ =?utf-8?B?bU1ZM2xnZnE4TWpSSWdBZXBJeG16emJRRE00NDlmTE4yZFBMOHB2QnpvdWQ1?=
+ =?utf-8?B?OG9KOVB5UUJ6Vk5wS2c0QVl4L0o1dzBjQkgvNExWKzRnekhER0VNd0NGZFNK?=
+ =?utf-8?B?SkwwVTd3aElKT0ZoSzk5akdOTWd4em5xc1N3SjRsNHIvci9ub3U2NHBXTnNy?=
+ =?utf-8?B?dGg4OGZta0JoeEt5NTdSOWdURHpoZnNsS1RKNm9WNENncjRUdnhUcGJRTVRa?=
+ =?utf-8?B?QjNxWkpwQ0JiMFcrMGRZZGExK2xZdkFOdkJnSlhSSnpQUFFsOXJBMzNBMU41?=
+ =?utf-8?B?TU5oVFlxODR1TWpFaXk4UVZLa0x5V2VIZlJGWXhmYmUyMkJKV1d6Wm1pSnh6?=
+ =?utf-8?B?SU1obFd3ZCtqQ0V1aU03M21WYzlwUDVRU2piamlnb3R6cjEvVmozV2xlZ2Ft?=
+ =?utf-8?B?dkJLZ3pON2FaOVJCdFFKTDFaYzF4Y3JrZGd0c2xqRzFSMFo0cU8wMHRWUjBo?=
+ =?utf-8?B?bzBNbDdpMGtxZUhOdFUvVjZvSkx2NFk0TWY3dGlVdTlxUnJVSTJTdC9mR1Nn?=
+ =?utf-8?B?bUNTZVZCWDBlT1JyRHJGZTJIaStkem9HMmJMemd0YlBPSS9FS3ZTWXAwaTVR?=
+ =?utf-8?B?MmYzTlF3UGJKV3MyNVMyd2JRQ1pjYUxya3VsK0JWUTFnaEErekgwQXpMS3lY?=
+ =?utf-8?B?dDdDVDRleVhVeFVHSU9mc01EWEcxbWtZWVNJMU1yUmU0MXMzRS9pWXZ5Ymoy?=
+ =?utf-8?B?LzZvbGhmZi9uNFBJTEFVUDlnUEFBaWVDbHhEeUdzeHAzVUNzdTgzVU4yS1VG?=
+ =?utf-8?B?Z09zQ2RtVGRIc09kUUp1UWFpUVFnQytOeUNkbnYrUldXNzY5cUpjZTAxbFli?=
+ =?utf-8?B?V1QvRUlLMzB1cUlSQ2lWb0lFcUlOQXVncjZrVG02N0drR3FRUFlPMVdMaXhT?=
+ =?utf-8?B?b3BNY0xYa2psQUFiTEo2L2VNajhZaWU1MVprdUwyWkUyak1xRkwvcDFlMTk5?=
+ =?utf-8?B?RDdIUTB2QUtDN0pOYkRUZFNqd3Y4Y3JyN2FReWVHRHh4bUZKNnI0WkZtU21X?=
+ =?utf-8?B?bTlZdG9TOTZER1VSYkVSMVRBOGRUNGRENml3WVJiUW85V1B0emZvMi8xcktv?=
+ =?utf-8?B?ZlhmaXN6T3ZHQXVmdmVrellqMTJ2ZFZTQldsd3YxN0V5VFlIcVA4RGxBZFY3?=
+ =?utf-8?B?WU9wZ3QvN0M5SHJaMS9SWWlGeGlZeWxKbmkvUXdSM0RoakxzdmVWU1JnMVNh?=
+ =?utf-8?B?aVlQVDdFcnJWTysxZGkyMWlWWE05czBRWGRhemJTOFV3M0NHRUhCdVNpZ1B4?=
+ =?utf-8?Q?KTekalnyWe+hLQ/Mbvmo801Ct?=
 X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd31b9b0-cec2-4c92-5c09-08dcc7fcfda5
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7fa4793-9ace-4b3e-78e6-08dcc7fda438
 X-MS-Exchange-CrossTenant-AuthSource: GV2PR10MB6186.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 07:34:18.2994
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 07:38:57.7782
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j6x2tKIS7EQBPoagY/RYU+a+azRYq34FzXOMVJltwiVTnZ9Gpd3+qCRdOgPMLRMg4gQcLuA+MDIikb7HqymDSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB6876
+X-MS-Exchange-CrossTenant-UserPrincipalName: K8hFAs6K3frP12r8OBf46f9LQcHicK6fxwVxnppjICXPnR0xZFtUkuWPzF345dmYAbGrfA2xlvR9/MrezWkcXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR10MB5529
 
-On 29.08.24 08:12, Krzysztof Kozlowski wrote:
-> On Wed, Aug 28, 2024 at 08:01:17PM +0200, Jan Kiszka wrote:
+On 29.08.24 08:14, Krzysztof Kozlowski wrote:
+> On Wed, Aug 28, 2024 at 08:01:15PM +0200, Jan Kiszka wrote:
 >> From: Jan Kiszka <jan.kiszka@siemens.com>
 >>
->> Rewrap the long lines at this chance.
+>> The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
+>> to specific regions of host memory. Add the optional property
+>> "memory-regions" to point to such regions of memory when PVU is used.
+>>
+>> Since the PVU deals with system physical addresses, utilizing the PVU
+>> with PCIe devices also requires setting up the VMAP registers to map the
+>> Requester ID of the PCIe device to the CBA Virtual ID, which in turn is
+>> mapped to the system physical address. Hence, describe the VMAP
+>> registers which are optionally unless the PVU shall used for PCIe.
 >>
 >> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 >> ---
->>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 18 ++++++++++++++----
->>  1 file changed, 14 insertions(+), 4 deletions(-)
+>> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+>> CC: "Krzysztof Wilczyński" <kw@linux.com>
+>> CC: Bjorn Helgaas <bhelgaas@google.com>
+>> CC: linux-pci@vger.kernel.org
+>> ---
+>>  .../bindings/pci/ti,am65-pci-host.yaml        | 52 ++++++++++++++-----
+>>  1 file changed, 40 insertions(+), 12 deletions(-)
 >>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+>> index 0a9d10532cc8..d8182bad92de 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+>> @@ -19,16 +19,6 @@ properties:
+>>        - ti,am654-pcie-rc
+>>        - ti,keystone-pcie
+>>  
+>> -  reg:
+>> -    maxItems: 4
+>> -
+>> -  reg-names:
+>> -    items:
+>> -      - const: app
+>> -      - const: dbics
+>> -      - const: config
+>> -      - const: atu
+>> -
 > 
-> You still have DTS packed in the middle of driver changes, suggesting
-> dependency.
+> Properties must be defined in top-level.
 > 
-> Such ordering does not make sense, because entire DTS goes separate tree
-> and branch. It only complicates stuff because if you have dependency,
-> which you cannot have, it won't be that easily visible.
-> 
-> You already got the same comment.
-> 
-> Please fix your driver to remove dependency and ABI break, and then fix
-> the patch order.
+> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
 > 
 
-Could you be a bit more precise in your review, please? Should I also
-pull the last patch to front, or more all DT changes into a separate series?
+Tried that already, moving the else: part to top-level, but dtschema
+(2024.5) checks fail then. Could you explain why?
 
-The PCI driver will not fail unless you ask it for the new feature
-(CONFIG_TI_PVU) AND provide an incomplete DT (DMA pools, but no VMAP regs).
+>>    interrupts:
+>>      maxItems: 1
+>>  
+>> @@ -84,12 +74,48 @@ if:
+>>        enum:
+>>          - ti,am654-pcie-rc
+>>  then:
+>> +  properties:
+>> +    reg:
+>> +      minItems: 4
+>> +      maxItems: 6
+>> +
+>> +    reg-names:
+>> +      minItems: 4
+>> +      items:
+>> +        - const: app
+>> +        - const: dbics
+>> +        - const: config
+>> +        - const: atu
+>> +        - const: vmap_lp
+>> +        - const: vmap_hp
+> 
+> This as well goes to the top.
+> 
+>> +
+>> +    memory-region:
+>> +      minItems: 1
+> 
+> Missing maxItems and this must be defined in top-level.
+> 
 
-Thanks,
+As explained (and documented), there is no maximum. And this does not
+apply to ti,keystone-pcie because only the AM65 supports the PVU.
+
 Jan
 
 -- 
