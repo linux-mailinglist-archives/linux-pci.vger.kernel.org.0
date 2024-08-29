@@ -1,152 +1,150 @@
-Return-Path: <linux-pci+bounces-12418-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12419-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDEA6964059
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 11:38:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04FE2964060
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 11:40:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F00FC1C24736
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 09:38:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A428A1F22FC7
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Aug 2024 09:40:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACBA118E341;
-	Thu, 29 Aug 2024 09:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D403E18E77F;
+	Thu, 29 Aug 2024 09:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V0k1Ed0p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLA3aMAO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C08418E053;
-	Thu, 29 Aug 2024 09:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026BF18E74E;
+	Thu, 29 Aug 2024 09:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724924249; cv=none; b=EwPhNAXX04cX2lc4JXeB5K5WsWmEKxxHN71CM9e/7dD7LmN/wqdAxXto+BVxQd7UgWZaDoZ3SvpMZqY0jv7EHYsMbTrK8uVUqtSpSY0awzoxj9Vh0sPH1g0vmf4+M97pMMSHJWnti1FZoqQBNJMUevYLf1cTX9AAVfs41x1Nw58=
+	t=1724924345; cv=none; b=sq0S/WK8N8KGK91W/7pxZmVS+xH3hY+EJAhL63tJ7CIVynFRejzej4N4lrori55k0TAnCL4g/NchRMuwAkkJkPUuC2SC+/uTeYkw7KmYSpg35lE1JblBbnCq/Lg1NMph5Y9Z7wgEZ+ugAseQ7ht2S1qQlD0vutOz7DF3lbAxzuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724924249; c=relaxed/simple;
-	bh=AsQiOUdqeFNaOGTs/WOSOkZKmODY99yIldxyKcZ3eP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bhv+ZT3+21VCb11jLa+Cp1S09uKA2eX6gFDTvg5RzYviJMHi36eIOGJbvuc0YmedZmJhfaNELYIIAAzANva822WQbVwpvqOP5Y7cZwHnM2gO7c9bFqN7N23XJrdvO6LYBBVB10uZBK/v4975UJvECZb4PyrWJ9+L34xaLVkXCAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V0k1Ed0p; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724924248; x=1756460248;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AsQiOUdqeFNaOGTs/WOSOkZKmODY99yIldxyKcZ3eP0=;
-  b=V0k1Ed0p0KORm8YAKC0XRtqNSJIYuGZrws9omNF9KysP02l0cRzkhwrn
-   HWVWJtt9gdZskHmY5G3/Jk3EZSwtaBnoBOH2UklQ6T1d1Wbiy1QPKXiez
-   Klwnw4f28KljQlLZDy/Olv2loWU3yYfBCjLPNLiucXRawDUvDUxadZaKS
-   6U9FRXrckYY3lzaUwDomvOPx9cPZyQbPn3+DHAyPsJcFR455CKkIWUdnK
-   Kfgv+VZSK+hR2iTielyxo0uqLXF8DXpXu0PS6R1lUo06zpLwwtEQXre9l
-   zporukM29EO/MLxTR+e9TdTT6SXVdDiFoutkhpBLx7DHRkzVoCOdlAfSp
-   Q==;
-X-CSE-ConnectionGUID: 3yZuAta4SMKGeBQbx9v8ZQ==
-X-CSE-MsgGUID: IUtGT53vTAebkk91XGYfcQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="34659697"
-X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="34659697"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 02:37:28 -0700
-X-CSE-ConnectionGUID: +v6HzWNLTYGlHe9yRXv/xg==
-X-CSE-MsgGUID: nuiL9r1NRTaSeHbvhO9P7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="63859002"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa006.jf.intel.com with ESMTP; 29 Aug 2024 02:37:23 -0700
-Date: Thu, 29 Aug 2024 17:34:52 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"pratikrajesh.sampat@amd.com" <pratikrajesh.sampat@amd.com>,
-	"michael.day@amd.com" <michael.day@amd.com>,
-	"david.kaplan@amd.com" <david.kaplan@amd.com>,
-	"dhaval.giani@amd.com" <dhaval.giani@amd.com>,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>,
-	"david@redhat.com" <david@redhat.com>
-Subject: Re: [RFC PATCH 12/21] KVM: IOMMUFD: MEMFD: Map private pages
-Message-ID: <ZtBAvKyWWiF5mYqc@yilunxu-OptiPlex-7050>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-13-aik@amd.com>
- <BN9PR11MB5276D14D4E3F9CB26FBDE36C8C8B2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20240826123024.GF3773488@nvidia.com>
+	s=arc-20240116; t=1724924345; c=relaxed/simple;
+	bh=QWSike9VpwQyStGczi0sxlL099ZlneJb2gi1J/Ddo8A=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=bgPpbcrZ4bX5Ov5nM/OvMEeGHiPFW0ycuV/DFu1kJcQQRpVQF7B3x8XQ0Wfr3US9Af/O4sEdCbcZT31nlPuriWvlcztLvB8ll61ynOu+m805C+pZzztwepLBBDe/+8L8jlmbhUOp+c4DcEMgIK1+SKKbYcMT3NVcXAuartMdloI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GLA3aMAO; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f4f8742138so5214361fa.0;
+        Thu, 29 Aug 2024 02:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724924342; x=1725529142; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2hbF3uMnM7NmwPcRt6ZaNxjqp4u1ebyZqTFRyY9sGTo=;
+        b=GLA3aMAO+Iqu28/in5dzl3Jqsfz7AiBrvre5Ksq+No/6Qv3+aB4xVuzt1zgQgSMwxq
+         UW+o1Vf5hlllLVeJ95hBXcYZVSaxAI0tUpJeZ5eXChtscJ3eYnLGjaEc+aNRhXBA/7cQ
+         bbTWp5tgKyz26kJWu+oQMBXUC3/0BVBEy5SNHEjlE+53wJrNByukduiknZjqfg02Ne4p
+         7NCentAH4IHd5inCj6gm9+Hxtm5a0nFYhO0mkHYXEWqdjFLrLmVKXofVNXuWQ+L8k0Gt
+         pVz/ifRBKK7Y8LyMuhgUkFdi/AylwjQ4CGa20PIMF69y8i444966A1TIHYxYlNiPI8lq
+         Urvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724924342; x=1725529142;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2hbF3uMnM7NmwPcRt6ZaNxjqp4u1ebyZqTFRyY9sGTo=;
+        b=LyIAW2F6zWb7GExMjvoGQ8aWK0JXb2kjtE8J//XQdH1JlksVli6N4kw9Uqn4D2y+Zb
+         yvrs3oY6QLyM8+lFUHz+L/PF7eY8S7tc4qUBBFcdtpVbSGdEwHleZ+ltekeFtI1TSVoT
+         kn5H32iwAvGOEM8afo4wCyT6NFWwuBLzD2JuyQpgogHpoytyDD1i1zZwj+FdcVQrlWUy
+         NE4q4txQsxaVaJjN9jIcSEGxp2tC9WhenTdFgW3F9BpYoacKr1abjPF4ZDtCSzwDztq5
+         DiUjk75uDOFYnfTYKx9EKeMVP7Hnj/P4v8ZpUNj1mZ8MLxnPk+PfpDnz5UUSf1QjXwSk
+         W9QA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFfxHTHauRzsldkO8Zw4W2X+yOfDnXBrmNz9XHVvbRHAMy6hJ63E5DY4ny51AHo5b7+JhJPBdqC0mU@vger.kernel.org, AJvYcCVVra0aSOgZhGwP6h2CXP0G4jbqq+3o7hLhjeZeA4/LQsoVLOAqX2T5sPrxrvPYvROy28XBnwAKP/YRfEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2V1iz89+wvh/L06JoXGCbdC1v9niP/pw5X+wIFsjVvI/4cD6a
+	XQ3idfIEwJt9YwiTaE8vV8EVpBLLlVC7bDt5DXqvjfnLmDg+XaDW
+X-Google-Smtp-Source: AGHT+IEl3gdYEee1AFWa2qjbOMcMGHCyHZVZXt92+u4wIHzgP73YdKmvKxD+7CNkAiMz6DGvnkoN2A==
+X-Received: by 2002:a2e:be89:0:b0:2ef:2450:81f3 with SMTP id 38308e7fff4ca-2f6105b5720mr17354741fa.6.1724924341444;
+        Thu, 29 Aug 2024 02:39:01 -0700 (PDT)
+Received: from [192.168.1.105] ([178.176.75.17])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f614f37dc3sm1316491fa.59.2024.08.29.02.38.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2024 02:39:00 -0700 (PDT)
+Subject: Re: [PATCH] usb: xHCI: add XHCI_RESET_ON_RESUME quirk for Phytium
+ xHCI host
+To: WangYuli <wangyuli@uniontech.com>, mathias.nyman@intel.com,
+ gregkh@linuxfoundation.org, bhelgaas@google.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, guanwentao@uniontech.com, zhanjun@uniontech.com,
+ Chen Baozi <chenbaozi@phytium.com.cn>,
+ Wang Zhimin <wangzhimin1179@phytium.com.cn>,
+ Chen Zhenhua <chenzhenhua@phytium.com.cn>,
+ Wang Yinfeng <wangyinfeng@phytium.com.cn>,
+ Jiakun Shuai <shuaijiakun1288@phytium.com.cn>
+References: <59E000092FD56E43+20240829073005.304698-1-wangyuli@uniontech.com>
+From: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <99754b01-51a0-29d3-6022-4e25130ff36a@gmail.com>
+Date: Thu, 29 Aug 2024 12:38:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240826123024.GF3773488@nvidia.com>
+In-Reply-To: <59E000092FD56E43+20240829073005.304698-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 26, 2024 at 09:30:24AM -0300, Jason Gunthorpe wrote:
-> On Mon, Aug 26, 2024 at 08:39:25AM +0000, Tian, Kevin wrote:
-> > > IOMMUFD calls get_user_pages() for every mapping which will allocate
-> > > shared memory instead of using private memory managed by the KVM and
-> > > MEMFD.
-> > > 
-> > > Add support for IOMMUFD fd to the VFIO KVM device's KVM_DEV_VFIO_FILE
-> > > API
-> > > similar to already existing VFIO device and VFIO group fds.
-> > > This addition registers the KVM in IOMMUFD with a callback to get a pfn
-> > > for guest private memory for mapping it later in the IOMMU.
-> > > No callback for free as it is generic folio_put() for now.
-> > > 
-> > > The aforementioned callback uses uptr to calculate the offset into
-> > > the KVM memory slot and find private backing pfn, copies
-> > > kvm_gmem_get_pfn() pretty much.
-> > > 
-> > > This relies on private pages to be pinned beforehand.
-> > > 
-> > 
-> > There was a related discussion [1] which leans toward the conclusion
-> > that the IOMMU page table for private memory will be managed by
-> > the secure world i.e. the KVM path.
-> 
-> It is still effectively true, AMD's design has duplication, the RMP
-> table has the mappings to validate GPA and that is all managed in the
-> secure world.
-> 
-> They just want another copy of that information in the unsecure world
-> in the form of page tables :\
-> 
-> > btw going down this path it's clearer to extend the MAP_DMA
-> > uAPI to accept {gmemfd, offset} than adding a callback to KVM.
-> 
-> Yes, we want a DMA MAP from memfd sort of API in general. So it should
-> go directly to guest memfd with no kvm entanglement.
+On 8/29/24 10:30 AM, WangYuli wrote:
 
-A uAPI like ioctl(MAP_DMA, gmemfd, offset, iova) still means userspace
-takes control of the IOMMU mapping in the unsecure world. But as
-mentioned, the unsecure world mapping is just a "copy" and has no
-generic meaning without the CoCo-VM context. Seems no need for userspace
-to repeat the "copy" for IOMMU.
+> The resume operation of Phytium Px210 xHCI host would failed
 
-Maybe userspace could just find a way to link the KVM context to IOMMU
-at the first place, then let KVM & IOMMU directly negotiate the mapping
-at runtime.
+   Fail?
 
-Thanks,
-Yilun
-
+> to restore state. Use the XHCI_RESET_ON_RESUME quirk to skip
+> it and reset the controller after resume.
 > 
-> Jason
-> 
+> Co-developed-by: Chen Baozi <chenbaozi@phytium.com.cn>
+> Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
+> Co-developed-by: Wang Zhimin <wangzhimin1179@phytium.com.cn>
+> Signed-off-by: Wang Zhimin <wangzhimin1179@phytium.com.cn>
+> Co-developed-by: Chen Zhenhua <chenzhenhua@phytium.com.cn>
+> Signed-off-by: Chen Zhenhua <chenzhenhua@phytium.com.cn>
+> Co-developed-by: Wang Yinfeng <wangyinfeng@phytium.com.cn>
+> Signed-off-by: Wang Yinfeng <wangyinfeng@phytium.com.cn>
+> Co-developed-by: Jiakun Shuai <shuaijiakun1288@phytium.com.cn>
+> Signed-off-by: Jiakun Shuai <shuaijiakun1288@phytium.com.cn>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+[...]
+
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index b5705ed01d83..af967644489c 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -55,6 +55,8 @@
+>  #define PCI_DEVICE_ID_INTEL_ALDER_LAKE_PCH_XHCI		0x51ed
+>  #define PCI_DEVICE_ID_INTEL_ALDER_LAKE_N_PCH_XHCI	0x54ed
+>  
+> +#define PCI_DEVICE_ID_PHYTIUM_XHCI			0xdc27
+> +
+>  /* Thunderbolt */
+>  #define PCI_DEVICE_ID_INTEL_MAPLE_RIDGE_XHCI		0x1138
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_XHCI	0x15b5
+> @@ -407,6 +409,10 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  	if (pdev->vendor == PCI_VENDOR_ID_VIA)
+>  		xhci->quirks |= XHCI_RESET_ON_RESUME;
+>  
+> +	if (pdev->vendor == PCI_VENDOR_ID_PHYTIUM ||
+
+   Hm, ||, not &&?
+
+> +	    pdev->device == PCI_DEVICE_ID_PHYTIUM_XHCI)
+> +		xhci->quirks |= XHCI_RESET_ON_RESUME;
+> +
+>  	/* See https://bugzilla.kernel.org/show_bug.cgi?id=79511 */
+>  	if (pdev->vendor == PCI_VENDOR_ID_VIA &&
+>  			pdev->device == 0x3432)
+[...]
+
+MBR, Sergey
 
