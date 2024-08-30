@@ -1,178 +1,214 @@
-Return-Path: <linux-pci+bounces-12530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFF969668E8
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 20:28:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D550E966959
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 21:12:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4FDF1C22309
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 18:28:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 051AC1C2299F
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 19:12:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E3D1BC095;
-	Fri, 30 Aug 2024 18:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1DC41BD4E8;
+	Fri, 30 Aug 2024 19:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZw9zYlB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sUNjx4jH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E614C585;
-	Fri, 30 Aug 2024 18:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855751BD4E5;
+	Fri, 30 Aug 2024 19:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725042482; cv=none; b=bifIiTyzvQ81x5HsL6Q0pp258ubAlscxi0CBLU1UNxkHSNpOmyB/mhJC3cJg0EGGCbZp+U0G4j99atk376PmqbGVDQUmwi4DQYjql8OYdODF/pryyYymz8NJ4y98MQXtVp+ju6OFqXI3aiT9b9HpRhHG8mqmVuqSljKj7IdYrWo=
+	t=1725045091; cv=none; b=KLVTUJRtIs9CZq4ZzWvxM1nNicoT39D7mDV4RamP08QkUBK+XWc1E7GdbVw82XmgL6YjDUkEVF+UVr9JhpGFMst8Ma75x62TMSXdmvAVY5yB4QDsPg2L1nAHmoZ/++76+1iH0vtvE8dUrOqTWudiqtK+llenixOPmgOybb998XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725042482; c=relaxed/simple;
-	bh=f5Uc5k5MsEWXT0HDmaPjKPSyz/7E7DKh4+BY1PUsbVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BWBioSQNWb6FWj6Xv5X1sAdbTbyjMD/qHT9AjA+jXqVxf18G+YHvQp0k0Tsaz9Rm9IZi+R6OWw9UnmjlBlSOI+/8sXXGDBevXiUc8lkjK5X6jzWl7CIs/BgHYUnE0UehRJ7o/A2OAN6vkf2xrcih7Da1tPUMgzPQ1dWzEzX7Jh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZw9zYlB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77642C4CEC4;
-	Fri, 30 Aug 2024 18:28:01 +0000 (UTC)
+	s=arc-20240116; t=1725045091; c=relaxed/simple;
+	bh=t2rLa4qLBaeQmb8d7MyO0jie2JSa7eFtQpHu1NNFc8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=R0ScKHjjV4rmz10xV9ToUWIMNM8KAPCoenoXHhYwpLAgEbCLpmeTzCCBLD2QE4UafufHuTZxCG4haZqYozWZCHFCqGYdMoPbZVWFgeqGB9Q6PILjc+fE4A0dOdRAi8xUtY7EnY0oP8nyVMaiqxicUpx2D1z3uPZ/OkcVjvNWCzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sUNjx4jH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D468DC4CEC2;
+	Fri, 30 Aug 2024 19:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725042481;
-	bh=f5Uc5k5MsEWXT0HDmaPjKPSyz/7E7DKh4+BY1PUsbVo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tZw9zYlBB3g5eplwmqwDuXZj66pLzG7m+54tkBkcDUj1oZ68+xI6EdlFYTOrcHQzc
-	 5X8AXWsHcPvAr2C5XAbm56EwdXy57n3WnPP5I3SFK4pPrFcY2GlBof6kBPHR19rK2t
-	 UHSGAPt1+B/ZYSUOnTnAlgjPWh+VHTVOjtGrZy1Mhpea1jqm+qnuNsb76/G4ACeBdt
-	 PDVROZTa5ctZ30DiryM3zkZeZG9FeGri895jfshIvfAEPtxkTCCKE2VcMabMeHKqpO
-	 NGMIwjO2SHaFrqc5pzuDyNaD/ORFAMGoBgCRaQaK0OteHQm+krqqpV1+3/ba+RXpc/
-	 nHg5W/6dMTgnA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5334c4d6829so2855708e87.2;
-        Fri, 30 Aug 2024 11:28:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUKM00D8wAxF98/OLZM1pMgT3jUJbid4mC87dmL4ZMIW6TaO28FMV+LwYxvgDxJx6BmPnBQGtWPBdPL@vger.kernel.org, AJvYcCUbclfWQJ1jDVhtC+CtouBNY+rrdb5JCAeiv4t16ZUp5EBNCdqp+vLgKnMLIkmFTv8+eRduXDe7N6ha3d0D@vger.kernel.org, AJvYcCVTwhY5+WgmAbWOSRQdDYEgdChsnHh5vo59HAp9ZJdfV/it6GZpgZu8NzlRXMyevICVUv0M0OlurAUJ@vger.kernel.org, AJvYcCWQrdUp/m+ntbNJFxhXix0POwyFHF55fnYwNBFTFj/XRDEanUkObyshx0GOlt6gFSyUs7H5gZs6KnZL0Q==@vger.kernel.org, AJvYcCWUj3YOEqr+KLSGTm+J3iJG9l15c1hhW/nFj79lXSyzXZ6lp3M5ilktW01F0kiMmi/g90QmqZZcKxT+@vger.kernel.org, AJvYcCX0Wvh5bPaFkcMM3VCrT8LgzNm3Bd1JDau2ie2xDNW00osddV3Bi7a3Ar906ZsDSJlW8prr43ERbEYzSw==@vger.kernel.org, AJvYcCX9cvq+VctDLzp/0rILSKogQy7yqM61yyYEkriJBIjVfbVI7f4kx6Zs13Vq2GLchPtiLn25EQKj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5OVsLE+q1tQET83J3sx03PV/6dDvL27gOJDoCaplDyg1rPA4u
-	kcdJO5XLptJnO7hkCmpvSHhiltAw8U/dv2wRMJ+fUplddi5kqV6tFmDOPMHUDPOSMniKjGgR1Q9
-	pdQrE7/DQnB3+rT8wHzJ7pBssBw==
-X-Google-Smtp-Source: AGHT+IHkKGY89CPI6FFA16aU1d1oJTlBeNFiYnaYKv5/UM42MiQxOpY0Lv8jGLq5OjBzmO9YOzgtvsD8lUsQ5sxBIsk=
-X-Received: by 2002:a05:6512:2c92:b0:530:e323:b1cd with SMTP id
- 2adb3069b0e04-53546bab46bmr2046490e87.40.1725042479576; Fri, 30 Aug 2024
- 11:27:59 -0700 (PDT)
+	s=k20201202; t=1725045091;
+	bh=t2rLa4qLBaeQmb8d7MyO0jie2JSa7eFtQpHu1NNFc8Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sUNjx4jH+xRMLWMZWVXbXZhM3sIz2p+Fl09oo0Sv3dTSs2LbMQSYfrdAUuamBT1FM
+	 CdRNKKrp38c9yp0x/vXtrtMgjE6zU7C9s6tyK3JAqdXynKzf4cLe+2V9ZSFOewOhOs
+	 W/eyAoalF51GI5YCDLyI578onnyAQs+b0dxy+bajngoJGxlbaPuBgT5buSDqiy1Xfi
+	 xEgQ2Ne3Hp8tOdv5UGyw8BPZJbz7tSpJJA/dd7GVtHXAWrD+St6z3XsJutPl3dSpVo
+	 vYB6xPe8oJqWU3OuqC7PTbMobQG87x7xFMnAQUNiWX5NFkolEte4P2MH21gt/0GNDj
+	 lQYY5mMajmKWA==
+Date: Fri, 30 Aug 2024 14:11:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v5 7/7] PCI: Create helper to print TLP Header and Prefix
+ Log
+Message-ID: <20240830191129.GA115840@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1724159867.git.andrea.porta@suse.com> <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <98c570cb-c2ca-4816-9ca4-94033f7fb3fb@gmx.net> <ZshZ6yAmyFoiF5qu@apocalypse>
- <015a0dd9-7a13-45b7-971a-19775a6bdd04@gmx.net> <Zsi5fNftL21vqJ3w@apocalypse>
-In-Reply-To: <Zsi5fNftL21vqJ3w@apocalypse>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 30 Aug 2024 13:27:46 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
-Message-ID: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-To: Stefan Wahren <wahrenst@gmx.net>, Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240514113109.6690-8-ilpo.jarvinen@linux.intel.com>
 
-On Fri, Aug 23, 2024 at 11:31=E2=80=AFAM Andrea della Porta
-<andrea.porta@suse.com> wrote:
->
-> Hi Stefan,
->
-> On 12:23 Fri 23 Aug     , Stefan Wahren wrote:
-> > Hi Andrea,
-> >
-> > Am 23.08.24 um 11:44 schrieb Andrea della Porta:
-> > > Hi Stefan,
-> > >
-> > > On 18:20 Wed 21 Aug     , Stefan Wahren wrote:
-> > > > Hi Andrea,
-> > > >
-> > > > Am 20.08.24 um 16:36 schrieb Andrea della Porta:
-> > > > > The RaspberryPi RP1 is ia PCI multi function device containing
-> > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > > and others.
-> > > > sorry, i cannot provide you a code review, but just some comments. =
-multi
-> > > > function device suggests "mfd" subsystem or at least "soc" . I won'=
-t
-> > > > recommend misc driver here.
-> > > It's true that RP1 can be called an MFD but the reason for not placin=
-g
-> > > it in mfd subsystem are twofold:
-> > >
-> > > - these discussions are quite clear about this matter: please see [1]
-> > >    and [2]
-> > > - the current driver use no mfd API at all
-> > >
-> > > This RP1 driver is not currently addressing any aspect of ARM core in=
- the
-> > > SoC so I would say it should not stay in drivers/soc / either, as als=
-o
-> > > condifirmed by [2] again and [3] (note that Microchip LAN966x is a ve=
-ry
-> > > close fit to what we have here on RP1).
-> > thanks i was aware of these discussions. A pointer to them or at least =
-a
-> > short statement in the cover letter would be great.
->
-> Sure, consider it done.
->
-> > >
-> > > > > Implement a bare minimum driver to operate the RP1, leveraging
-> > > > > actual OF based driver implementations for the on-borad periphera=
-ls
-> > > > > by loading a devicetree overlay during driver probe.
-> > > > Can you please explain why this should be a DT overlay? The RP1 is
-> > > > assembled on the Raspberry Pi 5 PCB. DT overlays are typically for =
-loose
-> > > > connections like displays or HATs. I think a DTSI just for the RP1 =
-would
-> > > > fit better and is easier to read.
-> > > The dtsi solution you proposed is the one adopted downstream. It has =
-its
-> > > benefits of course, but there's more.
-> > > With the overlay approach we can achieve more generic and agnostic ap=
-proach
-> > > to managing this chipset, being that it is a PCI endpoint and could b=
-e
-> > > possibly be reused in other hw implementations. I believe a similar
-> > > reasoning could be applied to Bootlin's Microchip LAN966x patchset as
-> > > well, and they also choose to approach the dtb overlay.
-> > Could please add this point in the commit message. Doesn't introduce
->
-> Ack.
->
-> > (maintainence) issues in case U-Boot needs a RP1 driver, too?
->
-> Good point. Right now u-boot does not support RP1 nor PCIe (which is a
-> prerequisite for RP1 to work) on Rpi5 and I'm quite sure that it will be
-> so in the near future. Of course I cannot guarantee this will be the case
-> far away in time.
->
-> Since u-boot is lacking support for RP1 we cannot really produce some tes=
-t
-> results to check the compatibility versus kernel dtb overlay but we can
-> speculate a little bit about it. AFAIK u-boot would probably place the rp=
-1
-> node directly under its pcie@12000 node in DT while the dtb overlay will =
-use
-> dynamically created PCI endpoint node (dev@0) as parent for rp1 node.
+On Tue, May 14, 2024 at 02:31:09PM +0300, Ilpo Järvinen wrote:
+> Add pcie_print_tlp_log() helper to print TLP Header and Prefix Log.
+> Print End-End Prefixes only if they are non-zero.
+> 
+> Consolidate the few places which currently print TLP using custom
+> formatting.
+> 
+> The first attempt used pr_cont() instead of building a string first but
+> it turns out pr_cont() is not compatible with pci_err() and prints on a
+> separate line. When I asked about this, Andy Shevchenko suggested
+> pr_cont() should not be used in the first place (to eventually get rid
+> of it) so pr_cont() is now replaced with building the string first.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>  drivers/pci/pci.h      |  2 ++
+>  drivers/pci/pcie/aer.c | 10 ++--------
+>  drivers/pci/pcie/dpc.c |  5 +----
+>  drivers/pci/pcie/tlp.c | 31 +++++++++++++++++++++++++++++++
+>  4 files changed, 36 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 7afdd71f9026..45083e62892c 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -423,6 +423,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>  int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>  		      unsigned int tlp_len, struct pcie_tlp_log *log);
+>  unsigned int aer_tlp_log_len(struct pci_dev *dev);
+> +void pcie_print_tlp_log(const struct pci_dev *dev,
+> +			const struct pcie_tlp_log *log, const char *pfx);
+>  #endif	/* CONFIG_PCIEAER */
+>  
+>  #ifdef CONFIG_PCIEPORTBUS
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index ecc1dea5a208..efb9e728fe94 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -664,12 +664,6 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>  	}
+>  }
+>  
+> -static void __print_tlp_header(struct pci_dev *dev, struct pcie_tlp_log *t)
+> -{
+> -	pci_err(dev, "  TLP Header: %08x %08x %08x %08x\n",
+> -		t->dw[0], t->dw[1], t->dw[2], t->dw[3]);
+> -}
+> -
+>  static void __aer_print_error(struct pci_dev *dev,
+>  			      struct aer_err_info *info)
+>  {
+> @@ -724,7 +718,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	__aer_print_error(dev, info);
+>  
+>  	if (info->tlp_header_valid)
+> -		__print_tlp_header(dev, &info->tlp);
+> +		pcie_print_tlp_log(dev, &info->tlp, "  ");
 
-u-boot could do that and it would not be following the 25+ year old
-PCI bus bindings. Some things may be argued about as "Linux bindings",
-but that isn't one of them.
+I see you went to some trouble to preserve the previous output, down
+to the number of spaces prefixing it.
 
-Rob
+But more than the leading spaces, I think what people will notice is
+that previously AER and DPC dmesgs contain the "AER: " or "DPC: "
+prefixes implicitly added by the dev_fmt definitions [1], where now
+IIUC they won't.
+
+I think adding dev_fmt("") here should take care of that, e.g.,
+
+  pcie_print_tlp_log(dev, &info->tlp, dev_fmt(""));
+
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1990272
+
+>  out:
+>  	if (info->id && info->error_dev_num > 1 && info->id == id)
+> @@ -796,7 +790,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  			aer->uncor_severity);
+>  
+>  	if (tlp_header_valid)
+> -		__print_tlp_header(dev, &aer->header_log);
+> +		pcie_print_tlp_log(dev, &aer->header_log, "  ");
+>  
+>  	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>  			aer_severity, tlp_header_valid, &aer->header_log);
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 5056cc6961ec..598f74384471 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -220,10 +220,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+>  	pcie_read_tlp_log(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG,
+>  			  cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG,
+>  			  dpc_tlp_log_len(pdev), &tlp_log);
+> -	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
+> -		tlp_log.dw[0], tlp_log.dw[1], tlp_log.dw[2], tlp_log.dw[3]);
+> -	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++)
+> -		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, tlp_log.prefix[i]);
+> +	pcie_print_tlp_log(pdev, &tlp_log, "");
+>  
+>  	if (pdev->dpc_rp_log_size < 5)
+>  		goto clear_status;
+> diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
+> index def9dd7b73e8..097ac8514e96 100644
+> --- a/drivers/pci/pcie/tlp.c
+> +++ b/drivers/pci/pcie/tlp.c
+> @@ -6,6 +6,7 @@
+>   */
+>  
+>  #include <linux/aer.h>
+> +#include <linux/array_size.h>
+>  #include <linux/pci.h>
+>  #include <linux/string.h>
+>  
+> @@ -76,3 +77,33 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>  
+>  	return 0;
+>  }
+> +
+> +/**
+> + * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
+> + * @dev: PCIe device
+> + * @log: TLP Log structure
+> + * @pfx: String prefix (for print out indentation)
+> + *
+> + * Prints TLP Header and Prefix Log information held by @log.
+> + */
+> +void pcie_print_tlp_log(const struct pci_dev *dev,
+> +			const struct pcie_tlp_log *log, const char *pfx)
+> +{
+> +	char buf[(10 + 1) * (4 + ARRAY_SIZE(log->prefix)) + 14 + 1];
+> +	unsigned int i;
+> +	int len;
+> +
+> +	len = scnprintf(buf, sizeof(buf), "%#010x %#010x %#010x %#010x",
+> +			log->dw[0], log->dw[1], log->dw[2], log->dw[3]);
+> +
+> +	if (log->prefix[0])
+> +		len += scnprintf(buf + len, sizeof(buf) - len, " E-E Prefixes:");
+> +	for (i = 0; i < ARRAY_SIZE(log->prefix); i++) {
+> +		if (!log->prefix[i])
+> +			break;
+> +		len += scnprintf(buf + len, sizeof(buf) - len,
+> +				 " %#010x", log->prefix[i]);
+> +	}
+> +
+> +	pci_err(dev, "%sTLP Header: %s\n", pfx, buf);
+> +}
+> -- 
+> 2.39.2
+> 
 
