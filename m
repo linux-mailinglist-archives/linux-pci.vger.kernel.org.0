@@ -1,178 +1,113 @@
-Return-Path: <linux-pci+bounces-12500-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12501-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3121965A2C
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 10:23:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47506965A30
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 10:23:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD9328AF93
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 08:23:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6C361F2409A
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 08:23:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D09413635E;
-	Fri, 30 Aug 2024 08:23:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE6516BE2B;
+	Fri, 30 Aug 2024 08:23:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y58JmQi7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agb3mJpH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DDD1667ED
-	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 08:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FC116726E;
+	Fri, 30 Aug 2024 08:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725006214; cv=none; b=ONsWwHDfmETRp+fnIuryek47axhzQDdv7E2SotbvYWXctncBnw47lRREzW8MWxRypsOJp+LBW9qkT2urarnMrfaIbPkGz61FQWMWs5xCVediVzPmyoL7ME/K02TUMmNGnkMVAPUjQ3qYrRYA5LexpWaT9LxxnwEMFFgsG1t8ldA=
+	t=1725006227; cv=none; b=u5OQi1v7Bh4pfMoentWPokTfln8kIHEWlhn8wGY3oATPFBt0MZGO/czxktEcRjxE75TYRZ9enLoU7gQkqgaaY0x/AiJeaXkBoCTSrA482G2n+9AT5W6HD70vadqrNWT2A4Vz2mdaHc3d0W8/DWLYW/YVISCqjXRLlu3dDRtIRrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725006214; c=relaxed/simple;
-	bh=dOvy8lq/EHJgmko75sUxm42JQCa3y8fE26e1sl4RadQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HIPrmodLXEx5lfFDmKeUVzAQiWFkp4KJmEKAJATk+XHQZOUkyOUmTgmbOKuzwXfsaBATQnUHgqHO12bGZ4ExNZzSqn7XAZUB4cHjy5lacf7iHydurr4KTnorCzTOy9xJgLP/asmOWcDjmDz0fSfv9LV0d6862m2+YP705q7gg+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y58JmQi7; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-70943713472so718702a34.2
-        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 01:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725006211; x=1725611011; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iwkXS2XE5Tkc0QlVhME91uwM7bEp3jrm2KHPu4Lpqm8=;
-        b=Y58JmQi7kq4itQiJnSlbl/zhiuY9+4OG/BLYnz9tAQWDDgeuj5zZUrFK+kmoKGkRGu
-         guj//lpr+deERV0Ef1JvqzHq5Bripolb7PhI1+VpudYVzgNm9/1MRYRYU4rruocy+Hxb
-         LcyxX33OPZdgI9l7205GR3Ts198JhTaJ0alFc1/neiyusfLQnXq3sBA1Vca2grzNaKC7
-         dh8WOK5jWzhHqkpuxDOVAOk41KKcG3GnTDyG17H5cEuGPMskkktGuTwTah25FEX8fVeh
-         lv1Q4YKhZqQBUknD9ykn9RZE6xnvJ2brChMwlboGUJ1L5qMo9FMhwUrwWkEWzNOPReOk
-         r3uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725006211; x=1725611011;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iwkXS2XE5Tkc0QlVhME91uwM7bEp3jrm2KHPu4Lpqm8=;
-        b=wqGtVAYGnE1YcveeWAxTAh7cbZI7JXu2HtrNu2u4VjQ4W9Gl7nu03oJiz5oDMhM1Zq
-         ShMxQM/W1VLBhpJJT1v7N7HeuAH+1HEHTSj4eUDw2tSo9FASY1ZG1kAusjRMcFWohSxf
-         Y+BU45NYyOgtYAOJvLtrIgl0Z61bHMtVfzCv8M+Kji5ZdiE2WMiNF47fxxPGmRpyWPvv
-         RfSER9xo631tO6vTWzh2FxYJ+SOmqQc37TZ4e2KQYg7ythxrtqFfJJreybzV9u+cXdf9
-         6Hx+i3HNenAYOwc3s+yXe2OfHLXWReMmtK77BrHFbdRsRs3XuPUaslmgwUhZ7M+DPB49
-         ZTFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfgDRv66ElIb+aVu1R/pe14kcBbRiqMvnFK/DI8X4urS51iWTZdhl2OTDN/URSmO9CsWWkm2USVPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfFuPN19r7AaLFdTJeKMP7DxsXZpHp7DH/SZxUIIEtqlvahX4v
-	VCCW7KX8BI3dYAY9y/FKKH/aTAV6Mw6bsqPQg0t2KZzcpMgMJ4gh5DuLgTiPyQ==
-X-Google-Smtp-Source: AGHT+IGQ9ZFGuWGC0MxA2Z/ohzzOno+rbi7BFhIeUOBZkKWCdB3C8rji4O6xHmPZhJ8tf79hvt7rKg==
-X-Received: by 2002:a05:6358:5289:b0:1b1:a91f:9f7e with SMTP id e5c5f4694b2df-1b603cb7acdmr711886455d.24.1725006210984;
-        Fri, 30 Aug 2024 01:23:30 -0700 (PDT)
-Received: from localhost.localdomain ([117.193.213.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e5576c90sm2265623b3a.2.2024.08.30.01.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 01:23:30 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com
-Cc: robh@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v3] PCI: qcom-ep: Enable controller resources like PHY only after refclk is available
-Date: Fri, 30 Aug 2024 13:53:19 +0530
-Message-Id: <20240830082319.51387-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1725006227; c=relaxed/simple;
+	bh=3Y9mMq3/KBsce91Bb2CDzhvN2+J+/hQB5/+wKDGtYzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oy7CtjTkB00BF6utjjayv5fBUegCPjKyZHXQpOfAJVVn2jYrazWFxP44C9Zo5E4+XpAceSKy4v+b4bX/Hoo73jvNGHjxz2HT1eS3UCB+u77v86zhMTBJNHPzoc+oyt8MFKkuUm6R+Hc2jbm1qiO7a6i5Oz3zwwxUwEwK6bklzvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agb3mJpH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94914C4CEC2;
+	Fri, 30 Aug 2024 08:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725006227;
+	bh=3Y9mMq3/KBsce91Bb2CDzhvN2+J+/hQB5/+wKDGtYzw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=agb3mJpHsKBiXBBdsw3MLK1eOD5wm1M0YQCjOdirZwfj4JOS6W9nuCLKAe9oRZToo
+	 UFpENv9l2Ej+SlyWHrVTPicbbf+iKligkNhJ6l0m2Z1hR/5tA+RAy+MvrmhY0ST0VP
+	 huMgtsNGHkuOS2SUKU28kN1vJ6l+rrJ1gS8yoR4bFmTyPN0xcKNcpF/6sxf7N9ev92
+	 0se7wu82ZBQKXhejuWr233rXiJTOmQgIKV7sSboPcQ44cOph+a6TPdHzrytLThLAo0
+	 N2eAYW376rP2/zWP0t0UKDpAj3FdPoRUSp8dowoUzS/LM8GYmCnabaPh6CIf8Pvtns
+	 qqbXacVbJq0+A==
+Date: Fri, 30 Aug 2024 10:23:44 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sricharan R <quic_srichara@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
+	p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, robimarko@gmail.com
+Subject: Re: [PATCH V3 1/6] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe
+ uniphy
+Message-ID: <e2qgpvfccpo2sd4mbrynxruvt5attqmtd5oik26of7tv7u4lq6@kvb63sglwa5b>
+References: <20240830081132.4016860-1-quic_srichara@quicinc.com>
+ <20240830081132.4016860-2-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240830081132.4016860-2-quic_srichara@quicinc.com>
 
-qcom_pcie_enable_resources() is called by qcom_pcie_ep_probe() and it
-enables the controller resources like clocks, regulator, PHY. On one of the
-new unreleased Qcom SoC, PHY enablement depends on the active refclk. And
-on all of the supported Qcom endpoint SoCs, refclk comes from the host
-(RC). So calling qcom_pcie_enable_resources() without refclk causes the
-NoC (Network On Chip) error in the endpoint SoC and in turn results in a
-whole SoC crash and rebooting into EDL (Emergency Download) mode which is
-an unrecoverable state.
+On Fri, Aug 30, 2024 at 01:41:27PM +0530, Sricharan R wrote:
+> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> 
+> Document the Qualcomm UNIPHY PCIe 28LP present in IPQ5018.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+>  [v3] Added reviewed-by tags
+> 
+>  .../phy/qcom,ipq5018-uniphy-pcie.yaml         | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml
+> new file mode 100644
+> index 000000000000..c04dd179eb8b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq5018-uniphy-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm UNIPHY PCIe 28LP PHY controller for genx1, genx2
+> +
+> +maintainers:
+> +  - Nitheesh Sekar <quic_nsekar@quicinc.com>
+> +  - Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,ipq5018-uniphy-pcie-gen2x1
+> +      - qcom,ipq5018-uniphy-pcie-gen2x2
 
-But qcom_pcie_enable_resources() is already called by
-qcom_pcie_perst_deassert() when PERST# is deasserted, and refclk is
-available at that time.
+... and now I wonder why there are two compatibles. Isn't the phy the
+same? We talk about the same hardware?
 
-Hence, remove the unnecessary call to qcom_pcie_enable_resources() from
-qcom_pcie_ep_probe() to prevent the above mentioned crash.
-
-It should be noted that this commit prevents the crash only under normal
-working condition (booting endpoint before host), but the crash may also
-occur if PERST# assert happens at the wrong time. For avoiding the crash
-completely, it is recommended to use SRIS mode which allows the endpoint
-SoC to generate its own refclk. The driver is not supporting SRIS mode
-currently, but will be added in the future.
-
-Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
-Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-
-Changes in v3:
-
-* Improved the patch description to mention that the crash in an unrecoverable
-  state and also that it may occur if PERST# is asserted at the wrong time.
-
-Changes in v2:
-
-- Changed the patch description to mention the crash clearly as suggested by
-  Bjorn
-- Added the Fixes tag
-
-Bjorn: This is not going to be a 6.11 material as it is not fixing a regression
-introduced in 6.11 (offending commit got merged in 6.10). So please merge this
-patch for 6.12.
-
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 236229f66c80..2319ff2ae9f6 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -846,21 +846,15 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = qcom_pcie_enable_resources(pcie_ep);
--	if (ret) {
--		dev_err(dev, "Failed to enable resources: %d\n", ret);
--		return ret;
--	}
--
- 	ret = dw_pcie_ep_init(&pcie_ep->pci.ep);
- 	if (ret) {
- 		dev_err(dev, "Failed to initialize endpoint: %d\n", ret);
--		goto err_disable_resources;
-+		return ret;
- 	}
- 
- 	ret = qcom_pcie_ep_enable_irq_resources(pdev, pcie_ep);
- 	if (ret)
--		goto err_disable_resources;
-+		goto err_ep_deinit;
- 
- 	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
- 	if (!name) {
-@@ -877,8 +871,8 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
- 	disable_irq(pcie_ep->global_irq);
- 	disable_irq(pcie_ep->perst_irq);
- 
--err_disable_resources:
--	qcom_pcie_disable_resources(pcie_ep);
-+err_ep_deinit:
-+	dw_pcie_ep_deinit(&pcie_ep->pci.ep);
- 
- 	return ret;
- }
--- 
-2.25.1
+Best regards,
+Krzysztof
 
 
