@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-12516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98A689663D1
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 16:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C1841966416
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 16:22:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4413E1F22E2F
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 14:10:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A9E21F21DB3
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 14:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 271A11B1D5E;
-	Fri, 30 Aug 2024 14:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B931B2506;
+	Fri, 30 Aug 2024 14:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="haLZ8908"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g8/ybE5R"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B2D1AF4F8;
-	Fri, 30 Aug 2024 14:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE0F16DC3D;
+	Fri, 30 Aug 2024 14:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725027051; cv=none; b=WwcKJFIlFpbA0CkPdQJVT9b5txmR78mpiaPQKCLnts7yMKAdIkeTYn+yrVSO8YNpk14/4bXrQXLQCHco+oA1c1KNAE/Uyjj2c5SI3Ebl5/9eSQc0V+VoMxv/CZdCMseSwG2wgeAIq+8KR/PODS2M8FF0wCJWceoubcUBbVN136I=
+	t=1725027735; cv=none; b=dfsryDH9RIK3pSuZMrDTJ6Yhn05pxy5s68k+QcA0WIpGdClS3LIracXcWRrS/DE5Nuc7cOlp4lWMQJg/N5Ya7rxE+Suryiuqcd65XbONWX8a4MLcAFgPFuFEoaY21p0cBrj0f8fNNh6I+rKLphjTxaO10MD195QKJH2vlmDNNxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725027051; c=relaxed/simple;
-	bh=s4ofsPLllTgoEZz5zcK/aCOTMmpqFnd/GqJpSB5kJaM=;
+	s=arc-20240116; t=1725027735; c=relaxed/simple;
+	bh=VSxdJN6tHPVIdLHJP/3S3iq04oDernv5VLzrgKR8idI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ha1U3BLkzqNOteFXI8o33OYn6b4g5JwQZegN0RSUnYlebdj3Qd0/B63ZsQeeW/ST9ZQKDheAdwApGsZB1IljjAai7Du/zaOH0SQvKtZOXB5fnKKjrvtoaM+89IT/9aTfkMOdgwvKcr4+BZdUmJK3fJYSqmPvwfcEP1RTtoU1+/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=haLZ8908; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubE82tdyYvztMdEQAaaW6uuqDZFgVWYWY07AUkyou8sXnqOarPDGSHVe9DOa7vyhN5mHifqESY4jvfXLbfu/o8Olp7DEIBbfjI6qYfeiMUTymj5LWaL4xhW0efJZjJxZ41RQ4JPHpsanrtHl6gRI50voFnMEmPvHyx4sj/r5coM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=g8/ybE5R; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -36,13 +36,13 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=uDcaebjvS3BGJm2mNwOKtW7qt1HOm0LrXI8UJBsCjr4=; b=haLZ8908g6RDC+VOGOw83NdP89
-	CeMPQLDvAK1hacZ5Q+EEj1yIsZ0PaIMoSfgNYOvLOOaN27XdqMy1bcvmuVBG9AD3sycn7kPSdsGk0
-	RpiOOZLgoac+3bM3ztwfjZr04JbHp+Wh6jTzzcYEBpmYIy8VRneE9X7tOYOkBojC8bBU=;
+	bh=bu+WwSmIw/oLOQaFMHKFaLYX5AWLg2UzmPKEeZok/Fs=; b=g8/ybE5RMs2beJopUs3A2zGyNo
+	U+3WuRhEZmZEtSmQfCf47ewOP0MKjJTfTHzs2lDS4T5Wg3KUJfCKSnr/VRQvXyxnXi+Cf3M6RUKp1
+	YroXQk8hzSQimnQMshWZZHIoYZc5bjReKEhnsLSvZSbZ2rkpek0o0fTzliUXZNNe5QHw=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1sk2KZ-0068J6-EH; Fri, 30 Aug 2024 16:10:27 +0200
-Date: Fri, 30 Aug 2024 16:10:27 +0200
+	id 1sk2Vh-0068QR-0H; Fri, 30 Aug 2024 16:21:57 +0200
+Date: Fri, 30 Aug 2024 16:21:56 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Andrea della Porta <andrea.porta@suse.com>
 Cc: Krzysztof Kozlowski <krzk@kernel.org>,
@@ -71,16 +71,12 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
 	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
- DT overlay
-Message-ID: <334b382a-c9ab-47e4-b860-b8477f04c3fb@lunn.ch>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <26efbff0-ba1a-4e9a-bc5e-4fd53ac0ed99@lunn.ch>
 References: <cover.1724159867.git.andrea.porta@suse.com>
- <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
- <Zsb_ZeczWd-gQ5po@apocalypse>
- <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
- <ZtBjMpMGtA4WfDij@apocalypse>
- <e6e6c230-370f-4b04-8cb7-4158dd51efdc@lunn.ch>
- <ZtFWyAX_7OR5yYDS@apocalypse>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,24 +85,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZtFWyAX_7OR5yYDS@apocalypse>
+In-Reply-To: <ZtHN0B8VEGZFXs95@apocalypse>
 
-> On a second thought, are you really sure we want to proceed with the header file?
-> After all the only line in it would be the extern declaration and the only one to
-> include it would be rp1-dev.c. Moreover, an header file would convey the false
-> premise that you can include it and use that symbol while in fact it should be
-> only used inside the driver.
-> OTOH, not creating that header file will continue to trigger the warning...
+On Fri, Aug 30, 2024 at 03:49:04PM +0200, Andrea della Porta wrote:
+> Hi Krzysztof,
+> 
+> On 10:38 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> > On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> > > The RaspberryPi RP1 is ia PCI multi function device containing
+> > > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > > and others.
+> > > Implement a bare minimum driver to operate the RP1, leveraging
+> > > actual OF based driver implementations for the on-borad peripherals
+> > > by loading a devicetree overlay during driver probe.
+> > > The peripherals are accessed by mapping MMIO registers starting
+> > > from PCI BAR1 region.
+> > > As a minimum driver, the peripherals will not be added to the
+> > > dtbo here, but in following patches.
+> > > 
+> > > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > ---
+> > >  MAINTAINERS                           |   2 +
+> > >  arch/arm64/boot/dts/broadcom/rp1.dtso | 152 ++++++++++++
+> > 
+> > Do not mix DTS with drivers.
+> > 
+> > These MUST be separate.
+> 
+> Separating the dtso from the driver in two different patches would mean
+> that the dtso patch would be ordered before the driver one. This is because
+> the driver embeds the dtbo binary blob inside itself, at build time. So
+> in order to build the driver, the dtso needs to be there also. This is not
+> the standard approach used with 'normal' dtb/dtbo, where the dtb patch is
+> ordered last wrt the driver it refers to.
+> Are you sure you want to proceed in this way?
 
-The header file does not need to be in global scope. It could be in
-the driver source directory. As such, nothing outside of the driver
-can use it.
-
-Headers like this have multiple proposes. One is they make a symbol
-visible to the linker. But having two different .c files include the
-header enables type checking, which for long term maintenance is just
-as important. So a one line header is fine.
+It is more about they are logically separate things. The .dtb/dtbo
+describes the hardware. It should be possible to review that as a
+standalone thing. The code them implements the binding. It makes no
+sense to review the code until the binding is correct, because changes
+to the binding will need changes to the code. Hence, we want the
+binding first, then the code which implements it.
 
 	Andrew
-
 
