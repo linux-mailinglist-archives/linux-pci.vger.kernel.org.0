@@ -1,60 +1,87 @@
-Return-Path: <linux-pci+bounces-12501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47506965A30
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 10:23:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 346F1965A6E
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 10:36:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6C361F2409A
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 08:23:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0594286E73
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 08:36:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE6516BE2B;
-	Fri, 30 Aug 2024 08:23:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0A716D31B;
+	Fri, 30 Aug 2024 08:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agb3mJpH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWtnQLDE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FC116726E;
-	Fri, 30 Aug 2024 08:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB31016D317
+	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 08:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725006227; cv=none; b=u5OQi1v7Bh4pfMoentWPokTfln8kIHEWlhn8wGY3oATPFBt0MZGO/czxktEcRjxE75TYRZ9enLoU7gQkqgaaY0x/AiJeaXkBoCTSrA482G2n+9AT5W6HD70vadqrNWT2A4Vz2mdaHc3d0W8/DWLYW/YVISCqjXRLlu3dDRtIRrc=
+	t=1725006962; cv=none; b=WTBLn443AlRmGMoEdpeEr4MB6mbYXztWkeBwby6sFloXiXa7x1j3Eoe+CdXIYHri8Lbahc03y2OtlErdw1e/Ubt9rq8wD6BetWrcTs4dhnqjZwvWLpxM0EHsKz/E4qDurV9DS7yMb8EuHpvqDFVPtXdNALXcZQXTQR/bsFK8H+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725006227; c=relaxed/simple;
-	bh=3Y9mMq3/KBsce91Bb2CDzhvN2+J+/hQB5/+wKDGtYzw=;
+	s=arc-20240116; t=1725006962; c=relaxed/simple;
+	bh=AQdl9xmsK8ZMt1kvTa1HmFVUzpMAE8Xf7jM0R7oI+ZA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oy7CtjTkB00BF6utjjayv5fBUegCPjKyZHXQpOfAJVVn2jYrazWFxP44C9Zo5E4+XpAceSKy4v+b4bX/Hoo73jvNGHjxz2HT1eS3UCB+u77v86zhMTBJNHPzoc+oyt8MFKkuUm6R+Hc2jbm1qiO7a6i5Oz3zwwxUwEwK6bklzvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agb3mJpH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94914C4CEC2;
-	Fri, 30 Aug 2024 08:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725006227;
-	bh=3Y9mMq3/KBsce91Bb2CDzhvN2+J+/hQB5/+wKDGtYzw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=agb3mJpHsKBiXBBdsw3MLK1eOD5wm1M0YQCjOdirZwfj4JOS6W9nuCLKAe9oRZToo
-	 UFpENv9l2Ej+SlyWHrVTPicbbf+iKligkNhJ6l0m2Z1hR/5tA+RAy+MvrmhY0ST0VP
-	 huMgtsNGHkuOS2SUKU28kN1vJ6l+rrJ1gS8yoR4bFmTyPN0xcKNcpF/6sxf7N9ev92
-	 0se7wu82ZBQKXhejuWr233rXiJTOmQgIKV7sSboPcQ44cOph+a6TPdHzrytLThLAo0
-	 N2eAYW376rP2/zWP0t0UKDpAj3FdPoRUSp8dowoUzS/LM8GYmCnabaPh6CIf8Pvtns
-	 qqbXacVbJq0+A==
-Date: Fri, 30 Aug 2024 10:23:44 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAJQX3hAAy1ZVBC7NrK2BH18dkAoGXfZwye1aaeOdJ4dLvwbMnsJJcYAsUmufg3erjvavrYvDUa/HTXy+pkasPG+JOw3f+i9FBQogut3t2o93QzzHu2n7rBUaXHtV3x3opCo+7USarRpYLvS4tXrWxi5Fin5xPLvvA6g5y4eOdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MWtnQLDE; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7bcf8077742so1087226a12.0
+        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 01:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1725006960; x=1725611760; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HRHmHWrP9aGbtsGBj3sSUa2W5O9vCt0AWItUOkadt2Y=;
+        b=MWtnQLDEotjVGwRD8x2jJQlPXUavaLCtAok/8AauIKs8WgpKFuVk5dfUSdnXya6hFb
+         7xDyebGN3RKnW0xAbTarnWJjq5CG4LSjmNG7xKybp9ifd2Qo2swh5Qe3oUmdjXNpiBBk
+         WJr9vCbtQiBmxt1bAfVNgvcnGbJ+Xo9oO//0csk3YgOQXZfKTi0pnWymStsbVTe8Sww7
+         Rg18jgVpcNhV1T/mOV8xNnp7UQU9LNRwN+tmvwe8JjDvvUcfqOag2yD2rAB9O8PzfOSG
+         snw1T629O+zDuEbz+DxCZkbGb2pzwr1C9z5WL8Qh8q7KupWuU71XjPtoy1ahvPZ+7oXd
+         1NgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725006960; x=1725611760;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRHmHWrP9aGbtsGBj3sSUa2W5O9vCt0AWItUOkadt2Y=;
+        b=qfuvM/gbxAOgPow+dZmpxNJFiJeOSPDFYJFUFtLlvJmyd2HsaUGGeY2B+N+TwXRcZW
+         0YpkQwmnQ8MPd6cAUBTFhfcx8q9r5/pJUZeJ4pwf19ZhdnLLrC/9zITisKCOKritSPVe
+         NKE2OeL9zEJatQXJa1AntvMDyrp4Rl45Kz7shAMpT2KXCkqF9h8SsNh+5jfKUAtWhxxN
+         kCGz6s322V0YVbmieUDeosxCbJUD3g1rpm+j2XJU7YaDvO/2oik4WOK9tz5KnsHbAFly
+         pIxbbBXKvbhEsWuFAWC1hfD3jiJCpmcLOsxHUKM5FGX7Dx2gkRv3yVciDd5jSeKJ+O26
+         cdZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJq0NuTFMkpuKsh8DkmcqWVszNgxTVvimrBpxCKIzgbcL2B8VD8cl1oev64JxyL1EGODc3VW7EL0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yync7+DBREsvK2YJKAh/5VcDE1OZyGScaf7QP5FUxsWQXPzh9E+
+	ytoDi1oMRdYsyTKKuV+nrA5qwgZ+ipzDI1jqkX9xUlrKw+KFfYzNAW00KFICmA==
+X-Google-Smtp-Source: AGHT+IEg701oVGHlnE52pK3OQhbcRTjhhzAp3dBmqRMQAHDvR10F57i/IZHuH1pve1bxSwuJqV6lAQ==
+X-Received: by 2002:a17:90b:4b01:b0:2d3:ce8d:f7f1 with SMTP id 98e67ed59e1d1-2d8561c7556mr6135729a91.25.1725006960007;
+        Fri, 30 Aug 2024 01:36:00 -0700 (PDT)
+Received: from thinkpad ([117.193.213.95])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d85b39ce64sm3134091a91.39.2024.08.30.01.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2024 01:35:59 -0700 (PDT)
+Date: Fri, 30 Aug 2024 14:05:51 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Sricharan R <quic_srichara@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
-	p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, robimarko@gmail.com
-Subject: Re: [PATCH V3 1/6] dt-bindings: phy: qcom,uniphy-pcie: Document PCIe
- uniphy
-Message-ID: <e2qgpvfccpo2sd4mbrynxruvt5attqmtd5oik26of7tv7u4lq6@kvb63sglwa5b>
-References: <20240830081132.4016860-1-quic_srichara@quicinc.com>
- <20240830081132.4016860-2-quic_srichara@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, p.zabel@pengutronix.de,
+	dmitry.baryshkov@linaro.org, quic_nsekar@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, robimarko@gmail.com
+Subject: Re: [PATCH V2 2/6] dt-bindings: PCI: qcom: Add IPQ5108 SoC
+Message-ID: <20240830083551.yazww3kj2shf4ocq@thinkpad>
+References: <20240827045757.1101194-1-quic_srichara@quicinc.com>
+ <20240827045757.1101194-3-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,51 +90,93 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240830081132.4016860-2-quic_srichara@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240827045757.1101194-3-quic_srichara@quicinc.com>
 
-On Fri, Aug 30, 2024 at 01:41:27PM +0530, Sricharan R wrote:
+On Tue, Aug 27, 2024 at 10:27:53AM +0530, Sricharan R wrote:
 > From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 > 
-> Document the Qualcomm UNIPHY PCIe 28LP present in IPQ5018.
+> Add support for the PCIe controller on the Qualcomm
+> IPQ5108 SoC to the bindings.
 > 
 > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
 > Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
 > ---
->  [v3] Added reviewed-by tags
+>  [v2] Added reviewed by tag
 > 
->  .../phy/qcom,ipq5018-uniphy-pcie.yaml         | 70 +++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml
-> new file mode 100644
-> index 000000000000..c04dd179eb8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq5018-uniphy-pcie.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq5018-uniphy-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index f867746b1ae5..c12efa27b8d8 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -21,6 +21,7 @@ properties:
+>            - qcom,pcie-apq8064
+>            - qcom,pcie-apq8084
+>            - qcom,pcie-ipq4019
+> +          - qcom,pcie-ipq5018
+>            - qcom,pcie-ipq6018
+>            - qcom,pcie-ipq8064
+>            - qcom,pcie-ipq8064-v2
+> @@ -312,6 +313,39 @@ allOf:
+>              - const: ahb # AHB reset
+>              - const: phy_ahb # PHY AHB reset
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,pcie-ipq5018
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 6
+> +          maxItems: 6
+> +        clock-names:
+> +          items:
+> +            - const: iface # PCIe to SysNOC BIU clock
+> +            - const: axi_m # AXI Master clock
+> +            - const: axi_s # AXI Slave clock
+> +            - const: ahb # AHB clock
+> +            - const: aux # Auxiliary clock
+> +            - const: axi_bridge # AXI bridge clock
+> +        resets:
+> +          minItems: 8
+> +          maxItems: 8
+> +        reset-names:
+> +          items:
+> +            - const: pipe # PIPE reset
+> +            - const: sleep # Sleep reset
+> +            - const: sticky # Core sticky reset
+> +            - const: axi_m # AXI master reset
+> +            - const: axi_s # AXI slave reset
+> +            - const: ahb # AHB reset
+> +            - const: axi_m_sticky # AXI master sticky reset
+> +            - const: axi_s_sticky # AXI slave sticky reset
 > +
-> +title: Qualcomm UNIPHY PCIe 28LP PHY controller for genx1, genx2
-> +
-> +maintainers:
-> +  - Nitheesh Sekar <quic_nsekar@quicinc.com>
-> +  - Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,ipq5018-uniphy-pcie-gen2x1
-> +      - qcom,ipq5018-uniphy-pcie-gen2x2
+>    - if:
+>        properties:
+>          compatible:
+> @@ -503,6 +537,7 @@ allOf:
+>                enum:
+>                  - qcom,pcie-apq8064
+>                  - qcom,pcie-ipq4019
+> +                - qcom,pcie-ipq5018
+>                  - qcom,pcie-ipq8064
+>                  - qcom,pcie-ipq8064v2
+>                  - qcom,pcie-ipq8074
+> -- 
+> 2.34.1
+> 
 
-... and now I wonder why there are two compatibles. Isn't the phy the
-same? We talk about the same hardware?
-
-Best regards,
-Krzysztof
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
