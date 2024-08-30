@@ -1,195 +1,292 @@
-Return-Path: <linux-pci+bounces-12513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51FFC9661DA
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 14:37:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BDAF966361
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 15:49:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 089E6282D3D
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 12:37:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E89DA28448E
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 13:49:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B25CC194132;
-	Fri, 30 Aug 2024 12:37:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F4C1AF4F4;
+	Fri, 30 Aug 2024 13:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="G3JFkbU5"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PDuS2BzV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3575614A0B6;
-	Fri, 30 Aug 2024 12:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725021423; cv=fail; b=ZFWkYs0RHs07BLrR1P9tCQFKW99vdDx4CHsoE5OhJDdvv53BuWx595AM0NTxhOfB8uAORNtduY0XPAO4Aay1K8yFGVBXh7fFsFQkRw6tf3/pYCZ37yoi9F75HSfU9IPu6J7kO/1E4NClwKyRCuFuzUkgdFfMsm4ozsxBUKZzRRs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725021423; c=relaxed/simple;
-	bh=bgFOxfkLz2osJqmAK+wPO8fCNVMbZnv4twWf413Wau0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Vdem+8lpyRQr1eTZiMP26aXuYL3NFcn1R/jXT/hdV5yiwZmOHMaqOO7gyTB8tGnx0WJ0cPOxloRvNsbMb3Shyd1y2dHXQwQbzXZQ0d486jIJVItX1Yb6CljI6OxKuF+aZuC3wVI/pHas4rFgnYl6boeTxx66wk8pkVhfu2r3/WA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=G3JFkbU5; arc=fail smtp.client-ip=40.107.93.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ar3yUeHuZmaSZ9PSfw+rw9Y2ZrBIBMH6aSdNIdmDdshmitLQDiCWDPxnDoXGP6zorXh+9POK+CFYaOeXK7PyUmAQsneNMqwn6yd9/WdDEUbmcgmJ70hFNlsvJe9qTV4HYml4s90HMXVtTttlDEBThpDQdy/csMAMfvRnqLBFY10SukX97l3CECaHpO4lSbP7hR5FMz3jPjDpJOkroec3hqQu41doqjmDKg/r1DlgYUihwmpU1L6EHsBlnlZUqmkD4eKbJ6RZVq1CdylPGAnKbhR6HzSKdEUn1xuVj7d88/H8Hg6csqwsGdjD5ZVWdrAQ6gg2gceTyRjex1+36jKzyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CmmiDq7Ez5iYFB2mp+jE9Ha+Vx/mszjc+aw4ozHW5Uw=;
- b=u7wj+2hH5j1J8i1l8OlD5x+f3F8q+Txf8XyKZHcIbU6uxNAyVK41i0rTmLdY3y6MvD1jhuC2yYJvzN+bmjVnvnl4xTomIqo2FgvYPCcrYkRAxiwxLo0Ys2p/xZTM9/09IZkVd4wkBpEvNtOQOE0+mdo8qidknST3/Iu8kdFSb7M+EUdDWTR1Im5BLYarf+oMFRL6CoMFJs1he7F0Lx3eFeGl5jYibSXoRRClJwx7NR+O3mRWfwDEloVENJWwL0uSgf2DGpIMSWj5flk0nYflLO3u4S/OTJ//K1hTfFsQLCVX+U9BcNmr5G7+0ZOXUQ94tCreDk9N2xutJ4wooTU/6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CmmiDq7Ez5iYFB2mp+jE9Ha+Vx/mszjc+aw4ozHW5Uw=;
- b=G3JFkbU5GlCdnlCo4lpz3/PL5x31o0TD4rEtn54eVe4zFp3myC36KbtBFCCPdcEUYZw6I/AHco5Hhdw/iJ+j/FaB0bWqRxTOXI7nCQSFxLhkYxEapGylqa/Z048URHhPK33PRlKZP85mjKgwIio7Q/eJz4FkGa48+vFc06SY2DvDtDXMmRW2RRJeic8YQubdRvIljXxdlCnGYk9PYtZcB+XxLQedvDQX5cajgorAmA/0LfsM6ZOmDMHJrBJe18s4ppgeVrEhb+M9NFMxOG+f4AL4tepTrd8lRd+v8D8if6JADXwLZLPKbkPswUDRwgPwgU6RwkRkV3+HifIP+j9UUg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB7763.namprd12.prod.outlook.com (2603:10b6:610:145::10)
- by SJ1PR12MB6194.namprd12.prod.outlook.com (2603:10b6:a03:458::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.20; Fri, 30 Aug
- 2024 12:36:58 +0000
-Received: from CH3PR12MB7763.namprd12.prod.outlook.com
- ([fe80::8b63:dd80:c182:4ce8]) by CH3PR12MB7763.namprd12.prod.outlook.com
- ([fe80::8b63:dd80:c182:4ce8%3]) with mapi id 15.20.7897.027; Fri, 30 Aug 2024
- 12:36:58 +0000
-Date: Fri, 30 Aug 2024 09:36:58 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"pratikrajesh.sampat@amd.com" <pratikrajesh.sampat@amd.com>,
-	"michael.day@amd.com" <michael.day@amd.com>,
-	"david.kaplan@amd.com" <david.kaplan@amd.com>,
-	"dhaval.giani@amd.com" <dhaval.giani@amd.com>,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>,
-	"david@redhat.com" <david@redhat.com>
-Subject: Re: [RFC PATCH 12/21] KVM: IOMMUFD: MEMFD: Map private pages
-Message-ID: <20240830123658.GO3773488@nvidia.com>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-13-aik@amd.com>
- <BN9PR11MB5276D14D4E3F9CB26FBDE36C8C8B2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20240826123024.GF3773488@nvidia.com>
- <ZtBAvKyWWiF5mYqc@yilunxu-OptiPlex-7050>
- <20240829121549.GF3773488@nvidia.com>
- <ZtFWjHPv79u8eQFG@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZtFWjHPv79u8eQFG@yilunxu-OptiPlex-7050>
-X-ClientProxiedBy: IA1P220CA0001.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:461::15) To CH3PR12MB7763.namprd12.prod.outlook.com
- (2603:10b6:610:145::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382481ACDE7
+	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 13:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725025745; cv=none; b=XNE8ntvzNlxXWdZk3LQMYB0KGhuDd+ByhwnSZe5c9/RcORTTOC9zA8LNX0FYE+eNtP4UtRIyCfvh6Hgt64VvgnUHsIBVs3hVTvlKKge8Mt+UYHnEfoI86K/7ouKd4SS2Esmhhv29aqSeUg8eLxVvyFDjGQkIlCB3MK+bjcKn+xM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725025745; c=relaxed/simple;
+	bh=9UIDn+zRPs2233Ey/wAks0cZbBTGHswiziDn3qxUXnM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phoG+yNjyGFPmn8hf8YyUlyfOW4Ozj6UOZNFkdC8/x214/SQgHogzZsbyQUOlpd0zbXN8EKVYx2F8laTAgXCjtv7YZEaka9UZHIyMehzi+46YuB8YZV+Q5JlgAKozkpEUkUUCvXi2DsRrUAZlRYZ+agORq5Mmqn/YEj5Ogzau/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PDuS2BzV; arc=none smtp.client-ip=209.85.167.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-534366c194fso1763532e87.0
+        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 06:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725025740; x=1725630540; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j3jLKDfv9G/F1hAhLjOmCz8z3HV7wHNtLsdpyhwWqPo=;
+        b=PDuS2BzVfxchFZMyByYEGwyuKZRjmhIXr67oiuwxqdKame7MEY5qOATnH7IHb4aj5L
+         wZqp7f/HQM0dLneKyaI59P7vc1CQkk3LrS1VkLcP1wKl2+rUYGy25E9rk//nFbjECcLU
+         nBuq+WDwXFhX9xuE2pc4Mss7xDR0rkj19UTOrdDIRxugvhvpT1caR5U3IX+03n9DiSmU
+         NNqX24qYfExAirqGvjVbRf7wGzi3kY5d0SLDm8v23nCoygrzGQKdPpZQJwib2qAKWTAr
+         TiphpUpBag8TxY7oqY6eWNA6WCToqXe93d3MEYu6T3zzLr/fjx0oK/ATibKJHJ6Osx+P
+         YrjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725025740; x=1725630540;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j3jLKDfv9G/F1hAhLjOmCz8z3HV7wHNtLsdpyhwWqPo=;
+        b=uSqA36mPh6el+CuVIRkdBwZnWZvutJRH4bOlxB14ONCZH9tvrS8B3iKuwhwMMCuV3s
+         etyNfeTFk3ekt0uJ1ghN7Fh5WI+GVmlRnKvXJRiQY5q73iOMkwIim1x4sVU47TmKPhY0
+         j1Z5vgvN5Hwn1LGYYSOiiNJm3SbGlI9QRpjaSZWYwtZiGV3FsfSQ84SJ09mo8OUnWFsF
+         5CFm+VeuF46vCgc4wJX+Zac/GjPYEx6tfBJLYJmmg7ujU1sTh/iggZ65ITMNVT10rE96
+         yvWtlrWu6iypoSny3NW74e65zqVhHM6szYaKwd1yvrLpyGtb6PiS94QLDwmbQKODFyZL
+         vdCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUg70u7EoAwu2UjB70cJ4cHCnx3+rlAKyCvHbRoqnvRlvOjGLFZ9WSZCXjdEmrOrog7DyUyjD0HHls=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqqXa7JXldssRFZtPmOOcGJhIVIEFeonqUoASzMmESsvCl5y5i
+	r9/d65MR67Ib4KdwLd7tjxb1KLvfaIW3asDCdNjz9PhL5mWDf6CCQColqJ+fm9w=
+X-Google-Smtp-Source: AGHT+IGg9M4Rtabw2zg4qqU8iskz42/lxuttsuGGIjXpiaV4rVUp+9fovEZeeF3bRXArRqzbS0RuVw==
+X-Received: by 2002:a05:6512:3b8c:b0:52f:159:2dc5 with SMTP id 2adb3069b0e04-53546ba9fd4mr1622050e87.42.1725025739816;
+        Fri, 30 Aug 2024 06:48:59 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8988feb072sm217505266b.28.2024.08.30.06.48.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2024 06:48:59 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Fri, 30 Aug 2024 15:49:04 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <ZtHN0B8VEGZFXs95@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB7763:EE_|SJ1PR12MB6194:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38e5ea3f-aa3b-4bc1-d875-08dcc8f070a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?z+GzEtdrSHibc3yeoxhiyZ/5qJDaRSUCUjcHkernRiI499OJDa065ssZTywO?=
- =?us-ascii?Q?5n+Mvm9sYerkVCB181XoHEtMFpOURNeQ1WVHDSSWq8+ndap12/Hxbzik6fCR?=
- =?us-ascii?Q?35vgW8zNPbcCzEgJTIkVEoq/1PMqmXM/r8m/jEMnOfG8nO8zfr3N3RNDcnBv?=
- =?us-ascii?Q?ZmcEB8OIyZA6vYkY0AGWFGOKy9AXPifCvOofPeFE9oUMf+SivXH2O5DktQKN?=
- =?us-ascii?Q?fx/k4iomvXr+TyJyHmhtmZgXgtnYxhIbKtkjaYPI8tuIWxGCAoJklFG9vh/t?=
- =?us-ascii?Q?LdVeD21pfLiFrI9P8Ya+5A5QfLJlep50uSdxgU/XTRVZq34biDGLoZZUGKRC?=
- =?us-ascii?Q?Nzac1eQ9iNx9PNvCJSS4yzqx6en0nHiOvkrENEADnqaFcwRFvj2/YVTOYJPd?=
- =?us-ascii?Q?rDy5q04rWbBqmmNOsM3J0kU5bs8OFSVYv6xHcDUGP3Ht96QdoRcKi0UsuMwF?=
- =?us-ascii?Q?c+TgDKVAMWLRn/plm1ozhDoGqWxZtQ6c8GoDdperlU0EGJLFAOVKwpzfLcZZ?=
- =?us-ascii?Q?8/MtdSJ0xXfLhe8B7MusPqiOjxo4SptZVipMu517KpsC2r6HI3LlGIVH65fU?=
- =?us-ascii?Q?3/ELaskdmbsqK+RfFgM7dkEviFXcIQY2YX4NkLBHwGUKR2sSJ3LkfoL1YueE?=
- =?us-ascii?Q?VIUurxZA3SHqPbEK9J6v01CYnDjXHcCPhtvMkd+Wvus66SCB+uvJkPLJ6qoA?=
- =?us-ascii?Q?29PuPwePapfo4tcnIVuZHeA2sOWrTOta/T3nRv8IjOAlOv4AaQpjzi5s+JQo?=
- =?us-ascii?Q?dYLUob1WDcF/nc+XGwXO8lYM3yCN5vLJtU9jt37k/FnAFlkfW7YbLrwNqH2E?=
- =?us-ascii?Q?iGIYdPWDpslT3VFnbguk/27I9xoXRsFpZLbL2Ot0tiKzCShYPnwQU9rrPW8T?=
- =?us-ascii?Q?siyeItHbsd3blA8O0DBLRMtDvt/o/XtWFUsEOmtDKVclj9f6BSMKrANOXUlW?=
- =?us-ascii?Q?wAt16wZ/3nNCpPzidSMjDfx1eWgfgFtWSPJJ0BDFSbpTrDwFip1YSLIHSbfE?=
- =?us-ascii?Q?lYvMDOJBJctr9EZD9iXKVqBOwhayBYDZS1xhSFwWvVP8Y/g+pY6QSZYTpfWz?=
- =?us-ascii?Q?ff1ZtRnH+g/euRkGDJRulkN6iA6SXwHF50+ZqgJNi62g2K/LmOhRdh2KxT6U?=
- =?us-ascii?Q?S/rgHVCx7n+YYfbTPnYg+51lSQ42oZZyCoH4MndP96UUuLyIXguh8nkMYcR8?=
- =?us-ascii?Q?vJyCHiVEoHbeWSBONrekehFyOs2fLfsb29ZX2Lrvw20AUecIkmQTSpYIbPvJ?=
- =?us-ascii?Q?ASIUwe/oYn5pR4p8tsUzaGAk/Odq848H4BkInizropaV286sUsuccAiQWzLJ?=
- =?us-ascii?Q?5+pi5dfD2f2QC9V/cq+/hyDpkLDHB59yjFq0IRI002sl9g=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?di5edH2COgAWReCO8OuLyxWyP9zQhZMpRdroF3HQEohDdiutrdzwtVZsArZ1?=
- =?us-ascii?Q?zQ8/+20KkVeT9bzT5A38Xx7rVnU6LFFHaWSgFoIbZBmrMeFH/N7iUywyzuMj?=
- =?us-ascii?Q?mgJEuEzDgUk4x896MYIbxbxEOpfE995u74bPHJRY5L8FeBDQ5yIKQtQZ2pZO?=
- =?us-ascii?Q?AIMFhy/cpcDDLlAbXE+kzzKxyDJEd5o0mMACGuKLnGwY5i95EbZ7Yh8DfJI4?=
- =?us-ascii?Q?Rww7fyDFAqnMCQaqYsN6rfJKYxfWxz0jnncHSeyMLNqjJhLmQ7XdwFQJa6/u?=
- =?us-ascii?Q?aWhsoRwZ662cmmGPd8IeOAEorwFEUn4iap2d5aaZUTEdy0u+nps7XZA5gj8o?=
- =?us-ascii?Q?tKfEaVfu0Lefe7sSAcACX6VmgYmbkopiZplSmlpgSvkCUkmSK4OISiHGjz5n?=
- =?us-ascii?Q?0vevIHrpTNJZ1K3FRLuEq63giANNkRrsm0ZPg/jRQzaPbMPqdihu/cXw8yy6?=
- =?us-ascii?Q?WvqmFgopULnFqoLqgPo3jxcBZY0R6VFReOEq4vMf6XLl9nZ4PQNaewHV1E8g?=
- =?us-ascii?Q?7nwPMhpgVJX/aRvpK4p52+KU4lxXVQwYjPU/dfwWK8eVz4xolSiuuRQJbBeq?=
- =?us-ascii?Q?BI02AC+gv0mScAcQPrd3OufCqdknX0526Hn00907U2/vS6M5JD9Kq3RI4FNF?=
- =?us-ascii?Q?sdYV3AwsbmMa3njRWDc6Xy9sAhutTh95xNDCFSrnNmrnQyNSoqLFzkuibT6P?=
- =?us-ascii?Q?RHE28LPyb8j9j9FXRHUQk6SI7idnI6I1fApxehxc5I8oItTYi3fJOgqZZCt7?=
- =?us-ascii?Q?zpNIQwa0YvtjkJ2MMaOBnlNkq9UmgaEg8fZzEuJBszrQtEr2Gh/srOslRb+M?=
- =?us-ascii?Q?7UoQ5CkX1O6eZ45clfgFKhKcjtVc3oAT6PekC6eTl+T9mzyTQlacVauZBvLZ?=
- =?us-ascii?Q?hgO4VjGtg/60nNS8xFxbMPxHAq0D0o7t2GS0ZWnxe5Nn7Xuzjr+vH/tYJjk0?=
- =?us-ascii?Q?Vw+4Bcdhwk87c3l1rX5q9Zb3yL+S5R8/FmkCN9/1Gvy9kYMqrB+iTK0SnWfV?=
- =?us-ascii?Q?MSBRtPssqWg5wiZS50sgYS5msd0h9O7hlld6hrs/n8pXnn13qq1u46sa1QAV?=
- =?us-ascii?Q?6GwR/dO1zhQ+DX6dYnyKdFoTXE0fpKXenm/Lr3gg2n5pj20+yYs74yYuubfp?=
- =?us-ascii?Q?S4Kh6ZnYY27ytrPF5FTY+08aGkntwZD8TH4t4pnHe2sw4mbb5AA8TZiPF1L7?=
- =?us-ascii?Q?ButOckxOTdviz6cAjCNWX91fPNsMqmhmd3Ti7EZaxJ+4AdKNOOkNOtQ29i52?=
- =?us-ascii?Q?rjjvtcfdm20+AvHlQuf5kmuFXofgsMENEEIe5AceRUOF0EQSaMlk13kDAWr9?=
- =?us-ascii?Q?+iLrIE1Njrylvu4ayzJAgdb6x6nz2mH17tfgIwRp4y/WHXPL7SqhYiTmvKC4?=
- =?us-ascii?Q?bBWj57TxqJuFd0+E+5WXU9T9wVbaide34KYGFITp2cxY+lGQg6sPs7QkQUev?=
- =?us-ascii?Q?ocb6lJ+y/sUhLqgC1CgpcJaru4vTQg0Z/c4zYWLI9aAU4MGgMyygYpfg2F13?=
- =?us-ascii?Q?HNjtlG77ia/dNSFh8UM+KhH4U50aF47hzP2RGz30s1CHGbAped5EeRWiFY5D?=
- =?us-ascii?Q?YXnyfROO4xOvhAwdLlj5aJwLO26+vtdV5FTGh0jX?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38e5ea3f-aa3b-4bc1-d875-08dcc8f070a0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7763.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2024 12:36:58.8185
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 32XEZd6ZoiK/fNKkxnHHnQTwhyxldPz9tYaFddBX79+VGNKdhwBJN4raPgsm71DO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6194
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
 
-On Fri, Aug 30, 2024 at 01:20:12PM +0800, Xu Yilun wrote:
+Hi Krzysztof,
 
-> > If that is true for the confidential compute, I don't know.
+On 10:38 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> > The RaspberryPi RP1 is ia PCI multi function device containing
+> > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > and others.
+> > Implement a bare minimum driver to operate the RP1, leveraging
+> > actual OF based driver implementations for the on-borad peripherals
+> > by loading a devicetree overlay during driver probe.
+> > The peripherals are accessed by mapping MMIO registers starting
+> > from PCI BAR1 region.
+> > As a minimum driver, the peripherals will not be added to the
+> > dtbo here, but in following patches.
+> > 
+> > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >  MAINTAINERS                           |   2 +
+> >  arch/arm64/boot/dts/broadcom/rp1.dtso | 152 ++++++++++++
 > 
-> For Intel TDX TEE-IO, there may be a different story.
+> Do not mix DTS with drivers.
 > 
-> Architechturely the secure IOMMU page table has to share with KVM secure
-> stage 2 (SEPT). The SEPT is managed by firmware (TDX Module), TDX Module
-> ensures the SEPT operations good for secure IOMMU, so there is no much
-> trick to play for SEPT.
+> These MUST be separate.
 
-Yes, I think ARM will do the same as well.
+Separating the dtso from the driver in two different patches would mean
+that the dtso patch would be ordered before the driver one. This is because
+the driver embeds the dtbo binary blob inside itself, at build time. So
+in order to build the driver, the dtso needs to be there also. This is not
+the standard approach used with 'normal' dtb/dtbo, where the dtb patch is
+ordered last wrt the driver it refers to.
+Are you sure you want to proceed in this way?
 
-From a uAPI perspective we need some way to create a secure vPCI
-function linked to a KVM and some IOMMUs will implicitly get a
-translation from the secure world and some IOMMUs will need to manage
-it in untrusted hypervisor memory.
+> 
+> >  drivers/misc/Kconfig                  |   1 +
+> >  drivers/misc/Makefile                 |   1 +
+> >  drivers/misc/rp1/Kconfig              |  20 ++
+> >  drivers/misc/rp1/Makefile             |   3 +
+> >  drivers/misc/rp1/rp1-pci.c            | 333 ++++++++++++++++++++++++++
+> >  drivers/misc/rp1/rp1-pci.dtso         |   8 +
+> >  drivers/pci/quirks.c                  |   1 +
+> >  include/linux/pci_ids.h               |   3 +
+> >  10 files changed, 524 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+> >  create mode 100644 drivers/misc/rp1/Kconfig
+> >  create mode 100644 drivers/misc/rp1/Makefile
+> >  create mode 100644 drivers/misc/rp1/rp1-pci.c
+> >  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 67f460c36ea1..1359538b76e8 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19119,9 +19119,11 @@ F:	include/uapi/linux/media/raspberrypi/
+> >  RASPBERRY PI RP1 PCI DRIVER
+> >  M:	Andrea della Porta <andrea.porta@suse.com>
+> >  S:	Maintained
+> > +F:	arch/arm64/boot/dts/broadcom/rp1.dtso
+> >  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> >  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+> >  F:	drivers/clk/clk-rp1.c
+> > +F:	drivers/misc/rp1/
+> >  F:	drivers/pinctrl/pinctrl-rp1.c
+> >  F:	include/dt-bindings/clock/rp1.h
+> >  F:	include/dt-bindings/misc/rp1.h
+> > diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > new file mode 100644
+> > index 000000000000..d80178a278ee
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > @@ -0,0 +1,152 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/clock/rp1.h>
+> > +#include <dt-bindings/misc/rp1.h>
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +
+> > +/ {
+> > +	fragment@0 {
+> > +		target-path="";
+> > +		__overlay__ {
+> > +			#address-cells = <3>;
+> > +			#size-cells = <2>;
+> > +
+> > +			rp1: rp1@0 {
+> > +				compatible = "simple-bus";
+> > +				#address-cells = <2>;
+> > +				#size-cells = <2>;
+> > +				interrupt-controller;
+> > +				interrupt-parent = <&rp1>;
+> > +				#interrupt-cells = <2>;
+> > +
+> > +				// ranges and dma-ranges must be provided by the includer
+> > +				ranges = <0xc0 0x40000000
+> > +					  0x01/*0x02000000*/ 0x00 0x00000000
+> > +					  0x00 0x00400000>;
+> 
+> Are you 100% sure you do not have here dtc W=1 warnings?
 
-Jason
+the W=1 warnings are:
+
+arch/arm64/boot/dts/broadcom/rp1.dtso:37.24-42.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/clk_xosc: missing or empty reg/ranges property
+arch/arm64/boot/dts/broadcom/rp1.dtso:44.26-49.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_pclk: missing or empty reg/ranges property
+arch/arm64/boot/dts/broadcom/rp1.dtso:51.26-56.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_hclk: missing or empty reg/ranges property
+arch/arm64/boot/dts/broadcom/rp1.dtso:14.15-173.5: Warning (avoid_unnecessary_addr_size): /fragment@0/__overlay__: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
+
+I don't see anything related to the ranges line you mentioned.
+
+> 
+> > +
+> > +				dma-ranges =
+> > +				// inbound RP1 1x_xxxxxxxx -> PCIe 1x_xxxxxxxx
+> > +					     <0x10 0x00000000
+> > +					      0x43000000 0x10 0x00000000
+> > +					      0x10 0x00000000>;
+> > +
+> > +				clk_xosc: clk_xosc {
+> 
+> Nope, switch to DTS coding style.
+
+Ack.
+
+> 
+> > +					compatible = "fixed-clock";
+> > +					#clock-cells = <0>;
+> > +					clock-output-names = "xosc";
+> > +					clock-frequency = <50000000>;
+> > +				};
+> > +
+> > +				macb_pclk: macb_pclk {
+> > +					compatible = "fixed-clock";
+> > +					#clock-cells = <0>;
+> > +					clock-output-names = "pclk";
+> > +					clock-frequency = <200000000>;
+> > +				};
+> > +
+> > +				macb_hclk: macb_hclk {
+> > +					compatible = "fixed-clock";
+> > +					#clock-cells = <0>;
+> > +					clock-output-names = "hclk";
+> > +					clock-frequency = <200000000>;
+> > +				};
+> > +
+> > +				rp1_clocks: clocks@c040018000 {
+> 
+> Why do you mix MMIO with non-MMIO nodes? This really does not look
+> correct.
+>
+
+Right. This is already under discussion here:
+https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
+
+IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
+using CLK_OF_DECLARE.
+ 
+> > +					compatible = "raspberrypi,rp1-clocks";
+> > +					#clock-cells = <1>;
+> > +					reg = <0xc0 0x40018000 0x0 0x10038>;
+> 
+> Wrong order of properties - see DTS coding style.
+
+Ack.
+
+Many thanks,
+Andrea
+
+> 
+> > +					clocks = <&clk_xosc>;
+> > +					clock-names = "xosc";
+> 
+> Best regards,
+> Krzysztof
+> 
 
