@@ -1,159 +1,178 @@
-Return-Path: <linux-pci+bounces-12529-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E689966776
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 18:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AFF969668E8
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 20:28:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 566781C23090
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 16:59:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4FDF1C22309
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 18:28:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9981B81CD;
-	Fri, 30 Aug 2024 16:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E3D1BC095;
+	Fri, 30 Aug 2024 18:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4ib93TQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZw9zYlB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEDB1B5ED3;
-	Fri, 30 Aug 2024 16:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E614C585;
+	Fri, 30 Aug 2024 18:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725037184; cv=none; b=CbzIPGCaX7iB8BDhWamSwfJiKTugef/+noaEYu4/AMHOHAx/j2QgPMgD33y2opbmKAJ/0PmMUXDIZNGfZuUm1PgrCyIgf3QwuJxkpPr+TXgBAe1ZosJCBvyy2PtDIeTbsd6qnVvHmLEcLl0bWp7gL/wSVB37ckm+rM923hj5kZ0=
+	t=1725042482; cv=none; b=bifIiTyzvQ81x5HsL6Q0pp258ubAlscxi0CBLU1UNxkHSNpOmyB/mhJC3cJg0EGGCbZp+U0G4j99atk376PmqbGVDQUmwi4DQYjql8OYdODF/pryyYymz8NJ4y98MQXtVp+ju6OFqXI3aiT9b9HpRhHG8mqmVuqSljKj7IdYrWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725037184; c=relaxed/simple;
-	bh=g+CDz/qgnDvPGrRMnmHjXJO8gZVIdvkxBnTYdMpl1Eo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgnMCyR0riioOtMSyQnfOID+Jy9pnxtaUNQJDkZuFw2VhlkZdKFZ5NVl0MWdnjtYjtgjjoMqHUGtrRr97m256bE4HnAwujfTx5BKNDPhioq1iBxr127MexKDMvfQh15y7nsv1oRGg6/d8xtcaeQjBCj2HB7Qsz1VeZrde1NikD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i4ib93TQ; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725037183; x=1756573183;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g+CDz/qgnDvPGrRMnmHjXJO8gZVIdvkxBnTYdMpl1Eo=;
-  b=i4ib93TQs4gLyG8nEDEVLi1RRLCsqU03GLbmmJnjF+GrVabuc4T8i3QX
-   pLMpX2scEmzWO7bs3p4QRnnVntyWVFtph28EccT7aR9K+Gws+pow7WYVk
-   Ej0tr93SsGAlpebRkPw9oTk0J7BPqx3SG0qJPm5EzOlA81qhi1Rm2rKye
-   ILd68NTQ5r8QmzDD4iA/NWOXoPa4eGHVWwmGXA+PK52XyWO/dWtv6XjzJ
-   70o5Y6/Lv+82/bwApqfyHuAoMvKIq+5hvlztvnbILbzSsHqLa89f+0OE3
-   z8sBRhbTs5hQh9Mi1qo6eQU5SXVg8aZanpAbU8TQ64aCxZ9GSilBclgaB
-   g==;
-X-CSE-ConnectionGUID: o7K/0ZirS7qyT1wOKGa9OQ==
-X-CSE-MsgGUID: vrf59SpNRQ+zXh4Z6Vl+mQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="23850876"
-X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
-   d="scan'208";a="23850876"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 09:59:42 -0700
-X-CSE-ConnectionGUID: 8WJvFrZ1S4S5x2a3h0WlzA==
-X-CSE-MsgGUID: 5ROgX7cgTDCCRTrQKpm91w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
-   d="scan'208";a="68842950"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 30 Aug 2024 09:59:38 -0700
-Date: Sat, 31 Aug 2024 00:57:10 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	pratikrajesh.sampat@amd.com, michael.day@amd.com,
-	david.kaplan@amd.com, dhaval.giani@amd.com,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC PATCH 13/21] KVM: X86: Handle private MMIO as shared
-Message-ID: <ZtH55q0Ho1DLm5ka@yilunxu-OptiPlex-7050>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-14-aik@amd.com>
+	s=arc-20240116; t=1725042482; c=relaxed/simple;
+	bh=f5Uc5k5MsEWXT0HDmaPjKPSyz/7E7DKh4+BY1PUsbVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BWBioSQNWb6FWj6Xv5X1sAdbTbyjMD/qHT9AjA+jXqVxf18G+YHvQp0k0Tsaz9Rm9IZi+R6OWw9UnmjlBlSOI+/8sXXGDBevXiUc8lkjK5X6jzWl7CIs/BgHYUnE0UehRJ7o/A2OAN6vkf2xrcih7Da1tPUMgzPQ1dWzEzX7Jh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZw9zYlB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77642C4CEC4;
+	Fri, 30 Aug 2024 18:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725042481;
+	bh=f5Uc5k5MsEWXT0HDmaPjKPSyz/7E7DKh4+BY1PUsbVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tZw9zYlBB3g5eplwmqwDuXZj66pLzG7m+54tkBkcDUj1oZ68+xI6EdlFYTOrcHQzc
+	 5X8AXWsHcPvAr2C5XAbm56EwdXy57n3WnPP5I3SFK4pPrFcY2GlBof6kBPHR19rK2t
+	 UHSGAPt1+B/ZYSUOnTnAlgjPWh+VHTVOjtGrZy1Mhpea1jqm+qnuNsb76/G4ACeBdt
+	 PDVROZTa5ctZ30DiryM3zkZeZG9FeGri895jfshIvfAEPtxkTCCKE2VcMabMeHKqpO
+	 NGMIwjO2SHaFrqc5pzuDyNaD/ORFAMGoBgCRaQaK0OteHQm+krqqpV1+3/ba+RXpc/
+	 nHg5W/6dMTgnA==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5334c4d6829so2855708e87.2;
+        Fri, 30 Aug 2024 11:28:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKM00D8wAxF98/OLZM1pMgT3jUJbid4mC87dmL4ZMIW6TaO28FMV+LwYxvgDxJx6BmPnBQGtWPBdPL@vger.kernel.org, AJvYcCUbclfWQJ1jDVhtC+CtouBNY+rrdb5JCAeiv4t16ZUp5EBNCdqp+vLgKnMLIkmFTv8+eRduXDe7N6ha3d0D@vger.kernel.org, AJvYcCVTwhY5+WgmAbWOSRQdDYEgdChsnHh5vo59HAp9ZJdfV/it6GZpgZu8NzlRXMyevICVUv0M0OlurAUJ@vger.kernel.org, AJvYcCWQrdUp/m+ntbNJFxhXix0POwyFHF55fnYwNBFTFj/XRDEanUkObyshx0GOlt6gFSyUs7H5gZs6KnZL0Q==@vger.kernel.org, AJvYcCWUj3YOEqr+KLSGTm+J3iJG9l15c1hhW/nFj79lXSyzXZ6lp3M5ilktW01F0kiMmi/g90QmqZZcKxT+@vger.kernel.org, AJvYcCX0Wvh5bPaFkcMM3VCrT8LgzNm3Bd1JDau2ie2xDNW00osddV3Bi7a3Ar906ZsDSJlW8prr43ERbEYzSw==@vger.kernel.org, AJvYcCX9cvq+VctDLzp/0rILSKogQy7yqM61yyYEkriJBIjVfbVI7f4kx6Zs13Vq2GLchPtiLn25EQKj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5OVsLE+q1tQET83J3sx03PV/6dDvL27gOJDoCaplDyg1rPA4u
+	kcdJO5XLptJnO7hkCmpvSHhiltAw8U/dv2wRMJ+fUplddi5kqV6tFmDOPMHUDPOSMniKjGgR1Q9
+	pdQrE7/DQnB3+rT8wHzJ7pBssBw==
+X-Google-Smtp-Source: AGHT+IHkKGY89CPI6FFA16aU1d1oJTlBeNFiYnaYKv5/UM42MiQxOpY0Lv8jGLq5OjBzmO9YOzgtvsD8lUsQ5sxBIsk=
+X-Received: by 2002:a05:6512:2c92:b0:530:e323:b1cd with SMTP id
+ 2adb3069b0e04-53546bab46bmr2046490e87.40.1725042479576; Fri, 30 Aug 2024
+ 11:27:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240823132137.336874-14-aik@amd.com>
+References: <cover.1724159867.git.andrea.porta@suse.com> <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <98c570cb-c2ca-4816-9ca4-94033f7fb3fb@gmx.net> <ZshZ6yAmyFoiF5qu@apocalypse>
+ <015a0dd9-7a13-45b7-971a-19775a6bdd04@gmx.net> <Zsi5fNftL21vqJ3w@apocalypse>
+In-Reply-To: <Zsi5fNftL21vqJ3w@apocalypse>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 30 Aug 2024 13:27:46 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
+Message-ID: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+To: Stefan Wahren <wahrenst@gmx.net>, Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 23, 2024 at 11:21:27PM +1000, Alexey Kardashevskiy wrote:
-> Currently private MMIO nested page faults are not expected so when such
-> fault occurs, KVM tries moving the faulted page from private to shared
-> which is not going to work as private MMIO is not backed by memfd.
-> 
-> Handle private MMIO as shared: skip page state change and memfd
+On Fri, Aug 23, 2024 at 11:31=E2=80=AFAM Andrea della Porta
+<andrea.porta@suse.com> wrote:
+>
+> Hi Stefan,
+>
+> On 12:23 Fri 23 Aug     , Stefan Wahren wrote:
+> > Hi Andrea,
+> >
+> > Am 23.08.24 um 11:44 schrieb Andrea della Porta:
+> > > Hi Stefan,
+> > >
+> > > On 18:20 Wed 21 Aug     , Stefan Wahren wrote:
+> > > > Hi Andrea,
+> > > >
+> > > > Am 20.08.24 um 16:36 schrieb Andrea della Porta:
+> > > > > The RaspberryPi RP1 is ia PCI multi function device containing
+> > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > > > > and others.
+> > > > sorry, i cannot provide you a code review, but just some comments. =
+multi
+> > > > function device suggests "mfd" subsystem or at least "soc" . I won'=
+t
+> > > > recommend misc driver here.
+> > > It's true that RP1 can be called an MFD but the reason for not placin=
+g
+> > > it in mfd subsystem are twofold:
+> > >
+> > > - these discussions are quite clear about this matter: please see [1]
+> > >    and [2]
+> > > - the current driver use no mfd API at all
+> > >
+> > > This RP1 driver is not currently addressing any aspect of ARM core in=
+ the
+> > > SoC so I would say it should not stay in drivers/soc / either, as als=
+o
+> > > condifirmed by [2] again and [3] (note that Microchip LAN966x is a ve=
+ry
+> > > close fit to what we have here on RP1).
+> > thanks i was aware of these discussions. A pointer to them or at least =
+a
+> > short statement in the cover letter would be great.
+>
+> Sure, consider it done.
+>
+> > >
+> > > > > Implement a bare minimum driver to operate the RP1, leveraging
+> > > > > actual OF based driver implementations for the on-borad periphera=
+ls
+> > > > > by loading a devicetree overlay during driver probe.
+> > > > Can you please explain why this should be a DT overlay? The RP1 is
+> > > > assembled on the Raspberry Pi 5 PCB. DT overlays are typically for =
+loose
+> > > > connections like displays or HATs. I think a DTSI just for the RP1 =
+would
+> > > > fit better and is easier to read.
+> > > The dtsi solution you proposed is the one adopted downstream. It has =
+its
+> > > benefits of course, but there's more.
+> > > With the overlay approach we can achieve more generic and agnostic ap=
+proach
+> > > to managing this chipset, being that it is a PCI endpoint and could b=
+e
+> > > possibly be reused in other hw implementations. I believe a similar
+> > > reasoning could be applied to Bootlin's Microchip LAN966x patchset as
+> > > well, and they also choose to approach the dtb overlay.
+> > Could please add this point in the commit message. Doesn't introduce
+>
+> Ack.
+>
+> > (maintainence) issues in case U-Boot needs a RP1 driver, too?
+>
+> Good point. Right now u-boot does not support RP1 nor PCIe (which is a
+> prerequisite for RP1 to work) on Rpi5 and I'm quite sure that it will be
+> so in the near future. Of course I cannot guarantee this will be the case
+> far away in time.
+>
+> Since u-boot is lacking support for RP1 we cannot really produce some tes=
+t
+> results to check the compatibility versus kernel dtb overlay but we can
+> speculate a little bit about it. AFAIK u-boot would probably place the rp=
+1
+> node directly under its pcie@12000 node in DT while the dtb overlay will =
+use
+> dynamically created PCI endpoint node (dev@0) as parent for rp1 node.
 
-This means host keeps the mapping for private MMIO, which is different
-from private memory. Not sure if it is expected, and I want to get
-some directions here.
+u-boot could do that and it would not be following the 25+ year old
+PCI bus bindings. Some things may be argued about as "Linux bindings",
+but that isn't one of them.
 
-From HW perspective, private MMIO is not intended to be accessed by
-host, but the consequence may varies. According to TDISP spec 11.2,
-my understanding is private device (known as TDI) should reject the
-TLP and transition to TDISP ERROR state. But no further error
-reporting or logging is mandated. So the impact to the host system
-is specific to each device. In my test environment, an AER
-NonFatalErr is reported and nothing more, much better than host
-accessing private memory.
-
-On SW side, my concern is how to deal with mmu_notifier. In theory, if
-we get pfn from hva we should follow the userspace mapping change. But
-that makes no sense. Especially for TDX TEE-IO, private MMIO mapping
-in SEPT cannot be changed or invalidated as long as TDI is running.
-
-Another concern may be specific for TDX TEE-IO. Allowing both userspace
-mapping and SEPT mapping may be safe for private MMIO, but on
-KVM_SET_USER_MEMORY_REGION2,  KVM cannot actually tell if a userspace
-addr is really for private MMIO. I.e. user could provide shared memory
-addr to KVM but declare it is for private MMIO. The shared memory then
-could be mapped in SEPT and cause problem.
-
-So personally I prefer no host mapping for private MMIO.
-
-Thanks,
-Yilun
-
-> page state tracking.
-> 
-> The MMIO KVM memory slot is still marked as shared as the guest can
-> access it as private or shared so marking the MMIO slot as private
-> is not going to help.
-> 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 928cf84778b0..e74f5c3d0821 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4366,7 +4366,11 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
->  {
->  	bool async;
->  
-> -	if (fault->is_private)
-> +	if (fault->slot && fault->is_private && !kvm_slot_can_be_private(fault->slot) &&
-> +	    (vcpu->kvm->arch.vm_type == KVM_X86_SNP_VM))
-> +		pr_warn("%s: private SEV TIO MMIO fault for fault->gfn=%llx\n",
-> +			__func__, fault->gfn);
-> +	else if (fault->is_private)
->  		return kvm_faultin_pfn_private(vcpu, fault);
->  
->  	async = false;
-> -- 
-> 2.45.2
-> 
-> 
+Rob
 
