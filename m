@@ -1,289 +1,136 @@
-Return-Path: <linux-pci+bounces-12489-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12490-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D5B296580B
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 09:06:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD762965929
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 09:55:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51D181C20C7A
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 07:06:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CBB21C2037B
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 07:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED841547D4;
-	Fri, 30 Aug 2024 07:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3F715C153;
+	Fri, 30 Aug 2024 07:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hWPYb+WA"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SO8orggT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C861531D0;
-	Fri, 30 Aug 2024 07:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D58B15C147;
+	Fri, 30 Aug 2024 07:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725001523; cv=none; b=ekYou9y82dupQTBvhNvj69S5mDfwjxUWDA/XEQUWHRcVpDCjDleoOl/J4P+zFpY1mV2FK7nKLwbZZ7ZnGrPgDUfIh0mpnXMX3mmg+d3CUBcXq6GY/rVMRyjBnw4BKdQGQI1l4EEEcDWmPeFEs3BVhhUQFLCj/LfYFa0JzYxQ+r4=
+	t=1725004543; cv=none; b=GaLMCd7xIjALcoR43WZjNfjPtOifvksANCqDSX7bRLAQrCFyCxNN2kdOLgBdIqhYs4bepFGnwXUKxsRbeOFQLD6Rzi6pfvaTw07oULdoJwPBRmYQQuptjcjqiol2BizFSsxU16/odUPOJZqRZugRSr0gFV9NWjSX+00+wFIE9ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725001523; c=relaxed/simple;
-	bh=fs7dwCcIGstjP+8EDLC7kaBlHBE+/dzsUlL4+b4g1A8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJW7VPk7qtCUmU54qD/1FGuNZfzJBcUP9qBefEaYlD7KWNy9Qr/h5Y21GoC/TBPl+ppIWT8G1JXdnFV7wWJDDOdX9UXk+bwRTYlUevBxhMqafIeTBngqEHaPA29ARCJPZC4Im5uVAixV+t3XIS8yZUHr2DAfw0ZRNZp40fiPqw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hWPYb+WA; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725001522; x=1756537522;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fs7dwCcIGstjP+8EDLC7kaBlHBE+/dzsUlL4+b4g1A8=;
-  b=hWPYb+WAalEHSUYhF5wkvpvUUIY0QRtPmbCgh1IYQ/rVmxfn6K0Vo9J7
-   lvQZwRKi7Ju0lzhccIHyi99N5l/7YCa348cL6mkVSyAdpRjiYvSrtmn0Q
-   sua2BloyMmcrVymQRkk7FmkUBn7ZE+F9Gxk3D+Hh/sksS35eBOrv4HNvI
-   eJELDdXHMzcEwL+jVweVwSI27WUNnkSP0blPy+maQOm3zmQUatnUvnwOe
-   oc3pR1+oploRew5JLVEDxCXhW1k2iVCd18xdA/Wt+HF0KfGti1P9PEx9z
-   0ipjJ70ewFrg2GzFupB8GFuuwfesZ/VUSJh3v9idNpWgOPafMfxr3+lD7
-   A==;
-X-CSE-ConnectionGUID: 3Sj8UGVhRe2KnSUcahwSMw==
-X-CSE-MsgGUID: p6i2J6y1QNK47vb8z6aG3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="23495459"
-X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
-   d="scan'208";a="23495459"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 00:05:22 -0700
-X-CSE-ConnectionGUID: gWAF0oB3R/iao1boJz3F7Q==
-X-CSE-MsgGUID: mb7SY/8sSaSNPXvLqiy6oA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
-   d="scan'208";a="68708882"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 30 Aug 2024 00:05:17 -0700
-Date: Fri, 30 Aug 2024 15:02:49 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	pratikrajesh.sampat@amd.com, michael.day@amd.com,
-	david.kaplan@amd.com, dhaval.giani@amd.com,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC PATCH 11/21] KVM: SEV: Add TIO VMGEXIT and bind TDI
-Message-ID: <ZtFumVbgXf9RBNxP@yilunxu-OptiPlex-7050>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-12-aik@amd.com>
- <ZtBIr5IrnZF4z3cp@yilunxu-OptiPlex-7050>
- <db05ceb5-d38b-45b8-81c9-c84c0d8fbd96@amd.com>
+	s=arc-20240116; t=1725004543; c=relaxed/simple;
+	bh=ICOnWy5ERtMLb4aSD3kPGAsQnN7m6tT8L+4jFpK3UFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Jgkhemus3VKiQjJj0yC2xTfeWrNqFoY6Mm6+BYf07iEPrmVuOtdujunENbNzwlPw8v6mCCRKStfjvF7g09DaZfa0qEZ7un6sV7RAF3GIm4OowSmpPaBULNPQF4jWId/4vW+Qlqul9VPFC7ajvDBXKRJYgz2q+FCKOyabHSMbHCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SO8orggT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47TITuiq011732;
+	Fri, 30 Aug 2024 07:54:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zYycfQ4lgaP4WF5dIMosJrmcyjh/Y2HNGGyYhdP2JtU=; b=SO8orggTFx1V5LiP
+	9mX9wuxE/5g0JhXMQpgYOLIHs2duHRm5fJqalUZVnWugLgAIO/1vD9d8c4ySLrrh
+	S5VqXtx86szGRqqGkan/VqZzemVP4JYsNXhyByeE7MI0dlqu9ztm9i0Yds3l3ten
+	ZPGrI2apaiBErdcLTo71EoXVzJbtGBjr367ABriWvpvNijBuM98SZuXO7JDGH34d
+	MzPcVumMHZc2uWK+0ZtxfY11p2v4zQ3lEe+Pfp0XUYIo7+0l7WZwMA4+O1K6H1Yn
+	m5/cfi9vlCKJDG/B0JxizHrjA932R1DnbIro/H8ii8hWXLq+sTEika3eYA1h3TzO
+	A13gfQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 419pv0fv1x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 Aug 2024 07:54:56 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47U7stlY017067
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 Aug 2024 07:54:55 GMT
+Received: from [10.151.37.100] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 Aug
+ 2024 00:54:49 -0700
+Message-ID: <c17d6216-654d-427a-b267-a3886929ab48@quicinc.com>
+Date: Fri, 30 Aug 2024 13:24:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db05ceb5-d38b-45b8-81c9-c84c0d8fbd96@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 6/6] arm64: dts: qcom: ipq5018: Enable PCIe
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <robimarko@gmail.com>
+References: <20240827045757.1101194-1-quic_srichara@quicinc.com>
+ <20240827045757.1101194-7-quic_srichara@quicinc.com>
+ <nut3ru5rdjf3k3np47gqbpuczvpsuoismx6hp55ivc5mqmdglz@zyzbra46i6iz>
+Content-Language: en-US
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <nut3ru5rdjf3k3np47gqbpuczvpsuoismx6hp55ivc5mqmdglz@zyzbra46i6iz>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ZFbtisr6HyB-2IYFdtE3WJX3D8urmszh
+X-Proofpoint-ORIG-GUID: ZFbtisr6HyB-2IYFdtE3WJX3D8urmszh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-30_03,2024-08-29_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=701 mlxscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408300057
 
-On Fri, Aug 30, 2024 at 02:00:30PM +1000, Alexey Kardashevskiy wrote:
+
+
+On 8/29/2024 2:40 PM, Dmitry Baryshkov wrote:
+> On Tue, Aug 27, 2024 at 10:27:57AM GMT, Sricharan R wrote:
+>> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+>>
+>> Enable the PCIe controller and PHY nodes for RDP 432-c2.
+>>
+>> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>> ---
+>>   [v2] Moved status as last property
+>>
+>>   arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+>> index 8460b538eb6a..2b253da7f776 100644
+>> --- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+>> @@ -28,6 +28,15 @@ &blsp1_uart1 {
+>>   	status = "okay";
+>>   };
+>>   
+>> +&pcie1 {
+>> +	perst-gpios = <&tlmm 15 GPIO_ACTIVE_LOW>;
 > 
+> pinctrl? wake-gpios?
 > 
-> On 29/8/24 20:08, Xu Yilun wrote:
-> > > diff --git a/virt/kvm/vfio.c b/virt/kvm/vfio.c
-> > > index 76b7f6085dcd..a4e9db212adc 100644
-> > > --- a/virt/kvm/vfio.c
-> > > +++ b/virt/kvm/vfio.c
-> > > @@ -15,6 +15,7 @@
-> > >   #include <linux/slab.h>
-> > >   #include <linux/uaccess.h>
-> > >   #include <linux/vfio.h>
-> > > +#include <linux/tsm.h>
-> > >   #include "vfio.h"
-> > >   #ifdef CONFIG_SPAPR_TCE_IOMMU
-> > > @@ -29,8 +30,14 @@ struct kvm_vfio_file {
-> > >   #endif
-> > >   };
-> > > +struct kvm_vfio_tdi {
-> > > +	struct list_head node;
-> > > +	struct vfio_device *vdev;
-> > > +};
-> > > +
-> > >   struct kvm_vfio {
-> > >   	struct list_head file_list;
-> > > +	struct list_head tdi_list;
-> > >   	struct mutex lock;
-> > >   	bool noncoherent;
-> > >   };
-> > > @@ -80,6 +87,22 @@ static bool kvm_vfio_file_is_valid(struct file *file)
-> > >   	return ret;
-> > >   }
-> > > +static struct vfio_device *kvm_vfio_file_device(struct file *file)
-> > > +{
-> > > +	struct vfio_device *(*fn)(struct file *file);
-> > > +	struct vfio_device *ret;
-> > > +
-> > > +	fn = symbol_get(vfio_file_device);
-> > > +	if (!fn)
-> > > +		return NULL;
-> > > +
-> > > +	ret = fn(file);
-> > > +
-> > > +	symbol_put(vfio_file_device);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > >   #ifdef CONFIG_SPAPR_TCE_IOMMU
-> > >   static struct iommu_group *kvm_vfio_file_iommu_group(struct file *file)
-> > >   {
-> > > @@ -297,6 +320,103 @@ static int kvm_vfio_set_file(struct kvm_device *dev, long attr,
-> > >   	return -ENXIO;
-> > >   }
-> > > +static int kvm_dev_tsm_bind(struct kvm_device *dev, void __user *arg)
-> > > +{
-> > > +	struct kvm_vfio *kv = dev->private;
-> > > +	struct kvm_vfio_tsm_bind tb;
-> > > +	struct kvm_vfio_tdi *ktdi;
-> > > +	struct vfio_device *vdev;
-> > > +	struct fd fdev;
-> > > +	int ret;
-> > > +
-> > > +	if (copy_from_user(&tb, arg, sizeof(tb)))
-> > > +		return -EFAULT;
-> > > +
-> > > +	ktdi = kzalloc(sizeof(*ktdi), GFP_KERNEL_ACCOUNT);
-> > > +	if (!ktdi)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	fdev = fdget(tb.devfd);
-> > > +	if (!fdev.file)
-> > > +		return -EBADF;
-> > > +
-> > > +	ret = -ENOENT;
-> > > +
-> > > +	mutex_lock(&kv->lock);
-> > > +
-> > > +	vdev = kvm_vfio_file_device(fdev.file);
-> > > +	if (vdev) {
-> > > +		ret = kvm_arch_tsm_bind(dev->kvm, vdev->dev, tb.guest_rid);
-> > > +		if (!ret) {
-> > > +			ktdi->vdev = vdev;
-> > > +			list_add_tail(&ktdi->node, &kv->tdi_list);
-> > > +		} else {
-> > > +			vfio_put_device(vdev);
-> > > +		}
-> > > +	}
-> > > +
-> > > +	fdput(fdev);
-> > > +	mutex_unlock(&kv->lock);
-> > > +	if (ret)
-> > > +		kfree(ktdi);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int kvm_dev_tsm_unbind(struct kvm_device *dev, void __user *arg)
-> > > +{
-> > > +	struct kvm_vfio *kv = dev->private;
-> > > +	struct kvm_vfio_tsm_bind tb;
-> > > +	struct kvm_vfio_tdi *ktdi;
-> > > +	struct vfio_device *vdev;
-> > > +	struct fd fdev;
-> > > +	int ret;
-> > > +
-> > > +	if (copy_from_user(&tb, arg, sizeof(tb)))
-> > > +		return -EFAULT;
-> > > +
-> > > +	fdev = fdget(tb.devfd);
-> > > +	if (!fdev.file)
-> > > +		return -EBADF;
-> > > +
-> > > +	ret = -ENOENT;
-> > > +
-> > > +	mutex_lock(&kv->lock);
-> > > +
-> > > +	vdev = kvm_vfio_file_device(fdev.file);
-> > > +	if (vdev) {
-> > > +		list_for_each_entry(ktdi, &kv->tdi_list, node) {
-> > > +			if (ktdi->vdev != vdev)
-> > > +				continue;
-> > > +
-> > > +			kvm_arch_tsm_unbind(dev->kvm, vdev->dev);
-> > > +			list_del(&ktdi->node);
-> > > +			kfree(ktdi);
-> > > +			vfio_put_device(vdev);
-> > > +			ret = 0;
-> > > +			break;
-> > > +		}
-> > > +		vfio_put_device(vdev);
-> > > +	}
-> > > +
-> > > +	fdput(fdev);
-> > > +	mutex_unlock(&kv->lock);
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int kvm_vfio_set_device(struct kvm_device *dev, long attr,
-> > > +			       void __user *arg)
-> > > +{
-> > > +	switch (attr) {
-> > > +	case KVM_DEV_VFIO_DEVICE_TDI_BIND:
-> > > +		return kvm_dev_tsm_bind(dev, arg);
-> > 
-> > I think the TDI bind operation should be under the control of the device
-> > owner (i.e. VFIO driver), rather than in this bridge driver.
-> 
-> This is a valid point, although this means teaching VFIO about the KVM
-> lifetime (and KVM already holds references to VFIO groups) and
 
-Not sure if I understand, VFIO already knows KVM lifetime via
-vfio_device_get_kvm_safe(), is it?
+  ok, will add to make it explicit.
+  Otherwise pinctrl was default muxed.
 
-> guest BDFns (which have no meaning for VFIO in the host kernel).
-
-KVM is not aware of the guest BDF today.
-
-I think we need to pass a firmware recognizable TDI identifier, which
-is actually a magic number and specific to vendors. For TDX, it is the
-FUNCTION_ID. So I didn't think too much to whom the identifier is
-meaningful.
-
-> 
-> > The TDI bind
-> > means TDI would be transitioned to CONFIG_LOCKED state, and a bunch of
-> > device configurations breaks the state (TDISP spec 11.4.5/8/9). So the
-> > VFIO driver should be fully aware of the TDI bind and manage unwanted
-> > breakage.
-> 
-> VFIO has no control over TDI any way, cannot even know what state it is in
-> without talking to the firmware.
-
-I think VFIO could talk to the firmware, that's part of the reason we are
-working on the TSM module independent to KVM.
-
-> When TDI goes into ERROR, this needs to be
-> propagated to the VM. At the moment (afaik) it does not tell the
-
-I assume when TDISP ERROR happens, an interrupt (e.g. AER) would be sent
-to OS and VFIO driver is the one who handles it in the first place. So
-maybe there has to be some TDI stuff in VFIO?
-
-Thanks,
-Yilun
-
-> userspace/guest about IOMMU errors and it probably should but the existing
-> mechanism should be able to do so. Thanks,
-> 
-> 
-> > 
-> > Thanks,
-> > Yilun
-> 
-> -- 
-> Alexey
-> 
+Regards,
+  Sricharan
 
