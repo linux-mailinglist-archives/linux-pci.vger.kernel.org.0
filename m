@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-12539-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12540-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0511966C79
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2024 00:32:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A058966C87
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2024 00:33:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21BA91F229EF
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 22:32:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04A38B23420
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 22:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33A21C2DC7;
-	Fri, 30 Aug 2024 22:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 221311C1AC6;
+	Fri, 30 Aug 2024 22:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IrI86eVD"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Dp1v7+aW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E6C1C233B
-	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 22:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8339F1BD02E
+	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 22:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725057120; cv=none; b=Ul4TamYplot5q62jAY964IZ4+x02URfmsBR4TraEvIC2SUs7SaqXu0weUxD/3uQlTsWk3o9NL7I4ZXYonTqE46v5gZOb+/3sKEomQzGuwoT0QEq0rNEwg2xsVu9a7D1BL8xErtEn2/IOnEDg8elIvBGUl4IOgjzXeNMDvdLH5nU=
+	t=1725057198; cv=none; b=Wr/J9D8i02DFvQeIzAZ0gB+nhY2pJ1sqchtUwY167ahbqY1dKPxI/RTn7WcaO+TCqx8RkpNFQ1IA0HAMKFJKPmoWf/55L3dFo649J0GaLtrLvkVOMqMsSr/1Pct4f4zI8Sj6oVRoAi1hTbJ8tXemJ9pICs6X8TR/e7Ny40UUts8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725057120; c=relaxed/simple;
-	bh=hHzLblhbrXJK+/G9raoIs399iqss/9FXwR5tgGPtjHI=;
+	s=arc-20240116; t=1725057198; c=relaxed/simple;
+	bh=DqAVqqLfjpgjASo+CIfe1feDonNcG4Odo1DBuX7wdR4=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TlnyMXdlenhdG9zHBjdv1RSY+DGTIbwOt1ukS85aUXeQyoRH/Zh2pSJ7Y7fz66oIWRQy2AIthqUkButfr/73vWxv3oeeh/ibJHjdbhy8pp2whrFGap/TfBPwYm5EoSgWQXvVe6Bs+gTXtcR/IetILLQBNujDt9bBO97Oiry940o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IrI86eVD; arc=none smtp.client-ip=209.85.167.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxQjgPqeTM1ZNcUs2POOJabBdGO24q048EfNsoTHeJ3LmeDWU/8ehG42vpWj7PkFEjYc/X2M0d1eBtR5Rvg/UdZ0HsOQ4lKiLaWo8vbT8WbD4ED0CsFWGlHusWqU+qfJat1+Chr91QjpkKALDMoXHWT7ApffdYA4nc8ds3tHHr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Dp1v7+aW; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5334879ba28so3238714e87.3
-        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 15:31:58 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a8682bb5e79so289270966b.2
+        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 15:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725057116; x=1725661916; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1725057194; x=1725661994; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FuOHjHN01pwLhTn870hGi0iyigFDRibUrDrwMdxDl98=;
-        b=IrI86eVDg2/wYDZQDlPMxC9/wv3dhUk6p8jIbcb0ybgmlva31/PINL3i3+UDhiZqiP
-         MVUt4Fnifkv1ske37BXvH3v9WBAxMv53Eztln2qqrTrxmE7TxOVdr4VbkqME4bEqNStj
-         XO+R4S0AMifdsZEueHH8AQQOqlDtRL0RSGlvB78AgLE0v1OOyaVCmbnQufRuNt7kJAjb
-         XD2k6NAJLCnHFEGStm/In2cnhT84ZannyVhPNt5lejbruB+WM/+h0En6qVZxkSW79teL
-         JaKBuHDtxCuGT+YHO/ECn13UxmmJ/ult2z5vWtuSTBD62XlR8xS7WFBkjXdE+qNyppS1
-         cx4A==
+        bh=oK95C0BSC1jzK2D55nrE90clLVhwEM+Y9bSdjRWpEd8=;
+        b=Dp1v7+aWJz+A4cKaT17oli44/yP7f2EW22bHOILyblolzuTJO8ufFE9h6WAZImPwqB
+         FvIP6MkS4VBTdglAlZrkkemaTnAP17V9CI7Akrcz6QU3vjSzMSyKleqKcmbnO9iwcdxH
+         Qn/8Z6lagO/ez613Qk6hVmWoA3v/ETIgM4LbGNi9D4AGRabXoIsWYqWAV+onnKHYgcp1
+         I55prglG9jD1jTFlh0ezT84sinyOk6ck64uOBbuXon4UejFLuYgRWMu7IAYy7EnTlKMF
+         7BMHrMYhVM4xX+7bC3jEsBzlLskQRblwFvT0haTOTx2nwEi6YuL7AmptvwKLlBeKkwiA
+         P+Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725057116; x=1725661916;
+        d=1e100.net; s=20230601; t=1725057194; x=1725661994;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FuOHjHN01pwLhTn870hGi0iyigFDRibUrDrwMdxDl98=;
-        b=ZSCWx88HoSO22c5e8NSWtH/YGJF2D1CzfaAIQPjx1a0DjdIPtBSH/SamwzeUC3/L9R
-         FCpQtMfVsXZSSdea79a7gQtstP00fPzBZBHT3A0GOhdZOR6JcZyEO1ZSdEY+MVkqH/AC
-         4e1kkfj5nNsTFoHfPZBBIWpWo2rqkvSfaCtzR4wHi4nD2Y1OwOqachoiCjF9nNSweM11
-         OvaKhRqryd1YLMqWkc/Bup5J6rFDU2WjvkcVHh4D3WiKEi3F9QP+PpXRxFVvzM0izq3o
-         82vFVT4DRbLvc+el1387r/6KsUfpCMuXWYa75jg4pR8JXGbtb5luGcaMAMUsQqCtUnHM
-         NSmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUItHwsEen3TCEdgLZ75uarS32ZYJKCLYZpoItnHY9BMv7kgnsHu2VXy4wuQRB++L2NwEk3p0eQ6yI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn7FAlBX0DrnxWnZ+lrZWt3JAjLOZDup4vqwD9EQKqTDuYef7D
-	An6R4v7fmFxPqIEI7DYRVgpWWu03+cnBviV4ObTRYLzelunG4gPd+vLU2y5reh4=
-X-Google-Smtp-Source: AGHT+IGclcXXmfEYFitTuWbyIOxJTqBHu8I4vUSw06+6AvY4Xvz0PRfaVlPP3p7/PlrqVhE+LPRQGg==
-X-Received: by 2002:a05:6512:3b11:b0:52c:e054:4149 with SMTP id 2adb3069b0e04-53546b052fdmr2712927e87.15.1725057115910;
-        Fri, 30 Aug 2024 15:31:55 -0700 (PDT)
+        bh=oK95C0BSC1jzK2D55nrE90clLVhwEM+Y9bSdjRWpEd8=;
+        b=gRDAdkECKXqQ2AbmYp+3vYZfUYCuaqZiuGFRPpy1aiCouxD0ETIZCp+ljwf9jnt/HY
+         y2abBr8FGa9i5sn5Y8fTSwFB90TtxDsqkU9m7EHjdezfeYIbzeuhQNBhVNg3BRsw57r+
+         pksZ/8PZYHmkjDaF6ddTO2sY0FsR9FeFjfeQ4FHvu5h1o+YSSu1oYhXXb63vbHp88Dx6
+         WI3fFVDIbiPbxMD8FjA3tIK3VOqrG71J/S3xpOobEN3ZHbKbsakSj5wrWV8gk7WH1WH4
+         3E4Wn4UhUsNaakR+okjBrpvWa61Wi1BcYyA/jzaWhCvcgD+R22WSNlX+x9pxiQRQG+Dj
+         iOOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUob/FzA3j3LMcAqCAuKXFTWL6ILphVDBAPeMjm3pkwQprx3BJOg8aiXoy1ubdwwU3VGn5ngDcB72w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywkh75SL1uk1ZZjZaXz4L/Cr6k5nK17IZNtmNLF/DAxVvRsX+fX
+	eypCXzkoKXmj8J5uYusURTWvkRVjwmXelsxPEE/t+QBFyxeOFM/giCFTBSqqJOQ=
+X-Google-Smtp-Source: AGHT+IHqkz6MDPFM4AoearcdXDKhXOMUBNtVV9Zz1IeP9NcojNkgXiXqwILRRdgqIEEC3J1YsUnnqQ==
+X-Received: by 2002:a17:907:2da2:b0:a7a:a5ae:11b7 with SMTP id a640c23a62f3a-a897fa63905mr698523966b.49.1725057193226;
+        Fri, 30 Aug 2024 15:33:13 -0700 (PDT)
 Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89891d6f9esm260898466b.154.2024.08.30.15.31.55
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989195e8csm260291966b.105.2024.08.30.15.33.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 15:31:55 -0700 (PDT)
+        Fri, 30 Aug 2024 15:33:12 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Sat, 31 Aug 2024 00:32:02 +0200
+Date: Sat, 31 Aug 2024 00:33:19 +0200
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -97,11 +97,12 @@ Cc: Andrea della Porta <andrea.porta@suse.com>,
 	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
 	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 10/11] net: macb: Add support for RP1's MACB variant
-Message-ID: <ZtJIYsBa07nJE6os@apocalypse>
+Subject: Re: [PATCH 11/11] arm64: dts: rp1: Add support for MACB contained in
+ RP1
+Message-ID: <ZtJIr-PCWSQWWjaK@apocalypse>
 References: <cover.1724159867.git.andrea.porta@suse.com>
- <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
- <cfysm2r6sswmvrch34pk5dx4wum3rohcxdla7i5qoh6vizgklb@pk5i7nzlnp67>
+ <a3fde99c2e522ef1fbf4e4bb125bc1d97a715eaf.1724159867.git.andrea.porta@suse.com>
+ <c3cgkrwnwkrzr67viuvo66ckkxc4ehcye4zomcqdwy2h4dabol@wjp4cd4clm77>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -110,76 +111,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cfysm2r6sswmvrch34pk5dx4wum3rohcxdla7i5qoh6vizgklb@pk5i7nzlnp67>
+In-Reply-To: <c3cgkrwnwkrzr67viuvo66ckkxc4ehcye4zomcqdwy2h4dabol@wjp4cd4clm77>
 
 Hi Krzysztof,
 
-On 10:49 Wed 21 Aug     , Krzysztof Kozlowski wrote:
-> On Tue, Aug 20, 2024 at 04:36:12PM +0200, Andrea della Porta wrote:
-> > RaspberryPi RP1 contains Cadence's MACB core. Implement the
-> > changes to be able to operate the customization in the RP1.
+On 10:43 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> On Tue, Aug 20, 2024 at 04:36:13PM +0200, Andrea della Porta wrote:
+> > RaspberryPi RP1 is multi function PCI endpoint device that
+> > exposes several subperipherals via PCI BAR.
+> > Add an ethernet node for Cadence MACB to the RP1 dtso
 > > 
 > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> 
-> 
-> > @@ -5100,6 +5214,11 @@ static int macb_probe(struct platform_device *pdev)
-> >  			}
-> >  		}
-> >  	}
-> > +
-> > +	device_property_read_u8(&pdev->dev, "cdns,aw2w-max-pipe", &bp->aw2w_max_pipe);
-> > +	device_property_read_u8(&pdev->dev, "cdns,ar2r-max-pipe", &bp->ar2r_max_pipe);
-> 
-> Where are the bindings?
-
-As stated in the cover letter, this patch (and the dtb patch #11 for macb) is completely
-unpolished and intended only for a quick test of the ethernet peripheral underneath
-the RP1.  As such, it's not intended to be upstreamed yet.
-However, your feedback is really appreaciated and will be used in a future patch that
-will deal with ethernet mac support.
-
-> 
-> > +	bp->use_aw2b_fill = device_property_read_bool(&pdev->dev, "cdns,use-aw2b-fill");
-> > +
-> >  	spin_lock_init(&bp->lock);
+> > ---
+> >  arch/arm64/boot/dts/broadcom/rp1.dtso | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > index d80178a278ee..b40e203c28d5 100644
+> > --- a/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> > @@ -78,6 +78,29 @@ rp1_clocks: clocks@c040018000 {
+> >  							       <50000000>;   // RP1_CLK_ETH_TSU
+> >  				};
 > >  
-> >  	/* setup capabilities */
-> > @@ -5155,6 +5274,21 @@ static int macb_probe(struct platform_device *pdev)
-> >  	else
-> >  		bp->phy_interface = interface;
-> >  
-> > +	/* optional PHY reset-related properties */
-> > +	bp->phy_reset_gpio = devm_gpiod_get_optional(&pdev->dev, "phy-reset",
+> > +				rp1_eth: ethernet@c040100000 {
+> > +					reg = <0xc0 0x40100000  0x0 0x4000>;
+> > +					compatible = "cdns,macb";
 > 
-> Where is the binding?
+> Please start using DTS coding style...
 
-Ditto.
+Ack.
 
-> 
-> > +						     GPIOD_OUT_LOW);
-> > +	if (IS_ERR(bp->phy_reset_gpio)) {
-> > +		dev_err(&pdev->dev, "Failed to obtain phy-reset gpio\n");
-> > +		err = PTR_ERR(bp->phy_reset_gpio);
-> > +		goto err_out_free_netdev;
-> > +	}
-> > +
-> > +	bp->phy_reset_ms = 10;
-> > +	of_property_read_u32(np, "phy-reset-duration", &bp->phy_reset_ms);
-> 
-> Where is the binding?
-
-Ditto.
-
-Cheers,
+Regards,
 Andrea
 
-> 
-> > +	/* A sane reset duration should not be longer than 1s */
-> > +	if (bp->phy_reset_ms > 1000)
-> > +		bp->phy_reset_ms = 1000;
-> > +
-> >  	/* IP specific init */
-> >  	err = init(pdev);
 > 
 > Best regards,
 > Krzysztof
