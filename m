@@ -1,187 +1,178 @@
-Return-Path: <linux-pci+bounces-12492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5234A9659AA
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 10:12:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3121965A2C
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 10:23:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 453601C21CE7
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 08:12:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD9328AF93
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Aug 2024 08:23:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0FE166F15;
-	Fri, 30 Aug 2024 08:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D09413635E;
+	Fri, 30 Aug 2024 08:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p+0ucVEV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y58JmQi7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA92F15099A
-	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 08:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DDD1667ED
+	for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 08:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725005535; cv=none; b=eJ/8Dj/c4vm4BWPzBy/GAWCvScnO7/XyOygHW+fiQsL8yxWcWRAGONb8Mnybuc3V/gDgekLiga8mUH/ULxqSqL/8wdbk9ruXJcDSAAyk2r/r/TNjtnhiZpmEN61e8jdrZBazLLA+Sa+ozt+Ecr91CipINI7oqmH84fU1HillaAY=
+	t=1725006214; cv=none; b=ONsWwHDfmETRp+fnIuryek47axhzQDdv7E2SotbvYWXctncBnw47lRREzW8MWxRypsOJp+LBW9qkT2urarnMrfaIbPkGz61FQWMWs5xCVediVzPmyoL7ME/K02TUMmNGnkMVAPUjQ3qYrRYA5LexpWaT9LxxnwEMFFgsG1t8ldA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725005535; c=relaxed/simple;
-	bh=Q5bXYbl4dV+VYYIPMv/Rb99ZiL+XzXzN25xBOihod3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Edkqy4vBk81gb54KbBoOeba7ObHy7DwKQCpLpiIWov9DU+LtiTqZC4sjbddxrX5OdyAO2G3PwFA3SuZdMNzahrKODuYaKZx6+JqhTWSQoMx4S2lyyVL+mhM2gm/+HKYpdeu+f1jW7g0LUNlhDDAxR7wNieyhM5XahmL9W+0Tr70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p+0ucVEV; arc=none smtp.client-ip=209.85.215.170
+	s=arc-20240116; t=1725006214; c=relaxed/simple;
+	bh=dOvy8lq/EHJgmko75sUxm42JQCa3y8fE26e1sl4RadQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HIPrmodLXEx5lfFDmKeUVzAQiWFkp4KJmEKAJATk+XHQZOUkyOUmTgmbOKuzwXfsaBATQnUHgqHO12bGZ4ExNZzSqn7XAZUB4cHjy5lacf7iHydurr4KTnorCzTOy9xJgLP/asmOWcDjmDz0fSfv9LV0d6862m2+YP705q7gg+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y58JmQi7; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7cd835872ceso1126775a12.3
-        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 01:12:13 -0700 (PDT)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-70943713472so718702a34.2
+        for <linux-pci@vger.kernel.org>; Fri, 30 Aug 2024 01:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725005533; x=1725610333; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aUHV0wbyIdVXwPB5dolmt5OPeFFiHv5Yfm1U7ilTAZ0=;
-        b=p+0ucVEVXbe6yrAIbm1gphBMUslR2F4/xe2krIfjfb8iIaFeOtWQnUuvAkkKkl7pcX
-         r277bZSPnxaIvv0qMY6RQX1FPryNiOj1AB+4stXyEqg76ey1XTNAFgMGjhRAjYOgrvjQ
-         CQOM9LAveneujVIMciWzPzZogQezRqnnY8mHytTHaPDEVB8OL7Az4lC/X7XWWT4wNTol
-         CYrUNoaN7X0h/treDopdYBupQQFw/bdNXN5repbBDmUn3Ao8SKxc2dm9avRQbi6vq9AR
-         u/GM1nbdAM2JRJ+vTQJm7XxAss9JfV4Rxvoomz3NqOkS3zPMXdBgUg+SfjCH+fBkVZzj
-         lcqA==
+        d=linaro.org; s=google; t=1725006211; x=1725611011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iwkXS2XE5Tkc0QlVhME91uwM7bEp3jrm2KHPu4Lpqm8=;
+        b=Y58JmQi7kq4itQiJnSlbl/zhiuY9+4OG/BLYnz9tAQWDDgeuj5zZUrFK+kmoKGkRGu
+         guj//lpr+deERV0Ef1JvqzHq5Bripolb7PhI1+VpudYVzgNm9/1MRYRYU4rruocy+Hxb
+         LcyxX33OPZdgI9l7205GR3Ts198JhTaJ0alFc1/neiyusfLQnXq3sBA1Vca2grzNaKC7
+         dh8WOK5jWzhHqkpuxDOVAOk41KKcG3GnTDyG17H5cEuGPMskkktGuTwTah25FEX8fVeh
+         lv1Q4YKhZqQBUknD9ykn9RZE6xnvJ2brChMwlboGUJ1L5qMo9FMhwUrwWkEWzNOPReOk
+         r3uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725005533; x=1725610333;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aUHV0wbyIdVXwPB5dolmt5OPeFFiHv5Yfm1U7ilTAZ0=;
-        b=ZqkMIshAmRYE0y0OG8yq8dGJreRETDjgXsH5UiqWKeyiqjVhFavNEQBUDfmDQc/hq6
-         ORyyJ5bVPktedI12gBJ//PAvykz68ZWOnzazrss6P2iFndDXDvnYyI3+OU9KiBLFgSBD
-         uBAXHDmc+FLYXQpwW+AQhzHFI/fXWFXRQ7YEoepcufPlcv99FXVl6sbXokJHXXXY0HGz
-         ISRF2+SgsKiHZTrsdPlB9pE4LRkkoiAfOCz2B9CpJBdenajiA4L4Z4ohXcqpGFNav72P
-         BcjB71fCEylL6JY9n+2jRp07LJbuAys2KyiSEX5q1CPPvOrHJDC+ga4Jxm01qbTG0LwU
-         0YKg==
-X-Forwarded-Encrypted: i=1; AJvYcCULZyg8ewtIFUHmM6A+7EDP9nXA/0zsGQqDuovIu7OlTOJT1sbjwedOt9Svt4ziRDtiAaleiudrUnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzViJVCi5ngssie4oWcGzjCkDFxRXWQQoPMC//IRPRs/LSUh+FH
-	EEHHFMVJdURxJEIbtFdOJVGCLoFA92Hx9hsHyBH/IRQ3z1qYXNisEHNDhk5MtQ==
-X-Google-Smtp-Source: AGHT+IE/BW3u6yWbfrYcy/l5d0lHQgaNZ0qFHfjJAZ8BG59rWjAxYM55Dn1n/0jPPnypv9IrkiwExw==
-X-Received: by 2002:a17:903:35ce:b0:202:1a0b:7cfd with SMTP id d9443c01a7336-2050c3dbf8fmr54516345ad.28.1725005532965;
-        Fri, 30 Aug 2024 01:12:12 -0700 (PDT)
-Received: from thinkpad ([117.193.213.95])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20515551e79sm22132855ad.248.2024.08.30.01.12.09
+        d=1e100.net; s=20230601; t=1725006211; x=1725611011;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iwkXS2XE5Tkc0QlVhME91uwM7bEp3jrm2KHPu4Lpqm8=;
+        b=wqGtVAYGnE1YcveeWAxTAh7cbZI7JXu2HtrNu2u4VjQ4W9Gl7nu03oJiz5oDMhM1Zq
+         ShMxQM/W1VLBhpJJT1v7N7HeuAH+1HEHTSj4eUDw2tSo9FASY1ZG1kAusjRMcFWohSxf
+         Y+BU45NYyOgtYAOJvLtrIgl0Z61bHMtVfzCv8M+Kji5ZdiE2WMiNF47fxxPGmRpyWPvv
+         RfSER9xo631tO6vTWzh2FxYJ+SOmqQc37TZ4e2KQYg7ythxrtqFfJJreybzV9u+cXdf9
+         6Hx+i3HNenAYOwc3s+yXe2OfHLXWReMmtK77BrHFbdRsRs3XuPUaslmgwUhZ7M+DPB49
+         ZTFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfgDRv66ElIb+aVu1R/pe14kcBbRiqMvnFK/DI8X4urS51iWTZdhl2OTDN/URSmO9CsWWkm2USVPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfFuPN19r7AaLFdTJeKMP7DxsXZpHp7DH/SZxUIIEtqlvahX4v
+	VCCW7KX8BI3dYAY9y/FKKH/aTAV6Mw6bsqPQg0t2KZzcpMgMJ4gh5DuLgTiPyQ==
+X-Google-Smtp-Source: AGHT+IGQ9ZFGuWGC0MxA2Z/ohzzOno+rbi7BFhIeUOBZkKWCdB3C8rji4O6xHmPZhJ8tf79hvt7rKg==
+X-Received: by 2002:a05:6358:5289:b0:1b1:a91f:9f7e with SMTP id e5c5f4694b2df-1b603cb7acdmr711886455d.24.1725006210984;
+        Fri, 30 Aug 2024 01:23:30 -0700 (PDT)
+Received: from localhost.localdomain ([117.193.213.95])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e5576c90sm2265623b3a.2.2024.08.30.01.23.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 01:12:12 -0700 (PDT)
-Date: Fri, 30 Aug 2024 13:42:05 +0530
+        Fri, 30 Aug 2024 01:23:30 -0700 (PDT)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	robh@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v2] PCI: qcom-ep: Enable controller resources like PHY
- only after refclk is available
-Message-ID: <20240830081205.x3ucsausk5znk27e@thinkpad>
-References: <20240829164455.ts2j46dfxwp3pa2f@thinkpad>
- <20240829170624.GA67120@bhelgaas>
+Subject: [PATCH v3] PCI: qcom-ep: Enable controller resources like PHY only after refclk is available
+Date: Fri, 30 Aug 2024 13:53:19 +0530
+Message-Id: <20240830082319.51387-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240829170624.GA67120@bhelgaas>
 
-On Thu, Aug 29, 2024 at 12:06:24PM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 29, 2024 at 10:14:55PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Aug 29, 2024 at 07:38:08AM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Aug 29, 2024 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
-> > > > On Wed, Aug 28, 2024 at 03:59:45PM -0500, Bjorn Helgaas wrote:
-> > > > > On Wed, Aug 28, 2024 at 07:31:08PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > qcom_pcie_enable_resources() is called by qcom_pcie_ep_probe() and it
-> > > > > > enables the controller resources like clocks, regulator, PHY. On one of the
-> > > > > > new unreleased Qcom SoC, PHY enablement depends on the active refclk. And
-> > > > > > on all of the supported Qcom endpoint SoCs, refclk comes from the host
-> > > > > > (RC). So calling qcom_pcie_enable_resources() without refclk causes the
-> > > > > > whole SoC crash on the new SoC.
-> > > > > > 
-> > > > > > qcom_pcie_enable_resources() is already called by
-> > > > > > qcom_pcie_perst_deassert() when PERST# is deasserted, and refclk is
-> > > > > > available at that time.
-> > > > > > 
-> > > > > > Hence, remove the unnecessary call to qcom_pcie_enable_resources() from
-> > > > > > qcom_pcie_ep_probe() to prevent the crash.
-> > > > > > 
-> > > > > > Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
-> > > > > > Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > ---
-> > > > > > 
-> > > > > > Changes in v2:
-> > > > > > 
-> > > > > > - Changed the patch description to mention the crash clearly as suggested by
-> > > > > >   Bjorn
-> > > > > 
-> > > > > Clearly mentioning the crash as rationale for the change is *part* of
-> > > > > what I was looking for.
-> > > > > 
-> > > > > The rest, just as important, is information about what sort of crash
-> > > > > this is, because I hope and suspect the crash is recoverable, and we
-> > > > > *should* recover from it because PERST# may occur at arbitrary times,
-> > > > > so trying to avoid it is never going to be reliable.
-> > > > 
-> > > > I did mention 'whole SoC crash' which typically means unrecoverable
-> > > > state as the SoC would crash (not just the driver). On Qcom SoCs,
-> > > > this will also lead the SoC to boot into EDL (Emergency Download)
-> > > > mode so that the users can collect dumps on the crash.
-> > > 
-> > > IIUC we're talking about an access to a PHY register, and the access
-> > > requires Refclk from the host.  I assume the SoC accesses the register
-> > > by doing an MMIO load.  If nothing responds, I assume the SoC would
-> > > take a machine check or similar because there's no data to complete
-> > > the load instruction.  So I assume again that the Linux on the SoC
-> > > doesn't know how to recover from such a machine check?  If that's the
-> > > scenario, is the machine check unrecoverable in principle, or is it
-> > > potentially recoverable but nobody has done the work to do it?  My
-> > > guess would be the latter, because the former would mean that it's
-> > > impossible to build a robust endpoint around this SoC.  But obviously
-> > > this is all complete speculation on my part.
-> > 
-> > Atleast on Qcom SoCs, doing a MMIO read without enabling the
-> > resources would result in a NoC (Network On Chip) error, which then
-> > end up as an exception to the Trustzone and Trustzone will finally
-> > convert it to a SoC crash so that the users could take a crash dump
-> > and do the analysis on why the crash has happened.
-> > 
-> > I know that it may sound strange to developers coming from x86 world
-> > :)
-> 
-> It's only strange if the system design forces a crash for events that
-> happen in normal operation.  Sounds like part of the problem here is
-> the non-SRIS mode that depends on Refclk from the host.  That and the
-> fact that operating in non-SRIS mode has an unavoidable race where
-> PERST# from the host at the wrong time can crash the endpoint.
-> 
+qcom_pcie_enable_resources() is called by qcom_pcie_ep_probe() and it
+enables the controller resources like clocks, regulator, PHY. On one of the
+new unreleased Qcom SoC, PHY enablement depends on the active refclk. And
+on all of the supported Qcom endpoint SoCs, refclk comes from the host
+(RC). So calling qcom_pcie_enable_resources() without refclk causes the
+NoC (Network On Chip) error in the endpoint SoC and in turn results in a
+whole SoC crash and rebooting into EDL (Emergency Download) mode which is
+an unrecoverable state.
 
-Precisely.
+But qcom_pcie_enable_resources() is already called by
+qcom_pcie_perst_deassert() when PERST# is deasserted, and refclk is
+available at that time.
 
-> I think users of non-SRIS mode need to be aware of this issue, and
-> this patch to narrow the race window, but not close it completely, is
-> one good place to mention it.
-> 
+Hence, remove the unnecessary call to qcom_pcie_enable_resources() from
+qcom_pcie_ep_probe() to prevent the above mentioned crash.
 
-Okay. I'll mention it in patch description.
+It should be noted that this commit prevents the crash only under normal
+working condition (booting endpoint before host), but the crash may also
+occur if PERST# assert happens at the wrong time. For avoiding the crash
+completely, it is recommended to use SRIS mode which allows the endpoint
+SoC to generate its own refclk. The driver is not supporting SRIS mode
+currently, but will be added in the future.
 
-> > But this NoC error is something NVidia has also reported before, so
-> > I wouldn't assume that this is a Qcom specific issue but rather for
-> > SoCs depending on refclk from host.
-> 
-> Are there other drivers that need a similar band-aid?
-> 
+Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
 
-AFAIK, only tegra194 and qcom-pcie-ep drivers require refclk from host. Rest of
-the endpoint drivers seem to have independent clock.
+Changes in v3:
 
-- Mani
+* Improved the patch description to mention that the crash in an unrecoverable
+  state and also that it may occur if PERST# is asserted at the wrong time.
 
+Changes in v2:
+
+- Changed the patch description to mention the crash clearly as suggested by
+  Bjorn
+- Added the Fixes tag
+
+Bjorn: This is not going to be a 6.11 material as it is not fixing a regression
+introduced in 6.11 (offending commit got merged in 6.10). So please merge this
+patch for 6.12.
+
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..2319ff2ae9f6 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -846,21 +846,15 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = qcom_pcie_enable_resources(pcie_ep);
+-	if (ret) {
+-		dev_err(dev, "Failed to enable resources: %d\n", ret);
+-		return ret;
+-	}
+-
+ 	ret = dw_pcie_ep_init(&pcie_ep->pci.ep);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to initialize endpoint: %d\n", ret);
+-		goto err_disable_resources;
++		return ret;
+ 	}
+ 
+ 	ret = qcom_pcie_ep_enable_irq_resources(pdev, pcie_ep);
+ 	if (ret)
+-		goto err_disable_resources;
++		goto err_ep_deinit;
+ 
+ 	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
+ 	if (!name) {
+@@ -877,8 +871,8 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
+ 	disable_irq(pcie_ep->global_irq);
+ 	disable_irq(pcie_ep->perst_irq);
+ 
+-err_disable_resources:
+-	qcom_pcie_disable_resources(pcie_ep);
++err_ep_deinit:
++	dw_pcie_ep_deinit(&pcie_ep->pci.ep);
+ 
+ 	return ret;
+ }
 -- 
-மணிவண்ணன் சதாசிவம்
+2.25.1
+
 
