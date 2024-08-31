@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-12551-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12552-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA4E3967102
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2024 13:04:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F5B9967168
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2024 13:52:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28607B2217C
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2024 11:04:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FF031C2127F
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Aug 2024 11:52:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD7822098;
-	Sat, 31 Aug 2024 11:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C339617C231;
+	Sat, 31 Aug 2024 11:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIH3P5f5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WDiKmuNK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21A71BC39
-	for <linux-pci@vger.kernel.org>; Sat, 31 Aug 2024 11:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1661A170A27
+	for <linux-pci@vger.kernel.org>; Sat, 31 Aug 2024 11:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725102241; cv=none; b=Ghz1suWq3ulqPqtDPC3GHD+bwD86MCSbajiJx3osNXD3QMsIEuRraBLRoB8A12sseva8WbSt9D1g7c9Z5GWLi85pNIa1Ef89MQnDahETD9QCyUIct7sKPSFUkO8UJkKkfkPMeko09NeMVBKmv0VXglXN60obyAf1oalEBqZEsic=
+	t=1725105127; cv=none; b=gFk01E3wCIAZ1WwTaxtkY3Jb0hwA0HKSJgtLHQnR/tY7Uzqag2s2GWc6S5/57sz5Eg9YoMu6aggOJlinkXE/vsD6wYMqlJXxx4azcftQCfE3fBR517+F6ZsN4zLywgw69ALDZRSgpVTukdkfJZnwOU9F6ViRefJVSBCB3CHF8JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725102241; c=relaxed/simple;
-	bh=rRCkIzcdXf7rEaj30NTxWh5je5Jjmz/MsoykMF9HTVE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=qXagIulaThHiVzNyhgCNv35SftWpkwBvD/7x9uyp80oHI6qhWM3U5deUuMRUgf3iJ0i04wh4uw7PLx2d8JkkVNSsYTvgSbxMYEngxsyE/Z6RIpqTORty4dBIUO2vGNiTenNsPUXxG+0vcpmLVP2VSicxa3QCFPY1GlVcp5GQhFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIH3P5f5; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1725105127; c=relaxed/simple;
+	bh=Auy7DpPre3cW8Vx364M+IZPoU/chX747LLL+RDCFycU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=drzbBleYejvQ1UumxqKPryX2nit2Tu39mMTLkV7WYLhAqbfjoBlz/oHI6Hue3BJgTJj37lD0RJZPeL9QQMzVhy7ngFKcSSu13F1biSBUgup6VmooPZqdR36bO/7AOQNdDHAhtpiDdSAW3GalNEiRY2E3r8dVE1vzVb+uX3q08qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WDiKmuNK; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725102240; x=1756638240;
+  t=1725105126; x=1756641126;
   h=date:from:to:cc:subject:message-id;
-  bh=rRCkIzcdXf7rEaj30NTxWh5je5Jjmz/MsoykMF9HTVE=;
-  b=iIH3P5f5SwefMDEbaC2u9T//yLBC9oikWmrHLgLsk6GwR1y94Dar/zCQ
-   6pF1BYXjxfkNjxmKbKKQC/+jDrBSyEWgneSqbc7ndzmmZti866bVXPBZR
-   PuhBbTAnmx8TfST87WrNlKO94l/VqMNbNCLM3pmNP/neS501Qqo5ocX7t
-   pD2f8tXauFUGlDrulTRsggaMOnwXHLjug7fjy321wzULq+Y8707lAFPtX
-   NorCZSYcl2Cu6yQTRR86h61K2UbEcSvMZLBfNeF2m4UaaBmr4wtLOBWDS
-   N6qkGATtBhmoUzjttwdRprLrekTvB9WpZmSujM00KPuhQL8euBA+QQOll
-   A==;
-X-CSE-ConnectionGUID: rz1jSyhvQuaZpfH8St9bFw==
-X-CSE-MsgGUID: JoAiO5Y8ROOVFgbaQslfIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="13309560"
+  bh=Auy7DpPre3cW8Vx364M+IZPoU/chX747LLL+RDCFycU=;
+  b=WDiKmuNKbxKTAlGD64HoQPFYg20RsUCfpBVhwvXxHbUEMYXS2m8Bcbq+
+   UqdcKMdCFyP5KeZK578K+Vij6NHkuLEE3EG992khrlzikmv/iOFGcvdCe
+   +ss+AbOSk9zgnztVxjOczR+hZAf5zorRit6mQk6XS3IDk0dT8Fqx3u6+G
+   hR8HxbW8Vlbh2qLRA0h/SJb/0ea9bWoI/y17r8WdmbDfhNBnck8bLlBaO
+   zl0zFDerhAJfa4Jth8lqNOid/DeYBWoKwBhukGuM4dlu0mrIY+8cmCZpJ
+   EnDL1YuJuw7OvVvFbwj2VN6Ced957R5HDIbUrX1q0wzRREx3gmx0ZMb9o
+   Q==;
+X-CSE-ConnectionGUID: wRxWYclrRdaYmcI98GhQMg==
+X-CSE-MsgGUID: slqpYR1RRFWXHgS4psa27Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="27617923"
 X-IronPort-AV: E=Sophos;i="6.10,191,1719903600"; 
-   d="scan'208";a="13309560"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2024 04:04:00 -0700
-X-CSE-ConnectionGUID: HChEQUYUT9202E5gLZLVHg==
-X-CSE-MsgGUID: xFs7u44sQIOw4AjINfuVbw==
+   d="scan'208";a="27617923"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2024 04:52:04 -0700
+X-CSE-ConnectionGUID: hX4zEIdYSUCv6333CchPPQ==
+X-CSE-MsgGUID: QJvqtI7aRs2drHxUY93Ulg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,191,1719903600"; 
-   d="scan'208";a="68805878"
+   d="scan'208";a="63967486"
 Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 31 Aug 2024 04:03:59 -0700
+  by orviesa010.jf.intel.com with ESMTP; 31 Aug 2024 04:52:03 -0700
 Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1skLtc-0002dS-23;
-	Sat, 31 Aug 2024 11:03:56 +0000
-Date: Sat, 31 Aug 2024 19:03:39 +0800
+	id 1skMe8-0002iW-24;
+	Sat, 31 Aug 2024 11:52:00 +0000
+Date: Sat, 31 Aug 2024 19:51:06 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/xilinx] BUILD SUCCESS
- 0b93267adb34f39ca5b1574cf3766ee5fe3d44b6
-Message-ID: <202408311936.4FcT0mYS-lkp@intel.com>
+Subject: [pci:for-linus] BUILD SUCCESS
+ 150b572a7c1df30f5d32d87ad96675200cca7b80
+Message-ID: <202408311904.tpXNwbCB-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,12 +74,12 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/xilinx
-branch HEAD: 0b93267adb34f39ca5b1574cf3766ee5fe3d44b6  arm64: zynqmp: Add PCIe phys property for ZCU102
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: 150b572a7c1df30f5d32d87ad96675200cca7b80  MAINTAINERS: PCI: Add NXP PCI controller mailing list imx@lists.linux.dev
 
-elapsed time: 1091m
+elapsed time: 993m
 
-configs tested: 185
+configs tested: 187
 configs skipped: 5
 
 The following configs have been built successfully.
@@ -249,6 +249,7 @@ x86_64       buildonly-randconfig-004-20240831   clang-18
 x86_64       buildonly-randconfig-005-20240831   clang-18
 x86_64       buildonly-randconfig-006-20240831   clang-18
 x86_64                              defconfig   clang-18
+x86_64                                  kexec   gcc-12
 x86_64                randconfig-001-20240831   clang-18
 x86_64                randconfig-002-20240831   clang-18
 x86_64                randconfig-003-20240831   clang-18
@@ -268,6 +269,7 @@ x86_64                randconfig-074-20240831   clang-18
 x86_64                randconfig-075-20240831   clang-18
 x86_64                randconfig-076-20240831   clang-18
 x86_64                          rhel-8.3-rust   clang-18
+x86_64                               rhel-8.3   gcc-12
 xtensa                            allnoconfig   gcc-14.1.0
 xtensa                randconfig-001-20240831   gcc-14.1.0
 xtensa                randconfig-002-20240831   gcc-14.1.0
