@@ -1,68 +1,69 @@
-Return-Path: <linux-pci+bounces-12564-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90DC4967838
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 18:29:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ACC096785C
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 18:31:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 475AC1F20FF7
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 16:29:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BDD01C20FDC
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 16:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC0FA183CB1;
-	Sun,  1 Sep 2024 16:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C9ED17E46E;
+	Sun,  1 Sep 2024 16:31:01 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3EB44C97;
-	Sun,  1 Sep 2024 16:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9681C68C;
+	Sun,  1 Sep 2024 16:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725208156; cv=none; b=gmxPH/i+70qyc74HRfRedvzZ+flG8OYvUeIq0GWlLo5A8meizA4Y/DNf7N9wX0df6yyuKx29CG4ilEq+nToWwEvVeSkZEDYCxfB3Rqs9qQQpU1ub4MA1CF6ChSwJgeTfvJwc5BbxuLC8YrRXwtf07rd5CwLFf8ogpUBdO/+Ng2M=
+	t=1725208261; cv=none; b=S2xh7CZXeNK2qluLsVX+sclHzVj+Hi9WiY9J/KACCDO+QbfBKywDWN2oPlODnb+iK/nmOyZtEsrEqQGB/Xp+WtK6A3QHUxynT6xTV3U+VOuLx5yzBBJUCNqwQEgbl+85iMG7qyl7W2WRHvA6PDUMtIU1l/t8+zYHfFz6ViPoCf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725208156; c=relaxed/simple;
+	s=arc-20240116; t=1725208261; c=relaxed/simple;
 	bh=EtLy3hQ2xvVykP8FrNndhx0mClZ6YC1ocIgQ9wkyQ6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ASqQlZaGyUrXRheSoKaN0bM/OcsV+heSBouI+QHdyEsqV02wD522H4+z6+gRboCZ37TbFK1r4d9rT/0uSMl4anpJ+y4WJ/XT4LY652M7gNN1B45CEbYiVjbJBsb65bwk1gjJ4qvSLF9XlaoYmdjxKAMqE2nvuyf+OnYn4RfGh8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=H+U7X+tcaJoBaBUH5C6BAuKYXEddgyMxp8mMTPWKp6L7hPxYHDbXLy9pOTp5XStnsOfOiX4hxUe2/EcZnayiLwLm7JGSD0Wqg/n0VUWDsPJW0qSMWEwG/HUVi/VSu22vQGv2Lw9fN1IyRjDJcpVfmG4D1GV3oFfxQM/p7lvn8RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2d8a1aa5606so480104a91.0;
-        Sun, 01 Sep 2024 09:29:15 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2053616fa36so15978885ad.0;
+        Sun, 01 Sep 2024 09:30:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725208154; x=1725812954;
+        d=1e100.net; s=20230601; t=1725208259; x=1725813059;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
         bh=wP6a0ObVRJ45bjmxA06dysPPH+I7+nzgYg6tCWWzUuk=;
-        b=qDbY76rUdMTruN73KEsEnegJgdwwHEFNadAPKUEEVnze5KYxuqE0GKOhabgCZP7jnj
-         iIPOtXhQvu83DdFlKC6oL8+7EEwHGTcX1gKbLK+0m8876gFNUSlskhQUVI+lur1XzkHF
-         7jveWlU8UUAYZC2CpJRQeWBx6uioAocIXIjUOsOxzJ57crWw2nS05dYXrV9rDBKlPHQd
-         aKSa4SnVjSYbKTgjtaBFrzpIX2x2Sj4FqqVUVLP2gp6CnGcF1Jumvtuj3x07Piub5CdX
-         uT83okb/sJW9DLr41vVMl6XQHyUQqizIfDWBVjrsRlXDknPb+A4Q7qTNaxSfexFThE9d
-         j4qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZItn/JHQMxrx0MmcqtOfmsEMndZ7zXnxNIsGRDtCOIRFuP4nOmaJ4resUGgksM++1nTrbNe52jE8d@vger.kernel.org, AJvYcCW4VGRIe5sEY2W5a7qy+d+xn9ddVW5oR7T3n+XTvLy22zardWwhxBCfQe6xqML0l1XMk+yddc6qwPMlurTr@vger.kernel.org, AJvYcCXKU9WKw2sW0w04mrE+lBROr67nL3JVMdmBEmf/An/7LrUaSvfGDlxxeHUGDovKSQwvK+YX6jdsE/4WhQY4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz1GYkviYdDJ75Tav2djMBF8w4Tpc7ozxZ1d9pWdYfnJm56aSg
-	GqRC7B+1XUQSbNFExVnGwUUp/JHk9uwWNw91O8/Z0wGRn47mhR4B
-X-Google-Smtp-Source: AGHT+IGC/ioEAJKa0p262HLZjiMbGlLJUOLGrDG8EGhClFFV22vNNlaG2OxZjXHFWJbKQQ0Ca1wI6Q==
-X-Received: by 2002:a17:902:d50d:b0:205:4a37:b2ac with SMTP id d9443c01a7336-2054a37b550mr28296875ad.34.1725208154477;
-        Sun, 01 Sep 2024 09:29:14 -0700 (PDT)
+        b=BcxXxz/qcdJWwhgrUqLHMzjERoRpjiSApJdqmnAjYZvXNlZAskbGNBw7nMkNwvbplW
+         Juk9CMN9rF0JtzhY8I6R0Gjz7g3EBtaNKImmJAodGWMIJu7AWl4NgXffVedUgkYijj0A
+         w2dbE5g7SjPnPaqOl8pcTTpZNGvQCbTR1XwyO0+FwNz0po0tI7zBhndKFKyO8PFxW06C
+         w1L9cGrmnrCa9f/xLS73s6Oox8p/NjvD+HoYzdhrCOkVkC0xA7867ergKkjkZlgsoPoc
+         NBMA6NUf4A7tHD1/ZrWteS4cSzfilLsYTYeDGH5h3w5rQSa27usvUzoc/EF0An5vCTqa
+         9gcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHmOkg++vYsH3V4VnAXHkEiyP0gtvQTCQ0BXkL1Um43MxO1DWbeaIeaCA4xn37LmfDtrtgZFdgKpjAOrJn@vger.kernel.org, AJvYcCW+Cvcspvhxet2EqZW19CnRfU+MB0Yw68vyoqApIv71Ic+TQturCqwanSTplBRLrTbZXc0WbKMTAEN2@vger.kernel.org, AJvYcCXSKRKKrF8yaovdeDQ49HzuqgKJ2F9d5bWV2+5cLC44jISA3IOehISKekpNJwW3acQ23Fpvgq4QtRnldedB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyE/okmnon0W5NI6Fj6oXA90mjWz5Ljw7RV/rjxpNpbysbwcRv1
+	l2Sf9CuyLz8sDcQB1JD+yD+2WC8FefEiuhfuRQ+56XvThJOL9YnP
+X-Google-Smtp-Source: AGHT+IH17xCwWUghUlInlD3NVtEs3jnWjn2+cCoLihDAaTFelEh9DOv9/gTtwgfIOQmFkYAItkSwoA==
+X-Received: by 2002:a17:902:e742:b0:202:162c:1f29 with SMTP id d9443c01a7336-2050c46deb5mr114450805ad.47.1725208258778;
+        Sun, 01 Sep 2024 09:30:58 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-205152cd669sm54310585ad.82.2024.09.01.09.29.13
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20515533acdsm53819995ad.124.2024.09.01.09.30.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2024 09:29:13 -0700 (PDT)
-Date: Mon, 2 Sep 2024 01:29:12 +0900
+        Sun, 01 Sep 2024 09:30:58 -0700 (PDT)
+Date: Mon, 2 Sep 2024 01:30:57 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Use OPP only if the platform supports it
-Message-ID: <20240901162912.GA204820@rocinante>
-References: <20240722131128.32470-1-manivannan.sadhasivam@linaro.org>
- <20240813202456.GB1922056@rocinante>
+Subject: Re: [PATCH] PCI: qcom-ep: Disable MHI RAM data parity error
+ interrupt for SA8775P SoC
+Message-ID: <20240901163057.GA235729@rocinante>
+References: <20240808063057.7394-1-manivannan.sadhasivam@linaro.org>
+ <20240813202956.GF1922056@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,7 +72,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240813202456.GB1922056@rocinante>
+In-Reply-To: <20240813202956.GF1922056@rocinante>
 
 [...]
 > Applied to controller/qcom, thank you!
