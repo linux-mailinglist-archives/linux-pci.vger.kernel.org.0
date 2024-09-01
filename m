@@ -1,72 +1,75 @@
-Return-Path: <linux-pci+bounces-12575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26724967B82
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 19:34:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36556967B8D
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 19:48:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 577731C20E88
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 17:34:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA4E7281515
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Sep 2024 17:48:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E75317DFEB;
-	Sun,  1 Sep 2024 17:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 017E023A6;
+	Sun,  1 Sep 2024 17:47:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD5728387;
-	Sun,  1 Sep 2024 17:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6638F53E15;
+	Sun,  1 Sep 2024 17:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725212041; cv=none; b=PB8YBpWbknT/iVTb9zLDDOMGDqJclLI9Tt+QR/duClQqJruC74Ed43FZLtycDqbpQ6RuLjXcnrzF1uSohuxYD3v8wZFkCazB3jxRyyH5SuJP+C4DGxu8vuv1w/zJCauSVHBH7U3EW4w5r1GCz24T03FzbmjzTUyoz/4lXQRzw1I=
+	t=1725212876; cv=none; b=sxYPFo+TXDbLv4u2UHEAb5nlH8m6c7XWB/QN2kMGl/UAw41e3jSNgBg9HYxDjRtus0x4KvEIdHc9p0S3voGvb7vvjPTb7+n6aV2R0p9Bg3H6NVhpn2kCgE+EQMKKknBKnv5swwFNhVPuio9+AGQp+CprNv2FqW7dcpfNtKuixOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725212041; c=relaxed/simple;
-	bh=PzDrXFfzqFVdCV2JfpY1TCCOml/OGOWPD8/E2HMkxiM=;
+	s=arc-20240116; t=1725212876; c=relaxed/simple;
+	bh=Xmc/hEdWTjAatvH4xDGup5Qa9uRF6QYKHs5Vb3yKznU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUaBKH0I7+Yukv0WnSUmX731Te8/NASPFObtCmbVljItiSYGe2DtXdR72puC/pHeMnBGFstWxUuUrhaBCu9iD2qb2lBCzAbncuQC9rzRB3prN3nY/Ozbg/GVe99P9Q5B7x68+6N8QA7UNKcw/CfdfShOr4U089O3ANoYNwJQ4WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=ss3Bb+KBNeQCGfrzmFPEtbk8sGJvB7kCE5aMVIX/r+L/MuzpLYTZCmA5ToKQrReN/lt102wrsIzMS+wk/0Z2L4jmfLuuPewD54w7LT/zaLcH+yRzGnhyplmuUN4Jcwu9EWPN602RO0WrsfXfuwjsGtcz2YMNUxXbF5UKGHHYU+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7141e20e31cso2877830b3a.3;
-        Sun, 01 Sep 2024 10:33:59 -0700 (PDT)
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7cdf2ac6130so1002598a12.2;
+        Sun, 01 Sep 2024 10:47:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725212039; x=1725816839;
+        d=1e100.net; s=20230601; t=1725212875; x=1725817675;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TYbqkAtoq8ECBqJqS2WA0sHMNuKw8v0jwauE2w39rHY=;
-        b=ii6kYArK7dR9NhoLXKanlwUAjjPIPrG3Tash9UwdGkKGB8s+c99sIF8P81jZwfpWsS
-         Y+okivLCb6jA37e0BgOGct9WkFKhzb4SkWoxa4i36XaNy7ahH6YaVNX4q+KCf2N1ARz1
-         e3VL0tBbR+IhJZYZm8nU7jFfyJPojHL5pMR0RKXj+sczjoGnkOk91a2eqVDwuE5RtJum
-         TUxfqFG30IvrSmwaGNkSbtlNARNKd3PKvrTl9+vSMzNgLILbDbeaH7ndKBAH6ArUN1Dw
-         +AgmcfaLmml+MMU2n96mm1sQ6XLFNA3+zCGFJUr+plL9J8UZzpUeMFpyQrxq8kToRnlp
-         STqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQRdbcxF+lPAilRa+GnP2NHnfXMvsCkwVHz+NMHYxQZ1G4ScOBCdy1IQEezydQATBMDlWO96vWDluJuxeF@vger.kernel.org, AJvYcCUhE20kRkSHID5t7ezMm59zDvcRGwB9VqyqzPl9n4CEu2MXo9KEmJbRZI0UpKc6dw3aFyY/4CGp1I3As55FYeY=@vger.kernel.org, AJvYcCVCRMoIv69ZlCZGraF+Ynw4EQLSh+K+nmupu2fYH0U2n0/OMXjsQPGhAT1jMkbZkctP+9e/zArDVCZBSO19KXjvAn4=@vger.kernel.org, AJvYcCWsTA53gOTqN5HthhD84cDchtS9SZTaCR9Yh4Gkc+bhlcc8tQtAnhvuopVwqDO+stSAo8jQMGudFSEK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwarxmhzqJ1XZPX6JGYbhatqAMDVAW+JA8pVFQ0ksXwWZoIV8om
-	Y8K7Q5LqiSWdOSLSnE6AziWe5MOVl7j0DY4gotAkbFtNROlZCTXW
-X-Google-Smtp-Source: AGHT+IEFQMytQM6n1pdKGwJuMZ05wwyEdA7f61XnLpDQzaPQVkTiJH9ySeXrhOSznpoV8xzQYWje1w==
-X-Received: by 2002:a05:6a20:b418:b0:1c6:a562:997f with SMTP id adf61e73a8af0-1cecf757f5cmr6024916637.42.1725212038844;
-        Sun, 01 Sep 2024 10:33:58 -0700 (PDT)
+        bh=cJYJQ1zlbAg/HiswfyOpJTEd1H+q6QzgGzUjsdDbFPY=;
+        b=UJKRPrJ0uNU+egfc8HnkDCL2uvkws3XZbNd5Zc4pmLEAHeZCEnSRWXflnaU5Q4TNQW
+         GZTjBk3mYaK9v/G6hpKWMPv2XGy3mY5vArGAAC6MiMK0YefjMpUYV5IMmGIeHwkq2pgC
+         c37YeTslwVGCFe+E+QIaV5ZsMaJRNRfyKQM3ooTGv9zRS90CpUjDzulKKXLmJNYEXaU4
+         9waehK7uNXReodhM9KHVeDTfYh0RvOMcRsMpYDgdFfX5eDWTVsfjv38y8ZqVdp2obNsZ
+         BDVpLrgGRlS3DkXRQvYbPFeS3QoxexBFVpPVpMKYYxHOF5qYWeizMYaxUR4OeDHE4DBZ
+         03ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUv5CKwu6W3+mOdkrUkgFOHI8UYcMZ6orD1WBcaPXT+8Ao+KIwpFepRkFJ3aeAsz4IHzUaNUBq8PQ6U@vger.kernel.org, AJvYcCV8Y4Mk/FY80Obgw19kfpGyI/ykkr9PqNdy9sHNhos92e/qjrSQiblDnFh0YcJDanYDSAkXNAd0y0awXVZq@vger.kernel.org, AJvYcCVjl13GQmDvxGMsvSDVMDnVF9zRcDbZhkMrsyXPivtElGAB81U1cMHmuatGtXBVS2JyTXqMwCJSwlmI@vger.kernel.org, AJvYcCWTosf+r1reefsNdCXsQhKawJ8ZRIgHai7eSQmS2Ll3ByUQ3OaKu1J+qqn4cRmm27UCdOb0bVMzUIlFl92K6Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNH+kGg5fWooOzQKeTyGciSLDg+3YFCLl06f28xx4+D6oKL1G/
+	CM4ZtMwBY29cYIH9lzxWOt9qfzdHNbl2M0ut/DhDwomKVcZOyhPO
+X-Google-Smtp-Source: AGHT+IEneXWt9Gk0g2RG61bxa1zZfsP3uwuDaYDhRSJVUYa7KkQxRn2HCtoVJzwC9/ELD2s3tYj9IA==
+X-Received: by 2002:a05:6a21:3a44:b0:1c4:a49b:403 with SMTP id adf61e73a8af0-1cece5e24c1mr4521500637.46.1725212874415;
+        Sun, 01 Sep 2024 10:47:54 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-205439dadabsm26453685ad.166.2024.09.01.10.33.57
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2051553648fsm54619285ad.172.2024.09.01.10.47.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Sep 2024 10:33:58 -0700 (PDT)
-Date: Mon, 2 Sep 2024 02:33:56 +0900
+        Sun, 01 Sep 2024 10:47:53 -0700 (PDT)
+Date: Mon, 2 Sep 2024 02:47:52 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+To: manivannan.sadhasivam@linaro.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: rcar-gen4: make read-only const array
- check_addr static
-Message-ID: <20240901173356.GK235729@rocinante>
-References: <20240822205941.643187-1-colin.i.king@gmail.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH v4 00/12] PCI: qcom: Enumerate endpoints based on Link up
+ event in 'global_irq' interrupt
+Message-ID: <20240901174752.GL235729@rocinante>
+References: <20240828-pci-qcom-hotplug-v4-0-263a385fbbcb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,17 +78,72 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240822205941.643187-1-colin.i.king@gmail.com>
+In-Reply-To: <20240828-pci-qcom-hotplug-v4-0-263a385fbbcb@linaro.org>
 
 Hello,
 
-> Don't populate the const read-only array check_addr on the stack at
-> run time, instead make it static.
+> This series adds support to enumerate the PCIe endpoint devices using the Qcom
+> specific 'Link up' event in 'global' IRQ. Historically, Qcom PCIe RC controllers
+> lacked standard hotplug support. So when an endpoint is attached to the SoC,
+> users have to rescan the bus manually to enumerate the device. But this can be
+> avoided by rescanning the bus upon receiving 'Link up' event.
+> 
+> Qcom PCIe RC controllers are capable of generating the 'global' SPI interrupt
+> to the host CPUs. The device driver can use this interrupt to identify events
+> such as PCIe link specific events, safety events etc...
+> 
+> One such event is the PCIe Link up event generated when an endpoint is detected
+> on the bus and the Link is 'up'. This event can be used to enumerate the
+> endpoint devices.
+> 
+> So add support for capturing the PCIe Link up event using the 'global' interrupt
+> in the driver. Once the Link up event is received, the bus underneath the host
+> bridge is scanned to enumerate PCIe endpoint devices.
+> 
+> This series also has some cleanups to the Qcom PCIe EP controller driver for
+> interrupt handling.
+> 
+> NOTE: During v2 review, there was a discussion about removing the devices when
+> 'Link Down' event is received. But this needs some more investigation, so I'm
+> planning to add it later.
+> 
+> Testing
+> =======
+> 
+> This series is tested on Qcom SM8450 based development board that has 2 SoCs
+> connected over PCIe.
+> 
+> Merging Strategy
+> ================
+> 
+> I'm expecting the binding and PCI driver changes to go through PCI tree and DTS
+> patches through Qcom tree.
 
-Applied to controller/rcar-gen4, thank you!
+Applied to controller/qcom, thank you!
 
-[1/1] PCI: rcar-gen4: Make read-only const array check_addr static
-      https://git.kernel.org/pci/pci/c/5603a3491b36
+[01/08] PCI: qcom-ep: Drop the redundant masking of global IRQ events
+        https://git.kernel.org/pci/pci/c/3858e8a5ea71
+
+[02/08] PCI: qcom-ep: Reword the error message for receiving unknown global IRQ event
+        https://git.kernel.org/pci/pci/c/95bebcbd657c
+
+[03/08] dt-bindings: PCI: pci-ep: Update Maintainers
+        https://git.kernel.org/pci/pci/c/99244b999dec
+
+[04/08] dt-bindings: PCI: pci-ep: Document 'linux,pci-domain' property
+        https://git.kernel.org/pci/pci/c/ada94d00620a
+
+[05/08] PCI: endpoint: Assign PCI domain number for endpoint controllers
+        https://git.kernel.org/pci/pci/c/0328947c5032
+
+[06/08] PCI: qcom-ep: Modify 'global_irq' and 'perst_irq' IRQ device names
+        https://git.kernel.org/pci/pci/c/bba1251edf85
+
+[07/08] dt-bindings: PCI: qcom,pcie-sm8450: Add 'global' interrupt
+        https://git.kernel.org/pci/pci/c/6efd853303a5
+
+[08/08] PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt
+        https://git.kernel.org/pci/pci/c/4581403f6792
 
 	Krzysztof
 
