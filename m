@@ -1,100 +1,84 @@
-Return-Path: <linux-pci+bounces-12620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AE6696854A
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 12:52:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97D4496898E
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 16:12:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5239B276FC
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 10:51:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55CF0283F72
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 14:12:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A85715FD13;
-	Mon,  2 Sep 2024 10:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F2D19F107;
+	Mon,  2 Sep 2024 14:12:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77747185928
-	for <linux-pci@vger.kernel.org>; Mon,  2 Sep 2024 10:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006B719F100;
+	Mon,  2 Sep 2024 14:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725274214; cv=none; b=my5zgdgBt1U8kY3Bmo84ESwjHkdmDbAjqbitV17ImPyYeyoDpteDbQU4VmCIWq9uCFhXxbZeLiaK+1yr+NgC7D33CEYDRy5Wbk3errzj6YLUpm2OewP9bOtMuVaNpsFKOYQfyJt21gJBZfkzAOa9Tk5Y9W0fEgJy9XLN8l4XZVw=
+	t=1725286358; cv=none; b=MBbdC3dinSqkS9xoBY4iRTJjA0pTj8qB/f9BO4CHEVTwuFZFvMg7sXBoC557X8lQGUhuU/1NIW+9O+gIIJ7+Lm3uAdfajdHgl5D0LzSqe/HSaosjUitCgzLNgFGAA3oyD8RmTexQixC3wfCLd33eygWhSyrJAEu+ZTgC7h2bBws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725274214; c=relaxed/simple;
-	bh=GgQxGuCtkHIn3SVdogUEf8CkQQQw92DisduIo578HJA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SIR1yXMmhP5EeuxWhr6R89bBjL7bKDeu9MHPCcCfll3BbpB/RA0D/s4CltHfVfLv4heNlIQqKpSP6g27IXituAL963DkA8AvvmOct88wdwbEs2xzeQqmADixnfsMyasKKfaLxBGMTfBiCSCEn6DnQHLlwWCtW3QMYOduI9Jnt+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sl4d1-00009L-2P; Mon, 02 Sep 2024 12:49:47 +0200
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sl4cx-004spI-Ok; Mon, 02 Sep 2024 12:49:43 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sl4cx-000i3a-27;
-	Mon, 02 Sep 2024 12:49:43 +0200
-Message-ID: <14291451658e9ad9e29d82f3eabd3f2b35301055.camel@pengutronix.de>
-Subject: Re: [PATCH v5 0/8] Add support for the LAN966x PCI device using a
- DT overlay
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Simon
- Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Lars Povlsen
- <lars.povlsen@microchip.com>, Steen Hegelund
- <Steen.Hegelund@microchip.com>,  Daniel Machon
- <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring
- <robh@kernel.org>,  Saravana Kannan <saravanak@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, Andrew
- Lunn <andrew@lunn.ch>,  linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>,  Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Date: Mon, 02 Sep 2024 12:49:43 +0200
-In-Reply-To: <20240808154658.247873-1-herve.codina@bootlin.com>
-References: <20240808154658.247873-1-herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1725286358; c=relaxed/simple;
+	bh=Kk8CHL+kR6atoREqYqkSYJwr9BSSnxuF4pNB/FP5hzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THLZ69zNxhgrVDQ+zbjfJ7fVF1AusotxB1wvHDxNoNFRtxzBwg5PMBNtD8liz2cyMzdp3tQfQFYcucuC6owBKfDDWjj6pE2rmOoW+eYXGMLhtrlVOXfU86QdauwMhwzYZC1BYD/ugfM10GPIT10Tl87rTfy6PHI8ghyyiqXzj8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2d877dab61fso1694747a91.3;
+        Mon, 02 Sep 2024 07:12:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725286356; x=1725891156;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F64bS6DRw3UKsmpMpP0QQPIepPXU+WPPJPaEDVUhgo8=;
+        b=OQfeC8zhJGvNsY05V5pz9b/V8D3eBcKwRtmY68Cb4ZsOEu2qpxFvEs/jBWrujcmthJ
+         QVNKNGqlEvsn31w4jfAUqY7xGPs9VhqIZ816yrfLmDDa6YCZFEras9klCxO5tkvrx4Br
+         2Pe3q+ZPYmkXraBNYLzMARrGh0gf2evXMwGbAsjJRFqNDotqUwhFUiT9gas7k02cuX/m
+         dnGsrqTSXYid2ugu/zjdOHcfEfIWZMgSNjjwB6bu0KWoWwL5cVGrz/9KmJSRR0KfMvJW
+         2/q6oqNj5ZkcDZAbOt8hKg4yPSbuylJ8t0U4joBqiSUHstlA9vVDgta5AEbMTciYOSXg
+         9smA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5WI+QlPKzfc+r5dfaZS+Pfu3OD28bNYaGEfpjWbCcjWsEiD2cWvDVaMAlVvsTUUnMmAcC8BPzJnyL@vger.kernel.org, AJvYcCWMVGLVo5dh7G5s8Ml2HkVrUi5/XFlbc/HZAFmeo0D5CcilNOoeK22w0VKpi6GXI0MZF+VpCw7Asf4K/Bg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW1mAGPIqGlNBZu169t+xK2s8XjqffxEfElxTrnpimhCW/0UGN
+	0ZE10YP00iZt9am/MGNJX7f3xzM6cBgzDJ/aWT+s04zrwHQY19hh
+X-Google-Smtp-Source: AGHT+IGsWW78e/zRV1dWhn7tH0/rGhlf3HuFQMz2+LGZYfUGsIT8PRfJ25tgS4V1WDe6lJrUL0V4hw==
+X-Received: by 2002:a17:90a:4481:b0:2d3:db91:ee82 with SMTP id 98e67ed59e1d1-2d856503a10mr11179272a91.40.1725286356015;
+        Mon, 02 Sep 2024 07:12:36 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d8b8fe1f68sm3237345a91.31.2024.09.02.07.12.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2024 07:12:35 -0700 (PDT)
+Date: Mon, 2 Sep 2024 23:12:33 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
+Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools: pci: rm .*.cmd when make clean
+Message-ID: <20240902141233.GA261040@rocinante>
+References: <20240902041240.5475-1-zhangjiao2@cmss.chinamobile.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240902041240.5475-1-zhangjiao2@cmss.chinamobile.com>
 
-On Do, 2024-08-08 at 17:46 +0200, Herve Codina wrote:
-> Hi,
->=20
-[...]
->  - Patches 3 to 8 allow the reset driver used for the LAN996x to be
->    built as a module. Indeed, in the case where Linux runs on the ARM
->    cores, it is common to have the reset driver built-in. However, when
->    the LAN996x is used as a PCI device, it makes sense that all its
->    drivers can be loaded as modules.
+Hello,
 
-I've applied patch 7 to reset/next.
+> rm .*.cmd when make clean
 
-regards
-Philipp
+Applied to misc, thank you!
+
+[1/1] tools: PCI: Remove .*.cmd files with make clean
+      https://git.kernel.org/pci/pci/c/f5383c543de0
+
+	Krzysztof
 
