@@ -1,136 +1,135 @@
-Return-Path: <linux-pci+bounces-12603-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12604-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF7829680A5
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 09:33:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F8659680C9
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 09:38:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C7431C21C73
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 07:33:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D03181C22047
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 07:38:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99140156962;
-	Mon,  2 Sep 2024 07:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FDD6178CCA;
+	Mon,  2 Sep 2024 07:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jm+wZYrN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WRRy/5Et"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2666A15573A
-	for <linux-pci@vger.kernel.org>; Mon,  2 Sep 2024 07:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A152178CC5
+	for <linux-pci@vger.kernel.org>; Mon,  2 Sep 2024 07:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725262424; cv=none; b=tIG1csPqzPyODH6Q3nUPPP7wmXkeLbMhJfk3yv3OX0siuwGzhyo9yHqCTZpjwFhb2sV3ZYHINht3haLI/9OLInuUQ+I/oh+IKTLB/NFe9audWV2KLpZVrZEs+BG3MV4UfMPKRjYzfS6+Jgd1AxKwKGRulMgStGRbsiuzuFvoJZo=
+	t=1725262702; cv=none; b=sblICb1DsdL8UoWe/k0w0d4IzH8ChwLMHb2gzLQlqaMQ15s0uO90sMlRTDd7gSfWpZnz2ZN97BrTqYC7KwwF33xAZSDR0qEaBYBgOIw6kOBW536ws2Xi9EpRWLT4KWZrye9EyacEVh7meGWreY0DYUo/TZ9j4jtPzub/CGV/qaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725262424; c=relaxed/simple;
-	bh=keakdINUGQQykwIW03n+sUlMVBu4gHUpnFRuqxOzes8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pc6P4k1h02rpWoSJMr6DoEy5V5qpracyt1AWHxjnkPH751RzOV6kVcKGf3Eqa+WuUSvhVYScIGIBlXK76ObM1ypxF0U/LEQ4nxXXMLzYZ6rO+BWfzXpC7ExBNJkrO9HA+8X47N0qFFbqtW8blrAIyHBocAZwOay7Qoby3ivfqYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jm+wZYrN; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-715c160e231so3398786b3a.0
-        for <linux-pci@vger.kernel.org>; Mon, 02 Sep 2024 00:33:42 -0700 (PDT)
+	s=arc-20240116; t=1725262702; c=relaxed/simple;
+	bh=BEJNUtN7GcPC4B29NBJfhJaZCRGwXQGoQMbbCrX/D1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jFCANKc76hgc2mfeH5mtlmWUgEz9XqAIbVZWyGuF+un3U/jhDOXIRHOZ0PFliDnOyITW3bADFy10ySZT7i07xrb7tzoRn4zMS6mpIjEtXi1JAuIV0YB0meOVU2KF+vY7ZTzH5DcLA/WrWTpdLj3sVZqN2qmwm5yGypEau+ZFBNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WRRy/5Et; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2f3eabcd293so43846981fa.2
+        for <linux-pci@vger.kernel.org>; Mon, 02 Sep 2024 00:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725262422; x=1725867222; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=K/HbDe/HSz6pkXiW0JkEGHwpwJAfk4nlDzkL2IIO73Y=;
-        b=Jm+wZYrNDyp4ha/GwbJDLllPKL+7RKSeNNjKIG0ICQjbgaDpxjT3hVvjxzmnVps1Tk
-         ar1rlHb4VlEom0S1pPMhX59BuQ9SpqgkME6RWt/g4SNLTk8Ykdj30gAOZb7Sd7sYNT/F
-         kYPKojlaqGDq/kW+jPmpVJN3ubeGJkw9XBz+nOFLG/M325ZXVoCawSJjLOQJf5PQsHY9
-         p9YQoJGrywTn+H/L3Gux1NkUC9QKBU+Ne78dblqUB/PR33RznbDsHP+6ApPIJULbMTzO
-         BOhVVQEB8XITSn1MPLyZmDTWp3hMEFXkPlcuI3RZ4fNsh0iqHvl1SuYut461pAFL+3x0
-         FEXQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725262698; x=1725867498; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BEJNUtN7GcPC4B29NBJfhJaZCRGwXQGoQMbbCrX/D1o=;
+        b=WRRy/5Et6fJUJ9WcibB5EUFNtV+02YuY+n97E4hNbEQegIxU8vwyiZAeWdUTjm03md
+         4ioW3M9feDwLJfasU3V719eiwTx8lVP6dxEXER6igl9vHWWoCHt9/CvM4vef+JGLIl7s
+         +D7nicbBvMmDYLVTvz4IlpAPIiEnXNUHwS2DmLkcF5TqZC43QErAxF/5FaeGKaMlwWv0
+         RPcQZcKdBhudrhCa2hMv9vUP+6Ee/vr1AakRtwNpBgN8GuyP+hSIlSFvBltLPs4j8nZA
+         BC7pOUXGiO0mfhRbG39Qgwk33yccsHjz3fT7ox76Dm+LMcHRKAGa0qA1LQmryP/fG2ef
+         iayw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725262422; x=1725867222;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K/HbDe/HSz6pkXiW0JkEGHwpwJAfk4nlDzkL2IIO73Y=;
-        b=Kf1X7BCltcse1gOdLa4LTptwBB1zYpMeN8Qb0GjhjSIzyyU9BQs8y5Ryeqk1Ze/XG9
-         DwH58TuVM3OMsdLIYWDy4Ki2GfTIQupq8Ti5HNyvVBaK1BBtBEacbC956dni8ix9xhv9
-         bMls03ECmYgItRzy5ObZWujSFvjgC2VjO8X7HwKNTJVDIPZ2JhpnWX+ATK7rMyd3Wa+I
-         k0xSb1agcjdEnVaUEsbG6MUWbQL3XRnETp8grmbTfXIAaequurrldJSPHwnHSpgBev+p
-         sUNIV5Ostf39uj7IpldV3QQ7+XV5pHuwpf+0Jnx/FIKCGGHdzG8z4e8xs7HI9zFh95Wb
-         jBPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXl0fgWF7KGtsq6BzjDr/T0q8p/WIfTz4YbeE00p2tpJWJtFo6YJuYO37IaowW1CTPigvDv0IUV1/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLVklSNt2s4QpF6fFiBBfEmd326eA0+ye6Nmb5OpNAcqWjadWL
-	an2JjLALCYVu3rGXAoLm1+INjSCKbeoQwerQysmpiGZYQVM8KctFBt8kQ9anTA==
-X-Google-Smtp-Source: AGHT+IEQZNvphTM9Na+10ZEQH+EVEVCFHgFa3BpTs1lm8QBLXCV8lFWg/7nLZZbMHQm9nljqgMjFIA==
-X-Received: by 2002:a05:6a20:ae86:b0:1cc:e41d:58f0 with SMTP id adf61e73a8af0-1cce41d59b5mr10376233637.13.1725262422332;
-        Mon, 02 Sep 2024 00:33:42 -0700 (PDT)
-Received: from thinkpad ([120.60.58.247])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-205152cd543sm60805665ad.76.2024.09.02.00.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2024 00:33:41 -0700 (PDT)
-Date: Mon, 2 Sep 2024 13:03:36 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, vigneshr@ti.com, kishon@kernel.org,
-	j-keerthy@ti.com, linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-	u-kumar1@ti.com, srk@ti.com
-Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix threaded IRQ request for
- "dra7xx-pcie-main" IRQ
-Message-ID: <20240902073336.fwyjm27ruvfb7gva@thinkpad>
-References: <20240827122422.985547-1-s-vadapalli@ti.com>
- <20240827122422.985547-2-s-vadapalli@ti.com>
+        d=1e100.net; s=20230601; t=1725262698; x=1725867498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BEJNUtN7GcPC4B29NBJfhJaZCRGwXQGoQMbbCrX/D1o=;
+        b=ZsHFiwDbp+cvmSmJv6Pxf89G+roGxFKrHO3D7oyVvXiFOIGHJ9JkVTdatCOhtSXGZO
+         ZMTK593iPjdLa8fYi9sQ7OTvMnoZn3dgCZGGSUdKqudcGdKXpYI3hzx78+TQ6c8foLFg
+         OgDqE9jgYlO4EE0maIWgGSSnv33Zej4akafGZBgFsGYkeIuj1bj1Ikx46KG8mqyCFnO4
+         i9Y24xlWouZWBb/uylrdbbXahOEpQvtnw52HQPA0VIVan9DLgC0YOwjJ7MmQgPQtRSV+
+         imBFF0tIVjscexzXtlVzJ7KmkAtqNnzkLvL360SAqPze0EvwrzO9GXtV9OPPJTi7x2Bd
+         IuBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHEwSeYPAfMOSAbzvg6MJmFhhBgISq1H81b1+T+KYuD7tGw47T0AS2twSkF1+g4sMBzyuNSToolmg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPqnJTI/HsElo+BUg3C8KjM14M7Grpce7qslnziZdeTyAKc7IG
+	js84Qc1iNWlfnQRhICOHxJbmBD1bY4AKpROlDELnbz0cWT4558ic8MQ7U5tkKqtZCMFLl9FpSXZ
+	NfEvMGvVI7mm5e3qMyJ2CZK7KTvfXKLxTmZs4jA==
+X-Google-Smtp-Source: AGHT+IE8LxJ1afSAwx5C9D5PQjgzUX3XGwHYEYKFDcxs4wtkzGPBFg49KkuRHnK41bo9t+wmHpZ/kD5AUiN78RL72xA=
+X-Received: by 2002:a05:6512:e99:b0:535:3d08:5844 with SMTP id
+ 2adb3069b0e04-53546afaee4mr6546170e87.6.1725262697439; Mon, 02 Sep 2024
+ 00:38:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240827122422.985547-2-s-vadapalli@ti.com>
+References: <20240823093323.33450-1-brgl@bgdev.pl> <20240823093323.33450-3-brgl@bgdev.pl>
+ <20240827085616.v3xzrgyojxd746bv@thinkpad>
+In-Reply-To: <20240827085616.v3xzrgyojxd746bv@thinkpad>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 2 Sep 2024 09:38:06 +0200
+Message-ID: <CAMRc=MdCfrYdMUTOpFLsGSJY6wa2bzVegq8V=KAePAuFF1TR9g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] PCI/pwrctl: put the bus rescan on a different thread
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Konrad Dybcio <konradybcio@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 27, 2024 at 05:54:21PM +0530, Siddharth Vadapalli wrote:
-> Commit da87d35a6e51 ("PCI: dra7xx: Use threaded IRQ handler for
-> "dra7xx-pcie-main" IRQ") switched from devm_request_irq() to
-> devm_request_threaded_irq() for the "dra7xx-pcie-main" interrupt.
-> Since the primary handler was set to NULL, the "IRQF_ONESHOT" flag
-> should have also been set. Fix this.
-> 
-> Fixes: da87d35a6e51 ("PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ")
-> Cc: <stable@vger.kernel.org>
-> Reported-by: Udit Kumar <u-kumar1@ti.com>
-> Suggested-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Tue, Aug 27, 2024 at 10:56=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Fri, Aug 23, 2024 at 11:33:23AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > If we trigger the bus rescan from sysfs, we'll try to lock the PCI
+>
+> I think the first 'we' is user and second 'we' is PCI and pwrctl drivers.=
+ If so,
+> it should be spelled out to make it clear.
+>
+> > rescan mutex recursively and deadlock - the platform device will be
+> > populated and probed on the same thread that handles the sysfs write.
+> >
+>
+> A little bit rewording could help here:
+>
+> 'When a user triggers a rescan from sysfs, sysfs code acquires the
+> pci_rescan_remove_lock during the start of the rescan. Then if a platform
+> device is created, pwrctl driver may get probed to control the power to t=
+he
+> device and it will also try to acquire the same lock to do the rescan aft=
+er
+> powering up the device. And this will cause a deadlock.'
+>
+> > Add a workqueue to the pwrctl code on which we schedule the rescan for
+> > controlled PCI devices. While at it: add a new interface for
+> > initializing the pwrctl context where we'd now assign the parent device
+> > address and initialize the workqueue.
+> >
+> > Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+> > Reported-by: Konrad Dybcio <konradybcio@kernel.org>
+>
+> Don't we need 'Closes' link these days? I hope this is reported in ML.
+>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Nope, unfortunately on IRC. But the tag is unformally optional it seems.
 
-- Mani
+Bart
 
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 4fe3b0cb72ec..20fb50741f3d 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -850,7 +850,8 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
->  	dra7xx->mode = mode;
->  
->  	ret = devm_request_threaded_irq(dev, irq, NULL, dra7xx_pcie_irq_handler,
-> -			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
-> +					IRQF_SHARED | IRQF_ONESHOT,
-> +					"dra7xx-pcie-main", dra7xx);
->  	if (ret) {
->  		dev_err(dev, "failed to request irq\n");
->  		goto err_gpio;
-> -- 
-> 2.40.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> With above changes,
+>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
