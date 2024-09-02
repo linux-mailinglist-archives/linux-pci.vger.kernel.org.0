@@ -1,277 +1,132 @@
-Return-Path: <linux-pci+bounces-12634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38B76968EF4
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 22:55:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C4C7968EFD
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 22:59:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57B951C22098
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 20:55:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A4A31F23206
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 20:59:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DF1D176FD2;
-	Mon,  2 Sep 2024 20:55:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7BA1865FA;
+	Mon,  2 Sep 2024 20:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dr8+R4LK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTSOvv0g"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536211A4E7E;
-	Mon,  2 Sep 2024 20:55:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A2F69959;
+	Mon,  2 Sep 2024 20:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725310501; cv=none; b=Q460ZNIAMFkEDSFyrF9m3poOXGpbAC+lpZ4lvl2YgdoA1tPwG+EUpwnIun/JYj+hoUYMeFKuzdoPaFlVWQGsZ/F7LUxiCPTB9jfU/c94iHfwJH3Uj3huQ5ZIo4CcRGlZFzvvqAZJuFHsEa3RLXLI8DgrS4/uAwenRyvOxkgV2YQ=
+	t=1725310777; cv=none; b=s1SbLbeU2rBQoYlllj977a6uagz476pKOR8csfeoncrwv2UHFma+OU4JFg/rob9qNtlhr6NKvvjIGOfboEX0e+OvvAoyEIQO+z0iOjziwSsOgZdVRTDu7NYN+XicjeIWtvIlX5YAnEMzlc+8dOvNcfgytM4pzXgXWcUpLhxqykQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725310501; c=relaxed/simple;
-	bh=FGHKapTIenGnlnPA+DpU84gT8/KM2p7zRNiALDGngyg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O/INEbblKXpQNSVDqintQpBCax39ETMkFFgnPubPjBUuMcdLH8xwUv6ZZXSG61HhRrLi9faGSGa4JxWqZ9o5ocUt/wR+XYZcIgj+J3powdwDUnbgmxdanwAY7gpQhvAyY7Vm+L4mZMqX0P8krxOX+WnT1lGKtyj6ha4M1xiPFRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dr8+R4LK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F25EC4CEC2;
-	Mon,  2 Sep 2024 20:55:00 +0000 (UTC)
+	s=arc-20240116; t=1725310777; c=relaxed/simple;
+	bh=r9qaTh+53ujld32cT6POMGMmnH20RcpZ6t2TTllW2Hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nuQ3sh5T3dQpmA64lT/FLJJYwFeeWIcMQIdi4es375S2DvkNhFc+beYwEydfPhzd7cB80kaZYB+kOhSA7M7EAL7XYiCNfR03b/Zy1XMKQMJgb2Cm4uxWSAqktbnTDLgASbf3VpXEhuGI6CQP3jH9EniahJmQdmtjZgPO+9jnBHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTSOvv0g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A5D6C4CEC2;
+	Mon,  2 Sep 2024 20:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725310500;
-	bh=FGHKapTIenGnlnPA+DpU84gT8/KM2p7zRNiALDGngyg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Dr8+R4LKpqGgyCr1SSh67dRIa0Fb+bjfWOH+/9sddxZHvuBFF4lRWPqNxnJ/tnoJv
-	 QpYwgZBCOiL0pj3Le88zL2ksCs+r52qZaIUS7EFfsqNqGFYXqH5lJQf9uxX44py5Dp
-	 fcYorokBO6obVlvflvTF1WWiw/lguXBpeOS0J3vqufxIEWDaUdPQHZovyQN+XNXSMS
-	 X4lLPOCu86K758f/v6IQCAKCEYkJ+EdbC3A8shKnDQM9SsHOZ2yRCxrXaTQZS/7kRq
-	 Xup5K3CCIw18OvS9qtZfAqSMzURx3rg5MlinNZHYRqyjCYsBQ2sxdpKTRlGr2foxk6
-	 Kd79vJwLMKY1Q==
+	s=k20201202; t=1725310776;
+	bh=r9qaTh+53ujld32cT6POMGMmnH20RcpZ6t2TTllW2Hw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aTSOvv0ge41O8LerqN8uWFZtaSDOgysBtJ8534F0opdMVWDxru2yIsGdNOPi+y3WA
+	 xaQV0Y5QVUT5+1Ly2uwOzRixSARVkaY8NAN8qnMmS5w8CbAlbljTcbbmoVsa3ZIhKO
+	 yGcFLWdKFXpSKfNy0e/iRQpcckh2yu+daDnuYY8nMfbQ2WNnwTskGAc2cBIxH1OcXn
+	 Q9ULidDmdbnWSOz7O1ZSjoAc2QAlRnAT1dpbErxU9JPQ29KpkbbNw9sJ1vBcG87HVA
+	 k85R53LYg1DT2JxnXckQVeS2DKsovSZp6tbYltmvYi/1H2ZYK/bQFBEJDcj+NPCoaq
+	 IPNg4fOyUEh8w==
+Date: Mon, 2 Sep 2024 15:59:34 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	jim2101024@gmail.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-pci@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: brcmstb: Sort enums, pcie_offsets[], pcie_cfg_data, .compatible strings
-Date: Mon,  2 Sep 2024 15:54:56 -0500
-Message-Id: <20240902205456.227409-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 01/11] PCI: imx6: Fix establish link failure in EP
+ mode for iMX8MM and iMX8MP
+Message-ID: <20240902205934.GA227711@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240729-pci2_upstream-v8-1-b68ee5ef2b4d@nxp.com>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Jul 29, 2024 at 04:18:08PM -0400, Frank Li wrote:
+> From: Richard Zhu <hongxing.zhu@nxp.com>
+> 
+> Add IMX6_PCIE_FLAG_HAS_APP_RESET flag to IMX8MM_EP and IMX8MP_EP drvdata.
+> This flag was overlooked during code restructuring. It is crucial to
+> release the app-reset from the System Reset Controller before initiating
+> LTSSM to rectify the issue
 
-Sort enum pcie_soc_base values.
+What exactly is the issue?  What does it look like to a user?  The
+endpoint doesn't establish a link correctly?
 
-Rename pcie_offsets_bmips_7425[] to pcie_offsets_bcm7425[] to match BCM7425
-pcie_soc_base enum, bcm7425_cfg, and "brcm,bcm7425-pcie" .compatible
-string.
+> Fixes: 0c9651c21f2a ("PCI: imx6: Simplify reset handling by using *_FLAG_HAS_*_RESET")
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Rename pcie_offset_bcm7278[] to pcie_offsets_bcm7278[] to match other
-"pcie_offsets" names.
+Does this need a -stable tag?
 
-Rename pcie_offset_bcm7712[] to pcie_offsets_bcm7712[] to match other
-"pcie_offsets" names.
+0c9651c21f2a appeared in v6.9, but this could arguably be v6.11
+material if it fixes a serious issue.
 
-Sort pcie_offsets_*[] by SoC name, move them all together, indent values
-for easy reading.
-
-Sort pcie_cfg_data structs by SoC name.
-
-Sort .compatible strings by SoC name.
-
-No functional change intended.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
-This is based on Jim's v6 series at
-https://lore.kernel.org/r/20240815225731.40276-1-james.quinlan@broadcom.com
-as applied at
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1ae791a877e7
-
- drivers/pci/controller/pcie-brcmstb.c | 114 +++++++++++++-------------
- 1 file changed, 57 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 21e692a57882..07b415fa04ea 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -220,11 +220,11 @@ enum {
- 
- enum pcie_soc_base {
- 	GENERIC,
--	BCM7425,
--	BCM7435,
-+	BCM2711,
- 	BCM4908,
- 	BCM7278,
--	BCM2711,
-+	BCM7425,
-+	BCM7435,
- 	BCM7712,
- };
- 
-@@ -1663,26 +1663,34 @@ static void brcm_pcie_remove(struct platform_device *pdev)
- }
- 
- static const int pcie_offsets[] = {
--	[RGR1_SW_INIT_1] = 0x9210,
--	[EXT_CFG_INDEX]  = 0x9000,
--	[EXT_CFG_DATA]   = 0x9004,
--	[PCIE_HARD_DEBUG] = 0x4204,
--	[PCIE_INTR2_CPU_BASE] = 0x4300,
-+	[RGR1_SW_INIT_1]	= 0x9210,
-+	[EXT_CFG_INDEX]		= 0x9000,
-+	[EXT_CFG_DATA]		= 0x9004,
-+	[PCIE_HARD_DEBUG]	= 0x4204,
-+	[PCIE_INTR2_CPU_BASE]	= 0x4300,
- };
- 
--static const int pcie_offsets_bmips_7425[] = {
--	[RGR1_SW_INIT_1] = 0x8010,
--	[EXT_CFG_INDEX]  = 0x8300,
--	[EXT_CFG_DATA]   = 0x8304,
--	[PCIE_HARD_DEBUG] = 0x4204,
--	[PCIE_INTR2_CPU_BASE] = 0x4300,
-+static const int pcie_offsets_bcm7278[] = {
-+	[RGR1_SW_INIT_1]	= 0xc010,
-+	[EXT_CFG_INDEX]		= 0x9000,
-+	[EXT_CFG_DATA]		= 0x9004,
-+	[PCIE_HARD_DEBUG]	= 0x4204,
-+	[PCIE_INTR2_CPU_BASE]	= 0x4300,
- };
- 
--static const int pcie_offset_bcm7712[] = {
--	[EXT_CFG_INDEX]  = 0x9000,
--	[EXT_CFG_DATA]   = 0x9004,
--	[PCIE_HARD_DEBUG] = 0x4304,
--	[PCIE_INTR2_CPU_BASE] = 0x4400,
-+static const int pcie_offsets_bcm7425[] = {
-+	[RGR1_SW_INIT_1]	= 0x8010,
-+	[EXT_CFG_INDEX]		= 0x8300,
-+	[EXT_CFG_DATA]		= 0x8304,
-+	[PCIE_HARD_DEBUG]	= 0x4204,
-+	[PCIE_INTR2_CPU_BASE]	= 0x4300,
-+};
-+
-+static const int pcie_offsets_bcm7712[] = {
-+	[EXT_CFG_INDEX]		= 0x9000,
-+	[EXT_CFG_DATA]		= 0x9004,
-+	[PCIE_HARD_DEBUG]	= 0x4304,
-+	[PCIE_INTR2_CPU_BASE]	= 0x4400,
- };
- 
- static const struct pcie_cfg_data generic_cfg = {
-@@ -1693,8 +1701,32 @@ static const struct pcie_cfg_data generic_cfg = {
- 	.num_inbound_wins = 3,
- };
- 
-+static const struct pcie_cfg_data bcm2711_cfg = {
-+	.offsets	= pcie_offsets,
-+	.soc_base	= BCM2711,
-+	.perst_set	= brcm_pcie_perst_set_generic,
-+	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
-+	.num_inbound_wins = 3,
-+};
-+
-+static const struct pcie_cfg_data bcm4908_cfg = {
-+	.offsets	= pcie_offsets,
-+	.soc_base	= BCM4908,
-+	.perst_set	= brcm_pcie_perst_set_4908,
-+	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
-+	.num_inbound_wins = 3,
-+};
-+
-+static const struct pcie_cfg_data bcm7278_cfg = {
-+	.offsets	= pcie_offsets_bcm7278,
-+	.soc_base	= BCM7278,
-+	.perst_set	= brcm_pcie_perst_set_7278,
-+	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
-+	.num_inbound_wins = 3,
-+};
-+
- static const struct pcie_cfg_data bcm7425_cfg = {
--	.offsets	= pcie_offsets_bmips_7425,
-+	.offsets	= pcie_offsets_bcm7425,
- 	.soc_base	= BCM7425,
- 	.perst_set	= brcm_pcie_perst_set_generic,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
-@@ -1709,40 +1741,8 @@ static const struct pcie_cfg_data bcm7435_cfg = {
- 	.num_inbound_wins = 3,
- };
- 
--static const struct pcie_cfg_data bcm4908_cfg = {
--	.offsets	= pcie_offsets,
--	.soc_base	= BCM4908,
--	.perst_set	= brcm_pcie_perst_set_4908,
--	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
--	.num_inbound_wins = 3,
--};
--
--static const int pcie_offset_bcm7278[] = {
--	[RGR1_SW_INIT_1] = 0xc010,
--	[EXT_CFG_INDEX] = 0x9000,
--	[EXT_CFG_DATA] = 0x9004,
--	[PCIE_HARD_DEBUG] = 0x4204,
--	[PCIE_INTR2_CPU_BASE] = 0x4300,
--};
--
--static const struct pcie_cfg_data bcm7278_cfg = {
--	.offsets	= pcie_offset_bcm7278,
--	.soc_base	= BCM7278,
--	.perst_set	= brcm_pcie_perst_set_7278,
--	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
--	.num_inbound_wins = 3,
--};
--
--static const struct pcie_cfg_data bcm2711_cfg = {
--	.offsets	= pcie_offsets,
--	.soc_base	= BCM2711,
--	.perst_set	= brcm_pcie_perst_set_generic,
--	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
--	.num_inbound_wins = 3,
--};
--
- static const struct pcie_cfg_data bcm7216_cfg = {
--	.offsets	= pcie_offset_bcm7278,
-+	.offsets	= pcie_offsets_bcm7278,
- 	.soc_base	= BCM7278,
- 	.perst_set	= brcm_pcie_perst_set_7278,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
-@@ -1751,7 +1751,7 @@ static const struct pcie_cfg_data bcm7216_cfg = {
- };
- 
- static const struct pcie_cfg_data bcm7712_cfg = {
--	.offsets	= pcie_offset_bcm7712,
-+	.offsets	= pcie_offsets_bcm7712,
- 	.perst_set	= brcm_pcie_perst_set_7278,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
- 	.soc_base	= BCM7712,
-@@ -1762,11 +1762,11 @@ static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
- 	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
- 	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
--	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
- 	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7216_cfg },
--	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
--	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
-+	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
- 	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
-+	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
-+	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
- 	{ .compatible = "brcm,bcm7712-pcie", .data = &bcm7712_cfg },
- 	{},
- };
--- 
-2.34.1
-
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 964d67756eb2b..42fd17fbadfa5 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1562,7 +1562,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  	},
+>  	[IMX8MM_EP] = {
+>  		.variant = IMX8MM_EP,
+> -		.flags = IMX6_PCIE_FLAG_HAS_PHYDRV,
+> +		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
+> +			 IMX6_PCIE_FLAG_HAS_PHYDRV,
+>  		.mode = DW_PCIE_EP_TYPE,
+>  		.gpr = "fsl,imx8mm-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+> @@ -1573,7 +1574,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  	},
+>  	[IMX8MP_EP] = {
+>  		.variant = IMX8MP_EP,
+> -		.flags = IMX6_PCIE_FLAG_HAS_PHYDRV,
+> +		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
+> +			 IMX6_PCIE_FLAG_HAS_PHYDRV,
+>  		.mode = DW_PCIE_EP_TYPE,
+>  		.gpr = "fsl,imx8mp-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+> 
+> -- 
+> 2.34.1
+> 
 
