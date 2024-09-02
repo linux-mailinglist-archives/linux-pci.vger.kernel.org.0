@@ -1,274 +1,211 @@
-Return-Path: <linux-pci+bounces-12589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFA1F967DC5
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 04:23:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FEA7967E27
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 05:32:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E0381F2220E
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 02:23:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B09B1B209C7
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 03:32:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E243282F7;
-	Mon,  2 Sep 2024 02:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A46212D057;
+	Mon,  2 Sep 2024 03:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L2AF+Qpb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xjz9mK2/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97423125DB;
-	Mon,  2 Sep 2024 02:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725243791; cv=fail; b=u8lAEfwEiEjuRXBQTvcRrJfDK9nZdK2JohksK/DAZvoTZGd4CMJZLug+BR3o6xsxbqblXYv6gHC9ypXyat+enibuxMlEA7aMh3eQ5w+4pxXPOYeHUTDayvxsGTc9tv2ylWapeDuM7OtRHXMiseJr1w0I0dXLXa9GvdfKBPKODVM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725243791; c=relaxed/simple;
-	bh=Qi3axy08O8fxYEg/maYwSroNK1ptOk+BbJaOLFd70/w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q6TzOcBluyTYjirQomfMMriHIbWI4dmlHJguboCj0droZNfgVoAGaFt8rVxcyJcd7eMNTRA0MducpdgkBQUa59iNg060ZEvpN7mgQuo0uOGaRyCFb3KlukHovHsJIkcMAmbL4fFJ0UDMKjN1TEUbaPki3Rc96tp0pLz1xx1hcVg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L2AF+Qpb; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E8ZoGJFQmcMx9jA/WAwDaO0pxF+WytTF17T8fKdsulpY6IpaWepbA6tcjn84bd258PV0fdRFR4xWXJgBLHWNPxyKNfiOll5tSdZSyb7T/NTrl59kc6cCRhxTIt0gvZC4mzU7LBf6qGtKjgEKNrfRUiJfRRy+aPpaSgVQFNfln1zmv5CGpP6QqUqccIaUYDdWsDOYttF78UfTD61TBQWlDEWBSQpb+TYNGbRd/CRuXNjeoGR/W/o+WqQPmIrNN1ah1+3/7AM4Uo83Xuv4pc/xQPgySYK3YGKBiySidSroonhJD9+KnHpPiFyrBawCxyjchTjB0T2sgJH2mTBmIiIESw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2q0D34oZl5VkvQi5fbUU6rwUiJpmo0ncLQAHi9NvbsE=;
- b=a0AUIT9e2Wk4QuL0x34H5xrIqPU8WypMWMNELkqGuYaPCPdO1dg06inMhjvmBbOaEuXGlSERQ9vupsWr/tCoJu9ycFb9wafUJaIQ86f/skWhwXQq4iRisb5Zhoi/JRAuwxWWEn1vAmacccQdLRMIibYPQ8JO60coRSaj7X7tJnkxWfKcFvszBq3pD+7gQzWj0Hsl/BFfnrLudzKTrbV7Hjrz4kbnwQRlxHTKuRI165Jdg7+xrK8er6A0a+eP8CuyehKJcKOsmFQ1iksjXJUxaC17HUb03hbGOzn0/HXvvFOCqNBIUYomNpn2vqKUFBtk+btlsT48swnPHjzxGI887A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2q0D34oZl5VkvQi5fbUU6rwUiJpmo0ncLQAHi9NvbsE=;
- b=L2AF+QpbqVkyWxOO6xY9rtrKYSUDW51cfL+HncG0E1R8yJTOqLYTn/cOrG/RFJc62CzSD3ngsVBvWTn528MSBYbtOR1wIngVAc3N8LQ2sHbOy+xzCPALrX2zYTJyhfRtTPfw9enxEyBdUk3n6jh6kXQIpMKqLa0/5nwC4q6V5OI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by PH7PR12MB9223.namprd12.prod.outlook.com (2603:10b6:510:2f2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.23; Mon, 2 Sep
- 2024 02:23:06 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%6]) with mapi id 15.20.7918.024; Mon, 2 Sep 2024
- 02:23:05 +0000
-Message-ID: <49226b61-e7d3-477f-980b-30567eb4d069@amd.com>
-Date: Mon, 2 Sep 2024 12:22:56 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH 13/21] KVM: X86: Handle private MMIO as shared
-Content-Language: en-US
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Dan Williams <dan.j.williams@intel.com>, pratikrajesh.sampat@amd.com,
- michael.day@amd.com, david.kaplan@amd.com, dhaval.giani@amd.com,
- Santosh Shukla <santosh.shukla@amd.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, Michael Roth <michael.roth@amd.com>,
- Alexander Graf <agraf@suse.de>, Nikunj A Dadhania <nikunj@amd.com>,
- Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-14-aik@amd.com>
- <ZtH55q0Ho1DLm5ka@yilunxu-OptiPlex-7050>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <ZtH55q0Ho1DLm5ka@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SYCPR01CA0027.ausprd01.prod.outlook.com
- (2603:10c6:10:e::15) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B950C2C80
+	for <linux-pci@vger.kernel.org>; Mon,  2 Sep 2024 03:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725247937; cv=none; b=j1rgGLVODr32UgGAvy5d4cyAKMlM8H+cAdWCJfD1lTWiV0UHpH0npz/eINPYXx3qu1cx1t4is06VK6Eqk6MfB5E3UEX1fqmhE6lgVmtj3CFsvlqNwEM4JJt50BE3RDZ8jIgO13sMv1amWI6KGm+kqDzitzW2RrBilEQwdZVHQGk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725247937; c=relaxed/simple;
+	bh=hCdT1PhQKvaCewMkgMIDiGXD8sW5Qw+SS+iu7Ba9D/0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=BUMhJTKjM+mZrlO8IBn4UCrgX0wl7mRt0d8x5ARnlSoAfobAKw63CxVshAnWmZqHCbnUpxwjBMC+bDvxbypdjTyTmOwPvMeS06Fsml+5a6l+R5jA5icXsVlxBDGtLGWuZlu+wlKU50ouFbsiQZasf/FoG7jYxyUKzOj9GluWCLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xjz9mK2/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725247934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=obu9w3qS3edU0OUEg+fxyJR4inviPotuVfPdF8CnfUg=;
+	b=Xjz9mK2/9kHb+beO66pyBJ3mc0Y59NbGr7mZoD84o5CFnDrfEVPsGPKnt01onbCMZgOBg3
+	mitUF6nfuV5hu4g7ilkgn2dXWP+j7U0uBQlO4iplurN88s7Vc/pRIQURMO8AnnmqtzkKQP
+	Gk/uO2ndiF7PK4SLVd76amYFR/Yb3NA=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-110-o-8cgHjEPrqiXPTxOAj6JA-1; Sun, 01 Sep 2024 23:32:13 -0400
+X-MC-Unique: o-8cgHjEPrqiXPTxOAj6JA-1
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-5dfa08a4424so3088830eaf.2
+        for <linux-pci@vger.kernel.org>; Sun, 01 Sep 2024 20:32:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725247932; x=1725852732;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=obu9w3qS3edU0OUEg+fxyJR4inviPotuVfPdF8CnfUg=;
+        b=nV7+xVBF+8v/kRFBTbwJMtMOoR/U7cnDt3ckWClyGSWYVrKO2fyHZXEEKqSQdtHqcT
+         6lZkNkiRF3Y2phv+Br1dOSZwT1zAfGN+Dga6bNWpLgeoMPipjIPyfKVY1oHF0hI8Yntg
+         dJUsuA+N/34s/4t3upcpkg9OZt5GOmct211sdGVRNZsQonmu7qXkj9NBk7dJgC7cz3lj
+         /7fOIPX7K/xIz1PnpEUtNhbNtVHl/Zs9SykQuPKWW26TwRG4y2doLFdneTx2cT8OIf+I
+         XcdVlFvkdHl6klPgvTc7aWNhNcQ39qpehacOhygMXIHiVoi0eAZYlo95P7B+BpHPWUxZ
+         arRA==
+X-Gm-Message-State: AOJu0YxkZSJ+XOLvkJep/O7dlRyfZhPjdzdBcHa1iySpZcjJthPiNsyt
+	i2ZNHo/hMywSMftWgJ6SOqUnCFzXIFkQ5NowIlKlmEpfs690rENlfi6mvq9UAwpzRe2UBkmWcJg
+	biwuJeLbFLsqo2v86TC4oEW/09MRbEnvZkMi+2YvAOe0GjG/1qiuVgNGqN5OW0HRisdix4qvQzu
+	VJBO+zApP7EA76Sl2t9oHiGnGjsEhFTUohbdDThwOe6kv3kg==
+X-Received: by 2002:a05:6358:52cb:b0:1b5:fba4:548a with SMTP id e5c5f4694b2df-1b603c36932mr1015980455d.8.1725247931984;
+        Sun, 01 Sep 2024 20:32:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEExHqgM0X4UPVqvSg2DDRFyLMAdoMxM2e6EWVRo95Bdwj8I6Mwcw23k5w8SDKeSuNcDvUpZCQB9Ma6n9LBeVo=
+X-Received: by 2002:a05:6358:52cb:b0:1b5:fba4:548a with SMTP id
+ e5c5f4694b2df-1b603c36932mr1015979355d.8.1725247931516; Sun, 01 Sep 2024
+ 20:32:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|PH7PR12MB9223:EE_
-X-MS-Office365-Filtering-Correlation-Id: 941fee20-9d68-4418-cc52-08dccaf62d56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UTAwQ3Zna1kzUGRpdCtBRmdMUGJQTFlaMHVNOUNvSkQ4S21UVk9NOHVZcmJZ?=
- =?utf-8?B?VVZVOWhpRkpzSEdNaTRPZURqMXIvc0s2RjRuQ1B5VWY4MklnMGx6Ung4eEdk?=
- =?utf-8?B?RDVIemdkVnlML2lMNWQvb1ViSUY3eEtrcGxNQ0poUVlEVUp3NjgwVHRBa0Jt?=
- =?utf-8?B?Rmp1SFVNMnZxalQ2Vmovd1dBRURJSjVOV1VsdUZtYmpuMXY2TjR4Z0gvc1B5?=
- =?utf-8?B?TVFVb0ppdXkxK05PQm80QzJ6eWJXVFhuWkdiUGU5N1FDd0xOdkEvc0dBWlJV?=
- =?utf-8?B?U0hvRHRFTGZHV1E3UEp1QkdpRzhGLytEc3hYY05KM2N4Wm5ITms3RWdCekMy?=
- =?utf-8?B?NDBqV2EvRE1scHo1TEN1UW5xc3FPNVlFd3dQSFRXOThXNXRrcytGZ2k1YVhG?=
- =?utf-8?B?TFUyU25EOGNhQk5aeUl0d2lOL2lOSTlSLzNNOU40L3ZsVlhHL2NuSXhYQngr?=
- =?utf-8?B?SlVXYmtNQTlQb0RtMWxIRXVOTE5IZHFDWG54ckFMKzUwYWZoMGZGOXZBdWpF?=
- =?utf-8?B?QVU5bXg0d29nTTljWHNWTDJqejY1UytJSDFweXJEcCsvTDRCcTI1eXZNM1p4?=
- =?utf-8?B?Ky9ITzRDNlVRTHUwSmg5QVBJQnIvNW95MU9CSUlXcGp4dm5SNnpXRjlGZ3lu?=
- =?utf-8?B?SGY5Z3c1YVRBRjkrS0VKeXRlM2FJMUpTTDRCcXdmVEF2MnVwTjBzQUkvVlpD?=
- =?utf-8?B?RGNiSG9sdE5ETVpKbzBsTXFXK255SlcwaVpyZmZRcTB2NlltVzdkRmxzVXlW?=
- =?utf-8?B?Vlg0VWkxLzVETE1IblFkbTQ0SGMySXAvZmhiVzE5OEpsZE4vTTE3ZE9zcDlU?=
- =?utf-8?B?eFZtWlJscFBscThtdjFiN3pCcm8xZjluVkIxZzVIeFdjYmJPOFFBNHJva1Nt?=
- =?utf-8?B?RytRNERuQ2NKSGI3SkZlWE1qMXFJT2dRRFJYVlVwL1V4ZGtrYnNWbTE1T2tm?=
- =?utf-8?B?cFdYN0tMOFlMelBVOFNOY2FFMGg4VEszR0k2WUUwdks0UGxhYm1veTFXenRJ?=
- =?utf-8?B?TG0vY1JGeDFORkE4MHVUSkdNbGNlcENpanUydnhVZkFwa25BWHZHSmVhb3FM?=
- =?utf-8?B?L1VHZWJ0cXgwZlFJcVREbml6QUl2S0E5cy9tOTBKYVlDM3cvU0h1SE1wK3A5?=
- =?utf-8?B?NzhTa3VvWDltZTQ2aWNGQXZPNnRoS1hKak5DMnN4aUJCSitoUkdWbThrVS8y?=
- =?utf-8?B?ZkdiSjcwQ2d4Q3pkTVVzbDBadUlLRzYrV1ROaVhnbmRMbitkalNyMUxxdEU0?=
- =?utf-8?B?b0NPb1djL1cyN0p3aTFHZGN5SitOOCtjVXYzQjJKWFRSbkdKbmZ2b0RybDlP?=
- =?utf-8?B?a1lHUVhQR3NoZ0FlQUlLeUlOeHFqZVRsUXlCZ2Q5alpORlEyVTZXZitsNDhu?=
- =?utf-8?B?TDlUTGp5R05oUTNQWnJCM3hpc05nMllWcVVVNGRRSUEwNlE0cUJZSzc5K0dj?=
- =?utf-8?B?SGdHSDlTZlVoaXNnbjFucHJkQWFFNXFMb21DQTVMNXNNYjVRdFdpaUN1TnRu?=
- =?utf-8?B?Qm14dVZvZ3NVNWhjVHBjdnA1WGpTNlVyQjZRbmw5STBtejBFYWYwWDY0SlZT?=
- =?utf-8?B?aFhkQW5sVTBmQkdRQ2lIRFFKbzBoZkNMRkRBYUk1TEx5YlFIOWRaY3VQdXhW?=
- =?utf-8?B?R1YyWUVWZ3Y4U0kzT3c2TGM5NDRvWXQyUHp1UjNmaGlaczlHbFNPdmN5TVRE?=
- =?utf-8?B?N2s5Zm40QUVXQjZmTUhRWmcwUFcweks5K2UyMVhEUVlRVUpDaWZvemk2R09F?=
- =?utf-8?B?bjRNMGRJTzRESmlTUzdtNUFLL2k1V29yVjFVQVRQUzJlK3Z4K055OHpqKzR0?=
- =?utf-8?B?M2RMejYycEhhckZVZEJYZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eWo4SG9WRGgveThXbENvcjVGRHFlVEEvSXR4dE5sQ1lodVROMmZiS3FwUzZB?=
- =?utf-8?B?YWRTYUNRRk9QZm84aWR0cFBIa1hmbCtPaHVmNElwNElQQnFoS0JYUUxaYUNR?=
- =?utf-8?B?RmorcmRUbFoyYXc5RjdrQ2hwb1h5VjAvM0NWSEJ2M1FRUkRicjRlTGZaMlhF?=
- =?utf-8?B?VHRIZ28rUEhYblhyam9UWjBZVDc0MzNTZ1VlZ2NRcWpKSWNUdEZxWU1QQVhz?=
- =?utf-8?B?NHVDK0xnYUtiYzZ0dXJTVW5vTHU0WTBqR2MvRTJkMFBGWm9KSG5veGNyWFIr?=
- =?utf-8?B?NlpxaXVtOXZIcE9xT0xLcDlScUZNT24zUnNoa3hveU1nczdTdUU1Q3hndzVu?=
- =?utf-8?B?VlFDQTFTOUdRbUYya05Ebm0rRzlMcHZHTGdoYmVKSEg4VFZEMmZNOHVNYjRy?=
- =?utf-8?B?S1Q3RWNFYWVhWk1SR21EdmlmenBNQUM1aGpTaHFZc0dGeFMxbEs0MG4rOGNM?=
- =?utf-8?B?UzBFQmFLZndOTHJ4MHVKQVBDK1ZVZnZ1WmZERUtHWUJLdlV6T2d1ekJNb1RN?=
- =?utf-8?B?YlozYlVHK1N3STY1UVpWU0VLeXJmMUlUcEdISlRTczZFcC9TeHJCQnBMNDZU?=
- =?utf-8?B?REppN0lGZnRsQVZTdjMvaVhPN1pSaWZVTFlFQ3BUTzhiSEV4ZlhQOGhzYzl0?=
- =?utf-8?B?VnhhWlh0SXRLTnBFN3k1ejdKTmR2RmhiRkhSL05uNHlrTXVCdmxkSjM0ME9k?=
- =?utf-8?B?TFRSWXNIaklrdFlHQzJNODJxeEJ6aDZxRjJLMnNNem54WlcvVGVlaHVBWDNr?=
- =?utf-8?B?U2NMVzlCanRtSGo3MmNhd0FLeXZSOVdDeXJvZ0xXalZ5cVlrOGU1RlVuQ2RF?=
- =?utf-8?B?eUVXVG9RamIxZDBLNHV2cEFwOGRTSzJuajdJYUNmdE9XYzhac09DVHFNQlFp?=
- =?utf-8?B?b0JjRFdOZU5WSVk5VXE5Q1k1aDJwUncvaklYWVdPbGNKbWZPSytpQWVXOG9T?=
- =?utf-8?B?bzBXVXp0alZKemk3dDBFZ29aVWRjYmhWYmVqS29CdEl0QmplT1oyZlNmS25n?=
- =?utf-8?B?eHhUVW9QUU9Remtra3oyNkc2ZVpNYno0YnVJSjRFM0UwUFBPYnFTZGVvd1Fl?=
- =?utf-8?B?enYydS9QNHBuMFoyYUVHT01UWnhId3hxQkVuL1NBZEx6djMxcmRFWWRXVHp4?=
- =?utf-8?B?NEpIdTZ3TjNTT3hTQ3NEdWJmS3NMY2VXREMvYTA1eWNpNmNmRUVlZXdEaGxP?=
- =?utf-8?B?eElvMnliMDBBZkVxSG1tZzdJd3pNbjBVbzJoS21vZlhqUzBSbGQ5bEwrOWJM?=
- =?utf-8?B?azh1alJHWEFTZFh3RHB0U09DODVVYVU2dTQ0a2NyTXRsUWRvWm5xRkwrWTJC?=
- =?utf-8?B?SkhJUVpKYjFYZDIzZGNsN3QrZ05GWHBVYUZlMUZsU1NHN0VZYkI3T3krZE1w?=
- =?utf-8?B?TzYzYUxrQ1Rnc3NGRmt1UWwzZ00xVmhZVzFJZnB6cUlmeVU0VHhoUXdpOU55?=
- =?utf-8?B?VXk4S3ZmejducGRKM0dLOU1VMkY3aFNFZmFCOTNZMzF6YVQ2QzRxdE5LbUwx?=
- =?utf-8?B?K0czNnNZRUlBTExKUU5jZjhOTjMzM2xUVDdmUmliR0FPN1kzMncreWJINnUr?=
- =?utf-8?B?ZnVPN3BCWlVSNjM4cjUxN2U2NEFJV0p4V0I1Qno4WmVqQVZ1Z1prdlNXbCtl?=
- =?utf-8?B?TDFhdUVNWEdzdGp4SGNKb3N4L0l3dFZ1ZUhVdHFnYTBrajFCQWpNVnpwY2w4?=
- =?utf-8?B?MmJGR0I1OXJ2b2FjSUJEeEozTGg4TmludzhpSnduUlhUakJoUzlGSi9LTy95?=
- =?utf-8?B?OFpCNGs2Z3VEZmdsWFFyVUF1cUFjSGZSd29Wa0QvMzgxdWwvWjVKZVRnUUlB?=
- =?utf-8?B?RTZqanNtaWdaN1VhSDhoYkNBVFc4TnFPamNHTDIxMENzeDdXL0lMMTR0VTY2?=
- =?utf-8?B?dUhVWlpVYmpETHhDNm8yRDdiNHlMU0NDL3F2eFdHYXZnRklpbnBUWTBLaUY3?=
- =?utf-8?B?am5hU1pmVEZEMUJtYlFLenE5YzRTNDArbUpvelJFMGpVc0VDVVhwek4za3JR?=
- =?utf-8?B?eXFBL1J3djlnRFNJT1hURHJlUStINTJXRTk1eU9wK2l1d0VXU1FEazhWK3ZV?=
- =?utf-8?B?UVh2RjNCcVBRTkozVDdkcVlGWmJkczQxcFpqUk1tLzgvTG1QVGp2a3ZwdmlH?=
- =?utf-8?Q?LV9cJ1gudGjxzqXONi+Xw+w5n?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 941fee20-9d68-4418-cc52-08dccaf62d56
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2024 02:23:05.4130
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X6nb3Fc2I1nFlD3zKOxeOJUwuE/zGUT6pmN/CBlbx8ghW/Q0twmNFV24Ya5nPEpPhaaX8YYxyWYBH5/goniDJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9223
+From: Changhui Zhong <czhong@redhat.com>
+Date: Mon, 2 Sep 2024 11:31:59 +0800
+Message-ID: <CAGVVp+XdmMf=kX2ZSWXUcvynyhyZ5=L=qrYJ0X9fdt5Fm0H7pA@mail.gmail.com>
+Subject: [bug report] WARNING: CPU: 0 PID: 10 at drivers/pci/pci.c:2250 pci_disable_device+0xe5/0x100
+To: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
+hit a warning issue when reboot system, if you need additional
+information or need testing a patch, please let me know
 
-On 31/8/24 02:57, Xu Yilun wrote:
-> On Fri, Aug 23, 2024 at 11:21:27PM +1000, Alexey Kardashevskiy wrote:
->> Currently private MMIO nested page faults are not expected so when such
->> fault occurs, KVM tries moving the faulted page from private to shared
->> which is not going to work as private MMIO is not backed by memfd.
->>
->> Handle private MMIO as shared: skip page state change and memfd
-> 
-> This means host keeps the mapping for private MMIO, which is different
-> from private memory. Not sure if it is expected, and I want to get
-> some directions here.
+repo: https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+branch: for-next
+commit HEAD: 81c0619ef256eb3b0aef6a5365f0b2c37e82327e
 
-There is no other translation table on AMD though, the same NPT. The 
-security is enforced by the RMP table. A device says "bar#x is private" 
-so the host + firmware ensure the each corresponding RMP entry is 
-"assigned" + "validated" and has a correct IDE stream ID and ASID, and 
-the VM's kernel maps it with the Cbit set.
+dmesg log:
+System Reboot
+.
+[
+  OK
+] Reached target
+System Reboot
+.
+[  241.277952] watchdog: watchdog0: watchdog did not stop!
+[  251.298630] systemd-shutdown[1]: Waiting for process: 2093
+(rhts-reboot), 2106 (sleep)
+[-- MARK -- Fri Aug 30 20:05:00 2024]
+[  331.337465] watchdog: watchdog0: watchdog did not stop!
+[  331.373580] dracut Warning: Killing all remaining processes
+dracut Warning: Killing all remaining processes
+[  331.409208] dracut Warning: Unmounted /oldroot.
+dracut Warning: Unmounted /oldroot.
+Rebooting.
+[  332.648001] {1}[Hardware Error]: Hardware error from APEI Generic
+Hardware Error Source: 5
+[  332.656256] {1}[Hardware Error]: event severity: recoverable
+[  332.661917] {1}[Hardware Error]:  Error 0, type: fatal
+[  332.667055] {1}[Hardware Error]:   section_type: PCIe error
+[  332.672621] {1}[Hardware Error]:   port_type: 0, PCIe end point
+[  332.678539] {1}[Hardware Error]:   version: 3.0
+[  332.683072] {1}[Hardware Error]:   command: 0x0002, status: 0x0010
+[  332.689252] {1}[Hardware Error]:   device_id: 0000:04:00.0
+[  332.694737] {1}[Hardware Error]:   slot: 0
+[  332.698838] {1}[Hardware Error]:   secondary_bus: 0x00
+[  332.703977] {1}[Hardware Error]:   vendor_id: 0x14e4, device_id: 0x165f
+[  332.710588] {1}[Hardware Error]:   class_code: 020000
+[  332.715632] {1}[Hardware Error]:   aer_uncor_status: 0x00100000,
+aer_uncor_mask: 0x00010000
+[  332.723980] {1}[Hardware Error]:   aer_uncor_severity: 0x000ef030
+[  332.730072] {1}[Hardware Error]:   TLP Header: 40000001 0000030f
+90028090 00000000
+[  332.737655] tg3 0000:04:00.0: AER: aer_status: 0x00100000,
+aer_mask: 0x00010000
+[  332.744964] tg3 0000:04:00.0:    [20] UnsupReq               (First)
+[  332.751316] tg3 0000:04:00.0: AER: aer_layer=Transaction Layer,
+aer_agent=Requester ID
+[  332.759230] tg3 0000:04:00.0: AER: aer_uncor_severity: 0x000ef030
+[  332.765322] tg3 0000:04:00.0: AER:   TLP Header: 40000001 0000030f
+90028090 00000000
+[  332.773065] ------------[ cut here ]------------
+[  332.777680] tg3 0000:04:00.0: disabling already-disabled device
+[  332.777689] WARNING: CPU: 0 PID: 10 at drivers/pci/pci.c:2250
+pci_disable_device+0xe5/0x100
+[  332.791953] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4
+dns_resolver nfs lockd grace netfs rfkill sunrpc vfat fat dm_multipath
+intel_rapl_msr intel_rapl_common intel_uncore_frequency
+intel_uncore_frequency_common i10nm_edac skx_edac_common nfit
+libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm
+mgag200 iTCO_wdt dell_pc dax_hmem i2c_algo_bit ipmi_ssif
+platform_profile iTCO_vendor_support cxl_acpi drm_shmem_helper rapl
+cxl_core drm_kms_helper mei_me intel_th_gth isst_if_mmio intel_cstate
+dell_smbios isst_if_mbox_pci i2c_i801 dcdbas acpi_power_meter
+intel_th_pci mei intel_uncore dell_wmi_descriptor isst_if_common
+wmi_bmof intel_vsec ipmi_si intel_pch_thermal intel_th einj acpi_ipmi
+i2c_smbus pcspkr ipmi_devintf ipmi_msghandler drm fuse xfs libcrc32c
+sd_mod sg ahci crct10dif_pclmul libahci crc32_pclmul crc32c_intel
+libata tg3 ghash_clmulni_intel wmi dm_mirror dm_region_hash dm_log
+dm_mod
+[  332.872617] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Kdump: loaded
+Not tainted 6.11.0-rc5+ #1
+[  332.881047] Hardware name: Dell Inc. PowerEdge R650xs/0PPTY2, BIOS
+1.4.4 10/07/2021
+[  332.888702] Workqueue: events aer_recover_work_func
+[  332.893582] RIP: 0010:pci_disable_device+0xe5/0x100
+[  332.898461] Code: 4d 85 e4 75 07 4c 8b a7 c8 00 00 00 48 8d bb c8
+00 00 00 e8 2d 6e 18 00 4c 89 e2 48 c7 c7 d0 98 23 84 48 89 c6 e8 3b
+6c 9f ff <0f> 0b e9 3b ff ff ff e8 2f 2f 62 00 66 66 2e 0f 1f 84 00 00
+00 00
+[  332.917206] RSP: 0018:ff4cd3648011fd28 EFLAGS: 00010282
+[  332.922431] RAX: 0000000000000000 RBX: ff36815a45adc000 RCX: ffffffff84721408
+[  332.929565] RDX: 0000000000000000 RSI: 00000000ffff7fff RDI: 0000000000000001
+[  332.936698] RBP: ff36815a5c736000 R08: 0000000000000000 R09: ff4cd3648011fbd8
+[  332.943829] R10: ff4cd3648011fbd0 R11: ffffffff847e1448 R12: ff36815a452b39d0
+[  332.950963] R13: ff36815a5c7369c0 R14: ff36815a45adc148 R15: ff36815a45ade000
+[  332.958097] FS:  0000000000000000(0000) GS:ff36815daf600000(0000)
+knlGS:0000000000000000
+[  332.966182] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  332.971928] CR2: 00007f9fcad73420 CR3: 000000000ce22004 CR4: 0000000000771ef0
+[  332.979061] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  332.986194] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  332.993327] PKRU: 55555554
+[  332.996038] Call Trace:
+[  332.998493]  <TASK>
+[  333.000597]  ? __warn+0x7f/0x120
+[  333.003831]  ? pci_disable_device+0xe5/0x100
+[  333.008103]  ? report_bug+0x18a/0x1a0
+[  333.011769]  ? handle_bug+0x3c/0x70
+[  333.015261]  ? exc_invalid_op+0x14/0x70
+[  333.019101]  ? asm_exc_invalid_op+0x16/0x20
+[  333.023287]  ? pci_disable_device+0xe5/0x100
+[  333.027559]  ? pci_disable_device+0xe5/0x100
+[  333.031834]  ? __pfx_report_frozen_detected+0x10/0x10
+[  333.036887]  tg3_io_error_detected+0x200/0x2b0 [tg3]
+[  333.041852]  ? __pfx_report_frozen_detected+0x10/0x10
+[  333.046904]  report_error_detected+0xc9/0x1c0
+[  333.051265]  ? __pfx_report_frozen_detected+0x10/0x10
+[  333.056315]  __pci_walk_bus+0x6b/0xb0
+[  333.059982]  ? __pfx_aer_root_reset+0x10/0x10
+[  333.064342]  pcie_do_recovery+0x2b4/0x3c0
+[  333.068354]  aer_recover_work_func+0x106/0x110
+[  333.072801]  process_one_work+0x179/0x390
+[  333.076812]  worker_thread+0x231/0x340
+[  333.080564]  ? __pfx_worker_thread+0x10/0x10
+[  333.084839]  kthread+0xcc/0x100
+[  333.087983]  ? __pfx_kthread+0x10/0x10
+[  333.091737]  ret_from_fork+0x2d/0x50
+[  333.095317]  ? __pfx_kthread+0x10/0x10
+[  333.099069]  ret_from_fork_asm+0x1a/0x30
+[  333.102996]  </TASK>
+[  333.105189] ---[ end trace 0000000000000000 ]---
+[  333.109901] reboot: Restarting system
 
->  From HW perspective, private MMIO is not intended to be accessed by
-> host, but the consequence may varies. According to TDISP spec 11.2,
-> my understanding is private device (known as TDI) should reject the
-> TLP and transition to TDISP ERROR state. But no further error
-> reporting or logging is mandated. So the impact to the host system
-> is specific to each device. In my test environment, an AER
-> NonFatalErr is reported and nothing more, much better than host
-> accessing private memory.
-
-afair I get an non-fatal RMP fault so the device does not even notice.
-
-> On SW side, my concern is how to deal with mmu_notifier. In theory, if
-> we get pfn from hva we should follow the userspace mapping change. But
-> that makes no sense. Especially for TDX TEE-IO, private MMIO mapping
-> in SEPT cannot be changed or invalidated as long as TDI is running.
-
-> Another concern may be specific for TDX TEE-IO. Allowing both userspace
-> mapping and SEPT mapping may be safe for private MMIO, but on
-> KVM_SET_USER_MEMORY_REGION2,  KVM cannot actually tell if a userspace
-> addr is really for private MMIO. I.e. user could provide shared memory
-> addr to KVM but declare it is for private MMIO. The shared memory then
-> could be mapped in SEPT and cause problem.
-
-I am missing lots of context here. When you are starting a guest with a 
-passed through device, until the TDISP machinery transitions the TDI 
-into RUN, this TDI's MMIO is shared and mapped everywhere. And after 
-transitioning to RUN you move mappings from EPT to SEPT?
-
-> So personally I prefer no host mapping for private MMIO.
-
-Nah, cannot skip this step on AMD. Thanks,
-
-
-> 
-> Thanks,
-> Yilun
-> 
->> page state tracking.
->>
->> The MMIO KVM memory slot is still marked as shared as the guest can
->> access it as private or shared so marking the MMIO slot as private
->> is not going to help.
->>
->> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
->> ---
->>   arch/x86/kvm/mmu/mmu.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
->> index 928cf84778b0..e74f5c3d0821 100644
->> --- a/arch/x86/kvm/mmu/mmu.c
->> +++ b/arch/x86/kvm/mmu/mmu.c
->> @@ -4366,7 +4366,11 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
->>   {
->>   	bool async;
->>   
->> -	if (fault->is_private)
->> +	if (fault->slot && fault->is_private && !kvm_slot_can_be_private(fault->slot) &&
->> +	    (vcpu->kvm->arch.vm_type == KVM_X86_SNP_VM))
->> +		pr_warn("%s: private SEV TIO MMIO fault for fault->gfn=%llx\n",
->> +			__func__, fault->gfn);
->> +	else if (fault->is_private)
->>   		return kvm_faultin_pfn_private(vcpu, fault);
->>   
->>   	async = false;
->> -- 
->> 2.45.2
->>
->>
-
--- 
-Alexey
+Thanks,
+Changhui
 
 
