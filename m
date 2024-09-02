@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-12632-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12633-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EA63968E89
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 21:46:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 732AF968EEC
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 22:45:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CFBACB21F7C
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 19:46:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 157341F23459
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 20:45:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828C019CC1E;
-	Mon,  2 Sep 2024 19:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEF1F1A4E9E;
+	Mon,  2 Sep 2024 20:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBAP/dxI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7E6mmhv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A1D13AA3E;
-	Mon,  2 Sep 2024 19:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EF61A4E7E;
+	Mon,  2 Sep 2024 20:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725306412; cv=none; b=jitRJSfBLtcLdRgg2QLR6+8kesSDKKat0//gO4/ez0+Zwo/mnrB04DVHfUyqxx7wLCF0e2bAkRtYHhFkZ27CuKGychtdr8Hhmb6nRoASTxLoOfta/cqk8iNvJu5M9BufpPunsKQGRlhG0qj+CHXzbuAfdW7JSoi/bxohwDNx3eQ=
+	t=1725309934; cv=none; b=gPbqdoY/nuZ+7iBGGCLeELnoHz72Xmf7qGmp52CySQEDG7yhr2PBKWuEg9Nl/ADlnWVV7hez4w2RjYBFKKPs9KhFBQ6ysYFoS+KS21pu1imOvprpZo9iEyhqUi3shHYta3adFanfT/q1O2D+1P2HRCgb+lnqaGV48v5wdTlEIwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725306412; c=relaxed/simple;
-	bh=vdkiPzrYmE5RUCC9GcrISY44Jm6tRQ85m3k0DgjEVqM=;
+	s=arc-20240116; t=1725309934; c=relaxed/simple;
+	bh=Ff/z3qhnWcm7zLGLAOapgZII/W5Vo0cU9a5nmORcnu4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pw+Prsyfl9cfzp4olWU65xBd/6stgO8ZOtVfuZR2S72sJTtF/RaKVi0xTIOFarqdwH1dyGBjltDUFfMJTFQdxDJmKauWTf6WTmVxBRka21Q746tADWnqnH4/66eoOQ2iIJr4DYJlVKsTrkgPqLEH+GN3IYi+fkVjh0mk5GLFkME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBAP/dxI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D7D8C4CEC2;
-	Mon,  2 Sep 2024 19:46:51 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=YLlNy1+hiVU+jIWYA6PERzTxawLwDM2MY7H5YfNtUH4HRxL0irlrq0eylYAiSGt8A+20uHJcgq6MN8pXtcU/x9KmH0wd18XWcxk4KdTIyCH9S3QT/XZEpXLsJDlrwQlPiESuXNaZVR6C6ERagQkKmkN575l4TDmxGMPtZradAsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7E6mmhv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F298DC4CEC2;
+	Mon,  2 Sep 2024 20:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725306411;
-	bh=vdkiPzrYmE5RUCC9GcrISY44Jm6tRQ85m3k0DgjEVqM=;
+	s=k20201202; t=1725309934;
+	bh=Ff/z3qhnWcm7zLGLAOapgZII/W5Vo0cU9a5nmORcnu4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PBAP/dxI/1mlNP11Qd9ptptG7K6TLp+p6QjLpf8Z0EbHWeJGspD1/hFfyy1tE696C
-	 NnSgSqLwJhfRkPkSdfh5vur6cxH3M/j5y6dSSMRQGfTz1c9NaZM7m+UxXF3H9p/HAz
-	 ifDBg++zhUJVBCHJynZUt0wYMkOeUSn0pdMz8OoULBFZPoyl2ye7erNOBR4bVy4yLJ
-	 hWMaW6tCjkdMPgWdJz7K/2Aa8BUaT/pEzwqXyNsa60+2U54BpGio4j8WdDTT9EjfvI
-	 N1myy2FSDRlhLro3IMYXCiJrsbCaei9DbyFY8heZFbdKeUYQNuocdejpGJwWDo3Irf
-	 IskSg0j3RnoKA==
-Date: Mon, 2 Sep 2024 14:46:49 -0500
+	b=X7E6mmhvnLiRwEX8jOwv9uaNA7WFssCE4DwyDFFIqhRALpLTadMvXSgSxOK412WuC
+	 IQ8Mdjbfbsh4/3PamCXI5Tugrkp9HLlzt/3k1/0NENDWrmiarECR3Y0IZAMPZc/JYI
+	 y2yy0JjUGpMykY3+UBJEQGJdDl94KsWTHi8cAYlkVRWiCchcjgOKh2Y+t9A6S9n8ka
+	 B5KlsH3A2uZz3NufegrCENlEZeE3j6LgngOZmu4rbvm09/NcYjUTowRAd5krNGWZ1X
+	 KyM8Iu5aOy88ON4GhGIhMFjKp/vkM6h/LeB9JHzP98tp8hrSEdgSsHN8yLQhsTaVej
+	 5lfKgzpA7aPXg==
+Date: Mon, 2 Sep 2024 15:45:32 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Jim Quinlan <james.quinlan@broadcom.com>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -59,9 +59,9 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 07/13] PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG,
- INTR2_CPU_BASE offsets SoC-specific
-Message-ID: <20240902194649.GA224705@bhelgaas>
+Subject: Re: [PATCH v6 10/13] PCI: brcmstb: Refactor for chips with many
+ regular inbound windows
+Message-ID: <20240902204532.GA227089@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,76 +70,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240815225731.40276-8-james.quinlan@broadcom.com>
+In-Reply-To: <20240815225731.40276-11-james.quinlan@broadcom.com>
 
-On Thu, Aug 15, 2024 at 06:57:20PM -0400, Jim Quinlan wrote:
-> Do prepatory work for the 7712 SoC, which is introduced in a future commit.
-> Our HW design has changed two register offsets for the 7712, where
-> previously it was a common value for all Broadcom SOCs with PCIe cores.
-> Specifically, the two offsets are to the registers HARD_DEBUG and
-> INTR2_CPU_BASE.
-
-> @@ -1499,12 +1502,16 @@ static const int pcie_offsets[] = {
->  	[RGR1_SW_INIT_1] = 0x9210,
->  	[EXT_CFG_INDEX]  = 0x9000,
->  	[EXT_CFG_DATA]   = 0x9004,
-> +	[PCIE_HARD_DEBUG] = 0x4204,
-> +	[PCIE_INTR2_CPU_BASE] = 0x4300,
->  };
->  
->  static const int pcie_offsets_bmips_7425[] = {
->  	[RGR1_SW_INIT_1] = 0x8010,
->  	[EXT_CFG_INDEX]  = 0x8300,
->  	[EXT_CFG_DATA]   = 0x8304,
-> +	[PCIE_HARD_DEBUG] = 0x4204,
-> +	[PCIE_INTR2_CPU_BASE] = 0x4300,
->  };
->  
->  static const struct pcie_cfg_data generic_cfg = {
-> @@ -1539,6 +1546,8 @@ static const int pcie_offset_bcm7278[] = {
->  	[RGR1_SW_INIT_1] = 0xc010,
->  	[EXT_CFG_INDEX] = 0x9000,
->  	[EXT_CFG_DATA] = 0x9004,
-> +	[PCIE_HARD_DEBUG] = 0x4204,
-> +	[PCIE_INTR2_CPU_BASE] = 0x4300,
->  };
-
-What's the organization scheme here?  We now have:
-
-  static const int pcie_offsets[] = { ... };
-  static const int pcie_offsets_bmips_7425[] = { ... };
-  static const int pcie_offset_bcm7712[] = { ... };
-
-  static const struct pcie_cfg_data generic_cfg = { ... };
-  static const struct pcie_cfg_data bcm7425_cfg = { ... };
-  static const struct pcie_cfg_data bcm7435_cfg = { ... };
-  static const struct pcie_cfg_data bcm4908_cfg = { ... };
-
-  static const int pcie_offset_bcm7278[] = { ... };
-
-  static const struct pcie_cfg_data bcm7278_cfg = { ... };
-  static const struct pcie_cfg_data bcm2711_cfg = { ... };
-  static const struct pcie_cfg_data bcm7216_cfg = { ... };
-  static const struct pcie_cfg_data bcm7712_cfg = { ... };
-
-So we have pcie_offsets_bmips_7425[] and pcie_offset_bcm7712[] (with
-gratuituously different "offset" vs "offsets") which are all together
-before the pcie_cfg_data.
-
-Then we have pcie_offset_bcm7278[] (again gratuitously different
-"offset") separately, next to bcm7278_cfg.
-
-It would be nice to pick one scheme and stick to it.
-
-Also a seemingly random order of the pcie_cfg_data structs and
-.compatible strings.
-
-Also a little confusing to have "bmips_7425" and "bcm7425" associated
-with the same chip.  I suppose there's historical reason for it, but I
-don't think it's helpful in this usage.
-
->  static const struct pcie_cfg_data bcm7278_cfg = {
-> -- 
-> 2.17.1
+On Thu, Aug 15, 2024 at 06:57:23PM -0400, Jim Quinlan wrote:
+> Provide support for new chips with multiple inbound windows while
+> keeping the legacy support for the older chips.
 > 
+> In existing chips there are three inbound windows with fixed purposes: the
+> first was for mapping SoC internal registers, the second was for memory,
+> and the third was for memory but with the endian swapped.  Typically, only
+> one window was used.
+> 
+> Complicating the inbound window usage was the fact that the PCIe HW would
+> do a baroque internal mapping of system memory, and concatenate the regions
+> of multiple memory controllers.
+> 
+> Newer chips such as the 7712 and Cable Modem SOCs take a step forward and
+> drop the internal mapping while providing for multiple inbound windows.
+> This works in concert with the dma-ranges property, where each provided
+> range becomes an inbound window.
+
+Krzysztof, can you touch this up on your branch to s/SOCs/SoCs/ to
+match other usage above, and ...
+
+> +	 * The HW registers (and PCIe) use order-1 numbering for BARs. As
+> +	 * such, we have inbound_wins[0] unused and BAR1 starts at inbound_wins[1].
+
+Rewrap this to fit in 80 columns like (most of) the rest of the file
+instead of 83?  I don't think we gain anything by being wider here.
 
