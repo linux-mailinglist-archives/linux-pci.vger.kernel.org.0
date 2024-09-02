@@ -1,84 +1,110 @@
-Return-Path: <linux-pci+bounces-12621-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12622-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97D4496898E
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 16:12:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B954C96899B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 16:15:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55CF0283F72
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 14:12:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AC112844AF
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Sep 2024 14:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F2D19F107;
-	Mon,  2 Sep 2024 14:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80BED19F12A;
+	Mon,  2 Sep 2024 14:15:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.astralinux.ru (mx.astralinux.ru [89.232.161.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006B719F100;
-	Mon,  2 Sep 2024 14:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB8D19F139;
+	Mon,  2 Sep 2024 14:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.232.161.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725286358; cv=none; b=MBbdC3dinSqkS9xoBY4iRTJjA0pTj8qB/f9BO4CHEVTwuFZFvMg7sXBoC557X8lQGUhuU/1NIW+9O+gIIJ7+Lm3uAdfajdHgl5D0LzSqe/HSaosjUitCgzLNgFGAA3oyD8RmTexQixC3wfCLd33eygWhSyrJAEu+ZTgC7h2bBws=
+	t=1725286520; cv=none; b=ECm6diMKMt8Q94DnREbXaBeRrbA7RhCF15JKjEj1B2GEYZFYNOsLpDR0e+2ddTpNTVtxAjP58RMeF6sL3Dl14uYxS81dZr4K6HWJTzMvNdekSZL7H5E7FsvsgxM6Wu7Xc50WJLNIuxDB1Ym0m0wlNR4SCWHbtDIkJtCn+tZjuXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725286358; c=relaxed/simple;
-	bh=Kk8CHL+kR6atoREqYqkSYJwr9BSSnxuF4pNB/FP5hzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THLZ69zNxhgrVDQ+zbjfJ7fVF1AusotxB1wvHDxNoNFRtxzBwg5PMBNtD8liz2cyMzdp3tQfQFYcucuC6owBKfDDWjj6pE2rmOoW+eYXGMLhtrlVOXfU86QdauwMhwzYZC1BYD/ugfM10GPIT10Tl87rTfy6PHI8ghyyiqXzj8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2d877dab61fso1694747a91.3;
-        Mon, 02 Sep 2024 07:12:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725286356; x=1725891156;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F64bS6DRw3UKsmpMpP0QQPIepPXU+WPPJPaEDVUhgo8=;
-        b=OQfeC8zhJGvNsY05V5pz9b/V8D3eBcKwRtmY68Cb4ZsOEu2qpxFvEs/jBWrujcmthJ
-         QVNKNGqlEvsn31w4jfAUqY7xGPs9VhqIZ816yrfLmDDa6YCZFEras9klCxO5tkvrx4Br
-         2Pe3q+ZPYmkXraBNYLzMARrGh0gf2evXMwGbAsjJRFqNDotqUwhFUiT9gas7k02cuX/m
-         dnGsrqTSXYid2ugu/zjdOHcfEfIWZMgSNjjwB6bu0KWoWwL5cVGrz/9KmJSRR0KfMvJW
-         2/q6oqNj5ZkcDZAbOt8hKg4yPSbuylJ8t0U4joBqiSUHstlA9vVDgta5AEbMTciYOSXg
-         9smA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5WI+QlPKzfc+r5dfaZS+Pfu3OD28bNYaGEfpjWbCcjWsEiD2cWvDVaMAlVvsTUUnMmAcC8BPzJnyL@vger.kernel.org, AJvYcCWMVGLVo5dh7G5s8Ml2HkVrUi5/XFlbc/HZAFmeo0D5CcilNOoeK22w0VKpi6GXI0MZF+VpCw7Asf4K/Bg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW1mAGPIqGlNBZu169t+xK2s8XjqffxEfElxTrnpimhCW/0UGN
-	0ZE10YP00iZt9am/MGNJX7f3xzM6cBgzDJ/aWT+s04zrwHQY19hh
-X-Google-Smtp-Source: AGHT+IGsWW78e/zRV1dWhn7tH0/rGhlf3HuFQMz2+LGZYfUGsIT8PRfJ25tgS4V1WDe6lJrUL0V4hw==
-X-Received: by 2002:a17:90a:4481:b0:2d3:db91:ee82 with SMTP id 98e67ed59e1d1-2d856503a10mr11179272a91.40.1725286356015;
-        Mon, 02 Sep 2024 07:12:36 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d8b8fe1f68sm3237345a91.31.2024.09.02.07.12.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2024 07:12:35 -0700 (PDT)
-Date: Mon, 2 Sep 2024 23:12:33 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
-Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools: pci: rm .*.cmd when make clean
-Message-ID: <20240902141233.GA261040@rocinante>
-References: <20240902041240.5475-1-zhangjiao2@cmss.chinamobile.com>
+	s=arc-20240116; t=1725286520; c=relaxed/simple;
+	bh=eKcS4egfaLEvKsQO+3YJgecSI6VbK+jzE9ME7MUG9So=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ol7bSCgy6hf7DqE1ELSBkItpdDiKtVnHBeVa0LB7aePhGQlxIqA7wCRV2HiCWcI3CbTW2apty/wcLioNxgA0QT7tujXXA7TGonEsUnJmZhNu+L2f1jcVsUoNw+Klhj6aGLLaNWufWOwU5KgFXlGUzAiEJDTglNCNhKlN5swxzpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=89.232.161.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from [10.177.185.109] (helo=new-mail.astralinux.ru)
+	by mx.astralinux.ru with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <adiupina@astralinux.ru>)
+	id 1sl7oK-009LEN-2i; Mon, 02 Sep 2024 17:13:40 +0300
+Received: from [10.198.21.172] (unknown [10.198.21.172])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Wy9k943bTzkWM5;
+	Mon,  2 Sep 2024 17:14:41 +0300 (MSK)
+Message-ID: <1e9500de-3388-402d-84a3-cebca7bc24df@astralinux.ru>
+Date: Mon, 2 Sep 2024 17:14:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240902041240.5475-1-zhangjiao2@cmss.chinamobile.com>
+User-Agent: RuPost Desktop
+Subject: Re: [PATCH v2] PCI: kirin: Fix buffer overflow
+Content-Language: ru
+To: Xiaowei Song <songxiaowei@hisilicon.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20240719122153.1987-1-adiupina@astralinux.ru>
+From: Alexandra Diupina <adiupina@astralinux.ru>
+In-Reply-To: <20240719122153.1987-1-adiupina@astralinux.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-DrWeb-SpamScore: 0
+X-DrWeb-SpamState: legit
+X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttderjeenucfhrhhomheptehlvgigrghnughrrgcuffhiuhhpihhnrgcuoegrughiuhhpihhnrgesrghsthhrrghlihhnuhigrdhruheqnecuggftrfgrthhtvghrnhepveefleetjeetfffgleeuvedujeffieffgedttdegudejheetfeeikeffueefgffgnecuffhomhgrihhnpehlihhnuhigthgvshhtihhnghdrohhrghenucfkphepuddtrdduleekrddvuddrudejvdenucfrrghrrghmpehhvghloheplgdutddrudelkedrvddurddujedvngdpihhnvghtpedutddrudelkedrvddurddujedvmeegfedtfedvpdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopedutddprhgtphhtthhopehsohhnghigihgrohifvghisehhihhsihhlihgtohhnrdgtohhmpdhrtghpthhtohepfigrnhhgsghinhhghhhuiheshhhishhilhhitghonhdrtghomhdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhifsehlihhnuhigrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+ gshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhgnecuffhrrdghvggsucetnhhtihhsphgrmhemucenucfvrghgshem
+X-DrWeb-SpamVersion: Dr.Web Antispam 1.0.7.202406240#1725281031#02
+X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.65.05230, Virus records: 12155458, Updated: 2024-Sep-02 12:31:53 UTC]
 
-Hello,
+just a friendly reminder
 
-> rm .*.cmd when make clean
 
-Applied to misc, thank you!
+19/07/24 15:21, Alexandra Diupina пишет:
+> In kirin_pcie_parse_port() pcie->num_slots is compared to
+> pcie->gpio_id_reset size (MAX_PCI_SLOTS). Need to fix
+> condition to pcie->num_slots + 1 >= MAX_PCI_SLOTS and move
+> pcie->num_slots increment lower to avoid out-of-bounds
+> array access.
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Fixes: b22dbbb24571 ("PCI: kirin: Support PERST# GPIOs for HiKey970 external PEX 8606 bridge")
+> Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
+> ---
+> v2: some changes
+>   drivers/pci/controller/dwc/pcie-kirin.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index d5523f302102..deab1e653b9a 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -412,12 +412,12 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
+>   			if (pcie->gpio_id_reset[i] < 0)
+>   				continue;
+>   
+> -			pcie->num_slots++;
+> -			if (pcie->num_slots > MAX_PCI_SLOTS) {
+> +			if (pcie->num_slots + 1 >= MAX_PCI_SLOTS) {
+>   				dev_err(dev, "Too many PCI slots!\n");
+>   				ret = -EINVAL;
+>   				goto put_node;
+>   			}
+> +			pcie->num_slots++;
+>   
+>   			ret = of_pci_get_devfn(child);
+>   			if (ret < 0) {
 
-[1/1] tools: PCI: Remove .*.cmd files with make clean
-      https://git.kernel.org/pci/pci/c/f5383c543de0
-
-	Krzysztof
 
