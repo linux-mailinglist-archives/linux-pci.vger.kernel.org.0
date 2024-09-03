@@ -1,125 +1,168 @@
-Return-Path: <linux-pci+bounces-12667-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8626296A129
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:51:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B5D496A166
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:57:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B95971C2412E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 14:51:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84611289EA8
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 14:57:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE2D71547F9;
-	Tue,  3 Sep 2024 14:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F022F187FE6;
+	Tue,  3 Sep 2024 14:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKRrOoEr"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q0Tc4FtZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47E56F30D;
-	Tue,  3 Sep 2024 14:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B91218732D
+	for <linux-pci@vger.kernel.org>; Tue,  3 Sep 2024 14:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725375073; cv=none; b=UHKecEn4MV7xLXQ8VdEyECH6Zm8ACjfnreJvPOixb6JY3luMwuY3lU+r/5+dNWGTWz/iPgsZDuJm0j0KxH4+xCZ1DsQFqnXOWT2D5G6xAGxLFcPqUtbjMdvTxuSqsyC0PU4rXEmvevptrmMQbDepVt5GyXy/g8xaP6IjAVTmKoo=
+	t=1725375406; cv=none; b=svNtrQ3C5c+Ldy4MI68UiDz5i/PdtlFUg3sWNqawJ4EQNN7mjlxa5L9j5IRS/17kI8V7nJKZefgegJqEf0AozJYKeSb6XspuXfKNtMS67j+C+yPBEwwdFJNoszfzYaHUaMTNks0Zv8G2fjvZD8rH4n8HSLPweI8iozF/dvm93bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725375073; c=relaxed/simple;
-	bh=ypa679/SQEuDxwGocMv1PijQXWWAn25QLhcHQVjpBvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWWuobfcfl5YmcfFQwZBmpYjmtgu4xGrcA+Oe5VZg5IVSuGU8D40u1Ogxh8G96wDc4tvDlTh9xht9y/yJLDZgpf04g8seTL/WRPGLNafIkpK0xeS9VrCD8KFTuGf7zsAcALELZx6KPxjnDO2lgFD+uc7JSJoP9yVveHVQNvucLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKRrOoEr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB15C4CEC4;
-	Tue,  3 Sep 2024 14:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725375073;
-	bh=ypa679/SQEuDxwGocMv1PijQXWWAn25QLhcHQVjpBvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AKRrOoEr8Arhm+x7N/MQWDjafbcWFx427plpqZCa4XqNEEz40U3VnF/jyV8LBzro2
-	 rhd4fdgdmKL06YnWnvFddjc/Y43BGD4hkRGRq31uC0QrLomc+wRenY2GPO7TNCrF6u
-	 ecc7Hjf0MA5ZvwOnZlKW5gFWiP9dOA2OpkwbwxcIU6w0fmh0mtF1DQdfDSfimIOmSk
-	 K9jDMjw/e/vH6QmOqAlDDPYEeh57cs3IYYfcNQkKycOygMri4+7JgmiL2TrbCo4yJ0
-	 qkyfvehSn6RfDXf+klpP4OEwxk36nhpfDZqhQUaGNOU+bfzKGtsAmgAQqQLeWGLqQN
-	 72A9KfzPuZJzQ==
-Date: Tue, 3 Sep 2024 08:51:10 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-	acelan.kao@canonical.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: vmd: Delay interrupt handling on MTL VMD controller
-Message-ID: <ZtciXnbQJ88hjfDk@kbusch-mbp>
-References: <20240903025544.286223-1-kai.heng.feng@canonical.com>
- <20240903042852.v7ootuenihi5wjpn@thinkpad>
- <CAAd53p4EWEuu-V5hvOHtKZQxCJNf94+FOJT+_ryu0s2RpB1o-Q@mail.gmail.com>
+	s=arc-20240116; t=1725375406; c=relaxed/simple;
+	bh=gXdcYhlkFiZc7PZFYt6CuTb/sBzByoIKPWKoUDitZO4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GAmBacFwWM0NlHEyUVvcUiCjJO7Ur56TYQlpvoS8J8iRzW6dBE+jptlTuv64/EQbo2SvKvtzLrf0hLpd5a7deCKkxpuKV92fcLA7FrSPSG7PmVIY0HmGLel/7w8I7hicAr57OKpwTz6+4BbuuApTPXNI2ibUGgODtjY7KmJD9w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Q0Tc4FtZ; arc=none smtp.client-ip=209.85.208.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lj1-f193.google.com with SMTP id 38308e7fff4ca-2f4f8742138so61797121fa.0
+        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2024 07:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725375402; x=1725980202; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DIv1iCvMP6bRoC9RIud+CJguG+zl0N1bX8dXz6wFLmQ=;
+        b=Q0Tc4FtZ9SyE23cE51CxIDm3wr4xpdfEF1VKGG6D4hTRBcgGU5VbqgJQ2ZOvvsiokB
+         O897E9H8Ceu35GO2fLP7wWkVj1zNiOz8o/yzTXtv1IQpcjEu6FZE0i20hK5UhLjGfpm3
+         Tz6y34T9Z+D6FaXMRl6+35GiVoDPpbhYuIjsnFnc64aLPewU1Wpn9QNkXUdtRMzZjRF/
+         UOo6xTuJ2HKJHVHXFdcjiVlLeFiRL5Uvov8jurz90Zh9bm/54N4qQ0PIecWdbt1GRigt
+         wvuLIAD+7FbwJsD2yJkqpyEEpiIUpSI9lBYP8DhbFcnzaN5Kg/pp8wcDzR/7FMWCasNB
+         wjpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725375402; x=1725980202;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DIv1iCvMP6bRoC9RIud+CJguG+zl0N1bX8dXz6wFLmQ=;
+        b=uKZ3XnVU0Q0aKGzZKsCyCQMFJKIB4iyJnw1mHvzlDx/aUUW1S6I/wTSewR9Ojf8szh
+         YOzgy2dJgXe/vhCKw75M5ZdfjsttiVzrbggQpnnoUAPgdlhy+ggnzVGvOr+r9l+c303Z
+         toHSGIMX92KT6UxQ6XgDutJtoOW/cDfpIXqBp7nv2DUSeMJmVobNnIDcLR4T0FuilE1X
+         2e5T4bu0YGAWTTHB/vnoKUYrRkxniDdIfCc/25rtw7Z7r7igAABw3K5bQxPH1C6hQ9ku
+         BCYcit5j2LndQWHBwrtYUAoBGy0owK8VAbNRJzzQIaJD0F1FtWUqIYcix33PlJotE6hF
+         GYZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfGuKjqh5tWm2SHXBYu9hhSofuxKmoCM0/KzGe5Om3OT5dcT1XIYeftrUoTlNzgdFsOOgnGLxAN5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+hcHwOm6VHi+ThmwrFMwVpX3MGkvSFwaBzTcNcXptqlXtEKrJ
+	aGV217tui+/N5OWz5oim1xa0XZTj4B+ipmJDo91nAO299kqnUblXwTTtUavNpzA=
+X-Google-Smtp-Source: AGHT+IGPXzXKjSyzj6ohNmy2x1Ly5xLLwbpSN9O7C4k6PqMn2bhMNSeS1m3Dv1qGKiKQSC913q2XHw==
+X-Received: by 2002:a2e:4e01:0:b0:2f3:b76e:4983 with SMTP id 38308e7fff4ca-2f64d4aa546mr6486601fa.22.1725375401093;
+        Tue, 03 Sep 2024 07:56:41 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c6a29bsm6517320a12.17.2024.09.03.07.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 07:56:40 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 3 Sep 2024 16:56:48 +0200
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <ZtcjsHnIb7iuDfhw@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
+ <26efbff0-ba1a-4e9a-bc5e-4fd53ac0ed99@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAd53p4EWEuu-V5hvOHtKZQxCJNf94+FOJT+_ryu0s2RpB1o-Q@mail.gmail.com>
+In-Reply-To: <26efbff0-ba1a-4e9a-bc5e-4fd53ac0ed99@lunn.ch>
 
-On Tue, Sep 03, 2024 at 03:07:45PM +0800, Kai-Heng Feng wrote:
-> On Tue, Sep 3, 2024 at 12:29 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Tue, Sep 03, 2024 at 10:55:44AM +0800, Kai-Heng Feng wrote:
-> > > Meteor Lake VMD has a bug that the IRQ raises before the DMA region is
-> > > ready, so the requested IO is considered never completed:
-> > > [   97.343423] nvme nvme0: I/O 259 QID 2 timeout, completion polled
-> > > [   97.343446] nvme nvme0: I/O 384 QID 3 timeout, completion polled
-> > > [   97.343459] nvme nvme0: I/O 320 QID 4 timeout, completion polled
-> > > [   97.343470] nvme nvme0: I/O 707 QID 5 timeout, completion polled
-> > >
-> > > The is documented as erratum MTL016 [0]. The suggested workaround is to
-> > > "The VMD MSI interrupt-handler should initially perform a dummy register
-> > > read to the MSI initiator device prior to any writes to ensure proper
-> > > PCIe ordering." which essentially is adding a delay before the interrupt
-> > > handling.
-> > >
-> >
-> > Why can't you add a dummy register read instead? Adding a delay for PCIe
-> > ordering is not going to work always.
+Hi Andrew,
+
+On 16:21 Fri 30 Aug     , Andrew Lunn wrote:
+> On Fri, Aug 30, 2024 at 03:49:04PM +0200, Andrea della Porta wrote:
+> > Hi Krzysztof,
+> > 
+> > On 10:38 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> > > On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> > > > The RaspberryPi RP1 is ia PCI multi function device containing
+> > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > > > and others.
+> > > > Implement a bare minimum driver to operate the RP1, leveraging
+> > > > actual OF based driver implementations for the on-borad peripherals
+> > > > by loading a devicetree overlay during driver probe.
+> > > > The peripherals are accessed by mapping MMIO registers starting
+> > > > from PCI BAR1 region.
+> > > > As a minimum driver, the peripherals will not be added to the
+> > > > dtbo here, but in following patches.
+> > > > 
+> > > > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > > ---
+> > > >  MAINTAINERS                           |   2 +
+> > > >  arch/arm64/boot/dts/broadcom/rp1.dtso | 152 ++++++++++++
+> > > 
+> > > Do not mix DTS with drivers.
+> > > 
+> > > These MUST be separate.
+> > 
+> > Separating the dtso from the driver in two different patches would mean
+> > that the dtso patch would be ordered before the driver one. This is because
+> > the driver embeds the dtbo binary blob inside itself, at build time. So
+> > in order to build the driver, the dtso needs to be there also. This is not
+> > the standard approach used with 'normal' dtb/dtbo, where the dtb patch is
+> > ordered last wrt the driver it refers to.
+> > Are you sure you want to proceed in this way?
 > 
-> This can be done too. But it can take longer than 4us delay, so I'd
-> like to keep it a bit faster here.
+> It is more about they are logically separate things. The .dtb/dtbo
+> describes the hardware. It should be possible to review that as a
+> standalone thing. The code them implements the binding. It makes no
+> sense to review the code until the binding is correct, because changes
+> to the binding will need changes to the code. Hence, we want the
+> binding first, then the code which implements it.
 
-An added delay is just a side effect of the read. The read flushes
-pending device-to-host writes, which is most likely what the errata
-really requires. I think Mani is right, you need to pay that register
-read penalty to truly fix this.
+Ack.
 
-> > > +     /* Erratum MTL016 */
-> > > +     VMD_FEAT_INTERRUPT_QUIRK        = (1 << 6),
-> > >  };
-> > >
-> > >  #define VMD_BIOS_PM_QUIRK_LTR        0x1003  /* 3145728 ns */
-> > > @@ -90,6 +94,8 @@ static DEFINE_IDA(vmd_instance_ida);
-> > >   */
-> > >  static DEFINE_RAW_SPINLOCK(list_lock);
-> > >
-> > > +static bool interrupt_delay;
-> > > +
-> > >  /**
-> > >   * struct vmd_irq - private data to map driver IRQ to the VMD shared vector
-> > >   * @node:    list item for parent traversal.
-> > > @@ -105,6 +111,7 @@ struct vmd_irq {
-> > >       struct vmd_irq_list     *irq;
-> > >       bool                    enabled;
-> > >       unsigned int            virq;
-> > > +     bool                    delay_irq;
-> >
-> > This is unused. Perhaps you wanted to use this instead of interrupt_delay?
+Cheers,
+Andrea
+
 > 
-> This is leftover, will scratch this.
-
-Maybe you should actually use it instead of making a global? The quirk
-says it is device specific, so no need to punish every device if it
-doesn't need it (unlikely as it is to see such a thing).
+> 	Andrew
 
