@@ -1,329 +1,532 @@
-Return-Path: <linux-pci+bounces-12669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3C8796A1E9
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 17:17:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6593196A20D
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 17:20:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08A51288E8A
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 15:17:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E66DD1F21D7D
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 15:20:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D295118BC2F;
-	Tue,  3 Sep 2024 15:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A4F192589;
+	Tue,  3 Sep 2024 15:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CcXKMBh/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WSP8LrL2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2195418BC30
-	for <linux-pci@vger.kernel.org>; Tue,  3 Sep 2024 15:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B3B191F71;
+	Tue,  3 Sep 2024 15:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725376531; cv=none; b=UZqvX9i2dsEzD+D1Q1Jl8t5UOzQSxX12ZkC81KI97Pl+hmATnKdrB5DCs09g4Joi5mT4os05TP5jfVn7nxN+bAldNtdJs31fp3XpsIgHEGMhTBMjRAicjO5VjM8v5mR2MJ33CDldRMiYuGNBZHMZCQvKWVO4HXpSkdLZ5uy+G6M=
+	t=1725376633; cv=none; b=Q93Smg/Vcupk3q1k+aoXzAWtwdcAA4rOfiJyoJUq31xVZGXhrpNKRoIRb6JsHhB7CC2ON76/twRUQKHenR2UCj8fBqTozx9QvgLWApKQYHG/RxZ77XbDF0ykFGU6Sv9malHX79BLiAuNlfKa4VXkhzRgAYFuz3f8VkSpnnpAu60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725376531; c=relaxed/simple;
-	bh=U7DXv46kAArn9FLdjrGEE2AWjxJWOWdSgwiVv/J76LE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RBVb+aJJ25qGyzDFc6tY9SEmqETQdq+HX7KdMonSCuU//8y2gWgYxOjdmZfJnsXjnRJex15bk0szvj0koMCgyCY9iuMlxf0HWNeVBLdWCpkxOaADvgYqKomNgkji6Iqpmn3lNnCVGXhMhrj6iYqPkMlS+u+V2/0WawZeNdarXr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CcXKMBh/; arc=none smtp.client-ip=209.85.208.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5c26815e174so1815171a12.0
-        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2024 08:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725376527; x=1725981327; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OTB7wsQhvCFsxyJgB8CQ5Pa/NBo7hDozebUo452UiWE=;
-        b=CcXKMBh/yTEpgJXgHzTwNQqtauDtBWEk0ZD+eMw20BnH2RdGrmSQKc6uUeCA5PrRse
-         P6A/sBteYAwsDeSQ8ayUU/rmvJyhnYJ5JAdb/HhpfPFs4LVw6w8qNkTDXTqHkjiMhue3
-         uBGYRxp6SmwsWEWs/5USx3A3vVF9GSPj3TxwgpJ+FwB9et1NP0yxpy2uIEwsvd06ddx5
-         mdGOASLxPJfA61KReguknBaa4zXQUDu/nNhF0AlAv7FPhPc7dNT47EVBMFLThvtAiLr6
-         j5doz5L7Q+DjJFFlN+8tpp2iBTEpx/cjJl/z0c7BoDGZxIWkpW79IEZYZ0/4gaGD/hR6
-         prVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725376527; x=1725981327;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OTB7wsQhvCFsxyJgB8CQ5Pa/NBo7hDozebUo452UiWE=;
-        b=u/+pZEpNAevp1VZL5ztYgJor1Z2oPsyTU95JM0nw0hyo7HxgQxvTj9B0PV47QS8XCW
-         c8KO/zBuYb44PqvaqZtfmJ7AC/fJVFMlJd/yl4sLtvx1DXaA+9RujTwqpc6v/q5A3rMH
-         7/e/9jrcTP8RP9zd7qSa3QI1/MlttDBOUOAHUh1AWaagBTlNL6oALK6l20KsLqb/za7M
-         YksijTgjl8GusC4qgdaU+BdMWTaQxUZgZVn7KK/wHosV7m4wiMv55c/6ERtl5kk0KjoK
-         Bc/UOR5FXyIEhlVW+5Ho/hfLOpMihxeu1CecIwyVDO9hbP2V5MiN+f/v9rBEC62Jr4xD
-         1VCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfCZg7z66Pm/ASqYCKhwoR1px1D6FC6dZaxUeL/4nmdC/kCaoPbBfeW2bDwNW5CIkmhFcYzPguYU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPZOIasOP3XqNbDARo7Qw/T7/ObZXm5h59PP+7jehKPW+nY9Tp
-	Wsu8104lCDyn8TjLr2vyerPN4gr9/o4xoLjEGIklBv6GZ+RjxaKJfkXahwlQiwH6eV6Mcgz6iwr
-	VEnxXog==
-X-Google-Smtp-Source: AGHT+IFcTte6BIp8pPXY+ojLOKAWveu1EM1jhlSY6FJHdjViAJCeXH8Z3blw4a5BrzCnpyEjcGVtwQ==
-X-Received: by 2002:a05:6402:3506:b0:5c2:6e5f:3bf9 with SMTP id 4fb4d7f45d1cf-5c26e5f3d09mr1609966a12.28.1725376526784;
-        Tue, 03 Sep 2024 08:15:26 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c7bda6sm6607816a12.41.2024.09.03.08.15.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 08:15:26 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 3 Sep 2024 17:15:34 +0200
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <ZtcoFmK6NPLcIwVt@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
- <ZtHN0B8VEGZFXs95@apocalypse>
- <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
+	s=arc-20240116; t=1725376633; c=relaxed/simple;
+	bh=tlNtHFLQM5AdDXZHGT8DIsZfvcHD1tWEPpoLoW/UHhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=npLrMstdZJY8QMMeF36yaddDgUm6mmr9MA8YMwkB1DMbAqEOFjoWcw2vRdLoJ44n0CblkacS6Xg6JBcQy3dCc44+eeazvGs/auhoOXWmLLpDgMEpz/DWu4iwt8Iw+E+lQ8X5k79DF0xVSs+C8gFDV/TdyyG13wZrgvWLhBW+n04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WSP8LrL2; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725376631; x=1756912631;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tlNtHFLQM5AdDXZHGT8DIsZfvcHD1tWEPpoLoW/UHhs=;
+  b=WSP8LrL2f1vRijaoGax34RLLo2m3JAyTP/A85f+jXhWylPnzGm0iKm14
+   M1ba/c/AIwTKPfpLwC4/NSVXYDt3eF9TzYrEINvTXafqkxWFz/yjJhdsK
+   m7m7meUAVX7jSVZGpUfM6krIwG0rq16qqM5SBpbGGUzqA+E+vE+PoUliT
+   agj5xT97ToFMIiB/LLEg9bCVHlzGHFF0u0n6l6zCBWllYVtlImyf3F7AS
+   w30ktNTfpMMr6wOT6JrSePgJ/29o0FB11nL3VI464hheJmCGp8KjnmKkP
+   JgMsVGN0IxmPCOz83QQi/v6xCjGKJLrkDWbwStU6pohu8AzhARejR7L+6
+   w==;
+X-CSE-ConnectionGUID: 0f1EzWJYRk6Z56zsF5p1mA==
+X-CSE-MsgGUID: vZIsk5DaSOe5evJEHBPBsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="24134287"
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="24134287"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:17:10 -0700
+X-CSE-ConnectionGUID: XYUdPjt9QgS7UJW/37EWTA==
+X-CSE-MsgGUID: /Hj2jRovTXuQWhMreTI+8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="95673710"
+Received: from unknown (HELO localhost) ([10.2.132.131])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:17:10 -0700
+Date: Tue, 3 Sep 2024 08:17:05 -0700
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, "David
+ E. Box" <david.e.box@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>,
+ Johan Hovold <johan@kernel.org>, Kuppuswamy Sathyanarayanan
+ <sathyanarayanan.kuppuswamy@linux.intel.com>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>, Paul M Stillwell Jr
+ <paul.m.stillwell.jr@intel.com>, linux-pci@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, linux@endlessos.org
+Subject: Re: [PATCH v8 4/4] PCI/ASPM: Fix L1.2 parameters when enable link
+ state
+Message-ID: <20240903081705.00001334@linux.intel.com>
+In-Reply-To: <CAPpJ_eeO9j38VGaukrw79dqQAZ7Z8+QMOvTbymyV9=fbQBqFzw@mail.gmail.com>
+References: <20240719075200.10717-2-jhp@endlessos.org>
+	<20240719080255.10998-2-jhp@endlessos.org>
+	<CAPpJ_edybLMtrN_gxP2h9Z-BuYH+RG-qRqMqgZM1oSVoW1sP5A@mail.gmail.com>
+	<e37536a435630583398307682e1a9aadbabfb497.camel@linux.intel.com>
+	<CAPpJ_eeATLdcnH9CWpvJM_9juV5ok+OEYysTit_HparqBpQ3CQ@mail.gmail.com>
+	<eb900245-5e13-bc6c-994a-43f2db8322ea@linux.intel.com>
+	<fc0e8066b06abed97d3857c5deefb03041a0fd2e.camel@linux.intel.com>
+	<f9660f21-f2e8-c62c-5e86-ed4875f61701@linux.intel.com>
+	<CAPpJ_eeO9j38VGaukrw79dqQAZ7Z8+QMOvTbymyV9=fbQBqFzw@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+On Mon, 12 Aug 2024 16:18:22 +0800
+Jian-Hong Pan <jhp@endlessos.org> wrote:
 
-On 18:52 Fri 30 Aug     , Krzysztof Kozlowski wrote:
-> On 30/08/2024 15:49, Andrea della Porta wrote:
-> > Hi Krzysztof,
-> > 
-> > On 10:38 Wed 21 Aug     , Krzysztof Kozlowski wrote:
-> >> On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
-> >>> The RaspberryPi RP1 is ia PCI multi function device containing
-> >>> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> >>> and others.
-> >>> Implement a bare minimum driver to operate the RP1, leveraging
-> >>> actual OF based driver implementations for the on-borad peripherals
-> >>> by loading a devicetree overlay during driver probe.
-> >>> The peripherals are accessed by mapping MMIO registers starting
-> >>> from PCI BAR1 region.
-> >>> As a minimum driver, the peripherals will not be added to the
-> >>> dtbo here, but in following patches.
-> >>>
-> >>> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> >>> ---
-> >>>  MAINTAINERS                           |   2 +
-> >>>  arch/arm64/boot/dts/broadcom/rp1.dtso | 152 ++++++++++++
-> >>
-> >> Do not mix DTS with drivers.
-> >>
-> >> These MUST be separate.
-> > 
-> > Separating the dtso from the driver in two different patches would mean
-> > that the dtso patch would be ordered before the driver one. This is because
-> > the driver embeds the dtbo binary blob inside itself, at build time. So
-> > in order to build the driver, the dtso needs to be there also. This is not
-> 
-> Sure, in such case DTS will have to go through the same tree as driver
-> as an exception. Please document it in patch changelog (---).
+> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> =E6=96=BC 2024=E5=B9=
+=B48=E6=9C=888=E6=97=A5 =E9=80=B1=E5=9B=9B
+> =E4=B8=8B=E5=8D=885:49=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > On Wed, 7 Aug 2024, David E. Box wrote:
+> > =20
+> > > On Wed, 2024-08-07 at 14:18 +0300, Ilpo J=C3=A4rvinen wrote: =20
+> > > > On Wed, 7 Aug 2024, Jian-Hong Pan wrote:
+> > > > =20
+> > > > > David E. Box <david.e.box@linux.intel.com> =E6=96=BC 2024=E5=B9=
+=B48=E6=9C=886=E6=97=A5
+> > > > > =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:26=E5=AF=AB=E9=81=93=EF=BC=
+=9A =20
+> > > > > >
+> > > > > > Hi Jian-Hong,
+> > > > > >
+> > > > > > On Fri, 2024-08-02 at 16:24 +0800, Jian-Hong Pan wrote: =20
+> > > > > > > Jian-Hong Pan <jhp@endlessos.org> =E6=96=BC 2024=E5=B9=B47=E6=
+=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=94
+> > > > > > > =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A =20
+> > > > > > > >
+> > > > > > > > Currently, when enable link's L1.2 features with
+> > > > > > > > __pci_enable_link_state(),
+> > > > > > > > it configs the link directly without ensuring related
+> > > > > > > > L1.2 parameters, such
+> > > > > > > > as T_POWER_ON, Common_Mode_Restore_Time, and
+> > > > > > > > LTR_L1.2_THRESHOLD have been
+> > > > > > > > programmed.
+> > > > > > > >
+> > > > > > > > This leads the link's L1.2 between PCIe Root Port and
+> > > > > > > > child device gets
+> > > > > > > > wrong configs when a caller tries to enabled it.
+> > > > > > > >
+> > > > > > > > Here is a failed example on ASUS B1400CEAE with enabled
+> > > > > > > > VMD:
+> > > > > > > >
+> > > > > > > > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen
+> > > > > > > > Core Processor PCIe
+> > > > > > > > Controller (rev 01) (prog-if 00 [Normal decode])
+> > > > > > > >     ...
+> > > > > > > >     Capabilities: [200 v1] L1 PM Substates
+> > > > > > > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+
+> > > > > > > > ASPM_L1.1+ L1_PM_Substates+
+> > > > > > > >                   PortCommonModeRestoreTime=3D45us
+> > > > > > > > PortTPowerOnTime=3D50us L1SubCtl1: PCI-PM_L1.2-
+> > > > > > > > PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D45us
+> > > > > > > > LTR1.2_Threshold=3D101376ns L1SubCtl2: T_PwrOn=3D50us
+> > > > > > > >
+> > > > > > > > 10000:e1:00.0 Non-Volatile memory controller: Sandisk
+> > > > > > > > Corp WD Blue SN550
+> > > > > > > > NVMe SSD (rev 01) (prog-if 02 [NVM Express])
+> > > > > > > >     ...
+> > > > > > > >     Capabilities: [900 v1] L1 PM Substates
+> > > > > > > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+
+> > > > > > > > ASPM_L1.1- L1_PM_Substates+
+> > > > > > > >                   PortCommonModeRestoreTime=3D32us
+> > > > > > > > PortTPowerOnTime=3D10us L1SubCtl1: PCI-PM_L1.2-
+> > > > > > > > PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D0us
+> > > > > > > > LTR1.2_Threshold=3D0ns L1SubCtl2: T_PwrOn=3D10us
+> > > > > > > >
+> > > > > > > > According to "PCIe r6.0, sec 5.5.4", before enabling
+> > > > > > > > ASPM L1.2 on the PCIe
+> > > > > > > > Root Port and the child NVMe, they should be programmed
+> > > > > > > > with the same LTR1.2_Threshold value. However, they
+> > > > > > > > have different values in this case.
+> > > > > > > >
+> > > > > > > > Invoke aspm_calc_l12_info() to program the L1.2
+> > > > > > > > parameters properly before
+> > > > > > > > enable L1.2 bits of L1 PM Substates Control Register in
+> > > > > > > > __pci_enable_link_state().
+> > > > > > > >
+> > > > > > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > > > > > > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > > > > > > ---
+> > > > > > > > v2:
+> > > > > > > > - Prepare the PCIe LTR parameters before enable L1
+> > > > > > > > Substates
+> > > > > > > >
+> > > > > > > > v3:
+> > > > > > > > - Only enable supported features for the L1 Substates
+> > > > > > > > part
+> > > > > > > >
+> > > > > > > > v4:
+> > > > > > > > - Focus on fixing L1.2 parameters, instead of
+> > > > > > > > re-initializing whole L1SS
+> > > > > > > >
+> > > > > > > > v5:
+> > > > > > > > - Fix typo and commit message
+> > > > > > > > - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM:
+> > > > > > > > Introduce aspm_get_l1ss_cap()"
+> > > > > > > >
+> > > > > > > > v6:
+> > > > > > > > - Skipped
+> > > > > > > >
+> > > > > > > > v7:
+> > > > > > > > - Pick back and rebase on the new version kernel
+> > > > > > > > - Drop the link state flag check. And, always config
+> > > > > > > > link state's timing
+> > > > > > > >   parameters
+> > > > > > > >
+> > > > > > > > v8:
+> > > > > > > > - Because pcie_aspm_get_link() might return the link as
+> > > > > > > > NULL, move getting the link's parent and child devices
+> > > > > > > > after check the link is not NULL. This avoids NULL
+> > > > > > > > memory access.
+> > > > > > > >
+> > > > > > > >  drivers/pci/pcie/aspm.c | 15 +++++++++++++++
+> > > > > > > >  1 file changed, 15 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/pci/pcie/aspm.c
+> > > > > > > > b/drivers/pci/pcie/aspm.c index
+> > > > > > > > 5db1044c9895..55ff1d26fcea 100644 ---
+> > > > > > > > a/drivers/pci/pcie/aspm.c +++ b/drivers/pci/pcie/aspm.c
+> > > > > > > > @@ -1411,9 +1411,15 @@
+> > > > > > > > EXPORT_SYMBOL(pci_disable_link_state); static int
+> > > > > > > > __pci_enable_link_state(struct pci_dev *pdev, int
+> > > > > > > > state, bool locked)
+> > > > > > > >  {
+> > > > > > > >         struct pcie_link_state *link =3D
+> > > > > > > > pcie_aspm_get_link(pdev);
+> > > > > > > > +       u32 parent_l1ss_cap, child_l1ss_cap;
+> > > > > > > > +       struct pci_dev *parent, *child;
+> > > > > > > >
+> > > > > > > >         if (!link)
+> > > > > > > >                 return -EINVAL;
+> > > > > > > > +
+> > > > > > > > +       parent =3D link->pdev;
+> > > > > > > > +       child =3D link->downstream;
+> > > > > > > > +
+> > > > > > > >         /*
+> > > > > > > >          * A driver requested that ASPM be enabled on
+> > > > > > > > this device, but
+> > > > > > > >          * if we don't have permission to manage ASPM
+> > > > > > > > (e.g., on ACPI @@ -1428,6 +1434,15 @@ static int
+> > > > > > > > __pci_enable_link_state(struct pci_dev
+> > > > > > > > *pdev, int state, bool locked)
+> > > > > > > >         if (!locked)
+> > > > > > > >                 down_read(&pci_bus_sem);
+> > > > > > > >         mutex_lock(&aspm_lock);
+> > > > > > > > +       /*
+> > > > > > > > +        * Ensure L1.2 parameters:
+> > > > > > > > Common_Mode_Restore_Times, T_POWER_ON and
+> > > > > > > > +        * LTR_L1.2_THRESHOLD are programmed properly
+> > > > > > > > before enable bits for
+> > > > > > > > +        * L1.2, per PCIe r6.0, sec 5.5.4.
+> > > > > > > > +        */
+> > > > > > > > +       parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
+> > > > > > > > +       child_l1ss_cap =3D aspm_get_l1ss_cap(child);
+> > > > > > > > +       aspm_calc_l12_info(link, parent_l1ss_cap,
+> > > > > > > > child_l1ss_cap); =20
+> > > > > >
+> > > > > > I still don't think this is the place to recalculate the
+> > > > > > L1.2 parameters especially when know the calculation was
+> > > > > > done but was cleared by pci_bus_reset(). Can't we just do a
+> > > > > > pci_save/restore_state() before/after pci_bus_reset() in
+> > > > > > vmd.c? =20
+> > > > >
+> > > > > I have not thought pci_save/restore_state() around
+> > > > > pci_bus_reset() before.  It is an interesting direction.
+> > > > >
+> > > > > So, I prepare modification below for test.  Include "[PATCH
+> > > > > v8 1/4] PCI: vmd: Set PCI devices to D0 before enable PCI
+> > > > > PM's L1 substates", too.  Then, both the PCIe bridge and the
+> > > > > PCIe device have the same LTR_L1.2_THRESHOLD 101376ns as
+> > > > > expected.
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/vmd.c
+> > > > > b/drivers/pci/controller/vmd.c index
+> > > > > bbf4a47e7b31..6b8dd4f30127 100644 ---
+> > > > > a/drivers/pci/controller/vmd.c +++
+> > > > > b/drivers/pci/controller/vmd.c @@ -727,6 +727,18 @@ static
+> > > > > void vmd_copy_host_bridge_flags(struct pci_host_bridge
+> > > > > *root_bridge, vmd_bridge->native_dpc =3D
+> > > > > root_bridge->native_dpc; }
+> > > > >
+> > > > > +static int vmd_pci_save_state(struct pci_dev *pdev, void
+> > > > > *userdata) +{
+> > > > > +       pci_save_state(pdev);
+> > > > > +       return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int vmd_pci_restore_state(struct pci_dev *pdev, void
+> > > > > *userdata) +{
+> > > > > +       pci_restore_state(pdev);
+> > > > > +       return 0;
+> > > > > +}
+> > > > > +
+> > > > >  /*
+> > > > >   * Enable ASPM and LTR settings on devices that aren't
+> > > > > configured by BIOS. */
+> > > > > @@ -927,6 +939,7 @@ static int vmd_enable_domain(struct
+> > > > > vmd_dev *vmd, unsigned long features)
+> > > > >         pci_scan_child_bus(vmd->bus);
+> > > > >         vmd_domain_reset(vmd);
+> > > > >
+> > > > > +       pci_walk_bus(vmd->bus, vmd_pci_save_state, NULL);
+> > > > >         /* When Intel VMD is enabled, the OS does not
+> > > > > discover the Root Ports
+> > > > >          * owned by Intel VMD within the MMCFG space.
+> > > > > pci_reset_bus() applies
+> > > > >          * a reset to the parent of the PCI device supplied
+> > > > > as argument. This
+> > > > > @@ -945,6 +958,7 @@ static int vmd_enable_domain(struct
+> > > > > vmd_dev *vmd, unsigned long features)
+> > > > >                         break;
+> > > > >                 }
+> > > > >         }
+> > > > > +       pci_walk_bus(vmd->bus, vmd_pci_restore_state, NULL); =20
+> > > >
+> > > > Why not call pci_reset_bus() (or __pci_reset_bus()) then in
+> > > > vmd_enable_domain() which preserves state unlike
+> > > > pci_reset_bus()?
+> > > >
+> > > > (Don't tell me naming of these functions is a horrible mess.
+> > > > :-/) =20
+> > >
+> > > Hmm. So this *is* calling pci_reset_bus(). =20
+> >
+> > Yeah, I managed to get confused by the names myself, I somehow
+> > ended up thinking it calls pci_bus_reset() which is not correct...
+> > =20
+> > > L1.2 configuration has specific
+> > > ordering requirements for changes to parent & child devices.
+> > > Could be why it's not getting restored properly. =20
+> >
+> > Indeed, it has to be something else since the patch above doesn't
+> > even restore anything because dev->state_saved should get set to
+> > false by the first pci_restore_state() called from
+> > __pci_reset_bus() -> pci_bus_restore_locked() -> pci_dev_restore(),
+> > I think!? =20
+>=20
+> Inspired by Ilpo's comment.  I add some debug messages based on
+> linux-next's tag 'next-20240809' to understand the code path of
+> pci_reset_bus():
+>=20
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ffaaca0978cb..3ee71374f1de 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5133,8 +5133,10 @@ static void pci_dev_save_and_disable(struct
+> pci_dev *dev)
+>          * races with ->remove() by the device lock, which must be
+> held by
+>          * the caller.
+>          */
+> -       if (err_handler && err_handler->reset_prepare)
+> +       if (err_handler && err_handler->reset_prepare) {
+> +               pci_info(dev, "%s: %pF\n", __func__,
+> err_handler->reset_prepare);
+>                 err_handler->reset_prepare(dev);
+> +       }
+>=20
+>         /*
+>          * Wake-up device prior to save.  PM registers default to D0
+> after @@ -5144,6 +5146,7 @@ static void
+> pci_dev_save_and_disable(struct pci_dev *dev)
+> pci_set_power_state(dev, PCI_D0);
+>=20
+>         pci_save_state(dev);
+> +       pci_info(dev, "%s: PCI state_saved is %s\n", __func__,
+> dev->state_saved ? "true" : "false");
+>         /*
+>          * Disable the device by clearing the Command register,
+> except for
+>          * INTx-disable which is set.  This not only disables MMIO
+> and I/O port @@ -5655,6 +5658,10 @@ static void
+> pci_bus_save_and_disable_locked(struct pci_bus *bus)
+>         struct pci_dev *dev;
+>=20
+>         list_for_each_entry(dev, &bus->devices, bus_list) {
+> +               pci_info(dev, "%s: PCI state_saved is %s, and %s
+> subordinate\n",
+> +                        __func__,
+> +                        dev->state_saved ? "true" : "false",
+> +                        dev->subordinate ? "has" : "does not have");
+>                 pci_dev_save_and_disable(dev);
+>                 if (dev->subordinate)
+>                         pci_bus_save_and_disable_locked(dev->subordinate);
+> @@ -5671,6 +5678,10 @@ static void pci_bus_restore_locked(struct
+> pci_bus *bus) struct pci_dev *dev;
+>=20
+>         list_for_each_entry(dev, &bus->devices, bus_list) {
+> +               pci_info(dev, "%s: PCI state_saved is %s, and %s
+> subordinate\n",
+> +                        __func__,
+> +                        dev->state_saved ? "true" : "false",
+> +                        dev->subordinate ? "has" : "does not have");
+>                 pci_dev_restore(dev);
+>                 if (dev->subordinate)
+>                         pci_bus_restore_locked(dev->subordinate);
+> @@ -5786,8 +5797,10 @@ static int pci_bus_reset(struct pci_bus *bus,
+> bool probe) if (!bus->self || !pci_bus_resettable(bus))
+>                 return -ENOTTY;
+>=20
+> -       if (probe)
+> +       if (probe) {
+> +               pci_info(bus->self, "%s: probe is true.  So return 0
+> directly", __func__);
+>                 return 0;
+> +       }
+>=20
+>         pci_bus_lock(bus);
+>=20
+> @@ -5858,10 +5871,12 @@ static int __pci_reset_bus(struct pci_bus
+> *bus) int rc;
+>=20
+>         rc =3D pci_bus_reset(bus, PCI_RESET_PROBE);
+> +       pci_info(bus->self, "%s: pci_bus_reset() returns %d\n",
+> __func__, rc); if (rc)
+>                 return rc;
+>=20
+>         if (pci_bus_trylock(bus)) {
+> +               pci_info(bus->self, "%s: pci_bus_trylock() returns
+> true\n", __func__);
+>                 pci_bus_save_and_disable_locked(bus);
+>                 might_sleep();
+>                 rc =3D pci_bridge_secondary_bus_reset(bus->self);
+> @@ -5881,6 +5896,7 @@ static int __pci_reset_bus(struct pci_bus *bus)
+>   */
+>  int pci_reset_bus(struct pci_dev *pdev)
+>  {
+> +       pci_info(pdev, "%s: %s", __func__,
+> !pci_probe_reset_slot(pdev->slot) ? "true" : "false");
+>         return (!pci_probe_reset_slot(pdev->slot)) ?
+>             __pci_reset_slot(pdev->slot) : __pci_reset_bus(pdev->bus);
+>  }
+>=20
+> And, have the information of VMD PCIe devices with the built kernel:
+>=20
+> 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core
+> Processor PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal
+> decode])
+>   ...
+>   Capabilities: [200 v1] L1 PM Substates
+>     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
+> L1_PM_Substates+ PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50us
+>     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+>       T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+>     L1SubCtl2: T_PwrOn=3D0us
+>=20
+> 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD
+> Blue SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+>   ...
+>   Capabilities: [900 v1] L1 PM Substates
+>     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> L1_PM_Substates+ PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10us
+>     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+>       T_CommonMode=3D0us LTR1.2_Threshold=3D101376ns
+>     L1SubCtl2: T_PwrOn=3D50us
+>=20
+> We can see the NVMe has expected LTR1.2_Threshold=3D101376ns, but the
+> PCIe bridge has LTR1.2_Threshold=3D0ns.
+>=20
+> Then, check the dmesg.  I notice the debug messages:
+>=20
+> pci 10000:e0:06.0: PCI bridge to [bus e1]
+> pci 10000:e0:06.0: Primary bus is hard wired to 0
+> pci 10000:e1:00.0: pci_reset_bus: false
+> pci 10000:e0:06.0: pci_bus_reset: probe is true.  So return 0 directly
+> pci 10000:e0:06.0: __pci_reset_bus: pci_bus_reset() returns 0
+> pci 10000:e0:06.0: __pci_reset_bus: pci_bus_trylock() returns true
+> pci 10000:e1:00.0: pci_bus_save_and_disable_locked: PCI state_saved is
+> false, and does not have subordinate
+> pci 10000:e1:00.0: pci_dev_save_and_disable: PCI state_saved is true
+> Freeing initrd memory: 75236K
+> pci 10000:e1:00.0: pci_bus_restore_locked: PCI state_saved is true,
+> and does not have subordinate
+>=20
+> So, the code path is:
+>=20
+> vmd_enable_domain()
+>   pci_reset_bus()
+>     __pci_reset_bus()
+>       pci_bus_reset()
+>         pci_bus_save_and_disable_locked()
+>           pci_dev_save_and_disable()
+>         pci_bus_restore_locked()
+>           pci_dev_restore()
+>=20
+> And, from the debug messages, I learned only NVMe 10000:e1:00.0 does
+> pci_save/restore_state.  But, the PCIe bridge 10000:e0:06.0 does not.
+> So, PCIe bridge 10000:e0:06.0 does not restore state correctly.
+>=20
+> Besides, it is NVMe 10000:e1:00.0's bus [e1] been reset, not the VMD's
+> bus in vmd_enable_domain().
+> * Bus "e1" has only NVMe 10000:e1:00.0
+> * VMD's bus in vmd_enable_domain() has PCIe bridge 10000:e0:06.0, NVMe
+> 10000:e1:00.0 and SATA Controller 10000:e0:17.0.
+>=20
+> Here is the PCI tree:
+>=20
+> -+-[0000:00]-+-00.0  Intel Corporation Device 9a04
+>  |           +-02.0  Intel Corporation Tiger Lake-LP GT2 [UHD
+> Graphics G4] |           +-04.0  Intel Corporation TigerLake-LP
+> Dynamic Tuning Processor Participant
+>  |           +-06.0  Intel Corporation RST VMD Managed Controller
+>  |           +-07.0-[01-2b]--
+>  |           +-08.0  Intel Corporation GNA Scoring Accelerator module
+>  |           +-0a.0  Intel Corporation Tigerlake Telemetry Aggregator
+> Driver |           +-0d.0  Intel Corporation Tiger Lake-LP
+> Thunderbolt 4 USB Controller
+>  |           +-0d.2  Intel Corporation Tiger Lake-LP Thunderbolt 4
+> NHI #0 |           +-0e.0  Intel Corporation Volume Management Device
+> NVMe RAID Controller
+>  |           +-14.0  Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1
+> xHCI Host Controller
+>  |           +-14.2  Intel Corporation Tiger Lake-LP Shared SRAM
+>  |           +-14.3  Intel Corporation Wi-Fi 6 AX201
+>  |           +-15.0  Intel Corporation Tiger Lake-LP Serial IO I2C
+> Controller #0 |           +-15.1  Intel Corporation Tiger Lake-LP
+> Serial IO I2C Controller #1 |           +-16.0  Intel Corporation
+> Tiger Lake-LP Management Engine Interface |           +-17.0  Intel
+> Corporation RST VMD Managed Controller |           +-1f.0  Intel
+> Corporation Tiger Lake-LP LPC Controller |           +-1f.3  Intel
+> Corporation Tiger Lake-LP Smart Sound Technology Audio Controller
+>  |           +-1f.4  Intel Corporation Tiger Lake-LP SMBus Controller
+>  |           +-1f.5  Intel Corporation Tiger Lake-LP SPI Controller
+>  |           \-1f.6  Intel Corporation Ethernet Connection (13) I219-V
+>  \-[10000:e0]-+-06.0-[e1]----00.0  Sandisk Corp WD Blue SN550 NVMe SSD
+>               \-17.0  Intel Corporation Tiger Lake-LP SATA Controller
+>=20
+> According the findings above, to ensure the devices on the VMD bus
+> have correctly states, seems pci_save_state() all the devices before
+> pci_reset_bus(), and pci_restore_state() all the devices after
+> pci_reset_bus() is the correct answer.
+What happens if you call pci_reset_bus with PCIe bridge 10000:e0:06.0
+instead of NVMe 10000:e1:00.0? I believe the current implementation in
+vmd_enable_domain finds first child device on each rootport and calls
+pci_reset_bus with NVMe.
 
-Ack.
+-nirmal
+>=20
+> Jian-Hong Pan
 
-> 
-> > the standard approach used with 'normal' dtb/dtbo, where the dtb patch is
-> > ordered last wrt the driver it refers to.
-> 
-> It's not exactly the "ordered last" that matters, but lack of dependency
-> and going through separate tree and branch - arm-soc/dts. Here there
-> will be an exception how we handle patch, but still DTS is hardware
-> description so should not be combined with driver code.
-
-Ack.
-
-> 
-> > Are you sure you want to proceed in this way?
-> 
-> 
-> > 
-> >>
-> >>>  drivers/misc/Kconfig                  |   1 +
-> >>>  drivers/misc/Makefile                 |   1 +
-> >>>  drivers/misc/rp1/Kconfig              |  20 ++
-> >>>  drivers/misc/rp1/Makefile             |   3 +
-> >>>  drivers/misc/rp1/rp1-pci.c            | 333 ++++++++++++++++++++++++++
-> >>>  drivers/misc/rp1/rp1-pci.dtso         |   8 +
-> >>>  drivers/pci/quirks.c                  |   1 +
-> >>>  include/linux/pci_ids.h               |   3 +
-> >>>  10 files changed, 524 insertions(+)
-> >>>  create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
-> >>>  create mode 100644 drivers/misc/rp1/Kconfig
-> >>>  create mode 100644 drivers/misc/rp1/Makefile
-> >>>  create mode 100644 drivers/misc/rp1/rp1-pci.c
-> >>>  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
-> >>>
-> >>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>> index 67f460c36ea1..1359538b76e8 100644
-> >>> --- a/MAINTAINERS
-> >>> +++ b/MAINTAINERS
-> >>> @@ -19119,9 +19119,11 @@ F:	include/uapi/linux/media/raspberrypi/
-> >>>  RASPBERRY PI RP1 PCI DRIVER
-> >>>  M:	Andrea della Porta <andrea.porta@suse.com>
-> >>>  S:	Maintained
-> >>> +F:	arch/arm64/boot/dts/broadcom/rp1.dtso
-> >>>  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-> >>>  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
-> >>>  F:	drivers/clk/clk-rp1.c
-> >>> +F:	drivers/misc/rp1/
-> >>>  F:	drivers/pinctrl/pinctrl-rp1.c
-> >>>  F:	include/dt-bindings/clock/rp1.h
-> >>>  F:	include/dt-bindings/misc/rp1.h
-> >>> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
-> >>> new file mode 100644
-> >>> index 000000000000..d80178a278ee
-> >>> --- /dev/null
-> >>> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
-> >>> @@ -0,0 +1,152 @@
-> >>> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> >>> +
-> >>> +#include <dt-bindings/gpio/gpio.h>
-> >>> +#include <dt-bindings/interrupt-controller/irq.h>
-> >>> +#include <dt-bindings/clock/rp1.h>
-> >>> +#include <dt-bindings/misc/rp1.h>
-> >>> +
-> >>> +/dts-v1/;
-> >>> +/plugin/;
-> >>> +
-> >>> +/ {
-> >>> +	fragment@0 {
-> >>> +		target-path="";
-> >>> +		__overlay__ {
-> >>> +			#address-cells = <3>;
-> >>> +			#size-cells = <2>;
-> >>> +
-> >>> +			rp1: rp1@0 {
-> >>> +				compatible = "simple-bus";
-> >>> +				#address-cells = <2>;
-> >>> +				#size-cells = <2>;
-> >>> +				interrupt-controller;
-> >>> +				interrupt-parent = <&rp1>;
-> >>> +				#interrupt-cells = <2>;
-> >>> +
-> >>> +				// ranges and dma-ranges must be provided by the includer
-> >>> +				ranges = <0xc0 0x40000000
-> >>> +					  0x01/*0x02000000*/ 0x00 0x00000000
-> >>> +					  0x00 0x00400000>;
-> >>
-> >> Are you 100% sure you do not have here dtc W=1 warnings?
-> > 
-> > the W=1 warnings are:
-> > 
-> > arch/arm64/boot/dts/broadcom/rp1.dtso:37.24-42.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/clk_xosc: missing or empty reg/ranges property
-> > arch/arm64/boot/dts/broadcom/rp1.dtso:44.26-49.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_pclk: missing or empty reg/ranges property
-> > arch/arm64/boot/dts/broadcom/rp1.dtso:51.26-56.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_hclk: missing or empty reg/ranges property
-> > arch/arm64/boot/dts/broadcom/rp1.dtso:14.15-173.5: Warning (avoid_unnecessary_addr_size): /fragment@0/__overlay__: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-> > 
-> > I don't see anything related to the ranges line you mentioned.
-> 
-> Hm, indeed, but I would expect warning about unit address not matching
-> ranges/reg.
-> 
-> > 
-> >>
-> >>> +
-> >>> +				dma-ranges =
-> >>> +				// inbound RP1 1x_xxxxxxxx -> PCIe 1x_xxxxxxxx
-> >>> +					     <0x10 0x00000000
-> >>> +					      0x43000000 0x10 0x00000000
-> >>> +					      0x10 0x00000000>;
-> >>> +
-> >>> +				clk_xosc: clk_xosc {
-> >>
-> >> Nope, switch to DTS coding style.
-> > 
-> > Ack.
-> > 
-> >>
-> >>> +					compatible = "fixed-clock";
-> >>> +					#clock-cells = <0>;
-> >>> +					clock-output-names = "xosc";
-> >>> +					clock-frequency = <50000000>;
-> >>> +				};
-> >>> +
-> >>> +				macb_pclk: macb_pclk {
-> >>> +					compatible = "fixed-clock";
-> >>> +					#clock-cells = <0>;
-> >>> +					clock-output-names = "pclk";
-> >>> +					clock-frequency = <200000000>;
-> >>> +				};
-> >>> +
-> >>> +				macb_hclk: macb_hclk {
-> >>> +					compatible = "fixed-clock";
-> >>> +					#clock-cells = <0>;
-> >>> +					clock-output-names = "hclk";
-> >>> +					clock-frequency = <200000000>;
-> >>> +				};
-> >>> +
-> >>> +				rp1_clocks: clocks@c040018000 {
-> >>
-> >> Why do you mix MMIO with non-MMIO nodes? This really does not look
-> >> correct.
-> >>
-> > 
-> > Right. This is already under discussion here:
-> > https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
-> > 
-> > IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
-> > using CLK_OF_DECLARE.
-> 
-> Depends. Where are these clocks? Naming suggests they might not be even
-> part of this device. But if these are part of the device, then why this
-> is not a clock controller (if they are controllable) or even removed
-> (because we do not represent internal clock tree in DTS).
-
-xosc is a crystal connected to the oscillator input of the RP1, so I would
-consider it an external fixed-clock. If we were in the entire dts, I would have
-put it in root under /clocks node, but here we're in the dtbo so I'm not sure
-where else should I put it.
-
-Regarding pclk and hclk, I'm still trying to understand where they come from.
-If they are external clocks (since they are fixed-clock too), they should be
-in the same node as xosc. CLK_OF_DECLARE does not seem to fit here because
-there's no special management of these clocks, so no new clock definition is
-needed.
-If they are internal tree, I cannot simply get rid of them because rp1_eth node
-references these two clocks (see clocks property), so they must be decalred 
-somewhere. Any hint about this?.
-
-Many thanks,
-Andrea
-
-> 
-> Best regards,
-> Krzysztof
-> 
 
