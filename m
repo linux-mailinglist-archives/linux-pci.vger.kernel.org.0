@@ -1,183 +1,95 @@
-Return-Path: <linux-pci+bounces-12686-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12687-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A4AE96A673
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 20:27:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 097D096A69B
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 20:32:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A9581F26AE4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 18:27:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C508B216C2
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 18:32:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634651917C9;
-	Tue,  3 Sep 2024 18:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZUJ+bTe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83072192587;
+	Tue,  3 Sep 2024 18:32:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E2418FDD7;
-	Tue,  3 Sep 2024 18:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A02192582;
+	Tue,  3 Sep 2024 18:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725388046; cv=none; b=ou/RFko5nRNMFP2DvXOcTkXlgT78LRbdGobEYFNevHkWhV1IJKBcC1Fi+ZJD40zNABztD+fMZZbHxMqW7nOVTr8d6npOAv9aSBrfqHEhGoZ9TSlW/gnsrB0oupFf45EcGAyMcwUa9k74TSsRQakIxJwZiS8+hv9bvn8iQggqtsE=
+	t=1725388335; cv=none; b=s2A724UnrtTPtEFFluSXbDoBoXP/MycVfr541UfGlVSi/LS8I4K4gQ6bY9rKaQQ0Ls9fv08s7XaBvtb0J36BFruYQwBNicg4AlFC7vCIh3q3V93mrHVKPuzBLUvO9xoVgnV0BxtHzy8ouaAnMSegQ+bAGShCb7LTHUSfsBz3M4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725388046; c=relaxed/simple;
-	bh=jtq+NV2hFNSsN40Ko7LAblrCis08mq85mqLfSbvwx4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GVLkNy11Fcl92VrdgtiaJN7ybo/DNBZ3U3zPIg7ms9i+bEx0bOpLfvoTnD9DcsDsRgJsBfa+UncQO3u7gLswbZbmrk20SgJCqbciy6t8wDSoqkVa3GRfr1lHPQDDU/ULa0dPmmdMBLh9AZAP9cNasa62L543GgoIq2jFAchO6xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZUJ+bTe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F48FC4CEC5;
-	Tue,  3 Sep 2024 18:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725388045;
-	bh=jtq+NV2hFNSsN40Ko7LAblrCis08mq85mqLfSbvwx4A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cZUJ+bTeqLi5y51bzBiYvYdQHngkR/4dba4aCV397G5bKm7jE99jg4yrTptWd3CTm
-	 /eEbjScXUiD/gVAKNKlGmafp3i5yrPI2V4t91OpF105/nMYV2sSVHssF8+W+QGmMLK
-	 JdqP/bwxwprfZCNmaFuoPq/FSWeGZ3iuFRCQbrV4iwdvxJYp3IGphdluTKzdOprdQH
-	 FZ3X4Cm1vfYA5tjyYrJbVaVIvudaOqno31GQQc5OpYL8+x3yoLziuN0Z9/7guSd5dE
-	 MIrzLZyOjhvGNjE1OkfiWm+GrcAuRgpr6pjLNN1jjchtLM+S3aPzAp3d5fU+tWc5fK
-	 UPPgxFN4IYuoA==
-Message-ID: <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
-Date: Tue, 3 Sep 2024 20:27:14 +0200
+	s=arc-20240116; t=1725388335; c=relaxed/simple;
+	bh=Y1fRnzB290jA91OvNqAJhDBKnrTAgbR42jL7Xd9rRvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IuyWQROzF/kc2wqUTlDTu1FVMI3gZ5NFUvgmecCymBQW6RXCsvu5PrFX5SH3XpU2cejOsynrkP5JbMrmmT5X5T3wRqazQX/VFGmELRhsqpH0eUPuUjGtle7ucUtZJCJyR0pfc0EIP0E0UaFdgMw6OM0rO+q6X0cgZ2sdNxcNG38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70cec4aa1e4so4077082b3a.1;
+        Tue, 03 Sep 2024 11:32:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725388333; x=1725993133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/dda/AAk1MExKHoXad6EwhYDQNLYDjU0OVlZdSY5EX0=;
+        b=adgh3xlwGiO+RMYxzcqLUV+JlEqD7XC4h7qiWy7qDP6zbCa0CZYQRqW22W2KJjm2Yg
+         KiSUQfYObpJ78hO7RZSMXhWBbA2hwdjBviG5xoQulzx2nr57QD5kjQZzlGWfFZG8xF2T
+         Z1eQJv4SiXd22wHzv5GXahdiJwjeg125znY6/WxFnTEqqKIoWjbwyhhyK5Rt8p++RaI1
+         8cGQ+a3FkFoRILayKLTxD+jK/CO4WR9pJcpyYNrFVk/ChjTBFrBtlooYwwBsriGjx3JA
+         fpfGLLBdVmArFZPmWepHlGCwfz4xijFlNnOp6ofGYtqfXSAsxr7rWvpkNuBnmosw6GOA
+         KK6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVN0cdpi60C0L2/NwIFN7padDhZp2rXX49y0gI5SeOfUBcQmk1mImW/HZTGk/9IxLKY/dKte9wdn7epZQ==@vger.kernel.org, AJvYcCVtKnU1pRnbuSZ+zsuIceI+GI+ilbAb/bRXtFOEyiQ8Q/As43zmffax2MD3kCBqSIBHdG0fabhauE+Q@vger.kernel.org, AJvYcCWw2KVHxLM7Y5I/yGRlbZMxCTFFIl5rpGYersO7qRgvUtligfuy80nzQNEuJ0nhnwfL3lz9DP1+g4lUJ+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm9z7GPpBxh90Awml/XyzUA55e0Bo8UY08Xtep6c3ig8/JS8Rt
+	1kPzRsi5I+9Edvs10yQR2QEW6cF0xeUIEvgsHGeWn8zU3yGwuyM6
+X-Google-Smtp-Source: AGHT+IGjyCoRatHCREo1h+pUKVDNv6QamtDZwsbofr5tMz5hVf7mO7IBuO9bchZxv9lQTZz8bYEQHw==
+X-Received: by 2002:a05:6a21:6b0a:b0:1ce:d1b0:bc5e with SMTP id adf61e73a8af0-1ced1b0bcb6mr13918729637.27.1725388333108;
+        Tue, 03 Sep 2024 11:32:13 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7177852108esm187751b3a.33.2024.09.03.11.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 11:32:12 -0700 (PDT)
+Date: Wed, 4 Sep 2024 03:32:11 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com,
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
+Message-ID: <20240903183211.GB3272142@rocinante>
+References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+ <78be1cb2-a6c6-44e3-8974-06731dd055f2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
- <ZtHN0B8VEGZFXs95@apocalypse>
- <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
- <ZtcoFmK6NPLcIwVt@apocalypse>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ZtcoFmK6NPLcIwVt@apocalypse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78be1cb2-a6c6-44e3-8974-06731dd055f2@bootlin.com>
 
-On 03/09/2024 17:15, Andrea della Porta wrote:
->>>>> +
->>>>> +				rp1_clocks: clocks@c040018000 {
->>>>
->>>> Why do you mix MMIO with non-MMIO nodes? This really does not look
->>>> correct.
->>>>
->>>
->>> Right. This is already under discussion here:
->>> https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
->>>
->>> IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
->>> using CLK_OF_DECLARE.
->>
->> Depends. Where are these clocks? Naming suggests they might not be even
->> part of this device. But if these are part of the device, then why this
->> is not a clock controller (if they are controllable) or even removed
->> (because we do not represent internal clock tree in DTS).
-> 
-> xosc is a crystal connected to the oscillator input of the RP1, so I would
-> consider it an external fixed-clock. If we were in the entire dts, I would have
-> put it in root under /clocks node, but here we're in the dtbo so I'm not sure
-> where else should I put it.
+Hello,
 
-But physically, on which PCB, where is this clock located?
+> This series has no remaining comment to address.
 
-> 
-> Regarding pclk and hclk, I'm still trying to understand where they come from.
-> If they are external clocks (since they are fixed-clock too), they should be
-> in the same node as xosc. CLK_OF_DECLARE does not seem to fit here because
+No, nothing.  Everything looks good.
 
-There is no such node as "/clocks" so do not focus on that. That's just
-placeholder but useless and it is inconsistent with other cases (e.g.
-regulators).
+> Is there any chance to get this series merged ?
 
-If this is external oscillator then it is not part of RP1 and you cannot
-put it inside just to satisfy your drivers.
+Yes.  Apologies for the delay.
 
-> there's no special management of these clocks, so no new clock definition is
-> needed.
+Bjorn, should be able to pull it for 6.12, hopefully.
 
-> If they are internal tree, I cannot simply get rid of them because rp1_eth node
-> references these two clocks (see clocks property), so they must be decalred 
-> somewhere. Any hint about this?.
-> 
-
-Describe the hardware. Show the diagram or schematics where is which device.
-
-Best regards,
-Krzysztof
-
+	Krzysztof
 
