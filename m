@@ -1,281 +1,204 @@
-Return-Path: <linux-pci+bounces-12658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58553969D9E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 14:30:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0E23969DEE
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 14:42:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10BA3285E11
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 12:30:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EBC61F21DD0
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 12:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED721CF2A2;
-	Tue,  3 Sep 2024 12:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75BFD1C987D;
+	Tue,  3 Sep 2024 12:42:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mC+4pygM"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JAI1fYGT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0AE1C9877
-	for <linux-pci@vger.kernel.org>; Tue,  3 Sep 2024 12:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6321CE6F5;
+	Tue,  3 Sep 2024 12:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725366608; cv=none; b=ZwBcEuMyS4+HQaIq2KPGukUowbV7kn20GGzOd2AAb8L++gUKR7eToXKkMZ9vpwmw374WDivx/itgWZAp1eo2T+0kWEXwlWOVsm31OiEklz+exdgHtR7ok7noAwBWzp3i3+8Yzb6sUL9OqCYK0lCz8qvzMRov6fQIeKg4J0pD9Gk=
+	t=1725367324; cv=none; b=rLQeqK7ME5PB3vISp1jH1D2m0XL6R08cKMjunjnPicXBFVlA7DxltT4LOrQJpv/HOg3m9d3tfbCww+V+LH+7jKevW7xXhKNj57V5EkDHG9Wpo8YG94nKNjMhufBv/Ao4m6QC/DE3j5CxlVCW41sDfQ2iscpoF1reKvK3zLek1zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725366608; c=relaxed/simple;
-	bh=5eiT/IDotgYrZmXJ8Mdoh1ChD7VJckJ3O8LS25vNanc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YZv0yKoC3jMubI6HHphdLfIhmBdd4bdfnxMy/5K+d8tKVz/WsfvWLzpwPGlIOlOJ+VsCuAb5FUXWQ76dzYkrB1PPQq2agyEl0bTSlXlTWmToI72kN+RqYHGpI1Qz/ZC3eivvS5WzbAgHr4uV/9t7CfYl/Jbj0/JycsBp/z8U2MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mC+4pygM; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725366607; x=1756902607;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5eiT/IDotgYrZmXJ8Mdoh1ChD7VJckJ3O8LS25vNanc=;
-  b=mC+4pygMdiUY2VuOCf+fkrw0nMQ2cd9uKyxliiMgOffw64cMK7NcZRpO
-   dW7NqHtm0tbZdXtNVXcEYEwhrJuBefuBqdqywr/FJ2Z38e6sxi2kCmKiJ
-   gBjsCH4N1EzxbplgUFtV4pfNUlypLm1DOsPOX2PoqZgXdPJ4gzDNgKTGI
-   aUvXkB5RceLkBpncrXeRDzYk+9OON9KWLXmIMKP3tjWFxH5HyVeYgSLyf
-   0PfgRtI6qt+LsQSCz9te9WU1G1HdotGjHhD58/bhSeI6jalHPE8+5TL0J
-   IjRXB9j6YAobUznd9dXpV+pUQjUpP08UOmrMC0QxgD1vzc+Y4I/0665OG
-   g==;
-X-CSE-ConnectionGUID: 4xjC0kbpQ5e9Q3LDGbkxBw==
-X-CSE-MsgGUID: hjQG3T/hS2KKiJdRBaIWIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="26877309"
-X-IronPort-AV: E=Sophos;i="6.10,198,1719903600"; 
-   d="scan'208";a="26877309"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 05:30:06 -0700
-X-CSE-ConnectionGUID: mW6LqSmfSj+32GcS7nPApA==
-X-CSE-MsgGUID: QX6XWG4cQru/IXynrq5sMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,198,1719903600"; 
-   d="scan'208";a="64878753"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 03 Sep 2024 05:30:04 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1slSfa-0006eA-1K;
-	Tue, 03 Sep 2024 12:30:02 +0000
-Date: Tue, 03 Sep 2024 20:29:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/brcmstb] BUILD SUCCESS
- 551a928636b907e1a7508e1a0abb379873f32180
-Message-ID: <202409032035.mVA5EKjm-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1725367324; c=relaxed/simple;
+	bh=ZVaq84pLPhwJhLzIfPmKiEeXxZp1YukNWV5ldKPBgPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LGjMU7Dc3rZlZksAKyxiV1cgAmHz99dZVUkwPYA/j8WVxxKCeqjo4E+jQbzRUdnelHyLdRgRt1Y101OSM9C6Bn5eA+WWUqZ7e2i4iaJgOrJflgH1sckfLeHeVQNaO1rBPsmZtTvDuDLu/6r0UIgGSy2/yoJvKainJp6TZmmh5t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JAI1fYGT; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8776BFF803;
+	Tue,  3 Sep 2024 12:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1725367319;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KAmTuYuyXHduAW64UkV2JwUoEe69ueUNZdmvsuTuQfI=;
+	b=JAI1fYGTKKL5l+SCb0pblQoraFWgfaGoP5aGV8o3omBndzVv3jbWnhkQg2MDx8pN2AE4nA
+	H7TJooczOhsB4V2Gv6IXMu5Q+O3hN8jorwDWOYwp++FZyTKUpqbUBcW/mhFmq8LMmJNY7J
+	oH0dLvK0dZbfxhVoHjmk7te/whHswi3b0coVuTZPVGVXVACLPUH6Rxgz61Ce/77fvlmJnN
+	sQSCwGhJ5KmOmafWnCseLz4TXeg85i6zAMeIdqBhqNQfKN9ac7o+MeVyj1xa2y8cB8WESQ
+	qZromrecx3UAesYiYeOqaaBiQSiHw9uik7IbAJ67GeXCc4hftSYMOTOPjIMm5w==
+Message-ID: <78be1cb2-a6c6-44e3-8974-06731dd055f2@bootlin.com>
+Date: Tue, 3 Sep 2024 14:41:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: gregory.clement@bootlin.com, theo.lebrun@bootlin.com,
+ thomas.petazzoni@bootlin.com, u-kumar1@ti.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Francesco Dolcini <francesco.dolcini@toradex.com>
+References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/brcmstb
-branch HEAD: 551a928636b907e1a7508e1a0abb379873f32180  PCI: brcmstb: Enable 7712 SOCs
+On 6/19/24 12:15, Thomas Richard wrote:
+> This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
+> 
+> In this 7th iteration, the i2c and mux patches were moved to dedicated
+> series ([1] and [2]).
+> The patch for the gpio-pca953x driver was removed. It will be sent
+> separately for further testing and discussion.
+> 
+> No merge conflict with 6.10-rc4.
+> 
+> [1]: https://lore.kernel.org/all/20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com/
+> [2]: https://lore.kernel.org/all/20240613-mux-mmio-resume-support-v1-0-4525bf56024a@bootlin.com/
 
-elapsed time: 976m
+Hello !!
 
-configs tested: 186
-configs skipped: 8
+This series has no remaining comment to address.
+Is there any chance to get this series merged ?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Best Regards,
 
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                            allyesconfig   clang-20
-alpha                               defconfig   gcc-14.1.0
-arc                              allmodconfig   clang-20
-arc                               allnoconfig   gcc-14.1.0
-arc                              allyesconfig   clang-20
-arc                                 defconfig   gcc-14.1.0
-arc                        nsim_700_defconfig   clang-20
-arc                        nsimosci_defconfig   clang-20
-arc                   randconfig-001-20240903   clang-20
-arc                   randconfig-002-20240903   clang-20
-arm                              allmodconfig   clang-20
-arm                               allnoconfig   gcc-14.1.0
-arm                              allyesconfig   clang-20
-arm                     davinci_all_defconfig   clang-20
-arm                                 defconfig   gcc-14.1.0
-arm                      jornada720_defconfig   clang-20
-arm                          pxa910_defconfig   gcc-14.1.0
-arm                   randconfig-001-20240903   clang-20
-arm                   randconfig-002-20240903   clang-20
-arm                   randconfig-003-20240903   clang-20
-arm                   randconfig-004-20240903   clang-20
-arm                             rpc_defconfig   gcc-14.1.0
-arm                        spear6xx_defconfig   gcc-14.1.0
-arm                           sunxi_defconfig   gcc-14.1.0
-arm64                            allmodconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-14.1.0
-arm64                 randconfig-001-20240903   clang-20
-arm64                 randconfig-002-20240903   clang-20
-arm64                 randconfig-003-20240903   clang-20
-arm64                 randconfig-004-20240903   clang-20
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-csky                  randconfig-001-20240903   clang-20
-csky                  randconfig-002-20240903   clang-20
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                          allyesconfig   clang-20
-hexagon                             defconfig   gcc-14.1.0
-hexagon               randconfig-001-20240903   clang-20
-hexagon               randconfig-002-20240903   clang-20
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240903   gcc-12
-i386         buildonly-randconfig-002-20240903   gcc-12
-i386         buildonly-randconfig-003-20240903   gcc-12
-i386         buildonly-randconfig-004-20240903   gcc-12
-i386         buildonly-randconfig-005-20240903   gcc-12
-i386         buildonly-randconfig-006-20240903   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240903   gcc-12
-i386                  randconfig-002-20240903   gcc-12
-i386                  randconfig-003-20240903   gcc-12
-i386                  randconfig-004-20240903   gcc-12
-i386                  randconfig-005-20240903   gcc-12
-i386                  randconfig-006-20240903   gcc-12
-i386                  randconfig-011-20240903   gcc-12
-i386                  randconfig-012-20240903   gcc-12
-i386                  randconfig-013-20240903   gcc-12
-i386                  randconfig-014-20240903   gcc-12
-i386                  randconfig-015-20240903   gcc-12
-i386                  randconfig-016-20240903   gcc-12
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-loongarch             randconfig-001-20240903   clang-20
-loongarch             randconfig-002-20240903   clang-20
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                         amcore_defconfig   gcc-14.1.0
-m68k                                defconfig   gcc-14.1.0
-m68k                        mvme147_defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                         db1xxx_defconfig   clang-20
-mips                     loongson1b_defconfig   clang-20
-mips                    maltaup_xpa_defconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-nios2                 randconfig-001-20240903   clang-20
-nios2                 randconfig-002-20240903   clang-20
-openrisc                          allnoconfig   clang-20
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-12
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   clang-20
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-12
-parisc                randconfig-001-20240903   clang-20
-parisc                randconfig-002-20240903   clang-20
-parisc64                            defconfig   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                        fsp2_defconfig   clang-20
-powerpc                   lite5200b_defconfig   gcc-14.1.0
-powerpc                       maple_defconfig   clang-20
-powerpc                   microwatt_defconfig   gcc-14.1.0
-powerpc                 mpc834x_itx_defconfig   clang-20
-powerpc                      pcm030_defconfig   clang-20
-powerpc                      ppc44x_defconfig   gcc-14.1.0
-powerpc                      ppc6xx_defconfig   gcc-14.1.0
-powerpc               randconfig-002-20240903   clang-20
-powerpc64                        alldefconfig   clang-20
-powerpc64             randconfig-001-20240903   clang-20
-powerpc64             randconfig-002-20240903   clang-20
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-12
-riscv                 randconfig-001-20240903   clang-20
-riscv                 randconfig-002-20240903   clang-20
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                          debug_defconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-s390                  randconfig-001-20240903   clang-20
-s390                  randconfig-002-20240903   clang-20
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                ecovec24-romimage_defconfig   clang-20
-sh                        edosk7760_defconfig   clang-20
-sh                          r7780mp_defconfig   clang-20
-sh                    randconfig-001-20240903   clang-20
-sh                    randconfig-002-20240903   clang-20
-sh                      rts7751r2d1_defconfig   gcc-14.1.0
-sh                           se7619_defconfig   clang-20
-sh                           se7619_defconfig   gcc-14.1.0
-sh                           se7721_defconfig   clang-20
-sh                   sh7724_generic_defconfig   clang-20
-sh                        sh7785lcr_defconfig   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc                       sparc64_defconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-sparc64               randconfig-001-20240903   clang-20
-sparc64               randconfig-002-20240903   clang-20
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-20
-um                               allyesconfig   clang-20
-um                                  defconfig   gcc-12
-um                             i386_defconfig   gcc-12
-um                    randconfig-001-20240903   clang-20
-um                    randconfig-002-20240903   clang-20
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240903   gcc-12
-x86_64       buildonly-randconfig-002-20240903   gcc-12
-x86_64       buildonly-randconfig-003-20240903   gcc-12
-x86_64       buildonly-randconfig-004-20240903   gcc-12
-x86_64       buildonly-randconfig-005-20240903   gcc-12
-x86_64       buildonly-randconfig-006-20240903   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                                  kexec   gcc-12
-x86_64                randconfig-001-20240903   gcc-12
-x86_64                randconfig-002-20240903   gcc-12
-x86_64                randconfig-003-20240903   gcc-12
-x86_64                randconfig-004-20240903   gcc-12
-x86_64                randconfig-005-20240903   gcc-12
-x86_64                randconfig-006-20240903   gcc-12
-x86_64                randconfig-011-20240903   gcc-12
-x86_64                randconfig-012-20240903   gcc-12
-x86_64                randconfig-013-20240903   gcc-12
-x86_64                randconfig-014-20240903   gcc-12
-x86_64                randconfig-015-20240903   gcc-12
-x86_64                randconfig-016-20240903   gcc-12
-x86_64                randconfig-071-20240903   gcc-12
-x86_64                randconfig-072-20240903   gcc-12
-x86_64                randconfig-073-20240903   gcc-12
-x86_64                randconfig-074-20240903   gcc-12
-x86_64                randconfig-075-20240903   gcc-12
-x86_64                randconfig-076-20240903   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   gcc-12
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240903   clang-20
-xtensa                randconfig-002-20240903   clang-20
+Thomas
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Regards,
+> 
+> Thomas
+> 
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+> Changes in v7:
+> - all: series rebased on Linux 6.10-rc4.
+> - i2c: patches moved to a dedicated series.
+> - mux: patches moved to a dedicated series.
+> - gpio-pca953x: patch removed, will be sent separately.
+> - Link to v6: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com
+> 
+> Changes in v6:
+> - i2c-omap: add a patch to remove __maybe_unused attribute of
+>   omap_i2c_runtime_suspend() and omap_i2c_runtime_resume()
+> - i2c-omap: fix compile issue if CONFIG_PM_SLEEP is not set
+> - Link to v5: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com
+> 
+> Changes in v5:
+> - all: series rebased on Linux 6.9-rc1
+> - pinctrl-single: patch removed (already applied to the pinctrl tree)
+> - phy: patches moved to a dedicated series.
+> - pci: add T_PERST_CLK_US macro.
+> - pci-j721e: update the comments about T_PERST_CLK_US.
+> - Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com
+> 
+> Changes in v4:
+> - all: use SoB/Co-developed-by for patches initially developed by Théo
+>   Lebrun.
+> - pinctrl-single: squash the two commits.
+> - i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+> - mux: mux_chip_resume() return 0 or at the first error.
+> - phy-j721e-wiz: clean code around dev_err_probe().
+> - phy-j721e-wiz: use REF_CLK_100MHZ macros.
+> - pci: fix subject line for all PCI patches.
+> - pci-cadence: use fsleep() instead of usleep_range().
+> - pci-cadence: remove cdns_torrent_clk_cleanup() call in
+>   cdns_torrent_phy_resume_noirq().
+> - pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in the probe().
+> - pci-j721e: fix unordered header files.
+> - pci-j721e: remove some log spammers.
+> - pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+> - pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+> - Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com
+> 
+> Changes in v3:
+> - pinctrl-single: split patch in two parts, a first patch to remove the
+>   dead code, a second to move suspend()/resume() callbacks to noirq.
+> - i2c-omap: add a comments above the suspend_noirq() callback.
+> - mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+>   all is ok or the first failure.
+> - mmio: fix commit message.
+> - phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() in
+>   the wiz_clock_init() function.
+> - phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+>   function to wiz_clock_probe(), extract hardware configuration part in a
+>   new function wiz_clock_init().
+> - phy-cadence-torrent: use dev_err_probe() and fix commit messages
+> - pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+>   function and extract the link setup part in a new function
+>   cdns_pcie_host_link_setup().
+> - pcie-cadence-host: make cdns_pcie_host_init() global.
+> - pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+>   functions in the resume_noirq() callback.
+> - Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com
+> 
+> Changes in v2:
+> - all: fix commits messages.
+> - all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+> - all: remove useless #ifdef CONFIG_PM.
+> - pinctrl-single: drop dead code
+> - mux: add mux_chip_resume() function in mux core.
+> - mmio: resume sequence is now a call to mux_chip_resume().
+> - phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+>   instead of reset_control_put()).
+> - phy-cadence-torrent: use PHY instead of phy.
+> - pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+>   sequence.
+> - pci-j721e: drop dead code.
+> - Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+> 
+> ---
+> Thomas Richard (5):
+>       PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+>       PCI: cadence: Set cdns_pcie_host_init() global
+>       PCI: j721e: Use dev_err_probe() in the probe() function
+>       PCI: Add T_PERST_CLK_US macro
+>       PCI: j721e: Use T_PERST_CLK_US macro
+> 
+> Théo Lebrun (2):
+>       PCI: j721e: Add reset GPIO to struct j721e_pcie
+>       PCI: j721e: Add suspend and resume support
+> 
+>  drivers/pci/controller/cadence/pci-j721e.c         | 121 ++++++++++++++++++---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
+>  drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+>  drivers/pci/pci.h                                  |   3 +
+>  4 files changed, 146 insertions(+), 34 deletions(-)
+> ---
+> base-commit: 7510725e693fb5e4b4cd17086cc5a49a7a065b9c
+> change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+> 
+> Best regards,
+
 
