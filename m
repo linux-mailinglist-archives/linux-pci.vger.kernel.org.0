@@ -1,84 +1,98 @@
-Return-Path: <linux-pci+bounces-12699-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12700-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88F0896A99D
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 23:06:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AA3A96A9C6
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 23:10:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC35E1C20AB3
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 21:06:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA171B21B0A
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 21:10:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B78CF1D7E46;
-	Tue,  3 Sep 2024 20:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D991EC018;
+	Tue,  3 Sep 2024 21:09:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnalmnS7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIs57Wl9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B2F1D7E3B
-	for <linux-pci@vger.kernel.org>; Tue,  3 Sep 2024 20:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB9E1EC011;
+	Tue,  3 Sep 2024 21:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725396637; cv=none; b=NF4L/bPCL+f03empjtnd5UDeN0wCiVC2FsQdf4ygwdxIZ00GvQbgW89Q2GLWHradQj5JQ43tjfQbeKwNWxvRjSAUISHfN98uYHja2uK4zCAR/9OnQcS+BTY72FxKnTuIC8GERH9H+zScVRDAQFEnkc7HpvbiK87u5uZsb0xXleo=
+	t=1725397762; cv=none; b=Acro83MF5fRt/IIefJ0NQXFT44PpVAjV9SFTanpRLUmhyXD7QvZOIXpc0IVU7rraMtPRUKuUJ4+Nfv6dkYfqHIauGRSLtnGJ9/aHqBcvxE9AdDBi0HXGgkuUxfqIHTl2AqQkEBu4aRmDmAVuloqJoqYIpV9z0/yGL64pryPyg+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725396637; c=relaxed/simple;
-	bh=vHendUxrr7qm67eycysQPGu+1hyPjOQ+daW7oEALHRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eBALWiPNeaAJViSzxjTwfSlvoUiOVqHTQpac8g8pv7+/McxTWX2iKUi1KhxUxQGRCdEhdWMhibXe5xWpqu3tJeg/IYAXbPVnHviMRD4NE5mYEO6aFwCJ0CYlG9Q1t1Cg5yAUYQY72V0dEYiwMUxat4om6wg2ZG0hd93cwAf1fkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnalmnS7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0590C4CEC4;
-	Tue,  3 Sep 2024 20:50:36 +0000 (UTC)
+	s=arc-20240116; t=1725397762; c=relaxed/simple;
+	bh=zMYA+LcGsMb9VFlyyQ4rB4esNt0Wsi3Z7wJ735oK+TQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RUU/rXfiqoLn5vuFQXuaIxlnKK6jIrbbSN6Ld5kH8tSR+M8hsQiSd0uBQHNDZcBWwGLdNr5IxJAYYKfhEHlYlWn7WYsjMimj/N29WBjGv0OopnCB2YWXiAeWNoqKwptRZJBTzyLnf+r3RQlu8Pj2JQP05uJkqMHAYQZqT0qHJLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIs57Wl9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592A7C4CEC4;
+	Tue,  3 Sep 2024 21:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725396637;
-	bh=vHendUxrr7qm67eycysQPGu+1hyPjOQ+daW7oEALHRU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BnalmnS7pae/kNkUsElnxMlUkN6Lls4sAkt+D/4lqStNHDK2tgKefbLam3UUHlml8
-	 ZeoU1k2FYGaBQShJwsg878muiAb3bRMcK6ZWHsCQ+V2kocAREiWaZLlFlYwwCsxS3d
-	 1yEatCIlRuNynKr/IiYj/fsddPidY0GBkfHtl7tHv+oUV7uo1nP+DNZrNKWkN5612b
-	 fkGGHNmpRHF9/ZcZ8aNwdfTG3dqyeHRxTnpa6wVehfyf0j6b4cf45sihEMqIoL2Pwl
-	 HemXeIIK9YncmvSg5UzNzA83eLq1Ea1oLidovYSJWEvtqx1obQFckXaPHW1GdtD3p1
-	 bXEpM/Q/zElwg==
+	s=k20201202; t=1725397761;
+	bh=zMYA+LcGsMb9VFlyyQ4rB4esNt0Wsi3Z7wJ735oK+TQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=qIs57Wl9jXFEqhkEJPkefxf7DNEpJ/KpO+Vz3giW1hy7mMsLHGeVdOQkkjx/+NmmV
+	 negBj0xkg1WEhOt0XYT1iCrGGzGIJjYOxxCttFb3gTJdQXofcN90AjhNG7CpX04DtM
+	 KZRTymWXV6TvKAfXJsYwF/8MLR3SFgpQ3A2G9pGoe7h5HvQZUN1YNvmHVLrMQz1Z4l
+	 2ikCqhcsHbDY86LeQwgeqBYLxKygEr8a9LXBVjf8UWZukvXPDMYqHdu01RuCB2vuiW
+	 BGoMAVReWhiBiAHDqtZ3Qws9SVbgQPKBWbRxUKIcOCWb8KeuNEhpfNWrdR44PJ3vnL
+	 nsP/xhzYHVYBw==
+Date: Tue, 3 Sep 2024 16:09:19 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: endpoint: Fix enum pci_epc_bar_type kerneldoc
-Date: Tue,  3 Sep 2024 15:50:33 -0500
-Message-Id: <20240903205033.277037-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Frank Li <Frank.li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 11/11] PCI: imx6: Add i.MX8Q PCIe root complex (RC)
+ support
+Message-ID: <20240903210919.GA277611@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZtdzIxr3YnDAW5VY@lizhi-Precision-Tower-5810>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Sep 03, 2024 at 04:35:47PM -0400, Frank Li wrote:
+> On Mon, Sep 02, 2024 at 08:49:27PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jul 29, 2024 at 04:18:18PM -0400, Frank Li wrote:
+> > > From: Richard Zhu <hongxing.zhu@nxp.com>
+> > >
+> > > Implement i.MX8Q (i.MX8QM, i.MX8QXP, and i.MX8DXL) PCIe RC support. While
+> > > the controller resembles that of iMX8MP, the PHY differs significantly.
+> > > Notably, there's a distinction between PCI bus addresses and CPU addresses.
+> >
+> > This bus/CPU address distinction is unrelated to the PHY despite the
+> > fact that this phrasing suggests they might be related.
+> 
+> This just list two indepentent differences.
 
-e01c9797c0eb ("PCI: endpoint: Clean up hardware description for BARs")
-added enum pci_epc_bar_type with incomplete kerneldoc.  Add the missing
-piece.
+Yes.  But using "Notably" here connects them by suggesting that the
+address space translation is a major part of what came before.  Weird
+subtlety of English usage, I guess.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- include/linux/pci-epc.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 85bdf2adb760..697cc190747d 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -149,6 +149,7 @@ struct pci_epc {
- };
- 
- /**
-+ * enum pci_epc_bar_type - configurability of endpoint BAR
-  * @BAR_PROGRAMMABLE: The BAR mask can be configured by the EPC.
-  * @BAR_FIXED: The BAR mask is fixed by the hardware.
-  * @BAR_RESERVED: The BAR should not be touched by an EPF driver.
--- 
-2.34.1
-
+Krzysztof, if you have a chance, just s/Notably/Also/ here.
 
