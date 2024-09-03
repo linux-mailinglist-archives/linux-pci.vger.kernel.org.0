@@ -1,119 +1,171 @@
-Return-Path: <linux-pci+bounces-12643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12644-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39FF296910F
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 03:49:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAFB19691A6
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 05:05:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CC121C22715
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 01:49:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08FB3B20F2C
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 03:05:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DECD1CCEE9;
-	Tue,  3 Sep 2024 01:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE58D1CCED3;
+	Tue,  3 Sep 2024 03:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+QeXC2X"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="MouyVDgm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F341CCED9;
-	Tue,  3 Sep 2024 01:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E762C2AD02;
+	Tue,  3 Sep 2024 03:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725328170; cv=none; b=Mp27Ce4jJcdla1f4fpC+eHy2jIaoCCnWU1dEayWHer0WVjNORf6aDPBEGynkrfY2khEyvwGWMTQzYiK1RKlqPYKOV6F8kRq096vbA8AWRMG2C5eZoQkEm20Erzz7G5f3V3faauAVjWFSzBz6GJo+NhpZH4MKea30lqO6tllJdxc=
+	t=1725332707; cv=none; b=OvnTV88b5fqu3sztmap7Nq8xz+EQvk0aPdyV2eKfqAdiWFibvnLk6IOwt15Iv2QOneu+DM2DQDBLDXoIr9SkW0DOr7BtXVLceu2eDgMQTC4NAJBMVdAa7UJDddbkgA9qFi3l3ONlaYX80fN0FJQBSCfCL5D6p6DBExzaCPs8WIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725328170; c=relaxed/simple;
-	bh=MYd+BDZHjT4A49/uPMG3JKdeSg29HklOPqAeNtZYWOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OmLRmpl3g80+up3s6JN655JLehkFlbeO4yhab40wvF4Z7nGLnIC/Ity0k5z1QMFqcYf69cDJpTJD4cxMcsuTQx6P5DUb3IgJvmjz0TbXgP7BdHbtvxs+dMglbjtZkemh7CiYhrpds0db60tovpd6DQBfxlHlziU3gYtSTa0omaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+QeXC2X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF07C4CEC2;
-	Tue,  3 Sep 2024 01:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725328169;
-	bh=MYd+BDZHjT4A49/uPMG3JKdeSg29HklOPqAeNtZYWOQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=U+QeXC2X1xudw533PDy63Jd71UFCyOegTYWfMWdJdl3xMIYgieBBJ57QEvO6Nuiju
-	 ziBP/E56LLdhirSIbhjy6x8sI34F8nBb45hV5jKNdTLAXJbkMwucnaexUitgrIYxxx
-	 eTtBCzAXlxQ2SUJPDMXoKkV79upiyjETusnKFJJMF/oa5meQdZusy5ltBUMmusM8d1
-	 ymNSYkz94NenKd1w/Ilg0MKS5kNr+lt5tLnXLPvVCc29bzwaY1pZtvgAxvsZytlsAT
-	 m/Ng3cEBcXjRjxAROcOECAXlXd2LxDMc/Fmtw48XMcjld5OPjdSWg1GgKdwiiCnokn
-	 o+iSZYY52Z6CQ==
-Date: Mon, 2 Sep 2024 20:49:27 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 11/11] PCI: imx6: Add i.MX8Q PCIe root complex (RC)
- support
-Message-ID: <20240903014927.GA230795@bhelgaas>
+	s=arc-20240116; t=1725332707; c=relaxed/simple;
+	bh=xDWnm992v5491wL8vjSVQL2pr5JbS0Y9QE2G+5QdfL4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gh5um4vG7cr8l+yRHw9SqsX0ZUJAOhfUAK4N6aaywLLH5SO3HZO2UCgs1aMoD2Qwni0R7jgeUO0XoLvTHLLzazw1lc+cY2+vwzxBIhOrtbJhAnfNPiVx1Yhd9NWyPgzyPHnTnynK+Oq/MiHk/mYywRg5+dBo3M9KodixrlITv8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=MouyVDgm; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from localhost.localdomain (unknown [10.101.196.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 3BF2D3F815;
+	Tue,  3 Sep 2024 02:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1725332168;
+	bh=ju/3DT/96Rz/Meyl3hFHlGrVpwLzX4tHG0xUmw5imBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=MouyVDgm/IaNjs865bzLleq+sK9uWco94O5X0QMwFHvyeLUojFYxOPQStB/rNr89c
+	 agfS+54/cGlK5uGIol5x82pbMNYiELd8/67M1mqXyN7WOlBOU3hIoHamXAoKBQbnI6
+	 Chuh8j5fJv67nGQiorLtQDIxA0vsrsT/UxbLOkIg2oYtaMZ/U5KlxuNO4VGlaZ3VOH
+	 D/oTRAA4+zfOJ0ICPh75Q5SofjTVxsRIM2IiRb6tqMaafmkTgWS4caYdReyAVOdnoo
+	 trsBs5acrRXP/9yONeF7VkUxtwAxIzWTuWezb/JHXMbxfVam1eZOiJP7L3M9M5cgAT
+	 KxoRQrkQiv8Iw==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: nirmal.patel@linux.intel.com,
+	jonathan.derrick@linux.dev
+Cc: acelan.kao@canonical.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI: vmd: Delay interrupt handling on MTL VMD controller
+Date: Tue,  3 Sep 2024 10:55:44 +0800
+Message-ID: <20240903025544.286223-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240729-pci2_upstream-v8-11-b68ee5ef2b4d@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 29, 2024 at 04:18:18PM -0400, Frank Li wrote:
-> From: Richard Zhu <hongxing.zhu@nxp.com>
-> 
-> Implement i.MX8Q (i.MX8QM, i.MX8QXP, and i.MX8DXL) PCIe RC support. While
-> the controller resembles that of iMX8MP, the PHY differs significantly.
-> Notably, there's a distinction between PCI bus addresses and CPU addresses.
+Meteor Lake VMD has a bug that the IRQ raises before the DMA region is
+ready, so the requested IO is considered never completed:
+[   97.343423] nvme nvme0: I/O 259 QID 2 timeout, completion polled
+[   97.343446] nvme nvme0: I/O 384 QID 3 timeout, completion polled
+[   97.343459] nvme nvme0: I/O 320 QID 4 timeout, completion polled
+[   97.343470] nvme nvme0: I/O 707 QID 5 timeout, completion polled
 
-This bus/CPU address distinction is unrelated to the PHY despite the
-fact that this phrasing suggests they might be related.
+The is documented as erratum MTL016 [0]. The suggested workaround is to
+"The VMD MSI interrupt-handler should initially perform a dummy register
+read to the MSI initiator device prior to any writes to ensure proper
+PCIe ordering." which essentially is adding a delay before the interrupt
+handling.
 
-> Introduce IMX_PCIE_FLAG_CPU_ADDR_FIXUP in drvdata::flags to indicate driver
-> need the cpu_addr_fixup() callback to facilitate CPU address to PCI bus
-> address conversion according to "ranges" property.
+Hence add a delay before handle interrupt to workaround the erratum.
 
-I actually don't understand why the .cpu_addr_fixup() callback exists
-at all.  I guess this is my lack of understanding here, but on the
-ACPI side, if CPU addresses and PCI bus addresses are different, ACPI
-tells us how to convert them.  It seems like it should be analogous
-for DT.
+[0] https://edc.intel.com/content/www/us/en/design/products/platforms/details/meteor-lake-u-p/core-ultra-processor-specification-update/errata-details/#MTL016
 
-> +static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
-> +{
-> +	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
-> +	struct dw_pcie_rp *pp = &pcie->pp;
-> +	struct resource_entry *entry;
-> +	unsigned int offset;
-> +
-> +	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
-> +		return cpu_addr;
-> +
-> +	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> +	offset = entry->offset;
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217871
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/controller/vmd.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-I would have assumed that if the DT is correct, "offset" will be zero
-for platforms where PCI bus addresses are identical to CPU addresses,
-so we could (and *should*) do this for all platforms, not just IMX8Q.
-But I must be missing something?
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index a726de0af011..3433b3730f9c 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -16,6 +16,7 @@
+ #include <linux/srcu.h>
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
++#include <linux/delay.h>
+ 
+ #include <asm/irqdomain.h>
+ 
+@@ -74,6 +75,9 @@ enum vmd_features {
+ 	 * proper power management of the SoC.
+ 	 */
+ 	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
++
++	/* Erratum MTL016 */
++	VMD_FEAT_INTERRUPT_QUIRK	= (1 << 6),
+ };
+ 
+ #define VMD_BIOS_PM_QUIRK_LTR	0x1003	/* 3145728 ns */
+@@ -90,6 +94,8 @@ static DEFINE_IDA(vmd_instance_ida);
+  */
+ static DEFINE_RAW_SPINLOCK(list_lock);
+ 
++static bool interrupt_delay;
++
+ /**
+  * struct vmd_irq - private data to map driver IRQ to the VMD shared vector
+  * @node:	list item for parent traversal.
+@@ -105,6 +111,7 @@ struct vmd_irq {
+ 	struct vmd_irq_list	*irq;
+ 	bool			enabled;
+ 	unsigned int		virq;
++	bool			delay_irq;
+ };
+ 
+ /**
+@@ -680,8 +687,11 @@ static irqreturn_t vmd_irq(int irq, void *data)
+ 	int idx;
+ 
+ 	idx = srcu_read_lock(&irqs->srcu);
+-	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node)
++	list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node) {
++		if (interrupt_delay)
++			udelay(4);
+ 		generic_handle_irq(vmdirq->virq);
++	}
+ 	srcu_read_unlock(&irqs->srcu, idx);
+ 
+ 	return IRQ_HANDLED;
+@@ -1015,6 +1025,9 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
+ 		vmd->first_vec = 1;
+ 
++	if (features & VMD_FEAT_INTERRUPT_QUIRK)
++		interrupt_delay = true;
++
+ 	spin_lock_init(&vmd->cfg_lock);
+ 	pci_set_drvdata(dev, vmd);
+ 	err = vmd_enable_domain(vmd, features);
+@@ -1106,7 +1119,8 @@ static const struct pci_device_id vmd_ids[] = {
+ 	{PCI_VDEVICE(INTEL, 0xa77f),
+ 		.driver_data = VMD_FEATS_CLIENT,},
+ 	{PCI_VDEVICE(INTEL, 0x7d0b),
+-		.driver_data = VMD_FEATS_CLIENT,},
++		.driver_data = VMD_FEATS_CLIENT |
++			       VMD_FEAT_INTERRUPT_QUIRK,},
+ 	{PCI_VDEVICE(INTEL, 0xad0b),
+ 		.driver_data = VMD_FEATS_CLIENT,},
+ 	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+-- 
+2.43.0
 
-> +	return (cpu_addr - offset);
-> +}
 
