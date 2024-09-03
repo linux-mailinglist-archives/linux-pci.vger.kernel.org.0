@@ -1,134 +1,205 @@
-Return-Path: <linux-pci+bounces-12675-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12676-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3770196A387
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 18:01:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B92096A3FD
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 18:15:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9799282DC4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:01:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13B1128700F
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:15:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E922F1891B9;
-	Tue,  3 Sep 2024 16:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CE7D18B48E;
+	Tue,  3 Sep 2024 16:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c+Fmen+1"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WmFFff2k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB3F188903;
-	Tue,  3 Sep 2024 16:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC54618858F
+	for <linux-pci@vger.kernel.org>; Tue,  3 Sep 2024 16:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725379290; cv=none; b=Yn5Yq+NwPeIZRy1Bw3T0gasA3VH+1LsXF7qSjJU4eCnRmLq4CRD7+SYar2NBDb2VVTUQVW6b9HUI2ZZnDAMGWKPi2Nsy1tYH7Hv3PwfagPE7gJI6dUdy2Ejny0izUBd9IWgTaV4w8raR7SV6C67V/4Nd5ABhuRc/85Iy51NnVz0=
+	t=1725380108; cv=none; b=PJOkkyfA7Sa2dyp+yUN8fccMCHIBXBcmQKgBbr+BMvYujV7SdyggLAQ0XTMdr0AjKf3rfQdbl12Y+5XTw7Xbb5Qu4lfBsj8EA9XCEL8ybAlC9lN6lJ5cludFvfpjznTRgTa/uaVmv1hsU92FxyIt8jUuKxBJkGnPyfvtww6EyKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725379290; c=relaxed/simple;
-	bh=JHkZaHTyZr8FrXiNtLB8ONHDQXBeymJgLt3plAsYQ9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GcFl7jV40vwN7D2LHgHnufBSk8/V3u3WVHBSeENDWPGWPIq8ul+4EYB6q97otQDgjAPGVhWoV2UA2LDWfsT4dE9VcgBEFuout2utDhn463YVO45AyAIoON4KDNf0UKv2BL2W5jhGPGo2AS4xUoH5IsyqOpgGSxRzNY4usmdjRyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c+Fmen+1; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1695160003;
-	Tue,  3 Sep 2024 16:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1725379280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TOEHRL0jTkqVJGqC1aF4rVCGmks2TS1OH/JK8xFsn/A=;
-	b=c+Fmen+107aZTxRPesX1RF0jOVv9G1jUVeZALqhujtGQggZXA7w9Up9m2Q8ybdjodWqpK/
-	WM+uKhy6OpKV6HrweUA8FA5wjh1QA4ljeH5VoAYJufX0f/z2nnBTXwYrToXqs1C6F+bImD
-	5sTuQ+ub2E9GLdELHmZb3HsAWADILFlGNR7iAqLPdUT8Op+8sURREaOQMQUB+pVoRnomcC
-	9AFaVAkqVi6FG/bVN/dETRKnJQslq7jw3IMydXJa50GsULYLzKRSh2TZ+KTyDH+JPYbZ+X
-	O8MRC1YafAcQsnU92sLa/Cw2YKVTqNXq6U/J/ePSLIaPIRFXW8NdkjdTCbAoFg==
-Date: Tue, 3 Sep 2024 18:01:16 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
- Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring
- <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
- <clement.leger@bootlin.com>
-Subject: Re: [PATCH v5 3/8] mfd: syscon: Add reference counting and device
- managed support
-Message-ID: <20240903180116.717a499b@bootlin.com>
-In-Reply-To: <20240903153839.GB6858@google.com>
-References: <20240808154658.247873-1-herve.codina@bootlin.com>
-	<20240808154658.247873-4-herve.codina@bootlin.com>
-	<20240903153839.GB6858@google.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1725380108; c=relaxed/simple;
+	bh=xpPrjjx3C5+Im8uDKPe6tjHcImbiqGdfdOEgJ6hTna4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NdNo5fkYcNSdsHvdEYytsw/70RojNhYnkaefPrkxZblr49gNIld6XnIxHj2c1vHW9Ktq3oAC5tzMPz1EoSj4mfo5cvTNYCfJbKjNI04533K9cFAIvxRCPrnC9EUJ+r7jeks86ozWpa4CZyFqrHVBAoxWvpt4dY0ujFQnGB+Yzkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WmFFff2k; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-a7a9cf7d3f3so618104866b.1
+        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2024 09:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725380103; x=1725984903; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ujcJQ5WbiK5TK1a1sgf7j5ujXkTQVZFXM9n+2iP5G8w=;
+        b=WmFFff2kFIq19MtQaDjm0FzF2D+n4UmBArivKNenpVoyPiaLTVuuoy/2JRdmVHz05u
+         Lqa4vliOXLpIra5yAWbRIRmH/gr73eNVqOuCZmERDdoW4IBJPAW0sYaVGWss4Y3rKkFr
+         4krm7cnvbgu1nkic+2VZPaHyF42IWfbWvSKSNHgM6O3W1GyyexRpDg7m2fL5vczsU6T9
+         rrPJgADQIB4TeWtAEmnA82LaI4PPec7TQ4J02+Yu8Ger2/dtigf3afQhVAjjOCTzdvv+
+         35EMIx1mozZG7cBMF6y4hcXC4tVN306+ThGE/zCgjgLD3OTRWnpd8TJymP+El+OaQLAH
+         PeVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725380103; x=1725984903;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ujcJQ5WbiK5TK1a1sgf7j5ujXkTQVZFXM9n+2iP5G8w=;
+        b=AyuuiLHOSnktSvdN5N0LPSvX5Or0ga5L7cyqoEeHq13P2JbFWpiNsp7IRMsVquN3YW
+         QTHo2yxROWI4Ok0ZvZb+LumXUxp7tQTw2Ra7ciOzkG6hjqDjAp2+FQu14k7PrjyyWdbE
+         VJNhaSrbWFORxQcRWRmaDFTRHk24Xj5xi3Qmt67yqJZqGyngSDY+uJlhKd15x8pzGlyV
+         Gzk3Pe/rycjVCITMaGBsp8HjvIsDjZLKXCVoluFExcazAXsKP++pEyiOvcs+ZZjqYcjb
+         /C73QJs9d+b5VoJZ52vbKTJlls9WplAPrRMYdsH2XYZUFKdzKF+aSppEXaPgEf6E50Pw
+         nkOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtQHlh0niA3NHr7tk2PCICi6ZwsrYgmO6D9GRyizPak2IhpiUfBiMEmCsUZ1H1m/ZywL8oUeKU38c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxffvfRvPmUEd/CwId9SpU62+BQROcAfp9SYiC6QGkraD3jnOwZ
+	wWJoZJ4uiEQ+Yf9Fs1tgnVhSbt/a/JdE1xV6wMcx85Gb+U9WfHq+9QXNq+ZnTg8=
+X-Google-Smtp-Source: AGHT+IGOVI/KlbnVkPKcUFB/WP4ky/V34Mnqxzaki61Es6M5ZEdZH9hu90OMWXXvI1MZc9xKoKdrvw==
+X-Received: by 2002:a17:907:d08:b0:a86:6d39:cbfd with SMTP id a640c23a62f3a-a89fafad393mr618619866b.57.1725380102711;
+        Tue, 03 Sep 2024 09:15:02 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a1dbfba91sm145366666b.225.2024.09.03.09.15.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 09:15:02 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 3 Sep 2024 18:15:09 +0200
+To: Rob Herring <robh@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
+ dma-ranges mapping
+Message-ID: <Ztc2DadAnxLIYFj-@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+ <20240821001618.GA2309328-robh@kernel.org>
+ <ZsWi86I1KG91fteb@apocalypse>
+ <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
+ <ZtBJ0jIq-QrTVs1m@apocalypse>
+ <CAL_Jsq+_-m3cjTRsFZ0RwVpot3Pdcr1GWt-qiiFC8kQvsmV7VQ@mail.gmail.com>
+ <ZtChPt4cD8PzfEkF@apocalypse>
+ <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
 
-Hi Lee,
+Hi Rob,
 
-On Tue, 3 Sep 2024 16:38:39 +0100
-Lee Jones <lee@kernel.org> wrote:
+On 14:37 Fri 30 Aug     , Rob Herring wrote:
+> On Thu, Aug 29, 2024 at 11:26 AM Andrea della Porta
+> <andrea.porta@suse.com> wrote:
+> >
+> > Hi Rob,
+> >
 
-> On Thu, 08 Aug 2024, Herve Codina wrote:
+...
+
 > 
-> > From: Clément Léger <clement.leger@bootlin.com>
-> > 
-> > Syscon releasing is not supported.
-> > Without release function, unbinding a driver that uses syscon whether
-> > explicitly or due to a module removal left the used syscon in a in-use
-> > state.
-> > 
-> > For instance a syscon_node_to_regmap() call from a consumer retrieves a
-> > syscon regmap instance. Internally, syscon_node_to_regmap() can create
-> > syscon instance and add it to the existing syscon list. No API is
-> > available to release this syscon instance, remove it from the list and
-> > free it when it is not used anymore.
-> > 
-> > Introduce reference counting in syscon in order to keep track of syscon
-> > usage using syscon_{get,put}() and add a device managed version of
-> > syscon_regmap_lookup_by_phandle(), to automatically release the syscon
-> > instance on the consumer removal.
-> > 
-> > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  drivers/mfd/syscon.c       | 138 ++++++++++++++++++++++++++++++++++---
-> >  include/linux/mfd/syscon.h |  16 +++++
-> >  2 files changed, 144 insertions(+), 10 deletions(-)  
+> I think simple-bus where you have it is fine. It is really 1 level up
+> that needs to be specified. Basically something that's referenced from
+> the specific PCI device's schema (e.g. the RP1 schema (which you are
+> missing)).
 > 
-> This doesn't look very popular.
+> That schema needs to roughly look like this:
 > 
-> What are the potential ramifications for existing users?
+> properties:
+>   "#address-cells":
+>     const: 3
+>   "#size-cells":
+>     const: 2
+>   ranges:
+>     minItems: 1
+>     maxItems: 6
+>     items:
+>       additionalItems: true
+>       items:
+>         - maximum: 5  # The BAR number
+>         - const: 0
+>         - const: 0
+>         - # TODO: valid PCI memory flags
 > 
+> patternProperties:
+>   "^bar-bus@[0-5]$":
+>     type: object
+>     additionalProperties: true
+>     properties:
+>       compatible:
+>         const: simple-bus
+>       ranges: true
+>
 
-Existing user don't use devm_syscon_regmap_lookup_by_phandle() nor
-syscon_put_regmap().
+Hmmm.. not sure how this is going to work. The PCI device (RP1) will
+havei, at runtime, a compatible like this:
 
-So refcount is incremented but never decremented. syscon is never
-released. Exactly the same as current implementation.
-Nothing change for existing users.
+compatible = "pci1de4,1\0pciclass,0200000\0pciclass,0200";
 
-Best regards,
-Hervé
+that is basically generated automatically by the OF framework. So, in the
+schema you proposed above, I can put something like:
+
+properties:
+  compatible:
+    contains:
+      pattern: '^pci1de4,1'
+
+or maybe I could omit the compatible entirely, like in:
+
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-iommu.yaml
+
+that seems to refer to generic compatible values.
+In both cases though, I don't see how these binding could work with
+make dt_binding_check, since there's no compatible known at compile
+time (for the first approach), or no compatible at all (the second
+approach).
+Is it intended only as a loose documentation?
+Or are you proposing that for a future new bus (hence with a new, specific,
+compatible) that could be described by the schema above?
+
+Many thanks,
+Andrea
+ 
+> There were some discussions around interrupt handling that might also
+> factor into this.
+> 
+> Rob
 
