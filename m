@@ -1,143 +1,125 @@
-Return-Path: <linux-pci+bounces-12666-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12667-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3B9196A10F
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:47:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8626296A129
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:51:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 953501F26547
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 14:47:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B95971C2412E
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 14:51:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6779B16F8EB;
-	Tue,  3 Sep 2024 14:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE2D71547F9;
+	Tue,  3 Sep 2024 14:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKRrOoEr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20271714C8;
-	Tue,  3 Sep 2024 14:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47E56F30D;
+	Tue,  3 Sep 2024 14:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725374778; cv=none; b=cOsfbWHd947x9IOfWAD78FJ2HPIwuvppv3y9zzIWyalgf9GX+jT29o4aZeN5XnLZp77Vt4bBDS8Aa2lfCSGIsPD9Edk+cDxHFAQZt5QR7uVmG+aXaC6mdTTP9BvohnzxpS/ZdkYVUfW4cam8fGX8MMYXMW+6ViX+K4BZASxZkSI=
+	t=1725375073; cv=none; b=UHKecEn4MV7xLXQ8VdEyECH6Zm8ACjfnreJvPOixb6JY3luMwuY3lU+r/5+dNWGTWz/iPgsZDuJm0j0KxH4+xCZ1DsQFqnXOWT2D5G6xAGxLFcPqUtbjMdvTxuSqsyC0PU4rXEmvevptrmMQbDepVt5GyXy/g8xaP6IjAVTmKoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725374778; c=relaxed/simple;
-	bh=nG5/DhExrK/sDFise/67XU/3qKkrRT9ySPcQhT8OeVQ=;
+	s=arc-20240116; t=1725375073; c=relaxed/simple;
+	bh=ypa679/SQEuDxwGocMv1PijQXWWAn25QLhcHQVjpBvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dpPfPCvXaQHG+dETxGXml2eapp1ThY/qdvtAyM9L6GxlcsOBLYBtPnxGQWEKaeVfNmBxRo/NZkNTKPMyhT6050Ii+R0RaoZ6B9BkCvEaKevsOJRbr0J6gJkafzOjwAF6j3GLOsebTKV3gzMBABFewcp12VroSOB3SYKQUfkhSJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-202376301e6so41645095ad.0;
-        Tue, 03 Sep 2024 07:46:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725374776; x=1725979576;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GlIJN7/IDs/oFriU9uFSlQnyKILfhpKkIsYfTci7DZk=;
-        b=qGuWNJwWWpwuiBr2mgZjIn+cKSkVu1zgPcIWDejxVVfIq4qg0j7ngToBXzHBFqENwH
-         RP36ZGeOR72Sry4KNybTi5t/JJVtJBNGmkbGkSEOi6vUb0pdIXvNnLVtgGSmLfzn6jOr
-         i911bOEneW5YRpSgqE0Q2E+LTAVkkLBsZCdRnmvmDr7i8IrsE5CasLE87af5ONVP2Hjn
-         oXpwCWp9h1F4rwm8+oQPQ+NXltwT+Og+mdyO5cnaF/uKwqWtB2cR3WJkc0bmy7oXx5qZ
-         jCWaDYYiWrrhJMvmUuOVpvVMIympcCqcqvnyVi0WBieUXbitfumgr/jdVLiHdULvEQeM
-         wilg==
-X-Forwarded-Encrypted: i=1; AJvYcCWA583O4mt99Y5Hm3uJnOrjPJZJPEMXDGCA8pyBInH2t+Azl3xrQ63Gm2b1OE4nrC2PXlgBMxttvUdYJ+Q=@vger.kernel.org, AJvYcCX9ZkqpbujnEed28G/8np+V05sVtStdnExJDQn31dg3Gjt0yuJNJCSpLV0jg/fleZWqBIaTU/vkHE+Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF2cqfNAFJZHlMXQqM+FR/llw8PVLG5zCeLbfNNQlrlflkHDh8
-	ygVZMG+hlAOUwhGUCmVh41ld++/ghRlkWCUak8kqCb97QS2gqbKtBuZamFb/8ro=
-X-Google-Smtp-Source: AGHT+IFSlOQLjDmJsranIyAkE43u5G/I7rh4zLlr3vtjaRV32TwPT40udJIiDMhrJWaWV48pppZZpg==
-X-Received: by 2002:a17:902:7c94:b0:1fd:7097:af58 with SMTP id d9443c01a7336-2050c215b2amr134223105ad.11.1725374775992;
-        Tue, 03 Sep 2024 07:46:15 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20552a5f4b8sm47398815ad.52.2024.09.03.07.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 07:46:15 -0700 (PDT)
-Date: Tue, 3 Sep 2024 23:46:13 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
-Message-ID: <20240903144613.GC1403301@rocinante>
-References: <20240815225731.40276-6-james.quinlan@broadcom.com>
- <20240902191827.GA224376@bhelgaas>
- <CA+-6iNywkWq=H1WRTWaVbPwa9aBTZxyhwfsWqX5eYh22L7P1ag@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZWWuobfcfl5YmcfFQwZBmpYjmtgu4xGrcA+Oe5VZg5IVSuGU8D40u1Ogxh8G96wDc4tvDlTh9xht9y/yJLDZgpf04g8seTL/WRPGLNafIkpK0xeS9VrCD8KFTuGf7zsAcALELZx6KPxjnDO2lgFD+uc7JSJoP9yVveHVQNvucLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKRrOoEr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB15C4CEC4;
+	Tue,  3 Sep 2024 14:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725375073;
+	bh=ypa679/SQEuDxwGocMv1PijQXWWAn25QLhcHQVjpBvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AKRrOoEr8Arhm+x7N/MQWDjafbcWFx427plpqZCa4XqNEEz40U3VnF/jyV8LBzro2
+	 rhd4fdgdmKL06YnWnvFddjc/Y43BGD4hkRGRq31uC0QrLomc+wRenY2GPO7TNCrF6u
+	 ecc7Hjf0MA5ZvwOnZlKW5gFWiP9dOA2OpkwbwxcIU6w0fmh0mtF1DQdfDSfimIOmSk
+	 K9jDMjw/e/vH6QmOqAlDDPYEeh57cs3IYYfcNQkKycOygMri4+7JgmiL2TrbCo4yJ0
+	 qkyfvehSn6RfDXf+klpP4OEwxk36nhpfDZqhQUaGNOU+bfzKGtsAmgAQqQLeWGLqQN
+	 72A9KfzPuZJzQ==
+Date: Tue, 3 Sep 2024 08:51:10 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+	acelan.kao@canonical.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: vmd: Delay interrupt handling on MTL VMD controller
+Message-ID: <ZtciXnbQJ88hjfDk@kbusch-mbp>
+References: <20240903025544.286223-1-kai.heng.feng@canonical.com>
+ <20240903042852.v7ootuenihi5wjpn@thinkpad>
+ <CAAd53p4EWEuu-V5hvOHtKZQxCJNf94+FOJT+_ryu0s2RpB1o-Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+-6iNywkWq=H1WRTWaVbPwa9aBTZxyhwfsWqX5eYh22L7P1ag@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAd53p4EWEuu-V5hvOHtKZQxCJNf94+FOJT+_ryu0s2RpB1o-Q@mail.gmail.com>
 
-Hello,
-
-[...]
-> > >  static void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
-> > >  {
-> > > -     u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
-> > > -     u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
-> > > +     if (val)
-> > > +             reset_control_assert(pcie->bridge_reset);
-> > > +     else
-> > > +             reset_control_deassert(pcie->bridge_reset);
+On Tue, Sep 03, 2024 at 03:07:45PM +0800, Kai-Heng Feng wrote:
+> On Tue, Sep 3, 2024 at 12:29 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Tue, Sep 03, 2024 at 10:55:44AM +0800, Kai-Heng Feng wrote:
+> > > Meteor Lake VMD has a bug that the IRQ raises before the DMA region is
+> > > ready, so the requested IO is considered never completed:
+> > > [   97.343423] nvme nvme0: I/O 259 QID 2 timeout, completion polled
+> > > [   97.343446] nvme nvme0: I/O 384 QID 3 timeout, completion polled
+> > > [   97.343459] nvme nvme0: I/O 320 QID 4 timeout, completion polled
+> > > [   97.343470] nvme nvme0: I/O 707 QID 5 timeout, completion polled
 > > >
-> > > -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > -     tmp = (tmp & ~mask) | ((val << shift) & mask);
-> > > -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > +     if (!pcie->bridge_reset) {
-> > > +             u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
-> > > +             u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
+> > > The is documented as erratum MTL016 [0]. The suggested workaround is to
+> > > "The VMD MSI interrupt-handler should initially perform a dummy register
+> > > read to the MSI initiator device prior to any writes to ensure proper
+> > > PCIe ordering." which essentially is adding a delay before the interrupt
+> > > handling.
+> > >
+> >
+> > Why can't you add a dummy register read instead? Adding a delay for PCIe
+> > ordering is not going to work always.
+> 
+> This can be done too. But it can take longer than 4us delay, so I'd
+> like to keep it a bit faster here.
+
+An added delay is just a side effect of the read. The read flushes
+pending device-to-host writes, which is most likely what the errata
+really requires. I think Mani is right, you need to pay that register
+read penalty to truly fix this.
+
+> > > +     /* Erratum MTL016 */
+> > > +     VMD_FEAT_INTERRUPT_QUIRK        = (1 << 6),
+> > >  };
+> > >
+> > >  #define VMD_BIOS_PM_QUIRK_LTR        0x1003  /* 3145728 ns */
+> > > @@ -90,6 +94,8 @@ static DEFINE_IDA(vmd_instance_ida);
+> > >   */
+> > >  static DEFINE_RAW_SPINLOCK(list_lock);
+> > >
+> > > +static bool interrupt_delay;
 > > > +
-> > > +             tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > +             tmp = (tmp & ~mask) | ((val << shift) & mask);
-> > > +             writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > +     }
+> > >  /**
+> > >   * struct vmd_irq - private data to map driver IRQ to the VMD shared vector
+> > >   * @node:    list item for parent traversal.
+> > > @@ -105,6 +111,7 @@ struct vmd_irq {
+> > >       struct vmd_irq_list     *irq;
+> > >       bool                    enabled;
+> > >       unsigned int            virq;
+> > > +     bool                    delay_irq;
 > >
-> > This pattern looks goofy:
-> >
-> >   reset_control_assert(pcie->bridge_reset);
-> >   if (!pcie->bridge_reset) {
-> >     ...
-> >
-> > If we're going to test pcie->bridge_reset at all, it should be first
-> > so it's obvious what's going on and the reader doesn't have to go
-> > verify that reset_control_assert() ignores and returns success for a
-> > NULL pointer:
-> >
-> >   if (pcie->bridge_reset) {
-> >     if (val)
-> >       reset_control_assert(pcie->bridge_reset);
-> >     else
-> >       reset_control_deassert(pcie->bridge_reset);
-> >
-> >     return;
-> >   }
-> >
-> >   u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
-> >   ...
-> >
-> Will do.
-[...]
+> > This is unused. Perhaps you wanted to use this instead of interrupt_delay?
+> 
+> This is leftover, will scratch this.
 
-You will do what?  If you don't mind me asking.
-
-	Krzysztof
+Maybe you should actually use it instead of making a global? The quirk
+says it is device specific, so no need to punish every device if it
+doesn't need it (unlikely as it is to see such a thing).
 
