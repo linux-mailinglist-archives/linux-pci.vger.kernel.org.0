@@ -1,205 +1,141 @@
-Return-Path: <linux-pci+bounces-12676-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12677-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B92096A3FD
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 18:15:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D6C396A411
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 18:18:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13B1128700F
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:15:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBBD5283B84
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 16:18:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CE7D18B48E;
-	Tue,  3 Sep 2024 16:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62254405C9;
+	Tue,  3 Sep 2024 16:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WmFFff2k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ELxiChKw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC54618858F
-	for <linux-pci@vger.kernel.org>; Tue,  3 Sep 2024 16:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8632118858C;
+	Tue,  3 Sep 2024 16:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725380108; cv=none; b=PJOkkyfA7Sa2dyp+yUN8fccMCHIBXBcmQKgBbr+BMvYujV7SdyggLAQ0XTMdr0AjKf3rfQdbl12Y+5XTw7Xbb5Qu4lfBsj8EA9XCEL8ybAlC9lN6lJ5cludFvfpjznTRgTa/uaVmv1hsU92FxyIt8jUuKxBJkGnPyfvtww6EyKI=
+	t=1725380317; cv=none; b=qFcrXIO5V5tSXwFOQzuxbxVKcLkDXfHpPuRhOogzsgbAzCm/6nidDJggdV3R0pneb5JaCseQeRD8aGno3Wco/ul1xH4SJdNTrGF7eDcd2e5w/9dojDouZfiZNtjE0P9RxtuaFuP/0vWAfCpHWRKOLKZDvj26OqJMcudQS42gYC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725380108; c=relaxed/simple;
-	bh=xpPrjjx3C5+Im8uDKPe6tjHcImbiqGdfdOEgJ6hTna4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NdNo5fkYcNSdsHvdEYytsw/70RojNhYnkaefPrkxZblr49gNIld6XnIxHj2c1vHW9Ktq3oAC5tzMPz1EoSj4mfo5cvTNYCfJbKjNI04533K9cFAIvxRCPrnC9EUJ+r7jeks86ozWpa4CZyFqrHVBAoxWvpt4dY0ujFQnGB+Yzkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WmFFff2k; arc=none smtp.client-ip=209.85.218.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-a7a9cf7d3f3so618104866b.1
-        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2024 09:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725380103; x=1725984903; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ujcJQ5WbiK5TK1a1sgf7j5ujXkTQVZFXM9n+2iP5G8w=;
-        b=WmFFff2kFIq19MtQaDjm0FzF2D+n4UmBArivKNenpVoyPiaLTVuuoy/2JRdmVHz05u
-         Lqa4vliOXLpIra5yAWbRIRmH/gr73eNVqOuCZmERDdoW4IBJPAW0sYaVGWss4Y3rKkFr
-         4krm7cnvbgu1nkic+2VZPaHyF42IWfbWvSKSNHgM6O3W1GyyexRpDg7m2fL5vczsU6T9
-         rrPJgADQIB4TeWtAEmnA82LaI4PPec7TQ4J02+Yu8Ger2/dtigf3afQhVAjjOCTzdvv+
-         35EMIx1mozZG7cBMF6y4hcXC4tVN306+ThGE/zCgjgLD3OTRWnpd8TJymP+El+OaQLAH
-         PeVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725380103; x=1725984903;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ujcJQ5WbiK5TK1a1sgf7j5ujXkTQVZFXM9n+2iP5G8w=;
-        b=AyuuiLHOSnktSvdN5N0LPSvX5Or0ga5L7cyqoEeHq13P2JbFWpiNsp7IRMsVquN3YW
-         QTHo2yxROWI4Ok0ZvZb+LumXUxp7tQTw2Ra7ciOzkG6hjqDjAp2+FQu14k7PrjyyWdbE
-         VJNhaSrbWFORxQcRWRmaDFTRHk24Xj5xi3Qmt67yqJZqGyngSDY+uJlhKd15x8pzGlyV
-         Gzk3Pe/rycjVCITMaGBsp8HjvIsDjZLKXCVoluFExcazAXsKP++pEyiOvcs+ZZjqYcjb
-         /C73QJs9d+b5VoJZ52vbKTJlls9WplAPrRMYdsH2XYZUFKdzKF+aSppEXaPgEf6E50Pw
-         nkOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtQHlh0niA3NHr7tk2PCICi6ZwsrYgmO6D9GRyizPak2IhpiUfBiMEmCsUZ1H1m/ZywL8oUeKU38c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxffvfRvPmUEd/CwId9SpU62+BQROcAfp9SYiC6QGkraD3jnOwZ
-	wWJoZJ4uiEQ+Yf9Fs1tgnVhSbt/a/JdE1xV6wMcx85Gb+U9WfHq+9QXNq+ZnTg8=
-X-Google-Smtp-Source: AGHT+IGOVI/KlbnVkPKcUFB/WP4ky/V34Mnqxzaki61Es6M5ZEdZH9hu90OMWXXvI1MZc9xKoKdrvw==
-X-Received: by 2002:a17:907:d08:b0:a86:6d39:cbfd with SMTP id a640c23a62f3a-a89fafad393mr618619866b.57.1725380102711;
-        Tue, 03 Sep 2024 09:15:02 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a1dbfba91sm145366666b.225.2024.09.03.09.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 09:15:02 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 3 Sep 2024 18:15:09 +0200
-To: Rob Herring <robh@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
- dma-ranges mapping
-Message-ID: <Ztc2DadAnxLIYFj-@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
- <20240821001618.GA2309328-robh@kernel.org>
- <ZsWi86I1KG91fteb@apocalypse>
- <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
- <ZtBJ0jIq-QrTVs1m@apocalypse>
- <CAL_Jsq+_-m3cjTRsFZ0RwVpot3Pdcr1GWt-qiiFC8kQvsmV7VQ@mail.gmail.com>
- <ZtChPt4cD8PzfEkF@apocalypse>
- <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+	s=arc-20240116; t=1725380317; c=relaxed/simple;
+	bh=e+ztJAswj0zgxwfKO74jE9paujDwSwvONdxkFHmYZtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=naA9Azucd2g/SqEQFdVZ108kO9U942mZGK5qSspoSb/Zt2/KpiY5mNnHHFSAYgki2sdHf4OjbaIYEQrgS81+g0IAojYCgOEfaBSjTrY5bs8He8f9IRjDXRnHguiRsxe0MO/H69j4jKAEu/+eE2YV4LvCEtbjtm5v7GwL2B6QEFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ELxiChKw; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725380315; x=1756916315;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=e+ztJAswj0zgxwfKO74jE9paujDwSwvONdxkFHmYZtQ=;
+  b=ELxiChKwc4dF49dhSp8SJgCvijuaQLbRpCeWDypeH5xfYPyKrBSMAY99
+   oG2TdpEnA1Vx6IG7H4qyYhckxkNytMwzY7eC9gl2jyvLzD2RPXtoxpBLF
+   2IGmup6uKGZZCWP0gIy1WQAWMCws+31VrTZdN0H9VUP4msXx2qWfsxvjw
+   A12d+775sYxt7ddB479PQAhXWGGyg34QF4NmPrR+7lWPXHChhLvSnePxw
+   UhZyiCZp8euY6dXVmO0D1Zr58b2ftZQTKcVqwHkTo2eJGftmVhbb7yaHe
+   CTkzHGWKAaLUOwEfWA10OyNrAk8s8o2v/2PaN+uln4JkMsx0QxfdVHbxa
+   w==;
+X-CSE-ConnectionGUID: Z11yb9mcSximYVxaEofeGg==
+X-CSE-MsgGUID: HLLeWEr2TtShi7vdmljLWg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="13350043"
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="13350043"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 09:18:27 -0700
+X-CSE-ConnectionGUID: WLEjygFwQ62mC3ud2PgMXA==
+X-CSE-MsgGUID: zETu7SKwTqORrT/a8qb2dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="69753081"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 03 Sep 2024 09:18:21 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1slWER-0006t0-2e;
+	Tue, 03 Sep 2024 16:18:15 +0000
+Date: Wed, 4 Sep 2024 00:17:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, acelan.kao@canonical.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] PCI: vmd: Delay interrupt handling on MTL VMD controller
+Message-ID: <202409040016.XGnUy9HW-lkp@intel.com>
+References: <20240903025544.286223-1-kai.heng.feng@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+In-Reply-To: <20240903025544.286223-1-kai.heng.feng@canonical.com>
 
-Hi Rob,
+Hi Kai-Heng,
 
-On 14:37 Fri 30 Aug     , Rob Herring wrote:
-> On Thu, Aug 29, 2024 at 11:26 AM Andrea della Porta
-> <andrea.porta@suse.com> wrote:
-> >
-> > Hi Rob,
-> >
+kernel test robot noticed the following build warnings:
 
-...
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.11-rc6 next-20240903]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> I think simple-bus where you have it is fine. It is really 1 level up
-> that needs to be specified. Basically something that's referenced from
-> the specific PCI device's schema (e.g. the RP1 schema (which you are
-> missing)).
-> 
-> That schema needs to roughly look like this:
-> 
-> properties:
->   "#address-cells":
->     const: 3
->   "#size-cells":
->     const: 2
->   ranges:
->     minItems: 1
->     maxItems: 6
->     items:
->       additionalItems: true
->       items:
->         - maximum: 5  # The BAR number
->         - const: 0
->         - const: 0
->         - # TODO: valid PCI memory flags
-> 
-> patternProperties:
->   "^bar-bus@[0-5]$":
->     type: object
->     additionalProperties: true
->     properties:
->       compatible:
->         const: simple-bus
->       ranges: true
->
+url:    https://github.com/intel-lab-lkp/linux/commits/Kai-Heng-Feng/PCI-vmd-Delay-interrupt-handling-on-MTL-VMD-controller/20240903-110553
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240903025544.286223-1-kai.heng.feng%40canonical.com
+patch subject: [PATCH] PCI: vmd: Delay interrupt handling on MTL VMD controller
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20240904/202409040016.XGnUy9HW-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240904/202409040016.XGnUy9HW-lkp@intel.com/reproduce)
 
-Hmmm.. not sure how this is going to work. The PCI device (RP1) will
-havei, at runtime, a compatible like this:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409040016.XGnUy9HW-lkp@intel.com/
 
-compatible = "pci1de4,1\0pciclass,0200000\0pciclass,0200";
+All warnings (new ones prefixed by >>):
 
-that is basically generated automatically by the OF framework. So, in the
-schema you proposed above, I can put something like:
+>> drivers/pci/controller/vmd.c:115: warning: Function parameter or struct member 'delay_irq' not described in 'vmd_irq'
 
-properties:
-  compatible:
-    contains:
-      pattern: '^pci1de4,1'
 
-or maybe I could omit the compatible entirely, like in:
+vim +115 drivers/pci/controller/vmd.c
 
-https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-iommu.yaml
+7cdbc4e9cd808b5 drivers/pci/controller/vmd.c Kai-Heng Feng 2024-09-03   98  
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12   99  /**
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  100   * struct vmd_irq - private data to map driver IRQ to the VMD shared vector
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  101   * @node:	list item for parent traversal.
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  102   * @irq:	back pointer to parent.
+21c80c9fefc3db1 arch/x86/pci/vmd.c           Keith Busch   2016-08-23  103   * @enabled:	true if driver enabled IRQ
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  104   * @virq:	the virtual IRQ value provided to the requesting driver.
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  105   *
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  106   * Every MSI/MSI-X IRQ requested for a device in a VMD domain will be mapped to
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  107   * a VMD IRQ using this structure.
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  108   */
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  109  struct vmd_irq {
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  110  	struct list_head	node;
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  111  	struct vmd_irq_list	*irq;
+21c80c9fefc3db1 arch/x86/pci/vmd.c           Keith Busch   2016-08-23  112  	bool			enabled;
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  113  	unsigned int		virq;
+7cdbc4e9cd808b5 drivers/pci/controller/vmd.c Kai-Heng Feng 2024-09-03  114  	bool			delay_irq;
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12 @115  };
+185a383ada2e779 arch/x86/pci/vmd.c           Keith Busch   2016-01-12  116  
 
-that seems to refer to generic compatible values.
-In both cases though, I don't see how these binding could work with
-make dt_binding_check, since there's no compatible known at compile
-time (for the first approach), or no compatible at all (the second
-approach).
-Is it intended only as a loose documentation?
-Or are you proposing that for a future new bus (hence with a new, specific,
-compatible) that could be described by the schema above?
-
-Many thanks,
-Andrea
- 
-> There were some discussions around interrupt handling that might also
-> factor into this.
-> 
-> Rob
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
