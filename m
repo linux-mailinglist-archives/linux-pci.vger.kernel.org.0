@@ -1,55 +1,78 @@
-Return-Path: <linux-pci+bounces-12705-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12706-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3340B96ABFC
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 00:18:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 487B096AC31
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 00:26:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCEB5281238
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 22:18:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E47341F246D7
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 22:26:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DBBB126C16;
-	Tue,  3 Sep 2024 22:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11F81D5886;
+	Tue,  3 Sep 2024 22:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gke3Wjn5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZn4TZXV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157221EBFE4;
-	Tue,  3 Sep 2024 22:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5E51EBFE4;
+	Tue,  3 Sep 2024 22:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725401902; cv=none; b=T+fb1Fx0mGEaAj0deCQixlfQZRGUeMGmLJidi1bbjrxAtrXK0CYK/C4f8ukCJcFsFUP88fF9V2FKeGSPLO9pOIv1oi99g5RBKs8T3Iihm6Bu+CRATCuScTPbQdySt2I3vu3Tr4oVyPvMvx3mQY3kdZkxMz5cHSrXbFHpjnp/ojs=
+	t=1725402406; cv=none; b=nDLxfs5UW/Qeh6He6KB0MfPwPE/grdeGGxDR469836Ph5SgumU4hoAfGwWtwNIUiRVMsk5Pg8SiAL0SyAljToD++j8XLm1LHmMbnYmYjFIgsok8ddRUnkgKoZKji4ICjPc7+bspNSnIForNeZKgGyPakq/1B4+KI7VxE/InvPM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725401902; c=relaxed/simple;
-	bh=ofGtKLeOINGZt+upXE0xfK5KYPswpVR/C0fqSZ1f660=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=f5SMD6sBdLbfBxgsh/YbaCckMUDuAkMpzykBiEaeWhg0JCt+SMRa/SEbOaiLYtpXubSyOVFiZ2mhkI8hHAWuWnBj4U+cXOZ/8Dh8zNisp6cKH6moUyMt4kBhJr72+G1nq8XK3K/wuWj/SsTjAbNaDEtO5+894yAeTBkMpix3GdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gke3Wjn5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A706DC4CEC4;
-	Tue,  3 Sep 2024 22:18:21 +0000 (UTC)
+	s=arc-20240116; t=1725402406; c=relaxed/simple;
+	bh=YXQIagdDPc90ZbJET9jNpaM1MPJKmJ5Y5fngYc6zZ5E=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VZMM6QfOdfOIsPgcFMIvR2Co69DR7Vwe9M2ZEKtZZ6911mC8xz9L4Hl6YD6H7dv+Je6L9OfqOa1ZE4MtzfXdRAzUeYBwUmlHv08Bru2sfpZq77UfYVbB/QVYjrrDWC9kFf02JsvFpcfQcj60PoXPtwU5KMExDBb2qHgOT07xXiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZn4TZXV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE497C4CEC4;
+	Tue,  3 Sep 2024 22:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725401901;
-	bh=ofGtKLeOINGZt+upXE0xfK5KYPswpVR/C0fqSZ1f660=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gke3Wjn5dqoKGbiIjlmeVKG/Uji8+RsT/iTji1DWda8O2EOneTnCfE9IYIQBE3xLL
-	 9Hq23w02oVgePst9seHWNuObDevufpAOqki9LRTc9SsIa7fLr5xfcQcaBsfKdxZ7LQ
-	 9b3Ah99gYGoaOd5srztlbqgm/o+tDoYmvGiyKrV+Pd/2/Ln8GnNHkVKEdOswfPoUFf
-	 MtjadBFzjSmGfp7fMtkg1K8GFtVkHQH2VZJQdqwsdeTeoo08EuFz0qBl7R5fng2e+q
-	 0GCeKDKBBdXZhRUJKSrnnpJ+dQtdqy+KmM9GbXqKMd283c0QSE78kIyWL/zN37r7aC
-	 0CHE2RsDryp0A==
-Date: Tue, 3 Sep 2024 17:18:20 -0500
+	s=k20201202; t=1725402406;
+	bh=YXQIagdDPc90ZbJET9jNpaM1MPJKmJ5Y5fngYc6zZ5E=;
+	h=Date:From:To:Subject:In-Reply-To:From;
+	b=dZn4TZXVbXEzEwa3ibet6GkytN3NXh0+F+/hWh7n22CyMZmwuMO1drbR6aDqPSH/m
+	 1onS+XmaNIzxiX4h1AD6FfLhQyYnaF2/AgM8LQSsl2aVq3kh1VZZBtMEcyN3NWmoV7
+	 WlGawzRAr97kNfsueOFPzVcWLHcCL9fx1uyE4BVpWiZCD3Br+lCJ4EnLT86dFuTSFv
+	 RNtwJ1gX9LNZsCrEFoRM1ff4GhTGAT9H3wladciEnJy5WJx+dAMD0kSmMMoulZg4hk
+	 aulQSWoX0q7ifdHNpRfXx5NwOgTa64bW7nZm0ZcA6mpu5hGiXwivszhbdpATg3smEr
+	 PHbM0Q+6gtxrw==
+Date: Tue, 3 Sep 2024 17:26:44 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Tony Hutter <hutter2@llnl.gov>
-Cc: bhelgaas@google.com, minyard@acm.org, linux-pci@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Introduce Cray ClusterStor E1000 NVMe slot LED
- driver
-Message-ID: <20240903221820.GA26364@bhelgaas>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
+ parsed from DT
+Message-ID: <20240903222644.GA126427@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,179 +81,69 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40c7776f-b168-4cbe-a352-122e56fe7b31@llnl.gov>
+In-Reply-To: <Zszcps6bnCcdFa54@apocalypse>
 
-On Tue, Aug 27, 2024 at 02:03:48PM -0700, Tony Hutter wrote:
-> Add driver to control the NVMe slot LEDs on the Cray ClusterStor E1000.
-> The driver provides hotplug attention status callbacks for the 24 NVMe
-> slots on the E1000.  This allows users to access the E1000's locate and
-> fault LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs
-> entries.  This driver uses IPMI to communicate with the E1000 controller to
-> toggle the LEDs.
+On Mon, Aug 26, 2024 at 09:51:02PM +0200, Andrea della Porta wrote:
+> On 10:24 Wed 21 Aug     , Bjorn Helgaas wrote:
+> > On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
+> > > The of_pci_set_address() function parses devicetree PCI range
+> > > specifier assuming the address is 'sanitized' at the origin,
+> > > i.e. without checking whether the incoming address is 32 or 64
+> > > bit has specified in the flags.  In this way an address with no
+> > > OF_PCI_ADDR_SPACE_MEM64 set in the flags could leak through and
+> > > the upper 32 bits of the address will be set too, and this
+> > > violates the PCI specs stating that in 32 bit address the upper
+> > > bit should be zero.
 
-I hope/assume the interface is the same as one of the others, i.e.,
-the existing one added for NVMe behind VMD by
-https://git.kernel.org/linus/576243b3f9ea ("PCI: pciehp: Allow
-exclusive userspace control of indicators") or the new one for NPEM
-and the _DSM at
-https://lore.kernel.org/linux-pci/20240814122900.13525-3-mariusz.tkaczyk@linux.intel.com/
+> > I don't understand this code, so I'm probably missing something.  It
+> > looks like the interesting path here is:
+> > 
+> >   of_pci_prop_ranges
+> >     res = &pdev->resource[...];
+> >     for (j = 0; j < num; j++) {
+> >       val64 = res[j].start;
+> >       of_pci_set_address(..., val64, 0, flags, false);
+> >  +      if (OF_PCI_ADDR_SPACE_MEM64)
+> >  +        prop[1] = upper_32_bits(val64);
+> >  +      else
+> >  +        prop[1] = 0;
+> > 
+> > OF_PCI_ADDR_SPACE_MEM64 tells us about the size of the PCI bus
+> > address, but the address (val64) is a CPU physical address, not a PCI
+> > bus address, so I don't understand why of_pci_set_address() should use
+> > OF_PCI_ADDR_SPACE_MEM64 to clear part of the CPU address.
+> 
+> It all starts from of_pci_prop_ranges(), that is the caller of
+> of_pci_set_address().
 
-I suppose we intend that the ledmon utility will be able to drive
-these LEDs?  Whatever the user, we should try to minimize the number
-of different interfaces for this functionality.
+> val64 (i.e. res[j].start) is the address part of a struct resource
+> that has its own flags.  Those flags are directly translated to
+> of_pci_range flags by of_pci_get_addr_flags(), so any
+> IORESOURCE_MEM_64 / IORESOURCE_MEM in the resource flag will
+> respectively become OF_PCI_ADDR_SPACE_MEM64 /
+> OF_PCI_ADDR_SPACE_MEM32 in pci range.
 
-A few minor random comments from a quick look below.
+> What is advertised as 32 bit at the origin (val64) should not become
+> a 64 bit PCI address at the output of of_pci_set_address(), so the
+> upper 32 bit portion should be dropped. 
 
-> +config HOTPLUG_PCI_PCIE_CRAY_E1000
-> +	tristate "PCIE Hotplug extensions for Cray ClusterStor E1000"
+> This is explicitly stated in [1] (see page 5), where a space code of 0b10
+> implies that the upper 32 bit of the address must be zeroed out.
 
-s/PCIE/PCIe/
+OK, I was confused and thought IORESOURCE_MEM_64 was telling us
+something about the *CPU* address, but it's actually telling us
+something about what *PCI bus* addresses are possible, i.e., whether
+it's a 32-bit BAR or a 64-bit BAR.
 
-> +static ssize_t craye1k_show(struct kobject *kobj, struct kobj_attribute *kattr,
-> +			    char *buf);
-> +static ssize_t craye1k_store(struct kobject *kobj, struct kobj_attribute *kattr,
-> +			     const char *buf,
-> +			     size_t count);
-> +static void craye1k_new_smi(int iface, struct device *dev);
-> +static void craye1k_smi_gone(int iface);
-> +static void craye1k_msg_handler(struct ipmi_recv_msg *msg, void *user_msg_data);
+However, the CPU physical address space and the PCI bus address are
+not the same.  Generic code paths should account for that different by
+applying an offset (the offset will be zero on many platforms where
+CPU and PCI bus addresses *look* the same).
 
-Is it possible to reorder the function implementations such that these
-forward declarations are not needed?  That's the typical Linux style, so
-that ordering will be more familiar to readers.
+So a generic code path like of_pci_prop_ranges() that basically copies
+a CPU physical address to a PCI bus address looks broken to me.
 
-> +static atomic64_t *craye1k_lookup_stat(struct kobject *kobj, const char *name)
-> +{
-> +	struct craye1k *craye1k;
-> +	struct device *dev;
-> +	int i;
-> +
-> +	/* Lookup table for name -> atomic64_t offset */
-> +	const struct {
-> +		const char *name;
-> +		size_t offset;
-> +	} table[] = {
-> +		CRAYE1K_TABLE(check_primary),
-> +		CRAYE1K_TABLE(check_primary_failed),
-> +		CRAYE1K_TABLE(was_already_primary),
-> +		CRAYE1K_TABLE(was_not_already_primary),
-> +		CRAYE1K_TABLE(set_primary),
-> +		CRAYE1K_TABLE(set_initial_primary_failed),
-> +		CRAYE1K_TABLE(set_primary_failed),
-> +		CRAYE1K_TABLE(set_led_locate_failed),
-> +		CRAYE1K_TABLE(set_led_fault_failed),
-> +		CRAYE1K_TABLE(set_led_readback_failed),
-> +		CRAYE1K_TABLE(set_led_failed),
-> +		CRAYE1K_TABLE(get_led_failed),
-> +		CRAYE1K_TABLE(completion_timeout),
-> +		CRAYE1K_TABLE(wrong_msgid),
-> +		CRAYE1K_TABLE(request_failed)
-> +	};
+Maybe my expectation of this being described in DT is mistaken.
 
-Looks like possibly this table could be static instead of being on the
-stack?
-
-> + * __craye1k_set_primary() - Tell the BMC we want to be the primary server
-> + *
-> + * An E1000 board has two physical servers on it.  In order to set a slot
-> + * NVMe LED, this server needs to first tell the BMC that it's the primary
-> + * server.
-> + *
-> + * Returns: 0 on success, 1 otherwise.
-> + */
-> +
-
-Spurious blank line.
-
-> +static int __craye1k_set_primary(struct craye1k *craye1k)
-
-> + * craye1k_is_primary() - Are we the primary server?
-> + *
-> + * Returns: 1 if we are the primary server, 0 otherwise.
-> + */
-> +static int craye1k_is_primary(struct craye1k *craye1k)
-> +{
-> +	u8 byte = 0;
-> +	int rc;
-> +
-> +	/* Response byte is 0x1 on success */
-> +	rc = craye1k_do_command(craye1k, CRAYE1K_CMD_PRIMARY, &byte, 1);
-> +	atomic64_inc(&craye1k->check_primary);
-> +	if (rc == 0x1)
-> +		return 1;   /* success */
-> +
-> +	atomic64_inc(&craye1k->check_primary_failed);
-> +	return 0;   /* We are not the primary server node */
-> +}
-> +
-> +/*
-> + * craye1k_set_primary() - Attempt to set ourselves as the primary server
-> + *
-> + * Returns: 0 on success, 1 otherwise.
-
-Maybe return a negative error value like -EIO for failure?  Then the
-caller can simply pass that return value up.  Same for
-__craye1k_set_primary().
-
-> +	 * We know that our attention status callback functions have been swapped
-> +	 * into the PCI device's hotplug_slot->ops values.  We can use that
-> +	 * knowledge to lookup our craye1k.
-> +	 *
-> +	 * To do that, we use the current hotplug_slot->ops value, which is going
-> +	 * to be one of the entries in craye1k->ops[], and offset our slot number
-> +	 * to get the address of craye1k->ops[0].  We then use that with
-> +	 * container_of() to get craye1k.  Slots start at 1, so account for that.
-
-99% of this file fits in 80 columns.  This and one or two other
-comments use 81, which seems like a random width.  Can you reflow
-these to fit in 80?
-
-> +static int __craye1k_get_attention_status(struct hotplug_slot *hotplug_slot,
-> +					  u8 *status, bool set_primary)
-> +{
-> +	unsigned char slot;
-> +	int locate, fault;
-> +	int rc = 0;
-> +	struct craye1k *craye1k;
-> +
-> +	slot = PSN(to_ctrl(hotplug_slot));
-> +	if (!(slot >= 1 && slot <= 24)) {
-> +		rc = -EINVAL;
-> +		goto out;
-
-There's no cleanup at "out", so drop the "rc" and the label, use
-"return -EINVAL/-EIO/etc " directly here, and then "return 0" at the
-end.
-
-> +	}
-> +
-> +	craye1k = craye1k_from_hotplug_slot(hotplug_slot);
-> +
-> +	if (set_primary) {
-> +		if (craye1k_set_primary(craye1k) != 0) {
-> +			rc = -EIO;
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	locate = craye1k_get_slot_led(craye1k, slot, true);
-> +	if (locate == -1) {
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	fault = craye1k_get_slot_led(craye1k, slot, false);
-> +	if (fault == -1) {
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	if (rc != 0)
-> +		atomic64_inc(&craye1k->get_led_failed);
-> +
-> +	*status = locate << 1 | fault;
-> +
-> +out:
-> +	return rc;
-> +}
+Bjorn
 
