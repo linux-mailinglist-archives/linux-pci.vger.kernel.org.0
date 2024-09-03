@@ -1,62 +1,63 @@
-Return-Path: <linux-pci+bounces-12702-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12703-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE1196AA36
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 23:32:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD8096AA89
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 23:46:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 140D01F25BD3
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 21:32:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55B23282433
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Sep 2024 21:46:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A427126BE3;
-	Tue,  3 Sep 2024 21:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75C4126BF2;
+	Tue,  3 Sep 2024 21:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEFb0OGD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2WWDuC7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31D623D7;
-	Tue,  3 Sep 2024 21:32:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926BB1EBFEC;
+	Tue,  3 Sep 2024 21:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725399163; cv=none; b=aR+NTY16bqLrtlHJ0a6jMqfdHeckLoNh4T3QymZ5mDJT31uZS2MN29sXQcvlr83HRh9U0aP98UOqn80ULxlcTuaw77gOmzQ4JQsgFsOpmlhEgISJHNSUtQTPeHU3yEqYQRVhidh2MELwKlAFNH9RJ3nfrRwBuDzgiU/bw3hhTuo=
+	t=1725399966; cv=none; b=S7xHlO4UI6uecxPnuTFCdVRJsvtS4gZB6Jco26JUYnoauFvgt0H7EVt0dCthdbqbxUxH/MU68mtFt8srmxHg5Hd/eF3PMEG6KLG6ayky+S1cKRXgPujZbT3MJNk4z8vZb8Argrp1MbBP6UtJ8+fbHFwIahvVb4C6Gw++YEm1Pho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725399163; c=relaxed/simple;
-	bh=1PUjVCqjErd2tSXMz7+npk0yPYPdMQTbhHntugIF9E4=;
+	s=arc-20240116; t=1725399966; c=relaxed/simple;
+	bh=p7rqK+c3+AbaVlz6xMAoFuo6JQj+X/iXW+rvmpzRJmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=WzRAHFBS2W+njdTQ8Y6k2lDPKTKu0zkNb8rcZUKKcxOhl1NJLJEu9jw2VSDEoSrcupeoLfvlTCRNzn74ghq2+IfT6UBhKAOj/JXfyUtkcMzlyHcfw77LwEK78ENlv1qs+uzsfE7kuP410ofIHSARqcyl+nhxW9yDpQgej9y2iQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEFb0OGD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B05C4CEC4;
-	Tue,  3 Sep 2024 21:32:42 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=XsJcR/Q5dCMQs+LALR5lSYUh49zhBfk000kU1b6lhyd86yRlCIBTJsDeZ789NCFikXZgPW92Lx+dW2HljUFB8wBaYQ/FIf7TWqr+q0Q1lC3rx9UpYRa/tXG0z/1RsVcb3/73a4OCtpA0xkTj+EFYDnBrbkF7NRDbxajpqRoW6Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2WWDuC7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34AAC4CEC4;
+	Tue,  3 Sep 2024 21:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725399162;
-	bh=1PUjVCqjErd2tSXMz7+npk0yPYPdMQTbhHntugIF9E4=;
+	s=k20201202; t=1725399966;
+	bh=p7rqK+c3+AbaVlz6xMAoFuo6JQj+X/iXW+rvmpzRJmU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YEFb0OGD6Xk6NFc6FGeJSC7MBhKOOlQV4XpIj0igsjreZXQHcGLCQbsx/LRP/3I+o
-	 +qm4hZAy6JYsQuPQlOZAMO+kr6A3y62hFTpc/awuwWdmXjMjcZpIc2vI0qnTHmbOL9
-	 SwoCpd6UtUbzqoYTzAxdqKI5p/q3uoo7djbjKCa1KB9Pl+OAfq5jKt6FhrJIcgF2/h
-	 qLRCh5xHwJwL8yuRCKCF8Z5uc8QbXKbu3wBEQ9IcLuK9Byd+MhefqE3UtrLbLSPMKy
-	 aVdeZdRg6YC2W459wIRs9HgJ0Vqw/tjICZCcwj0wVUYEVtJ8LgiaoIrtis1kd2Vd28
-	 Mnoo+4F/cu64g==
-Date: Tue, 3 Sep 2024 16:32:40 -0500
+	b=K2WWDuC7149nQDSRkx090OlRMUUtZAfJ4FNvmOD3mufPec/fjv0x8ZNoZSBc0G+kE
+	 F+sA0gi3ArqwD1kOluWuD54yQuaEGWtNL8oT2uSqYpDDiMF5xODIaJtM/sutLF3Y1C
+	 IdydrjmbWAdZIDEGJZQ+PWV4UgBkFx2ckAgOMqoi0lO5oEMH0wgCuwkUXAN+/2gcsM
+	 f98oNWpmOxasgOe5gkYmms8GlnSCPUxwLn/wT/3XDKxp7Wej0d/C+llKShYaS+lGED
+	 jvv/b/8q05wU1OuM+sqxT6p6Al2sCrrP2IubT4TymSoKjLZpKngSvxu3mUfhaS2xjr
+	 NFKDwGKEQS9Og==
+Date: Tue, 3 Sep 2024 16:46:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Gary Li <Gary.Li@amd.com>, Mario Limonciello <superm1@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mathias Nyman <mathias.nyman@intel.com>,
-	"open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-	Daniel Drake <drake@endlessos.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v5 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in
- pci_dev_wait()
-Message-ID: <20240903213240.GA304079@bhelgaas>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	pratikrajesh.sampat@amd.com, michael.day@amd.com,
+	david.kaplan@amd.com, dhaval.giani@amd.com,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC PATCH 20/21] pci: Allow encrypted MMIO mapping via sysfs
+Message-ID: <20240903214604.GA304177@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,34 +66,65 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <525214d1-793e-412c-b3b2-b7e20645b9cf@amd.com>
+In-Reply-To: <028e2952-ad4f-465d-870e-93e1ae6268f6@amd.com>
 
-On Tue, Sep 03, 2024 at 01:32:30PM -0500, Mario Limonciello wrote:
-> On 9/3/2024 13:25, Bjorn Helgaas wrote:
-> > On Tue, Sep 03, 2024 at 12:31:00PM -0500, Mario Limonciello wrote:
-> > > On 9/3/2024 12:11, Bjorn Helgaas wrote:
-> > > ...
-> > 
-> > > >     8) The USB4 stack sees the device and assumes it is in D0, but it
-> > > >     seems to still be in D3cold.  What is this based on?  Is there a
-> > > >     config read that returns ~0 data when it shouldn't?
+On Mon, Sep 02, 2024 at 06:22:00PM +1000, Alexey Kardashevskiy wrote:
+> On 24/8/24 08:37, Bjorn Helgaas wrote:
+> > On Fri, Aug 23, 2024 at 11:21:34PM +1000, Alexey Kardashevskiy wrote:
+> > > Add another resource#d_enc to allow mapping MMIO as
+> > > an encrypted/private region.
 > > > 
-> > > Yes there is.  From earlier in the thread I have a [log] I shared.
-> > > 
-> > > The message emitted is from ring_interrupt_active():
-> > > 
-> > > "thunderbolt 0000:e5:00.5: interrupt for TX ring 0 is already enabled"
-> > 
-> > Right, that's in the cover letter, but I can't tell from this what the
-> > ioread32(ring->nhi->iobase + reg) returned.  It looks like this is an
-> > MMIO read of BAR 0, not a config read.
-> 
-> Yeah.  I suppose another way to approach this problem is to make something
-> else in the call chain poll PCI_PM_CTRL.
-> 
-> Polling at the start of nhi_runtime_resume() should also work.  For the
-> "normal" scenario it would just be a single read to PCI_PM_CTRL.
+> > > Unlike resourceN_wc, the node is added always as ability to
+> > > map MMIO as private depends on negotiation with the TSM which
+> > > happens quite late.
 
-It doesn't sound like this is anything specific to Thunderbolt, so
-there should be a generic solution.
+> > > @@ -46,6 +46,15 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+> > >   	vma->vm_ops = &pci_phys_vm_ops;
+> > > +	/*
+> > > +	 * Calling remap_pfn_range() directly as io_remap_pfn_range()
+> > > +	 * enforces shared mapping.
+> > 
+> > s/Calling/Call/
+> > 
+> > Needs some additional context about why io_remap_pfn_range() can't be
+> > used here.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f8f6ae5d077a9bdaf5cbf2ac960a5d1a04b47482
+> added this.
+> 
+> "IO devices do not understand encryption, so this memory must always be
+> decrypted" it says.
+
+Thanks for the pointer.  Given that hint, the pgprot_decrypted()
+inside io_remap_pfn_range() is ... at least *there*, if not obvious.
+io_remap_pfn_range() probably could benefit from a simple comment to
+highlight that.
+
+> But devices do understand encryption so forcing decryption is not wanted.
+> What additional context is missing here, that "shared" means
+> "non-encrypted"? Thanks,
+
+If "shared" means "non-encrypted", that would be useful.  That wasn't
+obvious to me.
+
+IIUC, in the "enc" case, you *want* the mapping to remain encrypted?
+In that case, it would be helpful to say something like
+"io_remap_pfn_range() always produces decrypted mappings, so use
+remap_pfn_range() directly to avoid the decryption".
+
+Renaming "enc" to "encrypted" would also be a nice hint.
+
+> > > +	 */
+> > > +	if (enc)
+> > > +		return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+> > > +				       vma->vm_end - vma->vm_start,
+> > > +				       vma->vm_page_prot);
+> > > +
+> > >   	return io_remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+> > >   				  vma->vm_end - vma->vm_start,
+> > >   				  vma->vm_page_prot);
+> 
+> -- 
+> Alexey
+> 
 
