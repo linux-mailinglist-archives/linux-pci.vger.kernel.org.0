@@ -1,229 +1,148 @@
-Return-Path: <linux-pci+bounces-12790-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12791-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE38996C8F7
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 22:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E709E96C952
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 23:11:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D242285164
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 20:50:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A47472853DD
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 21:11:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D16FA146D7F;
-	Wed,  4 Sep 2024 20:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2464714D433;
+	Wed,  4 Sep 2024 21:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IC3xmFZG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CLe0Urnv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE9762A02;
-	Wed,  4 Sep 2024 20:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AABD15E88
+	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 21:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725483005; cv=none; b=Uf8AfToTOsyHa7i0g8C0BjQrLNzhEZoRsQK/B7EAV6DmBQd9rvKlLRjCN/Lugi4nQrhjTtcSvjFPgOMy9ejCNRlEwCSnWHOxvdW1F5Tr4jK7zQb9AYi0pB2ZvY8FOqeQYrrZStjOl6BV9IYmISw5M5+l5pjHOrjHy9Edv3rNGV8=
+	t=1725484229; cv=none; b=n8rWQibF10yZ0CnZdLVFNPdzM/WjSX8zISz38uRfEQ9zKNOlzB7mWNCWaAHATQtT8dHg3EtR7MoUz5l4MTETLEqBbOxEcBOzoAEs3uVuofx9zdL/lXIX58vc5uVQ93TcPU8eUuyUJaXyaD5luKVN6TnoTHyu9xk8vo76OxjmWR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725483005; c=relaxed/simple;
-	bh=hMDviyqPpbNkAXtWMozFCrxEkhOype3sYzn9/eDJzS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bIxxYAdxJFTCcJToIk2BpzJhLJ7zYnv4dQItgIuFvLte/dRbktZPKiQvpdlVMGu7JEafHi24s0FBOEavfci06186y6Va2ySQ5f05qqs+o7H4yAAXxI4gmdcBvdFPZCzJCDwx3iHNgqE7b/ggXcKtiyFSif7qKrrYL7kMNrlx0go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IC3xmFZG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 484A6ZmK006005;
-	Wed, 4 Sep 2024 20:49:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LWxPeIqAejEe5oPCfx9IDxvc+KANAKRiwRmr9zEOadk=; b=IC3xmFZGYGZMjY7s
-	PIzk3yBHisGgtox70K/Oh3DafrmAmt+hbOpl4d1p5+5EJI4CJ3IQrRWnPizrpsLR
-	TV6Gnc84kzZMXDdVkGb003G9HmkYx+e1as1n8RRPM0nOHsYTLX1oEwxqVHcSV6vh
-	n8+ZD6bqai3JBa5H3Mnh58W3S51IJWiO9palOD4CrFvSoojIg+Hi+QjA31UQM0xJ
-	q5aWzLlasInIn/JrVH3G0x8Fu1GmpBgl7j8NduLgMq1uxpf0jves0HfLB98C5DMZ
-	qY5zgMtJXV6UIqN7Gv9rk0oH935N/wcXDaXFngtoOVk5MxzSQ3PWZNfUolptKFUp
-	Hl4AwQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41bt6742x4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 20:49:37 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 484KmAdj002821
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Sep 2024 20:49:35 GMT
-Received: from [10.81.25.230] (10.49.16.6) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Sep 2024
- 13:48:10 -0700
-Message-ID: <195b4937-dfba-4ef9-8381-0ba2bdbd6e4c@quicinc.com>
-Date: Wed, 4 Sep 2024 13:48:09 -0700
+	s=arc-20240116; t=1725484229; c=relaxed/simple;
+	bh=AaWK/QPXRZfLzR92qjHxzhe3iEAWiYE2gFeSf6BoHes=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sD/QOzc+6stimwPq5wRG9pUzy7SU6GBnc1FVFNlhn94vsRvuVLGan+K1Xfb2Qkv4eIP0JLjLqft/sGshWQeBHom1ug2EBFycWxJhx+UNqaDnWajaSK0lEf3XPbEPVOgyAT+tWLGg2tk0yDkifNatL8wic8pg/oyhe95/2Z8G56g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CLe0Urnv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725484225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmlDgdck4DQOj2zQLq7yI2rKc9oAlzHGpi1D8CJZoNo=;
+	b=CLe0UrnvCVzldiBMcEI9j89LvSTfGsrgiFkVA8oq+i2IzB6qHQMl80IIoSbNd5tVPqk41i
+	F0whKKRNaOqOwcrLs7GeXCiR/5Ehnv6DRivEZrSJr2PCTCfS75P0Qa0jG57dUqPE4LtfIm
+	0E402WhE9Tp0wBYLMek9Gc2tq2QZiHg=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-355-vxn9z5EwN9-B5t7MLS8V_A-1; Wed, 04 Sep 2024 17:10:24 -0400
+X-MC-Unique: vxn9z5EwN9-B5t7MLS8V_A-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-82a22a74353so138813839f.2
+        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 14:10:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725484223; x=1726089023;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EmlDgdck4DQOj2zQLq7yI2rKc9oAlzHGpi1D8CJZoNo=;
+        b=bb/v7+E74CdMDRKI9iLNcuxB4jYeiV/JTSp7HfZ4SP4XxTpvY7HaW6zl8bTB+nb8cX
+         VlN5XTNGxpPaXeAdR4ZdPFwVgEZs0DKjFdKxCMoLceNkGf66xpQ9MRzkO3YY1AxPkedF
+         LXMi71ZXi1cAjxCR/a0OX2jD7M7bauyv2/jY9sAs2SWJodZx/h+7dxR7pkwahyw8Bht5
+         hXouou5wJWLoDX7OyKT3vXoMhFn94PZ1Zd5x8dgdwdsDPeUbhmMNq4qcaqDBmM7lH55P
+         a4vARAJFJP8r4tkdOcZutPAuL10eIwMbSf0ntjf5w2NQkyQLzmATBwEHWfVkZeDodMg0
+         eZAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNSPbslmhFrDlLTsAgjpdv2qLDynJySQC6WdRWfFbRnzS7GIuteeYu7GfU47LqZrLELPBEDjyK0k4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXeBKloMa1WuXPDvJ400dQF11Ig2IQ2fkbIXX8aqi/p/7vpr0F
+	h6Kb1NIYtg0r04sqmjY9ZxrY++6Bqe/e8G3jGWIPTyttZY6NR+XeQg/Ity9zfbtw9uxSUDSY3bc
+	OJe3c7nW13qGF8qteNQW/OTvq+6zQAivKlKSH/f9aoPYQgbHpUHsloc/beg==
+X-Received: by 2002:a5e:8a0c:0:b0:81f:86e1:5a84 with SMTP id ca18e2360f4ac-82a262dccfcmr1147221039f.2.1725484223562;
+        Wed, 04 Sep 2024 14:10:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZYsadPqPXpc7RvQuadK1TsaP01DtwjD+z0URp/pH4uIMb05QskHkC3t5HSszJ5KAhNNz0jw==
+X-Received: by 2002:a5e:8a0c:0:b0:81f:86e1:5a84 with SMTP id ca18e2360f4ac-82a262dccfcmr1147219139f.2.1725484223197;
+        Wed, 04 Sep 2024 14:10:23 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-82a1a2f071fsm379684939f.6.2024.09.04.14.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2024 14:10:22 -0700 (PDT)
+Date: Wed, 4 Sep 2024 15:10:20 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Philipp Stanner <pstanner@redhat.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Krzysztof
+ =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
+Message-ID: <20240904151020.486f599e.alex.williamson@redhat.com>
+In-Reply-To: <ZtjCFR3kd5GfV_6m@surfacebook.localdomain>
+References: <20240725120729.59788-2-pstanner@redhat.com>
+	<20240903094431.63551744.alex.williamson@redhat.com>
+	<2887936e2d655834ea28e07957b1c1ccd9e68e27.camel@redhat.com>
+	<24c1308a-a056-4b5b-aece-057d54262811@kernel.org>
+	<dcbf9292616816bbce020994adb18e2c32597aeb.camel@redhat.com>
+	<20240904120721.25626da9.alex.williamson@redhat.com>
+	<ZtjCFR3kd5GfV_6m@surfacebook.localdomain>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/4] PCI: qcom: Add RX margining settings for 16.0 GT/s
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Johan Hovold
-	<johan@kernel.org>
-CC: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo
-	<shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix
- Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Chuanhua Lei <lchuanhua@maxlinear.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>,
-        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <abel.vesa@linaro.org>, <johan+linaro@kernel.org>
-References: <20240904-pci-qcom-gen4-stability-v6-0-ec39f7ae3f62@linaro.org>
- <20240904-pci-qcom-gen4-stability-v6-4-ec39f7ae3f62@linaro.org>
- <ZtguJs128O-N07Eg@hovoldconsulting.com>
- <20240904160422.gcyrdrzgc47w7pbd@thinkpad>
-From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-In-Reply-To: <20240904160422.gcyrdrzgc47w7pbd@thinkpad>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 3G2FaZ3_2d7nIn9G5XqtHjtOBkdK_n5p
-X-Proofpoint-GUID: 3G2FaZ3_2d7nIn9G5XqtHjtOBkdK_n5p
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-04_18,2024-09-04_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0
- mlxlogscore=746 lowpriorityscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409040157
 
+On Wed, 4 Sep 2024 23:24:53 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
+> Wed, Sep 04, 2024 at 12:07:21PM -0600, Alex Williamson kirjoitti:
+> > On Wed, 04 Sep 2024 15:37:25 +0200
+> > Philipp Stanner <pstanner@redhat.com> wrote:  
+> > > On Wed, 2024-09-04 at 17:25 +0900, Damien Le Moal wrote:  
+> 
+> ...
+> 
+> > > If vfio-pci can get rid of pci_intx() alltogether, that might be a good
+> > > thing. As far as I understood Andy Shevchenko, pci_intx() is outdated.
+> > > There's only a hand full of users anyways.  
+> > 
+> > What's the alternative?  
+> 
+> From API perspective the pci_alloc_irq_vectors() & Co should be used.
 
-On 9/4/24 09:04, Manivannan Sadhasivam wrote:
-> On Wed, Sep 04, 2024 at 11:53:42AM +0200, Johan Hovold wrote:
->> On Wed, Sep 04, 2024 at 12:42:00PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
->>> From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
->>>
->>> Add RX lane margining settings for 16.0 GT/s (GEN 4) data rate. These
->>> settings improve link stability while operating at high date rates and
->>> helps to improve signal quality.
->>>
->>> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
->>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>> [mani: dropped the code refactoring and minor changes]
->>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>> ---
->>>  drivers/pci/controller/dwc/pcie-designware.h  | 18 ++++++++++++++++
->>>  drivers/pci/controller/dwc/pcie-qcom-common.c | 31 +++++++++++++++++++++++++++
->>>  drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
->>>  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++-
->>>  drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++-
->>>  5 files changed, 56 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->>> index 51744ad25575..f5be99731f7e 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>> @@ -209,6 +209,24 @@
->>>  
->>>  #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
->>>  
->>> +/*
->>> + * 16.0 GT/s (GEN4) lane margining register definitions
->>
->> nit: Gen 4?
->>
->>> + */
->>> +#define GEN4_LANE_MARGINING_1_OFF		0xb80
->>
->> nit: upper case hex
->>
->>> +#define MARGINING_MAX_VOLTAGE_OFFSET		GENMASK(29, 24)
->>> +#define MARGINING_NUM_VOLTAGE_STEPS		GENMASK(22, 16)
->>> +#define MARGINING_MAX_TIMING_OFFSET		GENMASK(13, 8)
->>> +#define MARGINING_NUM_TIMING_STEPS		GENMASK(5, 0)
->>> +
->>> +#define GEN4_LANE_MARGINING_2_OFF		0xb84
->>
->> Same here
->>
->>> +#define MARGINING_IND_ERROR_SAMPLER		BIT(28)
->>> +#define MARGINING_SAMPLE_REPORTING_METHOD	BIT(27)
->>> +#define MARGINING_IND_LEFT_RIGHT_TIMING		BIT(26)
->>> +#define MARGINING_IND_UP_DOWN_VOLTAGE		BIT(25)
->>> +#define MARGINING_VOLTAGE_SUPPORTED		BIT(24)
->>> +#define MARGINING_MAXLANES			GENMASK(20, 16)
->>> +#define MARGINING_SAMPLE_RATE_TIMING		GENMASK(13, 8)
->>> +#define MARGINING_SAMPLE_RATE_VOLTAGE		GENMASK(5, 0)
->>>  /*
->>>   * iATU Unroll-specific register definitions
->>>   * From 4.80 core version the address translation will be made by unroll
->>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
->>> index dc7d93db9dc5..99b75e7f085d 100644
->>> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
->>> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
->>> @@ -43,3 +43,34 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
->>>  	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
->>>  }
->>>  EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
->>> +
->>> +void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
->>
->> I'd try to find a shorter symbol name here, "settings" seems redundant
->> after "set". Perhaps just
->>
->> 	qcom_pcie_common_enable_lane_margining()
->>
->> or
->>
->> 	qcom_pcie_common_enable_16gt_lane_margining()?
->>
+We can't replace a device level INTx control with a vector allocation
+function.
+ 
+> > vfio-pci has a potentially unique requirement
+> > here, we don't know how to handle the device interrupt, we only forward
+> > it to the userspace driver.  As a level triggered interrupt, INTx will
+> > continue to assert until that userspace driver handles the device.
+> > That's obviously unacceptable from a host perspective, so INTx is
+> > masked at the device via pci_intx() where available, or at the
+> > interrupt controller otherwise.  The API with the userspace driver
+> > requires that driver to unmask the interrupt, again resulting in a call
+> > to pci_intx() or unmasking the interrupt controller, in order to receive
+> > further interrupts from the device.  Thanks,  
 > 
-> This one looks better. Since lane margining is implemented in the receiver, we
-> don't really need 'rx' in the function name.
-> 
->> if these settings are indeed specific to 16 GT/s. But perhaps it's
->> better to let the helper honour pci->max_link_speed if different
->> settings will later be needed for higher speeds:
->>
->> 	if (pcie_link_speed[pci->max_link_speed] >= PCIE_SPEED_16_0GT)
->> 		qcom_pcie_common_enable_lane_margining(pci)
->>
-> 
-> I did thought about it during the review, but this setting claims to be for 16
-> GT/s only. So I wouldn't recommend applying it to other speeds without checking 
-> with Qcom.
-> 
-> Unfortunately, I'm on vacation for 2 weeks and have limited access to Qcom
-> internal docs/chat. So won't be able to check it soon. If Shashank could check
-> it, it is fine. But on the conservative side, let's stick to 16 GT/s only?
-> 
-> - Mani
+> I briefly read the discussion and if I understand it correctly the problem here
+> is in the flow: when the above mentioned API is being called. Hence it's design
+> (or architectural) level of issue and changing call from foo() to bar() won't
+> magically make problem go away. But I might be mistaken.
 
-Yes Mani I think we have to stick to 16 GT/s only for now as we haven't characterized 32 GT/s yet.
+Certainly from a vector allocation standpoint we can change to whatever
+is preferred, but the direct INTx manipulation functions are a
+different thing entirely and afaik there's nothing else that can
+replace them at a low level, nor can we just get rid of our calls to
+pci_intx().  Thanks,
 
+Alex
 
-> 
->>>  void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
->>> +void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci);
->>
->> And maybe something similar for the eq settings for symmetry.
->>
->> Johan
-> 
 
