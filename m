@@ -1,179 +1,174 @@
-Return-Path: <linux-pci+bounces-12716-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12717-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4B5796B179
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 08:22:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A764296B254
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 09:06:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68C591F21C47
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 06:22:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0DDC9B20E57
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 07:06:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC2885C5E;
-	Wed,  4 Sep 2024 06:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637BE13AD03;
+	Wed,  4 Sep 2024 07:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXTFruj1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y28fcv7m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DFB84E0A
-	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 06:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02EB6A8D2
+	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 07:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725430947; cv=none; b=S16xAGu62Wxh97BL2YMj5lGPpuGjt00HUKXHnVMBdCt1MgzZte9L4yZzokdy6lfjUBxr+w5OsYMmHAkfOa1UYY8IUaLzygi5R7xyqpli+JWO8rAuxRcAnYOTadB8/nFjenKisR6woyy6aahdwwWd+20V0y7GKK8zDNIYud4JGkA=
+	t=1725433604; cv=none; b=cb8lV5AiL/am+T7goDoL2ByPeWkkNKmTOG61qLEA+ZtgH9hkQPwF9evIPqAX+UoqWb8h8WDuKBc7hkMbazSai5dbHIsZ7rM7UUdzmkrDJvT0krG7+o+ov6yL/8nSWRHHte689XKH8+RLSkSmbBUXxr4OWBtWnfLvrRNBRAiwRUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725430947; c=relaxed/simple;
-	bh=FO7/eg2n+yly83LuRtxVU2WlOjHeRHJhaGPjhuvmLeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFRikhj5j78jbxsk1DNeWDpMKLNB7AZTf0lBHkl4hzmGC17/pWmAjvfk/pb7eIgKo1D9TdzQdjTyMEzDUWmRWOUIOSLTen2Jxz76vWJhXpyWISQkHu86RnBSX91ZA1I8UNqorEMb6NDxoZ/b57phLmwCcQ1ErLD/7J06bhKimGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xXTFruj1; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2057c6c57b5so2253995ad.1
-        for <linux-pci@vger.kernel.org>; Tue, 03 Sep 2024 23:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725430945; x=1726035745; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bvx4PCK6P/x70ytMbdp6+XNFJeNRoV9prf+YBUPPRO0=;
-        b=xXTFruj1r4hmU0+D91BUQP5CkIvyTfKBsFPI7WsQDX1Gt3cGPc7mdgDCjK/MDL5Fxf
-         MRsr3NtY67h5xePE9cFDZdCUaluXokxJegDfIs9m5OK/Mn4xwwaEBFHP976A8hP35jbB
-         mxeIcQHDl/TWK5iV6attimcbObn3mV5+K264/FOrzCf4j+QMYX4gY4eaXA5nii1/r5iX
-         Eno0dsyPmIOgQtxjRQlyq37wBIU0dKfnme8W4H0pJdCLLH6pae6ptCR/M+pXShBQDDPo
-         FeMhbOhZeL/aQUuBd6W0VLILGBlisnR2xumAwk84qQpUv14k3W8hfPqfNX0hX7kQYYtT
-         zYWQ==
+	s=arc-20240116; t=1725433604; c=relaxed/simple;
+	bh=9+4+02P6VdlWS5bH9NiDFW/JYVZ0bGvOd3je7eBy/Kk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pAfxc2+DYHYgxd8OviT97Ou+zOSZSxr+spPvITHg8GP0DfdF4oKmPv9oqqa6tCWNXw5e5hLNF3mzdK2VVvkWbuOie58RngmLl6biy8+mEtKupv1HfJPeRnnZiSdnnAw1CbmEpszmvJ5BwlL3lHoIxuG1rvEcxuDHMlpSeZfIaEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y28fcv7m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725433601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D1fOf/Lbka3oPuT1iX3a8CQcbtqm54HN8PC96Xte6gY=;
+	b=Y28fcv7m/+jK9Ob7RHQqywF49wyhafrxsqebwJ5poHD7o25lm8LerubC5YNG4J1TnRHSdm
+	4Lw7eiLlhAnhy3/D9NkgcKiXeDVNxVIbJoIIGPVetVQv26qEOUBQEmUC9yCD50jlMWxetS
+	owct4xD5mwRS/QVdrAc/q4t7AyysjW0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-5eQOkWz6Oee4uvisZI8cPA-1; Wed, 04 Sep 2024 03:06:40 -0400
+X-MC-Unique: 5eQOkWz6Oee4uvisZI8cPA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42bb9fa67c5so9223715e9.1
+        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 00:06:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725430945; x=1726035745;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bvx4PCK6P/x70ytMbdp6+XNFJeNRoV9prf+YBUPPRO0=;
-        b=PPU+MV/uP6V1lW+l44uyuGdbTPP8qpmhnuZxyBC8nlqnbvaeOuMaOGiHz4t5bRaYJq
-         3hPwY5kRU3Z8b/FISj47bFbYVW0CZkPEz5zv3YK81MDP3h+HVrjFvp4YgX+YCF4OD7Ms
-         3PtFvWypyKNOlYsVAmeATvxrAk2iZ9btWxve82yBiiYl9lpt4uzUCCwreo7zn8b6FSRi
-         O1mDxpAWoqTP2FJO+Sq83Wh6HibXyCDE7fePGQvrIaRVEKtV0NyFvI4jauSOi5oZCWAM
-         PUOW9plyB9Jp8adXry7igS03SLuNkAGpcEh/ZZueYB6w2gSZ4dnSlz9jBMTTXEwNaZQl
-         CDhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFUzvj3RRVjpFub1+5BE90Lwj8ZNJ0r4dKWMq0LojsPsKuR9Svqst9qaquxXkHCGM5awDozfR5Zig=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq3x7AT1yLH3HpqgNomcagfTvdACs24dMWFZ63JddhbkCPPdtV
-	K5eHRDvDTgGqkGp99QrBPEej0XSVQTUIOu70bfiRAyhbz1N7+lRhfvpFHd5tPA==
-X-Google-Smtp-Source: AGHT+IFxH6Rr1LsBK8g6/owk9LowGpE1jvBIhUi6gZeytNmBAPTC6+GyIjdjZd2Lg+PefbI6Bg1K9Q==
-X-Received: by 2002:a17:902:dac1:b0:202:4bd9:aea5 with SMTP id d9443c01a7336-206b833f304mr21086275ad.14.1725430944940;
-        Tue, 03 Sep 2024 23:22:24 -0700 (PDT)
-Received: from thinkpad ([120.56.207.202])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206aea38435sm7168105ad.166.2024.09.03.23.22.20
+        d=1e100.net; s=20230601; t=1725433599; x=1726038399;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D1fOf/Lbka3oPuT1iX3a8CQcbtqm54HN8PC96Xte6gY=;
+        b=nEbVZGPHXf8dzAky8fCguCATRUrh9+Ut9nuq94w6+TDNWZaCZRe960tBNhCu/ZcJp5
+         TD6Oh+k3tR9sOQxba+Hx98cr5xHPc4VhD86fkGBWDi2MbT1hISBv5K/7RLaXfY5bzKRJ
+         g0C10xP1rzUji8FTIjWZ84JUHH/wH2ItlGSbA6Fxe5YNsLg8HKBRLkkZVJznuR4KKjVe
+         nJei4ai7gcR4oWthddQHPiZMftrmrxZLM2FC9WtAiyNurSZSPPhr2Y0Ir7vE+dYHX0SS
+         JZ8SP7t4a+97iCS8paIXRW2tqJwQx9iT/XvcrTxCg4niNl/yrbbzoZzvgoU3JSujOEzR
+         qLgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqdM1fmHPyRzNYB478hFMzTo6ltZftKtb4O77DcwgkNK5dfP6cEQS+CxHm7UBnZtZ7it6S2b/bmTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrX73XMleduar5IlXPd72IFrW0ZXY+UNcjK4Tz+YzfM2xMvTVk
+	C6cu4EbNpVlNCYQOXkxhi/PbmQhazn7CNq7r6qDOh0/z7CtCpJGhoii8Qr1Cj6QB/Clr55fh1mT
+	nWS4QY3vQJQkUr57ATEmvXzwERA6qm6RVMWnbAPFw7aBR5R0CLm4Zrz+KsQ==
+X-Received: by 2002:a05:600c:3b8e:b0:426:616e:db8d with SMTP id 5b1f17b1804b1-42bb01b556bmr154098925e9.15.1725433598815;
+        Wed, 04 Sep 2024 00:06:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHf/Kc6FZV8G94W1sYODGsLkpfpa2DDiOzZF4FZwEIEwJQGn0yGP3bHFUfookRalM2sYhKFPA==
+X-Received: by 2002:a05:600c:3b8e:b0:426:616e:db8d with SMTP id 5b1f17b1804b1-42bb01b556bmr154098685e9.15.1725433598350;
+        Wed, 04 Sep 2024 00:06:38 -0700 (PDT)
+Received: from dhcp-64-16.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6e33f5esm191840235e9.39.2024.09.04.00.06.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 23:22:24 -0700 (PDT)
-Date: Wed, 4 Sep 2024 11:52:19 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Keith Busch <kbusch@kernel.org>, nirmal.patel@linux.intel.com,
-	jonathan.derrick@linux.dev, acelan.kao@canonical.com,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: vmd: Delay interrupt handling on MTL VMD controller
-Message-ID: <20240904062219.x7kft2l3gq4qsojc@thinkpad>
-References: <20240903025544.286223-1-kai.heng.feng@canonical.com>
- <20240903042852.v7ootuenihi5wjpn@thinkpad>
- <CAAd53p4EWEuu-V5hvOHtKZQxCJNf94+FOJT+_ryu0s2RpB1o-Q@mail.gmail.com>
- <ZtciXnbQJ88hjfDk@kbusch-mbp>
- <CAAd53p4cyOvhkorHBkt227_KKcCoKZJ+SM13n_97fmTTq_HLuQ@mail.gmail.com>
+        Wed, 04 Sep 2024 00:06:38 -0700 (PDT)
+Message-ID: <2887936e2d655834ea28e07957b1c1ccd9e68e27.camel@redhat.com>
+Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Krzysztof
+ =?UTF-8?Q?Wilczy=C5=84ski?=
+	 <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
+Date: Wed, 04 Sep 2024 09:06:37 +0200
+In-Reply-To: <20240903094431.63551744.alex.williamson@redhat.com>
+References: <20240725120729.59788-2-pstanner@redhat.com>
+	 <20240903094431.63551744.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAd53p4cyOvhkorHBkt227_KKcCoKZJ+SM13n_97fmTTq_HLuQ@mail.gmail.com>
 
-On Wed, Sep 04, 2024 at 09:57:08AM +0800, Kai-Heng Feng wrote:
-> On Tue, Sep 3, 2024 at 10:51 PM Keith Busch <kbusch@kernel.org> wrote:
-> >
-> > On Tue, Sep 03, 2024 at 03:07:45PM +0800, Kai-Heng Feng wrote:
-> > > On Tue, Sep 3, 2024 at 12:29 PM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Tue, Sep 03, 2024 at 10:55:44AM +0800, Kai-Heng Feng wrote:
-> > > > > Meteor Lake VMD has a bug that the IRQ raises before the DMA region is
-> > > > > ready, so the requested IO is considered never completed:
-> > > > > [   97.343423] nvme nvme0: I/O 259 QID 2 timeout, completion polled
-> > > > > [   97.343446] nvme nvme0: I/O 384 QID 3 timeout, completion polled
-> > > > > [   97.343459] nvme nvme0: I/O 320 QID 4 timeout, completion polled
-> > > > > [   97.343470] nvme nvme0: I/O 707 QID 5 timeout, completion polled
-> > > > >
-> > > > > The is documented as erratum MTL016 [0]. The suggested workaround is to
-> > > > > "The VMD MSI interrupt-handler should initially perform a dummy register
-> > > > > read to the MSI initiator device prior to any writes to ensure proper
-> > > > > PCIe ordering." which essentially is adding a delay before the interrupt
-> > > > > handling.
-> > > > >
-> > > >
-> > > > Why can't you add a dummy register read instead? Adding a delay for PCIe
-> > > > ordering is not going to work always.
-> > >
-> > > This can be done too. But it can take longer than 4us delay, so I'd
-> > > like to keep it a bit faster here.
-> >
-> > An added delay is just a side effect of the read. The read flushes
-> > pending device-to-host writes, which is most likely what the errata
-> > really requires. I think Mani is right, you need to pay that register
-> > read penalty to truly fix this.
-> 
-> OK, will change the quirk to perform dummy register read.
-> 
-> But I am not sure which is the "MSI initiator device", is it VMD
-> controller or NVMe devices?
-> 
+On Tue, 2024-09-03 at 09:44 -0600, Alex Williamson wrote:
+> On Thu, 25 Jul 2024 14:07:30 +0200
+> Philipp Stanner <pstanner@redhat.com> wrote:
+>=20
+> > pci_intx() is a function that becomes managed if
+> > pcim_enable_device()
+> > has been called in advance. Commit 25216afc9db5 ("PCI: Add managed
+> > pcim_intx()") changed this behavior so that pci_intx() always leads
+> > to
+> > creation of a separate device resource for itself, whereas earlier,
+> > a
+> > shared resource was used for all PCI devres operations.
+> >=20
+> > Unfortunately, pci_intx() seems to be used in some drivers'
+> > remove()
+> > paths; in the managed case this causes a device resource to be
+> > created
+> > on driver detach.
+> >=20
+> > Fix the regression by only redirecting pci_intx() to its managed
+> > twin
+> > pcim_intx() if the pci_command changes.
+> >=20
+> > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
+>=20
+> I'm seeing another issue from this, which is maybe a more general
+> problem with managed mode.=C2=A0 In my case I'm using vfio-pci to assign
+> an
+> ahci controller to a VM.
 
-'MSI initiator' should be the NVMe device. My understanding is that the
-workaround suggests reading the NVMe register from the MSI handler before doing
-any write to the device to ensures that the previous writes from the device are
-flushed.
+"In my case" doesn't mean OOT, does it? I can't fully follow.
 
-And this sounds like the workaround should be done in the NVMe driver as it has
-the knowledge of the NVMe registers. But isn't the NVMe driver already reading
-CQE status first up in the ISR?
+> =C2=A0 ahci_init_one() calls pcim_enable_device()
+> which sets is_managed =3D true.=C2=A0 I notice that nothing ever sets
+> is_managed to false.=C2=A0 Therefore now when I call pci_intx() from vfio=
+-
+> pci
+> under spinlock, I get a lockdep warning
 
-- Mani
+I suppose you see the lockdep warning because the new pcim_intx() can=20
+now allocate, whereas before 25216afc9db5 it was pcim_enable_device()
+which allocated *everything* related to PCI devres.
 
-> Kai-Heng
-> 
-> >
-> > > > > +     /* Erratum MTL016 */
-> > > > > +     VMD_FEAT_INTERRUPT_QUIRK        = (1 << 6),
-> > > > >  };
-> > > > >
-> > > > >  #define VMD_BIOS_PM_QUIRK_LTR        0x1003  /* 3145728 ns */
-> > > > > @@ -90,6 +94,8 @@ static DEFINE_IDA(vmd_instance_ida);
-> > > > >   */
-> > > > >  static DEFINE_RAW_SPINLOCK(list_lock);
-> > > > >
-> > > > > +static bool interrupt_delay;
-> > > > > +
-> > > > >  /**
-> > > > >   * struct vmd_irq - private data to map driver IRQ to the VMD shared vector
-> > > > >   * @node:    list item for parent traversal.
-> > > > > @@ -105,6 +111,7 @@ struct vmd_irq {
-> > > > >       struct vmd_irq_list     *irq;
-> > > > >       bool                    enabled;
-> > > > >       unsigned int            virq;
-> > > > > +     bool                    delay_irq;
-> > > >
-> > > > This is unused. Perhaps you wanted to use this instead of interrupt_delay?
-> > >
-> > > This is leftover, will scratch this.
-> >
-> > Maybe you should actually use it instead of making a global? The quirk
-> > says it is device specific, so no need to punish every device if it
-> > doesn't need it (unlikely as it is to see such a thing).
+>  as I no go through pcim_intx()
+> code after 25216afc9db5=C2=A0
 
--- 
-மணிவண்ணன் சதாசிவம்
+You alwas went through pcim_intx()'s logic. The issue seems to be that
+the allocation step was moved.
+
+> since the previous driver was managed.
+
+what do you mean by "previous driver"?
+
+> =C2=A0 It seems
+> like we should be setting is_managed to false is the driver release
+> path, right?
+
+So the issue seems to be that the same struct pci_dev can be used by
+different drivers, is that correct?
+
+If so, I think that can be addressed trough having
+pcim_disable_device() set is_managed to false as you suggest.
+
+Another solution can could at least consider would be to use a
+GFP_ATOMIC for allocation in get_or_create_intx_devres().
+
+I suppose your solution is the better one, though.
+
+
+P.
+
+> =C2=A0 Thanks,
+>=20
+> Alex
+>=20
+
 
