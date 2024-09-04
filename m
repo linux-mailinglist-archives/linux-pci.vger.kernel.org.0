@@ -1,92 +1,93 @@
-Return-Path: <linux-pci+bounces-12751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DB3F96BEC9
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 15:40:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3091096BED8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 15:42:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D98AB2D47D
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 13:29:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23483B29721
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 13:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC9B1DA116;
-	Wed,  4 Sep 2024 13:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 002911DA630;
+	Wed,  4 Sep 2024 13:37:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/9RN6ZY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VpfYKAi3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E091CF7B9
-	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 13:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AB9185948
+	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 13:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725456579; cv=none; b=UYKLifu7yuPKsDBjGAAPQCZSuFXaP6bhxISSf6f1oX6oRWDYohj2u2LsY5r4Jj5EvS16GVdD1LquCsrpTxv75eWMCPa1mHroKnHG1KRHRaaXEXaORunqHXxFQRFUZEigahryNF7Foqr/1irFRwM4xptYnodh6tCxOl+G21ogHZ8=
+	t=1725457052; cv=none; b=j2D4K2LJNiBlETlZNTyj/4VcN1fbv277CD9c7G/IyKtwWfIFlyCGn4bGptCB8Bzlb9H3fGBBoN789aET+wMc0ZLIkq8XbpFD0arqr7dLMv2FKzwdAaLuriNAlyjJN9WKok2o8kyhRAQNdwHF9LoOuasv7nFqHjrlCAgwdh2/FHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725456579; c=relaxed/simple;
-	bh=BSz60P1IrsR7U2d5P+R2ikILGxiRJcRQZaxSjdr0EAE=;
+	s=arc-20240116; t=1725457052; c=relaxed/simple;
+	bh=BINDG+h5Rx9JyjiVgATPaQ1ON/8FRd4Uo930XEEoRdI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=f40ecbzzD/D1p0gLDxfP8g9AOMTrjKsuP9OYhJLz9V6CReAowULSwToSP/N0Jwnu4WhfKLgq2Hz4VfLTV3wE7RAUBJxLe5qASXhPAIjbX4DbQgo2ZEIsHcMF9ohm4U1Dyqvh1QkgyIO+D4nfEgw/c1rX5CNg+dQbw5pN22UHKgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z/9RN6ZY; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:MIME-Version; b=Ds/3mNkfeM11Cd+WkR8/xXYYHRh9uU1HXBVIPI0prjPHRF4ykc2S9mXbD7Zyhp543J2kHrKeSpjjpyoPAZQkHfKJiAAUuGXmabfJveMlg7b4OUtTeOuEMCdJU/XiR+orqrhWk1At0pGwgJNRBlGk5e6fU1ic/i3WDjXvWwGTbKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VpfYKAi3; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725456576;
+	s=mimecast20190719; t=1725457050;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sLYHw9iWqzWp7KnKRWoIkY5cQ6gZDO+n4+MBojwCGY8=;
-	b=Z/9RN6ZYxlbx+7SzeVRfuxooqh2DZzVYjHJ/OpXgxC3utfKOy2zJxNjT2VnnwofG3qdHzj
-	YnN7C3+IEz228eCjsu4qN3/XfB43O13DW9/UEQtFJ869fkGfqtkEtTU7lYg1g+sguTxIqk
-	3juK5qG3s+1lirI+aucHRsuqsTWU+pE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=BINDG+h5Rx9JyjiVgATPaQ1ON/8FRd4Uo930XEEoRdI=;
+	b=VpfYKAi3gVY53XDDMvBP+RE6RLRuBJ/cZWyQjdyy4I13Kh6Zv0k7aORLcRcqiIXT+yULNn
+	2e0ZguoHE3sRTIDrJLvh/je75NEfHY/EXaEY7+ny3s9h88dnB9S5ROqnMi+V1OKVBvfNWs
+	zZis+fx74VCE1XCIVVlCncO6z0mNwkU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-561-o9sNHEVjPNKSB-bCV8A1Ng-1; Wed, 04 Sep 2024 09:29:35 -0400
-X-MC-Unique: o9sNHEVjPNKSB-bCV8A1Ng-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42bb2899d57so7979365e9.3
-        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 06:29:35 -0700 (PDT)
+ us-mta-176-yZ9r8tf2PMGhnVBNAb9DNA-1; Wed, 04 Sep 2024 09:37:29 -0400
+X-MC-Unique: yZ9r8tf2PMGhnVBNAb9DNA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-374bacd5cccso3299773f8f.1
+        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 06:37:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725456574; x=1726061374;
+        d=1e100.net; s=20230601; t=1725457048; x=1726061848;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=sLYHw9iWqzWp7KnKRWoIkY5cQ6gZDO+n4+MBojwCGY8=;
-        b=T9mxJ33FizA5+Yf9DAQgibQIV4KRT1XpRqjrGntNCj4Xtk6tgc41YT+gFj0qRVbC+f
-         hGEiH8X6zY2r/zbg1uhq7njyRNu1pFF8YRFE3KshdImTwjXl/y5a4aIAe8hbmiVG5Lg/
-         IdWcZlYCaDWb77+nn8sQUAeas8pGgPOH7MrdXk4rh8R+hCkyxHMmWxEw2soiHw0nLolt
-         AhYrcPczdMLt9b79hmOMYZuUz7yMcSfArbaRlARoE6D2Do7Qm7F3Xhz7q4Pu3Zbc4GXf
-         Ezbk6oVFqd5nvwmSQOesUTv106aiQmmXTZJ/k+JNRgkH8kZm3oFmV6TPkknG8jFQcD5W
-         fi/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWAdQ1jwAxzukaJQwoXQ90rPCwPAnHjFOYR8UhgshxIqD9KCvMCaAsn0Dn0PjWOEf1Mn4tLoXz/RDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiS4GqbsjcHFFeV5Clb+4oTBb6JlI8UsPMifkcDP+S6/icMjQJ
-	1b81EoaHRdCE9tWDAATs4kpRV1vVPFfHYkzJOn4ag1N7RQqtCWjdbnSCU7igb077fbAraPHVGSd
-	M6ICPYDXO98kUtwtrsu0x2K+mz6siiGfQ3l/09stEjpbGxYDdPH4HNYSaPg==
-X-Received: by 2002:a05:600c:5125:b0:426:6667:bbbe with SMTP id 5b1f17b1804b1-42c9544f182mr21474895e9.9.1725456573979;
-        Wed, 04 Sep 2024 06:29:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHik21ZJ3vWD7/R0bF3eBiU2vdlbN43GCOhBudbhWvH6uYy2AYEX29uwzkfipqdixElqtt8EA==
-X-Received: by 2002:a05:600c:5125:b0:426:6667:bbbe with SMTP id 5b1f17b1804b1-42c9544f182mr21474505e9.9.1725456573277;
-        Wed, 04 Sep 2024 06:29:33 -0700 (PDT)
+        bh=BINDG+h5Rx9JyjiVgATPaQ1ON/8FRd4Uo930XEEoRdI=;
+        b=PiA34SSNpOvqGuTPFIrACwcotOskIsC/5bS1euyBSQcBJa+9C9xqEBs9zJbWWN0ntM
+         9Y+H8+BQTtc+djCcp4RhX5nfFHVHN/wTXxH5TfTYzPQZYqSv9SgiCLFa3lvOkcnUdDbO
+         u7G9Hiojhb7VtWP6E8HU1lr1Y+Vjv8FwoE933xq6BHXv+kWcVjYh4LWTZlPuyVPtxJZJ
+         ri0a0lVh2E7vgrWNJuJtgj4QEiidU1W6WFOF2AKXvJXwBCqR+t4x5Y1qxXp8GYHsLXKL
+         zz7eZ26TNqGzGAUhzR7rGufkH8zwu+nAdBSR/KSKfYGWOHuXAri2Q5457PLBZk1KmRdp
+         xjGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIm7geH4YN0acotZVrL0Kk4qg5xcinHIaNhauqt/S8WjP+mbUef+ph/RkXdQr74QyCtILzb4KQxj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyytq0gt6yOE3WEQW9+DOLCstsUMJBMPWNqAZYu+ugcBOWtxqbm
+	66GjAoGqSH8ADKgGjc9JWGPQkYLXJGVQ7TBnSEikLD3vd++Rje8B6ZUi7SJkvtboL05CQ01PSDo
+	6ppZcMvNiwGKaSBJiPgFQOlStzCJAh5PbXEN7rQbtjvoapHtc4xRL11ZWWQ==
+X-Received: by 2002:adf:e98f:0:b0:374:c287:2af9 with SMTP id ffacd0b85a97d-374c2872b74mr7672907f8f.46.1725457047813;
+        Wed, 04 Sep 2024 06:37:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxB+ozwdpXZ1ywtiN1p4tBdOX0ZCg6hM/KW4WkMtObdCBTq5iYWfbp++lwQXsKtQ4M4kZH3g==
+X-Received: by 2002:adf:e98f:0:b0:374:c287:2af9 with SMTP id ffacd0b85a97d-374c2872b74mr7672885f8f.46.1725457047215;
+        Wed, 04 Sep 2024 06:37:27 -0700 (PDT)
 Received: from dhcp-64-16.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb85ffbadsm197858155e9.12.2024.09.04.06.29.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42b9e7b7f87sm203837005e9.1.2024.09.04.06.37.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 06:29:32 -0700 (PDT)
-Message-ID: <717e86b10072f7c69f2f9534eb4649f4effe0eb5.camel@redhat.com>
+        Wed, 04 Sep 2024 06:37:26 -0700 (PDT)
+Message-ID: <dcbf9292616816bbce020994adb18e2c32597aeb.camel@redhat.com>
 Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
 From: Philipp Stanner <pstanner@redhat.com>
-To: Alex Williamson <alex.williamson@redhat.com>
+To: Damien Le Moal <dlemoal@kernel.org>, Alex Williamson
+	 <alex.williamson@redhat.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Krzysztof
  =?UTF-8?Q?Wilczy=C5=84ski?=
 	 <kwilczynski@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-Date: Wed, 04 Sep 2024 15:29:31 +0200
-In-Reply-To: <20240904065726.1f7275b6.alex.williamson@redhat.com>
+	linux-kernel@vger.kernel.org
+Date: Wed, 04 Sep 2024 15:37:25 +0200
+In-Reply-To: <24c1308a-a056-4b5b-aece-057d54262811@kernel.org>
 References: <20240725120729.59788-2-pstanner@redhat.com>
 	 <20240903094431.63551744.alex.williamson@redhat.com>
 	 <2887936e2d655834ea28e07957b1c1ccd9e68e27.camel@redhat.com>
-	 <20240904065726.1f7275b6.alex.williamson@redhat.com>
+	 <24c1308a-a056-4b5b-aece-057d54262811@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
@@ -97,14 +98,12 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-09-04 at 06:57 -0600, Alex Williamson wrote:
-> On Wed, 04 Sep 2024 09:06:37 +0200
-> Philipp Stanner <pstanner@redhat.com> wrote:
->=20
+On Wed, 2024-09-04 at 17:25 +0900, Damien Le Moal wrote:
+> On 2024/09/04 16:06, Philipp Stanner wrote:
 > > On Tue, 2024-09-03 at 09:44 -0600, Alex Williamson wrote:
 > > > On Thu, 25 Jul 2024 14:07:30 +0200
 > > > Philipp Stanner <pstanner@redhat.com> wrote:
-> > > =C2=A0=20
+> > >=20
 > > > > pci_intx() is a function that becomes managed if
 > > > > pcim_enable_device()
 > > > > has been called in advance. Commit 25216afc9db5 ("PCI: Add
@@ -128,36 +127,22 @@ On Wed, 2024-09-04 at 06:57 -0600, Alex Williamson wrote:
 > > > > twin
 > > > > pcim_intx() if the pci_command changes.
 > > > >=20
-> > > > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")=C2=A0=20
+> > > > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
 > > >=20
 > > > I'm seeing another issue from this, which is maybe a more general
 > > > problem with managed mode.=C2=A0 In my case I'm using vfio-pci to
 > > > assign
 > > > an
-> > > ahci controller to a VM.=C2=A0=20
+> > > ahci controller to a VM.
 > >=20
 > > "In my case" doesn't mean OOT, does it? I can't fully follow.
->=20
-> "OOT" Out Of Tree?=C2=A0 No, "In my case" is simply introducing the
-> scenario
-> in which I see the issue.=C2=A0 vfio-pci is an in-tree driver used to
-> attach
-> devices to userspace drivers, such as QEMU.=C2=A0 The ahci driver is
-> loaded
-> during system boot, setting the is_managed flag.=C2=A0 The ahci driver is
-> then unbound from the device and the vfio-pci driver is bound.=C2=A0 The
-> vfio-pci driver provides a uAPI for userspace drivers to operate a
-> device in an an IOMMU protected context.
-
-Alright, thx for the clarification.
-
-> =C2=A0
+> >=20
 > > > =C2=A0 ahci_init_one() calls pcim_enable_device()
 > > > which sets is_managed =3D true.=C2=A0 I notice that nothing ever sets
 > > > is_managed to false.=C2=A0 Therefore now when I call pci_intx() from
 > > > vfio-
 > > > pci
-> > > under spinlock, I get a lockdep warning=C2=A0=20
+> > > under spinlock, I get a lockdep warning
 > >=20
 > > I suppose you see the lockdep warning because the new pcim_intx()
 > > can=20
@@ -166,155 +151,79 @@ Alright, thx for the clarification.
 > > which allocated *everything* related to PCI devres.
 > >=20
 > > > =C2=A0as I no go through pcim_intx()
-> > > code after 25216afc9db5=C2=A0=C2=A0=20
+> > > code after 25216afc9db5=C2=A0
 > >=20
 > > You alwas went through pcim_intx()'s logic. The issue seems to be
 > > that
 > > the allocation step was moved.
->=20
-> Unintentionally, yes, I believe so.=C2=A0 vfio-pci is not a managed,
-> devres
-> driver and therefore had no expectation of using the managed code
-> path.
-
-Yes, I agree this needs to be fixed through the solution you proposed.
-
->=20
-> > > since the previous driver was managed.=C2=A0=20
+> >=20
+> > > since the previous driver was managed.
 > >=20
 > > what do you mean by "previous driver"?
 >=20
-> As noted, the ahci driver is first bound to the device at boot,
-> unbound, and the vfio-pci driver bound to the device.=C2=A0 The ahci
-> driver
-> is the previous driver.
+> The AHCI driver... When attaching a PCI dev to vfio to e.g.
+> passthrough to a VM,
+> the device driver must first be unbound and the device bound to vfio-
+> pci. So we
+> switch from ahci/libata driver to vfio. When vfio tries to enable
+> intx with
+> is_managed still true from the use of the device by ahci, problem
+> happen.
 >=20
+> >=20
 > > > =C2=A0 It seems
 > > > like we should be setting is_managed to false is the driver
 > > > release
-> > > path, right?=C2=A0=20
+> > > path, right?
 > >=20
 > > So the issue seems to be that the same struct pci_dev can be used
 > > by
 > > different drivers, is that correct?
->=20
-> Yes, and more generically, the driver release should undo everything
-> that has been configured by the driver probe.
->=20
+> >=20
 > > If so, I think that can be addressed trough having
 > > pcim_disable_device() set is_managed to false as you suggest.
->=20
-> If that's sufficient and drivers only call pcim_disable_device() in
-> their release function.
-
-pcim_disable_device() is not intended to be used directly by drivers.
-It's basically the devres callback for pcim_enable_device() and is
-called in everyone's release path automatically by devres.
-(I agree that the naming is not superbe)
-
-> =C2=A0 I also note that f748a07a0b64 ("PCI: Remove
-> legacy pcim_release()") claims that:
->=20
-> =C2=A0 Thanks to preceding cleanup steps, pcim_release() is now not neede=
-d
-> =C2=A0 anymore and can be replaced by pcim_disable_device(), which is the
-> =C2=A0 exact counterpart to pcim_enable_device().
->=20
-> However, that's not accurate as pcim_enable_device() adds a devm
-> action, unconditionally calls pci_enable_device() and sets is_managed
-> to true.
-
-It's not accurate in regards with is_managed.
-
-The rest is fine IMO. The devres callback shall be added, and the
-unconditional call to pci_enable_device() is also desired.
-
-> =C2=A0 If we assume pcim_pin_device() is a valid concept, don't we
-> still need to remove the devm action as well?
-
-No. As pcim_disable_device() is the very devres callback, it does not
-need to remove itself. Devres calls it once and then it's gone.
-
-However, pcim_pin_device() IMO is not a valid concept. Who wants such
-behavior IMO shall use pci_enable_device() and pci_disable_device()
-manually.
-I proposed removing it here:
-https://lore.kernel.org/all/20240822073815.12365-2-pstanner@redhat.com/
-
-(Note that previously it could not be removed because
-pcim_enable_device() also allocated all the stuff needed by
-pci_request_region() etc.)
-
->=20
+> >=20
 > > Another solution can could at least consider would be to use a
 > > GFP_ATOMIC for allocation in get_or_create_intx_devres().
 >=20
-> If we look at what pci_intx() does without devres, it's simply
-> reading
-> and setting or clearing a bit in config space.=C2=A0 I can attest that a
-> driver author would have no expectation that such a function
-> allocates
-> memory
+> If it is allowed to call pci_intx() under a spin_lock, then we need
+> GFP_ATOMIC.
+> If not, then vfio-pci needs to move the call out of the spinlock.
 
-A driver author would not have any expectation of a function implicitly
-doing anything with devres. That's the reason why I did all this work
-in the first place, to, ultimately, remove this hybrid behavior from
-all pci_ functions.
-So that devres functions are clearly marked with pcim_
-
-That is, however, not that easy because everyone who uses
-pcim_enable_device() in combination with pci_intx() first has to be
-ported to a pci_intx()-version that has nothing to do with devres.
+If vfio-pci can get rid of pci_intx() alltogether, that might be a good
+thing. As far as I understood Andy Shevchenko, pci_intx() is outdated.
+There's only a hand full of users anyways.
 
 
->  and there are scenarios where we want to call this with
-> interrupts disabled, such as within an interrupt context.=C2=A0 So, TBH,
-> it
-> might make sense to consider whether an allocation in this path is
-> appropriate at all, but I'm obviously no expert in devres.
+Best solution would be to avoid GFP_ATOMIC and see first if setting
+is_managed =3D false solves the reported problem for now.
 
-The entire hybrid nature from pci_intx() should be removed.
-I'm working on that.
-
-The hybrid nature was always there, but the allocation was not. It
-would be removed later together with the hybrid devres usage.
+Other problematic users should hopefully be found through lockdep, too.
+Though I think they are unlikely to occur
 
 >=20
-> > I suppose your solution is the better one, though.
+> Either solution must be implemented regardless of the fix to set
+> is_managed to
+> false.
+
+Yes
+
 >=20
-> I see you've posted a patch, I'll test it as soon as I'm able.=C2=A0
+> So what context is allowed to call pci_intx() ? The current kdoc
+> comment does
+> not say...
 
-If it works from what I understand that should solve those issues for
-now until we can phase out pci_intx() usage that relies on the device
-resource.
+the old pci_intx() did not allocate.
+It only calls pci_read_config_word() and pci_write_config_word(). If
+those cannot block etc. it should be save from any context.
 
----
-btw. I just looked into the old code and found that this one also
-already had a similar half-bug with is_managed. It never sets it to
-false again, but pci_intx() runs into:
+Though I'd like to hear from one of the maintainers about it.
 
-static struct pci_devres *find_pci_dr(struct pci_dev *pdev)
-{
-	if (pci_is_managed(pdev))
-		return devres_find(&pdev->dev, pcim_release, NULL,
-NULL);
-	return NULL;
-}
+The new version allocates if pcim_enable_device() was called when it
+runs for the first time. That first run would then be illegal in must-
+not-sleep contexts.
 
 
-So in your case pci_is_managed() would have also been true and the only
-reason no problem occurred is that devres_find() doesn't find the
-device resource of the previous driver anymore, so pci_intx() won't use
-that memory.
----
-
-
-Thanks for debugging,
 P.
-
-> Thanks,
->=20
-> Alex
->=20
 
 
