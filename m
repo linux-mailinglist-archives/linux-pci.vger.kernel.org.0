@@ -1,209 +1,212 @@
-Return-Path: <linux-pci+bounces-12749-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12750-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 227C396BBB7
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 14:12:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3FB696BD67
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 14:59:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A5591F26151
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 12:12:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AA6B288105
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 12:59:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9208B1D67A1;
-	Wed,  4 Sep 2024 12:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0868F1DA0F5;
+	Wed,  4 Sep 2024 12:57:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hu/+sqjW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WB5Z4TCX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FBA1D88BC
-	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 12:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3311DB556
+	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 12:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725451695; cv=none; b=a3MccJXctKTY32zQ3m9kGcyfLaeMtYbhjsBVb3yjI1E83OVViss3SiHosUMv17CMsQIOGdCHdDhf2QEdKw7CXrj2BnnL/e4U5CA6+QqJ2BpKFv2P/whxITix3u1JAr9Fv8NmdSWtBmP+JV5+M5PK9tlJkNVQz3/347sC9lyyxt0=
+	t=1725454653; cv=none; b=UB211nc5mnRL7RaRGFtn0JBrjXKywfv/InVZwMVZHPdV89Lo84ipZ5fYcT7FSEaOePKlLg4J91msLCBwmqasECCqyjzPT7j52FK/VyzMg5H0bejpVUSEkdY0hRi22hi6NvBNEIQBtC6QHoliD6GNBNjynT/xPwiVkxYk/5WaRw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725451695; c=relaxed/simple;
-	bh=08KArrf179M1tMSY8SJY/hAfPW+f4X7Di4tWWvMgGP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DzSyOsE5JzxnSwRoZViFIpj4pNLsDdNrcO85HbIMEPD5a76KHnzy9VUcfZxLPCm1lXHJ8cWOBr9oo2ChNiYj8lTd/d6m+uwSvQavi/KjDMSGReJGvmn8yvigT3CLL6Cm5TdQLVzdwxMjcngUwsHLHjwhAduB1DkUjA0Uzfm2Q3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hu/+sqjW; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725451693; x=1756987693;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=08KArrf179M1tMSY8SJY/hAfPW+f4X7Di4tWWvMgGP4=;
-  b=Hu/+sqjWl7SIrmJHkVZ14KGc4SbC1ZhBI1GNQYYJIV4pmbrdJlfjoWwS
-   j+BvSxM5JeZ3TDltRRGgfhF7GwXAgTbRVpnnA/FP380T9KzUWlY92qCd8
-   zZqKWEvIxNIC1XziAzgIEwnkCXO1uYjPYw3g/5cmjvwItrfZdEhTixago
-   EXsP7blNOrFll+RwatCHrzSuqsO0JzXAeFGpQMv/YuIWZItNY4fMXocSE
-   TBCfeTCtbQqX+n76W8mz+i+b1bea3sOEv2eJMmFS0jiemxg+bQ9DLoqSI
-   Bt95zTtayRVIQUKkM1ZMQCeD9qnbF15ZmB/RHALOKFXUeO2iJLOUaspTq
-   w==;
-X-CSE-ConnectionGUID: Osx2UU+qTCaWJvMRB/NWOQ==
-X-CSE-MsgGUID: gxSxwPelQdS5a8g+O9SrVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="27869908"
-X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="27869908"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 05:08:12 -0700
-X-CSE-ConnectionGUID: GL1z2rSfSjuLzQZHz6H7lg==
-X-CSE-MsgGUID: VC7RQotiSuOhfbnAhv67WQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="65298874"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 04 Sep 2024 05:08:11 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1slonx-0007xr-1y;
-	Wed, 04 Sep 2024 12:08:09 +0000
-Date: Wed, 04 Sep 2024 20:07:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/mediatek-gen3] BUILD SUCCESS
- f6ab898356dd70f267c49045a79d28ea5cf5e43e
-Message-ID: <202409042034.mi6BJygJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1725454653; c=relaxed/simple;
+	bh=nAS/Y/Y7RaYODxzBkH7Wcz9UJ1xzt6dWuLQyLqLErwY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IQGzzQKnpk1hAwVZhqRStBvuypvBygUTi9ucd7waA7Bja62SCy9Q9NibyAXTePbytP3Y7q6WxVZ9wa6hkjRbzvsjtclwYM23b80bZy2QPR1JySGDUoe14kzHUwqfwLHw2lpWGrucf2UYm4RK/W2O5VCf/PAk99GNAcSYaeWIkFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WB5Z4TCX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725454651;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hr0QPsQ8kKmsm1us550S0o5dWq5voRCeCjok7fkF5tg=;
+	b=WB5Z4TCXFSFEi/hci+soTLPI/y2AF7C/Nx+cQTUJ2/2TA0YO6P3I7tM1gfr1yXWDrD0e0+
+	Kex790PjvpeZ5IgOv70FXt6Grw/oghWmWlX9jjSmC/0ZdRo3x1ehQzqDUT1bS835i30DgJ
+	WUZT4dqC8ZvOYu6sNCAQ3slTXTlIxGY=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-461-aAt3IK9EPgW-YNIEZX4suQ-1; Wed, 04 Sep 2024 08:57:29 -0400
+X-MC-Unique: aAt3IK9EPgW-YNIEZX4suQ-1
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-39f377408b8so2588435ab.0
+        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 05:57:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725454649; x=1726059449;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hr0QPsQ8kKmsm1us550S0o5dWq5voRCeCjok7fkF5tg=;
+        b=mMyZg0M2thiQUTVWYevZlXk26YGeMKhGS+jMgnbELI6E5/H+7oJDwQAjkAsBsk6W5E
+         EEZYSn1JcADHpay41qAwlq3Yg7x6G2bt1AvILUz7zgm6lXN8GoSaUm21TUw1kf1kgVL2
+         qfcxOSZqWm9Q/PeoYM/lFov8KrX5sc1RJGHdaBCxw0JdanHXI6V8aw1+Os93BRRO+hRy
+         I5NHuZAeCzPl6Dqv9s9A4eG7voVop6NCulEORHvqzd9SoyKWR8DsOMSpPiRcrs7oUpzi
+         054/uISWWrtDWyrdx5Xahzgprm3TrRp9tIRL/y0mxpadklZqwsVCxbfII9f/TH0+iyAb
+         SV+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+9tjpQk+pN67BmUDMfNNNOmT94jTe5k8VV7JlSrSrN5B/UWvaVbSWTpWIWnzRAsR417gWdZzJJaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfGcuzrSnW9d6Fuo8WQoEcM/d1liwRgX+izVj31HiQ29oWY4qF
+	okBzo2PL56VVxVfh7C3QL3S2xq2ZcqL/lqnxbELhjhplz6Z2ua+iGJkD+Sebumvwps6eBVp/1Cm
+	qFr7lF730os6TDmc7bX9AuXVPfvi33LehuSrsK7iBN2W/NRHjsCJID4WTIg==
+X-Received: by 2002:a05:6e02:2187:b0:39f:7a06:6279 with SMTP id e9e14a558f8ab-39f7a0664e1mr11419625ab.5.1725454648809;
+        Wed, 04 Sep 2024 05:57:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5TAzuY2mhgg0UicT/y2Xf563yx0ZJEKUn8JSuLWk5pYKcHxL54Nzyp05Yy9gqgFxJfGCwVg==
+X-Received: by 2002:a05:6e02:2187:b0:39f:7a06:6279 with SMTP id e9e14a558f8ab-39f7a0664e1mr11419435ab.5.1725454648323;
+        Wed, 04 Sep 2024 05:57:28 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ced2eaccd1sm3106308173.124.2024.09.04.05.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2024 05:57:27 -0700 (PDT)
+Date: Wed, 4 Sep 2024 06:57:26 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRz?=
+ =?UTF-8?B?a2k=?=  <kwilczynski@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
+Message-ID: <20240904065726.1f7275b6.alex.williamson@redhat.com>
+In-Reply-To: <2887936e2d655834ea28e07957b1c1ccd9e68e27.camel@redhat.com>
+References: <20240725120729.59788-2-pstanner@redhat.com>
+	<20240903094431.63551744.alex.williamson@redhat.com>
+	<2887936e2d655834ea28e07957b1c1ccd9e68e27.camel@redhat.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/mediatek-gen3
-branch HEAD: f6ab898356dd70f267c49045a79d28ea5cf5e43e  PCI: mediatek-gen3: Add Airoha EN7581 support
+On Wed, 04 Sep 2024 09:06:37 +0200
+Philipp Stanner <pstanner@redhat.com> wrote:
 
-elapsed time: 1301m
+> On Tue, 2024-09-03 at 09:44 -0600, Alex Williamson wrote:
+> > On Thu, 25 Jul 2024 14:07:30 +0200
+> > Philipp Stanner <pstanner@redhat.com> wrote:
+> >  =20
+> > > pci_intx() is a function that becomes managed if
+> > > pcim_enable_device()
+> > > has been called in advance. Commit 25216afc9db5 ("PCI: Add managed
+> > > pcim_intx()") changed this behavior so that pci_intx() always leads
+> > > to
+> > > creation of a separate device resource for itself, whereas earlier,
+> > > a
+> > > shared resource was used for all PCI devres operations.
+> > >=20
+> > > Unfortunately, pci_intx() seems to be used in some drivers'
+> > > remove()
+> > > paths; in the managed case this causes a device resource to be
+> > > created
+> > > on driver detach.
+> > >=20
+> > > Fix the regression by only redirecting pci_intx() to its managed
+> > > twin
+> > > pcim_intx() if the pci_command changes.
+> > >=20
+> > > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()") =20
+> >=20
+> > I'm seeing another issue from this, which is maybe a more general
+> > problem with managed mode.=C2=A0 In my case I'm using vfio-pci to assign
+> > an
+> > ahci controller to a VM. =20
+>=20
+> "In my case" doesn't mean OOT, does it? I can't fully follow.
 
-configs tested: 114
-configs skipped: 4
+"OOT" Out Of Tree?  No, "In my case" is simply introducing the scenario
+in which I see the issue.  vfio-pci is an in-tree driver used to attach
+devices to userspace drivers, such as QEMU.  The ahci driver is loaded
+during system boot, setting the is_managed flag.  The ahci driver is
+then unbound from the device and the vfio-pci driver is bound.  The
+vfio-pci driver provides a uAPI for userspace drivers to operate a
+device in an an IOMMU protected context.
+=20
+> > =C2=A0 ahci_init_one() calls pcim_enable_device()
+> > which sets is_managed =3D true.=C2=A0 I notice that nothing ever sets
+> > is_managed to false.=C2=A0 Therefore now when I call pci_intx() from vf=
+io-
+> > pci
+> > under spinlock, I get a lockdep warning =20
+>=20
+> I suppose you see the lockdep warning because the new pcim_intx() can=20
+> now allocate, whereas before 25216afc9db5 it was pcim_enable_device()
+> which allocated *everything* related to PCI devres.
+>=20
+> >  as I no go through pcim_intx()
+> > code after 25216afc9db5=C2=A0 =20
+>=20
+> You alwas went through pcim_intx()'s logic. The issue seems to be that
+> the allocation step was moved.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Unintentionally, yes, I believe so.  vfio-pci is not a managed, devres
+driver and therefore had no expectation of using the managed code path.
 
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                            allyesconfig   clang-20
-alpha                               defconfig   gcc-14.1.0
-arc                              allmodconfig   clang-20
-arc                               allnoconfig   gcc-14.1.0
-arc                              allyesconfig   clang-20
-arc                                 defconfig   gcc-14.1.0
-arm                              allmodconfig   clang-20
-arm                               allnoconfig   gcc-14.1.0
-arm                              allyesconfig   clang-20
-arm                                 defconfig   gcc-14.1.0
-arm                        neponset_defconfig   gcc-14.1.0
-arm                         socfpga_defconfig   gcc-14.1.0
-arm64                            allmodconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-14.1.0
-csky                             alldefconfig   gcc-14.1.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                          allyesconfig   clang-20
-hexagon                             defconfig   gcc-14.1.0
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-12
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-12
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-12
-i386         buildonly-randconfig-001-20240904   gcc-12
-i386         buildonly-randconfig-002-20240904   gcc-12
-i386         buildonly-randconfig-003-20240904   gcc-12
-i386         buildonly-randconfig-004-20240904   gcc-12
-i386         buildonly-randconfig-005-20240904   gcc-12
-i386         buildonly-randconfig-006-20240904   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240904   gcc-12
-i386                  randconfig-002-20240904   gcc-12
-i386                  randconfig-004-20240904   gcc-12
-i386                  randconfig-005-20240904   gcc-12
-i386                  randconfig-006-20240904   gcc-12
-i386                  randconfig-011-20240904   gcc-12
-i386                  randconfig-012-20240904   gcc-12
-i386                  randconfig-013-20240904   gcc-12
-i386                  randconfig-014-20240904   gcc-12
-i386                  randconfig-015-20240904   gcc-12
-i386                  randconfig-016-20240904   gcc-12
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-14.1.0
-m68k                          multi_defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                           gcw0_defconfig   gcc-14.1.0
-mips                           ip28_defconfig   gcc-14.1.0
-mips                           jazz_defconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-openrisc                          allnoconfig   clang-20
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-12
-openrisc                 simple_smp_defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   clang-20
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-12
-parisc64                            defconfig   gcc-14.1.0
-powerpc                     akebono_defconfig   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                      ep88xc_defconfig   gcc-14.1.0
-powerpc                          g5_defconfig   gcc-14.1.0
-powerpc                    ge_imp3a_defconfig   gcc-14.1.0
-powerpc                 xes_mpc85xx_defconfig   gcc-14.1.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-12
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-s390                                defconfig   gcc-14.1.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                          sdk7786_defconfig   gcc-14.1.0
-sh                           se7724_defconfig   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc                       sparc32_defconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-20
-um                               allyesconfig   clang-20
-um                                  defconfig   gcc-12
-um                             i386_defconfig   gcc-12
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-11
-x86_64                                  kexec   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   gcc-12
-xtensa                            allnoconfig   gcc-14.1.0
+> > since the previous driver was managed. =20
+>=20
+> what do you mean by "previous driver"?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+As noted, the ahci driver is first bound to the device at boot,
+unbound, and the vfio-pci driver bound to the device.  The ahci driver
+is the previous driver.
+
+> > =C2=A0 It seems
+> > like we should be setting is_managed to false is the driver release
+> > path, right? =20
+>=20
+> So the issue seems to be that the same struct pci_dev can be used by
+> different drivers, is that correct?
+
+Yes, and more generically, the driver release should undo everything
+that has been configured by the driver probe.
+
+> If so, I think that can be addressed trough having
+> pcim_disable_device() set is_managed to false as you suggest.
+
+If that's sufficient and drivers only call pcim_disable_device() in
+their release function.  I also note that f748a07a0b64 ("PCI: Remove
+legacy pcim_release()") claims that:
+
+  Thanks to preceding cleanup steps, pcim_release() is now not needed
+  anymore and can be replaced by pcim_disable_device(), which is the
+  exact counterpart to pcim_enable_device().
+
+However, that's not accurate as pcim_enable_device() adds a devm
+action, unconditionally calls pci_enable_device() and sets is_managed
+to true.  If we assume pcim_pin_device() is a valid concept, don't we
+still need to remove the devm action as well?
+
+> Another solution can could at least consider would be to use a
+> GFP_ATOMIC for allocation in get_or_create_intx_devres().
+
+If we look at what pci_intx() does without devres, it's simply reading
+and setting or clearing a bit in config space.  I can attest that a
+driver author would have no expectation that such a function allocates
+memory and there are scenarios where we want to call this with
+interrupts disabled, such as within an interrupt context.  So, TBH, it
+might make sense to consider whether an allocation in this path is
+appropriate at all, but I'm obviously no expert in devres.
+
+> I suppose your solution is the better one, though.
+
+I see you've posted a patch, I'll test it as soon as I'm able.  Thanks,
+
+Alex
+
 
