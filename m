@@ -1,75 +1,76 @@
-Return-Path: <linux-pci+bounces-12763-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12764-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A09E996C2F0
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 17:51:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5091796C31F
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 17:57:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C22BD1C2158E
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 15:51:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 972CFB289AE
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 15:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB4271DFE26;
-	Wed,  4 Sep 2024 15:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81FA81E1A14;
+	Wed,  4 Sep 2024 15:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d692u+bM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PnaoG7LJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207461DEFE5
-	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 15:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865E9286A8
+	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 15:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725464998; cv=none; b=f+aR7HPigEsXWcM9JX6A36BcVImPLfn57NTEOLIxb4GBwfuLkMCcZoVZ4SGeWVMijuVLJc/IiBdPkCWv877zZQTF6NyhCyHm5RwW05n8X8HFuZTuDtG5IupWkQGVm+GRixHL+ZTkGeWN+QmYP/kFIWaDCe1Vr/uI64J5DU/Fqw0=
+	t=1725465164; cv=none; b=FLIacadXGLJHbXbJJAsBLQbt59WeBT8JP/fCUKBeLGa3b2zFlF6lOyUj43Jpqf4LIGH42bCCqr4vK6yaMVGoT9qvp3OySnAUV3oiCX1g8UTbFp1TiLudlCLhB4JmkDuJknva99pcqAr5lUcuWUiGHISacq+EkMqVLAI5G3o+M+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725464998; c=relaxed/simple;
-	bh=CTpZT61cw+v7Isz+5KEp0TwRe2k81PyY8Q9DOwJbOnI=;
+	s=arc-20240116; t=1725465164; c=relaxed/simple;
+	bh=KygQNf3+cuF9gbs3HDkBg3xT8j1Jn6935u8ekoom8lI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZGqbePMnpMZBi+M86Gs+wD3ah86aqikwe58jv3r9Y52QqqUp5C+KFGtDcGrciW7vCd8CuFSDLFtJR02DSr5RRs8MhAbY4Gc/2AGcLpbn4vicwpj1GcmDhLOB5Ff7SWOL52DnmZtM2JHPcxdbo7l/56YbNGHGhBsIitDC+PC3z/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d692u+bM; arc=none smtp.client-ip=209.85.215.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZN0PFW1kcFazHQKf/Dv2yd1XmusbdqwsYIEkCVKg8SiCtx0Rh9aTbKjm6Sw3RHo49CvsY7qHlddo8g6XdV9BPaIg9bQE0/And7P0ud3sDZPtYwuUhr7vJAqdx9Hz4j3I5mcqoM7XCjkF8x2R2XTuHH00aacwivhO22gABNmy6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PnaoG7LJ; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7cd9cfe4748so4398115a12.2
-        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 08:49:56 -0700 (PDT)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2054feabfc3so35485025ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 08:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725464996; x=1726069796; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1725465161; x=1726069961; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=aUspjdaZipuOhA4NRY0RJgeHGMKwRMzsWto8djn5vLI=;
-        b=d692u+bMkoKPaC1KysMc/5oBJOQrUqWi4Tz0sQhd99IZ3e5CmzKMlA8yu83gEO4cYp
-         eW6ZnRYJOt+ixnU+LVgmrDSgFGgF6x4pjD92BZn87RVsxQYz1l+8Hz1Q+50owV20aCcT
-         DDl922u1dP02I/xMllsRxmpGVsEtPtPpTfszHZ/1ncPRpG7UkT1NH6b3pbs+27NrLIZn
-         +1fEpbl2zaZ5pFlB529qqhzBZfYxsf7azUnHlMRdnfAO0G9zhQshWQ8OJ5nbo2jpp6T0
-         5yh4GPeZt5eQoKT3Uen0gUECaPJy87To6Lc3yUh3riydVWa91hgocwi4voLipM6HKJOm
-         hyiw==
+        bh=OI8jsgdgqnkbWWLEKVkCt2Ik5LT6LWIsO1U3amJG1/s=;
+        b=PnaoG7LJeIC+Vs4jqgXz4KpTBtW6dOH+tJXxJC93nXJA9zxe+PyxcmFCsUNarMzjY0
+         n/aw8R07RJNwDq/jido9HIhZOTkPpbwaSCqjpSSwizg0ziDB/XL2fBdPPOOSz3zrm6xt
+         6+2sxmgHPVFfmN2gAWG5PR4Bf/M1sWNhSavemKot21wNdIjmoD35eHC55w4pfDm6IUXk
+         UGSQEupobH17xrslYmMhJLmJQ0Ucmy/CNE+Vma1ncoLomaDxXoYbcaGEX7wORgLmUxIi
+         inijrXZlfL0aPpVwsZ2aGSUMkzRCpptFGBkhQ6g5a0hdu726oOyPwS9hCuTA03yUU1hv
+         b+AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725464996; x=1726069796;
+        d=1e100.net; s=20230601; t=1725465161; x=1726069961;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aUspjdaZipuOhA4NRY0RJgeHGMKwRMzsWto8djn5vLI=;
-        b=BIg3Olj1GZBJtBRLcTg6wWlJuS2XAQkBz6Q7g3buXajP4kpWBDa4kVz/ntncyY2QE1
-         zwnaYfgjG/zxjSNK3KrEKLYAw29ofF2ZLdeZtPArSLqkLnuXbBx9Xl7pNzMp+lr19jLc
-         unpMYXiopAJBQSo5Z5MT+moEX1XPBFH84V3DcU8RpYa3tsMnheP3j/EmA+TF+OY2+Qsy
-         TsPd11Vlt7snsz4NF0d0hRpqB7PJCPh6/4UQcVNqGpHxYpqU6eaFuOdDr728w8CXVail
-         AUfMXigPy4i/mQkvo2Su9umYVKUhEXz/8HHto5Zqry7qJx/aPFHfnWThUy8ETy9Qw9bt
-         ZxDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmiOlJ6E/Q1/GJWx6im9ElkXds2Gu6eW/BzCE/14yxLm8XJGnyEtCVvzVb0BDY/YLxWZfNtOsZ+ds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCBd4ROoSaKEgL6ALbuY3zI1PGFAGCMibLw6SAbMq5iPt1J1R7
-	EBkNF0z47rOBvdSM8HQBrDUZJ4TJ7/rebgof9F/aT+/Xh7as9CUw7dNHwBinng==
-X-Google-Smtp-Source: AGHT+IGaIqW5Fd7iC7eWGx3Bkr4KIAhnl/c5JAG+0dmpw/6XA8lzo2zqW5pfYpjv80IFZFIFhT9/Sw==
-X-Received: by 2002:a17:902:cec6:b0:206:9caf:1e00 with SMTP id d9443c01a7336-2069caf211cmr72629265ad.25.1725464996370;
-        Wed, 04 Sep 2024 08:49:56 -0700 (PDT)
+        bh=OI8jsgdgqnkbWWLEKVkCt2Ik5LT6LWIsO1U3amJG1/s=;
+        b=TCYFhHh1XQbSP4Pu+MTWLV96DmN1D+2snq+6YDsmqD5cs8P5PU6vOGyAO3VX6GSu9C
+         hIRbWQ6Y1QdvJUsn0cZagtu1esCfxgGgrV92eLVTw9nsnjdQgezvwk5ALROPqqP83kxw
+         wfzOMcLJ8/eKamYSs0exasv8i4oyoM9NtIlFmbliFa7HA6uw/2OOtaqy67toH8EMpmLN
+         L6nCE5usYwwpwJ2cloz6dS/y+DLLfDlxyDbdIfv2Ip36COV7Tcb+Ov2Yio4EBm/8k/+e
+         kYytsQtoZmiPioiMWfHkT9blbzhV+sVnaiWkCWdVTUBgjQjqpDx5Cu5a4TEOhlPFMawL
+         Zohw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/8tsZD4B7tYClU7R08RkSUdnROKfvHCBPeJ4SodVGnJfME+qnIYRSOQFfNYWp/NMtkGjWxhfCBfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzefyAUUIYo2NFiBV7lcBROn0vt5XN1Ubj6bXbDwyUzW8Nw4ukO
+	CQumz4AdjAySKxT2gCn658JtwaxZW+aaVfmqMY/h+5VYnpF7KoBZHaCOvWGO3A==
+X-Google-Smtp-Source: AGHT+IHGBNBoglCNHpz+D7sGeP/HKxiS/0D+eictU65nCi8V3pgHa+1MnnTJSobiRrpdR96hXD+x3Q==
+X-Received: by 2002:a17:902:da81:b0:206:8db4:481b with SMTP id d9443c01a7336-2068db45e50mr102338205ad.32.1725465161425;
+        Wed, 04 Sep 2024 08:52:41 -0700 (PDT)
 Received: from thinkpad ([120.60.128.165])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206ae950571sm15158925ad.82.2024.09.04.08.49.49
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206aea37ae2sm15212725ad.173.2024.09.04.08.52.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 08:49:56 -0700 (PDT)
-Date: Wed, 4 Sep 2024 21:19:44 +0530
+        Wed, 04 Sep 2024 08:52:41 -0700 (PDT)
+Date: Wed, 4 Sep 2024 21:22:33 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan@kernel.org>
+To: Johan Hovold <johan@kernel.org>,
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	Lucas Stach <l.stach@pengutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -86,14 +87,12 @@ Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	abel.vesa@linaro.org, johan+linaro@kernel.org,
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-Subject: Re: [PATCH v6 2/4] PCI: dwc: Always cache the maximum link speed
- value in dw_pcie::max_link_speed
-Message-ID: <20240904154944.w4bujfmhy5uhzkld@thinkpad>
+	abel.vesa@linaro.org, johan+linaro@kernel.org
+Subject: Re: [PATCH v6 3/4] PCI: qcom: Add equalization settings for 16.0 GT/s
+Message-ID: <20240904155233.zm3m6x3wvco35g6t@thinkpad>
 References: <20240904-pci-qcom-gen4-stability-v6-0-ec39f7ae3f62@linaro.org>
- <20240904-pci-qcom-gen4-stability-v6-2-ec39f7ae3f62@linaro.org>
- <ZtgooHdex5gXh0tP@hovoldconsulting.com>
+ <20240904-pci-qcom-gen4-stability-v6-3-ec39f7ae3f62@linaro.org>
+ <ZtgqvXGgp2sWNg5O@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -103,96 +102,134 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZtgooHdex5gXh0tP@hovoldconsulting.com>
+In-Reply-To: <ZtgqvXGgp2sWNg5O@hovoldconsulting.com>
 
-On Wed, Sep 04, 2024 at 11:30:08AM +0200, Johan Hovold wrote:
-> On Wed, Sep 04, 2024 at 12:41:58PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Wed, Sep 04, 2024 at 11:39:09AM +0200, Johan Hovold wrote:
+> On Wed, Sep 04, 2024 at 12:41:59PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 > > 
-> > Currently, dw_pcie::max_link_speed has a valid value only if the controller
-> > driver restricts the maximum link speed in the driver or if the platform
-> > does so in the devicetree using the 'max-link-speed' property.
+> > During high data transmission rates such as 16.0 GT/s, there is an
+> > increased risk of signal loss due to poor channel quality and interference.
+> > This can impact receiver's ability to capture signals accurately. Hence,
+> > signal compensation is achieved through appropriate lane equalization
+> > settings at both transmitter and receiver. This will result in increased
+> > PCIe signal strength.
 > > 
-> > But having the maximum supported link speed of the platform would be
-> > helpful for the vendor drivers to configure any link specific settings.
-> > So in the case of non-valid value in dw_pcie::max_link_speed, just cache
-> > the hardware default value from Link Capability register.
-> > 
-> > While at it, let's also remove the 'max_link_speed' argument to the
-> > dw_pcie_link_set_max_speed() function since the value can be retrieved
-> > within the function.
-> > 
+> > Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > [mani: dropped the code refactoring and minor changes]
 > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 18 ++++++++++++++----
-> >  1 file changed, 14 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 86c49ba097c6..0704853daa85 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -687,16 +687,27 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dw_pcie_upconfig_setup);
+>  
+> > +#define GEN3_EQ_CONTROL_OFF			0x8a8
+> 
+> Nit: uppercase hex since that's what is used for the other offsets
+> 
+> > +#define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
+> > +#define GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE	BIT(4)
+> > +#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC	GENMASK(23, 8)
+> > +#define GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL	BIT(24)
+> > +
+> > +#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
+> 
+> Nit: odd indentation uses spaces, uppercase
+> 
+> > +#define GEN3_EQ_FMDC_T_MIN_PHASE23		GENMASK(4, 0)
+> > +#define GEN3_EQ_FMDC_N_EVALS			GENMASK(9, 5)
+> > +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA	GENMASK(13, 10)
+> > +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA	GENMASK(17, 14)
+> > +
+> >  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+> >  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
 > >  
-> > -static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 max_link_speed)
-> > +static void dw_pcie_link_set_max_speed(struct dw_pcie *pci)
-> >  {
-> >  	u32 cap, ctrl2, link_speed;
-> >  	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> >  
-> >  	cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> > new file mode 100644
+> > index 000000000000..dc7d93db9dc5
+> > --- /dev/null
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> > @@ -0,0 +1,45 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> > + */
+> > +
+> > +#include <linux/pci.h>
+> > +
+> > +#include "pcie-designware.h"
+> > +#include "pcie-qcom-common.h"
+> > +
+> > +void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
+> > +{
+> > +	u32 reg;
 > > +
 > > +	/*
-> > +	 * Even if the platform doesn't want to limit the maximum link speed,
-> > +	 * just cache the hardware default value so that the vendor drivers can
-> > +	 * use it to do any link specific configuration.
+> > +	 * GEN3_RELATED_OFF register is repurposed to apply equalization
+> > +	 * settings at various data transmission rates through registers namely
+> > +	 * GEN3_EQ_*. RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF determines
+> > +	 * data rate for which this equalization settings are applied.
+> 
+> *The* RATE_SHADOW_SEL bit field
+> 
+> *the* data rate
+> 
+> s/this/these/
+> 
 > > +	 */
-> > +	if (pci->max_link_speed < 0) {
+> > +	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+> > +	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+> > +	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+> > +	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0x1);
 > 
-> This should be 
-> 
-> 	if (pci->max_link_speed < 1) {
+> How does 0x1 map to gen4/16 GT?
 > 
 
-Well I was trying to catch the error value here because if neither driver nor
-platform limits the max link speed, this would have -EINVAL (returned by
-of_pci_get_max_link_speed()).
-
-But logically it makes sense to use 'pci->max_link_speed < 1' since anything
-below value 1 is an invalid value.
-
-Will change it.
+I need inputs from Shashank here as I don't know the answer.
 
 - Mani
 
-> but the patch works as-is because of the default case in the switch
-> below which falls back to PCI_EXP_LNKCAP_SLS.
-> 
-> > +		pci->max_link_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, cap);
-> > +		return;
-> > +	}
+> > +	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
 > > +
-> >  	ctrl2 = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL2);
-> >  	ctrl2 &= ~PCI_EXP_LNKCTL2_TLS;
-> >  
-> > -	switch (pcie_link_speed[max_link_speed]) {
-> > +	switch (pcie_link_speed[pci->max_link_speed]) {
-> >  	case PCIE_SPEED_2_5GT:
-> >  		link_speed = PCI_EXP_LNKCTL2_TLS_2_5GT;
-> >  		break;
+> > +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+> > +	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+> > +		GEN3_EQ_FMDC_N_EVALS |
+> > +		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+> > +		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
+> > +	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+> > +		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+> > +		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+> > +		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
+> > +	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+> > +
+> > +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+> > +	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
+> > +		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
+> > +		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
+> > +		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
+> > +	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+> > +}
+> > +EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
+> > new file mode 100644
+> > index 000000000000..259e04b7bdf9
+> > --- /dev/null
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
+> > @@ -0,0 +1,8 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> > + */
+> > +
+> > +#include "pcie-designware.h"
 > 
-> > @@ -1058,8 +1069,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> >  {
-> >  	u32 val;
-> >  
-> > -	if (pci->max_link_speed > 0)
-> > -		dw_pcie_link_set_max_speed(pci, pci->max_link_speed);
-> > +	dw_pcie_link_set_max_speed(pci);
+> You only need a forward declaration:
 > 
-> With the above fixed:
+> 	struct dw_pcie;
 > 
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+> > +
+> > +void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
+> 
+> Compile guard still missing.
+> 
+> Johan
 
 -- 
 மணிவண்ணன் சதாசிவம்
