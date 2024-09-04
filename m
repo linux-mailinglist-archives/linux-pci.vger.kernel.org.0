@@ -1,82 +1,74 @@
-Return-Path: <linux-pci+bounces-12755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12756-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2CD96C0D8
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 16:37:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36D8196C116
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 16:46:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7154284AF2
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 14:37:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CCB39B2679E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 14:46:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72B21DAC5D;
-	Wed,  4 Sep 2024 14:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3231D88C3;
+	Wed,  4 Sep 2024 14:46:09 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F2B1DA61C;
-	Wed,  4 Sep 2024 14:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6625A22071;
+	Wed,  4 Sep 2024 14:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460658; cv=none; b=UOzb1Y9EPcbzcHoaPw+Drn3O1hKUX7pwiTezTsDj3sEbxUjqbXHqwX8ynPVvwhlt/KZQZMaOF6bxOv5M6JTOj9gqtdz7MrKYioGSQAkUtlVBgT3fSiSpkglYxKsJYx/c1+gv+8iL0qq8kpWTuk9Dm8OG2MqBEULUj+HbnukDeDo=
+	t=1725461168; cv=none; b=MRhTtje2uIgc9EkfmxgzfuVqIbMcgTucPxz2DzQDs/TN67D11mW8uz88s0osbuc4502tHAmU9vof+/Wz6sIrefRgS0hVyjouYW8USfO5wgzb+9N1gassm4rBCXxGGQ+SatYlUm5nVpNhimVrbDSAS3zq98c3uvvk7go4c/MY36w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460658; c=relaxed/simple;
-	bh=8FBaJR3/i5iho+H6LO/jm9p/DpWHmVIC7QJH1el3y2g=;
+	s=arc-20240116; t=1725461168; c=relaxed/simple;
+	bh=tZ4zoQ7+fGa7qXkuJICtHotCFwlzcQ2J7vhk5NZh5kw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwSXqGUeCOet9R08gllCDHBzriZ/eQb9qInx5j+0yX1SjaplI+PY+Upn6xvx1NZYazOEAJgRH4ILaoCPEAgyTMpigF2ZMGRh/aMkttkWXnHBgiYA1SKdX3/apf2tEht8/cIMRce0g2d9QtEFyfHNenNBW5am+SF28GHfxmqFqpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=oudnW9p9dXpYR80FB63wZIn272unmvm+Jrglw1+b62JEPNlB8ZN8if+m6iiMnygJIYLzK8VLvSjLMKcpvy4tKeEwFRzCE3JOglCEe49Qwxf6vP3pLpeEgEgYCIU73YHlUQWEn5N4CkKtQzcqpiuZXC8Ji+SOghCsAuU5bvK8N48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7cb3db0932cso5013844a12.1;
-        Wed, 04 Sep 2024 07:37:37 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2d88edf1340so2876117a91.1;
+        Wed, 04 Sep 2024 07:46:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725460657; x=1726065457;
+        d=1e100.net; s=20230601; t=1725461167; x=1726065967;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XeTNdvUSWx7HJEOyqeFtoigbheBAm0ccbTjqgX0Hr8w=;
-        b=l8Pe/765z+pbH8NoRXbf2DA9X6A6sbz5pmwBtMu/8/gFq248DmVAmHqJeBVwnkco7Y
-         UO8JeyFhScwQLozP4Ye43ffbB4zvqWPppDhqdTwyg2gDeXINmRGo8AHsHHcGkdDw1pUA
-         yxcQBNCNTVu7RBwjY7l3yaiV4IIM336y96Tqzr+ML9eovVKm0l/VxtEw/+OGMFan0y5t
-         J4SSK/jQl1W6GRuZ1fWfDwMrcN/YCADhYkFQtGGdseoJiC4oEXCCBFHlS/74hFDb6ZdF
-         w86yaSGR65gK1GLlM8kRnkqmBemjweSn8Wxl4TOjXZHNPrLjfJ+nY0Vg9+mlttQx5xdX
-         rD4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUV/hjxxZLzhzUfr4oUOuxjOCwFYeEyzFvS5xhm/2m8MR8e8y2cnH1gcumKTGr87QASK1iEhPm/gmZ+Wkzf@vger.kernel.org, AJvYcCVYPaBH8bRslE57uY/HH+TgFxax5Oveiyeu1oxKLUQfSH1LBq9HKuRCpTX/xrmyIypWsHabtKTpa22KILxPE1rW2lM=@vger.kernel.org, AJvYcCWHmfnn59rvlsxTNq91fo2XuTImyYRX9MEb2VmnzUQ8YcFw9MLAw+fhPS5y452/4fvUYoNyvI3OicEG@vger.kernel.org, AJvYcCX0QN6McTMZ7WGaQBhQX9QpByJT7rV/B248xCWSPsTDqe6h5xehLNGN/VNbTROJy4laq3T+vn5VHNeC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgmVcbpYtyxcTrzAhb7XmScm2GNhVTehLOW+Oq+s42nVHQzq8R
-	fQGl8OFhISvwUypk3EZPecq7lFhSMDcJmbTL+iFaZNEmyb5G/oRD
-X-Google-Smtp-Source: AGHT+IGFm3a6nIytISSTxdeWLXJD9PZzc11mSxiB8yoFNa+9OMf68AqsNjBgX2pnazA24lTCn9MZ5g==
-X-Received: by 2002:a05:6a20:d80b:b0:1ca:ccd0:1bf6 with SMTP id adf61e73a8af0-1cce0ffe3cemr20844080637.8.1725460656582;
-        Wed, 04 Sep 2024 07:37:36 -0700 (PDT)
+        bh=D/gRRuRqrbg0AurY1sJ7Xea56DowsKJuBt1BAJTfT7E=;
+        b=deqGhfwTJd35sR6Kip+WJoS18k3Jhkz7+ND3nVrtw5w3GY/nNDGg40xfAgi5zMhotQ
+         HIyxWz218VYgLom6a5pdp4u3GKPx0lkBiZCqP3ZXv8lHJ6tHqkvS4wvYdIGYREjNF9Jk
+         ehYzq76tvoHsnFPdCfKvyS22XtmOTy1ZOvZmlgeyd1olc5itkVYjSvYRYtH54On2X4zt
+         4lq7siF3q5+9KCkITGK5xk4gDmH8Tv1c0Iqq/8IfXkPKUiDComikzc0zhihuvSVfK4sZ
+         J+um3S2W3ZAu2Z7N9bxcObVslcJ9mMhofWDs94xGf7G1F3Ri33kwH2VT1s1Z1pem+fKM
+         zCcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4MdQ0zOfxfzDqebjxhmimi1VMiiF62XjrOaXcJLbJRlQoV+1nDHb4XUxiSNN5hZIX1ydXmf4f/1YFyafG@vger.kernel.org, AJvYcCWMiEK1qoiEgWgdkktbFpi7LeW8DY7+7o6zpgulwtii4KxP/VvXgWD+v2cUSKchSp0AoSfxck9e+Ueo@vger.kernel.org, AJvYcCXwHe62eBZqjyjD0QgWjeVKYhDN8Q54MoxRxm9DzbTCKv6cjVbJozSAYtsfCnnPj7EssPwKYMpsIMSI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX726Wa6iy/qLH0T4rNDP22KTGwt8LmQr6FlN+uvfIaj14OMlU
+	1v9d+gAwvcIjaLgyNxkSDp73HCNXqXe1XVyhzkwqu9510W+HlgZy
+X-Google-Smtp-Source: AGHT+IEFMGUmWkfIoTMckkMOZIt5S/YmaX0JZJtpZBVyk/WvpQWvlu8kAsbTAAvWVLa6jsYzlr7VSA==
+X-Received: by 2002:a17:90b:4a48:b0:2c9:9643:98f4 with SMTP id 98e67ed59e1d1-2da55924209mr7514672a91.5.1725461166596;
+        Wed, 04 Sep 2024 07:46:06 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d4fbd8c61asm1526789a12.25.2024.09.04.07.37.35
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d84462afb6sm16048198a91.33.2024.09.04.07.46.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 07:37:35 -0700 (PDT)
-Date: Wed, 4 Sep 2024 23:37:34 +0900
+        Wed, 04 Sep 2024 07:46:06 -0700 (PDT)
+Date: Wed, 4 Sep 2024 23:46:04 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Olof Johansson <olof@lixom.net>, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: hisilicon,kirin-pcie: add
- top-level constraints
-Message-ID: <20240904143734.GA3032973@rocinante>
-References: <20240818172843.121787-1-krzysztof.kozlowski@linaro.org>
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: layerscape-pci: Replace
+ fsl,lx2160a-pcie with fsl,lx2160ar2-pcie
+Message-ID: <20240904144604.GB3032973@rocinante>
+References: <20240826-2160r2-v1-0-106340d538d6@nxp.com>
+ <20240826-2160r2-v1-1-106340d538d6@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,25 +77,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240818172843.121787-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240826-2160r2-v1-1-106340d538d6@nxp.com>
 
 Hello,
 
-> Properties with variable number of items per each device are expected to
-> have widest constraints in top-level "properties:" block and further
-> customized (narrowed) in "if:then:".  Add missing top-level constraints
-> for clock-names and reset-names.
+> fsl,lx2160a-pcie compatible is used for mobivel according to
+> Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> 
+> fsl,layerscape-pcie.yaml is used for designware PCIe controller binding. So
+> change it to fsl,lx2160ar2-pcie and allow fall back to fsl,ls2088a-pcie.
+> 
+> Sort compatible string.
 
 Applied to dt-bindings, thank you!
 
-[01/03] dt-bindings: PCI: hisilicon,kirin-pcie: Add top-level constraints
-        https://git.kernel.org/pci/pci/c/ac44be2155cd
-
-[02/03] dt-bindings: PCI: renesas,pci-rcar-gen2: Add top-level constraints
-        https://git.kernel.org/pci/pci/c/c62a0b8fe8bf
-
-[03/03] dt-bindings: PCI: socionext,uniphier-pcie-ep: Add top-level constraints
-        https://git.kernel.org/pci/pci/c/a5c1bf7e9a46
+[1/1] dt-bindings: PCI: layerscape-pci: Replace fsl,lx2160a-pcie with fsl,lx2160ar2-pcie
+      https://git.kernel.org/pci/pci/c/1a1bf58897d2
 
 	Krzysztof
 
