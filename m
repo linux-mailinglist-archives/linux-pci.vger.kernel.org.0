@@ -1,209 +1,171 @@
-Return-Path: <linux-pci+bounces-12795-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12796-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C854F96CA25
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 00:19:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E124696CA6A
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 00:28:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D52928A246
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 22:19:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EA151C223AE
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 22:28:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E7E154456;
-	Wed,  4 Sep 2024 22:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9604114A62A;
+	Wed,  4 Sep 2024 22:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oE+Ajrks"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tI4AFqkV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F6C1474BF
-	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 22:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B56A154456;
+	Wed,  4 Sep 2024 22:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725488388; cv=none; b=KIcRhaIKw0nFPyHqW6SFL8dqW+cQszlC1uVDpFFCV4sLejQ91O5Pe4BMmYsuq+Lwilm3mGYY9QFbt087AkdQhfwBfTZt0Vm+bRewI4qQKmu+8g8UIwiHU0D5xPJhx0nG25yavguuye6ETGkLQWUvSgxFdWvtfOB2q/nwoHGPPmQ=
+	t=1725488855; cv=none; b=qEkRaK0j64W/V8gHZ7O5w5ax9s7rePKYPVouGHua+mtv4IyoI2VbuyFr6dYVBrujKqjYo9vBwcT8SAJqM8+szcznEUILFdHJDyd5147SFEcvNp0g/YBnOAZT5N2evjoc+91ex4/FTq0NxMZNwo8/LiPch3AUV9hQxvYC73BuxGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725488388; c=relaxed/simple;
-	bh=IJGTPGf/WTV05LoXSNnx4obRAVEp3noGIdw7gXCQkXs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mzpczAGuzjNAU/uM5I9Rf7mlhH9hBv4oGfcZrLMJSySyGPFTLheIrCSTxUqFzHnNZHozYkLIALTrubmmrnq/mLjxIgSm7ir8cw1xKoCtUQZcsIyJrxJmydOyB8Pz4sXMFleklNI7S631ZNRw02L4qw9moWhmaNyUd8pN/aE4ybI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oE+Ajrks; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725488387; x=1757024387;
-  h=date:from:to:cc:subject:message-id;
-  bh=IJGTPGf/WTV05LoXSNnx4obRAVEp3noGIdw7gXCQkXs=;
-  b=oE+AjrkslWPJT6p4zIh3uPt2UAkPdhFFGhdNjGFgtWfOjePwKxgzr8QT
-   HLA/xPKEjldrKM1MfP7AKV4b61+iAq/al/THJ90yXyWR12Ba4bM07sFlN
-   /D/E6VKZ4ixNm86pnhagDvKyynnEvkd6+Giwh+yCy4W7GZEmgI7CRYpaC
-   Jfm2Vw95eWnUkM0imJfeybGVzooZV3Yo/3PWO/x7yWfMb0/Bbi1NVkyVy
-   /dG/CtsNQQLMVeRO80arP+wUUhQYnpGzcefeNT8XEsfGBLvfokC/7avtO
-   YwpYhXSO0rzYWyDdh0C22WaeITObgsT2LjKfdpDL3aIANkoQAjk3WfK+R
-   Q==;
-X-CSE-ConnectionGUID: 5Fz6bKEzQX6BSTLJxV3C+A==
-X-CSE-MsgGUID: ehegeKHZRaaxaqK7DFuhRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="41651652"
-X-IronPort-AV: E=Sophos;i="6.10,203,1719903600"; 
-   d="scan'208";a="41651652"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 15:19:47 -0700
-X-CSE-ConnectionGUID: /+LXuvkrRwGnqfzxdfJPhg==
-X-CSE-MsgGUID: 41dm/EW8Tra96UAd06ZyiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,203,1719903600"; 
-   d="scan'208";a="65098713"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Sep 2024 15:19:45 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1slyLn-0008dn-0D;
-	Wed, 04 Sep 2024 22:19:43 +0000
-Date: Thu, 05 Sep 2024 06:19:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 2675ca35b4fe2e59a988ac28df49459fc30afdef
-Message-ID: <202409050611.lBDN98og-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1725488855; c=relaxed/simple;
+	bh=mCP9Oh0+eNEIzhBGdpuLJDsqFpKcih1u5WoGh2Pa/gw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QNt1FyUqMUssJi4lPEIsz407qoJgB+lVxdvlltT7nwMe0kZsorimT45oZy9cZs8CkSBzFL05fTdGjazm2Y2QL4NJQyZIlMPLwUXtCybwcTOn1d61ujf7vhFB0ZkixhdK+QUfxWMdSXRTAwXqmc+861SCgQ2bq6/D/jBlBNXgpI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tI4AFqkV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A695DC4CEC2;
+	Wed,  4 Sep 2024 22:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725488854;
+	bh=mCP9Oh0+eNEIzhBGdpuLJDsqFpKcih1u5WoGh2Pa/gw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=tI4AFqkVLbNYGsu5L1Uo98ouKl+nsxIjCydMWGnIDgh8Fc4FkFKQ9IIMcsgfqqZqj
+	 W/bv+LIJ5fta+h1VMTOGjxPW6fMKsbouGtgYzqIpq1LVjkpVkTD4apVC6uI+GgVTAl
+	 92Kd9uvwQVdZC3f3V0IEuwxwEND5CgkT477oeQwmpNy3sUdXFGJM1PohYsBghTnYA6
+	 fF+VcC1odgzpfHYzjcrj5ms5Di9zCnXNNcC53noitmfvIvxsn4FqsnZM0fX/t+cQ5U
+	 OKE/IHTb3baWDBl0dZEPdfKIz5JofKjuwT11tTEXdpQxlO96IRe3lXxC584Aeth+qf
+	 tIbP5JTi+Jo2A==
+Date: Wed, 4 Sep 2024 17:27:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-leds@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>, Christoph Hellwig <hch@lst.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lee Jones <lee@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Marek Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v7 0/3] PCIe Enclosure LED Management
+Message-ID: <20240904222732.GA359748@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240904104848.23480-1-mariusz.tkaczyk@linux.intel.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 2675ca35b4fe2e59a988ac28df49459fc30afdef  Merge branch 'pci/misc'
+On Wed, Sep 04, 2024 at 12:48:45PM +0200, Mariusz Tkaczyk wrote:
+> Patchset is named as PCIe Enclosure LED Management because it adds two
+> features:
+> - Native PCIe Enclosure Management (NPEM)
+> - PCIe SSD Status LED Management (DSM)
+> 
+> Both are pattern oriented standards, they tell which "indication"
+> should blink. It doesn't control physical LED or pattern visualization.
+> 
+> Overall, driver is simple but it was not simple to fit it into interfaces
+> we have in kernel (We considered leds and enclosure interfaces). It reuses
+> leds interface, this approach seems to be the best because:
+> - leds are actively maintained, no new interface added.
+> - leds do not require any extensions, enclosure needs to be adjusted first.
+> 
+> There are trade-offs:
+> - "brightness" is the name of sysfs file to control led. It is not
+>   natural to use brightness to set patterns, that is why multiple led
+>   devices are created (one per indication);
+> - Update of one led may affect other leds, led triggers may not work
+>   as expected.
+> 
+> Changes from v1:
+> - Renamed "pattern" to indication.
+> - DSM support added.
+> - Fixed nits reported by Bjorn.
+> 
+> Changes from v2:
+> - Introduce lazy loading to allow DELL _DSM quirks to work, reported by
+>   Stuart.
+> - leds class initcall moved up in Makefile, proposed by Dan.
+> - fix other nits reported by Dan and Iipo.
+> 
+> Changes from v3:
+> - Remove unnecessary packed attr.
+> - Fix doc issue reported by lkp.
+> - Fix read_poll_timeout() error handling reported by Iipo.
+> - Minor fixes reported by Christoph.
+> 
+> Changes from v4:
+> - Use 0 / 1 instead of LED_OFF/LED_ON, suggested by Marek.
+> - Documentation added, suggested by Bjorn.
+> 
+> Change from v5:
+> - Remove unnecessary _packed, reported by Christoph.
+> - Changed "led" to "LED" and other typos suggested by Randy.
+> 
+> Change from v6:
+> - Removed links, suggested by Bjorn.
+> - npem->active_inds_initialized:1 moved to DSM commit, suggested by Bjorn.
+> - Improve justification for active_inds_initialized, suggested by Bjorn.
+> - Chosen backed logging added, suggested by Bjorn.
+> 
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Tested-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-elapsed time: 1477m
+Very nice.  Applied to pci/npem for v6.12, thank you!
 
-configs tested: 116
-configs skipped: 2
+I noticed that b4 didn't pick up Stuart's Tested-by from the cover
+letter.  I assume it covers the whole series, so I added it to each
+patch.  Let me know if that's not what you intended.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                               defconfig   gcc-14.1.0
-arc                              allmodconfig   clang-20
-arc                               allnoconfig   gcc-14.1.0
-arc                              allyesconfig   clang-20
-arc                                 defconfig   gcc-14.1.0
-arm                              allmodconfig   clang-20
-arm                               allnoconfig   gcc-14.1.0
-arm                              allyesconfig   clang-20
-arm                          collie_defconfig   gcc-14.1.0
-arm                                 defconfig   gcc-14.1.0
-arm                          gemini_defconfig   gcc-14.1.0
-arm                   milbeaut_m10v_defconfig   gcc-14.1.0
-arm                           omap1_defconfig   gcc-14.1.0
-arm                        spear3xx_defconfig   gcc-14.1.0
-arm                    vt8500_v6_v7_defconfig   gcc-14.1.0
-arm64                            allmodconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-14.1.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                             defconfig   gcc-14.1.0
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-12
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-12
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-12
-i386                                defconfig   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                     loongson1c_defconfig   gcc-14.1.0
-mips                      loongson3_defconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-openrisc                          allnoconfig   clang-20
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-12
-openrisc                    or1ksim_defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   clang-20
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-12
-parisc64                            defconfig   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                      ep88xc_defconfig   gcc-14.1.0
-powerpc                 mpc836x_rdk_defconfig   gcc-14.1.0
-powerpc                         ps3_defconfig   gcc-14.1.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-12
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                          polaris_defconfig   gcc-14.1.0
-sh                          r7785rp_defconfig   gcc-14.1.0
-sh                           se7750_defconfig   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-um                                allnoconfig   clang-20
-um                                  defconfig   gcc-12
-um                             i386_defconfig   gcc-12
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240904   clang-18
-x86_64       buildonly-randconfig-002-20240904   clang-18
-x86_64       buildonly-randconfig-003-20240904   clang-18
-x86_64       buildonly-randconfig-004-20240904   clang-18
-x86_64       buildonly-randconfig-005-20240904   clang-18
-x86_64       buildonly-randconfig-006-20240904   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-11
-x86_64                                  kexec   gcc-12
-x86_64                randconfig-001-20240904   clang-18
-x86_64                randconfig-002-20240904   clang-18
-x86_64                randconfig-003-20240904   clang-18
-x86_64                randconfig-004-20240904   clang-18
-x86_64                randconfig-005-20240904   clang-18
-x86_64                randconfig-006-20240904   clang-18
-x86_64                randconfig-011-20240904   clang-18
-x86_64                randconfig-012-20240904   clang-18
-x86_64                randconfig-013-20240904   clang-18
-x86_64                randconfig-014-20240904   clang-18
-x86_64                randconfig-015-20240904   clang-18
-x86_64                randconfig-016-20240904   clang-18
-x86_64                randconfig-071-20240904   clang-18
-x86_64                randconfig-072-20240904   clang-18
-x86_64                randconfig-073-20240904   clang-18
-x86_64                randconfig-074-20240904   clang-18
-x86_64                randconfig-075-20240904   clang-18
-x86_64                randconfig-076-20240904   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   gcc-12
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                  audio_kc705_defconfig   gcc-14.1.0
-xtensa                         virt_defconfig   gcc-14.1.0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Lee Jones <lee@kernel.org>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: Marek Behun <marek.behun@nic.cz>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Link: https://lore.kernel.org/linux-pci/20240814122900.13525-1-mariusz.tkaczyk@linux.intel.com/
+> 
+> Mariusz Tkaczyk (3):
+>   leds: Init leds class earlier
+>   PCI/NPEM: Add Native PCIe Enclosure Management support
+>   PCI/NPEM: Add _DSM PCIe SSD status LED management
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  72 +++
+>  drivers/Makefile                        |   4 +-
+>  drivers/pci/Kconfig                     |   9 +
+>  drivers/pci/Makefile                    |   1 +
+>  drivers/pci/npem.c                      | 597 ++++++++++++++++++++++++
+>  drivers/pci/pci.h                       |   8 +
+>  drivers/pci/probe.c                     |   2 +
+>  drivers/pci/remove.c                    |   2 +
+>  include/linux/pci.h                     |   3 +
+>  include/uapi/linux/pci_regs.h           |  35 ++
+>  10 files changed, 732 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pci/npem.c
+> 
+> -- 
+> 2.35.3
+> 
 
