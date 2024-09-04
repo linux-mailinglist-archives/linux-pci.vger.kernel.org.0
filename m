@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-12781-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12782-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F18396C6B9
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 20:49:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FBC396C7BC
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 21:41:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C347280C07
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 18:49:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E98F61F262CF
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 19:41:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD7131E4123;
-	Wed,  4 Sep 2024 18:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14D91E6DC3;
+	Wed,  4 Sep 2024 19:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MK0Z2LM2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbgTmhu1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACE41E4114;
-	Wed,  4 Sep 2024 18:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B014D1E6321;
+	Wed,  4 Sep 2024 19:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725475753; cv=none; b=i7d2Au7xkE2PGMhTOfEkDZVtrngBdMMfTxrkGxPP82lXODzmEO5AZmTvFqsL1XdmEvwNsIanvJjnLXk8VJwq58jiT8xej4jiM6LLKz3NcgrGntUxpRhguH2aK/QMrNhhBK8GIJRK8yhKEDauWRArFdX1GgAcrjDLevZrfi5FVm8=
+	t=1725478854; cv=none; b=m7bYS+n9SOyU86Oz4qyqB+yGNxmpOyqlMyceUbbQUn2vrcUlVJOsmI2Hor4paEPMRBzYpO0dnL+buJBiqLKoL72Y/C7STye7rDjfGh/Jj2QhmfjPX6fqrFesRT8AfA2OJk/LATxGbaqxyLBzudAMfutW0+LREoDYZshcaT0sVus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725475753; c=relaxed/simple;
-	bh=NVJy7a9hzOZfICfnRGCKRFnKJQ0Sx2x47tJN20jKhus=;
+	s=arc-20240116; t=1725478854; c=relaxed/simple;
+	bh=bQK+yFu5fRg8+syHRGxnt1pzKtg69U9NOvqBoa1Brlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AqqzVrdqioJlw8kriynTgKAlKRhfjFkJtK1zQ9wjDQ9/gbw5cW2C5wB+MP6hjfgdo0An0Cluk/0w8R1/sM7O1qVCCnwMM493n1EAAModyldhzlmPkjAyzSAiqRK22RmZCsUwWxo4MGOJ5+mCprWLTPWYV7fPdM2UUVrLlor895k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MK0Z2LM2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F56EC4CEC2;
-	Wed,  4 Sep 2024 18:49:12 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Q5AbebltciRKsY7/5AZzdAUH9bvQAx9+iX1Ci3MNPLgiYAm6eyZwSwtAIv+Z+3Hjdeko1/0to2m8jATEmq0yn509D9xvzhl4h/+De5I7c0s9j1IzHZCvN/0J44wZY8/BFyTGc6YlFq3Uboagjso29vx+t9Hn97i9L4pzb+ySGu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbgTmhu1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02476C4CEC2;
+	Wed,  4 Sep 2024 19:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725475753;
-	bh=NVJy7a9hzOZfICfnRGCKRFnKJQ0Sx2x47tJN20jKhus=;
+	s=k20201202; t=1725478854;
+	bh=bQK+yFu5fRg8+syHRGxnt1pzKtg69U9NOvqBoa1Brlw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MK0Z2LM2sEoLcQactCH04EZbfL3YQrPNmkMnQfRli1kjLn19utVIF5SsnOIfLLdD9
-	 YuV6PtJudoDvx/I3pUM3R/c1xlDZDEmRpSifttS4E0xURO48r05aPPdhzOaK6RkD9B
-	 auJRS4e0+nQ4mqmac2i9k0v1XRyxq0//h6KwvM5VXVVuBatIwODFTJkSm3Y/TbkIWq
-	 dxZ4H/vuJt1/5YdH7JXlDLWmGmjWr1PZ8LizWsOD3cRruvZy4H7Uxwzt3wL5YdhhUk
-	 Dd98E9B8UkavLodhAvshLgKygAu488ry8gDMUzDHmibWbqqYMkerAlXVuHDxemmaMt
-	 2DruypS2JYrwA==
-Date: Wed, 4 Sep 2024 13:49:11 -0500
+	b=RbgTmhu1X/pELnHTv8/3BSXPVlW1Mq6ZP4H+iGofs9wvYFpFLQPeKENdYGzXzA0gz
+	 FhjkQhIMTsR4JO6gkoCwLTXR+h/ibWGe4RLo1/m1V2jUeEkGltGuD9fOadX3uTi+pX
+	 F+9Pz39X6HMpcuaVlG43LylLf8oERXJuTui1xxklGZfPyXM3jJeGjv7fX+mYFgDV0I
+	 YExTlRyDuLkQcX12XzIzj/2JAOSywyjj7A+JveVoDBIKiqHGs5ZW3rE1HQseqymFdk
+	 oCVaYTJ/tou7bkpNyjk2jlrDeMuQ6Yg4kvwZxZpxsGX7+r0Jhqa05DInN2FFC2aWt2
+	 6b2NQFZOfKDIQ==
+Date: Wed, 4 Sep 2024 14:40:52 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Wei Huang <wei.huang2@amd.com>
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -55,8 +55,8 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com,
 	bhelgaas@google.com, lukas@wunner.de, paul.e.luse@intel.com,
 	jing2.liu@intel.com
-Subject: Re: [PATCH V4 00/12] PCIe TPH and cache direct injection support
-Message-ID: <20240904184911.GA340610@bhelgaas>
+Subject: Re: [PATCH V4 03/12] PCI/TPH: Add pcie_tph_modes() to query TPH modes
+Message-ID: <20240904194052.GA344429@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,62 +65,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240822204120.3634-1-wei.huang2@amd.com>
+In-Reply-To: <20240822204120.3634-4-wei.huang2@amd.com>
 
-On Thu, Aug 22, 2024 at 03:41:08PM -0500, Wei Huang wrote:
-> Hi All,
+On Thu, Aug 22, 2024 at 03:41:11PM -0500, Wei Huang wrote:
+> Add pcie_tph_modes() to allow drivers to query the TPH modes supported
+> by an endpoint device, as reported in the TPH Requester Capability
+> register. The modes are reported as a bitmask and current supported
+> modes include:
 > 
-> TPH (TLP Processing Hints) is a PCIe feature that allows endpoint
-> devices to provide optimization hints for requests that target memory
-> space. These hints, in a format called steering tag (ST), are provided
-> in the requester's TLP headers and allow the system hardware, including
-> the Root Complex, to optimize the utilization of platform resources
-> for the requests.
-> 
-> Upcoming AMD hardware implement a new Cache Injection feature that
-> leverages TPH. Cache Injection allows PCIe endpoints to inject I/O
-> Coherent DMA writes directly into an L2 within the CCX (core complex)
-> closest to the CPU core that will consume it. This technology is aimed
-> at applications requiring high performance and low latency, such as
-> networking and storage applications.
+>  - PCI_TPH_CAP_NO_ST: NO ST Mode Supported
+>  - PCI_TPH_CAP_INT_VEC: Interrupt Vector Mode Supported
+>  - PCI_TPH_CAP_DEV_SPEC: Device Specific Mode Supported
 
-Thanks for this example, it's a great intro.  Suggest adding something
-similar to a patch commit log, since the cover letter is harder to
-find after this appears in git.
+> + * pcie_tph_modes - Get the ST modes supported by device
+> + * @pdev: PCI device
+> + *
+> + * Returns a bitmask with all TPH modes supported by a device as shown in the
+> + * TPH capability register. Current supported modes include:
+> + *   PCI_TPH_CAP_NO_ST - NO ST Mode Supported
+> + *   PCI_TPH_CAP_INT_VEC - Interrupt Vector Mode Supported
+> + *   PCI_TPH_CAP_DEV_SPEC - Device Specific Mode Supported
+> + *
+> + * Return: 0 when TPH is not supported, otherwise bitmask of supported modes
+> + */
+> +int pcie_tph_modes(struct pci_dev *pdev)
+> +{
+> +	if (!pdev->tph_cap)
+> +		return 0;
+> +
+> +	return get_st_modes(pdev);
+> +}
+> +EXPORT_SYMBOL(pcie_tph_modes);
 
-> This series introduces generic TPH support in Linux, allowing STs to be
-> retrieved and used by PCIe endpoint drivers as needed. As a
-> demonstration, it includes an example usage in the Broadcom BNXT driver.
-> When running on Broadcom NICs with the appropriate firmware, it shows
-> substantial memory bandwidth savings and better network bandwidth using
-> real-world benchmarks. This solution is vendor-neutral and implemented
-> based on industry standards (PCIe Spec and PCI FW Spec).
-> 
-> V3->V4:
->  * Rebase on top of the latest pci/next tree (tag: 6.11-rc1)
+I'm not sure I see the need for pcie_tph_modes().  The new bnxt code
+looks like this:
 
-No need to rebase to pci/next; pci/main is where it will be applied.
-But it currently applies cleanly to either, so no problem.
+  bnxt_request_irq
+    if (pcie_tph_modes(bp->pdev) & PCI_TPH_CAP_INT_VEC)
+      rc = pcie_enable_tph(bp->pdev, PCI_TPH_CAP_INT_VEC);
 
->  * Add new API functioins to query/enable/disable TPH support
->  * Make pcie_tph_set_st() completely independent from pcie_tph_get_cpu_st()
->  * Rewrite bnxt.c based on new APIs
->  * Remove documentation for now due to constantly changing API
+What is the advantage of this over just this?
 
-I'd like to see this documentation included.  And updated if the API
-changes, of course.
+  bnxt_request_irq
+    rc = pcie_enable_tph(bp->pdev, PCI_TPH_CAP_INT_VEC);
 
->  * Remove pci=notph, but keep pci=nostmode with better flow (Bjorn)
+It seems like drivers could just ask for what they want since
+pcie_enable_tph() has to verify support for it anyway.  If that fails,
+the driver can fall back to another mode.
 
-This seems backward to me.  I think "pci=notph" makes sense as a way
-to completely disable the TPH feature in case a user trips over a
-hardware or driver defect.
-
-But "pci=nostmode" is advertised as a way to quantify the benefit of
-Steering Tags, and that seems like it's of interest to developers but
-not users.
-
-So my advice would be to keep "pci=notph" and drop "pci=nostmode".
+Returning a bitmask of supported modes might be useful if the driver
+could combine them, but IIUC the modes are all mutually exclusive, so
+the driver can't request a combination of them.
 
 Bjorn
 
