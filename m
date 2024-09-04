@@ -1,228 +1,143 @@
-Return-Path: <linux-pci+bounces-12721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81F1496B27C
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 09:12:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7A8196B2C3
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 09:26:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EA901F25685
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 07:12:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5293F1F27255
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 07:26:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1919146A7A;
-	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7A614659D;
+	Wed,  4 Sep 2024 07:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxAVgAiy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUo47ZNl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4EF14659C;
-	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239A6145FE8
+	for <linux-pci@vger.kernel.org>; Wed,  4 Sep 2024 07:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725433922; cv=none; b=MF6ZVwdPRxq2IvUgFTA0JSFPhEn9YEoA+ln2TRtRY+r1puIxGyIMMDnOsNfO+1E+R94RgXjByDkqFS7jvPpPcgMMJlQwfRngsmkMRBrGe6Lw68xl0gdHqu1U+o07LQONvnn8CViU7uqAOYldI41JfhvUOO1ZbPac2NvmDlBYqq8=
+	t=1725434752; cv=none; b=sZGqqPxF2XeOcy2tv4B/LUu1b3p/4QYZkWjJHMRI/K1unPPZN46tqnujjG281G4PuCM9oppIrx21YZaIRDztUgn+En7CXuIEoycuXfHhChvMTsBJU5sF9qC+DFUskjGt+/aGr9AGxDiTMfyVOwD0l8uRSQGtFPfCo6pXuTEFPnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725433922; c=relaxed/simple;
-	bh=fByxYHe/OXVj/eHBrGGRG8NwOR5K7E48NNBb5OSzu0k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W5f7O+VuztPl+mMsec3BUkLJXZgMpQOjMhXNn8fL8HyZj3JK28vm5c0qBqx8BiPnvisr3azihtQxEMh0s8RenIg2S/n0oZfyCWgh2lrJrybD91H3AicFdGJIRbFomOz6qMh0yBQDAQo81m8dp6pf2KlwD/cCen2BvviBOLv4gl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxAVgAiy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 46A00C4CECF;
-	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725433922;
-	bh=fByxYHe/OXVj/eHBrGGRG8NwOR5K7E48NNBb5OSzu0k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IxAVgAiyKknQ/ye7phmarHhB2kbjaDwS8YI8VfldfQlyuI8ZWr5yFbY3KA1+AxUee
-	 Rw1dM3b0e4GNF+hjj8y4tZ/8WWl5EAngFeM81To+N94fN5OlSUSQQlzFee+pv4hGmD
-	 HQGKjrE3QqCtQxlsRsAhAs6Nx3V2pxpc37R7yDoeD/+DUrCWgjqgEAWuOARoxEiWz5
-	 q48sqkGe6jwoolN3qraNmpsrRfGQXzJ1ExQU4JgKWnmW7KAC3eE/VmQ+d4HS7T4LoY
-	 wp/hS/QopQd2qsePe63ctxJo1JNYir6tSNmqSWLcagJMiezA8nB86Fes0VvgbqEDVb
-	 cqF+XJzC/p92g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C05DCD3431;
-	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Wed, 04 Sep 2024 12:42:00 +0530
-Subject: [PATCH v6 4/4] PCI: qcom: Add RX margining settings for 16.0 GT/s
+	s=arc-20240116; t=1725434752; c=relaxed/simple;
+	bh=ZtjWFy7AfO9EdyqhcgulwtDmU/bcKMsg/rppWMCn84g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ywge/psBq5I1l7gbcLTJAU5sRZE0n1oIRcHldM7z2AEQqlHvwQopmvb0fcijcH3vwkEaSI70CVKGQ2F+0PK2xf63iXKB3mA80IABnHdxCyKvtQYB576R40pPixQoYvYHCVbFMLiRPSZggzzB1xUH1dt3VN2nZRp9XegnEqeM+d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PUo47ZNl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725434748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0Ai0i48K+x75wE2opWN6H+yE5yaU/0owwcRJ41uJwPs=;
+	b=PUo47ZNlqor3z4KcLgXGdK9Nh7zIsr1FlSsBTOiGFIanxVzNAdVPHAJshl4FznHq9Fk+fu
+	V9S9pO3+FW2zzqs3hA3mXLGs+DFrlSzd/BjAM0GC47zGdZ88vyt7foEPOzEi953CD+j0JU
+	dn7bPazUoD59BfgfIC7GNnRDpHxNOEg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-453-t218rB35OfG3YlBl3Euhfg-1; Wed, 04 Sep 2024 03:25:47 -0400
+X-MC-Unique: t218rB35OfG3YlBl3Euhfg-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42c7a5563cfso9394425e9.2
+        for <linux-pci@vger.kernel.org>; Wed, 04 Sep 2024 00:25:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725434746; x=1726039546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Ai0i48K+x75wE2opWN6H+yE5yaU/0owwcRJ41uJwPs=;
+        b=fXdHDX3uIaRSrBk5wbej/tHfiQjgmkuIUDiOtvWZtUk+ErTDmzvreG3lbgUkKM3aP9
+         dtRu5v/EsqEmlg0lsfhEIM8skgbIDZCodCChilheThHEhW+1onOnOX+QGs8HkMgKkN49
+         D3Qep6tJw6hIoj3J6NJBTf8dGi7eRSCkOvgN82RayIdHNoLCVgYK3yACCGBCQuadA6Bw
+         bgSUU5A/wrXi0CGRNUY1yRRruAAc4v67JojGb19gmMdrRj8lpvogBzGzy6Nk8gUFlhq5
+         IZNMIebPg/XIZRQdNvmwxi3ms9l/yVTsQuZB2Ag2zBdYdlo5KSesPHHTDS7gbHSSCfLX
+         xECw==
+X-Gm-Message-State: AOJu0YxeMqybp2etTM432n3jRrvdy7I40NjhQ6FVY0wULTT70CO6/VPw
+	hPg6XYgyRsEsnGM9ZYK/vYqglKM53vClxUjczjux95ULhMm6QxpiC4LPgvSIVEoTHqEnIK8Ltxf
+	gR2A1Pi+uymvC6UTgl5bEr7Yj9zxbbXs9IXcuPhhCVWv38IEnyYb3ti+2LiVy39KhXA==
+X-Received: by 2002:a05:600c:1c83:b0:426:5440:8541 with SMTP id 5b1f17b1804b1-42bb01e5f83mr144896435e9.27.1725434746511;
+        Wed, 04 Sep 2024 00:25:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEviBJFNrkQInUgxY9gMkRKTSBKIkiCknbrw34c2RvP/P4K3CeawHA8LFRYHivQqQ6/eeBWBQ==
+X-Received: by 2002:a05:600c:1c83:b0:426:5440:8541 with SMTP id 5b1f17b1804b1-42bb01e5f83mr144896215e9.27.1725434746012;
+        Wed, 04 Sep 2024 00:25:46 -0700 (PDT)
+Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6f9b584sm193222905e9.16.2024.09.04.00.25.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2024 00:25:45 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Fix might_sleep() lockdep warning in pcim_intx()
+Date: Wed,  4 Sep 2024 09:25:42 +0200
+Message-ID: <20240904072541.8746-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240904-pci-qcom-gen4-stability-v6-4-ec39f7ae3f62@linaro.org>
-References: <20240904-pci-qcom-gen4-stability-v6-0-ec39f7ae3f62@linaro.org>
-In-Reply-To: <20240904-pci-qcom-gen4-stability-v6-0-ec39f7ae3f62@linaro.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, 
- Chuanhua Lei <lchuanhua@maxlinear.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- abel.vesa@linaro.org, johan+linaro@kernel.org, 
- Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5581;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=+UyPXoBEoMHThbW48iMeb9Epx8yMpHkZz7Vs41Qi22Y=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBm2Ag/CKqFkchoOhfhcoyHVeR3YDPEC2OUGEWKm
- 6WLB/Ag6VaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZtgIPwAKCRBVnxHm/pHO
- 9T9aB/0cOOobTwlsF0wmCW6pgspvSb7L5UPaZJLD9me+c+UTbkKm+gmOC/7F0uhZc0mk91W104B
- 7uqxEJOqSw585He5P6MCADmUTIV52H+sBvRQKQ9gEHrUd8GdC4neN+Je/JQMJKrldwkDj59AUvV
- NhiLjHvqT9p/xfskS0QpnO161HeZU3Qa0GcEXwqpL9jGAz1gjzVsUbcGffGGuilzGJtbvxar9YT
- HktzXUuO2QX2etlTpsm6qRmZD4DdzQaVpZ68hW/oxYjiiebbya9VKk+t6nwHIvRhqIznGDKFHrY
- +Vh7w8QtIvvWul1i7Z58hfnF1TeZTuO++OOnhhDw9ApQUHV9
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@linaro.org/default with auth_id=185
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reply-To: manivannan.sadhasivam@linaro.org
+Content-Transfer-Encoding: 8bit
 
-From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+commit 25216afc9db5 ("PCI: Add managed pcim_intx()") moved the
+allocation step for pci_intx()'s device resource from
+pcim_enable_device() to pcim_intx(). As before, pcim_enable_device()
+sets pci_dev.is_managed to true; and it is never set to false again.
 
-Add RX lane margining settings for 16.0 GT/s (GEN 4) data rate. These
-settings improve link stability while operating at high date rates and
-helps to improve signal quality.
+Under some circumstances it can happen that drivers share a struct
+pci_dev. If one driver uses pcim_enable_device() and the other doesn't,
+this causes the other driver to run into managed pcim_intx(), which will
+try to allocate when called for the first time.
 
-Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-[mani: dropped the code refactoring and minor changes]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Allocations might sleep, so calling pci_intx() while holding spinlocks
+becomes then invalid, which causes lockdep warnings and could cause
+deadlocks.
+
+Have pcim_enable_device()'s release function, pcim_disable_device(), set
+pci_dev.is_managed to false so that subsequent drivers using the same
+struct pci_dev do not run implicitly into managed code.
+
+Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
+Reported-by: Alex Williamson <alex.williamson@redhat.com>
+Closes: https://lore.kernel.org/all/20240903094431.63551744.alex.williamson@redhat.com/
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.h  | 18 ++++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.c | 31 +++++++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
- drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++-
- drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++-
- 5 files changed, 56 insertions(+), 2 deletions(-)
+@Alex:
+Please have a look whether this fixes your issue.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 51744ad25575..f5be99731f7e 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -209,6 +209,24 @@
+Might also be cool to include your lockdep warning in the commit
+message, if you can provide that.
+
+P.
+---
+ drivers/pci/devres.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 3780a9f9ec00..c7affbbf73ab 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -483,6 +483,8 @@ static void pcim_disable_device(void *pdev_raw)
  
- #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
- 
-+/*
-+ * 16.0 GT/s (GEN4) lane margining register definitions
-+ */
-+#define GEN4_LANE_MARGINING_1_OFF		0xb80
-+#define MARGINING_MAX_VOLTAGE_OFFSET		GENMASK(29, 24)
-+#define MARGINING_NUM_VOLTAGE_STEPS		GENMASK(22, 16)
-+#define MARGINING_MAX_TIMING_OFFSET		GENMASK(13, 8)
-+#define MARGINING_NUM_TIMING_STEPS		GENMASK(5, 0)
+ 	if (!pdev->pinned)
+ 		pci_disable_device(pdev);
 +
-+#define GEN4_LANE_MARGINING_2_OFF		0xb84
-+#define MARGINING_IND_ERROR_SAMPLER		BIT(28)
-+#define MARGINING_SAMPLE_REPORTING_METHOD	BIT(27)
-+#define MARGINING_IND_LEFT_RIGHT_TIMING		BIT(26)
-+#define MARGINING_IND_UP_DOWN_VOLTAGE		BIT(25)
-+#define MARGINING_VOLTAGE_SUPPORTED		BIT(24)
-+#define MARGINING_MAXLANES			GENMASK(20, 16)
-+#define MARGINING_SAMPLE_RATE_TIMING		GENMASK(13, 8)
-+#define MARGINING_SAMPLE_RATE_VOLTAGE		GENMASK(5, 0)
- /*
-  * iATU Unroll-specific register definitions
-  * From 4.80 core version the address translation will be made by unroll
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-index dc7d93db9dc5..99b75e7f085d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-@@ -43,3 +43,34 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
- 	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
++	pdev->is_managed = false;
  }
- EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
-+
-+void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
-+{
-+	u32 reg;
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
-+	reg &= ~(MARGINING_MAX_VOLTAGE_OFFSET |
-+		MARGINING_NUM_VOLTAGE_STEPS |
-+		MARGINING_MAX_TIMING_OFFSET |
-+		MARGINING_NUM_TIMING_STEPS);
-+	reg |= FIELD_PREP(MARGINING_MAX_VOLTAGE_OFFSET, 0x24) |
-+		FIELD_PREP(MARGINING_NUM_VOLTAGE_STEPS, 0x78) |
-+		FIELD_PREP(MARGINING_MAX_TIMING_OFFSET, 0x32) |
-+		FIELD_PREP(MARGINING_NUM_TIMING_STEPS, 0x10);
-+	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_1_OFF, reg);
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_2_OFF);
-+	reg |= MARGINING_IND_ERROR_SAMPLER |
-+		MARGINING_SAMPLE_REPORTING_METHOD |
-+		MARGINING_IND_LEFT_RIGHT_TIMING |
-+		MARGINING_VOLTAGE_SUPPORTED;
-+	reg &= ~(MARGINING_IND_UP_DOWN_VOLTAGE |
-+		MARGINING_MAXLANES |
-+		MARGINING_SAMPLE_RATE_TIMING |
-+		MARGINING_SAMPLE_RATE_VOLTAGE);
-+	reg |= FIELD_PREP(MARGINING_MAXLANES, pci->num_lanes) |
-+		FIELD_PREP(MARGINING_SAMPLE_RATE_TIMING, 0x3f) |
-+		FIELD_PREP(MARGINING_SAMPLE_RATE_VOLTAGE, 0x3f);
-+	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_2_OFF, reg);
-+}
-+EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_rx_margining_settings);
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
-index 259e04b7bdf9..e9ddc901082e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.h
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
-@@ -6,3 +6,4 @@
- #include "pcie-designware.h"
  
- void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
-+void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci);
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index af83470216e8..5c220f2ecafe 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -487,8 +487,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 		goto err_disable_resources;
- 	}
- 
--	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
-+	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
- 		qcom_pcie_common_set_16gt_eq_settings(pci);
-+		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
-+	}
- 
- 	/*
- 	 * The physical address of the MMIO region which is exposed as the BAR
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 2742e82fdcb3..b0b1d8d34279 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -284,8 +284,10 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
- 
--	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
-+	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
- 		qcom_pcie_common_set_16gt_eq_settings(pci);
-+		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
-+	}
- 
- 	/* Enable Link Training state machine */
- 	if (pcie->cfg->ops->ltssm_enable)
-
+ /**
 -- 
-2.25.1
-
+2.46.0
 
 
