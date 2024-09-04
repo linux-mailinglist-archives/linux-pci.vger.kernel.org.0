@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-12722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12721-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C6C096B285
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 09:12:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81F1496B27C
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 09:12:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A15C51C21894
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 07:12:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EA901F25685
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Sep 2024 07:12:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9B3C148310;
-	Wed,  4 Sep 2024 07:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1919146A7A;
+	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWib1M3o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxAVgAiy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98CE1482F3;
-	Wed,  4 Sep 2024 07:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4EF14659C;
+	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725433923; cv=none; b=Ja1wqbaoTn4/M3WqX3DO9tok6AX0aCvbzlCXg8lg4hagJ7z6zLoJ0PIOJwXls/9gC5YZxgP3mTT+w9+7XOCZB2IX0DIwxOJF1dpzfZQ4t81ZDjRjD2zedwbLn9Q+3gK/+guw3d88ytvk+J8j4E88rWOkYafgLGWKsqKBaBb58YI=
+	t=1725433922; cv=none; b=MF6ZVwdPRxq2IvUgFTA0JSFPhEn9YEoA+ln2TRtRY+r1puIxGyIMMDnOsNfO+1E+R94RgXjByDkqFS7jvPpPcgMMJlQwfRngsmkMRBrGe6Lw68xl0gdHqu1U+o07LQONvnn8CViU7uqAOYldI41JfhvUOO1ZbPac2NvmDlBYqq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725433923; c=relaxed/simple;
-	bh=LwVGABloRuNGFpCVqJ9UyuuTFWf3rxmzAgpQvwystx4=;
+	s=arc-20240116; t=1725433922; c=relaxed/simple;
+	bh=fByxYHe/OXVj/eHBrGGRG8NwOR5K7E48NNBb5OSzu0k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SlZl7z3y54lkQrn1s/2LCITza3fzmtoFa/TWUFvZncNqjvsePYJ9bndyN7HRUNF5+oiShV9n6+srKQ0YrbP7v/coNA4LTcIihlz9F5bKzX7M6kpj8plgLvl09KkrdinLHuF/MjvUZZa2eapjqDB5OUweNlGWSD6sh+9i9eIQ2tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWib1M3o; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 33742C4CECF;
+	 In-Reply-To:To:Cc; b=W5f7O+VuztPl+mMsec3BUkLJXZgMpQOjMhXNn8fL8HyZj3JK28vm5c0qBqx8BiPnvisr3azihtQxEMh0s8RenIg2S/n0oZfyCWgh2lrJrybD91H3AicFdGJIRbFomOz6qMh0yBQDAQo81m8dp6pf2KlwD/cCen2BvviBOLv4gl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxAVgAiy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46A00C4CECF;
 	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725433923;
-	bh=LwVGABloRuNGFpCVqJ9UyuuTFWf3rxmzAgpQvwystx4=;
+	s=k20201202; t=1725433922;
+	bh=fByxYHe/OXVj/eHBrGGRG8NwOR5K7E48NNBb5OSzu0k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lWib1M3oZ58jLBwEHWD2UhgNp8kPvJdwCfvdHlUy783Nvfj7vIrsEB6MzirY2rVzu
-	 STgDrahXCCk9wPxdfbGvAxTBaBOx4SpYjYNiRtrNG0RccAyjZPxyCUOjLjgmlx16jn
-	 ulkU+tlFyeqNAOEfZ2LjbDAA6ivPO1rdsdLwJX7LbXOIvKvAjpH4dK9+7yAVLOiebF
-	 5YGyX3ILT4U5fO7UpF2qTCUkbNjw5h0VU+uG3pwwZLWlnhbEymWu3gat1HDjDa6p7R
-	 UmNN8L/WfD0Mt8zvp7kgqwMN8jF/Sbvt0gtJpUCAIMvCkpft9LyJ2NPgRoDZdlm3rG
-	 eqXPgmY7fB39A==
+	b=IxAVgAiyKknQ/ye7phmarHhB2kbjaDwS8YI8VfldfQlyuI8ZWr5yFbY3KA1+AxUee
+	 Rw1dM3b0e4GNF+hjj8y4tZ/8WWl5EAngFeM81To+N94fN5OlSUSQQlzFee+pv4hGmD
+	 HQGKjrE3QqCtQxlsRsAhAs6Nx3V2pxpc37R7yDoeD/+DUrCWgjqgEAWuOARoxEiWz5
+	 q48sqkGe6jwoolN3qraNmpsrRfGQXzJ1ExQU4JgKWnmW7KAC3eE/VmQ+d4HS7T4LoY
+	 wp/hS/QopQd2qsePe63ctxJo1JNYir6tSNmqSWLcagJMiezA8nB86Fes0VvgbqEDVb
+	 cqF+XJzC/p92g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD2BCD484B;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C05DCD3431;
 	Wed,  4 Sep 2024 07:12:02 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Wed, 04 Sep 2024 12:41:59 +0530
-Subject: [PATCH v6 3/4] PCI: qcom: Add equalization settings for 16.0 GT/s
+Date: Wed, 04 Sep 2024 12:42:00 +0530
+Subject: [PATCH v6 4/4] PCI: qcom: Add RX margining settings for 16.0 GT/s
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240904-pci-qcom-gen4-stability-v6-3-ec39f7ae3f62@linaro.org>
+Message-Id: <20240904-pci-qcom-gen4-stability-v6-4-ec39f7ae3f62@linaro.org>
 References: <20240904-pci-qcom-gen4-stability-v6-0-ec39f7ae3f62@linaro.org>
 In-Reply-To: <20240904-pci-qcom-gen4-stability-v6-0-ec39f7ae3f62@linaro.org>
 To: Richard Zhu <hongxing.zhu@nxp.com>, 
@@ -76,16 +76,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8912;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5581;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=O30AbR/u6bNNZQiLXcwalUrc4of9/6k1WIJqurCfXZQ=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBm2Ag/EgK/nkm3WCLqVQKqX/BtDr66lXxn1rXvr
- +c7ebkJiZWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZtgIPwAKCRBVnxHm/pHO
- 9XLrCACJm2fqFsKEizN0IiXfX4R841fL49SZYtGEJUpF7Aa6PFA8iEX/bOAmTjB5zmoPmhWcoEx
- tFdKlGUvWDcESJ9BUp8KRl3EnBPnOHu2kyfOZUGeAjidXhP0GMcAW3W2yfjbb6n4jY+rkKkVm+d
- AWU/MNfC71a80muKjrA4E9Uay+x+VtFHyBch+512VVzbI3si5oJgyjBhwaXa86b7pe3xtXlGZCN
- lcVzG12vX2OT15WD7WBonK96bmx68N36GkkRIRnxBL7Uwy06xmx1xY55tcbYkmjUFg6J04Vd2q4
- mC/u1VUle96DS73D8ASulnbJ3YdK9mVL+8EKxAbI7RYU4HX4
+ bh=+UyPXoBEoMHThbW48iMeb9Epx8yMpHkZz7Vs41Qi22Y=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBm2Ag/CKqFkchoOhfhcoyHVeR3YDPEC2OUGEWKm
+ 6WLB/Ag6VaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZtgIPwAKCRBVnxHm/pHO
+ 9T9aB/0cOOobTwlsF0wmCW6pgspvSb7L5UPaZJLD9me+c+UTbkKm+gmOC/7F0uhZc0mk91W104B
+ 7uqxEJOqSw585He5P6MCADmUTIV52H+sBvRQKQ9gEHrUd8GdC4neN+Je/JQMJKrldwkDj59AUvV
+ NhiLjHvqT9p/xfskS0QpnO161HeZU3Qa0GcEXwqpL9jGAz1gjzVsUbcGffGGuilzGJtbvxar9YT
+ HktzXUuO2QX2etlTpsm6qRmZD4DdzQaVpZ68hW/oxYjiiebbya9VKk+t6nwHIvRhqIznGDKFHrY
+ +Vh7w8QtIvvWul1i7Z58hfnF1TeZTuO++OOnhhDw9ApQUHV9
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -95,230 +95,131 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 
-During high data transmission rates such as 16.0 GT/s, there is an
-increased risk of signal loss due to poor channel quality and interference.
-This can impact receiver's ability to capture signals accurately. Hence,
-signal compensation is achieved through appropriate lane equalization
-settings at both transmitter and receiver. This will result in increased
-PCIe signal strength.
+Add RX lane margining settings for 16.0 GT/s (GEN 4) data rate. These
+settings improve link stability while operating at high date rates and
+helps to improve signal quality.
 
 Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 [mani: dropped the code refactoring and minor changes]
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- MAINTAINERS                                   |  4 ++-
- drivers/pci/controller/dwc/Kconfig            |  5 +++
- drivers/pci/controller/dwc/Makefile           |  1 +
- drivers/pci/controller/dwc/pcie-designware.h  | 12 +++++++
- drivers/pci/controller/dwc/pcie-qcom-common.c | 45 +++++++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.h |  8 +++++
- drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++
- drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++
- 8 files changed, 82 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware.h  | 18 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-common.c | 31 +++++++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++-
+ drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++-
+ 5 files changed, 56 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f328373463b0..3cfb6068b9f0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2728,7 +2728,7 @@ F:	drivers/iommu/msm*
- F:	drivers/mfd/ssbi.c
- F:	drivers/mmc/host/mmci_qcom*
- F:	drivers/mmc/host/sdhci-msm.c
--F:	drivers/pci/controller/dwc/pcie-qcom.c
-+F:	drivers/pci/controller/dwc/pcie-qcom*
- F:	drivers/phy/qualcomm/
- F:	drivers/power/*/msm*
- F:	drivers/reset/reset-qcom-*
-@@ -17757,6 +17757,7 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
-+F:	drivers/pci/controller/dwc/pcie-qcom-common.c
- F:	drivers/pci/controller/dwc/pcie-qcom.c
- 
- PCIE DRIVER FOR ROCKCHIP
-@@ -17793,6 +17794,7 @@ L:	linux-pci@vger.kernel.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-+F:	drivers/pci/controller/dwc/pcie-qcom-common.c
- F:	drivers/pci/controller/dwc/pcie-qcom-ep.c
- 
- PCMCIA SUBSYSTEM
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 4c38181acffa..b6d6778b0698 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -265,12 +265,16 @@ config PCIE_DW_PLAT_EP
- 	  order to enable device-specific features PCI_DW_PLAT_EP must be
- 	  selected.
- 
-+config PCIE_QCOM_COMMON
-+	bool
-+
- config PCIE_QCOM
- 	bool "Qualcomm PCIe controller (host mode)"
- 	depends on OF && (ARCH_QCOM || COMPILE_TEST)
- 	depends on PCI_MSI
- 	select PCIE_DW_HOST
- 	select CRC8
-+	select PCIE_QCOM_COMMON
- 	help
- 	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
- 	  PCIe controller uses the DesignWare core plus Qualcomm-specific
-@@ -281,6 +285,7 @@ config PCIE_QCOM_EP
- 	depends on OF && (ARCH_QCOM || COMPILE_TEST)
- 	depends on PCI_ENDPOINT
- 	select PCIE_DW_EP
-+	select PCIE_QCOM_COMMON
- 	help
- 	  Say Y here to enable support for the PCIe controllers on Qualcomm SoCs
- 	  to work in endpoint mode. The PCIe controller uses the DesignWare core
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index ec215b3d6191..a8308d9ea986 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
- obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
- obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
-+obj-$(CONFIG_PCIE_QCOM_COMMON) += pcie-qcom-common.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 22765564f301..51744ad25575 100644
+index 51744ad25575..f5be99731f7e 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -126,6 +126,18 @@
- #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
- #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+@@ -209,6 +209,24 @@
  
-+#define GEN3_EQ_CONTROL_OFF			0x8a8
-+#define GEN3_EQ_CONTROL_OFF_FB_MODE		GENMASK(3, 0)
-+#define GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE	BIT(4)
-+#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC	GENMASK(23, 8)
-+#define GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL	BIT(24)
-+
-+#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
-+#define GEN3_EQ_FMDC_T_MIN_PHASE23		GENMASK(4, 0)
-+#define GEN3_EQ_FMDC_N_EVALS			GENMASK(9, 5)
-+#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA	GENMASK(13, 10)
-+#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA	GENMASK(17, 14)
-+
- #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
- #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+ #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
  
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-new file mode 100644
-index 000000000000..dc7d93db9dc5
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ * 16.0 GT/s (GEN4) lane margining register definitions
 + */
++#define GEN4_LANE_MARGINING_1_OFF		0xb80
++#define MARGINING_MAX_VOLTAGE_OFFSET		GENMASK(29, 24)
++#define MARGINING_NUM_VOLTAGE_STEPS		GENMASK(22, 16)
++#define MARGINING_MAX_TIMING_OFFSET		GENMASK(13, 8)
++#define MARGINING_NUM_TIMING_STEPS		GENMASK(5, 0)
 +
-+#include <linux/pci.h>
++#define GEN4_LANE_MARGINING_2_OFF		0xb84
++#define MARGINING_IND_ERROR_SAMPLER		BIT(28)
++#define MARGINING_SAMPLE_REPORTING_METHOD	BIT(27)
++#define MARGINING_IND_LEFT_RIGHT_TIMING		BIT(26)
++#define MARGINING_IND_UP_DOWN_VOLTAGE		BIT(25)
++#define MARGINING_VOLTAGE_SUPPORTED		BIT(24)
++#define MARGINING_MAXLANES			GENMASK(20, 16)
++#define MARGINING_SAMPLE_RATE_TIMING		GENMASK(13, 8)
++#define MARGINING_SAMPLE_RATE_VOLTAGE		GENMASK(5, 0)
+ /*
+  * iATU Unroll-specific register definitions
+  * From 4.80 core version the address translation will be made by unroll
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+index dc7d93db9dc5..99b75e7f085d 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-common.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+@@ -43,3 +43,34 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
+ 	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+ }
+ EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
 +
-+#include "pcie-designware.h"
-+#include "pcie-qcom-common.h"
-+
-+void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
++void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
 +{
 +	u32 reg;
 +
-+	/*
-+	 * GEN3_RELATED_OFF register is repurposed to apply equalization
-+	 * settings at various data transmission rates through registers namely
-+	 * GEN3_EQ_*. RATE_SHADOW_SEL bit field of GEN3_RELATED_OFF determines
-+	 * data rate for which this equalization settings are applied.
-+	 */
-+	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-+	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-+	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-+	reg |= FIELD_PREP(GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0x1);
-+	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
++	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
++	reg &= ~(MARGINING_MAX_VOLTAGE_OFFSET |
++		MARGINING_NUM_VOLTAGE_STEPS |
++		MARGINING_MAX_TIMING_OFFSET |
++		MARGINING_NUM_TIMING_STEPS);
++	reg |= FIELD_PREP(MARGINING_MAX_VOLTAGE_OFFSET, 0x24) |
++		FIELD_PREP(MARGINING_NUM_VOLTAGE_STEPS, 0x78) |
++		FIELD_PREP(MARGINING_MAX_TIMING_OFFSET, 0x32) |
++		FIELD_PREP(MARGINING_NUM_TIMING_STEPS, 0x10);
++	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_1_OFF, reg);
 +
-+	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-+	reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
-+		GEN3_EQ_FMDC_N_EVALS |
-+		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
-+		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
-+	reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
-+		FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
-+		FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
-+		FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
-+	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-+	reg &= ~(GEN3_EQ_CONTROL_OFF_FB_MODE |
-+		GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE |
-+		GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL |
-+		GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC);
-+	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
++	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_2_OFF);
++	reg |= MARGINING_IND_ERROR_SAMPLER |
++		MARGINING_SAMPLE_REPORTING_METHOD |
++		MARGINING_IND_LEFT_RIGHT_TIMING |
++		MARGINING_VOLTAGE_SUPPORTED;
++	reg &= ~(MARGINING_IND_UP_DOWN_VOLTAGE |
++		MARGINING_MAXLANES |
++		MARGINING_SAMPLE_RATE_TIMING |
++		MARGINING_SAMPLE_RATE_VOLTAGE);
++	reg |= FIELD_PREP(MARGINING_MAXLANES, pci->num_lanes) |
++		FIELD_PREP(MARGINING_SAMPLE_RATE_TIMING, 0x3f) |
++		FIELD_PREP(MARGINING_SAMPLE_RATE_VOLTAGE, 0x3f);
++	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_2_OFF, reg);
 +}
-+EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
++EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_rx_margining_settings);
 diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
-new file mode 100644
-index 000000000000..259e04b7bdf9
---- /dev/null
+index 259e04b7bdf9..e9ddc901082e 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-common.h
 +++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include "pcie-designware.h"
-+
-+void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
+@@ -6,3 +6,4 @@
+ #include "pcie-designware.h"
+ 
+ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
++void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci);
 diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 236229f66c80..af83470216e8 100644
+index af83470216e8..5c220f2ecafe 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -25,6 +25,7 @@
- 
- #include "../../pci.h"
- #include "pcie-designware.h"
-+#include "pcie-qcom-common.h"
- 
- /* PARF registers */
- #define PARF_SYS_CTRL				0x00
-@@ -486,6 +487,9 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+@@ -487,8 +487,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
  		goto err_disable_resources;
  	}
  
-+	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
-+		qcom_pcie_common_set_16gt_eq_settings(pci);
-+
+-	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
++	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
+ 		qcom_pcie_common_set_16gt_eq_settings(pci);
++		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
++	}
+ 
  	/*
  	 * The physical address of the MMIO region which is exposed as the BAR
- 	 * should be written to MHI BASE registers.
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..2742e82fdcb3 100644
+index 2742e82fdcb3..b0b1d8d34279 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -35,6 +35,7 @@
- 
- #include "../../pci.h"
- #include "pcie-designware.h"
-+#include "pcie-qcom-common.h"
- 
- /* PARF registers */
- #define PARF_SYS_CTRL				0x00
-@@ -283,6 +284,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+@@ -284,8 +284,10 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
  {
  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
  
-+	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
-+		qcom_pcie_common_set_16gt_eq_settings(pci);
-+
+-	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT)
++	if (pcie_link_speed[pci->max_link_speed] == PCIE_SPEED_16_0GT) {
+ 		qcom_pcie_common_set_16gt_eq_settings(pci);
++		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
++	}
+ 
  	/* Enable Link Training state machine */
  	if (pcie->cfg->ops->ltssm_enable)
- 		pcie->cfg->ops->ltssm_enable(pcie);
 
 -- 
 2.25.1
