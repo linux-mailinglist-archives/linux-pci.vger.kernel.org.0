@@ -1,267 +1,237 @@
-Return-Path: <linux-pci+bounces-12833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12832-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8347896D874
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 14:27:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5213A96D86E
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 14:26:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C6FB2890AB
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 12:27:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C54E01F272EA
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 12:26:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6BE19AD8B;
-	Thu,  5 Sep 2024 12:23:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630AC19B3CE;
+	Thu,  5 Sep 2024 12:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1ed95S1"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Sp2r9JfV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2062.outbound.protection.outlook.com [40.107.93.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4089219D889
-	for <linux-pci@vger.kernel.org>; Thu,  5 Sep 2024 12:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725539032; cv=none; b=JbJ7DUh5/tuToQmWKX486mGeMs4t0pBUmNGDN8pOXupTmTBHXsmVZZqyjXRc47stRB9HoGsTEatJ2xZukqvxdzkJFSK0B5ra1oPT7RSmG+02Df94yaO+PjYi8GBScR4fAwGo4fbUxG8zfxtMCNSWafyYal3Ii5Q4MIepo51q6c0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725539032; c=relaxed/simple;
-	bh=oj7aAB/GoYPD5ApMQrbQuqTegQowZ24puXeky1Mw80o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=seA5d+Ez7kRfNfayu4QOF88kVOTnvEjSn9pfJZze6GDB7qsDwqmU6aPTkhyKYZEhagpltpCGknpli8dshUgHGqaI9r28TgCSRErkqvvQ3RTTSvR+WWSeH4cb86AoV3rjNhVpJx3LZaP0Hvh7aYi4empFwFTjTSABSmBUIgghWuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1ed95S1; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725539030; x=1757075030;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=oj7aAB/GoYPD5ApMQrbQuqTegQowZ24puXeky1Mw80o=;
-  b=j1ed95S1AOGb897xCze76sd3oKiC1Y2sM9CuvjscX8/0CFuH12j3dO6D
-   BqcwV49xld/uoSed27M38QNRqGTqwLKPaVvqtoNDEUQR1wD3LKYPVRgZr
-   PMbt/VTFD1Zq4OR87uD6bG3x3RDdnJCn+mmIRhwQfl3rWj91u8ZVsd3kJ
-   /PJl8LNAu5JXU5QJ+N8Qyjc4XsChin14R5QqKZ/dnn4Pcv+iOEtZg3xBd
-   PA4CJbOljZ//R6ww4n+B/2KVfwR5bU0hQd/hmHCLqoXwYe6GQfDJAd6Pi
-   pkeKdZACq4RnrpoxuVDJLPq4G6dfa89CbNtOU0hRsFeRoCCZW7yj8Xs8U
-   w==;
-X-CSE-ConnectionGUID: opW1r32nQWaCEOJd8FavwQ==
-X-CSE-MsgGUID: dV39r793Qb+Eimf7+V3Cag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="34916860"
-X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
-   d="scan'208";a="34916860"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 05:23:49 -0700
-X-CSE-ConnectionGUID: EbX0rTyMTS+o/NL6wjrSSA==
-X-CSE-MsgGUID: EwGPZoSYRFGQuwKdHUd+3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
-   d="scan'208";a="65295983"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 05 Sep 2024 05:23:48 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smBWc-0009px-0H;
-	Thu, 05 Sep 2024 12:23:46 +0000
-Date: Thu, 05 Sep 2024 20:23:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/j721e] BUILD SUCCESS
- c538d40f365b5b6d7433d371710f58e8b266fb19
-Message-ID: <202409052059.EB1J77Tw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B546C19CCF5;
+	Thu,  5 Sep 2024 12:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725539022; cv=fail; b=Y+MzwYVnGq8xaP6o2mJ4vDrjcnrdRC4INizUiMTAij8ZbY4R+oqC1g0GWp02tbQJ7PuDqrBvPch2Kz95Do3jhkK7l9NzwTH0B2mL0/3jvOE9yVHYpIgLEUNog3gkWY5dfB/n+UZjlOdxGPr/Dd+rin2flUuwJE1/vCssEgEDgQc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725539022; c=relaxed/simple;
+	bh=Mu8pjU7MvaMKF43MtyMap2vyWuBjZefMDqNRYPqaTvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=E9HMmBxim5OJBl5CK2kRwms7gRYkH7ppCLVf0vnOlTgDpM519Z8nw5spi/0RxXIeJmKarJrcxdPshIiROANeOfdCFeHrdIxabCUD8pOWwN2tE1/pOBetFuc8CjuaiA+otjM46akpXChxFJLCnybZknN5essUoLZGA3fUzjfjT7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Sp2r9JfV; arc=fail smtp.client-ip=40.107.93.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LpO6Qvfh0o+l+sGAD4i6oURUrLrZya98wL2BA4tv6wZXSdfxjWKk54Bv2VUKcrCjqGOC0gNBLMpHaPUwdNzeGyYcjqQ3Ihsgzy/1xDeF/PcgNHeziGG22FDeJKVY7B2sVH1c9KxmYM7zmIkWIj+nmuTT8GcrHAnMu51W2LI1SPx4oa/ES4LS+Uph3iXRhaUCKw1bG9UkPt7YJt9miKyg1K7KnWg4EqXcR3V+4p41YHHVdXiCkLvkay09zofBrimzavn1BpRmDITCkOg7KweafI9Rci+PNVVWDA2mMr8tVZCCA60IhOkedK8J5DK7bjGjmQMdNroaZcA1/7BNpJxyww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B3mabzs50IhxhGMv37TDupSSCwSo29OhcaU9ketnteA=;
+ b=N+pXjd6s575V1JDbKUjnZON+raOR2Qz/kbUmTjnf0eB6OMAOeluA1AJmGgBc0XIMoCeq6Lg29X2Yn6gv35AAoJKaXGGzv1VNGfWnxyytJafbZcmEvcjsN6mv1SbZsvCUWYqGrUQ8pAYiDkhM+w7ZZBkVnSxmh8OFhUJD1/5u5GVlAxvvHmjlU8f/UJ6Arodta+ccLbEX3qzP4etAK3HxOO4cl1QKDyRf8LUf7JNpH6ecpvCC4NReru7wcyA1B2272cevzWXzePQc+rbtk2EvsMEIWY+NFM5usCT2W6mZ3Hbgu6CPxIs/dnABhm2lf4dU/FGfEY48VPSQy0qaurUIxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B3mabzs50IhxhGMv37TDupSSCwSo29OhcaU9ketnteA=;
+ b=Sp2r9JfVi9ipYMuayuh3osVy41dothzJzcWMmqBvxNNdDRPhwzgUcTV28hHfu8EPtmK99tAZrkrGckJxZoLauVSF6dp6yR/JqnrKlbYsmgtP5iytM0pR0Zjd49SaJYBJWb8aUu/set4Gki2kXAsSY8C3lwn+sThXrXBfclxA9z2LSYxgE8+rlyAdwiwVvdVzurKpFLjHf/IeHNlhUJnS2xMJc+IboNGHRkOg6Q0OSt/s4S7zFhjpTKNKRnQZ9/mHr8XyO2bCmBtHsAkZbvS3nW+icdm2ZMx3PIG8d51Za9nS7xVNGrsQyRrlQs8eS1guIE7+I7hWHxNoRWMkYTKcHg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB7763.namprd12.prod.outlook.com (2603:10b6:610:145::10)
+ by SJ0PR12MB6879.namprd12.prod.outlook.com (2603:10b6:a03:484::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Thu, 5 Sep
+ 2024 12:23:37 +0000
+Received: from CH3PR12MB7763.namprd12.prod.outlook.com
+ ([fe80::8b63:dd80:c182:4ce8]) by CH3PR12MB7763.namprd12.prod.outlook.com
+ ([fe80::8b63:dd80:c182:4ce8%3]) with mapi id 15.20.7918.024; Thu, 5 Sep 2024
+ 12:23:37 +0000
+Date: Thu, 5 Sep 2024 09:23:36 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: "Williams, Dan J" <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Mostafa Saleh <smostafa@google.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	"pratikrajesh.sampat@amd.com" <pratikrajesh.sampat@amd.com>,
+	"michael.day@amd.com" <michael.day@amd.com>,
+	"david.kaplan@amd.com" <david.kaplan@amd.com>,
+	"dhaval.giani@amd.com" <dhaval.giani@amd.com>,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>,
+	"david@redhat.com" <david@redhat.com>
+Subject: Re: [RFC PATCH 12/21] KVM: IOMMUFD: MEMFD: Map private pages
+Message-ID: <20240905122336.GG1358970@nvidia.com>
+References: <20240826123024.GF3773488@nvidia.com>
+ <ZtBAvKyWWiF5mYqc@yilunxu-OptiPlex-7050>
+ <20240829121549.GF3773488@nvidia.com>
+ <ZtFWjHPv79u8eQFG@yilunxu-OptiPlex-7050>
+ <20240830123658.GO3773488@nvidia.com>
+ <66d772d568321_397529458@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240904000225.GA3915968@nvidia.com>
+ <66d7b0faddfbd_3975294e0@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240905120041.GB1358970@nvidia.com>
+ <BN9PR11MB527612F4EF22B4B564E1DEDA8C9D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB527612F4EF22B4B564E1DEDA8C9D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BN0PR04CA0089.namprd04.prod.outlook.com
+ (2603:10b6:408:ea::34) To CH3PR12MB7763.namprd12.prod.outlook.com
+ (2603:10b6:610:145::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB7763:EE_|SJ0PR12MB6879:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5f76209-1231-4e95-de0b-08dccda5916d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PUSEwd9Bh+gtMfkOf3gvGVpzPvxBRxVu2ZzKT2vqeaTOMlxuHIDlcLwP88Na?=
+ =?us-ascii?Q?KKh1VAJuWZWN+96LFkhypqPpXXSjXABcZchyQgXAikz/PU+3lmiEmptL6dJh?=
+ =?us-ascii?Q?KLF1mKLqEQRUmRr+ti9BPMkgxJAoG9MSzwLgNYixUlmPaqgN8vEB6ILauSRF?=
+ =?us-ascii?Q?eykg/Cvp4PlOGOEhy9DpD06rvlVQsor5OEJXJ/G7OkCgx+GkgZThFsQSc0cb?=
+ =?us-ascii?Q?+GyYR3E9nSbj6FTsqHpgrLSkaiM+bTBb527jjB80NW9wksVorw8ZVbT+PPdL?=
+ =?us-ascii?Q?M4q1xcTfkClYOfQl1CWdKQwMgVxZINjHk7gJhl3iPvdVQI6bW6RQUZDVkb6M?=
+ =?us-ascii?Q?qEglFklh7o+WO3bKqrWzQtGVk0kxg8gf1wrrRGWXUit2ui6uwU9Tcd56kRVP?=
+ =?us-ascii?Q?gYhRPW/j2MxGrWOQtY5hzkS3CvWqu4o24AS7ejcdURUuM2pBI0RhAi8XbGBL?=
+ =?us-ascii?Q?HkRaW/Cn3iBXg7U2Cp6KYtRsYF/TnPmG9Oe+Gdz1VB02tBV2aMwCrALekWfw?=
+ =?us-ascii?Q?L7oNFklAl/fcx8AEj9oCvsdIUQolIPkQAIZKStiz54Hke4JjAaK/jewW1Wgx?=
+ =?us-ascii?Q?ZIeumUEyo33SbNhgJrHjndCVMJT3fKZFbsWjU5ec3tZuwr3S+sYyJIFGB46Q?=
+ =?us-ascii?Q?p4UEjfw3ojTaumDvpiXQRiIOG5IjFI0boDOlK6Ete1FoLw+kgMPCgQvOwhdG?=
+ =?us-ascii?Q?goQ8ODVJqBot6jYFDViPPtVrvLUYjPcMQFk9R6wJzHgchT7Qcvm3Fm/SggPf?=
+ =?us-ascii?Q?R4n+LbPwueGXTnqUQQS+JDSCqGcRz6I5c61lz9Hbpu2g0srF7l1Pfkp1NCAn?=
+ =?us-ascii?Q?T6A2uh/VCq/0JOTFLPooEAq54nU0xr5ofxnwF17oBOseKeuURIi4ghd2f9Di?=
+ =?us-ascii?Q?70t9/bZBRQ4Vr0EJkR5zyYz/z33OxSnp/Wq9gPEQiqGd04JdRBouBNyqMIK2?=
+ =?us-ascii?Q?op3LL2bM7GhZlkgcWsVvEg6PU4S/R86M9EozWMOon20xAdEPzo1c2rDeBwJP?=
+ =?us-ascii?Q?yTh5g63k+hpJtUgpP7NstNqVdC58vb1dlBRSpKxqdXmIME//WVmE8Q7nsosV?=
+ =?us-ascii?Q?Sew3jtKcq+8DakxE+MOHkpMU3MSPs3E09mY/OWoDVFlzef8ImpMcSxSDycdK?=
+ =?us-ascii?Q?IxrdjuIoca0Yw/LU0On4sU8lyw94IV79zil3dkHZLAf1MWzaU8/AQjEVQHX8?=
+ =?us-ascii?Q?m62JSW7vAo3IOiuRkUy+Co5P55zKSwy2WAg/i1jkSWrmEVPaXZBMUiOdDtis?=
+ =?us-ascii?Q?mKbKAnXM5yMriyBP7Wg/T19q3XwXK4ojCa+nXpK2kqD390yYV7Y1DZNzEzDn?=
+ =?us-ascii?Q?NHy91lgcdyXwXSmrgyFTA1UrRN8jA/BHj9omtbOie9qaXw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7763.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KxXot1Af8Gzr7rhbmasOb9WAYDrNlM96qQc1gc8GJz/EfeujEtEucHS+GAqY?=
+ =?us-ascii?Q?MiDQTY+mS7n+9q5g54SgKtPNiWK5OE2o33ZF6KUd2zf0t49SPYF/GAlb8aa/?=
+ =?us-ascii?Q?ddGb0olYkR8AjqBWMVZTdJ0rof/ypZHHldIliaFzbYlNeYq9WvPbnlmRBcPQ?=
+ =?us-ascii?Q?h4162O5YE6jA0XQoZWuwGOJ/UP7UBHdfpxCkISR2houW9tNjppyCj4O+uGMf?=
+ =?us-ascii?Q?NatUOq6PFtspjzlmdbUmtYeGb7xNfJra9FJuv2Q2jR81rSKnaB3bS33JE9Zj?=
+ =?us-ascii?Q?30FcdDWjItHTfjOApFkkpgvhYyYNhbJvU++XcEIy5JTG4yqN5KAozG1y6tDn?=
+ =?us-ascii?Q?xwr12iBlN3CT5K9HBZlaIT4XoDDTHW/GiwghwXhF8rNirO0afw37tXXXV0cR?=
+ =?us-ascii?Q?e1i3u0FFoIkECMkz1D38j45gnyNB+R7kyq76TIaJSEkBA0ZCHTGtjCu1gwdc?=
+ =?us-ascii?Q?/2aceG4/hPTzg6/eS5NpZFNByswL/bg0b/XR72BKiLfCWBTN5fsRZ/oayCPD?=
+ =?us-ascii?Q?QYbrEEZbCZhXHASz+DfwIXM7kzXYfvKOLjJ7sduVNDZ+NFc9MSq0rw6RMgv6?=
+ =?us-ascii?Q?P6zNO+8Ml1REkP3zHsPEnF+nOdD0VqofhLV7QWZiweyIqWzK1yvB+Vkfeqgu?=
+ =?us-ascii?Q?h7ZAAKVHrzsxHV0UFUfQYap+dnFXE0W7sirAgs3tVglTnPaGMDLgOb00rBWe?=
+ =?us-ascii?Q?lXV+7NLeU36wkutdr87z8OmZ6KXODXyKpkUv1DXkSsnEnnA4bdpAX3ksgXhX?=
+ =?us-ascii?Q?ul64Bw9yDR/MowBC/myqux9XWKUr4fwAP6+WZ/p3IOoKQlSASytlhbXGmPtk?=
+ =?us-ascii?Q?hZsrm9GyTaKf2cPEBQvm5P+yOnQsBVdlDTmCFB5b/tJI+k6UsJpKtoipqINo?=
+ =?us-ascii?Q?al6KlUNNwW589xuOhsT8MOyICKsHwaN8iyjFofovIkCCILODL1qH6o7WAXv1?=
+ =?us-ascii?Q?IYrcqnXgn+nOnK5gDP7TfPXrrBeNs2g5cdhc0jDp4QQ0DnfC8BSx2l02CQO+?=
+ =?us-ascii?Q?g7dPVr1ZywLD6PhJRGypyf7GPJ5dmC+qdpxuUB54v9LEQQF9As7iiA5/mkkB?=
+ =?us-ascii?Q?tIRUaBR1lAFYS3bAnBMMIFF2D54J8xD44UcGC9J3hjSVW9fvq2K3hs/Cke+M?=
+ =?us-ascii?Q?cjni6q+n06Opb0dpw0FTvBuvskW3Sz8AuMha4Q8Su17iunRyCdJoix+icUgy?=
+ =?us-ascii?Q?AVeAlPJePHKgaEG52kBlGNjYXBAuK/vKLYlSh1Y5zMM+mxDsjdJptDkukABr?=
+ =?us-ascii?Q?7FR7DCZqAg5FuixC3p9M4HBy45Jl4IRHAqrAK5R5DlE+IGbyOnn9QGYF8ICl?=
+ =?us-ascii?Q?lZMmpSCk2LwP24PXxfklsjiuNTDYCnn5pXJybfEMBNxgA9PAgdtPNioo+uqB?=
+ =?us-ascii?Q?tfbugrGKswb+PzCw/1XHocGAjs9rWMfz0AMlcMYnwYUL219Qy9BANa/0p8/M?=
+ =?us-ascii?Q?MJcWIZz0qSr45jZd8yRecXKEiu4mqzjbom/Lkz4qtZUh/NzIaXvkZRSST4Id?=
+ =?us-ascii?Q?uRGCnEvHA5V3HUrD/VlHLZ2a5WFRgLQNvaB9oUeuUMs/81MzxGlS4E872tSR?=
+ =?us-ascii?Q?HVOZAUdBSTn8HxEsgiLm378Tq+A/ggO87nU5Qeto?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5f76209-1231-4e95-de0b-08dccda5916d
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7763.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2024 12:23:37.4198
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5v/8TXzRZhOzv1LHRvfzPXfhVu4COSxJ2XvYwMgueXTXFdhhJ1UdA2TH/7s9WeSI
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6879
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/j721e
-branch HEAD: c538d40f365b5b6d7433d371710f58e8b266fb19  PCI: j721e: Add suspend and resume support
+On Thu, Sep 05, 2024 at 12:17:14PM +0000, Tian, Kevin wrote:
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > Sent: Thursday, September 5, 2024 8:01 PM
+> > 
+> > On Tue, Sep 03, 2024 at 05:59:38PM -0700, Dan Williams wrote:
+> > > Jason Gunthorpe wrote:
+> > > > It would be a good starting point for other platforms to pick at. Try
+> > > > iommufd first (I'm guessing this is correct) and if it doesn't work
+> > > > explain why.
+> > >
+> > > Yes, makes sense. Will take a look at that also to prevent more
+> > > disconnects on what this PCI device-security community is actually
+> > > building.
+> > 
+> > We are already adding a VIOMMU object and that is going to be the
+> > linkage to the KVM side
+> > 
+> > So we could have new actions:
+> >  - Create a CC VIOMMU with XYZ parameters
+> >  - Create a CC vPCI function on the vIOMMU with XYZ parameters
+> >  - Query stuff?
+> >  - ???
+> >  - Destroy a vPCI function
+> > 
+> 
+> I'll look at the vIOMMU series soon. Just double confirm here.
+> 
+> the so-called vIOMMU object here is the uAPI between iommufd
+> and userspace. Not exactly suggesting a vIOMMU visible to guest.
+> otherwise this solution will be tied to implementations supporting
+> trusted vIOMMU.
 
-elapsed time: 1298m
+Right, the viommu object today just wraps elements of HW that are
+connected to the VM in some way. It is sort of a security container.
 
-configs tested: 172
-configs skipped: 3
+If the VMM goes on to expose a vIOMMU to the guest or not should be
+orthogonal.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I expect people will explicitly request a secure vIOMMU if they intend
+to expose the vIOMMU to the CC VM. This can trigger any actions in the
+trusted world that are required to support a secure vIOMMU.
 
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                            allyesconfig   clang-20
-alpha                               defconfig   gcc-14.1.0
-arc                              allmodconfig   clang-20
-arc                               allnoconfig   gcc-14.1.0
-arc                              allyesconfig   clang-20
-arc                                 defconfig   gcc-14.1.0
-arc                   randconfig-001-20240905   gcc-12
-arc                   randconfig-002-20240905   gcc-12
-arm                              allmodconfig   clang-20
-arm                               allnoconfig   gcc-14.1.0
-arm                              allyesconfig   clang-20
-arm                     am200epdkit_defconfig   clang-20
-arm                         assabet_defconfig   clang-20
-arm                        clps711x_defconfig   clang-20
-arm                                 defconfig   gcc-14.1.0
-arm                          ep93xx_defconfig   clang-20
-arm                      footbridge_defconfig   clang-20
-arm                            mps2_defconfig   clang-20
-arm                   randconfig-001-20240905   gcc-12
-arm                   randconfig-002-20240905   gcc-12
-arm                   randconfig-003-20240905   gcc-12
-arm                   randconfig-004-20240905   gcc-12
-arm                         socfpga_defconfig   clang-20
-arm64                            allmodconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-14.1.0
-arm64                 randconfig-001-20240905   gcc-12
-arm64                 randconfig-002-20240905   gcc-12
-arm64                 randconfig-003-20240905   gcc-12
-arm64                 randconfig-004-20240905   gcc-12
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-csky                  randconfig-001-20240905   gcc-12
-csky                  randconfig-002-20240905   gcc-12
-hexagon                          alldefconfig   clang-20
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                          allyesconfig   clang-20
-hexagon                             defconfig   gcc-14.1.0
-hexagon               randconfig-001-20240905   gcc-12
-hexagon               randconfig-002-20240905   gcc-12
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240905   gcc-12
-i386         buildonly-randconfig-002-20240905   gcc-12
-i386         buildonly-randconfig-003-20240905   gcc-12
-i386         buildonly-randconfig-004-20240905   gcc-12
-i386         buildonly-randconfig-005-20240905   gcc-12
-i386         buildonly-randconfig-006-20240905   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240905   gcc-12
-i386                  randconfig-002-20240905   gcc-12
-i386                  randconfig-003-20240905   gcc-12
-i386                  randconfig-004-20240905   gcc-12
-i386                  randconfig-005-20240905   gcc-12
-i386                  randconfig-006-20240905   gcc-12
-i386                  randconfig-011-20240905   gcc-12
-i386                  randconfig-012-20240905   gcc-12
-i386                  randconfig-013-20240905   gcc-12
-i386                  randconfig-014-20240905   gcc-12
-i386                  randconfig-015-20240905   gcc-12
-i386                  randconfig-016-20240905   gcc-12
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-loongarch             randconfig-001-20240905   gcc-12
-loongarch             randconfig-002-20240905   gcc-12
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-14.1.0
-m68k                            q40_defconfig   clang-20
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                          ath79_defconfig   clang-20
-mips                     decstation_defconfig   clang-20
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-nios2                 randconfig-001-20240905   gcc-12
-nios2                 randconfig-002-20240905   gcc-12
-openrisc                          allnoconfig   clang-20
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-12
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   clang-20
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-12
-parisc                randconfig-001-20240905   gcc-12
-parisc                randconfig-002-20240905   gcc-12
-parisc64                            defconfig   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                       holly_defconfig   clang-20
-powerpc                        icon_defconfig   clang-20
-powerpc               randconfig-001-20240905   gcc-12
-powerpc               randconfig-002-20240905   gcc-12
-powerpc               randconfig-003-20240905   gcc-12
-powerpc64             randconfig-001-20240905   gcc-12
-powerpc64             randconfig-002-20240905   gcc-12
-powerpc64             randconfig-003-20240905   gcc-12
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-12
-riscv                    nommu_k210_defconfig   clang-20
-riscv                 randconfig-001-20240905   gcc-12
-riscv                 randconfig-002-20240905   gcc-12
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-s390                  randconfig-001-20240905   gcc-12
-s390                  randconfig-002-20240905   gcc-12
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                 kfr2r09-romimage_defconfig   clang-20
-sh                    randconfig-001-20240905   gcc-12
-sh                    randconfig-002-20240905   gcc-12
-sh                          urquell_defconfig   clang-20
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-sparc64               randconfig-001-20240905   gcc-12
-sparc64               randconfig-002-20240905   gcc-12
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-20
-um                               allyesconfig   clang-20
-um                                  defconfig   gcc-12
-um                             i386_defconfig   gcc-12
-um                    randconfig-001-20240905   gcc-12
-um                    randconfig-002-20240905   gcc-12
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240905   gcc-12
-x86_64       buildonly-randconfig-002-20240905   gcc-12
-x86_64       buildonly-randconfig-003-20240905   gcc-12
-x86_64       buildonly-randconfig-004-20240905   gcc-12
-x86_64       buildonly-randconfig-005-20240905   gcc-12
-x86_64       buildonly-randconfig-006-20240905   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                                  kexec   gcc-12
-x86_64                randconfig-001-20240905   gcc-12
-x86_64                randconfig-002-20240905   gcc-12
-x86_64                randconfig-003-20240905   gcc-12
-x86_64                randconfig-004-20240905   gcc-12
-x86_64                randconfig-005-20240905   gcc-12
-x86_64                randconfig-006-20240905   gcc-12
-x86_64                randconfig-011-20240905   gcc-12
-x86_64                randconfig-012-20240905   gcc-12
-x86_64                randconfig-013-20240905   gcc-12
-x86_64                randconfig-014-20240905   gcc-12
-x86_64                randconfig-015-20240905   gcc-12
-x86_64                randconfig-016-20240905   gcc-12
-x86_64                randconfig-071-20240905   gcc-12
-x86_64                randconfig-072-20240905   gcc-12
-x86_64                randconfig-073-20240905   gcc-12
-x86_64                randconfig-074-20240905   gcc-12
-x86_64                randconfig-075-20240905   gcc-12
-x86_64                randconfig-076-20240905   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   gcc-12
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240905   gcc-12
-xtensa                randconfig-002-20240905   gcc-12
+For instance any secure vIOMMU will require some way for the guest to
+issue secure invalidations, and that will require some level of
+trusted world involvement. At the minimum the trusted world has to
+attest the validity of the vIOMMU to the guest.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Then you expect to build CC/vPCI stuff around the vIOMMU
+> object given it already connects to KVM?
+
+Yes, it is my thought
+
+We alreay have a binding of devices to the viommu, increasing that to
+also include creating vPCI objects in the trusted world is a small
+step.
+
+Jason
 
