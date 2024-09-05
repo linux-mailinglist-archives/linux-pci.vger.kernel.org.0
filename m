@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-12810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38CCD96CFC9
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 08:54:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E68FF96CFD0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 08:55:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D883B21B83
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 06:54:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A730A283EC4
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 06:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20FEB192588;
-	Thu,  5 Sep 2024 06:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DFA146596;
+	Thu,  5 Sep 2024 06:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4bNhaju"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adnmBx+k"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C6B1922C7;
-	Thu,  5 Sep 2024 06:53:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713A31922C9;
+	Thu,  5 Sep 2024 06:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725519234; cv=none; b=NBmkM5iO31KOKrr4ysHK8YgKo4JooV69bEGx2ZbGwrOWDx40Rhru4TCJsFE3sQ3TYx6HwymaF709ssfHUoz7fp73L7b8A914mnq2FNhtx/YBLi30Rqfvem1z6r+QteRod3fRvvUwk4IHZxAbPWnhJQbzyyzy3kjNPLx2qbBUw/U=
+	t=1725519309; cv=none; b=hnduvNDpk5tburCbhWmrFomP8RBOXYt83iYqgRVyJQ60lHF1b1Jsx+O80iyD+gTnHBEBKuaSIk9Dvb0PaxOG38otGc6ob/f9UnM2sxeRoU1y7F9mhS530Bxv02Ap7Aik7/WLFB76JFn2MsNYLW1IBw8hpMFse6u1LTmDCf3z4fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725519234; c=relaxed/simple;
-	bh=QqSHyyS9BmFPghapVTq0H/VJnW+c8y5zT1ZtiXkce/4=;
+	s=arc-20240116; t=1725519309; c=relaxed/simple;
+	bh=lVgP28DcjexPVeyCbnZvnGShmNHWiLDpVoP7F4Ubixc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CZfKke9mlTbYb88DMaBcwO13rW62ZnbBUx2xRTnkSWZ/IotRAZptTseOizJI9BWe4HJiCgmzn9SsQjPu4RkLv6HhSGLCC52L71G9zDcrkRfuNTvYS5Z9x29vgR/hdpXWVKbPdaErbOxo3jiMrSCiCNEqxKB9MqpNg711C6uhW68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4bNhaju; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F689C4CEC5;
-	Thu,  5 Sep 2024 06:53:45 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=syRvvPNi9iLbVvHCIsxSB+ysoO8RMFT/SAVS4//isgNUBiEBYArVWbZmzek4UtamxpTBS5qK/BWLU2MR+31vWNvTxAe50I+90kJrJmq3mKG1gEPhKr3uPmJxvH7Ccb0KOJiESvqaLiVOuqxTyPpP6mybkjN0H0TTSgAE8v9VjKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adnmBx+k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B769AC4CEC4;
+	Thu,  5 Sep 2024 06:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725519233;
-	bh=QqSHyyS9BmFPghapVTq0H/VJnW+c8y5zT1ZtiXkce/4=;
+	s=k20201202; t=1725519309;
+	bh=lVgP28DcjexPVeyCbnZvnGShmNHWiLDpVoP7F4Ubixc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P4bNhajueIlGef934tV5eusLGWWB1iUDYJ51r1o9SDQwcy7fLw1JThRXX3xo6BbNM
-	 cioC882O0uSsoywaRspyLryBUGVWXzvrcQuKikoomcL4CDl2ZzOUmiyxomYtVrJIrD
-	 L9NaiZ4i52Ho98p/z/gTSTDFB9mJLZ9XR+JMjXnMR1zOncIOR5ajsrSB4SYTRhjwLi
-	 kHNcJ0F4pmw/WvszDM1RANbmGi2sz8T+Wm37gLg0wGI+PnE+uVFyj+7EHDe7PbS8Pz
-	 50IvE8F5oHx7xyfueO3GlX/mh+E+/O85iNU41s/p1ka337GHOw7uKQuX+N0+OOCVfW
-	 i/TrOO+hl1FtQ==
-Message-ID: <669fa971-05f2-43f2-8c7b-d9de68d8910f@kernel.org>
-Date: Thu, 5 Sep 2024 08:53:43 +0200
+	b=adnmBx+kFZhIe+lprfEvIIeoBD8tz8nJx2HRk1zKej41TGb+lMWLXdpKfVea9jJIR
+	 Kv/dbqUifm0KNsIGRIomDu/qwNzJJ534iypuJYkgS3nD7io4lB40kJVpsAof9VMhnD
+	 dRUfCi9HCmHqF7NnXuvPA/dVBtQJVF1eSzwp2pO2TW1GeDbIzT/+tnesw9yfTCtR8S
+	 hNGQdyr5vJjvRgjLVcGrfWk8Q1cJnmQnaNINvlzDP3qDydS7oopy7jSzsMCSjoC++N
+	 Dj/Efr8bMtjht6LzXCK9bW5+G1+to1wMLDBalTu/JBYjGuux/GqPFTh0zM+vhmuXlp
+	 Wrn++6xq0qrtg==
+Message-ID: <59810081-5d76-4a41-8089-728ed03bf90b@kernel.org>
+Date: Thu, 5 Sep 2024 08:54:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/7] dt-bindings: PCI: ti,am65: Extend for use with PVU
+Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: ti,am65: Extend for use with PVU
 To: Jan Kiszka <jan.kiszka@siemens.com>
 Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
  Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
@@ -63,10 +63,10 @@ Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Bjorn Helgaas <bhelgaas@google.com>
-References: <cover.1725444016.git.jan.kiszka@siemens.com>
- <28d31a14fe9cc1867f023ebaddd6074459d15e40.1725444016.git.jan.kiszka@siemens.com>
- <t2mqfu62xx5uztlintofp4pquv6jalzace6w5jpymyyarb2wmn@vvo23e4cmu57>
- <4fd1d6e8-8a66-4eff-a995-5f947a4b707d@siemens.com>
+References: <cover.1724868080.git.jan.kiszka@siemens.com>
+ <752fb193661bb5e60e5aae6f87704784cbad145d.1724868080.git.jan.kiszka@siemens.com>
+ <2tc4eistthjifxsedwux3x7c52xlhkt5d3h2pcbe3glzzga6pg@bvbbsghc57zu>
+ <df7d3134-302d-45ed-ba72-b5473ac5e3aa@siemens.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,13 +112,13 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <4fd1d6e8-8a66-4eff-a995-5f947a4b707d@siemens.com>
+In-Reply-To: <df7d3134-302d-45ed-ba72-b5473ac5e3aa@siemens.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 05/09/2024 08:40, Jan Kiszka wrote:
-> On 05.09.24 08:32, Krzysztof Kozlowski wrote:
->> On Wed, Sep 04, 2024 at 12:00:11PM +0200, Jan Kiszka wrote:
+On 29/08/2024 09:38, Jan Kiszka wrote:
+> On 29.08.24 08:14, Krzysztof Kozlowski wrote:
+>> On Wed, Aug 28, 2024 at 08:01:15PM +0200, Jan Kiszka wrote:
 >>> From: Jan Kiszka <jan.kiszka@siemens.com>
 >>>
 >>> The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
@@ -158,21 +158,18 @@ On 05/09/2024 08:40, Jan Kiszka wrote:
 >>> -      - const: dbics
 >>> -      - const: config
 >>> -      - const: atu
+>>> -
 >>
+>> Properties must be defined in top-level.
 >>
->> Nothing improved here.
+>> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>>
 > 
-> Yes, explained the background to you. Sorry, if you do not address my
-> replies, I'm lost with your feedback.
+> Tried that already, moving the else: part to top-level, but dtschema
+> (2024.5) checks fail then. Could you explain why?
 
-My magic ball could not figure out the problem, so did not provide the
-answer.
-
-I gave you the exact code which illustrates how to do it. If you do it
-that way: it works. If you do it other way: it might not work. However
-without seeing anything, magic ball was silent, so I am not
-participating in game: would you be so kind to give more information so
-I won't waste my day in asking what is wrong.
+The example does not "move the else to top-level", so why would you do
+it? I gave you the code to copy&paste. I don't know how to write it simpler.
 
 Best regards,
 Krzysztof
