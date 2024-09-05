@@ -1,219 +1,259 @@
-Return-Path: <linux-pci+bounces-12826-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12827-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B70296D6F9
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 13:23:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB3296D7BF
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 13:57:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1F411C24C8C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 11:23:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5C6D28182A
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 11:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B35251991AC;
-	Thu,  5 Sep 2024 11:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7E75199225;
+	Thu,  5 Sep 2024 11:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aqhPwqWn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0319884A;
-	Thu,  5 Sep 2024 11:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DE9194C65
+	for <linux-pci@vger.kernel.org>; Thu,  5 Sep 2024 11:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725535434; cv=none; b=StTmPU95X/JHpSWQ7yImuqlPhKCrHxjnnZdCm9kw8coBVyehZigDqSyB2/8XVD0c2VBdpDbWAbTR9kxsgwPw4BI2ixoNWFrHhbYrS5ot7fTn5kSdhC7nFdW1srhXuH0MjXo8NNrV3GbusFiZFy3oJ+9cEP84VGYpCCO7Bb14ewI=
+	t=1725537465; cv=none; b=tnNuOpXbdxbfPW7OBHAxgsACcZ2x4BYx5s6bdxWlaaNHPRXq7wQLIFlLT1BOyZNIJnuoLmLHqd7+4H0D3GerBuNSeWVrvy0I4s138LRKy8SxlRo0v4vVapC959ZQLJfg+4clJT+VYyZ3sKdOh3v+vjko2/cE6ZThiF8M+zYyJhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725535434; c=relaxed/simple;
-	bh=8kCS0pJXM3ezR5roVWNJdy8wnu81VgMsOVNuKqbx5vc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GipyKvd26hP1X8/6GYP9Z6M3ciLdtL4LekMHY/gkxS9UwF5xHCKwzgV6AzNXUkX+QduzcfxiOZfcmWSh9iB3JszfXRxPN9//wyD7L/zpLf1MurUerWbxzSZMHNRbZAbujneekFqTC9lEBpSeDLF4/y5ILL4tNA68tjejA3uZAng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WzxjG2btbz6K8yp;
-	Thu,  5 Sep 2024 19:20:02 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3108C1400DC;
-	Thu,  5 Sep 2024 19:23:44 +0800 (CST)
-Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 5 Sep
- 2024 12:23:43 +0100
-Date: Thu, 5 Sep 2024 12:23:42 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-	<linuxarm@huawei.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	<terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvi?=
- =?ISO-8859-1?Q?nen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
- CXL PMUs (and aer)
-Message-ID: <20240905122342.000001be@Huawei.com>
-In-Reply-To: <87plpsbbe5.ffs@tglx>
-References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
-	<20240605180409.GA520888@bhelgaas>
-	<20240605204428.00001cb2@Huawei.com>
-	<20240605213910.00003034@huawei.com>
-	<ZmG3vjD2sbCOPrM0@wunner.de>
-	<20240823120501.00004151@Huawei.com>
-	<87plpsbbe5.ffs@tglx>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1725537465; c=relaxed/simple;
+	bh=q7TVKyAPx5u/YscVcr1l3T2M211aWvaE/jW/izwnKG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PhJ7k/XQOYOfGCwBQV1DRvbOjMhzWjLWUnGgA+4CIWzOVMydue0FA7Vw8c3oxyXF1G300Ytx+xrWWkWd2eh9j7r1G8vqZBc6d3RDuDcvEycyW3vGVGlCiIX1ZpT+tbo8dar90ClFy7EuMQfLrjsNSotqcSzhH86PLhcE2nVPmGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aqhPwqWn; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725537464; x=1757073464;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=q7TVKyAPx5u/YscVcr1l3T2M211aWvaE/jW/izwnKG0=;
+  b=aqhPwqWnIWFrE2Dg0HnsY9Prt1dJrSdVEIkxBh0KKjtrwWpswkBsPZ/7
+   DXcaBj+MLyFqko6a0kyJWbJDczq4BqJ1gMNaex3DaCwR2SYG81Jwxk6ub
+   XQwWaZ7L58gEB6bAW+t/blOIz/F4J65twAsut4SM9LrlHRuNxb6yBsk6E
+   9p7E489KAAQiPbf9SJqMTnGruKlg9kiPnmZrbAqXTkbvkR3dh6BrGN+wE
+   9WvVOIT4Y6lrkh4GrQKoM5mt7d0TwXa9yzaTVw4HjvhFvQykq/PiAP4nB
+   GTlc1ccKlE5+FPh3yyGIjVkpLfFeEFbgRC9H8V8lnAnj1q9OqLqh2ZtbW
+   w==;
+X-CSE-ConnectionGUID: qw1Hj84RQIuR5NtX8TWBPg==
+X-CSE-MsgGUID: 5VGosmhWSAmc/MHVC69cSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="35633837"
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="35633837"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 04:57:43 -0700
+X-CSE-ConnectionGUID: n3Ox0qa1S6yuQX3+ecRUIQ==
+X-CSE-MsgGUID: BhiMoQd3Sfq2fd9FyNM4AA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="66122762"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 05 Sep 2024 04:57:42 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1smB7L-0009nn-2l;
+	Thu, 05 Sep 2024 11:57:39 +0000
+Date: Thu, 05 Sep 2024 19:57:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ f04d277ff328e25ef30939b772d9cc1066f41f86
+Message-ID: <202409051958.18nUaJES-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
 
-Hi Thomas,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: f04d277ff328e25ef30939b772d9cc1066f41f86  dt-bindings: PCI: altera: msi: Convert to YAML
 
-One quick follow up question below.
+elapsed time: 1193m
 
-> 
-> So looking at the ASCII art of the cover letter:
-> 
->  _____________ __            ________ __________
-> |  Port       |  | creates  |        |          |
-> |  PCI Dev    |  |--------->| CPMU A |          |
-> |_____________|  |          |________|          |
-> |portdrv binds   |          | perf/cxlpmu binds |
-> |________________|          |___________________|
->                  \         
->                   \
->                    \         ________ __________
->                     \       |        |          |
->                      ------>| CPMU B |          |      
->                             |________|          |
->                             | perf/cxlpmu binds |
->                             |___________________|
-> 
-> AND
-> 
->  _____________ __ 
-> |  Type 3     |  | creates                                 ________ _________
-> |  PCI Dev    |  |--------------------------------------->|        |         |
-> |_____________|  |                                        | CPMU C |         |
-> | cxl_pci binds  |                                        |________|         |
-> |________________|                                        | perf/cxpmu binds |
->                                                           |__________________|
-> 
-> If I understand it correctly then both the portdrv and the cxl_pci
-> drivers create a "bus". The CPMU devices are attached to these buses.
-> 
-> So we are talking about distinctly different devices with the twist that
-> these devices somehow need to utilize the MSI/X (forget MSI) facility of
-> the device which creates the bus.
-> 
-> From the devres perspective we look at separate devices and that's what
-> the interrupt code expects too. This reminds me of the lengthy
-> discussion we had about IMS a couple of years ago.
-> 
->   https://lore.kernel.org/all/87bljg7u4f.fsf@nanos.tec.linutronix.de/
-> 
-> My view on that issue was wrong because the Intel people described the
-> problem wrong. But the above pretty much begs for a proper separation
-> and hierarchical design because you provide an actual bus and distinct
-> devices. Reusing the ASCII art from that old thread for the second case,
-> but it's probably the same for the first one:
-> 
->            ]-------------------------------------------|
->            | PCI device                                |
->            ]-------------------|                       |
->            | Physical function |                       |
->            ]-------------------|                       |
->            ]-------------------|----------|            |
->            | Control block for subdevices |            |
->            ]------------------------------|            |
->            |            | <- "Subdevice BUS"           |
->            |            |                              |
->            |            |-- Subddevice 0               | 
->            |            |-- Subddevice 1               | 
->            |            |-- ...                        | 
->            |            |-- Subddevice N               | 
->            ]-------------------------------------------|
-> 
-> 1) cxl_pci driver binds to the PCI device.
-> 
-> 2) cxl_pci driver creates AUXbus
-> 
-> 3) Bus enumerates devices on AUXbus
-> 
-> 4) Drivers bind to the AUXbus devices
-> 
-> So you have a clear provider consumer relationship. Whether the
-> subdevice utilizes resources of the PCI device or not is a hardware
-> implementation detail.
-> 
-> The important aspect is that you want to associate the subdevice
-> resources to the subdevice instances and not to the PCI device which
-> provides them.
-> 
-> Let me focus on interrupts, but it's probably the same for everything
-> else which is shared.
-> 
-> Look at how the PCI device manages interrupts with the per device MSI
-> mechanism. Forget doing this with either one of the legacy mechanisms.
-> 
->   1) It creates a hierarchical interrupt domain and gets the required
->      resources from the provided parent domain. The PCI side does not
->      care whether this is x86 or arm64 and it neither cares whether the
->      parent domain does remapping or not. The only way it cares is about
->      the features supported by the different parent domains (think
->      multi-MSI).
->      
->   2) Driver side allocations go through the per device domain
-> 
-> That AUXbus is not any different. When the CPMU driver binds it wants to
-> allocate interrupts. So instead of having a convoluted construct
-> reaching into the parent PCI device, you simply can do:
-> 
->   1) Let the cxl_pci driver create a MSI parent domain and set that in
->      the subdevice::msi::irqdomain pointer.
-> 
->   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU device
->      driver to create a per device interrupt domain.
-> 
->   3) Let the CPMU driver create its per device interrupt domain with
->      the provided parent domain
-> 
->   4) Let the CPMU driver allocate its MSI-X interrupts through the per
->      device domain
-> 
-> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
-> function does:
-> 
->     if (!pci_msix_enabled(pdev))
->     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
->     else
->         return pci_msix_alloc_irq_at(pdev, ....);
+configs tested: 164
+configs skipped: 3
 
-Hi Thomas,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I'm struggling to follow this suggestion
-Would you expect the cxl_pci MSI parent domain to set it's parent as
-msi_domain = irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->dev),
-					 IRQ_DOMAIN_FLAG_MSI_PARENT,
-					 ...
-which seems to cause a problem with deadlocks in __irq_domain_alloc_irqs()
-or create a separate domain structure and provide callbacks that reach into
-the parent domain as necessary?
+tested configs:
+alpha                             allnoconfig   gcc-14.1.0
+alpha                            allyesconfig   clang-20
+alpha                               defconfig   gcc-14.1.0
+arc                              allmodconfig   clang-20
+arc                               allnoconfig   gcc-14.1.0
+arc                              allyesconfig   clang-20
+arc                      axs103_smp_defconfig   gcc-14.1.0
+arc                                 defconfig   gcc-14.1.0
+arc                     haps_hs_smp_defconfig   gcc-14.1.0
+arc                        nsimosci_defconfig   gcc-14.1.0
+arc                   randconfig-001-20240905   gcc-12
+arc                   randconfig-002-20240905   gcc-12
+arm                              allmodconfig   clang-20
+arm                               allnoconfig   gcc-14.1.0
+arm                              allyesconfig   clang-20
+arm                     am200epdkit_defconfig   clang-20
+arm                         assabet_defconfig   clang-20
+arm                        clps711x_defconfig   clang-20
+arm                                 defconfig   gcc-14.1.0
+arm                          ep93xx_defconfig   clang-20
+arm                      footbridge_defconfig   clang-20
+arm                          ixp4xx_defconfig   gcc-14.1.0
+arm                            mps2_defconfig   clang-20
+arm                             mxs_defconfig   gcc-14.1.0
+arm                   randconfig-001-20240905   gcc-12
+arm                   randconfig-002-20240905   gcc-12
+arm                   randconfig-003-20240905   gcc-12
+arm                   randconfig-004-20240905   gcc-12
+arm                           sama5_defconfig   gcc-14.1.0
+arm                         socfpga_defconfig   clang-20
+arm                    vt8500_v6_v7_defconfig   gcc-14.1.0
+arm64                            allmodconfig   clang-20
+arm64                             allnoconfig   gcc-14.1.0
+arm64                               defconfig   gcc-14.1.0
+arm64                 randconfig-001-20240905   gcc-12
+arm64                 randconfig-002-20240905   gcc-12
+arm64                 randconfig-003-20240905   gcc-12
+arm64                 randconfig-004-20240905   gcc-12
+csky                              allnoconfig   gcc-14.1.0
+csky                                defconfig   gcc-14.1.0
+csky                  randconfig-001-20240905   gcc-12
+csky                  randconfig-002-20240905   gcc-12
+hexagon                          alldefconfig   clang-20
+hexagon                          allmodconfig   clang-20
+hexagon                           allnoconfig   gcc-14.1.0
+hexagon                          allyesconfig   clang-20
+hexagon                             defconfig   gcc-14.1.0
+hexagon               randconfig-001-20240905   gcc-12
+hexagon               randconfig-002-20240905   gcc-12
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240905   gcc-12
+i386         buildonly-randconfig-002-20240905   gcc-12
+i386         buildonly-randconfig-003-20240905   gcc-12
+i386         buildonly-randconfig-004-20240905   gcc-12
+i386         buildonly-randconfig-005-20240905   gcc-12
+i386         buildonly-randconfig-006-20240905   gcc-12
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240905   gcc-12
+i386                  randconfig-002-20240905   gcc-12
+i386                  randconfig-003-20240905   gcc-12
+i386                  randconfig-004-20240905   gcc-12
+i386                  randconfig-005-20240905   gcc-12
+i386                  randconfig-006-20240905   gcc-12
+i386                  randconfig-011-20240905   gcc-12
+i386                  randconfig-012-20240905   gcc-12
+i386                  randconfig-013-20240905   gcc-12
+i386                  randconfig-014-20240905   gcc-12
+i386                  randconfig-015-20240905   gcc-12
+i386                  randconfig-016-20240905   gcc-12
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-14.1.0
+loongarch                           defconfig   gcc-14.1.0
+loongarch             randconfig-001-20240905   gcc-12
+loongarch             randconfig-002-20240905   gcc-12
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-14.1.0
+m68k                            mac_defconfig   gcc-14.1.0
+m68k                            q40_defconfig   clang-20
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-14.1.0
+microblaze                      mmu_defconfig   gcc-14.1.0
+mips                              allnoconfig   gcc-14.1.0
+mips                          ath79_defconfig   clang-20
+mips                  decstation_64_defconfig   gcc-14.1.0
+mips                     decstation_defconfig   clang-20
+mips                           ip32_defconfig   gcc-14.1.0
+nios2                             allnoconfig   gcc-14.1.0
+nios2                               defconfig   gcc-14.1.0
+nios2                 randconfig-001-20240905   gcc-12
+nios2                 randconfig-002-20240905   gcc-12
+openrisc                          allnoconfig   clang-20
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-12
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   clang-20
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-12
+parisc                generic-64bit_defconfig   gcc-14.1.0
+parisc                randconfig-001-20240905   gcc-12
+parisc                randconfig-002-20240905   gcc-12
+parisc64                            defconfig   gcc-14.1.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   clang-20
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                      chrp32_defconfig   gcc-14.1.0
+powerpc                       holly_defconfig   clang-20
+powerpc                        icon_defconfig   clang-20
+powerpc                 linkstation_defconfig   gcc-14.1.0
+powerpc                 mpc8313_rdb_defconfig   gcc-14.1.0
+powerpc               randconfig-001-20240905   gcc-12
+powerpc               randconfig-002-20240905   gcc-12
+powerpc               randconfig-003-20240905   gcc-12
+powerpc64             randconfig-001-20240905   gcc-12
+powerpc64             randconfig-002-20240905   gcc-12
+powerpc64             randconfig-003-20240905   gcc-12
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   clang-20
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   gcc-12
+riscv                    nommu_k210_defconfig   clang-20
+riscv                 randconfig-001-20240905   gcc-12
+riscv                 randconfig-002-20240905   gcc-12
+s390                             allmodconfig   gcc-14.1.0
+s390                              allnoconfig   clang-20
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   gcc-12
+s390                  randconfig-001-20240905   gcc-12
+s390                  randconfig-002-20240905   gcc-12
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-12
+sh                 kfr2r09-romimage_defconfig   clang-20
+sh                          lboxre2_defconfig   gcc-14.1.0
+sh                    randconfig-001-20240905   gcc-12
+sh                    randconfig-002-20240905   gcc-12
+sh                          urquell_defconfig   clang-20
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-12
+sparc64               randconfig-001-20240905   gcc-12
+sparc64               randconfig-002-20240905   gcc-12
+um                               allmodconfig   clang-20
+um                                allnoconfig   clang-20
+um                               allyesconfig   clang-20
+um                                  defconfig   gcc-12
+um                             i386_defconfig   gcc-12
+um                    randconfig-001-20240905   gcc-12
+um                    randconfig-002-20240905   gcc-12
+um                           x86_64_defconfig   gcc-12
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64                              defconfig   clang-18
+x86_64                                  kexec   gcc-12
+x86_64                          rhel-8.3-rust   clang-18
+x86_64                               rhel-8.3   gcc-12
+xtensa                            allnoconfig   gcc-14.1.0
+xtensa                randconfig-001-20240905   gcc-12
+xtensa                randconfig-002-20240905   gcc-12
 
-Or do I have this entirely wrong? I'm struggling to relate what existing
-code like PCI does to what I need to do here.
-
-Jonathan
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
