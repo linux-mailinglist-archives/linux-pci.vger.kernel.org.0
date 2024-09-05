@@ -1,292 +1,206 @@
-Return-Path: <linux-pci+bounces-12846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A52796DFDA
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 18:34:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EB30596DFE0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 18:34:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F419528DAB0
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 16:34:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A29D428DF7C
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 16:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B03E81A0724;
-	Thu,  5 Sep 2024 16:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7571A0734;
+	Thu,  5 Sep 2024 16:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gW+wBkXH"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CwUDpRHu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD1F50271;
-	Thu,  5 Sep 2024 16:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371971A2878
+	for <linux-pci@vger.kernel.org>; Thu,  5 Sep 2024 16:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725554013; cv=none; b=PpZVmzPyqZSflds2OMDBwPjjFXeku22J136wovz+dWBUShBJxcnAgKsweZSU1euHXT+KEAzRY/vfXEHDoTt2f/rNqqlS0BxymT36+pWUTbAl5pxz35xEArXcu7z2Y5e9KOqAhCQ0A4XKAKdgSboLXCeGrho6NuReaQ96cZ9kZCg=
+	t=1725554022; cv=none; b=ab2QCgoNyYxKTxPhgnNxDciqMp+CDHHoW4T6IPpWVblgd7YwukDk90iN8a0M/DKtPoD+QZwBrDvhL+oz+GDxAU1KSEABrhpl7JsV0NJqlDRHs90OvcCJoLaNNqtsE2WL3n11EqF5jPboRZhAnaTp2kT8cdOVzyXP6MMHYmtJZxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725554013; c=relaxed/simple;
-	bh=9Tk0qytElXOqijUu2mwaQ/iNQpnr3HTIkzbW8O/Fgio=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uRoJxA+1zfwc/jR8tnYOhb+cWSurTV8ftSnO1fnTgqbSWf/XPXYfpBS/dBGqyzEMcEPomDoGKjYrArjspPmqW4RcrToiobSfkXvF2dMjcBoUuu7NmWDU8+LvPBg3uIXagxu5YLLbRNXYr8gFM4c6yB0K1sWlEa8lCWribUX8JW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gW+wBkXH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B71C4CEC3;
-	Thu,  5 Sep 2024 16:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725554012;
-	bh=9Tk0qytElXOqijUu2mwaQ/iNQpnr3HTIkzbW8O/Fgio=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gW+wBkXHJDhGVXXAfJCPQj2kpceVBR+QWpc5EB5VaM3VbU5KzSYjuyS+kU0KHYUgr
-	 Vbw7YD74hyIp9ASlVYw9i/S5T5hvkcMNS9g/sUfc0qUDPsWVcUe83qD/tkw+3Zopkl
-	 gakIRnJo3HMLUH5yZ4lTGGxnc6tViQlacP8tMH8RsMzC0ubDQA5nzKrqqDH95p5brW
-	 cxYC6wohcOlvlYD7LAPD+Eg0h5S+xtyw++MGlyUy5KeL/zsq62UTBqy+mp8R6fB01I
-	 piX0p5So+agRaK10NXmxRvxmrVanNSNsu9iQFOQ7iTY653UNcqqm8TUNkQVWBoRWym
-	 eScmz75uH8lrg==
-Date: Thu, 5 Sep 2024 11:33:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1725554022; c=relaxed/simple;
+	bh=3NAVcB6qwQxaSWihdV8SEeK1WvVXg/JpPm7/aLNJ3gI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CFGF5BFeY9s52PmgTTu7+UYIuiBA3pEONfBZj47r0L1HwlartuVMf0Tgj0h98OsrG+VdV69pQq6ehxwkTLKTFuFtlwo2x0bvu/2HmU5E7mVfaThk9FXsKOGtQ5v2nMuidagik/T86Ipx51UVXcrqVIc08Fpfir/now+s4N3YR4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CwUDpRHu; arc=none smtp.client-ip=209.85.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5bef295a429so1137427a12.2
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2024 09:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725554018; x=1726158818; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kJHk6dVcMot+83fqcyHPWmLjMUPxP5z8vxp/ZBkDsTM=;
+        b=CwUDpRHumS+xhjkOkSNcYkerUfHWVG+TzIQhXbhoKRrPX3T8LQnbOri7aQY0Mxr+hH
+         zt9JN5f0NuQEW68wTKFZPMxsN0cTQnN277Bx5updO5jz6Mg0MfitxiCobve9Zgj29Wmj
+         s1eNiGWZl0WErt/F4BipQoxnmWnLzxTNOGHpJu4fH+nCdUrkRfLK3o5126IeBhE5xGNq
+         IbVS0h+UpD15k9HDTFTSEkc2nozDjTu5yhu8fLc+0zFX9uJd2fl+MAiXFdeCcW0xR08i
+         PzGb93V+xzaO149I50uhyz0MgRfiEcgUtOmJ2VXPArnCtjCkEpl9ZuE2WXwJjroq8+z/
+         AWsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725554018; x=1726158818;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kJHk6dVcMot+83fqcyHPWmLjMUPxP5z8vxp/ZBkDsTM=;
+        b=VOzfYUsA89c/m+vMmWEfHDfRsimlZCBcsly5xobd8m42IoflQLVagjuL632GLzPlzq
+         pQPLMMQFQWFj6RyoxIYOJ1LZIQsa4Edlt/Cemfrenfufwy7IhYSVtV+nsUYn8Y8YGt6s
+         o8mrM1MgGIvwIYyZOAX3a7Mv4fhtPxB6msyC389Kdmu4DeNLqLNR88yZ6UptzA96VQuf
+         KG2w55VDktWBQOcUHZ7xzT0wytGEw9zRnAQ4In3K3Ity7a8cNKpb9CgrAOrXaBFCnelp
+         IRQCX3XfGMPiDnJZnh+mDaSPqmxVqVP+E4nEH22Jab2ZfhJKlZ6BqJXir3KuoTRdVrAX
+         KyRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVu8titRmeFkOLWHEH+CcSe0Xaxl7nLvvZYSPjkLwoiTn31blODJDALlPE6hP6gWS8MMnnYjAvK7GQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1uzBlHTUrh6aLHa2o1yIN85jNnNea0e9DACfWiMZaKZV2cptY
+	2k8iRak+I7rS1dwx07eyewrvG2Pu/tbiHl7K0tgIubmp7NsX113CibCKLp42I1o=
+X-Google-Smtp-Source: AGHT+IHU/avyIpf1tRzphlO3ca0BhbKJKByf8ZqboDAgvuiywTcmj9UX7KVZcHdK/Ol0/Wbwf0Mx9g==
+X-Received: by 2002:a05:6402:3226:b0:5c2:6bf7:8531 with SMTP id 4fb4d7f45d1cf-5c2caf33541mr5644250a12.33.1725554018023;
+        Thu, 05 Sep 2024 09:33:38 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3cc528bcfsm1430637a12.16.2024.09.05.09.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 09:33:37 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 5 Sep 2024 18:33:45 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org, Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Bao Cheng Su <baocheng.su@siemens.com>,
-	Hua Qian Li <huaqian.li@siemens.com>,
-	Diogo Ivo <diogo.ivo@siemens.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>
-Subject: Re: [PATCH v4 4/7] PCI: keystone: Add supported for PVU-based DMA
- isolation on AM654
-Message-ID: <20240905163329.GA389144@bhelgaas>
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <ZtndaYh2Faf6t3fC@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
+ <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
+ <ZtcoFmK6NPLcIwVt@apocalypse>
+ <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <361441d35d781b3c474b05921634bcae08d1a7b4.1725444016.git.jan.kiszka@siemens.com>
+In-Reply-To: <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
 
-[+cc Kishon, just in case you have time/interest ;)]
+Hi Krzysztof,
 
-On Wed, Sep 04, 2024 at 12:00:13PM +0200, Jan Kiszka wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
+On 20:27 Tue 03 Sep     , Krzysztof Kozlowski wrote:
+> On 03/09/2024 17:15, Andrea della Porta wrote:
+> >>>>> +
+> >>>>> +				rp1_clocks: clocks@c040018000 {
+> >>>>
+> >>>> Why do you mix MMIO with non-MMIO nodes? This really does not look
+> >>>> correct.
+> >>>>
+> >>>
+> >>> Right. This is already under discussion here:
+> >>> https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
+> >>>
+> >>> IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
+> >>> using CLK_OF_DECLARE.
+> >>
+> >> Depends. Where are these clocks? Naming suggests they might not be even
+> >> part of this device. But if these are part of the device, then why this
+> >> is not a clock controller (if they are controllable) or even removed
+> >> (because we do not represent internal clock tree in DTS).
+> > 
+> > xosc is a crystal connected to the oscillator input of the RP1, so I would
+> > consider it an external fixed-clock. If we were in the entire dts, I would have
+> > put it in root under /clocks node, but here we're in the dtbo so I'm not sure
+> > where else should I put it.
 > 
-> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
-> from untrusted PCI devices to selected memory regions this way. Use
-> static PVU-based protection instead.
+> But physically, on which PCB, where is this clock located?
+
+xosc is a crystal, feeding the reference clock oscillator input pins of the RP1,
+please see page 12 of the following document:
+https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+On Rpi5, the PCB is the very same as the one on which the BCM2712 (SoC) and RP1
+are soldered. Would you consider it external (since the crystal is outside the RP1)
+or internal (since the oscillator feeded by the crystal is inside the RP1)?
+
 > 
-> For this, we use the availability of restricted-dma-pool memory regions
-> as trigger and register those as valid DMA targets with the PVU.
-
-I guess the implication is that DMA *outside* the restricted-dma-pool
-just gets dropped, and the Requester would see Completion Timeouts or
-something for reads?
-
-> In
-> addition, we need to enable the mapping of requester IDs to VirtIDs in
-> the PCI RC. We only use a single VirtID so far, catching all devices.
-> This may be extended later on.
+> > 
+> > Regarding pclk and hclk, I'm still trying to understand where they come from.
+> > If they are external clocks (since they are fixed-clock too), they should be
+> > in the same node as xosc. CLK_OF_DECLARE does not seem to fit here because
 > 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
-> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> CC: "Krzysztof Wilczyński" <kw@linux.com>
-> CC: Bjorn Helgaas <bhelgaas@google.com>
-> CC: linux-pci@vger.kernel.org
+> There is no such node as "/clocks" so do not focus on that. That's just
+> placeholder but useless and it is inconsistent with other cases (e.g.
+> regulators).
 
-Regrettably we don't really have anybody taking care of pci-keystone.c
-(at least per MAINTAINERS).
+Fine, I beleve that the root node would be okay then, or some other carefully named
+node in root, if the clock is not internal to any chip.
 
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 101 ++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 2219b1a866fa..96b871656da4 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -19,6 +19,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/msi.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_pci.h>
->  #include <linux/phy/phy.h>
-> @@ -26,6 +27,7 @@
->  #include <linux/regmap.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
-> +#include <linux/ti-pvu.h>
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> @@ -111,6 +113,16 @@
->  
->  #define PCI_DEVICE_ID_TI_AM654X		0xb00c
->  
-> +#define KS_PCI_VIRTID			0
-> +
-> +#define PCIE_VMAP_xP_CTRL		0x0
-> +#define PCIE_VMAP_xP_REQID		0x4
-> +#define PCIE_VMAP_xP_VIRTID		0x8
-> +
-> +#define PCIE_VMAP_xP_CTRL_EN		BIT(0)
-> +
-> +#define PCIE_VMAP_xP_VIRTID_VID_MASK	0xfff
-> +
->  struct ks_pcie_of_data {
->  	enum dw_pcie_device_mode mode;
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1125,6 +1137,89 @@ static const struct of_device_id ks_pcie_of_match[] = {
->  	{ },
->  };
->  
-> +#ifdef CONFIG_TI_PVU
-> +static const char *ks_vmap_res[] = {"vmap_lp", "vmap_hp"};
-> +
-> +static int ks_init_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct of_phandle_iterator it;
-> +	bool init_vmap = false;
-> +	struct resource phys;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	unsigned int n;
-> +	u32 val;
-> +	int err;
-> +
-> +	of_for_each_phandle(&it, err, dev->of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (!of_device_is_compatible(it.node, "restricted-dma-pool"))
-> +			continue;
-> +
-> +		err = of_address_to_resource(it.node, 0, &phys);
-> +		if (err < 0) {
-> +			dev_err(dev, "failed to parse memory region %pOF: %d\n",
-> +				it.node, err);
-> +			continue;
-> +		}
-> +
-> +		err = ti_pvu_create_region(KS_PCI_VIRTID, &phys);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		init_vmap = true;
-> +	}
+> If this is external oscillator then it is not part of RP1 and you cannot
+> put it inside just to satisfy your drivers.
 
-  if (!init_vmap)
-    return 0;
+Ack.
 
-would unindent the following.
+> 
+> > there's no special management of these clocks, so no new clock definition is
+> > needed.
+> 
+> > If they are internal tree, I cannot simply get rid of them because rp1_eth node
+> > references these two clocks (see clocks property), so they must be decalred 
+> > somewhere. Any hint about this?.
+> > 
+> 
+> Describe the hardware. Show the diagram or schematics where is which device.
 
-> +
-> +	if (init_vmap) {
-> +		for (n = 0; n < ARRAY_SIZE(ks_vmap_res); n++) {
+Unfortunately I don't have the documentation (schematics or other info) about
+how these two clocks (pclk and hclk) are arranged, but I'm trying to get
+some insight about that from various sources. While we're waiting for some
+(hopefully) more certain info, I'd like to speculate a bit. I would say that
+they both probably be either external (just like xosc), or generated internally
+to the RP1:
 
-Since the only use of ks_vmap_res is here, this might be more readable
-if there were a helper that would be called twice with the constant
-strings, e.g.,
+If externals, I would place them in the same position as xosc, so root node
+or some other node under root (eg.: /rp1-clocks)
 
-  helper(pdev, "vmap_lp");
-  helper(pdev, "vmap_hp");
+If internals, I would leave them just where they are, i.e. inside the rp1 node
 
-> +			res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +							   ks_vmap_res[n]);
+Does it make sense?
 
-Seems like we should check "res" for error before using it?
+Many thnaks,
+Andrea
 
-> +			base = devm_pci_remap_cfg_resource(dev, res);
-> +			if (IS_ERR(base))
-> +				return PTR_ERR(base);
-> +
-> +			writel(0, base + PCIE_VMAP_xP_REQID);
-> +
-> +			val = readl(base + PCIE_VMAP_xP_VIRTID);
-> +			val &= ~PCIE_VMAP_xP_VIRTID_VID_MASK;
-> +			val |= KS_PCI_VIRTID;
-> +			writel(val, base + PCIE_VMAP_xP_VIRTID);
-> +
-> +			val = readl(base + PCIE_VMAP_xP_CTRL);
-> +			val |= PCIE_VMAP_xP_CTRL_EN;
-> +			writel(val, base + PCIE_VMAP_xP_CTRL);
-
-Since there's no explicit use of "restricted-dma-pool" elsewhere in
-this patch, I assume the setup above causes the controller to drop any
-DMA accesses outside that pool?  I think a comment about how the
-controller behavior is being changed would be useful.  Basically the
-same comment as for the commit log.
-
-Would there be any value in a dmesg note about a restriction being
-enforced?  Seems like it's dependent on both CONFIG_TI_PVU and some DT
-properties, and since those are invisible in the log, maybe a note
-would help understand/debug any issues?
-
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ks_release_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct of_phandle_iterator it;
-> +	struct resource phys;
-> +	int err;
-> +
-> +	of_for_each_phandle(&it, err, pdev->dev.of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (of_device_is_compatible(it.node, "restricted-dma-pool") &&
-> +		    of_address_to_resource(it.node, 0, &phys) == 0)
-> +			ti_pvu_remove_region(KS_PCI_VIRTID, &phys);
-
-I guess it's not important to undo the PCIE_VMAP_xP_CTRL_EN and
-related setup that was done by ks_init_restricted_dma()?
-
-> +	}
-> +}
-> +#else
-> +static inline int ks_init_restricted_dma(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void ks_release_restricted_dma(struct platform_device *pdev)
-> +{
-> +}
-> +#endif
-> +
->  static int ks_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1273,6 +1368,10 @@ static int ks_pcie_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		goto err_get_sync;
->  
-> +	ret = ks_init_restricted_dma(pdev);
-> +	if (ret < 0)
-> +		goto err_get_sync;
-> +
->  	switch (mode) {
->  	case DW_PCIE_RC_TYPE:
->  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_HOST)) {
-> @@ -1354,6 +1453,8 @@ static void ks_pcie_remove(struct platform_device *pdev)
->  	int num_lanes = ks_pcie->num_lanes;
->  	struct device *dev = &pdev->dev;
->  
-> +	ks_release_restricted_dma(pdev);
-> +
->  	pm_runtime_put(dev);
->  	pm_runtime_disable(dev);
->  	ks_pcie_disable_phy(ks_pcie);
-> -- 
-> 2.43.0
+> 
+> Best regards,
+> Krzysztof
 > 
 
