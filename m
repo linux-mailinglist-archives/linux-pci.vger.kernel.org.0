@@ -1,292 +1,262 @@
-Return-Path: <linux-pci+bounces-12854-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12855-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D02A396E14C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 19:40:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9108996E27F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 20:55:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E9CA1F277A2
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 17:40:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EE6FEB26DA0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 18:55:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4298B1A0B0F;
-	Thu,  5 Sep 2024 17:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C5519DFB8;
+	Thu,  5 Sep 2024 18:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9cenW1L"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bppyafcJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3879015350B;
-	Thu,  5 Sep 2024 17:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725558026; cv=fail; b=tuNNiL2EVTAC+DXSiAv0Sz2B94wXrSRxxn19mOAPAjlYWAsLezf8BIRNkGDaPjxpbCZ3isrdpX37myVoNbSqVHRmNcthm4t6L0tYR3FJt4I7S3bGIVjRe7yh5IX4aF0ofA1VX/fatshfK4dRVivc4KQeNjzX2pvgS2Mcnr/MdJc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725558026; c=relaxed/simple;
-	bh=ZTuQjtT2WP5LY+GX/iK5aPKTh3JJ+/zpr4W4CElZQ08=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=S08xirQfFt1luniJbLBd8dBq3cZxonaI56RqgzOxcbl+QJV7zV0gog5LJ21uAFEoX6rgCzOkZLjHxWbabnqfWHBg2B0OzHaVYJ4AW7An5IHqcN2Nw9bQwD3TtKqVh638myyXOngj65E8EXD39eY6OXtiZesdTBxp9QP6DuUFJo0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9cenW1L; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725558024; x=1757094024;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ZTuQjtT2WP5LY+GX/iK5aPKTh3JJ+/zpr4W4CElZQ08=;
-  b=M9cenW1LcCMlaLClSjVHTDVv1gDFYBVswNdxzqgWryV9IfDoOErhgkBL
-   RjeNiWHkNDoYM1Pc/rxwKyIHExOg+yUNDc+vR4RA9qrEl5axt0Frl4trD
-   hCkKcEws/NCG50+Wznbn1Oc/dXe61vBZOh5D5Zo1oa2AQWigciBmN1+Td
-   7tZgLll9zO+xQp1Dvb6w9HqQCckG8eW8j9KRWKf1HOQ02s0+tRI4tbw2e
-   CMaRshN1piPKxgHmqDpZx3BtPdDcR2ly+gA9OfXUyrI1BH1NEV73/qs69
-   zZF/FBdO2psQgTAmnKFTkvlKZqsNkXLhlAlV/tfz+D60EuJUqRREs+fks
-   Q==;
-X-CSE-ConnectionGUID: Slsw6euXTLenx2vAS8QmLg==
-X-CSE-MsgGUID: 11qL1lamT7+Gq6gbDh55/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="24451254"
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="24451254"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 10:40:23 -0700
-X-CSE-ConnectionGUID: QRGueCvYQQaOSkJqNbmZWA==
-X-CSE-MsgGUID: 0lvacJgMSrCYHpInYEu4tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="88937858"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Sep 2024 10:40:23 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 5 Sep 2024 10:40:22 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 5 Sep 2024 10:40:22 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 5 Sep 2024 10:40:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E2ML3VSKQK6RHfzIJJYiGXNYX7+ecB9Nd+y9E0LNiX4Q3K3qtoTRfa49j1jfZ9C5KMXifOMkPi6ZYytkmPwD7aXa2YU/xk1lThxucYlYxVoplJTjNqOL7EscMaU9+nsPjj+4h/wvSHBB04Ot9To6G0zltyPEqoWXKRsV5PULbG6gh/F+qBVpswZxKWQ/Lp5gpCeSNtDsnOHkpDGSZr/uKqNOGk8AMmV/DLtzto9KA76pM5/A/qXMEopeCXoMz65vupmkPycDzhQir0aauUKgQIbKtM60s5u1lCuYqyflRrDLp5YOhu/W36FPXv5bb+NfR8ugB06Rnem8wXY9204e7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oh6j+tVCWTW6u4H+DwcSU28gw8/ZG6ba9alqflNoNn8=;
- b=RtCcAXSpAvoEJHrTZpV0xjNZe4JRMYqR3JOESCWWSS1RmgPGfC1TrljOfq7QSN5pjaBo2nhCuXYB7HABzutYk9wK3V3+os6LqCZTRJnnFfdCQmiAiXACpwqFTndrixEZsMQT6inTUl4vqHvMj6vTjle6lfV/eomJP/vjTrSF8KUEe2eSo6pnwkctQ8TJDXYWkQfqitu9neu6tBvQ0i7Av9UxFvbOcKKoAJE5JFPsrZSO4kGUDkaqKKcliCC27577JSZmaCE9t8cDBze6xbnJ8Y1H9WzdV1UH/7gkeWE1ztLi0EkcxtZ66iuoSDpBunapjKnBMJttvGfYF5rurTJAuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB7793.namprd11.prod.outlook.com (2603:10b6:610:129::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.28; Thu, 5 Sep
- 2024 17:40:18 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7918.024; Thu, 5 Sep 2024
- 17:40:16 +0000
-Date: Thu, 5 Sep 2024 10:40:10 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <kvm@vger.kernel.org>
-CC: <iommu@lists.linux.dev>, <linux-coco@lists.linux.dev>,
-	<linux-pci@vger.kernel.org>, Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>, Alex Williamson
-	<alex.williamson@redhat.com>, <pratikrajesh.sampat@amd.com>,
-	<michael.day@amd.com>, <david.kaplan@amd.com>, <dhaval.giani@amd.com>,
-	Santosh Shukla <santosh.shukla@amd.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, Michael Roth <michael.roth@amd.com>, "Alexander
- Graf" <agraf@suse.de>, Nikunj A Dadhania <nikunj@amd.com>, Vasant Hegde
-	<vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC PATCH 06/21] crypto: ccp: Enable SEV-TIO feature in the PSP
- when supported
-Message-ID: <66d9ecfab488f_397529426@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-7-aik@amd.com>
- <66d77f5ec9da8_3975294d7@dwillia2-xfh.jf.intel.com.notmuch>
- <16182660-3eb0-4df0-95a5-d4d2c4598319@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <16182660-3eb0-4df0-95a5-d4d2c4598319@amd.com>
-X-ClientProxiedBy: MW4PR03CA0134.namprd03.prod.outlook.com
- (2603:10b6:303:8c::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50625199237
+	for <linux-pci@vger.kernel.org>; Thu,  5 Sep 2024 18:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725562457; cv=none; b=ieKwh/fd4PFPOnXpiUUYGhwAyHFA6oyetO7vNxuli7Es+b1QqDSElj15RnD4fliqBunvXf60X054NzzDnUxDd2hztqBq+VPpMbPNvhZvyYOC6110EIJSVQyeU9d4tfnuefLj2Kv1bgaG7SuirpR+4yTD1tRo9ZL+PreYftvFQCw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725562457; c=relaxed/simple;
+	bh=+X3EGBbsnfThSA6bfkbEMEawCDcd9CImfSQq8Sv6HaI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeI9IMe1e7jQISz+0iHB2geYraHihgfq/+2Lx0h4ET8aIuH0leVY76NhEjbVBqq/e9eZgcf1/+w9rmBVWjRA9ilM6KURWPACWCyK7d+TD1aE6xFYmY+4HcGplaFuQKFi1hbhz4akYxZg8pbmICvwu1tv2eNlXiAQo/Ij2gNdmB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bppyafcJ; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-a86a37208b2so168361366b.0
+        for <linux-pci@vger.kernel.org>; Thu, 05 Sep 2024 11:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725562454; x=1726167254; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RxABoZy7M/TZG8opuKEUGg9PIAepW4IWO/Hnr8c+uSo=;
+        b=bppyafcJoWlFgS8M2UEohwoJYcIWa32E1DW48VgOBaEV/dvI4G0dIdbhmRkujthpK/
+         XivKiGFCzh37sUL3g5wMcIK5RYUNXcSoDxSIYJpbW16wBkOUN9eT+9MDETM8yeZOLzhx
+         7bOL4qh4ZD9+M+XXikQI0pLTZbH3EO8wHRL5f1D5wEq2K3Meh3ZYbOhBMxw2ioIeb/wU
+         aaiAHgns6/6NQockmvPY4ZiaMfpitnOxDjaKsMo0VcghnTsI16h3hXg9FlLmwcwXrJN1
+         debI9J+wlOAeXnn6EaqSRyTvuNzO9zcQBKN3xe9VculiteYxvcIMweeueic6SIVQtlb8
+         h0cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725562454; x=1726167254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RxABoZy7M/TZG8opuKEUGg9PIAepW4IWO/Hnr8c+uSo=;
+        b=wZZ8NiR5YAY0qnzV9smFwtLsObpkTbTBr3A75pgnPwKwvMw/sTK4f0cErAoWjHr82s
+         W9Q44nrDtvVsRFhGCbyaS1XQqJ5eNLBrWAQOOqNqSzRD2ybllfFOTHNaf8oxm8n6xcUT
+         HFjtGYVPvb1F6jC9ayFgn2udS7jKXYpN657dVe77OUtxDsLrOshxhzZj56AYyjGq9uUP
+         0QDRs2aWmIxeEZCf+qUv2EqHvPE7aLXgVCNms3G/sFoNAKMoZ7/J4C50EKCNguZhiGNi
+         2/u9qV+uGTUbp6QONrAgZexcndWt3xQoA67tLhZekdSHb2/9vrNZoup120tNKCty/4XN
+         OeSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGD0EHZyh4mMm285T8zcmPOlm7HDmNH8VLkwFli49qDPU6VSpWoT2YC8D9ppQ/6bUlwgJ1UsUJFEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV4My9185AWPepfMhSVaQ4k6yjr2uXevLNODG1dnAxxKi/oVE7
+	kTEtJSn0fqJEr9//NR5B2kDknxaCPoW05xOImw0C+pzpwJjuEtek5fBn3n/qmZY=
+X-Google-Smtp-Source: AGHT+IFjEgRGyH+GaPbngGsdDcuBB5u6KOKaz4oCTouY+y9qZ4ACBcA78wca7rCiKJ55uLq+Ab/vJw==
+X-Received: by 2002:a17:907:9486:b0:a86:b042:585a with SMTP id a640c23a62f3a-a897fad5108mr2030528766b.57.1725562452809;
+        Thu, 05 Sep 2024 11:54:12 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a62038d8bsm168982266b.64.2024.09.05.11.54.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 11:54:12 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 5 Sep 2024 20:54:20 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Ztn-XOvtk_d3U6XJ@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
+ <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
+ <ZtcoFmK6NPLcIwVt@apocalypse>
+ <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
+ <ZtndaYh2Faf6t3fC@apocalypse>
+ <f39edf3d-aa9e-43a0-8997-762d76c9c248@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB7793:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c8edab9-32a3-4b25-fafc-08dccdd1cd0b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uuhQVF4S0I3go1yBNJwv3GxlA3RkgpZ0xRJTt8+Awyo8a09pBFIIqtfFGF2k?=
- =?us-ascii?Q?oQQjLqdItnKWHiLvoGjKeOlk1/Ts8KBOTYEHFaASiJposqnf/p6EroSzi9pz?=
- =?us-ascii?Q?u2t3/Mzb59VrlYw+uMaCIgPkVUN+bZdL1406gq5KHgQokJovRaV2RLekFJe/?=
- =?us-ascii?Q?4k7NcfAbGrTTQgry/BrZbDLGa/yeli8wOza0u9rjUV0dsNBGF3Jz80Oh+Mf9?=
- =?us-ascii?Q?DHD1+DflJmeCAOOgenoeQh1RCGHqoget/trw8nLCw/813clVAB3iBd2sbd6/?=
- =?us-ascii?Q?6F/Uo0AqH8dkXusGhzKfOy2KxBK7XP5u0i+K+HZfzwc43o86HuJ1p3SztHdw?=
- =?us-ascii?Q?gw/0re2DUbV0lVvF7Ol4AJXkjEDJyttNnpxo3Mwh5VdZ8zN82cYT6xS6F3XN?=
- =?us-ascii?Q?gXM577BaKKR0C79HTggf1+GmQ4pU5lZYoQRqbjwLtcuqBVbKKZBs3O49AHz2?=
- =?us-ascii?Q?pVqDOZJgKKoWVmvyZMcy01vpKYOcFLCSO0BYOqjpzxmyzkfRczKfJouYA0kB?=
- =?us-ascii?Q?3IOJGk3Kp7BuRxwqgE5zTMhf5rMb/UeAXp9C6JptCf9zZY0en/aD/YMjIMwI?=
- =?us-ascii?Q?0FmD5mAgOvkMSCfUnJXjnW21QU5MRzNo9mhkEapsX48Pgyo2TrnWMJbPFp53?=
- =?us-ascii?Q?a5qZ0LkWj3iA5B3OjgpB6Xizwh9GYoApOZR3xL+HAUX4PFYbGeH6RqqZ0A+a?=
- =?us-ascii?Q?LmIuIvd+RjFu2UJkTetN/+Q43I1MX0OoROWEdjSBOCq7XozPjkXqFsThdFqh?=
- =?us-ascii?Q?UPjC4saT52NXCPoLrzfnsR2QI+jDPPyBopoRPYrJPq+cxoe5j7AhYFm776pI?=
- =?us-ascii?Q?x929utjctvD3tHGDpVXVFUJZC3TJA4/hyAFOFUPKTyephMEFEnc2SghYEIpK?=
- =?us-ascii?Q?cjcm8pSBU5PcRlSctPv3TiAo16ZcJlJniBjY8uWOjXDaFCsqkizUza/y/JYo?=
- =?us-ascii?Q?LhPgE3zfLN5wvizltx5yzUXTtv2Xtx6rZoL+euN0xvQOk11auCUp7IEk7BHE?=
- =?us-ascii?Q?3+ZaLpKh0XQsZCe34p30jcaEQfgBZlHZFAt5RQtbrbp52AFY8c/X1uTY/vka?=
- =?us-ascii?Q?HpQaHX5P7aGPFCV79Kb5ZIk+AXy+oOq0+hO3G0mguS1WeURQRTxBzBknQoPa?=
- =?us-ascii?Q?dYI5P/x+mQSgvWjzPoS5FAd/rqmm2xFOqaAPkuBsLpXv8YBFsNyoqSMqH46I?=
- =?us-ascii?Q?+sHMQkFgI/K4eJdXUXCstzDFwzZxIBwM2gFnw5BWOoQ+rLuiblF2/JzLsY8E?=
- =?us-ascii?Q?O1ICJI4LZhWJlbchHDJ5eyVpE/dgSRYn3Yors08KPVOUz9omTQtDFfEEWLZb?=
- =?us-ascii?Q?5aqAssIrNSQ5Lx6xFXsndV9tske617HAuKShfLXWZ3KjjQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lxPtK8ydXy0anmr8Ef4aMbbXzLokSxAmfCSeLMCMJfSwUAjllLC/dkBx7vPU?=
- =?us-ascii?Q?R51m8JREXegJPosLvhgxyP/+cN1ov4SKE/y8Go8BqLZFcuCfdZLRN9CoVc3M?=
- =?us-ascii?Q?FEZhlv2fBMT/0J/XbeE9BWHl0+oF0Gz7m/pkH914/l0+iHHPoYcWj132MPwK?=
- =?us-ascii?Q?C8ueuMfuOF8ER9rX8qRC2E1krsSXJBur6f7QZsXp5jAd3ySTJUv9SMPi497z?=
- =?us-ascii?Q?xeRn+PeTe9NBcCfVxvxuALuaQZvt/tjEIaS0SKRuMjo3HTJVNDWub94B/T/9?=
- =?us-ascii?Q?qrf0oSN0++7irPWWuMpsnyx9cJjK/7b6PYqBCvmInBHBC6VBjL0kmMtR3oWB?=
- =?us-ascii?Q?MiYCwx0wJDRMsea48ol3UYnw52cpzPXPx8JSibfTGhdEXpmBc4uzAsMxMxi3?=
- =?us-ascii?Q?CG5k9QJgR/QgeHgZtCXpr41DNwlv1qflDoXp6sYMUREp8QJCynhsDihWJ5U/?=
- =?us-ascii?Q?L/9QWVzx+okj+07G0pWBSy/UI0IB7Y8CvRDWRgfvtn3Ep2JuIVFiq2ea5C57?=
- =?us-ascii?Q?uL81VCvRugoavssE+5/WjFKn93dbqaFH1Zz6aNb1WKQYsmR/rxeat8q2Krx1?=
- =?us-ascii?Q?PBG0NgI9IXuQgrtd/b7ouJth914MybcMB6lR5p5SCFxQ8/6/bpwbKxlpQMSC?=
- =?us-ascii?Q?VzJPsnoWg6rC+YWvdXJOKUxFYh9nvjzTD1EPaiOaQKN/ZN/amQ7sOzIy2HXv?=
- =?us-ascii?Q?d+gwWxnUpIXzWQP7jRWb0U/zb8spBrur0T6FbMR1gueB+40wd4YKt5/03NM9?=
- =?us-ascii?Q?TkLLiqE7f+O7LRwi6VWfVrdWwt08pm6xR1/jvE76ZDEG9YOD9FSWTC7PHBnH?=
- =?us-ascii?Q?gd+26EzYq+Qsg7zfmUf+qMIQZvf+CrgZ+I6FkFSIG5jaCoNurNMUU6oFg37F?=
- =?us-ascii?Q?uXDUXp5O5Vuu88FkNlaCOqU53gMw1NtMwZ/2RtJXDVD8X32eP7Yam26HS2lx?=
- =?us-ascii?Q?pGyisu/a41z+RdKQaVjRbK/GF8aEZ58J+MDlty2UJtt1toeVEOjNPsI614z0?=
- =?us-ascii?Q?3z1bVsA8Yu4rPFGLpNWDiMs7kyKPYqBCRH0KQdIa2MqmbomepE0beMWR+5ah?=
- =?us-ascii?Q?LaC9WsvlW3epg31wr7nLiYZELNT2oQJodaR9GjmF7qggrkNNwu9rdFvKbPxu?=
- =?us-ascii?Q?qBt77o/1lAE/q0v00QGUSOTgm9yRJlc/AZk00zAAJtBmqKVHXDDmqt5vXpQy?=
- =?us-ascii?Q?acKDyvubsRyDZhdfkQ8YD6Mngrwx+sCj8xw0roqpFFz1l8PDmcqdDQrqtDxE?=
- =?us-ascii?Q?yIZY1aNTqLp4Cq8ECTnajN63ZijfOOVlCmXQqKgQftEOsNpb3UEGE9QRYSHH?=
- =?us-ascii?Q?QN8FEb8ZSOChAmw5xcXNcRs1/0G1CjlrsvQ7IxUs6U7HLi62dkvRKSvcQHDT?=
- =?us-ascii?Q?CxcR8EmxfNmcvoIltCbmoq8ro/yJaJC4s/Aa09j/1N41vAKG9ORETN6Y3KtU?=
- =?us-ascii?Q?u+GaMDpy7SKamm4Jv0PjzUdHr6Wfraj9ffrKpOljtIIbgmVnnObpYkSYI+ZS?=
- =?us-ascii?Q?0fjxLJYh+hjpZ19T/A+MVem4WUxNAhLhvHF2g86l8Nd9P+SkF9p4JNKFFXQg?=
- =?us-ascii?Q?/+7+AbLZU1DvaRV9c0640eXI1rzVt584HLK/0hheirNSOHkt7IK4vARoF284?=
- =?us-ascii?Q?Xw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c8edab9-32a3-4b25-fafc-08dccdd1cd0b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2024 17:40:15.4055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0R4ZWvNc1nikq1kNNrhpYLl7fBDeo2lRTo8DMacbTdCClxMdd4eDZ225Eqi0clrdoxJcwwm7vmyAIJYM3HyU1hB0qL5aRzHCiBHfUZzszRY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7793
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f39edf3d-aa9e-43a0-8997-762d76c9c248@kernel.org>
 
-Alexey Kardashevskiy wrote:
-> 
-> 
-> On 4/9/24 07:27, Dan Williams wrote:
-> > Alexey Kardashevskiy wrote:
-> >> The PSP advertises the SEV-TIO support via the FEATURE_INFO command
-> >> support of which is advertised via SNP_PLATFORM_STATUS.
-> >>
-> >> Add FEATURE_INFO and use it to detect the TIO support in the PSP.
-> >> If present, enable TIO in the SNP_INIT_EX call.
-> >>
-> >> While at this, add new bits to sev_data_snp_init_ex() from SEV-SNP 1.55.
-> >>
-> >> Note that this tests the PSP firmware support but not if the feature
-> >> is enabled in the BIOS.
-> >>
-> >> While at this, add new sev_data_snp_shutdown_ex::x86_snp_shutdown
-> >>
-> >> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-[..]
-> > Why use CPU register names in C structures? I would hope the spec
-> > renames these parameters to something meaninful?
-> 
-> This mimics the CPUID instruction and (my guess) x86 people are used to 
-> "CPUID's ECX" == "Subfunction index". The spec (the one I mention below) 
-> calls it precisely "ECX_IN".
+Hi Krzysztof,
 
-Oh, I never would have guessed that "snp feature info" mimicked CPUID,
-but then again, no one has ever accused me of being an "x86 people".
-
-> >>   /**
-> >>    * struct sev_data_snp_launch_start - SNP_LAUNCH_START command params
-> >>    *
-> >> @@ -745,10 +765,14 @@ struct sev_data_snp_guest_request {
+On 18:52 Thu 05 Sep     , Krzysztof Kozlowski wrote:
+> On 05/09/2024 18:33, Andrea della Porta wrote:
+> > Hi Krzysztof,
 > > 
-> > Would be nice to have direct pointer to the spec and spec chapter
-> > documented for these command structure fields.
-> 
-> For every command? Seems overkill. Any good example?
-> 
-> Although the file could have mentioned in the header that SNP_xxx are 
-> from "SEV Secure Nested Paging Firmware ABI Specification" which google 
-> easily finds, and search on that pdf for "SNP_INIT_EX" finds the 
-> structure layout. Using the exact chapter numbers/titles means they 
-> cannot change, or someone has to track the changes.
-
-No need to go overboard, but you can grep for:
-    "PCIe\ r\[0-9\]"
-...or:
-    "CXL\ \[12\]" 
-
-...for some examples. Yes, these references can bit rot, but that can
-also be good information "the last time this definition was touched was
-in vN and vN+1 introduced some changes."
-
-[..]
-> >> +static int snp_get_feature_info(struct sev_device *sev, u32 ecx, struct sev_snp_feature_info *fi)
+> > On 20:27 Tue 03 Sep     , Krzysztof Kozlowski wrote:
+> >> On 03/09/2024 17:15, Andrea della Porta wrote:
+> >>>>>>> +
+> >>>>>>> +				rp1_clocks: clocks@c040018000 {
+> >>>>>>
+> >>>>>> Why do you mix MMIO with non-MMIO nodes? This really does not look
+> >>>>>> correct.
+> >>>>>>
+> >>>>>
+> >>>>> Right. This is already under discussion here:
+> >>>>> https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
+> >>>>>
+> >>>>> IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
+> >>>>> using CLK_OF_DECLARE.
+> >>>>
+> >>>> Depends. Where are these clocks? Naming suggests they might not be even
+> >>>> part of this device. But if these are part of the device, then why this
+> >>>> is not a clock controller (if they are controllable) or even removed
+> >>>> (because we do not represent internal clock tree in DTS).
+> >>>
+> >>> xosc is a crystal connected to the oscillator input of the RP1, so I would
+> >>> consider it an external fixed-clock. If we were in the entire dts, I would have
+> >>> put it in root under /clocks node, but here we're in the dtbo so I'm not sure
+> >>> where else should I put it.
+> >>
+> >> But physically, on which PCB, where is this clock located?
 > > 
-> > Why not make this bool...
-> > 
-> >> +{
-> >> +	struct sev_user_data_snp_status status = { 0 };
-> >> +	int psp_ret = 0, ret;
-> >> +
-> >> +	ret = snp_platform_status_locked(sev, &status, &psp_ret);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +	if (ret != SEV_RET_SUCCESS)
-> >> +		return -EFAULT;
-> >> +	if (!status.feature_info)
-> >> +		return -ENOENT;
-> >> +
-> >> +	ret = snp_feature_info_locked(sev, ecx, fi, &psp_ret);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +	if (ret != SEV_RET_SUCCESS)
-> >> +		return -EFAULT;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static bool sev_tio_present(struct sev_device *sev)
-> >> +{
-> >> +	struct sev_snp_feature_info fi = { 0 };
-> >> +	bool present;
-> >> +
-> >> +	if (snp_get_feature_info(sev, 0, &fi))
-> > 
-> > ...since the caller does not care?
+> > xosc is a crystal, feeding the reference clock oscillator input pins of the RP1,
+> > please see page 12 of the following document:
+> > https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
 > 
-> sev_tio_present() does not but other users of snp_get_feature_info() 
-> (one is coming sooner that TIO) might, WIP.
+> That's not the answer. Where is it physically located?
 
-...not a huge deal, but it definitely looked odd to see so much care to
-return distinct error codes only to throw away the distinction.
+Please see below.
+
+> 
+> > On Rpi5, the PCB is the very same as the one on which the BCM2712 (SoC) and RP1
+> > are soldered. Would you consider it external (since the crystal is outside the RP1)
+> > or internal (since the oscillator feeded by the crystal is inside the RP1)?
+> 
+> So it is on RPi 5 board? Just like every other SoC and every other
+> vendor? Then just like every other SoC and every other vendor it is in
+> board DTS file.
+
+Yes it's on the Rpi5 board. These are two separate thing, though: one is where
+to put it (DTS, DTSO) and another is in what target path relative to root. I
+was trying to understand the latter.
+The clock node should be put in the DTBO since we are loading this driver at
+runtime and we probably don't want to depend on some specific node name to be
+present in the DTS. This is also true because this driver should possibly work
+also on ACPI system and on hypothetical PCI card on which the RP1 could be mounted
+in the future, and in that case a DTS could be not even there. 
+After all, those clocks must be in the immediate proximity to the RP1, and on the
+same board, which may or may not be the main board as the Rpi5 case.
+I think that, since this application is a little bit peculiar, maybe some
+compromises could be legit.
+
+> 
+> > 
+> >>
+> >>>
+> >>> Regarding pclk and hclk, I'm still trying to understand where they come from.
+> >>> If they are external clocks (since they are fixed-clock too), they should be
+> >>> in the same node as xosc. CLK_OF_DECLARE does not seem to fit here because
+> >>
+> >> There is no such node as "/clocks" so do not focus on that. That's just
+> >> placeholder but useless and it is inconsistent with other cases (e.g.
+> >> regulators).
+> > 
+> > Fine, I beleve that the root node would be okay then, or some other carefully named
+> > node in root, if the clock is not internal to any chip.
+> > 
+> >>
+> >> If this is external oscillator then it is not part of RP1 and you cannot
+> >> put it inside just to satisfy your drivers.
+> > 
+> > Ack.
+> > 
+> >>
+> >>> there's no special management of these clocks, so no new clock definition is
+> >>> needed.
+> >>
+> >>> If they are internal tree, I cannot simply get rid of them because rp1_eth node
+> >>> references these two clocks (see clocks property), so they must be decalred 
+> >>> somewhere. Any hint about this?.
+> >>>
+> >>
+> >> Describe the hardware. Show the diagram or schematics where is which device.
+> > 
+> > Unfortunately I don't have the documentation (schematics or other info) about
+> > how these two clocks (pclk and hclk) are arranged, but I'm trying to get
+> > some insight about that from various sources. While we're waiting for some
+> > (hopefully) more certain info, I'd like to speculate a bit. I would say that
+> > they both probably be either external (just like xosc), or generated internally
+> > to the RP1:
+> > 
+> > If externals, I would place them in the same position as xosc, so root node
+> > or some other node under root (eg.: /rp1-clocks)
+> 
+> Just like /clocks, /rp1-clocks is not better. Neither /rp1-foo-clocks.
+
+Right. So in this case, since xosc seems to be on the same level and on the same
+board of the RP1 and the SoC, and it's also external to the RP1, can I assume that
+placing xosc node in root is ok?
+
+> 
+> I think there is some sort of big misunderstanding here. Is this RP1
+> co-processor on the RP board, connected over PCI to Broadcom SoC?
+
+Yes. 
+
+ ---------------Rpi5 board---------------------
+ |                                            |
+ |    SoC ==pci bus==> RP1 <== xosc crystal   |
+ |                                            |
+ ----------------------------------------------
+
+> 
+> > 
+> > If internals, I would leave them just where they are, i.e. inside the rp1 node
+> > 
+> > Does it make sense?
+> 
+> No, because you do not have xosc there, according to my knowledge.
+
+Hmmm sorry, not sure what this negation was referring to... I was talking about
+hclk and pclk, not xosc here. Could you please add some details?
+
+Many thanks,
+Andrea
+
+> 
+> Best regards,
+> Krzysztof
+> 
 
