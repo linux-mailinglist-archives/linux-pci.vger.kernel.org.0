@@ -1,285 +1,276 @@
-Return-Path: <linux-pci+bounces-12859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83F6C96E477
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 22:53:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBDA696E4F5
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 23:21:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9E76B21DA3
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 20:53:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05B271C23F8C
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 21:21:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FB21953A9;
-	Thu,  5 Sep 2024 20:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085D71AD267;
+	Thu,  5 Sep 2024 21:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WvdJghhR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xonpj9Hz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCFF1A3022;
-	Thu,  5 Sep 2024 20:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725569622; cv=fail; b=TGNWoye9Ueb9gqkf/f0db9WE7DRmlRtp+KHCLIGDuSQI427eYoMMb2fWo3Qvl69TTNVbf+a5EL10oKAAeFkuPt3D4OUqPKi2r3245Z/nbIkxqxHfDsch1ts5f+aKPqrINwyJUmAwEPupWNynrYt7i+P1W4HrIo7FTv7hTI+bCso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725569622; c=relaxed/simple;
-	bh=IUz2N51Hge7X1KV+3KzbJxAog2fuZVkGOp+yukXh1qw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HlpMpbcNcYBTIJetBtF5xDkqhVBbnRATVBC2FHjrA85fjApy6HupBHAu2XyFNZOhF7trfJ2LzqKAs/xwcX+V6tJ6r8IIFUKvkSfBDI0kebqD1wwkYsFpzTwxbZIgLTtneeHog/0eqUZcBcqUVN5JuYrOOCBV4K4v0+VZ8VCs3xY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WvdJghhR; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725569620; x=1757105620;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=IUz2N51Hge7X1KV+3KzbJxAog2fuZVkGOp+yukXh1qw=;
-  b=WvdJghhRCenLyJv2shaxl2eWqJHYp+Z0tp6nuEr8xcllOWdE3pjK2pH8
-   6au4zJeGithtBYE0Q8umngxehVTqRSsWBJRmvWYjnAneiA9OXaLRUaLLS
-   CB7eolhE8hkb7qBXuwYyieVE6mn9JF+mC9IzkNmGVQJZPl1kD35+m12kG
-   GS2b/YrL3MDkvaFSy7VyHX9kLzB5awczDYpjDa8VNIKVt4+WvWUJAusf3
-   gTJVONB3ZZ7ZiJkpGCMQ0MhLBlTZq9ca7khS51w2b2mHW//7qqTHZjzD4
-   K5qqgG0rzhdPYDgvAm9gtKWiAqPX3NheoOSgkY9nO4v8WHnEzJTEksKzt
-   Q==;
-X-CSE-ConnectionGUID: 5RhNIJqLQHCW64FtA5d3ig==
-X-CSE-MsgGUID: R9oesYAQQZ2OnTrmZx0u4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="23869411"
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="23869411"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 13:53:40 -0700
-X-CSE-ConnectionGUID: bXRxeqHETkSW5Ib2GOXcgQ==
-X-CSE-MsgGUID: bhd19zHxQFesK58k8NTGOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="66288857"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Sep 2024 13:53:40 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 5 Sep 2024 13:53:39 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 5 Sep 2024 13:53:39 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 5 Sep 2024 13:53:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FvLJmuuhIxOVOinxUfnVAJSiJclcL4OPPMFVXTp6xK3CT++NeZcfPqt3fJ3XOhe3nMYCjCdRLEA5Xfj5G330w/egeOqZq97hr6IJdwL5mtmWBFpsiJv9SjThyfF2x7hyfrbCdnlnuIlxynQzs8KMPu2p8R1Dkww0Ho815p/vs8fBa4vhZq+SocBh3rvmWghRNhF9xA1DKKb+WKJ5fdXgSw3rYuV22R1LCZLIskLgoXD9rxAnljJ7bqTJvcTwhMi4fvK+fYEisXfxYqV7xOL6Ut29P6p1ZWIdrGM3tcW4fo9Gox9Z5wQXaKN62xTf7/P/M8A8nRzh+PPAmcYtuRk2IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N9w+M41nCHZ40Ggo/3q+GaZpW0TEE571DKJHuj0UjQg=;
- b=xrn/e1S1JQyXmccDa9PHNXcvaf/h9281c8aligGt+6H+TUcb9A/AxsB+ZKFckpKfirZ/XoByNwqYzTRfU1Vfge2KE3RHkrnzgE98rhT7JQrcxEImcT3K6rFj+QjVZN4uLOvCfimELa33nUxEJB8xFv9Zn5pfq9giJbudr2PP/ootaQ1jjtcgR+Egjs83Sl6st4N4iAytpRfi6A49h6SKfPcehOw5hL/kIcE9oizMFYyfXp4fK1AS4sllU9Xgk8Hc7RqV9HOvYN0HFamtcyZhvQOist5wV2JVeDe90qvNO1S8EBq77oFD0FWV27k3A/brNnTE3ACSgl077JdnIirhDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA2PR11MB5067.namprd11.prod.outlook.com (2603:10b6:806:111::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Thu, 5 Sep
- 2024 20:53:31 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7918.024; Thu, 5 Sep 2024
- 20:53:31 +0000
-Date: Thu, 5 Sep 2024 13:53:27 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, "Tian, Kevin" <kevin.tian@intel.com>
-CC: "Williams, Dan J" <dan.j.williams@intel.com>, Xu Yilun
-	<yilun.xu@linux.intel.com>, Mostafa Saleh <smostafa@google.com>, "Alexey
- Kardashevskiy" <aik@amd.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-coco@lists.linux.dev"
-	<linux-coco@lists.linux.dev>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>, Alex Williamson
-	<alex.williamson@redhat.com>, "pratikrajesh.sampat@amd.com"
-	<pratikrajesh.sampat@amd.com>, "michael.day@amd.com" <michael.day@amd.com>,
-	"david.kaplan@amd.com" <david.kaplan@amd.com>, "dhaval.giani@amd.com"
-	<dhaval.giani@amd.com>, Santosh Shukla <santosh.shukla@amd.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, Michael Roth <michael.roth@amd.com>, "Alexander
- Graf" <agraf@suse.de>, Nikunj A Dadhania <nikunj@amd.com>, Vasant Hegde
-	<vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>, "david@redhat.com"
-	<david@redhat.com>
-Subject: Re: [RFC PATCH 12/21] KVM: IOMMUFD: MEMFD: Map private pages
-Message-ID: <66da1a47724e8_22a2294ef@dwillia2-xfh.jf.intel.com.notmuch>
-References: <ZtBAvKyWWiF5mYqc@yilunxu-OptiPlex-7050>
- <20240829121549.GF3773488@nvidia.com>
- <ZtFWjHPv79u8eQFG@yilunxu-OptiPlex-7050>
- <20240830123658.GO3773488@nvidia.com>
- <66d772d568321_397529458@dwillia2-xfh.jf.intel.com.notmuch>
- <20240904000225.GA3915968@nvidia.com>
- <66d7b0faddfbd_3975294e0@dwillia2-xfh.jf.intel.com.notmuch>
- <20240905120041.GB1358970@nvidia.com>
- <BN9PR11MB527612F4EF22B4B564E1DEDA8C9D2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20240905122336.GG1358970@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240905122336.GG1358970@nvidia.com>
-X-ClientProxiedBy: MW4PR03CA0073.namprd03.prod.outlook.com
- (2603:10b6:303:b6::18) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BE31A4E6F;
+	Thu,  5 Sep 2024 21:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725571269; cv=none; b=avCcOIFybHUR6WDFLAcGxbjbi3AzreqUMckBGPHoka/GLH/N8zN/gxemTrWo0E3RyE4O2nWzZ9gmroI5n4b2GN2f4jyGKWHziHBYGWiL9eOfKy7t5wKtejLkMCQhOTQERbHL4t09ZXe/5Rnp4Np0xSqIqA8LySEcppo1auUEPaI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725571269; c=relaxed/simple;
+	bh=pu745UfD6nFeM4JKfJBuPPz6wiYc0c0r/+Z5uAO5/C4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eVuhV9E3MUZWmZlCZ8BvZ2k8Un401S7s/wfoQaCPmfLX74Y5Jey6N8wTR8lw1mgVNEfwJpzYGLZNgXCaWoqFF9vFsjZf5dEc57b5C8C3kcXQSC5ct8co4MYGogLHov11xko6ORUAti2ORdIGtauslX5O040TCa4khLxbAJjOvT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xonpj9Hz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09384C4CEC3;
+	Thu,  5 Sep 2024 21:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725571269;
+	bh=pu745UfD6nFeM4JKfJBuPPz6wiYc0c0r/+Z5uAO5/C4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xonpj9Hz1TwRC0/VLPThd2398ncy6DzNG9LWiNdpJJVfcYZLj5M48GBD7vLE12gCI
+	 gEexAMyQm2sjRBxDETT83rcY+1iLGIakuC9pECOBsDw3OARuJSjnRUGjE46irwDvYn
+	 4jrWOjHPFCxqr3Xl1o3f+n2cPnntzKvIl23qXb/3xpRjcZmcHfYE5JzQnuIVtn9+1o
+	 Ei+SGQ6XItUEctLgbQKtcozAh5eSwRlItRWOdjWRF/S/VIze/hT6/VrjUdF95uw129
+	 bFiI9BxHu9rHTcfi5/9Uu7eiTupTHNiBi/kr6SAW85Z3xZqJis/OZMxD5spJJLX3zS
+	 F/wevBVGGCHUw==
+Message-ID: <50546635-1870-499d-8cdc-eb4e9fa1a510@kernel.org>
+Date: Thu, 5 Sep 2024 23:20:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA2PR11MB5067:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22d18bbb-4d0d-4ed3-4636-08dccdecccc5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Kh16CxST4DKh/u9Xg6eqrfSzx47iYKgB+6Bvjr6z3qOiQoBQ0WPmaUfC0+dm?=
- =?us-ascii?Q?4NpJwICmm/aMW8ps6ILDkEibkgFuIuBPD0Wxqjp7y+xoQF0vb5qdXDQbXtH/?=
- =?us-ascii?Q?BU5/X0puR47NgG5RNzwZvHMx8isNykVqtsRxMADfY9AjEqIjWxiYVghmZA2c?=
- =?us-ascii?Q?FAzvqr84WAoCKK/saAMGKEyHFUazeDdICt2k6le0Lwi1ESwP7v6vKiMNku9P?=
- =?us-ascii?Q?X4Inuhu35RTKc/CWZj9p9adTQ5SWRZxO0+QxoHjb2ZYqeupnbM8VRNc8qfPs?=
- =?us-ascii?Q?T8MNbibXGn3PPxVa/7BgXEg6FnQevS6MzO2L9+Tm39BgctnGJ6t2pnpQBrcr?=
- =?us-ascii?Q?ug6GCDvDvR3ywQgBoTnV96u4RXjrbCNg9xa1CGC8VMWthOs+IGBAgY3s3OJu?=
- =?us-ascii?Q?wWpk+TBgez9OLXEUhOxoAKxsVTkBJH0ufVZDOPmr2sUm9RhyG5ZQ9qXYcV/L?=
- =?us-ascii?Q?gtNDd0etBGinRy0YcxbhazZFbbyuo7A2IAGEbD/CRkIMgeBM+D+kIY/UrSJ0?=
- =?us-ascii?Q?ykE7JHOn4eUCMkE6yh8JJORWEY1L9m8gw5Y4OSLIx/CqGhYY6W0/GpRXpnw5?=
- =?us-ascii?Q?UUBebyioAIrvY991OeoJcFoq0kNkKHy874NfTmj6XIWF3Oa9WrXhCYZlYIyw?=
- =?us-ascii?Q?AAY+GRUg8yu73a7nT/ARUIL28Gqs7Cotks6AX6wbdwlM5/l0doPJAmp38wAn?=
- =?us-ascii?Q?9fqZfOLbK5cHYra9WSYD4TgnXtCnuzhI4lCZpdVq5PA8v8KinmgmVQtH1jYo?=
- =?us-ascii?Q?7i5HZnbxaf63p8wwjCIcRBQB4ML8I8BoQhEXwVycKkfXULJgmmr5my4+rOTC?=
- =?us-ascii?Q?JhS0MllbMvewFI4GHwtP62/5XxneV7I9LzKWeQnlnWIL6c02j8obKy3mPSH0?=
- =?us-ascii?Q?pUHFye6+tKfk6hSMNlukjMHI4M0TnyYCh0lZgr2VP4XmWvTOpNY+1a1qfUYz?=
- =?us-ascii?Q?DdBLCEQ3r3fudpbgMzDPVA/EAwZ/QCzXm0wzPHS/g1ZCnfD/8+OiEL41kbGl?=
- =?us-ascii?Q?QtsTzG3yZZkQp3G4Vih08LuPAKdMBTSznlVQ+zd8fw0nz6S6Zf4wV6GyxInx?=
- =?us-ascii?Q?tALddwes5NzHQyE6TncBPr2mnuL1GNqOGkef7XUojFuuzGH0b3aOwZN3Miv7?=
- =?us-ascii?Q?67+thOTDAeHiTstVEl/xrvsvMjPPGXKCMyU+BnSb9YEVtu/qBhLHSMj3skIK?=
- =?us-ascii?Q?QLqx5lXn/HotIJdFuLnodeOkyZuE+/8FF0xT5TsKO/ShuNT6AD94XMoNQtLB?=
- =?us-ascii?Q?wHmsTPkGzW8zvZHZk/GGcm+dgXLZqWx+ObAn3GIoutKDvCY5TCRZoc4oSiIG?=
- =?us-ascii?Q?pMRBDO+Hi3jGLoZWqhiEyZ4BVzAJGnM8YRCoY6cjbexhaA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8T650HM6sy296rfg/80rW0Lx93TR6IwbAJeUmUiEOcih30oe8nmn3RYM+Ss+?=
- =?us-ascii?Q?E1XNBKqYL+5ybINnc4y0mXwY5N1Bd/0buoZgj3L3k8lRT0lrD2sPXKdmFYbF?=
- =?us-ascii?Q?3q+eqgIEDpCvC61rK8fiMYXTFaWByTq3uRc0fPfplh0EOxG9tQCGqyF85YWd?=
- =?us-ascii?Q?RV3RorOp6v3OgHrNmYBKXc0PxWkMQcImnhkElKFcbRQGa/OcjTa1nz9N/zJe?=
- =?us-ascii?Q?JhUfBxj36kqh2oC3eRUkZlqUMfhRr2ABVY1orWrikVKcUShuDBjS9FHj+MYS?=
- =?us-ascii?Q?ax/uKOdw8dDhijv6oPG/XK8V7HeJVoqOxULGjYeeESuRJYwIPGHpHaVc1Jir?=
- =?us-ascii?Q?wpV0DG4Xvkyoi88nnwcasijYbgE8M/e19Ewcr5sU0fQriwLK+J2CgS69H/F1?=
- =?us-ascii?Q?y6BC0uB9QIQMSsMidVbkMaYEgVI4pJdEAeJYwuIHdADuOr6ID0TmF4zX+b+f?=
- =?us-ascii?Q?Er/OnNjPV/o2mjaw4ZeCMJR2AQofWuJCR5z0hxz4wJmE8Me3kYI5oNVHh8hT?=
- =?us-ascii?Q?2zam2CP7xSVzSJnG57Jgk9uGNjGJJq/41WLOmyVSVbroeTuT/7Lj2Uzw3SVW?=
- =?us-ascii?Q?KXsgBIYjXxyGAmrzlk+KXuCpMBpYUZDL7qcXopGJyWsks+PrJJyKruymdkFK?=
- =?us-ascii?Q?FWFpwCkA7gmTsJ1aRc4kxz82lhzQO8vNEGi50zOvG+rg2tDLoT2yWAkbT5sK?=
- =?us-ascii?Q?Jm0y0DL+homQ6zfHyE+AgESt0F5t9Oc9lssluFNoBVgDdaN5kvyrSdmwJ80f?=
- =?us-ascii?Q?p5dotXf5i6Mx5pb+yTxoWiq1dttU+F41EcrNOB+jZ09vI904+2F7y8Mc204w?=
- =?us-ascii?Q?jyp+Y/ANcXGasEEIYZedVn3j28upijq30fn2oyiTVE4rrk8sAh4PvFugD+rD?=
- =?us-ascii?Q?bp0ytIjG6KhSIcs/KDPRRnwfGFdKcbcInTqN8ZCsMb2dj8tTtgKnh9Mz9dPz?=
- =?us-ascii?Q?hdw23eIk6Ydu3/Q3rNSRjrRyNG4RaBOxkZ7GxgUB+T+gyo8AHmeXiCp/EPBt?=
- =?us-ascii?Q?y2/PAr+8Fzf1hXPlqiSJhokMO/lf/z9uDqre6UQKJpr0ADKxUhtCOKmCh8gf?=
- =?us-ascii?Q?gfCYbM1l2/u6Ms/ZtwHOrv+NSvKvhR4n8QwO1k29nFv72sTofTPqbbZeDjwG?=
- =?us-ascii?Q?MesGfRD0268MRFO/aHTcMtU9Q3JxSz2OUAYPJoY+OzBY12ILMomkciRfs389?=
- =?us-ascii?Q?W2/ltIkrm715byu9tTT52rywZDwmcH+E+wXZ6Y+rSTNIFra7UXUpGdEwhGYE?=
- =?us-ascii?Q?vvDNir0vuHqTxQarsES0UEBzd1oM2RmRz4YymNQ6x/vcPB728zm9weE/JfBj?=
- =?us-ascii?Q?yfEp1w33l8t5wr3gG+Fl/+EzABxqKNPD6HPwLn9KvbVK4FKNQ0Gy7peXlqR0?=
- =?us-ascii?Q?q2P1ue1dhCRi0MxpuyVCmFuh4rkRXLWdffxw6zE71+SpwMYGSicDidugMbDr?=
- =?us-ascii?Q?wu6H8pR2Ny1txZeg6BjXw4sao7N2BW7ukhZBTz4tLQXW9MSLAa9+suZQ0+Yq?=
- =?us-ascii?Q?67CwlChczlEVlVXXFTVJ7UsId+PxJmITWj6NhwAie/q2gR+mfd/uLjLYRpqk?=
- =?us-ascii?Q?412SGp2MZLwXFLDffJFzmBqlfm2e+VuCh4ggGJtFLQTe44cxdue7Bzat3Vhk?=
- =?us-ascii?Q?bw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22d18bbb-4d0d-4ed3-4636-08dccdecccc5
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2024 20:53:31.2856
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k3+f9iXWcHMwysr87dSU1mMAGVg+4iLVkO7Ci5rbRCHYWnIC4ZFCY13OxGme5lmB2CkWk/llhokskQF4d2cU4ZkmTA/VV1GZOJNc9jWIYX4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5067
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
+ <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
+ <ZtcoFmK6NPLcIwVt@apocalypse>
+ <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
+ <ZtndaYh2Faf6t3fC@apocalypse>
+ <f39edf3d-aa9e-43a0-8997-762d76c9c248@kernel.org>
+ <Ztn-XOvtk_d3U6XJ@apocalypse>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Ztn-XOvtk_d3U6XJ@apocalypse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Jason Gunthorpe wrote:
-> On Thu, Sep 05, 2024 at 12:17:14PM +0000, Tian, Kevin wrote:
-> > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > Sent: Thursday, September 5, 2024 8:01 PM
-> > > 
-> > > On Tue, Sep 03, 2024 at 05:59:38PM -0700, Dan Williams wrote:
-> > > > Jason Gunthorpe wrote:
-> > > > > It would be a good starting point for other platforms to pick at. Try
-> > > > > iommufd first (I'm guessing this is correct) and if it doesn't work
-> > > > > explain why.
-> > > >
-> > > > Yes, makes sense. Will take a look at that also to prevent more
-> > > > disconnects on what this PCI device-security community is actually
-> > > > building.
-> > > 
-> > > We are already adding a VIOMMU object and that is going to be the
-> > > linkage to the KVM side
-> > > 
-> > > So we could have new actions:
-> > >  - Create a CC VIOMMU with XYZ parameters
-> > >  - Create a CC vPCI function on the vIOMMU with XYZ parameters
-> > >  - Query stuff?
-> > >  - ???
-> > >  - Destroy a vPCI function
-> > > 
-> > 
-> > I'll look at the vIOMMU series soon. Just double confirm here.
-> > 
-> > the so-called vIOMMU object here is the uAPI between iommufd
-> > and userspace. Not exactly suggesting a vIOMMU visible to guest.
-> > otherwise this solution will be tied to implementations supporting
-> > trusted vIOMMU.
+On 05/09/2024 20:54, Andrea della Porta wrote:
+> Hi Krzysztof,
 > 
-> Right, the viommu object today just wraps elements of HW that are
-> connected to the VM in some way. It is sort of a security container.
+> On 18:52 Thu 05 Sep     , Krzysztof Kozlowski wrote:
+>> On 05/09/2024 18:33, Andrea della Porta wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On 20:27 Tue 03 Sep     , Krzysztof Kozlowski wrote:
+>>>> On 03/09/2024 17:15, Andrea della Porta wrote:
+>>>>>>>>> +
+>>>>>>>>> +				rp1_clocks: clocks@c040018000 {
+>>>>>>>>
+>>>>>>>> Why do you mix MMIO with non-MMIO nodes? This really does not look
+>>>>>>>> correct.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Right. This is already under discussion here:
+>>>>>>> https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
+>>>>>>>
+>>>>>>> IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
+>>>>>>> using CLK_OF_DECLARE.
+>>>>>>
+>>>>>> Depends. Where are these clocks? Naming suggests they might not be even
+>>>>>> part of this device. But if these are part of the device, then why this
+>>>>>> is not a clock controller (if they are controllable) or even removed
+>>>>>> (because we do not represent internal clock tree in DTS).
+>>>>>
+>>>>> xosc is a crystal connected to the oscillator input of the RP1, so I would
+>>>>> consider it an external fixed-clock. If we were in the entire dts, I would have
+>>>>> put it in root under /clocks node, but here we're in the dtbo so I'm not sure
+>>>>> where else should I put it.
+>>>>
+>>>> But physically, on which PCB, where is this clock located?
+>>>
+>>> xosc is a crystal, feeding the reference clock oscillator input pins of the RP1,
+>>> please see page 12 of the following document:
+>>> https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+>>
+>> That's not the answer. Where is it physically located?
 > 
-> If the VMM goes on to expose a vIOMMU to the guest or not should be
-> orthogonal.
+> Please see below.
 > 
-> I expect people will explicitly request a secure vIOMMU if they intend
-> to expose the vIOMMU to the CC VM. This can trigger any actions in the
-> trusted world that are required to support a secure vIOMMU.
+>>
+>>> On Rpi5, the PCB is the very same as the one on which the BCM2712 (SoC) and RP1
+>>> are soldered. Would you consider it external (since the crystal is outside the RP1)
+>>> or internal (since the oscillator feeded by the crystal is inside the RP1)?
+>>
+>> So it is on RPi 5 board? Just like every other SoC and every other
+>> vendor? Then just like every other SoC and every other vendor it is in
+>> board DTS file.
 > 
-> For instance any secure vIOMMU will require some way for the guest to
-> issue secure invalidations, and that will require some level of
-> trusted world involvement. At the minimum the trusted world has to
-> attest the validity of the vIOMMU to the guest.
-> 
-> > Then you expect to build CC/vPCI stuff around the vIOMMU
-> > object given it already connects to KVM?
-> 
-> Yes, it is my thought
-> 
-> We alreay have a binding of devices to the viommu, increasing that to
-> also include creating vPCI objects in the trusted world is a small
-> step.
+> Yes it's on the Rpi5 board. These are two separate thing, though: one is where
 
-Sounds reasonable to me.
+Finally.
 
-To answer Kevin's question about what "bind capable" means I need to
-clarify this oversubscribed "bind" term means. "Bind" in the TDISP sense
-is transitioning the device to the LOCKED state so that its
-configuration is static and ready for the VM to run attestation without
-worrying about TOCTOU races.
+> to put it (DTS, DTSO) and another is in what target path relative to root. I
+> was trying to understand the latter.
 
-The VMM is not in a good position to know when the assigned device can
-be locked. There are updates, configuration changes, and reset/recovery
-scenarios the VM may want to perform before transitioning the device to
-the LOCKED state. So, the "bind capable" concept is: pre-condition VFIO
-with the context that "this vPCI device is known to VFIO as a device
-that can attach to the secure world, all the linkage between VFIO and
-the secure world is prepared for a VM to trigger entry into the LOCKED
-state, and later the RUN state".
+It is already or should be part of DTS, not DTSO. You are duplicating
+device nodes.
 
-As mentioned in another thread this entry into the LOCKED state is
-likely nearly as violent as hotplug event since the DMA layer currently
-has no concept of a device having a foot in the secure world and the
-shared world at the same time.
+> The clock node should be put in the DTBO since we are loading this driver at
+> runtime and we probably don't want to depend on some specific node name to be
+> present in the DTS. This is also true because this driver should possibly work
+> also on ACPI system and on hypothetical PCI card on which the RP1 could be mounted
+
+Not really. ACPI and thus DT in such case will take it as clock input.
+Basically what you need here is to provide clock inputs to this device.
+It's then firmware independent.
+
+> in the future, and in that case a DTS could be not even there. 
+
+No problem. Whatever firmware mechanism you have, it will provide you clock.
+
+> After all, those clocks must be in the immediate proximity to the RP1, and on the
+> same board, which may or may not be the main board as the Rpi5 case.
+> I think that, since this application is a little bit peculiar, maybe some
+> compromises could be legit.
+
+Application is not peculiar but completely standard. You have standard
+PCI device which has some inputs. One of these inputs, maybe on some
+reserved M.2 pins or whatver connector you have there, is the clock.
+
+...
+
+>>>
+>>> If externals, I would place them in the same position as xosc, so root node
+>>> or some other node under root (eg.: /rp1-clocks)
+>>
+>> Just like /clocks, /rp1-clocks is not better. Neither /rp1-foo-clocks.
+> 
+> Right. So in this case, since xosc seems to be on the same level and on the same
+> board of the RP1 and the SoC, and it's also external to the RP1, can I assume that
+> placing xosc node in root is ok?
+
+root node of the DTS yes. Root node of DTSO of course not, because it is
+not part of DTSO and you are duplicating DTS. It would not even work.
+
+That's why you need to apply the overlay to proper target as I asked
+long time ago.
+
+> 
+>>
+>> I think there is some sort of big misunderstanding here. Is this RP1
+>> co-processor on the RP board, connected over PCI to Broadcom SoC?
+> 
+> Yes. 
+> 
+>  ---------------Rpi5 board---------------------
+>  |                                            |
+>  |    SoC ==pci bus==> RP1 <== xosc crystal   |
+>  |                                            |
+>  ----------------------------------------------
+> 
+>>
+>>>
+>>> If internals, I would leave them just where they are, i.e. inside the rp1 node
+>>>
+>>> Does it make sense?
+>>
+>> No, because you do not have xosc there, according to my knowledge.
+> 
+> Hmmm sorry, not sure what this negation was referring to... I was talking about
+> hclk and pclk, not xosc here. Could you please add some details?
+
+If considering hclk and pclk, then depends where are they. If they come
+as inputs, then same as xosc. If they are not, then it is also obvious -
+we do not represent internal device clocks as fixed clocks in DTS,
+because it makes absolutely no sense at all. No benefits, no help,
+nothing at all.
+
+It's just device's internal clock.
+
+This is again nothing peculiar. Many other devices have some internal
+stuff. Do we add fixed clocks for these? Fixed regulators? No, of course
+not.
+
+Best regards,
+Krzysztof
+
 
