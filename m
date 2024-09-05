@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-12811-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12812-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E68FF96CFD0
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 08:55:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAA2196CFD9
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 08:58:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A730A283EC4
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 06:55:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDBD61C22902
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Sep 2024 06:57:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DFA146596;
-	Thu,  5 Sep 2024 06:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D9F1922F9;
+	Thu,  5 Sep 2024 06:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adnmBx+k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCXyZv3E"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713A31922C9;
-	Thu,  5 Sep 2024 06:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296991922C9;
+	Thu,  5 Sep 2024 06:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725519309; cv=none; b=hnduvNDpk5tburCbhWmrFomP8RBOXYt83iYqgRVyJQ60lHF1b1Jsx+O80iyD+gTnHBEBKuaSIk9Dvb0PaxOG38otGc6ob/f9UnM2sxeRoU1y7F9mhS530Bxv02Ap7Aik7/WLFB76JFn2MsNYLW1IBw8hpMFse6u1LTmDCf3z4fk=
+	t=1725519476; cv=none; b=MTiAsIddWP8jQTFnzC2JaDn1ylc55LLz7Tzb8tfKrRB+NMqZPR7sSB0IqmEx2fHZKfpQ7wjMsvXvpFHB//I4rDg/HwzvQOgNYPXkwU+4IIh8XkDdrCt3BHKrwvhOIvQyw5fbTJUqsipE4YBQCgNPIl6yv0IQgIxfouPrVdp103M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725519309; c=relaxed/simple;
-	bh=lVgP28DcjexPVeyCbnZvnGShmNHWiLDpVoP7F4Ubixc=;
+	s=arc-20240116; t=1725519476; c=relaxed/simple;
+	bh=CEPsGflWZeSF9qjtv1h4qE9S6k0Dy+MydMjA+1WQ2YI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=syRvvPNi9iLbVvHCIsxSB+ysoO8RMFT/SAVS4//isgNUBiEBYArVWbZmzek4UtamxpTBS5qK/BWLU2MR+31vWNvTxAe50I+90kJrJmq3mKG1gEPhKr3uPmJxvH7Ccb0KOJiESvqaLiVOuqxTyPpP6mybkjN0H0TTSgAE8v9VjKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adnmBx+k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B769AC4CEC4;
-	Thu,  5 Sep 2024 06:55:01 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=hsstr1EPQGqp0m5WmAaasfFvsshbnn98rNEUvADZNa1GA0uIiTgmJAjqTR9DClPLxaR4HaGAxDfDcWk6FPgo6lhJCY8e6w9ArGg6Kt/zgl6mqVfKGoDbTeime4gStyeKxxNustMqN9v35zjXBViWGmKOkoiDZ61bg2CuMgxEXSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCXyZv3E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E5C5C4CEC4;
+	Thu,  5 Sep 2024 06:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725519309;
-	bh=lVgP28DcjexPVeyCbnZvnGShmNHWiLDpVoP7F4Ubixc=;
+	s=k20201202; t=1725519475;
+	bh=CEPsGflWZeSF9qjtv1h4qE9S6k0Dy+MydMjA+1WQ2YI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=adnmBx+kFZhIe+lprfEvIIeoBD8tz8nJx2HRk1zKej41TGb+lMWLXdpKfVea9jJIR
-	 Kv/dbqUifm0KNsIGRIomDu/qwNzJJ534iypuJYkgS3nD7io4lB40kJVpsAof9VMhnD
-	 dRUfCi9HCmHqF7NnXuvPA/dVBtQJVF1eSzwp2pO2TW1GeDbIzT/+tnesw9yfTCtR8S
-	 hNGQdyr5vJjvRgjLVcGrfWk8Q1cJnmQnaNINvlzDP3qDydS7oopy7jSzsMCSjoC++N
-	 Dj/Efr8bMtjht6LzXCK9bW5+G1+to1wMLDBalTu/JBYjGuux/GqPFTh0zM+vhmuXlp
-	 Wrn++6xq0qrtg==
-Message-ID: <59810081-5d76-4a41-8089-728ed03bf90b@kernel.org>
-Date: Thu, 5 Sep 2024 08:54:59 +0200
+	b=WCXyZv3EE/SQ5wPWAKrqheSOLin73I2Xr3MDAE1Hq+0QNmnVnJdHED/qTIpHueZdL
+	 J/NO+1vWOJ7SJJaXyUN6gQQeSs03GwYNM0cFQE0yneHIdm/McE/TvCLc+qyp4yq9rm
+	 mFoMiMlMbLkJkOci2VFxPNoxoNVU56lnP+kB//OgBZg94PD2T9vqSTOPeN5xBwHWsV
+	 9XNahFL144tsafs57L0y4mgeXYp9uYHKCQuLzcTZ0390iNkQQJPuIrV4yalKrVElqD
+	 bDGM15rFHKU8jBBfhjAj8TdhMFNB+NZTJz96EaczrBeh1wEVAe09/Ir08b3isrfkjN
+	 thEzXA0suIHCg==
+Message-ID: <acd72984-4c04-40f1-9e0e-f84f6c566b37@kernel.org>
+Date: Thu, 5 Sep 2024 08:57:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,23 +50,22 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] dt-bindings: PCI: ti,am65: Extend for use with PVU
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
+Subject: Re: [PATCH v4 2/7] dt-bindings: PCI: ti,am65: Extend for use with PVU
+To: Jan Kiszka <jan.kiszka@siemens.com>, Nishanth Menon <nm@ti.com>,
+ Santosh Shilimkar <ssantosh@kernel.org>,
  Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, Siddharth Vadapalli <s-vadapalli@ti.com>,
+ linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ Siddharth Vadapalli <s-vadapalli@ti.com>,
  Bao Cheng Su <baocheng.su@siemens.com>, Hua Qian Li
  <huaqian.li@siemens.com>, Diogo Ivo <diogo.ivo@siemens.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Bjorn Helgaas <bhelgaas@google.com>
-References: <cover.1724868080.git.jan.kiszka@siemens.com>
- <752fb193661bb5e60e5aae6f87704784cbad145d.1724868080.git.jan.kiszka@siemens.com>
- <2tc4eistthjifxsedwux3x7c52xlhkt5d3h2pcbe3glzzga6pg@bvbbsghc57zu>
- <df7d3134-302d-45ed-ba72-b5473ac5e3aa@siemens.com>
+References: <cover.1725444016.git.jan.kiszka@siemens.com>
+ <28d31a14fe9cc1867f023ebaddd6074459d15e40.1725444016.git.jan.kiszka@siemens.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,64 +111,42 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <df7d3134-302d-45ed-ba72-b5473ac5e3aa@siemens.com>
+In-Reply-To: <28d31a14fe9cc1867f023ebaddd6074459d15e40.1725444016.git.jan.kiszka@siemens.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 29/08/2024 09:38, Jan Kiszka wrote:
-> On 29.08.24 08:14, Krzysztof Kozlowski wrote:
->> On Wed, Aug 28, 2024 at 08:01:15PM +0200, Jan Kiszka wrote:
->>> From: Jan Kiszka <jan.kiszka@siemens.com>
->>>
->>> The PVU on the AM65 SoC is capable of restricting DMA from PCIe devices
->>> to specific regions of host memory. Add the optional property
->>> "memory-regions" to point to such regions of memory when PVU is used.
->>>
->>> Since the PVU deals with system physical addresses, utilizing the PVU
->>> with PCIe devices also requires setting up the VMAP registers to map the
->>> Requester ID of the PCIe device to the CBA Virtual ID, which in turn is
->>> mapped to the system physical address. Hence, describe the VMAP
->>> registers which are optionally unless the PVU shall used for PCIe.
->>>
->>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->>> ---
->>> CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
->>> CC: "Krzysztof Wilczyński" <kw@linux.com>
->>> CC: Bjorn Helgaas <bhelgaas@google.com>
->>> CC: linux-pci@vger.kernel.org
->>> ---
->>>  .../bindings/pci/ti,am65-pci-host.yaml        | 52 ++++++++++++++-----
->>>  1 file changed, 40 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
->>> index 0a9d10532cc8..d8182bad92de 100644
->>> --- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
->>> @@ -19,16 +19,6 @@ properties:
->>>        - ti,am654-pcie-rc
->>>        - ti,keystone-pcie
->>>  
->>> -  reg:
->>> -    maxItems: 4
->>> -
->>> -  reg-names:
->>> -    items:
->>> -      - const: app
->>> -      - const: dbics
->>> -      - const: config
->>> -      - const: atu
->>> -
->>
->> Properties must be defined in top-level.
->>
->> https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
->>
-> 
-> Tried that already, moving the else: part to top-level, but dtschema
-> (2024.5) checks fail then. Could you explain why?
+On 04/09/2024 12:00, Jan Kiszka wrote:
+> +
+> +    reg-names:
+> +      minItems: 4
+> +      items:
+> +        - const: app
+> +        - const: dbics
+> +        - const: config
+> +        - const: atu
+> +        - const: vmap_lp
+> +        - const: vmap_hp
+> +
+> +    memory-region:
 
-The example does not "move the else to top-level", so why would you do
-it? I gave you the code to copy&paste. I don't know how to write it simpler.
+This also did not improve. You did not address any feedback from v3.
+
+Missed feedback:
+
+This *must* be defined in top-level.
+I still think this must have some sort of maxItems. I accept your
+explanation that you could have multiple memory pools, but I don't think
+2147000 pools is possible. Make it 4, 8 or 32.
+
+> +      minItems: 1
+> +      description: |
+> +        phandle to one or more restricted DMA pools to be used for all devices
+> +        behind this controller. The regions should be defined according to
+> +        reserved-memory/shared-dma-pool.yaml.
+> +      items:
+> +        maxItems: 1
+
+
 
 Best regards,
 Krzysztof
