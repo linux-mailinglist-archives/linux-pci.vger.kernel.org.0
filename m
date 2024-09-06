@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-12862-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12863-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4DE196E6E1
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 02:37:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B77E96E6E3
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 02:38:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35B911F241B6
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 00:37:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B98421C21ACA
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 00:38:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8148EEB3;
-	Fri,  6 Sep 2024 00:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C76D7DDC3;
+	Fri,  6 Sep 2024 00:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkE5S8Fh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpuPjX3y"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8764E8BF0;
-	Fri,  6 Sep 2024 00:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1491BC20;
+	Fri,  6 Sep 2024 00:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725583035; cv=none; b=BXwAsXv51EOvvxhEwI9xPCwvm3WkprPOLFz9r3H7P6fzQNMH7iabz3IDoG7PL7+EJKBaygnyaIQjJfa0eDerMJMdFLpdGnKyCAMPUw/wSUb9KJbkx4yutUrTaBjTxQI6VZdQXO0MoM8BaoMCN0mr+mFcRwfBLGAWAMSs3JkU+SQ=
+	t=1725583087; cv=none; b=rslQL0wZ554pe/H8JNmSzrLHS5XUQATe7/ioatRRveNWYOTH6ZoIHv9KJ9yaGhSSIn9R/zm6aIzj92ROxXuC2FFrYaHoCMC5+ZgvHQ/qZFNHUeRV5vWBOFIizHBFLl/ByEXLoG7e8PFkOvYSm9VjaafBtGJhFGSm05Ao3+eq8eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725583035; c=relaxed/simple;
-	bh=xMtci75vl+s2j3G5k3OK8Fk71gwHjAnhMnoSMR+CJlI=;
+	s=arc-20240116; t=1725583087; c=relaxed/simple;
+	bh=h/bqzGls6F7f+dDC2lwmv7475uUwIOKUKCi9ByDT+Ww=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kW2ZZAGk5TOz+lzngCwRtY7dXg7ipL+Dgf1Wq1agXXIrekydUz9iCmx+9oXTkk3i3sOp5d2w1PM8/YKfa3zgmi8Kuu0GRhtPsgJoBUYzNf3mZdY+5JrGXmnyhkO43ZJ9KGZSRSsPGnGNgJwvy4LYWIBwE9h8eCVaSF4G7sc0lpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkE5S8Fh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB60C4CEC3;
-	Fri,  6 Sep 2024 00:37:13 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pZcoEC0MR728sGBOOmo+lWOrzaqVpcVw1BDF+zxiz8fnjDxMZ9K8/gw8a69GP6XvpI5QmbTQFD5k+8kqj8sVCoZtIlNpDA9Oo6rzLbbKpROl4GNXeZmrpp1L6kD0C/Ur840xwxDyebOy/iPo+Klj5cciuPZU295BS+C/ebfox9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpuPjX3y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65758C4CEC3;
+	Fri,  6 Sep 2024 00:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725583035;
-	bh=xMtci75vl+s2j3G5k3OK8Fk71gwHjAnhMnoSMR+CJlI=;
+	s=k20201202; t=1725583087;
+	bh=h/bqzGls6F7f+dDC2lwmv7475uUwIOKUKCi9ByDT+Ww=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jkE5S8FhvleKztX+KyZ8H3t6xn516/AKBDhDkKsp7ZaoIaFwRI7bbeaFTojlGMVcX
-	 oSgif8TjKY4XD2AmTYcGefDkV4gggQtHGAST3kpcP943SYrPw/JEQMZ/jvAJHWWuIN
-	 uVii+epLSSEuFTf/DDZmPWVgoarEaGfT8hQ9IPYoEM/0RZUJcivnaFHvJTpldhQxsd
-	 s5bLosrJlaouj1sU+YNx/DUmSz7SULEL+QM9GpOCXsOFS0l9ULQ/faf0ABpg6McMPq
-	 Hg7x3vUJIQXat/4PF2n8/zIGZfhwVavaysCGlYoxWqTwTDu0DCjLvsztegdtYW6PLI
-	 /7aKFuuZYbUSA==
-Message-ID: <2072aac8-cdab-40e3-806c-399d38e683f9@kernel.org>
-Date: Fri, 6 Sep 2024 09:37:11 +0900
+	b=cpuPjX3yAjmfIuD+2Ip0CWYTHwwoNGOHouPTav4d9IxNC2gGJ2RLGksGnKoTlmlRI
+	 z+i+6b/l5puvb9vt1DvoBB6vQR1vaE2ZoU3SLzW6oIHaR/Mtpl2y4kwlOUr3dc8h7O
+	 A7NhcJX1HrbvxYQumRE9nHwVJm/dVWzTr1EbnEvnFuMBTj0IbzT9d0CxU7Y5k/K0AW
+	 YK418D1xlD/sJgakPHGgDHl713wbm2G/wdnKl8wdlvLFrUB6i75GDOdUu2V2O1xr5t
+	 CCLgl2Y9HHnEgQpAqePtH28T3hLi+ADdCs2C6bioOl8UfxUrWOIWrVNZOdSfvP7dNY
+	 2xEJgb+OpGORw==
+Message-ID: <c979a2e5-3d81-49e3-bc58-78d8d9db2296@kernel.org>
+Date: Fri, 6 Sep 2024 09:38:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,143 +50,75 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix devres regression in pci_intx()
-To: Philipp Stanner <pstanner@redhat.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240725120729.59788-2-pstanner@redhat.com>
- <20240903094431.63551744.alex.williamson@redhat.com>
- <2887936e2d655834ea28e07957b1c1ccd9e68e27.camel@redhat.com>
- <24c1308a-a056-4b5b-aece-057d54262811@kernel.org>
- <dcbf9292616816bbce020994adb18e2c32597aeb.camel@redhat.com>
- <20240904120721.25626da9.alex.williamson@redhat.com>
- <ZtjCFR3kd5GfV_6m@surfacebook.localdomain>
- <20240904151020.486f599e.alex.williamson@redhat.com>
- <65fe5c47-e420-4b4d-a575-2bb90e13482c@kernel.org>
- <6a17c02077543f98b72662a7189407d0452e6d47.camel@redhat.com>
-Content-Language: en-US
+Subject: Re: [PATCH v2] PCI: Fix potential deadlock in pcim_intx()
+To: Philipp Stanner <pstanner@redhat.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alex Williamson <alex.williamson@redhat.com>
+References: <20240905072556.11375-2-pstanner@redhat.com>
 From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
 Organization: Western Digital Research
-In-Reply-To: <6a17c02077543f98b72662a7189407d0452e6d47.camel@redhat.com>
+In-Reply-To: <20240905072556.11375-2-pstanner@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 9/5/24 16:13, Philipp Stanner wrote:
-> On Thu, 2024-09-05 at 09:33 +0900, Damien Le Moal wrote:
->> On 2024/09/05 6:10, Alex Williamson wrote:
->>> On Wed, 4 Sep 2024 23:24:53 +0300
->>> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->>>
->>>> Wed, Sep 04, 2024 at 12:07:21PM -0600, Alex Williamson kirjoitti:
->>>>> On Wed, 04 Sep 2024 15:37:25 +0200
->>>>> Philipp Stanner <pstanner@redhat.com> wrote:  
->>>>>> On Wed, 2024-09-04 at 17:25 +0900, Damien Le Moal wrote:  
->>>>
->>>> ...
->>>>
->>>>>> If vfio-pci can get rid of pci_intx() alltogether, that might
->>>>>> be a good
->>>>>> thing. As far as I understood Andy Shevchenko, pci_intx() is
->>>>>> outdated.
->>>>>> There's only a hand full of users anyways.  
->>>>>
->>>>> What's the alternative?  
->>>>
->>>> From API perspective the pci_alloc_irq_vectors() & Co should be
->>>> used.
->>>
->>> We can't replace a device level INTx control with a vector
->>> allocation
->>> function.
->>>  
->>>>> vfio-pci has a potentially unique requirement
->>>>> here, we don't know how to handle the device interrupt, we only
->>>>> forward
->>>>> it to the userspace driver.  As a level triggered interrupt,
->>>>> INTx will
->>>>> continue to assert until that userspace driver handles the
->>>>> device.
->>>>> That's obviously unacceptable from a host perspective, so INTx
->>>>> is
->>>>> masked at the device via pci_intx() where available, or at the
->>>>> interrupt controller otherwise.  The API with the userspace
->>>>> driver
->>>>> requires that driver to unmask the interrupt, again resulting
->>>>> in a call
->>>>> to pci_intx() or unmasking the interrupt controller, in order
->>>>> to receive
->>>>> further interrupts from the device.  Thanks,  
->>>>
->>>> I briefly read the discussion and if I understand it correctly
->>>> the problem here
->>>> is in the flow: when the above mentioned API is being called.
->>>> Hence it's design
->>>> (or architectural) level of issue and changing call from foo() to
->>>> bar() won't
->>>> magically make problem go away. But I might be mistaken.
->>>
->>> Certainly from a vector allocation standpoint we can change to
->>> whatever
->>> is preferred, but the direct INTx manipulation functions are a
->>> different thing entirely and afaik there's nothing else that can
->>> replace them at a low level, nor can we just get rid of our calls
->>> to
->>> pci_intx().  Thanks,
->>
->> But can these calls be moved out of the spinlock context ? If not,
->> then we need
->> to clarify that pci_intx() can be called from any context, which will
->> require
->> changing to a GFP_ATOMIC for the resource allocation, even if the use
->> case
->> cannot trigger the allocation. This is needed to ensure the
->> correctness of the
->> pci_intx() function use.
+On 9/5/24 16:25, Philipp Stanner wrote:
+> commit 25216afc9db5 ("PCI: Add managed pcim_intx()") moved the
+> allocation step for pci_intx()'s device resource from
+> pcim_enable_device() to pcim_intx(). As before, pcim_enable_device()
+> sets pci_dev.is_managed to true; and it is never set to false again.
 > 
-> We could do that I guess. As I keep saying, it's not intended to have
-> pci_intx() allocate _permanently_. This is a temporary situation.
-> pci_intx() should have neither devres nor allocation.
+> Due to the lifecycle of a struct pci_dev, it can happen that a second
+> driver obtains the same pci_dev after a first driver ran.
+> If one driver uses pcim_enable_device() and the other doesn't,
+> this causes the other driver to run into managed pcim_intx(), which will
+> try to allocate when called for the first time.
 > 
->> Frankly, I am surprised that the might sleep splat you
->> got was not already reported before (fuzzying, static analyzers might
->> eventually
->> catch that though).
+> Allocations might sleep, so calling pci_intx() while holding spinlocks
+> becomes then invalid, which causes lockdep warnings and could cause
+> deadlocks:
 > 
-> It's a super rare situation:
->  * pci_intx() has very few callers
->  * It only allocates if pcim_enable_device() instead of
->    pci_enable_device() ran.
->  * It only allocates when it's called for the FIRST TIME
->  * All of the above is only a problem while you hold a lock
+> ========================================================
+> WARNING: possible irq lock inversion dependency detected
+> 6.11.0-rc6+ #59 Tainted: G        W
+> --------------------------------------------------------
+> CPU 0/KVM/1537 just changed the state of lock:
+> ffffa0f0cff965f0 (&vdev->irqlock){-...}-{2:2}, at:
+> vfio_intx_handler+0x21/0xd0 [vfio_pci_core] but this lock took another,
+> HARDIRQ-unsafe lock in the past: (fs_reclaim){+.+.}-{0:0}
 > 
->>
->> The other solution would be a version of pci_intx() that has a gfp
->> flags
->> argument to allow callers to use the right gfp flags for the call
->> context.
+> and interrupts could create inverse lock ordering between them.
 > 
-> I don't think that's a good idea. As I said, I want to clean up all
-> that in the mid term.
+> other info that might help us debug this:
+>  Possible interrupt unsafe locking scenario:
 > 
-> As a matter of fact, there is already __pcim_intx() in pci/devres.c as
-> a pure unmanaged pci_intx() as a means to split and then cleanup the
-> APIs.
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(fs_reclaim);
+>                                local_irq_disable();
+>                                lock(&vdev->irqlock);
+>                                lock(fs_reclaim);
+>   <Interrupt>
+>     lock(&vdev->irqlock);
+> 
+>  *** DEADLOCK ***
+> 
+> Have pcim_enable_device()'s release function, pcim_disable_device(), set
+> pci_dev.is_managed to false so that subsequent drivers using the same
+> struct pci_dev do implicitly run into managed code.
+> 
+> Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
+> Reported-by: Alex Williamson <alex.williamson@redhat.com>
+> Closes: https://lore.kernel.org/all/20240903094431.63551744.alex.williamson@redhat.com/
+> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> Tested-by: Alex Williamson <alex.williamson@redhat.com>
 
-Yeah. That naming is in fact confusing. __pcim_intx() should really be named
-pci_intx()...
+Looks OK to me.
 
-> One path towards getting the hybrid behavior out of pci_intx() could be
-> to rename __pcim_intx() to pci_intx_unmanaged() and port everyone who
-> uses pci_enable_device() + pci_intx() to that version. That would be
-> better than to have a third version with a gfp_t argument.
-
-Sounds good. But ideally, all users that rely on the managed variant should be
-converted to use pcim_intx() and pci_intx() changed to not call in devres. But
-that may be too much code churn (I have not checked).
-
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
 -- 
 Damien Le Moal
