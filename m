@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-12890-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12891-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C748896F099
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 11:57:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AED6996F09C
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 11:57:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48A291F21CA9
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 09:57:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C0DD281667
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Sep 2024 09:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026581C870D;
-	Fri,  6 Sep 2024 09:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3C51CB123;
+	Fri,  6 Sep 2024 09:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWOSnZWs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igzpPAwS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E491C8FBE;
-	Fri,  6 Sep 2024 09:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12651CA689;
+	Fri,  6 Sep 2024 09:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725616591; cv=none; b=HFZEph6XlSVQ+ebxudBAj2N0Y9i+vRjtGmAmlRsy+Nh2J+8720JFTg9iUK6AqG3qBw3VMBLYeh9aUZTU2MDIswfO3Z8mW9dZCCiuACJs7FO0AjQD4sEYM8WY0GXJjcx9h/vMxduUv42L3fBkGrzKCm9z1zpXfqNcl70HWQQt52g=
+	t=1725616596; cv=none; b=qOt2ESDP65ZOvubFM+vZ0YPEdz/konZzVdkrFilshPTWNDxByoFAc6wQEgroSv2C2Hk9ytFFnTsLCZuaURzlobla5TW8bSNY5P+TcWkdkQ3iEMIA61nLv/OY4fe3fMb12bLJCfMyWquIYNlJbuqMBbbIBBmxVe+/n8LtEVq8EJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725616591; c=relaxed/simple;
-	bh=fRb6iA5CazlU8a/FnHVGObboncCPam7WcbstuDBqWJs=;
+	s=arc-20240116; t=1725616596; c=relaxed/simple;
+	bh=ioXmGSPIFog6PaH8cO10O1YzsSog5V5eHKV6YVr0TaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bYhzDjEXoGfhq+1k92zvBCbxBx/YHBnkjdesTBz4Iy0Y1ZbTpDEyK+zEMqEnp0PFfR7wyeHNfABLOS5JtZRvfEQ4ialwm6tieONFTX4b+gaWOaX+bufRdi1VdoD6ThiiY4rzTMr2dgXXWKBKwXuquXlzASdusRhVk3DeYXQ7Xf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWOSnZWs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2964DC4CEC4;
-	Fri,  6 Sep 2024 09:56:25 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=MWtYZ+9nXsnyW+9USLwe1roO0drsqY/5qt9PBzrBg+Pc+YkOImYoWErfQnlw2Bof+pKSLrX1Rou42zCpI1ArPNRngFdnYjaW+N5G5ESaqPxR6vQL/XhDixaZs830Rdq3bkdOEF1FWQCmJ1Yon2ud9pd9DAtEHE1eaN0XsP//yKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igzpPAwS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03EC2C4CEC4;
+	Fri,  6 Sep 2024 09:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725616591;
-	bh=fRb6iA5CazlU8a/FnHVGObboncCPam7WcbstuDBqWJs=;
+	s=k20201202; t=1725616596;
+	bh=ioXmGSPIFog6PaH8cO10O1YzsSog5V5eHKV6YVr0TaA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PWOSnZWsgVAJrRh7NZN4vjWEkfLd/GxXf+4qmIcqLIEok22/5V+RZTVqr5mE2pH5h
-	 E63Bn4R2efuNX2Lkd4Z1i2p0OE8F0hZl1RmRbeR9Zmw/wxoaiSZ9ZWwMekrCOLRoH2
-	 zYtVMuZzX+wLuKZKr+lQP+LsQtjFZemooTRzF5L2EIqnjGkoDYExd8A0oh3uT6WEPJ
-	 GNtcqwzlVJOctp06RkG5UHR9mWQGD4wB3jbmzx1ApiaB2nUbwK4THIaYoBMlZ5WysU
-	 Q+aLJqUqujGV1fALaAPUaM4oM/fTBmUL2ojGBubae9XlMF2UQiPCJ0pfh8H50uW6Q7
-	 c8gav+BntVuXw==
-Message-ID: <e2f45f58-621f-4390-9595-723c3e829b05@kernel.org>
-Date: Fri, 6 Sep 2024 11:56:23 +0200
+	b=igzpPAwSAmEv050IUm9W1O2IMowYkihnIXdG80HnW5ljxTCS0MkLnjfgtLIHH1nSh
+	 UjbC3qxT6l87HoVsdKY/cCrk7GTtWdjzyZ+FOtFO0SphWkaRkpWrOB/B0rBwJ3ZGSn
+	 QQaMve/a4Mx2eITeKnv2WqR4j4OwZzEWV8vw+wOeMqZOwOFL1ifknOmrQrffgkNa5T
+	 PQj0GLp6P43DJ7UcncWIBycBauk4DBYbSmyymLK47hkKfsCGGRnKESG2JfC8humtEx
+	 uw6Iv06/LLoj9RxIkixmjFcFSrVl0gStKUN+wqqb+5dJvLeRgPMXUYOPYIpQKhJ6Lg
+	 IRqwRr0+NCIvg==
+Message-ID: <e985a9d4-b398-4290-a4b9-08999c6a9f71@kernel.org>
+Date: Fri, 6 Sep 2024 11:56:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
- Port controller-1
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: xilinx-cpm: Add compatible string
+ for CPM5 controller-1.
 To: Thippeswamy Havalige <thippesw@amd.com>,
  manivannan.sadhasivam@linaro.org, robh@kernel.org,
  linux-pci@vger.kernel.org, bhelgaas@google.com,
@@ -60,7 +60,7 @@ To: Thippeswamy Havalige <thippesw@amd.com>,
 Cc: bharat.kumar.gogada@amd.com, michal.simek@amd.com, lpieralisi@kernel.org,
  kw@linux.com
 References: <20240906093148.830452-1-thippesw@amd.com>
- <20240906093148.830452-3-thippesw@amd.com>
+ <20240906093148.830452-2-thippesw@amd.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,55 +106,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240906093148.830452-3-thippesw@amd.com>
+In-Reply-To: <20240906093148.830452-2-thippesw@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 06/09/2024 11:31, Thippeswamy Havalige wrote:
-> In the CPM5, controller-1 has platform-specific error interrupt bits
-> located at different offsets compared to controller-0.
+> The Xilinx Versal premium series has CPM5 block which supports two typeA
+> Root Port controller functionality at Gen5 speed.
+> 
+> Add compatible string to distinguish between two CPM5 rootport controller1.
+
+Subjects NEVER end with full stops.
+> 
+> Error interrupt register and bits for both the controllers
+> are at different.
 > 
 > Signed-off-by: Thippeswamy Havalige <thippesw@amd.com>
 > ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 39 +++++++++++++++++++-----
->  1 file changed, 32 insertions(+), 7 deletions(-)
+>  Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> index a0f5e1d67b04..d672f620bc4c 100644
-> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -30,10 +30,13 @@
->  #define XILINX_CPM_PCIE_REG_IDRN_MASK	0x00000E3C
->  #define XILINX_CPM_PCIE_MISC_IR_STATUS	0x00000340
->  #define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
-> -#define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
-> +#define XILINX_CPM_PCIE0_MISC_IR_LOCAL	BIT(1)
-> +#define XILINX_CPM_PCIE1_MISC_IR_LOCAL	BIT(2)
->  
-> -#define XILINX_CPM_PCIE_IR_STATUS       0x000002A0
-> -#define XILINX_CPM_PCIE_IR_ENABLE       0x000002A8
-> +#define XILINX_CPM_PCIE0_IR_STATUS       0x000002A0
-> +#define XILINX_CPM_PCIE1_IR_STATUS       0x000002B4
-> +#define XILINX_CPM_PCIE0_IR_ENABLE       0x000002A8
-> +#define XILINX_CPM_PCIE1_IR_ENABLE       0x000002BC
->  #define XILINX_CPM_PCIE_IR_LOCAL        BIT(0)
->  
->  #define IMR(x) BIT(XILINX_PCIE_INTR_ ##x)
-> @@ -280,10 +283,17 @@ static void xilinx_cpm_pcie_event_flow(struct irq_desc *desc)
->  	pcie_write(port, val, XILINX_CPM_PCIE_REG_IDR);
->  
->  	if (port->variant->version == CPM5) {
-> -		val = readl_relaxed(port->cpm_base + XILINX_CPM_PCIE_IR_STATUS);
-> +		val = readl_relaxed(port->cpm_base + XILINX_CPM_PCIE0_IR_STATUS);
->  		if (val)
->  			writel_relaxed(val, port->cpm_base +
-> -					    XILINX_CPM_PCIE_IR_STATUS);
-> +					    XILINX_CPM_PCIE0_IR_STATUS);
-> +	}
-> +
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index 989fb0fa2577..b63a759ec2d7 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -17,6 +17,7 @@ properties:
+>      enum:
+>        - xlnx,versal-cpm-host-1.00
+>        - xlnx,versal-cpm5-host
+> +      - xlnx,versal-cpm5-host1
 
-There are no blank lines allowed between arms of conditional statements.
-Please follow coding style. This case is explained there.
+That's poor naming. "-1.00" and now "1". Get your naming reasonable...
 
 Best regards,
 Krzysztof
