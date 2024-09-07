@@ -1,83 +1,80 @@
-Return-Path: <linux-pci+bounces-12921-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12922-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48DE0970188
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 12:12:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAE2097030C
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 17:53:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABF78B23799
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 10:12:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 02078B21AC4
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 15:53:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C511B14B094;
-	Sat,  7 Sep 2024 10:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18DAB15C131;
+	Sat,  7 Sep 2024 15:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=myyahoo.com header.i=@myyahoo.com header.b="A4HvNY6j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wb0g/hPe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sonic305-19.consmr.mail.sg3.yahoo.com (sonic305-19.consmr.mail.sg3.yahoo.com [106.10.241.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCC2BE6C
-	for <linux-pci@vger.kernel.org>; Sat,  7 Sep 2024 10:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E6FA93D;
+	Sat,  7 Sep 2024 15:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725703922; cv=none; b=mBDMPycZBrV9SLe5/AeCtcQtXS8V4CbmDTIgwu9SVpRTX4rhNr0cBIaysm6lGV4I48X0EcRSvyvDqhrz3Shbzy/VWxUAbJR2az0zfsWkGuv5LJP65tOIqCTRgLVv9JY8nGq8+uuTrsMS5nvrp0KOkKcXcmWGDfZthUkEY/P46Ls=
+	t=1725724377; cv=none; b=ftRVl5MhFoi6klX43JEkYQUXHa4V4PYnjq/EUu7p1E71/HLPTAjRlLBZiwLKwTC8pxx7CBseBPNtv263tTs8JzK3xumHvDjcGr4Akl6VKyfgBem7OBu/l/VVwVHkHaatYlQ5Y9IfcI5OeUxnkzPYqkUhWDNBbo/1PDylAiFvuGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725703922; c=relaxed/simple;
-	bh=kkiHYYOtW+BApMBwN6H60TlyXxOO+Zx4IxGpk5W/e1M=;
+	s=arc-20240116; t=1725724377; c=relaxed/simple;
+	bh=af2RuJlyRSy9sAYrpdJKVJIieJRObkqtTIwAoB3wxGk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6I7E4qDO/do2wna122XATIsL+4rynGKDgoqmHzsGupOpb/2TVhFePLB4NoOzPqG4nJyiP7CPbCTPm4ImLteU1Fd15dKY0xQzJL3T+miERxfwJmajG5xSoHoxbpHzkN6XQs36M3qb1lqPBpjEr26ph5B64wCelEFCwBVKLAuwqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=myyahoo.com; spf=pass smtp.mailfrom=myyahoo.com; dkim=pass (2048-bit key) header.d=myyahoo.com header.i=@myyahoo.com header.b=A4HvNY6j; arc=none smtp.client-ip=106.10.241.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=myyahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=myyahoo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myyahoo.com; s=s2048; t=1725703913; bh=zkTKJA2FhwivzUz5wJO2Jlnry0Ls8XEBLwuxnqUiJM4=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject:Reply-To; b=A4HvNY6j8WN+DHYNsG3CYj5q9MeLKgWPBz8Y50j+fOi+wdLz8S9kY/H4ENHPfXKplujas5Eu3Nb+Dytqvhf/mVBpvymkePoWZEvheTvg+vlCeOfnIdzT0YNsEjSAj8OFaWotTYZjg844qdV1kw4PMvvyRNnpUoWLism2bUZQyTOLVm/qLv4+NB52sH87JAo9LTCMbNw8+kuhoo98wYH9jSScDJ8mtulLgNwl7kPA1rfDAuzo7OZyU3GNruBh4PvPxbr+EtEO119BdkbUaBavpN4Hr+FvoX2BEsiFqwHP2WYqYujRkk8YyhhHnaVGb9uwMyrEpwVQAEdwwunrRhUB4A==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1725703913; bh=PKlfI6ejtF957zv0BOG039EtP2cZDnlRKEyeKMeQt5K=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=AVdVy2pRop3YzPaIGT9ilASB7TOep6Zqfp/1+xzlXPS4F5NyN4xmGoLOnDMQwr3VRW3dfep3xHjFKtkZ5ZLBCGxSVfoKLelae8C5PMjL1CIK3/eZHyPvxLXadGbtr6176IelgQ8nUEzQk0CAS7ZsV6xXkmvtISMF5JiDPVCrZ6lVm0wT/Y8eH2DGcg3TcA4GzoPe57nmar/yXfN8EvaquLT/dE8Duwh7JaR8QtIttum6GgbJ/l6cK9XuXkEF1y9lppCNg4U6iimHLYiAWOV8eLv001Y4Kk8UbYR+up+DKS4/FgN/qMlxtW7Y0iVdvGtISdxTqoMJAO/uBtlySQZ67Q==
-X-YMail-OSG: 40OVdcgVM1ngXn783d.sjWsogtiPN9AGriMrM4Hf.fdDnv8sNj_4WQc.wHkMzVL
- Y4E4uICd82AqGk_UEJfQxgdT6qTldRfMcSmCZYVrGZGzz1AX0ASOluosqupMG_QRbMTkNDa2Da.S
- aHQlmJQ.JvLZNqdkRv7VpDlfySWfR4oELhr1I1GJ29fz_HsKySlD_S40zbjxZTTHBTW3gDP_JK_w
- QMGdi98a_OSoikDyagzFPjwSc4r3gSmYrLlGnw7Udq7IB6QGU_HLTvGA7LjCphrLieoQIaAkVO1g
- RdlcgMnbrxPHhY9uV4wdctgdBnSycUYyVMlFI5Fvjd25nDnNe2_ASSjE13SgwKcM61YXchm0ucbW
- d2GEau48rhE5wMMlz9kDlt5yqRT8iKjzJDUDFADv7J6XyYgRkwUQsIFND2yXdl0VLNNOgwQeiY5W
- cvpw0_PhaJxsu8W8JodhjGgfMMwramYYR3hKv4BTydDUIgNiYP2u0lzN2GTIsqOJSuBMDUoYv_Lv
- xMr79TL8hju1TkBYIJ6fyTbsnWX7hHeBC2Wu0tobKhfSuyjVrBUoMCoAShHdxeNy2Ue5KvSnIU1k
- sCxDLZkkoYmYOKYJvZRXq9FsI8slBQSLq5A9UV0Rd..lqMkCGozm7coYJhS5m8TZammVRtLOwLUQ
- 8h_qtFKUWWnNAlqCy29Bm8h85REe6_mZatKqv5dJXNZpqV3ag_hIKUNwl86dqvRAl7WRpkkfRMMq
- QpVOwfCiWhZeBLEv0cjqaWMJsvHbkRnacNRVZ6e72jeZWlED72JMb2ztiAzyY1udQxyPyJNWIZP7
- EW0kWTsa46kYi7GHEiA3plpvNtL8YA63qbrBKj1W2k7kLGdZUfIP5.H7l9GJMQ_gd1BXjUD3LiJM
- dIfXBwYsNQXfOjaTDmg7F9IjQYU93aGEyM0whXD97R3GzrnAwONLCSLPlw5rSdG1eeM2NfUWvd1m
- T1IxwRAFrWvSxm8t1p8TeXL37KY1DJ5eg_utn2zYxRiwZanWflrL2s1E4uQ8xt7NCqyxt7oV_5V2
- xvUJRM0zcFuXmeMq4T1eSnaCFDhogqb3itFblN4UDKCXxfCm_6Uxj62wx6d21MbusXbSPFN6Vb3E
- GOcJgSjMqPPvEeqeQuHJN50mgyhfcCOb63zcuD8jn2lnfUbRQ5KLNmL4upC_PBmyBfJfqYBOnlx_
- 2RX5sQszb3n5W_yM0h._iEvN8uEQcjtpdSGtkHsKueZMsoRROz7P5HZNQ38fSNYz51C1UYxQ9AAR
- Gh6Ra7I4sP1xvNvz_7N1EY.7tf3aNjuaAMrqvF9dn9_vJvBSXOqRX9GwyN7WYqnVJiPFos_rfr4r
- UFGxXpL4LQJr4dSCIlYoouU524.6EPKAHWXhfeM_uD7qzSKjZJEx4oBJX.Ir7xJWsTE8Qavpw6iA
- z6rCzrvhtGHG9cfNCYCKCsBPqcHnPIho7X4GlrsiqGcb65t09hyd_jibooZA6QwmnJbnZ2DoyJK5
- X8x9Es6DcKatzbrvO9WFA25uE56FCSpsGNHA9caoppdUlOuZPcSW4oC5zTs.1FFCC3aO_HghfXvF
- MB.Pf11fTXxPflGpXfMsmsP7qQ4_i4yGapqBlASuvcBOAw0mTzX2zK9i_LQIz1hnXq4rLeJl2UtM
- 2_2MoaTIs3IEtonOaHuawO_dwF1N7h6Mg005D_CqpqVmdllrrsAcOMpEmJO_VjfT7mTbbueJFzos
- VHMFEvNpOiqseFwsE4JtbUAKRHAsLrvnuLUJDByai2b_inOUT4Vcjb9X5sJqK.4x_pK66MFUMReu
- Gn7JyxAIzbmq6hBKh9SIs8fT44B3artC_FAapQlvIic1jetvaf59KF1DkTmjUcJFssKjcfzqdzoq
- m6fXAf7w9dJt.0iJG65QEMYSZDVutEhViYJl.nNoSk9ZLNjPg9HVTaij0NfrdDIV8zKYy6oPPMP_
- VcLEghgx4QXSF2goqP3Q6HWnaRI3d4LWoELeBzoOLIM9YQyszX_xrcF_qF7j76px9iVBog2.Bd.e
- 5mpIyVVQYGh4dHSVtL6QDiXeqQ995c0bQ0kH5611osX3GEgFwXkX.AgINGEwBPpZDV4Pb2Hh_P_C
- uCHdQc6FjkAdVpoWVarNmAeTujHPEOL7q5sRzO9X9xQQ45lbLvEXfQlOmpjLN5dwt4AF0jOS3JXA
- n76WFWGA8ER5Yucxld1Lke1O.VW2IUZJNwOqnjEDPY_OD_xNHjc1k5J4kzB063mxsviEZcmz63RV
- Xv_Kt_V84YJfBznKabkKe.i4zYdoXMzjJAmS7wFuqvngdnzxL5iP4
-X-Sonic-MF: <abdul.rahim@myyahoo.com>
-X-Sonic-ID: ddf9fd8a-a61d-455e-a8bb-19462d5aa010
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.sg3.yahoo.com with HTTP; Sat, 7 Sep 2024 10:11:53 +0000
-Received: by hermes--production-sg3-fc85cddf6-kdpzj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9082047fd5155f96c2e5472233bc10ec;
-          Sat, 07 Sep 2024 10:11:48 +0000 (UTC)
-Date: Sat, 7 Sep 2024 15:41:38 +0530
-From: Abdul Rahim <abdul.rahim@myyahoo.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, bhelgaas@google.com, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fixed spelling in Documentation/PCI/pci.rst
-Message-ID: <n7gabykujjulz5dg4eyrc6pcbvn6wzkw6opol3pclaychqnssx@prjklcr7qh34>
-References: <u4xan54bdxf5sniwhtvrixw3b2vg4c7magey6q3rsd4ssq6ihk@xfbijuhadyw4>
- <20240906192429.GA430486@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jYA6trq3eGVv/9BBCYaJMFqAs6t5jRss+v3pPUrI0+tOiJ1nXK/vzbS2x/XU4O3jPmYR0bUBcIzNYSjHWFf2UU6Uxp6zeQ3zFs4SGCKnM0IqYy6w7f/z4R7O4HOpaATTTTi1FraBAw/PM7ImJfCfp09KVgN6tps8j2/xqmm8Hh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wb0g/hPe; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725724374; x=1757260374;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=af2RuJlyRSy9sAYrpdJKVJIieJRObkqtTIwAoB3wxGk=;
+  b=Wb0g/hPe9cekTctmh4ZWe0WjYqV9jOdzD1eK+U8UDUcDys/6MENiIe6u
+   +NzPvJYuiHl86DbLXwcnTwk2a5KA5GCNq4ossUZVucWAQN/Yzo2S2S3EW
+   ytqZn3kEledjOxYjulUtEuArTUYJfQeEtVCvuOrmj89Q6+p/0PssMcwt3
+   Oj3TxwZxmgc06nWGv5wRsLOVzu4uq9OnbfTnqxWQn//oSU3YEy8YLY8qZ
+   bQnn3QzZ35fwOfeYNa5NfCP5Rcd2/C1XfeIn3Gxu9vc4A+ihT1heIX/+d
+   24U1246E7txsZm6pIvDZpdhA0dHoSDlz5R6JDPka/V8JvUAgnq+SWGaog
+   w==;
+X-CSE-ConnectionGUID: u5+7Jbo4SVGumrypViyR7g==
+X-CSE-MsgGUID: x8JCHMFwRvG3dbD8QLAA+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11188"; a="24617365"
+X-IronPort-AV: E=Sophos;i="6.10,210,1719903600"; 
+   d="scan'208";a="24617365"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2024 08:52:54 -0700
+X-CSE-ConnectionGUID: 5owZJk0JTrySKpCJLAgCQg==
+X-CSE-MsgGUID: ymEl5IaWTyCOTc+/z2rb2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,210,1719903600"; 
+   d="scan'208";a="71192917"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 Sep 2024 08:52:51 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1smxk0-000CfT-1z;
+	Sat, 07 Sep 2024 15:52:48 +0000
+Date: Sat, 7 Sep 2024 23:52:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Riyan Dhiman <riyandhiman14@gmail.com>, jim2101024@gmail.com,
+	nsaenz@kernel.org, lorian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com, bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Riyan Dhiman <riyandhiman14@gmail.com>
+Subject: Re: [PATCH next] PCI: brmstb: Fix type mismatch for num_inbound_wins
+ in brcm_pcie_setup()
+Message-ID: <202409072334.YP8Xi0bX-lkp@intel.com>
+References: <20240904161953.46790-2-riyandhiman14@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,59 +83,208 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240906192429.GA430486@bhelgaas>
-X-Mailer: WebService/1.1.22645 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+In-Reply-To: <20240904161953.46790-2-riyandhiman14@gmail.com>
 
-On Fri, Sep 06, 2024 at 02:24:29PM GMT, Bjorn Helgaas wrote:
-> On Sat, Sep 07, 2024 at 12:44:13AM +0530, Abdul Rahim wrote:
-> > On Fri, Sep 06, 2024 at 12:53:18PM GMT, Jonathan Corbet wrote:
-> > > Abdul Rahim <abdul.rahim@myyahoo.com> writes:
-> > > 
-> > > > On Fri, Sep 06, 2024 at 11:41:52AM GMT, Bjorn Helgaas wrote:
-> > > >> On Fri, Sep 06, 2024 at 06:15:18PM +0530, Abdul Rahim wrote:
-> > > >> > Fixed spelling and edited for clarity.
-> > > >> > 
-> > > >> > Signed-off-by: Abdul Rahim <abdul.rahim@myyahoo.com>
-> > > >> > ---
-> > > >> >  Documentation/PCI/pci.rst | 2 +-
-> > > >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >> > 
-> > > >> > diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
-> > > >> > index dd7b1c0c21da..344c2c2d94f9 100644
-> > > >> > --- a/Documentation/PCI/pci.rst
-> > > >> > +++ b/Documentation/PCI/pci.rst
-> > > >> > @@ -52,7 +52,7 @@ driver generally needs to perform the following initialization:
-> > > >> >    - Enable DMA/processing engines
-> > > >> >  
-> > > >> >  When done using the device, and perhaps the module needs to be unloaded,
-> > > >> > -the driver needs to take the follow steps:
-> > > >> > +the driver needs to perform the following steps:
-> > > >> 
-> > > >> I don't see a spelling fix here, and personally I wouldn't bother with
-> > > >> changing "take" to "perform" unless we have other more significant
-> > > >> changes to make at the same time.
-> > > >
-> > > > - "follow" has been corrected to "following", which is more appriopriate
-> > > > in this context.
-> > > > - I know its trivial, but can disturb the readers flow
-> > > > - do you want me to change the message to "Edited for clarity"
-> > > 
-> > > The problem is not s/follow/following/, it is the other, unrelated
-> > > change you made that does not improve the text.  There are reasons why
-> > > we ask people not to mix multiple changes.  If you submit just the
-> > > "following" fix, it will surely be applied.
-> > 
-> > Understood, will take care next time. I will resend this patch with:
-> > "follow" -> "following", with commit message "Fixed spelling"
-> 
-> Sorry I missed the "follow" change, which is indeed worth fixing.  If
-> you resend it, make your subject and commit log say "fix" (not
-> "fixed"), like it's a command.
-> 
-> https://chris.beams.io/posts/git-commit/
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v6.9#n134
-> 
+Hi Riyan,
 
-Thanks for reviewing, i've resent this patch here: 
-https://lore.kernel.org/lkml/20240906205656.8261-1-abdul.rahim@myyahoo.com/
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on next-20240904]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Riyan-Dhiman/PCI-brmstb-Fix-type-mismatch-for-num_inbound_wins-in-brcm_pcie_setup/20240905-002339
+base:   next-20240904
+patch link:    https://lore.kernel.org/r/20240904161953.46790-2-riyandhiman14%40gmail.com
+patch subject: [PATCH next] PCI: brmstb: Fix type mismatch for num_inbound_wins in brcm_pcie_setup()
+config: i386-buildonly-randconfig-006-20240907 (https://download.01.org/0day-ci/archive/20240907/202409072334.YP8Xi0bX-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240907/202409072334.YP8Xi0bX-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409072334.YP8Xi0bX-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/pci/controller/pcie-brcmstb.c: In function 'brcm_pcie_setup':
+>> drivers/pci/controller/pcie-brcmstb.c:1034:9: error: expected ',' or ';' before 'int'
+    1034 |         int num_inbound_wins = 0;
+         |         ^~~
+>> drivers/pci/controller/pcie-brcmstb.c:1093:9: error: 'num_inbound_wins' undeclared (first use in this function); did you mean 'inbound_wins'?
+    1093 |         num_inbound_wins = brcm_pcie_get_inbound_wins(pcie, inbound_wins);
+         |         ^~~~~~~~~~~~~~~~
+         |         inbound_wins
+   drivers/pci/controller/pcie-brcmstb.c:1093:9: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +1034 drivers/pci/controller/pcie-brcmstb.c
+
+  1025	
+  1026	static int brcm_pcie_setup(struct brcm_pcie *pcie)
+  1027	{
+  1028		struct inbound_win inbound_wins[PCIE_BRCM_MAX_INBOUND_WINS];
+  1029		void __iomem *base = pcie->base;
+  1030		struct pci_host_bridge *bridge;
+  1031		struct resource_entry *entry;
+  1032		u32 tmp, burst, aspm_support;
+  1033		u8 num_out_wins = 0
+> 1034		int num_inbound_wins = 0;
+  1035		int memc, ret;
+  1036	
+  1037		/* Reset the bridge */
+  1038		ret = pcie->bridge_sw_init_set(pcie, 1);
+  1039		if (ret)
+  1040			return ret;
+  1041	
+  1042		/* Ensure that PERST# is asserted; some bootloaders may deassert it. */
+  1043		if (pcie->soc_base == BCM2711) {
+  1044			ret = pcie->perst_set(pcie, 1);
+  1045			if (ret) {
+  1046				pcie->bridge_sw_init_set(pcie, 0);
+  1047				return ret;
+  1048			}
+  1049		}
+  1050	
+  1051		usleep_range(100, 200);
+  1052	
+  1053		/* Take the bridge out of reset */
+  1054		ret = pcie->bridge_sw_init_set(pcie, 0);
+  1055		if (ret)
+  1056			return ret;
+  1057	
+  1058		tmp = readl(base + HARD_DEBUG(pcie));
+  1059		if (is_bmips(pcie))
+  1060			tmp &= ~PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
+  1061		else
+  1062			tmp &= ~PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
+  1063		writel(tmp, base + HARD_DEBUG(pcie));
+  1064		/* Wait for SerDes to be stable */
+  1065		usleep_range(100, 200);
+  1066	
+  1067		/*
+  1068		 * SCB_MAX_BURST_SIZE is a two bit field.  For GENERIC chips it
+  1069		 * is encoded as 0=128, 1=256, 2=512, 3=Rsvd, for BCM7278 it
+  1070		 * is encoded as 0=Rsvd, 1=128, 2=256, 3=512.
+  1071		 */
+  1072		if (is_bmips(pcie))
+  1073			burst = 0x1; /* 256 bytes */
+  1074		else if (pcie->soc_base == BCM2711)
+  1075			burst = 0x0; /* 128 bytes */
+  1076		else if (pcie->soc_base == BCM7278)
+  1077			burst = 0x3; /* 512 bytes */
+  1078		else
+  1079			burst = 0x2; /* 512 bytes */
+  1080	
+  1081		/*
+  1082		 * Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN,
+  1083		 * RCB_MPS_MODE, RCB_64B_MODE
+  1084		 */
+  1085		tmp = readl(base + PCIE_MISC_MISC_CTRL);
+  1086		u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK);
+  1087		u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK);
+  1088		u32p_replace_bits(&tmp, burst, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
+  1089		u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK);
+  1090		u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK);
+  1091		writel(tmp, base + PCIE_MISC_MISC_CTRL);
+  1092	
+> 1093		num_inbound_wins = brcm_pcie_get_inbound_wins(pcie, inbound_wins);
+  1094		if (num_inbound_wins < 0)
+  1095			return num_inbound_wins;
+  1096	
+  1097		set_inbound_win_registers(pcie, inbound_wins, num_inbound_wins);
+  1098	
+  1099		if (!brcm_pcie_rc_mode(pcie)) {
+  1100			dev_err(pcie->dev, "PCIe RC controller misconfigured as Endpoint\n");
+  1101			return -EINVAL;
+  1102		}
+  1103	
+  1104		tmp = readl(base + PCIE_MISC_MISC_CTRL);
+  1105		for (memc = 0; memc < pcie->num_memc; memc++) {
+  1106			u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
+  1107	
+  1108			if (memc == 0)
+  1109				u32p_replace_bits(&tmp, scb_size_val, SCB_SIZE_MASK(0));
+  1110			else if (memc == 1)
+  1111				u32p_replace_bits(&tmp, scb_size_val, SCB_SIZE_MASK(1));
+  1112			else if (memc == 2)
+  1113				u32p_replace_bits(&tmp, scb_size_val, SCB_SIZE_MASK(2));
+  1114		}
+  1115		writel(tmp, base + PCIE_MISC_MISC_CTRL);
+  1116	
+  1117		/*
+  1118		 * We ideally want the MSI target address to be located in the 32bit
+  1119		 * addressable memory area. Some devices might depend on it. This is
+  1120		 * possible either when the inbound window is located above the lower
+  1121		 * 4GB or when the inbound area is smaller than 4GB (taking into
+  1122		 * account the rounding-up we're forced to perform).
+  1123		 */
+  1124		if (inbound_wins[2].pci_offset >= SZ_4G ||
+  1125		    (inbound_wins[2].size + inbound_wins[2].pci_offset) < SZ_4G)
+  1126			pcie->msi_target_addr = BRCM_MSI_TARGET_ADDR_LT_4GB;
+  1127		else
+  1128			pcie->msi_target_addr = BRCM_MSI_TARGET_ADDR_GT_4GB;
+  1129	
+  1130	
+  1131		/* Don't advertise L0s capability if 'aspm-no-l0s' */
+  1132		aspm_support = PCIE_LINK_STATE_L1;
+  1133		if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
+  1134			aspm_support |= PCIE_LINK_STATE_L0S;
+  1135		tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+  1136		u32p_replace_bits(&tmp, aspm_support,
+  1137			PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+  1138		writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+  1139	
+  1140		/*
+  1141		 * For config space accesses on the RC, show the right class for
+  1142		 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+  1143		 */
+  1144		tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+  1145		u32p_replace_bits(&tmp, 0x060400,
+  1146				  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
+  1147		writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+  1148	
+  1149		bridge = pci_host_bridge_from_priv(pcie);
+  1150		resource_list_for_each_entry(entry, &bridge->windows) {
+  1151			struct resource *res = entry->res;
+  1152	
+  1153			if (resource_type(res) != IORESOURCE_MEM)
+  1154				continue;
+  1155	
+  1156			if (num_out_wins >= BRCM_NUM_PCIE_OUT_WINS) {
+  1157				dev_err(pcie->dev, "too many outbound wins\n");
+  1158				return -EINVAL;
+  1159			}
+  1160	
+  1161			if (is_bmips(pcie)) {
+  1162				u64 start = res->start;
+  1163				unsigned int j, nwins = resource_size(res) / SZ_128M;
+  1164	
+  1165				/* bmips PCIe outbound windows have a 128MB max size */
+  1166				if (nwins > BRCM_NUM_PCIE_OUT_WINS)
+  1167					nwins = BRCM_NUM_PCIE_OUT_WINS;
+  1168				for (j = 0; j < nwins; j++, start += SZ_128M)
+  1169					brcm_pcie_set_outbound_win(pcie, j, start,
+  1170								   start - entry->offset,
+  1171								   SZ_128M);
+  1172				break;
+  1173			}
+  1174			brcm_pcie_set_outbound_win(pcie, num_out_wins, res->start,
+  1175						   res->start - entry->offset,
+  1176						   resource_size(res));
+  1177			num_out_wins++;
+  1178		}
+  1179	
+  1180		/* PCIe->SCB endian mode for inbound window */
+  1181		tmp = readl(base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+  1182		u32p_replace_bits(&tmp, PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN,
+  1183			PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK);
+  1184		writel(tmp, base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+  1185	
+  1186		return 0;
+  1187	}
+  1188	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
