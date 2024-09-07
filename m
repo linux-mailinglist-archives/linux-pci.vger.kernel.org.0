@@ -1,81 +1,83 @@
-Return-Path: <linux-pci+bounces-12920-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 283CC97017F
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 12:02:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48DE0970188
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 12:12:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8F1C1F23034
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 10:02:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABF78B23799
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Sep 2024 10:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3543A158A13;
-	Sat,  7 Sep 2024 10:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C511B14B094;
+	Sat,  7 Sep 2024 10:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="icZ0i5RP"
+	dkim=pass (2048-bit key) header.d=myyahoo.com header.i=@myyahoo.com header.b="A4HvNY6j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic305-19.consmr.mail.sg3.yahoo.com (sonic305-19.consmr.mail.sg3.yahoo.com [106.10.241.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2104A158541;
-	Sat,  7 Sep 2024 10:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCC2BE6C
+	for <linux-pci@vger.kernel.org>; Sat,  7 Sep 2024 10:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725703347; cv=none; b=TFDQR+uDgHdChofvnT3If+Pj11dCSCAqXrRE7EAvdCz0TjFJqsgyJf9uGDReVTd28W8G+weZom2sId61Z/cAXbQmKPXw2YtZ5cgxO9gE/Rimo2aqg8+LNYFnJGXb4bm3S7FxvXv6OP+PLqg77goTPmunKiljn7IyR2PYFk/srwQ=
+	t=1725703922; cv=none; b=mBDMPycZBrV9SLe5/AeCtcQtXS8V4CbmDTIgwu9SVpRTX4rhNr0cBIaysm6lGV4I48X0EcRSvyvDqhrz3Shbzy/VWxUAbJR2az0zfsWkGuv5LJP65tOIqCTRgLVv9JY8nGq8+uuTrsMS5nvrp0KOkKcXcmWGDfZthUkEY/P46Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725703347; c=relaxed/simple;
-	bh=+8ndftcpr710lyIszgV8c95AAh8cy/KDHvOC47Z5jY8=;
+	s=arc-20240116; t=1725703922; c=relaxed/simple;
+	bh=kkiHYYOtW+BApMBwN6H60TlyXxOO+Zx4IxGpk5W/e1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IU2OViJOrjpv9T2agmo6zSN6hmP4+qAjhsl2x7tOkj7v6VXXU5a47gfvZRwzc7plZUQ+oAyyS74EWC7fCUMNqsM4h+8Gm/RwmBElefkaRPJYfZ4nMVNy76uwzia6wHWuP3vFi1rbSXCJwS7Ka9KLd5OMyEejjLIfObRDvhPC2m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=icZ0i5RP; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725703344; x=1757239344;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+8ndftcpr710lyIszgV8c95AAh8cy/KDHvOC47Z5jY8=;
-  b=icZ0i5RPJV4LsP52qy3QMQQ9V7YhiuECIuZ4w+i50Dbr9bZVtDbP2RAH
-   BSCqsPnT4AuBnM3Ud/+e8Rjg+e2NXQ0ORKZ4kwxbCjJ+JWu13RyEy7AgC
-   dZe3/zPeKMqBAa8XmlAmLbWvLfaVmaTw1/MH4Trazx/DZ19aD//IY+ZFd
-   7UEoJ6oD+Va3ZaJkBw01zbho9n0J2FskVFP3+E1vlGGtsYo8nGrHyWsuP
-   E0jkBvBrAYPtKjQWCXHKg+TPPFHg4lneqQ0wx9LvKW+M0ZF7zRnp1G5wb
-   6bBlf/039+FPFiP3ic4aN8e5jZBpX+mwTz96/3tWDVvfahv4RBC00TvLc
-   A==;
-X-CSE-ConnectionGUID: mOk0M4ySSimtUg4k2QUIxw==
-X-CSE-MsgGUID: d+0cU98WRxeBWCWoYxEjQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="24323050"
-X-IronPort-AV: E=Sophos;i="6.10,210,1719903600"; 
-   d="scan'208";a="24323050"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2024 03:02:24 -0700
-X-CSE-ConnectionGUID: /y7E0xneQa+1lRbk+cY5dw==
-X-CSE-MsgGUID: 5pZQbW8lSiai6JaiI7i3Sg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,210,1719903600"; 
-   d="scan'208";a="103648425"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 07 Sep 2024 03:02:20 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smsGn-000CPb-2j;
-	Sat, 07 Sep 2024 10:02:17 +0000
-Date: Sat, 7 Sep 2024 18:01:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thippeswamy Havalige <thippesw@amd.com>,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	linux-pci@vger.kernel.org, bhelgaas@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, bharat.kumar.gogada@amd.com,
-	michal.simek@amd.com, lpieralisi@kernel.org, kw@linux.com,
-	Thippeswamy Havalige <thippesw@amd.com>
-Subject: Re: [PATCH 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
- Port controller-1
-Message-ID: <202409071713.wrAI0UuK-lkp@intel.com>
-References: <20240906093148.830452-3-thippesw@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=H6I7E4qDO/do2wna122XATIsL+4rynGKDgoqmHzsGupOpb/2TVhFePLB4NoOzPqG4nJyiP7CPbCTPm4ImLteU1Fd15dKY0xQzJL3T+miERxfwJmajG5xSoHoxbpHzkN6XQs36M3qb1lqPBpjEr26ph5B64wCelEFCwBVKLAuwqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=myyahoo.com; spf=pass smtp.mailfrom=myyahoo.com; dkim=pass (2048-bit key) header.d=myyahoo.com header.i=@myyahoo.com header.b=A4HvNY6j; arc=none smtp.client-ip=106.10.241.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=myyahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=myyahoo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myyahoo.com; s=s2048; t=1725703913; bh=zkTKJA2FhwivzUz5wJO2Jlnry0Ls8XEBLwuxnqUiJM4=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject:Reply-To; b=A4HvNY6j8WN+DHYNsG3CYj5q9MeLKgWPBz8Y50j+fOi+wdLz8S9kY/H4ENHPfXKplujas5Eu3Nb+Dytqvhf/mVBpvymkePoWZEvheTvg+vlCeOfnIdzT0YNsEjSAj8OFaWotTYZjg844qdV1kw4PMvvyRNnpUoWLism2bUZQyTOLVm/qLv4+NB52sH87JAo9LTCMbNw8+kuhoo98wYH9jSScDJ8mtulLgNwl7kPA1rfDAuzo7OZyU3GNruBh4PvPxbr+EtEO119BdkbUaBavpN4Hr+FvoX2BEsiFqwHP2WYqYujRkk8YyhhHnaVGb9uwMyrEpwVQAEdwwunrRhUB4A==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1725703913; bh=PKlfI6ejtF957zv0BOG039EtP2cZDnlRKEyeKMeQt5K=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=AVdVy2pRop3YzPaIGT9ilASB7TOep6Zqfp/1+xzlXPS4F5NyN4xmGoLOnDMQwr3VRW3dfep3xHjFKtkZ5ZLBCGxSVfoKLelae8C5PMjL1CIK3/eZHyPvxLXadGbtr6176IelgQ8nUEzQk0CAS7ZsV6xXkmvtISMF5JiDPVCrZ6lVm0wT/Y8eH2DGcg3TcA4GzoPe57nmar/yXfN8EvaquLT/dE8Duwh7JaR8QtIttum6GgbJ/l6cK9XuXkEF1y9lppCNg4U6iimHLYiAWOV8eLv001Y4Kk8UbYR+up+DKS4/FgN/qMlxtW7Y0iVdvGtISdxTqoMJAO/uBtlySQZ67Q==
+X-YMail-OSG: 40OVdcgVM1ngXn783d.sjWsogtiPN9AGriMrM4Hf.fdDnv8sNj_4WQc.wHkMzVL
+ Y4E4uICd82AqGk_UEJfQxgdT6qTldRfMcSmCZYVrGZGzz1AX0ASOluosqupMG_QRbMTkNDa2Da.S
+ aHQlmJQ.JvLZNqdkRv7VpDlfySWfR4oELhr1I1GJ29fz_HsKySlD_S40zbjxZTTHBTW3gDP_JK_w
+ QMGdi98a_OSoikDyagzFPjwSc4r3gSmYrLlGnw7Udq7IB6QGU_HLTvGA7LjCphrLieoQIaAkVO1g
+ RdlcgMnbrxPHhY9uV4wdctgdBnSycUYyVMlFI5Fvjd25nDnNe2_ASSjE13SgwKcM61YXchm0ucbW
+ d2GEau48rhE5wMMlz9kDlt5yqRT8iKjzJDUDFADv7J6XyYgRkwUQsIFND2yXdl0VLNNOgwQeiY5W
+ cvpw0_PhaJxsu8W8JodhjGgfMMwramYYR3hKv4BTydDUIgNiYP2u0lzN2GTIsqOJSuBMDUoYv_Lv
+ xMr79TL8hju1TkBYIJ6fyTbsnWX7hHeBC2Wu0tobKhfSuyjVrBUoMCoAShHdxeNy2Ue5KvSnIU1k
+ sCxDLZkkoYmYOKYJvZRXq9FsI8slBQSLq5A9UV0Rd..lqMkCGozm7coYJhS5m8TZammVRtLOwLUQ
+ 8h_qtFKUWWnNAlqCy29Bm8h85REe6_mZatKqv5dJXNZpqV3ag_hIKUNwl86dqvRAl7WRpkkfRMMq
+ QpVOwfCiWhZeBLEv0cjqaWMJsvHbkRnacNRVZ6e72jeZWlED72JMb2ztiAzyY1udQxyPyJNWIZP7
+ EW0kWTsa46kYi7GHEiA3plpvNtL8YA63qbrBKj1W2k7kLGdZUfIP5.H7l9GJMQ_gd1BXjUD3LiJM
+ dIfXBwYsNQXfOjaTDmg7F9IjQYU93aGEyM0whXD97R3GzrnAwONLCSLPlw5rSdG1eeM2NfUWvd1m
+ T1IxwRAFrWvSxm8t1p8TeXL37KY1DJ5eg_utn2zYxRiwZanWflrL2s1E4uQ8xt7NCqyxt7oV_5V2
+ xvUJRM0zcFuXmeMq4T1eSnaCFDhogqb3itFblN4UDKCXxfCm_6Uxj62wx6d21MbusXbSPFN6Vb3E
+ GOcJgSjMqPPvEeqeQuHJN50mgyhfcCOb63zcuD8jn2lnfUbRQ5KLNmL4upC_PBmyBfJfqYBOnlx_
+ 2RX5sQszb3n5W_yM0h._iEvN8uEQcjtpdSGtkHsKueZMsoRROz7P5HZNQ38fSNYz51C1UYxQ9AAR
+ Gh6Ra7I4sP1xvNvz_7N1EY.7tf3aNjuaAMrqvF9dn9_vJvBSXOqRX9GwyN7WYqnVJiPFos_rfr4r
+ UFGxXpL4LQJr4dSCIlYoouU524.6EPKAHWXhfeM_uD7qzSKjZJEx4oBJX.Ir7xJWsTE8Qavpw6iA
+ z6rCzrvhtGHG9cfNCYCKCsBPqcHnPIho7X4GlrsiqGcb65t09hyd_jibooZA6QwmnJbnZ2DoyJK5
+ X8x9Es6DcKatzbrvO9WFA25uE56FCSpsGNHA9caoppdUlOuZPcSW4oC5zTs.1FFCC3aO_HghfXvF
+ MB.Pf11fTXxPflGpXfMsmsP7qQ4_i4yGapqBlASuvcBOAw0mTzX2zK9i_LQIz1hnXq4rLeJl2UtM
+ 2_2MoaTIs3IEtonOaHuawO_dwF1N7h6Mg005D_CqpqVmdllrrsAcOMpEmJO_VjfT7mTbbueJFzos
+ VHMFEvNpOiqseFwsE4JtbUAKRHAsLrvnuLUJDByai2b_inOUT4Vcjb9X5sJqK.4x_pK66MFUMReu
+ Gn7JyxAIzbmq6hBKh9SIs8fT44B3artC_FAapQlvIic1jetvaf59KF1DkTmjUcJFssKjcfzqdzoq
+ m6fXAf7w9dJt.0iJG65QEMYSZDVutEhViYJl.nNoSk9ZLNjPg9HVTaij0NfrdDIV8zKYy6oPPMP_
+ VcLEghgx4QXSF2goqP3Q6HWnaRI3d4LWoELeBzoOLIM9YQyszX_xrcF_qF7j76px9iVBog2.Bd.e
+ 5mpIyVVQYGh4dHSVtL6QDiXeqQ995c0bQ0kH5611osX3GEgFwXkX.AgINGEwBPpZDV4Pb2Hh_P_C
+ uCHdQc6FjkAdVpoWVarNmAeTujHPEOL7q5sRzO9X9xQQ45lbLvEXfQlOmpjLN5dwt4AF0jOS3JXA
+ n76WFWGA8ER5Yucxld1Lke1O.VW2IUZJNwOqnjEDPY_OD_xNHjc1k5J4kzB063mxsviEZcmz63RV
+ Xv_Kt_V84YJfBznKabkKe.i4zYdoXMzjJAmS7wFuqvngdnzxL5iP4
+X-Sonic-MF: <abdul.rahim@myyahoo.com>
+X-Sonic-ID: ddf9fd8a-a61d-455e-a8bb-19462d5aa010
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.sg3.yahoo.com with HTTP; Sat, 7 Sep 2024 10:11:53 +0000
+Received: by hermes--production-sg3-fc85cddf6-kdpzj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9082047fd5155f96c2e5472233bc10ec;
+          Sat, 07 Sep 2024 10:11:48 +0000 (UTC)
+Date: Sat, 7 Sep 2024 15:41:38 +0530
+From: Abdul Rahim <abdul.rahim@myyahoo.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, bhelgaas@google.com, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fixed spelling in Documentation/PCI/pci.rst
+Message-ID: <n7gabykujjulz5dg4eyrc6pcbvn6wzkw6opol3pclaychqnssx@prjklcr7qh34>
+References: <u4xan54bdxf5sniwhtvrixw3b2vg4c7magey6q3rsd4ssq6ihk@xfbijuhadyw4>
+ <20240906192429.GA430486@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,70 +86,59 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240906093148.830452-3-thippesw@amd.com>
+In-Reply-To: <20240906192429.GA430486@bhelgaas>
+X-Mailer: WebService/1.1.22645 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Hi Thippeswamy,
+On Fri, Sep 06, 2024 at 02:24:29PM GMT, Bjorn Helgaas wrote:
+> On Sat, Sep 07, 2024 at 12:44:13AM +0530, Abdul Rahim wrote:
+> > On Fri, Sep 06, 2024 at 12:53:18PM GMT, Jonathan Corbet wrote:
+> > > Abdul Rahim <abdul.rahim@myyahoo.com> writes:
+> > > 
+> > > > On Fri, Sep 06, 2024 at 11:41:52AM GMT, Bjorn Helgaas wrote:
+> > > >> On Fri, Sep 06, 2024 at 06:15:18PM +0530, Abdul Rahim wrote:
+> > > >> > Fixed spelling and edited for clarity.
+> > > >> > 
+> > > >> > Signed-off-by: Abdul Rahim <abdul.rahim@myyahoo.com>
+> > > >> > ---
+> > > >> >  Documentation/PCI/pci.rst | 2 +-
+> > > >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >> > 
+> > > >> > diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
+> > > >> > index dd7b1c0c21da..344c2c2d94f9 100644
+> > > >> > --- a/Documentation/PCI/pci.rst
+> > > >> > +++ b/Documentation/PCI/pci.rst
+> > > >> > @@ -52,7 +52,7 @@ driver generally needs to perform the following initialization:
+> > > >> >    - Enable DMA/processing engines
+> > > >> >  
+> > > >> >  When done using the device, and perhaps the module needs to be unloaded,
+> > > >> > -the driver needs to take the follow steps:
+> > > >> > +the driver needs to perform the following steps:
+> > > >> 
+> > > >> I don't see a spelling fix here, and personally I wouldn't bother with
+> > > >> changing "take" to "perform" unless we have other more significant
+> > > >> changes to make at the same time.
+> > > >
+> > > > - "follow" has been corrected to "following", which is more appriopriate
+> > > > in this context.
+> > > > - I know its trivial, but can disturb the readers flow
+> > > > - do you want me to change the message to "Edited for clarity"
+> > > 
+> > > The problem is not s/follow/following/, it is the other, unrelated
+> > > change you made that does not improve the text.  There are reasons why
+> > > we ask people not to mix multiple changes.  If you submit just the
+> > > "following" fix, it will surely be applied.
+> > 
+> > Understood, will take care next time. I will resend this patch with:
+> > "follow" -> "following", with commit message "Fixed spelling"
+> 
+> Sorry I missed the "follow" change, which is indeed worth fixing.  If
+> you resend it, make your subject and commit log say "fix" (not
+> "fixed"), like it's a command.
+> 
+> https://chris.beams.io/posts/git-commit/
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v6.9#n134
+> 
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus mani-mhi/mhi-next robh/for-next linus/master v6.11-rc6 next-20240906]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Thippeswamy-Havalige/dt-bindings-PCI-xilinx-cpm-Add-compatible-string-for-CPM5-controller-1/20240906-173446
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240906093148.830452-3-thippesw%40amd.com
-patch subject: [PATCH 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root Port controller-1
-config: um-allyesconfig (https://download.01.org/0day-ci/archive/20240907/202409071713.wrAI0UuK-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240907/202409071713.wrAI0UuK-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409071713.wrAI0UuK-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/pci/controller/pcie-xilinx-cpm.c: In function 'xilinx_cpm_pcie_event_flow':
-   drivers/pci/controller/pcie-xilinx-cpm.c:292:44: error: 'CPM5_HOST1' undeclared (first use in this function)
-     292 |         else if (port->variant->version == CPM5_HOST1) {
-         |                                            ^~~~~~~~~~
-   drivers/pci/controller/pcie-xilinx-cpm.c:292:44: note: each undeclared identifier is reported only once for each function it appears in
-   drivers/pci/controller/pcie-xilinx-cpm.c: In function 'xilinx_cpm_pcie_init_port':
-   drivers/pci/controller/pcie-xilinx-cpm.c:504:44: error: 'CPM5_HOST1' undeclared (first use in this function)
-     504 |         else if (port->variant->version == CPM5_HOST1) {
-         |                                            ^~~~~~~~~~
-   drivers/pci/controller/pcie-xilinx-cpm.c: At top level:
-   drivers/pci/controller/pcie-xilinx-cpm.c:635:40: error: redefinition of 'cpm5_host'
-     635 | static const struct xilinx_cpm_variant cpm5_host = {
-         |                                        ^~~~~~~~~
-   drivers/pci/controller/pcie-xilinx-cpm.c:631:40: note: previous definition of 'cpm5_host' with type 'const struct xilinx_cpm_variant'
-     631 | static const struct xilinx_cpm_variant cpm5_host = {
-         |                                        ^~~~~~~~~
-   drivers/pci/controller/pcie-xilinx-cpm.c:636:20: error: 'CPM5_HOST1' undeclared here (not in a function)
-     636 |         .version = CPM5_HOST1,
-         |                    ^~~~~~~~~~
-   drivers/pci/controller/pcie-xilinx-cpm.c:650:26: error: 'cpm5_host1' undeclared here (not in a function); did you mean 'cpm5_host'?
-     650 |                 .data = &cpm5_host1,
-         |                          ^~~~~~~~~~
-         |                          cpm5_host
->> drivers/pci/controller/pcie-xilinx-cpm.c:631:40: warning: 'cpm5_host' defined but not used [-Wunused-const-variable=]
-     631 | static const struct xilinx_cpm_variant cpm5_host = {
-         |                                        ^~~~~~~~~
-
-
-vim +/cpm5_host +631 drivers/pci/controller/pcie-xilinx-cpm.c
-
-51f1ffc00d95e3 Bharat Kumar Gogada 2022-07-05  630  
-51f1ffc00d95e3 Bharat Kumar Gogada 2022-07-05 @631  static const struct xilinx_cpm_variant cpm5_host = {
-51f1ffc00d95e3 Bharat Kumar Gogada 2022-07-05  632  	.version = CPM5,
-51f1ffc00d95e3 Bharat Kumar Gogada 2022-07-05  633  };
-51f1ffc00d95e3 Bharat Kumar Gogada 2022-07-05  634  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks for reviewing, i've resent this patch here: 
+https://lore.kernel.org/lkml/20240906205656.8261-1-abdul.rahim@myyahoo.com/
 
