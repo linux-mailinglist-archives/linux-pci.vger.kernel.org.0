@@ -1,219 +1,294 @@
-Return-Path: <linux-pci+bounces-12946-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12947-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8634B9714F1
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 12:10:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E14F59716DD
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 13:29:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 406E3284AA1
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 10:10:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23FFEB215FF
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 11:29:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F331B3F16;
-	Mon,  9 Sep 2024 10:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 551A61B3F24;
+	Mon,  9 Sep 2024 11:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lec/Ahsf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fOmJ4eCR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8011B3B2B;
-	Mon,  9 Sep 2024 10:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD3C1B3725
+	for <linux-pci@vger.kernel.org>; Mon,  9 Sep 2024 11:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725876620; cv=none; b=b8M4W0fM34wNRLVxfF9tctyq4aaQTb2jhEVcPO0Dv+ItXHZdDRRwQqf2uOk/s5ySKh6EJZHJxiBlEDJ3U9gPKi5eZUKRme5fTXoF7L55dNNaUF1kFdUZHetdr2FI1cLmOsIyE8A0HID/m2LVJ5LtJch8ARU/bjTdWcSdP2ao1Qo=
+	t=1725881374; cv=none; b=N4yDPIabXiqpb6Vhdl8MP1vTf3I/Ec5UXXpCMbSy3gxBPxgl0zoHaOQQ0ngZ2Ibw44F6XyTrbOsJ8cmsNV5ksqwye6NO/nwuFAmeUTgKPXJAdJS1h7ITU5z7SZhDla/yklkYvdR6nqHlDO1YDiAG2GhJ598NgnYhl7wiY48MisE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725876620; c=relaxed/simple;
-	bh=Q6/cLkEQq9XEo1Xu1WMQ40M9gJ5r2NMV6+rTtbQLAnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhFrsBxCBQaITu7+40fDV/GKlNSwlW8JHZzKo3zOxX9aTPFw8Ovhkg7a7i2NbmAeo31Eoqmg88ZkV7UUAMuXhAKbtU8d8RkAN2PpaEeCHdP+VuEDGJ7pL2Wxx1Bc2TfzY/kz94Or8qDfJI9Ct9OIGGPLJJIvUMqmh7cgin9cd2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lec/Ahsf; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725876619; x=1757412619;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q6/cLkEQq9XEo1Xu1WMQ40M9gJ5r2NMV6+rTtbQLAnk=;
-  b=lec/Ahsf8AiM6JR7hTGFPNQdDl2+MCf4WVVLNwemkPa+ZsSfaCLLCLxy
-   3XLKLpKHgR+BKw7f+BcWfXYKfQ99WLq+yMk0sQJ1n1p/icEDpKkdjs5Ab
-   DCjVGnQx/1XlcJjOz0Py478XXQ8DbsRkOyVxj0+xolk4x+CNvph4CA8OQ
-   z6Z4mFPNzSsa/u9Xo8Q0xQXlv3B+QuRntIeZiWHtWR3ET7qsjalcZmNFR
-   FfMyb3PUpuQrAH2X1oLD0XirofnJ7wMyO1XqucWI5aLngaFChzmq/oSRA
-   vfhUvTg2ZATYBTYLoeHmL1d3J9wsidWR1n+4l2C0tP7ANECkjLdEmFe0b
-   A==;
-X-CSE-ConnectionGUID: bI4XVfOZQxSsnVPIA5Mg8w==
-X-CSE-MsgGUID: gwTxTXCrSQWRJcyJCNNGLg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="13437148"
-X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
-   d="scan'208";a="13437148"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 03:10:18 -0700
-X-CSE-ConnectionGUID: xS0GuC5UTnuMKizuOOG52A==
-X-CSE-MsgGUID: M16vue2hRl65Ueo4nDhEGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
-   d="scan'208";a="66930014"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa006.jf.intel.com with ESMTP; 09 Sep 2024 03:10:13 -0700
-Date: Mon, 9 Sep 2024 18:07:35 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	pratikrajesh.sampat@amd.com, michael.day@amd.com,
-	david.kaplan@amd.com, dhaval.giani@amd.com,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [RFC PATCH 13/21] KVM: X86: Handle private MMIO as shared
-Message-ID: <Zt7I51r6dqkwkPAz@yilunxu-OptiPlex-7050>
-References: <20240823132137.336874-1-aik@amd.com>
- <20240823132137.336874-14-aik@amd.com>
- <ZtH55q0Ho1DLm5ka@yilunxu-OptiPlex-7050>
- <49226b61-e7d3-477f-980b-30567eb4d069@amd.com>
- <Ztaa3TpDLKrEY0Ys@yilunxu-OptiPlex-7050>
- <262bee4e-7e60-45e6-8920-ec6b8dd0a526@amd.com>
+	s=arc-20240116; t=1725881374; c=relaxed/simple;
+	bh=h9uvuHJtAEfett+JZRlDTHmYC+8YTREKfGVzpB/kOKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mdXICT1ZC4DWT9oQfxv1O3UZFSAb1nz83kzPWloaV1c/2BxC1x/lbBhOA2t+MpDHVKXN8qHcSzjnP86xW0iZCYZwaLvJ8hYJt/Vv+gKxNoiuaeXK/0zs1osbRZt1XiRFIbwKy0d7FeX4becKArxd/+4WA84a/1HkRGDV2dFd/O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fOmJ4eCR; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a8d2b4a5bf1so208720566b.2
+        for <linux-pci@vger.kernel.org>; Mon, 09 Sep 2024 04:29:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1725881371; x=1726486171; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ktNPaZ1KCv6Ld2rAfA4PfuySfO5io0j80rdw8Alh41g=;
+        b=fOmJ4eCR1j1050JVUxneiRQ8wdwdfjgbxWwKVPKh8WCt+d81hG4X+uNdD2aXdG/RxN
+         jqB3PLcha43bnr54oJDDrmFrbNIHEId3HRoSBExqdt90pzM3jL/+qYe5pxKCSWTilZb8
+         ySlqK2BupvrA2WZSRSYdWGPtrd5Ed7f/oU5UQzWhIPLsgcbkJhJpxu0WI8xK0K4AaxvT
+         q0DtOMqAn6g13ntPr9sjZv3ZV+179en0QPUlse8gUpltqYP3btvdFgEg4f7Ou1E+mEAT
+         i+HcjEdX9GSWqnOklXixmThvVbDoHqPyU1aGPwz37e4TomVFzSZe0Q3y4UB2w68l776t
+         YAmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725881371; x=1726486171;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ktNPaZ1KCv6Ld2rAfA4PfuySfO5io0j80rdw8Alh41g=;
+        b=EqQZMCMzBTNoA/gfRAYb8nd+QQhWVctrbzjOGiTzGO+APufM6Ova6nRGoK6XMr2Pwn
+         9peN+5jcBlN2mQUuqCdfnYdXdd1n4Qfje2vB5nVrwQOH8u05nn6Vg6z86HWAR3I/28CF
+         imwkBtNQ05jdHf09QnwB5kECxVNxf9iHxz4n/cbquNjWgPIuLaHjb0gxtKIo3o+AFjQi
+         38XFojiKzN78tRorIW4t4XGJGfMMNNZ32xMQLxz3mHxFdV3p6gaMDzAqMyJLOk5yaJwb
+         mO6xUoKFlMC6ea3FAs7Tlf3sQzHOOV+JsHDirAJygKzKnwcHmVP25KpH+MTLgbcp0mOd
+         I8bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4n6Z6oFmWpxge614Ft8MJrEvAIWB0rFGx1JjuSxL5GS0R2bZyD+EMpVGG/NDaSmaQin8fq+8Amfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybfo/Kx2+LaF+8L3wLroowulQMrmieA2qktSFFNEXfVBol8oj+
+	DzIVljjzLo0fZxLx5/H4OwLI1atzHByIGQcB8J3+ouAAL9TpgFpUgi7vVBddG7w=
+X-Google-Smtp-Source: AGHT+IHbyHiLLgCYAMG5Cp2xwyx3SxxsX41JowYhZLgV7ph6A6W/CyNOjt92TccFXBfzecj10YSGFg==
+X-Received: by 2002:a17:907:5083:b0:a8a:926a:d024 with SMTP id a640c23a62f3a-a8a926ad4e4mr481677066b.26.1725881370683;
+        Mon, 09 Sep 2024 04:29:30 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:aa0d:be00::8db? ([2a02:8109:aa0d:be00::8db])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25c61240sm327835766b.133.2024.09.09.04.29.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2024 04:29:30 -0700 (PDT)
+Message-ID: <1932646a-b138-48f3-99bc-17354a773586@linaro.org>
+Date: Mon, 9 Sep 2024 13:29:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <262bee4e-7e60-45e6-8920-ec6b8dd0a526@amd.com>
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v2 3/8] arm64: dts: qcom: qcs6490-rb3gen2: Add node for
+ qps615
+Content-Language: en-US
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ cros-qcom-dts-watchers@chromium.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: andersson@kernel.org, quic_vbadigan@quicinc.com,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
+ <20240803-qps615-v2-3-9560b7c71369@quicinc.com>
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <20240803-qps615-v2-3-9560b7c71369@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 06, 2024 at 01:31:48PM +1000, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 3/9/24 15:13, Xu Yilun wrote:
-> > On Mon, Sep 02, 2024 at 12:22:56PM +1000, Alexey Kardashevskiy wrote:
-> > > 
-> > > 
-> > > On 31/8/24 02:57, Xu Yilun wrote:
-> > > > On Fri, Aug 23, 2024 at 11:21:27PM +1000, Alexey Kardashevskiy wrote:
-> > > > > Currently private MMIO nested page faults are not expected so when such
-> > > > > fault occurs, KVM tries moving the faulted page from private to shared
-> > > > > which is not going to work as private MMIO is not backed by memfd.
-> > > > > 
-> > > > > Handle private MMIO as shared: skip page state change and memfd
-> > > > 
-> > > > This means host keeps the mapping for private MMIO, which is different
-> > > > from private memory. Not sure if it is expected, and I want to get
-> > > > some directions here.
-> > > 
-> > > There is no other translation table on AMD though, the same NPT. The
-> > 
-> > Sorry for not being clear, when I say "host mapping" I mean host
-> > userspace mapping (host CR3 mapping). By using guest_memfd, there is no
-> > host CR3 mapping for private memory. I'm wondering if we could keep host
-> > CR3 mapping for private MMIO.
-> > >> security is enforced by the RMP table. A device says "bar#x is
-> private" so
-> > > the host + firmware ensure the each corresponding RMP entry is "assigned" +
-> > > "validated" and has a correct IDE stream ID and ASID, and the VM's kernel
-> > > maps it with the Cbit set.
-> > > 
-> > > >   From HW perspective, private MMIO is not intended to be accessed by
-> > > > host, but the consequence may varies. According to TDISP spec 11.2,
-> > > > my understanding is private device (known as TDI) should reject the
-> > > > TLP and transition to TDISP ERROR state. But no further error
-> > > > reporting or logging is mandated. So the impact to the host system
-> > > > is specific to each device. In my test environment, an AER
-> > > > NonFatalErr is reported and nothing more, much better than host
-> > > > accessing private memory.
-> > > 
-> > > afair I get an non-fatal RMP fault so the device does not even notice.
-> > > 
-> > > > On SW side, my concern is how to deal with mmu_notifier. In theory, if
-> > > > we get pfn from hva we should follow the userspace mapping change. But
-> > > > that makes no sense. Especially for TDX TEE-IO, private MMIO mapping
-> > > > in SEPT cannot be changed or invalidated as long as TDI is running.
-> > > 
-> > > > Another concern may be specific for TDX TEE-IO. Allowing both userspace
-> > > > mapping and SEPT mapping may be safe for private MMIO, but on
-> > > > KVM_SET_USER_MEMORY_REGION2,  KVM cannot actually tell if a userspace
-> > > > addr is really for private MMIO. I.e. user could provide shared memory
-> > > > addr to KVM but declare it is for private MMIO. The shared memory then
-> > > > could be mapped in SEPT and cause problem.
-> > > 
-> > > I am missing lots of context here. When you are starting a guest with a
-> > > passed through device, until the TDISP machinery transitions the TDI into
-> > > RUN, this TDI's MMIO is shared and mapped everywhere. And after
-> > 
-> > Yes, that's the situation nowadays. I think if we need to eliminate
-> > host CR3 mapping for private MMIO, a simple way is we don't allow host
-> > CR3 mapping at the first place, even for shared pass through. It is
-> > doable cause:
-> > 
-> >   1. IIUC, host CR3 mapping for assigned MMIO is only used for pfn
-> >      finding, i.e. host doesn't really (or shouldn't?) access them.
-> 
-> Well, the host userspace might also want to access MMIO via mmap'ed region
-> if it is, say, DPDK.
+Hi Krishna,
 
-Yes for DPDK. But I mean for virtualization cases, host doesn't access
-assigned MMIO.
-
-I'm not suggesting we remove the entire mmap functionality in VFIO, but
-may have a user-optional no-mmap mode for private capable device.
-
+On 03/08/2024 05:22, Krishna chaitanya chundru wrote:
+> Add QPS615 PCIe switch node which has 3 downstream ports and in one
+> downstream port two embedded ethernet devices are present.
 > 
-> >   2. The hint from guest_memfd shows KVM doesn't have to rely on host
-> >      CR3 mapping to find pfn.
+> Power to the QPS615 is supplied through two LDO regulators, controlled
+> by two GPIOs, these are added as fixed regulators.
 > 
-> True.
+> Add i2c device node which is used to configure the switch.
 > 
-> > > transitioning to RUN you move mappings from EPT to SEPT?
-> > 
-> > Mostly correct, TDX move mapping from EPT to SEPT after LOCKED and
-> > right before RUN.
-> > 
-> > > 
-> > > > So personally I prefer no host mapping for private MMIO.
-> > > 
-> > > Nah, cannot skip this step on AMD. Thanks,
-> > 
-> > Not sure if we are on the same page.
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 121 +++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
+>  2 files changed, 122 insertions(+), 1 deletion(-)
 > 
-> With the above explanation, we are.
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> index 0d45662b8028..59d209768636 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -202,6 +202,30 @@ vph_pwr: vph-pwr-regulator {
+>  		regulator-min-microvolt = <3700000>;
+>  		regulator-max-microvolt = <3700000>;
+>  	};
+> +
+> +	vdd_ntn_0p9: regulator-vdd-ntn-0p9 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDD_NTN_0P9";
+> +		gpio = <&pm8350c_gpios 2 GPIO_ACTIVE_HIGH>;
+> +		regulator-min-microvolt = <899400>;
+> +		regulator-max-microvolt = <899400>;
+> +		enable-active-high;
+> +		pinctrl-0 = <&ntn_0p9_en>;
+> +		pinctrl-names = "default";
+> +		regulator-enable-ramp-delay = <4300>;
+> +	};
+> +
+> +	vdd_ntn_1p8: regulator-vdd-ntn-1p8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDD_NTN_1P8";
+> +		gpio = <&pm8350c_gpios 3 GPIO_ACTIVE_HIGH>;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		enable-active-high;
+> +		pinctrl-0 = <&ntn_1p8_en>;
+> +		pinctrl-names = "default";
+> +		regulator-enable-ramp-delay = <10000>;
+> +	};
+>  };
+>  
+>  &apps_rsc {
+> @@ -595,6 +619,12 @@ lt9611_out: endpoint {
+>  			};
+>  		};
+>  	};
+> +
+> +	qps615_switch: pcie-switch@77 {
+> +		compatible = "qcom,qps615";
+> +		reg = <0x77>;
+> +		status = "okay";
+> +	};
+>  };
+>  
+>  &i2c1 {
+> @@ -688,6 +718,75 @@ &pmk8350_rtc {
+>  	status = "okay";
+>  };
+>  
+> +&pcie1 {
+> +	status = "okay";
+> +};
+
+Isn't it also necessary to configure the phy as well? It's also default
+disabled and has two regulators.
+
+Kind regards,
+> +
+> +&pcieport {
+> +	pcie@0,0 {
+> +		compatible = "pci1179,0623";
+> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +
+> +		device_type = "pci";
+> +		ranges;
+> +
+> +		vddc-supply = <&vdd_ntn_0p9>;
+> +		vdd18-supply = <&vdd_ntn_1p8>;
+> +		vdd09-supply = <&vdd_ntn_0p9>;
+> +		vddio1-supply = <&vdd_ntn_1p8>;
+> +		vddio2-supply = <&vdd_ntn_1p8>;
+> +		vddio18-supply = <&vdd_ntn_1p8>;
+> +
+> +		qcom,qps615-controller = <&qps615_switch>;
+> +
+> +		reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
+> +
+> +		pcie@1,0 {
+> +			reg = <0x20800 0x0 0x0 0x0 0x0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			device_type = "pci";
+> +			ranges;
+> +		};
+> +
+> +		pcie@2,0 {
+> +			reg = <0x21000 0x0 0x0 0x0 0x0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			device_type = "pci";
+> +			ranges;
+> +		};
+> +
+> +		pcie@3,0 {
+> +			reg = <0x21800 0x0 0x0 0x0 0x0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			ranges;
+> +
+> +			pcie@0,0 {
+> +				reg = <0x50000 0x0 0x0 0x0 0x0>;
+> +				#address-cells = <3>;
+> +				#size-cells = <2>;
+> +				device_type = "pci";
+> +				ranges;
+> +			};
+> +
+> +			pcie@0,1 {
+> +				reg = <0x50100 0x0 0x0 0x0 0x0>;
+> +				#address-cells = <3>;
+> +				#size-cells = <2>;
+> +				device_type = "pci";
+> +				ranges;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &qupv3_id_0 {
+>  	status = "okay";
+>  };
+> @@ -812,6 +911,28 @@ lt9611_rst_pin: lt9611-rst-state {
+>  	};
+>  };
+>  
+> +&pm8350c_gpios {
+> +	ntn_0p9_en: ntn-0p9-en-state {
+> +		pins = "gpio2";
+> +		function = "normal";
+> +
+> +		bias-disable;
+> +		input-disable;
+> +		output-enable;
+> +		power-source = <0>;
+> +	};
+> +
+> +	ntn_1p8_en: ntn-1p8-en-state {
+> +		pins = "gpio3";
+> +		function = "normal";
+> +
+> +		bias-disable;
+> +		input-disable;
+> +		output-enable;
+> +		power-source = <0>;
+> +	};
+> +};
+> +
+>  &tlmm {
+>  	lt9611_irq_pin: lt9611-irq-state {
+>  		pins = "gpio24";
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 3d8410683402..3840f056b7f2 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2279,7 +2279,7 @@ pcie1: pcie@1c08000 {
+>  
+>  			status = "disabled";
+>  
+> -			pcie@0 {
+> +			pcieport: pcie@0 {
+>  				device_type = "pci";
+>  				reg = <0x0 0x0 0x0 0x0 0x0>;
+>  				bus-range = <0x01 0xff>;
 > 
-> > I assume from HW perspective, host
-> > CR3 mapping is not necessary for NPT/RMP build?
-> 
-> Yeah, the hw does not require that afaik. But the existing code continues
-> working for AMD, and I am guessing it is still true for your case too,
 
-It works for TDX with some minor changes similar as this patch does. But
-still see some concerns on my side, E.g. mmu_notifier. Unlike SEV-SNP,
-TDX firmware controls private MMIO accessing by building private S2 page
-table. If I still follow the HVA based page fault routine, then I should
-also follow the mmu_notifier, i.e. change private S2 mapping when HVA
-mapping changes. But private MMIO accessing is part of the private dev
-configuration and enforced (by firmware) not to be changed when TDI is
-RUNning. My effort for this issue is that, don't use HVA based page
-fault routine, switch to do like guest_memfd does.
-
-I see SEV-SNP prebuilds RMP to control private MMIO accessing, S2 page
-table modification is allowed at anytime. mmu_notifier only makes
-private access dis-functional. I assume that could also be nice to
-avoid.
-
-> right? Unless the host userspace tries accessing the private MMIO and some
-> horrible stuff happens? Thanks,
-
-The common part for all vendors is, the private device will be
-disturbed and enter TDISP ERROR state. I'm not sure if this is OK or can
-also be nice to avoid.
-
-Thanks,
-Yilun
+-- 
+// Caleb (they/them)
 
