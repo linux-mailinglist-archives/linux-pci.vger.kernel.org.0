@@ -1,148 +1,196 @@
-Return-Path: <linux-pci+bounces-12942-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12943-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1795497104E
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 09:52:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7949A9712B4
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 10:57:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C240D28309A
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 07:52:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0FC41F23417
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Sep 2024 08:57:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8D4C1B012A;
-	Mon,  9 Sep 2024 07:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD00176237;
+	Mon,  9 Sep 2024 08:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zq6JXZ//"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGeMTeeX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832DA1AF4D9;
-	Mon,  9 Sep 2024 07:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AE61B29C2
+	for <linux-pci@vger.kernel.org>; Mon,  9 Sep 2024 08:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725868337; cv=none; b=J86bvj4H6zq+UeUvbcoIsugXo7gJt3+CZeOwPkeML8ki+7PiE+SKBliKU4YrPfIMHEXeTO5KquJSbI2tYBBI52GCkCFX8b8DxAYgiDyKDzW+bl3idQMSwoB/DUfxsoUsYQUrPNTdz2PcTrR8GYUlJrk3J3UFx2b41mZDStzDF2o=
+	t=1725872216; cv=none; b=QiMzASeZgwVmXN60M3JQVqV3oguHX1KllqtcLrU7M8TK/gT7zYAWpPLRLGvRvUu5EaQe4c6NKKUEYd0LfvFjK6a53gtIfviRLJneesU2TKNzR6cq24xo1fwKsn+VT1/kxx3S1Yil3Xbe+bIxPHSeFRGP44YjzCAXDco8hCfRd2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725868337; c=relaxed/simple;
-	bh=tYpdgaZCN0lmhTqQidVM517rCDCWKPWudibqWnwydI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hh1/prBYLk43uoaz2bmqoCV5Th/nDoO9kzinaCVpvh5usdH/kuBY8phJ1yignsZOpQktN4NL2exAVU3nUoBIXKA5PnWcgBPupZpFVa7opfUGpFuB8kDJYYNIPMoytyAqO3Mn0VpzEQbPSqDwAQ1kAvxbHYMhPwRK9uWp7Y/KLKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zq6JXZ//; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 26DFA40005;
-	Mon,  9 Sep 2024 07:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1725868327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ryHecAjCKFHY5a39/P+GIvh5tYnxD8Fg8PfucobQxhs=;
-	b=Zq6JXZ//+adouwtwkw6boEPhyiUb2gfFl1RlA0RtXhCzJdYB5HfGK1TUuiPkVXECfEwRwo
-	5FksXPPXTfRR/GOVEhY+/BBte1UQQL25WwxYjwMs8hI6zh80c0qZ8lho8BBY9p/4i7aqGx
-	HVeByxhdV3V98xdhXabPHXeeVJJ+ojd/5b5xx4NhZ2xsZZaBgPbGmDkM7S5gBdiuQFAVn4
-	WF17yA5QBKYBiKqL8Q7+2YUgOIzQQwVr5fl42DKQM21/Muj8AIaUrastdmO0NdIpt/nGT+
-	dfkAHGEQdaTjvIEcerwNh6l4fmtvPPZrqc3P4P4ns6/jQPS79ay20fahDCDf3g==
-Date: Mon, 9 Sep 2024 09:52:03 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
- Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring
- <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
- <clement.leger@bootlin.com>
-Subject: Re: [PATCH v5 3/8] mfd: syscon: Add reference counting and device
- managed support
-Message-ID: <20240909095203.3d6effdb@bootlin.com>
-In-Reply-To: <20240903180116.717a499b@bootlin.com>
-References: <20240808154658.247873-1-herve.codina@bootlin.com>
-	<20240808154658.247873-4-herve.codina@bootlin.com>
-	<20240903153839.GB6858@google.com>
-	<20240903180116.717a499b@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1725872216; c=relaxed/simple;
+	bh=Qn8DDf492SFTDFVbYCo4rhi3QoNH93Kny3ep8sNADYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bjPvFBlu4G/+ocd/XdMEcrDyqN83XDeiML5MgoDbD2VazqWtzl4h1eonXY+Q3dpAXaBTlbCi59YLMAk5HJf9G7t0pSYRa1NPuNNpRl/P63bBdYjVGh16CsgMQxeWXcEGEV7W6CwLHA4SXIUe7TyOsw00iYSDn36S/sS1gOkcaFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGeMTeeX; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725872214; x=1757408214;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Qn8DDf492SFTDFVbYCo4rhi3QoNH93Kny3ep8sNADYc=;
+  b=fGeMTeeXNTs9KBtToSqIkKzW+JEPqE3WIRNHR+XC28O+lXNZvw9sIg3v
+   1sQmOIlzp4LgytYa/6eJJ5580H+yJ57axR/wVZ2JtbCTWh3GRltqrcmAV
+   RgmU5Oiij658h0kNGj2LXuPyLo6cpMaZPBs8yKQcZXqt4ehzzAPAZfkrY
+   IFfIl7MB8Ir2sfnoNxGNzcchXzZeI/c+A45zXERl2iKhg3uqXztFdnOMl
+   LVJXTOGtmC1PiAIkkKn4XvwPJbYKN72lBzHGp9xyc0VreHkkYUM52Qrij
+   athx2pZNhQkmK6132BESg7QjW1BhhqF1XFlzC/wIvz/v/N+TkwoV8r7N7
+   A==;
+X-CSE-ConnectionGUID: x7jrx2FBTDie08vchJ0A+g==
+X-CSE-MsgGUID: ADB3HKqGRDmJ5f7A/JSAIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="47077060"
+X-IronPort-AV: E=Sophos;i="6.10,213,1719903600"; 
+   d="scan'208";a="47077060"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 01:56:53 -0700
+X-CSE-ConnectionGUID: bxH3agydRbqxxGePqXcL6A==
+X-CSE-MsgGUID: ZJr306r4QP6tHM62tF+sig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,213,1719903600"; 
+   d="scan'208";a="71177956"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 09 Sep 2024 01:56:52 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1snaCY-000EXG-1S;
+	Mon, 09 Sep 2024 08:56:50 +0000
+Date: Mon, 09 Sep 2024 16:56:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/brcmstb] BUILD SUCCESS
+ 91e5d15c7b198ecea27407e04cff2fed2d4c2c75
+Message-ID: <202409091620.m2fdTXVK-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
 
-Hi Lee, Arnd,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/brcmstb
+branch HEAD: 91e5d15c7b198ecea27407e04cff2fed2d4c2c75  PCI: brcmstb: Enable 7712 SoCs
 
-On Tue, 3 Sep 2024 18:01:16 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+elapsed time: 2366m
 
-> Hi Lee,
-> 
-> On Tue, 3 Sep 2024 16:38:39 +0100
-> Lee Jones <lee@kernel.org> wrote:
-> 
-> > On Thu, 08 Aug 2024, Herve Codina wrote:
-> >   
-> > > From: Clément Léger <clement.leger@bootlin.com>
-> > > 
-> > > Syscon releasing is not supported.
-> > > Without release function, unbinding a driver that uses syscon whether
-> > > explicitly or due to a module removal left the used syscon in a in-use
-> > > state.
-> > > 
-> > > For instance a syscon_node_to_regmap() call from a consumer retrieves a
-> > > syscon regmap instance. Internally, syscon_node_to_regmap() can create
-> > > syscon instance and add it to the existing syscon list. No API is
-> > > available to release this syscon instance, remove it from the list and
-> > > free it when it is not used anymore.
-> > > 
-> > > Introduce reference counting in syscon in order to keep track of syscon
-> > > usage using syscon_{get,put}() and add a device managed version of
-> > > syscon_regmap_lookup_by_phandle(), to automatically release the syscon
-> > > instance on the consumer removal.
-> > > 
-> > > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
-> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > ---
-> > >  drivers/mfd/syscon.c       | 138 ++++++++++++++++++++++++++++++++++---
-> > >  include/linux/mfd/syscon.h |  16 +++++
-> > >  2 files changed, 144 insertions(+), 10 deletions(-)    
-> > 
-> > This doesn't look very popular.
-> > 
-> > What are the potential ramifications for existing users?
-> >   
-> 
-> Existing user don't use devm_syscon_regmap_lookup_by_phandle() nor
-> syscon_put_regmap().
-> 
-> So refcount is incremented but never decremented. syscon is never
-> released. Exactly the same as current implementation.
-> Nothing change for existing users.
-> 
-> Best regards,
-> Hervé
+configs tested: 101
+configs skipped: 2
 
-I hope I answered to Lee's question related to possible impacts on
-existing drivers.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Is there anything else that blocks this patch from being applied ?
+tested configs:
+alpha                             allnoconfig   gcc-13.3.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.3.0
+arc                               allnoconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240909   gcc-13.2.0
+arc                   randconfig-002-20240909   gcc-13.2.0
+arm                               allnoconfig   clang-20
+arm                   randconfig-001-20240909   gcc-14.1.0
+arm                   randconfig-002-20240909   gcc-14.1.0
+arm                   randconfig-003-20240909   clang-14
+arm                   randconfig-004-20240909   gcc-14.1.0
+arm64                             allnoconfig   gcc-14.1.0
+arm64                 randconfig-001-20240909   gcc-14.1.0
+arm64                 randconfig-002-20240909   clang-20
+arm64                 randconfig-003-20240909   gcc-14.1.0
+arm64                 randconfig-004-20240909   clang-16
+csky                              allnoconfig   gcc-14.1.0
+csky                                defconfig   gcc-14.1.0
+hexagon                           allnoconfig   clang-20
+i386                             allmodconfig   gcc-12
+i386                              allnoconfig   gcc-12
+i386                             allyesconfig   gcc-12
+i386         buildonly-randconfig-001-20240908   clang-18
+i386         buildonly-randconfig-002-20240908   clang-18
+i386         buildonly-randconfig-003-20240908   clang-18
+i386         buildonly-randconfig-004-20240908   clang-18
+i386         buildonly-randconfig-005-20240908   clang-18
+i386         buildonly-randconfig-006-20240908   gcc-12
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240908   gcc-12
+i386                  randconfig-002-20240908   clang-18
+i386                  randconfig-003-20240908   clang-18
+i386                  randconfig-004-20240908   clang-18
+i386                  randconfig-005-20240908   clang-18
+i386                  randconfig-006-20240908   clang-18
+i386                  randconfig-011-20240908   clang-18
+i386                  randconfig-012-20240908   gcc-12
+i386                  randconfig-013-20240908   gcc-12
+i386                  randconfig-014-20240908   clang-18
+i386                  randconfig-015-20240908   gcc-12
+i386                  randconfig-016-20240908   gcc-12
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+mips                              allnoconfig   gcc-14.1.0
+nios2                             allnoconfig   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-20
+riscv                             allnoconfig   gcc-14.1.0
+riscv                               defconfig   clang-20
+s390                              allnoconfig   clang-20
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   clang-20
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+um                               allmodconfig   clang-20
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-12
+um                                  defconfig   clang-20
+um                             i386_defconfig   gcc-12
+um                           x86_64_defconfig   clang-15
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240909   gcc-12
+x86_64       buildonly-randconfig-002-20240909   gcc-12
+x86_64       buildonly-randconfig-003-20240909   gcc-12
+x86_64       buildonly-randconfig-004-20240909   gcc-12
+x86_64       buildonly-randconfig-005-20240909   gcc-12
+x86_64       buildonly-randconfig-006-20240909   gcc-12
+x86_64                              defconfig   gcc-11
+x86_64                randconfig-001-20240909   gcc-12
+x86_64                randconfig-002-20240909   clang-18
+x86_64                randconfig-003-20240909   clang-18
+x86_64                randconfig-004-20240909   clang-18
+x86_64                randconfig-005-20240909   clang-18
+x86_64                randconfig-006-20240909   gcc-12
+x86_64                randconfig-011-20240909   gcc-12
+x86_64                randconfig-012-20240909   gcc-12
+x86_64                randconfig-013-20240909   gcc-12
+x86_64                randconfig-014-20240909   clang-18
+x86_64                randconfig-015-20240909   gcc-11
+x86_64                randconfig-016-20240909   gcc-12
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-14.1.0
 
-Best regards,
-Hervé
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
