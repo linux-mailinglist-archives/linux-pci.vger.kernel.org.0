@@ -1,123 +1,104 @@
-Return-Path: <linux-pci+bounces-12969-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12970-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0F859726B3
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 03:45:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 959A1972CDF
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 11:05:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E9ECB22B65
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 01:45:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CEB21F26016
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 09:05:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B78965674D;
-	Tue, 10 Sep 2024 01:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0325918859E;
+	Tue, 10 Sep 2024 09:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D04sHib8"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fc6+luku";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="BJYPBWuF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a7-32.smtp-out.eu-west-1.amazonses.com (a7-32.smtp-out.eu-west-1.amazonses.com [54.240.7.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E59537165;
-	Tue, 10 Sep 2024 01:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436FA186E4B;
+	Tue, 10 Sep 2024 09:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.7.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725932751; cv=none; b=SE62bz7d5f6hudpQdAxvqPNQBupe81i6IL6rxGYNbb1ml1UOR0snTeGTTQrPzmyBYA+qW1CFBbC3ycCoLPpHRf9L1VfAvpzDVV7uoVOUZVzD9FHEXkODj7xcwQqZ/8gnJiW8nlEOgiCkRnCp52nsNvnC7g91YYHpVjzgnpLz658=
+	t=1725959140; cv=none; b=ZQMQ8OpNRqAuBKPkUKXmhwdwgZE8YgrgSdTyXRZITyuLzCw75qMQhgMSbOmCIsAZYXOnjVKWuFbkd4IBdg29wAelQjfm/+CEGfgDMymWyl1Z9com3ikiAODMIrVJ0RWtxIogsVsmxldrSeKSdwqZGsee+PU5QG9/o6AqpKs+lMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725932751; c=relaxed/simple;
-	bh=nWPIEmLDwbrdFNx75Xf3vEnJ8myVckeOOQiX0vtRiiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=inaZTQCl7Fd7rPtiVmXXgHKRT3Q+eGWKoNYHiUooVipXlQ9NariFtbRMpYzemmudD19FBrI1n4hhtSBKcoN27a8GOiBF9ANnVoCjS8KmRV7Et1SjP7eMH4rxz3xQXlrg8kP2NlcR0MF2S4xGOyvnU0glI029N06BYxa0hHEgQ+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D04sHib8; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2053525bd90so42205765ad.0;
-        Mon, 09 Sep 2024 18:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725932750; x=1726537550; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JhAIyu0RTUe65FO11DVzvQKkyR9dMgsMirLbBNuoVgw=;
-        b=D04sHib8Ah/b0PJgb/YeeAESrmmhkdixEEtUvOwbaJRkWK78hOVsLA3PqwEZPvtqC2
-         tVP8b/L67GMvd0fGn+hCXFqhGVwCFubMGp/x6QxUpoeLFxlANoVNloHzuhrnj7+fFfvY
-         GUvLEZvsC5uljRVqFQwn/NwE8S7BWjDEw5kQ06aqomcKd4FxmY+VAYSrBk30wPkRkyhi
-         rOZa1enkGRaRsMXN9l9oT1/wr6HPYS55VgzQzqG31ta2EEWUohv3CR9HP4bIrApKUwin
-         qybCcPPKZU8anoc3lw/1HHcHUmAT1S/nT+CY71lMdoAZ/vAPZxo2Rv3ZvcPkZoJ/+kdz
-         lfkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725932750; x=1726537550;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JhAIyu0RTUe65FO11DVzvQKkyR9dMgsMirLbBNuoVgw=;
-        b=US2ztBsHa+qaLAKF9Ou/GGNJpYok7BP1UeH+O7jFE0FkDOl88Sq3arSR6f8KlQSrrD
-         uuypeN3tIQ5H6eZEyz3v2i0XSsEzGBxGwmn4nfFKuACEVkM8pSkzCY+hMYU5kT4O/AO8
-         93SyJf1eAKcL3xhwCxGqa2jhBKKgsnxGO28yOg+bUXXe2Edf3RVxSoKnKydQoLn2X3gI
-         KcjHcqe8QyMvSCH1bG0dQs6cdjUWV3iOGXTbbxGqh7fgPDOmWb+Z9TqhevsIQNYcb0Oj
-         dc+DztEt1bThDKDIsznTnSgufWgkKFzJakCkhNU0VhyToHXziyKtbP/GWvAL7tMFl8eE
-         bIQA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/gXAUIVWSeDKe2NoOdC+hbNV1QcBV8QrnWOqhE1Ae0tNIBrohoxbvT+r2dJf/EHaismAmYVR8BWj6@vger.kernel.org, AJvYcCUkxVcQ7WRXkQs8lCjGpnHSzHPJEL7NOp/Zv4pkZFrdIyu3dXf+hd4L0WToTCCWLK2xkk9b+ndRsNK0VcDB@vger.kernel.org, AJvYcCVzeAS2HvV6OGliBU+vMemoaSU2xpA+44l1dU2hwPqulPHp6Pa11O8FdNlZrzynjQzS/q32vkMkLsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwcx5I+6oCSaOERldW5Lmy+p1afw5ZSRgAGSZaizot9CHmIozD
-	xWiUq4NYgaodDVUIYoO+i/cZr3v2PZL26+IjXxoSb4bBBIwO2pHz
-X-Google-Smtp-Source: AGHT+IFmHak8m/g6m73sF1eAOxf24YWjx+IT+IWb0J0hI+mSUL5lKLxXDxk6fv+6tPVhnTEGqELu5g==
-X-Received: by 2002:a17:902:ec87:b0:205:7b1f:cf6d with SMTP id d9443c01a7336-206f053113bmr144666235ad.30.1725932749365;
-        Mon, 09 Sep 2024 18:45:49 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20710f21726sm39350755ad.236.2024.09.09.18.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2024 18:45:48 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 9000F4A0EB86; Tue, 10 Sep 2024 08:45:45 +0700 (WIB)
-Date: Tue, 10 Sep 2024 08:45:45 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Abdul Rahim <abdul.rahim@myyahoo.com>, bhelgaas@google.com,
-	corbet@lwn.net
-Cc: helgaas@kernel.org, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: PCI: fix typo in pci.rst
-Message-ID: <Zt-kyY2p3dmOxqJx@archie.me>
-References: <20240906205656.8261-1-abdul.rahim.ref@myyahoo.com>
- <20240906205656.8261-1-abdul.rahim@myyahoo.com>
+	s=arc-20240116; t=1725959140; c=relaxed/simple;
+	bh=e4E2QhibonUrb1as7MzSa4GR+pgL2He6HwaENBXi7to=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lYr3KPYH/03IDF9X0UsJemqhyGC+pq1zjA8wieAIKZz2wHYOjbcQJHDtz6Z2O5Ifnq9mT7uGi1lE9kWMARR6KJBECqJ4RVpAzkPeRyQG71VtZftKy9y3o9LZOkl9ZcN7ldWcO081mETxDP/5lH3VEk1rxOcpARtf6aw2E7YxR6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=amazonses.collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fc6+luku; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=BJYPBWuF; arc=none smtp.client-ip=54.240.7.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=4232tfv5ebdrjdwkr5zzm7kytdkokgug; d=collabora.com; t=1725959137;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=e4E2QhibonUrb1as7MzSa4GR+pgL2He6HwaENBXi7to=;
+	b=fc6+luku6MrEhrDUHytMjT4jSVkMAo5tyKr9F5VdtIWuegF2xO/n2RUrUzEziERJ
+	W0I6OM6WAd5wcwKpqzkt8m9BVYxOsfqgrPHetjVgp9nlWN4Glu6DCjtDwB9C61IvGKd
+	kO9mdOiBGww6ppt4HQdSquJ/1vzb7ih8GabjhrLDGtRlNB7JmQHvK8z+vBY2EvRImdp
+	WxAgAgpFapf7gl9GOQDHVo3bhWy44uoS3teNdDKxTvHzR9zjZQcpNJy1XhGOUWe5L8h
+	vVTkH4jIRi5gqq7EW5IJ+7K5nJspazyjsiQI1leh4NQZvr3JhDf4qkyDZshLa8ByDnH
+	7tHsJEdHzg==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=uku4taia5b5tsbglxyj6zym32efj7xqv; d=amazonses.com; t=1725959137;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=e4E2QhibonUrb1as7MzSa4GR+pgL2He6HwaENBXi7to=;
+	b=BJYPBWuF8Cw+HNGvI2d33pqsPo7cTFTfIb7Q74Ywmhy4h19IeWWantrd/4LlKuGx
+	JYVXmrw4cYsQuQWcXJpxSaeA4ivgLmgoyE0xfMu3nau0I3BC6+as5hP4IfvYVBQ069O
+	k+YWbQX9ggfKZxsWkoguYpGAo8iVe1Ul75CtAKQs=
+Message-ID: <01020191db2e68dd-f46a7a3b-61d3-4f99-a449-5c9b86d667cb-000000@eu-west-1.amazonses.com>
+Date: Tue, 10 Sep 2024 09:05:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YrGAIVQG7ZZPzhC9"
-Content-Disposition: inline
-In-Reply-To: <20240906205656.8261-1-abdul.rahim@myyahoo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] PCI: mediatek-gen3: Support limiting link speed and
+ width
+To: linux-pci@vger.kernel.org
+Cc: ryder.lee@mediatek.com, jianjun.wang@mediatek.com, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+	matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kernel@collabora.com
+References: <20240806094816.92137-1-angelogioacchino.delregno@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240806094816.92137-1-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Feedback-ID: ::1.eu-west-1.YpP9ZbxnARFfy3Cb5pfsLd/pdsXBCNK0KEM7HforL4k=:AmazonSES
+X-SES-Outgoing: 2024.09.10-54.240.7.32
 
+Il 06/08/24 11:48, AngeloGioacchino Del Regno ha scritto:
+> This series adds support for limiting the PCI-Express link speed
+> (or PCIe gen restriction) and link width (number of lanes) in the
+> pcie-mediatek-gen3 driver.
+> 
+> The maximum supported pcie gen is read from the controller itself,
+> so defining a max gen through platform data for each SoC is avoided.
+> 
+> Both are done by adding support for the standard devicetree properties
+> `max-link-speed` and `num-lanes`.
+> 
+> Please note that changing the bindings is not required, as those do
+> already allow specifying those properties for this controller.
+> 
+> AngeloGioacchino Del Regno (2):
+>    PCI: mediatek-gen3: Add support for setting max-link-speed limit
+>    PCI: mediatek-gen3: Add support for restricting link width
+> 
+>   drivers/pci/controller/pcie-mediatek-gen3.c | 76 ++++++++++++++++++++-
+>   1 file changed, 74 insertions(+), 2 deletions(-)
+> 
 
---YrGAIVQG7ZZPzhC9
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Gentle ping for this series.
 
-On Sat, Sep 07, 2024 at 02:26:56AM +0530, Abdul Rahim wrote:
->  When done using the device, and perhaps the module needs to be unloaded,
-> -the driver needs to take the follow steps:
-> +the driver needs to take the following steps:
-> =20
-
-Looks good, thanks!
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---YrGAIVQG7ZZPzhC9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZt+kyQAKCRD2uYlJVVFO
-o3C8AQDgUYrjQ61jhoK/drpH/yfBgUI5Cuc6Ukj21TaX1f0BGgD/Xh+09Y9U4PMr
-IhQRPk0Nbg0Tm9ZUSBuf87QFiy4sOwU=
-=ybWZ
------END PGP SIGNATURE-----
-
---YrGAIVQG7ZZPzhC9--
+Thanks,
+Angelo.
 
