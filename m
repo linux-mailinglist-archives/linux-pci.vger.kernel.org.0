@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-13005-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13006-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61F3A973E05
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 19:04:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D92B7973E06
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 19:05:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B7D94B26F78
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:03:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0898E1C2420B
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:05:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D801A2C01;
-	Tue, 10 Sep 2024 17:03:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E0BA19ABC6;
+	Tue, 10 Sep 2024 17:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="G9oUsv2E"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ULxOLIAd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5F8198842
-	for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 17:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4BE1922E3
+	for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 17:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725987820; cv=none; b=lI0Qug1y0LkvK6gtLqKASN1xX0zdM4n4TXEcxiXN9EhOUhMFnTjO/wfvqx6Y7nT4lYD6/bkscgQPNqvVK1JYjgywpfl4afEXmXP3MaQKrnhSrESpy+JY0rulpeMPsquWUa7gw1RIGuS6XSNf0l+PjRbxIjPkDesrq36jeXU0Fac=
+	t=1725987895; cv=none; b=c2WZZgWBT22G24ZhCh7EN44tTfMOZttALjFA4LzqAblQnfTjblQe2FfPvtJOohEWzmHfOul8z/F0/J/5arVQaR3bznzbZgub8/VlxKFDYGJiVaVBuNTMzkU3CNn9DzkWnYmdLwWcXueQzPK+dQx8TxSkPytga+w8mSpjYheWLDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725987820; c=relaxed/simple;
-	bh=WC+O13q6L3HoBM9kN8mi4TUPXvKfvpZ4WBMo1Hjk1a4=;
+	s=arc-20240116; t=1725987895; c=relaxed/simple;
+	bh=LW8FEX9mkCpB1RVUvuseZXdPeOEksUAqYyTZgqApHnI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ur4Wex7TvOB35zgFpMo18dqjgy57AAtRNZn6kWYgjd+daqZVCZqPKjvGTGvDSak4xkZXNSMjccSCSmnVXl38Ebl/SgZ2FA70TlOLYShiU9o3XB/x6HW5OrrWnae1ZWeTF5sCO3Ho5CT7tsc9/ifmE2nH8PE4zxTjVL+1oLU17ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=G9oUsv2E; arc=none smtp.client-ip=209.85.222.170
+	 In-Reply-To:Content-Type; b=VNWhlYkSlMTIpz0r2hjbmq3nZmDOLysCrRPVXrk4O9CPF4yXawTq5EhMEUY5YcDAVql+ujnKls96LFicgdKdojLOL5+K699Wudn1nKMfy4YJlYFzaEA+5Lnyet5384cP3ZwxvL0Ar67fAteQhaIx+klnn80EotUD5Mdsc8GmgZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ULxOLIAd; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7a99fd4ea26so86990385a.1
-        for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 10:03:37 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7a9a23fc16fso100109185a.2
+        for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 10:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1725987817; x=1726592617; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1725987892; x=1726592692; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=PGNxP+QyH3G5Fni35YB5TFeeZk4HpbFOyiLTZt4pldI=;
-        b=G9oUsv2EsycPh97h6NX3oKjiz6wfRLZKqIajRXiFHBq8SMkSmSOBioRxPt6ZgeVRRJ
-         iWnleVkAY76Sz4UQN6/+tnqoAuhaoep3c1UjZNuvw50KrpRnXM3de0LTiwYyNEEDe2kT
-         Z9FWNaLKVte0pLF+SgFXqDkPDAQH9sRmuEVMo=
+        bh=+VV4INpQE5dil1UicDv8WEVlgmBThvwhZa9jQ/i9V3A=;
+        b=ULxOLIAd0WTp6qE6tUXl6bA4oBQlXSk4RiUuDlTWhFFT0sr/+iOjigOow+BVZaENTh
+         lucjeDeexI2Tfs+MJVHxgfI8HjTAHompUMdNErbMCmjHyBbqXWw9bpfrdKAmaZk6iHKH
+         JPqje7PIpbwaY0MyRWadDrJItkXB8FtIVJSRg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725987817; x=1726592617;
+        d=1e100.net; s=20230601; t=1725987892; x=1726592692;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PGNxP+QyH3G5Fni35YB5TFeeZk4HpbFOyiLTZt4pldI=;
-        b=ueZt2enYKkBMTnNRS8cy2xjomfWlWVbIodBJOOfSsT+GXXgcnGyGcNDAt5pNw2lTbT
-         dKzrEKUp15KoOEWcKlmOyRQti18CdgnalA3GW6Mlp3T442BzjrDbi0ngGtPTmzOomzOK
-         wdoIjIA5xxc8zf18UhPX5E9axaTyumCjPgvAkRe0lDJcBjzxWOg17y6tfYS99jRgtJi2
-         dbUYepXFCEuTOK1CBLCzHRa+TWVfe7+lNJgtlIeuzz75OL8GnoCUc3B4OZ2KZZXBzCtK
-         3RMerEi6LamXeRtnlxiYCUb7Zj9Gc76F/B2ynpGDxfcP1uaHqi6/4hhTVtPJXR5Hw9pw
-         xkAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIYmK1QLUaqm8YGltCnViV6iHGsu5TzJq1KyEo2sfElrsa/etvRRSHfzoOVklXtHxr2ZHLTbqzYP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynnifTO5e5mMebwe6sdiqoQhcXLdPwjWb5Dw8k6sx35C/eO1O0
-	d4Q+JdRH8gqHqfMXgrNel9pcsV/kx60T+Ua9pgNVgJiLaMrvY4A8jP5wpwDDpw==
-X-Google-Smtp-Source: AGHT+IHDDOkUyLXsJJUAQbDqviqAlXaHMusWg1ObwAqoknADMqtSvYgyhkhUvTsxQMCrLxHwNKUcbw==
-X-Received: by 2002:a05:6214:5c44:b0:6c5:517a:56d1 with SMTP id 6a1803df08f44-6c55f9f4931mr924796d6.12.1725987816498;
-        Tue, 10 Sep 2024 10:03:36 -0700 (PDT)
+        bh=+VV4INpQE5dil1UicDv8WEVlgmBThvwhZa9jQ/i9V3A=;
+        b=begX+zPbsaedhAzqCzSGk3q2x1fxsJOs3y/5LK9/twIopN406piDCzXXdOMHh1P0is
+         oOG0N7uxchILDoO4cBwlQBF6dquk1iHyKoR5Vk3llF8DOcSnRNfHwAL8okVmGH7aQpkh
+         0D/HjNafiTc+WMISyCCWZGfqS+H88YJwJ0qjuIUicZBOQYMWOD9DF4l+JHV0ga8c/qMB
+         iOpcqQ9pv+ivnh/Bm9i2BVmAZqILY/akeqp+LE47+LoZXfA23JqoVCGxt1Rg1ddDmGB7
+         ddEhmMcAT/t1c9BByanGS5PcJk6o/AxndZ0Pig4T7d5bLV8Iyij/+oR1FUvfuTUUd+Q0
+         G5ag==
+X-Forwarded-Encrypted: i=1; AJvYcCXIosnHab7de4GJ3K2f+aMUwVJ80RMTl5h5KK+X4iZPLSlAVv7cyQoD2KvOFadBLoUHtosCBJLLSMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnWqZB87bmNIHFuxDMcGL+mh+t1XIMQ3sh9so+ZjsMAcepqyux
+	7k7YdDv7Pv+66hAcUc7Fs90T/SNIs/GcAPoEbNNyh30vdNGIftCZpNm31rJhGA==
+X-Google-Smtp-Source: AGHT+IEGESbHlEgOq14msNVhQByCIEg2VpukIkmwt0wZ4JkLOSYM2I4SAcQcWdRV2CPiiiYw+cergg==
+X-Received: by 2002:a05:620a:2a02:b0:7a9:aca7:e270 with SMTP id af79cd13be357-7a9d3a433c4mr34612985a.22.1725987892372;
+        Tue, 10 Sep 2024 10:04:52 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c534348d6bsm31813256d6.73.2024.09.10.10.03.33
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a9a796d1d7sm321527585a.52.2024.09.10.10.04.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2024 10:03:35 -0700 (PDT)
-Message-ID: <b41afb62-8a89-4c9d-8462-f4c5574eac7a@broadcom.com>
-Date: Tue, 10 Sep 2024 10:03:32 -0700
+        Tue, 10 Sep 2024 10:04:51 -0700 (PDT)
+Message-ID: <89ff93ce-edb5-48f0-9f56-4e033990966e@broadcom.com>
+Date: Tue, 10 Sep 2024 10:04:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,8 +74,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 -next 07/11] PCI: brcmstb: Avoid turn off of bridge
- reset
+Subject: Re: [PATCH v2 -next 09/11] PCI: brcmstb: Reuse config structure
 To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -90,7 +89,7 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
  Andrea della Porta <andrea.porta@suse.com>,
  Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
 References: <20240910151845.17308-1-svarbanov@suse.de>
- <20240910151845.17308-8-svarbanov@suse.de>
+ <20240910151845.17308-10-svarbanov@suse.de>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -125,39 +124,17 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240910151845.17308-8-svarbanov@suse.de>
+In-Reply-To: <20240910151845.17308-10-svarbanov@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 9/10/24 08:18, Stanimir Varbanov wrote:
-> On brcm_pcie_turn_off avoid shutdown of bridge reset.
+> Instead of copying fields from pcie_cfg_data structure to
+> brcm_pcie reference it directly.
 > 
 > Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> ---
->   drivers/pci/controller/pcie-brcmstb.c | 14 ++++++++++++--
->   1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index d78f33b33884..185ccf7fe86a 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -234,10 +234,17 @@ struct inbound_win {
->   	u64 cpu_addr;
->   };
->   
-> +/*
-> + * Shutting down this bridge on pcie1 means accesses to rescal block
-> + * will hang the chip if another RC wants to assert/deassert rescal.
-> + */
 
-Maybe a slightly more detailed comment saying that the RESCAL block is 
-tied to PCIe controller #1, regardless of the number of controllers, and 
-turning off PCIe controller #1 prevents access to the RESCAL register 
-blocks, therefore not other controller can access this register space, 
-and depending upon the bus fabric we may get a timeout (UBUS/GISB), or a 
-hang (AXI).
-
-Thanks!
+Reviewed-by: Florian Fainelil <florian.fainelli@broadcom.com>
 -- 
 Florian
 
