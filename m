@@ -1,50 +1,63 @@
-Return-Path: <linux-pci+bounces-13011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74424974171
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 19:59:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CD51974323
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 21:10:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D24A2847B1
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:59:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F8851C26494
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 19:10:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A8E1A3BCA;
-	Tue, 10 Sep 2024 17:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crV/1QrB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2318D1A76D2;
+	Tue, 10 Sep 2024 19:09:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC43A1A3BAF;
-	Tue, 10 Sep 2024 17:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905AB1A76CD;
+	Tue, 10 Sep 2024 19:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725991170; cv=none; b=n6ik3KHBMGRp1kzCmm9rdpfNa09ns34P1zEPEyy4BqvoxVV4OeVqWPRIYn6q+fMoc3UUcU0i1yCxf7OwGlyybDJmPlcz54BcKFbPkUldJdCSdxbw+/Bs2U4ygTdGjNqwlV/NUhysj+X6edW+ALp7ZKE6CanNad89+ErwLvp4bJc=
+	t=1725995345; cv=none; b=Ez8elz/zYZIGTqX2DnTLmmOZP5FRPMMSu6Anf6HTB0F4y6TaJZGib2vUYJn/UM767orvvo7N5tWaYDqEBEgH+RsgsUJnZ+SNrIodWdbEee5aUXQEB+kdOn4giX60f+if6uQKQIaxN96K+woph6DkjuF0eQN/kgO/MRlvpblJrEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725991170; c=relaxed/simple;
-	bh=2CwoTyoBU8Cyahl9bkaERJ3bw5QE6HHOa8rGrLy7A94=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dXPUrkTs20pg7+ZLnqQFr/12WDS1rVuaV6P0uKNCHwaMe/JT8hJTU3Fm/Y2is7iXXWEPqxb7PSmLAGioOcEKlyEs136QRT7/wPYNK79qtrJKk8Iz6AseO3UyPQvzcwUOY3yCW20dde0FqdLlwFnOxn7NWQmBlDIWZWOEdyU6Zug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crV/1QrB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3145BC4CEC3;
-	Tue, 10 Sep 2024 17:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725991169;
-	bh=2CwoTyoBU8Cyahl9bkaERJ3bw5QE6HHOa8rGrLy7A94=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=crV/1QrB7exGQ5wTtH1y64D2zlSbwamqVTrSRLEU7DIQrE4XstcdwB1W9JqUbfMA0
-	 3b3fmD12ZzOPGrUAIe90jORTfy45zHGEWWBUaPcClTnunsT0HIc2GDgicjOLG79To8
-	 d3j799fXRizJM2pgXqqXgAZztb9kAHr8/o30FNmgtNSqaBtA4d9jDQujLQEiuAtkcm
-	 OSkahkr1HccOOrH9LMXl1xIgxeW5U+2P0MxX98od0cUvfILqtkvlrbI7Aux70+T1DW
-	 on9bBcuPN4FLc45FWAd2tVxqCG5ejqUEQtrbm1GzAKOiiAD1dAPYmE41gsvt1R+bXe
-	 N9O5v+NbEWWrg==
-Date: Tue, 10 Sep 2024 12:59:27 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	s=arc-20240116; t=1725995345; c=relaxed/simple;
+	bh=W8wTMnQuqBGPgvSwNT0DrlwXeeQbppq+ym/XG4dBfDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1rebYBqH2hbxHGU3s0tTXZQll7knl+AWdnz0iHl4KDD3UF6qvVNlv0/vETZjYGa9fO+/VDo+DDsOZnzskSLoMlpH+UnFN3fRXx2v+E3uUj+i+RmbGvgKi2UtnuGn/TKL9a1nS1TZcI2ui7Ey7jgOAun4LWAzzOSBhbRDjmLQB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-717911ef035so4597073b3a.3;
+        Tue, 10 Sep 2024 12:09:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725995343; x=1726600143;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C0B13YwRmlaW1LgbTA4G5pfYntFaiIOALZ9EjPmoFa0=;
+        b=HWfzrmI49wnDqD682abrJFC0EwHIbS9we7kkQqNqGOVaLsdkaEopWt60GgjFLZtKrc
+         sJYcFyo4fCV3wz4NzxHPq+8NeG2A6RorQGA8NNJTBrYenHGJodPmvm9ZsPyxUYlgJOSc
+         /wQFZvhhFoBC7gAOfV7QW2Iw79ozce6AvS/5+9uMLkjdkkOHc6hxXH6uAa6SH4IV0IsO
+         PqpoRwM2a4po9DUqk27VIq+F+wWLgcwdSehWV6NIYn1S3JbK9wgrquzyznzqh//g2vGD
+         x/rxrFC7fNRkScqau1lvYNtgttlYDWBoYfzfDJvvdJA+2VF2CaE51jLv8EwIYON32dP3
+         EvFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFgB6X30/cBbQbg02pA5C+S9Ps+V5JyFg3/1BdNC4lN4QTMNmWnzBGRi1gkHZ0yA4m1ZuzshXbGHiw/gM=@vger.kernel.org, AJvYcCXeVazDq+1LFMRYoMqdfte/wavzIljdmwCm9A8vDDflQ4xozoUjijvkcv0o/UZKdjb0osL1nmCbFCFg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9B33K/3eHLuJYnJO7tWJrMGr0vaCTEYiO1hd11mqypLGMoYim
+	ow6nwHv0KqkKH0h3+SsUlp9EW0NMAXt9lbgXYXIMqZ9QOa7seT2U
+X-Google-Smtp-Source: AGHT+IF6UIsMNPzFHnX46S5WXa+yxR5K0nzIys4ygvC5KZV8gpp1njil3a8k5+ugHRobMNspiaFXhA==
+X-Received: by 2002:a05:6a00:189a:b0:710:6f54:bcac with SMTP id d2e1a72fcca58-718d5decd4fmr16303738b3a.1.1725995342688;
+        Tue, 10 Sep 2024 12:09:02 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d823cf3e5dsm5983903a12.35.2024.09.10.12.09.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 12:09:01 -0700 (PDT)
+Date: Wed, 11 Sep 2024 04:08:59 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 	Cyril Brulebois <kibi@debian.org>,
@@ -54,106 +67,53 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v6 05/13] PCI: brcmstb: Use bridge reset if available
-Message-ID: <20240910175927.GA590299@bhelgaas>
+Message-ID: <20240910190859.GA2136712@rocinante>
+References: <CA+-6iNxfmeBhHK57pUGtJEbBCuhEi8TQCVFPxPbAutkpJVwksA@mail.gmail.com>
+ <20240910175927.GA590299@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNxfmeBhHK57pUGtJEbBCuhEi8TQCVFPxPbAutkpJVwksA@mail.gmail.com>
+In-Reply-To: <20240910175927.GA590299@bhelgaas>
 
-On Tue, Sep 10, 2024 at 01:30:41PM -0400, Jim Quinlan wrote:
-> On Tue, Sep 3, 2024 at 10:26 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> > On Mon, Sep 2, 2024 at 3:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Aug 15, 2024 at 06:57:18PM -0400, Jim Quinlan wrote:
-> > > > The 7712 SOC has a bridge reset which can be described in the device tree.
-> > > > Use it if present.  Otherwise, continue to use the legacy method to reset
-> > > > the bridge.
-> > >
-> > > >  static void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
-> > > >  {
-> > > > -     u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
-> > > > -     u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
-> > > > +     if (val)
-> > > > +             reset_control_assert(pcie->bridge_reset);
-> > > > +     else
-> > > > +             reset_control_deassert(pcie->bridge_reset);
-> > > >
-> > > > -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > > -     tmp = (tmp & ~mask) | ((val << shift) & mask);
-> > > > -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > > +     if (!pcie->bridge_reset) {
-> > > > +             u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
-> > > > +             u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
-> > > > +
-> > > > +             tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > > +             tmp = (tmp & ~mask) | ((val << shift) & mask);
-> > > > +             writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > > > +     }
-> > >
-> > > This pattern looks goofy:
-> > >
-> > >   reset_control_assert(pcie->bridge_reset);
-> > >   if (!pcie->bridge_reset) {
-> > >     ...
-> > >
-> > > If we're going to test pcie->bridge_reset at all, it should be first
-> > > so it's obvious what's going on and the reader doesn't have to go
-> > > verify that reset_control_assert() ignores and returns success for a
-> > > NULL pointer:
-> > >
-> > >   if (pcie->bridge_reset) {
-> > >     if (val)
-> > >       reset_control_assert(pcie->bridge_reset);
-> > >     else
-> > >       reset_control_deassert(pcie->bridge_reset);
-> > >
-> > >     return;
-> > >   }
-> > >
-> > >   u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
-> > >   ...
-> > >
-> > Will do.
+Hello,
+
+[...]
+> > > Will do.
+> > 
+> > It is not clear to me if you want a new series -- which would be V7 --
+> > or you are okay with the current series V6.  If the latter, someone
+> > sent in a fixup commit which must be included.
+> > Please advise.
+
+Apologies for the confusion.  I though it was obvious that I will go ahead
+and fix the code on the branch directly.
+
+> Krzysztof amended this on the branch.  Take a look here and verify
+> that it makes sense to you:
 > 
-> Hi Bjorn,
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/drivers/pci/controller/pcie-brcmstb.c?h=controller/brcmstb#n752
 > 
-> It is not clear to me if you want a new series -- which would be V7 --
-> or you are okay with the current series V6.  If the latter, someone
-> sent in a fixup commit which must be included.
-> Please advise.
+> If that looks right to you, no need to post a new v7.
+> 
+> I think Krzysztof also integrated an "int num_inbound_wins" fix; is
+> that the one you mean?  If I'm thinking of the right one, you can
+> check that at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/drivers/pci/controller/pcie-brcmstb.c?h=controller/brcmstb#n1034
 
-Krzysztof amended this on the branch.  Take a look here and verify
-that it makes sense to you:
+Let me know if anything else needs doing.  But, if anything, then we need
+to be quick about it.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/drivers/pci/controller/pcie-brcmstb.c?h=controller/brcmstb#n752
-
-If that looks right to you, no need to post a new v7.
-
-I think Krzysztof also integrated an "int num_inbound_wins" fix; is
-that the one you mean?  If I'm thinking of the right one, you can
-check that at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/drivers/pci/controller/pcie-brcmstb.c?h=controller/brcmstb#n1034
-
-> > > Krzysztof, can you amend this on the branch?
-> > >
-> > > It will also make the eventual return checking and error message
-> > > simpler because we won't have to initialize "ret" first, and we can
-> > > "return 0" directly for the legacy case.
-> > >
-> > > Bjorn
-
-
+	Krzysztof
 
