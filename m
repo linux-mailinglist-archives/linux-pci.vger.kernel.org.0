@@ -1,31 +1,31 @@
-Return-Path: <linux-pci+bounces-12991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12992-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15224973B7A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:21:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 198E5973B7C
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:21:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCCF2283E88
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 15:21:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CE9D1C21909
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 15:21:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D7A51A2C01;
-	Tue, 10 Sep 2024 15:19:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9A71A38C2;
+	Tue, 10 Sep 2024 15:19:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC5F1A2561;
-	Tue, 10 Sep 2024 15:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAA6199951;
+	Tue, 10 Sep 2024 15:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725981559; cv=none; b=VSCI6ZIZjc31sBk2EV3b+cyeGREUxDqluwu5cG5XdCC2DzVJh0eiyr3tkJrNwnf+t4ohJ3vIUrYO6JVNnyqPbCZOKNSKDNLZyILZga+9+VzmAMjD8veGOFPRZntHbqnmubSp9WwJmWYyeK/NkXLznR6zyT0X+HTIvn5EtArZ8M4=
+	t=1725981561; cv=none; b=S/g/fsPWfiGsv7+wpnCZQcpvyQhxqh0DTOa/H/x5fqP63Tm0SFV/dxcy7RjijG4kI3azp+hdLk0oicslrmGG4MTyInccQy2qFDd8xS8fWE2N1FIyPxgkV/qni4JBATnl+0mW9ucvLT6lAT+qECfwbpOpKH3Gemfyih8t8RFdcHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725981559; c=relaxed/simple;
-	bh=RFLTpjvcxXgnO8pZbTh/A1eN3/OXULWZdi5csBclRyc=;
+	s=arc-20240116; t=1725981561; c=relaxed/simple;
+	bh=qNw5hhZp86YahUMr2kRxaWpZdi2NyyQBReS8Lc9cMCI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P/aYptsPWVxS+b0UIZITVNc6MuixAz81woceoncm2QqH51Is6DBvrkQ+a+SPfAtbGpNvBR8n2Sl7ONThPpLeq4RSCcu95sMFKLcfr1ddcPskMwAYiFDq3/rxZdV2YM0HO2ali40HfEKZGRoGOHMsxlAZa28ZtgPwSq/Vd5LtNZk=
+	 MIME-Version; b=A/VRL7cmzAVUo+i1vFvPHjvk81D8FFUEegHBjoVfK+fcW2XZQ31J474P1vYjHOwnuabYmCl8ap6R29M6U0vWHhoUSpbkSDDDpaVYXKU36BAa9rOczWML5A1R6BqwSDo+mRGhrPCY5oNcdCycCYkuBPw9Lc9AscZS4rfwHM1pKJ8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
@@ -33,20 +33,20 @@ Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 80DA91F821;
-	Tue, 10 Sep 2024 15:19:16 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A47221FCE8;
+	Tue, 10 Sep 2024 15:19:17 +0000 (UTC)
 Authentication-Results: smtp-out2.suse.de;
 	none
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6F85F13A3A;
-	Tue, 10 Sep 2024 15:19:15 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9080513A3A;
+	Tue, 10 Sep 2024 15:19:16 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kPXPGHNj4GaxQgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Tue, 10 Sep 2024 15:19:15 +0000
+	id iLLbIHRj4GaxQgAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Tue, 10 Sep 2024 15:19:16 +0000
 From: Stanimir Varbanov <svarbanov@suse.de>
 To: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Phil Elwell <phil@raspberrypi.com>,
 	Jonathan Bell <jonathan@raspberrypi.com>,
 	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH v2 -next 06/11] PCI: brcmstb: Enable external MSI-X if available
-Date: Tue, 10 Sep 2024 18:18:40 +0300
-Message-ID: <20240910151845.17308-7-svarbanov@suse.de>
+Subject: [PATCH v2 -next 07/11] PCI: brcmstb: Avoid turn off of bridge reset
+Date: Tue, 10 Sep 2024 18:18:41 +0300
+Message-ID: <20240910151845.17308-8-svarbanov@suse.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240910151845.17308-1-svarbanov@suse.de>
 References: <20240910151845.17308-1-svarbanov@suse.de>
@@ -85,109 +85,76 @@ Content-Transfer-Encoding: 8bit
 X-Rspamd-Pre-Result: action=no action;
 	module=replies;
 	Message is reply to one we originated
-X-Spam-Level: 
 X-Spamd-Result: default: False [-4.00 / 50.00];
 	REPLY(-4.00)[];
 	TAGGED_RCPT(0.00)[dt]
-X-Spam-Score: -4.00
 X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 80DA91F821
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: A47221FCE8
 X-Rspamd-Pre-Result: action=no action;
 	module=replies;
 	Message is reply to one we originated
 X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
 
-On RPi5 there is an external MIP MSI-X interrupt controller
-which can handle up to 64 interrupts.
+On brcm_pcie_turn_off avoid shutdown of bridge reset.
 
 Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 63 +++++++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index f2a7a8e93a74..d78f33b33884 100644
+index d78f33b33884..185ccf7fe86a 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1333,6 +1333,52 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
- 	return 0;
+@@ -234,10 +234,17 @@ struct inbound_win {
+ 	u64 cpu_addr;
+ };
+ 
++/*
++ * Shutting down this bridge on pcie1 means accesses to rescal block
++ * will hang the chip if another RC wants to assert/deassert rescal.
++ */
++#define CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN		BIT(0)
++
+ struct pcie_cfg_data {
+ 	const int *offsets;
+ 	const enum pcie_soc_base soc_base;
+ 	const bool has_phy;
++	const u32 quirks;
+ 	u8 num_inbound_wins;
+ 	int (*perst_set)(struct brcm_pcie *pcie, u32 val);
+ 	int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+@@ -290,6 +297,7 @@ struct brcm_pcie {
+ 	struct subdev_regulators *sr;
+ 	bool			ep_wakeup_capable;
+ 	bool			has_phy;
++	u32			quirks;
+ 	u8			num_inbound_wins;
+ };
+ 
+@@ -1549,8 +1557,9 @@ static int brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	u32p_replace_bits(&tmp, 1, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
+ 	writel(tmp, base + HARD_DEBUG(pcie));
+ 
+-	/* Shutdown PCIe bridge */
+-	ret = pcie->bridge_sw_init_set(pcie, 1);
++	if (!(pcie->quirks & CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN))
++		/* Shutdown PCIe bridge */
++		ret = pcie->bridge_sw_init_set(pcie, 1);
+ 
+ 	return ret;
  }
+@@ -1864,6 +1873,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	pcie->perst_set = data->perst_set;
+ 	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
+ 	pcie->has_phy = data->has_phy;
++	pcie->quirks = data->quirks;
+ 	pcie->num_inbound_wins = data->num_inbound_wins;
  
-+static int brcm_pcie_enable_external_msix(struct brcm_pcie *pcie,
-+					  struct device_node *msi_np)
-+{
-+	struct inbound_win inbound_wins[PCIE_BRCM_MAX_INBOUND_WINS];
-+	u64 msi_pci_addr, msi_phys_addr;
-+	struct resource r;
-+	int mip_bar, ret;
-+	u32 val, reg;
-+
-+	ret = of_property_read_reg(msi_np, 1, &msi_pci_addr, NULL);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_address_to_resource(msi_np, 0, &r);
-+	if (ret)
-+		return ret;
-+
-+	msi_phys_addr = r.start;
-+
-+	/* Find free inbound window for MIP access */
-+	mip_bar = brcm_pcie_get_inbound_wins(pcie, inbound_wins);
-+	if (mip_bar < 0)
-+		return mip_bar;
-+
-+	mip_bar += 1;
-+	reg = brcm_bar_reg_offset(mip_bar);
-+
-+	val = lower_32_bits(msi_pci_addr);
-+	val |= brcm_pcie_encode_ibar_size(SZ_4K);
-+	writel(val, pcie->base + reg);
-+
-+	val = upper_32_bits(msi_pci_addr);
-+	writel(val, pcie->base + reg + 4);
-+
-+	reg = brcm_ubus_reg_offset(mip_bar);
-+
-+	val = lower_32_bits(msi_phys_addr);
-+	val |= PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK;
-+	writel(val, pcie->base + reg);
-+
-+	val = upper_32_bits(msi_phys_addr);
-+	writel(val, pcie->base + reg + 4);
-+
-+	return 0;
-+}
-+
- static const char * const supplies[] = {
- 	"vpcie3v3",
- 	"vpcie3v3aux",
-@@ -1898,11 +1944,20 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		goto fail;
- 	}
- 
--	msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
--	if (pci_msi_enabled() && msi_np == pcie->np) {
--		ret = brcm_pcie_enable_msi(pcie);
-+	if (pci_msi_enabled()) {
-+		msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
-+		const char *str;
-+
-+		if (msi_np == pcie->np) {
-+			str = "internal MSI";
-+			ret = brcm_pcie_enable_msi(pcie);
-+		} else {
-+			str = "external MSI-X";
-+			ret = brcm_pcie_enable_external_msix(pcie, msi_np);
-+		}
-+
- 		if (ret) {
--			dev_err(pcie->dev, "probe of internal MSI failed");
-+			dev_err(pcie->dev, "enable of %s failed\n", str);
- 			goto fail;
- 		}
- 	}
+ 	pcie->base = devm_platform_ioremap_resource(pdev, 0);
 -- 
 2.35.3
 
