@@ -1,282 +1,199 @@
-Return-Path: <linux-pci+bounces-12984-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12985-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E183973B32
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:13:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33636973B65
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:19:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 058E3284D97
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 15:13:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 581B21C24EDC
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 15:19:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170E5196D9D;
-	Tue, 10 Sep 2024 15:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A328195980;
+	Tue, 10 Sep 2024 15:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RUuZQAgK"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K2LaU84u";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mWrUL8Gw";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K2LaU84u";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mWrUL8Gw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ABA194132
-	for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 15:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B415E199FDD;
+	Tue, 10 Sep 2024 15:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725981229; cv=none; b=qMqQo/0TvvDZJn3L5TKvgqSGwgwbCCBrKtJAOuG4tnOxEoSi+4hq7ycEwFK0FeqhEXV+4JbS215JM/FuqbZwo9krhWZADV6jXLoE3JdjuTNvK8+tFaQkaYIRKpTlLnkE2v04I2RBpiGkU/wuA7XXo5u0YOWGELalE9/xSq0ASNI=
+	t=1725981553; cv=none; b=Y/UC8zanJG095AF2+G/0Jeuv1OSOFZt1fA1cDE40qeMR0VWVANO+7tpGPdTbiCe+6MyRr0efg2S3WTUkeO+WHhiLxhEoSGqawHZ9tFX1AtXTUVR32Zhw/OXqu3VMEVdKMSYez9Yjl/ElF9YBoWtF1CFAPDNUnXogi2LRekeJ/ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725981229; c=relaxed/simple;
-	bh=12LnXQ/myw+9B4lr1aQ8axVEZcvVgt48uR2OJzPOSzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Dzr2k1PMAOLgBxg8JsLcNhZqkBA0NH5z08MwQTUSYuekMB4S+FUBJ9uf+8wjP4jjhneJIY5uYaF9PGU5sPW6bKnpQyILX2SYx/xoKrw8QcE9MC7ttZ0OKSZkLHgPUGCGVYJAMEaYj6raWFkVY2LI00pq5IJckmXyCd23o+2Yql0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RUuZQAgK; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725981228; x=1757517228;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=12LnXQ/myw+9B4lr1aQ8axVEZcvVgt48uR2OJzPOSzU=;
-  b=RUuZQAgKFQaggk2MFPNJM+Z2OUgUK0eg7H33V8d4pDqG+1dt+Hqu+fYz
-   7RW6TrRVI6fVYgayerAz7CftK7bPPZQ2E+u3kfaTj8pSxtvRkJr1RuEPc
-   SbAPLAn8Df7afLxksI1oe37mh3QP3HyLkd06lA7noFdlrIiuQiIRmmWSs
-   QID6NtzSNrbVvsN3SyV3sPrZu8oW4re87IvmC7iKcs0rHtd1n+ChNY4DE
-   FpCxLkwX2wEQfzzIA8RV8d8ekVifiRxle14cOjdDALzAyD2jXNKcsM17o
-   pl39EAn+n8wYscW1vkmVGkU6JpR2W9IAvPWCBxsvqjZpNLj4dWExonxw6
-   A==;
-X-CSE-ConnectionGUID: ceyhJmJ6RomIqEBshlrKOQ==
-X-CSE-MsgGUID: Ci8VxOqGSoyksiVGLszEng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11191"; a="24877348"
-X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
-   d="scan'208";a="24877348"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 08:13:47 -0700
-X-CSE-ConnectionGUID: PVaQ1va7SDCq+evz9SBBCw==
-X-CSE-MsgGUID: 8eaahZssTom5EYrwXkkX5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
-   d="scan'208";a="67356905"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 10 Sep 2024 08:13:46 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1so2Yp-0002FH-26;
-	Tue, 10 Sep 2024 15:13:43 +0000
-Date: Tue, 10 Sep 2024 23:12:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/imx6] BUILD SUCCESS
- d5e424d21af147985a2afb5eb423e52665e104ae
-Message-ID: <202409102346.54Ya8yl0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1725981553; c=relaxed/simple;
+	bh=E/lw+a9kSP7yktF8C21tBDc7gdoZhpLYXziDfOrPvYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WPggyx1Cytfn6M4+8cU0ukF6vQpoKZzq8hI/zTaem3agL8qkFvGiZFwldDnay9I2fFp+Z5G/sd0Q/2l9lq7RsG+x8QYzwsvPbtBaW2P3H7SmGMlMh10QRXzYsOWGqAZ3LIRkYivYc8uLzJpTGsr2aryOj0mG7WnUeioJYAhaXDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K2LaU84u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mWrUL8Gw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K2LaU84u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mWrUL8Gw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AFA2921A5D;
+	Tue, 10 Sep 2024 15:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725981549; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=KpOWZ4SVS+1k1ckgM9I/FM7qrwGXuDWWDPkuX5kqTn0=;
+	b=K2LaU84uSG5PdA0H2MRL9PjPjjQ+3Fn97aW1MOmUxSkoVhrYpGxGOdiGxgTSoz/Ef+Gyac
+	eSQg3s+Oc/yk/JRnfJlSFoWLyzVy+sB+CrtMor6cqD4S+Kf0jchrSNffIzPnqVgkLzZkQF
+	Jb4Jgc4Sz35dOlZfXvMp9NfFRY74qgI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725981549;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=KpOWZ4SVS+1k1ckgM9I/FM7qrwGXuDWWDPkuX5kqTn0=;
+	b=mWrUL8GwiF7gxSSGyHUAg4Lnn5iMA6APFaBYPR3urg4W8qbqypQaHM9XlWBVn55h7x2gSU
+	6o523biriDw9lUDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1725981549; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=KpOWZ4SVS+1k1ckgM9I/FM7qrwGXuDWWDPkuX5kqTn0=;
+	b=K2LaU84uSG5PdA0H2MRL9PjPjjQ+3Fn97aW1MOmUxSkoVhrYpGxGOdiGxgTSoz/Ef+Gyac
+	eSQg3s+Oc/yk/JRnfJlSFoWLyzVy+sB+CrtMor6cqD4S+Kf0jchrSNffIzPnqVgkLzZkQF
+	Jb4Jgc4Sz35dOlZfXvMp9NfFRY74qgI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1725981549;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=KpOWZ4SVS+1k1ckgM9I/FM7qrwGXuDWWDPkuX5kqTn0=;
+	b=mWrUL8GwiF7gxSSGyHUAg4Lnn5iMA6APFaBYPR3urg4W8qbqypQaHM9XlWBVn55h7x2gSU
+	6o523biriDw9lUDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3928813A3A;
+	Tue, 10 Sep 2024 15:19:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kxNCC2xj4GaxQgAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Tue, 10 Sep 2024 15:19:08 +0000
+From: Stanimir Varbanov <svarbanov@suse.de>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	kw@linux.com,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Stanimir Varbanov <svarbanov@suse.de>
+Subject: [PATCH v2 -next 00/11] Add PCIe support for bcm2712
+Date: Tue, 10 Sep 2024 18:18:34 +0300
+Message-ID: <20240910151845.17308-1-svarbanov@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dt];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Score: -1.30
+X-Spam-Flag: NO
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/imx6
-branch HEAD: d5e424d21af147985a2afb5eb423e52665e104ae  PCI: imx6: Add i.MX8Q PCIe Root Complex (RC) support
+Hello,
 
-elapsed time: 1457m
+Here is a v2 of adding PCIe support for bcm2712 (RPi5), the fisrt
+version can be found at [1].
 
-configs tested: 187
-configs skipped: 4
+v2 is based on linux-next plus latest changes in pcie-brcmstb driver
+[2]. The changes recently made by Jim leaded to a simplified patchset
+for bcm2712 enablement coparing with previous version of this series.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Noticeable changes are:
 
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                            allyesconfig   clang-20
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-14.1.0
-arc                               allnoconfig   gcc-14.1.0
-arc                                 defconfig   gcc-14.1.0
-arc                   randconfig-001-20240910   gcc-13.2.0
-arc                   randconfig-002-20240910   gcc-13.2.0
-arm                               allnoconfig   gcc-14.1.0
-arm                         at91_dt_defconfig   clang-20
-arm                                 defconfig   gcc-14.1.0
-arm                      integrator_defconfig   clang-20
-arm                      jornada720_defconfig   clang-20
-arm                   randconfig-001-20240910   gcc-13.2.0
-arm                   randconfig-002-20240910   gcc-13.2.0
-arm                   randconfig-003-20240910   gcc-13.2.0
-arm                   randconfig-004-20240910   gcc-13.2.0
-arm                           sama7_defconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-14.1.0
-arm64                 randconfig-001-20240910   gcc-13.2.0
-arm64                 randconfig-002-20240910   gcc-13.2.0
-arm64                 randconfig-003-20240910   gcc-13.2.0
-arm64                 randconfig-004-20240910   gcc-13.2.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-csky                  randconfig-001-20240910   gcc-13.2.0
-csky                  randconfig-002-20240910   gcc-13.2.0
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                          allyesconfig   clang-20
-hexagon                             defconfig   gcc-14.1.0
-hexagon               randconfig-001-20240910   gcc-13.2.0
-hexagon               randconfig-002-20240910   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-12
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-12
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-12
-i386         buildonly-randconfig-001-20240910   clang-18
-i386         buildonly-randconfig-001-20240910   gcc-12
-i386         buildonly-randconfig-002-20240910   clang-18
-i386         buildonly-randconfig-002-20240910   gcc-12
-i386         buildonly-randconfig-003-20240910   clang-18
-i386         buildonly-randconfig-003-20240910   gcc-12
-i386         buildonly-randconfig-004-20240910   clang-18
-i386         buildonly-randconfig-005-20240910   clang-18
-i386         buildonly-randconfig-006-20240910   clang-18
-i386         buildonly-randconfig-006-20240910   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240910   clang-18
-i386                  randconfig-001-20240910   gcc-12
-i386                  randconfig-002-20240910   clang-18
-i386                  randconfig-002-20240910   gcc-12
-i386                  randconfig-003-20240910   clang-18
-i386                  randconfig-003-20240910   gcc-12
-i386                  randconfig-004-20240910   clang-18
-i386                  randconfig-004-20240910   gcc-12
-i386                  randconfig-005-20240910   clang-18
-i386                  randconfig-005-20240910   gcc-12
-i386                  randconfig-006-20240910   clang-18
-i386                  randconfig-011-20240910   clang-18
-i386                  randconfig-011-20240910   gcc-12
-i386                  randconfig-012-20240910   clang-18
-i386                  randconfig-013-20240910   clang-18
-i386                  randconfig-014-20240910   clang-18
-i386                  randconfig-014-20240910   gcc-12
-i386                  randconfig-015-20240910   clang-18
-i386                  randconfig-015-20240910   gcc-12
-i386                  randconfig-016-20240910   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-loongarch             randconfig-001-20240910   gcc-13.2.0
-loongarch             randconfig-002-20240910   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                          amiga_defconfig   clang-20
-m68k                                defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                     loongson2k_defconfig   clang-20
-mips                      pic32mzda_defconfig   clang-20
-mips                       rbtx49xx_defconfig   clang-20
-mips                           xway_defconfig   clang-20
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-nios2                 randconfig-001-20240910   gcc-13.2.0
-nios2                 randconfig-002-20240910   gcc-13.2.0
-openrisc                          allnoconfig   clang-20
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-12
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   clang-20
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-12
-parisc                randconfig-001-20240910   gcc-13.2.0
-parisc                randconfig-002-20240910   gcc-13.2.0
-parisc64                            defconfig   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   clang-20
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                      bamboo_defconfig   clang-20
-powerpc                       eiger_defconfig   clang-20
-powerpc                  iss476-smp_defconfig   clang-20
-powerpc               randconfig-001-20240910   gcc-13.2.0
-powerpc               randconfig-002-20240910   gcc-13.2.0
-powerpc               randconfig-003-20240910   gcc-13.2.0
-powerpc64             randconfig-001-20240910   gcc-13.2.0
-powerpc64             randconfig-002-20240910   gcc-13.2.0
-powerpc64             randconfig-003-20240910   gcc-13.2.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-12
-riscv                 randconfig-001-20240910   gcc-13.2.0
-riscv                 randconfig-002-20240910   gcc-13.2.0
-s390                             allmodconfig   clang-20
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-s390                  randconfig-001-20240910   gcc-13.2.0
-s390                  randconfig-002-20240910   gcc-13.2.0
-s390                       zfcpdump_defconfig   clang-20
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                    randconfig-001-20240910   gcc-13.2.0
-sh                    randconfig-002-20240910   gcc-13.2.0
-sh                        sh7785lcr_defconfig   clang-20
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-sparc64               randconfig-001-20240910   gcc-13.2.0
-sparc64               randconfig-002-20240910   gcc-13.2.0
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-17
-um                                allnoconfig   clang-20
-um                               allyesconfig   clang-20
-um                               allyesconfig   gcc-12
-um                                  defconfig   gcc-12
-um                             i386_defconfig   gcc-12
-um                    randconfig-001-20240910   gcc-13.2.0
-um                    randconfig-002-20240910   gcc-13.2.0
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240910   gcc-12
-x86_64       buildonly-randconfig-002-20240910   gcc-12
-x86_64       buildonly-randconfig-003-20240910   gcc-12
-x86_64       buildonly-randconfig-004-20240910   gcc-12
-x86_64       buildonly-randconfig-005-20240910   gcc-12
-x86_64       buildonly-randconfig-006-20240910   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-11
-x86_64                randconfig-001-20240910   gcc-12
-x86_64                randconfig-002-20240910   gcc-12
-x86_64                randconfig-003-20240910   gcc-12
-x86_64                randconfig-004-20240910   gcc-12
-x86_64                randconfig-005-20240910   gcc-12
-x86_64                randconfig-006-20240910   gcc-12
-x86_64                randconfig-011-20240910   gcc-12
-x86_64                randconfig-012-20240910   gcc-12
-x86_64                randconfig-013-20240910   gcc-12
-x86_64                randconfig-014-20240910   gcc-12
-x86_64                randconfig-015-20240910   gcc-12
-x86_64                randconfig-016-20240910   gcc-12
-x86_64                randconfig-071-20240910   gcc-12
-x86_64                randconfig-072-20240910   gcc-12
-x86_64                randconfig-073-20240910   gcc-12
-x86_64                randconfig-074-20240910   gcc-12
-x86_64                randconfig-075-20240910   gcc-12
-x86_64                randconfig-076-20240910   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240910   gcc-13.2.0
-xtensa                randconfig-002-20240910   gcc-13.2.0
+ - Use of msi-range property in the MIP MSI-X controller and DT which
+ make possible to avoid few private DT properties. The other noticeable
+ change is moving of msi-pci-addr private property to a second 'reg'
+ region. I'll appreciate comments on this.
+
+ - Now the PCIe DT nodes are on separate axi{} simple-bus because adding
+ it on soc{} adds too much churn in the node (Florian).
+
+ - Added 'quirks' field in pcie_cfg_data to work around an issue (hw bug?)
+ with bridge_reset on bcm2712 SoC.
+
+regards,
+~Stan
+
+[1] https://patchwork.kernel.org/project/linux-pci/cover/20240626104544.14233-1-svarbanov@suse.de/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/brcmstb
+
+Stanimir Varbanov (11):
+  dt-bindings: interrupt-controller: Add bcm2712 MSI-X DT bindings
+  dt-bindings: PCI: brcmstb: Update bindings for PCIe on bcm2712
+  irqchip: mip: Add Broadcom bcm2712 MSI-X interrupt controller
+  PCI: brcmstb: Expand inbound size calculation helper
+  PCI: brcmstb: Restore CRS in RootCtl after prstn_n
+  PCI: brcmstb: Enable external MSI-X if available
+  PCI: brcmstb: Avoid turn off of bridge reset
+  PCI: brcmstb: Add bcm2712 support
+  PCI: brcmstb: Reuse config structure
+  arm64: dts: broadcom: bcm2712: Add PCIe DT nodes
+  arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
+
+ .../brcm,bcm2712-msix.yaml                    |  69 ++++
+ .../bindings/pci/brcm,stb-pcie.yaml           |   5 +-
+ .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |   8 +
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 166 ++++++++++
+ drivers/irqchip/Kconfig                       |  12 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-bcm2712-mip.c             | 310 ++++++++++++++++++
+ drivers/pci/controller/pcie-brcmstb.c         | 172 +++++++---
+ 8 files changed, 694 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+ create mode 100644 drivers/irqchip/irq-bcm2712-mip.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.35.3
+
 
