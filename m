@@ -1,475 +1,404 @@
-Return-Path: <linux-pci+bounces-13009-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13010-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB03C9740C8
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 19:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D66974167
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 19:58:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 022CC1C24C51
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:41:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 221641C25943
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:58:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D70A16DED5;
-	Tue, 10 Sep 2024 17:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7AFF1A38F4;
+	Tue, 10 Sep 2024 17:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LlRV4REP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E0D156F2B;
-	Tue, 10 Sep 2024 17:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E39F1A3BAF
+	for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 17:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725989868; cv=none; b=irr37r5iYXdLXAmE349A4Q3Ovz7K0Rf6ZPkv+q37OTYCt4UE1r5Qt7FzS3IN5Qna6XiJwOq47FAhzmbvvUCz3x24vIBpwu+U8oQM/AWsnDHxzxOANlCDH++bf62N3SIDAlegdruIW3P3PEm7+8zhk8jV7oHUa1Qf9igsovr2550=
+	t=1725991073; cv=none; b=bJIoKQAq0Pt7sPbWdesCNR00FmieCvG7zfmC90UaR0EnOkCduIjlFoW9V5ajMdPK6bCw7nMx4P+Y1oppcihye8bABzMDyR3Q7jiaWc7M7MERsCsRhQPINzKCFdBm31xzb8AHDuS0DW5cnojFGmDWmMKAWIP/Fl5tVeQ4+Fu8oMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725989868; c=relaxed/simple;
-	bh=06kjgpDqN10XbwNamUvy2FVl/mySt1RGqpRRRpekwOs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IUaoG7b8KQpRqWrulLkZ62mv5NijgJQC1uLM00jrVOhWHx6LhU8oX3HMRfJZHvHZWp9Ci+8qeP4LkvmESrpx4Lpu0y3RH8D5M9riblMiUoYJOUtxFPRTO0aZroeVww3bYNWKmtnPDskXqNcJjUZk6VPfI3eSUpLVtfmgkwKZYQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X39mY6cHZz6L6ww;
-	Wed, 11 Sep 2024 01:34:05 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CFB511400CA;
-	Wed, 11 Sep 2024 01:37:41 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 10 Sep
- 2024 19:37:41 +0200
-Date: Tue, 10 Sep 2024 18:37:39 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, Mahesh
- J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, "Dave Jiang" <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Will
- Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, <terry.bowman@amd.com>, Kuppuswamy
- Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
- CXL PMUs (and aer)
-Message-ID: <20240910183739.00005c32@huawei.com>
-In-Reply-To: <20240910174743.000037c7@huawei.com>
-References: <20240905122342.000001be@Huawei.com>
-	<87jzfpdrc7.ffs@tglx>
-	<20240906181832.00007dc7@Huawei.com>
-	<20240910174743.000037c7@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1725991073; c=relaxed/simple;
+	bh=JJZZB/X30QZDdKidFd5uFcb4V3/vG1UgCQ1the0PQ60=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R3u6pJ84da3rLu69x/smjRQk2IzmsCU6xE8kDQy1OnDw07uXXw1VlNNRlD884GJ9Tm9U6VrhnmSUd+VClx2081bBdPLMCtz6IpYUpmR2vPMmNYYUCU5diDXzojbdQAadgEFLY0+yrtMC4VIuGqOxwVyIUTkHhpQF8uSY3RDnWTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LlRV4REP; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-49bc672bb46so1849462137.2
+        for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 10:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1725991070; x=1726595870; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=STGVj6vl6LpAjZBaoJO/AHJ0YBKmV2BfQaPxcPnlFp4=;
+        b=LlRV4REPaT2SuSTFRcBWiZ2EUJRNBjSVFF/qc2b0WMhDaC/qtfA+mKedFuB++5wjbt
+         gkyRX/SF8daXWKSW66HCojnqieT7gtr2uITMdT5+rD6eQXYuexAHEEKAjhklnsY8GeQx
+         EzSor/bbza5cSWeZBRPd7DnC7w7zvGHIaSnG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725991070; x=1726595870;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=STGVj6vl6LpAjZBaoJO/AHJ0YBKmV2BfQaPxcPnlFp4=;
+        b=ekP9zQvS7JyLNCR42jxl9KhMRNuNIQQmFeKORv2R/Z7n7ezouwekBKH8kHFIEF+UBU
+         JKy+EVRPzf8TG/YItGapiDouL1z381E/8HQ1YhoEaEoV0EZwBFqveIyw9WCQo0iRixeN
+         5UZQJRlaO10oepdfV6iFiKmsd72vqD5yzY4rIqzWdeXpMUCJq+8CbSYKIZ1ZVzFf7YbZ
+         K0pnlg4AF0m5zQ9wfXraikJB4OCDS0L4KW6aeimsVGTB7FyX9BwECQyn1u9Ccuet7MJq
+         j0jFxQFn/xJYWPhllG/L38P0AD6G3i9tNdx21JCK/q7TfPxQ9kN/tU9sUnnm/hH6cszN
+         PRHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVr1S1V+O28C/G80Cu4W3qXxo3WXLSb5sTixoXGG6qee+lyWHJyEWU7OPov+7DaeZOuDgzsMIZVRWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/9rsMo2o618smAbsgcG5zswf2O4YM9Hb5Ro8kUvIjHtqr9zhq
+	o8eUa0ZqfL97OuY4aqCvptz8eIUd2r0o7bBxm7nNaRyUXFWnKNDqfM3DpIBxdw==
+X-Google-Smtp-Source: AGHT+IGne/IKFNr9YFpyRr2ls9xEmzWsfOMV71gkVSWIpAyGIP2uO/EP6hAwPlHys0aPcgD5J5pTpg==
+X-Received: by 2002:a05:6102:510b:b0:492:abbe:8923 with SMTP id ada2fe7eead31-49bde14671dmr15106234137.6.1725991070196;
+        Tue, 10 Sep 2024 10:57:50 -0700 (PDT)
+Received: from spinny.c.googlers.com (78.206.23.34.bc.googleusercontent.com. [34.23.206.78])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8489ac10b36sm746045241.8.2024.09.10.10.57.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 10:57:49 -0700 (PDT)
+From: Esther Shimanovich <eshimanovich@chromium.org>
+Date: Tue, 10 Sep 2024 17:57:45 +0000
+Subject: [PATCH v5] PCI: Detect and trust built-in Thunderbolt chips
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240910-trust-tbt-fix-v5-1-7a7a42a5f496@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAJiI4GYC/3XMSw6CMBSF4a2Qjq3pG3DkPoyD0t5CB4hpC9EY9
+ u7VESE6/E9yvhfJkCJkcqpeJMESc5xuGPpQETfYWw80emwimFCsYYaWNOdCS1doiA+qg5R18C2
+ 4xhL83BPg/PUuV+wh5jKl55df+Gf9Jy2cclpLCzooZby2ZzekaYzzeJxSTz7YIrZAswcEAgKks
+ kzbljfmByA3ANd7QCJgOsvwq71W7gegNoCQe0Ah4EzgIDvv2w52wLqubxcwYuVwAQAA
+To: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, 
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ iommu@lists.linux.dev, Lukas Wunner <lukas@wunner.de>, 
+ Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Esther Shimanovich <eshimanovich@chromium.org>
+X-Mailer: b4 0.13.0
 
-On Tue, 10 Sep 2024 17:47:43 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+Some computers with CPUs that lack Thunderbolt features use discrete
+Thunderbolt chips to add Thunderbolt functionality. These Thunderbolt
+chips are located within the chassis; between the root port labeled
+ExternalFacingPort and the USB-C port.
 
-> On Fri, 6 Sep 2024 18:18:32 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Fri, 06 Sep 2024 12:11:36 +0200
-> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> >   
-> > > On Thu, Sep 05 2024 at 12:23, Jonathan Cameron wrote:    
-> > > >> Look at how the PCI device manages interrupts with the per device MSI
-> > > >> mechanism. Forget doing this with either one of the legacy mechanisms.
-> > > >> 
-> > > >>   1) It creates a hierarchical interrupt domain and gets the required
-> > > >>      resources from the provided parent domain. The PCI side does not
-> > > >>      care whether this is x86 or arm64 and it neither cares whether the
-> > > >>      parent domain does remapping or not. The only way it cares is about
-> > > >>      the features supported by the different parent domains (think
-> > > >>      multi-MSI).
-> > > >>      
-> > > >>   2) Driver side allocations go through the per device domain
-> > > >> 
-> > > >> That AUXbus is not any different. When the CPMU driver binds it wants to
-> > > >> allocate interrupts. So instead of having a convoluted construct
-> > > >> reaching into the parent PCI device, you simply can do:
-> > > >> 
-> > > >>   1) Let the cxl_pci driver create a MSI parent domain and set that in
-> > > >>      the subdevice::msi::irqdomain pointer.
-> > > >> 
-> > > >>   2) Provide cxl_aux_bus_create_irqdomain() which allows the CPMU device
-> > > >>      driver to create a per device interrupt domain.
-> > > >> 
-> > > >>   3) Let the CPMU driver create its per device interrupt domain with
-> > > >>      the provided parent domain
-> > > >> 
-> > > >>   4) Let the CPMU driver allocate its MSI-X interrupts through the per
-> > > >>      device domain
-> > > >> 
-> > > >> Now on the cxl_pci side the AUXbus parent interrupt domain allocation
-> > > >> function does:
-> > > >> 
-> > > >>     if (!pci_msix_enabled(pdev))
-> > > >>     	return pci_msix_enable_and_alloc_irq_at(pdev, ....);
-> > > >>     else
-> > > >>         return pci_msix_alloc_irq_at(pdev, ....);      
-> > > 
-> > > Ignore the above. Brainfart.
-> > >     
-> > > > I'm struggling to follow this suggestion
-> > > > Would you expect the cxl_pci MSI parent domain to set it's parent as
-> > > > msi_domain = irq_domain_create_hierarchy(dev_get_msi_domain(&pdev->dev),
-> > > > 					 IRQ_DOMAIN_FLAG_MSI_PARENT,
-> > > > 					 ...
-> > > > which seems to cause a problem with deadlocks in __irq_domain_alloc_irqs()
-> > > > or create a separate domain structure and provide callbacks that reach into
-> > > > the parent domain as necessary?
-> > > >
-> > > > Or do I have this entirely wrong? I'm struggling to relate what existing
-> > > > code like PCI does to what I need to do here.      
-> > > 
-> > > dev_get_msi_domain(&pdev->dev) is a nightmare due to the 4 different
-> > > models we have:
-> > > 
-> > >    - Legacy has no domain
-> > > 
-> > >    - Non-hierarchical domain
-> > > 
-> > >    - Hierarchical domain v1
-> > > 
-> > >          That's the global PCI/MSI domain
-> > > 
-> > >    - Hierarchical domain v2
-> > > 
-> > >       That's the underlying MSI_PARENT domain, which is on x86
-> > >       either the interrupt remap unit or the vector domain. On arm64
-> > >       it's the ITS domain.
-> > > 
-> > > See e.g. pci_msi_domain_supports() which handles the mess.
-> > > 
-> > > Now this proposal will only work on hierarchical domain v2 because that
-> > > can do the post enable allocations on MSI-X. Let's put a potential
-> > > solution for MSI aside for now to avoid complexity explosion.
-> > > 
-> > > So there are two ways to solve this:
-> > > 
-> > >   1) Implement the CXL MSI parent domain as disjunct domain
-> > > 
-> > >   2) Teach the V2 per device MSI-X domain to be a parent domain
-> > > 
-> > > #1 Looks pretty straight forward, but does not seemlessly fit the
-> > >    hierarchical domain model and creates horrible indirections.
-> > > 
-> > > #2 Is the proper abstraction, but requires to teach the MSI core code
-> > >    about stacked MSI parent domains, which should not be horribly hard
-> > >    or maybe just works out of the box.
-> > > 
-> > > The PCI device driver invokes the not yet existing function
-> > > pci_enable_msi_parent_domain(pci_dev). This function does:
-> > > 
-> > >   A) validate that this PCI device has a V2 parent domain
-> > > 
-> > >   B) validate that the device has enabled MSI-X
-> > > 
-> > >   C) validate that the PCI/MSI-X domain supports dynamic MSI-X
-> > >      allocation
-> > > 
-> > >   D) if #A to #C are true, it enables the PCI device parent domain
-> > > 
-> > > I made #B a prerequisite for now, as that's an orthogonal problem, which
-> > > does not need to be solved upfront. Maybe it does not need to be solved
-> > > at all because the underlying PCI driver always allocates a management
-> > > interrupt before dealing with the underlying "bus", which is IMHO a
-> > > reasonable expectation. At least it's a reasonable restriction for
-> > > getting started.
-> > > 
-> > > That function does:
-> > > 
-> > >      msix_dom = pci_msi_get_msix_domain(pdev);
-> > >      msix_dom->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
-> > >      msix_dom->msi_parent_ops = &pci_msix_parent_ops;
-> > > 
-> > > When creating the CXL devices the CXL code invokes
-> > > pci_msi_init_subdevice(pdev, &cxldev->device), which just does:
-> > > 
-> > >   dev_set_msi_domain(dev, pci_msi_get_msix_subdevice_parent(pdev));
-> > > 
-> > > That allows the CXL devices to create their own per device MSI
-> > > domain via a new function pci_msi_create_subdevice_irq_domain().
-> > > 
-> > > That function can just use a variant of pci_create_device_domain() with
-> > > a different domain template and a different irqchip, where the irqchip
-> > > just redirects to the underlying parent domain chip, aka PCI-MSI-X.
-> > > 
-> > > I don't think the CXL device will require a special chip as all they
-> > > should need to know is the linux interrupt number. If there are special
-> > > requirements then we can bring the IMS code back or do something similar
-> > > to the platform MSI code. 
-> > > 
-> > > Then you need pci_subdev_msix_alloc_at() and pci_subdev_msix_free()
-> > > which are the only two functions which the CXL (or similar) need.
-> > > 
-> > > The existing pci_msi*() API function might need a safety check so they
-> > > can't be abused by subdevices, but that's a problem for a final
-> > > solution.
-> > > 
-> > > That's pretty much all what it takes. Hope that helps.    
-> > 
-> > Absolutely!  Thanks for providing the detailed suggestion
-> > this definitely smells a lot less nasty than previous approach.
-> > 
-> > I have things sort of working now but it's ugly code with a few
-> > cross layer hacks that need tidying up (around programming the
-> > msi registers from wrong 'device'), so may be a little
-> > while before I get it in a state to post.  
-> 
-> Hi Thomas,
+These Thunderbolt PCIe devices should be labeled as fixed and trusted,
+as they are built into the computer. Otherwise, security policies that
+rely on those flags may have unintended results, such as preventing
+USB-C ports from enumerating.
 
-I forgot to say, for anyone reading this, don't spend to much time on it yet!
-The whole topic area of refactoring portdrv is up for discussion
-in the PCI related uconf at plumbers next week.
+Detect the above scenario through the process of elimination.
 
-Whilst I quite like this approach we might end up going in a totally
-different direction due to legacy and other concerns :(
+1) Integrated Thunderbolt host controllers already have Thunderbolt
+   implemented, so anything outside their external facing root port is
+   removable and untrusted.
 
-Jonathan
+   Detect them using the following properties:
 
-> 
-> My first solution had some callbacks where we created a local
-> descriptor so that I could swap in the pci_dev->dev and
-> just use the various standard pci/msi/irqdomain.c functions.
-> 
-> The 'minimal' solution seems to be a bit ugly.
-> `
-> There are quite a few places that make the assumption that the
-> preirq_data->parent->chip is the right chip to for example call
-> irq_set_affinity on.
-> 
-> So the simple way to make it all work is to just have
-> a msi_domain_template->msi_domain_ops->prepare_desc
-> that sets the desc->dev = to the parent device (here the
-> pci_dev->dev)
-> 
-> At that point everything more or less just works and all the
-> rest of the callbacks can use generic forms.
-> 
-> Alternative might be to make calls like the one in
-> arch/x86/kernel/apic/msi.c msi_set_affinity search
-> for the first ancestor device that has an irq_set_affinity().
-> That unfortunately may affect quite a few places.
-> 
-> Anyhow, I'll probably send out the prepare_desc hack set with
-> driver usage etc after I've written up a proper description of problems encountered
-> etc so you can see what it all looks like and will be more palatable in
-> general but in the  meantime this is the guts of it of the variant where the
-> subdev related desc has the dev set to the parent device.
-> 
-> Note for the avoidance of doubt, I don't much like this
-> solution but maybe it will grow on me ;)
-> 
-> Jonathan
-> 
-> 
-> 
-> From eb5761b1cb7b6278c86c836ae552982621c3504e Mon Sep 17 00:00:00 2001
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Date: Tue, 10 Sep 2024 17:10:09 +0100
-> Subject: [PATCH 1/1] pci: msi: Add subdevice irq domains for dynamic MSI-X
-> 
-> PoC code only. All sorts of missing checks etc.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  arch/x86/kernel/apic/msi.c  |  3 ++
->  drivers/pci/msi/api.c       | 14 ++++++
->  drivers/pci/msi/irqdomain.c | 87 +++++++++++++++++++++++++++++++++++++
->  include/linux/msi.h         |  5 +++
->  include/linux/pci.h         |  3 ++
->  kernel/irq/msi.c            |  5 +++
->  6 files changed, 117 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
-> index 340769242dea..8ab4391d4559 100644
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -218,6 +218,9 @@ static bool x86_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
->  	case DOMAIN_BUS_DMAR:
->  	case DOMAIN_BUS_AMDVI:
->  		break;
-> +	case DOMAIN_BUS_PCI_DEVICE_MSIX:
-> +		/* Currently needed just for the PCI MSI-X subdevice handling */
-> +		break;
->  	default:
->  		WARN_ON_ONCE(1);
->  		return false;
-> diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
-> index b956ce591f96..2b4c15102671 100644
-> --- a/drivers/pci/msi/api.c
-> +++ b/drivers/pci/msi/api.c
-> @@ -179,6 +179,20 @@ void pci_msix_free_irq(struct pci_dev *dev, struct msi_map map)
->  }
->  EXPORT_SYMBOL_GPL(pci_msix_free_irq);
->  
-> +struct msi_map pci_subdev_msix_alloc_irq_at(struct device *dev, unsigned int index,
-> +					const struct irq_affinity_desc *affdesc)
-> +{
-> +	//missing sanity checks
-> +	return msi_domain_alloc_irq_at(dev, MSI_DEFAULT_DOMAIN, index, affdesc, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_subdev_msix_alloc_irq_at);
-> +
-> +void pci_subdev_msix_free_irq(struct device *dev, struct msi_map map)
-> +{
-> +	msi_domain_free_irqs_range(dev, MSI_DEFAULT_DOMAIN, map.index, map.index);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_subdev_msix_free_irq);
-> +
->  /**
->   * pci_disable_msix() - Disable MSI-X interrupt mode on device
->   * @dev: the PCI device to operate on
-> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-> index 569125726b3e..48357a8054ff 100644
-> --- a/drivers/pci/msi/irqdomain.c
-> +++ b/drivers/pci/msi/irqdomain.c
-> @@ -444,3 +444,90 @@ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
->  					     DOMAIN_BUS_PCI_MSI);
->  	return dom;
->  }
-> +
-> +static const struct msi_parent_ops pci_msix_parent_ops = {
-> +	.supported_flags = MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN,
-> +	.prefix = "PCI-MSIX-PROXY-",
-> +	.init_dev_msi_info = msi_parent_init_dev_msi_info,
-> +};
-> +
-> +int pci_msi_enable_parent_domain(struct pci_dev *pdev)
-> +{
-> +	struct irq_domain *msix_dom;
-> +	/* TGLX: Validate has v2 parent domain */
-> +	/* TGLX: validate msix enabled */
-> +	/* TGLX: Validate msix domain supports dynamics msi-x */
-> +
-> +	/* Enable PCI device parent domain */
-> +	msix_dom = dev_msi_get_msix_device_domain(&pdev->dev);
-> +	msix_dom->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
-> +	msix_dom->msi_parent_ops = &pci_msix_parent_ops;
-> +	return 0;
-> +}
-> +
-> +void pci_msi_init_subdevice(struct pci_dev *pdev, struct device *dev)
-> +{
-> +	dev_set_msi_domain(dev, dev_msi_get_msix_device_domain(&pdev->dev));
-> +}
-> +
-> +static bool pci_subdev_create_device_domain(struct device *dev, const struct msi_domain_template *tmpl,
-> +				     unsigned int hwsize)
-> +{
-> +	struct irq_domain *domain = dev_get_msi_domain(dev);
-> +
-> +	if (!domain || !irq_domain_is_msi_parent(domain))
-> +		return true;
-> +
-> +	return msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN, tmpl,
-> +					    hwsize, NULL, NULL);
-> +}
-> +
-> +static void pci_subdev_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> +					struct msi_desc *desc)
-> +{
-> +	struct device *parent = desc->dev->parent;
-> +
-> +	if (!desc->pci.mask_base) {
-> +		/* Not elegant - but needed for irq affinity to work? */
-> +		desc->dev = parent;
-> +		msix_prepare_msi_desc(to_pci_dev(parent), desc);
-> +	}
-> +}
-> +
-> +static const struct msi_domain_template subdev_template = {
-> +	.chip = {
-> +		.name = "SUBDEV",
-> +		.irq_mask = irq_chip_unmask_parent,
-> +		.irq_unmask = irq_chip_unmask_parent,
-> +		.irq_write_msi_msg = pci_msi_domain_write_msg,
-> +		.irq_set_affinity = irq_chip_set_affinity_parent,
-> +		.flags = IRQCHIP_ONESHOT_SAFE,
-> +	},
-> +	.ops = {
-> +		/*
-> +		 * RFC: Sets the desc->dev to the parent PCI device
-> +		 *       Needed for
-> +		 *       irq_setup_affinity() ->
-> +		 *          msi_set_affinity() ->
-> +		 *             parent = irq_d->parent_data;
-> +		 *             parent->chip->irq_set_affinity() to work.
-> +		 *      That could be made more flexible perhaps as
-> +		 *      currently it makes assumption that parent of
-> +		 *      the MSI device is the one to set the affinity on.
-> +		 */
-> +		.prepare_desc = pci_subdev_msix_prepare_desc,
-> +		/* Works because the desc->dev is the parent PCI device */
-> +		.set_desc = pci_msi_domain_set_desc,
-> +	},
-> +	.info = {
-> +		.flags = MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN |
-> +		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_USE_DEF_DOM_OPS,
-> +		.bus_token = DOMAIN_BUS_PCI_DEVICE_MSIX,
-> +	},
-> +};
-> +
-> +bool pci_subdev_setup_device_domain(struct device *dev, unsigned int hwsize)
-> +{
-> +	return pci_subdev_create_device_domain(dev, &subdev_template, hwsize);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_subdev_setup_device_domain);
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index 944979763825..ff81b4dcc1d9 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -656,8 +656,13 @@ void pci_msi_unmask_irq(struct irq_data *data);
->  struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
->  					     struct msi_domain_info *info,
->  					     struct irq_domain *parent);
-> +int pci_msi_enable_parent_domain(struct pci_dev *pdev);
-> +struct irq_domain *pci_msi_get_msix_device_domain(struct device *dev);
->  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
->  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
-> +struct irq_domain *dev_msi_get_msix_device_domain(struct device *dev);
-> +void pci_msi_init_subdevice(struct pci_dev *pdev, struct device *dev);
-> +bool pci_subdev_setup_device_domain(struct device *dev, unsigned int hwsize);
->  #else /* CONFIG_PCI_MSI */
->  static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
->  {
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 225de9be3006..460551f1bd6e 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1679,6 +1679,9 @@ struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
->  				     const struct irq_affinity_desc *affdesc);
->  void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map);
->  
-> +struct msi_map pci_subdev_msix_alloc_irq_at(struct device *dev, unsigned int index,
-> +					const struct irq_affinity_desc *affdesc);
-> +void pci_subdev_msix_free_irq(struct device *dev, struct msi_map map);
->  void pci_free_irq_vectors(struct pci_dev *dev);
->  int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
->  const struct cpumask *pci_irq_get_affinity(struct pci_dev *pdev, int vec);
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index 5fa0547ece0c..d55a91c7a496 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -1720,3 +1720,8 @@ bool msi_device_has_isolated_msi(struct device *dev)
->  	return arch_is_isolated_msi();
->  }
->  EXPORT_SYMBOL_GPL(msi_device_has_isolated_msi);
-> +struct irq_domain *dev_msi_get_msix_device_domain(struct device *dev)
-> +{
-> +	return dev->msi.data->__domains[0].domain;
-> +}
-> +
+     - Most integrated host controllers have the usb4-host-interface
+       ACPI property, as described here:
+Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#mapping-native-protocols-pcie-displayport-tunneled-through-usb4-to-usb4-host-routers
+
+     - Integrated Thunderbolt PCIe root ports before Alder Lake do not
+       have the usb4-host-interface ACPI property. Identify those with
+       their PCI IDs instead.
+
+2) If a root port does not have integrated Thunderbolt capabilities, but
+   has the ExternalFacingPort ACPI property, that means the manufacturer
+   has opted to use a discrete Thunderbolt host controller that is
+   built into the computer.
+
+   This host controller can be identified by virtue of being located
+   directly below an external-facing root port that lacks integrated
+   Thunderbolt. Label it as trusted and fixed.
+
+   Everything downstream from it is untrusted and removable.
+
+The ExternalFacingPort ACPI property is described here:
+Link: https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-externally-exposed-pcie-root-ports
+
+Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Esther Shimanovich <eshimanovich@chromium.org>
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+While working with devices that have discrete Thunderbolt chips, I
+noticed that their internal TBT chips are inaccurately labeled as
+untrusted and removable.
+
+I've observed that this issue impacts all computers with internal,
+discrete Intel JHL Thunderbolt chips, such as JHL6240, JHL6340, JHL6540,
+and JHL7540, across multiple device manufacturers such as Lenovo, Dell,
+and HP.
+
+This affects the execution of any downstream security policy that
+relies on the "untrusted" or "removable" flags.
+
+I initially submitted a quirk to resolve this, which was too small in
+scope, and after some discussion, Mika proposed a more thorough fix:
+https://lore.kernel.org/lkml/20240510052616.GC4162345@black.fi.intel.com
+I refactored it and am submitting as a new patch.
+---
+Changes in v5:
+- Applied the following edits suggested by Lukas Wunner:
+  - Applied ifdefs edits to ensure code is only compiled on x86 systems
+  with ACPI
+  - Added returns to avoid unecessary checks
+  - Renamed pcie_is_tunneled to arch_pci_dev_is_removable
+- Link to v4: https://lore.kernel.org/r/20240823-trust-tbt-fix-v4-1-c6f1e3bdd9be@chromium.org
+
+Changes in v4:
+- Applied edits on logic-flow clarity and formatting suggested by Ilpo
+  Järvinen
+- Mario Limonciello tested patch and confirmed works as intended.
+- Link to v3: https://lore.kernel.org/r/20240815-trust-tbt-fix-v3-1-6ba01865d54c@chromium.org
+
+Changes in v3:
+- Incorporated minor edits suggested by Mika Westerberg.
+- Mika Westerberg tested patch (more details in v2 link)
+- Added "reviewed-by" and "tested-by" lines
+- Link to v2: https://lore.kernel.org/r/20240808-trust-tbt-fix-v2-1-2e34a05a9186@chromium.org
+
+Changes in v2:
+- I clarified some comments, and made minor fixins
+- I also added a more detailed description of implementation into the
+  commit message
+- Added Cc recipients Mike recommended
+- Link to v1: https://lore.kernel.org/r/20240806-trust-tbt-fix-v1-1-73ae5f446d5a@chromium.org
+---
+ arch/x86/pci/acpi.c | 119 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c |  30 +++++++++----
+ include/linux/pci.h |   6 +++
+ 3 files changed, 148 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+index 55c4b07ec1f6..62271668c3b1 100644
+--- a/arch/x86/pci/acpi.c
++++ b/arch/x86/pci/acpi.c
+@@ -250,6 +250,125 @@ void __init pci_acpi_crs_quirks(void)
+ 		pr_info("Please notify linux-pci@vger.kernel.org so future kernels can do this automatically\n");
+ }
+ 
++/*
++ * Checks if pdev is part of a PCIe switch that is directly below the
++ * specified bridge.
++ */
++static bool pcie_switch_directly_under(struct pci_dev *bridge,
++				       struct pci_dev *pdev)
++{
++	struct pci_dev *parent = pci_upstream_bridge(pdev);
++
++	/* If the device doesn't have a parent, it's not under anything. */
++	if (!parent)
++		return false;
++
++	/*
++	 * If the device has a PCIe type, check if it is below the
++	 * corresponding PCIe switch components (if applicable). Then check
++	 * if its upstream port is directly beneath the specified bridge.
++	 */
++	switch (pci_pcie_type(pdev)) {
++	case PCI_EXP_TYPE_UPSTREAM:
++		return parent == bridge;
++
++	case PCI_EXP_TYPE_DOWNSTREAM:
++		if (pci_pcie_type(parent) != PCI_EXP_TYPE_UPSTREAM)
++			return false;
++		parent = pci_upstream_bridge(parent);
++		return parent == bridge;
++
++	case PCI_EXP_TYPE_ENDPOINT:
++		if (pci_pcie_type(parent) != PCI_EXP_TYPE_DOWNSTREAM)
++			return false;
++		parent = pci_upstream_bridge(parent);
++		if (!parent || pci_pcie_type(parent) != PCI_EXP_TYPE_UPSTREAM)
++			return false;
++		parent = pci_upstream_bridge(parent);
++		return parent == bridge;
++	}
++
++	return false;
++}
++
++static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
++{
++	struct fwnode_handle *fwnode;
++
++	/*
++	 * For USB4, the tunneled PCIe root or downstream ports are marked
++	 * with the "usb4-host-interface" ACPI property, so we look for
++	 * that first. This should cover most cases.
++	 */
++	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
++				       "usb4-host-interface", 0);
++	if (!IS_ERR(fwnode)) {
++		fwnode_handle_put(fwnode);
++		return true;
++	}
++
++	/*
++	 * Any integrated Thunderbolt 3/4 PCIe root ports from Intel
++	 * before Alder Lake do not have the "usb4-host-interface"
++	 * property so we use their PCI IDs instead. All these are
++	 * tunneled. This list is not expected to grow.
++	 */
++	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
++		switch (pdev->device) {
++		/* Ice Lake Thunderbolt 3 PCIe Root Ports */
++		case 0x8a1d:
++		case 0x8a1f:
++		case 0x8a21:
++		case 0x8a23:
++		/* Tiger Lake-LP Thunderbolt 4 PCIe Root Ports */
++		case 0x9a23:
++		case 0x9a25:
++		case 0x9a27:
++		case 0x9a29:
++		/* Tiger Lake-H Thunderbolt 4 PCIe Root Ports */
++		case 0x9a2b:
++		case 0x9a2d:
++		case 0x9a2f:
++		case 0x9a31:
++			return true;
++		}
++	}
++
++	return false;
++}
++
++bool arch_pci_dev_is_removable(struct pci_dev *pdev)
++{
++	struct pci_dev *parent, *root;
++
++	/* pdev without a parent or Root Port is never tunneled. */
++	parent = pci_upstream_bridge(pdev);
++	if (!parent)
++		return false;
++	root = pcie_find_root_port(pdev);
++	if (!root)
++		return false;
++
++	/* Internal PCIe devices are not tunneled. */
++	if (!root->external_facing)
++		return false;
++
++	/* Anything directly behind a "usb4-host-interface" is tunneled. */
++	if (pcie_has_usb4_host_interface(parent))
++		return true;
++
++	/*
++	 * Check if this is a discrete Thunderbolt/USB4 controller that is
++	 * directly behind the non-USB4 PCIe Root Port marked as
++	 * "ExternalFacingPort". Those are not behind a PCIe tunnel.
++	 */
++	if (pcie_switch_directly_under(root, pdev))
++		return false;
++
++	/* PCIe devices after the discrete chip are tunneled. */
++	return true;
++}
++
+ #ifdef	CONFIG_PCI_MMCONFIG
+ static int check_segment(u16 seg, struct device *dev, char *estr)
+ {
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b14b9876c030..7e0d6a1e151b 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1631,23 +1631,33 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+ 
+ static void set_pcie_untrusted(struct pci_dev *dev)
+ {
+-	struct pci_dev *parent;
++	struct pci_dev *parent = pci_upstream_bridge(dev);
+ 
++	if (!parent)
++		return;
+ 	/*
+-	 * If the upstream bridge is untrusted we treat this device
++	 * If the upstream bridge is untrusted we treat this device as
+ 	 * untrusted as well.
+ 	 */
+-	parent = pci_upstream_bridge(dev);
+-	if (parent && (parent->untrusted || parent->external_facing))
++	if (parent->untrusted) {
++		dev->untrusted = true;
++		return;
++	}
++
++	if (arch_pci_dev_is_removable(dev)) {
++		pci_dbg(dev, "marking as untrusted\n");
+ 		dev->untrusted = true;
++	}
+ }
+ 
+ static void pci_set_removable(struct pci_dev *dev)
+ {
+ 	struct pci_dev *parent = pci_upstream_bridge(dev);
+ 
++	if (!parent)
++		return;
+ 	/*
+-	 * We (only) consider everything downstream from an external_facing
++	 * We (only) consider everything tunneled below an external_facing
+ 	 * device to be removable by the user. We're mainly concerned with
+ 	 * consumer platforms with user accessible thunderbolt ports that are
+ 	 * vulnerable to DMA attacks, and we expect those ports to be marked by
+@@ -1657,9 +1667,15 @@ static void pci_set_removable(struct pci_dev *dev)
+ 	 * accessible to user / may not be removed by end user, and thus not
+ 	 * exposed as "removable" to userspace.
+ 	 */
+-	if (parent &&
+-	    (parent->external_facing || dev_is_removable(&parent->dev)))
++	if (dev_is_removable(&parent->dev)) {
++		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
++		return;
++	}
++
++	if (arch_pci_dev_is_removable(dev)) {
++		pci_dbg(dev, "marking as removable\n");
+ 		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
++	}
+ }
+ 
+ /**
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 9e36b6c1810e..dca19203bc7c 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2604,6 +2604,12 @@ pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+ static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+ #endif
+ 
++#if defined(CONFIG_X86) && defined(CONFIG_ACPI)
++bool arch_pci_dev_is_removable(struct pci_dev *pdev);
++#else
++static inline bool arch_pci_dev_is_removable(struct pci_dev *pdev) { return false; }
++#endif
++
+ #ifdef CONFIG_EEH
+ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
+ {
+
+---
+base-commit: 3f386cb8ee9f04ff4be164ca7a1d0ef3f81f7374
+change-id: 20240806-trust-tbt-fix-5f337fd9ec8a
+
+Best regards,
+-- 
+Esther Shimanovich <eshimanovich@chromium.org>
 
 
