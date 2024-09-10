@@ -1,219 +1,236 @@
-Return-Path: <linux-pci+bounces-12972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23F4C972D22
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 11:13:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E5F8973732
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 14:27:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CF67282999
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 09:13:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 564EF1C23C32
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 12:27:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45825188002;
-	Tue, 10 Sep 2024 09:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97A33188CB1;
+	Tue, 10 Sep 2024 12:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f2bKFIaw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dvphqLbs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81358186E4B;
-	Tue, 10 Sep 2024 09:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8932818F2D5;
+	Tue, 10 Sep 2024 12:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725959616; cv=none; b=D8is7BeLrr8sgEVAWmiPxOrfXekIp2o0OVREEuR+ps6sCMGditFX3F8xmaI/xqg/ZqOmHDJMdQJWk61ZU8unS8Z1ZKG1s8nSNKNevcmElNzfEXK3itoPSzNy0CnIve+v05cneNDs3bG1Sfy/b0JmPznnd9zhCpv1ZAfh3JX64FE=
+	t=1725971242; cv=none; b=pSdpEPkzDCgNVF5UNG69JtbHPWCj0A7pJr4EUHK66Jy358YjhH+ibbEc6cAwDLM948vj/5cgY9v+nbW5398tl89S9W2pvhm55nKd55p7wueX2LgZYeQ8vu0wir2GmJayx8Sb1WxXzSgANkAgR4lEITl+1p9i3OO1qZs2GCN71Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725959616; c=relaxed/simple;
-	bh=YINo2g1H0Op1NpkCuXXnppwfgjGpy5ajXOb4LCsVAZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q1c358P0nnUy2ZbSSeF4FtJJR80Nq8FM4XFCb15CSZ0cra9VbyOIb8N2F429kcezV0r0q6oTwgcygHLv/AjkZN/vQUA3h/rBXsGHt/EwQa+xoK0nBCa8KnOJtoYC9t7uZG2N+ULjEiUbF61Qn3Ds0qPcyu7qzwqIS0oN5U5YNLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f2bKFIaw; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1725971242; c=relaxed/simple;
+	bh=lqPUKgcV6djMC54DXRpHGaZbHVeCCoBfZlJXbMGKYhw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=czCwFa+KWADyJa87HGzMXATqzJKE9V3vu5AfuZvXEc5dAwaeY0tT6+i15016Tqz4XC+WAs0nffffqFkY5GojNlMaF/99HRedWFoR0vDdagbJAbHEUB6mdSWRz8EIWJfmE95uV3S60Cowp8MQTRGB+fr3uomOXJ3U/Kj5pYZDGmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dvphqLbs; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725959615; x=1757495615;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YINo2g1H0Op1NpkCuXXnppwfgjGpy5ajXOb4LCsVAZY=;
-  b=f2bKFIawRYPxlgoALOyzl/0bqVdaCGsI34R4clUFmy6Xol2WqSXghQEM
-   XJP04uvF0TdkQNEF0M8CvXrDYktnT4bNOWMh4USuHSDgWmpcFpy5wePl6
-   2EY3bwIaQzLN9kuyBC+oFaIZBBMeZnUcXbDrEBx+LA3egqOW0oQbSXpW9
-   BQ4moR6laTSCBS8EUGbC+s9JVknSvv1Fb2+7c8CPCBE8L+H45bKwP1RSN
-   dUrQ8jjBzoCjGmqYbAO1Bpx79bfjihyaOtJJFUQG0D7UcCHoWgEM8CjrM
-   Y+IPnHuE7c7/dHMlUUjK2PLnaoiqJdIfmPiJo2DKKyg5s8Km7IjIRG+Hp
-   w==;
-X-CSE-ConnectionGUID: G52eIM+GQreFjZb/6oSmWw==
-X-CSE-MsgGUID: uFVuNQp4T4KwSkNDk/eAiA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="47210552"
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="47210552"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:13:34 -0700
-X-CSE-ConnectionGUID: HXDW64PPTlm42dqy064KGw==
-X-CSE-MsgGUID: so8cop4WRbyQJo57SG7cqA==
+  t=1725971241; x=1757507241;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lqPUKgcV6djMC54DXRpHGaZbHVeCCoBfZlJXbMGKYhw=;
+  b=dvphqLbs7I4iNq8V0PuVK7bgEm5aFDIw4YK6B4hBkDGeRhbHsMHf7BF6
+   DgYzw1DZKf1MCFzav3iAvn/Nffe6hVL5t6Gyiu4v1j1i8HCEBEEEvc37u
+   El7DihN2C0N0tlQWak00mA8fpdYBtmQjVs9HKG3hICNGzszxPNfwr/D8T
+   AWO1/uvDa6ArOCfyt8trbz1nJSW0as5Y4IDZkVySrPn9vU4D9svvfdXQ1
+   oow39/+kPb0mZy+JWhBtXA3LyiVPRrw5P3onbTk4Nnnez0z2lj2TMkY/1
+   dSYeGkmIweifDVY/nb5vqkIosbSdPlEUZA0BhljW/p48OVI7XF2s7lw3q
+   Q==;
+X-CSE-ConnectionGUID: yRX88InvQyOzRDkWgbXtZA==
+X-CSE-MsgGUID: CgCEepGTT6i+reBpt4pySQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="27634148"
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="27634148"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 05:27:20 -0700
+X-CSE-ConnectionGUID: ZTNzcfL3SHu4oHVrJ/eR0g==
+X-CSE-MsgGUID: QG3Tdm7DRe6RWpsvskbgBg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="67256093"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 10 Sep 2024 02:13:31 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 0EC5520B; Tue, 10 Sep 2024 12:13:30 +0300 (EEST)
-Date: Tue, 10 Sep 2024 12:13:29 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Gary Li <Gary.Li@amd.com>,
-	Mario Limonciello <superm1@kernel.org>,
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="66968003"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.224])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 05:27:13 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Mathias Nyman <mathias.nyman@intel.com>,
-	"open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-	Daniel Drake <drake@endlessos.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v5 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in
- pci_dev_wait()
-Message-ID: <20240910091329.GI275077@black.fi.intel.com>
-References: <20240903182509.GA260253@bhelgaas>
- <525214d1-793e-412c-b3b2-b7e20645b9cf@amd.com>
- <20240904120545.GF1532424@black.fi.intel.com>
- <2bf715fb-509b-4b00-a28d-1cc83c0bb588@amd.com>
- <20240905093325.GJ1532424@black.fi.intel.com>
- <b4237bef-809f-4d78-8a70-d962e7eb467b@amd.com>
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-pm@vger.kernel.org,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v7 0/8] PCI: Add PCIe bandwidth controller
+Date: Tue, 10 Sep 2024 15:26:57 +0300
+Message-Id: <20240910122705.4068-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b4237bef-809f-4d78-8a70-d962e7eb467b@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi all,
 
-On Mon, Sep 09, 2024 at 03:40:54PM -0500, Mario Limonciello wrote:
-> > Few additional side paths here, though. This is supposed to work so that
-> > once the host router sleep bit is set the driver is supposed to allow
-> > the domain to enter sleep (e.g it should not be waken up before it is
-> > fully transitioned). That's what we do:
-> > 
-> > 1. All tunneled PCIe Root/Downstream ports are in D3.
-> > 2. All tunneled USB 3.x ports are in U3.
-> > 3. No DisplayPort is tunneled.
-> > 4. Thunderbolt driver enables wakes.
-> > 5. Thunderbolt driver writes sleep ready bit of the host router.
-> > 6. Thunderbolt driver runtime suspend is complete.
-> > 7. ACPI method is called (_PS3 or _PR3.OFF) that will trigger the "Sleep
-> > Event".
-> > 
-> > If between 5 and 7 there is device connected, it should not "abort" the
-> > sequence. Unfortunately this is not explict in the USB4 spec but the
-> > connection manager guide has similar note. Even if the connect happens
-> > there the "Sleep Event" should happen but after that it can trigger
-> > normal wakeup which will then bring everything back.
-> > 
-> > Would it be possible to enable tracing around these steps so that we
-> > could see if there is hotplug notification somewhere there that is not
-> > expected? Here are instructions how to get pretty accurate trace:
-> > 
-> > https://github.com/intel/tbtools?tab=readme-ov-file#tracing
-> > 
-> > Please also take full dmesg.
-> 
-> Sure, here is the dmesg with tracing enabled:
-> 
-> https://gist.github.com/superm1/5186e0023c8a5d2ecd75c50fd2168308
+This series adds PCIe bandwidth controller (bwctrl) and associated PCIe
+cooling driver to the thermal core side for limiting PCIe Link Speed
+due to thermal reasons. PCIe bandwidth controller is a PCI express bus
+port service driver. A cooling device is created for each port the
+service driver finds to support changing speeds.
 
-Thanks! I meant also enable control channel tracing as explained in the
-above linked page so we could maybe see the hotplug packet coming from
-the lane adapter too. Anyhow,
+This series only adds support for controlling PCIe Link Speed.
+Controlling PCIe Link Width might also be useful but there is no
+mechanism for that until PCIe 6.0 (L0p) so Link Width throttling is not
+added by this series.
 
-[  560.789681] thunderbolt 0-2: device disconnected
-[  560.789771] thunderbolt 0000:e5:00.5: bandwidth consumption changed, re-calculating estimated bandwidth
-[  560.789775] thunderbolt 0000:e5:00.5: bandwidth re-calculation done
-[  560.789778] thunderbolt 0000:e5:00.5: looking for DP IN <-> DP OUT pairs:
-[  560.789800] thunderbolt 0000:e5:00.5: 0:6: DP IN available
-[  560.789803] thunderbolt 0000:e5:00.5: 0:6: no suitable DP OUT adapter available, not tunneling
-[  560.790484] thunderbolt 0000:e5:00.5: 0:7: DP IN available
-[  560.790487] thunderbolt 0000:e5:00.5: 0:7: no suitable DP OUT adapter available, not tunneling
-...
-[  578.677640] thunderbolt 0000:e5:00.5: nhi_runtime_suspend() - enter, pdev->current_state = 0
-[  578.677648] thunderbolt 0000:e5:00.5: 0: suspending switch
-[  578.677653] thunderbolt 0000:e5:00.5: 0: enabling wakeup: 0x3f
-[  578.678248] thunderbolt 0000:e5:00.5: stopping RX ring 0
-[  578.678256] thunderbolt 0000:e5:00.5: disabling interrupt at register 0x38200 bit 3 (0x9 -> 0x1)
-[  578.678272] thunderbolt 0000:e5:00.5: stopping TX ring 0
-[  578.678277] thunderbolt 0000:e5:00.5: disabling interrupt at register 0x38200 bit 0 (0x1 -> 0x0)
-[  578.678287] thunderbolt 0000:e5:00.5: control channel stopped
-...
-pci_pm_runtime_resume()
-  pci_pm_default_resume_early(pci_dev);
-    pci_pm_power_up_and_verify_state(pci_dev);
-      pci_power_up(pci_dev);
-        platform_pci_set_power_state(dev, PCI_D0);
-	// here we should see acpi_pci_set_power_state() printing "xxx: power
-	// state changed by ACPI to D0" but we don't.
-	//
-	// also pdev->current_state is set to PCI_D0
-      pci_update_current_state(pci_dev, PCI_D0);
-        // this one reads it back, it should be 0..
-  pm->runtime_resume(dev);
-    nhi_runtime_resume(dev)
-[  578.773503] thunderbolt 0000:e5:00.5: nhi_runtime_resume() - enter, pdev->current_state = 3
+V7 does substantial change into the interactions with the Target Speed
+quirk which in v6 were not taking into account how early the quirk
+runs. While I believe the challenges are mostly addressed now, it would
+certainly be useful to have a second opinion on the chosen solutions.
+These challenges will also be covered as a part of my upcoming talk at
+VFIO/IOMMU/PCI microconference in Vienna.
 
-// .. but it is not. It seems to be powered off, D3cold.
+bwctrl is built on top of BW notifications revert. The changes are
+based on top of the Target Speed quirk fixes in pci/enumeration branch.
 
-[  578.773516] thunderbolt 0000:e5:00.5: control channel starting...
-[  578.773518] thunderbolt 0000:e5:00.5: starting TX ring 0
-[  578.773524] thunderbolt 0000:e5:00.5: enabling interrupt at register 0x38200 bit 0 (0xffffffff -> 0xffffffff)
+v7:
+- Rebased on top of Maciej's latest Target Speed quirk patches
+- Target Speed quirk runs very early, w/o ->subordinate existing yet.
+  This required adapting logic:
+	- Move Supported Link Speeds back to pci_dev
+	- Check for ->subordinate == NULL where necessary
+	- Cannot always take bwctrl's per port mutex (in pcie_bwctrl_data)
+- Cleaned up locking in pcie_set_target_speed() using wrappers
+	- Allowed removing confusing __pcie_set_target_speed()
+- Fix building with CONFIG_PCI=n
+- Correct error check in pcie_lbms_seen()
+- Don't return error for an empty bus that remains at 2.5GT
+- Use rwsem to protect ->link_bwctrl setup and bwnotif enable
+- Clear LBMS in remove_board()
+- Adding export for pcie_get_supported_speeds() was unnecessary
+- Call bwctrl's init before hotplug.
+- Added local variable 'bus' into a few functions
 
-// As here too.
+v6:
+- Removed unnecessary PCI_EXP_LNKCAP_SLS mask from PCIE_LNKCAP_SLS2SPEED()
+- Split error handling in pcie_bwnotif_irq_thread()
+- pci_info() -> pci_dbg() on bwctrl probe success path
+- Handle cooling device pointer -Exx codes in bwctrl probe
+- Reorder port->link_bwctrl setup / bwnotif enable for symmetry
+- Handle LBMS count == 0 in PCIe quirk by checking LBMS (avoids a race
+  between quirk and bwctrl)
+- Use cleanup.h in PCIe cooling device's register
 
-It would be interesting to see what ACPI does here, I mean enabling
-dynamic debugging of acpi_device_set_power() and friends. One suspect is
-that when the runtime suspends happens, the power resource or _PS3()
-gets called to put the device into D3cold and it has some sort of
-Sleep() inside. This allows the OS to relese the CPU to do other things
-too according to ACPI spec (and Linux does this) so now when you plug in
-the device the GPE triggers wake and Linux starts processing that one.
-We see the above runtime resume but then the Sleep() in the _PS3()
-completes and cuts the power from the NHI while we are in the middle of
-resuming it already (or something along those lines).
+v5:
+- Removed patches: LNKCTL2 RMW driver patches went in separately
+- Refactor pcie_update_link_speed() to read LNKSTA + add __ variant
+  for hotplug that has LNKSTA value at hand
+- Make series fully compatible with the Target Speed quirk
+	- LBMS counter added, quirk falls back to LBMS bit when bwctrl =n
+	- Separate LBMS patch from set target speed patches
+- Always provide pcie_bwctrl_change_speed() even if bwctrl =n so drivers
+  don't need to come up their own version (also required by the Target
+  Speed quirk)
+- Remove devm_* (based on Lukas' comment on some other service
+  driver patch)
+- Convert to use cleanup.h
+- Renamed functions/struct to have shorter names
 
-We saw similar "context switch" happening when PCIe L2 failed, BIOS
-implemented the timeout using Sleep() that allowed Linux to process
-other things which resulted unexpected wake (not the same as here
-though).
+v4:
+- Merge Port's and Endpoint's Supported Link Speeds Vectors into
+  supported_speeds in the struct pci_bus
+- Reuse pcie_get_speed_cap()'s code for pcie_get_supported_speeds()
+- Setup supported_speeds with PCI_EXP_LNKCAP2_SLS_2_5GB when no
+  Endpoint exists
+- Squash revert + add bwctrl patches into one
+- Change to use threaded IRQ + IRQF_ONESHOT
+- Enable also LABIE / LABS
+- Convert Link Speed selection to use bit logic instead of loop
+- Allocate before requesting IRQ during probe
+- Use devm_*()
+- Use u8 for speed_conv array instead of u16
+- Removed READ_ONCE()
+- Improve changelogs, comments, and Kconfig
+- Name functions slightly more consistently
+- Use bullet list for RMW protected registers in docs
 
-So one thing to check too is how the ACPI methods get called and
-especially if they somehow end up messing with each other.
+v3:
+- Correct hfi1 shortlog prefix
+- Improve error prints in hfi1
+- Add L: linux-pci to the MAINTAINERS entry
 
-> > It is entirely possible that this has nothing to do with the issue but I
-> > think it is worth checking.
-> > 
-> > The second thing we could try is to check the wake status bits after
-> > this has happened, like:
-> > 
-> >    # tbdump -r 0 -a <ADAPTER> -vv -N 1 PORT_CS_18
-> > 
-> > (where <ADAPTER> is the lane 0 adapter of the USB4 port the device was
-> > connected).
-> > 
-> 
-> Unfortunately the adapter is in such a bad state at this time that tbdump
-> doesn't work.
+v2:
+- Adds LNKCTL2 to RMW safe list in Documentation/PCI/pciebus-howto.rst
+- Renamed cooling devices from PCIe_Port_* to PCIe_Port_Link_Speed_* in
+  order to plan for possibility of adding Link Width cooling devices
+  later on
+- Moved struct thermal_cooling_device declaration to the correct patch
+- Small tweaks to Kconfig texts
+- Series rebased to resolve conflict (in the selftest list)
 
-Oh, indeed it is.
+Ilpo Järvinen (8):
+  PCI: Protect Link Control 2 Register with RMW locking
+  PCI: Store all PCIe Supported Link Speeds
+  PCI: Refactor pcie_update_link_speed()
+  PCI/quirks: Abstract LBMS seen check into own function
+  PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller
+  PCI/bwctrl: Add API to set PCIe Link Speed
+  thermal: Add PCIe cooling driver
+  selftests/pcie_bwctrl: Create selftests
 
-> > The third thing to try is to comment out TB_WAKE_ON_CONNECT in
-> > tb_switch_suspend(). This should result no wake even if the device is
-> > connected. This tells us that it is really the connect on USB4 port that
-> > triggered the wake.
-> 
-> Yup that's correct; there is no action on the hotplug with this change.
+ Documentation/PCI/pciebus-howto.rst           |  14 +-
+ MAINTAINERS                                   |   9 +
+ drivers/pci/hotplug/pciehp_ctrl.c             |   5 +
+ drivers/pci/hotplug/pciehp_hpc.c              |   2 +-
+ drivers/pci/pci.c                             |  60 ++-
+ drivers/pci/pci.h                             |  42 +-
+ drivers/pci/pcie/Kconfig                      |  12 +
+ drivers/pci/pcie/Makefile                     |   1 +
+ drivers/pci/pcie/bwctrl.c                     | 397 ++++++++++++++++++
+ drivers/pci/pcie/portdrv.c                    |   9 +-
+ drivers/pci/pcie/portdrv.h                    |  10 +-
+ drivers/pci/probe.c                           |  15 +-
+ drivers/pci/quirks.c                          |  32 +-
+ drivers/thermal/Kconfig                       |  10 +
+ drivers/thermal/Makefile                      |   2 +
+ drivers/thermal/pcie_cooling.c                |  80 ++++
+ include/linux/pci-bwctrl.h                    |  28 ++
+ include/linux/pci.h                           |  19 +-
+ include/uapi/linux/pci_regs.h                 |   1 +
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/pcie_bwctrl/Makefile  |   2 +
+ .../pcie_bwctrl/set_pcie_cooling_state.sh     | 122 ++++++
+ .../selftests/pcie_bwctrl/set_pcie_speed.sh   |  67 +++
+ 23 files changed, 887 insertions(+), 53 deletions(-)
+ create mode 100644 drivers/pci/pcie/bwctrl.c
+ create mode 100644 drivers/thermal/pcie_cooling.c
+ create mode 100644 include/linux/pci-bwctrl.h
+ create mode 100644 tools/testing/selftests/pcie_bwctrl/Makefile
+ create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
+ create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
 
-Okay thanks for checking.
+-- 
+2.39.2
+
 
