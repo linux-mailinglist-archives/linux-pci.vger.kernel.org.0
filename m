@@ -1,183 +1,196 @@
-Return-Path: <linux-pci+bounces-12996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-12997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47AC0973B8A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:22:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 205DA973C19
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 17:35:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C5391C20BF7
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 15:22:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 974741F26B9B
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Sep 2024 15:35:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4871A4B84;
-	Tue, 10 Sep 2024 15:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F0CC6F2F4;
+	Tue, 10 Sep 2024 15:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K3xH550v";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RqubavTv";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K3xH550v";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RqubavTv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YOkB7npb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D05A1A4AA8;
-	Tue, 10 Sep 2024 15:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ACE4204D
+	for <linux-pci@vger.kernel.org>; Tue, 10 Sep 2024 15:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725981565; cv=none; b=Z1v2bIYwSlwCzVt3nTE0Q3KfTf4ZWu/Ibn81F0KyztOC8TIM0YfMsZA/BMTaji8xDs4haoGO8SGNoo+7X04dBsL23gMB9R8bNswX+Llsdhxm0r7pfhzrckv3GOpja9A1gDYGysKpbb0I9ow7x3Pnyn3EsTCU1SpCciGoC+uFkbs=
+	t=1725982550; cv=none; b=C7cX+BgUPtcSHK3orcRQqdeBeBvGEbfgXHwI7u+q5reUcSElyTHy56MswQsiPtfm8OH0hitHlBIZBZO71K+4k9BpxFmz6api7RTPXsSAAG5kwmnv3pJQLM/09fhlXe2QY394a11ERZYRqmUuXTQvG9xJf1Vzi0hMHk8zHQRY41M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725981565; c=relaxed/simple;
-	bh=cSctLIy+Ueh9E3uOggfIzmmhU3Wfl0bc8PZ27z1Sk00=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jca+o6nkUOjdlODx3B89evmEbb1Q/ilq0748mqjAoe7lASohH/OZASMJ7MStyW1DU+eAXrSm7Ljwv7vz2MYntCMFj2KPffKV0q2y4VY3P/iCc1u9B2AgU0RRACz4+xt7SubPB3OCs4C3fpEc4FvLawyw+vDpaCxvu9INjReAxo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K3xH550v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RqubavTv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K3xH550v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RqubavTv; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7561E21A68;
-	Tue, 10 Sep 2024 15:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725981562; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qS/6HzsIq3IulkJS4iX4Snvr5Ush1QhGkDf3KbzmlYA=;
-	b=K3xH550vq3TS8ey6H7TUGTNefNVJG8CJX1jh4Zkkcf6QGgtxJCVVSY8OSlTSDSy0Bl2hQt
-	S+KRRUD6UWsJk8FaIr5Tt3gz3fStAdmuVpcyUT9pDyzqiQMeelP9GC85eGjlXNfKfSHtR4
-	4iEB2/6ifwiaIs12uQZh05u6CWMbEiE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725981562;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qS/6HzsIq3IulkJS4iX4Snvr5Ush1QhGkDf3KbzmlYA=;
-	b=RqubavTv4t6LKC/HCnxn/i5/XksLuPaib1UkYphxOWpJKlY4rhLhvecCzhEBzxtGhbeCsh
-	Qmp+TdlE2MGLwOCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1725981562; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qS/6HzsIq3IulkJS4iX4Snvr5Ush1QhGkDf3KbzmlYA=;
-	b=K3xH550vq3TS8ey6H7TUGTNefNVJG8CJX1jh4Zkkcf6QGgtxJCVVSY8OSlTSDSy0Bl2hQt
-	S+KRRUD6UWsJk8FaIr5Tt3gz3fStAdmuVpcyUT9pDyzqiQMeelP9GC85eGjlXNfKfSHtR4
-	4iEB2/6ifwiaIs12uQZh05u6CWMbEiE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1725981562;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qS/6HzsIq3IulkJS4iX4Snvr5Ush1QhGkDf3KbzmlYA=;
-	b=RqubavTv4t6LKC/HCnxn/i5/XksLuPaib1UkYphxOWpJKlY4rhLhvecCzhEBzxtGhbeCsh
-	Qmp+TdlE2MGLwOCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6ED5113A3A;
-	Tue, 10 Sep 2024 15:19:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IF+yD3lj4GaxQgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Tue, 10 Sep 2024 15:19:21 +0000
-From: Stanimir Varbanov <svarbanov@suse.de>
-To: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	kw@linux.com,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH v2 -next 11/11] arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
-Date: Tue, 10 Sep 2024 18:18:45 +0300
-Message-ID: <20240910151845.17308-12-svarbanov@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240910151845.17308-1-svarbanov@suse.de>
-References: <20240910151845.17308-1-svarbanov@suse.de>
+	s=arc-20240116; t=1725982550; c=relaxed/simple;
+	bh=eUo0OnDbl/xJ/0dJDbTU85FPlQ/pmWeRuwY/xCaOqNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TFo/NY5FxTlkWcOLGK/ClePnzuSNbTsG6nl/OhVwkWERZuvNSEUmOZu19oOjLSt3FD0BQY3elzdUneSuJf2+q/P9VKI2tQ7QBK5g+fxr+Zc6X/sam+pRs7wioOquAqMuXgrxxoTyqyX1r1/wqaaeCSEr6K4+NIFUc10tGeTDVIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YOkB7npb; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725982549; x=1757518549;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=eUo0OnDbl/xJ/0dJDbTU85FPlQ/pmWeRuwY/xCaOqNQ=;
+  b=YOkB7npbK4l3pO9z7GhvlcSB5+TxBIG+ah7OMwRZpX2TzoVW8tP8ctn8
+   MUS97+0yA1y1YBWWuLi+ebm4Xipu3L/jc+nzSKLSflhL9E/oJ3Gs0DUkC
+   OTCQ+SEqnlm8EIHrAg1gvNPh3BQqgPDxNs2zoz6djYc+knbuQ2E84dQIT
+   2J/utybqa2+QsVRpVzyqM26LlfA4BPXOe2lw89muh69CFUS3eK7WNarxS
+   7hA4iAbjrBIxYVD5tdvKsNDmIMbqcdBDCHizjBoaOePeJPPGvkGf+fDjp
+   a4cA8pZLdb5wynuav1laX9jerpuOWZAvPzkX0g75vxprhxCFTx9Gnaa3Z
+   A==;
+X-CSE-ConnectionGUID: wzI8AU1uQ1yF/y3H+9SybQ==
+X-CSE-MsgGUID: LPjx5QI+RpWWjtHQarM9/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11191"; a="35405408"
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="35405408"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 08:35:48 -0700
+X-CSE-ConnectionGUID: LxVmtujnR0uOE1O9k+r+TA==
+X-CSE-MsgGUID: uoIiKP9bSeeiAyHHGGfnpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="71833802"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 10 Sep 2024 08:35:47 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1so2u8-0002Gt-2N;
+	Tue, 10 Sep 2024 15:35:44 +0000
+Date: Tue, 10 Sep 2024 23:35:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ 59100eb248c0b15585affa546c7f6834b30eb5a4
+Message-ID: <202409102320.3AVJcraR-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de];
-	FROM_HAS_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	R_RATELIMIT(0.00)[to_ip_from(RL7mwea5a3cdyragbzqhrtit3y)];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -5.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
 
-Enable pcie1 and pcie2 DT nodes. Pcie1 is used for the extension
-connector and pcie2 is used for RP1 south-bridge.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: 59100eb248c0b15585affa546c7f6834b30eb5a4  PCI: Use an error code with PCIe failed link retraining
 
-Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
----
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+elapsed time: 1480m
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index 2bdbb6780242..e970a6013c6f 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -62,3 +62,11 @@ &sdio1 {
- 	sd-uhs-ddr50;
- 	sd-uhs-sdr104;
- };
-+
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+&pcie2 {
-+	status = "okay";
-+};
+configs tested: 101
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc-13.3.0
+arc                   randconfig-001-20240910   gcc-13.2.0
+arc                   randconfig-002-20240910   gcc-13.2.0
+arm                   randconfig-001-20240910   clang-20
+arm                   randconfig-002-20240910   gcc-14.1.0
+arm                   randconfig-003-20240910   gcc-14.1.0
+arm                   randconfig-004-20240910   clang-20
+arm64                 randconfig-001-20240910   gcc-14.1.0
+arm64                 randconfig-002-20240910   clang-20
+arm64                 randconfig-003-20240910   gcc-14.1.0
+arm64                 randconfig-004-20240910   gcc-14.1.0
+csky                  randconfig-001-20240910   gcc-14.1.0
+csky                  randconfig-002-20240910   gcc-14.1.0
+hexagon                          allmodconfig   clang-20
+hexagon                          allyesconfig   clang-20
+hexagon               randconfig-001-20240910   clang-17
+hexagon               randconfig-002-20240910   clang-20
+i386                             allmodconfig   gcc-12
+i386                              allnoconfig   gcc-12
+i386                             allyesconfig   gcc-12
+i386         buildonly-randconfig-001-20240910   gcc-12
+i386         buildonly-randconfig-002-20240910   gcc-12
+i386         buildonly-randconfig-003-20240910   gcc-12
+i386         buildonly-randconfig-004-20240910   clang-18
+i386         buildonly-randconfig-005-20240910   clang-18
+i386         buildonly-randconfig-006-20240910   gcc-12
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240910   gcc-12
+i386                  randconfig-002-20240910   gcc-12
+i386                  randconfig-003-20240910   gcc-12
+i386                  randconfig-004-20240910   gcc-12
+i386                  randconfig-005-20240910   gcc-12
+i386                  randconfig-006-20240910   clang-18
+i386                  randconfig-011-20240910   gcc-12
+i386                  randconfig-012-20240910   clang-18
+i386                  randconfig-013-20240910   clang-18
+i386                  randconfig-014-20240910   gcc-12
+i386                  randconfig-015-20240910   gcc-12
+i386                  randconfig-016-20240910   clang-18
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch             randconfig-001-20240910   gcc-14.1.0
+loongarch             randconfig-002-20240910   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+nios2                 randconfig-001-20240910   gcc-14.1.0
+nios2                 randconfig-002-20240910   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240910   gcc-14.1.0
+parisc                randconfig-002-20240910   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc               randconfig-001-20240910   clang-20
+powerpc               randconfig-002-20240910   gcc-14.1.0
+powerpc               randconfig-003-20240910   gcc-14.1.0
+powerpc64             randconfig-001-20240910   clang-14
+powerpc64             randconfig-002-20240910   gcc-14.1.0
+powerpc64             randconfig-003-20240910   clang-20
+riscv                             allnoconfig   gcc-14.1.0
+riscv                 randconfig-001-20240910   gcc-14.1.0
+riscv                 randconfig-002-20240910   gcc-14.1.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   clang-20
+s390                             allyesconfig   gcc-14.1.0
+s390                  randconfig-001-20240910   clang-20
+s390                  randconfig-002-20240910   gcc-14.1.0
+sh                               allmodconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                    randconfig-001-20240910   gcc-14.1.0
+sh                    randconfig-002-20240910   gcc-14.1.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64               randconfig-001-20240910   gcc-14.1.0
+sparc64               randconfig-002-20240910   gcc-14.1.0
+um                               allmodconfig   clang-20
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-12
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240910   gcc-12
+x86_64       buildonly-randconfig-002-20240910   gcc-12
+x86_64       buildonly-randconfig-003-20240910   clang-18
+x86_64       buildonly-randconfig-004-20240910   gcc-12
+x86_64       buildonly-randconfig-005-20240910   gcc-11
+x86_64       buildonly-randconfig-006-20240910   gcc-12
+x86_64                              defconfig   gcc-11
+x86_64                randconfig-001-20240910   gcc-12
+x86_64                randconfig-002-20240910   gcc-12
+x86_64                randconfig-003-20240910   gcc-12
+x86_64                randconfig-004-20240910   gcc-12
+x86_64                randconfig-005-20240910   clang-18
+x86_64                randconfig-006-20240910   clang-18
+x86_64                randconfig-011-20240910   gcc-12
+x86_64                randconfig-012-20240910   clang-18
+x86_64                randconfig-013-20240910   clang-18
+x86_64                randconfig-014-20240910   clang-18
+x86_64                randconfig-015-20240910   gcc-12
+x86_64                          rhel-8.3-rust   clang-18
+
 -- 
-2.35.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
