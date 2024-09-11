@@ -1,71 +1,70 @@
-Return-Path: <linux-pci+bounces-13052-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13053-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E5097587B
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 18:34:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D604E9758D7
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 18:56:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 704ABB22D10
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 16:34:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1508A1C231CF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 16:56:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F2E1AC8A0;
-	Wed, 11 Sep 2024 16:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C5421B0131;
+	Wed, 11 Sep 2024 16:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cke0NNEi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EeCFVeoa"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7901A3AB8;
-	Wed, 11 Sep 2024 16:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28CB383B1;
+	Wed, 11 Sep 2024 16:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726072439; cv=none; b=QfszJNOkGr1b7pAiK1fg8BOGMhDqxs8V6NAH8W8JaM4PQB19KsEDbJEpo/1u+tHWAXYK834zqzDGaJFq2fiWDdc2dvPoa7iOO0kdGplmmIw/DKAvmKowcdWNqUJJB3oPT9mD4T5ypWCv9WnwRjDaCPIIDvcTj+9nUCBsbDgxU40=
+	t=1726073773; cv=none; b=aHR78Miiy2jRtq0rP1TYqXi+Y+gzdoNDPZlViyPGDLPZ2X0qcb0qnphQP29o3N5GUKU15GRfJQixOML2CBdDsArKVz5Z2Gg7CTkUjzFv6x1axGBCBgWZWpHCmTX9saVmCbmlNrl7GMaISOV1c6aK6AUA5bnEnwvoGhg/sSWS5V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726072439; c=relaxed/simple;
-	bh=me2IwCdr0YPbwk7LPVsZk6xYX4lHvRc5w/WlwEq5Ot0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LUHNmTXVZX+PjYJC00IFNHFVdNqsUj7ROHp2ldUqZLJVZWTD++JAkHCOqU2gXIJcmc4TD9ulJ9K2gm1ikDKlXi6yVzagVkHeH8QbR0j7sb1pQR18zYTCH+zlnCdNrahG/Adtriou0JdDe1iP2mWrY5P7E5Ap5UDYIrv4S0c3reI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cke0NNEi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C99A8C4CEC0;
-	Wed, 11 Sep 2024 16:33:58 +0000 (UTC)
+	s=arc-20240116; t=1726073773; c=relaxed/simple;
+	bh=w5rs/PwnbnPH2WJmKYV5ErVySmPazQWq1znvo203RuI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUmLwscyItJQk/AJ/H8Z0xJKWRb1Y+3WY8n6QR98drZ6GZvPOx9IDNiktoZf4VZ/942VLT9GxZFPngS81fWixc+CfrOUzU0EYle3QuBELyt3kyceXOUtEG86GQvAaLmLiRK1ik/BLRXxliEu3pQR0tpfNoE2KaAbWGFL0kY1QLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EeCFVeoa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51077C4CEC0;
+	Wed, 11 Sep 2024 16:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726072439;
-	bh=me2IwCdr0YPbwk7LPVsZk6xYX4lHvRc5w/WlwEq5Ot0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Cke0NNEiY/Ntdi9DzOQWVIx2io2HmhtOE9Tfn/DtPR7XxhJ2nNd/qGrWUEHNo0Hu7
-	 jtXTkS39wkSgMp5MdfGtAdXasMqWFKucOTqwcKosQ2zT355Tkz1r45LHx34oa7hkMk
-	 PFYXqcEQJnAV98EKJ1fw8P67GORnJ/TU3U6pBOKSv42z/bTShuyl5xPhDFjVxyN9fQ
-	 3ZH2P8eMrByP8jTwXRBuAAT/mdCh4dEwC15fTixvA8LXqKJ/yDKBmitZw+BBY/475u
-	 M9thXb3k+g7hf2aRQkbAExivGG3g//uIsLFPSQ3l2XLhQkkGqPbGlheoEpDTYSCfcE
-	 xxQja9Fio1UyQ==
-Date: Wed, 11 Sep 2024 11:33:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
+	s=k20201202; t=1726073772;
+	bh=w5rs/PwnbnPH2WJmKYV5ErVySmPazQWq1znvo203RuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EeCFVeoaqIsPDBQE0cuwny/rnaq2ePK5Qk/s92YTROQQkNHM3nIIgPkWFjDz3zOFN
+	 +kfwYV41jho7WPj91L7xWWcJyQdU/33R/YufgZn0ub4Hu7LnArHcDvURjfwIncfBCG
+	 /tzYMkDsUzfLpyd13oJaQ64AjE6+O5BKxZTtXvRBONR/bEqqk/FdUmRQvAQ/dH8u+o
+	 6FrP/IHp4X4CMlqT++SutuJkcb0Mj8j9p/9b4sZh6me2iEqDtaznp80ghjoBSRuZQo
+	 zLHFq2vmhlLj2vg5gtLKmeqflGz+1t5yRTINirAxAuKjXQ3+DlENvGm1zwavw1RJiC
+	 GtvjUhjQsy1uQ==
+Date: Wed, 11 Sep 2024 11:56:11 -0500
+From: Rob Herring <robh@kernel.org>
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
 	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org, Qianqiang Liu <qianqiang.liu@163.com>
-Subject: Re: [PATCH v8 11/11] PCI: imx6: Add i.MX8Q PCIe root complex (RC)
- support
-Message-ID: <20240911163356.GA643833@bhelgaas>
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>
+Subject: Re: [PATCH v2 -next 01/11] dt-bindings: interrupt-controller: Add
+ bcm2712 MSI-X DT bindings
+Message-ID: <20240911165611.GA897131-robh@kernel.org>
+References: <20240910151845.17308-1-svarbanov@suse.de>
+ <20240910151845.17308-2-svarbanov@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,69 +73,112 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZuG1BfhQpd9GajNH@lizhi-Precision-Tower-5810>
+In-Reply-To: <20240910151845.17308-2-svarbanov@suse.de>
 
-On Wed, Sep 11, 2024 at 11:19:33AM -0400, Frank Li wrote:
-> On Wed, Sep 11, 2024 at 09:07:21AM -0500, Bjorn Helgaas wrote:
-> > [+cc Qianqiang]
-> >
-> > On Mon, Jul 29, 2024 at 04:18:18PM -0400, Frank Li wrote:
-> > > From: Richard Zhu <hongxing.zhu@nxp.com>
-> > >
-> > > Implement i.MX8Q (i.MX8QM, i.MX8QXP, and i.MX8DXL) PCIe RC support. While
-> > > the controller resembles that of iMX8MP, the PHY differs significantly.
-> > > Notably, there's a distinction between PCI bus addresses and CPU addresses.
-> > >
-> > > Introduce IMX_PCIE_FLAG_CPU_ADDR_FIXUP in drvdata::flags to indicate driver
-> > > need the cpu_addr_fixup() callback to facilitate CPU address to PCI bus
-> > > address conversion according to "ranges" property.
-> >
-> > > +static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
-> > > +{
-> > > +	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
-> > > +	struct dw_pcie_rp *pp = &pcie->pp;
-> > > +	struct resource_entry *entry;
-> > > +	unsigned int offset;
-> > > +
-> > > +	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
-> > > +		return cpu_addr;
-> > > +
-> > > +	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> > > +	offset = entry->offset;
-> > > +	return (cpu_addr - offset);
-> > > +}
-> >
-> > I'm sure that with enough effort, we could prove "entry" cannot be
-> > NULL here, but I'm not sure I want to spend the effort, and we're
-> > going to end up with more patches like this:
-> >
-> >   https://lore.kernel.org/r/20240911125055.58555-1-qianqiang.liu@163.com
-> >
-> > I propose this minor change:
-> >
-> >   entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> >   if (!entry)
-> >     return cpu_addr;
-> >
-> >   return cpu_addr - entry->offset;
-> >
-> > I still think we should get rid of the .cpu_addr_fixup() callback if
-> > possible.  But that's a discussion for another day.
+On Tue, Sep 10, 2024 at 06:18:35PM +0300, Stanimir Varbanov wrote:
+> Adds DT bindings for bcm2712 MSI-X interrupt peripheral controller.
 > 
-> Stop these fake alarm from some tools's scan. entry never be NULL here.
-> I am working on EP side by involve a "ranges" support like RC side.
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> ---
+>  .../brcm,bcm2712-msix.yaml                    | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
 > 
-> Or just omit this kinds of patches.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+> new file mode 100644
+> index 000000000000..2b53dfa7c25e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/brcm,bcm2712-msix.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom bcm2712 MSI-X Interrupt Peripheral support
+> +
+> +maintainers:
+> +  - Stanimir Varbanov <svarbanov@suse.de>
+> +
+> +description: >
 
-As I said initially, we probably *could* prove that "entry" can never
-be NULL here, but why should I have to spend the effort to do that?
-The "windows" list is not even built in this file, so it's not
-trivial.  And even if "entry" can't be NULL now, what's to prevent
-that assumption from breaking in the future?
+Don't need '>' here.
 
-I don't think there's anything wrong with checking for NULL here, and
-it avoids copy/pasting this somewhere where it *does* matter.  So I'm
-in favor of this kind of patch.
+> +  This interrupt controller is used to provide interrupt vectors to the
+> +  generic interrupt controller (GIC) on bcm2712. It will be used as
+> +  external MSI-X controller for PCIe root complex.
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2712-mip
+> +
+> +  reg:
+> +    items:
+> +      - description: base registers address
+> +      - description: pcie message address
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
 
-Bjorn
+What goes in these cells?
+
+But really, what interrupts does an MSI controller handle? Or are we 
+just putting "interrupt-controller" in here so that kernel handles this 
+with IRQCHIP_DECLARE()?
+
+> +
+> +  msi-controller: true
+
+Drop and use 'unevaluatedProperties'.
+
+> +
+> +  "#msi-cells":
+> +    enum: [0]
+
+const: 0
+
+> +
+> +  msi-ranges: true
+
+Drop.
+
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - msi-controller
+> +  - msi-ranges
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    axi {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        msi-controller@1000130000 {
+> +            compatible = "brcm,bcm2712-mip";
+> +            reg = <0x10 0x00130000 0x00 0xc0>,
+> +                  <0xff 0xfffff000 0x00 0x1000>;
+> +            msi-controller;
+> +            #msi-cells = <0>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +            msi-ranges = <&gicv2 GIC_SPI 128 IRQ_TYPE_EDGE_RISING 64>;
+> +        };
+> +    };
+> -- 
+> 2.35.3
+> 
 
