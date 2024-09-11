@@ -1,142 +1,93 @@
-Return-Path: <linux-pci+bounces-13040-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13041-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81F8D97553B
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 16:27:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D85A975583
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 16:33:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37B221F26000
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 14:27:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8B8028B510
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Sep 2024 14:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04EBA19E96A;
-	Wed, 11 Sep 2024 14:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 853FD19F11A;
+	Wed, 11 Sep 2024 14:33:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5xPkGWa"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NDmOFM2K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24E719C549;
-	Wed, 11 Sep 2024 14:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5362C191F8C;
+	Wed, 11 Sep 2024 14:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726064837; cv=none; b=AD5k7q/42fgbfL/fBhkHXS09QSPVoDGGtrEOkG90uE1GD9pnRPumBf7Kl0b5Pq0icrgCvJIOyj6T8KuRxmzyo63AQa70hKy77c3bbhzeyOBu7pW7Qh9NiO7utK43Og2u21zJQ3kqjKIjI0bVDD1AQMl8ykS/RZ/FAmR+EG2Qdy4=
+	t=1726065190; cv=none; b=JSF+b7uXa64aXtPt/GZ4hx7awqnE1qfJlIq61AbtOlmnvW9TWikYlQi5rmT01CYkUU/xrHjJc844JXS9vNgMxHOLvfG0CKSdOCCkMBf7GdYq7X4y5yiU9ophsDHOOlw/aB3SNVFWHSGKVsdGdp2H0gBR59Ae82Gmj+oI32P1nsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726064837; c=relaxed/simple;
-	bh=FaOwNupyl9iAIlCSstUPhKFSdOd6TxiIQxicMnmypzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=i1wwfh8Sm4WNXrxuuayR+pg1nPHGidXh0pyD2wr0QAJ2IbcYc9LRPEf5AY+43f/Q++FSsFgCfbzBMiE3j+0QcOV9yL5sZoFYKLmpOzv+G3j+kT1MG92d0Bzpwfyej+7mIucL+tSfSkTC2A09IbIrq6yFA1tTHvrU7aIVeQErPB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5xPkGWa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BC87C4CEC0;
-	Wed, 11 Sep 2024 14:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726064837;
-	bh=FaOwNupyl9iAIlCSstUPhKFSdOd6TxiIQxicMnmypzs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=T5xPkGWap9jxKexIvUS7sty9qun3N17h+2CyAVNokPp58NdbQZv44vbEG44tPp3Wn
-	 BGJbAzyBajZppT9ftEb4YABZahmYsHC1JmBbkz8HPQ4Hz9wTClqmN9xmeDeoxl3FvG
-	 uWMfXkjW7xCILQ5N3GSlC3DjZyFUFpakLoeAk+cBB1y648jL1/D8f+bsi/3rHBVoIW
-	 JBVzZaDaMGWp7y4zfDmDe8R/1Xw4dK/SRwFVR5s+sqtl0jh4lxPNII/5uFY5o6Xy1S
-	 oOUPuwKhIAzv8+IQbsvi4pM+zg4G0XTWxMhuVmzFRj9+bno/UoGjXt7eP50Y5yQ34P
-	 ClzXMB39W1IbQ==
-Date: Wed, 11 Sep 2024 09:27:15 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1726065190; c=relaxed/simple;
+	bh=nH7uXR/mf89HIjvFTdMKPGL8LxZGyXArM3vFfrHZHHk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qAHV0LJ/Yhauqt3if+S74alpiTQleUMwteCnYh5pEZBVP90PBajtDv0iq238xXlXcrl3oyaGys4Z3u9d5BYP+uxB2omA2e4K0hTXGc5amHeR/ZVNGTWSv/Zj5o5pBSzik7VIDetyqvixodyTqHhIj4NVxk/TxpnjEIyTLOF7X38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NDmOFM2K; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=BeDJb
+	itMR/rHgNLbtzCICYHaqbwBV6Q3Kpd+79Ocnh0=; b=NDmOFM2KsaKH9f366mVWW
+	Sf13O3yxeAZTUlhdT1SOVEX4yX7fg5LBaWLARqMF5h1wN/Y57C520cxygDwoJRep
+	+GEUdatOmFgswFdsdkZRQ1BYL7EiWb46IpdEpuwG7ZDHX43uFQM8pzzJ+iB9OIkQ
+	dep6uYMrgDJ61wH1yb/iQc=
+Received: from iZbp1asjb3cy8ks0srf007Z.. (unknown [120.26.85.94])
+	by gzga-smtp-mta-g3-1 (Coremail) with SMTP id _____wDnT_r1qeFmmhDyCg--.6633S2;
+	Wed, 11 Sep 2024 22:32:21 +0800 (CST)
+From: Qianqiang Liu <qianqiang.liu@163.com>
+To: ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com,
+	lpieralisi@kernel.org,
+	matthias.bgg@gmail.com
+Cc: linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH v2] PCI: Fix potential deadlock in pcim_intx()
-Message-ID: <20240911142715.GA633951@bhelgaas>
+	Qianqiang Liu <qianqiang.liu@163.com>
+Subject: [PATCH] PCI: mediatek-gen3: Check the return value of the reset_control_bulk_deassert
+Date: Wed, 11 Sep 2024 22:31:55 +0800
+Message-Id: <20240911143154.59816-1-qianqiang.liu@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905072556.11375-2-pstanner@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnT_r1qeFmmhDyCg--.6633S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKr4xJr43Gr4kAry5tr4ktFb_yoWkJFg_Xr
+	Z7GFsrA3yDCry3KwnFyrWrArZxAas7Z3W0kF95tF13Aa48ur1FqrnrZrWDZF4UGF4Yqr9x
+	GF1kuw4fAa4UJjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjJPEDUUUUU==
+X-CM-SenderInfo: xtld01pldqwhxolxqiywtou0bp/1tbiLwVXamVOGRDjgwACsX
 
-On Thu, Sep 05, 2024 at 09:25:57AM +0200, Philipp Stanner wrote:
-> commit 25216afc9db5 ("PCI: Add managed pcim_intx()") moved the
-> allocation step for pci_intx()'s device resource from
-> pcim_enable_device() to pcim_intx(). As before, pcim_enable_device()
-> sets pci_dev.is_managed to true; and it is never set to false again.
-> 
-> Due to the lifecycle of a struct pci_dev, it can happen that a second
-> driver obtains the same pci_dev after a first driver ran.
-> If one driver uses pcim_enable_device() and the other doesn't,
-> this causes the other driver to run into managed pcim_intx(), which will
-> try to allocate when called for the first time.
-> 
-> Allocations might sleep, so calling pci_intx() while holding spinlocks
-> becomes then invalid, which causes lockdep warnings and could cause
-> deadlocks:
-> 
-> ========================================================
-> WARNING: possible irq lock inversion dependency detected
-> 6.11.0-rc6+ #59 Tainted: G        W
-> --------------------------------------------------------
-> CPU 0/KVM/1537 just changed the state of lock:
-> ffffa0f0cff965f0 (&vdev->irqlock){-...}-{2:2}, at:
-> vfio_intx_handler+0x21/0xd0 [vfio_pci_core] but this lock took another,
-> HARDIRQ-unsafe lock in the past: (fs_reclaim){+.+.}-{0:0}
-> 
-> and interrupts could create inverse lock ordering between them.
-> 
-> other info that might help us debug this:
->  Possible interrupt unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(fs_reclaim);
->                                local_irq_disable();
->                                lock(&vdev->irqlock);
->                                lock(fs_reclaim);
->   <Interrupt>
->     lock(&vdev->irqlock);
-> 
->  *** DEADLOCK ***
-> 
-> Have pcim_enable_device()'s release function, pcim_disable_device(), set
-> pci_dev.is_managed to false so that subsequent drivers using the same
-> struct pci_dev do implicitly run into managed code.
-> 
-> Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
-> Reported-by: Alex Williamson <alex.williamson@redhat.com>
-> Closes: https://lore.kernel.org/all/20240903094431.63551744.alex.williamson@redhat.com/
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> Tested-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
-> @Bjorn:
-> This problem was introduced in the v6.11 merge window. So one might
-> consider getting it into mainline before v6.11.0 gets tagged.
+"reset_control_bulk_deassert" may return error code, we should check the
+return value of it.
 
-Applied with Damien's Reviewed-by to pci/for-linus for v6.11, thanks.
+Signed-off-by: Qianqiang Liu <qianqiang.liu@163.com>
+---
+ drivers/pci/controller/pcie-mediatek-gen3.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/pci/devres.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index 3780a9f9ec00..c7affbbf73ab 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -483,6 +483,8 @@ static void pcim_disable_device(void *pdev_raw)
->  
->  	if (!pdev->pinned)
->  		pci_disable_device(pdev);
-> +
-> +	pdev->is_managed = false;
->  }
->  
->  /**
-> -- 
-> 2.46.0
-> 
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 66ce4b5d309b..5b35dc32ad47 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -1016,7 +1016,9 @@ static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
+ 	 * Deassert the line in order to avoid unbalance in deassert_count
+ 	 * counter since the bulk is shared.
+ 	 */
+-	reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
++	err = reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
++	if (err)
++		return err;
+ 	/*
+ 	 * The controller may have been left out of reset by the bootloader
+ 	 * so make sure that we get a clean start by asserting resets here.
+-- 
+2.39.2
+
 
