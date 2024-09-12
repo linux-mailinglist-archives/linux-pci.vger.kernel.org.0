@@ -1,81 +1,95 @@
-Return-Path: <linux-pci+bounces-13117-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13118-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DEB8976C48
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 16:37:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C995976C75
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 16:45:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15893285194
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 14:37:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A25E1F2464E
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 14:45:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5711B12F1;
-	Thu, 12 Sep 2024 14:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26EE21AD9CB;
+	Thu, 12 Sep 2024 14:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqmkcdBv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M64PuJY2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDBB1AD279;
-	Thu, 12 Sep 2024 14:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518601AD276
+	for <linux-pci@vger.kernel.org>; Thu, 12 Sep 2024 14:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726151869; cv=none; b=naAswUt9bUTjzyAPPCP4159AD8sL6wN8PuurlC7c1Dm6a2BY9wa8ORlOFEpV3P9/fxk+TxnNr/tAyueDoAbSn802yp3qGnF5kPVAh6FUDbC43Zk8aJgIHghtUpb5j8Hg7Rx8m86zUkJBJAwDbFOfuQZ4SrJsJVsxEx9jSYCn/c8=
+	t=1726152303; cv=none; b=TfUrFhIdWKWfgyK/cErVgWPbAOZqbgs2SrgfByITvyZfxEBnK953JrFPIxkYhbkZu0lzf1l21f5yVpylBAngIhHLdzXYcrwLw+eDhjUYn8f5yhORhaAQfoEJlGTT0q9pyXF2N67SoJwTYc2AQTULAA2MmHKuKXLWUVVx554RYE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726151869; c=relaxed/simple;
-	bh=aaWSOI6MHJpLiPOnj5+JUWz8WRVEzc2V3HK4lxMCrXg=;
+	s=arc-20240116; t=1726152303; c=relaxed/simple;
+	bh=A/8ZCG9y3TEjGNR152EIdHi0nvsFyn37cQI3yggThnQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HymfjYSMgQv5JK2IpheqPQImq2bU1UEJqwg5GdhXSAeSoyzIir0c7Usfr+P/iY91RKieuWy2ZJ7mEk4xa6Wm3kpVDWnHzD2YZQ/aFndzDz1BtlVGKDjz4sQ3MLQQCdk1SDJvFfqO12V3PlLARNqoNkeW7inGNB2WfWGjHcd26M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqmkcdBv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63210C4CEC3;
-	Thu, 12 Sep 2024 14:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726151869;
-	bh=aaWSOI6MHJpLiPOnj5+JUWz8WRVEzc2V3HK4lxMCrXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UqmkcdBva718XKuLTmddQooosXpq27yFyMFL567h3OryjxwVrDJOdtHm5QJaKCxcm
-	 93KB1ZBPVPNnvAtgJDn1WHP9ywGz+muzfZorn2eHYEmO1kCCd7e1K6wRph5z9yE6Ve
-	 GvjMTETF6ht/xp8V5qLMdt1aYPVSBmiDt0GE9/aNzg1JAMwFYoc1WNVHZC/aMTUbsG
-	 RUj4a4KfesifilOHjhd81AGQhorbOiKV1m+Ri/V/X4egcafHZpHZ7/m+Lu0k2a5jER
-	 XNFJMwDf8ZMPCYPcpNQFAgR16FubTNv5NRBuJo49G68/ghUhWQc6Znzxr8urVYRXF0
-	 6y4w7XLpj3RoQ==
-Date: Thu, 12 Sep 2024 15:37:40 +0100
-From: Lee Jones <lee@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Simon Horman <horms@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
-Subject: Re: [PATCH v5 3/8] mfd: syscon: Add reference counting and device
- managed support
-Message-ID: <20240912143740.GD24460@google.com>
-References: <20240808154658.247873-1-herve.codina@bootlin.com>
- <20240808154658.247873-4-herve.codina@bootlin.com>
- <20240903153839.GB6858@google.com>
- <20240903180116.717a499b@bootlin.com>
- <20240909095203.3d6effdb@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nrDSxy3XXoOZDiwe+/B5bD5OxHzVkP5fmxnutDDemjcjnqY6LGIXjmkfRJ0toFwtysTvfFhdlYmpIG/4Aqa8k8jk68w2VufK+AOWcrDI/k8L+6O0ISeEM5QOmtJDqH7Si2rDGGtfk04SMuUmEJQMz9ANHtgLR1Lqj4W+NMRpb4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M64PuJY2; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-278279a3a39so511443fac.0
+        for <linux-pci@vger.kernel.org>; Thu, 12 Sep 2024 07:45:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726152300; x=1726757100; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Us8nS3NBHkRNjHO7PeWm6594BLpqNuKjFcNB+sFes+A=;
+        b=M64PuJY2q7KYAL40MoJ6dBc9GVuYcuKgtCUZckScnQOdyW1I+CCQzRKWvQOcEfSpi4
+         HkyDAeNWiYfZtqb5vEPTndtv0sT+5vvJC1a1HSq7vSP+EDTzN85dSocYGrS+TB1HouvP
+         sPJmitc6aSX3NCPIRi6IWAckO/x1qtAknGJcG845RCzEFHq5p/iAPun27yf3oE5FNEGw
+         QcKFnrIwWNkSTKWBuc/a6cqOx0rzLZLfNIEkq9+K/KZ2zLQ9cFig4hSDLfsmMEQywgQv
+         JILM/rfKbZU0rQgsof/Z1pzuIewpJ+A/4fU8wXw6nNlIegmElIfrQKk4QwvJi/36y5H9
+         3qnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726152300; x=1726757100;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Us8nS3NBHkRNjHO7PeWm6594BLpqNuKjFcNB+sFes+A=;
+        b=ReMRS9zhNixbLfyxv000OVhmYP41l6YAWbJaRnZwod96xZtBpx/IbS9uUcWV1NQG8z
+         T74VIv2sI+8P6m40FjXqolCsOp+fnbGPFStnQgzqyZtu0N4KFv6t7FQ+8UfWyV7ntJBl
+         0CgrSLmqjrX9CDCcPsNKpWgl6XUG6TD2uLa40GB6L3mT5KdiF/Gp8zMgJ+Ky8ST8LWhZ
+         /v/wiXTp2gMxb07zPkJFPajB3KREceSIAHZMBp6ZNE/l5ibMDFz3TwYLxvd/rdCYGAMC
+         /suIbWNGPrBN/UiaNRl4o66OCCPWrPpxYL1c3FJ00jbfRjQAs4zsmK92chl3bH3ZWlBc
+         Qj+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXT8xCcjmlsMZ+gr3LmQLaTvq22gguXYJ6jBskbeHlUuopJTAavVpdc2vTbRF9gg8gWYYoXk3pBgic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0p7D4T7o2aGP1W7ulkXrcR5NUj+z3AIy42DH3yXAN6Z9WY6R5
+	piTqa/BLnGOKpCQ6KXWS7tSugCKUaieq2G9MkU0bCsAyazaDuXJHQ60aOpuOcA==
+X-Google-Smtp-Source: AGHT+IELriO1F3RjFu7Nlmk0OH8Yy7rcsbs7jfdrPadTuniwAi50BrFet+dLaCQCkStjWf6ncGBXOA==
+X-Received: by 2002:a05:6871:3319:b0:277:ff5a:db0f with SMTP id 586e51a60fabf-27c3f2cfe64mr2186877fac.27.1726152300341;
+        Thu, 12 Sep 2024 07:45:00 -0700 (PDT)
+Received: from thinkpad ([120.60.79.18])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71908fe4e8asm4673021b3a.79.2024.09.12.07.44.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2024 07:45:00 -0700 (PDT)
+Date: Thu, 12 Sep 2024 20:14:39 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Qiang Yu <quic_qianyu@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, vkoul@kernel.org,
+	kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+	quic_devipriy@quicinc.com, kw@linux.com, lpieralisi@kernel.org,
+	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH 8/8] PCI: qcom: Add support to PCIe slot power supplies
+Message-ID: <20240912144439.fnne4x7qvggveve2@thinkpad>
+References: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
+ <20240827063631.3932971-9-quic_qianyu@quicinc.com>
+ <CAA8EJpq5KergZ8czg4F=EYMLANoOeBsiSVoO-zAgfG0ezQrKCQ@mail.gmail.com>
+ <20240827165826.moe6cnemeheos6jn@thinkpad>
+ <26f2845f-2e29-4887-9f33-0b5b2a06adb6@quicinc.com>
+ <20240911153228.7ajcqicxnu2afhbp@thinkpad>
+ <9222ef18-2eef-4ba3-95aa-fae540c06925@quicinc.com>
+ <d5468dd2-0f81-4d89-a3bd-a546b2395ca6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,73 +99,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240909095203.3d6effdb@bootlin.com>
+In-Reply-To: <d5468dd2-0f81-4d89-a3bd-a546b2395ca6@kernel.org>
 
-On Mon, 09 Sep 2024, Herve Codina wrote:
-
-> Hi Lee, Arnd,
+On Thu, Sep 12, 2024 at 04:15:56PM +0200, Konrad Dybcio wrote:
+> On 12.09.2024 3:39 PM, Qiang Yu wrote:
+> > 
+> > On 9/11/2024 11:32 PM, Manivannan Sadhasivam wrote:
+> >> On Wed, Sep 11, 2024 at 04:17:41PM +0800, Qiang Yu wrote:
+> >>> On 8/28/2024 12:58 AM, Manivannan Sadhasivam wrote:
+> >>>> On Tue, Aug 27, 2024 at 02:44:09PM +0300, Dmitry Baryshkov wrote:
+> >>>>> On Tue, 27 Aug 2024 at 09:36, Qiang Yu <quic_qianyu@quicinc.com> wrote:
+> >>>>>> On platform x1e80100 QCP, PCIe3 is a standard x8 form factor. Hence, add
+> >>>>>> support to use 3.3v, 3.3v aux and 12v regulators.
+> >>>>> First of all, I don't see corresponding bindings change.
+> >>>>>
+> >>>>> Second, these supplies power up the slot, not the host controller
+> >>>>> itself. As such these supplies do not belong to the host controller
+> >>>>> entry. Please consider using the pwrseq framework instead.
+> >>>>>
+> >>>> Indeed. For legacy reasons, slot power supplies were populated in the host
+> >>>> bridge node itself until recently Rob started objecting it [1]. And it makes
+> >>>> real sense to put these supplies in the root port node and handle them in the
+> >>>> relevant driver.
+> >>>>
+> >>>> I'm still evaluating whether the handling should be done in the portdrv or
+> >>>> pwrctl driver, but haven't reached the conclusion. Pwrctl seems to be the ideal
+> >>>> choice, but I see a few issues related to handling the OF node for the root
+> >>>> port.
+> >>>>
+> >>>> Hope I'll come to a conclusion in the next few days and will update this thread.
+> >>>>
+> >>>> - Mani
+> >>>>
+> >>>> [1] https://lore.kernel.org/lkml/20240604235806.GA1903493-robh@kernel.org/
+> >>> Hi Mani, do you have any updates?
+> >>>
+> >> I'm working with Bartosz to add a new pwrctl driver for rootports. And we are
+> >> debugging an issue currently. Unfortunately, the progress is very slow as I'm on
+> >> vacation still.
+> >>
+> >> Will post the patches once it got resolved.
+> >>
+> >> - Mani
+> > OK, thanks for your update.
 > 
-> On Tue, 3 Sep 2024 18:01:16 +0200
-> Herve Codina <herve.codina@bootlin.com> wrote:
+> Qiang, you can still resubmit the rest of the patches without having
+> to wait on that to be resolved
 > 
-> > Hi Lee,
-> > 
-> > On Tue, 3 Sep 2024 16:38:39 +0100
-> > Lee Jones <lee@kernel.org> wrote:
-> > 
-> > > On Thu, 08 Aug 2024, Herve Codina wrote:
-> > >   
-> > > > From: Clément Léger <clement.leger@bootlin.com>
-> > > > 
-> > > > Syscon releasing is not supported.
-> > > > Without release function, unbinding a driver that uses syscon whether
-> > > > explicitly or due to a module removal left the used syscon in a in-use
-> > > > state.
-> > > > 
-> > > > For instance a syscon_node_to_regmap() call from a consumer retrieves a
-> > > > syscon regmap instance. Internally, syscon_node_to_regmap() can create
-> > > > syscon instance and add it to the existing syscon list. No API is
-> > > > available to release this syscon instance, remove it from the list and
-> > > > free it when it is not used anymore.
-> > > > 
-> > > > Introduce reference counting in syscon in order to keep track of syscon
-> > > > usage using syscon_{get,put}() and add a device managed version of
-> > > > syscon_regmap_lookup_by_phandle(), to automatically release the syscon
-> > > > instance on the consumer removal.
-> > > > 
-> > > > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
-> > > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > > ---
-> > > >  drivers/mfd/syscon.c       | 138 ++++++++++++++++++++++++++++++++++---
-> > > >  include/linux/mfd/syscon.h |  16 +++++
-> > > >  2 files changed, 144 insertions(+), 10 deletions(-)    
-> > > 
-> > > This doesn't look very popular.
-> > > 
-> > > What are the potential ramifications for existing users?
-> > >   
-> > 
-> > Existing user don't use devm_syscon_regmap_lookup_by_phandle() nor
-> > syscon_put_regmap().
-> > 
-> > So refcount is incremented but never decremented. syscon is never
-> > released. Exactly the same as current implementation.
-> > Nothing change for existing users.
-> > 
-> > Best regards,
-> > Hervé
-> 
-> I hope I answered to Lee's question related to possible impacts on
-> existing drivers.
-> 
-> Is there anything else that blocks this patch from being applied ?
 
-Arnd usually takes care of Syscon reviews.
+In that case, the slot supplies should be described in the PCIe bridge.
 
-Perhaps he's out on vacation.
+- Mani
 
-Let's wait a little longer, since it's too late for this cycle anyway.
+> Konrad
 
 -- 
-Lee Jones [李琼斯]
+மணிவண்ணன் சதாசிவம்
 
