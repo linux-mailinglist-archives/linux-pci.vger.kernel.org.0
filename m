@@ -1,123 +1,180 @@
-Return-Path: <linux-pci+bounces-13115-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13116-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D59CD976BC0
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 16:16:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6FFB976C45
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 16:37:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89FC21F232A6
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 14:16:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8992B284EA1
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 14:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 101861885BC;
-	Thu, 12 Sep 2024 14:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD281AD276;
+	Thu, 12 Sep 2024 14:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5iivF/H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QAP9VoBJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D096A2209B;
-	Thu, 12 Sep 2024 14:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36C31AD279
+	for <linux-pci@vger.kernel.org>; Thu, 12 Sep 2024 14:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726150566; cv=none; b=LNbn96GIog3BVtAoE632t2ZTGGFpAuYXSyZZ78xdLnE897X92W0VqmT/DrrR9s9rWKTHY2LMGQiN+iJGFoKWSsDbjdQykOSDJER/bPzJVUusUYd2LAEA1/Ivvx9LJklpJ9t2EMw0q8EaTw7AnqN0yXWhEw/RnMhxEfQ4uvASvMA=
+	t=1726151826; cv=none; b=behiVTMtokZ9UiLoWlzS3NPRAE8SifyQuW86lUNABb3YbT1OJ84wE6o1LaYO2zx0m5ogSgndWfhTRRhXDoQIXk4bWykvR4NnklmxmQ5hBUPqA7Dslsw6P1et5nk4gqfeLXiw1lpPDkn6WE0HfVEv7cSPZvfL4SjpecOW17awvhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726150566; c=relaxed/simple;
-	bh=fVIETZv+H9p1/it8eBQidsDxsQ++8d/hnRorBQfS3C0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=akXpZsAiOK7w79NsgXPt2eGuJdE0jvanBPYzKRqhNAxI9Xyg62nFFeB4LgT4ShtdsH7EbXIrLZ7Thh4LnDlbqrOPEfksqpe6eI4KamyvFOtEuvLuVep1kBAx6AVpaG5rgCyC4B/kh5zgTHnlvekH2x/Y7QC8pEWQnlA1uz5Puvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5iivF/H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01140C4CEC3;
-	Thu, 12 Sep 2024 14:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726150566;
-	bh=fVIETZv+H9p1/it8eBQidsDxsQ++8d/hnRorBQfS3C0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C5iivF/H28ePrgwhxHcJmm5659Weo5AOrMMA8JYewHHjPvLnFa1WK8qNA3N8PDkOQ
-	 a+B+BDhF1/6uutnd7lfbpL7pQ/Lva37UDKBL9nFH5NS0kKxTz3BsKrkmz6ry8pZWq2
-	 vcCGtfxmqeLEBCsXl5zT/gBAGAvPWfszDuEa9kL7xeSXmsmALu9SmW67RH9yqvZK09
-	 KEOs3zgz97YFc4ieuqrxbdpL9STATh9GVf/0VA+4f+ZrjX2GYl4mAPTZaC7fKMd5Tv
-	 GBIvWetuVlpCqFCzgDLCIntn+VXI+9mVe3azFPsfxvmIgVm+7Oh54tdOiieXRNWLJ2
-	 uPBNa0b009Lzg==
-Message-ID: <d5468dd2-0f81-4d89-a3bd-a546b2395ca6@kernel.org>
-Date: Thu, 12 Sep 2024 16:15:56 +0200
+	s=arc-20240116; t=1726151826; c=relaxed/simple;
+	bh=Vtkgpna/bKHRgJY/JAr5zkpq/2jMcMCjZoDV692lmhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q/ZEFKIj3wzGULv+601PWw/ojUrWYqnREqzfPOLoGXVM2qzT4stia/3l+S4pRUEk9VmGf/wZujY/fOTFC3tnjDHPHfVRGsLqb+0/lgF6mvOb6l64yctJRPO6i3j6UXzu0r4x+DweDy37uxTCNZ7JGmyoDXyBQdrv15AVSBP4/Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QAP9VoBJ; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7163489149eso926224a12.1
+        for <linux-pci@vger.kernel.org>; Thu, 12 Sep 2024 07:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726151824; x=1726756624; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=anFSFPTnheRWls/K0Q3hF4+qKY/5O1ir8c9HL2uimeg=;
+        b=QAP9VoBJP6p7vJN++x/dE2Q5FzsR/l7w5U6WLeCjy7Z1J1uhXgta/YnrGaHSVDCGN7
+         PumgSoTtmu6XBppHsxN2vOSEYHGJb18MB1MuKkeK4neTfxeMc8rnB75awoVLTx35IK0j
+         1//bzH/70sWI0lvcmbI73+vUp51mZylYgPyG2c5bAelCSb6w4drrDkxPzA4tApITAYuh
+         AHSmkFicxlb88f6X34Lqa+zAAg2moKNTB1l2SaSF7GE1kbGf7R1STQzZp4TVZU4ZzeHD
+         lv6PQ1c1Zs0UQmkCSbF46TleS8v1XdBXQ9N1aKKcFufXUKVaFGcvQ36RYHnI0qy+vqWG
+         W6Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726151824; x=1726756624;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=anFSFPTnheRWls/K0Q3hF4+qKY/5O1ir8c9HL2uimeg=;
+        b=OmWeubbAR6gV9vI8v3w+INCittBaEqaFYEJNmQ1bcwWfnERId9d41VOwt8uxNyWnCv
+         DclQuWDNXZysf68sYZ/Z3UEypj+cDjb+bt2DKc8Y5BxwWVI8RzDsJYoRmxJvr2a/rxHA
+         x04GkcqY8KBdC2K9DdK3vL0pKHYv3PaEdVa1NNr05iJrIRezu6X/64Z4o7AC0lRgaJtO
+         tIM9awatVualmd9mxTvFKq+NWnK3FuvsaanEADBchawjy/N1d0O3T4d4vpn/D3wsvFaN
+         lAh9256WDTC1Ij4i+wPvJ8x2c0BIrLoP5ODokYV6MygakOkoAoYSahImfYAZssDoTh9Z
+         8P0g==
+X-Gm-Message-State: AOJu0Yx+3U8uOYxg2sB3bDdIysFV9r4sGhMFArasCer3kL84PTpqpAY3
+	OPJYj844qoCqhC8n4b6e9CqB214hB5o7At7lbOOm0vMVCz2gLtRU6wDwUlUOpspCsqTkP4MXyjc
+	=
+X-Google-Smtp-Source: AGHT+IE4qikLqQ5I8bCymfHxDdWrenloJq1hmSkXnnti718yXOSlzljTlC6NJCWxXtl/eegdxBC8Iw==
+X-Received: by 2002:a05:6a20:c41a:b0:1cf:4679:9b97 with SMTP id adf61e73a8af0-1cf7620cbc7mr3566067637.37.1726151823595;
+        Thu, 12 Sep 2024 07:37:03 -0700 (PDT)
+Received: from thinkpad ([120.60.79.18])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7190909252esm4650564b3a.124.2024.09.12.07.37.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2024 07:37:03 -0700 (PDT)
+Date: Thu, 12 Sep 2024 20:06:57 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, paul.m.stillwell.jr@intel.com
+Subject: Re: [PATCH v2] PCI: vmd: Clear PCI_INTERRUPT_LINE for VMD sub-devices
+Message-ID: <20240912143657.sgigcoj2lkedwfu4@thinkpad>
+References: <20240820223213.210929-1-nirmal.patel@linux.intel.com>
+ <20240822094806.2tg2pe6m75ekuc7g@thinkpad>
+ <20240822113010.000059a1@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/8] PCI: qcom: Add support to PCIe slot power supplies
-To: Qiang Yu <quic_qianyu@quicinc.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, vkoul@kernel.org,
- kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, abel.vesa@linaro.org,
- quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, kw@linux.com,
- lpieralisi@kernel.org, neil.armstrong@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20240827063631.3932971-1-quic_qianyu@quicinc.com>
- <20240827063631.3932971-9-quic_qianyu@quicinc.com>
- <CAA8EJpq5KergZ8czg4F=EYMLANoOeBsiSVoO-zAgfG0ezQrKCQ@mail.gmail.com>
- <20240827165826.moe6cnemeheos6jn@thinkpad>
- <26f2845f-2e29-4887-9f33-0b5b2a06adb6@quicinc.com>
- <20240911153228.7ajcqicxnu2afhbp@thinkpad>
- <9222ef18-2eef-4ba3-95aa-fae540c06925@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konradybcio@kernel.org>
-In-Reply-To: <9222ef18-2eef-4ba3-95aa-fae540c06925@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240822113010.000059a1@linux.intel.com>
 
-On 12.09.2024 3:39 PM, Qiang Yu wrote:
+On Thu, Aug 22, 2024 at 11:30:10AM -0700, Nirmal Patel wrote:
+> On Thu, 22 Aug 2024 15:18:06 +0530
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
 > 
-> On 9/11/2024 11:32 PM, Manivannan Sadhasivam wrote:
->> On Wed, Sep 11, 2024 at 04:17:41PM +0800, Qiang Yu wrote:
->>> On 8/28/2024 12:58 AM, Manivannan Sadhasivam wrote:
->>>> On Tue, Aug 27, 2024 at 02:44:09PM +0300, Dmitry Baryshkov wrote:
->>>>> On Tue, 27 Aug 2024 at 09:36, Qiang Yu <quic_qianyu@quicinc.com> wrote:
->>>>>> On platform x1e80100 QCP, PCIe3 is a standard x8 form factor. Hence, add
->>>>>> support to use 3.3v, 3.3v aux and 12v regulators.
->>>>> First of all, I don't see corresponding bindings change.
->>>>>
->>>>> Second, these supplies power up the slot, not the host controller
->>>>> itself. As such these supplies do not belong to the host controller
->>>>> entry. Please consider using the pwrseq framework instead.
->>>>>
->>>> Indeed. For legacy reasons, slot power supplies were populated in the host
->>>> bridge node itself until recently Rob started objecting it [1]. And it makes
->>>> real sense to put these supplies in the root port node and handle them in the
->>>> relevant driver.
->>>>
->>>> I'm still evaluating whether the handling should be done in the portdrv or
->>>> pwrctl driver, but haven't reached the conclusion. Pwrctl seems to be the ideal
->>>> choice, but I see a few issues related to handling the OF node for the root
->>>> port.
->>>>
->>>> Hope I'll come to a conclusion in the next few days and will update this thread.
->>>>
->>>> - Mani
->>>>
->>>> [1] https://lore.kernel.org/lkml/20240604235806.GA1903493-robh@kernel.org/
->>> Hi Mani, do you have any updates?
->>>
->> I'm working with Bartosz to add a new pwrctl driver for rootports. And we are
->> debugging an issue currently. Unfortunately, the progress is very slow as I'm on
->> vacation still.
->>
->> Will post the patches once it got resolved.
->>
->> - Mani
-> OK, thanks for your update.
+> > On Tue, Aug 20, 2024 at 03:32:13PM -0700, Nirmal Patel wrote:
+> > > VMD does not support INTx for devices downstream from a VMD
+> > > endpoint. So initialize the PCI_INTERRUPT_LINE to 0 for all NVMe
+> > > devices under VMD to ensure other applications don't try to set up
+> > > an INTx for them.
+> > > 
+> > > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>  
+> > 
+> > I shared a diff to put it in pci_assign_irq() and you said that you
+> > were going to test it [1]. I don't see a reply to that and now you
+> > came up with another approach.
+> > 
+> > What happened inbetween?
+> 
+> Apologies, I did perform the tests and the patch worked fine. However, I
+> was able to see lot of bridge devices had the register set to 0xFF and I
+> didn't want to alter them.
 
-Qiang, you can still resubmit the rest of the patches without having
-to wait on that to be resolved
+You should've either replied to my comment or mentioned it in the changelog.
 
-Konrad
+> Also pci_assign_irg would still set the
+> interrupt line register to 0 with or without VMD. Since I didn't want to
+> introduce issues for non-VMD setup, I decide to keep the change limited
+> only to the VMD.
+> 
+
+Sorry no. SPDK usecase is not specific to VMD and so is the issue. So this
+should be fixed in the PCI core as I proposed. What if another bridge also wants
+to do the same?
+
+- Mani 
+
+> -Nirmal
+> > 
+> > - Mani
+> > 
+> > [1]
+> > https://lore.kernel.org/linux-pci/20240801115756.0000272e@linux.intel.com
+> > 
+> > > ---
+> > > v2->v1: Change the execution from fixup.c to vmd.c
+> > > ---
+> > >  drivers/pci/controller/vmd.c | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/vmd.c
+> > > b/drivers/pci/controller/vmd.c index a726de0af011..2e9b99969b81
+> > > 100644 --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -778,6 +778,18 @@ static int vmd_pm_enable_quirk(struct pci_dev
+> > > *pdev, void *userdata) return 0;
+> > >  }
+> > >  
+> > > +/*
+> > > + * Some applications like SPDK reads PCI_INTERRUPT_LINE to decide
+> > > + * whether INTx is enabled or not. Since VMD doesn't support INTx,
+> > > + * write 0 to all NVMe devices under VMD.
+> > > + */
+> > > +static int vmd_clr_int_line_reg(struct pci_dev *dev, void
+> > > *userdata) +{
+> > > +	if(dev->class == PCI_CLASS_STORAGE_EXPRESS)
+> > > +		pci_write_config_byte(dev, PCI_INTERRUPT_LINE, 0);
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long
+> > > features) {
+> > >  	struct pci_sysdata *sd = &vmd->sysdata;
+> > > @@ -932,6 +944,7 @@ static int vmd_enable_domain(struct vmd_dev
+> > > *vmd, unsigned long features) 
+> > >  	pci_scan_child_bus(vmd->bus);
+> > >  	vmd_domain_reset(vmd);
+> > > +	pci_walk_bus(vmd->bus, vmd_clr_int_line_reg, &features);
+> > >  
+> > >  	/* When Intel VMD is enabled, the OS does not discover the
+> > > Root Ports
+> > >  	 * owned by Intel VMD within the MMCFG space.
+> > > pci_reset_bus() applies -- 
+> > > 2.39.1
+> > > 
+> > >   
+> > 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
