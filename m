@@ -1,173 +1,121 @@
-Return-Path: <linux-pci+bounces-13125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF52D976F37
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 18:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F850976F41
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 19:01:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DF231C23832
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 16:57:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 826241C23B6F
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Sep 2024 17:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54EEE1BE245;
-	Thu, 12 Sep 2024 16:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF09F156F44;
+	Thu, 12 Sep 2024 17:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="korcF1/i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDF/dz1e"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D871865F7;
-	Thu, 12 Sep 2024 16:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D2449654;
+	Thu, 12 Sep 2024 17:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726160232; cv=none; b=OuxisRPAh9uczpVwnGFod4cZGJ5OjPpvo9Cry7z/1i9QC1zFmyxPKvDVKHILVGm5AQCvJs+BG2x4g4JaMLv8tt84Jp1WRvikm93RpE0IJNyFHzuqRWTYWP0dyb+Ek03Uq7AaJpGqWwZvJbjbRN7NAOlABWx1q2S/VTLB6YcS7Fs=
+	t=1726160455; cv=none; b=Kt+I6RlttKVY6RBrhFvxUN0DLQmOROvgkB/DmQIw21ihsuwB1Biy06/o5t100emtKhE4PXav7Oox39malKrTffIpu4/E/EhB86e4GSzNmwU9PgMuMJ3AHera0ovQDDFCGH9PZfChIxLSW3EtBA6oFIHRQoFqqLXNobKEdC+MpmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726160232; c=relaxed/simple;
-	bh=Jj/M0eZBMZoxDv71JmXMGVCQT07R36WyX1KvbT/rYaw=;
+	s=arc-20240116; t=1726160455; c=relaxed/simple;
+	bh=UDKMDUCUwWVXn9aUo/LFf70emdXSaz9qd8L0RE6dHN4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OvwSYHDGQNiDjmP7vlXgpQoXhKRwl+HIe6B9jGqm55+8a+VAHwW82wZlvU91IB41/Q6cA40Qu0aLLRGc1ZL+gpP5+No+uSYEs2P1R+mUQh9eFP61cduGngVgO34yI9c7lv9V4ZbjxR5eN7ILYNTbZ4SJSKd3vb8BW9nkvntj95U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=korcF1/i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65CEDC4CEC3;
-	Thu, 12 Sep 2024 16:57:11 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hu8dQvygcCeFBu2YgzPT09172CoZ3GkWU0U7juhnOACAgeC49JabMnDnQVbfEGCmcwzhDu+ll7+bMyqq+ELPrG24p2NC10JVQDvETbFD/lmAtFO3MKwbnIytMWnBOKHfu7ElLuv+KkKe1OAct1sfEMWpbQgm6kDuNHCSWec0nek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDF/dz1e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14CEC4CEC3;
+	Thu, 12 Sep 2024 17:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726160231;
-	bh=Jj/M0eZBMZoxDv71JmXMGVCQT07R36WyX1KvbT/rYaw=;
+	s=k20201202; t=1726160455;
+	bh=UDKMDUCUwWVXn9aUo/LFf70emdXSaz9qd8L0RE6dHN4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=korcF1/i50mRH0RuPqEW7Uu7oFsXOdoHeoZnO7mTDzDvDJsAi+Y8GfJYEqN7Fpa2e
-	 m7wXdxY/jl0yCYm6YfSfChmwDvEinti/AknoLvKE/TEo8MUPTCj1e3wuB/sl3owNwW
-	 pNqA8XQwxmuGDDgz0YPaE5QYlVb+7FFGfVcDFLnoVUu0v5mtxbhV/4qPHMBjm5Ipai
-	 tzpjLcJwjfJkjBAcJlorlxJynZ0SWwfQ63eR/4bIuZg7Y9Lt3wyixP3+ak6krK334+
-	 af/xOKEx+EbeyK6j3rnkZ7Ruz4tZiFFfRkNg3P3yQdoK357qEII8W18Y/e069bwrgU
-	 xCyRHqS55Hy5A==
-Date: Thu, 12 Sep 2024 11:57:09 -0500
+	b=mDF/dz1ec0OQiVPo0b5i0DSy1dXUfD1Gg5jPKs0WrFVVfZc09uFPI1Mj14yfCInfy
+	 tiGWr3CN1aHP5AX/whkpHWZmq9iBz4pvwTUX5oxrG1X1V5Ilz5hcOeHVkkiNDoEFE8
+	 7LXONGdrCPS1+ta3kPL8deLye8eDnGBW+kwkbvGhcwj8PK+IqxTgSUAzV95wgnE4hC
+	 PB/Pmrso03xFZsC2dVmfj9/uOd8gLUf1046rjlvdfA9ZBE/g/sWH6YXk0PmmCCEmkq
+	 b3VaDl7zEbHn1LtDCht/sYhdKbd3i6nr5DZeZdJ8OvQR4QNOGKb8Y7ZX/A/bsuhyCq
+	 3Jwd5J6pdG6DQ==
+Date: Thu, 12 Sep 2024 12:00:52 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: bhelgaas@google.com, mario.limonciello@amd.com,
-	mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kaihengfeng@gmail.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] PCI/PM: Put devices to low power state on shutdown
-Message-ID: <20240912165709.GA674430@bhelgaas>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Simon Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 1/8] misc: Add support for LAN966x PCI device
+Message-ID: <20240912170052.GA677163@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAd53p7vP8TcPj=u5TTuPMXFaWW15hwpJdECCprvXGBhigKD6Q@mail.gmail.com>
+In-Reply-To: <20240808154658.247873-2-herve.codina@bootlin.com>
 
-[+cc Rafael]
-
-On Thu, Sep 12, 2024 at 11:00:43AM +0800, Kai-Heng Feng wrote:
-> On Thu, Sep 12, 2024 at 3:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Jul 12, 2024 at 02:24:11PM +0800, Kai-Heng Feng wrote:
-> > > Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
-> > > connected.
-> > >
-> > > The following error message can be found during shutdown:
-> > > pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
-> > > pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-> > > pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
-> > > pcieport 0000:09:04.0:    [ 7] BadDLLP
-> > >
-> > > Calling aer_remove() during shutdown can quiesce the error message,
-> > > however the spurious wakeup still happens.
-> > >
-> > > The issue won't happen if the device is in D3 before system shutdown, so
-> > > putting device to low power state before shutdown to solve the issue.
-> > >
-> > > I don't have a sniffer so this is purely guesswork, however I believe
-> > > putting device to low power state it's the right thing to do.
-> >
-> > My objection here is that we don't have an explanation of why this
-> > should matter or a pointer to any spec language about this situation,
-> > so it feels a little bit random.
+On Thu, Aug 08, 2024 at 05:46:50PM +0200, Herve Codina wrote:
+> Add a PCI driver that handles the LAN966x PCI device using a device-tree
+> overlay. This overlay is applied to the PCI device DT node and allows to
+> describe components that are present in the device.
 > 
-> I have the same feeling too. The PCIe spec doesn't specify what's the
-> correct power state for shutdown.
-> So we can only "logically" think the software should put devices to
-> low power state during shutdown.
+> The memory from the device-tree is remapped to the BAR memory thanks to
+> "ranges" properties computed at runtime by the PCI core during the PCI
+> enumeration.
 > 
-> > I suppose the problem wouldn't happen if AER interrupts were disabled?
-> > We already do disable them in aer_suspend(), but maybe that's not used
-> > in the shutdown path?
+> The PCI device itself acts as an interrupt controller and is used as the
+> parent of the internal LAN966x interrupt controller to route the
+> interrupts to the assigned PCI INTx interrupt.
 > 
-> That was my first thought, so I modified pcie_port_shutdown_service()
-> to disable AER interrupt.
-> That approach didn't work though.
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/misc/Kconfig          |  24 ++++
+>  drivers/misc/Makefile         |   3 +
+>  drivers/misc/lan966x_pci.c    | 215 ++++++++++++++++++++++++++++++++++
+>  drivers/misc/lan966x_pci.dtso | 167 ++++++++++++++++++++++++++
+>  drivers/pci/quirks.c          |   1 +
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/quirks.c
+
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index a2ce4e08edf5..bae2dd99017c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6245,6 +6245,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
+>  
+>  /*
+>   * Devices known to require a longer delay before first config space access
+> -- 
+> 2.45.0
 > 
-> > My understanding is that .shutdown() should turn off device interrupts
-> > and stop DMA.  So maybe we need an aer_shutdown() that disables
-> > interrupts?
-> 
-> Logically we should do that. However that approach doesn't solve this issue.
-
-I'm not completely clear on the semantics of the .shutdown()
-interface.  The doc at
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/device/driver.h?id=v6.10#n73
-says "@shutdown: Called at shut-down time to quiesce the device"
-
-Turning off device interrupts and DMA *would* fit within the idea of
-quiescing the device.  Does that also include changing the device
-power state?  I dunno.  The power state isn't *mentioned* in the
-.shutdown() context, while it *is* mentioned for .suspend().
-
-IIUC, this patch and commit log uses "shutdown" to refer to a
-system-wide *poweroff*, which is a different concept despite using the
-same "shutdown" name.
-
-So should the system poweroff procedure use .suspend()?  Should it use
-both .shutdown() and .suspend()?  I think it only uses .shutdown()
-today:
-
-  kernel_power_off
-    kernel_shutdown_prepare(SYSTEM_POWER_OFF)
-      device_shutdown
-        while (!list_empty(&devices_kset->list))
-          dev->bus->shutdown(dev)
-            pci_device_shutdown
-
-There are several driver .shutdown() methods that do things like this:
-
-  e1000_shutdown
-    if (system_state == SYSTEM_POWER_OFF)
-      pci_set_power_state(pdev, PCI_D3hot)
-
-Maybe that's the right thing and should be done by the PCI core, which
-is similar to what you propose here.  But I think it muddies the
-definition of .shutdown() a bit by mixing in power management stuff.
-
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > >  drivers/pci/pci-driver.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > > index af2996d0d17f..4c6f66f3eb54 100644
-> > > --- a/drivers/pci/pci-driver.c
-> > > +++ b/drivers/pci/pci-driver.c
-> > > @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
-> > >       if (drv && drv->shutdown)
-> > >               drv->shutdown(pci_dev);
-> > >
-> > > +     /*
-> > > +      * If driver already changed device's power state, it can mean the
-> > > +      * wakeup setting is in place, or a workaround is used. Hence keep it
-> > > +      * as is.
-> > > +      */
-> > > +     if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
-> > > +             pci_prepare_to_sleep(pci_dev);
-> > > +
-> > >       /*
-> > >        * If this is a kexec reboot, turn off Bus Master bit on the
-> > >        * device to tell it to not continue to do DMA. Don't touch
-> > > --
-> > > 2.43.0
-> > >
 
