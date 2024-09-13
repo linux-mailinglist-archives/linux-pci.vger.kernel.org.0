@@ -1,144 +1,149 @@
-Return-Path: <linux-pci+bounces-13143-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13144-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52551977989
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 09:24:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08DD69779DF
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 09:42:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E95D51F21428
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 07:24:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B360A1F270B6
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 07:42:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6612A1BB69C;
-	Fri, 13 Sep 2024 07:24:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA25D1BC9F8;
+	Fri, 13 Sep 2024 07:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CElDnCGe"
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="ImwkuKFB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EEE77107;
-	Fri, 13 Sep 2024 07:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E469D1D52B;
+	Fri, 13 Sep 2024 07:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726212243; cv=none; b=AD9kmmjHOkTv6RdCwlSw0JfC/gKDsP4e5ZvhV1le5R2yKJkuc4ewyj+Z/QJ42UmTH6jLUjrSxJS4SUuR1Ug+XOsJk32fBoTxyq9yMV0aogb7eOeBXGwB3dBJyginjZG1gETkPETiqN9AY18Mh1YgpvkyUOyvA+kZt3LiO+JgeKU=
+	t=1726213351; cv=none; b=k9Qf9EZLJO3nLvaGYJSkJSx64od/AR20brhoAEbdVrvNdmoHY7j45l+XCelryICPqg0LgerX2OUGohr+Eb2koTkwYRCjsrIJ2a2DZpCkPMVRJkIdDqBJ3X9N2H15gDO95U5g02WVsX30hH8bYCmknd8f8AMwxi+Q4FCwCiFYcO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726212243; c=relaxed/simple;
-	bh=iPvd+9z6NuPIzam4+usKWHP3bX8Hx0aJk/Uu79HF2cQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8A1gyKFn1ssX2IKgYOXgfF+6faZfDCtPTfjb8Q2w7ixBAQCvaxKoIAGSbTNKX6Zz0N+GN7YVVkJqZgEyvfcPYNkyKyk6pMF2oC1OcSNJV43ExcAswF0lbLt1zTrPXv7EBgimIgSK18DaM/j+gZ9+lXM4aGS3G2bsO3zYwBKHf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CElDnCGe; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726212242; x=1757748242;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iPvd+9z6NuPIzam4+usKWHP3bX8Hx0aJk/Uu79HF2cQ=;
-  b=CElDnCGeCEIJDuWLjrrSJT9s/4bj3VfPIsJSZ07npCeoIiAhNSMR3e+H
-   cUEfcGAQv12dxckwnxa/IotHwdVLek7KvDt7UxqWVbbbPc5zXmR2xIxlJ
-   khtb+AnCuGMz1QEW2ekpR4jICXtg3YI0JfD7caQ0uPCjLp8/K+nYzPpts
-   Mi30Li6RQ5IBzjEUKo96EpwiCU0HfoBIj+nwRqV9Yu8nkjq2AlchGkK9j
-   j/vgEWf36lWFYdGDlkSCjC7pNkYhidI49cpLjef6eWMIuL1eFSEgKuNSK
-   gYQcW7Dg2VzAqvdJB1u8/bVDp78exnQqe3itMcV7mZGXcWC7b5JFV1lpf
-   A==;
-X-CSE-ConnectionGUID: lUUAcCy3T9ygMX7e+UBLEw==
-X-CSE-MsgGUID: lse/c7hXSwyspobCD9AAcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="47618229"
-X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
-   d="scan'208";a="47618229"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 00:24:01 -0700
-X-CSE-ConnectionGUID: oHG4PVODQ7GpA5DverliGg==
-X-CSE-MsgGUID: LJV4th+PRpCy+8quuV7LfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
-   d="scan'208";a="105429499"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 13 Sep 2024 00:23:58 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id DCA0732A; Fri, 13 Sep 2024 10:23:56 +0300 (EEST)
-Date: Fri, 13 Sep 2024 10:23:56 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Gary Li <Gary.Li@amd.com>,
-	Mario Limonciello <superm1@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mathias Nyman <mathias.nyman@intel.com>,
-	"open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-	Daniel Drake <drake@endlessos.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v5 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in
- pci_dev_wait()
-Message-ID: <20240913072356.GO275077@black.fi.intel.com>
-References: <20240903182509.GA260253@bhelgaas>
- <525214d1-793e-412c-b3b2-b7e20645b9cf@amd.com>
- <20240904120545.GF1532424@black.fi.intel.com>
- <2bf715fb-509b-4b00-a28d-1cc83c0bb588@amd.com>
- <20240905093325.GJ1532424@black.fi.intel.com>
- <b4237bef-809f-4d78-8a70-d962e7eb467b@amd.com>
- <20240910091329.GI275077@black.fi.intel.com>
- <66019fa3-2f02-4b03-9eb7-7b0bed0fd044@amd.com>
- <20240913045807.GM275077@black.fi.intel.com>
+	s=arc-20240116; t=1726213351; c=relaxed/simple;
+	bh=xcN/2MClZQoHLqg74s28dw4Q089iErLpjPvgLY8hzm8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u4NOw8ZyEZgxDXvCzQnrV+8PFmX2/FjnZ+uXStxY02kHQgTLePufl6v1lgnhXy/E2mynsEZZq14Slq4SgcBnifdzqLkHohlnZPVKyNUkVQxf4FVBshIK/F+U7rItc1SqEI1oRC+CO85vfh2ak8MM66+Fwdvb+P3iPaEzp2GZl6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=ImwkuKFB; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0DE5FDACDF;
+	Fri, 13 Sep 2024 09:42:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1726213344; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=8al1aKshZXM/ap5AqW/w9WJ//+RM7rrRIU1vsdyXi/o=;
+	b=ImwkuKFBRWdjpVxXJShrOW/l2J+O4avGesFuvBBoRUmUggXEHjYcO94uFk8LUQZfvk7ZEK
+	fZtXT/1VFOzQcd0gn28Xh1r6EmGDvZIr60i6eclc/s8vLA9WIgMKdgKDqQBXdxmQM85SS8
+	LjdrbDnYM+TszCtOKzqKXrmZLxPOGAJkgapJRMu8kgf5oF964xIcHEyB9TZLpiEdBZ/g2X
+	wTGChrlIAiwJ5VEmx3h0JEbe79HfHtpNjVoB5e97sVcm7c9Iw3nnXxJ1tBeAmS7YKINfP6
+	KrirOua2Yfs042xmKCm48F3OBTf2eElm2nMOu3Y2vp0EW/uvp2sqGmWddfffUg==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH 0/6] EDITME: blk: refactor queue affinity helpers
+Date: Fri, 13 Sep 2024 09:41:58 +0200
+Message-Id: <20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240913045807.GM275077@black.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMbs42YC/z2NQW7DIBBFr2Kx7lRAbROy6j2qLAYYJ6PGQIC4r
+ aLcvTSRunxfX+/dRKXCVMV+uIlCG1dOsYN6GYQ/YTwScOgstNSjtEpDoQV9SwXc+RNwWThy+4E
+ TnTOVCkburLOTG52Sojtyv/P3w/9xeHKhy7Vn2nMUK9WKj8x++I+EBDE1SBuVr9KvkD3DijlzP
+ MKmQMFuMnp0syc/2vd6rfQa6C/osBL4tK7cum8mZY0zi+1eHNG/SRWCxDBp6aWfrfGa0ARxuN9
+ /AV2d8PgKAQAA
+To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com, 
+ mpi3mr-linuxdrv.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com, 
+ storagedev@microchip.com, linux-nvme@lists.infradead.org, 
+ Daniel Wagner <dwagner@suse.de>, 
+ 20240912-do-not-overwrite-pci-mapping-v1-1-85724b6cec49@suse.de, 
+ Ming Lei <ming.lei@redhat.com>
+X-Mailer: b4 0.14.0
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi again,
+These patches were part of 'honor isolcpus configuration' [1] series. To
+simplify the review process I decided to send this as separate series
+because I think it's a nice cleanup independent of the isolcpus feature.
 
-On Fri, Sep 13, 2024 at 07:58:07AM +0300, Mika Westerberg wrote:
-> Yeah, I agree now. It does not look like the methods are messing each
-> other here. We don't see the GPE handler being run but I don't think it
-> matters here. For some reason the device just is not yet ready when it
-> is supposed to be in D0.
-> 
-> Sorry for wasting your time with these suspects.
+One thing which I am a bit unsure are the CONFIG bits. I've reused the
+BLK_MQ_PCI and BLK_MQ_VIRTIO as guard for the new helpers but it looks a
+bit off.
 
-One more suggestion though ;-) I realized that my hack patch to disable
-I/O and MMIO did not actually do that because it looks like we don't
-clear those bits ever. I wonder if you could still check if the below
-changes anything? At least it should now "disable" the device to follow
-the spec.
+changes:
+  - renamed blk_mq_dev_map_queues to blk_mq_hctx_map_queues
+  - squased 'virito: add APIs for retrieving vq affinity' into
+    'blk-mq: introduce blk_mq_hctx_map_queues'
+  - moved hisi_sas changed into a new patch
+  - hisi_sas use define instead of hard coded value
+  - moved helpers into their matching subsystem, removed
+    blk-mq-pci and blk-mq-virtio files
+  - fix spelling/typos
+  - fixed long lines in docu (yep new lines in brief descriptions are
+    supported, tested ti)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index f412ef73a6e4..79a566376301 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1332,6 +1332,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 
- 	if (!pci_dev->state_saved) {
- 		pci_save_state(pci_dev);
-+		pci_pm_default_suspend(pci_dev);
- 		pci_finish_runtime_suspend(pci_dev);
- 	}
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ffaaca0978cb..91f4e7a03c94 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2218,6 +2218,13 @@ static void do_pci_disable_device(struct pci_dev *dev)
- 		pci_command &= ~PCI_COMMAND_MASTER;
- 		pci_write_config_word(dev, PCI_COMMAND, pci_command);
- 	}
-+	/*
-+	 * PCI PM 1.2 sec 8.2.2 says that when a function is put into D3
-+	 * the OS needs to disable I/O and MMIO space in addition to bus
-+	 * mastering so do that here.
-+	 */
-+	pci_command &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
-+	pci_write_config_word(dev, PCI_COMMAND, pci_command);
- 
- 	pcibios_disable_device(dev);
- }
+[1] https://lore.kernel.org/all/20240806-isolcpus-io-queues-v3-0-da0eecfeaf8b@suse.de
+
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+Daniel Wagner (5):
+      scsi: replace blk_mq_pci_map_queues with blk_mq_hctx_map_queues
+      scsi: hisi_sas: replace blk_mq_pci_map_queues with blk_mq_hctx_map_queues
+      nvme: replace blk_mq_pci_map_queues with blk_mq_hctx_map_queues
+      virtio: blk/scsi: replace blk_mq_virtio_map_queues with blk_mq_hctx_map_queues
+      blk-mq: remove unused queue mapping helpers
+
+Ming Lei (1):
+      blk-mq: introduce blk_mq_hctx_map_queues
+
+ block/Makefile                            |  2 --
+ block/blk-mq-cpumap.c                     | 35 +++++++++++++++++++++++
+ block/blk-mq-pci.c                        | 46 -------------------------------
+ block/blk-mq-virtio.c                     | 46 -------------------------------
+ drivers/block/virtio_blk.c                |  4 +--
+ drivers/nvme/host/fc.c                    |  1 -
+ drivers/nvme/host/pci.c                   |  4 +--
+ drivers/pci/pci.c                         | 20 ++++++++++++++
+ drivers/scsi/fnic/fnic_main.c             |  4 +--
+ drivers/scsi/hisi_sas/hisi_sas.h          |  1 -
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c    | 20 +++++++-------
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  5 ++--
+ drivers/scsi/megaraid/megaraid_sas_base.c |  4 +--
+ drivers/scsi/mpi3mr/mpi3mr.h              |  1 -
+ drivers/scsi/mpi3mr/mpi3mr_os.c           |  3 +-
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  4 +--
+ drivers/scsi/pm8001/pm8001_init.c         |  3 +-
+ drivers/scsi/pm8001/pm8001_sas.h          |  1 -
+ drivers/scsi/qla2xxx/qla_nvme.c           |  4 +--
+ drivers/scsi/qla2xxx/qla_os.c             |  4 +--
+ drivers/scsi/smartpqi/smartpqi_init.c     |  8 +++---
+ drivers/scsi/virtio_scsi.c                |  4 +--
+ drivers/virtio/virtio.c                   | 31 +++++++++++++++++++++
+ include/linux/blk-mq-pci.h                | 11 --------
+ include/linux/blk-mq-virtio.h             | 11 --------
+ include/linux/blk-mq.h                    |  5 ++++
+ include/linux/pci.h                       | 11 ++++++++
+ include/linux/virtio.h                    | 13 +++++++++
+ 28 files changed, 152 insertions(+), 154 deletions(-)
+---
+base-commit: 26e197b7f9240a4ac301dd0ad520c0c697c2ea7d
+change-id: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
+prerequisite-message-id: 20240912-do-not-overwrite-pci-mapping-v1-1-85724b6cec49@suse.de
+prerequisite-patch-id: 0d995b19a62289433fe888843af1baa6fd19aec7
+
+Best regards,
+-- 
+Daniel Wagner <dwagner@suse.de>
+
 
