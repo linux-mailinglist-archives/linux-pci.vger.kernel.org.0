@@ -1,49 +1,50 @@
-Return-Path: <linux-pci+bounces-13144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13145-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08DD69779DF
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 09:42:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BD7D9779E3
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 09:42:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B360A1F270B6
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 07:42:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F2181C22330
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 07:42:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA25D1BC9F8;
-	Fri, 13 Sep 2024 07:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51941BD01D;
+	Fri, 13 Sep 2024 07:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="ImwkuKFB"
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="g9k0uXMD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E469D1D52B;
-	Fri, 13 Sep 2024 07:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D317E1B9847;
+	Fri, 13 Sep 2024 07:42:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726213351; cv=none; b=k9Qf9EZLJO3nLvaGYJSkJSx64od/AR20brhoAEbdVrvNdmoHY7j45l+XCelryICPqg0LgerX2OUGohr+Eb2koTkwYRCjsrIJ2a2DZpCkPMVRJkIdDqBJ3X9N2H15gDO95U5g02WVsX30hH8bYCmknd8f8AMwxi+Q4FCwCiFYcO8=
+	t=1726213352; cv=none; b=HjHDydTwV7ScL4VaAxq15T8ZYoeYF5/k1FFm/0w70Uqze1kr1DOsdmTq26UHkeXxObny9JcJFIIF8u802TvHRWb+mOVRaLYoaCgjey36uAOgbGM2YnQ1V52bIjAiJ7bHkrZJLI7sIo579Noa1AHAbdDllxljsAmwCXO9jS+pDY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726213351; c=relaxed/simple;
-	bh=xcN/2MClZQoHLqg74s28dw4Q089iErLpjPvgLY8hzm8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u4NOw8ZyEZgxDXvCzQnrV+8PFmX2/FjnZ+uXStxY02kHQgTLePufl6v1lgnhXy/E2mynsEZZq14Slq4SgcBnifdzqLkHohlnZPVKyNUkVQxf4FVBshIK/F+U7rItc1SqEI1oRC+CO85vfh2ak8MM66+Fwdvb+P3iPaEzp2GZl6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=ImwkuKFB; arc=none smtp.client-ip=49.12.199.46
+	s=arc-20240116; t=1726213352; c=relaxed/simple;
+	bh=iSgue7/2lVBI93cC0NUABTZFK9oyhsYZ13HmAxW4f0s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SQi76i4JSiEdmcNnyl22i7EYAAc5EdEbsQDJiCJUf9r8Zhku/lWakpf9edCoYVkCoNrJK6WftkISwCZYeye6f8KUOmYodyRrnak2gpugMrJP7LkJwy0gYUl09fHf3GUwvs1cGKkH4qexuEph7X7xeVA4XORWKELWs8osy917K9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=g9k0uXMD; arc=none smtp.client-ip=49.12.199.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0DE5FDACDF;
-	Fri, 13 Sep 2024 09:42:20 +0200 (CEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1ADB0DACFB;
+	Fri, 13 Sep 2024 09:42:26 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1726213344; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=8al1aKshZXM/ap5AqW/w9WJ//+RM7rrRIU1vsdyXi/o=;
-	b=ImwkuKFBRWdjpVxXJShrOW/l2J+O4avGesFuvBBoRUmUggXEHjYcO94uFk8LUQZfvk7ZEK
-	fZtXT/1VFOzQcd0gn28Xh1r6EmGDvZIr60i6eclc/s8vLA9WIgMKdgKDqQBXdxmQM85SS8
-	LjdrbDnYM+TszCtOKzqKXrmZLxPOGAJkgapJRMu8kgf5oF964xIcHEyB9TZLpiEdBZ/g2X
-	wTGChrlIAiwJ5VEmx3h0JEbe79HfHtpNjVoB5e97sVcm7c9Iw3nnXxJ1tBeAmS7YKINfP6
-	KrirOua2Yfs042xmKCm48F3OBTf2eElm2nMOu3Y2vp0EW/uvp2sqGmWddfffUg==
+	t=1726213346; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=vG3gSuOvrRnVYL3Q0mMe0eJlgwAG8lQwl7lw4ED2gbg=;
+	b=g9k0uXMDSENB6diCbjm1KZhN5LwDWlSOwahO2toKe6DiIZaObeAf9tVewDu7h0N8pXaR72
+	IwVKKYpm0Ls/1Y+eEX9Exr4HKYGHiyQaCgA32jPLDIGn9H7ZBkw8kSrvrkgFIa9fdxsLAY
+	hKgPAPTi+QqEsQKblQ7sz+fml4wPuzTUgC7rVChbEVBtdDHH0d6HlRKav3Id2MEv0HjNSY
+	Lq+DzfALt7nMGnP6E9g0XBlnCxORsXzkv9T+ATgoaidnCRKsmh80aVMC/bBWqwuGNCb8eQ
+	QqGmOyBOx9KAs+BFHIR5yUJjKj/YjC/HLWVi209z3Eo+c7Pfp+X57XsY7u1S3Q==
 From: Daniel Wagner <wagi@kernel.org>
-Subject: [PATCH 0/6] EDITME: blk: refactor queue affinity helpers
-Date: Fri, 13 Sep 2024 09:41:58 +0200
-Message-Id: <20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de>
+Date: Fri, 13 Sep 2024 09:41:59 +0200
+Subject: [PATCH 1/6] blk-mq: introduce blk_mq_hctx_map_queues
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,11 +53,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMbs42YC/z2NQW7DIBBFr2Kx7lRAbROy6j2qLAYYJ6PGQIC4r
- aLcvTSRunxfX+/dRKXCVMV+uIlCG1dOsYN6GYQ/YTwScOgstNSjtEpDoQV9SwXc+RNwWThy+4E
- TnTOVCkburLOTG52Sojtyv/P3w/9xeHKhy7Vn2nMUK9WKj8x++I+EBDE1SBuVr9KvkD3DijlzP
- MKmQMFuMnp0syc/2vd6rfQa6C/osBL4tK7cum8mZY0zi+1eHNG/SRWCxDBp6aWfrfGa0ARxuN9
- /AV2d8PgKAQAA
+Message-Id: <20240913-refactor-blk-affinity-helpers-v1-1-8e058f77af12@suse.de>
+References: <20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de>
+In-Reply-To: <20240913-refactor-blk-affinity-helpers-v1-0-8e058f77af12@suse.de>
 To: Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>, 
  "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
  "Martin K. Petersen" <martin.petersen@oracle.com>, 
@@ -73,77 +72,213 @@ Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.0
 X-Last-TLS-Session-Version: TLSv1.3
 
-These patches were part of 'honor isolcpus configuration' [1] series. To
-simplify the review process I decided to send this as separate series
-because I think it's a nice cleanup independent of the isolcpus feature.
+From: Ming Lei <ming.lei@redhat.com>
 
-One thing which I am a bit unsure are the CONFIG bits. I've reused the
-BLK_MQ_PCI and BLK_MQ_VIRTIO as guard for the new helpers but it looks a
-bit off.
+blk_mq_pci_map_queues and blk_mq_virtio_map_queues will create a CPU to
+hardware queue mapping based on affinity information. These two
+function share code which only differs on how the affinity information
+is retrieved. Also there is the hisi_sas which open codes the same loop.
 
-changes:
-  - renamed blk_mq_dev_map_queues to blk_mq_hctx_map_queues
-  - squased 'virito: add APIs for retrieving vq affinity' into
-    'blk-mq: introduce blk_mq_hctx_map_queues'
-  - moved hisi_sas changed into a new patch
-  - hisi_sas use define instead of hard coded value
-  - moved helpers into their matching subsystem, removed
-    blk-mq-pci and blk-mq-virtio files
-  - fix spelling/typos
-  - fixed long lines in docu (yep new lines in brief descriptions are
-    supported, tested ti)
+Thus introduce a new helper function for creating these mappings which
+takes an callback function for fetching the affinity mask. Also
+introduce common helper function for PCI and virtio devices to retrieve
+affinity masks.
 
-[1] https://lore.kernel.org/all/20240806-isolcpus-io-queues-v3-0-da0eecfeaf8b@suse.de
-
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+[dwagner: - removed fallback mapping
+          - added affinity helpers (moved to pci/virtio)
+          - updated commit message]
 Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
-Daniel Wagner (5):
-      scsi: replace blk_mq_pci_map_queues with blk_mq_hctx_map_queues
-      scsi: hisi_sas: replace blk_mq_pci_map_queues with blk_mq_hctx_map_queues
-      nvme: replace blk_mq_pci_map_queues with blk_mq_hctx_map_queues
-      virtio: blk/scsi: replace blk_mq_virtio_map_queues with blk_mq_hctx_map_queues
-      blk-mq: remove unused queue mapping helpers
+ block/blk-mq-cpumap.c   | 35 +++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c       | 20 ++++++++++++++++++++
+ drivers/virtio/virtio.c | 31 +++++++++++++++++++++++++++++++
+ include/linux/blk-mq.h  |  5 +++++
+ include/linux/pci.h     | 11 +++++++++++
+ include/linux/virtio.h  | 13 +++++++++++++
+ 6 files changed, 115 insertions(+)
 
-Ming Lei (1):
-      blk-mq: introduce blk_mq_hctx_map_queues
+diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
+index 9638b25fd521..c4993c0f822e 100644
+--- a/block/blk-mq-cpumap.c
++++ b/block/blk-mq-cpumap.c
+@@ -54,3 +54,38 @@ int blk_mq_hw_queue_to_node(struct blk_mq_queue_map *qmap, unsigned int index)
+ 
+ 	return NUMA_NO_NODE;
+ }
++
++/**
++ * blk_mq_hctx_map_queues - Create CPU to hardware queue mapping
++ * @qmap:	CPU to hardware queue map.
++ * @dev_off:	Offset to use for the device.
++ * @dev_data:	Device data passed to get_queue_affinity().
++ * @get_queue_affinity:	Callback to retrieve queue affinity.
++ *
++ * Create a CPU to hardware queue mapping in @qmap. For each queue
++ * @get_queue_affinity will be called to retrieve the affinity for given
++ * queue.
++ */
++void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
++			    void *dev_data, int dev_off,
++			    get_queue_affinty_fn *get_queue_affinity)
++{
++	const struct cpumask *mask;
++	unsigned int queue, cpu;
++
++	for (queue = 0; queue < qmap->nr_queues; queue++) {
++		mask = get_queue_affinity(dev_data, dev_off, queue);
++		if (!mask)
++			goto fallback;
++
++		for_each_cpu(cpu, mask)
++			qmap->mq_map[cpu] = qmap->queue_offset + queue;
++	}
++
++	return;
++
++fallback:
++	WARN_ON_ONCE(qmap->nr_queues > 1);
++	blk_mq_clear_mq_map(qmap);
++}
++EXPORT_SYMBOL_GPL(blk_mq_hctx_map_queues);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e3a49f66982d..84f9c16b813b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6370,6 +6370,26 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_BLK_MQ_PCI
++/**
++ * pci_get_blk_mq_affinity - get affinity mask queue mapping for PCI device
++ * @dev_data:	Pointer to struct pci_dev.
++ * @offset:	Offset to use for the pci irq vector
++ * @queue:	Queue index
++ *
++ * This function returns for a queue the affinity mask for a PCI device.
++ * It is usually used as callback for blk_mq_hctx_map_queues().
++ */
++const struct cpumask *pci_get_blk_mq_affinity(void *dev_data, int offset,
++					      int queue)
++{
++	struct pci_dev *pdev = dev_data;
++
++	return pci_irq_get_affinity(pdev, offset + queue);
++}
++EXPORT_SYMBOL_GPL(pci_get_blk_mq_affinity);
++#endif
++
+ #ifdef CONFIG_ACPI
+ bool pci_pr3_present(struct pci_dev *pdev)
+ {
+diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+index a9b93e99c23a..21667309ca9a 100644
+--- a/drivers/virtio/virtio.c
++++ b/drivers/virtio/virtio.c
+@@ -592,6 +592,37 @@ int virtio_device_restore(struct virtio_device *dev)
+ EXPORT_SYMBOL_GPL(virtio_device_restore);
+ #endif
+ 
++const struct cpumask *virtio_get_vq_affinity(struct virtio_device *dev,
++		int index)
++{
++	if (!dev->config->get_vq_affinity)
++		return NULL;
++
++	return dev->config->get_vq_affinity(dev, index);
++}
++EXPORT_SYMBOL_GPL(virtio_get_vq_affinity);
++
++#ifdef CONFIG_BLK_MQ_VIRTIO
++/**
++ * virtio_get_blk_mq_affinity - get affinity mask queue mapping for
++ * virtio device
++ * @dev_data:	Pointer to struct virtio_device.
++ * @offset:	Offset to use for the virtio irq vector
++ * @queue:	Queue index
++ *
++ * This function returns for a queue the affinity mask for a virtio device.
++ * It is usually used as callback for blk_mq_hctx_map_queues().
++ */
++const struct cpumask *virtio_get_blk_mq_affinity(void *dev_data,
++						 int offset, int queue)
++{
++	struct virtio_device *vdev = dev_data;
++
++	return virtio_get_vq_affinity(vdev, offset + queue);
++}
++EXPORT_SYMBOL_GPL(virtio_get_blk_mq_affinity);
++#endif
++
+ static int virtio_init(void)
+ {
+ 	if (bus_register(&virtio_bus) != 0)
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 8d304b1d16b1..b9881a8794af 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -929,7 +929,12 @@ void blk_mq_freeze_queue_wait(struct request_queue *q);
+ int blk_mq_freeze_queue_wait_timeout(struct request_queue *q,
+ 				     unsigned long timeout);
+ 
++typedef const struct cpumask *(get_queue_affinty_fn)(void *dev_data,
++		int dev_off, int queue_idx);
+ void blk_mq_map_queues(struct blk_mq_queue_map *qmap);
++void blk_mq_hctx_map_queues(struct blk_mq_queue_map *qmap,
++			    void *dev_data, int dev_off,
++			    get_queue_affinty_fn *get_queue_affinity);
+ void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues);
+ 
+ void blk_mq_quiesce_queue_nowait(struct request_queue *q);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4cf89a4b4cbc..97f4797b5060 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1633,6 +1633,17 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+ int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+ 		      unsigned int command_bits, u32 flags);
+ 
++#ifdef CONFIG_BLK_MQ_PCI
++const struct cpumask *pci_get_blk_mq_affinity(void *dev_data,
++		int offset, int queue);
++#else
++static inline const struct cpumask *pci_get_blk_mq_affinity(void *dev_data,
++		int offset, int queue)
++{
++	return cpu_possible_mask;
++}
++#endif
++
+ /*
+  * Virtual interrupts allow for more interrupts to be allocated
+  * than the device has interrupts for. These are not programmed
+diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+index ecc5cb7b8c91..49d4f7353e5c 100644
+--- a/include/linux/virtio.h
++++ b/include/linux/virtio.h
+@@ -170,6 +170,19 @@ int virtio_device_restore(struct virtio_device *dev);
+ void virtio_reset_device(struct virtio_device *dev);
+ 
+ size_t virtio_max_dma_size(const struct virtio_device *vdev);
++const struct cpumask *virtio_get_vq_affinity(struct virtio_device *dev,
++					     int index);
++
++#ifdef CONFIG_BLK_MQ_VIRTIO
++const struct cpumask *virtio_get_blk_mq_affinity(void *dev_data,
++						 int offset, int queue);
++#else
++static inline const struct cpumask *virtio_get_blk_mq_affinity(void *dev_data,
++							       int offset, int queue)
++{
++	return cpu_possible_mask;
++}
++#endif
+ 
+ #define virtio_device_for_each_vq(vdev, vq) \
+ 	list_for_each_entry(vq, &vdev->vqs, list)
 
- block/Makefile                            |  2 --
- block/blk-mq-cpumap.c                     | 35 +++++++++++++++++++++++
- block/blk-mq-pci.c                        | 46 -------------------------------
- block/blk-mq-virtio.c                     | 46 -------------------------------
- drivers/block/virtio_blk.c                |  4 +--
- drivers/nvme/host/fc.c                    |  1 -
- drivers/nvme/host/pci.c                   |  4 +--
- drivers/pci/pci.c                         | 20 ++++++++++++++
- drivers/scsi/fnic/fnic_main.c             |  4 +--
- drivers/scsi/hisi_sas/hisi_sas.h          |  1 -
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c    | 20 +++++++-------
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  5 ++--
- drivers/scsi/megaraid/megaraid_sas_base.c |  4 +--
- drivers/scsi/mpi3mr/mpi3mr.h              |  1 -
- drivers/scsi/mpi3mr/mpi3mr_os.c           |  3 +-
- drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  4 +--
- drivers/scsi/pm8001/pm8001_init.c         |  3 +-
- drivers/scsi/pm8001/pm8001_sas.h          |  1 -
- drivers/scsi/qla2xxx/qla_nvme.c           |  4 +--
- drivers/scsi/qla2xxx/qla_os.c             |  4 +--
- drivers/scsi/smartpqi/smartpqi_init.c     |  8 +++---
- drivers/scsi/virtio_scsi.c                |  4 +--
- drivers/virtio/virtio.c                   | 31 +++++++++++++++++++++
- include/linux/blk-mq-pci.h                | 11 --------
- include/linux/blk-mq-virtio.h             | 11 --------
- include/linux/blk-mq.h                    |  5 ++++
- include/linux/pci.h                       | 11 ++++++++
- include/linux/virtio.h                    | 13 +++++++++
- 28 files changed, 152 insertions(+), 154 deletions(-)
----
-base-commit: 26e197b7f9240a4ac301dd0ad520c0c697c2ea7d
-change-id: 20240912-refactor-blk-affinity-helpers-7089b95b4b10
-prerequisite-message-id: 20240912-do-not-overwrite-pci-mapping-v1-1-85724b6cec49@suse.de
-prerequisite-patch-id: 0d995b19a62289433fe888843af1baa6fd19aec7
-
-Best regards,
 -- 
-Daniel Wagner <dwagner@suse.de>
+2.46.0
 
 
