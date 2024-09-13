@@ -1,187 +1,120 @@
-Return-Path: <linux-pci+bounces-13189-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13190-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39C819786B6
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 19:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4758F978799
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 20:12:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7A393B20B63
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 17:28:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2CBD8B21B74
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Sep 2024 18:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B319277F2F;
-	Fri, 13 Sep 2024 17:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CCBD126BF0;
+	Fri, 13 Sep 2024 18:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WdkXpT66"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amYC6KlQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1E1EEE4
-	for <linux-pci@vger.kernel.org>; Fri, 13 Sep 2024 17:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AE479B8E;
+	Fri, 13 Sep 2024 18:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726248491; cv=none; b=dC3Msj9fZ1eAqhjAgjh26wrCh1tnFsayWLX1XABizEe8AVYirm2crqrfOKTkqHuUEn/2GpwDS8TPiTsUFSMLAEB3mQokN9e6ZC/gW10sIYBYjcyhYTbTNfEJDge+JJQjWZtYSjCFqVxqTy4ZRcDzje+4TI5qdeh5om4CNsxRstE=
+	t=1726251140; cv=none; b=JFnQkCpJDgui06zclih4G3xXr7WCZIkrZG0gSawyhmtldDk7ZgEOPS6aoDXx/pyrgA0zKP8ZitPendnBxPISlzLxSJJakaN7oDelPDeelku6rj9KrGcR/Av6cSGdlW6W5ALGknMsznsKGRpFK3DsHniDK+J/5p2klXIQJnXPx/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726248491; c=relaxed/simple;
-	bh=oirDKPWMCTxCpIDecIf+debbLoulghhg+gfJVNJgcFM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=d669B2JqUcjfPoldcb4EXVq0P51DF2ckoVz7gMoMj6o43wNg7JkSGty0OmRG6EY6Fh1FKeUswz2hpdFFii3ptbeewV8J/R73BXOJFsvfD893NIF2KbKlmO2oIYPfx/zgNIZNViyi1Vh9zaPtYl92C1bomcsNQdznztD2invhX50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WdkXpT66; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726248490; x=1757784490;
-  h=date:from:to:cc:subject:message-id;
-  bh=oirDKPWMCTxCpIDecIf+debbLoulghhg+gfJVNJgcFM=;
-  b=WdkXpT66BWSewZqlwGpbaqrEKLVu+41pi9nPFH0YDmoDt8WP69T3wKOJ
-   KMygYsqFOxNtz2QHWe+4E9hIZX/7T7wb8OgX7Yx2+l9eIyEZdh6XLkr8o
-   XnqajVheIJNI7R5AoYIeJIscIBctpSR4Sv8dSSl6cUDPu6payBh/zUr/7
-   df9HhksVB7HzCW8+g6oQikFMN7+KRX8xTqJ0W2oSQyHErJpadhUtTk22c
-   Yyg5ysXaNj3FcGDrA+8ZJutsSK1udTPlgopgaXOEsdHIBC90dGmdjj+u4
-   a+taRJPzxAP8XoxY7Cy7bEljfOhkduB+LWo2qAbR1H9VmObLl5BcCmiZ8
-   g==;
-X-CSE-ConnectionGUID: CCx8Ux+UTF2o+jejXKI+wg==
-X-CSE-MsgGUID: zYbxcq1YSRmIh27h5r+H3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="25094691"
-X-IronPort-AV: E=Sophos;i="6.10,226,1719903600"; 
-   d="scan'208";a="25094691"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 10:28:09 -0700
-X-CSE-ConnectionGUID: L3hqABaBS9S0f5kDSb4roA==
-X-CSE-MsgGUID: ubw3mBNATbSfUCuOVLzYfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,226,1719903600"; 
-   d="scan'208";a="72950734"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 13 Sep 2024 10:28:09 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1spA5W-0006k8-1V;
-	Fri, 13 Sep 2024 17:28:06 +0000
-Date: Sat, 14 Sep 2024 01:27:39 +0800
-From: kernel test robot <lkp@intel.com>
+	s=arc-20240116; t=1726251140; c=relaxed/simple;
+	bh=ELc+EZ6Ud+nuJFE/uD3oBDDq7oF9thBeZ2LWyjeuLTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fmt23LDyyn31pa0JXvV6K2p0lqBe4cGxKKi614kihv4YaWQZHlfrW6BZdM80BKQrcFnIdGuy+rumVyW30YEvoVSKo7Dbogum8y5LEvpjm95dinpxxuo9X7EJ2saqp85GnSI6Jfgt+wQudsPbQV3VhjnyVwSCbmHSryQxSlJ7BKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amYC6KlQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF54BC4CEC0;
+	Fri, 13 Sep 2024 18:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726251140;
+	bh=ELc+EZ6Ud+nuJFE/uD3oBDDq7oF9thBeZ2LWyjeuLTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=amYC6KlQsEeRu1br1naI9PFxAp4xNZc1uIpm1fS11VIcupSakzGNwcLGcHu4sUhr8
+	 zY3n/2KOSWizbRqWSmlXNGBo5BLtQqDbVTH5pEhy+4Y3V8Mt8kIncZEkj0+ynTu7ev
+	 KzKKp6YKi2o6zsJ4Q0xBZjzbVmtHlWOn/mCnlPZwkA4DVwEN9A1QZjEqvSG/6EgvrR
+	 s3imqLthMF766CTm0Pt6oKQ9LwILSsn8/YsLNE7i0pZCGFgutcD1o9RZZDtubVCxqi
+	 vc9rYwoicw3eDz16YY5tx93mZpQGOG890aro/j6wIfB/BHQmDiEiWgC7oEASd6zx69
+	 LrhAY9RH/ZBSA==
+Date: Sat, 14 Sep 2024 03:12:18 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- fc8c818e756991f5f50b8dfab07f970a18da2556
-Message-ID: <202409140131.HxxFyMIL-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+	Rob Herring <robh@kernel.org>, Lucas Stach <l.stach@pengutronix.de>,
+	Philip Li <philip.li@intel.com>, linux-pci@vger.kernel.org
+Subject: Re: [linux-next:master 11090/11210]
+ arch/arm64/boot/dts/freescale/imx8mm-venice-gw75xx-0x.dtb: pcie-ep@33800000:
+ reg: [[864026624, 4194304], [402653184, 134217728]] is too short
+Message-ID: <20240913181218.GA3047723@rocinante>
+References: <202409131940.gkwdcLJ6-lkp@intel.com>
+ <20240913163249.GA713949@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240913163249.GA713949@bhelgaas>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: fc8c818e756991f5f50b8dfab07f970a18da2556  PCI: Fix potential deadlock in pcim_intx()
+[+Cc Philip]
 
-elapsed time: 1664m
+Hello,
 
-configs tested: 94
-configs skipped: 3
+> I don't know if this is a false positive or related to
+> https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/commit/?id=2f309c988b7c
+> ("dt-bindings: PCI: imx6q-pcie: Add reg-name "dbi2" and "atu" for
+> i.MX8M PCIe Endpoint") or what, but needs to be resolved before this
+> gets merged to mainline.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Philip, this is one of the false-positives, isn't it?  I believe we've got
+a few of these recently.  See below for an example.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20240913    clang-18
-i386        buildonly-randconfig-002-20240913    clang-18
-i386        buildonly-randconfig-003-20240913    clang-18
-i386        buildonly-randconfig-004-20240913    clang-18
-i386        buildonly-randconfig-005-20240913    clang-18
-i386        buildonly-randconfig-006-20240913    clang-18
-i386                                defconfig    clang-18
-i386                  randconfig-001-20240913    clang-18
-i386                  randconfig-002-20240913    clang-18
-i386                  randconfig-003-20240913    clang-18
-i386                  randconfig-004-20240913    clang-18
-i386                  randconfig-005-20240913    clang-18
-i386                  randconfig-006-20240913    clang-18
-i386                  randconfig-011-20240913    clang-18
-i386                  randconfig-012-20240913    clang-18
-i386                  randconfig-013-20240913    clang-18
-i386                  randconfig-014-20240913    clang-18
-i386                  randconfig-015-20240913    clang-18
-i386                  randconfig-016-20240913    clang-18
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                          rhel-8.3-rust    clang-18
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.1.0
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> > head:   57f962b956f1d116cd64d5c406776c4975de549d
+> > commit: b099c3ac1a08c08517c1ff05c52a7f5476020b02 [11090/11210] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+> > config: arm64-randconfig-051-20240911 (https://download.01.org/0day-ci/archive/20240913/202409131940.gkwdcLJ6-lkp@intel.com/config)
+> > compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+> > dtschema version: 2024.6.dev16+gc51125d
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240913/202409131940.gkwdcLJ6-lkp@intel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202409131940.gkwdcLJ6-lkp@intel.com/
+> > 
+> > dtcheck warnings: (new ones prefixed by >>)
+> > >> arch/arm64/boot/dts/freescale/imx8mm-venice-gw75xx-0x.dtb: pcie-ep@33800000: reg: [[864026624, 4194304], [402653184, 134217728]] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > >> arch/arm64/boot/dts/freescale/imx8mm-venice-gw75xx-0x.dtb: pcie-ep@33800000: reg-names: ['dbi', 'addr_space'] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > --
+> > >> arch/arm64/boot/dts/freescale/imx8mp-var-som-symphony.dtb: pcie-ep@33800000: reg: [[864026624, 4194304], [402653184, 134217728]] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > >> arch/arm64/boot/dts/freescale/imx8mp-var-som-symphony.dtb: pcie-ep@33800000: reg-names: ['dbi', 'addr_space'] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > --
+> > >> arch/arm64/boot/dts/freescale/imx8mp-venice-gw75xx-2x.dtb: pcie-ep@33800000: reg: [[864026624, 4194304], [402653184, 134217728]] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > >> arch/arm64/boot/dts/freescale/imx8mp-venice-gw75xx-2x.dtb: pcie-ep@33800000: reg-names: ['dbi', 'addr_space'] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > --
+> > >> arch/arm64/boot/dts/freescale/imx8mp-phyboard-pollux-rdk-no-eth.dtb: pcie-ep@33800000: reg: [[864026624, 4194304], [402653184, 134217728]] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+> > >> arch/arm64/boot/dts/freescale/imx8mp-phyboard-pollux-rdk-no-eth.dtb: pcie-ep@33800000: reg-names: ['dbi', 'addr_space'] is too short
+> >    	from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Past conversation about these errors:
+
+  - https://lore.kernel.org/all/202407041154.pTMBERxA-lkp@intel.com/
+
+	Krzysztof
 
