@@ -1,57 +1,73 @@
-Return-Path: <linux-pci+bounces-13218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97D119792DC
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Sep 2024 20:06:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46A81979446
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Sep 2024 03:37:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C86771C2135B
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Sep 2024 18:06:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 791F51C22AAA
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Sep 2024 01:37:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C79B1D319B;
-	Sat, 14 Sep 2024 18:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E2D10E0;
+	Sun, 15 Sep 2024 01:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PiLdGvn1"
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="eHFH5Vv/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7B71D1F68;
-	Sat, 14 Sep 2024 18:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B43A1FDD
+	for <linux-pci@vger.kernel.org>; Sun, 15 Sep 2024 01:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726337137; cv=none; b=O1beia1fkOkTPNLH/RbuntUF6Cu6DaxvSPr+St5nnI8VNqY+gA2g+OWySKwtc/yLpGSJQF7XkkIgcOLJzvlVT+w8s8DTm4SG3OPfRDWhRWrN0q2TBETICOcNhgONCLSh1pq3kriT17SspYTZLi3Ng13vHWJXiPybZMVpmyqY+bU=
+	t=1726364232; cv=none; b=IxVZ1x1UbtmA/nSwSDk2OMlRk3oXhBAY6yVY3WIW6+esMjZJjmiFZRd3TL2a8slE0+yjFVpiPQkpV7HSNu9Jz+FeswaZlc7w+ZBfHJsfTppL/GE59WAwvHPjgwPYYoflLWrsqMziyC42WKTh/7o0cT8E1TDQYulXgMOog//PPqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726337137; c=relaxed/simple;
-	bh=bX3hfSvdivSwqj787dVv//EFjHQaHvkTiKg8rAMVnOA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=adN/PMw4l+Ga50LgxDlUCrktuXVE4NNctJ9wies+GyKnizvj6MtKCsTuanNHM0awIbSKFoZE3PCHG8j8QLID7ZfRc1bZ5NNtCgnBt7Z6hsQOfRTXA9zG6Cb6R1TyLYAaLJRobUeZyUDG6rmfVhS8O1veiX6ihTrFpeahj1OHHPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PiLdGvn1; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1726337133;
-	bh=bX3hfSvdivSwqj787dVv//EFjHQaHvkTiKg8rAMVnOA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PiLdGvn1mF6o4/igmFmYwt5NOUNLrTMBo7g10pSJbl3riizN5P9WV2t2abw5+N255
-	 aO1EQTfE76P2tfpvQZQk+L3/VHoMZY8W5ghfjmBZ2tQ5F195dUQe91afNPmrJmudjL
-	 SWyfRqs6wd5mKbN0RbolVG1gGKW2GsmKo7Y+N+HktoHBx9siqcljeiIfKrQFXj2PdV
-	 OV3+QjiSUq1qFFDir/FJSFq/BrgvB+uLn56QVKmhPpj2FmGXPxHrAiA8QF07TalXIu
-	 sx3VltxJ7gjejJniMqPAiLqeDEVHdg5WiH0pqh+uT72zfLYbRYHwAXyKRxn9MzgIr6
-	 KXvLG5dFRG1aw==
-Received: from localhost (unknown [188.27.55.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7F83C17E360F;
-	Sat, 14 Sep 2024 20:05:33 +0200 (CEST)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Sat, 14 Sep 2024 21:04:57 +0300
-Subject: [PATCH 4/4] clk: Drop obsolete devm_clk_bulk_get_all_enable()
- helper
+	s=arc-20240116; t=1726364232; c=relaxed/simple;
+	bh=e2DB0jY7CI7g9yMhLJrXFiC12wUCmyurX80yXHI+8ak=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RsgTf6CYAZb4gUV7bUxmS6xyF3sPrrGoJa3EXQULGhw20vveCXANmUKya8BoR/46s9oyJN/m1x5b13rAGrJKxtHhVnAIR6jxc550397seW7YOiE/zvoMjHNsi33jRXSFCEU2XCLf3zJ/W8K0bwpkgyuvcdT3wymKvq9slkY3NbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=none smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=eHFH5Vv/; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=daynix.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2059112f0a7so19008615ad.3
+        for <linux-pci@vger.kernel.org>; Sat, 14 Sep 2024 18:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1726364231; x=1726969031; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qd+n/+pRJnLuOWSZ4DY2fGdQOZIdYewseGE889SHmks=;
+        b=eHFH5Vv/ej3b+HbyGqFufdbn2lWFX9udp1iJPBgwlA0SFYqx4XTSyIf4+qbJpm9cx/
+         G++AnBvpQnzph/mT5v90bXs69sPHbZ57peiOxVXpcuexhwq7jSFgpLchg7S4kJN8ZBSR
+         +ctNUoO/VCSSy+HTPmBWd8TcwzcysklDZFIaMEA9vMDE27HVKjecaKggw6rHp5DrHRj+
+         3P5QyKX4XykCN+SR3Nv/rI2qt+PrntaIoQ0S1/g6XCRiDxyY/7rLRlQH/rXFUNd7tL7i
+         eGgOhhbKII84JGaAa9tiRLfw9QMvQbmZhL0o+7lird2KILuZ/8CLfjBynn8+Rz3UiXFV
+         04eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726364231; x=1726969031;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qd+n/+pRJnLuOWSZ4DY2fGdQOZIdYewseGE889SHmks=;
+        b=Dm5qGW8TZw/gTTOYfgy7mSPoYDgZveMzOSrY3ksPDDPzxjDMD2o5TeNA6Il9Vuuth2
+         LIJjHq56TGwGOLGWZmEdp0JXJAsJeK42DRjcTuJVUqb/uXsnUW2rODHzomALAV9AMIKW
+         xyArPrgDvgK2zaV3wKA1KoLgxygc2G1997dO1ZUhcFEp5H5SaESTO8rrY36Rk30mGTSj
+         N1rC/sIDYp0N/tmDENW/vrm2BbL0Bsxa4AxupVKL70bYsLVgxFPzu0bXH33ziGRUBy9V
+         LuRFDr5A1gNM6mHaRFJGRw4SUAcZVV/PRf+8xfba3KJjCRC2IYWQvu9ZnH7PyKmeWdcA
+         zCfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqea5WllkzNw+J8VC3lw4HwUOhxxzyhZoeemIP6DiR9vDga8hr3F2PK/QyizUjgHhZoP9U1elIC7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznY8Ev0FUthFk0W5sqqaJHj/PNT1N5iqT4PRzqBvHQgcXo+Fb+
+	91HMbERcASXK3dOkdq9W3rNzx2aLYKOyjbqPae2146bOFf3VLc3f6rjrdSvvbhg=
+X-Google-Smtp-Source: AGHT+IGBzYZA6aqxcO/jlga0x7/3lidt29yrIn+ISrJpxc+g6woAA3sheKe9inzHSihEaDrpdgpEFQ==
+X-Received: by 2002:a17:90b:2249:b0:2cf:2bf6:b030 with SMTP id 98e67ed59e1d1-2dbb9f057a9mr10878850a91.33.1726364230768;
+        Sat, 14 Sep 2024 18:37:10 -0700 (PDT)
+Received: from localhost ([210.160.217.68])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2dbb9c3f21esm4431154a91.6.2024.09.14.18.37.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Sep 2024 18:37:10 -0700 (PDT)
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+Date: Sun, 15 Sep 2024 10:36:58 +0900
+Subject: [PATCH] Documentation: Fix config_acs= example
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,131 +75,53 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240914-clk_bulk_ena_fix-v1-4-ce3537585c06@collabora.com>
-References: <20240914-clk_bulk_ena_fix-v1-0-ce3537585c06@collabora.com>
-In-Reply-To: <20240914-clk_bulk_ena_fix-v1-0-ce3537585c06@collabora.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jingoo Han <jingoohan1@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: kernel@collabora.com, linux-clk@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org
-X-Mailer: b4 0.14.1
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240915-acs-v1-1-b9ee536ee9bd@daynix.com>
+X-B4-Tracking: v=1; b=H4sIADk65mYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDS0ND3cTkYl1jAxPjRCNzY/PkZEsloMqCotS0zAqwKdGxtbUAZEX2xlU
+ AAAA=
+To: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Akihiko Odaki <akihiko.odaki@daynix.com>
+X-Mailer: b4 0.14-dev-fd6e3
 
-Commit 265b07df758a ("clk: Provide managed helper to get and enable bulk
-clocks") added devm_clk_bulk_get_all_enable() function, but missed to
-return the number of clocks stored in the clk_bulk_data table referenced
-by the clks argument.  Without knowing the number, it's not possible to
-iterate these clocks when needed, hence the argument is useless and
-could have been simply removed.
+The documentation used to say:
+> For example,
+>   pci=config_acs=10x
+> would configure all devices that support ACS to enable P2P Request
+> Redirect, disable Translation Blocking, and leave Source Validation
+> unchanged from whatever power-up or firmware set it to.
 
-A new helper devm_clk_bulk_get_all_enabled() has been introduced, which
-is consistent with devm_clk_bulk_get_all() in terms of the returned
-value.
+However, a flag specification always needs to be suffixed with "@" and a
+PCI device string, which is missing in this example. It needs to be
+suffixed with "@pci:0:0" to configure all devices that support ACS in
+particular.
 
-Drop the obsolete function since all users switched to the new helper.
-
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
 ---
- drivers/clk/clk-devres.c | 32 --------------------------------
- include/linux/clk.h      | 22 ----------------------
- 2 files changed, 54 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
-index 4203aaaa7544..14a657f336fe 100644
---- a/drivers/clk/clk-devres.c
-+++ b/drivers/clk/clk-devres.c
-@@ -218,38 +218,6 @@ static void devm_clk_bulk_release_all_enable(struct device *dev, void *res)
- 	clk_bulk_put_all(devres->num_clks, devres->clks);
- }
- 
--int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
--					      struct clk_bulk_data **clks)
--{
--	struct clk_bulk_devres *devres;
--	int ret;
--
--	devres = devres_alloc(devm_clk_bulk_release_all_enable,
--			      sizeof(*devres), GFP_KERNEL);
--	if (!devres)
--		return -ENOMEM;
--
--	ret = clk_bulk_get_all(dev, &devres->clks);
--	if (ret > 0) {
--		*clks = devres->clks;
--		devres->num_clks = ret;
--	} else {
--		devres_free(devres);
--		return ret;
--	}
--
--	ret = clk_bulk_prepare_enable(devres->num_clks, *clks);
--	if (!ret) {
--		devres_add(dev, devres);
--	} else {
--		clk_bulk_put_all(devres->num_clks, devres->clks);
--		devres_free(devres);
--	}
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all_enable);
--
- int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
- 					       struct clk_bulk_data **clks)
- {
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index 158c5072852e..b607482ca77e 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -495,22 +495,6 @@ int __must_check devm_clk_bulk_get_optional(struct device *dev, int num_clks,
- int __must_check devm_clk_bulk_get_all(struct device *dev,
- 				       struct clk_bulk_data **clks);
- 
--/**
-- * devm_clk_bulk_get_all_enable - Get and enable all clocks of the consumer (managed)
-- * @dev: device for clock "consumer"
-- * @clks: pointer to the clk_bulk_data table of consumer
-- *
-- * Returns success (0) or negative errno.
-- *
-- * This helper function allows drivers to get all clocks of the
-- * consumer and enables them in one operation with management.
-- * The clks will automatically be disabled and freed when the device
-- * is unbound.
-- */
--
--int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
--					      struct clk_bulk_data **clks);
--
- /**
-  * devm_clk_bulk_get_all_enabled - Get and enable all clocks of the consumer (managed)
-  * @dev: device for clock "consumer"
-@@ -1052,12 +1036,6 @@ static inline int __must_check devm_clk_bulk_get_all(struct device *dev,
- 	return 0;
- }
- 
--static inline int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
--						struct clk_bulk_data **clks)
--{
--	return 0;
--}
--
- static inline int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
- 						struct clk_bulk_data **clks)
- {
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index ee2984e46c06..5611903c27a9 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4604,7 +4604,7 @@
+ 				  '1' – force enabled
+ 				  'x' – unchanged
+ 				For example,
+-				  pci=config_acs=10x
++				  pci=config_acs=10x@pci:0:0
+ 				would configure all devices that support
+ 				ACS to enable P2P Request Redirect, disable
+ 				Translation Blocking, and leave Source
 
+---
+base-commit: 46a0057a5853cbdb58211c19e89ba7777dc6fd50
+change-id: 20240911-acs-3043a2737cc9
+
+Best regards,
 -- 
-2.46.0
+Akihiko Odaki <akihiko.odaki@daynix.com>
 
 
