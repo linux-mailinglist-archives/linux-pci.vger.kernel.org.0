@@ -1,96 +1,99 @@
-Return-Path: <linux-pci+bounces-13229-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13230-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D114979B75
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2024 08:49:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E35A4979E2A
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2024 11:16:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6155D2841D6
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2024 06:49:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5F7AB21C7D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Sep 2024 09:16:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C078073452;
-	Mon, 16 Sep 2024 06:48:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46A1013DDDD;
+	Mon, 16 Sep 2024 09:16:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBCA5025E;
-	Mon, 16 Sep 2024 06:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2994C12F5B1;
+	Mon, 16 Sep 2024 09:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726469334; cv=none; b=hPVpkTPBovVWa1QCazO+ILFmSlcdA5U54bfSSfX9lTythGL8burZTmT/2z/SgWMwQnfHi8FrbSKLQmzgAoFo+Zu6jVR49Ag2fH7JarIxjx2HP896apI5GskN07fdt7zEy6fqy7s21NDEVeGWSEP3v3NR6wOsPBj6B2qLvwWo58Q=
+	t=1726478165; cv=none; b=G23rQkqSkIGHGySqgeb82SFP4HYrmcXMJVW+fgdWDwo2ZYzPbs9i3MSNSjRB69uYuNCve7/s91fv4oVSs+Nchqs62rIGqly+76iLI2qg1LtBlgIynAVqQZI6ggcuDI+UICrMnIDgrkeLHa63ChuntyL9Y722SPUk8YqvqjhhCpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726469334; c=relaxed/simple;
-	bh=y8BURP73rNIkllDOPgxsGnvJZjK9VISFdAoxhnkEplA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qSQcWloKH2tfilmOru9h3o56CjzjwgQyzkjsJEGS2l9YDueLlEEX9QVxbs7kZqlK98x0fDOA7geeY4gWCTWngQiL7v0KzRbHGxy3AKhaDz7yIY3rbBvovNbhaoiLcFYqt+6lFtT24EiNXFH10X4pFnI5ZVDbeEylme/BDfU92YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 92036227AAA; Mon, 16 Sep 2024 08:48:46 +0200 (CEST)
-Date: Mon, 16 Sep 2024 08:48:46 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-scsi@vger.kernel.org,
-	megaraidlinux.pdl@broadcom.com, mpi3mr-linuxdrv.pdl@broadcom.com,
-	MPT-FusionLinux.pdl@broadcom.com, storagedev@microchip.com,
-	linux-nvme@lists.infradead.org, Daniel Wagner <dwagner@suse.de>,
-	20240912-do-not-overwrite-pci-mapping-v1-1-85724b6cec49@suse.de,
-	Ming Lei <ming.lei@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/6] blk-mq: introduce blk_mq_hctx_map_queues
-Message-ID: <20240916064846.GA15950@lst.de>
-References: <20240913-refactor-blk-affinity-helpers-v1-1-8e058f77af12@suse.de> <20240913162654.GA713813@bhelgaas>
+	s=arc-20240116; t=1726478165; c=relaxed/simple;
+	bh=jtdwfYadaYYw0XauKl0wZWfekoNSA9U3l0za1HkbZJw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SWhhsuv4752GOGIR0ubBYLCMaLhPfsdkn532q/N5yVpuYicWBERsp/7kv5oi+YODzGNqbuE18pVDxKRS3NSzoEZxOUnML9AgxPxePjFl+48/bVhi4IWTGWU8UNFdRIxuUxBsxewGvckUE2nxJfgPKpjDCexuLllm6HioY4h8wAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4X6fQz3psDz6K5X3;
+	Mon, 16 Sep 2024 17:15:55 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 24E56140158;
+	Mon, 16 Sep 2024 17:15:59 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 16 Sep
+ 2024 11:15:58 +0200
+Date: Mon, 16 Sep 2024 10:15:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Gregory Price <gourry@gourry.net>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bhelgaas@google.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<vishal.l.verma@intel.com>, <lukas@wunner.de>
+Subject: Re: [PATCH] pci/doe: add a 1 second retry window to pci_doe
+Message-ID: <20240916101557.00007b3a@Huawei.com>
+In-Reply-To: <66e51febbab99_ae212949d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240913183241.17320-1-gourry@gourry.net>
+	<66e51febbab99_ae212949d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240913162654.GA713813@bhelgaas>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Sep 13, 2024 at 11:26:54AM -0500, Bjorn Helgaas wrote:
-> > +const struct cpumask *pci_get_blk_mq_affinity(void *dev_data, int offset,
-> > +					      int queue)
-> > +{
-> > +	struct pci_dev *pdev = dev_data;
-> > +
-> > +	return pci_irq_get_affinity(pdev, offset + queue);
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_get_blk_mq_affinity);
-> > +#endif
+On Fri, 13 Sep 2024 22:32:28 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> [ add linux-pci and Lukas ]
 > 
-> IMO this doesn't really fit well in drivers/pci since it doesn't add
-> any PCI-specific knowledge or require any PCI core internals, and the
-> parameters are blk-specific.  I don't object to the code, but it seems
-> like it could go somewhere in block/?
+> Gregory Price wrote:
+> > Depending on the device, sometimes firmware clears the busy flag
+> > later than expected.  This can cause the device to appear busy when
+> > calling multiple commands in quick sucession. Add a 1 second retry
+> > window to all doe commands that end with -EBUSY.  
+> 
+> I would have expected this to be handled as part of finishing off
+> pci_doe_recv_resp() not retrying on a new submission.
+> 
+> It also occurs to me that instead of warning "another entity is sending conflicting
+> requests" message, the doe core should just ensure that it is the only
+> agent using the mailbox. Something like hold the PCI config lock over
+> DOE transactions. Then it will remove ambiguity of "conflicting agent"
+> vs "device is slow to clear BUSY".
+> 
 
-That's where it, or rather the current equivalent, lives, which is a bit
-silly.  That being said, I suspect the nicest thing would be to offer a
-real irq_get_affinity interface at the bus level.
+I believe we put that dance in to not fail too horribly
+if a firmware was messing with the DOE behind our backs rather than
+another OS level actor was messing with it.
 
-e.g. add something like:
+We wouldn't expect firmware to be using a DOE that Linux wants, but
+the problem is the discovery protocol which the firmware might run
+to find the DOE it does want to use.
 
+My memory might be wrong though as this was a while back.
 
-	const struct cpumask *(*irq_get_affinity(struct device *dev,
-			unsigned int irq_vec);
-
-to struct bus_type so that any layer can just query the irq affinity
-for buses that support it without extra glue code.
+Jonathan
 
