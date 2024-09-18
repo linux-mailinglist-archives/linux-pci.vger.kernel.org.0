@@ -1,388 +1,248 @@
-Return-Path: <linux-pci+bounces-13284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13285-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A32CE97BFB3
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2024 19:32:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFCA197C194
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2024 23:53:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C4A71F22B83
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2024 17:32:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B4DBB210B0
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Sep 2024 21:52:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C95161C9EC9;
-	Wed, 18 Sep 2024 17:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6ADF1CB30E;
+	Wed, 18 Sep 2024 21:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WLzvc1cL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWjcEzJX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2069.outbound.protection.outlook.com [40.107.236.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E001C9EB3;
-	Wed, 18 Sep 2024 17:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726680704; cv=fail; b=RK89GrFx6pwkwefgtO7pDabrgZGjKqeXgcOwTLKIHnz96ITsLncEwT4ogsDWYQlE7h+DYjgPmyGfkGVizrki+yfd5CE7PUHA5PaGv/EgNVr4XMAO6jFGLq4h24smNN34JEUPU93V/Xk452KTYck792TutOSo3ywAWJgRSjbp+/4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726680704; c=relaxed/simple;
-	bh=f1WSub3CjGCWgY4AKiwsdS+6fWB+w+Qvk4/uS9EfHGA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VjVUkBX25yyYd0zWRAQFURtD8OWl7BiZKZGAh18++YiGJmC7B6iVB1Iu1oLaHnGohSnTSr7zKB4fSfod+tclwXkzoqQvrfBRYtyfkzdY3Hijgo5X6N5QEZkQAUKmsZ2EPpvBU1YA9miSsK6ZQOjwYx5lOI4mfp+aN0WMgPQAgPE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WLzvc1cL; arc=fail smtp.client-ip=40.107.236.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ql/oAqXUvoLABQHNy4a5J/AGHyfkxPWuNNjtMqs0umPaMzkHfl7DD9NuQVGXXiKMsguYgiIJYTdjFjaJIpFw6daHv+8aawLsfjiruRHp41/ETHZP8dTuDS0fjY3M6QiWcEhRGlr6BMV9KabqEwqR0EU2rPoVBTc7oi/bh3vtGGcoOxy8cDEfg8wpb+NgA+rBGXp3BC0tddo8h6l3y7fqcQrBRo3V0fvcNkw1pvTAfb8yr53n5ifO7h9P6W88ugpLbCyyJStctjV2vdQwILulroMU4q58lEkb7qP1z1UGTM7yuHDDYt+oPAioZr8eGmkeDrILWp4Yhd5tF84ofWTndA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZGkuZ1LSph2V4m2FW8dFZaz+lRIIkknkTkgX+G3LPxM=;
- b=LPDHqUorWTBY29d9TplhivIahxk9fGcXXsVHp+w7gIpyvE6mjdALGnBSXijkDZ0A+nciKeDL63gTbR1c7Kh12X71r+N2hYsTiac6tWEn/GQumvGknXJOIwKYuMvHICmIqS3yGwIV/qWt73ETDCgkf8PQyVNCQGvqnMMtniFRhazZRjQNCPWUq3luRqPfbJ12wbac3JafVmvS0/oYObhhzrLsymemDVbeqoBrRJm1NIPvJV791k85NiHVlHka6IaCs5h/g5G0Vw9uQyl/mMXer4ZwlY6PZOTuVmdz84KgHaInfJb+Nfel3/aaqfZLRdujuxKV6spRvdmB83UCW15NxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGkuZ1LSph2V4m2FW8dFZaz+lRIIkknkTkgX+G3LPxM=;
- b=WLzvc1cLKEJqw269nUf2rtRzv4Q5NLIFPZ4710y1qcdRqdAn8Psu+VSX8REEgwjFEZ6Ah31Yx7yt8/2wnYzMu1+BciQqulK/Ciw5oodcgMuHwpVyHitnjjv+dNrtH6R41Hucgdv47DSYaUCkm1xxw3P5n43YWI9/Ix0x/iPvCqs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by MN2PR12MB4421.namprd12.prod.outlook.com (2603:10b6:208:26c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.16; Wed, 18 Sep
- 2024 17:31:39 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.7982.012; Wed, 18 Sep 2024
- 17:31:39 +0000
-Message-ID: <b02f2e6e-5ad2-2e7b-86a5-644f44ecdb6d@amd.com>
-Date: Wed, 18 Sep 2024 18:31:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V4 11/12] bnxt_en: Add TPH support in BNXT driver
-Content-Language: en-US
-To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: Jonathan.Cameron@Huawei.com, helgaas@kernel.org, corbet@lwn.net,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
- michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
- somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
- manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
- horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
- lukas@wunner.de, paul.e.luse@intel.com, jing2.liu@intel.com
-References: <20240822204120.3634-1-wei.huang2@amd.com>
- <20240822204120.3634-12-wei.huang2@amd.com>
- <c7b9cafc-4d9d-f443-12b5-bf3d7b178d2c@amd.com>
- <6fb7e2cf-e26d-4af5-84e4-2c56c184a1df@amd.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <6fb7e2cf-e26d-4af5-84e4-2c56c184a1df@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0157.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:188::18) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B8818A6C5;
+	Wed, 18 Sep 2024 21:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726696373; cv=none; b=fM+JfhL6KUVXcE4UHysb8UUwBrkhCiXucnGOrlvgZdFJpJ0/WP+hDGmaSq94n9HlKDX/mw1Dv4ZAF1fWDXk5AMCwVkBBi9bJBxD7vkwvYq1+SWNZuHdGwYodK1mZgG4UvhNmQJy1oK9/xyfDpNHlXPFInCnSY4BvuK54zg1L4w8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726696373; c=relaxed/simple;
+	bh=KjosWc3YQGl++7cHwuyERfoMjEYoSmUFMJfCENozWAQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jbop9kwUti7CwCBP64WlOpSS7Oatrp+zspxOrJ86AKF5fS7DRosojiiPAJA07FcBVpIGSY3YBkrz5DE6b2q++Vse5vVWCgBHraNbdEtShXubJE2EwzOChZ9cpgmrSu8ZLXv537FseulmXUJ2Nal2uATJli0MxAi+3BF+8gQVIUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWjcEzJX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C711AC4CEC2;
+	Wed, 18 Sep 2024 21:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726696373;
+	bh=KjosWc3YQGl++7cHwuyERfoMjEYoSmUFMJfCENozWAQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=dWjcEzJXX4ooRHUXZs1QKRISgq0BU0G8hNkX+kieyzIIGyJKsLFV2tRzO5yYceGcH
+	 K7MqyCs1l7uFHSn2AM8V/hxEVmDM01gL5WQ6r+lrAvkxXpRZOqEchapTg1/5N25FzV
+	 Z9J38Rzr5VyP5A4Bx36/b9OvnFCLEJ2b0XA1U2kYyX1L2ws5Oedick2Io1uyiaRVg+
+	 u13tTohXKkJbw9VooAQCTnxOPvTouaOTcoM9IOkt2An1+bqQ2Hm/PrUpAoH4oxTtIb
+	 ZFSJKoN/8RtX7NYroGqxCYTCS6cu8xp7L1Hy/OjV4h7zeTaN6KklRG9LvXy07VePbw
+	 ZFSLGUlmA9rUA==
+Date: Wed, 18 Sep 2024 14:52:50 -0700 (PDT)
+From: Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To: Jiqian Chen <Jiqian.Chen@amd.com>
+cc: Juergen Gross <jgross@suse.com>, 
+    Stefano Stabellini <sstabellini@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, xen-devel@lists.xenproject.org, 
+    linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+    linux-acpi@vger.kernel.org, Huang Rui <ray.huang@amd.com>
+Subject: Re: [KERNEL PATCH v9 1/3] xen/pci: Add a function to reset device
+ for xen
+In-Reply-To: <20240912092352.1602724-2-Jiqian.Chen@amd.com>
+Message-ID: <alpine.DEB.2.22.394.2409181450280.1417852@ubuntu-linux-20-04-desktop>
+References: <20240912092352.1602724-1-Jiqian.Chen@amd.com> <20240912092352.1602724-2-Jiqian.Chen@amd.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MN2PR12MB4421:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94919958-f722-4ebb-7c08-08dcd807c0c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RlZIZzdvbXZCVW51cXJxNmlqbHB2L2NsU2hwUU04VDBUem11NW15LzM1RVRZ?=
- =?utf-8?B?SExnNzkrZzRhTUNIYUZSTEZDdUtTUlkwRSsyODhicHBBaHU1bDRpbm5UV2Rl?=
- =?utf-8?B?dXBqTC8zVEtVRXB2QjlQbjd3Y3ZkWHQyaVdrc3FZQ2ZyeGcyZkNTT2JBRFRS?=
- =?utf-8?B?TEh1VXFFNW5tZHFoREYxVFNxMmN1UDZwd05CRlBQSks5ZEtpKzU0UWVweFMy?=
- =?utf-8?B?K2huY0RxR2VXN2k2NnNacHFsMHd0Z1BtcmE1b1RHa3grRUdpOEdhYlkzV0Yy?=
- =?utf-8?B?K093K1ZwOEhVNml1dzdDbXFRcnB0SDVmdGZYL0RxSm5GS1NTK2JkL2pRRmUr?=
- =?utf-8?B?L1p6UUhqNGNneVpteTNaWVpNMUhQbEtJTlVSeWQ0WjFoRzNXZHc3MS9lYW4y?=
- =?utf-8?B?UEs5Tk1vTlNvMWZYTUlWTzkrTXFMWmZ4UXVUbER1eDVTUGx2SlFKWWxWSTg0?=
- =?utf-8?B?bmpRWktibGlrMmNyNGtYYkdGYThPL2I1ZFA4THdyZlR5cDBiZXZmWWkyL2lm?=
- =?utf-8?B?ZktKWjZ1RVc2dXBWM3pDQ002bTZLNk1RZ3pFcG1YUkgxVm9OYzhTZks3ZFh0?=
- =?utf-8?B?NnhhTWpqdEQ1eU1rMDNuM0hhaExpMVQ3TVQ5VjhWY09hMmwyOE94L1BaQmg1?=
- =?utf-8?B?dmJrd2x3YU96aktTRllQTnpvRVdTc3JpVmpuK3dvTFBBanJyYTVpRXAxVFpr?=
- =?utf-8?B?ZytPTEttMDVOR0hVaGI1ZzVYK0J4OGo1QWh6RTRlY28wMzBYdXJ6TDZJTUZm?=
- =?utf-8?B?NGZ1bWM5d3JKRkxWb0Vxb25TOVovbUpNZ0tPY1JoMmNCbnljY2RnNkJ5ZUR6?=
- =?utf-8?B?L0pNTExpMVdKNStVTHUwMDF2U3lzaHI5UytHOTJxZURrUzFQNnZOZDBtMlRt?=
- =?utf-8?B?eWVGdnB4NDNLQ3JXR0JkU2JmQUZGQWJycHpUcEpOMGhkeStUNlRSdzBRK2RW?=
- =?utf-8?B?R3RLUUt1OHlZR1FQV2FRalZtWGk0N0ZsaDBvR3hZbFA0MTFabExYUHpSRXp2?=
- =?utf-8?B?V25FUWxYTzBLdFFTbGEyc1BxRk43S09DUWtwN1NWK09uUHhNTjRxaEQ0RW1o?=
- =?utf-8?B?ZzZhbFZQaWpUYzhWTFV3SitybDVENHdwWndLOGVCQmxVdi9pUDd2d21iNW9h?=
- =?utf-8?B?V21FeGNaNnRPK0pnQjFqRHJucTYvU1FOV2g0YzVQYjJDVklXWCtTR3dQbDJX?=
- =?utf-8?B?VjdMQUVpem9idmxCak90amw2NDdZR0djb0gyY1NlanlON3czWjllaGE4RG1r?=
- =?utf-8?B?WGpQSVI0RUFpdVBJeklJQ2pGajJkRXFDSTYrZ044czBlaTBIeTM2MjRxV0d3?=
- =?utf-8?B?cnJxQWxnYk54bkdKM2M1UU5jZG9jY1JDNFB3enFrYWx0WmthTlUvKzNUQ0lt?=
- =?utf-8?B?SllQUDdyWkxXSkxxM2hXQ2lUdTZoRy85WEZLWXJXeUhMZmFmT3orOVIxdTVN?=
- =?utf-8?B?a1BFQjF5Zy9lUUFmM2xJYmwzTkRYbVp4cTN4UjNKc3RUNDJXeG0wN3ZZZE9z?=
- =?utf-8?B?M2pMMCtZME12RWdrN2VFY2NPYmJyM3ZxNkMydG80V3dEQnF4bmZjSE1TOHZi?=
- =?utf-8?B?cXJSaWNHR05Tb1hiLy9QYlRHTnBxUUhDVXZYaUx1SjNPcUw1U2NYSWRZdkZG?=
- =?utf-8?B?eUFFVWI0SGNqdlZha2FjUU1pZCtIYnRZNENhMkdFaHJzUWNXTXJMYUcrdXJE?=
- =?utf-8?B?VVlVcXNKTk5EYkNHNTdqUXM2UDAzSE1vVVQ0ZDZ5K0tteXJDMks4cUwwRVR2?=
- =?utf-8?B?VHhtNmJGU0tyUWpnb3daZkdWY1NIbEprSC9Db3NuVmpuSDFGMGJubm1YM21i?=
- =?utf-8?B?T1luTWh0ZytOeGE4b0F2QT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UlIzVnpDejNWSjIwNC8rdnpDM1c1ZHNIb0RpalNoNmZXeUkvT0g4L0d3ZXpl?=
- =?utf-8?B?MEp5N3F6dU9Od2RPazJsVUt1TTU2ZFh4OC9lNHo0UEJtVEFSTGp3K21QRk5w?=
- =?utf-8?B?dytWeERJRkx5ZDZMUHNVTnVNZWhjMTBqMTFxNkxjOE95L0c1LzBHWTExSjdm?=
- =?utf-8?B?YjBaRVhReEd1bWNac2FNWGxSOGRNMitUOUhBenhJVEtleGxaZnJpSjZIQmtO?=
- =?utf-8?B?NTFwQlZlZnZLWEsxY0Z4YnJZTEZTSnJMQ01jV2g1QTVQOVl0VjFocXh4cjd5?=
- =?utf-8?B?TGtZZUZZb2I1SzlHWUMxNXVEclZCRjU5aXY3M2lBM1hSenArNmhsaUgxcDZX?=
- =?utf-8?B?YksxWWY5ZWZhdGllYlJtRldBQ3JQcmdJTnM5T3BXZkRlaFEwNkpEWU5aNDVn?=
- =?utf-8?B?bWdnV3hOZ3Rwb01BTVduWFZLVjhkQWk2RzBXUERRUlJKeDFzNm5GTVltS20y?=
- =?utf-8?B?VGlVdnE5L3V2a3hOR21Oeks1YmswTXdSQmUrVEk3MWFSTHJ5SFYyVDRlYkcy?=
- =?utf-8?B?cGpyQyszUmtjU1pYZXgyOEVZM21nc3NhVE5BQ0d2L3ZRM2k0Vm9mWXdTdnRh?=
- =?utf-8?B?eHY4dFZ5S2RJMmoxS0YwUGRmMGFoTldpc2dzRW9pb1YwM2VmUVV5Z0YxRjg2?=
- =?utf-8?B?ZVRpVElhQzg0MUl4YzBYbEx1U1g5WXJjNHVJR0I3S29NNldjWW0rNjNqQTZU?=
- =?utf-8?B?NTNVTXRkeENzQTFTU0h5ZHNDUGU1US9XNHM5QWxRc0pyYzByQXU5WHNWZGlt?=
- =?utf-8?B?bC9xbklZV0pIOVg4U0grRkdDMmhTNTdSTW5iVThuM2pGUUVMZjk3UHVoY2J3?=
- =?utf-8?B?Vy9iVHRESFlYTERaS1hZenFyZlgzL0QzU0hZR2hYQjNtWkVWcVhnTXliTjFO?=
- =?utf-8?B?d2F0Z2Y0QURCdDd6ekFoblRFQXdHL0RkL2FjQXk5SzFVM3BvMVFzdUFJamg3?=
- =?utf-8?B?TUpSZXNvOTZpblM4eUw3MUdyRnVkRUQvVlJySUdNWFhEcmRKbVpnMGRLVFB5?=
- =?utf-8?B?TUFTc1B4d1EwNXJMSlpleDBVT1N3c3F1elRiL3VIcGExVkZBRjJ3MWtRSFVh?=
- =?utf-8?B?THgxTUFxbE1uQlhGd0I1ZStMeDRVSDZacWpCUWtQSEUwOUsxM1hzdUV6WlUz?=
- =?utf-8?B?ekRTV0hBTTFzNWREOG9iTXJFVG5RRHpxbTkyNjdyTkJlL0plOEpxMmExdHZD?=
- =?utf-8?B?bENTdzk4b0tGakZQZG5PMEw0Tm9GbG5QOGxDY012dzJubUtacnRSZW4zQUlQ?=
- =?utf-8?B?Nm5wa21sWnZac0p0dWxvMUJmR2JPN01TVElORTEvWTFGaHgvZWUwV2hzaXZy?=
- =?utf-8?B?c3F3NGQ2VVRCU3RXRzM1aHJ4dDQ1TWlETmYxemFQV01GYzM0cS90bURQT3Zq?=
- =?utf-8?B?Q25SQmRUdXZ4bHVqME5CS1JYWEhIaTJvMjlBd1A5ak9pY2xoNmIzQjRNUzRN?=
- =?utf-8?B?TzBsQ1dwZ3prK0FjdWwvaE1wT2hWbGJtZEE1dFZjcUR1cXdmckhZNXY1cDBh?=
- =?utf-8?B?OXNDWTJrYjZqV3VuUnBZR0g3WkVBTnR2NmpnU1pPaVBPb2hVTGovUmNmWWU4?=
- =?utf-8?B?ZExTY25EWVF5OUtOMk02Qkt0U2V6akVHM041Qy9NbkZxMFdVbXNCZFRpcGNp?=
- =?utf-8?B?azFyT3V4dm5WQ2hkSVVna1FlL0pTMzdtS2NFWXdidG9LYUJ6ZzlocXBqYmVu?=
- =?utf-8?B?QzZ1TVVjN0g1SHVaK2FJWjlNL1NOM3ljSGdlK0gvMXo2ay9FRVBOWERqR21s?=
- =?utf-8?B?RVNqRHBTeDBKbVdTOXA5NERYZWJ1UkNJM01SWjRpdHR2UVc3WndOVndESW1w?=
- =?utf-8?B?Mm5vZXArazdmaWMvUGk1cVNwRUpaYjg0MU9kWnE0aEZhazRyN2l2alZ4TE1C?=
- =?utf-8?B?SG85SGVoRjY4aG1tUks2WEdOeTBxRFhLbFk0cWRZR2dqWmk2OUdNRUw3WHRp?=
- =?utf-8?B?V2xzQWpYQXovOXpMVW4wSVF4VkQyTDY1bkhqTWhQOGcwUHBhMTNnMjJSM2ZS?=
- =?utf-8?B?MlhHbUxwOXd5QURpU1lQbUQvbVZtTmMwdVZPUG9MNmNQY3RQN0FYVnloMGdv?=
- =?utf-8?B?L2wvM3d2bXJkVWQyWWVDUExSeCt2OUtsR0NsL05ib1BwTXVsVEtFTnVpb0th?=
- =?utf-8?Q?vASssvofGgOyXsv2NXWpWYpzT?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94919958-f722-4ebb-7c08-08dcd807c0c4
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2024 17:31:39.2729
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0jkdFtaMQMSPaOBQoURHW0kOEKZOn9+Qm1Y1pwjKS4303R+B5FrfaBtT1MWhWyPZ7+MzgV6q6E/5CuXYi0j9LQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4421
+Content-Type: text/plain; charset=US-ASCII
+
+On Thu, 12 Sep 2024, Jiqian Chen wrote:
+> When device on dom0 side has been reset, the vpci on Xen side
+> won't get notification, so that the cached state in vpci is
+> all out of date with the real device state.
+> To solve that problem, add a new function to clear all vpci
+> device state when device is reset on dom0 side.
+> 
+> And call that function in pcistub_init_device. Because when
+> using "pci-assignable-add" to assign a passthrough device in
+> Xen, it will reset passthrough device and the vpci state will
+> out of date, and then device will fail to restore bar state.
+> 
+> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
+> Signed-off-by: Huang Rui <ray.huang@amd.com>
+> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
 
 
-On 9/16/24 19:55, Wei Huang wrote:
->
->
-> On 9/11/24 10:37 AM, Alejandro Lucero Palau wrote:
->>
->> On 8/22/24 21:41, Wei Huang wrote:
->>> From: Manoj Panicker <manoj.panicker2@amd.com>
->>>
->>> Implement TPH support in Broadcom BNXT device driver. The driver uses
->>> TPH functions to retrieve and configure the device's Steering Tags when
->>> its interrupt affinity is being changed.
->>>
->>> Co-developed-by: Wei Huang <wei.huang2@amd.com>
->>> Signed-off-by: Wei Huang <wei.huang2@amd.com>
->>> Signed-off-by: Manoj Panicker <manoj.panicker2@amd.com>
->>> Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
->>> Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
->>> Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
->>> ---
->>>    drivers/net/ethernet/broadcom/bnxt/bnxt.c | 78 
->>> +++++++++++++++++++++++
->>>    drivers/net/ethernet/broadcom/bnxt/bnxt.h |  4 ++
->>>    2 files changed, 82 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c 
->>> b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
->>> index ffa74c26ee53..5903cd36b54d 100644
->>> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
->>> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
->>> @@ -55,6 +55,7 @@
->>>    #include <net/page_pool/helpers.h>
->>>    #include <linux/align.h>
->>>    #include <net/netdev_queues.h>
->>> +#include <linux/pci-tph.h>
->>>       #include "bnxt_hsi.h"
->>>    #include "bnxt.h"
->>> @@ -10821,6 +10822,58 @@ int bnxt_reserve_rings(struct bnxt *bp, 
->>> bool irq_re_init)
->>>        return 0;
->>>    }
->>>    +static void __bnxt_irq_affinity_notify(struct 
->>> irq_affinity_notify *notify,
->>> +                       const cpumask_t *mask)
->>> +{
->>> +    struct bnxt_irq *irq;
->>> +    u16 tag;
->>> +
->>> +    irq = container_of(notify, struct bnxt_irq, affinity_notify);
->>> +    cpumask_copy(irq->cpu_mask, mask);
->>> +
->>> +    if (pcie_tph_get_cpu_st(irq->bp->pdev, TPH_MEM_TYPE_VM,
->>> +                cpumask_first(irq->cpu_mask), &tag))
->>
->>
->> I understand just one cpu from the mask has to be used, but I wonder if
->> some check should be done for ensuring the mask is not mad.
->>
->> This is control path and the related queue is going to be restarted, so
->> maybe a sanity check for ensuring all the cpus in the mask are from the
->> same CCX complex?
->
-> I don't think this is always true and we shouldn't warn when this 
-> happens. There is only one ST can be supported, so the driver need to 
-> make a good judgement on which ST to be used. But no matter what, ST 
-> is just a hint - it shouldn't cause any correctness issues in HW, even 
-> when it is not the optimal target CPU. So warning is unnecessary.
->
-
-1) You can use a "mad" mask for avoiding a specific interrupt to disturb 
-a specific execution is those cores not part of the mask. But I argue 
-the ST hint should not be set then.
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 
 
-2) Someone, maybe an automatic script, could try to get the best 
-performance possible, and a "mad" mask could preclude such outcome 
-inadvertently.
 
-
-I agree a warning could not be a good idea because 1, but I would say 
-adding some way of traceability here could be interesting. A tracepoint 
-or a new ST field for last hint set for that interrupt/queue.
-
-
->>
->> That would be an iteration checking the tag is the same one for all of
->> them. If not, at least a warning stating the tag/CCX/cpu used.
->>
->>
->>> +        return;
->>> +
->>> +    if (pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, tag))
->>> +        return;
->>> +
->>> +    if (netif_running(irq->bp->dev)) {
->>> +        rtnl_lock();
->>> +        bnxt_close_nic(irq->bp, false, false);
->>> +        bnxt_open_nic(irq->bp, false, false);
->>> +        rtnl_unlock();
->>> +    }
->>> +}
->>> +
->>> +static void __bnxt_irq_affinity_release(struct kref __always_unused 
->>> *ref)
->>> +{
->>> +}
->>> +
->>> +static void bnxt_release_irq_notifier(struct bnxt_irq *irq)
->>> +{
->>> +    irq_set_affinity_notifier(irq->vector, NULL);
->>> +}
->>> +
->>> +static void bnxt_register_irq_notifier(struct bnxt *bp, struct 
->>> bnxt_irq *irq)
->>> +{
->>> +    struct irq_affinity_notify *notify;
->>> +
->>> +    /* Nothing to do if TPH is not enabled */
->>> +    if (!pcie_tph_enabled(bp->pdev))
->>> +        return;
->>> +
->>> +    irq->bp = bp;
->>> +
->>> +    /* Register IRQ affinility notifier */
->>> +    notify = &irq->affinity_notify;
->>> +    notify->irq = irq->vector;
->>> +    notify->notify = __bnxt_irq_affinity_notify;
->>> +    notify->release = __bnxt_irq_affinity_release;
->>> +
->>> +    irq_set_affinity_notifier(irq->vector, notify);
->>> +}
->>> +
->>>    static void bnxt_free_irq(struct bnxt *bp)
->>>    {
->>>        struct bnxt_irq *irq;
->>> @@ -10843,11 +10896,17 @@ static void bnxt_free_irq(struct bnxt *bp)
->>>                    free_cpumask_var(irq->cpu_mask);
->>>                    irq->have_cpumask = 0;
->>>                }
->>> +
->>> +            bnxt_release_irq_notifier(irq);
->>> +
->>>                free_irq(irq->vector, bp->bnapi[i]);
->>>            }
->>>               irq->requested = 0;
->>>        }
->>> +
->>> +    /* Disable TPH support */
->>> +    pcie_disable_tph(bp->pdev);
->>>    }
->>>       static int bnxt_request_irq(struct bnxt *bp)
->>> @@ -10870,6 +10929,13 @@ static int bnxt_request_irq(struct bnxt *bp)
->>>        if (!(bp->flags & BNXT_FLAG_USING_MSIX))
->>>            flags = IRQF_SHARED;
->>>    +    /* Enable TPH support as part of IRQ request */
->>> +    if (pcie_tph_modes(bp->pdev) & PCI_TPH_CAP_INT_VEC) {
->>> +        rc = pcie_enable_tph(bp->pdev, PCI_TPH_CAP_INT_VEC);
->>> +        if (rc)
->>> +            netdev_warn(bp->dev, "failed enabling TPH support\n");
->>> +    }
->>> +
->>>        for (i = 0, j = 0; i < bp->cp_nr_rings; i++) {
->>>            int map_idx = bnxt_cp_num_to_irq_num(bp, i);
->>>            struct bnxt_irq *irq = &bp->irq_tbl[map_idx];
->>> @@ -10893,8 +10959,10 @@ static int bnxt_request_irq(struct bnxt *bp)
->>>               if (zalloc_cpumask_var(&irq->cpu_mask, GFP_KERNEL)) {
->>>                int numa_node = dev_to_node(&bp->pdev->dev);
->>> +            u16 tag;
->>>                   irq->have_cpumask = 1;
->>> +            irq->msix_nr = map_idx;
->>>                cpumask_set_cpu(cpumask_local_spread(i, numa_node),
->>>                        irq->cpu_mask);
->>>                rc = irq_set_affinity_hint(irq->vector, irq->cpu_mask);
->>> @@ -10904,6 +10972,16 @@ static int bnxt_request_irq(struct bnxt *bp)
->>>                            irq->vector);
->>>                    break;
->>>                }
->>> +
->>> +            bnxt_register_irq_notifier(bp, irq);
->>> +
->>> +            /* Init ST table entry */
->>> +            if (pcie_tph_get_cpu_st(irq->bp->pdev, TPH_MEM_TYPE_VM,
->>> +                        cpumask_first(irq->cpu_mask),
->>> +                        &tag))
->>> +                break;
->>> +
->>> +            pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, tag);
->>>            }
->>>        }
->>>        return rc;
->>> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h 
->>> b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
->>> index 6bbdc718c3a7..ae1abcc1bddf 100644
->>> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
->>> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
->>> @@ -1224,6 +1224,10 @@ struct bnxt_irq {
->>>        u8        have_cpumask:1;
->>>        char        name[IFNAMSIZ + 2];
->>>        cpumask_var_t    cpu_mask;
->>> +
->>> +    struct bnxt    *bp;
->>> +    int        msix_nr;
->>> +    struct irq_affinity_notify affinity_notify;
->>>    };
->>>       #define HWRM_RING_ALLOC_TX    0x1
+> ---
+> v8->v9 changes:
+> Due to the struct and name of the hypercall changed on Xen side, I did the corresponding changes, so removed the Reviewed-by of Stefano. But no function changes actually.
+> 
+> v5->v8 changes:
+> No.
+> 
+> v4->v5 changes:
+> Added Reviewed-by of Stefano.
+> 
+> v3->v4 changes:
+> Changed the code comment of PHYSDEVOP_pci_device_state_reset.
+> Used a new function pcistub_reset_device_state to wrap __pci_reset_function_locked and xen_reset_device_state, and called pcistub_reset_device_state in pci_stub.c.
+> 
+> v2->v3 changes:
+> Added condition to limit do xen_reset_device_state for no-pv domain in pcistub_init_device.
+> 
+> v1->v2 changes:
+> New patch to add a new function to call reset hypercall.
+> ---
+>  drivers/xen/pci.c                  | 13 +++++++++++++
+>  drivers/xen/xen-pciback/pci_stub.c | 18 +++++++++++++++---
+>  include/xen/interface/physdev.h    | 17 +++++++++++++++++
+>  include/xen/pci.h                  |  6 ++++++
+>  4 files changed, 51 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
+> index 72d4e3f193af..bb59524b8bbd 100644
+> --- a/drivers/xen/pci.c
+> +++ b/drivers/xen/pci.c
+> @@ -177,6 +177,19 @@ static int xen_remove_device(struct device *dev)
+>  	return r;
+>  }
+>  
+> +int xen_reset_device(const struct pci_dev *dev)
+> +{
+> +	struct pci_device_reset device = {
+> +		.dev.seg = pci_domain_nr(dev->bus),
+> +		.dev.bus = dev->bus->number,
+> +		.dev.devfn = dev->devfn,
+> +		.flags = PCI_DEVICE_RESET_FLR,
+> +	};
+> +
+> +	return HYPERVISOR_physdev_op(PHYSDEVOP_pci_device_reset, &device);
+> +}
+> +EXPORT_SYMBOL_GPL(xen_reset_device);
+> +
+>  static int xen_pci_notifier(struct notifier_block *nb,
+>  			    unsigned long action, void *data)
+>  {
+> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+> index 4faebbb84999..3e162c1753e2 100644
+> --- a/drivers/xen/xen-pciback/pci_stub.c
+> +++ b/drivers/xen/xen-pciback/pci_stub.c
+> @@ -89,6 +89,16 @@ static struct pcistub_device *pcistub_device_alloc(struct pci_dev *dev)
+>  	return psdev;
+>  }
+>  
+> +static int pcistub_reset_device_state(struct pci_dev *dev)
+> +{
+> +	__pci_reset_function_locked(dev);
+> +
+> +	if (!xen_pv_domain())
+> +		return xen_reset_device(dev);
+> +	else
+> +		return 0;
+> +}
+> +
+>  /* Don't call this directly as it's called by pcistub_device_put */
+>  static void pcistub_device_release(struct kref *kref)
+>  {
+> @@ -107,7 +117,7 @@ static void pcistub_device_release(struct kref *kref)
+>  	/* Call the reset function which does not take lock as this
+>  	 * is called from "unbind" which takes a device_lock mutex.
+>  	 */
+> -	__pci_reset_function_locked(dev);
+> +	pcistub_reset_device_state(dev);
+>  	if (dev_data &&
+>  	    pci_load_and_free_saved_state(dev, &dev_data->pci_saved_state))
+>  		dev_info(&dev->dev, "Could not reload PCI state\n");
+> @@ -284,7 +294,7 @@ void pcistub_put_pci_dev(struct pci_dev *dev)
+>  	 * (so it's ready for the next domain)
+>  	 */
+>  	device_lock_assert(&dev->dev);
+> -	__pci_reset_function_locked(dev);
+> +	pcistub_reset_device_state(dev);
+>  
+>  	dev_data = pci_get_drvdata(dev);
+>  	ret = pci_load_saved_state(dev, dev_data->pci_saved_state);
+> @@ -420,7 +430,9 @@ static int pcistub_init_device(struct pci_dev *dev)
+>  		dev_err(&dev->dev, "Could not store PCI conf saved state!\n");
+>  	else {
+>  		dev_dbg(&dev->dev, "resetting (FLR, D3, etc) the device\n");
+> -		__pci_reset_function_locked(dev);
+> +		err = pcistub_reset_device_state(dev);
+> +		if (err)
+> +			goto config_release;
+>  		pci_restore_state(dev);
+>  	}
+>  	/* Now disable the device (this also ensures some private device
+> diff --git a/include/xen/interface/physdev.h b/include/xen/interface/physdev.h
+> index a237af867873..df74e65a884b 100644
+> --- a/include/xen/interface/physdev.h
+> +++ b/include/xen/interface/physdev.h
+> @@ -256,6 +256,13 @@ struct physdev_pci_device_add {
+>   */
+>  #define PHYSDEVOP_prepare_msix          30
+>  #define PHYSDEVOP_release_msix          31
+> +/*
+> + * Notify the hypervisor that a PCI device has been reset, so that any
+> + * internally cached state is regenerated.  Should be called after any
+> + * device reset performed by the hardware domain.
+> + */
+> +#define PHYSDEVOP_pci_device_reset      32
+> +
+>  struct physdev_pci_device {
+>      /* IN */
+>      uint16_t seg;
+> @@ -263,6 +270,16 @@ struct physdev_pci_device {
+>      uint8_t devfn;
+>  };
+>  
+> +struct pci_device_reset {
+> +    struct physdev_pci_device dev;
+> +#define PCI_DEVICE_RESET_COLD 0x0
+> +#define PCI_DEVICE_RESET_WARM 0x1
+> +#define PCI_DEVICE_RESET_HOT  0x2
+> +#define PCI_DEVICE_RESET_FLR  0x3
+> +#define PCI_DEVICE_RESET_MASK 0x3
+> +    uint32_t flags;
+> +};
+> +
+>  #define PHYSDEVOP_DBGP_RESET_PREPARE    1
+>  #define PHYSDEVOP_DBGP_RESET_DONE       2
+>  
+> diff --git a/include/xen/pci.h b/include/xen/pci.h
+> index b8337cf85fd1..424b8ea89ca8 100644
+> --- a/include/xen/pci.h
+> +++ b/include/xen/pci.h
+> @@ -4,10 +4,16 @@
+>  #define __XEN_PCI_H__
+>  
+>  #if defined(CONFIG_XEN_DOM0)
+> +int xen_reset_device(const struct pci_dev *dev);
+>  int xen_find_device_domain_owner(struct pci_dev *dev);
+>  int xen_register_device_domain_owner(struct pci_dev *dev, uint16_t domain);
+>  int xen_unregister_device_domain_owner(struct pci_dev *dev);
+>  #else
+> +static inline int xen_reset_device(const struct pci_dev *dev)
+> +{
+> +	return -1;
+> +}
+> +
+>  static inline int xen_find_device_domain_owner(struct pci_dev *dev)
+>  {
+>  	return -1;
+> -- 
+> 2.34.1
+> 
 
