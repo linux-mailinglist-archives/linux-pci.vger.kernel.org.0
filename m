@@ -1,240 +1,736 @@
-Return-Path: <linux-pci+bounces-13297-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13298-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A422597CC17
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 18:14:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1389597CE31
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 21:45:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2810D1F22935
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 16:14:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C567D28454A
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 19:45:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499E812E78;
-	Thu, 19 Sep 2024 16:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342B550288;
+	Thu, 19 Sep 2024 19:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B99ejIov"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQohY1rt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2047.outbound.protection.outlook.com [40.107.223.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BAA33D8;
-	Thu, 19 Sep 2024 16:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726762476; cv=fail; b=UsuJPhdQ9eJTV9dYBWNZlJvBB048Gx/gVZrasE8dAgwQMYqycL9sncgbLIk6dFK9QXjzDzGsOHl8O4U9I1kUSqGIcxBOU9q7cPMSKJ/zXu1nnXJngx4W6XDMz3m+FN+5EhH4MF97P55G0YV5ouDyl+6PIWdJ7THSbhYKTo/Rb5A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726762476; c=relaxed/simple;
-	bh=Omub45R3gqex5b9IGUJn85eztT1YZc3lcinnwNWxEaI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XZ8b+/+kI5MEfeR07FmEiMAv7SldUNOP6Y2PZZAWISHaVgQk8s7OIwTpiAS2nYGNUC6bpvCCxnLiiwFosgimTy6UX25FDR9knOi7t/hjbsvFPHwpPoyQNqM/LVBIvTvvkPZuu7qUoDcYTUeddRnoD1o+4rszCGrUoEG/g4+0Eto=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B99ejIov; arc=fail smtp.client-ip=40.107.223.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vxw7ukFpb1qLQQ++6UDcqWZk/KEux9Q9wuS6SHy6IXdnMc3dBDnZRCKpKd1dZz/F9n+rNG73VF7WjveqV0m4veHKv2F2XZLo3r+PVLGrZFFooCAf6aYl3I6brD0cR7tSmw4hjAgFEEzqeYMti9wqhIt2pZ1cUPKv2Lg+CwSzz9iaTomaB4BJoVBTa0eYsRvwDXzoQa/ymvTurNXTiEI1QBBeLTbHSOQXbzxSyoF+gTIWVvy6WxGc1mivQNgq7hTpeoaw0BUlCvT1iCgZdLYjoxfeJGSGcwBvgph1DHQq2O88f/wblKLU4mwwQE4aTfX1aNtfGGnVY69cQjGt1J+FjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yVS09dW0VWqDgTO5boOT+98MGNQh6FaVgUfiy0SnyU8=;
- b=b94zg6Wr5jA70E9/ubB7UxvEHmUEAXxbXl9Oa51skbGu7ooPR/DoksWFS5r5lfeNR1/yHKoOCPRfFblTtoL51ba7MVFKfiD1xZDBPsB95aqJ4OOgqY0hURD88+vR1ygiy6AxOBPjajLx0JxTF7o1F2yAU/zkopSvLfByUfaxVhLomrPen6mAs0Cl+YSda34TXp/2lN7xYX4351FRfaJFo+veV0XrZwXXvJvclmeqtq7ywmYENMDjo7rQvlZnhG2CWLfu7f1rMzrwetxn+3Kx7cS/gUcFx7TlP0iJZtLb+Sqpa1ENimzNyCzlJ4JdQ9Q/gTg/rqWbusz/PjkDU7BKfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yVS09dW0VWqDgTO5boOT+98MGNQh6FaVgUfiy0SnyU8=;
- b=B99ejIovdZSPGXShFzeTMuboEfM5txtmcauia35rohtEka8Gqu7mqrp9wwskr2PuE5QG1ujNXebnMPE5m7pGe3LdwurlYEJXBoiSZ/Q1SVLSiqw3ek+aJ2Twc9FGSIvMy4OYsKAcxhaWU3ALL6S5DP78MwgiIZRvBdycs6Km33s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com (2603:10b6:5:1bb::24)
- by DS0PR12MB6438.namprd12.prod.outlook.com (2603:10b6:8:ca::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.23; Thu, 19 Sep
- 2024 16:14:30 +0000
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475]) by DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475%4]) with mapi id 15.20.7982.018; Thu, 19 Sep 2024
- 16:14:30 +0000
-Message-ID: <8eb46b36-df73-4dec-b9cb-1606bb927f89@amd.com>
-Date: Thu, 19 Sep 2024 11:14:27 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 11/12] bnxt_en: Add TPH support in BNXT driver
-To: Alejandro Lucero Palau <alucerop@amd.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: Jonathan.Cameron@Huawei.com, helgaas@kernel.org, corbet@lwn.net,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
- michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
- somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
- manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
- horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
- lukas@wunner.de, paul.e.luse@intel.com, jing2.liu@intel.com
-References: <20240822204120.3634-1-wei.huang2@amd.com>
- <20240822204120.3634-12-wei.huang2@amd.com>
- <c7b9cafc-4d9d-f443-12b5-bf3d7b178d2c@amd.com>
- <6fb7e2cf-e26d-4af5-84e4-2c56c184a1df@amd.com>
- <b02f2e6e-5ad2-2e7b-86a5-644f44ecdb6d@amd.com>
-Content-Language: en-US
-From: Wei Huang <wei.huang2@amd.com>
-In-Reply-To: <b02f2e6e-5ad2-2e7b-86a5-644f44ecdb6d@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0063.namprd04.prod.outlook.com
- (2603:10b6:806:121::8) To DM6PR12MB4877.namprd12.prod.outlook.com
- (2603:10b6:5:1bb::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99F849647;
+	Thu, 19 Sep 2024 19:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726775117; cv=none; b=mIUlSNJ1mzIeqYLnGCubu4i6fNIX++NS3ZwVkvrln/cUL7L22IG4YP9TVwvM8X8huDP1uz4d0zi8FCeMYuCLjKToop6xbRQazhUHQUwfNeQPEeu8pv0x01Ozqzp9M9xGtNihYqCKAkNHQTYqkb8V6W+HAIxaLfqNN4wny6gHs6A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726775117; c=relaxed/simple;
+	bh=N90NJs3NwAC4hWjsgGnSlJZRnqf+llHmgCa0f+J7yZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TUPl7zsSuuUJxhhHphb1P5sJVGzdeeFqA7MqznyXzDU1O0F3ekLtldVfHTEVzVxKFySLCKb9s347N4A5ygXkKDwDqgTwTboB7ZdvIr4Hkr+NMDs+C3a0QJGohn8WKVjpnc44rD41NxGL04f/uv/q3PUrBFh0Jwet3nhklddBGIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQohY1rt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13CDC4CEC5;
+	Thu, 19 Sep 2024 19:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726775116;
+	bh=N90NJs3NwAC4hWjsgGnSlJZRnqf+llHmgCa0f+J7yZQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AQohY1rtNBvOj5ZEJbfRwQtK4+aBdQEj94XVRRz6U7qMli74WtDWNChWxK2tWqRXT
+	 1o5w8GbmxE+U4F1RA/UaSrZzdIXlFX9wtGkgxnBFY17UiYFXl1XRKMAt3SeQRA7+cl
+	 85AURJb51Dv7NvsAluCDCHdiuJrs0F3mgsHzyQXCnsISTrIoZ2dzy5hkHnIf014eI2
+	 2XpeO/b5lRVWl2q0HSbDu4syD3TqTp+lszthWbSnJ1yyV7KQFs52IIvY/rD2IPR//S
+	 JIFduYdyMt3TVq1oUnvC6iKsOVcrLgCTulmMQGbHfXuJY7d5s9pHoCvbp8o7rlvetC
+	 Qm0LdqUJKTn6g==
+Date: Thu, 19 Sep 2024 14:45:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [GIT PULL] PCI changes for v6.12
+Message-ID: <20240919194514.GA1025547@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|DS0PR12MB6438:EE_
-X-MS-Office365-Filtering-Correlation-Id: df2cfee9-3f15-47e9-fde2-08dcd8c62436
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VE4xMEFrYVVNRDF6QzR6TVduN2hYMkp5bzF6ajliNHZkNTZreW9uYnY3QWxw?=
- =?utf-8?B?QlQxOGN3QkZNb1EvNlVuQVhGQ2ZVc25kR29NZjNQN2lxS2FxUXE2a25PQVRH?=
- =?utf-8?B?bzJOdE5oZ0JQdGprM2tYcFIwdllkVDVsYzJ1WkczMDlCdk5HczhYYUVUT3pD?=
- =?utf-8?B?Vi82S2s5Y1IydVVZZzlyQ3F3Y0tQUnBwUmZ1TXdrYWY4Z1hOSmhQVFVUQUp3?=
- =?utf-8?B?TEhOMVlobWR6QnlyMEpvQlYrTDkxeDE3Y3ZrSEIzWk1PMzFmWTNVYWYzQ1hW?=
- =?utf-8?B?eWkwcG8rc3dsQ2U2QnZPOS83N2hySSt4SHNQcHVnaEdBbE9sSzRuazdneHZB?=
- =?utf-8?B?WW4wNjRlbkp5WGJwKzFLbnlmZzJYVjNUbFVHWE1jRXhyVVQzSGdSUTNKUVdN?=
- =?utf-8?B?alhUSnJuTzdKVGtyUjQ4YmExZWlVbE94N2p6bGRYRVFoTU85bmtTU2cyd0VM?=
- =?utf-8?B?OFZmTnEycXNjM1VsRlhwWExqQnFxVjVoQWdraFJTdzJuNDI0MkxlVWJBa3g1?=
- =?utf-8?B?SjRVL0Y3MEFaVDYxb2dsLzhHd1k1RVdtUE4wTnF3WHhNcGtlZHJ1eFBveG9z?=
- =?utf-8?B?YkM2ak5EaGs4amhMYUtUTkdOWENydWlkcC9XemJPKzBYWXR6aXdlTGFSVCts?=
- =?utf-8?B?L0tsdjg5cVkzeFE5eWw0SHZKK1FLSEw3Wk5nem1ZMjFBYmI2ellUQlpLRmpv?=
- =?utf-8?B?ZkxTSWZQVnJDaGVuZ25vWXZiWWVhbzl4UTQvR0gxOHMyL0h5MHFwcnRIM2gz?=
- =?utf-8?B?dlFZNllMeTJkL2VXT1NxU1hWZGs4VkdNTTBRZDYydk1lNk4yQWFPamN4cE84?=
- =?utf-8?B?MHlLNDlZVnQyWk0zblZMSEZabGQyNWRQTnBaSi80ZUdjM3RXdmQ2VzJMd0JT?=
- =?utf-8?B?VXE4L2htNVB6UTZrNFFVSjBJR2NiSGorYzAvd0xFbVJaUGdBUFhKTi9TUjdR?=
- =?utf-8?B?RnlLN202U2hCK1I5TGl0K2UxUkljVFlRNWJBS2J2OGFEUUhmWnZaQWtsdzJ5?=
- =?utf-8?B?ZGE4SlRmMDgwYUtOWXJaaWZYNXRORytqd1JvY3NKaVFEZ1FaWlAzZjVWd0NN?=
- =?utf-8?B?cWtpVFlrZGE1UkdJR3QvUW9ab0g5VnZqK0hYakpNMitiVng3K2RveGhMV3VW?=
- =?utf-8?B?WGc1anJoNVQ0VnovLzVUT3pNMlc0UFpJWXZkbS9nQ3B0ZHltOWtweVpROHdn?=
- =?utf-8?B?dHFnUGFFL2s0Y1h0b00zRmw4eDJrN1loOFNQNzRXaEhKY0ZTKzB1TTNpbEtI?=
- =?utf-8?B?UEtSK01CVmpYTmhrZEo1VGlHNUZkYytGVmg0UjFPNzJaZm9PY3lucGt3eGho?=
- =?utf-8?B?RXNuRm40WUdyUVUvK0dzMXZ1VS92RnNWaUx6bVNiazZMb3diMk5OR1VMNjJl?=
- =?utf-8?B?TEhTK1ZRVUt0VDU4UDJhdjZYcjluanl3cTR3cERwV2FkVStYK090ckRTR0p1?=
- =?utf-8?B?eUVNVWs0ZVlZTHJRU0tmM3lIN3FTOUFjdm5NTktmM3NsWklEdy8waE1USVlN?=
- =?utf-8?B?bjE2RVBvWW0vZitvLy9xdUZZZTVPSXVvWU0rT3VNbWtmelNsZzkzL3A0YXJ4?=
- =?utf-8?B?MFAzVTlzWGI3ck5xVzAwWlJ4c3U4ZXpRLzg5Q1hETjZ0cHU0bnJybTlLbjJx?=
- =?utf-8?B?VUlVczFabTRGRTJZdXpBbFh0WGNLeml3VjBXanVUQ1RiQXdwN0R2ZHBxY0V5?=
- =?utf-8?B?NDBkVTNrK3hEWjBFL2JUVEcwSFRrZG5PWFcxRW5RUUY3RkdGZmNMQ0Q2ZHNz?=
- =?utf-8?B?K0ZaS09uSzZmNU81d3pYcERTQVZDemh0eDBjcVcySldsQkx2aDdBUzJJRm50?=
- =?utf-8?B?bG5rZmZzdWQ3NkMrU2l1dz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VEdWNGZVbzBLTlc3VEluTmxHeDQxOGNQV3RzNm5UR3RHc1JLek1sL3hYaXRp?=
- =?utf-8?B?aS9WclFOTXpmMCtnSFBWdjA4OGtRa3lxVnlsMXBhSmlPbnVGRlJGU1M3Mmx6?=
- =?utf-8?B?aVpOa0dZVEhpT3QwNVFscm95Yk5CdzR0aVQ5V24zRkxNbGp3VkoyNEZ0WkNV?=
- =?utf-8?B?eHZGQWlzdVE1QjhYZFVKS0tlVUowMmZ0Wms2RitIeVdiUWQrZ0VwWnNJdXlJ?=
- =?utf-8?B?d1RwZHh5QkJWMVYydm9ldk9ST2FJaUFLYWcyRmV6bUxJTTRoT0tLWlFTc2Y1?=
- =?utf-8?B?QTh4QUlTRUphdFdjRGV2dm1iNFYyRm9XM2ZxaEJwV2lmWVBjaVVJZlNpbjhW?=
- =?utf-8?B?YW9iSlhraUVsMFhGdXE3RlBJMGxoZTk0Vml3VytiOXVzengxV0JsdmVCMy83?=
- =?utf-8?B?RnBpcUhvbGVxTGFXVVlsWFhIVVNLU2E4aVNFVEFnNEdnN2x0anBJckNibkxX?=
- =?utf-8?B?SFZkUWUvL2ZZSzA1cVVrWWthOXY0ZmRjL3BkaUtiQ0xmZmVUaWdyc1hyR2xl?=
- =?utf-8?B?bC9qb1hZZXpXRmp3L2ZMWEJlSTlraFpWK0YvYnZBei95UFpncWlLQ0Z5bE9E?=
- =?utf-8?B?aHZJc2haeXlCVy80TFJ5OEg0TzJScWI1WHhnM3lnV0tjTmRSaG14VjBQRUl0?=
- =?utf-8?B?alhlQnJhWE95Vmc4SlZCazVlcTJtTlkvMW5ORmR2d3BoRnVVcGhpSGtqdTNU?=
- =?utf-8?B?Mzc3UTdXTkZMWHdRcDBJOFpld0t2UUNXOG45bWZJTjA1bjJrS3FMRXBJZXNF?=
- =?utf-8?B?dndwdE5pUVRhcXJSc1lGRGowZy93ckdscE4yZ2VnbS9RdjNSR0R4UUE4UGU0?=
- =?utf-8?B?UnZoWVF6c0h6ZE44WHRleUN4ZVBvcFVTUkFyM2dEVGhYa2N1d0V3YTduVHRq?=
- =?utf-8?B?WmNtK1dBRHZackNaZG5kTC9DZ1RWRktYRzBNN0JSOGdlTmRaRHRpVFBmSXcz?=
- =?utf-8?B?a2EzWDBqUVJ5ak04bStxVXZ6cTJ1YmllNUhtVGFhc0dXem9FT2lQTEMvR3Ix?=
- =?utf-8?B?Mk1GQWxRaGdPRUJIM3FtR0hUa1FNRkV0Q0pYZDBidlhYZWJBNzRHUmYrRVU0?=
- =?utf-8?B?UitEay9kc0gxZWtQQTVTVXFzUzlTVFEvRGdRUVdrYjA5VXJUNno0aTJGTS9T?=
- =?utf-8?B?RThXQnBmcERQdEdIa1drWnRiQ0hoOTdZRUdwWG9zZEswZElxMEY5U1pnd21n?=
- =?utf-8?B?cUVycmdrYWtwdUhkb2thZk9XV1N2Tkpxa1ladldsVCs4T09ISGVYOUNBYkpG?=
- =?utf-8?B?LzVSMW1VVVVsVDhiS0E1YXNjdkZLQkwxcU4zSElrUHh6UzJlTXhQZzB3SjNC?=
- =?utf-8?B?YjdWeENEcHl6U2RqWDNpejFaNVBCZHlPZ1l2eXhkNGlIU2Q1dllLMkdUTWg2?=
- =?utf-8?B?R2kyS0pIMTl3OEgxUk15QUE2dzFYSkVJY2tEVUJKZlRvYTN2MnNNWE4vRzNk?=
- =?utf-8?B?dVhxZzFxSWovL0RVbWkrZDJPN0kwaUpjSVE3WlpOTDdIbXpBK2VQTTVKd0xR?=
- =?utf-8?B?TEhDVCtCdUdYVVB6Ti9Td2s3aXlPT2J5eU9sN092ZkxkOXFuNnl4U1NZOWp2?=
- =?utf-8?B?RzZ3VExqYW5OcHBxWU5JTkxPMC83VDlWQVFFT0VTdHJ5SzFaUmtSR0VwempH?=
- =?utf-8?B?QXhVL0gyQTBrTVVrYlptQTVNSWJUK29zc2R6R3JSZWRwaHo5TEhoVnUvaGdv?=
- =?utf-8?B?dnk1REM4VWxQTEJHYnBNNjBHaGVIS3FPanRibXRXSEJMRUVWQnBXWDFDV00w?=
- =?utf-8?B?dWFGTnB1QmNXeTV6TEJDY3EveG0wbThPM2Nwa0FkOGNHRUc1NHFWaTF0NWYz?=
- =?utf-8?B?b0UxaTlKbXdERVFrdlRuQUxUblVtSWljS05QaXlVWHBYcGpoOUx5eko0NENm?=
- =?utf-8?B?Z2dlMnNIcFh4KzZSMzAzcG9ZT1ZDMEJna1c3blJKaFBZdmoyT0ZwcHM2cUJ1?=
- =?utf-8?B?ZHcvOU5oVTB6dEtvTHhxTkxjZmxRWHpuQ2Y0YjhCMzhtRzNrakJLTmIzSThD?=
- =?utf-8?B?d1dWMzUyMUtkbStNOWMxUHpOR1JyQWJzY3B3ZE1ZbDdscDVxakM0Ry9kY2xi?=
- =?utf-8?B?N2lvSEdSOEY2UnVXK0d0NERKRDZuT2U4QTJ6VzErZUJFTkZHdU1MSVBmN001?=
- =?utf-8?Q?ZgHc=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df2cfee9-3f15-47e9-fde2-08dcd8c62436
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4877.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2024 16:14:30.4236
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zfIaBxulyFK5XejQpW3onm9ZvdUHWMI5jCa1gb1HcBbEpQRxZdE0LXCDEvmo6Ra1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6438
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
+The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
 
+  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
 
-On 9/18/24 12:31, Alejandro Lucero Palau wrote:
-> 
-> On 9/16/24 19:55, Wei Huang wrote:
->>
->>
->> On 9/11/24 10:37 AM, Alejandro Lucero Palau wrote:
->>>
-...
->>>
->>> I understand just one cpu from the mask has to be used, but I wonder if
->>> some check should be done for ensuring the mask is not mad.
->>>
->>> This is control path and the related queue is going to be restarted, so
->>> maybe a sanity check for ensuring all the cpus in the mask are from the
->>> same CCX complex?
->>
->> I don't think this is always true and we shouldn't warn when this
->> happens. There is only one ST can be supported, so the driver need to
->> make a good judgement on which ST to be used. But no matter what, ST
->> is just a hint - it shouldn't cause any correctness issues in HW, even
->> when it is not the optimal target CPU. So warning is unnecessary.
->>
-> 
-> 1) You can use a "mad" mask for avoiding a specific interrupt to disturb
-> a specific execution is those cores not part of the mask. But I argue
-> the ST hint should not be set then.
-> 
-> 
-> 2) Someone, maybe an automatic script, could try to get the best
-> performance possible, and a "mad" mask could preclude such outcome
-> inadvertently.
-> 
+are available in the Git repository at:
 
-For this case, you can use the following command:
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.12-changes
 
-echo cpu_id > /proc/irq/nnn/smp_affinity_list
+for you to fetch changes up to 81e53c0da8f8b153e049036e5ca5ca20e811c0c8:
 
-where nnn is the MSI IRQ number associated witht the device. This forces
-IRQ to be associated with only one specific CPU.
+  Merge branch 'pci/tools' (2024-09-19 14:25:34 -0500)
 
-> 
-> I agree a warning could not be a good idea because 1, but I would say
-> adding some way of traceability here could be interesting. A tracepoint
-> or a new ST field for last hint set for that interrupt/queue.
+Rebased today to fix comment typos and drop a duplicate patch; no code changes.
+----------------------------------------------------------------
 
-We do have two pci_dbg() in tph.c. You can see the logs with proper
-kernel print level. The logs show GET/SET ST values in what PCIe device,
-which ST table, and at which index.
+Enumeration:
 
-> 
-> 
->>>
->>> That would be an iteration checking the tag is the same one for all of
->>> them. If not, at least a warning stating the tag/CCX/cpu used.
->>>
+  - Wait for device readiness after reset by polling Vendor ID and looking
+    for Configuration RRS instead of polling the Command register and
+    looking for non-error completions, to avoid hardware retries done for
+    RRS on non-Vendor ID reads (Bjorn Helgaas)
+
+  - Rename CRS Completion Status to RRS ('Request Retry Status') to match
+    PCIe r6.0 spec usage (Bjorn Helgaas)
+
+  - Clear LBMS bit after a manual link retrain so we don't try to retrain a
+    link when there's no downstream device anymore (Maciej W. Rozycki)
+
+  - Revert to the original link speed after retraining fails instead of
+    leaving it restricted to 2.5GT/s, so a future device has a chance to
+    use higher speeds (Maciej W. Rozycki)
+
+  - Wait for each level of downstream bus, not just the first, to become
+    accessible before restoring devices on that bus (Ilpo Järvinen)
+
+  - Add ARCH_PCI_DEV_GROUPS so s390 can add its own attribute_groups
+    without having to stomp on the core's pdev->dev.groups (Lukas Wunner)
+
+Driver binding:
+
+  - Export pcim_request_region(), a managed counterpart of
+    pci_request_region(), for use by drivers (Philipp Stanner)
+
+  - Export pcim_iomap_region() and deprecate pcim_iomap_regions() (Philipp
+    Stanner)
+
+  - Request the PCI BAR used by xboxvideo (Philipp Stanner)
+
+  - Request and map drm/ast BARs with pcim_iomap_region() (Philipp Stanner)
+
+MSI:
+
+  - Add MSI_FLAG_NO_AFFINITY flag for devices that mux MSIs onto a single
+    IRQ line and cannot set the affinity of each MSI to a specific CPU core
+    (Marek Vasut)
+
+  - Use MSI_FLAG_NO_AFFINITY and remove unnecessary .irq_set_affinity()
+    implementations in aardvark, altera, brcmstb, dwc, mediatek-gen3,
+    mediatek, mobiveil, plda, rcar, tegra, vmd, xilinx-nwl, xilinx-xdma,
+    and xilinx drivers to avoid 'IRQ: set affinity failed' warnings (Marek
+    Vasut)
+
+Power management:
+
+  - Add pwrctl support for ATH11K inside the WCN6855 package (Konrad
+    Dybcio)
+
+PCI device hotplug:
+
+  - Remove unnecessary hpc_ops struct from shpchp (ngn)
+
+  - Check for PCI_POSSIBLE_ERROR(), not 0xffffffff, in cpqphp (weiyufeng)
+
+Virtualization:
+
+  - Mark Creative Labs EMU20k2 INTx masking as broken (Alex Williamson)
+
+  - Add an ACS quirk for Qualcomm SA8775P, which doesn't advertise ACS but
+    does provide ACS-like features (Subramanian Ananthanarayanan)
+
+IOMMU:
+
+  - Add function 0 DMA alias quirk for Glenfly Arise audio function, which
+    uses the function 0 Requester ID (WangYuli)
+
+NPEM:
+
+  - Add Native PCIe Enclosure Management (NPEM) support for sysfs control
+    of NVMe RAID storage indicators (ok/fail/locate/rebuild/etc) (Mariusz
+    Tkaczyk)
+
+  - Add support for the ACPI _DSM PCIe SSD status LED management, which is
+    functionally similar to NPEM but mediated by platform firmware (Mariusz
+    Tkaczyk)
+
+Device trees:
+
+  - Drop minItems and maxItems from ranges in PCI generic host binding
+    since host bridges may have several MMIO and I/O port apertures (Frank
+    Li)
+
+  - Add kirin, rcar-gen2, uniphier DT binding top-level constraints for
+    clocks (Krzysztof Kozlowski)
+
+Altera PCIe controller driver:
+
+  - Convert altera DT bindings from text to YAML (Matthew Gerlach)
+
+  - Replace TLP_REQ_ID() with macro PCI_DEVID(), which does the same thing
+    and is what other drivers use (Jinjie Ruan)
+
+Broadcom STB PCIe controller driver:
+
+  - Add DT binding maxItems for reset controllers (Jim Quinlan)
+
+  - Use the 'bridge' reset method if described in the DT (Jim Quinlan)
+
+  - Use the 'swinit' reset method if described in the DT (Jim Quinlan)
+
+  - Add 'has_phy' so the existence of a 'rescal' reset controller doesn't
+    imply software control of it (Jim Quinlan)
+
+  - Add support for many inbound DMA windows (Jim Quinlan)
+
+  - Rename SoC 'type' to 'soc_base' express the fact that SoCs come in
+    families of multiple similar devices (Jim Quinlan)
+
+  - Add Broadcom 7712 DT description and driver support (Jim Quinlan)
+
+  - Sort enums, pcie_offsets[], pcie_cfg_data, .compatible strings for
+    maintainability (Bjorn Helgaas)
+
+Freescale i.MX6 PCIe controller driver:
+
+  - Add imx6q-pcie 'dbi2' and 'atu' reg-names for i.MX8M Endpoints (Richard
+    Zhu)
+
+  - Fix a code restructuring error that caused i.MX8MM and i.MX8MP
+    Endpoints to fail to establish link (Richard Zhu)
+
+  - Fix i.MX8MP Endpoint occasional failure to trigger MSI by enforcing
+    outbound alignment requirement (Richard Zhu)
+
+  - Call phy_power_off() in the .probe() error path (Frank Li)
+
+  - Rename internal names from imx6_* to imx_* since i.MX7/8/9 are also
+    supported (Frank Li)
+
+  - Manage Refclk by using SoC-specific callbacks instead of switch
+    statements (Frank Li)
+
+  - Manage core reset by using SoC-specific callbacks instead of switch
+    statements (Frank Li)
+
+  - Expand comments for erratum ERR010728 workaround (Frank Li)
+
+  - Use generic PHY APIs to configure mode, speed, and submode, which is
+    harmless for devices that implement their own internal PHY management
+    and don't set the generic imx_pcie->phy (Frank Li)
+
+  - Add i.MX8Q (i.MX8QM, i.MX8QXP, and i.MX8DXL) DT binding and driver Root
+    Complex support (Richard Zhu)
+
+Freescale Layerscape PCIe controller driver:
+
+  - Replace layerscape-pcie DT binding compatible fsl,lx2160a-pcie with
+    fsl,lx2160ar2-pcie (Frank Li)
+
+  - Add layerscape-pcie DT binding deprecated 'num-viewport' property to
+    address a DT checker warning (Frank Li)
+
+  - Change layerscape-pcie DT binding 'fsl,pcie-scfg' to phandle-array
+    (Frank Li)
+
+Loongson PCIe controller driver:
+
+  - Increase max PCI hosts to 8 for Loongson-3C6000 and newer chipsets
+    (Huacai Chen)
+
+Marvell Aardvark PCIe controller driver:
+
+  - Fix issue with emulating Configuration RRS for two-byte reads of Vendor
+    ID; previously it only worked for four-byte reads (Bjorn Helgaas)
+
+MediaTek PCIe Gen3 controller driver:
+
+  - Add per-SoC struct mtk_gen3_pcie_pdata to support multiple SoC types
+    (Lorenzo Bianconi)
+  
+  - Use reset_bulk APIs to manage PHY reset lines (Lorenzo Bianconi)
+
+  - Add DT and driver support for Airoha EN7581 PCIe controller (Lorenzo
+    Bianconi)
+
+Qualcomm PCIe controller driver:
+
+  - Update qcom,pcie-sc7280 DT binding with eight interrupts (Rayyan
+    Ansari)
+
+  - Add back DT 'vddpe-3v3-supply', which was incorrectly removed earlier
+    (Johan Hovold)
+
+  - Drop endpoint redundant masking of global IRQ events (Manivannan
+    Sadhasivam)
+
+  - Clarify unknown global IRQ message and only log it once to avoid a
+    flood (Manivannan Sadhasivam)
+
+  - Add 'linux,pci-domain' property to endpoint DT binding (Manivannan
+    Sadhasivam)
+
+  - Assign PCI domain number for endpoint controllers (Manivannan
+    Sadhasivam)
+
+  - Add 'qcom_pcie_ep' and the PCI domain number to IRQ names for endpoint
+    controller (Manivannan Sadhasivam)
+
+  - Add global SPI interrupt for PCIe link events to DT binding (Manivannan
+    Sadhasivam)
+
+  - Add global RC interrupt handler to handle 'Link up' events and
+    automatically enumerate hot-added devices (Manivannan Sadhasivam)
+
+  - Avoid mirroring of DBI and iATU register space so it doesn't overlap
+    BAR MMIO space (Prudhvi Yarlagadda)
+
+  - Enable controller resources like PHY only after PERST# is deasserted to
+    partially avoid the problem that the endpoint SoC crashes when
+    accessing things when Refclk is absent (Manivannan Sadhasivam)
+
+  - Add 16.0 GT/s equalization and RX lane margining settings (Shashank
+    Babu Chinta Venkata)
+
+  - Pass domain number to pci_bus_release_domain_nr() explicitly to avoid a
+    NULL pointer dereference (Manivannan Sadhasivam)
+
+Renesas R-Car PCIe controller driver:
+
+  - Make the read-only const array 'check_addr' static (Colin Ian King)
+
+  - Add R-Car V4M (R8A779H0) PCIe host and endpoint to DT binding
+    (Yoshihiro Shimoda)
+
+TI DRA7xx PCIe controller driver:
+
+  - Request IRQF_ONESHOT for 'dra7xx-pcie-main' IRQ since the primary
+    handler is NULL (Siddharth Vadapalli)
+
+  - Handle IRQ request errors during root port and endpoint probe
+    (Siddharth Vadapalli)
+
+TI J721E PCIe driver:
+
+  - Add DT 'ti,syscon-acspcie-proxy-ctrl' and driver support to enable the
+    ACSPCIE module to drive Refclk for the Endpoint (Siddharth Vadapalli)
+
+  - Extract the cadence link setup from cdns_pcie_host_setup() so link
+    setup can be done separately during resume (Thomas Richard)
+
+  - Add T_PERST_CLK_US definition for the mandatory delay between Refclk
+    becoming stable and PERST# being deasserted (Thomas Richard)
+
+  - Add j721e suspend and resume support (Théo Lebrun)
+
+TI Keystone PCIe controller driver:
+
+  - Fix NULL pointer checking when applying MRRS limitation quirk for AM65x
+    SR 1.0 Errata #i2037 (Dan Carpenter)
+
+Xilinx NWL PCIe controller driver:
+
+  - Fix off-by-one error in INTx IRQ handler that caused INTx interrupts to
+    be lost or delivered as the wrong interrupt (Sean Anderson)
+
+  - Rate-limit misc interrupt messages (Sean Anderson)
+
+  - Turn off the clock on probe failure and device removal (Sean Anderson)
+
+  - Add DT binding and driver support for enabling/disabling PHYs (Sean
+    Anderson)
+
+  - Add PCIe phy bindings for the ZCU102 (Sean Anderson)
+
+Xilinx XDMA PCIe controller driver:
+
+  - Add support for Xilinx QDMA Soft IP PCIe Root Port Bridge to DT binding
+    and xilinx-dma-pl driver (Thippeswamy Havalige)
+
+Miscellaneous:
+
+  - Fix buffer overflow in kirin_pcie_parse_port() (Alexandra Diupina)
+
+  - Fix minor kerneldoc issues and typos (Bjorn Helgaas)
+
+  - Use PCI_DEVID() macro in aer_inject() instead of open-coding it (Jinjie
+    Ruan)
+
+  - Check pcie_find_root_port() return in x86 fixups to avoid NULL pointer
+    dereferences (Samasth Norway Ananda)
+
+  - Make pci_bus_type constant (Kunwu Chan)
+
+  - Remove unused declarations of __pci_pme_wakeup() and pci_vpd_release()
+    (Yue Haibing)
+
+  - Remove any leftover .*.cmd files with make clean (zhang jiao)
+
+  - Remove unused BILLION macro (zhang jiao)
+
+----------------------------------------------------------------
+Alex Williamson (1):
+      PCI: Mark Creative Labs EMU20k2 INTx masking as broken
+
+Alexandra Diupina (1):
+      PCI: kirin: Fix buffer overflow in kirin_pcie_parse_port()
+
+Bjorn Helgaas (39):
+      PCI: endpoint: Fix enum pci_epc_bar_type kerneldoc
+      PCI: mediatek: Drop excess mtk_pcie.mem kerneldoc description
+      PCI: cadence: Drop excess cdns_pcie_rc.dev kerneldoc description
+      PCI: brcmstb: Sort enums, pcie_offsets[], pcie_cfg_data, .compatible strings
+      PCI: Wait for device readiness with Configuration RRS
+      PCI: aardvark: Correct Configuration RRS checking
+      PCI: Rename CRS Completion Status to RRS
+      PCI: Fix typos
+      Merge branch 'pci/aer'
+      Merge branch 'pci/crs'
+      Merge branch 'pci/devres'
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/hotplug'
+      Merge branch 'pci/iommu'
+      Merge branch 'pci/npem'
+      Merge branch 'pci/pwrctl'
+      Merge branch 'pci/reset'
+      Merge branch 'pci/sysfs'
+      Merge branch 'pci/dt-bindings'
+      Merge branch 'pci/controller/endpoint'
+      Merge branch 'pci/controller/affinity'
+      Merge branch 'pci/controller/altera'
+      Merge branch 'pci/controller/brcmstb'
+      Merge branch 'pci/controller/cadence'
+      Merge branch 'pci/controller/dra7xx'
+      Merge branch 'pci/controller/imx6'
+      Merge branch 'pci/controller/j721e'
+      Merge branch 'pci/controller/keystone'
+      Merge branch 'pci/controller/kirin'
+      Merge branch 'pci/controller/loongson'
+      Merge branch 'pci/controller/mediatek'
+      Merge branch 'pci/controller/mediatek-gen3'
+      Merge branch 'pci/controller/qcom'
+      Merge branch 'pci/controller/rcar-gen4'
+      Merge branch 'pci/controller/vmd'
+      Merge branch 'pci/controller/xilinx'
+      Merge branch 'pci/quirks'
+      Merge branch 'pci/misc'
+      Merge branch 'pci/tools'
+
+Colin Ian King (1):
+      PCI: rcar-gen4: Make read-only const array check_addr static
+
+Dan Carpenter (1):
+      PCI: keystone: Fix if-statement expression in ks_pcie_quirk()
+
+Frank Li (11):
+      dt-bindings: PCI: host-generic-pci: Drop minItems and maxItems of ranges
+      dt-bindings: PCI: layerscape-pci: Replace fsl,lx2160a-pcie with fsl,lx2160ar2-pcie
+      dt-bindings: PCI: layerscape-pci: Add deprecated property 'num-viewport'
+      dt-bindings: PCI: layerscape-pci: Change property 'fsl,pcie-scfg' type
+      PCI: imx6: Fix missing call to phy_power_off() in error handling
+      PCI: imx6: Rename imx6_* with imx_*
+      PCI: imx6: Introduce SoC specific callbacks for controlling REFCLK
+      PCI: imx6: Simplify switch-case logic by involve core_reset callback
+      PCI: imx6: Improve comment for workaround ERR010728
+      PCI: imx6: Consolidate redundant if-checks
+      PCI: imx6: Call common PHY API to set mode, speed, and submode
+
+Huacai Chen (1):
+      PCI/ACPI: Increase Loongson max PCI hosts to 8
+
+Ilpo Järvinen (1):
+      PCI: Wait for Link before restoring Downstream Buses
+
+Jim Quinlan (13):
+      dt-bindings: PCI: brcm,stb-pcie: Change brcmstb maintainer and cleanup
+      dt-bindings: PCI: brcm,stb-pcie: Use maxItems for reset controllers
+      dt-bindings: PCI: brcm,stb-pcie: Add 7712 SoC description
+      PCI: brcmstb: Use common error handling code in brcm_pcie_probe()
+      PCI: brcmstb: Use bridge reset if available
+      PCI: brcmstb: Use swinit reset if available
+      PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific
+      PCI: brcmstb: Remove two unused constants from driver
+      PCI: brcmstb: Don't conflate the reset rescal with PHY ctrl
+      PCI: brcmstb: Refactor for chips with many regular inbound windows
+      PCI: brcmstb: Check return value of all reset_control_* calls
+      PCI: brcmstb: Change field name from 'type' to 'soc_base'
+      PCI: brcmstb: Enable 7712 SoCs
+
+Jinjie Ruan (2):
+      PCI/AER: Use PCI_DEVID() macro in aer_inject()
+      PCI: altera: Replace TLP_REQ_ID() with macro PCI_DEVID()
+
+Johan Hovold (1):
+      dt-bindings: PCI: qcom: Allow 'vddpe-3v3-supply' again
+
+Konrad Dybcio (1):
+      PCI/pwrctl: Add WCN6855 support
+
+Krzysztof Kozlowski (3):
+      dt-bindings: PCI: hisilicon,kirin-pcie: Add top-level constraints
+      dt-bindings: PCI: renesas,pci-rcar-gen2: Add top-level constraints
+      dt-bindings: PCI: socionext,uniphier-pcie-ep: Add top-level constraints
+
+Kunwu Chan (1):
+      PCI: Make pci_bus_type constant
+
+Lorenzo Bianconi (4):
+      dt-bindings: PCI: mediatek-gen3: Add support for Airoha EN7581
+      PCI: mediatek-gen3: Add mtk_gen3_pcie_pdata data structure
+      PCI: mediatek-gen3: Rely on reset_bulk APIs for PHY reset lines
+      PCI: mediatek-gen3: Add Airoha EN7581 support
+
+Lukas Wunner (1):
+      s390/pci: Stop usurping pdev->dev.groups
+
+Maciej W. Rozycki (4):
+      PCI: Clear the LBMS bit after a link retrain
+      PCI: Revert to the original speed after PCIe failed link retraining
+      PCI: Correct error reporting with PCIe failed link retraining
+      PCI: Use an error code with PCIe failed link retraining
+
+Manivannan Sadhasivam (12):
+      PCI: qcom-ep: Drop the redundant masking of global IRQ events
+      PCI: qcom-ep: Reword the error message for receiving unknown global IRQ event
+      dt-bindings: PCI: pci-ep: Update Maintainers
+      dt-bindings: PCI: pci-ep: Document 'linux,pci-domain' property
+      PCI: endpoint: Assign PCI domain number for endpoint controllers
+      PCI: qcom-ep: Modify 'global_irq' and 'perst_irq' IRQ device names
+      dt-bindings: PCI: qcom,pcie-sm8450: Add 'global' interrupt
+      PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt
+      PCI: qcom-ep: Enable controller resources like PHY only after refclk is available
+      PCI: dwc: Rename 'dw_pcie::link_gen' to 'dw_pcie::max_link_speed'
+      PCI: dwc: Always cache the maximum link speed value in dw_pcie::max_link_speed
+      PCI: Pass domain number to pci_bus_release_domain_nr() explicitly
+
+Marek Vasut (15):
+      genirq/msi: Silence 'set affinity failed' warning
+      PCI: aardvark: Silence 'set affinity failed' warning
+      PCI: altera-msi: Silence 'set affinity failed' warning
+      PCI: brcmstb: Silence 'set affinity failed' warning
+      PCI: dwc: Silence 'set affinity failed' warning
+      PCI: mediatek-gen3: Silence 'set affinity failed' warning
+      PCI: mediatek: Silence 'set affinity failed' warning
+      PCI: mobiveil: Silence 'set affinity failed' warning
+      PCI: plda: Silence 'set affinity failed' warning
+      PCI: rcar-host: Silence 'set affinity failed' warning
+      PCI: tegra: Silence 'set affinity failed' warning
+      PCI: vmd: Silence 'set affinity failed' warning
+      PCI: xilinx-nwl: Silence 'set affinity failed' warning
+      PCI: xilinx-xdma: Silence 'set affinity failed' warning
+      PCI: xilinx: Silence 'set affinity failed' warning
+
+Mariusz Tkaczyk (3):
+      leds: Init leds class earlier
+      PCI/NPEM: Add Native PCIe Enclosure Management support
+      PCI/NPEM: Add _DSM PCIe SSD status LED management
+
+Matthew Gerlach (2):
+      dt-bindings: PCI: altera: Convert to YAML
+      dt-bindings: PCI: altera: msi: Convert to YAML
+
+Philipp Stanner (4):
+      PCI: Make pcim_request_region() a public function
+      drm/vboxvideo: Add PCI region request
+      PCI: Deprecate pcim_iomap_regions() in favor of pcim_iomap_region()
+      drm/ast: Request PCI BAR with devres
+
+Prudhvi Yarlagadda (1):
+      PCI: qcom: Disable mirroring of DBI and iATU register space in BAR region
+
+Rayyan Ansari (1):
+      dt-bindings: PCI: qcom,pcie-sc7280: Update bindings adding eight interrupts
+
+Richard Zhu (5):
+      PCI: imx6: Fix establish link failure in EP mode for i.MX8MM and i.MX8MP
+      PCI: imx6: Fix i.MX8MP PCIe EP's occasional failure to trigger MSI
+      dt-bindings: PCI: imx6q-pcie: Add i.MX8Q PCIe compatible string
+      PCI: imx6: Add i.MX8Q PCIe Root Complex (RC) support
+      dt-bindings: PCI: imx6q-pcie: Add reg-name "dbi2" and "atu" for i.MX8M PCIe Endpoint
+
+Riyan Dhiman (1):
+      PCI: vmd: Fix indentation issue in vmd_shutdown()
+
+Samasth Norway Ananda (1):
+      x86/PCI: Check pcie_find_root_port() return for NULL
+
+Sean Anderson (7):
+      PCI: xilinx-nwl: Fix off-by-one in INTx IRQ handler
+      PCI: xilinx-nwl: Fix register misspelling
+      PCI: xilinx-nwl: Rate-limit misc interrupt messages
+      PCI: xilinx-nwl: Clean up clock on probe failure/removal
+      dt-bindings: pci: xilinx-nwl: Add phys property
+      PCI: xilinx-nwl: Add PHY support
+      arm64: zynqmp: Add PCIe phys property for ZCU102
+
+Shashank Babu Chinta Venkata (2):
+      PCI: qcom: Add equalization settings for 16.0 GT/s
+      PCI: qcom: Add RX lane margining settings for 16.0 GT/s
+
+Siddharth Vadapalli (4):
+      dt-bindings: PCI: ti,j721e-pci-host: Add ACSPCIE proxy control property
+      PCI: j721e: Enable ACSPCIE Refclk if "ti,syscon-acspcie-proxy-ctrl" exists
+      PCI: dra7xx: Fix threaded IRQ request for "dra7xx-pcie-main" IRQ
+      PCI: dra7xx: Fix error handling when IRQ request fails in probe
+
+Subramanian Ananthanarayanan (1):
+      PCI: Add ACS quirk for Qualcomm SA8775P
+
+Thippeswamy Havalige (2):
+      dt-bindings: PCI: xilinx-xdma: Add schemas for Xilinx QDMA PCIe Root Port Bridge
+      PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+
+Thomas Richard (5):
+      PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+      PCI: cadence: Set cdns_pcie_host_init() global
+      PCI: j721e: Use dev_err_probe() in the probe() function
+      PCI: Add T_PERST_CLK_US macro
+      PCI: j721e: Use T_PERST_CLK_US macro
+
+Théo Lebrun (2):
+      PCI: j721e: Add reset GPIO to struct j721e_pcie
+      PCI: j721e: Add suspend and resume support
+
+WangYuli (1):
+      PCI: Add function 0 DMA alias quirk for Glenfly Arise chip
+
+Yoshihiro Shimoda (2):
+      dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4M compatible
+      dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4M compatible
+
+Yue Haibing (2):
+      PCI/PM: Remove __pci_pme_wakeup() unused declarations
+      PCI/VPD: Remove pci_vpd_release() unused declarations
+
+ngn (1):
+      PCI: shpchp: Remove hpc_ops
+
+weiyufeng (1):
+      PCI: cpqphp: Use PCI_POSSIBLE_ERROR() to check config reads
+
+zhang jiao (2):
+      tools: PCI: Remove .*.cmd files with make clean
+      tools: PCI: Remove unused BILLION macro
+
+ Documentation/ABI/testing/sysfs-bus-pci            |   72 ++
+ .../devicetree/bindings/pci/altera-pcie-msi.txt    |   27 -
+ .../devicetree/bindings/pci/altera-pcie.txt        |   50 -
+ .../bindings/pci/altr,msi-controller.yaml          |   65 ++
+ .../bindings/pci/altr,pcie-root-port.yaml          |  114 +++
+ .../devicetree/bindings/pci/brcm,stb-pcie.yaml     |   42 +-
+ .../devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml |   13 +-
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   16 +
+ .../bindings/pci/fsl,layerscape-pcie.yaml          |   41 +-
+ .../bindings/pci/hisilicon,kirin-pcie.yaml         |    3 +-
+ .../devicetree/bindings/pci/host-generic-pci.yaml  |    2 -
+ .../bindings/pci/mediatek-pcie-gen3.yaml           |   68 +-
+ Documentation/devicetree/bindings/pci/pci-ep.yaml  |   14 +-
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  |    7 +-
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |    1 +
+ .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |   27 +-
+ .../bindings/pci/qcom,pcie-sc8280xp.yaml           |    3 -
+ .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  |   10 +-
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |    3 +
+ .../devicetree/bindings/pci/rcar-gen4-pci-ep.yaml  |    1 +
+ .../bindings/pci/rcar-gen4-pci-host.yaml           |    1 +
+ .../bindings/pci/renesas,pci-rcar-gen2.yaml        |    8 +-
+ .../bindings/pci/socionext,uniphier-pcie-ep.yaml   |    8 +-
+ .../devicetree/bindings/pci/ti,j721e-pci-host.yaml |   10 +
+ .../devicetree/bindings/pci/xlnx,nwl-pcie.yaml     |    7 +
+ .../devicetree/bindings/pci/xlnx,xdma-host.yaml    |   36 +-
+ MAINTAINERS                                        |    8 +-
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts  |    1 +
+ arch/s390/include/asm/pci.h                        |    9 +-
+ arch/s390/pci/Makefile                             |    3 +-
+ arch/s390/pci/pci.c                                |    1 -
+ arch/s390/pci/pci_sysfs.c                          |   14 +-
+ arch/x86/pci/fixup.c                               |    4 +-
+ drivers/Makefile                                   |    4 +-
+ drivers/acpi/pci_mcfg.c                            |   12 +
+ drivers/bcma/driver_pci_host.c                     |   10 +-
+ drivers/gpu/drm/ast/ast_drv.c                      |   12 +-
+ drivers/gpu/drm/vboxvideo/vbox_main.c              |    4 +
+ drivers/pci/Kconfig                                |    9 +
+ drivers/pci/Makefile                               |    1 +
+ drivers/pci/ats.c                                  |    4 +-
+ drivers/pci/controller/Kconfig                     |    2 +-
+ drivers/pci/controller/cadence/Kconfig             |    2 +-
+ drivers/pci/controller/cadence/pci-j721e.c         |  160 +++-
+ drivers/pci/controller/cadence/pcie-cadence-host.c |   44 +-
+ drivers/pci/controller/cadence/pcie-cadence.h      |   13 +-
+ drivers/pci/controller/dwc/Kconfig                 |    5 +
+ drivers/pci/controller/dwc/Makefile                |    1 +
+ drivers/pci/controller/dwc/pci-dra7xx.c            |   11 +-
+ drivers/pci/controller/dwc/pci-imx6.c              | 1000 +++++++++++---------
+ drivers/pci/controller/dwc/pci-keystone.c          |    9 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c  |   12 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |   24 +-
+ drivers/pci/controller/dwc/pcie-designware.h       |   35 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c         |    4 +-
+ drivers/pci/controller/dwc/pcie-kirin.c            |    4 +-
+ drivers/pci/controller/dwc/pcie-qcom-common.c      |   78 ++
+ drivers/pci/controller/dwc/pcie-qcom-common.h      |   14 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |   41 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             |  133 ++-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c        |   13 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c        |    2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c         |   37 +-
+ .../pci/controller/mobiveil/pcie-mobiveil-host.c   |   11 +-
+ drivers/pci/controller/pci-aardvark.c              |   74 +-
+ drivers/pci/controller/pci-tegra.c                 |   10 +-
+ drivers/pci/controller/pci-xgene.c                 |    6 +-
+ drivers/pci/controller/pcie-altera-msi.c           |   11 +-
+ drivers/pci/controller/pcie-altera.c               |    3 +-
+ drivers/pci/controller/pcie-brcmstb.c              |  602 ++++++++----
+ drivers/pci/controller/pcie-iproc.c                |   18 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c        |  193 +++-
+ drivers/pci/controller/pcie-mediatek.c             |   12 +-
+ drivers/pci/controller/pcie-rcar-host.c            |   10 +-
+ drivers/pci/controller/pcie-xilinx-dma-pl.c        |   64 +-
+ drivers/pci/controller/pcie-xilinx-nwl.c           |  150 ++-
+ drivers/pci/controller/pcie-xilinx.c               |    9 +-
+ drivers/pci/controller/plda/pcie-plda-host.c       |   11 +-
+ drivers/pci/controller/vmd.c                       |   17 +-
+ drivers/pci/devres.c                               |    9 +-
+ drivers/pci/endpoint/pci-epc-core.c                |   14 +
+ drivers/pci/hotplug/TODO                           |    5 -
+ drivers/pci/hotplug/cpqphp_core.c                  |    2 +-
+ drivers/pci/hotplug/cpqphp_pci.c                   |    4 +-
+ drivers/pci/hotplug/s390_pci_hpc.c                 |    2 +-
+ drivers/pci/hotplug/shpchp.h                       |   38 +-
+ drivers/pci/hotplug/shpchp_core.c                  |   15 +-
+ drivers/pci/hotplug/shpchp_ctrl.c                  |   79 +-
+ drivers/pci/hotplug/shpchp_hpc.c                   |   63 +-
+ drivers/pci/iomap.c                                |    2 +-
+ drivers/pci/npem.c                                 |  595 ++++++++++++
+ drivers/pci/pci-bridge-emul.c                      |    4 +-
+ drivers/pci/pci-driver.c                           |    2 +-
+ drivers/pci/pci-sysfs.c                            |    5 +
+ drivers/pci/pci.c                                  |   75 +-
+ drivers/pci/pci.h                                  |   46 +-
+ drivers/pci/pcie/aer_inject.c                      |    4 +-
+ drivers/pci/probe.c                                |   37 +-
+ drivers/pci/pwrctl/pci-pwrctl-pwrseq.c             |    5 +
+ drivers/pci/quirks.c                               |   39 +-
+ drivers/pci/remove.c                               |    4 +-
+ include/linux/bcma/bcma_driver_pci.h               |    2 +-
+ include/linux/msi.h                                |    2 +
+ include/linux/pci-epc.h                            |    3 +
+ include/linux/pci.h                                |   11 +-
+ include/linux/pci_ids.h                            |    2 +
+ include/uapi/linux/pci_regs.h                      |   41 +-
+ kernel/irq/msi.c                                   |    2 +-
+ sound/pci/hda/hda_intel.c                          |    2 +-
+ tools/pci/Makefile                                 |    2 +-
+ tools/pci/pcitest.c                                |    2 -
+ 111 files changed, 3369 insertions(+), 1339 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-qcom-common.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-qcom-common.h
+ create mode 100644 drivers/pci/npem.c
 
