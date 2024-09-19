@@ -1,207 +1,154 @@
-Return-Path: <linux-pci+bounces-13291-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13292-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CDA497C5C4
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 10:26:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2593997CA65
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 15:48:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1C0A1C22B73
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 08:26:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC2921F22971
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 13:48:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04A31991C1;
-	Thu, 19 Sep 2024 08:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D743B19D091;
+	Thu, 19 Sep 2024 13:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CmHtYYP6"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cNI8GUnY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1D1198A30
-	for <linux-pci@vger.kernel.org>; Thu, 19 Sep 2024 08:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D27F1DFF0;
+	Thu, 19 Sep 2024 13:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726734343; cv=none; b=OZbQJCUpO1kzuXeiLGrulWrcHO023NChsFxRmL+8ZV5vLM9faqySr7FyMadTYGv0ZnQ1qKMHShjNH9YXAXL/NjYJS/a5iEw6jFk8QsQf/t9Kth7mzCdsae1tOalb0r+wsAqapvR567tkFcI8EnwNgX8oVgfkhBk40y+kdKj9PFw=
+	t=1726753692; cv=none; b=XHTmuISRQ7Oj7nl0bAVqxShSLDS3KNvxGl6vhAys4mJXiKfSwEMMiz5jEnVnMkcd5RPstqJGXOUfYnAKxwqWJ1MqwdlrSjwERYsRtaSnzU5064P9ZNbeJuN03VeKqmWERob0OCvGxTCvmOt1nK5ZqN9xU41ONfRjfSUKlkw30xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726734343; c=relaxed/simple;
-	bh=8NqLkMy3Zx6bnWeNPtd3QcNpt2w1EU41lxesU7fl/oE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BtHUtKjODqS395tLa7A7dDVpUYpTDgGEAWWck6WMj67F8HZztDG7q2Ql6yTZI1g+qcU+jv7Oqpla1xhF7z1jJprCAw2F7EESx1zRwfmj53Ev+4p5Ug4PrCGMuPV2O6kFQftW61PZFBROum/ZID26XI5Zj8BdBvKigYc4BCFJPSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=CmHtYYP6; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20573eb852aso11427955ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 19 Sep 2024 01:25:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1726734341; x=1727339141; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HmqZt8e3zro76L+L3lI/fpw4YEZYvty94868lL6i/x0=;
-        b=CmHtYYP6D1Pc0srB4ZVKie96F6yiKRnAOdibKwZAZFSt3v+AiW4EbuVH3UpfO40xyc
-         jE7fqiXfRwp4RUEYNXDIQ5dh26d80e4zKf5p2j+Hj/udHtrA6zglre+0l0L0B6vLw6fb
-         ozjhngH1773zjME1YyuX/NVOa+4aXkQVvtuGI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726734341; x=1727339141;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HmqZt8e3zro76L+L3lI/fpw4YEZYvty94868lL6i/x0=;
-        b=f8GymW6mf35v2Izr18LUVxYdRjKgnb40t/nrFI6pwTF3elhCXfCpoM4vPUhC+cRyuS
-         yTw7Ii3dkFQkwV9uUTUl3pJ7DM4WQSfX+t7WgaVi9kiGLoycLoQ/JYm/8H4+MgElsEAG
-         BqyyJXd1lMvFZprMSzQxDhHOB3qX5eJkFyR96zs1iPbn6wug9n6RBiJkSIfYexZjBmvN
-         y3YpvsCzifUYlfdlVLsl60sWKRcTIIz4CplC/h3oLVM+Hg3W7T8m30//BC+2i2CkAxw9
-         umLvdR01Uy088XHmeck8uztwen5UTQUm60PtwBKP5TIAinuFCVWSjxRKmDQk5y3rEXW/
-         ExYg==
-X-Gm-Message-State: AOJu0Yw/78+n9oLHXUAYyVsjpnz7zfeLYavdsJVZ5JMJX3DwbaIE4K8F
-	Bsf50/2tmY9zFuSLEqq0tkSsBV9XdNn1vA1c8+zGuetN5TWnRtKr5KR/UP8LKUlHgIT2KFSNnnb
-	tdBJ8ghC7trV5f+Rvbk2pFDMy2s24bpBiEztvxiBwoENQKCQY1BkCfTf0cyrJ6tlDsmVj3MVUQ4
-	6UZyuh22labbgt1IRGa8hOCb4AkOWuOUg7ylO1gAPh1jR48Vq8046q4Gh3vbthi3I=
-X-Google-Smtp-Source: AGHT+IGIoR7DQTByHj/l4Zf/Tfkw0Ev3y9F9w0HlqKuds5yDKg55HUfdksZ5EucrAa8WOWGaXEVCsw==
-X-Received: by 2002:a17:902:f706:b0:205:8763:6c2d with SMTP id d9443c01a7336-208cb8b392emr43227385ad.9.1726734341144;
-        Thu, 19 Sep 2024 01:25:41 -0700 (PDT)
-Received: from dhcp-135-24-192-142.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20794735810sm75228425ad.278.2024.09.19.01.25.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Sep 2024 01:25:40 -0700 (PDT)
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org,
-	logang@deltatee.com
-Cc: linux-kernel@vger.kernel.org,
-	sumanesh.samanta@broadcom.com,
-	sathya.prakash@broadcom.com,
-	sjeaugey@nvidia.com,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Subject: [PATCH 2/2 v2] PCI/P2PDMA: Modify p2p_dma_distance to detect P2P links
-Date: Thu, 19 Sep 2024 01:13:44 -0700
-Message-Id: <1726733624-2142-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-X-Mailer: git-send-email 2.4.3
-In-Reply-To: <1726733624-2142-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-References: <1726733624-2142-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+	s=arc-20240116; t=1726753692; c=relaxed/simple;
+	bh=IjtSn80u0k+rqHsc4HIqQUn4txsXju6Qc/BEN2LzhiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DPpcLE56d0EK0mbJRgEhfywTixTTtz6lXmD9epBARCYnaS9gdQICEMLcW8AZjh0Yw8SivlkmDORwKAJOg0ZPicgX0xNNLXf0kSPrb5/49ulsZhLRvWqrspTgdztm2JyGio9Nl+yVLiYbVfOhWO1WN8bAntvu/VY5ZX3wOrArifY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cNI8GUnY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48J9LYej024791;
+	Thu, 19 Sep 2024 13:47:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hDBCaMgpGL9eOfWjmuYLuKpODfSFLLqQaCiE5cxk4WY=; b=cNI8GUnYLteAkbbj
+	KG7YRa+uwnPcyizs6Lc7JFvOs3ACVbsVm0f96sf1r8zy3IgakX7v7GiEAUaImfhv
+	ij+XZgFpUfUt+r3nW+251H9kZeZK9yYwmNxwxccwR1k2Kg+qScPsCv49xDh1NpsO
+	iTdGHoLB3MPWZNT3r9wZFDINgPDPUqFPh4xpa+lEm13fRxkR9Lb88Iq9raeR1BWQ
+	DGVt80PnNQKJICZCSXoyQofw4Wu7hMVK+Xx7hioJYXWq4Xj3zT+w/YOscxtJodId
+	k1l4gfsuFxNU5eBuAhD4sEq0PCesBFwXQJGYc+VjOe8qRpi/6RDXUAyWNYNNQnCF
+	EWlDGg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41n4gedc32-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Sep 2024 13:47:57 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48JDluPJ002844
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Sep 2024 13:47:56 GMT
+Received: from [10.253.37.179] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 19 Sep
+ 2024 06:47:52 -0700
+Message-ID: <1dff17e3-580b-4829-b889-0c559db64f26@quicinc.com>
+Date: Thu, 19 Sep 2024 21:47:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Document the X1E80100 QMP PCIe PHY Gen4 x8
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <abel.vesa@linaro.org>, <quic_msarkar@quicinc.com>,
+        <quic_devipriy@quicinc.com>, <dmitry.baryshkov@linaro.org>,
+        <kw@linux.com>, <lpieralisi@kernel.org>, <neil.armstrong@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>
+References: <20240913083724.1217691-1-quic_qianyu@quicinc.com>
+ <20240913083724.1217691-2-quic_qianyu@quicinc.com>
+ <20240913133751.2yegqbobvfzbogxc@thinkpad>
+Content-Language: en-US
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <20240913133751.2yegqbobvfzbogxc@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: UZwaA9CQWVSHI1Ll4zedF_4M1zgh8_7H
+X-Proofpoint-ORIG-GUID: UZwaA9CQWVSHI1Ll4zedF_4M1zgh8_7H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 impostorscore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2408220000
+ definitions=main-2409190091
 
-Update the p2p_dma_distance() to determine inter-switch P2P links existing
-between two switches and use this to calculate the DMA distance between
-two devices.
 
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
----
- drivers/pci/p2pdma.c       | 17 ++++++++++++++++-
- drivers/pci/pcie/portdrv.c | 34 ++++++++++++++++++++++++++++++++++
- drivers/pci/pcie/portdrv.h |  2 ++
- 3 files changed, 52 insertions(+), 1 deletion(-)
+On 9/13/2024 9:37 PM, Manivannan Sadhasivam wrote:
+> On Fri, Sep 13, 2024 at 01:37:20AM -0700, Qiang Yu wrote:
+>> PCIe 3rd instance of X1E80100 support Gen 4x8 which needs different 8 lane
+>> capable QMP PCIe PHY. Document Gen 4x8 PHY as separate module.
+>>
+> Nit: please use 'Gen 4 x8'
+Will update in next version patch.
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 4f47a13cb500..eed3b69e7293 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -21,6 +21,8 @@
- #include <linux/seq_buf.h>
- #include <linux/xarray.h>
- 
-+extern bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b);
-+
- struct pci_p2pdma {
- 	struct gen_pool *pool;
- 	bool p2pmem_published;
-@@ -576,7 +578,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 		int *dist, bool verbose)
- {
- 	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
--	struct pci_dev *a = provider, *b = client, *bb;
-+	struct pci_dev *a = provider, *b = client, *bb, *b_p2p_link = NULL;
- 	bool acs_redirects = false;
- 	struct pci_p2pdma *p2pdma;
- 	struct seq_buf acs_list;
-@@ -606,6 +608,16 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 			if (a == bb)
- 				goto check_b_path_acs;
- 
-+			/*
-+			 * If both upstream bridges have Inter switch P2P link
-+			 * available, P2P DMA distance can account for optimized
-+			 * path.
-+			 */
-+			if (pcie_port_is_p2p_link_available(a, bb)) {
-+				b_p2p_link = bb;
-+				goto check_b_path_acs;
-+			}
-+
- 			bb = pci_upstream_bridge(bb);
- 			dist_b++;
- 		}
-@@ -629,6 +641,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 			acs_cnt++;
- 		}
- 
-+		if (bb == b_p2p_link)
-+			break;
-+
- 		bb = pci_upstream_bridge(bb);
- 	}
- 
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index c940b4b242fd..2fe1598fc684 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -104,6 +104,40 @@ static bool pcie_port_is_p2p_supported(struct pci_dev *dev)
- 	return false;
- }
- 
-+/**
-+ * pcie_port_is_p2p_link_available: Determine if a P2P link is available
-+ * between the two upstream bridges. The serial number of the two devices
-+ * will be compared and if they are same then it is considered that the P2P
-+ * link is available.
-+ *
-+ * Return value: true if inter switch P2P is available, return false otherwise.
-+ */
-+bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b)
-+{
-+	u64 dsn_a, dsn_b;
-+
-+	/*
-+	 * Check if the devices support Inter switch P2P.
-+	 */
-+	if (!pcie_port_is_p2p_supported(a) ||
-+	    !pcie_port_is_p2p_supported(b))
-+		return false;
-+
-+	dsn_a = pci_get_dsn(a);
-+	if (!dsn_a)
-+		return false;
-+
-+	dsn_b = pci_get_dsn(b);
-+	if (!dsn_b)
-+		return false;
-+
-+	if (dsn_a == dsn_b)
-+		return true;
-+
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(pcie_port_is_p2p_link_available);
-+
- /*
-  * Traverse list of all PCI bridges and find devices that support Inter switch P2P
-  * and have the same serial number to create report the BDF over sysfs.
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index 1be06cb45665..b341aad6eb49 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -130,5 +130,7 @@ static inline bool pcie_pme_no_msi(void) { return false; }
- static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
- #endif /* !CONFIG_PCIE_PME */
- 
-+bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b);
-+
- struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
- #endif /* _PORTDRV_H_ */
--- 
-2.43.0
-
+Thanks,
+Qiang
+>
+> - Mani
+>
+>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+>> ---
+>>   .../devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml    | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+>> index dcf4fa55fbba..680ec3113c2b 100644
+>> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+>> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+>> @@ -41,6 +41,7 @@ properties:
+>>         - qcom,x1e80100-qmp-gen3x2-pcie-phy
+>>         - qcom,x1e80100-qmp-gen4x2-pcie-phy
+>>         - qcom,x1e80100-qmp-gen4x4-pcie-phy
+>> +      - qcom,x1e80100-qmp-gen4x8-pcie-phy
+>>   
+>>     reg:
+>>       minItems: 1
+>> @@ -172,6 +173,7 @@ allOf:
+>>                 - qcom,sc8280xp-qmp-gen3x2-pcie-phy
+>>                 - qcom,sc8280xp-qmp-gen3x4-pcie-phy
+>>                 - qcom,x1e80100-qmp-gen4x4-pcie-phy
+>> +              - qcom,x1e80100-qmp-gen4x8-pcie-phy
+>>       then:
+>>         properties:
+>>           clocks:
+>> @@ -201,6 +203,7 @@ allOf:
+>>                 - qcom,sm8550-qmp-gen4x2-pcie-phy
+>>                 - qcom,sm8650-qmp-gen4x2-pcie-phy
+>>                 - qcom,x1e80100-qmp-gen4x2-pcie-phy
+>> +              - qcom,x1e80100-qmp-gen4x8-pcie-phy
+>>       then:
+>>         properties:
+>>           resets:
+>> -- 
+>> 2.34.1
+>>
 
