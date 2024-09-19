@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-13290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD55397C5C2
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 10:25:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CDA497C5C4
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 10:26:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 986A828315D
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 08:25:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1C0A1C22B73
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Sep 2024 08:26:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B5D1990CE;
-	Thu, 19 Sep 2024 08:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04A31991C1;
+	Thu, 19 Sep 2024 08:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Na84f0JA"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CmHtYYP6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA21990A7
-	for <linux-pci@vger.kernel.org>; Thu, 19 Sep 2024 08:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1D1198A30
+	for <linux-pci@vger.kernel.org>; Thu, 19 Sep 2024 08:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726734340; cv=none; b=EjTWOrTh3luTNxHBtRv0SyNbZ7tWCmRsv6ASGwJrO9FARVy2rZv7dTXCy7TvBcffQQc851jefsUc5IfuOXTbb6f+GmxIbZNI6B4MmzzY2xl8QWCcHzVSUnI5ra5iN9zTOjvH+1XecctCrcuhtZwK92Mq7A3UJa/YHfXHsYNKeQ8=
+	t=1726734343; cv=none; b=OZbQJCUpO1kzuXeiLGrulWrcHO023NChsFxRmL+8ZV5vLM9faqySr7FyMadTYGv0ZnQ1qKMHShjNH9YXAXL/NjYJS/a5iEw6jFk8QsQf/t9Kth7mzCdsae1tOalb0r+wsAqapvR567tkFcI8EnwNgX8oVgfkhBk40y+kdKj9PFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726734340; c=relaxed/simple;
-	bh=I+1/h8w66Ko9V4d7rDmx7wTFUatWmAwuRoGm5l3iZa0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=eRuSnbIFBCwZJy42K5+n/EYsi7uHYL1oYHyND/X1GuJlogA/UZzkt1P9wIkj5fAnuhu8Of3/KJNQ02M88ENMz3CWxpo7hrmkA4ZaNAgOd/p1F5mS9Y4Gt695XlOrQoxTq5zEKpMGagkBDqbuAvLAtOZTtSH4Ew3IzBR8POs7dWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Na84f0JA; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1726734343; c=relaxed/simple;
+	bh=8NqLkMy3Zx6bnWeNPtd3QcNpt2w1EU41lxesU7fl/oE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BtHUtKjODqS395tLa7A7dDVpUYpTDgGEAWWck6WMj67F8HZztDG7q2Ql6yTZI1g+qcU+jv7Oqpla1xhF7z1jJprCAw2F7EESx1zRwfmj53Ev+4p5Ug4PrCGMuPV2O6kFQftW61PZFBROum/ZID26XI5Zj8BdBvKigYc4BCFJPSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=CmHtYYP6; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2059204f448so5731875ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 19 Sep 2024 01:25:39 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20573eb852aso11427955ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 19 Sep 2024 01:25:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1726734338; x=1727339138; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1726734341; x=1727339141; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=zv8UBzpT++2A1Z5LtWaFXxAekSrpKtHS741NZWyaGOg=;
-        b=Na84f0JACrMmsMmZ6GvuQbdT+dF/sHMCXipO2pKa9KmMTJW5fO5/IiHiLTLCvUX/Qz
-         TOhQnelFwnj2BeimbfIn2Epg7mlvtI1ZeTRmVdpSNE8zdt6Ut/eKdQ4pPg0gxMI2OYee
-         ro4oI8Tm0comyDNKMM0+jsfLCPhx55aIlpfGU=
+        bh=HmqZt8e3zro76L+L3lI/fpw4YEZYvty94868lL6i/x0=;
+        b=CmHtYYP6D1Pc0srB4ZVKie96F6yiKRnAOdibKwZAZFSt3v+AiW4EbuVH3UpfO40xyc
+         jE7fqiXfRwp4RUEYNXDIQ5dh26d80e4zKf5p2j+Hj/udHtrA6zglre+0l0L0B6vLw6fb
+         ozjhngH1773zjME1YyuX/NVOa+4aXkQVvtuGI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726734338; x=1727339138;
+        d=1e100.net; s=20230601; t=1726734341; x=1727339141;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zv8UBzpT++2A1Z5LtWaFXxAekSrpKtHS741NZWyaGOg=;
-        b=mqqDUDxEE0r8A+XHApAcuTAxahFJ+zDSmlSz5B3k/ElOvmrOtykRjRpAV3jAlS7X+b
-         XI6KFvMtYTUuDHtCA3P/otG/0PQjFNFYjIRunlDAIvqCxqiFwL+zllVHK4LW3mY0VZiL
-         SUHfckMelyd3YBShehTFQxfU3EnifGFN6MXfAI+7OIn5liMPTH0KdW0UQL8PMMbuXiw2
-         tPQDQqyqkah8PKc736CgjqQoVeyiQ3rBpIITqoxAmIQvwBgyTY6WUhEEJVJSPZCLYqWw
-         1g7D/WTUuGUO2Vm98+5VGlraNSk4mt7Sa2ALc2D1nk3dLS2S9+wAFwbaUpMScFWI2nTV
-         l3VA==
-X-Gm-Message-State: AOJu0Yzfzr0Wh1RAGHUGvDlOepwHcrHTiiWN2/Ktyq01CzzvztHEYTt0
-	k8G24tQC6O+u46Ohc8TWQAsZ91el6Zpoqy0L5XPJ7Tk6CuM5kpfpqV88kiGnjPRYkc84Fnln3+X
-	2gxy7tM4gaKyz6i3VG80kj3B1nq2PgwdvWottzLA9rmmJLuT3h0AzDVLwuoTlDuJwtixdvj7Nw1
-	30Y/suY/OTQBOUJr8CABRgQ0rVZv+mNdlg8x5It/OvC2K5pNo+VCexbgvtU7JKWMU=
-X-Google-Smtp-Source: AGHT+IHgyUzDSi0goEAofqZhhD2vYTSY1PZMedmtnKrcsSBCiPfXALNJZGtmwtgL+T20eqkrYjhPGQ==
-X-Received: by 2002:a17:902:d50a:b0:206:9caf:1e09 with SMTP id d9443c01a7336-2076e47a81amr355154595ad.61.1726734337918;
-        Thu, 19 Sep 2024 01:25:37 -0700 (PDT)
+        bh=HmqZt8e3zro76L+L3lI/fpw4YEZYvty94868lL6i/x0=;
+        b=f8GymW6mf35v2Izr18LUVxYdRjKgnb40t/nrFI6pwTF3elhCXfCpoM4vPUhC+cRyuS
+         yTw7Ii3dkFQkwV9uUTUl3pJ7DM4WQSfX+t7WgaVi9kiGLoycLoQ/JYm/8H4+MgElsEAG
+         BqyyJXd1lMvFZprMSzQxDhHOB3qX5eJkFyR96zs1iPbn6wug9n6RBiJkSIfYexZjBmvN
+         y3YpvsCzifUYlfdlVLsl60sWKRcTIIz4CplC/h3oLVM+Hg3W7T8m30//BC+2i2CkAxw9
+         umLvdR01Uy088XHmeck8uztwen5UTQUm60PtwBKP5TIAinuFCVWSjxRKmDQk5y3rEXW/
+         ExYg==
+X-Gm-Message-State: AOJu0Yw/78+n9oLHXUAYyVsjpnz7zfeLYavdsJVZ5JMJX3DwbaIE4K8F
+	Bsf50/2tmY9zFuSLEqq0tkSsBV9XdNn1vA1c8+zGuetN5TWnRtKr5KR/UP8LKUlHgIT2KFSNnnb
+	tdBJ8ghC7trV5f+Rvbk2pFDMy2s24bpBiEztvxiBwoENQKCQY1BkCfTf0cyrJ6tlDsmVj3MVUQ4
+	6UZyuh22labbgt1IRGa8hOCb4AkOWuOUg7ylO1gAPh1jR48Vq8046q4Gh3vbthi3I=
+X-Google-Smtp-Source: AGHT+IGIoR7DQTByHj/l4Zf/Tfkw0Ev3y9F9w0HlqKuds5yDKg55HUfdksZ5EucrAa8WOWGaXEVCsw==
+X-Received: by 2002:a17:902:f706:b0:205:8763:6c2d with SMTP id d9443c01a7336-208cb8b392emr43227385ad.9.1726734341144;
+        Thu, 19 Sep 2024 01:25:41 -0700 (PDT)
 Received: from dhcp-135-24-192-142.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20794735810sm75228425ad.278.2024.09.19.01.25.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20794735810sm75228425ad.278.2024.09.19.01.25.38
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Sep 2024 01:25:37 -0700 (PDT)
+        Thu, 19 Sep 2024 01:25:40 -0700 (PDT)
 From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	bhelgaas@google.com,
@@ -72,9 +72,9 @@ Cc: linux-kernel@vger.kernel.org,
 	sathya.prakash@broadcom.com,
 	sjeaugey@nvidia.com,
 	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Subject: [PATCH 1/2 v2] PCI/portdrv: Enable reporting inter-switch P2P links
-Date: Thu, 19 Sep 2024 01:13:43 -0700
-Message-Id: <1726733624-2142-2-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+Subject: [PATCH 2/2 v2] PCI/P2PDMA: Modify p2p_dma_distance to detect P2P links
+Date: Thu, 19 Sep 2024 01:13:44 -0700
+Message-Id: <1726733624-2142-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
 X-Mailer: git-send-email 2.4.3
 In-Reply-To: <1726733624-2142-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
 References: <1726733624-2142-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
@@ -84,242 +84,123 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-Broadcom PCI switches supports inter-switch P2P links between two
-PCI-to-PCI bridges. This presents an optimal data path for data
-movement. The patch exports a new sysfs entry for PCI devices that
-support the inter switch P2P links and reports the B:D:F information
-of the devices that are connected through this inter switch link as
-shown below:
-
-                             Host root bridge
-                ---------------------------------------
-                |                                     |
-  NIC1 --- PCI Switch1 --- Inter-switch link --- PCI Switch2 --- NIC2
-(2c:00.0)   (2a:00.0)                             (3d:00.0)   (40:00.0)
-                |                                     |
-               GPU1                                  GPU2
-            (2d:00.0)                             (3f:00.0)
-                               SERVER 1
-
-$ find /sys/ -name "p2p_link" | xargs grep .
-/sys/devices/pci0000:29/0000:29:01.0/0000:2a:00.0/p2p_link:0000:3d:00.0
-/sys/devices/pci0000:3c/0000:3c:01.0/0000:3d:00.0/p2p_link:0000:2a:00.0
-
-Current support is added to report the P2P links available for
-Broadcom switches based on the capability that is reported by the
-upstream bridges through their vendor-specific capability registers.
+Update the p2p_dma_distance() to determine inter-switch P2P links existing
+between two switches and use this to calculate the DMA distance between
+two devices.
 
 Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Sumanesh Samanta <sumanesh.samanta@broadcom.com>
 ---
-Changes in v2:
-Integrated the code into PCIe portdrv to create the sysfs entries during
-probe, as suggested by Mani.
+ drivers/pci/p2pdma.c       | 17 ++++++++++++++++-
+ drivers/pci/pcie/portdrv.c | 34 ++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/portdrv.h |  2 ++
+ 3 files changed, 52 insertions(+), 1 deletion(-)
 
- Documentation/ABI/testing/sysfs-bus-pci |  14 +++
- drivers/pci/pcie/portdrv.c              | 131 ++++++++++++++++++++++++
- drivers/pci/pcie/portdrv.h              |  10 ++
- 3 files changed, 155 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index ecf47559f495..e5d02f20655f 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -572,3 +572,17 @@ Description:
- 		enclosure-specific indications "specific0" to "specific7",
- 		hence the corresponding led class devices are unavailable if
- 		the DSM interface is used.
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 4f47a13cb500..eed3b69e7293 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -21,6 +21,8 @@
+ #include <linux/seq_buf.h>
+ #include <linux/xarray.h>
+ 
++extern bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b);
 +
-+What:		/sys/bus/pci/devices/.../p2p_link
-+Date:		September 2024
-+Contact:	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-+Description:
-+		This file appears on PCIe upstream ports which supports an
-+		internal P2P link.
-+		Reading this attribute will provide the list of other upstream
-+		ports on the system which have an internal P2P link available
-+		between the two ports.
-+Users:
-+		Userspace applications interested in determining a optimal P2P
-+		link for data transfers between devices connected to the PCIe
-+		switches.
+ struct pci_p2pdma {
+ 	struct gen_pool *pool;
+ 	bool p2pmem_published;
+@@ -576,7 +578,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 		int *dist, bool verbose)
+ {
+ 	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
+-	struct pci_dev *a = provider, *b = client, *bb;
++	struct pci_dev *a = provider, *b = client, *bb, *b_p2p_link = NULL;
+ 	bool acs_redirects = false;
+ 	struct pci_p2pdma *p2pdma;
+ 	struct seq_buf acs_list;
+@@ -606,6 +608,16 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 			if (a == bb)
+ 				goto check_b_path_acs;
+ 
++			/*
++			 * If both upstream bridges have Inter switch P2P link
++			 * available, P2P DMA distance can account for optimized
++			 * path.
++			 */
++			if (pcie_port_is_p2p_link_available(a, bb)) {
++				b_p2p_link = bb;
++				goto check_b_path_acs;
++			}
++
+ 			bb = pci_upstream_bridge(bb);
+ 			dist_b++;
+ 		}
+@@ -629,6 +641,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 			acs_cnt++;
+ 		}
+ 
++		if (bb == b_p2p_link)
++			break;
++
+ 		bb = pci_upstream_bridge(bb);
+ 	}
+ 
 diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 6af5e0425872..c940b4b242fd 100644
+index c940b4b242fd..2fe1598fc684 100644
 --- a/drivers/pci/pcie/portdrv.c
 +++ b/drivers/pci/pcie/portdrv.c
-@@ -18,6 +18,7 @@
- #include <linux/string.h>
- #include <linux/slab.h>
- #include <linux/aer.h>
-+#include <linux/bitops.h>
- 
- #include "../pci.h"
- #include "portdrv.h"
-@@ -37,6 +38,134 @@ struct portdrv_service_data {
- 	u32 service;
- };
+@@ -104,6 +104,40 @@ static bool pcie_port_is_p2p_supported(struct pci_dev *dev)
+ 	return false;
+ }
  
 +/**
-+ * pcie_brcm_is_p2p_supported - Broadcom device specific handler
-+ *       to check if the upstream port supports inter switch P2P.
++ * pcie_port_is_p2p_link_available: Determine if a P2P link is available
++ * between the two upstream bridges. The serial number of the two devices
++ * will be compared and if they are same then it is considered that the P2P
++ * link is available.
 + *
-+ * @dev: PCIe upstream port to check
-+ *
-+ * This function assumes the PCIe upstream port is a Broadcom
-+ * PCIe device.
++ * Return value: true if inter switch P2P is available, return false otherwise.
 + */
-+static bool pcie_brcm_is_p2p_supported(struct pci_dev *dev)
++bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b)
 +{
-+	u64 dsn;
-+	u16 vsec;
-+	u32 vsec_data;
-+
-+	dsn = pci_get_dsn(dev);
-+	if (!dsn) {
-+		pci_dbg(dev, "DSN capability is not present\n");
-+		return false;
-+	}
-+
-+	vsec = pci_find_vsec_capability(dev, PCI_VENDOR_ID_LSI_LOGIC,
-+					PCIE_BRCM_SW_P2P_VSEC_ID);
-+	if (!vsec) {
-+		pci_dbg(dev, "Failed to get VSEC capability\n");
-+		return false;
-+	}
-+
-+	pci_read_config_dword(dev, vsec + PCIE_BRCM_SW_P2P_MODE_VSEC_OFFSET,
-+			      &vsec_data);
-+
-+	pci_dbg(dev, "Serial Number: 0x%llx VSEC 0x%x\n",
-+		dsn, vsec_data);
-+
-+	if (!PCIE_BRCM_SW_IS_SECURE_PART(dsn))
-+		return false;
-+
-+	if (FIELD_GET(PCIE_BRCM_SW_P2P_MODE_MASK, vsec_data) !=
-+		PCIE_BRCM_SW_P2P_MODE_INTER_SW_LINK)
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * Determine if device supports Inter switch P2P links.
-+ *
-+ * Return value: true if inter switch P2P is supported, return false otherwise.
-+ */
-+static bool pcie_port_is_p2p_supported(struct pci_dev *dev)
-+{
-+	/* P2P link attribute is supported on upstream ports only */
-+	if (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM)
-+		return false;
++	u64 dsn_a, dsn_b;
 +
 +	/*
-+	 * Currently Broadcom PEX switches are supported.
++	 * Check if the devices support Inter switch P2P.
 +	 */
-+	if (dev->vendor == PCI_VENDOR_ID_LSI_LOGIC &&
-+	    (dev->device == PCI_DEVICE_ID_BRCM_PEX_89000_HLC ||
-+	     dev->device == PCI_DEVICE_ID_BRCM_PEX_89000_LLC))
-+		return pcie_brcm_is_p2p_supported(dev);
++	if (!pcie_port_is_p2p_supported(a) ||
++	    !pcie_port_is_p2p_supported(b))
++		return false;
++
++	dsn_a = pci_get_dsn(a);
++	if (!dsn_a)
++		return false;
++
++	dsn_b = pci_get_dsn(b);
++	if (!dsn_b)
++		return false;
++
++	if (dsn_a == dsn_b)
++		return true;
 +
 +	return false;
 +}
++EXPORT_SYMBOL_GPL(pcie_port_is_p2p_link_available);
 +
-+/*
-+ * Traverse list of all PCI bridges and find devices that support Inter switch P2P
-+ * and have the same serial number to create report the BDF over sysfs.
-+ */
-+static ssize_t p2p_link_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev), *pdev_link = NULL;
-+	size_t len = 0;
-+	u64 dsn, dsn_link;
-+
-+	dsn = pci_get_dsn(pdev);
-+
-+	/* Traverse list of PCI bridges to determine any available P2P links */
-+	while ((pdev_link = pci_get_class(PCI_CLASS_BRIDGE_PCI << 8, pdev_link))
-+			!= NULL) {
-+		if (pdev_link == pdev)
-+			continue;
-+
-+		if (!pcie_port_is_p2p_supported(pdev_link))
-+			continue;
-+
-+		dsn_link = pci_get_dsn(pdev_link);
-+		if (!dsn_link)
-+			continue;
-+
-+		if (dsn == dsn_link)
-+			len += sysfs_emit_at(buf, len, "%04x:%02x:%02x.%d\n",
-+					     pci_domain_nr(pdev_link->bus),
-+					     pdev_link->bus->number, PCI_SLOT(pdev_link->devfn),
-+					     PCI_FUNC(pdev_link->devfn));
-+	}
-+
-+	return len;
-+}
-+
-+/* P2P link sysfs attribute. */
-+static struct device_attribute dev_attr_p2p_link =
-+	__ATTR(p2p_link, 0444, p2p_link_show, NULL);
-+
-+static struct attribute *pcie_port_p2p_link_attrs[] = {
-+	&dev_attr_p2p_link.attr,
-+	NULL
-+};
-+
-+static umode_t pcie_port_p2p_link_attrs_is_visible(struct kobject *kobj,
-+						   struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (!pcie_port_is_p2p_supported(pdev))
-+		return 0;
-+
-+	return a->mode;
-+}
-+
-+const struct attribute_group pcie_port_p2p_link_attr_group = {
-+	.attrs = pcie_port_p2p_link_attrs,
-+	.is_visible = pcie_port_p2p_link_attrs_is_visible,
-+};
-+
- /**
-  * release_pcie_device - free PCI Express port service device structure
-  * @dev: Port service device to release
-@@ -715,6 +844,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
- 		pm_runtime_allow(&dev->dev);
- 	}
- 
-+	sysfs_update_group(&dev->dev.kobj, &pcie_port_p2p_link_attr_group);
-+
- 	return 0;
- }
- 
+ /*
+  * Traverse list of all PCI bridges and find devices that support Inter switch P2P
+  * and have the same serial number to create report the BDF over sysfs.
 diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index 12c89ea0313b..1be06cb45665 100644
+index 1be06cb45665..b341aad6eb49 100644
 --- a/drivers/pci/pcie/portdrv.h
 +++ b/drivers/pci/pcie/portdrv.h
-@@ -25,6 +25,16 @@
+@@ -130,5 +130,7 @@ static inline bool pcie_pme_no_msi(void) { return false; }
+ static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
+ #endif /* !CONFIG_PCIE_PME */
  
- #define PCIE_PORT_DEVICE_MAXSERVICES   5
- 
-+/* P2P Link supported device IDs */
-+#define PCI_DEVICE_ID_BRCM_PEX_89000_HLC	0xC030
-+#define PCI_DEVICE_ID_BRCM_PEX_89000_LLC	0xC034
++bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b);
 +
-+#define PCIE_BRCM_SW_P2P_VSEC_ID		0x1
-+#define PCIE_BRCM_SW_P2P_MODE_VSEC_OFFSET	0xC
-+#define PCIE_BRCM_SW_P2P_MODE_MASK		GENMASK(9, 8)
-+#define PCIE_BRCM_SW_P2P_MODE_INTER_SW_LINK	0x2
-+#define PCIE_BRCM_SW_IS_SECURE_PART(dsn)	((dsn) & 0x8)
-+
- extern bool pcie_ports_dpc_native;
- 
- #ifdef CONFIG_PCIEAER
+ struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
+ #endif /* _PORTDRV_H_ */
 -- 
 2.43.0
 
