@@ -1,229 +1,187 @@
-Return-Path: <linux-pci+bounces-13344-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13345-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA07C97E08A
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2024 10:14:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5553297E2AA
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2024 19:09:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29689281705
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2024 08:14:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AD5A2814F8
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2024 17:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5AA193084;
-	Sun, 22 Sep 2024 08:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 810192B9DD;
+	Sun, 22 Sep 2024 17:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJVKgGiG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RVdVgmwq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542672C6A3;
-	Sun, 22 Sep 2024 08:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A8029CE3
+	for <linux-pci@vger.kernel.org>; Sun, 22 Sep 2024 17:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726992891; cv=none; b=fVzr3cTR31rxlom8+gAi4SPtpVJXadMY+ejMv8rhXdtCEgWGpZHSmEFLMnzSywJWe5fN14K8QECvIhrR18Ti5oAAADBzw7/b8l0KslP4T4FYKjqjHQfFZ9GkCQZD0mWP/voOIOpLqbx5j7oglwT1ZJX/798so4wbjAcolRoUn/E=
+	t=1727024971; cv=none; b=l/HHFmEj1BKJmuWFhpzZt6bcDSQ0d2S4yOUypAyrsBquGPP64tipiKTd7NDaC4V5REZyueUl/fpCkJRWW+2dUhE5erN0en5Su/RvpGEG3aVPpgLtsdu9m2cTyOYhftu1zyk1vxeo8b2vRidt6lZHNLRlEFUcgLOkjj73xFfqkGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726992891; c=relaxed/simple;
-	bh=daVW5nkkXHXbUa28cwr4Mm6p9F17c5lXuRDCLv5wpyM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZjYjn5RPaCLIyu736UpVBys6GGHwJIXOM72Q9Sxxq14K4FC2JngESBkXVCNxPbwN4+oIBwKepbUfqn+4bQBZGAdXnO8vtmQHoepLaNvdGjlSUFw289G8iMi/60FVq3hHKkBb57+9te/sp19m9qwYxbcH6csJvDMXQWx7TPPFzhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJVKgGiG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6E6C4CED0;
-	Sun, 22 Sep 2024 08:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726992890;
-	bh=daVW5nkkXHXbUa28cwr4Mm6p9F17c5lXuRDCLv5wpyM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BJVKgGiGR7tSchChAfCiRfZd6kgnYLQJM8Q16qEF1dlbLiaT8aHW7pUbJVSz7d742
-	 nfyGL1SuA0Ir2P2+Vucx+dRS3ejAvBt10hmGq+vpDenAVSL7Mu9tE8BkLcKX655v+E
-	 M0YIx325UYT7E2dmSHZ2Pjpf+IiVNJNRuN3INM5+X5RgP/Y73vYdS+EU1pG/txMyfA
-	 uXhpkmzVJwvwpPkFaVuSxHi6hmK6oeJ25u+1rNplzqKuCoZk8iID6kux2G72mGe/Cz
-	 17bU021Nh4eXF+cc61SNXlvkCyCowmHTJmonwMyp4/2rTLO3PMZSBYTiEFHUiEmi7z
-	 1yCUWajynF+fA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5365cf5de24so4171532e87.1;
-        Sun, 22 Sep 2024 01:14:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3z8ktaVsLUNTKJXKMzK9cI8CAcZKfzV01rXYpHsCrqeCsncKmumcx2vAqsS5w8VzbY9eAmgXxeI3c1Q==@vger.kernel.org, AJvYcCUJY83GPPbwWypCvG1NidtE1Gxim9PjLVRKB8NNksgkTchHhT9H2cO+DSbXPlVA+2OYQ1yN32gyh/mhWA==@vger.kernel.org, AJvYcCVdF4ahk5Cc434JV6yE7XXYFAziAj2qYfhcj2Bl07bx1923rAFB5ZdU6ul3kLywlrEposZP4W+4qdOMQRoS@vger.kernel.org, AJvYcCVioPEDm0PcVQ9dETExaiYWHKWvNaoaSBV4S/eSl/cU++YVMrijgorqRnEEdgMOTYjesTuKSc5UXdr/@vger.kernel.org, AJvYcCX3X23/+KRucze82lXBGXe0OiSgWK9ISEVhMOgdHrmsf4wC6mv/K9c6qIsC/L5IsHVYU0+u0W8hvJUV@vger.kernel.org, AJvYcCX5aTa5pE0KKMfdtAaEMFITxln5W/iJ5UGmcJcV+7o60iuBweAnXLyhz7FDMorJ6GklOQ5VzqSsMHNo@vger.kernel.org, AJvYcCXUJWtK0/sqAUU0zPCYEJVBDEmkUITHZgOLT8PUoez/0KvLIQmwojOpezKW5TbKgxgwng/PdLh9AavKqlRW@vger.kernel.org, AJvYcCXvhwT8aC6UCEH2gl1tKAu/C6Knqlf3HnZRovAk5TeYf+Y9CsmWbii/8DUDv5XFWLzThB3XZ+Sz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm38pquwDnzp64QIRpZnEe0GdIqiSur1c4R6OzrYCwMKR+2iSx
-	GA+nqMi3bgu6QSJ+abz050gyqwnTO6vRJIKV0tUlS6gaD3Ycp0tzpP24Fv0R/QYFC3iWvZIht9X
-	kcwtGEF/tfcLvFOCJyLoDTsX1H8M=
-X-Google-Smtp-Source: AGHT+IEkGHmluJPYdY5Kkg0y6DLMIw/ocbENg+Gy+OgcetK1Xjl0OGvt1ds6StzBsAWxCQ0BMMYkAc8LLyrnCJUG5uk=
-X-Received: by 2002:a05:6512:281c:b0:533:44a3:21b9 with SMTP id
- 2adb3069b0e04-536acf6abdemr3884035e87.1.1726992889297; Sun, 22 Sep 2024
- 01:14:49 -0700 (PDT)
+	s=arc-20240116; t=1727024971; c=relaxed/simple;
+	bh=7kPmqFQNL8wHbsPJ1aFo4mgkSTjutG+BY+1kZiG8quU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQo4mG/jr1+1h+rr5nybiQFSfF8YDX0+gQ9bhuXX85Ud27b4vhaBsnwo2+88hqiQiFSpV/OcOOgCVjdQE7TOsOp9pt26IIrbAXjdTd7yIxbq3LJ71loyPjd26XN7qpY+QQwpal7sBEqvYlQjPJvn2rf/f3RijIvrW8e2JtCFCjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RVdVgmwq; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42cb58d810eso28110885e9.0
+        for <linux-pci@vger.kernel.org>; Sun, 22 Sep 2024 10:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727024968; x=1727629768; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=L0rIrXzxLzm1RYymakq/5yWW79oFHaAAUNk6PTkjpnU=;
+        b=RVdVgmwq2gl2Qr+72ogBtUR1SOZjuyexkfBIdXMRmgMec1gsqU1ivluOcDZScjHaXj
+         c7kg7yLNaBxQ37vi9OnjnQk56KQVhdsiCEuCcEbWXL6vl57lNhQmVb6RvHyaWbkePkGX
+         ZBLoX9P/8+LsgmLH38Vu30KcmqqmTzayP9VLFaIHqnNcIr6rOeb3HIxw82B/DPi/ELFQ
+         O5QVDkdG0mHgIoGNmIKpicnub/wj46rLFc9lr1xCB4bRTl4TYUDoFKKWiUAzy1nz6Nzi
+         SuKDJal/0e3BUEzQIQj2g1CxNhyryqIWRDzqSbedZhHTeSx/EFOmk9hBxZMAsDT98Gzz
+         jXgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727024968; x=1727629768;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L0rIrXzxLzm1RYymakq/5yWW79oFHaAAUNk6PTkjpnU=;
+        b=ly8wjGjlh3+zIZYgPSSC4hku2Ud+DvSjwcoH7ctWuDQMrGmUCIhJjoj4Zj3ZkZfZlJ
+         nm+6e+TGxVUyktJL5liDajx1a54Dxh6UoffzYkzCb/IoTZO5+fQbE4Mk7x0I9QyZuI1e
+         40pQ5S8C3GNCxp8MZVv73Ny73f64Y6anOF5sG0qbgsFPSPhZoSzdUprkfOQdLJBWgkkx
+         HcQUCZl1TpgIBtnwSdd3cr9unm+1MZ4Tah9tbkTfATU8cQCsITSewyHdKfGa1zPt8sND
+         VPIqdVyD/XeNbIqlPQU88nvxTeqc489u3CvIZyl4c/ORivv9MY58pkeCXvYL0Zeli9xH
+         kbWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVoIlQh20JpCjBBnLTjmPKz4zHJJ0QA9BakRL7mCwQnJJ8NZizA6oy+JlIHlbph+UOMCcO/vPQYF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5pA1mKVvFMGfBhc8Cy715MbrfiUWoFoGGEOXkfZ0eGRZ6/JOT
+	2oJmRgQdYOm0IYbKCBX+9VpGSHQwDzn4rPvm/2HjVhHql9DAdOBia2wNdtxC5h2SsQ+V6twJd+3
+	4ZQ==
+X-Google-Smtp-Source: AGHT+IHnnuaHgxDj+rS3r9lgGu134/fQ270qm0dfx4TIlDOErD+D6Q+2jXX//mse26TLw59cSmOqYw==
+X-Received: by 2002:a05:600c:1ca2:b0:42c:b8e5:34d5 with SMTP id 5b1f17b1804b1-42e7a9fe8dbmr52478745e9.15.1727024967852;
+        Sun, 22 Sep 2024 10:09:27 -0700 (PDT)
+Received: from thinkpad (i53873832.versanet.de. [83.135.56.50])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e801d66f6sm55926815e9.29.2024.09.22.10.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2024 10:09:27 -0700 (PDT)
+Date: Sun, 22 Sep 2024 19:09:25 +0200
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, vkoul@kernel.org,
+	kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	mturquette@baylibre.com, sboyd@kernel.org, abel.vesa@linaro.org,
+	quic_msarkar@quicinc.com, quic_devipriy@quicinc.com,
+	dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
+	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Add support for PCIe3 on x1e80100
+Message-ID: <20240922170925.qcuwja6oaqlbng5j@thinkpad>
+References: <20240913083724.1217691-1-quic_qianyu@quicinc.com>
+ <36bd9f69-e263-08a1-af07-45185ea03671@quicinc.com>
+ <6f1118eb-89cf-4fd4-a35d-e8b98b0b7a8d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1724159867.git.andrea.porta@suse.com> <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com>
- <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org> <ZtcBHvI9JxgH9iFT@apocalypse>
- <d87530b846d0dc9e78789234cfcb602a.sboyd@kernel.org>
-In-Reply-To: <d87530b846d0dc9e78789234cfcb602a.sboyd@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 22 Sep 2024 17:14:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQEx52BYMYfNu+xj8sNmdtH9XfPapdhJDrsbDo43aD3Dg@mail.gmail.com>
-Message-ID: <CAK7LNAQEx52BYMYfNu+xj8sNmdtH9XfPapdhJDrsbDo43aD3Dg@mail.gmail.com>
-Subject: Re: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being
- discarded after init
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Eric Dumazet <edumazet@google.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Stefan Wahren <wahrenst@gmx.net>, 
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6f1118eb-89cf-4fd4-a35d-e8b98b0b7a8d@quicinc.com>
 
-On Sun, Sep 22, 2024 at 5:47=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wro=
-te:
->
-> Quoting Andrea della Porta (2024-09-03 05:29:18)
-> > On 12:46 Fri 30 Aug     , Stephen Boyd wrote:
-> > > Quoting Andrea della Porta (2024-08-20 07:36:07)
-> > > > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generi=
-c/vmlinux.lds.h
-> > > > index ad6afc5c4918..3ae9097774b0 100644
-> > > > --- a/include/asm-generic/vmlinux.lds.h
-> > > > +++ b/include/asm-generic/vmlinux.lds.h
-> > >
-> > > It would be nice to keep the initdata properties when this isn't used
-> > > after init as well. Perhaps we need another macro and/or filename to
-> > > indicate that the DTB{O} can be thrown away after init/module init.
-> >
-> > We can certainly add some more filename extension that would place the
-> > relevant data in a droppable section.
-> > Throwing away the dtb/o after init is like the actual KERNEL_DTB macro =
-that
-> > is adding teh data to section .init.data, but this would mean t would b=
-e
-> > useful only at very early init stage, just like for CONFIG_OF_UNITTEST.
-> > Throwing after module init could be more difficult though, I think,
-> > for example we're not sure when to discard the section in case of defer=
-red
-> > modules probe.
-> >
->
-> This patch can fix a modpost warning seen in linux-next because I have
-> added DT overlays from KUnit tests while kbuild has properly marked the
-> overlay as initdata that is discarded. See [1] for details. In KUnit I
-> doubt this really matters because most everything runs from __init code
-> (even if it isn't marked that way).
->
-> I'm thinking that we need to make dtbo Makefile target put the blob in
-> the rodata section so it doesn't get thrown away and leave the builtin
-> DTB as part of init.rodata. Did you already do that? I see the kbuild
-> tree has removed the commit that caused the warning, but I suspect this
-> may still be a problem. See [2] for the next series where overlays
-> applied in the test happen from driver probe so __ref is added.
->
-> If we simply copy the wrap command and make it so that overlays always
-> go to the .rodata section we should be good. Maybe there's some way to
-> figure out what is being wrapped so we don't have to copy the whole
-> thing.
->
-> Finally, it's unfortunate that the DTBO is copied when an overlay is
-> applied. We'll waste memory after this patch, so of_overlay_fdt_apply()
-> could be taught to reuse the blob passed in instead of copying it.
->
-> -----8<----
-> diff --git a/scripts/Makefile.dtbs b/scripts/Makefile.dtbs
-> index 55998b878e54..070e08082cd3 100644
-> --- a/scripts/Makefile.dtbs
-> +++ b/scripts/Makefile.dtbs
-> @@ -51,11 +51,25 @@ quiet_cmd_wrap_S_dtb =3D WRAP    $@
->                 echo '.balign STRUCT_ALIGNMENT';                         =
-               \
->         } > $@
->
-> +quiet_cmd_wrap_S_dtbo =3D WRAP    $@
-> +      cmd_wrap_S_dtbo =3D {                                             =
-                 \
-> +               symbase=3D__$(patsubst .%,%,$(suffix $<))_$(subst -,_,$(n=
-otdir $*));      \
-> +               echo '\#include <asm-generic/vmlinux.lds.h>';            =
-               \
-> +               echo '.section .rodata,"a"';                             =
-               \
-> +               echo '.balign STRUCT_ALIGNMENT';                         =
-               \
-> +               echo ".global $${symbase}_begin";                        =
-               \
-> +               echo "$${symbase}_begin:";                               =
-               \
-> +               echo '.incbin "$<" ';                                    =
-               \
-> +               echo ".global $${symbase}_end";                          =
-               \
-> +               echo "$${symbase}_end:";                                 =
-               \
-> +               echo '.balign STRUCT_ALIGNMENT';                         =
-               \
-> +       } > $@
-> +
->  $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->         $(call if_changed,wrap_S_dtb)
->
->  $(obj)/%.dtbo.S: $(obj)/%.dtbo FORCE
-> -       $(call if_changed,wrap_S_dtb)
-> +       $(call if_changed,wrap_S_dtbo)
->
->  # Schema check
->  # ----------------------------------------------------------------------=
------
->
-> [1] https://lore.kernel.org/all/20240909112728.30a9bd35@canb.auug.org.au/
-> [2] https://lore.kernel.org/all/20240910094459.352572-1-masahiroy@kernel.=
-org/
+On Thu, Sep 19, 2024 at 10:14:06PM +0800, Qiang Yu wrote:
+> 
+> On 9/14/2024 11:59 AM, Krishna Chaitanya Chundru wrote:
+> > Hi qiang,
+> > 
+> > In next series can you add logic in controller driver
+> > to have new ops for this x1e80100 since this hardware
+> > has smmuv3 support but currently the ops_1_9_0 ops which
+> > is being used has configuring bdf to sid table which will
+> > be not present for this devices.
+> > 
+> Sure, bdf2sid map is not supported and required since we use smmuv3 for
+> pcie on x1e80100. Can I add a new ops which is same as ops_1_9_0 basically
+> and only config_sid callback is removed. Or add a new flag to determine if
+> we need to config bdf2sid map like no_l0s.
+> 
+> Hi Mani, what do you think about this?
+> 
 
+Good question. IMO it is better to add a new ops even though it duplictes the
+callbacks. Because the newer platforms are not going to need this bdf2sid map
+anyway. But if we add a flag to determine that, then the check will become,
 
+	if (pcie->cfg->ops->config_sid && !pcie->cfg->smmuv3)
+		...
 
+And this doesn't look good as both conditions are false for X1E80100 i.e., it
+doesn't need bdf2sid mapping and it is also a SMMUv3 platform. Moreover having
+two checks here makes it confusing also.
 
+So let's use a new callback. But please mention the IP revision in comments as
+like other ops.
 
+- Mani
 
+> Thanks,
+> Qiang
+> > 
+> > - Krishna Chaitanya.
+> > 
+> > On 9/13/2024 2:07 PM, Qiang Yu wrote:
+> > > This series add support for PCIe3 on x1e80100.
+> > > 
+> > > PCIe3 needs additional set of clocks, regulators and new set of PCIe QMP
+> > > PHY configuration compare other PCIe instances on x1e80100. Hence add
+> > > required resource configuration and usage for PCIe3.
+> > > 
+> > > v2->v1:
+> > > 1. Squash [PATCH 1/8], [PATCH 2/8],[PATCH 3/8] into one patch and
+> > > make the
+> > >     indentation consistent.
+> > > 2. Put dts patch at the end of the patchset.
+> > > 3. Put dt-binding patch at the first of the patchset.
+> > > 4. Add a new patch where opp-table is added in dt-binding to avoid dtbs
+> > >     checking error.
+> > > 5. Remove GCC_PCIE_3_AUX_CLK, RPMH_CXO_CLK, put in
+> > > TCSR_PCIE_8L_CLKREF_EN
+> > >     as ref.
+> > > 6. Remove lane_broadcasting.
+> > > 7. Add 64 bit bar, Remove GCC_PCIE_3_PIPE_CLK_SRC,
+> > >     GCC_CFG_NOC_PCIE_ANOC_SOUTH_AHB_CLK is changed to
+> > >     GCC_CFG_NOC_PCIE_ANOC_NORTH_AHB_CLK.
+> > > 8. Add Reviewed-by tag.
+> > > 9. Remove [PATCH 7/8], [PATCH 8/8].
+> > > 
+> > > Qiang Yu (5):
+> > >    dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the X1E80100
+> > >      QMP PCIe PHY Gen4 x8
+> > >    dt-bindings: PCI: qcom: Add OPP table for X1E80100
+> > >    phy: qcom: qmp: Add phy register and clk setting for x1e80100 PCIe3
+> > >    clk: qcom: gcc-x1e80100: Fix halt_check for pipediv2 clocks
+> > >    arm64: dts: qcom: x1e80100: Add support for PCIe3 on x1e80100
+> > > 
+> > >   .../bindings/pci/qcom,pcie-x1e80100.yaml      |   4 +
+> > >   .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   3 +
+> > >   arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 202 ++++++++++++++++-
+> > >   drivers/clk/qcom/gcc-x1e80100.c               |  10 +-
+> > >   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 211 ++++++++++++++++++
+> > >   .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h    |  25 +++
+> > >   drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h |  19 ++
+> > >   7 files changed, 468 insertions(+), 6 deletions(-)
+> > >   create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h
+> > >   create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h
+> > > 
 
-Rather, I'd modify my patch as follows:
-
-
-
---- a/scripts/Makefile.dtbs
-+++ b/scripts/Makefile.dtbs
-@@ -34,12 +34,14 @@ $(obj)/dtbs-list: $(dtb-y) FORCE
- # Assembly file to wrap dtb(o)
- # ------------------------------------------------------------------------=
----
-
-+builtin-dtb-section =3D $(if $(filter arch/%, $(obj)),.dtb.init.rodata,.ro=
-data)
-+
- # Generate an assembly file to wrap the output of the device tree compiler
- quiet_cmd_wrap_S_dtb =3D WRAP    $@
-       cmd_wrap_S_dtb =3D { \
-  symbase=3D__$(patsubst .%,%,$(suffix $<))_$(subst -,_,$(notdir $*)); \
-  echo '\#include <asm-generic/vmlinux.lds.h>'; \
-- echo '.section .dtb.init.rodata,"a"'; \
-+ echo '.section $(builtin-dtb-section),"a"'; \
-  echo '.balign STRUCT_ALIGNMENT'; \
-  echo ".global $${symbase}_begin"; \
-  echo "$${symbase}_begin:"; \
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+-- 
+மணிவண்ணன் சதாசிவம்
 
