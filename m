@@ -1,146 +1,171 @@
-Return-Path: <linux-pci+bounces-13340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D3F697DEDD
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Sep 2024 22:48:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D903997E039
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2024 08:14:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABAD5B21188
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Sep 2024 20:48:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 559E2281638
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Sep 2024 06:14:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C265126BEF;
-	Sat, 21 Sep 2024 20:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D778211712;
+	Sun, 22 Sep 2024 06:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKg+nXU1"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T+Klaejy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2057.outbound.protection.outlook.com [40.107.94.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C7963B9;
-	Sat, 21 Sep 2024 20:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726951672; cv=none; b=ALvg/0ER+gVokWnq42VYW95imXBU5ONyfSN26u2cfnBr7c/ni2tKlGXMrkR3owQB/N7QZETqu71ws6BZJPTnssKIXdeUd6P4r6pFSoBSULiVYuWUoMTJVHTlMXTr8keAiTge6+9ckB0MfhoTPNJLgeUEMS02CmjdTl4NYoKjEXQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726951672; c=relaxed/simple;
-	bh=rH7Dd3F/dN69MjOyihHAnz5rb6ZghANW3/Yr+QCK5vc=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=YqzpRQeoUUzQQmlbFzEKSvSaXJ2jYCI0+sya/ESKeZ1QINjmjXk5f+/4MHdiDaxiQcjajn7A8sJOl+Nm4Luwp/ftu8A/YdjLY2kW9yp5jC6W8tLZ7pH/3n2pTg5fEkJPwRlyatFhfcBGx09RN77mP7E0rDEcUBEWtMb7AwdHTvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKg+nXU1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50464C4CEC2;
-	Sat, 21 Sep 2024 20:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726951671;
-	bh=rH7Dd3F/dN69MjOyihHAnz5rb6ZghANW3/Yr+QCK5vc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=hKg+nXU1aYxGePNWhTIE8dsBsIfsAqTtDNnuthtmAZE5rUruPkUtzAK/P7Y3jQpuQ
-	 0iGCWRteM1b38mWRKlI34PpfmUlGmdTSd7QlDzcgjq9JZdFvvxOEAd+jdR3dMVBd1P
-	 wPl8X5jzLfN06q+FcQjH+qv7C0dZeZ2AYlhyqfqbbCZ/vFNhnoMFNHYPfpfWiqUdgs
-	 UFkeDAV5K358rvaQRFHISVEuA2fvulH7az9mxmh854UFfTCXoQnDa6qvW6Z0lwSB6M
-	 IxSoNEPk488RziMwMnaB5dfkgmKSPJiJRz4qg76SVbMLimGtlmNT27GradvHf7Da9k
-	 S857xSA9cfrFg==
-Message-ID: <d87530b846d0dc9e78789234cfcb602a.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15265130E58;
+	Sun, 22 Sep 2024 06:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726985675; cv=fail; b=nhJth4IAqomeBz5axELd061bFaws/Ko+NPYGBLPOgiTtXJMIg6XfinbRkaQ7i0mue80nXsRKNvR+S5/8Fy9d55bIfMNn1kH+BzvYbwO890EuT1Q4zmW44ixQm4WD+aoP4bKicJECU9hRn/aVBPLPox3WlJgjyYfnsvqE0N6oDxo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726985675; c=relaxed/simple;
+	bh=g7Aoz5tb8ctHpK+I2cbWiLVVIzEzaVWALS7KUW4twLc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L46boav9N3tsQ7lNfy5D4apS9Im8lib3NM/2Tb5BLNHDkpsipmSS+nt+agA0XQkxMD1szdKrDTPqA5XRAVmUWI1fV8pZ4bkBSGK80k8mk04TdMYQVSrr3kn4EzVxyoHqj2fP0kjQIYk6Je+/FU6HwpjAxdYC/rwBxH02IHSHIUA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T+Klaejy; arc=fail smtp.client-ip=40.107.94.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AQ6QdfdV+dOuF4Ul2dzdFhusW79UkpdRpGRvtMLRNbVeaFcteu4c8bQd5/Syw8cTZ8NBMN0eq0C1d2II2if2EhLOoAA1K665a6fsBarVfgxSspjpNM3YiZGLLhb23lR5LNuhwCTzSqiUkkwUVYW10zfq8mFKeW5MCbujZ3hrQEycIT5wAwuCoLhYQ8pyXeERKXQMZLHlPhn1A+2HhHunRfsa94r/l3UPr7Jiu2p/SPb25QJXnbh2hlReALk0nd96doVmXIFTsBXnFIOtr4wWj8JHJFT/AVioJtygRuqs0e0c3uiynwioyMKrzdlLxv5EKu8p+pcq5unaU0SiyLQZhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wGGIosIU+sMxJPeWTWm+Kd34TVPtvf7VOPC6ZGjGm8w=;
+ b=nSMZYcM5/ayW4DEMFbj+lX0dUZEd0X7mEoYyOsOtnzOnVE1SMbXe/MoGBR0oPQcoiIiQVbp823oC70blBJDe1ON0/+4dcalwyy5V89IQiYfWqpxVWbAUD5BS43ZqN8qpFJ9pSrg45FiZ1KhaRssk/M64fOgdkaEykMSdxhQPfmFpx5HwK7tUyTOt22Uk3/UhobsLNyWkVIJzq7z7bM0PfDtgoNP39oiGTSOTOCy0/LLodm0YNfw90QfvrioFqzwzt+X0Y6bvj3Vzxfk7a9XU2VPmbxqNVyBvdl/DMeO7RzfpzM2Jx87FSIHGBgSfRTp4Y4nnJROXAHXiYfiQT2Dquw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wGGIosIU+sMxJPeWTWm+Kd34TVPtvf7VOPC6ZGjGm8w=;
+ b=T+KlaejynQ/Pl0VWS9KGtJj7+TUcIKSltkR7FiOJYtYeRTf/wGoAX1pWe0ykvSr5cB932jPU01zcdhtjIopbm70eHrqmwjh7srLJNYlKembDRUtugQfikL5IqOCuhwEYy2dagEGOjFb2eWNiqzzhdWMHzuO2VjtXnTJziZWY/fo=
+Received: from DS7PR03CA0108.namprd03.prod.outlook.com (2603:10b6:5:3b7::23)
+ by DS0PR12MB6630.namprd12.prod.outlook.com (2603:10b6:8:d2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.24; Sun, 22 Sep
+ 2024 06:14:27 +0000
+Received: from DS3PEPF000099D4.namprd04.prod.outlook.com
+ (2603:10b6:5:3b7:cafe::d3) by DS7PR03CA0108.outlook.office365.com
+ (2603:10b6:5:3b7::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.28 via Frontend
+ Transport; Sun, 22 Sep 2024 06:14:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D4.mail.protection.outlook.com (10.167.17.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7918.13 via Frontend Transport; Sun, 22 Sep 2024 06:14:27 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 22 Sep
+ 2024 01:14:26 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 22 Sep
+ 2024 01:14:26 -0500
+Received: from xhdbharatku40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Sun, 22 Sep 2024 01:14:22 -0500
+From: Thippeswamy Havalige <thippesw@amd.com>
+To: <kw@linux.com>, <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+	<bhelgaas@google.com>, <devicetree@vger.kernel.org>, <conor+dt@kernel.org>,
+	<krzk+dt@kernel.org>
+CC: <bharat.kumar.gogada@amd.com>, <michal.simek@amd.com>,
+	<lpieralisi@kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Thippeswamy Havalige <thippesw@amd.com>
+Subject: [PATCH v3 0/2] Add support for CPM5 controller 1
+Date: Sun, 22 Sep 2024 11:43:16 +0530
+Message-ID: <20240922061318.2653503-1-thippesw@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZtcBHvI9JxgH9iFT@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com> <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com> <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org> <ZtcBHvI9JxgH9iFT@apocalypse>
-Subject: Re: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being discarded after init
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, Conor Dooley <conor+dt@kernel.org>, David S. Miller <davem@davemloft.net>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Eric Dumazet <edumazet@google.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.o
- rg>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
-To: Andrea della Porta <andrea.porta@suse.com>, Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 21 Sep 2024 13:47:49 -0700
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D4:EE_|DS0PR12MB6630:EE_
+X-MS-Office365-Filtering-Correlation-Id: eab603e7-0470-4bf0-1d51-08dcdacdcff1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ff6J78fgjasKcjJrumxyGAEyIAkTSLjpG0gATBgAktvoW+KvYnEtvf84tqQ6?=
+ =?us-ascii?Q?No/smYlXd2Su3BceZgRl7tVkJmoxTAFMa1MBiN7kJbkJ8yvubLrrETaevlOA?=
+ =?us-ascii?Q?TatY75GjGiWlmqJIYtLkuileLzoCKM3QE6PG92QV886O3ovIfLgyrYy2ZMyO?=
+ =?us-ascii?Q?9sB+0CQTBA9oURzK4AuTMVWY8UlNJxUhcS/syKxhj1VND03oaZBM1AvBYen5?=
+ =?us-ascii?Q?GlP6ZRM12QRR55WRCHIj4pQSRXCp1kPPQdmFgQSrWyuJ+WVxP0qOn3o5E6Lk?=
+ =?us-ascii?Q?S0FfgPCd54kOE/Q9lbO/XKQPTlo9F0nu8oynkl6KrzgRFKu4SKsFJW7S7x2F?=
+ =?us-ascii?Q?Q15NGJC47DuXSBv9QvvC+WZdcRmlc2jPtTAIICnPjFHNlAO7YLTeF+QLHBK+?=
+ =?us-ascii?Q?3fMKC3ziOw9n1gxd74q0B3OGk2IynVh55E7PpJugS/yxSFsYbehBA9GbOG6x?=
+ =?us-ascii?Q?Bx6cZkdZ6MRBZnx604NBAU77P2j+x5K+soUpvjCBbq3ParPzQGyC5o+QekE8?=
+ =?us-ascii?Q?bXBz6dZGQeFmlV0gdiFfh4eb75GSpdCGtnOVgnYj3qskcCo5nLrYVOZWLB6+?=
+ =?us-ascii?Q?arBleoJtP1kpXGU95OsvAQri03d/MOlkk+H4YD3MBUQtdVnBOMkeYXbA7kyO?=
+ =?us-ascii?Q?quQYEmFBwZUDW/BJr5JeMKkkUcla+jJ+C1xz4xpDuzlbQzA9+6l7BU8btMqd?=
+ =?us-ascii?Q?1lq55p8D4pIb0I7OIEhJGQEYhAelbl95fu33jywMtfrSaCsHo2RQP+1Aseg7?=
+ =?us-ascii?Q?Dbm8UbYs6e0YG9zepPPW7W1ZM6fZ2l1KEmFDcE9+FrYTM8izY8ttvp8HcVNM?=
+ =?us-ascii?Q?xPn3Al4LtHs3aTC0rK5xoACLybsT6wl+bpMqhD9zseCaI2ylVstlZ/S44pk4?=
+ =?us-ascii?Q?msk9eUfdIS4yfaQt/WL4OPi4KlgQpwoS50KI4J3OATIXBZ/azWRoMZfYCJDg?=
+ =?us-ascii?Q?BtmfjUeV7/rjzVjq0vFsKad4ZwM+TfwcjfJzPtSyaGUEvFcqQCLBYTVbQwLI?=
+ =?us-ascii?Q?W1C/xWZGImDkOhl50qAfH/5ObosLXX+hDG3yliVwHilHh1r0NSql7eZduUev?=
+ =?us-ascii?Q?CEsxx9y0xCHZ8NoQy6g8W1BBsZGFFto9n8+Tg8F1VCIvubWzNZNzCy9Ny/TI?=
+ =?us-ascii?Q?HES3W5c2niQieAqJxZTmsHE9GFge5W4xzcBlRBD0i7Om7AbSrrJLHNSjGiwF?=
+ =?us-ascii?Q?8KDZeKtF8ttCv3zQnLT4dd6SUxGd7p7wbw+9qpjx8REIQJobpPVDk9QhYjT5?=
+ =?us-ascii?Q?Cpkv70Nwxtxzj+njhAnVuTfMzKidr61EtnzOniUCl6c6KYB0x5KRnfkDSQ6W?=
+ =?us-ascii?Q?PQ4p5mPNmJWEFUR4hA/15vzSE6wlhqvJJRnKGqLT/odupJrd7B6pcptlLLEg?=
+ =?us-ascii?Q?ixCKzEhJnku1p/PR5j9segfL5ya3?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2024 06:14:27.0510
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: eab603e7-0470-4bf0-1d51-08dcdacdcff1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D4.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6630
 
-Quoting Andrea della Porta (2024-09-03 05:29:18)
-> On 12:46 Fri 30 Aug     , Stephen Boyd wrote:
-> > Quoting Andrea della Porta (2024-08-20 07:36:07)
-> > > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/=
-vmlinux.lds.h
-> > > index ad6afc5c4918..3ae9097774b0 100644
-> > > --- a/include/asm-generic/vmlinux.lds.h
-> > > +++ b/include/asm-generic/vmlinux.lds.h
-> >=20
-> > It would be nice to keep the initdata properties when this isn't used
-> > after init as well. Perhaps we need another macro and/or filename to
-> > indicate that the DTB{O} can be thrown away after init/module init.
->=20
-> We can certainly add some more filename extension that would place the
-> relevant data in a droppable section.=20
-> Throwing away the dtb/o after init is like the actual KERNEL_DTB macro th=
-at
-> is adding teh data to section .init.data, but this would mean t would be
-> useful only at very early init stage, just like for CONFIG_OF_UNITTEST.
-> Throwing after module init could be more difficult though, I think,
-> for example we're not sure when to discard the section in case of deferred
-> modules probe.
->=20
+This patch series introduces support for the second Root Port controller in
+the Xilinx Versal Premium CPM5 block. The Versal Premium platform features
+two Type-A Root Port controllers operating at Gen5 speed. However, the
+error interrupt registers and their corresponding bits are located at
+different offsets for Controller 0 and Controller 1.
 
-This patch can fix a modpost warning seen in linux-next because I have
-added DT overlays from KUnit tests while kbuild has properly marked the
-overlay as initdata that is discarded. See [1] for details. In KUnit I
-doubt this really matters because most everything runs from __init code
-(even if it isn't marked that way).
+To handle these differences, the series includes:
 
-I'm thinking that we need to make dtbo Makefile target put the blob in
-the rodata section so it doesn't get thrown away and leave the builtin
-DTB as part of init.rodata. Did you already do that? I see the kbuild
-tree has removed the commit that caused the warning, but I suspect this
-may still be a problem. See [2] for the next series where overlays
-applied in the test happen from driver probe so __ref is added.
+A new compatible string for the second Root Port controller in the device
+tree bindings.
 
-If we simply copy the wrap command and make it so that overlays always
-go to the .rodata section we should be good. Maybe there's some way to
-figure out what is being wrapped so we don't have to copy the whole
-thing.
+Driver updates to manage platform-specific interrupt registers and offsets
+for both controllers using the new compatible string.
 
-Finally, it's unfortunate that the DTBO is copied when an overlay is
-applied. We'll waste memory after this patch, so of_overlay_fdt_apply()
-could be taught to reuse the blob passed in instead of copying it.
+Thippeswamy Havalige (2):
+  dt-bindings: PCI: xilinx-cpm: Add compatible string for CPM5 host1
+  PCI: xilinx-cpm: Add support for Versal CPM5 Root Port controller 1
 
------8<----
-diff --git a/scripts/Makefile.dtbs b/scripts/Makefile.dtbs
-index 55998b878e54..070e08082cd3 100644
---- a/scripts/Makefile.dtbs
-+++ b/scripts/Makefile.dtbs
-@@ -51,11 +51,25 @@ quiet_cmd_wrap_S_dtb =3D WRAP    $@
- 		echo '.balign STRUCT_ALIGNMENT';					\
- 	} > $@
-=20
-+quiet_cmd_wrap_S_dtbo =3D WRAP    $@
-+      cmd_wrap_S_dtbo =3D {								\
-+		symbase=3D__$(patsubst .%,%,$(suffix $<))_$(subst -,_,$(notdir $*));	\
-+		echo '\#include <asm-generic/vmlinux.lds.h>';				\
-+		echo '.section .rodata,"a"';						\
-+		echo '.balign STRUCT_ALIGNMENT';					\
-+		echo ".global $${symbase}_begin";					\
-+		echo "$${symbase}_begin:";						\
-+		echo '.incbin "$<" ';							\
-+		echo ".global $${symbase}_end";						\
-+		echo "$${symbase}_end:";						\
-+		echo '.balign STRUCT_ALIGNMENT';					\
-+	} > $@
-+
- $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
- 	$(call if_changed,wrap_S_dtb)
-=20
- $(obj)/%.dtbo.S: $(obj)/%.dtbo FORCE
--	$(call if_changed,wrap_S_dtb)
-+	$(call if_changed,wrap_S_dtbo)
-=20
- # Schema check
- # ------------------------------------------------------------------------=
----
+ .../bindings/pci/xilinx-versal-cpm.yaml       |  1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 50 +++++++++++++++----
+ 2 files changed, 40 insertions(+), 11 deletions(-)
 
-[1] https://lore.kernel.org/all/20240909112728.30a9bd35@canb.auug.org.au/
-[2] https://lore.kernel.org/all/20240910094459.352572-1-masahiroy@kernel.or=
-g/
+-- 
+2.34.1
+
 
