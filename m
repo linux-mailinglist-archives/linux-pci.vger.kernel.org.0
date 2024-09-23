@@ -1,102 +1,344 @@
-Return-Path: <linux-pci+bounces-13363-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13364-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C767997EA8E
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Sep 2024 13:17:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AF0C97EAB4
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Sep 2024 13:28:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 870502822E5
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Sep 2024 11:17:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBD94280E14
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Sep 2024 11:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D37A195985;
-	Mon, 23 Sep 2024 11:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D53C197A87;
+	Mon, 23 Sep 2024 11:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l1HexIV/"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="E2qmDCYs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0626EADA
-	for <linux-pci@vger.kernel.org>; Mon, 23 Sep 2024 11:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06970944E
+	for <linux-pci@vger.kernel.org>; Mon, 23 Sep 2024 11:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727090258; cv=none; b=tmzg+4TS8CkkIEuk9Q4XbWye3jCXmV1EY1vneLb4VxmHrOaFZ2GTaBgfyuc6fRglT0cmYy9k2gtrWYb4XB21nZt92LQFZfsEBupuEkFCS86d0WIC76s6v2GwMMCtTLoRtTFiDPL9zcWR9DWsqrVTVJFTV4zJDNiR7D35F0zl3mA=
+	t=1727090895; cv=none; b=N6dcN0dMWSJE0vH6VFQKx1ahtYjbyqyZGeX9p1RYGlP48bc8ogJKAb2UaH1G4H5WCVyjZblUNDx9omvbhFqGFybK5L+5oDuCiWDMMJMLsoML5esizeh3h3maBzzhIPjJkwWcO+nSu53uzpRrPsyKBTFQvcJyEs9eiFUxnpXM9Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727090258; c=relaxed/simple;
-	bh=oT0J+exSbcMUtXhbjyc0NjUqkCpBvPLs+cYPwOzULoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jupmTOFQavDAbpSOzUPmfoU+UfccW0g99f19pz9MrIbbH6P6PkDMCqdvyqr4PXI1CxkkLohIKsX47wptGuasMQcFZYjlHmlEvFmAIonRYYPsglB10vVCYURYde9DgwBAaB70JxuPmhvRbwjpbP2BB9x7mPvDry/75d7czjCoe20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l1HexIV/; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727090257; x=1758626257;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oT0J+exSbcMUtXhbjyc0NjUqkCpBvPLs+cYPwOzULoQ=;
-  b=l1HexIV/fYiJIla5HWAX/RwmlZAYpJY4eatILUwQnw+k32ktyhqeCs/S
-   nz+B2/18JwRpKTAtCmrhFwwlVCQkmeb4A5Idph+s3/yyi/UZ5Ij1FdBtO
-   LPMQf8GtCafCXum4Y9phtkvQvqs/qW7ctCW5hqoYPlY2TDz37Wq8gkrZq
-   LbXKQTP3ER8FzX3m0N2fvqUIbAAk+75sjzFDKDJsVdpoTwak2lqRMBHQo
-   fj+46QPSKFCWikZhREwNwa+OPN65JmqT9BJd+DqE6xy7k9tAyE6eLOO1S
-   GfuAPpBaQL6g+qIrRLg5kjBmuzPOyUB5yHSaGwBK6rIk0NNOM+GdTooir
-   A==;
-X-CSE-ConnectionGUID: mGxiorJ8SACJ+5lzlQsatw==
-X-CSE-MsgGUID: 25NB4EiZRsavzpGBViregg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11202"; a="43551458"
-X-IronPort-AV: E=Sophos;i="6.10,251,1719903600"; 
-   d="scan'208";a="43551458"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 04:17:36 -0700
-X-CSE-ConnectionGUID: m0pcvJkeRvWYpiWDUqLGxw==
-X-CSE-MsgGUID: Y1/4cQqtTPer4EqcWKJ/Ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,251,1719903600"; 
-   d="scan'208";a="70934133"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 23 Sep 2024 04:17:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 682DD2E1; Mon, 23 Sep 2024 14:17:33 +0300 (EEST)
-Date: Mon, 23 Sep 2024 14:17:33 +0300
-From: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To: "Wassenberg, Dennis" <Dennis.Wassenberg@secunet.com>
-Cc: "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"kbusch@kernel.org" <kbusch@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>
-Subject: Re: UAF during boot on MTL based devices with attached dock
-Message-ID: <20240923111733.GV275077@black.fi.intel.com>
-References: <6de4b45ff2b32dd91a805ec02ec8ec73ef411bf6.camel@secunet.com>
- <20240923044123.GT275077@black.fi.intel.com>
- <99a2aa0d9f3768f250510db0abe6b32079f6a047.camel@secunet.com>
+	s=arc-20240116; t=1727090895; c=relaxed/simple;
+	bh=ZYIUJSJHY0X6GASbH43baRFil7lffT/IRTBTSaj1FZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jxU9JC9DR2hGqnklY9XVOKg6LUui8RjekjUbPRVSIpqiM0wa1klSyTHJVZRYeYCHhbXvd0DiTyGbcpKnZ59r5gImlWVp4WGDhN4Y7YqIyuk4hkUH5BTGnBjuiedaUyFSkFn5l1YJv5P2VrWGNbyhWLUXAjrkp56Cc2N+XaMCVJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=E2qmDCYs; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1727090891;
+	bh=ZYIUJSJHY0X6GASbH43baRFil7lffT/IRTBTSaj1FZI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E2qmDCYswf1FlpWFMUZ/DCi5wig/Bwqt7JMBv8rOE/4QnZLYWrQ5+A6hOk/uzjAgo
+	 AG24Hw62qmCCNQCMtA3iDs+xzBas9dKNSGYv4d0Qswhr+2TTxyGv7XqxIrV3LYepGn
+	 6Se8+juJ6TgRD/VZPKryU/It/bkFBwk4U0jNC7nrCvnhSJp4eHSF5VzQf3vjUVkJHG
+	 ts+2Vw6+jyiG87iV9gkjhMRHX+2iLOTlee7fLIcX/LLs3cSOQemLELLIZqCr8xkl9N
+	 UYVcjP+bc41dFQ4jDA5lMRvOnDUtVrMCv1SUBc2fgsdYByHVru7UH0CAYi8yNKtbJu
+	 TjBHgqbx78WRQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 92D4D17E121F;
+	Mon, 23 Sep 2024 13:28:10 +0200 (CEST)
+Message-ID: <05ec0016-09e8-4e84-92d1-698b3c195ec8@collabora.com>
+Date: Mon, 23 Sep 2024 13:28:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <99a2aa0d9f3768f250510db0abe6b32079f6a047.camel@secunet.com>
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIXSBQQ0k6IG1lZGlhdGVrLWdlbjM6IEF2?=
+ =?UTF-8?Q?oid_PCIe_resetting_for_Airoha_EN7581_SoC?=
+To: =?UTF-8?B?SHVpIE1hICjpqazmhacp?= <Hui.Ma@airoha.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <Ryder.Lee@mediatek.com>,
+ =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= <Jianjun.Wang@mediatek.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, upstream <upstream@airoha.com>
+References: <20240920-pcie-en7581-rst-fix-v1-1-1043fb63ffc9@kernel.org>
+ <d8941149-9125-4fe2-a1c0-ab29223a0c87@collabora.com>
+ <SG2PR03MB6341D9B41B5742BD45E09B46FF6F2@SG2PR03MB6341.apcprd03.prod.outlook.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <SG2PR03MB6341D9B41B5742BD45E09B46FF6F2@SG2PR03MB6341.apcprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 23, 2024 at 08:43:19AM +0000, Wassenberg, Dennis wrote:
-> Hi Mika,
+Il 23/09/24 12:06, Hui Ma (马慧) ha scritto:
+> Hi Angelo，
 > 
-> the logs I shared with Ilpo a few minutes ago will already contain activated thunderbolt logging.
+>           EN7581 doesn't support pulling up/down PERST by bit3 of PCIe MAC register 0x148(PCIE_RST_CTRL_REG).
+> 
+>           EN7581 toggle PERST in clk_bulk_enable function called by mtk_pcie_en7581_power_up function.
+> 
 
-Thanks for the logs!
+Hello Hui,
+please don't top post.
 
-I wonder if you can share your kernel .config with me too? I have here
-MTL based system and similar dock so can try to reproduce. At least with
-my kernel config I do not see the issue even if I set the command line
-matching yours:
+Anyway, are those bits unexistant on EN7581, or are those used for different
+functions?
 
-  slab_debug dyndbg="file drivers/pci/* +p"
+If those do not exist, and setting those bits will not produce adverse effects,
+it'd be possible to avoid creating a different codepath and just add a comment
+saying that the setting has no effect on Airoha EN7581.
 
-I built the Thunderbolt driver into the kernel as it looks like this is
-what you are doing but still I don't see the crash due the poisoned
-memory so I suspect I'm still missing something.
+Regards,
+Angelo
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> -----邮件原件-----
+> 发件人: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 发送时间: 2024年9月23日 17:42
+> 收件人: Lorenzo Bianconi <lorenzo@kernel.org>; Ryder Lee <Ryder.Lee@mediatek.com>; Jianjun Wang (王建军) <Jianjun.Wang@mediatek.com>; Lorenzo Pieralisi <lpieralisi@kernel.org>; Krzysztof Wilczyński <kw@linux.com>; Rob Herring <robh@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; Matthias Brugger <matthias.bgg@gmail.com>
+> 抄送: Christian Marangi <ansuelsmth@gmail.com>; linux-pci@vger.kernel.org; linux-mediatek@lists.infradead.org; linux-arm-kernel@lists.infradead.org; upstream <upstream@airoha.com>; Hui Ma (马慧) <Hui.Ma@airoha.com>
+> 主题: Re: [PATCH] PCI: mediatek-gen3: Avoid PCIe resetting for Airoha EN7581 SoC
+> 
+> 
+> 
+> Il 20/09/24 10:26, Lorenzo Bianconi ha scritto:
+> 
+>> The PCIe controller available on the EN7581 SoC does not support reset
+> 
+>> via the following lines:
+> 
+>> - PCIE_MAC_RSTB
+> 
+>> - PCIE_PHY_RSTB
+> 
+>> - PCIE_BRG_RSTB
+> 
+>> - PCIE_PE_RSTB
+> 
+>>
+> 
+>> Introduce the reset callback in order to avoid resetting the PCIe port
+> 
+>> for Airoha EN7581 SoC.
+> 
+>>
+> 
+> 
+> 
+> EN7581 doesn't support pulling up/down PERST#?!
+> 
+> That looks definitely odd, as that signal is part of the PCI-Express CEM spec.
+> 
+> 
+> 
+> Besides, there's another PERST# assertion at mtk_pcie_suspend_noirq()...
+> 
+> 
+> 
+> Cheers,
+> 
+> Angelo
+> 
+> 
+> 
+>> Tested-by: Hui Ma <hui.ma@airoha.com<mailto:hui.ma@airoha.com>>
+> 
+>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org<mailto:lorenzo@kernel.org>>
+> 
+>> ---
+> 
+>>    drivers/pci/controller/pcie-mediatek-gen3.c | 44 ++++++++++++++++++-----------
+> 
+>>    1 file changed, 28 insertions(+), 16 deletions(-)
+> 
+>>
+> 
+>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+> 
+>> b/drivers/pci/controller/pcie-mediatek-gen3.c
+> 
+>> index 5c19abac74e8..9cea67e92d98 100644
+> 
+>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> 
+>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> 
+>> @@ -128,10 +128,12 @@ struct mtk_gen3_pcie;
+> 
+>>    /**
+> 
+>>     * struct mtk_gen3_pcie_pdata - differentiate between host generations
+> 
+>>     * @power_up: pcie power_up callback
+> 
+>> + * @reset: pcie reset callback
+> 
+>>     * @phy_resets: phy reset lines SoC data.
+> 
+>>     */
+> 
+>>    struct mtk_gen3_pcie_pdata {
+> 
+>>             int (*power_up)(struct mtk_gen3_pcie *pcie);
+> 
+>> +    void (*reset)(struct mtk_gen3_pcie *pcie);
+> 
+>>             struct {
+> 
+>>                       const char *id[MAX_NUM_PHY_RESETS];
+> 
+>>                       int num_resets;
+> 
+>> @@ -373,6 +375,28 @@ static void mtk_pcie_enable_msi(struct mtk_gen3_pcie *pcie)
+> 
+>>             writel_relaxed(val, pcie->base + PCIE_INT_ENABLE_REG);
+> 
+>>    }
+> 
+>>
+> 
+>> +static void mtk_pcie_reset(struct mtk_gen3_pcie *pcie) {
+> 
+>> +    u32 val;
+> 
+>> +
+> 
+>> +    /* Assert all reset signals */
+> 
+>> +    val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
+> 
+>> +    val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
+> 
+>> +    writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
+> 
+>> +
+> 
+>> +    /*
+> 
+>> +    * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
+> 
+>> +    * and 2.2.1 (Initial Power-Up (G3 to S0)).
+> 
+>> +    * The deassertion of PERST# should be delayed 100ms (TPVPERL)
+> 
+>> +    * for the power and clock to become stable.
+> 
+>> +    */
+> 
+>> +    msleep(100);
+> 
+>> +
+> 
+>> +    /* De-assert reset signals */
+> 
+>> +    val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB);
+> 
+>> +    writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG); }
+> 
+>> +
+> 
+>>    static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+> 
+>>    {
+> 
+>>             struct resource_entry *entry;
+> 
+>> @@ -402,22 +426,9 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+> 
+>>             val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
+> 
+>>             writel_relaxed(val, pcie->base + PCIE_MISC_CTRL_REG);
+> 
+>>
+> 
+>> -     /* Assert all reset signals */
+> 
+>> -     val = readl_relaxed(pcie->base + PCIE_RST_CTRL_REG);
+> 
+>> -     val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
+> 
+>> -     writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
+> 
+>> -
+> 
+>> -     /*
+> 
+>> -     * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
+> 
+>> -     * and 2.2.1 (Initial Power-Up (G3 to S0)).
+> 
+>> -     * The deassertion of PERST# should be delayed 100ms (TPVPERL)
+> 
+>> -     * for the power and clock to become stable.
+> 
+>> -     */
+> 
+>> -     msleep(100);
+> 
+>> -
+> 
+>> -     /* De-assert reset signals */
+> 
+>> -     val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB);
+> 
+>> -     writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
+> 
+>> +    /* Reset the PCIe port if requested by the hw */
+> 
+>> +    if (pcie->soc->reset)
+> 
+>> +             pcie->soc->reset(pcie);
+> 
+>>
+> 
+>>             /* Check if the link is up or not */
+> 
+>>             err = readl_poll_timeout(pcie->base + PCIE_LINK_STATUS_REG, val, @@
+> 
+>> -1207,6 +1218,7 @@ static const struct dev_pm_ops mtk_pcie_pm_ops = {
+> 
+>>
+> 
+>>    static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_mt8192 = {
+> 
+>>             .power_up = mtk_pcie_power_up,
+> 
+>> +    .reset = mtk_pcie_reset,
+> 
+>>             .phy_resets = {
+> 
+>>                       .id[0] = "phy",
+> 
+>>                       .num_resets = 1,
+> 
+>>
+> 
+>> ---
+> 
+>> base-commit: f2024903cb387971abdbc6398a430e735a9b394c
+> 
+>> change-id: 20240920-pcie-en7581-rst-fix-8161658c13c4
+> 
+>>
+> 
+>> Best regards,
+> 
+> 
+
 
