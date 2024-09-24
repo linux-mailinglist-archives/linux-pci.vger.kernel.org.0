@@ -1,163 +1,181 @@
-Return-Path: <linux-pci+bounces-13445-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13446-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15270984841
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 17:08:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B83E98485F
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 17:15:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAF171C20BCC
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 15:08:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73B3C1C228BA
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 15:15:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA2E1AB6C6;
-	Tue, 24 Sep 2024 15:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE6E5473E;
+	Tue, 24 Sep 2024 15:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLE2yZvc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B8D155757;
-	Tue, 24 Sep 2024 15:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D965D17579;
+	Tue, 24 Sep 2024 15:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727190515; cv=none; b=ZCgR+/tMoyTM7AzdUpplCFF030k1YBaQimUwz7vtsQIn9fbz5UkayD8VKijzKsSw6ZrSOtyusZ1fwEHMiRt87QUzvM1jhVzlNv5yHAZXM49S/8deZfcVSYjCfrPY4hLSg//nv1+A2pG+s81spQrN4w6/HetSFKZYsTX4J6KTaO4=
+	t=1727190930; cv=none; b=CWmgszj+WvMirYwXO4+PtuwbdIH6DGrxJE8yTITXm5y21mSsFCDDqq2povRINUYn/KzfurDmKnWPHUTCnIQYgvowetNqc11DWpZLEhBLPT0GVt0KNshaPLA+glhT36FHULMWLZK8JU8+VcL7ppgkTe7SepaQzRgfx0LdMWlg7Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727190515; c=relaxed/simple;
-	bh=bJl4aHDHHFVlpUdXXtylYpC5cGHghAmoBWgZNKJcXlM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KdMJX8su+1mqu48iXg/wuUoo27DHHGjgSbFvFDqFNdIz9pSBhqfd3SgiPSNIkTswD8BU8CWgdTeB8mXhawW26Jm2SmPdjr1e+BfvsWqvxSdE56NGI1YMQBtZhgGQhFiSvu3smqEhWtsPTSjkU0ft/XlnVUmpZ9lcifz9EBYaK4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XCjnX3Sz2z6DB8S;
-	Tue, 24 Sep 2024 23:04:32 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 20AF9140B39;
-	Tue, 24 Sep 2024 23:08:29 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 24 Sep
- 2024 17:08:28 +0200
-Date: Tue, 24 Sep 2024 16:08:27 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-	<manivannan.sadhasivam@linaro.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <sumanesh.samanta@broadcom.com>,
-	<sathya.prakash@broadcom.com>, <sjeaugey@nvidia.com>
-Subject: Re: [PATCH 2/2 v2] PCI/P2PDMA: Modify p2p_dma_distance to detect
- P2P links
-Message-ID: <20240924160827.000049dd@Huawei.com>
-In-Reply-To: <1726733624-2142-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-References: <1726733624-2142-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-	<1726733624-2142-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1727190930; c=relaxed/simple;
+	bh=zua3115y7pyjRHGR0V8lJBC3jKIcSuH/Ui+QDs+z1Gw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JgV9/CtZBRfFx4QSilRmpK2aQzlSufNl5coS6C1f9FRLL0S+/Q/Dbxjhm3o3lxOENykXvZtn9+7Foa7HL2Sa570vtN+t3BGYKAbPg2nIpIr45O6/v81Eygs0GPAwRsH5y6kBJKxzycbHDylx1/J2RqxCnI9IVXNKnaIwp7844EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLE2yZvc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FF84C4CEC4;
+	Tue, 24 Sep 2024 15:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727190929;
+	bh=zua3115y7pyjRHGR0V8lJBC3jKIcSuH/Ui+QDs+z1Gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PLE2yZvcxco7DlAVE0tAajIu/yBQjgrEMN/2GdK6xd3eqx56YPDtGkyroSb1hVrBA
+	 fxxJhxsVpxUrEyPfZoKKTtAI0AtYO2numyIlO5445D6v9OZsn8BVvuLtLBK5O4Qe6g
+	 BhySFKMJ60VEFB4Bjuz5A3b24+NETz5LFzyAgR/NMjbinrXneEhIJ7dT8v+RAqadPd
+	 vhL+HqJUJDRWhoWg3ytmBzS0dHYDmFbB0cjwEnXTorvsgpa24J84oXuA4yPD8KrmTx
+	 cRA/Zx6cjfh9xrFEol8xEac/0RpWVSNS6bZt3eBP8mNBS1SBiRmkbkDPnWwxWWt+hr
+	 1aUiZuPq2EQeA==
+Received: from johan by theta with local (Exim 4.98)
+	(envelope-from <johan@kernel.org>)
+	id 1st7G9-0000000025Y-1TD9;
+	Tue, 24 Sep 2024 17:15:25 +0200
+Date: Tue, 24 Sep 2024 17:15:25 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
+	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
+	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] phy: qcom: qmp: Add phy register and clk setting
+ for x1e80100 PCIe3
+Message-ID: <ZvLXjdpBpUS3lLn-@hovoldconsulting.com>
+References: <20240924101444.3933828-1-quic_qianyu@quicinc.com>
+ <20240924101444.3933828-4-quic_qianyu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240924101444.3933828-4-quic_qianyu@quicinc.com>
 
-On Thu, 19 Sep 2024 01:13:44 -0700
-Shivasharan S <shivasharan.srikanteshwara@broadcom.com> wrote:
+On Tue, Sep 24, 2024 at 03:14:41AM -0700, Qiang Yu wrote:
+> Currently driver supports only x4 lane based functionality using tx/rx and
+> tx2/rx2 pair of register sets. To support 8 lane functionality with PCIe3,
+> PCIe3 related QMP PHY provides additional programming which are available
+> as txz and rxz based register set. Hence adds txz and rxz based registers
+> usage and programming sequences.
 
-> Update the p2p_dma_distance() to determine inter-switch P2P links existing
-> between two switches and use this to calculate the DMA distance between
-> two devices.
+> Phy register setting for txz and rxz will
+> be applied to all 8 lanes. Some lanes may have different settings on
+> several registers than txz/rxz, these registers should be programmed after
+> txz/rxz programming sequences completing.
+
+Please expand and clarify what you mean by this.
+ 
+> Besides, x1e80100 SoC uses QMP phy with version v6.30 for PCIe Gen4 x8.
+> Add the new register offsets in a dedicated header file.
 > 
-> Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Reviewed-by: Konrad Dybcio <konradybcio@kernel.org>
 > ---
->  drivers/pci/p2pdma.c       | 17 ++++++++++++++++-
->  drivers/pci/pcie/portdrv.c | 34 ++++++++++++++++++++++++++++++++++
->  drivers/pci/pcie/portdrv.h |  2 ++
->  3 files changed, 52 insertions(+), 1 deletion(-)
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 211 ++++++++++++++++++
+>  .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h    |  25 +++
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h |  19 ++
+>  3 files changed, 255 insertions(+)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 4f47a13cb500..eed3b69e7293 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -21,6 +21,8 @@
->  #include <linux/seq_buf.h>
->  #include <linux/xarray.h>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> index f71787fb4d7e..d7bbd9df11d7 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+
+> @@ -1344,6 +1346,155 @@ static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_G4_FOM_EQ_CONFIG5, 0x8a),
+>  };
 >  
-> +extern bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b);
+> +static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x8_pcie_txz_tbl[] = {
 
-That's nasty.  Include the header so you get a clean stub if
-this support is not built in etc.
+Please try to follow the sort order used for the other platforms for
+these tables (e.g.  serdes, tx, rx, pcr, pcr_misc).
 
+> +static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x8_pcie_pcs_misc_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_ENDPOINT_REFCLK_DRIVE, 0xc1),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_OSC_DTCT_ACTIONS, 0x00),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_EQ_CONFIG1, 0x16),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_G4_EQ_CONFIG5, 0x02),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_G4_PRE_GAIN, 0x2e),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_RX_MARGINING_CONFIG1, 0x03),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_RX_MARGINING_CONFIG3, 0x28),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_RX_MARGINING_CONFIG5, 0x18),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_G3_FOM_EQ_CONFIG5, 0x7a),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_G4_FOM_EQ_CONFIG5, 0x8a),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_G3_RXEQEVAL_TIME, 0x27),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_G4_RXEQEVAL_TIME, 0x27),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_TX_RX_CONFIG, 0xc0),
+> +	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_30_PCS_POWER_STATE_CONFIG2, 0x1d),
 > +
 
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index c940b4b242fd..2fe1598fc684 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -104,6 +104,40 @@ static bool pcie_port_is_p2p_supported(struct pci_dev *dev)
->  	return false;
->  }
+Stray newline.
+
+> +};
+> +
+
+> +static const struct qmp_phy_cfg x1e80100_qmp_gen4x8_pciephy_cfg = {
+> +	.lanes = 8,
+> +
+> +	.offsets		= &qmp_pcie_offsets_v6_30,
+> +	.tbls = {
+> +		.serdes			= x1e80100_qmp_gen4x8_pcie_serdes_tbl,
+> +		.serdes_num		= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_serdes_tbl),
+> +		.rx			= x1e80100_qmp_gen4x8_pcie_rx_tbl,
+> +		.rx_num			= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_rx_tbl),
+> +		.pcs			= x1e80100_qmp_gen4x8_pcie_pcs_tbl,
+> +		.pcs_num		= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_pcs_tbl),
+> +		.pcs_misc		= x1e80100_qmp_gen4x8_pcie_pcs_misc_tbl,
+> +		.pcs_misc_num		= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_pcs_misc_tbl),
+> +		.ln_shrd		= x1e80100_qmp_gen4x8_pcie_ln_shrd_tbl,
+> +		.ln_shrd_num		= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_ln_shrd_tbl),
+> +		.txz			= x1e80100_qmp_gen4x8_pcie_txz_tbl,
+> +		.txz_num		= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_txz_tbl),
+> +		.rxz			= x1e80100_qmp_gen4x8_pcie_rxz_tbl,
+> +		.rxz_num		= ARRAY_SIZE(x1e80100_qmp_gen4x8_pcie_rxz_tbl),
+
+Try follow the order of the other SoCs here as well (e.g. use the order
+defined in struct qmp_phy_cfg_tbls).
+
+> +	},
+
+>  static void qmp_pcie_init_port_b(struct qmp_pcie *qmp, const struct qmp_phy_cfg_tbls *tbls)
+>  {
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> @@ -3751,6 +3953,9 @@ static void qmp_pcie_init_registers(struct qmp_pcie *qmp, const struct qmp_phy_c
 >  
-> +/**
-> + * pcie_port_is_p2p_link_available: Determine if a P2P link is available
-> + * between the two upstream bridges. The serial number of the two devices
-> + * will be compared and if they are same then it is considered that the P2P
-> + * link is available.
-> + *
-> + * Return value: true if inter switch P2P is available, return false otherwise.
-> + */
-> +bool pcie_port_is_p2p_link_available(struct pci_dev *a, struct pci_dev *b)
-> +{
-> +	u64 dsn_a, dsn_b;
+>  	qmp_configure(qmp->dev, serdes, tbls->serdes, tbls->serdes_num);
+
+If your comment in the commit message implies that txz/rxz must be
+programmed before tx/rx then you need to add a comment here as well.
+
+> +	qmp_configure(qmp->dev, qmp->txz, tbls->txz, tbls->txz_num);
+> +	qmp_configure(qmp->dev, qmp->rxz, tbls->rxz, tbls->rxz_num);
 > +
-> +	/*
-> +	 * Check if the devices support Inter switch P2P.
-> +	 */
+>  	qmp_configure_lane(qmp->dev, tx, tbls->tx, tbls->tx_num, 1);
+>  	qmp_configure_lane(qmp->dev, rx, tbls->rx, tbls->rx_num, 1);
 
-Single line comment syntax fine here.  However it's kind
-of obvious, so I'd just drop the comment.
-
-
-> +	if (!pcie_port_is_p2p_supported(a) ||
-> +	    !pcie_port_is_p2p_supported(b))
-
-Don't wrap this. I think it's under 80 chars anyway.
-
-> +		return false;
-> +
-> +	dsn_a = pci_get_dsn(a);
-> +	if (!dsn_a)
-> +		return false;
-If we assume that dsn is the only right way to detect this
-(I'm fine with that for now) then we know the supported tests
-above would only pass if this is true. Hence
-
-return pci_get_dsn(a) == pci_get_dsn(b);
-
-should be fine.
-
-> +
-> +	dsn_b = pci_get_dsn(b);
-> +	if (!dsn_b)
-> +		return false;
-> +
-> +	if (dsn_a == dsn_b)
-> +		return true;
-
-	return dsn_a == dsn_b;
-
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(pcie_port_is_p2p_link_available);
-> +
->  /*
->   * Traverse list of all PCI bridges and find devices that support Inter switch P2P
->   * and have the same serial number to create report the BDF over sysfs.
-
-
+Johan
 
