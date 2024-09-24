@@ -1,86 +1,84 @@
-Return-Path: <linux-pci+bounces-13458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D650A9849B1
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 18:34:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 808B6984A7A
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 19:55:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 529041F215CF
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 16:34:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 043FA1F24985
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 17:55:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080BA1ABEDF;
-	Tue, 24 Sep 2024 16:34:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 340671AB6D9;
+	Tue, 24 Sep 2024 17:55:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sWKBsz7A"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b5B+S3qf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB01AB6D3;
-	Tue, 24 Sep 2024 16:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A92C5464A;
+	Tue, 24 Sep 2024 17:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727195648; cv=fail; b=ff+14pmCchWsN03tFveBrQiiiDFd6E0g/fS7VZ4dRT2vq86nzhE9MO4DkqDZNLsWqnjJnEnRNoeQg/T6KxJb8vzckjxraOWqE3OZjRMX0MEQkh2+5w774RZKf7aehJ5twUyF+xgTQo7Gv4grJGeYoa+6UupPHgxiuM9qOZnPoAY=
+	t=1727200523; cv=fail; b=WAPCIUGJUYMiAd+C9JRo7OECraRiVz2c7b+fa2UzHnh/kWyb2jnktzYeoJ+VhszALdI6zUFrnAhmY8ufoxtUnzCwaMDnmy92Pfdtn0hUvO6blrKsjaxvkhzZxfmEI8/4Jj9FsPb+hHvvhAxrHD0k2o0Ad6LNSSu8vWZmsADuMXg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727195648; c=relaxed/simple;
-	bh=wtr6iQZ/+bkTxQ8EdzXFi25EeFdtkEfIsBXs36Gi0LU=;
+	s=arc-20240116; t=1727200523; c=relaxed/simple;
+	bh=oBt+FDGp5/tCZK/aKoqJjQ5dnT3K1XHSFTgiDKxvZYY=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eGPukbKTtnfMMSmG1cdHQJjkdHIwS7PBGzsEvgMB9lLLuE3B51fQwzbtulzPV60h/yQxFSMfJGV7waYUO+XOx33y8JNTnTptHODh8T3tZViDPpTSM+ulWgld59JYzT2QLotPYrC3pDS8Hti3nvyXR0Hs6is9aB4fSKwxmUiQ1Qk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sWKBsz7A; arc=fail smtp.client-ip=40.107.236.84
+	 Content-Type:MIME-Version; b=pRIfhqqW2uBletZiWUqxm/6sQwNc94u7/spmRk7sS62kezLQY+AZiLCeqNC2Q3vlIAEojPl5FmuEi8FRDOYNK+sYJgP7lktU5Cuips6D23hyL+1zsjkBFuPxluT5B4OuLyDPQkAeux6ObVQpMvY/zCxjtYrbgY4sA6j6aGYbjhs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b5B+S3qf; arc=fail smtp.client-ip=40.107.220.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RUxKItYmY0Lx8z4Q+WPmjv0faHxJl7oRzaMT/2kQ/5e8UAP65b4OBSF93jTTM0ZgHcaqwJSR+H2O9si7FuE4+P7rl1UPIG09shDja1Kpo2QZO+HUWIGwiEnJG5Fa3C5kz7wrnuxUKR9ZXCdZlu3iy3Q4cX4kd1KCO97roWHlZXa4RT6uruHLOeHEbTWynn9mV63iUwNrNGnwIo+rRJn+ACGtrFwW/ZJ6TZxRR9BdUW3EewI0UFmrbSN8duRvqkYbdM7elA7eOgwT3W6HpoWd2FrOAiF/yPjFD2Eic0kSahcm6L6tA2OUwdjGrPPdnHLvZzAgSi1IPtV1xo8SZfd1fw==
+ b=wps0NSxvMkFivv7PpjpaBIKhssoZrcg1KeR6vZUzjGxr2Pn2wm8d+iXiBbTeDxLMm3fT9ud8FkpAUNCG56omBaIkBvTq4Nv7ZyeH16CCy7278SC/k4nNBFebnfoEbTP4TyHVHL5SYQXSIrlmeEUUo3+XtEFatWd8cw559mZX3acZCoYrY/zU5L/UrF1320/XOrQmP9tp3lAXK5cXbZd8wHWvz1/g7ENTlA9Evh2mgsBmGFIyQatrgYU2VPUnY+va+ok54ZApR7jP2zTFMuQJbJXdULhisMHdOk1uqHSUiiofWryJhhw1+6eS+1g29wuk1XijGBN8Qd80GDpdEfmTBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B5WACd+xgwPM9QpgZEKBcp5qYuiWUgwNvyD39dveRZ4=;
- b=D3yisgw/5gX7zjvc+KdCswWLzCEjGprID/aQLB0EkrPiGDELXU/I6wAK9eptktfd53XHPWi1Fck2fTyLzzWJovDv6MG+ELlrAbWK0PuyDFmD8xNxEznrTyHBWJYRWyQeyvYBWkg9nM1FtkSrgvH1aNngrVpgJBliGxSUIiDzrfZH527ebmxHEZgU35f/21M8Ub+acpRYisERCHB7BlQnANh2BZWmDlrcJ/2fsMvNwzs/l2aYLRhCv2ccGcFpaQLmaNjJy643uf3U0XtiV7477zj+h1R0pwKxluW5hmQZZSa4qjWPiK+WyvI9nOkDxMUoBol3tOPFX4w6WYYmqbecgg==
+ bh=6El/BGuoDI29VsKdTdYzFYXEYq3lLybU81BiccYQvtI=;
+ b=WLuVYLB/j9FSmxgTFZqukIAjGXUN+LVgxoQjkdW+IoGNV2ViqqMMXzQa7dIZWGeC9XsiWElW99RBMkOWJd0BPPQztpdmADCe4dfIt9q6gHkxQQXb3T4qqJcW04xnoBYkKYbbiPycy8IC7zv7i9s9MCIbnC78M8UZ8e4Q0eAoGGm6BDR0d+8WRHUQhYssrySCWn4sNeO43iHql3HmOp7oFjtDDZBjnolHNSIkz8p8eIkCkxrr0fk9mbeMGiXXkTCWBo/1u05K+juPH5WWO7teKVXRQbGMMENSbbeNUeBEJ6FSI8A+XPjJalL79a+ZDPasEtgIjO1gbvkDvypWnQzkAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B5WACd+xgwPM9QpgZEKBcp5qYuiWUgwNvyD39dveRZ4=;
- b=sWKBsz7AWXqg4rpo6utY+zcs8JLKf7716bXYF0qkHbSPSKNE9oIHRppeYZyVnqkiNG4LTi4tDgJIb/l3J2ER0lCF3wdODlLMwTSdce9K3LCFZEGpx9zcXAg/K0/C8iUkuYY04IsXblv0F0fF1C99fhYuOMZ0JuxZrvF3z/qq/0s=
+ bh=6El/BGuoDI29VsKdTdYzFYXEYq3lLybU81BiccYQvtI=;
+ b=b5B+S3qfrGeJjGPw05n9sCA4SxlGsJYIEPUOz94bZ5+yJz9tjC+ohLiRs7GibBYtPQBY7xYK4oljD9UOCZgyCh8YhfLYf8iexE5CiXKpldF4FNm3liMHbIvfyjJ89zDmdoBA3lqBv9EFE3Fwx+i3KqMBx+ptHUPTyIiwPxpFMuM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com (2603:10b6:5:1bb::24)
- by IA1PR12MB7568.namprd12.prod.outlook.com (2603:10b6:208:42c::10) with
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ0PR12MB7459.namprd12.prod.outlook.com (2603:10b6:a03:48d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Tue, 24 Sep
- 2024 16:34:03 +0000
-Received: from DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475]) by DM6PR12MB4877.namprd12.prod.outlook.com
- ([fe80::92ad:22ff:bff2:d475%3]) with mapi id 15.20.7982.022; Tue, 24 Sep 2024
- 16:34:03 +0000
-Message-ID: <5a524007-6071-47e6-8982-3e541302099e@amd.com>
-Date: Tue, 24 Sep 2024 11:34:00 -0500
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.28; Tue, 24 Sep
+ 2024 17:55:18 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Tue, 24 Sep 2024
+ 17:55:17 +0000
+Message-ID: <91e179ca-ff2e-48b0-813d-7b819e300dca@amd.com>
+Date: Tue, 24 Sep 2024 12:55:15 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 1/5] PCI: Add TLP Processing Hints (TPH) support
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org,
- Jonathan.Cameron@huawei.com, helgaas@kernel.org, corbet@lwn.net,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
- michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
- somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
- manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
- horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
- paul.e.luse@intel.com, jing2.liu@intel.com
-References: <20240916205103.3882081-1-wei.huang2@amd.com>
- <20240916205103.3882081-2-wei.huang2@amd.com> <ZvEcBLGqlJMj3MHA@wunner.de>
+Subject: Re: unexptect ACPI GPE wakeup on Lenovo platforms
+To: Baochen Qiang <quic_bqiang@quicinc.com>, rafael@kernel.org,
+ mika.westerberg@linux.intel.com, ulf.hansson@linaro.org,
+ bhelgaas@google.com, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+ mpearson@lenovo.com, markpearson@lenovo.com, Kalle Valo <kvalo@kernel.org>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
+ <79d288c6-6042-4f73-b465-0ddcde14509a@amd.com>
+ <b51c89f0-035a-4e94-adc3-e1b4fc31dfdd@quicinc.com>
 Content-Language: en-US
-From: Wei Huang <wei.huang2@amd.com>
-In-Reply-To: <ZvEcBLGqlJMj3MHA@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0085.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:35e::28) To DM6PR12MB4877.namprd12.prod.outlook.com
- (2603:10b6:5:1bb::24)
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <b51c89f0-035a-4e94-adc3-e1b4fc31dfdd@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9P221CA0004.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:806:25::9) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,204 +86,229 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4877:EE_|IA1PR12MB7568:EE_
-X-MS-Office365-Filtering-Correlation-Id: fae2690a-bd40-4f5d-d4a0-08dcdcb6b362
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB7459:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33201037-c905-4a7e-04cd-08dcdcc20cd0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a1c1d2IzemNadjYzYWNDYiszL3JiaDN3MjVHQjh1SHRpbldjb21kSjFVd0ti?=
- =?utf-8?B?bzJieFdFV3orVUIwcERHUWlMRXJaVFMvb002ZDJBV2dRZVFGbDFGQmpaZlE0?=
- =?utf-8?B?NkxqT0hrVGVFek5zWWtJK3d5eTNTMGlPamRwSHQ2bFBPZ01QdHd2UTg4dGRJ?=
- =?utf-8?B?cFdiMUZ2M1NlT3EyeXNmbHlqYmlHOFFsVzhmbmJkcjFuSHVJbEhpSHlJNzVi?=
- =?utf-8?B?dCtCc1VJU2JPWnNLdWRWYkhXZDdQUWk0bnZXS2F0QmZnNU1wb2FGUHYxdHBU?=
- =?utf-8?B?N1FWbHRUY2FqazRsamE0b3RUcHJkQ2owSHJoV25URlI2bjVUbEtRQlhQQnla?=
- =?utf-8?B?bllsOW1EMVZwSXZ5alZwRmFDUDFaR0JhN01sN3AzU05xeURRSmlaMHlJK21V?=
- =?utf-8?B?bmp3YkJnU3FwbVdFblNNcUZVd2Y3Tys2eFpRTzlJS2pYaEE0NGdINnhsemFz?=
- =?utf-8?B?enM2aUdSd0NRZlR6c0V4SXJJeHRkR0FuRzYzY2lGdHkwOTJ6MFNzSWdldWxn?=
- =?utf-8?B?cUVFY3lRV1FkQ1B4Vldpa3BFV0xxRlVya0dCQ2luL2hQeGdNOWNSUmNXLzVP?=
- =?utf-8?B?RVB3NmZkTWZNRUpiQWRiak5neEcxZVJsc1BPRk5TL0tKa3U4Zm5OWEx3d0dQ?=
- =?utf-8?B?MWNaU3ZoM096K0hqalVlclpuMjZDRjJ5ak5jWGpZRVA4VVVMQkRncEJzazN3?=
- =?utf-8?B?dHE4N2tWaWtPT0xzcFpsdVpLVHJOcXNONTJxVU9tQ3AxZXRqaGdqM2hVbVEz?=
- =?utf-8?B?b3VFaHBJQ2VGeUF2eTkrd0xzYUQwU2pISFp4YXJ5VG1tK0s3QmdycXUxUzFX?=
- =?utf-8?B?a3laNVJsb1dSVlFQNVMyNWdKamRVQzFWb1YzY3R3NUE2TGo0ZmdVUDgvRlRa?=
- =?utf-8?B?OUIybXVieGl4MEMwT1JlRmwzR2UwUTJkL2J1M1graEl6M2JramFjNVRYUDJX?=
- =?utf-8?B?M0hZc1Bsb1BVUVlnM283VDRIL2ttREtsOGFIczdySjI2aGdrOHh1cWxmVXFW?=
- =?utf-8?B?VjVnL2RlcUw3bDJCVVdRUFBXY1RBUVlCb21GR2JYTkNrbjVJUHY5NXVBVlB2?=
- =?utf-8?B?bGpBbGd0VEs5VDRLSUZlOGxud2srNUVBV0p3TkNQQUYreVpmZjNwangreVdk?=
- =?utf-8?B?OXdhSklVdkIrdVZ6U1JtY2RxZXdZd3UvdzRxYXpPSzJnL1dNc2Y3REg1MEdB?=
- =?utf-8?B?anIzbExXRG9kRzk2STVBMktNamNQWmxQZCt3UXRJTDgvM1RTOEdSYnRtMk5C?=
- =?utf-8?B?QXhQQkJ0azFuTExiTitWUzBMWWVaRVRnc3NncHUxR2U1SXNtdSszMUdTdFlw?=
- =?utf-8?B?TUJEOURRL216ZklBQ0Z5VnlldERDRDlidzc4UnhXTU12QlpibjlVOHdYVkZI?=
- =?utf-8?B?ZXFscWl0djZjMFVUL1Q2dDlrRzI3SEpzOHNid2lrcWUrMW52STFMWDNUN1Vv?=
- =?utf-8?B?ZVdwaTFzUzNibUVWaUtuQnMzbW1SQmc5RXFUZkpOMnJzNVBuYURLc1dEQ0F3?=
- =?utf-8?B?enF0bmNRaUFTczd3ZmorZ0d6MDc2WjZCVFJJek40R0F5Uy9BVVg3L0RpKzNU?=
- =?utf-8?B?VkxibFVvNUlGRWRtZ2ZGRmZCYW9VOXE4LytRWEE4VUtEL2VoTmt1UVpzRkVw?=
- =?utf-8?B?VHpORVc5SlI1ZTVweDZnbnNXLzlLQWhJejdac1Y0dTk1Q1NtL2NDT29xOG44?=
- =?utf-8?B?VWNYN1gweDBEMVdudGFid0w0YVBJaEFZS1I3OGU2amJ2OVkvalRxcVBPOXJ3?=
- =?utf-8?B?VE5BelpIMmxHSEViR1JLa0U5bzRwWUtEZElNMlQzb2JQcVFhWkpmOTUwdVpk?=
- =?utf-8?B?blB1UXlIN0xIZDZUaFVKdz09?=
+	=?utf-8?B?VDZ1T1N6ZlNBVXNITUR0NjN3TkxGOE9XY2Mxc1BNb0ZXaUsvZGIxWlkrTHVC?=
+ =?utf-8?B?NUJpY2xIdkk4K0pTZFJ0L1c5dyszMXcySnBYd2cweW9EWEVTZVh0eWcvN2ty?=
+ =?utf-8?B?NDA1QlZMd083RllNMWozdFJ5Y2dSR2crZmpid2JPZlEvNEU2RnRQeDFxZDZt?=
+ =?utf-8?B?cnAwREpoY0JPUVVOM0lVSldEeXhNemZJQ0dXTm1rY1dVeUh4R3Q5RUVnSCtC?=
+ =?utf-8?B?SkZCWXN0MVBCZDI5a0RTemVKMGJNYkV3UE1rRTVxbXlVUXI3RldOdjkreGNW?=
+ =?utf-8?B?c1lqeXY3aWxRamtLMjlDcGtuSW9jNUx4S3lQaERSekFDY1NFY3ppRjJaRkN4?=
+ =?utf-8?B?dmRDTkhETzU1WE93R2ExSWtQR1JUTFRYbWlUc3N0cUtFSUN2cFRjNjJVS3Bo?=
+ =?utf-8?B?RytBZGVtVDlqbkw0VGdRMStabEZkQ1lHaVVNMUxjcDZDeWdsSkdxb1VuazZT?=
+ =?utf-8?B?U0pFaEx4WkRheEZqT1QzT3JhYTRQVjQxQ1QxWjBzckhjMlQ0QS9WVTFUSCtV?=
+ =?utf-8?B?NlJVN2NzbTQyeWpJOHdBWUw3TitzVlhvczB5TFRsbXpVcVdpdGFzZnlOMklF?=
+ =?utf-8?B?VjdsTnRXcnBVSEJCTlZocGorRXVucUo3VnRGU09CeXkxMW1tMTgwK1lLWXJz?=
+ =?utf-8?B?OUZBNGFUVGcvWndTcTMrRjhwcTV5N0l3SU9ubHYrcHcyU1QybzlOMVd2NVph?=
+ =?utf-8?B?ZkZ6eGhwSHdZZFJ1OEVMZXRWdW9UZHZyRE1HRjFkbDJKMWhkYkdJRHlydVRE?=
+ =?utf-8?B?VktMRmZKNUx4cTduaGhxcDdtdjVMbmxYSXhVTWhCSHNrVXc0UnZSQkhIb0l2?=
+ =?utf-8?B?ZUx3YXJDVzdCV2dueTB2dGdyOTlBZHBHYkhXVitTN2lOZVBkL3NYc3lzZnhy?=
+ =?utf-8?B?cklzRUVENDV5bVZUUmhXTDhLcGltL0lvNW9QZGErN3BTYi9tRytQQkoya2xE?=
+ =?utf-8?B?OHBRZmpEbGJDUTVlUVg2QkYwcng1OEl5Y01WbnpNcVlpL1UrZEM0M0luZHNx?=
+ =?utf-8?B?c2Izb09hcW5Iby9LYXRpY2dpMGJSc3lxZ01TdllmZ1kwbFd4MHZkWjRFVkUv?=
+ =?utf-8?B?OVdvOTdXZWhyV2RRbTlpY1hqckp0bVUzbHNlTXlQVzlSeWIzT0t1cU1ldHBp?=
+ =?utf-8?B?cEx3cytoSlhqdk45d2pGS3cxekhnSE5oVmhxbXRnQ1VFdlNBM0NWWFhsWlFW?=
+ =?utf-8?B?ZHJLVHdjeWxyeGU2M2VrTW41c1E2WC9KVkVzT3Vwemg3Y1o4SnR6ck04LzBK?=
+ =?utf-8?B?WWhuNXJ5cXR4cjNqb1lWTS9HcW5wNU53eitjTmRGa3QzdUQ0azJsTnNvMHhI?=
+ =?utf-8?B?WDkyL2ZSWU5FczVLZmIvMHJFa216SzZQa1ZYeGdkRGdWNkpSamtWa3AvQnZS?=
+ =?utf-8?B?UkVWb1FlOGtERnFqTEcwSkdhS2Q4YVNXdTd5VEs3dnJYbHF5dHFpNFZ3b2VL?=
+ =?utf-8?B?ZXVJenQ3RE9KeVlVSHE3aGsrejB5L2tZSFVkd09xL1pEQ3dEMnlobVozV2pE?=
+ =?utf-8?B?dEEyQmxIQnN0M3Y2RDJiS0NqRDhSSTIzbXlid3dGbEhLUE0rOHVTVVV0Nys4?=
+ =?utf-8?B?Zm5jSEFCdk92VDhKdFpURE1BZmdJQk5tRGFWNGhiRThxNEVoY2JqNk5nQ2pz?=
+ =?utf-8?B?YXBOOUxVQm5qT0JieWlaeDhXMUZ3OVVUcG9Dc2R5am9JWG9sQytOUUdjaTJV?=
+ =?utf-8?B?bkMyZUQwei9TbGwwVDRLRXIwQyt2d253elZBTC9qdGhWNlZSdk1wMEZSY24z?=
+ =?utf-8?B?Uzc5akRpY0FhSE9rMnR1YThaMTFtRWc1aXg0eEd5NTVCR1Bxc1BKay95YzZh?=
+ =?utf-8?Q?TBBM2UpcGUtpAks3Q6E1SKNsGMIwJL+xsxpYU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4877.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YUo3RkFiZExLbk9OeXlPMTNwWHowZmc2QTJMT3JNOGk4STVGU1dvMFZ5WmJS?=
- =?utf-8?B?TWR2dU80NkcwV0owRndaSUM4ZjdKVjdwaTJSTHN5OVNSNjJTektEamI3TnR0?=
- =?utf-8?B?VkxVK0RGUlZiaTFmbzJ3aG1CWDJTM0FsY2dtMXVSb3FzaTZNcnpRT0NJV3Ra?=
- =?utf-8?B?bTNnTCs2UGlqcmt6K2c1OWRHR0c2T29zY1c0b3V4Q1VoWU9rekorbWRQYTFn?=
- =?utf-8?B?em1lcTJNS2F3RldIWDZEbnRvVkFvV1QyV3p5V3JLdDh5bzM5d1hkbDEzd2ZH?=
- =?utf-8?B?TUFwVUwwR1lVL20wd05yTUcrNm5yenVSTDFxTXZUVEJLOWg3aFFFeldhTGtv?=
- =?utf-8?B?VzErcjM2SE1jTUJFYzhSZTlaNCtxbXk2bEVlUlhLenB4cWJLNVViVURja0hy?=
- =?utf-8?B?ZGE0WFdyRnBFWGN5cGdSQzFvcGtSQWJyblMwZmpIQldGTTBidlVXdTZMaXBB?=
- =?utf-8?B?Rk8ydzFHdTBjR29nZHF5TXdCcHp5d0laUjVpeHhxVGFCVFljUWcyK29iR1Zn?=
- =?utf-8?B?d2JmSy9DSXZHRkt5blVuZFBzdHBobzlEaFlqYm52QXZFSVBqT2p0VEVnZTZs?=
- =?utf-8?B?c1VFWXNHR3phTXBsMXllRWJCTFpnbFVVZkY4aWZ4c0pSdEdOSkZ3bjRRdGV5?=
- =?utf-8?B?bncyVlpuRmVsUmZUTVl3VSttdlpvM2hyS3JieUkwMXdpVUpiZDcxaVgxUmlm?=
- =?utf-8?B?Uk1DS0JPSUxvSUFuL3ZRcmtFUHhzUlBtTnl2NnZ0VkJhK0s4Rm1WejNBUjRK?=
- =?utf-8?B?QTFXRXZNN3hJc3JwY21WTXN0eWZSL3JqUWIxVCt4TGszbTlCOWdFeXFmYm1s?=
- =?utf-8?B?YXdSL3hYR2JFR0o1Q2VhbXk3VVJSQWdoY2FnamNxQ214UC9HTi9QUHhMNmhE?=
- =?utf-8?B?RkFUT0RmT2trTXJ2UVdHUHdNVzNWZlJqNTJEQkd3RUNFcGJ2RE1ibkR5cEQ5?=
- =?utf-8?B?NzkrcFRhYUNLUTBnL2hGTUIySTBxWVFBaysvWUpCKzI5cHZZWEYzd2g2MG9X?=
- =?utf-8?B?RTFSYW5qMWZCUzJteUd0SGZMNnk4M2Z1d012cGJKWGRtTURhRzMrejh6RHR5?=
- =?utf-8?B?N2djVm0yemV3aVdlQWdqYWUzdzRNTGtlNm50NzNXbkdNQXZPTkxTR1l0Vms1?=
- =?utf-8?B?QkN3dmpFOStRdXlMRkJHbXd0bW95bzNRakYxNThOMW1ERVFPdkhlYVpPeWw3?=
- =?utf-8?B?TCtPcFFjWUdXYmZqcFFiUTcvT1JDeXZVR2xGVzlGdE9UZ3N2VFpMTTMwc3VV?=
- =?utf-8?B?cDd4OGRvWURiYTZJbzdTUFhNU3IvWTRlZkZETS9WdE1MdHFIc3lQYW5MS3RS?=
- =?utf-8?B?NVFtNC9iQkU3Qy9pNHNSWW1rMCsrazFkcTdRMmwzTytaamlZVnZTa2pPbW12?=
- =?utf-8?B?cC9wdDhPSUJtQnFydXZibEZFZnhCSENuajB0TFZKMEMxV3JrNm9aOXlUNzA5?=
- =?utf-8?B?Zjd1SW4yd21Tei9veWdoNSsySGVFUWFHUGxPckpRU1lFWTVLa0podzlkcXo4?=
- =?utf-8?B?SUZXdjIxQ3RqbTVnK2c0bTdPdVdxOTlrU2ZFMWU4ZitRVjFXLzdxOHNDYUZs?=
- =?utf-8?B?VUxETSttRHRzVmJGeDc4SFhSQ0RxaVM2OGlxSXZLKytVTWx3Q21GVkt3aWxU?=
- =?utf-8?B?bDlhTE1wb0k4eUZYK3pEWW9iRE5RY3hZQVA5WjlISmFOVkt4RGg3cHFQTVkw?=
- =?utf-8?B?YS9VRWN3UUxGTlhmQVUyemdRTTFiQ2RMSkptR1l2bkllSUxNQ3Uya3JkQnVQ?=
- =?utf-8?B?MUk0NU1Ea2tlQllSY3ZDNklTQk5sY245YjlTQkhNWHBualJuK1lsVVk1cW1B?=
- =?utf-8?B?MGZTelNHcnMzQyt2UHdEU1JnYUQ1bGtEbjlxbVJ3eHdaNzZtN1JGVTIzSWFh?=
- =?utf-8?B?WGhnYko1eVpiT01UMWJvcUhjd09LS1lTUmRJTnlJOW82a0ZuWFQwcjZENVJu?=
- =?utf-8?B?QXZLQmx6djlkbHRCeityaEM3eW9jYmdoMHdIRjk3aUJQSklhSkZDTjFhRTVo?=
- =?utf-8?B?N2RoNnpYNUk5Vm8vMTBuR3JoaG9qanc4eEpNRGhnSCtvYytLVVNHZVFEUzdP?=
- =?utf-8?B?Z2V3MldUN09wL28rV3o5RnQ2MDc0NEI0Z1VIbjFvZnh1cUlDTTY2RlFkZzgw?=
- =?utf-8?Q?6XBk=3D?=
+	=?utf-8?B?elV2K1Y0YjJBK2JZbDEwNElSMjkyNmF4Q29nc1F0aHZhTUF4UlVmSTdxODJx?=
+ =?utf-8?B?U054aTBOMkFzNVVadlFoNTBlanlINCsycmRnMXdHSWJxekRramowNCszUExK?=
+ =?utf-8?B?SWFWSzBjRlFBenowMXo0MVZxUDZXZEtDSWd2T1VEYkJiN0FmQVVVczFkUlpZ?=
+ =?utf-8?B?R1k2Y3MzNnA4MG1ETm5zbEh2Qi9pU3c3bU5SdmdTQS91ZXFZc2Q4VHJPRTI0?=
+ =?utf-8?B?U0xOeDNpQmEvak53aW1nQWIzZUZ4TUt4cGI4anRsL1JkbXJvbkpDVlBNL29H?=
+ =?utf-8?B?ODhKUlp4eFl4b0RzQlZIVFB5TVNQZnJPcDU5Q1BOY3pUcWVhTzhHa1FRSVpR?=
+ =?utf-8?B?M3VtNkpES3dqRW05RGdQL3BQRjFmYTVtVFIvMm1nTVhDZlFOZDIvQzgvekpl?=
+ =?utf-8?B?Mk95d1FVOUdNeC9vb1l2bDhlb2VBZllDTzlHQ0pUaVdoREVPU1BXUnF4MS9z?=
+ =?utf-8?B?N0RPZ2JyL2NpdUt3Z0NRWk9GUFpPVmF3b0l3VTF3YUtXdGpMdUhZUVhrdHp5?=
+ =?utf-8?B?UVdnSjREQm5pQmYyNGN2Nk5MNUVXVlVCLzA1V00zMEd3WERXRXV2aUVwL25K?=
+ =?utf-8?B?WW00NTZEVzdoaU1JSStIQWxOa2FjaE1rem9ia0lUelJOT0hLc0NqeHNzc01H?=
+ =?utf-8?B?MmFsY05zSEYvc0VPZGN2aW5QMFE5cFYwdFh0c1I4Z1FEd0tOT3NWSnpJMVll?=
+ =?utf-8?B?SEJCc2lDOFdwWnhqSkZSYjhjTDhVczJoUGUxalZFSlh4LzdGYzR5NDU1ckVE?=
+ =?utf-8?B?V2UvM0k0c2FRMEdyV3Q2aDdGZ2ZYdjMrSVZtMVRwUW92YmVqTGNQc0NJaDVE?=
+ =?utf-8?B?RWhOVisyRTNlNHArbFpQdlEyeGVhbE8rN3NqVXhLL2I4aDJNLzJheENsZURR?=
+ =?utf-8?B?MnRIaGJDR0JrUG16ODVqTjRQM3dDc0ZHQ2pFb2FjMTRhWDl3SGpCdGxQMlo0?=
+ =?utf-8?B?UXV4bkk1cytYUHBFcWR3Mmd6aUwzVVNuM2lQOWFVSC9hcDB6RjNJQUtFdUhV?=
+ =?utf-8?B?Ynh3anNwTkt4NFd0N3JBN2t2ZGlEMEN2cnB4TjVYNkFlQWZJS1F2MGZCbSth?=
+ =?utf-8?B?bGc5T3VLYlNGRGx3NnB4VnQ2ZmdzWGd0UmxBZHptdFVNTWdRei9xS3pOQ01W?=
+ =?utf-8?B?UUZUYUVuMCtCbkU5MTdrZm44TkNZLytENzhGZ0tQZGRTNEdFV25PNmxpWjFs?=
+ =?utf-8?B?MnZQaDJrR2cvZnFaME1KVEN6SGM4ZkI2UGVnTjlzWktscktlWVFvalMvL2NX?=
+ =?utf-8?B?Qk15TmF3VU5tb3ZmVDRJckpYNnlmTGQ4cFViNEg1dDNvcEdIQTJLUkIveERh?=
+ =?utf-8?B?d05wYXdlSTlRdjQ1WlFkRldhZm1Ea21kQURxWmwySjNWUWtETkJBZEM4dkx5?=
+ =?utf-8?B?T0Uyb0VQMXJVKzcySWoxU2FxYnJjMDYxeSs3ZlpyVmlWeVU0bkdnK0ZhUW16?=
+ =?utf-8?B?Y1RTTmNaQktPNXd4RkprdXVXZmJwOGRjaS91bjloNDRmcTdIZlFCTmhlSi9h?=
+ =?utf-8?B?cStkdXp1TC9Lc3hFRWxkazA3ZlJzcFlFcWk0bnREbENpZktHOTZpb0pwTVAv?=
+ =?utf-8?B?c20xSStJSmljSyszcC9XdzJNMStKY2MvRElDTG1BZGR6SEFDUlRBM0RnSGtB?=
+ =?utf-8?B?VXMzL2ZNNEJ4UTlHUjVGYWZLS1V0N1NEQ1J4T0pWT2hGdkhkc1dEby9kYlVD?=
+ =?utf-8?B?WENPNDBTaU9QeGpFMTlDc2ZOblR2bWJKRUNaKy9KZzVDVW5yb3cwbVdCOFNz?=
+ =?utf-8?B?THFNTDBZM24wZUtBTHZiR3g4cm40T0JXeDd5QVZDN3B3M1Y3cW5XSzlvOU9I?=
+ =?utf-8?B?YjJVZmo1SFE4SS9qaEcxc3p5TFdPK3pDNEJkWXpBTCtBOEhRcTN5a242SlNi?=
+ =?utf-8?B?elNuYmsyQTBjK0dSRGJJSHJhby9iNS9UVnFNMzRXdU90bzBuRGhMSkhWbTlK?=
+ =?utf-8?B?SUFmN3lBekFidjZhMkdoZTVzbk9WRUQ5RlBwQVY5bDZEd3JhWFZyUVBwWmNG?=
+ =?utf-8?B?aE1UZnVxb0U3RG9pRzVxUzRKRjZlNTBGaTdPS0xCM3BHN3ZmS3lkejRkNHVs?=
+ =?utf-8?B?elhMSERWOHFqNGVKYllnMFZMbEhOZjNDNGp4Szhva2JhaHdvUVppQnFNN0l4?=
+ =?utf-8?Q?FhOMnCvFCzjdx5L96e9ybBqgV?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fae2690a-bd40-4f5d-d4a0-08dcdcb6b362
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4877.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33201037-c905-4a7e-04cd-08dcdcc20cd0
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 16:34:03.4239
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 17:55:17.8169
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JxmRU42NlEIGXV/CDt/wa/UzkDhVT3kskwDj9ZAFG8dUATC08PzwcXNKPAoCmfmt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7568
+X-MS-Exchange-CrossTenant-UserPrincipalName: J7Whc3blbS8XRnGln6EarZYVJGg8s7/qctkzacONYRNmmA3z6XDqmcqOtXhfaTFpUsa5RwUpGLljao2CsXgXoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7459
 
+On 9/24/2024 00:52, Baochen Qiang wrote:
+> 
+> 
+> On 9/23/2024 9:37 PM, Mario Limonciello wrote:
+>> On 9/23/2024 05:07, Baochen Qiang wrote:
+>>> Hi,
+>>>
+>>> recently it is reported that on some Lenovo machines (P16v, Z13 etc.) unexpected ACPI event wakeup is seen with kernel 6.10 [1][2]. To summary, the unexpected wakeup is triggered by simply unplug AC power or close lid of the laptop. Regression test shows this is caused by below commit, and with that reverted the issue is gone:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath11k?id=166a490f59ac10340ee5330e51c15188ce2a7f8f
+>>>
+>>> Well what confuses me is that this commit basically resets WLAN hardware before going to suspend. that said, WLAN target maintains limited functionality (PCIe link handling etc...) during system suspend and is thus not expected to wakeup system.
+>>>
+>>> kernel log shows this is an ACPI GPE event wakeup:
+>>>
+>>> Sep 22 22:34:32 fedora kernel: PM: Triggering wakeup from IRQ 9
+>>> Sep 22 22:34:32 fedora kernel: ACPI: PM: ACPI non-EC GPE wakeup
+>>> ...
+>>> Sep 22 22:34:32 fedora kernel: PM: noirq resume of devices complete after 693.757 msecs
+>>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x07
+>>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x0e
+>>>
+>>> Consulting ACPI tables show GPE 0x07 is used by the EC and GPE 0x0e is used by GPP6 device:
+>>>
+>>> Scope (\_SB.PCI0.GPP6)
+>>> {
+>>>       ...
+>>>       Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
+>>>       {
+>>>           M460 ("PLA-ASL-\\_SB.PCI0.GPP6._PRW Return GPRW (0xE, 0x4)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+>>>           Return (Package (0x02)
+>>>           {
+>>>               0x0E,
+>>>               0x04
+>>>           })
+>>>       }
+>>>       ...
+>>> }
+>>>
+>>> while GPP6 is the PCI bridge (the PCIe root port in this case) to which WLAN target is attached to:
+>>>
+>>> Device (GPP6)
+>>> {
+>>>       Name (_ADR, 0x00020002)  // _ADR: Address
+>>>       ...
+>>> }
+>>>
+>>> Scope (_SB.PCI0.GPP6)
+>>> {
+>>>       Device (WLAN)
+>>>       {
+>>>           ...
+>>>       }
+>>>       ...
+>>> }
+>>>
+>>> and lspci also shows such relationship:
+>>>
+>>> $ lspci -vt
+>>> -[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
+>>>              ...
+>>>              +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
+>>>              ....
+>>>
+>>> Based on above info:
+>>> #1 is that valid to get the conclusion that this unexpected wakeup is triggered directly by PCIe bridge?
+>>> #2 if this is related to WLAN (seems so based on the regression test), is it the WLAN wake pin (a GPIO pin?) that originally triggers this? and how does it affect the bridge?
+>>> #3 quick tests show that with GPP6 wakeup disabled this issue is gone. so a workaround is to disable GPP6 wakeup before going to suspend and enable it back after resume. But is it safe to do so?
+>>>
+>>>
+>>>
+>>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
+>>> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2301921
+>>>
+>>
+>> With pinctrl-amd there is an extra debugging message present [1] that is activated when you enable '/sys/power/pm_debug_messages' which will tell you if a GPIO is active during the suspend cycle.  That can help you to rule out whether this is the WoWLAN GPIO pin causing the behavior.
+>>
+>> [1] https://github.com/torvalds/linux/blob/v6.11/drivers/pinctrl/pinctrl-amd.c#L626
+> Thanks for the reminder, Mario.
+> 
+> I do notice that some reporters mentioned about this [1]. and I can also see this on my P16v machine:
+> 
+> [  881.799289] PM: suspend entry (s2idle)
+> ...
+> [  897.491440] PM: Triggering wakeup from IRQ 9
+> [  897.491714] ACPI: PM: ACPI non-EC GPE wakeup
+> [  897.491720] PM: resume from suspend-to-idle
+> ...
+> [  898.153259] PM: noirq resume of devices complete after 556.675 msecs
+> [  898.153443] ACPI: GPE event 0x07
+> [  898.153502] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 1st time
+> ...
+> [  898.314804] mhi mhi0: Requested to power ON //WLAN begin to reinitialize
+> [  898.314841] mhi mhi0: Power on setup success
+> [  898.694562] mhi mhi0: Wait for device to enter SBL or Mission mode
+> [  899.305898] GPIO 18 is active: 0x10157a00 //I guess this is the WoWLAN GPIO pin
 
+Yeah that's what it looks like to me too.  The easiest way to confirm 
+this (without a schematic that is) is to look at the _AEI / _EVT in the 
+SSDT and see what is notified when this is active.
 
-On 9/23/24 02:43, Lukas Wunner wrote:
-> On Mon, Sep 16, 2024 at 03:50:59PM -0500, Wei Huang wrote:
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1813,6 +1813,7 @@ int pci_save_state(struct pci_dev *dev)
->>  	pci_save_dpc_state(dev);
->>  	pci_save_aer_state(dev);
->>  	pci_save_ptm_state(dev);
->> +	pci_save_tph_state(dev);
->>  	return pci_save_vc_state(dev);
->>  }
->>  EXPORT_SYMBOL(pci_save_state);
->> @@ -1917,6 +1918,7 @@ void pci_restore_state(struct pci_dev *dev)
->>  	pci_restore_vc_state(dev);
->>  	pci_restore_rebar_state(dev);
->>  	pci_restore_dpc_state(dev);
->> +	pci_restore_tph_state(dev);
->>  	pci_restore_ptm_state(dev);
->>  
->>  	pci_aer_clear_status(dev);
-> 
-> I'm wondering if there's a reason to use a different order on save versus
-> restore?  E.g. does PTM need to be restored last?
+> [  899.306089] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 2nd time
+> [  899.333158] ath11k_pci 0000:03:00.0: chip_id 0x12 chip_family 0xb board_id 0xff soc_id 0x400c1211
+> [  899.333190] ath11k_pci 0000:03:00.0: fw_version 0x1106196e fw_build_timestamp 2024-01-12 11:30 fw_build_id WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.37
+> ...
+> [  899.826378] PM: suspend exit
 > 
 > 
+> But I don;t think it is the wakeup source, it is just toggled during WLAN reinitialize AFTER system wakeup. actually even with ath11k module removed I can also see this GPE wakeup, but without GPIO 18 toggled:
 
-Will fix
-
->> --- a/drivers/pci/pcie/Kconfig
->> +++ b/drivers/pci/pcie/Kconfig
->> @@ -155,3 +155,14 @@ config PCIE_EDR
->>  	  the PCI Firmware Specification r3.2.  Enable this if you want to
->>  	  support hybrid DPC model which uses both firmware and OS to
->>  	  implement DPC.
->> +
->> +config PCIE_TPH
->> +	bool "TLP Processing Hints"
->> +	depends on ACPI
-> 
-> TPH isn't really an ACPI-specific feature, it could exist on
-> devicetree-based platforms as well.  I think there could be valid
-> use cases for enabling TPH support on such platforms:
-> 
-> E.g. the platform firmware or bootloader might set up the TPH Extended
-> Capability in a specific way and the kernel would have to save/restore
-> it on system sleep.
-> 
-> So I'd recommend removing this dependency.
-
-This is reasonable - I can remove this dependency.
+I don't believe that just removing the kernel module is enough.  Can you 
+physically remove the hardware?
 
 > 
-> Note that there's a static inline for acpi_check_dsm() which returns
-> false if CONFIG_ACPI=n, so tph_invoke_dsm() returns AE_ERROR and
-> pcie_tph_get_cpu_st() returns -EINVAL.  It thus looks like you may not
-> even need an #ifdef.
+> [ 2640.849342] PM: suspend entry (s2idle)
+> ...
+> [ 2650.806234] PM: Triggering wakeup from IRQ 9
+> ...
+> [ 2651.467653] PM: noirq resume of devices complete after 558.943 msecs
+> [ 2651.467880] ACPI: GPE event 0x07
+> [ 2651.467961] ACPI: GPE event 0x0e
+> ...
+> [ 2651.848848] PM: suspend exit
+> 
+> 
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219286
+> 
 
-We might have to add #ifdef around the ACPI related functions. The
-reason is not because of acpi_evaluate_dsm() or acpi_evaluate_dsm().
-Instead the compilation will fail due to "pci_acpi_dsm_guid". In TPH V2
-series, somebody reported the following error:
+Is it possible for you to put a scope on the GPIO and/or PCIe analzyer 
+on the bus?
 
-"
-This seems to break builds on ARM (32bit) with multi_v7_defconfig.
+It sounds to me that most likely what's going on is PME being asserted 
+from WLAN controller.
 
-  .../tph.c:221:39: error: use of undeclared identifier 'pci_acpi_dsm_guid'
-  221 |         out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid,
-MIN_ST_DSM_REV,
-      |
-"
-
-> 
-> 
->> diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
->> new file mode 100644
-> 
-> The PCIe features added most recently (such as DOE) have been placed
-> directly in drivers/pci/ instead of the pcie/ subdirectory.
-> The pcie/ subdirectory mostly deals with port drivers.
-> So perhaps tph.c should likewise be placed in drivers/pci/ ?
-
-I am OK with it. Some extended features, such as ATS, are indeed
-implemented in drivers/pci/.
-
-Bjorn: Any comments on this idea?
-
-> 
-> 
->> --- /dev/null
->> +++ b/drivers/pci/pcie/tph.c
->> @@ -0,0 +1,199 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * TPH (TLP Processing Hints) support
->> + *
->> + * Copyright (C) 2024 Advanced Micro Devices, Inc.
->> + *     Eric Van Tassell <Eric.VanTassell@amd.com>
->> + *     Wei Huang <wei.huang2@amd.com>
->> + */
->> +#include <linux/pci.h>
->> +#include <linux/pci-acpi.h>
-> 
-> This patch doesn't seem to use any of the symbols defined in pci-acpi.h,
-> or did I miss anything?  I'd move the inclusion of pci-acpi.h to the patch
-> that actually uses its symbols.
-> 
-> Thanks,
-> 
-> Lukas
 
