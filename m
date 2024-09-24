@@ -1,159 +1,97 @@
-Return-Path: <linux-pci+bounces-13399-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13406-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB6C0983B50
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 04:46:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42E6C983BEC
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 05:57:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8B3B1C225E0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 02:46:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C988CB20ED2
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 03:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E923211CA0;
-	Tue, 24 Sep 2024 02:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXbc8IZr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6544B45C1C;
+	Tue, 24 Sep 2024 03:57:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE0D1B85DA;
-	Tue, 24 Sep 2024 02:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54FC2E859;
+	Tue, 24 Sep 2024 03:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727145997; cv=none; b=JWd7GHHyXM7HWInQJYVy02vFhAgitTQ/q9YcTus3ga77f/JO2v5Z9zVgUCFCkihi4fdAiJxU+GDxxcCJfS8rgjD+6SWfGrT/ltyr+yrApKM6/b9X326kdXlRshXB8HrFXxpX+vIrZTWg1NfSSPJ2ki9EPElOpERKYG2skW09PRA=
+	t=1727150231; cv=none; b=eoCpWV5A6y5xoPVblnUjxQw4v/tnCnOV0bPRtMSLblw51yzevnpBjW5+fNrnJqs9KKmMpaQba1B7kA+VuZEZHl8rB4Pz8cQnCHcrGDGkfsmHg3+F62V8YuZ7fHVBdAoWsBH3/YC0BkYqd/OPj3KONxci0RBnmdcQwVEgQKWSJtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727145997; c=relaxed/simple;
-	bh=saapds3Tco5OXwRJK6gEwmbqTm5hd9R5EEGQWhxcueg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qyOAfFgzCYU8EisbdYa8/H+uNkLE9RJ+tyILs9HjHHJityjhj5nH7XcCG5kQgzCGiiEDui9ckqzRUG+2WixUTpe2FYDI5vo3BjvVo6SAq6kLOTWihNK8eGFoX5mZieBsK9EBpsEPlTDYC30dMgC6uDJ9tLVsNLI/FsaDreMDfmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXbc8IZr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34100C4CEDA;
-	Tue, 24 Sep 2024 02:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727145997;
-	bh=saapds3Tco5OXwRJK6gEwmbqTm5hd9R5EEGQWhxcueg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CXbc8IZrs+le1x6K8gPklyx59P7UO2MaFH+aBs6qULAOOByQjWz2EwDcFxVQwMXR8
-	 uDC4rvtiiFp1YHSpIIi29Vyf5Xk9vyunyVGL0G9cl9ifmzROQ7XhuRrCY9E2V8NhBk
-	 NDzmD2DsOyPUjbix144H2Z24mARaXizk1TP49VwMXmKKfHfmAtmYD4+5Ro9/+walcc
-	 8e/UpjKbHbslIF1BtWRTkehIxG8ySOToyaah2hOXVz/SmYL/DEtbJVH0X1Y9bKwZHm
-	 s2J769cmRTcYSDwtMzoQbzlIuCXMMyW1wQ6anVZgK2E+vY6MsMycmVCSN0RP/pMgWi
-	 nHBBJxy7ma/AQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53660856a21so4826564e87.2;
-        Mon, 23 Sep 2024 19:46:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVJXZ8o2fiFRGN34OFI7v4marGFjwMO4b9/YdDkndTX1SJR9PrrDV/uupJfNVvInOYbBwlbnxISIRTKw==@vger.kernel.org, AJvYcCV4qnhlXmd/pNtynF6EoKBLlofyH2WNGeaWZdYcDMDWO1rP70Yx44MSZYDcQ3wPWrQp0HxUNUcLswtD@vger.kernel.org, AJvYcCV8sJpN9/p5r1bthDfvVl05PMAS5ortaswtv0Lv6ySiT324sU8rj4O7XAdtFU4qxR6/EvYetQtSXzsQy/HF@vger.kernel.org, AJvYcCVe0322POMCrVO5cX7/fFNKZseqmP/a2N+6gAG+uknz6i7yxpWtloHo+ctB+ZZBjp5nFJgb7tui/PVY@vger.kernel.org, AJvYcCWc3DP4gCs7l9SHGJDIMKfQ6kLqkhxjKjtfqhi1o7n7uZ7XiIX6gRcd8ZwaammH7u2h8NNCHU2T5TJzkQ==@vger.kernel.org, AJvYcCX7hS7NeoYQHliRuUPyPgSliNiX06FLRz4PI13Lw7xjMxnxKIGE3bafucD8zeR0X953ufD2xYCZsbBG9ODX@vger.kernel.org, AJvYcCXIX6+z9AYMUrgZA6PSF5cAdZFktVUAvNR6vrvu1/Je4+icsqo/glaHp87I9w17aG9e+vQ6QtyS@vger.kernel.org, AJvYcCXTMkWqeZ8UBi7wEXPSjzraiuobgkP94FtHaoXaRSU/x6cw4Wd9uIheSsi4IrIioFs57vDjv8RH7Edx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIjQmszHN58JgXnSDBpAbIiugia5Jx9c+tkCI5yRRHl9Fdr/JH
-	Daai9wOchvMNlFc/5QCY8QBv4NMu0pG2xrrg0B/nv7QZ1OJKvPAE4D1NEgbSBjh8Bon5vtGZ1tl
-	Tyv8yAHTYU6fZrCR2YvbbDmsFKng=
-X-Google-Smtp-Source: AGHT+IGbFPw/bTRm+UErpcrDrhXiYrSHOwzSiG4p3e4jUUEDfOTfASqMN5Pcr7Ww2ei18DiP8qOt5I2z7sBy9E6rsKI=
-X-Received: by 2002:a05:6512:158e:b0:533:d3e:16f5 with SMTP id
- 2adb3069b0e04-536ac334255mr7477512e87.38.1727145995657; Mon, 23 Sep 2024
- 19:46:35 -0700 (PDT)
+	s=arc-20240116; t=1727150231; c=relaxed/simple;
+	bh=JxVsVnqk5Gl0zqzkJU/CBt1Xr8Bc/FAKu7INTUmmAJQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=UmSXjiYfvt6w62MMfXcQga5kMb95plfQ1s0hqCYLkv9pGHIyJOaAWvqnpp9huXJYsYA6T3nOEWeRhfHeib/czi8uYit4sDlpFuh4B9QGiYttWusjAVHtmHnONC2v+Q8TAZO6le2bZbcRSqpCuCFU0Vlsv7KdvShxSrODM9Unvsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4A1E11A02D0;
+	Tue, 24 Sep 2024 05:50:21 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1275F1A1445;
+	Tue, 24 Sep 2024 05:50:21 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1EBF8183DC03;
+	Tue, 24 Sep 2024 11:50:19 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: l.stach@pengutronix.de,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	frank.li@nxp.com,
+	robh+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	festevam@gmail.com,
+	s.hauer@pengutronix.de
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	kernel@pengutronix.de,
+	imx@lists.linux.dev
+Subject: [PATCH v1 0/9] A bunch of changes to refine i.MX PCIe driver
+Date: Tue, 24 Sep 2024 11:27:35 +0800
+Message-Id: <1727148464-14341-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1724159867.git.andrea.porta@suse.com> <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com>
- <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org> <ZtcBHvI9JxgH9iFT@apocalypse>
- <d87530b846d0dc9e78789234cfcb602a.sboyd@kernel.org> <CAK7LNAQEx52BYMYfNu+xj8sNmdtH9XfPapdhJDrsbDo43aD3Dg@mail.gmail.com>
- <146d3866ec57e963713cd07b9eaf5a71.sboyd@kernel.org>
-In-Reply-To: <146d3866ec57e963713cd07b9eaf5a71.sboyd@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 24 Sep 2024 11:45:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ1oUvuMcHs-idZcPxE-c4fJgMDt-cURATsrVkjjFPNWg@mail.gmail.com>
-Message-ID: <CAK7LNAQ1oUvuMcHs-idZcPxE-c4fJgMDt-cURATsrVkjjFPNWg@mail.gmail.com>
-Subject: Re: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being
- discarded after init
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Eric Dumazet <edumazet@google.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Stefan Wahren <wahrenst@gmx.net>, 
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 24, 2024 at 3:13=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wro=
-te:
->
-> Quoting Masahiro Yamada (2024-09-22 01:14:12)
-> >
-> > Rather, I'd modify my patch as follows:
-> >
-> > --- a/scripts/Makefile.dtbs
-> > +++ b/scripts/Makefile.dtbs
-> > @@ -34,12 +34,14 @@ $(obj)/dtbs-list: $(dtb-y) FORCE
-> >  # Assembly file to wrap dtb(o)
-> >  # --------------------------------------------------------------------=
--------
-> >
-> > +builtin-dtb-section =3D $(if $(filter arch/%, $(obj)),.dtb.init.rodata=
-,.rodata)
->
-> I think we want to free the empty root dtb that's always builtin. That
-> is in drivers/of/ right?
+A bunch of changes to refine i.MX PCIe driver.
+- Add ref clock gate for i.MX95 PCIe by #1, #2 and #9 patches.
+  The changes of clock part is here [1].
+  [1] https://patchwork.kernel.org/project/linux-arm-kernel/cover/1725525535-22924-1-git-send-email-hongxing.zhu@nxp.com/
+- #3 and #4 patches clean i.MX PCIe driver by removing useless codes.
+  Patch #3 depends on [2].
+  [2] https://patchwork.kernel.org/project/linux-arm-kernel/cover/1723534943-28499-1-git-send-email-hongxing.zhu@nxp.com/
+- Make core reset and enable_ref_clk symmetric for i.MX PCIe driver by
+  #5 and #6 patches.
+- Use dwc common suspend resume method, and enable i.MX8MQ, i.MX8Q and
+  i.MX95 PCIe PM supports by #7 and #8 patches.
 
+[PATCH v1 1/9] dt-bindings: imx6q-pcie: Add ref clock for i.MX95 PCIe
+[PATCH v1 2/9] PCI: imx6: Add ref clock for i.MX95 PCIe
+[PATCH v1 3/9] PCI: imx6: Fetch dbi2 and iATU base addesses from DT
+[PATCH v1 4/9] PCI: imx6: Correct controller_id generation logic for
+[PATCH v1 5/9] PCI: imx6: Make core reset assertion deassertion
+[PATCH v1 6/9] PCI: imx6: Make *_enable_ref_clk() function symmetric
+[PATCH v1 7/9] PCI: imx6: Use dwc common suspend resume method
+[PATCH v1 8/9] PCI: imx6: Add i.MX8MQ i.MX8Q and i.MX95 PCIe PM
+[PATCH v1 9/9] arm64: dts: imx95: Add ref clock for i.MX95 PCIe
 
-drivers/of/empty_root.dts is really small.
-
-That is not a big deal even if empty_root.dtb
-remains in the .rodata section.
-
-
-
-> And I worry that an overlay could be in arch/
-> and then this breaks again. That's why it feels more correct to treat
-> dtbo.o vs. dtb.o differently. Perhaps we can check $(obj) for dtbo vs
-> dtb?
-
-
-This is not a problem either.
-
-
-Checking $(obj)/ is temporary.
-
-See this later patch:
-
-https://lore.kernel.org/linux-kbuild/20240904234803.698424-16-masahiroy@ker=
-nel.org/T/#u
-
-After my work is completed, DTB and DTBO will go
-to the .rodata section unconditionally.
-
-
-
-> Also, modpost code looks for .init* named sections and treats them as
-> initdata already. Can we rename .dtb.init.rodata to .init.dtb.rodata so
-> that modpost can find that?
-
-
-My previous patch checked .dtb.init.rodata.
-
-I do not mind renaming it to .init.dtb.rodata.
-
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml |   4 +-
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml        |  25 ++++++++++--
+arch/arm64/boot/dts/freescale/imx95.dtsi                         |  25 ++++++++++--
+drivers/pci/controller/dwc/pci-imx6.c                            | 166 +++++++++++++++++++++++++++-------------------------------------------------
+drivers/pci/controller/dwc/pcie-designware-host.c                |  31 ++++++++-------
+5 files changed, 119 insertions(+), 132 deletions(-)
 
