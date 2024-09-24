@@ -1,192 +1,192 @@
-Return-Path: <linux-pci+bounces-13431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB149984405
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 12:52:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FC6998458B
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 14:07:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B2711F24348
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 10:52:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8671BB2095C
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 12:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C9019B3EA;
-	Tue, 24 Sep 2024 10:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 213C01A3AB7;
+	Tue, 24 Sep 2024 12:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SaIci6e8"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dxb6ny+a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2043.outbound.protection.outlook.com [40.107.237.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E061F5FF
-	for <linux-pci@vger.kernel.org>; Tue, 24 Sep 2024 10:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727175119; cv=none; b=bzYNLelUjxs/Ja7zmD5/cayLU2iCPwgMj8Hy90wwzURH7aK3k3ES8OW3MPjyzmYs2Y6dizpO2V3+zuqAZYEsCVvE4MfIqi/YncZKruNL914Hywu66cDj47vq7O3f+uXkui5H1nA4gtiia44YYFEpzUYcmrEM3r0u/bV/GN59NdE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727175119; c=relaxed/simple;
-	bh=ffkVPnW09kpTisqPvWpEqEydXoPyPzOq59AUO5IrSHw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lYYtgqohEEvJu1WU0dnfLIu5atBhF1xVMnlp3cbJTlheIn268mKlHS+2VMhffwElyEB6EeCTv6InscQy7lB/m5XQayQ3vop9jITSJ4qnkl/k9O27rh/UHQtpdCFAyfYo2mV0+dzCUBm0q9CB52PGyMNohqcTExrYsZUxhjf8kyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SaIci6e8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727175117; x=1758711117;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ffkVPnW09kpTisqPvWpEqEydXoPyPzOq59AUO5IrSHw=;
-  b=SaIci6e82ZLbbqv7Ne/ul2Zl6a0Qgue9Xu5C914WfFG7D3AMZGWMtBih
-   6kXtVVjtJUwIgna9EAfUYrH70jdavGf6U2Ozp+YJD3W/NkTvoN23EZnOa
-   17dtwM6Mh9DdcAUlrc6OgZQQerOzLEWrdLFbI6KY7QUoTWhx9IGQh6Eo1
-   guh37/zmE+eviRApC98t9kmrGxOeUjYlzFtp/oj+4ymXfwN3XcUu9cXXd
-   gCQsPKQkOmNEuWNpzy8xPr8MvodZIntoAQ/V91DVY/FtDi3SN9u+f56qL
-   tcX7GWbPJr1aK0convXI4eGuzDH/8xjru8HuAIryTFhOj1mBf1vQRCuqo
-   g==;
-X-CSE-ConnectionGUID: 8fX+g7qQR8+IbbYVv/OgYQ==
-X-CSE-MsgGUID: 3VEJlD3wSzG6BY3r17kYQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11204"; a="26348719"
-X-IronPort-AV: E=Sophos;i="6.10,254,1719903600"; 
-   d="scan'208";a="26348719"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2024 03:51:57 -0700
-X-CSE-ConnectionGUID: BJuZ/VlGTK+utjpJulANAA==
-X-CSE-MsgGUID: Ord2ATMCRu254V2FEV8aoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,254,1719903600"; 
-   d="scan'208";a="71451008"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.151])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2024 03:51:54 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Sep 2024 13:51:51 +0300 (EEST)
-To: "Wassenberg, Dennis" <Dennis.Wassenberg@secunet.com>
-cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    "kbusch@kernel.org" <kbusch@kernel.org>, 
-    "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, 
-    "mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>, 
-    "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, 
-    "minipli@grsecurity.net" <minipli@grsecurity.net>, 
-    "lukas@wunner.de" <lukas@wunner.de>
-Subject: Re: UAF during boot on MTL based devices with attached dock
-In-Reply-To: <c394a3f07bfb7240a2c32fa6d467ea1a03547881.camel@secunet.com>
-Message-ID: <68de3ca4-a624-8b02-8f6d-889deb61495d@linux.intel.com>
-References: <6de4b45ff2b32dd91a805ec02ec8ec73ef411bf6.camel@secunet.com> <c394a3f07bfb7240a2c32fa6d467ea1a03547881.camel@secunet.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D28E1E4BE;
+	Tue, 24 Sep 2024 12:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727179663; cv=fail; b=AfqPe8PDioBYI1vTri7ebVDoAqBsYODn9ebAGBoITlK+3F+mvyE5bbpfxIWAhMQLY90pH3vbiqFHROvL0cg+zGNyx7Nuyi+bRmjQEwEiLqFX6m70QiOwb3604wh1tzPQPCQb2W9Q4zPo0/hwENpDbYrVdcA8pfu1Ajzm5tYzpvY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727179663; c=relaxed/simple;
+	bh=4/mtoymYQzJhy+yGtu6rH3tne3vgm2UfhlljFFvSSoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=UgkglEkUTc5MNyyx30xT78EQ810/kfiEYNxFp/rUceWJ8TvqTnHDds0h57ooTpZv4dbNhAVrwDgoH6mRLpWpJ6xSWNp29fgYui5tL6Ne8P8ZcbuwRFpvwaHP9eXlCENCAzsyoGKaUhmDz0qnPI2sj32i1TOM4uR4WtwolhQCuU4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dxb6ny+a; arc=fail smtp.client-ip=40.107.237.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E8JN2y9fZO6EenHRP24TYWMssI6zvnZI1cqVsMwVSOUvIEc3/xUI4AI/3Yh1n3dVWZR4dYe15FFUQ3no2IOQhqybXYNgNJbnHsV4zL6ls7/Xk3hTxVClpoR5QN8DKYeU9klI5q/Rc0NzcRLd5dhdUbZ4CvFLWBXk5iCigKuEOgzZ5m+6GTQZWLfis6x4O9RT/ewKq26l78dcyXl6ud4TMcwsHhx4Ps9rpg9ZpkfrFxnKdLeImDuELNfAwgcaIuo654QcEcUQ2HJqsZxfviN05Abm4oiwNOJwF6b9icQDQSCjWUF92aFI020tmXbEPBR5mOEobcZ4JpBFGhlYdaamhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PDoFfHSW6IajwBEtxqfNFmLx8i525iSlsxg/Z45FzHQ=;
+ b=Asc6X0uOkr7KGKbPiKRJDbUFghygCvgvHUbINmI+Ko0kcg/pIvVaCwXWyAUQmK1dhLTE9G1kv0sA7m6WlYj3EneKzPlB/wBNZQFhpAE7XXN+E8Rpjbh8Dgq4iX2AV8zozOkmxYQ89I3fjm8RqLvglKxMkZjSKjBOFxd8ysJsjLlug1xN6KtoBz5/kbhJjm0oM7bTmO6peNtc7YI3S/KyCG06TtEhatGJKJJDOckZBWz5x5CSxygdhYcD076WWIr+CU8f+V0H82229Zthj95Zu5UIkQIjyI1wSgPQCqDGjvtj11ewdPyKPW4bV+gpP9OuwKRhoGtPEg0exWzLHS0RCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PDoFfHSW6IajwBEtxqfNFmLx8i525iSlsxg/Z45FzHQ=;
+ b=dxb6ny+aLNnv2bMVOif7+h1cX418ZPNHdNUObvUiDUHA4zhtAzyHWvq4OCnTtGFcyM38UXV7QX6fPALUK0E/E8GbyAw2bTH2rJKRiRKp1i/Ki1t7NeNXnGGXaLlE8IoDop2mIVRFqlreX3SuGf2+HoqkJxcEJOk1ZRP5fABnCYHZYfoWmtzZsmjIhcZEChez1fJnkDgt5aZ4fcaABjCG0Qu+mffEWGD+E//vqtdYkw4c31YB8OjiGuWIkIYMxH7yANuZjnrL/LFgY31bbd5HmUATrArgvLlj36WRZVwmhcKgSMbkDf3gPg0y3H17p2kwtl6CHcy/yIu/8Kz5snU8yQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by IA1PR12MB8466.namprd12.prod.outlook.com (2603:10b6:208:44b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Tue, 24 Sep
+ 2024 12:07:36 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.7982.022; Tue, 24 Sep 2024
+ 12:07:36 +0000
+Date: Tue, 24 Sep 2024 09:07:35 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: "Annapurve, Vishal" <vannapurve@google.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"pratikrajesh.sampat@amd.com" <pratikrajesh.sampat@amd.com>,
+	"michael.day@amd.com" <michael.day@amd.com>,
+	"david.kaplan@amd.com" <david.kaplan@amd.com>,
+	"dhaval.giani@amd.com" <dhaval.giani@amd.com>,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Roth <michael.roth@amd.com>, Alexander Graf <agraf@suse.de>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC PATCH 12/21] KVM: IOMMUFD: MEMFD: Map private pages
+Message-ID: <20240924120735.GI9417@nvidia.com>
+References: <20240823132137.336874-1-aik@amd.com>
+ <20240823132137.336874-13-aik@amd.com>
+ <ZudMoBkGCi/dTKVo@nvidia.com>
+ <CAGtprH8C4MQwVTFPBMbFWyW4BrK8-mDqjJn-UUFbFhw4w23f3A@mail.gmail.com>
+ <BN9PR11MB527608E3B8B354502F22DFCA8C6F2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <CAGtprH-bj_+1k-jwEVS9PcAmCOvo72Vec3VVKvL1te7T8R1ooQ@mail.gmail.com>
+ <BL1PR11MB5271327169B23A60D66965F38C6F2@BL1PR11MB5271.namprd11.prod.outlook.com>
+ <20240923160239.GD9417@nvidia.com>
+ <BN9PR11MB527605EA6D4DB0C8A4D4AFD78C6F2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB527605EA6D4DB0C8A4D4AFD78C6F2@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BN9PR03CA0852.namprd03.prod.outlook.com
+ (2603:10b6:408:13d::17) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB8466:EE_
+X-MS-Office365-Filtering-Correlation-Id: a32ba90b-2ddc-4372-c8a9-08dcdc917a6a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OK9vrND0WbrM5jLm0EYG1+qHnCqs5M+ZuL+k2T9R2+z7rBDN5HrFv5eDBVsp?=
+ =?us-ascii?Q?nHlBwbNn+7fZ7vTsxwmgxIelPSOw53HQE4ejaxG3UHF9CJU3ZWHYo3RfV9oy?=
+ =?us-ascii?Q?Vv5byS5swrk7ATws3qt9Hf6Ciaxm2bEdSu11rOO1kIU0RcVjBy8q772J1pv+?=
+ =?us-ascii?Q?7Zu+fThu5ZwWp/SVgCH0Bjz/eHLvrxz4uhq5+XAtxnDWq0kd/JqS1ZvmxOGN?=
+ =?us-ascii?Q?2H/WWiKIJWjNvipaRaGsWcXds41ZKvRegHA12NAKi7ABC25NTXsooHN8p1F/?=
+ =?us-ascii?Q?MatSjf+r8PaOinATAbW5Xfy91J80EBoibCNwr0gkcbmVz/l5G5sadGERsyiK?=
+ =?us-ascii?Q?bYlfTpN3qoQsJ1eJCo17G0bMz9lVuFs7VaiiQvM+o3+gBeUwICFD1NsS3mo7?=
+ =?us-ascii?Q?VTC5v8hAdFR6xi4s843njDKrL0wb2DVN4sknzleiiHOvfLuJ6M7WDpvuZRqQ?=
+ =?us-ascii?Q?KZltmWylHD9QIp+xyaUtoIuK535BbrYDAArsx4QC5/vqURGidnWfzF0yYkl2?=
+ =?us-ascii?Q?VT9x+uQfUTqpE4f7Yf8BcXkqAJxiKHjh6C8YPt4lQY+v8BT8XXt8/RZbs99L?=
+ =?us-ascii?Q?6ODAvrN79ieCO5fURkHLv42dVAiCOtfCNJDHxnqNxKVUxEYfdOWsky04LGAZ?=
+ =?us-ascii?Q?ryIBmKbC3N3t25vlaRMEr+KR8gFVI9KuAUzXEzyz9HXzQtQJx1LgRD5Ncyhm?=
+ =?us-ascii?Q?2gc7Uf0oqleEkpydY8ApKxmRQl4cGSdX5v/aYqTqSVPn5FxrxINL/9AEpVNR?=
+ =?us-ascii?Q?si/zfeH9mRhJ22kEJaDQ5MerPq419m3QxafaCTwSgZwG3G9ONgb7YZV6eugy?=
+ =?us-ascii?Q?ayLFuBAOGYd9MIzEiwf/0/X8tyCenraJdvyE5d1WHdUboembnOXpBiZS6VtX?=
+ =?us-ascii?Q?G0Ej0DHDDN9M4bZDHyeHBQgkGWFZmYtjHwr4spez2MmABT/0Ngt2+Gnl/nrb?=
+ =?us-ascii?Q?HlpO2X065xDziaeIcUuLgbVlswzmTKnXGQilbLqQ5nq1P1F3NH9JHaLLyRO9?=
+ =?us-ascii?Q?MbPIVqPTYQPCkkDuyJPEnfMwZVktBUkxXS8kV9QRnl6UMNHeXouEwTrbU/9W?=
+ =?us-ascii?Q?x68LN93ojScuAcb8fEJLLBY5Pnfb1vIfycvRXab+h5TCpyHeGDBxpyZDZJEa?=
+ =?us-ascii?Q?glfcDNIBUISy+8o2TU9JVjhzWWmXli+GCdbBEFfyurf5rp7GG2I5TD+1fyDX?=
+ =?us-ascii?Q?Vwi+mQ1NO5AevVVgw8sdFXrlcbEhJ8gOktm29qAOxX/YNe5LLynlzPhaBlRI?=
+ =?us-ascii?Q?sBAAAImnEjUa1M6Yeo5xvjdTYwQsBc2nKvfmDuTTnw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gT5VBt0IKgJjos1n/WjZjCGRKM9MSRzOfNBhXmCVxdxvPAn+OyZtKDeLaZXc?=
+ =?us-ascii?Q?XTlG4F754l6YoVF5OspoZQdukoZfCJYxmy11Sf6EIOb3wMTuBWHRRrVyWhcR?=
+ =?us-ascii?Q?pARLUBf/3Yz7vp3Ip6gvJ5hVCmCTY39stef96N2A/LSpfM0Sjh4t0jLTqVx1?=
+ =?us-ascii?Q?GWrhtY1T12568NOROWWVUxPKO4LjUcV2vCV1Fl7rQBrkLZ9VmnzXB5EcwVDM?=
+ =?us-ascii?Q?+QprSo+9OwxbAmTA30nvVm+On5o5HbW1vi6I+QqiIbJUh1YaC7bk2O4ATjP2?=
+ =?us-ascii?Q?MTX+j8t1bCjQGE0sUf8xBBPImPxScjpatxVKeW2ars+W1XUFYlXBHmOTb20y?=
+ =?us-ascii?Q?VU6wAkIsaZQYT5ss65ZrX5bgKITpHD12zmPnPOWdgkNshh0AKgMr2BGcrv8Z?=
+ =?us-ascii?Q?7bqVUzcUAXF7m9gExN2U3guxp9tyZWkzh+O8c49QyTwH3sDDc9BwvMNwE8FZ?=
+ =?us-ascii?Q?/tlBYbdnhHRWzP3o/LjTgP4s8JvBAxe8XkT0u5xvht2GWJexUDE30RQJec1W?=
+ =?us-ascii?Q?LPqCd2sma0Mp+cBUChrLGIpchtkZ4Mt//VHtSHygxDpgwR+1Twpz77Ou1sWq?=
+ =?us-ascii?Q?e6U0lRXfDx42Jt3hDAP7sht1QobcmmQJtMPCZZtm8hiCv8N9fd4QfQiFpuLe?=
+ =?us-ascii?Q?ctJ6hxNAUhxD9NkQ2pKMe5JOBkF311aM0BU5U+iPuyokFpaHInr+HdeKbp/d?=
+ =?us-ascii?Q?5r4R/xR1ddrUO4CvEvAr2c3fbPdOUcnsqE47KRu3Y62P+rJEUipTcGqEcf9U?=
+ =?us-ascii?Q?pDVn0mgMHWD4gEFNtOPTIENxQqneP0YHX5uUQbRkk5RxNL7YZmUo5wlEd8zU?=
+ =?us-ascii?Q?mnBPNy+oTV+Gs2C2tahqPyOGzfNKX15TyIUnWeQ4FB3qHOAKwUC6X2gCEmE/?=
+ =?us-ascii?Q?ErXeFmYf4wnnaFQvksDttGBdqzSo8Hj0CddYuJYeqjGk8DvBzo45+tS2mg1W?=
+ =?us-ascii?Q?liYREAsPNnYWYClx2UPLVqZPZmB+P0MGY/ztYOxYS8/2Rd+R/2ddHccpHQdf?=
+ =?us-ascii?Q?NvmLOjlbkm/SPVTnTkN44Fyh1lnRPQ8vW/a8U76zaeoDa+BxIrWl6RBcNiFT?=
+ =?us-ascii?Q?GboUAKhdsA2orV8Ouk2cMI5r2+X+wgiXCk9aElX0WxzOHTxNdthTwr5Ng2Md?=
+ =?us-ascii?Q?zfQHN1dmJENkHXFmGm8Jzg7bUT3uO56bYI+JS+Mcsw21k6dBJeJQSauz9XRK?=
+ =?us-ascii?Q?XqVIFeL3ufzhcX4Wup/UVYpIUbLKO5ZUdKpi03JXBGE4GhZ5VovfeEJYBKdN?=
+ =?us-ascii?Q?fGpXt+p2wRVY5GK256tLZRQ3crkksfByqET4LioHxt9gvD4MYhgUSrJnh+S1?=
+ =?us-ascii?Q?OWsVr2+SlvnaNnzmU/LdDdC4xwW7Y+3Fec6M+lq2zc74kY02q3PBQo57G9GK?=
+ =?us-ascii?Q?JnkYtiIUlB6KXNv0mzMg1CBViA+MI4vYdygP5rMh3jZs80sd6M+hR4L3n9sJ?=
+ =?us-ascii?Q?NVoM0oxMEfHYB++XtVUI1K1n7PBM5ey2bkQ4pX8oAJZz8pQcusgWXRuymekU?=
+ =?us-ascii?Q?X7/YLv/IWgbzBghYON0wcOJVObI1gA24KKA/LJvI6fb3f8p8TP+ktJ0QuZQh?=
+ =?us-ascii?Q?s2bvrXvhh5z6oC5ax2E=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a32ba90b-2ddc-4372-c8a9-08dcdc917a6a
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 12:07:36.3719
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C6Ibmr2NK8RUnFMEEebv1hBiDewDAiLCdHRIn5IQ+WhjCFALkbugxeyTxINwUlod
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8466
 
-On Mon, 23 Sep 2024, Wassenberg, Dennis wrote:
+On Mon, Sep 23, 2024 at 11:52:19PM +0000, Tian, Kevin wrote:
+> > IMHO we should try to do as best we can here, and the ideal interface
+> > would be a notifier to switch the shared/private pages in some portion
+> > of the guestmemfd. With the idea that iommufd could perhaps do it
+> > atomically.
+> 
+> yes atomic replacement is necessary here, as there might be in-fly
+> DMAs to pages adjacent to the one being converted in the same
+> 1G hunk. Unmap/remap could potentially break it.
 
-> Hi together,
-> 
-> we did some further analysis on this:
-> 
-> Because we are working on kernel 6.8.12, I will use some logs from this kernel version, just for demonstration. The
-> initial report was based on 6.11.
-> 
-> After we tried a KASAN build (dmesg-ramoops-kasan) it looks like it is exactly the same pciehp flow which leads to the
-> UAF.
-> Both going through pciehp_ist -> pciehp_disable_slot -> pciehp_unconfigure_device -> pci_remove_bus_device -> ...
-> This means there are two consecutive interrupts, running on CPU 12 and both will execute the same flow.
-> At the latest the pci_lock_rescan_remove should be taken in pciehp_unconfigure_device to prevent accessing the pci/bus
-> structures in parallel.
-> 
-> I had a look if there are shared data structures accessed in this code path:
-> For me the access to "*parent = ctrl->pcie->port->subordinate;" looks fishy in pciehp_unconfigure_device. The parent ptr
-> will be obtained before getting the lock (pci_lock_rescan_remove). Now, if there are two concurrent/consecutive flows
-> come into this function, both will get the pointer to the parent bridge/subordinate. One thread will enter the lock and
-> the other one is waiting until the lock is gone. The thread which enters the lock at first will completely remove the
-> bridge and the subordinate: pciehp_unconfigure_device -> pci_stop_and_remove_bus_device -> pci_remove_bus_device ->
-> pci_destroy_dev: This will destroy the pci_dev and the subordinate is a part the this structure as well. Now everything
-> is gone below this pci_bus (childs included). In pci_remove_bus_device there is a loop which iterates over all child
-> devices and call pci_remove_bus_device again. This means even the child bridges of the current bridge will be deleted.
-> In the end: everything is gone below the bridge which is regarded here at first.
+Yeah.. This integration is going to be much more complicated than I
+originally thought about. It will need the generic pt stuff as the
+hitless page table manipulations we are contemplating here are pretty
+complex.
 
-Doesn't that end up removing portdrv/hotplug too so pciehp_remove() does 
-release ctrl? I'm not sure if ctrl can be safely accessed even if the 
-lock is taken first?
-
--- 
- i.
-
-> After this the thread leaves the lock with pci_unlock_rescan_remove in pciehp_unconfigure_device. Now the second
-> thread/ISR will enter the lock. If the second thread belongs to a child bridge of the bridge which was already removed,
-> it will run into an UAF. This is because the parent bridge destroys all child bridges as well, but the second thread
-> gets the subordinate pointer before accessing the lock. This means it could be possible  hat the second thread uses the
-> already destroyed subordinate pointer which makes the subordinate invalid. Accessing the pci_bus structure via this
-> subordinate will definitely run into an UAF.
-> 
-> In addition we looked closer at pci_stop_and_remove_bus_device_locked() and noticed that while pci_stop_bus_device() is
-> also walking the ->devices list in reverse order, pci_remove_bus_device() isn't. Maybe it should, to ensure a consistent
-> order of destruction?
->
-> We addressed both with the following patch: v2-0001-PCI-pcihp-fix-subordinate-access-in-pciehp_unconf.patch
-> 
-> Whats your thoughts about this?
-> 
-> 
-> After applying this patch on top of 6.8.12 the initial UAF is gone (the one shown in dmesg-ramoops-kasan), but a
-> different UAF comes up (dmesg-ramoops-kasan-v2). This new one is more similar to the one which I reported initially on
-> Kernel 6.11. I think even though the UAF in dmesg-ramoops-kasan is not easy to reproduce on vanilla 6.11, because an
-> other one will happen, it is a valid fix which should be applied anyway because the code in 6.11 and 6.8.18 doesn't
-> differ in this area.
-> I attached a KASAN log as well where both patches are integrated: (v2-0001-PCI-pcihp-fix-subordinate-access-in-
-> pciehp_unconf.patch + PCI: Don't access freed bus in pci_slot_release() from Ilpo (dmesg-ramoops-kasan-v2+patch_ilpo).
-> 
-> 
-> In addition I am currently trying to reproduce this on vanilla 6.11 with activated KASAN but I was not lucky enough to
-> catch this until yet (without KASAN it is easy to reproduce for me).
-> 
-> Thank you & best regards,
-> Dennis
-> 
-> 
-> 
-> On Thu, 2024-09-19 at 10:06 +0200, Dennis Wassenberg wrote:
-> > Hi together,
-> > 
-> > we are facing into issues which seems to be PCI related and asking for your estimations.
-> > 
-> > Background:
-> > We want to boot up an Intel MeteorLake based system (e.g. Lenovo ThinkPad X13 Gen5) with the Lenovo Thunderbolt 4
-> > universal dock attached during boot. On some devices it is nearly 100% reproducible that the boot will fail. Other
-> > systems will never show this issue (e.g. older devices based on RaptorLake or AlderLake platform).
-> > 
-> > We did some debugging on this and came to the conclusion that there is a use-after-free in pci_slot_release.
-> > The Thunderbolt 4 Dock will expose a PCI hierarchy at first and shortly after that, due to the device is inaccessible,
-> > it will release the additional buses/ports. This seems to end up in a race where pci_slot_release accesses &slot->bus
-> > which as already freed:
-> > 
-> > 0000:00 [root bus]
-> >       -> 0000:00:07.0 [bridge to 20-49]
-> >                      -> 0000:20:00.0 [bridge to 21-49]
-> >                                     -> 0000:21:00.0 [bridge to 22]
-> >                                        0000:21:01.0 [bridge to 23-2e]
-> >                                        0000:21:02.0 [bridge to 2f-3a]
-> >                                        0000:21:03.0 [bridge to 3b-48]
-> >                                        0000:21:04.0 [bridge to 49]
-> >          0000:00:07.2 [bridge to 50-79]
-> > 
-> > 
-> > We are currently running on kernel 6.8.12. Because this kernel is out of support I tried it on 6.11. This kernel shows
-> > exactly the same issue. I attached two log files:
-> > dmesg-ramoops-0: Based on kernel 6.11 with added kernel command line option "slab_debug" in order to force a kernel
-> > Oops
-> > while accessing freed memory.
-> > dmesg-ramoops-0-pci_dbg: This it like dmesg-ramoops-0 with additional kernel command line option '"dyndbg=file
-> > drivers/pci/* +p" ignore_loglevel' in order to give you more insight whats happening on the pci bus.
-> > 
-> > I would appreciate any kind of help on this.
-> > 
-> > Thank you & best regards,
-> > Dennis
-> > 
-> > 
-> 
-> 
+Jason
 
