@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-13402-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13403-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39DD3983BB0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 05:51:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26FA9983BB3
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 05:51:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E341D1F229C6
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 03:51:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B85A4B22692
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 03:51:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2D249638;
-	Tue, 24 Sep 2024 03:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4E6B6F2F2;
+	Tue, 24 Sep 2024 03:50:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42358481CD;
-	Tue, 24 Sep 2024 03:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B16553373;
+	Tue, 24 Sep 2024 03:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727149836; cv=none; b=KcF3gCn46lHVfnRtvlLbSw5Muo6Fr+cw7uaf9loZ82VX5+AprGBRZlUc6zAaSD7MyK4Io2XgOfSs6S0CShUwubDRaPdtjeWFAB3BeKEmtpZTjuic2psS7mbe0kVxfcdAwjBrJg8OjuNcq0VwnIz3CKBBj2YJfNzlGChxCwInBkM=
+	t=1727149838; cv=none; b=EFieYhrm+EuREvmnbJr3Iuwnmp9xr2h5Qa1MAJcHAdLTG39lyd2rytkOEN6h44biju7EZbGk5z76jJJccbrnYQMcUGb55yVwJqvogMCUc7f7i0Ca4jDk6iqI5wLOb0pluy1282iBdFfc2ngfv+YXSpo/HIFRtcBtC27RAGnWAXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727149836; c=relaxed/simple;
-	bh=sQ9MeQogb1yW5Cc6yYBVPX298b0I4TU9AsXyCbfNl88=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=YnxXcJPcyR//RN2pVKRV61JFiBbZFG1nfbgqDlizMLQ/DAvlLdGFkp6CCF4f1xVohosVWR6TRZCpslRphp1d0VHJDRm5IPDNo+Gp/Vqs0CHFNM6lh7e808kE15tKj2lKL96qqv6bMM38FpWhaYH32Oyj4zyysQYoD3hYXNBTPeQ=
+	s=arc-20240116; t=1727149838; c=relaxed/simple;
+	bh=Id0QWNRJ07QIW+k0f3ROqnkVTaEdzgVXxKTBSEnj5Kk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=MjvlywtGrkBXX8hKXpRit+psmrsOLrgb9R6n7Z0YrkzAdYqk+LwKqWqfDyp4viLbld35Cksl5YAW8XnjS6ZhYQ0sZjpHLqd2v5UHUFm9gxZNrBTF6ghxeA7mqSOxmWu0ZDnHqOJ24gdWV4SdUcrYR3WFiyscV1PtBRoX2UXxAjw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C248620140A;
-	Tue, 24 Sep 2024 05:50:33 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 50A202007E0;
+	Tue, 24 Sep 2024 05:50:35 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 898172006D1;
-	Tue, 24 Sep 2024 05:50:33 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 174482006D1;
+	Tue, 24 Sep 2024 05:50:35 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 79B85183DC03;
-	Tue, 24 Sep 2024 11:50:31 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 10BAB183DC02;
+	Tue, 24 Sep 2024 11:50:32 +0800 (+08)
 From: Richard Zhu <hongxing.zhu@nxp.com>
 To: l.stach@pengutronix.de,
 	kwilczynski@kernel.org,
@@ -56,9 +56,9 @@ Cc: linux-pci@vger.kernel.org,
 	kernel@pengutronix.de,
 	imx@lists.linux.dev,
 	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v1 8/9] PCI: imx6: Add i.MX8MQ i.MX8Q and i.MX95 PCIe PM support
-Date: Tue, 24 Sep 2024 11:27:43 +0800
-Message-Id: <1727148464-14341-9-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v1 9/9] arm64: dts: imx95: Add ref clock for i.MX95 PCIe
+Date: Tue, 24 Sep 2024 11:27:44 +0800
+Message-Id: <1727148464-14341-10-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1727148464-14341-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1727148464-14341-1-git-send-email-hongxing.zhu@nxp.com>
@@ -69,45 +69,70 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-Add iMX8MQ i.MX8Q and i.MX95 PCIe suspend/resume support.
+Add ref clock for i.MX95 PCIe.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/imx95.dtsi | 25 ++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 36df439d43ae..a8505cd3b53d 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1497,7 +1497,8 @@ static const struct imx_pcie_drvdata drvdata[] = {
- 	[IMX8MQ] = {
- 		.variant = IMX8MQ,
- 		.flags = IMX_PCIE_FLAG_HAS_APP_RESET |
--			 IMX_PCIE_FLAG_HAS_PHY_RESET,
-+			 IMX_PCIE_FLAG_HAS_PHY_RESET |
-+			 IMX_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.gpr = "fsl,imx8mq-iomuxc-gpr",
- 		.clk_names = imx8mq_clks,
- 		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
-@@ -1535,13 +1536,15 @@ static const struct imx_pcie_drvdata drvdata[] = {
- 	[IMX8Q] = {
- 		.variant = IMX8Q,
- 		.flags = IMX_PCIE_FLAG_HAS_PHYDRV |
--			 IMX_PCIE_FLAG_CPU_ADDR_FIXUP,
-+			 IMX_PCIE_FLAG_CPU_ADDR_FIXUP |
-+			 IMX_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.clk_names = imx8q_clks,
- 		.clks_cnt = ARRAY_SIZE(imx8q_clks),
- 	},
- 	[IMX95] = {
- 		.variant = IMX95,
--		.flags = IMX_PCIE_FLAG_HAS_SERDES,
-+		.flags = IMX_PCIE_FLAG_HAS_SERDES |
-+			 IMX_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.clk_names = imx95_clks,
- 		.clks_cnt = ARRAY_SIZE(imx95_clks),
- 		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
+diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
+index 1bbf9a0468f6..e66be264c2f2 100644
+--- a/arch/arm64/boot/dts/freescale/imx95.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
+@@ -221,6 +221,13 @@ core5 {
+ 		};
+ 	};
+ 
++	clk_dummy: clock-dummy {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++		clock-output-names = "clk_dummy";
++	};
++
+ 	clk_ext1: clock-ext1 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -1055,6 +1062,14 @@ smmu: iommu@490d0000 {
+ 			};
+ 		};
+ 
++		hsio_blk_ctl: syscon@4c0100c0 {
++			compatible = "nxp,imx95-hsio-blk-ctl", "syscon";
++			reg = <0x0 0x4c0100c0 0x0 0x4>;
++			#clock-cells = <1>;
++			power-domains = <&scmi_devpd IMX95_PD_HSIO_TOP>;
++			clocks = <&clk_dummy>;
++		};
++
+ 		pcie0: pcie@4c300000 {
+ 			compatible = "fsl,imx95-pcie";
+ 			reg = <0 0x4c300000 0 0x10000>,
+@@ -1082,8 +1097,9 @@ pcie0: pcie@4c300000 {
+ 			clocks = <&scmi_clk IMX95_CLK_HSIO>,
+ 				 <&scmi_clk IMX95_CLK_HSIOPLL>,
+ 				 <&scmi_clk IMX95_CLK_HSIOPLL_VCO>,
+-				 <&scmi_clk IMX95_CLK_HSIOPCIEAUX>;
+-			clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux";
++				 <&scmi_clk IMX95_CLK_HSIOPCIEAUX>,
++				 <&hsio_blk_ctl 0>;
++			clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux", "ref";
+ 			assigned-clocks =<&scmi_clk IMX95_CLK_HSIOPLL_VCO>,
+ 					 <&scmi_clk IMX95_CLK_HSIOPLL>,
+ 					 <&scmi_clk IMX95_CLK_HSIOPCIEAUX>;
+@@ -1149,8 +1165,9 @@ pcie1: pcie@4c380000 {
+ 			clocks = <&scmi_clk IMX95_CLK_HSIO>,
+ 				 <&scmi_clk IMX95_CLK_HSIOPLL>,
+ 				 <&scmi_clk IMX95_CLK_HSIOPLL_VCO>,
+-				 <&scmi_clk IMX95_CLK_HSIOPCIEAUX>;
+-			clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux";
++				 <&scmi_clk IMX95_CLK_HSIOPCIEAUX>,
++				 <&hsio_blk_ctl 0>;
++			clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_aux", "ref";
+ 			assigned-clocks =<&scmi_clk IMX95_CLK_HSIOPLL_VCO>,
+ 					 <&scmi_clk IMX95_CLK_HSIOPLL>,
+ 					 <&scmi_clk IMX95_CLK_HSIOPCIEAUX>;
 -- 
 2.37.1
 
