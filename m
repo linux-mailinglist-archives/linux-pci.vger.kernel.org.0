@@ -1,124 +1,99 @@
-Return-Path: <linux-pci+bounces-13422-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13423-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D9F3984121
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 10:55:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 803C198432B
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 12:09:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADDEB1C209EE
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 08:55:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29DAD1F22FE3
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Sep 2024 10:09:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E742414F124;
-	Tue, 24 Sep 2024 08:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ADB3170A3E;
+	Tue, 24 Sep 2024 10:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqzYzQp9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C595450EE
-	for <linux-pci@vger.kernel.org>; Tue, 24 Sep 2024 08:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6059B170A3D;
+	Tue, 24 Sep 2024 10:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727168111; cv=none; b=cOfDtl0XX5CX8im4bgI5S/C2OLN/fuBCNRSYss+beHI/VyKmGPWJRbErNb8922W+JKMJR8ibqNYOsqoBVYumEO+gCi9gPy6RDYBPS+oHkPQhfuEHr00Wpphl3yGTSXI4oqar7lXwAUlfurIB0b9/rZ3VJNkQnQdLZ+y2642w0yE=
+	t=1727172506; cv=none; b=ELrymS5/B6bIsXyqAZPv5jwwdNtWCKUV+0eajffPwyJfxfsBboEJxl3nGFE9de4lW13/VoCYZjdpHaJGMLd8s9ttA+SM+dDj02BU1+xMUTuaMauoLZ62VW4+qVyu94Mbz6MeUu7tngTo+voHZiFQPTsiNpNtIj1+be9Q/3/eaKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727168111; c=relaxed/simple;
-	bh=B855ocoZI5j246WfOh9OvjTcSzB3KmSW6BnXQfhV9D0=;
+	s=arc-20240116; t=1727172506; c=relaxed/simple;
+	bh=qjRcD8XaCQtfC+CXj8B3RS3iMr5qqtfxn/9w1+Vpwoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KocnRACLPE1QmeZ0MjQwAF8R+odQHJAXQRG8hyJoUDQnzfprkl2rID7BO+jmdfCrHVCKzMdlQvqNcBKjNk6kThl9K86V5djod02kkqv5KqFVmWm32vd3cFPflovtbYgNQq63ManFlSfgsN2bhPp4JSFGy0nK9pu6w/mFKMIGS9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id D319A100D5865;
-	Tue, 24 Sep 2024 10:54:58 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9D6291DEDA1; Tue, 24 Sep 2024 10:54:58 +0200 (CEST)
-Date: Tue, 24 Sep 2024 10:54:58 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: "Wassenberg, Dennis" <Dennis.Wassenberg@secunet.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kbusch@kernel.org" <kbusch@kernel.org>,
-	"mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-	"mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>
-Subject: Re: UAF during boot on MTL based devices with attached dock
-Message-ID: <ZvJ-Yhidtc4IlU6P@wunner.de>
-References: <6de4b45ff2b32dd91a805ec02ec8ec73ef411bf6.camel@secunet.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVMhjtNoPK6CjHQkBb4NhrZAZqCrjeHg7KLArTO23b9QlmjBCIHt3K77P2OZaMy0q4iK6Xj6spwN0r3wFLJivU1lpfDtsXWR7uU5X2dtLX6VqwSY2tFIGkpoV3dijo6J5OaKxqQRjcOTdqs4cD+FuMAwB8CuY4RzCFU6c1TqEzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqzYzQp9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6654DC4CEC4;
+	Tue, 24 Sep 2024 10:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727172505;
+	bh=qjRcD8XaCQtfC+CXj8B3RS3iMr5qqtfxn/9w1+Vpwoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SqzYzQp93dGUwuK3crgxPjosYaZsJEloYZeMqEihgotzZQM/CDv8CASzjYnufILO5
+	 taIViMjN5jBlchcv6+6gBgO/UxbQbixJvRaO4uwSENJ6IYUPZjYs4nw6NxJRa1MmRa
+	 AjrKROcGgot0hbWzNsynhn72O8xNROSGRUMMAzlm2ilYTLu4FIefRlrh2MCwAZY1l1
+	 JEunDpHWEfS0EUeDmr9/MPgYV/zsQ5yB4UhciO6ZVy0K5bmj6Y7juXBbtiVcx7++ex
+	 EIPfX47cskTKbsSMV/qGaPYbgpu3LMhRX7iZhi2W6aCfVBLKzh6IvnmlSQKsGTjJ3X
+	 VK7f45vLMyBSg==
+Date: Tue, 24 Sep 2024 11:08:20 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: l.stach@pengutronix.de, kwilczynski@kernel.org, bhelgaas@google.com,
+	lpieralisi@kernel.org, frank.li@nxp.com, robh+dt@kernel.org,
+	conor+dt@kernel.org, shawnguo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, festevam@gmail.com,
+	s.hauer@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, kernel@pengutronix.de,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v1 1/9] dt-bindings: imx6q-pcie: Add ref clock for i.MX95
+ PCIe
+Message-ID: <20240924-ended-unlaced-cc7ddf87af90@spud>
+References: <1727148464-14341-1-git-send-email-hongxing.zhu@nxp.com>
+ <1727148464-14341-2-git-send-email-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QPsNdq4s/PN2L3Fw"
+Content-Disposition: inline
+In-Reply-To: <1727148464-14341-2-git-send-email-hongxing.zhu@nxp.com>
+
+
+--QPsNdq4s/PN2L3Fw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6de4b45ff2b32dd91a805ec02ec8ec73ef411bf6.camel@secunet.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 19, 2024 at 08:06:03AM +0000, Wassenberg, Dennis wrote:
-> We want to boot up an Intel MeteorLake based system (e.g. Lenovo
-> ThinkPad X13 Gen5) with the Lenovo Thunderbolt 4 universal dock
-> attached during boot.
-[...]
-> 0000:00 [root bus]
->       -> 0000:00:07.0 [bridge to 20-49]
->                      -> 0000:20:00.0 [bridge to 21-49]
->                                     -> 0000:21:00.0 [bridge to 22]
->                                        0000:21:01.0 [bridge to 23-2e]
->                                        0000:21:02.0 [bridge to 2f-3a]
->                                        0000:21:03.0 [bridge to 3b-48]
->                                        0000:21:04.0 [bridge to 49]
->          0000:00:07.2 [bridge to 50-79]
+On Tue, Sep 24, 2024 at 11:27:36AM +0800, Richard Zhu wrote:
+> Add one ref clock for i.MX95 PCIe. Increase clocks' maxItems to 5 and
+> keep the same restriction with other compatible string.
+>=20
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-The kernel oopses in kthread irq/156-pciehp.  That belongs to
-the Root Port 0000:00:07.0, as is evident from...
+It'd be really good to mention why this clock is appearing now, when it
+did not before. You're just explaining what you've done, which can be
+seen in the diff, but not why you did it.
 
-    [   12.850063] pcieport 0000:00:07.0: PME: Signaling with IRQ 156
+--QPsNdq4s/PN2L3Fw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-...because PME and hotplug share the same interrupt.
+-----BEGIN PGP SIGNATURE-----
 
-What happens here is that pciehp checks on probe whether the slot is
-not occupied (neither link nor presence bits set in config space)
-but is in ON_STATE (the list subordinate->devices is non-empty,
-see pcie_init()).
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvKPlAAKCRB4tDGHoIJi
+0gdqAP9OZE7f2j2BJ6kK0OX4ojssKFgoNCVvarSmVjUoswwluAD9GJRlsy4e4cVO
+V+bFllNycrn9H5nOyRGfT0fu8JdWTw8=
+=I93h
+-----END PGP SIGNATURE-----
 
-pciehp then synthesizes a Presence Detect Changed event to bring the
-slot down, i.e. de-enumerate the device in the purportedly non-occupied
-slot:
-
-pciehp_probe()
-  pciehp_check_presence()
-    pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC)
-
-Corresponding messages:
-
-    [   12.850866] pcieport 0000:00:07.0: pciehp: pciehp_check_link_active: lnk_status = 5041
-
-Bit 13 in the Link Status register is not set (Data Link Layer Link Active).
-
-    [   12.850880] pcieport 0000:00:07.0: pciehp: Slot(12): Card not present
-
-Synthesize Presence Detect Changed event
-
-    [   12.850887] pcieport 0000:00:07.0: pciehp: pciehp_unconfigure_device: domain:bus:dev = 0000:20:00
-
-De-enumerate child device.
-
-We need to find out why the oops occurs for sure, and it's good that
-you found it and are able to reproduce it.  But the reason you're
-seeing this on some devices and not on others is likely that the
-Meteor Lake CPU oddly reports presence and link down even though
-there's a device attached which is apparently accessible just fine.
-
-Not sure if that's a hardware erratum in Meteor Lake or a BIOS issue.
-
-I'll need some more time to root cause the oops.  Sorry for the delay,
-everyone is still decompressing after Plumbers last week.
-
-Thanks,
-
-Lukas
+--QPsNdq4s/PN2L3Fw--
 
