@@ -1,306 +1,223 @@
-Return-Path: <linux-pci+bounces-13466-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13467-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0540A9850E4
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 04:19:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 872C89850F8
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 04:31:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4293F1F21034
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 02:19:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4739A28485B
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 02:31:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65659149013;
-	Wed, 25 Sep 2024 02:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35D80148301;
+	Wed, 25 Sep 2024 02:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KQe6rc+H"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="AA9c325y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2069.outbound.protection.outlook.com [40.107.22.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDC5946F;
-	Wed, 25 Sep 2024 02:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727230752; cv=none; b=utw8qyesGijij8R6kAYL7ondqM3i734c0hlJGv/bvBfmafgdt/5AiTj/udsIo3L7AaH241zo3v1pRSYdc4PuS8TT/AO6UkbsaMqjI+wnzhZMUtEPqmKf8F/OqV9c3K1pzvxrrhN4YdweW+iuZrQDELjWvZiiPwiGr4W0LxtVtIw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727230752; c=relaxed/simple;
-	bh=oqMXqPenpnnACiruyiOns6DjEWIO3FXYx2lK3V9hScw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sWjiq0sanYbfGmUPcaDd0sQ6lrFFL2YAnFszagPYqNcJLByoIr4moQIHtXCE+avZ5sY+7NQRFZsOd6ebPHrpvHEdBKQiNnoOJkhA2PTvHNJAUycbTLjjLVc27v/O/jHqdD8c4V5rvll77AbO3gc/Hhu0VdpPZkvcQ4MtPw4oz5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KQe6rc+H; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48OHeUO0025397;
-	Wed, 25 Sep 2024 02:18:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6whLWtPSgr0+Y2zMO6IskNPkPfq9lg9PtKIpHEQYVbk=; b=KQe6rc+HIsOSpHji
-	1H3nwUqA2/1WgW8DsyErMEL1t/0UAZgMa/Z1Hfwdsvg9+6YS2qE0UL9nWaU3pxq3
-	NdrrdnHOH9PbX3CCx2njxp9q1yOuNHbKFS+yF5cJZizDcDHNb9N2dd1k9JlPYNU+
-	lcUXlvUUjmtHwckp5Trd/gkSO562aL44sfniiDl77mCgSrLgRYumhnKIDGBV9jFZ
-	ZdF+dylA9z+MguIoh6GnPSjHbzqyKPWmxlUMFP4D4nXNyjV6T0B/+cB6UhzbA0Eb
-	moIHx8Gx4OF7iJyRwY4m0BaTO4p1pJPky2rUH4ujOlCcDnjeNjs2BsKhw12kJyox
-	hEePHw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41sph6tq1k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Sep 2024 02:18:53 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48P2Iq3q030045
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Sep 2024 02:18:52 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Sep
- 2024 19:18:48 -0700
-Message-ID: <115efc10-60fd-436f-99b6-0b141f9585e7@quicinc.com>
-Date: Wed, 25 Sep 2024 10:18:46 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A0D136664;
+	Wed, 25 Sep 2024 02:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727231511; cv=fail; b=qXnsjaC2GbYEMZO4tDNQFGePFoDrtSdnzWHNfitsq2DSU5i4adCFVS2gHmy36MwvTG41BFnhkNSgSyDVw7dMkGP9zO86nKRSH767c9NPMx54D62AqPQ4numvuHgVXbdnnh1E3TktPe5IEIeZPq/wm82GESk0FZ3hru1+TzcwDMs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727231511; c=relaxed/simple;
+	bh=jxF+Gqz3szXRvfwO50JR/UAOuH4DdyTZILnXraR+mLY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=p90STfjXAb2YB00PUCb4HkLyyizqDB1cTPBDEyLv8/tNJQ+Hw61OTbmBEnSjUgq6cvC4RTbG5faZb3uWqapyHF3XV5FJ9sSHNcjRIAh0OSxIdZNapXzZ0xrjqIUQu8dfGuvXaYop0c8Vzda2oQdQLFDJ2c9ldRQepodp3TDBJ/w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=AA9c325y; arc=fail smtp.client-ip=40.107.22.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RO7YugNBQVwNM83pvsOD6ynt/6pQ6mzJoMg8lTm8OHJ00P0tfaAKTyPF13jNDZMj5fMyOzBoZraL6NssuuqBSqcfUrIjtnZ/6IQsJxblbWwE5wi9GrJChO5LmsonuZ30Uxg7lQfCCyPWwMfOusxfgL63BeEgNlN99dcWLhmEeRSulCRAsLtDhtuiuPaYvqbRJR9hAsZrhrUyNX6SXhO7NNLSTyUA8vBbK6SKoZdhBVlo4C2fWVqNmZtKkeJ109/QgyXEVyk2MyBgGcoSZufBMFFd/j4rFuRdarPOen+Jr7ZY7deON5V9i6byeiv02FfTxWeZPrmPQ4c/0e67/aMVSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jxF+Gqz3szXRvfwO50JR/UAOuH4DdyTZILnXraR+mLY=;
+ b=o4K2jjysji834amptLqMCHwrv2OZeLRD3GHgv46SzRLT4Hq9TPZYyplRx+ME3Vmpt+MQkgPljXb0pulz7v05hTbVf+Jb6FV3JYdcxHHtTedCPBVWI+isjl7YwEZLKKYiZPXwUrDRjTQjR9Unz/ybLQQJCgUSmnNg5Q1LE3f9tuBsaUWJ1UH078v1QGro6j7Q89MMiqlUidNXB/iGj2Y950vv6syvd7k92SzDjtJJFjEh0FTnTZHb/JXuzh217sqCWrb5w632QimrpfnGyIkWjOpn2Nje06DOmJ7sKoAzbuvRY31NQCMG8ycpB+BKRPn2C/YvYehLqHzbdxw/bBqn+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jxF+Gqz3szXRvfwO50JR/UAOuH4DdyTZILnXraR+mLY=;
+ b=AA9c325yHh+EffwTS3C9KAvQgFSKmslgkrxA5lj/PKG0Fb/mRSIthc0scqxoc4wJkxQIkDOhUq9dz44C9RIhsBIIThVonmh1i6rAEMNhec0Ywq9iZbcrUXc7F2HG6A9+DI4l2ChMm1X9GoNnLBRw0XWbPD6ZO46+9mPtrkvATP3MEtQ4dXUR9XfuaV0VIZ9OyHvbbv6ZnhMfkRhGlrSiJA3BO81Nx/2GG38+lcAD17rEtfChIOdLCnPeP56KzlzlrzE5RbSvHW0Mmaoa6GElKJjdJMtNgGfG+2Wi4wIzKHTDnj48SWzdHPNEIddNrcN7UCAswF+K3A9VJhUcYsiemA==
+Received: from DU2PR04MB8677.eurprd04.prod.outlook.com (2603:10a6:10:2dc::14)
+ by DB9PR04MB8137.eurprd04.prod.outlook.com (2603:10a6:10:244::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.27; Wed, 25 Sep
+ 2024 02:31:42 +0000
+Received: from DU2PR04MB8677.eurprd04.prod.outlook.com
+ ([fe80::6b10:a2e8:fdf0:6bdd]) by DU2PR04MB8677.eurprd04.prod.outlook.com
+ ([fe80::6b10:a2e8:fdf0:6bdd%4]) with mapi id 15.20.7918.024; Wed, 25 Sep 2024
+ 02:31:41 +0000
+From: Hongxing Zhu <hongxing.zhu@nxp.com>
+To: Conor Dooley <conor@kernel.org>, Frank Li <frank.li@nxp.com>
+CC: "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de"
+	<s.hauer@pengutronix.de>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [PATCH v1 1/9] dt-bindings: imx6q-pcie: Add ref clock for i.MX95
+ PCIe
+Thread-Topic: [PATCH v1 1/9] dt-bindings: imx6q-pcie: Add ref clock for i.MX95
+ PCIe
+Thread-Index: AQHbDjTjeKGi9dgwR0+Ck4WHAuh9dbJmtvMAgABX8gCAAAuDAIAArv+Q
+Date: Wed, 25 Sep 2024 02:31:41 +0000
+Message-ID:
+ <DU2PR04MB8677A659D73AB056EFE0B4158C692@DU2PR04MB8677.eurprd04.prod.outlook.com>
+References: <1727148464-14341-1-git-send-email-hongxing.zhu@nxp.com>
+ <1727148464-14341-2-git-send-email-hongxing.zhu@nxp.com>
+ <20240924-ended-unlaced-cc7ddf87af90@spud>
+ <ZvLZWqRFnAtgFo3B@lizhi-Precision-Tower-5810>
+ <20240924-spoilage-fanfare-357c65b8418e@spud>
+In-Reply-To: <20240924-spoilage-fanfare-357c65b8418e@spud>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PR04MB8677:EE_|DB9PR04MB8137:EE_
+x-ms-office365-filtering-correlation-id: ba023665-a500-4b3b-a411-08dcdd0a30e3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?gb2312?B?ZmdaMFF6d2JQRXhrZ2FUaVVuMTFsOVc5RUNOekY3MmR1VURQWml6UDc2aHB0?=
+ =?gb2312?B?Y0tJMFQyYldsSFkwRytyVGE2WnNWMW9nb3lXdVpUN2xPeEVlNUUyRHY3eFJ2?=
+ =?gb2312?B?eU5QenNERjBuWEh0clZPNk91YmxLbGxrVTZiRHBFQTJlUUJoT0orTDEvakpr?=
+ =?gb2312?B?RlNhQmJJRjhscWhCRFFBb2VhcjJoVDVvY1VmaGxyaVFFOTdqb0ExTXpId05w?=
+ =?gb2312?B?NmdIMmxpb2dOSUxDeldCMFZaMnBVOW9nYW0yRHE2dWxzbGVEOVhSNFVwR01w?=
+ =?gb2312?B?MjIwdzUvd29MUWxaek5KNjY2ZFNYVHVTcnM0M3kvZkxJa1dCc0hhZjluTVJ5?=
+ =?gb2312?B?RGo3RytVZkY4d2VPRUN2SjBsaFEvRzVickFoTkpOMU1ybndoT2JyK3FuV1pl?=
+ =?gb2312?B?SDVha3JtbEoyY2ZYWEtUbFp4anQ5YlU4WHZJcHVoTkZqbHhFRnBnN21Ua3ds?=
+ =?gb2312?B?WDNsSGRVbzBmK1oxNzBGMldaTThuN3MrRGsyNTNXT0ZSb2RDcjk5WmRrZUFU?=
+ =?gb2312?B?RVRHVThzb0t4RGsxN2NFVmlTcm0xYVdVdU1wS3NpbXFwU1drQUVQUTc2TzlV?=
+ =?gb2312?B?cmUzaWhwT2oxc212alp2bXZoVHhwRkdWSWN0N3JxZnJZUDV3UTFVMm1vMDcy?=
+ =?gb2312?B?V2ZGdEF3NFVDNUpOcGV0a2xRcHdENEMyS3ZmcGdjUUtXVUtiU2VvT0xVM29L?=
+ =?gb2312?B?dkJyRHhCOGFKaUVYQ29LcXFXME1NVjFrUzd5dktaYlVVY3dIUHhKdzRYa2lr?=
+ =?gb2312?B?R095dGd6aFZkQ29oN3pKYTFKejdzS3pQRDVGbDFzcDE2allpRktKc0IyR1Ns?=
+ =?gb2312?B?RkN1cTJvdmVwTUNuTEoxZklTQkgxV3c2azdtamRYL3hsd21uV0hLL1Fqd2U1?=
+ =?gb2312?B?Z3I5WHM5Y0RlWHFVM0tRamo0Qzk5OE9Pa3BxZ05scFdwaWU1MFFZQ0gzTWY5?=
+ =?gb2312?B?dGliZ0xrci9zVWVubmlyeVVYbUF0V0FUV2N1NkpkUTlLaGg3OHhmMGgyV3hC?=
+ =?gb2312?B?MlJ0OW0xeXo4U3lNL1R0cmV4MmVsMS9PWUlPa1N3ZmkwUXJkLzJCcTFJbXVa?=
+ =?gb2312?B?bFBmbGZadTZFcUtrQXBaRWQrT3BXc2JZN3ZLcXhMV2ZlQzNzRFY2NkdWcDBi?=
+ =?gb2312?B?dHd3em5tN1puYTV1Slp3UGRhazhMam5GMGxRc2hnTzZYZVRBTDNxRjlRYkFZ?=
+ =?gb2312?B?RytyaElDQmFkV081YzJpSE1oOGJuMStlajRpTnc4Sk5OTmx0WEtoMWpOdnZl?=
+ =?gb2312?B?QlBvRUQ2cUJYN2VPS1dmcFEyaDdRVXBUdmpiOVZtTnZaVlIwOHVIWU1kMHdp?=
+ =?gb2312?B?SmtlMUFwUDFjWC9MZmZlWmxrRmJzUHZjb2U4ZHNTb0FlQTB3TVBEWmhHSnRM?=
+ =?gb2312?B?TDRGb2g3Zm1nUTBmdGxQUFhJc0xIdlhIendoR05xSFZpTlN4VUJkK1NUVWtm?=
+ =?gb2312?B?WVJjd3oxTVE0UUlhMzYvVW4rZUkzb2xQUFc4YlhIY3hrdnVNZUMvYW8wNFlm?=
+ =?gb2312?B?dzVJK3FLNkdZOTdNZ0J4aWZEQ0hsMFMwM2R1U09jandRY1VDK2xlYlQ2QmlR?=
+ =?gb2312?B?NmlHTUpqdHV6TmtHL0pnSzhSak1UY29YaS9Zc1Rub2FwOWJuS3pqVWJQSjFD?=
+ =?gb2312?B?OERvSGlya1Q3K2JxN0JKdWVUTVVoK0o2U1F1TVFPU3Q0V0d1Q09IMkV1OURm?=
+ =?gb2312?B?ZEV3RlJ3WE5zNDkwb09DZlpjbjRYbkFTNndEWkNBSDMxaXR4SXNneEJ2V0lK?=
+ =?gb2312?B?ajBkQVZHQzBoUFU3UnlzekhDRXhzWjRNMkhPRE5MUVZWa3loTm5rMXE5MzI5?=
+ =?gb2312?B?aG5QT2p2eFNiOTh6K2hjQT09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8677.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?MVVKcmhiZHhyMUppTTNOenZMMjdSbVpxQ3k4d2dZdDJUd05BUi9RVzY4b3FG?=
+ =?gb2312?B?Y1UwZjVOMTg4UkNHSmUydGZlNUVQOFplV091Y1NVR1NrZ0tQdElWajRTcnZy?=
+ =?gb2312?B?RExxeE1oSStYb2ZYUytNc3daL0kydHk2SGMxaGZSUlRicHo2NVdTdmh1WlVG?=
+ =?gb2312?B?TjYyUFk1V0JhZ1FlS3diQmp1MjFZbmkrcVVCTGtyZitSVEhadGVoT2lQMmhR?=
+ =?gb2312?B?cXNwbFIvanJKTWVnRHBycEp3bVJ4N2xqZnVNSWpkVnhFeUx5NFFsaHh5dnhv?=
+ =?gb2312?B?VndBMTNsMTFVVDN6dVpKMjE4bmUrWm5rVTk4dmc2UVpSWTBOTHVJOGRVTFZz?=
+ =?gb2312?B?SUJ2bGNnektlM3FBZGFQWjZmeGY5WXhQTkpZTmdoWG14ODQydEd3ZE80VlZk?=
+ =?gb2312?B?SWFlRlhTVlRHQkNobmdDYmJmOW5rRmJocDUzelhJayt2TklBdDgrY2liNXFR?=
+ =?gb2312?B?eHNLVlZtSkVjZ3cvTnJ6QTJEdEczZm92VXc5d0s1cmsxNjVBamRtTGNnR3pE?=
+ =?gb2312?B?OGJWUWU4bWdyS0pxWElpMzd4dWxzNC84WkZCRHY2TEFEaWtzMloyMGR4WVBW?=
+ =?gb2312?B?ME5zQWxDamd2WGtDYTZheGxJZDdrb25wMkk2THJkeElYc0tMSmxLWkxna1dQ?=
+ =?gb2312?B?LzV3UFY3czM3VEtRQU9VeTBBYnQyNkNoYnhOTkdxTEs0SWZJSEEvSFNlczJz?=
+ =?gb2312?B?cmlJNE5kcStEYzBaWVRoRGIzSkxMc3gya0lyZ295aktrcU0rRUUvS2NFdzRC?=
+ =?gb2312?B?RkY3WlF2dTRIcEdoOTZhMlpGWEJWdkl6RmJpWlUwT1BRRCtMd05abzdGSzdj?=
+ =?gb2312?B?T2R0ZndKcmJSeEpFZnp6MTZDQTU2eCtIcUJteUV0MWltYko5c2JBbStYQmto?=
+ =?gb2312?B?ZUFiWmdBVTU1dlEyNzZkQ1U1RTFuSktSQzBwQTYvTDFvVS9MalBET3hWLzYr?=
+ =?gb2312?B?UVpJUG4veEZmbEo3TXVKTzZaUmlvNUtaUDV4UWM4QVZWOGswTW9qL0pTMGF1?=
+ =?gb2312?B?ZGpIVVg1dXgyRExDbXFqUDMrQnpKT1hyTW4rMDVYVkxKbVZIVWNZMjZhQUFm?=
+ =?gb2312?B?ZXV4Wk0wMDdOWFNraFZkYjh2dkRUcXdNTVNkN2pWaUhIeDZIamV5YXFIZmE3?=
+ =?gb2312?B?Y0p2Vk12dUJ0NGwxdDhJSEFxN3RqY2RSMUh0dVNoeHl1V0lOaWxXTDJIdEU5?=
+ =?gb2312?B?Z2swQ3hDeEluNzR6a2ZEK0dUd2VaRElqcm9XSzdxbDBFeGRwT3VJVDFsTXJi?=
+ =?gb2312?B?TWdwZzg0SnRkSFhFalJQOXc5Q0RoeUtZUnFFbTNqWjhlb0krWEFNd0l3U0Zx?=
+ =?gb2312?B?RHRkU3Z5OU9KQlExUGpvcjMwU2hkYlh4WjJtYSs5UW9vbzdjTGhQSDNlaDh2?=
+ =?gb2312?B?b2FyeHdLd2V1anVBV3FFR0hOYlRNTUNINU1NMDRxZnl3U3NHbmVta2VrZHNZ?=
+ =?gb2312?B?QlhNM0t2SVdaWHZoRUxCNXhiQlV3YjcrSkdpMWRPNSs3ZFBBT0s4VGJFcXZ5?=
+ =?gb2312?B?ZC9yMU5ueHRLbnNlaS9iVnZvU0wxU0p6eUdid2JiZmJBTnVINkRycTliN1FD?=
+ =?gb2312?B?VDdGcy8zaUo2TTFXK2dwNk9rbGxmRUl1dENFWm1wRUlGUFhKT3A1R2ZtRndI?=
+ =?gb2312?B?VXdxMG1kY1VETWIxbGNRaFBJdFRPWkpYV09sZGNwWjdUSHhlMytFQW9KZS8z?=
+ =?gb2312?B?SEhWK2UzQWFyRFJac3hzSnF6dWZRdS92YkkveUJ1MTFUNjhyZXB2OFFmVkw3?=
+ =?gb2312?B?Yi8vUWtWR0JUdHF1elNLRDBIOENwY0N2OFZtcU5TcVB4Y0tzK29Ga1EvdTZ5?=
+ =?gb2312?B?ckVYanhZc29zYXNYQjJrQ1AxaWhhNnZLbHZuUjlEVCs5bHZRSkhCMjR1cXhU?=
+ =?gb2312?B?TzZES0ZURDAySU5TdUZSanlocnBndlVJZEFSaW5JRXFlUjRBdGd6b2ZmeXEy?=
+ =?gb2312?B?c1huRGV1QzZ6Y0F1VjIvR3lzSU5EUFVaekxxRVY1S2dXd1hjamVZUTBDb2Jv?=
+ =?gb2312?B?WVB6SGQ1WkxVSDl0TUdnYy9NbUk2WDR6a1hVUm9QS2V3alk3Y0dVSjlqUWJF?=
+ =?gb2312?B?SXNTMmpRQ2E1WWVWUSt2dFMzeDRuY1JISDVPUHpuS1pBYkpaM2djOEx0WFEx?=
+ =?gb2312?Q?+YtJHYb11eI7iJDooU4OgPD5A?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: unexptect ACPI GPE wakeup on Lenovo platforms
-To: Mario Limonciello <mario.limonciello@amd.com>, <rafael@kernel.org>,
-        <mika.westerberg@linux.intel.com>, <ulf.hansson@linaro.org>,
-        <bhelgaas@google.com>, <Basavaraj.Natikar@amd.com>,
-        <Shyam-sundar.S-k@amd.com>, <mpearson@lenovo.com>,
-        <markpearson@lenovo.com>, Kalle Valo <kvalo@kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-References: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
- <79d288c6-6042-4f73-b465-0ddcde14509a@amd.com>
- <b51c89f0-035a-4e94-adc3-e1b4fc31dfdd@quicinc.com>
- <91e179ca-ff2e-48b0-813d-7b819e300dca@amd.com>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <91e179ca-ff2e-48b0-813d-7b819e300dca@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: F0YU-THIKDcK4yDkH0twd7aD3rYNUhXX
-X-Proofpoint-ORIG-GUID: F0YU-THIKDcK4yDkH0twd7aD3rYNUhXX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
- mlxscore=0 adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409250016
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8677.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba023665-a500-4b3b-a411-08dcdd0a30e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2024 02:31:41.9154
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SKsC0yfbvgihKiTng3e6xmnNf4GKSDqAGzHlpoC0/z/4tmJ+YaJQj9JR5AVsp0Ivzjsir/aDRepRcD6ZF0RdVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8137
 
-
-
-On 9/25/2024 1:55 AM, Mario Limonciello wrote:
-> On 9/24/2024 00:52, Baochen Qiang wrote:
->>
->>
->> On 9/23/2024 9:37 PM, Mario Limonciello wrote:
->>> On 9/23/2024 05:07, Baochen Qiang wrote:
->>>> Hi,
->>>>
->>>> recently it is reported that on some Lenovo machines (P16v, Z13 etc.) unexpected ACPI event wakeup is seen with kernel 6.10 [1][2]. To summary, the unexpected wakeup is triggered by simply unplug AC power or close lid of the laptop. Regression test shows this is caused by below commit, and with that reverted the issue is gone:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath11k?id=166a490f59ac10340ee5330e51c15188ce2a7f8f
->>>>
->>>> Well what confuses me is that this commit basically resets WLAN hardware before going to suspend. that said, WLAN target maintains limited functionality (PCIe link handling etc...) during system suspend and is thus not expected to wakeup system.
->>>>
->>>> kernel log shows this is an ACPI GPE event wakeup:
->>>>
->>>> Sep 22 22:34:32 fedora kernel: PM: Triggering wakeup from IRQ 9
->>>> Sep 22 22:34:32 fedora kernel: ACPI: PM: ACPI non-EC GPE wakeup
->>>> ...
->>>> Sep 22 22:34:32 fedora kernel: PM: noirq resume of devices complete after 693.757 msecs
->>>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x07
->>>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x0e
->>>>
->>>> Consulting ACPI tables show GPE 0x07 is used by the EC and GPE 0x0e is used by GPP6 device:
->>>>
->>>> Scope (\_SB.PCI0.GPP6)
->>>> {
->>>>       ...
->>>>       Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
->>>>       {
->>>>           M460 ("PLA-ASL-\\_SB.PCI0.GPP6._PRW Return GPRW (0xE, 0x4)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
->>>>           Return (Package (0x02)
->>>>           {
->>>>               0x0E,
->>>>               0x04
->>>>           })
->>>>       }
->>>>       ...
->>>> }
->>>>
->>>> while GPP6 is the PCI bridge (the PCIe root port in this case) to which WLAN target is attached to:
->>>>
->>>> Device (GPP6)
->>>> {
->>>>       Name (_ADR, 0x00020002)  // _ADR: Address
->>>>       ...
->>>> }
->>>>
->>>> Scope (_SB.PCI0.GPP6)
->>>> {
->>>>       Device (WLAN)
->>>>       {
->>>>           ...
->>>>       }
->>>>       ...
->>>> }
->>>>
->>>> and lspci also shows such relationship:
->>>>
->>>> $ lspci -vt
->>>> -[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
->>>>              ...
->>>>              +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
->>>>              ....
->>>>
->>>> Based on above info:
->>>> #1 is that valid to get the conclusion that this unexpected wakeup is triggered directly by PCIe bridge?
->>>> #2 if this is related to WLAN (seems so based on the regression test), is it the WLAN wake pin (a GPIO pin?) that originally triggers this? and how does it affect the bridge?
->>>> #3 quick tests show that with GPP6 wakeup disabled this issue is gone. so a workaround is to disable GPP6 wakeup before going to suspend and enable it back after resume. But is it safe to do so?
->>>>
->>>>
->>>>
->>>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
->>>> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2301921
->>>>
->>>
->>> With pinctrl-amd there is an extra debugging message present [1] that is activated when you enable '/sys/power/pm_debug_messages' which will tell you if a GPIO is active during the suspend cycle.  That can help you to rule out whether this is the WoWLAN GPIO pin causing the behavior.
->>>
->>> [1] https://github.com/torvalds/linux/blob/v6.11/drivers/pinctrl/pinctrl-amd.c#L626
->> Thanks for the reminder, Mario.
->>
->> I do notice that some reporters mentioned about this [1]. and I can also see this on my P16v machine:
->>
->> [  881.799289] PM: suspend entry (s2idle)
->> ...
->> [  897.491440] PM: Triggering wakeup from IRQ 9
->> [  897.491714] ACPI: PM: ACPI non-EC GPE wakeup
->> [  897.491720] PM: resume from suspend-to-idle
->> ...
->> [  898.153259] PM: noirq resume of devices complete after 556.675 msecs
->> [  898.153443] ACPI: GPE event 0x07
->> [  898.153502] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 1st time
->> ...
->> [  898.314804] mhi mhi0: Requested to power ON //WLAN begin to reinitialize
->> [  898.314841] mhi mhi0: Power on setup success
->> [  898.694562] mhi mhi0: Wait for device to enter SBL or Mission mode
->> [  899.305898] GPIO 18 is active: 0x10157a00 //I guess this is the WoWLAN GPIO pin
-> 
-> Yeah that's what it looks like to me too.  The easiest way to confirm this (without a schematic that is) is to look at the _AEI / _EVT in the SSDT and see what is notified when this is active.
-seems GPP6 is notified, does this mean GPIO18 is NOT bound to WLAN wakeup pin? but instead it is bound to the PCIe root port?
-
-Scope (\_SB.GPIO)
-{
-    Method (_AEI, 0, NotSerialized)  // _AEI: ACPI Event Interrupts
-    {
-        Name (BUF0, ResourceTemplate ()
-        {
-		...
-            	GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
-                	"\\_SB.GPIO", 0x00, ResourceConsumer, ,)
-                {   	// Pin list
-                    	0x0012
-                }
-		...
-	})
-        Name (BUF1, ResourceTemplate ()
-	{
-		...
-		GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
-			"\\_SB.GPIO", 0x00, ResourceConsumer, ,)
-		{   	// Pin list
-			0x0012
-		}
-		...
-			
-	})
-	If ((\_SB.PCI0.LPC0.EC0.WWDT != 0x0F))
-	{
-		Return (BUF0) /* \_SB_.GPIO._AEI.BUF0 */
-	}
-	Else
-	{
-		Return (BUF1) /* \_SB_.GPIO._AEI.BUF1 */
-	}
-    }
-	
-    Method (_EVT, 1, Serialized)  // _EVT: Event
-    {
-        M460 ("  OEM-ASL-\\_SB.GPIO._EVT-Start Case %d\n", ToInteger (Arg0), 0x00, 0x00, 0x00, 0x00, 0x00)
-        Switch (ToInteger (Arg0))
-	{
-		...
-            	Case (0x12)
-            	{
-                	M000 (0x3912)
-                	M460 ("    Notify (\\_SB.PCI0.GPP6, 0x02)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
-                	Notify (\_SB.PCI0.GPP6, 0x02) // Device Wake
-            	}
-		...
-        }
-
-        M460 ("  OEM-ASL-\\_SB.GPIO._EVT-End Case %d\n", ToInteger (Arg0), 0x00, 0x00, 0x00, 0x00, 0x00)
-    }
-}
-
-> 
->> [  899.306089] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 2nd time
->> [  899.333158] ath11k_pci 0000:03:00.0: chip_id 0x12 chip_family 0xb board_id 0xff soc_id 0x400c1211
->> [  899.333190] ath11k_pci 0000:03:00.0: fw_version 0x1106196e fw_build_timestamp 2024-01-12 11:30 fw_build_id WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.37
->> ...
->> [  899.826378] PM: suspend exit
->>
->>
->> But I don;t think it is the wakeup source, it is just toggled during WLAN reinitialize AFTER system wakeup. actually even with ath11k module removed I can also see this GPE wakeup, but without GPIO 18 toggled:
-> 
-> I don't believe that just removing the kernel module is enough.  Can you physically remove the hardware?
-not possible, it is soldered, not a M.2 module
-> 
->>
->> [ 2640.849342] PM: suspend entry (s2idle)
->> ...
->> [ 2650.806234] PM: Triggering wakeup from IRQ 9
->> ...
->> [ 2651.467653] PM: noirq resume of devices complete after 558.943 msecs
->> [ 2651.467880] ACPI: GPE event 0x07
->> [ 2651.467961] ACPI: GPE event 0x0e
->> ...
->> [ 2651.848848] PM: suspend exit
->>
->>
->>
->> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219286
->>
-> 
-> Is it possible for you to put a scope on the GPIO and/or PCIe analzyer on the bus?
-it is hard to me -- for the GPIO I need the schematic which is not available, and for the PCIe analyzer we need hardware rework for that, but I will try.
-
-> 
-> It sounds to me that most likely what's going on is PME being asserted from WLAN controller.
-But I don;t see a PME interrupt fired on the root port:
-
-$ cat /proc/interrupts
-  36:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0  IR-PCI-MSI-0000:00:02.2    0-edge      PCIe PME
-
-$ lspci -tv
--[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
-	   ...
-           +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
-
-
-> 
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb25vciBEb29sZXkgPGNvbm9y
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjTE6jnUwjI1yNUgMDowNA0KPiBUbzogRnJhbmsgTGkg
+PGZyYW5rLmxpQG54cC5jb20+DQo+IENjOiBIb25neGluZyBaaHUgPGhvbmd4aW5nLnpodUBueHAu
+Y29tPjsgbC5zdGFjaEBwZW5ndXRyb25peC5kZTsNCj4ga3dpbGN6eW5za2lAa2VybmVsLm9yZzsg
+YmhlbGdhYXNAZ29vZ2xlLmNvbTsgbHBpZXJhbGlzaUBrZXJuZWwub3JnOw0KPiByb2JoK2R0QGtl
+cm5lbC5vcmc7IGNvbm9yK2R0QGtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IGty
+enlzenRvZi5rb3psb3dza2krZHRAbGluYXJvLm9yZzsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiBz
+LmhhdWVyQHBlbmd1dHJvbml4LmRlOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBrZXJuZWxAcGVuZ3V0cm9uaXgu
+ZGU7IGlteEBsaXN0cy5saW51eC5kZXYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MSAxLzldIGR0
+LWJpbmRpbmdzOiBpbXg2cS1wY2llOiBBZGQgcmVmIGNsb2NrIGZvciBpLk1YOTUNCj4gUENJZQ0K
+PiANCj4gT24gVHVlLCBTZXAgMjQsIDIwMjQgYXQgMTE6MjM6MDZBTSAtMDQwMCwgRnJhbmsgTGkg
+d3JvdGU6DQo+ID4gT24gVHVlLCBTZXAgMjQsIDIwMjQgYXQgMTE6MDg6MjBBTSArMDEwMCwgQ29u
+b3IgRG9vbGV5IHdyb3RlOg0KPiA+ID4gT24gVHVlLCBTZXAgMjQsIDIwMjQgYXQgMTE6Mjc6MzZB
+TSArMDgwMCwgUmljaGFyZCBaaHUgd3JvdGU6DQo+ID4gPiA+IEFkZCBvbmUgcmVmIGNsb2NrIGZv
+ciBpLk1YOTUgUENJZS4gSW5jcmVhc2UgY2xvY2tzJyBtYXhJdGVtcyB0byA1DQo+ID4gPiA+IGFu
+ZCBrZWVwIHRoZSBzYW1lIHJlc3RyaWN0aW9uIHdpdGggb3RoZXIgY29tcGF0aWJsZSBzdHJpbmcu
+DQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgWmh1IDxob25neGluZy56
+aHVAbnhwLmNvbT4NCj4gPiA+DQo+ID4gPiBJdCdkIGJlIHJlYWxseSBnb29kIHRvIG1lbnRpb24g
+d2h5IHRoaXMgY2xvY2sgaXMgYXBwZWFyaW5nIG5vdywgd2hlbg0KPiA+ID4gaXQgZGlkIG5vdCBi
+ZWZvcmUuIFlvdSdyZSBqdXN0IGV4cGxhaW5pbmcgd2hhdCB5b3UndmUgZG9uZSwgd2hpY2gNCj4g
+PiA+IGNhbiBiZSBzZWVuIGluIHRoZSBkaWZmLCBidXQgbm90IHdoeSB5b3UgZGlkIGl0Lg0KPiA+
+DQo+ID4gUHJldmlvdXMgcmVmZXJlbmNlIGNsb2NrIG9mIGkuTVg5NSBpcyBvbiB3aGVuIHN5c3Rl
+bSBib290IHRvIGtlcm5lbC4NCj4gPiBCdXQgYm9vdCBmaXJtd2FyZSBjaGFuZ2UgdGhlIGJlaGF2
+b3IsIHNvIGl0IGlzIG9mZiB3aGVuIGJvb3QuIFNvIGl0DQo+ID4gbmVlZCBiZSB0dXJuIG9uIHdo
+ZW4gaXQgdXNlLiBBbHNvIGl0IG5lZWQgYmUgdHVybiBvZmYvb24gd2hlbiBzdXNwZW5kIGFuZA0K
+PiByZXN1bWUuDQo+ID4gUHJldmlvdXMgbWlzcyB0aGlzIGZlYXR1cmUuDQo+IA0KPiBQbGVhc2Ug
+cHV0IHRoaXMgaW4gdGhlIGNvbW1pdCBtZXNzYWdlIFJpY2hhcmQuDQpIaSBDb25vcjoNClRoYW5r
+cyBmb3IgeW91ciBjb21tZW50cy4NCldvdWxkIGFkZCB0aGVzZSBpbmZvcm1hdGlvbiBpbiB0aGUg
+Y29tbWl0IG1lc3NhZ2UgbGF0ZXIuDQoNCkJlc3QgUmVnYXJkcw0KUmljaGFyZCBaaHUNCj4gDQo+
+IFRoYW5rcywNCj4gQ29ub3IuDQo=
 
