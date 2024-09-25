@@ -1,53 +1,48 @@
-Return-Path: <linux-pci+bounces-13526-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13527-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95ABF98657B
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 19:14:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39FD49866DD
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 21:28:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F2701F2110A
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 17:14:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5D931F25397
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 19:28:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49BAA43AA4;
-	Wed, 25 Sep 2024 17:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BFB613E043;
+	Wed, 25 Sep 2024 19:28:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="RH94mpxk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldQm7a9n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC095134BD;
-	Wed, 25 Sep 2024 17:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DEF1EEE9;
+	Wed, 25 Sep 2024 19:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727284487; cv=none; b=cr4PmVaoeigCym/UyOSnjrNBwxBLF7FnytZoP52YSWZZ5QwiuRQeyEeG3mt7vI6G5IyZtnCTAUzPRLm/9M6DkNc7bSWOa8JrY3qyNymG/R1nNKVK/Mss5aYZYkkrBX3aYNkWzaI34P3u8gjI2szhekhntvMvESwYAOQTY+gxWoY=
+	t=1727292512; cv=none; b=EXTsASDN14KAiOCR3HicnzaogdfOhcNZfy/A42iudJ22qCeMwc2D+eU+g6EZNnJ47bUf7pEmdmkUoXH7DLeA477HksPCi124Ov1jiKErbHLwxtif3fqwKE/BZzP+/G//++q8QI9uYPVW6372xIgBbAxkprn0C076IAWTt9kXEoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727284487; c=relaxed/simple;
-	bh=aIW1QfRYwvuDJbIY3ZHeD9wGhOVohwX859RGPoS1nQs=;
+	s=arc-20240116; t=1727292512; c=relaxed/simple;
+	bh=BHY5b/7aCxpIbeg6RwISb63xJhM+TyHwNQ3PeO7u430=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dywOxllQSWM8XJMKuBsp6rfNmdPmmxfUZzvTEHlC4haTMlL6F2On/0MkyxcpMrUqxaY3fTIwNl718yw6L2nwwIlrbAm1baBYmejDYxzcn3dny2QZRgUw9yN/06pNa12pUbSkirJQfAFYAIu85uwaIwggVigyE8uqzwNoxJwrNos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=RH94mpxk; arc=none smtp.client-ip=166.84.1.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
-	(No client certificate requested)
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4XDNCF2nF7zDQj;
-	Wed, 25 Sep 2024 12:55:37 -0400 (EDT)
-Received: from [192.168.80.67] (unknown [207.7.121.250])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4XDNC55w34zl2J;
-	Wed, 25 Sep 2024 12:55:29 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1727283330; bh=aIW1QfRYwvuDJbIY3ZHeD9wGhOVohwX859RGPoS1nQs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RH94mpxk3EVikiQBZ1bjTttZbakCa8GRtM46BdWBji+xmCV9HMcCnb9vv83DEjwca
-	 fl1W/jyqYBWNmmw7RlpXdEIW/qQ6/sOgA2YAVXrHf/gOa/E2YD241Cuc4hv472ZfDq
-	 q7GRkY2Q8ZhpPmGrhhgNuksq8nQhzXTg2IP1ujdM=
-Message-ID: <985893c0-ade3-4b23-b452-6f416e7ff2a1@panix.com>
-Date: Wed, 25 Sep 2024 09:55:28 -0700
+	 In-Reply-To:Content-Type; b=KaEjU5lSfpSaGcz9u46NM8or91Brpyom9bH4yQc87w4GFy12S9qxtw42RfTyJ6d/A7LEIurZpxPm9+yYsyXNWMyP1Ag6TinkE+WhzQhZQQOs4sGgw/f/SrRveF8ICnMK+HERlshEWedCy56pyx29pSD61BHDbjeKe3bub+X64aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldQm7a9n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CF91C4CEC3;
+	Wed, 25 Sep 2024 19:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727292511;
+	bh=BHY5b/7aCxpIbeg6RwISb63xJhM+TyHwNQ3PeO7u430=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ldQm7a9nP9Ya10copiq24onxV9Q5DcpKS5L3W6NNsjffFf+0h30C+CnvIfCFOuSpz
+	 tgtoyo/dZYX7qsxhvnHlDzMpMvHTQLhefWWwnN8CAOWxn4b4lr8tmz0SPRdyhSJDKN
+	 3r2hEe9aggCQC4AQveofbQFRH6+KQHIaJ5bYpJ5TJgoUVxKnPD+6lpUwLKsUY4WvWw
+	 l4CIGMt70xsdmnt2QT/thKhl4/0epZfwekVMbj0fc1CxklWSHtBr8triSnsD/dcJ3r
+	 BxcdUH5BL/rF70QOSWeKbouszufKDeGlWkkAbSyMX3TqKSbktslBR8CzB1erRLRRFA
+	 0TIYiSPg0pdtg==
+Message-ID: <acb6f417-d8ad-4b73-9752-d30da34b204a@kernel.org>
+Date: Wed, 25 Sep 2024 21:28:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,55 +50,139 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: My Dell XPS-9320 (kernel 6.10.x, et al.) doesn't detect
- Thunderbolt additions when coming out of suspend or hibernate
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Me <kenny@panix.com>
-Cc: Lukas Wunner <lukas@wunner.de>, linux-usb@vger.kernel.org,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- linux-pci@vger.kernel.org
-References: <c9feac08-a1fd-4e03-a708-1046793443db@panix.com>
- <ZsvxR-dQAZtwNi0g@wunner.de> <6322b3f1-c5d9-4291-96da-72b85248dea0@panix.com>
- <5e7183c8-1843-4390-aef1-1772e538a359@panix.com>
- <20240904122835.GG1532424@black.fi.intel.com>
- <98c3c35d-c694-4fcd-b8b4-6101c4764ae4@panix.com>
- <0e5168df-894e-4e35-8785-6c48328f8782@panix.com>
- <20240913052540.GN275077@black.fi.intel.com>
- <7ac9a400-fdb2-4d78-bacf-2e502c7338e8@panix.com>
- <ad0458ee-b75c-46f9-a012-1e0615aecf53@panix.com>
- <b29b8750-5235-4097-a880-d8620da2520a@panix.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: imx6q-pcie: Add ref clock for i.MX95
+ PCIe
+To: Frank Li <Frank.li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
+ kwilczynski@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org,
+ robh+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, festevam@gmail.com,
+ s.hauer@pengutronix.de, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kernel@pengutronix.de, imx@lists.linux.dev
+References: <1727245477-15961-1-git-send-email-hongxing.zhu@nxp.com>
+ <1727245477-15961-2-git-send-email-hongxing.zhu@nxp.com>
+ <vtrxj3r4wy6htxyl44rzjyao4zso6z2idexkvxrh3cg4wazcdc@gffmfu22jiyh>
+ <ZvQ+YGqqwAUW+FaD@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <b29b8750-5235-4097-a880-d8620da2520a@panix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZvQ+YGqqwAUW+FaD@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 9/15/24 17:14, Kenneth Crudup wrote:
-
-> ... and it turns out that my crashes on the CalDigit TB4 dock are 
-> probably related to a Thunderbolt-to-NVMe enclosure that was always 
-> plugged into to the dock; apparently when resuming "something" was 
-> waiting for the now-disconnected NVMe drive to come back, leading to the 
-> hangs. Disconnecting the enclosure from the dock seems to prevent the 
-> resume crashes.
+On 25/09/2024 18:46, Frank Li wrote:
+> On Wed, Sep 25, 2024 at 09:50:06AM +0200, Krzysztof Kozlowski wrote:
+>> On Wed, Sep 25, 2024 at 02:24:29PM +0800, Richard Zhu wrote:
+>>> Previous reference clock of i.MX95 is on when system boot to kernel. But
+>>> boot firmware change the behavor, it is off when boot. So it needs be turn
+>>> on when it is used. Also it needs be turn off/on when suspend and resume.
+>>
+>> That's an old platform... How come that you changed bootloader just now?
+>> Like 7 or 8 years after?
 > 
-> I may try and root-cause that issue later, if I have time.
+> It is new platform, which just publish in this year. Old platform reference
+> clock was controlled in PCI module, so needn't export to DT. So we have
+> not realized it when start i.MX95 work.
 
-So I've determined this problem happened somewhere between 6.10.8 and 
-6.10.9; I don't always have the affected hardware so it'll take me a 
-couple of days to bisect the issue, but at least I have an idea on where 
-the problem is.
+Indeed, I missed that it is i.MX95, not i.MX6q.
 
-What's interesting is testing using the NVMe-to-TB adaptor directly into 
-the laptop isn't enough to trigger the crashes, it has to be plugged 
-into the CalDigit TB4 dock at suspend time to trigger a hang on resume 
-if the CalDigit dock is disconnected in between.
+> 
+>>
+>> For the future: you should document all clock inputs, not only ones
+>> needed for given bootloader...
+> 
+> Understand.
 
--Kenny
+Sorry, in case of early upstreaming it's understandable.
 
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+> 
+>>
+>>>
+>>> Add one ref clock for i.MX95 PCIe. Increase clocks' maxItems to 5 and keep
+>>> the same restriction with other compatible string.
+>>
+>> <form letter>
+>> Please use scripts/get_maintainers.pl to get a list of necessary people
+>> and lists to CC (and consider --no-git-fallback argument). It might
+>> happen, that command when run on an older kernel, gives you outdated
+>> entries. Therefore please be sure you base your patches on recent Linux
+>> kernel.
+>>
+>> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+>> people, so fix your workflow. Tools might also fail if you work on some
+>> ancient tree (don't, instead use mainline) or work on fork of kernel
+>> (don't, instead use mainline). Just use b4 and everything should be
+>> fine, although remember about  if you added new
+>> patches to the patchset.
+>> </form letter>
+>>
+>> and I was wondering why I cannot find this and previous thread in my
+>> inbox... So please stop developing on two year old kernels (and before
+>> you say "I do not", well, then fix way how you use tools).
+>>
+>>
+>>>
+>>> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+>>> ---
+>>>  .../bindings/pci/fsl,imx6q-pcie-common.yaml   |  4 +--
+>>>  .../bindings/pci/fsl,imx6q-pcie.yaml          | 25 ++++++++++++++++---
+>>>  2 files changed, 23 insertions(+), 6 deletions(-)
+>>>
+>>
+>> You missed to update ep binding.
+> 
+> So far, EP don't need reference clock. PCIe standard require host provide
+> 100MHz reference clock to EP side. But EP side can choose use itself's
+> clock or reference clock from PCIe bus. Currently i.MX95 only support clock
+> from internal PLL when work as EP mode.
+
+But this patch allowed certain existing variants in EP to have 5 clocks.
+You missed to update EP binding...
+
+Best regards,
+Krzysztof
 
 
