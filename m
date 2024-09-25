@@ -1,153 +1,158 @@
-Return-Path: <linux-pci+bounces-13512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 706D1985782
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 13:01:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B1B986060
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 16:21:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2678C1F21622
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 11:01:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79C3D1F26A7B
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 14:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5793484A2C;
-	Wed, 25 Sep 2024 11:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2511F86252;
+	Wed, 25 Sep 2024 12:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="egzyZVwq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gQjWamgQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B4A16F84F
-	for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 11:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF2017D372
+	for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 12:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727262091; cv=none; b=qQPFVX2PXWTPhLhpSuCmO33QxpW8kmThwZbpfgkYCVeDUrpU9nZXL94FXp0/ulJWIYVvDUXUXDDinqowMamlG2SEkqP9Syrg5yJR4OGwflIsmcSwzsEtDzUjqXxa4xw9uu8BIueWJbktLdb26ZdbDLx1Re4pwRESdU5CAL6RnfA=
+	t=1727268751; cv=none; b=dHxaJ7OTz1pSFxmHRHh7BenCqZkTdoEdyCKIeVxUAd2LFSsOd8AWoRXZ5st6dO8BAL3WCl8ahJav4Ubap0SwoB7hctyh4wyECnYo3Wk1tltLQp6YqhUZTJ6jdFpO57S4OJBbCEdy/rRpxDlqu1WBaFHEbmiA0Tve9GEnIChSMsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727262091; c=relaxed/simple;
-	bh=+3/SKikLppL1Xr/573aId+sPOU3wtbF6dELTbzD1gOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=me/lWgBljkr4MgcrhCrtjt+heSHwIxrQDkDWaqhfuZYuPs7wZVCcNnQE2M9RLrgnOd+FOjmSLiGJnJcZ0QmK8N6g6oQyyJZsMxjd40t0aSC4XB9zElT4v5EUiRaf1GsuiD+ZSc7wsUftqLE9iyiOL0/Px4dYwsnPON4qYQkHsuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=egzyZVwq; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7db54269325so4998529a12.2
-        for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 04:01:29 -0700 (PDT)
+	s=arc-20240116; t=1727268751; c=relaxed/simple;
+	bh=v8nFyWsksEF8DTF1lg3ZcP05G+mbIViNLRepJVEIEcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DxJuO0VqG4J2HVmA4TTqWXMMTzutGoc002+A3rdnDut7XXqI4K1enMq2d0MsTKyn8R1AiGoxw2/3NOCUuIRYbDrv6FPz7RaiuAoHEhVnC4HXZDx1CSUfnqVfccMq7zKunOvT9djk/KEVphMQN3EjZGf/mBJAI293VOOJxoTkMKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gQjWamgQ; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4280ca0791bso65893705e9.1
+        for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 05:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1727262089; x=1727866889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J2iSmOLo812yFnIR5Nq9UtGPT6s6P+lL9nzScHALAHw=;
-        b=egzyZVwqOkwi/ivmnoBzfJifRF0T0lRi6juIqGxyrzxLintHifE5+nvGlVWXQVINDK
-         bkNBeLyqYBbLQcxgMitmwSteOI5Hz6C6hurqEV5cJ/uzaVZdpgmaT3p8rQWIL5ga9zvo
-         m6415LrXULxN28R3R6g1aNTCTISFuFelyZ1Yg=
+        d=linaro.org; s=google; t=1727268747; x=1727873547; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PsYnTiQnoLJmTLqLligtuj1TznoQqpggCMnS36XtOaI=;
+        b=gQjWamgQeu3mY706fYbRPb4Gs8vSsRR+e3bgL0K/iQzkJPdYswAepkH8PWLUa+ixnq
+         zsedIwwnQWGWYOwXHRSrXF+4Hr09O0fSNJ2GCTnWxq7d5TUordl0GkJalTEfCDFYEwrQ
+         1QnXG2LijNVLY3x5r+Lsf7Z8MUTyUENcxBAZ0iwDE/nkYLlL3BLl5+iXTYzD8ckJJWH7
+         GRyBABHG5O3v6VBswCiSVwgVUX9nn8hW0od394L5vTTLH/y8b7juIG+Utpsa+7ftOd+L
+         sqSogyw7Fp8+0lDCLDme/zc07qyj1VAzJF0e7NgI/MFPhAIA2AWgL25k426fXseOFgTz
+         UlwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727262089; x=1727866889;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J2iSmOLo812yFnIR5Nq9UtGPT6s6P+lL9nzScHALAHw=;
-        b=elJ7qOfbK3UezfN1aPAp59sShBMS5JJsxaYPmwQZz+gQjrFzwXalQAzXvE0USJlJk9
-         +aWsX7pe4by/bNklj9Yo1LDNsEkTImmTWogm0zHqt7haaN7kEd9FS9WRJHuXhd7RxsAw
-         Dnxpt5nWzpZpN5Quys7XphEA0xe1tA5shE6XEpB6ibLpH0Zi0YakGqPXYXaPR8DnZSwK
-         3WIlk/xcFo0DGXeNgAGzPYshZBjLPWbV1rcbEwqQogTOrCTa0cdqMJeMbCCUOWoHwuvZ
-         LYsSdMgIqf8GrpUrJd3OW1gBp90lj5auowj1LkIGgoZMYgg7cGq5WSf1DNYu+kv9hi2r
-         U5dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ1CZAPpxwb+HdE8Yeva8crNEGG0eHVBB+AAE0RlwguRt8GxdkH5Ydsg3zvNkxQKnMzSbRy4IjlKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw91z9mCI7VQGaincgZEZb/zRudcrkrZxeCr8SFhneZl+sJkpF6
-	NVvrKDBqQyUoFPYzZa/SOIzGN+rzTiO+rULAIy1yHibFzRDCO2oSXhWbUBZsaw==
-X-Google-Smtp-Source: AGHT+IEDiU9yG0J24zu6lnu25+9BPDQ5H9Y9675km39iDIf0qssdZRYcfe9ubry0OUwppyeNUeL9pA==
-X-Received: by 2002:a05:6a21:e8c:b0:1cf:1b7d:8481 with SMTP id adf61e73a8af0-1d4d4b9bb7amr2971899637.32.1727262088709;
-        Wed, 25 Sep 2024 04:01:28 -0700 (PDT)
-Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:2b86:78b6:8ebc:e17a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7e6b7c73085sm2570298a12.59.2024.09.25.04.01.25
+        d=1e100.net; s=20230601; t=1727268747; x=1727873547;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PsYnTiQnoLJmTLqLligtuj1TznoQqpggCMnS36XtOaI=;
+        b=wmici14L0bSbU/p5tPM8fvFlVP9C/yvG95d0ZTqhwub+yfrXjnvBP/hkdN7Ubx6jOy
+         Gjb0/+CPlzFqTWRHlLRf+3BVMdSLxwkeYDHqm6RYClK5viOqM9K2MWNvCnrIulZL7IOP
+         D2Zdid/V9ssyGn2f4qn7zpxAO2JWtQZS32DA0+hRCG33abmKnRuQnxS9FCL5qLlr7zgF
+         kwbYmFvGe7eBbkxBQ27d89eW8fKlLM7QvTEEn29V4ZLzvpU2lY3SzglrubgvUWRK3Rtv
+         xZlT5Gu54xg/YSWcp+FWK9On6OS+WT0+/zrOnfRzZWl1yr4pG435XwOeQVzjKtz/nkxf
+         jU0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV0uImGXRIx3fAvBDmstab4oxOth9OEeklaCAxoClKm/04YA2CV+v35IlwsFv5/aSQoW0zJPNCh378=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwriZ6MohwAjX/uS9Cs+gvmbqw0nFcRnkZJU0qbi0eYsRqRMSNA
+	nVonO5+y2P4Q9Jcf6NcKo8r5r2vQiEqRQ84BX4tpezfpMQK9BCgRxfX9zlFEFg==
+X-Google-Smtp-Source: AGHT+IG4lPaaPhhTrY0nQowUBPj7qZopeTwFGYzQZG1u0Frm/UegncIuXWSeBUCFGZpQxJONnfZ1dw==
+X-Received: by 2002:a05:600c:3581:b0:426:602d:a246 with SMTP id 5b1f17b1804b1-42e962456cbmr18604785e9.32.1727268747527;
+        Wed, 25 Sep 2024 05:52:27 -0700 (PDT)
+Received: from thinkpad ([62.67.186.33])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e969a8bd5sm18569155e9.0.2024.09.25.05.52.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 04:01:28 -0700 (PDT)
-From: Fei Shao <fshao@chromium.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Fei Shao <fshao@chromium.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH 2/6] dt-bindings: PCI: mediatek-gen3: Allow exact number of clocks only
-Date: Wed, 25 Sep 2024 18:57:46 +0800
-Message-ID: <20240925110044.3678055-3-fshao@chromium.org>
-X-Mailer: git-send-email 2.46.0.792.g87dc391469-goog
-In-Reply-To: <20240925110044.3678055-1-fshao@chromium.org>
-References: <20240925110044.3678055-1-fshao@chromium.org>
+        Wed, 25 Sep 2024 05:52:26 -0700 (PDT)
+Date: Wed, 25 Sep 2024 14:52:24 +0200
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Qiang Yu <quic_qianyu@quicinc.com>, vkoul@kernel.org,
+	kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
+	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] arm64: dts: qcom: x1e80100: Add support for PCIe3
+ on x1e80100
+Message-ID: <20240925125224.53g6rw46qufxsw6m@thinkpad>
+References: <20240924101444.3933828-1-quic_qianyu@quicinc.com>
+ <20240924101444.3933828-7-quic_qianyu@quicinc.com>
+ <9a692c98-eb0a-4d86-b642-ea655981ff53@kernel.org>
+ <20240925080522.qwjeyrpjtz64pccx@thinkpad>
+ <4ee4d016-9d68-4925-9f49-e73a4e7fa794@kernel.org>
+ <2731e17d-c1ad-4fb4-ab60-82ceafeffbaf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2731e17d-c1ad-4fb4-ab60-82ceafeffbaf@kernel.org>
 
-In MediaTek PCIe gen3 bindings, "clocks" accepts a range of 1-6 clocks
-across all SoCs. But in practice, each SoC requires a particular number
-of clocks as defined in "clock-names", and the length of "clocks" and
-"clock-names" can be inconsistent with current bindings.
+On Wed, Sep 25, 2024 at 11:46:35AM +0200, Konrad Dybcio wrote:
+> On 25.09.2024 11:30 AM, Konrad Dybcio wrote:
+> > On 25.09.2024 10:05 AM, Manivannan Sadhasivam wrote:
+> >> On Tue, Sep 24, 2024 at 04:26:34PM +0200, Konrad Dybcio wrote:
+> >>> On 24.09.2024 12:14 PM, Qiang Yu wrote:
+> >>>> Describe PCIe3 controller and PHY. Also add required system resources like
+> >>>> regulators, clocks, interrupts and registers configuration for PCIe3.
+> >>>>
+> >>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> >>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> >>>> ---
+> >>>
+> >>> Qiang, Mani
+> >>>
+> >>> I have a RTS5261 mmc chip on PCIe3 on the Surface Laptop.
+> >>
+> >> Is it based on x1e80100?
+> > 
+> > You would think so :P
+> > 
+> >>
+> >>> Adding the global irq breaks sdcard detection (the chip still comes
+> >>> up fine) somehow. Removing the irq makes it work again :|
+> >>>
+> >>> I've confirmed that the irq number is correct
+> >>>
+> >>
+> >> Yeah, I did see some issues with MSI on SM8250 (RB5) when global interrupts are
+> >> enabled and I'm working with the hw folks to understand what is going on. But
+> >> I didn't see the same issues on newer platforms (sa8775p etc...).
+> >>
+> >> Can you please confirm if the issue is due to MSI not being received from the
+> >> device? Checking the /proc/interrutps is enough.
+> > 
+> > There's no msi-map for PCIe3. I recall +Johan talking about some sort of
+> > a bug that prevents us from adding it?
+> 
 
-For example:
-- MT8188, MT8192 and MT8195 all require 6 clocks, while the bindings
-  accept 4-6 clocks.
-- MT7986 requires 4 clocks, while the bindings accept 4-6 clocks.
+Yeah, that's for using GIC-ITS to receive MSIs. But the default one is the
+internal MSI controller in DWC.
 
-Update minItems and maxItems properties for individual SoCs as needed to
-only accept the correct number of clocks.
+> Unless you just meant the msi0..=7 interrupts, then yeah, I only get one irq
+> event with "global" in place and it seems to never get more
+> 
 
-Fixes: c6abd0eadec6 ("dt-bindings: PCI: mediatek-gen3: Add support for Airoha EN7581")
-Signed-off-by: Fei Shao <fshao@chromium.org>
----
+Ok. Then most likely the same issue I saw on SM8250 as well. But I'm confused
+why Qiang didn't see the issue. I specifically asked him to add the global
+interrupt and test it with the endpoint to check if the issue arises or not.
 
- .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml          | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Qiang, can you please confirm?
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-index 898c1be2d6a4..f05aab2b1add 100644
---- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -149,7 +149,7 @@ allOf:
-     then:
-       properties:
-         clocks:
--          minItems: 4
-+          minItems: 6
- 
-         clock-names:
-           items:
-@@ -178,7 +178,7 @@ allOf:
-     then:
-       properties:
-         clocks:
--          minItems: 4
-+          minItems: 6
- 
-         clock-names:
-           items:
-@@ -207,6 +207,7 @@ allOf:
-       properties:
-         clocks:
-           minItems: 4
-+          maxItems: 4
- 
-         clock-names:
-           items:
+- Mani
+
 -- 
-2.46.0.792.g87dc391469-goog
-
+மணிவண்ணன் சதாசிவம்
 
