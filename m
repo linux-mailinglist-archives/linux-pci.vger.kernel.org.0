@@ -1,158 +1,139 @@
-Return-Path: <linux-pci+bounces-13513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09B1B986060
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 16:21:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4FB898612C
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 16:42:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79C3D1F26A7B
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 14:21:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 222B51C25D19
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 14:42:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2511F86252;
-	Wed, 25 Sep 2024 12:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB65718FDC5;
+	Wed, 25 Sep 2024 13:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gQjWamgQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKypVRSJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF2017D372
-	for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 12:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8A618FDB7;
+	Wed, 25 Sep 2024 13:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727268751; cv=none; b=dHxaJ7OTz1pSFxmHRHh7BenCqZkTdoEdyCKIeVxUAd2LFSsOd8AWoRXZ5st6dO8BAL3WCl8ahJav4Ubap0SwoB7hctyh4wyECnYo3Wk1tltLQp6YqhUZTJ6jdFpO57S4OJBbCEdy/rRpxDlqu1WBaFHEbmiA0Tve9GEnIChSMsA=
+	t=1727272759; cv=none; b=etXnM2KVlUBVTfYrOh/Gu6fJrWCko01JPJQJLmz5BCwSIe8R/mW25ATl3VIurWOoAF7/CBFsM3VB+8Ekd00cHbksJZeas5EbvldmXsL5pGKp3oOnVATsrMFzbyH/mTecaY1dpfRlKsVbX+sIY9H6j3cVDOwq+yUqCEqsYHQ5flo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727268751; c=relaxed/simple;
-	bh=v8nFyWsksEF8DTF1lg3ZcP05G+mbIViNLRepJVEIEcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DxJuO0VqG4J2HVmA4TTqWXMMTzutGoc002+A3rdnDut7XXqI4K1enMq2d0MsTKyn8R1AiGoxw2/3NOCUuIRYbDrv6FPz7RaiuAoHEhVnC4HXZDx1CSUfnqVfccMq7zKunOvT9djk/KEVphMQN3EjZGf/mBJAI293VOOJxoTkMKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gQjWamgQ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4280ca0791bso65893705e9.1
-        for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 05:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727268747; x=1727873547; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PsYnTiQnoLJmTLqLligtuj1TznoQqpggCMnS36XtOaI=;
-        b=gQjWamgQeu3mY706fYbRPb4Gs8vSsRR+e3bgL0K/iQzkJPdYswAepkH8PWLUa+ixnq
-         zsedIwwnQWGWYOwXHRSrXF+4Hr09O0fSNJ2GCTnWxq7d5TUordl0GkJalTEfCDFYEwrQ
-         1QnXG2LijNVLY3x5r+Lsf7Z8MUTyUENcxBAZ0iwDE/nkYLlL3BLl5+iXTYzD8ckJJWH7
-         GRyBABHG5O3v6VBswCiSVwgVUX9nn8hW0od394L5vTTLH/y8b7juIG+Utpsa+7ftOd+L
-         sqSogyw7Fp8+0lDCLDme/zc07qyj1VAzJF0e7NgI/MFPhAIA2AWgL25k426fXseOFgTz
-         UlwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727268747; x=1727873547;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PsYnTiQnoLJmTLqLligtuj1TznoQqpggCMnS36XtOaI=;
-        b=wmici14L0bSbU/p5tPM8fvFlVP9C/yvG95d0ZTqhwub+yfrXjnvBP/hkdN7Ubx6jOy
-         Gjb0/+CPlzFqTWRHlLRf+3BVMdSLxwkeYDHqm6RYClK5viOqM9K2MWNvCnrIulZL7IOP
-         D2Zdid/V9ssyGn2f4qn7zpxAO2JWtQZS32DA0+hRCG33abmKnRuQnxS9FCL5qLlr7zgF
-         kwbYmFvGe7eBbkxBQ27d89eW8fKlLM7QvTEEn29V4ZLzvpU2lY3SzglrubgvUWRK3Rtv
-         xZlT5Gu54xg/YSWcp+FWK9On6OS+WT0+/zrOnfRzZWl1yr4pG435XwOeQVzjKtz/nkxf
-         jU0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV0uImGXRIx3fAvBDmstab4oxOth9OEeklaCAxoClKm/04YA2CV+v35IlwsFv5/aSQoW0zJPNCh378=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwriZ6MohwAjX/uS9Cs+gvmbqw0nFcRnkZJU0qbi0eYsRqRMSNA
-	nVonO5+y2P4Q9Jcf6NcKo8r5r2vQiEqRQ84BX4tpezfpMQK9BCgRxfX9zlFEFg==
-X-Google-Smtp-Source: AGHT+IG4lPaaPhhTrY0nQowUBPj7qZopeTwFGYzQZG1u0Frm/UegncIuXWSeBUCFGZpQxJONnfZ1dw==
-X-Received: by 2002:a05:600c:3581:b0:426:602d:a246 with SMTP id 5b1f17b1804b1-42e962456cbmr18604785e9.32.1727268747527;
-        Wed, 25 Sep 2024 05:52:27 -0700 (PDT)
-Received: from thinkpad ([62.67.186.33])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e969a8bd5sm18569155e9.0.2024.09.25.05.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 05:52:26 -0700 (PDT)
-Date: Wed, 25 Sep 2024 14:52:24 +0200
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Qiang Yu <quic_qianyu@quicinc.com>, vkoul@kernel.org,
-	kishon@kernel.org, robh@kernel.org, andersson@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
-	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
-	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] arm64: dts: qcom: x1e80100: Add support for PCIe3
- on x1e80100
-Message-ID: <20240925125224.53g6rw46qufxsw6m@thinkpad>
-References: <20240924101444.3933828-1-quic_qianyu@quicinc.com>
- <20240924101444.3933828-7-quic_qianyu@quicinc.com>
- <9a692c98-eb0a-4d86-b642-ea655981ff53@kernel.org>
- <20240925080522.qwjeyrpjtz64pccx@thinkpad>
- <4ee4d016-9d68-4925-9f49-e73a4e7fa794@kernel.org>
- <2731e17d-c1ad-4fb4-ab60-82ceafeffbaf@kernel.org>
+	s=arc-20240116; t=1727272759; c=relaxed/simple;
+	bh=lJm+ObDEXANZOJHKSXCxL3oLlApQe9ehHdbO7nUzBeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mM84cXcTMPo0zNuFU1srBfh/XNSEgDT75WQkY5fW/9alDYPJN4Zy8GD2PbvDmUiQ6qzjETmE5wskyrVkP72iYeS63UREICKT8I33ZIEWhFqw1eOW8f54HJXD4JcSz0wwkVRtzhs/ch3Z8lXIVTFtBFXQzbORxZb/Lq2UeQPbUik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKypVRSJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74660C4CEC3;
+	Wed, 25 Sep 2024 13:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727272759;
+	bh=lJm+ObDEXANZOJHKSXCxL3oLlApQe9ehHdbO7nUzBeQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MKypVRSJR2Epc9UNqTi9FKghSRchqTYo99hNGU+4I7Yyt/mMUzde6QBL88TWRAopy
+	 e+dVxlIh6CSF/ulKmbwvFp7ISXWJSa4CUzzGfJdreOI943MQjw3EEd0ujTbFrPfEyM
+	 7HeKJEqXIdWc1DEqlbqut4zuL1GahJ7XXy1RQ8pgpMrglQv5iQk662F0IQ4sg6SBzR
+	 GKOuYzTLlPqIsED3YlvCRrhp1UbcDOpdbjUGllldpFITc55ZSu0h+BHBrjOE7h+ZQr
+	 70njrKzilu5TCLRYh6WjUAUQrzbpjKRqQ5qN/Fvzgs/Qm3CcxvCy4daOZp5Y3SRTKy
+	 fHux3grZC08XA==
+Message-ID: <6b5b463a-cf01-4e02-bb4e-292f5bd8b7f2@kernel.org>
+Date: Wed, 25 Sep 2024 15:59:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2731e17d-c1ad-4fb4-ab60-82ceafeffbaf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] dt-bindings: PCI: mediatek-gen3: Allow exact number
+ of clocks only
+To: Fei Shao <fshao@chromium.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
+ Jianjun Wang <jianjun.wang@mediatek.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84s?=
+ =?UTF-8?Q?ki?= <kw@linux.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20240925110044.3678055-1-fshao@chromium.org>
+ <20240925110044.3678055-3-fshao@chromium.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240925110044.3678055-3-fshao@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 25, 2024 at 11:46:35AM +0200, Konrad Dybcio wrote:
-> On 25.09.2024 11:30 AM, Konrad Dybcio wrote:
-> > On 25.09.2024 10:05 AM, Manivannan Sadhasivam wrote:
-> >> On Tue, Sep 24, 2024 at 04:26:34PM +0200, Konrad Dybcio wrote:
-> >>> On 24.09.2024 12:14 PM, Qiang Yu wrote:
-> >>>> Describe PCIe3 controller and PHY. Also add required system resources like
-> >>>> regulators, clocks, interrupts and registers configuration for PCIe3.
-> >>>>
-> >>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> >>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>>> ---
-> >>>
-> >>> Qiang, Mani
-> >>>
-> >>> I have a RTS5261 mmc chip on PCIe3 on the Surface Laptop.
-> >>
-> >> Is it based on x1e80100?
-> > 
-> > You would think so :P
-> > 
-> >>
-> >>> Adding the global irq breaks sdcard detection (the chip still comes
-> >>> up fine) somehow. Removing the irq makes it work again :|
-> >>>
-> >>> I've confirmed that the irq number is correct
-> >>>
-> >>
-> >> Yeah, I did see some issues with MSI on SM8250 (RB5) when global interrupts are
-> >> enabled and I'm working with the hw folks to understand what is going on. But
-> >> I didn't see the same issues on newer platforms (sa8775p etc...).
-> >>
-> >> Can you please confirm if the issue is due to MSI not being received from the
-> >> device? Checking the /proc/interrutps is enough.
-> > 
-> > There's no msi-map for PCIe3. I recall +Johan talking about some sort of
-> > a bug that prevents us from adding it?
+On 25/09/2024 12:57, Fei Shao wrote:
+> In MediaTek PCIe gen3 bindings, "clocks" accepts a range of 1-6 clocks
+> across all SoCs. But in practice, each SoC requires a particular number
+> of clocks as defined in "clock-names", and the length of "clocks" and
+> "clock-names" can be inconsistent with current bindings.
+> 
+> For example:
+> - MT8188, MT8192 and MT8195 all require 6 clocks, while the bindings
+>   accept 4-6 clocks.
+> - MT7986 requires 4 clocks, while the bindings accept 4-6 clocks.
+> 
+> Update minItems and maxItems properties for individual SoCs as needed to
+> only accept the correct number of clocks.
 > 
 
-Yeah, that's for using GIC-ITS to receive MSIs. But the default one is the
-internal MSI controller in DWC.
 
-> Unless you just meant the msi0..=7 interrupts, then yeah, I only get one irq
-> event with "global" in place and it seems to never get more
-> 
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Ok. Then most likely the same issue I saw on SM8250 as well. But I'm confused
-why Qiang didn't see the issue. I specifically asked him to add the global
-interrupt and test it with the endpoint to check if the issue arises or not.
+Best regards,
+Krzysztof
 
-Qiang, can you please confirm?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
