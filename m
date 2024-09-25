@@ -1,139 +1,108 @@
-Return-Path: <linux-pci+bounces-13514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13515-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4FB898612C
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 16:42:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBA899861DC
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 17:03:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 222B51C25D19
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 14:42:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E30E28B9E8
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Sep 2024 15:03:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB65718FDC5;
-	Wed, 25 Sep 2024 13:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704B12F855;
+	Wed, 25 Sep 2024 14:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKypVRSJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="noDiH0BD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8A618FDB7;
-	Wed, 25 Sep 2024 13:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4253770D
+	for <linux-pci@vger.kernel.org>; Wed, 25 Sep 2024 14:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727272759; cv=none; b=etXnM2KVlUBVTfYrOh/Gu6fJrWCko01JPJQJLmz5BCwSIe8R/mW25ATl3VIurWOoAF7/CBFsM3VB+8Ekd00cHbksJZeas5EbvldmXsL5pGKp3oOnVATsrMFzbyH/mTecaY1dpfRlKsVbX+sIY9H6j3cVDOwq+yUqCEqsYHQ5flo=
+	t=1727275532; cv=none; b=j69ulLTfw0QGAB97OsukROK3gmvTC9YAak2REFtbY6HmE7cWwbG0QpQUFmxVmYRz3ZSVFjVBlpTIE+W6HFejMvp4PTGlidlHzLR+4iPfTnkimCbu/W8xgqON2IQ5ZIAZ+98i3JUNXTIfZI5psX7eCDHFiHFcFGPowhU/64x3R34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727272759; c=relaxed/simple;
-	bh=lJm+ObDEXANZOJHKSXCxL3oLlApQe9ehHdbO7nUzBeQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mM84cXcTMPo0zNuFU1srBfh/XNSEgDT75WQkY5fW/9alDYPJN4Zy8GD2PbvDmUiQ6qzjETmE5wskyrVkP72iYeS63UREICKT8I33ZIEWhFqw1eOW8f54HJXD4JcSz0wwkVRtzhs/ch3Z8lXIVTFtBFXQzbORxZb/Lq2UeQPbUik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKypVRSJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74660C4CEC3;
-	Wed, 25 Sep 2024 13:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727272759;
-	bh=lJm+ObDEXANZOJHKSXCxL3oLlApQe9ehHdbO7nUzBeQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MKypVRSJR2Epc9UNqTi9FKghSRchqTYo99hNGU+4I7Yyt/mMUzde6QBL88TWRAopy
-	 e+dVxlIh6CSF/ulKmbwvFp7ISXWJSa4CUzzGfJdreOI943MQjw3EEd0ujTbFrPfEyM
-	 7HeKJEqXIdWc1DEqlbqut4zuL1GahJ7XXy1RQ8pgpMrglQv5iQk662F0IQ4sg6SBzR
-	 GKOuYzTLlPqIsED3YlvCRrhp1UbcDOpdbjUGllldpFITc55ZSu0h+BHBrjOE7h+ZQr
-	 70njrKzilu5TCLRYh6WjUAUQrzbpjKRqQ5qN/Fvzgs/Qm3CcxvCy4daOZp5Y3SRTKy
-	 fHux3grZC08XA==
-Message-ID: <6b5b463a-cf01-4e02-bb4e-292f5bd8b7f2@kernel.org>
-Date: Wed, 25 Sep 2024 15:59:13 +0200
+	s=arc-20240116; t=1727275532; c=relaxed/simple;
+	bh=aSKOXtfRb6IIHrPBBBqYmZWBMi7dadENEpMMg1PlviA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nUAZ156ujXMfQOtOwjFr5OyuiiN6WKeT0APHB6J6Xc1jlIUzLhirOHxZnHQtG2W+uajusW16AdcfPkwxIYauamMwU92phIBO2gJqzm4V3LoVw+IR9f/wjbztP1JtwVlmRfxkHp602Z9wghmw1WxZvqTQxhPT3v08NCp65Nz8MvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=noDiH0BD; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727275531; x=1758811531;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aSKOXtfRb6IIHrPBBBqYmZWBMi7dadENEpMMg1PlviA=;
+  b=noDiH0BDhq4Yye2+QdypZY3AT17lqufHEYiKKti/yi1WWaTRM4R0nJgl
+   aeGPDQnYIwx7oFNCqs7t97VvHISa0mxjp2QOTLSJkjgvEdpGcVcrktetv
+   MmaEd6prSH7ARHb/io9gTnlXJx55FWOn9HKmtTqYVfmBckkiIf0+XQw/P
+   urhuIncWddbn1fAwG+FxGhplckCyeFugEewWYv/vggDf/13ElveDKvVEV
+   tcdzmSmF/xu4BsUnLAfvZllu61PfCpo277Xf8njUttogS6UzaKJC5aoux
+   2GiyGRR6+y4ul796YEwPiDsHxhaMBCSiUf3j6xJn/oB24Qx1LaKQ+Qds6
+   Q==;
+X-CSE-ConnectionGUID: +WQqEhUsSsq4NiEltZtEUw==
+X-CSE-MsgGUID: 5MvfpxLfTc2Y0thM11yq2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="26470583"
+X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
+   d="scan'208";a="26470583"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 07:45:30 -0700
+X-CSE-ConnectionGUID: X1m7tzVoQG6B9HK19KNjxw==
+X-CSE-MsgGUID: g1BOZW9wQny1LLgOMBBmuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
+   d="scan'208";a="71941473"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by fmviesa008.fm.intel.com with SMTP; 25 Sep 2024 07:45:27 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 25 Sep 2024 17:45:26 +0300
+From: Ville Syrjala <ville.syrjala@linux.intel.com>
+To: intel-gfx@lists.freedesktop.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH 0/6] drm/i915/pm: Clean up the hibernate vs. PCI D3 quirk
+Date: Wed, 25 Sep 2024 17:45:20 +0300
+Message-ID: <20240925144526.2482-1-ville.syrjala@linux.intel.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] dt-bindings: PCI: mediatek-gen3: Allow exact number
- of clocks only
-To: Fei Shao <fshao@chromium.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Jianjun Wang <jianjun.wang@mediatek.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84s?=
- =?UTF-8?Q?ki?= <kw@linux.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20240925110044.3678055-1-fshao@chromium.org>
- <20240925110044.3678055-3-fshao@chromium.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240925110044.3678055-3-fshao@chromium.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25/09/2024 12:57, Fei Shao wrote:
-> In MediaTek PCIe gen3 bindings, "clocks" accepts a range of 1-6 clocks
-> across all SoCs. But in practice, each SoC requires a particular number
-> of clocks as defined in "clock-names", and the length of "clocks" and
-> "clock-names" can be inconsistent with current bindings.
-> 
-> For example:
-> - MT8188, MT8192 and MT8195 all require 6 clocks, while the bindings
->   accept 4-6 clocks.
-> - MT7986 requires 4 clocks, while the bindings accept 4-6 clocks.
-> 
-> Update minItems and maxItems properties for individual SoCs as needed to
-> only accept the correct number of clocks.
-> 
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
+Attempt to make i915 rely more on the standard pci pm
+code instead of hand rolling a bunch of
+pci_save_state()+pci_set_power_state() stuff in the
+driver.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: linux-pci@vger.kernel.org
 
-Best regards,
-Krzysztof
+Ville Syrjälä (6):
+  PCI/PM: Respect pci_dev->skip_bus_pm in the .poweroff() path
+  drm/i915/pm: Hoist pci_save_state()+pci_set_power_state() to the end
+    of pm _late() hook
+  drm/i915/pm: Simplify pm hook documentation
+  drm/i915/pm: Move the hibernate+D3 quirk stuff into noirq() pm hooks
+  drm/i915/pm: Do pci_restore_state() in switcheroo resume hook
+  drm/i915/pm: Use pci_dev->skip_bus_pm for hibernate vs. D3 workaround
+
+ drivers/gpu/drm/i915/i915_driver.c | 121 +++++++++++++++++++----------
+ drivers/pci/pci-driver.c           |  16 +++-
+ 2 files changed, 94 insertions(+), 43 deletions(-)
+
+-- 
+2.44.2
 
 
