@@ -1,201 +1,299 @@
-Return-Path: <linux-pci+bounces-13580-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13581-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2065F9879C8
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 21:53:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B4CF987A42
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 23:03:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 91FC2B211AC
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 19:53:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F8EDB2104F
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 21:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6892A172BD5;
-	Thu, 26 Sep 2024 19:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B90A535D8;
+	Thu, 26 Sep 2024 21:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4OGyDi5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzySU76T"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D06215AD9C;
-	Thu, 26 Sep 2024 19:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F2528371;
+	Thu, 26 Sep 2024 21:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727380410; cv=none; b=ZzQoPYj9/I7c0URcm4wzphrxhVt9zed3MR3iLN8YV3iVLm35/A5q0FGfyp5K2MQKbPwX5Uy0rTWenkgjkPEm1wpupZSSjWUqdlQ84RBw+fk0kFzgTS9EKhKg6O3709UHlKoJriruOYyoTR8TIrIJfIgImYHW0rwjm3OfCOvYXPw=
+	t=1727384582; cv=none; b=uzvafS0EkJrcIfHPZoo5pGYL8Qjax38AV4yUmMO6JqcWkxhgA6OttylDTA8OSXFcflsfHGUkh9EKNe/Y6govdrkEIBtjhE38mTfzXAuiP23YOhvpfJzNyzDa02w3x2T0vZ8QsUCHFK3qXifiO1enFwPfYUZXnYDbnjnWQoHfeWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727380410; c=relaxed/simple;
-	bh=GBl6AZCiyH0AHpBOXUejSjUQp7awTZ3QRZisiwzCxU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qi9P+8YaVOScr9vqcueHvAKm2zLia95XnXbOkTWHPEp2Yn++gcNrPxNaQ2lwyiAtU8PuB5laSiJaJdubpidUACDdmkKcLDPpewq8UMbyRPPg6A/tBTE5YOO2eS6A7b3BE179K0hcrvdHkqyZSPn1IMeZKHlZWo/HTLHXkvDFGYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4OGyDi5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6821C4AF09;
-	Thu, 26 Sep 2024 19:53:29 +0000 (UTC)
+	s=arc-20240116; t=1727384582; c=relaxed/simple;
+	bh=mUzioz2uRVxCDo1dm+jClKnYGG1J3gCE1iHAmDNw75Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FYRFhD4F4qwnzCHKBX6Bz7G7QGnsuGAmeTmX9G4iLZVZAQW3urBQNEWQZ0e5oTKfUV3/Znr8t5OdiXHT+JN4jtNvVEusztQRP3PPqhHFrSOZtsh3EZVLV5Wyp1+t52cU44fZkEfViT5Fc3AJ96YYAxBVbhccoTPTy1b64JyLOAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzySU76T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81618C4CEC5;
+	Thu, 26 Sep 2024 21:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727380409;
-	bh=GBl6AZCiyH0AHpBOXUejSjUQp7awTZ3QRZisiwzCxU0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M4OGyDi5cve1pT9SV62/FgEfl98HGc6NUNIbWa5dvAdQMzoa4F0EF9HHN34/4NnwY
-	 nnxnm12/+ACr46nFYwEjYdKxo5hzHVrVU+yWxu6g3HgT0Ws8zWMZahnlyA7CScWAcY
-	 T3K4M9sTSsKATultqf19P88i0exGwcghSPLUo3Ecy+XbOu5VDOYk7X1VakE0kSYHsS
-	 zQqSz48Je3dUSCNacqz9cFZGTC8J3CjJhUTUtkvrDhkncoilNapKGshHIrHJHZuHRE
-	 SlhmNz4FA5gGNRImH+7c2kvQOC2/2aGWPLF25Tp+N5pfHUnIl+upKKGcA47pQajL0F
-	 pNZ76PIFz/Now==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5e1c63c9822so723920eaf.0;
-        Thu, 26 Sep 2024 12:53:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUq0BTAeBLV4D2soJCbK6gUBF3KoZRDAmXIyWKOtTDQjYNx1st7UMv0ifm/FJO7NeV+qdlgVafmma+o@vger.kernel.org, AJvYcCXh/9iacHGe9J1FP8BjZ89KeLjEGWKaUWf0Kdr0dUsmXvclKxuvDa0NngGuYBxY3FAm5Be86v/qh1OT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDl0FuecEYgUkQ7sAbsagSE8mJkh92ENU80TcJnIN7pOJ3zglZ
-	VljvWppRv6YrjIHRopGsbhSi2KcTfuT6C+D/H0q79JkkdMOBegD0q0+xGKdInlo214Gqe95LiO5
-	rf8Ya07/om4PcVCokDN9g4ZpUX44=
-X-Google-Smtp-Source: AGHT+IGfTciu8k8MtMrXi1yerNQVIyGGiGGREp+hRVvZ1R5J9R0WPtodq6tM5z6lm+gxQX1JMXjt5x7QIlaJa60B0/U=
-X-Received: by 2002:a05:6820:160c:b0:5e5:7086:ebd8 with SMTP id
- 006d021491bc7-5e7725c8c9cmr546877eaf.2.1727380409068; Thu, 26 Sep 2024
- 12:53:29 -0700 (PDT)
+	s=k20201202; t=1727384581;
+	bh=mUzioz2uRVxCDo1dm+jClKnYGG1J3gCE1iHAmDNw75Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nzySU76T6d09NUJBnrui5VuWIjSR0vKw/zDhur5n0W/Wv+MWOsDP284K4avN7YrH9
+	 1iJSO3gEFvI0NvRwjF0noTePKMn6XQN05xfMtY9/88wWOgeeQYSple7TJrX6j/vMyd
+	 fvIzOUH02SRfb8fGigwS1k6dOS8BgGkCiV+PhhkGT0W8O1vUQfpGDnfBUjIwQ/0WoC
+	 30EvjUJ6Ebtlsn1CzSsHFpU2sEjsh2drvIN2iX9mHnA/F/ZJWJVogEJW6kqZZoeDvV
+	 PGCM8vpdWcCqVzv7tQrt4RWha6ZEfDGUnVZprVG34UsxbX3xoEZhpVmj7rw2nkb6MM
+	 83wPUixH68Z8Q==
+Date: Thu, 26 Sep 2024 16:02:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Tony Hutter <hutter2@llnl.gov>
+Cc: Lukas Wunner <lukas@wunner.de>, mariusz.tkaczyk@linux.intel.com,
+	minyard@acm.org, linux-pci@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: Introduce Cray ClusterStor E1000 NVMe slot LED
+ driver
+Message-ID: <20240926210259.GA13456@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <EqPNlJ6f78UUE-J-5aIWtMWCwa2RUsGoVOePPCp9pMFhWHu9d7hAR0kzJtsLcWwt_RnUQP6Zs_7nUBbaYLPhuBz6I-0iJ_M8AdVGPaDwovA=@protonmail.com>
- <5068b802fb833cda3457e9cdbac7e6a5c82174d3.camel@intel.com>
-In-Reply-To: <5068b802fb833cda3457e9cdbac7e6a5c82174d3.camel@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Sep 2024 21:53:17 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hP7s4YduPZoWpykaUk+dR9AG=bAW9nYpN3qVupqYkmEA@mail.gmail.com>
-Message-ID: <CAJZ5v0hP7s4YduPZoWpykaUk+dR9AG=bAW9nYpN3qVupqYkmEA@mail.gmail.com>
-Subject: Re: acpiphp module and Asus GA402RJ
-To: "athul.krishna.kr@protonmail.com" <athul.krishna.kr@protonmail.com>
-Cc: "Accardi, Kristen C" <kristen.c.accardi@intel.com>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: multipart/mixed; boundary="000000000000ad149006230b17a7"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f35eb96-3458-45d2-a31d-7813ae4e7260@llnl.gov>
 
---000000000000ad149006230b17a7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 23, 2024 at 05:06:05PM -0700, Tony Hutter wrote:
+> Add driver to control the NVMe slot LEDs on the Cray ClusterStor E1000.
+> The driver provides hotplug attention status callbacks for the 24 NVMe
+> slots on the E1000.  This allows users to access the E1000's locate and
+> fault LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs
+> entries.  This driver uses IPMI to communicate with the E1000 controller
+> to toggle the LEDs.
 
-CC lists.
+I don't quite understand what the E1000 is and where this code runs.
+Since you have a DMI check for DMI_PRODUCT_NAME "VSSEP1EC", I assume
+E1000 is an attached storage controller, and this driver is part of an
+embedded OS running inside the E1000 itself, *not* on the system to
+which the E1000 is attached?
 
-On Wed, Sep 25, 2024 at 8:36=E2=80=AFPM Accardi, Kristen C
-<kristen.c.accardi@intel.com> wrote:
->
-> On Wed, 2024-09-25 at 17:52 +0000, Athul Krishna wrote:
-> > Device: Asus Zephyrus G14 GA402RJ
-> > Kernel: 6.11
-> > CPU: R7 67800H
-> > GPU: RX 6700S
-> >
-> > Hello Kristen,
-> >
-> > I'd like provide feedback on the acpiphp module. My laptop is all
-> > AMD(CPU+GPU). So the discrete gpu: \_SB_.PCI0.GPP0.SWUS.SWDS.VGA_,
-> > and the hotplug bridge: \_SB_.PCI0.GPP0. And there's two PCI-PCI
-> > bridges: SWUS and SWDS.
-> >
-> > Eject notification on the discrete GPU, will remove the GPU, and the
-> > two PCI bridges.
-> >
-> > The issue I've encountered is, Device check notification cannot reach
-> > GPU, as it's hotplug context is lost, with the current implementation
-> > of acpiphp(acpiphp_glue.c) module.
-> >
-> >
-> > I hope this helps. Also a small disclaimer: I'm a newbie to Linux
-> > kernel internals. So I might be limited in the help I can provide.
-> > I can provide dmesg logs or ACPI tables if required.
-> >
-> > Thanks & Regards,
-> > Athul
->
-> Hi Athul,
-> I think that Rafael might be maintaining this driver these days. I've
-> copied him on this reply.
+I guess this "attention" file is the one implemented by
+attention_write_file() at
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/hotplug/pci_hotplug_core.c?id=v6.11#n163,
+right?
 
-I don't maintain it (Bjorn does that AFAICS), but I may be one of the
-developers who have touched it most recently.
+The existing implementations of set_attention_status() interpret the
+value written as:
 
-In any case, I don't think it is at fault here, but firmware
-expectations that go beyond provisions made by the ACPI specification:
+  0 = OFF
+  1 = ON
+  2 = blink (ampere, ibmphp, pciehp, rpaphp, shpchp)
+  other values are no-op, OFF, or ON depending on the driver
 
-https://uefi.org/specs/ACPI/6.5/05_ACPI_Software_Programming_Model.html#dev=
-ice-object-notifications
+I *think* this one is:
 
-because it seems to really want to trigger a bus rescan starting from
-a device that has been discovered already that will lead to a
-discovery of a specific "new" device along with its parent.  Sending a
-device check notification on a device that has not been discovered yet
-and whose parent has not been discovered yet either may reasonably be
-regarded as unsuitable for this purpose.
+  0 = fault LED OFF, locate LED OFF
+  1 = fault LED ON,  locate LED OFF
+  2 = fault LED OFF, locate LED ON
+  3 = fault LED ON,  locate LED ON
+  other values alias the above (interpreted as value & 0x3)
 
-That said, it appears to be possible to adjust the generic ACPI device
-notification handling code to take this firmware behavior into account
-kind of as expected.  That is, if a device check notification is
-received on a device object without a hotplug context, look for its
-closest ancestor that has a hotplug context or otherwise can handle
-hotplug and trigger a bus check from it as though it got a bus check
-notification.
+All this should have already been documented in
+Documentation/ABI/testing/sysfs-bus-pci along with the other similar
+attributes.  I guess since we failed to document them in the past,
+this would be a good chance to do it.
 
-Please check the attached (completely untested) patch.
+> Changes in v2:
+>  - Integrated E1000 code into the pciehp driver as an built-in
+>    extention rather than as a standalone module.
+>  - Moved debug tunables and counters to debugfs.
+>  - Removed forward declarations.
+>  - Kept the /sys/bus/pci/slots/<slot>/attention interface rather
+>    than using NPEM/_DSM or led_classdev as suggested.  The "attention"
+>    interface is more beneficial for our site, since it allows us to
+>    control the NVMe slot LEDs agnostically across different enclosure
+>    vendors and kernel versions using the same scripts.  It is also
+>    nice to use the same /sys/bus/pci/slots/<slot>/ sysfs directory for
+>    both slot LED toggling ("attention") and slot power control
+>    ("power").
 
---000000000000ad149006230b17a7
-Content-Type: text/x-patch; charset="US-ASCII"; name="acpi-hotplig-extend.patch"
-Content-Disposition: attachment; filename="acpi-hotplig-extend.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m1jozn720>
-X-Attachment-Id: f_m1jozn720
+The sysfs "attention" interface already exists, so I sort of see your
+point, although it can't work exactly the same with different
+enclosures because they only have a single LED that can be OFF, ON, or
+blinking.  And of course, "attention" can't support all the additional
+indications NPEM and the _DSM support.
 
-LS0tCiBkcml2ZXJzL2FjcGkvc2Nhbi5jIHwgICA3OSArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNTIgaW5zZXJ0aW9u
-cygrKSwgMjcgZGVsZXRpb25zKC0pCgpJbmRleDogbGludXgtcG0vZHJpdmVycy9hY3BpL3NjYW4u
-Ywo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09Ci0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvYWNwaS9zY2FuLmMKKysrIGxp
-bnV4LXBtL2RyaXZlcnMvYWNwaS9zY2FuLmMKQEAgLTQzNSw0MiArNDM1LDY4IEBAIHN0YXRpYyBp
-bnQgYWNwaV9nZW5lcmljX2hvdHBsdWdfZXZlbnQoc3QKIAlyZXR1cm4gLUVJTlZBTDsKIH0KIAot
-dm9pZCBhY3BpX2RldmljZV9ob3RwbHVnKHN0cnVjdCBhY3BpX2RldmljZSAqYWRldiwgdTMyIHNy
-YykKK3N0YXRpYyBpbnQgYWNwaV9kZXZpY2VfaG90cGx1Z19ub3RpZnkoc3RydWN0IGFjcGlfZGV2
-aWNlICphZGV2LCB1MzIgdHlwZSkKIHsKLQl1MzIgb3N0X2NvZGUgPSBBQ1BJX09TVF9TQ19OT05f
-U1BFQ0lGSUNfRkFJTFVSRTsKLQlpbnQgZXJyb3IgPSAtRU5PREVWOworCXdoaWxlIChhZGV2KSB7
-CisJCS8qCisJCSAqIFRoZSBkZXZpY2Ugb2JqZWN0J3MgQUNQSSBoYW5kbGUgY2Fubm90IGJlY29t
-ZSBpbnZhbGlkIGFzIGxvbmcKKwkJICogYXMgYWNwaV9zY2FuX2xvY2sgaXMgYmVpbmcgaGVsZCwg
-YnV0IGl0IG1pZ2h0IGhhdmUgYmVjb21lCisJCSAqIGludmFsaWQgYmVmb3JlIHRoYXQgbG9jayB3
-YXMgYWNxdWlyZWQuCisJCSAqLworCQlpZiAoYWRldi0+aGFuZGxlID09IElOVkFMSURfQUNQSV9I
-QU5ETEUpCisJCQlyZXR1cm4gLUVOT0RFVjsKIAotCWxvY2tfZGV2aWNlX2hvdHBsdWcoKTsKLQlt
-dXRleF9sb2NrKCZhY3BpX3NjYW5fbG9jayk7CisJCWlmIChhZGV2LT5mbGFncy5pc19kb2NrX3N0
-YXRpb24pCisJCQlyZXR1cm4gZG9ja19ub3RpZnkoYWRldiwgdHlwZSk7CiAKLQkvKgotCSAqIFRo
-ZSBkZXZpY2Ugb2JqZWN0J3MgQUNQSSBoYW5kbGUgY2Fubm90IGJlY29tZSBpbnZhbGlkIGFzIGxv
-bmcgYXMgd2UKLQkgKiBhcmUgaG9sZGluZyBhY3BpX3NjYW5fbG9jaywgYnV0IGl0IG1pZ2h0IGhh
-dmUgYmVjb21lIGludmFsaWQgYmVmb3JlCi0JICogdGhhdCBsb2NrIHdhcyBhY3F1aXJlZC4KLQkg
-Ki8KLQlpZiAoYWRldi0+aGFuZGxlID09IElOVkFMSURfQUNQSV9IQU5ETEUpCi0JCWdvdG8gZXJy
-X291dDsKLQotCWlmIChhZGV2LT5mbGFncy5pc19kb2NrX3N0YXRpb24pIHsKLQkJZXJyb3IgPSBk
-b2NrX25vdGlmeShhZGV2LCBzcmMpOwotCX0gZWxzZSBpZiAoYWRldi0+ZmxhZ3MuaG90cGx1Z19u
-b3RpZnkpIHsKLQkJZXJyb3IgPSBhY3BpX2dlbmVyaWNfaG90cGx1Z19ldmVudChhZGV2LCBzcmMp
-OwotCX0gZWxzZSB7Ci0JCWFjcGlfaHBfbm90aWZ5IG5vdGlmeTsKKwkJaWYgKGFkZXYtPmZsYWdz
-LmhvdHBsdWdfbm90aWZ5KQorCQkJcmV0dXJuIGFjcGlfZ2VuZXJpY19ob3RwbHVnX2V2ZW50KGFk
-ZXYsIHR5cGUpOwogCiAJCWFjcGlfbG9ja19ocF9jb250ZXh0KCk7Ci0JCW5vdGlmeSA9IGFkZXYt
-PmhwID8gYWRldi0+aHAtPm5vdGlmeSA6IE5VTEw7CisKKwkJaWYgKGFkZXYtPmhwKSB7CisJCQlh
-Y3BpX2hwX25vdGlmeSBub3RpZnkgPSBhZGV2LT5ocC0+bm90aWZ5OworCisJCQlhY3BpX3VubG9j
-a19ocF9jb250ZXh0KCk7CisKKwkJCWlmIChXQVJOX09OX09OQ0UoIW5vdGlmeSkpCisJCQkJcmV0
-dXJuIC1FSU5WQUw7CisKKwkJCXJldHVybiBub3RpZnkoYWRldiwgdHlwZSk7CisJCX0KKwogCQlh
-Y3BpX3VubG9ja19ocF9jb250ZXh0KCk7CisKIAkJLyoKIAkJICogVGhlcmUgbWF5IGJlIGFkZGl0
-aW9uYWwgbm90aWZ5IGhhbmRsZXJzIGZvciBkZXZpY2Ugb2JqZWN0cwotCQkgKiB3aXRob3V0IHRo
-ZSAuZXZlbnQoKSBjYWxsYmFjaywgc28gaWdub3JlIHRoZW0gaGVyZS4KKwkJICogd2l0aG91dCB0
-aGUgLmV2ZW50KCkgY2FsbGJhY2ssIHNvIGlnbm9yZSB0aGVtIGhlcmUsIGJ1dCBpZgorCQkgKiB0
-aGUgbm90aWZpY2F0aW9uIHR5cGUgaXMgZWl0aGVyIEFDUElfTk9USUZZX0RFVklDRV9DSEVDSyBv
-cgorCQkgKiBBQ1BJX05PVElGWV9CVVNfQ0hFQ0ssIHByb3BhZ2F0ZSB0byB0aGUgcGFyZW50IGFu
-ZCBhYm92ZSBpdC4KIAkJICovCi0JCWlmIChub3RpZnkpCi0JCQllcnJvciA9IG5vdGlmeShhZGV2
-LCBzcmMpOwotCQllbHNlCi0JCQlnb3RvIG91dDsKKwkJaWYgKHR5cGUgPT0gQUNQSV9OT1RJRllf
-REVWSUNFX0NIRUNLKQorCQkJdHlwZSA9IEFDUElfTk9USUZZX0JVU19DSEVDSzsKKwkJZWxzZSBp
-ZiAodHlwZSAhPSBBQ1BJX05PVElGWV9CVVNfQ0hFQ0spCisJCQlyZXR1cm4gMTsKKworCQlhZGV2
-ID0gYWNwaV9kZXZfcGFyZW50KGFkZXYpOwogCX0KLQlzd2l0Y2ggKGVycm9yKSB7CisKKwlyZXR1
-cm4gLUVOT0RFVjsKK30KKwordm9pZCBhY3BpX2RldmljZV9ob3RwbHVnKHN0cnVjdCBhY3BpX2Rl
-dmljZSAqYWRldiwgdTMyIHNyYykKK3sKKwl1MzIgb3N0X2NvZGUgPSBBQ1BJX09TVF9TQ19OT05f
-U1BFQ0lGSUNfRkFJTFVSRTsKKwlpbnQgcmV0OworCisJbG9ja19kZXZpY2VfaG90cGx1ZygpOwor
-CW11dGV4X2xvY2soJmFjcGlfc2Nhbl9sb2NrKTsKKworCXJldCA9IGFjcGlfZGV2aWNlX2hvdHBs
-dWdfbm90aWZ5KGFkZXYsIHNyYyk7CisJaWYgKHJldCA+IDApCisJCWdvdG8gb3V0OworCisJc3dp
-dGNoIChyZXQpIHsKIAljYXNlIDA6CiAJCW9zdF9jb2RlID0gQUNQSV9PU1RfU0NfU1VDQ0VTUzsK
-IAkJYnJlYWs7CkBAIC00ODUsNyArNTExLDYgQEAgdm9pZCBhY3BpX2RldmljZV9ob3RwbHVnKHN0
-cnVjdCBhY3BpX2RldgogCQlicmVhazsKIAl9CiAKLSBlcnJfb3V0OgogCWFjcGlfZXZhbHVhdGVf
-b3N0KGFkZXYtPmhhbmRsZSwgc3JjLCBvc3RfY29kZSwgTlVMTCk7CiAKICBvdXQ6Cg==
---000000000000ad149006230b17a7--
+A few mostly superficial code comments below.
+
+> +config HOTPLUG_PCI_PCIE_CRAY_E1000
+> +	bool "PCIe Hotplug extensions for Cray ClusterStor E1000"
+> +	depends on ACPI_PCI_SLOT && HOTPLUG_PCI_PCIE && IPMI_HANDLER=y
+
+What's the ACPI_PCI_SLOT connection?  I don't see the dependency.
+
+> +	help
+> +	  Say Y here if you have a Cray ClusterStor E1000 and want to control
+> +	  your NVMe slot LEDs.  Without this driver is it not possible
+> +	  to control the fault and locate LEDs on the E1000's 24 NVMe slots.
+
+If my guess about where this driver runs is correct, this is a little
+misleading.  A user with a system that has an E1000 attached to it
+would read this and think the driver would be useful on the system to
+which the E1000 is attached.  But IIUC, it's only relevant to the
+embedded processor *inside* the E1000.
+
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -73,6 +73,13 @@ static int init_slot(struct controller *ctrl)
+>  		ops->get_attention_status = pciehp_get_raw_indicator_status;
+>  		ops->set_attention_status = pciehp_set_raw_indicator_status;
+>  	}
+> +#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
+> +	if (is_craye1k_slot(ctrl)) {
+> +		/* slots 1-24 on Cray E1000s are controlled differently */
+> +		ops->get_attention_status = craye1k_get_attention_status;
+> +		ops->set_attention_status = craye1k_set_attention_status;
+> +	}
+> +#endif
+
+I'm not really thrilled about dropping device-specific code in here,
+but I don't have a better suggestion yet.
+
+> @@ -404,6 +411,11 @@ int __init pcie_hp_init(void)
+>  	pr_debug("pcie_port_service_register = %d\n", retval);
+>  	if (retval)
+>  		pr_debug("Failure to register service\n");
+> +#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
+> +	retval = craye1k_init();
+> +	if (retval)
+> +		pr_debug("Failure to register Cray E1000 extensions");
+> +#endif
+
+> + * craye1k_do_message() - Send the message in 'craye1k' and wait for a response
+> + *
+> + * Context: craye1k->lock is already held.
+> + * Return: 0 on success, non-zero on error.
+> + */
+> +static int craye1k_do_message(struct craye1k *craye1k)
+> +{
+> +	int rc;
+> +	long rc2;
+> +	struct completion *read_complete = &craye1k->read_complete;
+> +	unsigned long tout = msecs_to_jiffies(craye1k->completion_timeout_ms);
+> +
+> +	rc = craye1k_send_message(craye1k);
+> +	if (rc == 0) {
+> +		rc2 = wait_for_completion_killable_timeout(read_complete, tout);
+> +		if (rc2 == 0) {
+> +			craye1k->completion_timeout++;
+> +			rc = -ETIME;
+> +		}
+> +	}
+> +
+> +	if (craye1k->rx_result == IPMI_UNKNOWN_ERR_COMPLETION_CODE || rc2 <= 0)
+> +		rc = -1;
+> +
+> +	return rc;
+
+This doesn't make sense to me.
+
+If craye1k_send_message() fails (returns non-zero), we test both
+craye1k->rx_result and rc2, which are uninitialized AFAICS.
+
+If wait_for_completion_killable_timeout() returns "rc2 <= 0" (timeout
+or interrupted), it looks like we always return -1, so I don't know
+why we mention -ETIME in the middle.
+
+And it doesn't look safe to test craye1k->rx_result because it's only
+valid if craye1k_msg_handler() has called
+complete(&craye1k->read_complete).
+
+I think this might be easier to read as below.  I don't *guarantee*
+that it's equivalent, but it seems like it on first glance:
+
+  rc = craye1k_send_message(craye1k);
+  if (rc)
+    return rc;
+
+  rc2 = wait_for_completion_killable_timeout(read_complete, tout);
+  if (rc2 > 0)
+    return 0;         /* normal path, got response before timeout */
+
+  if (rc2 == 0)
+    craye1k->completion_timeout++;
+
+  return -1;          /* timed out or interrupted */
+
+> + * __craye1k_do_command() - Do an IPMI command
+> + *
+> + * Send a command with optional data bytes, and read back response bytes.
+> + * Context: craye1k->lock is already held.
+> + * Returns: 0 on success, non-zero on error.
+> + */
+> +static int __craye1k_do_command(struct craye1k *craye1k, u8 netfn, u8 cmd,
+> +				u8 *send_data, u8 send_data_len, u8 *recv_data,
+> +				u8 recv_data_len)
+> +{
+> +	int rc;
+> +
+> +	craye1k->tx_msg.netfn = netfn;
+> +	craye1k->tx_msg.cmd = cmd;
+> +
+> +	if (send_data) {
+> +		memcpy(&craye1k->tx_msg_data[0], send_data, send_data_len);
+> +		craye1k->tx_msg.data_len = send_data_len;
+> +	} else {
+> +		craye1k->tx_msg_data[0] = 0;
+> +		craye1k->tx_msg.data_len = 0;
+> +	}
+> +
+> +	rc = craye1k_do_message(craye1k);
+> +	memcpy(recv_data, craye1k->rx_msg_data, recv_data_len);
+
+Seems wrong to copy into recv_data if this failed?
+
+Looks like craye1k_do_command_and_netfn() is the only caller, and it
+supplies recv_data == NULL and recv_data_len = 0, so why do they
+exist?
+
+> +static int craye1k_do_command(struct craye1k *craye1k, u8 cmd, u8 *send_data,
+> +			      u8 send_data_len)
+> +{
+> +	return (craye1k_do_command_and_netfn(craye1k, CRAYE1K_CMD_NETFN, cmd,
+> +					     send_data, send_data_len));
+
+Unnecessary outer parens.
+
+> + * craye1k_is_primary() - Are we the primary server?
+> + *
+> + * Returns: 1 if we are the primary server, 0 otherwise.
+> + */
+> +static int craye1k_is_primary(struct craye1k *craye1k)
+> +{
+> +	u8 byte = 0;
+> +	int rc;
+> +
+> +	/* Response byte is 0x1 on success */
+> +	rc = craye1k_do_command(craye1k, CRAYE1K_CMD_PRIMARY, &byte, 1);
+> +	craye1k->check_primary++;
+> +	if (rc == 0x1)
+> +		return 1;   /* success */
+
+This isn't actually *success*, it's more like "true"; this function
+just answers a yes/no question and could return boolean.
+
+If there's a possibility of failure, i.e., if "we can't tell whether
+we're primary" is a possible outcome, there would have to be three
+possible return values.
+
+> +	craye1k->check_primary_failed++;
+> +	return 0;   /* We are not the primary server node */
+> +}
+> +
+> +/*
+> + * craye1k_set_primary() - Attempt to set ourselves as the primary server
+> + *
+> + * Returns: 0 on success, 1 otherwise.
+
+Why 1 for failure here, <0 for failure elsewhere?  Negative -ERRNO
+return value for failure is the usual convention.
+
+Bjorn
 
