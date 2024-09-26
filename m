@@ -1,120 +1,237 @@
-Return-Path: <linux-pci+bounces-13557-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13558-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FC949871FF
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 12:49:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 703BD987209
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 12:52:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5132228C56D
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 10:49:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBF761F210DE
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 10:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42FCC1ACE12;
-	Thu, 26 Sep 2024 10:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CB701ACE12;
+	Thu, 26 Sep 2024 10:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qMhC3dtQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JX9fYAsk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB861F95C;
-	Thu, 26 Sep 2024 10:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D041AC883;
+	Thu, 26 Sep 2024 10:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727347793; cv=none; b=cOicv7wbYunSMzrFScC0Nrek7hgJp6/kzvifn9/nqGwOeqRqSivOAmXmyB4GcHZyHnn0FBWWbrGOwWPzwrwgJvhRm6v/j1qrqvcuRLNeixbp8uHtYbhiLfqoTaPI7srQGazLoxx3wQ3D9ZMPs6Pd98p2kW9N9VzfnhRnoGdbWew=
+	t=1727347941; cv=none; b=ahSRNpPfwzXAh1PMtm1iNFKVUsPDNJHWlZ2ITV+3k5W85XIb8ZEAZdNF23eeJeNDIj4hn2nqNBDPG4f4ErXy+EJCRTqyzHbRRNoXay/97o2Pe6HZlTpEpHBnZDDhSpssKWM341AGfeacSiN/yjkr3Mr32LPH4tn5EJY1yzxfrJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727347793; c=relaxed/simple;
-	bh=5z7SiMhJTEAuTswaoEaoXppBt9EGx2gS7cFSH/7/tow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IFcjc5ZDMAG9moXrH4v+IFPcYntP2vdw9hMoWOxzBmmGGu4/IuvuosZQ4chaZ/IisJWAZKMgKMJBH1VC7B85qLYfCW10IuSC385w5tsICRpjptNq+YSekeuTuRDhslDmeA06PssJXGCykBuudzx8cQlRhfgpLBCloh5FPutquuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qMhC3dtQ; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1727347789;
-	bh=5z7SiMhJTEAuTswaoEaoXppBt9EGx2gS7cFSH/7/tow=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qMhC3dtQcM1PnqulvZCIkjIpriv/j4NY6o6x597yg0HfYV+VJRVOQZ162gpZO+OGA
-	 OBfpQsR3mRtzjSQcGeTqIiYFxCjWFOKJOYS2N31M1dPN/bm96phcxq4GgpY51KnoSI
-	 eEYbb6I8ZALbhUNpH4yOqaa4ytTLa0Cx1iMZJOVSBlN8mlWUbnL1pyZGScI4zVpcp6
-	 fENYo3TyyD3YRxff3cd1o6q8OKgOenw6A/0Sbb++RuCML5MkbfNLmnMLN+aYp2YmBF
-	 fjHyq95v2p+BEZnJA+hJltFc4qEpxL7trtLhmjTKBTr9JC5+PgUmxPZuN90P4jLxer
-	 +aTpTpuNcQ95A==
-Received: from [IPV6:2a01:e0a:d1a:1250:792b:136f:2a18:fd70] (unknown [IPv6:2a01:e0a:d1a:1250:792b:136f:2a18:fd70])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0E59417E11F6;
-	Thu, 26 Sep 2024 12:49:49 +0200 (CEST)
-Message-ID: <227a813a-0586-4072-b6de-9dfddfe2d060@collabora.com>
-Date: Thu, 26 Sep 2024 13:49:47 +0300
+	s=arc-20240116; t=1727347941; c=relaxed/simple;
+	bh=9WzNs6a9TghPvx2jiO6tLXzf0mbcqwe2XFjZKwbhgZk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oqLgZJvLjFAYP/mPh4+vmsLb7M1amAkiWW6upOUBv/3qYxyBHmrUoNnZU9zfs5a9lyyzdGFvBxiSRvkPIEZr65uRregKHKvel0rKgQ7CMTZsFGg9oW8BbtXRzmmVDStBKnPhdeL61YPeS1DDMX0bM00V7pblNWvcegbAZ8yWP/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JX9fYAsk; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727347938; x=1758883938;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=9WzNs6a9TghPvx2jiO6tLXzf0mbcqwe2XFjZKwbhgZk=;
+  b=JX9fYAskOHaJO/dFVSYq/thavLlV59/RaM2hZtsqNqrtCfIq/3OeAPvL
+   Vd8Ex/+MZKjnf8GwdBFxzKVuSvjjml5p9IK3z4zKhQzI2SXoMZZurIb/u
+   WzfJLi9MZd0efnQmlirC5cZgdzrqrqttsjvqgFeu8AWm9Y5Sl0JssH5uc
+   cr0/ReeMvTPSbSkCNUyWk8zG/i0W7RZ+I5guLgiVextPDqV+lxVMwkkIQ
+   kS1zc32rqqHpFoVEu8mbIiLq+8vPSmbhU5R9rddXKLDOa7/UHR7pI3Mcd
+   Qx+XtALBZ2NK/WcsC69mE8PdhsFph1fAFxjI+HaEEdvLMNdA+wO19GeQu
+   A==;
+X-CSE-ConnectionGUID: ycXdzTUsRXWs/OL8NArgCw==
+X-CSE-MsgGUID: duTC8LwBSEqLLKDwDL2zwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="26382557"
+X-IronPort-AV: E=Sophos;i="6.10,155,1719903600"; 
+   d="scan'208";a="26382557"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2024 03:52:18 -0700
+X-CSE-ConnectionGUID: c6sVX8B9SpG2LluwZMDWHg==
+X-CSE-MsgGUID: zEBcAInwRUWmUbWn4+lMMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,155,1719903600"; 
+   d="scan'208";a="76872303"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.208])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2024 03:52:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Sep 2024 13:52:10 +0300 (EEST)
+To: Jian-Hong Pan <jhp@endlessos.org>
+cc: david.e.box@linux.intel.com, Bjorn Helgaas <helgaas@kernel.org>, 
+    Johan Hovold <johan@kernel.org>, 
+    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Nirmal Patel <nirmal.patel@linux.intel.com>, 
+    Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux@endlessos.org
+Subject: Re: [PATCH v9 3/3] PCI: vmd: Save/restore PCIe bridge states
+ before/after pci_reset_bus()
+In-Reply-To: <CAPpJ_ed09KJY9Gw2qGwOHdKFw4-BAMyG6jOyWHnV7brJutwfVw@mail.gmail.com>
+Message-ID: <44275137-97fc-3da9-c01a-6e747c236c8e@linux.intel.com>
+References: <20240924070551.14976-2-jhp@endlessos.org> <20240924072858.15929-3-jhp@endlessos.org> <8050f9d4cb851fc301cc35b4fb5a839ff71fdcae.camel@linux.intel.com> <CAPpJ_ed09KJY9Gw2qGwOHdKFw4-BAMyG6jOyWHnV7brJutwfVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Provide devm_clk_bulk_get_all_enabled() helper
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Matthias Brugger <matthias.bgg@gmail.com>, Jingoo Han
- <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, kernel@collabora.com, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20240914-clk_bulk_ena_fix-v1-0-ce3537585c06@collabora.com>
- <20240924143634.pqpdsewoqxn3liqi@thinkpad>
- <70a24964-990b-4606-bdc8-4dd42c44785a@collabora.com>
- <20240925075654.f2pefosdspqiakvj@thinkpad>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20240925075654.f2pefosdspqiakvj@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1368481887-1727347868=:1148"
+Content-ID: <f275b967-ffbf-9ab3-03c1-043b59007802@linux.intel.com>
 
-On 9/25/24 10:56 AM, Manivannan Sadhasivam wrote:
-> On Wed, Sep 25, 2024 at 09:52:44AM +0200, AngeloGioacchino Del Regno wrote:
->> Il 24/09/24 16:36, Manivannan Sadhasivam ha scritto:
->>> On Sat, Sep 14, 2024 at 09:04:53PM +0300, Cristian Ciocaltea wrote:
->>>> Commit 265b07df758a ("clk: Provide managed helper to get and enable bulk
->>>> clocks") added devm_clk_bulk_get_all_enable() function, but missed to
->>>> return the number of clocks stored in the clk_bulk_data table referenced
->>>> by the clks argument.
->>>>
->>>> That is required in case there is a need to iterate these clocks later,
->>>> therefore I couldn't see any use case of this parameter and should have
->>>> been simply removed from the function declaration.
->>>>
->>>
->>> Is there an user that currerntly does this?
->>>
->>
->> Yes and the patch wasn't sent upstream yet, but anyway, regardless of that,
->> this series is fixing inconsistency with both naming and usage between the
->> clock (bulk) API functions, with that being the only function acting
->> different from the others, at best confusing people.
->>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1368481887-1727347868=:1148
+Content-Type: text/plain; CHARSET=ISO-2022-JP
+Content-ID: <c0937035-0f93-a19e-a39c-fd9eeda963df@linux.intel.com>
+
+On Thu, 26 Sep 2024, Jian-Hong Pan wrote:
+
+> David E. Box <david.e.box@linux.intel.com> 於 2024年9月26日 週四 上午10:51寫道：
+> >
+> > Hi Jian-Hong,
+> >
+> > On Tue, 2024-09-24 at 15:29 +0800, Jian-Hong Pan wrote:
+> > > PCI devices' parameters on the VMD bus have been programmed properly
+> > > originally. But, cleared after pci_reset_bus() and have not been restored
+> > > correctly. This leads the link's L1.2 between PCIe Root Port and child
+> > > device gets wrong configs.
+> > >
+> > > Here is a failed example on ASUS B1400CEAE with enabled VMD. Both PCIe
+> > > bridge and NVMe device should have the same LTR1.2_Threshold value.
+> > > However, they are configured as different values in this case:
+> > >
+> > > 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Processor
+> > > PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
+> > >   ...
+> > >   Capabilities: [200 v1] L1 PM Substates
+> > >     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+> > >       PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+> > >     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >       T_CommonMode=0us LTR1.2_Threshold=0ns
+> > >     L1SubCtl2: T_PwrOn=0us
+> > >
+> > > 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Blue
+> > > SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+> > >   ...
+> > >   Capabilities: [900 v1] L1 PM Substates
+> > >     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+> > >       PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+> > >     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >       T_CommonMode=0us LTR1.2_Threshold=101376ns
+> > >     L1SubCtl2: T_PwrOn=50us
+> > >
+> > > Here is VMD mapped PCI device tree:
+> > >
+> > > -+-[0000:00]-+-00.0  Intel Corporation Device 9a04
+> > >  | ...
+> > >  \-[10000:e0]-+-06.0-[e1]----00.0  Sandisk Corp WD Blue SN550 NVMe SSD
+> > >               \-17.0  Intel Corporation Tiger Lake-LP SATA Controller
+> > >
+> > > When pci_reset_bus() resets the bus [e1] of the NVMe, it only saves and
+> > > restores NVMe's state before and after reset. Because bus [e1] has only one
+> > > device: 10000:e1:00.0 NVMe. The PCIe bridge is missed. However, when it
+> > > restores the NVMe's state, it also restores the ASPM L1SS between the PCIe
+> > > bridge and the NVMe by pci_restore_aspm_l1ss_state(). The NVMe's L1SS is
+> > > restored correctly. But, the PCIe bridge's L1SS is restored with the wrong
+> > > value 0x0. Becuase, the PCIe bridge's state is not saved before reset.
+> > > That is why pci_restore_aspm_l1ss_state() gets the parent device (PCIe
+> > > bridge)'s saved state capability data and restores L1SS with value 0.
+> > >
+> > > So, save the PCIe bridge's state before pci_reset_bus(). Then, restore the
+> > > state after pci_reset_bus(). The restoring state also consumes the saving
+> > > state.
+> > >
+> > > Link: https://www.spinics.net/lists/linux-pci/msg159267.html
+> > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > ---
+> > > v9:
+> > > - Drop the v8 fix about drivers/pci/pcie/aspm.c. Use this in VMD instead.
+> > >
+> > >  drivers/pci/controller/vmd.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > > index 11870d1fc818..2820005165b4 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -938,9 +938,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd,
+> > > unsigned long features)
+> > >               if (!list_empty(&child->devices)) {
+> > >                       dev = list_first_entry(&child->devices,
+> > >                                              struct pci_dev, bus_list);
+> >
+> > Newline here
+> > > +                     /* To avoid pci_reset_bus restore wrong ASPM L1SS
+> > > +                      * configuration due to missed saving parent device's
+> > > +                      * states, save & restore the parent device's states
+> > > +                      * as well.
+> > > +                      */
+> >
+> > No text on first line of comment.
 > 
-> I agree with the 'inconsistency' part of the API, but I wouldn't call it as
-> *broken* as this series does. Please fix that and you can have my:
+> Oops!  Thanks
 > 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >     /*
+> >      * To avoid pci_reset_bus restore wrong ASPM L1SS
+> >      * ...
+> >      */
+> >
+> > > +                     pci_save_state(dev->bus->self);
+> > >                       ret = pci_reset_bus(dev);
+> > >                       if (ret)
+> > >                               pci_warn(dev, "can't reset device: %d\n",
+> > > ret);
+> > > +                     pci_restore_state(dev->bus->self);
+> >
+> > I think Ilpo's point was that pci_save_aspm_l1ss_state() and
+> > pci_restore_aspm_l1ss_state() should be more symmetric. If
+> > pci_save_aspm_l1ss_state() is changed to also handle the state for the device
+> > and its parent in the same call, then no change is needed here. But that would
+> > only handle L1SS settings and not anything else that might need to be restored
+> > after the bus reset. So I'm okay with it either way.
 
-Thanks Angelo and Mani for reviewing this.
+Why would something else need to be restored? The spec explicitly says the 
+bus reset should not cause config changes on the parent other than 
+to status bits.
 
-I've submitted v2:
+Based on what is seen so far, the problem here is not the reset itself 
+breaking parent's config but ASPM code restoring values from state beyond 
+what it had saved and thus it programs pseudogarbage into the L1SS 
+settings.
 
-https://lore.kernel.org/lkml/20240926-clk_bulk_ena_fix-v2-0-9c767510fbb5@collabora.com/
+> Yes, that made me think the whole day before I sent out this patch. I
+> do not know what is the best reset bus procedure, especially how other
+> drivers reset the bus.
+> 
+> If trace the code path:
+> pci_reset_bus()
+>   __pci_reset_bus()
+>     pci_bus_reset()
+>       pci_bus_save_and_disable_locked()
+> 
+> pci_bus_save_and_disable_locked()'s comment shows "Save and disable
+> devices from the top of the tree down while holding the @dev mutex
+> lock for the entire tree". I think that means the PCI(e) bridge should
+> save state first, then the following bus' devices. However, VMD resets
+> the child device (10000:e1:00.0 NVMe)'s bus first and only saves the
+> child device (10000:e1:00.0 NVMe)'s state. It does not visit the tree
+> from the top to down. So, it misses the PCIe bridge.  Therefore, I
+> make it save & restore its parent (10000:e0:06.0 PCIe bridge)'s state
+> as compensation.
 
-Regards,
-Cristian
+The problem with your fix is it only takes care of part of the cases (i.e. 
+VMD). But there are other callers of pci_reset_bus() which would also 
+restore incorrect L1SS settings, no?
+
+I'd suggest making the L1SS code symmetric on this, even if it means 
+saving the register value twice when walking the tree downwards (it seems 
+harmless to write the same value twice).
+
+-- 
+ i.
+--8323328-1368481887-1727347868=:1148--
 
