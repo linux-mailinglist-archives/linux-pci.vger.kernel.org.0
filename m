@@ -1,225 +1,213 @@
-Return-Path: <linux-pci+bounces-13532-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13533-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8053E986AEB
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 04:26:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 992B0986B17
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 04:52:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF6EA1F22444
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 02:26:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ABADB1C215E2
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Sep 2024 02:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5FB17278D;
-	Thu, 26 Sep 2024 02:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 528F11714B2;
+	Thu, 26 Sep 2024 02:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frspAm7M"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KBwW+7dc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80FC4120B;
-	Thu, 26 Sep 2024 02:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27914C91;
+	Thu, 26 Sep 2024 02:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727317571; cv=none; b=lrImTJFX0LSAqMrP/SZiw+DgGHEeUQ2N6O062xkEIITIy0XddM070JnM0tC008rgvgx1FraN5e8pr41FZO0T2zD8OcyWM3FmtG1fKdnNd91f44lC0MTjborf7lghHU6sriWZE/iCDvkaI15e4Kk0kXHSf9h6N39J7Wy6TlnNZSk=
+	t=1727319119; cv=none; b=ImZenoyJkQRDdRkovDTJ+kVbAEU1WVGGqkm9v+26tp6mMUCVOzHrUP1eQyHnUChUyDL3OgFHpDoAnFf6fupoM1o1KCbon0EF+Lp+aW/dO0YX60xz1/wAGfClI/njlTroduJvWS+XobBO85yHmIyxy8njZ3Tc1MP9WvSDkDtKvhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727317571; c=relaxed/simple;
-	bh=r5SI/RGSLPfnaDMdwQYTrj8PSSmy7YhHEr12h+MWAoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ErIX4u2w441C2HnnDbkDM8rcwMHzvFZkmxELVoZjIaja3yg161gdro4ZNgeY99FoQz17tbNqazM656aZYj74WaaR0dDbDh+DDAQQK8mcbuAYWKdRoYi08HDWcpwMca/D+CPyN1BXP0pswE+Mb4i3UZRl2sF7aMr9ybHfDKVDup4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frspAm7M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC0DC4CEC3;
-	Thu, 26 Sep 2024 02:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727317571;
-	bh=r5SI/RGSLPfnaDMdwQYTrj8PSSmy7YhHEr12h+MWAoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=frspAm7Mpmz1+1OkPVLEAsL/gO4dAcKalYn1V+qRG5s5F3chfbXw4j8c86lSDF7ET
-	 d/LSuEOFje85dlrho0oNDIstDd2/Hy/jE9fbpWKuAL1ZHF2NOYW3xVBxKzUXF76yMl
-	 8tq2l8F3N7DWB3v6o3hb3qyAwniLvGQ2rh0noD3xOZMwmafcSQTn1y/DT0vRzhGVtd
-	 IfCn5dtDczmE6EY29yFIR1sxBmzPpUkM1XsBSGJpt1CT7herFW1ys9l6DNw/eMyskH
-	 3GSK7M+nCmklE5AvkTdHIkppb+alBO4lhyfFpx58LHfbWTwpzYGx2Y4hksLE8a+rpu
-	 MAHrsHi+GBxSw==
-Date: Wed, 25 Sep 2024 21:26:10 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH 1/3] of: address: Add helper function to get untranslated
- 'ranges' information
-Message-ID: <20240926022610.GA2360654-robh@kernel.org>
-References: <20240924-pci_fixup_addr-v1-0-57d14a91ec4f@nxp.com>
- <20240924-pci_fixup_addr-v1-1-57d14a91ec4f@nxp.com>
+	s=arc-20240116; t=1727319119; c=relaxed/simple;
+	bh=6x5k5kh2NYIZT+bfekCIrgVpCErQu44D3YEWhqWxLdE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kPL7CCrPfRXSq24PPR91gWhaHrjmAYk2usYekcblBctQ5oZjeD/X3N5HHhqPsBWg40243U5MDEK3N34oJw288jQijuUxlxfK3oSZNxr/CmzfTnF6Zan0JWVfKnhN9Pq3GgZ+bDhx79ePBTj5L516ksIzQ8qsIITY+KaF5kUvn0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KBwW+7dc; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727319115; x=1758855115;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=6x5k5kh2NYIZT+bfekCIrgVpCErQu44D3YEWhqWxLdE=;
+  b=KBwW+7dcdK+77cXy6XGqIG5Xj1Wfs6H1EmnnYenufG6leJiuXGLAHXzF
+   CfUROn1OYnTiD1c/5+eQr3vRvrS7lt5MYwW18yxGVNMEdHExfcGFFm3BT
+   IVA0JigC0EpXctREsERyCvK0GNVDBQqHMmPlg8QVw8MOtuEjfD+Num/qb
+   OmSr42Kjuq3qSRL3IAcDhT3oDwUMQzJUUhaA4OZW1xXD5owZKEmH4FTa6
+   LKkkiFoYhjq/H/+j/tGOeZ+Q/R7zEhh7SPXpMckKwMdbRIkrTIgp1NQTI
+   Bb3UPR0470CvAC/wyXgR6k1UMeiatASmU/uPVN+JCyORNkBR16ncxN7aQ
+   w==;
+X-CSE-ConnectionGUID: r+ZdH6BgQ8aCm2BnPGpdTA==
+X-CSE-MsgGUID: LkZggPwHToyRmtei8CKFig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="37068099"
+X-IronPort-AV: E=Sophos;i="6.10,259,1719903600"; 
+   d="scan'208";a="37068099"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 19:51:55 -0700
+X-CSE-ConnectionGUID: VzK7qaLpROiZDwlnYwskhg==
+X-CSE-MsgGUID: sKenbcVNTymBL1ucCCdHww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,259,1719903600"; 
+   d="scan'208";a="72083000"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com ([10.125.111.121])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 19:51:54 -0700
+Message-ID: <8050f9d4cb851fc301cc35b4fb5a839ff71fdcae.camel@linux.intel.com>
+Subject: Re: [PATCH v9 3/3] PCI: vmd: Save/restore PCIe bridge states
+ before/after pci_reset_bus()
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Jian-Hong Pan <jhp@endlessos.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Kuppuswamy Sathyanarayanan
+ <sathyanarayanan.kuppuswamy@linux.intel.com>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>,  linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux@endlessos.org
+Date: Wed, 25 Sep 2024 19:51:54 -0700
+In-Reply-To: <20240924072858.15929-3-jhp@endlessos.org>
+References: <20240924070551.14976-2-jhp@endlessos.org>
+	 <20240924072858.15929-3-jhp@endlessos.org>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0-1build2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240924-pci_fixup_addr-v1-1-57d14a91ec4f@nxp.com>
 
-On Tue, Sep 24, 2024 at 05:54:19PM -0400, Frank Li wrote:
-> Introduce `for_each_of_range_untranslate()` to retrieve untranslated CPU
-> address information, similar to `of_property_read_reg()`. This is required
-> for hardware like i.MX8QXP to configure the PCIe controller ATU and
-> eliminate the need for workaround address fixups in drivers. Currently,
-> many drivers use hardcoded CPU addresses for fixups, but this information
-> is already described in the Device Tree. With correct hardware
-> descriptions, such fixups can be removed.
+Hi Jian-Hong,
 
-Just to be clear, you don't have to change the DT to add the 
-intermediate bus? If you do, then that's an ABI issue.
-
-> 
->             ┌─────────┐                    ┌────────────┐
->  ┌─────┐    │         │ IA: 0x8ff0_0000    │            │
->  │ CPU ├───►│ BUS     ├─────────────────┐  │ PCI        │
->  └─────┘    │         │ IA: 0x8ff8_0000 │  │            │
->   CPU Addr  │ Fabric  ├─────────────┐   │  │ Controller │
-> 0x7000_0000 │         │             │   │  │            │
->             │         │             │   │  │            │   PCI Addr
->             │         │             │   └──► CfgSpace  ─┼────────────►
->             │         ├─────────┐   │      │            │    0
->             │         │         │   │      │            │
->             └─────────┘         │   └──────► IOSpace   ─┼────────────►
->                                 │          │            │    0
->                                 │          │            │
->                                 └──────────► MemSpace  ─┼────────────►
->                         IA: 0x8000_0000    │            │  0x8000_0000
->                                            └────────────┘
-> 
-> bus@5f000000 {
->         compatible = "simple-bus";
->         #address-cells = <1>;
->         #size-cells = <1>;
->         ranges = <0x5f000000 0x0 0x5f000000 0x21000000>,
->                  <0x80000000 0x0 0x70000000 0x10000000>;
-> 
->         pcieb: pcie@5f010000 {
->                 compatible = "fsl,imx8q-pcie";
->                 reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
->                 reg-names = "dbi", "config";
->                 #address-cells = <3>;
->                 #size-cells = <2>;
->                 device_type = "pci";
->                 bus-range = <0x00 0xff>;
->                 ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
->                          <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
-> 	...
-> 	};
-> };
-> 
-> Currently all function related 'range' return CPU address. THe new help
-> function for_each_of_range_untranslate() can get above diagram IA address
-> informaiton.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Tue, 2024-09-24 at 15:29 +0800, Jian-Hong Pan wrote:
+> PCI devices' parameters on the VMD bus have been programmed properly
+> originally. But, cleared after pci_reset_bus() and have not been restored
+> correctly. This leads the link's L1.2 between PCIe Root Port and child
+> device gets wrong configs.
+>=20
+> Here is a failed example on ASUS B1400CEAE with enabled VMD. Both PCIe
+> bridge and NVMe device should have the same LTR1.2_Threshold value.
+> However, they are configured as different values in this case:
+>=20
+> 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Processo=
+r
+> PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
+> =C2=A0 ...
+> =C2=A0 Capabilities: [200 v1] L1 PM Substates
+> =C2=A0=C2=A0=C2=A0 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1=
+.1+ L1_PM_Substates+
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PortCommonModeRestoreTime=3D45us PortTPowe=
+rOnTime=3D50us
+> =C2=A0=C2=A0=C2=A0 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L=
+1.1-
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+> =C2=A0=C2=A0=C2=A0 L1SubCtl2: T_PwrOn=3D0us
+>=20
+> 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Blue
+> SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+> =C2=A0 ...
+> =C2=A0 Capabilities: [900 v1] L1 PM Substates
+> =C2=A0=C2=A0=C2=A0 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1=
+.1- L1_PM_Substates+
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PortCommonModeRestoreTime=3D32us PortTPowe=
+rOnTime=3D10us
+> =C2=A0=C2=A0=C2=A0 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L=
+1.1-
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T_CommonMode=3D0us LTR1.2_Threshold=3D1013=
+76ns
+> =C2=A0=C2=A0=C2=A0 L1SubCtl2: T_PwrOn=3D50us
+>=20
+> Here is VMD mapped PCI device tree:
+>=20
+> -+-[0000:00]-+-00.0=C2=A0 Intel Corporation Device 9a04
+> =C2=A0| ...
+> =C2=A0\-[10000:e0]-+-06.0-[e1]----00.0=C2=A0 Sandisk Corp WD Blue SN550 N=
+VMe SSD
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 \-17.0=C2=A0 Intel Corporation Tiger Lake-LP SATA Controller
+>=20
+> When pci_reset_bus() resets the bus [e1] of the NVMe, it only saves and
+> restores NVMe's state before and after reset. Because bus [e1] has only o=
+ne
+> device: 10000:e1:00.0 NVMe. The PCIe bridge is missed. However, when it
+> restores the NVMe's state, it also restores the ASPM L1SS between the PCI=
+e
+> bridge and the NVMe by pci_restore_aspm_l1ss_state(). The NVMe's L1SS is
+> restored correctly. But, the PCIe bridge's L1SS is restored with the wron=
+g
+> value 0x0. Becuase, the PCIe bridge's state is not saved before reset.
+> That is why pci_restore_aspm_l1ss_state() gets the parent device (PCIe
+> bridge)'s saved state capability data and restores L1SS with value 0.
+>=20
+> So, save the PCIe bridge's state before pci_reset_bus(). Then, restore th=
+e
+> state after pci_reset_bus(). The restoring state also consumes the saving
+> state.
+>=20
+> Link: https://www.spinics.net/lists/linux-pci/msg159267.html
+> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 > ---
->  drivers/of/address.c       | 33 +++++++++++++++++++++++----------
->  include/linux/of_address.h |  9 ++++++++-
->  2 files changed, 31 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 286f0c161e332..09c73936e573f 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -787,8 +787,9 @@ int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
->  EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
->  #define of_dma_range_parser_init of_pci_dma_range_parser_init
->  
-> -struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
-> -						struct of_pci_range *range)
-> +struct of_pci_range *of_pci_range_parser_one_common(struct of_pci_range_parser *parser,
-> +						    struct of_pci_range *range,
-> +						    bool translate)
->  {
->  	int na = parser->na;
->  	int ns = parser->ns;
-> @@ -806,11 +807,13 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->  	range->bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
->  
->  	if (parser->dma)
-> -		range->cpu_addr = of_translate_dma_address(parser->node,
-> -				parser->range + na);
-> +		range->cpu_addr = translate ? of_translate_dma_address(parser->node,
-> +						parser->range + na) :
-> +					      of_read_number(parser->range + na, parser->pna);
->  	else
-> -		range->cpu_addr = of_translate_address(parser->node,
-> -				parser->range + na);
-> +		range->cpu_addr = translate ? of_translate_address(parser->node,
-> +						parser->range + na) :
-> +					      of_read_number(parser->range + na, parser->pna);
->  	range->size = of_read_number(parser->range + parser->pna + na, ns);
->  
->  	parser->range += np;
-> @@ -823,11 +826,13 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->  		flags = parser->bus->get_flags(parser->range);
->  		bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
->  		if (parser->dma)
-> -			cpu_addr = of_translate_dma_address(parser->node,
-> -					parser->range + na);
-> +			cpu_addr = translate ? of_translate_dma_address(parser->node,
-> +						parser->range + na) :
-> +					       of_read_number(parser->range + np, np);
->  		else
-> -			cpu_addr = of_translate_address(parser->node,
-> -					parser->range + na);
-> +			cpu_addr = translate ? of_translate_address(parser->node,
-> +						parser->range + na) :
-> +					       of_read_number(parser->range + np, np);
->  		size = of_read_number(parser->range + parser->pna + na, ns);
->  
->  		if (flags != range->flags)
-> @@ -842,6 +847,14 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->  
->  	return range;
->  }
-> +EXPORT_SYMBOL_GPL(of_pci_range_parser_one_common);
-> +
-> +struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
-> +					     struct of_pci_range *range)
-> +{
-> +	return of_pci_range_parser_one_common(parser, range, true);
-> +}
-> +
->  EXPORT_SYMBOL_GPL(of_pci_range_parser_one);
->  
->  static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 26a19daf0d092..692aae853217a 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -32,8 +32,11 @@ struct of_pci_range {
->  #define of_range of_pci_range
->  
->  #define for_each_of_pci_range(parser, range) \
-> -	for (; of_pci_range_parser_one(parser, range);)
-> +	for (; of_pci_range_parser_one_common(parser, range, true);)
-> +#define for_each_of_pci_range_untranslate(parser, range) \
-> +	for (; of_pci_range_parser_one_common(parser, range, false);)
->  #define for_each_of_range for_each_of_pci_range
-> +#define for_each_of_range_untranslate for_each_of_pci_range_untranslate
+> v9:
+> - Drop the v8 fix about drivers/pci/pcie/aspm.c. Use this in VMD instead.
+>=20
+> =C2=A0drivers/pci/controller/vmd.c | 7 +++++++
+> =C2=A01 file changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 11870d1fc818..2820005165b4 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -938,9 +938,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd,
+> unsigned long features)
+> =C2=A0		if (!list_empty(&child->devices)) {
+> =C2=A0			dev =3D list_first_entry(&child->devices,
+> =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_dev, bus_list)=
+;
 
-You may want both the translated and untranslated address, so I would 
-just add the untranslated address to the of_pci_range struct and return 
-both with the existing iterator.
+Newline here
 
-Rob
+> +			/* To avoid pci_reset_bus restore wrong ASPM L1SS
+> +			 * configuration due to missed saving parent device's
+> +			 * states, save & restore the parent device's states
+> +			 * as well.
+> +			 */
+
+No text on first line of comment.
+
+    /*
+     * To avoid pci_reset_bus restore wrong ASPM L1SS
+     * ...
+     */
+
+> +			pci_save_state(dev->bus->self);
+> =C2=A0			ret =3D pci_reset_bus(dev);
+> =C2=A0			if (ret)
+> =C2=A0				pci_warn(dev, "can't reset device: %d\n",
+> ret);
+> +			pci_restore_state(dev->bus->self);
+
+I think Ilpo's point was that pci_save_aspm_l1ss_state() and
+pci_restore_aspm_l1ss_state() should be more symmetric. If
+pci_save_aspm_l1ss_state() is changed to also handle the state for the devi=
+ce
+and its parent in the same call, then no change is needed here. But that wo=
+uld
+only handle L1SS settings and not anything else that might need to be resto=
+red
+after the bus reset. So I'm okay with it either way.
+
+David
+
+> =C2=A0
+> =C2=A0			break;
+> =C2=A0		}
+
 
