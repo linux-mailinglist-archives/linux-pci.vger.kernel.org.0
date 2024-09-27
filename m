@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-13612-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13613-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3F72988D0E
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 01:51:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88A93988D12
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 01:54:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F09D1F21209
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 23:51:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 405721F21C50
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 23:54:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A221898F7;
-	Fri, 27 Sep 2024 23:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A920B1B3F33;
+	Fri, 27 Sep 2024 23:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrYKABT6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wgc0B/X6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F279443;
-	Fri, 27 Sep 2024 23:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CA3187345;
+	Fri, 27 Sep 2024 23:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727481080; cv=none; b=MWqTYl6tPpNTAjE6ADC4ePU8j7up3B7891PzsO8TJT8brV3BnB46ED2Op+2IYpDIIuKwGRUzE/efONh6cdLjPmdVbgpD4ah8AEQ8s7SSScUW3qj7buN1EVpQ0ewU4MTe8dfeVU1oKVwQw6dTtSOYcUficBMYx3kPJ/mjFOfDzm4=
+	t=1727481286; cv=none; b=V4L1mq6KNPEMj3MJ2ghMm3dU/k2OA3Hqt/MuKY9tpxgGYeuCcswWHgr26JTGlThXdU7slbTo4FCu2J6bkc4taZx3lW2fymPmKIhImboPU9hSylvU7X9w0iTxiE3EC4YS937fWfmcl/swHV/CiWDLJHNVNfcRLmRTUMGLn15xNaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727481080; c=relaxed/simple;
-	bh=ewY/sv1t7nj53njmVivVzd//BFGp3FOUKqt7Okgo7NI=;
+	s=arc-20240116; t=1727481286; c=relaxed/simple;
+	bh=xuljhnvBCGrJKOmRNT+0jGIXwSOHGJy+hMu8r7QwgC8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dGCq6Kt/tbc4JkR0/LN46Q74oDQEvbUgDpFObNfXOMBEMZEXtLaSLz44+ljk8BvIBZkvkEJl2M2btMFSfP4766ETLjWmpoQcwbwPFcYgmQK7PfOxt6wHDknz2lr91hpPoYe8isqCJqwdW2jtzBQi2i9PIZut9/Ty9tvQTtFlzQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrYKABT6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC6FC4CEC6;
-	Fri, 27 Sep 2024 23:51:19 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Ne8TT1a1zlf0KVx+qLDHka9nq8fIeeT/iXwsiiz/lDkt9j04MtPtFrJdsloCS8SIkIwKUM3fYIReSlXBeFn+B40zIecU+EZs8XvtZ9Tmu7dr9HtBIqfrkRw9+xJIcXdzhCvBhZAn1ZVNI04OUbQwdq4NcyE/9gX1sHfxrTCYwDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wgc0B/X6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9CCC4CEC4;
+	Fri, 27 Sep 2024 23:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727481079;
-	bh=ewY/sv1t7nj53njmVivVzd//BFGp3FOUKqt7Okgo7NI=;
+	s=k20201202; t=1727481286;
+	bh=xuljhnvBCGrJKOmRNT+0jGIXwSOHGJy+hMu8r7QwgC8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YrYKABT6UQnYignz9+180E4GcxNgMeqQQyEgAHmmbf7Bh897jAsp8D8U1v1pYffw9
-	 IZ4lRZ2CJyVCSo5WQh3gU6/AGXEEOpZqTTCi7ObWJYdcTqBwL8qD1wRV0f7qh4UGlb
-	 EE2TufiS4ABxVmTIQOGY93zl7Mj6eP9O2LL/C1bOos31Fn/K8MgoYrC1G68KyAsi4P
-	 N1UbrNlDlEdnf9jAQ738cJGWW0HRi8bIKBWp2hhxeR1sg62oXg8UF+qoP9eWhg4QMD
-	 9sADzU5wBKz+MnpBvlaY/39tSvOAol46oIGrtTbjdFKleKOI1Ru8+Px7KgzcCsW+EZ
-	 QbEDrCh+r13vg==
-Date: Fri, 27 Sep 2024 18:51:17 -0500
+	b=Wgc0B/X6N9Wpa23OFUqvPsmyDacOOMPxTRWZca6USb44APmwCH1LTlX7CSftlXD4n
+	 THkDexcFUOI0t5CKfrY6D3Eh82TGVYEF7DXQHd4l0vMQMOLL5u+oSPn0dSL45o1faK
+	 lYqrTokvnKclH8/5lK81DgwIvEfLK0yjwM2TImkuz3Nt3Y+df5AAY5wT3qzPx8ljsj
+	 T0pCkQfsyYdR6OnMRVfqAAiLc+0D1vpeBfDXc9saqJUa1mPtSXOnSwqY8ig3aKwW5x
+	 fmNDlzhoPAgPXkjv6G63HDci1RpDcJOy+BkT4Yi25d243V1zpOs/dWStLKAHcwKxwy
+	 97mYpxIHWERHA==
+Date: Fri, 27 Sep 2024 18:54:44 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
@@ -58,124 +58,101 @@ Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
 	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/3] of: address: Add cpu_untranslate_addr to struct
- of_pci_range
-Message-ID: <20240927235117.GA98484@bhelgaas>
+Subject: Re: [PATCH v2 3/3] PCI: imx6: Remove cpu_addr_fixup()
+Message-ID: <20240927235444.GA98792@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240926-pci_fixup_addr-v2-1-e4524541edf4@nxp.com>
+In-Reply-To: <20240926-pci_fixup_addr-v2-3-e4524541edf4@nxp.com>
 
-On Thu, Sep 26, 2024 at 12:47:13PM -0400, Frank Li wrote:
-> Introduce field 'cpu_untranslate_addr' in of_pci_range to retrieve
-> untranslated CPU address information. This is required for hardware like
-> i.MX8QXP to configure the PCIe controller ATU and eliminate the need for
-> workaround address fixups in drivers. Currently, many drivers use
-> hardcoded CPU addresses for fixups, but this information is already
-> described in the Device Tree. With correct hardware descriptions, such
-> fixups can be removed.
-
-Instead of saying "required for hardware like i.MX8QXP", can we say
-something specific about what this kind of hardware *does* that
-requires this?
-
-I *think* the point is that there's some address translation being
-done between the primary and secondary sides of some bridge.
-
-I think "many drivers use hardcoded CPU addresses for fixups"
-basically means the .cpu_addr_fixup() callback hardcodes that
-translation in the code, e.g., "cpu_addr & CDNS_PLAT_CPU_TO_BUS_ADDR",
-"cpu_addr + BUS_IATU_OFFSET", etc, even though those translations
-*should* be described via DT.
-
->             ┌─────────┐                    ┌────────────┐
->  ┌─────┐    │         │ IA: 0x8ff0_0000    │            │
->  │ CPU ├───►│ BUS     ├─────────────────┐  │ PCI        │
->  └─────┘    │         │ IA: 0x8ff8_0000 │  │            │
->   CPU Addr  │ Fabric  ├─────────────┐   │  │ Controller │
-> 0x7000_0000 │         │             │   │  │            │
->             │         │             │   │  │            │   PCI Addr
->             │         │             │   └──► CfgSpace  ─┼────────────►
->             │         ├─────────┐   │      │            │    0
->             │         │         │   │      │            │
->             └─────────┘         │   └──────► IOSpace   ─┼────────────►
->                                 │          │            │    0
->                                 │          │            │
->                                 └──────────► MemSpace  ─┼────────────►
->                         IA: 0x8000_0000    │            │  0x8000_0000
->                                            └────────────┘
-
-What does "IA" stand for?
-
-I don't quite understand the mapping done by the "BUS Fabric" block.
-It looks like you're saying the CPU Addr 0x7000_0000 is translated to
-all three of IA 0x8ff0_0000, IA 0x8ff8_0000, and IA 0x8000_0000, but
-that doesn't seem right.
-
-> bus@5f000000 {
->         compatible = "simple-bus";
->         #address-cells = <1>;
->         #size-cells = <1>;
->         ranges = <0x5f000000 0x0 0x5f000000 0x21000000>,
->                  <0x80000000 0x0 0x70000000 0x10000000>;
-> 
->         pcieb: pcie@5f010000 {
->                 compatible = "fsl,imx8q-pcie";
->                 reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
->                 reg-names = "dbi", "config";
->                 #address-cells = <3>;
->                 #size-cells = <2>;
->                 device_type = "pci";
->                 bus-range = <0x00 0xff>;
->                 ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
->                          <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
-> 	...
-> 	};
-> };
-> 
-> 'cpu_untranslate_addr' in of_pci_range can indicate above diagram IA
-> address information.
+On Thu, Sep 26, 2024 at 12:47:15PM -0400, Frank Li wrote:
+> Remove cpu_addr_fixup() because dwc common driver already handle address
+> translate.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
 > Change from v1 to v2
-> - add cpu_untranslate_addr in of_pci_range, instead adding new API.
+> - set using_dtbus_info true
 > ---
->  drivers/of/address.c       | 2 ++
->  include/linux/of_address.h | 1 +
->  2 files changed, 3 insertions(+)
+>  drivers/pci/controller/dwc/pci-imx6.c | 22 ++--------------------
+>  1 file changed, 2 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 286f0c161e332..f4cb82f5313cf 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -811,6 +811,8 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->  	else
->  		range->cpu_addr = of_translate_address(parser->node,
->  				parser->range + na);
-> +
-> +	range->cpu_untranslate_addr = of_read_number(parser->range + na, parser->pna);
->  	range->size = of_read_number(parser->range + parser->pna + na, ns);
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 1e58c24137e7f..94f3411352bf0 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -82,7 +82,6 @@ enum imx_pcie_variants {
+>  #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+>  #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
+>  #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
+> -#define IMX_PCIE_FLAG_CPU_ADDR_FIXUP		BIT(8)
 >  
->  	parser->range += np;
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 26a19daf0d092..0683ce0c07f68 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -26,6 +26,7 @@ struct of_pci_range {
->  		u64 bus_addr;
->  	};
->  	u64 cpu_addr;
-> +	u64 cpu_untranslate_addr;
->  	u64 size;
->  	u32 flags;
+>  #define imx_check_flag(pci, val)	(pci->drvdata->flags & val)
+>  
+> @@ -1015,22 +1014,6 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
+>  		regulator_disable(imx_pcie->vpcie);
+>  }
+>  
+> -static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+> -{
+> -	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
+> -	struct dw_pcie_rp *pp = &pcie->pp;
+> -	struct resource_entry *entry;
+> -
+> -	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
+> -		return cpu_addr;
+> -
+> -	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> -	if (!entry)
+> -		return cpu_addr;
+> -
+> -	return cpu_addr - entry->offset;
+> -}
+> -
+>  static const struct dw_pcie_host_ops imx_pcie_host_ops = {
+>  	.init = imx_pcie_host_init,
+>  	.deinit = imx_pcie_host_exit,
+> @@ -1039,7 +1022,6 @@ static const struct dw_pcie_host_ops imx_pcie_host_ops = {
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.start_link = imx_pcie_start_link,
+>  	.stop_link = imx_pcie_stop_link,
+> -	.cpu_addr_fixup = imx_pcie_cpu_addr_fixup,
+
+This is tremendous, thank you very much for doing this!
+
+Have you looked at the other users of .cpu_addr_fixup()?  It looks
+like cadence, dra7xx, artpec6, intel-gw, and visconti all use it.
+
+Do we know whether any of them have to deal with DTs that don't
+describe the correct translations?  It would be even better if we
+could fix them all and we didn't need using_dtbus_info.
+
 >  };
+>  
+>  static void imx_pcie_ep_init(struct dw_pcie_ep *ep)
+> @@ -1459,6 +1441,7 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	pci->using_dtbus_info = true;
+>  	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
+>  		ret = imx_add_pcie_ep(imx_pcie, pdev);
+>  		if (ret < 0)
+> @@ -1598,8 +1581,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  	},
+>  	[IMX8Q] = {
+>  		.variant = IMX8Q,
+> -		.flags = IMX_PCIE_FLAG_HAS_PHYDRV |
+> -			 IMX_PCIE_FLAG_CPU_ADDR_FIXUP,
+> +		.flags = IMX_PCIE_FLAG_HAS_PHYDRV,
+>  		.clk_names = imx8q_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8q_clks),
+>  	},
 > 
 > -- 
 > 2.34.1
