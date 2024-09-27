@@ -1,125 +1,143 @@
-Return-Path: <linux-pci+bounces-13592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25566988149
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 11:25:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8450F988158
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 11:29:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C50C81F2169D
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 09:25:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4559D281F4B
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 09:29:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4C61BAEEB;
-	Fri, 27 Sep 2024 09:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mF5cGAn9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C86591BAED4;
+	Fri, 27 Sep 2024 09:29:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F0D16D9B8;
-	Fri, 27 Sep 2024 09:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DD51BAED0;
+	Fri, 27 Sep 2024 09:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727429096; cv=none; b=ketDMOX2EgSbI2/BFbDva2yLO5RpWF/tHyPq/Zh/teooNaxOZ7s60A3WtzVOm0L0YyToqVCrg/1z39yZP19BQyQIFKXh4BxAKVDGec5BZ40oJ6qcbZh88eEt3n/RnELjdGZGBKbnQ2nf/1EOe33PyQ6zshaLdkZgntMPzA3znwM=
+	t=1727429346; cv=none; b=s00Ji5KmzEwCvelHlMXYfLb3RTElWJrDn1V7cT1UKFzTMvtwx1PeKusDbKZUHgKTRpvmMfa8LH9Wg3YFwcepyrbcQF8vIgRPhTZ6Kwsmr5BJQ+bt0hrXhGigXxGehv/YEQMyRKVzfZVoWlSJ/cWQVjxKPYRw/ArYIpnuYKcg6Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727429096; c=relaxed/simple;
-	bh=y1yeiT+rifySbDZrsNczQQ8jpJCujtuGcNQPagD6zzU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CD/Oir3Nvy7e2pQeNCVEoC8f8stRaQ79CpuS7dnMv8eMJ+6v+snDlQGB4O2y2+Em9t2cAMFNzn2Ny0zPHcbsSSQcnsM2Q5QHjzcC2OGyHzDq1LuAs6Rhs1bQqd19rOIb70ZIzoIJHk+L3HmGHzeaRu16m/K2a8QvtiuXmg17kcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mF5cGAn9; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42cbb08a1a5so17764285e9.3;
-        Fri, 27 Sep 2024 02:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727429092; x=1728033892; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/RTT5aJJwYQeDfzc5Aoy2fETEx6khrTlU5RyNlFgzMY=;
-        b=mF5cGAn9PrERsnWB7joABixrQwrq9OB5UUOIQ4LsJXqSRfQf+n/H53hmOcT9d8GoWO
-         g4/31qpZwK2r9l49VyUSm+kFLaSoHFqNd1FMQmEZ2NSIq69WOERqrLh/UOORxpuZaOdE
-         DIBB4v4QrgTAxIK+qpzEgSHawDNMcIdKfQekXlUEgXjvwOE8gExgIi62EkMBS0dklNEZ
-         ngfHo/JA4E2B+OiTdY8RFeGf17480Ogn5Sw6EmnhHqQ0d1VqhXPzVSbtauC/1DhLdeMp
-         TP1gHZ8hsj4wDJ44nrJ/OgC2p+M+OV/XFo9TdJPUfU6FO9UIhMCIcMzvoxNlUUgUrbeE
-         4KIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727429092; x=1728033892;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/RTT5aJJwYQeDfzc5Aoy2fETEx6khrTlU5RyNlFgzMY=;
-        b=JW32M+5R1CtwSCnoKszXz0ncLVjkiuCO4bCZ2qtD6Ji1CNW0oxzRuIF75TLLAyJPEx
-         yFSA6gMFi/VPtIXj0qFqFBhxCks6S42FJt9WypsbyyOGYSG761XQLE8gOyjcirjMuGbS
-         Tdwvu8eqBZsEjxtTpVtYR7dyUh3DJvYkJjcBpm9TKi48BlvyMyOFf8Y6AhDTcWKwofBY
-         0yXvuPcjvdDrqD1sDeGJpdzphAbuUd+jaE/oKjB0KJJl39uQxkZkrF8TAYGh3q8yVi1H
-         Ld4nWCL9iXd8atIk6Xxwru9476xZDuuDkxkTyNWlxgcrWAp0RQySH454I3H9f6a2K7nM
-         CSfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVY3HRqs1CHuUujrdBb7iMmAI9+qpnnSPinIQfbTraYLyltCeW5bWz3V8IvlEFMUMSCUiw9ZjzDwIC@vger.kernel.org, AJvYcCWVHy8R6D4h9ukitBrnhIRB4ZKrUbXZJfqQtSzbQgZV+DC2rge4ZYSAQSlTRq0y5lIYgNvFpxUHdVvO6PnE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/fEEn7TWZkXH+1BlNyFZb9LEXl1tDk+pP3xN3F6ksXM2kuF61
-	0yW1Wn8nqj8w60YDrCeLiKyO3D3N4ie6jpScG6qGxtIALv59DlFGIX7/Gg==
-X-Google-Smtp-Source: AGHT+IGpXpThTma6QJO1S+zAhN6KHrK6GEj4426UT+ny0xvzEoHGIZ6hAyI9Ihj1vpMmcRj2h6wDmw==
-X-Received: by 2002:a05:600c:3b11:b0:42c:b63e:fea6 with SMTP id 5b1f17b1804b1-42f58497f1dmr19294635e9.22.1727429091826;
-        Fri, 27 Sep 2024 02:24:51 -0700 (PDT)
-Received: from localhost.localdomain (158.red-88-11-182.dynamicip.rima-tde.net. [88.11.182.158])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd56e6665sm1942996f8f.54.2024.09.27.02.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2024 02:24:50 -0700 (PDT)
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-To: linux-pci@vger.kernel.org
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
-	bhelgaas@google.com,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: acpiphp_ampere_altra: Switch back to struct platform_driver::remove()
-Date: Fri, 27 Sep 2024 11:24:49 +0200
-Message-Id: <20240927092449.44628-1-sergio.paracuellos@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1727429346; c=relaxed/simple;
+	bh=JF+sDDOK5PxGb3aYQzqGRu08TbXb26q+zXfIZ0oadcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Scnd+UZah9zrAT6j8tsPyi1YbKL7K1vYnm9fV2B3Mt+5og48u5mG11nfa7wrB0Bn7QIJqL3a7h0gEZ/r4z2SCL6TUeg+r0EGDsoJEGuZoyb+kLea8dfe9DwaGwjhf3obNBQMZWmxuyZ3Aj6qZQta552yLE3MwPBWxUynenDhXv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id BE7232800F0B1;
+	Fri, 27 Sep 2024 11:28:54 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id A2869268E83; Fri, 27 Sep 2024 11:28:54 +0200 (CEST)
+Date: Fri, 27 Sep 2024 11:28:54 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
+ during suspend
+Message-ID: <ZvZ61srt3QAca2AI@wunner.de>
+References: <20240926125909.2362244-1-acelan.kao@canonical.com>
+ <ZvVgTGVSco0Kg7H5@wunner.de>
+ <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
 
-After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
-return void") .remove() is (again) the right callback to implement for
-platform drivers.
+On Fri, Sep 27, 2024 at 03:33:50PM +0800, AceLan Kao wrote:
+> Lukas Wunner <lukas@wunner.de> 2024-9-26 9:23
+> > On Thu, Sep 26, 2024 at 08:59:09PM +0800, Chia-Lin Kao (AceLan) wrote:
+> > > Remove unnecessary pci_walk_bus() call in pciehp_resume_noirq(). This
+> > > fixes a system hang that occurs when resuming after a Thunderbolt dock
+> > > with attached thunderbolt storage is unplugged during system suspend.
+> > >
+> > > The PCI core already handles setting the disconnected state for devices
+> > > under a port during suspend/resume.
+> > > 
+> > > The redundant bus walk was
+> > > interfering with proper hardware state detection during resume, causing
+> > > a system hang when hot-unplugging daisy-chained Thunderbolt devices.
+> 
+> I have no good answer for you now.
+> After enabling some debugging options and debugging lock options, I
+> still didn't get any message.
 
-Convert all PCI controller drivers to use .remove(), with the eventual goal
-to drop struct platform_driver::remove_new(). As .remove() and .remove_new()
-have the same prototypes, conversion is done by just changing the structure
-member name in the driver initializer.
+Have you tried "no_console_suspend" on the kernel command line?
 
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- drivers/pci/hotplug/acpiphp_ampere_altra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Bjorn,
+> ubuntu@localhost:~$ lspci -tv
+> -[0000:00]-+-00.0  Intel Corporation Device 6400
+>           +-02.0  Intel Corporation Lunar Lake [Intel Graphics]
+>           +-04.0  Intel Corporation Device 641d
+>           +-05.0  Intel Corporation Device 645d
+>           +-07.0-[01-38]--
+>           +-07.2-[39-70]----00.0-[3a-70]--+-00.0-[3b]--
+>           |                               +-01.0-[3c-4d]--
+>           |                               +-02.0-[4e-5f]----00.0-[4f-50]----01.0-[50]----00.0  Phison Electronics Corporation E12 NVMe Controller
+>           |                               +-03.0-[60-6f]--
+>           |                               \-04.0-[70]--
+> 
+> This is Dell WD22TB dock
+> 39:00.0 PCI bridge [0604]: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] [8086:0b26] (rev 03)
+>        Subsystem: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] [8086:0000]
+> 
+> This is the TBT storage connects to the dock
+> 50:00.0 Non-Volatile memory controller [0108]: Phison Electronics
+> Corporation E12 NVMe Controller [1987:5012] (rev 01)
+>        Subsystem: Phison Electronics Corporation E12 NVMe Controller [1987:5012]
+>        Kernel driver in use: nvme
+>        Kernel modules: nvme
 
-This is the last 'remove_new' inside 'drivers/pci' folder. Since it is
-not in controller I preferred to sent this patch alone.
+The lspci output shows another PCIe switch in-between the WD22TB dock and
+the NVMe drive (bus 4e and 4f).  Is that another Thunderbolt device?
+Or is the NVMe drive built into the WD22TB dock and the switch at bus
+4e and 4f is a non-Thunderbolt PCIe switch in the dock?
+
+I realize now that commit 9d573d19547b ("PCI: pciehp: Detect device
+replacement during system sleep") is a little overzealous because it
+not only reacts to *replaced* devices but also to *unplugged* devices:
+If the device was unplugged, reading the vendor and device ID returns
+0xffff, which is different from the cached value, so the device is
+assumed to have been replaced even though it's actually been unplugged.
+
+The device replacement check runs in the ->resume_noirq phase.  Later on
+in the ->resume phase, pciehp_resume() calls pciehp_check_presence() to
+check for unplugged devices.  Commit 9d573d19547b inadvertantly reacts
+before pciehp_check_presence() gets a chance to react.  So that's something
+that we should probably change.
+
+I'm not sure though why that would call a hang.  But there is a known issue
+that a deadlock may occur when hot-removing nested PCIe switches (which is
+what you've got here).  Keith Busch recently re-discovered the issue.
+You may want to try if the hang goes away if you apply this patch:
+
+https://lore.kernel.org/all/20240612181625.3604512-2-kbusch@meta.com/
+
+If it does go away then at least we know what the root cause is.
+
+The patch is a bit hackish, but there's an ongoing effort to tackle the
+problem more thoroughly:
+
+https://lore.kernel.org/all/20240722151936.1452299-1-kbusch@meta.com/
+https://lore.kernel.org/all/20240827192826.710031-1-kbusch@meta.com/
 
 Thanks,
-   Sergio Paracuellos
 
-diff --git a/drivers/pci/hotplug/acpiphp_ampere_altra.c b/drivers/pci/hotplug/acpiphp_ampere_altra.c
-index f5c9e741c1d4..70dbc0431fc6 100644
---- a/drivers/pci/hotplug/acpiphp_ampere_altra.c
-+++ b/drivers/pci/hotplug/acpiphp_ampere_altra.c
-@@ -119,7 +119,7 @@ static struct platform_driver altra_led_driver = {
- 		.acpi_match_table = altra_led_ids,
- 	},
- 	.probe = altra_led_probe,
--	.remove_new = altra_led_remove,
-+	.remove = altra_led_remove,
- };
- module_platform_driver(altra_led_driver);
- 
--- 
-2.25.1
-
+Lukas
 
