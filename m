@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-13611-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13612-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BBC9988C5C
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 00:18:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3F72988D0E
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 01:51:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19D3C1F21631
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 22:18:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F09D1F21209
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 23:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCFFD186E58;
-	Fri, 27 Sep 2024 22:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A221898F7;
+	Fri, 27 Sep 2024 23:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBuUlxYX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrYKABT6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DAD1F931;
-	Fri, 27 Sep 2024 22:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F279443;
+	Fri, 27 Sep 2024 23:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727475513; cv=none; b=pXi2HRfRU9896YkmYdwhCrulOXj7IBdg3C1QLuRX08n4U3c1n2CaXsYcEdHyno62DH/YA4wHilyiOZAoCk6ZKSfOCGNRQbwRBsfbaBXggV7hxJX3U9YhiYunKCKVZsoGIpp/3+HiXfUZKx051HM3sD1vkD/H7ia/g2KnsKiU5X4=
+	t=1727481080; cv=none; b=MWqTYl6tPpNTAjE6ADC4ePU8j7up3B7891PzsO8TJT8brV3BnB46ED2Op+2IYpDIIuKwGRUzE/efONh6cdLjPmdVbgpD4ah8AEQ8s7SSScUW3qj7buN1EVpQ0ewU4MTe8dfeVU1oKVwQw6dTtSOYcUficBMYx3kPJ/mjFOfDzm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727475513; c=relaxed/simple;
-	bh=uMyaYEJZLNU05MeCrzdMNUO+M6h8+Xyzu3+DEW7cg3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFqltkHKjN/SJW6h0LkFnbBKwlNnIEEIqRbWzte0gUecycXSFRPvMkUlXEgUdQJgzD1SQo0A/GRQk8D8JJFL28GJK6TcTpFo0/Wu89aaOHc3zw/TJLv9prsQ0zLe9+CfBQ/ycQ6f9sbFg+3uQD90zGBKQO9CRzW/YjFilFNhs0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBuUlxYX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B877DC4CECE;
-	Fri, 27 Sep 2024 22:18:32 +0000 (UTC)
+	s=arc-20240116; t=1727481080; c=relaxed/simple;
+	bh=ewY/sv1t7nj53njmVivVzd//BFGp3FOUKqt7Okgo7NI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dGCq6Kt/tbc4JkR0/LN46Q74oDQEvbUgDpFObNfXOMBEMZEXtLaSLz44+ljk8BvIBZkvkEJl2M2btMFSfP4766ETLjWmpoQcwbwPFcYgmQK7PfOxt6wHDknz2lr91hpPoYe8isqCJqwdW2jtzBQi2i9PIZut9/Ty9tvQTtFlzQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrYKABT6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC6FC4CEC6;
+	Fri, 27 Sep 2024 23:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727475512;
-	bh=uMyaYEJZLNU05MeCrzdMNUO+M6h8+Xyzu3+DEW7cg3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mBuUlxYXZsaFExSeyCRZG5b0/ei0hlt3jEIT0C1TrYuEoMPsm7OiKpm//pariQSyk
-	 jipNJSO8TttPNtfpe9QGtBVyt9r77r1913wHJDCozoYCkAmum9FHwy641jCF3RN0Dc
-	 rPYLCKyIE6GEi+mPqagxla73qKcqreJ8C2rDviOGATXcClVg9BK0knm8ojIKbUDCoK
-	 BoTK+wTaPcxjaRU1ib8WXwLpcTPQ+f7YM8kPnn9lgk+pooqJVbXyXUwwt39lzfEXbS
-	 QpFPz/RcMZsIrQ7dqV2xHv0JBQwKYDJ2/0TGPDwmbAzbAwPhyZeY5zIXln317pntx7
-	 aPt9tHrpnYS0Q==
-Date: Fri, 27 Sep 2024 17:18:31 -0500
-From: Rob Herring <robh@kernel.org>
+	s=k20201202; t=1727481079;
+	bh=ewY/sv1t7nj53njmVivVzd//BFGp3FOUKqt7Okgo7NI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=YrYKABT6UQnYignz9+180E4GcxNgMeqQQyEgAHmmbf7Bh897jAsp8D8U1v1pYffw9
+	 IZ4lRZ2CJyVCSo5WQh3gU6/AGXEEOpZqTTCi7ObWJYdcTqBwL8qD1wRV0f7qh4UGlb
+	 EE2TufiS4ABxVmTIQOGY93zl7Mj6eP9O2LL/C1bOos31Fn/K8MgoYrC1G68KyAsi4P
+	 N1UbrNlDlEdnf9jAQ738cJGWW0HRi8bIKBWp2hhxeR1sg62oXg8UF+qoP9eWhg4QMD
+	 9sADzU5wBKz+MnpBvlaY/39tSvOAol46oIGrtTbjdFKleKOI1Ru8+Px7KgzcCsW+EZ
+	 QbEDrCh+r13vg==
+Date: Fri, 27 Sep 2024 18:51:17 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Saravana Kannan <saravanak@google.com>,
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
 	Jingoo Han <jingoohan1@gmail.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -60,9 +60,7 @@ Cc: Saravana Kannan <saravanak@google.com>,
 	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
 Subject: Re: [PATCH v2 1/3] of: address: Add cpu_untranslate_addr to struct
  of_pci_range
-Message-ID: <20240927221831.GA135061-robh@kernel.org>
-References: <20240926-pci_fixup_addr-v2-0-e4524541edf4@nxp.com>
- <20240926-pci_fixup_addr-v2-1-e4524541edf4@nxp.com>
+Message-ID: <20240927235117.GA98484@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,7 +80,20 @@ On Thu, Sep 26, 2024 at 12:47:13PM -0400, Frank Li wrote:
 > hardcoded CPU addresses for fixups, but this information is already
 > described in the Device Tree. With correct hardware descriptions, such
 > fixups can be removed.
-> 
+
+Instead of saying "required for hardware like i.MX8QXP", can we say
+something specific about what this kind of hardware *does* that
+requires this?
+
+I *think* the point is that there's some address translation being
+done between the primary and secondary sides of some bridge.
+
+I think "many drivers use hardcoded CPU addresses for fixups"
+basically means the .cpu_addr_fixup() callback hardcodes that
+translation in the code, e.g., "cpu_addr & CDNS_PLAT_CPU_TO_BUS_ADDR",
+"cpu_addr + BUS_IATU_OFFSET", etc, even though those translations
+*should* be described via DT.
+
 >             ┌─────────┐                    ┌────────────┐
 >  ┌─────┐    │         │ IA: 0x8ff0_0000    │            │
 >  │ CPU ├───►│ BUS     ├─────────────────┐  │ PCI        │
@@ -99,7 +110,14 @@ On Thu, Sep 26, 2024 at 12:47:13PM -0400, Frank Li wrote:
 >                                 └──────────► MemSpace  ─┼────────────►
 >                         IA: 0x8000_0000    │            │  0x8000_0000
 >                                            └────────────┘
-> 
+
+What does "IA" stand for?
+
+I don't quite understand the mapping done by the "BUS Fabric" block.
+It looks like you're saying the CPU Addr 0x7000_0000 is translated to
+all three of IA 0x8ff0_0000, IA 0x8ff8_0000, and IA 0x8000_0000, but
+that doesn't seem right.
+
 > bus@5f000000 {
 >         compatible = "simple-bus";
 >         #address-cells = <1>;
@@ -155,11 +173,11 @@ On Thu, Sep 26, 2024 at 12:47:13PM -0400, Frank Li wrote:
 >  	};
 >  	u64 cpu_addr;
 > +	u64 cpu_untranslate_addr;
-
-Let's call it "parent_bus_addr" as it's not really the "cpu" address any 
-more. With that,
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
-Rob
+>  	u64 size;
+>  	u32 flags;
+>  };
+> 
+> -- 
+> 2.34.1
+> 
 
