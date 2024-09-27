@@ -1,143 +1,138 @@
-Return-Path: <linux-pci+bounces-13593-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13594-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8450F988158
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 11:29:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAFBF988293
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 12:33:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4559D281F4B
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 09:29:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B52BB22EC8
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Sep 2024 10:33:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C86591BAED4;
-	Fri, 27 Sep 2024 09:29:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C5A17A597;
+	Fri, 27 Sep 2024 10:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="TVX6ArO8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DD51BAED0;
-	Fri, 27 Sep 2024 09:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4427D154C0A
+	for <linux-pci@vger.kernel.org>; Fri, 27 Sep 2024 10:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727429346; cv=none; b=s00Ji5KmzEwCvelHlMXYfLb3RTElWJrDn1V7cT1UKFzTMvtwx1PeKusDbKZUHgKTRpvmMfa8LH9Wg3YFwcepyrbcQF8vIgRPhTZ6Kwsmr5BJQ+bt0hrXhGigXxGehv/YEQMyRKVzfZVoWlSJ/cWQVjxKPYRw/ArYIpnuYKcg6Ck=
+	t=1727433221; cv=none; b=Y0AV2igGZGyBfXhTjV0xcWuYU2PaeDZCaTRcopVRk9qWmV6lOmTVmxcW6kJNb0U1IyxfeSl+1J2iKWSKHBphMTa2812DdtXj6ImKyis9idl5Vprlxpyh5GOWP8cMSKNgIeRjFy1XmK53J+tVjwFbtblS9U/IYPP0uJb85V6pyAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727429346; c=relaxed/simple;
-	bh=JF+sDDOK5PxGb3aYQzqGRu08TbXb26q+zXfIZ0oadcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Scnd+UZah9zrAT6j8tsPyi1YbKL7K1vYnm9fV2B3Mt+5og48u5mG11nfa7wrB0Bn7QIJqL3a7h0gEZ/r4z2SCL6TUeg+r0EGDsoJEGuZoyb+kLea8dfe9DwaGwjhf3obNBQMZWmxuyZ3Aj6qZQta552yLE3MwPBWxUynenDhXv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id BE7232800F0B1;
-	Fri, 27 Sep 2024 11:28:54 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id A2869268E83; Fri, 27 Sep 2024 11:28:54 +0200 (CEST)
-Date: Fri, 27 Sep 2024 11:28:54 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
- during suspend
-Message-ID: <ZvZ61srt3QAca2AI@wunner.de>
-References: <20240926125909.2362244-1-acelan.kao@canonical.com>
- <ZvVgTGVSco0Kg7H5@wunner.de>
- <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
+	s=arc-20240116; t=1727433221; c=relaxed/simple;
+	bh=jvmEomY0Hp/ILK66ANKCMNaC0jWBActS4+ftVmPCWM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L+gJXnFcGlOMPeaTx+e2TtwM1nFzg1lVmgFBrOasDSJxdk6BdvNuXGn8Qje/9UOmpNndP7Y6QB8s0NxurA0ifFkUEYZsKoaM/dZEcWioTUitDfeQffb4FDgnEt/56TlOgT38aNq2XytHuxNeZUch4Spa1k19vrEDIYWzIK0mWFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=TVX6ArO8; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7178df70f28so1660397b3a.2
+        for <linux-pci@vger.kernel.org>; Fri, 27 Sep 2024 03:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1727433217; x=1728038017; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3T2LL56WRUoCrnPPbMQXHKo2gYqUc6Xl1Uhj3Rvhbjc=;
+        b=TVX6ArO89L5+CfIURfPOU0duJ5kBCWmqL6h2Mq7gpAuiszKLMt/h7ZSH/Cwmte9Yjo
+         eDwcxy2q7GvB1pB5sswt8+7PaCVLoN2AfjaEaAYfPlMECE0YLBRJ1Oz1iIHWu05FXGkx
+         mALVryRTnwNZl1DVxC2AoBL1MKdWjnpfdPAbKSFHjxsn1/D+dtR4zSKz4OP07Tm/W5g+
+         ksUAJ46WKsKmJO+DaLJVgmE0Cr0PmqaZljR39Fxb9Tjdj6eUXUMLh4kmRK362fFK168A
+         6wnTVHj1lu3taVStRsmSGGx5NlZDxSrWiu7KUnrBxY/FQS0e57uF2ZGNxra5zTtKQ9za
+         8Q5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727433217; x=1728038017;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3T2LL56WRUoCrnPPbMQXHKo2gYqUc6Xl1Uhj3Rvhbjc=;
+        b=iGTcMrag+WvP3LJIgUoATA9zkHK3ImhiZFZTvhunpxiYM/JT0R1RuCYwHqeF5m7kfF
+         jKKl32kLP+Nkox2lV8BKXTRFdIoU4diTZoobsWYiLoyNJkMmexXrt5cjP9i17Cg2lVfM
+         lawm4BjTHTMC9PMWNuL3TCiwJxVuqPiC8AiGDJM5fWfeO4OO4T9BfkceO8Lki3xYdkWl
+         6R8+LcwURba9Rn30qkOwmIK9z7WKyCXKXVtouSeEmv2gMT3pxMwIrw0WKdF52Mm7/Wq5
+         Sj0DN7JRwsjT7vLLVwljTrT4sc28rMl2ezAEWMUOnGgfus7rocOzHZmocYrqAC0/deK1
+         3R+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUvHX7YG7EpWsIES3Lu6B2jtxQhYCDaWo+yVcCOiD9BH0sXoQVcx6PuFOuDFZVD9p4ILaxNHvguf9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvOQOZIM71yBAKkSy1F0Zf3P44fX39FTNOHr3bZ10w9wU70bin
+	/yQkvQbVDd/vp7vsFNooWdzD4M8UOvfWHlx4uCibSZsg+T9lSyaex9hZ0luHWds=
+X-Google-Smtp-Source: AGHT+IF0zNjfWEDae/br0X7b1tX8Ys2XUZW1pqq4nWxX+EJ/ZMpO2obVuiNEzXm2wGp5BTWq0Y+Z4Q==
+X-Received: by 2002:a05:6a21:3a96:b0:1d3:4675:fc06 with SMTP id adf61e73a8af0-1d4fa6212c8mr4009385637.10.1727433217215;
+        Fri, 27 Sep 2024 03:33:37 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-7e6db2b3e22sm1352768a12.30.2024.09.27.03.33.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2024 03:33:36 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v10 0/3] PCI: vmd: Enable PCI PM's L1 substates of remapped PCIe Root Port and NVMe
+Date: Fri, 27 Sep 2024 18:32:32 +0800
+Message-ID: <20240927103231.24244-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 27, 2024 at 03:33:50PM +0800, AceLan Kao wrote:
-> Lukas Wunner <lukas@wunner.de> 2024-9-26 9:23
-> > On Thu, Sep 26, 2024 at 08:59:09PM +0800, Chia-Lin Kao (AceLan) wrote:
-> > > Remove unnecessary pci_walk_bus() call in pciehp_resume_noirq(). This
-> > > fixes a system hang that occurs when resuming after a Thunderbolt dock
-> > > with attached thunderbolt storage is unplugged during system suspend.
-> > >
-> > > The PCI core already handles setting the disconnected state for devices
-> > > under a port during suspend/resume.
-> > > 
-> > > The redundant bus walk was
-> > > interfering with proper hardware state detection during resume, causing
-> > > a system hang when hot-unplugging daisy-chained Thunderbolt devices.
-> 
-> I have no good answer for you now.
-> After enabling some debugging options and debugging lock options, I
-> still didn't get any message.
+Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1 substates
+capability, but they are disabled originally.
 
-Have you tried "no_console_suspend" on the kernel command line?
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
 
+10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Processor PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+                  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=0us
 
-> ubuntu@localhost:~$ lspci -tv
-> -[0000:00]-+-00.0  Intel Corporation Device 6400
->           +-02.0  Intel Corporation Lunar Lake [Intel Graphics]
->           +-04.0  Intel Corporation Device 641d
->           +-05.0  Intel Corporation Device 645d
->           +-07.0-[01-38]--
->           +-07.2-[39-70]----00.0-[3a-70]--+-00.0-[3b]--
->           |                               +-01.0-[3c-4d]--
->           |                               +-02.0-[4e-5f]----00.0-[4f-50]----01.0-[50]----00.0  Phison Electronics Corporation E12 NVMe Controller
->           |                               +-03.0-[60-6f]--
->           |                               \-04.0-[70]--
-> 
-> This is Dell WD22TB dock
-> 39:00.0 PCI bridge [0604]: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] [8086:0b26] (rev 03)
->        Subsystem: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] [8086:0000]
-> 
-> This is the TBT storage connects to the dock
-> 50:00.0 Non-Volatile memory controller [0108]: Phison Electronics
-> Corporation E12 NVMe Controller [1987:5012] (rev 01)
->        Subsystem: Phison Electronics Corporation E12 NVMe Controller [1987:5012]
->        Kernel driver in use: nvme
->        Kernel modules: nvme
+10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Blue SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
 
-The lspci output shows another PCIe switch in-between the WD22TB dock and
-the NVMe drive (bus 4e and 4f).  Is that another Thunderbolt device?
-Or is the NVMe drive built into the WD22TB dock and the switch at bus
-4e and 4f is a non-Thunderbolt PCIe switch in the dock?
+According to "PCIe r6.0, sec 5.5.4", to config the link between the PCIe
+Root Port and the child device correctly:
+* Ensure both devices are in D0 before enabling PCI-PM L1 PM Substates.
+* Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
+  LTR_L1.2_THRESHOLD are programmed properly on both devices before enable
+  bits for L1.2.
 
-I realize now that commit 9d573d19547b ("PCI: pciehp: Detect device
-replacement during system sleep") is a little overzealous because it
-not only reacts to *replaced* devices but also to *unplugged* devices:
-If the device was unplugged, reading the vendor and device ID returns
-0xffff, which is different from the cached value, so the device is
-assumed to have been replaced even though it's actually been unplugged.
+Prepare this series to fix that.
 
-The device replacement check runs in the ->resume_noirq phase.  Later on
-in the ->resume phase, pciehp_resume() calls pciehp_check_presence() to
-check for unplugged devices.  Commit 9d573d19547b inadvertantly reacts
-before pciehp_check_presence() gets a chance to react.  So that's something
-that we should probably change.
+Jian-Hong Pan (3):
+  PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
+  PCI/ASPM: Add notes about enabling PCI-PM L1SS to
+    pci_enable_link_state(_locked)
+  PCI: ASPM: Make pci_save_aspm_l1ss_state save both child and parent's
+    L1SS configuration
 
-I'm not sure though why that would call a hang.  But there is a known issue
-that a deadlock may occur when hot-removing nested PCIe switches (which is
-what you've got here).  Keith Busch recently re-discovered the issue.
-You may want to try if the hang goes away if you apply this patch:
+ drivers/pci/controller/vmd.c | 13 +++++++----
+ drivers/pci/pcie/aspm.c      | 45 +++++++++++++++++++++++++++++-------
+ 2 files changed, 46 insertions(+), 12 deletions(-)
 
-https://lore.kernel.org/all/20240612181625.3604512-2-kbusch@meta.com/
+-- 
+2.46.2
 
-If it does go away then at least we know what the root cause is.
-
-The patch is a bit hackish, but there's an ongoing effort to tackle the
-problem more thoroughly:
-
-https://lore.kernel.org/all/20240722151936.1452299-1-kbusch@meta.com/
-https://lore.kernel.org/all/20240827192826.710031-1-kbusch@meta.com/
-
-Thanks,
-
-Lukas
 
