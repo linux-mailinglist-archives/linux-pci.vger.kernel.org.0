@@ -1,78 +1,85 @@
-Return-Path: <linux-pci+bounces-13620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AEF5989152
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 22:17:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD13A989169
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 22:57:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93E48285C1C
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 20:17:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFDFB1C22EE5
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 20:57:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD3616849F;
-	Sat, 28 Sep 2024 20:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E03418308A;
+	Sat, 28 Sep 2024 20:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HN6l/kql"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K5ammNvw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B4923774;
-	Sat, 28 Sep 2024 20:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC90F17C7D4;
+	Sat, 28 Sep 2024 20:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727554640; cv=none; b=rD9oQZlM1czX9pW+L9DSjhkIEG77TnaxdHKayjfqdxEOeKkcUQua6O6jz3v9eA9VmwmaaNQKTzYHjaGG2FKQpiTUcKiYrJ9dGyBBOFDV+fWCzJcAowGZlRFh9yYOuc1mh1AhdAt0pxM6p3kXXq49nSo4lUv+CUy4U/i/08zdeJ4=
+	t=1727557028; cv=none; b=BEzYP/PUbtaHPVUNWIhSWGtJD1v1y9SmSAV6agNaxw+T68FH18CJqpZZnG1frWGEwXKZDZs+SoPBigCdrelLCt7UoNyUo8C88zDKYKQLDjdBdZvol+tD1Gx6tk7ZgCRwbs8eWw9/+PSw/7o6DT4gwfUHU0L3E+wofUKS1xiWWcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727554640; c=relaxed/simple;
-	bh=GxLnxv0XYQXvlin9TcvZ4RiHtAZjSqilKKtgN9ttjaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bWpU6JlkPjs+vIpWZ+oLa20d2VyokvAP86K7sShakOYkoYvbYslFNPNFiQ/SHPh3j09ieqKNh1Fez4x3LKuk5J30gkudSrpWqil1UumFqHtax/wi+9cG39CxU/RBSB0+ByPyInUKs4bIVKD7BaswLk21aBELEVkbQbc5OmE5lb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HN6l/kql; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85778C4CEC3;
-	Sat, 28 Sep 2024 20:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727554639;
-	bh=GxLnxv0XYQXvlin9TcvZ4RiHtAZjSqilKKtgN9ttjaY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HN6l/kqlpNLRnX4Tj3J6WmkbDtid6/YNBPS/tnLJtWZVxlTextqj2bwj8ktQuWByR
-	 TYBf6EnmSnIf1nXJODJHVTzzqZ4s8nq3czWZ9esZozC1LrmBHzsBdYHxjGulC3Gwmi
-	 KgNMC1fUuAf+wWNHdjhMht8FJNaYv/bV5HpQ0RlrS+0ZsPoFrDolCPWENRUPmxF93k
-	 G8pecxcSctXbSKJ67xAHr1Zs8GuZg6LHhZrrxt24NTJJyXPmo4SdafNQ8WkjSEsVW+
-	 zLblasZLivej8yvdAgRi1/mG7+RPJvxgwkp6csgTsA0646WhXcvKTUdQ/MaGnV0W7z
-	 H1TjnpPJ3ff5A==
-Date: Sat, 28 Sep 2024 15:17:17 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <20240928201717.GA99402@bhelgaas>
+	s=arc-20240116; t=1727557028; c=relaxed/simple;
+	bh=OK5RveDLSz5tFyXUinR9c5kALUI2j3KDOCHCIRzL/ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OawwzYEezWGqV5Y6msx5L0PXZum1Q4rfgNREjLirogJzcswvJaVtw68vtZ1ax4lJP4Ld6ypj5NhBM6R/GFgYfS/dk/eYghDamDHJpE5iMz0n+4aI2gpb+aHg8RvU6WUYYjKNsaUiG0yvtfVgekPa8XQufX4nAhuXdjOp3IkLa6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K5ammNvw; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727557025; x=1759093025;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OK5RveDLSz5tFyXUinR9c5kALUI2j3KDOCHCIRzL/ug=;
+  b=K5ammNvwqmIX83nFP6U1LVHv8plnNyZYRNKaE8uW8Af6D36VgF1kabOD
+   //XF9rA+yXJuKqPf7VVChGOaflVRr6r7q9gNcyf3T3TuyI7KIX/H5NW/d
+   yt37ebvCyAmquu0bm3r8xJjlqH2mHumz0SAKr1xgjdJ+fdzyAobS1nc2m
+   +hjv3XD4KMIxJDBbMqU9mSFTlnX6dFEEnpH10FXf0QtSvE9iyH3qUv3hV
+   yUxFxovV1qgCMgQio1FqNNy4RfemQOBAc1m5tmS9lUM7yhr835+ChUaWd
+   Vzqd36QX9EO2pOdC8qrQWIKADpf9k/Jb17R2XXPTIuHUmENeJB4k+RUvA
+   Q==;
+X-CSE-ConnectionGUID: V4Va7bwRRc+Uv68uQmpFwg==
+X-CSE-MsgGUID: r82VU8LZRCC71GLxShgDyw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11209"; a="30381435"
+X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
+   d="scan'208";a="30381435"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2024 13:57:05 -0700
+X-CSE-ConnectionGUID: 6qhZtbjVRJmEAVdY4rD6Yw==
+X-CSE-MsgGUID: RZ0r+Ll4ReGVrTFCGCBMVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
+   d="scan'208";a="96208155"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 28 Sep 2024 13:56:59 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sueUq-000NeZ-27;
+	Sat, 28 Sep 2024 20:56:56 +0000
+Date: Sun, 29 Sep 2024 04:56:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Jonathan.Cameron@huawei.com, helgaas@kernel.org, corbet@lwn.net,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
+	wei.huang2@amd.com, vadim.fedorenko@linux.dev, horms@kernel.org,
+	bagasdotme@gmail.com, bhelgaas@google.com, lukas@wunner.de,
+	paul.e.luse@intel.com, jing2.liu@intel.com
+Subject: Re: [PATCH V6 2/5] PCI/TPH: Add Steering Tag support
+Message-ID: <202409290413.EtVuNEgl-lkp@intel.com>
+References: <20240927215653.1552411-3-wei.huang2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,182 +88,121 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZvZVPA6ov5XgScpz@apocalypse>
+In-Reply-To: <20240927215653.1552411-3-wei.huang2@amd.com>
 
-On Fri, Sep 27, 2024 at 08:48:28AM +0200, Andrea della Porta wrote:
-> On 15:16 Thu 05 Sep     , Bjorn Helgaas wrote:
-> > On Thu, Sep 05, 2024 at 06:43:35PM +0200, Andrea della Porta wrote:
-> > > On 17:26 Tue 03 Sep     , Bjorn Helgaas wrote:
-> > > > On Mon, Aug 26, 2024 at 09:51:02PM +0200, Andrea della Porta wrote:
-> > > > > On 10:24 Wed 21 Aug     , Bjorn Helgaas wrote:
-> > > > > > On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
-> > > > > > > The of_pci_set_address() function parses devicetree PCI range
-> > > > > > > specifier assuming the address is 'sanitized' at the origin,
-> > > > > > > i.e. without checking whether the incoming address is 32 or 64
-> > > > > > > bit has specified in the flags.  In this way an address with no
-> > > > > > > OF_PCI_ADDR_SPACE_MEM64 set in the flags could leak through and
-> > > > > > > the upper 32 bits of the address will be set too, and this
-> > > > > > > violates the PCI specs stating that in 32 bit address the upper
-> > > > > > > bit should be zero.
-> > > > 
-> > > > > > I don't understand this code, so I'm probably missing something.  It
-> > > > > > looks like the interesting path here is:
-> > > > > > 
-> > > > > >   of_pci_prop_ranges
-> > > > > >     res = &pdev->resource[...];
-> > > > > >     for (j = 0; j < num; j++) {
-> > > > > >       val64 = res[j].start;
-> > > > > >       of_pci_set_address(..., val64, 0, flags, false);
-> > > > > >  +      if (OF_PCI_ADDR_SPACE_MEM64)
-> > > > > >  +        prop[1] = upper_32_bits(val64);
-> > > > > >  +      else
-> > > > > >  +        prop[1] = 0;
-> > > ...
-> > > > However, the CPU physical address space and the PCI bus address are
-> > > > not the same.  Generic code paths should account for that different by
-> > > > applying an offset (the offset will be zero on many platforms where
-> > > > CPU and PCI bus addresses *look* the same).
-> > > > 
-> > > > So a generic code path like of_pci_prop_ranges() that basically copies
-> > > > a CPU physical address to a PCI bus address looks broken to me.
-> > > 
-> > > Hmmm, I'd say that a translation from one bus type to the other is
-> > > going on nonetheless, and this is done in the current upstream function
-> > > as well. This patch of course does not add the translation (which is
-> > > already in place), just to do it avoiding generating inconsistent address.
-> > 
-> > I think I was looking at this backwards.  I assumed we were *parsing"
-> > a "ranges" property, but I think in fact we're *building* a "ranges"
-> > property to describe an existing PCI device (either a PCI-to-PCI
-> > bridge or an endpoint).  For such devices there is no address
-> > translation.
-> > 
-> > Any address translation would only occur at a PCI host bridge that has
-> > CPU address space on the upstream side and PCI address space on the
-> > downstream side.
-> > 
-> > Since (IIUC), we're building "ranges" for a device in the interior of
-> > a PCI hierarchy where address translation doesn't happen, I think both
-> > the parent and child addresses in "ranges" should be in the PCI
-> > address space.
-> > 
-> > But right now, I think they're both in the CPU address space, and we
-> > basically do this:
-> > 
-> >   of_pci_prop_ranges(struct pci_dev *pdev, ...)
-> >     res = &pdev->resource[...];
-> >     for (j = 0; j < num; j++) {   # iterate through BARs or windows
-> >       val64 = res[j].start;       # CPU physical address
-> >       # <convert to PCI address space>
-> >       of_pci_set_address(..., rp[i].parent_addr, val64, ...)
-> >         rp[i].parent_addr = val64
-> >       if (pci_is_bridge(pdev))
-> >         memcpy(rp[i].child_addr, rp[i].parent_addr)
-> >       else
-> >         rp[i].child_addr[0] = j   # child addr unset/unused
-> > 
-> > Here "res" is a PCI BAR or bridge window, and it contains CPU physical
-> > addresses, so "val64" is a CPU physical address.  It looks to me like
-> > we should convert to a PCI bus address at the point noted above, based
-> > on any translation described by the PCI host bridge.  That *should*
-> > naturally result in a 32-bit value if OF_PCI_ADDR_SPACE_MEM64 is not
-> > set.
-> 
-> That's exactly the point, except that right now a 64 bit address would
-> "unnaturally" pass through even if OF_PCI_ADDR_SPACE_MEM64 is not set.
-> Hence the purpose of this patch.
+Hi Wei,
 
-From your earlier email
-(https://lore.kernel.org/r/Zszcps6bnCcdFa54@apocalypse):
+kernel test robot noticed the following build errors:
 
-> Without this patch the range translation chain is broken, like this:
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master next-20240927]
+[cannot apply to v6.11]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> pcie@120000: <0x2000000 0x00 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> ~~~ chain breaks here ~~~
-> pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
-> dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
-> rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
+url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Huang/PCI-Add-TLP-Processing-Hints-TPH-support/20240928-055915
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240927215653.1552411-3-wei.huang2%40amd.com
+patch subject: [PATCH V6 2/5] PCI/TPH: Add Steering Tag support
+config: x86_64-buildonly-randconfig-001-20240929 (https://download.01.org/0day-ci/archive/20240929/202409290413.EtVuNEgl-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240929/202409290413.EtVuNEgl-lkp@intel.com/reproduce)
 
-The cover letter said "RP1 is an MFD chipset that acts as a
-south-bridge PCIe endpoint .. the RP1 as an endpoint itself is
-discoverable via usual PCI enumeration".
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409290413.EtVuNEgl-lkp@intel.com/
 
-I assume pcie@120000 is the PCI host bridge and is already in the
-original DT describing the platform.  I assume pci@0 is a Root Port
-and dev@0,0 is the RP1 Endpoint, and the existing code already adds
-them as they are enumerated when pci_bus_add_device() calls
-of_pci_make_dev_node(), and I think this series adds the rp1@0
-description.
+All errors (new ones prefixed by >>):
 
-And the "ranges" properties are built when of_pci_make_dev_node()
-eventually calls of_pci_prop_ranges().  With reference to sec 2.2.1.1
-of https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
-and
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#ranges,
-I *think* your example says:
+>> drivers/pci/tph.c:230:19: error: no member named 'msix_base' in 'struct pci_dev'; did you mean 'msix_cap'?
+     230 |         vec_ctrl = pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
+         |                          ^~~~~~~~~
+         |                          msix_cap
+   include/linux/pci.h:350:6: note: 'msix_cap' declared here
+     350 |         u8              msix_cap;       /* MSI-X capability offset */
+         |                         ^
+   drivers/pci/tph.c:236:9: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((mask), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (mask)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
+     236 |         val |= FIELD_PREP(mask, st_val);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
+     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
+      72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+      73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      74 |                                  _pfx "type of reg too small for mask"); \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+   include/linux/compiler_types.h:517:22: note: expanded from macro 'compiletime_assert'
+     517 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:505:23: note: expanded from macro '_compiletime_assert'
+     505 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:497:9: note: expanded from macro '__compiletime_assert'
+     497 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   1 warning and 1 error generated.
 
-pcie@120000 has:
-  child phys.hi	      0x02000000    n=0 p=0 t=0 ss=10b
-  child phys.mid,lo   0x00000000_00000000
-  parent phys.hi,lo   0x0000001f_00000000
-  length hi,lo        0x00000000_fffffffc
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for CRYPTO_CRC32C_INTEL
+   Depends on [n]: CRYPTO [=y] && !KMSAN [=y] && X86 [=y]
+   Selected by [y]:
+   - ISCSI_TARGET [=y] && TARGET_CORE [=y] && INET [=y] && X86 [=y]
 
-which would make it a bridge where the child (PCI) address space is
-relocatable non-prefetchable 32-bit memory space at
-0x00000000-0xfffffffc, and the corresponding parent address space is
-0x1f_00000000-0x1f_fffffffc.  That means the host bridge applies an
-address translation of "child_addr = parent_addr - 0x1f_00000000".
 
-pci@0 has:
-  child phys.hi	      0x82000000    n=1 p=0 t=0 ss=10b
-  child phys.mid,lo   0x0000001f_00000000
-  parent phys.hi      0x82000000    n=1 p=0 t=0 ss=10b
-  parent phys.mid,lo  0x0000001f_00000000
-  length hi,lo        0x00000000_00600000
+vim +230 drivers/pci/tph.c
 
-which would make it a PCI-to-PCI bridge (I assume a PCIe Root Port),
-where the child (secondary bus) address space is the non-relocatable
-non-prefetchable 32-bit memory space 0x1f_00000000-0x1f_005fffff and
-the parent (primary bus) address space is also non-relocatable
-non-prefetchable 32-bit memory space at 0x1f_00000000-0x1f_005fffff.
+   205	
+   206	/* Write ST to MSI-X vector control reg - Return 0 if OK, otherwise -errno */
+   207	static int write_tag_to_msix(struct pci_dev *pdev, int msix_idx, u16 tag)
+   208	{
+   209		struct msi_desc *msi_desc = NULL;
+   210		void __iomem *vec_ctrl;
+   211		u32 val, mask, st_val;
+   212		int err = 0;
+   213	
+   214		msi_lock_descs(&pdev->dev);
+   215	
+   216		/* Find the msi_desc entry with matching msix_idx */
+   217		msi_for_each_desc(msi_desc, &pdev->dev, MSI_DESC_ASSOCIATED) {
+   218			if (msi_desc->msi_index == msix_idx)
+   219				break;
+   220		}
+   221	
+   222		if (!msi_desc) {
+   223			err = -ENXIO;
+   224			goto err_out;
+   225		}
+   226	
+   227		st_val = (u32)tag;
+   228	
+   229		/* Get the vector control register (offset 0xc) pointed by msix_idx */
+ > 230		vec_ctrl = pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
+   231		vec_ctrl += PCI_MSIX_ENTRY_VECTOR_CTRL;
+   232	
+   233		val = readl(vec_ctrl);
+   234		mask = PCI_MSIX_ENTRY_CTRL_ST_LOWER | PCI_MSIX_ENTRY_CTRL_ST_UPPER;
+   235		val &= ~mask;
+   236		val |= FIELD_PREP(mask, st_val);
+   237		writel(val, vec_ctrl);
+   238	
+   239		/* Read back to flush the update */
+   240		val = readl(vec_ctrl);
+   241	
+   242	err_out:
+   243		msi_unlock_descs(&pdev->dev);
+   244		return err;
+   245	}
+   246	
 
-This looks wrong to me because the pci@0 parent address space
-(0x1f_00000000-0x1f_005fffff) should be inside the pcie@120000 child
-address space (0x00000000-0xfffffffc), but it's not.
-
-IIUC, this patch clears the upper 32 bits in the pci@0 parent address
-space.  That would make things work correctly in this case because
-that happens to be the exact translation of pcie@120000, so it results
-in pci@0 parent address space of 0x00000000-0x005fffff.
-
-But I don't think it works in general because there's no requirement
-that the host bridge address translation be that simple.  For example,
-if we have two host bridges, and we want each to have 2GB of 32-bit
-PCI address space starting at 0x0, it might look like this:
-
-  0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
-  0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
-
-In this case simply ignoring the high 32 bits of the CPU address isn't
-the correct translation for the second host bridge.  I think we should
-look at each host bridge's "ranges", find the difference between its
-parent and child addresses, and apply the same difference to
-everything below that bridge.
-
-> while with the patch applied the chain correctly become:
-
-> pcie@120000: <0x2000000 0x00 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> pci@0      : <0x82000000 0x00 0x00   0x82000000 0x00 0x00     0x00 0x600000>;
-> dev@0,0    : <0x01 0x00 0x00         0x82010000 0x00 0x00     0x00 0x400000>;
-> rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
-
-> > > > Maybe my expectation of this being described in DT is mistaken.
-> > > 
-> > > Not sure what you mean here, the address being translated are coming from
-> > > DT, in fact they are described by "ranges" properties.
-> > 
-> > Right, for my own future reference since I couldn't find a generic
-> > description of "ranges" in Documentation/devicetree/:
-> > 
-> > [1] https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#ranges
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
