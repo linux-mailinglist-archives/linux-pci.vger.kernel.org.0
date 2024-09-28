@@ -1,306 +1,195 @@
-Return-Path: <linux-pci+bounces-13617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19BB7988E08
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 08:49:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B385E988F2A
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 14:26:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 258B81C20DF4
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 06:49:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BC261F218E6
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 12:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21AEE175D20;
-	Sat, 28 Sep 2024 06:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD951187870;
+	Sat, 28 Sep 2024 12:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="LWKb33OI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SX7uwgI/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010062.outbound.protection.outlook.com [52.101.69.62])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB91800;
-	Sat, 28 Sep 2024 06:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727506162; cv=fail; b=Tn/KYofNB0TUBVBke7elMnHt1BfWAFyrAM9t+l9tJPJfF08bE+LSebw6+b6kkY1tWZU3AcfdjpW/KS0NIDrl5bDI/nMi1t2OKi50ivpKtOzBoZtEkWFikkXjRyjuSb1Gf1kAIdCZ6a8iCVtleEmxWsL6zeqcNz4qjVuJij/JDh4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727506162; c=relaxed/simple;
-	bh=WRr+7hASPSP0NnBZndy0dnEIWJ+8Lg60/VzkpYBD3FM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VTBoSb2W76nYGGUfLPxJe6hSXNEkGd/53Qw5enf/bFnJzcR+o4SpSBTg4wDdH3BYJnV0/hi5JtxhB1hCoRMbkCNxzyheUTdBU2u+XUqDTa/jzTdTxukLUkLGbuNrgooIz+xVugjfKgpRJQgRbYoZBMvCUMdA7jiHHEweDjyx8FI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=LWKb33OI; arc=fail smtp.client-ip=52.101.69.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UsDhMnmt9odnYaz12HfFuN7Wk9WMuGqtLLp/bXsioenn/dUCqe0mbbTTus5evFgRlgAKaom0+Kd1hCfoNxqU74I0BrlftsM2SDGuhP4KsYIKqlbM8ImIKwd+gUR5BMeRNNTlwSPO+BRcOgdxOtOzKPdBZgVWzgLLcStN8UeHgT8j80lv3tqHKyGlckyVhad7MKJbvSVtSvrDnzXz29RTSoA2+y2BDR57yVKKqvvIeWh+ume2it1Wruz59ewPr77PFEHlR0wYNArJ/xhrMwWqH/kUS1lCGevMp/r6/glQsgW2ozt9nIxCbqtNDE5fgRvDqxRdq9MnjmO5x2mx4X4AVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gimOuSKRxnS6jNgQ8TnsVsaC2tPQRsAueOhMPgSfJ/4=;
- b=cUOGeAUgNckSVj8b939DisgRqp7viC6/N9xvudmUv4VI/LvMMEs97rLTT8w8o01cCxlG0AneNctt0Z4yghgVMnUceXpqqBApYcih8Ifw/fnWD8S4SlldzYikzliOvx5U0CrOvUiCbLaXbfAtj3vbNQKucm8L22Ec8ubBctQUzVWTSsAWfV77PdTj9qqW+OQCMqysosmWx86CtKBu51gwxSTbkn4HU3AujtYzBjxDb9egN9c3ftq7ivZkAWvI+yrZ1XB2TGTJzJHPZegEm+YfGdGep3ROeUGXTX3i+MF1i129Nf136Q0CQWD0TNEqBXWRu+zhiYMt8jm+ysF5Dad+Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gimOuSKRxnS6jNgQ8TnsVsaC2tPQRsAueOhMPgSfJ/4=;
- b=LWKb33OIRXPNvJz+O4TyPBfYDrYIi+TyDpdF2ErnFKMFbHxWtRf2evER3ytd/lpIGFDiigYPDQLJdNLHUd7p0PaY6uO82f8pwfdMLll+KYAnFAR8M6+A8NeMlpSglBKd6P+mf7XrdG446XxGvYqdC08Ac/RXYUY0zT0m4IC0+TvU2DFjUjBoH7Bs77vGVoCBAKR4nST/HffEsXsVJC0ldJY3Fc9GBNlrPmB3WBe+nXdMbHlK+kAbwnARi0TcF+Nf8y5Xmf6zPWfP5wL4FX/YbfGukovbO7PUGK3vrTMbq+hPtc2daBECD+QTZHy2H79DtM36ATqL9GNVnyDfBFsGUw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PA1PR04MB11060.eurprd04.prod.outlook.com (2603:10a6:102:491::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.24; Sat, 28 Sep
- 2024 06:49:16 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%3]) with mapi id 15.20.8005.021; Sat, 28 Sep 2024
- 06:49:16 +0000
-Date: Sat, 28 Sep 2024 02:49:05 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/3] of: address: Add cpu_untranslate_addr to struct
- of_pci_range
-Message-ID: <Zvem4SUAC+FW+WkL@lizhi-Precision-Tower-5810>
-References: <20240926-pci_fixup_addr-v2-1-e4524541edf4@nxp.com>
- <20240927235117.GA98484@bhelgaas>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240927235117.GA98484@bhelgaas>
-X-ClientProxiedBy: SJ0PR03CA0233.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10951187858;
+	Sat, 28 Sep 2024 12:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727526383; cv=none; b=P4jtBjVzYW/jLypUWlkpJD6fbtYSOsLj4FHs6TZt0Hw4xyLXlFspGAoqyyDoQ+49k3uVYofN5ssvCn9EwF1zEmXqvqPoBI7ZfMjJWV2oWxA7yg6Dkh8A1XoU8EzTLvu9lO0rg5chnmHqxgV6sxV3RVGzG71DGZdeKTEVyDn3eU4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727526383; c=relaxed/simple;
+	bh=0O0bP0IrBhKutucM950AErodJ/ElrwHuacHsGrdmOL0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fodQ4P0jZCrQHomJamEINbb+xH+vZTU1CmLNAJblr94l4nxh0a51vC9tRoSOI49xy1GapU6WSMtWXhVYM4Vz1KzLICPcOdSiy4v41q4vf2vNFJzVgDKyFy54DgWkKwINSEe/KRev5NgZtzUFuZiBw5WeZeo3W005OwGOA4avg2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SX7uwgI/; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727526382; x=1759062382;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0O0bP0IrBhKutucM950AErodJ/ElrwHuacHsGrdmOL0=;
+  b=SX7uwgI/bzo2IPYwplUAb/6TV1nzHERKIIfVJfcr997WWzNLVxBvI/Ul
+   JQwGFItuWYIScipfgSS/5Np6lu0psZF0yQPfoK/4TjLqwoyZ9VV9dYMaQ
+   9ZqsJyqILxB1Hqw78L5l5ttcQ0S44KAeRzucgtkw4hCD/P+FHkRTnUrdS
+   gtbdWA4sr1stItIyWQSf4zlUqVMXM4IKOm7i6ExnIIWYi+CmcQ8ZqaxSW
+   B+Cr/vSKKbJSMKZr3w0IDSWuvmmCJNKehfqD3zalKmNk3lEGchUdvPDXs
+   /gjqO6OcNcbcZFtG5hIupOlZJR5K+TUDLzQFLJSm2KhIH4XUugWf2OA1O
+   Q==;
+X-CSE-ConnectionGUID: OTniNFF/SMiv6IrXN1Zojg==
+X-CSE-MsgGUID: 27+CBRIgQf6mJvxSCAhgqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11209"; a="26174337"
+X-IronPort-AV: E=Sophos;i="6.11,160,1725346800"; 
+   d="scan'208";a="26174337"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2024 05:26:21 -0700
+X-CSE-ConnectionGUID: tqVLSgj5RGiBg6fDPtfYcA==
+X-CSE-MsgGUID: iXlxDZxGRlO5tpgIe7GV2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,160,1725346800"; 
+   d="scan'208";a="72677358"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 28 Sep 2024 05:26:15 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1suWWa-000NFb-0k;
+	Sat, 28 Sep 2024 12:26:12 +0000
+Date: Sat, 28 Sep 2024 20:25:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Jonathan.Cameron@huawei.com, helgaas@kernel.org, corbet@lwn.net,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
+	wei.huang2@amd.com, vadim.fedorenko@linux.dev, horms@kernel.org,
+	bagasdotme@gmail.com, bhelgaas@google.com, lukas@wunner.de,
+	paul.e.luse@intel.com, jing2.liu@intel.com
+Subject: Re: [PATCH V6 2/5] PCI/TPH: Add Steering Tag support
+Message-ID: <202409282017.PWd5zICd-lkp@intel.com>
+References: <20240927215653.1552411-3-wei.huang2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PA1PR04MB11060:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1aa2353-8e50-43a6-732a-08dcdf89ab2f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T0h6TXgyMmFIRzR2Nkt3VnczUVlWMnpESXovWStmNnU5eElBcVNON2RITHFm?=
- =?utf-8?B?Zm5iM2pIOG50Mzl1SWNoYUxua0h1eFFCTzVVMlBUZGVuVzdlOUhiYVhsY2hB?=
- =?utf-8?B?Y0svT2prL3dLSUI0ckw5VTBwR0Q2TFU4ZkdZUkFCY0VOMzVjVWRWa0NRZWJ2?=
- =?utf-8?B?N1doR3dnU1FnWVNOZ0QvUFRYeUVBMk9FY21QeVNLTk5yNXlVd0h2Q1JHL0gw?=
- =?utf-8?B?Mi9BeFBac3ZIZG5OSE8xZEVYLzNLRDdqTUUvaGhoZjEvTnoxTmZ5K2lWeVRo?=
- =?utf-8?B?elpXZTcrakJ2WFN6ZndkaStrbVN0Y2d1T1EvSzByRXBmdnowaXBpclhaODJr?=
- =?utf-8?B?UERZT2ZwbjV4NmlDR3FzSTJ5cVNRSnRBQWFFV21zc2pBV01BdHFyVFU1Mkxj?=
- =?utf-8?B?a1BLQmsxMkxxNHBxbEVZVXFWVjBRd2ZMZ0VaWWwwYmpybVI1djZOVWplQTl2?=
- =?utf-8?B?ckFwVVJNb1ZFRlZOUkd6Q0JudXNWdFlaN2JNOVo5Z0lVQVNiK091U0c5SG1F?=
- =?utf-8?B?cEtCNG1EMTNKMzFVVXdQZk9FZ0pZcSs1SzBidE0zMVRzRVdWTXFBbHp1SStp?=
- =?utf-8?B?aGZXdFZwTkI0K1BZSjlIQnVSUmlMQUR2dm5QNVFrYlRKQzNYcXl4WUtUeGpE?=
- =?utf-8?B?dDJ2cVYwNWZwK2RLNWZqUjlSdzJKU0xQdm9SUTNuYkVZKzU4WnZGMkhjb3Bj?=
- =?utf-8?B?UG1ZVTRxeUNvcmlsRmNtTnE5V1N0dWU5b2NhZlkxNTdyVjBuY1REMDMrWHph?=
- =?utf-8?B?c01taWhPT1NVdE9VeFM5VTlMeUw4TFBpTnVXdVJOV1o2NExrOU5xOTFvSDN4?=
- =?utf-8?B?YnVvd2F2SkhETEI4QmJlVnRNaEl3TTcxTlVJQ200NjRUMFpaaCt1b0hoYTZy?=
- =?utf-8?B?bzZKNG13NjJFVVljSGFPRXBUM0ZzcmtwZnh2em8rbXhhcVBBUTJ1VTdVbG9R?=
- =?utf-8?B?eUlQOTdZS0pOaHMvZndmZ01uaVphamlFUTQ3a2hMSmdPVUhGaFpBaG9LTXZs?=
- =?utf-8?B?VlRRYjNrUmFjbWhXeStqQkFydzZ3L2hDcFpHdldwakt0SU9Bc00vN0tFRnV0?=
- =?utf-8?B?Q3ZTN1VtdllwNnA0ek5iRVZFeEpaS2kwMG9vRW9xYmRWeGlJYXBaVUNmYXN5?=
- =?utf-8?B?NU5WTTdYRUFzUStRcjlMbHZzN1NKTXJTT1dmbE8zNjJYK2NVMVRHOEFlN1oz?=
- =?utf-8?B?ZHhOYjNYUGV4cFFSVVRtREoyeVhRYlk1NjZ1NVVydUZwVjZON2VlamxRMUVQ?=
- =?utf-8?B?V2NmY3BMSmI0Z0VUNVQ5L1E4THB4eFNaVCs0RHpPZ1ZpM3dINWk1UHQzaHB5?=
- =?utf-8?B?M0dSdXQyWG9XYnU3NjIvbkRmdGl1L3NWVTNJWkw4czkrckx0M2NjenVNN3A1?=
- =?utf-8?B?VlFYZmZZalFXekV4dkhXKzVBRGlyYm42UGl5SEgxN1hUamhIN3dEYUpQUXVa?=
- =?utf-8?B?UGpzNEs5K3BXOVpUK29uSnZ1aHJ3bXdtK3JEdFgvUVRETnFUNy9JVTNkNUZY?=
- =?utf-8?B?dTZTMVp0T1gyS0J0cDc0VFdDZlZ3RzlCVzlxR0VmRXlsdzZPbmd3ZmFsZm15?=
- =?utf-8?B?cEZHSXBDQjRKK0kvTDZzaW5GbCtkQk5lYWpJUEhtNkpIeGRJRnA5TFlocXlw?=
- =?utf-8?B?TVRQTzJpMmFLb2ZRZnBzOExxcnVTSGdkd2crVFRpa1RYMUxoa2hScFZzYXE2?=
- =?utf-8?B?UE1jNXNDVitQZ1lwV25EOFN2R1RNbGIvcVU5dURodjJsUHdsNVBuWWRkZE1u?=
- =?utf-8?B?OFBrUUY1L2pOeUpoUlViaGM3cWgxUmc5MDdGTnBhbWhGNFRJS09jTEhMZDdr?=
- =?utf-8?B?NHVRYVE5eFRDYzZzdU5UZjFDS0V4aTZmUm1EekJZTW1tT2E0cUplYWhiL21G?=
- =?utf-8?B?bFFiWnFXa2xobGRuUzJudUxXektVZ2w0WEh1RnpreDhEcFE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V1lrRVBnOXBrbHpEU3lSbGRtRkxMd3AvdDgxVEJxUkhzRGltZ2RGNzRYTHdE?=
- =?utf-8?B?dlBJdjlxZko3TmwwbHdqcVpQVERhMVdUZ3VWTUdDTk1Wd280NnA0T21ZSXdl?=
- =?utf-8?B?NTlSMU5pNVNEbUVwcjBpVkhINlpEK1RQVjJUSGRIb2oxR25QcFY5TWliTmwr?=
- =?utf-8?B?L3pMOFBQci9iQmNVR2V3bERJaDZQSXlMbE5RbUxrQmdUakxOOHQ0MEp4YUhT?=
- =?utf-8?B?NEFQMDc3M0Vrb2xUT0UrOVlzSGJZZHZ0c1F2aENOdUt4YzhtSm1LbEtTZlNw?=
- =?utf-8?B?OXI3VHVxQk9oaVdPeFRsRDVzaWQrN3VSQVVmUUdOMmlUc2JjUlZHSUxzd0F6?=
- =?utf-8?B?WU1pRlFLdnNzTUl1MGFnYkJaRVMyaHFPK0g4UTV1bmtVN2pTR0c4THQzODU3?=
- =?utf-8?B?MWZiQ3pJT05oem41alhCZDVHL09BcWRGT2VqSGJJWnh5VEUxbFVnUlYrd1M0?=
- =?utf-8?B?QkZDdHRRR2lJN1lSWlI0YnVucEZtZWNmMWVOYTJHYXR5U2NIWXRmT0s1d3Za?=
- =?utf-8?B?RUxHN3hPbmVQUTJXejRGNlRNOThYRGExbGJGVmFKcXIxbnpzYVBzaytiRjNS?=
- =?utf-8?B?LzFZTFE5R1FjWExUa3UzMExaMmJqSzg4UDBqVUxKMTJSVG0vcEdpRFpXRDAr?=
- =?utf-8?B?YlZ3YU9iZ1RlK25QUG82ZnhvMktwRFZCdVFFeGMxM3JueVEvY0lJMXcyK05M?=
- =?utf-8?B?amNJMnluYWxudmdUbUhYVTdLZStJYWtmUWw0MkE2cW5pelY3SGRIVnNCWWxW?=
- =?utf-8?B?K2o4clgzMUo3YnhrSiswLzRiL3g1YmVGSFg5M0szMVRhbTZCajhqc2VTWXRm?=
- =?utf-8?B?ZExBblUxOXRaMTFML25jKy9EaUZBbDg0WlMxQm9PN2dybXJ0b3BzVGNSMkxl?=
- =?utf-8?B?RUxVbmswTzFsOGdGa2N0VkhuT0FkcHpJalNWSGFPbm5JYStPNkZaZ0ZqSm1l?=
- =?utf-8?B?bUhiOWFwRFQ1QkFFWERIWHk3aTY2d0JaTUpyNnQyUTFQWk5vVGxOVnQ1dGx0?=
- =?utf-8?B?b1RNMjExVnZGQ210bEhKREVobmp4Skt1V1lpcTRCOXRhZzIrVythWlNTem9Y?=
- =?utf-8?B?TUNKU3crMStlOEE0MW05NDdtZmRvNTBpZHRPRVlMLzd1dThUaFZ2U3dHZVF6?=
- =?utf-8?B?dUNieVBhVHJTZWNsYUV3VW05QmIwK2ZRb1krcEtUUWVpVVkvN3dGZ1hxNXBY?=
- =?utf-8?B?dWlLb3ZQeExXcDZnYzFuYWNtZGhFeU5jUXd5YUk4Y3RKc0hobmxrcXlXT2Yz?=
- =?utf-8?B?S052RW0vRGtsMkVqckxjUTF4N1VRSjdaYUNIcU14V1N1TjhpQnZocy80SW80?=
- =?utf-8?B?Q0JJVVphTkpwNXFZV3FHaFhwYkVjd1doQnVmdlhtbGZxRWUrZDZsTU9FdTdZ?=
- =?utf-8?B?OWZLVmI3aWE4cnIySEpOZFN2cFVlRXE5dmZxRFJiWmdRNHBpVzdhcUJtdFht?=
- =?utf-8?B?WkxMc0tNb2ljYXdINm1zNFJqRE5lQTQ0dHBzcmkyRnh5TWhUeFRKelhJVzA3?=
- =?utf-8?B?TGRyQjNhYWJRR3prQ1h0dnhoQ3paeDViMG9sL3pCY05sU2RFNTVUdlIveWRa?=
- =?utf-8?B?RmFyTEhhdWRKVWpMeWplMTB1NUJxOUdNV1pRTTQzM001QzIyMys0eWZpMmFo?=
- =?utf-8?B?bTUvMVVPbmVZYUV0OFNvc0xValJwVWFlSTJxRW1JSHRScUhOU0RFcFJjaGJs?=
- =?utf-8?B?ZFpCQVVHRHBYVWUxd0FEbGtHQVIwRlEwVHdDTCtKSENHY0N0YlBnL0JqaEg0?=
- =?utf-8?B?eVNIdGZ6b1dacHN4M2tqTml2OERKTEE2L3cwR0hQU1J4MEtuRFVuNmM0bmJH?=
- =?utf-8?B?ZDVPQU9ROW9NaDErcVZ4U0gwd2hhN1phUEttUFMzMCtVTDU0Y0s2MDhXRnBv?=
- =?utf-8?B?bEFRcEp0a3NKRkloVTFyUVVTRWRDYjRQdFVNZ085cFJSMHdBOGRJNzNzdFZ6?=
- =?utf-8?B?Wm5iRU5UbEdrQnUrVm4xbDFYMHE4T251WTkwdDQrZ3A0ditULzBjT2FiNDJJ?=
- =?utf-8?B?NVIyM3crbERTUGhMQVJaR0lNVzlQNFVzbjdYcXMrMUI2L3J0dGV2NFRzNFJy?=
- =?utf-8?B?TEc0TWtKUG5sY284TmJpZzRwN0JRRHRkOVNoeHFxekhNVElNZ1gyOWhsSGc4?=
- =?utf-8?Q?Zhgd3LwEPv5R5lZ59yzp3tjIy?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1aa2353-8e50-43a6-732a-08dcdf89ab2f
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2024 06:49:16.3430
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bi3yddKalbmbR6f3QxM6AyYm8rl03thxbxojpqgP8Oo8mFRN4xLeXzogaBIqDzlnHHfSjW1QSxrRXGbBm8FO8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11060
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240927215653.1552411-3-wei.huang2@amd.com>
 
-On Fri, Sep 27, 2024 at 06:51:17PM -0500, Bjorn Helgaas wrote:
-> On Thu, Sep 26, 2024 at 12:47:13PM -0400, Frank Li wrote:
-> > Introduce field 'cpu_untranslate_addr' in of_pci_range to retrieve
-> > untranslated CPU address information. This is required for hardware like
-> > i.MX8QXP to configure the PCIe controller ATU and eliminate the need for
-> > workaround address fixups in drivers. Currently, many drivers use
-> > hardcoded CPU addresses for fixups, but this information is already
-> > described in the Device Tree. With correct hardware descriptions, such
-> > fixups can be removed.
->
-> Instead of saying "required for hardware like i.MX8QXP", can we say
-> something specific about what this kind of hardware *does* that
-> requires this?
->
-> I *think* the point is that there's some address translation being
-> done between the primary and secondary sides of some bridge.
->
-> I think "many drivers use hardcoded CPU addresses for fixups"
-> basically means the .cpu_addr_fixup() callback hardcodes that
-> translation in the code, e.g., "cpu_addr & CDNS_PLAT_CPU_TO_BUS_ADDR",
-> "cpu_addr + BUS_IATU_OFFSET", etc, even though those translations
-> *should* be described via DT.
->
-> >             ┌─────────┐                    ┌────────────┐
-> >  ┌─────┐    │         │ IA: 0x8ff0_0000    │            │
-> >  │ CPU ├───►│ BUS     ├─────────────────┐  │ PCI        │
-> >  └─────┘    │         │ IA: 0x8ff8_0000 │  │            │
-> >   CPU Addr  │ Fabric  ├─────────────┐   │  │ Controller │
-> > 0x7000_0000 │         │             │   │  │            │
-> >             │         │             │   │  │            │   PCI Addr
-> >             │         │             │   └──► CfgSpace  ─┼────────────►
-> >             │         ├─────────┐   │      │            │    0
-> >             │         │         │   │      │            │
-> >             └─────────┘         │   └──────► IOSpace   ─┼────────────►
-> >                                 │          │            │    0
-> >                                 │          │            │
-> >                                 └──────────► MemSpace  ─┼────────────►
-> >                         IA: 0x8000_0000    │            │  0x8000_0000
-> >                                            └────────────┘
->
-> What does "IA" stand for?
+Hi Wei,
 
-internal address
+kernel test robot noticed the following build warnings:
 
->
-> I don't quite understand the mapping done by the "BUS Fabric" block.
-> It looks like you're saying the CPU Addr 0x7000_0000 is translated to
-> all three of IA 0x8ff0_0000, IA 0x8ff8_0000, and IA 0x8000_0000, but
-> that doesn't seem right.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master next-20240927]
+[cannot apply to v6.11]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-0x7000_0000 --> 0x8000_0000
-0x7ff0_0000 --> 0x8ff0_0000
-0x7ff8_0000 --> 0x8ff8_0000
+url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Huang/PCI-Add-TLP-Processing-Hints-TPH-support/20240928-055915
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240927215653.1552411-3-wei.huang2%40amd.com
+patch subject: [PATCH V6 2/5] PCI/TPH: Add Steering Tag support
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240928/202409282017.PWd5zICd-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240928/202409282017.PWd5zICd-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409282017.PWd5zICd-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/tph.c:236:9: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((mask), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (mask)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
+     236 |         val |= FIELD_PREP(mask, st_val);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
+     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
+      72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+      73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      74 |                                  _pfx "type of reg too small for mask"); \
+         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+   include/linux/compiler_types.h:517:22: note: expanded from macro 'compiletime_assert'
+     517 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:505:23: note: expanded from macro '_compiletime_assert'
+     505 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:497:9: note: expanded from macro '__compiletime_assert'
+     497 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   1 warning generated.
 
 
-I can update diagram at next version
+vim +236 drivers/pci/tph.c
 
->
-> > bus@5f000000 {
-> >         compatible = "simple-bus";
-> >         #address-cells = <1>;
-> >         #size-cells = <1>;
-> >         ranges = <0x5f000000 0x0 0x5f000000 0x21000000>,
-> >                  <0x80000000 0x0 0x70000000 0x10000000>;
-> >
-> >         pcieb: pcie@5f010000 {
-> >                 compatible = "fsl,imx8q-pcie";
-> >                 reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
-> >                 reg-names = "dbi", "config";
-> >                 #address-cells = <3>;
-> >                 #size-cells = <2>;
-> >                 device_type = "pci";
-> >                 bus-range = <0x00 0xff>;
-> >                 ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
-> >                          <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
-> > 	...
-> > 	};
-> > };
-> >
-> > 'cpu_untranslate_addr' in of_pci_range can indicate above diagram IA
-> > address information.
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > Change from v1 to v2
-> > - add cpu_untranslate_addr in of_pci_range, instead adding new API.
-> > ---
-> >  drivers/of/address.c       | 2 ++
-> >  include/linux/of_address.h | 1 +
-> >  2 files changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index 286f0c161e332..f4cb82f5313cf 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -811,6 +811,8 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
-> >  	else
-> >  		range->cpu_addr = of_translate_address(parser->node,
-> >  				parser->range + na);
-> > +
-> > +	range->cpu_untranslate_addr = of_read_number(parser->range + na, parser->pna);
-> >  	range->size = of_read_number(parser->range + parser->pna + na, ns);
-> >
-> >  	parser->range += np;
-> > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> > index 26a19daf0d092..0683ce0c07f68 100644
-> > --- a/include/linux/of_address.h
-> > +++ b/include/linux/of_address.h
-> > @@ -26,6 +26,7 @@ struct of_pci_range {
-> >  		u64 bus_addr;
-> >  	};
-> >  	u64 cpu_addr;
-> > +	u64 cpu_untranslate_addr;
-> >  	u64 size;
-> >  	u32 flags;
-> >  };
-> >
-> > --
-> > 2.34.1
-> >
+   205	
+   206	/* Write ST to MSI-X vector control reg - Return 0 if OK, otherwise -errno */
+   207	static int write_tag_to_msix(struct pci_dev *pdev, int msix_idx, u16 tag)
+   208	{
+   209		struct msi_desc *msi_desc = NULL;
+   210		void __iomem *vec_ctrl;
+   211		u32 val, mask, st_val;
+   212		int err = 0;
+   213	
+   214		msi_lock_descs(&pdev->dev);
+   215	
+   216		/* Find the msi_desc entry with matching msix_idx */
+   217		msi_for_each_desc(msi_desc, &pdev->dev, MSI_DESC_ASSOCIATED) {
+   218			if (msi_desc->msi_index == msix_idx)
+   219				break;
+   220		}
+   221	
+   222		if (!msi_desc) {
+   223			err = -ENXIO;
+   224			goto err_out;
+   225		}
+   226	
+   227		st_val = (u32)tag;
+   228	
+   229		/* Get the vector control register (offset 0xc) pointed by msix_idx */
+   230		vec_ctrl = pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
+   231		vec_ctrl += PCI_MSIX_ENTRY_VECTOR_CTRL;
+   232	
+   233		val = readl(vec_ctrl);
+   234		mask = PCI_MSIX_ENTRY_CTRL_ST_LOWER | PCI_MSIX_ENTRY_CTRL_ST_UPPER;
+   235		val &= ~mask;
+ > 236		val |= FIELD_PREP(mask, st_val);
+   237		writel(val, vec_ctrl);
+   238	
+   239		/* Read back to flush the update */
+   240		val = readl(vec_ctrl);
+   241	
+   242	err_out:
+   243		msi_unlock_descs(&pdev->dev);
+   244		return err;
+   245	}
+   246	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
