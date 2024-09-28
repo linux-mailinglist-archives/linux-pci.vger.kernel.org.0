@@ -1,76 +1,76 @@
-Return-Path: <linux-pci+bounces-13621-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13622-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD13A989169
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 22:57:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 878989891E2
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Sep 2024 00:21:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFDFB1C22EE5
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 20:57:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 255651F2388C
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Sep 2024 22:21:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E03418308A;
-	Sat, 28 Sep 2024 20:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A745018734F;
+	Sat, 28 Sep 2024 22:21:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K5ammNvw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZaRm8IAU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC90F17C7D4;
-	Sat, 28 Sep 2024 20:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CBD1F5EA;
+	Sat, 28 Sep 2024 22:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727557028; cv=none; b=BEzYP/PUbtaHPVUNWIhSWGtJD1v1y9SmSAV6agNaxw+T68FH18CJqpZZnG1frWGEwXKZDZs+SoPBigCdrelLCt7UoNyUo8C88zDKYKQLDjdBdZvol+tD1Gx6tk7ZgCRwbs8eWw9/+PSw/7o6DT4gwfUHU0L3E+wofUKS1xiWWcU=
+	t=1727562069; cv=none; b=XZ8htIDUnSxYHWClI/2HeDN8LIeyePyfgt8HSeKGHABywZqO4RfDOHYtLOYLxIrDJ/0r4i33OifGvSwfGnG3miQZSdygvg5dirQuTjnWtDS7crH9uN5xPJuUAPiiiV/tU67ROfxaaO+94Pm9jbjKFWtPIvoTOKYmiLaUlhksiUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727557028; c=relaxed/simple;
-	bh=OK5RveDLSz5tFyXUinR9c5kALUI2j3KDOCHCIRzL/ug=;
+	s=arc-20240116; t=1727562069; c=relaxed/simple;
+	bh=753n/HZnmHMAeAEp/81I+HWoLFnnpgyNJSj2QobhRAI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OawwzYEezWGqV5Y6msx5L0PXZum1Q4rfgNREjLirogJzcswvJaVtw68vtZ1ax4lJP4Ld6ypj5NhBM6R/GFgYfS/dk/eYghDamDHJpE5iMz0n+4aI2gpb+aHg8RvU6WUYYjKNsaUiG0yvtfVgekPa8XQufX4nAhuXdjOp3IkLa6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K5ammNvw; arc=none smtp.client-ip=198.175.65.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=t+8mcm98UiUJhk5ZWFVlbe7I6OsnDCKNaq8k1yaWsaQMBgZuslRuZY+mXTXVY2V4UB2BR+lKTksrS3WyJX3l4xdaQzalQbcKN+RdLy8juv0jTZ2UXPe4urGqeC4trC5kve3xAfUaXPd8KpEUkr0A6QbCxD5nZl9qjTUA2T+LLBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZaRm8IAU; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727557025; x=1759093025;
+  t=1727562068; x=1759098068;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=OK5RveDLSz5tFyXUinR9c5kALUI2j3KDOCHCIRzL/ug=;
-  b=K5ammNvwqmIX83nFP6U1LVHv8plnNyZYRNKaE8uW8Af6D36VgF1kabOD
-   //XF9rA+yXJuKqPf7VVChGOaflVRr6r7q9gNcyf3T3TuyI7KIX/H5NW/d
-   yt37ebvCyAmquu0bm3r8xJjlqH2mHumz0SAKr1xgjdJ+fdzyAobS1nc2m
-   +hjv3XD4KMIxJDBbMqU9mSFTlnX6dFEEnpH10FXf0QtSvE9iyH3qUv3hV
-   yUxFxovV1qgCMgQio1FqNNy4RfemQOBAc1m5tmS9lUM7yhr835+ChUaWd
-   Vzqd36QX9EO2pOdC8qrQWIKADpf9k/Jb17R2XXPTIuHUmENeJB4k+RUvA
-   Q==;
-X-CSE-ConnectionGUID: V4Va7bwRRc+Uv68uQmpFwg==
-X-CSE-MsgGUID: r82VU8LZRCC71GLxShgDyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11209"; a="30381435"
+  bh=753n/HZnmHMAeAEp/81I+HWoLFnnpgyNJSj2QobhRAI=;
+  b=ZaRm8IAUdNKloL8n7zj6tQSWg5EGKegpjRY1f+Pe21X4JYfMm2sshBt8
+   C391kDDtynyFuvgOxGLj/LLAfcoBJ4cFxH81gxAukC374vCfpFdaSH/Ds
+   A8Lw5I+EN+PHKfmWrYMIin5FIKcYLeWWXuQ9uK9/VBLY4MYUm0AcLgeys
+   VAFfhz3PtNxiCNAEsJM/6xrumZmnI1i65Y54VjsD8bgtcndEzzB3Jl+FC
+   uptQ4NtBokAxyY0eJCnsU/Cbzk15pqsbKdgUyjegQ4bUgeNLeWwvXJofo
+   G1PCF8ZDISGl0fALtVq7iOBqV758cbQlw4aviTw4XORTil031br7iLpCs
+   w==;
+X-CSE-ConnectionGUID: Wa6qfH7FSASG3jfRLf8ngQ==
+X-CSE-MsgGUID: 6GHH03N7SmOVWOWc9Qo29Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11209"; a="37247974"
 X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
-   d="scan'208";a="30381435"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2024 13:57:05 -0700
-X-CSE-ConnectionGUID: 6qhZtbjVRJmEAVdY4rD6Yw==
-X-CSE-MsgGUID: RZ0r+Ll4ReGVrTFCGCBMVQ==
+   d="scan'208";a="37247974"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2024 15:21:07 -0700
+X-CSE-ConnectionGUID: SZ77uNqsRS+YvGRrXkIpJQ==
+X-CSE-MsgGUID: EF6fF7mjRKyzfeRhvubsoQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
-   d="scan'208";a="96208155"
+   d="scan'208";a="73183641"
 Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 28 Sep 2024 13:56:59 -0700
+  by orviesa006.jf.intel.com with ESMTP; 28 Sep 2024 15:21:01 -0700
 Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sueUq-000NeZ-27;
-	Sat, 28 Sep 2024 20:56:56 +0000
-Date: Sun, 29 Sep 2024 04:56:04 +0800
+	id 1sufoA-000Nhj-2I;
+	Sat, 28 Sep 2024 22:20:58 +0000
+Date: Sun, 29 Sep 2024 06:20:01 +0800
 From: kernel test robot <lkp@intel.com>
 To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	netdev@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Jonathan.Cameron@huawei.com, helgaas@kernel.org, corbet@lwn.net,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
+Cc: oe-kbuild-all@lists.linux.dev, Jonathan.Cameron@huawei.com,
+	helgaas@kernel.org, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
 	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
 	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
 	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
@@ -78,7 +78,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	bagasdotme@gmail.com, bhelgaas@google.com, lukas@wunner.de,
 	paul.e.luse@intel.com, jing2.liu@intel.com
 Subject: Re: [PATCH V6 2/5] PCI/TPH: Add Steering Tag support
-Message-ID: <202409290413.EtVuNEgl-lkp@intel.com>
+Message-ID: <202409290628.jR98LDA9-lkp@intel.com>
 References: <20240927215653.1552411-3-wei.huang2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -105,56 +105,22 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Huang/PCI-Add-TLP-Pro
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
 patch link:    https://lore.kernel.org/r/20240927215653.1552411-3-wei.huang2%40amd.com
 patch subject: [PATCH V6 2/5] PCI/TPH: Add Steering Tag support
-config: x86_64-buildonly-randconfig-001-20240929 (https://download.01.org/0day-ci/archive/20240929/202409290413.EtVuNEgl-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240929/202409290413.EtVuNEgl-lkp@intel.com/reproduce)
+config: sparc64-randconfig-r062-20240929 (https://download.01.org/0day-ci/archive/20240929/202409290628.jR98LDA9-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240929/202409290628.jR98LDA9-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409290413.EtVuNEgl-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409290628.jR98LDA9-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/pci/tph.c:230:19: error: no member named 'msix_base' in 'struct pci_dev'; did you mean 'msix_cap'?
+   drivers/pci/tph.c: In function 'write_tag_to_msix':
+>> drivers/pci/tph.c:230:26: error: 'struct pci_dev' has no member named 'msix_base'; did you mean 'msix_cap'?
      230 |         vec_ctrl = pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
          |                          ^~~~~~~~~
          |                          msix_cap
-   include/linux/pci.h:350:6: note: 'msix_cap' declared here
-     350 |         u8              msix_cap;       /* MSI-X capability offset */
-         |                         ^
-   drivers/pci/tph.c:236:9: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((mask), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (mask)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
-     236 |         val |= FIELD_PREP(mask, st_val);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:115:3: note: expanded from macro 'FIELD_PREP'
-     115 |                 __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: ");    \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:72:53: note: expanded from macro '__BF_FIELD_CHECK'
-      72 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
-      73 |                                  __bf_cast_unsigned(_reg, ~0ull),       \
-         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      74 |                                  _pfx "type of reg too small for mask"); \
-         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/linux/compiler_types.h:517:22: note: expanded from macro 'compiletime_assert'
-     517 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:505:23: note: expanded from macro '_compiletime_assert'
-     505 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:497:9: note: expanded from macro '__compiletime_assert'
-     497 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   1 warning and 1 error generated.
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for CRYPTO_CRC32C_INTEL
-   Depends on [n]: CRYPTO [=y] && !KMSAN [=y] && X86 [=y]
-   Selected by [y]:
-   - ISCSI_TARGET [=y] && TARGET_CORE [=y] && INET [=y] && X86 [=y]
 
 
 vim +230 drivers/pci/tph.c
