@@ -1,52 +1,63 @@
-Return-Path: <linux-pci+bounces-13663-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13664-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 056C298ACEF
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 21:29:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 550B698AD04
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 21:38:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DF4D1C2181C
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 19:29:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF714B20CBC
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 19:38:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FA2F199E82;
-	Mon, 30 Sep 2024 19:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D4A61991B1;
+	Mon, 30 Sep 2024 19:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mg60oNe9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bj5fAJyX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3781991B2
-	for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 19:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD59198E84
+	for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 19:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727724517; cv=none; b=mnUP2njWIQRF5Z0bdpuXkEIDuLewnFUuN/GUEoxDExYQ4mA6m9A1Hg8kdU1fsRL5x6FrAvF7JhKv/QeUZhHXFoExKOqPs1+/TU5xun9m1F18TxOnd2vN3GpAhPLvJN5/5d3fM3+EYCiR1Dc8Pnx9rx0vPk6y1JhrTm+NAQhc2ls=
+	t=1727725078; cv=none; b=ioQf5Y1hgZEt1AI/RRUvBFjh+Toa07Dz5Cq1OFUNYycdWOq1RprHZhKzNm2ASu6jH54Y8NPLsDNjaRlvHSB4oD5Io5i3OoydpzkSpCL8+vp50NwEZzhwt1gtXks6yPgO77hqpLvhnVzxaMPybVBatiyrMQ2VbSLk4XDeeZjaKIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727724517; c=relaxed/simple;
-	bh=RKaSnfGXLWXkgN2e2BEQlsDhwpxN4RmAU+ak848zlG8=;
+	s=arc-20240116; t=1727725078; c=relaxed/simple;
+	bh=bd1W1edyxyIMzyL2oVwBIlRMv4WpY7BdgJEv7EeGadU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KXm9MzeRgE+H0OMO/3V+nd/llbXskb4oZr9n0nwZ0N/MBEUogmQ3AZkBNX9hb6oldj3zvK56QslWlzt6nqPjSRrzB7NZjPB6r2lz4raYG6k4hBXQzr3XEd8pCWlOyVbG6U9X+1G6gSBXZmRqJnDwTenMdE3oddFl/uVNmdWdm58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mg60oNe9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755FDC4CEC7;
-	Mon, 30 Sep 2024 19:28:36 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=SBWzqvM787mWpxgzr8Zs1hHzVOXzUfRxsQKnLU2PsOU5LcCaF2/7RCZEwYS81/Aay3dK38Y+HfjTb3xchGH9Oj9GehW1V6wU8qvByuaqoOosc3b81UdsGVuz8YC646hUt2T9VWYvFdqzfkGitAWuLOQQ5wPDFAmN6iwoswvHKn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bj5fAJyX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BA59C4CEC7;
+	Mon, 30 Sep 2024 19:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727724516;
-	bh=RKaSnfGXLWXkgN2e2BEQlsDhwpxN4RmAU+ak848zlG8=;
+	s=k20201202; t=1727725078;
+	bh=bd1W1edyxyIMzyL2oVwBIlRMv4WpY7BdgJEv7EeGadU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mg60oNe9/Hgq++f9vgXrai1wlWtjbPNOW4dvqoT+TFxn3AL3sMX8XbDyfH5/bk7q7
-	 eQg+o6nXSHYpMvNQdE16a3/2gL1MeJ0KN9ozGDuisDzvFXfEP0OCyf8zqfVtF/3P3q
-	 ywmNnw8WZmVh6EqDquzdCtpgLcB+LQnjZ3JxTIDul6xpcfjB66KZhLRgsB/6zQrwgd
-	 RPRftGlRnMntt4CckubTHhQg+j7aY0KnlfxLBlytpygMnSoZxQsUxSEYUMuIqPC28m
-	 JyKAAk5+2l8QyMlabqLB3VneiYLTt7Y2W2h2x4uA96kfGEBcAE/0ugyklEKMm9kP3A
-	 WnDpAc0DG0qQw==
-Date: Mon, 30 Sep 2024 14:28:34 -0500
+	b=Bj5fAJyXTmlHX0a4DRvSQuSyLlHOQXv4RSMwtiCTmAKV4ifAt0Cy3jB3IVi5N7NqX
+	 juZkVo9JxoiHBdA8ynQTQaiKOmZk+y9W3Bpm036nNJqIJOlt9ScFiRBblEUv62GkqX
+	 60MhMh2HSYCoz3tT0MmMALx4gTBZjJg+/TTDfhcQA+2UKxMPf3m/HXJz8pynmwSSXK
+	 8eglbwfrGxOHYOC7T/QfAtG5+e8+gEpeudcSExGwhGejwdojBWzuiY5gT70m63m6Kz
+	 niXI0iq95UQxVnC7QOKBxAsBrOO1Do+P19DXKjDY9gCvH1hjSrOSeO+Z9IkwHyk+/G
+	 294KSdkwmdVVA==
+Date: Mon, 30 Sep 2024 14:37:56 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Maverickk 78 <maverickk1778@gmail.com>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: pcie hotplug driver probe is not getting called
-Message-ID: <20240930192834.GA187120@bhelgaas>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Christian Marangi <ansuelsmth@gmail.com>, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
+	Hui Ma <hui.ma@airoha.com>
+Subject: Re: [PATCH] PCI: mediatek-gen3: Avoid PCIe resetting for Airoha
+ EN7581 SoC
+Message-ID: <20240930193756.GA187798@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,45 +66,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALfBBTsmKYf5FT-pxLfM-C1EgdrKKhQU43OhMDBz2ZPtKcxaLQ@mail.gmail.com>
+In-Reply-To: <d8941149-9125-4fe2-a1c0-ab29223a0c87@collabora.com>
 
-On Sun, Sep 29, 2024 at 07:29:32PM +0530, Maverickk 78 wrote:
-> Hi Bjorn,
+On Mon, Sep 23, 2024 at 11:41:41AM +0200, AngeloGioacchino Del Regno wrote:
+> Il 20/09/24 10:26, Lorenzo Bianconi ha scritto:
+> > The PCIe controller available on the EN7581 SoC does not support reset
+> > via the following lines:
+> > - PCIE_MAC_RSTB
+> > - PCIE_PHY_RSTB
+> > - PCIE_BRG_RSTB
+> > - PCIE_PE_RSTB
+> > 
+> > Introduce the reset callback in order to avoid resetting the PCIe port
+> > for Airoha EN7581 SoC.
 > 
-> I have a switch connecting to the Host bridge, one of the downstream
-> port(02:1.0) on the switch has the slot enabled.
+> EN7581 doesn't support pulling up/down PERST#?!  That looks
+> definitely odd, as that signal is part of the PCI-Express CEM spec.
 > 
-> Appended pcie_ports=native along with pciehp.pciehp_force=1
-> pciehp.pciehp_debug=1  to the cmdline and I see the driver creating symlink
-> to sysfs device node.
-> 
-> Does this mean pciehp can handle the hotplug events? asking this because
-> none of the functions in pciehp_core listed in ftrace?
+> Besides, there's another PERST# assertion at
+> mtk_pcie_suspend_noirq()...
 
-From the dmesg log you attached:
+I agree, it doesn't smell right that this SoC doesn't have a way to
+assert PERST#.
 
-  [    0.000000] DMI: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-0-g155821a-20210629_105355-sharpie 04/01/2014
-  [    0.000000] Hypervisor detected: KVM
-  [    0.408755] Kernel command line: BOOT_IMAGE=/boot/vmlinuz-6.11.0+ root=UUID=f563804b-1b93-4921-90e1-4114c8111e8f ro modprobe.blacklist=mpt3sas ftrace=function_graph ftrace_graph_filter=*pcie* pciehp.pciehp_force=1 pciehp.pciehp_debug=1 pcie_ports=native quite splash crashkernel=512M-:192M vt.handoff=7
-  [    1.640055] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
-  [    1.736168] acpi PNP0A08:00: _OSC: platform does not support [PCIeHotplug LTR DPC]
-  [    1.738096] acpi PNP0A08:00: _OSC: OS now controls [SHPCHotplug PME AER PCIeCapability]
-  [    9.885390] pcieport 0000:02:01.0: pciehp: Slot #0 AttnBtn+ PwrCtrl+ MRL+ AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock- NoCompl- IbPresDis- LLActRep+
+The response at
+https://lore.kernel.org/r/SG2PR03MB63415DB5791C58C7EA69FF01FF682@SG2PR03MB6341.apcprd03.prod.outlook.com
+suggests that maybe there's a hardware defect that means asserting
+PERST# doesn't work correctly?  But surely firmware must have a way of
+asserting PERST#, at least at boot time.
 
-I assume this kernel is running as a KVM guest.  The firmware _OSC
-says the platform (QEMU) doesn't support native PCIe hotplug, so
-host->native_pcie_hotplug will be false.  But of course
-"pcie_ports=native" would set pcie_ports_native, so the portdrv
-get_port_device_capability() will set PCIE_PORT_SERVICE_HP, which
-allows pciehp to bind to 02:01.0.
-
-The "pcieport 0000:02:01.0: pciehp: Slot #0" line shows that
-pciehp_probe() was called.
-
-I don't know whether QEMU supports PCIe hotplug interrupts though.
-
-When do you expect pciehp to do something?  Are you hotplugging a
-physical device that is passed through to this guest?
+If this is truly a hardware defect and we really can't assert PERST#,
+please say that this is a defect in the commit log so people don't
+think that lack of PERST# is an acceptable thing.
 
 Bjorn
 
