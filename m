@@ -1,137 +1,169 @@
-Return-Path: <linux-pci+bounces-13647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BC2298A3E9
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 15:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92D9598A4BE
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 15:25:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D0561F28875
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 13:04:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3D4D1F24171
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 13:25:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBA1818C011;
-	Mon, 30 Sep 2024 13:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Vih0aST7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5023B18FDBE;
+	Mon, 30 Sep 2024 13:23:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BC21DA3D;
-	Mon, 30 Sep 2024 13:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B11D18EFE0;
+	Mon, 30 Sep 2024 13:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727701453; cv=none; b=C1ocIgloDe7S8amkGiYmO2annpBz7sSpwDxMatwlXbRDvOp4A/UgGTQvpuMmWR+9qB9Y+Cnq+BCm9978/RQlBdY33CH1LDJmTEi+34sgSpE5oaDYRynHtjAyNW0T0IzuzuDRzoQ3F6aAC+FTURQpuU+nzFBrDdKQTA0Rh6L2iHA=
+	t=1727702635; cv=none; b=UoOwMGW6goQn/ZhrmXaHXtHsMggu9cUsGTli3IXPUzNSyXONBnLB/SVHtLJZWcvJFPQm4LWoSKsI538MumRpAoEpMceqrXq64K/83nKwSvD61vt1pPADzNxx75AqX2z5V8WofwoJUTIeF7/vSl33l3k6ojx/A3fcuKOk3i7zoOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727701453; c=relaxed/simple;
-	bh=X1w+aHZ1aSEC/ce63NVfAhp4cMR5ClhM0fpq2w+I4m4=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=drnQ2hA2r3oM5d7slGyO97IXlqnMSM6KLYjhEOvEnHR1NfA6Mc9PakZ26IrxA4briopsU2Eb5PjWZokg1mtmufLUFpB37KWgXvyZ7Eq9t7/zl+u61EbujJWlzVZm4dzdackptSWeSGATz5H9wEMC4iiCwf8OfA9rAnp5Fm3eHn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Vih0aST7; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1727701451; x=1759237451;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=X1w+aHZ1aSEC/ce63NVfAhp4cMR5ClhM0fpq2w+I4m4=;
-  b=Vih0aST7MeAzYbKrxOKgVfhRu35Bz2JPfLM080jR0DuM3ClTSttEUn2q
-   tf+RZ35KqUqQa1C6/mxScnHDX9hw9n//YQcepOHhGLYL4nMrE0tp2ojeS
-   GK9OlvOsSAaDVsqQ/IiKi53LhLM75MdfqRakad16AlG0+4NKruxgRWsBu
-   aQ5Gyxzx5XcXUOb/7FqFA3bt2P8AaxxU31JtuXSik2bNq7MM9E76hsUV7
-   Ke/oSSmrzYh6H8D+xeMIvLn5p3DMm7E9m5yX2K3V4+tNSQUCLJAsixIUW
-   +gaYwhEDhtWzWP5CE3t/KVXzOVyMzHNqsIp79qwHKnVqzVDztE+Pt6kJx
-   g==;
-X-CSE-ConnectionGUID: vO9Oy7ojQeG5B541OJjihw==
-X-CSE-MsgGUID: 5bccPyKoRgKxoVZkWYFVeQ==
-X-IronPort-AV: E=Sophos;i="6.11,165,1725346800"; 
-   d="scan'208";a="35659350"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Sep 2024 06:04:09 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 30 Sep 2024 06:04:02 -0700
-Received: from DEN-DL-M31857.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 30 Sep 2024 06:03:57 -0700
-Message-ID: <e3fca0f385e489cc30fc79c09d642c110125fd89.camel@microchip.com>
-Subject: Re: [PATCH v6 2/7] reset: mchp: sparx5: Use the second reg item
- when cpu-syscon is not present
-From: Steen Hegelund <steen.hegelund@microchip.com>
-To: Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven
-	<geert@linux-m68k.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Simon
- Horman" <horms@kernel.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann
-	<arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
-	<dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>, Daniel Machon
-	<daniel.machon@microchip.com>, <UNGLinuxDriver@microchip.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, "Andrew
- Lunn" <andrew@lunn.ch>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Allan
- Nielsen" <allan.nielsen@microchip.com>, Luca Ceresoli
-	<luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date: Mon, 30 Sep 2024 15:03:56 +0200
-In-Reply-To: <20240930121601.172216-3-herve.codina@bootlin.com>
-References: <20240930121601.172216-1-herve.codina@bootlin.com>
-	 <20240930121601.172216-3-herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1727702635; c=relaxed/simple;
+	bh=NP8jjB23QLX+S3BSx5sj/XPrv18+qsyiocQiyL4WsKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qOYeOeWGkMo+mIAjrr+NdVYJ9fN/5V1dcKN+xtaPj3VPwNyovDVtB4vqXqfQw43ZJykdcSMbEtK+p4RdTTTUeRjlk9S5278bRzqY0VzxD8ngUibLsHTSL2IbezdGRaN03pJ//GQVqIYHmPnt1p4QiOywClqn5szdkYjpjDQAzdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6e25f3748e0so13168407b3.0;
+        Mon, 30 Sep 2024 06:23:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727702632; x=1728307432;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XZEBwxrpoLE/VvANGlwD0fZQRFkLr5Jij21iFhSOg0E=;
+        b=Ny+brfuRI0mD5jGft+XwV0ns+QULBfUaRHokH4l6opSGxQ/Ts2IFunUdOwcxcMYqvR
+         BPnB7yWoTgQD01gTouoSukmJzk2q4R35oOV1FWsPhVY68aleH6ZE1PYj50JAoafVqSMh
+         IHuGvhyav1/86KhMnBEQaRT7XK5PNqJRAM7OJckism28eAmwQl/dOnc8aPirtMM6zXH3
+         09IzTcxVRKQ9TfykgxzH8YF25pr6gK1HiHA0vJRFPFYp52/v6vPalO9PDsiIhU0vhrDh
+         uFBVq7jjWmcorMfzYOYMPsInZ+jk3A6FuBml2l1BZgpL17kG+SYvTptf36bv74mbPkWY
+         liwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTFkfjpjQnAtssSdAFa/xHw2hPa9G9GfmfUKBQIBFRzr1PQrAsI8ntYKQEfiYwz3gDe4B9UVC3ZPmp@vger.kernel.org, AJvYcCWFCvipBFthvROU+Y9wWOa3DdPlRUqAW3qBvFGYZAwFoh5X5vjGwYCJyCVZNzgxYo3OTU+m+hVX@vger.kernel.org, AJvYcCWGVMSwRWvi1oLDt4f1qO2vPN5fZu7Mi/65iYjcYdv6WpSk39lFrKcjpa8ctvsStHL93AbLgra1w9/WuUl4@vger.kernel.org, AJvYcCXBqxI43nFQ2jyBlYocJoingNPDbER3E8lwL7RjGoVUzt4av+K9EJZl1W0fOAYxxGlkmO8U+9WEJ23E@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2s3hMwR4s6i4G3kBAJliUZg7lYB2z+a8Gox/T1bVk7XBHGzaE
+	qK3TFmCK/Ln+QkjrsvzxzAqFKs5ZyNjM49GO47d29J8mp1xDqNd1r8p/DrYK
+X-Google-Smtp-Source: AGHT+IGLCnlU657xJcYU/8fHe95pp7TnjlS5Glm36BYWtS0N1BCldXcsEtAzK3PM1O9s1GCVcUaSKw==
+X-Received: by 2002:a05:690c:4285:b0:6d7:f32:735b with SMTP id 00721157ae682-6e24759c116mr68881877b3.27.1727702631701;
+        Mon, 30 Sep 2024 06:23:51 -0700 (PDT)
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e2454a1dc9sm13480477b3.142.2024.09.30.06.23.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2024 06:23:51 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6e25f3748e0so13167997b3.0;
+        Mon, 30 Sep 2024 06:23:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMbdbgKtE3FE4bCYDvMaOinVTZJM7SY25+4sTCjhMXo6v8cidvEDvupA80tes0wkwoNqgg3P4v3yGj@vger.kernel.org, AJvYcCVeyQS82wYUgZblU2lfXUsTIRVY6ioJoCOg5MgYbOqBT2neZiHGjrSQzPNJzgJuwmX3Ry+yn6Av@vger.kernel.org, AJvYcCVxJ3KShLqjwbQn4q71izq/vp7Q0dVIUGFEebCmnI/xsAn57u5d7s86cNWDPO2kgvKPt72dyr0McXnD@vger.kernel.org, AJvYcCXDKSV3TDRNc5XBpXJu9FmQe9xeUIdPCsOmU4y6utHfABRTWWaQZAOM2SgkqtsSEQovTYEF3UYn7Phw+IuN@vger.kernel.org
+X-Received: by 2002:a05:690c:26c6:b0:6e2:1b46:27c1 with SMTP id
+ 00721157ae682-6e24761f502mr54518597b3.45.1727702630751; Mon, 30 Sep 2024
+ 06:23:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240930121601.172216-1-herve.codina@bootlin.com> <20240930121601.172216-3-herve.codina@bootlin.com>
+In-Reply-To: <20240930121601.172216-3-herve.codina@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 30 Sep 2024 15:23:37 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX97ESvg-htynOJC5408Hf1bKN46ji-fnuzr94wBcZSXw@mail.gmail.com>
+Message-ID: <CAMuHMdX97ESvg-htynOJC5408Hf1bKN46ji-fnuzr94wBcZSXw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/7] reset: mchp: sparx5: Use the second reg item when
+ cpu-syscon is not present
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgSGVydmUsCgpPbiBNb24sIDIwMjQtMDktMzAgYXQgMTQ6MTUgKzAyMDAsIEhlcnZlIENvZGlu
-YSB3cm90ZToKPiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0
-YWNobWVudHMgdW5sZXNzIHlvdQo+IGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZQo+IAo+IEluIHRo
-ZSBMQU45NjZ4IFBDSSBkZXZpY2UgdXNlIGNhc2UsIHN5c2NvbiBjYW5ub3QgYmUgdXNlZCBhcyBz
-eXNjb24KPiBkZXZpY2VzIGRvIG5vdCBzdXBwb3J0IHJlbW92YWwgWzFdLiBBIHN5c2NvbiBkZXZp
-Y2UgaXMgYSBjb3JlCj4gInN5c3RlbSIKPiBkZXZpY2UgYW5kIG5vdCBhIGRldmljZSBhdmFpbGFi
-bGUgaW4gc29tZSBhZGRvbiBib2FyZHMgYW5kIHNvLCBpdCBpcwo+IG5vdAo+IHN1cHBvc2VkIHRv
-IGJlIHJlbW92ZWQuCj4gCj4gSW4gb3JkZXIgdG8gcmVtb3ZlIHRoZSBzeXNjb24gdXNhZ2UsIHVz
-ZSBhIGxvY2FsIG1hcHBpbmcgb2YgYSByZWcKPiBhZGRyZXNzIHJhbmdlIHdoZW4gY3B1LXN5c2Nv
-biBpcyBub3QgcHJlc2VudC4KPiAKPiBMaW5rOgo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2Fs
-bC8yMDI0MDkyMzEwMDc0MS4xMTI3NzQzOUBib290bGluLmNvbS/CoFsxXQo+IFNpZ25lZC1vZmYt
-Ynk6IEhlcnZlIENvZGluYSA8aGVydmUuY29kaW5hQGJvb3RsaW4uY29tPgo+IC0tLQo+IMKgZHJp
-dmVycy9yZXNldC9yZXNldC1taWNyb2NoaXAtc3Bhcng1LmMgfCAxNiArKysrKysrKysrKysrKyst
-Cj4gwqAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Jlc2V0L3Jlc2V0LW1pY3JvY2hpcC1zcGFyeDUuYwo+IGIv
-ZHJpdmVycy9yZXNldC9yZXNldC1taWNyb2NoaXAtc3Bhcng1LmMKPiBpbmRleCA2MzZlODVjMzg4
-YjAuLjFjMDk1ZmE0MWQ2OSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3Jlc2V0L3Jlc2V0LW1pY3Jv
-Y2hpcC1zcGFyeDUuYwo+ICsrKyBiL2RyaXZlcnMvcmVzZXQvcmVzZXQtbWljcm9jaGlwLXNwYXJ4
-NS5jCj4gQEAgLTExNCw4ICsxMTQsMjIgQEAgc3RhdGljIGludCBtY2hwX3NwYXJ4NV9yZXNldF9w
-cm9iZShzdHJ1Y3QKPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHJldHVybiAtRU5PTUVNOwo+IAo+IMKgwqDCoMKgwqDCoMKgIGVyciA9IG1j
-aHBfc3Bhcng1X21hcF9zeXNjb24ocGRldiwgImNwdS1zeXNjb24iLCAmY3R4LQo+ID5jcHVfY3Ry
-bCk7Cj4gLcKgwqDCoMKgwqDCoCBpZiAoZXJyKQo+ICvCoMKgwqDCoMKgwqAgc3dpdGNoIChlcnIp
-IHsKPiArwqDCoMKgwqDCoMKgIGNhc2UgMDoKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBicmVhazsKPiArwqDCoMKgwqDCoMKgIGNhc2UgLUVOT0RFVjoKPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAvKgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKiBUaGUg
-Y3B1LXN5c2NvbiBkZXZpY2UgaXMgbm90IGF2YWlsYWJsZS4KPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgICogRmFsbCBiYWNrIHdpdGggSU8gbWFwcGluZyAoaS5lLiBtYXBwaW5nIGZy
-b20gcmVnCj4gcHJvcGVydHkpLgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKi8K
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlcnIgPSBtY2hwX3NwYXJ4NV9tYXBfaW8o
-cGRldiwgMSwgJmN0eC0+Y3B1X2N0cmwpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGlmIChlcnIpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHJldHVybiBlcnI7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7Cj4gK8Kg
-wqDCoMKgwqDCoCBkZWZhdWx0Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1
-cm4gZXJyOwo+ICvCoMKgwqDCoMKgwqAgfQo+ICsKPiDCoMKgwqDCoMKgwqDCoCBlcnIgPSBtY2hw
-X3NwYXJ4NV9tYXBfaW8ocGRldiwgMCwgJmN0eC0+Z2NiX2N0cmwpOwo+IMKgwqDCoMKgwqDCoMKg
-IGlmIChlcnIpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBlcnI7Cj4g
-LS0KPiAyLjQ2LjEKPiAKCkxHVE0KClJldmlld2VkLWJ5OiBTdGVlbiBIZWdlbHVuZCA8U3RlZW4u
-SGVnZWx1bmRAbWljcm9jaGlwLmNvbT4KCkJSClN0ZWVuCg==
+Hi Herv=C3=A9,
 
+On Mon, Sep 30, 2024 at 2:16=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+> In the LAN966x PCI device use case, syscon cannot be used as syscon
+> devices do not support removal [1]. A syscon device is a core "system"
+> device and not a device available in some addon boards and so, it is not
+> supposed to be removed.
+>
+> In order to remove the syscon usage, use a local mapping of a reg
+> address range when cpu-syscon is not present.
+>
+> Link: https://lore.kernel.org/all/20240923100741.11277439@bootlin.com/ [1=
+]
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+
+Thanks for your patch!
+
+> --- a/drivers/reset/reset-microchip-sparx5.c
+> +++ b/drivers/reset/reset-microchip-sparx5.c
+> @@ -114,8 +114,22 @@ static int mchp_sparx5_reset_probe(struct platform_d=
+evice *pdev)
+>                 return -ENOMEM;
+>
+>         err =3D mchp_sparx5_map_syscon(pdev, "cpu-syscon", &ctx->cpu_ctrl=
+);
+> -       if (err)
+> +       switch (err) {
+> +       case 0:
+> +               break;
+> +       case -ENODEV:
+> +               /*
+> +                * The cpu-syscon device is not available.
+> +                * Fall back with IO mapping (i.e. mapping from reg prope=
+rty).
+> +                */
+> +               err =3D mchp_sparx5_map_io(pdev, 1, &ctx->cpu_ctrl);
+> +               if (err)
+> +                       return err;
+> +               break;
+> +       default:
+>                 return err;
+> +       }
+> +
+
+This can be shortened to:
+
+    if (err =3D=3D -ENODEV) {
+            /*
+             * The cpu-syscon device is not available.
+             * Fall back with IO mapping (i.e. mapping from reg property).
+             */
+            err =3D mchp_sparx5_map_io(pdev, 1, &ctx->cpu_ctrl);
+    }
+    if (err)
+            return err;
+
+>         err =3D mchp_sparx5_map_io(pdev, 0, &ctx->gcb_ctrl);
+>         if (err)
+>                 return err;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
