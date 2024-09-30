@@ -1,225 +1,232 @@
-Return-Path: <linux-pci+bounces-13634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3922989FC5
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 12:50:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2198B98A03B
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 13:22:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6F8A1C217E9
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 10:50:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D287728388D
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 11:22:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BACC818C014;
-	Mon, 30 Sep 2024 10:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E9318E756;
+	Mon, 30 Sep 2024 11:21:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h5feyn7w"
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="N5Crvn6K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D404818BB9E;
-	Mon, 30 Sep 2024 10:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDA318A926;
+	Mon, 30 Sep 2024 11:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727693408; cv=none; b=dCDh32x3yj3vSDv4e5fFbNZVnW7Xu72aR19m3yWLd388AZBbuSkfBgCW377foWoNbzqsuWYHgxcFPkn7mjoZ0tSjEhPRlybN9zoErj9M1fMSGObqj++CtCq9x5AE0CXk8pnG0eOdj83xnl2d2FUOZ1Ptd7Nyg5S6xAIIaRhqtlE=
+	t=1727695303; cv=none; b=kSu9CAI+ScKlSUuIn1DvxRezgW6Y1TL9l4xF8GDjp9vu6aekQokRutr1paDy+SSwl0Zt1Ij1nvGrtl0GuDdlHUG2ufp2AEf2RT9+UeA40j1OliYcgIvZSIcpLVaId+iWTSaM1TDXZVniSJ9Xg9cS/8TRwyKQrx4rGkApmpc/E9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727693408; c=relaxed/simple;
-	bh=JuK/F2G0f9reVtS1XFQCexpKDja04762L2xBEQufO/w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=E1xBGr3GqmSDWvkR1pYj+SvUmK+neK6P9MT08Zezdy1UR0iJChhVjfqFP3bIQV86srSQK8V/zkeVZkkt7eVOxtdbMP2Wx+k25OyRNkWSt8aUr5pRWl2FA1jJ1xPNORu/YEgLQi7AXEKLixpYN7/cpZJqut3//nf4X/iEFTmp++s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h5feyn7w; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727693407; x=1759229407;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JuK/F2G0f9reVtS1XFQCexpKDja04762L2xBEQufO/w=;
-  b=h5feyn7wd9QKB7mT6OTh4TS+O5I/jC62ETJcwA1irKeWpdNT4gTj4+iP
-   m8qFLc6+30P3t1T2STA3EiEW3hAYdPD/KlPt1yM6UzyD6s6vCBEWD/co1
-   PotFrNenFC/Y3heGs3+MM/t7Er/2L8pf4z20fQeI9r4HQPuYf/acOV2iq
-   AYa/fCqLqOMJwehkel7bO3Ss6wz8vrv9rLEOIyFGHFUfuLqSQovqFJSAd
-   EXDWJRVEEbp3xI3L5W8HV5OgCK4e6D8fUhksOHC+KjzJDC3yvUMomqVMH
-   naVbuU9EZSe3EWSksAADS/sUYyXemsCDTfFi5oiIqsJBHGDRRT00Rwmng
-   w==;
-X-CSE-ConnectionGUID: 89CrAwmwT8qfwrmlH158Qw==
-X-CSE-MsgGUID: 6YesXnfLRICORtv6b0DCrg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11210"; a="26283030"
-X-IronPort-AV: E=Sophos;i="6.11,165,1725346800"; 
-   d="scan'208";a="26283030"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 03:50:06 -0700
-X-CSE-ConnectionGUID: VDux0oGzSsKF2yBuQDaxKA==
-X-CSE-MsgGUID: yZI44t+VTAS51i+sg4YOXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,165,1725346800"; 
-   d="scan'208";a="110743950"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.26])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 03:50:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Sep 2024 13:49:59 +0300 (EEST)
-To: Jian-Hong Pan <jhp@endlessos.org>
-cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>, 
-    David Box <david.e.box@linux.intel.com>, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Nirmal Patel <nirmal.patel@linux.intel.com>, 
-    Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux@endlessos.org
-Subject: Re: [PATCH v11 3/3] PCI/ASPM: Make pci_save_aspm_l1ss_state save
- both child and parent's L1SS configuration
-In-Reply-To: <20240930084953.13454-2-jhp@endlessos.org>
-Message-ID: <828d2fc0-e594-ad3e-b653-2c0acc1223b3@linux.intel.com>
-References: <20240930082530.12839-2-jhp@endlessos.org> <20240930084953.13454-2-jhp@endlessos.org>
+	s=arc-20240116; t=1727695303; c=relaxed/simple;
+	bh=rgAYbIHR+nhPtrrRBq3CzRqixIFEvPXFZ9pgtqmmkAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ROhyPYffgSwvQDgDORnIJTC12zIIBI+gCs6Lda8MKoiXmcZCBwdVBaIBEgM5/FGpV/xs89ge33ssn193gCriXY0rnogV90f7RvCAsUd5JXLv+SKKjWkYfOEC868WRKD9RTHXo0qtfvTCc0mcwD0NjReJhZfv0PX7ezy8d7bJX6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=N5Crvn6K; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9JFHu5GN4m1ZIa7hFOr/S0cR7gAkAibwxtDh3yT9bKQ=;
+  b=N5Crvn6Kq6KpHSPNN73aCiDy+RvsqlM0pHtSseTwUaXi/R+AUcNhRU/s
+   cjlHPMFgIZOJllRTItDSSyRCzG1SoWucsK69kp3cC+hyWG6w77VR7U5lk
+   50vSZgwZFWWTGfQ7neSTgSg1frKowyQAjCduh7p7sY9rw2OBXSFMSw4B2
+   4=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.11,165,1725314400"; 
+   d="scan'208";a="185956867"
+Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 13:21:25 +0200
+From: Julia Lawall <Julia.Lawall@inria.fr>
+To: linux-gpio@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org,
+	linux-mm@kvack.org,
+	maple-tree@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	Sanyog Kale <sanyog.r.kale@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	dccp@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	drbd-dev@lists.linbit.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-leds@vger.kernel.org,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	tipc-discussion@lists.sourceforge.net,
+	Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-wireless@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Subject: [PATCH 00/35] Reorganize kerneldoc parameter names
+Date: Mon, 30 Sep 2024 13:20:46 +0200
+Message-Id: <20240930112121.95324-1-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2081136472-1727693399=:938"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Reorganize kerneldoc parameter names to match the parameter
+order in the function header.
 
---8323328-2081136472-1727693399=:938
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+The misordered cases were identified using the following
+Coccinelle semantic patch:
 
-On Mon, 30 Sep 2024, Jian-Hong Pan wrote:
+// <smpl>
+@initialize:ocaml@
+@@
 
-> PCI devices' parameters on the VMD bus have been programmed properly
-> originally. But, cleared after pci_reset_bus() and have not been restored
-> correctly. This leads the link's L1.2 between PCIe Root Port and child
-> device gets wrong configs.
->=20
-> Here is a failed example on ASUS B1400CEAE with enabled VMD. Both PCIe
-> bridge and NVMe device should have the same LTR1.2_Threshold value.
-> However, they are configured as different values in this case:
->=20
-> 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Processo=
-r PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
->   ...
->   Capabilities: [200 v1] L1 PM Substates
->     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Subst=
-ates+
->       PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50us
->     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->       T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
->     L1SubCtl2: T_PwrOn=3D0us
->=20
-> 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Blue=
- SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
->   ...
->   Capabilities: [900 v1] L1 PM Substates
->     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Subst=
-ates+
->       PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10us
->     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->       T_CommonMode=3D0us LTR1.2_Threshold=3D101376ns
->     L1SubCtl2: T_PwrOn=3D50us
->=20
-> Here is VMD mapped PCI device tree:
->=20
-> -+-[0000:00]-+-00.0  Intel Corporation Device 9a04
->  | ...
->  \-[10000:e0]-+-06.0-[e1]----00.0  Sandisk Corp WD Blue SN550 NVMe SSD
->               \-17.0  Intel Corporation Tiger Lake-LP SATA Controller
->=20
-> When pci_reset_bus() resets the bus [e1] of the NVMe, it only saves and
-> restores NVMe's state before and after reset.
+let parse_doc l =
+  let pieces = List.map String.trim (String.split_on_char '*' l) in
+  let l = String.concat " " pieces in
+  match String.split_on_char ':' l with
+    x::xs -> x
+  | _ -> ""
 
-> The bus [e1] has only one
-> NVMe device, so the NVMe's parent PCIe bridge is missed to be saved.
+let params ps =
+  List.rev
+    (List.fold_left
+       (fun prev (pm,_) ->
+	 let ty =
+	   String.trim(Pretty_print_c.string_of_fullType pm.Ast_c.p_type) in
+	 if ty = "void" && pm.Ast_c.p_namei = None
+	 then prev
+	 else
+	   let name =
+	     match pm.Ast_c.p_namei with
+	       Some name -> name
+	     | None -> failwith "function parameter has no name" in
+	   (String.trim (Pretty_print_c.string_of_name name),ty)::prev)
+       [] ps)
 
-This is still misleading because "only one NVMe device" is not the=20
-reason why the parent's state is not saved.
+@r@
+comments c;
+identifier fn;
+position p;
+parameter list ps;
+type T;
+@@
 
-> However, when it restores the NVMe's state, ASPM code restores L1SS for
-> both the parent bridge and the NVMe in pci_restore_aspm_l1ss_state().
-> Although the NVMe's L1SS is restored correctly, the parent bridge's L1SS =
-is
-> restored with a wrong value 0x0. Because, the parent bridge's L1SS was no=
-t
+T@c fn@p(ps) { ... }
 
-Again, please join these sentences.
+@script:ocaml@
+p << r.p;
+c << r.c;
+(_,ps) << r.ps;
+@@
 
-> saved by pci_save_aspm_l1ss_state() before reset.
->=20
-> So, if the PCI device has a parent, make pci_save_aspm_l1ss_state() save
-> the parent's L1SS configuration, too. This is symmetric on
-> pci_restore_aspm_l1ss_state().
->=20
-> Link: https://lore.kernel.org/linux-pci/CAPpJ_eexU0gCHMbXw_z924WxXw0+B6Sd=
-S4eG9oGpEX1wmnMLkQ@mail.gmail.com/
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
-> Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for suspe=
-nd/resume")
-> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+let isdoc c ps =
+  List.length ps > 1 &&
+  (let c = String.trim c in
+  String.length c > 3 && String.sub c 0 3 = "/**" && String.get c 3 != '*') in
 
-This tag should appear before signed-off-by.
+let subset l1 l2 =
+  List.for_all (fun x -> List.mem x l2) l1 in
 
-> ---
-> v9:
-> - Drop the v8 fix about drivers/pci/pcie/aspm.c. Use this in VMD instead.
->=20
-> v10:
-> - Drop the v9 fix about drivers/pci/controller/vmd.c
-> - Fix in PCIe ASPM to make it symmetric between pci_save_aspm_l1ss_state(=
-)
->   and pci_restore_aspm_l1ss_state()
->=20
-> v11:
-> - Introduce __pci_save_aspm_l1ss_state as a resusable helper function
->   which is same as the original pci_configure_aspm_l1ss
-> - Make pci_save_aspm_l1ss_state invoke __pci_save_aspm_l1ss_state for
->   both child and parent devices
-> - Smooth the commit message
->=20
->  drivers/pci/pcie/aspm.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index bd0a8a05647e..17cdf372f7e0 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -79,7 +79,7 @@ void pci_configure_aspm_l1ss(struct pci_dev *pdev)
->  =09=09=09ERR_PTR(rc));
->  }
-> =20
-> -void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
-> +static void __pci_save_aspm_l1ss_state(struct pci_dev *pdev)
->  {
->  =09struct pci_cap_saved_state *save_state;
->  =09u16 l1ss =3D pdev->l1ss;
-> @@ -101,6 +101,24 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
->  =09pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
->  }
-> =20
-> +void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
-> +{
-> +=09struct pci_dev *parent;
-> +
-> +=09__pci_save_aspm_l1ss_state(pdev);
-> +
-> +=09/*
-> +=09 * To be symmetric on pci_restore_aspm_l1ss_state(), save parent's L1
-> +=09 * substate configuration, if the parent has not saved state.
-> +=09 */
-> +=09if (!pdev->bus || !pdev->bus->self)
-> +=09=09return;
-> +
-> +=09parent =3D pdev->bus->self;
-> +=09if (!parent->state_saved)
-> +=09=09__pci_save_aspm_l1ss_state(parent);
-> +}
+let (cb,cm,ca) = List.hd c in
+match List.rev cb with
+  c::_ when isdoc c ps ->
+    let pieces = String.split_on_char '@' c in
+    (match pieces with
+      _::tl ->
+	let d_names = List.map parse_doc tl in
+	(* check parameters *)
+	let p_names = List.map fst (params ps) in
+	if d_names <> [] && not(d_names = p_names)
+	then
+	  begin
+	    if List.sort compare d_names = List.sort compare p_names
+	    then Coccilib.print_main "out of order" p
+	    else if subset d_names p_names
+	    then Coccilib.print_main "doc is missing a parameter" p
+	    else if subset d_names p_names
+	    then Coccilib.print_main "doc has an extra parameter" p
+	  end
+    | _ -> ())
+| _ -> ()
+// </smpl>
 
-The code change looks good!
+---
 
---=20
- i.
-
---8323328-2081136472-1727693399=:938--
+ arch/arm/mach-omap2/prm2xxx_3xxx.c              |    1 -
+ arch/powerpc/platforms/ps3/interrupt.c          |    2 +-
+ arch/powerpc/platforms/ps3/repository.c         |    2 +-
+ drivers/base/firmware_loader/main.c             |    2 +-
+ drivers/comedi/drivers/comedi_8254.c            |    2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c          |    2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c        |    2 +-
+ drivers/gpu/drm/drm_gem_framebuffer_helper.c    |    3 +--
+ drivers/gpu/drm/drm_gpuvm.c                     |    2 +-
+ drivers/gpu/drm/radeon/radeon_ib.c              |    2 +-
+ drivers/iommu/iommu.c                           |    2 +-
+ drivers/leds/leds-gpio-register.c               |    2 +-
+ drivers/mfd/atmel-smc.c                         |    4 ++--
+ drivers/misc/mei/bus.c                          |    2 +-
+ drivers/mtd/ubi/eba.c                           |    2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c  |    2 +-
+ drivers/net/ethernet/intel/e1000/e1000_hw.c     |    2 +-
+ drivers/net/ethernet/intel/i40e/i40e_common.c   |    7 +++----
+ drivers/net/ethernet/intel/ice/ice_common.c     |    2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c |    2 +-
+ drivers/nvdimm/dimm_devs.c                      |    2 +-
+ drivers/pci/hotplug/pci_hotplug_core.c          |    2 +-
+ drivers/pinctrl/pinmux.c                        |    2 +-
+ drivers/slimbus/messaging.c                     |    2 +-
+ drivers/soc/qcom/qmi_interface.c                |    2 +-
+ drivers/soundwire/stream.c                      |    2 +-
+ drivers/usb/gadget/config.c                     |    4 ++--
+ fs/char_dev.c                                   |    2 +-
+ fs/dcache.c                                     |    4 ++--
+ fs/seq_file.c                                   |    2 +-
+ kernel/audit.c                                  |    2 +-
+ kernel/resource.c                               |    2 +-
+ kernel/sysctl.c                                 |    1 -
+ kernel/trace/ring_buffer.c                      |    2 +-
+ lib/lru_cache.c                                 |    2 +-
+ lib/maple_tree.c                                |    2 +-
+ mm/mmu_notifier.c                               |    2 +-
+ net/dccp/feat.c                                 |    2 +-
+ net/mac80211/mesh_hwmp.c                        |    6 +++---
+ net/mac80211/mesh_pathtbl.c                     |   10 +++++-----
+ net/socket.c                                    |    2 +-
+ net/sunrpc/xprt.c                               |    2 +-
+ net/tipc/link.c                                 |   14 +++++++-------
+ net/tipc/msg.c                                  |    2 +-
+ sound/pci/hda/hda_codec.c                       |    2 +-
+ 45 files changed, 60 insertions(+), 64 deletions(-)
 
