@@ -1,140 +1,164 @@
-Return-Path: <linux-pci+bounces-13649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4300D98A5AB
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 15:44:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B324A98A67A
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 16:00:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73B751F20EFA
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 13:44:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3726F1F245CE
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 14:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADEA418FDBE;
-	Mon, 30 Sep 2024 13:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717E21917D9;
+	Mon, 30 Sep 2024 13:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QkFcN88g"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TC23zq9t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mD2kZMYW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4E617CA04
-	for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 13:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784271917D6;
+	Mon, 30 Sep 2024 13:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727703869; cv=none; b=sXOfSFozBk7gldsF6ayWytQfuo+KzEwmRszCDHPPdvZfqoNN6ZLUrwCUPnLAY8Um9lZxg0obPbCXSByaDGzxljJT/sHdiMgO4qVDoQvg+5BWp7SUDxYjKP4r0D6CzuAsGpSgKA4FXdpre4ujorp5JBGcxdGlHWX5vnwd9mMbAvE=
+	t=1727704646; cv=none; b=ZOy9xbLMRFGbcnsUF4saOz99gXbaufBk43Edcs3hI00QrUb312m37+pPutZdtAylwN/II57nxaEKCPl6hF8Ji2/mTGUiwz6KLOPITTbu97I75+toEkxxmdmAXHcaSsYjmz0W77uHks8uZvUZRKdxRlZgUgjL0gTcfrSvD6719P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727703869; c=relaxed/simple;
-	bh=Y5H0HrrQ6IglONoTkai/fYV+fWIuc5rbHPbApliW5Jc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=luarLYhxAk/mAG3h9dhst9rUUmgXZXXxDxKlbdr3O11Qr6ZhPo77pZEv+w07CsR+oI7dtrFVFZREr35oDKAs2x/qfcZNe12uvEf13FXekca/aqwKiq0uNzBXX8HxBAVkHzK+oN0jDgYlec0Ke/b5QNVaDzmNu6B9GByymw0UkDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QkFcN88g; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7e6b738acd5so1716231a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 06:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727703867; x=1728308667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DILVMKpFA5VjsR+vvQY53oDn4fB7zBWA61cme3tLjoU=;
-        b=QkFcN88gSRrB65DN0b+E7RsF9pmQ0Tn4zlXbI7E8+mgznUpiYqe3Wcm0yLr05ydyYn
-         6HLwtnBtc5WZ7uzGFkL7QvegzuRNjWUKX9LRE/RCi9zcoTRnS7nONU7k8mr/xidvvpf9
-         fJJl7KhX0gduDoUwuy2mhu77VYwdtJoEtz8qzv8JWdaCstbkywhjc78DChaYvI8yS+1e
-         k9ZPY3JFGaSYiBfYVPE/DZd3pLDVtKDe3JYMgWrm0r1v3uMtdUT79MaTARy6oJff7OKL
-         UIBS2GfJSYGjIPi9KLmPvAzsqQx0CyHq+gVUBUR1W5A5fdaYpnpRJ0zYvqmEUL8F++b5
-         eK8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727703867; x=1728308667;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DILVMKpFA5VjsR+vvQY53oDn4fB7zBWA61cme3tLjoU=;
-        b=Ie/j5ZxQJn5ayS+aXLa6Xadl6JkYYvAoB1ZHmDPoRT0cKl+4ViBqa0hYqQVC+BExyB
-         Si2KBCwDWXKM48GvGreJ6GLJTSoPzBxbMyqdlG/N9IKK5elgDvQ8RtCb47G6vQSkki46
-         a1PSD1Yln2yDcQuw/xLSvMF3lv7g2xbqh2h7RdJl9gplGdaVeyhBy64JXolsjpUQGOO6
-         Ey0sDC9E8bUT6BXwGI8L7Gdn9rOJTqv3J/KmcGD7h2lDIXIpdmSZh1Ih8ymu5kc3ldAO
-         XFy3vCIbTRlaWUmqjGRjAdoouvXkdvEuNnpTgDe8T3o1lYRg36s9Js4Dj16SbAKA/Do+
-         Na/w==
-X-Forwarded-Encrypted: i=1; AJvYcCW96s1XXNViem0UIa+0TcVMbZeBgNMH/XRlX3Nip2+JHUW98SQe5KHFcqS6Vo8MUQLnegFINapL8Pg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8cLU41uYdWESDHSxk+gIFavigBtqI+LvlJPSmN14jJph8K3Wo
-	chJRyz7unEo25LFhOej1aai5mXPYbx05GGDHFQayNO4rHX7VGhFSjDiFquye4Q==
-X-Google-Smtp-Source: AGHT+IFF6pUHURVOksHtQIKlyUA/YLoNUWPw/ji+ioxk83gTs7yv5U2CiseMTE5gPA0f+REAwP04ig==
-X-Received: by 2002:a05:6a20:e607:b0:1d4:e66c:2a05 with SMTP id adf61e73a8af0-1d4fa686b1fmr17150721637.7.1727703867258;
-        Mon, 30 Sep 2024 06:44:27 -0700 (PDT)
-Received: from localhost.localdomain ([36.255.17.150])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71b265397d8sm6235674b3a.220.2024.09.30.06.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 06:44:26 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: lpieralisi@kernel.org,
-	kw@linux.com
-Cc: robh@kernel.org,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	quic_qianyu@quicinc.com,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: [PATCH] PCI: qcom: Enable MSI interrupts together with Link up if global IRQ is supported
-Date: Mon, 30 Sep 2024 19:14:09 +0530
-Message-Id: <20240930134409.168494-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1727704646; c=relaxed/simple;
+	bh=QCBFPxmVRNOK/b5sAejjKo7owEzuauLEMn65u4OcpX4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Gg4KXtlcKZeI+hLZF4R7rv0kjdQzkP8JoOGxQML0ygQwj63ATIy3uWinltiPo1rK01g0Ixh7YRC30ddaSPC/CPtoo4TqUnij7SLMokZLQAGu+YXPyUrufrUKdnYA3+s15qOx4UXk2vwCHP9YTPxu69L7YzCfZCAxG4zdhVVoq3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TC23zq9t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mD2kZMYW; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 7A1FF114018C;
+	Mon, 30 Sep 2024 09:57:22 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Mon, 30 Sep 2024 09:57:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1727704642;
+	 x=1727791042; bh=NSoee6bnuXvKPKgroQdbhisM+ZgHsKn6G++bqEuUpII=; b=
+	TC23zq9tLXqdZxR06X0WFKYbIy2lR3mJat6QcJZ/MAajqfZXHGuGxe+c1XWI3Pu1
+	tpq+3VPIKbc0BeTM2Ushzya6wy+U8i83bQyMrAoXxM4lozwEzrJWHz1hC0EqunmU
+	qhJVtHiUBJ5dyXvVbC6ZWcIFqklYqDLiJpQ16FExILkQCJw9/3hfkac6ZP/4iORZ
+	cZHT5o6G2fXc8kbnqFIIligMGofkv6iGsmcn7IjSgKZm9UpsRr1G3K90jCo4tGhZ
+	NhZdVke7Xk1WZAKhwU84PKgdWYq7qdm7tc+fRhqJh+wPiTbZzd549kR/z/t6L0Hd
+	0nfVU3YUYhzgXg7RDlYYIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727704642; x=
+	1727791042; bh=NSoee6bnuXvKPKgroQdbhisM+ZgHsKn6G++bqEuUpII=; b=m
+	D2kZMYWXZfVGZrOtcv0kDYhn/14fNJ1OzgERlC6nRndDe9BvQdiVsUUGwvQp8i7e
+	KYyRO72YwSJg/8ATl8ra+wzKT505zW1OhQzB9YCPvTWjgUjGdJ33qukTCetPr8Ct
+	zghv9YOXom6UbyH6qhQqEbKJ/tDLjcWXACsmiiHraQ3rXTrvZTAgNCKVF6hmDMud
+	Hrt/xrbwfv4lvttGRW0CZNE+k6tsniYFoZsAe/rKtDVxNx+fnpzNzlxYU6i7YUYz
+	bUh5if0Af19I5z4K41neztAQvG4ch0weCUiyI3W2y+DAPCv30rqU0QDQtqNdAvmC
+	3APCmfz6A5F7bAIy6HlFw==
+X-ME-Sender: <xms:Qq76ZtcMD1VHOm_5tgmyNUUJTYiHejXNafbh_6vC9t2ZZPAVgClcKA>
+    <xme:Qq76ZrO9G01KMxPz2hziRapL4rOTnD3sOKY220otwJf3AMTZM2VdN3ksRbbJdKVjP
+    c8pXNeRnbUDTvnjxyM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduhedgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeek
+    keelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghr
+    nhgusgdruggvpdhnsggprhgtphhtthhopeefvddpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepuggvrhgvkhdrkhhivghrnhgrnhesrghmugdrtghomhdprhgtphhtthhopegu
+    rhgrghgrnhdrtghvvghtihgtsegrmhgurdgtohhmpdhrtghpthhtohephhgvrhhvvgdrtg
+    houghinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghs
+    ohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgrii
+    iiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghm
+    lhhofhhtrdhnvghtpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrg
+    hilhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhr
+    tghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:Qq76ZmjvotPzzy6o4IjTfEWR1Ae1ZZZZ6nNQSKX7qnPLT0IG38l1SA>
+    <xmx:Qq76Zm_LOqj4ciNOWbaMWYb-D0OvO5_n4Ih7TGFh2jhHae1ThBZXCg>
+    <xmx:Qq76ZpscZnyHVWm5vJL_KaNhoZQUCYXtiIgim11BL25IToQMXpkyzQ>
+    <xmx:Qq76ZlEM-P5HUNSqZ7juqxINfjRi5uysuuE6F8FlFVFYe6WkE5UoGA>
+    <xmx:Qq76ZnpXwJQdtwlwl7OqZcRUBrXUnWJ1ApxdtT2tFL4K14X2Po1AFe7b>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DE1282220071; Mon, 30 Sep 2024 09:57:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Mon, 30 Sep 2024 13:57:01 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Herve Codina" <herve.codina@bootlin.com>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+ "Simon Horman" <horms@kernel.org>, "Lee Jones" <lee@kernel.org>,
+ "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+ "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Lars Povlsen" <lars.povlsen@microchip.com>,
+ "Steen Hegelund" <Steen.Hegelund@microchip.com>,
+ "Daniel Machon" <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Horatiu Vultur" <horatiu.vultur@microchip.com>,
+ "Andrew Lunn" <andrew@lunn.ch>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Allan Nielsen" <allan.nielsen@microchip.com>,
+ "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
+Message-Id: <d244471d-b85e-49e8-8359-60356024ce8a@app.fastmail.com>
+In-Reply-To: <20240930121601.172216-3-herve.codina@bootlin.com>
+References: <20240930121601.172216-1-herve.codina@bootlin.com>
+ <20240930121601.172216-3-herve.codina@bootlin.com>
+Subject: Re: [PATCH v6 2/7] reset: mchp: sparx5: Use the second reg item when
+ cpu-syscon is not present
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Currently, if global IRQ is supported by the platform, only the Link up
-interrupt is enabled in the PARF_INT_ALL_MASK register. But on some Qcom
-platforms like SM8250, and X1E80100, MSIs are getting masked due to this.
-They require enabling the MSI interrupt bits in the register to unmask
-(enable) the MSIs.
+On Mon, Sep 30, 2024, at 12:15, Herve Codina wrote:
+> In the LAN966x PCI device use case, syscon cannot be used as syscon
+> devices do not support removal [1]. A syscon device is a core "system"
+> device and not a device available in some addon boards and so, it is not
+> supposed to be removed.
+>
+> In order to remove the syscon usage, use a local mapping of a reg
+> address range when cpu-syscon is not present.
+>
+> Link: https://lore.kernel.org/all/20240923100741.11277439@bootlin.com/ [1]
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
 
-Even though the MSI interrupt enable bits in PARF_INT_ALL_MASK are
-described as 'diagnostic' interrupts in the internal documentation,
-disabling them masks MSI on these platforms. Due to this, MSIs were not
-reported to be received these platforms while supporting global IRQ.
+>>  	err = mchp_sparx5_map_syscon(pdev, "cpu-syscon", &ctx->cpu_ctrl);
+> -	if (err)
+> +	switch (err) {
+> +	case 0:
+> +		break;
+> +	case -ENODEV:
 
-So enable the MSI interrupts along with the Link up interrupt in the
-PARF_INT_ALL_MASK register if global IRQ is supported. This ensures that
-the MSIs continue to work and also the driver is able to catch the Link
-up interrupt for enumerating endpoint devices.
+I was expecting a patch that would read the phandle and map the
+syscon node to keep the behavior unchanged, but I guess this one
+works as well.
 
-Fixes: 4581403f6792 ("PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt")
-Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-Closes: https://lore.kernel.org/linux-pci/9a692c98-eb0a-4d86-b642-ea655981ff53@kernel.org/
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The downside of your approach is that it requires an different
+DT binding, which only works as long as there are no other
+users of the syscon registers.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index ef44a82be058..2b33d03ed054 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -133,6 +133,7 @@
- 
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
- #define PARF_INT_ALL_LINK_UP			BIT(13)
-+#define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
- 
- /* PARF_NO_SNOOP_OVERIDE register fields */
- #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-@@ -1716,7 +1717,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 			goto err_host_deinit;
- 		}
- 
--		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
-+		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
-+			       pcie->parf + PARF_INT_ALL_MASK);
- 	}
- 
- 	qcom_pcie_icc_opp_update(pcie);
--- 
-2.25.1
-
+     Arnd
 
