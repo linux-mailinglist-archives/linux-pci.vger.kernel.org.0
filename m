@@ -1,162 +1,243 @@
-Return-Path: <linux-pci+bounces-13685-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13686-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7580E98BDDF
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 15:35:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DF4098BFC1
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 16:22:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EFA2C284E84
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 13:35:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38B48280049
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 14:22:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F9C1C3F3E;
-	Tue,  1 Oct 2024 13:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6046A1C7B71;
+	Tue,  1 Oct 2024 14:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjZ4AFUQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+gly9Oq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A057D1BFE02
-	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 13:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A301C7B76
+	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 14:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727789730; cv=none; b=c8sjwM8S0Hv76tF3dQMpxSSo8rpSaeBz6/ou/mSoneSq84TOQIRiw69JoiYgIaouUpvQ+Qe0I8TAf+PH1KWgw3VWSMyWQDX2LX6rcEIIJVuTOHq4EtlmMzbTKsmY40eNAQCpK2N19t55XqPcg0/z0EPmFoNqoJVnPe8lvEM9Va4=
+	t=1727792423; cv=none; b=LpkhQ3zmtq/Y4lSf4fIH57FkNqOP5pB/BZhz8tqWeEyXobzGtQ7zXmWrdW9Kp2LtvWLrHNuWLarAtVsrwOltkPbXBVwfp07LcH08nd0/PUrZxGeKseD2/2gh+3XC4/9SwCrfilXaW+2Exn7sGfOVcgkH9MgywwWJV98DEXITc5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727789730; c=relaxed/simple;
-	bh=FK/qxSXFYWKosQk0lYk1fxKQ9FBzfdLOLv4ik6/Y7Ws=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=njOmKEt9Cc9be7l0uqDaflnhllO5gmMCvzdaVsudZDYcvS8XwAck2j6q6hViTGNnC8VqZoXHWwCU5SaBNCnOzo4NTZxRdVALKLmeDjJnuQvoVBgJlu09YFW4OYk4PTrsbBmmWpBBqcFurebarCTmVeNMHjMZ/Y6/VEjdB2yM5d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gjZ4AFUQ; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e2261adfdeso81446547b3.2
-        for <linux-pci@vger.kernel.org>; Tue, 01 Oct 2024 06:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727789727; x=1728394527; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ANq+ECA+IvHgfg6kZ4ZUsRIsZPn8tej582mOso2TjVw=;
-        b=gjZ4AFUQgaq8sigWrY4haamIKMU19TRjjcbYsh7kQddXv1qPjZ7mo0L8qngA2Q0j7W
-         sAZtYpIjkPZ7HdDilqNFxiGvyiFTjWzCD+35j3PHSd5bHrSWJpEqKOm3+ARSPYb/RDvT
-         eVCliL1i67yyMrGpKlK6bw/BR9lEDtSPTqkN0bYB4h+HE2wX47teQA5WyUPXT1YHMQOD
-         5chOftUeHN1tgGH4x8o+fmknRy4IIgJ2nm/V3dyVV9lyjDnD2QAsOda+txqJ6jxtPg7L
-         MZphVDFIH810/orQnA7rCB0K7eBmyf2Zdeb/sTMsuUC111KYLZUb98AphfBUd7dJ4Dwv
-         H8gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727789727; x=1728394527;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ANq+ECA+IvHgfg6kZ4ZUsRIsZPn8tej582mOso2TjVw=;
-        b=YqzIE0DpCZqEVPPtzYJQK65cWMmoyU/Ifl9fKH9SPIivttdM/roRcsKKuHRz20g9ya
-         p+SevPoiMK139iQPTgvMyvuXOIuiDvRxMiY4PvgrLkAP1NzaSzfPLjGDZvOpP2uP0yMF
-         C43nJ3+nbBas07nOxiVBXkkCo19LJVkFH8/aBS1nFyFnN/OkXKpkwfkFyKCtWPLRur+b
-         VXLV0fHwnXzMvYRju465B/KTcidbKHCepZFKEzju4K9TNyu8YiOkKCeoF4WW/qRsasv0
-         gDDo6K/kTFS93Iz4vtngUOVPftA6QtcadfJs6GuZbJLRvnhGw37SrU7bjOO0QGI2zQFv
-         a11g==
-X-Gm-Message-State: AOJu0YxmVr45fqxqBbGwYrU6+RddoeGmc8UNUxMJP7Mp3ZkSLUi/YCcv
-	9dNyr62w9r2rJEFNst/Wj2PctNh7rAt5fT72esSMf5YwXBO2+XMeDneVJOzRdEmKrRxXZ6q3OWt
-	V1t/TopvYzM7No6kInR8Hgg==
-X-Google-Smtp-Source: AGHT+IFSKycEdIDMTFqMuEM2dGdxN7sbM+Y2EWdRRETRWWmtMWi1kkO+1rjs2DvIecOjdUS6Z6aaRsQ/aHj2M94zcA==
-X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a05:690c:3708:b0:6db:afa4:75d3 with
- SMTP id 00721157ae682-6e2475a7f21mr5766997b3.3.1727789727554; Tue, 01 Oct
- 2024 06:35:27 -0700 (PDT)
-Date: Tue,  1 Oct 2024 19:05:18 +0530
+	s=arc-20240116; t=1727792423; c=relaxed/simple;
+	bh=K1JQUj7u78a74eQ5EQ9rtEFURE0/toi0yWfpYDQ0++c=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=E+Ws1kgka+Edr4LIo/dUL8EAS9/8PMk5fjHiKenH2ppeLUL1V1t4MdXPkV9ue4EQJNxZ8M9FMDqtwzv+GWEvkgFTG95IK28sKphJa54VE+q0PvbJ061w1buD07W/PXlUbKVX+5l+y9JKdwUtKCxc21x1/aErhf6SYg5QViC/lvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+gly9Oq; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727792421; x=1759328421;
+  h=date:from:to:cc:subject:message-id;
+  bh=K1JQUj7u78a74eQ5EQ9rtEFURE0/toi0yWfpYDQ0++c=;
+  b=G+gly9Oq+0Ub568v6wGLErDHYyAoA3FCr5KCiVjvz5p188QljBK+4Vzc
+   w2flq6yN+3JBF8+5/jXEJ3m4EzZfdxV4pcanjsj3KLQnJ5U7ucy/IMt1/
+   VluVKFwjJydxQ+tNA59NZUn3z+T8N8AqtWFCdy3TVoaf1w5++ayD7tv8k
+   rGsVEYWUrfmRv9ZQa9m/8LP4dMYGZLLFuF2UDIiWO7Vc45xushyxjXk8n
+   w7ElrQTz8HtRWMSacW/fVRpdgvKhDkzU0MJETmtXKUrIAjf2OKy7y/NrR
+   cDo+tznruKzIjcOGS/6O/stb23XQB5EybYgfOPVQClmpKTDABXaA9iQ+3
+   Q==;
+X-CSE-ConnectionGUID: +yOp4GPcSqWkGoDhLRwPkQ==
+X-CSE-MsgGUID: l7m7UMfPTBGrc6BuITtisA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="37524195"
+X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
+   d="scan'208";a="37524195"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 07:20:20 -0700
+X-CSE-ConnectionGUID: Jay5gpn3TNypO38puKyPxw==
+X-CSE-MsgGUID: MG1mriDDTbqM8EiISI4m8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
+   d="scan'208";a="77725235"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 01 Oct 2024 07:20:20 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1svdjd-000Qlp-2V;
+	Tue, 01 Oct 2024 14:20:17 +0000
+Date: Tue, 01 Oct 2024 22:19:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ 43ee11adcb940204948ac0ca3a05d6178f0e8b08
+Message-ID: <202410012243.qhO8jsFq-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Message-ID: <20241001133519.2743673-1-ajayagarwal@google.com>
-Subject: [PATCH] PCI/ASPM: Disable L1 before disabling L1ss
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: "=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, 
-	"David E. Box" <david.e.box@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Vidya Sagar <vidyas@nvidia.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-The current sequence in the driver for L1ss update is as follows.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: 43ee11adcb940204948ac0ca3a05d6178f0e8b08  PCI: hotplug: Remove "Returns" kerneldoc from void functions
 
-Disable L1ss
-Disable L1
-Enable L1ss as required
-Enable L1 if required
+elapsed time: 1229m
 
-PCIe spec r6.2, section 5.5.4, recommends that setting either
-or both of the enable bits for ASPM L1 PM Substates must be done
-while ASPM L1 is disabled. My interpretation here is that
-clearing L1ss should also be done when L1 is disabled. Thereby,
-change the sequence as follows.
+configs tested: 150
+configs skipped: 3
 
-Disable L1
-Disable L1ss
-Enable L1ss as required
-Enable L1 if required
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
----
- drivers/pci/pcie/aspm.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+tested configs:
+alpha                             allnoconfig    gcc-13.3.0
+alpha                            allyesconfig    clang-20
+alpha                            allyesconfig    gcc-13.3.0
+alpha                               defconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              alldefconfig    clang-20
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    clang-20
+arc                          axs103_defconfig    gcc-14.1.0
+arc                                 defconfig    gcc-14.1.0
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    clang-20
+arm                              allyesconfig    clang-20
+arm                          collie_defconfig    gcc-14.1.0
+arm                     davinci_all_defconfig    gcc-14.1.0
+arm                                 defconfig    gcc-14.1.0
+arm                         lpc18xx_defconfig    gcc-14.1.0
+arm                       omap2plus_defconfig    clang-20
+arm                       versatile_defconfig    gcc-14.1.0
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             allmodconfig    clang-18
+i386                              allnoconfig    clang-18
+i386                             allyesconfig    clang-18
+i386        buildonly-randconfig-001-20241001    clang-18
+i386        buildonly-randconfig-002-20241001    clang-18
+i386        buildonly-randconfig-002-20241001    gcc-12
+i386        buildonly-randconfig-003-20241001    clang-18
+i386        buildonly-randconfig-004-20241001    clang-18
+i386        buildonly-randconfig-004-20241001    gcc-12
+i386        buildonly-randconfig-005-20241001    clang-18
+i386        buildonly-randconfig-006-20241001    clang-18
+i386        buildonly-randconfig-006-20241001    gcc-12
+i386                                defconfig    clang-18
+i386                  randconfig-001-20241001    clang-18
+i386                  randconfig-001-20241001    gcc-12
+i386                  randconfig-002-20241001    clang-18
+i386                  randconfig-003-20241001    clang-18
+i386                  randconfig-004-20241001    clang-18
+i386                  randconfig-004-20241001    gcc-12
+i386                  randconfig-005-20241001    clang-18
+i386                  randconfig-006-20241001    clang-18
+i386                  randconfig-011-20241001    clang-18
+i386                  randconfig-011-20241001    gcc-12
+i386                  randconfig-012-20241001    clang-18
+i386                  randconfig-012-20241001    gcc-12
+i386                  randconfig-013-20241001    clang-18
+i386                  randconfig-013-20241001    gcc-12
+i386                  randconfig-014-20241001    clang-18
+i386                  randconfig-014-20241001    gcc-11
+i386                  randconfig-015-20241001    clang-18
+i386                  randconfig-015-20241001    gcc-12
+i386                  randconfig-016-20241001    clang-18
+i386                  randconfig-016-20241001    gcc-12
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                                defconfig    gcc-14.1.0
+m68k                       m5475evb_defconfig    clang-20
+m68k                        mvme147_defconfig    clang-20
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                         cobalt_defconfig    clang-20
+mips                         db1xxx_defconfig    gcc-14.1.0
+mips                 decstation_r4k_defconfig    clang-20
+mips                           ip30_defconfig    clang-20
+mips                      loongson3_defconfig    clang-20
+mips                        qi_lb60_defconfig    clang-20
+mips                          rb532_defconfig    clang-20
+mips                           rs90_defconfig    gcc-14.1.0
+mips                   sb1250_swarm_defconfig    clang-20
+nios2                         3c120_defconfig    clang-20
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                          allnoconfig    gcc-14.1.0
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+openrisc                  or1klitex_defconfig    gcc-14.1.0
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                            allnoconfig    gcc-14.1.0
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                           allnoconfig    gcc-14.1.0
+powerpc                          allyesconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                 canyonlands_defconfig    gcc-14.1.0
+powerpc                        cell_defconfig    gcc-14.1.0
+powerpc                        fsp2_defconfig    gcc-14.1.0
+powerpc               mpc834x_itxgp_defconfig    gcc-14.1.0
+powerpc                         wii_defconfig    gcc-14.1.0
+riscv                            allmodconfig    clang-20
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                             allnoconfig    gcc-14.1.0
+riscv                            allyesconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    clang-20
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               alldefconfig    gcc-14.1.0
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                ecovec24-romimage_defconfig    gcc-14.1.0
+sh                            hp6xx_defconfig    clang-20
+sh                            migor_defconfig    clang-20
+sh                          rsk7201_defconfig    clang-20
+sh                            titan_defconfig    gcc-14.1.0
+sh                              ul2_defconfig    gcc-14.1.0
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-17
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64                              defconfig    clang-18
+x86_64                                  kexec    clang-18
+x86_64                                  kexec    gcc-12
+x86_64                               rhel-8.3    gcc-12
+x86_64                          rhel-8.3-rust    clang-18
+xtensa                            allnoconfig    gcc-14.1.0
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index cee2365e54b8..d37f66f9e9c8 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -848,16 +848,14 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- /* Configure the ASPM L1 substates */
- static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- {
--	u32 val, enable_req;
-+	u32 val;
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
- 
--	enable_req = (link->aspm_enabled ^ state) & state;
--
- 	/*
- 	 * Here are the rules specified in the PCIe spec for enabling L1SS:
- 	 * - When enabling L1.x, enable bit at parent first, then at child
- 	 * - When disabling L1.x, disable bit at child first, then at parent
--	 * - When enabling ASPM L1.x, need to disable L1
-+	 * - When enabling/disabling ASPM L1.x, need to disable L1
- 	 *   (at child followed by parent).
- 	 * - The ASPM/PCIPM L1.2 must be disabled while programming timing
- 	 *   parameters
-@@ -866,21 +864,17 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 	 * what is needed.
- 	 */
- 
-+	/* Disable L1, and it gets enabled later in pcie_config_aspm_link() */
-+	pcie_capability_clear_word(child, PCI_EXP_LNKCTL,
-+				   PCI_EXP_LNKCTL_ASPM_L1);
-+	pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
-+				   PCI_EXP_LNKCTL_ASPM_L1);
-+
- 	/* Disable all L1 substates */
- 	pci_clear_and_set_config_dword(child, child->l1ss + PCI_L1SS_CTL1,
- 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
- 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
- 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
--	/*
--	 * If needed, disable L1, and it gets enabled later
--	 * in pcie_config_aspm_link().
--	 */
--	if (enable_req & (PCIE_LINK_STATE_L1_1 | PCIE_LINK_STATE_L1_2)) {
--		pcie_capability_clear_word(child, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPM_L1);
--		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPM_L1);
--	}
- 
- 	val = 0;
- 	if (state & PCIE_LINK_STATE_L1_1)
--- 
-2.46.1.824.gd892dcdcdd-goog
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
