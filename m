@@ -1,55 +1,84 @@
-Return-Path: <linux-pci+bounces-13668-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13669-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C959598AD3E
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 21:50:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C28598B2EC
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 06:21:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60813B23153
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Sep 2024 19:50:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FF311C22BC5
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 04:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2A1D199234;
-	Mon, 30 Sep 2024 19:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC2441B0119;
+	Tue,  1 Oct 2024 04:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBKzLd1J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edQTh1YM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C92014F9D9
-	for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 19:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74701B3F17
+	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 04:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727725811; cv=none; b=BJO5BfW5TEgaSAdoPry7uuxj/49DsWUOufF3ADfRLaf7CdZZ9cyOC57MgwHOI8yeb2zBQaEZXpSp/EFLQ0/YTIGFSCv+QLkQm8t40FJqKIEj/EpcQUps10RevLDwfu8IeYMEYXPKkNLdyWhwllrBWlE8qchZghGP3likAPckNfE=
+	t=1727756464; cv=none; b=JlpQJu8sc+Bt39QvxZdlmzcfJNT0la57z0iiEEyrrs3a/g/M+I6Ndpq5yH1FD2J4pgv85C3mgdjKxUT5zigSQq8XvHNfEiBbgVKMsgAL/PZSprvNWBcx2XtkQaj5/vWDodSCoQ2ACz0ZBZ6d+NY6SPTzsdTqtlSYsmocf8E9/XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727725811; c=relaxed/simple;
-	bh=9SA453tPLrQRjXTURT3F9tHPTSbY1zUIImzF4+TO3uA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gWJZGdiwcIrBtmTlwVOzMTTYfs8CkszBblLTLGQ71pBrXTBznF4t9MJvpXXWnUZe1YXVzXeZKsgRDSJTGOnVTlxsN3MBxa7pGDbdTMMhDNV5z4GOow+NWApPonUeRnVAdrs9Km8/qjuAaIDl+sirzQ2RooLt7zCHP3rlEPeTBXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBKzLd1J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E285BC4CEC7;
-	Mon, 30 Sep 2024 19:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727725811;
-	bh=9SA453tPLrQRjXTURT3F9tHPTSbY1zUIImzF4+TO3uA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=JBKzLd1JCuhkntJtb/uwV/yuzRABss8YWOzCSKbxtkkxbYCB9C5MaGA9lgb4RQv7Z
-	 7Bcr/syxyZ/qp+uSwL1cYyINHa+krJWGKN3QEGrtxng7P3tGi8nBUDgzfs2C3ZubGY
-	 V9KJ7fCkNHypLJJjU63lu+nhz+CpACrXA0cF0zpyvMdiW9BBUy1YlVlbUMdz1LDbPR
-	 YophY4BVkdfypHJJZybuLkvLl++gvMeCCo5vnh8+ss4rOlfyZ8p6rHzs7LJ2CqShDu
-	 wN98I29E/lj9+ioU+8+jxfLTpFS5M0zl9MtE/WILWjHwru43/g83wh2sARloglpT7K
-	 iILeg3CdpAllg==
-Date: Mon, 30 Sep 2024 14:50:09 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: intel-gfx@lists.freedesktop.org, Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/6] PCI/PM: Respect pci_dev->skip_bus_pm in the
- .poweroff() path
-Message-ID: <20240930195009.GA188032@bhelgaas>
+	s=arc-20240116; t=1727756464; c=relaxed/simple;
+	bh=2vHVnH/4a+TI9m7+h+0WNgqxTEdog8ZD2UBhQAmgP4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnJJ47smnia6gZZKxSLDEkQVNjQziN9Ixqhcp7e7KMNQzqMdLqWEH7VPHl4+OFf3RH60Sc+vacHnSdFpk7bjfXp9ancrlhQO79Sd8htovT45ciGYadElJw0iQWFG5XwsuLMgrXbOl7NxG7ekhKkiskFIuDjw0vURcERuLxaeFj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=edQTh1YM; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7d50e865b7aso3941771a12.0
+        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 21:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727756461; x=1728361261; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=icoY3qoHkJebuDnNC7tmCQDTScbY4VF90NsdASl0kCo=;
+        b=edQTh1YMq1tDMhrYR7c3L25kn9/5bFcT0dXamDYHm/u06Qe7LPes3bI2kvOvpZt1Pt
+         hS6c6k/DaQtoVmzEbybbbGCxiJOoJ5K7P9cnufBtoXIEZUR3lAfQnymMJTWumRqzve2P
+         UlzeWkN9Db13WdfVMIcw4vELHmxkI9tmdarjh+xqKoFSKBzf3esEW2BrL8GX5ToqbQ7R
+         onTgOZlulYNeWwtkYXeaf8N/lrCDh72RVKYFO5U1bcDUAHnFUVr2ugvpmaXvygmDzkpg
+         ui98LC8eFWf/pvMaIKnqYlse8dXquStPTg5xa36R/7Xf8pxga18HtePbyNiRHf3+8faJ
+         8bYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727756461; x=1728361261;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=icoY3qoHkJebuDnNC7tmCQDTScbY4VF90NsdASl0kCo=;
+        b=jjxDSK25WPiSH+nD4A0IQHA/YJMEBZBSO5X8cX9xO0drlIoFlQY5TQRIOuXYl5mml1
+         qMzzfg0jCHVQ94zsl/5B9fubxtmK6MtitAcQ0UAZNOK+ZEovUcnBa2xBvDOZCn+DiUmm
+         evhuNspdg1gzV5xLoJHGZLF6jyNiw+6MVvoUfsZ6P1tmdv72Ay/pGH7ekJHpUPH2U+ZV
+         hqFgUXvf/mbhsahZyOeYwdxxNRnNwKQgmX+tyqu6/HbsSIGnQQgrscn0BXiMYXb0WuZQ
+         j83Ht9qiH2H54L1uVrTuMIck8zgfyJsN17xAC1t3GdGjJfmbpJIBl6ZAyUmPG3aUBZMR
+         92nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyQAA9UtYmRWugZqW218KrgsKtPtQNabOkBo0eheLa83MxICuRhY2iLxdRfx9FVcSdPbXj5w/5fKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/zW67+NbczhFFsAHu1h30u26u6ZrY/BymZ7a34q4NsYdxnEIH
+	Wvj2HvRIqm5a1DXWfkvX5SE3i8Kvo5U4XYhxIoBzFCRaW1mZtjo8jyyC7dPBCQ==
+X-Google-Smtp-Source: AGHT+IGkODG87Nrx6whSCqQEnsxe02WoLf8cq/2tdiwWSa7nfwMsiRNiYuTbQPvVnCH9JZuf5OUInQ==
+X-Received: by 2002:a17:90a:db56:b0:2d8:a344:900d with SMTP id 98e67ed59e1d1-2e0b89dffbemr16116715a91.12.1727756461219;
+        Mon, 30 Sep 2024 21:21:01 -0700 (PDT)
+Received: from thinkpad ([36.255.17.150])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20b37e0fdafsm61579625ad.148.2024.09.30.21.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2024 21:21:00 -0700 (PDT)
+Date: Tue, 1 Oct 2024 09:50:55 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	quic_qianyu@quicinc.com, Konrad Dybcio <konradybcio@kernel.org>
+Subject: Re: [PATCH] PCI: qcom: Enable MSI interrupts together with Link up
+ if global IRQ is supported
+Message-ID: <20241001042055.ivf4zspq4fqmaxth@thinkpad>
+References: <20240930134409.168494-1-manivannan.sadhasivam@linaro.org>
+ <20240930171101.GA180132@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,60 +88,94 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZvWFxLZwRWL3DCeX@intel.com>
+In-Reply-To: <20240930171101.GA180132@bhelgaas>
 
-On Thu, Sep 26, 2024 at 07:03:16PM +0300, Ville Syrjälä wrote:
-> On Wed, Sep 25, 2024 at 02:28:42PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Sep 25, 2024 at 05:45:21PM +0300, Ville Syrjala wrote:
-> > > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > > 
-> > > On some older laptops i915 needs to leave the GPU in
-> > > D0 when hibernating the system, or else the BIOS
-> > > hangs somewhere. Currently that is achieved by calling
-> > > pci_save_state() ahead of time, which then skips the
-> > > whole pci_prepare_to_sleep() stuff.
-
-> > If there's a general requirement to leave all devices in D0 when
-> > hibernating, it would be nice to have have some documentation like an
-> > ACPI spec reference.
+On Mon, Sep 30, 2024 at 12:11:01PM -0500, Bjorn Helgaas wrote:
+> On Mon, Sep 30, 2024 at 07:14:09PM +0530, Manivannan Sadhasivam wrote:
+> > Currently, if global IRQ is supported by the platform, only the Link up
+> > interrupt is enabled in the PARF_INT_ALL_MASK register. But on some Qcom
+> > platforms like SM8250, and X1E80100, MSIs are getting masked due to this.
+> > They require enabling the MSI interrupt bits in the register to unmask
+> > (enable) the MSIs.
 > 
-> No, IIRC the ACPI spec even says that you must (or at least
-> should) put devices into D3. But the buggy BIOS on some old
-> laptops keels over when you do that. Hence we need this quirk.
-
-Can we include a reference to this part of the ACPI spec and some
-details on which laptops have this issue?
-
-I'm a little bit wary of changing the PCI core in a generic-looking
-way on the basis of some unspecified buggy old BIOS.  That feels like
-something we're likely to break in the future.
-
-> > Or if this is some i915-specific thing, maybe a pointer to history
-> > like a lore or bugzilla reference.
+> "global IRQ" is a very generic name.  If that's the official name, it
+> should at least be capitalized, e.g., "Global IRQ", to show that it is
+> a proper noun that refers to a specific IRQ.
 > 
-> The two relevant commits I can find are:
+
+Sure.
+
+> > Even though the MSI interrupt enable bits in PARF_INT_ALL_MASK are
+> > described as 'diagnostic' interrupts in the internal documentation,
+> > disabling them masks MSI on these platforms. Due to this,
 > 
-> commit 54875571bbfd ("drm/i915: apply the PCI_D0/D3 hibernation
-> workaround everywhere on pre GEN6")
-> commit ab3be73fa7b4 ("drm/i915: gen4: work around hang during
-> hibernation")
-
-Thanks, this feels like important history to include somewhere.
-
-> > IIUC this is a cleanup that doesn't fix any known problem?  The
-> > overall diffstat doesn't make it look like a simplification, although
-> > it might certainly be cleaner somehow:
+> > MSIs were not
+> > reported to be received these platforms while supporting global IRQ.
 > 
-> My main concern is that using pci_save_state() might cause the pci
-> code to deviate from the normal path in more ways than just skipping
-> the D0->D3 transition. And then we might end up constantly chasing
-> after driver/pci changes in order to match its behaviour.
+> I'm trying to parse "while supporting global IRQ."  We basically
+> support global IRQ by installing qcom_pcie_global_irq_thread(), but of
+> course the device doesn't see that, so I assume it would be more
+> informative to say that MSIs are masked by some register setting.
 > 
-> Not to mention that having the pci_save_state() in the driver code
-> is clearly confusing a bunch of our developers.
 
-I'm all in favor of removing pci_save_state() from drivers when
-possible.  I take it that this doesn't fix a functional issue.
+Hmm, this is what I mentioned in the above paragraph referencing
+PARF_INT_ALL_MASK register. Is that not clear enough?
 
-Bjorn
+> The patch suggests that MSIs are masked internally unless
+> PARF_INT_MSI_DEV_0_7 is set in PARF_INT_ALL_MASK.
+> 
+> Are you saying that prior to 4581403f6792, MSIs did work?  Does that
+> mean PARF_INT_MSI_DEV_0_7 was set by a bootloader or something, so
+> MSIs worked?  And then 4581403f6792 came along and implicitly cleared
+> PARF_INT_MSI_DEV_0_7, so MSIs were then masked?
+> 
+
+Yeah. Those bits were enabled by default in hardware, but since they were
+mentioned as 'diagnostic interrupts' in documentation, commit 4581403f6792
+intentionally disabled them. But that results in MSIs getting masked in
+*some* platforms.
+
+- Mani
+
+> > So enable the MSI interrupts along with the Link up interrupt in the
+> > PARF_INT_ALL_MASK register if global IRQ is supported. This ensures that
+> > the MSIs continue to work and also the driver is able to catch the Link
+> > up interrupt for enumerating endpoint devices.
+> > 
+> > Fixes: 4581403f6792 ("PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt")
+> > Reported-by: Konrad Dybcio <konradybcio@kernel.org>
+> > Closes: https://lore.kernel.org/linux-pci/9a692c98-eb0a-4d86-b642-ea655981ff53@kernel.org/
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index ef44a82be058..2b33d03ed054 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -133,6 +133,7 @@
+> >  
+> >  /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
+> >  #define PARF_INT_ALL_LINK_UP			BIT(13)
+> > +#define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
+> >  
+> >  /* PARF_NO_SNOOP_OVERIDE register fields */
+> >  #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
+> > @@ -1716,7 +1717,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >  			goto err_host_deinit;
+> >  		}
+> >  
+> > -		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
+> > +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
+> > +			       pcie->parf + PARF_INT_ALL_MASK);
+> >  	}
+> >  
+> >  	qcom_pcie_icc_opp_update(pcie);
+> > -- 
+> > 2.25.1
+> > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
