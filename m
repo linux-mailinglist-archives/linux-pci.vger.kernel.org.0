@@ -1,174 +1,139 @@
-Return-Path: <linux-pci+bounces-13670-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13671-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E85BA98B4BB
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 08:43:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3465F98B709
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 10:35:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54625B23A80
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 06:43:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D618D1F2133E
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 08:35:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4F31BC084;
-	Tue,  1 Oct 2024 06:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EC8219ABCB;
+	Tue,  1 Oct 2024 08:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvD/970v"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="AprasQOE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D52A1BC070;
-	Tue,  1 Oct 2024 06:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C28A199FD7
+	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 08:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727765008; cv=none; b=f6S1N/WSa/CzY9dl98Z7MUkbBJpfl+Iyik/boYpuCCm20OBmD48j+rpmNJb5Es3gd4DlTpwJECbHgw6KQbrWaeorieMhvDPdJwFs7Fv57lXSVKKFq3DrDf0K9qNycmCjttFc8bT+n4+4HkrcXWT/4ijoS7xssq0E/BoDiS5WXMo=
+	t=1727771716; cv=none; b=HLv0O7IlxXSxCCJFJ/asH0WQatQL/YgqS7p1dhjxg/p/ekGKWSvbEAzq80H1B+OgBIWWZWMaBk15UvIGR/3FTX7nEoELHUt4FiezxPm5+N1OzWhDaCLmRBAudTj91edRYWGY9W0d0J3zB73ActwZW4//8tJUcc0Ph/F3YwBKlz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727765008; c=relaxed/simple;
-	bh=Eqh7CxsxMbg7lUiyrHXHF4V+hK92QACWu7JR6SctAD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0fpUlw1YSXOIEq75oPrctNE2JOHP5FpizeXJUMBxrEA+kants2hx6VeXQL/4W4KrwsmKMq6z9IqISqrUSJq8D9SgtP9Zi/OMi9JwAxu2/TG3Jx1xLF99jcYnPTJtZ+aO2acJ06GuHi9A1m07AIr5E9yO1cxzxayU90rKuouToQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvD/970v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE9C5C4CEC6;
-	Tue,  1 Oct 2024 06:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727765008;
-	bh=Eqh7CxsxMbg7lUiyrHXHF4V+hK92QACWu7JR6SctAD8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MvD/970vL0gcr+2EgNHBWQ3lL2ODJbQnge8+5weu42T/rJETaaTI84Umy4MKaar3+
-	 qKFLsMxIuoUJVsOXRemnpCLlq8FOADhkFNYiFKOt6g5ARxmKidqJ5oWa0HK1dVpvbC
-	 j1G7VmCF4ktJPGtkGC8P3u9Yw0aj5yzMU0fFsLDkaQtCNocTei+AV9ZOXOGM04/RRJ
-	 VEytpnuvUTnsSnKnb/py5Z51Cl/XOO5vmrbduTIhxZiXKXBI+RHV+KgqWrl3D5HXIO
-	 jSopVzWuxFZYPZH1m4EgkS0dfLyZN1288bJp2rHGv4eLSYLuAXvNhgrVcRxF+RJSNM
-	 6OhnY7kd2ToIg==
-Date: Tue, 1 Oct 2024 08:43:23 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 1/7] dt-bindings: reset: microchip,rst: Allow to
- replace cpu-syscon by an additional reg item
-Message-ID: <emcl3vfclrmy273kknsakpqpzolvo5vohrjnw64ml3op4dwzvu@lwqfgc7jxxzq>
-References: <20240930121601.172216-1-herve.codina@bootlin.com>
- <20240930121601.172216-2-herve.codina@bootlin.com>
+	s=arc-20240116; t=1727771716; c=relaxed/simple;
+	bh=sjT6ukd3PKEKSU3+RSXdWT/8Zkq2/Gnd0DL/XZxOjfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IT5Hx+kLY8sOIraiMr08sqXyoEk91XbhDgXG6encS0NzmUCSlsFRJ6/A4YVSvfQyeb7AcmThjPd0EgxJWx4mld6vbsctWBtOCo11ePvqeplbiTQBx+4icFgse8ekPj767qbcfHsxO29MdtSkhiLIYl7ydswF7WL/dvpcXt3WWaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=AprasQOE; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-713892fed01so2180138a34.2
+        for <linux-pci@vger.kernel.org>; Tue, 01 Oct 2024 01:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1727771713; x=1728376513; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0xKp489To+kZdQ2N4G3JNP+h7PtJl5bQrYRI2mnZ3mY=;
+        b=AprasQOEtjRs9/cJUQoZzoSQEScsPiuMi9fSzv/PnJ4YdE7icGtM/dCQZNXHwkY7m8
+         PP+8VYOLtIQSLnrFzZ1cSYx0wHYZ53IsGacRNCzT4h3Z8SAIoI6VogWKVmJd98Dg1x0p
+         KCqvgCGWK+mV4Zacz10Ju69EyW+M8aE8AsuHTGBHkU/dCIXKmUoDCMxd0QkCd8Ex1ToD
+         O8NnNEdSDQRIDfOjdmpGO6h8MZBeViT/MJKO7bGf8+mFQDyvTfWd8dPSk9MDhqH6ZFOP
+         W87B1lF5i4rU5Ho9cLTHwtfFzsQFj0XUuofJUDZlOiVDp9JL3qlJszew//uoBLowEoxP
+         Zt4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727771713; x=1728376513;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0xKp489To+kZdQ2N4G3JNP+h7PtJl5bQrYRI2mnZ3mY=;
+        b=Xa1bjERS5DvX175jW5UlCRyZngpARaZcABpZIB//ijqn4pdd/mjOzjMZaDAV6gNMt7
+         RZmdA4eZXZ28cp0OcF3r3YR2leaUmZt88Y3cLr/9Tm38VhzJFvB2fIozYYDZnuz0HN5o
+         68X6pA8L2aVWl2pO/07/GC9vudy/kcURlQ17tj8QOiO/sk+5crldawCjqJOTJ6mzLRXR
+         SM4VTcUXXCm2NkPMSfP1ZQdr5GNrZ7gQBGUi9DZCoVpdGN/8kPgdx4CiKewm3ZXXdDQM
+         KhoVsyw13MEqn3KbT9TIOyAylOcHDaR4lyhrVBEyk6lL5siMYK+J8Bf2KAm6etbRiEVn
+         7AHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSgdab65PJOdxCyFnfZy7DCt2arlLmCNapWOgXmNHeUgcM8Kw0IYlJz6Q/IyH+ghNXkmaOGYgDW+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIwKbW5go86QEklzr7RUs6AE5Ceia/cTyXDDzu/uuKTnGz3cSq
+	EmwbNUbvYL+GnwkQkgLeR6U72FVdCbByd+s5LOqBT/6JcT3bGScM2uuvWJtEhIQ=
+X-Google-Smtp-Source: AGHT+IHCmZL9lfI92oxKpIN8LZlTynU5oG9jp7HrYXx53tJm3QmqHAWVb6Nu97nnPilQHfWSE4RUPw==
+X-Received: by 2002:a05:6830:610c:b0:710:f3ae:5a79 with SMTP id 46e09a7af769-714fbefe76dmr10684290a34.22.1727771713446;
+        Tue, 01 Oct 2024 01:35:13 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-71b26516148sm7521573b3a.110.2024.10.01.01.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 01:35:12 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v12 0/3] PCI: vmd: Enable PCI PM's L1 substates of remapped PCIe Root Port and NVMe
+Date: Tue,  1 Oct 2024 16:34:36 +0800
+Message-ID: <20241001083438.10070-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240930121601.172216-2-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 30, 2024 at 02:15:41PM +0200, Herve Codina wrote:
-> In the LAN966x PCI device use case, syscon cannot be used as syscon
-> devices do not support removal [1]. A syscon device is a core "system"
-> device and not a device available in some addon boards and so, it is not
-> supposed to be removed.
+Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1 substates
+capability, but they are disabled originally.
 
-That's not accurate. syscon is our own, Linux term which means also
-anything exposing set of registers.
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
 
-If you need to unload syscons, implement it. syscon is the same resource
-as all others so should be handled same way.
+10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Processor PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+                  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=0us
 
-> 
-> In order to remove the syscon device usage, allow the reset controller
-> to have a direct access to the address range it needs to use.
+10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Blue SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
 
-So you map same address twice? That's not good, because you have no
-locking over concurrent register accesses.
+According to "PCIe r6.0, sec 5.5.4", to config the link between the PCIe
+Root Port and the child device correctly:
+* Ensure both devices are in D0 before enabling PCI-PM L1 PM Substates.
+* Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
+  LTR_L1.2_THRESHOLD are programmed properly on both devices before enable
+  bits for L1.2.
 
-> 
-> Link: https://lore.kernel.org/all/20240923100741.11277439@bootlin.com/ [1]
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  .../bindings/reset/microchip,rst.yaml         | 35 ++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/microchip,rst.yaml b/Documentation/devicetree/bindings/reset/microchip,rst.yaml
-> index f2da0693b05a..5164239a372c 100644
-> --- a/Documentation/devicetree/bindings/reset/microchip,rst.yaml
-> +++ b/Documentation/devicetree/bindings/reset/microchip,rst.yaml
-> @@ -25,12 +25,16 @@ properties:
->        - microchip,lan966x-switch-reset
->  
->    reg:
-> +    minItems: 1
->      items:
->        - description: global control block registers
-> +      - description: cpu system block registers
->  
->    reg-names:
-> +    minItems: 1
->      items:
->        - const: gcb
-> +      - const: cpu
->  
->    "#reset-cells":
->      const: 1
-> @@ -39,12 +43,29 @@ properties:
->      $ref: /schemas/types.yaml#/definitions/phandle
->      description: syscon used to access CPU reset
->  
-> +allOf:
-> +  # Allow to use the second reg item instead of cpu-syscon
-> +  - if:
-> +      required:
-> +        - cpu-syscon
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-> +        reg-names:
-> +          maxItems: 1
-> +    else:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +        reg-names:
-> +          minItems: 2
-> +
->  required:
->    - compatible
->    - reg
->    - reg-names
->    - "#reset-cells"
-> -  - cpu-syscon
->  
->  additionalProperties: false
->  
-> @@ -57,3 +78,15 @@ examples:
->          #reset-cells = <1>;
->          cpu-syscon = <&cpu_ctrl>;
->      };
-> +
-> +    /*
-> +     * The following construction can be used if the cpu-syscon device is not
-> +     * present. This is the case when the LAN966x is used as a PCI device.
-> +     */
-> +    reset-controller@22010008 {
-> +        compatible = "microchip,lan966x-switch-reset";
-> +        reg = <0xe200400c 0x4>,
-> +              <0xe00c0000 0xa8>;
+Prepare this series to fix that.
 
-If you have here CPU address, then syscon device is present...
+Jian-Hong Pan (3):
+  PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
+  PCI/ASPM: Add notes about enabling PCI-PM L1SS to
+    pci_enable_link_state(_locked)
+  PCI/ASPM: Make pci_save_aspm_l1ss_state save both child and parent's
+    L1SS configuration
 
-Best regards,
-Krzysztof
+ drivers/pci/controller/vmd.c | 13 +++++++++----
+ drivers/pci/pcie/aspm.c      | 26 +++++++++++++++++++++++++-
+ 2 files changed, 34 insertions(+), 5 deletions(-)
+
+-- 
+2.46.2
 
 
