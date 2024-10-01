@@ -1,84 +1,69 @@
-Return-Path: <linux-pci+bounces-13669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C28598B2EC
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 06:21:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E85BA98B4BB
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 08:43:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FF311C22BC5
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 04:21:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54625B23A80
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 06:43:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC2441B0119;
-	Tue,  1 Oct 2024 04:21:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4F31BC084;
+	Tue,  1 Oct 2024 06:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edQTh1YM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvD/970v"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74701B3F17
-	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 04:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D52A1BC070;
+	Tue,  1 Oct 2024 06:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727756464; cv=none; b=JlpQJu8sc+Bt39QvxZdlmzcfJNT0la57z0iiEEyrrs3a/g/M+I6Ndpq5yH1FD2J4pgv85C3mgdjKxUT5zigSQq8XvHNfEiBbgVKMsgAL/PZSprvNWBcx2XtkQaj5/vWDodSCoQ2ACz0ZBZ6d+NY6SPTzsdTqtlSYsmocf8E9/XU=
+	t=1727765008; cv=none; b=f6S1N/WSa/CzY9dl98Z7MUkbBJpfl+Iyik/boYpuCCm20OBmD48j+rpmNJb5Es3gd4DlTpwJECbHgw6KQbrWaeorieMhvDPdJwFs7Fv57lXSVKKFq3DrDf0K9qNycmCjttFc8bT+n4+4HkrcXWT/4ijoS7xssq0E/BoDiS5WXMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727756464; c=relaxed/simple;
-	bh=2vHVnH/4a+TI9m7+h+0WNgqxTEdog8ZD2UBhQAmgP4A=;
+	s=arc-20240116; t=1727765008; c=relaxed/simple;
+	bh=Eqh7CxsxMbg7lUiyrHXHF4V+hK92QACWu7JR6SctAD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CnJJ47smnia6gZZKxSLDEkQVNjQziN9Ixqhcp7e7KMNQzqMdLqWEH7VPHl4+OFf3RH60Sc+vacHnSdFpk7bjfXp9ancrlhQO79Sd8htovT45ciGYadElJw0iQWFG5XwsuLMgrXbOl7NxG7ekhKkiskFIuDjw0vURcERuLxaeFj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=edQTh1YM; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7d50e865b7aso3941771a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 30 Sep 2024 21:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727756461; x=1728361261; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=icoY3qoHkJebuDnNC7tmCQDTScbY4VF90NsdASl0kCo=;
-        b=edQTh1YMq1tDMhrYR7c3L25kn9/5bFcT0dXamDYHm/u06Qe7LPes3bI2kvOvpZt1Pt
-         hS6c6k/DaQtoVmzEbybbbGCxiJOoJ5K7P9cnufBtoXIEZUR3lAfQnymMJTWumRqzve2P
-         UlzeWkN9Db13WdfVMIcw4vELHmxkI9tmdarjh+xqKoFSKBzf3esEW2BrL8GX5ToqbQ7R
-         onTgOZlulYNeWwtkYXeaf8N/lrCDh72RVKYFO5U1bcDUAHnFUVr2ugvpmaXvygmDzkpg
-         ui98LC8eFWf/pvMaIKnqYlse8dXquStPTg5xa36R/7Xf8pxga18HtePbyNiRHf3+8faJ
-         8bYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727756461; x=1728361261;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=icoY3qoHkJebuDnNC7tmCQDTScbY4VF90NsdASl0kCo=;
-        b=jjxDSK25WPiSH+nD4A0IQHA/YJMEBZBSO5X8cX9xO0drlIoFlQY5TQRIOuXYl5mml1
-         qMzzfg0jCHVQ94zsl/5B9fubxtmK6MtitAcQ0UAZNOK+ZEovUcnBa2xBvDOZCn+DiUmm
-         evhuNspdg1gzV5xLoJHGZLF6jyNiw+6MVvoUfsZ6P1tmdv72Ay/pGH7ekJHpUPH2U+ZV
-         hqFgUXvf/mbhsahZyOeYwdxxNRnNwKQgmX+tyqu6/HbsSIGnQQgrscn0BXiMYXb0WuZQ
-         j83Ht9qiH2H54L1uVrTuMIck8zgfyJsN17xAC1t3GdGjJfmbpJIBl6ZAyUmPG3aUBZMR
-         92nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyQAA9UtYmRWugZqW218KrgsKtPtQNabOkBo0eheLa83MxICuRhY2iLxdRfx9FVcSdPbXj5w/5fKs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/zW67+NbczhFFsAHu1h30u26u6ZrY/BymZ7a34q4NsYdxnEIH
-	Wvj2HvRIqm5a1DXWfkvX5SE3i8Kvo5U4XYhxIoBzFCRaW1mZtjo8jyyC7dPBCQ==
-X-Google-Smtp-Source: AGHT+IGkODG87Nrx6whSCqQEnsxe02WoLf8cq/2tdiwWSa7nfwMsiRNiYuTbQPvVnCH9JZuf5OUInQ==
-X-Received: by 2002:a17:90a:db56:b0:2d8:a344:900d with SMTP id 98e67ed59e1d1-2e0b89dffbemr16116715a91.12.1727756461219;
-        Mon, 30 Sep 2024 21:21:01 -0700 (PDT)
-Received: from thinkpad ([36.255.17.150])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20b37e0fdafsm61579625ad.148.2024.09.30.21.20.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 21:21:00 -0700 (PDT)
-Date: Tue, 1 Oct 2024 09:50:55 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_qianyu@quicinc.com, Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH] PCI: qcom: Enable MSI interrupts together with Link up
- if global IRQ is supported
-Message-ID: <20241001042055.ivf4zspq4fqmaxth@thinkpad>
-References: <20240930134409.168494-1-manivannan.sadhasivam@linaro.org>
- <20240930171101.GA180132@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0fpUlw1YSXOIEq75oPrctNE2JOHP5FpizeXJUMBxrEA+kants2hx6VeXQL/4W4KrwsmKMq6z9IqISqrUSJq8D9SgtP9Zi/OMi9JwAxu2/TG3Jx1xLF99jcYnPTJtZ+aO2acJ06GuHi9A1m07AIr5E9yO1cxzxayU90rKuouToQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvD/970v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE9C5C4CEC6;
+	Tue,  1 Oct 2024 06:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727765008;
+	bh=Eqh7CxsxMbg7lUiyrHXHF4V+hK92QACWu7JR6SctAD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MvD/970vL0gcr+2EgNHBWQ3lL2ODJbQnge8+5weu42T/rJETaaTI84Umy4MKaar3+
+	 qKFLsMxIuoUJVsOXRemnpCLlq8FOADhkFNYiFKOt6g5ARxmKidqJ5oWa0HK1dVpvbC
+	 j1G7VmCF4ktJPGtkGC8P3u9Yw0aj5yzMU0fFsLDkaQtCNocTei+AV9ZOXOGM04/RRJ
+	 VEytpnuvUTnsSnKnb/py5Z51Cl/XOO5vmrbduTIhxZiXKXBI+RHV+KgqWrl3D5HXIO
+	 jSopVzWuxFZYPZH1m4EgkS0dfLyZN1288bJp2rHGv4eLSYLuAXvNhgrVcRxF+RJSNM
+	 6OhnY7kd2ToIg==
+Date: Tue, 1 Oct 2024 08:43:23 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 1/7] dt-bindings: reset: microchip,rst: Allow to
+ replace cpu-syscon by an additional reg item
+Message-ID: <emcl3vfclrmy273kknsakpqpzolvo5vohrjnw64ml3op4dwzvu@lwqfgc7jxxzq>
+References: <20240930121601.172216-1-herve.codina@bootlin.com>
+ <20240930121601.172216-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,95 +72,103 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240930171101.GA180132@bhelgaas>
+In-Reply-To: <20240930121601.172216-2-herve.codina@bootlin.com>
 
-On Mon, Sep 30, 2024 at 12:11:01PM -0500, Bjorn Helgaas wrote:
-> On Mon, Sep 30, 2024 at 07:14:09PM +0530, Manivannan Sadhasivam wrote:
-> > Currently, if global IRQ is supported by the platform, only the Link up
-> > interrupt is enabled in the PARF_INT_ALL_MASK register. But on some Qcom
-> > platforms like SM8250, and X1E80100, MSIs are getting masked due to this.
-> > They require enabling the MSI interrupt bits in the register to unmask
-> > (enable) the MSIs.
+On Mon, Sep 30, 2024 at 02:15:41PM +0200, Herve Codina wrote:
+> In the LAN966x PCI device use case, syscon cannot be used as syscon
+> devices do not support removal [1]. A syscon device is a core "system"
+> device and not a device available in some addon boards and so, it is not
+> supposed to be removed.
+
+That's not accurate. syscon is our own, Linux term which means also
+anything exposing set of registers.
+
+If you need to unload syscons, implement it. syscon is the same resource
+as all others so should be handled same way.
+
 > 
-> "global IRQ" is a very generic name.  If that's the official name, it
-> should at least be capitalized, e.g., "Global IRQ", to show that it is
-> a proper noun that refers to a specific IRQ.
+> In order to remove the syscon device usage, allow the reset controller
+> to have a direct access to the address range it needs to use.
+
+So you map same address twice? That's not good, because you have no
+locking over concurrent register accesses.
+
 > 
-
-Sure.
-
-> > Even though the MSI interrupt enable bits in PARF_INT_ALL_MASK are
-> > described as 'diagnostic' interrupts in the internal documentation,
-> > disabling them masks MSI on these platforms. Due to this,
+> Link: https://lore.kernel.org/all/20240923100741.11277439@bootlin.com/ [1]
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  .../bindings/reset/microchip,rst.yaml         | 35 ++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
 > 
-> > MSIs were not
-> > reported to be received these platforms while supporting global IRQ.
-> 
-> I'm trying to parse "while supporting global IRQ."  We basically
-> support global IRQ by installing qcom_pcie_global_irq_thread(), but of
-> course the device doesn't see that, so I assume it would be more
-> informative to say that MSIs are masked by some register setting.
-> 
+> diff --git a/Documentation/devicetree/bindings/reset/microchip,rst.yaml b/Documentation/devicetree/bindings/reset/microchip,rst.yaml
+> index f2da0693b05a..5164239a372c 100644
+> --- a/Documentation/devicetree/bindings/reset/microchip,rst.yaml
+> +++ b/Documentation/devicetree/bindings/reset/microchip,rst.yaml
+> @@ -25,12 +25,16 @@ properties:
+>        - microchip,lan966x-switch-reset
+>  
+>    reg:
+> +    minItems: 1
+>      items:
+>        - description: global control block registers
+> +      - description: cpu system block registers
+>  
+>    reg-names:
+> +    minItems: 1
+>      items:
+>        - const: gcb
+> +      - const: cpu
+>  
+>    "#reset-cells":
+>      const: 1
+> @@ -39,12 +43,29 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description: syscon used to access CPU reset
+>  
+> +allOf:
+> +  # Allow to use the second reg item instead of cpu-syscon
+> +  - if:
+> +      required:
+> +        - cpu-syscon
+> +    then:
+> +      properties:
+> +        reg:
+> +          maxItems: 1
+> +        reg-names:
+> +          maxItems: 1
+> +    else:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +        reg-names:
+> +          minItems: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+>    - reg-names
+>    - "#reset-cells"
+> -  - cpu-syscon
+>  
+>  additionalProperties: false
+>  
+> @@ -57,3 +78,15 @@ examples:
+>          #reset-cells = <1>;
+>          cpu-syscon = <&cpu_ctrl>;
+>      };
+> +
+> +    /*
+> +     * The following construction can be used if the cpu-syscon device is not
+> +     * present. This is the case when the LAN966x is used as a PCI device.
+> +     */
+> +    reset-controller@22010008 {
+> +        compatible = "microchip,lan966x-switch-reset";
+> +        reg = <0xe200400c 0x4>,
+> +              <0xe00c0000 0xa8>;
 
-Hmm, this is what I mentioned in the above paragraph referencing
-PARF_INT_ALL_MASK register. Is that not clear enough?
+If you have here CPU address, then syscon device is present...
 
-> The patch suggests that MSIs are masked internally unless
-> PARF_INT_MSI_DEV_0_7 is set in PARF_INT_ALL_MASK.
-> 
-> Are you saying that prior to 4581403f6792, MSIs did work?  Does that
-> mean PARF_INT_MSI_DEV_0_7 was set by a bootloader or something, so
-> MSIs worked?  And then 4581403f6792 came along and implicitly cleared
-> PARF_INT_MSI_DEV_0_7, so MSIs were then masked?
-> 
+Best regards,
+Krzysztof
 
-Yeah. Those bits were enabled by default in hardware, but since they were
-mentioned as 'diagnostic interrupts' in documentation, commit 4581403f6792
-intentionally disabled them. But that results in MSIs getting masked in
-*some* platforms.
-
-- Mani
-
-> > So enable the MSI interrupts along with the Link up interrupt in the
-> > PARF_INT_ALL_MASK register if global IRQ is supported. This ensures that
-> > the MSIs continue to work and also the driver is able to catch the Link
-> > up interrupt for enumerating endpoint devices.
-> > 
-> > Fixes: 4581403f6792 ("PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt")
-> > Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-> > Closes: https://lore.kernel.org/linux-pci/9a692c98-eb0a-4d86-b642-ea655981ff53@kernel.org/
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index ef44a82be058..2b33d03ed054 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -133,6 +133,7 @@
-> >  
-> >  /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> >  #define PARF_INT_ALL_LINK_UP			BIT(13)
-> > +#define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
-> >  
-> >  /* PARF_NO_SNOOP_OVERIDE register fields */
-> >  #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-> > @@ -1716,7 +1717,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >  			goto err_host_deinit;
-> >  		}
-> >  
-> > -		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
-> > +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
-> > +			       pcie->parf + PARF_INT_ALL_MASK);
-> >  	}
-> >  
-> >  	qcom_pcie_icc_opp_update(pcie);
-> > -- 
-> > 2.25.1
-> > 
-
--- 
-மணிவண்ணன் சதாசிவம்
 
