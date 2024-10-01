@@ -1,98 +1,145 @@
-Return-Path: <linux-pci+bounces-13680-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13681-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC45E98BAA2
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 13:07:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B4A98BB17
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 13:31:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D82661C216A2
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 11:07:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3F7B1C23517
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 11:31:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE091BF335;
-	Tue,  1 Oct 2024 11:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0E61C1755;
+	Tue,  1 Oct 2024 11:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="haHPx4e4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26A51BE86E;
-	Tue,  1 Oct 2024 11:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F046C1C172C
+	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 11:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727780842; cv=none; b=K67UlZFi8r34L/5Vf4eHu+DVirWl1gCyTDPoms7VxvQT6eiNLh7morfbPt3YunHZdZ5WagcGtoWXCYkt3Lzl3eskRm09/wxCKlruLOltpGUB1XvBJufLDi/txUgu4/tk5NOict1J0WjpUK1EwkR1DMAglUInv8D1+KiWcpW9ZGU=
+	t=1727782278; cv=none; b=ewAmZVloT9yheKwAmCkBA8P5tY5d3dSQdUapz2Qo+Nx9XRnAPDmFxepEkb4TOxelb6s1YljqKMb/KE5opDv+TgPyZzKADmZbEcGodWkJ+naOu0C70bXz6UUL5DgG+P99F8oVMTGs4msnJJUR9vnrwNJiSiFGcyQ3vU1YkKZdbr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727780842; c=relaxed/simple;
-	bh=weurZ7f6r0W/k0PPpMVi8YHvf9LeKhQs/vfB2a1/Kzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WBxJkgrKGms0O/yW/33MMl9ciY4nCyPjooEKWsS931izi6iNjLDmcS7sj2/Bfyvm2aSOel0vKi3rH+C61G5EPtAU8+qrW/vpOOzE14+gosKhXMpq0dKWgYI0ATXB4vN2xt2lUgvwjF76qTshwIa43j2e2cdIJsiJz9W7OWZe5B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 76EF5100D9429;
-	Tue,  1 Oct 2024 13:07:18 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 507095008; Tue,  1 Oct 2024 13:07:18 +0200 (CEST)
-Date: Tue, 1 Oct 2024 13:07:18 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
- during suspend
-Message-ID: <ZvvX5i95MpWrru4_@wunner.de>
-References: <20240926125909.2362244-1-acelan.kao@canonical.com>
- <ZvVgTGVSco0Kg7H5@wunner.de>
- <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
- <ZvZ61srt3QAca2AI@wunner.de>
- <CAFv23Q=QJ+SmpwvzLmzJeCXwYrAHVvTK96Wz7rY=df7VmGbSmw@mail.gmail.com>
+	s=arc-20240116; t=1727782278; c=relaxed/simple;
+	bh=xNq7dd0QQAzKdyjPQjXshn7HgVAnKT5ZeUNDrPDm3cU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WzOls/lc/BOCzatYXnMDHoL9Xaz6NUULK5DZvmEFAV0mI1QJAaowBgY+gC2JXV4tIjALaEl9yDTTvvUbQRs5In2sb8vWvdxQTzFmmnf/dIdwAwGKeqz2KNj0JlUNSIhV0eoyASFAdWGUNSmjFcJha4ho/zXO4pLO++0ihkMj2o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=haHPx4e4; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-718816be6cbso4592354b3a.1
+        for <linux-pci@vger.kernel.org>; Tue, 01 Oct 2024 04:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1727782276; x=1728387076; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dkw5ZjTULYmnDhqzTqOvsBoCEBWuQcvkFtFk7rwLDX0=;
+        b=haHPx4e4tas7WGpON8puSDU2FPzsO3z3it630Ua8bijGgwqhy/pADeyjvipMyU45LG
+         eNswpYijDBDST0fQ0P5HsH3UW9xhcotGUHgt74OLkguH9neX7dQgRnUVcjJqntLfDnBH
+         bSv63yKLr/fOuKzql9vAEzjg8CkZL7e8Mxc30=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727782276; x=1728387076;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dkw5ZjTULYmnDhqzTqOvsBoCEBWuQcvkFtFk7rwLDX0=;
+        b=nqc2tsUDEAd3uvNMrU/mBh8rEVTyT9zTpaKqxzbBehwoyJnGMqqsUfFFWHW+vVVIhn
+         gWBPz/N4C2VKkznEmVxFoGV9zSdbewBpOCiIm2BHJPoEXxwQZRIUB012l+euO8pVIUAJ
+         75803ma/hK87V5xxzUzNcEvhYnk8pyuwrgwFRBJpoXF2IuOmXiPcsvWKrWhP8THbcd1+
+         +1NI7riFw0YtqzU9hWDv6j7db0qU6W3HEEtcXBYkvOgenEPj8f5959Bqhm63jDXEr2F/
+         9mWaqZSvu2glt6PaKweUmCZzWvvWnpez9wNs9DYzbtp9bKU/vX1YP/zgUjxF1fc4sy58
+         DDuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5l7AkWxNzwhX1p8LZ288hfPBR0Ps9JFdv3Qi1y7hsEEt+MvZEY9ACbCu3cfCX+p8aXGR5W8UDy40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwooAvKZCG0Le2ZMZI1wNAiUCD7tANekCmmOZKWDxzCSdRfp/NY
+	h2FXwSyQE0gSccnaQmW4sbWqqa2oa8Q/eAgQidQQiNGPRzJeu7l6ffTOXgrPKg==
+X-Google-Smtp-Source: AGHT+IEFyHAzeCxiNj5YqUp1sXh7ztXqQKl/I/N9BtpUPW8sRSj4zlFPq+dVnC9EwBiPLWiMyOrcxA==
+X-Received: by 2002:a05:6a21:3305:b0:1cf:2513:8a01 with SMTP id adf61e73a8af0-1d4fa6cfb88mr19356853637.26.1727782276389;
+        Tue, 01 Oct 2024 04:31:16 -0700 (PDT)
+Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:e044:f156:126b:d5c6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71b264b63d9sm7810646b3a.52.2024.10.01.04.31.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 04:31:15 -0700 (PDT)
+From: Fei Shao <fshao@chromium.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Fei Shao <fshao@chromium.org>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Bin Liu <bin.liu@mediatek.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabien Parent <fparent@baylibre.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	MandyJH Liu <mandyjh.liu@mediatek.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Xia Jiang <xia.jiang@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2 0/8] MT8188 DT and binding fixes
+Date: Tue,  1 Oct 2024 19:27:18 +0800
+Message-ID: <20241001113052.3124869-1-fshao@chromium.org>
+X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFv23Q=QJ+SmpwvzLmzJeCXwYrAHVvTK96Wz7rY=df7VmGbSmw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 30, 2024 at 11:27:28AM +0800, AceLan Kao wrote:
-> Lukas Wunner <lukas@wunner.de> 2024 9 27 5:28
-> > there is a known issue
-> > that a deadlock may occur when hot-removing nested PCIe switches (which is
-> > what you've got here).  Keith Busch recently re-discovered the issue.
-> > You may want to try if the hang goes away if you apply this patch:
-> >
-> > https://lore.kernel.org/all/20240612181625.3604512-2-kbusch@meta.com/
-> >
-> > If it does go away then at least we know what the root cause is.
-> 
-> Yes, the 2 patches work.
+Hi,
 
-Okay so you can't reproduce the issue with those patches?
+This series is split from a previous series[*] to focus on few fixes and
+improvements around MediaTek MT8188 device tree and associated bindings,
+and addressed comments and carried tags from the previous series.
 
-That would mean 9d573d19547b ("PCI: pciehp: Detect device replacement
-during system sleep") isn't the culprit, whew!
+[*]: https://lore.kernel.org/all/20240909111535.528624-1-fshao@chromium.org/
+[v1]: https://lore.kernel.org/all/20240925110044.3678055-1-fshao@chromium.org/
 
+Regards,
+Fei
 
-> > The patch is a bit hackish, but there's an ongoing effort to tackle the
-> > problem more thoroughly:
-> >
-> > https://lore.kernel.org/all/20240722151936.1452299-1-kbusch@meta.com/
-> > https://lore.kernel.org/all/20240827192826.710031-1-kbusch@meta.com/
-> 
-> v2 can't be applied clearly, so I made some changes.
-> And this series doesn't work for me.
+Changes in v2:
+- new patch to MediaTek jpeg and vcodec bindings
+- new patch to move MT8188 SPI NOR cell properties
+- revise commit message of vdec power domain changes
 
-Okay, I'll look at those patches separately.
+Fei Shao (8):
+  dt-bindings: power: mediatek: Add another nested power-domain layer
+  dt-bindings: PCI: mediatek-gen3: Allow exact number of clocks only
+  dt-bindings: media: mediatek,jpeg: Relax IOMMU max item count
+  dt-bindings: media: mediatek,vcodec: Revise description
+  arm64: dts: mediatek: mt8188: Add missing dma-ranges to soc node
+  arm64: dts: mediatek: mt8188: Update vppsys node names to syscon
+  arm64: dts: mediatek: mt8188: Move vdec1 power domain under vdec0
+  arm64: dts: mediatek: mt8188: Move SPI NOR *-cells properties
 
-Thanks,
+ .../media/mediatek,vcodec-subdev-decoder.yaml | 100 +++++++++++-------
+ .../bindings/media/mediatek-jpeg-decoder.yaml |   3 +-
+ .../bindings/media/mediatek-jpeg-encoder.yaml |   2 +-
+ .../bindings/pci/mediatek-pcie-gen3.yaml      |   5 +-
+ .../power/mediatek,power-controller.yaml      |   4 +
+ arch/arm64/boot/dts/mediatek/mt8188-evb.dts   |   2 -
+ arch/arm64/boot/dts/mediatek/mt8188.dtsi      |  33 +++---
+ 7 files changed, 88 insertions(+), 61 deletions(-)
 
-Lukas
+-- 
+2.46.1.824.gd892dcdcdd-goog
+
 
