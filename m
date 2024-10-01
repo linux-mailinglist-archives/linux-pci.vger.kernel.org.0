@@ -1,127 +1,116 @@
-Return-Path: <linux-pci+bounces-13677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13678-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A089F98BA2A
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 12:58:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CE1A98BA8A
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 13:04:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50839B213FF
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 10:58:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC98B1F23AD1
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 11:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3992C1BE86E;
-	Tue,  1 Oct 2024 10:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jToG2rnW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 914D2188A08;
+	Tue,  1 Oct 2024 11:02:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C517E1BE844;
-	Tue,  1 Oct 2024 10:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1271885A4;
+	Tue,  1 Oct 2024 11:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727780275; cv=none; b=rn55Aqpzh3IUIyQMNN7uzkdd2pYad4P97Kfz5lF5O9+bJkIEVFq1C+fe57c6KYgJnVY09pgPw7CZvi0/Bu26UXNoS/ei+q6kqdy9hCDrRs9IxnkPvH4U2+X2N5l0jQwCQUMBCURfJJb8SnFcynMyOK0UP7t01VheiTouQvUxZyA=
+	t=1727780576; cv=none; b=LyHWiJ6kdhPZVtyJq9gjqIVllh1QH3gRdnGwudfnUkSWubbYW1Dy5NtiXSksIkSUkU2wO9hXw1pG9olfs1R3hjGE5N0tMh7dIN5sB23spwlENadr9BwjZhsuUITizXzsBLFzSk2Y1Lz6deXRxRMZ3xnOfhZTLpFR4Aas6ukaCwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727780275; c=relaxed/simple;
-	bh=kX4fvjsFongNoCxNryFoqj8xRI066V4+yt0N+iVFFMQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DoLaf/weNSpxhtruYqQrxJZH5DOLvUAlMqsW64nKf5yjJejUVxY0VWZoNR3ILg/Q/+b1nj83XodUPr7yjSjjESiHIMXeIhsqiZhoWRVwOUpAQ13f0JPmJl6iNRQ4yd/olAI5TfgTHLxX4PAZaerJ9zC1XR4QDozFl9qUhIgl8JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jToG2rnW; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6e7b121be30so3570923a12.1;
-        Tue, 01 Oct 2024 03:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727780273; x=1728385073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+XodivF81UWtP2cNwWOGWcI/Uct7qBUohMsaji6ENUY=;
-        b=jToG2rnWCSFqzJ0MlJqhXN6Vg/OVFH5q1qn/xh5XYOWAhUUt9YF8TFEz65oGeqZ5W5
-         Dho7UwVPnanpap6gEwt/mlm3ZRjZib2nYrDgwnW5wPFfokmSYYBSFWep+uD6wD+l4i+u
-         Oeds6ZWdn96wzoGYPO2UpAZ1HlFR8CmiAINlTJWgXy5siL5i8ltWgiHsUDFkcq4AdMPi
-         pQGTBLTZtEhgixVKwGgy8NUz5H2sQ9J/sCTAtfsgWq6C06JJAQjE5houGd9OjdE1MYRQ
-         91jCGljlChYWwi3KN9K82cSq2TsGrXf7VxfRJtLP49ssTFKWQED1iNzjVdALvjoU7djQ
-         aK6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727780273; x=1728385073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+XodivF81UWtP2cNwWOGWcI/Uct7qBUohMsaji6ENUY=;
-        b=fPooNu8CrIc5ZHsEW+UmBMLqBWU6SsKeeQEj6hgTAAW426jizuzJJfsOrdJxnDB+Vb
-         /UdEOgymPpMYQbEha2L0f3Daopa8p91YSwRFe/PmAVgvL+vm7CGp26zAvXvbEmpIUfjS
-         waBxHdGINjgISlx/qm803YjL8mc4xzBm6hMI1BhckBXFOwdDV1MfzwEeWj8LVM5M+TyB
-         SBW+zpzXM+Tsdwa1Hm0WJkcT/OhowF0fWkvS/EySq/xQCP/hGU29MEBE5ABK2N2oVsIh
-         jMFJGIT1bUTswrWKuFrehDHISZAZ897WDPU8OB7ynA4oQGJDm92jg4jnu3zPAVnnsmo/
-         iHHA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4wynpvycPVeXz1yQlxYD/3zOog7ZMicfKspzBlkkB/VYvyTMWRXs7qCmCYoJpKHqQKNcqx6O4aT/vNg==@vger.kernel.org, AJvYcCXo/TuZD2llutxwEH7q3alWNPk49USlia45YOcNFMEKIdCSySdl8G8gho+pKfSNfmSUTnQjKrKl9P03@vger.kernel.org, AJvYcCXvWnfPexuMJpDXF2uCImG/ySKfDn8zPZ/eR/e2jtnzCWShkNi//LxB8PKK3FHqZ6AQ9hctkM7on4fjuQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydrF5fCmFf+ac8RixNgcD2jkNgtWnhoR+rMYeno6mRlTjzxopg
-	R6wuA6/ZK0orLLGWKTVuzQdntKws/TrraOSnSy7zAVZYKqlsAR0H
-X-Google-Smtp-Source: AGHT+IGhZN9+wVKG14eYUdsgaPGOEoVAZRpX351sFX9Rh29MejCBf9Qb4pmMk6uv2ceETeAVZBeWUA==
-X-Received: by 2002:a05:6a21:1193:b0:1c4:9ef6:499b with SMTP id adf61e73a8af0-1d4fa6cfd50mr21889572637.29.1727780272943;
-        Tue, 01 Oct 2024 03:57:52 -0700 (PDT)
-Received: from fedora.. ([106.219.166.49])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7e6db5ed0e9sm8069195a12.57.2024.10.01.03.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2024 03:57:52 -0700 (PDT)
-From: Riyan Dhiman <riyandhiman14@gmail.com>
-To: vigneshr@ti.com,
-	s-vadapalli@ti.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com
-Cc: kishon@kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Riyan Dhiman <riyandhiman14@gmail.com>
-Subject: [PATCH v2] PCI: dra7xx: Added error handling in probe function when devm_phy_get() fails
-Date: Tue,  1 Oct 2024 16:27:18 +0530
-Message-ID: <20241001105717.4566-2-riyandhiman14@gmail.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1727780576; c=relaxed/simple;
+	bh=U8G0GaWCxBo32O5qvT2qm7PwwTvKoSsH0VDCHUaOYMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OvvpsYl7c/UgyJNZMw16HLAY6Y3ZQNVw0sOlRpnWSzdGLbfBciU5TVz2gGzBcbhO0o8wGkmmOkGme+EHA6NupUGYumUQw9FvheXKGpGNe1KP3HNry/Pvz5ha0UXz6aDrYiNZh1V+lMnCx25dIwScmHBUV69pacoZiVIbwa1ugxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 35A07100DA1D3;
+	Tue,  1 Oct 2024 13:02:46 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0DE47208266; Tue,  1 Oct 2024 13:02:46 +0200 (CEST)
+Date: Tue, 1 Oct 2024 13:02:46 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
+ during suspend
+Message-ID: <ZvvW1ua2UjwHIOEN@wunner.de>
+References: <20240926125909.2362244-1-acelan.kao@canonical.com>
+ <ZvVgTGVSco0Kg7H5@wunner.de>
+ <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
+ <ZvZ61srt3QAca2AI@wunner.de>
+ <Zvf7xYEA32VgLRJ6@wunner.de>
+ <CAFv23QkwxmT7qrnbfEpJNN+mnevNAor6Dk7efvYNOdjR9tGyrw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFv23QkwxmT7qrnbfEpJNN+mnevNAor6Dk7efvYNOdjR9tGyrw@mail.gmail.com>
 
-While creation of device link, if devm_phy_get() function fails then it 
-directly returns PTR_ERR without any cleanup of previous added device 
-links.
+On Mon, Sep 30, 2024 at 09:31:53AM +0800, AceLan Kao wrote:
+> Lukas Wunner <lukas@wunner.de> 2024 9 28 8:51:
+> > -       if (pci_get_dsn(pdev) != ctrl->dsn)
+> > +       dsn = pci_get_dsn(pdev);
+> > +       if (!PCI_POSSIBLE_ERROR(dsn) &&
+> > +           dsn != ctrl->dsn)
+> >                 return true;
+> 
+> In my case, the pciehp_device_replaced() returns true from this final check.
+> And these are the values I got
+> dsn = 0x00000000, ctrl->dsn = 0x7800AA00
+> dsn = 0x00000000, ctrl->dsn = 0x21B7D000
 
-Added goto statement to handle the cleanup of already added device links.
+Ah because pci_get_dsn() returns 0 if the device is gone.
+Below is a modified patch which returns false in that case.
 
-Fixes: 7a4db656a635 (PCI: dra7xx: Create functional dependency between 
-PCIe and PHY)
-Signed-off-by: Riyan Dhiman <riyandhiman14@gmail.com>
----
-v2: resend when tree is open and reformat commit message
+I've only changed:
+-	dsn = pci_get_dsn(pdev);
+-	if (!PCI_POSSIBLE_ERROR(dsn) &&
++	if ((dsn = pci_get_dsn(pdev)) &&
++	    !PCI_POSSIBLE_ERROR(dsn) &&
 
- drivers/pci/controller/dwc/pci-dra7xx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 4fe3b0cb72ec..c329d107b811 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -762,8 +762,10 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
- 	for (i = 0; i < phy_count; i++) {
- 		snprintf(name, sizeof(name), "pcie-phy%d", i);
- 		phy[i] = devm_phy_get(dev, name);
--		if (IS_ERR(phy[i]))
--			return PTR_ERR(phy[i]);
-+		if (IS_ERR(phy[i])) {
-+			ret = PTR_ERR(phy[i]);
-+			goto err_link;
-+		}
- 
- 		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
- 		if (!link[i]) {
--- 
-2.46.1
+> Did some other test
+> TBT HDD -> TBT dock -> laptop
+>    suspend
+> TBT HDD -> laptop(replace TBT dock with the TBT HDD)
+>    resume
+> Got the same result as above, looks like it didn't detect the TBT dock
+> has been replaced by TBT HDD.
+> 
+> In the origin call trace, unplug TBT dock or replace it with TBT HDD,
+> it returns true by the below check
+>         if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
+>            reg != (pdev->vendor | (pdev->device << 16)) ||
+>            pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
+>            reg != (pdev->revision | (pdev->class << 8)))
+>                return true;
 
+Hm, that's odd.  Why is that?  Is reg == 0xffffffff in one of those cases?
+
+I guess that could happen if the Thunderbolt tunnels are not yet
+established at that point (i.e. in the ->resume_noirq phase),
+but normally they should be.  Does this system use ICM-controlled
+tunnel management or kernel-native (software-controlled) tunnel
+management?
+
+Thanks,
+
+Lukas
 
