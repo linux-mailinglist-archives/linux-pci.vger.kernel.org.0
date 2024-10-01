@@ -1,243 +1,221 @@
-Return-Path: <linux-pci+bounces-13686-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13687-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DF4098BFC1
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 16:22:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 82B0598C100
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 17:03:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38B48280049
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 14:22:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B387287F9B
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Oct 2024 15:02:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6046A1C7B71;
-	Tue,  1 Oct 2024 14:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76161CC160;
+	Tue,  1 Oct 2024 15:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+gly9Oq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1yUDxJ+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A301C7B76
-	for <linux-pci@vger.kernel.org>; Tue,  1 Oct 2024 14:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F631CC154;
+	Tue,  1 Oct 2024 15:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727792423; cv=none; b=LpkhQ3zmtq/Y4lSf4fIH57FkNqOP5pB/BZhz8tqWeEyXobzGtQ7zXmWrdW9Kp2LtvWLrHNuWLarAtVsrwOltkPbXBVwfp07LcH08nd0/PUrZxGeKseD2/2gh+3XC4/9SwCrfilXaW+2Exn7sGfOVcgkH9MgywwWJV98DEXITc5Q=
+	t=1727794865; cv=none; b=KOp7PtaG9eysppYa8dgYXJjhN2pXL49vOPiqR2pk2dAad5fLGsWvxUaUbIIgKXZGegRpjykILhlLZlHq7Gr4ewxNeRI9tla/3Xl7C7x/6fhitOp8TfrlWMLBOp9CACSaqkDZB8cbTnYIKsUEDJx0I77Pe1Oum4JpbQeYcFGZYX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727792423; c=relaxed/simple;
-	bh=K1JQUj7u78a74eQ5EQ9rtEFURE0/toi0yWfpYDQ0++c=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=E+Ws1kgka+Edr4LIo/dUL8EAS9/8PMk5fjHiKenH2ppeLUL1V1t4MdXPkV9ue4EQJNxZ8M9FMDqtwzv+GWEvkgFTG95IK28sKphJa54VE+q0PvbJ061w1buD07W/PXlUbKVX+5l+y9JKdwUtKCxc21x1/aErhf6SYg5QViC/lvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+gly9Oq; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1727794865; c=relaxed/simple;
+	bh=1tLlMeiFBW2HxX8QD+VoQVyMTNRgr0xF9elLgst9neg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=F4LK+VfVv7lbUzEUGR6HrbBxXliCcomHGIzewocO6OWvsrccf3BJLFwZDmwiim/Et2NoRm4mZRbYk03n9kU3WCKOBJpF2uVn/DCOO3UzUjTiTagqIwPgd0jrFq2skWYgFlJ3Qx3iuovrgDn7YKhXZfkIkOKZoVX7FeB2vPXWQtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1yUDxJ+; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727792421; x=1759328421;
-  h=date:from:to:cc:subject:message-id;
-  bh=K1JQUj7u78a74eQ5EQ9rtEFURE0/toi0yWfpYDQ0++c=;
-  b=G+gly9Oq+0Ub568v6wGLErDHYyAoA3FCr5KCiVjvz5p188QljBK+4Vzc
-   w2flq6yN+3JBF8+5/jXEJ3m4EzZfdxV4pcanjsj3KLQnJ5U7ucy/IMt1/
-   VluVKFwjJydxQ+tNA59NZUn3z+T8N8AqtWFCdy3TVoaf1w5++ayD7tv8k
-   rGsVEYWUrfmRv9ZQa9m/8LP4dMYGZLLFuF2UDIiWO7Vc45xushyxjXk8n
-   w7ElrQTz8HtRWMSacW/fVRpdgvKhDkzU0MJETmtXKUrIAjf2OKy7y/NrR
-   cDo+tznruKzIjcOGS/6O/stb23XQB5EybYgfOPVQClmpKTDABXaA9iQ+3
-   Q==;
-X-CSE-ConnectionGUID: +yOp4GPcSqWkGoDhLRwPkQ==
-X-CSE-MsgGUID: l7m7UMfPTBGrc6BuITtisA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="37524195"
+  t=1727794864; x=1759330864;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1tLlMeiFBW2HxX8QD+VoQVyMTNRgr0xF9elLgst9neg=;
+  b=n1yUDxJ+HMdnl4YlmVjVUpRaNLprjfFfhyXwFYd+pUQ4qng2EKcWvfXY
+   LG02oSjHHhLqqgZlnEssUZFtce/06jOT0mK8wGhrDrMeZPXgwGXFdClS3
+   TQNjEWqwp6i5BJqci6cswIbc5iBrMI5BHV6tPzctN4676hWIPT89gU07h
+   lunwlymtgfdgrErZubOCd34Eqs8yoLftv94QzjaBfmcEjHB7f+Oll0307
+   kHqYDy3nd6+qATu6qjfslKWvx+2Y3ZR6SDx0zn5JNIgz6meNHsmQJoIN4
+   Rbn1jVyJobuaaV9FVXNFJxtZheFkyclH7GRHQznOas8yR1fKel0gidFPt
+   w==;
+X-CSE-ConnectionGUID: uQPUx1MYSISvoKWtHSMZ4w==
+X-CSE-MsgGUID: pweeRZtERamcl2Kd+xDzmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11212"; a="26812399"
 X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
-   d="scan'208";a="37524195"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 07:20:20 -0700
-X-CSE-ConnectionGUID: Jay5gpn3TNypO38puKyPxw==
-X-CSE-MsgGUID: MG1mriDDTbqM8EiISI4m8g==
+   d="scan'208";a="26812399"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 08:01:03 -0700
+X-CSE-ConnectionGUID: 7iO5mCcCS/SMcKSdBU2k/Q==
+X-CSE-MsgGUID: j+Q2cE9CQKGwWSwjfauz8A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,167,1725346800"; 
-   d="scan'208";a="77725235"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 01 Oct 2024 07:20:20 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1svdjd-000Qlp-2V;
-	Tue, 01 Oct 2024 14:20:17 +0000
-Date: Tue, 01 Oct 2024 22:19:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- 43ee11adcb940204948ac0ca3a05d6178f0e8b08
-Message-ID: <202410012243.qhO8jsFq-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="111164895"
+Received: from fpallare-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.204])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2024 08:01:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 1 Oct 2024 18:00:56 +0300 (EEST)
+To: Jian-Hong Pan <jhp@endlessos.org>
+cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>, 
+    David Box <david.e.box@linux.intel.com>, 
+    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Nirmal Patel <nirmal.patel@linux.intel.com>, 
+    Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux@endlessos.org
+Subject: Re: [PATCH v12 3/3] PCI/ASPM: Make pci_save_aspm_l1ss_state save
+ both child and parent's L1SS configuration
+In-Reply-To: <20241001083438.10070-8-jhp@endlessos.org>
+Message-ID: <d2ec2de3-171f-e4b6-213d-f900b84b47cd@linux.intel.com>
+References: <20241001083438.10070-2-jhp@endlessos.org> <20241001083438.10070-8-jhp@endlessos.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1362662974-1727794856=:945"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: 43ee11adcb940204948ac0ca3a05d6178f0e8b08  PCI: hotplug: Remove "Returns" kerneldoc from void functions
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-elapsed time: 1229m
+--8323328-1362662974-1727794856=:945
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-configs tested: 150
-configs skipped: 3
+On Tue, 1 Oct 2024, Jian-Hong Pan wrote:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> PCI devices' parameters on the VMD bus have been programmed properly
+> originally. But, cleared after pci_reset_bus() and have not been restored
+> correctly. This leads the link's L1.2 between PCIe Root Port and child
+> device gets wrong configs.
+>=20
+> Here is a failed example on ASUS B1400CEAE with enabled VMD. Both PCIe
+> bridge and NVMe device should have the same LTR1.2_Threshold value.
+> However, they are configured as different values in this case:
+>=20
+> 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core Processo=
+r PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal decode])
+>   ...
+>   Capabilities: [200 v1] L1 PM Substates
+>     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Subst=
+ates+
+>       PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50us
+>     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+>       T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+>     L1SubCtl2: T_PwrOn=3D0us
+>=20
+> 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD Blue=
+ SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+>   ...
+>   Capabilities: [900 v1] L1 PM Substates
+>     L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Subst=
+ates+
+>       PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10us
+>     L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+>       T_CommonMode=3D0us LTR1.2_Threshold=3D101376ns
+>     L1SubCtl2: T_PwrOn=3D50us
+>=20
+> Here is VMD mapped PCI device tree:
+>=20
+> -+-[0000:00]-+-00.0  Intel Corporation Device 9a04
+>  | ...
+>  \-[10000:e0]-+-06.0-[e1]----00.0  Sandisk Corp WD Blue SN550 NVMe SSD
+>               \-17.0  Intel Corporation Tiger Lake-LP SATA Controller
+>=20
+> When pci_reset_bus() resets the bus [e1] of the NVMe, it only saves and
+> restores NVMe's state before and after reset. Then, when it restores the
+> NVMe's state, ASPM code restores L1SS for both the parent bridge and the
+> NVMe in pci_restore_aspm_l1ss_state(). The NVMe's L1SS is restored
+> correctly. But, the parent bridge's L1SS is restored with a wrong value 0=
+x0
+> because the parent bridge's L1SS wasn't saved by pci_save_aspm_l1ss_state=
+()
+> before reset.
+>=20
+> So, if the PCI device has a parent, make pci_save_aspm_l1ss_state() save
+> the parent's L1SS configuration, too. This is symmetric on
+> pci_restore_aspm_l1ss_state().
+>=20
+> Link: https://lore.kernel.org/linux-pci/CAPpJ_eexU0gCHMbXw_z924WxXw0+B6Sd=
+S4eG9oGpEX1wmnMLkQ@mail.gmail.com/
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for suspe=
+nd/resume")
+> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 
-tested configs:
-alpha                             allnoconfig    gcc-13.3.0
-alpha                            allyesconfig    clang-20
-alpha                            allyesconfig    gcc-13.3.0
-alpha                               defconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              alldefconfig    clang-20
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    clang-20
-arc                          axs103_defconfig    gcc-14.1.0
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    clang-20
-arm                              allyesconfig    clang-20
-arm                          collie_defconfig    gcc-14.1.0
-arm                     davinci_all_defconfig    gcc-14.1.0
-arm                                 defconfig    gcc-14.1.0
-arm                         lpc18xx_defconfig    gcc-14.1.0
-arm                       omap2plus_defconfig    clang-20
-arm                       versatile_defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20241001    clang-18
-i386        buildonly-randconfig-002-20241001    clang-18
-i386        buildonly-randconfig-002-20241001    gcc-12
-i386        buildonly-randconfig-003-20241001    clang-18
-i386        buildonly-randconfig-004-20241001    clang-18
-i386        buildonly-randconfig-004-20241001    gcc-12
-i386        buildonly-randconfig-005-20241001    clang-18
-i386        buildonly-randconfig-006-20241001    clang-18
-i386        buildonly-randconfig-006-20241001    gcc-12
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241001    clang-18
-i386                  randconfig-001-20241001    gcc-12
-i386                  randconfig-002-20241001    clang-18
-i386                  randconfig-003-20241001    clang-18
-i386                  randconfig-004-20241001    clang-18
-i386                  randconfig-004-20241001    gcc-12
-i386                  randconfig-005-20241001    clang-18
-i386                  randconfig-006-20241001    clang-18
-i386                  randconfig-011-20241001    clang-18
-i386                  randconfig-011-20241001    gcc-12
-i386                  randconfig-012-20241001    clang-18
-i386                  randconfig-012-20241001    gcc-12
-i386                  randconfig-013-20241001    clang-18
-i386                  randconfig-013-20241001    gcc-12
-i386                  randconfig-014-20241001    clang-18
-i386                  randconfig-014-20241001    gcc-11
-i386                  randconfig-015-20241001    clang-18
-i386                  randconfig-015-20241001    gcc-12
-i386                  randconfig-016-20241001    clang-18
-i386                  randconfig-016-20241001    gcc-12
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                       m5475evb_defconfig    clang-20
-m68k                        mvme147_defconfig    clang-20
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                         cobalt_defconfig    clang-20
-mips                         db1xxx_defconfig    gcc-14.1.0
-mips                 decstation_r4k_defconfig    clang-20
-mips                           ip30_defconfig    clang-20
-mips                      loongson3_defconfig    clang-20
-mips                        qi_lb60_defconfig    clang-20
-mips                          rb532_defconfig    clang-20
-mips                           rs90_defconfig    gcc-14.1.0
-mips                   sb1250_swarm_defconfig    clang-20
-nios2                         3c120_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-openrisc                  or1klitex_defconfig    gcc-14.1.0
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                 canyonlands_defconfig    gcc-14.1.0
-powerpc                        cell_defconfig    gcc-14.1.0
-powerpc                        fsp2_defconfig    gcc-14.1.0
-powerpc               mpc834x_itxgp_defconfig    gcc-14.1.0
-powerpc                         wii_defconfig    gcc-14.1.0
-riscv                            allmodconfig    clang-20
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             allmodconfig    clang-20
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               alldefconfig    gcc-14.1.0
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                ecovec24-romimage_defconfig    gcc-14.1.0
-sh                            hp6xx_defconfig    clang-20
-sh                            migor_defconfig    clang-20
-sh                          rsk7201_defconfig    clang-20
-sh                            titan_defconfig    gcc-14.1.0
-sh                              ul2_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                               rhel-8.3    gcc-12
-x86_64                          rhel-8.3-rust    clang-18
-xtensa                            allnoconfig    gcc-14.1.0
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+ i.
+
+
+> ---
+> v9:
+> - Drop the v8 fix about drivers/pci/pcie/aspm.c. Use this in VMD instead.
+>=20
+> v10:
+> - Drop the v9 fix about drivers/pci/controller/vmd.c
+> - Fix in PCIe ASPM to make it symmetric between pci_save_aspm_l1ss_state(=
+)
+>   and pci_restore_aspm_l1ss_state()
+>=20
+> v11:
+> - Introduce __pci_save_aspm_l1ss_state as a resusable helper function
+>   which is same as the original pci_configure_aspm_l1ss
+> - Make pci_save_aspm_l1ss_state invoke __pci_save_aspm_l1ss_state for
+>   both child and parent devices
+> - Smooth the commit message
+>=20
+> v12:
+> - Update the commit message
+>=20
+>  drivers/pci/pcie/aspm.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index bd0a8a05647e..17cdf372f7e0 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -79,7 +79,7 @@ void pci_configure_aspm_l1ss(struct pci_dev *pdev)
+>  =09=09=09ERR_PTR(rc));
+>  }
+> =20
+> -void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+> +static void __pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+>  {
+>  =09struct pci_cap_saved_state *save_state;
+>  =09u16 l1ss =3D pdev->l1ss;
+> @@ -101,6 +101,24 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+>  =09pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
+>  }
+> =20
+> +void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+> +{
+> +=09struct pci_dev *parent;
+> +
+> +=09__pci_save_aspm_l1ss_state(pdev);
+> +
+> +=09/*
+> +=09 * To be symmetric on pci_restore_aspm_l1ss_state(), save parent's L1
+> +=09 * substate configuration, if the parent has not saved state.
+> +=09 */
+> +=09if (!pdev->bus || !pdev->bus->self)
+> +=09=09return;
+> +
+> +=09parent =3D pdev->bus->self;
+> +=09if (!parent->state_saved)
+> +=09=09__pci_save_aspm_l1ss_state(parent);
+> +}
+> +
+>  void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
+>  {
+>  =09struct pci_cap_saved_state *pl_save_state, *cl_save_state;
+>=20
+--8323328-1362662974-1727794856=:945--
 
