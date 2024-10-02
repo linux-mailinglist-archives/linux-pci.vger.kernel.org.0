@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-13719-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13720-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C74E98E156
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 19:01:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F10498E15A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 19:01:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9E051F22BDA
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 17:01:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4687A1C243DE
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 17:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E031D14F6;
-	Wed,  2 Oct 2024 17:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86CA61D1513;
+	Wed,  2 Oct 2024 17:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cZWj20QI"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aKndpXxy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2058.outbound.protection.outlook.com [40.107.102.58])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2059.outbound.protection.outlook.com [40.107.244.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C081D1CF7D7;
-	Wed,  2 Oct 2024 17:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796501C36;
+	Wed,  2 Oct 2024 17:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727888421; cv=fail; b=lEiCjC1Pt+ff3YxvM9BoyQ7H/J9ki3PCzCAJ9Rp6/u7t9vYIC0/TmW6u2rt9PRDuALWqmJ+oIM5K2qlzThmpoKC8/A/DvE91MF7aPTBsQ38ynRXSmOiJxIgVoe1ktwUQkahTM46Fp62sX42MMGac1HZpKpS1HvwRjY5V09DTYmM=
+	t=1727888436; cv=fail; b=tVCVyhd3OqPCwKgqk5bzTpcTcM0p5D3yiWazCogVwlTkvLYBciUtiHENpJ/F5Tvbkk6TQ0Jdt4rSTZfvM7lJAlDFGJN8/IlE1PYOe2jaSrHmzT6+VFObJE2wPA/Od+l7zxwjiVwaXKMoJZmppdZ/pOitabB41zm9nj5nfDGORRg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727888421; c=relaxed/simple;
-	bh=w9/0yLSeXaKwaqnqVIUMAVev0B3eB3agL3VQWboFWQI=;
+	s=arc-20240116; t=1727888436; c=relaxed/simple;
+	bh=GE5Ak3Esz5diDdcR6RL8mHrTmVXTprZ65lPEZbSYJKM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BdqibUpEu1AzrGerVhGywQE9s7j2gc5BgL/riYuUpIsxZbDCmQ2mS3s4V8NsM8wIoFC2OrdaohvM9D34sw5r+yc0t3j9rQhfsv+Xm2vTwuoewGPwIitz7vSxAlpM9IuI2nPkzehJksLoq9o1pa896wxyvU6INep8D8RsDdaeoH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cZWj20QI; arc=fail smtp.client-ip=40.107.102.58
+	 MIME-Version:Content-Type; b=EIhfh1m5H/fbCyWYjwAXeYUQxKEbbexH2S7anYgBhxbSI73zwKOi0sFgLZT3uI2L/qIQGc+jF575r7Hw+wWHyoaT9GHS6uEXXPpSL/+W+9GVnLI0VZ10xVglceCcs2RpHkVFS9SyRFHT4Xv71YvMoqzKuUs5piT3U3Q+YxymWUI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aKndpXxy; arc=fail smtp.client-ip=40.107.244.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iqj2QckGBfqXJWmnHIqiY/ERIZ3MFThz5ZERZ/zug+GrpRP43c+R9T6SBxz+hCsDo/VqcBOHEoaS4gQrq6/kUMFkA+HD01EZhaDW1s1mABfbRny7i3KfgCc6OT4O7NrOY2J8XZq5zrFVyppVXhVzktLZX8z1VLm9d58+6tDqJM+Tad3ktmnNbr3RctX7aU847WuxWUiFk3CDmsHStV9AXCLppI6tlwBXyS1siQ6wozpCJ/sh3BRyc2+mQh8HIxK5f6FekgNvA8QdLKmrJ7C4v8nTBU/9widWIGCOoU2PHMwewHR66QTSXmTHvc1HwD3ccw2SnkpkWIK4Dl8YQnQSKA==
+ b=DL69zKYBOHLPIEJIzUkANktvpbY3JQVK56uY5GHmukKEn2oDvXMhRieCL43Oj11ZYivqYcEWfQ51TRey0OMA5YbeepkYpZZDBKBx3/bqqoBMOnwKgFf7ep3Gm6D/IJays7JWGtd6plGP2OOWRwSy2bHPaFkS1HPnae1JxqfkFgVbbvOqStNuLQSujNCl7Lo2E0Gz0UYpobYfFHlhnuJRHt3Lr5qmnphDmS+4+XMZqEtykONutvkS+qNphQP9rNE6Wqn8OHnEbGb8aRrjbKqS4NyTihdGsVJ+HMeCFwEgUFm4t9nV+qUGWjhcDeGL8D7nVCjUbU43/SAnP0xZsNkMJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tWd3cTd9zrjCpRK7l0azHAaXKPGPz81LrYQE0TmRCFU=;
- b=OR+P7wKoZvZsBCiRTKn1zHbGYFz0M0jzTl5Qa2V24Sd7Iy9ktIwVRwikXiVD7Hfi/Vt13/P36MKH4gACvXNMfuLroJE4t45uw3GcCuiDbPUjQPyHSDtzSLtF6qCwO+lOq5XiFoYGLYwX8Cu9xPppe+co4i/XpVXs3JBBWRHqx83qFniBaLnmyvjsRjBriCCAd9ZHjgRpuJPGxh966a9TyzvKNarVWPGR9bond3FjO+wIAciotM5CkyU3r9OCSB2jI5WYFB7Fg57M6qvpx6hCe1IE6SqOgjYWsmBA1YLm9BAaWlkQahHXaCa3rkn7J6DMuAWYPQQjxCmit3lJ8ijp1A==
+ bh=N0voJwfotcDxcQN1wVl74vw1W/1iMW0A95SuITVkWQw=;
+ b=BCFj6f6G8+4Fzzdf5ec5Lt7GRIqE+bk/h2ynXajpgtU77hOQ2+a+jAqudegdJJecRdZ5C/WLa0y+kunEKUxA68nDSIziU4CKdnmZJivzaRhutQjqZ/gDMAvgveNjAaQqgQ1AVlAfrPEIsCwT4n1nEvPVRVOjHJcr0Id6/3SIVDp+v/BDfCtyM20nWyG9heZEWawetU9W/F9Q9CvgCWS/v7SY6l2/Hc5G32Q7Gh3jK2aPScb8H+hMs01s/m8kBz3mF3M6S7fqtFs5leDa+M6nxkW+gCb7/TOk/0KnHAQR5kknL/37yygBZ5gOryP2kqJi2nEcam1lvd0jDeAU2jPHcQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tWd3cTd9zrjCpRK7l0azHAaXKPGPz81LrYQE0TmRCFU=;
- b=cZWj20QIyeu5IzF/i2kFpfQHxo4sR05za6h2mED4bnR/GJnDZnI0IhZNxeAbck9fTDuiDlunBesErzrNgHAZ8cSLQB8PMC/kCalXDcKRad+dUw6FlKWM9x2Flmi4C7GeGwr3FbAPapxuJfpIO3iILavgQ5/3Pc03La39tzhpuas=
-Received: from SA9PR11CA0002.namprd11.prod.outlook.com (2603:10b6:806:6e::7)
- by PH7PR12MB7817.namprd12.prod.outlook.com (2603:10b6:510:279::20) with
+ bh=N0voJwfotcDxcQN1wVl74vw1W/1iMW0A95SuITVkWQw=;
+ b=aKndpXxyTTq966+bTmSJpqfugqYs+SLbqGVrr/7hPS6UQc0B9CizFLTs0a3pyVC7Z6iDUYtlVs5Pv64EtXJBgKlukM0UY9qhMANAUiNLMy+HAyWoqEwDnOCHZzeEHIqvMpSEudKtafhBh/B5b6Zh1Jx8sS9AkX7W60sHtyzgQsY=
+Received: from BYAPR05CA0034.namprd05.prod.outlook.com (2603:10b6:a03:c0::47)
+ by PH0PR12MB7885.namprd12.prod.outlook.com (2603:10b6:510:28f::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Wed, 2 Oct
- 2024 17:00:14 +0000
-Received: from SA2PEPF00003F63.namprd04.prod.outlook.com
- (2603:10b6:806:6e:cafe::6a) by SA9PR11CA0002.outlook.office365.com
- (2603:10b6:806:6e::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.17 via Frontend
- Transport; Wed, 2 Oct 2024 17:00:14 +0000
+ 2024 17:00:26 +0000
+Received: from SJ1PEPF00001CDC.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0:cafe::85) by BYAPR05CA0034.outlook.office365.com
+ (2603:10b6:a03:c0::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16 via Frontend
+ Transport; Wed, 2 Oct 2024 17:00:25 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F63.mail.protection.outlook.com (10.167.248.38) with Microsoft
+ SJ1PEPF00001CDC.mail.protection.outlook.com (10.167.242.4) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8026.11 via Frontend Transport; Wed, 2 Oct 2024 17:00:14 +0000
+ 15.20.8026.11 via Frontend Transport; Wed, 2 Oct 2024 17:00:24 +0000
 Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Oct
- 2024 12:00:11 -0500
+ 2024 12:00:23 -0500
 From: Wei Huang <wei.huang2@amd.com>
 To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
@@ -82,9 +82,9 @@ CC: <Jonathan.Cameron@Huawei.com>, <helgaas@kernel.org>, <corbet@lwn.net>,
 	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>,
 	<bhelgaas@google.com>, <lukas@wunner.de>, <paul.e.luse@intel.com>,
 	<jing2.liu@intel.com>
-Subject: [PATCH V7 1/5] PCI: Add TLP Processing Hints (TPH) support
-Date: Wed, 2 Oct 2024 11:59:50 -0500
-Message-ID: <20241002165954.128085-2-wei.huang2@amd.com>
+Subject: [PATCH V7 2/5] PCI/TPH: Add Steering Tag support
+Date: Wed, 2 Oct 2024 11:59:51 -0500
+Message-ID: <20241002165954.128085-3-wei.huang2@amd.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20241002165954.128085-1-wei.huang2@amd.com>
 References: <20241002165954.128085-1-wei.huang2@amd.com>
@@ -100,520 +100,530 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F63:EE_|PH7PR12MB7817:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39841d85-8c52-46c2-912e-08dce303af2c
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDC:EE_|PH0PR12MB7885:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0fdb56fb-b0f3-46cb-ed8c-08dce303b5a5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kVYUCThjwlGgYhiajUCoM1aZ3Xnd8Y0NAZSpAlLzQ5hvs1Wo+5BpJVifXA+j?=
- =?us-ascii?Q?nKMJJMrtHEvsoSpSyi/mx6vds1VZTaUQcdA3C7o3ux/NJMCzT1dbYKFRWJtf?=
- =?us-ascii?Q?T9PGygWnYwxWZZUcfOip1Aj1nmO+sHQa5DZrCAHxIL+gNKb84Q4CbwqhRsZh?=
- =?us-ascii?Q?fOxbt2x0USbNXVFz0p4XVEpPBHPNOqR/TBv4NnFXp0/Rm3TaGs47HjqOTxcJ?=
- =?us-ascii?Q?Iz4wo7Q525KuCm2YxA6I0OrF6E3inQRWah6qHkxf8Qtkhe9xKonAwdnqCthS?=
- =?us-ascii?Q?94YuVx/H7Hx1fl0vNX9xJMn9cQ7bHe7wtlnv1/TeHVi0iAsFeRGc/CiJw9rH?=
- =?us-ascii?Q?rM9AoRAmmIOze+n5LZl/G4+lPCgoYm5PVkdLdvlXc3JIlj4UxQFLtJjGsRmn?=
- =?us-ascii?Q?r9AsdRH13kazNgsvdcwiEanJCAUOZ8d5JEoaLZdKda4YFHQ46KZGVuxmIovm?=
- =?us-ascii?Q?r/DuOITvhnHA1ly+Jq8TKwCYv4a8st2mgSPB1MRaBj41VWwEg8Aq9agtYFWy?=
- =?us-ascii?Q?AqaZc50wppppzcyT9m96kfwLKbcvSubH2Ug6GcmL5hZstZyQN24o9w5lI9E1?=
- =?us-ascii?Q?xua3VJp3yXOqCM9EltdVKDoljfV9p27L+Ss0oWl3st1jXPzmpHem4te9pA4q?=
- =?us-ascii?Q?3ayzcFORGjZhDImPV97Bps69rz93OZz5QFmpl6vk1wXMrdAbLKWpUlPQtLEo?=
- =?us-ascii?Q?SdiHm5R049KhPNRcAKvX0r5iL9/yekrZr+O0gWrTiMCqMfXj6oYl1GH8iMmd?=
- =?us-ascii?Q?c/rpFORExiptlmGXBK6/EKX72xAB+dMVxzVqJbuOdhJQbBwzjxcFWD7oTqMm?=
- =?us-ascii?Q?1BZW5Y/cZjs8Vuwp14/GnxEcUxQjDm/06ay1DhWEjrhO7pWwqewgdDc2AZKt?=
- =?us-ascii?Q?07ueEBgL3/SYZwEZ6bJW1X+unhUM23vtQdylazKlpUJFP+731WvRV4yjuXjq?=
- =?us-ascii?Q?VkCPDrcoSctt8l9CC28geE2kcgoA12LomMMCW5BcQychwoK20zYOo8M29RCr?=
- =?us-ascii?Q?fpsUpXl40sKP3SScr2nyrZKr/78VAcTqhPR5YQuqeeaDnP0pKVu4m6fIannj?=
- =?us-ascii?Q?uHt9uDl0GRRMKPK6YJqKKWnOAe5U+HO1ghNqyU9gIUOeDJXQxa0E/BYE7erm?=
- =?us-ascii?Q?RSMcCj2hUK1OMuTPHTvK5zLIz8XfGQIQM7Utn7obY9vIpZulp7P5bMwvnn3c?=
- =?us-ascii?Q?xBsXkM1ldl19Puy1oGmtOwNiVsaivxY+P4ZWZcTxx4MaSwrTzgIUjUX6KQ+Q?=
- =?us-ascii?Q?wSFCPxjzpHYsuqPhMOrfvf/Cqz6ejGrpKYEwKORK2Ms9VSJtSiiHOk8jXaeb?=
- =?us-ascii?Q?3BLBIbAGvjgcNIz+R7DkG8b7xjI3jmuthG5fY7CkKqMBgE6sr088lVxSVlKC?=
- =?us-ascii?Q?Lw1KQtIZ8W3VLZnkydXfBhh0EgoP?=
+	=?us-ascii?Q?bl69QnVEXOfJPkmt2LVqS8h3nni2F3HeOJpCtIRYqI1kOKBBsm2WO+4xuvqQ?=
+ =?us-ascii?Q?GzfPvtjAA5xlucCaJ9dlfbzb5o8iE2QZw4cRdeZjuZ9eb3bGqErJsnTKJnRu?=
+ =?us-ascii?Q?LD5N4mkw0cxyieZzIb3h8XhJ0e2XbxtIAUIvI/CV+3/gGiOnRCOn6Aq1j/hl?=
+ =?us-ascii?Q?X9FejSSeU7GApu99kJwPSc94VztcLyihg/45//LZN4ey+aeZ9ju0XRz81nHc?=
+ =?us-ascii?Q?Rzy9Kh4xvEReWuAdAmdnp8SLf3t6VfYsBrZPVDu8siVPDILUBw0+rGAgB70f?=
+ =?us-ascii?Q?R15u9VfM8ZkWN2jfy/nK/wDmNOq5Ls0qJEvRw9WEQ/yi8sD+6a6djZGYO0Sz?=
+ =?us-ascii?Q?p+rJoGtfamnZIDFkg0bYtZhTDi7ZB0nddk00X+6jJjM+5IaNNTEsh1S7m3kz?=
+ =?us-ascii?Q?Gu9jERPgKHRTbSLgqF9T1OJq9A09S5vXkFTzvNk+5N3w+lA0MUrd85sRDP8Q?=
+ =?us-ascii?Q?Ax6bhQd0BZA9QWP42newdpg/f+oOxI8D/3aMbK1vU2iw9bmG9uhxsBmhPnHi?=
+ =?us-ascii?Q?1o/BpK9DqQV9rfKmOjtIFRH8sTpjWU7K1DVnLxqq75zCFcoPmvkpF02sD4K6?=
+ =?us-ascii?Q?UCTO6l0ZJWj9WNyihTBCgF02aZYdGhBNKOfnqPLGH6yhTze0Amp+UAFxGCsI?=
+ =?us-ascii?Q?h3aZ/vbbBf8GiIsP6k7Pz5wmPpS2/nc5v/X5Kf3rrpHGssqm+E4BrQOmp2+t?=
+ =?us-ascii?Q?T6yaMRYgNNdZUtyYAI6+QjPxRjzYcULKT0m/9/LQH135TdVIGRBX8lnvm2KD?=
+ =?us-ascii?Q?whC/gufGnJsWPEgqzcFL8tX0vm9SM9dGIcsYK6XV2vF+dJqRegf2XLwXB974?=
+ =?us-ascii?Q?vCuuQg95uznPbu+YdBGakHxs9bmCq8wxDcHdPRacQ6Yt6+MLrRcKkLi1dulC?=
+ =?us-ascii?Q?fXnJKyyogxCMQtzktxjrKPVDnLAP21HxHeVb7FsCO0b0S3HTU4u8pbnKBp/+?=
+ =?us-ascii?Q?1Q2eoz3vyfwCg+u9sbqdQnvOIG8CCWhb+9oraV8bIdYr34iGGVlqNe+jBywL?=
+ =?us-ascii?Q?HsGD2N90rafJPYhvFoYe2G19lL2/rTOyoAtWYwNLFVHRFxev4r0qUSXgXhbQ?=
+ =?us-ascii?Q?oIlp/RKKza90MWkBtrPe9U2bJUrvGaRCWH9ysYEYpN7SftOf6eTUUYzSSWG6?=
+ =?us-ascii?Q?S7jGPs+fxFbZVd+NWEILq+GrhJl10FLagP0L2m98kt2hkUYsO5hruogt6G1J?=
+ =?us-ascii?Q?WcFzxkc2J5ukVu90TVkBSdfNOYewW9AD0ct8d+FfpthL8acxPBxQ+dZNd0/s?=
+ =?us-ascii?Q?K3SvlQ+rIzbL5MXVhFYTDrtvOwCeJDUtXCAI3n+odr0UYk+eco1is/X037DE?=
+ =?us-ascii?Q?nyNVp5LBBzfMpK63CE5VfStdBjLNtvvqlwF3pODsZmw263xaCo1lnOVROoFm?=
+ =?us-ascii?Q?qspYk82jm7npv60GQ7HupGkdIOyW?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 17:00:14.1858
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 17:00:24.8756
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39841d85-8c52-46c2-912e-08dce303af2c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fdb56fb-b0f3-46cb-ed8c-08dce303b5a5
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F63.namprd04.prod.outlook.com
+	SJ1PEPF00001CDC.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7817
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7885
 
-Add support for PCIe TLP Processing Hints (TPH) support (see PCIe r6.2,
-sec 6.17).
+Add pcie_tph_get_cpu_st() to allow a caller to retrieve Steering Tags
+for a target memory that is associated with a specific CPU. The ST tag
+is retrieved by invoking PCI ACPI _DSM method (rev=0x7, func=0xF) of
+the device's Root Port device.
 
-Add missing TPH register definitions in pci_regs.h, including the TPH
-Requester capability register, TPH Requester control register, TPH
-Completer capability, and the ST fields of MSI-X entry.
+Add pcie_tph_set_st_entry() to support updating the device's Steering
+Tags. The tags will be written into the device's MSI-X table or the
+ST table located in the TPH Extended Capability space.
 
-Introduce pcie_enable_tph() and pcie_disable_tph(), enabling drivers to
-toggle TPH support and configure specific ST mode as needed. Also add a
-new kernel parameter, "pci=notph", allowing users to disable TPH support
-across the entire system.
-
-Co-developed-by: Jing Liu <jing2.liu@intel.com>
-Signed-off-by: Jing Liu <jing2.liu@intel.com>
-Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
-Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
 Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
 Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
 Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
 Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
 ---
- .../admin-guide/kernel-parameters.txt         |   4 +
- drivers/pci/Kconfig                           |   9 +
- drivers/pci/Makefile                          |   1 +
- drivers/pci/pci.c                             |   4 +
- drivers/pci/pci.h                             |  12 ++
- drivers/pci/probe.c                           |   1 +
- drivers/pci/tph.c                             | 197 ++++++++++++++++++
- include/linux/pci-tph.h                       |  21 ++
- include/linux/pci.h                           |   7 +
- include/uapi/linux/pci_regs.h                 |  37 +++-
- 10 files changed, 285 insertions(+), 8 deletions(-)
- create mode 100644 drivers/pci/tph.c
- create mode 100644 include/linux/pci-tph.h
+ drivers/pci/tph.c       | 351 +++++++++++++++++++++++++++++++++++++++-
+ include/linux/pci-tph.h |  23 +++
+ 2 files changed, 373 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 1518343bbe22..178995b07451 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4678,6 +4678,10 @@
- 		nomio		[S390] Do not use MIO instructions.
- 		norid		[S390] ignore the RID field and force use of
- 				one PCI domain per PCI function
-+		notph		[PCIE] If the PCIE_TPH kernel config parameter
-+				is enabled, this kernel boot option can be used
-+				to disable PCIe TLP Processing Hints support
-+				system-wide.
- 
- 	pcie_aspm=	[PCIE] Forcibly enable or ignore PCIe Active State Power
- 			Management.
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 0d94e4a967d8..2f270e4414b3 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -173,6 +173,15 @@ config PCI_PASID
- 
- 	  If unsure, say N.
- 
-+config PCIE_TPH
-+	bool "TLP Processing Hints"
-+	help
-+	  This option adds support for PCIe TLP Processing Hints (TPH).
-+	  TPH allows endpoint devices to provide optimization hints, such as
-+	  desired caching behavior, for requests that target memory space.
-+	  These hints, called Steering Tags, can empower the system hardware
-+	  to optimize the utilization of platform resources.
-+
- config PCI_P2PDMA
- 	bool "PCI peer-to-peer transfer support"
- 	depends on ZONE_DEVICE
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 374c5c06d92f..b2a100f2e24a 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
- obj-$(CONFIG_PCI_DOE)		+= doe.o
- obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
- obj-$(CONFIG_PCI_NPEM)		+= npem.o
-+obj-$(CONFIG_PCIE_TPH)		+= tph.o
- 
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 7d85c04fbba2..89dafecc869b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1828,6 +1828,7 @@ int pci_save_state(struct pci_dev *dev)
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
- 	pci_save_ptm_state(dev);
-+	pci_save_tph_state(dev);
- 	return pci_save_vc_state(dev);
- }
- EXPORT_SYMBOL(pci_save_state);
-@@ -1933,6 +1934,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
- 	pci_restore_ptm_state(dev);
-+	pci_restore_tph_state(dev);
- 
- 	pci_aer_clear_status(dev);
- 	pci_restore_aer_state(dev);
-@@ -6896,6 +6898,8 @@ static int __init pci_setup(char *str)
- 				pci_no_domains();
- 			} else if (!strncmp(str, "noari", 5)) {
- 				pcie_ari_disabled = true;
-+			} else if (!strncmp(str, "notph", 5)) {
-+				pci_no_tph();
- 			} else if (!strncmp(str, "cbiosize=", 9)) {
- 				pci_cardbus_io_size = memparse(str + 9, &str);
- 			} else if (!strncmp(str, "cbmemsize=", 10)) {
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 14d00ce45bfa..d89fdbf04f36 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -597,6 +597,18 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
- 
- #endif /* CONFIG_PCI_IOV */
- 
-+#ifdef CONFIG_PCIE_TPH
-+void pci_restore_tph_state(struct pci_dev *dev);
-+void pci_save_tph_state(struct pci_dev *dev);
-+void pci_no_tph(void);
-+void pci_tph_init(struct pci_dev *dev);
-+#else
-+static inline void pci_restore_tph_state(struct pci_dev *dev) { }
-+static inline void pci_save_tph_state(struct pci_dev *dev) { }
-+static inline void pci_no_tph(void) { }
-+static inline void pci_tph_init(struct pci_dev *dev) { }
-+#endif
-+
- #ifdef CONFIG_PCIE_PTM
- void pci_ptm_init(struct pci_dev *dev);
- void pci_save_ptm_state(struct pci_dev *dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4f68414c3086..b086d53a9048 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2495,6 +2495,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
- 	pci_rcec_init(dev);		/* Root Complex Event Collector */
- 	pci_doe_init(dev);		/* Data Object Exchange */
-+	pci_tph_init(dev);		/* TLP Processing Hints */
- 
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
 diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
-new file mode 100644
-index 000000000000..6c6b500c2eaa
---- /dev/null
+index 6c6b500c2eaa..9a268653866d 100644
+--- a/drivers/pci/tph.c
 +++ b/drivers/pci/tph.c
-@@ -0,0 +1,197 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -7,6 +7,8 @@
+  *     Wei Huang <wei.huang2@amd.com>
+  */
+ #include <linux/pci.h>
++#include <linux/pci-acpi.h>
++#include <linux/msi.h>
+ #include <linux/bitfield.h>
+ #include <linux/pci-tph.h>
+ 
+@@ -15,6 +17,134 @@
+ /* System-wide TPH disabled */
+ static bool pci_tph_disabled;
+ 
++#ifdef CONFIG_ACPI
 +/*
-+ * TPH (TLP Processing Hints) support
++ * The st_info struct defines the Steering Tag (ST) info returned by the
++ * firmware PCI ACPI _DSM method (rev=0x7, func=0xF, "_DSM to Query Cache
++ * Locality TPH Features"), as specified in the approved ECN for PCI Firmware
++ * Spec and available at https://members.pcisig.com/wg/PCI-SIG/document/15470.
 + *
-+ * Copyright (C) 2024 Advanced Micro Devices, Inc.
-+ *     Eric Van Tassell <Eric.VanTassell@amd.com>
-+ *     Wei Huang <wei.huang2@amd.com>
++ * @vm_st_valid:  8-bit ST for volatile memory is valid
++ * @vm_xst_valid: 16-bit extended ST for volatile memory is valid
++ * @vm_ph_ignore: 1 => PH was and will be ignored, 0 => PH should be supplied
++ * @vm_st:        8-bit ST for volatile mem
++ * @vm_xst:       16-bit extended ST for volatile mem
++ * @pm_st_valid:  8-bit ST for persistent memory is valid
++ * @pm_xst_valid: 16-bit extended ST for persistent memory is valid
++ * @pm_ph_ignore: 1 => PH was and will be ignored, 0 => PH should be supplied
++ * @pm_st:        8-bit ST for persistent mem
++ * @pm_xst:       16-bit extended ST for persistent mem
 + */
-+#include <linux/pci.h>
-+#include <linux/bitfield.h>
-+#include <linux/pci-tph.h>
++union st_info {
++	struct {
++		u64 vm_st_valid : 1;
++		u64 vm_xst_valid : 1;
++		u64 vm_ph_ignore : 1;
++		u64 rsvd1 : 5;
++		u64 vm_st : 8;
++		u64 vm_xst : 16;
++		u64 pm_st_valid : 1;
++		u64 pm_xst_valid : 1;
++		u64 pm_ph_ignore : 1;
++		u64 rsvd2 : 5;
++		u64 pm_st : 8;
++		u64 pm_xst : 16;
++	};
++	u64 value;
++};
 +
-+#include "pci.h"
-+
-+/* System-wide TPH disabled */
-+static bool pci_tph_disabled;
-+
-+static u8 get_st_modes(struct pci_dev *pdev)
++static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
++			   union st_info *info)
 +{
-+	u32 reg;
-+
-+	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
-+	reg &= PCI_TPH_CAP_ST_NS | PCI_TPH_CAP_ST_IV | PCI_TPH_CAP_ST_DS;
-+
-+	return reg;
-+}
-+
-+/* Return device's Root Port completer capability */
-+static u8 get_rp_completer_type(struct pci_dev *pdev)
-+{
-+	struct pci_dev *rp;
-+	u32 reg;
-+	int ret;
-+
-+	rp = pcie_find_root_port(pdev);
-+	if (!rp)
++	switch (req_type) {
++	case PCI_TPH_REQ_TPH_ONLY: /* 8-bit tag */
++		switch (mem_type) {
++		case TPH_MEM_TYPE_VM:
++			if (info->vm_st_valid)
++				return info->vm_st;
++			break;
++		case TPH_MEM_TYPE_PM:
++			if (info->pm_st_valid)
++				return info->pm_st;
++			break;
++		}
++		break;
++	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
++		switch (mem_type) {
++		case TPH_MEM_TYPE_VM:
++			if (info->vm_xst_valid)
++				return info->vm_xst;
++			break;
++		case TPH_MEM_TYPE_PM:
++			if (info->pm_xst_valid)
++				return info->pm_xst;
++			break;
++		}
++		break;
++	default:
 +		return 0;
-+
-+	ret = pcie_capability_read_dword(rp, PCI_EXP_DEVCAP2, &reg);
-+	if (ret)
-+		return 0;
-+
-+	return FIELD_GET(PCI_EXP_DEVCAP2_TPH_COMP_MASK, reg);
-+}
-+
-+/**
-+ * pcie_disable_tph - Turn off TPH support for device
-+ * @pdev: PCI device
-+ *
-+ * Return: none
-+ */
-+void pcie_disable_tph(struct pci_dev *pdev)
-+{
-+	if (!pdev->tph_cap)
-+		return;
-+
-+	if (!pdev->tph_enabled)
-+		return;
-+
-+	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, 0);
-+
-+	pdev->tph_mode = 0;
-+	pdev->tph_req_type = 0;
-+	pdev->tph_enabled = 0;
-+}
-+EXPORT_SYMBOL(pcie_disable_tph);
-+
-+/**
-+ * pcie_enable_tph - Enable TPH support for device using a specific ST mode
-+ * @pdev: PCI device
-+ * @mode: ST mode to enable. Current supported modes include:
-+ *
-+ *   - PCI_TPH_ST_NS_MODE: NO ST Mode
-+ *   - PCI_TPH_ST_IV_MODE: Interrupt Vector Mode
-+ *   - PCI_TPH_ST_DS_MODE: Device Specific Mode
-+ *
-+ * Checks whether the mode is actually supported by the device before enabling
-+ * and returns an error if not. Additionally determines what types of requests,
-+ * TPH or extended TPH, can be issued by the device based on its TPH requester
-+ * capability and the Root Port's completer capability.
-+ *
-+ * Return: 0 on success, otherwise negative value (-errno)
-+ */
-+int pcie_enable_tph(struct pci_dev *pdev, int mode)
-+{
-+	u32 reg;
-+	u8 dev_modes;
-+	u8 rp_req_type;
-+
-+	/* Honor "notph" kernel parameter */
-+	if (pci_tph_disabled)
-+		return -EINVAL;
-+
-+	if (!pdev->tph_cap)
-+		return -EINVAL;
-+
-+	if (pdev->tph_enabled)
-+		return -EBUSY;
-+
-+	/* Sanitize and check ST mode compatibility */
-+	mode &= PCI_TPH_CTRL_MODE_SEL_MASK;
-+	dev_modes = get_st_modes(pdev);
-+	if (!((1 << mode) & dev_modes))
-+		return -EINVAL;
-+
-+	pdev->tph_mode = mode;
-+
-+	/* Get req_type supported by device and its Root Port */
-+	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
-+	if (FIELD_GET(PCI_TPH_CAP_EXT_TPH, reg))
-+		pdev->tph_req_type = PCI_TPH_REQ_EXT_TPH;
-+	else
-+		pdev->tph_req_type = PCI_TPH_REQ_TPH_ONLY;
-+
-+	rp_req_type = get_rp_completer_type(pdev);
-+
-+	/* Final req_type is the smallest value of two */
-+	pdev->tph_req_type = min(pdev->tph_req_type, rp_req_type);
-+
-+	if (pdev->tph_req_type == PCI_TPH_REQ_DISABLE)
-+		return -EINVAL;
-+
-+	/* Write them into TPH control register */
-+	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, &reg);
-+
-+	reg &= ~PCI_TPH_CTRL_MODE_SEL_MASK;
-+	reg |= FIELD_PREP(PCI_TPH_CTRL_MODE_SEL_MASK, pdev->tph_mode);
-+
-+	reg &= ~PCI_TPH_CTRL_REQ_EN_MASK;
-+	reg |= FIELD_PREP(PCI_TPH_CTRL_REQ_EN_MASK, pdev->tph_req_type);
-+
-+	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, reg);
-+
-+	pdev->tph_enabled = 1;
++	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL(pcie_enable_tph);
 +
-+void pci_restore_tph_state(struct pci_dev *pdev)
++#define TPH_ST_DSM_FUNC_INDEX	0xF
++static acpi_status tph_invoke_dsm(acpi_handle handle, u32 cpu_uid,
++				  union st_info *st_out)
 +{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
++	union acpi_object arg3[3], in_obj, *out_obj;
 +
-+	if (!pdev->tph_cap)
-+		return;
++	if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 7,
++			    BIT(TPH_ST_DSM_FUNC_INDEX)))
++		return AE_ERROR;
 +
-+	if (!pdev->tph_enabled)
-+		return;
++	/* DWORD: feature ID (0 for processor cache ST query) */
++	arg3[0].integer.type = ACPI_TYPE_INTEGER;
++	arg3[0].integer.value = 0;
 +
-+	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_TPH);
-+	if (!save_state)
-+		return;
++	/* DWORD: target UID */
++	arg3[1].integer.type = ACPI_TYPE_INTEGER;
++	arg3[1].integer.value = cpu_uid;
 +
-+	/* Restore control register and all ST entries */
-+	cap = &save_state->cap.data[0];
-+	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, *cap++);
++	/* QWORD: properties, all 0's */
++	arg3[2].integer.type = ACPI_TYPE_INTEGER;
++	arg3[2].integer.value = 0;
++
++	in_obj.type = ACPI_TYPE_PACKAGE;
++	in_obj.package.count = ARRAY_SIZE(arg3);
++	in_obj.package.elements = arg3;
++
++	out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 7,
++				    TPH_ST_DSM_FUNC_INDEX, &in_obj);
++	if (!out_obj)
++		return AE_ERROR;
++
++	if (out_obj->type != ACPI_TYPE_BUFFER) {
++		ACPI_FREE(out_obj);
++		return AE_ERROR;
++	}
++
++	st_out->value = *((u64 *)(out_obj->buffer.pointer));
++
++	ACPI_FREE(out_obj);
++
++	return AE_OK;
++}
++#endif
++
++/* Update the TPH Requester Enable field of TPH Control Register */
++static void set_ctrl_reg_req_en(struct pci_dev *pdev, u8 req_type)
++{
++	u32 reg;
++
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, &reg);
++
++	reg &= ~PCI_TPH_CTRL_REQ_EN_MASK;
++	reg |= FIELD_PREP(PCI_TPH_CTRL_REQ_EN_MASK, req_type);
++
++	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, reg);
 +}
 +
-+void pci_save_tph_state(struct pci_dev *pdev)
+ static u8 get_st_modes(struct pci_dev *pdev)
+ {
+ 	u32 reg;
+@@ -25,6 +155,37 @@ static u8 get_st_modes(struct pci_dev *pdev)
+ 	return reg;
+ }
+ 
++static u32 get_st_table_loc(struct pci_dev *pdev)
 +{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
++	u32 reg;
 +
-+	if (!pdev->tph_cap)
-+		return;
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
 +
-+	if (!pdev->tph_enabled)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_TPH);
-+	if (!save_state)
-+		return;
-+
-+	/* Save control register */
-+	cap = &save_state->cap.data[0];
-+	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, cap++);
++	return FIELD_GET(PCI_TPH_CAP_LOC_MASK, reg);
 +}
 +
-+void pci_no_tph(void)
-+{
-+	pci_tph_disabled = true;
-+
-+	pr_info("PCIe TPH is disabled\n");
-+}
-+
-+void pci_tph_init(struct pci_dev *pdev)
-+{
-+	u32 save_size;
-+
-+	pdev->tph_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_TPH);
-+	if (!pdev->tph_cap)
-+		return;
-+
-+	save_size = sizeof(u32);
-+	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_TPH, save_size);
-+}
-diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-new file mode 100644
-index 000000000000..58654a334ffb
---- /dev/null
-+++ b/include/linux/pci-tph.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * TPH (TLP Processing Hints)
-+ *
-+ * Copyright (C) 2024 Advanced Micro Devices, Inc.
-+ *     Eric Van Tassell <Eric.VanTassell@amd.com>
-+ *     Wei Huang <wei.huang2@amd.com>
++ * Return the size of ST table. If ST table is not in TPH Requester Extended
++ * Capability space, return 0. Otherwise return the ST Table Size + 1.
 + */
-+#ifndef LINUX_PCI_TPH_H
-+#define LINUX_PCI_TPH_H
++static u16 get_st_table_size(struct pci_dev *pdev)
++{
++	u32 reg;
++	u32 loc;
 +
-+#ifdef CONFIG_PCIE_TPH
-+void pcie_disable_tph(struct pci_dev *pdev);
-+int pcie_enable_tph(struct pci_dev *pdev, int mode);
++	/* Check ST table location first */
++	loc = get_st_table_loc(pdev);
++
++	/* Convert loc to match with PCI_TPH_LOC_* defined in pci_regs.h */
++	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
++	if (loc != PCI_TPH_LOC_CAP)
++		return 0;
++
++	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CAP, &reg);
++
++	return FIELD_GET(PCI_TPH_CAP_ST_MASK, reg) + 1;
++}
++
+ /* Return device's Root Port completer capability */
+ static u8 get_rp_completer_type(struct pci_dev *pdev)
+ {
+@@ -43,6 +204,170 @@ static u8 get_rp_completer_type(struct pci_dev *pdev)
+ 	return FIELD_GET(PCI_EXP_DEVCAP2_TPH_COMP_MASK, reg);
+ }
+ 
++/* Write ST to MSI-X vector control reg - Return 0 if OK, otherwise -errno */
++static int write_tag_to_msix(struct pci_dev *pdev, int msix_idx, u16 tag)
++{
++#ifdef CONFIG_PCI_MSI
++	struct msi_desc *msi_desc = NULL;
++	void __iomem *vec_ctrl;
++	u32 val;
++	int err = 0;
++
++	msi_lock_descs(&pdev->dev);
++
++	/* Find the msi_desc entry with matching msix_idx */
++	msi_for_each_desc(msi_desc, &pdev->dev, MSI_DESC_ASSOCIATED) {
++		if (msi_desc->msi_index == msix_idx)
++			break;
++	}
++
++	if (!msi_desc) {
++		err = -ENXIO;
++		goto err_out;
++	}
++
++	/* Get the vector control register (offset 0xc) pointed by msix_idx */
++	vec_ctrl = pdev->msix_base + msix_idx * PCI_MSIX_ENTRY_SIZE;
++	vec_ctrl += PCI_MSIX_ENTRY_VECTOR_CTRL;
++
++	val = readl(vec_ctrl);
++	val &= ~PCI_MSIX_ENTRY_CTRL_ST;
++	val |= FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
++	writel(val, vec_ctrl);
++
++	/* Read back to flush the update */
++	val = readl(vec_ctrl);
++
++err_out:
++	msi_unlock_descs(&pdev->dev);
++	return err;
 +#else
-+static inline void pcie_disable_tph(struct pci_dev *pdev) { }
-+static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
++	return -ENODEV;
++#endif
++}
++
++/* Write tag to ST table - Return 0 if OK, otherwise -errno */
++static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
++{
++	int st_table_size;
++	int offset;
++
++	/* Check if index is out of bound */
++	st_table_size = get_st_table_size(pdev);
++	if (index >= st_table_size)
++		return -ENXIO;
++
++	offset = pdev->tph_cap + PCI_TPH_BASE_SIZEOF + index * sizeof(u16);
++
++	return pci_write_config_word(pdev, offset, tag);
++}
++
++/**
++ * pcie_tph_get_cpu_st() - Retrieve Steering Tag for a target memory associated
++ * with a specific CPU
++ * @pdev: PCI device
++ * @mem_type: target memory type (volatile or persistent RAM)
++ * @cpu_uid: associated CPU id
++ * @tag: Steering Tag to be returned
++ *
++ * This function returns the Steering Tag for a target memory that is
++ * associated with a specific CPU as indicated by cpu_uid.
++ *
++ * Returns: 0 if success, otherwise negative value (-errno)
++ */
++int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
++			unsigned int cpu_uid, u16 *tag)
++{
++#ifdef CONFIG_ACPI
++	struct pci_dev *rp;
++	acpi_handle rp_acpi_handle;
++	union st_info info;
++
++	rp = pcie_find_root_port(pdev);
++	if (!rp || !rp->bus || !rp->bus->bridge)
++		return -ENODEV;
++
++	rp_acpi_handle = ACPI_HANDLE(rp->bus->bridge);
++
++	if (tph_invoke_dsm(rp_acpi_handle, cpu_uid, &info) != AE_OK) {
++		*tag = 0;
++		return -EINVAL;
++	}
++
++	*tag = tph_extract_tag(mem_type, pdev->tph_req_type, &info);
++
++	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu_uid=%d, tag=%#04x\n",
++		(mem_type == TPH_MEM_TYPE_VM) ? "volatile" : "persistent",
++		cpu_uid, *tag);
++
++	return 0;
++#else
++	return -ENODEV;
++#endif
++}
++EXPORT_SYMBOL(pcie_tph_get_cpu_st);
++
++/**
++ * pcie_tph_set_st_entry() - Set Steering Tag in the ST table entry
++ * @pdev: PCI device
++ * @index: ST table entry index
++ * @tag: Steering Tag to be written
++ *
++ * This function will figure out the proper location of ST table, either in the
++ * MSI-X table or in the TPH Extended Capability space, and write the Steering
++ * Tag into the ST entry pointed by index.
++ *
++ * Returns: 0 if success, otherwise negative value (-errno)
++ */
++int pcie_tph_set_st_entry(struct pci_dev *pdev, unsigned int index, u16 tag)
++{
++	u32 loc;
++	int err = 0;
++
++	if (!pdev->tph_cap)
++		return -EINVAL;
++
++	if (!pdev->tph_enabled)
++		return -EINVAL;
++
++	/* No need to write tag if device is in "No ST Mode" */
++	if (pdev->tph_mode == PCI_TPH_ST_NS_MODE)
++		return 0;
++
++	/* Disable TPH before updating ST to avoid potential instability as
++	 * cautioned in PCIe r6.2, sec 6.17.3, "ST Modes of Operation"
++	 */
++	set_ctrl_reg_req_en(pdev, PCI_TPH_REQ_DISABLE);
++
++	loc = get_st_table_loc(pdev);
++	/* Convert loc to match with PCI_TPH_LOC_* defined in pci_regs.h */
++	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
++
++	switch (loc) {
++	case PCI_TPH_LOC_MSIX:
++		err = write_tag_to_msix(pdev, index, tag);
++		break;
++	case PCI_TPH_LOC_CAP:
++		err = write_tag_to_st_table(pdev, index, tag);
++		break;
++	default:
++		err = -EINVAL;
++	}
++
++	if (err) {
++		pcie_disable_tph(pdev);
++		return err;
++	}
++
++	set_ctrl_reg_req_en(pdev, pdev->tph_mode);
++
++	pci_dbg(pdev, "set steering tag: %s table, index=%d, tag=%#04x\n",
++		(loc == PCI_TPH_LOC_MSIX) ? "MSI-X" : "ST", index, tag);
++
++	return 0;
++}
++EXPORT_SYMBOL(pcie_tph_set_st_entry);
++
+ /**
+  * pcie_disable_tph - Turn off TPH support for device
+  * @pdev: PCI device
+@@ -140,6 +465,8 @@ EXPORT_SYMBOL(pcie_enable_tph);
+ void pci_restore_tph_state(struct pci_dev *pdev)
+ {
+ 	struct pci_cap_saved_state *save_state;
++	int num_entries, i, offset;
++	u16 *st_entry;
+ 	u32 *cap;
+ 
+ 	if (!pdev->tph_cap)
+@@ -155,11 +482,21 @@ void pci_restore_tph_state(struct pci_dev *pdev)
+ 	/* Restore control register and all ST entries */
+ 	cap = &save_state->cap.data[0];
+ 	pci_write_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, *cap++);
++	st_entry = (u16 *)cap;
++	offset = PCI_TPH_BASE_SIZEOF;
++	num_entries = get_st_table_size(pdev);
++	for (i = 0; i < num_entries; i++) {
++		pci_write_config_word(pdev, pdev->tph_cap + offset,
++				      *st_entry++);
++		offset += sizeof(u16);
++	}
+ }
+ 
+ void pci_save_tph_state(struct pci_dev *pdev)
+ {
+ 	struct pci_cap_saved_state *save_state;
++	int num_entries, i, offset;
++	u16 *st_entry;
+ 	u32 *cap;
+ 
+ 	if (!pdev->tph_cap)
+@@ -175,6 +512,16 @@ void pci_save_tph_state(struct pci_dev *pdev)
+ 	/* Save control register */
+ 	cap = &save_state->cap.data[0];
+ 	pci_read_config_dword(pdev, pdev->tph_cap + PCI_TPH_CTRL, cap++);
++
++	/* Save all ST entries in extended capability structure */
++	st_entry = (u16 *)cap;
++	offset = PCI_TPH_BASE_SIZEOF;
++	num_entries = get_st_table_size(pdev);
++	for (i = 0; i < num_entries; i++) {
++		pci_read_config_word(pdev, pdev->tph_cap + offset,
++				     st_entry++);
++		offset += sizeof(u16);
++	}
+ }
+ 
+ void pci_no_tph(void)
+@@ -186,12 +533,14 @@ void pci_no_tph(void)
+ 
+ void pci_tph_init(struct pci_dev *pdev)
+ {
++	int num_entries;
+ 	u32 save_size;
+ 
+ 	pdev->tph_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_TPH);
+ 	if (!pdev->tph_cap)
+ 		return;
+ 
+-	save_size = sizeof(u32);
++	num_entries = get_st_table_size(pdev);
++	save_size = sizeof(u32) + num_entries * sizeof(u16);
+ 	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_TPH, save_size);
+ }
+diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+index 58654a334ffb..c3e806c13d64 100644
+--- a/include/linux/pci-tph.h
++++ b/include/linux/pci-tph.h
+@@ -9,10 +9,33 @@
+ #ifndef LINUX_PCI_TPH_H
+ #define LINUX_PCI_TPH_H
+ 
++/*
++ * According to the ECN for PCI Firmware Spec, Steering Tag can be different
++ * depending on the memory type: Volatile Memory or Persistent Memory. When a
++ * caller query about a target's Steering Tag, it must provide the target's
++ * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/document/15470.
++ */
++enum tph_mem_type {
++	TPH_MEM_TYPE_VM,	/* volatile memory */
++	TPH_MEM_TYPE_PM		/* persistent memory */
++};
++
+ #ifdef CONFIG_PCIE_TPH
++int pcie_tph_set_st_entry(struct pci_dev *pdev,
++			  unsigned int index, u16 tag);
++int pcie_tph_get_cpu_st(struct pci_dev *dev,
++			enum tph_mem_type mem_type,
++			unsigned int cpu_uid, u16 *tag);
+ void pcie_disable_tph(struct pci_dev *pdev);
+ int pcie_enable_tph(struct pci_dev *pdev, int mode);
+ #else
++static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
++					unsigned int index, u16 tag)
 +{ return -EINVAL; }
-+#endif
-+
-+#endif /* LINUX_PCI_TPH_H */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 573b4c4c2be6..8351d76b6e12 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -434,6 +434,7 @@ struct pci_dev {
- 	unsigned int	ats_enabled:1;		/* Address Translation Svc */
- 	unsigned int	pasid_enabled:1;	/* Process Address Space ID */
- 	unsigned int	pri_enabled:1;		/* Page Request Interface */
-+	unsigned int	tph_enabled:1;		/* TLP Processing Hints */
- 	unsigned int	is_managed:1;		/* Managed via devres */
- 	unsigned int	is_msi_managed:1;	/* MSI release via devres installed */
- 	unsigned int	needs_freset:1;		/* Requires fundamental reset */
-@@ -534,6 +535,12 @@ struct pci_dev {
- 
- 	/* These methods index pci_reset_fn_methods[] */
- 	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
-+
-+#ifdef CONFIG_PCIE_TPH
-+	u16		tph_cap;	/* TPH capability offset */
-+	u8		tph_mode;	/* TPH mode */
-+	u8		tph_req_type;	/* TPH requester type */
-+#endif
- };
- 
- static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 12323b3334a9..155dea741615 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -340,7 +340,8 @@
- #define PCI_MSIX_ENTRY_UPPER_ADDR	0x4  /* Message Upper Address */
- #define PCI_MSIX_ENTRY_DATA		0x8  /* Message Data */
- #define PCI_MSIX_ENTRY_VECTOR_CTRL	0xc  /* Vector Control */
--#define  PCI_MSIX_ENTRY_CTRL_MASKBIT	0x00000001
-+#define  PCI_MSIX_ENTRY_CTRL_MASKBIT	0x00000001  /* Mask Bit */
-+#define  PCI_MSIX_ENTRY_CTRL_ST		0xffff0000  /* Steering Tag */
- 
- /* CompactPCI Hotswap Register */
- 
-@@ -659,6 +660,7 @@
- #define  PCI_EXP_DEVCAP2_ATOMIC_COMP64	0x00000100 /* 64b AtomicOp completion */
- #define  PCI_EXP_DEVCAP2_ATOMIC_COMP128	0x00000200 /* 128b AtomicOp completion */
- #define  PCI_EXP_DEVCAP2_LTR		0x00000800 /* Latency tolerance reporting */
-+#define  PCI_EXP_DEVCAP2_TPH_COMP_MASK	0x00003000 /* TPH completer support */
- #define  PCI_EXP_DEVCAP2_OBFF_MASK	0x000c0000 /* OBFF support mechanism */
- #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
- #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
-@@ -1023,15 +1025,34 @@
- #define  PCI_DPA_CAP_SUBSTATE_MASK	0x1F	/* # substates - 1 */
- #define PCI_DPA_BASE_SIZEOF	16	/* size with 0 substates */
- 
-+/* TPH Completer Support */
-+#define PCI_EXP_DEVCAP2_TPH_COMP_NONE		0x0 /* None */
-+#define PCI_EXP_DEVCAP2_TPH_COMP_TPH_ONLY	0x1 /* TPH only */
-+#define PCI_EXP_DEVCAP2_TPH_COMP_EXT_TPH	0x3 /* TPH and Extended TPH */
-+
- /* TPH Requester */
- #define PCI_TPH_CAP		4	/* capability register */
--#define  PCI_TPH_CAP_LOC_MASK	0x600	/* location mask */
--#define   PCI_TPH_LOC_NONE	0x000	/* no location */
--#define   PCI_TPH_LOC_CAP	0x200	/* in capability */
--#define   PCI_TPH_LOC_MSIX	0x400	/* in MSI-X */
--#define PCI_TPH_CAP_ST_MASK	0x07FF0000	/* ST table mask */
--#define PCI_TPH_CAP_ST_SHIFT	16	/* ST table shift */
--#define PCI_TPH_BASE_SIZEOF	0xc	/* size with no ST table */
-+#define  PCI_TPH_CAP_ST_NS	0x00000001 /* No ST Mode Supported */
-+#define  PCI_TPH_CAP_ST_IV	0x00000002 /* Interrupt Vector Mode Supported */
-+#define  PCI_TPH_CAP_ST_DS	0x00000004 /* Device Specific Mode Supported */
-+#define  PCI_TPH_CAP_EXT_TPH	0x00000100 /* Ext TPH Requester Supported */
-+#define  PCI_TPH_CAP_LOC_MASK	0x00000600 /* ST Table Location */
-+#define   PCI_TPH_LOC_NONE	0x00000000 /* Not present */
-+#define   PCI_TPH_LOC_CAP	0x00000200 /* In capability */
-+#define   PCI_TPH_LOC_MSIX	0x00000400 /* In MSI-X */
-+#define  PCI_TPH_CAP_ST_MASK	0x07FF0000 /* ST Table Size */
-+#define  PCI_TPH_CAP_ST_SHIFT	16	/* ST Table Size shift */
-+#define PCI_TPH_BASE_SIZEOF	0xc	/* Size with no ST table */
-+
-+#define PCI_TPH_CTRL		8	/* control register */
-+#define  PCI_TPH_CTRL_MODE_SEL_MASK	0x00000007 /* ST Mode Select */
-+#define   PCI_TPH_ST_NS_MODE		0x0 /* No ST Mode */
-+#define   PCI_TPH_ST_IV_MODE		0x1 /* Interrupt Vector Mode */
-+#define   PCI_TPH_ST_DS_MODE		0x2 /* Device Specific Mode */
-+#define  PCI_TPH_CTRL_REQ_EN_MASK	0x00000300 /* TPH Requester Enable */
-+#define   PCI_TPH_REQ_DISABLE		0x0 /* No TPH requests allowed */
-+#define   PCI_TPH_REQ_TPH_ONLY		0x1 /* TPH only requests allowed */
-+#define   PCI_TPH_REQ_EXT_TPH		0x3 /* Extended TPH requests allowed */
- 
- /* Downstream Port Containment */
- #define PCI_EXP_DPC_CAP			0x04	/* DPC Capability */
++static inline int pcie_tph_get_cpu_st(struct pci_dev *dev,
++				      enum tph_mem_type mem_type,
++				      unsigned int cpu_uid, u16 *tag)
++{ return -EINVAL; }
+ static inline void pcie_disable_tph(struct pci_dev *pdev) { }
+ static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
+ { return -EINVAL; }
 -- 
 2.46.0
 
