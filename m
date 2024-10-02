@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-13722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0A4098E161
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 19:02:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3DFC98E166
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 19:02:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B049E281994
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 17:02:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D934F1C20B33
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Oct 2024 17:02:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 391D01D172C;
-	Wed,  2 Oct 2024 17:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 334511D130F;
+	Wed,  2 Oct 2024 17:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CGSHyZyv"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="h6zHtjqt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2064.outbound.protection.outlook.com [40.107.101.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595501D0F7A;
-	Wed,  2 Oct 2024 17:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E7D1D0B98;
+	Wed,  2 Oct 2024 17:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727888456; cv=fail; b=hpGpg62Vj0icCJz5S8YvXzWjMEXmPPMfhpSumSiqXIEf0nzj8g1jBLSfojz8eVvSa3+Zs88h5OoM/CRwFeW6BzF35fSvdevISr7vVM7H90M7nA2MMMh3g7H3tEP9WUO3n8OcEGnsTiMaVVlk0OYRJXLDBC8+VoRbR35K8r3vge4=
+	t=1727888477; cv=fail; b=W+bzICzpocNcovvXqmtIENBA6SMlaWVEYAbyHK/vo9lx1AM3tSRCGFn1FIYjJtrS8sz7tU1JOOcKja6Itcn3MNXkjYF5XHAWUu1NBPsNaM6O1Vnx4O9JHQcCbqHYQGvWAKbRysO0UgcE1Ze8XJ0930RRuuImaUf98pvP0TC1hyw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727888456; c=relaxed/simple;
-	bh=ZJGssY2oGWwJP0wcRvNnHd+4b2k3mjLwmhKdNFZ4CSc=;
+	s=arc-20240116; t=1727888477; c=relaxed/simple;
+	bh=yAZK6hUfDiIK8k8WzNKlB3FUTEfoOUj/1LD2zGi4cQo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iHk+TId43ih2R8eBdZ1JNjU8HtF4Ayo4guRufHq/ThPeDY+lZQhm4ERRHCq4HyT3hqxweiYJ0ygOnQnQ5Ho78ekotKlm6a8aINrmPN8TD+1nyRPrs+I+UrLBanFXBXM1l9R/t2hru/ikF1FosaqISUCGMGLc1eTk+Ia7A6OU4Z8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CGSHyZyv; arc=fail smtp.client-ip=40.107.223.80
+	 MIME-Version:Content-Type; b=nOrrgPDBjP3InEqC4fZDZErrnpOvh1az0Bx0OldQDhPg2S3QYG/Gd/AXsUSv2aKSwX5dof548ZF3NdNRd3gYt7N4pyxK5WJO47hJk+9+YBbUA4w8+FLXx0fgPUAa5Eton3pbmQ6caNvTKNolsB53f4i3PhvuZTul9gG7Ty1Jykk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=h6zHtjqt; arc=fail smtp.client-ip=40.107.101.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ETZQRZaFpZAy26OHFeeXsKpedfPSc6Em5YpdaKcZ65h9AGg+7+bMqZDB2k52XRA/GGVrZlHopqJAtmrcux3yr4woJj59cocgl4jB838TUKE9n9FTpm6+g+eOmNzdNp0BQhsA5agt1ib1ulX/t3mRZhqWTLSN9yzK8Hu+KcZEjWXp9Fq/NtLEjpO9Mklf6PQ4K7J7vikn6HRiPWDwOio3Oe2jB0TC6KiIrAfLQgHtvpG69MgvTJOAjw1c1oWrBIQJneQYC4OFDoCPRPE8WGc09fVIBDV45BqmcyBViZs7viU7uPWOAtZEW2jWwFbBFRX28AOxAVulp2EUAiBE62GZYA==
+ b=v09N7Um0dwkBtKohqsNIhglZ+1/8zVp8nz67n0Nq0p/yavijW89O+0e9ftAoQ+z6CHSvraAiVOgcP3gxt/qt595pCFVR9m2jzWUH6KqhqVxolG6t1NIq1vkxy1UeYUX0AIPj1sVzmQmXcjIowIifiTNyrs1zeaY7bbt729HT1ptncKulDFoQ0JjV0p8/J9tjKdy+Ro0fKgmNsvaHXUniwezScFxaRww+RUCHtm+0RRVAJPSUiqyKvOfp6OTkOtaVYwta5LOQp2JZPOTkcc5bFrE5WWSugXVvPpa3Do6l7t66HP6Y8zqy0w1bVxrqF6ZUBHd7xWKMSnV71sGUWIlR3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t9ToyhpSl9wVHpET5ZvTlp/uavVyYBFOFmaKWTkzXRQ=;
- b=SZXydXUp+OCvIXBSCG634hLovorxWCm9Izjo5ottZe8z31rUNma3Y54gu2G7SU5tXrDZnwqIfin67sgTY/u4Lfi6Ls6oXttWXN24jFojx8ZIdd+wb9+JeqvgE3+HD08CMQwlh3a4Cjdu4Pf6KITXrP9/n9gnnjjES78k4pIHUZvfhy7W6k+DEvZtZUPnBDjsbfKtb42PF7ujNEpgu8rsRoGgKS5+MOIoP9W3wP8/4zExjodeiElYWDchnMhxQqt3oq434SyU3DWo3VrsuywJ4pc6m/pF7KM00lIAwvx53sOTPosGoTsulM73HqSMWK58xE9x5m84bg2mR6f/Sp2JZg==
+ bh=PNgpq07v5YZYLTb3beaoC4kaV0hX9qVoFMDzGQPEADc=;
+ b=ArpJ0Opf5rbT9NVWj+POJNaNisYvT60+k3+ubZzsRz2AZ9mBm2tFaEb/lPsGPmO58WnzwkXPq5Hm0olEu5g+anjesZ5WKvSUTJBteW+6lT+35qHSXJKO1TgMSJkLiu3JJGhYoiPwLBF0wIT7PRCOLvGdRRCrRGYJjrjZCvT1OqFylDxCnwbDE8YD7ZRRTY/NZw5x1Tb3xSurU+DT4diwVeEbpL+DPpuvVWiU65bZolbAizO+tIYpBFXEH3UmhiWjmiJWacWgZmLK8IvVF0TDEd5ZiRAAWnJvbT5B3C8S4OUQRfr2/XuK+jzbFcbSFBCZW6BrEbJaq3cz3YkjW74xGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t9ToyhpSl9wVHpET5ZvTlp/uavVyYBFOFmaKWTkzXRQ=;
- b=CGSHyZyvKbn0E3+vV/PDCgvqE3fK60g/VQXxUUGm6MLPWuB+S4wPq064Jik/YTed/CTohpcGaS4DL8Sa8CiVS9G553uunh/remQb/xADlaQseWz7NHY39utHe+qXyNIjt6Cg65hW+gbhp4hyJNfbsUKm+/7HU29ElwVKj53wXFA=
-Received: from SJ0PR05CA0122.namprd05.prod.outlook.com (2603:10b6:a03:33d::7)
- by CH2PR12MB4182.namprd12.prod.outlook.com (2603:10b6:610:ae::11) with
+ bh=PNgpq07v5YZYLTb3beaoC4kaV0hX9qVoFMDzGQPEADc=;
+ b=h6zHtjqty0QpU8xaoRz2hpq9NlPwtUitYiAsW2n7xvEbyHsQtEJOVHF9p+g4bdcvDk5b/t3acHzhgqjBiLgWuNkS98HgSSe6RI3ko3X8omwGCDKeUCts5CduUYCZot6S2OSRuB/CcaOdxKI5uk0mpQ8F7vz74WYSXwJf6rDiWvc=
+Received: from SJ0PR03CA0034.namprd03.prod.outlook.com (2603:10b6:a03:33e::9)
+ by CH2PR12MB4166.namprd12.prod.outlook.com (2603:10b6:610:78::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Wed, 2 Oct
- 2024 17:00:49 +0000
-Received: from SJ1PEPF00001CE0.namprd05.prod.outlook.com
- (2603:10b6:a03:33d:cafe::9) by SJ0PR05CA0122.outlook.office365.com
- (2603:10b6:a03:33d::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.9 via Frontend
- Transport; Wed, 2 Oct 2024 17:00:49 +0000
+ 2024 17:01:08 +0000
+Received: from SJ1PEPF00001CE3.namprd05.prod.outlook.com
+ (2603:10b6:a03:33e:cafe::ce) by SJ0PR03CA0034.outlook.office365.com
+ (2603:10b6:a03:33e::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16 via Frontend
+ Transport; Wed, 2 Oct 2024 17:01:08 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE0.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SJ1PEPF00001CE3.mail.protection.outlook.com (10.167.242.11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8026.11 via Frontend Transport; Wed, 2 Oct 2024 17:00:48 +0000
+ 15.20.8026.11 via Frontend Transport; Wed, 2 Oct 2024 17:01:07 +0000
 Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Oct
- 2024 12:00:46 -0500
+ 2024 12:01:02 -0500
 From: Wei Huang <wei.huang2@amd.com>
 To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
@@ -82,9 +82,9 @@ CC: <Jonathan.Cameron@Huawei.com>, <helgaas@kernel.org>, <corbet@lwn.net>,
 	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>,
 	<bhelgaas@google.com>, <lukas@wunner.de>, <paul.e.luse@intel.com>,
 	<jing2.liu@intel.com>
-Subject: [PATCH V7 4/5] bnxt_en: Add TPH support in BNXT driver
-Date: Wed, 2 Oct 2024 11:59:53 -0500
-Message-ID: <20241002165954.128085-5-wei.huang2@amd.com>
+Subject: [PATCH V7 5/5] bnxt_en: Pass NQ ID to the FW when allocating RX/RX AGG rings
+Date: Wed, 2 Oct 2024 11:59:54 -0500
+Message-ID: <20241002165954.128085-6-wei.huang2@amd.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20241002165954.128085-1-wei.huang2@amd.com>
 References: <20241002165954.128085-1-wei.huang2@amd.com>
@@ -100,243 +100,102 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE0:EE_|CH2PR12MB4182:EE_
-X-MS-Office365-Filtering-Correlation-Id: 597d8223-0002-423e-fe28-08dce303c3ed
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE3:EE_|CH2PR12MB4166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 171f3b6d-8504-4b57-42fc-08dce303cf16
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?R7hyqvxH3p60GfGh73KAM3FMXn8Mw/K6flun5JSWu8f30u/HLmVrmPEL+3IT?=
- =?us-ascii?Q?IlXt3unyzwMMzJtkiGas8jEMzGybB720LMC4d+tFaQrHGXhVKRH9ExeHejqd?=
- =?us-ascii?Q?TpK3pZ8GbtX7L2htKd5g8Oa2Q+Ko/Y/UwEAxQ9ctmA+Wy55n7GKZAhFQo9bN?=
- =?us-ascii?Q?0yOQcnQKNFDCh4F73jbyO/N0iOWlrziJ26gbnY+uMcZrjfiUyJ0/6jPMqmsw?=
- =?us-ascii?Q?OW8qPGK9iAB4ZA7mOVVv2PLvZqMtYiLFAthUAxi39FlsMe2LQZIe++Ii7QN8?=
- =?us-ascii?Q?khibasLZZDbXWtjRKUzwWHhIYmCCjwrI/T89rOfZjKOpETQ45nsiWuwgezcO?=
- =?us-ascii?Q?4ImeELxNIDi0QedLaTvo5eJmUHMS8sJ0fjVgnmKnP2gLBh1+6mjqHHww08G+?=
- =?us-ascii?Q?z0Eh6FqEhZzhsUi3BiP86/y6mcwOArxSK2qv7zBtARyWgR1rXs3+olDY69CZ?=
- =?us-ascii?Q?dmBH8JBp6H8SZ1Piv4//pYCNxqzMgBqF2LE+hJITI/rI223UyIyTJ+aWSg24?=
- =?us-ascii?Q?XmcCPrFmsaDnSkn9stFZQ4Wfn5L/1zcB2GCAm6fJ5hCEWh6DaJPzaJRtkdir?=
- =?us-ascii?Q?Z7kRRHKXb/hUG3lch5AGIS4wMrb31SMSCHjL5jRpZfFf0somWYcDoLCuavQp?=
- =?us-ascii?Q?gh/ZsWrek0JoTyYKfVP1Iy7DO6WCn6VLrWce8HH8nATNCKjYRDlvjT3tQpta?=
- =?us-ascii?Q?AiOZjoYbmJNMRk7qMw2fUrIt4pH+wB3YutOHoBDXb6Kjxeio7VH1f9Ly0Nvw?=
- =?us-ascii?Q?rLecuNjQSScF5IMFgk40USopf1gm2OYvbqQIzPZTl4U5prIClQYQNHWSzR7o?=
- =?us-ascii?Q?RbORDs9jQOgcu/ql4HpMALx1Uvf1WAmQVEPGLUku3uTXMzSp7frnCamPAKho?=
- =?us-ascii?Q?CpPWpmuSuBYttMK5vaEACRNBKHU2D4vIiqvvujwGzlO+fJkoWoVlhjf53T9D?=
- =?us-ascii?Q?IVgvKjusERk6p5TpvIk7dtt2UCybnCPx9lkFHvIFI4MGKv/LYNu78cpoM/CI?=
- =?us-ascii?Q?e+wMMMKCGVxgLlQfRLwe3Y97NHi0dpVZRy7i4oBin1c5kxrFXGxbMmfwZJwp?=
- =?us-ascii?Q?sfd/rjOj1d85Kkac4zdBQSqkHXhuIPN4Eh53qAf8c241U6j47/HqDt+4ABEQ?=
- =?us-ascii?Q?U2kneLNh8D+i8K5llkmbqi0XF5fNHz5HiwoMY6qH3VWdOefm3CS76WizVq7J?=
- =?us-ascii?Q?OwRXPzGJlfon3TgzkP4EHXgMh4OGfHobo4cWgUMXliddKig8o08DCJ6lbaZE?=
- =?us-ascii?Q?7rScBMLSCg3F7Z5cW1hbxWh6JLMDx2Qna+2NsKRhIIDHUJcngVU212jeY5N1?=
- =?us-ascii?Q?wfopY81EDt5ivns4KmviG9A2ud5tJVPlcJZwFjaWdtVRC6Gli5NjpFMbcnZs?=
- =?us-ascii?Q?sI3UVvff6iAby7CnCl/TI6LT4xFd?=
+	=?us-ascii?Q?fVqLuxyZmq7asMCSAGntYUQAceWnGq2b5pNYO1VFUWJxFVhgH8RdgGIHwqN0?=
+ =?us-ascii?Q?yRKGdffGfae5S3pCnAoV5aYWGlGhUUtSJXhNqoDEYpK7PlvOcvDZUbyoSnRV?=
+ =?us-ascii?Q?R+AczbQcLvHOlxpI13DU8QxXFSYj3vEz4ZOkUV4tjByCIRbsJl82IpardjAs?=
+ =?us-ascii?Q?h+kWYKx1US5MrtvAzObs0ZHmplqoOMQSfVzw5rw+iUkZN3sHSJMaQaWe6tjb?=
+ =?us-ascii?Q?9q2hThal9KzVLc3SjKomROcxRmaYdDiYTzeB422UTOm1FgxiSGi2hHee1/Ar?=
+ =?us-ascii?Q?jKrGXeYq9k2iNPOhnVTj5cyUKJJBLsQq2sim1Ss+gkZYDWTTnJDAOg96IqIR?=
+ =?us-ascii?Q?CwupXA5y39my62AIHK/iyPKNpyJS7jBP3MtT8QVhL1bCT6NGNG6CX4+JxvOo?=
+ =?us-ascii?Q?CwlWgnzyN0hIQYL9GuDFKM5iGGSUXvYUl2KnX2vw73hMSH+G3zuhMmBWIm4D?=
+ =?us-ascii?Q?ZdFTpZ0N0CfaklMP0sBoRv1FgGQye12R7FTK0xecRFqX3w22vTp6iUrwhw0m?=
+ =?us-ascii?Q?TSkROa/mdiE5Hexg6XvPfXjUhoq1f3PaGufips8iY+DOyiaT5DKwyNaYM5CW?=
+ =?us-ascii?Q?g5Y4fj3JNhIgq5q0WkcJ5YMfDFEjqsdYeYxNl3BGj3anrU4HPVUdYh2Gtzeh?=
+ =?us-ascii?Q?JlUIZMCTKH3xYafan9rE7LWgXHK77WQDoSf5ejZeXqBCyYodAw3/16MvsFV9?=
+ =?us-ascii?Q?iAFLKxHhbezKDGgcwKk+VtNJY18YIuvpezeX1d8mhkGXYxsdD+2AGUFNWJ1B?=
+ =?us-ascii?Q?NwZS7tGwjj7vqMAQ5pCRJ9x9cy7kC4dz7wqPt38EKSphGdVMY+Qw+/oIT4MY?=
+ =?us-ascii?Q?O0MvV1vVFJricORFWtbEAuaBYAFMLG10+LpGuAwR+AVZCm/yNeQ7adcyTLDk?=
+ =?us-ascii?Q?ougq2zWhCAOyYH9jRPxSqAz8+NHuJLv8G0H78X1hUDXCi1Cy7aLkcNBvVCyp?=
+ =?us-ascii?Q?6l5DETqYtOH4s5ExE9vx328wuj+2lvmMYjehCAhejoCoCL31/y2Gmk96F408?=
+ =?us-ascii?Q?Lykpz0fGGRSdFcO0DVyhLlJDS9M4rQX7HO5Q8K4eUmEZCw7k08NXu+RchkXT?=
+ =?us-ascii?Q?rvekezL73E2zwmBCXXgjG0XxEDT2zICVQ+1Z9QQERbcUIKuKC/cP3q+qbOif?=
+ =?us-ascii?Q?2/XzrASV0QZ+Uo1+BaxkiMp0Fo71EM2bG3BoSs542UWpjyMao18DA+wLZ5Mv?=
+ =?us-ascii?Q?NHqMgNAnkOExMDQggcEAuOCh6manN5u9IGRkg/bJediW4r9XxdlSiCsypp1n?=
+ =?us-ascii?Q?50/HIAKsYfOZBqJ5oI/sRdoCJrbC5qMxcuKEpOFgY9MGlE3AfPJfDoyJ217g?=
+ =?us-ascii?Q?EoTUvnJjxmOgYm0vcbHheKpFDEEZZJorEGViNFdVKx+zbV5eno+mvuRdqkuw?=
+ =?us-ascii?Q?BcsYjDqhOwQdOQwbZxY322IfLGVF?=
 X-Forefront-Antispam-Report:
 	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 17:00:48.9766
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 17:01:07.6955
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 597d8223-0002-423e-fe28-08dce303c3ed
+X-MS-Exchange-CrossTenant-Network-Message-Id: 171f3b6d-8504-4b57-42fc-08dce303cf16
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE0.namprd05.prod.outlook.com
+	SJ1PEPF00001CE3.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4182
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4166
 
-From: Manoj Panicker <manoj.panicker2@amd.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-Add TPH support to the Broadcom BNXT device driver. This allows the
-driver to utilize TPH functions for retrieving and configuring Steering
-Tags when changing interrupt affinity. With compatible NIC firmware,
-network traffic will be tagged correctly with Steering Tags, leading to
-significant memory bandwidth savings and other benefits as demonstrated
-by real network benchmarks on TPH-capable platforms.
+Newer firmware can use the NQ ring ID associated with each RX/RX AGG
+ring to enable PCIe Steering Tags.  When allocating RX/RX AGG rings,
+pass along NR ring ID for the firmware to use.  This information helps
+optimize DMA writes by directing them to the cache closer to the CPU
+consuming the data, potentially improving the processing speed.  This
+change is backward-compatible with older firmware, which will simply
+disregard the information.
 
-Co-developed-by: Somnath Kotur <somnath.kotur@broadcom.com>
-Signed-off-by: Somnath Kotur <somnath.kotur@broadcom.com>
-Co-developed-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Manoj Panicker <manoj.panicker2@amd.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
+Reviewed-by: Hongguang Gao <hongguang.gao@broadcom.com>
 Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 83 +++++++++++++++++++++++
- drivers/net/ethernet/broadcom/bnxt/bnxt.h |  7 ++
- net/core/netdev_rx_queue.c                |  1 +
- 3 files changed, 91 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 6e422e24750a..23ad2b6e70c7 100644
+index 23ad2b6e70c7..a35207931d7d 100644
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -55,6 +55,8 @@
- #include <net/page_pool/helpers.h>
- #include <linux/align.h>
- #include <net/netdev_queues.h>
-+#include <net/netdev_rx_queue.h>
-+#include <linux/pci-tph.h>
+@@ -6811,10 +6811,12 @@ static int hwrm_ring_alloc_send_msg(struct bnxt *bp,
  
- #include "bnxt_hsi.h"
- #include "bnxt.h"
-@@ -10865,6 +10867,61 @@ int bnxt_reserve_rings(struct bnxt *bp, bool irq_re_init)
- 	return 0;
- }
- 
-+static void __bnxt_irq_affinity_notify(struct irq_affinity_notify *notify,
-+				       const cpumask_t *mask)
-+{
-+	struct bnxt_irq *irq;
-+	u16 tag;
-+	int err;
-+
-+	irq = container_of(notify, struct bnxt_irq, affinity_notify);
-+	cpumask_copy(irq->cpu_mask, mask);
-+
-+	if (pcie_tph_get_cpu_st(irq->bp->pdev, TPH_MEM_TYPE_VM,
-+				cpumask_first(irq->cpu_mask), &tag))
-+		return;
-+
-+	if (pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, tag))
-+		return;
-+
-+	if (netif_running(irq->bp->dev)) {
-+		rtnl_lock();
-+		err = netdev_rx_queue_restart(irq->bp->dev, irq->ring_nr);
-+		if (err)
-+			netdev_err(irq->bp->dev,
-+				   "rx queue restart failed: err=%d\n", err);
-+		rtnl_unlock();
-+	}
-+}
-+
-+static void __bnxt_irq_affinity_release(struct kref __always_unused *ref)
-+{
-+}
-+
-+static void bnxt_release_irq_notifier(struct bnxt_irq *irq)
-+{
-+	irq_set_affinity_notifier(irq->vector, NULL);
-+}
-+
-+static void bnxt_register_irq_notifier(struct bnxt *bp, struct bnxt_irq *irq)
-+{
-+	struct irq_affinity_notify *notify;
-+
-+	irq->bp = bp;
-+
-+	/* Nothing to do if TPH is not enabled */
-+	if (!bp->tph_mode)
-+		return;
-+
-+	/* Register IRQ affinity notifier */
-+	notify = &irq->affinity_notify;
-+	notify->irq = irq->vector;
-+	notify->notify = __bnxt_irq_affinity_notify;
-+	notify->release = __bnxt_irq_affinity_release;
-+
-+	irq_set_affinity_notifier(irq->vector, notify);
-+}
-+
- static void bnxt_free_irq(struct bnxt *bp)
- {
- 	struct bnxt_irq *irq;
-@@ -10887,11 +10944,18 @@ static void bnxt_free_irq(struct bnxt *bp)
- 				free_cpumask_var(irq->cpu_mask);
- 				irq->have_cpumask = 0;
- 			}
-+
-+			bnxt_release_irq_notifier(irq);
-+
- 			free_irq(irq->vector, bp->bnapi[i]);
+ 			/* Association of rx ring with stats context */
+ 			grp_info = &bp->grp_info[ring->grp_idx];
++			req->nq_ring_id = cpu_to_le16(grp_info->cp_fw_ring_id);
+ 			req->rx_buf_size = cpu_to_le16(bp->rx_buf_use_size);
+ 			req->stat_ctx_id = cpu_to_le32(grp_info->fw_stats_ctx);
+ 			req->enables |= cpu_to_le32(
+-				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID);
++				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID |
++				RING_ALLOC_REQ_ENABLES_NQ_RING_ID_VALID);
+ 			if (NET_IP_ALIGN == 2)
+ 				flags = RING_ALLOC_REQ_FLAGS_RX_SOP_PAD;
+ 			req->flags = cpu_to_le16(flags);
+@@ -6826,11 +6828,13 @@ static int hwrm_ring_alloc_send_msg(struct bnxt *bp,
+ 			/* Association of agg ring with rx ring */
+ 			grp_info = &bp->grp_info[ring->grp_idx];
+ 			req->rx_ring_id = cpu_to_le16(grp_info->rx_fw_ring_id);
++			req->nq_ring_id = cpu_to_le16(grp_info->cp_fw_ring_id);
+ 			req->rx_buf_size = cpu_to_le16(BNXT_RX_PAGE_SIZE);
+ 			req->stat_ctx_id = cpu_to_le32(grp_info->fw_stats_ctx);
+ 			req->enables |= cpu_to_le32(
+ 				RING_ALLOC_REQ_ENABLES_RX_RING_ID_VALID |
+-				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID);
++				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID |
++				RING_ALLOC_REQ_ENABLES_NQ_RING_ID_VALID);
+ 		} else {
+ 			req->ring_type = RING_ALLOC_REQ_RING_TYPE_RX;
  		}
- 
- 		irq->requested = 0;
- 	}
-+
-+	/* Disable TPH support */
-+	pcie_disable_tph(bp->pdev);
-+	bp->tph_mode = 0;
- }
- 
- static int bnxt_request_irq(struct bnxt *bp)
-@@ -10911,6 +10975,12 @@ static int bnxt_request_irq(struct bnxt *bp)
- #ifdef CONFIG_RFS_ACCEL
- 	rmap = bp->dev->rx_cpu_rmap;
- #endif
-+
-+	/* Enable TPH support as part of IRQ request */
-+	rc = pcie_enable_tph(bp->pdev, PCI_TPH_ST_IV_MODE);
-+	if (!rc)
-+		bp->tph_mode = PCI_TPH_ST_IV_MODE;
-+
- 	for (i = 0, j = 0; i < bp->cp_nr_rings; i++) {
- 		int map_idx = bnxt_cp_num_to_irq_num(bp, i);
- 		struct bnxt_irq *irq = &bp->irq_tbl[map_idx];
-@@ -10934,8 +11004,11 @@ static int bnxt_request_irq(struct bnxt *bp)
- 
- 		if (zalloc_cpumask_var(&irq->cpu_mask, GFP_KERNEL)) {
- 			int numa_node = dev_to_node(&bp->pdev->dev);
-+			u16 tag;
- 
- 			irq->have_cpumask = 1;
-+			irq->msix_nr = map_idx;
-+			irq->ring_nr = i;
- 			cpumask_set_cpu(cpumask_local_spread(i, numa_node),
- 					irq->cpu_mask);
- 			rc = irq_set_affinity_hint(irq->vector, irq->cpu_mask);
-@@ -10945,6 +11018,16 @@ static int bnxt_request_irq(struct bnxt *bp)
- 					    irq->vector);
- 				break;
- 			}
-+
-+			bnxt_register_irq_notifier(bp, irq);
-+
-+			/* Init ST table entry */
-+			if (pcie_tph_get_cpu_st(irq->bp->pdev, TPH_MEM_TYPE_VM,
-+						cpumask_first(irq->cpu_mask),
-+						&tag))
-+				continue;
-+
-+			pcie_tph_set_st_entry(irq->bp->pdev, irq->msix_nr, tag);
- 		}
- 	}
- 	return rc;
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-index 69231e85140b..641d25646367 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1227,6 +1227,11 @@ struct bnxt_irq {
- 	u8		have_cpumask:1;
- 	char		name[IFNAMSIZ + BNXT_IRQ_NAME_EXTRA];
- 	cpumask_var_t	cpu_mask;
-+
-+	struct bnxt	*bp;
-+	int		msix_nr;
-+	int		ring_nr;
-+	struct irq_affinity_notify affinity_notify;
- };
- 
- #define HWRM_RING_ALLOC_TX	0x1
-@@ -2183,6 +2188,8 @@ struct bnxt {
- 	struct net_device	*dev;
- 	struct pci_dev		*pdev;
- 
-+	u8			tph_mode;
-+
- 	atomic_t		intr_sem;
- 
- 	u32			flags;
-diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
-index e217a5838c87..10e95d7b6892 100644
---- a/net/core/netdev_rx_queue.c
-+++ b/net/core/netdev_rx_queue.c
-@@ -79,3 +79,4 @@ int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
- 
- 	return err;
- }
-+EXPORT_SYMBOL_GPL(netdev_rx_queue_restart);
 -- 
 2.46.0
 
