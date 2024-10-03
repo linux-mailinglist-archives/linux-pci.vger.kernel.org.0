@@ -1,97 +1,127 @@
-Return-Path: <linux-pci+bounces-13741-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70CA798E784
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 02:04:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0ACC98E7C5
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 02:33:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 209381F25F26
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 00:04:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E52B1C21130
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 00:33:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60C8138C;
-	Thu,  3 Oct 2024 00:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4F14C8E;
+	Thu,  3 Oct 2024 00:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mg9AO4Vh"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="nvWRorHs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA4C38B
-	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 00:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727913892; cv=none; b=rLj+0a+4nIdOJnn4bf1I+4Ff8AkpcBvfqk7ITIu9kvJfAxiCBP7t7dvSbi5kFW8jH5M5+bS4XLwUSkcWatebTSvLvJVqm1Fkawg4ALmALJ3YsTLTyUMgCffPQmZ+oEzIZvjjjuY0RnuaBkj9v0Togeb5xPxg4EoKrA9d13IJ2iY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727913892; c=relaxed/simple;
-	bh=fzwriY9KdzQ/vI9K54QePO9zEqU3L5eVVuMdk+fAUbA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AC38BFC
+	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 00:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.162
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727915587; cv=pass; b=b51hsmJFhVpmocjYbd58+p5MKKKdWYl5JdLjM+ayqhWPyO+ixknQ1ftw/8hXRVWeqa3MARTIEEIZWp2CBiJNm8Bs10LRC1cU68lNCXm00SzWUGCXBaSSiU8wH8qTs2wjYtiEuZzkM6VuAG/eEBmJ7nyXvMrCVIPsFTkPbMwUpoQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727915587; c=relaxed/simple;
+	bh=bukB2Tz4JXCIjky993DAquDVLTNcWdGPULvuUi4oXx0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tCRjckCt4oDzVrM2MP6W4f5kSPOMs2x2xl0B+FOz36p2WQGxKyVX/T5dDrJORG/LI2cDUo9n3YR+s/RifMbha05CiWvGRHkjPLUcMMPky/gyQ9o2a204dG5qnzB+Bx8ZzbE9NsHqQixrTv/fLI/eDZ21qXFt50HaVxIExjYdBUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mg9AO4Vh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6460FC4CEC2;
-	Thu,  3 Oct 2024 00:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727913891;
-	bh=fzwriY9KdzQ/vI9K54QePO9zEqU3L5eVVuMdk+fAUbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mg9AO4VhWPI448ZXDU6XoQhkaPYgepunw7zdtiuN4jG4q4OnyWPyFRW3P+Ho86KHG
-	 UQpQyFUxfcski1yqy1iBm3vja5uqNyY8FpNkYZY47fwvA9ASJEwFFjLre2lFref2R2
-	 1ZagpTMuAjfJCFw89HGAdZG2ccs0HUfKUen8JY3hfHsC0ZCtJpxxoxAutpCF/NUKHO
-	 r0vi/dAysareB1+zfdwzFpWzJEtcIH6pjbGey9CltWb6aCehEBwxS8TuuDoFVBK6JF
-	 +X1wAXLqzBa5Lw+DN1bSxhHpnY/5XxAMm/WAk749z2Q6eVvLZ6Vw8PnSQwrrmyqY+F
-	 rdtvpnF9LjaqQ==
-Date: Wed, 2 Oct 2024 18:04:48 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCHv2 1/5] pci: make pci_stop_dev concurrent safe
-Message-ID: <Zv3foGpzXKx8adcy@kbusch-mbp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=drXPZ4QEWsIeQFKYZ7ZPcMSz8AT8yVpVRIC1J1GTQHrr8PKEJcfjK+O42t7Z/pAVVnzPPXqKEsn/b2RnOBrslszeMUe8iUM6Mo20el7Tf57FfDI7peK2CHzvz+g6guFqCeE/U86eFynUr9k1mt31roxfGfF63cTjeqn0WUpB3zc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=nvWRorHs; arc=pass smtp.client-ip=23.83.223.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 983E3844448;
+	Thu,  3 Oct 2024 00:32:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a289.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.99.96.202])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 25DC684442E;
+	Thu,  3 Oct 2024 00:32:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1727915578; a=rsa-sha256;
+	cv=none;
+	b=yGs60A/FDDR5aY48xU0JMD1YYvvxpu14aTfb10ktt0nOL0ZrXL7CQi2k1BxLtJC546nyx8
+	AyE5c/dK2uUvZ3k8qIiNVqAspdJtyj8QtogXU60nHX2vW+5M/aqHogwVDunVngHAdN6VEp
+	NdHPRBpghpv2LVd/+Ni5EB4rXCcfZOtO4se7CN7dnuB5RtPsE7bh01e5OEERuAmqp9GhpK
+	eBmpuUKCp7QEOSKRe+hErq1Ry8ymFa0ImuQUvtsR1CSRbMX5DbnK7FoLL4BuSVgewHlDkl
+	xhaSGT+Rbf0RxkDlSMn7IRM9ZkYwAsoQWPWa8f4Os/TvspH8uOcBiR7ehFe2EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1727915578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=bukB2Tz4JXCIjky993DAquDVLTNcWdGPULvuUi4oXx0=;
+	b=7iuP6lVo/xTrkjTJqV15UY1yu0NiZ9e6mFV0FD71t36WGuAmrWJ/mcPdo3Ccl/HjAa/RHT
+	by3lKSGdoh3WxKkTkBKAk5qKjsc6izrsIj66PR7VXVPQ786cf57LGd9dxRS8Z3v7h9kgek
+	tNDA2TMC6dDjExmGe3dCnMwgpeHNf/QlYZH9bb5B6j08tQVgwhJwfXAoB+8SAs0E7G5RP3
+	c7NwxAWw0OrbfqhiHIOPJZfI+xHuCHJPtwxoZd3S3TU9HrHkTf/UbqZk5NXOgAmYxJuAHh
+	/WKVGdkDVa2Bk5OlTUl6Q2thZxE9A4TKVTMKw00KzGhRrjot9d32fsnmOg5z6Q==
+ARC-Authentication-Results: i=1;
+	rspamd-784544597-8c24n;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Bored-Whistle: 0092fae76fccb79e_1727915578408_3264024077
+X-MC-Loop-Signature: 1727915578408:2994298954
+X-MC-Ingress-Time: 1727915578407
+Received: from pdx1-sub0-mail-a289.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.96.202 (trex/7.0.2);
+	Thu, 03 Oct 2024 00:32:58 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a289.dreamhost.com (Postfix) with ESMTPSA id 4XJt1j51byz6Z;
+	Wed,  2 Oct 2024 17:32:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1727915578;
+	bh=bukB2Tz4JXCIjky993DAquDVLTNcWdGPULvuUi4oXx0=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=nvWRorHssGLVE2vEsrw8BD8FnXCpiJXipcKmMoyYoXqZ0jfpdb35w5sdpHypqF2EG
+	 8q6zbBCqLnxDNEXOpJ0jnlzjKbsCGufZtzmnJ0G2ZCVPJEUzSEP/MJv+LJgsdvwayv
+	 zCsf4wkGDzqfM1keR9oPX9TCH06CHINSx/cSbjfB4XxL2gkiCWcq6yq4/VIjqTaSBi
+	 1gqOkUVjcdmASZXyAJVC4PrgHpHGFo6tqmf5OMVvbG9WcH13In1D5guKW49n58AoXU
+	 Vm3hYu27migvDQ5IhXluTlqTuMy8aNbk7nbyFqbgN/1kLIYDihjuKHn0NYBoKlzg3n
+	 YGXksFItMzCtA==
+Date: Wed, 2 Oct 2024 17:32:54 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Keith Busch <kbusch@meta.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	Keith Busch <kbusch@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCHv2 3/5] pci: move the walk bus lock to where its needed
+Message-ID: <20241003003254.cu2qthzl4znajcbh@offworld>
 References: <20240827192826.710031-1-kbusch@meta.com>
- <20240827192826.710031-2-kbusch@meta.com>
- <20241002233937.jvudgfhxjqbspq6n@offworld>
+ <20240827192826.710031-4-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20241002233937.jvudgfhxjqbspq6n@offworld>
+In-Reply-To: <20240827192826.710031-4-kbusch@meta.com>
+User-Agent: NeoMutt/20220429
 
-On Wed, Oct 02, 2024 at 04:39:37PM -0700, Davidlohr Bueso wrote:
-> > +	set_bit(PCI_DEV_ADDED, &dev->priv_flags);
-> > +}
-> 
-> So set_bit does not imply any barriers. 
+On Tue, 27 Aug 2024, Keith Busch wrote:
 
-Huh. Hannes told me the same thing just last weak, and I was thinking
-"nah, it's an atomic operation." But I'm mistaken thinking that provides
-a memory barrier.
+>From: Keith Busch <kbusch@kernel.org>
+>
+>Simplify the common function by removing an unnecessary parameter that
+>can be more easily handled in the only caller that wants it.
+>
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Signed-off-by: Keith Busch <kbusch@kernel.org>
 
-> Does this matter in the future when breaking up
-> pci_rescan_remove_lock? For example, what prevents things like:
+Nice cleanup.
 
-We're still far from being able to remove the big pci rescan/remove
-lock, but yes, that's the idea. This should be safe as-is since it is
-still using that lock, I can add smp barriers to make the memroy
-dependencies explicit.
- 
-> pci_bus_add_device()			pci_stop_dev()
->     pci_dev_assign_added()
-> 	dev->priv_flags [S]
-> 					    pci_dev_test_and_clear_added() // true
-> 						dev->priv_flags [L]
->     device_attach(&dev->dev)
-> 					    device_release_driver(&dev->dev)
-> 
-> ... I guess that implied barrier from that device_lock() in device_attach().
-> I am not familiar with this code, but overall I think any locking rework should
-> explain more about the ordering implications in the changes if the end result
-
-Oh, goot point. This sequence shouldn't be possible with either the
-existing or proposed bus locking, and I can certainly add more detailed
-explanations.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
