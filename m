@@ -1,84 +1,91 @@
-Return-Path: <linux-pci+bounces-13745-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13746-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60E7A98E93A
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 06:57:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4606D98E94B
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 07:15:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 814E21C21EEA
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 04:57:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 083B1B21633
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 05:15:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5434443AD9;
-	Thu,  3 Oct 2024 04:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86FFC224D1;
+	Thu,  3 Oct 2024 05:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OXdBAGnL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P71OwC4h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFDB3AC2B
-	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 04:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF68D36126
+	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 05:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727931436; cv=none; b=VBIaVNnLLmXxSMs0tiBczQaqVuZk/YgcweGt16fJT5rAEHPtIKXzgOxKrfFvc+FnN4z35ie2OLXVuKMWMEh9Wc8/dUGEdn0j4+bv4MbamxiI/iWVBWYCk8vgnkqCRgu+/6lL0J3/Q7H50vNeg9PwpyGdRyFxKZCh8r1rgZrSXAA=
+	t=1727932538; cv=none; b=Q4asJ8e25XQ/nL7EZ/TdS0+98S1/KaIba0F73hYqTckP+OvggwbsqAZQnG063Na1iRPK3PAohwe88aTIb94toVvCcjxuRJuxXUp8YJ6sCYaDEgOdOWqGIOxDUTZ52bFva4qN0PN4plc57FQfUry4/zu1I3vwnCDjZiIHO+Cxt1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727931436; c=relaxed/simple;
-	bh=qEnoBtsvZoh+9PLGVc+C4bgF5PV/jjkeM8XAPFbyTgc=;
+	s=arc-20240116; t=1727932538; c=relaxed/simple;
+	bh=OHiaQB6DuBhomWeQAXyZs+hA1EcEH547SHdB4xPJezs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DYL2Cde6vIvF4rbbxkw9VF3TsEm/As3IwiComCjkkQo/UF3yQwITpCWBQq7qTQr4Dbrx3O5LusfT6tGq20RoYMZQbrG+lVCmb/X4v/WYiDYLiSua/uyGH8pi1Ooz0yfLoqBCLJG2htmBGE3Rvb3VCJX/YSp8lAb+zd9S9S1aqJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OXdBAGnL; arc=none smtp.client-ip=209.85.215.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=PiWm3mW3U5IZLphyH8T/uz748Te92u48aMLGD2TX4KmkmbX3SxgGjvcmhJBtEJfs3CYYTX8Lf1CcegHONJgVzhnDzPhelzCoNpoLq1e/FVnwz/sngPf2qjTYCcvcglm0pXqppAnvgmB6jcwMHX03cPDD+ebJuyK34OaM9n6qQG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P71OwC4h; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-656d8b346d2so297393a12.2
-        for <linux-pci@vger.kernel.org>; Wed, 02 Oct 2024 21:57:13 -0700 (PDT)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2e09d9f2021so416460a91.0
+        for <linux-pci@vger.kernel.org>; Wed, 02 Oct 2024 22:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727931432; x=1728536232; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727932536; x=1728537336; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8dDNfw+NjJwfHr3rs4t9p6Uot6ve0GGTnKxlXQV+iZE=;
-        b=OXdBAGnLfMtY2FG4okmsu4wV8dNTqdhfnpviGhMMVOKbCrgWWqKFZ8LGDIEFj/ayO4
-         rUo/emhztLLyVcBX152jP7IaXzYQOvqGp2/W3ZuwrmjUPZfi2FlnDgzAus1KJJkIv0ay
-         GRjBcCHjGKRIHfAmZWvmrDpYB+UomMWsIaIZJeGuINNVpaDcWyGttnHnURW0w5JzaTVX
-         5HK/i+F1MXPgDFBBr0BdIB99Vq6myj13yfukLVR4+0+p8Y3C9CVHnr/zNoU5v3dBKD6p
-         t6u2MXYRyAkkLnNTqytpqD/A4AN8/bnw6ARRIYeqdjsJanEtjFCD6IYwWz343FmzLUl9
-         TKbg==
+        bh=zDZEd+knXkuxXPgXs2kDCTgo3adMpe62SuSlOEQu0K8=;
+        b=P71OwC4h+hwSGsTSrJ4V2TQ0bta34eAe5JEPK7wlyYCrNImKkj63ENFie6/MuBwolL
+         xJEE/G9/Y3qWw5khkoI9+R9vUCkgUIIcEAM5QHYzIak7H+V56nwN7kwywIHl0TEf0cml
+         Pe8mRT3hwiefIkiL3o5DPLWAdc2LBhhli4M2/mAZZQz2R6iLsY7tEacjtZrdPdML4OKv
+         dDMo5D/RJz9AI6ZsjuWWZJOLkKSresQa9+00U252JbmjJNiDE0zBtCXSxw7PzcPr1Z2c
+         Fy/TD6Dwlmg5eewGosdW62lX012n/RRaAtaKz5XvtfunS1ynbPpOuGc6Ll6s+bkzjF7o
+         VFIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727931432; x=1728536232;
+        d=1e100.net; s=20230601; t=1727932536; x=1728537336;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8dDNfw+NjJwfHr3rs4t9p6Uot6ve0GGTnKxlXQV+iZE=;
-        b=bCHTeSLp7Xj8bqgnwFk92gCWNF16edYP3jEDwZnXBE6FCRNyCkCUOMf0eFLQ2kb/64
-         7qHYq+QxuWPegwujJfVVsbKEOMhVB8QAuxlfwYxJHuH2kht7C573RJYFSMe0o5LO+9s9
-         TVuV+KfMCqo1FIrdfjCgeV1neihfN9N1uxHy1NQx38hVkeI+/Fo3jllDMrS3P1+C/Oh6
-         syf0Wy9Qx06R8mFEjh0boy+nLCmTrsEXwsHv+tgDOyKmSIP8IxrWMJXzZRIYiNwjgMES
-         vGk9st6+yErQj7aJPwpi0WznykGqkzt4t8eM1jRA3yqdudBpizv3JOf+t9dJzJPGv4H4
-         Wafw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiZMLYOzt/1UYxsl5leWPCNSCaTWWSJu6fBY+/Z74pbEkCxClB6B0a8YVFPmPIjX96cZP0IJAEfHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwSVExWE+KTgKkfQVRDvBcEudKkW7S80qBEvuV+5QU/3ixh3Sk
-	nF//SERFVihWDX5cMhI/OGkdzaS9/neoU+t/4gKuJzk/Uf+etv1omtf9zmEQaA==
-X-Google-Smtp-Source: AGHT+IH6h3pPAfdiE/OAeLgcL5M9L/V1oC+Dm1QHf9XghZuR3HLE9GJaHmWNiuj0yQDfqrO7gF3icw==
-X-Received: by 2002:a05:6a21:6e41:b0:1d4:fc66:30e8 with SMTP id adf61e73a8af0-1d5db163d65mr8252358637.10.1727931432531;
-        Wed, 02 Oct 2024 21:57:12 -0700 (PDT)
+        bh=zDZEd+knXkuxXPgXs2kDCTgo3adMpe62SuSlOEQu0K8=;
+        b=JlE/Y1aoiTjWsNrzrvu3WWmA3EEYcN6J7Nr3wFaVhYu72R+WFEy6AZ42mzCtKgfwgc
+         /sbp1nYub5gxP9ln5TU9SKd6r+SSNSnD0SB0OJdJfJGWlxgkfbu3hpErXm33SAlr5R8r
+         uQahCHTs0QadrmUK2Y9VLH9i9H3cKFEJEygmoonwut7GiE7rbu4mSpD9KxLDvfkI0JE2
+         cOaQG4bCdDi//s9eMbLLMvASxIf8ffMKKROIvEnID91UtpKwGG+PuipwsuONvLtH2JuV
+         28CN2xLn9hh3X8IIvx8xBX7SC3T8xny2H3YKotH8LkRnktpuI9yhSzXeLgMz0bXJwvCK
+         zuqg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8tZXr3Twdp+hBLGwQ2P/6kdHGFcR+Mcum/3nS9JGoY5C70+LB22GDlFA9NwLMZFEmXkilZn12//g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznsrjdAFG+0JKksWeb0DsE26RiDpOQZJGURuLAylfsOVMqMGvf
+	K+ZVoJ3ybRpMozIRPM8D9il7kON3ASRkI1UNYLH4dKwnXSE5dDIcoctJ8ARsHg==
+X-Google-Smtp-Source: AGHT+IGFzmJSdO8rd6CXNlY0TTZNLylyV1+W0nXK1rdwwYtV/CN8tyL4ABdeXZlNSjBhb2YD1GkaTA==
+X-Received: by 2002:a17:90a:a00f:b0:2e0:77aa:fecf with SMTP id 98e67ed59e1d1-2e1849cbe38mr5987618a91.41.1727932535975;
+        Wed, 02 Oct 2024 22:15:35 -0700 (PDT)
 Received: from thinkpad ([36.255.17.222])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7e9dbfee44dsm2588a12.64.2024.10.02.21.57.09
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e18f773a21sm2669570a91.20.2024.10.02.22.15.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 21:57:12 -0700 (PDT)
-Date: Thu, 3 Oct 2024 10:27:07 +0530
+        Wed, 02 Oct 2024 22:15:35 -0700 (PDT)
+Date: Thu, 3 Oct 2024 10:45:28 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_qianyu@quicinc.com, Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH] PCI: qcom: Enable MSI interrupts together with Link up
- if global IRQ is supported
-Message-ID: <20241003045707.gy3zemtxrheuipr7@thinkpad>
-References: <20241001042055.ivf4zspq4fqmaxth@thinkpad>
- <20241001211957.GA227250@bhelgaas>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
+	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
+	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
+	robin.murphy@arm.com, will@kernel.org
+Subject: Re: [PATCH v2 0/2] PCI: add enabe(disable)_device() hook for bridge
+Message-ID: <20241003051528.qrp2z7kvzgvymgjb@thinkpad>
+References: <20240930-imx95_lut-v2-0-3b6467ba539a@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,114 +95,105 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241001211957.GA227250@bhelgaas>
+In-Reply-To: <20240930-imx95_lut-v2-0-3b6467ba539a@nxp.com>
 
-On Tue, Oct 01, 2024 at 04:19:57PM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 01, 2024 at 09:50:55AM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Sep 30, 2024 at 12:11:01PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Sep 30, 2024 at 07:14:09PM +0530, Manivannan Sadhasivam wrote:
-> > > > Currently, if global IRQ is supported by the platform, only the Link up
-> > > > interrupt is enabled in the PARF_INT_ALL_MASK register. But on some Qcom
-> > > > platforms like SM8250, and X1E80100, MSIs are getting masked due to this.
-> > > > They require enabling the MSI interrupt bits in the register to unmask
-> > > > (enable) the MSIs.
-> > > 
-> > > "global IRQ" is a very generic name.  If that's the official name, it
-> > > should at least be capitalized, e.g., "Global IRQ", to show that it is
-> > > a proper noun that refers to a specific IRQ.
-> > 
-> > Sure.
-> > 
-> > > > Even though the MSI interrupt enable bits in PARF_INT_ALL_MASK are
-> > > > described as 'diagnostic' interrupts in the internal documentation,
-> > > > disabling them masks MSI on these platforms. Due to this,
-> > > 
-> > > > MSIs were not
-> > > > reported to be received these platforms while supporting global IRQ.
-> > > 
-> > > I'm trying to parse "while supporting global IRQ."  We basically
-> > > support global IRQ by installing qcom_pcie_global_irq_thread(), but of
-> > > course the device doesn't see that, so I assume it would be more
-> > > informative to say that MSIs are masked by some register setting.
-> > 
-> > Hmm, this is what I mentioned in the above paragraph referencing
-> > PARF_INT_ALL_MASK register. Is that not clear enough?
+On Mon, Sep 30, 2024 at 03:42:20PM -0400, Frank Li wrote:
+> Some system's IOMMU stream(master) ID bits(such as 6bits) less than
+> pci_device_id (16bit). It needs add hardware configuration to enable
+> pci_device_id to stream ID convert.
 > 
-> It requires the knowledge that the MSI enable bits are set by
-> hardware, cleared by 4581403f6792, and set again here.  This will be
-> more accessible to non-qcom experts if that information is included
-> here.
+> https://lore.kernel.org/imx/20240622173849.GA1432357@bhelgaas/
+> This ways use pcie bus notifier (like apple pci controller), when new PCIe
+> device added, bus notifier will call register specific callback to handle
+> look up table (LUT) configuration.
+> 
+> https://lore.kernel.org/imx/20240429150842.GC1709920-robh@kernel.org/
+> which parse dt's 'msi-map' and 'iommu-map' property to static config LUT
+> table (qcom use this way). This way is rejected by DT maintainer Rob.
 > 
 
-Okay.
+What is the issue in doing this during the probe() stage? It looks like you are
+working with the static info in the devicetree, which is already available
+during the controller probe().
 
-> > > The patch suggests that MSIs are masked internally unless
-> > > PARF_INT_MSI_DEV_0_7 is set in PARF_INT_ALL_MASK.
-> > > 
-> > > Are you saying that prior to 4581403f6792, MSIs did work?  Does that
-> > > mean PARF_INT_MSI_DEV_0_7 was set by a bootloader or something, so
-> > > MSIs worked?  And then 4581403f6792 came along and implicitly cleared
-> > > PARF_INT_MSI_DEV_0_7, so MSIs were then masked?
-> > 
-> > Yeah. Those bits were enabled by default in hardware, but since they were
-> > mentioned as 'diagnostic interrupts' in documentation, commit 4581403f6792
-> > intentionally disabled them. But that results in MSIs getting masked in
-> > *some* platforms.
+> Above ways can resolve LUT take or stream id out of usage the problem. If
+> there are not enough stream id resource, not error return, EP hardware
+> still issue DMA to do transfer, which may transfer to wrong possition.
 > 
-> Apparently the "*some* platforms" part is more qcom-expert knowledge?
-
-I already mentioned those platforms in the commit message 'SM8250 and X1E80100'.
-
-> There are other qcom platforms where MSIs are not disabled by
-> 4581403f6792?  Information about which platforms are which also sounds
-> useful for future maintenance.
+> Add enable(disable)_device() hook for bridge can return error when not
+> enough resource, and PCI device can't enabled.
 > 
 
-Yeah, SM8450 is the one which I know so far. I will mention it explicitly.
+{enable/disable}_device() doesn't convey the fact you are mapping BDF to SID in
+the hardware. Maybe something like, {map/unmap}_bdf2sid() or similar would make
+sense.
 
 - Mani
 
-> > > > So enable the MSI interrupts along with the Link up interrupt in the
-> > > > PARF_INT_ALL_MASK register if global IRQ is supported. This ensures that
-> > > > the MSIs continue to work and also the driver is able to catch the Link
-> > > > up interrupt for enumerating endpoint devices.
-> > > > 
-> > > > Fixes: 4581403f6792 ("PCI: qcom: Enumerate endpoints based on Link up event in 'global_irq' interrupt")
-> > > > Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-> > > > Closes: https://lore.kernel.org/linux-pci/9a692c98-eb0a-4d86-b642-ea655981ff53@kernel.org/
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
-> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > index ef44a82be058..2b33d03ed054 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > @@ -133,6 +133,7 @@
-> > > >  
-> > > >  /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > > >  #define PARF_INT_ALL_LINK_UP			BIT(13)
-> > > > +#define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
-> > > >  
-> > > >  /* PARF_NO_SNOOP_OVERIDE register fields */
-> > > >  #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-> > > > @@ -1716,7 +1717,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> > > >  			goto err_host_deinit;
-> > > >  		}
-> > > >  
-> > > > -		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
-> > > > +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
-> > > > +			       pcie->parf + PARF_INT_ALL_MASK);
-> > > >  	}
-> > > >  
-> > > >  	qcom_pcie_icc_opp_update(pcie);
-> > > > -- 
-> > > > 2.25.1
-> > > > 
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
+> Basicallly this version can match Bjorn's requirement:
+> 1: simple, because it is rare that there are no LUT resource.
+> 2: EP driver probe failure when no LUT, but lspci can see such device.
+> 
+> [    2.164415] nvme nvme0: pci function 0000:01:00.0
+> [    2.169142] pci 0000:00:00.0: Error enabling bridge (-1), continuing
+> [    2.175654] nvme 0000:01:00.0: probe with driver nvme failed with error -12
+> 
+> > lspci
+> 0000:00:00.0 PCI bridge: Philips Semiconductors Device 0000
+> 0000:01:00.0 Non-Volatile memory controller: Micron Technology Inc 2100AI NVMe SSD [Nitro] (rev 03)
+> 
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> To: Richard Zhu <hongxing.zhu@nxp.com>
+> To: Lucas Stach <l.stach@pengutronix.de>
+> To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> To: Krzysztof Wilczyński <kw@linux.com>
+> To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> To: Rob Herring <robh@kernel.org>
+> To: Shawn Guo <shawnguo@kernel.org>
+> To: Sascha Hauer <s.hauer@pengutronix.de>
+> To: Pengutronix Kernel Team <kernel@pengutronix.de>
+> To: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: imx@lists.linux.dev
+> Cc: Frank.li@nxp.com \
+> Cc: alyssa@rosenzweig.io \
+> Cc: bpf@vger.kernel.org \
+> Cc: broonie@kernel.org \
+> Cc: jgg@ziepe.ca \
+> Cc: joro@8bytes.org \
+> Cc: l.stach@pengutronix.de \
+> Cc: lgirdwood@gmail.com \
+> Cc: maz@kernel.org \
+> Cc: p.zabel@pengutronix.de \
+> Cc: robin.murphy@arm.com \
+> Cc: will@kernel.org \
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Changes in v2:
+> - see each patch
+> - Link to v1: https://lore.kernel.org/r/20240926-imx95_lut-v1-0-d0c62087dbab@nxp.com
+> 
+> ---
+> Frank Li (2):
+>       PCI: Add enable_device() and disable_device() callbacks for bridges
+>       PCI: imx6: Add IOMMU and ITS MSI support for i.MX95
+> 
+>  drivers/pci/controller/dwc/pci-imx6.c | 133 +++++++++++++++++++++++++++++++++-
+>  drivers/pci/pci.c                     |  14 ++++
+>  include/linux/pci.h                   |   2 +
+>  3 files changed, 148 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 2849622e7b01d5aea1b060ba3955054798c1e0bb
+> change-id: 20240926-imx95_lut-1c68222e0944
+> 
+> Best regards,
+> ---
+> Frank Li <Frank.Li@nxp.com>
+> 
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
