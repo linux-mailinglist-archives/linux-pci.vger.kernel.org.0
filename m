@@ -1,162 +1,156 @@
-Return-Path: <linux-pci+bounces-13761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13762-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A783698EBE3
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 10:50:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A3D798EC18
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 11:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 559D5286EC7
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 08:50:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D1E41F21D37
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 09:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB5F513DDA7;
-	Thu,  3 Oct 2024 08:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M04nxZ9m"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C07142E7C;
+	Thu,  3 Oct 2024 09:13:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239CC13B2B4
-	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 08:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173A713DBB1;
+	Thu,  3 Oct 2024 09:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727945449; cv=none; b=nPj5RIWLVWRvNjAaEAbiYef55Fs9I5I2cRM7wikkA2rNEi57NpdREkRtV3tgY6Mc3NCtf+bJZPpIQNrUD/eGXysiZWmfwsv5JjvSEAcgazFfBiAZ0JsjVzgJz1skD6KMdQ4ILP6LZasAfkzzRrFco06CLYrXPHwNzxMVx5V61Lo=
+	t=1727946814; cv=none; b=BR6J/9kH94aSeYSE6cIezzbQLCmY6dFV76DvA2BR9U4DW1z39IzBs55K4l4TV8FoG+4Pxv/Q8pV2vLkEUISQzIuAvgkjQqG0MTnmP6M9BnwqCkySEH8rUwgmvrqZ3jBa2s9ExlZ06+1rPomXqVjfwNWoex/z7WebNmS3oS42TYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727945449; c=relaxed/simple;
-	bh=/FmHmBpd5XDOLhQhi/5I3Km8K1myZ143jQBtndvdIOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oe0lEriR3Lv2wCnmxjRwx+t4WSWOWmyQmIsxM9ffqCXYJv3CdRFeJTQ3AqfayUsqVK/tSMkvKvbo5Nx7MgXNektIDupctx6H6/ACS2LmRqJAuJe616oHBoDSVTn8J4DRjvcDLAV9y7U+G7IpBVQ8hS7YleaqNQFb6vDy9ilZ0Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M04nxZ9m; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-718d6ad6050so678056b3a.0
-        for <linux-pci@vger.kernel.org>; Thu, 03 Oct 2024 01:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727945447; x=1728550247; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7KQ7+I4I78I58DCOoMZSP/bllSWx1mddI+1OwxdetBE=;
-        b=M04nxZ9mK3liv7VZMotY/Z5VWMGKY24OGYnGDnYjSv8jBAwx71YXfM+9TsgR8+2nws
-         0kDjITYrEgLKqZezDvDRZ79/oj53ErPZ31eOT7gsfaCHOmqY+8k0LqeO123mYzjHE4K6
-         sjVbazew4HWqNmnS/np3TvwevI9uf4102SAXGejvosh7wFaPwcY0fSZ090W3YDX6yn7Y
-         gwZpMB/HiWBuxg41psiHpPUs19NajTOMpozltARuraTLhUzKnyzrjwgc/6Lgjie7fhN+
-         Yc4GzpyszjjT/GRDIT3CH997Q4oWxEC34GH8VTTGhkmnvtiyl3zQzPecA3cH8Juk9LFC
-         sfsw==
+	s=arc-20240116; t=1727946814; c=relaxed/simple;
+	bh=NXCM33NdXsSEuRRLpBcQcMOtIahHrw3gOJde07MAaq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YkB1E9vW86R49GTCmyKlPTHMF2XIlgXrgaLcEcBObgPcRDn9qk2dqNV+IozbUygCXxmfYb9uNoY0dMQ/HDynyirC8cUXceNMkXPaW0u3DOF4DbtOfN96yZBoW5iOiMjXc6iE1MySTZNmU6juRJTIcLjQTrKxhdt80vYqheNbzTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6ddfdeed0c9so5664027b3.2;
+        Thu, 03 Oct 2024 02:13:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727945447; x=1728550247;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7KQ7+I4I78I58DCOoMZSP/bllSWx1mddI+1OwxdetBE=;
-        b=mKLX/Sgzs0lRXWIiHj89OS1fELu+Y/P2W1gK0Hmn67lynKjfQDllS8z/PV9JuOG0vK
-         XWYfGenbWdsbFlAASR8HP0CHM69zQ3V3hzTuxsyqJEstd0Wfo8JNKkrlQmaMjjQthUj2
-         nOqO2d6Pc5YmtB1KLlBNiUkn69e6d7VsxQNqrzk11t/d/Dk8WYK0Wwug9MfIXmCNdiTC
-         S2hMLeTXtdK4MFJz4/QmsLr2IeLE+3CLQZTr/vHtdH8LZj5648Ww/OxglAsxW9ExwvbB
-         TliCR4QkV6lSrjbjnd7/4meR+nMAMbb3u9Kc4AEnt4GhjDIgo5QY1SUMrOaIFmAidQ7N
-         Pzrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrXNBqXRyF7ArOlLVEEtaqJA77PL8SfCAYClYA/ssNRA+/WgckbGGfMVZvEl5mOWNgjqbtPFI0EoI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5tGVSrOO4dsv55e/ZP3Q2LW/IiPwSwfUyoSlhWOPdz3i71vd0
-	HLD+3BLU63a7tvJSx5B695hU7Te7wqAAz7FmnkGuzgCf2WyPNurvJxJwDDLGCQ==
-X-Google-Smtp-Source: AGHT+IG2HoPAdPTHe9BKFz0bx6mX818wSoCf/G1Oj2DqmoO9d5KjePwIuI2iQfkVv1fwjTfAhr8xiA==
-X-Received: by 2002:a05:6a00:4fc5:b0:717:90df:7cbb with SMTP id d2e1a72fcca58-71dc5d5bf53mr9374915b3a.22.1727945447365;
-        Thu, 03 Oct 2024 01:50:47 -0700 (PDT)
-Received: from thinkpad ([36.255.17.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71dd9d8e65fsm829846b3a.87.2024.10.03.01.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2024 01:50:46 -0700 (PDT)
-Date: Thu, 3 Oct 2024 14:20:42 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v2] PCI: take the rescan lock when adding devices during
- host probe
-Message-ID: <20241003085042.w7d3h2tiogr56un7@thinkpad>
-References: <20241003084342.27501-1-brgl@bgdev.pl>
+        d=1e100.net; s=20230601; t=1727946811; x=1728551611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c7WgvebXXsaRMnWziPr4x8Pj8uGoCS6EaJvHvtQmBuY=;
+        b=skiEfA82QesGYJog62JU63cMx1yyt7EdfbhvJIsRGZXuzYzhyOJGY9KS+tgsmNkJlE
+         rKVN0/KoKIqFlWIqBsOTsXDCI+YwGOKKKScOQKnZhre2l/P8ML447jnzPLHs7NOl4aZm
+         5RYuQe8EgMJnp5S9d/z71owjSb2FCYdi90833HGsbz2mp++AxHyAh9bPE9NP/4BBmwM+
+         me4Lsc0gX4Yh5X/8TntH5RVuhIBhlEzGoTTPnpOJl5GLiywVEoWreTb5E/oaj6oO9HRx
+         rOgs+q8256or7lEpLATxZrbCe8Xxm0x/ugF4LTsD64HT7j0VdrxxS/P7lJ5nKPDtHOUP
+         19YA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGur2MGfdOCjMsx/AkG1Wmxjbod5bU1S4XQWSSg/ZwQ4HSLlFPGT7xTZuL3T2wDXy0N2ifB944I8ftf6y0@vger.kernel.org, AJvYcCWWzVWB8phuSQkvgVdortL4/uSL8tVcelnb1jwOnf+6z78s719jQInlEN0I/NUp/Xk08YVWQFb3@vger.kernel.org, AJvYcCXRqWRrbB2mkLYysLuNkpzKgQiClx8IvTE33MIAyeAXV7uCMgHl/inQj0HRjMixDq/S6RmjH+sb0yrv@vger.kernel.org, AJvYcCXqLmCLpWR9LYYSGDj/X2bRzdzBlSZ3/RIPhCYveyhPdXbOgF8bc5bgzYdI4Ubd8SGt/3Oex0gmxQe4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBtPd0ImKYp2kLFnwENb0bhkkdFahehXcFj8MZMeONufcmqnwe
+	0TsxQHYjZrLTF4gf0AO/SsyhfNZ2e2Y3ut7yOT2gW89aaewWbci8hORumuniAYU=
+X-Google-Smtp-Source: AGHT+IGn18KDopn5fANqBk5+McBjmh6uePf8h4ryC2QhJR0RNJaG/0M5ek3KbypWMR3DGEBkmK/ztA==
+X-Received: by 2002:a05:690c:b13:b0:6e2:83d:dfd9 with SMTP id 00721157ae682-6e2a309f315mr62025137b3.44.1727946811113;
+        Thu, 03 Oct 2024 02:13:31 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e2bc2d1de6sm1334357b3.68.2024.10.03.02.13.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2024 02:13:29 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6e232e260c2so6053897b3.0;
+        Thu, 03 Oct 2024 02:13:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV+vvUfrvAOYPhCbgy1OcVfwxSR64yz1OIrTbiz7/Ikj4LpElzYKdcB8cC4idfggou8Ki0FVxXSA6iQt3tz@vger.kernel.org, AJvYcCV0jO9Sst1ZcZ4T+SIY2g6UwAtW76oIWHxtA2A/HoGac7fbTGxye45m/YO+/rMKDrXlh5GO16IcJ8C3@vger.kernel.org, AJvYcCWJhotmCwgW8t6hvs1hfVawmel2bVrXfAuHhjfnFWxLwqh4UaWeXQYXemwuJ8wHCOh94lFfXIg3@vger.kernel.org, AJvYcCXF4Ag7lK4fYaqH2jmWHYct9Sfb4wXkrox76ebUdhuYocx7KzgM/+6Jfnwf7UeXOhRIYRlijganGRzo@vger.kernel.org
+X-Received: by 2002:a05:690c:660e:b0:6e2:636:d9ed with SMTP id
+ 00721157ae682-6e2a2b72c98mr51489427b3.3.1727946809298; Thu, 03 Oct 2024
+ 02:13:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241003084342.27501-1-brgl@bgdev.pl>
+References: <20241003081647.642468-1-herve.codina@bootlin.com> <20241003081647.642468-2-herve.codina@bootlin.com>
+In-Reply-To: <20241003081647.642468-2-herve.codina@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 3 Oct 2024 11:13:17 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU=Huug5Hip+CCma8pzo=AHAeWtzPES8Zu-qCBAJ0Ng2w@mail.gmail.com>
+Message-ID: <CAMuHMdU=Huug5Hip+CCma8pzo=AHAeWtzPES8Zu-qCBAJ0Ng2w@mail.gmail.com>
+Subject: Re: [PATCH v7 1/6] misc: Add support for LAN966x PCI device
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, Andrew Lunn <andrew@lunn.ch>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 03, 2024 at 10:43:41AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Since adding the PCI power control code, we may end up with a race
-> between the pwrctl platform device rescanning the bus and the host
-> controller probe function. The latter needs to take the rescan lock when
-> adding devices or we may end up in an undefined state having two
-> incompletely added devices and hit the following crash when trying to
-> remove the device over sysfs:
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> Internal error: Oops: 0000000096000004 [#1] SMP
-> Call trace:
->   __pi_strlen+0x14/0x150
->   kernfs_find_ns+0x80/0x13c
->   kernfs_remove_by_name_ns+0x54/0xf0
->   sysfs_remove_bin_file+0x24/0x34
->   pci_remove_resource_files+0x3c/0x84
->   pci_remove_sysfs_dev_files+0x28/0x38
->   pci_stop_bus_device+0x8c/0xd8
->   pci_stop_bus_device+0x40/0xd8
->   pci_stop_and_remove_bus_device_locked+0x28/0x48
->   remove_store+0x70/0xb0
->   dev_attr_store+0x20/0x38
->   sysfs_kf_write+0x58/0x78
->   kernfs_fop_write_iter+0xe8/0x184
->   vfs_write+0x2dc/0x308
->   ksys_write+0x7c/0xec
-> 
+Hi Herv=C3=A9,
 
-Thanks for adding the crash log. It always helps to have the log in patch
-description to find *this* patch.
+On Thu, Oct 3, 2024 at 10:17=E2=80=AFAM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+> Add a PCI driver that handles the LAN966x PCI device using a device-tree
+> overlay. This overlay is applied to the PCI device DT node and allows to
+> describe components that are present in the device.
+>
+> The memory from the device-tree is remapped to the BAR memory thanks to
+> "ranges" properties computed at runtime by the PCI core during the PCI
+> enumeration.
+>
+> The PCI device itself acts as an interrupt controller and is used as the
+> parent of the internal LAN966x interrupt controller to route the
+> interrupts to the assigned PCI INTx interrupt.
+>
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> Reported-by: Konrad Dybcio <konradybcio@kernel.org>
-> Tested-by: Konrad Dybcio <konradybcio@kernel.org>
-> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Thanks for your patch!
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> --- /dev/null
+> +++ b/drivers/misc/lan966x_pci.dtso
+> @@ -0,0 +1,167 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2022 Microchip UNG
+> + */
+> +
+> +#include <dt-bindings/clock/microchip,lan966x.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/mfd/atmel-flexcom.h>
+> +#include <dt-bindings/phy/phy-lan966x-serdes.h>
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +       fragment@0 {
+> +               target-path=3D"";
 
-- Mani
+Nit: missing spaces around "=3D".
 
-> ---
-> v1 -> v2:
-> - improve the commit message, add example stack trace
-> 
->  drivers/pci/probe.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4f68414c3086..f1615805f5b0 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3105,7 +3105,9 @@ int pci_host_probe(struct pci_host_bridge *bridge)
->  	list_for_each_entry(child, &bus->children, node)
->  		pcie_bus_configure_settings(child);
->  
-> +	pci_lock_rescan_remove();
->  	pci_bus_add_devices(bus);
-> +	pci_unlock_rescan_remove();
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_host_probe);
-> -- 
-> 2.30.2
-> 
-> 
+> +               __overlay__ {
 
--- 
-மணிவண்ணன் சதாசிவம்
+Unfortunately we cannot use sugar syntax, as sugar syntax does not
+support empty target paths yet.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
