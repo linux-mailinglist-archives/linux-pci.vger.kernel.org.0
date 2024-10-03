@@ -1,419 +1,366 @@
-Return-Path: <linux-pci+bounces-13788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D05798F8B2
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 23:13:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 828AB98F908
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 23:39:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1409B1F21D97
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 21:13:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A740D1C20D18
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 21:39:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65631A7262;
-	Thu,  3 Oct 2024 21:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70AE01BFE01;
+	Thu,  3 Oct 2024 21:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JABzhNSe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjQmAtzE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010020.outbound.protection.outlook.com [52.101.69.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4395E1B85F3;
-	Thu,  3 Oct 2024 21:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727989977; cv=fail; b=GLPyPWZxTUWlwhFOCerNK2bsiKucNZ1S62B4YDeawWPtXNErAd6o+xjKT/Com2SnP5iqEF6oA2QOyi5kndYvThm1Ij7p8Jx3wnHnjuV8yiVuujy5WWWtHqWFsX+3bq9olSdkIQRrI/6558bgQ/eLyTt5Fw/Em2KsMfFYkMmRM0w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727989977; c=relaxed/simple;
-	bh=18U3XrrdiMz9Dv2b7XwE1IgL9Cj1tQg3O0pgzAMIbzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n9yEW+AIszNK9Y4Vo4rsHPi8Vrpm5WjKIusrr4rYex64ZksmjKa9SKU4KcDK+Tgy34VIzl0S+cfAzbU/hP+UF9cBVB+sb+98V0HTjKWY7mBBtX0PMLHVkzPwWTTvKeRecCvdq1asEp6tk0KUrLteiG1y87AdItM2xlqpSfpu5pQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JABzhNSe; arc=fail smtp.client-ip=52.101.69.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o/emwT1IgvrDnmameXbUtM8MCbq+SiRMx7GwkeJhIbmrPx/kKjKQTVGhhGhCJ49JtYsa3lV1kZLqV8uxqWtbKYDTd3De8U83+iWe1ZZLoFABuMTRRM6MbAsBSXVXhFIWAzErKTqqFjz5UiusDkNEdMJUsnuBqVyGl+48l4XvKEqQOmfhWGGaWzV3DGpksjHAPSw5VX5NBheizXPJK2XHFtuS/RCixC3X292OKShE4rY1oprGtWfxeEHLQPd6kYsFpGCJNYO7VVl670LtB8+7noH4w8/QGBbPAck5IUa5k2HoeSlzl2EYCP+2ANvmh+lm0rTrbxDHUW44V5Xd3INeaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X+IlFSFIqNRKkimcuRBIfOgXfFUBgdpYyvYItQbD6rE=;
- b=Df9vO7QrBAYQ33pDdWqmHq07FuTDQaUMSLy2c6esiJEiSih5HCN4KQ3yWCwp9FEAOGiG2M7rDiSnB3bCrlDFYNvxRCtf0lx+ePNfcVOjZEisuY0+gnUgz/Z25+U2YsIJIlcPVgu8LJlc+qELcRJV6U1mi7/3yyt0nIaYk3VYmsIaaF2sp6o0fKLVXvp4RhmDVW0fNydQDBa2WUKVAT0EJsKqmOEa0YDSh/Q4vya+iYnp6sHRAHw2b8XJh91WMGLy+ELBrmWRO3igKp8bdRaKXVC9qYrSBWGGjl4ic6NPhuc5PebyP6xJlDVZBXLi/WGPr1CcckJXl+n0WEcdKjfQyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X+IlFSFIqNRKkimcuRBIfOgXfFUBgdpYyvYItQbD6rE=;
- b=JABzhNSeZKahT1lKjROB0K5FL4NRS/BTLhZrpdQ2m0VlXyAaQ7d1dHn78yLDpb9T9YcbwDwbLULLgfY3VNyTfhwodoDqWd1I/c2lBQJxJNzs+8m/2Q+rB674m4ABq4YBJ53YUQ9kVNUNdde9aA2Dv0/CZwuKyu7NvbEDuZ5vh2MTIFqHG/UJOxzuHcMTBxATlFkYIWJKRvN5/eJKAXlDnj4cXhz3BdK7HntW87TWmNocPldZcnxCZbnvP+qCAjvwNksCjCsHWhunRcImDkj7aKL+X1HYpVT5DNAPJGKVLn5k5rGU+/zr+J17Jnn/Criu+8ptb/FLWqJ8JRXrEw86qg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB9737.eurprd04.prod.outlook.com (2603:10a6:800:1dc::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Thu, 3 Oct
- 2024 21:12:38 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8026.016; Thu, 3 Oct 2024
- 21:12:38 +0000
-Date: Thu, 3 Oct 2024 17:12:30 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	N Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
-	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
-	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
-	will@kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: imx6: Add IOMMU and ITS MSI support for
- i.MX95
-Message-ID: <Zv8IviyeSDf7HtbG@lizhi-Precision-Tower-5810>
-References: <20240930-imx95_lut-v2-0-3b6467ba539a@nxp.com>
- <20240930-imx95_lut-v2-2-3b6467ba539a@nxp.com>
- <b479cad6-e0c5-48fb-bb8f-a70f7582cfd5@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b479cad6-e0c5-48fb-bb8f-a70f7582cfd5@arm.com>
-X-ClientProxiedBy: SN4PR0501CA0054.namprd05.prod.outlook.com
- (2603:10b6:803:41::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498DF1BD01F;
+	Thu,  3 Oct 2024 21:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727991575; cv=none; b=uqt0KXcQrIZyuZ5zDGPcBCPxEENb27WMAWMc2O7I4Jpogwpv8p2DAhBj4fTOoGXC6hrAj9XORfpWLzux/J/KEqZN5l9lR3/CYRnHUkz929XOxr2IAFHrhI9au6D3V9nmUPmynyr0GQeebMNifIm8OaXkkVA5KwOf4rV3VoUQBus=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727991575; c=relaxed/simple;
+	bh=g9FV0YPeoBlLFnXeB9872pXI8atzqPwVsaTCFwhYqRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SSoCvPy/aeuN1DPTyOvb+VUWCpdN3BXZ+zov4lnZ9/sT32sQqeBII1la8zTB47keKgtr8HFY1vSH+FG5UxlYWp2nOKfaQbJ+xSpO9wa+nfqqHhgWERcvlBEJsNkdnvbrM3fKEfj/2hMT91kfyiZhgx4MzxwZxXTPOHTKtfFhjxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjQmAtzE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E5FC4CEC5;
+	Thu,  3 Oct 2024 21:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727991574;
+	bh=g9FV0YPeoBlLFnXeB9872pXI8atzqPwVsaTCFwhYqRI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kjQmAtzEi2SuMXXTRmdlVZbFtSuWuIsGwPtPQ/Qr8B/rts7zHSm7OWYyJGzridcHE
+	 ENSYUFGWbh63/3dCy3Kfy04B9pZqzmeE4Nq6Ls4v7zorcf1PVAr/ukx2rVtpR20y73
+	 VP0EwoL/Zye97Iri6alowj2vESpusajCzmdARU5Zl2BhDujKmDWGBKWWoYTNh8mJj/
+	 ZfuT08Uiycu1Y9LLBYFqASe4aiFvpr7dQ9bRMAhVU/kxy83bca+eve3Zps9aT23g39
+	 aCg0kZ32vOtTwCZY1rfLKdKer6lDKwMpLATZQzdxtNL8eB86wSNTvvO0i9dYWWnh81
+	 snrGQ+eR1NaIg==
+Date: Thu, 3 Oct 2024 16:39:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <jroedel@suse.de>
+Cc: David Woodhouse <dwmw2@infradead.org>, linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [Bug 219349] New: RIP: 0010:pci_for_each_dma_alias
+ (./include/linux/pci.h:692 drivers/pci/search.c:41)
+Message-ID: <20241003213932.GA324584@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB9737:EE_
-X-MS-Office365-Filtering-Correlation-Id: 435ba735-6d3b-42cd-b256-08dce3f01bdc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3tKZGdP75s9yz+Z5P4vjijBm/ecJSyAjiJZ/rH5wI/83r8vbRsfFF2zzIA9L?=
- =?us-ascii?Q?eKfxQCQYs7BdlnbzNmgTK/JtSQKSDA3N5cOJs4vXDEVF57UV+DJIc9nx50di?=
- =?us-ascii?Q?uKeHd3BUrsjKptrezm52ONBPeGCLDDxGP5GKVz2r0zXdqT36mPW50NY3jt6e?=
- =?us-ascii?Q?6mC41HMLaQpZuBlsDv1HNlKnQrHZw+1tgeYIumEJ1Z4ZhqfY431vmNR4nF/V?=
- =?us-ascii?Q?QKgM+0x/ZU5Z5ldqOWUva6gwrWs6DQWbz91NNqhKEn/ixfkdxX6n+NPUtNy0?=
- =?us-ascii?Q?NQNjcZs1/CVNVP3c1Xzp3oKrSyK1TIDf1VTxWuazBQf+Ikkq5n9+gGdAwBJO?=
- =?us-ascii?Q?mEL6J6Oo9iRvwPlw6c/6d+kCv+oroG8UUukDFLi3xcB6Vn1vXcxXchyCCKrp?=
- =?us-ascii?Q?n9H7587wKe4ptIH444V0ZuZUUPJ7uNYNyZmb9J/a0zl/bwihZjECzvQZw5xq?=
- =?us-ascii?Q?MuGhBOWmmt3RsAiWR71pDbfgOhhhUHFdpItiUM2R2VqFzcDSfmYytF+IrdGZ?=
- =?us-ascii?Q?+PrQCXAU8I2tS3mBqJ+EBL5q9mNJD4f4uk6r2D4zCFJIKK2U6nq9Ny1VtQRu?=
- =?us-ascii?Q?J8XS5DhRUzH7IjvzGKAKXKC6OBRAIXwn8Ezeolrov9sfDSuxvRIgGZS8Lh/u?=
- =?us-ascii?Q?PuKOHjIVlB4PdH/gfZeAXRhqCfvp1YiOAVJG6wBEHKZcnVzo++vtCpbUhzMm?=
- =?us-ascii?Q?TpKtu+nr4N1EELnIuAbF4nS1Ftz2g/TmTkbOl4ZNVRkOZ1fbHuq1AFFOSGDS?=
- =?us-ascii?Q?YdkaZzWegAfGCDw7GaS1Wnhth6YJEkQku4N2mYA/EBQ3AjnE2IzTeMDSANH7?=
- =?us-ascii?Q?34L25WiQj7nz34uxFyLECNhf/8drUx6gW3p7IQwWP8OS3oovbOMkJOrV95yo?=
- =?us-ascii?Q?UiviW+IBXsa49fGQ++Q2vvAzwA+H/RaFssVYpBJQcNjNGinOrGiUeQvkVAtp?=
- =?us-ascii?Q?2020qtBCr+OBx4UduuXAJP9ofrOrTj8BB4TLgjJeaAcdRFXp0hohFex2MWxr?=
- =?us-ascii?Q?4rR4oAuZfckL31NSay/QVShtLEgm4E9QS/MNnIqI3iKTsnrjtJgmA3o47l95?=
- =?us-ascii?Q?05502eR1T64kO1+2rGHPPSNhhhehNjPyMjaVlN5CkLKoGJXeq8i2G3W6an8B?=
- =?us-ascii?Q?0nuZMVPsBH22exFX1ntIxZRokaYqEzJKxMvH/7lSfehtxm+OYLNKCoTihntC?=
- =?us-ascii?Q?uLJxS0g1izKt9jHQNQcd/PGwiZWcX7bvsGjqnFTYJWfHnYwcPq9+9e1oWHbE?=
- =?us-ascii?Q?Zp5N/G3twkiW190rp0zu2Bck8RM0+VXO0AsP9Kc2N5qySA0oqqH1acwfmyIS?=
- =?us-ascii?Q?KppkNXdtDKhY/iYSW82nVKSMlIfKfQ2oekhahXNChBcR1w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?D097Ej0xUFIxe5wqJ9XgFCHdkEMHQYdWo/vS9FAL2mJ94hwdCbDFz1yFkrVA?=
- =?us-ascii?Q?R9274m9ycTkoPtlGTTEUw2Q6ur6u4kRPHvaOhXzlzCXp6OPDAY6h4EJItuXz?=
- =?us-ascii?Q?KOTXzYgVcW69c6TYZiXmvGUhQmSfMiVyduJRCm33WIGuGuddj/o+M3DFooNv?=
- =?us-ascii?Q?wpsEd6JfjxcPExoe504pUoxw488OYhfp+ivLcOgnXGnq8uM8WSpeC+eb+B0/?=
- =?us-ascii?Q?xVBKLvymxVkMaj77KWTha2eDDlDhHiIlnSe/ark2LNWVBuQ0/Btj1jC0DbWI?=
- =?us-ascii?Q?tQjAyAcq2VEc56Koak5+HlfoLIgZYvB4VwktpRDq48wdLM7Fh4M/Zns1R7k7?=
- =?us-ascii?Q?tDxIowtHXM3Hg2i3qQygY2r7wcFuaMbIfF5HqgD2TrIqmWtIthF6eQyVwUs/?=
- =?us-ascii?Q?GF20eg680twhuRBvnrDf32QaZDaWKfvPCxd/QyvFsBYuDpQs7C+VQBafI9r9?=
- =?us-ascii?Q?Mmo3SL/YE7/Ax3ctJ+ipDKUpTdvUSbwzgWwk5nOrWG1FZc56uqrb2NAbJeYN?=
- =?us-ascii?Q?h4JsfXyQa7ED2xPAUUzFqlj7SOIxkewy5kBt2dFhTuiwzVb5PTwFQhKomY6A?=
- =?us-ascii?Q?Z8Yy9ZebSXE9hmonBf2AH2wFKkx5kwEDmHqjQr2kbdjT96qeFj1WYa67zFBp?=
- =?us-ascii?Q?VPH3HfYi2JBHQM0Y6IY3WWbbvW63JkSSTVx9Sr5Evq8RHiAjkYbX98ZP08q2?=
- =?us-ascii?Q?PquVy7EWyNgveog1NRSo8M80y0dciKppTvMwBnCCr9csc2MHT7iuZohM276u?=
- =?us-ascii?Q?FnOeH4lsc8w4U2Nj8YhMmQyk3P2dXu+xzQ9uVJoR9RlZv/t+IutNAXOxSSlH?=
- =?us-ascii?Q?bf43CjKn/CXWpoWL0s0NDSsg/Xq2dS44Xra551ny7FDJpyDtllkpi1K+x8fK?=
- =?us-ascii?Q?WEIxP4bQlQFICgUoEgX/nDGzCVipBBXNcX2SuHp+Ox4/vyuJg2EGeaxH6+rH?=
- =?us-ascii?Q?aNj184XIqVlRIx87ItyD83xl2yBOALes1Kb6MbvUGxtMdV4Xe7XbKGYzom8O?=
- =?us-ascii?Q?zKrFVk+1EoropST3reyzJGZATdGgt6Hxcs+QfymHwk+WDHs+Q5w8nFdyC48M?=
- =?us-ascii?Q?xys2NnvvVDCDY/F9b8BA6K8WUDLnxYKlBzwrA+S57zSL4k4iY+Zn4CaJT4EI?=
- =?us-ascii?Q?ww1oLHeGT8uftS0rt6NbuhLg9sne56rIeg0/XX5IZlPJcEjKmR6zYb4Dw/lJ?=
- =?us-ascii?Q?IWPmSTq4SQgYWbQc3lCqqutaxx7ShZG+M1m/1DraUQATvmUMpk2MSauSCS/l?=
- =?us-ascii?Q?tK81nP9tQrCn+n/ZQE9sB6QRZnETQs9GMomfC16BeCqHbr9pPnMv+nC0k14u?=
- =?us-ascii?Q?axxi+cs2rL49w4D0xKwRJNY8lcT52iVdK/w/6qgOMo3vcEuupS9RRSUr8DmX?=
- =?us-ascii?Q?K0cVOC9sd/B9OPT8ABOTnsBZF5fFS3NjC2FNPNkpGJoP6A3CZGkkK856nssK?=
- =?us-ascii?Q?DJAphgNINIdcFSI5F6MhMrlKNkyeAD5FxNbIodCp6YBW0wa+mdgcPmx8j/Mu?=
- =?us-ascii?Q?PBsXGZEub0sRkoswJz8gS04KUTpq2R1oEvXFsvQTNboKOr14+2KzCi8woRCK?=
- =?us-ascii?Q?p5dNFkaMmDa2RaYO5D8=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 435ba735-6d3b-42cd-b256-08dce3f01bdc
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2024 21:12:38.1041
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7amQv9ewC0FbI/PlKuuqhFnE8gs/Jn1YcnSvuwvfhQblEJvlC001QCV665Qf3gNPs3SDCBWxWpiU1anKQjWaaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9737
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bug-219349-41252@https.bugzilla.kernel.org/>
 
-On Thu, Oct 03, 2024 at 12:16:42PM +0100, Robin Murphy wrote:
-> On 2024-09-30 8:42 pm, Frank Li wrote:
-> > For the i.MX95, configuration of a LUT is necessary to convert Bus Device
-> > Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
-> > This involves examining the msi-map and smmu-map to ensure consistent
-> > mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
-> > registers are configured. In the absence of an msi-map, the built-in MSI
-> > controller is utilized as a fallback.
-> >
-> > Additionally, register a PCI bus callback function enable_device() and
-> > disable_device() to config LUT when enable a new PCI device.
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > change from v1 to v2
-> > - set callback to pci_host_bridge instead pci->ops.
-> > ---
-> >   drivers/pci/controller/dwc/pci-imx6.c | 133 +++++++++++++++++++++++++++++++++-
-> >   1 file changed, 132 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> > index 94f3411352bf0..29186058ba256 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -55,6 +55,22 @@
-> >   #define IMX95_PE0_GEN_CTRL_3			0x1058
-> >   #define IMX95_PCIE_LTSSM_EN			BIT(0)
-> > +#define IMX95_PE0_LUT_ACSCTRL			0x1008
-> > +#define IMX95_PEO_LUT_RWA			BIT(16)
-> > +#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
-> > +
-> > +#define IMX95_PE0_LUT_DATA1			0x100c
-> > +#define IMX95_PE0_LUT_VLD			BIT(31)
-> > +#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
-> > +#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
-> > +
-> > +#define IMX95_PE0_LUT_DATA2			0x1010
-> > +#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
-> > +#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
-> > +
-> > +#define IMX95_SID_MASK				GENMASK(5, 0)
-> > +#define IMX95_MAX_LUT				32
-> > +
-> >   #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
-> >   enum imx_pcie_variants {
-> > @@ -82,6 +98,7 @@ enum imx_pcie_variants {
-> >   #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
-> >   #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
-> >   #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
-> > +#define IMX_PCIE_FLAG_HAS_LUT			BIT(8)
-> >   #define imx_check_flag(pci, val)	(pci->drvdata->flags & val)
-> > @@ -134,6 +151,7 @@ struct imx_pcie {
-> >   	struct device		*pd_pcie_phy;
-> >   	struct phy		*phy;
-> >   	const struct imx_pcie_drvdata *drvdata;
-> > +	struct mutex		lock;
-> >   };
-> >   /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> > @@ -925,6 +943,111 @@ static void imx_pcie_stop_link(struct dw_pcie *pci)
-> >   	imx_pcie_ltssm_disable(dev);
-> >   }
-> > +static int imx_pcie_add_lut(struct imx_pcie *imx_pcie, u16 reqid, u8 sid)
-> > +{
-> > +	struct dw_pcie *pci = imx_pcie->pci;
-> > +	struct device *dev = pci->dev;
-> > +	u32 data1, data2;
-> > +	int i;
-> > +
-> > +	if (sid >= 64) {
-> > +		dev_err(dev, "Invalid SID for index %d\n", sid);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	guard(mutex)(&imx_pcie->lock);
-> > +
-> > +	for (i = 0; i < IMX95_MAX_LUT; i++) {
-> > +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
-> > +
-> > +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
-> > +		if (data1 & IMX95_PE0_LUT_VLD)
-> > +			continue;
->
-> Maybe check if an existing entry already exists for the given RID?
->
-> > +		data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
-> > +		data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
-> > +		data1 |= IMX95_PE0_LUT_VLD;
-> > +
-> > +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
-> > +
-> > +		data2 = 0xffff;
-> > +		data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, reqid);
-> > +
-> > +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
-> > +
-> > +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> > +	dev_err(dev, "All lut already used\n");
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static void imx_pcie_remove_lut(struct imx_pcie *imx_pcie, u16 reqid)
-> > +{
-> > +	u32 data2 = 0;
-> > +	int i;
-> > +
-> > +	guard(mutex)(&imx_pcie->lock);
-> > +
-> > +	for (i = 0; i < IMX95_MAX_LUT; i++) {
-> > +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
-> > +
-> > +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
-> > +		if (FIELD_GET(IMX95_PE0_LUT_REQID, data2) == reqid) {
-> > +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, 0);
-> > +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, 0);
-> > +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
->
-> ...plus then you could safely return early here.
->
-> > +		}
-> > +	}
-> > +}
-> > +
-> > +static int imx_pcie_enable_device(struct pci_host_bridge *bridge, struct pci_dev *pdev)
-> > +{
-> > +	u32 sid_i = 0, sid_m = 0, rid = pci_dev_id(pdev);
-> > +	struct imx_pcie *imx_pcie;
-> > +	struct device *dev;
-> > +	int err;
-> > +
-> > +	imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(bridge->sysdata));
-> > +	dev = imx_pcie->pci->dev;
-> > +
-> > +	err = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", NULL, &sid_i);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", NULL, &sid_m);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	if (sid_i != rid && sid_m != rid)
->
-> Perhaps it is reasonable to assume that i.MX95 will never have SMMU/ITS
-> mappings for low-numbered devices on bus 0, but in general this isn't very
-> robust, and either way it's certainly not all that clear at first glance
-> what assmuption is actually being made here. If it's significant whether a
-> mapping actually exists or not for the given ID then you should really use
-> the "target" argument of of_map_id() to determine that.
+On Thu, Oct 03, 2024 at 08:15:16PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=219349
+> 
+>            Summary: RIP: 0010:pci_for_each_dma_alias
+>                     (./include/linux/pci.h:692 drivers/pci/search.c:41)
+>     Kernel Version: 6.12.0-rc1  8c245fe7dde3
+>         Regression: Yes
+> 
+> Created attachment 306959
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=306959&action=edit
+> lspci -vv
+> 
+> Hello,
+> I see BUG: kernel NULL pointer dereference using kernel 6.12.0-rc1 (actually at
+> 8c245fe7dde3 but don't know what is first bad commit).
 
+Thanks very much for this report!  You marked this as a regression;
+Marcin, do you know the most recent kernel where you did not see this
+issue?
 
-let me do more research on this.
-The key part is patch 1.
+> RPC: Registered tcp NFSv4.1 backchannel transport module.
+> intel-lpss 0000:00:15.0: enabling device (0000 -> 0002)#012 SUBSYSTEM=pci#012
+> DEVICE=+pci:0000:00:15.0
+> platform idma64.0: Adding to iommu group 12#012 SUBSYSTEM=platform#012
+> DEVICE=+platform:idma64.0
+> BUG: kernel NULL pointer dereference, address: 00000000000000d8
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0
+> Oops: Oops: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
+> CPU: 0 UID: 0 PID: 430 Comm: (udev-worker) Not tainted
+> 6.12.0-rc1-00113-g8c245fe7dde3 #50
+> Hardware name: MSI MS-7982/B150M PRO-VDH (MS-7982), BIOS 3.H0 07/10/2018
+> RIP: 0010:pci_for_each_dma_alias (./include/linux/pci.h:692
+> drivers/pci/search.c:41)
+> Code: 00 0f 1f 40 00 0f 1f 44 00 00 41 56 41 55 41 54 49 89 d4 55 48 89 f5 53
+> e8 18 d2 ff ff 4c 89 e2 48 89 c3 48 8b 40 10 48 89 df <0f> b6 b0 d8 00 00 00 c1
+> e6 08 66 0b 73 38 0f b7 f6 ff d5 85 c0 41
+> All code
+> ========
+>    0:   00 0f                   add    %cl,(%rdi)
+>    2:   1f                      (bad)
+>    3:   40 00 0f                rex add %cl,(%rdi)
+>    6:   1f                      (bad)
+>    7:   44 00 00                add    %r8b,(%rax)
+>    a:   41 56                   push   %r14
+>    c:   41 55                   push   %r13
+>    e:   41 54                   push   %r12
+>   10:   49 89 d4                mov    %rdx,%r12
+>   13:   55                      push   %rbp
+>   14:   48 89 f5                mov    %rsi,%rbp
+>   17:   53                      push   %rbx
+>   18:   e8 18 d2 ff ff          call   0xffffffffffffd235
+>   1d:   4c 89 e2                mov    %r12,%rdx
+>   20:   48 89 c3                mov    %rax,%rbx
+>   23:   48 8b 40 10             mov    0x10(%rax),%rax
+>   27:   48 89 df                mov    %rbx,%rdi
+>   2a:*  0f b6 b0 d8 00 00 00    movzbl 0xd8(%rax),%esi          <-- trapping
+> instruction
+>   31:   c1 e6 08                shl    $0x8,%esi
+>   34:   66 0b 73 38             or     0x38(%rbx),%si
+>   38:   0f b7 f6                movzwl %si,%esi
+>   3b:   ff d5                   call   *%rbp
+>   3d:   85 c0                   test   %eax,%eax
+>   3f:   41                      rex.B
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   0f b6 b0 d8 00 00 00    movzbl 0xd8(%rax),%esi
+>    7:   c1 e6 08                shl    $0x8,%esi
+>    a:   66 0b 73 38             or     0x38(%rbx),%si
+>    e:   0f b7 f6                movzwl %si,%esi
+>   11:   ff d5                   call   *%rbp
+>   13:   85 c0                   test   %eax,%eax
+>   15:   41                      rex.B
+> RSP: 0018:ffffbff6006bb3a8 EFLAGS: 00010296
+> RAX: 0000000000000000 RBX: ffff9dd828880348 RCX: 0000000000000000
+> RDX: ffff9dd80f838ea0 RSI: ffffffffac8045b0 RDI: ffff9dd828880348
+> RBP: ffffffffac8045b0 R08: 0000000000000000 R09: 0000000200000025
+> R10: 000000000000007c R11: 00000000000001f4 R12: ffff9dd80f838ea0
+> R13: ffff9dd826ab9700 R14: 0000000000000001 R15: 0000000000000001
+> FS:  00007fe4921ab5c0(0000) GS:ffff9ddb5c600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000000000d8 CR3: 000000010fa9b004 CR4: 00000000003706f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  ? __die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434)
+>  ? page_fault_oops (arch/x86/mm/fault.c:715)
+>  ? do_user_addr_fault (./include/linux/kprobes.h:589 (discriminator 1)
+> arch/x86/mm/fault.c:1240 (discriminator 1))
+>  ? _raw_spin_unlock_irqrestore (./include/linux/spinlock_api_smp.h:152
+> kernel/locking/spinlock.c:194)
+>  ? exc_page_fault (./arch/x86/include/asm/irqflags.h:37
+> ./arch/x86/include/asm/irqflags.h:92 arch/x86/mm/fault.c:1489
+> arch/x86/mm/fault.c:1539)
+>  ? asm_exc_page_fault (./arch/x86/include/asm/idtentry.h:623)
+>  ? domain_context_clear_one (drivers/iommu/intel/iommu.c:3328)
+>  ? domain_context_clear_one (drivers/iommu/intel/iommu.c:3328)
+>  ? pci_for_each_dma_alias (./include/linux/pci.h:692 drivers/pci/search.c:41)
+>  ? pci_for_each_dma_alias (drivers/pci/search.c:41 (discriminator 1))
+>  device_block_translation (drivers/iommu/intel/iommu.c:3370)
+>  intel_iommu_attach_device (drivers/iommu/intel/iommu.c:3635)
+>  __iommu_attach_device (drivers/iommu/iommu.c:2084)
+>  __iommu_device_set_domain (drivers/iommu/iommu.c:2272)
 
-Frank
+I suspect this path:
 
->
-> > +		if ((sid_i & IMX95_SID_MASK) != (sid_m & IMX95_SID_MASK)) {
-> > +			dev_err(dev, "its and iommu stream id miss match, please check dts file\n");
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +	/* if iommu-map is not existed then use msi-map's stream id*/
-> > +	if (sid_i == rid)
-> > +		sid_i = sid_m;
-> > +
-> > +	sid_i &= IMX95_SID_MASK;
->
-> AFAICS this means that:
-> a) the check in imx_pcie_add_lut() is useless, since if a mapping had an
-> output ID larger than 63, then we've now just silently truncated the LUT
-> entry to not match what the SMMU/ITS will still expect.
-> b) if no mapping existed, then we're going to needlessly allocate a LUT
-> entry anyway since the truncated RID now won't match the original.
+  __iommu_device_set_domain
+    __iommu_attach_device
+      domain->ops->attach_dev
+        intel_iommu_attach_device
+          device_block_translation
+            domain_context_clear
+              if (!dev_is_pci(info->dev))
+                domain_context_clear_one
+              pci_for_each_dma_alias
 
-You are right. It is my mistake.
+and 9a16ab9d6402 ("iommu/vt-d: Make context clearing consistent with
+context mapping") looks a little suspicious to me since
+domain_context_clear() now calls domain_context_clear_one() for
+non-PCI devices, but then goes on to also use pci_for_each_dma_alias()
+for ALL devices, even non-PCI ones.
 
->
-> > +
-> > +	if (sid_i != rid)
-> > +		return imx_pcie_add_lut(imx_pcie, rid, sid_i);
-> > +
-> > +	/* Use dwc built-in MSI controller */
->
-> This comment seems out of place - how does returning 0 from here vs.
-> returning 0 from imx_pcie_add_lut() achieve that? I don't see any obvious
-> way for the LUT programming to influence the IRQ subsystem here :/
+But 9a16ab9d6402 appeared in v6.7-rc4, so it's been around a while.
+Maybe a more recent change added non-PCI devices into the mix, so
+previously we only got there with PCI devices?
 
-If msi-map is not existed. sid_i will equal to rid. imx_pcie_add_lut()
-will be skipped. PCI controller still fallback to the dwc built-in's MSI
-controller.
-
-msi-map        iommu-map
-Y                  Y            ITS + SMMU, require the same sid
-Y                  N            ITS
-N                  Y            DWC MSI Ctrl + SMMU
-N                  N            DWC MSI Ctrl. (current upstream state)
-
-Return 0 here, it is N-N case.
-
->
-> Thanks,
-> Robin.
->
-> > +	return 0;
-> > +}
-> > +
-> > +static void imx_pcie_disable_device(struct pci_host_bridge *bridge, struct pci_dev *pdev)
-> > +{
-> > +	struct imx_pcie *imx_pcie;
-> > +
-> > +	imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(bridge->sysdata));
-> > +	imx_pcie_remove_lut(imx_pcie, pci_dev_id(pdev));
-> > +}
-> > +
-> >   static int imx_pcie_host_init(struct dw_pcie_rp *pp)
-> >   {
-> >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > @@ -941,6 +1064,11 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
-> >   		}
-> >   	}
-> > +	if (pp->bridge && imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT)) {
-> > +		pp->bridge->enable_device = imx_pcie_enable_device;
-> > +		pp->bridge->disable_device = imx_pcie_disable_device;
-> > +	}
-> > +
-> >   	imx_pcie_assert_core_reset(imx_pcie);
-> >   	if (imx_pcie->drvdata->init_phy)
-> > @@ -1292,6 +1420,8 @@ static int imx_pcie_probe(struct platform_device *pdev)
-> >   	imx_pcie->pci = pci;
-> >   	imx_pcie->drvdata = of_device_get_match_data(dev);
-> > +	mutex_init(&imx_pcie->lock);
-> > +
-> >   	/* Find the PHY if one is defined, only imx7d uses it */
-> >   	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
-> >   	if (np) {
-> > @@ -1587,7 +1717,8 @@ static const struct imx_pcie_drvdata drvdata[] = {
-> >   	},
-> >   	[IMX95] = {
-> >   		.variant = IMX95,
-> > -		.flags = IMX_PCIE_FLAG_HAS_SERDES,
-> > +		.flags = IMX_PCIE_FLAG_HAS_SERDES |
-> > +			 IMX_PCIE_FLAG_HAS_LUT,
-> >   		.clk_names = imx8mq_clks,
-> >   		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
-> >   		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
-> >
->
+>  iommu_setup_default_domain (drivers/iommu/iommu.c:2326 (discriminator 2)
+> drivers/iommu/iommu.c:2992 (discriminator 2))
+>  __iommu_probe_device (drivers/iommu/iommu.c:567)
+>  iommu_probe_device (drivers/iommu/iommu.c:604)
+>  iommu_bus_notifier (drivers/iommu/iommu.c:1668 drivers/iommu/iommu.c:1659)
+>  notifier_call_chain (kernel/notifier.c:95)
+>  blocking_notifier_call_chain (kernel/notifier.c:389 kernel/notifier.c:376)
+>  bus_notify (./include/linux/kobject.h:193 drivers/base/base.h:73
+> drivers/base/bus.c:999)
+>  device_add (drivers/base/core.c:3656)
+>  platform_device_add (drivers/base/platform.c:717)
+>  mfd_add_device (drivers/mfd/mfd-core.c:274) mfd_core
+>  ? alloc_inode (fs/inode.c:265)
+>  ? make_kgid (kernel/user_namespace.c:483)
+>  ? inode_init_always (fs/inode.c:219)
+>  mfd_add_devices (drivers/mfd/mfd-core.c:329) mfd_core
+>  intel_lpss_probe (drivers/mfd/intel-lpss.c:443 drivers/mfd/intel-lpss.c:390)
+> intel_lpss
+>  ? _raw_spin_lock_irqsave (./arch/x86/include/asm/paravirt.h:584
+> ./arch/x86/include/asm/qspinlock.h:51 ./include/asm-generic/qspinlock.h:114
+> ./include/linux/spinlock.h:187 ./include/linux/spinlock_api_smp.h:111
+> kernel/locking/spinlock.c:162)
+>  ? pci_conf1_write (arch/x86/pci/direct.c:78)
+>  intel_lpss_pci_probe (drivers/mfd/intel-lpss-pci.c:80) intel_lpss_pci
+>  local_pci_probe (drivers/pci/pci-driver.c:325)
+>  pci_device_probe (drivers/pci/pci-driver.c:392 (discriminator 1)
+> drivers/pci/pci-driver.c:417 (discriminator 1) drivers/pci/pci-driver.c:451
+> (discriminator 1))
+>  really_probe (drivers/base/dd.c:581 drivers/base/dd.c:658)
+>  ? __device_attach_driver (drivers/base/dd.c:1157)
+>  __driver_probe_device (drivers/base/dd.c:800)
+>  driver_probe_device (drivers/base/dd.c:831)
+>  __driver_attach (drivers/base/dd.c:1217 drivers/base/dd.c:1156)
+>  bus_for_each_dev (drivers/base/bus.c:369)
+>  bus_add_driver (drivers/base/bus.c:676)
+>  driver_register (drivers/base/driver.c:247)
+>  ? 0xffffffffc061b000
+>  do_one_initcall (init/main.c:1269)
+>  do_init_module (kernel/module/main.c:2544)
+>  init_module_from_file (kernel/module/main.c:3199)
+>  idempotent_init_module (kernel/module/main.c:3210)
+>  __x64_sys_finit_module (./include/linux/file.h:68 kernel/module/main.c:3238
+> kernel/module/main.c:3220 kernel/module/main.c:3220)
+>  do_syscall_64 (arch/x86/entry/common.c:52 (discriminator 1)
+> arch/x86/entry/common.c:83 (discriminator 1))
+>  ? mntput_no_expire (fs/namespace.c:1460)
+>  ? terminate_walk (fs/namei.c:693 (discriminator 1))
+>  ? path_openat (fs/namei.c:3934)
+>  ? do_filp_open (fs/namei.c:3961 (discriminator 2))
+>  ? copy_from_kernel_nofault (mm/maccess.c:31 (discriminator 1))
+>  ? kmem_cache_alloc_noprof (mm/slub.c:494 mm/slub.c:539 mm/slub.c:528
+> mm/slub.c:3964 mm/slub.c:4123 mm/slub.c:4142)
+>  ? do_sys_openat2 (fs/open.c:1424)
+>  ? syscall_exit_to_user_mode (./arch/x86/include/asm/processor.h:701
+> ./arch/x86/include/asm/entry-common.h:100 ./include/linux/entry-common.h:364
+> kernel/entry/common.c:220)
+>  ? do_syscall_64 (arch/x86/entry/common.c:102)
+>  ? do_syscall_64 (arch/x86/entry/common.c:102)
+>  ? do_syscall_64 (arch/x86/entry/common.c:102)
+>  ? do_syscall_64 (arch/x86/entry/common.c:102)
+>  ? syscall_exit_to_user_mode (./arch/x86/include/asm/processor.h:701
+> ./arch/x86/include/asm/entry-common.h:100 ./include/linux/entry-common.h:364
+> kernel/entry/common.c:220)
+>  ? do_syscall_64 (arch/x86/entry/common.c:102)
+>  ? syscall_exit_to_user_mode (./arch/x86/include/asm/processor.h:701
+> ./arch/x86/include/asm/entry-common.h:100 ./include/linux/entry-common.h:364
+> kernel/entry/common.c:220)
+>  ? do_syscall_64 (arch/x86/entry/common.c:102)
+>  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> RIP: 0033:0x7fe49238eb8d
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48
+> 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
+> c3 48 8b 0d 6b 72 0c 00 f7 d8 64 89 01 48
+> All code
+> ========
+>    0:   ff c3                   inc    %ebx
+>    2:   66 2e 0f 1f 84 00 00    cs nopw 0x0(%rax,%rax,1)
+>    9:   00 00 00
+>    c:   90                      nop
+>    d:   f3 0f 1e fa             endbr64
+>   11:   48 89 f8                mov    %rdi,%rax
+>   14:   48 89 f7                mov    %rsi,%rdi
+>   17:   48 89 d6                mov    %rdx,%rsi
+>   1a:   48 89 ca                mov    %rcx,%rdx
+>   1d:   4d 89 c2                mov    %r8,%r10
+>   20:   4d 89 c8                mov    %r9,%r8
+>   23:   4c 8b 4c 24 08          mov    0x8(%rsp),%r9
+>   28:   0f 05                   syscall
+>   2a:*  48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax         <--
+> trapping instruction
+>   30:   73 01                   jae    0x33
+>   32:   c3                      ret
+>   33:   48 8b 0d 6b 72 0c 00    mov    0xc726b(%rip),%rcx        # 0xc72a5
+>   3a:   f7 d8                   neg    %eax
+>   3c:   64 89 01                mov    %eax,%fs:(%rcx)
+>   3f:   48                      rex.W
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax
+>    6:   73 01                   jae    0x9
+>    8:   c3                      ret
+>    9:   48 8b 0d 6b 72 0c 00    mov    0xc726b(%rip),%rcx        # 0xc727b
+>   10:   f7 d8                   neg    %eax
+>   12:   64 89 01                mov    %eax,%fs:(%rcx)
+>   15:   48                      rex.W
+> RSP: 002b:00007ffdf72f16f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> RAX: ffffffffffffffda RBX: 000055b0dae03330 RCX: 00007fe49238eb8d
+> RDX: 0000000000000004 RSI: 00007fe49252231b RDI: 000000000000000d
+> RBP: 0000000000000004 R08: 000055b0dae05940 R09: 000055b0dae03e80
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe49252231b
+> R13: 0000000000020000 R14: 000055b0dadd00e0 R15: 000055b0dae03330
+>  </TASK>
+> Modules linked in: intel_lpss_pci(+) intel_lpss idma64 raid_class virt_dma
+> scsi_transport_sas mfd_core sunrpc dm_mirror dm_region_hash dm_log dm_mod btrfs
+> blake2b_generic
+> CR2: 00000000000000d8
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:pci_for_each_dma_alias (./include/linux/pci.h:692
+> drivers/pci/search.c:41)
+> Code: 00 0f 1f 40 00 0f 1f 44 00 00 41 56 41 55 41 54 49 89 d4 55 48 89 f5 53
+> e8 18 d2 ff ff 4c 89 e2 48 89 c3 48 8b 40 10 48 89 df <0f> b6 b0 d8 00 00 00 c1
+> e6 08 66 0b 73 38 0f b7 f6 ff d5 85 c0 41
+> All code
+> ========
+>    0:   00 0f                   add    %cl,(%rdi)
+>    2:   1f                      (bad)
+>    3:   40 00 0f                rex add %cl,(%rdi)
+>    6:   1f                      (bad)
+>    7:   44 00 00                add    %r8b,(%rax)
+>    a:   41 56                   push   %r14
+>    c:   41 55                   push   %r13
+>    e:   41 54                   push   %r12
+>   10:   49 89 d4                mov    %rdx,%r12
+>   13:   55                      push   %rbp
+>   14:   48 89 f5                mov    %rsi,%rbp
+>   17:   53                      push   %rbx
+>   18:   e8 18 d2 ff ff          call   0xffffffffffffd235
+>   1d:   4c 89 e2                mov    %r12,%rdx
+>   20:   48 89 c3                mov    %rax,%rbx
+>   23:   48 8b 40 10             mov    0x10(%rax),%rax
+>   27:   48 89 df                mov    %rbx,%rdi
+>   2a:*  0f b6 b0 d8 00 00 00    movzbl 0xd8(%rax),%esi          <-- trapping
+> instruction
+>   31:   c1 e6 08                shl    $0x8,%esi
+>   34:   66 0b 73 38             or     0x38(%rbx),%si
+>   38:   0f b7 f6                movzwl %si,%esi
+>   3b:   ff d5                   call   *%rbp
+>   3d:   85 c0                   test   %eax,%eax
+>   3f:   41                      rex.B
+> 
+> Code starting with the faulting instruction
+>    0:   0f b6 b0 d8 00 00 00    movzbl 0xd8(%rax),%esi
+>    7:   c1 e6 08                shl    $0x8,%esi
+>    a:   66 0b 73 38             or     0x38(%rbx),%si
+>    e:   0f b7 f6                movzwl %si,%esi
+>   11:   ff d5                   call   *%rbp
+>   13:   85 c0                   test   %eax,%eax
+>   15:   41                      rex.B
+> RSP: 0018:ffffbff6006bb3a8 EFLAGS: 00010296
+> RAX: 0000000000000000 RBX: ffff9dd828880348 RCX: 0000000000000000
+> RDX: ffff9dd80f838ea0 RSI: ffffffffac8045b0 RDI: ffff9dd828880348
+> RBP: ffffffffac8045b0 R08: 0000000000000000 R09: 0000000200000025
+> R10: 000000000000007c R11: 00000000000001f4 R12: ffff9dd80f838ea0
+> R13: ffff9dd826ab9700 R14: 0000000000000001 R15: 0000000000000001
+> FS:  00007fe4921ab5c0(0000) GS:ffff9ddb5c600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000000000d8 CR3: 000000010fa9b004 CR4: 00000000003706f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> note: (udev-worker)[430] exited with irqs disabled
+> mpt3sas version 48.100.00.00 loaded
+> md/raid1: md22: active with 2 out of 2 mirrors
+> md22: detected capacity change from 0 to 62912512
 
