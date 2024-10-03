@@ -1,202 +1,146 @@
-Return-Path: <linux-pci+bounces-13770-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13771-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CDED98F049
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 15:25:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C194198F0C3
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 15:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 558671C21553
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 13:25:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 56970B21013
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 13:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0830B1E495;
-	Thu,  3 Oct 2024 13:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIiQpTYB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11D44154C12;
+	Thu,  3 Oct 2024 13:47:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4650F770F1
-	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 13:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8498C07
+	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 13:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727961910; cv=none; b=nvR8C/u84p8rYGG0yZoUyot7EqjNJxVUEX7nLFGtI4IDKPqP/4G325CN+NTrK1TteMs84fYu3do2Z1d6pPgrqyrdSQ5zwUoY4LsRuQDxjAXV4nj35ieRvGT1EXKLKzzRAzOLT+t3c2hp1B9xvQQl1usn/fODQGT7pdE1m1NKTXM=
+	t=1727963228; cv=none; b=QUYLpqpCD4GcZFpnWckNYCFRsOFTJ0l4AWZmH+F57+Np4Yl5/MG+YM9AYgdIe6r2qOTSW+1EwGTAcvfLlU7Y2NUjnBxoFzwPjkj5Q2sCnUais9EHfNGUYJIciYkb1FF96pU4U68cuDcDmjkEDRWvO2WWEJv9DH+2m6vll4mphVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727961910; c=relaxed/simple;
-	bh=VPUjdiRcKhVbXwzbnaYMfTxReg621DW/jEbJgfTtIQE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mJe2ziTPNLqO8OIPIwhRxdZq+i6AXZo5OZ6RiDkvR+kl6mv0gI0+TaRE62lwWwhj2ZuOOJd2wse+n0PtXzQ2Rvd/KAxA82ok/D6B/jU9voATTvltynfs8kbllRf5X0kyCRNTowmCJSH1M/jN+6PGX5DXEvJiRd1CQ/cUU69rZjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mIiQpTYB; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e288a73e967so496066276.1
-        for <linux-pci@vger.kernel.org>; Thu, 03 Oct 2024 06:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727961908; x=1728566708; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zhPO6EQNqmZYglwSSc/PcDhcDIT9wXF3yWHj9Joov4E=;
-        b=mIiQpTYBER0QM2yov2WRsB35tdfopxz0AS4VzHo6v1GtIpLZLI/RnZ87ArO4fg1mdc
-         6ZOGvCFaYQ9WEWlDVRaW/z1KsahI70OBs8ocA+BWblt45+JsyYxiReUH3Kb0eWVcI8NW
-         4cy47kD+tjdfC924Gw8XMznnxauQoUXW3hP+nXfJHeJWnt6/oqxkZBI/MuQB7puL0cJc
-         FScWNnj/mwnS7u+tI0k2J0eQhO/qppOl8RIfiiHvqlUOfEfh6GwWTjao3aqhtAEx/NHm
-         5IDMEHAPEEtG7fC39j1TdnP/L2PjlVLvaIQZ62hGWDsqzjSD8tAaaEQE5zQKIhMh20ui
-         Uebg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727961908; x=1728566708;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zhPO6EQNqmZYglwSSc/PcDhcDIT9wXF3yWHj9Joov4E=;
-        b=GRSLVl58gozzd2UX3kAJGBz+yDt8RhvBPk6SLjkBT8JoGBdoZjgy58SvmnGxlAaFLm
-         vuJTLKl53b1HqlV8UmwPoKcavxeJZU5Vj8ntUEAx//D8dxm8EOp6ywziV/hD2c7FCJp+
-         BZ7XXNXwZsCjexu+GCzcuHEprgzpCqD99HZ+IECnXMOcG3RNtEO8TI9qhPdUO6Vt51Uc
-         nzPqd6aOyoO9NSKCVUiFZuD0ESHAudk/q9i8CBC1CbKyv4k5tca8/e/IwfQFfiD1mqIh
-         0N15CRKp1Dvu9C4e7mYQiNmgXWCFL5WCmbZBgnGZmstkJVs6AQXSfWyHCCC6i52f/6L6
-         Wzpw==
-X-Gm-Message-State: AOJu0YzOwYGecWbh58IqBKBHxRvtj2JN61W6KvFoK9+w6lNybNaIeqbm
-	6+3nU2wzqFF0Q0LwmRPkmLGVG+s+kPx9ZzAYpps0g1da/5XXwtoj7H5ZIVNH4izi6sT+3qXUguQ
-	mCpxofEpmPHDVrLCz9NjyBQ==
-X-Google-Smtp-Source: AGHT+IGjc/KJTG0s+tgCvOkKPffMgNe2i691hL28KU5K79OZJJtzI9Nr9BgjkwwAjuJfaIhwIcAIYcuUHVlPMn7wKA==
-X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a25:a283:0:b0:e11:7246:963b with SMTP
- id 3f1490d57ef6-e26383802femr22279276.1.1727961908261; Thu, 03 Oct 2024
- 06:25:08 -0700 (PDT)
-Date: Thu,  3 Oct 2024 18:55:03 +0530
+	s=arc-20240116; t=1727963228; c=relaxed/simple;
+	bh=6TXy7d539OwogFJsue7rYjqKIXqVg3S8Gzxo+FbS7do=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rPer6Nf6wENmDzz2cmEVJaANdAP5ojzgaBQR5CpfgigDA43D4iE1iJ4Rpd9YfPouvgmvhRTolPtyPhuZ613Mamz5suP3G3l+sxk0B3bN94bgZvJmkJ1+go8M3wMZoRZkpXrL/tqmlE4uy/VI7ovKc+a8i/5ViOqBy1CocxJ9sYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 62E513000C77B;
+	Thu,  3 Oct 2024 15:46:55 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2E81428CC9; Thu,  3 Oct 2024 15:46:55 +0200 (CEST)
+Date: Thu, 3 Oct 2024 15:46:55 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "Wassenberg, Dennis" <Dennis.Wassenberg@secunet.com>
+Cc: "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"kbusch@kernel.org" <kbusch@kernel.org>,
+	"mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"mpearson-lenovo@squebb.ca" <mpearson-lenovo@squebb.ca>,
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"minipli@grsecurity.net" <minipli@grsecurity.net>
+Subject: Re: UAF during boot on MTL based devices with attached dock
+Message-ID: <Zv6gT96pHg2Jglxv@wunner.de>
+References: <6de4b45ff2b32dd91a805ec02ec8ec73ef411bf6.camel@secunet.com>
+ <c394a3f07bfb7240a2c32fa6d467ea1a03547881.camel@secunet.com>
+ <68de3ca4-a624-8b02-8f6d-889deb61495d@linux.intel.com>
+ <233b9645e201556422dea79f71262d115c687fcb.camel@secunet.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Message-ID: <20241003132503.2279433-1-ajayagarwal@google.com>
-Subject: [PATCH v2] PCI/ASPM: Disable L1 before disabling L1ss
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: "=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, 
-	"David E. Box" <david.e.box@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Vidya Sagar <vidyas@nvidia.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <233b9645e201556422dea79f71262d115c687fcb.camel@secunet.com>
 
-The current sequence in the driver for L1ss update is as follows.
+On Wed, Sep 25, 2024 at 03:38:34PM +0000, Wassenberg, Dennis wrote:
+> [    2.858063] Oops: general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP NOPTI
+> [    2.858071] CPU: 13 UID: 0 PID: 137 Comm: irq/156-pciehp Not tainted 6.11.0-devel+ #3
+> [    2.858090] Hardware name: LENOVO 21LVS1CV00/21LVS1CV00, BIOS N45ET18W (1.08 ) 07/08/2024
+> [    2.858097] RIP: 0010:dev_driver_string+0x12/0x40
+> [    2.858111] Code: 5c c3 cc cc cc cc 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 47 68 48 85 c0 74 08 <48> 8b 00 c3 cc cc cc cc 48 8b 47 60 48 85 c0 75 ef 48 8b 97 a8 02
+> [    2.858123] RSP: 0000:ffff9493009cfa00 EFLAGS: 00010202
+> [    2.858132] RAX: 6b6b6b6b6b6b6b6b RBX: ffff8e53029cb918 RCX: 0000000000000000
+> [    2.858139] RDX: ffffffffa586b18a RSI: ffff8e53029cb918 RDI: ffff8e53029cb918
+> [    2.858144] RBP: ffff9493009cfb10 R08: 0000000000000000 R09: ffff8e5304f61000
+> [    2.858150] R10: ffff9493009cfb20 R11: 0000000000005627 R12: ffffffffa64db188
+> [    2.858156] R13: 6b6b6b6b6b6b6b6b R14: 0000000000000080 R15: ffff8e5302b1c0c0
+> [    2.858161] FS:  0000000000000000(0000) GS:ffff8e5a50140000(0000) knlGS:0000000000000000
+> [    2.858169] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    2.858175] CR2: 0000000000000000 CR3: 000000030162e001 CR4: 0000000000f70ef0
+> [    2.858182] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    2.858187] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
+> [    2.858193] PKRU: 55555554
+> [    2.858196] Call Trace:
+[...]
+> [    2.858258]  __dynamic_dev_dbg+0x170/0x210
+> [    2.858287]  pci_destroy_slot+0x59/0x60
+> [    2.858296]  pciehp_remove+0x2e/0x50
+> [    2.858304]  pcie_port_remove_service+0x30/0x50
+> [    2.858311]  device_release_driver_internal+0x19f/0x200
+> [    2.858322]  bus_remove_device+0xc6/0x130
+> [    2.858335]  device_del+0x165/0x3f0
+> [    2.858348]  device_unregister+0x17/0x60
+> [    2.858355]  remove_iter+0x1f/0x30
+> [    2.858361]  device_for_each_child+0x6a/0xb0
+> [    2.858368]  pcie_portdrv_remove+0x2f/0x60
+> [    2.858374]  pci_device_remove+0x3f/0xa0
+> [    2.858383]  device_release_driver_internal+0x19f/0x200
+> [    2.858392]  bus_remove_device+0xc6/0x130
+> [    2.858398]  device_del+0x165/0x3f0
+> [    2.858413]  pci_remove_bus_device+0x91/0x140
+> [    2.858422]  pci_remove_bus_device+0x3e/0x140
+> [    2.858430]  pciehp_unconfigure_device+0x98/0x160
+> [    2.858439]  pciehp_disable_slot+0x69/0x130
+> [    2.858447]  pciehp_handle_presence_or_link_change+0x281/0x4c0
+> [    2.858456]  pciehp_ist+0x14a/0x150
 
-Disable L1ss
-Disable L1
-Enable L1ss as required
-Enable L1 if required
+Could you try the patch below and report back if it fixes the issue?
 
-With this sequence, a bus hang is observed during the L1ss
-disable sequence when the RC CPU attempts to clear the RC L1ss
-register after clearing the EP L1ss register. It looks like the
-RC attempts to enter L1ss again and at the same time, access to
-RC L1ss register fails because aux clk is still not active.
+Thanks!
 
-PCIe spec r6.2, section 5.5.4, recommends that setting either
-or both of the enable bits for ASPM L1 PM Substates must be done
-while ASPM L1 is disabled. My interpretation here is that
-clearing L1ss should also be done when L1 is disabled. Thereby,
-change the sequence as follows.
+Lukas
 
-Disable L1
-Disable L1ss
-Enable L1ss as required
-Enable L1 if required
+-- >8 --
 
-Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
----
- drivers/pci/pcie/aspm.c | 50 ++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index cee2365e54b8..c172886129f3 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -848,17 +848,13 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- /* Configure the ASPM L1 substates */
- static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- {
--	u32 val, enable_req;
-+	u32 val;
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index 0f87cade10f7..ed645c7a4e4b 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -79,6 +79,7 @@ static void pci_slot_release(struct kobject *kobj)
+ 	up_read(&pci_bus_sem);
  
--	enable_req = (link->aspm_enabled ^ state) & state;
--
- 	/*
--	 * Here are the rules specified in the PCIe spec for enabling L1SS:
-+	 * Spec r6.2, section 5.5.4, mentions the rules for enabling L1SS:
- 	 * - When enabling L1.x, enable bit at parent first, then at child
- 	 * - When disabling L1.x, disable bit at child first, then at parent
--	 * - When enabling ASPM L1.x, need to disable L1
--	 *   (at child followed by parent).
- 	 * - The ASPM/PCIPM L1.2 must be disabled while programming timing
- 	 *   parameters
- 	 *
-@@ -871,16 +867,6 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
- 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
- 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
--	/*
--	 * If needed, disable L1, and it gets enabled later
--	 * in pcie_config_aspm_link().
--	 */
--	if (enable_req & (PCIE_LINK_STATE_L1_1 | PCIE_LINK_STATE_L1_2)) {
--		pcie_capability_clear_word(child, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPM_L1);
--		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPM_L1);
--	}
+ 	list_del(&slot->list);
++	pci_bus_put(slot->bus);
  
- 	val = 0;
- 	if (state & PCIE_LINK_STATE_L1_1)
-@@ -937,21 +923,33 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- 		dwstream |= PCI_EXP_LNKCTL_ASPM_L1;
+ 	kfree(slot);
+ }
+@@ -261,7 +262,7 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 		goto err;
  	}
  
-+	/*
-+	 * Spec r6.2, section 5.5.4, recommends that setting either or both of
-+	 * the enable bits for ASPM L1 PM Substates must be done while ASPM L1
-+	 * is disabled. So disable L1 here, and it gets enabled later after the
-+	 * L1ss configuration has been completed.
-+	 *
-+	 * Spec r6.2, section 7.5.3.7, mentions that ASPM L1 must be enabled by
-+	 * software in the Upstream component on a Link prior to enabling ASPM
-+	 * L1 in the Downstream component on the Link. When disabling L1,
-+	 * software must disable ASPM L1 in the Downstream component on a Link
-+	 * prior to disabling ASPM L1 in the Upstream component on that Link.
-+	 *
-+	 * Spec doesn't mention L0s.
-+	 *
-+	 * Disable L1 and L0s here, and they get enabled later after the L1ss
-+	 * configuration has been completed.
-+	 */
-+	list_for_each_entry(child, &linkbus->devices, bus_list)
-+		pcie_config_aspm_dev(child, 0);
-+	pcie_config_aspm_dev(parent, 0);
-+
- 	if (link->aspm_capable & PCIE_LINK_STATE_L1SS)
- 		pcie_config_aspm_l1ss(link, state);
+-	slot->bus = parent;
++	slot->bus = pci_bus_get(parent);
+ 	slot->number = slot_nr;
  
--	/*
--	 * Spec 2.0 suggests all functions should be configured the
--	 * same setting for ASPM. Enabling ASPM L1 should be done in
--	 * upstream component first and then downstream, and vice
--	 * versa for disabling ASPM L1. Spec doesn't mention L0S.
--	 */
--	if (state & PCIE_LINK_STATE_L1)
--		pcie_config_aspm_dev(parent, upstream);
-+	pcie_config_aspm_dev(parent, upstream);
- 	list_for_each_entry(child, &linkbus->devices, bus_list)
- 		pcie_config_aspm_dev(child, dwstream);
--	if (!(state & PCIE_LINK_STATE_L1))
--		pcie_config_aspm_dev(parent, upstream);
- 
- 	link->aspm_enabled = state;
- 
--- 
-2.46.1.824.gd892dcdcdd-goog
-
+ 	slot->kobj.kset = pci_slots_kset;
+@@ -269,6 +270,7 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		pci_bus_put(slot->bus);
+ 		kfree(slot);
+ 		goto err;
+ 	}
 
