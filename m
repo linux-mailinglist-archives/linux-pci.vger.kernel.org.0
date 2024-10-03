@@ -1,91 +1,91 @@
-Return-Path: <linux-pci+bounces-13746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4606D98E94B
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 07:15:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0810F98E961
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 07:34:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 083B1B21633
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 05:15:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B171528656A
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 05:34:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86FFC224D1;
-	Thu,  3 Oct 2024 05:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 002C642069;
+	Thu,  3 Oct 2024 05:34:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P71OwC4h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLpogeTX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF68D36126
-	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 05:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3F51F5FF
+	for <linux-pci@vger.kernel.org>; Thu,  3 Oct 2024 05:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727932538; cv=none; b=Q4asJ8e25XQ/nL7EZ/TdS0+98S1/KaIba0F73hYqTckP+OvggwbsqAZQnG063Na1iRPK3PAohwe88aTIb94toVvCcjxuRJuxXUp8YJ6sCYaDEgOdOWqGIOxDUTZ52bFva4qN0PN4plc57FQfUry4/zu1I3vwnCDjZiIHO+Cxt1E=
+	t=1727933690; cv=none; b=I+qbog699z3nCKq90vQgXRcqdOA/enkqpsOI5kotK1SJ2QWj5eYK3EvH3hthMYJS94pewk/YVXvxpk7KVv4740ZxpDnVJQdtNZ3P/YKBJxC0GxWb4qaSC3IKEP5BhdZK5cBrmNy8ZwDubzs4g9hZM13jsyZUKLiv8DLN4MA9I6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727932538; c=relaxed/simple;
-	bh=OHiaQB6DuBhomWeQAXyZs+hA1EcEH547SHdB4xPJezs=;
+	s=arc-20240116; t=1727933690; c=relaxed/simple;
+	bh=EDm+/tkGzYiUBi8ZkmlBNjgzxGpygo9gAhp62ALZ35Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PiWm3mW3U5IZLphyH8T/uz748Te92u48aMLGD2TX4KmkmbX3SxgGjvcmhJBtEJfs3CYYTX8Lf1CcegHONJgVzhnDzPhelzCoNpoLq1e/FVnwz/sngPf2qjTYCcvcglm0pXqppAnvgmB6jcwMHX03cPDD+ebJuyK34OaM9n6qQG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P71OwC4h; arc=none smtp.client-ip=209.85.216.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=SNW2JGWUMqrsngjV8GKbG/JWHY4igAsx+XVtinWRFj39UFnzeTrqZFwoWFvI9gX7SaMMz9fxzmu49kDoU+i5+kZcD6lMAbQd8/R3FOWvmF6t5vLiBO6Tf/Gm485KsBt9n6uK0KpBfHlE38O4t6pW5mYPB8096ef4rCClfcgW/0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GLpogeTX; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2e09d9f2021so416460a91.0
-        for <linux-pci@vger.kernel.org>; Wed, 02 Oct 2024 22:15:36 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-71b0d9535c0so439386b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 02 Oct 2024 22:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727932536; x=1728537336; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727933689; x=1728538489; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=zDZEd+knXkuxXPgXs2kDCTgo3adMpe62SuSlOEQu0K8=;
-        b=P71OwC4h+hwSGsTSrJ4V2TQ0bta34eAe5JEPK7wlyYCrNImKkj63ENFie6/MuBwolL
-         xJEE/G9/Y3qWw5khkoI9+R9vUCkgUIIcEAM5QHYzIak7H+V56nwN7kwywIHl0TEf0cml
-         Pe8mRT3hwiefIkiL3o5DPLWAdc2LBhhli4M2/mAZZQz2R6iLsY7tEacjtZrdPdML4OKv
-         dDMo5D/RJz9AI6ZsjuWWZJOLkKSresQa9+00U252JbmjJNiDE0zBtCXSxw7PzcPr1Z2c
-         Fy/TD6Dwlmg5eewGosdW62lX012n/RRaAtaKz5XvtfunS1ynbPpOuGc6Ll6s+bkzjF7o
-         VFIg==
+        bh=HSml+1r4bZzAkwRWts40vTN9SrEXop2A63UnX854Gxc=;
+        b=GLpogeTXyapHGOFywv2Y/F4FfCJ4RNG7GtSHTxipIF7FFFklw/eY4ZWJzi2LFykMeh
+         TTCqhkt/+LK3pyDZ0RckYLgZiEKxGP4t6D9JYmYROqQBwh/y6qahqEKBbdeTfgIL5r5C
+         rBTLqYKcgGwz7EqWTeX5ja5pCWFlr9y+B8timJ/9fegI9NMM7Or650uiDGdOBckhNLdF
+         oYidljEkDtTWnVAx05S+0kIxQIGWy9uI6JkD9Lr+pu32kWe602gnXyCt6YjAc8dHUMQA
+         oBrbeHi9XSR2WPnX/29ZQ00je52q0lN7Y6HClv7xVhkqQiW22GfKM4ciiAx5umPt8kDh
+         jWtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727932536; x=1728537336;
+        d=1e100.net; s=20230601; t=1727933689; x=1728538489;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zDZEd+knXkuxXPgXs2kDCTgo3adMpe62SuSlOEQu0K8=;
-        b=JlE/Y1aoiTjWsNrzrvu3WWmA3EEYcN6J7Nr3wFaVhYu72R+WFEy6AZ42mzCtKgfwgc
-         /sbp1nYub5gxP9ln5TU9SKd6r+SSNSnD0SB0OJdJfJGWlxgkfbu3hpErXm33SAlr5R8r
-         uQahCHTs0QadrmUK2Y9VLH9i9H3cKFEJEygmoonwut7GiE7rbu4mSpD9KxLDvfkI0JE2
-         cOaQG4bCdDi//s9eMbLLMvASxIf8ffMKKROIvEnID91UtpKwGG+PuipwsuONvLtH2JuV
-         28CN2xLn9hh3X8IIvx8xBX7SC3T8xny2H3YKotH8LkRnktpuI9yhSzXeLgMz0bXJwvCK
-         zuqg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8tZXr3Twdp+hBLGwQ2P/6kdHGFcR+Mcum/3nS9JGoY5C70+LB22GDlFA9NwLMZFEmXkilZn12//g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznsrjdAFG+0JKksWeb0DsE26RiDpOQZJGURuLAylfsOVMqMGvf
-	K+ZVoJ3ybRpMozIRPM8D9il7kON3ASRkI1UNYLH4dKwnXSE5dDIcoctJ8ARsHg==
-X-Google-Smtp-Source: AGHT+IGFzmJSdO8rd6CXNlY0TTZNLylyV1+W0nXK1rdwwYtV/CN8tyL4ABdeXZlNSjBhb2YD1GkaTA==
-X-Received: by 2002:a17:90a:a00f:b0:2e0:77aa:fecf with SMTP id 98e67ed59e1d1-2e1849cbe38mr5987618a91.41.1727932535975;
-        Wed, 02 Oct 2024 22:15:35 -0700 (PDT)
+        bh=HSml+1r4bZzAkwRWts40vTN9SrEXop2A63UnX854Gxc=;
+        b=GvB8B8TKgPETUykvEdlT+KKf3HtZP4bt4F+bPIMGTtDh4GjyOkN2HEkMKzkbWcraSm
+         4S/GqS8PnwXVMNuvXDcSLv5vSj8JbYu0wp2+XO7mGIESO/gi3NzvSvyphQ3ue6TBatBo
+         KYJEn7Yaabnc2f1tg3xkQwJ8U1DwD2RLIt9zCJsfJAXa2zUcjBiUT+lMlKIHYpQSDG0a
+         IalJXgt6X63HYKH/1+1H8wIiP9rrFm0mkmQXhIRLC42j25+htk//TGtDF200gtwdfQZ6
+         /C2RYITCrJUJ6M8llTA5faPY6E7iuVylLjgY5I8fH3f3/kV4BLbpUNPfGWQ/7IpMTwMq
+         /GOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIIWF3bVI4VHa6Fk84WivShwOozG4VVao3YtcKFFScfPs8V1R+3Z63gJQT/77ZgP2UBgN+cITGEaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpqt+Llp3gLqM9dkWR5+3s7QQoN3sPchqHL0BUGVLYpmEhSi7y
+	ARmBbcjM1F54gye3JlpzGpdcx9Jp6fKJ7PlVT5DisfxIZvmCF8mzoH2Y0CB3Fg==
+X-Google-Smtp-Source: AGHT+IEhnqAJQDNpXwUuNi0Kwr7kqnn3sBdkE/2mLCX4Dd9WV3ch5BfYf8udYxNwIYPKwjCCMKEivQ==
+X-Received: by 2002:a05:6a00:acb:b0:71c:5b8a:ae0b with SMTP id d2e1a72fcca58-71dc5d71766mr9243388b3a.24.1727933688500;
+        Wed, 02 Oct 2024 22:34:48 -0700 (PDT)
 Received: from thinkpad ([36.255.17.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e18f773a21sm2669570a91.20.2024.10.02.22.15.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71dd9dee8b8sm480877b3a.145.2024.10.02.22.34.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 22:15:35 -0700 (PDT)
-Date: Thu, 3 Oct 2024 10:45:28 +0530
+        Wed, 02 Oct 2024 22:34:48 -0700 (PDT)
+Date: Thu, 3 Oct 2024 11:04:40 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, alyssa@rosenzweig.io, bpf@vger.kernel.org,
-	broonie@kernel.org, jgg@ziepe.ca, joro@8bytes.org,
-	lgirdwood@gmail.com, maz@kernel.org, p.zabel@pengutronix.de,
-	robin.murphy@arm.com, will@kernel.org
-Subject: Re: [PATCH v2 0/2] PCI: add enabe(disable)_device() hook for bridge
-Message-ID: <20241003051528.qrp2z7kvzgvymgjb@thinkpad>
-References: <20240930-imx95_lut-v2-0-3b6467ba539a@nxp.com>
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v3 0/3] PCI: dwc: opitimaze RC host pci_fixup_addr()
+Message-ID: <20241003053440.5mv6kv27rxttekaq@thinkpad>
+References: <20240930-pci_fixup_addr-v3-0-80ee70352fc7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,104 +95,108 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240930-imx95_lut-v2-0-3b6467ba539a@nxp.com>
+In-Reply-To: <20240930-pci_fixup_addr-v3-0-80ee70352fc7@nxp.com>
 
-On Mon, Sep 30, 2024 at 03:42:20PM -0400, Frank Li wrote:
-> Some system's IOMMU stream(master) ID bits(such as 6bits) less than
-> pci_device_id (16bit). It needs add hardware configuration to enable
-> pci_device_id to stream ID convert.
+On Mon, Sep 30, 2024 at 02:44:52PM -0400, Frank Li wrote:
+> ┌─────────┐                    ┌────────────┐
+>  ┌─────┐    │         │ IA: 0x8ff0_0000    │            │
+>  │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
+>  └─────┘    │   │     │ IA: 0x8ff8_0000 │  │            │
+>   CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
+> 0x7ff0_0000─┼───┘  │  │             │   │  │            │
+>             │      │  │             │   │  │            │   PCI Addr
+> 0x7ff8_0000─┼──────┘  │             │   └──► CfgSpace  ─┼────────────►
+>             │         │             │      │            │    0
+> 0x7000_0000─┼────────►├─────────┐   │      │            │
+>             └─────────┘         │   └──────► IOSpace   ─┼────────────►
+>              BUS Fabric         │          │            │    0
+>                                 │          │            │
+>                                 └──────────► MemSpace  ─┼────────────►
+>                         IA: 0x8000_0000    │            │  0x8000_0000
+>                                            └────────────┘
 > 
-> https://lore.kernel.org/imx/20240622173849.GA1432357@bhelgaas/
-> This ways use pcie bus notifier (like apple pci controller), when new PCIe
-> device added, bus notifier will call register specific callback to handle
-> look up table (LUT) configuration.
+> Current dwc implimemnt, pci_fixup_addr() call back is needed when bus
+> fabric convert cpu address before send to PCIe controller.
 > 
-> https://lore.kernel.org/imx/20240429150842.GC1709920-robh@kernel.org/
-> which parse dt's 'msi-map' and 'iommu-map' property to static config LUT
-> table (qcom use this way). This way is rejected by DT maintainer Rob.
+>     bus@5f000000 {
+>             compatible = "simple-bus";
+>             #address-cells = <1>;
+>             #size-cells = <1>;
+>             ranges = <0x5f000000 0x0 0x5f000000 0x21000000>,
+>                      <0x80000000 0x0 0x70000000 0x10000000>;
 > 
-
-What is the issue in doing this during the probe() stage? It looks like you are
-working with the static info in the devicetree, which is already available
-during the controller probe().
-
-> Above ways can resolve LUT take or stream id out of usage the problem. If
-> there are not enough stream id resource, not error return, EP hardware
-> still issue DMA to do transfer, which may transfer to wrong possition.
+>             pcie@5f010000 {
+>                     compatible = "fsl,imx8q-pcie";
+>                     reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
+>                     reg-names = "dbi", "config";
+>                     #address-cells = <3>;
+>                     #size-cells = <2>;
+>                     device_type = "pci";
+>                     bus-range = <0x00 0xff>;
+>                     ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
+>                              <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+>             ...
+>             };
+>     };
 > 
-> Add enable(disable)_device() hook for bridge can return error when not
-> enough resource, and PCI device can't enabled.
+> Device tree already can descript all address translate. Some hardware
+> driver implement fixup function by mask some bits of cpu address. Last
+> pci-imx6.c are little bit better by fetch memory resource's offset to do
+> fixup.
 > 
-
-{enable/disable}_device() doesn't convey the fact you are mapping BDF to SID in
-the hardware. Maybe something like, {map/unmap}_bdf2sid() or similar would make
-sense.
-
-- Mani
-
-> Basicallly this version can match Bjorn's requirement:
-> 1: simple, because it is rare that there are no LUT resource.
-> 2: EP driver probe failure when no LUT, but lspci can see such device.
+> static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+> {
+> 	...
+> 	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> 	return cpu_addr - entry->offset;
+> }
 > 
-> [    2.164415] nvme nvme0: pci function 0000:01:00.0
-> [    2.169142] pci 0000:00:00.0: Error enabling bridge (-1), continuing
-> [    2.175654] nvme 0000:01:00.0: probe with driver nvme failed with error -12
+> But it is not good by using IORESOURCE_MEM to fix up io/cfg address map
+> although address translate is the same as IORESOURCE_MEM.
 > 
-> > lspci
-> 0000:00:00.0 PCI bridge: Philips Semiconductors Device 0000
-> 0000:01:00.0 Non-Volatile memory controller: Micron Technology Inc 2100AI NVMe SSD [Nitro] (rev 03)
+> This patches to fetch untranslate range information for PCIe controller
+> (pcie@5f010000: ranges). So current config ATU without cpu_fixup_addr().
 > 
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Richard Zhu <hongxing.zhu@nxp.com>
-> To: Lucas Stach <l.stach@pengutronix.de>
-> To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> To: Krzysztof Wilczyński <kw@linux.com>
-> To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> To: Rob Herring <robh@kernel.org>
-> To: Shawn Guo <shawnguo@kernel.org>
-> To: Sascha Hauer <s.hauer@pengutronix.de>
-> To: Pengutronix Kernel Team <kernel@pengutronix.de>
-> To: Fabio Estevam <festevam@gmail.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: imx@lists.linux.dev
-> Cc: Frank.li@nxp.com \
-> Cc: alyssa@rosenzweig.io \
-> Cc: bpf@vger.kernel.org \
-> Cc: broonie@kernel.org \
-> Cc: jgg@ziepe.ca \
-> Cc: joro@8bytes.org \
-> Cc: l.stach@pengutronix.de \
-> Cc: lgirdwood@gmail.com \
-> Cc: maz@kernel.org \
-> Cc: p.zabel@pengutronix.de \
-> Cc: robin.murphy@arm.com \
-> Cc: will@kernel.org \
+> EP side patch:
+> https://lore.kernel.org/linux-pci/20240923-pcie_ep_range-v2-0-78d2ea434d9f@nxp.com/T/#mfc73ca113a69ad2c0294a2e629ecee3105b72973
+> 
+> The both pave the road to eliminate ugle cpu_fixup_addr() callback function.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
+> Changes in v3:
+> - see each patch
+
+You should make the life easier for the reviewer, not hard. Please summarise
+what has changed since the last version.
+
+- Mani
+
+> - Link to v2: https://lore.kernel.org/r/20240926-pci_fixup_addr-v2-0-e4524541edf4@nxp.com
+> 
 > Changes in v2:
 > - see each patch
-> - Link to v1: https://lore.kernel.org/r/20240926-imx95_lut-v1-0-d0c62087dbab@nxp.com
+> - Link to v1: https://lore.kernel.org/r/20240924-pci_fixup_addr-v1-0-57d14a91ec4f@nxp.com
 > 
 > ---
-> Frank Li (2):
->       PCI: Add enable_device() and disable_device() callbacks for bridges
->       PCI: imx6: Add IOMMU and ITS MSI support for i.MX95
+> Frank Li (3):
+>       of: address: Add parent_bus_addr to struct of_pci_range
+>       PCI: dwc: Using parent_bus_addr in of_range to eliminate cpu_addr_fixup()
+>       PCI: imx6: Remove cpu_addr_fixup()
 > 
->  drivers/pci/controller/dwc/pci-imx6.c | 133 +++++++++++++++++++++++++++++++++-
->  drivers/pci/pci.c                     |  14 ++++
->  include/linux/pci.h                   |   2 +
->  3 files changed, 148 insertions(+), 1 deletion(-)
+>  drivers/of/address.c                              |  2 ++
+>  drivers/pci/controller/dwc/pci-imx6.c             | 22 ++----------
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 42 +++++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h      |  8 +++++
+>  include/linux/of_address.h                        |  1 +
+>  5 files changed, 55 insertions(+), 20 deletions(-)
 > ---
-> base-commit: 2849622e7b01d5aea1b060ba3955054798c1e0bb
-> change-id: 20240926-imx95_lut-1c68222e0944
+> base-commit: 69940764dc1c429010d37cded159fadf1347d318
+> change-id: 20240924-pci_fixup_addr-a8568f9bbb34
 > 
 > Best regards,
 > ---
 > Frank Li <Frank.Li@nxp.com>
-> 
 > 
 
 -- 
