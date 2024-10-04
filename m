@@ -1,63 +1,59 @@
-Return-Path: <linux-pci+bounces-13846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60188990C6B
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 20:49:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45F3E990C6F
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 20:49:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5DDB1F26C48
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 18:49:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77DFA1C22761
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 18:49:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016AF21C191;
-	Fri,  4 Oct 2024 18:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E89E1F780B;
+	Fri,  4 Oct 2024 18:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="McdwyXZq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K876QZYH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7E01F709F;
-	Fri,  4 Oct 2024 18:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070B21F7808;
+	Fri,  4 Oct 2024 18:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728066193; cv=none; b=SS6J9mqFI/qhLXdImPYsDJ8YHTnDVpn+Q2j3+hn/AbazIFEq9rfiItOlkpmoc8GjmqaMW2P0fH/xlyneEwaw5b7czwC2WSYAfObd6xR7mbgGWPM3IUJGvjeQlAa+gOhjTnyTc0NaFGtsKzpWp2OVB4JjvCtr8kw2ocLktIJUmVs=
+	t=1728066195; cv=none; b=PT2W/0iwv92GDzfLvA+02t5FVIeFPNjGYLj3+qdK6aWAYFd1dKxyQ1Zc9i9xXKYj6bCOOy8pObhOCxchjMYjAm5EdToybNfP6IRNBUdqRAEXEMzhMxL/E12YuN7qkm7QSDFSmgYGSQf2SSqgjMpxQXb70aupTg4koNqGbsAKajk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728066193; c=relaxed/simple;
-	bh=LV6/8sInqNJQ94n/PHbBsBClTJET/v8G+eUKe4oEfnY=;
+	s=arc-20240116; t=1728066195; c=relaxed/simple;
+	bh=dPelZsrz963rJ7yqfdRQroR1gmL4IW4pvZrgvpQucvU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s3K8AJYcdIJqt3uFME4V8pEDeQi+zxLzaHP/cYS/7kyV6zGIzbVKDfn78nUf/vutrntok2dW+WvemVosd/RwjjYq5J94yYiO30MoQWEcsQN4+6dATwQNjcjzo7s1nKfs0e3PZPfcEV2s3aUvlgRkJlEsPGkst731wnWOfV4Yj2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=McdwyXZq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA905C4CEC6;
-	Fri,  4 Oct 2024 18:23:11 +0000 (UTC)
+	 MIME-Version:Content-Type; b=THRwc8Uw+t176tDdvjXe0YAkKBYHnGc7eW0buVOjPufbt6PTOktm4cD3X0u2Zc3PSIUA4QGbOo9hy2wo+hjbsm5xMk7usjI7Ea1+PZIpusQAkt9ObEoToueO12LjpKXgZ1rL6bYQrzMXivBVGEadF4JXGSbI6H6m1b7y07hWlis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K876QZYH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBEE4C4CECD;
+	Fri,  4 Oct 2024 18:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728066193;
-	bh=LV6/8sInqNJQ94n/PHbBsBClTJET/v8G+eUKe4oEfnY=;
+	s=k20201202; t=1728066194;
+	bh=dPelZsrz963rJ7yqfdRQroR1gmL4IW4pvZrgvpQucvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=McdwyXZqyNir72k0duGxeAbq8mCXRN0EePJAhwN4rL6Q0lBg5MawYREKBuSOtLeHC
-	 dqrb/yoSD2TT32WPM+XQiUQLqv7OMhoIwsO7r5aVraicjmJV99vn4DQi0D00rP20VP
-	 6pr085/Gxev8CuWhSzDF+2upDMm795uyemSMJdfWphK7eL7y5MdzCBUd44ughesgxW
-	 g9c3f6BV3L+BNFBLQRR/c1k32PVyTrdUkqj/9AYkOOkol97Eg717nKSEuBL+UsYR+L
-	 dg8Xa0e7FXRhhI5dvDdrHKhj9o0QMoS3VdhZis20xQVJZa2bpGCIVztTG2rCknHThY
-	 lEUtJ1yy7KFOQ==
+	b=K876QZYHi3vdrjLxpFWsXVsiVgcYATgDJkS49O3JzHBmUnN44PtVB0nEUXthMb8r5
+	 XdgVRiuIObu0Hxh5z+IltkOXxrwsQVESILw4gjZtmN+O0LF4kR9JcwhhYqGv9Bk09u
+	 XIW6b7fBlHpQT1ohsfLPtGlI699flpTwxN4f+XYdd+Ae/H1IOcpObSck7+Svkv0J+E
+	 9iirCXuyfPBYa1+P1aQCzQnvuLoKjCPgAC0IAmcs0VU5t0SOfH25lU+Fb50T5AtOdH
+	 ARyq9phEAMMHGc3cYq2OjF25sMYwRu/R4LkpdeQfD4SzgCFjcaQVwhG2Zv9q99CeTK
+	 AvRJe4J/tqblA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Mayank Rana <quic_mrana@quicinc.com>,
+	Frank Li <Frank.Li@nxp.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jingoohan1@gmail.com,
-	lpieralisi@kernel.org,
 	kw@linux.com,
 	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 37/70] PCI: qcom: Disable mirroring of DBI and iATU register space in BAR region
-Date: Fri,  4 Oct 2024 14:20:35 -0400
-Message-ID: <20241004182200.3670903-37-sashal@kernel.org>
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.10 38/70] PCI: endpoint: Assign PCI domain number for endpoint controllers
+Date: Fri,  4 Oct 2024 14:20:36 -0400
+Message-ID: <20241004182200.3670903-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241004182200.3670903-1-sashal@kernel.org>
 References: <20241004182200.3670903-1-sashal@kernel.org>
@@ -73,286 +69,91 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.10.13
 Content-Transfer-Encoding: 8bit
 
-From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[ Upstream commit 10ba0854c5e6165b58e17bda5fb671e729fecf9e ]
+[ Upstream commit 0328947c50324cf4b2d8b181bf948edb8101f59f ]
 
-PARF hardware block which is a wrapper on top of DWC PCIe controller
-mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
-register to get the size of the memory block to be mirrored and uses
-PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
-address of DBI and ATU space inside the memory block that is being
-mirrored.
+Right now, PCI endpoint subsystem doesn't assign PCI domain number for the
+PCI endpoint controllers. But this domain number could be useful to the EPC
+drivers to uniquely identify each controller based on the hardware instance
+when there are multiple ones present in an SoC (even multiple RC/EP).
 
-When a memory region which is located above the SLV_ADDR_SPACE_SIZE
-boundary is used for BAR region then there could be an overlap of DBI and
-ATU address space that is getting mirrored and the BAR region. This
-results in DBI and ATU address space contents getting updated when a PCIe
-function driver tries updating the BAR/MMIO memory region. Reference
-memory map of the PCIe memory region with DBI and ATU address space
-overlapping BAR region is as below.
+So let's make use of the existing pci_bus_find_domain_nr() API to allocate
+domain numbers based on either devicetree (linux,pci-domain) property or
+dynamic domain number allocation scheme.
 
-                        |---------------|
-                        |               |
-                        |               |
-        ------- --------|---------------|
-           |       |    |---------------|
-           |       |    |       DBI     |
-           |       |    |---------------|---->DBI_BASE_ADDR
-           |       |    |               |
-           |       |    |               |
-           |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
-           |    BAR/MMIO|---------------|
-           |    Region  |       ATU     |
-           |       |    |---------------|---->ATU_BASE_ADDR
-           |       |    |               |
-        PCIe       |    |---------------|
-        Memory     |    |       DBI     |
-        Region     |    |---------------|---->DBI_BASE_ADDR
-           |       |    |               |
-           |    --------|               |
-           |            |               |---->SLV_ADDR_SPACE_SIZE
-           |            |---------------|
-           |            |       ATU     |
-           |            |---------------|---->ATU_BASE_ADDR
-           |            |               |
-           |            |---------------|
-           |            |       DBI     |
-           |            |---------------|---->DBI_BASE_ADDR
-           |            |               |
-           |            |               |
-        ----------------|---------------|
-                        |               |
-                        |               |
-                        |               |
-                        |---------------|
+It should be noted that the domain number allocated by this API will be
+based on both RC and EP controllers in a SoC. If the 'linux,pci-domain' DT
+property is present, then the domain number represents the actual hardware
+instance of the PCI endpoint controller. If not, then the domain number
+will be allocated based on the PCI EP/RC controller probe order.
 
-Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
-used for BAR region which is why the above mentioned issue is not
-encountered. This issue is discovered as part of internal testing when we
-tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
-we are trying to fix this.
+If the architecture doesn't support CONFIG_PCI_DOMAINS_GENERIC (rare), then
+currently a warning is thrown to indicate that the architecture specific
+implementation is needed.
 
-As PARF hardware block mirrors DBI and ATU register space after every
-PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, program
-maximum possible size to this register by writing 0x80000000 to it(it
-considers only powers of 2 as values) to avoid mirroring DBI and ATU to
-BAR/MMIO region. Write the physical base address of DBI and ATU register
-blocks to PARF_DBI_BASE_ADDR (default 0x0) and PARF_ATU_BASE_ADDR (default
-0x1000) respectively to make sure DBI and ATU blocks are at expected
-memory locations.
-
-The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
-and PARF_ATU_BASE_ADDR are applicable for platforms that use Qcom IP
-rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
-PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for Qcom IP rev 2.3.3.
-PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for Qcom
-IP rev 1.0.0, 2.3.2 and 2.4.0. Update init()/post_init() functions of the
-respective Qcom IP versions to program applicable PARF_DBI_BASE_ADDR,
-PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR register offsets. Update
-the SLV_ADDR_SPACE_SZ macro to 0x80000000 to set highest bit in
-PARF_SLV_ADDR_SPACE_SIZE register.
-
-Cache DBI and iATU physical addresses in 'struct dw_pcie' so that
-pcie_qcom.c driver can program these addresses in the PARF_DBI_BASE_ADDR
-and PARF_ATU_BASE_ADDR registers.
-
-Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/linux-pci/20240814220338.1969668-1-quic_pyarlaga@quicinc.com
-Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+Link: https://lore.kernel.org/linux-pci/20240828-pci-qcom-hotplug-v4-5-263a385fbbcb@linaro.org
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Mayank Rana <quic_mrana@quicinc.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware.c |  2 +
- drivers/pci/controller/dwc/pcie-designware.h |  2 +
- drivers/pci/controller/dwc/pcie-qcom.c       | 72 ++++++++++++++++----
- 3 files changed, 61 insertions(+), 15 deletions(-)
+ drivers/pci/endpoint/pci-epc-core.c | 14 ++++++++++++++
+ include/linux/pci-epc.h             |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 250cf7f40b858..d59f607b71f17 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -112,6 +112,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
- 		pci->dbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
- 		if (IS_ERR(pci->dbi_base))
- 			return PTR_ERR(pci->dbi_base);
-+		pci->dbi_phys_addr = res->start;
- 	}
- 
- 	/* DBI2 is mainly useful for the endpoint controller */
-@@ -134,6 +135,7 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
- 			pci->atu_base = devm_ioremap_resource(pci->dev, res);
- 			if (IS_ERR(pci->atu_base))
- 				return PTR_ERR(pci->atu_base);
-+			pci->atu_phys_addr = res->start;
- 		} else {
- 			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
- 		}
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index f8e5431a207bd..ea3c22f713111 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -387,8 +387,10 @@ struct dw_pcie_ops {
- struct dw_pcie {
- 	struct device		*dev;
- 	void __iomem		*dbi_base;
-+	resource_size_t		dbi_phys_addr;
- 	void __iomem		*dbi_base2;
- 	void __iomem		*atu_base;
-+	resource_size_t		atu_phys_addr;
- 	size_t			atu_size;
- 	u32			num_ib_windows;
- 	u32			num_ob_windows;
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 7fa1fe5a29e3d..28bfd8b38dc7a 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -43,6 +43,7 @@
- #define PARF_PHY_REFCLK				0x4c
- #define PARF_CONFIG_BITS			0x50
- #define PARF_DBI_BASE_ADDR			0x168
-+#define PARF_SLV_ADDR_SPACE_SIZE		0x16c
- #define PARF_MHI_CLOCK_RESET_CTRL		0x174
- #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-@@ -50,8 +51,13 @@
- #define PARF_LTSSM				0x1b0
- #define PARF_SID_OFFSET				0x234
- #define PARF_BDF_TRANSLATE_CFG			0x24c
--#define PARF_SLV_ADDR_SPACE_SIZE		0x358
-+#define PARF_DBI_BASE_ADDR_V2			0x350
-+#define PARF_DBI_BASE_ADDR_V2_HI		0x354
-+#define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
-+#define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
- #define PARF_NO_SNOOP_OVERIDE			0x3d4
-+#define PARF_ATU_BASE_ADDR			0x634
-+#define PARF_ATU_BASE_ADDR_HI			0x638
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_TABLE_N			0x2000
- #define PARF_BDF_TO_SID_CFG			0x2c00
-@@ -106,7 +112,7 @@
- #define PHY_RX0_EQ(x)				FIELD_PREP(GENMASK(26, 24), x)
- 
- /* PARF_SLV_ADDR_SPACE_SIZE register value */
--#define SLV_ADDR_SPACE_SZ			0x10000000
-+#define SLV_ADDR_SPACE_SZ			0x80000000
- 
- /* PARF_MHI_CLOCK_RESET_CTRL register fields */
- #define AHB_CLK_EN				BIT(0)
-@@ -323,6 +329,50 @@ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
- 	dw_pcie_dbi_ro_wr_dis(pci);
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 47d27ec7439d9..141840fceb798 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -810,6 +810,10 @@ void pci_epc_destroy(struct pci_epc *epc)
+ {
+ 	pci_ep_cfs_remove_epc_group(epc->group);
+ 	device_unregister(&epc->dev);
++
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++	pci_bus_release_domain_nr(NULL, &epc->dev);
++#endif
  }
+ EXPORT_SYMBOL_GPL(pci_epc_destroy);
  
-+static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
+@@ -872,6 +876,16 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+ 	epc->dev.release = pci_epc_release;
+ 	epc->ops = ops;
+ 
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++	epc->domain_nr = pci_bus_find_domain_nr(NULL, dev);
++#else
++	/*
++	 * TODO: If the architecture doesn't support generic PCI
++	 * domains, then a custom implementation has to be used.
++	 */
++	WARN_ONCE(1, "This architecture doesn't support generic PCI domains\n");
++#endif
 +
-+	if (pci->dbi_phys_addr) {
-+		/*
-+		 * PARF_DBI_BASE_ADDR register is in CPU domain and require to
-+		 * be programmed with CPU physical address.
-+		 */
-+		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-+							PARF_DBI_BASE_ADDR);
-+		writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-+						PARF_SLV_ADDR_SPACE_SIZE);
-+	}
-+}
-+
-+static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pci->dbi_phys_addr) {
-+		/*
-+		 * PARF_DBI_BASE_ADDR_V2 and PARF_ATU_BASE_ADDR registers are
-+		 * in CPU domain and require to be programmed with CPU
-+		 * physical addresses.
-+		 */
-+		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-+							PARF_DBI_BASE_ADDR_V2);
-+		writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
-+						PARF_DBI_BASE_ADDR_V2_HI);
-+
-+		if (pci->atu_phys_addr) {
-+			writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
-+							PARF_ATU_BASE_ADDR);
-+			writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
-+							PARF_ATU_BASE_ADDR_HI);
-+		}
-+
-+		writel(0x0, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
-+		writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-+					PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
-+	}
-+}
-+
- static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
- {
- 	u32 val;
-@@ -553,8 +603,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+ 	ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
+ 	if (ret)
+ 		goto put_dev;
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index acc5f96161fe1..cac04ce7f2ed7 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -128,6 +128,7 @@ struct pci_epc_mem {
+  * @group: configfs group representing the PCI EPC device
+  * @lock: mutex to protect pci_epc ops
+  * @function_num_map: bitmap to manage physical function number
++ * @domain_nr: PCI domain number of the endpoint controller
+  * @init_complete: flag to indicate whether the EPC initialization is complete
+  *                 or not
+  */
+@@ -145,6 +146,7 @@ struct pci_epc {
+ 	/* mutex to protect against concurrent access of EP controller */
+ 	struct mutex			lock;
+ 	unsigned long			function_num_map;
++	int				domain_nr;
+ 	bool				init_complete;
+ };
  
- static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
- {
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_base(pcie);
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
-@@ -644,8 +693,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_base(pcie);
- 
- 	/* MAC PHY_POWERDOWN MUX DISABLE  */
- 	val = readl(pcie->parf + PARF_SYS_CTRL);
-@@ -837,13 +885,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 
--	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
- 		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-@@ -966,8 +1012,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	/* MAC PHY_POWERDOWN MUX DISABLE  */
- 	val = readl(pcie->parf + PARF_SYS_CTRL);
-@@ -1181,14 +1226,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
- 	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
 -- 
 2.43.0
 
