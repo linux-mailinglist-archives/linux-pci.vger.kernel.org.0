@@ -1,56 +1,88 @@
-Return-Path: <linux-pci+bounces-13791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3417E98F99E
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 00:11:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6346698FC72
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 05:00:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFD611F2371B
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Oct 2024 22:11:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B15F1C21FC8
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 03:00:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FF5D1C7B6D;
-	Thu,  3 Oct 2024 22:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B351EDDA1;
+	Fri,  4 Oct 2024 03:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EH+Ew4ed"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AIxSp7hF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D311E1C2DB2;
-	Thu,  3 Oct 2024 22:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD45288B5
+	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 03:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727993436; cv=none; b=ELGsO4KeH+v9v1zHd3UPpc2zrGmu6pBKREe4267abf7/9XAKxgBEjj69GA3XMpek/YQiKB25Tl89ahaqLGHqcEEalxZxtkzan3fNIyaTm9ae5tT8BbR1td8o7pZVSsoWMwnYAeDJx4b5h721pKfDxf1owJnS8WcGmj0UEoPTzuY=
+	t=1728010838; cv=none; b=tlBn8R1NspJ5dn2/jPPPirrfuv3ai0Ptjgn69CdBKK3+sEfEDhggUvsyZZofmAy5o7VJfZg1xPWJgOtoNbqwtu/p660ihsMBxo+zbDBY3n4JYeLBpt4JwlUrIVzvoLrvDz8rKr2xxGNsqnLMXImJu5bjnyqyPh1/23RJ36HcJvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727993436; c=relaxed/simple;
-	bh=MadVuRwfh5yDTb8GHcmeHrDGyQR1j2Mwx4Mzz3rndFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AkNaOEL6Ipdk0hEhunFm5R8v2OB9sN4kXL51zGiBi3CVkCArdNN83HMzJ68eDfnqoBEMY12Eo9E/rofIUykxzhmq8gcbrRYD9aK3qM6qQoy/VnzdICjTsJVuHNGCsmx2IfV/s0CQG/GmUcXMRIwpho4mNgmdSZOCNBrYcuP8QEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EH+Ew4ed; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9CBC4CEC5;
-	Thu,  3 Oct 2024 22:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727993435;
-	bh=MadVuRwfh5yDTb8GHcmeHrDGyQR1j2Mwx4Mzz3rndFk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EH+Ew4ed9IHArjrYs1HV1urju/HuGP4XDPcMdXcjEELWmBj43BmlTrkg241eg4hCi
-	 6oE8Jc3q3hg0EHHVk7E3g3M7RPp9pu1upwA/BPVdQUZ+Mnr+SEjM0M/k7MPF01P31M
-	 IUFBPfNUsvm+hrY5U4na1Wa7OyBtSpJsbvyNO8B0x2FhSSNcHswD+yoNfhdjlgN7Lu
-	 B8y/wWjLUyaoSQZ9yyAU3mDPkLYPumP35HNVh1sXngwI36pgkNymOWnUhHb7C6pLTv
-	 FuzoW5XqXyJGink6A/yhin8Wtk421kv/uEUFL8Ajfip2MtkhmhRZARG7JXEAP6WFNA
-	 ARei4DOMVgSdA==
-Date: Thu, 3 Oct 2024 17:10:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, manivannan.sadhasivam@linaro.org,
-	Markus.Elfring@web.de, quic_mrana@quicinc.com, rafael@kernel.org,
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_ramkri@quicinc.com
-Subject: Re: [PATCH v5] PCI: Enable runtime pm of the host bridge
-Message-ID: <20241003221033.GA327855@bhelgaas>
+	s=arc-20240116; t=1728010838; c=relaxed/simple;
+	bh=nW7wqiDCtMpBBru9fQpWsqTDpgKrjXUQFwUX4ryMVZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OmYzbkx1hf90thmHCM+M+/G09dfK0ynFAi24/e7shpgCSy9uMkGgpqu245dK/jMdn1fXrgsL6ajsyNsSGfSuY7CIwLw7ESKaYQvLYsczfazSC5un741KtFMqBumJKox8CjMFLb4/rnnwwDT53eAvdAdBrNLqzBVuoTwSX2vp9t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AIxSp7hF; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20b90ab6c19so17848165ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 03 Oct 2024 20:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728010836; x=1728615636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0qLUBCKQLtoABPl15OXigTRRzuAktX7KLGR2tbJ2/Ac=;
+        b=AIxSp7hFkzsXKhPUff98dIhNP/kW8WLdmNTqphmOWxiCSR9zRrOI2P+recD0qA3wi6
+         pkEbOwgNxEJcoET7BfJqdQtbREnokFTY/UK55ZY9vcAkxHP5xJunYO2tdUNja/a9vc/+
+         yf7mXeaOqPDXpABg/TEI5GKlFq1ihiVzKnnSPkxytTZnpi/B51Jk9/lGoiXih09B6QHD
+         ekPEnTZKJOLNQehkMc9aQPtbB8SDWQLmXQ7grBGUkIa+DEY0CcSg8Cqhl9ZtVbBWAgbZ
+         VKmkVvfCUoZ/Zl5KptoEk+uBzcpn5j8xWhkH8WKJyz+kzqdfG2welV5JCYi4hF9sxt+g
+         35Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728010836; x=1728615636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0qLUBCKQLtoABPl15OXigTRRzuAktX7KLGR2tbJ2/Ac=;
+        b=KTGwrysJ7F32Cl8qHDBUFYS2TSHqwzN/WLroM5EUWO4pf30LQRzdVQF346X8ZG0kch
+         zksUIJ1duDSYhAo/3FU7BYBGVYJDO3Kb/QTDzMvbJy7JuAcuwxPddn4qE3YbjcUbuULE
+         y1haVqZ7HuX80B46WvJHIUp4/2n/HuyNKaQhS9WXA/zCLPDsEVx3pcux7Mks39+NF/zD
+         d7j53b/llQEPyzFS5rV3PiedWRScyrYaCOtXiEOY9vaMeVWUfb6DznDGQz+eSv+Q87AG
+         QddlMKdhNGQ7nQUWVe1p3WBSQUvKilMDtwUUSrJ+9CTyE0KRyieDo4x9w25TFVYuT9Wx
+         VwtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXj01Fh9NWC+WIftjrFZbChniQ9gIqoxejaR6wxSwyhH0ZR+eBRvdxdPknCCWXAb8b/n++KA5Lw++U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBd4en9lnzFEdnjlRh0HO4+4oogmUXlEcyFp5M0P2LnQRJDSO0
+	ZCAAMmwY8/489TXounTOaOmgRxfHQqorGN2CU4JIhdnWWNJIJ4H0Qgf2OFaScQ==
+X-Google-Smtp-Source: AGHT+IEQM1Pk6BmaHKYNgcH6wIPGIrUYBBrtgdRKO7S5nze7M4EYP74HBAwb4FeAkkN3UBAYbhpIHQ==
+X-Received: by 2002:a17:902:f650:b0:20b:cae5:dec6 with SMTP id d9443c01a7336-20bff074ab7mr18543665ad.59.1728010836207;
+        Thu, 03 Oct 2024 20:00:36 -0700 (PDT)
+Received: from google.com (1.243.198.35.bc.googleusercontent.com. [35.198.243.1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beefafc65sm15329605ad.217.2024.10.03.20.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2024 20:00:35 -0700 (PDT)
+Date: Fri, 4 Oct 2024 08:30:27 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>,
+	Sajid Dalvi <sdalvi@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/ASPM: Disable L1 before disabling L1ss
+Message-ID: <Zv9aS_FpDZpvmGnQ@google.com>
+References: <Zv7TLs9_CMaYQ--b@google.com>
+ <20241003202321.GA321551@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,109 +91,68 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241003-runtime_pm-v5-1-3ebd1a395d45@quicinc.com>
+In-Reply-To: <20241003202321.GA321551@bhelgaas>
 
-On Thu, Oct 03, 2024 at 11:32:32AM +0530, Krishna chaitanya chundru wrote:
-> The Controller driver is the parent device of the PCIe host bridge,
-> PCI-PCI bridge and PCIe endpoint as shown below.
+On Thu, Oct 03, 2024 at 03:23:21PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2024 at 10:53:58PM +0530, Ajay Agarwal wrote:
+> > On Thu, Oct 03, 2024 at 12:01:22PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Oct 03, 2024 at 06:55:03PM +0530, Ajay Agarwal wrote:
+> > > > The current sequence in the driver for L1ss update is as follows.
+> > > > 
+> > > > Disable L1ss
+> > > > Disable L1
+> > > > Enable L1ss as required
+> > > > Enable L1 if required
+> > > > 
+> > > > With this sequence, a bus hang is observed during the L1ss
+> > > > disable sequence when the RC CPU attempts to clear the RC L1ss
+> > > > register after clearing the EP L1ss register.
+> > > 
+> > > Thanks for this.  What exactly does the bus hang look like to a user?
+> > >
+> > The CPU is just hung on reading the RC PCI_L1SS_CTL1 register. After
+> > some time, the CPU watchdog expires and the system reboots.
 > 
->         PCIe controller(Top level parent & parent of host bridge)
->                         |
->                         v
->         PCIe Host bridge(Parent of PCI-PCI bridge)
->                         |
->                         v
->         PCI-PCI bridge(Parent of endpoint driver)
->                         |
->                         v
->                 PCIe endpoint driver
+> Wow.  Good to know that this is outside the PCIe domain.  I think this
+> is a good change, and since it is partly motivated by hardware
+> behavior that might be legal but seems somewhat unusual, can we
+> identify the hardware (CPU and PCIe Root Complex) involved here?
 > 
-> Now, when the controller device goes to runtime suspend, PM framework
-> will check the runtime PM state of the child device (host bridge) and
-> will find it to be disabled. So it will allow the parent (controller
-> device) to go to runtime suspend. Only if the child device's state was
-> 'active' it will prevent the parent to get suspended.
-> 
-> It is a property of the runtime PM framework that it can only
-> follow continuous dependency chains.  That is, if there is a device
-> with runtime PM disabled in a dependency chain, runtime PM cannot be
-> enabled for devices below it and above it in that chain both at the
-> same time.
-> 
-> Since runtime PM is disabled for host bridge, the state of the child
-> devices under the host bridge is not taken into account by PM framework
-> for the top level parent, PCIe controller. So PM framework, allows
-> the controller driver to enter runtime PM irrespective of the state
-> of the devices under the host bridge. And this causes the topology
-> breakage and also possible PM issues like controller driver goes to
-> runtime suspend while endpoint driver is doing some transfers.
-> 
-> Because of the above, in order to enable runtime PM for a PCIe
-> controller device, one needs to ensure that runtime PM is enabled for
-> all devices in every dependency chain between it and any PCIe endpoint
-> (as runtime PM is enabled for PCIe endpoints).
-> 
-> This means that runtime PM needs to be enabled for the host bridge
-> device, which is present in all of these dependency chains.
-> 
-> After this change, the host bridge device will be runtime-suspended
-> by the runtime PM framework automatically after suspending its last
-> child and it will be runtime-resumed automatically before resuming its
-> first child which will allow the runtime PM framework to track
-> dependencies between the host bridge device and all of its
-> descendants.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The CPU is an ARM A-core. The PCIe RC is a Synopsys Designware core.
 
-Applied to pci/pm for v6.13, thanks for your patience is working
-through this!
+> > > I guess the problem happens in pcie_config_aspm_l1ss(), where we do:
+> > > 
+> > >   pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ... 0)
+> > >   pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ... 0)
+> > > 
+> > > where clearing the child (endpoint) PCI_L1SS_CTL1_L1_2_MASK works, but
+> > > something goes wrong when clearing the parent (RP) mask?  The
+> > > clear_and_set will do a read followed by a write, and one of those
+> > > causes some kind of error?
+> > >
+> > During ASPM disable, in pcie_config_aspm_l1ss(), we do:
+> >    1. pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ... 0)
+> >    2. pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ... 0)
+> >    3. pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ... 0)
+> >    4. pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ... 0)
+> > 
+> > We observe that the steps 1 and 2 go through just fine. But the read of
+> > PCI_L1SS_CTL1 register in the step 3 hangs. I am not sure why.
+> > The issue is pretty difficult to reproduce, and adding prints around
+> > these steps masks the issue.
+> 
+> I guess the L1 disable is between 2 and 3, right?  And 3 and 4 may
+> enable L1 SS (using val, not 0)?
+> 
+>   1. same
+>   2. same
+>   2.5 pcie_capability_clear_word(child, PCI_EXP_LNKCTL_ASPM_L1)
+>   2.6 pcie_capability_clear_word(parent, PCI_EXP_LNKCTL_ASPM_L1)
+>   3. pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ...  val)
+>   4. pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ...  val)
+>
+Thats the sequence when L1ss is enabled. When it is disabled, then steps
+2.5 and 2.6 do not run. And 'val' remains 0.
 
-> ---
-> Changes in v5:
-> - call pm_runtime_no_callbacks() as suggested by Rafael.
-> - include the commit texts as suggested by Rafael.
-> - Link to v4: https://lore.kernel.org/linux-pci/20240708-runtime_pm-v4-1-c02a3663243b@quicinc.com/
-> Changes in v4:
-> - Changed pm_runtime_enable() to devm_pm_runtime_enable() (suggested by mayank)
-> - Link to v3: https://lore.kernel.org/lkml/20240609-runtime_pm-v3-1-3d0460b49d60@quicinc.com/
-> Changes in v3:
-> - Moved the runtime API call's from the dwc driver to PCI framework
->   as it is applicable for all (suggested by mani)
-> - Updated the commit message.
-> - Link to v2: https://lore.kernel.org/all/20240305-runtime_pm_enable-v2-1-a849b74091d1@quicinc.com
-> Changes in v2:
-> - Updated commit message as suggested by mani.
-> - Link to v1: https://lore.kernel.org/r/20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com
-> ---
-> 
-> ---
->  drivers/pci/probe.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4f68414c3086..8409e1dde0d1 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3106,6 +3106,11 @@ int pci_host_probe(struct pci_host_bridge *bridge)
->  		pcie_bus_configure_settings(child);
->  
->  	pci_bus_add_devices(bus);
-> +
-> +	pm_runtime_set_active(&bridge->dev);
-> +	pm_runtime_no_callbacks(&bridge->dev);
-> +	devm_pm_runtime_enable(&bridge->dev);
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_host_probe);
-> 
-> ---
-> base-commit: c02d24a5af66a9806922391493205a344749f2c4
-> change-id: 20241003-runtime_pm-655d48356c8b
-> 
-> Best regards,
-> -- 
-> Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
+> Bjorn
 
