@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-13812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FA5E99024E
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 13:45:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5937A990251
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 13:45:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BC651F2403F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 11:45:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0434D1F21940
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 11:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E353D15B11F;
-	Fri,  4 Oct 2024 11:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EC5214A4E7;
+	Fri,  4 Oct 2024 11:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNiRQzv1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtcYvbDO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAF515C122
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 11:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256A21D5AD8
+	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 11:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728042308; cv=none; b=dNzTaZVY5zlSICwG8xmq6j1AZf1gquIZcZUM5y2dzn8ebHyHK3qoZGYbcC6HbQQ6o/nou8cZV5LKoJDsQN1AsD0SBAVBDMKduHfHSwYSZ4wnVCMZIENCWYg4jZox8NsbJDT+/YgQl3VIJYKvFlNqj0hPoZ1BaIjdFmNxBAsOYNY=
+	t=1728042334; cv=none; b=TPILiZXcD588c5ESf0Uu9oFm9HYVPf5fZj+w/kkyQdhFaC/nhck719wsFXOJxL9PJoR1keR6bluS2PBJAUvtpVA+WpWgL+e7/hsfYcaa/EuL4fQEBMGxR2fTH7mEK3BTtjRTCzJN4NSLaV22R+uos70lHA1ofY/LsBDj4yXdbkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728042308; c=relaxed/simple;
-	bh=LyFyc+RBXZjWswYqUO7+iPTq5eriUE506PGl8MlL3jo=;
+	s=arc-20240116; t=1728042334; c=relaxed/simple;
+	bh=/wRPsVjpoCluQAabsarxc843Qr9VkfhycfYZKlJ5yBM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kf1pkUF3XXFOgTnf6lzpC7lH6vojuYAJNjMMFC30Lgz9qHbldWaNrHrSyR7N/hwf2CR7/ZovHw+l4OBF7PDVqoYfDX/j3PZ4+52HTHPt6vdokbQDFHI8ym4gOTqiUqeDB9vl+9zgmDE/ah4pHRGq8t4FTiDTwTY7XnljDQHyBCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNiRQzv1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5B8C4CED3;
-	Fri,  4 Oct 2024 11:45:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jk6p1mk4+OMuk8kf+sNIbOljWndoY/NahIOz+JUGnEVjIPXYNLuq50x42GLWCXD5JDWJ3xbDrw5L+NJGNhTXBXNZAhNNiM70Ym6bSgTxLq+gTlEAi10iVnAneXx0rRla6aDVUCybz7E/jJv3X20EAqI7Z8phJ277HS6Dn+FgNgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtcYvbDO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55293C4CEC6;
+	Fri,  4 Oct 2024 11:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728042308;
-	bh=LyFyc+RBXZjWswYqUO7+iPTq5eriUE506PGl8MlL3jo=;
+	s=k20201202; t=1728042333;
+	bh=/wRPsVjpoCluQAabsarxc843Qr9VkfhycfYZKlJ5yBM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PNiRQzv1zmTvqyRBrl6nazawZA6Z9fnRdwZcpvZW24KEYj/aU+Fxdsgr8GQ7GPSpS
-	 Cwwbs5lLYHYhJNtiUI3ZPpTFnAWV7AyLaLYUoiLYJtk0i98FtQrzqneMctTg7p6fOt
-	 Fj8ErwHnlRLAtIerDnC+++J9gN9arqFHS0tnnGZuM/06m3GID3CgNEv4RVUSWOJ0vE
-	 Gsea+afGUHhHS3EQJyl+msg1gPZZiVWnhqqBqQDhPjw9ow9z+BYp/6wHW2POwF2x4A
-	 uzf13W/CkUkGwFNcO8z+gZ9kydZiDH0Hayyw5KYi+236T7rgYj9I2IkDon6NCTxbAQ
-	 Q3u6j1R8ihwrw==
-Date: Fri, 4 Oct 2024 13:45:02 +0200
+	b=gtcYvbDO9Wil4jLYuUFsVsU1Iw+9Lrc7k2E9uswWPsh0eGUFlQLAAIvzPHjCTJe5R
+	 26Ca2dcFwwpt8cUI/o2l78jsNBfNSyQmLTDmVvr7ITXq9+Y9UlIJlWfIE1Rj1N8bxx
+	 Ql+hEbDWgNLtz8GQhWvSxH+PL5gAZYFBho2rSQ7s27aOdHO+By6iZ090WVm+9kMImQ
+	 F61rPW4/H9qNf6k60w0U/Lo0FFwaiw7bFQ9P5a3PldS6cpApaUD43kTKZOj0wpLpRj
+	 f7YIV7864ddOt23KkQRPF5dFPb2UF8NLiuO5s043KbudrEiGxK3X4uyduYQNHq/c1U
+	 B9tgSOSr9gK9A==
+Date: Fri, 4 Oct 2024 13:45:28 +0200
 From: Niklas Cassel <cassel@kernel.org>
 To: Damien Le Moal <dlemoal@kernel.org>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -52,9 +52,10 @@ Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
 	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v3 0/7] Improve PCI memory mapping API
-Message-ID: <Zv_VPioJgZWGhbna@ryzen.lan>
+Subject: Re: [PATCH v3 2/7] PCI: endpoint: Improve pci_epc_mem_alloc_addr()
+Message-ID: <Zv_VWL630rLJFR5B@ryzen.lan>
 References: <20241004050742.140664-1-dlemoal@kernel.org>
+ <20241004050742.140664-3-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,104 +64,60 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241004050742.140664-1-dlemoal@kernel.org>
+In-Reply-To: <20241004050742.140664-3-dlemoal@kernel.org>
 
-On Fri, Oct 04, 2024 at 02:07:35PM +0900, Damien Le Moal wrote:
-> This series introduces the new functions pci_epc_map_align(),
-> pci_epc_mem_map() and pci_epc_mem_unmap() to improve handling of the
-> PCI address mapping alignment constraints of endpoint controllers in a
-> controller independent manner.
+On Fri, Oct 04, 2024 at 02:07:37PM +0900, Damien Le Moal wrote:
+> There is no point in attempting to allocate memory from an endpoint
+> controller memory window if the requested size is larger than the window
+> size. Add a check to skip bitmap_find_free_region() calls for such case.
+> Also change the final return to return NULL to simplify the code.
 > 
-> The issue fixed is that the fixed alignment defined by the "align" field
-> of struct pci_epc_features assumes is defined for inbound ATU entries
-
-s/assumes//
-
-
-> (e.g. BARs) and is a fixed value, whereas some controllers need a PCI
-> address alignment that depends on the PCI address itself. For instance,
-> the rk3399 SoC controller in endpoint mode uses the lower bits of the
-> local endpoint memory address as the lower bits for the PCI addresses
-> for data transfers. That is, when mapping local memory, one must take
-> into account the number of bits of the RC PCI address that change from
-> the start address of the mapping.
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/endpoint/pci-epc-mem.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> To fix this, the new endpoint controller method .map_align is introduced
-> and called from pci_epc_map_align(). This method is optional and for
-> controllers that do not define it, it is assumed that the controller has
-> no PCI address constraint.
-> 
-> The functions pci_epc_mem_map() is a helper function which obtains
-> mapping information, allocates endpoint controller memory according to
-> the mapping size obtained and maps the memory. pci_epc_mem_unmap()
-> unmaps and frees the endpoint memory.
-> 
-> This series is organized as follows:
->  - Patch 1 tidy up the epc core code
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index a9c028f58da1..218a60e945db 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -178,7 +178,7 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size)
+>  {
+> -	void __iomem *virt_addr = NULL;
+> +	void __iomem *virt_addr;
+>  	struct pci_epc_mem *mem;
+>  	unsigned int page_shift;
+>  	size_t align_size;
+> @@ -188,10 +188,13 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  
+>  	for (i = 0; i < epc->num_windows; i++) {
+>  		mem = epc->windows[i];
+> -		mutex_lock(&mem->lock);
+> +		if (size > mem->window.size)
+> +			continue;
+> +
+>  		align_size = ALIGN(size, mem->window.page_size);
+>  		order = pci_epc_mem_get_order(mem, align_size);
+>  
+> +		mutex_lock(&mem->lock);
 
-Introduces a small helper which cleans up the code.
-
-
->  - Patch 2 improves pci_epc_mem_alloc_addr()
->  - Patch 3 and 4 introduce the new map_align endpoint controller method
->    and the epc functions pci_epc_mem_map() and pci_epc_mem_unmap().
->  - Patch 5 documents these new functions.
->  - Patch 6 modifies the test endpoint function driver to use 
->    pci_epc_mem_map() and pci_epc_mem_unmap() to illustrate the use of
->    these functions.
->  - Finally, patch 7 implements the rk3588 endpoint controller driver
->    .map_align operation to satisfy that controller 64K PCI address
->    alignment constraint.
-
-Why mention that it implements it for rk3588 ? (And why mention 64K?)
-Patch 7 is not specific to rk3588. Better to mention that you implement
-it for all DWC PCIe EP controllers, based on the iATU hardware requirements,
-read from hardware registers (which is stored in pci->region_align), since
-that is what the commit does.
-
-You should probably also mention that as a result of this series, follow
-up patches can remove alignment entries in drivers/misc/pci_endpoint_test.c
+Perhaps mention in the commit message why it is safe to move the mutex_lock() ?
 
 
-> 
-> Changes from v2:
->  - Dropped all patches for the rockchip-ep. These patches will be sent
->    later as a separate series.
->  - Added patch 2 and 5
->  - Added review tags to patch 1
-
-I think that you should have mentioned that this fixes quite a serious bug in
-V2, that was reported here:
-https://lore.kernel.org/linux-pci/eb580d64-1110-479a-9a0b-c2f1eacd23e7@kernel.org/
-
-
-> 
-> Changes from v1:
->  - Changed pci_epc_check_func() to pci_epc_function_is_valid() in patch
->    1.
->  - Removed patch "PCI: endpoint: Improve pci_epc_mem_alloc_addr()"
->    (former patch 2 of v1)
->  - Various typos cleanups all over. Also fixed some blank space
->    indentation.
->  - Added review tags
-> 
-> Damien Le Moal (7):
->   PCI: endpoint: Introduce pci_epc_function_is_valid()
->   PCI: endpoint: Improve pci_epc_mem_alloc_addr()
->   PCI: endpoint: Introduce pci_epc_map_align()
->   PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
->   PCI: endpoint: Update documentation
->   PCI: endpoint: test: Use pci_epc_mem_map/unmap()
->   PCI: dwc: endpoint: Define the .map_align() controller operation
-> 
->  Documentation/PCI/endpoint/pci-endpoint.rst   |  33 ++
->  .../pci/controller/dwc/pcie-designware-ep.c   |  15 +
->  drivers/pci/endpoint/functions/pci-epf-test.c | 372 +++++++++---------
->  drivers/pci/endpoint/pci-epc-core.c           | 213 +++++++---
->  drivers/pci/endpoint/pci-epc-mem.c            |   9 +-
->  include/linux/pci-epc.h                       |  41 ++
->  6 files changed, 453 insertions(+), 230 deletions(-)
-> 
+>  		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
+>  						 order);
+>  		if (pageno >= 0) {
+> @@ -211,7 +214,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  		mutex_unlock(&mem->lock);
+>  	}
+>  
+> -	return virt_addr;
+> +	return NULL;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+>  
 > -- 
 > 2.46.2
 > 
