@@ -1,159 +1,152 @@
-Return-Path: <linux-pci+bounces-13832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13833-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D2FF99093F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 18:32:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 284E6990A24
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 19:31:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3CD9B23AD9
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 16:28:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE368284354
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 17:31:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9826513CF86;
-	Fri,  4 Oct 2024 16:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43701BC2F;
+	Fri,  4 Oct 2024 17:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="N5MAvhXP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dp+ssbRM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF211C8782
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 16:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1741E377E;
+	Fri,  4 Oct 2024 17:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728059315; cv=none; b=KAtpH70+Sx9CmYNjIhvzw0kT9RtuM+HQYizNJseZrmPkcNrQRTjFm97MJ0s8yvk4OEejm4reyaoDob9bEf6CL3k31xFkp+sFEyRg0Svwd0EkrsHMw+eKm3v4Vn0f6EPI+LJy7ulRrAbXXABOI0p6zKXnBtZl1Wga4s7gS1Ezh/E=
+	t=1728063106; cv=none; b=uxISh8+CIvx1TkUq7ZhjjyY19JTwh9z5htaO7Z0wWLR56XmUKli0SLm+KCahtPxRXDjBx3GTJ37X/P/yjii8bsmJFOw0juEvflfmQxaqD3pF4aKZJ7CQLQvyMMN18MqUIfJcnoc4dz16UlzjutfSPdzxexGcIwyamAd1LRxbibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728059315; c=relaxed/simple;
-	bh=l7+/OOnbPo59NRdHU4hf39heIHqnVwgUybEyl/BT7zY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nkp5PTSNe1XwPtb9lPyhgrBmtIphMWRqUEYpzoaTHgY7zLvgFD0Y1DbmEraVd+coA8R/F+w5pzKEyKssCGLkPpdfI1qt8H43d86bO82/gNYzRD1Y4nsmw5uPt/yFLmp+WmD2h2QyA2rg2ANYBFWuRRi/U28LviR0+Tae3Zj4ZuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=N5MAvhXP; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6cb97afcec9so11479996d6.2
-        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2024 09:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728059312; x=1728664112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g9cpx8Hyi6dy6qO2dUhiRIRpdrteVAK0AMuAZrMnAe0=;
-        b=N5MAvhXPocpXL+3MRnLl6U8seb48TXhzIBXVAGF6Z5WylKzfg0PGkMinuwXG8cdnS/
-         raQH7qudNAX3v1B/9Qy3c5Hzk1i75y3HHgpVLDnNWTzg9pKA9hI91i9zbS8fkvBRzbhL
-         yDmknpHxL8IoHp+fne7pCvc5KTG7wzoc234m6tS2ePyNmurrsfezA97BnnePodjMbDWY
-         FXAPzWSJx+qYyc2kLa/btg7cqB4xWXJuLy6/a2AXezMquOZah862dfX8qAHQ8YRHztEU
-         MHoIpaiotQi/NjTH3AnQxWKN+5riQplWeni+ontCtxV05YncNV4ObPO8IopM6J3olyTJ
-         I2eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728059312; x=1728664112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g9cpx8Hyi6dy6qO2dUhiRIRpdrteVAK0AMuAZrMnAe0=;
-        b=sxxXwGOyYYk1YMEFbGcp0P4Kq+oWuWRM+LrFlfo4xid3IQSfhnzBxpxXGnxQXV7qOO
-         C0y6L8d5IlK3jVRHeU8L9hDmCRiz08CGt+hImX9Kf0DvyahktXrSBZRdIV73eGY0Odb4
-         /6HVdO6AfeIezoBCxbS+FFuCwGoIbLLt1njn2xyjed3OfmYrTOPGzZT7MsfHZyLnybgz
-         RgBOCqPweROlhFnPqfksE0UBVfd6IaU4dGMb9ueUpbwgPNmFD4gmWYzX465Vqsj6oRha
-         xTCc9MMxqsMvgF+216DTWdtkQsqIB8libB5gIr0PwX0kLq1xQooY8B11dYy0/Ifdjwuh
-         UDoQ==
-X-Gm-Message-State: AOJu0Yxv5wGMOpR6M8Wrco+/n6CSG1iu1s1y51x3NpQnhtfUREtJelBF
-	vQU0+BJ8tziAQV8pug9XSMyUFdTX2pocXZqSlCLmD/Aj2Ubn7Pd3/TsFDxUnLt/z3hrON2vVC8A
-	P
-X-Google-Smtp-Source: AGHT+IHCGTgu+cqiGiiZGFp3IkE06rob+xgV+iZNNZ8TyR776du/mFsmvAe7H6wEvrhSrVYdAin9FQ==
-X-Received: by 2002:a05:6214:5504:b0:6cb:4a84:e02a with SMTP id 6a1803df08f44-6cb9a32d338mr50523826d6.16.1728059312390;
-        Fri, 04 Oct 2024 09:28:32 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cba4751920sm573476d6.98.2024.10.04.09.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 09:28:31 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-pci@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lukas@wunner.de,
-	dan.j.williams@intel.com,
-	bhelgaas@google.com,
-	dave@stgolabs.net,
-	dave.jiang@intel.com,
-	vishal.l.verma@intel.com,
-	Jonathan.Cameron@Huawei.com
-Subject: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in pci_doe_send_req
-Date: Fri,  4 Oct 2024 12:28:28 -0400
-Message-ID: <20241004162828.314-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1728063106; c=relaxed/simple;
+	bh=Uh9WqQBox/3PVQag7IgByDSw8XZvHs/uKrGtAQ1UpPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJLS7n5QG/yy2Ntm9cVHEk8mwy/3yJrbku0lKGRQE8v3iXiYQEjDMPjwFyzahlj1fMX2pI4Pii1BgWGBV/b3XzbrJawf/H4AgRiCIMVU18L45YEpvpCGiKKJP1M6/ge7xxyd4IzrDX/S2/RPcjQCwLzP5XbXk04kRRXOhj1cqGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dp+ssbRM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE2AFC4CEC6;
+	Fri,  4 Oct 2024 17:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728063106;
+	bh=Uh9WqQBox/3PVQag7IgByDSw8XZvHs/uKrGtAQ1UpPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dp+ssbRM4Puo3snZWtJkAYcsR8WTrxlkC8jQSzAMl8iJF7/lBs3NnQeigZYm530Je
+	 LCSy5L3a1L2+VHdQT6Nk20T8PhSJ+czKfY7xwFod8RLEyAFNDFbN7+yZgw6ZulhrmN
+	 Ff2vQrm2srUL/NB03sYPUinRY+DBuYLM4RwlUDAYMELPdnYr/E51rWEEXC16rZwidH
+	 0V/sQehcDeswAuQeSFXbZU/Gj+cQg3AxNZ2V2U0os2lkUrPx6i7Jx0k9PtuLtcOWZP
+	 gcMTrjA6NqlusYIfrGeAiYTnupO6GG3Y9yF2fRP6/vwgseOMvLEJwLpaoNmLqNJ99W
+	 4xnsn0za+NCUw==
+Date: Fri, 4 Oct 2024 12:31:43 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Johan Hovold <johan@kernel.org>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>
+Subject: Re: [PATCH] PCI/pwrctl: pwrseq: abandon probe on pre-pwrseq
+ device-trees
+Message-ID: <rog6wbda7rdk6rebjyprnofgz4twzpg6kt4pnmeap4m4hga532@3ffxora5yutf>
+References: <20241004125227.46514-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241004125227.46514-1-brgl@bgdev.pl>
 
-During initial device probe, the PCI DOE busy bit for some CXL
-devices may be left set for a longer period than expected by the
-current driver logic. Despite local comments stating DOE Busy is
-unlikely to be detected, it appears commonly specifically during
-boot when CXL devices are being probed.
+On Fri, Oct 04, 2024 at 02:52:27PM GMT, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Old device trees for some platforms already define wifi nodes for the WCN
+> family of chips since before power sequencing was added upstream.
+> 
+> These nodes don't consume the regulator outputs from the PMU and if we
+> allow this driver to bind to one of such "incomplete" nodes, we'll see
+> a kernel log error about the indefinite probe deferral.
+> 
+> Let's check the existence of the regulator supply that exists on all WCN
+> models before moving forward.
+> 
+> Fixes: 6140d185a43d ("PCI/pwrctl: Add a PCI power control driver for power sequenced devices")
+> Reported-by: Johan Hovold <johan@kernel.org>
+> Closes: https://lore.kernel.org/all/Zv565olMDDGHyYVt@hovoldconsulting.com/
 
-This was observed on a single socket AMD platform with 2 CXL memory
-expanders attached to the single socket. It was not the case that
-concurrent accesses were being made, as validated by monitoring
-mailbox commands on the device side.
+Opens-up: A whole bunch of new issues
 
-This behavior has been observed with multiple CXL memory expanders
-from different vendors - so it appears unrelated to the model.
+> Suggested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+> index a23a4312574b..8ed613655d4a 100644
+> --- a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+> +++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/of.h>
+>  #include <linux/pci-pwrctl.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/property.h>
+>  #include <linux/pwrseq/consumer.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> @@ -31,6 +32,25 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	int ret;
+>  
+> +	/*
+> +	 * Old device trees for some platforms already define wifi nodes for
+> +	 * the WCN family of chips since before power sequencing was added
+> +	 * upstream.
+> +	 *
+> +	 * These nodes don't consume the regulator outputs from the PMU and
+> +	 * if we allow this driver to bind to one of such "incomplete" nodes,
+> +	 * we'll see a kernel log error about the indefinite probe deferral.
+> +	 *
+> +	 * Let's check the existence of the regulator supply that exists on all
+> +	 * WCN models before moving forward.
+> +	 *
+> +	 * NOTE: If this driver is ever used to support a device other than
+> +	 * a WCN chip, the following lines should become conditional and depend
+> +	 * on the compatible string.
 
-In all observed tests, only a small period of the retry window is
-actually used - typically only a handful of loop iterations.
+What do you mean "is ever used ... other than WCN chip"?
 
-Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
-interval (1 second), resolves this issues cleanly.
+This driver and the power sequence framework was presented as a
+completely generic solution to solve all kinds of PCI power sequence
+problems - upon which the WCN case was built.
 
-Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
-raise an interrupt, so polling is the best option in this scenario.
+In fact, if I read this correctly, the second user of the power sequence
+implementation (the QPS615, proposed in [1]), would break if this check
+is added.
 
-Subsqeuent code in doe_statemachine_work and abort paths also wait
-for up to 1 PCI DOE timeout interval, so this order of (potential)
-additional delay is presumed acceptable.
+Add to this that your colleagues are pushing people to implement simple
+power supplies for M.2-connected devices into this framework - which I
+can only assume would trip on this as well (the one supply pin in a M.2.
+connector isn't named "vddaon").
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/pci/doe.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+[1] https://lore.kernel.org/all/20240803-qps615-v2-3-9560b7c71369@quicinc.com/
 
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index 652d63df9d22..27ba5d281384 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
- 	size_t length, remainder;
- 	u32 val;
- 	int i;
-+	unsigned long timeout_jiffies;
- 
- 	/*
- 	 * Check the DOE busy bit is not set. If it is set, this could indicate
- 	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
- 	 * it is expected that firmware and OS will negotiate access rights via
- 	 * an, as yet to be defined, method.
-+	 *
-+	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
-+	 * finish. Otherwise, simply error out as unable to field the request.
-+	 *
-+	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
-+	 * bit is cleared, so polling here is our best option for the moment.
- 	 */
--	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-+	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
-+	do {
-+		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-+	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
-+		 !time_after(jiffies, timeout_jiffies));
-+
- 	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
- 		return -EBUSY;
- 
--- 
-2.43.0
+Regards,
+Bjorn
 
+> +	 */
+> +	if (!device_property_present(dev, "vddaon-supply"))
+> +		return -ENODEV;
+> +
+>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+> -- 
+> 2.43.0
+> 
 
