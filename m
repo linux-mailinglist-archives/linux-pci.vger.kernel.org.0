@@ -1,57 +1,61 @@
-Return-Path: <linux-pci+bounces-13875-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13876-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8B2F99122D
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Oct 2024 00:12:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BBAD9912E3
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Oct 2024 01:19:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77F112832B5
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 22:12:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D80C1C224DB
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 23:19:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DB1146A93;
-	Fri,  4 Oct 2024 22:12:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0140214B061;
+	Fri,  4 Oct 2024 23:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwIcvep7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMErnZwe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6A81411C8
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 22:12:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1381130ADA
+	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 23:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728079925; cv=none; b=E9t2FMOjg9jF6eJVYEpVg9nFJXlpUjw9wOVgU3XiOwaTG0wlFO44hSjePH0BLtOUEUJP3WhdyxFXYxnDDHmcNPgquUVWrMn3nmaRb/T71A70uNxKR3z6YPcE4kbbZAJaPG2icVVmWvBFiyKGOlKu6Rfmbf2UGi+pjUv74cdtnTw=
+	t=1728083970; cv=none; b=U7ZJqvSGNdhDKTvfbEMPDXCrcjXeg+PMJCcFeXXeo/Waa3fx8ns4T5TTJ6H3AStNWIa77vGAr3krJGoF827CsMOG8dAiSsxMuOGXAOqdPxc7AyZz0FGFsA5jfbvM6dCpGuFLYOSmnLPBX1ZsiFQRBkIZAXC+5WYTUJqhsf+nCj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728079925; c=relaxed/simple;
-	bh=KbiQcFYiVJAE6boBPJAsK7pL0080Bl8fCggDl22vH5c=;
+	s=arc-20240116; t=1728083970; c=relaxed/simple;
+	bh=V+7hthLRpyIDZQ/dwJIGJDGglqlQDWuoK8iWKcWwtDc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Dk5vVCn1j2x+ZhF2ZId+On70khkhw9asyFNRgiUUfmiT0naS1kFpPDZYJ/RhVkQmjhmZc2v0v/lKIiraipl64hzjfcP/9lQY86s7AWC35sYPMXZJL4VvdFT1vntTnMdxNcGUU+KnfWha+hZxGrfZA/vfZu1UkjJ6KBzVeALRbuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwIcvep7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5ACC4CECD;
-	Fri,  4 Oct 2024 22:12:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=GkIgb3T28VPY68QS+TzyOUv0afu5Wt+wxtTPlSo1ik7XllY5G5+McYeyvJoiVfn0jWHdEj3pSq0Q1R7q7gL828sKwVo7PBrn0ATg2mgA2zz319OyNSYBVOhwJQ48/0IYscucOW0tERiyZYqkxaoR5W/evXttf9xHpiMjuCNlVd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMErnZwe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB0AC4CEC6;
+	Fri,  4 Oct 2024 23:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728079924;
-	bh=KbiQcFYiVJAE6boBPJAsK7pL0080Bl8fCggDl22vH5c=;
+	s=k20201202; t=1728083970;
+	bh=V+7hthLRpyIDZQ/dwJIGJDGglqlQDWuoK8iWKcWwtDc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OwIcvep7lAo0cTeifgH74WX8fw4KBoRC6NU8ki1GQXm3YjjaA6fEeLx8fRwGgm9l5
-	 73fbS4S0V7NXWKLrpxDKu0Khxv0WfEceWPNVoKMlRhOD3hisRv4kKVEGet7XL449Ae
-	 d0JaUdk7oFCS5nnZHDhXLOY8PTbusjty7wRi7iF8OkEoSSKvUoIFb0lCegngRD3FN+
-	 V23BCIJFmNPGdyM+D3VzxwhpmcYq0ZrbQsYwRqMTAUR68boGcLu5dfWbbN2TRcePS6
-	 9OeRJxWK24UFLYM+q7lx5nSi9MW4npPpSL3oT1zpypzvPJhA7Mu6XfvI1x1s+1/J3w
-	 bp4V4Y+pkqoYA==
-Date: Fri, 4 Oct 2024 17:12:02 -0500
+	b=GMErnZweqHTQeLtJ+TCfThFwYAeJHlfF1TGmPtxwFWlPgir2qdZSaV8IGhXp5GGpe
+	 P6fNsKXZbTuJt49qlmF5gV4FKvokfh+XLKECl22eMvjXWwQaFXGOjPJblgs66OgUNm
+	 k1yOGidULYPttzIMPndjkWzDLWMrwUrIsolaxvzgakNdvXlTlSE6hi5ZBcVfcm6ifw
+	 1lP9uxBlRUjDabpMrH4O6V3pA91A6mMXoZKg3JTUMHB83/pzcoVLEe5mSMn88TEA0u
+	 hTmFEmEoL+LDOLZC94avBsxAdDjng6IMz1gEkBCk6uX4/qSV3hvrycO6GjTzxvVwum
+	 kO1CQmp3ZMn4A==
+Date: Fri, 4 Oct 2024 18:19:28 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, Niklas Cassel <niklas.cassel@wdc.com>
-Subject: Re: [PATCH] PCI: endpoint: test: Synchronously cancel command
- handler work
-Message-ID: <20241004221202.GA364252@bhelgaas>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>,
+	Sajid Dalvi <sdalvi@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/ASPM: Disable L1 before disabling L1ss
+Message-ID: <20241004231928.GA366846@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,50 +64,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241004141255.5202-1-dlemoal@kernel.org>
+In-Reply-To: <20241003132503.2279433-1-ajayagarwal@google.com>
 
-On Fri, Oct 04, 2024 at 11:12:55PM +0900, Damien Le Moal wrote:
-> Use cancel_delayed_work_sync() in pci_epf_test_epc_deinit() to ensure
-> that the command handler is really stopped when proceeding with dma
-> and bar cleanup.
+On Thu, Oct 03, 2024 at 06:55:03PM +0530, Ajay Agarwal wrote:
+> The current sequence in the driver for L1ss update is as follows.
 > 
-> The same change is also done in pci_epf_test_link_down() to ensure that
-> the link down handling completes with the command handler fully stopped.
-
-s/when proceeding/before proceeding/
-s/dma/DMA/
-s/bar/BAR/
-
-Whoever applies this can tweak it.
-
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Disable L1ss
+> Disable L1
+> Enable L1ss as required
+> Enable L1 if required
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index a73bc0771d35..c2e7f67e5107 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -800,7 +800,7 @@ static void pci_epf_test_epc_deinit(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->  
-> -	cancel_delayed_work(&epf_test->cmd_handler);
-> +	cancel_delayed_work_sync(&epf_test->cmd_handler);
->  	pci_epf_test_clean_dma_chan(epf_test);
->  	pci_epf_test_clear_bar(epf);
->  }
-> @@ -931,7 +931,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->  	struct pci_epc *epc = epf->epc;
->  
-> -	cancel_delayed_work(&epf_test->cmd_handler);
-> +	cancel_delayed_work_sync(&epf_test->cmd_handler);
->  	if (epc->init_complete) {
->  		pci_epf_test_clean_dma_chan(epf_test);
->  		pci_epf_test_clear_bar(epf);
-> -- 
-> 2.46.2
+> With this sequence, a bus hang is observed during the L1ss
+> disable sequence when the RC CPU attempts to clear the RC L1ss
+> register after clearing the EP L1ss register. It looks like the
+> RC attempts to enter L1ss again and at the same time, access to
+> RC L1ss register fails because aux clk is still not active.
+>
+> PCIe spec r6.2, section 5.5.4, recommends that setting either
+> or both of the enable bits for ASPM L1 PM Substates must be done
+> while ASPM L1 is disabled. My interpretation here is that
+> clearing L1ss should also be done when L1 is disabled. Thereby,
+> change the sequence as follows.
 > 
+> Disable L1
+> Disable L1ss
+> Enable L1ss as required
+> Enable L1 if required
+
+I think we also write the L1.2 enable bits in PCI_L1SS_CTL1 in
+aspm_calc_l12_info() when ASPM L1 may be enabled:
+
+  pcie_aspm_init_link_state
+    pcie_aspm_cap_init
+      pcie_capability_read_word(PCI_EXP_LNKCTL)
+      aspm_l1ss_init
+        aspm_calc_l12_info
+          pci_clear_and_set_config_dword(PCI_L1SS_CTL1, PCI_L1SS_CTL1_L1_2_MASK)
+
+That looks like another path where we should make a similar change.
+What do you think?
+
+Bjorn
 
