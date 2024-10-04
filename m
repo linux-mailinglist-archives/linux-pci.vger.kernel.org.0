@@ -1,130 +1,148 @@
-Return-Path: <linux-pci+bounces-13821-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13822-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0794C990364
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 14:58:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 910399903A2
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 15:13:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9943FB22752
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 12:58:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43CFB1F242C6
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 13:13:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E721720FAA1;
-	Fri,  4 Oct 2024 12:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 559661DB95B;
+	Fri,  4 Oct 2024 13:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oLcUbZTl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGthLXxR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091F520FA99
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 12:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3127079F3
+	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 13:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728046707; cv=none; b=nTfdYmh5cfkCBksINf3jk+kOX4XKiT26uJMCD8rR0/CE7m4FD2sNnb3Gf1c7JDySbJvFjQI0OfhEtUSlVYJsbIU3IOAH2Y0WYFxvXFGiiNRsDSN9TCCIv4/ZZOxCwpwM9PAjR47yci5Tq+Sru85BypHKkdsVCtDm4EnictMdWzM=
+	t=1728047586; cv=none; b=HQjoto4BpFwLRtRWcdTIeexw1joPEervX9ObZaZOopOv6Am32jg/YFYPnoDk9rVdz4fh1lFk0DJty5Tw5SRCN3r49mDme4Hamw++72A3x6oFZ3sIky9c1KFNlF0sxERjiRbZWB+E5g8UZCHGxysM8SXH5rU0SaT5pOREB1zjTR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728046707; c=relaxed/simple;
-	bh=81lZz6tvQXAZ8py6IHRzmNqwYHG/0FHSLJkeNNpuEjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GuOZMwETkXYtTMTPatzbF4KuiObn9D1qqpcEOEZIUzESUN569zDoEf9SPsSAyAifDY2q1tKXczuPmBYHy6JTq0U85TCU04HX4cQ0KmcTc78cRmtdpq+xycQbrU/9EUq7znwRRK34BDP8Q8gHG72tNMKtRiwNM7EiSWMlifk2Rjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oLcUbZTl; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37cc5fb1e45so1553928f8f.2
-        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2024 05:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728046704; x=1728651504; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wq33e40qq5B5EGnE1SLGXv5afGtNdJFNQ/iJq5Jz7zc=;
-        b=oLcUbZTlb3HhIavsJXgSmHAE091Gi7EQio7jc/C7NN6dUKtINImO1+sIZeIxCdBVqc
-         voW/9gIovd/Bx0tdlpf5FFkRP7ZZcDegtlCU7f1LcJHQ1zsquin8EoSVnxr9HyJvkALJ
-         NfIrqNWOmDcK9Yvb2csBRCqfF0jrzh8j6K4yg4wsIUs3NX5dkc8kxRBzqu1RUCz2yx6H
-         No+/wq3IfwG/mAKYE7U6FYvLQ75SpLwjYIGZdMviafaBPPS+G4v0RKI8+3CbHae0Q3u3
-         Zplzss3F9aO0RC1+CpNMrXXgKfwXrkzxiKWYLeTG9NozFzenp3EGl9Kf1Cez9yu9JCSP
-         SkVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728046704; x=1728651504;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wq33e40qq5B5EGnE1SLGXv5afGtNdJFNQ/iJq5Jz7zc=;
-        b=V0jk0sTl6WMRqGZGpbSSUe0lPafEtbDNd7zb0ngeWAc+3rZMF0Dq5U+4tjSwIftlqo
-         KjbDEfWVIOa+QD5eZtFU3tOS6Ow3kAD/FL2Lk5HQ1sKZVOSJZq0rv+JjkY0yIHXO5VoS
-         fd3TcyBd4dxDs4jIPSeTXls6vt/G7u1fdp19U0gwdZCAna9LApn0Ty/2y08j8OEXZpA5
-         MsNLu+GiQNNvGkW6YmBOm7W2Pc5tFO147zCPk7tQ36/4o4VmSMlOUvDQCCc4sWAA/jQv
-         4l/HFdebFMw53ztyKuARW5oWy98PoiLu6SWpRB1nIdfMDGanAs9ljsPBYqqsCVvEzAy+
-         MtXA==
-X-Gm-Message-State: AOJu0YyorE/VYq2B6PkzPBW+Ph8VSeb2mZ1FQYRZeKEjHpKirqCEdwct
-	Nn74SeGLnL7b2NTroUTo/EnsX06vsytgkSCNZRYSOdqb2V69fLaLsZsRYY75b28+E7Ka8IS/+F2
-	3
-X-Google-Smtp-Source: AGHT+IFtD2pF+3S+hWKaj35gJuRRUik/oqclbdt4ZgQcGB8oQY5sk3Cx9/zxl70fxbiUrrsytYJcsw==
-X-Received: by 2002:adf:8b5c:0:b0:374:c142:80e7 with SMTP id ffacd0b85a97d-37d0e6bba99mr1881280f8f.1.1728046703929;
-        Fri, 04 Oct 2024 05:58:23 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:80ea:d045:eb77:2d3b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d082d20bcsm3197815f8f.100.2024.10.04.05.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 05:58:23 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] PCI/pwrctl: pwrseq: don't use OF-specific routines
-Date: Fri,  4 Oct 2024 14:58:21 +0200
-Message-ID: <20241004125821.47525-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1728047586; c=relaxed/simple;
+	bh=psM0QqMpdJaBOkRvWH9v1igZceCpHP15n8/14Ff2WzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d47kj8sH1VF7mFhdyUgl+rqFtFRaXYfjlkqQvQlmXAGRxN/HimAlbF5LQdUqxGHcZUj1h7G2qyv/QIRCQk5v6CQXsfD81k1AuFnNtUttz2USvqjp8CLtlfN0snfJHS5z3OdwveosCTcRdAOAZJMVZGIsOQfTl40NaJdW5I6daiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGthLXxR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 641BDC4CEC6;
+	Fri,  4 Oct 2024 13:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728047585;
+	bh=psM0QqMpdJaBOkRvWH9v1igZceCpHP15n8/14Ff2WzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TGthLXxRlT6HoNNho8kVEuatMFmxONs+evMuIGYL98vmFv1jjp+sT/tTJYWL7Yp8T
+	 eMJi7+ltO6s/GbPVNraTO26oAEZGcwYazVNHkMYWdAS+BZa84t0QnfQTyp4p81m1Ch
+	 c33JRic4HPuahIC12AJPa+iN+QCGLwm6viBm5EM9a0gkYV0rdMeh12NR2BSnjZKvnG
+	 /fCm44hODog1j+X3wfV1eu/GeAaIcZz20MpYlZdsWzkOFizi2WyxiTurMvAfneUegr
+	 JRijeRd6xCmYpfPF1Df+jJ9pQP7UpFZFjUKagIIgq3x6HcOp5M92sjw/G89ZgK4iJQ
+	 hCH7IEajKqLjw==
+Date: Fri, 4 Oct 2024 15:13:00 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Subject: Re: [PATCH v3 0/7] Improve PCI memory mapping API
+Message-ID: <Zv_p3CjYblYnY9Dj@ryzen.lan>
+References: <20241004050742.140664-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241004050742.140664-1-dlemoal@kernel.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Oct 04, 2024 at 02:07:35PM +0900, Damien Le Moal wrote:
+> This series introduces the new functions pci_epc_map_align(),
+> pci_epc_mem_map() and pci_epc_mem_unmap() to improve handling of the
+> PCI address mapping alignment constraints of endpoint controllers in a
+> controller independent manner.
+> 
+> The issue fixed is that the fixed alignment defined by the "align" field
+> of struct pci_epc_features assumes is defined for inbound ATU entries
+> (e.g. BARs) and is a fixed value, whereas some controllers need a PCI
+> address alignment that depends on the PCI address itself. For instance,
+> the rk3399 SoC controller in endpoint mode uses the lower bits of the
+> local endpoint memory address as the lower bits for the PCI addresses
+> for data transfers. That is, when mapping local memory, one must take
+> into account the number of bits of the RC PCI address that change from
+> the start address of the mapping.
+> 
+> To fix this, the new endpoint controller method .map_align is introduced
+> and called from pci_epc_map_align(). This method is optional and for
+> controllers that do not define it, it is assumed that the controller has
+> no PCI address constraint.
+> 
+> The functions pci_epc_mem_map() is a helper function which obtains
+> mapping information, allocates endpoint controller memory according to
+> the mapping size obtained and maps the memory. pci_epc_mem_unmap()
+> unmaps and frees the endpoint memory.
+> 
+> This series is organized as follows:
+>  - Patch 1 tidy up the epc core code
+>  - Patch 2 improves pci_epc_mem_alloc_addr()
+>  - Patch 3 and 4 introduce the new map_align endpoint controller method
+>    and the epc functions pci_epc_mem_map() and pci_epc_mem_unmap().
+>  - Patch 5 documents these new functions.
+>  - Patch 6 modifies the test endpoint function driver to use 
+>    pci_epc_mem_map() and pci_epc_mem_unmap() to illustrate the use of
+>    these functions.
+>  - Finally, patch 7 implements the rk3588 endpoint controller driver
+>    .map_align operation to satisfy that controller 64K PCI address
+>    alignment constraint.
+> 
+> Changes from v2:
+>  - Dropped all patches for the rockchip-ep. These patches will be sent
+>    later as a separate series.
+>  - Added patch 2 and 5
+>  - Added review tags to patch 1
+> 
+> Changes from v1:
+>  - Changed pci_epc_check_func() to pci_epc_function_is_valid() in patch
+>    1.
+>  - Removed patch "PCI: endpoint: Improve pci_epc_mem_alloc_addr()"
+>    (former patch 2 of v1)
+>  - Various typos cleanups all over. Also fixed some blank space
+>    indentation.
+>  - Added review tags
 
-This driver doesn't need to use OF interfaces directly. Replace the
-single usage of an of_ function and replace it with a generic device
-property variant. Drop the of.h header and pull in property.h instead.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Bjorn: This may conflict with [1] but this should go for v6.13 while [1]
-is a fix that's targetting v6.12. If git doesn't figure it out then the
-resolution is trivial, just add <linux/property.h> in both and drop
-<linux/of.h>.
+I think the cover letter is missing some text on how this series has been
+tested.
 
-[1] https://lore.kernel.org/linux-pci/20241004125227.46514-1-brgl@bgdev.pl/
+In V2 I suggested adding a new option to pcitest.c, so that it doesn't
+ensure that buffers are aligned. pci_test will currently use a 4k alignment
+by default, and for some PCI device IDs and vendor IDs, it will ensure that
+the buffers are aligned to something else. (E.g. for the PCI device ID used
+by rk3588, buffers will be aligned to 64K.)
 
- drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+By adding an --no-alignment option to pci_test, we can ensure that this new
+API is actually working.
 
-diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-index a23a4312574b..d3f960612cf3 100644
---- a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-+++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-@@ -6,9 +6,9 @@
- #include <linux/device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/pci-pwrctl.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/pwrseq/consumer.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -35,7 +35,7 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
--	data->pwrseq = devm_pwrseq_get(dev, of_device_get_match_data(dev));
-+	data->pwrseq = devm_pwrseq_get(dev, device_get_match_data(dev));
- 	if (IS_ERR(data->pwrseq))
- 		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
- 				     "Failed to get the power sequencer\n");
--- 
-2.43.0
+Did you perhaps ifdef out all the alignment from pci_endpoint_test.c when
+testing?
 
+I think that having a --no-alignment option included as part of the series
+would give us higher confidence that the API is working as intended.
+
+(pci_test would still align buffers by default, and the long term plan is
+to remove these eventually, but it would be nice to already have an option
+to disable it.)
+
+
+Kind regards,
+Niklas
 
