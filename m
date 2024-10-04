@@ -1,82 +1,78 @@
-Return-Path: <linux-pci+bounces-13820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAE0A990351
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 14:52:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0794C990364
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 14:58:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BDDD283E99
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 12:52:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9943FB22752
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 12:58:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F8A3155322;
-	Fri,  4 Oct 2024 12:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E721720FAA1;
+	Fri,  4 Oct 2024 12:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XBAFHk+s"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oLcUbZTl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F1929422
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 12:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091F520FA99
+	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 12:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728046362; cv=none; b=MvYl4UrHiEw9f0E2Nk6J7cxNo+Bx7yBonerK16bnSfP3CT3xMF0pgS65+0TSufc00EU0ZuiHmGYCqbi3Ma5IZkJ2saeMBE7OousXk7ZBTFblq7m2ov83YW4FGkmkyDgs9/xPB82s++oD1W/We8+U2HsRF/XjJWcHxGc37PO/aPo=
+	t=1728046707; cv=none; b=nTfdYmh5cfkCBksINf3jk+kOX4XKiT26uJMCD8rR0/CE7m4FD2sNnb3Gf1c7JDySbJvFjQI0OfhEtUSlVYJsbIU3IOAH2Y0WYFxvXFGiiNRsDSN9TCCIv4/ZZOxCwpwM9PAjR47yci5Tq+Sru85BypHKkdsVCtDm4EnictMdWzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728046362; c=relaxed/simple;
-	bh=9PYW71iDSCM5kPIkNn6Mt8m5WS1qZgw9PcoQq9wIi/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nIcS5l0AZyQ4oJktE3d2C3SAsVt6GKXPqIMpSHwobbJHDRDZpoa/M59gjEyqDz4LWp5iLW93VljjPmcsAAjzmq++AqZh/6d33GaVyBMUQ9VTpGG2sY5miciBrh0q1K8xUsgl6nRbfGGY3C5lAPnsNPQbLG2NUIJhFCkGg6/oIVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XBAFHk+s; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1728046707; c=relaxed/simple;
+	bh=81lZz6tvQXAZ8py6IHRzmNqwYHG/0FHSLJkeNNpuEjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GuOZMwETkXYtTMTPatzbF4KuiObn9D1qqpcEOEZIUzESUN569zDoEf9SPsSAyAifDY2q1tKXczuPmBYHy6JTq0U85TCU04HX4cQ0KmcTc78cRmtdpq+xycQbrU/9EUq7znwRRK34BDP8Q8gHG72tNMKtRiwNM7EiSWMlifk2Rjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oLcUbZTl; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42cb1758e41so16849685e9.1
-        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2024 05:52:39 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37cc5fb1e45so1553928f8f.2
+        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2024 05:58:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728046358; x=1728651158; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728046704; x=1728651504; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ItTuNJesRv8aPVVPDBG9NjVbPRogCviOxa9DraYVho=;
-        b=XBAFHk+sggd97QJH5ZQ0LJR5hajQO4YirBVPJ7R5KXgNHo43jsFpJD/w8tKHQULEpu
-         yCVGQkAlJLHACXiw/jN6WaleLeogaTzXbvTkejHisDuBO/ylJTUuHahg88r0t1IyGAu+
-         ZHFX5nJgBxIxCCLvnzOp5vP5Rhhd5ludi9D3wWlzFX7OA229weB9It60cW76NeiMdJ/e
-         Ju6cc5g/+ER+CYJS8E6WOvfwpqF0rpzm3dICN0bva6uW0kso8VZrDmDZBsXlO/cNlJUm
-         YudxVk9uosWggVr/zs1NfMsvwpUrFruptjmJZIifyYTyUdY9FqVdUH10kRyQPLO8NLdK
-         /COg==
+        bh=wq33e40qq5B5EGnE1SLGXv5afGtNdJFNQ/iJq5Jz7zc=;
+        b=oLcUbZTlb3HhIavsJXgSmHAE091Gi7EQio7jc/C7NN6dUKtINImO1+sIZeIxCdBVqc
+         voW/9gIovd/Bx0tdlpf5FFkRP7ZZcDegtlCU7f1LcJHQ1zsquin8EoSVnxr9HyJvkALJ
+         NfIrqNWOmDcK9Yvb2csBRCqfF0jrzh8j6K4yg4wsIUs3NX5dkc8kxRBzqu1RUCz2yx6H
+         No+/wq3IfwG/mAKYE7U6FYvLQ75SpLwjYIGZdMviafaBPPS+G4v0RKI8+3CbHae0Q3u3
+         Zplzss3F9aO0RC1+CpNMrXXgKfwXrkzxiKWYLeTG9NozFzenp3EGl9Kf1Cez9yu9JCSP
+         SkVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728046358; x=1728651158;
+        d=1e100.net; s=20230601; t=1728046704; x=1728651504;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9ItTuNJesRv8aPVVPDBG9NjVbPRogCviOxa9DraYVho=;
-        b=TsSr3fgxkFZ/tI4WJZOd2ZRDSfmQGThvm0+MzSYM7eWvYDHEsO1zLBCNr9E7FVbHQY
-         KmX75l1oNNLA+NpIlFV1WyUG1aYWTOuIgwv9jGBTNFu/cwYvLEACbuDb7IGwjRQfzakI
-         IM251qoKZ7WnZcgp3G4nXV/yEzT6m2YIYU7KDPO3CzsBWND0jmK/dQwEb+8vOD0qyB2T
-         WwFwY5wwPBRQK13E9+K2fdPw8fwU2MNTFDNFCrgJq30o4jf6QrD5grZqRlYLimzwPTEh
-         fvEwxzwke7c/r7iGAuibbD5ZWgFIXQDeqLc4GDBWLUZ63q6O+JDp7CnE8r7ag8vRuDfX
-         Mb/A==
-X-Gm-Message-State: AOJu0YygHF9r6u3aJUxGmGRzTtE+wu9qrnyitSqxb4puVz1qZAxnYb8+
-	fuIoqv/K/3vPDFb/Rd0GJ5LxCuCX8I1wzDsCBIwAc2/QqPg4WOP6ejBZmLfPCVk=
-X-Google-Smtp-Source: AGHT+IG+2BRoSh77J4Sl0ajlbC5Py8WTVYqjuen+MLAY1ENUWyu6ojnznZ8DA20fmDDX40F92PGboQ==
-X-Received: by 2002:a05:600c:511c:b0:42c:a8f8:1d58 with SMTP id 5b1f17b1804b1-42f85aa32c0mr15613935e9.7.1728046357780;
-        Fri, 04 Oct 2024 05:52:37 -0700 (PDT)
+        bh=wq33e40qq5B5EGnE1SLGXv5afGtNdJFNQ/iJq5Jz7zc=;
+        b=V0jk0sTl6WMRqGZGpbSSUe0lPafEtbDNd7zb0ngeWAc+3rZMF0Dq5U+4tjSwIftlqo
+         KjbDEfWVIOa+QD5eZtFU3tOS6Ow3kAD/FL2Lk5HQ1sKZVOSJZq0rv+JjkY0yIHXO5VoS
+         fd3TcyBd4dxDs4jIPSeTXls6vt/G7u1fdp19U0gwdZCAna9LApn0Ty/2y08j8OEXZpA5
+         MsNLu+GiQNNvGkW6YmBOm7W2Pc5tFO147zCPk7tQ36/4o4VmSMlOUvDQCCc4sWAA/jQv
+         4l/HFdebFMw53ztyKuARW5oWy98PoiLu6SWpRB1nIdfMDGanAs9ljsPBYqqsCVvEzAy+
+         MtXA==
+X-Gm-Message-State: AOJu0YyorE/VYq2B6PkzPBW+Ph8VSeb2mZ1FQYRZeKEjHpKirqCEdwct
+	Nn74SeGLnL7b2NTroUTo/EnsX06vsytgkSCNZRYSOdqb2V69fLaLsZsRYY75b28+E7Ka8IS/+F2
+	3
+X-Google-Smtp-Source: AGHT+IFtD2pF+3S+hWKaj35gJuRRUik/oqclbdt4ZgQcGB8oQY5sk3Cx9/zxl70fxbiUrrsytYJcsw==
+X-Received: by 2002:adf:8b5c:0:b0:374:c142:80e7 with SMTP id ffacd0b85a97d-37d0e6bba99mr1881280f8f.1.1728046703929;
+        Fri, 04 Oct 2024 05:58:23 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:80ea:d045:eb77:2d3b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f869a39adsm15238885e9.0.2024.10.04.05.52.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d082d20bcsm3197815f8f.100.2024.10.04.05.58.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 05:52:37 -0700 (PDT)
+        Fri, 04 Oct 2024 05:58:23 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Johan Hovold <johan@kernel.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Subject: [PATCH] PCI/pwrctl: pwrseq: abandon probe on pre-pwrseq device-trees
-Date: Fri,  4 Oct 2024 14:52:27 +0200
-Message-ID: <20241004125227.46514-1-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] PCI/pwrctl: pwrseq: don't use OF-specific routines
+Date: Fri,  4 Oct 2024 14:58:21 +0200
+Message-ID: <20241004125821.47525-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -88,63 +84,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Old device trees for some platforms already define wifi nodes for the WCN
-family of chips since before power sequencing was added upstream.
+This driver doesn't need to use OF interfaces directly. Replace the
+single usage of an of_ function and replace it with a generic device
+property variant. Drop the of.h header and pull in property.h instead.
 
-These nodes don't consume the regulator outputs from the PMU and if we
-allow this driver to bind to one of such "incomplete" nodes, we'll see
-a kernel log error about the indefinite probe deferral.
-
-Let's check the existence of the regulator supply that exists on all WCN
-models before moving forward.
-
-Fixes: 6140d185a43d ("PCI/pwrctl: Add a PCI power control driver for power sequenced devices")
-Reported-by: Johan Hovold <johan@kernel.org>
-Closes: https://lore.kernel.org/all/Zv565olMDDGHyYVt@hovoldconsulting.com/
-Suggested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Bjorn: This may conflict with [1] but this should go for v6.13 while [1]
+is a fix that's targetting v6.12. If git doesn't figure it out then the
+resolution is trivial, just add <linux/property.h> in both and drop
+<linux/of.h>.
+
+[1] https://lore.kernel.org/linux-pci/20241004125227.46514-1-brgl@bgdev.pl/
+
+ drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-index a23a4312574b..8ed613655d4a 100644
+index a23a4312574b..d3f960612cf3 100644
 --- a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
 +++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-@@ -9,6 +9,7 @@
- #include <linux/of.h>
+@@ -6,9 +6,9 @@
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
  #include <linux/pci-pwrctl.h>
  #include <linux/platform_device.h>
 +#include <linux/property.h>
  #include <linux/pwrseq/consumer.h>
  #include <linux/slab.h>
  #include <linux/types.h>
-@@ -31,6 +32,25 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
-+	/*
-+	 * Old device trees for some platforms already define wifi nodes for
-+	 * the WCN family of chips since before power sequencing was added
-+	 * upstream.
-+	 *
-+	 * These nodes don't consume the regulator outputs from the PMU and
-+	 * if we allow this driver to bind to one of such "incomplete" nodes,
-+	 * we'll see a kernel log error about the indefinite probe deferral.
-+	 *
-+	 * Let's check the existence of the regulator supply that exists on all
-+	 * WCN models before moving forward.
-+	 *
-+	 * NOTE: If this driver is ever used to support a device other than
-+	 * a WCN chip, the following lines should become conditional and depend
-+	 * on the compatible string.
-+	 */
-+	if (!device_property_present(dev, "vddaon-supply"))
-+		return -ENODEV;
-+
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+@@ -35,7 +35,7 @@ static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
  	if (!data)
  		return -ENOMEM;
+ 
+-	data->pwrseq = devm_pwrseq_get(dev, of_device_get_match_data(dev));
++	data->pwrseq = devm_pwrseq_get(dev, device_get_match_data(dev));
+ 	if (IS_ERR(data->pwrseq))
+ 		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
+ 				     "Failed to get the power sequencer\n");
 -- 
 2.43.0
 
