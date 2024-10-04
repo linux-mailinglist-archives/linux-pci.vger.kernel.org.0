@@ -1,58 +1,61 @@
-Return-Path: <linux-pci+bounces-13858-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13859-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90000990E37
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 21:29:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3BA0990E3C
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 21:30:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 436561F2392E
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 19:29:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 840C92845C6
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 19:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B60D21FEC8;
-	Fri,  4 Oct 2024 18:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F971DE3C9;
+	Fri,  4 Oct 2024 18:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a392iF2p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEjcqE1M"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E687321FEC4;
-	Fri,  4 Oct 2024 18:29:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8561DE3BF;
+	Fri,  4 Oct 2024 18:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728066570; cv=none; b=Le7rqEHoWK+lHQQKmvz9lfidU6RoJmVQs+6+r74gc20Ff/6FaG+rA6FgIYKij8V5GwOdgGPXs+BwnW5bAk35iKW5cjBflN+0DgseD/W0k1BPGBZi/RugOWhRKXwu0fEKA9SUm6Zac6/Y4hjjSc/a9ay6f7NL9t+dIjYHMuN090E=
+	t=1728066571; cv=none; b=I2PtT+j5VZDpt45xV3pE22TXYF2CTKC5mJ8jdcl52+I0oasBW8X6RIVRb60Gqy0YbX66uVN2t2gGaFbDEBv6b4cOC+OaqyoQ6lPsD27i0V/Dq5eQpeb8m8XYsMckAonc4kYFCzHChTksY3F7pOIuAYdEfOuvbUcjT7ODKQTMEMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728066570; c=relaxed/simple;
-	bh=2K/1a5RGIAyA2J4ybA+WQ5RJxOMBMXzl5TD8SvSdLHQ=;
+	s=arc-20240116; t=1728066571; c=relaxed/simple;
+	bh=2LtfAKH0dDbBh2ZgnhNv/xXfHcrgEhxInqY8B59SDhQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L3GHmvxZyzLyYgfoIKtQPh+1Es7bs1OR8BfEVIhWVrFoIuX4lA3yk82Cn8eHD2yS9zZU+EoF4EvhiZhRbGMxDgZW5hveuielLLUJNt1onQVSXxhmC6Ld/Vu2E4lnBaUlupuZ/oWox4NN7iDdJcvHdLttRndKN7zwL8BDkkVlKqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a392iF2p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C6D0C4CECC;
-	Fri,  4 Oct 2024 18:29:28 +0000 (UTC)
+	 MIME-Version; b=n4sjlBajeV6befg3A2abi0wPLZsRoWkvwUKHVPm6YrJqVfQg7R0HGujFJBD9F+sZKDYSwx4Vx0wPLzjmreMft3Rv0ZKPLNwqy1AeRuRUfCyIGSRDKqAdUCxjUtinrfLGHz+sCFp5r1AxbChTPDmeM5K0apMqGe8KAh0KANwYKyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEjcqE1M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5775C4CECD;
+	Fri,  4 Oct 2024 18:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728066569;
-	bh=2K/1a5RGIAyA2J4ybA+WQ5RJxOMBMXzl5TD8SvSdLHQ=;
+	s=k20201202; t=1728066571;
+	bh=2LtfAKH0dDbBh2ZgnhNv/xXfHcrgEhxInqY8B59SDhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a392iF2pQUWmTiCB/rz0SQ+GEOnqionQf/rnOKbfsl70tZN5cyQ8Ljq4wgwikYMir
-	 WCwGuZmO0ZaJRwffP960KtE6sBF+RRrSfMavMgf3RiIv9uGur/a9aglWujAS+8bein
-	 BcDqw1NB0n8wd8bJS2JW+xkrAx6td28oouEWNTZ3JML8B2ENXqF6p/+79yxIBqL+rk
-	 2o5rcfjEqskTLYU9TonYNMwGjrRxlowrGjkAjJFdRtjylD+S0MU8lMGkAi0/hUNDEI
-	 xmJzAlNCXRUTGNv/Icc0cGP1HzfjZCe3AJrf5gGk2gFX6vrVNIcjN6HvWiDBn/bj0w
-	 j0teZqoetUlNQ==
+	b=DEjcqE1M75T1emlF/l3gHUKmkiEYr6mjQk07FfzfVHNQzk0lEvhQF56CRhx8/5dwF
+	 H7Hb0pV0Z5C/+U1wYj5n5KYyP7hbVa2gSYk/djQNb8xrG3Ds7VWHv+uD5Uk9ehdn3Q
+	 D5Em0NcxoxwzS5GubnRiyM6IOQAbuJuPs+0ZdQd5wDx3nBr2Z5iOzDVstW/YJIbah1
+	 sgFy1fMR9PYDbxmwoBSF28GUo/idNREgwkGaqEbhUxs9UxytEqZhnkSoyIJxsIauvP
+	 jiGr6tOe4+5zITTeVS79rADbraSTI+UuxrCH/DWNRMaFbRbrbm1Jw4egd2As6qkG1B
+	 GRVD+ClN+Ak0g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	zdravko delineshev <delineshev@outlook.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Kaixin Wang <kxwang23@m.fudan.edu.cn>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Jon Mason <jdmason@kudzu.us>,
 	Sasha Levin <sashal@kernel.org>,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 19/31] PCI: Mark Creative Labs EMU20k2 INTx masking as broken
-Date: Fri,  4 Oct 2024 14:28:27 -0400
-Message-ID: <20241004182854.3674661-19-sashal@kernel.org>
+	kurt.schwemmer@microsemi.com,
+	dave.jiang@intel.com,
+	allenbh@gmail.com,
+	linux-pci@vger.kernel.org,
+	ntb@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.15 20/31] ntb: ntb_hw_switchtec: Fix use after free vulnerability in switchtec_ntb_remove due to race condition
+Date: Fri,  4 Oct 2024 14:28:28 -0400
+Message-ID: <20241004182854.3674661-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241004182854.3674661-1-sashal@kernel.org>
 References: <20241004182854.3674661-1-sashal@kernel.org>
@@ -62,46 +65,56 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.167
 Content-Transfer-Encoding: 8bit
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Kaixin Wang <kxwang23@m.fudan.edu.cn>
 
-[ Upstream commit 2910306655a7072640021563ec9501bfa67f0cb1 ]
+[ Upstream commit e51aded92d42784313ba16c12f4f88cc4f973bbb ]
 
-Per user reports, the Creative Labs EMU20k2 (Sound Blaster X-Fi
-Titanium Series) generates spurious interrupts when used with
-vfio-pci unless DisINTx masking support is disabled.
+In the switchtec_ntb_add function, it can call switchtec_ntb_init_sndev
+function, then &sndev->check_link_status_work is bound with
+check_link_status_work. switchtec_ntb_link_notification may be called
+to start the work.
 
-Thus, quirk the device to mark INTx masking as broken.
+If we remove the module which will call switchtec_ntb_remove to make
+cleanup, it will free sndev through kfree(sndev), while the work
+mentioned above will be used. The sequence of operations that may lead
+to a UAF bug is as follows:
 
-Closes: https://lore.kernel.org/all/VI1PR10MB8207C507DB5420AB4C7281E0DB9A2@VI1PR10MB8207.EURPRD10.PROD.OUTLOOK.COM
-Link: https://lore.kernel.org/linux-pci/20240912215331.839220-1-alex.williamson@redhat.com
-Reported-by: zdravko delineshev <delineshev@outlook.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[kwilczynski: commit log]
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+CPU0                                 CPU1
+
+                        | check_link_status_work
+switchtec_ntb_remove    |
+kfree(sndev);           |
+                        | if (sndev->link_force_down)
+                        | // use sndev
+
+Fix it by ensuring that the work is canceled before proceeding with
+the cleanup in switchtec_ntb_remove.
+
+Signed-off-by: Kaixin Wang <kxwang23@m.fudan.edu.cn>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 965e2c9406dbd..4ce4ca3df7432 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3482,6 +3482,8 @@ DECLARE_PCI_FIXUP_FINAL(0x1814, 0x0601, /* Ralink RT2800 802.11n PCI */
- 			quirk_broken_intx_masking);
- DECLARE_PCI_FIXUP_FINAL(0x1b7c, 0x0004, /* Ceton InfiniTV4 */
- 			quirk_broken_intx_masking);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CREATIVE, PCI_DEVICE_ID_CREATIVE_20K2,
-+			quirk_broken_intx_masking);
- 
- /*
-  * Realtek RTL8169 PCI Gigabit Ethernet Controller (rev 10)
+diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+index ec9cb6c81edae..759248415b5c2 100644
+--- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
++++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+@@ -1556,6 +1556,7 @@ static void switchtec_ntb_remove(struct device *dev,
+ 	switchtec_ntb_deinit_db_msg_irq(sndev);
+ 	switchtec_ntb_deinit_shared_mw(sndev);
+ 	switchtec_ntb_deinit_crosslink(sndev);
++	cancel_work_sync(&sndev->check_link_status_work);
+ 	kfree(sndev);
+ 	dev_info(dev, "ntb device unregistered\n");
+ }
 -- 
 2.43.0
 
