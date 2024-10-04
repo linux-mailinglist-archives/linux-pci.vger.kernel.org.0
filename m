@@ -1,143 +1,174 @@
-Return-Path: <linux-pci+bounces-13818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9E279902BE
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 14:12:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99C88990350
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 14:52:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 833B4B20431
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 12:12:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8BB81C21282
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 12:52:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 807D315A84D;
-	Fri,  4 Oct 2024 12:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 348B2148FF6;
+	Fri,  4 Oct 2024 12:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHGgIdaQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SLXblnnR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CECF15A849
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 12:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1F029422
+	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 12:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728043927; cv=none; b=uyJI7kEiXfBnEgTa3DosMOdTARuL5Ia6Yr9mVzd/OTej6sO48kFJUhfWByK2h/+8qyBel7/R+u8SDvWwSb+CEVNWk8v1zm3rCiXn6CgWWTlNDjuu87BaTQePkfSVZVvjKPVeKCF3xvKpHUhYPzUsZcEtYdz90ZN3UaF0AFqH8YE=
+	t=1728046342; cv=none; b=iqZ9cGMOe4SlFE9ImYSQI5ueNS2yRrHD9nlac1Hm7g/LK6vqZb0o2B+h0/IJSZSnDuPQj0tuCU6nPcDbnBVgAft3cl13Xy3uxDZUhJQ0sA0AzSo6K5rKz7fJzPU6jjFvgv/YQJmqgtb36iwNGumcO9VymSkO/yNjfkg7OUIfyAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728043927; c=relaxed/simple;
-	bh=D/kQEOXBV72/ZIRSeXEcF2Uq/w24vsBdd1YMa5noJiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WjWVnDXLGGP/ohs7U0xETA9fRqrScdnRqP8gI93JnkI3Kq4mFXANcjGb6mMZ3lZM5oTDr/LfZXEM8jHyv5pooNth8PzgUK807vQRmbUda3p+RoNE0zqeST8/NcshJUWDRaOyrM9Z5tDdQ4p0tSd7to2wEVZnkoZD5ZCAN9/VuMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHGgIdaQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72391C4CEC6;
-	Fri,  4 Oct 2024 12:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728043926;
-	bh=D/kQEOXBV72/ZIRSeXEcF2Uq/w24vsBdd1YMa5noJiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nHGgIdaQH3N8Nvw0/trU9qkoW1vCheGlXAvQ23/+QDw/ofBbzNX0ZUhgrwytrYAg1
-	 ftnQjY/vva/wJDbx4dUXj3hSGamXj4dewWH5pqxAMOUFqrUWzg66SL8IKFQFE8CXx2
-	 CZmfiZkW+vDd0VsZvQhe4JMtKujAbGDkl4Fqp+3216Z0lpAkUejfSQ+wjvKcNqzrnu
-	 ixnTSuxs8WbjExqo6NZPFMPEFcTHTPfVMjbt8XQhiIV5imIFbCWKbgfpwd8+4dDAYe
-	 kr5YmRiL6O6Ee7u7ETE94ahdXxwDQaAKwJxuckKBHSDf4dgVWYqO6jnNbcNG8jKEP4
-	 KeT3ZExVoQcdg==
-Date: Fri, 4 Oct 2024 14:12:01 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v3 7/7] PCI: dwc: endpoint: Define the .map_align()
- controller operation
-Message-ID: <Zv_bkb35eNK1Sqcp@ryzen.lan>
-References: <20241004050742.140664-1-dlemoal@kernel.org>
- <20241004050742.140664-8-dlemoal@kernel.org>
+	s=arc-20240116; t=1728046342; c=relaxed/simple;
+	bh=tXn7cgV5PLplDXu28RDs+afeydt3uFCPje1HwTbv2Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=edNYPWaO3JJ3AgfjQ+2FHAoJp1GoAMCkQc7liBhoECcpOeVhsb6KdfjWsEpYwWFrNjuuAul/hk+ZIV+h319ZQYb/48SepWWgVEESjnyZmIMoBlzHEosFqTX724zrdLsjMZtGo4tNI4SIzAUq6GhOUAO+BX4/W6iBXB72qn+JkQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SLXblnnR; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728046340; x=1759582340;
+  h=date:from:to:cc:subject:message-id;
+  bh=tXn7cgV5PLplDXu28RDs+afeydt3uFCPje1HwTbv2Rc=;
+  b=SLXblnnRJz+5nsAPVoAOh5TDu/z27n6mW+9VZ+tPFFrZ1ZaWBQjcbY+E
+   4TjNtWmNCx8RSiccZY8Kq64uomy0AiTrwQZD6sCvmOD3pX4RMhlfn9DCs
+   HZ8YuzFj8c/N430A0NFMU2hN6fkW0pNML+BuWXmZ7mTu6Z1xa+u4h1MPE
+   H9xy6Xg7OQdnK4Q71JurC83stRVwemxjXjf1MAiDsqZJhwEW6dg6JEyut
+   FVnMckMGRLLeD8gcJSjkIpPfun+avvPjexziGnTgnPcHxtgsOjAjjTA70
+   /ZveGy3lMJXalQpFaiyoNu+Hg9Pi1tSwteKcfdQKu9yujHR4zmGPG4RJ1
+   g==;
+X-CSE-ConnectionGUID: YTNmpBI5QYGpz4RT5MY+nA==
+X-CSE-MsgGUID: 5OY6/vbJSIm37ME5kiV6Lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="26773983"
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="26773983"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 05:52:18 -0700
+X-CSE-ConnectionGUID: q78K93pRTEOoopSF79+q+g==
+X-CSE-MsgGUID: O+sd8qwTSmqx0MewOnerMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="79531559"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 04 Oct 2024 05:52:17 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1swhn4-0001dA-2p;
+	Fri, 04 Oct 2024 12:52:14 +0000
+Date: Fri, 04 Oct 2024 20:51:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:pm] BUILD SUCCESS
+ 02787a3b4d102eda121ae66f8f05b4e41e082f16
+Message-ID: <202410042016.82FWfhr7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241004050742.140664-8-dlemoal@kernel.org>
 
-On Fri, Oct 04, 2024 at 02:07:42PM +0900, Damien Le Moal wrote:
-> The function dw_pcie_prog_outbound_atu() used to program outbound ATU
-> entries for mapping RC PCI addresses to local CPU addresses does not
-> allow PCI addresses that are not aligned to struct dw_pcie->region_align
-> (generally 64K).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
+branch HEAD: 02787a3b4d102eda121ae66f8f05b4e41e082f16  PCI/PM: Enable runtime power management for host bridges
 
-I think that you should just remove the "generally 64K". This is totally
-dependent on the hardware configuration set when synthesizing the DWC PCIe
-controller.
+elapsed time: 816m
 
-See e.g. drivers/misc/pci_endpoint_test.c:
-.alignment = SZ_4K,
-.alignment = SZ_64K,
-.alignment = 256,
+configs tested: 81
+configs skipped: 3
 
-In fact, the most common one, from looking at what the different PCI device
-and vendor IDs, seems to be 4k.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Perhaps simply mention that the pci->region_align contains the value that was
-read/determined from iATU hardware registers during detection time of the iATU
-(done by dw_pcie_iatu_detect()), so this code is actually generic for all DWC
-PCIe controllers, and should thus work regardless of the hardware configuration
-used when synthesizing the DWC PCIe controller.
+tested configs:
+alpha            allnoconfig    gcc-14.1.0
+alpha           allyesconfig    clang-20
+alpha              defconfig    gcc-14.1.0
+arc             allmodconfig    clang-20
+arc              allnoconfig    gcc-14.1.0
+arc             allyesconfig    clang-20
+arc                defconfig    gcc-14.1.0
+arm             allmodconfig    clang-20
+arm              allnoconfig    gcc-14.1.0
+arm             allyesconfig    clang-20
+arm                defconfig    gcc-14.1.0
+arm64           allmodconfig    clang-20
+arm64            allnoconfig    gcc-14.1.0
+arm64              defconfig    gcc-14.1.0
+csky             allnoconfig    gcc-14.1.0
+csky               defconfig    gcc-14.1.0
+hexagon         allmodconfig    clang-20
+hexagon          allnoconfig    gcc-14.1.0
+hexagon         allyesconfig    clang-20
+hexagon            defconfig    gcc-14.1.0
+i386            allmodconfig    clang-18
+i386             allnoconfig    clang-18
+i386            allyesconfig    clang-18
+i386               defconfig    clang-18
+loongarch       allmodconfig    gcc-14.1.0
+loongarch        allnoconfig    gcc-14.1.0
+loongarch          defconfig    gcc-14.1.0
+m68k            allmodconfig    gcc-14.1.0
+m68k             allnoconfig    gcc-14.1.0
+m68k            allyesconfig    gcc-14.1.0
+m68k               defconfig    gcc-14.1.0
+microblaze      allmodconfig    gcc-14.1.0
+microblaze       allnoconfig    gcc-14.1.0
+microblaze      allyesconfig    gcc-14.1.0
+microblaze         defconfig    gcc-14.1.0
+mips             allnoconfig    gcc-14.1.0
+nios2            allnoconfig    gcc-14.1.0
+nios2              defconfig    gcc-14.1.0
+openrisc         allnoconfig    clang-20
+openrisc         allnoconfig    gcc-14.1.0
+openrisc        allyesconfig    gcc-14.1.0
+openrisc           defconfig    gcc-12
+parisc          allmodconfig    gcc-14.1.0
+parisc           allnoconfig    clang-20
+parisc           allnoconfig    gcc-14.1.0
+parisc          allyesconfig    gcc-14.1.0
+parisc             defconfig    gcc-12
+parisc64           defconfig    gcc-14.1.0
+powerpc         allmodconfig    gcc-14.1.0
+powerpc          allnoconfig    clang-20
+powerpc          allnoconfig    gcc-14.1.0
+powerpc         allyesconfig    gcc-14.1.0
+riscv           allmodconfig    gcc-14.1.0
+riscv            allnoconfig    clang-20
+riscv            allnoconfig    gcc-14.1.0
+riscv           allyesconfig    gcc-14.1.0
+riscv              defconfig    gcc-12
+s390            allmodconfig    gcc-14.1.0
+s390             allnoconfig    clang-20
+s390            allyesconfig    gcc-14.1.0
+s390               defconfig    gcc-12
+sh              allmodconfig    gcc-14.1.0
+sh               allnoconfig    gcc-14.1.0
+sh              allyesconfig    gcc-14.1.0
+sh                 defconfig    gcc-12
+sparc           allmodconfig    gcc-14.1.0
+sparc64            defconfig    gcc-12
+um              allmodconfig    clang-20
+um               allnoconfig    clang-17
+um               allnoconfig    clang-20
+um              allyesconfig    clang-20
+um                 defconfig    gcc-12
+um            i386_defconfig    gcc-12
+um          x86_64_defconfig    gcc-12
+x86_64           allnoconfig    clang-18
+x86_64          allyesconfig    clang-18
+x86_64             defconfig    clang-18
+x86_64                 kexec    gcc-12
+x86_64              rhel-8.3    gcc-12
+x86_64         rhel-8.3-rust    clang-18
+xtensa           allnoconfig    gcc-14.1.0
 
-
-> 
-> Handle this constraint by defining the endpoint controller .map_align()
-> operation to calculate a mapping size and the offset into the mapping
-> based on the requested RC PCI address and size to map.
-> 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 43ba5c6738df..501e527c188e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -268,6 +268,20 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
->  	return -EINVAL;
->  }
->  
-> +static int dw_pcie_ep_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +				struct pci_epc_map *map)
-> +{
-> +	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	size_t mask = pci->region_align - 1;
-> +
-> +	map->map_pci_addr = map->pci_addr & ~mask;
-> +	map->map_ofst = map->pci_addr & mask;
-> +	map->map_size = ALIGN(map->map_ofst + map->pci_size, ep->page_size);
-> +
-> +	return 0;
-> +}
-> +
->  static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  				  phys_addr_t addr)
->  {
-> @@ -444,6 +458,7 @@ static const struct pci_epc_ops epc_ops = {
->  	.write_header		= dw_pcie_ep_write_header,
->  	.set_bar		= dw_pcie_ep_set_bar,
->  	.clear_bar		= dw_pcie_ep_clear_bar,
-> +	.map_align		= dw_pcie_ep_map_align,
->  	.map_addr		= dw_pcie_ep_map_addr,
->  	.unmap_addr		= dw_pcie_ep_unmap_addr,
->  	.set_msi		= dw_pcie_ep_set_msi,
-> -- 
-> 2.46.2
-> 
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
