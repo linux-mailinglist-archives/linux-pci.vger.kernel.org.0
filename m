@@ -1,158 +1,118 @@
-Return-Path: <linux-pci+bounces-13792-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13793-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6346698FC72
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 05:00:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 444C098FCA6
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 06:11:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B15F1C21FC8
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 03:00:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E41B1F235C0
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 04:11:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B351EDDA1;
-	Fri,  4 Oct 2024 03:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89794963C;
+	Fri,  4 Oct 2024 04:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AIxSp7hF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jF3a7J9e"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD45288B5
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 03:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AD943ABD;
+	Fri,  4 Oct 2024 04:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728010838; cv=none; b=tlBn8R1NspJ5dn2/jPPPirrfuv3ai0Ptjgn69CdBKK3+sEfEDhggUvsyZZofmAy5o7VJfZg1xPWJgOtoNbqwtu/p660ihsMBxo+zbDBY3n4JYeLBpt4JwlUrIVzvoLrvDz8rKr2xxGNsqnLMXImJu5bjnyqyPh1/23RJ36HcJvg=
+	t=1728015090; cv=none; b=ESJmTMmKCaUV/y8/Gggfj3utp22fq2ZrYK+LLEHJSrMEs8eUyPv8tlYK1B3yR5pfIbeH/ki3KR1QVi2ZIjAT4fbakMZln6J2XzRxewzlGVLClJ/Myd8UvZerJgr04zpGivWUr/Z1tHlmNYgCVlA73467B1FeF+9rL55suumzhKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728010838; c=relaxed/simple;
-	bh=nW7wqiDCtMpBBru9fQpWsqTDpgKrjXUQFwUX4ryMVZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OmYzbkx1hf90thmHCM+M+/G09dfK0ynFAi24/e7shpgCSy9uMkGgpqu245dK/jMdn1fXrgsL6ajsyNsSGfSuY7CIwLw7ESKaYQvLYsczfazSC5un741KtFMqBumJKox8CjMFLb4/rnnwwDT53eAvdAdBrNLqzBVuoTwSX2vp9t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AIxSp7hF; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20b90ab6c19so17848165ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 03 Oct 2024 20:00:37 -0700 (PDT)
+	s=arc-20240116; t=1728015090; c=relaxed/simple;
+	bh=mWEOE9nswXDaTVB00jH1eq6MCyPSkMFdNPKlHkn8Yns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V1aW+BUqlgKv5zXQbpTMwUjZCJ52GBfjVgekYvfeVIvg6NfBAJ2VxMah/1yiANtai+hvQdHCmpDBvrkMnFH7vkslheUvIIRin8f5Nz5muUV9VLG+uHx9fMHf29SE7bSvnLe1sAlDOkCv6PHGXtmJsMLE+BQVyCuJ85cLE6JYcl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jF3a7J9e; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-27d045a73easo914583fac.0;
+        Thu, 03 Oct 2024 21:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728010836; x=1728615636; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0qLUBCKQLtoABPl15OXigTRRzuAktX7KLGR2tbJ2/Ac=;
-        b=AIxSp7hFkzsXKhPUff98dIhNP/kW8WLdmNTqphmOWxiCSR9zRrOI2P+recD0qA3wi6
-         pkEbOwgNxEJcoET7BfJqdQtbREnokFTY/UK55ZY9vcAkxHP5xJunYO2tdUNja/a9vc/+
-         yf7mXeaOqPDXpABg/TEI5GKlFq1ihiVzKnnSPkxytTZnpi/B51Jk9/lGoiXih09B6QHD
-         ekPEnTZKJOLNQehkMc9aQPtbB8SDWQLmXQ7grBGUkIa+DEY0CcSg8Cqhl9ZtVbBWAgbZ
-         VKmkVvfCUoZ/Zl5KptoEk+uBzcpn5j8xWhkH8WKJyz+kzqdfG2welV5JCYi4hF9sxt+g
-         35Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728010836; x=1728615636;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1728015088; x=1728619888; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0qLUBCKQLtoABPl15OXigTRRzuAktX7KLGR2tbJ2/Ac=;
-        b=KTGwrysJ7F32Cl8qHDBUFYS2TSHqwzN/WLroM5EUWO4pf30LQRzdVQF346X8ZG0kch
-         zksUIJ1duDSYhAo/3FU7BYBGVYJDO3Kb/QTDzMvbJy7JuAcuwxPddn4qE3YbjcUbuULE
-         y1haVqZ7HuX80B46WvJHIUp4/2n/HuyNKaQhS9WXA/zCLPDsEVx3pcux7Mks39+NF/zD
-         d7j53b/llQEPyzFS5rV3PiedWRScyrYaCOtXiEOY9vaMeVWUfb6DznDGQz+eSv+Q87AG
-         QddlMKdhNGQ7nQUWVe1p3WBSQUvKilMDtwUUSrJ+9CTyE0KRyieDo4x9w25TFVYuT9Wx
-         VwtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXj01Fh9NWC+WIftjrFZbChniQ9gIqoxejaR6wxSwyhH0ZR+eBRvdxdPknCCWXAb8b/n++KA5Lw++U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBd4en9lnzFEdnjlRh0HO4+4oogmUXlEcyFp5M0P2LnQRJDSO0
-	ZCAAMmwY8/489TXounTOaOmgRxfHQqorGN2CU4JIhdnWWNJIJ4H0Qgf2OFaScQ==
-X-Google-Smtp-Source: AGHT+IEQM1Pk6BmaHKYNgcH6wIPGIrUYBBrtgdRKO7S5nze7M4EYP74HBAwb4FeAkkN3UBAYbhpIHQ==
-X-Received: by 2002:a17:902:f650:b0:20b:cae5:dec6 with SMTP id d9443c01a7336-20bff074ab7mr18543665ad.59.1728010836207;
-        Thu, 03 Oct 2024 20:00:36 -0700 (PDT)
-Received: from google.com (1.243.198.35.bc.googleusercontent.com. [35.198.243.1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beefafc65sm15329605ad.217.2024.10.03.20.00.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2024 20:00:35 -0700 (PDT)
-Date: Fri, 4 Oct 2024 08:30:27 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	Sajid Dalvi <sdalvi@google.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/ASPM: Disable L1 before disabling L1ss
-Message-ID: <Zv9aS_FpDZpvmGnQ@google.com>
-References: <Zv7TLs9_CMaYQ--b@google.com>
- <20241003202321.GA321551@bhelgaas>
+        bh=7KG5NyyXcoddyKNeeQDgE4xPxgRSIlRvqW3eOyOluoc=;
+        b=jF3a7J9en/K+uzKbEHu2hHbWs9BqE75H1+EHEt/Lnz1svJC4PYq46C0C4lwZABQ/CZ
+         AjTw4bSS/sEx9eLUb/VKGGp4YfoTTa+XzyRFqkw0OQ3AcdGbTD49LaJ2R8nnHWKR6J6x
+         OSuVroCUfKWR/jLRdIC5pGl8yKNQ/iYXq2DsFf/obk709MRiJqw5d9IEnZVDUqqXkMoE
+         OXUTLnqW5rvKFDf1Kbvx1hLsFUyaO5cVmu1enu78onGRMcwLU9OSYzw3yfGjW0u9iM2z
+         BD6kHfs7fNn/XTHic5QDxskUDP26UyzSXuFfKlzFXTWdzvhPMRy91948dHCtTXnfi09Y
+         7/xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728015088; x=1728619888;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7KG5NyyXcoddyKNeeQDgE4xPxgRSIlRvqW3eOyOluoc=;
+        b=Rnc6tDcuWaTsFq70bJW1O6T0xFftnvSnReYFb6U/2aKJnl/pNrAQSUYB1jsOByqfrM
+         K1ef2zUkP2rlfRk1BAwu1QhP6b8xhKq14GSBTQkV9qTrqxAMF18qP7IXBCLfc0+JY4ov
+         ux7W8FinJvu9d9JOkXjiFCQj+v2Fn+CW6kgqCT8CgluU4QJCnOY4Hco980DWNWwrKgyt
+         44/lfFX2gbnfKE7D5DEqenDGDm84nMVr2V/2jlRCXXfdytJvfXVTxpYQ9IpUxPUDClXB
+         lpoizsCJQoM2K/FbSazGo1y7Z1YN1boJssODTU2sw/8D9ZV/gbYyxxQkniWvPe/544QB
+         /6rw==
+X-Forwarded-Encrypted: i=1; AJvYcCVm/1+QqzCrz8LO/J8f+kCBTb571LFqTyksXepWH7tL0T//+llndG+sWqJS88zVDlyMn+JYjT02PDwP5k7JUBGQvDM=@vger.kernel.org, AJvYcCVr5KWmJoMEfnVIXdUI5xIJa8gw57doKFnV3+849bpsJ3/xHMynQ0wfgcJzX/A8rPEqvUw/n+5lesFM@vger.kernel.org, AJvYcCW7/7l6oBhVgQf5LYjv12SSc4rvdOqn/BANnlxRFejfX/eJl+TqA7wH6WqmKYnvYhnhDPm+JeOWduARrw==@vger.kernel.org, AJvYcCWXcl8Y92qeEKUuhOZ5q/GPw7vLEHa5CLN9VK2weOlX5MwCI5dN/T15sv/AqjIpmaa9aXc2co0MPf7nH5Y=@vger.kernel.org, AJvYcCWux2NQyF7KM9Tk3cCZAa5jaFF6vVdLDnPvkAqiMm2qkHhwyhlBy8/9XaoNTc/CafdiYPuoJsgLmdCpBJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6s5Eik8exAXCJJhKOpjVXnRq+g3fSRfQAYwF/HcftLGxgM3Hw
+	IjbbuHVmkd0JFAuPSJNNkcxFJatWSuJKoO4xIOiu0FdDewq1oa7JvWgbgvbyP9k2iRPg30WizE1
+	gYZi8M3wPSkEm5v/asAJLoFglJQM=
+X-Google-Smtp-Source: AGHT+IH/oQQS/mnVkBMVZavu+1GJwds/AMzKCb97mcp7UAcOj1YhpcUbl3S8U4Ofo7beYWzVZu+XAyXSDZXvx8Nnsww=
+X-Received: by 2002:a05:6870:2191:b0:261:1f7d:cf70 with SMTP id
+ 586e51a60fabf-287c2154afamr1028179fac.36.1728015088169; Thu, 03 Oct 2024
+ 21:11:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241003202321.GA321551@bhelgaas>
+References: <tdxrmmqyzcufupnwkdbg7lwgadizm7v3lxjirykijbml7x54ze@upbdzycdsilm> <20241003215217.GA326383@bhelgaas>
+In-Reply-To: <20241003215217.GA326383@bhelgaas>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Fri, 4 Oct 2024 06:11:17 +0200
+Message-ID: <CAMhs-H8q95jAvo65yQ5x0NxyU3Hzu0HeNQxZSa+5CHd7REgQuA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: controller: Switch back to struct platform_driver::remove()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	linux-pci@vger.kernel.org, vigneshr@ti.com, s-vadapalli@ti.com, 
+	lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, krzk@kernel.org, 
+	alim.akhtar@samsung.com, shawn.guo@linaro.org, songxiaowei@hisilicon.com, 
+	marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, 
+	thierry.reding@gmail.com, jonathanh@nvidia.com, thomas.petazzoni@bootlin.com, 
+	pali@kernel.org, florian.fainelli@broadcom.com, 
+	angelogioacchino.delregno@collabora.com, ryder.lee@mediatek.com, 
+	heiko@sntech.de, kevin.xie@starfivetech.com, kishon@kernel.org, 
+	dlemoal@kernel.org, shawn.lin@rock-chips.com, 
+	linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 03, 2024 at 03:23:21PM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2024 at 10:53:58PM +0530, Ajay Agarwal wrote:
-> > On Thu, Oct 03, 2024 at 12:01:22PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Oct 03, 2024 at 06:55:03PM +0530, Ajay Agarwal wrote:
-> > > > The current sequence in the driver for L1ss update is as follows.
-> > > > 
-> > > > Disable L1ss
-> > > > Disable L1
-> > > > Enable L1ss as required
-> > > > Enable L1 if required
-> > > > 
-> > > > With this sequence, a bus hang is observed during the L1ss
-> > > > disable sequence when the RC CPU attempts to clear the RC L1ss
-> > > > register after clearing the EP L1ss register.
-> > > 
-> > > Thanks for this.  What exactly does the bus hang look like to a user?
-> > >
-> > The CPU is just hung on reading the RC PCI_L1SS_CTL1 register. After
-> > some time, the CPU watchdog expires and the system reboots.
-> 
-> Wow.  Good to know that this is outside the PCIe domain.  I think this
-> is a good change, and since it is partly motivated by hardware
-> behavior that might be legal but seems somewhat unusual, can we
-> identify the hardware (CPU and PCIe Root Complex) involved here?
-> 
-The CPU is an ARM A-core. The PCIe RC is a Synopsys Designware core.
-
-> > > I guess the problem happens in pcie_config_aspm_l1ss(), where we do:
-> > > 
-> > >   pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ... 0)
-> > >   pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ... 0)
-> > > 
-> > > where clearing the child (endpoint) PCI_L1SS_CTL1_L1_2_MASK works, but
-> > > something goes wrong when clearing the parent (RP) mask?  The
-> > > clear_and_set will do a read followed by a write, and one of those
-> > > causes some kind of error?
-> > >
-> > During ASPM disable, in pcie_config_aspm_l1ss(), we do:
-> >    1. pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ... 0)
-> >    2. pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ... 0)
-> >    3. pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ... 0)
-> >    4. pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ... 0)
-> > 
-> > We observe that the steps 1 and 2 go through just fine. But the read of
-> > PCI_L1SS_CTL1 register in the step 3 hangs. I am not sure why.
-> > The issue is pretty difficult to reproduce, and adding prints around
-> > these steps masks the issue.
-> 
-> I guess the L1 disable is between 2 and 3, right?  And 3 and 4 may
-> enable L1 SS (using val, not 0)?
-> 
->   1. same
->   2. same
->   2.5 pcie_capability_clear_word(child, PCI_EXP_LNKCTL_ASPM_L1)
->   2.6 pcie_capability_clear_word(parent, PCI_EXP_LNKCTL_ASPM_L1)
->   3. pci_clear_and_set_config_dword(parent->l1ss + PCI_L1SS_CTL1, ...  val)
->   4. pci_clear_and_set_config_dword(child->l1ss + PCI_L1SS_CTL1, ...  val)
+On Thu, Oct 3, 2024 at 11:52=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
 >
-Thats the sequence when L1ss is enabled. When it is disabled, then steps
-2.5 and 2.6 do not run. And 'val' remains 0.
+> On Thu, Oct 03, 2024 at 12:17:08PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > Hello,
+> >
+> > I found this patch in next as 712359cb5e9d9553c1383fc5005593aa1988efc4.
+> >
+> > While rebasing my patches with the same purpose I found that this patch
+> > handled the indention differently than I did for two files:
+>
+> Updated 712359cb5e9d ("PCI: controller: Switch back to struct
+> platform_driver::remove()") to adopt your indentation changes and also
+> convert drivers/pci/controller/pcie-xilinx-nwl.c, thank you very much
+> for noticing this!
 
-> Bjorn
+Thanks a lot for noticing and correcting this!
+
+Best regards,
+    Sergio Paracuellos
 
