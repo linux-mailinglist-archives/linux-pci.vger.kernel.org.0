@@ -1,172 +1,142 @@
-Return-Path: <linux-pci+bounces-13834-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13835-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31D1D990A83
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 20:00:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76BDE990B3F
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 20:24:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 76739B214D6
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 18:00:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A86381C21A53
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Oct 2024 18:24:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD3D1DAC84;
-	Fri,  4 Oct 2024 17:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3054622168B;
+	Fri,  4 Oct 2024 18:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="T40dcfB8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8NPC3gr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E081AA7BA
-	for <linux-pci@vger.kernel.org>; Fri,  4 Oct 2024 17:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053E421F43D;
+	Fri,  4 Oct 2024 18:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728064797; cv=none; b=rs2w4cKSb8xTxYfADJO7YUtBqG8yqcKxye7HyLy6uRCgWHEMHJHb8qQ8C2Pn7ozTsBQ3qZlWJl3Z/rChpDs+1MDhK3IdR6Vl+jsUWZW/HuEuXRdXnNMMK4OHCp3AVFvE59nlrAoxGPs4AnsqtobZUoKzbLwOSEe8gk8qT5lbzaU=
+	t=1728065953; cv=none; b=ckpAD6OWJjAA7yjC5h61ys5+dozVcLToQ8gX/WOr+iJmuoq5HoC6+BEBJcNS3Jz+yHkVG6kmVFK5mESIe+mEnJFrvewO4KyLcixQXmB6INQxrs+8Uo7HE6UkXjbHeQueBrvaU8WgvytN7aDf2qOmIzd2SupfgqU81qBMAx/S5cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728064797; c=relaxed/simple;
-	bh=inuFU3NXMCe9t8sJPID56GbyaIR3FjwYuD3KDJW0AyM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HM8CXe/J5BIITyTXxAw8bglveNYRArWFDTOA5bR9pSYGIBlOoKfzcxAaQJVBkJBF18jUnWpSMNiJfhYV7fvcq4hxeF2BZiDMmyZ9XNVvaiKg0TyIUJIAkHfd990jIK2QXEjYjvQlTEk3NVnqZQiF+FwF8SYCCpqzpepUcDv2Om8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=T40dcfB8; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5398e7dda5fso2521557e87.0
-        for <linux-pci@vger.kernel.org>; Fri, 04 Oct 2024 10:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728064793; x=1728669593; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZIc2Q/g7SzIUf5LcQlTpJjF6kt6YPBe5J0bTkqMkNrs=;
-        b=T40dcfB8p+1OQXYcJBLq1LnKRinIm1xPRCxHOd0bvQ7vuKOKp17ZYqUPjAc41efDNQ
-         WONMm4DGQoVnjumLkuiZAEMumFCIm/xIKs1mP6O/YABc3hv1XSeOovpPJFx3x6HqxcfC
-         ySS1Mus6NsHzR4DU/2DBfScjNNj6VxZFs6fvyqo0E3NO3KlQFUzMNiTBcVgHbY+Zr5oL
-         injtWkYhdQINmHsAHPNAd7jeOstdpe+dUHZHmgQm6OG0Db8vJ77rk2IKQ0eKzwUXeSja
-         PBofJzYmhcTe8FkFW3JVuMQHJkd+WpM4eJg6JfNatf56gQX1K5prly10DYZKr+l+EjUX
-         Fg7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728064793; x=1728669593;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZIc2Q/g7SzIUf5LcQlTpJjF6kt6YPBe5J0bTkqMkNrs=;
-        b=dQwteTlktOXDSrJBzOdN8utpaVdUfEETB/UK7ubBGBWEzcAtN6zmoU+SxDZozuGS0L
-         oadHZ/Pbhqvk9xjxOsz63CKZQIrA8mMLwjI0+/9dJiYwKGZli7zWyh8UuEX9DJ80mM3o
-         Q8ZVE+wy/ufu2Gk23t+DLyLov7T3As8u5oeVmgoIjFlifPJhwFlSmAXFWYsqjFoR2N6L
-         p0ny3ZUzcf4FkzMUKtw0CxSBqhlhTmRbZXnA4GrwoLN6BpOeXUYKfPgIood0iNQguhoK
-         Neny/8pBnCh6H1+7t8bgb1bJB78m51zxrL5XV7rEppc2nDIdZHCcGpaYkTupsy3Ejw7S
-         7x9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWbY8qj8qgIBtaZaUxibZk6N4Iq4wOb9bo0IegZd/GI4rj69vpesxQnx1KuQ0DmAAnYMnyBH4RkPko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvdgJvluWuViuF0H2DlFZ3ntkN7TPTbMpeIOK8o+2ratuLu4pc
-	Fv9kHa9OjkuvdAcEjztt2+RJ3be/icVBNcfMgydvvYE+zfoLd77l60uXvxJ86FgVpHF5XBiD6AM
-	0x3Z/qDZ8DIG2wVialf7+kMS5tgYTU9fpywFGKg==
-X-Google-Smtp-Source: AGHT+IHHz8Cr6VTmIusVTwt1IY2wWXjjxXJuyGY5S7lxceFUPPBU36GfG5fFHG9WIFrL0iFdylF/a642abnf9QcKd5c=
-X-Received: by 2002:a05:6512:b9c:b0:530:aeea:27e1 with SMTP id
- 2adb3069b0e04-539ab9e6cfcmr2638044e87.50.1728064792965; Fri, 04 Oct 2024
- 10:59:52 -0700 (PDT)
+	s=arc-20240116; t=1728065953; c=relaxed/simple;
+	bh=VExMiYD7TNrlptRw+fpX3Jnj1phEK2IPtfjJxvhOSVQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ks6/EtzfkbaEsU2GyF4/hD7qZbUCbb53lcuG7REHx3fyzLC7cdx3krwXrO8SQC7o3z9B6CCp0xPu7L+jcyDfRtZnXi6iUYGThvEuylrRQZgDXtJkJJjaGqJ731EK5K1MrliEXozP0fVn47F+C5Ap4V0CgivLdKOwNv61ABs5bHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8NPC3gr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E321FC4CEC6;
+	Fri,  4 Oct 2024 18:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728065952;
+	bh=VExMiYD7TNrlptRw+fpX3Jnj1phEK2IPtfjJxvhOSVQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r8NPC3gr304yDh4Nppc4xnZJ9miG/aoOqS4CnBxSnGJ4NDUj85Jb6K2boEfgbDiPw
+	 FcfiV9/sR60aSYw96WQJJolbrgJAYnYJndMOvtwjNdS9ueausfW6xcub6mJfNqhPC3
+	 grVqyn4hd6E6VLhsQ0O2PuEBf7+r676aiHhjWX6BJ6Bm7hxgpKeZMYWcAZXLJSAvnN
+	 xnNo1CjZObVLeZbxr2FPA/X6mWkJ/JOO6Xp4Zb3Ee8+MezVqRt1IDD8sIx0Bko+3HR
+	 qjJ2pVQsu/jcYd3hHzvVd71wfveoXnED3yoiFavBzVgScl/Fsj7ztNdcqiWCCuRo7N
+	 YldMjtp5PzvYQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: WangYuli <wangyuli@uniontech.com>,
+	SiyuLi <siyuli@glenfly.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	pierre-louis.bossart@linux.dev,
+	peter.ujfalusi@linux.intel.com,
+	maarten.lankhorst@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	rsalvaterra@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.11 24/76] PCI: Add function 0 DMA alias quirk for Glenfly Arise chip
+Date: Fri,  4 Oct 2024 14:16:41 -0400
+Message-ID: <20241004181828.3669209-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241004181828.3669209-1-sashal@kernel.org>
+References: <20241004181828.3669209-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004125227.46514-1-brgl@bgdev.pl> <rog6wbda7rdk6rebjyprnofgz4twzpg6kt4pnmeap4m4hga532@3ffxora5yutf>
-In-Reply-To: <rog6wbda7rdk6rebjyprnofgz4twzpg6kt4pnmeap4m4hga532@3ffxora5yutf>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 4 Oct 2024 19:59:41 +0200
-Message-ID: <CAMRc=MekMuV6ULeX_x8mgQiL=XoHuH3PrJLihqucWqowN-YRLQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI/pwrctl: pwrseq: abandon probe on pre-pwrseq device-trees
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Johan Hovold <johan@kernel.org>, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.11.2
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 4, 2024 at 7:31=E2=80=AFPM Bjorn Andersson <andersson@kernel.or=
-g> wrote:
->
-> >
-> > +     /*
-> > +      * Old device trees for some platforms already define wifi nodes =
-for
-> > +      * the WCN family of chips since before power sequencing was adde=
-d
-> > +      * upstream.
-> > +      *
-> > +      * These nodes don't consume the regulator outputs from the PMU a=
-nd
-> > +      * if we allow this driver to bind to one of such "incomplete" no=
-des,
-> > +      * we'll see a kernel log error about the indefinite probe deferr=
-al.
-> > +      *
-> > +      * Let's check the existence of the regulator supply that exists =
-on all
-> > +      * WCN models before moving forward.
-> > +      *
-> > +      * NOTE: If this driver is ever used to support a device other th=
-an
-> > +      * a WCN chip, the following lines should become conditional and =
-depend
-> > +      * on the compatible string.
->
-> What do you mean "is ever used ... other than WCN chip"?
->
+From: WangYuli <wangyuli@uniontech.com>
 
-This driver was released as part of v6.11 and so far (until v6.12) is
-only used to support the WCN chips. That's not to say that it cannot
-be extended to support more hardware. I don't know how to put it in
-simpler words.
+[ Upstream commit 9246b487ab3c3b5993aae7552b7a4c541cc14a49 ]
 
-> This driver and the power sequence framework was presented as a
-> completely generic solution to solve all kinds of PCI power sequence
-> problems - upon which the WCN case was built.
->
+Add DMA support for audio function of Glenfly Arise chip, which uses
+Requester ID of function 0.
 
-I never presented anything as "completely generic". You demanded that
-I make it into a miraculous catch-all solution. I argued that there's
-no such thing and this kind of attitude is precisely why it's so hard
-to get anything done in the kernel. I made it *generic enough* and we
-can cross any bridge requiring new features when we get to it. This is
-why we have no stable APIs in the kernel! And why every long-lived
-user-space library is at major API version 2 or 3. You can never
-possibly get *everything* right.
+Link: https://lore.kernel.org/r/CA2BBD087345B6D1+20240823095708.3237375-1-wangyuli@uniontech.com
+Signed-off-by: SiyuLi <siyuli@glenfly.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+[bhelgaas: lower-case hex to match local code, drop unused Device IDs]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/quirks.c      | 4 ++++
+ include/linux/pci_ids.h   | 2 ++
+ sound/pci/hda/hda_intel.c | 2 +-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-Also: there's a big difference between the framework and this driver.
-A driver is just a consumer of the larger framework. We could possibly
-make it WCN-specific and create a new one for QPS615 (even if it was
-to use pwrseq as well) instead of cramming a solution for every
-possible corner case into a single compilation unit.
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index a2ce4e08edf5a..cc6c82c3bd3d0 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4246,6 +4246,10 @@ static void quirk_dma_func0_alias(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe832, quirk_dma_func0_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
+ 
++/* Some Glenfly chips use function 0 as the PCIe Requester ID for DMA */
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, 0x3d40, quirk_dma_func0_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_GLENFLY, 0x3d41, quirk_dma_func0_alias);
++
+ static void quirk_dma_func1_alias(struct pci_dev *dev)
+ {
+ 	if (PCI_FUNC(dev->devfn) != 1)
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index e388c8b1cbc27..2c94d4004dd50 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2661,6 +2661,8 @@
+ #define PCI_DEVICE_ID_DCI_PCCOM8	0x0002
+ #define PCI_DEVICE_ID_DCI_PCCOM2	0x0004
+ 
++#define PCI_VENDOR_ID_GLENFLY		0x6766
++
+ #define PCI_VENDOR_ID_INTEL		0x8086
+ #define PCI_DEVICE_ID_INTEL_EESSC	0x0008
+ #define PCI_DEVICE_ID_INTEL_HDA_CML_LP	0x02c8
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 97d33a48ff17c..c98b1821b0620 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2679,7 +2679,7 @@ static const struct pci_device_id azx_ids[] = {
+ 	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS |
+ 	  AZX_DCAPS_PM_RUNTIME },
+ 	/* GLENFLY */
+-	{ PCI_DEVICE(0x6766, PCI_ANY_ID),
++	{ PCI_DEVICE(PCI_VENDOR_ID_GLENFLY, PCI_ANY_ID),
+ 	  .class = PCI_CLASS_MULTIMEDIA_HD_AUDIO << 8,
+ 	  .class_mask = 0xffffff,
+ 	  .driver_data = AZX_DRIVER_GFHDMI | AZX_DCAPS_POSFIX_LPIB |
+-- 
+2.43.0
 
-> In fact, if I read this correctly, the second user of the power sequence
-> implementation (the QPS615, proposed in [1]), would break if this check
-> is added.
->
-
-Is it queued for v6.13 yet? If not, then we make no guarantees. A
-regression is when something upstream stops working, not when
-yet-unmerged patches from the list do. Have you really never had to
-modify existing code to accommodate new one?
-
-This is a fix that needs to go into v6.12 and be backported to v6.11.
-Hence a simple patch. For v6.13 we can easily extend the match data to
-become a structure indicating whether we should do the check or not.
-That's a really simple change too. But it would grow the fix
-needlessly.
-
-> Add to this that your colleagues are pushing people to implement simple
-> power supplies for M.2-connected devices into this framework - which I
-> can only assume would trip on this as well (the one supply pin in a M.2.
-> connector isn't named "vddaon").
->
-> [1] https://lore.kernel.org/all/20240803-qps615-v2-3-9560b7c71369@quicinc=
-.com/
->
-
-I'm not sure what exactly you're referring to here.
-
-Bart
 
