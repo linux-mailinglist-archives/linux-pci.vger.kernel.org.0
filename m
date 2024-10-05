@@ -1,221 +1,232 @@
-Return-Path: <linux-pci+bounces-13879-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13880-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B212B9913D6
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Oct 2024 03:55:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B8C7991424
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Oct 2024 05:43:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C4181F2388D
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Oct 2024 01:55:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63FCE1C21E8D
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Oct 2024 03:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19B9A171BB;
-	Sat,  5 Oct 2024 01:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 868BC211C;
+	Sat,  5 Oct 2024 03:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ao9Py+r1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nlYsBIe3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2799D322B;
-	Sat,  5 Oct 2024 01:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE29231C96
+	for <linux-pci@vger.kernel.org>; Sat,  5 Oct 2024 03:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728093300; cv=none; b=Kyf2Kz+0c6mjJmSZcCLeWL+zoe0Aj+wx0thBtSt2jz+HN4dOzvC5ZjH6V841r86M13+wnhOqVZHn+8BaoXiAIb9EGvurZkK5Uk0FIit8Hi4yyCPz52IsOrNmv4eFu+CYYFhUS9BTyekxIAKOPMikAorF53rZts74gUIvgI9LbXE=
+	t=1728099776; cv=none; b=ErR6ogglDBImo+qPixjsrKQE8P7NkI7jzd8z5+43raBIjdMHnOqDxnQpe5g4jLLteBfVVtSbSAGlzHnYzz1WRLLn8I1V6trNGOUyn9rUPBSBPHOjgEtbdBo5+jMjtz+kO3u8AmCeE60KAEcpt1O2krKDVCR4k1DbXlnWjwBSuF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728093300; c=relaxed/simple;
-	bh=uXRVWVG114f3/9yWUkqrx/Xg92Pkui3oaEXL/RgQMY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AT5vbHRdk5aMLReESBncPhzpJISpE0mK83YWlV2C/Kn4jtQBRmhvjhu6rHrd1Rd6KVUF7S7ia+ueRzLAuzwoS9GTTw3x2KYtq37PLrU3WyX6P7AMsoNmaAs3lKqNJweHrIdP8wd/sr/5kwTCI5EfXOn43Nv2zQr9t5FtcWMuRU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ao9Py+r1; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1728099776; c=relaxed/simple;
+	bh=sQ4QvubPfcFAh9hKCQWimvNQJ9ADfGi3DQ+bgw6svsY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=BO107PozvPO5N3cBN5nW1YjHnldXIDPY5SPEgYWdax/G6KpWs8Fhp9+osYkruEBvqqu3fXpLIoqthXjcwll/87TH9QvG+t0sKVCCtaoMOAaiXvvzKxmZVhfELoaDnJxVvsWrd/S7YPI3QOBJiaYWHgmTzatOzpBLQlxFboPLJZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nlYsBIe3; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728093297; x=1759629297;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uXRVWVG114f3/9yWUkqrx/Xg92Pkui3oaEXL/RgQMY0=;
-  b=Ao9Py+r1zsvQ36BTg4jeQNu1LdJdPrT9tLQw0sa09Nx2hfY9SfFXFztf
-   3lnpkUGczFQWXuV6b7zUfAR5Q8nmp+1IzGnKfaSLKYhB0Q3YWY9wi3uK9
-   7/9EFM6xvBKZVspMXIQVTdg2gXbvZvYKaUpPpqe9UDLKSDH6k9qM1XesU
-   cW0B888mANCNAOVxkuOwZajP7AHlMYKUHVyUPXKo8uuJUjRn3xepwxhbr
-   oiJl0S/C1QJsqZn8PxfRylVFnGKiWuU1Hg+zVR2ApXRuZxE1KlOYmfzBD
-   cDgT3tfjBDKbuRBGqfnU/IaVIHi+vY9jQf29WIb2myVLO5cI+YBuFIc4d
-   w==;
-X-CSE-ConnectionGUID: pT5H4Li2S6eMNXxq3wAOxA==
-X-CSE-MsgGUID: ymvFZxSAQiWyx9sk6lW+kQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="30209802"
+  t=1728099775; x=1759635775;
+  h=date:from:to:cc:subject:message-id;
+  bh=sQ4QvubPfcFAh9hKCQWimvNQJ9ADfGi3DQ+bgw6svsY=;
+  b=nlYsBIe3eqrLeDlLBWZnCZIGo5ZLYNVj3h8pBAUX8azb/ESC9Qkp+ndH
+   v51dn2wJ0KwZtYlIokQtaGLDJILy4ZfUv8DLaB4mq/nq6E530+6P+y5V5
+   UfYmjhJ23eXFtx0jDZ3Rtcrgo8zwFyavF+LV/ZjRqINFe0h64doU3YmN6
+   wGtjUbwLXkR2kJOJHS9r2/VLkLuBbKdDg0nV1HW5p2rYcITOGECQjJJIb
+   8OC4xpssvCUUOm5LyeuNncOZGnKM3dPM6bahJ2DpyBXhQJaQVXE0qvbcK
+   qNmtTIoU9UxIFpDBsLro1iAJ28DId4z5k5Lwc5q8YmNWS1IzuL2MnYzuB
+   A==;
+X-CSE-ConnectionGUID: PpQ/KzH6QZe7bKxeIyE+HQ==
+X-CSE-MsgGUID: UJltJqVES96eRPdLTWlsIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="27463252"
 X-IronPort-AV: E=Sophos;i="6.11,179,1725346800"; 
-   d="scan'208";a="30209802"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 18:54:56 -0700
-X-CSE-ConnectionGUID: dq26sFVKRNOHr4dJL9jIYA==
-X-CSE-MsgGUID: pHBLfBJjQk2TiDi2g3fVEA==
+   d="scan'208";a="27463252"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 20:42:54 -0700
+X-CSE-ConnectionGUID: gfVzT9HbQXeUN1g5yTB4AA==
+X-CSE-MsgGUID: 9xBiLd9dRbGvtYNtNv93Ow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,179,1725346800"; 
-   d="scan'208";a="75214238"
+   d="scan'208";a="79664593"
 Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 04 Oct 2024 18:54:49 -0700
+  by orviesa005.jf.intel.com with ESMTP; 04 Oct 2024 20:42:53 -0700
 Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1swu0N-0002RI-13;
-	Sat, 05 Oct 2024 01:54:47 +0000
-Date: Sat, 5 Oct 2024 09:54:36 +0800
+	id 1swvgx-0002Wc-0i;
+	Sat, 05 Oct 2024 03:42:51 +0000
+Date: Sat, 05 Oct 2024 11:41:58 +0800
 From: kernel test robot <lkp@intel.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	iommu@lists.linux.dev, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	virtualization@lists.linux.dev
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	catalin.marinas@arm.com, will@kernel.org, luto@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
-	daniel.lezcano@linaro.org, joro@8bytes.org, robin.murphy@arm.com,
-	davem@davemloft.net, edumazet@google.com
-Subject: Re: [PATCH 5/5] hyperv: Use hvhdk.h instead of hyperv-tlfs.h in
- Hyper-V code
-Message-ID: <202410050921.0o9FH5Ai-lkp@intel.com>
-References: <1727985064-18362-6-git-send-email-nunodasneves@linux.microsoft.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ d219adbfc83a711c2d51c82dda79e22cc51dcfac
+Message-ID: <202410051145.ITPEh7hC-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1727985064-18362-6-git-send-email-nunodasneves@linux.microsoft.com>
 
-Hi Nuno,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: d219adbfc83a711c2d51c82dda79e22cc51dcfac  Merge branch 'pci/misc'
 
-kernel test robot noticed the following build errors:
+elapsed time: 1778m
 
-[auto build test ERROR on tip/x86/core]
-[also build test ERROR on arm64/for-next/core kvm/queue linus/master v6.12-rc1 next-20241004]
-[cannot apply to kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 139
+configs skipped: 3
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-Das-Neves/hyperv-Move-hv_connection_id-to-hyperv-tlfs-h/20241004-035418
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/1727985064-18362-6-git-send-email-nunodasneves%40linux.microsoft.com
-patch subject: [PATCH 5/5] hyperv: Use hvhdk.h instead of hyperv-tlfs.h in Hyper-V code
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20241005/202410050921.0o9FH5Ai-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project fef3566a25ff0e34fb87339ba5e13eca17cec00f)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241005/202410050921.0o9FH5Ai-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410050921.0o9FH5Ai-lkp@intel.com/
+tested configs:
+alpha                             allnoconfig    gcc-13.3.0
+alpha                            allyesconfig    clang-20
+alpha                            allyesconfig    gcc-13.3.0
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                     haps_hs_smp_defconfig    gcc-13.2.0
+arc                     nsimosci_hs_defconfig    gcc-13.2.0
+arc                           tb10x_defconfig    gcc-13.2.0
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    clang-20
+arm                              allyesconfig    clang-20
+arm                                 defconfig    gcc-14.1.0
+arm                      integrator_defconfig    gcc-13.2.0
+arm                           omap1_defconfig    gcc-13.2.0
+arm                           sama7_defconfig    gcc-13.2.0
+arm                         socfpga_defconfig    gcc-13.2.0
+arm                        spear3xx_defconfig    gcc-13.2.0
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-13.2.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             alldefconfig    gcc-13.2.0
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20241005    clang-18
+i386        buildonly-randconfig-002-20241005    clang-18
+i386        buildonly-randconfig-003-20241005    clang-18
+i386        buildonly-randconfig-004-20241005    clang-18
+i386        buildonly-randconfig-005-20241005    gcc-12
+i386        buildonly-randconfig-006-20241005    gcc-12
+i386                                defconfig    clang-18
+i386                  randconfig-001-20241005    gcc-11
+i386                  randconfig-002-20241005    clang-18
+i386                  randconfig-003-20241005    gcc-12
+i386                  randconfig-004-20241005    clang-18
+i386                  randconfig-005-20241005    clang-18
+i386                  randconfig-006-20241005    clang-18
+i386                  randconfig-011-20241005    gcc-12
+i386                  randconfig-012-20241005    clang-18
+i386                  randconfig-013-20241005    clang-18
+i386                  randconfig-014-20241005    gcc-12
+i386                  randconfig-015-20241005    gcc-12
+i386                  randconfig-016-20241005    gcc-12
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                                defconfig    gcc-14.1.0
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+nios2                         3c120_defconfig    gcc-13.2.0
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    gcc-14.1.0
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    gcc-14.1.0
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    gcc-14.1.0
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                       eiger_defconfig    gcc-13.2.0
+powerpc                      pasemi_defconfig    gcc-13.2.0
+powerpc                     tqm8540_defconfig    gcc-13.2.0
+riscv                            allmodconfig    clang-20
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    gcc-14.1.0
+riscv                            allyesconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    clang-20
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                   sh7724_generic_defconfig    gcc-13.2.0
+sh                        sh7763rdp_defconfig    gcc-13.2.0
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-17
+um                               allyesconfig    clang-20
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64      buildonly-randconfig-001-20241005    gcc-12
+x86_64      buildonly-randconfig-002-20241005    gcc-12
+x86_64      buildonly-randconfig-003-20241005    gcc-12
+x86_64      buildonly-randconfig-004-20241005    gcc-12
+x86_64      buildonly-randconfig-005-20241005    gcc-12
+x86_64      buildonly-randconfig-006-20241005    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-18
+x86_64                randconfig-001-20241005    gcc-12
+x86_64                randconfig-002-20241005    gcc-12
+x86_64                randconfig-003-20241005    gcc-12
+x86_64                randconfig-004-20241005    gcc-12
+x86_64                randconfig-005-20241005    gcc-12
+x86_64                randconfig-006-20241005    gcc-12
+x86_64                randconfig-011-20241005    gcc-12
+x86_64                randconfig-012-20241005    gcc-12
+x86_64                randconfig-013-20241005    gcc-12
+x86_64                randconfig-014-20241005    gcc-12
+x86_64                randconfig-015-20241005    gcc-12
+x86_64                randconfig-016-20241005    gcc-12
+x86_64                randconfig-071-20241005    gcc-12
+x86_64                randconfig-072-20241005    gcc-12
+x86_64                randconfig-073-20241005    gcc-12
+x86_64                randconfig-074-20241005    gcc-12
+x86_64                randconfig-075-20241005    gcc-12
+x86_64                randconfig-076-20241005    gcc-12
+x86_64                               rhel-8.3    gcc-12
+x86_64                          rhel-8.3-rust    clang-18
+xtensa                            allnoconfig    gcc-14.1.0
+xtensa                  cadence_csp_defconfig    gcc-13.2.0
 
-All errors (new ones prefixed by >>):
-
-   In file included from arch/arm64/hyperv/mshyperv.c:13:
-   In file included from include/linux/acpi.h:39:
-   In file included from include/acpi/acpi_io.h:7:
-   In file included from arch/arm64/include/asm/acpi.h:14:
-   In file included from include/linux/memblock.h:12:
-   In file included from include/linux/mm.h:2228:
-   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     501 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     508 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> arch/arm64/hyperv/mshyperv.c:53:19: error: use of undeclared identifier 'HV_REGISTER_FEATURES'; did you mean 'HV_REGISTER_FEATURES_INFO'?
-      53 |         hv_get_vpreg_128(HV_REGISTER_FEATURES, &result);
-         |                          ^~~~~~~~~~~~~~~~~~~~
-         |                          HV_REGISTER_FEATURES_INFO
-   include/hyperv/hvgdk_mini.h:807:2: note: 'HV_REGISTER_FEATURES_INFO' declared here
-     807 |         HV_REGISTER_FEATURES_INFO                               = 0x00000201,
-         |         ^
->> arch/arm64/hyperv/mshyperv.c:58:19: error: use of undeclared identifier 'HV_REGISTER_ENLIGHTENMENTS'
-      58 |         hv_get_vpreg_128(HV_REGISTER_ENLIGHTENMENTS, &result);
-         |                          ^
-   5 warnings and 2 errors generated.
-
-
-vim +53 arch/arm64/hyperv/mshyperv.c
-
-410779d8d81fcf Nuno Das Neves 2024-03-07  30  
-9bbb888824e38c Michael Kelley 2021-08-04  31  static int __init hyperv_init(void)
-9bbb888824e38c Michael Kelley 2021-08-04  32  {
-9bbb888824e38c Michael Kelley 2021-08-04  33  	struct hv_get_vp_registers_output	result;
-9bbb888824e38c Michael Kelley 2021-08-04  34  	u64	guest_id;
-9bbb888824e38c Michael Kelley 2021-08-04  35  	int	ret;
-9bbb888824e38c Michael Kelley 2021-08-04  36  
-9bbb888824e38c Michael Kelley 2021-08-04  37  	/*
-9bbb888824e38c Michael Kelley 2021-08-04  38  	 * Allow for a kernel built with CONFIG_HYPERV to be running in
-9bbb888824e38c Michael Kelley 2021-08-04  39  	 * a non-Hyper-V environment, including on DT instead of ACPI.
-9bbb888824e38c Michael Kelley 2021-08-04  40  	 * In such cases, do nothing and return success.
-9bbb888824e38c Michael Kelley 2021-08-04  41  	 */
-9bbb888824e38c Michael Kelley 2021-08-04  42  	if (acpi_disabled)
-9bbb888824e38c Michael Kelley 2021-08-04  43  		return 0;
-9bbb888824e38c Michael Kelley 2021-08-04  44  
-9bbb888824e38c Michael Kelley 2021-08-04  45  	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
-9bbb888824e38c Michael Kelley 2021-08-04  46  		return 0;
-9bbb888824e38c Michael Kelley 2021-08-04  47  
-9bbb888824e38c Michael Kelley 2021-08-04  48  	/* Setup the guest ID */
-d5ebde1e2b4615 Li kunyu       2022-09-28  49  	guest_id = hv_generate_guest_id(LINUX_VERSION_CODE);
-b967df6293510b Nuno Das Neves 2024-03-12  50  	hv_set_vpreg(HV_REGISTER_GUEST_OS_ID, guest_id);
-9bbb888824e38c Michael Kelley 2021-08-04  51  
-9bbb888824e38c Michael Kelley 2021-08-04  52  	/* Get the features and hints from Hyper-V */
-9bbb888824e38c Michael Kelley 2021-08-04 @53  	hv_get_vpreg_128(HV_REGISTER_FEATURES, &result);
-9bbb888824e38c Michael Kelley 2021-08-04  54  	ms_hyperv.features = result.as32.a;
-9bbb888824e38c Michael Kelley 2021-08-04  55  	ms_hyperv.priv_high = result.as32.b;
-9bbb888824e38c Michael Kelley 2021-08-04  56  	ms_hyperv.misc_features = result.as32.c;
-9bbb888824e38c Michael Kelley 2021-08-04  57  
-9bbb888824e38c Michael Kelley 2021-08-04 @58  	hv_get_vpreg_128(HV_REGISTER_ENLIGHTENMENTS, &result);
-9bbb888824e38c Michael Kelley 2021-08-04  59  	ms_hyperv.hints = result.as32.a;
-9bbb888824e38c Michael Kelley 2021-08-04  60  
-9bbb888824e38c Michael Kelley 2021-08-04  61  	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, hints 0x%x, misc 0x%x\n",
-9bbb888824e38c Michael Kelley 2021-08-04  62  		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
-9bbb888824e38c Michael Kelley 2021-08-04  63  		ms_hyperv.misc_features);
-9bbb888824e38c Michael Kelley 2021-08-04  64  
-9bbb888824e38c Michael Kelley 2021-08-04  65  	ret = hv_common_init();
-9bbb888824e38c Michael Kelley 2021-08-04  66  	if (ret)
-9bbb888824e38c Michael Kelley 2021-08-04  67  		return ret;
-9bbb888824e38c Michael Kelley 2021-08-04  68  
-52ae076c3a9b36 Michael Kelley 2023-05-23  69  	ret = cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE, "arm64/hyperv_init:online",
-9bbb888824e38c Michael Kelley 2021-08-04  70  				hv_common_cpu_init, hv_common_cpu_die);
-9bbb888824e38c Michael Kelley 2021-08-04  71  	if (ret < 0) {
-9bbb888824e38c Michael Kelley 2021-08-04  72  		hv_common_free();
-9bbb888824e38c Michael Kelley 2021-08-04  73  		return ret;
-9bbb888824e38c Michael Kelley 2021-08-04  74  	}
-9bbb888824e38c Michael Kelley 2021-08-04  75  
-f2580a907e5c0e Michael Kelley 2024-03-18  76  	ms_hyperv_late_init();
-f2580a907e5c0e Michael Kelley 2024-03-18  77  
-9bbb888824e38c Michael Kelley 2021-08-04  78  	hyperv_initialized = true;
-9bbb888824e38c Michael Kelley 2021-08-04  79  	return 0;
-9bbb888824e38c Michael Kelley 2021-08-04  80  }
-9bbb888824e38c Michael Kelley 2021-08-04  81  
-
--- 
+--
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
