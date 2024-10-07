@@ -1,64 +1,66 @@
-Return-Path: <linux-pci+bounces-13909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF95F992358
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:03:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A5F7992362
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:12:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 771411F225E3
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:03:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E5491F22779
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 207EC4430;
-	Mon,  7 Oct 2024 04:03:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0DA27442;
+	Mon,  7 Oct 2024 04:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHAXNMHa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJzb3hlL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E8E3C2F
-	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 04:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0C73C2F;
+	Mon,  7 Oct 2024 04:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728273819; cv=none; b=P+KUCtotJP8XTR5KqjJ52eUmBCE7h5HpITxelhrdeMAEcWW1Cb5Oy/l+MLRA7Y8XyzCghMPwAKVzIkZJlDY/TfqDk0gplQw6MlemJYj8K1y5fMSxYvY37YJIuAXFlKs7XvAY8xODNrGPvR0huMnU3Y6D8vEgzidoOTa5TlgFxjM=
+	t=1728274342; cv=none; b=C0sF0SAhp19PG/alED/gIGPRNwVcK28/oxzuuZrd66ed7qTVYd6N8QMRd+5hB1WTX49qdZvy81Hw0yWvjgdrX8tG+ZYaI6NeKOXHX/aG4jQ5B+xRh5Ni7ib1bDgBP7sxCh7NlTZNzjOODhXNDnszSLFpax6HCFWTqSdQet+YGi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728273819; c=relaxed/simple;
-	bh=yx4Q/rn6pqKvqmdQqzU9Qy7oW1jSZp2YseRN8m9MKkg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GycEjsSakOIexxrcGiRn8GYRutXPVbL/o6dP2q6fcsBbwuKhHlbqZLYc1wtlO0J4veUEjwu2sfFjqX1g6wVdX6EWfxJ43OqNjva2js94B5DS3LvnHo2+YkzNUlvcB2/4qx72IUNANyw1BKFRNlIARJkoIL0WC1iXqq6Pw2iew4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHAXNMHa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3198C4CED3;
-	Mon,  7 Oct 2024 04:03:35 +0000 (UTC)
+	s=arc-20240116; t=1728274342; c=relaxed/simple;
+	bh=pBd4mpQbBt2uBbtEczYEejdQ6FSxmXUytAe+feLiGd8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qR1yGqqthxvMIPN2+k9mxm9yRD36DKSV0tWtt77GP2VQe+yxC5BFoTWxtULXtKzc/WQc4ZQB1fqqh5aZ43Zq5X+S9fbqJqp3kjMZetsqSYk8R54heNx0JE4ofsAWBqvFxgk3WF+o5SDwqTnUaSJTkcit+GZXYyIF5oODSzHdQVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJzb3hlL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCC2C4CEC6;
+	Mon,  7 Oct 2024 04:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728273817;
-	bh=yx4Q/rn6pqKvqmdQqzU9Qy7oW1jSZp2YseRN8m9MKkg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rHAXNMHaxU8cLQDlI6L10MU7XkB3OHUvzSAlXTrzQGMQv8OpX/Ni9s7zBjLmKRDZN
-	 AvZ0Ysez8ODpAE5OxpsqnOxFwHaqGFKEgUAGOQAnKYNT1ZPLNh+tccRw04sH3kA3Xy
-	 NzxScwTFRRSEGDXktohs/eEYaL6LfB+LavmdFv0kmF0RynM5x1effcf3qhKFayeiZ1
-	 13mHZavxUSLav96ABdgSGoFaWD2VX00AN6hdIoK7gFZFeg/onyAj44cYlEv271zUB2
-	 1Q0QUkZE+QIe6CKu1Ybkbcy4ldXS95mOYkGx07AM3hqk4zD0ePCP5RglemIXNfZOcQ
-	 woDjIpiZ9d/Ww==
+	s=k20201202; t=1728274342;
+	bh=pBd4mpQbBt2uBbtEczYEejdQ6FSxmXUytAe+feLiGd8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gJzb3hlLIGeNwg2h5HQYF02ldUMLXclzAE+Y4MITxeM/pPn8bRL3cvs0csIHhnVtm
+	 sR+NvRGwHIabPnsPiW0rWCzwtb3qxChjHWciLiokc7Ocjt7MwoKtENUugCVluNKp29
+	 /abhzrx+IFGUJXEKWigGqBI56ugP70nD/Ke79PtZ0zTIptxwkLGfbDZ8tlWZuEkbO+
+	 eMBWKI+V0OCV2Puhaa/u0vzJ6BLVIjJamCI3G7dx5zaJIsIG4g1/fX1oxEVpFjRaF0
+	 jVwhM+AF6uf6NmyM+Ei4q0kd8PsXw2LCIULfw8FAHte+NUBdvuWuJLewVk+scb0R/u
+	 uRG1C1syfYtgA==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-pci@vger.kernel.org,
 	Rob Herring <robh@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	linux-pci@vger.kernel.org
-Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v4 7/7] PCI: dwc: endpoint: Define the .map_align() controller operation
-Date: Mon,  7 Oct 2024 13:03:19 +0900
-Message-ID: <20241007040319.157412-8-dlemoal@kernel.org>
+Subject: [PATCH v3 00/12] 
+Date: Mon,  7 Oct 2024 13:12:06 +0900
+Message-ID: <20241007041218.157516-1-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241007040319.157412-1-dlemoal@kernel.org>
-References: <20241007040319.157412-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,59 +69,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function dw_pcie_prog_outbound_atu() used to program outbound ATU
-entries for mapping RC PCI addresses to local CPU addresses does not
-allow PCI addresses that are not aligned to the value of region_align
-of struct dw_pcie. This value is determined from the iATU hardware
-registers during probing of the iATU (done by dw_pcie_iatu_detect()).
-This value is thus valid for all DWC PCIe controllers, and valid
-regardless of the hardware configuration used when synthesizing the
-DWC PCIe controller.
+This patch series is the second part of the former version 2 of the
+patch series "Improve PCI memory mapping API". This second part is split
+out as it deals solely with the rockchip/rk3399 PCI endpoint controller
+driver.
 
-Handle this PCI address alignment constraint by defining the endpoint
-controller .map_align() operation to calculate a mapping size and the
-offset into the mapping based on the requested RC PCI address and size
-to map.
+This series is organized as follows:
+ - Patch 1 fixes the rockchip ATU programming
+ - Patch 2, 3 and 4 introduce small code improvments
+ - Patch 5 implements the .map_align() operation to make the rk3399
+   endpoint controller driver fully functional
+ - Patch 6, 7 and 8 refactor the driver code to make it more readable
+ - Patch 9 introduces the .stop() endpoint controller operation to
+   correctly disable the endpopint controller after use
+ - Patch 10 improves link training
+ - Patch 11 and 12 implement handling of the #PERST signal
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Changes from v2:
+ - Split the patch series
+ - Corrected patch 11 to add the missing "maxItem"
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 43ba5c6738df..501e527c188e 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -268,6 +268,20 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
- 	return -EINVAL;
- }
- 
-+static int dw_pcie_ep_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-+				struct pci_epc_map *map)
-+{
-+	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	size_t mask = pci->region_align - 1;
-+
-+	map->map_pci_addr = map->pci_addr & ~mask;
-+	map->map_ofst = map->pci_addr & mask;
-+	map->map_size = ALIGN(map->map_ofst + map->pci_size, ep->page_size);
-+
-+	return 0;
-+}
-+
- static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 				  phys_addr_t addr)
- {
-@@ -444,6 +458,7 @@ static const struct pci_epc_ops epc_ops = {
- 	.write_header		= dw_pcie_ep_write_header,
- 	.set_bar		= dw_pcie_ep_set_bar,
- 	.clear_bar		= dw_pcie_ep_clear_bar,
-+	.map_align		= dw_pcie_ep_map_align,
- 	.map_addr		= dw_pcie_ep_map_addr,
- 	.unmap_addr		= dw_pcie_ep_unmap_addr,
- 	.set_msi		= dw_pcie_ep_set_msi,
+Changes from v1:
+ - Changed pci_epc_check_func() to pci_epc_function_is_valid() in patch
+   1.
+ - Removed patch "PCI: endpoint: Improve pci_epc_mem_alloc_addr()"
+   (former patch 2 of v1)
+ - Various typos cleanups all over. Also fixed some blank space
+   indentation.
+ - Added review tags
+
+Damien Le Moal (11):
+  PCI: rockchip-ep: Fix address translation unit programming
+  PCI: rockchip-ep: Use a macro to define EP controller .align feature
+  PCI: rockchip-ep: Improve rockchip_pcie_ep_unmap_addr()
+  PCI: rockchip-ep: Improve rockchip_pcie_ep_map_addr()
+  PCI: rockchip-ep: Implement the .map_align() controller operation
+  PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations
+  PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() MSI-X hiding
+  PCI: rockchip-ep: Refactor endpoint link training enable
+  PCI: rockship-ep: Introduce rockchip_pcie_ep_stop()
+  PCI: rockchip-ep: Improve link training
+  PCI: rockchip-ep: Handle PERST# signal in endpoint mode
+
+Wilfred Mallawa (1):
+  dt-bindings: pci: rockchip,rk3399-pcie-ep: Add ep-gpios property
+
+ .../bindings/pci/rockchip,rk3399-pcie-ep.yaml |   4 +
+ drivers/pci/controller/pcie-rockchip-ep.c     | 392 +++++++++++++++---
+ drivers/pci/controller/pcie-rockchip.c        |  17 +-
+ drivers/pci/controller/pcie-rockchip.h        |  22 +
+ 4 files changed, 358 insertions(+), 77 deletions(-)
+
 -- 
 2.46.2
 
