@@ -1,317 +1,189 @@
-Return-Path: <linux-pci+bounces-13922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 041D999237A
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:13:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 367249923A4
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:34:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 789801F22942
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:13:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 587AC1C20BD4
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3795173501;
-	Mon,  7 Oct 2024 04:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C4A61FCE;
+	Mon,  7 Oct 2024 04:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDm/Jb96"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NCoARZm4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102102AF1B;
-	Mon,  7 Oct 2024 04:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A103910A1C
+	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 04:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728274368; cv=none; b=qw5eRXYHQk6BsfKt+Bky/AtrrZQ0/OFrOnEnS5+5lqV5ls0sgbeCKFycd8YQfBl5GmIcqyy5ZZX/Y4bvYzuqJUW3IFoIp6qmqh7XK9+lFBycTMJl4gIgF+8zQANLHwyRRrjGp7Ne7XGgIlVbLdxugr5OnTs2OHLcKo6hthZxNyM=
+	t=1728275672; cv=none; b=DIEjah7H/8ow7fVgzakPgtT+S0VBaizSe2GkwUz7EoLWIMdjdlXP9DnqiZz0CjUNejxKfAd6tIjHe5KsMKVEys/L6IRhq0s9oMwlP2QUAlDmcCzKKIM8MiMQnL76IJNzMPn6hy/L04gz0rVOtq2IBqOI/erpMpEGKo1R9sitkn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728274368; c=relaxed/simple;
-	bh=mg7tQ5KHeQvXnXHQ9fqxsTpUTZBgoStFDRnvXossBYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KuaokhRuWvFlDjYveRgh9qOzGE3bEVylP42iZDwxwjVdBhp+dYSWIxkM7rH+Tp2ortJzoBXGRT2q6TlN9/2rKafIDiAO6ICUyQcqKkQMWnSqm6CtrN9ATGWxCOGHfL7JQJCIE/Q6V7Sx/ILCPMOT33JQ4mLSAE+5AonHOgHVovI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDm/Jb96; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2051CC4CED0;
-	Mon,  7 Oct 2024 04:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728274367;
-	bh=mg7tQ5KHeQvXnXHQ9fqxsTpUTZBgoStFDRnvXossBYY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nDm/Jb96cY5akeCsymnQsrfII208DE8ciggBFC/LaNODBkjg6dCOUGIFGN7v60SSp
-	 VXwvlE/xHnRSLlsuuXEvEhGZ6ye0MWmLz05dRTY71qX34VAM1J+ZtI4qWu36eYq8Ci
-	 HbIcQSQG43ZkWhxtfCBh49mUQjH5bmbGzWom5TLzhWYuT2p0iv/kE32zuwB+dJ2vgQ
-	 n1/Yob8NaeBegNOEAzyGkZlzYkiTloE5+Sg/9NE+EptO6T+ikb0LaWMhBg90nDkV/9
-	 oVuX0qaL4VqUMNDuZIoME0Ey7koWVkGw7AaUOoTgcbLqvEoM2SvDRazW+cMa3aUUne
-	 LcW+/vYMkzh/Q==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-pci@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v3 12/12] PCI: rockchip-ep: Handle PERST# signal in endpoint mode
-Date: Mon,  7 Oct 2024 13:12:18 +0900
-Message-ID: <20241007041218.157516-13-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241007041218.157516-1-dlemoal@kernel.org>
-References: <20241007041218.157516-1-dlemoal@kernel.org>
+	s=arc-20240116; t=1728275672; c=relaxed/simple;
+	bh=xtVT0IFCi2Qto8kpSQiCGlBpvaMpt3JFkS6nS7bOX5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m+ROxLUZjO/fuzsFNmBPm+BQZIuAI+mNwpVjakl+f/313SHK0Iqvu4D/LvFCbyHOPvPAWUiJj1Te9ASLo+ooq1UvtO9PRynVTs12bvlS24RMehG8VF4JAaUh/07KVAUASLVzkZK8EED3oESUmjeFFSH/fDAiI1gVx6OpEFqBdPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NCoARZm4; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com [209.85.219.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C3EA33F1BD
+	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 04:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1728275661;
+	bh=RKS/f2MF9K/DRHRfB0v5ZmIcK+e+Ci2Bwh5D2AMKYp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=NCoARZm4YObPF2EsJ5tKPaNNxW2XDvdETMAB1/B8zTiBbu1HrsOuzMksk1j+G/nB2
+	 hMfRMQYjk95NVLBDFHpjhwso0pAJA0AHJje8qRQAt+SL6jdPwPNkYoac9m1GxZq25u
+	 qe7nVrUCpw5PkSMCChi3KmHjEgc6oBEQjEWfag+L7tXX9Vx4mTi8cn/NCJNv14ubfO
+	 ZQVhKgMaKF+Q1LhvzzUjJG5apymS0IplC0rLbOjurOFBj9FoIx9iWcdtHXciS72YGK
+	 tUcD5Sy2PTkZFyKmhVUZpUAzyQHoQX6xR5/VEe92tH5nlIVdDShIZ74FZ79F0MKr+A
+	 oR6aCrHgo7P2w==
+Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-e165fc5d94fso6139366276.2
+        for <linux-pci@vger.kernel.org>; Sun, 06 Oct 2024 21:34:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728275660; x=1728880460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RKS/f2MF9K/DRHRfB0v5ZmIcK+e+Ci2Bwh5D2AMKYp8=;
+        b=iwMSIZ2GaqKU+Alb88HCa3S04fo6oITbchhXhPZ+E7w92vyBfTtPxDoO49gdJkts0p
+         qAdZ99BfnKZTePgRVkPQxlhrLDJPDP3UOpGDPeu3jyNbwCNSAbO6NaDL8nuR4FbRokCa
+         3jEetjV7mbjpFs0g181r5fq6WH44uLUTm7YMBM91e8yEyXpaeddfnuDftbaATq2JQbcN
+         KlIDnuxnM++VPel8etbuDAWXAybHZEigEulEEUz2Kz8uwFcpTaMWZFNq7chuEUbcey0s
+         4YKAQOqfuJm2hEgnqZlqVoTTq7vVuyDF9O9tR1jVlu0rTfVpYJdVn3VWfS+W22dxhVd9
+         ZyKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOFsCWmViioGxwKPxUTjcMrMCn7T4Kl1uIvxGM3JWGzk3GRL+ym4L/kWFOuZeeFKlWD5LRO53L6lM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfVzDPTS1fAVBmt3BTfC5i6TmPzfmBZgkSELM4AFSRFeKpso1T
+	3i/xxIcJTW5SW00YydLLO6O6b3WsGekqbxKfM/UFPq9sMfiovUN/dne9agKGVcwU0tQFAWQc6lz
+	vAONUDG/Ql8Iq7rYCIs6aZJrXUIPwS5YgC2qskx3ZV9VFpTzJc5sf0V8xYKGTMjEgKq+jRqx8jW
+	KTpw1ZhMHMiUo22YATDHSvBYC2oPEEnyIh1P4nOGiu3EX01akg
+X-Received: by 2002:a05:6902:2388:b0:e22:5b1b:f1f1 with SMTP id 3f1490d57ef6-e28936d681cmr7110372276.22.1728275660431;
+        Sun, 06 Oct 2024 21:34:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHi3j06zDsu+UMiFSC0YAaoU5Gwv3GT9ajM093Bdzuvg/07VdqPhd1wdUbzIXoRnTEH9VD+2v/cf2IOe3HLgE=
+X-Received: by 2002:a05:6902:2388:b0:e22:5b1b:f1f1 with SMTP id
+ 3f1490d57ef6-e28936d681cmr7110367276.22.1728275660149; Sun, 06 Oct 2024
+ 21:34:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240926125909.2362244-1-acelan.kao@canonical.com>
+ <ZvVgTGVSco0Kg7H5@wunner.de> <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
+ <ZvZ61srt3QAca2AI@wunner.de> <Zvf7xYEA32VgLRJ6@wunner.de> <CAFv23QkwxmT7qrnbfEpJNN+mnevNAor6Dk7efvYNOdjR9tGyrw@mail.gmail.com>
+ <ZvvW1ua2UjwHIOEN@wunner.de> <ZvvXDQSBRZMEI2EX@wunner.de>
+In-Reply-To: <ZvvXDQSBRZMEI2EX@wunner.de>
+From: AceLan Kao <acelan.kao@canonical.com>
+Date: Mon, 7 Oct 2024 12:34:09 +0800
+Message-ID: <CAFv23Q=4O5czQaNw2mEnwkb9LQfODfQDeW+qQD14rfdeVEwjwA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
+ during suspend
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, the Rockchip PCIe endpoint controller driver does not handle
-PERST# signal, which prevents detecting when link training should
-actually be started or if the host reset the device. This however can
-be supported using the controller ep_gpio, set as an input GPIO for
-endpoint mode.
+Lukas Wunner <lukas@wunner.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=881=E6=97=A5=
+ =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:03=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Tue, Oct 01, 2024 at 01:02:46PM +0200, Lukas Wunner wrote:
+> > On Mon, Sep 30, 2024 at 09:31:53AM +0800, AceLan Kao wrote:
+> > > Lukas Wunner <lukas@wunner.de> 2024 9 28 8:51:
+> > > > -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
+> > > > +       dsn =3D pci_get_dsn(pdev);
+> > > > +       if (!PCI_POSSIBLE_ERROR(dsn) &&
+> > > > +           dsn !=3D ctrl->dsn)
+> > > >                 return true;
+> > >
+> > > In my case, the pciehp_device_replaced() returns true from this final=
+ check.
+> > > And these are the values I got
+> > > dsn =3D 0x00000000, ctrl->dsn =3D 0x7800AA00
+> > > dsn =3D 0x00000000, ctrl->dsn =3D 0x21B7D000
+> >
+> > Ah because pci_get_dsn() returns 0 if the device is gone.
+> > Below is a modified patch which returns false in that case.
+>
+> Sorry, forgot to include the patch:
+>
+> -- >8 --
+>
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pcie=
+hp_core.c
+> index ff458e6..957c320 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -287,24 +287,32 @@ static int pciehp_suspend(struct pcie_device *dev)
+>  static bool pciehp_device_replaced(struct controller *ctrl)
+>  {
+>         struct pci_dev *pdev __free(pci_dev_put);
+> +       u64 dsn;
+>         u32 reg;
+>
+>         pdev =3D pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0,=
+ 0));
+>         if (!pdev)
+> +               return false;
+> +
+> +       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) =3D=3D 0 &&
+> +           !PCI_POSSIBLE_ERROR(reg) &&
+> +           reg !=3D (pdev->vendor | (pdev->device << 16)))
+>                 return true;
+>
+> -       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
+> -           reg !=3D (pdev->vendor | (pdev->device << 16)) ||
+> -           pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
+> +       if (pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) =3D=3D =
+0 &&
+> +           !PCI_POSSIBLE_ERROR(reg) &&
+>             reg !=3D (pdev->revision | (pdev->class << 8)))
+>                 return true;
+>
+>         if (pdev->hdr_type =3D=3D PCI_HEADER_TYPE_NORMAL &&
+> -           (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) |=
+|
+> -            reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_device <=
+< 16))))
+> +           pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) =
+=3D=3D 0 &&
+> +           !PCI_POSSIBLE_ERROR(reg) &&
+> +           reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_device <<=
+ 16)))
+>                 return true;
+>
+> -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
+> +       if ((dsn =3D pci_get_dsn(pdev)) &&
+> +           !PCI_POSSIBLE_ERROR(dsn) &&
+> +           dsn !=3D ctrl->dsn)
+>                 return true;
+>
+>         return false;
+Hi Lukas,
 
-Modify the endpoint rockchip driver to get the ep_gpio and its
-associated interrupt which is serviced using a threaded IRQ with the
-function rockchip_pcie_ep_perst_irq_thread() as handler.
+Sorry for the late reply, just encountered a strong typhoon in my area
+last week and can't check this in our lab.
 
-This handler function notifies a link down event corresponding to the RC
-side asserting the PERST# signal using pci_epc_linkdown() when the gpio
-is high. Once the gpio value goes down, corresponding to the RC
-de-asserting the PERST# signal, link training is started. The polarity
-of the gpio interrupt trigger is changed from high to low after the RC
-asserted PERST#, and conversely changed from low to high after the RC
-de-asserts PERST#.
+The patched pciehp_device_replaced() returns false at the end of the
+function in my case.
+Unplug the dock which is connected with a tbt storage won't be
+considered as a replacement.
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/pci/controller/pcie-rockchip-ep.c | 118 +++++++++++++++++++++-
- drivers/pci/controller/pcie-rockchip.c    |  12 +--
- 2 files changed, 122 insertions(+), 8 deletions(-)
+But when I tried to replace the dock with the tbt storage during
+suspend, it still returned false at the end of the function like
+unplugged.
 
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index af50432525b4..c70a64c37a56 100644
---- a/drivers/pci/controller/pcie-rockchip-ep.c
-+++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -18,6 +18,7 @@
- #include <linux/sizes.h>
- #include <linux/workqueue.h>
- #include <linux/iopoll.h>
-+#include <linux/gpio/consumer.h>
- 
- #include "pcie-rockchip.h"
- 
-@@ -50,6 +51,9 @@ struct rockchip_pcie_ep {
- 	u64			irq_pci_addr;
- 	u8			irq_pci_fn;
- 	u8			irq_pending;
-+	int			perst_irq;
-+	bool			perst_asserted;
-+	bool			link_up;
- 	struct delayed_work	link_training;
- };
- 
-@@ -462,13 +466,17 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
- 
- 	rockchip_pcie_write(rockchip, cfg, PCIE_CORE_PHY_FUNC_CFG);
- 
-+	if (rockchip->ep_gpio)
-+		enable_irq(ep->perst_irq);
-+
- 	/* Enable configuration and start link training */
- 	rockchip_pcie_write(rockchip,
- 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
- 			    PCIE_CLIENT_CONF_ENABLE,
- 			    PCIE_CLIENT_CONFIG);
- 
--	schedule_delayed_work(&ep->link_training, 0);
-+	if (!rockchip->ep_gpio)
-+		schedule_delayed_work(&ep->link_training, 0);
- 
- 	return 0;
- }
-@@ -478,6 +486,11 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
- 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
- 
-+	if (rockchip->ep_gpio) {
-+		ep->perst_asserted = true;
-+		disable_irq(ep->perst_irq);
-+	}
-+
- 	cancel_delayed_work_sync(&ep->link_training);
- 
- 	/* Stop link training and disable configuration */
-@@ -540,6 +553,13 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
- 	if (!rockchip_pcie_ep_link_up(rockchip))
- 		goto again;
- 
-+	/*
-+	 * If PERST was asserted while polling the link, do not notify
-+	 * the function.
-+	 */
-+	if (ep->perst_asserted)
-+		return;
-+
- 	val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS0);
- 	dev_info(dev,
- 		 "Link UP (Negociated speed: %sGT/s, width: x%lu)\n",
-@@ -549,6 +569,7 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
- 
- 	/* Notify the function */
- 	pci_epc_linkup(ep->epc);
-+	ep->link_up = true;
- 
- 	return;
- 
-@@ -556,6 +577,94 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
- 	schedule_delayed_work(&ep->link_training, msecs_to_jiffies(5));
- }
- 
-+static void rockchip_pcie_ep_perst_assert(struct rockchip_pcie_ep *ep)
-+{
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+
-+	dev_dbg(dev, "PERST asserted, link down\n");
-+
-+	if (ep->perst_asserted)
-+		return;
-+
-+	ep->perst_asserted = true;
-+
-+	cancel_delayed_work_sync(&ep->link_training);
-+
-+	if (ep->link_up) {
-+		pci_epc_linkdown(ep->epc);
-+		ep->link_up = false;
-+	}
-+}
-+
-+static void rockchip_pcie_ep_perst_deassert(struct rockchip_pcie_ep *ep)
-+{
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+
-+	dev_dbg(dev, "PERST de-asserted, starting link training\n");
-+
-+	if (!ep->perst_asserted)
-+		return;
-+
-+	ep->perst_asserted = false;
-+
-+	/* Enable link re-training */
-+	rockchip_pcie_ep_retrain_link(rockchip);
-+
-+	/* Start link training */
-+	schedule_delayed_work(&ep->link_training, 0);
-+}
-+
-+static irqreturn_t rockchip_pcie_ep_perst_irq_thread(int irq, void *data)
-+{
-+	struct pci_epc *epc = data;
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	u32 perst = gpiod_get_value(rockchip->ep_gpio);
-+
-+	if (perst)
-+		rockchip_pcie_ep_perst_assert(ep);
-+	else
-+		rockchip_pcie_ep_perst_deassert(ep);
-+
-+	irq_set_irq_type(ep->perst_irq,
-+			 (perst ? IRQF_TRIGGER_HIGH : IRQF_TRIGGER_LOW));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+	int ret;
-+
-+	if (!rockchip->ep_gpio)
-+		return 0;
-+
-+	/* PCIe reset interrupt */
-+	ep->perst_irq = gpiod_to_irq(rockchip->ep_gpio);
-+	if (ep->perst_irq < 0) {
-+		dev_err(dev, "No corresponding IRQ for PERST GPIO\n");
-+		return ep->perst_irq;
-+	}
-+
-+	ep->perst_asserted = true;
-+	irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-+	ret = devm_request_threaded_irq(dev, ep->perst_irq, NULL,
-+					rockchip_pcie_ep_perst_irq_thread,
-+					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-+					"pcie-ep-perst", epc);
-+	if (ret) {
-+		dev_err(dev, "Request PERST GPIO IRQ failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct pci_epc_features rockchip_pcie_epc_features = {
- 	.linkup_notifier = true,
- 	.msi_capable = true,
-@@ -719,6 +828,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 	rockchip->is_rc = false;
- 	rockchip->dev = dev;
- 	INIT_DELAYED_WORK(&ep->link_training, rockchip_pcie_ep_link_training);
-+	ep->link_up = false;
- 
- 	epc = devm_pci_epc_create(dev, &rockchip_pcie_epc_ops);
- 	if (IS_ERR(epc)) {
-@@ -751,7 +861,13 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 
- 	pci_epc_init_notify(epc);
- 
-+	err = rockchip_pcie_ep_setup_irq(epc);
-+	if (err < 0)
-+		goto err_uninit_port;
-+
- 	return 0;
-+err_uninit_port:
-+	rockchip_pcie_deinit_phys(rockchip);
- err_release_resources:
- 	rockchip_pcie_ep_release_resources(ep);
- err_disable_clocks:
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 154e78819e6e..bcb1c9266c56 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -119,13 +119,11 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 		return PTR_ERR(rockchip->aclk_rst);
- 	}
- 
--	if (rockchip->is_rc) {
--		rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep",
--							    GPIOD_OUT_LOW);
--		if (IS_ERR(rockchip->ep_gpio))
--			return dev_err_probe(dev, PTR_ERR(rockchip->ep_gpio),
--					     "failed to get ep GPIO\n");
--	}
-+	rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep",
-+				rockchip->is_rc ? GPIOD_OUT_LOW : GPIOD_IN);
-+	if (IS_ERR(rockchip->ep_gpio))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->ep_gpio),
-+				     "failed to get ep GPIO\n");
- 
- 	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
- 	if (IS_ERR(rockchip->aclk_pcie)) {
--- 
-2.46.2
-
+BTW, it's a new model, so I think the ICM is used. And the reg is
+0xffffffff when unplugged.
 
