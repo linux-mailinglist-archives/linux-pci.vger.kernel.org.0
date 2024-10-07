@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-13915-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13916-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E2E8992367
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:12:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19C9D992368
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:12:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D63F41F22948
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:12:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4FE31C20A1B
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:12:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88854879B;
-	Mon,  7 Oct 2024 04:12:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6FF3524B0;
+	Mon,  7 Oct 2024 04:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KaiS/9zF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Asey4TTg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D543C2F;
-	Mon,  7 Oct 2024 04:12:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09925338D;
+	Mon,  7 Oct 2024 04:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728274353; cv=none; b=njsEyHWegZExheoi7PJcH7HRpskQ427T9cZUqg9yW4GaMbMmaoQ6DTdWH6iZlNKr9/R84zw+5dwhDo9Rnghbgx6XRvbZiZqhJGy68d7S6T5e5wLVjErUg4KtCMIOx2XYjx1m17m6K3y7iBMWXV3ZCW/iXzf5Xmy9KSI0mSXgb6E=
+	t=1728274355; cv=none; b=GVtGtCobRAy2AmUsbaVWTiPqR9bRrgwjR/yRfdDhhJY7wOZd99GbiGrMzLeOETvRhSYOc0skOXEhNeeCS/Rxrqol/Wtl3E/tyYqVaIfsILZKQ498xRC62ixz5SKNx2gHacKgrtFANMtZII8fTvBLwgclBfM0/7ZYI5VV+rBx93E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728274353; c=relaxed/simple;
-	bh=YXwtDpZsLghWFwsXwrt/8ym6U04F+m9T5KgQswcLSak=;
+	s=arc-20240116; t=1728274355; c=relaxed/simple;
+	bh=TsqGV75FVnyIunhX2UHg/pvAV3kchHT+z+/uEhq7AqE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OZ+KnVnZQQ22FUC4yUnVYsaO8bPldlkkX2hAfIqKUHi1mCAiTKJYB9AJUfV7hQA8cWbr7qbCWbI6O/pdEPSidxCZdxl2JDduiw1LhrN8x5XSynFJx0hq7TwEE2tJj9B2C/EqixX02jc2rAJQ6lZl/ijRUtKv/IEaXwc93dG2Z40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KaiS/9zF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56954C4CECF;
-	Mon,  7 Oct 2024 04:12:31 +0000 (UTC)
+	 MIME-Version; b=WXtlfdEjxfMLiJylehaZTbfkY2dRo4eI8LCXuA0d33e8xkCMbDdBfmWLYHvNuTSsI8Oo1GLPOoZnvhPxzFRXLKt8SK28hp5OjwY/pK8qwLfx9Hcfj4lVUz9EXjcUfHsaDPuda1/mYgWOsX97OmNolgO33/hULzv5CLfV/IOR9+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Asey4TTg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E343C4CED1;
+	Mon,  7 Oct 2024 04:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728274353;
-	bh=YXwtDpZsLghWFwsXwrt/8ym6U04F+m9T5KgQswcLSak=;
+	s=k20201202; t=1728274355;
+	bh=TsqGV75FVnyIunhX2UHg/pvAV3kchHT+z+/uEhq7AqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KaiS/9zFWcajSpjM1UIR2W0ZBSPohaZao0TtxNEi1BhHGQmD+EXCeBkGZPZ+fcFYz
-	 +lMP1bCbHIUY/i8/X3gGFDW7X/jRED2ROZklflbCo72h9FlO4djkvUGBoeir+kLcvp
-	 9kHXN9LLttgYpH4RMcg+sLbjBKaz/OfB4dK099j0EpSqi5SdDm2vLtaXEKTajhtgKJ
-	 PrZ54IU6V370VHlzuPKoEapaNCmHUptgs1K44SAHNJ/rOS56EGKVhDYW819eZb82/K
-	 3D1CMSD0QOOwl+teb3WKJj/w0VuXFdcogUjBbHmdOGuyauHQsMlmkVQbnUHbilGUw4
-	 ygGejOZsGFMVw==
+	b=Asey4TTgZYC4eJ08MQFDZI0Xf2uT6glqWRHboIlMR9nwru1MnVEKzurINTCcbdImi
+	 xo2XDevTYWe54qbgAQcqBitHHLVZnKq7Gj7iMEGndPcdo807zApJXkhRDRthsy0NA+
+	 7U5NjxAjmIRSkaV04OFMgYA8FkDHFG6rUJasOlU/vXCqiXUrZCHhPgUrvaEX8nmN/J
+	 0KbFqFfDAgybIOi9ylqG5z3L8HGudbP54AqPxFxTO1KJYcn0GEPynXbF5PNW4E5OIf
+	 JxmhW+IhCyDUeANL3izqcUHUimWvE1M0qW73pIXLNyattkJv/aexT2M5ApIw2PGoua
+	 A49B4HVNALpyA==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -58,9 +58,9 @@ Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v3 05/12] PCI: rockchip-ep: Implement the .map_align() controller operation
-Date: Mon,  7 Oct 2024 13:12:11 +0900
-Message-ID: <20241007041218.157516-6-dlemoal@kernel.org>
+Subject: [PATCH v3 06/12] PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations
+Date: Mon,  7 Oct 2024 13:12:12 +0900
+Message-ID: <20241007041218.157516-7-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241007041218.157516-1-dlemoal@kernel.org>
 References: <20241007041218.157516-1-dlemoal@kernel.org>
@@ -72,89 +72,171 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The rockchip PCIe endpoint controller handles PCIe transfers addresses
-by masking the lower bits of the programmed PCI address and using the
-same number of lower bits from the CPU address space used for the
-mapping. For a PCI mapping of size bytes starting from pci_addr, the
-number of bits masked is the number of address bits changing in the
-address range [pci_addr..pci_addr + size - 1], up to 20 bits, that is,
-up to 1MB mappings.
+Introduce the function rockchip_pcie_ep_get_resources() to parse the DT
+node of a rockchip PCIe endpoint controller and allocate the outbound
+memory region and memory needed for IRQ handling. This function tidies
+up rockchip_pcie_ep_probe(). No functional change.
 
-This means that when preparing a PCI address mapping, an endpoint
-function driver must use an offset into the allocated controller
-memory region that is equal to the mask of the starting PCI address
-over rockchip_pcie_ep_ob_atu_num_bits() bits. This offset also
-determines the maximum size of the mapping given the starting PCI
-address and the fixed 1MB controller memory window size.
-
-Implement the ->map_align() endpoint controller operation to allow the
-mapping alignment to be transparently handled by endpoint function
-drivers through the function pci_epc_map_align().
-
-Co-developed-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 22 ++++++++++++++++++++++
- drivers/pci/controller/pcie-rockchip.h    |  5 +++++
- 2 files changed, 27 insertions(+)
+ drivers/pci/controller/pcie-rockchip-ep.c | 109 ++++++++++++----------
+ 1 file changed, 62 insertions(+), 47 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index edb84fb1ba39..a9b319d4e507 100644
+index a9b319d4e507..523e9cdfd241 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -235,6 +235,27 @@ static inline u32 rockchip_ob_region(phys_addr_t addr)
- 	return (addr >> ilog2(SZ_1M)) & 0x1f;
- }
+@@ -524,15 +524,70 @@ static const struct of_device_id rockchip_pcie_ep_of_match[] = {
+ 	{},
+ };
  
-+static int rockchip_pcie_ep_map_align(struct pci_epc *epc, u8 fn, u8 vfn,
-+				      struct pci_epc_map *map)
++static int rockchip_pcie_ep_get_resources(struct rockchip_pcie_ep *ep)
 +{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	int num_bits;
++	struct rockchip_pcie *rockchip = &ep->rockchip;
++	struct device *dev = rockchip->dev;
++	struct pci_epc_mem_window *windows = NULL;
++	int err, i;
 +
-+	num_bits = rockchip_pcie_ep_ob_atu_num_bits(&ep->rockchip,
-+						map->pci_addr, map->pci_size);
++	err = rockchip_pcie_parse_ep_dt(rockchip, ep);
++	if (err)
++		return err;
 +
-+	map->map_pci_addr = map->pci_addr & ~((1ULL << num_bits) - 1);
-+	map->map_ofst = map->pci_addr - map->map_pci_addr;
++	ep->ob_addr = devm_kcalloc(dev, ep->max_regions, sizeof(*ep->ob_addr),
++				   GFP_KERNEL);
 +
-+	if (map->map_ofst + map->pci_size > SZ_1M)
-+		map->pci_size = SZ_1M - map->map_ofst;
++	if (!ep->ob_addr)
++		return -ENOMEM;
 +
-+	map->map_size = ALIGN(map->map_ofst + map->pci_size,
-+			      ROCKCHIP_PCIE_AT_SIZE_ALIGN);
++	windows = devm_kcalloc(dev, ep->max_regions,
++			       sizeof(struct pci_epc_mem_window), GFP_KERNEL);
++	if (!windows)
++		return -ENOMEM;
++
++	for (i = 0; i < ep->max_regions; i++) {
++		windows[i].phys_base = rockchip->mem_res->start + (SZ_1M * i);
++		windows[i].size = SZ_1M;
++		windows[i].page_size = SZ_1M;
++	}
++	err = pci_epc_multi_mem_init(ep->epc, windows, ep->max_regions);
++	devm_kfree(dev, windows);
++
++	if (err < 0) {
++		dev_err(dev, "failed to initialize the memory space\n");
++		return err;
++	}
++
++	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(ep->epc, &ep->irq_phys_addr,
++						  SZ_1M);
++	if (!ep->irq_cpu_addr) {
++		dev_err(dev, "failed to reserve memory space for MSI\n");
++		goto err_epc_mem_exit;
++	}
++
++	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
 +
 +	return 0;
++
++err_epc_mem_exit:
++	pci_epc_mem_exit(ep->epc);
++
++	return err;
 +}
 +
- static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, u8 vfn,
- 				     phys_addr_t addr, u64 pci_addr,
- 				     size_t size)
-@@ -458,6 +479,7 @@ static const struct pci_epc_ops rockchip_pcie_epc_ops = {
- 	.write_header	= rockchip_pcie_ep_write_header,
- 	.set_bar	= rockchip_pcie_ep_set_bar,
- 	.clear_bar	= rockchip_pcie_ep_clear_bar,
-+	.map_align	= rockchip_pcie_ep_map_align,
- 	.map_addr	= rockchip_pcie_ep_map_addr,
- 	.unmap_addr	= rockchip_pcie_ep_unmap_addr,
- 	.set_msi	= rockchip_pcie_ep_set_msi,
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 02368ce9bd54..30398156095f 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -241,6 +241,11 @@
- #define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK		GENMASK(15, 8)
- #define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
- #define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
++static void rockchip_pcie_ep_release_resources(struct rockchip_pcie_ep *ep)
++{
++	pci_epc_mem_exit(ep->epc);
++}
 +
-+#define ROCKCHIP_PCIE_AT_MIN_NUM_BITS	8
-+#define ROCKCHIP_PCIE_AT_MAX_NUM_BITS	20
-+#define ROCKCHIP_PCIE_AT_SIZE_ALIGN	(1UL << ROCKCHIP_PCIE_AT_MIN_NUM_BITS)
-+
- #define ROCKCHIP_PCIE_EP_FUNC_BASE(fn) \
- 	(PCIE_EP_PF_CONFIG_REGS_BASE + (((fn) << 12) & GENMASK(19, 12)))
- #define ROCKCHIP_PCIE_EP_VIRT_FUNC_BASE(fn) \
+ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct rockchip_pcie_ep *ep;
+ 	struct rockchip_pcie *rockchip;
+ 	struct pci_epc *epc;
+-	size_t max_regions;
+-	struct pci_epc_mem_window *windows = NULL;
+-	int err, i;
++	int err;
+ 	u32 cfg_msi, cfg_msix_cp;
+ 
+ 	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+@@ -552,13 +607,13 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+ 	ep->epc = epc;
+ 	epc_set_drvdata(epc, ep);
+ 
+-	err = rockchip_pcie_parse_ep_dt(rockchip, ep);
++	err = rockchip_pcie_ep_get_resources(ep);
+ 	if (err)
+ 		return err;
+ 
+ 	err = rockchip_pcie_enable_clocks(rockchip);
+ 	if (err)
+-		return err;
++		goto err_release_resources;
+ 
+ 	err = rockchip_pcie_init_port(rockchip);
+ 	if (err)
+@@ -568,47 +623,9 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+ 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
+ 			    PCIE_CLIENT_CONFIG);
+ 
+-	max_regions = ep->max_regions;
+-	ep->ob_addr = devm_kcalloc(dev, max_regions, sizeof(*ep->ob_addr),
+-				   GFP_KERNEL);
+-
+-	if (!ep->ob_addr) {
+-		err = -ENOMEM;
+-		goto err_uninit_port;
+-	}
+-
+ 	/* Only enable function 0 by default */
+ 	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+ 
+-	windows = devm_kcalloc(dev, ep->max_regions,
+-			       sizeof(struct pci_epc_mem_window), GFP_KERNEL);
+-	if (!windows) {
+-		err = -ENOMEM;
+-		goto err_uninit_port;
+-	}
+-	for (i = 0; i < ep->max_regions; i++) {
+-		windows[i].phys_base = rockchip->mem_res->start + (SZ_1M * i);
+-		windows[i].size = SZ_1M;
+-		windows[i].page_size = SZ_1M;
+-	}
+-	err = pci_epc_multi_mem_init(epc, windows, ep->max_regions);
+-	devm_kfree(dev, windows);
+-
+-	if (err < 0) {
+-		dev_err(dev, "failed to initialize the memory space\n");
+-		goto err_uninit_port;
+-	}
+-
+-	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+-						  SZ_1M);
+-	if (!ep->irq_cpu_addr) {
+-		dev_err(dev, "failed to reserve memory space for MSI\n");
+-		err = -ENOMEM;
+-		goto err_epc_mem_exit;
+-	}
+-
+-	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
+-
+ 	/*
+ 	 * MSI-X is not supported but the controller still advertises the MSI-X
+ 	 * capability by default, which can lead to the Root Complex side
+@@ -638,10 +655,8 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+ 	pci_epc_init_notify(epc);
+ 
+ 	return 0;
+-err_epc_mem_exit:
+-	pci_epc_mem_exit(epc);
+-err_uninit_port:
+-	rockchip_pcie_deinit_phys(rockchip);
++err_release_resources:
++	rockchip_pcie_ep_release_resources(ep);
+ err_disable_clocks:
+ 	rockchip_pcie_disable_clocks(rockchip);
+ 	return err;
 -- 
 2.46.2
 
