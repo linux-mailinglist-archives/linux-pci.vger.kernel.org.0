@@ -1,139 +1,239 @@
-Return-Path: <linux-pci+bounces-13900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C80B89922F0
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 05:21:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F1D79922F6
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 05:29:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0E971C2200E
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 03:21:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FA431C20918
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 03:29:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD404C91;
-	Mon,  7 Oct 2024 03:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F472CA8;
+	Mon,  7 Oct 2024 03:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRxzPCAf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Q3s4t2z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673724A08
-	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 03:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ECD1C6A1
+	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 03:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728271294; cv=none; b=kjKmRGAwmdIky8fTSn4xtYU9BiH9qNSJ//n8bNksUXatl24brGNs/qWbrAJhr7OXgl0auTzuUa8UF8ucVqCuzfTC5o5bXEhEZgHpMDl51SrQkLIe8WIYqOUsMnTO8Z/h9CrtCIYM/J8sP1gB9gTWOxO2mE65P0Nii0g8u/jOEIg=
+	t=1728271766; cv=none; b=aNzhN9VIzIgHxXgdFP+UQgvO5Cw1zTBQkVV4nyuEWugiU7aDCFDzOp5CehUktcIrctKCm4CkOC+7sDDM/owYv36e5T9sCoZC2glPWa0b+5vurLMk+ZRnUhVKJk2yTfX4FlzRI8FI/LlH0AuvOYQWFPY3lfJgBceBDQaCt11Bg2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728271294; c=relaxed/simple;
-	bh=22qiIyTBAwjnwv9Yh0JXKO1zHs/7+SutTxf0y5dE2JQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5geXsJbI7eEyKxwl6m14i8+x+B0WEillpzrIaQyakq+vU0sKn+fkp7MeaIs0WfZ+Kchjziv+SFwy7HdtGofzZ0RMNeLvTm6pVKPThP72A/5zQI3+arMkTR1eKN3K8YKaL7j1jR6bOZ4bqmP6Aa5m1s5DD0bW36doE9LSkyLiJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dRxzPCAf; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1728271766; c=relaxed/simple;
+	bh=hm8olSmsctpeaPXcVDemiOPL5FkCHTbR32Wact0WsgM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=isLmbXPpTUioZBfOsIVOstsrhYqFEUm2pso5jjNyspWHbf6DmchQWc9Vvcc1Zs3xYIp3hfJ7V34hvKa/ssr879UX8jAH3sJM6nBWSc6jBCtjCCC+bQt6ZvVTeYw1gE3eIhF9T+n4zc5H7Xt/s0IB8iyJGOkvRaF5372UJeIkhwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Q3s4t2z; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20ba8d92af9so28671105ad.3
-        for <linux-pci@vger.kernel.org>; Sun, 06 Oct 2024 20:21:33 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6e278b2a5c4so68430537b3.2
+        for <linux-pci@vger.kernel.org>; Sun, 06 Oct 2024 20:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728271292; x=1728876092; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwYAPxSdpQfNG1BLQ8KTvGuP6z7zaDJ5WKCEbyOMzak=;
-        b=dRxzPCAfz/bzfH8ATrMEjR+4IOUdLmSNftTpQk2zw/QqSHdK6tu3cwS7xExJXM64zD
-         Cmvl2HjFDm7mbLQN6c+YXUIaYdebi4nRzWgzae6qMcrpsz0g4FUKcIUO4C3V98dCrHQK
-         rqddyGZuYzOGVBMhhkc3H/hjr5up1KzrtHMM8dg6TzYfjkSsl+DRuodzNQNGE0nQvxtc
-         F7lXNcxQ+weUR/PATQVZx/nK5y/0sLtFNEYW1BVRYNqYpOm9te+W3649wpTfw/0X13gy
-         YbwPZaLE1owlsGoqM30MNj7P1AyWsuvxTDfvPiAii4OKExZfQSTyspO9FdjLOrVNBlww
-         KmYg==
+        d=google.com; s=20230601; t=1728271764; x=1728876564; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ehkisLRJAELHV3S+3teRI9LlUsx1g0/d9d5bSWoVJrc=;
+        b=1Q3s4t2zPHE4Q5LZJRBQYGeo7pmtT3ozcNeauPfnrf4i5V/D2g4chJfVH5yAzphNmp
+         UXUahweBAQXuIS6un2buStlPeXRbqNxgy05T4DIiaRemX3lmtDbo2RiGENW2HkIoz9MU
+         w9h39FcCkbma0UfSZZ++EQS5+Xjo1+kayCtpLHHWqeDYaSBQyxp61vukFuwPomOiobFE
+         cvgfFbm0ToV1ekC051topoV1I7p+13H4Ac6Trc8uNu9a2A6LPFUl2Ayuz2K2pjQKxdrx
+         rjo0wdQw6NgMjC87ZkMcZqmz3CCIAhCxB4r0FDODgorac+JX4DYw095fXSO3knNuWNRT
+         UQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728271292; x=1728876092;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gwYAPxSdpQfNG1BLQ8KTvGuP6z7zaDJ5WKCEbyOMzak=;
-        b=ITFoJyKueEaEBCBqkfpB41gQLC15vpanThlYyhRiD91gIHwUBUzgEt+7OKmTeDKnsK
-         pAgfzpYo0oG2qYZMPxtnB7t7UVSEN3TboGbj3/UkSYDmFBjcVdh+ztrGmiTzJ0QlmhJF
-         yUDgJ9+WdgZWdtFzy9OjsNA9GPpbTlHCg5LRjrg46thNKb6ZugOThS6kJomubXMa2UEd
-         BhQ1cnG3mHCc/GtFI9k4tPXzid4ltBiJZK+0FCaUsakGVRunfMRHv6v1bDM6C292HXx0
-         uFB9EJnYxzJmCdJVWw085ixt8rNMCWd7J6F8ALxF3rKRP1Fi1Yh4Z4LtXD84WHn1NIG/
-         Bnmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMMcVyyHR34OH7kuBr/SVg2fz28ex0DKT6Mh/USrMbREBRHu32LqFqZ2FQ9txIqf9gWKWHZEB2qrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH54R1UxTw4Gq/MgOR+wYo4IKgCCycyMGwSLn9B7JuqXEM7SH0
-	RjcuL0RldLkxeh5Ybke1IWCFUo5GVc18eNjBp+2I2EdgMb2eRu50UUk7tgf86GRrsQxWmN+3jUh
-	vhttR
-X-Google-Smtp-Source: AGHT+IFCa1oJA60S5oQyo1jpOD2t8mstMnof6MAYT3q8JWv87rD5xsJdD5ONlxIML27Q+xneCnIUxA==
-X-Received: by 2002:a17:903:11c7:b0:20b:b455:eb72 with SMTP id d9443c01a7336-20bfde555c3mr154319365ad.8.1728271292308;
-        Sun, 06 Oct 2024 20:21:32 -0700 (PDT)
-Received: from google.com (98.81.87.34.bc.googleusercontent.com. [34.87.81.98])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c138cbfaasm31086225ad.88.2024.10.06.20.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2024 20:21:31 -0700 (PDT)
-Date: Mon, 7 Oct 2024 08:51:23 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	Sajid Dalvi <sdalvi@google.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/ASPM: Disable L1 before disabling L1ss
-Message-ID: <ZwNTswQatCdb62FT@google.com>
-References: <20241003132503.2279433-1-ajayagarwal@google.com>
- <20241004231928.GA366846@bhelgaas>
+        d=1e100.net; s=20230601; t=1728271764; x=1728876564;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ehkisLRJAELHV3S+3teRI9LlUsx1g0/d9d5bSWoVJrc=;
+        b=taGQmqE8kLH8UCoJyZh8y6LUQh7yj8PLW8/34wssYY35LxHJmxcgpe314p43cSHwuO
+         +awvZDmTozEZeQ+8WK8iWI/e+VkhCdxVRKmPNJwIyJ16d3H2cdGDc/uWrFntUXfaaONk
+         ysQeTh5cBEH+HqbiZiD2x510Zpi1Z4lca3rhGjEqovnXkiWtKvE/saQ4bYNdTOSZWs85
+         YQRn1S74BqfyKEq9eEovz2ijOquqCgx9kS6P9dij7ucFWNf5bH3AqHNrMEyuB8eTiGUL
+         iRUYWkc1JxkpF6rn+MVoUzzCbhXcIZpYj/phIDYFceFgBp5BZIl8dwNVr01U99sbNj69
+         gn2w==
+X-Gm-Message-State: AOJu0YzL9CU/51a4Cd1l/iNKtcXG+w4A3h3jqEiJj9Q0P1OkDnod7oBF
+	zfFXdwLWuDLwnBCN3Htbovqod+HLSK4xGQdCPMaZNs/DRSESjIzx5XEhB/TRpvnK/VHvubvB397
+	6wCV4BlPNHmBsRbiAqrP/8Q==
+X-Google-Smtp-Source: AGHT+IG2vTPjIpvtvgPfp4TOJoVUs6G0ZwhyZx4qYiJkRhlTq+8Ebd7NxCud6Ilh4qdcCS6vbQDvuZJiJEuQIFoPtA==
+X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
+ (user=ajayagarwal job=sendgmr) by 2002:a25:fc06:0:b0:e25:ce37:257 with SMTP
+ id 3f1490d57ef6-e28936cfc77mr7679276.3.1728271763780; Sun, 06 Oct 2024
+ 20:29:23 -0700 (PDT)
+Date: Mon,  7 Oct 2024 08:59:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241004231928.GA366846@bhelgaas>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.rc0.187.ge670bccf7e-goog
+Message-ID: <20241007032917.872262-1-ajayagarwal@google.com>
+Subject: [PATCH v3] PCI/ASPM: Disable L1 before disabling L1ss
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: "=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, 
+	"David E. Box" <david.e.box@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Oct 04, 2024 at 06:19:28PM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2024 at 06:55:03PM +0530, Ajay Agarwal wrote:
-> > The current sequence in the driver for L1ss update is as follows.
-> > 
-> > Disable L1ss
-> > Disable L1
-> > Enable L1ss as required
-> > Enable L1 if required
-> > 
-> > With this sequence, a bus hang is observed during the L1ss
-> > disable sequence when the RC CPU attempts to clear the RC L1ss
-> > register after clearing the EP L1ss register. It looks like the
-> > RC attempts to enter L1ss again and at the same time, access to
-> > RC L1ss register fails because aux clk is still not active.
-> >
-> > PCIe spec r6.2, section 5.5.4, recommends that setting either
-> > or both of the enable bits for ASPM L1 PM Substates must be done
-> > while ASPM L1 is disabled. My interpretation here is that
-> > clearing L1ss should also be done when L1 is disabled. Thereby,
-> > change the sequence as follows.
-> > 
-> > Disable L1
-> > Disable L1ss
-> > Enable L1ss as required
-> > Enable L1 if required
-> 
-> I think we also write the L1.2 enable bits in PCI_L1SS_CTL1 in
-> aspm_calc_l12_info() when ASPM L1 may be enabled:
-> 
->   pcie_aspm_init_link_state
->     pcie_aspm_cap_init
->       pcie_capability_read_word(PCI_EXP_LNKCTL)
->       aspm_l1ss_init
->         aspm_calc_l12_info
->           pci_clear_and_set_config_dword(PCI_L1SS_CTL1, PCI_L1SS_CTL1_L1_2_MASK)
-> 
-> That looks like another path where we should make a similar change.
-> What do you think?
->
-I agree. We should make a similar change there. Thanks for pointing out.
-Will make the change in the next version.
-> Bjorn
+The current sequence in the driver for L1ss update is as follows.
+
+Disable L1ss
+Disable L1
+Enable L1ss as required
+Enable L1 if required
+
+With this sequence, a bus hang is observed during the L1ss
+disable sequence when the RC CPU attempts to clear the RC L1ss
+register after clearing the EP L1ss register. It looks like the
+RC attempts to enter L1ss again and at the same time, access to
+RC L1ss register fails because aux clk is still not active.
+
+PCIe spec r6.2, section 5.5.4, recommends that setting either
+or both of the enable bits for ASPM L1 PM Substates must be done
+while ASPM L1 is disabled. My interpretation here is that
+clearing L1ss should also be done when L1 is disabled. Thereby,
+change the sequence as follows.
+
+Disable L1
+Disable L1ss
+Enable L1ss as required
+Enable L1 if required
+
+Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+---
+Changelog since v2:
+ - Add the logic in pcie_aspm_cap_init()
+
+Changelog since v1:
+ - Move the L1 disable/enable logic to pcie_config_aspm_link()
+ - Add detailed comments including spec version and section number
+
+ drivers/pci/pcie/aspm.c | 66 +++++++++++++++++++++++++----------------
+ 1 file changed, 40 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index cee2365e54b8..50997e378631 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -805,6 +805,15 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &parent_lnkctl);
+ 	pcie_capability_read_word(child, PCI_EXP_LNKCTL, &child_lnkctl);
+ 
++	/* Make sure L0s/L1 are disabled before updating L1SS config */
++	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, child_lnkctl) ||
++	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, parent_lnkctl)) {
++		pcie_capability_write_word(child, PCI_EXP_LNKCTL,
++					   child_lnkctl & ~PCI_EXP_LNKCTL_ASPMC);
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL,
++					   parent_lnkctl & ~PCI_EXP_LNKCTL_ASPMC);
++	}
++
+ 	/*
+ 	 * Setup L0s state
+ 	 *
+@@ -829,6 +838,13 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 
+ 	aspm_l1ss_init(link);
+ 
++	/* Restore L0s/L1 if they were enabled */
++	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, child_lnkctl) ||
++	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, parent_lnkctl)) {
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_lnkctl);
++		pcie_capability_write_word(child, PCI_EXP_LNKCTL, child_lnkctl);
++	}
++
+ 	/* Save default state */
+ 	link->aspm_default = link->aspm_enabled;
+ 
+@@ -848,17 +864,13 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ /* Configure the ASPM L1 substates */
+ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ {
+-	u32 val, enable_req;
++	u32 val;
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+ 
+-	enable_req = (link->aspm_enabled ^ state) & state;
+-
+ 	/*
+-	 * Here are the rules specified in the PCIe spec for enabling L1SS:
++	 * Spec r6.2, section 5.5.4, mentions the rules for enabling L1SS:
+ 	 * - When enabling L1.x, enable bit at parent first, then at child
+ 	 * - When disabling L1.x, disable bit at child first, then at parent
+-	 * - When enabling ASPM L1.x, need to disable L1
+-	 *   (at child followed by parent).
+ 	 * - The ASPM/PCIPM L1.2 must be disabled while programming timing
+ 	 *   parameters
+ 	 *
+@@ -871,16 +883,6 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
+ 	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+ 				       PCI_L1SS_CTL1_L1SS_MASK, 0);
+-	/*
+-	 * If needed, disable L1, and it gets enabled later
+-	 * in pcie_config_aspm_link().
+-	 */
+-	if (enable_req & (PCIE_LINK_STATE_L1_1 | PCIE_LINK_STATE_L1_2)) {
+-		pcie_capability_clear_word(child, PCI_EXP_LNKCTL,
+-					   PCI_EXP_LNKCTL_ASPM_L1);
+-		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
+-					   PCI_EXP_LNKCTL_ASPM_L1);
+-	}
+ 
+ 	val = 0;
+ 	if (state & PCIE_LINK_STATE_L1_1)
+@@ -937,21 +939,33 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ 		dwstream |= PCI_EXP_LNKCTL_ASPM_L1;
+ 	}
+ 
++	/*
++	 * Spec r6.2, section 5.5.4, recommends that setting either or both of
++	 * the enable bits for ASPM L1 PM Substates must be done while ASPM L1
++	 * is disabled. So disable L1 here, and it gets enabled later after the
++	 * L1ss configuration has been completed.
++	 *
++	 * Spec r6.2, section 7.5.3.7, mentions that ASPM L1 must be enabled by
++	 * software in the Upstream component on a Link prior to enabling ASPM
++	 * L1 in the Downstream component on the Link. When disabling L1,
++	 * software must disable ASPM L1 in the Downstream component on a Link
++	 * prior to disabling ASPM L1 in the Upstream component on that Link.
++	 *
++	 * Spec doesn't mention L0s.
++	 *
++	 * Disable L1 and L0s here, and they get enabled later after the L1ss
++	 * configuration has been completed.
++	 */
++	list_for_each_entry(child, &linkbus->devices, bus_list)
++		pcie_config_aspm_dev(child, 0);
++	pcie_config_aspm_dev(parent, 0);
++
+ 	if (link->aspm_capable & PCIE_LINK_STATE_L1SS)
+ 		pcie_config_aspm_l1ss(link, state);
+ 
+-	/*
+-	 * Spec 2.0 suggests all functions should be configured the
+-	 * same setting for ASPM. Enabling ASPM L1 should be done in
+-	 * upstream component first and then downstream, and vice
+-	 * versa for disabling ASPM L1. Spec doesn't mention L0S.
+-	 */
+-	if (state & PCIE_LINK_STATE_L1)
+-		pcie_config_aspm_dev(parent, upstream);
++	pcie_config_aspm_dev(parent, upstream);
+ 	list_for_each_entry(child, &linkbus->devices, bus_list)
+ 		pcie_config_aspm_dev(child, dwstream);
+-	if (!(state & PCIE_LINK_STATE_L1))
+-		pcie_config_aspm_dev(parent, upstream);
+ 
+ 	link->aspm_enabled = state;
+ 
+-- 
+2.47.0.rc0.187.ge670bccf7e-goog
+
 
