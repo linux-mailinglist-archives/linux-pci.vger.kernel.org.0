@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-13912-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13913-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47B4B992365
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:12:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B38C99236D
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:12:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A4CD1F22838
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:12:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14CB1282949
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:12:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2F15338D;
-	Mon,  7 Oct 2024 04:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 356132261D;
+	Mon,  7 Oct 2024 04:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGQ5JKe2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGyv6Gea"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CDF3C2F;
-	Mon,  7 Oct 2024 04:12:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB243C2F;
+	Mon,  7 Oct 2024 04:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728274347; cv=none; b=ke2dlXxLCR6X7g0LYwmjs1Kv6wU7nMmuZndjSkbUf43DZTCY3lp/86xlckNWJOJY2kLNhXfgxG3jCRzFCiwq9ou4BXoGIk0rM2zkXbrk53fLOvmsUg7nr1qykSD78jMs4WHyUn2rnqF6dlCJAvnxqev08l9EaN2I27DPCY6gvSA=
+	t=1728274349; cv=none; b=FFMyoqXyN1pb/yrVa54mUrvLJGAdAJZAU281NlzXyd1rhF/Jpik8d83o9j2+GgqAqVvK8o0ByvOEXbnfOxetIRRnP5lWxhRxfvLoeSbcvLZTQ8AGeKAkK6qT9miPMp5Y6pRhHOpbS6wteqsP8t1FZ0VL3hHxlWIPIZeZKQKNsEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728274347; c=relaxed/simple;
-	bh=lYwTrY0jS1tCfZGBdpC5Zd5QRFOVHWsbeSniB+7qLxs=;
+	s=arc-20240116; t=1728274349; c=relaxed/simple;
+	bh=5w+3NShXDU/wbYOsiv93TvrG7kU2oPVW7277Gez3AR0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ithzIBU6SIoC06rhqPvOlxFyWtI4TKdUCOxuhJWMWpHDY27nbBRrP0hSb6GsHObV22/k5GINOwDh2Y3knLgvJYJBnA9KQxHdJ3pXBEEgSdvklKZn/BUK4MNKGUH+WvZb+Fu2lKtqPtUYdPsUCsYMZnMe9svV+dxHi4y8EFlyqfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGQ5JKe2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2F7C4CED0;
-	Mon,  7 Oct 2024 04:12:24 +0000 (UTC)
+	 MIME-Version; b=bfaV4MyZMwhlj5nbp6KAYIWXY5RaigchfKI1/NTCQEtmerqP3IpaSg88xjPFshGsQdT+YZ48nIaMtBTj/eM7J2r0TbCV8MTISo+5jb7WBcnuEjU9lR+wgwAwZ6RAGT4x/gzLt/HXBaQ7u+gc4Mge/sj1ZidPSCIAYJxF5gP6da4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGyv6Gea; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 071A8C4CECF;
+	Mon,  7 Oct 2024 04:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728274346;
-	bh=lYwTrY0jS1tCfZGBdpC5Zd5QRFOVHWsbeSniB+7qLxs=;
+	s=k20201202; t=1728274348;
+	bh=5w+3NShXDU/wbYOsiv93TvrG7kU2oPVW7277Gez3AR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BGQ5JKe2YQwtiSg+YyGQ6bWx5D6dv+0ynxFVl49qydjwcwMDeABObBiwr4a/7Ufdr
-	 o2tOTZGAXjZNgXVWMravJJeteBBX77c0SgWoqA0deBFBanWQxSMjZ1Pf6YzZmOvGhm
-	 HTdw+V3F+vZm+0RfCdq8X8mG5e08ucGGDuITQ2NGetMsV+YTwuf8/a1lCke1pq/pGe
-	 YiPQW8amJJUw3yKU4hif6Pw2Sd5SyhQiJXALc9GY5DRZoPXojmTztaWy8fijza/ppS
-	 oq4qYMRsFDsmNLxC7hH+o3q+2naD70Tty+0c2zz0YdKYvOXfCAYqp4kEzv3P6So2Tk
-	 8BoYSAkOZbqwg==
+	b=aGyv6GeaMtH/0srjMhy4Mx6yx8duOHHSMcfTtn/qwnmxj9s998T3LIdDSkxkV5+TF
+	 t1EgNx3ei6UFALwjjIgwzQ3gyDKf3iYZNwmffbNsZmmXHamU+FvxRKCvzhsr+LFcUQ
+	 HwtwJnzOJqLLKgLG3tHEAkdIdsGHi36VcFrp9Pg7xvXWvWznoGqRqskfsstJRFvSz5
+	 AG57q7IfebNRTF1kyUl6xkP1ALD4XwZHxB+VhSp4IWOLF9xfE8o0LZLJY2b65MSr8t
+	 bKOxD3k7+07mT3lFJEsIchHYVQa5VVR+uMjY6jNqBNtL/Uw632Aq51KL1bzF7ZhbVh
+	 JnKNRvprB/MrQ==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -58,9 +58,9 @@ Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v3 02/12] PCI: rockchip-ep: Use a macro to define EP controller .align feature
-Date: Mon,  7 Oct 2024 13:12:08 +0900
-Message-ID: <20241007041218.157516-3-dlemoal@kernel.org>
+Subject: [PATCH v3 03/12] PCI: rockchip-ep: Improve rockchip_pcie_ep_unmap_addr()
+Date: Mon,  7 Oct 2024 13:12:09 +0900
+Message-ID: <20241007041218.157516-4-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241007041218.157516-1-dlemoal@kernel.org>
 References: <20241007041218.157516-1-dlemoal@kernel.org>
@@ -72,42 +72,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the macro ROCKCHIP_PCIE_AT_SIZE_ALIGN defined using
-ROCKCHIP_PCIE_AT_MIN_NUM_BITS to initialize the .align field of the
-controller epc_features structure, avoiding using the "magic" value 8
-directly.
+From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+There is no need to loop over all regions to find the memory window used
+to map an address. We can use rockchip_ob_region() to determine the
+region index, together with a check that the address passed as argument
+is the address used to create the mapping. Furthermore, the
+ob_region_map bitmap should also be checked to ensure that we are not
+attempting to unmap an address that is not mapped.
+
+Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
- drivers/pci/controller/pcie-rockchip.h    | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 27a7febb74e0..5a07084fb7c4 100644
+index 5a07084fb7c4..89ebdf3e4737 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -446,7 +446,7 @@ static const struct pci_epc_features rockchip_pcie_epc_features = {
- 	.linkup_notifier = false,
- 	.msi_capable = true,
- 	.msix_capable = false,
--	.align = 256,
-+	.align = ROCKCHIP_PCIE_AT_SIZE_ALIGN,
- };
+@@ -256,13 +256,9 @@ static void rockchip_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn, u8 vfn,
+ {
+ 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+-	u32 r;
+-
+-	for (r = 0; r < ep->max_regions; r++)
+-		if (ep->ob_addr[r] == addr)
+-			break;
++	u32 r = rockchip_ob_region(addr);
  
- static const struct pci_epc_features*
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 15ee949f2485..02368ce9bd54 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -248,6 +248,7 @@
+-	if (r == ep->max_regions)
++	if (addr != ep->ob_addr[r] || !test_bit(r, &ep->ob_region_map))
+ 		return;
  
- #define ROCKCHIP_PCIE_AT_MIN_NUM_BITS  8
- #define ROCKCHIP_PCIE_AT_MAX_NUM_BITS  20
-+#define ROCKCHIP_PCIE_AT_SIZE_ALIGN    (1UL << ROCKCHIP_PCIE_AT_MIN_NUM_BITS)
- 
- #define ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar) \
- 	(PCIE_CORE_AXI_CONF_BASE + 0x0828 + (fn) * 0x0040 + (bar) * 0x0008)
+ 	rockchip_pcie_clear_ep_ob_atu(rockchip, r);
 -- 
 2.46.2
 
