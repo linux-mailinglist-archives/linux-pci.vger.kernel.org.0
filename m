@@ -1,83 +1,89 @@
-Return-Path: <linux-pci+bounces-13899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75E429922B2
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:02:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C80B89922F0
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 05:21:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C47CB21C2F
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 02:02:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0E971C2200E
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 03:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F38231C8F;
-	Mon,  7 Oct 2024 02:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD404C91;
+	Mon,  7 Oct 2024 03:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ts4j2ywh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRxzPCAf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F283C8D7
-	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 02:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673724A08
+	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 03:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728266549; cv=none; b=lN6Sxt2yPY7JSx1oxQEYPMxNe1qZpU2ij6ThVdvB2HBDweWtz0+TQqNAw/wwXc08Pe4QUg3y5mvuhSkouSbJ3UeJotlBmtFtQfRYi/Uli804zGpA9b8pJrRLVnA2uwUNOy7a/ikBGSrhmkFGjGLlkIJhVtMOijwlr9iL7bMJTTM=
+	t=1728271294; cv=none; b=kjKmRGAwmdIky8fTSn4xtYU9BiH9qNSJ//n8bNksUXatl24brGNs/qWbrAJhr7OXgl0auTzuUa8UF8ucVqCuzfTC5o5bXEhEZgHpMDl51SrQkLIe8WIYqOUsMnTO8Z/h9CrtCIYM/J8sP1gB9gTWOxO2mE65P0Nii0g8u/jOEIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728266549; c=relaxed/simple;
-	bh=m+DhcAJ7T5xCYccShyZWlwcMLocHgJ/Ps/SdyIztZEE=;
+	s=arc-20240116; t=1728271294; c=relaxed/simple;
+	bh=22qiIyTBAwjnwv9Yh0JXKO1zHs/7+SutTxf0y5dE2JQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jGZ4rTrD2nVH203+6mEUQDmWbqwdqTbLequ21EaFljYu4Eo0aZQ6pSRgFHLnrz/Ch4GO5Cy9xMGW4dEATRGSqIx82vEES0rEoa4TlYaOmZZDaKz3+x5y6WZXGOlzqoZCHksjZ63CWj9VShn/jqvEBlhFFwXsuOGYy39xv4Ozwyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ts4j2ywh; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728266547; x=1759802547;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m+DhcAJ7T5xCYccShyZWlwcMLocHgJ/Ps/SdyIztZEE=;
-  b=Ts4j2ywhx5IhWrFYcfHza7+mfH8/p+ahyqThBsFpPlgEmnjHqKRz25do
-   Ph4smHoOP4M+b/8stnRbJG3LXgSCuXsEhXEJ7srzCIVq/xxEpz4AAn2vh
-   xmnEPO9Qnaj5eKjeMRFVhpYmRyn/bTQEvqHz4vZMVyNneBcDwF6EBzk5O
-   uZ7GrfnX0LJIDREf0uyqqC8McuY/k9Akn+VEd0bS/oaJs6yLAQN+iG697
-   8htlWDq2tj3WTHSluXVK0YDswfjmR+0sHMVYtCPDz4nZKTlPy/sZS42uJ
-   8ePHzSh4lDNvUtRQFwddkh7REOfMQlaDg/JiVBLhbmm4kHOhsZDJ8bXUc
-   g==;
-X-CSE-ConnectionGUID: A3+2qF1mR9eRHC4YKzL00Q==
-X-CSE-MsgGUID: 7/Eb9bcoTuCYHC1Ti7Rtbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11217"; a="38058805"
-X-IronPort-AV: E=Sophos;i="6.11,183,1725346800"; 
-   d="scan'208";a="38058805"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2024 19:02:26 -0700
-X-CSE-ConnectionGUID: /CGnJXOTQ+WjO9rL9wYQ3w==
-X-CSE-MsgGUID: em3GyqhvRGinBErnz1ijwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,183,1725346800"; 
-   d="scan'208";a="75668024"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 06 Oct 2024 19:02:24 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sxd4n-0004VM-26;
-	Mon, 07 Oct 2024 02:02:21 +0000
-Date: Mon, 7 Oct 2024 10:01:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Damien Le Moal <dlemoal@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=u5geXsJbI7eEyKxwl6m14i8+x+B0WEillpzrIaQyakq+vU0sKn+fkp7MeaIs0WfZ+Kchjziv+SFwy7HdtGofzZ0RMNeLvTm6pVKPThP72A/5zQI3+arMkTR1eKN3K8YKaL7j1jR6bOZ4bqmP6Aa5m1s5DD0bW36doE9LSkyLiJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dRxzPCAf; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20ba8d92af9so28671105ad.3
+        for <linux-pci@vger.kernel.org>; Sun, 06 Oct 2024 20:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728271292; x=1728876092; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gwYAPxSdpQfNG1BLQ8KTvGuP6z7zaDJ5WKCEbyOMzak=;
+        b=dRxzPCAfz/bzfH8ATrMEjR+4IOUdLmSNftTpQk2zw/QqSHdK6tu3cwS7xExJXM64zD
+         Cmvl2HjFDm7mbLQN6c+YXUIaYdebi4nRzWgzae6qMcrpsz0g4FUKcIUO4C3V98dCrHQK
+         rqddyGZuYzOGVBMhhkc3H/hjr5up1KzrtHMM8dg6TzYfjkSsl+DRuodzNQNGE0nQvxtc
+         F7lXNcxQ+weUR/PATQVZx/nK5y/0sLtFNEYW1BVRYNqYpOm9te+W3649wpTfw/0X13gy
+         YbwPZaLE1owlsGoqM30MNj7P1AyWsuvxTDfvPiAii4OKExZfQSTyspO9FdjLOrVNBlww
+         KmYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728271292; x=1728876092;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gwYAPxSdpQfNG1BLQ8KTvGuP6z7zaDJ5WKCEbyOMzak=;
+        b=ITFoJyKueEaEBCBqkfpB41gQLC15vpanThlYyhRiD91gIHwUBUzgEt+7OKmTeDKnsK
+         pAgfzpYo0oG2qYZMPxtnB7t7UVSEN3TboGbj3/UkSYDmFBjcVdh+ztrGmiTzJ0QlmhJF
+         yUDgJ9+WdgZWdtFzy9OjsNA9GPpbTlHCg5LRjrg46thNKb6ZugOThS6kJomubXMa2UEd
+         BhQ1cnG3mHCc/GtFI9k4tPXzid4ltBiJZK+0FCaUsakGVRunfMRHv6v1bDM6C292HXx0
+         uFB9EJnYxzJmCdJVWw085ixt8rNMCWd7J6F8ALxF3rKRP1Fi1Yh4Z4LtXD84WHn1NIG/
+         Bnmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMMcVyyHR34OH7kuBr/SVg2fz28ex0DKT6Mh/USrMbREBRHu32LqFqZ2FQ9txIqf9gWKWHZEB2qrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH54R1UxTw4Gq/MgOR+wYo4IKgCCycyMGwSLn9B7JuqXEM7SH0
+	RjcuL0RldLkxeh5Ybke1IWCFUo5GVc18eNjBp+2I2EdgMb2eRu50UUk7tgf86GRrsQxWmN+3jUh
+	vhttR
+X-Google-Smtp-Source: AGHT+IFCa1oJA60S5oQyo1jpOD2t8mstMnof6MAYT3q8JWv87rD5xsJdD5ONlxIML27Q+xneCnIUxA==
+X-Received: by 2002:a17:903:11c7:b0:20b:b455:eb72 with SMTP id d9443c01a7336-20bfde555c3mr154319365ad.8.1728271292308;
+        Sun, 06 Oct 2024 20:21:32 -0700 (PDT)
+Received: from google.com (98.81.87.34.bc.googleusercontent.com. [34.87.81.98])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c138cbfaasm31086225ad.88.2024.10.06.20.21.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2024 20:21:31 -0700 (PDT)
+Date: Mon, 7 Oct 2024 08:51:23 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v3 4/7] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
-Message-ID: <202410070929.jEKAJxjG-lkp@intel.com>
-References: <20241004050742.140664-5-dlemoal@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>,
+	Sajid Dalvi <sdalvi@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/ASPM: Disable L1 before disabling L1ss
+Message-ID: <ZwNTswQatCdb62FT@google.com>
+References: <20241003132503.2279433-1-ajayagarwal@google.com>
+ <20241004231928.GA366846@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,93 +92,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241004050742.140664-5-dlemoal@kernel.org>
+In-Reply-To: <20241004231928.GA366846@bhelgaas>
 
-Hi Damien,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus mani-mhi/mhi-next linus/master v6.12-rc2 next-20241004]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Damien-Le-Moal/PCI-endpoint-Introduce-pci_epc_function_is_valid/20241004-130947
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20241004050742.140664-5-dlemoal%40kernel.org
-patch subject: [PATCH v3 4/7] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
-config: x86_64-randconfig-122-20241007 (https://download.01.org/0day-ci/archive/20241007/202410070929.jEKAJxjG-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241007/202410070929.jEKAJxjG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410070929.jEKAJxjG-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/endpoint/pci-epc-core.c:569:34: sparse: sparse: Using plain integer as NULL pointer
-   drivers/pci/endpoint/pci-epc-core.c: note: in included file (through include/linux/smp.h, include/linux/lockdep.h, include/linux/spinlock.h, ...):
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
-
-vim +569 drivers/pci/endpoint/pci-epc-core.c
-
-   524	
-   525	/**
-   526	 * pci_epc_mem_map() - allocate and map a PCI address to a CPU address
-   527	 * @epc: the EPC device on which the CPU address is to be allocated and mapped
-   528	 * @func_no: the physical endpoint function number in the EPC device
-   529	 * @vfunc_no: the virtual endpoint function number in the physical function
-   530	 * @pci_addr: PCI address to which the CPU address should be mapped
-   531	 * @pci_size: the number of bytes to map starting from @pci_addr
-   532	 * @map: where to return the mapping information
-   533	 *
-   534	 * Allocate a controller memory address region and map it to a RC PCI address
-   535	 * region, taking into account the controller physical address mapping
-   536	 * constraints using pci_epc_map_align().
-   537	 * The effective size of the PCI address range mapped from @pci_addr is
-   538	 * indicated by @map->pci_size. This size may be less than the requested
-   539	 * @pci_size. The local virtual CPU address for the mapping is indicated by
-   540	 * @map->virt_addr (@map->phys_addr indicates the physical address).
-   541	 * The size and CPU address of the controller memory allocated and mapped are
-   542	 * respectively indicated by @map->map_size and @map->virt_base (and
-   543	 * @map->phys_base).
-   544	 *
-   545	 * Returns 0 on success and a negative error code in case of error.
-   546	 */
-   547	int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-   548			    u64 pci_addr, size_t pci_size, struct pci_epc_map *map)
-   549	{
-   550		int ret;
-   551	
-   552		ret = pci_epc_map_align(epc, func_no, vfunc_no, pci_addr, pci_size, map);
-   553		if (ret)
-   554			return ret;
-   555	
-   556		map->virt_base = pci_epc_mem_alloc_addr(epc, &map->phys_base,
-   557							map->map_size);
-   558		if (!map->virt_base)
-   559			return -ENOMEM;
-   560	
-   561		map->phys_addr = map->phys_base + map->map_ofst;
-   562		map->virt_addr = map->virt_base + map->map_ofst;
-   563	
-   564		ret = pci_epc_map_addr(epc, func_no, vfunc_no, map->phys_base,
-   565				       map->map_pci_addr, map->map_size);
-   566		if (ret) {
-   567			pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
-   568					      map->map_size);
- > 569			map->virt_base = 0;
-   570			return ret;
-   571		}
-   572	
-   573		return 0;
-   574	}
-   575	EXPORT_SYMBOL_GPL(pci_epc_mem_map);
-   576	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Fri, Oct 04, 2024 at 06:19:28PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 03, 2024 at 06:55:03PM +0530, Ajay Agarwal wrote:
+> > The current sequence in the driver for L1ss update is as follows.
+> > 
+> > Disable L1ss
+> > Disable L1
+> > Enable L1ss as required
+> > Enable L1 if required
+> > 
+> > With this sequence, a bus hang is observed during the L1ss
+> > disable sequence when the RC CPU attempts to clear the RC L1ss
+> > register after clearing the EP L1ss register. It looks like the
+> > RC attempts to enter L1ss again and at the same time, access to
+> > RC L1ss register fails because aux clk is still not active.
+> >
+> > PCIe spec r6.2, section 5.5.4, recommends that setting either
+> > or both of the enable bits for ASPM L1 PM Substates must be done
+> > while ASPM L1 is disabled. My interpretation here is that
+> > clearing L1ss should also be done when L1 is disabled. Thereby,
+> > change the sequence as follows.
+> > 
+> > Disable L1
+> > Disable L1ss
+> > Enable L1ss as required
+> > Enable L1 if required
+> 
+> I think we also write the L1.2 enable bits in PCI_L1SS_CTL1 in
+> aspm_calc_l12_info() when ASPM L1 may be enabled:
+> 
+>   pcie_aspm_init_link_state
+>     pcie_aspm_cap_init
+>       pcie_capability_read_word(PCI_EXP_LNKCTL)
+>       aspm_l1ss_init
+>         aspm_calc_l12_info
+>           pci_clear_and_set_config_dword(PCI_L1SS_CTL1, PCI_L1SS_CTL1_L1_2_MASK)
+> 
+> That looks like another path where we should make a similar change.
+> What do you think?
+>
+I agree. We should make a similar change there. Thanks for pointing out.
+Will make the change in the next version.
+> Bjorn
 
