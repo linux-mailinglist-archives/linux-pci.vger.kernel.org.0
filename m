@@ -1,189 +1,154 @@
-Return-Path: <linux-pci+bounces-13923-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13924-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 367249923A4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:34:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 502C99923AD
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 06:43:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 587AC1C20BD4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:34:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 801CE1F21153
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 04:43:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C4A61FCE;
-	Mon,  7 Oct 2024 04:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CEA561FED;
+	Mon,  7 Oct 2024 04:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NCoARZm4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Obbg0Skj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A103910A1C
-	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 04:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7710343ABC
+	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 04:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728275672; cv=none; b=DIEjah7H/8ow7fVgzakPgtT+S0VBaizSe2GkwUz7EoLWIMdjdlXP9DnqiZz0CjUNejxKfAd6tIjHe5KsMKVEys/L6IRhq0s9oMwlP2QUAlDmcCzKKIM8MiMQnL76IJNzMPn6hy/L04gz0rVOtq2IBqOI/erpMpEGKo1R9sitkn0=
+	t=1728276234; cv=none; b=uMR/poC0d1DhVy03cQlpzBFeMsO9ScX17cnfJoKZQ4ZQqU84tk2Nox6FHQQBp23rB+tLvKLBlaBZRtFQgxccs3zQWn/rxnh/H/wZ1sY/d7hjAYWRzkaGZmxttV9mavMx0TPToLqeWTlhQJHkEK5Rgux79q2+oZXJpESqn4A/TRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728275672; c=relaxed/simple;
-	bh=xtVT0IFCi2Qto8kpSQiCGlBpvaMpt3JFkS6nS7bOX5U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m+ROxLUZjO/fuzsFNmBPm+BQZIuAI+mNwpVjakl+f/313SHK0Iqvu4D/LvFCbyHOPvPAWUiJj1Te9ASLo+ooq1UvtO9PRynVTs12bvlS24RMehG8VF4JAaUh/07KVAUASLVzkZK8EED3oESUmjeFFSH/fDAiI1gVx6OpEFqBdPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NCoARZm4; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com [209.85.219.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C3EA33F1BD
-	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 04:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1728275661;
-	bh=RKS/f2MF9K/DRHRfB0v5ZmIcK+e+Ci2Bwh5D2AMKYp8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=NCoARZm4YObPF2EsJ5tKPaNNxW2XDvdETMAB1/B8zTiBbu1HrsOuzMksk1j+G/nB2
-	 hMfRMQYjk95NVLBDFHpjhwso0pAJA0AHJje8qRQAt+SL6jdPwPNkYoac9m1GxZq25u
-	 qe7nVrUCpw5PkSMCChi3KmHjEgc6oBEQjEWfag+L7tXX9Vx4mTi8cn/NCJNv14ubfO
-	 ZQVhKgMaKF+Q1LhvzzUjJG5apymS0IplC0rLbOjurOFBj9FoIx9iWcdtHXciS72YGK
-	 tUcD5Sy2PTkZFyKmhVUZpUAzyQHoQX6xR5/VEe92tH5nlIVdDShIZ74FZ79F0MKr+A
-	 oR6aCrHgo7P2w==
-Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-e165fc5d94fso6139366276.2
-        for <linux-pci@vger.kernel.org>; Sun, 06 Oct 2024 21:34:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728275660; x=1728880460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RKS/f2MF9K/DRHRfB0v5ZmIcK+e+Ci2Bwh5D2AMKYp8=;
-        b=iwMSIZ2GaqKU+Alb88HCa3S04fo6oITbchhXhPZ+E7w92vyBfTtPxDoO49gdJkts0p
-         qAdZ99BfnKZTePgRVkPQxlhrLDJPDP3UOpGDPeu3jyNbwCNSAbO6NaDL8nuR4FbRokCa
-         3jEetjV7mbjpFs0g181r5fq6WH44uLUTm7YMBM91e8yEyXpaeddfnuDftbaATq2JQbcN
-         KlIDnuxnM++VPel8etbuDAWXAybHZEigEulEEUz2Kz8uwFcpTaMWZFNq7chuEUbcey0s
-         4YKAQOqfuJm2hEgnqZlqVoTTq7vVuyDF9O9tR1jVlu0rTfVpYJdVn3VWfS+W22dxhVd9
-         ZyKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOFsCWmViioGxwKPxUTjcMrMCn7T4Kl1uIvxGM3JWGzk3GRL+ym4L/kWFOuZeeFKlWD5LRO53L6lM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfVzDPTS1fAVBmt3BTfC5i6TmPzfmBZgkSELM4AFSRFeKpso1T
-	3i/xxIcJTW5SW00YydLLO6O6b3WsGekqbxKfM/UFPq9sMfiovUN/dne9agKGVcwU0tQFAWQc6lz
-	vAONUDG/Ql8Iq7rYCIs6aZJrXUIPwS5YgC2qskx3ZV9VFpTzJc5sf0V8xYKGTMjEgKq+jRqx8jW
-	KTpw1ZhMHMiUo22YATDHSvBYC2oPEEnyIh1P4nOGiu3EX01akg
-X-Received: by 2002:a05:6902:2388:b0:e22:5b1b:f1f1 with SMTP id 3f1490d57ef6-e28936d681cmr7110372276.22.1728275660431;
-        Sun, 06 Oct 2024 21:34:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHi3j06zDsu+UMiFSC0YAaoU5Gwv3GT9ajM093Bdzuvg/07VdqPhd1wdUbzIXoRnTEH9VD+2v/cf2IOe3HLgE=
-X-Received: by 2002:a05:6902:2388:b0:e22:5b1b:f1f1 with SMTP id
- 3f1490d57ef6-e28936d681cmr7110367276.22.1728275660149; Sun, 06 Oct 2024
- 21:34:20 -0700 (PDT)
+	s=arc-20240116; t=1728276234; c=relaxed/simple;
+	bh=im53CFKZy+1GrlC7y6uTbBfBbSyVogmlK6TyUwF1ayg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mwJB9bmsT8LwJkVVp1yy9kLdbCXvhR1tcRgGpz6wZqZUxZBj+N6xAxjTPYfHCMNRtqPqshj+3ACQSOsC3+JcrPylF01WWQ6nwtJO3ka0zcCmO3nZQkPGACgRe8uOHnSzcufSOENozmYLjck1LXMssD6K7wrGWw0ZOqObwRImaeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Obbg0Skj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D290C4CEC6;
+	Mon,  7 Oct 2024 04:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728276233;
+	bh=im53CFKZy+1GrlC7y6uTbBfBbSyVogmlK6TyUwF1ayg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Obbg0SkjwsjEZaujqBx3DZivatLpS0BY+faGjSFll0MSr/ga5gbaU7iTXm57MQuRX
+	 oMM4cuIXzhw2HUko5mV1Jg0YDHxQly+wYwosT/+d8Czshxc1KFo2BbJPRSR/SdKdwo
+	 YjvTcsLjMG6kjVctk3Kenu9Ce0IrbKgfDoa2OKz9vTbTtHkIYTLiJe5MF89YImwJQe
+	 XJIQYsBqaFozehsjhl2nAIUX3mMNFDpTiC+egCHNMDy96SSqGuOSK1hgJplpWFg84P
+	 h/ADLD9Kmtp6GekRCvMaVuHp8TbLCI0x5+zyQs06BL6xdKZM/8j2oNKu6mmFYNtfjU
+	 7YSIOFRYHomOA==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-nvme@lists.infradead.org,
+	Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-pci@vger.kernel.org
+Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v1 0/5] NVMe PCI endpoint function driver
+Date: Mon,  7 Oct 2024 13:43:46 +0900
+Message-ID: <20241007044351.157912-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240926125909.2362244-1-acelan.kao@canonical.com>
- <ZvVgTGVSco0Kg7H5@wunner.de> <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
- <ZvZ61srt3QAca2AI@wunner.de> <Zvf7xYEA32VgLRJ6@wunner.de> <CAFv23QkwxmT7qrnbfEpJNN+mnevNAor6Dk7efvYNOdjR9tGyrw@mail.gmail.com>
- <ZvvW1ua2UjwHIOEN@wunner.de> <ZvvXDQSBRZMEI2EX@wunner.de>
-In-Reply-To: <ZvvXDQSBRZMEI2EX@wunner.de>
-From: AceLan Kao <acelan.kao@canonical.com>
-Date: Mon, 7 Oct 2024 12:34:09 +0800
-Message-ID: <CAFv23Q=4O5czQaNw2mEnwkb9LQfODfQDeW+qQD14rfdeVEwjwA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
- during suspend
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Lukas Wunner <lukas@wunner.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=881=E6=97=A5=
- =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:03=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, Oct 01, 2024 at 01:02:46PM +0200, Lukas Wunner wrote:
-> > On Mon, Sep 30, 2024 at 09:31:53AM +0800, AceLan Kao wrote:
-> > > Lukas Wunner <lukas@wunner.de> 2024 9 28 8:51:
-> > > > -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
-> > > > +       dsn =3D pci_get_dsn(pdev);
-> > > > +       if (!PCI_POSSIBLE_ERROR(dsn) &&
-> > > > +           dsn !=3D ctrl->dsn)
-> > > >                 return true;
-> > >
-> > > In my case, the pciehp_device_replaced() returns true from this final=
- check.
-> > > And these are the values I got
-> > > dsn =3D 0x00000000, ctrl->dsn =3D 0x7800AA00
-> > > dsn =3D 0x00000000, ctrl->dsn =3D 0x21B7D000
-> >
-> > Ah because pci_get_dsn() returns 0 if the device is gone.
-> > Below is a modified patch which returns false in that case.
->
-> Sorry, forgot to include the patch:
->
-> -- >8 --
->
-> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pcie=
-hp_core.c
-> index ff458e6..957c320 100644
-> --- a/drivers/pci/hotplug/pciehp_core.c
-> +++ b/drivers/pci/hotplug/pciehp_core.c
-> @@ -287,24 +287,32 @@ static int pciehp_suspend(struct pcie_device *dev)
->  static bool pciehp_device_replaced(struct controller *ctrl)
->  {
->         struct pci_dev *pdev __free(pci_dev_put);
-> +       u64 dsn;
->         u32 reg;
->
->         pdev =3D pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0,=
- 0));
->         if (!pdev)
-> +               return false;
-> +
-> +       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) =3D=3D 0 &&
-> +           !PCI_POSSIBLE_ERROR(reg) &&
-> +           reg !=3D (pdev->vendor | (pdev->device << 16)))
->                 return true;
->
-> -       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
-> -           reg !=3D (pdev->vendor | (pdev->device << 16)) ||
-> -           pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
-> +       if (pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) =3D=3D =
-0 &&
-> +           !PCI_POSSIBLE_ERROR(reg) &&
->             reg !=3D (pdev->revision | (pdev->class << 8)))
->                 return true;
->
->         if (pdev->hdr_type =3D=3D PCI_HEADER_TYPE_NORMAL &&
-> -           (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) |=
-|
-> -            reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_device <=
-< 16))))
-> +           pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) =
-=3D=3D 0 &&
-> +           !PCI_POSSIBLE_ERROR(reg) &&
-> +           reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_device <<=
- 16)))
->                 return true;
->
-> -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
-> +       if ((dsn =3D pci_get_dsn(pdev)) &&
-> +           !PCI_POSSIBLE_ERROR(dsn) &&
-> +           dsn !=3D ctrl->dsn)
->                 return true;
->
->         return false;
-Hi Lukas,
+This patch series implements an NVMe PCI endpoint driver that implements
+a PCIe NVMe controller for a local NVMe fabrics host controller.
+This series is based on the improved PCI endpoint API patches "Improve
+PCI memory mapping API" (see [1]).
 
-Sorry for the late reply, just encountered a strong typhoon in my area
-last week and can't check this in our lab.
+The first 3 patches of this series are changes to the NVMe target and
+fabrics code to facilitate reusing the NVMe code and an NVMe host
+controller from other (non NVMe) drivers.
 
-The patched pciehp_device_replaced() returns false at the end of the
-function in my case.
-Unplug the dock which is connected with a tbt storage won't be
-considered as a replacement.
+Patch 4 is the main patch which introduces the NVMe PCI endpoint driver.
+This patch commit message provides and overview of the driver design and
+operation.
 
-But when I tried to replace the dock with the tbt storage during
-suspend, it still returned false at the end of the function like
-unplugged.
+Finally, patch 5 adds documentation files to document the NVMe PCI
+endpoint function driver internals, provide a user guide explaning how
+to setup an NVMe PCI endpoint device and describe the NVMe endpoint
+function driver binding attributes.
 
-BTW, it's a new model, so I think the ICM is used. And the reg is
-0xffffffff when unplugged.
+This driver has been extensively tested using a Radxa Rock5B board
+(rk3588 Arm SoC). Some tests have also been done using a Pine Rockpro64
+board (however, this board does not support PCI DMA, leading to very
+poor performance).
+
+Using the Radxa Rock5b board and setting up a 4 queue-pairs controller
+with a null-blk block device loop target, performance was measured
+using fio as follows:                                      
+
+ +----------------------------------+------------------------+
+ | Workload                         | IOPS (BW)              |
+ +----------------------------------+------------------------+
+ | Rand read, 4KB, QD=1, 1 job      | 7382 IOPS              |
+ | Rand read, 4KB, QD=32, 1 job     | 45.5k IOPS             |
+ | Rand read, 4KB, QD=32, 4 jobs    | 49.7k IOPS             |
+ | Rand read, 128KB, QD=32, 1 job   | 10.0k IOPS (1.31 GB/s) |
+ | Rand read, 128KB, QD=32, 4 jobs  | 10.2k IOPS (1.33 GB/s) |
+ | Seq read, 128KB, QD=32, 1 job    | 1.28 GB/s              |
+ | Seq read, 512KB, QD=32, 1 job    | 1.28 GB/s              |
+ | Rand write, 128KB, QD=32, 1 job  | 8713 IOPS (1.14 GB/s)  |
+ | Rand write, 128KB, QD=32, 4 jobs | 8103 IOPS (1.06 GB/s)  |
+ | Seq write, 128KB, QD=32, 1 job   | 8557 IOPS (1.12 GB/s)  |
+ | Seq write, 512KB, QD=32, 1 job   | 2069 IOPS (1.08 GB/s)  |
+ +----------------------------------+------------------------+
+
+These results use the default MDTS of the NVMe enpoint driver of 128 KB.
+Setting the NVMe endpoint device with a larger MDTS of 512 KB leads to
+improved maximum throughput of up to 2.4 GB/s (e.g. for the 512K random
+read workloads and sequential read workloads). The maximum IOPS achieved
+with this larger MDTS does not change significantly.
+
+This driver is not intended for production use but rather to be a
+playground for learning NVMe and NVMe over fabrics and exploring/testing
+new NVMe features while providing reasonably good performance.
+
+[1] https://lore.kernel.org/linux-pci/20241007040319.157412-1-dlemoal@kernel.org/T/#t
+
+Damien Le Moal (5):
+  nvmet: rename and move nvmet_get_log_page_len()
+  nvmef: export nvmef_create_ctrl()
+  nvmef: Introduce the NVME_OPT_HIDDEN_NS option
+  PCI: endpoint: Add NVMe endpoint function driver
+  PCI: endpoint: Document the NVMe endpoint function driver
+
+ .../endpoint/function/binding/pci-nvme.rst    |   34 +
+ Documentation/PCI/endpoint/index.rst          |    3 +
+ .../PCI/endpoint/pci-nvme-function.rst        |  151 +
+ Documentation/PCI/endpoint/pci-nvme-howto.rst |  190 ++
+ MAINTAINERS                                   |    9 +
+ drivers/nvme/host/core.c                      |   17 +-
+ drivers/nvme/host/fabrics.c                   |   11 +-
+ drivers/nvme/host/fabrics.h                   |    5 +
+ drivers/nvme/target/admin-cmd.c               |   20 +-
+ drivers/nvme/target/discovery.c               |    4 +-
+ drivers/nvme/target/nvmet.h                   |    3 -
+ drivers/pci/endpoint/functions/Kconfig        |    9 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-nvme.c | 2489 +++++++++++++++++
+ include/linux/nvme.h                          |   19 +
+ 15 files changed, 2935 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/function/binding/pci-nvme.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-nvme-function.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-nvme-howto.rst
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-nvme.c
+
+-- 
+2.46.2
+
 
