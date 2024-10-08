@@ -1,194 +1,290 @@
-Return-Path: <linux-pci+bounces-13982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1548F993A4C
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 00:35:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E42AD993C01
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 03:08:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5485EB22832
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Oct 2024 22:35:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A401B2841E4
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 01:08:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B939191F8C;
-	Mon,  7 Oct 2024 22:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC394DF71;
+	Tue,  8 Oct 2024 01:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e3VL5Ud8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRrydWrd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A29318CC15
-	for <linux-pci@vger.kernel.org>; Mon,  7 Oct 2024 22:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644FBEC4;
+	Tue,  8 Oct 2024 01:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728340531; cv=none; b=YA2Mfa93FJjueXPqb9mdQb/wQpxGj/hT3DtoKtSJOtvj/jglVIYSRoBtAd871FjCueBZ/Tfq5FSLIjkeya6EtNwc9aee1uAO4aPF4Yd2nBA8aFmjtMW7nJ1AQwJ/YHzgG1SPCQlRzgxXqp9ngjM7uWQ2gz1nZoS8OyJRGU67Mc4=
+	t=1728349691; cv=none; b=RUSIPjGgnPRqVKhwmNp31LuvNB8Tw2Xw9HPlW697ZXVNpQuNx04n7U24vBc+hanUnjp1X0gperQJI6E7xlURotuRV66/Gl3B4OBZ6S8nH24BnBqdCdDWLMhI9OjIWnHGVTIZpzfywjjxrFLmBYabMoso5muc2QK6UqkrCr+H0bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728340531; c=relaxed/simple;
-	bh=gesjil9Y0RZgbcjmX5qHd/S97rHztDCcedkOm+1cl0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bu5AdPzC+HFly0hwh3yMhT3CE7IbdOl8/uD/k23dKZcOJl4eZyRStdFppLGy8flHl5xYxJty478Gc0/QL+UQq9ffo5Z1Ybvo/lxyTDurszvSnnGc2znfnnxTNy0ik0B9+v+BD6eF2PjZpTwFGOS1FBx9AOBH50wW9Ng2eJVR47s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e3VL5Ud8; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e28ad6b7f1fso1953188276.1
-        for <linux-pci@vger.kernel.org>; Mon, 07 Oct 2024 15:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728340526; x=1728945326; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gesjil9Y0RZgbcjmX5qHd/S97rHztDCcedkOm+1cl0k=;
-        b=e3VL5Ud84GLI+E2x3bA8ztpqvuFMv57yd9aYEVQJXCzdGLPTTmXpQqv3Opq72bJmux
-         KBHMo3MVO1HOzdmTO8H+pcTCfVPqaiTDnPTpbQzl0qQR7IL44jHkwS4bzBufrjeR8qhe
-         DDLiaWivcex7UxcVlthWRdgNLBWzi+M8qTeDx57baSkDWFH1agIYPgvRPadbYLCLtjZu
-         06qTHbdte5aRDCOnGRwQe0feCJbqguEWevqetTaa5WoZI91EWlvvh0bLcBUS4nMqHsf9
-         D1KWrNcsh7YIcTiYbXUJhkPijHa5aKTMIfa20aY8luGYazLflzR5ecy/UydbOSAfiQM/
-         3TDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728340526; x=1728945326;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gesjil9Y0RZgbcjmX5qHd/S97rHztDCcedkOm+1cl0k=;
-        b=l+irRqiWJ54sVf5g1Cgh5OB5GHUSG4GUtX68ygBQiVxzVShLzzJwjK/eYMbc14YwC8
-         ct0csJ0pFD1R5a23M8/8Pq0/+lrIcvnsyUowlxiEvKkC61k9APOChdcKRVhvyixu1Evn
-         +AAY1tqQ7R+vXKXaz0UeInM5jcBggWCNMZmUEj7Ma2TfOLQ1r7+ybikqsEp4y8Habdvy
-         XEthHetQIy4AnonVgwxfdXku+LXobk3sEI4+1Ic+4xepAtpAf5mlkaktD2iifdXl9xuJ
-         M3uaWSN0fRlGgcjLI3a+ilPl/grnpT4M+sZX0/yua2+DsojVdC5uyHKx7O7K2iTtqcQ0
-         avHw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6N12ct+wcx073ya2zRwpytA0pgJUO6oLn4eAPSeD+BTpG2XRwi2uFJrpi6E4rSdpPAby9XkNUXq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYV+3ms4xBq4xB1fFkOHCqdhH6ejegTF3P8fdNN2qN/Rz+hkkI
-	fiKf0AeCXQersGQbCF08fM+38wxpPEzmBAl8bep7CNBdkZyJIcMlhmbBTdsjH6ivfAeztKxt3+R
-	sNxMNve+oJAJjN70qZeTnRU9jDGOJeqD/vUrjVA==
-X-Google-Smtp-Source: AGHT+IGYLLRVc3CeXKReIUVnntYlZ+ULRb29gPUl3UTx4hoqAUGdx6q2aFDzdnacRWqcM/cOYseo4GoEdp7e3a8qLZE=
-X-Received: by 2002:a05:6902:2305:b0:e28:6ec7:4353 with SMTP id
- 3f1490d57ef6-e2893964043mr10612649276.54.1728340526338; Mon, 07 Oct 2024
- 15:35:26 -0700 (PDT)
+	s=arc-20240116; t=1728349691; c=relaxed/simple;
+	bh=J2Nr7fmMyEWoumwX5k+h1Kr1J+Kf7NiK9qAvLzlafdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rlMWvzYpOm8fFEw0p+96q9rTappsFRJt8P8xgeLHiUGN/P6+CA4k4386V4TtSvWHM664qX5jk/a8NB7k8ux4XOW0Fu8zvnpWq5NUhYkUELmr4THR6roG/+gGuy7kz/dkMTs4BqStIekJHF9ymkSEOOARBEBjPsrVSO1eYqb4wGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRrydWrd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB77C4CEC6;
+	Tue,  8 Oct 2024 01:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728349690;
+	bh=J2Nr7fmMyEWoumwX5k+h1Kr1J+Kf7NiK9qAvLzlafdc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=WRrydWrd9YlGa0Z9P9TQSoFVXleerZO60E+YHAoNCW8Q/AGUAjPGbimrmTOWoYn5k
+	 e5KqW+0NHhe8dwrJ9e5N/Tw8M3l6yht5X7nUb2mxLwHbRNWuJqLxSJlAdero7XxAGt
+	 I0xpQ0ff0kfuipQH69xT+xb36IvFCvGSrdXpI6SfirF1G1xa38xDpZJsCtzXuOOXb+
+	 9GD9imdhYkNjhrWH9Eo5TpRiwoz0KmEIftWTxUAC+VOhrwwYIe0/vzZ/KiaEaqf4jP
+	 CMueLYvV13VPtaFCjAC+8LNrCbLs6MT6dRJpwzcb0DbGhmNOvEm5SVN8r7gcHhNTt6
+	 xvFHxjyv10PAw==
+Date: Mon, 7 Oct 2024 20:08:08 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
+Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
+ parsed from DT
+Message-ID: <20241008010808.GA455773@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
- <CAPDyKFp0N6UJhnHS164Tdf=xkWB0jzq65L9TdvYazeBQ-6WjeQ@mail.gmail.com>
- <20241007184924.GH14766@pendragon.ideasonboard.com> <CAPDyKFpQVnF7eQv3dup8k-3EijnMjuveCG9sZ=Rpey1Y6MBJEg@mail.gmail.com>
- <20241007222502.GG30699@pendragon.ideasonboard.com>
-In-Reply-To: <20241007222502.GG30699@pendragon.ideasonboard.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 8 Oct 2024 00:34:49 +0200
-Message-ID: <CAPDyKFrGNwna6Y2pqSRaBbRYHKRaD2ayqQHLtoqLPOu9Et7qTg@mail.gmail.com>
-Subject: Re: [PATCH 00/51] treewide: Switch to __pm_runtime_put_autosuspend()
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
-	linux-i3c@lists.infradead.org, linux-iio@vger.kernel.org, 
-	linux-input@vger.kernel.org, patches@opensource.cirrus.com, 
-	iommu@lists.linux.dev, imx@lists.linux.dev, 
-	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
-	linux-serial@vger.kernel.org, greybus-dev@lists.linaro.org, 
-	asahi@lists.linux.dev, rafael@kernel.org, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZwJyk9XouLfd24VG@apocalypse>
 
-On Tue, 8 Oct 2024 at 00:25, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Ulf,
->
-> On Tue, Oct 08, 2024 at 12:08:24AM +0200, Ulf Hansson wrote:
-> > On Mon, 7 Oct 2024 at 20:49, Laurent Pinchart wrote:
-> > > On Fri, Oct 04, 2024 at 04:38:36PM +0200, Ulf Hansson wrote:
-> > > > On Fri, 4 Oct 2024 at 11:41, Sakari Ailus wrote:
-> > > > >
-> > > > > Hello everyone,
-> > > > >
-> > > > > This set will switch the users of pm_runtime_put_autosuspend() to
-> > > > > __pm_runtime_put_autosuspend() while the former will soon be re-purposed
-> > > > > to include a call to pm_runtime_mark_last_busy(). The two are almost
-> > > > > always used together, apart from bugs which are likely common. Going
-> > > > > forward, most new users should be using pm_runtime_put_autosuspend().
-> > > > >
-> > > > > Once this conversion is done and pm_runtime_put_autosuspend() re-purposed,
-> > > > > I'll post another set to merge the calls to __pm_runtime_put_autosuspend()
-> > > > > and pm_runtime_mark_last_busy().
-> > > >
-> > > > That sounds like it could cause a lot of churns.
-> > > >
-> > > > Why not add a new helper function that does the
-> > > > pm_runtime_put_autosuspend() and the pm_runtime_mark_last_busy()
-> > > > things? Then we can start moving users over to this new interface,
-> > > > rather than having this intermediate step?
-> > >
-> > > I think the API would be nicer if we used the shortest and simplest
-> > > function names for the most common use cases. Following
-> > > pm_runtime_put_autosuspend() with pm_runtime_mark_last_busy() is that
-> > > most common use case. That's why I like Sakari's approach of repurposing
-> > > pm_runtime_put_autosuspend(), and introducing
-> > > __pm_runtime_put_autosuspend() for the odd cases where
-> > > pm_runtime_mark_last_busy() shouldn't be called.
-> >
-> > Okay, so the reason for this approach is because we couldn't find a
-> > short and descriptive name that could be used in favor of
-> > pm_runtime_put_autosuspend(). Let me throw some ideas at it and maybe
-> > you like it - or not. :-)
->
-> I like the idea at least :-)
->
-> > I don't know what options you guys discussed, but to me the entire
-> > "autosuspend"-suffix isn't really that necessary in my opinion. There
-> > are more ways than calling pm_runtime_put_autosuspend() that triggers
-> > us to use the RPM_AUTO flag for rpm_suspend(). For example, just
-> > calling pm_runtime_put() has the similar effect.
->
-> To be honest, I'm lost there. pm_runtime_put() calls
-> __pm_runtime_idle(RPM_GET_PUT | RPM_ASYNC), while
-> pm_runtime_put_autosuspend() calls __pm_runtime_suspend(RPM_GET_PUT |
-> RPM_ASYNC | RPM_AUTO).
+On Sun, Oct 06, 2024 at 01:20:51PM +0200, Andrea della Porta wrote:
+> On 15:17 Sat 28 Sep, Bjorn Helgaas wrote:
+> ...
+> > From your earlier email
+> > (https://lore.kernel.org/r/Zszcps6bnCcdFa54@apocalypse):
+> > 
+> > > Without this patch the range translation chain is broken, like this:
+> > 
+> > > pcie@120000: <0x2000000 0x00 0x00    0x1f 0x00                0x00 0xfffffffc>;
+> > > ~~~ chain breaks here ~~~
+> > > pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
+> > > dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
+> > > rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
+> > 
+> > The cover letter said "RP1 is an MFD chipset that acts as a
+> > south-bridge PCIe endpoint .. the RP1 as an endpoint itself is
+> > discoverable via usual PCI enumeration".
+> > 
+> > I assume pcie@120000 is the PCI host bridge and is already in the
+> > original DT describing the platform.  I assume pci@0 is a Root Port
+> > and dev@0,0 is the RP1 Endpoint, and the existing code already adds
+> > them as they are enumerated when pci_bus_add_device() calls
+> > of_pci_make_dev_node(), and I think this series adds the rp1@0
+> > description.
+> 
+> Correct.
+> 
+> > And the "ranges" properties are built when of_pci_make_dev_node()
+> > eventually calls of_pci_prop_ranges().  With reference to sec 2.2.1.1
+> > of https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> > and
+> > https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#ranges,
+> > I *think* your example says:
+> > 
+> > pcie@120000 has:
+> >   child phys.hi       0x02000000    n=0 p=0 t=0 ss=10b
+> >   child phys.mid,lo   0x00000000_00000000
+> >   parent phys.hi,lo   0x0000001f_00000000
+> >   length hi,lo        0x00000000_fffffffc
+> > 
+> > which would make it a bridge where the child (PCI) address space is
+> > relocatable non-prefetchable 32-bit memory space at
+> > 0x00000000-0xfffffffc, and the corresponding parent address space is
+> > 0x1f_00000000-0x1f_fffffffc.  That means the host bridge applies an
+> > address translation of "child_addr = parent_addr - 0x1f_00000000".
+> > 
+> > pci@0 has:
+> >   child phys.hi       0x82000000    n=1 p=0 t=0 ss=10b
+> >   child phys.mid,lo   0x0000001f_00000000
+> >   parent phys.hi      0x82000000    n=1 p=0 t=0 ss=10b
+> >   parent phys.mid,lo  0x0000001f_00000000
+> >   length hi,lo        0x00000000_00600000
+> > 
+> > which would make it a PCI-to-PCI bridge (I assume a PCIe Root Port),
+> > where the child (secondary bus) address space is the non-relocatable
+> > non-prefetchable 32-bit memory space 0x1f_00000000-0x1f_005fffff and
+> > the parent (primary bus) address space is also non-relocatable
+> > non-prefetchable 32-bit memory space at 0x1f_00000000-0x1f_005fffff.
+> > 
+> > This looks wrong to me because the pci@0 parent address space
+> > (0x1f_00000000-0x1f_005fffff) should be inside the pcie@120000 child
+> > address space (0x00000000-0xfffffffc), but it's not.
+> 
+> Exactly, that example refers to the 'uncorrected' case, i.e. without the
+> patch applied.
+> 
+> > IIUC, this patch clears the upper 32 bits in the pci@0 parent address
+> > space.  That would make things work correctly in this case because
+> > that happens to be the exact translation of pcie@120000, so it results
+> > in pci@0 parent address space of 0x00000000-0x005fffff.
+> 
+> Right. I think we should split it into two issues:
+> 
+> [1] RP1 acknowledges a 32 bit BAR address from its config space while the
+> device must be accessed using a 64 bit address (that is cpu address
+> 0x1f_00000000), which sounds strange to me but I guess that is how
+> the hw interconnect has been designed, so we need to cope with it.
 
-__pm_runtime_idle() ends up calling rpm_idle(), which may call
-rpm_suspend() - if it succeeds to idle the device. In that case, it
-tags on the RPM_AUTO flag in the call to rpm_suspend(). Quite similar
-to what is happening when calling pm_runtime_put_autosuspend().
+It's common that PCI bus addresses are identical to CPU physical
+addresses, but by no means universal.  More details in
+Documentation/core-api/dma-api-howto.rst
 
->
-> >
-> > Moreover, it's similar for pm_runtime_mark_last_busy(), it's called
-> > during rpm_resume() too, for example. So why bother about having
-> > "mark_last_busy" in the new name too.
-> >
-> > That said, my suggestion is simply "pm_runtime_put_suspend".
->
-> Can we do even better, and make pm_runtime_put() to handle autosuspend
-> automatically when autosuspend is enabled ?
+> [2] I still think that the of_pci_set_address() function should be amended
+> to avoid generating invalid 64 address when 32 bit flag is set.
+> 
+> As you noted, fixing [2] will incidentally also let [1] work: I think
+> we can try to solve [1] the proper way and maybe defer [2] for a separate
+> patch.
+> To solve [1] I've dropped this patch and tried to solve it from devicetree,
+> modifying the following mapping:
+> 
+> pcie@120000: <0x3000000 0x1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
+> 
+> so we now have a 1:1 64 bit mapping from 0x1f_00000000 to 0x1f_00000000.
 
-As stated above, this is already the case.
+That's the wrong thing to change.  pcie@120000 is fine; it's pci@0
+that's incorrect.
 
->
-> > If you don't like it, I will certainly not object to your current
-> > approach, even if I think it leads to unnecessary churns.
-> >
-> > [...]
-> >
-> > Kind regards
-> > Uffe
->
-> --
-> Regards,
->
-> Laurent Pinchart
+pcie@120000 is the host bridge, and its "ranges" must describe the
+address translation it performs between the primary (CPU) side and the
+secondary (PCI) side.  Either this offset is built into the hardware
+and can't be changed, or the offset is configured by firmware and the
+DT has to match.
 
-Kind regards
-Uffe
+So I think this description is correct:
+
+  pcie@120000: <0x2000000 0x0 0x00000000 0x1f 0x00000000 0x0 0xfffffffc>;
+
+which means we have an aperture from CPU physical addresses to PCI bus
+addresses like this:
+
+  Host bridge: [mem 0x1f_00000000-0x1f_fffffffb window] (bus address 0x00000000-0xfffffffb)
+
+> I thought it would result in something like this:
+> 
+> pcie@120000: <0x3000000 0x1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
+> pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
+> dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
+> rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
+> 
+> but it fails instead (err: "can't assign; no space") in pci_assign_resource()
+> function trying to match the size using pci_clip_resource_to_region(). It turned
+> out that the clipping is done against 32 bit memory region 'pci_32_bit',and
+> this is failing because the original region addresses to be clipped wxxiereas 64
+> bit wide. The 'culprit' seems to be the function devm_of_pci_get_host_bridge_resources()
+> dropping IORESOURCE_MEM_64 on any memory resource, which seems to be a change
+> somewhat specific to a RK3399 case (see commit 3bd6b8271ee66), but I'm not sure
+> whether it can be considered generic.
+
+I think the problem is that we're building the pci@0 (Root Port)
+"ranges" incorrectly.  pci@0 is a PCI-PCI bridge, which cannot do any
+address translation, so its parent and child address spaces must both
+be inside the pcie@120000 *child* address space.
+
+> Also, while taking a look at the resulting devicetree, I'm a bit confused by the
+> fact that the parent address generated by of_pci_prop_ranges() for the pci@0,0
+> bridge seems to be taken from the parent address of the pcie@120000 node. Shouldn't
+> it be taken from the child address of pcie@120000, instead?
+
+Yes, this is exactly the problem.  The pci@0 parent and child
+addresses in "ranges" are both in the PCI address space.  But we
+start with pdev->resource[N], which is a CPU address.  To get the PCI
+address, we need to apply pci_bus_address().  If the host bridge
+windows are set up correctly, the window->offset used in
+pcibios_resource_to_bus() should yield the PCI bus address.
+
+I think it should look like this:
+
+  pci@0: <0x82000000 0x0 0x00000000 0x82000000 0x0 0x00000000 0x0 0x600000>;
+
+By default lspci shows you the CPU addresses for BARs, so you should
+see something like this:
+
+  00:02.0 PCI bridge
+    Memory behind bridge: 1f00000000-1ffffffffb
+    Capabilities: [40] Express Root Port
+
+If you run "lspci -b", it will show you PCI bus addresses instead,
+which should look like this:
+
+  00:02.0 PCI bridge
+    Memory behind bridge: 00000000-fffffffb
+    Capabilities: [40] Express Root Port
+
+> > But I don't think it works in general because there's no requirement
+> > that the host bridge address translation be that simple.  For example,
+> > if we have two host bridges, and we want each to have 2GB of 32-bit
+> > PCI address space starting at 0x0, it might look like this:
+> > 
+> >   0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
+> >   0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
+> > 
+> > In this case simply ignoring the high 32 bits of the CPU address isn't
+> > the correct translation for the second host bridge.  I think we should
+> > look at each host bridge's "ranges", find the difference between its
+> > parent and child addresses, and apply the same difference to
+> > everything below that bridge.
+> 
+> Not sure I've got this scenario straight: can you please provide the topology
+> and the bit setting (32/64 bit) for those ranges? Also, is this scenario coming
+> from a real use case or is it hypothetical?
+
+This scenario is purely hypothetical, but it's a legal topology that
+we should handle correctly.  It's two host bridges, with independent
+PCI hierarchies below them:
+
+  Host bridge A: [mem 0x2_00000000-0x2_7fffffff window] (bus address 0x00000000-0x7fffffff)
+  Host bridge B: [mem 0x2_80000000-0x2_ffffffff window] (bus address 0x00000000-0x7fffffff)
+
+Bridge A has an MMIO aperture at CPU addresses
+0x2_00000000-0x2_7fffffff, and when it initiates PCI transactions on
+its secondary side, the PCI address is CPU_addr - 0x2_00000000.
+
+Similarly, bridge B has an MMIO aperture at CPU addresses 
+0x2_80000000-0x2_ffffffff, and when it initiates PCI transactions on 
+its secondary side, the PCI address is CPU_addr - 0x2_80000000.
+
+Both hierarchies use PCI bus addresses in the 0x00000000-0x7fffffff
+range.  In a topology like this, you can't convert a bus address back
+to a CPU address unless you know which hierarchy it's in.
+pcibios_bus_to_resource() takes a pci_bus pointer, which tells you
+which hierarchy (and which host bridge address translation) to use.
+
+Bjorn
 
