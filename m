@@ -1,290 +1,137 @@
-Return-Path: <linux-pci+bounces-13983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E42AD993C01
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 03:08:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67803993E6C
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 07:44:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A401B2841E4
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 01:08:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 821DB1C229E8
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 05:44:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC394DF71;
-	Tue,  8 Oct 2024 01:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5B5C12C484;
+	Tue,  8 Oct 2024 05:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRrydWrd"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="q4mPHQyk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from rusty.tulip.relay.mailchannels.net (rusty.tulip.relay.mailchannels.net [23.83.218.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644FBEC4;
-	Tue,  8 Oct 2024 01:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728349691; cv=none; b=RUSIPjGgnPRqVKhwmNp31LuvNB8Tw2Xw9HPlW697ZXVNpQuNx04n7U24vBc+hanUnjp1X0gperQJI6E7xlURotuRV66/Gl3B4OBZ6S8nH24BnBqdCdDWLMhI9OjIWnHGVTIZpzfywjjxrFLmBYabMoso5muc2QK6UqkrCr+H0bs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728349691; c=relaxed/simple;
-	bh=J2Nr7fmMyEWoumwX5k+h1Kr1J+Kf7NiK9qAvLzlafdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rlMWvzYpOm8fFEw0p+96q9rTappsFRJt8P8xgeLHiUGN/P6+CA4k4386V4TtSvWHM664qX5jk/a8NB7k8ux4XOW0Fu8zvnpWq5NUhYkUELmr4THR6roG/+gGuy7kz/dkMTs4BqStIekJHF9ymkSEOOARBEBjPsrVSO1eYqb4wGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRrydWrd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB77C4CEC6;
-	Tue,  8 Oct 2024 01:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728349690;
-	bh=J2Nr7fmMyEWoumwX5k+h1Kr1J+Kf7NiK9qAvLzlafdc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WRrydWrd9YlGa0Z9P9TQSoFVXleerZO60E+YHAoNCW8Q/AGUAjPGbimrmTOWoYn5k
-	 e5KqW+0NHhe8dwrJ9e5N/Tw8M3l6yht5X7nUb2mxLwHbRNWuJqLxSJlAdero7XxAGt
-	 I0xpQ0ff0kfuipQH69xT+xb36IvFCvGSrdXpI6SfirF1G1xa38xDpZJsCtzXuOOXb+
-	 9GD9imdhYkNjhrWH9Eo5TpRiwoz0KmEIftWTxUAC+VOhrwwYIe0/vzZ/KiaEaqf4jP
-	 CMueLYvV13VPtaFCjAC+8LNrCbLs6MT6dRJpwzcb0DbGhmNOvEm5SVN8r7gcHhNTt6
-	 xvFHxjyv10PAw==
-Date: Mon, 7 Oct 2024 20:08:08 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <20241008010808.GA455773@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8407762D2
+	for <linux-pci@vger.kernel.org>; Tue,  8 Oct 2024 05:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.252
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728366175; cv=pass; b=JJEQk8YeP6PKQupAkWfN0vIVt5XRMscfZ3N1Rh09qHBUxiDz4q0NCUkUgG4NWIXT1r7ea9xHEpbsexBj+JQojUO9riPgTrua2yZuh3jpqKWJJHNG8HnTXEPlS1uUv3mFJ+vP7FH4Py0cZVtgNuRKOPnrq6EcxbN+7zae6q0qruU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728366175; c=relaxed/simple;
+	bh=yTz7goaAG5CAqDTe+Hg4xEdnfdba9vprJQklvyelWQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2MoyxVcMYZX12yaX5NOFIFL1uh1+gQnOD05asy284uQCGQy69U588dyUsWVJuaJhb1g0mIf6Hi2mu3699LzHGzISSZzFT7Yrm1Rzf1Tf+RqhQ6SVr33WFozruP9SmwQm4A+33hFR7tFjezGSUNW6O81BR/Amf47TAVYgeS9TTY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=q4mPHQyk; arc=pass smtp.client-ip=23.83.218.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D14801640DC;
+	Tue,  8 Oct 2024 02:15:05 +0000 (UTC)
+Received: from pdx1-sub0-mail-a271.dreamhost.com (trex-2.trex.outbound.svc.cluster.local [100.101.175.87])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 6AF9B1652AB;
+	Tue,  8 Oct 2024 02:15:05 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1728353705; a=rsa-sha256;
+	cv=none;
+	b=u+6nv4p6ROVrXADK48jmQGrlI+apIUqwHXVcahwL6ibOKZ6fKE5eIfA678NHki8+5ctHKJ
+	LrR+8onEVSdfY9WT/ypU7qi+pOLuvOj4mXWzuIn7C8ZqCTOlwm+PLMeFIB5cLBTmM7Z7aH
+	FRcpe6orIT0cpjIiSMJnLwTZTzrPyDQyAhaTca/hoQgHNAE2GT+Ey44hd7FlO87kTEaKYN
+	91kDqpIsjZoEb8qMRIDNvcE0JOuzrV0rXFR49ymZRcEJfkWIKBxD+S1vxbnzAidzvfb6RX
+	qghEzXMBBK7yibd4aFCPDceWko01uJRfrPKNqUPuylDw0yhaKwhX7nb4lUb71g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1728353705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=0EoJ2JHR5XoPAMxMhJaPDfC6XqGzlNmikS0NuOW7T00=;
+	b=q4lZKnJfnMWUaq2zG2J5uSZm+ejQsG0WryY8A5kQkQ3dr2OOhX2+R4fig1OChB+Sew8SNy
+	YnrQppUBCEaYlcpgJew7yg/5OvXo5xCJ6Bi6vXHBB/g+Cx/f/QRp4C2AQ9Q6H9G+v5Dx4E
+	p8k1Y83q13QBG49Un1wRbHtz4LASo52d286RpsqlN5q/J5tWMqEN76JN3Tu0ULbdyvtUo8
+	7Yz9CWUyZGDaqMOcztpxXY7aP9YNhROcriuT5OxW8i9y3BB/AJDUq+dTUQ1JKzaD9Ck7d4
+	F9RN3q++IubcdXnSELOrthfVQ3OKMMzxoDpH+WtBfJAn6Si1hjjUaaOjJHjoww==
+ARC-Authentication-Results: i=1;
+	rspamd-54f99b5bc4-kmmxb;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Minister-Company: 7269a57403352817_1728353705675_2575222262
+X-MC-Loop-Signature: 1728353705675:1295637027
+X-MC-Ingress-Time: 1728353705675
+Received: from pdx1-sub0-mail-a271.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.101.175.87 (trex/7.0.2);
+	Tue, 08 Oct 2024 02:15:05 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a271.dreamhost.com (Postfix) with ESMTPSA id 4XN03D6wQrzGp;
+	Mon,  7 Oct 2024 19:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1728353705;
+	bh=0EoJ2JHR5XoPAMxMhJaPDfC6XqGzlNmikS0NuOW7T00=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=q4mPHQykZNajM3nyvqenF4sdST6U0R/+spW0Pv8LQ2m9P7TOH74kfpxRkHXp7iXsY
+	 8Tfr8VW8QNxk8bYXChaonW7rO3fPkhTFQhVoSPslPrXgptNL5y89400SZSWZJIbfcA
+	 y9E9HlCbYI4tRV1RA81jdr0qNGYi469DVlscxQ2cOMIRyP8rxM8HHmIEDgx1iJ7IVO
+	 ZoMZRpBJN5v++kGMLfjrahZAHLC5pTe8h9QyGUQYYK6YoNrhNVHavutOIgJUUyehOn
+	 W7yW2SItI63onkfvr/J50wAcGjYP1hEGDc5/UWVohpgUgx+w6ssdCvt8xB3RMnZ5FK
+	 0fiyBkErIdrhA==
+Date: Mon, 7 Oct 2024 19:15:01 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
+	bhelgaas@google.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCHv2 2/5] pci: make pci_destroy_dev concurrent safe
+Message-ID: <20241008021501.gyig3gpnqz5zqi5o@offworld>
+References: <20240827192826.710031-1-kbusch@meta.com>
+ <20240827192826.710031-3-kbusch@meta.com>
+ <20241003023354.txfw7w4ud247h5va@offworld>
+ <Zv6wG5qF74J237w2@kbusch-mbp>
+ <20241003170416.kfbdpd7xkneh5sgc@offworld>
+ <Zv7bifNNSJXXJgAn@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <ZwJyk9XouLfd24VG@apocalypse>
+In-Reply-To: <Zv7bifNNSJXXJgAn@kbusch-mbp>
+User-Agent: NeoMutt/20220429
 
-On Sun, Oct 06, 2024 at 01:20:51PM +0200, Andrea della Porta wrote:
-> On 15:17 Sat 28 Sep, Bjorn Helgaas wrote:
-> ...
-> > From your earlier email
-> > (https://lore.kernel.org/r/Zszcps6bnCcdFa54@apocalypse):
-> > 
-> > > Without this patch the range translation chain is broken, like this:
-> > 
-> > > pcie@120000: <0x2000000 0x00 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> > > ~~~ chain breaks here ~~~
-> > > pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
-> > > dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
-> > > rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
-> > 
-> > The cover letter said "RP1 is an MFD chipset that acts as a
-> > south-bridge PCIe endpoint .. the RP1 as an endpoint itself is
-> > discoverable via usual PCI enumeration".
-> > 
-> > I assume pcie@120000 is the PCI host bridge and is already in the
-> > original DT describing the platform.  I assume pci@0 is a Root Port
-> > and dev@0,0 is the RP1 Endpoint, and the existing code already adds
-> > them as they are enumerated when pci_bus_add_device() calls
-> > of_pci_make_dev_node(), and I think this series adds the rp1@0
-> > description.
-> 
-> Correct.
-> 
-> > And the "ranges" properties are built when of_pci_make_dev_node()
-> > eventually calls of_pci_prop_ranges().  With reference to sec 2.2.1.1
-> > of https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
-> > and
-> > https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#ranges,
-> > I *think* your example says:
-> > 
-> > pcie@120000 has:
-> >   child phys.hi       0x02000000    n=0 p=0 t=0 ss=10b
-> >   child phys.mid,lo   0x00000000_00000000
-> >   parent phys.hi,lo   0x0000001f_00000000
-> >   length hi,lo        0x00000000_fffffffc
-> > 
-> > which would make it a bridge where the child (PCI) address space is
-> > relocatable non-prefetchable 32-bit memory space at
-> > 0x00000000-0xfffffffc, and the corresponding parent address space is
-> > 0x1f_00000000-0x1f_fffffffc.  That means the host bridge applies an
-> > address translation of "child_addr = parent_addr - 0x1f_00000000".
-> > 
-> > pci@0 has:
-> >   child phys.hi       0x82000000    n=1 p=0 t=0 ss=10b
-> >   child phys.mid,lo   0x0000001f_00000000
-> >   parent phys.hi      0x82000000    n=1 p=0 t=0 ss=10b
-> >   parent phys.mid,lo  0x0000001f_00000000
-> >   length hi,lo        0x00000000_00600000
-> > 
-> > which would make it a PCI-to-PCI bridge (I assume a PCIe Root Port),
-> > where the child (secondary bus) address space is the non-relocatable
-> > non-prefetchable 32-bit memory space 0x1f_00000000-0x1f_005fffff and
-> > the parent (primary bus) address space is also non-relocatable
-> > non-prefetchable 32-bit memory space at 0x1f_00000000-0x1f_005fffff.
-> > 
-> > This looks wrong to me because the pci@0 parent address space
-> > (0x1f_00000000-0x1f_005fffff) should be inside the pcie@120000 child
-> > address space (0x00000000-0xfffffffc), but it's not.
-> 
-> Exactly, that example refers to the 'uncorrected' case, i.e. without the
-> patch applied.
-> 
-> > IIUC, this patch clears the upper 32 bits in the pci@0 parent address
-> > space.  That would make things work correctly in this case because
-> > that happens to be the exact translation of pcie@120000, so it results
-> > in pci@0 parent address space of 0x00000000-0x005fffff.
-> 
-> Right. I think we should split it into two issues:
-> 
-> [1] RP1 acknowledges a 32 bit BAR address from its config space while the
-> device must be accessed using a 64 bit address (that is cpu address
-> 0x1f_00000000), which sounds strange to me but I guess that is how
-> the hw interconnect has been designed, so we need to cope with it.
+On Thu, 03 Oct 2024, Keith Busch wrote:
 
-It's common that PCI bus addresses are identical to CPU physical
-addresses, but by no means universal.  More details in
-Documentation/core-api/dma-api-howto.rst
+>On Thu, Oct 03, 2024 at 10:04:16AM -0700, Davidlohr Bueso wrote:
+>> Well the thing is it is crashing on me, as reported. I was able to reproduce
+>> the deadlock with rescan_remove_lock on a switched CXL topology (via sysfs
+>> remove/rescan parent/child). This is why I tested your full pci-bus-locking-2024-09-09
+>> branch hoping the last patch would fix it, but still cannot confirm because
+>> of that nil ptr deref.
+>
+>You might need something different than anything in that series if you
+>are doing concurrent sysfs access during removal. This is what I wrote
+>up for that issue:
 
-> [2] I still think that the of_pci_set_address() function should be amended
-> to avoid generating invalid 64 address when 32 bit flag is set.
-> 
-> As you noted, fixing [2] will incidentally also let [1] work: I think
-> we can try to solve [1] the proper way and maybe defer [2] for a separate
-> patch.
-> To solve [1] I've dropped this patch and tried to solve it from devicetree,
-> modifying the following mapping:
-> 
-> pcie@120000: <0x3000000 0x1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> 
-> so we now have a 1:1 64 bit mapping from 0x1f_00000000 to 0x1f_00000000.
+The crash is *only* happening in your branch. The test runs into a deadlock
+on a vanilla kernel.
 
-That's the wrong thing to change.  pcie@120000 is fine; it's pci@0
-that's incorrect.
+>
+>  https://lore.kernel.org/linux-pci/20240719185513.3376321-1-kbusch@meta.com/T/#u
 
-pcie@120000 is the host bridge, and its "ranges" must describe the
-address translation it performs between the primary (CPU) side and the
-secondary (PCI) side.  Either this offset is built into the hardware
-and can't be changed, or the offset is configured by firmware and the
-DT has to match.
-
-So I think this description is correct:
-
-  pcie@120000: <0x2000000 0x0 0x00000000 0x1f 0x00000000 0x0 0xfffffffc>;
-
-which means we have an aperture from CPU physical addresses to PCI bus
-addresses like this:
-
-  Host bridge: [mem 0x1f_00000000-0x1f_fffffffb window] (bus address 0x00000000-0xfffffffb)
-
-> I thought it would result in something like this:
-> 
-> pcie@120000: <0x3000000 0x1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
-> dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
-> rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
-> 
-> but it fails instead (err: "can't assign; no space") in pci_assign_resource()
-> function trying to match the size using pci_clip_resource_to_region(). It turned
-> out that the clipping is done against 32 bit memory region 'pci_32_bit',and
-> this is failing because the original region addresses to be clipped wxxiereas 64
-> bit wide. The 'culprit' seems to be the function devm_of_pci_get_host_bridge_resources()
-> dropping IORESOURCE_MEM_64 on any memory resource, which seems to be a change
-> somewhat specific to a RK3399 case (see commit 3bd6b8271ee66), but I'm not sure
-> whether it can be considered generic.
-
-I think the problem is that we're building the pci@0 (Root Port)
-"ranges" incorrectly.  pci@0 is a PCI-PCI bridge, which cannot do any
-address translation, so its parent and child address spaces must both
-be inside the pcie@120000 *child* address space.
-
-> Also, while taking a look at the resulting devicetree, I'm a bit confused by the
-> fact that the parent address generated by of_pci_prop_ranges() for the pci@0,0
-> bridge seems to be taken from the parent address of the pcie@120000 node. Shouldn't
-> it be taken from the child address of pcie@120000, instead?
-
-Yes, this is exactly the problem.  The pci@0 parent and child
-addresses in "ranges" are both in the PCI address space.  But we
-start with pdev->resource[N], which is a CPU address.  To get the PCI
-address, we need to apply pci_bus_address().  If the host bridge
-windows are set up correctly, the window->offset used in
-pcibios_resource_to_bus() should yield the PCI bus address.
-
-I think it should look like this:
-
-  pci@0: <0x82000000 0x0 0x00000000 0x82000000 0x0 0x00000000 0x0 0x600000>;
-
-By default lspci shows you the CPU addresses for BARs, so you should
-see something like this:
-
-  00:02.0 PCI bridge
-    Memory behind bridge: 1f00000000-1ffffffffb
-    Capabilities: [40] Express Root Port
-
-If you run "lspci -b", it will show you PCI bus addresses instead,
-which should look like this:
-
-  00:02.0 PCI bridge
-    Memory behind bridge: 00000000-fffffffb
-    Capabilities: [40] Express Root Port
-
-> > But I don't think it works in general because there's no requirement
-> > that the host bridge address translation be that simple.  For example,
-> > if we have two host bridges, and we want each to have 2GB of 32-bit
-> > PCI address space starting at 0x0, it might look like this:
-> > 
-> >   0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
-> >   0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
-> > 
-> > In this case simply ignoring the high 32 bits of the CPU address isn't
-> > the correct translation for the second host bridge.  I think we should
-> > look at each host bridge's "ranges", find the difference between its
-> > parent and child addresses, and apply the same difference to
-> > everything below that bridge.
-> 
-> Not sure I've got this scenario straight: can you please provide the topology
-> and the bit setting (32/64 bit) for those ranges? Also, is this scenario coming
-> from a real use case or is it hypothetical?
-
-This scenario is purely hypothetical, but it's a legal topology that
-we should handle correctly.  It's two host bridges, with independent
-PCI hierarchies below them:
-
-  Host bridge A: [mem 0x2_00000000-0x2_7fffffff window] (bus address 0x00000000-0x7fffffff)
-  Host bridge B: [mem 0x2_80000000-0x2_ffffffff window] (bus address 0x00000000-0x7fffffff)
-
-Bridge A has an MMIO aperture at CPU addresses
-0x2_00000000-0x2_7fffffff, and when it initiates PCI transactions on
-its secondary side, the PCI address is CPU_addr - 0x2_00000000.
-
-Similarly, bridge B has an MMIO aperture at CPU addresses 
-0x2_80000000-0x2_ffffffff, and when it initiates PCI transactions on 
-its secondary side, the PCI address is CPU_addr - 0x2_80000000.
-
-Both hierarchies use PCI bus addresses in the 0x00000000-0x7fffffff
-range.  In a topology like this, you can't convert a bus address back
-to a CPU address unless you know which hierarchy it's in.
-pcibios_bus_to_resource() takes a pci_bus pointer, which tells you
-which hierarchy (and which host bridge address translation) to use.
-
-Bjorn
+This does not address either, fyi.
 
