@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-14018-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14019-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7575C9959FF
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 00:21:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFE74995A03
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 00:22:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED8121F21706
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 22:21:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 894E6283981
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 22:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0BE1213EF1;
-	Tue,  8 Oct 2024 22:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433BC21642C;
+	Tue,  8 Oct 2024 22:19:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vwR3gW7A"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C4T6F4yA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2081.outbound.protection.outlook.com [40.107.243.81])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2045.outbound.protection.outlook.com [40.107.236.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DD921503B;
-	Tue,  8 Oct 2024 22:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253FF216429;
+	Tue,  8 Oct 2024 22:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728425972; cv=fail; b=h8BRGJuXjlWILfXbtxINbfIcUo13vYNpK1gQLaLsTSjZNNF3wO7h+FtzjboJTDvLGJekADZxaegL4Jr5ZoWR5zoygkBgmxOXFrTvGpvZFt8Kj1FpnSg3grgczvSglS9vfK2Myi7i2Qc1A2KZa6xaArhcRCPIi+HyDMlCzq6uSGc=
+	t=1728425986; cv=fail; b=fAMbJcnqPhYLHQ6DFnYxyulxElIrdNLzCMTmFJ90F46AZ5d+YEAj5M0nABONDpeFRlOx+++/v6KEKkFkfZFIJSSgXsxSiRicp0uiWpbOl9Oe7mdHDRfRSReBZNvIhcS17kIhK53xhJycDrs/okyDD8/1jVV6llmfFsJCvJ4uArI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728425972; c=relaxed/simple;
-	bh=JrXreU8bAVYSLae02dgo+C2Q1O9B1VPtNz8E5rdCVF8=;
+	s=arc-20240116; t=1728425986; c=relaxed/simple;
+	bh=WnI9cftdckMCCfAB/cCAoK83Qqfp8hCPGKlp157JaRo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aw0k3qMDVMgcJUq2TxYTR2CS2SUu/0AzHwjzPWGoSd9TrZtNaZZGKcru5gthrgbTgl0C3lYZo5Nnr/Ka9fWfppfbU00yMl0drTfgz+auHWlRfnNymVihzCqh0rBMPom/dzWJCEtCJX15x6DVZ+LXOvxJRiXseCF+JckVwJlIwXQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vwR3gW7A; arc=fail smtp.client-ip=40.107.243.81
+	 MIME-Version:Content-Type; b=NDU60jubb4x23vFR6HEWIbZ7NJ6w4n9xSAszzWzFaO+j+yF+0s4kxy+tcWGuzFQiCYwx+sp1GvFqqvjhH7VezNohWI1ETFhERbTQ9eRhYvjzr0r0M2azvtTdMBxAUkyf0irwZ7+twYdlM5a83FKFwEPaT4JKJ0CXOOo1FsGWeg8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C4T6F4yA; arc=fail smtp.client-ip=40.107.236.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tKoYwWnTN0fsoiq8xs/j2/TcnLeJ7GQQpRxd0iJJrt63W8foqXQ/BZV/Kb98EEPWm2Zm0UbnOhnBgi2pGIWrqQ3zqpcNht5Dghg7bu4LkYVxdaQJVghguAxpQnOurKuD+zSwRuAWZRLKOtl/w879unsLbqwN58aqQuVV+891UvAeE5h+ed/WUoE9WPV1HZ38uTAujZPAasixg5ZLKl1P0aajB8RasfiqQV9ldNsIYLfH/ZgLkia+RyXX8RMxg5MNJAofe0qJTc6J4aOUHqFVf9hsRgLCqg0IJTc66DorobQkiJzwZlslNXilzV7t/8wKdGeagIRqbLTL1BOf1A5k4g==
+ b=YCLPIrZrq6aJk244w7JyaMtCO+7eWsAVCPFvn77ZEHLuzJ0DjReMj2RLXotOW0GKRGWVcgPtdLRAX2NWRipi5IfSn199nEOkP9oReF0l/jPO6bNQpjQcM2F6ug3iqtH4S3jLyl6xBQKIBhwtH6bgyvHu2RRwwa5nMhrXSG4YWftfKowbFuEJjwZvCRZXViqTSb2ZRUEhqPmO5um96VLTdBC9FmQxmBzl9l47WPTNfqNwBRIOm4BD0uMFYco7IzRuS2DWiWUAEx3gFtgiuQbIXa6UNBJlm2+uIxjuQI3iZt7lzqn0KMjOuIKO+KZCjJBowFqZYcbigwR1E6zWFOPyhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=baLU/8n16ZjbbGjYZ9V333EBUkQ5W1UUAvVlCOa2Jhs=;
- b=oV+7JGyiugbtOOs6mFifMEbncgbGHHjFQfgQyR4yzcSJznMIgs+sGwansmDCkQpK8U8As5p4H7LGqTvpWfX6tWnLi0zYAERh28a/SwWcFGhBZCTGaygtcb3wbs64ckR5G5Ya/FNaD66Qv4ceHBF2LAj5edfUH0Tbx5Zc0n1t82EZzKR1oaUmd0GmK9YcrQCPq8DJ7pZnRruTFoUTOJBjuN21LS36diydDZSb4drnzQk089Fn7/wLDoTagRoI7D2b/y7zjQAyT9xDEvNl4HAhFj9Czb2CmZkB5KTjE7BpTC+OBGPpdzFG/Q27JWFWlOzjslPwzhlmxjAQ9pUrXQXbCA==
+ bh=5IJezya7VDFnthrpvmaJErquhXQmSEGt3pjALQGFDAE=;
+ b=qZgbUB0hIhoKFfZc946OszK/mi8qCMjcBEy0VK/Fw3mXVseJUOx9tWy4EZ32xidlB1ypVQOpgKkcygH9JcMdV1oiXEiFmwcG9+3UxUB4RtROlEK99JvTl8T34EvhBVfOHs3cK0v+/oaj0TsfCSfFE9ZJSHW1QxdiXXanmfAW82+en8+vCM1PE7UdJQDWH/GqXWN4573L6KT6AxveEJku5Ulo0W4VHSagnsBf7xnOdJg/5WxF0ZwLi9HoqVDzLGxqpYjyFEeFMql2x0G8EMkKvrdMgzwo/GtHe4kW5Yk/ZXUk4sXRSC1QAJQ9mVQ1Gh2LMC9tKc2InK4vJZUhcsasHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=baLU/8n16ZjbbGjYZ9V333EBUkQ5W1UUAvVlCOa2Jhs=;
- b=vwR3gW7AHzEw2HpIVo0KjECJ9CZrU98Rtzlp53K9Xju6Dyf90q2MHxwH4G1UU1Obr8w9YeLb4rInpnLu2LwlOVO5L3TZNywvB8bb9gnx1DW/QvR94y7337Z9kdBice1UeU0HwOagBrCAIPfwAMz/9R3IVy32Vpjp3SNQO3F3DJs=
-Received: from BLAPR05CA0042.namprd05.prod.outlook.com (2603:10b6:208:335::22)
- by IA0PR12MB8326.namprd12.prod.outlook.com (2603:10b6:208:40d::7) with
+ bh=5IJezya7VDFnthrpvmaJErquhXQmSEGt3pjALQGFDAE=;
+ b=C4T6F4yAJbXGBcpxSAS3HoRoQnFMzoEeVRJwsTuhUAu5OVdN9FnLw7hVYdAOSGmfHwFoJaZb6T4fOAYEkRkF5Iz0evx9CT0jPziy8a97srHP5E7fm3SBXKbN4wJqgwr2nqKPJVFk4Febrk9cVYoMhCdtYQ3NSD4+am4T5JSxrho=
+Received: from BL0PR02CA0023.namprd02.prod.outlook.com (2603:10b6:207:3c::36)
+ by DS7PR12MB5933.namprd12.prod.outlook.com (2603:10b6:8:7c::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.16; Tue, 8 Oct
- 2024 22:19:28 +0000
-Received: from BN3PEPF0000B074.namprd04.prod.outlook.com
- (2603:10b6:208:335:cafe::2) by BLAPR05CA0042.outlook.office365.com
- (2603:10b6:208:335::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.17 via Frontend
- Transport; Tue, 8 Oct 2024 22:19:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.24; Tue, 8 Oct
+ 2024 22:19:39 +0000
+Received: from BN3PEPF0000B071.namprd04.prod.outlook.com
+ (2603:10b6:207:3c:cafe::37) by BL0PR02CA0023.outlook.office365.com
+ (2603:10b6:207:3c::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.24 via Frontend
+ Transport; Tue, 8 Oct 2024 22:19:39 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B074.mail.protection.outlook.com (10.167.243.119) with Microsoft
+ BN3PEPF0000B071.mail.protection.outlook.com (10.167.243.116) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8048.13 via Frontend Transport; Tue, 8 Oct 2024 22:19:28 +0000
+ 15.20.8048.13 via Frontend Transport; Tue, 8 Oct 2024 22:19:39 +0000
 Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Oct
- 2024 17:19:27 -0500
+ 2024 17:19:38 -0500
 From: Terry Bowman <terry.bowman@amd.com>
 To: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
@@ -79,9 +79,9 @@ To: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
 	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
 	<nathan.fontenot@amd.com>, <smita.koralahallichannabasappa@amd.com>,
 	<terry.bowman@amd.com>
-Subject: [PATCH 13/15] cxl/pci: Add trace logging for CXL PCIe port RAS errors
-Date: Tue, 8 Oct 2024 17:16:55 -0500
-Message-ID: <20241008221657.1130181-14-terry.bowman@amd.com>
+Subject: [PATCH 14/15] cxl/aer/pci: Export pci_aer_unmask_internal_errors()
+Date: Tue, 8 Oct 2024 17:16:56 -0500
+Message-ID: <20241008221657.1130181-15-terry.bowman@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241008221657.1130181-1-terry.bowman@amd.com>
 References: <20241008221657.1130181-1-terry.bowman@amd.com>
@@ -97,166 +97,108 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B074:EE_|IA0PR12MB8326:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d056cbb-ef32-4b20-31ea-08dce7e7467a
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B071:EE_|DS7PR12MB5933:EE_
+X-MS-Office365-Filtering-Correlation-Id: eb7182a3-222b-4b78-d284-08dce7e74d11
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|921020;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SSCA244ozanzgReeL6O0rNBuh8byD/8n4GSCm+hylyU2I7nGbcuxvGeAYR6N?=
- =?us-ascii?Q?hD9NL0nZ1SSdo8uO5CrHiI+YBx7on5FQHI7eAfRoOTYQhweHLquR8oZRX0zj?=
- =?us-ascii?Q?Z/64Qulfw/yhbW+sETyFtRwxOByKBqkf98yOuWu+kjOT17kj856MdY1g3CUB?=
- =?us-ascii?Q?QSuRI7B61YS8yw0qW2J5vSBVQCJDDmjaX+2gTzslNqQZGThfpJo7vejVSIPD?=
- =?us-ascii?Q?55W8+wlrzXXa1K+fs2u+xY6n2HBHb5UWLakBxrLEvviCmDJ6QBns64EIVvZ5?=
- =?us-ascii?Q?bEjsl3Tlx5byBI4cjr9os86sA3TiOLu8c4c158SNXtdEQVqsE8RchwAZgaKp?=
- =?us-ascii?Q?4CHZIQ4hSgZLRukFUHEOcBsQ4v8J0EJeMI9ErTQemNwG1mH1P06vTHs6RMuu?=
- =?us-ascii?Q?TTGnP9dnFosIH66JgMU5Fjj5ApiNfhErs9IxxZ6/JxeC0Gc/nsG6lw98P0dC?=
- =?us-ascii?Q?oDVg/Tx3g4qOIGhH3q5DqLUktyE0eO39zw1fMoIk6UfMFtvYAIgH505D8Otn?=
- =?us-ascii?Q?9uh1wPBFkUfyxMwQJcScblpV6lyYHlt6BVovk0xS0MkJ6ESzDtx2pkZCOvjl?=
- =?us-ascii?Q?JdDzMiGMYFWmUOfnnS7YfUwGMX0QKwgP8x1918jD+eZEaHiFa6BCciTp1qu6?=
- =?us-ascii?Q?kM3pqGFrqMJF2zie7ZQaH6KgLrJNJC8D3vadmNZFqVv5lx7M4wGzqRhAl3nC?=
- =?us-ascii?Q?KUOYxBt/qmyNh+tbKMCuvM8V5p2LzyCu8hLgq4qLtCynQ8dmJYLY4fpS2zJR?=
- =?us-ascii?Q?MuxFye/Ci+zKh/Em3OCQ9PMgWyet7Cc+bsJQcuVSmhzv/UpdtK8tjunT+Kfg?=
- =?us-ascii?Q?RQJk0ZV/zOjRWJTK/HIBF4qqf/PUOPS+wkeREBYwfHtdIybuWCidUW6q8iup?=
- =?us-ascii?Q?CWm+/wXg1T6/rcgmpAqU0wTRHZAalty2Mr3nuuGOzroQTASA5w6qZxjiBfiq?=
- =?us-ascii?Q?obwldmzU0QiJajO1qhYqnGfYLaVF8E1Gq5eLiSmOrtuJLCjvlpkXLP2w1yWk?=
- =?us-ascii?Q?HZt654DZ7QyH9X5AewE6FlZhfFwBI6pVjL4r8uCDyo7JZnqnfvuQDh/EZ0ed?=
- =?us-ascii?Q?ndu6xGcEE8yu4Mkua2Q//zAlPLpjtk4CTmWIeMZF3XfS/3XfyjIwpnUVDSJ9?=
- =?us-ascii?Q?hSINA+nfAuhBF6gHvxDFiBS3tYH7rve+9zxGGkxyFVD6KklGb+vbGs736pQi?=
- =?us-ascii?Q?pIZQKCJGUthdd5kvzIik7XxH7Bl2/NuXyqB5zZS90D1PSWYw8GNVds73lWRj?=
- =?us-ascii?Q?pfYySzBawTjVPbSngokvaGwNe7wVgAp7U8Ggcopb77b7aJVnu2rVNy5EzyZQ?=
- =?us-ascii?Q?3Q/2BOIrJSYVJcLIWu13pH5bowRCmFaShdjbSPXh/nmpI4QyoLtFtVcOBfJF?=
- =?us-ascii?Q?MxDawJZQinOFS7+ksY6i5QyG5a5w?=
+	=?us-ascii?Q?l6vLoN211EEYs94sDCyQeu7KrVVX+Ls2CQGHvfMAavxPDFS8EYlD0gyvEzLA?=
+ =?us-ascii?Q?eypAZ82NVp1lRgJ59W0vVIhhAFUNW3PAp618PSTjYhup20BtL7VUdB4yzF+E?=
+ =?us-ascii?Q?j3aRiYkYSs3oBHTqQUEx1JA8zoz4rvZ4cCAWUt/KgnzgRoLgsQu9ZZ/4SuRb?=
+ =?us-ascii?Q?R6+9jWBRWQQOTM3PQjFgvwVHZkQSUoi6U4wGwTtzG3HEp2ckxsWtqR/jXlq7?=
+ =?us-ascii?Q?thjfVNbjqINogGlBAwhJP1J09OY5f+BPYsFXuNJk4DknpXgYExg25OTGxK9r?=
+ =?us-ascii?Q?7Dmag3VuLMUNXU4t1PuTZeL7HSr9JdDn4XOP2fl9yidEbX5WaQDf8dllzogg?=
+ =?us-ascii?Q?cdBC6Rnm9SR8VHuhW0z2LVlP942ReGl6D3ZFn8QRdkSI5UaOtZ7v3JyUf4Pi?=
+ =?us-ascii?Q?4uw33X5edTSz3QDWnzPz5MPQZAO6F3Z+awq6HQlqWmmWk5ax1qU1mtr+Lrwf?=
+ =?us-ascii?Q?6HtpJUcFrgOdMPJrgpjm03KcqxvYoWkZRgei+2MSL9AITzKpRVlzd4vNl8j1?=
+ =?us-ascii?Q?VxAQDHXjnl1cINBnkKBbp0Py/a/DWsyGtVgXykIB0cupBBSdWRjzmy3PK0Nw?=
+ =?us-ascii?Q?AhU1Dif0cKA7KbgvQ6BX0WTA1kTLDhYyRyim53fMJvwsabf5PSEi/bu8zps4?=
+ =?us-ascii?Q?nlGSmQM83THJj4sZb2RlLfk+KhYgm4BJv1DEFQWw3q/hCrktPUq9AeJVXFJg?=
+ =?us-ascii?Q?uOog3q1SVmyBMa6lFNr7/JsQqH9nh4aefR7K4RL3Jm61tRrKDqKZZimF/8gJ?=
+ =?us-ascii?Q?qfzlbhRvR6X0vHCXbOijKFAvpuXnbNqEeJMdFVlfbhZ1fYdGjpfBUHCb5KzA?=
+ =?us-ascii?Q?pK0BKXG9T0dNyHR7YfjHkvisPi1DNXlBhglJYuf3TuJcIFaRH13aVODTV+fS?=
+ =?us-ascii?Q?qqYjVVoYNdTBtGia1F+sBwjhLBtDYP1x4mFTo0RMO4rTvecGof8lIaBv/a7T?=
+ =?us-ascii?Q?ioLFVjfF20S/0/osKhRfBRSR0EFphgO0BHhTJAMFJPHW54MtdK23MCn6f++A?=
+ =?us-ascii?Q?T8/PiVk8R4+dYbr0Qi49UbEQNF/LNjavdqeA8NCGzVwKtakS0lCAeuGRG2Aa?=
+ =?us-ascii?Q?5IqRG4WoldEoATrTXxhY+0tQPF3+qvkRz5iLBal1NZP6TMRqMovTbP64Dk+E?=
+ =?us-ascii?Q?jmwxfLo7YNi68IWGMQr/JWmZRYyAFlqZtI+JIX85e9CPJZLdrQSQ+a1X4dqW?=
+ =?us-ascii?Q?pz/MNC9ysgE9pSuDx/GQ4w4MVNCj0Ak0cUUOpMUC/4IdXqreO89r6g6C149J?=
+ =?us-ascii?Q?Wy7Qm5Jmv12xfcttSsWeSofqwuI1yhOQU++tMF3/uPFht7R09lYn2Pa1Cy3l?=
+ =?us-ascii?Q?ymGeh04FXm6Pqj7uTIUzfSIz2fDgLipfUDeQiyF3NdnvhyAPbcl0cxm1uPZM?=
+ =?us-ascii?Q?8xRn1wsgbVRkBfxXS71HNF32zy3F?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2024 22:19:28.4861
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2024 22:19:39.5618
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d056cbb-ef32-4b20-31ea-08dce7e7467a
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb7182a3-222b-4b78-d284-08dce7e74d11
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B074.namprd04.prod.outlook.com
+	BN3PEPF0000B071.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8326
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5933
 
-The CXL drivers use kernel trace functions for logging endpoint and
-RCH downstream port RAS errors. However, similar functionality is
-required for CXL root ports, CXL downstream switch ports, and CXL
-upstream switch ports.
+The CXL driver needs to enable AER correctable and uncorrectable internal
+errors in order to receive notification of protocol
+errors. pci_aer_unmask_internal_errors() is currently defined as
+'static' in the AER service driver.
 
-Introduce trace logging functions for both RAS correctable and
-uncorrectable errors specific to CXL PCIe ports. Additionally, update
-the PCIe port error handlers to invoke these new trace functions.
+Update the AER service driver, exporting pci_aer_unmask_internal_errors()
+to CXL namespace.
 
 Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 ---
- drivers/cxl/core/pci.c   | 16 ++++++++++----
- drivers/cxl/core/trace.h | 47 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+), 4 deletions(-)
+ drivers/pci/pcie/aer.c | 6 ++++--
+ include/linux/aer.h    | 2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 7e3770f7a955..4706113d2582 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -697,10 +697,14 @@ static void __cxl_handle_cor_ras(struct device *dev,
- 
- 	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
- 	status = readl(addr);
--	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
--		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-+	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
-+		return;
-+	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-+
-+	if (is_cxl_memdev(dev))
- 		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
--	}
-+	else if (dev_is_pci(dev))
-+		trace_cxl_port_aer_correctable_error(dev, status);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 81a19028c4e7..1b4004932084 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -962,7 +962,6 @@ static bool is_internal_error(struct aer_err_info *info)
+ 	return info->status & PCI_ERR_UNC_INTN;
  }
  
- static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
-@@ -756,7 +760,11 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
- 	}
- 
- 	header_log_copy(ras_base, hl);
--	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
-+	if (is_cxl_memdev(dev))
-+		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
-+	else if (dev_is_pci(dev))
-+		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
+-#ifdef CONFIG_PCIEAER_CXL
+ /**
+  * pci_aer_unmask_internal_errors - unmask internal errors
+  * @dev: pointer to the pcie_dev data structure
+@@ -973,7 +972,7 @@ static bool is_internal_error(struct aer_err_info *info)
+  * Note: AER must be enabled and supported by the device which must be
+  * checked in advance, e.g. with pcie_aer_is_native().
+  */
+-static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
++void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+ {
+ 	int aer = dev->aer_cap;
+ 	u32 mask;
+@@ -986,6 +985,9 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+ 	mask &= ~PCI_ERR_COR_INTERNAL;
+ 	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
+ }
++EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, CXL);
 +
- 	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
++#ifdef CONFIG_PCIEAER_CXL
  
- 	return true;
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index 9167cfba7f59..6305c0eea627 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -48,6 +48,34 @@
- 	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
- )
- 
-+TRACE_EVENT(cxl_port_aer_uncorrectable_error,
-+	    TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
-+	TP_ARGS(dev, status, fe, hl),
-+	TP_STRUCT__entry(
-+		__string(devname, dev_name(dev))
-+		__string(host, dev_name(dev->parent))
-+		__field(u32, status)
-+		__field(u32, first_error)
-+		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-+	),
-+	TP_fast_assign(
-+		__assign_str(devname);
-+		__assign_str(host);
-+		__entry->status = status;
-+		__entry->first_error = fe;
-+		/*
-+		 * Embed the 512B headerlog data for user app retrieval and
-+		 * parsing, but no need to print this in the trace buffer.
-+		 */
-+		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-+	),
-+	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
-+		  __get_str(devname), __get_str(host),
-+		  show_uc_errs(__entry->status),
-+		  show_uc_errs(__entry->first_error)
-+	)
-+);
+ static bool is_cxl_mem_dev(struct pci_dev *dev)
+ {
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 67fd04c5ae2b..c43d2b60b992 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -69,5 +69,7 @@ struct cxl_port_err_hndlrs {
+ void register_cxl_port_hndlrs(struct cxl_port_err_hndlrs *_cxl_port_hndlrs);
+ void unregister_cxl_port_hndlrs(void);
+ struct cxl_port_err_hndlrs *find_cxl_port_hndlrs(void);
 +
- TRACE_EVENT(cxl_aer_uncorrectable_error,
- 	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
- 	TP_ARGS(cxlmd, status, fe, hl),
-@@ -96,6 +124,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
- 	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
- )
++void pci_aer_unmask_internal_errors(struct pci_dev *dev);
+ #endif //_AER_H_
  
-+TRACE_EVENT(cxl_port_aer_correctable_error,
-+	TP_PROTO(struct device *dev, u32 status),
-+	TP_ARGS(dev, status),
-+	TP_STRUCT__entry(
-+		__string(devname, dev_name(dev))
-+		__string(host, dev_name(dev->parent))
-+		__field(u32, status)
-+	),
-+	TP_fast_assign(
-+		__assign_str(devname);
-+		__assign_str(host);
-+		__entry->status = status;
-+	),
-+	TP_printk("device=%s host=%s status='%s'",
-+		  __get_str(devname), __get_str(host),
-+		  show_ce_errs(__entry->status)
-+	)
-+);
-+
- TRACE_EVENT(cxl_aer_correctable_error,
- 	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
- 	TP_ARGS(cxlmd, status),
 -- 
 2.34.1
 
