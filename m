@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-13985-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-13986-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40C66993F01
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 08:53:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5464E993F26
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 09:10:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 633271C215CB
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 06:53:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70B821C22263
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 07:10:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9281D043A;
-	Tue,  8 Oct 2024 06:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A8B51DE4F5;
+	Tue,  8 Oct 2024 06:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipZHQFGf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqpvB27S"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C20513BC0C;
-	Tue,  8 Oct 2024 06:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C911DE4D9;
+	Tue,  8 Oct 2024 06:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728368651; cv=none; b=QeLWJa1KmPvbl97RWf/FpmiIvxe6t5BTrylDbSQPTFXKzAeaNC7M8U1VhjPOoy/D5zbldHWERdvgClsEyAw95ZsJOS6WXQfuSIE1kSL8bYX0QEVUQbxb+dm9RbiO/3pTDhea52w+xboB8UE0cVSXNiW/8F4GHJTRKt0USSq2Drk=
+	t=1728368789; cv=none; b=XzlEBC9XbmFSWf9d7Bhr8p77Vsx2dGocFFlB01gm6rM0XErBqWGY1F32ZJVtRKnQA09Dzgi08XT0NGo6DY2h8h76jZSPA7CxFc3rBoWyLgKO0gBscbHXEyOBv8F06Yb4ERio6XoS+jJuasv+dixJev2cqeKC95gnx6m0coLuxRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728368651; c=relaxed/simple;
-	bh=ZCmpVIO4mKb6ac9euGG9tBUheFL5NjNdMiYA28D1doA=;
+	s=arc-20240116; t=1728368789; c=relaxed/simple;
+	bh=T45AqMpwASiBl0/I50N2dY606S5QKSd7yQWdyfR9JdQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z286YmbRaW0vqM0s2vUAFjYZQ8+vuXbubXDh/y7BUbahFNFBeNSleftcO1R0tVTrjbuag7cQkPgfMdBjK6dyM9gqeUs80Buw91mjKMIrAoo23V5Rt38YAnRqfOwXLLrd7T25uylE6ItawWBvmfTpx9nx1FUyOY9B8fsFowLmVS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipZHQFGf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92EB5C4CECF;
-	Tue,  8 Oct 2024 06:24:09 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=BpM/pnJfyP/L0y/IS2rcIqhJJh1TIIxbPaB5T2of59AZL1gIS/lBYfl8lK3wlndg4friLvtvYKJvolRHQxqW/7udgfSx9yTaKyvxIrcxJMO1G0S+UacdoZTcXlypMchw6IWYCQ3InGHRFL/CQVpiOZmp46FdKQEpzFWsLYy6qPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqpvB27S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2527DC4CECC;
+	Tue,  8 Oct 2024 06:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728368650;
-	bh=ZCmpVIO4mKb6ac9euGG9tBUheFL5NjNdMiYA28D1doA=;
+	s=k20201202; t=1728368788;
+	bh=T45AqMpwASiBl0/I50N2dY606S5QKSd7yQWdyfR9JdQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ipZHQFGfZ1XnYJN4WRfrcd3MzdHHcJ41yv1KeJtYWb+UPOsHVpzBo6/wzTXOB8P6j
-	 qjqRXJBig/73KLYDPllA3NK9ahabtnWKkPJgN3SfPqFUlDco53dMepnMo4uj8uhKeJ
-	 bbPecTaZTCXhWGPQ3e63AuUk/0RHmiXztV0EBElkZxxXQsM/vdbJ5FTGeYv2H0u5Fi
-	 OTYsJKf6Pp/AOals/2GWJifJcQ8a2SEEN1kKihBLVXVfY6nyVe9LRXwKHbYUIotcB6
-	 kY/jFwWek8Z8m6nbyjCXzP6nd/KsxgH/Wa6WNTdRo9OAB1c9tvGbWzOHefG+nbcGB0
-	 N85D/7iJluoow==
-Date: Tue, 8 Oct 2024 08:24:06 +0200
+	b=hqpvB27S6vyJAseVV7a2ekE1MW8fK51W7M2o5OXx9n0djgMeF1DhKsAxpMVtcNqWH
+	 D3f2AUxaMr9vNiyhZqZF4PSoXJTlFpEZXZS3sS8Z+8/+y9j8gz4E+9J9wwiiplZrrA
+	 FxMAvuyThwsIkCfuG7hctoTgaFG95309AoBvQ0IU92ObWRf7SfuB+Z3eJD1TDlLPJA
+	 SpUS0ugQPwjSEIj81uKzhXJj2k17WCSGacw62j9KGwcQiDny0djKWIfj8PxttApF0h
+	 VHDsCEZzW/z/nd1YRVsWRoiLhllvp/xdDxSGhB0NcgdKavv7LC5i8RYvc7Wklw8JtZ
+	 cfPjwDO1ZGgig==
+Date: Tue, 8 Oct 2024 08:26:25 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Andrea della Porta <andrea.porta@suse.com>
 Cc: Michael Turquette <mturquette@baylibre.com>, 
@@ -61,11 +61,11 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
 	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
 	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 03/14] dt-bindings: pci: Add common schema for devices
- accessible through PCI BARs
-Message-ID: <flxm3zap4opsjf2s4wfjwdj6idf7p6errgtiru4xgbgkfx4ves@xxiz42cghgvr>
+Subject: Re: [PATCH v2 04/14] dt-bindings: misc: Add device specific bindings
+ for RaspberryPi RP1
+Message-ID: <zequ4ps7h6ynr2y5yrcqm3tpvvmmrgc6auupfy435rpysiyypf@7cd2zbwhk3ya>
 References: <cover.1728300189.git.andrea.porta@suse.com>
- <e1d6c72d9f41218e755b615b9a985db075ce9c28.1728300189.git.andrea.porta@suse.com>
+ <3141e3e7898c1538ea658487923d3446b3d7fd0c.1728300189.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,57 +74,88 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e1d6c72d9f41218e755b615b9a985db075ce9c28.1728300189.git.andrea.porta@suse.com>
+In-Reply-To: <3141e3e7898c1538ea658487923d3446b3d7fd0c.1728300189.git.andrea.porta@suse.com>
 
-On Mon, Oct 07, 2024 at 02:39:46PM +0200, Andrea della Porta wrote:
-> Common YAML schema for devices that exports internal peripherals through
-> PCI BARs. The BARs are exposed as simple-buses through which the
-> peripherals can be accessed.
-> 
-> This is not intended to be used as a standalone binding, but should be
-> included by device specific bindings.
-
-It still has to be tested before posting... Mailing list is not a
-testing service. My and Rob's machines are not a testing service.
-
+On Mon, Oct 07, 2024 at 02:39:47PM +0200, Andrea della Porta wrote:
+> The RP1 is a MFD that exposes its peripherals through PCI BARs. This
+> schema is intended as minimal support for the clock generator and
+> gpio controller peripherals which are accessible through BAR1.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > ---
->  .../devicetree/bindings/pci/pci-ep-bus.yaml   | 69 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>  .../devicetree/bindings/misc/pci1de4,1.yaml   | 110 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> diff --git a/Documentation/devicetree/bindings/misc/pci1de4,1.yaml b/Documentation/devicetree/bindings/misc/pci1de4,1.yaml
 > new file mode 100644
-> index 000000000000..9d7a784b866a
+> index 000000000000..3f099b16e672
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
-> @@ -0,0 +1,69 @@
+> +++ b/Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+> @@ -0,0 +1,110 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pci/pci-ep-bus.yaml#
+> +$id: http://devicetree.org/schemas/misc/pci1de4,1.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Common properties for PCI MFD endpoints with peripherals addressable from BARs.
-
-Drop full stop and capitalize it.
-
+> +title: RaspberryPi RP1 MFD PCI device
 > +
 > +maintainers:
-> +  - Andrea della Porta  <andrea.porta@suse.com>
+> +  - Andrea della Porta <andrea.porta@suse.com>
 > +
 > +description:
-> +  Define a generic node representing a PCI endpoint which contains several sub-
-> +  peripherals. The peripherals can be accessed through one or more BARs.
-> +  This common schema is intended to be referenced from device tree bindings, and
-> +  does not represent a device tree binding by itself.
+> +  The RaspberryPi RP1 is a PCI multi function device containing
+> +  peripherals ranging from Ethernet to USB controller, I2C, SPI
+> +  and others.
+> +  The peripherals are accessed by addressing the PCI BAR1 region.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-ep-bus.yaml
 > +
 > +properties:
-> +  "#address-cells":
+> +  compatible:
+> +    additionalItems: true
 
-Use consistent quotes, either ' or ".
+Why is this true? This is final schema, not a "common" part.
+
+> +    maxItems: 3
+> +    items:
+> +      - const: pci1de4,1
+> +
+> +patternProperties:
+> +  "^pci-ep-bus@[0-2]$":
+> +    $ref: '#/$defs/bar-bus'
+> +    description:
+> +      The bus on which the peripherals are attached, which is addressable
+> +      through the BAR.
+> +
+> +unevaluatedProperties: false
+> +
+> +$defs:
+> +  bar-bus:
+> +    $ref: /schemas/pci/pci-ep-bus.yaml#/$defs/pci-ep-bus
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      "#interrupt-cells":
+> +        const: 2
+> +        description:
+> +          Specifies respectively the interrupt number and flags as defined
+> +          in include/dt-bindings/interrupt-controller/irq.h.
+> +
+> +      interrupt-controller: true
+> +
+> +      interrupt-parent:
+> +        description:
+> +          Must be the phandle of this 'pci-ep-bus' node. It will trigger
+> +          PCI interrupts on behalf of peripheral generated interrupts.
+> +
+> +    patternProperties:
+> +      "^clocks(@[0-9a-f]+)?$":
+
+Why @ is optional? Your device is fixed, not flexible.
 
 Best regards,
 Krzysztof
