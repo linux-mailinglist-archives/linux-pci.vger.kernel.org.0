@@ -1,201 +1,287 @@
-Return-Path: <linux-pci+bounces-13999-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14000-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26CBA99566B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 20:25:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF5649957E6
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 21:54:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41B781C256E8
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 18:25:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F93A1F26067
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Oct 2024 19:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B70D212D17;
-	Tue,  8 Oct 2024 18:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23BCF213EF3;
+	Tue,  8 Oct 2024 19:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWv3+c7h"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="W8q8Np/b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011055.outbound.protection.outlook.com [52.101.70.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67A220B1E5;
-	Tue,  8 Oct 2024 18:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728411908; cv=none; b=iY4WxDlRVJ4m4OGBPQ1ELg85C6r0yZ+QDYeTfC1N+NEWbdte9IXY2ireisz0C8oJQSkjTtmfLl2Fawg/WyizRNiveUVThcMuOPPd37ItABn/GUNRI29vPt51qdQprLEIZJBhrKNxN2e0Eh524SuD1DrWZlkspZUJ0ccktCXb7Mk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728411908; c=relaxed/simple;
-	bh=gbTLwyB5anW/NVNa27O4GYEgcT7Zt8zwGlDOBl4w9X4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DSjJ3y7jGCHPN0opTgBqBhLeVfPa0Y6k3x4lo2gFVhGf+YIXbRfaJHdkCYrJtWpj41BhLpVVGwnlq+UUDc0oVHa4+ULwK2vSOh9Iihv9qEZD8L1PG01Wuw4lQNgus1HhQsHBqwrmhWFcAPQIDmycPDt0RIAoPq6xgw5TFhRiC+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWv3+c7h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 579F8C4CED3;
-	Tue,  8 Oct 2024 18:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728411907;
-	bh=gbTLwyB5anW/NVNa27O4GYEgcT7Zt8zwGlDOBl4w9X4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QWv3+c7hgheNar52dT93kuaRJqQGwrTlm+2qt+dJoGyQzAHIgU0jubrC8ThWhyZIZ
-	 RS8ECJijkXPnKWXZt/DHYo4oNlel2cdA7QmeMfgDuBLkCfLLpl6vQcl4DNTcV5EyFH
-	 5h8XYKukhwE21LUBMtMTij4WxRmO6XhWfjQaEwayPWgg9ncS5s6vbgtpgFKR2d4Ze1
-	 U8RaeSIFzvB8vNoypQgBEdP43kZiPZVbc5vt/+kjhif0hCbio5j23Z7Fbcd2MdU+Eu
-	 u4mqS8NwdiP912BRPYfCL4ckK1zD9U7UpC3cflIOLH9kTp0r9qM6ScGNZWHbmYuBvP
-	 5BPH6goJRp7XQ==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5e5d0a80db4so3217626eaf.3;
-        Tue, 08 Oct 2024 11:25:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3C3tK00jRXhoDZ96Dzj87jGGWiyg2EPXq2wo8twXZRCit9AeTBQH0qi7g71NeR3ndkIDf6zbCO2tCxOF3Go0=@vger.kernel.org, AJvYcCUD9UjTrJPYFCwGiVUYkyUEeZBiugwoiKWgkR6f1ZvJQUXSh7pQwb/ehWVwZSj34Obki6ROqP4T+Nwp@vger.kernel.org, AJvYcCUPVbBzCw6zvLiCONNyI1ddGYtUzA+MHpEDBCAsW6t6M65XCOKNj56eshvi2CmN/CpJORuxiTRooGbqUVBR1clH@vger.kernel.org, AJvYcCUafMoirgA3e5dJkDINiZqnh5qLjlbeI47XxJzi6PBgWdYgzJC00+bADWoklUhSt3fTGKXgi/2b7Cs=@vger.kernel.org, AJvYcCUdD/AhSYyBNDirh3PISBiwwXRNURiDVDcxQf77QQEDXCi3oTIY1JW+fz4/Zi5cCG7IsIVcnpYom8xN0XA=@vger.kernel.org, AJvYcCVKjPj8S9Cx++kzEGvwFgrQJ5Ii5xMsQlR05NMOg45G5iaauB8vEZpCTeJI6P5uFkoXKuBGJDKCo+nem6s=@vger.kernel.org, AJvYcCVL45VzJJc9nt6spfbiiO6L9DTnzo7i3yke7UoO/oTfZAtHo/vlmCCdXaBDUIv/E6ydRcx/oQplLjjzoA7H@vger.kernel.org, AJvYcCVMz5l8ZPHKtmjYCxJBkY4DRurKhkDBubjnyu3jKklDdLaVd6ej5iYbecElBzbNN/lfRjj4gAvLQyjH@vger.kernel.org, AJvYcCVTcIwXSAUbucn8TVDe1qx0PSHPmATijxKPLeBF/liopYXcLQ8ScAgnF3Yqj0X5rhu4cG5E48jqB8mc@vger.kernel.org, AJvYcCWClUGOO7yG560xUvaF
- YQCo7slmKdQbsRUjiXB1uhxLvpc+HouPwj4fFoi+FEBisNLRNDd1VQVWiaYj@vger.kernel.org, AJvYcCWOEzBzz0LjlFp6HFvZ11F5QnLq5gjO/21J41JjqVltZc+rpksNlzjeDYalgS79mIC58zE0xBoS@vger.kernel.org, AJvYcCWULSQYYztWyt0PcUroL3N0kIvSh9DCjJZM98nMzpRDokvJjojrZrBiVQDakYuM4uzVnRAV/gE1Sxxi@vger.kernel.org, AJvYcCWgM7Gzxm3gksn1fv9oUHSIJdAhDMK/c6wMzi8J+4YrDwp7epUQPKTEk0BxwOgVby4JbrU4dCZLlTRV@vger.kernel.org, AJvYcCWgXdWexWcVGuVAFwrVWY48r1t9Edbc4p9omIYy5/zgYxMqkiS5sbXJiYfIIlbuXNrhESuKJGWJvHyDiA==@vger.kernel.org, AJvYcCWxiJ/5XtFlUli+/zTZtnfq87fGeioVam9UlDjBmhZoMk8Gu976EkD63HnmmqLXDlr7LvNr4HVIJH9Ql2A7Ryfy/w==@vger.kernel.org, AJvYcCX3ch1TTIOzPm7XF+W4zOr7q8QsmZwzR1oJ6GKkz9XQ7vvlp/fHRjHux9+g6nUd4Z7CK8d5lW0ih6JDg28p@vger.kernel.org, AJvYcCX53X85N4Ri3qdiFm276KT5SNw18oK2Tre6x/w5VUfxRK+Pdh/J9GkRjmO26bM+wd3NMHx4AZ25PlEO@vger.kernel.org, AJvYcCX6L4fi/TdH5zDCtPYXvMzGM/qWvxLz34wO/6FzIoBhCYOEckc7qxU6Wy8CYN8mt+zVyjyO7nLMlK+3@vger.kernel.org, AJvYcCXCupac8c380ExASXZG1cOW3GSRrTD4pOsNa//Ehzy7Mc9+nhrMK91rRqiQYYUUNzHoUj4qEvu62hzFjFM
- =@vger.kernel.org, AJvYcCXN28OzyeGZgOPyw9ddKIIB6Tx6vMl50ZBIBrdKVVHELeHm6OnE7vFC/CpfnJolMr7yZJBzEiCuiH6TWjk1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDtei8K4c+yglZWIg+wthGPZHkZ7UnsIQmNflJFGICsDhc9KZf
-	6UGNS75k6Og3dhkPiDn96OjfZNpuVrvIjIr8L8jxLZ+rzJat6qBtCvWOpeT+mLhY8C7hDo0/oWm
-	HENFfnjpCC32JdxMZanz8yplv9AQ=
-X-Google-Smtp-Source: AGHT+IE8/UzrmOfg0dgL+a7sFpnmZmTmVZlVfZVXeH9h9sR6Zbx0f+k3/XHDUWx/NQFfJo1odWsZ7gtN5j50xL2u+GA=
-X-Received: by 2002:a05:6820:228e:b0:5e1:d741:6f04 with SMTP id
- 006d021491bc7-5e7cc079979mr12626737eaf.3.1728411906564; Tue, 08 Oct 2024
- 11:25:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A93A213EEE;
+	Tue,  8 Oct 2024 19:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728417270; cv=fail; b=DxCfsAS0S3TijUgrZGMOn8by9AYat7HViLDaHiHpC+t0P/KtILx97rZjkZr6l4ZV+SPBT1dQQLf0smvrEHKqy9IC4FDUocpyV4bCf/T80VpOPzJKw4FOI97JIBaNNP+2jD2dbagM5huYIzZ96CesUSMHnadovTYOyQivUj9fKDU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728417270; c=relaxed/simple;
+	bh=HO3RF+f1eP8myCyS6q1TjWPk2I7D1R5GldyB/e+ttPg=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=twTS31nmE3vAW+hfeGilLwgUkdTxN3FCvFstCaHjL25MHOS0Vb0jxl4KK/GNEDyAkjnwC9m6bcuTNYs1mGyBGgPXv+UxImZ8tz63sHp/WcyE6+mfVwETdSCwDcpydGul3R68ut7CDM0oAHIxXC9snx2SicsGJNURCmd0VAhjcns=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=W8q8Np/b; arc=fail smtp.client-ip=52.101.70.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tAiq2G9utsKPqOgzBdL3TMhtrCvjwC76oPfbGxAPVVigmuLT8QLLROHNlfvXWeq0FHyUb773VDgrEKvnt4nhA9oXDGfg4nD78xiKLU6IjxQcDR/5oh62CpwZ3bs6FjHYRTLnlilHW3UNLTNY1pNLYRkdEGJ/ylvwAuFZ9nsSb8+Eye8Myz6obMFJgGJmxv2UdNH3lqeMI4XAijmdljBZ/aSsFILfagZWZL6C1FeK4xnZxTlKvdCcFnpFIBCgw4GrB+4917KS4qab8ZnZ9VOojXVggD+R3nsfsmLcQYRXBPK+uXY94dKxXeGvltWiIem3JCrwPByn1L0xUzLfLHtSEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NQ/vBBc27kEks902DM6ab+mHUnmP7cGQAewthgz7UTY=;
+ b=c6EzRigi4sc6nLgDepWdvSxDZTVXT444tf1YMNbg53yelySMdALNMAud1GbPuO05emAPzXPdtuP2eZMb/5pLeG25y4+yBBrJC+0B6v+X5DddnTqooaoHI0FwVaJUTOiBdha2NdgMNC4og/DQfnK5FWqraSlcNI0m63YtpAhckLjJpn3Zhiyn1UfmTvfgLWq3oNf2IMii+pKk8DozfYhGkKV2q5k7Lx3khjR++YUoU9xENZ/ub/cC79lfBMW5T760BCcWj+Av/Zs9865pYO31h2JKiWJVcgGaFDlJJBLP4lRzt3/8vZpd7xEGOGYG9vaJBT9e1JtJn9LTPtJl8TPiNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NQ/vBBc27kEks902DM6ab+mHUnmP7cGQAewthgz7UTY=;
+ b=W8q8Np/bNhWXue9KNSCjsjOZysHaJMnDkN/svb5C3/X+dMpdek26OYQd+xjdIdT015ucA+u07rc2ezdUsxCzfC0Aklc/jFT5lbUFqVI457PdX4Tlz4ST4+N76c9X5kvCVMTaDTQfgGmXBgX17haLEriHCLyv+BKXUDLmmEntdbpo8eXQw3FDldplaHzK8KD7qxBoMtS/j72jCPpxBzT/SGpKRLxDOYX6Sq/KKZzvuQufqhpE7QmpHYRXULig3cACrZontoJw1iAeO+qYmd79Nr7n/whE/ccyuipe5ISJtBIfjFhbRlXPuoGOzQvhX9RkmFHTmMdRYuOYwavJLRHrAQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by PA1PR04MB10577.eurprd04.prod.outlook.com (2603:10a6:102:493::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.22; Tue, 8 Oct
+ 2024 19:54:24 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%3]) with mapi id 15.20.8026.019; Tue, 8 Oct 2024
+ 19:54:24 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v4 0/3] PCI: dwc: opitimaze RC host pci_fixup_addr()
+Date: Tue, 08 Oct 2024 15:53:57 -0400
+Message-Id: <20241008-pci_fixup_addr-v4-0-25e5200657bc@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIANWNBWcC/3XMyw6CMBCF4VcxXVvTy5SLK9/DGFLaqXQhkKINh
+ vDuFjZiiMszk++fyIDB40DOh4kEjH7wXZsGHA/ENLq9I/U2bSKYAFYKoL3xlfPjq6+0tYHqQmW
+ FK+u6lkAS6gOm7xq83tJu/PDswnvtR75c/6Yip4yq3HLQJUcD7tKO/cl0D7KEotjibIdFwghKg
+ AKO1sEvlhss2Q7LhAuGmDOphDP5F8/z/AFRpHvBJAEAAA==
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ Jingoo Han <jingoohan1@gmail.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728417259; l=4665;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=HO3RF+f1eP8myCyS6q1TjWPk2I7D1R5GldyB/e+ttPg=;
+ b=G4vFqdq8y7fJtg1OZDTXkcv6y0idRjaE5Pgkge0AJnx6IUBRXudORnBPNhw1jlmrfUMQm49x0
+ eJfofFCWywkA6lk8RUNOPfhcjTOVwuqF9QQ7vplkATQAlSxRRYdHCBW
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR05CA0195.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::20) To AS4PR04MB9621.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4ff::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
- <CAPDyKFp0N6UJhnHS164Tdf=xkWB0jzq65L9TdvYazeBQ-6WjeQ@mail.gmail.com>
- <20241007184924.GH14766@pendragon.ideasonboard.com> <CAPDyKFpQVnF7eQv3dup8k-3EijnMjuveCG9sZ=Rpey1Y6MBJEg@mail.gmail.com>
- <20241007222502.GG30699@pendragon.ideasonboard.com> <CAPDyKFrGNwna6Y2pqSRaBbRYHKRaD2ayqQHLtoqLPOu9Et7qTg@mail.gmail.com>
-In-Reply-To: <CAPDyKFrGNwna6Y2pqSRaBbRYHKRaD2ayqQHLtoqLPOu9Et7qTg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 8 Oct 2024 20:24:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jvJyS7D5-wURi2kyWN-rmNa+YqupeQJ000pQRVd9VBcQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jvJyS7D5-wURi2kyWN-rmNa+YqupeQJ000pQRVd9VBcQ@mail.gmail.com>
-Subject: Re: [PATCH 00/51] treewide: Switch to __pm_runtime_put_autosuspend()
-To: Ulf Hansson <ulf.hansson@linaro.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
-	linux-i3c@lists.infradead.org, linux-iio@vger.kernel.org, 
-	linux-input@vger.kernel.org, patches@opensource.cirrus.com, 
-	iommu@lists.linux.dev, imx@lists.linux.dev, 
-	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
-	linux-serial@vger.kernel.org, greybus-dev@lists.linaro.org, 
-	asahi@lists.linux.dev, Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PA1PR04MB10577:EE_
+X-MS-Office365-Filtering-Correlation-Id: 354cefd0-7d32-4635-46bf-08dce7d301df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|376014|7416014|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bTJra0h6WjZhdy9kNGw2Y21nSWZQazA0cXdySE10U1lZVmw0T1JsL3k4Nk54?=
+ =?utf-8?B?U2V2R2dTR2pYWmhGcGIxc2hZTnZ2bUo1cXVSL3l4cFQzbTBURVN6V3k0TUdX?=
+ =?utf-8?B?NUxuWE5vWU4ya3dzYy9ldWhhYjNqNmRaSE9maE82YTYvQnRjTlJ3YzBJRlc1?=
+ =?utf-8?B?allhMFpwU0RPbko4Qlc5djFqNGhDSEU3RitKTHJYUjd5bVBxREs1S2toQWVy?=
+ =?utf-8?B?MlRtcExMT2FrRXRBMmhRZGFtRHRERzNieDd0aCs0ZTFyclFzSnFmdHYzdklx?=
+ =?utf-8?B?M1QycnlpMU15R1dXRXhXMnVWdjlXUlNmL3kvZEZPaVd0QkROTjcvRTZUQlBD?=
+ =?utf-8?B?Mk94TFJCMnFqaHpHYzRwMUxVMms3MXozeFR4ZzU2S0ZlWkFjY0FZVmVKWlUy?=
+ =?utf-8?B?b3JDVE5BaXZGbW1JcHUyamc0NnJWcGRDM1N0cmZwMHdiSWtHQlFaWXU0WXR3?=
+ =?utf-8?B?MnlnUkEyTUJjVHk2a0U3ZDdxUjh3NGtBQlowV3ZRU0xzUitrR0M4cXNuclpq?=
+ =?utf-8?B?R2xOZTVsSzREWWhYQzVOU0RwZjFaaUF1N1AvaWhTamdnRzJRcEc2SEVLSGIw?=
+ =?utf-8?B?bTJaczMydGU4U0pRbzlySmNvTW8wZzE3TFd4TVhsYUZTbVcwTHdXNW1qYTZB?=
+ =?utf-8?B?UDdqbzJaWFBvT0VERkF6aGRnb1R2bTNzQzR1cWlJOVpsSXBFUWRBRklsSUt4?=
+ =?utf-8?B?RlhuTVowcnNld3g1L296a0lWZEtrNm1jbHc1K0FZWlNsMkJ5SEdEellqc0hY?=
+ =?utf-8?B?d0pYTHNFZUY2M1pXZkxPVFdnYzFCVWF5NXZRR0gvbU44ZXI1cEhqeGJZb2hC?=
+ =?utf-8?B?MGRDV2VtM3ZBYlJXaHRwUGlVNVBKeGozU2N3b2hNUytjZVNTaXBoNmphcGkr?=
+ =?utf-8?B?aEsyZjVNUUZKRWRmR0VINjhIVHZMOHE1YjAzc0RrbThPTi9xTmxxcWoyMmRM?=
+ =?utf-8?B?T2Y4aXEzS1RhQzcvakcrdm0yVC9Jd0lHVFk5STVTRWRzdzg4Mi9mVkhWYU1R?=
+ =?utf-8?B?MmMwRjZ2YTZBQmdTS1l5My83RFhJSVhnaE5yNWxtL051aDYxVnNRemtONUsw?=
+ =?utf-8?B?RDVCbktjZmZQUnA5TWs2VTk0alZtc1pHbnZGQUxWOTF1MHVGSUJiV1lQclJs?=
+ =?utf-8?B?V2JRNjY3ajh2dElwNlh2NFY0bGkvc21oYmZGNGtHd24rUHdPQmxtZmpiS1NH?=
+ =?utf-8?B?M3ltOFJqSlc5OWZRSFpnMkNzYU43Snp2eHowR2hWQmpKM21rVkRaY2I3ek10?=
+ =?utf-8?B?eU1WR3BMZ25kZ2tMVldOcDdsdnpDTnVYK2VucXBiZU1YRmtJMzl5ZVVLbmlP?=
+ =?utf-8?B?NHRVNHFnejdvK3NXa0hsbnoxM2Y0L1hQNlpEeHI3OUZoR0FtU2tlbmhiUTlT?=
+ =?utf-8?B?Nm9UdHNLUFN3Q3grMlRhZDVKcU05SWUrcjdtckdiR3duLytUeG5JN3BLU21O?=
+ =?utf-8?B?ZzJENGVCVTgrWmd1bnZhVG1QT2UzUldSZlFtRUU5UlNnQjQzdWdmSFdjOGtq?=
+ =?utf-8?B?NVhnR2Y2bGNHcmYzQ25FclBqaU96THk0b0RwL3pVejJ3YzJlT2hMeFlYS25X?=
+ =?utf-8?B?U3RBc25IMkVkenFpTklZdUFRbEhzYVBYdjAvdmdUd3dpVWhhVkp4NTBmL1FX?=
+ =?utf-8?B?cUk4b3ZVK1AwcXo2bUxBRE1OY240engxU1hxOVZlR2diOHppcEhHT3dvWk16?=
+ =?utf-8?B?ZTl0ZlpZUHFUU21tM3V2dEtJaUlsZmk3TDRKb0VFaU5tYVlScDQyNUhEUjBh?=
+ =?utf-8?B?eHp5ZjU1UTQwMTVOM1BldEc5S3V3N2NEV1ZkR25LaFhoUXRKT2M5UGhjVWtU?=
+ =?utf-8?Q?xshfECaApBVKv6GeJPCiGR8NsNbEF0sTdbd3A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(7416014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c0xEWXVQSm4rZWdFVUhKdVFLUFBHRUFFOTJmdVpuN01CT2RzUkwxUmM5Nm5J?=
+ =?utf-8?B?SC8rVUdjR1QrMUZXeTBseDUvakF6S0crTURMWWJmbWhqOEQzSGhmNXNWbGUr?=
+ =?utf-8?B?RzJ2SjY1WkdmdXJQRXN2RnhRaFI2Y2pPYlZzQVVocW0zWWxIdTgvMlREVWpx?=
+ =?utf-8?B?a0Fjb2ZoTWppN3RGeWVjSVhmT0pvOGY3MFBMcmQzS0NPMnpGa3RHeVRadWZ3?=
+ =?utf-8?B?Nko1KzVmTXAxZDlWcnprYkFxS25VazhxWmhuUmlvcFExc05xaEdjdzg2eDZt?=
+ =?utf-8?B?T04zTTNmQ2J3cU5vVDNQSzh6dnpNTXZsd2xGNUhoaVNkN0RjU1VyN2s5RjZN?=
+ =?utf-8?B?MTJtbzJBVStDQ0d5cEJPaUtTQjA2M0w4VWJWakh6RlJDNEYraWFJQUdMNkU2?=
+ =?utf-8?B?OHo2MGJvUnlBcmRHZUFSMVMzd1ZsbmV6RHFCRFNjb3FxU3l3TmdhQ2FZM0lz?=
+ =?utf-8?B?SkZveGV0Wi9lUDVQeGgrQUJENkZ2QVFBOXNiV2NMREdraTJubFB0Z1NhYU1T?=
+ =?utf-8?B?dStTaHNjd1lxV0drbWV6ZTl5bGtXNnRlL3ZMVSt1cFZ6VzRGaFhya29XRnYv?=
+ =?utf-8?B?NHVIVjVnUVpsK0pCUzBRWlNXZFdCM21YWjM4TUFJRFhWeGRWa3Y4T2dNeWhJ?=
+ =?utf-8?B?b25UQ1dCSVE1UWpqZG56blNubkVlK0Z6MGFoK05uSU91cXFRYVdLYzZlemVH?=
+ =?utf-8?B?UUZhb0VxRmRmeU5RUlA2UDNtUUtOM25XTm9vWUNmQURSclhqL3ZwUW13ZXdW?=
+ =?utf-8?B?NXVPZGdBS2I3MXlwbUVDQldPVGQ0eXpZcFI3bnFlQkVoaVl1R0JPNG44MzJU?=
+ =?utf-8?B?ZkYxQW1EYjRhcHFJdStTOGQ4dU1NbnNNblN6NmkzRjR3YUk3NjNKYnhzQ2Y4?=
+ =?utf-8?B?MXE5bnBLcCthVE45bUpteWNxRUlzdlBVWlcrdU5OTXNJWjFqbkVHVFFtSHlL?=
+ =?utf-8?B?eElWYmpQSEI0dmwwN213cUIzSkozalc2VmtLMVVBSEwreG96a212TzBGOEVu?=
+ =?utf-8?B?VVU3V213NFBzMmd3eXRDYjlpQkU2d09uYTJZL0d6NmNyNFBybXl6MnFJVTlp?=
+ =?utf-8?B?Z1VFdW9lRmNuSFhJeHYvZlBWd0hURTFZRTJaSmFqVklCcTJkQzVCZXNYK3Fv?=
+ =?utf-8?B?MHNxSGdmN0pEZ0JGaHozZEtRRE00emxwdFN1Z3p5UnI0aFo0OHI3S0xLZHBx?=
+ =?utf-8?B?dld5OTZqekRSMUYwMi9lZkFZN0lPOTZqVHdlWWRvL0tZYXVidmphVFAwKzg1?=
+ =?utf-8?B?ZkNrTmxpSWl3a2VsanpMamRzN1BnbGVsa0NnNXZEaGt6TUxwZWR1dmZiVENZ?=
+ =?utf-8?B?YjVFb3AzLzZpaGIrMnlqdDA2UUI1cHJKQjI4aXJycXFhUzNuSlFjSk84eHY3?=
+ =?utf-8?B?NWphUTJublY1R0JzWGViZlFHWFhIQzlGc3gxcG9jR2p6RHRkOUtla3VrN2tW?=
+ =?utf-8?B?ZlZJdTQ2aitNM3pLelVHVEp2TmYwZXcwbzhWNG5NdjQ4UlQ0WUorNWpDVEI5?=
+ =?utf-8?B?bVFVRGxjUXBDMTNGVFhJZVhaYzZ3am4wVEZEV2VWNWd0QlhwVkRqbXdvZW1h?=
+ =?utf-8?B?TmFYNUlRdnZqNG9GbkkvZG1tQ0xpZW8yQ0xlQW9OSVhQOHJSWU43UTZiTVVq?=
+ =?utf-8?B?QWtpc2dsNndxOVVIeE9nOWYzdGFPNnd3ZHRCTEFqaUlxa3JWWVJmUTVua3A2?=
+ =?utf-8?B?L0FycW0rSnBWTEZUUjM4SkVac1prbUR5QXYrVFQ4aHM0NUlXKzBURFRvaGJl?=
+ =?utf-8?B?NHJ0emVGZDc3c3VlcXBlYzRWTEYyZmo0RUl2YkRlRHQwL251aXdTdnpLczZM?=
+ =?utf-8?B?eEhtWCtCaWZkUzB4YmYwUTRhYkN5K1VEUmxmVjFYaXlWbnVsR0tvNVpGSkZj?=
+ =?utf-8?B?M2Z6bUNpMGNJM3ZUY0ttWjAxV3FkUVhxWEozbGoxb21kcFdjTzM2KzZyT3JQ?=
+ =?utf-8?B?L2tpYUNoUXdkWDh1QkV4NXRxZlpSeHBEdVJlZ1FTbjBzbHJON21uaDFzU3Fn?=
+ =?utf-8?B?bWIvNGVPcWcrM3VReGRRZzM2ZnBCQjJydkhYZVN5TzR2Zlp5eStsY3BvL0NL?=
+ =?utf-8?B?TisvMlV5N2VnUkVlS2owTXNMdUJ5R0VyUzVkRitBOGVRZC8yaE9vQjk0ZVdR?=
+ =?utf-8?Q?o1OucvCQFdMFTMs7fGRwcDcKp?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 354cefd0-7d32-4635-46bf-08dce7d301df
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9621.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2024 19:54:23.9643
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OXlrbN4NYGEGTAtPzdBMllmSiMH/fNfWKH/bssceXF8VE1salyBvujeMEpH97fDttSDl+UZPAx9uu+5Qcg0FaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10577
 
-On Tue, Oct 8, 2024 at 12:35=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> On Tue, 8 Oct 2024 at 00:25, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Ulf,
-> >
-> > On Tue, Oct 08, 2024 at 12:08:24AM +0200, Ulf Hansson wrote:
-> > > On Mon, 7 Oct 2024 at 20:49, Laurent Pinchart wrote:
-> > > > On Fri, Oct 04, 2024 at 04:38:36PM +0200, Ulf Hansson wrote:
-> > > > > On Fri, 4 Oct 2024 at 11:41, Sakari Ailus wrote:
-> > > > > >
-> > > > > > Hello everyone,
-> > > > > >
-> > > > > > This set will switch the users of pm_runtime_put_autosuspend() =
-to
-> > > > > > __pm_runtime_put_autosuspend() while the former will soon be re=
--purposed
-> > > > > > to include a call to pm_runtime_mark_last_busy(). The two are a=
-lmost
-> > > > > > always used together, apart from bugs which are likely common. =
-Going
-> > > > > > forward, most new users should be using pm_runtime_put_autosusp=
-end().
-> > > > > >
-> > > > > > Once this conversion is done and pm_runtime_put_autosuspend() r=
-e-purposed,
-> > > > > > I'll post another set to merge the calls to __pm_runtime_put_au=
-tosuspend()
-> > > > > > and pm_runtime_mark_last_busy().
-> > > > >
-> > > > > That sounds like it could cause a lot of churns.
-> > > > >
-> > > > > Why not add a new helper function that does the
-> > > > > pm_runtime_put_autosuspend() and the pm_runtime_mark_last_busy()
-> > > > > things? Then we can start moving users over to this new interface=
-,
-> > > > > rather than having this intermediate step?
-> > > >
-> > > > I think the API would be nicer if we used the shortest and simplest
-> > > > function names for the most common use cases. Following
-> > > > pm_runtime_put_autosuspend() with pm_runtime_mark_last_busy() is th=
-at
-> > > > most common use case. That's why I like Sakari's approach of repurp=
-osing
-> > > > pm_runtime_put_autosuspend(), and introducing
-> > > > __pm_runtime_put_autosuspend() for the odd cases where
-> > > > pm_runtime_mark_last_busy() shouldn't be called.
-> > >
-> > > Okay, so the reason for this approach is because we couldn't find a
-> > > short and descriptive name that could be used in favor of
-> > > pm_runtime_put_autosuspend(). Let me throw some ideas at it and maybe
-> > > you like it - or not. :-)
-> >
-> > I like the idea at least :-)
-> >
-> > > I don't know what options you guys discussed, but to me the entire
-> > > "autosuspend"-suffix isn't really that necessary in my opinion. There
-> > > are more ways than calling pm_runtime_put_autosuspend() that triggers
-> > > us to use the RPM_AUTO flag for rpm_suspend(). For example, just
-> > > calling pm_runtime_put() has the similar effect.
-> >
-> > To be honest, I'm lost there. pm_runtime_put() calls
-> > __pm_runtime_idle(RPM_GET_PUT | RPM_ASYNC), while
-> > pm_runtime_put_autosuspend() calls __pm_runtime_suspend(RPM_GET_PUT |
-> > RPM_ASYNC | RPM_AUTO).
->
-> __pm_runtime_idle() ends up calling rpm_idle(), which may call
-> rpm_suspend() - if it succeeds to idle the device. In that case, it
-> tags on the RPM_AUTO flag in the call to rpm_suspend(). Quite similar
-> to what is happening when calling pm_runtime_put_autosuspend().
+┌─────────┐                    ┌────────────┐
+ ┌─────┐    │         │ IA: 0x8ff0_0000    │            │
+ │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
+ └─────┘    │   │     │ IA: 0x8ff8_0000 │  │            │
+  CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
+0x7ff0_0000─┼───┘  │  │             │   │  │            │
+            │      │  │             │   │  │            │   PCI Addr
+0x7ff8_0000─┼──────┘  │             │   └──► CfgSpace  ─┼────────────►
+            │         │             │      │            │    0
+0x7000_0000─┼────────►├─────────┐   │      │            │
+            └─────────┘         │   └──────► IOSpace   ─┼────────────►
+             BUS Fabric         │          │            │    0
+                                │          │            │
+                                └──────────► MemSpace  ─┼────────────►
+                        IA: 0x8000_0000    │            │  0x8000_0000
+                                           └────────────┘
 
-Right.
+Current dwc implimemnt, pci_fixup_addr() call back is needed when bus
+fabric convert cpu address before send to PCIe controller.
 
-For almost everybody, except for a small bunch of drivers that
-actually have a .runtime_idle() callback, pm_runtime_put() is
-literally equivalent to pm_runtime_put_autosuspend().
+    bus@5f000000 {
+            compatible = "simple-bus";
+            #address-cells = <1>;
+            #size-cells = <1>;
+            ranges = <0x5f000000 0x0 0x5f000000 0x21000000>,
+                     <0x80000000 0x0 0x70000000 0x10000000>;
 
-So really the question is why anyone who doesn't provide a
-.runtime_idle() callback bothers with using this special
-pm_runtime_put_autosuspend() thing, which really means "do a
-runtime_put(), but skip my .runtime_idle() callback".
+            pcie@5f010000 {
+                    compatible = "fsl,imx8q-pcie";
+                    reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
+                    reg-names = "dbi", "config";
+                    #address-cells = <3>;
+                    #size-cells = <2>;
+                    device_type = "pci";
+                    bus-range = <0x00 0xff>;
+                    ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
+                             <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
+            ...
+            };
+    };
 
-> >
-> > >
-> > > Moreover, it's similar for pm_runtime_mark_last_busy(), it's called
-> > > during rpm_resume() too, for example. So why bother about having
-> > > "mark_last_busy" in the new name too.
-> > >
-> > > That said, my suggestion is simply "pm_runtime_put_suspend".
-> >
-> > Can we do even better, and make pm_runtime_put() to handle autosuspend
-> > automatically when autosuspend is enabled ?
->
-> As stated above, this is already the case.
+Device tree already can descript all address translate. Some hardware
+driver implement fixup function by mask some bits of cpu address. Last
+pci-imx6.c are little bit better by fetch memory resource's offset to do
+fixup.
 
-What really is needed appears to be a combination of
-pm_runtime_mark_last_busy() with pm_runtime_put().
+static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+{
+	...
+	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+	return cpu_addr - entry->offset;
+}
 
-Granted, pm_runtime_put() could do the pm_runtime_mark_last_busy()
-thing automatically if autosuspend is enabled and the only consequence
-of it might be delaying a suspend of the device until its autosuspend
-timer expires, which should not be a problem in the vast majority of
-cases.
+But it is not good by using IORESOURCE_MEM to fix up io/cfg address map
+although address translate is the same as IORESOURCE_MEM.
+
+This patches to fetch untranslate range information for PCIe controller
+(pcie@5f010000: ranges). So current config ATU without cpu_fixup_addr().
+
+EP side patch:
+https://lore.kernel.org/linux-pci/20240923-pcie_ep_range-v2-0-78d2ea434d9f@nxp.com/T/#mfc73ca113a69ad2c0294a2e629ecee3105b72973
+
+The both pave the road to eliminate ugle cpu_fixup_addr() callback function.
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Changes in v4:
+- Improve commit message by add driver source code path.
+- Link to v3: https://lore.kernel.org/r/20240930-pci_fixup_addr-v3-0-80ee70352fc7@nxp.com
+
+Changes in v3:
+- see each patch
+- Link to v2: https://lore.kernel.org/r/20240926-pci_fixup_addr-v2-0-e4524541edf4@nxp.com
+
+Changes in v2:
+- see each patch
+- Link to v1: https://lore.kernel.org/r/20240924-pci_fixup_addr-v1-0-57d14a91ec4f@nxp.com
+
+---
+Frank Li (3):
+      of: address: Add parent_bus_addr to struct of_pci_range
+      PCI: dwc: Using parent_bus_addr in of_range to eliminate cpu_addr_fixup()
+      PCI: imx6: Remove cpu_addr_fixup()
+
+ drivers/of/address.c                              |  2 ++
+ drivers/pci/controller/dwc/pci-imx6.c             | 22 ++----------
+ drivers/pci/controller/dwc/pcie-designware-host.c | 42 +++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      |  8 +++++
+ include/linux/of_address.h                        |  1 +
+ 5 files changed, 55 insertions(+), 20 deletions(-)
+---
+base-commit: 69940764dc1c429010d37cded159fadf1347d318
+change-id: 20240924-pci_fixup_addr-a8568f9bbb34
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
 
