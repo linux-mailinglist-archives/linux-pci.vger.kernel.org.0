@@ -1,168 +1,174 @@
-Return-Path: <linux-pci+bounces-14083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14084-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8182F9967A5
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 12:50:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41F969967BC
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 12:52:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5212281B51
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 10:50:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0397A1F24138
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 10:52:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD822190470;
-	Wed,  9 Oct 2024 10:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3227919149E;
+	Wed,  9 Oct 2024 10:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aD17HEW2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iwfAWz9O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7882190045
-	for <linux-pci@vger.kernel.org>; Wed,  9 Oct 2024 10:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F8A19049A;
+	Wed,  9 Oct 2024 10:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728471023; cv=none; b=QBHMqU1ehDoT1t4HC12wOajFsIAfaoKDnt6lc04c8ToZTCadzz96fvq8t9xVKa5m5SFUHkY/ueAKn7PaBHnIg7u+r5DYsFs8A84uExOOcB3EonxWApPURCjizWQIL2QE7WSL9NjSmrMYzH3AU/lGphr3lUcl583lmzV6c7gHes4=
+	t=1728471151; cv=none; b=ll+3WTCHYWNMsfMJ+HOP5UCg1cP1qG3ElRguzV0aBmfFaYTfcp3x4dWuRrfpdNosI/QtqYov169wXSLQ2mjMpEliRq/XiFItvq5AXgy70tDN2nlMroBULxv5bdwUft84iJAEngTe7qlnEGyBOYk4vzGXHdPuzVsLjI0CUtou0FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728471023; c=relaxed/simple;
-	bh=DSgm22aJFfiNtDR5PH9COXLN1T3/sjP+t9mUNwfGUwc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pd0xuynAk0ez/4b5BYdJ2+ILdv7KWUTniyFg7szdtMsAk/0OyzX1rMVWvawVbD3U7KEwIaEY6qrCKTczIlDvpVylGwOBLIch8dpZbYnj2FLvyA413JEbSSf3yfh54SsGvrSL2lb/iREjYmbxElMOWD9UyG7LFEe485/xjL6INPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aD17HEW2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728471021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DSgm22aJFfiNtDR5PH9COXLN1T3/sjP+t9mUNwfGUwc=;
-	b=aD17HEW292abkeVr6K/27cxhGRHtEYgOoCbfpawI/fxMAFpxr22H8uXOLEEKV6m9aTOdML
-	fVolMHzdYN+9aqGWalGEuVDdlTxkmQd1Dwxpe9c1h9tJzbGNdXSLvSvDquvh9Lz4buMKp2
-	Hevq/JUeyiUHItaqJ2kHx1qvxFAHPhU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-382-KOOjv1C2OYy05RlxmrcvfA-1; Wed, 09 Oct 2024 06:50:19 -0400
-X-MC-Unique: KOOjv1C2OYy05RlxmrcvfA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42cb6dc3365so57184325e9.2
-        for <linux-pci@vger.kernel.org>; Wed, 09 Oct 2024 03:50:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728471019; x=1729075819;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DSgm22aJFfiNtDR5PH9COXLN1T3/sjP+t9mUNwfGUwc=;
-        b=ZBAkIsc2eiHPs4VEUvClZacMkz6ufhpdAOoeykMrz18DY6PHLTbMLzYLQcZseKBWaP
-         GzJg2q0ZdrZbu8rqKsg8+T7WHNTog6V0xpQpVwu+upuzZ+h+u3ZMpRgNlNybHXy2sVW5
-         ZLqyO4fnsRq+LPi1Ho77hAD4ncfmGnoN3qyePxqfkR6Hg3bK8WO3jww1UTbG+zLISzcP
-         2zQoeeFLN/eKdztU2NxTKjFbJUl/wdq2lblbL8hIL3KoW9OTcMdEpG8u9N3RjL8vxNlN
-         Fl9ldNgqRj2QwA7rnIV2uuefHgRguknRNXUawR/lk/RvFNWw3xsBioaY650UaskY6/IM
-         gmNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTVhIjz4blThT9j4nlvKjcFzJw3rQTflP9HcgVtnoHE3jPknASp4DirU/mKa1vv3gH3N+JYjE25Eg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6bw2byTYRWFMFblipt1lBhvNpnbskwBLfkwp+56sVl8NkJGdQ
-	nxDSUcuHQu6UwvvKXlabaJLud9O8F1gUjOHFsLF8XxqXgnJ8SVV/ch5682wxpOrY5RPuBayh1cr
-	MuGg7wqWC6uk7I2VLPFz2g3b4OPrLa9ugdIf7rgYPepY6g7X1sKVaq/HrEg==
-X-Received: by 2002:a05:600c:154e:b0:42c:bf94:f9ad with SMTP id 5b1f17b1804b1-430d748c5demr14384085e9.34.1728471018516;
-        Wed, 09 Oct 2024 03:50:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHApNTrtsbft1V7n10B4IIxH4JucbHmoQkQ4Jkaz+as7iAf1Sn6WqJVUcb29pY2MStHfTeBSg==
-X-Received: by 2002:a05:600c:154e:b0:42c:bf94:f9ad with SMTP id 5b1f17b1804b1-430d748c5demr14383375e9.34.1728471017985;
-        Wed, 09 Oct 2024 03:50:17 -0700 (PDT)
-Received: from dhcp-64-16.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1695e62bsm10108645f8f.81.2024.10.09.03.50.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 03:50:17 -0700 (PDT)
-Message-ID: <6f54425072b008481a0511fc140bab2590cd1c06.camel@redhat.com>
-Subject: Re: [RFC PATCH 03/13] drivers/xen: Use never-managed version of
- pci_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Juergen Gross <jgross@suse.com>, Damien Le Moal <dlemoal@kernel.org>, 
- Niklas Cassel <cassel@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
- Basavaraj Natikar <basavaraj.natikar@amd.com>, Jiri Kosina
- <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alex
- Dubov <oakad@yahoo.com>, Sudarsana Kalluru <skalluru@marvell.com>, Manish
- Chopra <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
- GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
- Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
- Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Stefano Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
- Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
- <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
- <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Hannes Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
- Soumya Negi <soumya.negi97@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi
- Liu <yi.l.liu@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
- Christian Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>,
- Reinette Chatre <reinette.chatre@intel.com>, Eric Auger
- <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,  Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
- Marc Zyngier <maz@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, netdev@vger.kernel.org, 
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org,  linux-staging@lists.linux.dev,
- kvm@vger.kernel.org,  xen-devel@lists.xenproject.org,
- linux-sound@vger.kernel.org
-Date: Wed, 09 Oct 2024 12:50:14 +0200
-In-Reply-To: <3874c932-71c4-4253-9dcf-a9c302e6bc7e@suse.com>
-References: <20241009083519.10088-1-pstanner@redhat.com>
-	 <20241009083519.10088-4-pstanner@redhat.com>
-	 <3874c932-71c4-4253-9dcf-a9c302e6bc7e@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1728471151; c=relaxed/simple;
+	bh=79g+gJx7OJcWdLNPVFGgUvMBjzoj7nD53HIZ/OcztQo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=PCgsO4UQi7Biu8UmTp451jHIkD9lHE174r2T+Lc/6Ker4wW5+KOd0zU7iO3SBf4eC/Wqql5doAsBGhHfCTIRcIFSqtwolYH3vZsk1mqn7JakyuRr1iUnIgiYlHrjtyAanU4DEXscX183C3hc/04BHEkxOHteJSvK2HK0dWml2+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iwfAWz9O; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728471150; x=1760007150;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=79g+gJx7OJcWdLNPVFGgUvMBjzoj7nD53HIZ/OcztQo=;
+  b=iwfAWz9OZ50WGceqpl/BcwSobdlRFLIbht9L4Z0fUiYNyM4Ubc1YkiNZ
+   YfRg2j5C/bcKWTtSLr1u8Gd/WL9A/kinQoaL4rnj+xOlhi+RUMnV2Wr4o
+   C7Aq0yONTUdDhFmWOanEHE/VCT8OLZAilz4A8m9x0tQGg5kyVl6QBR2gI
+   vvlLVi+ktMpVLteWz+fEYJBsYHMMeLgusDF3Mh/o4vkyfwshr0la42y8u
+   nGI/7LLfDrwZ4UlOJ7bOJohanIaWJ8J55un0D6+io2wiz+hgQ7qNPYCtA
+   f+jncA9KNOgWvKC6RlpeXaErL4CTPIZJs1EJBh49pMo1/d3DhrTC8TAQa
+   w==;
+X-CSE-ConnectionGUID: 69IcwbJyRN2H5xRUUu4NjA==
+X-CSE-MsgGUID: +0Wgo1s0SHqAFnMl+e5q9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="38349764"
+X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
+   d="scan'208";a="38349764"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 03:52:28 -0700
+X-CSE-ConnectionGUID: BdgtP9jKRVKr/D5tVmDGPg==
+X-CSE-MsgGUID: jUtkbT7ZRZ+ILNWdrOblww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
+   d="scan'208";a="80722037"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.41])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 03:52:25 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI: Move no_pci_devices() to the only driver using it
+Date: Wed,  9 Oct 2024 13:52:18 +0300
+Message-Id: <20241009105218.7798-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-10-09 at 10:51 +0200, Juergen Gross wrote:
-> On 09.10.24 10:35, Philipp Stanner wrote:
-> > pci_intx() is a hybrid function which can sometimes be managed
-> > through
-> > devres. To remove this hybrid nature from pci_intx(), it is
-> > necessary to
-> > port users to either an always-managed or a never-managed version.
-> >=20
-> > xen enables its PCI-Device with pci_enable_device(). Thus, it
-> > needs the never-managed version.
-> >=20
-> > Replace pci_intx() with pci_intx_unmanaged().
-> >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
->=20
-> Acked-by: Juergen Gross <jgross@suse.com>
->=20
-> BTW, the diffstat in the [PATCH 00/13] mail is missing some files,
-> e.g. the changes of this patch.
+Core PCI code provides no_pci_devices() that is only used in the
+pc110pad driver during init to detect cases when PC110 definitely cannot
+be present. Move this legacy detection trickery/hack into the pc110pad
+driver.
 
-Ooops, probably something exploded when I copied the backed-up cover-
-letter after regenerating the patches. Will fix.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/input/mouse/pc110pad.c | 19 +++++++++++++++++++
+ drivers/pci/probe.c            | 17 -----------------
+ include/linux/pci.h            |  3 ---
+ 3 files changed, 19 insertions(+), 20 deletions(-)
 
-But good to see that someone actually reads cover letters :p
-
-P.
-
->=20
->=20
-> Juergen
->=20
+diff --git a/drivers/input/mouse/pc110pad.c b/drivers/input/mouse/pc110pad.c
+index efa58049f746..f4167a7e71c8 100644
+--- a/drivers/input/mouse/pc110pad.c
++++ b/drivers/input/mouse/pc110pad.c
+@@ -87,6 +87,25 @@ static int pc110pad_open(struct input_dev *dev)
+  * that the PC110 is not a PCI system. So if we find any
+  * PCI devices in the machine, we don't have a PC110.
+  */
++#ifdef CONFIG_PCI
++static int __init no_pci_devices(void)
++{
++	struct device *dev;
++	int no_devices;
++
++	dev = bus_find_next_device(&pci_bus_type, NULL);
++	no_devices = (dev == NULL);
++	put_device(dev);
++	return no_devices;
++}
++#else
++static int __init no_pci_devices(void)
++{
++	return 1;
++}
++#endif
++
++
+ static int __init pc110pad_init(void)
+ {
+ 	int err;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4f68414c3086..2704503fa8fb 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -65,23 +65,6 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
+ 	return &r->res;
+ }
+ 
+-/*
+- * Some device drivers need know if PCI is initiated.
+- * Basically, we think PCI is not initiated when there
+- * is no device to be found on the pci_bus_type.
+- */
+-int no_pci_devices(void)
+-{
+-	struct device *dev;
+-	int no_devices;
+-
+-	dev = bus_find_next_device(&pci_bus_type, NULL);
+-	no_devices = (dev == NULL);
+-	put_device(dev);
+-	return no_devices;
+-}
+-EXPORT_SYMBOL(no_pci_devices);
+-
+ /*
+  * PCI Bus Class
+  */
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 573b4c4c2be6..4757ce7ccd53 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1107,8 +1107,6 @@ extern const struct bus_type pci_bus_type;
+ /* Do NOT directly access these two variables, unless you are arch-specific PCI
+  * code, or PCI core code. */
+ extern struct list_head pci_root_buses;	/* List of all known PCI buses */
+-/* Some device drivers need know if PCI is initiated */
+-int no_pci_devices(void);
+ 
+ void pcibios_resource_survey_bus(struct pci_bus *bus);
+ void pcibios_bus_add_device(struct pci_dev *pdev);
+@@ -1969,7 +1967,6 @@ static inline struct pci_dev *pci_get_base_class(unsigned int class,
+ static inline int pci_dev_present(const struct pci_device_id *ids)
+ { return 0; }
+ 
+-#define no_pci_devices()	(1)
+ #define pci_dev_put(dev)	do { } while (0)
+ 
+ static inline void pci_set_master(struct pci_dev *dev) { }
+-- 
+2.39.5
 
 
