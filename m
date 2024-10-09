@@ -1,63 +1,62 @@
-Return-Path: <linux-pci+bounces-14109-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14110-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4620599766B
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 22:25:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91AAC9976F6
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 22:53:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2937B28176D
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 20:25:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E9F2289494
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 20:53:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5FD91E1A0A;
-	Wed,  9 Oct 2024 20:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF241E25ED;
+	Wed,  9 Oct 2024 20:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUx+NO/N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQCxYEML"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F029161313;
-	Wed,  9 Oct 2024 20:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EC91DFDAB;
+	Wed,  9 Oct 2024 20:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728505523; cv=none; b=Toti7RTLLnBF2uB1G2XkqInJjPAZlt7wzePhxZNOIm3FOOWUfPpE26zDGPS8N05lNBvjo7ZAC3LVCOIOvE8CIs6Hh7J16oub2X/i63smEqKf9F/QHfueha0fwNf/AENfYC2I+h1urYRuTIsSITgZFYOjr1AzE1X1kqa4iC0b0cg=
+	t=1728507186; cv=none; b=REz/pfsJTAxjNoWJqoHMWoKEfPIrtisGZGLfKOwoT3VANMwbfYBe1a+iB3pBqUw2qVdwbW1sNsswLHFdwsWwKkQK+gDKKTOdBtn3JMK+rU/pOxizH4Xo1dWsi9mlC4XfygeYDzAvqw9NKqqv7gP9zEcLMEsDyEP8yFtl4E+Sj1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728505523; c=relaxed/simple;
-	bh=9DcWRqzRXQ7bjuDcrr4wCjK/5kicZsX5VMPHI05/h6s=;
+	s=arc-20240116; t=1728507186; c=relaxed/simple;
+	bh=z3NFl3JU4cXkyowzq5opNhTPBloo/S0tofmm6les7ds=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fW6v1v7xn5xWkxT7fuwdbAUAnTpAAU4z1yz2h26GTA5v+MC/jWoXDYlpWcZ6jPWoe02SY3k4ICbGT0zd1OHu1mWbdix6yFF9G85gbprCu+ycY+yuNraakNbI8/rDx9oIxUhCD5G7w9MAhL4lztVERcwIBYO3B8Cqgib2rKJoMJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUx+NO/N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDA4C4CEC3;
-	Wed,  9 Oct 2024 20:25:22 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=QEvKIkvIZOBvtmvdjX+T1nK9PLm5dofgZkTY1ygu0hmFVgD7+pVDptHGwIC4/jnLDe+jOE4XCM+OAQWoHAHKWMnAVOw0jcNAkeLEg+Um3ghXc9nPe89uBHiiYhsuxEUGbZtEDeFXaE2JKi+1/ZuWAABSeSz5l5EftHffoHSsAWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQCxYEML; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90E87C4CEC3;
+	Wed,  9 Oct 2024 20:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728505523;
-	bh=9DcWRqzRXQ7bjuDcrr4wCjK/5kicZsX5VMPHI05/h6s=;
+	s=k20201202; t=1728507185;
+	bh=z3NFl3JU4cXkyowzq5opNhTPBloo/S0tofmm6les7ds=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jUx+NO/NCskAYhlHNu0yu/+6op5AwZFKFcNiDh0IHtwF5IcU9CGgua7scNlOXbkcS
-	 aHEHby+MK4Xr1CrN4gDMBE0DmaymLdLumYwkhe81Sh5zjLJ8QtJHcMOpLImQebl2MS
-	 jIrzgL45AciurmR+cSj9GNKrLHzEXvNdRb7q7Y6QBhRNLqFLOPn0DasqlTIqkYq/Uz
-	 pJLWG5cpqITuHNFLDpqJs/JdCEHmMwzGcIZtwIOEAgia9+eNrwZtCI40MCqUDUQ7aa
-	 2IzdXQuipvfXbLXZ7PXpqOkIj+J407heML2kja2gXD4ZkfyqWgn0vbiTjNTvUywS3i
-	 8DCiyt+udTxpw==
-Date: Wed, 9 Oct 2024 15:25:22 -0500
+	b=DQCxYEMLzlgshGROEYfKV/8alUi36hXQwa0orX8JGwReVH5Ym1TNjOLdR8knjfiH3
+	 uHBKqP1xLZD6eN0aZGe5c2Yf6+1QsRBJ250iZdpG1IgO/a/21inaa41shI03t2U+wf
+	 8aCUK4DKa2aIdjK7IO8qVDttEaI7fE/7m/rAfuYEVCE5wjfMZTAoj3IvDrnyQgsUot
+	 Iycb4fgKZREQU6SO2UdnJ6iwgV9bcHEX02p+PU5PL27oMIZzXib/W1eHDexxpkEWrN
+	 2f6fFs/vnpEWsItbdy4xZvrrkpDZzZm0ydj9LGMKKh55+ZH3zs3T4f4cnlf9dhNnHV
+	 24KMvDoZS47Yw==
+Date: Wed, 9 Oct 2024 15:53:04 -0500
 From: Rob Herring <robh@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
-	andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-	abel.vesa@linaro.org, quic_msarkar@quicinc.com,
-	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
-	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 3/7] dt-bindings: PCI: qcom,pcie-x1e80100: Add
- 'global' interrupt
-Message-ID: <20241009202522.GA611063-robh@kernel.org>
-References: <20241009091540.1446-1-quic_qianyu@quicinc.com>
- <20241009091540.1446-4-quic_qianyu@quicinc.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Wei Fang <wei.fang@nxp.com>, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, vladimir.oltean@nxp.com,
+	claudiu.manoil@nxp.com, xiaoning.wang@nxp.com,
+	christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
+	bhelgaas@google.com, imx@lists.linux.dev, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next 02/11] dt-bindings: net: add i.MX95 ENETC support
+Message-ID: <20241009205304.GA615678-robh@kernel.org>
+References: <20241009095116.147412-1-wei.fang@nxp.com>
+ <20241009095116.147412-3-wei.fang@nxp.com>
+ <ZwavhfKthzaOR2R9@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,21 +65,60 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241009091540.1446-4-quic_qianyu@quicinc.com>
+In-Reply-To: <ZwavhfKthzaOR2R9@lizhi-Precision-Tower-5810>
 
-On Wed, Oct 09, 2024 at 02:15:36AM -0700, Qiang Yu wrote:
-> Document 'global' SPI interrupt along with the existing MSI interrupts so
-> that QCOM PCIe RC driver can make use of it to get events such as PCIe
-> link specific events, safety events, etc.
-
-Is it required for some reason vs. being optional? It's fine to break 
-the ABI because...?
-
-Answer those questions with your commit msg.
-
+On Wed, Oct 09, 2024 at 12:29:57PM -0400, Frank Li wrote:
+> On Wed, Oct 09, 2024 at 05:51:07PM +0800, Wei Fang wrote:
+> > The ENETC of i.MX95 has been upgraded to revision 4.1, and the vendor
+> > ID and device ID have also changed, so add the new compatible strings
+> > for i.MX95 ENETC. In addition, i.MX95 supports configuration of RGMII
+> > or RMII reference clock.
+> >
+> > Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> > ---
+> >  .../devicetree/bindings/net/fsl,enetc.yaml    | 23 +++++++++++++++----
+> >  1 file changed, 19 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/fsl,enetc.yaml b/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > index e152c93998fe..1a6685bb7230 100644
+> > --- a/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > +++ b/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > @@ -20,14 +20,29 @@ maintainers:
+> >
+> >  properties:
+> >    compatible:
+> > -    items:
+> > -      - enum:
+> > -          - pci1957,e100
+> > -      - const: fsl,enetc
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - pci1957,e100
+> > +          - const: fsl,enetc
+> > +      - items:
+> > +          - const: pci1131,e101
+> > +      - items:
+> > +          - enum:
+> > +              - nxp,imx95-enetc
+> > +          - const: pci1131,e101
 > 
-> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-x1e80100.yaml    | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>     oneOf:
+>       - items:
+>           - enum:
+>               - pci1957,e100
+>           - const: fsl,enetc
+>       - items:
+>           - const: pci1131,e101
+>           - enum:
+>               - nxp,imx95-enetc
+
+const.
+
+Or maybe just drop it. Hopefully the PCI ID changes with each chip. If 
+not, we kind of have the compatibles backwards.
+
+>           minItems: 1
+
+Then why have the fallback?
 
