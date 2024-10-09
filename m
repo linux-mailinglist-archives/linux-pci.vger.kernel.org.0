@@ -1,126 +1,165 @@
-Return-Path: <linux-pci+bounces-14086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 134EA9967E2
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 12:59:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56810996810
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 13:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7569CB230C3
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 10:59:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C85EA28BDC3
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 11:09:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E8DA19066B;
-	Wed,  9 Oct 2024 10:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26B6190051;
+	Wed,  9 Oct 2024 11:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdGsIKZ9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GqyRtRgq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F15D19049B;
-	Wed,  9 Oct 2024 10:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059A118E76E
+	for <linux-pci@vger.kernel.org>; Wed,  9 Oct 2024 11:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728471548; cv=none; b=V/o5HhZUfuX4wOu3UbJ4F/MrP5fl5G8g1DN4WyKMnaY0p1fETlnZI4wdgIuSRuD0gEadaPx4PTGy0dJbNsnHHxcr7cRyzqwoE20ufupFzWbSDTMw5LzDWupbws3+ogOWI1/Ws5Rt1WWnvc1h2CIyYt8BRCkrjdiB/TUp736Kwp4=
+	t=1728472186; cv=none; b=VhJ8sQlZhWFj9RRMhNTQrm3zPsogmTk5mgpi941bwNuWMZVq+Pd/oeNtUCZ0rKzldMzG0ghUvg+0HcuzcZWV5L5IH6yTETBZLKnZAPg71LtnKQG8Z+xbZOVB8Pzj590W78RX2+E62sVh77qZuDAnjR/vcOT2pAURbpSxUr9NUaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728471548; c=relaxed/simple;
-	bh=xeAjzDULJnF+69KjJwTqAoX43npj68BsDBynQYrVTjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=miZ2PcTAkbdt/VHQKOTfFJ+5VA2RLxC1qcWPzydEZ/yd8h/pf8rM93c++3uFmnrDyrUVg85J5ZiBFDxVbRmuKVj8NQQdgYgE1wkTUEmYnPIFw44ZDrqaIVVcQ6RNQZ3vlm8FkuHfszPW8jVruPDr6HbRCCQF6NnFXnXhKNonoFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdGsIKZ9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 988FBC4CEC5;
-	Wed,  9 Oct 2024 10:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728471547;
-	bh=xeAjzDULJnF+69KjJwTqAoX43npj68BsDBynQYrVTjM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BdGsIKZ9BeXI3qHoiOHlRfowyKiZj8WdV74MVwV3oawwnSt85m5qcg3zMUBkV0w19
-	 SPK/bufEcKbJSMsSOrU1EMS3CnTxKE4KIcT6f8KOJwV8g4ebzU4pAz3yYlyvudCNvI
-	 v5aLm6/aUs0o/pmIUZQKsmzoWXIyUcM4oRpqXQGVuW4VfWzINDBj62gdvLRajOu79h
-	 YoIae6J1tiV0CJ2eUAXjUf5C/EDm6jt0NBWXEtUIeyJ3cw3kk4ZlfruFsQ+5EKkeOX
-	 pLTHC9+SYPu6oVFfx5TnDMAjnrlhVJrkX10k/QRgDbhh9ATu9KGnjFtwEwPrTZggzB
-	 ufoZ3F9MJW+bQ==
-Date: Wed, 9 Oct 2024 11:58:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Steen Hegelund <steen.hegelund@microchip.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Simon Horman <horms@kernel.org>, Lee Jones <lee@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 3/6] reset: mchp: sparx5: Map cpu-syscon locally in
- case of LAN966x
-Message-ID: <20241009-walnut-unending-aed5b687454c@spud>
-References: <20241003081647.642468-1-herve.codina@bootlin.com>
- <20241003081647.642468-4-herve.codina@bootlin.com>
- <71fb65a929e5d5be86f95ab76591beb77e641c14.camel@microchip.com>
- <CAMuHMdVR8UfZyGUS1c3nZqvPYBNs7oSe5p1GjCA3BYwrz8-bdQ@mail.gmail.com>
+	s=arc-20240116; t=1728472186; c=relaxed/simple;
+	bh=qZpZMRQQ+xlixICANxcpy3oSa/Y9MHgxHQ1oAId7kSk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lH2crGTv6bwSZVRBIcsw5q48jrnhrw69/ZYNOnPLReol679l+pmM9rEwrVFtrNDHG8jBqIJmMjYMsw6O7NRScazgKxBOdQRFrBVNLEemto/K/KbApuYI932b62h9dZevQbvfNsdRMlhwiUYSb5rJSVWWbGRY5k0pa1TRvbj67qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GqyRtRgq; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728472186; x=1760008186;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=qZpZMRQQ+xlixICANxcpy3oSa/Y9MHgxHQ1oAId7kSk=;
+  b=GqyRtRgq83lsXKcace1jZzMvxRzXLPnKDlWUIOoIlVGKEJ7C9uR7D/Ur
+   haJYp4LibkZBxw3OAtsscTTXsa9q3rkUc0Sy+kMzWgXrqZAC3z9aQ0v0k
+   SaIAiF49xA/fbIylfoU9jAIMYKHo1FHWb3avPLuLR78YeTZ1A5TszOzuF
+   WNhQ+dFNHvDbQwo3AuijDl810Eve7fjfneaaNJZc4bqrVJRCTfTOVYXQl
+   CY/eegO1nQf72s3W9ESRCsFYXFJ+89RSKIDVuK3X1h6/HkYfmh+VmOE+1
+   S/Hi6vX8LmvqvVaGMu3l6kCOCfpiwn7T90szh6VCtRyqPeMLqH4pwaaG/
+   Q==;
+X-CSE-ConnectionGUID: o0RTVMyyQSOt4UqXLBJPdA==
+X-CSE-MsgGUID: 8i4WTTEeQGepXX9UyzSlkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="45231561"
+X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
+   d="scan'208";a="45231561"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 04:09:24 -0700
+X-CSE-ConnectionGUID: +PFUL0AvRP6GU/4e6VSxXg==
+X-CSE-MsgGUID: sQTEdOROQf203Fkn8filrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
+   d="scan'208";a="75814819"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.41])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 04:09:21 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 9 Oct 2024 14:09:18 +0300 (EEST)
+To: Keith Busch <kbusch@meta.com>
+cc: linux-pci@vger.kernel.org, bhelgaas@google.com, 
+    Keith Busch <kbusch@kernel.org>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCHv2 3/5] pci: move the walk bus lock to where its needed
+In-Reply-To: <20240827192826.710031-4-kbusch@meta.com>
+Message-ID: <d9d552ed-d5d3-1d3e-2020-11de8c2b1c14@linux.intel.com>
+References: <20240827192826.710031-1-kbusch@meta.com> <20240827192826.710031-4-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cndNbLBuvwOtOy9M"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVR8UfZyGUS1c3nZqvPYBNs7oSe5p1GjCA3BYwrz8-bdQ@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-438438734-1728472158=:930"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---cndNbLBuvwOtOy9M
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--8323328-438438734-1728472158=:930
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Wed, Oct 09, 2024 at 12:20:32PM +0200, Geert Uytterhoeven wrote:
-> Hi Steve,
+On Tue, 27 Aug 2024, Keith Busch wrote:
+
+> From: Keith Busch <kbusch@kernel.org>
 >=20
-> On Wed, Oct 9, 2024 at 9:30=E2=80=AFAM Steen Hegelund
-> <steen.hegelund@microchip.com> wrote:
-> > On Thu, 2024-10-03 at 10:16 +0200, Herve Codina wrote:
-> > > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > > know the content is safe
+> Simplify the common function by removing an unnecessary parameter that
+> can be more easily handled in the only caller that wants it.
 >=20
-> Hmm, the email I received directly from Herv=C3=A9 did not have the part
-> you are quoting, so it looks like you are subject to a MiTM-attack ;-)
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
 
-Yeah, unfortunately we are subjected to that. This one at least just
-adds some text, there's another "MiTM attacker" we have that sometimes
-crops up and has a side effect of tab-to-space conversion. The joys of
-corporate IT.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
---cndNbLBuvwOtOy9M
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+ i.
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZwZh8wAKCRB4tDGHoIJi
-0lfaAQDEiHS7Rxt7GPKHgI4elepFbJpqoYoimbiJmOxyO003UgD/UVz8BnS0gXHT
-d4vnv47DPKzMLjGYw5WnRL1P8t+NmQs=
-=nI7S
------END PGP SIGNATURE-----
-
---cndNbLBuvwOtOy9M--
+> ---
+>  drivers/pci/bus.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index e41dfece0d969..7c07a141e8772 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -390,7 +390,7 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+>  EXPORT_SYMBOL(pci_bus_add_devices);
+> =20
+>  static void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev=
+ *, void *),
+> -=09=09=09   void *userdata, bool locked)
+> +=09=09=09   void *userdata)
+>  {
+>  =09struct pci_dev *dev;
+>  =09struct pci_bus *bus;
+> @@ -398,8 +398,6 @@ static void __pci_walk_bus(struct pci_bus *top, int (=
+*cb)(struct pci_dev *, void
+>  =09int retval;
+> =20
+>  =09bus =3D top;
+> -=09if (!locked)
+> -=09=09down_read(&pci_bus_sem);
+>  =09next =3D top->devices.next;
+>  =09for (;;) {
+>  =09=09if (next =3D=3D &bus->devices) {
+> @@ -422,8 +420,6 @@ static void __pci_walk_bus(struct pci_bus *top, int (=
+*cb)(struct pci_dev *, void
+>  =09=09if (retval)
+>  =09=09=09break;
+>  =09}
+> -=09if (!locked)
+> -=09=09up_read(&pci_bus_sem);
+>  }
+> =20
+>  /**
+> @@ -441,7 +437,9 @@ static void __pci_walk_bus(struct pci_bus *top, int (=
+*cb)(struct pci_dev *, void
+>   */
+>  void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void =
+*), void *userdata)
+>  {
+> -=09__pci_walk_bus(top, cb, userdata, false);
+> +=09down_read(&pci_bus_sem);
+> +=09__pci_walk_bus(top, cb, userdata);
+> +=09up_read(&pci_bus_sem);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_walk_bus);
+> =20
+> @@ -449,7 +447,7 @@ void pci_walk_bus_locked(struct pci_bus *top, int (*c=
+b)(struct pci_dev *, void *
+>  {
+>  =09lockdep_assert_held(&pci_bus_sem);
+> =20
+> -=09__pci_walk_bus(top, cb, userdata, true);
+> +=09__pci_walk_bus(top, cb, userdata);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_walk_bus_locked);
+> =20
+>=20
+--8323328-438438734-1728472158=:930--
 
