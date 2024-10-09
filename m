@@ -1,150 +1,201 @@
-Return-Path: <linux-pci+bounces-14113-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14114-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FD11997879
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 00:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF853997901
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 01:18:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6092E1C21580
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 22:24:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E459F1C2262A
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 23:18:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E76C21E32C2;
-	Wed,  9 Oct 2024 22:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB35319A285;
+	Wed,  9 Oct 2024 23:18:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciayY5H6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BSBQuUj1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5EA19923C;
-	Wed,  9 Oct 2024 22:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071C11E32A6
+	for <linux-pci@vger.kernel.org>; Wed,  9 Oct 2024 23:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728512646; cv=none; b=GM/njAk5nij07jeH3fpwZKcRKInT8ch3QWZLwptdLX7XqXijO4BA0gWnDAEuQs+HHywpcK9bBWAm21FWgtzsD5E0MB2yxEO0W50+ORQRaaWFFQd/8llA3giewnh5RyE8ilbRchM8k3ZcY7q6hWmQahQEVF3N/Zo4H9XhCcgt4+o=
+	t=1728515910; cv=none; b=J9WVjViHUj7rJEXQvGiyo2vROCOnk6Z/Fzn/a4NhiFSJdCG7J3+ALDMvWsJ5203Siqxl1v52KG2LiEB9ostgMRE9tGwK1eO2dY6fAwgjXPE+CBg87X3JT8IqjjyiC1AIRkmE2dVuLs4Sj8odYMVDzKZ47i36RE4f+lFe6mO2ahA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728512646; c=relaxed/simple;
-	bh=Q1IRoaSIpPaBToI0HSWzg6kfGu2RhTlvkYSuzXw7Tc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fSqDTO1sqaI8wUtMMIqArHQ2w25ucQh4vC0F5bw1UsrMqu9FnfYc1zxvAb9Ys38Mz/0sXspv7FBtGQ/xV4xfQZWR6M0JG1mauct6RBJb9rgEtLfk1J86uxIg1EcletJnKbRaw5g6MkTNQtt/ifh8UBIzOFNgrgUkmD1YkUxzqgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciayY5H6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4189AC4CECC;
-	Wed,  9 Oct 2024 22:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728512645;
-	bh=Q1IRoaSIpPaBToI0HSWzg6kfGu2RhTlvkYSuzXw7Tc0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ciayY5H63RROmQEDj/ybuztTAOuK2JyjBZwr1S6BCB+ABhoNGcr32/uVlrV68Eh33
-	 K0u51+jxwUGn9ETCjcJ7vF7oP+mIA5H/QpFyzbLk4l6rmxw7haIyYMCWMj7r81N60X
-	 hHwP6cSPUC2c5FMH0GHtpJryayTtxc1f31A66PJYbl8fyTsWcbTXv8/EMkW8qEKAK0
-	 PqhdRfkm1lal8eY8G+mtkAvL9Jm4uHhuI/pD0jKsO+B6Ho59FxXng0OQyuYjjQgKfB
-	 maEyLQ8Rg/XYlUScqBjxaUMrLJUwTfeqkd0DJjBKqTzKk3a7vZS2bGrxD9rDXIX95j
-	 S9t7sNnQmTxZA==
-Date: Wed, 9 Oct 2024 17:24:03 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Kai-Heng Feng <kaihengfeng@gmail.com>, bhelgaas@google.com,
-	mario.limonciello@amd.com, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] PCI/PM: Put devices to low power state on shutdown
-Message-ID: <20241009222403.GA507767@bhelgaas>
+	s=arc-20240116; t=1728515910; c=relaxed/simple;
+	bh=QwSwCFp1OlCJr1786kytAX8FloADBrC2RzFURzFzHHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=aNx+Q+xOssVXhyntnfeyuLI0tGdkgvY9tfYOEOa3n8l0dpE/Ss2dpkW53WcWec20ECR5K20KymwxYtQIrzRIgeKweVzbY0mRa63d6oBn2Yj9uTAG1U/YULQvN5cz0qJ+n8pfcfGlo/7Y0/hBVYi58jJYbojX2TUzkyZdqVJJhD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BSBQuUj1; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728515910; x=1760051910;
+  h=date:from:to:cc:subject:message-id;
+  bh=QwSwCFp1OlCJr1786kytAX8FloADBrC2RzFURzFzHHQ=;
+  b=BSBQuUj1MZIKQFQI5AmIrogpowpttt/FW1F+ZL55KaCpa+hUZ40J2eyQ
+   /zeW7gxZXhAbU5N0+5WpeE5JEyfbtvtO4oMtjuOYTZX9x0XVHpXlslhFQ
+   qYxr9+0tqhz1cplurD/3Nf0fSubR0+VOPdSJqwDk93Bm2BV8WDNL+aLX0
+   fppfxZAqdhKPEXQ2iK/YOauR4V1wdZHUpNR3tzqATNfPUW/Fd5uGlqg7a
+   Z0szSV4ZQFK7kUXrNNMlOdLZlFAxrkbpaNYuJSEl3HSeUco+9AvyAa1Vr
+   r3Mjy4hNQVWlGAfx5+zR4kMHwan1YgIoi0BUqM70ugYlWScyzUsv5GPDi
+   Q==;
+X-CSE-ConnectionGUID: ghA0vo9cR3OvM9TtEr4XyA==
+X-CSE-MsgGUID: XmBRYUcXTy2AEDf/yf5fQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="27799132"
+X-IronPort-AV: E=Sophos;i="6.11,191,1725346800"; 
+   d="scan'208";a="27799132"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 16:18:29 -0700
+X-CSE-ConnectionGUID: u/hm+/1CSVuvKGGuPqcTqQ==
+X-CSE-MsgGUID: tkARfHfJSP29gqnGgVMeoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,191,1725346800"; 
+   d="scan'208";a="76874352"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 09 Oct 2024 16:18:28 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1syfwn-0009uQ-0w;
+	Wed, 09 Oct 2024 23:18:25 +0000
+Date: Thu, 10 Oct 2024 07:17:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 6437627cb582a85c0fcf850902d52405014ce10b
+Message-ID: <202410100750.Fv4ZBuqF-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240913080123.GP275077@black.fi.intel.com>
 
-On Fri, Sep 13, 2024 at 11:01:23AM +0300, Mika Westerberg wrote:
-> On Fri, Sep 13, 2024 at 02:00:58PM +0800, Kai-Heng Feng wrote:
-> > On Fri, Sep 13, 2024 at 12:57 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Sep 12, 2024 at 11:00:43AM +0800, Kai-Heng Feng wrote:
-> > > > On Thu, Sep 12, 2024 at 3:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Fri, Jul 12, 2024 at 02:24:11PM +0800, Kai-Heng Feng wrote:
-> > > > > > Some laptops wake up after poweroff when HP Thunderbolt
-> > > > > > Dock G4 is connected.
-> > > > > >
-> > > > > > The following error message can be found during shutdown:
-> > > > > > pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
-> > > > > > pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-> > > > > > pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
-> > > > > > pcieport 0000:09:04.0:    [ 7] BadDLLP
-> > > > > >
-> > > > > > Calling aer_remove() during shutdown can quiesce the error
-> > > > > > message, however the spurious wakeup still happens.
-> > > > > >
-> > > > > > The issue won't happen if the device is in D3 before
-> > > > > > system shutdown, so putting device to low power state
-> > > > > > before shutdown to solve the issue.
-> > > > > >
-> > > > > > I don't have a sniffer so this is purely guesswork,
-> > > > > > however I believe putting device to low power state it's
-> > > > > > the right thing to do.
-> > > > >
-> > > > > My objection here is that we don't have an explanation of
-> > > > > why this should matter or a pointer to any spec language
-> > > > > about this situation, so it feels a little bit random.
-> ...
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 6437627cb582a85c0fcf850902d52405014ce10b  Merge branch 'pci/misc'
 
-> I don't mean to confuse you guys but with this one too, I wonder if you
-> tried to "disable" the device instead of putting it into D3? On another
-> thread (Mario at least is aware of this) I mentioned that our PCIe SV
-> folks identified a couple issues in Linux implementation around power
-> management and one thing that we are missing is to disable I/O and MMIO
-> upon entering D3.
-> ...
+elapsed time: 1497m
 
-This is really interesting -- did they discover a functional problem,
-or did they just notice that we don't follow the PCI PM spec?
+configs tested: 108
+configs skipped: 6
 
-> +++ b/drivers/pci/pci.c
-> @@ -2218,6 +2218,13 @@ static void do_pci_disable_device(struct pci_dev *dev)
->  		pci_command &= ~PCI_COMMAND_MASTER;
->  		pci_write_config_word(dev, PCI_COMMAND, pci_command);
->  	}
-> +	/*
-> +	 * PCI PM 1.2 sec 8.2.2 says that when a function is put into D3
-> +	 * the OS needs to disable I/O and MMIO space in addition to bus
-> +	 * mastering so do that here.
-> +	 */
-> +	pci_command &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
-> +	pci_write_config_word(dev, PCI_COMMAND, pci_command);
->  
->  	pcibios_disable_device(dev);
->  }
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This do_pci_disable_device() proposal is interesting.
+tested configs:
+alpha                             allnoconfig    gcc-13.3.0
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                            allyesconfig    gcc-13.3.0
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-14.1.0
+arc                    vdk_hs38_smp_defconfig    gcc-14.1.0
+arm                               allnoconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                                 defconfig    gcc-14.1.0
+arm                   milbeaut_m10v_defconfig    gcc-14.1.0
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-002-20241009    gcc-12
+i386        buildonly-randconfig-003-20241009    clang-18
+i386        buildonly-randconfig-004-20241009    clang-18
+i386        buildonly-randconfig-005-20241009    clang-18
+i386        buildonly-randconfig-006-20241009    gcc-12
+i386                                defconfig    clang-18
+i386                  randconfig-002-20241009    clang-18
+i386                  randconfig-003-20241009    gcc-12
+i386                  randconfig-004-20241009    clang-18
+i386                  randconfig-005-20241009    gcc-12
+i386                  randconfig-006-20241009    clang-18
+i386                  randconfig-011-20241009    clang-18
+i386                  randconfig-012-20241009    clang-18
+i386                  randconfig-013-20241009    clang-18
+i386                  randconfig-014-20241009    gcc-12
+i386                  randconfig-015-20241009    clang-18
+i386                  randconfig-016-20241009    gcc-11
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                                defconfig    gcc-14.1.0
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                      bmips_stb_defconfig    gcc-14.1.0
+mips                           ci20_defconfig    gcc-14.1.0
+mips                          rb532_defconfig    gcc-14.1.0
+mips                        vocore2_defconfig    gcc-14.1.0
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    gcc-14.1.0
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+openrisc                 simple_smp_defconfig    gcc-14.1.0
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    gcc-14.1.0
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc64                            defconfig    gcc-14.1.0
+powerpc                           allnoconfig    gcc-14.1.0
+powerpc                       eiger_defconfig    gcc-14.1.0
+powerpc                     ppa8548_defconfig    gcc-14.1.0
+riscv                             allnoconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+riscv                               defconfig    gcc-14.1.0
+s390                             allmodconfig    clang-20
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                ecovec24-romimage_defconfig    gcc-14.1.0
+sh                        edosk7705_defconfig    gcc-14.1.0
+sh                          r7785rp_defconfig    gcc-14.1.0
+sh                           se7750_defconfig    gcc-14.1.0
+sparc                            alldefconfig    gcc-14.1.0
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-17
+um                               allyesconfig    clang-20
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-18
+x86_64                               rhel-8.3    gcc-12
+x86_64                          rhel-8.3-rust    clang-18
+xtensa                            allnoconfig    gcc-14.1.0
+xtensa                          iss_defconfig    gcc-14.1.0
 
-pci_enable_device() turns on PCI_COMMAND_MEMORY and PCI_COMMAND_IO,
-which enables the device to respond to MMIO and I/O port accesses to
-its BARs from the driver.  It also makes sure the device is in D0,
-because BAR access only works in D0.
-
-pci_set_master() turns on PCI_COMMAND_MASTER, which enables the device
-to perform DMA (including generating MSIs).
-
-pci_disable_device() *sounds* like it should be the opposite of
-pci_enable_device(), but it's currently basically the same as
-pci_clear_master(), which clears PCI_COMMAND_MASTER to prevent DMA.
-I didn't know about this text in 8.2.2, and I wish I knew why we
-don't currently clear PCI_COMMAND_MEMORY and PCI_COMMAND_IO.
-
-If we want to pursue this, I think it should be split to its own patch
-and moved out of pci_disable_device() because I don't think this path
-necessary implies putting the device in D3, so I think it would fit
-better with the spec if we cleared PCI_COMMAND_MEMORY and
-PCI_COMMAND_IO in a path that explicitly does put it in D3.
-
-I think there's a significant chance of breaking something because
-drivers are currently able to access BARs after pci_disable_device(),
-and there are a LOT of callers.  But if there's a problem it would
-fix, we should definitely explore it.
-
-Bjorn
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
