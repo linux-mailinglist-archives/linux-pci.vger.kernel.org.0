@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-14057-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14058-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 435519965FE
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 11:53:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E49F6996604
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 11:53:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD6EE1F2580C
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 09:53:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A255287D0C
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 09:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A629B18B48B;
-	Wed,  9 Oct 2024 09:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFB918E03E;
+	Wed,  9 Oct 2024 09:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X+iICrd8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EzBK/GVZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD9F18B472;
-	Wed,  9 Oct 2024 09:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284D418DF65;
+	Wed,  9 Oct 2024 09:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728467583; cv=none; b=Rul4A/5SvWvP76sHcB7L2JHqb7nwrj277W8lGbFEA0kxuFCuwWYzOyyWIq90XftToGMZARRuQo81asPmBiiys6U5eKkfSv5oJZMWyi0vsdPv5MktGUWGdMk2p2BHVa0nItrV39FallKxYlBngGg1inJFdsmyG0boXV17TeTv05M=
+	t=1728467594; cv=none; b=JQoDcW/sBwdDMm2/Rf29qRTBj9Surt+jerh8hnOM+CiAI97ipiPoBB8vdfcRXdrKkIWFyJh+p3mfZ6bgv7us2yxslnHEYjTxGRcn+o6bl0R+s9LKMJ2wC8F0FIJ3YYY4ZDzNM0XTiIWccTeuwqHhE3eMFD13COWRsixU57QBeXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728467583; c=relaxed/simple;
-	bh=DPnc1fi/Miq14chejWMvakLKQuUVitxVsXIQ2PVm3wQ=;
+	s=arc-20240116; t=1728467594; c=relaxed/simple;
+	bh=lPPE2ybB860dOVW+u2UW17xbPLNdG/vbXkTiBVYcZj8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mLm3M0rf0lcOc31hVhis7Ep3hW4giqzIUZvcSY8hWtXmAVCUrEisLHmpKAFJvv8pjHr8mFwtj8N/E3blHM8K6jnY2ZpHdKDR5IaiUimNsuth8M3cJjNdmfVONnZXzh3NPSOGiy7SrtkYMCSTP4NBinGGO6U0WLQctgy6rcYIOxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X+iICrd8; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=gHVeXhFDUXNwhDLi2jcC78/4oA9EIud+/v51SrzHQW7dTI3K4DttE88uusxasmPn0p4fm9I3TMjfS45mswedwHtEyn0gAYlp3xUvGGRMUn2hNPCUG2TLacwQCLx4x+neRExtMquk2ZxWneFP/h3/PkP08fAvK8K2R9NDNDoEK6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EzBK/GVZ; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728467582; x=1760003582;
+  t=1728467593; x=1760003593;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DPnc1fi/Miq14chejWMvakLKQuUVitxVsXIQ2PVm3wQ=;
-  b=X+iICrd8nd5ExWySqsnYkqEcJt36B86yZRAkM/iV/52jefcbSq2CTilm
-   witkx6s8M4e0BJFFUSwsHd2h9t9fmfAIQpUvZcmyCRxWTReh7ehkaP/fZ
-   LkZoPlTNI/jAPIy9kgzLp70tIIrNl7dLpuHBdgY3pCOj2a3TIU/N5LGIb
-   3iFq9COAPd7MngFpllSztxmsM+LDBYeOefwqGOQ0YzQPLXQGQm8dP51lQ
-   v8Nv3yekUx9aXx14I1oMPfyUbJmwMoceXm2FvqBYMN1Y/W21riyHAGvfX
-   VAZmDrIcfe3fvOxhQWnddk4Wqqz57BvpbYJIW3zmARl2UpHLL4eLBmMy7
-   Q==;
-X-CSE-ConnectionGUID: VfwiCl+RQQyHWTfK2+v2DA==
-X-CSE-MsgGUID: 0Kb7uHHKQ0G/cl5gqInyjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="38322508"
+  bh=lPPE2ybB860dOVW+u2UW17xbPLNdG/vbXkTiBVYcZj8=;
+  b=EzBK/GVZpCmgIhBHhlGiBZN7dYSRZWArDYyFl8S5XZhNGbnnK3GOe9bE
+   spJykN1UebDMokyANt0TWtjfpDNnSvTSuQh0WFVyVKEf6mKRXm4ssx681
+   Rus8MV1L+iWge/FPMegb3/A0qtcv8FLG3oP1iFE1MCtcLblWXXLVpZhs7
+   A2DLILFLz8NRf0FJhhpXPG/imwLZJan0gQXoIBhWrzII3FtzTxBqNiVcR
+   jikPm+DTkwN0r7hyxFKdvwSXTyDrcZZQ0aaSrFAG5pa2CCAx3lEHhf/bZ
+   9qTfe29gVS4x3iHnxMNj4imr/BnbVdOQBTwk6wYTzs+Kmy1biaEX3XlAy
+   g==;
+X-CSE-ConnectionGUID: Ilm8ml+xSiOn9ol9ty/jVg==
+X-CSE-MsgGUID: lf6vFL25QVaznDExJrBRsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="38322803"
 X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
-   d="scan'208";a="38322508"
+   d="scan'208";a="38322803"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 02:53:01 -0700
-X-CSE-ConnectionGUID: ge/ag1YbQD+6f4fklORFjQ==
-X-CSE-MsgGUID: MbokNGl4Qb2JcF7Zcix+VA==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 02:53:12 -0700
+X-CSE-ConnectionGUID: Gvh7v3wYQu2/P84owVVHrQ==
+X-CSE-MsgGUID: bBKcGyUOQ46Mv827kY313Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
-   d="scan'208";a="76506766"
+   d="scan'208";a="76506809"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.41])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 02:52:56 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 02:53:06 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Zhang Rui <rui.zhang@intel.com>,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v8 2/8] PCI: Store all PCIe Supported Link Speeds
-Date: Wed,  9 Oct 2024 12:52:17 +0300
-Message-Id: <20241009095223.7093-3-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v8 3/8] PCI: Refactor pcie_update_link_speed()
+Date: Wed,  9 Oct 2024 12:52:18 +0300
+Message-Id: <20241009095223.7093-4-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20241009095223.7093-1-ilpo.jarvinen@linux.intel.com>
 References: <20241009095223.7093-1-ilpo.jarvinen@linux.intel.com>
@@ -94,212 +94,87 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-PCIe bandwidth controller added by a subsequent commit will require
-selecting PCIe Link Speeds that are lower than the Maximum Link Speed.
+pcie_update_link_speed() is passed the Link Status register but not all
+callers have that value at hand nor need the value.
 
-The struct pci_bus only stores max_bus_speed. Even if PCIe r6.1 sec
-8.2.1 currently disallows gaps in supported Link Speeds, the
-Implementation Note in PCIe r6.1 sec 7.5.3.18, recommends determining
-supported Link Speeds using the Supported Link Speeds Vector in the
-Link Capabilities 2 Register (when available) to "avoid software being
-confused if a future specification defines Links that do not require
-support for all slower speeds."
+Refactor pcie_update_link_speed() to include reading the Link Status
+register and create __pcie_update_link_speed() which can be used by the
+hotplug code that has the register value at hand beforehand (and needs
+the value for other purposes).
 
-Reuse code in pcie_get_speed_cap() to add pcie_get_supported_speeds()
-to query the Supported Link Speeds Vector of a PCIe device. The value
-is taken directly from the Supported Link Speeds Vector or synthetized
-from the Max Link Speed in the Link Capabilities Register when the Link
-Capabilities 2 Register is not available.
-
-The Supported Link Speeds Vector in the Link Capabilities Register 2
-corresponds to the bus below on Root Ports and Downstream Ports,
-whereas it corresponds to the bus above on Upstream Ports and
-Endpoints (PCIe r6.1 sec 7.5.3.18):
-
-	"Supported Link Speeds Vector - This field indicates the
-	supported Link speed(s) of the associated Port."
-
-Add supported_speeds into the struct pci_dev that caches the
-Supported Link Speeds Vector.
-
-supported_speeds contains a set of Link Speeds only in the case where
-PCIe Link Speed can be determined. The Root Complex Integrated
-Endpoints do not have a well-defined Link Speed because they do not
-seem to implement either of the Link Capabilities Registers, which is
-allowed by PCIe r6.1 sec 7.5.3 (the same limitation applies to
-determining cur_bus_speed and max_bus_speed that are PCI_SPEED_UNKNOWN
-in such case). This is of no concern from PCIe bandwidth controller
-point of view because such devices are not attached into a PCIe Root
-Port that could be controlled.
-
-supported_speeds field keeps the extra reserved zero at the least
-significant bit to match the Link Capabilities 2 Register layouting.
-
-An attempt was made to store supported_speeds field into the struct
-pci_bus as an intersection of the both ends of the Link, however, the
-subordinate struct pci_bus is not available early enough. The Target
-Speed quirk (in pcie_failed_link_retrain()) can run either during
-initial scan or later requiring it to use the API PCIe bandwidth
-controller provides to set the Target Link Speed in order to co-exist
-with the bandwidth controller. When the Target Speed quirk is calling
-the bandwidth controller during initial scan, the struct pci_bus is not
-yet initialized. As such, storing supported_speeds into the struct
-pci_bus is not viable.
-
-Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/pci.c             | 58 ++++++++++++++++++++++++-----------
- drivers/pci/probe.c           |  3 ++
- include/linux/pci.h           | 11 ++++++-
- include/uapi/linux/pci_regs.h |  1 +
- 4 files changed, 54 insertions(+), 19 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c |  2 +-
+ drivers/pci/pci.h                |  7 ++++++-
+ drivers/pci/probe.c              | 12 +++++++-----
+ 3 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 7d85c04fbba2..b28ab4761b18 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6189,38 +6189,60 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- EXPORT_SYMBOL(pcie_bandwidth_available);
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 736ad8baa2a5..bb5a8d9f03ad 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -319,7 +319,7 @@ int pciehp_check_link_status(struct controller *ctrl)
+ 		return -1;
+ 	}
  
- /**
-- * pcie_get_speed_cap - query for the PCI device's link speed capability
-+ * pcie_get_supported_speeds - query Supported Link Speed Vector
-  * @dev: PCI device to query
-  *
-- * Query the PCI device speed capability.  Return the maximum link speed
-- * supported by the device.
-+ * Query @dev supported link speeds.
-+ *
-+ * Implementation Note in PCIe r6.0.1 sec 7.5.3.18 recommends determining
-+ * supported link speeds using the Supported Link Speeds Vector in the Link
-+ * Capabilities 2 Register (when available).
-+ *
-+ * Link Capabilities 2 was added in PCIe r3.0, sec 7.8.18.
-+ *
-+ * Without Link Capabilities 2, i.e., prior to PCIe r3.0, Supported Link
-+ * Speeds field in Link Capabilities is used and only 2.5 GT/s and 5.0 GT/s
-+ * speeds were defined.
-+ *
-+ * For @dev without Supported Link Speed Vector, the field is synthetized
-+ * from the Max Link Speed field in the Link Capabilities Register.
-+ *
-+ * Return: Supported Link Speeds Vector
-  */
--enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
-+u8 pcie_get_supported_speeds(struct pci_dev *dev)
- {
- 	u32 lnkcap2, lnkcap;
-+	u8 speeds;
+-	pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status);
++	__pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status);
  
--	/*
--	 * Link Capabilities 2 was added in PCIe r3.0, sec 7.8.18.  The
--	 * implementation note there recommends using the Supported Link
--	 * Speeds Vector in Link Capabilities 2 when supported.
--	 *
--	 * Without Link Capabilities 2, i.e., prior to PCIe r3.0, software
--	 * should use the Supported Link Speeds field in Link Capabilities,
--	 * where only 2.5 GT/s and 5.0 GT/s speeds were defined.
--	 */
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &lnkcap2);
-+	speeds = lnkcap2 & PCI_EXP_LNKCAP2_SLS;
- 
- 	/* PCIe r3.0-compliant */
--	if (lnkcap2)
--		return PCIE_LNKCAP2_SLS2SPEED(lnkcap2);
-+	if (speeds)
-+		return speeds;
- 
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+ 	if (!found) {
+ 		ctrl_info(ctrl, "Slot(%s): No device found\n",
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 14d00ce45bfa..6e827d47aa85 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -378,7 +378,12 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+ void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
+ void pcie_report_downtraining(struct pci_dev *dev);
+-void pcie_update_link_speed(struct pci_bus *bus, u16 link_status);
 +
-+	/* Synthetize from the Max Link Speed field */
- 	if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB)
--		return PCIE_SPEED_5_0GT;
-+		speeds = PCI_EXP_LNKCAP2_SLS_5_0GB | PCI_EXP_LNKCAP2_SLS_2_5GB;
- 	else if ((lnkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_2_5GB)
--		return PCIE_SPEED_2_5GT;
-+		speeds = PCI_EXP_LNKCAP2_SLS_2_5GB;
-+
-+	return speeds;
-+}
- 
--	return PCI_SPEED_UNKNOWN;
-+/**
-+ * pcie_get_speed_cap - query for the PCI device's link speed capability
-+ * @dev: PCI device to query
-+ *
-+ * Query the PCI device speed capability.
-+ *
-+ * Return: the maximum link speed supported by the device.
-+ */
-+enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
++static inline void __pcie_update_link_speed(struct pci_bus *bus, u16 linksta)
 +{
-+	return PCIE_LNKCAP2_SLS2SPEED(dev->supported_speeds);
- }
- EXPORT_SYMBOL(pcie_get_speed_cap);
++	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
++}
++void pcie_update_link_speed(struct pci_bus *bus);
  
+ /* Single Root I/O Virtualization */
+ struct pci_sriov {
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4f68414c3086..af153a8e8225 100644
+index af153a8e8225..c138daf78961 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -1947,6 +1947,9 @@ int pci_setup_device(struct pci_dev *dev)
+@@ -742,9 +742,13 @@ const char *pci_speed_string(enum pci_bus_speed speed)
+ }
+ EXPORT_SYMBOL_GPL(pci_speed_string);
  
- 	set_pcie_untrusted(dev);
- 
-+	if (pci_is_pcie(dev))
-+		dev->supported_speeds = pcie_get_supported_speeds(dev);
+-void pcie_update_link_speed(struct pci_bus *bus, u16 linksta)
++void pcie_update_link_speed(struct pci_bus *bus)
+ {
+-	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
++	struct pci_dev *bridge = bus->self;
++	u16 linksta;
 +
- 	/* "Unknown power state" */
- 	dev->current_state = PCI_UNKNOWN;
++	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
++	__pcie_update_link_speed(bus, linksta);
+ }
+ EXPORT_SYMBOL_GPL(pcie_update_link_speed);
  
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index be5ed534c39c..a02b77fe7865 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -303,6 +303,7 @@ enum pci_bus_speed {
- 	PCI_SPEED_UNKNOWN		= 0xff,
- };
+@@ -827,13 +831,11 @@ static void pci_set_bus_speed(struct pci_bus *bus)
  
-+u8 pcie_get_supported_speeds(struct pci_dev *dev);
- enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
- enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+ 	if (pci_is_pcie(bridge)) {
+ 		u32 linkcap;
+-		u16 linksta;
  
-@@ -318,7 +319,14 @@ struct pci_sriov;
- struct pci_p2pdma;
- struct rcec_ea;
+ 		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP, &linkcap);
+ 		bus->max_bus_speed = pcie_link_speed[linkcap & PCI_EXP_LNKCAP_SLS];
  
--/* The pci_dev structure describes PCI devices */
-+/* struct pci_dev - describes a PCI device
-+ *
-+ * @supported_speeds:	PCIe Supported Link Speeds Vector (+ reserved 0 at
-+ *			LSB). 0 when the supported speeds cannot be
-+ *			determined (e.g., for Root Complex Integrated
-+ *			Endpoints without the relevant Capability
-+ *			Registers).
-+ */
- struct pci_dev {
- 	struct list_head bus_list;	/* Node in per-bus list */
- 	struct pci_bus	*bus;		/* Bus this device is on */
-@@ -522,6 +530,7 @@ struct pci_dev {
- 	struct npem	*npem;		/* Native PCIe Enclosure Management */
- #endif
- 	u16		acs_cap;	/* ACS Capability offset */
-+	u8		supported_speeds; /* Supported Link Speeds Vector */
- 	phys_addr_t	rom;		/* Physical address if not from BAR */
- 	size_t		romlen;		/* Length if not from BAR */
- 	/*
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 12323b3334a9..f3c9de0a497c 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -678,6 +678,7 @@
- #define PCI_EXP_DEVSTA2		0x2a	/* Device Status 2 */
- #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V2 0x2c	/* end of v2 EPs w/o link */
- #define PCI_EXP_LNKCAP2		0x2c	/* Link Capabilities 2 */
-+#define  PCI_EXP_LNKCAP2_SLS		0x000000fe /* Supported Link Speeds Vector */
- #define  PCI_EXP_LNKCAP2_SLS_2_5GB	0x00000002 /* Supported Speed 2.5GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
+-		pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+-		pcie_update_link_speed(bus, linksta);
++		pcie_update_link_speed(bus);
+ 	}
+ }
+ 
 -- 
 2.39.5
 
