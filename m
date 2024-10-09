@@ -1,158 +1,161 @@
-Return-Path: <linux-pci+bounces-14024-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14025-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6615A9960DD
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 09:30:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3225C9960E5
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 09:30:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8451A1C23712
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 07:30:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E607B24EF5
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Oct 2024 07:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98AF217C7CA;
-	Wed,  9 Oct 2024 07:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6054F17BB21;
+	Wed,  9 Oct 2024 07:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdKl3UfB"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qVQ8E+o7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38FB17B50E
-	for <linux-pci@vger.kernel.org>; Wed,  9 Oct 2024 07:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720315C144;
+	Wed,  9 Oct 2024 07:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728458967; cv=none; b=VIkIT7HSrR3Pi7yVu69xR6ad3LGfXacTuNRSwca8eyaD16+kcEes0RMO/ZQ/CIll1Gg11NqAS/FhagCQOOoDU+chpODcYxbm8nq87TSSDZ8nHlI3KnQgyOj4nQIiJ303W2AIMuwV+XOiXY9pULYPqPBCUhecbHnksKknA27f0Yw=
+	t=1728459047; cv=none; b=Q7zfVj0TFWhvvURQg5fmjOeXe9niNcPdnJdK3u88DARiE7lKMi7ieV7Z+qVfGhwzscbLocAQM3IY/JPyvdH+J6IAfYNdv0Jzjh53ViGPfy//3D70CGMboiGAFQMeJINacQ7NCbvnDeAg5/5QPUangTexnYzrFFEkXhpF8Mj0Uhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728458967; c=relaxed/simple;
-	bh=EUGDLaFxOcsu4nfdm8VUJya0q/PT9+RysRlUrA5JoNw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TIQLnlQfPO0jtQHMcy1KxqXC4gx4yr+OyIOU4uzCry/w3d9Zqh4nuD/HaACE2apzR7K9a9hsL8JBosPeU/Okc8t56HVPx3jzYHm8BYznoZBCKodP703Tu6QLLMvKCv+9gq5OsYJ35Oap3al5xmGF2VaEi3zEDZkWnyABBP67gzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PdKl3UfB; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e290333a62cso204205276.2
-        for <linux-pci@vger.kernel.org>; Wed, 09 Oct 2024 00:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728458965; x=1729063765; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V7wsUBBpyLsHvIcpuWZOmppXiQmagQNXt+Y3YerXGt0=;
-        b=PdKl3UfB/mMdTE1wovoBDDiNnkffgMGCUs7cVdCFtwV+tJV9V6njZ4BBxQ7tvBQUks
-         y5rnv31aNFmxS60M+V4buHMce4uiuGN03iWRQhrZd/YtCWK4x/QPG7/v7/CyD9y0PBlb
-         icUjXHr3l0+q8qmhURQnBzsKxZZjrLZEGFPi4ZOHYb41lXLhQURhOuB1HSI8WXi59sch
-         wegbeXJupLp+V4ZDXwCVwDpcFDv+RceOXUOdTN+CP1CO1ffXwpGb/iM7dv3E+C8/IN3l
-         vJJTMJhYYqn2YBOtETDvt0rIt0kaL49z1XEpcIYYTGFurDFFII1HfcdjKFECieuvwm98
-         TvXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728458965; x=1729063765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V7wsUBBpyLsHvIcpuWZOmppXiQmagQNXt+Y3YerXGt0=;
-        b=MG9mPv9YBBUv+uX4RtVWUSK+3RrsoSWT4d5dyKBQ4v2MBAvQDLSfZ+8ztl1c5ucMY2
-         WEfFaM1F04O0qa01WnK3550yw7+OINRHgwk4SXMqiQtJATF0VlY2eGT/bu5Lmqc2liDg
-         6wZiWKhCTksOr3zTL18z2iX63mBV+aTJ6J9nKoBzmxhOdw2TOfSgTo94E3K9S8TN8kG+
-         alIl3NKlo0W1wRbpBTn2GetV+MEQBMPeoq2KByrOyl84vKsA00rnTWYYDpkCuJjC7g6p
-         7+JlrG410Hmc+s85VsnXcS/nhvZkVe18lfU1ozsjjPAi1SmT3+UpNYHEOMIQFKgc4S78
-         dvcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWP4JgyQxXrTOtek1gpeagI87ii74q8es/tW3gxNIeWtNrsoFj0LtFnf3mkuzy/wmSi5rJWaAJgvfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyroeLbkfb4Id7LjvZc8pG5ZrtqBkRGI5JZz4b3Y4Gmk036xNhN
-	DMTG2iYIY/1JsPR6ztH14kia3AzQ5A0RPM2slEZIO0bWVwsusSdriPk8a7xDHEDEVlgAkIbg2hg
-	vbL7CA46azxGnvnniNTc38qctPo0=
-X-Google-Smtp-Source: AGHT+IGGImEZpS6v5xk+2Z92nkV1YU7EdG1EaWEgmDxgG/K4t3PwC4fIGN+fMb3TYrqJuyntagmd+ahXNdHfDV92NCk=
-X-Received: by 2002:a05:6902:1203:b0:e25:cfe3:9b50 with SMTP id
- 3f1490d57ef6-e28fe4d6a04mr1317597276.37.1728458964556; Wed, 09 Oct 2024
- 00:29:24 -0700 (PDT)
+	s=arc-20240116; t=1728459047; c=relaxed/simple;
+	bh=TyPX5RsfEu869eEFs5gjuF1hH+zRkucYDdNB+syyCO4=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RX4ZmDQ/CJ1BkbPg5PluuGv1aZR7G1iK34F4aj8Rt55IHumZv12wQ5JcYHCEyVpRkbQO++KcaJVsv5RSUyY3thGzS8BbrVUt1tPN0YM6TLFvIC1xTwwKZFUcjgmCHMmGDurCFeccHwuB/lUAT1ZPdvzf+DiRV5UqB+S0Eo+Bcqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=qVQ8E+o7; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1728459045; x=1759995045;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=TyPX5RsfEu869eEFs5gjuF1hH+zRkucYDdNB+syyCO4=;
+  b=qVQ8E+o7rEEZmcRaokE3ZmEGmf1wEwlYvHFM9Tkx9094sBRxMxQy1FCY
+   xGxUAJtDUqzIvetk4LD+ZWGLPUEoUtF0UuQXuiS5dABjwgLbcvZA0ybP4
+   nnp5ByLzF4SxIHUz3hlH+fd2H3zx32SgKyI1mnPAu5FT2yhq0e1VGwgfe
+   6Vvp11bNT97p49qCKUS9W+9sPAkei6o7UzPpBvE1Smel8hNCJdiyP76Gh
+   jvqDNIGOeRZGnQW1vep2qX7KWJKH8DbYO2uNffI/0TuTjDM3OIsr0QJj9
+   7055CONlmrpXK3BjeOxlQRdemdi0I8/mO+xaUH69Xp5fRRN6u66jJlcG4
+   g==;
+X-CSE-ConnectionGUID: qFEgkva4S1qo/8hhkxFAyg==
+X-CSE-MsgGUID: qVQ3upl8TUe5VnRoOX3tPQ==
+X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
+   d="scan'208";a="36104240"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2024 00:30:38 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 9 Oct 2024 00:29:58 -0700
+Received: from DEN-DL-M31857.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 9 Oct 2024 00:29:53 -0700
+Message-ID: <71fb65a929e5d5be86f95ab76591beb77e641c14.camel@microchip.com>
+Subject: Re: [PATCH v7 3/6] reset: mchp: sparx5: Map cpu-syscon locally in
+ case of LAN966x
+From: Steen Hegelund <steen.hegelund@microchip.com>
+To: Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven
+	<geert@linux-m68k.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Simon
+ Horman" <horms@kernel.org>, Lee Jones <lee@kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+	<dragan.cvetic@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>, Daniel Machon
+	<daniel.machon@microchip.com>, <UNGLinuxDriver@microchip.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, "Andrew
+ Lunn" <andrew@lunn.ch>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Allan
+ Nielsen" <allan.nielsen@microchip.com>, Luca Ceresoli
+	<luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date: Wed, 9 Oct 2024 09:29:52 +0200
+In-Reply-To: <20241003081647.642468-4-herve.codina@bootlin.com>
+References: <20241003081647.642468-1-herve.codina@bootlin.com>
+	 <20241003081647.642468-4-herve.codina@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241007044351.157912-1-dlemoal@kernel.org> <20241007044351.157912-5-dlemoal@kernel.org>
- <ZwO0H0WCnORq9EzQ@ryzen> <8b1c846d-6c86-43ea-bc73-aef619094267@kernel.org>
-In-Reply-To: <8b1c846d-6c86-43ea-bc73-aef619094267@kernel.org>
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date: Wed, 9 Oct 2024 09:28:47 +0200
-Message-ID: <CAAEEuhqpthLsNX70WWCn6+udPaNhks41d=oCZRKpPSHKnRc-AQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] PCI: endpoint: Add NVMe endpoint function driver
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, linux-nvme@lists.infradead.org, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 7, 2024 at 12:26=E2=80=AFPM Damien Le Moal <dlemoal@kernel.org>=
- wrote:
->
-> On 10/7/24 19:12, Niklas Cassel wrote:
-> > On Mon, Oct 07, 2024 at 01:43:50PM +0900, Damien Le Moal wrote:
-> >> From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> >
-> > (snip)
-> >
-> >> Early versions of this driver code were based on an RFC submission by
-> >> Alan Mikhak <alan.mikhak@sifive.com> (https://lwn.net/Articles/804369/=
-).
-> >> The code however has since been completely rewritten.
-> >
-> > Here you state that the code has been completely rewritten...
-> >
-> >
-> >>
-> >> Co-developed-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> >> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> >> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> >> ---
-> >>  MAINTAINERS                                   |    7 +
-> >>  drivers/pci/endpoint/functions/Kconfig        |    9 +
-> >>  drivers/pci/endpoint/functions/Makefile       |    1 +
-> >>  drivers/pci/endpoint/functions/pci-epf-nvme.c | 2489 ++++++++++++++++=
-+
-> >>  4 files changed, 2506 insertions(+)
-> >>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-nvme.c
-> >
-> > (snip)
-> >
-> >> --- /dev/null
-> >> +++ b/drivers/pci/endpoint/functions/pci-epf-nvme.c
-> >> @@ -0,0 +1,2489 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * NVMe function driver for PCI Endpoint Framework
-> >> + *
-> >> + * Copyright (C) 2019 SiFive
-> >
-> > ...yet here you claim Copyright (C) SiFive.
-> >
-> > *If* the code has been completely rewritten, then you probably should
-> > put yourself and/or your current employeer as the copyright holder.
->
-> Oops. One thing I forgot to rewrite :)
-> Will change the copyright in v2.
+SGkgSGVydmUsCgpPbiBUaHUsIDIwMjQtMTAtMDMgYXQgMTA6MTYgKzAyMDAsIEhlcnZlIENvZGlu
+YSB3cm90ZToKPiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0
+YWNobWVudHMgdW5sZXNzIHlvdQo+IGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZQo+IAo+IEluIHRo
+ZSBMQU45NjZ4IFBDSSBkZXZpY2UgdXNlIGNhc2UsIHRoZSBzeXNjb24gQVBJIGNhbm5vdCBiZSB1
+c2VkIGFzCj4gaXQgZG9lcyBub3Qgc3VwcG9ydCBkZXZpY2UgcmVtb3ZhbCBbMV0uIEEgc3lzY29u
+IGRldmljZSBpcyBhIGNvcmUKPiAic3lzdGVtIiBkZXZpY2UgYW5kIG5vdCBhIGRldmljZSBhdmFp
+bGFibGUgaW4gc29tZSBhZGRvbiBib2FyZHMgYW5kCj4gc28sCj4gaXQgaXMgbm90IHN1cHBvc2Vk
+IHRvIGJlIHJlbW92ZWQuIFRoZSBzeXNjb24gQVBJIGZvbGxvd3MgdGhpcwo+IGFzc3VtcHRpb24K
+PiBidXQgdGhpcyBhc3N1bXB0aW9uIGlzIG5vIGxvbmdlciB2YWxpZCBpbiB0aGUgTEFOOTY2eCB1
+c2UgY2FzZS4KPiAKPiBJbiBvcmRlciB0byBhdm9pZCB0aGUgdXNlIG9mIHRoZSBzeXNjb24gQVBJ
+IGFuZCBzbywgc3VwcG9ydCBmb3IKPiByZW1vdmFsLAo+IHVzZSBhIGxvY2FsIG1hcHBpbmcgb2Yg
+dGhlIHN5c2NvbiBkZXZpY2UuCj4gCj4gTGluazoKPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9h
+bGwvMjAyNDA5MjMxMDA3NDEuMTEyNzc0MzlAYm9vdGxpbi5jb20vwqBbMV0KPiBTaWduZWQtb2Zm
+LWJ5OiBIZXJ2ZSBDb2RpbmEgPGhlcnZlLmNvZGluYUBib290bGluLmNvbT4KPiAtLS0KPiDCoGRy
+aXZlcnMvcmVzZXQvcmVzZXQtbWljcm9jaGlwLXNwYXJ4NS5jIHwgMzUKPiArKysrKysrKysrKysr
+KysrKysrKysrKysrLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZXNldC9yZXNldC1taWNyb2NoaXAt
+c3Bhcng1LmMKPiBiL2RyaXZlcnMvcmVzZXQvcmVzZXQtbWljcm9jaGlwLXNwYXJ4NS5jCj4gaW5k
+ZXggNjM2ZTg1YzM4OGIwLi40OGE2MmQ1ZGE3OGQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9yZXNl
+dC9yZXNldC1taWNyb2NoaXAtc3Bhcng1LmMKPiArKysgYi9kcml2ZXJzL3Jlc2V0L3Jlc2V0LW1p
+Y3JvY2hpcC1zcGFyeDUuYwo+IEBAIC02Miw2ICs2MiwyOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHJlc2V0X2NvbnRyb2xfb3BzCj4gc3Bhcng1X3Jlc2V0X29wcyA9IHsKPiDCoMKgwqDCoMKgwqDC
+oCAucmVzZXQgPSBzcGFyeDVfcmVzZXRfbm9vcCwKPiDCoH07Cj4gCj4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgcmVnbWFwX2NvbmZpZyBtY2hwX2xhbjk2Nnhfc3lzY29uX3JlZ21hcF9jb25maWcKPiA9
+IHsKPiArwqDCoMKgwqDCoMKgIC5yZWdfYml0cyA9IDMyLAo+ICvCoMKgwqDCoMKgwqAgLnZhbF9i
+aXRzID0gMzIsCj4gK8KgwqDCoMKgwqDCoCAucmVnX3N0cmlkZSA9IDQsCj4gK307Cj4gKwo+ICtz
+dGF0aWMgc3RydWN0IHJlZ21hcCAqbWNocF9sYW45NjZ4X3N5c2Nvbl90b19yZWdtYXAoc3RydWN0
+IGRldmljZQo+ICpkZXYsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgc3RydWN0Cj4gZGV2aWNlX25vZGUgKnN5c2Nvbl9ucCkKPiArewo+ICvCoMKgwqDCoMKg
+wqAgc3RydWN0IHJlZ21hcF9jb25maWcgcmVnbWFwX2NvbmZpZyA9Cj4gbWNocF9sYW45NjZ4X3N5
+c2Nvbl9yZWdtYXBfY29uZmlnOwo+ICvCoMKgwqDCoMKgwqAgcmVzb3VyY2Vfc2l6ZV90IHNpemU7
+Cj4gK8KgwqDCoMKgwqDCoCB2b2lkIF9faW9tZW0gKmJhc2U7Cj4gKwo+ICvCoMKgwqDCoMKgwqAg
+YmFzZSA9IGRldm1fb2ZfaW9tYXAoZGV2LCBzeXNjb25fbnAsIDAsICZzaXplKTsKPiArwqDCoMKg
+wqDCoMKgIGlmIChJU19FUlIoYmFzZSkpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+cmV0dXJuIEVSUl9DQVNUKGJhc2UpOwo+ICsKPiArwqDCoMKgwqDCoMKgIHJlZ21hcF9jb25maWcu
+bWF4X3JlZ2lzdGVyID0gc2l6ZSAtIDQ7Cj4gKwo+ICvCoMKgwqDCoMKgwqAgcmV0dXJuIGRldm1f
+cmVnbWFwX2luaXRfbW1pbyhkZXYsIGJhc2UsICZyZWdtYXBfY29uZmlnKTsKPiArfQo+ICsKPiDC
+oHN0YXRpYyBpbnQgbWNocF9zcGFyeDVfbWFwX3N5c2NvbihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2LCBjaGFyCj4gKm5hbWUsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCByZWdtYXAgKip0YXJnZXQp
+Cj4gwqB7Cj4gQEAgLTcyLDcgKzk0LDE4IEBAIHN0YXRpYyBpbnQgbWNocF9zcGFyeDVfbWFwX3N5
+c2NvbihzdHJ1Y3QKPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGNoYXIgKm5hbWUsCj4gwqDCoMKg
+wqDCoMKgwqAgc3lzY29uX25wID0gb2ZfcGFyc2VfcGhhbmRsZShwZGV2LT5kZXYub2Zfbm9kZSwg
+bmFtZSwgMCk7Cj4gwqDCoMKgwqDCoMKgwqAgaWYgKCFzeXNjb25fbnApCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiAtRU5PREVWOwo+IC3CoMKgwqDCoMKgwqAgcmVnbWFw
+ID0gc3lzY29uX25vZGVfdG9fcmVnbWFwKHN5c2Nvbl9ucCk7Cj4gKwo+ICvCoMKgwqDCoMKgwqAg
+LyoKPiArwqDCoMKgwqDCoMKgwqAgKiBUaGUgc3lzY29uIEFQSSBkb2Vzbid0IHN1cHBvcnQgc3lz
+Y29uIGRldmljZSByZW1vdmFsLgo+ICvCoMKgwqDCoMKgwqDCoCAqIFdoZW4gdXNlZCBpbiBMQU45
+NjZ4IFBDSSBkZXZpY2UsIHRoZSBjcHUtc3lzY29uIGRldmljZQo+IG5lZWRzIHRvIGJlCj4gK8Kg
+wqDCoMKgwqDCoMKgICogcmVtb3ZlZCB3aGVuIHRoZSBQQ0kgZGV2aWNlIGlzIHJlbW92ZWQuCj4g
+K8KgwqDCoMKgwqDCoMKgICogSW4gY2FzZSBvZiBMQU45NjZ4LCBtYXAgdGhlIHN5c2NvbiBkZXZp
+Y2UgbG9jYWxseSB0bwo+IHN1cHBvcnQgdGhlCj4gK8KgwqDCoMKgwqDCoMKgICogZGV2aWNlIHJl
+bW92YWwuCj4gK8KgwqDCoMKgwqDCoMKgICovCj4gK8KgwqDCoMKgwqDCoCBpZiAob2ZfZGV2aWNl
+X2lzX2NvbXBhdGlibGUocGRldi0+ZGV2Lm9mX25vZGUsCj4gIm1pY3JvY2hpcCxsYW45NjZ4LXN3
+aXRjaC1yZXNldCIpKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZ21hcCA9IG1j
+aHBfbGFuOTY2eF9zeXNjb25fdG9fcmVnbWFwKCZwZGV2LT5kZXYsCj4gc3lzY29uX25wKTsKPiAr
+wqDCoMKgwqDCoMKgIGVsc2UKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWdtYXAg
+PSBzeXNjb25fbm9kZV90b19yZWdtYXAoc3lzY29uX25wKTsKPiDCoMKgwqDCoMKgwqDCoCBvZl9u
+b2RlX3B1dChzeXNjb25fbnApOwo+IMKgwqDCoMKgwqDCoMKgIGlmIChJU19FUlIocmVnbWFwKSkg
+ewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlcnIgPSBQVFJfRVJSKHJlZ21hcCk7
+Cj4gLS0KPiAyLjQ2LjEKPiAKClRoaXMgbG9va3MgZ29vZCB0byBtZS4KClJldmlld2VkLWJ5OiBT
+dGVlbiBIZWdlbHVuZCA8U3RlZW4uSGVnZWx1bmRAbWljcm9jaGlwLmNvbT4KCkJSClN0ZWVuCg==
 
-Hello Damien.
-Thank you for acknowledging my contributions in the commit message. I
-would appreciate it if you could add both our names in the copyright
-for the v2, I don't mind not being in the MODULE_AUTHOR() but I would
-appreciate a mention in the header comment of the file, thank you.
-
-Best regards,
-Rick
-
->
-> >
-> >
-> > Kind regards,
-> > Niklas
->
->
-> --
-> Damien Le Moal
-> Western Digital Research
 
