@@ -1,257 +1,224 @@
-Return-Path: <linux-pci+bounces-14162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B172B99801A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 10:37:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87DDB998025
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 10:37:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B2BF1C2039A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 08:37:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4279B2826C1
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 08:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAFC81BCA1C;
-	Thu, 10 Oct 2024 08:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232291B5EBC;
+	Thu, 10 Oct 2024 08:10:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MKorcZtY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A7yqGsbh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7411BC9ED
-	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 08:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D3D1A3BAD
+	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 08:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728547762; cv=none; b=kAPaYZjasEQq96HQJuqRT7ZT82Ibk+RVNM3JDPfUq9GAtLhuYEgDFhNLxS/SCnIdKwI3G/PC2uo1sTS3pihKLHTmljoz1O15fxITRT/7gLf8ZsarcfS2WIqnoHjDWOvUFHhGRWEretH4IkSP9crE/PT5StMKJ52OT1zzwqsVSdY=
+	t=1728547806; cv=none; b=uxepY57FoTCpx22DxIhgYvX6vRZC5AeG9/VA0brlaq5bhGvJVgARf1bnldVzyqz3pApVOsRCjVogxQ5P+Eqa7/bW4ovvk8t6Cc9CbF9GCxwAlxGzHyO+ZdTg+okBoQae9bnsBi9pcewx45niuVlCZEzVEG7ug1BSeTuSEGXcv9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728547762; c=relaxed/simple;
-	bh=pw8KOQX2sQzFlQlPbqII5/R8X0bzkOW8a5wxz7PnGKI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UdhhIDpSyHRTuc+WfL25TEzi3kNAKfnndkHrv5GuiN9i6xdZdEIuA16Cpe3nHpL6099+uYSmlKgbBEka163azAUH63exlEnfVSKjNfXqs2TzEDYWVJCudPG+9f1yyN8ZQp51clYHVRdFRNDAW+kIT1146WsBbaCzW0bo0+WxhA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MKorcZtY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728547760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pw8KOQX2sQzFlQlPbqII5/R8X0bzkOW8a5wxz7PnGKI=;
-	b=MKorcZtYqPVyu9qFNW0PPlu++U9wCyP/7B8XwBPfdWG7stS1a9grtp3lWE7V6SOhtsRDdv
-	oJCjGsvpXTbNR3bEYBG2w5Wm1IqALxK3QlC9oDO2YaagBmwzDDUeEk61ZawQJBnCuP9g88
-	Nq4GQwiQv/LTWxeEk6MPVhwtLDd/ABo=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-189-FwafXMU5PvO8wYbigmxfEg-1; Thu, 10 Oct 2024 04:09:18 -0400
-X-MC-Unique: FwafXMU5PvO8wYbigmxfEg-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-539ada1e190so401493e87.2
-        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 01:09:18 -0700 (PDT)
+	s=arc-20240116; t=1728547806; c=relaxed/simple;
+	bh=g36zPfGHWbFIKy+xWCvY4miH9KOz74X7KhYaStb3iD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLLwUNYqKaqCYcXoxfr1QOsvrRX0It4MxoyHSIHOSKoeF9qVRV2w9kKGh532CYcbIJyL6UFUAyZJjcFYx3As7TMuWQKHLlxoGV7lY4g0sEynLrAQtR6xKmed3ottodVJ+rMClnKc/tlZM40uO4qQkkDd9Zr8u+QieKqHC3tHw7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A7yqGsbh; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20b7259be6fso6754825ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 01:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728547803; x=1729152603; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zmKcXJUPy3GJb83o8RShQJdgCDtW41p1Q1FD22fOmPo=;
+        b=A7yqGsbhWsWn4a1tYxZaggIeZg6TJtKagj8x7LtTYfMzFSgmRZI8cA9bzEkmhqD/hH
+         /LUH6ehQyLwwsS44MKFL56G27eck8nQ7J+1jV7ID0jQ0TxT36Rb0GmGG6ITVbKsHoA1k
+         3jCHv3jZvlSaCzozi8etdEZByEcT907Z2bslqurvhJ+oTreM+Oz51iflvgTVwYJUBUCg
+         J1h4x4ZWDjaX/j/vkoBWIXhHOllVQIyi+1MUslBTlzPWTGtEvHLSEDH5N6/zirrHMVr1
+         geeM5DIHfKO9XYKhZUqTYby4pKXhgtHQKw63+JRxmfsKidyNPbKf54ZwhabXF5t7CRgU
+         628Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728547757; x=1729152557;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pw8KOQX2sQzFlQlPbqII5/R8X0bzkOW8a5wxz7PnGKI=;
-        b=emTPMFs0sop4goavJBjrJEia984K7FxwTc/lIVghPQvQd0BFQ5xzBH4R5Zvp82Mg/v
-         xh9B+p+CF1PakUmFXN5WMSSoUjIVd25frqRyPxt6VC3GfmMAm7Q937te5gvTw1YLepc+
-         wxiN3cuXBa3osCxBXT1k56utfvbChCvgL/+rBV69i+wcXXJbUBdX+ccWMWMgSVy9T/dG
-         Uyyl2VRz74Q+bxZ1qSgs6Dlf9o1uhzAXWYUiBC/vMSM03icKXyZJbJvxSfs5sVhXEedF
-         Pqw6a64M+FGRxGNOJdBxt3f5yUEQAqarpsaHFzwBukYA3vW8S8z+Dhu7lFd3dhGhsrxh
-         vatA==
-X-Forwarded-Encrypted: i=1; AJvYcCXI3UZvBw2duwCsf0lnwWPoS4GnlSpXjSfZECZFj8kcUx+Mo83MuNiCtOeDGj+ltB+h2ZZ84EfKCmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPAJAKxvPqGyctFU8rFdoAZA7mBtVocFGMMLkHcptQSwOKZvjL
-	I2bT1c+tUQUXsPaQAbqTWGWTY9m6ektJyoUDEzNg6xfmv/B3RHOyiKQbjgw/gFlXf4Hm+AkRH0+
-	hFwknJBMF5KKRbhOxA1zf9yxNVLecSKNmX8FvrIBIQTb58mYOKJeMAAX9Bg==
-X-Received: by 2002:a05:6512:39c5:b0:539:8e9a:7a5d with SMTP id 2adb3069b0e04-539c496d11bmr3575128e87.59.1728547757146;
-        Thu, 10 Oct 2024 01:09:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYx/LKt+QTCY84iQbturhiv4PGMfz8gf1TEkJnFJaO0GasD2CA7x+ACPT7d09hd8mpWAI6Rw==
-X-Received: by 2002:a05:6512:39c5:b0:539:8e9a:7a5d with SMTP id 2adb3069b0e04-539c496d11bmr3575082e87.59.1728547756510;
-        Thu, 10 Oct 2024 01:09:16 -0700 (PDT)
-Received: from dhcp-64-16.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43096601152sm42136595e9.0.2024.10.10.01.09.14
+        d=1e100.net; s=20230601; t=1728547803; x=1729152603;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zmKcXJUPy3GJb83o8RShQJdgCDtW41p1Q1FD22fOmPo=;
+        b=IIQcUZP+41ql1s8my8dOiXMZp+UvQdbnYQ55lgAL9Hct/rPhPO8Vzzjt1nvZXsPKZN
+         a5LRLZDw6xF0k4peFM+GrbkmXIbZSe0WgsqbwdcxFf5abSExxginxMRSBKcA1xFZq2mn
+         k8mTxgV/PRuVC6UjevQ5e1tHqdB4RQ8s6mi96xNeNSqaqIiH3TDrw4XT/5ne9Av59c8H
+         1TC/8x+XwssIlp52JQFgo+Myih+xvcYRPQ2KbfzhTxnyZQsH/ztIjoJsh2lMBAEQAQ/h
+         83c+5z00bjrnS/qQcHgpGDRqs8iyKJUK541i+CY3qIaNfEuHUyiF+tH3xpCNF+IdgiEQ
+         lHKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQqCGv/XbVeYjHOgwfWIBHwle8j3V/QdMHU2nvcxthPOhjDjBfRAvYPYF4u8bzVBVw2e+4Lc9c/TQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3As+DD1rq7yyfdoooRvb+vzl4hIaKPkUfhBOB8fqUhnKfz9iW
+	xwv2fcW69NDu5KifuOAm+ryksydQO3c+IdbwleorSWb9bqhPclcoMNbaQ25zkw==
+X-Google-Smtp-Source: AGHT+IEhI0oEHMpvi/Ep8rZT37rMBupuv4nErdDsje5nS4NaslF2zKOn4ZDc5nilfaVzbMlP4HVL5w==
+X-Received: by 2002:a17:903:124b:b0:206:9a3f:15e5 with SMTP id d9443c01a7336-20c63746cafmr77627535ad.32.1728547802706;
+        Thu, 10 Oct 2024 01:10:02 -0700 (PDT)
+Received: from thinkpad ([220.158.156.184])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8bad33d6sm5162345ad.33.2024.10.10.01.09.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 01:09:16 -0700 (PDT)
-Message-ID: <6468cf3e4a06c008644c98a7a79f81a1c04752b8.camel@redhat.com>
-Subject: Re: [RFC PATCH 00/13] Remove implicit devres from pci_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>, Damien Le Moal
- <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>, Sergey Shtylyov
- <s.shtylyov@omp.ru>, Basavaraj Natikar <basavaraj.natikar@amd.com>, Jiri
- Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alex Dubov <oakad@yahoo.com>, Sudarsana Kalluru <skalluru@marvell.com>,
- Manish Chopra <manishc@marvell.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rasesh Mody
- <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko
- <imitsyanko@quantenna.com>, Sergey Matyukevich <geomatsi@gmail.com>, Kalle
- Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar
- S K <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
- Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
- <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
- <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Hannes Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
- Soumya Negi <soumya.negi97@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi
- Liu <yi.l.liu@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
- Christian Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>,
- Reinette Chatre <reinette.chatre@intel.com>, Eric Auger
- <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,  Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
- Marc Zyngier <maz@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, netdev@vger.kernel.org, 
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org,  linux-staging@lists.linux.dev,
- kvm@vger.kernel.org,  xen-devel@lists.xenproject.org,
- linux-sound@vger.kernel.org
-Date: Thu, 10 Oct 2024 10:09:12 +0200
-In-Reply-To: <8643a212-884c-48de-a2d0-0f068fc49ca2@gmail.com>
-References: <20241009083519.10088-1-pstanner@redhat.com>
-	 <8643a212-884c-48de-a2d0-0f068fc49ca2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        Thu, 10 Oct 2024 01:10:02 -0700 (PDT)
+Date: Thu, 10 Oct 2024 13:39:56 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v3 07/12] PCI: rockchip-ep: Refactor
+ rockchip_pcie_ep_probe() MSI-X hiding
+Message-ID: <20241010080956.z3cw2mxxlgrjafhs@thinkpad>
+References: <20241007041218.157516-1-dlemoal@kernel.org>
+ <20241007041218.157516-8-dlemoal@kernel.org>
+ <20241010072512.f7e4kdqcfe5okcvg@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241010072512.f7e4kdqcfe5okcvg@thinkpad>
 
-On Wed, 2024-10-09 at 20:32 +0200, Heiner Kallweit wrote:
-> On 09.10.2024 10:35, Philipp Stanner wrote:
-> > Hi all,
-> >=20
-> > this series removes a problematic feature from pci_intx(). That
-> > function
-> > sometimes implicitly uses devres for automatic cleanup. We should
-> > get
-> > rid of this implicit behavior.
-> >=20
-> > To do so, a pci_intx() version that is always-managed, and one that
-> > is
-> > never-managed are provided. Then, all pci_intx() users are ported
-> > to the
-> > version they need. Afterwards, pci_intx() can be cleaned up and the
-> > users of the never-managed version be ported back to pci_intx().
-> >=20
-> > This way we'd get this PCI API consistent again.
-> >=20
-> AFAICS pci_intx() is used only by drivers which haven't been
-> converted
-> to the pci_alloc_irq_vectors() API yet. Wouldn't it be better to do
-> this
-> instead of trying to improve pci_intx()?
+On Thu, Oct 10, 2024 at 12:55:12PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Oct 07, 2024 at 01:12:13PM +0900, Damien Le Moal wrote:
+> > Move the code in rockchip_pcie_ep_probe() to hide the MSI-X capability
+> > to its own function, rockchip_pcie_ep_hide_msix_cap(). No functional
+> > changes.
+> > 
+> > Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Btw, can someone from Rockchip confirm if this hiding is necessary for all the
+> SoCs? It looks to me like an SoC quirk.
+> 
+> - Mani
+> 
+> > ---
+> >  drivers/pci/controller/pcie-rockchip-ep.c | 54 +++++++++++++----------
+> >  1 file changed, 30 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> > index 523e9cdfd241..7a1798fcc2ad 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> > @@ -581,6 +581,34 @@ static void rockchip_pcie_ep_release_resources(struct rockchip_pcie_ep *ep)
+> >  	pci_epc_mem_exit(ep->epc);
+> >  }
+> >  
+> > +static void rockchip_pcie_ep_hide_msix_cap(struct rockchip_pcie *rockchip)
 
-This would be the cr=C3=A9me-de-la-cr=C3=A9me-solution, yes.
+Perhaps a better name would be rockchip_pcie_disable_broken_msix()? As the
+function essentially disables MSIx which is broken. Again, it'd be good to know
+if this applies to all SoCs or just a few.
 
-But such a portation would require more detailed knowledge of the old
-drivers.
+- Mani
 
-In this discussion, Alex points out that at least in some drivers, you
-can't replace pci_intx() without further ado:
-https://lore.kernel.org/all/20240904151020.486f599e.alex.williamson@redhat.=
-com/
+> > +{
+> > +	u32 cfg_msi, cfg_msix_cp;
+> > +
+> > +	/*
+> > +	 * MSI-X is not supported but the controller still advertises the MSI-X
+> > +	 * capability by default, which can lead to the Root Complex side
+> > +	 * allocating MSI-X vectors which cannot be used. Avoid this by skipping
+> > +	 * the MSI-X capability entry in the PCIe capabilities linked-list: get
+> > +	 * the next pointer from the MSI-X entry and set that in the MSI
+> > +	 * capability entry (which is the previous entry). This way the MSI-X
+> > +	 * entry is skipped (left out of the linked-list) and not advertised.
+> > +	 */
+> > +	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
+> > +				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
+> > +
+> > +	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
+> > +
+> > +	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
+> > +					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
+> > +					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
+> > +
+> > +	cfg_msi |= cfg_msix_cp;
+> > +
+> > +	rockchip_pcie_write(rockchip, cfg_msi,
+> > +			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
+> > +}
+> > +
+> >  static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -588,7 +616,6 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+> >  	struct rockchip_pcie *rockchip;
+> >  	struct pci_epc *epc;
+> >  	int err;
+> > -	u32 cfg_msi, cfg_msix_cp;
+> >  
+> >  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> >  	if (!ep)
+> > @@ -619,6 +646,8 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+> >  	if (err)
+> >  		goto err_disable_clocks;
+> >  
+> > +	rockchip_pcie_ep_hide_msix_cap(rockchip);
+> > +
+> >  	/* Establish the link automatically */
+> >  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
+> >  			    PCIE_CLIENT_CONFIG);
+> > @@ -626,29 +655,6 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+> >  	/* Only enable function 0 by default */
+> >  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
+> >  
+> > -	/*
+> > -	 * MSI-X is not supported but the controller still advertises the MSI-X
+> > -	 * capability by default, which can lead to the Root Complex side
+> > -	 * allocating MSI-X vectors which cannot be used. Avoid this by skipping
+> > -	 * the MSI-X capability entry in the PCIe capabilities linked-list: get
+> > -	 * the next pointer from the MSI-X entry and set that in the MSI
+> > -	 * capability entry (which is the previous entry). This way the MSI-X
+> > -	 * entry is skipped (left out of the linked-list) and not advertised.
+> > -	 */
+> > -	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
+> > -				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
+> > -
+> > -	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
+> > -
+> > -	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
+> > -					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
+> > -					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
+> > -
+> > -	cfg_msi |= cfg_msix_cp;
+> > -
+> > -	rockchip_pcie_write(rockchip, cfg_msi,
+> > -			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
+> > -
+> >  	rockchip_pcie_write(rockchip, PCIE_CLIENT_CONF_ENABLE,
+> >  			    PCIE_CLIENT_CONFIG);
+> >  
+> > -- 
+> > 2.46.2
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
-
-What we could do is mark pci_intx() and pcim_intx() as deprecated and
-point everyone to pci_alloc_irq_vectors(). Then someone can look into
-porting the old drivers at some point in the future.
-
-
-P.
-
-
-> Eventually pci_intx() would have to be used in PCI core only.
->=20
-> > The last patch obviously reverts the previous patches that made
-> > drivers
-> > use pci_intx_unmanaged(). But this way it's easier to review and
-> > approve. It also makes sure that each checked out commit should
-> > provide
-> > correct behavior, not just the entire series as a whole.
-> >=20
-> > Merge plan for this would be to enter through the PCI tree.
-> >=20
-> > Please say so if you've got concerns with the general idea behind
-> > the
-> > RFC.
-> >=20
-> > Regards,
-> > P.
-> >=20
-> > Philipp Stanner (13):
-> > =C2=A0 PCI: Prepare removing devres from pci_intx()
-> > =C2=A0 ALSA: hda: hda_intel: Use always-managed version of pcim_intx()
-> > =C2=A0 drivers/xen: Use never-managed version of pci_intx()
-> > =C2=A0 net/ethernet: Use never-managed version of pci_intx()
-> > =C2=A0 net/ntb: Use never-managed version of pci_intx()
-> > =C2=A0 misc: Use never-managed version of pci_intx()
-> > =C2=A0 vfio/pci: Use never-managed version of pci_intx()
-> > =C2=A0 PCI: MSI: Use never-managed version of pci_intx()
-> > =C2=A0 ata: Use always-managed version of pci_intx()
-> > =C2=A0 staging: rts5280: Use always-managed version of pci_intx()
-> > =C2=A0 wifi: qtnfmac: use always-managed version of pcim_intx()
-> > =C2=A0 HID: amd_sfh: Use always-managed version of pcim_intx()
-> > =C2=A0 Remove devres from pci_intx()
-> >=20
-> > =C2=A0drivers/ata/ahci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/ata/ata_piix.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/ata/pata_rdc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/ata/sata_sil24.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/ata/sata_sis.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/ata/sata_uli.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/ata/sata_vsc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0drivers/hid/amd-sfh-hid/amd_sfh_pcie.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 4 ++--
-> > =C2=A0drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c |=C2=A0 2 +-
-> > =C2=A0.../wireless/quantenna/qtnfmac/pcie/pcie.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 2 +-
-> > =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 24 +++------------
-> > ----
-> > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 14 +----------
-> > =C2=A0drivers/staging/rts5208/rtsx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> > =C2=A0sound/pci/hda/hda_intel.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0 2 +-
-> > =C2=A015 files changed, 18 insertions(+), 47 deletions(-)
-> >=20
->=20
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
