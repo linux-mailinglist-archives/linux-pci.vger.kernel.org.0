@@ -1,414 +1,161 @@
-Return-Path: <linux-pci+bounces-14191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C61E199853D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 13:43:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90F58998856
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 15:51:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E33821C21535
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 11:43:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B14C1F22CCA
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 13:51:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6684D1C245C;
-	Thu, 10 Oct 2024 11:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC3E1C9EDC;
+	Thu, 10 Oct 2024 13:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="awVwpDDG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFry+cLB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E40183CD9;
-	Thu, 10 Oct 2024 11:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728560581; cv=fail; b=Aa44jfiQZALyq7KOCmrxHqID4cgyovBxj6JWQM3gJuZ3+wG7J15EkS4cCCekkvieC75JxCzXLmLxrsGPosXxoubVLWFjUQBhmizAql2ZQ8DEiyAwe4ZN5Plwp//sshgtkJqC1ZIYZ/GpcnUtWfW7busdb2p+502tgXNEGzWHQH0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728560581; c=relaxed/simple;
-	bh=wDaNLvoiI4DWa3QW8mAAk7qc7T+p7iwjqvoFXRK5/G4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LlqKOTnOAknvCP4z84tTc4GSTYH2yc6YCqbpc4p3OIv1yopd92iPTMKH4xe38nYMKCaikvFz4dVoLdFnKu4pxeLuBR+1QMF3jp/9Tn6EOIrrPXstolVo4RtXEN9K71Obe1oYOvWWZHPtzfezoJls9Vp9gvOZK3Zrwy85QEAXeY8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=awVwpDDG; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728560579; x=1760096579;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=wDaNLvoiI4DWa3QW8mAAk7qc7T+p7iwjqvoFXRK5/G4=;
-  b=awVwpDDG5TcKhrMMctsQHW4Jzs2WAXvINjsS/X4vttz+u79UqANPR2Cc
-   3udC6rd6NoZb0gwcR98U1YRmvufpudvkcKkMyB+kXv38ANSmhWvJrhlGC
-   IodphszxMd2aV3IomHzsz5+4lumhbWdgVeWBBWrEy3X27GfPjiJC+NwzX
-   439+6Ws2Es4UGCHJbT0bJ4knE5WyDZNVjRlif/p00SwCqPMnxrFzpKbY/
-   DbyKXydb1Duc3Q9T2eyzpG9qqa41OrIRO8UOyKTCf3Y1JGI7ijLaooc6z
-   8QjTger7mU9AWpZ05NbbGI4uB/GbDt6CAqgSHFG7xUS2PkYknjIFs10a8
-   Q==;
-X-CSE-ConnectionGUID: FIUsnir0RWG3fEpMvUT3tQ==
-X-CSE-MsgGUID: xtPZaUvhQ1SBfLE79Z0I0g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="27856547"
-X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
-   d="scan'208";a="27856547"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 04:42:59 -0700
-X-CSE-ConnectionGUID: 1yJghNruR2K8i/db/BFjOQ==
-X-CSE-MsgGUID: CzNXjC74ToK0usyGFTn4xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
-   d="scan'208";a="81368108"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Oct 2024 04:42:58 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 10 Oct 2024 04:42:58 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 10 Oct 2024 04:42:57 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 10 Oct 2024 04:42:57 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 10 Oct 2024 04:42:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RSVeFD9BYZRg3k7/ReKwmTTcyYPFpG6PNOevNmUw1L3g4+A8207sbf9EdjqBeUEJfyFMurE5x8rxMChJbRMNheKZbXWz2nhN2tNd9fktYiWJ0YrJS62Nmp04wVJkX9/eps/jUL51mgIYRmrn5pVk86H/nxDmxyYKdeZpCPXOs0ORdS46gXXm01BIJlWfwdADOo0SIj/wYgsJn6gF/pKDaz5xM+x/hBVVQFYU4jhp5OvO1Hn5SSQqoZw82UIDuSgOILRgTSnxlFJPa+tG6cwjh9m1fr7G5UcToH8/yEATPkhKnH1AnRP3r26/0Ul3V4yk64RI4QhhzBeKGcBF2EIWzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E8y1d+P/JEWBs7Xsscf8ENHtOs/t2EdGj1+wG5EycC0=;
- b=ijotzHEX1BfJT1oY8uMln4+aQ+TwCZvZoEvLFka4mWplRoRJqdf5QCWJ27g1z7DHQL5AtKMWF/R379QVi2lX0UsTi9wV70yRHw2KhVou2zMMn1obGIyyJTEknLrAYnM7Tu/cEsaXvpJZIy8/JY0NzbhqoGIxIIDbyrBtPAR+r3wz0jaOW+E2tmYdsY+f/a0WGpWbNwW33HXoZzr5dvWRRFPIfaEW43EA3paOXWNBAe7YbXS57ZSPlzy32I9xPxJ+DJEM1fnmaiuS7np1hj/gQX4nbm2i1tLsz0i/fOIHfNMmm9Umm4dQFFmcmcEfQiph+om29eL5LuOp6RBLEc59+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- CY8PR11MB6841.namprd11.prod.outlook.com (2603:10b6:930:62::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8048.16; Thu, 10 Oct 2024 11:42:55 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39%5]) with mapi id 15.20.8048.013; Thu, 10 Oct 2024
- 11:42:55 +0000
-Date: Thu, 10 Oct 2024 13:42:51 +0200
-From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
-	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
-	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
-	<matthew.d.roper@intel.com>
-Subject: Re: [PATCH v3 3/5] PCI: Allow IOV resources to be resized in
- pci_resize_resource
-Message-ID: <gisgytply7pyvbcsx76bmcd4qx6wkvf3wqwksfacrzx7c5doz2@rqwfi6vpamzj>
-References: <20241010103203.382898-1-michal.winiarski@intel.com>
- <20241010103203.382898-4-michal.winiarski@intel.com>
- <4c783170-930f-945f-a2b8-8dc3a111d13e@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c783170-930f-945f-a2b8-8dc3a111d13e@linux.intel.com>
-X-ClientProxiedBy: WA0P291CA0015.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1::20) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2581B1C9B9B
+	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 13:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728568267; cv=none; b=mebdPMo4CitambS5yaliws+YNJHwMB+70VZynNsSHmqfdpEg53bCnEukZRkiEOqg5UCJqPg5ehHI9xHmNPDlXGsuqLwy8HXOlwc7XiZHTXuBUpNi8OdCcOtMJcCk85KVth9u8kQ4wGrZRTknKiZsaj15bndKte4ah2Ip+egDkDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728568267; c=relaxed/simple;
+	bh=kC64z7GxA0jcH+ebK2cfoqjQcd3boIqK8A9Vfxm2t10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WM829E4BfsjP2PtAeGBSw/X/91CPbXt+ghUtJIgofIYai0CtOUvFl9GaCXXmOAQJK+rQ8ko57Kwr2ZS1y8eke2fZKhD+2vAnJ2Q0qRtSn8D7k1cPfjJB/lxnJaxuM2IAMv9JkgoGatSX0m2mrp8348ta3J2dKnLONRT8VnI6QZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CFry+cLB; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5398a26b64fso930224e87.3
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 06:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728568263; x=1729173063; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cMqw76UFr3KyOj7RnEC3aqiu0YdHjPevmACOjAMgttE=;
+        b=CFry+cLBW8JFX42tNBJE3JkhTXRuwaKmhH/uz+IXr9WY3yojCpJWO0+zu27MOucocf
+         qJYjugOJjHMo4hz42JCV5lyc9vpyT8E5Vjg5GOZno/kNAVTXaymUC0PRnVWnRXPnQGuC
+         Xd6/ztzgHpYtmTG+FTQldcgu83fuesmTOZH6p5Nj3sAlBfnnd3DTyCXus/MV96EvmNOZ
+         cL4RfQghWq0uc+4ayS8WXinXKqhMsm1UsmxAjKvOM9DR8JTClAVSayDhYs3xgWI5iHgw
+         I29Kbf2bvCHAUzj4NVlpaOrzNieRtWXDsEkYCc1Jlwz/CWkgm7wIqKzvN7jIA3/GJm0y
+         fpsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728568263; x=1729173063;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cMqw76UFr3KyOj7RnEC3aqiu0YdHjPevmACOjAMgttE=;
+        b=hTkbdgeiVIpxmBz4mfqj9Bn7m/aWy2esS5zoytaBipgeI1PuDyQP9iT1HQQUnSS2Zl
+         qC8w90EtbwEhfhwCY9rBVvGwPBmEkvUpVIc0ZzkCdt+Fn/NUIApr9gRgIYDIAh6l1HG1
+         b/AqGV88yi1bpZcSizjKRRih8iUnidCpyivLpfZMh9a9C2eixHlZ6Esd3WFFgMHDXwjx
+         5HfUUax+JPXMB8jCfejgNVFyjBT3M8vxlotRUTyd3r4phZD9t28jAnY8Excqy4dhSYUz
+         3wumqzyF5TEq8hLaQEZ72FxRcaQRwc/35+LZgouD9D3xYI2XcdMZkiX4hrR/jnu9lEe/
+         /lDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWK0ZcvjKlQYz+qkzrCzlgZVW0gFbbPnBR/kw/NhSrJmiLxzYGIf+1LI29CLtKUXvzwaMohoIw/f7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3C27ylwq9qhxL9yisE53eiGawc+uelfGrdvGxBy0+ukeu7Glt
+	8+DmpeTWOdUif252Nw6JH2V/Sby3NJ0qs+4yzTSEfx5CJ/WzYQflTvn/tPrxRUI=
+X-Google-Smtp-Source: AGHT+IEdFN6tHEPOV5BGfgasm+djxDl4woP34V2NNtQEEnSKQjbMo5AzUtpP2ZOqLjKUa8VMlGqcng==
+X-Received: by 2002:a05:6512:2808:b0:536:54fd:275b with SMTP id 2adb3069b0e04-539c4967edemr4294135e87.54.1728568263124;
+        Thu, 10 Oct 2024 06:51:03 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539cb6c863bsm258410e87.87.2024.10.10.06.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2024 06:51:01 -0700 (PDT)
+Date: Thu, 10 Oct 2024 16:50:59 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org, 
+	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, abel.vesa@linaro.org, 
+	quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, kw@linux.com, lpieralisi@kernel.org, 
+	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] PCI: qcom: Fix the ops for X1E80100 and SC8280X
+ family SoC
+Message-ID: <otipwbhacorpdyjlhvf4g3tpg7ymtqmcuzjirewhkmwv3gbpka@2urxbhufrveb>
+References: <20241009091540.1446-1-quic_qianyu@quicinc.com>
+ <20241009091540.1446-7-quic_qianyu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|CY8PR11MB6841:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca2f6dc8-6767-4742-bb74-08dce920ae0b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NlZGYXlXR2dWQmtQR0NmMHE2OXQ5TkFvK3VXNDBFT29FdnQzd2FLMEx4VnVN?=
- =?utf-8?B?N3BENVg4MldKcW9zM0VwZFMzdjlrUVo4bVEreG9yb0Q1UFllc3phVUpraGE0?=
- =?utf-8?B?NEJXUlJYdS9XU2ZMUVNyRDZIVVFVZDZBSzU5QjQvNERoMHJzbjlwckdvMkd5?=
- =?utf-8?B?dkdKOEdUUXNBV3J5bDFnVVVhT3dLM0pCdks2T3B5REZGMnFidzFZWmdndFg1?=
- =?utf-8?B?QThxUWhyZGNUbkFNWmVBTWNsdEd5Nzdqc2R5VnR6Wkl3TVhFWjNkbEFWRmVY?=
- =?utf-8?B?NXpyZngzbWZVQ1I0TjQxMmFxcWNkU1ZYdVZnS2cvTjZxaDQ0bEVTa252dlZl?=
- =?utf-8?B?WHlJRDN0ek5hcU1xZ2FrRlhiMEhoczR1ME51UDFZWUVBN0d5dFgrNGU5WEUy?=
- =?utf-8?B?UVdWcXlLc2RmclVnUjRERDAzVllHVjlmZkVSRWgxblJTa2d5VmVDME1LeGhM?=
- =?utf-8?B?VmI5L1JFL1hZaEVXRHJyRlV0YkxzSEhVdThxTk96dzBvWDZnYm1pbXc5NEVw?=
- =?utf-8?B?ekpud0NtYXIzOFgveGlXR2QwNjNqSHgyM3hHb0xPc3IvNmFoR2pNMlB2bDdt?=
- =?utf-8?B?cW9GRVFOZWoxazhpZmMxNGJ1NTRoOXh6U1kwaDdoMWR6ZDZRNmdvb2RLQjZI?=
- =?utf-8?B?aEFTSkdTWXN1cDlVQyttNG94ZDVEM3puMUJjQkhzVTB0SGFaUmNkZndITHNW?=
- =?utf-8?B?K2t4N1JLL3R0Ty91VU9GazZmUHpTbHc4dE1EMGE3cVIzNk54TXlJVkpLUzR1?=
- =?utf-8?B?OEUxYlVjTWdjM2FTZ1hDdDZqaUpuU3gwRml5VS91cEd6ajV3ZzhSVWc5QmNw?=
- =?utf-8?B?dW9SRnUwZ2ZBZ2JPREc3T2VtVW04S1p2NHZCQWFxZ0lzYWhaU0F2Z2ZlY1Av?=
- =?utf-8?B?VVlodDY2OXZLemVmakk4RlIxNUt5aG5QZlgxN0VDTTFlZGdwbTlndWJ3UHZZ?=
- =?utf-8?B?NlhVb0c0ejQvUG5URnhpOUVDRWxFVDJBVExlN0p2d2dvZkVlU3JaaXBQWjUy?=
- =?utf-8?B?S0xjZHNIdkozeU40N1VCVXZOVHBoSmVHbWdsNktib3F4M251RS9rVE95aU9T?=
- =?utf-8?B?NG4vT1ZuZXFiNlBzLzVDakZMazRPVzRyOEJkczJhZ2dLMGVWY2hhdktHWmlz?=
- =?utf-8?B?OVdDOVVkNW1LYys1a1owY0tzdUw2ZmVVR1pFc1VWUXhsclJ5bEMzM3NGQ05R?=
- =?utf-8?B?aks3NFdIUURZb0puNG5VVEt2dEJrRmorT2xZQlBEOHVYeTRZRzk3VnJEcTR5?=
- =?utf-8?B?WGh2Nkk5aXRIemNQTU1DaFkzZSsrUVhEOEdoS2hmOUVLTStGUzI4YjJLSnFG?=
- =?utf-8?B?cFB6WnZyc3BxM0VHZm1QUnA2Y0ZnaVBnU0l6V2U4VGN3Y1hpdHgwdHdnYzUr?=
- =?utf-8?B?Mm9Xa2JablpwZXNuNUdUanlhNXR3T092ZXRqMnRUUGpDcU1jRmdtM2g2bUsy?=
- =?utf-8?B?RWpyQ3p4SG5lY2ozV1RjalRvd2l0SlBYRTVDUzhUMHNscWFWRkFzam9TNHU5?=
- =?utf-8?B?emlZaFpGUmhKVzR0NE5Bai90MkJjZkV1N1dFYVJoWXZ6QVdyM251aVdKM012?=
- =?utf-8?B?UVQ4U2h6NnhMb1hOMXZweSsrSVd6TU92Zzlabk9QcEtMTFVtQ1hhb1UxQmpi?=
- =?utf-8?B?NE8wY3hGbURhZ3VMbHpuNTZJbmhEY3hNOG5YTTJVd1dNYi9TZExLbWNCUlNy?=
- =?utf-8?B?bjhkZHcraHRpUkpaRjR2RHMwNVhqREwyVVFMNzZWMFNqTHBsRkp5emJRPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SWxKb1REY043dGRNK2dRV01RMTJXaEJTUFE5MVRJSlZMMzJDWmtiTHYydE1z?=
- =?utf-8?B?d2J6cGZSMHpSRUJSNmZDWUVyMGt4M0EwUlR6K2xYSW14VDFTc1NHL0hvZ3I1?=
- =?utf-8?B?dTM0Y0hOVVE3UzNwdlA1b0NVbHZXMTdqK1J5K0tsTVJmWHdjQmV4M3A5VTJp?=
- =?utf-8?B?QVkrMG03UmZMelRMZnBldXpkb215VDJhYVY4N1lsU2FFRnl6RzZKeUdtL1Zy?=
- =?utf-8?B?bE1aVFR5NjRMYldMRmtNWFpRc1NaeTRTZ2Z4RWQyTkdiK0hVVEdhNTloQmVK?=
- =?utf-8?B?eSs0Z2x6OS9tdVdnSHIvV2Q2b3ExY3ZvNDJhMG1xSVgxQXhheTNna0NMUnRz?=
- =?utf-8?B?K0hDMVVNSkxnVVdpd2hRcWJzcnZaclhkbmFIdG5kLzl0WFM5UFlrRmFQUTZE?=
- =?utf-8?B?UmdlQUFMMytlTDMrV0NMaDU2ZDlZOCtSaDBzd053Vkc4MmdvZExnRTJ2YUV5?=
- =?utf-8?B?WXplZnJKaFdmUXpDWWdiT1BtM2Q0TU1JbStuVVU5QVppaFN6L21jUWF0dmZv?=
- =?utf-8?B?RGFjckNpRC9VL2VYTnlZRVRkazRScmo2OXZiRC9DRlAyWFY4Q2NpbHFjc1o3?=
- =?utf-8?B?bzRQcE82OWp3VUx4T05raTZpaWlodi9KUURxaEVjRmxOMEtJYkpmeS83Y1o0?=
- =?utf-8?B?NEFvVzN2Ym9vdENwYWUxOHRSNXBmSWxCcmh6SW9jL25uU3JWckJTcE1xOEFq?=
- =?utf-8?B?aXhTMUdpYmFQTWZIMnZ1QWUwTW9zUnN2RFJoSXNzT3BVdVZYMmFXdzgyZkNZ?=
- =?utf-8?B?WWV4dWFXK2Y0cERIUjhXSWdFSkJEdG5mbjZkWUJoSHZGbWhIUGNkem51SkxL?=
- =?utf-8?B?QTk2N29ZYVJmTm8vaDh0WlM1ZjZHYmxObkpNNUU5L3BhUjJQY2lxa0NKdHhG?=
- =?utf-8?B?d0tiNlJ4WFdIMUdBUEdkc2tSb0N3K1NlRER1UGpXYk84dnNvK2lIbmUzS05t?=
- =?utf-8?B?a2QzcGdka1k5MlFoM01ETEtEb1RWRUFLMWxpWCtZQU9RcmZtZDNid0ovRmlC?=
- =?utf-8?B?RXd0RXNqTTVRb05vVHBqRndtVzNKTFdMMUorSXpuZ3dPcUpFaGJHUlBXSlhS?=
- =?utf-8?B?Zys3N1pBZ3RUdHhuN3FOU2FrNHIwNmRibjJHbHgwZ3lsYkM1V2RJRy9vR3Rr?=
- =?utf-8?B?b2tiaVk4cS8vdUpwajZoY3h2bDZ0ejUxRFM1bDd5eFArbFA4Uitkbndhb1I0?=
- =?utf-8?B?KzBKWXBDMlFUOTFWS2RxczRXVk5INk1aZFROQnExWFd0KzhHRWZJcVFGbUI5?=
- =?utf-8?B?azM1WjlPdThYZkQrT3g0VGhyTnBtSmlaUnJza3Zsb3RWTWxIUUExV0R2YmVC?=
- =?utf-8?B?ZDZ5aUhhcUluQ294RVRGZ0xuWTRmQ2NPbUlrQnREb3FtV3VkWmdJQkVKWG9L?=
- =?utf-8?B?WjJkYWtwWlgxNU5Ub1ZwYzR5QWk5V0lMZ1FYSkw0ZFEzdmlJa3ZFZXkyRk5R?=
- =?utf-8?B?YWEvUUFqVmxIdC9XWEQycU9vcG4yblBBTzNzNWxOSWs1TkxEcTVHNkwwNmlQ?=
- =?utf-8?B?RkVPN2FISkt5TkFKd3hLblpOOWpzYmg5aTJKa1ZMS0VlWUx6ZVE5YTNVeEMy?=
- =?utf-8?B?aDJNUS9KV09mcmNiUnBqRUpkQW5tMUdwa0dWdEwyVCt2ZFAyeXY2U3NDQ0Uw?=
- =?utf-8?B?aHFNOHBuMkFCSXcwbk9rbXNCVitnemd5REhyTU51QXUrZUl2anNpQnBRTy9N?=
- =?utf-8?B?Tm5Gc0l2ZGtaL3Y5S0pLZDRQemo2UmFTTSsrZHBLRjJyL1ZPMERlTXNDZTlB?=
- =?utf-8?B?bXZQL1haczRpL1MxMG80ZUgzSGNOLzQ5U0ticzZtdHNhNDlFSDhrL3l4b0Vt?=
- =?utf-8?B?QUdtaXMwbEdHU3BXekhmUkp1bnZUNnBvejFpRCtxRWE1RjY2STJvSTlKWkxO?=
- =?utf-8?B?cmR1cStmSXB0cERzREFGN3Ivc01xdjBod3ZCRlVvSGpNZkhKankwY3hPUlUr?=
- =?utf-8?B?VW5XeGYvRGwrWmlYZDBMZGdGOEUvS2NTMGZtaFZvUjZPNnBNS3VxUEJkMzZj?=
- =?utf-8?B?azdJVjY4Z1dtTDRMd1FuZElVamNQUVkzbjN5eDlrb0dsR3hNWTVydW1XQWhS?=
- =?utf-8?B?djBPUzVNZHNjSzI3M0xJRkdFVk1mbHM3bjB2dGdsbFNJRnNhMy9HeEFYWWFH?=
- =?utf-8?B?QjRkYU56Tm45UWsrdGZrdXp1SGl5YXVuZEsvOHA0dnVxY3NFTk1VNysrYW9C?=
- =?utf-8?B?UGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca2f6dc8-6767-4742-bb74-08dce920ae0b
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2024 11:42:55.0834
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wkQzcT04iMmjaCqYgGwUNCdJaqQLg/NrzhOpp7rqLac30zuxxFMeSOvZp5dqTsKGUAWJr90phymGKX4CN9YdsTClmMchoUn5mD/8t0pD0Hk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6841
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241009091540.1446-7-quic_qianyu@quicinc.com>
 
-On Thu, Oct 10, 2024 at 02:17:11PM +0300, Ilpo Järvinen wrote:
-> On Thu, 10 Oct 2024, Michał Winiarski wrote:
-> 
-> > Similar to regular resizable BAR, VF BAR can also be resized.
-> > The structures are very similar, which means we can reuse most of the
-> > implementation. See PCIe r4.0, sec 9.3.7.4.
-> > 
-> > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
-> > ---
-> >  drivers/pci/iov.c       | 20 ++++++++++++++++++++
-> >  drivers/pci/pci.c       |  9 ++++++++-
-> >  drivers/pci/pci.h       |  8 ++++++++
-> >  drivers/pci/setup-res.c | 33 ++++++++++++++++++++++++++++-----
-> >  4 files changed, 64 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index fd5c059b29c13..591a3eae1618a 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -154,6 +154,26 @@ resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
-> >  	return dev->sriov->barsz[resno - PCI_IOV_RESOURCES];
-> >  }
-> >  
-> > +void pci_iov_resource_set_size(struct pci_dev *dev, int resno, resource_size_t size)
-> > +{
-> > +	if (!pci_resource_is_iov(resno)) {
-> > +		pci_warn(dev, "%s is not an IOV resource\n",
-> > +			 pci_resource_name(dev, resno));
-> > +		return;
-> > +	}
-> > +
-> > +	dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = size;
-> > +}
-> > +
-> > +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev)
-> > +{
-> > +	u16 cmd;
-> > +
-> > +	pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL, &cmd);
-> > +
-> > +	return cmd & PCI_SRIOV_CTRL_MSE;
-> > +}
-> > +
-> >  static void pci_read_vf_config_common(struct pci_dev *virtfn)
-> >  {
-> >  	struct pci_dev *physfn = virtfn->physfn;
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 7d85c04fbba2a..788ae61731213 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3718,10 +3718,17 @@ void pci_acs_init(struct pci_dev *dev)
-> >   */
-> >  static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
-> >  {
-> > +	int cap = PCI_EXT_CAP_ID_REBAR;
-> >  	unsigned int pos, nbars, i;
-> >  	u32 ctrl;
-> >  
-> > -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-> > +#ifdef CONFIG_PCI_IOV
-> > +	if (pci_resource_is_iov(bar)) {
-> > +		cap = PCI_EXT_CAP_ID_VF_REBAR;
-> > +		bar -= PCI_IOV_RESOURCES;
-> > +	}
-> > +#endif
-> 
-> Perhaps abstracting bar -= PCI_IOV_RESOURCES too into some static inline 
-> function would be useful so you could drop the ifdefs. That calculation 
-> seems to be done in few places besides this one.
+On Wed, Oct 09, 2024 at 02:15:39AM GMT, Qiang Yu wrote:
+> On X1E80100 and SC8280X family SoC, PCIe controllers are connected to
+> SMMUv3, hence they don't need the config_sid() callback in ops_1_9_0
+> struct. Fix it by introducing a new ops struct, namely ops_1_21_0, so
+> that BDF2SID mapping won't be configured during init.
 
-I have a version of this series with helpers for conversion in both
-ways:
-pci_iov_resource_to_vf_bar (which is this one)
-and pci_vf_bar_to_iov_resource (+= PCI_IOV_RESOURCES)
-
-But decided to leave it out for now.
-I can include it in v4 (or send it separately, depending on the
-direction in which this revision goes).
+Fixes tag missing. Cc:stable if required.
 
 > 
-> > +	pos = pci_find_ext_capability(pdev, cap);
-> >  	if (!pos)
-> >  		return -ENOTSUPP;
-> >  
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index c55f2d7a4f37e..e15fd8fe0f81f 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -584,6 +584,8 @@ static inline bool pci_resource_is_iov(int resno)
-> >  {
-> >  	return resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END;
-> >  }
-> > +void pci_iov_resource_set_size(struct pci_dev *dev, int resno, resource_size_t size);
-> > +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev);
-> >  extern const struct attribute_group sriov_pf_dev_attr_group;
-> >  extern const struct attribute_group sriov_vf_dev_attr_group;
-> >  #else
-> > @@ -607,6 +609,12 @@ static inline bool pci_resource_is_iov(int resno)
-> >  {
-> >  	return false;
-> >  }
-> > +static inline void pci_iov_resource_set_size(struct pci_dev *dev, int resno,
-> > +					     resource_size_t size) { }
-> > +static inline bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev)
-> > +{
-> > +	return false;
-> > +}
-> >  #endif /* CONFIG_PCI_IOV */
-> >  
-> >  #ifdef CONFIG_PCIE_PTM
-> > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> > index e2cf79253ebda..95a13a5fa379c 100644
-> > --- a/drivers/pci/setup-res.c
-> > +++ b/drivers/pci/setup-res.c
-> > @@ -425,13 +425,37 @@ void pci_release_resource(struct pci_dev *dev, int resno)
-> >  }
-> >  EXPORT_SYMBOL(pci_release_resource);
-> >  
-> > +static bool pci_resize_is_memory_decoding_enabled(struct pci_dev *dev, int resno)
-> > +{
-> > +	u16 cmd;
-> > +
-> > +	if (pci_resource_is_iov(resno))
-> > +		return pci_iov_is_memory_decoding_enabled(dev);
-> > +
-> > +	pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> > +
-> > +	return cmd & PCI_COMMAND_MEMORY;
-> > +}
-> > +
-> > +static void pci_resize_resource_set_size(struct pci_dev *dev, int resno, int size)
-> > +{
-> > +	resource_size_t res_size = pci_rebar_size_to_bytes(size);
-> > +	struct resource *res = dev->resource + resno;
-> > +
-> > +	if (!pci_resource_is_iov(resno)) {
-> > +		res->end = res->start + res_size - 1;
-> > +	} else {
-> > +		res->end = res->start + res_size * pci_sriov_get_totalvfs(dev) - 1;
-> 
-> I wish Bjorn would pick up my resource_set_{range,size}() series [1] so we 
-> wouldn't need to open-code this resource size calculation everywhere.
+> In addition, since it is recommended to disable ASPM L0s on X1E80100 as
+> same as SC8280X, hence X1E80100 can simply reuse cfg_sc8280xp as its
+> config.
 
-Yeah - that looks useful indeed.
-
-Thanks,
--Michał
+Separate commit, please with its own description and Fixes tag.
 
 > 
-> > +		pci_iov_resource_set_size(dev, resno, res_size);
-> > +	}
-> > +}
-> > +
-> >  int pci_resize_resource(struct pci_dev *dev, int resno, int size)
-> >  {
-> >  	struct resource *res = dev->resource + resno;
-> >  	struct pci_host_bridge *host;
-> >  	int old, ret;
-> >  	u32 sizes;
-> > -	u16 cmd;
-> >  
-> >  	/* Check if we must preserve the firmware's resource assignment */
-> >  	host = pci_find_host_bridge(dev->bus);
-> > @@ -442,8 +466,7 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
-> >  	if (!(res->flags & IORESOURCE_UNSET))
-> >  		return -EBUSY;
-> >  
-> > -	pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> > -	if (cmd & PCI_COMMAND_MEMORY)
-> > +	if (pci_resize_is_memory_decoding_enabled(dev, resno))
-> >  		return -EBUSY;
-> >  
-> >  	sizes = pci_rebar_get_possible_sizes(dev, resno);
-> > @@ -461,7 +484,7 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
-> > +	pci_resize_resource_set_size(dev, resno, size);
-> >  
-> >  	/* Check if the new config works by trying to assign everything. */
-> >  	if (dev->bus->self) {
-> > @@ -473,7 +496,7 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
-> >  
-> >  error_resize:
-> >  	pci_rebar_set_size(dev, resno, old);
-> > -	res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-> > +	pci_resize_resource_set_size(dev, resno, old);
-> >  	return ret;
-> >  }
-> >  EXPORT_SYMBOL(pci_resize_resource);
-> > 
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 > 
-> [1] https://patchwork.kernel.org/project/linux-pci/patch/20240614100606.15830-2-ilpo.jarvinen@linux.intel.com/
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 88a98be930e3..c533e6024ba2 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1367,6 +1367,16 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+>  };
+>  
+> +/* Qcom IP rev.: 1.21.0 */
+> +static const struct qcom_pcie_ops ops_1_21_0 = {
+> +	.get_resources = qcom_pcie_get_resources_2_7_0,
+> +	.init = qcom_pcie_init_2_7_0,
+> +	.post_init = qcom_pcie_post_init_2_7_0,
+> +	.host_post_init = qcom_pcie_host_post_init_2_7_0,
+> +	.deinit = qcom_pcie_deinit_2_7_0,
+> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +};
+> +
+>  static const struct qcom_pcie_cfg cfg_1_0_0 = {
+>  	.ops = &ops_1_0_0,
+>  };
+> @@ -1405,7 +1415,7 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
+>  };
+>  
+>  static const struct qcom_pcie_cfg cfg_sc8280xp = {
+> -	.ops = &ops_1_9_0,
+> +	.ops = &ops_1_21_0,
+>  	.no_l0s = true,
+>  };
+>  
+> @@ -1837,7 +1847,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+> -	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
+>  	{ }
+>  };
+>  
 > -- 
->  i.
+> 2.34.1
+> 
 
+-- 
+With best wishes
+Dmitry
 
