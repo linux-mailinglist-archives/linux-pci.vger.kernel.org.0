@@ -1,55 +1,57 @@
-Return-Path: <linux-pci+bounces-14238-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4B9D9994F0
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 00:07:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3289999502
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 00:16:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 707FD1F2402A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 22:07:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A50EB2162C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 22:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19AFE1E47CE;
-	Thu, 10 Oct 2024 22:07:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92C4C1BC9F3;
+	Thu, 10 Oct 2024 22:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eae/Cu9v"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOjDNuJb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67AB1E2839;
-	Thu, 10 Oct 2024 22:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6573719A2A3;
+	Thu, 10 Oct 2024 22:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728598070; cv=none; b=YnxcmHztYgjYHTrm7eOJ5AFOCgLd0MDfgzNpeKSXj7lhjg7cFphMhC0rTaiJZsqUJ0XGsgdwGc4Nih4vsZVhT15frsog2KDHJdCH+hdGxSNKRt0eHxeHLjrGVE/f2suGM2BlnpsLf4sVe/Hs860O0SE9LmogA6WBFngbbQmr2FM=
+	t=1728598592; cv=none; b=HdOGsLMgD1/iR+bWJZxHqumrd1o9Z3TrUr5aZVoWQ/r32oegNgZIkHvFFnkOoICIFMgGn29eMr7BeaLfqgMK7bEerjPOFYjStt7wmnrRiPjsLFsjLJYSFi0Bba7/nShircNGaMRPD7nTNb+Qqw4rViD0XnrAkePy2lsGupDaEiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728598070; c=relaxed/simple;
-	bh=00l5K9SfK1hW5HpyRetxiwRtURhebXZza77EpqLIza4=;
+	s=arc-20240116; t=1728598592; c=relaxed/simple;
+	bh=/fSUe/XuT4djq6U2zM2gzmBo0xFuuCYD1/zFnLdp/QU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=RcltIdicutAkR5IxQ3Iv8jwXxV5VpsE6RkBZlS1ujmELCXT5gfHzY5Jj9FwPrZviOZ7hD2beL00RenfGkgLBwBu7I9BrGNu3fxM6dMjcAvjcVrmNINTSMSEHgpVs2C8R+XGqZyF+vz5vPib+Ro9fRBJdmuv5tK65vsSvprRoeYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eae/Cu9v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0884BC4CEC5;
-	Thu, 10 Oct 2024 22:07:48 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=YRshi/AN7o4onSPp5SG7VJ4iEEuGVFIToean06fX97KAFtJskKfiix9Qfu38U5I/CdRtSPQuEtJGRDZTKpYCv7eCyUsFuDd3x0HXlXi9YrYPfCz5tJtjfnM2D/+gbAASKUm4xWpF/3cLlCW38xWB3Ivorl/5pUw/qMCQrKvBAdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOjDNuJb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5136C4CEC5;
+	Thu, 10 Oct 2024 22:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728598069;
-	bh=00l5K9SfK1hW5HpyRetxiwRtURhebXZza77EpqLIza4=;
+	s=k20201202; t=1728598591;
+	bh=/fSUe/XuT4djq6U2zM2gzmBo0xFuuCYD1/zFnLdp/QU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eae/Cu9vBaBKBo6XIMSl6WoFREPmJgo+TzxFgjgvpThDZgr+Rdvd0xY8odAvDvep5
-	 iFnWblkpvZ8TaxOIc+p1cNkl5WW9H2Tog4ti3FArjiGwPiG50LemcZ0Cx9z1mwKu70
-	 KqGrCC8o5N+j/JHFXsCOSNGb4eK5Db1WpWre3NxymgnA1FjBtfNlUYAdPDEZZaEG0X
-	 kheUm6pIQpVAsaDb8l9ywUE/8cKiyXKy9lnwQIo8Z5bn/6DBHK5XyMRggwmHA7HehI
-	 CjlS5O3R8yUjQB/fYiZWCHbY8zBdv4Ujs5KxpogKdQ9qQAZ9ATt3AFvQ+XLRZrOoHl
-	 6wCghtYRXpwpg==
-Date: Thu, 10 Oct 2024 17:07:47 -0500
+	b=ZOjDNuJbForY00J9ZrwYA99p1VYOnT3JUgWwXgRVQ+fBnZSIImFd/K5x70FlGYEes
+	 wxEgP7tEOGaV6XBtHdmT9Wmr+22/QRGErM6dJHTul27R+qBAZdP0FuJh3u+6JUtF9V
+	 DH5nuDkADPqJIhdVztudOAEOJnYXxfQojAf4LS0/T/nBYEY4pnWfKesRyHZWlTofXM
+	 hLHC+etVaffbIFf1e5ig9awUHBcozyvz0Qunn+jvE/JHfmAzUOrHbHa80HDzwrryAy
+	 rPaHfkMotx9Shw+x8Fdj8iOoWejgiINbyZt1xoL64kOllpaxC8LahQftjfSmT/Nw3c
+	 wCPSNp9T/68mQ==
+Date: Thu, 10 Oct 2024 17:16:28 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/7] PCI: Constify pci_register_io_range() fwnode_handle
-Message-ID: <20241010220747.GA579765@bhelgaas>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	dan.j.williams@intel.com, bhelgaas@google.com, dave@stgolabs.net,
+	dave.jiang@intel.com, vishal.l.verma@intel.com,
+	Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
+ pci_doe_send_req
+Message-ID: <20241010221628.GA580128@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,54 +60,82 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241010-dt-const-v1-1-87a51f558425@kernel.org>
+In-Reply-To: <20241004162828.314-1-gourry@gourry.net>
 
-On Thu, Oct 10, 2024 at 11:27:14AM -0500, Rob Herring (Arm) wrote:
-> pci_register_io_range() does not modify the passed in fwnode_handle, so
-> make it const.
+On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
+> During initial device probe, the PCI DOE busy bit for some CXL
+> devices may be left set for a longer period than expected by the
+> current driver logic. Despite local comments stating DOE Busy is
+> unlikely to be detected, it appears commonly specifically during
+> boot when CXL devices are being probed.
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> This was observed on a single socket AMD platform with 2 CXL memory
+> expanders attached to the single socket. It was not the case that
+> concurrent accesses were being made, as validated by monitoring
+> mailbox commands on the device side.
+> 
+> This behavior has been observed with multiple CXL memory expanders
+> from different vendors - so it appears unrelated to the model.
+> 
+> In all observed tests, only a small period of the retry window is
+> actually used - typically only a handful of loop iterations.
+> 
+> Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
+> interval (1 second), resolves this issues cleanly.
+> 
+> Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
+> raise an interrupt, so polling is the best option in this scenario.
+> 
+> Subsqeuent code in doe_statemachine_work and abort paths also wait
+> for up to 1 PCI DOE timeout interval, so this order of (potential)
+> additional delay is presumed acceptable.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I provisionally applied this to pci/doe for v6.13 with Lukas and
+Jonathan's reviewed-by.  
 
+Can we include a sample of any dmesg logging or other errors users
+would see because of this problem?  I'll update the commit log with
+any of this information to help users connect an issue with this fix.
+
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 > ---
-> Please ack and I'll take with the rest of the series.
-
-Thank you!
-
-> ---
->  drivers/pci/pci.c   | 2 +-
->  include/linux/pci.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/doe.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 7d85c04fbba2..4b102bd1cfea 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4163,7 +4163,7 @@ EXPORT_SYMBOL(pci_request_regions_exclusive);
->   * Record the PCI IO range (expressed as CPU physical address + size).
->   * Return a negative value if an error has occurred, zero otherwise
->   */
-> -int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
-> +int pci_register_io_range(const struct fwnode_handle *fwnode, phys_addr_t addr,
->  			resource_size_t	size)
->  {
->  	int ret = 0;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 573b4c4c2be6..11421ae5c558 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1556,7 +1556,7 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
->  			void *alignf_data);
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 652d63df9d22..27ba5d281384 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>  	size_t length, remainder;
+>  	u32 val;
+>  	int i;
+> +	unsigned long timeout_jiffies;
 >  
+>  	/*
+>  	 * Check the DOE busy bit is not set. If it is set, this could indicate
+>  	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
+>  	 * it is expected that firmware and OS will negotiate access rights via
+>  	 * an, as yet to be defined, method.
+> +	 *
+> +	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
+> +	 * finish. Otherwise, simply error out as unable to field the request.
+> +	 *
+> +	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
+> +	 * bit is cleared, so polling here is our best option for the moment.
+>  	 */
+> -	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
+> +	do {
+> +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
+> +		 !time_after(jiffies, timeout_jiffies));
+> +
+>  	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+>  		return -EBUSY;
 >  
-> -int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
-> +int pci_register_io_range(const struct fwnode_handle *fwnode, phys_addr_t addr,
->  			resource_size_t size);
->  unsigned long pci_address_to_pio(phys_addr_t addr);
->  phys_addr_t pci_pio_to_address(unsigned long pio);
-> 
 > -- 
-> 2.45.2
+> 2.43.0
 > 
 
