@@ -1,200 +1,277 @@
-Return-Path: <linux-pci+bounces-14213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1309C998E15
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 19:11:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92D52998E86
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 19:43:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91F311F24B57
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 17:10:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B77CAB2619C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 17:43:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABCD19ABC3;
-	Thu, 10 Oct 2024 17:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D6B519D083;
+	Thu, 10 Oct 2024 17:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Izljrfxv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60F938F9C
-	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 17:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D646919CD17
+	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 17:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728580251; cv=none; b=K9Hk7huCsv7PxCFe4pqTQrbyqajs/MO7oNsycdwCJdujOg0xwH/AiGTLNMFOR0/5X55go8nuWnIrTB0phxts37Vs55bckCGWJMnySOjxFg0UMye61+hHpjd/4uz/7X+xmBc0YM1/Zp3kg5av4RrIhjFHcok9ZQIzMayWHHFXjPw=
+	t=1728582194; cv=none; b=at+agslFU0frYeYMXgsiiZIjQDiLHR7wwFwmUY9emGS9SEXAZXNRfpYihC6PGU4nxbYiRNTHUeJnbQycmkKEOkW1T42ftVvELEl8UF5VQBmNwCLDKMrJlWGScPPnZbs5RpR+IaYWWQvhY8PSv2kp6YPvmpYxEzkzdTZ9bE9a2Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728580251; c=relaxed/simple;
-	bh=R2xoIbi7WNXln7KrMvI/BVl959luCoS8D6wz3npsH1U=;
-	h=Message-Id:From:Date:Subject:To:Cc; b=uK/aZRbjs1LNdi4fLI+S0bo+o+tH1nsL+MTSMmOGMpRg4a+irBWcO+uOYHI1hsEHXbYSDjCEy2k7bh9W0eYJbcZvY3Xdcw4hdTDibNT8pfHjAyfo8E+k5hu7eiPCkxWsfTB8LyC7Al9xC2f+NFTyKSJ37ASXnSAGNsWCyNcb5cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 99483101953AF;
-	Thu, 10 Oct 2024 19:10:38 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 6C59CC9C58; Thu, 10 Oct 2024 19:10:38 +0200 (CEST)
-Message-Id: <4bfd4c0e976c1776cd08e76603903b338cf25729.1728579288.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Thu, 10 Oct 2024 19:10:34 +0200
-Subject: [PATCH] PCI: Fix use-after-free of slot->bus on hot remove
-To: Bjorn Helgaas <bhelgaas@google.com>, Dennis Wassenberg <Dennis.Wassenberg@secunet.com>, Rafael Wysocki <rafael@kernel.org>, Alex Williamson <alex.williamson@redhat.com>
-Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mathias Krause <minipli@grsecurity.net>, Mark Pearson <mpearson-lenovo@squebb.ca>, Stuart Hayes <stuart.w.hayes@gmail.com>
+	s=arc-20240116; t=1728582194; c=relaxed/simple;
+	bh=YXdfXiuy338Q996EzueGEmiCzwm5chK0zlMbGYwxsB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=co5B5FEwTTMKVGnbuMlrMGHsT3wHyHIDi4Ev4Abko0SD1SScDwPfiSABXoJctFRQziXuXoCj18uaQqS8nalD/sxs8qAZW3vfU6cSma8W9Sj68tYRcucEHmCsuXYgAdqZ5IU3FRng2DTLyiOTWEdNqiXeJ8Gkw0IcxtExub7gSW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Izljrfxv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728582191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=okv2RKybuCagmoTr+5nQR2nTb+IA1DURK3Hada+1xdc=;
+	b=Izljrfxv9BcCexeNqtB7NRkx0dx6rl/BTVCBoEX82qFNnYBABCleCadp+zRgO0O2lhYPIR
+	zvX/9oVQNtSyjzVclB7vlyuiysiNb2CTrItyxmqXGadHPF69Kmm+Ucv3s6ifDkbs/jjoMu
+	+1izB0Zv8Ml/5J3VSFmCCuR9PUwSfIE=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-77-uBXQNteIMemJUcElyETz_A-1; Thu, 10 Oct 2024 13:43:09 -0400
+X-MC-Unique: uBXQNteIMemJUcElyETz_A-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-83539231e19so18374039f.0
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 10:43:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728582189; x=1729186989;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=okv2RKybuCagmoTr+5nQR2nTb+IA1DURK3Hada+1xdc=;
+        b=KhWEe5si6H1NC2+T1o2scn1+8JbtXaKQidKzORz3lxUiM5a9KmwweFOf27lqxzrtjT
+         KbvMnMbIXPW5y3NcWVuGNPmSl4yeW6IOWfQkPStyYiCKPZSQwaNoc/eoSwCUOso6Es3C
+         jWscnIY/4T+UniSbyI7i9IALDFMq18b+inJiutM9cWS76u2eKRmE+YqNNE/Y2AdR9Eeb
+         /3XyT3f8aKQ+ByUJG3VeowzVNMeC2wz0eV25sEpNXFL3I2wQanUOFwKu4jJilf3PRvTR
+         y07V9cYhFb2UAuw+3p8o6nA5cX/4Yk0yID9LvqWBGdi5drJECxnDlb7rjLW69GpIawLW
+         4kzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvusu4eWECjH6b3hdjZ81tJSm1ek6JaBJX53DweBjDe/Rh74cR3le8QcgSaDeeUWZgOCvzw9GMous=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcutPWZMYotm26JUlw0ptrnRK3ST5QEEYE1vOm0Yg+8T01Y+M4
+	AbyJGIsP+wOtdR4IZKI9qvbxYil4TrqL6Y7IjyvjILkzRZb0L5BXd9NVcvdhmRqdZN15LSl6xSx
+	Bmp5R15Tlf9PU8+F6h1jdNoWUEGx76snkkjYgkF28+JW4VmRlSA1HJvacqQ==
+X-Received: by 2002:a05:6e02:1f0b:b0:3a3:a5c5:3914 with SMTP id e9e14a558f8ab-3a3a5c53b23mr8780435ab.7.1728582188950;
+        Thu, 10 Oct 2024 10:43:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEX4wPODz5d2oXE9aKocFeCuVGB9sHsZCElsoW8M99wIhH/mdFxCjREgEp2wTOzqiP6m0FOTw==
+X-Received: by 2002:a05:6e02:1f0b:b0:3a3:a5c5:3914 with SMTP id e9e14a558f8ab-3a3a5c53b23mr8780315ab.7.1728582188363;
+        Thu, 10 Oct 2024 10:43:08 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbad9d47d4sm324603173.64.2024.10.10.10.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2024 10:43:07 -0700 (PDT)
+Date: Thu, 10 Oct 2024 11:43:04 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
+ <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>, Benjamin
+ Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
+ Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
+ <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
+ GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
+ Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+ Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
+ <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
+ Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
+ Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
+ <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
+ =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
+ <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Hannes Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
+ Soumya Negi <soumya.negi97@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi
+ Liu <yi.l.liu@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Christian Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>,
+ Reinette Chatre <reinette.chatre@intel.com>, Eric Auger
+ <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
+ =?UTF-8?B?TWFyY3p5a293c2tpLUfDs3JlY2tp?= <marmarek@invisiblethingslab.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
+ <kai.vehmanen@linux.intel.com>, Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
+ Marc Zyngier <maz@kernel.org>, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+ ntb@lists.linux.dev, linux-pci@vger.kernel.org,
+ linux-staging@lists.linux.dev, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
+Subject: Re: [RFC PATCH 01/13] PCI: Prepare removing devres from pci_intx()
+Message-ID: <20241010114304.064f5d3d.alex.williamson@redhat.com>
+In-Reply-To: <20241009083519.10088-2-pstanner@redhat.com>
+References: <20241009083519.10088-1-pstanner@redhat.com>
+	<20241009083519.10088-2-pstanner@redhat.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Dennis reports a boot crash on recent Lenovo laptops with a USB4 dock.
+On Wed,  9 Oct 2024 10:35:07 +0200
+Philipp Stanner <pstanner@redhat.com> wrote:
 
-Since commit 0fc70886569c ("thunderbolt: Reset USB4 v2 host router") and
-commit 59a54c5f3dbd ("thunderbolt: Reset topology created by the boot
-firmware"), USB4 v2 and v1 Host Routers are reset on probe of the
-thunderbolt driver.
+> pci_intx() is a hybrid function which sometimes performs devres
+> operations, depending on whether pcim_enable_device() has been used to
+> enable the pci_dev. This sometimes-managed nature of the function is
+> problematic. Notably, it causes the function to allocate under some
+> circumstances which makes it unusable from interrupt context.
+> 
+> To, ultimately, remove the hybrid nature from pci_intx(), it is first
+> necessary to provide an always-managed and a never-managed version
+> of that function. Then, all callers of pci_intx() can be ported to the
+> version they need, depending whether they use pci_enable_device() or
+> pcim_enable_device().
+> 
+> An always-managed function exists, namely pcim_intx(), for which
+> __pcim_intx(), a never-managed version of pci_intx() had been
+> implemented.
+> 
+> Make __pcim_intx() a public function under the name
+> pci_intx_unmanaged(). Make pcim_intx() a public function.
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>  drivers/pci/devres.c | 24 +++---------------------
+>  drivers/pci/pci.c    | 26 ++++++++++++++++++++++++++
+>  include/linux/pci.h  |  2 ++
+>  3 files changed, 31 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index b133967faef8..475a3ae5c33f 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -411,31 +411,12 @@ static inline bool mask_contains_bar(int mask, int bar)
+>  	return mask & BIT(bar);
+>  }
+>  
+> -/*
+> - * This is a copy of pci_intx() used to bypass the problem of recursive
+> - * function calls due to the hybrid nature of pci_intx().
+> - */
+> -static void __pcim_intx(struct pci_dev *pdev, int enable)
+> -{
+> -	u16 pci_command, new;
+> -
+> -	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> -
+> -	if (enable)
+> -		new = pci_command & ~PCI_COMMAND_INTX_DISABLE;
+> -	else
+> -		new = pci_command | PCI_COMMAND_INTX_DISABLE;
+> -
+> -	if (new != pci_command)
+> -		pci_write_config_word(pdev, PCI_COMMAND, new);
+> -}
+> -
+>  static void pcim_intx_restore(struct device *dev, void *data)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct pcim_intx_devres *res = data;
+>  
+> -	__pcim_intx(pdev, res->orig_intx);
+> +	pci_intx_unmanaged(pdev, res->orig_intx);
+>  }
+>  
+>  static struct pcim_intx_devres *get_or_create_intx_devres(struct device *dev)
+> @@ -472,10 +453,11 @@ int pcim_intx(struct pci_dev *pdev, int enable)
+>  		return -ENOMEM;
+>  
+>  	res->orig_intx = !enable;
+> -	__pcim_intx(pdev, enable);
+> +	pci_intx_unmanaged(pdev, enable);
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL(pcim_intx);
 
-The reset clears the Presence Detect State and Data Link Layer Link Active
-bits at the USB4 Host Router's Root Port and thus causes hot removal of
-the dock.
+What precludes this from _GPL?  Also note that this is now calling a
+GPL symbol, so by default I'd assume it should also be GPL.  Thanks,
 
-The crash occurs when pciehp is unbound from one of the dock's Downstream
-Ports:  pciehp creates a pci_slot on bind and destroys it on unbind.  The
-pci_slot contains a pointer to the pci_bus below the Downstream Port, but
-a reference on that pci_bus is never acquired.  The pci_bus is destroyed
-before the pci_slot, so a use-after-free ensues when pci_slot_release()
-accesses slot->bus.
+Alex
 
-In principle this should not happen because pci_stop_bus_device() unbinds
-pciehp (and therefore destroys the pci_slot) before the pci_bus is
-destroyed by pci_remove_bus_device().
-
-However the stacktrace provided by Dennis shows that pciehp is unbound
-from pci_remove_bus_device() instead of pci_stop_bus_device().
-To understand the significance of this, one needs to know that the PCI
-core uses a two step process to remove a portion of the hierarchy:  It
-first unbinds all drivers in the sub-hierarchy in pci_stop_bus_device()
-and then actually removes the devices in pci_remove_bus_device().
-There is no precaution to prevent driver binding in-between
-pci_stop_bus_device() and pci_remove_bus_device().
-
-In Dennis' case, it seems removal of the hierarchy by pciehp races with
-driver binding by pci_bus_add_devices().  pciehp is bound to the
-Downstream Port after pci_stop_bus_device() has run, so it is unbound by
-pci_remove_bus_device() instead of pci_stop_bus_device().  Because the
-pci_bus has already been destroyed at that point, accesses to it result in
-a use-after-free.
-
-One might conclude that driver binding needs to be prevented after
-pci_stop_bus_device() has run.  However it seems risky that pci_slot
-points to pci_bus without holding a reference.  Solely relying on correct
-ordering of driver unbind versus pci_bus destruction is certainly not
-defensive programming.
-
-If pci_slot has a need to access data in pci_bus, it ought to acquire a
-reference.  Amend pci_create_slot() accordingly.  Dennis reports that the
-crash is not reproducible with this change.
-
-Abridged stacktrace:
-
-  pcieport 0000:00:07.0: PME: Signaling with IRQ 156
-  pcieport 0000:00:07.0: pciehp: Slot #12 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
-  pci_bus 0000:20: dev 00, created physical slot 12
-  pcieport 0000:00:07.0: pciehp: Slot(12): Card not present
-  ...
-  pcieport 0000:21:02.0: pciehp: pcie_disable_notification: SLOTCTRL d8 write cmd 0
-  Oops: general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP NOPTI
-  CPU: 13 UID: 0 PID: 134 Comm: irq/156-pciehp Not tainted 6.11.0-devel+ #1
-  RIP: 0010:dev_driver_string+0x12/0x40
-  pci_destroy_slot
-  pciehp_remove
-  pcie_port_remove_service
-  device_release_driver_internal
-  bus_remove_device
-  device_del
-  device_unregister
-  remove_iter
-  device_for_each_child
-  pcie_portdrv_remove
-  pci_device_remove
-  device_release_driver_internal
-  bus_remove_device
-  device_del
-  pci_remove_bus_device (recursive invocation)
-  pci_remove_bus_device
-  pciehp_unconfigure_device
-  pciehp_disable_slot
-  pciehp_handle_presence_or_link_change
-  pciehp_ist
-
-Reported-by: Dennis Wassenberg <Dennis.Wassenberg@secunet.com>
-Tested-by: Dennis Wassenberg <Dennis.Wassenberg@secunet.com>
-Closes: https://lore.kernel.org/r/6de4b45ff2b32dd91a805ec02ec8ec73ef411bf6.camel@secunet.com/
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org
----
-I am tempted to remove the call to device_release_driver() from
-pci_stop_dev() and just rely on driver unbinding by device_del().
-It would simplify and rationalize the code.  The call was introduced by
-commit c4a0a5d964e9 (PCI: Move device_del() from pci_stop_dev() to
-pci_destroy_dev()) without providing an explicit reason.
-
-Dennis stress-tested driver unbinding via device_del() without witnessing
-any problems.  The only downside I see is that it would re-introduce the
-cosmetic issue avoided by commit 16b6c8bb687c ("PCI: Detach driver before
-procfs & sysfs teardown on device remove").
-
-Preventing driver binding after pci_stop_bus_device() should be achieved
-by this one-line patch, though that's still racy as pci_bus_add_devices()
-might revert the match_driver flag to true after pci_stop_bus_device() has
-set it to false:
-https://lore.kernel.org/r/Zv-dIHDXNNYomG2Y@wunner.de/
-
-An alternative would be to serialize removal of the hierarchy with
-pci_bus_add_devices() by way of pci_lock_rescan_remove():
-https://lore.kernel.org/r/20241003084342.27501-1-brgl@bgdev.pl/
-
-Both approaches are yet to be tested by Dennis.  Personally I would like
-to avoid the pci_lock_rescan_remove() approach.  We should try to move
-away from this big lock and use finer grained locking instead.  So again,
-just dropping the call to device_release_driver() would be the simplest
-and most preferred approach from my point of view.  Thoughts?
-
- drivers/pci/slot.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index 0f87cad..ed645c7 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -79,6 +79,7 @@ static void pci_slot_release(struct kobject *kobj)
- 	up_read(&pci_bus_sem);
- 
- 	list_del(&slot->list);
-+	pci_bus_put(slot->bus);
- 
- 	kfree(slot);
- }
-@@ -261,7 +262,7 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 		goto err;
- 	}
- 
--	slot->bus = parent;
-+	slot->bus = pci_bus_get(parent);
- 	slot->number = slot_nr;
- 
- 	slot->kobj.kset = pci_slots_kset;
-@@ -269,6 +270,7 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	slot_name = make_slot_name(name);
- 	if (!slot_name) {
- 		err = -ENOMEM;
-+		pci_bus_put(slot->bus);
- 		kfree(slot);
- 		goto err;
- 	}
--- 
-2.43.0
+>  
+>  static void pcim_disable_device(void *pdev_raw)
+>  {
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 7d85c04fbba2..318cfb5b5e15 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4476,6 +4476,32 @@ void pci_disable_parity(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> +/**
+> + * pci_intx - enables/disables PCI INTx for device dev, unmanaged version
+> + * @pdev: the PCI device to operate on
+> + * @enable: boolean: whether to enable or disable PCI INTx
+> + *
+> + * Enables/disables PCI INTx for device @pdev
+> + *
+> + * This function behavios identically to pci_intx(), but is never managed with
+> + * devres.
+> + */
+> +void pci_intx_unmanaged(struct pci_dev *pdev, int enable)
+> +{
+> +	u16 pci_command, new;
+> +
+> +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> +
+> +	if (enable)
+> +		new = pci_command & ~PCI_COMMAND_INTX_DISABLE;
+> +	else
+> +		new = pci_command | PCI_COMMAND_INTX_DISABLE;
+> +
+> +	if (new != pci_command)
+> +		pci_write_config_word(pdev, PCI_COMMAND, new);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_intx_unmanaged);
+> +
+>  /**
+>   * pci_intx - enables/disables PCI INTx for device dev
+>   * @pdev: the PCI device to operate on
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 573b4c4c2be6..6b8cde76d564 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1353,6 +1353,7 @@ int __must_check pcim_set_mwi(struct pci_dev *dev);
+>  int pci_try_set_mwi(struct pci_dev *dev);
+>  void pci_clear_mwi(struct pci_dev *dev);
+>  void pci_disable_parity(struct pci_dev *dev);
+> +void pci_intx_unmanaged(struct pci_dev *pdev, int enable);
+>  void pci_intx(struct pci_dev *dev, int enable);
+>  bool pci_check_and_mask_intx(struct pci_dev *dev);
+>  bool pci_check_and_unmask_intx(struct pci_dev *dev);
+> @@ -2293,6 +2294,7 @@ static inline void pci_fixup_device(enum pci_fixup_pass pass,
+>  				    struct pci_dev *dev) { }
+>  #endif
+>  
+> +int pcim_intx(struct pci_dev *pdev, int enabled);
+>  void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen);
+>  void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
+>  				const char *name);
 
 
