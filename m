@@ -1,267 +1,289 @@
-Return-Path: <linux-pci+bounces-14183-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14184-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C85C99983AF
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 12:34:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 969D59983D4
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 12:36:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A8931F2222E
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 10:34:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F32C1F2636B
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 10:36:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958091BFE12;
-	Thu, 10 Oct 2024 10:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8131519E7D0;
+	Thu, 10 Oct 2024 10:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SRsBP/KB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mzLg81J/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16C41C4616;
-	Thu, 10 Oct 2024 10:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728556359; cv=fail; b=WHRtg+fhFzbsW1qtiisYTGdFFvJmQqQkCVas60nkOKVW0aYZrdW8iWJe6x2OsPC+c6aReobyk14YAOK032JOU2c4VtBkDaCM4kN/IsYC1nbrNHoq1Jc4vPn50Vn/pBEJjPkFqLhKw6lNCbkrm2y50/xFRrLRkq+fFFxS5RXcYrE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728556359; c=relaxed/simple;
-	bh=doqr1dty0vN+uf31XtEqRtxzdxeUgEoyO4Rr7m7TfV0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YGVfiUYZocAZoFM9B6i7qnzEycXvJYi9W/7BYBFOFppqaYW+xHnN7tchQG/cwYECmXpNasPrENBzgjWAKsvYAIufbugTU6QVu4wyDnFjvt3IV61UcERVcw++Y4Z7t3hubOJH1o/XFFL+Xj8OlMnZmwiR6L5nZKwvIEU1430fT/M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SRsBP/KB; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728556358; x=1760092358;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=doqr1dty0vN+uf31XtEqRtxzdxeUgEoyO4Rr7m7TfV0=;
-  b=SRsBP/KBhHIrYb/RZhhQCwKUYkhrqB84D6w7ka5VHrby7+Pa9CARH5TH
-   kgqVEa0R1cnk0UoqtpV7kwlTh87Pomj34fQ01n4FZ6r/jbi5AkfOq7uFu
-   RrIqyc12r4isDWvDDrsHItbah1S/G7mijhpXxnhqzRoK9SUeWTBs/40oc
-   epjP0qEQWSQT2EGkRfst8Sf9iRraNDARbnWK/awV1GPpBoOMeq6s3KexA
-   3ciRJgy44cG4g6NEf7Eyu48OxsIZ4NoH9ibNUBNeHXozh4pMEQFRp7Bxh
-   aLI6eI89eHQFQZUZWvWdNzF9UUkhu92IWsFqeeDwcao1N+ZJTpaeIpwIC
-   w==;
-X-CSE-ConnectionGUID: FL61RHcDSG66m6GqxNgC6A==
-X-CSE-MsgGUID: QKHo3udeTHWSCospFRo5MA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="27351302"
-X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
-   d="scan'208";a="27351302"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 03:32:36 -0700
-X-CSE-ConnectionGUID: +4zwoDOwScSCV3JD/xSNrg==
-X-CSE-MsgGUID: T7i+5Ds5ThKAZZF9OaBviA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
-   d="scan'208";a="80559343"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Oct 2024 03:32:34 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 10 Oct 2024 03:32:33 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 10 Oct 2024 03:32:33 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.46) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 10 Oct 2024 03:32:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=exTCYN/P+Bog60IrLiv0hAfZkj1EMBHMjpSZD4+s0d4fmXnyIRAu9wJPWtlw8RB9Nt17B6KyF94uNL8Mm1PMIA6/0o+HB5s9CNWvkaXk9TK+Bh0CtA+/MbOY07Bc1aECBb5oEB56qYXx+HirbliEmwS86AOfoMlGJwCuuvrvTmGi9Mvn1Fe/EKhtND3rFo6Wpdw7AFpocIm7roK0bHur3c+5Q6KgbtbnfguBa26/yyuwhVkm/XWYEgPxi1PYrF+AaYb6eDqM3QQ+zbF1wg45StDUc5D/XW8/w7BRrlWYeBYhlE4uQLISQW/0B2kSq9dJ0fW03LQt8Zl0IMiQJkruXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KdVn5Ub7EPPEMa3i3e7evc/RY/yZ3Kbngz9R7/bMOT4=;
- b=gZxGGWUeDGP6LN0/73Vvq4kdDctg0e3OtWV/wuUmiRHJ/esxaSMWW66TnjoFm303YaXL8xUZ6RifyVliz8AxpAIfyfn/kZqlI1Vo0ViOBCq8kSO3opD7uL1ifZCIGhYySwulyGZxjGjLyEG7jBg9L2hCDR9nVRHZFKK/yxvq6WujOqlqIp2eW7yUM8avGJvO/svvdGTEBk/8Ve4o/8Bnk5XcbdmSxA2W15O9YLBldb7fFNpbt3wgP6QJQOactwbMQP07g5EF4hybmPMD1hdHhyTD6wzFOdUdJQDXq1FRdrv0QQHv/zuO38q5d8vwkjFaIzkuDbN8PkJcBxxcUl2K6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- MN6PR11MB8103.namprd11.prod.outlook.com (2603:10b6:208:473::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.22; Thu, 10 Oct
- 2024 10:32:31 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39%5]) with mapi id 15.20.8048.013; Thu, 10 Oct 2024
- 10:32:30 +0000
-From: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
-To: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Bjorn
- Helgaas" <bhelgaas@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
-	<kw@linux.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-CC: Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
-	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
-	<matthew.d.roper@intel.com>, =?UTF-8?q?Micha=C5=82=20Winiarski?=
-	<michal.winiarski@intel.com>
-Subject: [PATCH v3 5/5] drm/xe/pf: Extend the VF LMEM BAR
-Date: Thu, 10 Oct 2024 12:32:03 +0200
-Message-ID: <20241010103203.382898-6-michal.winiarski@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241010103203.382898-1-michal.winiarski@intel.com>
-References: <20241010103203.382898-1-michal.winiarski@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: WA0P291CA0006.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1::18) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB061BE85C
+	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 10:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728556560; cv=none; b=TkI66D5jLZSIvAHNj0fu8Y49uPjG0YRFcKpRkfVjBoQhC2m1ewgOjcWkjtrDorUYf8rZCX0j2MmPXBL27/YiTBRDB6xEebBm7cxLRqiYeokI7Bhhj9jWhVu+QJgYQDtJWrbCdwotZ5tXclpZ2smxOqPTDdSSVkXrjZbBuAYS2Qo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728556560; c=relaxed/simple;
+	bh=CtyIT4ZNOQuxdgMNtatD9o1p8iGKg6KQy/UDY8yO1GE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWtoIeAQlHO+kM6i0HmWI6CRWxd+si+t6vsfTXcrWRgpeh2Iw8MdFFxYiWORPQ/oIZGcKV7KAoel/gXon7Uek5uSANWhWIXd9T49isCZ/9kObNg/GQs0qohXesnRyrh7TqnKio7od9yI/FAzPl8ykLh+3aQun9UCpZYFSooaTwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mzLg81J/; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2e28b75dbd6so643024a91.0
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 03:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728556558; x=1729161358; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=90kCFwX2rvFJ1EX0qVrB7V4aNyyA47t7eqFcnQ7sd14=;
+        b=mzLg81J/MSzQJnb2moLOsmlnH2IxbD9JlrcIzMgVXypHQeCqO38qCSQmARgOeKVPQ8
+         ORIiMKdKOuraB1SSt04Iwo3N9/F1jr7I4ZwamsSmkZmDdqG3UtsjFfEKQRgcY1+/ShJ3
+         o/bkAY26u0bMtQ3eoTDz2dJgZRhWZ42vuYYd9usPzotuUezP/WYMCV6j/Z6dHzSebt9F
+         6lgHqdKqdsm0j3AO+rkWXumJhWfvujnt+44g0DifFDies7yBdXdZKuJoxVqw1QASSsbt
+         TSNrtxTdECMKUYshy7dTc+V53iTRwuuQkKus4I00YZ6bI9Sb+OESAbvKcEITAs3uapGj
+         u9PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728556558; x=1729161358;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=90kCFwX2rvFJ1EX0qVrB7V4aNyyA47t7eqFcnQ7sd14=;
+        b=Pa6sibLt4fHBJF8o+VP/jS1GCJ70twPnxkBH1kvf9ZOK6tVxuDma6tU0uYf4g0z4a5
+         KKODMwO1o/hMYT99RzF+vWRZ8pgPZ6ca1S7OmD3lC21Tt/jthxDSvb417AYXA8zTw5lG
+         BKhdVwwZiSiwol6sZGZLXvPRrF+zJutOazqYXoxStyWrLvo7QfFGqoiwczdwb4Kdnkqq
+         v4mtI5QsMDR0GO09QzQBImWeHqA3K+VzD50VQn5WFggZp7HTi782DW5Hn+25zpPizGgV
+         KL2RCMYc7EIX3toUJVgkKBxjx3PbCgePmnuOKjz6WakJwyLcEdD9dX4urySka4iTm9Fq
+         g0qg==
+X-Forwarded-Encrypted: i=1; AJvYcCUryaZ+uaH0/OquFVR/EeZ887GFfxVz2ctmuyPgfZj9CizNRNDEGFkAqLE98sHaYQpGpXPQiuIFltM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjv/11PIjBI9zb4CQ1UVZUPvPqHOJCHMSr57VD2LHDLcWqepNB
+	45OptiyZ4Th1JwwH2yVFHQ+gwYx8mSaNBCLiMnuqnMQVTixxpi6Vq6PuDszsyw==
+X-Google-Smtp-Source: AGHT+IED2bSUu+lVDaGy2RN4aKt78OaxV4xRcBnWCUkQllV8/en+YZ3X+i9YU8U4s95jGGviZKDKwQ==
+X-Received: by 2002:a17:90a:e395:b0:2e2:cf5c:8edf with SMTP id 98e67ed59e1d1-2e2cf5c8fe4mr2286223a91.9.1728556558052;
+        Thu, 10 Oct 2024 03:35:58 -0700 (PDT)
+Received: from thinkpad ([220.158.156.184])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2b41f8377sm1503510a91.1.2024.10.10.03.35.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2024 03:35:57 -0700 (PDT)
+Date: Thu, 10 Oct 2024 16:05:50 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v3 10/12] PCI: rockchip-ep: Improve link training
+Message-ID: <20241010103550.elwd2k35t4k4cypu@thinkpad>
+References: <20241007041218.157516-1-dlemoal@kernel.org>
+ <20241007041218.157516-11-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|MN6PR11MB8103:EE_
-X-MS-Office365-Filtering-Correlation-Id: 312d2e32-a51e-4d8b-c513-08dce916d857
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SEYxZkRXeWhZazVtLzlOSXp1bTNId1Fnc0F4ZU9mSzFQOHUrd0t1V29sQXFH?=
- =?utf-8?B?Q2FwM04wYjRiYkE5Q1krSTVzK3MwUmd5U2ZpenltcitwMXcwZDZLOVQ0OGJu?=
- =?utf-8?B?OEtNWmJvWSt1bTNaSE9aVGNJaGJseUNrZHdnclhaVU1SMmFiQjBBTlV6S2pB?=
- =?utf-8?B?SWhYdDU5WXkwWUp3YVp5c3JjN2hnMWVBd1oyU3Q3SHZxYXJwcjVVb29DcVMx?=
- =?utf-8?B?SzVFbE5pbWZUQ1hTR25nMi83L05SendpQnlDVDFOUno5cG5hUnhianpSTFdx?=
- =?utf-8?B?cUpEZVdONnh0a0VZdEY0bGZFbDRaWnRZb1pvRGtHbHM4dVQvNkN2RWFjeFo5?=
- =?utf-8?B?bzAwNjhneUYvRFdDR2ltUVFCaDk1WkFHOVptUjNjSDc4RlBnbUxXd3ZuSTRV?=
- =?utf-8?B?bStzZTdKcGNiL2Q3YjJkQUQ4SHZmbXVKS21YbjBZKzcwaWdsdzhsTTJ1MFkr?=
- =?utf-8?B?Q1hsd1lvRFV3Unhpa09QMUJQQ28vWTR4THVweDNNUmlYTkJZK1FTSThoT0do?=
- =?utf-8?B?RTZ6TjFTd1ZFL0VNcVFSTjdISHloTkZqb0RRSVljT3lKTDdQcEh1bU1EVFF2?=
- =?utf-8?B?V0Y3VWNheDJZeW52OUxZaFVIR0RzV1I2U24rV2hlNWVYSFZpVnBGVWV4S2xL?=
- =?utf-8?B?VGFTZmVBNEZqRzRHeDA2NGd3S2cvNzVQZmMySitacEFaVURFczB2MXVCOWor?=
- =?utf-8?B?b2ZmYytTVmJndnVaNG5aUjQ3Q2Uva0JMZ096RU52WFd5ZXcwNFhvSDNTM21Z?=
- =?utf-8?B?VjNFMWxqNzcyY2N3ckxaaHliT25mSWFOMHRvRjNFMlJmSlpSb1dXUHgwZDJx?=
- =?utf-8?B?bktKM09IUUY1UUQrS2F6T3hCdGsxUlhFS0k4SmJYU1NWVnRncVNuKy81VWZP?=
- =?utf-8?B?YXpTYVU2LzlsYmx2emMzbDNqdU15UHI0STBqbjNNeHBMQkJCeHBDVTd5NHY0?=
- =?utf-8?B?SlBaazIweXQ4bGVjQVBCUy91aVBBZGpYZW51Q1hkWCtXZ1E4NjRYSHJIOS96?=
- =?utf-8?B?ZC8zQVpyNDJTSkw0d2JjZzhrc0NmM0RSemtLUlRCSCt3U0RZWGhSRU5EMG9n?=
- =?utf-8?B?ZEs5ZW5nTnVaSzR4QzZiOEpjelBnVWlOb2lLYjkwYUFIaWRNZ0NVb0xURkIr?=
- =?utf-8?B?ZzhyOUg2VE9mN2xpTjYySDlKcjRvMEFaSmVtaC8ralM0NmFkTTBTNzduV3BF?=
- =?utf-8?B?dDVlUXdXT0hJNHNYeTVCQUdyd25IbFNacUgwQi9lcXJZU2FiVi9QVnhqWDhR?=
- =?utf-8?B?UzRFUjlmVzR3RzRnMWp5MlZLdnJKS3dEY1F3M3RvdTV3MmtrdTl5ZWQxNVdU?=
- =?utf-8?B?eUFRb0lXczRkTDhpY0haUlNFeEpTelBKTUhlRDZCQ2tDYU5QTW1xVDJ6Rjlw?=
- =?utf-8?B?TCs5bFNyUWY0MFBjOHV5dFZoKzIyYVJ6YUVlRmxXeE9YWUZBRVdiOUpqMGhN?=
- =?utf-8?B?R3dFYTRUMzQxS0RGeCt6YnM0ZGMrdDVTMVRudi82ZHR1cG9pV2lOQ3U1eU9w?=
- =?utf-8?B?bFRCcHY5M1VYaEVTS1VPeHE5bjBiMDg2dWNiMmRIVDdNT2UxMTNoY1ZvVDYx?=
- =?utf-8?B?YXpHeUJ5MlU5eXd1N0dLclc5M2EyVDNzNHJtb25YSGkzNUliTllSZkwzWVRB?=
- =?utf-8?B?dTNTTHpTcmpmcWRYQ2FYWTNuWmpaNUFsWXVETW5FTFBTNUwxTDZtR2VXSlVz?=
- =?utf-8?B?eHpOanppSjh1UjJMNHcxY3BRYjluQUU2RUxvRXBhc3BWVEtYZHYzcVp3PT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bEMyeWlTSUtLQ3VuYnp1djlNUWNCNUJnYkZ1VmdvZmVpcm14dzArdk1YMnkz?=
- =?utf-8?B?QWVObE1kNTMyRFBXMkFwejEwdDlhV3VKbFd1QjEyOXZoMnZCZlVONzFRVUVJ?=
- =?utf-8?B?TlA4SG1RVzdnUkNYcitwSjFwaGFTcXhiSEN6ZkVhY2QvZWhBeEtURk9oNndZ?=
- =?utf-8?B?RDd6aDRjQjV2RUZZYW9EOU0xQWdqVC9CTG9oMTZGSHpuWUxsUlhXSWRoSStT?=
- =?utf-8?B?cXVaVGF1VjI1ZVdoYTJiRDBHMzJyblBHek1IdEtaNzZucFdOa2R2RGh6VUxi?=
- =?utf-8?B?dnA3RVZ6ek1QUHdxOVBoNFR5dktJUzI3L1RCeC9FZkxwNFdMRS9ic3NZci9H?=
- =?utf-8?B?dExhMktocW9wVHVaaFVTSVVtNUtHUXVUd0JNQlJlZVNBUnRUajZXR3NVWDZI?=
- =?utf-8?B?MnNnKzJYRWhwT1V1elZ4RDgrVlUzSm1mTi9mWDZqYThONnQyY0NadUhlc3ky?=
- =?utf-8?B?aExrTVY1UXpzU282Ymt5bjBDS29Fck9seTg1dXZMUWhvNjlqOWlIQW9WbEQw?=
- =?utf-8?B?V2x1ZWhkR2VCRGovRmpqUUJyNkRJTUpScHFKYml3VDRFTGlYbWpKdTQ0Nlhi?=
- =?utf-8?B?bVlFMWcySjVPWWJZNXZNVlNxbmlJODhlTjBRWFR2ODVYeEllSnFFNWdHc1Yz?=
- =?utf-8?B?L3hXSThIWE10Q0xhd0ZVcDdDUkxnVjR2VGh6QUlxYlA0VGpQb1V3dk0vNXRH?=
- =?utf-8?B?NXRGVVZjT3U3Nmwvb2h2QTZEdVpVd1VwTHdCMW91alJjUFE3WXdyYkZtZDBn?=
- =?utf-8?B?dUZaR3Fsc3ExSVYybWNDZGZERUdMU01md1RxNTBJWlphMmpFVU92S20rMEJC?=
- =?utf-8?B?WDhudzZSZHFZMWF2dmM2dURmUG8vN25Ta1ZnVCtOempoUERtbmRVVGZwSzht?=
- =?utf-8?B?Ulg2Y1E5VXJ1VGR3ak05T0VQS1NDT1h6b1lwZU1uMkVRK2ErbEYwQ0RpTmlL?=
- =?utf-8?B?RmVOUk9va3lIREFFYitDb29sVGNrWTIrN1RKRkY2Zy9sUEt6RWpJLy9xZDFM?=
- =?utf-8?B?V0o3YjZOVnpGYWJ4T2VnU3FIb0wvSFZObWd4L0ROdDAzWlVyeVVWRVV0WHpC?=
- =?utf-8?B?U0R0TXo1ZVZpRVlGazNYaDRiUVo2MGRLdkcyUjJpZllVbFIvSHl0b1Y5ZGVu?=
- =?utf-8?B?R08zaVV0b2FmTnRhbWhyNXpjcmd6Q3g0M1dFQjZ5Vkd1OEFlUmVxWVVWell2?=
- =?utf-8?B?TmNLSHpickdEdWlsVVp5N0NDWnBFV0xHRzRSbjdqUFRJMTFNRjkvSmhhS1U3?=
- =?utf-8?B?eVRJeXBRTGRhRUQvdWR4M3N1eDdjSWN2RGJmVjAvY2wzcDlWOWdoMy9qQXZ4?=
- =?utf-8?B?TTNHZXFmTEx5bTA3U1duTHJSSDBJK1hvaFl1TlIxRUVHdTNUTVpsSkJvbkhG?=
- =?utf-8?B?VVBUelJmMHEyTmdyeTlLdVdha2V1SXMyZDhiNS9TUk52d0tTOWMxSVJVdFk1?=
- =?utf-8?B?UEtOTmxjR3pXN05FRS9qWWVsTTNNbWlza0p3cmdldVVEaDAzZmt4TWFnT2dD?=
- =?utf-8?B?YkZxQWtlRHVoKzFWUTBRM3l4ZGdKSjFuVW5aU29GemsvNlhYcXlpTzJ3V1Bz?=
- =?utf-8?B?d2VQWm9xY1lhVXVsQmwxYkpxM2p5L1pqL2tpVzdHTnBvaU5aSUxyaGNjN3dE?=
- =?utf-8?B?M1pIQVpuQjA2amlibXIrcWdQWEdTQmwrUDRLZjdKdHAwRnRJMHlJazBjb1ZX?=
- =?utf-8?B?WkV2bTNxNktkay81VEREMmovUzlFZVRRYlhFVVVmRVB1K1F6MXlxeU9WdHFr?=
- =?utf-8?B?Q3pMR0YzU3Z5c3AyT0NaOFQwK2NYWlB1SlhVZXAreWltaHlEc1JmOWNIc3JS?=
- =?utf-8?B?VUI2VkJhRCsxeU9BTC9hZnBFVmd1Q21JVkFIaTFkdVlRYlVOWk8zTTVOQmFC?=
- =?utf-8?B?REVaTnFTZXVIcldGNzd4eDFEbk9JeHUvaXdDOWdLQitLY0FVd2IzMEw2Yjkw?=
- =?utf-8?B?RUZOcEl1ajd4YnF1elpXRHREVmpGYUxFcWtpWnZYcE5yUHM2MlFlTjM4TC9R?=
- =?utf-8?B?ajREWkEyaXNjM2pjcnJDblpvVDQ5ZkpSNHZFMSs3RGdESUZIdmdLbzMrOGdw?=
- =?utf-8?B?R29XS3cwSXVHQ0FpbGlleHFQdzFJSERJcGRmTlVCT0hacm50WEpwNEV4Rnh1?=
- =?utf-8?B?WmtSa29GOWFWL255YmRMWG5zTW1NVytQMnlIZGhNM2JhN2hRR3RIY2RwUytU?=
- =?utf-8?B?NHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 312d2e32-a51e-4d8b-c513-08dce916d857
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2024 10:32:30.8990
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cjHW+P7YzbGrckK7LL2/dLmZP5Ktfnv1m7sdrh4Q1edn/vkpvtfgqBRe/yAnxhLcpJdxlmfNg1xxe7gk0gYfE6cbTYwJKC/FtTnSU2/TA54=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8103
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241007041218.157516-11-dlemoal@kernel.org>
 
-Opt into extending the VF BAR.
-LMEM is partitioned between multiple VFs, and we expect that the more
-VFs we have, the less LMEM is assigned to each VF.
-This means that we can achieve full LMEM BAR access without the need to
-attempt full VF LMEM BAR resize via pci_resize_resource().
+On Mon, Oct 07, 2024 at 01:12:16PM +0900, Damien Le Moal wrote:
+> The Rockchip rk339 technical reference manual describe the endpoint mode
 
-Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
----
- drivers/gpu/drm/xe/regs/xe_bars.h | 1 +
- drivers/gpu/drm/xe/xe_sriov_pf.c  | 8 ++++++++
- 2 files changed, 9 insertions(+)
+RK3399
 
-diff --git a/drivers/gpu/drm/xe/regs/xe_bars.h b/drivers/gpu/drm/xe/regs/xe_bars.h
-index ce05b6ae832f1..880140d6ccdca 100644
---- a/drivers/gpu/drm/xe/regs/xe_bars.h
-+++ b/drivers/gpu/drm/xe/regs/xe_bars.h
-@@ -7,5 +7,6 @@
- 
- #define GTTMMADR_BAR			0 /* MMIO + GTT */
- #define LMEM_BAR			2 /* VRAM */
-+#define VF_LMEM_BAR			9 /* VF VRAM */
- 
- #endif
-diff --git a/drivers/gpu/drm/xe/xe_sriov_pf.c b/drivers/gpu/drm/xe/xe_sriov_pf.c
-index 0f721ae17b266..a26719b87ac1e 100644
---- a/drivers/gpu/drm/xe/xe_sriov_pf.c
-+++ b/drivers/gpu/drm/xe/xe_sriov_pf.c
-@@ -4,7 +4,9 @@
-  */
- 
- #include <drm/drm_managed.h>
-+#include <linux/pci.h>
- 
-+#include "regs/xe_bars.h"
- #include "xe_assert.h"
- #include "xe_device.h"
- #include "xe_module.h"
-@@ -80,8 +82,14 @@ bool xe_sriov_pf_readiness(struct xe_device *xe)
-  */
- int xe_sriov_pf_init_early(struct xe_device *xe)
- {
-+	int err;
-+
- 	xe_assert(xe, IS_SRIOV_PF(xe));
- 
-+	err = pci_iov_resource_extend(to_pci_dev(xe->drm.dev), VF_LMEM_BAR, true);
-+	if (err)
-+		xe_sriov_info(xe, "Failed to extend VF LMEM BAR: %d", err);
-+
- 	return drmm_mutex_init(&xe->drm, &xe->sriov.pf.master_lock);
- }
- 
+Please include the full reference: TRM name followed by the section.
+
+> link training process clearly and states that:
+>   Insure link training completion and success by observing link_st field
+>   in PCIe Client BASIC_STATUS1 register change to 2'b11. If both side
+>   support PCIe Gen2 speed, re-train can be Initiated by asserting the
+>   Retrain Link field in Link Control and Status Register. The software
+>   should insure the BASIC_STATUS0[negotiated_speed] changes to "1", that
+>   indicates re-train to Gen2 successfully.
+> This procedure is very similar to what is done for the root-port mode in
+> rockchip_pcie_host_init_port().
+> 
+> Implement this link training procedure for the endpoint mode as well.
+> Given that the rk3399 SoC does not have an interrupt signaling link
+> status changes, training is implemented as a delayed work which is
+> rescheduled until the link training completes or the endpoint controller
+> is stopped. The link training work is first scheduled in
+> rockchip_pcie_ep_start() when the endpoint function is started. Link
+> training completion is signaled to the function using pci_epc_linkup().
+> Accordingly, the linkup_notifier field of the rockchip pci_epc_features
+> structure is changed to true.
+> 
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/controller/pcie-rockchip-ep.c | 79 ++++++++++++++++++++++-
+>  drivers/pci/controller/pcie-rockchip.h    | 11 ++++
+>  2 files changed, 89 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index a801e040bcad..af50432525b4 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -16,6 +16,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pci-epf.h>
+>  #include <linux/sizes.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/iopoll.h>
+
+Please keep the includes sorted.
+
+>  
+>  #include "pcie-rockchip.h"
+>  
+> @@ -48,6 +50,7 @@ struct rockchip_pcie_ep {
+>  	u64			irq_pci_addr;
+>  	u8			irq_pci_fn;
+>  	u8			irq_pending;
+> +	struct delayed_work	link_training;
+>  };
+>  
+>  static void rockchip_pcie_clear_ep_ob_atu(struct rockchip_pcie *rockchip,
+> @@ -465,6 +468,8 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
+>  			    PCIE_CLIENT_CONF_ENABLE,
+>  			    PCIE_CLIENT_CONFIG);
+>  
+> +	schedule_delayed_work(&ep->link_training, 0);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -473,6 +478,8 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
+>  	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct rockchip_pcie *rockchip = &ep->rockchip;
+>  
+> +	cancel_delayed_work_sync(&ep->link_training);
+> +
+>  	/* Stop link training and disable configuration */
+>  	rockchip_pcie_write(rockchip,
+>  			    PCIE_CLIENT_CONF_DISABLE |
+> @@ -480,8 +487,77 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
+>  			    PCIE_CLIENT_CONFIG);
+>  }
+>  
+> +static void rockchip_pcie_ep_retrain_link(struct rockchip_pcie *rockchip)
+> +{
+> +	u32 status;
+> +
+> +	status = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_LCS);
+> +	status |= PCI_EXP_LNKCTL_RL;
+> +	rockchip_pcie_write(rockchip, status, PCIE_EP_CONFIG_LCS);
+> +}
+> +
+> +static bool rockchip_pcie_ep_link_up(struct rockchip_pcie *rockchip)
+> +{
+> +	u32 val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS1);
+> +
+> +	return PCIE_LINK_UP(val);
+> +}
+> +
+> +static void rockchip_pcie_ep_link_training(struct work_struct *work)
+> +{
+> +	struct rockchip_pcie_ep *ep =
+> +		container_of(work, struct rockchip_pcie_ep, link_training.work);
+> +	struct rockchip_pcie *rockchip = &ep->rockchip;
+> +	struct device *dev = rockchip->dev;
+> +	u32 val;
+> +	int ret;
+> +
+> +	/* Enable Gen1 training and wait for its completion */
+> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
+> +				 val, PCIE_LINK_TRAINING_DONE(val), 50,
+> +				 LINK_TRAIN_TIMEOUT);
+> +	if (ret)
+> +		goto again;
+> +
+> +	/* Make sure that the link is up */
+> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
+> +				 val, PCIE_LINK_UP(val), 50,
+> +				 LINK_TRAIN_TIMEOUT);
+> +	if (ret)
+> +		goto again;
+> +
+> +	/* Check the current speed */
+> +	val = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
+> +	if (!PCIE_LINK_IS_GEN2(val) && rockchip->link_gen == 2) {
+
+PCIE_LINK_IS_GEN2()?
+
+> +		/* Enable retrain for gen2 */
+> +		rockchip_pcie_ep_retrain_link(rockchip);
+> +		readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
+> +				   val, PCIE_LINK_IS_GEN2(val), 50,
+> +				   LINK_TRAIN_TIMEOUT);
+> +	}
+> +
+> +	/* Check again that the link is up */
+> +	if (!rockchip_pcie_ep_link_up(rockchip))
+> +		goto again;
+
+TRM doesn't mention this check. Is this really necessary?
+
+> +
+> +	val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS0);
+> +	dev_info(dev,
+> +		 "Link UP (Negociated speed: %sGT/s, width: x%lu)\n",
+
+
+Negotiated
+
+> +		 (val & PCIE_CLIENT_NEG_LINK_SPEED) ? "5" : "2.5",
+> +		 ((val & PCIE_CLIENT_NEG_LINK_WIDTH_MASK) >>
+> +		  PCIE_CLIENT_NEG_LINK_WIDTH_SHIFT) << 1);
+> +
+> +	/* Notify the function */
+> +	pci_epc_linkup(ep->epc);
+> +
+> +	return;
+> +
+> +again:
+> +	schedule_delayed_work(&ep->link_training, msecs_to_jiffies(5));
+> +}
+> +
+>  static const struct pci_epc_features rockchip_pcie_epc_features = {
+> -	.linkup_notifier = false,
+> +	.linkup_notifier = true,
+>  	.msi_capable = true,
+>  	.msix_capable = false,
+>  	.align = ROCKCHIP_PCIE_AT_SIZE_ALIGN,
+> @@ -642,6 +718,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+>  	rockchip = &ep->rockchip;
+>  	rockchip->is_rc = false;
+>  	rockchip->dev = dev;
+> +	INIT_DELAYED_WORK(&ep->link_training, rockchip_pcie_ep_link_training);
+>  
+>  	epc = devm_pci_epc_create(dev, &rockchip_pcie_epc_ops);
+>  	if (IS_ERR(epc)) {
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 0263f158ee8d..3963b7097a91 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -26,6 +26,7 @@
+>  #define MAX_LANE_NUM			4
+>  #define MAX_REGION_LIMIT		32
+>  #define MIN_EP_APERTURE			28
+> +#define LINK_TRAIN_TIMEOUT		(5000 * USEC_PER_MSEC)
+
+pcie-rockchip-host has only 500ms timeout.
+
+- Mani
+
 -- 
-2.47.0
-
+மணிவண்ணன் சதாசிவம்
 
