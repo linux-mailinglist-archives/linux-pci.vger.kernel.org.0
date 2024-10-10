@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-14242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAD7799953E
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 00:31:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2189E999541
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 00:36:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CFBE286358
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 22:31:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFE181F245EC
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 22:36:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408811BBBC4;
-	Thu, 10 Oct 2024 22:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 635B41C6888;
+	Thu, 10 Oct 2024 22:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEAUnbow"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kP3HnD+p"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1667A1A2645;
-	Thu, 10 Oct 2024 22:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A261A2645;
+	Thu, 10 Oct 2024 22:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728599499; cv=none; b=q3yGm8hShZYTG9V1h3GvsTLNlRmOCFqpFJPi29rveSKEFHFbHwYTCWUqo5I6OnmwQ5TdVBU88a9q/er4BbxcFBo/66jrue2KgWpqOoP6i+HxcJFQo9gqzfefCnRmLK9OF235Wvzp2wIcMHmHPzVWxisxWO0H+TRDzoNOpLt+Efs=
+	t=1728599792; cv=none; b=UV4kwxfxWdEqJvcTHy/fUzV9M8DEgkAwa8sxND8yz357IQDSLolcmPN+HsTl7hPC7sKnBeQ9QSvtZs0GYlkNXhZAG58UGYODf+45wiVQ7JAlKF07xv1Ny/xRurcfIbQP13wFmJ73tYPnMWDZv7KJbOtVUhR3qOmVetiClQQJs9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728599499; c=relaxed/simple;
-	bh=bFO4DmRffhott1966dfnOLbsiTu6pSb4c8w8UhTpjXc=;
+	s=arc-20240116; t=1728599792; c=relaxed/simple;
+	bh=2mWGKo67DpHVHlPBRBwjISoktypQVqAGgZpcasr0OFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pLbjcSIORo6c6eb5DPsYIZDafUj/QZM27WmqGFswMHeJ68qBtiCH0c+M35R9PM5EW/VAnOqrV3W7q0PCJ8qwi5JrEkRu5RhF+Uk0NZUmDTf6qXOxdpZpCuTlaposUDOzMzXnLPWU3rKecE4WbZtfOGumitQt97BHh4TSOCgPrPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEAUnbow; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B36C4CEC5;
-	Thu, 10 Oct 2024 22:31:38 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=uC/J+Wi1xnWs+rKsczaZHhNezikwi4zyq4L3N+2VbvByZ1+8BPSVlY0BVGFNTZUsgqVKflkv5ARGQQygYUyeskg3C/P2i56L91IbSfURq/2FY+FEQOvV0yTMxLPdnReTZA9qMyyAJNK8TzAsRW+c14F1r1tlV6kXYmsViSyUzjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kP3HnD+p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B96C4CEC5;
+	Thu, 10 Oct 2024 22:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728599498;
-	bh=bFO4DmRffhott1966dfnOLbsiTu6pSb4c8w8UhTpjXc=;
+	s=k20201202; t=1728599791;
+	bh=2mWGKo67DpHVHlPBRBwjISoktypQVqAGgZpcasr0OFQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PEAUnbowtl1iVcHAPwHU1Q38imbBuUiqwNoWd50OCPaB4jsUM6LQw1WuKjTB48RIO
-	 7HiIdcjJuaQ0A3ce0FKdRqF8XcG8HWIjsKAnRGscfKJncDpv8gzhIXhyuw5TwwLK74
-	 UUpYyXUW2Vqu2y4cRLnW8epl5/c17nkM4+RwsPIFihOHpxTJpb6YMfKIvtjcS0e11+
-	 oVIx5/bpC3sgBKAN7uuBfLbnbaI9squHZBhiXegc3O68/t/RxqPZ8+wKLT8tg6LoYE
-	 zfpglkVb5ySM6KYWzptrrBu7GQiDsm2LJN15GGhmZ51pk3R3RLjskbXEZz2kdp30fW
-	 eCViZKQgBpUXQ==
-Date: Thu, 10 Oct 2024 17:31:36 -0500
+	b=kP3HnD+p/ALWJIne5QXQB/acHwiuepBOQfXYzd0eCGXIH+jnCCXUf2G7b523XVZX0
+	 IGwHkPQ2zrO/Lr1kb9JILZpLncYkVhiA0gD0ANREITE1HH00nC9Jkj2UUqioBL/n+w
+	 3OvEynB80KcyGi4AxPrFhdmXRppzgxAiMc21IgRRfdjo4L/Yyf9M8WajB7O4y3hN7U
+	 4+nzrzQ+9hRg8KNQRDj5KR3AoZ4vgLxyxyiy04xPtcMD4TtPjt8RVNHBtaCy31nAPE
+	 OKbN47yZg2InzUH5/D8q+KMQxPK0Bcf6md8/An7y4yB+WEddn4LpTTw88iwbHIZcHn
+	 /Pi4LCFAC/W1A==
+Date: Thu, 10 Oct 2024 17:36:29 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
 Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
@@ -59,9 +59,9 @@ Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
 	Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v3 1/5] PCI/IOV: Restore VF resizable BAR state after
- reset
-Message-ID: <20241010223136.GA581380@bhelgaas>
+Subject: Re: [PATCH v3 3/5] PCI: Allow IOV resources to be resized in
+ pci_resize_resource
+Message-ID: <20241010223629.GA581425@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,90 +71,79 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241010103203.382898-2-michal.winiarski@intel.com>
+In-Reply-To: <20241010103203.382898-4-michal.winiarski@intel.com>
 
-On Thu, Oct 10, 2024 at 12:31:59PM +0200, Michał Winiarski wrote:
-> Similar to regular resizable BAR, VF BAR can also be resized, e.g. by
-> the system firmware, or the PCI subsystem itself.
-> Add the capability ID and restore it as a part of IOV state.
-> See PCIe r4.0, sec 9.3.7.4.
+On Thu, Oct 10, 2024 at 12:32:01PM +0200, Michał Winiarski wrote:
+> Similar to regular resizable BAR, VF BAR can also be resized.
+> The structures are very similar, which means we can reuse most of the
+> implementation. See PCIe r4.0, sec 9.3.7.4.
 
 Add blank line between paragraphs.
 
-> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
-> ---
->  drivers/pci/iov.c             | 29 ++++++++++++++++++++++++++++-
->  include/uapi/linux/pci_regs.h |  1 +
->  2 files changed, 29 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index aaa33e8dc4c97..fd5c059b29c13 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -7,6 +7,7 @@
->   * Copyright (C) 2009 Intel Corporation, Yu Zhao <yu.zhao@intel.com>
->   */
+Add "()" after function name in subject.
+
+Add what the patch does in the commit log, not just what can be done.
+
+>  static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
+>  {
+> +	int cap = PCI_EXT_CAP_ID_REBAR;
+>  	unsigned int pos, nbars, i;
+>  	u32 ctrl;
 >  
-> +#include <linux/bitfield.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/export.h>
-> @@ -862,6 +863,30 @@ static void sriov_release(struct pci_dev *dev)
->  	dev->sriov = NULL;
+> -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
+> +#ifdef CONFIG_PCI_IOV
+> +	if (pci_resource_is_iov(bar)) {
+> +		cap = PCI_EXT_CAP_ID_VF_REBAR;
+> +		bar -= PCI_IOV_RESOURCES;
+> +	}
+> +#endif
+
+Personal preference, but I'd rather set "cap" directly here instead of
+setting a default and then overriding it in some cases.  Setting it
+here means both settings are in the same place.
+
+> +	pos = pci_find_ext_capability(pdev, cap);
+>  	if (!pos)
+>  		return -ENOTSUPP;
+
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index c55f2d7a4f37e..e15fd8fe0f81f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -584,6 +584,8 @@ static inline bool pci_resource_is_iov(int resno)
+>  {
+>  	return resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END;
 >  }
->  
-> +static void sriov_restore_vf_rebar_state(struct pci_dev *dev)
+> +void pci_iov_resource_set_size(struct pci_dev *dev, int resno, resource_size_t size);
+> +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev);
+>  extern const struct attribute_group sriov_pf_dev_attr_group;
+>  extern const struct attribute_group sriov_vf_dev_attr_group;
+>  #else
+> @@ -607,6 +609,12 @@ static inline bool pci_resource_is_iov(int resno)
+>  {
+>  	return false;
+>  }
+> +static inline void pci_iov_resource_set_size(struct pci_dev *dev, int resno,
+> +					     resource_size_t size) { }
+> +static inline bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev)
 > +{
-> +	unsigned int pos, nbars, i;
-> +	u32 ctrl;
-> +
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VF_REBAR);
-> +	if (!pos)
-> +		return;
-> +
-> +	pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
-> +	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-> +
-> +	for (i = 0; i < nbars; i++, pos += 8) {
-> +		int bar_idx, size;
-> +
-> +		pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
-> +		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-> +		size = pci_rebar_bytes_to_size(dev->sriov->barsz[bar_idx]);
-> +		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
-> +		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-> +		pci_write_config_dword(dev, pos + PCI_REBAR_CTRL, ctrl);
-> +	}
+> +	return false;
 > +}
-> +
->  static void sriov_restore_state(struct pci_dev *dev)
->  {
->  	int i;
-> @@ -1021,8 +1046,10 @@ resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno)
->   */
->  void pci_restore_iov_state(struct pci_dev *dev)
->  {
-> -	if (dev->is_physfn)
-> +	if (dev->is_physfn) {
-> +		sriov_restore_vf_rebar_state(dev);
->  		sriov_restore_state(dev);
-> +	}
->  }
+>  #endif /* CONFIG_PCI_IOV */
 >  
->  /**
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 12323b3334a9c..a0cf701c4c3af 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -740,6 +740,7 @@
->  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
->  #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
-> +#define PCI_EXT_CAP_ID_VF_REBAR 0x24	/* VF Resizable BAR */
->  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
->  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
->  #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
-> -- 
-> 2.47.0
-> 
+>  #ifdef CONFIG_PCIE_PTM
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index e2cf79253ebda..95a13a5fa379c 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -425,13 +425,37 @@ void pci_release_resource(struct pci_dev *dev, int resno)
+>  }
+>  EXPORT_SYMBOL(pci_release_resource);
+>  
+> +static bool pci_resize_is_memory_decoding_enabled(struct pci_dev *dev, int resno)
+
+Wrap this (and others) to fit in 80 columns like the rest of the file.
+
+Bjorn
 
