@@ -1,98 +1,110 @@
-Return-Path: <linux-pci+bounces-14201-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14202-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9B4C998D3C
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 18:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61E2E998D5B
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 18:28:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61AFC1F24C35
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 16:23:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07F0C1F21BD7
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 16:28:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 476B81CDFD3;
-	Thu, 10 Oct 2024 16:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 217B71CDFD7;
+	Thu, 10 Oct 2024 16:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBfZ7uX+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3BA7DA62;
-	Thu, 10 Oct 2024 16:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62B91CDA2D;
+	Thu, 10 Oct 2024 16:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728577412; cv=none; b=IYFG47sk6eiQ/nzWH7wLnoiasD4+kFSLHOOJLAmaYSbgJH+A1x6ZyCmL8a+ag6rQCMlxMVpq+827Fp73H2qrjffPV+T27OVAPhQIaqETrePsAgpY5HUPlqka37inzjIJgG3dqEyhpBQtdUOGE7EkzMaQWppyNkYG2jLJbZ/TxEM=
+	t=1728577679; cv=none; b=uEbB87FFn1g7tpGrJ6uh0t2+j4dGOtXcjh7ATbThDoYA39+mVbyQfHpGogYV++OMu0X96LiTQxIEkm/SPgs5aSSDSfwjlBEO+Kz9zYIsJNGyJIrVB5M4Uix5QaatP96+cM4Zf161djMAM9MjwjKfflwighBXXdskLQZQXd5NIdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728577412; c=relaxed/simple;
-	bh=r5RQUSqIRifgak7HHNmWG3aZxu+/9+hiSZdy3uPwCVs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XbP4pPw8S0KJ4QJBijnO5dBQIduKveKBupZasjC01QRiDbNtF4bLqCW8MsXM8++TbO2ibXmgPKxSw8GoPNUNiDHy3lEZ8Go1HO+ZZjUEGPMZ1UFTcj7jeXVmpg7/OmoYPJXWbavWExPubMU+2bT1/NXicxE8TFrvmCV7JygCAYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XPZlf44Lsz67MRx;
-	Fri, 11 Oct 2024 00:22:06 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB1B01400CB;
-	Fri, 11 Oct 2024 00:23:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 10 Oct
- 2024 18:23:27 +0200
-Date: Thu, 10 Oct 2024 17:23:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Gregory Price <gourry@gourry.net>, <linux-pci@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>
-Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
- pci_doe_send_req
-Message-ID: <20241010172326.00004d1a@Huawei.com>
-In-Reply-To: <ZweukOWeqFy8vd4W@wunner.de>
-References: <20241004162828.314-1-gourry@gourry.net>
-	<ZweukOWeqFy8vd4W@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1728577679; c=relaxed/simple;
+	bh=pAybqgmIwmNbjIqIXpZlFut4c805d6kX1GVVhSSpf4E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RuHGWbDHb87Ujet5DVCf8KbsPoKLFtzJZmsJD//6ixPSG/L0SffletITfJbJTn/uFNvUl5EZ0M0qVjo+30TSmbRpqdVxYKgFMy4eU0snL8eCxj330DvBCrrM65etvp72gbaPEQwNRDinFmmMnifz4pB6HLoZDhAjR1c7UR3+54E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBfZ7uX+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572A8C4CEC5;
+	Thu, 10 Oct 2024 16:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728577678;
+	bh=pAybqgmIwmNbjIqIXpZlFut4c805d6kX1GVVhSSpf4E=;
+	h=From:Subject:Date:To:Cc:From;
+	b=jBfZ7uX+rcc6o5/ZXq3r82ktchz1KruUBipM0Bt1cyGrhWMVvmsNZiWSF252Q6CQt
+	 UOy9+fcU2zh1JfVpHygVieVMU04aO4PO05d0F95PYOONCEdIXt6SS6zj78PLzGUsa6
+	 l7KDGQqeGtrUjuUmBbVUPzVcp2bJjObcM31QvVjscGWIDXTgnkpG4WxvafZlt3eW1J
+	 PUAF4WBFay6uC4+oFrvtVtuo3g/yQ7gNAcu4CPdVhCNXZhY6krZnhnrlBzc3C3rdBP
+	 FOVQev0+vuXpd9cHSk6IixbWFVNZTzBkp62M5jT89rG23QaMvUxVrIQ+MHBB08AKrW
+	 HJUPahZtylCQA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH 0/7] of: Constify DT structs
+Date: Thu, 10 Oct 2024 11:27:13 -0500
+Message-Id: <20241010-dt-const-v1-0-87a51f558425@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-B4-Tracking: v=1; b=H4sIAGEACGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDA0MD3ZQS3eT8vOISXfPk1NQ0c+OUNCPLZCWg8oKi1LTMCrBR0bG1tQC
+ 6u1wZWgAAAA==
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Saravana Kannan <saravanak@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org
+X-Mailer: b4 0.15-dev
 
-On Thu, 10 Oct 2024 12:38:08 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+This series constifies many usages of DT structs in the DT core code. 
+Many uses of struct device_node where the node refcount is not 
+changed can be const. Most uses of struct property can also be const.
 
-> On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
-> > Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
-> > interval (1 second), resolves this issues cleanly.  
-> 
-> Nit: s/issues/issue/
-> 
-> > Subsqeuent code in doe_statemachine_work and abort paths also wait  
-> 
-> Nit: s/Subsqeuent/Subsequent/
-> 
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
-> > @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
-> >  	size_t length, remainder;
-> >  	u32 val;
-> >  	int i;
-> > +	unsigned long timeout_jiffies;  
-> 
-> Nit: Reverse Christmas tree.
-> 
-> With that addressed,
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> 
-Looks good to me with Lukas' nits tidied up.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The first 2 patches are dependencies. The functions called by the 
+DT core where the fwnode_handle needs to be const to make the containing 
+device_node const.
 
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Rob Herring (Arm) (7):
+      PCI: Constify pci_register_io_range() fwnode_handle
+      logic_pio: Constify fwnode_handle
+      of: Constify struct device_node function arguments
+      of: Constify struct property pointers
+      of: Constify of_changeset_entry function arguments
+      of: Constify safe_name() kobject arg
+      of/address: Constify of_busses[] array and pointers
+
+ drivers/of/address.c       | 22 +++++++++++-----------
+ drivers/of/base.c          | 20 ++++++++++----------
+ drivers/of/cpu.c           |  2 +-
+ drivers/of/dynamic.c       |  4 ++--
+ drivers/of/irq.c           |  4 ++--
+ drivers/of/kobj.c          |  8 ++++----
+ drivers/of/of_private.h    | 12 ++++++------
+ drivers/of/overlay.c       | 19 ++++++++++---------
+ drivers/of/property.c      | 10 +++++-----
+ drivers/of/resolver.c      | 12 ++++++------
+ drivers/pci/pci.c          |  2 +-
+ include/linux/logic_pio.h  |  6 +++---
+ include/linux/of.h         | 28 ++++++++++++++--------------
+ include/linux/of_address.h |  6 +++---
+ include/linux/of_irq.h     |  4 ++--
+ include/linux/pci.h        |  2 +-
+ lib/logic_pio.c            |  4 ++--
+ 17 files changed, 83 insertions(+), 82 deletions(-)
+---
+base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+change-id: 20241010-dt-const-7ceef73df29c
+
+Best regards,
+-- 
+Rob Herring (Arm) <robh@kernel.org>
 
 
