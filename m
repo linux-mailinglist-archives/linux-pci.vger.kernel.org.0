@@ -1,88 +1,81 @@
-Return-Path: <linux-pci+bounces-14122-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14123-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3FF3997AA7
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 04:43:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50FEA997AAE
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 04:47:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E96D282CA0
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 02:43:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6175E1C218B6
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 02:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D3A517B427;
-	Thu, 10 Oct 2024 02:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C4F17DE2D;
+	Thu, 10 Oct 2024 02:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKGqOsVu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sdr2eS+T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706AC16F0E8;
-	Thu, 10 Oct 2024 02:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A7A3716D;
+	Thu, 10 Oct 2024 02:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728528227; cv=none; b=b5YS8IevTTXzmKGknBNwzezkcHfWJ1qL1ELQGzjYEYVegKT++KrXjUezQ6yIcBbSKb5SxGz7tPyFgyHo3b9tvHlZV+CeK/YfvJ15QLbEKN/2qMecOWRhEr6UgVQbzd0kizI80qAR1jw5982Z6jhf9voCJRiiqydDHe7fVLRnzWk=
+	t=1728528467; cv=none; b=JvSGTqoyCAtYBrU94uE5rjS4xA6LieEnrBnHzDORhDXdI3GCwPrTt3ugLOHOtxRJXrseP2E5c+PCCqLCK+HrsQTpgAdPR42Um/X4ZXPhvbUMqj5oT2VBsVwals1oBSg0sxT26GR/H6ogbn0nqq//yWRyAal8IEzJS/DkVZHr/cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728528227; c=relaxed/simple;
-	bh=Nq3W6E/fBAbdamPvD166i+gTBRozQvXbP8fpNhuQSn0=;
+	s=arc-20240116; t=1728528467; c=relaxed/simple;
+	bh=6WLgWNCrCh4822VnUA7GiiBuo+86qYoquXQRf55qHZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=thevVik7Cmj55/yooW9ozjZx2CmtKFRz4qVpmJtiji5i1sIFs+KIMw0garcPGhY+VXRzf2xq8jMvVlPhUNDfWmrVk0dy29lw6jyb/OxsAQ1Gz66hU+aNZmS8KB6kX4oTFApPd6IVnCEw0TzjoNincjEIfu1eA0fiupQfPg0jAkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKGqOsVu; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728528226; x=1760064226;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nq3W6E/fBAbdamPvD166i+gTBRozQvXbP8fpNhuQSn0=;
-  b=RKGqOsVuuYRj/HIlUjsEsiEYjTIPni9L36pPqFIx8FdBM1SYykKhbYDk
-   4098OCoRq6B1uUxqJo2TE64H12hSzOWe/J1Q9T0MHhO/5nLmXlpIDtrmF
-   e5qXZv10wIWpuTazwx8aLm6bFBkXhhkBpx75YLYbiR36fUPi4+UTgTVJH
-   BW4DB0pdbjV8+PwDiU7WTsZtSQLskTf2aLTp4EiJaFrQR6IH4crsA3wDp
-   VEcez6n/7hL3UHisVgVpahSz7EEF0tC7oq3iivbc4k/JVGVHLBRw8WHg3
-   eDxS5s7lvuE8ywMU+9CZr1+L1i+y5Ux35589alB/wM8wGBEdBx8f5ZK2M
-   A==;
-X-CSE-ConnectionGUID: PiSYm7YJTPOCLYtEBm2PJg==
-X-CSE-MsgGUID: TBdhWp90TkOd9LfCLfKBTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="27995954"
-X-IronPort-AV: E=Sophos;i="6.11,191,1725346800"; 
-   d="scan'208";a="27995954"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 19:43:45 -0700
-X-CSE-ConnectionGUID: V2RqSgWmRFukWWGdHiONpg==
-X-CSE-MsgGUID: 4gj8LtXVTwKdcJfOFYktLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,191,1725346800"; 
-   d="scan'208";a="76380482"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 09 Oct 2024 19:43:40 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1syj9N-000A4k-2w;
-	Thu, 10 Oct 2024 02:43:37 +0000
-Date: Thu, 10 Oct 2024 10:43:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Damien Le Moal <dlemoal@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=p1Nl52z2R1mNRhoIobmHRyY9P8gkh40cjTFKLX+Vqc2SgrZH6vsoJAtUz0rSXwVrgzbkpD2UYAMnwdXujlyu+536egiM2NIqZyrE305jA5hgQTNSw9nv+cJD2i53WQ6I6adwWIdLj8wNfgc8xLvsE3o/SgsEC+pf6zFyn/CN/DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sdr2eS+T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF519C4CEC3;
+	Thu, 10 Oct 2024 02:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728528467;
+	bh=6WLgWNCrCh4822VnUA7GiiBuo+86qYoquXQRf55qHZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sdr2eS+Tty9SXjErOKfQ05zgJjyr219MwPcl9eOnrYlZOOLAF9aORakcj6JrrAj3E
+	 JQAQ9K8b2KF11qCiTlgTfQsDFTUdgX2tB7mK+9qBImyMsyHWUsW/ZqVS0vN+1D0o4K
+	 Ew5NKXUQUElp4tVek+nowptRnZs8OsEerDbVTK4/ziO/LA1XyRtBX2NQs5JMdtyRra
+	 rI1IXPNAsqeYG7aYD/x63vtrBqDepXyiwMqTZnrtEwoFaTS/BIJSQ+5qnQnEjoN21I
+	 ncs2Jn2b0+UYvGaypJCwPGChwUneHt3YnfEnVoYkPsnLyn5xrLbZoiZq6YCSiTExwQ
+	 l/0QwZCD0JfLA==
+Date: Wed, 9 Oct 2024 21:47:46 -0500
+From: Rob Herring <robh@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-rockchip@lists.infradead.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v3 05/12] PCI: rockchip-ep: Implement the .map_align()
- controller operation
-Message-ID: <202410101044.3nr7XIR9-lkp@intel.com>
-References: <20241007041218.157516-6-dlemoal@kernel.org>
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 03/14] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
+Message-ID: <20241010024746.GA978628-robh@kernel.org>
+References: <cover.1728300189.git.andrea.porta@suse.com>
+ <e1d6c72d9f41218e755b615b9a985db075ce9c28.1728300189.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,193 +84,114 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241007041218.157516-6-dlemoal@kernel.org>
+In-Reply-To: <e1d6c72d9f41218e755b615b9a985db075ce9c28.1728300189.git.andrea.porta@suse.com>
 
-Hi Damien,
+On Mon, Oct 07, 2024 at 02:39:46PM +0200, Andrea della Porta wrote:
+> Common YAML schema for devices that exports internal peripherals through
+> PCI BARs. The BARs are exposed as simple-buses through which the
+> peripherals can be accessed.
+> 
+> This is not intended to be used as a standalone binding, but should be
+> included by device specific bindings.
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  .../devicetree/bindings/pci/pci-ep-bus.yaml   | 69 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> new file mode 100644
+> index 000000000000..9d7a784b866a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/pci-ep-bus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common properties for PCI MFD endpoints with peripherals addressable from BARs.
+> +
+> +maintainers:
+> +  - Andrea della Porta  <andrea.porta@suse.com>
+> +
+> +description:
+> +  Define a generic node representing a PCI endpoint which contains several sub-
+> +  peripherals. The peripherals can be accessed through one or more BARs.
+> +  This common schema is intended to be referenced from device tree bindings, and
+> +  does not represent a device tree binding by itself.
+> +
+> +properties:
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  ranges:
+> +    minItems: 1
+> +    maxItems: 6
+> +    items:
+> +      maxItems: 8
+> +      additionalItems: true
+> +      items:
+> +        - maximum: 5  # The BAR number
+> +        - const: 0
+> +        - const: 0
+> +
+> +patternProperties:
+> +  "^pci-ep-bus@[0-5]$":
+> +    $ref: '#/$defs/pci-ep-bus'
 
-kernel test robot noticed the following build errors:
+This should just be:
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus mani-mhi/mhi-next linus/master v6.12-rc2 next-20241009]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+additionalProperties: true
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Damien-Le-Moal/PCI-rockchip-ep-Use-a-macro-to-define-EP-controller-align-feature/20241007-131224
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20241007041218.157516-6-dlemoal%40kernel.org
-patch subject: [PATCH v3 05/12] PCI: rockchip-ep: Implement the .map_align() controller operation
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20241010/202410101044.3nr7XIR9-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241010/202410101044.3nr7XIR9-lkp@intel.com/reproduce)
+properties:
+  compatible:
+    const: simple-bus
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410101044.3nr7XIR9-lkp@intel.com/
+required:
+  - compatible
 
-All error/warnings (new ones prefixed by >>):
+Then the compatible will cause simple-bus.yaml to be applied to this 
+node.
 
->> drivers/pci/controller/pcie-rockchip-ep.c:239:46: warning: 'struct pci_epc_map' declared inside parameter list will not be visible outside of this definition or declaration
-     239 |                                       struct pci_epc_map *map)
-         |                                              ^~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c: In function 'rockchip_pcie_ep_map_align':
->> drivers/pci/controller/pcie-rockchip-ep.c:245:52: error: invalid use of undefined type 'struct pci_epc_map'
-     245 |                                                 map->pci_addr, map->pci_size);
-         |                                                    ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:245:67: error: invalid use of undefined type 'struct pci_epc_map'
-     245 |                                                 map->pci_addr, map->pci_size);
-         |                                                                   ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:247:12: error: invalid use of undefined type 'struct pci_epc_map'
-     247 |         map->map_pci_addr = map->pci_addr & ~((1ULL << num_bits) - 1);
-         |            ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:247:32: error: invalid use of undefined type 'struct pci_epc_map'
-     247 |         map->map_pci_addr = map->pci_addr & ~((1ULL << num_bits) - 1);
-         |                                ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:248:12: error: invalid use of undefined type 'struct pci_epc_map'
-     248 |         map->map_ofst = map->pci_addr - map->map_pci_addr;
-         |            ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:248:28: error: invalid use of undefined type 'struct pci_epc_map'
-     248 |         map->map_ofst = map->pci_addr - map->map_pci_addr;
-         |                            ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:248:44: error: invalid use of undefined type 'struct pci_epc_map'
-     248 |         map->map_ofst = map->pci_addr - map->map_pci_addr;
-         |                                            ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:250:16: error: invalid use of undefined type 'struct pci_epc_map'
-     250 |         if (map->map_ofst + map->pci_size > SZ_1M)
-         |                ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:250:32: error: invalid use of undefined type 'struct pci_epc_map'
-     250 |         if (map->map_ofst + map->pci_size > SZ_1M)
-         |                                ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:251:20: error: invalid use of undefined type 'struct pci_epc_map'
-     251 |                 map->pci_size = SZ_1M - map->map_ofst;
-         |                    ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:251:44: error: invalid use of undefined type 'struct pci_epc_map'
-     251 |                 map->pci_size = SZ_1M - map->map_ofst;
-         |                                            ^~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:12: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |            ^~
-   In file included from include/vdso/const.h:5,
-                    from include/linux/const.h:4,
-                    from include/uapi/linux/kernel.h:6,
-                    from include/linux/cache.h:5,
-                    from include/linux/time.h:5,
-                    from include/linux/stat.h:19,
-                    from include/linux/configfs.h:22,
-                    from drivers/pci/controller/pcie-rockchip-ep.c:11:
-   drivers/pci/controller/pcie-rockchip-ep.c:253:34: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                                  ^~
-   include/uapi/linux/const.h:49:44: note: in definition of macro '__ALIGN_KERNEL_MASK'
-      49 | #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-         |                                            ^
-   include/linux/align.h:8:33: note: in expansion of macro '__ALIGN_KERNEL'
-       8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
-         |                                 ^~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:25: note: in expansion of macro 'ALIGN'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                         ^~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:50: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                                                  ^~
-   include/uapi/linux/const.h:49:44: note: in definition of macro '__ALIGN_KERNEL_MASK'
-      49 | #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-         |                                            ^
-   include/linux/align.h:8:33: note: in expansion of macro '__ALIGN_KERNEL'
-       8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
-         |                                 ^~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:25: note: in expansion of macro 'ALIGN'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                         ^~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:34: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                                  ^~
-   include/uapi/linux/const.h:49:50: note: in definition of macro '__ALIGN_KERNEL_MASK'
-      49 | #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-         |                                                  ^~~~
-   include/linux/align.h:8:33: note: in expansion of macro '__ALIGN_KERNEL'
-       8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
-         |                                 ^~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:25: note: in expansion of macro 'ALIGN'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                         ^~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:50: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                                                  ^~
-   include/uapi/linux/const.h:49:50: note: in definition of macro '__ALIGN_KERNEL_MASK'
-      49 | #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-         |                                                  ^~~~
-   include/linux/align.h:8:33: note: in expansion of macro '__ALIGN_KERNEL'
-       8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
-         |                                 ^~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:25: note: in expansion of macro 'ALIGN'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                         ^~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:34: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                                  ^~
-   include/uapi/linux/const.h:49:61: note: in definition of macro '__ALIGN_KERNEL_MASK'
-      49 | #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-         |                                                             ^~~~
-   include/linux/align.h:8:33: note: in expansion of macro '__ALIGN_KERNEL'
-       8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
-         |                                 ^~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:25: note: in expansion of macro 'ALIGN'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                         ^~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:50: error: invalid use of undefined type 'struct pci_epc_map'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                                                  ^~
-   include/uapi/linux/const.h:49:61: note: in definition of macro '__ALIGN_KERNEL_MASK'
-      49 | #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-         |                                                             ^~~~
-   include/linux/align.h:8:33: note: in expansion of macro '__ALIGN_KERNEL'
-       8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
-         |                                 ^~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:253:25: note: in expansion of macro 'ALIGN'
-     253 |         map->map_size = ALIGN(map->map_ofst + map->pci_size,
-         |                         ^~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c: At top level:
->> drivers/pci/controller/pcie-rockchip-ep.c:482:10: error: 'const struct pci_epc_ops' has no member named 'map_align'
-     482 |         .map_align      = rockchip_pcie_ep_map_align,
-         |          ^~~~~~~~~
->> drivers/pci/controller/pcie-rockchip-ep.c:482:27: error: initialization of 'int (*)(struct pci_epc *, u8,  u8,  phys_addr_t,  u64,  size_t)' {aka 'int (*)(struct pci_epc *, unsigned char,  unsigned char,  long long unsigned int,  long long unsigned int,  long unsigned int)'} from incompatible pointer type 'int (*)(struct pci_epc *, u8,  u8,  struct pci_epc_map *)' {aka 'int (*)(struct pci_epc *, unsigned char,  unsigned char,  struct pci_epc_map *)'} [-Wincompatible-pointer-types]
-     482 |         .map_align      = rockchip_pcie_ep_map_align,
-         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:482:27: note: (near initialization for 'rockchip_pcie_epc_ops.map_addr')
-   drivers/pci/controller/pcie-rockchip-ep.c:483:27: warning: initialized field overwritten [-Woverride-init]
-     483 |         .map_addr       = rockchip_pcie_ep_map_addr,
-         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:483:27: note: (near initialization for 'rockchip_pcie_epc_ops.map_addr')
+> +    description:
+> +      One node for each BAR used by peripherals contained in the PCI endpoint.
+> +      Each node represent a bus on which peripherals are connected.
+> +      This allows for some segmentation, e.g. one peripheral is accessible
+> +      through BAR0 and another through BAR1, and you don't want the two
+> +      peripherals to be able to act on the other BAR. Alternatively, when
+> +      different peripherals need to share BARs, you can define only one node
+> +      and use 'ranges' property to map all the used BARs.
+> +
+> +required:
+> +  - ranges
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +
+> +$defs:
+> +  pci-ep-bus:
+> +    type: object
+> +    additionalProperties: true
+> +    properties:
+> +      compatible:
+> +        const: simple-bus
+> +      dma-ranges: true
+> +      ranges: true
+> +      "#address-cells": true
+> +      "#size-cells": true
+> +    required:
+> +      - compatible
+> +      - ranges
+> +      - '#address-cells'
+> +      - '#size-cells'
 
+All this should be covered by simple-bus.yaml.
 
-vim +245 drivers/pci/controller/pcie-rockchip-ep.c
-
-   237	
-   238	static int rockchip_pcie_ep_map_align(struct pci_epc *epc, u8 fn, u8 vfn,
- > 239					      struct pci_epc_map *map)
-   240	{
-   241		struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-   242		int num_bits;
-   243	
-   244		num_bits = rockchip_pcie_ep_ob_atu_num_bits(&ep->rockchip,
- > 245							map->pci_addr, map->pci_size);
-   246	
-   247		map->map_pci_addr = map->pci_addr & ~((1ULL << num_bits) - 1);
-   248		map->map_ofst = map->pci_addr - map->map_pci_addr;
-   249	
-   250		if (map->map_ofst + map->pci_size > SZ_1M)
-   251			map->pci_size = SZ_1M - map->map_ofst;
-   252	
-   253		map->map_size = ALIGN(map->map_ofst + map->pci_size,
-   254				      ROCKCHIP_PCIE_AT_SIZE_ALIGN);
-   255	
-   256		return 0;
-   257	}
-   258	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
 
