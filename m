@@ -1,161 +1,157 @@
-Return-Path: <linux-pci+bounces-14192-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14193-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90F58998856
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 15:51:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9C649988D7
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 16:10:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B14C1F22CCA
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 13:51:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CB861F25490
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 14:10:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC3E1C9EDC;
-	Thu, 10 Oct 2024 13:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22061C9B67;
+	Thu, 10 Oct 2024 14:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFry+cLB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OZXPTbhU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2581B1C9B9B
-	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 13:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DB21C8FD6
+	for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 14:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728568267; cv=none; b=mebdPMo4CitambS5yaliws+YNJHwMB+70VZynNsSHmqfdpEg53bCnEukZRkiEOqg5UCJqPg5ehHI9xHmNPDlXGsuqLwy8HXOlwc7XiZHTXuBUpNi8OdCcOtMJcCk85KVth9u8kQ4wGrZRTknKiZsaj15bndKte4ah2Ip+egDkDc=
+	t=1728569438; cv=none; b=NjHcDktoi5nQfWw8idSyNC/hY+ViSDhzdNSNmqo40/gfNF8Kwc1YMCtEdk0rjUDHTaQNqnklLmMVXq5921IUjjeQUqiOKS1e8MH1qX+AsY2CHXC42b7wL2O9vk4Nbvw4WgkWKdxKQx/KOA3JkZFYxbqrBO0fhpK541SG+8Paa9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728568267; c=relaxed/simple;
-	bh=kC64z7GxA0jcH+ebK2cfoqjQcd3boIqK8A9Vfxm2t10=;
+	s=arc-20240116; t=1728569438; c=relaxed/simple;
+	bh=MIWus4AikIXF8Ds8JP2d7UuZ6R0SGQw48OMa01u4sy8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WM829E4BfsjP2PtAeGBSw/X/91CPbXt+ghUtJIgofIYai0CtOUvFl9GaCXXmOAQJK+rQ8ko57Kwr2ZS1y8eke2fZKhD+2vAnJ2Q0qRtSn8D7k1cPfjJB/lxnJaxuM2IAMv9JkgoGatSX0m2mrp8348ta3J2dKnLONRT8VnI6QZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CFry+cLB; arc=none smtp.client-ip=209.85.167.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=IfUviXfhHNDnVpPpuc4PcA9appbsQmYim3ji5KYKFomvo2JQ43fcjyv1EQKLDJC13JxB6ZwDize+UdCTaigspxvt7RnawqaFPoAtJRC5S4USdltYvMISrFe4B9IODo+P2iuoAKZ+reldKw0kVGrYBCWNvdlUCbady6eAXof1yMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OZXPTbhU; arc=none smtp.client-ip=209.85.166.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5398a26b64fso930224e87.3
-        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 06:51:04 -0700 (PDT)
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a0c8b81b4eso4224165ab.0
+        for <linux-pci@vger.kernel.org>; Thu, 10 Oct 2024 07:10:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728568263; x=1729173063; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cMqw76UFr3KyOj7RnEC3aqiu0YdHjPevmACOjAMgttE=;
-        b=CFry+cLBW8JFX42tNBJE3JkhTXRuwaKmhH/uz+IXr9WY3yojCpJWO0+zu27MOucocf
-         qJYjugOJjHMo4hz42JCV5lyc9vpyT8E5Vjg5GOZno/kNAVTXaymUC0PRnVWnRXPnQGuC
-         Xd6/ztzgHpYtmTG+FTQldcgu83fuesmTOZH6p5Nj3sAlBfnnd3DTyCXus/MV96EvmNOZ
-         cL4RfQghWq0uc+4ayS8WXinXKqhMsm1UsmxAjKvOM9DR8JTClAVSayDhYs3xgWI5iHgw
-         I29Kbf2bvCHAUzj4NVlpaOrzNieRtWXDsEkYCc1Jlwz/CWkgm7wIqKzvN7jIA3/GJm0y
-         fpsA==
+        d=linaro.org; s=google; t=1728569436; x=1729174236; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j6OzBykZDvSRfwEOuaXOs3NxkQ6/TznhHqIuRe5qjUM=;
+        b=OZXPTbhU9GmjOPGH0tfggUnNXEvRWQfHO2u3MCPIny0Ime57n0P5GzRx3F+Reuf0g+
+         oBaxpanTW4R69JrGoRdbE6bvZMzrxm1k7EcW4YOxbRdlNlweLEkQYCl4FEJ1Aixzv8ts
+         vvq/6J4hIS4xUS3ucCPmMpXAtVuFj5rkRIC3sJUuwrBY4wsgRgtiD39rIJn/yRnlWiiS
+         m6/PM3tegHHjpQD5D2s/F3iRXegxZ/bPd8YYhppD3FAbN9QQ14uvI4OnE3/l7/1u4RNM
+         OhIXkiVBNKGPCUbvFP8/pqQImUXdmjmgugguY4uQcUl3v7b8qOfPdIaugw34YKBeaU7k
+         IuSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728568263; x=1729173063;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cMqw76UFr3KyOj7RnEC3aqiu0YdHjPevmACOjAMgttE=;
-        b=hTkbdgeiVIpxmBz4mfqj9Bn7m/aWy2esS5zoytaBipgeI1PuDyQP9iT1HQQUnSS2Zl
-         qC8w90EtbwEhfhwCY9rBVvGwPBmEkvUpVIc0ZzkCdt+Fn/NUIApr9gRgIYDIAh6l1HG1
-         b/AqGV88yi1bpZcSizjKRRih8iUnidCpyivLpfZMh9a9C2eixHlZ6Esd3WFFgMHDXwjx
-         5HfUUax+JPXMB8jCfejgNVFyjBT3M8vxlotRUTyd3r4phZD9t28jAnY8Excqy4dhSYUz
-         3wumqzyF5TEq8hLaQEZ72FxRcaQRwc/35+LZgouD9D3xYI2XcdMZkiX4hrR/jnu9lEe/
-         /lDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWK0ZcvjKlQYz+qkzrCzlgZVW0gFbbPnBR/kw/NhSrJmiLxzYGIf+1LI29CLtKUXvzwaMohoIw/f7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3C27ylwq9qhxL9yisE53eiGawc+uelfGrdvGxBy0+ukeu7Glt
-	8+DmpeTWOdUif252Nw6JH2V/Sby3NJ0qs+4yzTSEfx5CJ/WzYQflTvn/tPrxRUI=
-X-Google-Smtp-Source: AGHT+IEdFN6tHEPOV5BGfgasm+djxDl4woP34V2NNtQEEnSKQjbMo5AzUtpP2ZOqLjKUa8VMlGqcng==
-X-Received: by 2002:a05:6512:2808:b0:536:54fd:275b with SMTP id 2adb3069b0e04-539c4967edemr4294135e87.54.1728568263124;
-        Thu, 10 Oct 2024 06:51:03 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539cb6c863bsm258410e87.87.2024.10.10.06.51.00
+        d=1e100.net; s=20230601; t=1728569436; x=1729174236;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j6OzBykZDvSRfwEOuaXOs3NxkQ6/TznhHqIuRe5qjUM=;
+        b=Jl3E1PkbseDf68aXQdfC+zvl+6gxoTTR1K74rhPPezbDnI3XSE/pVSkQKw2pJv/cYw
+         o8nrcP20vR83uEWDmVCMI6iuiJiqKEg4FcTGvAj8hkCyPraOVguhP0ajLjx7v6Yow+kt
+         HfrH6pfiGXEutpaoB0o7DP541CBzAiKDe2Qgsgd3rLWXJ8fUua2t5/u8S1/kSAGxDZCb
+         oOOakexBcX1Vs8ftQDILjPxIdIWH77LTbXa9id2b8bM7TQSMXy3gdi/qG7zc3YpvxYWv
+         gDWunDknXHOBm+8oLczllwEV165IF81ZM5cEqxYO1S0rTlQRPxz6rEEea5N+WTEDpggq
+         hjBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWG1jiGO/HvISVdQdHrzy8+wOWavPhxHQgNza84ZMBLL98Sgf1QME/btii85nM/pWniu/W/iteTFHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLNZRy3hCQmqcyyqtU5QdYmAMZH3++YJGSytqb0LKP40It5UHW
+	aXD/Eui7BQjc4T01yf4aC6lc6j5UAlknpY2lZ/TgPCsL2w/15UBkmwh81dfnOA==
+X-Google-Smtp-Source: AGHT+IGkaq4cXguxjWr6ddngE5j+zzE1jQG5GM6Q3KhBXmPcCyPHZFdAUFVhm3tQ7tQh8Pv0omUinQ==
+X-Received: by 2002:a05:6e02:178d:b0:3a0:8d8a:47c with SMTP id e9e14a558f8ab-3a3a5cd5641mr42271715ab.14.1728569436403;
+        Thu, 10 Oct 2024 07:10:36 -0700 (PDT)
+Received: from thinkpad ([36.255.17.48])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea448f93f0sm1069748a12.32.2024.10.10.07.10.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 06:51:01 -0700 (PDT)
-Date: Thu, 10 Oct 2024 16:50:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org, 
-	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, abel.vesa@linaro.org, 
-	quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, kw@linux.com, lpieralisi@kernel.org, 
-	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] PCI: qcom: Fix the ops for X1E80100 and SC8280X
- family SoC
-Message-ID: <otipwbhacorpdyjlhvf4g3tpg7ymtqmcuzjirewhkmwv3gbpka@2urxbhufrveb>
-References: <20241009091540.1446-1-quic_qianyu@quicinc.com>
- <20241009091540.1446-7-quic_qianyu@quicinc.com>
+        Thu, 10 Oct 2024 07:10:35 -0700 (PDT)
+Date: Thu, 10 Oct 2024 19:40:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v4 2/7] PCI: endpoint: Improve pci_epc_mem_alloc_addr()
+Message-ID: <20241010141029.xsk6olgcenba473d@thinkpad>
+References: <20241007040319.157412-1-dlemoal@kernel.org>
+ <20241007040319.157412-3-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241009091540.1446-7-quic_qianyu@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241007040319.157412-3-dlemoal@kernel.org>
 
-On Wed, Oct 09, 2024 at 02:15:39AM GMT, Qiang Yu wrote:
-> On X1E80100 and SC8280X family SoC, PCIe controllers are connected to
-> SMMUv3, hence they don't need the config_sid() callback in ops_1_9_0
-> struct. Fix it by introducing a new ops struct, namely ops_1_21_0, so
-> that BDF2SID mapping won't be configured during init.
-
-Fixes tag missing. Cc:stable if required.
-
+On Mon, Oct 07, 2024 at 01:03:14PM +0900, Damien Le Moal wrote:
+> There is no point in attempting to allocate memory from an endpoint
+> controller memory window if the requested size is larger than the memory
+> window size. Add a check to skip bitmap_find_free_region() calls for
+> such case. This check can be done without the mem->lock mutex held as
+> memory window sizes are constant and never modified at runtime.
+> Also change the final return to return NULL to simplify the code.
 > 
-> In addition, since it is recommended to disable ASPM L0s on X1E80100 as
-> same as SC8280X, hence X1E80100 can simply reuse cfg_sc8280xp as its
-> config.
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 
-Separate commit, please with its own description and Fixes tag.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> 
-> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+- Mani
+
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+>  drivers/pci/endpoint/pci-epc-mem.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 88a98be930e3..c533e6024ba2 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1367,6 +1367,16 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
->  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
->  };
+> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> index a9c028f58da1..218a60e945db 100644
+> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> @@ -178,7 +178,7 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size)
+>  {
+> -	void __iomem *virt_addr = NULL;
+> +	void __iomem *virt_addr;
+>  	struct pci_epc_mem *mem;
+>  	unsigned int page_shift;
+>  	size_t align_size;
+> @@ -188,10 +188,13 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
 >  
-> +/* Qcom IP rev.: 1.21.0 */
-> +static const struct qcom_pcie_ops ops_1_21_0 = {
-> +	.get_resources = qcom_pcie_get_resources_2_7_0,
-> +	.init = qcom_pcie_init_2_7_0,
-> +	.post_init = qcom_pcie_post_init_2_7_0,
-> +	.host_post_init = qcom_pcie_host_post_init_2_7_0,
-> +	.deinit = qcom_pcie_deinit_2_7_0,
-> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> +};
+>  	for (i = 0; i < epc->num_windows; i++) {
+>  		mem = epc->windows[i];
+> -		mutex_lock(&mem->lock);
+> +		if (size > mem->window.size)
+> +			continue;
 > +
->  static const struct qcom_pcie_cfg cfg_1_0_0 = {
->  	.ops = &ops_1_0_0,
->  };
-> @@ -1405,7 +1415,7 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
->  };
+>  		align_size = ALIGN(size, mem->window.page_size);
+>  		order = pci_epc_mem_get_order(mem, align_size);
 >  
->  static const struct qcom_pcie_cfg cfg_sc8280xp = {
-> -	.ops = &ops_1_9_0,
-> +	.ops = &ops_1_21_0,
->  	.no_l0s = true,
->  };
+> +		mutex_lock(&mem->lock);
+>  		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
+>  						 order);
+>  		if (pageno >= 0) {
+> @@ -211,7 +214,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  		mutex_unlock(&mem->lock);
+>  	}
 >  
-> @@ -1837,7 +1847,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
-> -	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
-> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
->  	{ }
->  };
+> -	return virt_addr;
+> +	return NULL;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
 >  
 > -- 
-> 2.34.1
+> 2.46.2
 > 
 
 -- 
-With best wishes
-Dmitry
+மணிவண்ணன் சதாசிவம்
 
