@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-14240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8446999530
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 00:27:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E9A2999535
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 00:30:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB0EE2860B4
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 22:27:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A4AC1C21F08
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 22:30:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737991E2839;
-	Thu, 10 Oct 2024 22:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CA6A1BDA84;
+	Thu, 10 Oct 2024 22:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pf4BhbzN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjE3esmT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B93519A2A3;
-	Thu, 10 Oct 2024 22:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021671A2645;
+	Thu, 10 Oct 2024 22:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728599258; cv=none; b=h74DnQkPjD2RqJmnDY6mK63C2kqDAcM7lV6w7ImOOWGbJ/+JJGkOt/LKuTh8I01khwUdoZCr1GHEcoqk/4DamTLUeJwSOeihjFjNs3Ci+N98wVAB9v/gZdkuh6v4TVEwwfktpiAcyDZXXThFGI763a7D688FG7T6VMxjymqoPj4=
+	t=1728599420; cv=none; b=tknZTEq9Ev+HJwwiMdIbXGJ08jrqS7RK5duibTDhvwR+43znNTiPATyMOiSg/SbpK1eRLHE3Z9wOcFsA/xJ1buBQBheZPK7YGtgLjzoAYrULnut5LvPXN9Y0DQKZwV3l16XvvpQ8xVtn1G89b9UXRQmwGO37+o8PHYCcyRw1nWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728599258; c=relaxed/simple;
-	bh=oTNzX0Px6F2ZuEdSdbpP0nHju9ehSWKosmu3toVlgy0=;
+	s=arc-20240116; t=1728599420; c=relaxed/simple;
+	bh=RmmjDvDZ7iJUH7ngcCFh624/xsW4HOovYjuPHee/7VI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ByKnQq39O8NdM3yp3C2bTlDkuG/4SNBVb4gCmMCW/pvak1i1cXLXgM4M9KB7lAMT+j3qq0QIi0ZjdYQaHY4IukHM1Oyid9TloSM0XaOOBBaqgYtMt1cwx2mMDsMGb518D+Ycb9zm9WHG4b0H0apsavVuNjW/0zNKKjwO+24M8rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pf4BhbzN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739D1C4CEC5;
-	Thu, 10 Oct 2024 22:27:37 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=sok2Ls0VWU7IPs8GTXYI7y8jtgpdWLtdkpC+6ysD359Xkkrmb/QMLBRvDkI9IkkuUc/tXzdl/7CW7mOYEsRT/+7sbmRiH6slg7RBdsItJXDTcd/27JaEaS6aGuKxIF75VES71vYZufFaGiUyebg0CWdMJeqCobUjY1XYt6BoXJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjE3esmT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D8BC4CEC5;
+	Thu, 10 Oct 2024 22:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728599257;
-	bh=oTNzX0Px6F2ZuEdSdbpP0nHju9ehSWKosmu3toVlgy0=;
+	s=k20201202; t=1728599419;
+	bh=RmmjDvDZ7iJUH7ngcCFh624/xsW4HOovYjuPHee/7VI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Pf4BhbzNjET2vqzRkOWkNObKT9+3v+3g4SHSdy+1tpvL6vl4hEwcRRznlwxWc9SpL
-	 2ImhQkURL1Dsm0G/uFMlhz02FywDkPw2ml5J544X1gV81NSDVwgV1rakOLFsmiBbNV
-	 EIQ2DwNgm20C5hTNMOUxlG+Xwjn2CJ9o4QJSzRPuscYWDllIHfGQN5orwonzHDa7w7
-	 LBlGkdFS4EBJbVMjP+eJCc3tYX/lo4nIx0oyc431qSUO3wcI3TzRdF69JB0LByP5JJ
-	 +eL9i4RdpAVTQDveIkREhRXCYwXqng5nPWsiU7lCP12cHtKUPqMPIlBjwvq9Q4f52O
-	 FjtjwkQ/xbYhg==
-Date: Thu, 10 Oct 2024 17:27:35 -0500
+	b=UjE3esmTX8+GJNF4Z+olw+k/0MBVzlX+Exnc4NXTcyz7/XGvQP93CbXMtkqgXeq2M
+	 eEb1WKi3YFEIJtuqB3us4HyKnAdfT37xKrmmtt4azZCZl32W3ysP3Ph9wLeTldCBnL
+	 594f2SyzMueaWevU3StH5oRsHt1nHrXMHPFpOtb1sJ6guQNEHQ9G0ZTw1QoB12ROGV
+	 DJkQWXGM/sjMj2Ej33uH+4ncmZZ0VuRH0I0ZVMdFuHzdi29bjVca0sXNVCzEFVTQTm
+	 16nl0LRI50D1DVSFo8QYcRMxBvZQMfK5MK9vwVi0k7gSC1UMwoo+bsr1Yq5X/GwKQE
+	 bnJj/C6sKVuQA==
+Date: Thu, 10 Oct 2024 17:30:17 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
 Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
@@ -59,9 +59,8 @@ Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
 	Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v3 4/5] PCI/IOV: Allow extending VF BAR within original
- resource boundary
-Message-ID: <20241010222735.GA580854@bhelgaas>
+Subject: Re: [PATCH v3 2/5] PCI: Add a helper to identify IOV resources
+Message-ID: <20241010223017.GA581272@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,48 +70,118 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241010103203.382898-5-michal.winiarski@intel.com>
+In-Reply-To: <20241010103203.382898-3-michal.winiarski@intel.com>
 
-On Thu, Oct 10, 2024 at 12:32:02PM +0200, Michał Winiarski wrote:
-> VF MMIO resource reservation, either created by system firmware and
-> inherited by Linux PCI subsystem or created by the subsystem itself,
-> contains enough space to fit the BAR of all SR-IOV Virtual Functions
-> that can potentially be created (total VFs supported by the device).
+On Thu, Oct 10, 2024 at 12:32:00PM +0200, Michał Winiarski wrote:
+> There are multiple places where special handling is required for IOV
+> resources.
+> Extract it to a helper and drop a few ifdefs.
 
-It's *possible* that this is true, but there's no guarantee that
-firmware has assigned enough space for all BARs of all possible VFs.
+Add blank line between paragraphs.
 
-> This can be leveraged when the device is exposing lower than optimal BAR
-> size as a default, allowing access to the entire resource when lower
-> number of VFs are created.
-> It is achieved by dynamically resizing the BAR to largest possible value
-> that allows to fit all newly created VFs within the original resource
-> boundary.
+Include name of helper in subject line and commit log, i.e.,
+pci_resource_is_iov().  No point in guessing or making us extract it
+from the patch.  This will also make the commit log say more clearly
+what the patch does.
 
-Add blank lines between paragraphs.
-
-This log doesn't actually say what the patch does.  It describes a
-possible configuration and ways that it may be used, and even *how*
-something might be done, but something along the lines of the subject
-line should be included in the commit log.
-
-> +static void pci_iov_resource_do_extend(struct pci_dev *dev, int resno, u16 num_vfs)
-
-Please wrap to fit in 80 columns like the rest of the file.
-
-> +int pci_iov_resource_extend(struct pci_dev *dev, int resno, bool enable)
-
-Please add kerneldoc here to help users of this exported function.
-
-> @@ -480,6 +560,11 @@ static ssize_t sriov_numvfs_store(struct device *dev,
->  		goto exit;
->  	}
+> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/pci/pci.h       | 18 ++++++++++++++----
+>  drivers/pci/setup-bus.c |  5 +----
+>  drivers/pci/setup-res.c |  4 +---
+>  3 files changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 14d00ce45bfa9..c55f2d7a4f37e 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -580,6 +580,10 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
+>  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
+>  void pci_restore_iov_state(struct pci_dev *dev);
+>  int pci_iov_bus_range(struct pci_bus *bus);
+> +static inline bool pci_resource_is_iov(int resno)
+> +{
+> +	return resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END;
+> +}
+>  extern const struct attribute_group sriov_pf_dev_attr_group;
+>  extern const struct attribute_group sriov_vf_dev_attr_group;
+>  #else
+> @@ -589,12 +593,20 @@ static inline int pci_iov_init(struct pci_dev *dev)
+>  }
+>  static inline void pci_iov_release(struct pci_dev *dev) { }
+>  static inline void pci_iov_remove(struct pci_dev *dev) { }
+> +static inline void pci_iov_update_resource(struct pci_dev *dev, int resno) { }
+> +static inline resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno)
+> +{
+> +	return 0;
+> +}
+>  static inline void pci_restore_iov_state(struct pci_dev *dev) { }
+>  static inline int pci_iov_bus_range(struct pci_bus *bus)
+>  {
+>  	return 0;
+>  }
+> -
+> +static inline bool pci_resource_is_iov(int resno)
+> +{
+> +	return false;
+> +}
+>  #endif /* CONFIG_PCI_IOV */
 >  
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> +		if (pdev->sriov->rebar_extend[i])
-> +			pci_iov_resource_do_extend(pdev, i + PCI_IOV_RESOURCES, num_vfs);
-
-Wrap to fit in 80 columns.
-
-Bjorn
+>  #ifdef CONFIG_PCIE_PTM
+> @@ -616,12 +628,10 @@ unsigned long pci_cardbus_resource_alignment(struct resource *);
+>  static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+>  						     struct resource *res)
+>  {
+> -#ifdef CONFIG_PCI_IOV
+>  	int resno = res - dev->resource;
+>  
+> -	if (resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END)
+> +	if (pci_resource_is_iov(resno))
+>  		return pci_sriov_resource_alignment(dev, resno);
+> -#endif
+>  	if (dev->class >> 8 == PCI_CLASS_BRIDGE_CARDBUS)
+>  		return pci_cardbus_resource_alignment(res);
+>  	return resource_alignment(res);
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 23082bc0ca37a..8909948bc9a9f 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1093,17 +1093,14 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  			     (r->flags & mask) != type3))
+>  				continue;
+>  			r_size = resource_size(r);
+> -#ifdef CONFIG_PCI_IOV
+>  			/* Put SRIOV requested res to the optional list */
+> -			if (realloc_head && i >= PCI_IOV_RESOURCES &&
+> -					i <= PCI_IOV_RESOURCE_END) {
+> +			if (realloc_head && pci_resource_is_iov(i)) {
+>  				add_align = max(pci_resource_alignment(dev, r), add_align);
+>  				r->end = r->start - 1;
+>  				add_to_list(realloc_head, dev, r, r_size, 0 /* Don't care */);
+>  				children_add_size += r_size;
+>  				continue;
+>  			}
+> -#endif
+>  			/*
+>  			 * aligns[0] is for 1MB (since bridge memory
+>  			 * windows are always at least 1MB aligned), so
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index c6d933ddfd464..e2cf79253ebda 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -127,10 +127,8 @@ void pci_update_resource(struct pci_dev *dev, int resno)
+>  {
+>  	if (resno <= PCI_ROM_RESOURCE)
+>  		pci_std_update_resource(dev, resno);
+> -#ifdef CONFIG_PCI_IOV
+> -	else if (resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END)
+> +	else if (pci_resource_is_iov(resno))
+>  		pci_iov_update_resource(dev, resno);
+> -#endif
+>  }
+>  
+>  int pci_claim_resource(struct pci_dev *dev, int resource)
+> -- 
+> 2.47.0
+> 
 
