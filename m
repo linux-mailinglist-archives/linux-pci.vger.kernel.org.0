@@ -1,158 +1,260 @@
-Return-Path: <linux-pci+bounces-14177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DE42998259
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 11:34:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA9239983A0
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 12:32:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B0FA287C1E
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 09:34:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 167D41C206A4
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 10:32:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE6731BD50C;
-	Thu, 10 Oct 2024 09:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225F747A60;
+	Thu, 10 Oct 2024 10:32:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="En4Ag8Dl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lki1WKg4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA5F33CE8;
-	Thu, 10 Oct 2024 09:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728552823; cv=none; b=CYYd1BIKZnxv9TE08PkTGE55vV8BUoVwiYfbr8yv+9UzkyhGEgTtUcH7zBNO/lxgG6zatF0otNQ07h8DLF3YKGOfAFNh01rgtak/iSuJJj6pDoQNIwIC2Zt5JIcyKdqDgg2gZPU5nxwQIQHdL6FhkX8VP9Nq0JcAvOpXU3iWvIg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728552823; c=relaxed/simple;
-	bh=qBxQgkj2nJgxxaoqA5Dg7eRIG8Bdg50/61evn+NoLJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+j8BPIjv/Cnkn2BGioDuX+GeHP0jLy2+0J7wSyo2SMPmQvTznMhbvmgNHSwRWKCamPaHosDgxMUF32HkVPXXqn/y4i4E4zZzu+b9ffuSLYF9e03GyTOno2kar3u0D/Fsj8iU6/OsHMmpvvpeGpqqYnPzp7VlcB345D0NOxszt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=En4Ag8Dl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2F6C4CEC5;
-	Thu, 10 Oct 2024 09:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728552823;
-	bh=qBxQgkj2nJgxxaoqA5Dg7eRIG8Bdg50/61evn+NoLJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=En4Ag8DlmZ6disIgz53CZ3K0DvRM+gC92oLowhIX/DCCQXVFmeO6m4HrbmW9EVIlI
-	 xg05COwRn39bwJ2LXUzaWIbjQEiTZOeOXSmn4a0cS3vBNjAbMt33NhE4N0hsALnhlX
-	 e/SI9T38sDZcPnQiF+RyM/kZ7yMtfyfsZfcbeHNJPoj8VdEnQR3Rr/poUtbNQcT7tr
-	 UgvL7v2VWhkRVwojxQIlQDbLqiGpenIc4MOyhx6BtyUKjSeLi0Q8hoReD/rBuHXB07
-	 xCHtIVAws4xHmZm19B6Y+dREdmOmj+YYrJcSf0tRCyAto27CKikNGxPu7WZyZ2dYMj
-	 kUkvEVnOms8uQ==
-Date: Thu, 10 Oct 2024 11:33:38 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH v5 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and
- "atu" for i.MX8M PCIe Endpoint
-Message-ID: <ZwefciwGBSU-iwFg@ryzen.lan>
-References: <1723534943-28499-1-git-send-email-hongxing.zhu@nxp.com>
- <1723534943-28499-2-git-send-email-hongxing.zhu@nxp.com>
- <ZwaagtTx1ar1CW4V@ryzen.lan>
- <AS8PR04MB8676516366FB6EE23F4823C68C782@AS8PR04MB8676.eurprd04.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7BE1C0DC5;
+	Thu, 10 Oct 2024 10:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728556341; cv=fail; b=Pj9C+i4PTqCPS5L0qBs/vZjVx86q2hW4p9D++KqVoaTunawgiK4EpyLAGP67stmpb1/ptpMoGS1VZYJaNB1SpDR0yhXGH24eIWzRRxigfcqqJnUkM4EXlr9ClRMefXOvonVAH0aIPnmnCxbrRoUs3dorBW8Cbc0GW2PKyF97lOs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728556341; c=relaxed/simple;
+	bh=k6FuSgJWVlJs5J+Zi67ZM/VutGM78ik5XQLGqbORcgA=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=JspWvAlrOCX4F5MovA6jX72IW2s6+iboqrlhrzb9FPMwfB+8rQM8yrh/jdCvvA0ukpOlhTt9eNU3j6gE0ykvXqfE0UpGppBmdnUd0WWqoXPAwkHih1WZu1Lf6PM6lAHadi4M7hWQh8bmamf539hPUPwwUwA7bOh1sE9qq2oU0yM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lki1WKg4; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728556339; x=1760092339;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=k6FuSgJWVlJs5J+Zi67ZM/VutGM78ik5XQLGqbORcgA=;
+  b=Lki1WKg4YbAxOxAAxOb+HFT7vjmzJvBHFAiZcZmtWI0dz8jPlBucqKMO
+   gmn4oHqlBnliPvhs3R063AWGiFigfHZVX3bJjJNxEFpFtI1mtuo5/zDqU
+   QzPieBRPh7RtgtJ5vocJuEvQec+VZ5s0Kpzez7jgALFzOvnz1eZ6zK9WH
+   BNpOfqgNqcOlfHZncc1OzKShP3qrzIYB1Vgh2bOBtK7xr+UVEOc8AjDnF
+   T+VQW0hyIqj4JjFp5TrcoZ0AUZRYvDX5xgUfdAqrPakJAPKvrGY4CsGd4
+   oSlGUROErPJlYXIyioX4dGt0tSIGIpi5I17EC2Trbykv0PodkoTRR15Np
+   w==;
+X-CSE-ConnectionGUID: 1pcz+KzPQWeE2jYl/q5fwg==
+X-CSE-MsgGUID: F1C1KDYyRACwyi1R4WGkuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11220"; a="15528398"
+X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
+   d="scan'208";a="15528398"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 03:32:15 -0700
+X-CSE-ConnectionGUID: +3KnJhDtTaO3E7zouqqKhA==
+X-CSE-MsgGUID: D6QkxObdS4GiQZ4UU+/BBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,192,1725346800"; 
+   d="scan'208";a="76464891"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Oct 2024 03:32:15 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 10 Oct 2024 03:32:14 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 10 Oct 2024 03:32:13 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.46) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 10 Oct 2024 03:32:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MDfEkx+KNivMn7VT8cy43oycw3urHabRJvHHjIqHQZcFWXWOB/+qZvXp8TpJd6pwuH8qHdmUYyPqdKAFvnodTWO0OO9aqt3fssGc4cXQ1baCQh5ki/em6yEru5I5bIhUYYFdYy7W497bqtlYYkEbVLB2zkZydJBYZac2Pc78NWsyP6g8L/QVlC7WwqMkruZWrJLXpCiZThjzNENMFycMmBUfAi0akN62yBFy6jHyyKUXV8wt/HvxVSJ024JFmVYhe2o4QTSwqLcAX716Pre8N88f6EnANJZ4c1ded8LA8TCEoBnCGl1wwQO0j9bwDv3cziUwCTLgBo8y3CX12FMSLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kDvImW3k0R7R4nAXhPF9Yp/GPKvJHSPSpaJ+oYpQBRw=;
+ b=Ino5gc9mda++ZDMXk4j7suGdpveyNTf8l7k6ZbOKDjX25/GJRMCKPruAbt2k7G5P5SBD85AMsOCBXdkn4sGAzPUdpo7hCvu7PmcxyLAZ+VcAWp198z9tSzgcL+Vub8ylFsL70eXNim269pn/3qvEvKdYb9ukaUExqbAmh/jRD3B6GsILYl/Nr7/2cye/w0hQXBPz6ELd6/eFUK1kyA4oOt6vZ4A+oVHEp63Mh400ebFnhSIUUFmdhYTQlos0Tm/jxOahtVoygS+27/WTH6Rqqvt2MEnzOrdGU/E+fzs9cMNneWZkCsmuwd3lDR9UKgnLo0AK9mMUsv7hE8m5WbfYKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
+ MN6PR11MB8103.namprd11.prod.outlook.com (2603:10b6:208:473::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.22; Thu, 10 Oct
+ 2024 10:32:11 +0000
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39%5]) with mapi id 15.20.8048.013; Thu, 10 Oct 2024
+ 10:32:10 +0000
+From: =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
+To: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+	<christian.koenig@amd.com>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kw@linux.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+CC: Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
+	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
+	<matthew.d.roper@intel.com>, =?UTF-8?q?Micha=C5=82=20Winiarski?=
+	<michal.winiarski@intel.com>
+Subject: [PATCH v3 0/5] PCI: VF resizable BAR
+Date: Thu, 10 Oct 2024 12:31:58 +0200
+Message-ID: <20241010103203.382898-1-michal.winiarski@intel.com>
+X-Mailer: git-send-email 2.47.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MI1P293CA0005.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:2::12) To DM4PR11MB5373.namprd11.prod.outlook.com
+ (2603:10b6:5:394::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676516366FB6EE23F4823C68C782@AS8PR04MB8676.eurprd04.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|MN6PR11MB8103:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0acfb7d7-f78a-4ace-c0e0-08dce916cc4f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RmNCT3ZsaTNPTXY2UEx6S3lid2ljY1VQUUVtZXJUSWpnTWxPUHlzNzVQQ2VW?=
+ =?utf-8?B?S0dVbW5FblhGM1dnU3JrVjVzc0Exbld2V0RTbkszNGlKTTl0cWJibEoxWXpy?=
+ =?utf-8?B?Vnk4USsyeU1WekU3QjdIRWJXSk1SRkdlOG1QQTBzNWRZMkprRDBsdVFNczJM?=
+ =?utf-8?B?a0s5UkVYcXpJYjlXN3g1d3VTb0xDc2dKcFdhSEJPbWNoOThMWG1TRFIwVzZN?=
+ =?utf-8?B?cG16K0JkKzFNTzZWc01BeEdFYzA0SzEwczQrSnhJeHdsWTFJbytGS1dORTd4?=
+ =?utf-8?B?WFpUbkJsa2wxUllPZEdSWDJzU041MzdRQzIzNzFuRWpzZDZPMG5BZ0xzV3NW?=
+ =?utf-8?B?Tm5jL3RHNDZjVU5ENGtaT2ZHd1VBN081QlJvS1YzTHlvTjAyV1Nybks4VVpU?=
+ =?utf-8?B?cXQrWlFJMEVTUGVUSHVwRkJ6TW5SNnNtWmxXY2lrWVo2QWh3YlZUOVN4ei91?=
+ =?utf-8?B?NEVaemhKNW9YWGFXMkk2ZDdNRENiOGxiYm96K0JGWHBYQXpqOVpmZXNuc00x?=
+ =?utf-8?B?S21lSDJlSDUwS2w1cXhHZ2g3SHJEVG03RGpWc2pUTUwwVTR6bTVKOUhpWE9i?=
+ =?utf-8?B?d3k3Q1R5VEN4dnlqYjUyZ1Z2ZVpKTjh4QVI5K0ZBWDNGbmwyMnlvcXlTd0JS?=
+ =?utf-8?B?QTlUVFRXdkhHVE1INmpaTEhxdVdQVlJMUEZnM1BkL3VNVDVUVkZycS9XNzlG?=
+ =?utf-8?B?R1FGNDRDTDNCL05ZVmdrdC85clhVR255V0tERGhveFgydVZaWVJ3bktXQ1pH?=
+ =?utf-8?B?MkZUQXd5Z3c2Q0U0eHhxaCs5aDQ0SVJySEFRbzVuQVVCdW1ycWF1ZExZSitp?=
+ =?utf-8?B?aWNqVmxJb1FlOHNwWFRycUJtaXM3dm5mUml3eHZVbStlcWlYY3lOWjBDZ3FS?=
+ =?utf-8?B?NThkZzB0U3ZUWmZLUTFuZFY3bFVmNW5TMHdJalExYWs1OTBrVG4zRG5aT0tQ?=
+ =?utf-8?B?UXZTY0N2VUtiaHJtajBLMU50UksyYXZtL3Q5OGRNNGxOVFV5Nm9ZVnk3Skhj?=
+ =?utf-8?B?ZjVCUXNnTTlFQU5QSGh5VEZyZldiVm5aWVZjVzJ2VVE0bDFpWjdCNU4wTlZQ?=
+ =?utf-8?B?emVLdC9ycCtFcEpKV21Ga3kzTDFMb0JPMzBjWW1MN2VPZTk2S1dOd2V2eHVU?=
+ =?utf-8?B?VXFjMGVSUlZTVFNGUXR2NzdyRjd3UFhDODZrU2RUODhhZmZjNE5UOXpWZDAr?=
+ =?utf-8?B?c3gwTUJxYWZ0djRTZkxOTGZBOXRTbnJiN0lVOGxpaVVjUFB1Qk9zdDhLZUtR?=
+ =?utf-8?B?VkNvWDRvZ0RUQVB4QVVVakdxQ1pQUFZjM2lMVm9teUJsbnNsSlFveTdnbFlR?=
+ =?utf-8?B?VVUrUnM2c1BtU1FTbHpuZFA2S05paWNJQm9OcWdkV1VKS1hidGRxdFhmd01k?=
+ =?utf-8?B?ZHJ5Q1lrVG1EYzdSNysvOXZMa29OaUw0d3ZSazIyeEtnVExZeWhkSUtlZU5D?=
+ =?utf-8?B?Z0RPVTZRZXd3cmtYaVN4WjQ2UURwNE96b0lJakQveEtxeTR6Z1MvVTZ3Smtz?=
+ =?utf-8?B?OEVzdVJaM1N2S2w3OGRCbEdYSS9xRlR1aU0zKzJveVREM0xWd0dIMWMzSS9r?=
+ =?utf-8?B?a2NXYzRoemgxLzRxbHhOU3pCNUNFTTh0R2lQbk5UMkE1SU9OR0taT1FuZWYv?=
+ =?utf-8?B?SFFMUVBQNjYvZy9rUmZkWC8yVlhIRnRUMUlETERkMkUxUTJ5dzlVYjJ6bHk5?=
+ =?utf-8?B?ZVZDcndzNEYySlE0dTQxRmJCNDVWN2FXY1hiVlpCKzMxbVV2bEdXRENBPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UTBrVmtvSVU2ZEFDck5JYWdwMmhqTmo0cGc5MkR2MXdrRzZHVHBrVW1LaCsr?=
+ =?utf-8?B?dlhlUCtFWVhBY3cyTUUralZGSUh4bXZmVFVzMkl4OHJtZER3cFlYVnU0eUNp?=
+ =?utf-8?B?WjZ4bG8xWTlTL2g4SW1MZGhad1NSUWdqdDlpa0ttSWIxem5Jd0txWHN0ZkEr?=
+ =?utf-8?B?YVpPdVFMbnc4U3BPS2ZaRkRnVllERUJaNVM5RXZINWJ5Uk9sMFc3T0ZGemwy?=
+ =?utf-8?B?SGJTWVhkOTNWUTFFamJrYTkyUXZMdGs5MCt6aXFCN1RtZXhWTnZ5UjBETXpn?=
+ =?utf-8?B?bzJIN1RLOUp4UUM2eXNwN2IyZXV1L2VVV1N5ODIwMkRTMEhwQS9WeUN6RmFl?=
+ =?utf-8?B?ZDZXcDVpODNubDBReEgxbkozZWkvTTd4TmN0THVjNTFRcGJUK0ZwK0FBb0xq?=
+ =?utf-8?B?eElEVW04Tnk1WHhaNys1QUtZMmU1Y3NudVlFMExHNW1Nak1ReGQyaXZDcEIx?=
+ =?utf-8?B?c1E3QnRuQkIyV2QzSFUyaTE3MW1MMTBmeFBuSWp6NklkczJIL09udFpzb0VL?=
+ =?utf-8?B?bW95T1ZiUVN3em9pNHZJdGhxMExyTXorSlZvaUJkb0w2MUdteExWZ0dYbFJa?=
+ =?utf-8?B?MzdlZXdxQ2VEeEpCU20wc2ZpM1hHeXJjbDNYa2FNMTF6NGo3RVFHZ2FGUE80?=
+ =?utf-8?B?dWFkVzVHdExSNjhsd3NCYW5oTlFEOGZ4eWdoUmc0eTRXS210MjVMaVdkSUZ1?=
+ =?utf-8?B?OVhLVGRlNlBJTnZZQXBMWGM3dkhmVERtK3h6KzUyZFhYY1IrSWkxRUFmcFBv?=
+ =?utf-8?B?WU9zeUhsSkxYSkZmNUdibjlOSEtCeE9MOTBqeWltaGE4Rnl3MlpheWVYZU4z?=
+ =?utf-8?B?MVRFa3FIbnp3UC8vdlZRTml2V04rQ3dnMmxrU0RzTGgxZlp5STNEU2VVY0xq?=
+ =?utf-8?B?bjhXZFVDTDYzV0wwNndaM25QUytnR2ZvQ0Z6T01VN1VmNDQ1QklxZUVLREp5?=
+ =?utf-8?B?UXg2ODk5K2tGTWhhOS9QSU91b0lMMTN1V05kMkZXTUtlRUFmbUtyTUxqZldF?=
+ =?utf-8?B?VC90N3V0NFFNWWxtayswVTlaMVlRYlVDZEwvQ2FlcElldGNPME1JUUoxVzB4?=
+ =?utf-8?B?blArWEppdEdFUTBmekVQa2V0bHF1Wm9jcFhqZVpvVWoreXdEWGQ2L0xMME5a?=
+ =?utf-8?B?N3VhMXhCM3F1bVVGTWNFbm5waUs1Nm1iRmFYNFpQYjNocG00WHcraGYwZ2F6?=
+ =?utf-8?B?d0x2Szd0N2JiYnRrRWU0bmFWbWZZWkhaUGNscWc1TXZGZ2pBeTE1eE9LcTBO?=
+ =?utf-8?B?SkxldG55UEZPZ1cwekVtSDZUYi92NDJ5OXBPcWpSRzg0Mm9NSitKQ3hiMDZh?=
+ =?utf-8?B?TTU4U2FqK2FoSEVjMDNxWFRvQ21ySUpPZEFTQUpFL2FlK3ZRVE9BMkZFQUVu?=
+ =?utf-8?B?UFFNMXA1V3ZZZFQxUURFOVh2QnZEdTYzSUhobTdRY1FlRHRndnN3c2VPclJV?=
+ =?utf-8?B?cW83MGtFMVJBVWZDcHNPV3hkRitBVTJKWndXRzlPVm5lbEhsaUFObHVrNkRT?=
+ =?utf-8?B?Z3V3V1BXdHllYUpxY1hyeTAzU1RjaUZQcmxBNDl5bTF2ckFwLzYraUFCeERF?=
+ =?utf-8?B?WUNsbVlXZmdRRUpTVDF4cHlETXBNenRFblk4TENwRVhVMWsyM3VTNmJ1dVIw?=
+ =?utf-8?B?UDVtOVRLcUhsQXQ5N3hpMGdCYWtua3loMEtmUlliOVZqbHR4SnNZc2syOVlt?=
+ =?utf-8?B?cXdvL3d4QkRGaU9mMGxZQnhSdkFYRlE2Z3NHQlBBbjVnUVhqRkd2cE8yR2dW?=
+ =?utf-8?B?cldYekhmenQrbUF5SlNvaTZ0UmkxbGdWUVVxM2JTemo5SEo1ZWZBUlNCK2hx?=
+ =?utf-8?B?RTFhYklFRGt2cFNnMmRBT0d1VmlDLzR1RHZvOWZ5N0JBL1c3Wk9SelRuQ01S?=
+ =?utf-8?B?OHVHQmhpTFJYUXlhMHhmZXhGUHFwWmNWN2RiVnBXL2EvZEFnOVhRaHg2V0Vv?=
+ =?utf-8?B?MGd3d1I1elVsb0xaMUxRNmwxKzZYa3Q4OVNlbDlhdnZoSVEyUnVQSmJxWVkx?=
+ =?utf-8?B?b091VXpFOG1RV2cxRXpIWkJla1cvNVlkdjJ0UWt6Yks0cnNwaURhNWp3OHB4?=
+ =?utf-8?B?ZVlTeXgxM005VFVScTgyOVVxdHZBRGVaTEhneTgvYUo2cUNyd0NGa1pQNzA2?=
+ =?utf-8?B?SUp0by9lTUJZUTkzTWVQVDZ4SGJoRUE4cHYxZ1pLei9PZ2tMNG9VQU0rZWtp?=
+ =?utf-8?B?WlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0acfb7d7-f78a-4ace-c0e0-08dce916cc4f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2024 10:32:10.7268
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Sizvt1wMGAIaDkYoX73Xa71JbtdcqdK3A/Uu8v918ebvSdq/XN4Gh/28l0s3kaYhAvwOTR8tmvckDO4gXfS2FN1spLtGwYWuTqChP5SfqRI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8103
+X-OriginatorOrg: intel.com
 
-On Thu, Oct 10, 2024 at 02:17:25AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Niklas Cassel <cassel@kernel.org>
-> > Sent: 2024年10月9日 23:00
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > shawnguo@kernel.org; l.stach@pengutronix.de; devicetree@vger.kernel.org;
-> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; kernel@pengutronix.de; imx@lists.linux.dev
-> > Subject: Re: [PATCH v5 1/4] dt-bindings: imx6q-pcie: Add reg-name "dbi2" and
-> > "atu" for i.MX8M PCIe Endpoint
-> > 
-> > On Tue, Aug 13, 2024 at 03:42:20PM +0800, Richard Zhu wrote:
-> > > Add reg-name: "dbi2", "atu" for i.MX8M PCIe Endpoint.
-> > >
-> > > For i.MX8M PCIe EP, the dbi2 and atu addresses are pre-defined in the
-> > > driver. This method is not good.
-> > >
-> > > In commit b7d67c6130ee ("PCI: imx6: Add iMX95 Endpoint (EP) support"),
-> > > Frank suggests to fetch the dbi2 and atu from DT directly. This commit
-> > > is preparation to do that for i.MX8M PCIe EP.
-> > >
-> > > These changes wouldn't break driver function. When "dbi2" and "atu"
-> > > properties are present, i.MX PCIe driver would fetch the according
-> > > base addresses from DT directly. If only two reg properties are
-> > > provided, i.MX PCIe driver would fall back to the old method.
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml  | 13
-> > > +++++++++----
-> > >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
-> > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
-> > > index a06f75df8458..84ca12e8b25b 100644
-> > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
-> > > @@ -65,12 +65,14 @@ allOf:
-> > >      then:
-> > >        properties:
-> > >          reg:
-> > > -          minItems: 2
-> > > -          maxItems: 2
-> > > +          minItems: 4
-> > > +          maxItems: 4
-> > 
-> > Now it seems like this patch has already been picked up, but how is this not
-> > breaking DT backwards compatibility?
-> > 
-> > You are here increasing minItems, which means that an older DT should now fail
-> > to validate using the new schema?
-> > 
-> > I thought that it was only acceptable to add new optional properties after the
-> > DT binding has been accepted.
-> > 
-> > What am I missing?
-> > 
-> > 
-> > If the specific compatible isn't used by any DTS in a released kernel, then I think
-> > that the commit log should have clearly stated so, and explained that that is the
-> > reason why it is okay to break DT backwards compatibility.
-> > 
-> Hi Niklas:
-> Thanks for your comments and concerns.
-> Up to now, the pcie_ep of i.MX8MP is only present in i.mx8mp.dtsi file.
-> And it isn't used by any DTS in the release kernels.
-> So, this series wouldn't break DT backwards compatibility.
+Hi,
 
-Ok, this information should have been in the commit message IMO.
-(Too late now, but for the next patch affecting i.mx8mp.dtsi)
+Resurrecting an old series [1], now that we have an in-tree user for it.
 
-In the normal case, someone reviewing a DT binding patch will of course
-assume there thre is actually a DTS using the binding, thus in the
-(non-normal) case where there is no DTS using the binding, I think that
-you should explicitly mention that in the commit message.
+For regular BAR, drivers can use pci_resize_resource to resize it to the
+desired size provided that it is supported by the hardware, which the
+driver can query using pci_rebar_get_possible_sizes.
+This series expands the API to work with IOV BAR as well.
+It also adds the additional API to allow extending the VF BAR within the
+original resource boundary.
 
+Thanks,
+-Michał
 
-Kind regards,
-Niklas
+[1] https://lore.kernel.org/all/20211215141626.3090807-1-michal.winiarski@intel.com/
+
+v1 -> v2:
+- Add pci_iov_resource_extend() and usage in Xe driver
+- Reduce the number of ifdefs (Christian)
+- Drop patch 2/2 from v1 (Christian)
+- Add a helper to avoid upsetting static analysis tools (Krzysztof)
+
+v2 -> v3:
+- Extract introducing pci_resource_is_iov to separate commit and
+  use it elsewhere in PCI subsystem (Christian)
+- Extract restoring VF rebar state to separate commit (Christian)
+- Reorganize memory decoding check (Christian)
+- Don't use dev_WARN (Ilpo)
+- Fix build without CONFIG_PCI_IOV (CI)
+
+Michał Winiarski (5):
+  PCI/IOV: Restore VF resizable BAR state after reset
+  PCI: Add a helper to identify IOV resources
+  PCI: Allow IOV resources to be resized in pci_resize_resource
+  PCI/IOV: Allow extending VF BAR within original resource boundary
+  drm/xe/pf: Extend the VF LMEM BAR
+
+ drivers/gpu/drm/xe/regs/xe_bars.h |   1 +
+ drivers/gpu/drm/xe/xe_sriov_pf.c  |   8 ++
+ drivers/pci/iov.c                 | 141 +++++++++++++++++++++++++++++-
+ drivers/pci/pci.c                 |   9 +-
+ drivers/pci/pci.h                 |  27 +++++-
+ drivers/pci/setup-bus.c           |   5 +-
+ drivers/pci/setup-res.c           |  37 ++++++--
+ include/linux/pci.h               |   3 +
+ include/uapi/linux/pci_regs.h     |   1 +
+ 9 files changed, 213 insertions(+), 19 deletions(-)
+
+-- 
+2.47.0
+
 
