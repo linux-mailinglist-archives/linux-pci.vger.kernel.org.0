@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-14148-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14149-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CD89997D5D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 08:36:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D92EE997D63
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 08:37:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA58B1F21AF6
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 06:36:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 754F0B2218C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Oct 2024 06:37:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E7E51B5ED8;
-	Thu, 10 Oct 2024 06:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCE71BBBF7;
+	Thu, 10 Oct 2024 06:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l4HgT9bc"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OHoRfRhX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0937B1AFB35;
-	Thu, 10 Oct 2024 06:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5181B533F;
+	Thu, 10 Oct 2024 06:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728542183; cv=none; b=dKabpBkifjp7EQzmikjPxDBhLZa49DPjUOcgaAKStqDmKiMblzUuOO7OVlL+8CdcEAGQFTRhHwmVgCLsdHeW0Z9C7Krq3iZiqeVaOUbKcKJoS5YuZB4D1y2Ux9X6ZYYFDLsNfvypNccamJjqDBOjCWsCFxi+6q8FxxRBP0ATHi4=
+	t=1728542185; cv=none; b=PJDyoVhgHXlE8vnW3iDrJcJa4/1y2jYwThJ+bUTeqo3gG3Zecpuz2IO4qpugVf4SjtL5E2nA+Fipt55OnKGeBIOonxMXPbdRQIUK/QUEAJhYYB78joIY1xE6JBvI4B4YHmoZl0A2QtoGLMtFbctvnbzP86vzJePIICWIzJYjvQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728542183; c=relaxed/simple;
-	bh=4kghCVbBraLlQpqx8DAgenOlDS6CE+jDcPdxfrAEDgE=;
+	s=arc-20240116; t=1728542185; c=relaxed/simple;
+	bh=+SVdKl1IWa/HJRCY4IavIoOe2teX0PV4vUDkok6B1lo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NHW0N926ogNjQnecIRshCFQWXJA19I0Pc56Ta/gYPaEc2lZzpdBICwd2mJaXBxFp0KskHBUM1RXu/8TexbHkp5wbO4s5OcAUP8BQDxf1bk4pDvBrKIxjwdPdhdF8xxUndCPgd0gXPmfDJYF1OjdRu1WETbEdmauAkaxQzcIyLpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l4HgT9bc; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=KpRQ3XYlZzHGveLJMvEkEvqwQ5uikL9uJFuhs9hc0e8lr2K7t02t06OinMzsO5dX78F3NnKVkV/lEZGKVY4JRT5O3E4yWfhf+WZaWA3tSMXp93jW4cCgey+Hgy+vZ7tE1N6UtcVCnnThgPAls8COqFNcNHqb0xWdETCVjWObmvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OHoRfRhX; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id C74501C0007;
-	Thu, 10 Oct 2024 06:36:17 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 8025C1C0002;
+	Thu, 10 Oct 2024 06:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1728542179;
+	t=1728542181;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h0Ips3fu7+7BgqtN1VK4fBVu80FSths6Nq7bdNsRq4A=;
-	b=l4HgT9bcsFNK7eMEZ/EyeuQiPnOxIhco8f63y0VOFKAhrxMZNhdmVFbDgX7LBsevSKh8V5
-	dPpqC07N1gcroVCqI24DnA+X0LIKB8ZEYWZDedkjhhD7pinNIqQTXIR+/cpAZhni+5CMx3
-	Jlhu+TauxjXL2t/h5DBtVLJJq2MNBFN/AW/Ulfep34j9wzJyCWI+IQ31MuBmrSxhQz0m9J
-	50dy4coUZsnWUX/Ca9T32x96RXY1Oap3TqCukD0sOE51p7r9F4ElBtSZXc9UvgHb5AIfAV
-	3vL9E7Wbs917XT9YoYQIT0fpR1iqobZLi+EloCHKzhMFFo7jkfVc/0BEfbobig==
+	bh=dfuIYqw7th60ZTkt8Ycp++b+l5ZZV6kmbe9D3MS4HFQ=;
+	b=OHoRfRhXY4aHRMqd/QxPPu0rhMN7W6kyD/O2jRTHAXimoGP3d0WjQCwS8PsWY9hvWUcVID
+	w/I0Kb2BJG9sWyE8Dld10TGvLRqAa0xBtAqiLx+2nc8nwHRDRiJSGy+EPvG6iXoCKT3hIJ
+	2hSgN4+KHlzAIVq0nSv/yg60+Qgd+gboyOrpxUWp8u5yHIq/nrjNMqtmI0EBPqSiWcKW6q
+	iKFLDO6HngyGcZpWoz5KoluLRa59TXGSdPBbanMCQdVwKphfr0PAjFi2lBjME1BvJjTY6N
+	v9cDrGQ5liIp3ENPqbeiC30Pctv1s4eqgeoShOyaQePiV142EIVK0wXaBc86KQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Geert Uytterhoeven <geert@linux-m68k.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -80,9 +80,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v9 2/6] MAINTAINERS: Add the Microchip LAN966x PCI driver entry
-Date: Thu, 10 Oct 2024 08:36:02 +0200
-Message-ID: <20241010063611.788527-3-herve.codina@bootlin.com>
+Subject: [PATCH v9 3/6] reset: mchp: sparx5: Map cpu-syscon locally in case of LAN966x
+Date: Thu, 10 Oct 2024 08:36:03 +0200
+Message-ID: <20241010063611.788527-4-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241010063611.788527-1-herve.codina@bootlin.com>
 References: <20241010063611.788527-1-herve.codina@bootlin.com>
@@ -95,31 +95,76 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-After contributing the driver, add myself as the maintainer for the
-Microchip LAN966x PCI driver.
+In the LAN966x PCI device use case, the syscon API cannot be used as
+it does not support device removal [1]. A syscon device is a core
+"system" device and not a device available in some addon boards and so,
+it is not supposed to be removed. The syscon API follows this assumption
+but this assumption is no longer valid in the LAN966x use case.
 
+In order to avoid the use of the syscon API and so, support for removal,
+use a local mapping of the syscon device.
+
+Link: https://lore.kernel.org/all/20240923100741.11277439@bootlin.com/ [1]
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/reset/reset-microchip-sparx5.c | 35 +++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c27f3190737f..79125b6f7814 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15184,6 +15184,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
- F:	drivers/irqchip/irq-lan966x-oic.c
+diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
+index 636e85c388b0..48a62d5da78d 100644
+--- a/drivers/reset/reset-microchip-sparx5.c
++++ b/drivers/reset/reset-microchip-sparx5.c
+@@ -62,6 +62,28 @@ static const struct reset_control_ops sparx5_reset_ops = {
+ 	.reset = sparx5_reset_noop,
+ };
  
-+MICROCHIP LAN966X PCI DRIVER
-+M:	Herve Codina <herve.codina@bootlin.com>
-+S:	Maintained
-+F:	drivers/misc/lan966x_pci.c
-+F:	drivers/misc/lan966x_pci.dtso
++static const struct regmap_config mchp_lan966x_syscon_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++};
 +
- MICROCHIP LCDFB DRIVER
- M:	Nicolas Ferre <nicolas.ferre@microchip.com>
- L:	linux-fbdev@vger.kernel.org
++static struct regmap *mchp_lan966x_syscon_to_regmap(struct device *dev,
++						    struct device_node *syscon_np)
++{
++	struct regmap_config regmap_config = mchp_lan966x_syscon_regmap_config;
++	resource_size_t size;
++	void __iomem *base;
++
++	base = devm_of_iomap(dev, syscon_np, 0, &size);
++	if (IS_ERR(base))
++		return ERR_CAST(base);
++
++	regmap_config.max_register = size - 4;
++
++	return devm_regmap_init_mmio(dev, base, &regmap_config);
++}
++
+ static int mchp_sparx5_map_syscon(struct platform_device *pdev, char *name,
+ 				  struct regmap **target)
+ {
+@@ -72,7 +94,18 @@ static int mchp_sparx5_map_syscon(struct platform_device *pdev, char *name,
+ 	syscon_np = of_parse_phandle(pdev->dev.of_node, name, 0);
+ 	if (!syscon_np)
+ 		return -ENODEV;
+-	regmap = syscon_node_to_regmap(syscon_np);
++
++	/*
++	 * The syscon API doesn't support syscon device removal.
++	 * When used in LAN966x PCI device, the cpu-syscon device needs to be
++	 * removed when the PCI device is removed.
++	 * In case of LAN966x, map the syscon device locally to support the
++	 * device removal.
++	 */
++	if (of_device_is_compatible(pdev->dev.of_node, "microchip,lan966x-switch-reset"))
++		regmap = mchp_lan966x_syscon_to_regmap(&pdev->dev, syscon_np);
++	else
++		regmap = syscon_node_to_regmap(syscon_np);
+ 	of_node_put(syscon_np);
+ 	if (IS_ERR(regmap)) {
+ 		err = PTR_ERR(regmap);
 -- 
 2.46.2
 
