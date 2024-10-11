@@ -1,144 +1,93 @@
-Return-Path: <linux-pci+bounces-14328-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E51E399A672
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 16:36:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3235399A708
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 16:58:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61F18285A91
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:36:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D10FA1F247BA
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:58:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3A483CDB;
-	Fri, 11 Oct 2024 14:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25567183CD5;
+	Fri, 11 Oct 2024 14:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sF4QHqW9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIHEy4lp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6800184;
-	Fri, 11 Oct 2024 14:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC45F405FB;
+	Fri, 11 Oct 2024 14:58:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728657394; cv=none; b=MslBGkDv0wftK0pqUrYrVo7baGq3YoZKgWxBWKCjc5ItDPqaIuBSzjVBoQIiXB2rPjOqlFNIM000eaU2PD937UXElH49jlWwcDiyDoVyePUOtoeCz4ARJ2cFcclENuORXupM5fn9czIIQdTc74sHFl4nT4gzANg0IbFAU79ssS0=
+	t=1728658718; cv=none; b=ioxfcTahUuGYVZLK+S/FQ7nKgF1ljq4XmNlBa8X9gYcV25erIo7nUNwSGVmlOxjSDmQRC91bYMmpmA7EEkGDc7dhcNlLAZs9U8hxw/RyGd8wh9yNOHqYFK3IpZ4ClPxjF22O6VfxThiBYbWUSQm4YFRTXDijoS/WEG5IhuD28fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728657394; c=relaxed/simple;
-	bh=elTTuQlhe68qlI7O7q5tMA03WudpGcGqjtAOdfqvfuA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tSZtFwyda1E9Wq+AqosXhqAFBuW/GRdy9oRI3S3FFWIKSYB/gb0rjkyMQWjAgZGNnIFHYfrnpdcFXdZ97BX7YialJkAfVLUmUgxgAZnGTTbs1JLYZIhkZCP+qFxWXGf2yr0aEP6eARw1TOkCcRL+EUcTGJpIkK8yz/2I2t3BPrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sF4QHqW9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF95CC4CEC7;
-	Fri, 11 Oct 2024 14:36:25 +0000 (UTC)
+	s=arc-20240116; t=1728658718; c=relaxed/simple;
+	bh=uAC1hsqraTaOFn/zr9dLVaQssrqC5CU+EZzISvIxio0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sRqgmjpE7xx9Lj9J6WTRohoFBW7z/NinnXe00bwnaq4fWkHjn9wKq4KrO8LXhTvanu6pe2U8eTbv7mEoL/m9B7pM7OPuEk8CNy93Ww4YqqnWZnbRGPhistBaS+3wiDf4hGw7TAggg/Iyh8Pz63q+unrtLKxkvamWQhv0HCmkb2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIHEy4lp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE88C4CEC3;
+	Fri, 11 Oct 2024 14:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728657394;
-	bh=elTTuQlhe68qlI7O7q5tMA03WudpGcGqjtAOdfqvfuA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=sF4QHqW9rn0Q59fdNsnpCmNanVUU2iXqmZSnV0CgncA2F1ARM2OUZVpqgD2L3CEye
-	 jFnBiBX4SG5yxNlwDYR43PCmLkCcmGMsfeQM744V5BEt97bQ38/0VJE5jsBoHDphg4
-	 7uCuL8GP3lUbVXcOgpjQl410CkV+l6nddbhGTJd5L+78HkU9Z0jWgdBUU1OhCRrlCI
-	 Pni0UIT36/oseekkB3W2T7dLs1lwWnXxKvp+nji4aB3/x7msrmZAJjBl9Uf4rAZ4to
-	 aA6BJntRAP5vu7+AjdUXohpjbg3091gMQUonHRc5Sy4UeC0QRCWga8w8Oj82LKVMEt
-	 mDUo6hTBRGLjQ==
-Message-ID: <937d3d61-482a-4a14-a594-615f10baf5f0@kernel.org>
-Date: Fri, 11 Oct 2024 16:36:22 +0200
+	s=k20201202; t=1728658717;
+	bh=uAC1hsqraTaOFn/zr9dLVaQssrqC5CU+EZzISvIxio0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eIHEy4lp246ggA2OYzvv+z9GX7D7xmeg948RSojVeXyWwNg5D33SKml5W5BNQcIOK
+	 EMphgUffYqBHSKps4UB2VJ5tTb1eH/DDtjVjL1qtJWkDgcgInRraCXeUpej1VNtYlD
+	 7CE3hdsF+3M+8d4bLoBC/hVh4KFcjC2rNr9yFgU2ls64I/I7keMNsKaMaBTH9+6WnY
+	 KYHjnPCts0m7NhKOnH5q0kvhOdOR9kC54m2ZM4JBiFEXOj82ex/9Hm4U54KOjE3MWz
+	 gpkqPnZSJU0Z4BrfF87E6zRRZL53zdSXuDcyKKDRhKppIN1ZWD6sHz1rZXTozpy+QX
+	 yYemcmYg02ymA==
+Date: Fri, 11 Oct 2024 16:58:33 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Saravana Kannan <saravanak@google.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/7] PCI: Constify pci_register_io_range() fwnode_handle
+Message-ID: <lvjupiwar2vy4v3ulracyi4jbyadj252odf7vhbdt2ij5fc7vh@rrsyabqsmci6>
+References: <20241010-dt-const-v1-0-87a51f558425@kernel.org>
+ <20241010-dt-const-v1-1-87a51f558425@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global'
- interrupt
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
- robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
- sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
- quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org, kw@linux.com,
- lpieralisi@kernel.org, neil.armstrong@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
- <20241011104142.1181773-4-quic_qianyu@quicinc.com>
- <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241010-dt-const-v1-1-87a51f558425@kernel.org>
 
-On 11/10/2024 16:33, Krzysztof Kozlowski wrote:
-> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
->> Document 'global' SPI interrupt along with the existing MSI interrupts so
->> that QCOM PCIe RC driver can make use of it to get events such as PCIe
->> link specific events, safety events, etc.
+On Thu, Oct 10, 2024 at 11:27:14AM -0500, Rob Herring (Arm) wrote:
+> pci_register_io_range() does not modify the passed in fwnode_handle, so
+> make it const.
 > 
-> Describe the hardware, not what the driver will do.
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> Please ack and I'll take with the rest of the series.
+> ---
+>  drivers/pci/pci.c   | 2 +-
+>  include/linux/pci.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
->>
->> Though adding a new interrupt will break the ABI, it is required to
->> accurately describe the hardware.
-> 
-> That's poor reason. Hardware was described and missing optional piece
-> (because according to your description above everything was working
-> fine) is not needed to break ABI.
-> 
-> Sorry, if your driver changes the ABI for this poor reason.
-> 
-> NAK.
-> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 7d85c04fbba2..4b102bd1cfea 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4163,7 +4163,7 @@ EXPORT_SYMBOL(pci_request_regions_exclusive);
+>   * Record the PCI IO range (expressed as CPU physical address + size).
+>   * Return a negative value if an error has occurred, zero otherwise
+>   */
+> -int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
+> +int pci_register_io_range(const struct fwnode_handle *fwnode, phys_addr_t addr,
+>  			resource_size_t	size)
 
-Plus you did not test DTS, not fixed existing users.
-
-That's v6, so we assume you already know how to test it and do the
-testing before posting new versions.
+Either I look at wrong tree (next) or something is missing and this is
+not bisectable. The fwnode is assigned to range->fwnode which is not
+const.
 
 Best regards,
 Krzysztof
