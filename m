@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-14284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14285-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54FD499A321
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:01:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9E3399A323
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:01:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B83F9B22E97
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:01:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55CAAB2362F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1FF71CB311;
-	Fri, 11 Oct 2024 12:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C44215F55;
+	Fri, 11 Oct 2024 12:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgLI7Kov"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKPLMqeY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE681217328
-	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA63420B21A
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728648081; cv=none; b=WJaEY3oo6MhVQ7/zMDT9NlY9A1IWre8lnbUqskrknJtAr3CqmR96qsG+1ViK1sgjXixzSYV4bjMZRn9olRzSHI84vPD7E6l7uNOyTbBMkfF6+bUEVGKQnS2CbOJqmSQw9n85e6mTc3vsL+ItSKvWpw7GI9adhEwncEgNFWHkAqk=
+	t=1728648084; cv=none; b=bdZXAoJl2UOb8aaIEXMtX2KdmFq+CR20Plvi8RjUVJfmQiCBnujxWrNm/ko/kTKOdNYWy2knNLxv0Qq14XdrDoN7TP9pL82b2+AsSB7m+7WejllC2hMdPd9FTiW6di4LjhKudkXNiwP3uLWjXDG01J90p7WWb6HVkGLi+OHj+00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728648081; c=relaxed/simple;
-	bh=iNfrJBwwFI7j5pHupmrYIY4mz/G7Ry/1L5wK2FA8xok=;
+	s=arc-20240116; t=1728648084; c=relaxed/simple;
+	bh=2pIMqO+1BPUWENwocGsBk0ugzEQ8nFRlLXw5YWuO6nw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YD7RxNQisooH25zqLkZyCzR++ncY04qH7U73XjbSXvAB6aQAee1TaSIIHY9WmOcfvYk6HBk0SG4siVJpEjpLCME1QW6LvS6U286nLoG5BL6pj6aQczixMe3YIqB/GMj3N3k7Ydq/q5ylDJgBYVFBBFyL/Ln9u/Bsw5HBekVJ+74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgLI7Kov; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C9CC4CED0;
-	Fri, 11 Oct 2024 12:01:19 +0000 (UTC)
+	 MIME-Version; b=MUuFkEhjCCL+79yN9sf9lXOgHD1akZUVqNw4KfK1ruJTIRKeDlY7G2r/Js+ET77K9VALdEPI2vRSToFUlB7ElBo5WDpkyRpsXM8CLI7rBgyMuixuYtKw8VZOxcUpXtih/ES/lBBxSCS4zHJFlZVbGcDa+ZapUuyd6uif5Hi8YVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKPLMqeY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D495C4CED2;
+	Fri, 11 Oct 2024 12:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728648081;
-	bh=iNfrJBwwFI7j5pHupmrYIY4mz/G7Ry/1L5wK2FA8xok=;
+	s=k20201202; t=1728648083;
+	bh=2pIMqO+1BPUWENwocGsBk0ugzEQ8nFRlLXw5YWuO6nw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qgLI7Kovi8eebYQTt4IZQw8f9+84xzVSM0uo/pdYjuS9gDfwzlPgmw/ryg9LdP9MP
-	 Q+LvLSM/tgTXrYeDVXQmUFxfVmZBwbjehFwuA8mCVlFBRqsrxVcsWLsaq2q9LnaK5B
-	 bq5cYZxhXWOODdBBRovUz4uMPjncdNhbu18ksWA3zfRdPqtd8aifLJf7Tr6BHmPxr6
-	 YxxmkDgbxr2m9Bl66QQdu9txwxVuzwqpNNgaS2oBurLjBSMBOCHcd36UpyFdQupCgF
-	 +wI1QHXcPgCROhT5iitMLa5VyjNyc6wt211JpGVGWcrxD+vfyFpqqgF4mHl/arVu+n
-	 fMFoVqM9FOntg==
+	b=YKPLMqeYFiApLkrmb9S3U2PK0PF9AeYvsNcMV4drjv0jVLtf3tbMmymJbSWnm/aVn
+	 eEp2TR37X6Wk9CB2GbJWBcx8TJ26xJ2o8GCOXa7UeSVa2mrGtDwpe0dmNMQua52Te+
+	 5UxCIk+/JCTDSgs6TgnmNlphj2RFK/trzBoQI8NoOCV5F3se2NLyG0bXypc844ojS0
+	 +L5v9EgU3P1tFCF8iAmg/pTKrQ8Wl1YQpTv5KqbVzGFNDyIebBdZElF3EZBIzPkfr/
+	 QyuXwJ70R+3E0dv0frKoG1sokF2wchiRZ578jZ05CHn6aj15jG23rELx2vQ3WPEbDd
+	 q69I4XRP6BzRg==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -53,9 +53,9 @@ To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	linux-pci@vger.kernel.org
 Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v5 1/6] PCI: endpoint: Introduce pci_epc_function_is_valid()
-Date: Fri, 11 Oct 2024 21:01:10 +0900
-Message-ID: <20241011120115.89756-2-dlemoal@kernel.org>
+Subject: [PATCH v5 2/6] PCI: endpoint: Improve pci_epc_mem_alloc_addr()
+Date: Fri, 11 Oct 2024 21:01:11 +0900
+Message-ID: <20241011120115.89756-3-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241011120115.89756-1-dlemoal@kernel.org>
 References: <20241011120115.89756-1-dlemoal@kernel.org>
@@ -67,211 +67,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the epc core helper function pci_epc_function_is_valid() to
-verify that an epc pointer, a physical function number and a virtual
-function number are all valid. This avoids repeating the code pattern:
-
-if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-	return err;
-
-if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-	return err;
-
-in many functions of the endpoint controller core code.
+There is no point in attempting to allocate memory from an endpoint
+controller memory window if the requested size is larger than the memory
+window size. Add a check to skip bitmap_find_free_region() calls for
+such case. This check can be done without the mem->lock mutex held as
+memory window sizes are constant and never modified at runtime.
+Also change the final return to return NULL to simplify the code.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 79 +++++++++++------------------
- 1 file changed, 31 insertions(+), 48 deletions(-)
+ drivers/pci/endpoint/pci-epc-mem.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 17f007109255..b854f1bab26f 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -128,6 +128,18 @@ enum pci_barno pci_epc_get_next_free_bar(const struct pci_epc_features
+diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+index a9c028f58da1..218a60e945db 100644
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -178,7 +178,7 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+ 				     phys_addr_t *phys_addr, size_t size)
+ {
+-	void __iomem *virt_addr = NULL;
++	void __iomem *virt_addr;
+ 	struct pci_epc_mem *mem;
+ 	unsigned int page_shift;
+ 	size_t align_size;
+@@ -188,10 +188,13 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+ 
+ 	for (i = 0; i < epc->num_windows; i++) {
+ 		mem = epc->windows[i];
+-		mutex_lock(&mem->lock);
++		if (size > mem->window.size)
++			continue;
++
+ 		align_size = ALIGN(size, mem->window.page_size);
+ 		order = pci_epc_mem_get_order(mem, align_size);
+ 
++		mutex_lock(&mem->lock);
+ 		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
+ 						 order);
+ 		if (pageno >= 0) {
+@@ -211,7 +214,7 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+ 		mutex_unlock(&mem->lock);
+ 	}
+ 
+-	return virt_addr;
++	return NULL;
  }
- EXPORT_SYMBOL_GPL(pci_epc_get_next_free_bar);
+ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
  
-+static bool pci_epc_function_is_valid(struct pci_epc *epc,
-+				      u8 func_no, u8 vfunc_no)
-+{
-+	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-+		return false;
-+
-+	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  * pci_epc_get_features() - get the features supported by EPC
-  * @epc: the features supported by *this* EPC device will be returned
-@@ -145,10 +157,7 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
- {
- 	const struct pci_epc_features *epc_features;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return NULL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return NULL;
- 
- 	if (!epc->ops->get_features)
-@@ -218,10 +227,7 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	if (!epc->ops->raise_irq)
-@@ -262,10 +268,7 @@ int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc))
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	if (!epc->ops->map_msi_irq)
-@@ -293,10 +296,7 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
- {
- 	int interrupt;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return 0;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return 0;
- 
- 	if (!epc->ops->get_msi)
-@@ -329,11 +329,10 @@ int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no, u8 interrupts)
- 	int ret;
- 	u8 encode_int;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    interrupts < 1 || interrupts > 32)
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (interrupts < 1 || interrupts > 32)
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_msi)
-@@ -361,10 +360,7 @@ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
- {
- 	int interrupt;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return 0;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return 0;
- 
- 	if (!epc->ops->get_msix)
-@@ -397,11 +393,10 @@ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    interrupts < 1 || interrupts > 2048)
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (interrupts < 1 || interrupts > 2048)
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_msix)
-@@ -428,10 +423,7 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
- void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 			phys_addr_t phys_addr)
- {
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return;
- 
- 	if (!epc->ops->unmap_addr)
-@@ -459,10 +451,7 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	if (!epc->ops->map_addr)
-@@ -489,12 +478,11 @@ EXPORT_SYMBOL_GPL(pci_epc_map_addr);
- void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		       struct pci_epf_bar *epf_bar)
- {
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    (epf_bar->barno == BAR_5 &&
--	     epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (epf_bar->barno == BAR_5 &&
-+	    epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
- 		return;
- 
- 	if (!epc->ops->clear_bar)
-@@ -521,18 +509,16 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	int ret;
- 	int flags = epf_bar->flags;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    (epf_bar->barno == BAR_5 &&
--	     flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
-+		return -EINVAL;
-+
-+	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
- 	    (flags & PCI_BASE_ADDRESS_SPACE_IO &&
- 	     flags & PCI_BASE_ADDRESS_IO_MASK) ||
- 	    (upper_32_bits(epf_bar->size) &&
- 	     !(flags & PCI_BASE_ADDRESS_MEM_TYPE_64)))
- 		return -EINVAL;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
--		return -EINVAL;
--
- 	if (!epc->ops->set_bar)
- 		return 0;
- 
-@@ -561,10 +547,7 @@ int pci_epc_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	/* Only Virtual Function #1 has deviceID */
 -- 
 2.47.0
 
