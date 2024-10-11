@@ -1,302 +1,368 @@
-Return-Path: <linux-pci+bounces-14290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78D7D99A32C
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:03:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8DAF99A361
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:08:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6068D1C210B8
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:03:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0739E1C21997
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:08:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58869216A2A;
-	Fri, 11 Oct 2024 12:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F51D217323;
+	Fri, 11 Oct 2024 12:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmzvnJGf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NexA34kq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193CE21500F
-	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0BF19923C
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728648228; cv=none; b=JzbyWs6jeBqpCwA7oKuoXATXxwr8Kd0km4Q2777/rQpiniEvjRQe9/2wwpJxfIlMBESp7OEYlgAq3Y9LptE+aViREtwx/hDujJhKBSboTzP2FWJwJWf1Phz14aonMfndw2+f9hSDYZW4KkoC5++gW7msYj5sjdAi/1kkbtbnDuM=
+	t=1728648433; cv=none; b=k8b2HjuUY4X3ecBLkCI44jNm2+w1lyV5smgLTT1wi4P5D9bWXN3DhmqaXLpaSXRhIL5wWQMstT7Dfmtf8VsVLD8+kEu0pBgYMLhML7apLbeEoBhbaXcjxbf9Vidk225lzyT7mklEwwWtBnG9sbixniOBySKF5M/R5kwQHq3xOi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728648228; c=relaxed/simple;
-	bh=JWzZMjqpp/xPZ1MmHfjs2qnl7WyX+6LRJNU05aMLIA0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dbIyMqr5FsOnU/VT7B5cQaIF3mo1389Cnjh03DOpq1dflbse6E/rY/gy5PWn0DAxP6YJwm0DyLSKbG5eGOOnPXL5dtulxGFm4cPsTQOOl52AbdZ9RYznGtuIGZD+c16XFJelDNmr0FP77tCDeMes5EcV8R1nIRrjdf2rMBsteKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HmzvnJGf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728648225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3I5lHL6mHTQWMds6pJC4dZUawdNZoxrsfeR6hWpkDqM=;
-	b=HmzvnJGfYk4/e7bD5ZZtE1b+i4kla43u+mtoVdV3eKIMww2ZKVEOWNRVmCAFhxkaud0pyw
-	62ACAt5xy88XuHaqmH9HbSsBJTLndAHJoeBq1lBq+gFVhHa8vfkJfotvh9lLvIjqjSQOes
-	3b7LgyMw9NRjHxYi4hxXNfddwU04vxg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-ad0ev5URObC9p4Pom04GsQ-1; Fri, 11 Oct 2024 08:03:44 -0400
-X-MC-Unique: ad0ev5URObC9p4Pom04GsQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43056c979c9so11793905e9.1
-        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 05:03:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728648223; x=1729253023;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3I5lHL6mHTQWMds6pJC4dZUawdNZoxrsfeR6hWpkDqM=;
-        b=BqLBrIBelnXQVLpp2b6Ph34VKtAb79Eyjnh3uc1puSlVmzjdcMu7qLwoaRCCuWsIEc
-         AFtRjtM/qA7DsLVt0XprM0hgsUTKIiAx6eBRN/0dGJaqlkIpjVpLMD9QPcVi0xWbKTPM
-         Xdk92GUWGutiuro72bXC+Fk0DEpdNVN1+pFreo/hXMserB5nousxKQQbNZ5yWQbfpf10
-         e5UcpRUlz2yoWT/o1KN1+ptL63u01VR5gob/zCyWL2G7UEkahw4flzNE7DSx5NvJdoEx
-         iFGdGvUotcknJZTmoUQbbEPOEgbyjF80Hs/jbBRoACXO8einvPPoRzlZPOMSXM/CcaiM
-         Re6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVrkU/HiIQY/i8ENB+6fk4wbrhEQ/k+/dNBbTlFcfCUJT2irfBIxTqV02Xwy6ZCtO2VheqUkH3viFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXNdeQc7vRnyREv2a8+Rz26dyayusp0OaBgI26MAsTFnnEOwob
-	QEhGPja7/rAArEQUBKJZ9kttL4h+tJeI0hGOAzwyNy2QoU/tWRSruHG5sUTE1F2XmlLO8dP94W4
-	Vh6bDG8CNAlRMG5OjGOGuoQWRct8fsQnJoROnYIQmFXo9T/1M+yRWxbweuQ==
-X-Received: by 2002:a05:600c:1d1c:b0:42c:c003:edd1 with SMTP id 5b1f17b1804b1-4311decaa48mr19191885e9.10.1728648222796;
-        Fri, 11 Oct 2024 05:03:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExbuVJr4JGcXjTZsUgf0Q1cJGFJf/2hMvz1Z5drCky7hS/DrFylID4EQn0lZzCFTWpUUq6Zw==
-X-Received: by 2002:a05:600c:1d1c:b0:42c:c003:edd1 with SMTP id 5b1f17b1804b1-4311decaa48mr19191405e9.10.1728648222253;
-        Fri, 11 Oct 2024 05:03:42 -0700 (PDT)
-Received: from eisenberg.fritz.box ([2001:16b8:3d05:4700:3e59:7d70:cabd:144b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430ccf51770sm73523925e9.22.2024.10.11.05.03.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 05:03:41 -0700 (PDT)
-Message-ID: <914de38f0b6b3d2ddf98c16e427085732bebfd4a.camel@redhat.com>
-Subject: Re: [RFC PATCH 01/13] PCI: Prepare removing devres from pci_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
- <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
- Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
- Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
- <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
- GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
- Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
- Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>,  Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
- Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
- <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
- <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Hannes Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
- Soumya Negi <soumya.negi97@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi
- Liu <yi.l.liu@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
- Christian Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>,
- Reinette Chatre <reinette.chatre@intel.com>, Eric Auger
- <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,  Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
- Marc Zyngier <maz@kernel.org>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-input@vger.kernel.org,
- netdev@vger.kernel.org,  linux-wireless@vger.kernel.org,
- ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
- linux-staging@lists.linux.dev, kvm@vger.kernel.org, 
- xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Date: Fri, 11 Oct 2024 14:03:39 +0200
-In-Reply-To: <20241010114304.064f5d3d.alex.williamson@redhat.com>
-References: <20241009083519.10088-1-pstanner@redhat.com>
-	 <20241009083519.10088-2-pstanner@redhat.com>
-	 <20241010114304.064f5d3d.alex.williamson@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1728648433; c=relaxed/simple;
+	bh=BWsa7EcpFA4GjTAB1nLOfIQu8ihGf+0FxFs3D4LaooU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7HOZWJIocN1jRmIYhIg6ShbREJOtzPH35SBr0lrhK9J3Zqic/I74z4b+bSQ29rosH85dWMN8jIzIfNhQ67hglqSrlFqFiZFw44xznEtRvp2SNr244XoGpfKKvMfmag8f+rPEcflGBBF5NgBMMC/uw3jqfkEiH++zO1oK5nBhTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NexA34kq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807FCC4CEC3;
+	Fri, 11 Oct 2024 12:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728648432;
+	bh=BWsa7EcpFA4GjTAB1nLOfIQu8ihGf+0FxFs3D4LaooU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NexA34kqLzB4aRr9r5pJhvxOYjVIpz+3MEsgq8JTOVJk+IuvmOxr0B8VE12a8yJ/D
+	 2Wi2U23pPvxk9NQsSde9BYF9ecmDkCI4o0wPglTOfw8r/LLobuEvmAw9RG+b4eng8m
+	 8PNFzae9bzIZZgiDK9qbzuONbbvQYsm+9UeRZrZZ8iFRXk20kSkqX3NXbCh4q4n5Q2
+	 D5aWt4pW+K7lLJ3GEblKRI/tXma+x6P1nrOHNlInX3xV0uGIs2I6UqqwD4Kll4yUGu
+	 rHdnWSwXsHFNWI6UNvWE8Stxjr+sKU/5ojkP+2RgsuVjNWiDQyrMEjc/p4LjEVxQuH
+	 udyTK1DtFJOMg==
+Date: Fri, 11 Oct 2024 14:07:07 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Subject: Re: [PATCH v5 3/6] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
+Message-ID: <ZwkU68LjTkahz_RZ@ryzen.lan>
+References: <20241011120115.89756-1-dlemoal@kernel.org>
+ <20241011120115.89756-4-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241011120115.89756-4-dlemoal@kernel.org>
 
-On Thu, 2024-10-10 at 11:43 -0600, Alex Williamson wrote:
-> On Wed,=C2=A0 9 Oct 2024 10:35:07 +0200
-> Philipp Stanner <pstanner@redhat.com> wrote:
->=20
-> > pci_intx() is a hybrid function which sometimes performs devres
-> > operations, depending on whether pcim_enable_device() has been used
-> > to
-> > enable the pci_dev. This sometimes-managed nature of the function
-> > is
-> > problematic. Notably, it causes the function to allocate under some
-> > circumstances which makes it unusable from interrupt context.
-> >=20
-> > To, ultimately, remove the hybrid nature from pci_intx(), it is
-> > first
-> > necessary to provide an always-managed and a never-managed version
-> > of that function. Then, all callers of pci_intx() can be ported to
-> > the
-> > version they need, depending whether they use pci_enable_device()
-> > or
-> > pcim_enable_device().
-> >=20
-> > An always-managed function exists, namely pcim_intx(), for which
-> > __pcim_intx(), a never-managed version of pci_intx() had been
-> > implemented.
-> >=20
-> > Make __pcim_intx() a public function under the name
-> > pci_intx_unmanaged(). Make pcim_intx() a public function.
-> >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > =C2=A0drivers/pci/devres.c | 24 +++---------------------
-> > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0 | 26 ++++++++++++++++++++++++=
-++
-> > =C2=A0include/linux/pci.h=C2=A0 |=C2=A0 2 ++
-> > =C2=A03 files changed, 31 insertions(+), 21 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> > index b133967faef8..475a3ae5c33f 100644
-> > --- a/drivers/pci/devres.c
-> > +++ b/drivers/pci/devres.c
-> > @@ -411,31 +411,12 @@ static inline bool mask_contains_bar(int
-> > mask, int bar)
-> > =C2=A0	return mask & BIT(bar);
-> > =C2=A0}
-> > =C2=A0
-> > -/*
-> > - * This is a copy of pci_intx() used to bypass the problem of
-> > recursive
-> > - * function calls due to the hybrid nature of pci_intx().
-> > - */
-> > -static void __pcim_intx(struct pci_dev *pdev, int enable)
-> > -{
-> > -	u16 pci_command, new;
-> > -
-> > -	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> > -
-> > -	if (enable)
-> > -		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
-> > -	else
-> > -		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
-> > -
-> > -	if (new !=3D pci_command)
-> > -		pci_write_config_word(pdev, PCI_COMMAND, new);
-> > -}
-> > -
-> > =C2=A0static void pcim_intx_restore(struct device *dev, void *data)
-> > =C2=A0{
-> > =C2=A0	struct pci_dev *pdev =3D to_pci_dev(dev);
-> > =C2=A0	struct pcim_intx_devres *res =3D data;
-> > =C2=A0
-> > -	__pcim_intx(pdev, res->orig_intx);
-> > +	pci_intx_unmanaged(pdev, res->orig_intx);
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> > device *dev)
-> > @@ -472,10 +453,11 @@ int pcim_intx(struct pci_dev *pdev, int
-> > enable)
-> > =C2=A0		return -ENOMEM;
-> > =C2=A0
-> > =C2=A0	res->orig_intx =3D !enable;
-> > -	__pcim_intx(pdev, enable);
-> > +	pci_intx_unmanaged(pdev, enable);
-> > =C2=A0
-> > =C2=A0	return 0;
-> > =C2=A0}
-> > +EXPORT_SYMBOL(pcim_intx);
->=20
-> What precludes this from _GPL?=C2=A0 Also note that this is now calling a
-> GPL symbol, so by default I'd assume it should also be GPL.=C2=A0 Thanks,
+On Fri, Oct 11, 2024 at 09:01:12PM +0900, Damien Le Moal wrote:
+> Some endpoint controllers have requirements on the alignment of the
+> controller physical memory address that must be used to map a RC PCI
+> address region. For instance, the endpoint controller of the RK3399 SoC
+> uses at most the lower 20 bits of a physical memory address region as
+> the lower bits of a RC PCI address region. For mapping a PCI address
+> region of size bytes starting from pci_addr, the exact number of
+> address bits used is the number of address bits changing in the address
+> range [pci_addr..pci_addr + size - 1]. For this example, this creates
+> the following constraints:
+> 1) The offset into the controller physical memory allocated for a
+>    mapping depends on the mapping size *and* the starting PCI address
+>    for the mapping.
+> 2) A mapping size cannot exceed the controller windows size (1MB) minus
+>    the offset needed into the allocated physical memory, which can end
+>    up being a smaller size than the desired mapping size.
+> 
+> Handling these constraints independently of the controller being used
+> in an endpoint function driver is not possible with the current EPC
+> API as only the ->align field in struct pci_epc_features is provided
+> but used for BAR (inbound ATU mappings) mapping only. A new API is
+> needed for function drivers to discover mapping constraints and handle
+> non-static requirements based on the RC PCI address range to access.
+> 
+> Introduce endpoint controller operation ->get_mem_map() to allow
+> the EPC core functions to obtain the size and the offset into a
+> controller address region that must be allocated and mapped to access
+> a RC PCI address region. The size of the mapping provided by the
+> get_mem_map() operation can then be used as the size argument for the
+> function pci_epc_mem_alloc_addr() and the offset into the allocated
+> controller memory provided can be used to correctly handle data
+> transfers. For endpoint controllers that have PCI address alignment
+> constraints, get_mem_map() may indicate upon return an effective PCI
+> address region size that is smaller (but not 0) than the requested PCI
+> address region size.
+> 
+> The controller ->get_mem_map() operation is optional: controllers that
+> do not have any alignment constraints for mapping RC PCI address regions
+> do not need to implement this operation. For such controllers, it is
+> always assumed that the mapping size is equal to the requested size of
+> the PCI region and that the mapping offset is 0.
+> 
+> The function pci_epc_mem_map() is introduced to use this new controller
+> operation (if it is defined) to handle controller memory allocation and
+> mapping to a RC PCI address region in endpoint function drivers.
+> 
+> This function first uses the ->get_mem_map() controller operation to
+> determine the controller memory address size (and offset into) needed
+> for mapping an RC PCI address region.  The result of this function
+> operation is used to allocate a controller physical memory region using
+> pci_epc_mem_alloc_addr() and then to map that memory to the RC PCI
+> address space with pci_epc_map_addr().
+> 
+> Since ->get_mem_map() () may indicate that not all of a  RC PCI
+> address region can be mapped, pci_epc_mem_map() may only partially map
+> the RC PCI address region specified. It is the responsibility of the
+> caller (an endpoint function driver) to handle such smaller mapping
+> by repeatedly using pci_epc_mem_map() over the desried PCI address
+> range.
+> 
+> The counterpart of pci_epc_mem_map() to unmap and free the controller
+> memory address region is pci_epc_mem_unmap().
+> 
+> Both functions as well as the ->get_mem_map() controller operation
+> operate using the new struct pci_epc_map data structure. This new
+> structure represents a mapping PCI address, mapping effective size, the
+> size and offset into the controller memory needed for the mapping as
+> well as the physical and virtual CPU addresses of the mapping (phys_base
+> and virt_base fields). For convenience, the physical and virtual CPU
+> addresses within that mapping to access the target RC PCI address region
+> are also provided (phys_addr and virt_addr fields).
+> 
+> Endpoint function drivers can use struct pci_epc_map to access the
+> mapped RC PCI address region using the ->virt_addr and ->pci_size
+> fields.
+> 
+> Co-developed-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/endpoint/pci-epc-core.c | 126 ++++++++++++++++++++++++++++
+>  include/linux/pci-epc.h             |  39 +++++++++
+>  2 files changed, 165 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index b854f1bab26f..b6bf6d9f9f85 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -466,6 +466,132 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
+>  
+> +/*
+> + * Determine the actual PCI address range that should be mapped to access
+> + * @pci_size from @pci_addr. This is done using the controller get_mem_map
+> + * operation if that operation is defined. Otherwise, simply assume that the
+> + * controller has no mapping alignment constraint and return the requested range
+> + * as-is.
+> + */
+> +static int pci_epc_get_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +			       u64 pci_addr, size_t pci_size,
+> +			       struct pci_epc_map *map)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * Initialize and remember the PCI address region to be mapped. The
+> +	 * controller ->get_mem_map() operation may change the map->pci_size to a
+> +	 * smaller value.
+> +	 */
+> +	memset(map, 0, sizeof(*map));
+> +	map->pci_addr = pci_addr;
+> +	map->pci_size = pci_size;
+> +
+> +	if (!epc->ops->get_mem_map) {
+> +		/*
+> +		 * Assume that the EP controller has no alignment constraint,
+> +		 * that is, that the PCI address to map and the size of the
+> +		 * controller memory needed for the mapping are the same as
+> +		 * specified by the caller.
+> +		 */
+> +		map->map_pci_addr = pci_addr;
+> +		map->map_size = pci_size;
+> +		map->map_ofst = 0;
+> +		return 0;
+> +	}
+> +
+> +	mutex_lock(&epc->lock);
+> +	ret = epc->ops->get_mem_map(epc, func_no, vfunc_no, map);
+> +	mutex_unlock(&epc->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * pci_epc_mem_map() - allocate and map a PCI address to a CPU address
+> + * @epc: the EPC device on which the CPU address is to be allocated and mapped
+> + * @func_no: the physical endpoint function number in the EPC device
+> + * @vfunc_no: the virtual endpoint function number in the physical function
+> + * @pci_addr: PCI address to which the CPU address should be mapped
+> + * @pci_size: the number of bytes to map starting from @pci_addr
+> + * @map: where to return the mapping information
+> + *
+> + * Allocate a controller memory address region and map it to a RC PCI address
+> + * region, taking into account the controller physical address mapping
+> + * constraints using pci_epc_get_mem_map().
+> + * The effective size of the PCI address range mapped from @pci_addr is
+> + * indicated by @map->pci_size. This size may be less than the requested
+> + * @pci_size. The local virtual CPU address for the mapping is indicated by
+> + * @map->virt_addr (@map->phys_addr indicates the physical address).
+> + * The size and CPU address of the controller memory allocated and mapped are
+> + * respectively indicated by @map->map_size and @map->virt_base (and
+> + * @map->phys_base).
+> + *
+> + * Returns 0 on success and a negative error code in case of error.
+> + */
+> +int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		    u64 pci_addr, size_t pci_size, struct pci_epc_map *map)
+> +{
+> +	int ret;
+> +
+> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
+> +		return -EINVAL;
+> +
+> +	if (!pci_size || !map)
+> +		return -EINVAL;
+> +
+> +	ret = pci_epc_get_mem_map(epc, func_no, vfunc_no,
+> +				  pci_addr, pci_size, map);
+> +	if (ret)
+> +		return ret;
+> +
+> +	map->virt_base = pci_epc_mem_alloc_addr(epc, &map->phys_base,
+> +						map->map_size);
+> +	if (!map->virt_base)
+> +		return -ENOMEM;
+> +
+> +	map->phys_addr = map->phys_base + map->map_ofst;
+> +	map->virt_addr = map->virt_base + map->map_ofst;
+> +
+> +	ret = pci_epc_map_addr(epc, func_no, vfunc_no, map->phys_base,
+> +			       map->map_pci_addr, map->map_size);
+> +	if (ret) {
+> +		pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
+> +				      map->map_size);
+> +		map->virt_base = 0;
 
-Ah right, I overlooked that pci_intx() also has the _GPL version.
-Will make consistent.
+As reported by the kernel test robot on both v3 and v4, this should be:
+map->virt_base = NULL;
+otherwise you introduce a new sparse warning.
 
-Thx,
-P.
 
->=20
-> Alex
->=20
-> > =C2=A0
-> > =C2=A0static void pcim_disable_device(void *pdev_raw)
-> > =C2=A0{
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 7d85c04fbba2..318cfb5b5e15 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -4476,6 +4476,32 @@ void pci_disable_parity(struct pci_dev *dev)
-> > =C2=A0	}
-> > =C2=A0}
-> > =C2=A0
-> > +/**
-> > + * pci_intx - enables/disables PCI INTx for device dev, unmanaged
-> > version
-> > + * @pdev: the PCI device to operate on
-> > + * @enable: boolean: whether to enable or disable PCI INTx
-> > + *
-> > + * Enables/disables PCI INTx for device @pdev
-> > + *
-> > + * This function behavios identically to pci_intx(), but is never
-> > managed with
-> > + * devres.
-> > + */
-> > +void pci_intx_unmanaged(struct pci_dev *pdev, int enable)
-> > +{
-> > +	u16 pci_command, new;
-> > +
-> > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> > +
-> > +	if (enable)
-> > +		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
-> > +	else
-> > +		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
-> > +
-> > +	if (new !=3D pci_command)
-> > +		pci_write_config_word(pdev, PCI_COMMAND, new);
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_intx_unmanaged);
-> > +
-> > =C2=A0/**
-> > =C2=A0 * pci_intx - enables/disables PCI INTx for device dev
-> > =C2=A0 * @pdev: the PCI device to operate on
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 573b4c4c2be6..6b8cde76d564 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1353,6 +1353,7 @@ int __must_check pcim_set_mwi(struct pci_dev
-> > *dev);
-> > =C2=A0int pci_try_set_mwi(struct pci_dev *dev);
-> > =C2=A0void pci_clear_mwi(struct pci_dev *dev);
-> > =C2=A0void pci_disable_parity(struct pci_dev *dev);
-> > +void pci_intx_unmanaged(struct pci_dev *pdev, int enable);
-> > =C2=A0void pci_intx(struct pci_dev *dev, int enable);
-> > =C2=A0bool pci_check_and_mask_intx(struct pci_dev *dev);
-> > =C2=A0bool pci_check_and_unmask_intx(struct pci_dev *dev);
-> > @@ -2293,6 +2294,7 @@ static inline void pci_fixup_device(enum
-> > pci_fixup_pass pass,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0 struct pci_dev *dev) { }
-> > =C2=A0#endif
-> > =C2=A0
-> > +int pcim_intx(struct pci_dev *pdev, int enabled);
-> > =C2=A0void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned
-> > long maxlen);
-> > =C2=A0void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
-> > =C2=A0				const char *name);
->=20
-
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_epc_mem_map);
+> +
+> +/**
+> + * pci_epc_mem_unmap() - unmap and free a CPU address region
+> + * @epc: the EPC device on which the CPU address is allocated and mapped
+> + * @func_no: the physical endpoint function number in the EPC device
+> + * @vfunc_no: the virtual endpoint function number in the physical function
+> + * @map: the mapping information
+> + *
+> + * Unmap and free a CPU address region that was allocated and mapped with
+> + * pci_epc_mem_map().
+> + */
+> +void pci_epc_mem_unmap(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		       struct pci_epc_map *map)
+> +{
+> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
+> +		return;
+> +
+> +	if (!map || !map->virt_base)
+> +		return;
+> +
+> +	pci_epc_unmap_addr(epc, func_no, vfunc_no, map->phys_base);
+> +	pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
+> +			      map->map_size);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_epc_mem_unmap);
+> +
+>  /**
+>   * pci_epc_clear_bar() - reset the BAR
+>   * @epc: the EPC device for which the BAR has to be cleared
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 42ef06136bd1..b5f5c1eb54c5 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -32,11 +32,44 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+>  	}
+>  }
+>  
+> +/**
+> + * struct pci_epc_map - information about EPC memory for mapping a RC PCI
+> + *                      address range
+> + * @pci_addr: start address of the RC PCI address range to map
+> + * @pci_size: size of the RC PCI address range mapped from @pci_addr
+> + * @map_pci_addr: RC PCI address used as the first address mapped (may be lower
+> + *                than @pci_addr)
+> + * @map_size: size of the controller memory needed for mapping the RC PCI address
+> + *            range @pci_addr..@pci_addr+@pci_size
+> + * @map_ofst: offset into the mapped controller memory to access @pci_addr
+> + * @phys_base: base physical address of the allocated EPC memory for mapping the
+> + *             RC PCI address range
+> + * @phys_addr: physical address at which @pci_addr is mapped
+> + * @virt_base: base virtual address of the allocated EPC memory for mapping the
+> + *             RC PCI address range
+> + * @virt_addr: virtual address at which @pci_addr is mapped
+> + */
+> +struct pci_epc_map {
+> +	phys_addr_t	pci_addr;
+> +	size_t		pci_size;
+> +
+> +	phys_addr_t	map_pci_addr;
+> +	size_t		map_size;
+> +	phys_addr_t	map_ofst;
+> +
+> +	phys_addr_t	phys_base;
+> +	phys_addr_t	phys_addr;
+> +	void __iomem	*virt_base;
+> +	void __iomem	*virt_addr;
+> +};
+> +
+>  /**
+>   * struct pci_epc_ops - set of function pointers for performing EPC operations
+>   * @write_header: ops to populate configuration space header
+>   * @set_bar: ops to configure the BAR
+>   * @clear_bar: ops to reset the BAR
+> + * @get_mem_map: operation to get the size and offset into a controller memory
+> + *               window needed to map an RC PCI address region
+>   * @map_addr: ops to map CPU address to PCI address
+>   * @unmap_addr: ops to unmap CPU address and PCI address
+>   * @set_msi: ops to set the requested number of MSI interrupts in the MSI
+> @@ -61,6 +94,8 @@ struct pci_epc_ops {
+>  			   struct pci_epf_bar *epf_bar);
+>  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  			     struct pci_epf_bar *epf_bar);
+> +	int	(*get_mem_map)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +			       struct pci_epc_map *map);
+>  	int	(*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  			    phys_addr_t addr, u64 pci_addr, size_t size);
+>  	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> @@ -278,6 +313,10 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size);
+>  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+>  			   void __iomem *virt_addr, size_t size);
+> +int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		    u64 pci_addr, size_t pci_size, struct pci_epc_map *map);
+> +void pci_epc_mem_unmap(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		       struct pci_epc_map *map);
+>  
+>  #else
+>  static inline void pci_epc_init_notify(struct pci_epc *epc)
+> -- 
+> 2.47.0
+> 
 
