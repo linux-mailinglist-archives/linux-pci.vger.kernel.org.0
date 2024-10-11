@@ -1,178 +1,189 @@
-Return-Path: <linux-pci+bounces-14321-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14324-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10B6899A598
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 15:59:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94D6799A5AD
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 16:02:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C26FF286687
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 13:59:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3D27B2531C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADCFD218D68;
-	Fri, 11 Oct 2024 13:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E58ACC2F2;
+	Fri, 11 Oct 2024 14:02:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OoP9AM4D"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="foW5HfcF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7472141C8
-	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 13:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AA5D517;
+	Fri, 11 Oct 2024 14:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728655170; cv=none; b=SpzW9cl1pU4JauJCbG77H/KhCeBO/YV76arFc3c7JUssN5Dmc3MPAzeMpGX68BzwfK4B57me1hZXU6pqHfaIdALyYRNJC2Jc6OZwv/eEYe/y4753UbaN2P8ftMuNSJs8C/L7zM+29Myr6VixxcTbnoT8KKav7SRa864cV+Wy7SM=
+	t=1728655325; cv=none; b=sftOb+wpYHKXRZQVKJjii2zdK75PWTWy40/j7po+XNnL1GDPhlYSO+C/oOJniGt0q5YhchTGrqXfyBfdo0FwObHFyUHbIP6DjcS5OnYE/U7WBn/krJwo2wJe7uIOfw6MVZs0cgwYPSWir68Upwj04+3sOFn+E2Lb2bmz0nBhkJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728655170; c=relaxed/simple;
-	bh=oa0wWEHk2DCgqrnI5NOLBJVu4UIRkhWHOM9j5gizBjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKEjPU3afTAHdkZWmB2XKtXFtaHNnpkbG9lZWw3Bd7L20vVNcGYk3rsdmD05ZbGzb+Fnnybz8AcXl5LJtVLyQhbU3V2w7s8Tt/1VJg3h8A+zOxQkmob0uNpV0ViKQxmjWijoqJXCs1myt90OVKa8wxw+BoBoBofWZMW30JWn5iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OoP9AM4D; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6cbf0769512so4776226d6.3
-        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 06:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1728655167; x=1729259967; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SMgQAKnsRs9CqPUiZARlP8dyHlTa8JA38T3vt8l3mtw=;
-        b=OoP9AM4DUSycm1wuyGbr1ndEJyrJAetSznP1hRPbvKwk10LNRp6k7p31nFwujsoilA
-         JUfIWaeP2lzyEsWLSsFVLGnnOS+M/zqsNDSv9akYYbFFBjsOgLEQiRTS0ta2IpJn238I
-         9aJQAd0Oj5PJlopdRZySkZftqsA5oNHnBlBJxhUOMb3lp2+cm+LLUoBnnwqoEZPjmtrZ
-         oIQYJsJlIp0QlbVvwnE8rsNJa+VSa7zbB4adS7Z7fJTkiTmPO1hW2TMvw7SN7LOZWLtx
-         9FmJheXWnBZtm+j7FUkdBB22MReLysCzwEZBjRkpRNfzd+12q6KlHhmdshDc5w1HariA
-         hpag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728655167; x=1729259967;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SMgQAKnsRs9CqPUiZARlP8dyHlTa8JA38T3vt8l3mtw=;
-        b=Vb4PrsdG5IROpb7sB8MyO67jFUVFo+5wy6WtJ6RiBjcVkMk97FtgZfyYqA+0u8+8K2
-         U+mAj26tpCpbo3yc6v5fU8RIuRuzrJANSkTJLAG9Z4aakNqJE+jGLZTAzbV45TbCFboi
-         prVA1JQRVq3xfGsTm+D6xADqDCpzt6gacrqO0fAjNp5buhj+t0d+68b0lA5okeqtd+Bq
-         BDPewLOdkcLoomxVkqF+tNsgTWwn+Qct030CEqXf7WBKZPYL0o1v1h2EsTlh4NajysG4
-         sNctQtFdiYGPFbnlYouB1mEn3Swwe0qpbLqn9rJNIagR+kcyRWktVSAxO6z1YGQ9zzXu
-         YjFg==
-X-Gm-Message-State: AOJu0YwnNknwSGGPei/fSkvbjTt9yKzIUn1swRj9MqVGYvqn1+LV1A6N
-	8MV3Pw+SvYIx/kjOU1tDU7R26ALa02KlNU8r+jRYN50QSjlpXG7UUt+y4QylnJw=
-X-Google-Smtp-Source: AGHT+IHcByFF6yQ/bPeQbJ3nqEcB1yr2kvWliV8YMpQdFKT5Ch9+kA9/fIFQYrGYJJKQ8+n1Sx+XxA==
-X-Received: by 2002:a05:6214:5c03:b0:6cb:e770:f505 with SMTP id 6a1803df08f44-6cbf012bc58mr29670396d6.50.1728655167499;
-        Fri, 11 Oct 2024 06:59:27 -0700 (PDT)
-Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe85a5d6asm15892246d6.5.2024.10.11.06.59.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 06:59:26 -0700 (PDT)
-Date: Fri, 11 Oct 2024 09:59:12 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lukas@wunner.de,
-	dan.j.williams@intel.com, bhelgaas@google.com, dave@stgolabs.net,
-	dave.jiang@intel.com, vishal.l.verma@intel.com,
-	Jonathan.Cameron@huawei.com
-Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
- pci_doe_send_req
-Message-ID: <ZwkvMIqC2DjLZJrg@PC2K9PVX.TheFacebook.com>
-References: <20241004162828.314-1-gourry@gourry.net>
- <20241010221628.GA580128@bhelgaas>
+	s=arc-20240116; t=1728655325; c=relaxed/simple;
+	bh=sQQRl84OSqc71fs5ZYTHiOsVda3ygHGyCvYxoo3m6Vo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qO6aFN4rhUwA6adHZcBoEeo9eL8VMNcA9riz8FD466PuRTZe8MBy9xstVgsSLavCxF9naZwh04dr/f8sjYrtv7jc7DcbEJeV3yjBRX8Np3hbZWa5ojRqylq0JdcI0oVOCvWCBIiTl+L5HXRrWcPgWfQgHFgN0VFIPUmyjduwSZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=foW5HfcF; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1728655324; x=1760191324;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sQQRl84OSqc71fs5ZYTHiOsVda3ygHGyCvYxoo3m6Vo=;
+  b=foW5HfcFh63wgZu9/1zKmftuUr/DanKJVNZ+XH++fvbRo05OOiYBkgi5
+   QPf2CKZnXVSS4KHFm5vgtc2xEc2jHUUO2ltkjC4wQK/g6kOsd8hrdEhOX
+   us7b9kTXmAcZZac5rmVFZQzNKlTASRvhpnEacT6Kqv/CCmdm2d4ja1TAV
+   +PlQfndCLCtLTuf+TG7xDVmyljvCFk+tN0GweIC0vDyrrVN3rBJYH1RFL
+   aU0kUalX8eOp4OWA4icINOrP7r00kV52d/cAGK3oZNxeLfsQSo9buL3p6
+   UZgVq8CSacTy1DXNS6FgmH0fa+NzsWAdARDPPC66lRk9Sva6Ory7+p/Qm
+   Q==;
+X-CSE-ConnectionGUID: PBjGkC+SSZ+djG4FWi+TaQ==
+X-CSE-MsgGUID: /gNjHoa8S1WzSWJx2oYLbg==
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="263956557"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Oct 2024 07:02:03 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 11 Oct 2024 07:01:26 -0700
+Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Fri, 11 Oct 2024 07:01:24 -0700
+From: <daire.mcnamara@microchip.com>
+To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
+	<ilpo.jarvinen@linux.intel.com>, <kevin.xie@starfivetech.com>
+Subject: [PATCH v10 0/3] Fix address translations on MPFS PCIe controller
+Date: Fri, 11 Oct 2024 15:00:40 +0100
+Message-ID: <20241011140043.1250030-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241010221628.GA580128@bhelgaas>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, Oct 10, 2024 at 05:16:28PM -0500, Bjorn Helgaas wrote:
-> On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
-> > During initial device probe, the PCI DOE busy bit for some CXL
-> > devices may be left set for a longer period than expected by the
-> > current driver logic. Despite local comments stating DOE Busy is
-> > unlikely to be detected, it appears commonly specifically during
-> > boot when CXL devices are being probed.
-> > 
-> > This was observed on a single socket AMD platform with 2 CXL memory
-> > expanders attached to the single socket. It was not the case that
-> > concurrent accesses were being made, as validated by monitoring
-> > mailbox commands on the device side.
-> > 
-> > This behavior has been observed with multiple CXL memory expanders
-> > from different vendors - so it appears unrelated to the model.
-> > 
-> > In all observed tests, only a small period of the retry window is
-> > actually used - typically only a handful of loop iterations.
-> > 
-> > Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
-> > interval (1 second), resolves this issues cleanly.
-> > 
-> > Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
-> > raise an interrupt, so polling is the best option in this scenario.
-> > 
-> > Subsqeuent code in doe_statemachine_work and abort paths also wait
-> > for up to 1 PCI DOE timeout interval, so this order of (potential)
-> > additional delay is presumed acceptable.
-> 
-> I provisionally applied this to pci/doe for v6.13 with Lukas and
-> Jonathan's reviewed-by.  
-> 
-> Can we include a sample of any dmesg logging or other errors users
-> would see because of this problem?  I'll update the commit log with
-> any of this information to help users connect an issue with this fix.
->
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-The only indication in dmesg you will see is a line like
+Hi all,
 
-[   24.542625] endpoint6: DOE failed -EBUSY
+On Microchip PolarFire SoC (MPFS), the PCIe controller is connected to the
+CPU via one of three Fabric Interface Connectors (FICs).  Each FIC present
+to the CPU complex as 64-bit AXI-M and 64-bit AXI-S.  To preserve
+compatibility with other PolarFire family members, the PCIe controller is
+connected to its encapsulating FIC via a 32-bit AXI-M and 32-bit AXI-S
+interface.
 
-produced by cxl_cdat_get_length or cxl_cdat_read_table
+Each FIC is implemented in FPGA logic and can incorporate logic along its 64-bit
+AXI-M to 32-bit AXI-M chain (including address translation) and, likewise, along
+its 32-bit AXI-S to 64-bit AXI-S chain (again including address translation).
+
+In order to reduce the potential support space for the PCIe controller in
+this environment, MPFS supports certain reference designs for these address
+translations: reference designs for cache-coherent memory accesses
+and reference designs for non-cache-coherent memory accesses. The precise
+details of these reference designs and associated customer guidelines
+recommending that customers adhere to the addressing schemes used in those
+reference designs are available from Microchip, but the implication for the
+PCIe controller address translation between CPU-space and PCIe-space are:
+
+For outbound address translation, the PCIe controller address translation tables
+are treated as if they are 32-bit only.  Any further address translation must
+be done in FPGA fabric.
+
+For inbound address translation, the PCIe controller is configurable for two
+cases:
+* In the case of cache-coherent designs, the base of the AXI-S side of the
+  address translation must be set to 0 and the size should be 4 GiB wide. The
+  FPGA fabric must complete any address translations based on that 0-based
+  address translation.
+* In the case of non-cache coherent designs, the base of AXI-S side of the
+  address translation must be set to 0x8000'0000 and the size shall be 2 GiB
+  wide.  The FPGA fabric must complete any address translation based on that
+  0x80000000 base.
+
+So, for example, in the non-cache-coherent case, with a device tree property
+that maps an inbound range from 0x10'0000'0000 in PCIe space to 0x10'0000'0000
+in CPU space, the PCIe rootport will translate a PCIe address of 0x10'0000'0000
+to an intermediate 32-bit AXI-S address of 0x8000'0000 and the FIC is
+responsible for translating that intermediate 32-bit AXI-S address of
+0x8000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+And similarly, for example, in the cache-coherent case, with a device tree
+property that maps an inbound range from 0x10'0000'0000 in PCIe space to
+0x10'0000'0000 in CPU space, the PCIe rootport will translate a PCIe address
+of 0x10'0000'0000 to an intermediate 32-bit AXI-S address of 0x0000'0000 and
+the FIC is responsible for translating that intermediate 32-bit AXI-S address
+of 0x0000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+See https://lore.kernel.org/all/20220902142202.2437658-1-daire.mcnamara@microchip.com/T/
+for backstory.
+
+Changes since v9:
+- Dropped plda_setup_inbound_address_translation() from StarFive driver
+
+Changes since v8:
+- Edits suggested by BHelgass and Ilpo Jarvinen
+- Dropped the setup_inbound_atr u64 change (passing on openrisc 32-bit without it)
+
+Changes since v7:
+- Rebased on top of 6.11rc1
+
+Changes since v6:
+- Added Reviewed-by: Ilpo tag to outbound patch
+- Fixed typos/capitalisation/etc as suggested by Ilpo
+
+Changes since v5:
+- Reverted setup_inbound_atr size parameter to u64 as ci system reported
+  SZ_4G getting truncated to 0 on mips when I try to use size_t or resource_size_t.
+  Added Acked-by tags
+
+Changes since v4:
+- Added more cleanups suggested by Ilpo Jarvinen
+  Added cleanups for inbound v4 and outbound v3.
+
+Changes since v3:
+- Added nice cleanups suggested by Ilpo Jarvinen
+
+Changes since v2:
+- Added <Signed-off-by: tag>
+
+Changes since v1:
+- added bindings patch to allow dma-noncoherent
+- changed a size_t to u64 to pass 32-bit compile tests
+- allowed 64-bit outbound pcie translations
+- tied PCIe side of eCAM translation table to 0
+
+Conor Dooley (1):
+  dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
+
+Daire McNamara (2):
+  PCI: microchip: Fix outbound address translation tables
+  PCI: microchip: Fix inbound address translation tables
+
+ .../bindings/pci/microchip,pcie-host.yaml     |   2 +
+ .../pci/controller/plda/pcie-microchip-host.c | 123 +++++++++++++++++-
+ drivers/pci/controller/plda/pcie-plda-host.c  |  17 ++-
+ drivers/pci/controller/plda/pcie-plda.h       |   6 +-
+ 4 files changed, 139 insertions(+), 9 deletions(-)
 
 
-Do you want an updated patch with the nits fixed?
- 
-> > Suggested-by: Lukas Wunner <lukas@wunner.de>
-> > Signed-off-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >  drivers/pci/doe.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > index 652d63df9d22..27ba5d281384 100644
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
-> > @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
-> >  	size_t length, remainder;
-> >  	u32 val;
-> >  	int i;
-> > +	unsigned long timeout_jiffies;
-> >  
-> >  	/*
-> >  	 * Check the DOE busy bit is not set. If it is set, this could indicate
-> >  	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
-> >  	 * it is expected that firmware and OS will negotiate access rights via
-> >  	 * an, as yet to be defined, method.
-> > +	 *
-> > +	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
-> > +	 * finish. Otherwise, simply error out as unable to field the request.
-> > +	 *
-> > +	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
-> > +	 * bit is cleared, so polling here is our best option for the moment.
-> >  	 */
-> > -	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
-> > +	do {
-> > +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
-> > +		 !time_after(jiffies, timeout_jiffies));
-> > +
-> >  	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-> >  		return -EBUSY;
-> >  
-> > -- 
-> > 2.43.0
-> > 
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+-- 
+2.43.0
+
 
