@@ -1,99 +1,104 @@
-Return-Path: <linux-pci+bounces-14344-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14345-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 150E999AAB3
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 19:53:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3111699AABF
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 19:57:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF4CC1F225B2
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 17:53:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B765B283F42
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 17:57:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F8219F12A;
-	Fri, 11 Oct 2024 17:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84BD1BB6BB;
+	Fri, 11 Oct 2024 17:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="karPNvp3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d0Fhsuji"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E5E195811;
-	Fri, 11 Oct 2024 17:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17327195811
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 17:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728669224; cv=none; b=VImuAp0Bp5rsJWLhRH6xys8vrXR0W7mTMb+sLxZWPRs7DtdbHe/pKkt2Z0U7WuoX7MXoK/wGV8D33duMCJPP2kfOVslkP1Vswj2bqRFRaqamLmq6zwBxjHefzjo75aMlcIV+QNmNQIQmoPSwj4qwUmIvEHI/g7oOr2fffSOtCss=
+	t=1728669446; cv=none; b=huPyLvexPP7DIHioJiu3rWv7uFibTV4/SqkuypeMSczU0A8H/1Iudu6veFnsw1iesLyjaoCzwWknOHVEChQrw+7cYWWtUCMf4gw7qAMuDp+B/nXcFfNrIerzqRMMP3amVfo7xV5HqRQQ/15kkuimNdwtf52Lf14SJSdhHCan3tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728669224; c=relaxed/simple;
-	bh=yi0IOHhsXYP7btvr12gW4x200lHHEqtCf0KvtVlB3c8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mnSTTDm08yK0XQVZoUO9UEEjQoG5YCw27ZRyWqa+kKyGxW3Dir3tdIjiU5jZ3myUrR0avGrdKvPy4cHTTCk4ZtPKm0B0M3JpBlXj4a9U7AO1JfdrPhJVBQxamCm0Z8wYz81bqXSbawTqB0bzeeHD9v3QQO89KaiWAaTYYlVT68Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=karPNvp3; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-539d9fffea1so1115798e87.2;
-        Fri, 11 Oct 2024 10:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728669221; x=1729274021; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yi0IOHhsXYP7btvr12gW4x200lHHEqtCf0KvtVlB3c8=;
-        b=karPNvp3MUdgmu0ipD3oeKwNvEDiS+7NOejBEb8qwcBnNAvJIFTRfZh1ED9+C0Bom+
-         w+nJ7PeDYsfIKpgcuk9kue+PMrKEl9Ou53A1v80GiOWMv5MX7Dp1musehqE2cosITgfe
-         EDsPBO2M/mZ1o53yshLIKUB/FBaKYS//+Xgd4ouUXkMzG019uAGNSsI1nvFn0++02ywu
-         V5C0q6v31m3TbxtiCPYv0cb+GNjE2TvO2qAquGJncG4gf6aW3idD4fKzeSVCHlCf7s4J
-         gflSKxSxY/JybeyvzTjT/Ju6LF0VzYh2N1OBGjMBczUcNYZPqDKvyrHSN3uCniQXis5V
-         HUdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728669221; x=1729274021;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yi0IOHhsXYP7btvr12gW4x200lHHEqtCf0KvtVlB3c8=;
-        b=xTy899WvHLBGb6URZnZprWZLxkoJFwtRPAFf32PxpNaJF4q/Okckqxyp0yej2PBhe4
-         JQ3cYmD2w5X9HZBHFd6rnd58tXjRdni3VirTAC/7Y8U7XWn0MOM60aLOOJgA/BgGEEAq
-         kDms/z5H1GheoLluhBCOXg3gftgDv5EsXvudgQqRoLpA2FUJXPc2qDyasUsuFLNlqE1Y
-         YpxDqTAI8f5FgUcuqjsUoDVYZURf//04v6QgUf8uVNcrrXyrWL3bCzdBwjKl7dlFM/Ra
-         fUkaiZlY+TlAaL2XHe1J9tXnopxEsGCe17rz2WlVgs2HHPgPrh/pRhDtwg6oXmnqy3ri
-         rN1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuX62ZWFlbXoEqyAwpT2KC0uQAR/+wVIAi7P4bP3BrU9+lFhHbDz/dhB5ffTDUDw8SWIi+DGS+eiX4rSE=@vger.kernel.org, AJvYcCVIXHEQsO41yiOkJnVdDKf4Oy34nn1QaX/6luRPqBaZn+2aV6CjK/+ToUeAZyH5LgHv5iUcvdX8xZBd@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm1qY4zN/Bb/mjWXlZI0WqV5iZ8zu2B8AdWjQHok23jxtBOYbI
-	pPAPYnLKF5w8nw+RM0l7l9BO8Fw9JcXV2HbkwkQrSU5jrrVrNBwUKFAhsxZqIfeujl7uL/RY9bd
-	T5n0+Etp8OLu1tK3JmSp8svTdSYhgAQ==
-X-Google-Smtp-Source: AGHT+IEtZAwtQ3Jy0M0nPbX1jfHsYx5J6HKTKpBofyp3A65IBy2lbYIrGATmFKv2yJcksyi9nBkbyNxGrjkEjAtWog4=
-X-Received: by 2002:a05:6512:1091:b0:539:8f2d:a3bc with SMTP id
- 2adb3069b0e04-539da595574mr1837328e87.49.1728669220393; Fri, 11 Oct 2024
- 10:53:40 -0700 (PDT)
+	s=arc-20240116; t=1728669446; c=relaxed/simple;
+	bh=6Wwg7wRcmCKnw61litvaGWv26gm86DrWn4uFeen2lF4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tCYjCzRZWIEsFUduHveoXkNpZg9mlO/ffvZy/+wLveveAzJY6cJTHNBLM96uwSTDzzA0F6TzzTvLywbtFqlYQqlvrBKuygO83WF83E/NaMzkODnVTYegA4ezZjkKEtyD15xKxoCeqTDJJIteUdugOvcGtECyNc+vuQ51fuRkrS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d0Fhsuji; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728669445; x=1760205445;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6Wwg7wRcmCKnw61litvaGWv26gm86DrWn4uFeen2lF4=;
+  b=d0FhsujiTUF8HvR0YzPUYEPyrraVky5QCDfgKXsyA8gmugR3qolWL6ZY
+   Jj9Md0WVajbqFLD7byHm9CXcq8hR9nj7HywgsaTbO/o/SulXrBoWoMu5/
+   48eoFGSP3EMkE9tl81bYrbXAdM8FsZDrG50Z9wqyykJShzPf7ziwlCTp6
+   eh8cRnP8U4GJWQEu00vtFv9kC46h40eq2uOtE5xZ/ygcMeHpvULX+Sg5S
+   PpWhqr0RjlNc70fLO0lx+1RBGP7A5UZoBIgZSFd4uP33RRemWhTAkFJW1
+   XXhaV9NNa884no59pZqCQHYWyBXlEMLuYGeoQNp606FiDnBMn4n5KQ4eF
+   Q==;
+X-CSE-ConnectionGUID: vWpVbI7qRfOIr2RgssCV+A==
+X-CSE-MsgGUID: oK6zqz3oTvWWPe1oFWJZ7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="27524634"
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="27524634"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:57:21 -0700
+X-CSE-ConnectionGUID: YK+F65rRQsqCcUsdFkmXxg==
+X-CSE-MsgGUID: Vuckfk17TYu1ZOd37ZaJLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
+   d="scan'208";a="76869320"
+Received: from unknown (HELO localhost.ch.intel.com) ([10.2.230.45])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 10:57:20 -0700
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
+To: <linux-pci@vger.kernel.org>,
+	paul.m.stillwell.jr@intel.com
+Cc: Nirmal Patel <nirmal.patel@linux.ntel.com>
+Subject: [PATCH] PCI: vmd: Add DID 8086:B06F and 8086:B60B for Intel client SKU's
+Date: Fri, 11 Oct 2024 10:56:57 -0700
+Message-Id: <20241011175657.249948-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241009131659.29616-1-eichest@gmail.com> <ZwgykRyE+jDU0CiU@lizhi-Precision-Tower-5810>
- <20241010201121.GA88411@francesco-nb> <ZwhY/dtSNPptgs27@lizhi-Precision-Tower-5810>
- <Zwk35efNI4EO1eir@eichest-laptop> <ZwlF4VhRPv6mzURo@lizhi-Precision-Tower-5810>
-In-Reply-To: <ZwlF4VhRPv6mzURo@lizhi-Precision-Tower-5810>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Fri, 11 Oct 2024 14:53:28 -0300
-Message-ID: <CAOMZO5Bi_iAJsx4sQW7YzpJHrNYWs-mC+0cTo0c7w0XjCMunXw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: imx6: Add suspend/resume support for i.MX6QDL
-To: Frank Li <Frank.li@nxp.com>
-Cc: Stefan Eichenberger <eichest@gmail.com>, Francesco Dolcini <francesco@dolcini.it>, hongxing.zhu@nxp.com, 
-	l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	francesco.dolcini@toradex.com, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, 
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 11, 2024 at 12:36=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
+From: Nirmal Patel <nirmal.patel@linux.ntel.com>
 
-> I have not met this problem at arm64 platform. what's your .config?
+Add support for this VMD device which supports the bus restriction mode.
+The feature that turns off vector 0 for MSI-X remapping is also enabled.
 
-Stefan reported the problem on imx6, so imx_v6_v7_defconfig.
+Signed-off-by: Nirmal Patel <nirmal.patel@linux.ntel.com>
+---
+ drivers/pci/controller/vmd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index a726de0af011..4429a3ca1de1 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -1111,6 +1111,10 @@ static const struct pci_device_id vmd_ids[] = {
+ 		.driver_data = VMD_FEATS_CLIENT,},
+ 	{PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+ 		.driver_data = VMD_FEATS_CLIENT,},
++	{PCI_VDEVICE(INTEL, 0xb60b),
++                .driver_data = VMD_FEATS_CLIENT,},
++	{PCI_VDEVICE(INTEL, 0xb06f),
++                .driver_data = VMD_FEATS_CLIENT,},
+ 	{0,}
+ };
+ MODULE_DEVICE_TABLE(pci, vmd_ids);
+-- 
+2.39.1
+
 
