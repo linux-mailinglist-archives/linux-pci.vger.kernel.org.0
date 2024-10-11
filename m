@@ -1,219 +1,162 @@
-Return-Path: <linux-pci+bounces-14306-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14307-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A16F99A3AF
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:16:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F418699A3BA
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:19:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1E3E1F2305F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:16:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B4EB1C22700
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:19:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455AC218584;
-	Fri, 11 Oct 2024 12:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B3441BDAA1;
+	Fri, 11 Oct 2024 12:19:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QcO29hYP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1I0FREg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEAB215026
-	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F9D802
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728648975; cv=none; b=cATmld0ybabICE7DNVzULVg/dz4OdDTE/9zxqXbENr9XA7tRjN0qTU2VOx00DfHMFmjjoqUMLHS4f4rEWovQzmNNW5tTRzC6+XJTa7XUb772XRL1sTWW5+/P277lBl9X6LefVh6szVQhWCTgkU4noFSdGupBGD6rvZfK16D8bHc=
+	t=1728649195; cv=none; b=Yu9dYuVpkhu7ZucjdVaqwqsp5a0kPLcUqT1dFQN46ERazQSu7VsvzcNYkoUpwMG0gbDbcLv1ot6xaAt06MsaQWSWIegVZe9YTYQu3xMd7g9Tlq+kaZWskS3F01Shz3UW6LN0jpZQNm/l/LhzpG1M+pQdmFEJs5YJnf4+bW/XMPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728648975; c=relaxed/simple;
-	bh=Ua4saN/auvT/81KeOxYQZAnafhhGA0y+W7JZWy3BjS4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ep00G0sjr2v77HkXxd0PFAD8VXcsDV3ZyhY2TSHOaMVo43CopinqvhwUCBboOPTY76/WY40jycrK8Xw1AxY0NuubEN2kWQjM1zhWPURdLNpTW16r1bjxwcqp6Q6lKDi9nO7Gp7nOiKQPXPmIKNoPmF4FZdX/ZnXZiXzWQriG7FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QcO29hYP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728648972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W3YR/eN7EDVZPnEUtVVl/DT7O1jzPEky1m6YBwoyhuE=;
-	b=QcO29hYPBTGi+v22LFXuvJ5MBY/LMiQMrB5MZ9CVOrVrV69d459BL+TWgdy2yEKEiWBbtF
-	IkaFOthZz5qS/Zctcxct2pZZfwyfhF9wN9ylES0+LH6EHfBMtDSOsmvaideO+gaVUqu9uC
-	1/2OisA2032QedCBGaiWZzFVXlMdj5c=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-286-JtAzY5j8Mk28PstaihsXSg-1; Fri, 11 Oct 2024 08:16:10 -0400
-X-MC-Unique: JtAzY5j8Mk28PstaihsXSg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42cb635b108so12315625e9.2
-        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 05:16:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728648969; x=1729253769;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W3YR/eN7EDVZPnEUtVVl/DT7O1jzPEky1m6YBwoyhuE=;
-        b=RknArmefoGIl4mG1OKHiIgTJNFKxYWzQnQEsJaEY9UIG40q9D6F0F99atGkSUS/RaJ
-         7ce8JmOg7TRF9mkWOLJZEkjRsx97kEMnF4kdWgkHpL+lCr8Ga+tW6vLPPFBZI8XZGFod
-         11eb1FTyvv2Lm5GZiKllkgotUzufC5QuYsu6JPviK9MhLryOHL+paQrB1xRvRizNRfGA
-         AExS9WWbbMUAKGmTm8N6DcYmJWe+hznW6ys1CATDbEhsnI32hk6Z+uO6wXShY6yxe5TR
-         QoHIL/WL8/XrhCpRgdR4HeWmfD8CnB1IHKF/JGAflho9E+0r0zD8eyHoEG8EwUGUl5Sp
-         wWAg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3BLfcMpb6LZFs8BnSazpdkjroeR7B4EBb6CZA4497Cd0N3eSLZcMop+7tGaNfCU3XHr6IMJv3v9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA0hwSLPkZi6cevBqipTtKPRqqm/TVKGBfF9doXCm0sitd/duj
-	5d/BOkLRrI5szyN0xKIiPvwhBR6MNz6qIvACB1Gf2JwBcmQfiEb3UykOGgSIcXvnY+xxtdEfy1b
-	sjTuvI5vUvsf99+o7U94+sbo58Ad+Iv3p1PlsUv3wjwyy1FH4YzD6sHbPzQ==
-X-Received: by 2002:a05:600c:1d0e:b0:42c:b2fa:1c0a with SMTP id 5b1f17b1804b1-4311df429c8mr19539475e9.23.1728648969423;
-        Fri, 11 Oct 2024 05:16:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJ7w0P8euwuh1uWsgO1hBzdaK+5QHv+AFGT0Iwx99lPo3ic55Ocuel+lqlVPvlsAnC7ezD6A==
-X-Received: by 2002:a05:600c:1d0e:b0:42c:b2fa:1c0a with SMTP id 5b1f17b1804b1-4311df429c8mr19538645e9.23.1728648968995;
-        Fri, 11 Oct 2024 05:16:08 -0700 (PDT)
-Received: from eisenberg.fritz.box ([2001:16b8:3d05:4700:3e59:7d70:cabd:144b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430ccf4841asm73010925e9.19.2024.10.11.05.16.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 05:16:08 -0700 (PDT)
-Message-ID: <f65e9fa01a1947782fc930876e5f84174408db67.camel@redhat.com>
-Subject: Re: [RFC PATCH 01/13] PCI: Prepare removing devres from pci_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
- <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
- Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
- Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
- <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
- GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
- Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
- Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
- Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
- <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
- <smostafa@google.com>, Hannes Reinecke <hare@suse.de>, John Garry
- <john.g.garry@oracle.com>, Soumya Negi <soumya.negi97@gmail.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>, "Dr. David Alan
- Gilbert" <linux@treblig.org>, Christian Brauner <brauner@kernel.org>, Ankit
- Agrawal <ankita@nvidia.com>, Reinette Chatre <reinette.chatre@intel.com>,
- Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,  Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
- Marc Zyngier <maz@kernel.org>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-input@vger.kernel.org,
- netdev@vger.kernel.org,  linux-wireless@vger.kernel.org,
- ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
- linux-staging@lists.linux.dev, kvm@vger.kernel.org, 
- xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Date: Fri, 11 Oct 2024 14:16:06 +0200
-In-Reply-To: <ZwfnULv2myACxnVb@smile.fi.intel.com>
-References: <20241009083519.10088-1-pstanner@redhat.com>
-	 <20241009083519.10088-2-pstanner@redhat.com>
-	 <ZwfnULv2myACxnVb@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1728649195; c=relaxed/simple;
+	bh=tiGAxM+Issad/Urtbnk+tdJ6+VWqn04wmRMnT8WzUvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WMPvcZg0Bd9awnfaNO08jKqC1u2WsyI9v+5wFqVTfFFXbTxUC21OK30+W+aEoDk/URgDDZ6RoVFav7bhtO/AWlbRUgLQfKIXcySQMwml3/4An8SPenxSe9CB6SszuGPlRhrL83G8l8z/5I3IQ8n68IKU53DMwVwb0CPOBSo9vN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1I0FREg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03645C4CEC3;
+	Fri, 11 Oct 2024 12:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728649194;
+	bh=tiGAxM+Issad/Urtbnk+tdJ6+VWqn04wmRMnT8WzUvw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A1I0FREgoJbJAQgSiY7dT7v6om4XFd0k+7qmcyAHgzMrPa8uZG63sXqK71yv23AUY
+	 PtE0YiaD1t57Pt244lRx5oIUyS7yfY34dFm9i2AgGSWEZSyPPLkZPBChqrPUvFy3Ir
+	 n4q7hE7sLHpMTpu8fYk/T5nh2lZASTC4AlticzfEgaxujtSVlOUis+SX7C/Tdii/ab
+	 7VqjS5RHSag7pMUt3pCo5mt4+J9uWD4A2NY9Oaqnkei1oLxqyawveAqq4RInl7oOL9
+	 CGFZheGtQXw0CsUvyd+V8dh9XPaV0rrkfYe8IRkIOA6RJza8y1lg/eKQAJkhFaLHa1
+	 PdmOuciFlCo6Q==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-nvme@lists.infradead.org,
+	Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-pci@vger.kernel.org
+Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v2 0/5] NVMe PCI endpoint function driver
+Date: Fri, 11 Oct 2024 21:19:46 +0900
+Message-ID: <20241011121951.90019-1-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-10-10 at 17:40 +0300, Andy Shevchenko wrote:
-> On Wed, Oct 09, 2024 at 10:35:07AM +0200, Philipp Stanner wrote:
-> > pci_intx() is a hybrid function which sometimes performs devres
-> > operations, depending on whether pcim_enable_device() has been used
-> > to
-> > enable the pci_dev. This sometimes-managed nature of the function
-> > is
-> > problematic. Notably, it causes the function to allocate under some
-> > circumstances which makes it unusable from interrupt context.
-> >=20
-> > To, ultimately, remove the hybrid nature from pci_intx(), it is
-> > first
-> > necessary to provide an always-managed and a never-managed version
-> > of that function. Then, all callers of pci_intx() can be ported to
-> > the
-> > version they need, depending whether they use pci_enable_device()
-> > or
-> > pcim_enable_device().
-> >=20
-> > An always-managed function exists, namely pcim_intx(), for which
-> > __pcim_intx(), a never-managed version of pci_intx() had been
-> > implemented.
->=20
-> > Make __pcim_intx() a public function under the name
-> > pci_intx_unmanaged(). Make pcim_intx() a public function.
->=20
-> To avoid an additional churn we can make just completely new APIs,
-> namely:
-> pcim_int_x()
-> pci_int_x()
->=20
-> You won't need all dirty dances with double underscored function
-> naming and
-> renaming.
+This patch series implements an NVMe PCI endpoint driver that implements
+a PCIe NVMe controller for a local NVMe fabrics host controller.
+This series is based on the improved PCI endpoint API patches "Improve
+PCI memory mapping API" (see [1]).
 
-=C3=84hm.. I can't follow. The new version doesn't use double underscores
-anymore. __pcim_intx() is being removed, effectively.
-After this series, we'd end up with a clean:
+The first 3 patches of this series are changes to the NVMe target and
+fabrics code to facilitate reusing the NVMe code and an NVMe host
+controller from other (non NVMe) drivers.
 
-	pci_intx() <-> pcim_intx()
+Patch 4 is the main patch which introduces the NVMe PCI endpoint driver.
+This patch commit message provides and overview of the driver design and
+operation.
 
-just as in the other PCI APIs.
+Finally, patch 5 adds documentation files to document the NVMe PCI
+endpoint function driver internals, provide a user guide explaning how
+to setup an NVMe PCI endpoint device and describe the NVMe endpoint
+function driver binding attributes.
 
+This driver has been extensively tested using a Radxa Rock5B board
+(rk3588 Arm SoC). Some tests have also been done using a Pine Rockpro64
+board (however, this board does not support PCI DMA, leading to very
+poor performance).
 
->=20
->=20
-> ...
->=20
-> > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> > +
-> > +	if (enable)
-> > +		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
-> > +	else
-> > +		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
-> > +
-> > +	if (new !=3D pci_command)
->=20
-> I would use positive conditionals as easy to read (yes, a couple of
-> lines
-> longer, but also a win is the indentation and avoiding an additional
-> churn in
-> the future in case we need to add something in this branch.
+Using the Radxa Rock5b board and setting up a 4 queue-pairs controller
+with a null-blk block device loop target, performance was measured
+using fio as follows:                                      
 
-I can't follow. You mean:
+ +----------------------------------+------------------------+
+ | Workload                         | IOPS (BW)              |
+ +----------------------------------+------------------------+
+ | Rand read, 4KB, QD=1, 1 job      | 7382 IOPS              |
+ | Rand read, 4KB, QD=32, 1 job     | 45.5k IOPS             |
+ | Rand read, 4KB, QD=32, 4 jobs    | 49.7k IOPS             |
+ | Rand read, 128KB, QD=32, 1 job   | 10.0k IOPS (1.31 GB/s) |
+ | Rand read, 128KB, QD=32, 4 jobs  | 10.2k IOPS (1.33 GB/s) |
+ | Seq read, 128KB, QD=32, 1 job    | 1.28 GB/s              |
+ | Seq read, 512KB, QD=32, 1 job    | 1.28 GB/s              |
+ | Rand write, 128KB, QD=32, 1 job  | 8713 IOPS (1.14 GB/s)  |
+ | Rand write, 128KB, QD=32, 4 jobs | 8103 IOPS (1.06 GB/s)  |
+ | Seq write, 128KB, QD=32, 1 job   | 8557 IOPS (1.12 GB/s)  |
+ | Seq write, 512KB, QD=32, 1 job   | 2069 IOPS (1.08 GB/s)  |
+ +----------------------------------+------------------------+
 
-if (new =3D=3D pci_command)
-    return;
+These results use the default MDTS of the NVMe enpoint driver of 128 KB.
+Setting the NVMe endpoint device with a larger MDTS of 512 KB leads to
+improved maximum throughput of up to 2.4 GB/s (e.g. for the 512K random
+read workloads and sequential read workloads). The maximum IOPS achieved
+with this larger MDTS does not change significantly.
 
-?
+This driver is not intended for production use but rather to be a
+playground for learning NVMe and NVMe over fabrics and exploring/testing
+new NVMe features while providing reasonably good performance.
 
-That's exactly the same level of indentation. Plus, I just copied the
-code.
+[1] https://lore.kernel.org/linux-pci/20241007040319.157412-1-dlemoal@kernel.org/T/#t
 
->=20
-> > +		pci_write_config_word(pdev, PCI_COMMAND, new);
->=20
-> ...
->=20
-> Otherwise I'm for the idea in general.
+Changes from v1:
+ - Added review tag to patch 1
+ - Modified patch 4 to:
+   - Add Rick's copyright notice
+   - Improve admin command handling (set_features command) to handle the
+     number of queues feature (among others) to enable Windows host
+   - Improved SQ and CQ work items handling
 
-\o/
+Damien Le Moal (5):
+  nvmet: rename and move nvmet_get_log_page_len()
+  nvmef: export nvmef_create_ctrl()
+  nvmef: Introduce the NVME_OPT_HIDDEN_NS option
+  PCI: endpoint: Add NVMe endpoint function driver
+  PCI: endpoint: Document the NVMe endpoint function driver
 
->=20
+ .../endpoint/function/binding/pci-nvme.rst    |   34 +
+ Documentation/PCI/endpoint/index.rst          |    3 +
+ .../PCI/endpoint/pci-nvme-function.rst        |  151 +
+ Documentation/PCI/endpoint/pci-nvme-howto.rst |  189 ++
+ MAINTAINERS                                   |    9 +
+ drivers/nvme/host/core.c                      |   17 +-
+ drivers/nvme/host/fabrics.c                   |   11 +-
+ drivers/nvme/host/fabrics.h                   |    5 +
+ drivers/nvme/target/admin-cmd.c               |   20 +-
+ drivers/nvme/target/discovery.c               |    4 +-
+ drivers/nvme/target/nvmet.h                   |    3 -
+ drivers/pci/endpoint/functions/Kconfig        |    9 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-nvme.c | 2591 +++++++++++++++++
+ include/linux/nvme.h                          |   19 +
+ 15 files changed, 3036 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/function/binding/pci-nvme.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-nvme-function.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-nvme-howto.rst
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-nvme.c
+
+-- 
+2.47.0
 
 
