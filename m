@@ -1,253 +1,178 @@
-Return-Path: <linux-pci+bounces-14320-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14321-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC25899A569
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 15:51:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10B6899A598
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 15:59:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF2121C21E59
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 13:51:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C26FF286687
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 13:59:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD1F219493;
-	Fri, 11 Oct 2024 13:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADCFD218D68;
+	Fri, 11 Oct 2024 13:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZlzaVOr"
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OoP9AM4D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FAA218D85;
-	Fri, 11 Oct 2024 13:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7472141C8
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 13:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728654675; cv=none; b=MYvpQhTQCOtsc2CLa6BAT8usVBNX2QSvkaWo8UYl8+uD49nxjrSiRXRIr6pP5C6QWlfwqX+EXbnNIaXg+hwF1NrfiKvSRukAOpDS+sqxbQkwt1QCBcixTu6ecjlgHrZymzlCTdXVQclwxQa+XEf7GrrriA1dzfvJraA27gak/MM=
+	t=1728655170; cv=none; b=SpzW9cl1pU4JauJCbG77H/KhCeBO/YV76arFc3c7JUssN5Dmc3MPAzeMpGX68BzwfK4B57me1hZXU6pqHfaIdALyYRNJC2Jc6OZwv/eEYe/y4753UbaN2P8ftMuNSJs8C/L7zM+29Myr6VixxcTbnoT8KKav7SRa864cV+Wy7SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728654675; c=relaxed/simple;
-	bh=JZpTFHIOKgsBhrK+TAyqIMe3uV9e4+zAkXpEvbByrtE=;
+	s=arc-20240116; t=1728655170; c=relaxed/simple;
+	bh=oa0wWEHk2DCgqrnI5NOLBJVu4UIRkhWHOM9j5gizBjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RZHAoAkl8Jo2pK9NFbUv85zGACcbvCqnTzwL9fUtN6OnGlyAo5jHBEiyj7KiZK37Pzc2b/3aN0dLWFE696u7ZBOR84BEXkhtZU8FUrEP7i2qArKCqDn9MdzZmAkZXo/F0loXqz21AUTn7LIc3EFp2lo+nQfmhPncarczAbqj+10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZlzaVOr; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728654674; x=1760190674;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JZpTFHIOKgsBhrK+TAyqIMe3uV9e4+zAkXpEvbByrtE=;
-  b=fZlzaVOrCRHUNF3RJPkievhkT1A1xiCeBwdl4Ync+1CmOfkfRU9QrLub
-   fzitE0w3l1VsfdStgHZEb5jG3cmynWmY8UMkM9UYYOFUCLYZgtX+F/d3M
-   pL6l+0iz1kYBk9hn+ToOVsa6HzVDlV5BlrUoaNs1/ZmVNq2JhXXbbY4Jl
-   Iri2MJJ4Ec9gumdRmoBjUTYcAnQpGdtrKRjl9B2yWuHBo5MYEPTFqc16Z
-   G58cko1qMqSloqg1yITxdVLeV0sZ4XWOzlR0BodalU6x/1nwX+Wg5V3mQ
-   8Rgqt/ewimAaA5qBm/yJsGZTn4OvBYvH0Q5f2RlLr7E2YdmlGgceP0xIB
-   A==;
-X-CSE-ConnectionGUID: gnJlkRW4TP2awSLw3E/2rw==
-X-CSE-MsgGUID: jZ6Z4kA0QU2BnSslE7bPNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="27862192"
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="27862192"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 06:51:12 -0700
-X-CSE-ConnectionGUID: +v41otkISg+36h8OYkcGUw==
-X-CSE-MsgGUID: Wq59MZX2TDuGSzOxtLCdcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="76834109"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 06:50:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1szG2d-00000001uKQ-3BlX;
-	Fri, 11 Oct 2024 16:50:51 +0300
-Date: Fri, 11 Oct 2024 16:50:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alex Dubov <oakad@yahoo.com>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-	Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Chen Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mostafa Saleh <smostafa@google.com>, Hannes Reinecke <hare@suse.de>,
-	John Garry <john.g.garry@oracle.com>,
-	Soumya Negi <soumya.negi97@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>,
-	Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Rui Salvaterra <rsalvaterra@gmail.com>,
-	Marc Zyngier <maz@kernel.org>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-staging@lists.linux.dev, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Subject: Re: [RFC PATCH 01/13] PCI: Prepare removing devres from pci_intx()
-Message-ID: <ZwktO8AUmFEakhVP@smile.fi.intel.com>
-References: <20241009083519.10088-1-pstanner@redhat.com>
- <20241009083519.10088-2-pstanner@redhat.com>
- <ZwfnULv2myACxnVb@smile.fi.intel.com>
- <f65e9fa01a1947782fc930876e5f84174408db67.camel@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gKEjPU3afTAHdkZWmB2XKtXFtaHNnpkbG9lZWw3Bd7L20vVNcGYk3rsdmD05ZbGzb+Fnnybz8AcXl5LJtVLyQhbU3V2w7s8Tt/1VJg3h8A+zOxQkmob0uNpV0ViKQxmjWijoqJXCs1myt90OVKa8wxw+BoBoBofWZMW30JWn5iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OoP9AM4D; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6cbf0769512so4776226d6.3
+        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 06:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1728655167; x=1729259967; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SMgQAKnsRs9CqPUiZARlP8dyHlTa8JA38T3vt8l3mtw=;
+        b=OoP9AM4DUSycm1wuyGbr1ndEJyrJAetSznP1hRPbvKwk10LNRp6k7p31nFwujsoilA
+         JUfIWaeP2lzyEsWLSsFVLGnnOS+M/zqsNDSv9akYYbFFBjsOgLEQiRTS0ta2IpJn238I
+         9aJQAd0Oj5PJlopdRZySkZftqsA5oNHnBlBJxhUOMb3lp2+cm+LLUoBnnwqoEZPjmtrZ
+         oIQYJsJlIp0QlbVvwnE8rsNJa+VSa7zbB4adS7Z7fJTkiTmPO1hW2TMvw7SN7LOZWLtx
+         9FmJheXWnBZtm+j7FUkdBB22MReLysCzwEZBjRkpRNfzd+12q6KlHhmdshDc5w1HariA
+         hpag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728655167; x=1729259967;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SMgQAKnsRs9CqPUiZARlP8dyHlTa8JA38T3vt8l3mtw=;
+        b=Vb4PrsdG5IROpb7sB8MyO67jFUVFo+5wy6WtJ6RiBjcVkMk97FtgZfyYqA+0u8+8K2
+         U+mAj26tpCpbo3yc6v5fU8RIuRuzrJANSkTJLAG9Z4aakNqJE+jGLZTAzbV45TbCFboi
+         prVA1JQRVq3xfGsTm+D6xADqDCpzt6gacrqO0fAjNp5buhj+t0d+68b0lA5okeqtd+Bq
+         BDPewLOdkcLoomxVkqF+tNsgTWwn+Qct030CEqXf7WBKZPYL0o1v1h2EsTlh4NajysG4
+         sNctQtFdiYGPFbnlYouB1mEn3Swwe0qpbLqn9rJNIagR+kcyRWktVSAxO6z1YGQ9zzXu
+         YjFg==
+X-Gm-Message-State: AOJu0YwnNknwSGGPei/fSkvbjTt9yKzIUn1swRj9MqVGYvqn1+LV1A6N
+	8MV3Pw+SvYIx/kjOU1tDU7R26ALa02KlNU8r+jRYN50QSjlpXG7UUt+y4QylnJw=
+X-Google-Smtp-Source: AGHT+IHcByFF6yQ/bPeQbJ3nqEcB1yr2kvWliV8YMpQdFKT5Ch9+kA9/fIFQYrGYJJKQ8+n1Sx+XxA==
+X-Received: by 2002:a05:6214:5c03:b0:6cb:e770:f505 with SMTP id 6a1803df08f44-6cbf012bc58mr29670396d6.50.1728655167499;
+        Fri, 11 Oct 2024 06:59:27 -0700 (PDT)
+Received: from PC2K9PVX.TheFacebook.com (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe85a5d6asm15892246d6.5.2024.10.11.06.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2024 06:59:26 -0700 (PDT)
+Date: Fri, 11 Oct 2024 09:59:12 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	dan.j.williams@intel.com, bhelgaas@google.com, dave@stgolabs.net,
+	dave.jiang@intel.com, vishal.l.verma@intel.com,
+	Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH] PCI/DOE: Poll DOE Busy bit for up to 1 second in
+ pci_doe_send_req
+Message-ID: <ZwkvMIqC2DjLZJrg@PC2K9PVX.TheFacebook.com>
+References: <20241004162828.314-1-gourry@gourry.net>
+ <20241010221628.GA580128@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f65e9fa01a1947782fc930876e5f84174408db67.camel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20241010221628.GA580128@bhelgaas>
 
-On Fri, Oct 11, 2024 at 02:16:06PM +0200, Philipp Stanner wrote:
-> On Thu, 2024-10-10 at 17:40 +0300, Andy Shevchenko wrote:
-> > On Wed, Oct 09, 2024 at 10:35:07AM +0200, Philipp Stanner wrote:
-> > > pci_intx() is a hybrid function which sometimes performs devres
-> > > operations, depending on whether pcim_enable_device() has been used
-> > > to
-> > > enable the pci_dev. This sometimes-managed nature of the function
-> > > is
-> > > problematic. Notably, it causes the function to allocate under some
-> > > circumstances which makes it unusable from interrupt context.
-> > > 
-> > > To, ultimately, remove the hybrid nature from pci_intx(), it is
-> > > first
-> > > necessary to provide an always-managed and a never-managed version
-> > > of that function. Then, all callers of pci_intx() can be ported to
-> > > the
-> > > version they need, depending whether they use pci_enable_device()
-> > > or
-> > > pcim_enable_device().
-
-> > > An always-managed function exists, namely pcim_intx(), for which
-> > > __pcim_intx(), a never-managed version of pci_intx() had been
-> > > implemented.
+On Thu, Oct 10, 2024 at 05:16:28PM -0500, Bjorn Helgaas wrote:
+> On Fri, Oct 04, 2024 at 12:28:28PM -0400, Gregory Price wrote:
+> > During initial device probe, the PCI DOE busy bit for some CXL
+> > devices may be left set for a longer period than expected by the
+> > current driver logic. Despite local comments stating DOE Busy is
+> > unlikely to be detected, it appears commonly specifically during
+> > boot when CXL devices are being probed.
 > > 
-> > > Make __pcim_intx() a public function under the name
-> > > pci_intx_unmanaged(). Make pcim_intx() a public function.
-
-It seems I got confused by these two paragraphs. Why the double underscored
-function is even mentioned here?
-
-> > To avoid an additional churn we can make just completely new APIs,
-> > namely:
-> > pcim_int_x()
-> > pci_int_x()
+> > This was observed on a single socket AMD platform with 2 CXL memory
+> > expanders attached to the single socket. It was not the case that
+> > concurrent accesses were being made, as validated by monitoring
+> > mailbox commands on the device side.
 > > 
-> > You won't need all dirty dances with double underscored function
-> > naming and
-> > renaming.
-> 
-> Ähm.. I can't follow. The new version doesn't use double underscores
-> anymore. __pcim_intx() is being removed, effectively.
-> After this series, we'd end up with a clean:
-> 
-> 	pci_intx() <-> pcim_intx()
-> 
-> just as in the other PCI APIs.
-
-...
-
-> > > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> > > +
-> > > +	if (enable)
-> > > +		new = pci_command & ~PCI_COMMAND_INTX_DISABLE;
-> > > +	else
-> > > +		new = pci_command | PCI_COMMAND_INTX_DISABLE;
-> > > +
-> > > +	if (new != pci_command)
+> > This behavior has been observed with multiple CXL memory expanders
+> > from different vendors - so it appears unrelated to the model.
 > > 
-> > I would use positive conditionals as easy to read (yes, a couple of
-> > lines
-> > longer, but also a win is the indentation and avoiding an additional
-> > churn in
-> > the future in case we need to add something in this branch.
+> > In all observed tests, only a small period of the retry window is
+> > actually used - typically only a handful of loop iterations.
+> > 
+> > Polling on the PCI DOE Busy Bit for (at max) one PCI DOE timeout
+> > interval (1 second), resolves this issues cleanly.
+> > 
+> > Per PCIe r6.2 sec 6.30.3, the DOE Busy Bit being cleared does not
+> > raise an interrupt, so polling is the best option in this scenario.
+> > 
+> > Subsqeuent code in doe_statemachine_work and abort paths also wait
+> > for up to 1 PCI DOE timeout interval, so this order of (potential)
+> > additional delay is presumed acceptable.
 > 
-> I can't follow. You mean:
+> I provisionally applied this to pci/doe for v6.13 with Lukas and
+> Jonathan's reviewed-by.  
 > 
-> if (new == pci_command)
->     return;
-> 
-> ?
-> 
-> That's exactly the same level of indentation.
+> Can we include a sample of any dmesg logging or other errors users
+> would see because of this problem?  I'll update the commit log with
+> any of this information to help users connect an issue with this fix.
+>
 
-No, the body gets one level off.
+The only indication in dmesg you will see is a line like
 
-> Plus, I just copied the code.
-> 
-> > > +		pci_write_config_word(pdev, PCI_COMMAND, new);
+[   24.542625] endpoint6: DOE failed -EBUSY
 
-	if (new == pci_command)
-		return;
-
-	pci_write_config_word(pdev, PCI_COMMAND, new);
-
-See the difference?
-Also, imaging adding a new code in your case:
-
-	if (new != pci_command)
-		pci_write_config_word(pdev, PCI_COMMAND, new);
-
-==>
-
-	if (new != pci_command) {
-		...foo...
-		pci_write_config_word(pdev, PCI_COMMAND, new);
-		...bar...
-	}
-
-And in mine:
-
-	if (new == pci_command)
-		return;
-
-	...foo...
-	pci_write_config_word(pdev, PCI_COMMAND, new);
-	...bar...
-
-I hope it's clear now what I meant.
-
--- 
-With Best Regards,
-Andy Shevchenko
+produced by cxl_cdat_get_length or cxl_cdat_read_table
 
 
+Do you want an updated patch with the nits fixed?
+ 
+> > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > ---
+> >  drivers/pci/doe.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> > index 652d63df9d22..27ba5d281384 100644
+> > --- a/drivers/pci/doe.c
+> > +++ b/drivers/pci/doe.c
+> > @@ -149,14 +149,26 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+> >  	size_t length, remainder;
+> >  	u32 val;
+> >  	int i;
+> > +	unsigned long timeout_jiffies;
+> >  
+> >  	/*
+> >  	 * Check the DOE busy bit is not set. If it is set, this could indicate
+> >  	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
+> >  	 * it is expected that firmware and OS will negotiate access rights via
+> >  	 * an, as yet to be defined, method.
+> > +	 *
+> > +	 * Wait up to one PCI_DOE_TIMEOUT period to allow the prior command to
+> > +	 * finish. Otherwise, simply error out as unable to field the request.
+> > +	 *
+> > +	 * PCIe r6.2 sec 6.30.3 states no interrupt is raised when the DOE Busy
+> > +	 * bit is cleared, so polling here is our best option for the moment.
+> >  	 */
+> > -	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
+> > +	do {
+> > +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > +	} while (FIELD_GET(PCI_DOE_STATUS_BUSY, val) &&
+> > +		 !time_after(jiffies, timeout_jiffies));
+> > +
+> >  	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+> >  		return -EBUSY;
+> >  
+> > -- 
+> > 2.43.0
+> > 
 
