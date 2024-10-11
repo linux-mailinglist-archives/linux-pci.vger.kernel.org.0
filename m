@@ -1,365 +1,219 @@
-Return-Path: <linux-pci+bounces-14305-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14306-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20F8699A3A2
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:14:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A16F99A3AF
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:16:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 432D91C20B5A
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:14:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1E3E1F2305F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCDF21733D;
-	Fri, 11 Oct 2024 12:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455AC218584;
+	Fri, 11 Oct 2024 12:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYTr8EoM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QcO29hYP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58522141CE;
-	Fri, 11 Oct 2024 12:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEAB215026
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728648879; cv=none; b=GZScFTCEHc1QNhspgqP5tUqJ+QxKP1TRPb8vD9MPiQoGyIDePWDo4Npe/VLoAQm88YGAubMXNqc1mV7/6KoyEVCfoX5LdyXBQMDntmeYOGUqWAsuG9RAExsCwEExgMPxJdaXCHiAOpHjsmyZKH6LZyM4HLu/QFHQTeGZNzmqSJQ=
+	t=1728648975; cv=none; b=cATmld0ybabICE7DNVzULVg/dz4OdDTE/9zxqXbENr9XA7tRjN0qTU2VOx00DfHMFmjjoqUMLHS4f4rEWovQzmNNW5tTRzC6+XJTa7XUb772XRL1sTWW5+/P277lBl9X6LefVh6szVQhWCTgkU4noFSdGupBGD6rvZfK16D8bHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728648879; c=relaxed/simple;
-	bh=3FpVbYWRhZys2Q1ZuVEZur1JYUJbUcy5kBWzAgbmX5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=edqX/GbSYE5eGBHZt8Q8iZdDNEgLZcXs+Gsb/6Hh2T5majIwQZvVxj2coq8EnXerAB2Px2xiUBUtGydYAq5wZMdTi32Dr4JZblIuaDTUHhw6w70ZEMLMP4dKmXXpeK5ISukc1vRqTSeboXmZfs4xB3a/XFRFqNkh+unqdcKmLB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYTr8EoM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 525C2C4CED0;
-	Fri, 11 Oct 2024 12:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728648879;
-	bh=3FpVbYWRhZys2Q1ZuVEZur1JYUJbUcy5kBWzAgbmX5U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RYTr8EoMsl2pZRtk6M29cmB/uEGvdxJ5b6IpMe5gxMf0wbgWDF5eA4xWyU3vYhvcw
-	 5V9LOY3MJNJNygXuprQu2Z1mIr5YDBhFte/Qn+2dquJwM/ZAykT6kezK6p1klFt0Eq
-	 H2/BTW4TVYfMzJ99gdjw3rlkqbfDOkunj1Gxv64r90tQCUDuNvCcAiSVW3fXfwVs4Q
-	 +gPPEotTxoxCwLpi06uU3cQFrrB3SU0Cx6qU2tAi8pgHrfEBAeQ7XghBYSKHeT28yP
-	 /yqGMqJh7RkF8n1MYt7yB+9cKhxWpeduBAwC7fh6AqLgaj8kaMsoDAqNJNfwDGV6oe
-	 GB5PvX355fRgw==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-pci@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v4 12/12] PCI: rockchip-ep: Handle PERST# signal in endpoint mode
-Date: Fri, 11 Oct 2024 21:14:08 +0900
-Message-ID: <20241011121408.89890-13-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241011121408.89890-1-dlemoal@kernel.org>
-References: <20241011121408.89890-1-dlemoal@kernel.org>
+	s=arc-20240116; t=1728648975; c=relaxed/simple;
+	bh=Ua4saN/auvT/81KeOxYQZAnafhhGA0y+W7JZWy3BjS4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ep00G0sjr2v77HkXxd0PFAD8VXcsDV3ZyhY2TSHOaMVo43CopinqvhwUCBboOPTY76/WY40jycrK8Xw1AxY0NuubEN2kWQjM1zhWPURdLNpTW16r1bjxwcqp6Q6lKDi9nO7Gp7nOiKQPXPmIKNoPmF4FZdX/ZnXZiXzWQriG7FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QcO29hYP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728648972;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W3YR/eN7EDVZPnEUtVVl/DT7O1jzPEky1m6YBwoyhuE=;
+	b=QcO29hYPBTGi+v22LFXuvJ5MBY/LMiQMrB5MZ9CVOrVrV69d459BL+TWgdy2yEKEiWBbtF
+	IkaFOthZz5qS/Zctcxct2pZZfwyfhF9wN9ylES0+LH6EHfBMtDSOsmvaideO+gaVUqu9uC
+	1/2OisA2032QedCBGaiWZzFVXlMdj5c=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-286-JtAzY5j8Mk28PstaihsXSg-1; Fri, 11 Oct 2024 08:16:10 -0400
+X-MC-Unique: JtAzY5j8Mk28PstaihsXSg-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42cb635b108so12315625e9.2
+        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 05:16:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728648969; x=1729253769;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W3YR/eN7EDVZPnEUtVVl/DT7O1jzPEky1m6YBwoyhuE=;
+        b=RknArmefoGIl4mG1OKHiIgTJNFKxYWzQnQEsJaEY9UIG40q9D6F0F99atGkSUS/RaJ
+         7ce8JmOg7TRF9mkWOLJZEkjRsx97kEMnF4kdWgkHpL+lCr8Ga+tW6vLPPFBZI8XZGFod
+         11eb1FTyvv2Lm5GZiKllkgotUzufC5QuYsu6JPviK9MhLryOHL+paQrB1xRvRizNRfGA
+         AExS9WWbbMUAKGmTm8N6DcYmJWe+hznW6ys1CATDbEhsnI32hk6Z+uO6wXShY6yxe5TR
+         QoHIL/WL8/XrhCpRgdR4HeWmfD8CnB1IHKF/JGAflho9E+0r0zD8eyHoEG8EwUGUl5Sp
+         wWAg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3BLfcMpb6LZFs8BnSazpdkjroeR7B4EBb6CZA4497Cd0N3eSLZcMop+7tGaNfCU3XHr6IMJv3v9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA0hwSLPkZi6cevBqipTtKPRqqm/TVKGBfF9doXCm0sitd/duj
+	5d/BOkLRrI5szyN0xKIiPvwhBR6MNz6qIvACB1Gf2JwBcmQfiEb3UykOGgSIcXvnY+xxtdEfy1b
+	sjTuvI5vUvsf99+o7U94+sbo58Ad+Iv3p1PlsUv3wjwyy1FH4YzD6sHbPzQ==
+X-Received: by 2002:a05:600c:1d0e:b0:42c:b2fa:1c0a with SMTP id 5b1f17b1804b1-4311df429c8mr19539475e9.23.1728648969423;
+        Fri, 11 Oct 2024 05:16:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJ7w0P8euwuh1uWsgO1hBzdaK+5QHv+AFGT0Iwx99lPo3ic55Ocuel+lqlVPvlsAnC7ezD6A==
+X-Received: by 2002:a05:600c:1d0e:b0:42c:b2fa:1c0a with SMTP id 5b1f17b1804b1-4311df429c8mr19538645e9.23.1728648968995;
+        Fri, 11 Oct 2024 05:16:08 -0700 (PDT)
+Received: from eisenberg.fritz.box ([2001:16b8:3d05:4700:3e59:7d70:cabd:144b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430ccf4841asm73010925e9.19.2024.10.11.05.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2024 05:16:08 -0700 (PDT)
+Message-ID: <f65e9fa01a1947782fc930876e5f84174408db67.camel@redhat.com>
+Subject: Re: [RFC PATCH 01/13] PCI: Prepare removing devres from pci_intx()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
+ <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
+ Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
+ Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
+ <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
+ GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
+ Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+ Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
+ <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
+ Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
+ Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
+ <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
+ <smostafa@google.com>, Hannes Reinecke <hare@suse.de>, John Garry
+ <john.g.garry@oracle.com>, Soumya Negi <soumya.negi97@gmail.com>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>, "Dr. David Alan
+ Gilbert" <linux@treblig.org>, Christian Brauner <brauner@kernel.org>, Ankit
+ Agrawal <ankita@nvidia.com>, Reinette Chatre <reinette.chatre@intel.com>,
+ Eric Auger <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
+ =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
+ <kai.vehmanen@linux.intel.com>,  Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
+ Marc Zyngier <maz@kernel.org>, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-input@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-wireless@vger.kernel.org,
+ ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
+ linux-staging@lists.linux.dev, kvm@vger.kernel.org, 
+ xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
+Date: Fri, 11 Oct 2024 14:16:06 +0200
+In-Reply-To: <ZwfnULv2myACxnVb@smile.fi.intel.com>
+References: <20241009083519.10088-1-pstanner@redhat.com>
+	 <20241009083519.10088-2-pstanner@redhat.com>
+	 <ZwfnULv2myACxnVb@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Currently, the Rockchip PCIe endpoint controller driver does not handle
-the PERST# signal, which prevents detecting when link training should
-actually be started or if the host resets the device. This however can
-be supported using the controller reset_gpios property set as an input
-GPIO for endpoint mode.
+On Thu, 2024-10-10 at 17:40 +0300, Andy Shevchenko wrote:
+> On Wed, Oct 09, 2024 at 10:35:07AM +0200, Philipp Stanner wrote:
+> > pci_intx() is a hybrid function which sometimes performs devres
+> > operations, depending on whether pcim_enable_device() has been used
+> > to
+> > enable the pci_dev. This sometimes-managed nature of the function
+> > is
+> > problematic. Notably, it causes the function to allocate under some
+> > circumstances which makes it unusable from interrupt context.
+> >=20
+> > To, ultimately, remove the hybrid nature from pci_intx(), it is
+> > first
+> > necessary to provide an always-managed and a never-managed version
+> > of that function. Then, all callers of pci_intx() can be ported to
+> > the
+> > version they need, depending whether they use pci_enable_device()
+> > or
+> > pcim_enable_device().
+> >=20
+> > An always-managed function exists, namely pcim_intx(), for which
+> > __pcim_intx(), a never-managed version of pci_intx() had been
+> > implemented.
+>=20
+> > Make __pcim_intx() a public function under the name
+> > pci_intx_unmanaged(). Make pcim_intx() a public function.
+>=20
+> To avoid an additional churn we can make just completely new APIs,
+> namely:
+> pcim_int_x()
+> pci_int_x()
+>=20
+> You won't need all dirty dances with double underscored function
+> naming and
+> renaming.
 
-Modify the rockchip PCI endpoint controller driver to get the reset_gpio
-and its associated interrupt which is serviced using a threaded IRQ with
-the function rockchip_pcie_ep_perst_irq_thread() as handler.
+=C3=84hm.. I can't follow. The new version doesn't use double underscores
+anymore. __pcim_intx() is being removed, effectively.
+After this series, we'd end up with a clean:
 
-This handler function notifies a link down event corresponding to the RC
-side asserting the PERST# signal using pci_epc_linkdown() when the gpio
-is high. Once the gpio value goes down, corresponding to the RC
-de-asserting the PERST# signal, link training is started. The polarity
-of the gpio interrupt trigger is changed from high to low after the RC
-asserted PERST#, and conversely changed from low to high after the RC
-de-asserts PERST#.
+	pci_intx() <-> pcim_intx()
 
-Also, given that the host mode controller and the endpoint mode
-controller use two different property names for the same PERST# signal
-(ep_gpios property and reset_gpios property respectively), for clarity,
-rename the ep_gpio field of struct rockchip_pcie to perst_gpio.
+just as in the other PCI APIs.
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/pci/controller/pcie-rockchip-ep.c   | 126 +++++++++++++++++++-
- drivers/pci/controller/pcie-rockchip-host.c |   4 +-
- drivers/pci/controller/pcie-rockchip.c      |  16 +--
- drivers/pci/controller/pcie-rockchip.h      |   2 +-
- 4 files changed, 135 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 07dcda1d1d09..3d7e58629801 100644
---- a/drivers/pci/controller/pcie-rockchip-ep.c
-+++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/configfs.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/of.h>
-@@ -50,6 +51,9 @@ struct rockchip_pcie_ep {
- 	u64			irq_pci_addr;
- 	u8			irq_pci_fn;
- 	u8			irq_pending;
-+	int			perst_irq;
-+	bool			perst_asserted;
-+	bool			link_up;
- 	struct delayed_work	link_training;
- };
- 
-@@ -462,13 +466,17 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
- 
- 	rockchip_pcie_write(rockchip, cfg, PCIE_CORE_PHY_FUNC_CFG);
- 
-+	if (rockchip->perst_gpio)
-+		enable_irq(ep->perst_irq);
-+
- 	/* Enable configuration and start link training */
- 	rockchip_pcie_write(rockchip,
- 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
- 			    PCIE_CLIENT_CONF_ENABLE,
- 			    PCIE_CLIENT_CONFIG);
- 
--	schedule_delayed_work(&ep->link_training, 0);
-+	if (!rockchip->perst_gpio)
-+		schedule_delayed_work(&ep->link_training, 0);
- 
- 	return 0;
- }
-@@ -478,6 +486,11 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
- 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
- 
-+	if (rockchip->perst_gpio) {
-+		ep->perst_asserted = true;
-+		disable_irq(ep->perst_irq);
-+	}
-+
- 	cancel_delayed_work_sync(&ep->link_training);
- 
- 	/* Stop link training and disable configuration */
-@@ -540,6 +553,13 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
- 	if (!rockchip_pcie_ep_link_up(rockchip))
- 		goto again;
- 
-+	/*
-+	 * If PERST was asserted while polling the link, do not notify
-+	 * the function.
-+	 */
-+	if (ep->perst_asserted)
-+		return;
-+
- 	val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS0);
- 	dev_info(dev,
- 		 "Link UP (Negotiated speed: %sGT/s, width: x%lu)\n",
-@@ -549,6 +569,7 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
- 
- 	/* Notify the function */
- 	pci_epc_linkup(ep->epc);
-+	ep->link_up = true;
- 
- 	return;
- 
-@@ -556,6 +577,99 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
- 	schedule_delayed_work(&ep->link_training, msecs_to_jiffies(5));
- }
- 
-+static void rockchip_pcie_ep_perst_assert(struct rockchip_pcie_ep *ep)
-+{
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+
-+	dev_dbg(dev, "PERST asserted, link down\n");
-+
-+	if (ep->perst_asserted)
-+		return;
-+
-+	ep->perst_asserted = true;
-+
-+	cancel_delayed_work_sync(&ep->link_training);
-+
-+	if (ep->link_up) {
-+		pci_epc_linkdown(ep->epc);
-+		ep->link_up = false;
-+	}
-+}
-+
-+static void rockchip_pcie_ep_perst_deassert(struct rockchip_pcie_ep *ep)
-+{
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+
-+	dev_dbg(dev, "PERST de-asserted, starting link training\n");
-+
-+	if (!ep->perst_asserted)
-+		return;
-+
-+	ep->perst_asserted = false;
-+
-+	/* Enable link re-training */
-+	rockchip_pcie_ep_retrain_link(rockchip);
-+
-+	/* Start link training */
-+	schedule_delayed_work(&ep->link_training, 0);
-+}
-+
-+static irqreturn_t rockchip_pcie_ep_perst_irq_thread(int irq, void *data)
-+{
-+	struct pci_epc *epc = data;
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	u32 perst = gpiod_get_value(rockchip->perst_gpio);
-+
-+	if (perst)
-+		rockchip_pcie_ep_perst_assert(ep);
-+	else
-+		rockchip_pcie_ep_perst_deassert(ep);
-+
-+	irq_set_irq_type(ep->perst_irq,
-+			 (perst ? IRQF_TRIGGER_HIGH : IRQF_TRIGGER_LOW));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+	int ret;
-+
-+	if (!rockchip->perst_gpio)
-+		return 0;
-+
-+	/* PCIe reset interrupt */
-+	ep->perst_irq = gpiod_to_irq(rockchip->perst_gpio);
-+	if (ep->perst_irq < 0) {
-+		dev_err(dev, "No corresponding IRQ for PERST GPIO\n");
-+		return ep->perst_irq;
-+	}
-+
-+	/*
-+	 * The perst_gpio is active low, so when it is inactive on start, it
-+	 * is high and will trigger the perst_irq handler. So treat this initial
-+	 * IRQ as a dummy one by faking the host asserting #PERST.
-+	 */
-+	ep->perst_asserted = true;
-+	irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-+	ret = devm_request_threaded_irq(dev, ep->perst_irq, NULL,
-+					rockchip_pcie_ep_perst_irq_thread,
-+					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-+					"pcie-ep-perst", epc);
-+	if (ret) {
-+		dev_err(dev, "Request PERST GPIO IRQ failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct pci_epc_features rockchip_pcie_epc_features = {
- 	.linkup_notifier = true,
- 	.msi_capable = true,
-@@ -749,11 +863,17 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 
- 	pci_epc_init_notify(epc);
- 
-+	err = rockchip_pcie_ep_setup_irq(epc);
-+	if (err < 0)
-+		goto err_uninit_port;
-+
- 	return 0;
--err_exit_ob_mem:
--	rockchip_pcie_ep_exit_ob_mem(ep);
-+err_uninit_port:
-+	rockchip_pcie_deinit_phys(rockchip);
- err_disable_clocks:
- 	rockchip_pcie_disable_clocks(rockchip);
-+err_exit_ob_mem:
-+	rockchip_pcie_ep_exit_ob_mem(ep);
- 	return err;
- }
- 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index cbec71114825..7471d9fd18bc 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -294,7 +294,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- 	int err, i = MAX_LANE_NUM;
- 	u32 status;
- 
--	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
-+	gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
- 
- 	err = rockchip_pcie_init_port(rockchip);
- 	if (err)
-@@ -323,7 +323,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- 			    PCIE_CLIENT_CONFIG);
- 
- 	msleep(PCIE_T_PVPERL_MS);
--	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
-+	gpiod_set_value_cansleep(rockchip->perst_gpio, 1);
- 
- 	msleep(PCIE_T_RRS_READY_MS);
- 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 154e78819e6e..51eb60fc72a2 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -119,13 +119,15 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 		return PTR_ERR(rockchip->aclk_rst);
- 	}
- 
--	if (rockchip->is_rc) {
--		rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep",
--							    GPIOD_OUT_LOW);
--		if (IS_ERR(rockchip->ep_gpio))
--			return dev_err_probe(dev, PTR_ERR(rockchip->ep_gpio),
--					     "failed to get ep GPIO\n");
--	}
-+	if (rockchip->is_rc)
-+		rockchip->perst_gpio = devm_gpiod_get_optional(dev, "ep",
-+							       GPIOD_OUT_LOW);
-+	else
-+		rockchip->perst_gpio = devm_gpiod_get_optional(dev, "reset",
-+							       GPIOD_IN);
-+	if (IS_ERR(rockchip->perst_gpio))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->perst_gpio),
-+				     "failed to get #PERST GPIO\n");
- 
- 	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
- 	if (IS_ERR(rockchip->aclk_pcie)) {
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 24796176f658..a51b087ce878 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -329,7 +329,7 @@ struct rockchip_pcie {
- 	struct	regulator *vpcie3v3; /* 3.3V power supply */
- 	struct	regulator *vpcie1v8; /* 1.8V power supply */
- 	struct	regulator *vpcie0v9; /* 0.9V power supply */
--	struct	gpio_desc *ep_gpio;
-+	struct	gpio_desc *perst_gpio;
- 	u32	lanes;
- 	u8      lanes_map;
- 	int	link_gen;
--- 
-2.47.0
+>=20
+>=20
+> ...
+>=20
+> > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> > +
+> > +	if (enable)
+> > +		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
+> > +	else
+> > +		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
+> > +
+> > +	if (new !=3D pci_command)
+>=20
+> I would use positive conditionals as easy to read (yes, a couple of
+> lines
+> longer, but also a win is the indentation and avoiding an additional
+> churn in
+> the future in case we need to add something in this branch.
+
+I can't follow. You mean:
+
+if (new =3D=3D pci_command)
+    return;
+
+?
+
+That's exactly the same level of indentation. Plus, I just copied the
+code.
+
+>=20
+> > +		pci_write_config_word(pdev, PCI_COMMAND, new);
+>=20
+> ...
+>=20
+> Otherwise I'm for the idea in general.
+
+\o/
+
+>=20
 
 
