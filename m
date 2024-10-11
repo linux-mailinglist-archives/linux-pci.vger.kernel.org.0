@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-14277-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14278-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F23F99A1CF
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:44:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B964299A1DD
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:45:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30EC01F2522B
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 10:44:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C82FB25D40
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 10:45:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA3F6213EE7;
-	Fri, 11 Oct 2024 10:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A010C2141C3;
+	Fri, 11 Oct 2024 10:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jhOTnqrB"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VFMtWsXu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661D9198A3F;
-	Fri, 11 Oct 2024 10:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC70213EC6;
+	Fri, 11 Oct 2024 10:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728643453; cv=none; b=XSBJ2wpHpAWWZK4c6zBL95lOYF9HgnJwdv3qEkNH2WXKzqY/4SeedvP6ZagwZ8HWwyTNxJFayL2a7lYh3ALNiqEpQAk17GnJDnzul59j8PKQDqIE20+n4ZiAnwBR4HU0zwnq6O8xbie7d8Pzf23DR7ZHWRCUX96yPx4fX5zRRPY=
+	t=1728643498; cv=none; b=ozBg+JIJpirfsYMaXw2VkJKNuURJVIs3qN/d5v3u5JugiuIUIxtAunqaSuzUAaDfgB8AhW4JpOIK9nuennMYFNr0aHwWkQA/GUt3O60dNJdRilAJMW3I9scBsd1UddMCLo68JJ7PWdU6I2ouBampRZyolCrvTsaDoraHwvVMGf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728643453; c=relaxed/simple;
-	bh=sOKcqGX4UZHwenPSjHPtTDzhT/8VpI0ge79oPvoda0A=;
+	s=arc-20240116; t=1728643498; c=relaxed/simple;
+	bh=XVqBF3uU6H3gRvE1VXGdpEedqjqbhY5OV4rF9o9T3RA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oDW3fh9QhmVXF8FpVNH4zmTJ6Qp1yPH+INwn5DNaGIV+kN30GtcXNRruIGbECeKIkCG1jesKYe+fEXoizWp+HcdFxntcCxIPk9nVpfNTI6APZm1fa+M1AfxTak2oZI3timM4dM0SNjK62NkHlYbitKZLxTzeHTy+1TFCjRWqh5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jhOTnqrB; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version; b=E0578KfxiCc/+DcMXSmRtTLCudPmu1nPCFYPTsq0KRPr1zUHj3zqdFOFx0JpcnsNUfUcpYhV9nn6SPxLy5c1aqz7KboF5IpNGVyhYMOJR6aYaWrBMX9uqbb3jBfaqjKxMVRThXHQEiSuFNuyd340RfAX8PrIzX8ylhCT1AHILHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VFMtWsXu; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49B6O1Oc030035;
-	Fri, 11 Oct 2024 10:41:46 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49B4Pa9W027275;
+	Fri, 11 Oct 2024 10:41:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=R8apB/HC6zb
-	dmOM/osprUzGSdJFwFC3SdC4+94ASLH8=; b=jhOTnqrBWqa2ycu9AGXKTac0hJJ
-	9NbCuovLg8kPMxilAbyFAT+HQ/iuEcSGZ4zk4jwcuRbOZdbmYucEciJ19cVr+1lt
-	bcN0i9ltrQB9QCtKUN74Ruc4OqcpXQl258UZRI+Z4NNya9uk5Jo29TIfQozM8Zap
-	yalJ5BOishcpl5lH3/u+xglVwhemNFknn+bTTwmADRuEUcEkamuhUp1sa+YmU5bc
-	eAhGiFu5bj74c7Djbn4iY2kkPdqjVrTplKk6qCVDyeCSckhWfv1VfJByrbnIEru2
-	p1K7QteF4zRcB35td5NDTWoS3ryTwK+Z8IeL+Hfmt5fl0EgxvpXoci9ywCw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 426g6navd6-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=AdcktK5D9O1
+	N/CDpsnC+gVeX8zMqbfI9hnTcbdr6Dss=; b=VFMtWsXuwosHZtj4aHpomrfETKM
+	9d0FajhUnnpMOES6WUmzBe7k9QBh3SAlKSeZngdbQig/9nMi/HZ3fVTvXljxtWp9
+	89aA2AkmfKaN3/Kh2QDcyb+EBp56uVTek4HAe0PdGKKvZszin3sJOoAV+oYTtI8k
+	CoayBTrpnW+sms+tGEFG90bsHTtXOMiI7Ke8XrFiC5+mJCnN2H6Vc1Wc5WkgDYBN
+	hFPAjsuAEmCJhYLXsonS/NhFU0153GvWWqAyZfqXYZF0YmSH2PAOmPrZTKyEkGw1
+	EYJhpFMAhvqKhS5ti8ap/jOH9vD4B3tnT4Q471/XVYWu8EB6SHVbaRmRkMA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 426fj6u19y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Oct 2024 10:41:45 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA01.qualcomm.com [127.0.0.1])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 49BAV68a019033;
+	Fri, 11 Oct 2024 10:41:47 +0000 (GMT)
+Received: from pps.filterd (NALASPPMTA02.qualcomm.com [127.0.0.1])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 49BAfjaj000492;
 	Fri, 11 Oct 2024 10:41:45 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA01.qualcomm.com (PPS) with ESMTPS id 426wjy2dpu-1
+	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 426uxek3y5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 11 Oct 2024 10:41:45 +0000
-Received: from NALASPPMTA01.qualcomm.com (NALASPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 49BAeKwr031365;
-	Fri, 11 Oct 2024 10:41:44 GMT
+Received: from NALASPPMTA02.qualcomm.com (NALASPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 49BAfjkU000485;
+	Fri, 11 Oct 2024 10:41:45 GMT
 Received: from hu-devc-lv-u22-c.qualcomm.com (hu-qianyu-lv.qualcomm.com [10.81.25.114])
-	by NALASPPMTA01.qualcomm.com (PPS) with ESMTPS id 49BAfiDa000929
+	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 49BAfjop000484
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Oct 2024 10:41:44 +0000
+	Fri, 11 Oct 2024 10:41:45 +0000
 Received: by hu-devc-lv-u22-c.qualcomm.com (Postfix, from userid 4098150)
-	id 80FCD651; Fri, 11 Oct 2024 03:41:44 -0700 (PDT)
+	id 27727651; Fri, 11 Oct 2024 03:41:45 -0700 (PDT)
 From: Qiang Yu <quic_qianyu@quicinc.com>
 To: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
         robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
@@ -75,9 +75,9 @@ Cc: dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org, Qiang Yu <quic_qianyu@quicinc.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v6 1/8] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the X1E80100 QMP PCIe PHY Gen4 x8
-Date: Fri, 11 Oct 2024 03:41:35 -0700
-Message-Id: <20241011104142.1181773-2-quic_qianyu@quicinc.com>
+Subject: [PATCH v6 2/8] dt-bindings: PCI: qcom: Move OPP table to qcom,pcie-common.yaml
+Date: Fri, 11 Oct 2024 03:41:36 -0700
+Message-Id: <20241011104142.1181773-3-quic_qianyu@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
 References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
@@ -92,55 +92,60 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: eg7xCzd5psDHknnbshH5TfLoxABY44d0
-X-Proofpoint-GUID: eg7xCzd5psDHknnbshH5TfLoxABY44d0
+X-Proofpoint-GUID: gkrk2kmhZkGq9wNuhtZOqBRvvubhSahl
+X-Proofpoint-ORIG-GUID: gkrk2kmhZkGq9wNuhtZOqBRvvubhSahl
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 phishscore=0 malwarescore=0
- clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2410110073
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ clxscore=1015 mlxscore=0 impostorscore=0 priorityscore=1501 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
+ definitions=main-2410110073
 
-PCIe 3rd instance of X1E80100 supports Gen 4 x8 which needs different
-8 lane capable QMP PCIe PHY with hardware revision v6.30. Document Gen
-4 x8 PHY as separate module.
+OPP table is a generic property that is also required by other qcom
+platforms. Hence move this property to qcom,pcie-common.yaml so that PCIe
+on other qcom platforms is able to adjust power domain performance state
+and ICC peak bw according to PCIe gen speed and link width.
 
 Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml    | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml | 4 ++++
+ Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml | 4 ----
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-index dcf4fa55fbba..680ec3113c2b 100644
---- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-@@ -41,6 +41,7 @@ properties:
-       - qcom,x1e80100-qmp-gen3x2-pcie-phy
-       - qcom,x1e80100-qmp-gen4x2-pcie-phy
-       - qcom,x1e80100-qmp-gen4x4-pcie-phy
-+      - qcom,x1e80100-qmp-gen4x8-pcie-phy
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+index 704c0f58eea5..3c6430fe9331 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+@@ -78,6 +78,10 @@ properties:
+     description: GPIO controlled connection to WAKE# signal
+     maxItems: 1
  
-   reg:
-     minItems: 1
-@@ -172,6 +173,7 @@ allOf:
-               - qcom,sc8280xp-qmp-gen3x2-pcie-phy
-               - qcom,sc8280xp-qmp-gen3x4-pcie-phy
-               - qcom,x1e80100-qmp-gen4x4-pcie-phy
-+              - qcom,x1e80100-qmp-gen4x8-pcie-phy
-     then:
-       properties:
-         clocks:
-@@ -201,6 +203,7 @@ allOf:
-               - qcom,sm8550-qmp-gen4x2-pcie-phy
-               - qcom,sm8650-qmp-gen4x2-pcie-phy
-               - qcom,x1e80100-qmp-gen4x2-pcie-phy
-+              - qcom,x1e80100-qmp-gen4x8-pcie-phy
-     then:
-       properties:
-         resets:
++  operating-points-v2: true
++  opp-table:
++    type: object
++
+ required:
+   - reg
+   - reg-names
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
+index 46bd59eefadb..6e0a6d8f0ed0 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
+@@ -70,10 +70,6 @@ properties:
+       - const: msi7
+       - const: global
+ 
+-  operating-points-v2: true
+-  opp-table:
+-    type: object
+-
+   resets:
+     maxItems: 1
+ 
 -- 
 2.34.1
 
