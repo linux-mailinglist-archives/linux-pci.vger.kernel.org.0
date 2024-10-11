@@ -1,124 +1,302 @@
-Return-Path: <linux-pci+bounces-14289-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14290-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC9D699A326
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78D7D99A32C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 14:03:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F4551C20CEE
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:01:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6068D1C210B8
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Oct 2024 12:03:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FFD921500F;
-	Fri, 11 Oct 2024 12:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58869216A2A;
+	Fri, 11 Oct 2024 12:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYFQjzJ2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmzvnJGf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4A7216A3E
-	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193CE21500F
+	for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 12:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728648093; cv=none; b=Qxm/7k2Qg8Eeyn5zTcDWkpEFpZcbHRu+GCFHqI/15M5LxOzow+A5hI1FcGrn0Te2snsrSwP92LDnF8N5YtA/BMhmApocmMcW2WZn2wmBDONNO6Gjsl81NRDr5jm1qEs43DZicG2WZSyKINIvnF0SGxxGmrec7HOQNVvKuOITqIg=
+	t=1728648228; cv=none; b=JzbyWs6jeBqpCwA7oKuoXATXxwr8Kd0km4Q2777/rQpiniEvjRQe9/2wwpJxfIlMBESp7OEYlgAq3Y9LptE+aViREtwx/hDujJhKBSboTzP2FWJwJWf1Phz14aonMfndw2+f9hSDYZW4KkoC5++gW7msYj5sjdAi/1kkbtbnDuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728648093; c=relaxed/simple;
-	bh=CQ6PvhizfGBwCyVuEIy1Tp0Fk7YOlbdHfJ+HxdHghA8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fj2DnChRk1f6wYz2Y2mqyYIqHFa9FMNSfnjf2elpj2IKv0lcg++B2dt4QK8hNN9q7dPG95DNBaGBQlDNQhm9KVL1v3VUrb+0hovrMyUhfxuP3R4oG6eao2IfeAwghulzdtqx32VQJjAc2uOLXrDeYrrIW4NERujLjL6YtDj2d+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYFQjzJ2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E8AC4CECF;
-	Fri, 11 Oct 2024 12:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728648092;
-	bh=CQ6PvhizfGBwCyVuEIy1Tp0Fk7YOlbdHfJ+HxdHghA8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LYFQjzJ2CDpJjQdZTLuendYnaAY0HckU6PZYMHpFqZCabSo+A01cCfyvMtJxOTRZ5
-	 ZZItyYr60umRFA1WUASAWBkmUAzde4UEravu7B9+/Vf/SCb7vvQBRgvf8F3wbpGGx1
-	 UKVlhwV8nKFFHd4aEr4Y4OsKODzJ/OyD1qQ1oiUVb5lWoF7IAgroMyIQeLTGiFQCVD
-	 HMuX48a1X0yZ7kzDOGEN6jNnkZy9D+nsZ3Q5Hyn0yfVZebk9BvujMOdZrx0LxPvBzG
-	 CfsUy/1WR3M4z+ftiZYR9EK95YADCDRA+DpG0dVPuU0RngMWJvjuNZfegN0CBCbjoQ
-	 sccpRN4G/x2Qw==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	linux-pci@vger.kernel.org
-Cc: Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v5 6/6] PCI: dwc: endpoint: Implement the pci_epc_ops::get_mem_map() operation
-Date: Fri, 11 Oct 2024 21:01:15 +0900
-Message-ID: <20241011120115.89756-7-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241011120115.89756-1-dlemoal@kernel.org>
-References: <20241011120115.89756-1-dlemoal@kernel.org>
+	s=arc-20240116; t=1728648228; c=relaxed/simple;
+	bh=JWzZMjqpp/xPZ1MmHfjs2qnl7WyX+6LRJNU05aMLIA0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dbIyMqr5FsOnU/VT7B5cQaIF3mo1389Cnjh03DOpq1dflbse6E/rY/gy5PWn0DAxP6YJwm0DyLSKbG5eGOOnPXL5dtulxGFm4cPsTQOOl52AbdZ9RYznGtuIGZD+c16XFJelDNmr0FP77tCDeMes5EcV8R1nIRrjdf2rMBsteKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HmzvnJGf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728648225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3I5lHL6mHTQWMds6pJC4dZUawdNZoxrsfeR6hWpkDqM=;
+	b=HmzvnJGfYk4/e7bD5ZZtE1b+i4kla43u+mtoVdV3eKIMww2ZKVEOWNRVmCAFhxkaud0pyw
+	62ACAt5xy88XuHaqmH9HbSsBJTLndAHJoeBq1lBq+gFVhHa8vfkJfotvh9lLvIjqjSQOes
+	3b7LgyMw9NRjHxYi4hxXNfddwU04vxg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-67-ad0ev5URObC9p4Pom04GsQ-1; Fri, 11 Oct 2024 08:03:44 -0400
+X-MC-Unique: ad0ev5URObC9p4Pom04GsQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43056c979c9so11793905e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 05:03:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728648223; x=1729253023;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3I5lHL6mHTQWMds6pJC4dZUawdNZoxrsfeR6hWpkDqM=;
+        b=BqLBrIBelnXQVLpp2b6Ph34VKtAb79Eyjnh3uc1puSlVmzjdcMu7qLwoaRCCuWsIEc
+         AFtRjtM/qA7DsLVt0XprM0hgsUTKIiAx6eBRN/0dGJaqlkIpjVpLMD9QPcVi0xWbKTPM
+         Xdk92GUWGutiuro72bXC+Fk0DEpdNVN1+pFreo/hXMserB5nousxKQQbNZ5yWQbfpf10
+         e5UcpRUlz2yoWT/o1KN1+ptL63u01VR5gob/zCyWL2G7UEkahw4flzNE7DSx5NvJdoEx
+         iFGdGvUotcknJZTmoUQbbEPOEgbyjF80Hs/jbBRoACXO8einvPPoRzlZPOMSXM/CcaiM
+         Re6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVrkU/HiIQY/i8ENB+6fk4wbrhEQ/k+/dNBbTlFcfCUJT2irfBIxTqV02Xwy6ZCtO2VheqUkH3viFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXNdeQc7vRnyREv2a8+Rz26dyayusp0OaBgI26MAsTFnnEOwob
+	QEhGPja7/rAArEQUBKJZ9kttL4h+tJeI0hGOAzwyNy2QoU/tWRSruHG5sUTE1F2XmlLO8dP94W4
+	Vh6bDG8CNAlRMG5OjGOGuoQWRct8fsQnJoROnYIQmFXo9T/1M+yRWxbweuQ==
+X-Received: by 2002:a05:600c:1d1c:b0:42c:c003:edd1 with SMTP id 5b1f17b1804b1-4311decaa48mr19191885e9.10.1728648222796;
+        Fri, 11 Oct 2024 05:03:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExbuVJr4JGcXjTZsUgf0Q1cJGFJf/2hMvz1Z5drCky7hS/DrFylID4EQn0lZzCFTWpUUq6Zw==
+X-Received: by 2002:a05:600c:1d1c:b0:42c:c003:edd1 with SMTP id 5b1f17b1804b1-4311decaa48mr19191405e9.10.1728648222253;
+        Fri, 11 Oct 2024 05:03:42 -0700 (PDT)
+Received: from eisenberg.fritz.box ([2001:16b8:3d05:4700:3e59:7d70:cabd:144b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430ccf51770sm73523925e9.22.2024.10.11.05.03.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2024 05:03:41 -0700 (PDT)
+Message-ID: <914de38f0b6b3d2ddf98c16e427085732bebfd4a.camel@redhat.com>
+Subject: Re: [RFC PATCH 01/13] PCI: Prepare removing devres from pci_intx()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
+ <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
+ Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
+ Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
+ <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
+ GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
+ Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+ Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
+ <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>,  Jaroslav Kysela <perex@perex.cz>, Takashi
+ Iwai <tiwai@suse.com>, Mario Limonciello <mario.limonciello@amd.com>, Chen
+ Ni <nichen@iscas.ac.cn>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
+ <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mostafa Saleh
+ <smostafa@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Hannes Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
+ Soumya Negi <soumya.negi97@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi
+ Liu <yi.l.liu@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+ Christian Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>,
+ Reinette Chatre <reinette.chatre@intel.com>, Eric Auger
+ <eric.auger@redhat.com>, Ye Bin <yebin10@huawei.com>, Marek
+ =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
+ <kai.vehmanen@linux.intel.com>,  Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>, Rui Salvaterra <rsalvaterra@gmail.com>,
+ Marc Zyngier <maz@kernel.org>, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-input@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-wireless@vger.kernel.org,
+ ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
+ linux-staging@lists.linux.dev, kvm@vger.kernel.org, 
+ xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
+Date: Fri, 11 Oct 2024 14:03:39 +0200
+In-Reply-To: <20241010114304.064f5d3d.alex.williamson@redhat.com>
+References: <20241009083519.10088-1-pstanner@redhat.com>
+	 <20241009083519.10088-2-pstanner@redhat.com>
+	 <20241010114304.064f5d3d.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The function dw_pcie_prog_outbound_atu() used to program outbound ATU
-entries for mapping RC PCI addresses to local CPU addresses does not
-allow PCI addresses that are not aligned to the value of region_align
-of struct dw_pcie. This value is determined from the iATU hardware
-registers during probing of the iATU (done by dw_pcie_iatu_detect()).
-This value is thus valid for all DWC PCIe controllers, and valid
-regardless of the hardware configuration used when synthesizing the
-DWC PCIe controller.
+On Thu, 2024-10-10 at 11:43 -0600, Alex Williamson wrote:
+> On Wed,=C2=A0 9 Oct 2024 10:35:07 +0200
+> Philipp Stanner <pstanner@redhat.com> wrote:
+>=20
+> > pci_intx() is a hybrid function which sometimes performs devres
+> > operations, depending on whether pcim_enable_device() has been used
+> > to
+> > enable the pci_dev. This sometimes-managed nature of the function
+> > is
+> > problematic. Notably, it causes the function to allocate under some
+> > circumstances which makes it unusable from interrupt context.
+> >=20
+> > To, ultimately, remove the hybrid nature from pci_intx(), it is
+> > first
+> > necessary to provide an always-managed and a never-managed version
+> > of that function. Then, all callers of pci_intx() can be ported to
+> > the
+> > version they need, depending whether they use pci_enable_device()
+> > or
+> > pcim_enable_device().
+> >=20
+> > An always-managed function exists, namely pcim_intx(), for which
+> > __pcim_intx(), a never-managed version of pci_intx() had been
+> > implemented.
+> >=20
+> > Make __pcim_intx() a public function under the name
+> > pci_intx_unmanaged(). Make pcim_intx() a public function.
+> >=20
+> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > ---
+> > =C2=A0drivers/pci/devres.c | 24 +++---------------------
+> > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0 | 26 ++++++++++++++++++++++++=
+++
+> > =C2=A0include/linux/pci.h=C2=A0 |=C2=A0 2 ++
+> > =C2=A03 files changed, 31 insertions(+), 21 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> > index b133967faef8..475a3ae5c33f 100644
+> > --- a/drivers/pci/devres.c
+> > +++ b/drivers/pci/devres.c
+> > @@ -411,31 +411,12 @@ static inline bool mask_contains_bar(int
+> > mask, int bar)
+> > =C2=A0	return mask & BIT(bar);
+> > =C2=A0}
+> > =C2=A0
+> > -/*
+> > - * This is a copy of pci_intx() used to bypass the problem of
+> > recursive
+> > - * function calls due to the hybrid nature of pci_intx().
+> > - */
+> > -static void __pcim_intx(struct pci_dev *pdev, int enable)
+> > -{
+> > -	u16 pci_command, new;
+> > -
+> > -	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> > -
+> > -	if (enable)
+> > -		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
+> > -	else
+> > -		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
+> > -
+> > -	if (new !=3D pci_command)
+> > -		pci_write_config_word(pdev, PCI_COMMAND, new);
+> > -}
+> > -
+> > =C2=A0static void pcim_intx_restore(struct device *dev, void *data)
+> > =C2=A0{
+> > =C2=A0	struct pci_dev *pdev =3D to_pci_dev(dev);
+> > =C2=A0	struct pcim_intx_devres *res =3D data;
+> > =C2=A0
+> > -	__pcim_intx(pdev, res->orig_intx);
+> > +	pci_intx_unmanaged(pdev, res->orig_intx);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static struct pcim_intx_devres *get_or_create_intx_devres(struct
+> > device *dev)
+> > @@ -472,10 +453,11 @@ int pcim_intx(struct pci_dev *pdev, int
+> > enable)
+> > =C2=A0		return -ENOMEM;
+> > =C2=A0
+> > =C2=A0	res->orig_intx =3D !enable;
+> > -	__pcim_intx(pdev, enable);
+> > +	pci_intx_unmanaged(pdev, enable);
+> > =C2=A0
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > +EXPORT_SYMBOL(pcim_intx);
+>=20
+> What precludes this from _GPL?=C2=A0 Also note that this is now calling a
+> GPL symbol, so by default I'd assume it should also be GPL.=C2=A0 Thanks,
 
-Implement the ->get_mem_map() endpoint controller operation to allow
-this mapping alignment to be transparently handled by endpoint function
-drivers through the function pci_epc_mem_map().
+Ah right, I overlooked that pci_intx() also has the _GPL version.
+Will make consistent.
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Thx,
+P.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 43ba5c6738df..b65f4f0f5856 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -268,6 +268,20 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
- 	return -EINVAL;
- }
- 
-+static int dw_pcie_ep_get_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-+				  struct pci_epc_map *map)
-+{
-+	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	size_t mask = pci->region_align - 1;
-+
-+	map->map_pci_addr = map->pci_addr & ~mask;
-+	map->map_ofst = map->pci_addr & mask;
-+	map->map_size = ALIGN(map->map_ofst + map->pci_size, ep->page_size);
-+
-+	return 0;
-+}
-+
- static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 				  phys_addr_t addr)
- {
-@@ -444,6 +458,7 @@ static const struct pci_epc_ops epc_ops = {
- 	.write_header		= dw_pcie_ep_write_header,
- 	.set_bar		= dw_pcie_ep_set_bar,
- 	.clear_bar		= dw_pcie_ep_clear_bar,
-+	.get_mem_map		= dw_pcie_ep_get_mem_map,
- 	.map_addr		= dw_pcie_ep_map_addr,
- 	.unmap_addr		= dw_pcie_ep_unmap_addr,
- 	.set_msi		= dw_pcie_ep_set_msi,
--- 
-2.47.0
+>=20
+> Alex
+>=20
+> > =C2=A0
+> > =C2=A0static void pcim_disable_device(void *pdev_raw)
+> > =C2=A0{
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 7d85c04fbba2..318cfb5b5e15 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -4476,6 +4476,32 @@ void pci_disable_parity(struct pci_dev *dev)
+> > =C2=A0	}
+> > =C2=A0}
+> > =C2=A0
+> > +/**
+> > + * pci_intx - enables/disables PCI INTx for device dev, unmanaged
+> > version
+> > + * @pdev: the PCI device to operate on
+> > + * @enable: boolean: whether to enable or disable PCI INTx
+> > + *
+> > + * Enables/disables PCI INTx for device @pdev
+> > + *
+> > + * This function behavios identically to pci_intx(), but is never
+> > managed with
+> > + * devres.
+> > + */
+> > +void pci_intx_unmanaged(struct pci_dev *pdev, int enable)
+> > +{
+> > +	u16 pci_command, new;
+> > +
+> > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+> > +
+> > +	if (enable)
+> > +		new =3D pci_command & ~PCI_COMMAND_INTX_DISABLE;
+> > +	else
+> > +		new =3D pci_command | PCI_COMMAND_INTX_DISABLE;
+> > +
+> > +	if (new !=3D pci_command)
+> > +		pci_write_config_word(pdev, PCI_COMMAND, new);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_intx_unmanaged);
+> > +
+> > =C2=A0/**
+> > =C2=A0 * pci_intx - enables/disables PCI INTx for device dev
+> > =C2=A0 * @pdev: the PCI device to operate on
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 573b4c4c2be6..6b8cde76d564 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1353,6 +1353,7 @@ int __must_check pcim_set_mwi(struct pci_dev
+> > *dev);
+> > =C2=A0int pci_try_set_mwi(struct pci_dev *dev);
+> > =C2=A0void pci_clear_mwi(struct pci_dev *dev);
+> > =C2=A0void pci_disable_parity(struct pci_dev *dev);
+> > +void pci_intx_unmanaged(struct pci_dev *pdev, int enable);
+> > =C2=A0void pci_intx(struct pci_dev *dev, int enable);
+> > =C2=A0bool pci_check_and_mask_intx(struct pci_dev *dev);
+> > =C2=A0bool pci_check_and_unmask_intx(struct pci_dev *dev);
+> > @@ -2293,6 +2294,7 @@ static inline void pci_fixup_device(enum
+> > pci_fixup_pass pass,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 struct pci_dev *dev) { }
+> > =C2=A0#endif
+> > =C2=A0
+> > +int pcim_intx(struct pci_dev *pdev, int enabled);
+> > =C2=A0void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned
+> > long maxlen);
+> > =C2=A0void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
+> > =C2=A0				const char *name);
+>=20
 
 
