@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-14371-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14372-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0816899B220
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 10:30:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 322D399B224
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 10:33:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7428B1F224EB
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 08:30:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66449B216F6
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 08:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CBAA13342F;
-	Sat, 12 Oct 2024 08:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66C2137750;
+	Sat, 12 Oct 2024 08:33:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTtyaOYS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDmdIEE0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5648BD517
-	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 08:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08C933F7
+	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 08:33:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728721833; cv=none; b=K907xcYHpUT3VJqjEaZPBHgmpsAAJ59WYi1IAw0Ao0exqX6cURGXBCEXuRGAZ0mU3HEkB8zyh1RSTYvlX5hMzZkpNa87P8+p3VsQMXwGrwgDFTFhUFrslioc9ehIZpF3lkzYNoLCwAyBOMfeCE2CytRd/f9U6cQKaOeinJix/zo=
+	t=1728722017; cv=none; b=ugDCjdZzYPoYqIRnBmHtrwMb5vQ40TTx9unzWoUi2aHs+gFmHIfoUFtcdEnZBjqDDtm18AQyXITWOrMpSkRM2l4sYY8mW3y0xfCFqTrFAzUMR9m9hFJ83tT3OzVO0UpvsnWo+0P3UQyzs1u7ZnqExqAZ7eT95pMdD/fhru3WVUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728721833; c=relaxed/simple;
-	bh=64nLYaLmemVduUSNvTAJQwHT1xIrIVrDA2Dq+7Oxxr8=;
+	s=arc-20240116; t=1728722017; c=relaxed/simple;
+	bh=uTvLZxgdLY5GrgkNwFOJfNtZUYdKN6PxBR//RsziKaQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C/0IVH2SIXAXdlpUeZZ3NBfd5HoreCp/MXJEK/f66ZiGJ8C68LLl+87S2217raAGmazXcXPd78NZW7RYmtPeUTxL92W5WWQf6zHAruIjjLGTMrNfb8NaHykp9+rLSANyVDvio7afTqPnhRDgfNN3QR6mcULgTeedsIh8Uuvb/wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTtyaOYS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343FAC4CEC6;
-	Sat, 12 Oct 2024 08:30:31 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Tti/qMJ7SxpTwHkiEThjX111LcZ5KrK/XoNUHPVHyiVa8xDxW/z+EK0CSe5+c4DNE+mhgrFJ5feVkWel6lqBFl/teNER62uCznYYPF1oIrrPlnvvSKxeyIFUBnIT6WTS+mvRVUIk552ulmhge+PAnt35cL0hEIoXwxXIYw0Vzok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDmdIEE0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABD8EC4CEC6;
+	Sat, 12 Oct 2024 08:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728721832;
-	bh=64nLYaLmemVduUSNvTAJQwHT1xIrIVrDA2Dq+7Oxxr8=;
+	s=k20201202; t=1728722017;
+	bh=uTvLZxgdLY5GrgkNwFOJfNtZUYdKN6PxBR//RsziKaQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jTtyaOYSr9z/PXuT89PcaprrG5g+1q6UNCDIZFolJ051dmn9AYepeRGPPXgg6OfrV
-	 RGqGu52s8E1yG84pDvHITc1ouILZq3FrnfzgkOMsA2nJTJQGFK/kTVRVvpTwqnIsfJ
-	 jWqa3ac3cwq6DxVI35L54QWJ0abIcq8EPUoFh3Scn13Yl2ptJuhqqFkbItKCaOS4tA
-	 V911IH6e5Sene208JVpgci3i9VjYTjvSbKbH6ZWrQWA8N5lyNS3q1vbhIZrF/FWg/k
-	 g7s3wT5Rse/gcJKlVOinQhq4sn6FUV01dgVXNf/TzLdfkGAriPNeN7xenBzFHewrLZ
-	 OV/mBE+U2DpqQ==
-Message-ID: <fa8cde24-28a4-4e8c-ab4f-1c4a40382ea3@kernel.org>
-Date: Sat, 12 Oct 2024 17:30:29 +0900
+	b=HDmdIEE0+xRY8BcsJ1HKOufBXBTD8vnBmvGAzGrwV7bf9HQc6PY7BjsKT4HOMcaao
+	 SLbi1a3jJFzirLUvt9QS3oQcYsMkEXZz2Uss6pPsofFhpo4t5jn47MrNuTl02d3hoS
+	 +j7mfK5mUUUtHJ2GAFSOKCges0IcMUegzkWHcHcEZKEREU6NCrt68SK1oAgMuF1tf/
+	 bb+w/m7mStIjc4UTw5EUJWBYqnNQeI2kAw9ciiPr4Q7NoiRi0gTuwwAUX3e89kKb0A
+	 LCu0OeJY/BIj9qRpuH6yaGIIsxTfLaQBu8geqVEI3Dg2sRgCUKBLJSv+Ajsp29gtOd
+	 xpTjRIZVeSvqg==
+Message-ID: <104e1cf9-f901-4e47-8a79-cf8df08d1ce1@kernel.org>
+Date: Sat, 12 Oct 2024 17:33:34 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/7] PCI: endpoint: Introduce pci_epc_map_align()
+Subject: Re: [PATCH v4 4/7] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -60,137 +60,131 @@ Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  linux-pci@vger.kernel.org, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
  Niklas Cassel <cassel@kernel.org>
 References: <20241007040319.157412-1-dlemoal@kernel.org>
- <20241007040319.157412-4-dlemoal@kernel.org>
- <20241010143627.5eo5n2rp75pgtgpt@thinkpad>
- <2b3c7dfb-94ba-404a-94c0-6fd37a0cb20c@kernel.org>
- <20241012063246.2ogwe26edelljpth@thinkpad>
+ <20241007040319.157412-5-dlemoal@kernel.org>
+ <20241010164355.okuasill4hzsipun@thinkpad>
+ <ee174108-66d5-4a4e-8051-d4a5889ecd10@kernel.org>
+ <20241012075654.d33yqcregmtjbkfi@thinkpad>
 From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
 Organization: Western Digital Research
-In-Reply-To: <20241012063246.2ogwe26edelljpth@thinkpad>
+In-Reply-To: <20241012075654.d33yqcregmtjbkfi@thinkpad>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/12/24 15:32, Manivannan Sadhasivam wrote:
-> On Fri, Oct 11, 2024 at 10:07:30AM +0900, Damien Le Moal wrote:
->> On 10/10/24 23:36, Manivannan Sadhasivam wrote:
->>> On Mon, Oct 07, 2024 at 01:03:15PM +0900, Damien Le Moal wrote:
->>>> Some endpoint controllers have requirements on the alignment of the
->>>> controller physical memory address that must be used to map a RC PCI
->>>> address region. For instance, the rockchip endpoint controller uses
->>>> at most the lower 20 bits of a physical memory address region as the
->>>> lower bits of an RC PCI address. For mapping a PCI address region of
->>>> size bytes starting from pci_addr, the exact number of address bits
->>>> used is the number of address bits changing in the address range
->>>> [pci_addr..pci_addr + size - 1].
+On 10/12/24 16:56, Manivannan Sadhasivam wrote:
+> On Fri, Oct 11, 2024 at 11:01:09AM +0900, Damien Le Moal wrote:
+>> On 10/11/24 01:43, Manivannan Sadhasivam wrote:
+>>> On Mon, Oct 07, 2024 at 01:03:16PM +0900, Damien Le Moal wrote:
+>>>> Introduce the function pci_epc_mem_map() to facilitate controller memory
+>>>> address allocation and mapping to a RC PCI address region in endpoint
+>>>> function drivers.
 >>>>
->>>> For this example, this creates the following constraints:
->>>> 1) The offset into the controller physical memory allocated for a
->>>>    mapping depends on the mapping size *and* the starting PCI address
->>>>    for the mapping.
->>>> 2) A mapping size cannot exceed the controller windows size (1MB) minus
->>>>    the offset needed into the allocated physical memory, which can end
->>>>    up being a smaller size than the desired mapping size.
+>>>> This function first uses pci_epc_map_align() to determine the controller
+>>>> memory address size (and offset into) depending on the controller
+>>>> address alignment constraints. The result of this function is used to
+>>>> allocate a controller physical memory region using
+>>>> pci_epc_mem_alloc_addr() and map that memory to the RC PCI address
+>>>> space with pci_epc_map_addr().
 >>>>
->>>> Handling these constraints independently of the controller being used
->>>> in an endpoint function driver is not possible with the current EPC
->>>> API as only the ->align field in struct pci_epc_features is provided
->>>> and used for BAR (inbound ATU mappings) mapping. A new API is needed
->>>> for function drivers to discover mapping constraints and handle
->>>> non-static requirements based on the RC PCI address range to access.
+>>>> Since pci_epc_map_align() may indicate that the effective mapping
+>>>> of a PCI address region is smaller than the user requested size,
+>>>> pci_epc_mem_map() may only partially map the RC PCI address region
+>>>> specified. It is the responsibility of the caller (an endpoint function
+>>>> driver) to handle such smaller mapping.
 >>>>
->>>> Introduce the function pci_epc_map_align() and the endpoint controller
->>>> operation ->map_align to allow endpoint function drivers to obtain the
->>>> size and the offset into a controller address region that must be
->>>> allocated and mapped to access an RC PCI address region. The size
->>>> of the mapping provided by pci_epc_map_align() can then be used as the
->>>> size argument for the function pci_epc_mem_alloc_addr().
->>>> The offset into the allocated controller memory provided can be used to
->>>> correctly handle data transfers.
+>>>> The counterpart of pci_epc_mem_map() to unmap and free the controller
+>>>> memory address region is pci_epc_mem_unmap().
 >>>>
->>>> For endpoint controllers that have PCI address alignment constraints,
->>>> pci_epc_map_align() may indicate upon return an effective PCI address
->>>> region mapping size that is smaller (but not 0) than the requested PCI
->>>> address region size. For such case, an endpoint function driver must
->>>> handle data accesses over the desired PCI address range in fragments,
->>>> by repeatedly using pci_epc_map_align() over the PCI address range.
+>>>> Both functions operate using a struct pci_epc_map data structure
+>>>> Endpoint function drivers can use struct pci_epc_map to access the
+>>>> mapped RC PCI address region using the ->virt_addr and ->pci_size
+>>>> fields.
 >>>>
->>>> The controller operation ->map_align is optional: controllers that do
->>>> not have any alignment constraints for mapping a RC PCI address region
->>>> do not need to implement this operation. For such controllers,
->>>> pci_epc_map_align() always returns the mapping size as equal to the
->>>> requested size of the PCI region and an offset equal to 0.
->>>>
->>>> The new structure struct pci_epc_map is introduced to represent a
->>>> mapping start PCI address, mapping effective size, the size and offset
->>>> into the controller memory needed for mapping the PCI address region as
->>>> well as the physical and virtual CPU addresses of the mapping (phys_base
->>>> and virt_base fields). For convenience, the physical and virtual CPU
->>>> addresses within that mapping to access the target RC PCI address region
->>>> are also provided (phys_addr and virt_addr fields).
->>>>
+>>>> Co-developed-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+>>>> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+>>>> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 >>>
->>> I'm fine with the concept of this patch, but I don't get why you need an API for
->>> this and not just a callback to be used in the pci_epc_mem_{map/unmap} APIs.
->>> Furthermore, I don't see an user of this API (in 3 series you've sent out so
->>> far). Let me know if I failed to spot it.
+>>> Looks good to me. Just one comment below.
 >>>
->>> Also, the API name pci_epc_map_align() sounds like it does the mapping, but it
->>> doesn't. So I'd not have it exposed as an API at all.
+>>>> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+>>>> ---
+>>>>  drivers/pci/endpoint/pci-epc-core.c | 78 +++++++++++++++++++++++++++++
+>>>>  include/linux/pci-epc.h             |  4 ++
+>>>>  2 files changed, 82 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+>>>> index 1adccf07c33e..d03c753d0a53 100644
+>>>> --- a/drivers/pci/endpoint/pci-epc-core.c
+>>>> +++ b/drivers/pci/endpoint/pci-epc-core.c
+>>>> @@ -532,6 +532,84 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
+>>>>  
+>>>> +/**
+>>>> + * pci_epc_mem_map() - allocate and map a PCI address to a CPU address
+>>>> + * @epc: the EPC device on which the CPU address is to be allocated and mapped
+>>>> + * @func_no: the physical endpoint function number in the EPC device
+>>>> + * @vfunc_no: the virtual endpoint function number in the physical function
+>>>> + * @pci_addr: PCI address to which the CPU address should be mapped
+>>>> + * @pci_size: the number of bytes to map starting from @pci_addr
+>>>> + * @map: where to return the mapping information
+>>>> + *
+>>>> + * Allocate a controller memory address region and map it to a RC PCI address
+>>>> + * region, taking into account the controller physical address mapping
+>>>> + * constraints using pci_epc_map_align().
+>>>> + * The effective size of the PCI address range mapped from @pci_addr is
+>>>> + * indicated by @map->pci_size. This size may be less than the requested
+>>>> + * @pci_size. The local virtual CPU address for the mapping is indicated by
+>>>> + * @map->virt_addr (@map->phys_addr indicates the physical address).
+>>>> + * The size and CPU address of the controller memory allocated and mapped are
+>>>> + * respectively indicated by @map->map_size and @map->virt_base (and
+>>>> + * @map->phys_base).
+>>>> + *
+>>>> + * Returns 0 on success and a negative error code in case of error.
+>>>> + */
+>>>> +int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>>>> +		    u64 pci_addr, size_t pci_size, struct pci_epc_map *map)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = pci_epc_map_align(epc, func_no, vfunc_no, pci_addr, pci_size, map);
+>>>
+>>> I don't like the fact that one structure is passed to two functions and both
+>>> modify some members. If you get rid of the pci_epc_map_align() API and just use
+>>> the callback, then the arguments could be passed on their own without the 'map'
+>>> struct.
 >>
->> OK. Fine with me. I will move this inside pci_epc_mem_map(). But note that
->> without this function, pci_epc_mem_alloc_addr() and pci_epc_map_addr() are
->> totally useless for EP controllers that have a mapping alignment requirement,
->> which without the pci_epc_map_align() function, an endpoint function driver
->> cannot discover *at all* currently. That does not fix the overall API of EPC...
+>> That would be far too many arguments. The pci_epc functions already have many
+>> (minimum of 3 for epc, func and vfunc). So I prefer trying to minimize that.
 >>
 > 
-> Not at all. EPF drivers still can use "epf_mhi->epc_features->align" to discover
-> the alignment requirement and calculate the offset on their own (please see
-> pci-epf-mhi). But I'm not in favor of that approach since the APIs need to do
-> that job and that's why I like your pci_epc_mem_map() API.
+> Actually, there is no need to pass 'func, vfunc' as I don't think the controller
+> can have different alignment requirements for each functions.
+> 
+> So I'm envisioning a callback like this:
+> 
+> 	u64 (*align_addr)(struct pci_epc *epc, u64 addr, size_t *offset, size_t *size);
+> 
+> And there is no need to check the error return also. Also you can avoid passing
+> 'offset', as the caller can derive the offset using the mapped and unmapped
+> addresses. This also avoids the extra local function and allows the callers to
+> just use the callback directly.
+> 
+> NOTE: Please do not respin the patches without concluding the comments on
+> previous revisions. I understand that you want to get the series merged asap and
+> I do have the same adjective.
 
-That is *not* correct, at least in general. For two reasons:
-1) epc_features->align defines alignment for BARs, that is, inbound windows
-memory. It is not supposed to be about the outbound windows for mapping PCI
-address space for doing mmio or DMA. Some controllers may have the same
-alignment constraint for both ib and ob, in which case things will work, but
-that is "just being lucky". I spent weeks with the RK3399 understanding that I
-was not lucky with that one :)
-2) A static alignment constraint does not work for all controllers. C.f. my
-series fixing the RK3399 were I think I clearly explain that alignment of a
-mapping depends on the PCI address AND the size being mapped, as both determine
-the number of bits of address changing within the PCI address range to access.
-Using a fixed boundary alignment for the RK3399 simply does not work at all. An
-epf cannot know that simply looking at a fixed value...
+v5 that I posted yesterday addressed all your comment, except the one above.
+The controller operation (renamed get_mem_map) still uses the pci_mem_map
+structure as argument.
 
-What you said may be true for the mhi epf, because it requires special hardware
-that has a simple fixed alignment constraint. ntb and vntb are also coded
-assuming such constraint. So If I try to run ntb or vntg on the RK3399 it will
-likely not work (actually it may, but out of sheer luck given that the addresses
-that will be mapped will likely be aligned to 1MB, that is, the memory window size).
-
-Developping the nvme epf driver where I was seeing completely random PCI
-addresses for command buffers, I could make things work only after developping
-the pci_epc_mem_map() with the controller operation telling the mapping
-(.get_mem_map()) for every address to map.
+I need to respin a v6. Do you want me to change the controller op as you suggest
+above ?
 
 > 
->> By not having pci_epc_map_align(), pci_epc_mem_alloc_addr() and
->> pci_epc_map_addr() remain broken, but the introduction of pci_epc_mem_map() does
->> provide a working solution for the general case.
->>
->> So I think we will still need to do something about this bad state of the API later.
->>
+> - Mani
 > 
-> We can always rework the APIs to incorporate the alignment requirement.
 
-See above. An API that advertise a simple alignment requirement will not work
-for all controllers... But anyway, given that we are not getting any problem
-report, people using the EP framework likely have setups that combine
-controllers and endpoint drivers playing well together. So I do not think there
-is any urgency about the API. I really do need this series for the nvme endpoint
-driver though, as a first step for the API improvement.
 
 -- 
 Damien Le Moal
