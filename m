@@ -1,89 +1,92 @@
-Return-Path: <linux-pci+bounces-14368-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14369-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 725F699B1DF
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 09:57:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 855EC99B1E6
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 10:00:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C7C5284CEF
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 07:57:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D35B3B2394E
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 08:00:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43730126BE1;
-	Sat, 12 Oct 2024 07:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 783D4137742;
+	Sat, 12 Oct 2024 08:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nhop+VGH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMUy29F/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E77F13D53F
-	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 07:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA45813774B
+	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 08:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728719822; cv=none; b=Xf9XyVUtTyOfCEJQoVhXuQe9HOH3xQSWvVTlMKh97lTBVKNMl3nDM1wEa0qx+ZxfHYNR9iO2BX+4Uq6bu0Y0LtAutruAfJeQulrOid5iDIyPr2I6cRmwucLtpL1yS0Lt3GUhr4eQI0nonQrJgceqt7jxOfmLr5SWm91dCj1BLxI=
+	t=1728720030; cv=none; b=nLHr0tcWedCAXos8pKInLbawjVnt9leV4mvx27Qhn8BQoxUoWaDsBL+vH6HnVU/zg04Ag0Ruy2gA/qGvlO7+wBjqcIofLNOp0YKFeM1tGMZz9mB79USb6WV8yOiAxSv2+YQhnyvEjZ5LgQ/zT60IbqQ5MawkQsESgNhdawBjdbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728719822; c=relaxed/simple;
-	bh=X+Ov6N2DMA+YDC5jg+2pr+/h8n5WsdEHnFrs7M9UE5I=;
+	s=arc-20240116; t=1728720030; c=relaxed/simple;
+	bh=X/oFhZ44IyH3gxaWPSlq/39m/4rwqDFrzXuiQnAiYLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFD46JmDHgVZX1E4IKcxAiMn66VyrWpbPFaTIeqpi52mxKSia6xiWMnMnqhis4VpfWE8l9ZKbpb7cPKikYLXAITzwACYoTSqBHfRO7BdFGURlAgZo8Zjoj99iUJhFTb0jdGhwx7T5INA/va8hQf0UzYCHxLjkb5jX2oV8LFHv+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nhop+VGH; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=uEyiqzoR7J+tB5mjmmY3LNjf29ci2E0pkNVzB9krMnnAFCj0NAdao5MKWsCfWyPMNYoo7s2s4YXarkajBCuYT8ROIwxAv8E2TqLKJJJp7ZKmcdcILot2shMz2USwdJjImpnpimKlonxDfUV6RUSiKgcY6+bjMSRoUyz2ws/zAi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WMUy29F/; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-207115e3056so22673115ad.2
-        for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 00:57:00 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c7edf2872so21692865ad.1
+        for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 01:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728719819; x=1729324619; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1728720028; x=1729324828; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=AmFBCe7gbjWgMRYfCag2EJg+03xDsvkJhIfEIeIlZIk=;
-        b=Nhop+VGHWzUiow1UAdCJN+dQQb/dp8hLBzWJGH3EQNFHJsY+b5/Tk/NBCWupw76XeU
-         52rTcezo//x7Uy2Ko9JH5vb5olzn0dm9A2ffcMBsy7QEsDf2il+eMFCmaed8zNubiLWW
-         Uu9ZrFsXCNRJF9Qk62Tk/HPvTQ/5ybIqPmXT1o49vVaKbrkHUA+xdIXxDqPhCIVTCPfK
-         Wjwd2Y5yY0By3PHx7szm5IdPylm3pZkh4QUNv8SFkYX3w/qBzd8ve+v937C2IHFTCtN/
-         rFcJ9iyvGUPQfHRxFhz94/nk3HOyPlZpiLX1KdA7i/U9mPp2/s1Bti7YWB7t6TvFv+0N
-         U8ig==
+        bh=SwGEkgRRa1cwEpEXYHn8Jfzmui7uZXkgrh+X/zl8+Zg=;
+        b=WMUy29F/BHJg1rXxWGY2TpjFfFCGzCatxDBqIs9kzBf8x5Gu59JI3m6Pd64RAarIkY
+         OZAwYN1Lbkha1KBBkPEWU6jZzosg1rUToresP3p4KJAt6f7dl52b1xLqytUY+GNgtj9C
+         1A1seMOnlHj3MAjiphrnxvf6Vy8WGiNS3ZlS6v1LupEfJOlnegnNrY39XOiSSI3s76Ul
+         Xes6cNtnxxitHTjzb9MSfs2I9L5pMJS3psrYc1LRM6dewBAE8EUY5B0aOAsDAp8OfDtt
+         P9ZXNPO6hxXum9oAMS5zsjMAK238A33SURYqQnBHPuO9AdvVevlswm7Kz8BRC/tEeA9T
+         7VRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728719819; x=1729324619;
+        d=1e100.net; s=20230601; t=1728720028; x=1729324828;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AmFBCe7gbjWgMRYfCag2EJg+03xDsvkJhIfEIeIlZIk=;
-        b=MaicaWE2iVRgEN2XGeLmu6CPfbyOU6toM1xa1KRdVUCMSyFsKRmuKmOL08+c+pen9H
-         cO2GSsgj8QkxC55V8T9pHGhA0KC+1cSXUt759is1LH0legHKJcOpk4xG5q/evP5xc9Xg
-         lvFJPBScBXBJCEIqzpSdrR+zGJJzdhX5R59jruNGUuFlpo32LW/WSvJKHJXHfUnLWmKM
-         tY+ff+++PIvntr3qXSq1gIvWMSwRXouRxmZgHq0m7193AOoPP1gkGBAHxq/qo56oIYRm
-         U4Vvoe8sQbyXd/Tdvc/8vBXhyXz7ablQ1av6vnPgBbMVxTu/sT5MeokNxCbkkftHO6IF
-         UVMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+o+LRWG2IfG0ivEsXd3QSGZjEUVyTWHEvnwrA3lOEQgzVObY7scQs6a8cfRnPJIZ5kC3v1bF5qvQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaPrKKsMjOeiUNkOUoqn0DEnp+gKs3xHGJCm1vPpyNDsNRFfes
-	aLxfs2Qzg5iCugEDrkyubfsRHkpSUHJatnfB/ekkskM+N3/AlJ/Iwt8OaYtjvQ==
-X-Google-Smtp-Source: AGHT+IFguBgvzB5t22j4wR9WorRHBNwfYpfSyCfV++xLU3mYl3nUL0KQP/JHPY4y+I1FntL5TAuxbQ==
-X-Received: by 2002:a17:902:f542:b0:20b:a728:d130 with SMTP id d9443c01a7336-20ca144eca3mr89130715ad.14.1728719819542;
-        Sat, 12 Oct 2024 00:56:59 -0700 (PDT)
+        bh=SwGEkgRRa1cwEpEXYHn8Jfzmui7uZXkgrh+X/zl8+Zg=;
+        b=IUD1c8qw13qqOI1AsXV6Ngzi730P1cuEnEP+nxb+Ym3njf7o1kiS99GwVFJuLSu7j1
+         CtT6PGug6CXcV9TgZPccdvSChzK+yh8M++rc5VBnwoQl3mZAiI9gA8wbF/1DMvHtCj2p
+         3LRMefy7Zp8UjNhGlI84o+BA8PNKzG2flIJ0swGLp4POuVHAt+vBLBffjZoi4tsuUdei
+         mSE5p49N2ciIh/mgJHbUaBX4u1mXpSp6T63WBiQw5RuXEKXQzDIg1RNGYYv+Acq3bxdA
+         VjiKKGehDkcipfc1Ql/+uemoexzm6TUm2ow9Gq/7nNw3ddYfY1nKSFKAJrMFmrsjBVGB
+         8s6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzo5Apf0fLXeajQox1t7EKV3lnoX1aE0DoL3MKpOSblDkTGIrFMTDH6Zy78VDs/9QlpW8afGI9qbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/C5orvvZfK9KNITyVyp5E8jItpAjundc6hmobzT5Hz0J+5oHc
+	N3o/RRv84ebvOS++qe4I0p50sYHSX5987L929wjICwnO3sHHKLfinG9VIoSp2g==
+X-Google-Smtp-Source: AGHT+IFcLuA6Pa/yDRB0ro7g9hMgXsIhUc1ZpWkdd3AW+bO3wyX3tthtl51Bioe/OrN9QKN7qtOYwQ==
+X-Received: by 2002:a17:903:2b10:b0:20b:db4:d913 with SMTP id d9443c01a7336-20ca037aa44mr78217775ad.11.1728720028121;
+        Sat, 12 Oct 2024 01:00:28 -0700 (PDT)
 Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c34aaaasm33588315ad.290.2024.10.12.00.56.55
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8bad9968sm33450665ad.6.2024.10.12.01.00.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2024 00:56:58 -0700 (PDT)
-Date: Sat, 12 Oct 2024 13:26:54 +0530
+        Sat, 12 Oct 2024 01:00:24 -0700 (PDT)
+Date: Sat, 12 Oct 2024 13:30:19 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v4 4/7] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
-Message-ID: <20241012075654.d33yqcregmtjbkfi@thinkpad>
-References: <20241007040319.157412-1-dlemoal@kernel.org>
- <20241007040319.157412-5-dlemoal@kernel.org>
- <20241010164355.okuasill4hzsipun@thinkpad>
- <ee174108-66d5-4a4e-8051-d4a5889ecd10@kernel.org>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-pci@vger.kernel.org>,
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-rockchip@lists.infradead.org>,
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/3] PCI: rockchip: Simplify reset control handling by
+ using reset_control_bulk*() function
+Message-ID: <20241012080019.cdgq63rwj6oi4bg7@thinkpad>
+References: <20241012050611.1908-1-linux.amoon@gmail.com>
+ <20241012050611.1908-3-linux.amoon@gmail.com>
+ <20241012061834.ksbtcaw3c7iacnye@thinkpad>
+ <CANAwSgTk2ynkuxBarvX--Qs_LTduFuSDCv3k_WNgj=za_81+kQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,109 +96,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ee174108-66d5-4a4e-8051-d4a5889ecd10@kernel.org>
+In-Reply-To: <CANAwSgTk2ynkuxBarvX--Qs_LTduFuSDCv3k_WNgj=za_81+kQ@mail.gmail.com>
 
-On Fri, Oct 11, 2024 at 11:01:09AM +0900, Damien Le Moal wrote:
-> On 10/11/24 01:43, Manivannan Sadhasivam wrote:
-> > On Mon, Oct 07, 2024 at 01:03:16PM +0900, Damien Le Moal wrote:
-> >> Introduce the function pci_epc_mem_map() to facilitate controller memory
-> >> address allocation and mapping to a RC PCI address region in endpoint
-> >> function drivers.
-> >>
-> >> This function first uses pci_epc_map_align() to determine the controller
-> >> memory address size (and offset into) depending on the controller
-> >> address alignment constraints. The result of this function is used to
-> >> allocate a controller physical memory region using
-> >> pci_epc_mem_alloc_addr() and map that memory to the RC PCI address
-> >> space with pci_epc_map_addr().
-> >>
-> >> Since pci_epc_map_align() may indicate that the effective mapping
-> >> of a PCI address region is smaller than the user requested size,
-> >> pci_epc_mem_map() may only partially map the RC PCI address region
-> >> specified. It is the responsibility of the caller (an endpoint function
-> >> driver) to handle such smaller mapping.
-> >>
-> >> The counterpart of pci_epc_mem_map() to unmap and free the controller
-> >> memory address region is pci_epc_mem_unmap().
-> >>
-> >> Both functions operate using a struct pci_epc_map data structure
-> >> Endpoint function drivers can use struct pci_epc_map to access the
-> >> mapped RC PCI address region using the ->virt_addr and ->pci_size
-> >> fields.
-> >>
-> >> Co-developed-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> >> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> >> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> > 
-> > Looks good to me. Just one comment below.
-> > 
-> >> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> >> ---
-> >>  drivers/pci/endpoint/pci-epc-core.c | 78 +++++++++++++++++++++++++++++
-> >>  include/linux/pci-epc.h             |  4 ++
-> >>  2 files changed, 82 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> >> index 1adccf07c33e..d03c753d0a53 100644
-> >> --- a/drivers/pci/endpoint/pci-epc-core.c
-> >> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> >> @@ -532,6 +532,84 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
-> >>  
-> >> +/**
-> >> + * pci_epc_mem_map() - allocate and map a PCI address to a CPU address
-> >> + * @epc: the EPC device on which the CPU address is to be allocated and mapped
-> >> + * @func_no: the physical endpoint function number in the EPC device
-> >> + * @vfunc_no: the virtual endpoint function number in the physical function
-> >> + * @pci_addr: PCI address to which the CPU address should be mapped
-> >> + * @pci_size: the number of bytes to map starting from @pci_addr
-> >> + * @map: where to return the mapping information
-> >> + *
-> >> + * Allocate a controller memory address region and map it to a RC PCI address
-> >> + * region, taking into account the controller physical address mapping
-> >> + * constraints using pci_epc_map_align().
-> >> + * The effective size of the PCI address range mapped from @pci_addr is
-> >> + * indicated by @map->pci_size. This size may be less than the requested
-> >> + * @pci_size. The local virtual CPU address for the mapping is indicated by
-> >> + * @map->virt_addr (@map->phys_addr indicates the physical address).
-> >> + * The size and CPU address of the controller memory allocated and mapped are
-> >> + * respectively indicated by @map->map_size and @map->virt_base (and
-> >> + * @map->phys_base).
-> >> + *
-> >> + * Returns 0 on success and a negative error code in case of error.
-> >> + */
-> >> +int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> >> +		    u64 pci_addr, size_t pci_size, struct pci_epc_map *map)
-> >> +{
-> >> +	int ret;
-> >> +
-> >> +	ret = pci_epc_map_align(epc, func_no, vfunc_no, pci_addr, pci_size, map);
-> > 
-> > I don't like the fact that one structure is passed to two functions and both
-> > modify some members. If you get rid of the pci_epc_map_align() API and just use
-> > the callback, then the arguments could be passed on their own without the 'map'
-> > struct.
+On Sat, Oct 12, 2024 at 12:55:32PM +0530, Anand Moon wrote:
+> Hi Manivannan,
 > 
-> That would be far too many arguments. The pci_epc functions already have many
-> (minimum of 3 for epc, func and vfunc). So I prefer trying to minimize that.
+> Thanks for your review comments.
 > 
+> On Sat, 12 Oct 2024 at 11:48, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Sat, Oct 12, 2024 at 10:36:04AM +0530, Anand Moon wrote:
+> > > Refactor the reset control handling in the Rockchip PCIe driver,
+> > > introducing a more robust and efficient method for assert and
+> > > deassert reset controller using reset_control_bulk*() API. Using the
+> > > reset_control_bulk APIs, the reset handling for the core clocks reset
+> > > unit becomes much simpler.
+> > >
+> >
+> > Same comments as previous patch.
+> >
+> I will explain more about this.
+> > > Spilt the reset controller in two groups as pre the RK3399 TRM.
+> >
+> > *per
+> >
+> > Also please state the TRM name and section for reference.
+> >
+> Yes
+> > > After power up, the software driver should de-assert the reset of PCIe PHY,
+> > > then wait the PLL locked by polling the status, if PLL
+> > > has locked, then can de-assert the reset simultaneously
+> > > driver need to De-assert the reset pins simultionaly.
+> > >
+> > >   PIPE_RESET_N/MGMT_STICKY_RESET_N/MGMT_RESET_N/RESET_N.
+> > >
+> > > - replace devm_reset_control_get_exclusive() with
+> > >       devm_reset_control_bulk_get_exclusive().
+> > > - replace reset_control_assert with
+> > >       reset_control_bulk_assert().
+> > > - replace reset_control_deassert with
+> > >       reset_control_bulk_deassert().
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > > v7: replace devm_reset_control_bulk_get_optional_exclusive()
+> > >         with devm_reset_control_bulk_get_exclusive()
+> > >     update the functional changes.
+> > > V6: Add reason for the split of the RESET pins.
+> > > v5: Fix the De-assert reset core as per the TRM
+> > >     De-assert the PIPE_RESET_N/MGMT_STICKY_RESET_N/MGMT_RESET_N/RESET_N
+> > >     simultaneously.
+> > > v4: use dev_err_probe in error path.
+> > > v3: Fix typo in commit message, dropped reported by.
+> > > v2: Fix compilation error reported by Intel test robot
+> > >     fixed checkpatch warning.
+> > > ---
+> > >  drivers/pci/controller/pcie-rockchip.c | 151 +++++--------------------
+> > >  drivers/pci/controller/pcie-rockchip.h |  26 +++--
+> > >  2 files changed, 49 insertions(+), 128 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> > > index 2777ef0cb599..9a118e2b8cbd 100644
+> > > --- a/drivers/pci/controller/pcie-rockchip.c
+> > > +++ b/drivers/pci/controller/pcie-rockchip.c
 
-Actually, there is no need to pass 'func, vfunc' as I don't think the controller
-can have different alignment requirements for each functions.
+[...]
 
-So I'm envisioning a callback like this:
+> > > @@ -256,31 +181,15 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> > >        * Please don't reorder the deassert sequence of the following
+> > >        * four reset pins.
+> >
+> > I don't think my earlier comment on this addressed. Why are you changing the
+> > reset order? Why can't you have the resets in below (older) order?
+> >
+> > static const char * const rockchip_pci_core_rsts[] = {
+> >         mgmt-sticky",
+> >         "core",
+> >         "mgmt",
+> >         "pipe",
+> > };
+>  I will add a comment on this above.
 
-	u64 (*align_addr)(struct pci_epc *epc, u64 addr, size_t *offset, size_t *size);
-
-And there is no need to check the error return also. Also you can avoid passing
-'offset', as the caller can derive the offset using the mapped and unmapped
-addresses. This also avoids the extra local function and allows the callers to
-just use the callback directly.
-
-NOTE: Please do not respin the patches without concluding the comments on
-previous revisions. I understand that you want to get the series merged asap and
-I do have the same adjective.
+Sorry, I don't get your response. My suggestion was to keep the resets sorted as
+the original order (also indicated by my above snippet).
 
 - Mani
 
