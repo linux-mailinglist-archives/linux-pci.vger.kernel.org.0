@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-14400-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14401-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 718FA99B4CC
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 14:16:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A047B99B4D4
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 14:31:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2437A283107
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 12:16:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFE501C21556
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 12:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9937615666C;
-	Sat, 12 Oct 2024 12:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A1AE16C444;
+	Sat, 12 Oct 2024 12:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mz+8k67G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3z057VC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BE414A09F
-	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 12:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1AC1E481
+	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 12:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728735392; cv=none; b=AyLofBmu5Pc8VRWrNk96fs+PXLumdVAb9oBz4cOSKP8MvPDAmMSVhhJqVhLSNms17eyvatbvSa3yA3cICRbY+QpJSD2iMr96dEIFgqunHlg5Z5s+5LOs7BDe5kkV2OxOKObrG2Hjx/dw0FUxzs5U7GKh442KzFbRqrNG9slV+0I=
+	t=1728736279; cv=none; b=Zr4M3QrOY3MuC4yo6+Z8ioU9rd+hfLHLRU0KSyLfcwHW19WQXs9nbRvuLmHcQcvreoVVbI/7mDsL1kdJm3+nTMaMLuxQMYpRxpFQ9OYbtzfCsUVr7s2S95Ej1/HsSptFhcDqBJbKnoDBMKmpDHXnbi5qsm33WwCxzSfaIDnULxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728735392; c=relaxed/simple;
-	bh=HE4VapOdk40ucAUwq5tJVJNiQNjVgHGXQnbN2vKIQxA=;
+	s=arc-20240116; t=1728736279; c=relaxed/simple;
+	bh=sLpWJQVRQqMP0tk4yyyDYTAi5amNwBiPuv/VTdErFzA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCl6yQazxFqy9G2srbsVyqnIu+fp9O+6ZR3U+8QaDQqjM+jfHhHFFzQKe85VlReCyBU5pKMv4zQfFuV766eddiBOIYQOvw/9cXo5OUEe/CRccZIhOEA/P8meFnPUQh3sbsoCtWxR6/8UX0SfGHujdTaHvW3NMwPbVPoVCpvBxeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mz+8k67G; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=EpY2kn0aGi+HvbFH+BZtARaPRj60aJEEpPyOIogPcMI97OqzYXonWDRGYcg34YCfZYEP1ajyiKslZjG211A0SmADwYNzkwJYdNI+nP+U90HsFTPZZ166Dz2ez0bxw5lfMhcd8gWtsh1xBS/+M1aiNOCGmV3Sw3JErGRoVAHJg3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x3z057VC; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71e57d89ffaso42793b3a.1
-        for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 05:16:30 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20c8b557f91so20622355ad.2
+        for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 05:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728735390; x=1729340190; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1728736277; x=1729341077; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=CuW3rboOAG1eM7gMjWc9QpSNVTecsSZqlvXpnegovBc=;
-        b=mz+8k67GH1/6knqDxsw6Tpyn3p1pBwFcKpk5S/zvaBaESFsJwbYAd+i/JDBzhZq63G
-         RNc3TpYF6XvzDRN/fWVmIlMU5ul0VCL9b+4DQeDGH//8Xdtv/9ZJ7J110UnuGQfX84xL
-         KJ8DQK9ZWzSw+a5g19D7sA5ohh/OGh7Ig7GlCMLeqgu5FqB6hdtNsTu38yXa4Zzk4XCz
-         gxkOp2WNJHdSC30Xo/RQPaUJf5wsh0SCh4UdpA44SvP+y3TaYChQS/upXCahYUgiOXJQ
-         eoPtZz5SH8/MVH0RyadMzsuC8Z98K5yIcALXiLCe1IWeWaKZVk8KKsKLayfoFB6GNu6f
-         pusQ==
+        bh=o6zyDyeTtPJ40HuJojRed0anIe5PmnUIqk8gS8vhC04=;
+        b=x3z057VCXNke0IZvuDCKJUgohQgeMfAhbfSh9XwQ+M/y7rLFBLLeeWeJ3fpL6gC7dI
+         b6dh+LR10MdljTujANC8x9L5F2FwuJIPp9Hzar0eHRfataGtCoSr9ymcPR9eFj8h/CFe
+         pFj5fZ72HhyCwL1chylr+5IlZJgr2B9jed+913gygKhuObKtz7xea+oBICipf4m0+TMl
+         KlDSzfYb4UabLpj4vAUE+i+BYEMBykzUL+PImPyjSk3j+j9BGD2YJqC1r7XxkJnh1Eji
+         6KQFrqiCx8N19UvkEQDtK1k8ccaM1o76yRZdjQN/Tw5pEBReKmI3YC6vrRLPLociH7TH
+         LEAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728735390; x=1729340190;
+        d=1e100.net; s=20230601; t=1728736277; x=1729341077;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CuW3rboOAG1eM7gMjWc9QpSNVTecsSZqlvXpnegovBc=;
-        b=JjsrrnzopV9rv8hpZM3mRyxivbI3KarR+A34Ir2VQa4iFntHc5dxybOQ0OdnErf9Q8
-         0R7f8UmXjmIt4QQ7MhWTgl24fcPnb6IZG+/UHX6E5kf3a89W3y/mgdxXgIuqtwLmjg8f
-         fH1F/QtE6tIplqSxAXDAYLL5vFrgqOzijfuUNFc6Yl/J6HV/L6fhF2xPXdiuLqMonIAj
-         I9KYJ2BFzG5ZDKVMwWOb8NZWo7Re6uNJuD4+f8aB+yMQlDrEmHiUCgJ77ExC2PCFJWjq
-         R0qkLiiHh9E8/dOkGfHFi3nX/TGEE1HE8ULMBgzGvl3xdcYyjs44yyHjaqzQeNwz5GxR
-         paEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXrREzZhh8PzSgpqjNeJnPcvX9cQILVD1vrypEN6brlXsoyfr+sZZ8B5tkWECC2qoBucOXcomz5N4w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuJOhTw7IRdQx5ICfkg9QIvl/NoX0ZZbY1bPeO2E8MkfGdK52E
-	vyp4/DU9jHDzXnmclxAUX6br8Bp3h1AWHOKII480YloVgS42Js4Eb+PMrNm9ng==
-X-Google-Smtp-Source: AGHT+IFJFAKq8AvKr5WqJJluQSblJRPi1x8ZqEJtRUpmaq30Rs5xjtclmV9IFrQu3SO8OQr5mniMDQ==
-X-Received: by 2002:a05:6a21:168e:b0:1d7:7ea:2f36 with SMTP id adf61e73a8af0-1d8bcefde33mr8009237637.4.1728735390374;
-        Sat, 12 Oct 2024 05:16:30 -0700 (PDT)
+        bh=o6zyDyeTtPJ40HuJojRed0anIe5PmnUIqk8gS8vhC04=;
+        b=PnTur5e0i3l3N/xHHpBZulrCkQtpghNwWvpLqfE/cNWJGFeaErn8kKdwH1XUm/k/KV
+         24HC8he7Cmg96faIdOXnxju3qazNxeAeKv1ro555UBtzYNXk5A4zWqWPFsSt1NdtUEtC
+         ZDqkvYkOzgEy8qSxT+cIxw1WFzdYISaaHr8KBHpljxcC9Bw2K267KFAdUqpXd7mm2SZY
+         ANCfxJ+QBO+8e6yJ/IVMtilmS55xIM3xAZq77hZI02RqR1SWyN5Xu+EjogXZAz8iqAib
+         xx6bUurYupzVo5qKKhMsIjuX6ClGJW1jV3RA57UKx3LhFyYz1Qut9tWK5AlEckDMUpkT
+         RsrA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8+lvSODX60h7Wn7lC7pWgBtYT594DwgXVomCTBL/z04uI8zxF3XugRxc+YaSPby9ykec2qV73yps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweAvQc8zrbDSrOCSCMfA+CeHyymYpDRxlxTlNtugBxmNTqpsqV
+	RxaSGvcDlqyzIHSMdi4d5F490hDjqlpGhBv3zLK8zz8sIywhl8lR4celH4pReQ==
+X-Google-Smtp-Source: AGHT+IHWHwbSaDZkpKZg/vkEnfXk7LU06gEkVAG3M5hSmPI5sp+UlowafZbkiKf+muCQsqeF+wVDLg==
+X-Received: by 2002:a17:903:595:b0:202:508c:b598 with SMTP id d9443c01a7336-20ca1726af8mr59782905ad.59.1728736277331;
+        Sat, 12 Oct 2024 05:31:17 -0700 (PDT)
 Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e4dbad815sm1142523b3a.175.2024.10.12.05.16.25
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8bc1a160sm36596595ad.102.2024.10.12.05.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2024 05:16:29 -0700 (PDT)
-Date: Sat, 12 Oct 2024 17:46:22 +0530
+        Sat, 12 Oct 2024 05:31:16 -0700 (PDT)
+Date: Sat, 12 Oct 2024 18:01:11 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Damien Le Moal <dlemoal@kernel.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -83,12 +83,13 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v3 10/12] PCI: rockchip-ep: Improve link training
-Message-ID: <20241012121622.owkg5geqp5jqtjod@thinkpad>
+Subject: Re: [PATCH v3 12/12] PCI: rockchip-ep: Handle PERST# signal in
+ endpoint mode
+Message-ID: <20241012123111.bg6rzxotabkxfchc@thinkpad>
 References: <20241007041218.157516-1-dlemoal@kernel.org>
- <20241007041218.157516-11-dlemoal@kernel.org>
- <20241010103550.elwd2k35t4k4cypu@thinkpad>
- <84efa346-c1de-44d5-8b27-2481043e9102@kernel.org>
+ <20241007041218.157516-13-dlemoal@kernel.org>
+ <20241010104932.gfrunorhpnhan5wp@thinkpad>
+ <b525abc8-4066-4097-9a36-558b84144228@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,66 +99,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <84efa346-c1de-44d5-8b27-2481043e9102@kernel.org>
+In-Reply-To: <b525abc8-4066-4097-9a36-558b84144228@kernel.org>
 
-On Fri, Oct 11, 2024 at 05:55:25PM +0900, Damien Le Moal wrote:
-> On 10/10/24 19:35, Manivannan Sadhasivam wrote:
-> >> +static void rockchip_pcie_ep_link_training(struct work_struct *work)
+On Fri, Oct 11, 2024 at 06:30:31PM +0900, Damien Le Moal wrote:
+> On 10/10/24 19:49, Manivannan Sadhasivam wrote:
+> >> +static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
 > >> +{
-> >> +	struct rockchip_pcie_ep *ep =
-> >> +		container_of(work, struct rockchip_pcie_ep, link_training.work);
+> >> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
 > >> +	struct rockchip_pcie *rockchip = &ep->rockchip;
 > >> +	struct device *dev = rockchip->dev;
-> >> +	u32 val;
 > >> +	int ret;
 > >> +
-> >> +	/* Enable Gen1 training and wait for its completion */
-> >> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
-> >> +				 val, PCIE_LINK_TRAINING_DONE(val), 50,
-> >> +				 LINK_TRAIN_TIMEOUT);
-> >> +	if (ret)
-> >> +		goto again;
+> >> +	if (!rockchip->ep_gpio)
+> >> +		return 0;
 > >> +
-> >> +	/* Make sure that the link is up */
-> >> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
-> >> +				 val, PCIE_LINK_UP(val), 50,
-> >> +				 LINK_TRAIN_TIMEOUT);
-> >> +	if (ret)
-> >> +		goto again;
-> >> +
-> >> +	/* Check the current speed */
-> >> +	val = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
-> >> +	if (!PCIE_LINK_IS_GEN2(val) && rockchip->link_gen == 2) {
-> > 
-> > PCIE_LINK_IS_GEN2()?
-> 
-> This is defined in drivers/pci/controller/pcie-rockchip.h. What is it exactly
-> you would like to know about this ?
-> 
-
-!PCIE_LINK_IS_GEN2 means check is for non-Gen2 mode, isn't it? I guess the check
-should be 'if (PCIE_LINK_IS_GEN2...)
-
-> > 
-> >> +		/* Enable retrain for gen2 */
-> >> +		rockchip_pcie_ep_retrain_link(rockchip);
-> >> +		readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
-> >> +				   val, PCIE_LINK_IS_GEN2(val), 50,
-> >> +				   LINK_TRAIN_TIMEOUT);
+> >> +	/* PCIe reset interrupt */
+> >> +	ep->perst_irq = gpiod_to_irq(rockchip->ep_gpio);
+> >> +	if (ep->perst_irq < 0) {
+> >> +		dev_err(dev, "No corresponding IRQ for PERST GPIO\n");
+> >> +		return ep->perst_irq;
 > >> +	}
 > >> +
-> >> +	/* Check again that the link is up */
-> >> +	if (!rockchip_pcie_ep_link_up(rockchip))
-> >> +		goto again;
+> >> +	ep->perst_asserted = true;
 > > 
-> > TRM doesn't mention this check. Is this really necessary?
+> > How come?
 > 
-> I think so, to check the result of the second training for gen2.
-> Even though the TRM does not say so, I prefer checking that the result is what
-> we expect: the link is up.
-> 
+> Yeah, a bit confusing. This is because the gpio active low / inactive high, so
+> as soon as we enable the IRQ, we are going to get one IRQ even though perst gpio
+> signal has not changed yet.
 
-Ok.
+Which means you are looking for a wrong level! What is the polarity of the
+PERST# gpio in DT?
 
 - Mani
 
