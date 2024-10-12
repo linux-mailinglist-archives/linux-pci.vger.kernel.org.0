@@ -1,148 +1,143 @@
-Return-Path: <linux-pci+bounces-14358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6EAD99B10A
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 07:07:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32EEE99B115
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 07:36:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 914CA1F22F6D
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 05:07:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAD232847B5
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Oct 2024 05:36:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9852D13774B;
-	Sat, 12 Oct 2024 05:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76CF512D760;
+	Sat, 12 Oct 2024 05:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwEeW8NH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fe9T5oMg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E92012F588;
-	Sat, 12 Oct 2024 05:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41972BB09
+	for <linux-pci@vger.kernel.org>; Sat, 12 Oct 2024 05:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728709607; cv=none; b=cMdIP/3mgYEc7b27wfAcOBfTDVeUJ9rA0lEuqLnDzY0jYqSy8UvJGSekdWdnP1YXD5gbgl2Swi4S6NpqGm7/y4jt6DdbS3PZSBS+x6ZtEuHh6dRDn2+fuFAb6OTUugAlGG2CGGLPhTXKMBE2DqzqbizgG8a40oEO6E94FU0IOWA=
+	t=1728711408; cv=none; b=WEkIOMEcyi6i++drifNfKtUZNSrdCOLpTRP7XUc2RpxKfjfLyP67OhXe8EHC+AZsHsFIcQYvUgYwQQw1YNqN2C2+U2DAB8QjndkYdt9hT4+q6dFEAsWuiberPqmyGFXq9qhQbO97wB8tPtHaa4+Ynl3pLOPKHH4Wcrs+G1hh2Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728709607; c=relaxed/simple;
-	bh=TvbJoRWmZ3IE3J8cwVIHQKM4m47ajNC1mqy4uVaJVCU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fEdqX9H1K64TRPWle9Hv0CGQHMbOX+p+3gt8DsjzHb4i0fuH9TOZdU4IACbhCGTnf10vvr2+tu/p7UbJyngY1YBTtoz6wM9W3xYEAbgi+boANsM1akS/Rdr9aZ3wkEB42jB/9ztRqQXnXgYeIHU2fl+V/ec3wLN4OBHRvilov98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SwEeW8NH; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-71e053cf1f3so2436214b3a.2;
-        Fri, 11 Oct 2024 22:06:45 -0700 (PDT)
+	s=arc-20240116; t=1728711408; c=relaxed/simple;
+	bh=id6bl7x2+/RADHJgpgSgWPIftbgTDqmwOH9HR9CntpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDR4JVbh9MtJ3fNkojAkj5yqEhUzsEErbEORcflMrxGT1IOmt1tKZBERuXUM5a+tHvn2lXDXH1hhV6xnr2SX5SQXWawbdJHtyHDAJcH/VKFSWO2H/QTPuILGkDDV1JIFBUDvmNYf33gMP7jmhYK94KQW7zI2Zmg/PNEcpGZp3TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fe9T5oMg; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e188185365so2201781a91.1
+        for <linux-pci@vger.kernel.org>; Fri, 11 Oct 2024 22:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728709605; x=1729314405; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=myoEO0ww2czFo+NDaKnAm+OqHSFtr4LH3EKBGNBM3z4=;
-        b=SwEeW8NHNTnNijyAM4AAjG+rDWMq83Deim7EHgyN9NdYVfoRXUca8VzQOoI6cUjkhb
-         IE8dzsfRZbO1aMKPJlVeITfZ63z91AtKtLkcNaf18/roOfYU6zcVVFqvgCwfMb3T9rGo
-         /cyXEQOHf2r6i+msU4hf/qF+ksKF4AqJGTaAnPjsgubREzqvL/F6SnOE9G+MZQ0i3yWX
-         nJVUQEL0IsoXgOXG0suU/4KBHW9yIQ4Lp1d2LGljcOGin9Qgc3PmaCjIbsMFA6LKxXjn
-         h8lJqoENIel/49cLfcd0k3jsYge0f4vhVfUM3PEya4jbWPiFpinpycWGNqqgwuVpHIiT
-         Hmqw==
+        d=linaro.org; s=google; t=1728711406; x=1729316206; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MjQuIV6kj3VfwRWddXnrTlmwecAWDBUJYA1PrNxHudo=;
+        b=Fe9T5oMg4fjcyqgrGozD/NgYo8G4IIuNAJnZeWpGTeWI5nCPy0IDjuNomWDTPC/ynt
+         3/E9WmqGi8I40NyC0C0znvyW+F3betQRryykUfvz36TiW5ou9zP9RdaUhPyoQ6PkvAeG
+         cC1MguNIwZv375x6cShNNep2nHrMZlJmspz1NPTRJDJHXDNLaRYggmG+O/60z0u0xeTP
+         msPU8UMwb19VrEkfLY7zT0KlIuLC1/g1PEsH26w72+Cn4sOFeFPd1kdoZ2xs1R5LwK0Z
+         xZwxLhjNz8xMFMlpVFFUFcYJuPKNpXkshh74rF8mLs35ANGAEZvnIv2x+Qql4+4vIovr
+         jfPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728709605; x=1729314405;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=myoEO0ww2czFo+NDaKnAm+OqHSFtr4LH3EKBGNBM3z4=;
-        b=ANkjzWEnZ4BTJ/JdO5oMMPIEDq5Rqxccn8H/nl6qMDCbjSxQhEMSJMMiuTnOTiIooG
-         0+aJI98tUDnnRfy6FE/oq9KH8+FP9P0Ktr3Aa6EXsPQ/77hsdQMAbqxMO/dzpFM84Mys
-         hGPxTG0tyUKb6oK/XK8mdensyDrGrxIEI4+HeL5kXQOO1pvhE9ChyfZsfwsaHsq5VarX
-         BO6eVzDTLm54ZUZ7psVk6jduJCMrLvRydd72Z5+aSUoAERKobJ5jCok0XWus6KofMq99
-         AVlNI7exFN9gqfGDTW/PgOiCX/Ur9LzFY1+vHLdxl1A93Wx6obEc5wAHuJtD/yRqCKNZ
-         nLbw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2HP1v2FoxLsyuXwHOYjsygEd/6GE/rQOT7P/zotNE2Oc8FEXwxJHqw5NrMruvGE4VM23PPNlA/3FOkEw=@vger.kernel.org, AJvYcCWMEZ5SNTVTvPiIzJxwsfKg21QNYgEoIgic57oN47Z29Sv2H+cvo7JHyqUbOcoz3tOMYvNfcUmI1ZgZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzjyn6NsDm7tYT3/Py4sUVjsNSavQVCAgaPH9DrhaFLxZkEzePK
-	W/i8dXD1324FbULzNhmZsUS0gBrPAB128z7lTG61cvgpB8gQhICL
-X-Google-Smtp-Source: AGHT+IHbWnSJOFSlNgJF4OYXyX8KdfVCrRAO9/1mq47VYfOabgDCcVZ58F7Tw4bhokGiBoTcmX26tg==
-X-Received: by 2002:a05:6a20:c997:b0:1d7:1277:8d22 with SMTP id adf61e73a8af0-1d8bcfb296dmr8295467637.43.1728709605470;
-        Fri, 11 Oct 2024 22:06:45 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e4ad1b9f7sm859809b3a.190.2024.10.11.22.06.41
+        d=1e100.net; s=20230601; t=1728711406; x=1729316206;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MjQuIV6kj3VfwRWddXnrTlmwecAWDBUJYA1PrNxHudo=;
+        b=nJFFtyrnu2jhWvcpmq7R0/WS/RGSjZayh6FJsXowWMH7CNOD/O60W1LlrdewLFUMNJ
+         h7vkS2CONtUzxBoCKpg5um7npki4E9fMy6wMKVSEH5xQQqKNOBK3RgSPu8XU803100cg
+         Hww8TRRxgMZH/MJkJpp5Ae53+QjwEOcbxJiwHd/QiXk/h6TIN3hFz6UKGdByqlT48eo0
+         aaAskHF7M21nJRYFe4nwfxMbt1F2cO4hMsrHihBYqacGnq9IYFPaFN0pTV81mTj9qvLM
+         XncXi4m1KCSU1M8N+O1uVfOxI9JxTt08rLKsfbRtJihayWjaAFbL0A03aGWD5AYObajf
+         AlUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWu+B4mni0SM2lJLt9PATpn3/Ch8o+S62MopFPTCQ6g0CaZwz9MEE0d27ety0KvIiP60Wd69Mj3YIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUSJTrm1XtwEc3ESBv9nDwIrRiowVmzhxS4e2Z96c1YoyQGIch
+	TDkkpZhTYv2uB5yn2CEuG9/U2tEw2yaF6aFWpqVn0EqRyi870ljqElMeocn/wg==
+X-Google-Smtp-Source: AGHT+IHqiyyz1xhjY6vqhIqY84FxPaW6G2o/VAwjL/1LFjW/xaek+9WCg+PZY5ymNnouaWkyvQGCag==
+X-Received: by 2002:a17:90b:893:b0:2e0:a47a:5eb0 with SMTP id 98e67ed59e1d1-2e2f0da8051mr5652417a91.38.1728711406131;
+        Fri, 11 Oct 2024 22:36:46 -0700 (PDT)
+Received: from thinkpad ([220.158.156.122])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2a36417afsm6683894a91.0.2024.10.11.22.36.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 22:06:45 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-pci@vger.kernel.org (open list:PCIE DRIVER FOR ROCKCHIP),
-	linux-rockchip@lists.infradead.org (open list:PCIE DRIVER FOR ROCKCHIP),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v7 3/3] PCI: rockchip: Refactor rockchip_pcie_disable_clocks() function signature
-Date: Sat, 12 Oct 2024 10:36:05 +0530
-Message-ID: <20241012050611.1908-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20241012050611.1908-1-linux.amoon@gmail.com>
-References: <20241012050611.1908-1-linux.amoon@gmail.com>
+        Fri, 11 Oct 2024 22:36:45 -0700 (PDT)
+Date: Sat, 12 Oct 2024 11:06:37 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
+	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v6 7/8] PCI: qcom: Fix the cfg for X1E80100 SoC
+Message-ID: <20241012053637.cu2eyle6d7gbqsth@thinkpad>
+References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
+ <20241011104142.1181773-8-quic_qianyu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241011104142.1181773-8-quic_qianyu@quicinc.com>
 
-Refactor the rockchip_pcie_disable_clocks function to accept a
-struct rockchip_pcie pointer instead of a void pointer. This change
-improves type safety and code readability by explicitly specifying
-the expected data type.
+On Fri, Oct 11, 2024 at 03:41:41AM -0700, Qiang Yu wrote:
+> Currently, the cfg_1_9_0 which is being used for X1E80100 has config_sid
+> callback in its ops and doesn't disable ASPM L0s. However, as same as
+> SC8280X, PCIe controllers on X1E80100 are connected to SMMUv3 and it is
+
+"...connected to SMMUv3, hence doesn't need config_sid() callback"
+
+> recommended to disable ASPM L0s. Hence reuse cfg_sc8280xp for X1E80100.
+
+"...and hardware team has recommended to disable L0s as it is broken in the
+controller."
+
+> 
+> Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v7: None
-v6: Fix the subject, add the missing () in the function name.
-v5: Fix the commit message and add r-b Manivannan.
-v4: None
-v3: None
-v2: No
----
- drivers/pci/controller/pcie-rockchip.c | 3 +--
- drivers/pci/controller/pcie-rockchip.h | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 9a118e2b8cbd..c3147111f1a7 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -269,9 +269,8 @@ int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip)
- }
- EXPORT_SYMBOL_GPL(rockchip_pcie_enable_clocks);
- 
--void rockchip_pcie_disable_clocks(void *data)
-+void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip)
- {
--	struct rockchip_pcie *rockchip = data;
- 
- 	clk_bulk_disable_unprepare(rockchip->num_clks, rockchip->clks);
- }
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 2761699f670b..7f0f938e9195 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -347,7 +347,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip);
- int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
- void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
- int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
--void rockchip_pcie_disable_clocks(void *data);
-+void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip);
- void rockchip_pcie_cfg_configuration_accesses(
- 		struct rockchip_pcie *rockchip, u32 type);
- 
+We need to backport this patch to stable to fix the L0s handling. But we don't
+need the previous patch as even without that cfg_sc8280xp disables L0s.
+
+- Mani
+
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 468bd4242e61..c533e6024ba2 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1847,7 +1847,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+> -	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
+>  	{ }
+>  };
+>  
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.44.0
-
+மணிவண்ணன் சதாசிவம்
 
