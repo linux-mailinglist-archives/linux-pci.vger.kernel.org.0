@@ -1,82 +1,61 @@
-Return-Path: <linux-pci+bounces-14408-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD4C099B7FB
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Oct 2024 04:28:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BEA699B8E4
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Oct 2024 11:06:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74634282731
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Oct 2024 02:28:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFA6B1F2177F
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Oct 2024 09:06:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6490C17FE;
-	Sun, 13 Oct 2024 02:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797BA127E01;
+	Sun, 13 Oct 2024 09:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WrGhdZ5A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEc7XzeI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF6B231CB4;
-	Sun, 13 Oct 2024 02:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F2D80027
+	for <linux-pci@vger.kernel.org>; Sun, 13 Oct 2024 09:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728786519; cv=none; b=WZNJvP/XDC6z4S0P8ZPlkKLwc41VsmO18Jacuu2ydgyOk7OPbJApwa+zI09a4V5ED8v4gT2bul0TEM3nPt8Ylwg572Hb9dH31Zw/SY23rFa7ClQjzXQ4TlNg2FufbLenXrj5GIUocpFQvYk+K2VTvXW62SITUW0wPCSStZz56JM=
+	t=1728810389; cv=none; b=A4P+Lbt/0ht3UyDIHa8VyBj3WnrJTQVRv1dtKO/kA1/0HCsHabre0fmEwOKZX69cPEZVi3E8Pr+KYhJ+CBQEk15D76R9NZAbuNoUnEr2gnGx+81dl3IxYj+UPiTZjXE13q/ds24mbLxLjDWtK80kYeHCcjV3ooqz4a/KNU2eyHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728786519; c=relaxed/simple;
-	bh=kxw0/5KQqdN8nbP5+1lX3aIizA0MM7Ku7mcSHuuSt78=;
+	s=arc-20240116; t=1728810389; c=relaxed/simple;
+	bh=YNpeHodVXfAX2OcPEYmDol7G1DiuZkAab0fvRoAYUy0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pfRNniVbwgyDqa9gsiW9kggoJNDalfkUrpa9MnT6DSqLcY5EEgyLVUad2xl4x2JlwgrahdFS4p9zEjAY5TTkqr39LszECLgg9zUixypzbmPU3+n37CbiBFzrFJA2yoJ/YkojGDnQarebqiDglGXu8PUVG1Z8Efn8QXXqtNN9fZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WrGhdZ5A; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728786517; x=1760322517;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kxw0/5KQqdN8nbP5+1lX3aIizA0MM7Ku7mcSHuuSt78=;
-  b=WrGhdZ5AosXWjiZOSFaMtToHiFij0gvT1WZ4p2gR0ui5X1+7VztdCtae
-   proKltb9ZHkdec2Lkpp+7nO3PXKEehyL3ZISX6TP6PIInjNG3+8Kbgkkn
-   6DQn4WTucTt21rZvqFVciFESRTb4NlMgwslJflFITKxFXpGPnZrhSXKaE
-   +WfBlreK82gMioCsQdSYKqaE5llbKInDKxH17AAv3r02Nyax+qJ4j3M9w
-   CSJCThAy0z1FxxU8emEIiFihUO94WXMlec9v+8jDCjbnA8qqnSzfpXoU+
-   JvnoemjKwTiZhd5ofU7qOak8TI25BP5bkyrJhAfKIA57mDiAJQa/jk//V
-   g==;
-X-CSE-ConnectionGUID: CS5TS9tHTUitzBFIhjFP7g==
-X-CSE-MsgGUID: jv2in9R0S8uMllx732FifQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="38731315"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="38731315"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2024 19:28:37 -0700
-X-CSE-ConnectionGUID: do3bFO2CTB68Q54myxA8Nw==
-X-CSE-MsgGUID: pH9+hgyLT8y7Svldl/1AxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="77172345"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 12 Oct 2024 19:28:32 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1szoLN-000E0B-1Z;
-	Sun, 13 Oct 2024 02:28:29 +0000
-Date: Sun, 13 Oct 2024 10:27:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wei Fang <wei.fang@nxp.com>, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, vladimir.oltean@nxp.com,
-	claudiu.manoil@nxp.com, xiaoning.wang@nxp.com, Frank.Li@nxp.com,
-	christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
-	bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, imx@lists.linux.dev,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH net-next 05/11] net: enetc: add enetc-pf-common driver
- support
-Message-ID: <202410131001.KjFCfYWr-lkp@intel.com>
-References: <20241009095116.147412-6-wei.fang@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJXRF1LRaOeb6ZrdXdIi/9YYQEjUSumo018+dLwb7a2knJL99c4/fYiOkGtIwiHXtv5rBahN1+S5tHPFET4oVFnIguzA7JS9FhfsaZCoxYWIOdXKmq/13DsXICXLWFMScJ1qV4plA++GxcEPWZ+s3HRjP1mKNFF0A019O/ySAJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEc7XzeI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A70C4CEC5;
+	Sun, 13 Oct 2024 09:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728810388;
+	bh=YNpeHodVXfAX2OcPEYmDol7G1DiuZkAab0fvRoAYUy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rEc7XzeIyppxBTLYRpIohafLB+bf7WCmth+hysnYsBy9m3TsMeOvB2fDTsycLuACO
+	 iUcosGdVu8oeU9PzdcuJx4UK86ufXzymFUON5uzbbuZXUoT/0UA6uCvI7CB7HgC4sp
+	 AJEDR647LxWJfLhSwezLMZbbG2wQ61KUtMLpsUciOCnDzCcuxD11XTB8AjFCEqM99U
+	 VZSB17oIOfXAzfRGWGCYcAs+TCI3WnGozDf22vd3W3t9OdSq+aBX+mqQFqyF83CeiT
+	 iyw0DcZjz3sJffzshCAe8hXnVRklgiTbD3FFTes36eH0R1Erur5FIFj+qfxN1EKDsG
+	 QMX9EoPyDVivQ==
+Date: Sun, 13 Oct 2024 11:06:23 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Subject: Re: [PATCH v6 3/6] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
+Message-ID: <ZwuNjwdRLKsaM1Sd@ryzen.lan>
+References: <20241012113246.95634-1-dlemoal@kernel.org>
+ <20241012113246.95634-4-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,91 +64,304 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241009095116.147412-6-wei.fang@nxp.com>
+In-Reply-To: <20241012113246.95634-4-dlemoal@kernel.org>
 
-Hi Wei,
+On Sat, Oct 12, 2024 at 08:32:43PM +0900, Damien Le Moal wrote:
+> Some endpoint controllers have requirements on the alignment of the
+> controller physical memory address that must be used to map a RC PCI
+> address region. For instance, the endpoint controller of the RK3399 SoC
+> uses at most the lower 20 bits of a physical memory address region as
+> the lower bits of a RC PCI address region. For mapping a PCI address
+> region of size bytes starting from pci_addr, the exact number of
+> address bits used is the number of address bits changing in the address
+> range [pci_addr..pci_addr + size - 1]. For this example, this creates
+> the following constraints:
+> 1) The offset into the controller physical memory allocated for a
+>    mapping depends on the mapping size *and* the starting PCI address
+>    for the mapping.
+> 2) A mapping size cannot exceed the controller windows size (1MB) minus
+>    the offset needed into the allocated physical memory, which can end
+>    up being a smaller size than the desired mapping size.
+> 
+> Handling these constraints independently of the controller being used
+> in an endpoint function driver is not possible with the current EPC
+> API as only the ->align field in struct pci_epc_features is provided
+> but used for BAR (inbound ATU mappings) mapping only. A new API is
+> needed for function drivers to discover mapping constraints and handle
+> non-static requirements based on the RC PCI address range to access.
+> 
+> Introduce the endpoint controller operation ->align_addr() to allow
+> the EPC core functions to obtain the size and the offset into a
+> controller address region that must be allocated and mapped to access
+> a RC PCI address region. The size of the mapping provided by the
+> align_addr() operation can then be used as the size argument for the
+> function pci_epc_mem_alloc_addr() and the offset into the allocated
+> controller memory provided can be used to correctly handle data
+> transfers. For endpoint controllers that have PCI address alignment
+> constraints, the align_addr() operation may indicate upon return an
+> effective PCI address mapping size that is smaller (but not 0) than the
+> requested PCI address region size.
+> 
+> The controller ->align_addr() operation is optional: controllers that
+> do not have any alignment constraints for mapping RC PCI address regions
+> do not need to implement this operation. For such controllers, it is
+> always assumed that the mapping size is equal to the requested size of
+> the PCI region and that the mapping offset is 0.
+> 
+> The function pci_epc_mem_map() is introduced to use this new controller
+> operation (if it is defined) to handle controller memory allocation and
+> mapping to a RC PCI address region in endpoint function drivers.
+> 
+> This function first uses the ->align_addr() controller operation to
+> determine the controller memory address size (and offset into) needed
+> for mapping an RC PCI address region. The result of this operation is
+> used to allocate a controller physical memory region using
+> pci_epc_mem_alloc_addr() and then to map that memory to the RC PCI
+> address space with pci_epc_map_addr().
+> 
+> Since ->align_addr() () may indicate that not all of a RC PCI address
+> region can be mapped, pci_epc_mem_map() may only partially map the RC
+> PCI address region specified. It is the responsibility of the caller
+> (an endpoint function driver) to handle such smaller mapping by
+> repeatedly using pci_epc_mem_map() over the desried PCI address range.
+> 
+> The counterpart of pci_epc_mem_map() to unmap and free a mapped
+> controller memory address region is pci_epc_mem_unmap().
+> 
+> Both functions operate using the new struct pci_epc_map data structure.
+> This new structure represents a mapping PCI address, mapping effective
+> size, the size of the controller memory needed for the mapping as well
+> as the physical and virtual CPU addresses of the mapping (phys_base and
+> virt_base fields). For convenience, the physical and virtual CPU
+> addresses within that mapping to use to access the target RC PCI address
+> region are also provided (phys_addr and virt_addr fields).
+> 
+> Endpoint function drivers can use struct pci_epc_map to access the
+> mapped RC PCI address region using the ->virt_addr and ->pci_size
+> fields.
+> 
+> Co-developed-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/endpoint/pci-epc-core.c | 103 ++++++++++++++++++++++++++++
+>  include/linux/pci-epc.h             |  38 ++++++++++
+>  2 files changed, 141 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index b854f1bab26f..04a85d2f7e2a 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -466,6 +466,109 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
+>  
+> +/**
+> + * pci_epc_mem_map() - allocate and map a PCI address to a CPU address
+> + * @epc: the EPC device on which the CPU address is to be allocated and mapped
+> + * @func_no: the physical endpoint function number in the EPC device
+> + * @vfunc_no: the virtual endpoint function number in the physical function
+> + * @pci_addr: PCI address to which the CPU address should be mapped
+> + * @pci_size: the number of bytes to map starting from @pci_addr
+> + * @map: where to return the mapping information
+> + *
+> + * Allocate a controller memory address region and map it to a RC PCI address
+> + * region, taking into account the controller physical address mapping
+> + * constraints using the controller operation align_addr(). If this operation is
+> + * not defined, we assume that there are no alignment constraints for the
+> + * mapping.
+> + *
+> + * The effective size of the PCI address range mapped from @pci_addr is
+> + * indicated by @map->pci_size. This size may be less than the requested
+> + * @pci_size. The local virtual CPU address for the mapping is indicated by
+> + * @map->virt_addr (@map->phys_addr indicates the physical address).
+> + * The size and CPU address of the controller memory allocated and mapped are
+> + * respectively indicated by @map->map_size and @map->virt_base (and
+> + * @map->phys_base for the physical address of @map->virt_base).
+> + *
+> + * Returns 0 on success and a negative error code in case of error.
+> + */
+> +int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		    u64 pci_addr, size_t pci_size, struct pci_epc_map *map)
+> +{
+> +	size_t map_size = pci_size;
+> +	size_t map_offset = 0;
+> +	int ret;
+> +
+> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
+> +		return -EINVAL;
+> +
+> +	if (!pci_size || !map)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Align the PCI address to map. If the controller defines the
+> +	 * .align_addr() operation, use it to determine the PCI address to map
+> +	 * and the size of the mapping. Otherwise, assume that the controller
+> +	 * has no alignment constraint.
+> +	 */
+> +	memset(map, 0, sizeof(*map));
+> +	map->pci_addr = pci_addr;
+> +	if (epc->ops->align_addr)
+> +		map->map_pci_addr =
+> +			epc->ops->align_addr(epc, pci_addr,
+> +					     &map_size, &map_offset);
+> +	else
+> +		map->map_pci_addr = pci_addr;
+> +	map->map_size = map_size;
+> +	if (map->map_pci_addr + map->map_size < pci_addr + pci_size)
+> +		map->pci_size = map->map_pci_addr + map->map_size - pci_addr;
+> +	else
+> +		map->pci_size = pci_size;
+> +
+> +	map->virt_base = pci_epc_mem_alloc_addr(epc, &map->phys_base,
+> +						map->map_size);
+> +	if (!map->virt_base)
+> +		return -ENOMEM;
+> +
+> +	map->phys_addr = map->phys_base + map_offset;
+> +	map->virt_addr = map->virt_base + map_offset;
+> +
+> +	ret = pci_epc_map_addr(epc, func_no, vfunc_no, map->phys_base,
+> +			       map->map_pci_addr, map->map_size);
+> +	if (ret) {
+> +		pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
+> +				      map->map_size);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_epc_mem_map);
+> +
+> +/**
+> + * pci_epc_mem_unmap() - unmap and free a CPU address region
+> + * @epc: the EPC device on which the CPU address is allocated and mapped
+> + * @func_no: the physical endpoint function number in the EPC device
+> + * @vfunc_no: the virtual endpoint function number in the physical function
+> + * @map: the mapping information
+> + *
+> + * Unmap and free a CPU address region that was allocated and mapped with
+> + * pci_epc_mem_map().
+> + */
+> +void pci_epc_mem_unmap(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		       struct pci_epc_map *map)
+> +{
+> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
+> +		return;
+> +
+> +	if (!map || !map->virt_base)
+> +		return;
+> +
+> +	pci_epc_unmap_addr(epc, func_no, vfunc_no, map->phys_base);
+> +	pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
+> +			      map->map_size);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_epc_mem_unmap);
+> +
+>  /**
+>   * pci_epc_clear_bar() - reset the BAR
+>   * @epc: the EPC device for which the BAR has to be cleared
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 42ef06136bd1..f4b8dc37e447 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -32,11 +32,43 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+>  	}
+>  }
+>  
+> +/**
+> + * struct pci_epc_map - information about EPC memory for mapping a RC PCI
+> + *                      address range
+> + * @pci_addr: start address of the RC PCI address range to map
+> + * @pci_size: size of the RC PCI address range mapped from @pci_addr
+> + * @map_pci_addr: RC PCI address used as the first address mapped (may be lower
+> + *                than @pci_addr)
+> + * @map_size: size of the controller memory needed for mapping the RC PCI address
+> + *            range @pci_addr..@pci_addr+@pci_size
+> + * @phys_base: base physical address of the allocated EPC memory for mapping the
+> + *             RC PCI address range
+> + * @phys_addr: physical address at which @pci_addr is mapped
+> + * @virt_base: base virtual address of the allocated EPC memory for mapping the
+> + *             RC PCI address range
+> + * @virt_addr: virtual address at which @pci_addr is mapped
+> + */
+> +struct pci_epc_map {
+> +	phys_addr_t	pci_addr;
 
-kernel test robot noticed the following build errors:
+I think that it is really confusing that this is type phys_addr_t.
 
-[auto build test ERROR on net-next/main]
+I would much prefer:
+-dma_addr_t
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Fang/dt-bindings-net-add-compatible-string-for-i-MX95-EMDIO/20241009-181113
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20241009095116.147412-6-wei.fang%40nxp.com
-patch subject: [PATCH net-next 05/11] net: enetc: add enetc-pf-common driver support
-config: powerpc-randconfig-r062-20241013 (https://download.01.org/0day-ci/archive/20241013/202410131001.KjFCfYWr-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241013/202410131001.KjFCfYWr-lkp@intel.com/reproduce)
+or, less commonly used (but still much better than phys_addr_t):
+-pci_bus_addr_t
+-u64
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410131001.KjFCfYWr-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   powerpc-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_pf_common.o: in function `enetc_sriov_configure':
->> drivers/net/ethernet/freescale/enetc/enetc_pf_common.c:336:(.text+0x55c): undefined reference to `enetc_msg_psi_free'
->> powerpc-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_pf_common.c:349:(.text+0x5e4): undefined reference to `enetc_msg_psi_init'
->> powerpc-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_pf_common.c:365:(.text+0x658): undefined reference to `enetc_msg_psi_free'
-   powerpc-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_pf_common.o: in function `enetc_pf_netdev_setup':
-   drivers/net/ethernet/freescale/enetc/enetc_pf_common.c:106:(.text+0xb00): undefined reference to `enetc_set_ethtool_ops'
+To make it more clear that this is NOT a physical address.
+In drivers/pci, we usually only use phy_addr_t for the "CPU address".
 
 
-vim +336 drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+> +	size_t		pci_size;
+> +
+> +	phys_addr_t	map_pci_addr;
+> +	size_t		map_size;
+> +
+> +	phys_addr_t	phys_base;
+> +	phys_addr_t	phys_addr;
+> +	void __iomem	*virt_base;
+> +	void __iomem	*virt_addr;
+> +};
+> +
+>  /**
+>   * struct pci_epc_ops - set of function pointers for performing EPC operations
+>   * @write_header: ops to populate configuration space header
+>   * @set_bar: ops to configure the BAR
+>   * @clear_bar: ops to reset the BAR
+> + * @align_addr: operation to get the mapping address, mapping size and offset
+> + *		into a controller memory window needed to map an RC PCI address
+> + *		region
 
-   324	
-   325	int enetc_sriov_configure(struct pci_dev *pdev, int num_vfs)
-   326	{
-   327		struct enetc_si *si = pci_get_drvdata(pdev);
-   328		struct enetc_pf *pf = enetc_si_priv(si);
-   329		int err;
-   330	
-   331		if (!IS_ENABLED(CONFIG_PCI_IOV))
-   332			return 0;
-   333	
-   334		if (!num_vfs) {
-   335			pci_disable_sriov(pdev);
- > 336			enetc_msg_psi_free(pf);
-   337			kfree(pf->vf_state);
-   338			pf->num_vfs = 0;
-   339		} else {
-   340			pf->num_vfs = num_vfs;
-   341	
-   342			pf->vf_state = kcalloc(num_vfs, sizeof(struct enetc_vf_state),
-   343					       GFP_KERNEL);
-   344			if (!pf->vf_state) {
-   345				pf->num_vfs = 0;
-   346				return -ENOMEM;
-   347			}
-   348	
- > 349			err = enetc_msg_psi_init(pf);
-   350			if (err) {
-   351				dev_err(&pdev->dev, "enetc_msg_psi_init (%d)\n", err);
-   352				goto err_msg_psi;
-   353			}
-   354	
-   355			err = pci_enable_sriov(pdev, num_vfs);
-   356			if (err) {
-   357				dev_err(&pdev->dev, "pci_enable_sriov err %d\n", err);
-   358				goto err_en_sriov;
-   359			}
-   360		}
-   361	
-   362		return num_vfs;
-   363	
-   364	err_en_sriov:
- > 365		enetc_msg_psi_free(pf);
-   366	err_msg_psi:
-   367		kfree(pf->vf_state);
-   368		pf->num_vfs = 0;
-   369	
-   370		return err;
-   371	}
-   372	EXPORT_SYMBOL_GPL(enetc_sriov_configure);
-   373	
+I think this text should be more clear that it is about the PCI address.
+Perhaps:
+Operation to get the PCI address to map and the size of the mapping,
+in order to satisfy address translation requirements of the controller.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+>   * @map_addr: ops to map CPU address to PCI address
+>   * @unmap_addr: ops to unmap CPU address and PCI address
+>   * @set_msi: ops to set the requested number of MSI interrupts in the MSI
+> @@ -61,6 +93,8 @@ struct pci_epc_ops {
+>  			   struct pci_epf_bar *epf_bar);
+>  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  			     struct pci_epf_bar *epf_bar);
+> +	phys_addr_t (*align_addr)(struct pci_epc *epc, phys_addr_t pci_addr,
+> +				  size_t *size, size_t *offset);
+
+This functions returns an aligned PCI address.
+Making it return a phys_addr_t for someone used to reading code in
+drivers/pci is very confusing, as you automatically assume that this is
+then the "CPU address" (which is not the case here).
+
+Please change the return type (basically the same as my first comment in
+this reply) in order to make the API more clear.
+
+
+>  	int	(*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  			    phys_addr_t addr, u64 pci_addr, size_t size);
+>  	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> @@ -278,6 +312,10 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size);
+>  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+>  			   void __iomem *virt_addr, size_t size);
+> +int pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		    u64 pci_addr, size_t pci_size, struct pci_epc_map *map);
+> +void pci_epc_mem_unmap(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		       struct pci_epc_map *map);
+>  
+>  #else
+>  static inline void pci_epc_init_notify(struct pci_epc *epc)
+> -- 
+> 2.47.0
+> 
 
