@@ -1,162 +1,111 @@
-Return-Path: <linux-pci+bounces-14472-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14473-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39FA599CB57
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:16:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE6E499CB77
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:20:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6BA221C22DAA
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 13:16:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFDF41C22D7F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 13:20:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D407F1C3F32;
-	Mon, 14 Oct 2024 13:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F4C91A726B;
+	Mon, 14 Oct 2024 13:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g5DdR/3V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzpAG0sq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EBD1C3052;
-	Mon, 14 Oct 2024 13:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69092E659;
+	Mon, 14 Oct 2024 13:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728911598; cv=none; b=T7/1k2b1h/aH8x3dyxPFCbZfklN8Mfo1iubUWzp1I3PKREpZQ5lQGIQRa0CdJkjGgn7VThcyrRUb+RSpoSKmhYQ1lVA2EN4DdBvABObvkMeUQhCVBH7HRWyui+VGxQWOov66Su2Cwv/uHEmK/XAT2SJJLW66WjybIz5LK3Dh8pg=
+	t=1728912016; cv=none; b=h8uTCuoEPnnBStskjTh3PTt8zUrVWS3e2AetXWTKhDvtXzzkH6Ho2QK0xrmg48eCzoRJo0rNRndKdbjFI/uC3je3+rUp7a0s++Azerj9xH/8r4f5m0BcmH2agYGadxVyCj4MF0KEA5e9SHq3moFuOANMu/H73KiBTrp+kckK0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728911598; c=relaxed/simple;
-	bh=8rvFv72V/ATXidkPdPrUDPDXphy7QCZWWCwsoMM0z+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JLE88x6rW9OfcSWOTNCBvLn5P3NskQ8orXus5trzlkyPBL0SP3onrcPoikvqyN4D0Zt05lGDEp+BcNbvORCqeqtUvHLptqfrcFHfF05ygeVo91UIBhkHA5h/7KQNx97ciyknFr+GhTPt5vTw5CXKN3aRcEmNnotJdfGngHIVdXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g5DdR/3V; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49EARqs6008690;
-	Mon, 14 Oct 2024 13:10:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	s7iw1fPo4g9lffSq8A0NeOVNnbxLfmxzqmRxicpKLX4=; b=g5DdR/3Vko8VnmGZ
-	EbID4hoJO76FhJ1gE1hZ52ZCtRP3UetOOy4WXHu/1U2eTLLJ7nD52a9co9/s8FtA
-	2LdTlZ61f+AU2RYg5Ek9FWC2zwd+tKq21Jin/lhV0t2b8F8v6LICZ1eAPsV8dOjh
-	9jR5WMOpVQLTyn25nFTMJai5a2LOAEt3W1WWkzbUoKknrzFoGJ51DgVptm3jMnNU
-	WLg61wPHFJilTRqPpjvPuT7ZIJLtB1uzn4rbJlTTv9klL5VE7nJN5Ou404pw/+9q
-	gQ2JuGz/kC8fVePFhHq3GTLeibxFs4gLV/58bubxXJRynDilMkMBHfKUzTDY4xb7
-	gymw3A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 427gpxmf4s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 13:10:02 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49EDA13a022102
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 13:10:01 GMT
-Received: from [10.253.10.174] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Oct
- 2024 06:09:55 -0700
-Message-ID: <62785e7d-86ea-4841-ae76-4afdd612dca4@quicinc.com>
-Date: Mon, 14 Oct 2024 21:09:51 +0800
+	s=arc-20240116; t=1728912016; c=relaxed/simple;
+	bh=g1ApVtXktfn/7ob3WMQ7xB9x/GOzNyYOBnXLIeK05R4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OGA2ayGnwwk4cd98Fwc57VD3fVPoncNALqu8qjmIAzDHBlxxROubMWZzt0AqnloDUpV1ovcFHOL+4sg5t5puSKOhvcBto4+OfABwD56hygTBsyhTA2u4aTU8ZO3cbt0k56AITsiPxGyorDM3wpgwvZUmHGkOaDyBTKYVLqaWKMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CzpAG0sq; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2e2e8c8915eso2943689a91.3;
+        Mon, 14 Oct 2024 06:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728912014; x=1729516814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PnIQCT5EAf4D/q+zlrns+kyFpnKjw9kFZRzD9+mWzjg=;
+        b=CzpAG0sq06L6t+zx2xBuAPerMmk7JWKPjLtccFE28c4vNAZRr3/tWYMBMUn/rRcs2P
+         ZcIDJX0G7YodT1XozHwQfhqhY4JyXzTm7PSFY576mYJYhnYN+ow5pLBwv0Rjawin+TFg
+         oeMVvEfwF7krl8vfPnhBz7H6R6ZkngFP2lcEsKMbSVlyRuCjcu8e2jZVX3i+xyAPkV8N
+         6gwULNgbLxnDB20cE62H5v3gJxzbCE0RSFkqsm7lC761j1U4OmmH0DAbVX1LZLo8qgHR
+         86wnYmld2p4zcXMCtvAv2ACux+rj9/qHTmqJBxpJDcjh9QCHrjLrTdSu5cBNWgSNFZub
+         uifA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728912014; x=1729516814;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PnIQCT5EAf4D/q+zlrns+kyFpnKjw9kFZRzD9+mWzjg=;
+        b=ki/L7wetJ9H3r2uDhnYeTWr+8/c5Joqceh332+nl4K2qkajFx4IRj4r0cF/4soaKUo
+         h9+QR1RCFkX1kKe+nHVYw74SXO6Dv2pYmTOBKCIsogkeAIztiYeSji3H4Q8ItMEMKAWp
+         jxPkiFaLCcHCo2+29FxpXwdGyX0N6+8AveaMCSB2efN+PFER0sxVwMqB9a1RLjkWq70d
+         4Oa0T8ZN5CrD9Q1BGzyV6Ih2l4U0ndS06iG5lOU+vDj+STdBXSVL4gS/2DWQRafGiBBl
+         8I0/voZuIqLReVahw7mfdVIvIhR81TmxBNtRl1abrRIWhlxmD5X+lLBlt8z7owCrfs33
+         QaAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXA3W0T8gFJ+kF3bmgAQ7K+kM4TxxmwXcKObyovHTZJWpia7pRppQXukQ2j0pdAY+74XL/Hro+bKWQxE1Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcgGWDi+2ko0mJh5vPLxlbhURpKwI6IGDz5CLhMmQb/wIgz/SA
+	8qBbRF5q2/+hRqaz1vWpJ/oq4KTqEA6W2Gm9K2Xg1qEDNsoLFHiWUZtrvf0Y
+X-Google-Smtp-Source: AGHT+IHO5ZiYHWJlNRSnYuVh3AsdjH83YDljE/J3KhsHBNSRMG6dcWxOciWNP7TQ5pEDCI55/QXQ7w==
+X-Received: by 2002:a17:90b:3b90:b0:2e2:cd6b:c6ca with SMTP id 98e67ed59e1d1-2e3153589c9mr9923489a91.25.1728912013932;
+        Mon, 14 Oct 2024 06:20:13 -0700 (PDT)
+Received: from localhost.localdomain ([187.120.154.170])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2bf0b3011sm10124558a91.1.2024.10.14.06.20.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 06:20:13 -0700 (PDT)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: trintaeoitogc@gmail.com,
+	scott@spiteful.org,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: cpcihp: remove uneccessary field
+Date: Mon, 14 Oct 2024 10:19:17 -0300
+Message-ID: <20241014131917.324667-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global'
- interrupt
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <abel.vesa@linaro.org>, <quic_msarkar@quicinc.com>,
-        <quic_devipriy@quicinc.com>, <dmitry.baryshkov@linaro.org>,
-        <kw@linux.com>, <lpieralisi@kernel.org>, <neil.armstrong@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
- <20241011104142.1181773-4-quic_qianyu@quicinc.com>
- <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
- <4802B12B-BAC1-4E99-BDFE-A2340F4A8F24@linaro.org>
- <3d1d0822-da66-44c8-a328-69804210123c@kernel.org>
- <65B34B14-76C3-491D-8A58-6D0887889018@linaro.org>
- <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
- <96816abb-4e0d-4c60-8ae6-b5a5cd796e99@quicinc.com>
- <d16a2dca-5b96-4b72-bd79-6ad2960fdb5e@kernel.org>
-Content-Language: en-US
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <d16a2dca-5b96-4b72-bd79-6ad2960fdb5e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LNbswjoW0-pCJSDR8VSslzRLqzMEjKQF
-X-Proofpoint-ORIG-GUID: LNbswjoW0-pCJSDR8VSslzRLqzMEjKQF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- suspectscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
- malwarescore=0 mlxlogscore=704 priorityscore=1501 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
- definitions=main-2410140095
+Content-Transfer-Encoding: 8bit
 
+The hardware_test field in cpci_hp_controller_ops is uneccessary because
+no file is being used. How a pointer need a space in memory for storage
+the address (4 bytes in 32bits systems and 8 bytes in 64 bits sustems),
+remove this dead code to reduce resource consumption.
 
-On 10/14/2024 4:25 PM, Krzysztof Kozlowski wrote:
-> On 14/10/2024 09:50, Qiang Yu wrote:
->> On 10/12/2024 12:06 AM, Krzysztof Kozlowski wrote:
->>> On 11/10/2024 17:51, Manivannan Sadhasivam wrote:
->>>> On October 11, 2024 9:14:31 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>> On 11/10/2024 17:42, Manivannan Sadhasivam wrote:
->>>>>> On October 11, 2024 8:03:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>>>> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
->>>>>>>> Document 'global' SPI interrupt along with the existing MSI interrupts so
->>>>>>>> that QCOM PCIe RC driver can make use of it to get events such as PCIe
->>>>>>>> link specific events, safety events, etc.
->>>>>>> Describe the hardware, not what the driver will do.
->>>>>>>
->>>>>>>> Though adding a new interrupt will break the ABI, it is required to
->>>>>>>> accurately describe the hardware.
->>>>>>> That's poor reason. Hardware was described and missing optional piece
->>>>>>> (because according to your description above everything was working
->>>>>>> fine) is not needed to break ABI.
->>>>>>>
->>>>>> Hardware was described but not completely. 'global' IRQ let's the controller driver to handle PCIe link specific events like Link up, Link down etc... They improve user experience like the driver can use those interrupts to start bus enumeration on its own. So breaking the ABI for good in this case.
->>>>>>
->>>>>>> Sorry, if your driver changes the ABI for this poor reason.
->>>>>>>
->>>>>> Is the above reasoning sufficient?
->>>>> I tried to look for corresponding driver change, but could not, so maybe
->>>>> there is no ABI break in the first place.
->>>> Here it is:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4581403f67929d02c197cb187c4e1e811c9e762a
->>>>
->>>>    Above explanation is good, but
->>>>> still feels like improvement and device could work without global clock.
->>> So there is no ABI break in the first place... Commit is misleading.
->> OK, will remove the description about ABI break in commit message. But may
-> Describe real effects. You got comments about ABI impact before, right?
-> So if you remove this, how previous feedback is addressed?
-Global interrupt is parsed as optional in driver, so there is
-no ABI break, will write this in commit message.
+Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+---
+ drivers/pci/hotplug/cpci_hotplug.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks
-Qiang
->
->
->> I know in which case ABI will be broken by adding an interrupt in bingdings
->> and what ABI will be broken?
-> Users of ABI stop working.
->
-> Best regards,
-> Krzysztof
->
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index 6d8970d8c3f2..03fa39ab0c88 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -44,7 +44,6 @@ struct cpci_hp_controller_ops {
+ 	int (*enable_irq)(void);
+ 	int (*disable_irq)(void);
+ 	int (*check_irq)(void *dev_id);
+-	int (*hardware_test)(struct slot *slot, u32 value);
+ 	u8  (*get_power)(struct slot *slot);
+ 	int (*set_power)(struct slot *slot, int value);
+ };
+-- 
+2.46.2
+
 
