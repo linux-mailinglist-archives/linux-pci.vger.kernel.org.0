@@ -1,168 +1,205 @@
-Return-Path: <linux-pci+bounces-14415-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14416-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 861AC99C1FD
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 09:51:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 036A999C20A
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 09:53:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C22DBB22AE5
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 07:51:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 263911C2354D
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 07:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0AFF14B94B;
-	Mon, 14 Oct 2024 07:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BADD814B94C;
+	Mon, 14 Oct 2024 07:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V1doFuVT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aTKtRGDQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263FC14A092;
-	Mon, 14 Oct 2024 07:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4940C14A4C7
+	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 07:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728892281; cv=none; b=Feo3admLUwRk1ZWjrxjL6Emi1TQz4L5TjcRCILGA6tc640Kdteb/8wH2GNEaKSW0Be4LC6OcpIcAgsixPrFHjchfg8Ul9lPuHRonfA2Ph0n427IOZrXTiW6IYMaimPb9GYWck4cPX41JjvKwP5W9KjPAnPWhVzoF6eZYiwHmrlQ=
+	t=1728892420; cv=none; b=BfF6v5Jt+5XDK/6iusEXQSV8jcXxO4NW15UUFyrtH9iNycPillcn4fbDUKcTN5Hm9OAhzWa68rG6oqVE3dU1jPhrk8asXxNpqiwO+3p0Tn3Ry+Y89mhN90iwWvO8hQd8pVpoSOlXeY1M6v1EcdPS2lGMflhFv7mm0ACJDPRDjtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728892281; c=relaxed/simple;
-	bh=a2HMJn4Hv9unmOCAOZxrCsje+PKdd6KLUJK7SCRo6no=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Qq3DvZNhRKku9l+E7JrgdyOqn8E0FywY84voBwmukH+K9Btf7avu0BlKL2yFiT2TXHmRZlCsJEe7W+x0GB7v9Xo+AYcol37RpFXKjSFwSCntM+X0CJpEXOjPbqet224uU87xU1so/D6eAkRgQxANNMmiZWTKB+Y1cb9oZdRGPyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V1doFuVT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49DNdoLP005267;
-	Mon, 14 Oct 2024 07:51:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bZoC//fj3Iku0eMTHN9r0vcUQXgeGd56zY8cVePVZFY=; b=V1doFuVT4jA3fceZ
-	H4a5h9sEpaXuKE53ZJsgTh2+OpIxGgZlzNUS6DKinVEiVT5hGs7FftlMyCJdhqeI
-	ReDn/ytBRUZgiqV/cenqapQ9zhhYaEzf+p44qSwOs0y8ql4xC9sGkXl39ZXshHNF
-	FVjEBvRBK/XNGRcxbiZ6+kJgwrHULmxdwMFSZzB9IaeblfRpDEY4PGOwCNKpTctr
-	D6AQ9NLTlI7VNz2J4cicLkqlWv/+7c630AM81K4I1O7uAYkY3LPz4EzlFBbQnPQy
-	cwPAiQjeZZCauMsup8PawKdw47rQu6DKJlUmKDGFQ86UT2R2XfqCeOum+MthQCsl
-	Asdeeg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 427hg73med-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 07:51:06 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49E7p5Zq020221
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 07:51:05 GMT
-Received: from [10.239.29.179] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Oct
- 2024 00:51:00 -0700
-Message-ID: <96816abb-4e0d-4c60-8ae6-b5a5cd796e99@quicinc.com>
-Date: Mon, 14 Oct 2024 15:50:53 +0800
+	s=arc-20240116; t=1728892420; c=relaxed/simple;
+	bh=38C6NRMVkq3wK7ZeHi+VPdubstwCMm5larN0ifKv6Lc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E3fVClxbpsRB8AVzHYAm6Y0WBwa5x05UespkVOBnzmAZ2guDYXhV7iV5Piv1DuCtO3Ndhd5n8Iaxdnagg8EkaDvOdvfvS3y8QvBwg4fWdNKOgO01qm7KeHEzEIh43kFnh1dNDtmiwukVl5ce/G+sHA15DQvNRwk7faBrs2fyNf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aTKtRGDQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728892417;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4Em0Fwa9CsX4Yf8Gv8tnKBN7DITxj0GNsoQ0n+t3mNw=;
+	b=aTKtRGDQtCwoQY5Ro7rK94SwQRtJpXxvWo8VqfKJUryU1uwI5dlO4waXTh8NOlwPj+tO6T
+	Mxe5AHkIDQcfYQ55A0xsBzRxJCtj4KABPaBO6hm7EclwCPhLpIRaiiG7UyZ0d+bU8DKMG7
+	EGAuNAuAhFMQC3t6CxTd7w679j49cNg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-612-Xjcs6T4iM7mL4Dt9ghLvmg-1; Mon, 14 Oct 2024 03:53:35 -0400
+X-MC-Unique: Xjcs6T4iM7mL4Dt9ghLvmg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a8711c48990so340053966b.2
+        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 00:53:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728892414; x=1729497214;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Em0Fwa9CsX4Yf8Gv8tnKBN7DITxj0GNsoQ0n+t3mNw=;
+        b=hLLmeAJAT2zCJz35OdtnAI/dZrL/VVofKnFKQ35tI4FxmMcO1EB6AIW7wPPSlz4Ogk
+         rLEx+Zv7qbV3iypg5+XYFQo9El7uLv9nARm3FhicZPbVTPsoH+JSEpsDiG4x58IeHPW7
+         effxK+hdG5719Pf4FtRTxRSK2PgLTDlBDwaonCaioDmDyZe+J3++GziAJfBGxSEk+7FF
+         StbMkGjcE4OMcNtOO6Mv3cyMDpu8XzokVnyjVpZKt5Fz81TPYm/4UWITIhxH99vpoDsH
+         DIVtT1mecAC+Vsc+cWA3teMSP7cexRh5bZDTwxhZxMOQJuUGoTaxIoBREMCEe78Hrfbj
+         Fe4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXzm1Ky4zqxOKbZeUL0jgLQTpHr0/jfvePK/1l/h2xjCLabdeJwo2j9ZUMSiOVsZNsVV+tvQGznwVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/R5MnjoQyzuD8xUdS4QnoVX1w0Ao/RkAdlvQIkTu7AkvNx5JL
+	Q/CfaICAR78ac8ZfI6xltv9+Iy0buun+S0v3xy+espm6/GfVuP2hKe+wSYRcgqjkazlpfWsUoWy
+	JGJO1h01a1LLNtEAuon4SYF96IH41z1IN10O9mgXGML0IAMBpFz03b6Pl6Q==
+X-Received: by 2002:a17:906:7314:b0:a99:f71a:4305 with SMTP id a640c23a62f3a-a99f71a449dmr562730566b.18.1728892414377;
+        Mon, 14 Oct 2024 00:53:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGS7mQi6VCblmjG4hiCSOfJ6En7uiGA8g5T0Re27ntZ7e0Jx5n23I6AOFOqGr0X48zqfpZyKw==
+X-Received: by 2002:a17:906:7314:b0:a99:f71a:4305 with SMTP id a640c23a62f3a-a99f71a449dmr562727066b.18.1728892413919;
+        Mon, 14 Oct 2024 00:53:33 -0700 (PDT)
+Received: from eisenberg.fritz.box (200116b82d3798001d5778cfc1aeb0b3.dip.versatel-1u1.de. [2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99f86fa986sm243291666b.92.2024.10.14.00.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 00:53:33 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Wu Hao <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Keith Busch <kbusch@kernel.org>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Li Zetao <lizetao1@huawei.com>
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fpga@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v7 0/5] PCI: Remove most pcim_iounmap_regions() users
+Date: Mon, 14 Oct 2024 09:53:21 +0200
+Message-ID: <20241014075329.10400-1-pstanner@redhat.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global'
- interrupt
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <abel.vesa@linaro.org>, <quic_msarkar@quicinc.com>,
-        <quic_devipriy@quicinc.com>, <dmitry.baryshkov@linaro.org>,
-        <kw@linux.com>, <lpieralisi@kernel.org>, <neil.armstrong@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
- <20241011104142.1181773-4-quic_qianyu@quicinc.com>
- <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
- <4802B12B-BAC1-4E99-BDFE-A2340F4A8F24@linaro.org>
- <3d1d0822-da66-44c8-a328-69804210123c@kernel.org>
- <65B34B14-76C3-491D-8A58-6D0887889018@linaro.org>
- <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
-Content-Language: en-US
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: c8DC4QGZl6mybIcNqaHlS2FPJub-re1X
-X-Proofpoint-GUID: c8DC4QGZl6mybIcNqaHlS2FPJub-re1X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=909
- lowpriorityscore=0 spamscore=0 adultscore=0 priorityscore=1501
- suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0 impostorscore=0
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410140056
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Ready for merge, all Reviews / Acks are in place.
+
+Merge plan for this is the PCI-Tree.
+
+After this series, only two users (net/ethernet/stmicro and
+vdpa/solidrun) will remain to be ported in the subsequent merge window.
+Doing them right now proved very difficult because of various conflicts
+as they are currently also being reworked.
+
+Changes in v7:
+  - Add Paolo's Acked-by.
+ (- Rebase on current master)
+
+Changes in v6:
+  - Remove the patches for "vdpa: solidrun" since the maintainer seems
+    unwilling to review and discuss, not to mention approve, anything
+    that is part of a wider patch series across other subsystems.
+  - Change series's name to highlight that not all callers are removed
+    by it.
+
+Changes in v5:
+  - Patch "ethernet: cavium": Re-add accidentally removed
+    pcim_iounmap_region(). (Me)
+  - Add Jens's Reviewed-by to patch "block: mtip32xx". (Jens)
+
+Changes in v4:
+  - Drop the "ethernet: stmicro: [...] patch since it doesn't apply to
+    net-next, and making it apply to that prevents it from being
+    applyable to PCI ._. (Serge, me)
+  - Instead, deprecate pcim_iounmap_regions() and keep "ethernet:
+    stimicro" as the last user for now.
+  - ethernet: cavium: Use PTR_ERR_OR_ZERO(). (Andy)
+  - vdpa: solidrun (Bugfix) Correct wrong printf string (was "psnet" instead of
+    "snet"). (Christophe)
+  - vdpa: solidrun (Bugfix): Add missing blank line. (Andy)
+  - vdpa: solidrun (Portation): Use PTR_ERR_OR_ZERO(). (Andy)
+  - Apply Reviewed-by's from Andy and Xu Yilun.
+
+Changes in v3:
+  - fpga/dfl-pci.c: remove now surplus wrapper around
+    pcim_iomap_region(). (Andy)
+  - block: mtip32xx: remove now surplus label. (Andy)
+  - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
+    occurs. (Andy, Christophe)
+  - Some minor wording improvements in commit messages. (Me)
+
+Changes in v2:
+  - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
+    patch, put stable kernel on CC. (Christophe, Andy).
+  - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
+  - Consequently, drop patch "PCI: Make pcim_release_region() a public
+    function", since there's no user anymore. (obsoletes the squash
+    requested by Damien).
+  - vdap/solidrun:
+    • make 'i' an 'unsigned short' (Andy, me)
+    • Use 'continue' to simplify loop (Andy)
+    • Remove leftover blank line
+  - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
 
 
-On 10/12/2024 12:06 AM, Krzysztof Kozlowski wrote:
-> On 11/10/2024 17:51, Manivannan Sadhasivam wrote:
->>
->> On October 11, 2024 9:14:31 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>> On 11/10/2024 17:42, Manivannan Sadhasivam wrote:
->>>>
->>>> On October 11, 2024 8:03:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
->>>>>> Document 'global' SPI interrupt along with the existing MSI interrupts so
->>>>>> that QCOM PCIe RC driver can make use of it to get events such as PCIe
->>>>>> link specific events, safety events, etc.
->>>>> Describe the hardware, not what the driver will do.
->>>>>
->>>>>> Though adding a new interrupt will break the ABI, it is required to
->>>>>> accurately describe the hardware.
->>>>> That's poor reason. Hardware was described and missing optional piece
->>>>> (because according to your description above everything was working
->>>>> fine) is not needed to break ABI.
->>>>>
->>>> Hardware was described but not completely. 'global' IRQ let's the controller driver to handle PCIe link specific events like Link up, Link down etc... They improve user experience like the driver can use those interrupts to start bus enumeration on its own. So breaking the ABI for good in this case.
->>>>
->>>>> Sorry, if your driver changes the ABI for this poor reason.
->>>>>
->>>> Is the above reasoning sufficient?
->>> I tried to look for corresponding driver change, but could not, so maybe
->>> there is no ABI break in the first place.
->> Here it is:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4581403f67929d02c197cb187c4e1e811c9e762a
->>
->>   Above explanation is good, but
->>> still feels like improvement and device could work without global clock.
-> So there is no ABI break in the first place... Commit is misleading.
-OK, will remove the description about ABI break in commit message. But may
-I know in which case ABI will be broken by adding an interrupt in bingdings
-and what ABI will be broken?
->
->> It is certainly an improvement but provides a nice user experience as the devices will be enumerated when they get plugged into the slot (like hotplug). Otherwise, users have to rescan the bus every time they plug a device. Also when the device gets removed, driver could retrain the link if link went to a bad state. Otherwise, link will remain in the broken state requiring users to unload/load the driver again.
-> OK
+Important things first:
+This series is based on [1] and [2] which Bjorn Helgaas has currently
+queued for v6.12 in the PCI tree.
 
-Thanks Mani for your detailed explaination. Can I reword commit message
-like this:
+This series shall remove pcim_iounmap_regions() in order to make way to
+remove its brother, pcim_iomap_regions().
 
-Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
-to the host CPU. This interrupt can be used by the device driver to handle
-PCIe link specific events such as Link up and Link down, which give the
-driver a chance to start bus enumeration on its own when link is up and
-initiate link training if link went to a bad state. This provides a nice
-user experience.
+Regards,
+P.
 
-Hence, document it in the binding along with the existing MSI interrupts.
+[1] https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
+[2] https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
 
-Thanks,
-Qiang
->
-> Best regards,
-> Krzysztof
->
+Philipp Stanner (5):
+  PCI: Deprecate pcim_iounmap_regions()
+  fpga/dfl-pci.c: Replace deprecated PCI functions
+  block: mtip32xx: Replace deprecated PCI functions
+  gpio: Replace deprecated PCI functions
+  ethernet: cavium: Replace deprecated PCI functions
+
+ drivers/block/mtip32xx/mtip32xx.c              | 18 ++++++++----------
+ drivers/fpga/dfl-pci.c                         | 16 ++++------------
+ drivers/gpio/gpio-merrifield.c                 | 14 +++++++-------
+ .../net/ethernet/cavium/common/cavium_ptp.c    |  7 +++----
+ drivers/pci/devres.c                           |  8 ++++++--
+ include/linux/pci.h                            |  1 +
+ 6 files changed, 29 insertions(+), 35 deletions(-)
+
+-- 
+2.46.2
+
 
