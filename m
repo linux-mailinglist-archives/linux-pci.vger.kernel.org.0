@@ -1,151 +1,154 @@
-Return-Path: <linux-pci+bounces-14485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 491B199D4A0
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 18:27:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3731699D4B1
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 18:31:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AAFDCB255D7
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 16:26:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0B6F288D11
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 16:31:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAB71AE01F;
-	Mon, 14 Oct 2024 16:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CE72595;
+	Mon, 14 Oct 2024 16:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jW5/jYIv"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rrQud1Bm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wPq0vw4z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0E428FC;
-	Mon, 14 Oct 2024 16:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3126B231C92;
+	Mon, 14 Oct 2024 16:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728923208; cv=none; b=M7rHiuOEgl+Ou3Md1F6bCLML41FOmEl3SXE4l/s8wQROBglZgIy3vfqx+4nev1Zg0Be7pq3cbec738D7L1UHvOKYKpRdsS9Wl+h31VVNaAunnxzl4OT4d5yPjog5fIkoQ0KQatrasGfQBWYSV4xcI/8Ae1Y2pfj1oMhLr1JFl8c=
+	t=1728923496; cv=none; b=CSaCtZpkp3Wb161pg9GZUjyQPOuFk/EjJT8pOwkpzDcIVJvH5TQLiMyOme+EGxCH0T7CyDaVYCNVH8y9cHqTe9L6FvU6mHGJXsP7ws8qXgdI5+GdQ1KyFFD+qX+E5ORDLam3vMddaLVc8zaJdYs5ywjHTXfxTpy+7solSblMxV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728923208; c=relaxed/simple;
-	bh=k9Br7NGn1JUJDdpw4cdkfc2viP9z4pXwuv/4rditTgM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t+KyLzsoX16fXoJHHAFGcd9XCbD+pB4+CZDutjGZo7VcBnSLsnXfdZOO7/NlndSdUr9lMCnII53T7LvArbQ2l1vSBkaj/lM0U7c//CUaUiH8wYKNu9JxvjhEK0pWMhEW/JgFA2xAJ68kZblJhqxdSIhhPPz2d0tfbprsNDjLGeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jW5/jYIv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49EAjHBR029461;
-	Mon, 14 Oct 2024 16:26:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=tcbhP5eT086myskRJMszrU
-	ovLk1dvJ9QFpMPp6xbhxM=; b=jW5/jYIvnNMLYuKcwxMW2YdqWSV34aBeQz1nCJ
-	WqrnEtRU9c8i17xDveNtcnRJ+rozNO8Fc6I5/tlyu18A0Ub0JNFxIngRKdk3Wnn1
-	k8p5cVqW8j5Bui/GNCoyLzBU388/Lu1TSYqVvQfHk89CxSnVP7F0TVEv4HoqbnLP
-	IfgsfaBUn3IrdBhIeKCkxmcB/JWMeP4pgn4+nKpSjlFXyzmJTqvCp6J65HUpfs5T
-	+okBxKL1bcMe6Mwl4+Jnwhm1/KiUBum8Wt7WJy0QSw7dWMDYjbEO8SzUqCr+qZdL
-	fZGBG+JnoCU7cOlCNe55sCRaJi8bC9o7LXVHzPY9XOLrHCPw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 427jd8vx0t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 16:26:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49EGQQr0000507
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Oct 2024 16:26:26 GMT
-Received: from hu-mrana-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 14 Oct 2024 09:26:26 -0700
-From: Mayank Rana <quic_mrana@quicinc.com>
-To: <kevin.xie@starfivetech.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_krichai@quicinc.com>, Mayank Rana <quic_mrana@quicinc.com>,
-        "Marek
- Szyprowski" <m.szyprowski@samsung.com>
-Subject: [PATCH v3] PCI: starfive: Enable PCIe controller's runtime PM  before probing host bridge
-Date: Mon, 14 Oct 2024 09:26:07 -0700
-Message-ID: <20241014162607.1247611-1-quic_mrana@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1728923496; c=relaxed/simple;
+	bh=hRoA3ccR5Y8oRXRdOMvMWRGqLfR7Pm1OrtYuVHblhug=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JR/GpQ1NPWc+kgepWLK+mZ16V4ldnUq1jGk5setQXY6jmnI9bsz7jW7BgcDqJEqT1ky9k3lQ19HjdETZdzN2Cn8FAUUtumDLZVzrDwvVwz4KulkE+4nsxJICTBXPixDAfsrLlh4+waO/HhSZe/H3N1hsTBz2Jrt81oy8rwxwcwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rrQud1Bm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wPq0vw4z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1728923492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ow/UxrNjYbB9p7imk5iwLyMoJAD0hoXV5EJONRnoywA=;
+	b=rrQud1Bmrb6k1OJO8EmZWxF/QUHGHoo6snHSxtVUgsEFeCxNzJ4q1QMFXvIBHiCXLrKOnp
+	5n2zfs4cjvMRW84uP2ReREOXB4GsDYWko8jIDJkr9l+9zdO8YwS26aL6ZSWCDjRud13enR
+	KsHcpVLiarsShJnRVFn4EhH3D+c78VhqrZZnmHAwIZ55bCGCLkxhmQ/ki2Ny5NpX5G+FiT
+	4el9dkx2BNEHvetIh2DFvh54IORDpOroEmPDh5UZ/bgbVFpY3DjPUqwrOzaJX72HycQoPj
+	jBUluAEhaic3IhLOaOiqXwD4Lzr/iEcOr5BdHwPnyX7HYGY6YL619CT/VYHswQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1728923492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ow/UxrNjYbB9p7imk5iwLyMoJAD0hoXV5EJONRnoywA=;
+	b=wPq0vw4zgDf7pPyiwHAm5p05qXTlNkIJPC5VQTxfHidMe8ODXZEdfMPPimcsSbxLQli+/+
+	ZLuoGkIRW8RucaDg==
+To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ kw@linux.com, Philipp Zabel <p.zabel@pengutronix.de>, Andrea della Porta
+ <andrea.porta@suse.com>, Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
+ <jonathan@raspberrypi.com>, Stanimir Varbanov <svarbanov@suse.de>
+Subject: Re: [PATCH v3 03/11] irqchip: mip: Add Broadcom bcm2712 MSI-X
+ interrupt controller
+In-Reply-To: <20241014130710.413-4-svarbanov@suse.de>
+References: <20241014130710.413-1-svarbanov@suse.de>
+ <20241014130710.413-4-svarbanov@suse.de>
+Date: Mon, 14 Oct 2024 18:31:32 +0200
+Message-ID: <87o73mfxy3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: FeoM34QLfoUxiLkmq9s0PbLfuQAorsip
-X-Proofpoint-ORIG-GUID: FeoM34QLfoUxiLkmq9s0PbLfuQAorsip
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 impostorscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410140118
 
-PCIe controller device (i.e. PCIe starfive device) is parent to PCIe host
-bridge device. To enable runtime PM of PCIe host bridge device (child
-device), it is must to enable parent device's runtime PM to avoid seeing
-the below warning from PM core:
 
-pcie-starfive 940000000.pcie: Enabling runtime PM for inactive device
-with active children
+> Subject: irqchip: mip:
 
-Fix this issue by enabling starfive pcie controller device's runtime PM
-before calling pci_host_probe() in plda_pcie_host_init().
+is not a valid prefix
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-v2->v3:
-- Update commit description based on Mani's feedback
-- Updated Reviewed-by tag
-Link to v2: https://patchwork.kernel.org/project/linux-pci/patch/20241011235530.3919347-1-quic_mrana@quicinc.com/
+Just make it: irqchip: Add Broadcom  .....
 
-v1->v2: Updated commit description based on Bjorn's feedback
-Link to v1: https://patchwork.kernel.org/project/linux-pci/patch/20241010202950.3263899-1-quic_mrana@quicinc.com/
- 
- drivers/pci/controller/plda/pcie-starfive.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+> +static int mip_middle_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				   unsigned int nr_irqs, void *arg)
+> +{
+> +	struct mip_priv *mip = domain->host_data;
+> +	struct irq_fwspec fwspec = {0};
+> +	struct irq_data *irqd;
+> +	unsigned int hwirq, irq, i;
 
-diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
-index 0567ec373a3e..e73c1b7bc8ef 100644
---- a/drivers/pci/controller/plda/pcie-starfive.c
-+++ b/drivers/pci/controller/plda/pcie-starfive.c
-@@ -404,6 +404,9 @@ static int starfive_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+
- 	plda->host_ops = &sf_host_ops;
- 	plda->num_events = PLDA_MAX_EVENT_NUM;
- 	/* mask doorbell event */
-@@ -413,11 +416,12 @@ static int starfive_pcie_probe(struct platform_device *pdev)
- 	plda->events_bitmap <<= PLDA_NUM_DMA_EVENTS;
- 	ret = plda_pcie_host_init(&pcie->plda, &starfive_pcie_ops,
- 				  &stf_pcie_event);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_put_sync(&pdev->dev);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
-+	}
- 
--	pm_runtime_enable(&pdev->dev);
--	pm_runtime_get_sync(&pdev->dev);
- 	platform_set_drvdata(pdev, pcie);
- 
- 	return 0;
--- 
-2.25.1
+	unsigned int hwirq, irq, i;
+	struct irq_data *irqd;
 
+> +
+> +#define MIP_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
+> +				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
+> +				 MSI_FLAG_PCI_MSI_MASK_PARENT |	\
+> +				 MSI_FLAG_PCI_MSIX)
+
+Why are you requiring MSI_FLAG_PCI_MSIX here? That's a supported flag,
+not a required one.
+
+> +#define MIP_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK |	\
+> +				 MSI_FLAG_PCI_MSIX |		\
+
+So this does not support multi MSI, but your allocation function looks
+like it supports it (nr_irqs is not range checked).
+
+> +				 IRQ_DOMAIN_FLAG_MSI_PARENT)
+
+This is not a MSI flag and has no place here.
+
+> +static const struct msi_parent_ops mip_msi_parent_ops = {
+> +	.supported_flags	= MIP_MSI_FLAGS_SUPPORTED,
+> +	.required_flags		= MIP_MSI_FLAGS_REQUIRED,
+> +	.bus_select_token       = DOMAIN_BUS_PCI_MSI,
+> +	.bus_select_mask	= MATCH_PCI_MSI,
+> +	.prefix			= "MIP-MSI-",
+> +	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
+> +};
+> +
+> +static int mip_init_domains(struct mip_priv *mip, struct device_node *np)
+> +{
+> +	struct irq_domain *middle;
+> +
+> +	middle = irq_domain_add_hierarchy(mip->parent, 0, mip->num_msis, np,
+> +					  &mip_middle_domain_ops, mip);
+> +	if (!middle)
+> +		return -ENOMEM;
+> +
+> +	irq_domain_update_bus_token(middle, DOMAIN_BUS_PCI_MSI);
+
+That's the wrong token. DOMAIN_BUS_PCI_MSI is what the v2 global PCI/MSI
+domain uses. But that's not what this is about. This is the parent
+domain for PCI/MSI. DOMAIN_BUS_GENERIC_MSI or DOMAIN_BUS_NEXUS is what
+you want here.
+
+> +	middle->dev = mip->dev;
+> +	middle->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
+> +	middle->msi_parent_ops = &mip_msi_parent_ops;
+> +
+
+Other than this, this looks good now.
+
+Thanks,
+
+        tglx
 
