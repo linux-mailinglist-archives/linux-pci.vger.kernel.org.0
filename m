@@ -1,104 +1,199 @@
-Return-Path: <linux-pci+bounces-14503-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14504-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 670EE99D625
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 20:08:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD9DB99DA49
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 01:47:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E051A1F25E8A
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 18:08:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E13428513B
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 23:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78CDA1C7B77;
-	Mon, 14 Oct 2024 18:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BCA9146D65;
+	Mon, 14 Oct 2024 23:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKLdoYvB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KMfaiGod"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515951C7617;
-	Mon, 14 Oct 2024 18:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270D71E4A6
+	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 23:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728929324; cv=none; b=VdvdLP/xCagBNyPVlStZyhQO4Yx88JDgrfc/Yf3qw2GJd6zdqhKe8LzeZQfNRNcDe/GRDY1ddW4smTaM+uqJMX2h38C1He3CIAPkO5001vPyTKWIY63Gpfdb4oomWoWXONIp/J69bEVWFExfAsdtpi0eOmFcMl5wb1r/jclMuko=
+	t=1728949636; cv=none; b=rqBnHdvycNq6A3wRLe/p8QskDdUQ++W0vKAOLvJ2bdZhQFuheokOIy7sD9oiPImyjsBBBKX4tBp54W0c8deasvthKRKV/91fyEmjWLTQhI0ygN44NclK+06FOKS0775Av5jhzGvbR8vtu3doyS/7xs7C3SskGBGh90cyHm9YFlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728929324; c=relaxed/simple;
-	bh=ukToEOBdztdbDqRT5/hmmyOQ+APOBBzbWQpb5VB9xfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qtslLjxOr7V3BDYWFq8zlLMlMObdr/SzCHXxO6bhYD+uYNgfPJySZjYNlG6nFyQmch7MrmwKnXwxOmAst1/vgyIbYbQ1BSO1avG9dIfGxC7HOd7LbDDFNoqswAbnc84mx5FoiDguOr9dRuxqHaXE6VXVamXtFjr43rHy3iklsos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKLdoYvB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA585C4CEC3;
-	Mon, 14 Oct 2024 18:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728929324;
-	bh=ukToEOBdztdbDqRT5/hmmyOQ+APOBBzbWQpb5VB9xfE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EKLdoYvBaRjZ9DdOlSvlPbIpz7DQOaaFth5l4Ii5pilHR9ckRwCLZtip/4GyQW1P4
-	 j5IMA1BH5v/5Y99q1PIFlLLtla3as1wfx0KMG2CUd04sXs1QbZx7MdW0deck65YAtz
-	 a6mlEd5B1NUHF7Y1eawUSGH0eXKq11a3u80B9XaRUbcE2RQfLg9RI0rE52lkc790Vs
-	 PTg7WSFGyW5EFAinrK8xKpluk3UYp0Tt2OaUvPzv668e3UVnJW6W/h57SsIAI7gwP+
-	 SqZoYpJVGEfKK82bgHqjTfEP9BSDhAyHSbVWd2nInTO+1q7q5m7oke3s6xFRuwxp9U
-	 FPsGunrk7ye6w==
-Date: Mon, 14 Oct 2024 13:08:41 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mayank Rana <quic_mrana@quicinc.com>, kevin.xie@starfivetech.com,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_krichai@quicinc.com,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v3] PCI: starfive: Enable PCIe controller's runtime PM
- before probing host bridge
-Message-ID: <20241014180841.GA613986@bhelgaas>
+	s=arc-20240116; t=1728949636; c=relaxed/simple;
+	bh=Q8/7aYzVlkuFgmHDoknYiKgJozkMhFgIloPTjF/rw/0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=YM5XYPLdWPAREk+8w7Owt19ESeyZJ6kvH6ytaIB0j1iqZb6lHQpa3qvAMxt669k2M1zf1hefCzZYFYO29YAS/UhlYm5fJD4p+5jhGOiCa8f1W+GCiy1wX9EV1aWVDOr8AKzEEOYyeFgodJPAXssq7Q2gEAoxy5GjDh4fR/y6QaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KMfaiGod; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728949635; x=1760485635;
+  h=date:from:to:cc:subject:message-id;
+  bh=Q8/7aYzVlkuFgmHDoknYiKgJozkMhFgIloPTjF/rw/0=;
+  b=KMfaiGodfDA1h8UxlX/Bvc+bvqClUvj8zTgzwsSUqmXtgr9feo0KgSg8
+   UEZ/gTAje/quVB+TaAl1+x/Nb1e4jc26368UD6LOUXrkBMkjCJNtU4tQ6
+   eO+Gl3trf0XLz/kzrha3oWIuqT+iAmbng6/i9eFCzxfnbNfijKBLmBKTd
+   lg+ruYI4rsSM63Lme2jrTu1th5cFD/obdbrSNyVgbgTOsPsOZe75t3X5C
+   DyZw3YMYQP+uJd1x//HiVOOlDxd/sIH3+JXaeo71DmXuomOnXRUy+TpJl
+   Ds47ESkp13Tk9m1P3Moz/6j+UqiaXZGLbuJ5Xnxh8FXCUOk8H0+hd3g1G
+   g==;
+X-CSE-ConnectionGUID: T7WK3tBbS0y710f/UsxN7A==
+X-CSE-MsgGUID: ckwCr24mRm6ZNQV4ABiFkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28468181"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28468181"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 16:47:15 -0700
+X-CSE-ConnectionGUID: W0KpqHf+RNuC40xBROhh+A==
+X-CSE-MsgGUID: 56WDFKvjTG+waSpS9UFfIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,203,1725346800"; 
+   d="scan'208";a="77589406"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 14 Oct 2024 16:47:13 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t0UmN-000HKd-1A;
+	Mon, 14 Oct 2024 23:47:11 +0000
+Date: Tue, 15 Oct 2024 07:46:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:doe] BUILD SUCCESS
+ 86efc62d031307e53ad4011e0aa8898e029cef47
+Message-ID: <202410150739.OEnKOCAd-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241014174817.i4yrjozmfbdrm3md@thinkpad>
 
-On Mon, Oct 14, 2024 at 11:18:17PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Oct 14, 2024 at 12:23:21PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Oct 14, 2024 at 09:26:07AM -0700, Mayank Rana wrote:
-> > > PCIe controller device (i.e. PCIe starfive device) is parent to PCIe host
-> > > bridge device. To enable runtime PM of PCIe host bridge device (child
-> > > device), it is must to enable parent device's runtime PM to avoid seeing
-> > > the below warning from PM core:
-> > > 
-> > > pcie-starfive 940000000.pcie: Enabling runtime PM for inactive device
-> > > with active children
-> > > 
-> > > Fix this issue by enabling starfive pcie controller device's runtime PM
-> > > before calling pci_host_probe() in plda_pcie_host_init().
-> > > 
-> > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
-> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > I want this in the same series as Krishna's patch to turn on runtime
-> > PM of host bridges.  That's how I know they need to be applied in
-> > order.  If they're not in the same series, they're likely to be
-> > applied out of order.
-> 
-> There is no harm in applying this patch on its own. It fixes a legit
-> issue of enabling the parent runtime PM before the child as required
-> by the PM core. Rest of the controller drivers follow the same
-> pattern.
-> 
-> I fail to understand why you want this to be combined with Krishna's
-> patch. That patch is only a trigger, but even without that patch the
-> issue still exists (not user visible ofc).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git doe
+branch HEAD: 86efc62d031307e53ad4011e0aa8898e029cef47  PCI/DOE: Poll DOE Busy bit for up to 1 second in pci_doe_send_req()
 
-I don't want it *combined* with Krishna's patch.
+elapsed time: 1853m
 
-I want this applied *before* Krishna's patch because if we apply
-Krishna's patch first, we have some interval where we report the
-"Enabling runtime PM for inactive device with active children" error.
+configs tested: 106
+configs skipped: 3
 
-Bjorn
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                 nsimosci_hs_smp_defconfig    gcc-14.1.0
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm                                 defconfig    gcc-14.1.0
+arm                          moxart_defconfig    gcc-14.1.0
+arm                        mvebu_v5_defconfig    gcc-14.1.0
+arm                           spitz_defconfig    gcc-14.1.0
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             allmodconfig    clang-18
+i386                              allnoconfig    clang-18
+i386                             allyesconfig    clang-18
+i386        buildonly-randconfig-001-20241015    clang-18
+i386        buildonly-randconfig-002-20241015    clang-18
+i386        buildonly-randconfig-003-20241015    clang-18
+i386        buildonly-randconfig-004-20241015    clang-18
+i386        buildonly-randconfig-005-20241015    clang-18
+i386        buildonly-randconfig-006-20241015    clang-18
+i386                                defconfig    clang-18
+i386                  randconfig-001-20241015    clang-18
+i386                  randconfig-002-20241015    clang-18
+i386                  randconfig-003-20241015    clang-18
+i386                  randconfig-004-20241015    clang-18
+i386                  randconfig-005-20241015    clang-18
+i386                  randconfig-006-20241015    clang-18
+i386                  randconfig-011-20241015    clang-18
+i386                  randconfig-012-20241015    clang-18
+i386                  randconfig-013-20241015    clang-18
+i386                  randconfig-014-20241015    clang-18
+i386                  randconfig-015-20241015    clang-18
+i386                  randconfig-016-20241015    clang-18
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                                defconfig    gcc-14.1.0
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                          ath25_defconfig    gcc-14.1.0
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                        fsp2_defconfig    gcc-14.1.0
+powerpc                   lite5200b_defconfig    gcc-14.1.0
+powerpc                 mpc836x_rdk_defconfig    gcc-14.1.0
+powerpc                      ppc64e_defconfig    gcc-14.1.0
+powerpc64                        alldefconfig    gcc-14.1.0
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                          sdk7780_defconfig    gcc-14.1.0
+sh                             sh03_defconfig    gcc-14.1.0
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-14.1.0
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64                              defconfig    clang-18
+x86_64                                  kexec    gcc-12
+x86_64                               rhel-8.3    gcc-12
+xtensa                            allnoconfig    gcc-14.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
