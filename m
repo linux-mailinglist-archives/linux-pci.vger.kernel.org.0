@@ -1,238 +1,154 @@
-Return-Path: <linux-pci+bounces-14431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1027599C3FD
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:48:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED5299C495
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 11:03:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32D5E1C22293
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 08:48:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2E681F2128B
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 09:03:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD6514B972;
-	Mon, 14 Oct 2024 08:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03EC1552EB;
+	Mon, 14 Oct 2024 09:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnESRwg+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LV+QAYY5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EE51A270;
-	Mon, 14 Oct 2024 08:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C985156C62
+	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 09:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728895696; cv=none; b=S04RvMpCN1jpMSudVyUTF5OTPH1V0JMlJTPtyaWTn9Js/lG0PaqZwxRMUofBuvyayFsRw1b/9oyV11fc2Kqw9vkrAb8Y5fQSI0afn1Be+dPO6n5CJejyTr9iPICbgSswHC1KSq1lOL+MJK/J+/FkgURdsRB/dxphsha7j6QDAzs=
+	t=1728896581; cv=none; b=A7nXw6nHwf9dIHtOd0wjx/9gE+gVPd9K3A00ofo5id69MYWlTo0ZykiuVe5SexPFWHtzikDlmEuRTv8iMY5f9QJTATtNfSpN2ZVTouLyEaVcik1LbGbAdmouSRF3HJiNDIPJhrM4wCi40CnkLDxhlyI+RoHRHuyJPBqOXuRKHUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728895696; c=relaxed/simple;
-	bh=XUlH7SBebbNpINAE+wx39Vw/oLjGTMOCSxxpABkV8L8=;
+	s=arc-20240116; t=1728896581; c=relaxed/simple;
+	bh=2GisIUBe0IEWy+Sau5w4ZmES8kY8GzDvVOOez+Hfq+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vd+P24TWZ/z0MyAXbZccLot7vBdohLjN1Jki8bYq/pSy+iwZa2yFvQhr6liylVl39eHGplBP8Yu890+7Do/mpXhihwzgxkgNHMDV6lbIuw6aygz5NKyt79rC8ogI5xn7bxCxS90BzPelOUBMTDw8UsBbVbM2OR+bl1A/9OI58Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AnESRwg+; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43111cff9d3so29846075e9.1;
-        Mon, 14 Oct 2024 01:48:14 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejtUQLNEUbX5srjl9eaQBNNmr7ihOw1woQsz0YencK25Ivi7LNG0nFhv+FZYAvVbWoWNLkQSy9zMl3c7dOtHxi2BNoCHjq4DKbWki4Ltf7NmTrdmQKpWE2RWs3K8PktD/Mpfz0k9boDrzx4D38+yeB3crQgi8/PAiEBwaBi3lDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LV+QAYY5; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71e453c7408so1546606b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 02:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728895693; x=1729500493; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WPs81oFcWH+51u7WuJEjyNlpMlepy7CsftIdGzaBCYE=;
-        b=AnESRwg+tsl6Y0iwtUqD/9S6JjuvVrJ4KDp9cAhBdwNmhwMMNwE8OjcsDcMEPJZsfA
-         TIDISzj1ahVnQna+Ga5nZVXo35avJvLHQDn7+aN0Un61pC1jZ7UcpYRtkCdteizTs8hG
-         yl8qChvg+3gbY+nLunOHHSENTHqycrY9wlQPER8oC6Nej5oK1wkdj7D0rqTlzPo9i2w9
-         En3hkvKJ4XDe40oihtFC5fs4sncxALhyUL4LJAglHsKkqKkGHHznHAbJVVUJBFJRFtSy
-         ooASuDJ902J4U0gvleVOGOp2166RZ8iSkcjoRg0PT/sNlMcpZdag6tBM+yIv1ZEqHgVG
-         5hFw==
+        d=linaro.org; s=google; t=1728896579; x=1729501379; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=r6BlRxGFAWXdmmWyG/Jl2AYSWcJ7q9f3AYTt/GTL8Vs=;
+        b=LV+QAYY56vzmsVZnIe/UZIbuDRBg4Taz6blK0MKyl4tQcumxn9sEHI4QjThzBFvh4d
+         Pt0kzWhrzkBLP1LoVuj8DpxknUY8GPHUlWrWSeyIH0VRKK/YWSdJBRc/31nUhA1azdAd
+         W/l9DUXMM8cC7ylPFtVy1DRjsFUo/Im6ZbDhT6FO90nPPo234BSa1k2x3ycJ+3wDOdK4
+         QLVP3tXdGeUM5xFbYQ2jFIzTl6cS8bOQRF7Q04jBP1PhiBlj/+qYd1kZCSagJOdh+6k1
+         WaJGspLM6DWbet8DwuAKsPfK2iU/ClakgHeIpyKr/S62fjvVrRwiBmVupx7/Kr6QNg29
+         0G+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728895693; x=1729500493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WPs81oFcWH+51u7WuJEjyNlpMlepy7CsftIdGzaBCYE=;
-        b=igaXWVS+o3vv5FrFmtlS2HTlBsZ+cWAOlOPAGEvbgVaDg32SpOQs/o9T/5HbMhtrD2
-         OSmpCu17aJj2nItQx1E19Xq3M4ZAxcklerjm8C9KseFeUnV88VALqXDblIEUmpABA85M
-         URv5jZCF6gysNWGbLRaTCrpAdM4PSOwgtv2uF+Qm98vSs9LH9rODftWt76Pmup2cnI9h
-         2RkZxXekWttD562GpO12jHfVrFQcCvlPoCI8Lp5zDo3fEtnhBzUXRkoPPK2SzNIvQOLT
-         h1axPt/gsQQ/D9UGWjYOQDQn6fhAdA5JYdEB8Ki9/h/hWtJH0SB0pBsfNsh8te9sZTXJ
-         62tA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC08//rElH73vFqvLkAw88WFc/Xb5WcQko2MYYMmv4Ukto6oOce5XjQHcGm2FcWqqXsgKBT9aSpTL5pPw=@vger.kernel.org, AJvYcCWnvm6WS963ZmslEQQEdauehPt3kzrf3uXE/0k8MO4NtofOdoy3W8m24zDuKwU/1b2MD++0HhVC7/GX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxrw6KEPm8JNwq56qCc44rvfPVBxbJJyf/QTLVfw0AjRAlLh68A
-	67t7TJ2467oe21YY3gucPG6UsjUUFUVQj8QIYVv5hQrSHQO4y9Ii
-X-Google-Smtp-Source: AGHT+IGlBLalOk4/ecKUuRu4nTec1HLQ/slf1/Edv4CqJxEq3RkHgt8/qX/nMWuy9553izNMXfOzrw==
-X-Received: by 2002:a05:600c:3b19:b0:430:54a4:5b03 with SMTP id 5b1f17b1804b1-4311deba4bbmr89399895e9.6.1728895693147;
-        Mon, 14 Oct 2024 01:48:13 -0700 (PDT)
-Received: from eichest-laptop ([2a02:168:af72:0:fd1:3993:f12c:5deb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431182d7bddsm114580875e9.8.2024.10.14.01.48.12
+        d=1e100.net; s=20230601; t=1728896579; x=1729501379;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r6BlRxGFAWXdmmWyG/Jl2AYSWcJ7q9f3AYTt/GTL8Vs=;
+        b=cyMbum58v53HsykrxdwMCbjoA2jdxu01NyjkyTbm1TeorU6lNYiyfiIDiZcKdoVEOU
+         gcmGMhs3XfeHwC5b2iW4dQXoxpGhhraqN5rwKI8hizSkPX1oPYbAYRc1fh5HfNQcGhAc
+         AeYxehQcVOUTtLZCdAAO7wioEjCqw6OkgYzbjCUgIlkCvE/vanvYxvetWUD5RvWn4Kuq
+         xGCMo233Mpv8UAmjANpacSCfmrD918uC/+YNoJEBXdy1mqk/ElKXGj4xWGlDX2ONVGZy
+         nSX+B4ieFOnlnB1Uukv2H6yWFOBSx29OPl6+oxnQEqOZvE3S4zMP9bs0C4++MeQYBQI3
+         vclQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1BQqH0WBdQIj3qn+pETLyq5roXWZ0Z0jNq3lvbULL3fEeeIOhAE0M0K4REvDa6KGg3DCfx4z6yJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykQlo7VMu9/3QhYStvBhec11kxOHyDUbFKlMepZ2dtacN7FV9V
+	Hpev5TscTjYZI/vJ0LJacvGZvBd19z2LOL/QaAEQgr5nmY+d1m4xZLoZIAI4nw==
+X-Google-Smtp-Source: AGHT+IEd4NMKPXw0+kEcZfxjlbat70LgfJ4YvfVvn2VjB+W9S14ALVCgSnHKZNhydjKJLkZrc0GTQg==
+X-Received: by 2002:a05:6a00:1391:b0:71e:ba5:820e with SMTP id d2e1a72fcca58-71e4c1dcd95mr11403576b3a.27.1728896579444;
+        Mon, 14 Oct 2024 02:02:59 -0700 (PDT)
+Received: from thinkpad ([220.158.156.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e6283e9f4sm2013750b3a.187.2024.10.14.02.02.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 01:48:12 -0700 (PDT)
-Date: Mon, 14 Oct 2024 10:48:11 +0200
-From: Stefan Eichenberger <eichest@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, francesco.dolcini@toradex.com, Frank.li@nxp.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: Re: [PATCH v2] PCI: imx6: Add suspend/resume support for i.MX6QDL
-Message-ID: <ZwzayxXuJWc1uhab@eichest-laptop>
-References: <20241009131659.29616-1-eichest@gmail.com>
- <20241012041315.vtmixcxbqwb63kno@thinkpad>
+        Mon, 14 Oct 2024 02:02:59 -0700 (PDT)
+Date: Mon, 14 Oct 2024 14:32:51 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Qiang Yu <quic_qianyu@quicinc.com>, vkoul@kernel.org, kishon@kernel.org,
+	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
+	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add
+ 'global' interrupt
+Message-ID: <20241014090251.r4sfaaxtasokv4oi@thinkpad>
+References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
+ <20241011104142.1181773-4-quic_qianyu@quicinc.com>
+ <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
+ <4802B12B-BAC1-4E99-BDFE-A2340F4A8F24@linaro.org>
+ <3d1d0822-da66-44c8-a328-69804210123c@kernel.org>
+ <65B34B14-76C3-491D-8A58-6D0887889018@linaro.org>
+ <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241012041315.vtmixcxbqwb63kno@thinkpad>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
 
-Hi Mani,
-
-Thanks a lot for the comments.
-
-On Sat, Oct 12, 2024 at 09:43:15AM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Oct 09, 2024 at 03:14:05PM +0200, Stefan Eichenberger wrote:
-> > From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+On Fri, Oct 11, 2024 at 06:06:02PM +0200, Krzysztof Kozlowski wrote:
+> On 11/10/2024 17:51, Manivannan Sadhasivam wrote:
 > > 
-> > The suspend/resume support is broken on the i.MX6QDL platform. This
-> 
-> You mean the 'system suspend/resume'?
-> 
-> > patch resets the link upon resuming to recover functionality. It shares
-> > most of the sequences with other i.MX devices but does not touch the
-> > critical registers, which might break PCIe. This patch addresses the
-> > same issue as the following downstream commit:
-> > https://github.com/nxp-imx/linux-imx/commit/4e92355e1f79d225ea842511fcfd42b343b32995
-> > In comparison this patch will also reset the device if possible. Without
-> > this patch suspend/resume will not work if a PCIe device is connected.
-> > The kernel will hang on resume and print an error:
-> > ath10k_pci 0000:01:00.0: Unable to change power state from D3hot to D0, device inaccessible
-> 
-> Looks like the device is turned off during suspend.
-
-Yes, I don't have a deep understanding about PCIe to be honest. However,
-my understanding is that the PCIe devices will always try to suspend and
-there is no way from the PCIe host controller to prevent this. Or am I
-wrong? Currently suspend is not implemented for the i.MX6Dual/Quad
-variant in the pci-imx6 driver and the device will still be turned off
-by the PCI subsystem. On the other side I don't think it will fix
-anything if I can prevent suspend for the devices because the
-communication will still fail after resume.
-
-> 
-> > 8<--- cut here ---
-> > Unhandled fault: imprecise external abort (0x1406) at 0x0106f944
 > > 
-> > Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
-> > ---
-> > v1 -> v2: Share most code with other i.MX platforms and set suspend
-> > 	  support flag for i.MX6QDL. Version 1 can be found here:
-> > 	  https://lore.kernel.org/all/20240819090428.17349-1-eichest@gmail.com/
+> > On October 11, 2024 9:14:31 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >> On 11/10/2024 17:42, Manivannan Sadhasivam wrote:
+> >>>
+> >>>
+> >>> On October 11, 2024 8:03:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >>>> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
+> >>>>> Document 'global' SPI interrupt along with the existing MSI interrupts so
+> >>>>> that QCOM PCIe RC driver can make use of it to get events such as PCIe
+> >>>>> link specific events, safety events, etc.
+> >>>>
+> >>>> Describe the hardware, not what the driver will do.
+> >>>>
+> >>>>>
+> >>>>> Though adding a new interrupt will break the ABI, it is required to
+> >>>>> accurately describe the hardware.
+> >>>>
+> >>>> That's poor reason. Hardware was described and missing optional piece
+> >>>> (because according to your description above everything was working
+> >>>> fine) is not needed to break ABI.
+> >>>>
+> >>>
+> >>> Hardware was described but not completely. 'global' IRQ let's the controller driver to handle PCIe link specific events like Link up, Link down etc... They improve user experience like the driver can use those interrupts to start bus enumeration on its own. So breaking the ABI for good in this case.
+> >>>
+> >>>> Sorry, if your driver changes the ABI for this poor reason.
+> >>>>
+> >>>
+> >>> Is the above reasoning sufficient? 
+> >>
+> >> I tried to look for corresponding driver change, but could not, so maybe
+> >> there is no ABI break in the first place.
 > > 
-> >  drivers/pci/controller/dwc/pci-imx6.c | 44 +++++++++++++++++++++++++--
-> >  1 file changed, 41 insertions(+), 3 deletions(-)
+> > Here it is:
 > > 
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> > index 808d1f1054173..f33bef0aa1071 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -1238,8 +1238,23 @@ static int imx_pcie_suspend_noirq(struct device *dev)
-> >  
-> >  	imx_pcie_msi_save_restore(imx_pcie, true);
-> >  	imx_pcie_pm_turnoff(imx_pcie);
-> > -	imx_pcie_stop_link(imx_pcie->pci);
-> > -	imx_pcie_host_exit(pp);
-> > +	/*
-> > +	 * Do not turn off the PCIe controller because of ERR003756, ERR004490, ERR005188,
-> > +	 * they all document issues with LLTSSM and the PCIe controller which
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4581403f67929d02c197cb187c4e1e811c9e762a
+> > 
+> >  Above explanation is good, but
+> >> still feels like improvement and device could work without global clock.
 > 
-> LTSSM
+> So there is no ABI break in the first place... Commit is misleading.
 > 
-> But LTSSM is for the PCIe link state, not sure how it impacts controller state.
-> Can you share the link to those erratums?
 
-The erratas are all from this document:
-https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+It increases the 'minItems' to 9 from 8, how come it is not an ABI break?
 
-Only the i.MX 6Dual/6Quad variant is affected but not the newer Plus
-variants.
+- Mani
 
-> 
-> > +	 * does not come out of reset properly. Therefore, try to keep the controller enabled
-> > +	 * and only reset the link. However, the reference clock still needs to be turned off,
-> 
-> You are resetting the *device* below, not the link.
-
-Thanks, I will fix this comment.
-
-> > +	 * else the controller will freeze on resume.
-> > +	 */
-> 
-> Please use 80 columns for comments. Exception is for the code.
-
-Thanks, I will fix this.
-
-> > +	if (imx_pcie->drvdata->variant == IMX6Q) {
-> > +		/* Reset the PCIe device */
-> > +		gpiod_set_value_cansleep(imx_pcie->reset_gpiod, 1);
-> > +
-> > +		if (imx_pcie->drvdata->enable_ref_clk)
-> > +			imx_pcie->drvdata->enable_ref_clk(imx_pcie, false);
-> > +	} else {
-> > +		imx_pcie_stop_link(imx_pcie->pci);
-> > +		imx_pcie_host_exit(pp);
-> > +	}
-> >  
-> >  	return 0;
-> >  }
-> > @@ -1253,6 +1268,28 @@ static int imx_pcie_resume_noirq(struct device *dev)
-> >  	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_SUPPORTS_SUSPEND))
-> >  		return 0;
-> >  
-> > +	/*
-> > +	 * Even though the i.MX6Q does not support proper suspend/resume, we
-> > +	 * need to reset the link after resume or the memory mapped PCIe I/O
-> > +	 * space will be inaccessible. This will cause the system to freeze.
-> > +	 */
-
-Thanks, I will fix this.
-
-> 
-> > +	if (imx_pcie->drvdata->variant == IMX6Q) {
-> > +		if (imx_pcie->drvdata->enable_ref_clk)
-> > +			imx_pcie->drvdata->enable_ref_clk(imx_pcie, true);
-> > +
-> > +		imx_pcie_deassert_core_reset(imx_pcie);
-> 
-> There is no corresponding imx_pcie_assert_core_reset() in suspend.
-
-Thanks, I will try to fix this similar to what they do in the host_init.
-
-> > +
-> > +		/*
-> > +		 * Setup the root complex again and enable msi. Without this PCIe will
-> > +		 * not work in msi mode and drivers will crash if they try to access
-> > +		 * the device memory area
-> > +		 */
-> 
-> This indicates that the controller state is not preserved. I think we need a bit
-> more understanding on what is going on during system suspend on this platform.
-
-Yes I fully agree, but unfortunately I don't really know how to fix it
-properly. I just tried to fix the driver by searching for an absolute
-minimum that is required to make suspend/resume work when a PCIe device
-is connected. As an alternative the downstream patch would do something
-similar but I thought also resetting the device would be a better
-solution (to stay closer to what the other variants do):
-https://github.com/nxp-imx/linux-imx/commit/4e92355e1f79d225ea842511fcfd42b343b32995
-I just now saw that I didn't mention ERR005723 at all, sorry for that.
-If this would be a more acceptable solution I would do some more tests
-with this patch in our setup.
-
-Regards,
-Stefan
+-- 
+மணிவண்ணன் சதாசிவம்
 
