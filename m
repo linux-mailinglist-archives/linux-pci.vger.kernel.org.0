@@ -1,172 +1,162 @@
-Return-Path: <linux-pci+bounces-14426-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14427-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B920199C331
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:28:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F03E99C33A
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:29:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C5931F2636A
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 08:28:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 63CE3B223F5
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 08:29:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABD41158851;
-	Mon, 14 Oct 2024 08:25:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B14215530B;
+	Mon, 14 Oct 2024 08:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqJ/xXNB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PbRNX1Zs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7041215855E;
-	Mon, 14 Oct 2024 08:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8D4153BF8
+	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 08:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728894356; cv=none; b=QaFnLuck6cZfaNP1G+G5xddT560ca9tMEjxkL3oQ591WiRlFf/7jJ+/RZk1intFL+vf74TzDhjRm5YKfJupYNoiHHf2rAXTqHSiulxbjj9ORwINKgh6ZAqZwKRuBTV1m/4szR8TdplpU/oIqRbvDISXe1tLdof8UR4Vb19Qh1zY=
+	t=1728894460; cv=none; b=lkoqXksn6RDz8A6jpNBb3a81kewxsloFX+dn3kn8wbfP5DM1VeVvgsvvdZTaCzQyD7j/KgEfnk6PqUMZlDmDl/y9LdERSqbvpjnTY8N3k1i/8EQ7DiuTfFAS3w/omAStc1AvCifk1w4U6SE7rvSVa05GXA2BTTMS63X3+lqi8KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728894356; c=relaxed/simple;
-	bh=u7YfSWegyPPOTNPrJniGqPQMCIlA47Jb7N5EXK91ZEc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A2BiUAGfB6p3g7k7Xn34OZQzvkhhdphQ+45R7ogkCRtyG3Sp6lqVUe86CVzExg3+c8q0vjGIdF2g0z9PQtqqv+gvr5cki6nkQwMZSSznpJivoGJpD4v6VjbuVqypQWjCj/oXpsokATlqeabBSKIKpSkK2U/e3Ng0g/463elvfcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqJ/xXNB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0282DC4CED0;
-	Mon, 14 Oct 2024 08:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728894356;
-	bh=u7YfSWegyPPOTNPrJniGqPQMCIlA47Jb7N5EXK91ZEc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mqJ/xXNBkhAm5ZmVGkzbAlnXMcg27Pjen/y5+tjZ32b3fi3kHD2i1UY76bdtcdAS0
-	 r9b4K4Jho5iDsabAFMORTHrZcfuygeBhuTtMp7rvL7tdI9c4ZSbYelRylF7BraOvWr
-	 RMAXYG8ePhqSXZnZMBVbfJ/FhMTbpNcx3SwR6i2tSIU8DxPXK1kkx0mVQH5fdSBJDV
-	 WaaBUUNHk8C/H34ltphBtZhLsflHA5/9evMcykiAhXkQSq1hGRqwLDTI2DxF8PQA+2
-	 S8UjUuqmApGRSUKieY1Jn0J3ZZdvarFqBzJr/sEMeRAxnzAEqrP/IqaiTUHEDUQWpy
-	 UKUHmQC76hMYQ==
-Message-ID: <d16a2dca-5b96-4b72-bd79-6ad2960fdb5e@kernel.org>
-Date: Mon, 14 Oct 2024 10:25:47 +0200
+	s=arc-20240116; t=1728894460; c=relaxed/simple;
+	bh=TJzj3Ji7bLkY42Y0Qiq/OYG4j5c51i9ljEt10a3JImU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HxKM5EKIv85b/trgSLDmiMjIcPZUrHRO/OQ+Bi+56xUevIeHffArBWKlCRToPxl/YJsHVm3xT9dNSU3KUG+nyLiD98LOs02TPIzAQGFcBGpLmKz3IwDXhHdMf42Zw/i8kqBFaxVVi+m4CvWkRx38iBMyPgqdGxGcZFTVlP3F9V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PbRNX1Zs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728894457;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TJzj3Ji7bLkY42Y0Qiq/OYG4j5c51i9ljEt10a3JImU=;
+	b=PbRNX1ZshN58cYiRytLHe2zuQ+/6rP//QQiSNZCDMlp8SYuS0/B91Aw2FtcjALj5zjxvak
+	jjAirUG570CEmOaIbvA0uByYjfY5PsD60vRsn7XnD3XWNOtGENlrhcygG9HffuR25Ac8MC
+	hMEFAstQLbijM1s+npqa6gdGUXP8AUI=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-125-Njz4c2txPTa3yuJ8ZXkRlA-1; Mon, 14 Oct 2024 04:27:36 -0400
+X-MC-Unique: Njz4c2txPTa3yuJ8ZXkRlA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a995056fadcso251861666b.1
+        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 01:27:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728894455; x=1729499255;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TJzj3Ji7bLkY42Y0Qiq/OYG4j5c51i9ljEt10a3JImU=;
+        b=PjoxeGOsAF2k7d3Sm/Un7b/QBQSbMKGf/5WUK7L0KZ/wl6UCeX88oYS0Qz9JCG/emO
+         S78WCnWOVRfka03Xk5qBW+2Y3W2hN0K6iD2JP5oYZ3UYtjEulEnaLuISGaXtk43zp3/O
+         BQiJ3cRJ54/ttLEBrKMhRz4RL0oRp6p+s8lB4Wl2HNtf81TQjVsSxu1vO7TEcj2D2UFS
+         jcx6O1dT8yo/18NVaLVNVTNFVPjEDjB8Z5N/zJ8ZRUo+iXTOd/aCO8YpDq1YhneKuLsA
+         T5OoVgZxwktt1FU7iMaghLRzeGjCySwe/J7GpUJEP77B8IKp37YCnEGshSPtcpRdIZtb
+         TXdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfv2rRgPAU2QZNejmjuCDGZUIQqtdglFzgHPeUCg0bmmIxJXwI7A6uZOIVu3BNxwEXEEXbidxPQAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRaNQYhv9JqLSg2ElT3t2rZI8qoJtwGYfi5v112ZMT/itHzPFt
+	jcSwW6QgoTbpUZYCz58CN2gZrK2ovs0TcvKfpLP6u+/0jT+xLVBozauztxItXxopI9eZMHgycTv
+	cUNuLFC9eRQXK/AC7acyY8V2PuDSYGz6qTJD6GZfO+QjuC9OEIH/tKstF7g==
+X-Received: by 2002:a17:907:d03:b0:a8d:3d36:3169 with SMTP id a640c23a62f3a-a99b95e99afmr1010125666b.63.1728894454864;
+        Mon, 14 Oct 2024 01:27:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IET06hligI0OlzzqWIT8Zxv8HD0sGUV38UYd28vMXZeTZMRv5ATRNZ8cQQeTW6fnRICTxBimQ==
+X-Received: by 2002:a17:907:d03:b0:a8d:3d36:3169 with SMTP id a640c23a62f3a-a99b95e99afmr1010120866b.63.1728894454431;
+        Mon, 14 Oct 2024 01:27:34 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3? (200116b82d3798001d5778cfc1aeb0b3.dip.versatel-1u1.de. [2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a0edb1a00sm113812666b.128.2024.10.14.01.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 01:27:34 -0700 (PDT)
+Message-ID: <e612ef6af75929fa874817e6e8b4b69473af8051.camel@redhat.com>
+Subject: Re: [PATCH v7 4/5] gpio: Replace deprecated PCI functions
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix
+ <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
+ <yilun.xu@intel.com>,  Andy Shevchenko <andy@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard
+ Cochran <richardcochran@gmail.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Hannes Reinecke <hare@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,  Keith
+ Busch <kbusch@kernel.org>, Li Zetao <lizetao1@huawei.com>,
+ linux-block@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-fpga@vger.kernel.org,  linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,  Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Date: Mon, 14 Oct 2024 10:27:32 +0200
+In-Reply-To: <CAMRc=Me8U+7EwNDEh2RJJD8+FTPqO-CbwG_fiDmHLpjxh33o5w@mail.gmail.com>
+References: <20241014075329.10400-1-pstanner@redhat.com>
+	 <20241014075329.10400-5-pstanner@redhat.com>
+	 <CAMRc=McAfEPM0b0m6oYUO9_RC=qTd1vsg4wMn1Hb4jYQbx4irA@mail.gmail.com>
+	 <dc9d7bd817e5c8bc88b0b8dfffcf83b2676cc225.camel@redhat.com>
+	 <CAMRc=Me8U+7EwNDEh2RJJD8+FTPqO-CbwG_fiDmHLpjxh33o5w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global'
- interrupt
-To: Qiang Yu <quic_qianyu@quicinc.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
- abel.vesa@linaro.org, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com,
- dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
- neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
- <20241011104142.1181773-4-quic_qianyu@quicinc.com>
- <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
- <4802B12B-BAC1-4E99-BDFE-A2340F4A8F24@linaro.org>
- <3d1d0822-da66-44c8-a328-69804210123c@kernel.org>
- <65B34B14-76C3-491D-8A58-6D0887889018@linaro.org>
- <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
- <96816abb-4e0d-4c60-8ae6-b5a5cd796e99@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <96816abb-4e0d-4c60-8ae6-b5a5cd796e99@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 14/10/2024 09:50, Qiang Yu wrote:
-> 
-> On 10/12/2024 12:06 AM, Krzysztof Kozlowski wrote:
->> On 11/10/2024 17:51, Manivannan Sadhasivam wrote:
->>>
->>> On October 11, 2024 9:14:31 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>> On 11/10/2024 17:42, Manivannan Sadhasivam wrote:
->>>>>
->>>>> On October 11, 2024 8:03:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>>> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
->>>>>>> Document 'global' SPI interrupt along with the existing MSI interrupts so
->>>>>>> that QCOM PCIe RC driver can make use of it to get events such as PCIe
->>>>>>> link specific events, safety events, etc.
->>>>>> Describe the hardware, not what the driver will do.
->>>>>>
->>>>>>> Though adding a new interrupt will break the ABI, it is required to
->>>>>>> accurately describe the hardware.
->>>>>> That's poor reason. Hardware was described and missing optional piece
->>>>>> (because according to your description above everything was working
->>>>>> fine) is not needed to break ABI.
->>>>>>
->>>>> Hardware was described but not completely. 'global' IRQ let's the controller driver to handle PCIe link specific events like Link up, Link down etc... They improve user experience like the driver can use those interrupts to start bus enumeration on its own. So breaking the ABI for good in this case.
->>>>>
->>>>>> Sorry, if your driver changes the ABI for this poor reason.
->>>>>>
->>>>> Is the above reasoning sufficient?
->>>> I tried to look for corresponding driver change, but could not, so maybe
->>>> there is no ABI break in the first place.
->>> Here it is:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4581403f67929d02c197cb187c4e1e811c9e762a
->>>
->>>   Above explanation is good, but
->>>> still feels like improvement and device could work without global clock.
->> So there is no ABI break in the first place... Commit is misleading.
-> OK, will remove the description about ABI break in commit message. But may
+On Mon, 2024-10-14 at 10:15 +0200, Bartosz Golaszewski wrote:
+> On Mon, Oct 14, 2024 at 10:08=E2=80=AFAM Philipp Stanner
+> <pstanner@redhat.com> wrote:
+> >=20
+> > On Mon, 2024-10-14 at 09:59 +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Oct 14, 2024 at 9:53=E2=80=AFAM Philipp Stanner
+> > > <pstanner@redhat.com>
+> > > wrote:
+> > > >=20
+> > > > pcim_iomap_regions() and pcim_iomap_table() have been
+> > > > deprecated by
+> > > > the
+> > > > PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> > > > pcim_iomap_table(), pcim_iomap_regions_request_all()").
+> > > >=20
+> > > > Replace those functions with calls to pcim_iomap_region().
+> > > >=20
+> > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > > > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > > > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > ---
+> > >=20
+> > > This is part of a larger series so I acked it previously but at
+> > > second
+> > > glance it doesn't look like it depends on anything that comes
+> > > before?
+> > > Should it have been sent separately to the GPIO tree? Should I
+> > > pick
+> > > it
+> > > up independently?
+> >=20
+> > Thx for the offer, but it depends on pcim_iounmap_region(), which
+> > only
+> > becomes a public symbol through patch No.1 of this series :)
+> >=20
+>=20
+> Then a hint: to make it more obvious to maintainers, I'd change the
+> commit title for patch 1 to say explicitly it makes this function
+> public. In fact: I'd split it and the deprecation into two separate
+> patches.
 
-Describe real effects. You got comments about ABI impact before, right?
-So if you remove this, how previous feedback is addressed?
+Yeah, good idea. The maintainer could squash then if two atomic patches
+are deemed undesirable.
 
+Noted.
+Thank you!
+P.
 
-> I know in which case ABI will be broken by adding an interrupt in bingdings
-> and what ABI will be broken?
-
-Users of ABI stop working.
-
-Best regards,
-Krzysztof
+>=20
+> Bart
+>=20
 
 
