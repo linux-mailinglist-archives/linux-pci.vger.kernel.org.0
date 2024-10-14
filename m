@@ -1,269 +1,150 @@
-Return-Path: <linux-pci+bounces-14481-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14482-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B06C299D404
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 17:57:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7EDF99D3CB
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 17:46:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82A3AB254F4
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:43:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84ABC1F21523
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B97571C0DCB;
-	Mon, 14 Oct 2024 15:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86C703EA98;
+	Mon, 14 Oct 2024 15:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="i1RkyCDs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rECCMoVh";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="i1RkyCDs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rECCMoVh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B05UN3kA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD8E83A14;
-	Mon, 14 Oct 2024 15:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6E1175B1;
+	Mon, 14 Oct 2024 15:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728920470; cv=none; b=nmHwiNMV52WmGlNuWVYSK6gr1J6oBPAoyA2kJ0KBNwYOXF2XEAu9c/eo1XvP+hBPJfBQoWLrURIFdxmu64zI5rqF7Fn9lar8QoK13VdzsFhDtXhzJKu1LWxCp3nV+bfG1oZ9hkktLvAmPBO+oH+J+jFJ9yGRe/vQJPlBQS/4znw=
+	t=1728920748; cv=none; b=k9ODE5zTKKwY39bL1ghTu+7Vz0voM5QI+kz5Oma3OsdwHVu2iX2rv44Ytx1LB9dt6yIW4w/EBswcCO9zrqfUjC4pVcn6WV/A4oelRYzZl+XPnSMcGt418Eww3hBNk9QTbra1X2BhRsQ8YlUoOiasc86hVdaPV6LL4swUsVw1MFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728920470; c=relaxed/simple;
-	bh=+VBu3zagKcK6w+UgcxicDjXDUho5UjsJmz0KtxTye6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQ3jTnrWf8XYDdrMEKfb79OwYObjzmXfoSPbVPGZez+9GkOvf4o21WPMynmpTehC1hvtuj90gcVXTgzIoMucGCD8+pizsMcN7Qdn0dEkCJ2AJDcbJk1boMxjdm749pGhrPWmGTq+ycumR/9ODyGAdq7hT12+ffD3LeUkhjcX9T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=i1RkyCDs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rECCMoVh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=i1RkyCDs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rECCMoVh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1637C1F80B;
-	Mon, 14 Oct 2024 15:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728920467; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lWLVJk3sxq76pmdkakLZ23+Lq6++B+EeSNXoL3gBhsU=;
-	b=i1RkyCDs99yzTOAWQjhH4Bc1yEMagxKMLapWBgkOnW+UdFKJygNA1GN36AzLqi6tYj5sq6
-	pERNfQ/2MDpiTYMr5BmaUnXs+saFgv3tcqx09f1xZJGcb7zhYOPPBJvikdRhSmSJjyLWyU
-	+N4/1I05dcKHRanLIklrYWy8W6jupP4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728920467;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lWLVJk3sxq76pmdkakLZ23+Lq6++B+EeSNXoL3gBhsU=;
-	b=rECCMoVhtfQFX2DilrjBgvvluiKQL04hU9i+iM1XueOHmt4ibg8lfbWJGCXlToPdt2QSpN
-	gHUb33abFAH4kiAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=i1RkyCDs;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=rECCMoVh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728920467; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lWLVJk3sxq76pmdkakLZ23+Lq6++B+EeSNXoL3gBhsU=;
-	b=i1RkyCDs99yzTOAWQjhH4Bc1yEMagxKMLapWBgkOnW+UdFKJygNA1GN36AzLqi6tYj5sq6
-	pERNfQ/2MDpiTYMr5BmaUnXs+saFgv3tcqx09f1xZJGcb7zhYOPPBJvikdRhSmSJjyLWyU
-	+N4/1I05dcKHRanLIklrYWy8W6jupP4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728920467;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lWLVJk3sxq76pmdkakLZ23+Lq6++B+EeSNXoL3gBhsU=;
-	b=rECCMoVhtfQFX2DilrjBgvvluiKQL04hU9i+iM1XueOHmt4ibg8lfbWJGCXlToPdt2QSpN
-	gHUb33abFAH4kiAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C98813A51;
-	Mon, 14 Oct 2024 15:41:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id E5GYO5E7DWctfgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 14 Oct 2024 15:41:05 +0000
-Message-ID: <c3546c71-46d9-4999-8e53-8e8babd4bb35@suse.de>
-Date: Mon, 14 Oct 2024 18:41:01 +0300
+	s=arc-20240116; t=1728920748; c=relaxed/simple;
+	bh=NV3daSXdDYmEG8Lr0Ex4MIWgg+SUR7cPY5VoPueLcsE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kOwUdkIr+MvjPpbVPjjVcxDqlbtVfbrTKSX23yTFs0a/mdIDGNmLdwuojKKPMDUkMC+glnrUPxsEwWlK30AB8IRoAptB2lmMCLTgr8At86RxL6KAqwWjBT8iDHnUUqHzBiJeGBTbcdvajfwKN4sPWX58BYiQRNBajvl/zL5QVw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B05UN3kA; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2e2ab5bbc01so788831a91.2;
+        Mon, 14 Oct 2024 08:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728920746; x=1729525546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=urBdkgegMF7XQRvU3yEsW/lOkG2RPkpWnSJ5/Oj21Uo=;
+        b=B05UN3kAceDozoC3vqveVXXo0kK0Xr8ImEpBc0+amPq8odFWp4auAPfD5owqa0b34W
+         diShDtnXOEMqhyCbtSmdzDqpyB/smTScPqDz7OyAKkyh/6WVeUKqw1MNBg0MGZOB+SpQ
+         vy0qYghYA1AWUjxu6htJk5n/QWLIsAQDj7opJlSOkHKYtQZFs9gD0ds1TyxzjXNJPd5z
+         s0M7wkIwGVfNQnxwAr6TsZ6lGxqKIwa91ygEIwo5k4eeoDTSQCosUrsI1mZAY3ruLagR
+         tc13CQInx1/pBvU3brSNB1NvWpwp79i3FfaW75xq709e8J+l1hJ9kaqOukgxujz+BJkE
+         lKYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728920746; x=1729525546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=urBdkgegMF7XQRvU3yEsW/lOkG2RPkpWnSJ5/Oj21Uo=;
+        b=Aozyzaw2uFqTQl9hYNIjHB63ZtNn9VJ25Mel/Hdc438aZsgI0xUxQU/v/NH7N1+LwV
+         750m0j5dgEIJ/eKH7sV0dIwHlX9dTpZrDAZJNGWcYF2YncEGZ2mpxAVDcB8PwW2X7scA
+         oHXK7pNuRiLHe0s213vcMPM9rSlf7o4dvxuXI15PTdQECWVh3HH3GZqsssjDeklMohBq
+         9qjx+IKNsQPgsgiq2Mjvs/hKQv3owtjwhBbxQQMHWocCXF6etKI8JahnNGfsLzoPnfNi
+         cjURbrMOt/m8EvGSIp/8xZDHbVknVfZCoZuRfBbu4IdaTd1Xk4tayDE83hyDBABUCuCK
+         n99Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWMTR7t3MGNrvTaIGqkez7zuiFHZbmVEDOhZyaorQ+URq7K+NX0xtbQfkieQlkOZaFBoLvgCJcbSvKJsGg=@vger.kernel.org, AJvYcCWo4BA5CsIIM+4gs2ZIi6XQenS/rGxjvkJ5VZgrG/wTEalnBA8AbTvsAintrg3v+hvjsWORaqylC3vC@vger.kernel.org
+X-Gm-Message-State: AOJu0YztbF/VQV7J6JlFKCdnmzg25WsuSmRvk4Ac4DJdSR6xGXdd8r4/
+	LIVnBdcRqGXbBf/76D4vvRc1zH0MwGxQKLthYLZP9rOqpHN6wpOGKZciDc2voa7rbZVr3gRDygc
+	ZANEJVKmUD5hgrC6m8WSRW7DSKCM=
+X-Google-Smtp-Source: AGHT+IFsBRoPEXbTXS5Ff46RFH5X1jTMu4OeBPJkvDso2hrabHpmHawU+KMeOBCQH9atwTLfKwg8xP9P9VMxCT5ReGE=
+X-Received: by 2002:a17:90a:474f:b0:2e1:682b:361e with SMTP id
+ 98e67ed59e1d1-2e2f0c3b7e4mr5933462a91.4.1728920746330; Mon, 14 Oct 2024
+ 08:45:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/11] Add PCIe support for bcm2712
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Stanimir Varbanov <svarbanov@suse.de>
-Cc: Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Jonathan Bell <jonathan@raspberrypi.com>, Jim Quinlan
- <jim2101024@gmail.com>, linux-rpi-kernel@lists.infradead.org, kw@linux.com,
- Andrea della Porta <andrea.porta@suse.com>, devicetree@vger.kernel.org,
- Phil Elwell <phil@raspberrypi.com>, Thomas Gleixner <tglx@linutronix.de>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Conor Dooley <conor+dt@kernel.org>
-References: <20241014130710.413-1-svarbanov@suse.de>
- <172891445648.1127418.3673645217921706886.robh@kernel.org>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <172891445648.1127418.3673645217921706886.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1637C1F80B
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[broadcom.com,kernel.org,google.com,vger.kernel.org,raspberrypi.com,gmail.com,lists.infradead.org,linux.com,suse.com,linutronix.de,pengutronix.de];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,devicetree.org:url]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+References: <20241014152502.1477809-1-superm1@kernel.org>
+In-Reply-To: <20241014152502.1477809-1-superm1@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 14 Oct 2024 11:45:34 -0400
+Message-ID: <CADnq5_PCHZtmGN4Frknz+10xVMypwpDuW7_kYbTmvihcayCPew@mail.gmail.com>
+Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot
+ VGA device
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	dri-devel@lists.freedesktop.org, 
+	Mario Limonciello <mario.limonciello@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	"Luke D . Jones" <luke@ljones.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Oct 14, 2024 at 11:25=E2=80=AFAM Mario Limonciello <superm1@kernel.=
+org> wrote:
+>
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display device=
+.
+>
+> ```
+> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeForce RTX=
+ 4070 Max-Q / Mobile] (rev a1)
+> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Strix =
+[Radeon 880M / 890M] (rev c1)
+> ```
 
+For clarity, the iGPU is not a VGA class device.  The "primary" should
+not have any dependency on the VGA PCI class, but I'm not sure how
+exactly the kernel handles this case.  In this case, the primary
+should be the iGPU which is not a VGA PCI class device.
 
-On 10/14/24 17:05, Rob Herring (Arm) wrote:
-> 
-> On Mon, 14 Oct 2024 16:06:59 +0300, Stanimir Varbanov wrote:
->> Hello,
->>
->> Here is v3 the series to add support for PCIe on bcm2712 SoC
->> used by RPi5. Previous v2 can be found at [1].
->>
->> v2 -> v3 changes include:
->>  - Added Reviewed-by/Acked-by tags.
->>  - MIP MSI-X driver has been converted to MSI parent.
->>  - Added a new patch for PHY PLL adjustment need to succesfully
->>    enumerate PCIe endpoints on extension connector (tested with
->>    Pineboards AI Bundle + NVME SSD adapter card).
->>  - Re-introduced brcm,msi-offset DT private property for MIP
->>    interrupt-controller (without it I'm anable to use the interrupts
->>    of adapter cards on PCIe enxtension connector).
->>
->> For more info check patches.
->>
->> [1] https://patchwork.kernel.org/project/linux-pci/cover/20240910151845.17308-1-svarbanov@suse.de/
->>
->> Stanimir Varbanov (11):
->>   dt-bindings: interrupt-controller: Add bcm2712 MSI-X DT bindings
->>   dt-bindings: PCI: brcmstb: Update bindings for PCIe on bcm2712
->>   irqchip: mip: Add Broadcom bcm2712 MSI-X interrupt controller
->>   PCI: brcmstb: Expand inbound size calculation helper
->>   PCI: brcmstb: Enable external MSI-X if available
->>   PCI: brcmstb: Avoid turn off of bridge reset
->>   PCI: brcmstb: Add bcm2712 support
->>   PCI: brcmstb: Reuse config structure
->>   PCI: brcmstb: Adjust PHY PLL setup to use a 54MHz input refclk
->>   arm64: dts: broadcom: bcm2712: Add PCIe DT nodes
->>   arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
->>
->>  .../brcm,bcm2712-msix.yaml                    |  60 ++++
->>  .../bindings/pci/brcm,stb-pcie.yaml           |   5 +-
->>  .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |   8 +
->>  arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 160 +++++++++
->>  drivers/irqchip/Kconfig                       |  16 +
->>  drivers/irqchip/Makefile                      |   1 +
->>  drivers/irqchip/irq-bcm2712-mip.c             | 308 ++++++++++++++++++
->>  drivers/pci/controller/pcie-brcmstb.c         | 197 ++++++++---
->>  8 files changed, 707 insertions(+), 48 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
->>  create mode 100644 drivers/irqchip/irq-bcm2712-mip.c
->>
->> --
->> 2.43.0
->>
->>
->>
-> 
-> 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->   pip3 install dtschema --upgrade
-> 
-> 
-> New warnings running 'make CHECK_DTBS=y broadcom/bcm2712-rpi-5-b.dtb' for 20241014130710.413-1-svarbanov@suse.de:
+Alex
 
-Sorry about that. I forgot to update brcm,stb-pcie.yaml schema for
-number of resets.
-
-~Stan
-
-> 
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@100000: resets: [[12, 42], [13]] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@100000: reset-names:0: 'rescal' was expected
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@100000: reset-names:1: 'bridge' was expected
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@100000: reset-names: ['bridge', 'rescal'] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@110000: 'msi-controller' is a required property
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@110000: resets: [[12, 43], [13]] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@110000: reset-names:0: 'rescal' was expected
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@110000: reset-names:1: 'bridge' was expected
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@110000: reset-names: ['bridge', 'rescal'] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@120000: 'msi-controller' is a required property
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@120000: resets: [[12, 44], [13]] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@120000: reset-names:0: 'rescal' was expected
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@120000: reset-names:1: 'bridge' was expected
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@120000: reset-names: ['bridge', 'rescal'] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> 
-> 
-> 
-> 
-> 
+>
+> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU as the
+> boot VGA device, but really the eDP is connected to the AMD PCI display
+> device.
+>
+> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA device.
+>
+> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+> Reported-by: Luke D. Jones <luke@ljones.dev>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/vgaarb.c | 7 -------
+>  1 file changed, 7 deletions(-)
+>
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 78748e8d2dba..05ac2b672d4b 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_device *vg=
+adev)
+>                 return true;
+>         }
+>
+> -       /*
+> -        * Vgadev has neither IO nor MEM enabled.  If we haven't found an=
+y
+> -        * other VGA devices, it is the best candidate so far.
+> -        */
+> -       if (!boot_vga)
+> -               return true;
+> -
+>         return false;
+>  }
+>
+> --
+> 2.43.0
+>
 
