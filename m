@@ -1,132 +1,172 @@
-Return-Path: <linux-pci+bounces-14425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA5599C2CA
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:16:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B920199C331
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E2D81C255E6
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 08:16:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C5931F2636A
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 08:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC23514D70F;
-	Mon, 14 Oct 2024 08:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABD41158851;
+	Mon, 14 Oct 2024 08:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="p0qNWgk7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqJ/xXNB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F1914B077
-	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 08:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7041215855E;
+	Mon, 14 Oct 2024 08:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728893763; cv=none; b=BvC6Y513BGs3ZcZD2ytWf9fhBVddt8G5Qw0z36ybfw+3RKenwuZ6WKIhQxf22ADeEDhmZMluHNFoYMBhesuHdipYQUIZ2C1UwWND3fNMCf8Nrrbh13HWnALRn2p+rwDuSSGSaEae8kiZZ42FlnLPVcibEN8B7R5Lf15g2Vo2fps=
+	t=1728894356; cv=none; b=QaFnLuck6cZfaNP1G+G5xddT560ca9tMEjxkL3oQ591WiRlFf/7jJ+/RZk1intFL+vf74TzDhjRm5YKfJupYNoiHHf2rAXTqHSiulxbjj9ORwINKgh6ZAqZwKRuBTV1m/4szR8TdplpU/oIqRbvDISXe1tLdof8UR4Vb19Qh1zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728893763; c=relaxed/simple;
-	bh=ZgDKMVeLxznmFf5ZCrSGz0IvyrvooVbXTGlKGwkLa+s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=id/Wqy/50R8BPRACbkqI0wCSVwa64AlP0hohkdWWqyOVhW+MWhxoXNQgkvTy2H01Do7wMb70yzdqq1gv97HQ1ykjLa3oq72V7QviN3eP03lvW1BtD9tdzEsfivWY5wYx6UOZGlO2lFeWNnU2AW3tmzaAQWZRRi3T9Hl8X92Br24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=p0qNWgk7; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-539e4b7409fso1796795e87.0
-        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 01:16:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728893760; x=1729498560; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZgDKMVeLxznmFf5ZCrSGz0IvyrvooVbXTGlKGwkLa+s=;
-        b=p0qNWgk7lgNR73CDmbKNCe8carjDxZi5xf7N5xFzH/WMMVlLSUad0tKT9vbRpGgrsk
-         fK8g/NCV+Ewiq8Ax+HaeaRtSqErxlSJXzqCDz9i5XSFO3po2Q52HsuKbwjx8sGmTYMt1
-         nH1K8Y4OlmzNA9OE7/2r3CFiXSvo9JfE/ThDXDZBw/6GF/+yTJWyN87w85pqTL0A89Mj
-         1+fcgL5kStWyCjlHDZOiauonOZ0xlxafbmCsZAvnktDvHAN8kgi4tPwur68F0YWSz+HN
-         TWSZq7iKZBsBQFatlhV079Dkw3CH0E+DR3x4Uc8Bm+B7dDKfBDZtFGMurW/rJkvmO9h/
-         zaTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728893760; x=1729498560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZgDKMVeLxznmFf5ZCrSGz0IvyrvooVbXTGlKGwkLa+s=;
-        b=fdxUqddwwwytPQGX6AGUWnPx1haVbZzccono/bnS89GTQSKZDydH3II2c+ekbIsN5X
-         EzIBqRv01I6zSBj7HoxfwzhLF9QqMqLNj3MfjCIEYjWH/tg23fm8WHLLYA/lNbnXfKk8
-         BgvuXHEwclFJPRfJLVtECGviZZuJ7ksAjed6gSv4bllBv+E37nSy1O3gpYJ7CzO8ZvHQ
-         419tocWSL4lPjYxlC8AOqe22TZR9i0wDG2V1BOJ4TW2j6krhyGAWIkG1HQKw2pVPfLbK
-         +XeLb+oleM7bIy8VpAwwXrBA5C158TeO4g3TPx9VP9pEQlvF6sWOmdHVNxPoLvRQn4YJ
-         GCpw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9jZqEHF7fdPaIg3Sxbr00YpVW5Fnw3h5Qy4y3acCM9fmzhNi0U8UVLs/TPVXEyI3qTgY/JnWc2rs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIfuqHivWcz9hpuUgicwOi5L3iiPkFj1sEtSK+kbVGhghMd4pC
-	sBdJNjxsjWjTmlf+RsNkXD8oYNsR3oduMUZOMCUfaPg3MnMHvdq1+BbTKIrNTWLAtnSVA2UeMIW
-	A67ug7RAVq7Z40hJYGpgESI/tWwnjwin7ONqmmw==
-X-Google-Smtp-Source: AGHT+IHdDAIjXYd2S69FLZv9SLr0zTg0livk5nl6SwOydMcHkiUKTf2/hmy4fWdIKBPYwmr/c88DMXlSKUPi9UaNRr0=
-X-Received: by 2002:a05:6512:3d1e:b0:539:9f5f:efd5 with SMTP id
- 2adb3069b0e04-539c98b923dmr4809047e87.26.1728893760273; Mon, 14 Oct 2024
- 01:16:00 -0700 (PDT)
+	s=arc-20240116; t=1728894356; c=relaxed/simple;
+	bh=u7YfSWegyPPOTNPrJniGqPQMCIlA47Jb7N5EXK91ZEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A2BiUAGfB6p3g7k7Xn34OZQzvkhhdphQ+45R7ogkCRtyG3Sp6lqVUe86CVzExg3+c8q0vjGIdF2g0z9PQtqqv+gvr5cki6nkQwMZSSznpJivoGJpD4v6VjbuVqypQWjCj/oXpsokATlqeabBSKIKpSkK2U/e3Ng0g/463elvfcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqJ/xXNB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0282DC4CED0;
+	Mon, 14 Oct 2024 08:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728894356;
+	bh=u7YfSWegyPPOTNPrJniGqPQMCIlA47Jb7N5EXK91ZEc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mqJ/xXNBkhAm5ZmVGkzbAlnXMcg27Pjen/y5+tjZ32b3fi3kHD2i1UY76bdtcdAS0
+	 r9b4K4Jho5iDsabAFMORTHrZcfuygeBhuTtMp7rvL7tdI9c4ZSbYelRylF7BraOvWr
+	 RMAXYG8ePhqSXZnZMBVbfJ/FhMTbpNcx3SwR6i2tSIU8DxPXK1kkx0mVQH5fdSBJDV
+	 WaaBUUNHk8C/H34ltphBtZhLsflHA5/9evMcykiAhXkQSq1hGRqwLDTI2DxF8PQA+2
+	 S8UjUuqmApGRSUKieY1Jn0J3ZZdvarFqBzJr/sEMeRAxnzAEqrP/IqaiTUHEDUQWpy
+	 UKUHmQC76hMYQ==
+Message-ID: <d16a2dca-5b96-4b72-bd79-6ad2960fdb5e@kernel.org>
+Date: Mon, 14 Oct 2024 10:25:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241014075329.10400-1-pstanner@redhat.com> <20241014075329.10400-5-pstanner@redhat.com>
- <CAMRc=McAfEPM0b0m6oYUO9_RC=qTd1vsg4wMn1Hb4jYQbx4irA@mail.gmail.com> <dc9d7bd817e5c8bc88b0b8dfffcf83b2676cc225.camel@redhat.com>
-In-Reply-To: <dc9d7bd817e5c8bc88b0b8dfffcf83b2676cc225.camel@redhat.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 14 Oct 2024 10:15:49 +0200
-Message-ID: <CAMRc=Me8U+7EwNDEh2RJJD8+FTPqO-CbwG_fiDmHLpjxh33o5w@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] gpio: Replace deprecated PCI functions
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, 
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Richard Cochran <richardcochran@gmail.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Keith Busch <kbusch@kernel.org>, Li Zetao <lizetao1@huawei.com>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global'
+ interrupt
+To: Qiang Yu <quic_qianyu@quicinc.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+ abel.vesa@linaro.org, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com,
+ dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
+ neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
+ <20241011104142.1181773-4-quic_qianyu@quicinc.com>
+ <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
+ <4802B12B-BAC1-4E99-BDFE-A2340F4A8F24@linaro.org>
+ <3d1d0822-da66-44c8-a328-69804210123c@kernel.org>
+ <65B34B14-76C3-491D-8A58-6D0887889018@linaro.org>
+ <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
+ <96816abb-4e0d-4c60-8ae6-b5a5cd796e99@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <96816abb-4e0d-4c60-8ae6-b5a5cd796e99@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 14, 2024 at 10:08=E2=80=AFAM Philipp Stanner <pstanner@redhat.c=
-om> wrote:
->
-> On Mon, 2024-10-14 at 09:59 +0200, Bartosz Golaszewski wrote:
-> > On Mon, Oct 14, 2024 at 9:53=E2=80=AFAM Philipp Stanner <pstanner@redha=
-t.com>
-> > wrote:
-> > >
-> > > pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
-> > > the
-> > > PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> > > pcim_iomap_table(), pcim_iomap_regions_request_all()").
-> > >
-> > > Replace those functions with calls to pcim_iomap_region().
-> > >
-> > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> > > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> >
-> > This is part of a larger series so I acked it previously but at
-> > second
-> > glance it doesn't look like it depends on anything that comes before?
-> > Should it have been sent separately to the GPIO tree? Should I pick
-> > it
-> > up independently?
->
-> Thx for the offer, but it depends on pcim_iounmap_region(), which only
-> becomes a public symbol through patch No.1 of this series :)
->
+On 14/10/2024 09:50, Qiang Yu wrote:
+> 
+> On 10/12/2024 12:06 AM, Krzysztof Kozlowski wrote:
+>> On 11/10/2024 17:51, Manivannan Sadhasivam wrote:
+>>>
+>>> On October 11, 2024 9:14:31 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>> On 11/10/2024 17:42, Manivannan Sadhasivam wrote:
+>>>>>
+>>>>> On October 11, 2024 8:03:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
+>>>>>>> Document 'global' SPI interrupt along with the existing MSI interrupts so
+>>>>>>> that QCOM PCIe RC driver can make use of it to get events such as PCIe
+>>>>>>> link specific events, safety events, etc.
+>>>>>> Describe the hardware, not what the driver will do.
+>>>>>>
+>>>>>>> Though adding a new interrupt will break the ABI, it is required to
+>>>>>>> accurately describe the hardware.
+>>>>>> That's poor reason. Hardware was described and missing optional piece
+>>>>>> (because according to your description above everything was working
+>>>>>> fine) is not needed to break ABI.
+>>>>>>
+>>>>> Hardware was described but not completely. 'global' IRQ let's the controller driver to handle PCIe link specific events like Link up, Link down etc... They improve user experience like the driver can use those interrupts to start bus enumeration on its own. So breaking the ABI for good in this case.
+>>>>>
+>>>>>> Sorry, if your driver changes the ABI for this poor reason.
+>>>>>>
+>>>>> Is the above reasoning sufficient?
+>>>> I tried to look for corresponding driver change, but could not, so maybe
+>>>> there is no ABI break in the first place.
+>>> Here it is:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4581403f67929d02c197cb187c4e1e811c9e762a
+>>>
+>>>   Above explanation is good, but
+>>>> still feels like improvement and device could work without global clock.
+>> So there is no ABI break in the first place... Commit is misleading.
+> OK, will remove the description about ABI break in commit message. But may
 
-Then a hint: to make it more obvious to maintainers, I'd change the
-commit title for patch 1 to say explicitly it makes this function
-public. In fact: I'd split it and the deprecation into two separate
-patches.
+Describe real effects. You got comments about ABI impact before, right?
+So if you remove this, how previous feedback is addressed?
 
-Bart
+
+> I know in which case ABI will be broken by adding an interrupt in bingdings
+> and what ABI will be broken?
+
+Users of ABI stop working.
+
+Best regards,
+Krzysztof
+
 
