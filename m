@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-14491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E21B499D544
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 19:08:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A7A599D551
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 19:10:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9570A283B0C
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 17:08:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1DF71F24F30
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 17:10:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B4281BFE01;
-	Mon, 14 Oct 2024 17:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D5D01C304B;
+	Mon, 14 Oct 2024 17:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Llgjbq+c"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LT7MheF6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17901AB6DC
-	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 17:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18291C2439
+	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 17:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728925678; cv=none; b=gh3nVnMu+geAg82A0WxBIL3IieYSXREBIKbwAjBVP6Fvw/XILDQWUVxLhx5WxZsramATHZGMdE0ysh04piEW1EDeWWlsU3kJpt0jvEXsUjRVohmSCDTmqykQoM8G3Q9tqRipoksWHaw3QKfCMXmyNbMpe5Wi3K0Si3E0CZMVrG8=
+	t=1728925816; cv=none; b=qd356Sht+qUA92hKPpS4PnpYRIPn2tX3coBJfBTArqL4pBYkB/lcb5Id2I5qVjG1gYL1myXyut4ycpedigAbMMt6aGvc6XxtSkMsEGHxzLUW0DxKs1a2B/gxrYV2lDCqxMmY/L2R4D+IrXXwLQ36DjESt8OTR6ATKiAogzccbUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728925678; c=relaxed/simple;
-	bh=OTxZOlFr7lF/giDCl2WbtXA6Ph6giq3edd6UTXVPf1I=;
+	s=arc-20240116; t=1728925816; c=relaxed/simple;
+	bh=oHc52P7m8VFk4NjNVYsFi65iNDfIXx3sGpxt1JVnbFc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nvKHAxCj4uiqPsywxgAPQ8IXwGed31oEflLgAZNNFOJ0AjuuyZ23rf1Dxb65F28iNGd0Yb+QEF1hqAJnwPfCnP+gtbuLvg2nzkV7L2OuBZp11LfWpD68nbol+pSr9tR4lkqYrFmCK8DfzRKhsss/vcQAslrG6HJa3QCgXvVp2rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Llgjbq+c; arc=none smtp.client-ip=209.85.210.173
+	 In-Reply-To:Content-Type; b=JYFekVtLc3m30ffrCTGIbP/xcm321qViCmu9xf9u5pwngEb09sZevl1BRzcKbwKbZ6aA+uq9LJj8qYcKbpGk6olL9dMmnx7PlhtB7SfKp0iq3MAgha5Pzan4kb7LO9KdWpAWDZItwyNm8s8qLAdz5HpfM5KL8iH3NVxdFii3RZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LT7MheF6; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-71e5a62031aso1116811b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 10:07:56 -0700 (PDT)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-20c805a0753so36554095ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 10:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1728925676; x=1729530476; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1728925814; x=1729530614; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=d57W/1gTpeBBCc/zpl7NspKLrqvmEwEWM6BGQvTt2Jw=;
-        b=Llgjbq+cNnZN2tl2o7XajT2sWTLjmCMY8RTsv/2XDthTeFdYI4aG39Px/xYles0MGV
-         xBV1pZHFseQ3xFTaNoOcB/XjjNoGPHe/Di4BOlmMdvl6q04d/hm/je+q9M2dYuGYYVVM
-         srJEf1qM11DxuhxDC3wta25cEywzqvK596WMs=
+        bh=UsgEoRnWXXUKflQR0xKvChheqGwtV13X+dTdfU/fSLs=;
+        b=LT7MheF6mMN0kATHGsOZYanWq+A7FbLyAxeu2nP+YPJEgmdA8GpAtBjuSevzBFpQS4
+         bCwmoHC9SQLHONVfTaTrydYsLVtrPj/u1xHBWjIPSz0NMSJ9oknrYzrKT8N/kXob9TvU
+         dpp1yLpkTqB7pheq3N+oQEjhVe7BiBapCnep8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728925676; x=1729530476;
+        d=1e100.net; s=20230601; t=1728925814; x=1729530614;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d57W/1gTpeBBCc/zpl7NspKLrqvmEwEWM6BGQvTt2Jw=;
-        b=LDguQZjeP4zVXshAA12HYDVM5UBbFQHH4SLrONVzwy3lddE6OYod093M3rkDvM1dwB
-         DXVNzXCjF6lzXZrHI4YVMr+zGXUttZ3TnOOcEO2d1+ahkoPk6BUsTdhuekqIpcxfPGnY
-         cUW8FDrGD/myqp8YR1VzbUjN/KqhAdzkGksoFcDjB1rZduskRHocVItuKTjZNc9MxV1y
-         19Q1PzkE/T/DM34N1/+NQTznqXzKrvGLZgGPzt3m1V9mhXfsohMDQO7l35IjITJbGCDU
-         MLeT4R5zGSwqLrgEFmqx+ijIFyJXiDfxFTfiEZZdSr2Cf29PWS9cGWsr4t7RXq41crW+
-         /HVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYpFQsHzBsUU2lH0eVlyKweLOr4es5Xl3nHLzBC5kLIhUnCUG/eCJ7jtqhgiQJAVkbljsU8ymu+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV6T7hpyrDVxMXPvDNhQRaMQsU8Dia4IspfRAMk+PLyqLlbn5e
-	s4SKQ+JXr+qX1rJQ9TfqxqLtT7LmLrxdy3HA0XB4LgHIItkQnd8RSwIAy+r1HQ==
-X-Google-Smtp-Source: AGHT+IFjnV/HtzUs61LrEWSz3V9PeQDvduk31j26C3pMmN26Fi5U9AbminFgIto6QxKKWmdBsMOOZA==
-X-Received: by 2002:a05:6a00:174b:b0:71e:148c:4611 with SMTP id d2e1a72fcca58-71e4c13a1d0mr13847060b3a.6.1728925675864;
-        Mon, 14 Oct 2024 10:07:55 -0700 (PDT)
+        bh=UsgEoRnWXXUKflQR0xKvChheqGwtV13X+dTdfU/fSLs=;
+        b=TMBMZFByLWfuMCgKu5M/ziGW9fAVYAtSA73T8UBjkRwygjWIXKbcmVFKLW3ilWl1jd
+         uCcn8eqxk29Z5Ko0UOfAFmL3AwhodPWmRoUYrsDBlHw2ZUUgbmruqlrQs7khI+P1kwko
+         faeqXX5CbUGzd+Py7HbDP5+3+Ssxchol5ECJ6qVvv5Fgpeo3vngbmAlHdla0DlGeYeh+
+         e225kjp3tPAoHPg3VtQzuiOAxeAJ3tgbGh1oVgbSbcN5uRyAhfdE8a+0RA+UcHt2gtRo
+         eCuXb8DgQSXdqWIQs22iiAgSb69XYOM5NsP5k9KraMidRiUeSVfhe8ibW+zpx/6le8uP
+         qFMw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9WTyf04PSrbyZV/9JRO0YynYyiUAyQPjNzcUPx1xU/VMjVKf4+ZC4AWYJnlDRbPadFLMvBRgDoo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbQgwYPN9Ziz1W6riiMPTZh7VHO0uHj2VSwq91LU4iKjldRoAN
+	dWxEYEGtWLTxr/Plcl4IpEujb5cEJ1JqcekjHy7iMn+3z8Uvut+NkGrDSaWIjA==
+X-Google-Smtp-Source: AGHT+IF+5JEwuyPgsv7TgW+LcqbythE1/vib73JnkbvQ1dRjDisewu+jbiIm8CS9UhoWB78JEn5J/g==
+X-Received: by 2002:a17:903:228d:b0:20c:a04f:927d with SMTP id d9443c01a7336-20ca167865cmr164941135ad.33.1728925814176;
+        Mon, 14 Oct 2024 10:10:14 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e6818a0e2sm2054083b3a.31.2024.10.14.10.07.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8badc3c8sm68169995ad.21.2024.10.14.10.10.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2024 10:07:55 -0700 (PDT)
-Message-ID: <60de2ae5-af4b-4c31-bc63-9f62b08be2fc@broadcom.com>
-Date: Mon, 14 Oct 2024 10:07:53 -0700
+        Mon, 14 Oct 2024 10:10:13 -0700 (PDT)
+Message-ID: <69c2f4ac-896d-4cfc-8068-45bd58aef6dd@broadcom.com>
+Date: Mon, 14 Oct 2024 10:10:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,13 +74,15 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/11] PCI: brcmstb: Adjust PHY PLL setup to use a
- 54MHz input refclk
-To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v3 04/11] PCI: brcmstb: Expand inbound size calculation
+ helper
+To: Bjorn Helgaas <helgaas@kernel.org>, Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -89,8 +91,7 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
  Philipp Zabel <p.zabel@pengutronix.de>,
  Andrea della Porta <andrea.porta@suse.com>,
  Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-References: <20241014130710.413-1-svarbanov@suse.de>
- <20241014130710.413-10-svarbanov@suse.de>
+References: <20241014165752.GA611670@bhelgaas>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -125,72 +126,31 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20241014130710.413-10-svarbanov@suse.de>
+In-Reply-To: <20241014165752.GA611670@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 10/14/24 06:07, Stanimir Varbanov wrote:
-> Use canned MDIO writes from Broadcom that switch the ref_clk output
-> pair to run from the internal fractional PLL, and set the internal
-> PLL to expect a 54MHz input reference clock.
+On 10/14/24 09:57, Bjorn Helgaas wrote:
+> On Mon, Oct 14, 2024 at 04:07:03PM +0300, Stanimir Varbanov wrote:
+>> BCM2712 memory map can supports up to 64GB of system
+>> memory, thus expand the inbound size calculation in
+>> helper function up to 64GB.
 > 
-> Without this RPi5 PCIe cannot enumerate endpoint devices on
-> extension connector.
-
-You could say that the default reference clock for the PLL is 100MHz, 
-except for some devices, where it is 54MHz, like 2712d0. AFAIR, 2712c1 
-might have been 100MHz as well, so whether we need to support that 
-revision of the chip or not might be TBD.
-
+> The fact that the calculation is done in a helper isn't important
+> here.  Can you make the subject line say something about supporting
+> DMA for up to 64GB of system memory?
 > 
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> ---
-> v2 -> v3:
->   - New patch.
-> 
->   drivers/pci/controller/pcie-brcmstb.c | 35 +++++++++++++++++++++++++++
->   1 file changed, 35 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 407343a30439..12591e292c0c 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -55,6 +55,10 @@
->   #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->   #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
->   
-> +#define PCIE_RC_PL_PHY_CTL_15				0x184c
-> +#define  PCIE_RC_PL_PHY_CTL_15_DIS_PLL_PD_MASK		0x400000
-> +#define  PCIE_RC_PL_PHY_CTL_15_PM_CLK_PERIOD_MASK	0xff
-> +
->   #define PCIE_MISC_MISC_CTRL				0x4008
->   #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK	0x80
->   #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK	0x400
-> @@ -251,6 +255,7 @@ struct pcie_cfg_data {
->   	u8 num_inbound_wins;
->   	int (*perst_set)(struct brcm_pcie *pcie, u32 val);
->   	int (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-> +	int (*post_setup)(struct brcm_pcie *pcie);
->   };
->   
->   struct subdev_regulators {
-> @@ -826,6 +831,32 @@ static int brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
->   	return 0;
->   }
->   
-> +static int brcm_pcie_post_setup_bcm2712(struct brcm_pcie *pcie)
-> +{
-> +	const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030, 0x5030, 0x0007 };
-> +	const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
-> +	u32 tmp;
-> +	int i;
-> +
-> +	/* Allow a 54MHz (xosc) refclk source */
-> +
+> This is being done specifically for BCM2712, but I assume it's safe
+> for *all* brcmstb devices, right?
 
-This newline is not necessary. Other than that:
+It is safe in the sense that all brcmstb devices with this PCIe 
+controller will adopt the same encoding of the size, all of the 
+currently supported brcmstb devices have a variety of limitations when 
+it comes to the amount of addressable DRAM however. Typically we have a 
+hard limit at 4GB of DRAM per memory controller, some devices can do 2GB 
+x3, 4GB x2, or 4GB x1.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Does that answer your question?
 -- 
 Florian
 
