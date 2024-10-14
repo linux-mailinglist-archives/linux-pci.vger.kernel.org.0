@@ -1,202 +1,133 @@
-Return-Path: <linux-pci+bounces-14442-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14443-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BAB399C6DF
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 12:12:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1261B99C752
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 12:41:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE98D2831CA
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:12:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2E50B2484C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 10:41:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D985E15B122;
-	Mon, 14 Oct 2024 10:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92C0618453C;
+	Mon, 14 Oct 2024 10:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="exwIxRV4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElZoaXLt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99B11A01BD
-	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 10:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6CB183CA2
+	for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 10:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728900601; cv=none; b=nUEjAIQfeTNeHfur49loyNh7mMaTZuklkVjbGRDyqsN5L0lkYLoQGzPCAhhNyoeGwwhu8+PWgcqhUqxzE9AFBt6t7JFPB1LfPWwjq4ZaE07CMa6I7WXnvB2qQvWBoTNlRiLXpk9Q9QEiRqpbndU/adMIuJs/EG2jKvQlp6INiRw=
+	t=1728902482; cv=none; b=rcOUvV27sD/NHCyoqyuokHkFMSSS5bS3rGR4ocZvjow6GDIOmeVdavUmUgCMRDS7EZNcoCUi9GMd4JDp8IJ5p97j+x33La/lOq7hUtgn8ilcFVlzH1OH9n83lrr0xpe13OmM9gOJU5n89lmT6I74VYzLcgs0Vdb2EqFl+9HXfRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728900601; c=relaxed/simple;
-	bh=FxAgZgLYG3WhCR6K5ZyTVYWI+VxuRlKimcMVV0XW9W4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=GgX/uOQ8jw7X2rNuRYXRtjJYMOrddxzCnASiqIZPXawka5cwXzTwX3z94eJyGG+pEehSxZDfmDEk5egXmvsU/Zt9Z50gs9OQJUr/EZttBOxMJU34226t2utif4EpLHt7QVVQhQQ7Yiy7P1PygaRggEC1bfaYOfjwg1zi7dcNbEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=exwIxRV4; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728900600; x=1760436600;
-  h=date:from:to:cc:subject:message-id;
-  bh=FxAgZgLYG3WhCR6K5ZyTVYWI+VxuRlKimcMVV0XW9W4=;
-  b=exwIxRV4/tc/QGKysTiyO69rvFLfKU5G1Hb7lOwCdOjJWJ8lxIZPfnx/
-   rfoe7Kk+FDMkKqO21WSkpHmLu8WBWfZnFYnw3iPoqiwARbu4FeKUTwhXG
-   /BBq1CEFK7a6py306dyKz9uzfDF8lFo31eji3yb9d4blR67LIhW0Q8Lo2
-   FNGrAH7SKT7fVFzH12AghBAzI3M0GSCVXpY6BJPP9eSvZuzUM3bSdTNcT
-   fb5rpcI0q4BQ87xLgEnUV6cVVQPILtzVejtd/+9WdCR0jy52RasCaPcOc
-   E/MUuhjTgeK5iLzY+OOXxK9rXiNR7UUCbMsuLRU+Jgiq4b6CRZlwy1BP1
-   Q==;
-X-CSE-ConnectionGUID: knO8P8qwTbCaP5zJS3Vy8g==
-X-CSE-MsgGUID: Gz4KffA8Td2BuQ5pYP9LBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11224"; a="27699847"
-X-IronPort-AV: E=Sophos;i="6.11,202,1725346800"; 
-   d="scan'208";a="27699847"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2024 03:09:59 -0700
-X-CSE-ConnectionGUID: f7WfVYuPTOaZZvt7HB9hJw==
-X-CSE-MsgGUID: Z20jGoayQ9+T8e97nor4Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,202,1725346800"; 
-   d="scan'208";a="77539561"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 14 Oct 2024 03:09:58 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t0I1U-000FAz-0Z;
-	Mon, 14 Oct 2024 10:09:56 +0000
-Date: Mon, 14 Oct 2024 18:09:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint] BUILD SUCCESS
- acb6b7158fdf5598d5f8efd4ddd46f0145190ccd
-Message-ID: <202410141838.0nGEhEzb-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1728902482; c=relaxed/simple;
+	bh=B9CmGqSiB0qg80nzJv8rM8Wv+9unf2VSkjZ7TkKL7rg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MswvTAEJdLRKhWz8vw+hvfByZBtYXIEwTXi1O72UD5JOgQh4M9B5okEiAY3AQlEug0navTJaIjUJ0sJN0UihFKirKMN6iIyYN+glUs6S2g/Ox+RyiZQ7m68n/YXvUc4ndS4Vk9fpbh5+zEcBxknCpz4H6oGUc5OCPQbOa1yrYaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElZoaXLt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC83C4CEC3;
+	Mon, 14 Oct 2024 10:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728902482;
+	bh=B9CmGqSiB0qg80nzJv8rM8Wv+9unf2VSkjZ7TkKL7rg=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=ElZoaXLt/T7F0mSPpWzd6vA/w6/0LR/Z5wYJ7JqL66xEGSs4AHCFkvfzVziOMssvh
+	 GyuzvJ0BsvJWN4EnokWdtzlnGMWOp/GUt+HSED0lv8SjnExhuVcfqfvtps5mxbrAER
+	 DBWnpYpvdP2RIU/7/hsBGWJiffvd/cSTHMYXZGhyE73sr4t2S7oun9vdm88Bgqt6sC
+	 +X0gWw8cx99OOpsfOHhKNfzty6hM0Q54LHYNAgWaOuZ9D/MFhvWDI2QxFXdiFOdFKt
+	 go4z9picDkPzPIAGmqel6zJyjGfjf6mGtMzwtEBdijo4EzjS9/546X3DAFSFKioV+G
+	 Y6w/4JS20XJvg==
+Message-ID: <79e57ebb-eef7-48b1-b337-845d2ef6ff49@kernel.org>
+Date: Mon, 14 Oct 2024 19:41:18 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v2 4/5] PCI: endpoint: Add NVMe endpoint function driver
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-nvme@lists.infradead.org, Keith Busch <kbusch@kernel.org>,
+ Sagi Grimberg <sagi@grimberg.me>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20241011121951.90019-1-dlemoal@kernel.org>
+ <20241011121951.90019-5-dlemoal@kernel.org> <20241014084424.GC23780@lst.de>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20241014084424.GC23780@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-branch HEAD: acb6b7158fdf5598d5f8efd4ddd46f0145190ccd  PCI: dwc: endpoint: Implement the pci_epc_ops::align_addr() operation
+On 10/14/24 17:44, Christoph Hellwig wrote:
+> For one please keep nvme target code in drivers/nvme/  PCI endpoint is
+> just another transport and should not have device class logic.
+> 
+> But I also really fail to understand the architecture of the whole
+> thing.  It is a target driver and should in no way tie into the NVMe
+> host code, the host code runs on the other side of the PCIe wire.
 
-elapsed time: 2720m
+Nope, it is not a target driver. It is a PCI endpoint driver which turns the
+host running it into a PCIe NVMe device. But the NVMe part implementation is
+minimal. Instead I use an endpoint local fabrics host controller which is itself
+connected to whatever target you want (loop, tcp, ...).
 
-configs tested: 109
-configs skipped: 3
+Overall, it looks like this:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+         +-----------------------------------+
+         | PCIe Host Machine (Root-Complex)  |
+         | (BIOS, Grub, Linux, Windows, ...) |
+         |                                   |
+         |       +------------------+        |
+         |       | NVMe PCIe driver |        |
+         +-------+------------------+--------+
+                           |
+                 PCIe bus  |
+                           |
+        +----+---------------------------+-----+
+        |    | PCIe NVMe endpoint driver |     |
+	|    | (Handles BAR registers,   |     |
+	|    | doorbells, IRQs, SQs, CQs |     |
+	|    | and DMA transfers)        |     |
+        |    +---------------------------+     |
+        |                  |                   |
+        |    +---------------------------+     |
+        |    |     NVMe fabrics host     |     |
+        |    +---------------------------+     |
+        |                  |                   |
+        |    +---------------------------+     |
+        |    |     NVMe fabrics target   |     |
+        |    |      (loop, TCP, ...)     |     |
+        |    +---------------------------+     |
+        |                                      |
+        | PCIe Endpoint Machine (e.g. Rock 5B) |
+        +--------------------------------------+
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                         s5pv210_defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20241014    clang-18
-i386        buildonly-randconfig-002-20241014    gcc-12
-i386        buildonly-randconfig-003-20241014    clang-18
-i386        buildonly-randconfig-004-20241014    clang-18
-i386        buildonly-randconfig-005-20241014    clang-18
-i386        buildonly-randconfig-006-20241014    gcc-12
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241014    gcc-12
-i386                  randconfig-002-20241014    gcc-12
-i386                  randconfig-003-20241014    gcc-12
-i386                  randconfig-004-20241014    clang-18
-i386                  randconfig-005-20241014    clang-18
-i386                  randconfig-006-20241014    clang-18
-i386                  randconfig-011-20241014    gcc-12
-i386                  randconfig-012-20241014    clang-18
-i386                  randconfig-013-20241014    clang-18
-i386                  randconfig-014-20241014    clang-18
-i386                  randconfig-015-20241014    gcc-12
-i386                  randconfig-016-20241014    gcc-12
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                          atari_defconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                           ip32_defconfig    gcc-14.1.0
-mips                          malta_defconfig    gcc-14.1.0
-mips                           xway_defconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                 mpc8315_rdb_defconfig    gcc-14.1.0
-powerpc                      ppc64e_defconfig    gcc-14.1.0
-powerpc                     rainier_defconfig    gcc-14.1.0
-powerpc                     redwood_defconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             alldefconfig    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                      rts7751r2d1_defconfig    gcc-14.1.0
-sh                           se7206_defconfig    gcc-14.1.0
-sh                           se7780_defconfig    gcc-14.1.0
-sh                     sh7710voipgw_defconfig    gcc-14.1.0
-sh                        sh7763rdp_defconfig    gcc-14.1.0
-sh                            shmin_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    clang-18
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.1.0
+The nvme target can be anything that can be supported with the PCI Endpoint
+Machine. With a small board like the Rock 5B, it is loop (file and block
+device), TCP target or NVMe passtrhough (using the PCIe Gen2 M.2 E-Key slot).
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Unless I am mistaken, if I use a PCI transport as the base for the endpoint
+driver, I would be able to connect only to a PCIe nvme device as the backend, no
+? With the above design, I can use anything support by nvmf as backend and that
+is exposed to the root-complex host through the nvme endpoint PCIe driver.
+To do that, the PCI endpoint driver mostly need only to create the fabrics host
+with nvmf_create_ctrl(), which connects to the target and then the nvme endpoint
+driver can execute the nvme commands with __nvme_submit_sync_cmd().
+Only some admin commands need special handling (e.g. create sq/cq).
+
+-- 
+Damien Le Moal
+Western Digital Research
 
