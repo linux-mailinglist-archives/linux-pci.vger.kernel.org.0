@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-14493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E4BC99D56D
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 19:18:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4CDD99D57C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 19:20:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34D671F2452E
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 17:18:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60387284E57
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 17:20:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E87551BDABD;
-	Mon, 14 Oct 2024 17:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C29951BFE10;
+	Mon, 14 Oct 2024 17:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKA7pD6Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jspzCD3A"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B236029A0;
-	Mon, 14 Oct 2024 17:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAC01B85E4;
+	Mon, 14 Oct 2024 17:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728926289; cv=none; b=h4mbvzMbTt3fSqWRlDjer7oY2ynofYH2vAlMTGf61BFQDGensZWv37P8TG+r6bh56oi++LVS0SDc/CKryhHFpVU/D9r4k+HsWXwHfIiMCen2Jj5oVu6biC45rxNuyY5Ko61kBmzaT5LY/ZLdvzCPf38pev85irRshKcRnmRM57o=
+	t=1728926402; cv=none; b=ILPuuHFLFGmyhtKOlRCY8WNA4LoJiW5w6xu1emQkI53EbO3pR48pbFdUbNdjE/fQJDkldgDfRC85CQiK9PeXfR0xbFKbtOI9JAqiSIBKHgFft2BT0h1fBV92J/83Ni98d+HiIJZo937TxM9qkN0RQB5QPSNlOtMT8NuE27HR8Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728926289; c=relaxed/simple;
-	bh=1ziApFauYenoCS9MtS1B+tDzb5Mh3mm1sv1noAcTU6k=;
+	s=arc-20240116; t=1728926402; c=relaxed/simple;
+	bh=Np62Up9il5vG205tNL0IREXGDm1XoBvQ7ES3tBuqiSI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=iU7wtcXUxGokl0WIHv1YNj/DGx4wCVyTmAvHDumvrYxrENmOm/3xynALI7bis79KYVuy66bQ8MvW2yDSJQ0DtvgxEACxjDupDnsgaxMmXPJgv21cpPGJKT2vLibejXNEcG78pagFxWyXnyUEVyUH5iNOcQLVPa+F6H63r0GD3Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKA7pD6Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7772C4CEC3;
-	Mon, 14 Oct 2024 17:18:08 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hrpSJ2XNhuUyaTSmyieAIO5iD4/WBdvB7ON5IZA1XV8WdozLxF/Wgow7KUamNTfc8BOuuISpKJWHS9zyYZDbCZoOYPUMgWFN3r8C4NbMauk216bBRI1GLUSj0vJLJLB4zR903XyMFYWFL3AQI0vSyd1Z4tyfIHUGoFH4Fo75Q/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jspzCD3A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD114C4CEC3;
+	Mon, 14 Oct 2024 17:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728926289;
-	bh=1ziApFauYenoCS9MtS1B+tDzb5Mh3mm1sv1noAcTU6k=;
+	s=k20201202; t=1728926402;
+	bh=Np62Up9il5vG205tNL0IREXGDm1XoBvQ7ES3tBuqiSI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VKA7pD6YIgstOPFxjDhROkqhZWnVeMgAJlI+6imU3n58/Pf8OdDY+M8/RVlGnN/0S
-	 GBw9tyJBa4EOkMthReck7N7DDx2hSJwVrmewZ9A2OwVw1I7T4kJigLyIkKz7V6CZlE
-	 TFy4aq/E0//kuoMkq6ccVSFCg6Vqm2tTIQco3BIH5akm1ByJQI8i5vobR+9r/jsTOg
-	 FV5g66HvbV8K6kE4VZ1mTj951cIxhXPwCFPO8jrSQvrvA6KkchM6G6JsKDCyMpk6BY
-	 qHUKn3Ng+C/0cicrNKDC6yJ+YMgmFWiU4l4MlnWIaTbMWDgUA5rSn339wwhcj/LmTZ
-	 pDYKkCWYKRbNA==
-Date: Mon, 14 Oct 2024 12:18:07 -0500
+	b=jspzCD3Aw3An6B7xeaJtD5Ud6xL8ZrkU8JKHagUm6ZeV/tFf4S2LVwyIhekC5k01B
+	 3PKDIXVihcupi6fa5Q4sslzbf1jWHiGD3lms0g4ZJ7GwTpZ8RjResdB6UG8EJ557VU
+	 jih+np1a8BCduiGQU21NjIDWK36NB7KJafvW8k5iKQdpznPNS5O6Na6C2YBppYlEiq
+	 lRVaduMQTW0etlOIzZgPvXngyx92wk+fCCIBya9A6XrRJqJZ0i9amqI6T63aCg0wwr
+	 sVQW0WK1os1tKPuOH68F7rA3u3lJIYn+GBoLxMprNKuDK0PjdoOS1TtTYikv/WGrAM
+	 YVu2VdGp9CRZg==
+Date: Mon, 14 Oct 2024 12:20:00 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Qiang Yu <quic_qianyu@quicinc.com>
 Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
@@ -52,10 +52,9 @@ Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
 	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
 	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH v6 6/8] PCI: qcom: Fix the ops for SC8280X family SoC
-Message-ID: <20241014171807.GA612411@bhelgaas>
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v6 7/8] PCI: qcom: Fix the cfg for X1E80100 SoC
+Message-ID: <20241014172000.GA612658@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,62 +63,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241011104142.1181773-7-quic_qianyu@quicinc.com>
+In-Reply-To: <20241011104142.1181773-8-quic_qianyu@quicinc.com>
 
-[+cc Johan; if you tag a commit with Fixes:, please cc the author of
-that commit!]
+On Fri, Oct 11, 2024 at 03:41:41AM -0700, Qiang Yu wrote:
+> Currently, the cfg_1_9_0 which is being used for X1E80100 has config_sid
+> callback in its ops and doesn't disable ASPM L0s. However, as same as
+> SC8280X, PCIe controllers on X1E80100 are connected to SMMUv3 and it is
+> recommended to disable ASPM L0s. Hence reuse cfg_sc8280xp for X1E80100.
 
-On Fri, Oct 11, 2024 at 03:41:40AM -0700, Qiang Yu wrote:
-> On SC8280X family SoC, PCIe controllers are connected to SMMUv3, hence
-> they don't need the config_sid() callback in ops_1_9_0 struct. Fix it by
-> introducing a new ops struct, namely ops_1_21_0, so that BDF2SID mapping
-> won't be configured during init.
+Say something specific in the subject line.  Apparently you need to
+disable ASPM L0s for this SoC, which is important to know and much
+more useful than "Fix the cfg".
 
-Can you make the subject line say something specific about what this
-patch does?  "Fix the ops" really doesn't include any useful
-information.
-
-Based on the Fixes: below, this has to do with ASPM, so the subject
-line (and the commit log) should probably say something about ASPM.
-
-I don't see the connection between your mention of SMMUv3 and ASPM.
-Are there two logical changes here that should be two separate
-patches?
-
-> Fixes: d1997c987814 ("PCI: qcom: Disable ASPM L0s for sc8280xp, sa8540p and sa8295p")
+> Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
 > Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 88a98be930e3..468bd4242e61 100644
+> index 468bd4242e61..c533e6024ba2 100644
 > --- a/drivers/pci/controller/dwc/pcie-qcom.c
 > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1367,6 +1367,16 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
->  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
->  };
->  
-> +/* Qcom IP rev.: 1.21.0 */
-> +static const struct qcom_pcie_ops ops_1_21_0 = {
-> +	.get_resources = qcom_pcie_get_resources_2_7_0,
-> +	.init = qcom_pcie_init_2_7_0,
-> +	.post_init = qcom_pcie_post_init_2_7_0,
-> +	.host_post_init = qcom_pcie_host_post_init_2_7_0,
-> +	.deinit = qcom_pcie_deinit_2_7_0,
-> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> +};
-> +
->  static const struct qcom_pcie_cfg cfg_1_0_0 = {
->  	.ops = &ops_1_0_0,
->  };
-> @@ -1405,7 +1415,7 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
->  };
->  
->  static const struct qcom_pcie_cfg cfg_sc8280xp = {
-> -	.ops = &ops_1_9_0,
-> +	.ops = &ops_1_21_0,
->  	.no_l0s = true,
+> @@ -1847,7 +1847,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
+> -	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
+>  	{ }
 >  };
 >  
 > -- 
