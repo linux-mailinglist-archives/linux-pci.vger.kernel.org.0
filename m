@@ -1,185 +1,174 @@
-Return-Path: <linux-pci+bounces-14469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14471-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2D0E99CB21
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:10:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46FBC99CB51
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:15:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB9E3B223C1
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 13:10:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 059DA281D60
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 13:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BBE41BFE10;
-	Mon, 14 Oct 2024 13:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89FC1C1AD8;
+	Mon, 14 Oct 2024 13:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="U63faUZf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HrUpPN+2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="U63faUZf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HrUpPN+2"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aLkNruy3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA291B85E3;
-	Mon, 14 Oct 2024 13:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90F91BE86E;
+	Mon, 14 Oct 2024 13:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728911267; cv=none; b=APwJpXeA4BFMj4bzi8jt1MxZBbaH/sbrnvGvOTHqWYSbJKehi6Yxm/Z1l6jEG74Ftowb1i5A1fZaIhtKO4rzi06/Mc6+ZrHDM290uvFl5ujWnK+Dh0Pls4y5NmDmsNcD8zPFBCXBxlbxIU/OwRuwY2LnJT5+3N1du446wE5nUGg=
+	t=1728911591; cv=none; b=apVAjZ/1+5yjmVdLjBg2wi9rztFKz9CTvPLVimpWWbsCZTo5IBDl2s7YX9GQ8NCLwjtyOt1bL60yKJLOHbtutsRE5D2GoaRYTDjCAtYU8JPn7n9MtiAcTz0HFJzInc+e0+UAfsxVonCwXlO0XHUB0akwaIwLdW+9HX9u+s10hXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728911267; c=relaxed/simple;
-	bh=ZTmMP9+orp+PHCeTBEJ8UKDhxWX5nor/QBPLZVUpgkA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iVlHjnpsyfwWISSvzX5vXOj1FN6zalBVNUzOwri0sBmwDOQOyKWH4eE+B9yAvd7l4ZxF0wNKVKf6DJ1hcQQ7VBspDb9OUi79BGJTy3WgNqa4UX7rFJ4p0CssMWcdjQLKs9DlqrUJxFkOxAkC7z/lO4xvv9o5CHEnrO19QivojTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=U63faUZf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HrUpPN+2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=U63faUZf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HrUpPN+2; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2146921D83;
-	Mon, 14 Oct 2024 13:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728911264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XffrhzQrGdzdN3IUx4YVAtm8Pi44R6VVyrxsJ/n9ADA=;
-	b=U63faUZfTq3oeMNRduutK6PpXmAs/dyJJo0kg+Dmb2aOgR52aNtzJz/HxQDn0BszA9b42l
-	QMvACKbaNIrkSjc9FYM1LC/PccnsG3Cc4zFuevcZQjm1xV+tRQ1DNhD9/rjMyvIvevfUQf
-	KvHRm5qdaCRVyPicOF/Am4MnNWLGGPM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728911264;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XffrhzQrGdzdN3IUx4YVAtm8Pi44R6VVyrxsJ/n9ADA=;
-	b=HrUpPN+28GUF6qD1lFjKr2xbwwGgFpjoJqhEjvAUQZCdgNQQ2HuY+Px3OQjwMDbqWMDrZd
-	mMS/J9WzThoy5cCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728911264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XffrhzQrGdzdN3IUx4YVAtm8Pi44R6VVyrxsJ/n9ADA=;
-	b=U63faUZfTq3oeMNRduutK6PpXmAs/dyJJo0kg+Dmb2aOgR52aNtzJz/HxQDn0BszA9b42l
-	QMvACKbaNIrkSjc9FYM1LC/PccnsG3Cc4zFuevcZQjm1xV+tRQ1DNhD9/rjMyvIvevfUQf
-	KvHRm5qdaCRVyPicOF/Am4MnNWLGGPM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728911264;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XffrhzQrGdzdN3IUx4YVAtm8Pi44R6VVyrxsJ/n9ADA=;
-	b=HrUpPN+28GUF6qD1lFjKr2xbwwGgFpjoJqhEjvAUQZCdgNQQ2HuY+Px3OQjwMDbqWMDrZd
-	mMS/J9WzThoy5cCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1BF8D13A79;
-	Mon, 14 Oct 2024 13:07:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WAJ+BJ8XDWcqTwAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 14 Oct 2024 13:07:43 +0000
-From: Stanimir Varbanov <svarbanov@suse.de>
-To: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	kw@linux.com,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH v3 11/11] arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
-Date: Mon, 14 Oct 2024 16:07:10 +0300
-Message-ID: <20241014130710.413-12-svarbanov@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241014130710.413-1-svarbanov@suse.de>
-References: <20241014130710.413-1-svarbanov@suse.de>
+	s=arc-20240116; t=1728911591; c=relaxed/simple;
+	bh=ndee/AFgnLGg95ixYYKZU3dpuR3s81+9MlGalzVSh2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ern4kqmXUKPLVIT7egBdwUsd8fVz7bsrHzCXbgyWj42PAprFM9FgrCECwFBNWGeT6IY9tryBovSozxZjqOYxj1ACoHQdCXM3p8VQtaWF0qIq4LfhXNVn1CVQ43cF5Rq+0n2MB//zqvgNRRU0GtnOgpMiIsbRwP9EJcY9MWeYaJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aLkNruy3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49EBNHqF013174;
+	Mon, 14 Oct 2024 13:09:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	e3SuHs/ftC65uHNR5RtQxXpgy6EP0Kdb+DVlw9heaHw=; b=aLkNruy32o9al6hE
+	DqbGEVYCJzkp37+vUikjWfQbj7t1dQdy719I/LLEXEdDkOyr5WPwXuNT+bkeKW91
+	ZxA1/xjs3ZFDPZeYq2Jgn1cpfT7RS2lHCEylEQPtTfEs8U9BqkDntLpn1VDW9fXL
+	40p4egZENfl6Gy7CMwpDz8iBDGQCzlhJWa0fi1GrE92makb4zyd8anSqITUoB0tO
+	EbZmuDqJ7ZdOSoYzN7ZaoVJiwxkyBGY97cocWcoLjXnCCLK9/953tDIqFWTsnOwV
+	6dimCu2Blvs1UJ1b4/PHtTH2siyyCxIjzMhEMXC/0Y2BvR1nHGXqxjvysgksR3aO
+	irKFfw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 427hvfvbet-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Oct 2024 13:09:28 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49ED9RDx032375
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Oct 2024 13:09:27 GMT
+Received: from [10.253.10.174] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Oct
+ 2024 06:09:21 -0700
+Message-ID: <75b22700-e4de-43fd-8e16-1961703bb708@quicinc.com>
+Date: Mon, 14 Oct 2024 21:09:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global'
+ interrupt
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Krzysztof
+ Kozlowski" <krzk@kernel.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <abel.vesa@linaro.org>, <quic_msarkar@quicinc.com>,
+        <quic_devipriy@quicinc.com>, <dmitry.baryshkov@linaro.org>,
+        <kw@linux.com>, <lpieralisi@kernel.org>, <neil.armstrong@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>
+References: <20241011104142.1181773-1-quic_qianyu@quicinc.com>
+ <20241011104142.1181773-4-quic_qianyu@quicinc.com>
+ <eyxkgcmgv5mejjifzsevkzm2yqdknilizrvhwryd745pkfalgk@kau4lq4cd7g3>
+ <4802B12B-BAC1-4E99-BDFE-A2340F4A8F24@linaro.org>
+ <3d1d0822-da66-44c8-a328-69804210123c@kernel.org>
+ <65B34B14-76C3-491D-8A58-6D0887889018@linaro.org>
+ <df6379c6-662a-4b35-a919-13c695a869c7@kernel.org>
+ <20241014090251.r4sfaaxtasokv4oi@thinkpad>
+ <ea7c1390-7ead-4c17-9ae3-cdcc9866332a@kernel.org>
+ <B716D0B8-2B9C-4FA2-94F3-038F1C634244@linaro.org>
+Content-Language: en-US
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <B716D0B8-2B9C-4FA2-94F3-038F1C634244@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	R_RATELIMIT(0.00)[to_ip_from(RL7mwea5a3cdyragbzqhrtit3y)];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -1.30
-X-Spam-Flag: NO
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: LfnxdWDOyju9HWf5eiUdlaFtkSZPqfEW
+X-Proofpoint-ORIG-GUID: LfnxdWDOyju9HWf5eiUdlaFtkSZPqfEW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 bulkscore=0 mlxlogscore=832 malwarescore=0 mlxscore=0
+ clxscore=1015 adultscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410140095
 
-Enable pcie1 and pcie2 DT nodes. Pcie1 is used for the extension
-connector and pcie2 is used for RP1 south-bridge.
 
-Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
----
-v2 -> v3:
- - No changes.
+On 10/14/2024 5:41 PM, Manivannan Sadhasivam wrote:
+>
+> On October 14, 2024 2:56:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 14/10/2024 11:02, Manivannan Sadhasivam wrote:
+>>> On Fri, Oct 11, 2024 at 06:06:02PM +0200, Krzysztof Kozlowski wrote:
+>>>> On 11/10/2024 17:51, Manivannan Sadhasivam wrote:
+>>>>>
+>>>>> On October 11, 2024 9:14:31 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>> On 11/10/2024 17:42, Manivannan Sadhasivam wrote:
+>>>>>>>
+>>>>>>> On October 11, 2024 8:03:58 PM GMT+05:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>>>> On Fri, Oct 11, 2024 at 03:41:37AM -0700, Qiang Yu wrote:
+>>>>>>>>> Document 'global' SPI interrupt along with the existing MSI interrupts so
+>>>>>>>>> that QCOM PCIe RC driver can make use of it to get events such as PCIe
+>>>>>>>>> link specific events, safety events, etc.
+>>>>>>>> Describe the hardware, not what the driver will do.
+>>>>>>>>
+>>>>>>>>> Though adding a new interrupt will break the ABI, it is required to
+>>>>>>>>> accurately describe the hardware.
+>>>>>>>> That's poor reason. Hardware was described and missing optional piece
+>>>>>>>> (because according to your description above everything was working
+>>>>>>>> fine) is not needed to break ABI.
+>>>>>>>>
+>>>>>>> Hardware was described but not completely. 'global' IRQ let's the controller driver to handle PCIe link specific events like Link up, Link down etc... They improve user experience like the driver can use those interrupts to start bus enumeration on its own. So breaking the ABI for good in this case.
+>>>>>>>
+>>>>>>>> Sorry, if your driver changes the ABI for this poor reason.
+>>>>>>>>
+>>>>>>> Is the above reasoning sufficient?
+>>>>>> I tried to look for corresponding driver change, but could not, so maybe
+>>>>>> there is no ABI break in the first place.
+>>>>> Here it is:
+>>>>>
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4581403f67929d02c197cb187c4e1e811c9e762a
+>>>>>
+>>>>>   Above explanation is good, but
+>>>>>> still feels like improvement and device could work without global clock.
+>>>> So there is no ABI break in the first place... Commit is misleading.
+>>>>
+>>> It increases the 'minItems' to 9 from 8, how come it is not an ABI break?
+>> Interface changed but all known users are still working, right? "Break"
+>> means something does not work, something is affected.
+> Hmm. I thought you were referring to the DTS warnings (for old DTS) that come out of these changes. But for kernel ABI, yes there is no breakage.
+I really see dts warning after dtbs checking and since global irq is to
+improve user experience and device could still work without it, will
+keep the 'minItems' as 8 and set 'maxItems' as 9.
 
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index 2bdbb6780242..e970a6013c6f 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -62,3 +62,11 @@ &sdio1 {
- 	sd-uhs-ddr50;
- 	sd-uhs-sdr104;
- };
-+
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+&pcie2 {
-+	status = "okay";
-+};
--- 
-2.43.0
-
+Thanks
+Qiang
+>
+> Sorry for the confusion.
+>
+> - Mani
+>
+>> I might be missing
+>> here something, of course, but I simply do not see any affected user here.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
+> மணிவண்ணன் சதாசிவம்
 
