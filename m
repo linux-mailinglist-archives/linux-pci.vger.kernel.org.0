@@ -1,94 +1,94 @@
-Return-Path: <linux-pci+bounces-14462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14463-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C3EA99CB0C
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:08:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5598699CB10
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 15:08:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4CACB23D01
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 13:08:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8C6D5B23D81
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 13:08:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 323C51AB6F1;
-	Mon, 14 Oct 2024 13:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37E1B1ABED8;
+	Mon, 14 Oct 2024 13:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RMWpEqQr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9VP4hrHH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RMWpEqQr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9VP4hrHH"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZAxlWxqi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5/Zp48/p";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZAxlWxqi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5/Zp48/p"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860D61AB508;
-	Mon, 14 Oct 2024 13:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694E31AB534;
+	Mon, 14 Oct 2024 13:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728911260; cv=none; b=g6YofNmIFT1U3eXQak4FBkNi7AZ/6Oq21rb1jFFA8pEhbE0lwsEO6de12FGRfxl7VHQkKEqIqZGHhXZuNVyu5SZ8V2pFqt+vtYlaBrT7gDE/Ajz2eJ4O96gDqx1vjrKvOSfIf6K7LYdkpie0XJtab/gAY0QJ8U6tHfK5h4iy4eU=
+	t=1728911261; cv=none; b=cRCFa03R7hnQkozSK/TuEhl3m8XnohtsO3jeCOiHat5PkmnItR38We7BYgAkzqxxON99r5CDtKKKGyQJZpzqcfQiUX+ycP7IhynjuI7V/2C4YQM5e6ifZ8o2paUMvINeAVbwnVVymTKWaqF1jwW0j3DuftR5w8zR8VKe53ySd4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728911260; c=relaxed/simple;
-	bh=9BTRwWkPM2WPp5j1i5kzqC7QIFL1b8FvDjCOakdpO3o=;
+	s=arc-20240116; t=1728911261; c=relaxed/simple;
+	bh=6GWRSgUpCdoUY9hh+1yTDdP86TiWongLkz8HE537dtM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tHxQMrustCAt0AXULkiM8YWW0fjF5AbjOj2u5aiB+knbcff/1lN5BNuTohL2YJ5LORirGzePeJzPrJL44FcLZK/XV8tYZb6Fu+OEJe6JCELc0IogonJ1zDTb1dehnRrm+C/NUv9lvM8jivcEJog+z0UjP1fkh0hWxLl6H/gN3Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RMWpEqQr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9VP4hrHH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RMWpEqQr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9VP4hrHH; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=KibaexeplQ1ro5OicAp2VAXT4uRjla8eVUq2MaBdofi3YTXntmQX8aM7wSn+LqRYAhartEseaezf563W9prryBchWRXxIpkHQC7fd7cAcNJqAuJW9B4RsCiPyhsxOps/r+T3MwiCsKZ4X++q6n9pefZsrvDN0apTqBGbLCJq1Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZAxlWxqi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5/Zp48/p; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZAxlWxqi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5/Zp48/p; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B67071FE61;
-	Mon, 14 Oct 2024 13:07:36 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D24131FE57;
+	Mon, 14 Oct 2024 13:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728911256; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1728911257; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V2CRT0BA7K09BgT5YL2JQfhcvweXAfO6F7Tmt9UwGBs=;
-	b=RMWpEqQrTz5dWbeRcC2GsLzQ24HBXqs8SlVufV1NMeeEkT7m7DG5JVFbTeTu/SEyiOeqCS
-	2LNwUdmdMyKtCCW/NAXI33Yb4Pp2RU+NomZezBXy9M8G8wb8KSNyRNfcBee6T9h7A0KBDb
-	/D9K3IIZGzNDzLfVO+dt+CItxHmVMeE=
+	bh=8DCAVJXCB/9zzBCk/NgKVl3/lMA3I5cjuushV32SkV0=;
+	b=ZAxlWxqi4J8lej4rm8+JhepYDPLTp5ypbEP4s/QklpyYTRJjuw5XGPuWh0myFF27nuvGIc
+	Yb/OWKt3i53k9vnPtKVgH0uRVt4lYE2/k/5BXH/WSyD/we3wXTNqUBL/vwza0INgWKbGkI
+	cjyh91m5onuTsa2oyZOuj/2b70KZ+AI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728911256;
+	s=susede2_ed25519; t=1728911257;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V2CRT0BA7K09BgT5YL2JQfhcvweXAfO6F7Tmt9UwGBs=;
-	b=9VP4hrHHVbM2n+KgaSy4/OZLkGoFHq1tsbY/0lCNoBGcfTjQ7c+MlxXo0T/HxFqt58Mn3j
-	bwoUZGcVHdFqPACA==
+	bh=8DCAVJXCB/9zzBCk/NgKVl3/lMA3I5cjuushV32SkV0=;
+	b=5/Zp48/pk1hv3Ra5Vx7IRvZUeqMqa1QKfmd2R0lcILyp7m0M9/DQyQVYWlRoLqm2NpbS1Q
+	HQoybphr0i/n9RBg==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RMWpEqQr;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=9VP4hrHH
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZAxlWxqi;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="5/Zp48/p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728911256; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1728911257; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V2CRT0BA7K09BgT5YL2JQfhcvweXAfO6F7Tmt9UwGBs=;
-	b=RMWpEqQrTz5dWbeRcC2GsLzQ24HBXqs8SlVufV1NMeeEkT7m7DG5JVFbTeTu/SEyiOeqCS
-	2LNwUdmdMyKtCCW/NAXI33Yb4Pp2RU+NomZezBXy9M8G8wb8KSNyRNfcBee6T9h7A0KBDb
-	/D9K3IIZGzNDzLfVO+dt+CItxHmVMeE=
+	bh=8DCAVJXCB/9zzBCk/NgKVl3/lMA3I5cjuushV32SkV0=;
+	b=ZAxlWxqi4J8lej4rm8+JhepYDPLTp5ypbEP4s/QklpyYTRJjuw5XGPuWh0myFF27nuvGIc
+	Yb/OWKt3i53k9vnPtKVgH0uRVt4lYE2/k/5BXH/WSyD/we3wXTNqUBL/vwza0INgWKbGkI
+	cjyh91m5onuTsa2oyZOuj/2b70KZ+AI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728911256;
+	s=susede2_ed25519; t=1728911257;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V2CRT0BA7K09BgT5YL2JQfhcvweXAfO6F7Tmt9UwGBs=;
-	b=9VP4hrHHVbM2n+KgaSy4/OZLkGoFHq1tsbY/0lCNoBGcfTjQ7c+MlxXo0T/HxFqt58Mn3j
-	bwoUZGcVHdFqPACA==
+	bh=8DCAVJXCB/9zzBCk/NgKVl3/lMA3I5cjuushV32SkV0=;
+	b=5/Zp48/pk1hv3Ra5Vx7IRvZUeqMqa1QKfmd2R0lcILyp7m0M9/DQyQVYWlRoLqm2NpbS1Q
+	HQoybphr0i/n9RBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A77BB13A42;
-	Mon, 14 Oct 2024 13:07:35 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C65CF13A79;
+	Mon, 14 Oct 2024 13:07:36 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WPpZJpcXDWcqTwAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 14 Oct 2024 13:07:35 +0000
+	id CNT6LZgXDWcqTwAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Mon, 14 Oct 2024 13:07:36 +0000
 From: Stanimir Varbanov <svarbanov@suse.de>
 To: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -111,9 +111,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Phil Elwell <phil@raspberrypi.com>,
 	Jonathan Bell <jonathan@raspberrypi.com>,
 	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH v3 04/11] PCI: brcmstb: Expand inbound size calculation helper
-Date: Mon, 14 Oct 2024 16:07:03 +0300
-Message-ID: <20241014130710.413-5-svarbanov@suse.de>
+Subject: [PATCH v3 05/11] PCI: brcmstb: Enable external MSI-X if available
+Date: Mon, 14 Oct 2024 16:07:04 +0300
+Message-ID: <20241014130710.413-6-svarbanov@suse.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241014130710.413-1-svarbanov@suse.de>
 References: <20241014130710.413-1-svarbanov@suse.de>
@@ -124,8 +124,9 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B67071FE61
-X-Spam-Level: 
+X-Rspamd-Queue-Id: D24131FE57
+X-Spam-Score: -1.51
+X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -148,46 +149,109 @@ X-Spamd-Result: default: False [-1.51 / 50.00];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dt];
 	DKIM_TRACE(0.00)[suse.de:+];
 	R_RATELIMIT(0.00)[to_ip_from(RLw7mkaud87zuqqztkur5718rm)];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -1.51
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
+X-Spam-Level: 
 
-BCM2712 memory map can supports up to 64GB of system
-memory, thus expand the inbound size calculation in
-helper function up to 64GB.
+On RPi5 there is an external MIP MSI-X interrupt controller
+which can handle up to 64 interrupts.
 
 Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
 v2 -> v3:
- - Added Reviewed-by tags.
- - Improved patch description (Florian).
+ - No changes
 
- drivers/pci/controller/pcie-brcmstb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+drivers/pci/controller/pcie-brcmstb.c | 63 +++++++++++++++++++++++++--
+ 1 file changed, 59 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 9321280f6edb..b0ef2f31914d 100644
+index b0ef2f31914d..b76c16287f37 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -309,8 +309,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
- 	if (log2_in >= 12 && log2_in <= 15)
- 		/* Covers 4KB to 32KB (inclusive) */
- 		return (log2_in - 12) + 0x1c;
--	else if (log2_in >= 16 && log2_in <= 35)
--		/* Covers 64KB to 32GB, (inclusive) */
-+	else if (log2_in >= 16 && log2_in <= 36)
-+		/* Covers 64KB to 64GB, (inclusive) */
- 		return log2_in - 15;
- 	/* Something is awry so disable */
+@@ -1323,6 +1323,52 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
  	return 0;
+ }
+ 
++static int brcm_pcie_enable_external_msix(struct brcm_pcie *pcie,
++					  struct device_node *msi_np)
++{
++	struct inbound_win inbound_wins[PCIE_BRCM_MAX_INBOUND_WINS];
++	u64 msi_pci_addr, msi_phys_addr;
++	struct resource r;
++	int mip_bar, ret;
++	u32 val, reg;
++
++	ret = of_property_read_reg(msi_np, 1, &msi_pci_addr, NULL);
++	if (ret)
++		return ret;
++
++	ret = of_address_to_resource(msi_np, 0, &r);
++	if (ret)
++		return ret;
++
++	msi_phys_addr = r.start;
++
++	/* Find free inbound window for MIP access */
++	mip_bar = brcm_pcie_get_inbound_wins(pcie, inbound_wins);
++	if (mip_bar < 0)
++		return mip_bar;
++
++	mip_bar += 1;
++	reg = brcm_bar_reg_offset(mip_bar);
++
++	val = lower_32_bits(msi_pci_addr);
++	val |= brcm_pcie_encode_ibar_size(SZ_4K);
++	writel(val, pcie->base + reg);
++
++	val = upper_32_bits(msi_pci_addr);
++	writel(val, pcie->base + reg + 4);
++
++	reg = brcm_ubus_reg_offset(mip_bar);
++
++	val = lower_32_bits(msi_phys_addr);
++	val |= PCIE_MISC_UBUS_BAR1_CONFIG_REMAP_ACCESS_EN_MASK;
++	writel(val, pcie->base + reg);
++
++	val = upper_32_bits(msi_phys_addr);
++	writel(val, pcie->base + reg + 4);
++
++	return 0;
++}
++
+ static const char * const supplies[] = {
+ 	"vpcie3v3",
+ 	"vpcie3v3aux",
+@@ -1888,11 +1934,20 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 		goto fail;
+ 	}
+ 
+-	msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
+-	if (pci_msi_enabled() && msi_np == pcie->np) {
+-		ret = brcm_pcie_enable_msi(pcie);
++	if (pci_msi_enabled()) {
++		msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
++		const char *str;
++
++		if (msi_np == pcie->np) {
++			str = "internal MSI";
++			ret = brcm_pcie_enable_msi(pcie);
++		} else {
++			str = "external MSI-X";
++			ret = brcm_pcie_enable_external_msix(pcie, msi_np);
++		}
++
+ 		if (ret) {
+-			dev_err(pcie->dev, "probe of internal MSI failed");
++			dev_err(pcie->dev, "enable of %s failed\n", str);
+ 			goto fail;
+ 		}
+ 	}
 -- 
 2.43.0
 
