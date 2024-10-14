@@ -1,154 +1,120 @@
-Return-Path: <linux-pci+bounces-14486-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14487-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3731699D4B1
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 18:31:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEE5499D512
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 18:58:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0B6F288D11
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 16:31:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB3A31C2217F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Oct 2024 16:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CE72595;
-	Mon, 14 Oct 2024 16:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 534861C232D;
+	Mon, 14 Oct 2024 16:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rrQud1Bm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wPq0vw4z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgiUybSY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3126B231C92;
-	Mon, 14 Oct 2024 16:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2241F28FC;
+	Mon, 14 Oct 2024 16:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728923496; cv=none; b=CSaCtZpkp3Wb161pg9GZUjyQPOuFk/EjJT8pOwkpzDcIVJvH5TQLiMyOme+EGxCH0T7CyDaVYCNVH8y9cHqTe9L6FvU6mHGJXsP7ws8qXgdI5+GdQ1KyFFD+qX+E5ORDLam3vMddaLVc8zaJdYs5ywjHTXfxTpy+7solSblMxV0=
+	t=1728925075; cv=none; b=WIPNMuxytWDmEhJkB3iF9X+jlx/MkunaJdGqRbJSezKtCwgbYuE0bzYdDE7lLLtnvlLvsOJNpIkzoFkbJuWgiKjN9wtM4XkdCzYAc63lXwAfzz4RGsmYTpcm/crcZ7ZpZleh9z5Yd4DCrQD65WhA5DP3j88Fws7N/AiXRpKu4dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728923496; c=relaxed/simple;
-	bh=hRoA3ccR5Y8oRXRdOMvMWRGqLfR7Pm1OrtYuVHblhug=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JR/GpQ1NPWc+kgepWLK+mZ16V4ldnUq1jGk5setQXY6jmnI9bsz7jW7BgcDqJEqT1ky9k3lQ19HjdETZdzN2Cn8FAUUtumDLZVzrDwvVwz4KulkE+4nsxJICTBXPixDAfsrLlh4+waO/HhSZe/H3N1hsTBz2Jrt81oy8rwxwcwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rrQud1Bm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wPq0vw4z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1728923492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ow/UxrNjYbB9p7imk5iwLyMoJAD0hoXV5EJONRnoywA=;
-	b=rrQud1Bmrb6k1OJO8EmZWxF/QUHGHoo6snHSxtVUgsEFeCxNzJ4q1QMFXvIBHiCXLrKOnp
-	5n2zfs4cjvMRW84uP2ReREOXB4GsDYWko8jIDJkr9l+9zdO8YwS26aL6ZSWCDjRud13enR
-	KsHcpVLiarsShJnRVFn4EhH3D+c78VhqrZZnmHAwIZ55bCGCLkxhmQ/ki2Ny5NpX5G+FiT
-	4el9dkx2BNEHvetIh2DFvh54IORDpOroEmPDh5UZ/bgbVFpY3DjPUqwrOzaJX72HycQoPj
-	jBUluAEhaic3IhLOaOiqXwD4Lzr/iEcOr5BdHwPnyX7HYGY6YL619CT/VYHswQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1728923492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ow/UxrNjYbB9p7imk5iwLyMoJAD0hoXV5EJONRnoywA=;
-	b=wPq0vw4zgDf7pPyiwHAm5p05qXTlNkIJPC5VQTxfHidMe8ODXZEdfMPPimcsSbxLQli+/+
-	ZLuoGkIRW8RucaDg==
-To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- kw@linux.com, Philipp Zabel <p.zabel@pengutronix.de>, Andrea della Porta
- <andrea.porta@suse.com>, Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Stanimir Varbanov <svarbanov@suse.de>
-Subject: Re: [PATCH v3 03/11] irqchip: mip: Add Broadcom bcm2712 MSI-X
- interrupt controller
-In-Reply-To: <20241014130710.413-4-svarbanov@suse.de>
-References: <20241014130710.413-1-svarbanov@suse.de>
- <20241014130710.413-4-svarbanov@suse.de>
-Date: Mon, 14 Oct 2024 18:31:32 +0200
-Message-ID: <87o73mfxy3.ffs@tglx>
+	s=arc-20240116; t=1728925075; c=relaxed/simple;
+	bh=wXWzMdrUxolDFmjz40s5QfHgXPCyiA7KBOB9gExbNoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=YwlLSCdMaBWfPVcBDzb//4iKs0kK9DZwNk4AcwYxKP6vDSvgx7vmjI9XFjMYN1VgWYLECXPEUIJnSEPrel6v9ENSHGtSug7m/OFPrMxUITfKZWKet0swa/EcxtD/GluFZV/NgS7FVeT172jWJrMS3x1KEWa/NS/KBONXlrOkK20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgiUybSY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C67EC4CEC3;
+	Mon, 14 Oct 2024 16:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728925074;
+	bh=wXWzMdrUxolDFmjz40s5QfHgXPCyiA7KBOB9gExbNoo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GgiUybSYshbUNzejaSCnPLicOmznG3IXLZs0Ne0pYdd0FwUTMy5rnBRB7PvARVe7o
+	 rgVV3XvNr15M+ceo4vir7M+oPOiSp4xszzdfBWjx3rHAW2eQts4smdBQDg3gxJscNB
+	 rBvsube5oReuK32CkktFMqviLgNBavmqlYx7A0hrp7R4gC3SC/EunDoww1pBEnGS/q
+	 UdiOS+236BW8VU4+kKTissW9IkdTxTFNihEBGNV+lhh7wOrDFsEby24zuexmXWbN/J
+	 vu3uEBWPiZRON8OJlMqut4O8AWDxXj2rYe2orUSBQtHz81yPVo6LdnokYqDBH3DQJu
+	 63NmYkBzN2d9w==
+Date: Mon, 14 Oct 2024 11:57:52 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>
+Subject: Re: [PATCH v3 04/11] PCI: brcmstb: Expand inbound size calculation
+ helper
+Message-ID: <20241014165752.GA611670@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241014130710.413-5-svarbanov@suse.de>
 
+On Mon, Oct 14, 2024 at 04:07:03PM +0300, Stanimir Varbanov wrote:
+> BCM2712 memory map can supports up to 64GB of system
+> memory, thus expand the inbound size calculation in
+> helper function up to 64GB.
 
-> Subject: irqchip: mip:
+The fact that the calculation is done in a helper isn't important
+here.  Can you make the subject line say something about supporting
+DMA for up to 64GB of system memory?
 
-is not a valid prefix
+This is being done specifically for BCM2712, but I assume it's safe
+for *all* brcmstb devices, right?
 
-Just make it: irqchip: Add Broadcom  .....
+s/can supports/can support/
 
-> +static int mip_middle_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				   unsigned int nr_irqs, void *arg)
-> +{
-> +	struct mip_priv *mip = domain->host_data;
-> +	struct irq_fwspec fwspec = {0};
-> +	struct irq_data *irqd;
-> +	unsigned int hwirq, irq, i;
+Rewrap commit log to fill 75 columns.
 
-	unsigned int hwirq, irq, i;
-	struct irq_data *irqd;
-
-> +
-> +#define MIP_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
-> +				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
-> +				 MSI_FLAG_PCI_MSI_MASK_PARENT |	\
-> +				 MSI_FLAG_PCI_MSIX)
-
-Why are you requiring MSI_FLAG_PCI_MSIX here? That's a supported flag,
-not a required one.
-
-> +#define MIP_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK |	\
-> +				 MSI_FLAG_PCI_MSIX |		\
-
-So this does not support multi MSI, but your allocation function looks
-like it supports it (nr_irqs is not range checked).
-
-> +				 IRQ_DOMAIN_FLAG_MSI_PARENT)
-
-This is not a MSI flag and has no place here.
-
-> +static const struct msi_parent_ops mip_msi_parent_ops = {
-> +	.supported_flags	= MIP_MSI_FLAGS_SUPPORTED,
-> +	.required_flags		= MIP_MSI_FLAGS_REQUIRED,
-> +	.bus_select_token       = DOMAIN_BUS_PCI_MSI,
-> +	.bus_select_mask	= MATCH_PCI_MSI,
-> +	.prefix			= "MIP-MSI-",
-> +	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
-> +};
-> +
-> +static int mip_init_domains(struct mip_priv *mip, struct device_node *np)
-> +{
-> +	struct irq_domain *middle;
-> +
-> +	middle = irq_domain_add_hierarchy(mip->parent, 0, mip->num_msis, np,
-> +					  &mip_middle_domain_ops, mip);
-> +	if (!middle)
-> +		return -ENOMEM;
-> +
-> +	irq_domain_update_bus_token(middle, DOMAIN_BUS_PCI_MSI);
-
-That's the wrong token. DOMAIN_BUS_PCI_MSI is what the v2 global PCI/MSI
-domain uses. But that's not what this is about. This is the parent
-domain for PCI/MSI. DOMAIN_BUS_GENERIC_MSI or DOMAIN_BUS_NEXUS is what
-you want here.
-
-> +	middle->dev = mip->dev;
-> +	middle->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
-> +	middle->msi_parent_ops = &mip_msi_parent_ops;
-> +
-
-Other than this, this looks good now.
-
-Thanks,
-
-        tglx
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+> v2 -> v3:
+>  - Added Reviewed-by tags.
+>  - Improved patch description (Florian).
+> 
+>  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 9321280f6edb..b0ef2f31914d 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -309,8 +309,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
+>  	if (log2_in >= 12 && log2_in <= 15)
+>  		/* Covers 4KB to 32KB (inclusive) */
+>  		return (log2_in - 12) + 0x1c;
+> -	else if (log2_in >= 16 && log2_in <= 35)
+> -		/* Covers 64KB to 32GB, (inclusive) */
+> +	else if (log2_in >= 16 && log2_in <= 36)
+> +		/* Covers 64KB to 64GB, (inclusive) */
+>  		return log2_in - 15;
+>  	/* Something is awry so disable */
+>  	return 0;
+> -- 
+> 2.43.0
+> 
 
