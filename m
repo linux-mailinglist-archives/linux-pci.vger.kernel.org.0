@@ -1,83 +1,89 @@
-Return-Path: <linux-pci+bounces-14512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 225BB99DDBA
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 07:54:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F3DF99DDDE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 08:01:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E09F428326C
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 05:54:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C83D42856AB
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 06:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E5A17623F;
-	Tue, 15 Oct 2024 05:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD78D16F0EC;
+	Tue, 15 Oct 2024 06:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LApnVPVr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eI16IcRj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66F8173357
-	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 05:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48471EC5
+	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 06:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728971684; cv=none; b=HbDC2yM+zHG2HII7wi6pX/4QVXX7zjs6qcWxkRuwnH8lb5VZcKK7pUqr0RvVJE1O28A5/IvR1uv01KqfcTpwm5mbQYPTZCvgP9hTIt4fueO0MOrP8j52xaw1TrVmgf7lzpSz7HDGB2W5LlJ071J+hXXDh3X+NVp53IW62XzyxwU=
+	t=1728972068; cv=none; b=gMsEfMPJZj4fjxlfAJBDjt8ZcR2a472YHwaSpWnbh312+cVAeRMQRpjkqUdDVOhpWgu4Rj9QZoJLadTt2DHzLZLiT7SmxzICp5ZEo6He9sKTzg/ENlLJcOag6dBxK7bMN0oz7u1MUoHtNx4Ukpe//hCEH9Ama1tb/JnYH2EP9SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728971684; c=relaxed/simple;
-	bh=IT+auioFxv3+OZIBud5Fsp7H9caV4TDN8/WEBQ0yHSU=;
+	s=arc-20240116; t=1728972068; c=relaxed/simple;
+	bh=OCZF+ogb2gFJ0Bl/bkyA2jV14682B1nBpxJUHoiauSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpuCy+EZ6ZuTTSC3Vbn9XD7Iex/Dyx6gNyCxJpy54OwGqnD1yUxuHoNwrF1M0ZRv1tNsYsXjECEzydJrO7NDCaz3Khf7zpsiiB35UU27cX/RZyYQqCdu4gMbJ5F1q9Nyp7mEAZkhbEF6J2IdzBaDaZg5HnxFXlXHMtqrPhTjOOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LApnVPVr; arc=none smtp.client-ip=209.85.216.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=R68pwo5BHMlsIOPXFlfNQgSlLko2y9jhdsFISDFJY/wURtQN4uLIreeJr8zBK23oEWYlcW1Jl950d65B8l4V6Hxq1qHy8rscBEciPq8r3cvQ2FnDjH+x+DTtvpYFvkeFF7wo3MtsVvqZpFa/OmPoodBeFXZzsA0F6uF8VSncNms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eI16IcRj; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2e0d9b70455so3881320a91.3
-        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 22:54:42 -0700 (PDT)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7e6ed072cdaso3139453a12.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 23:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728971682; x=1729576482; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1728972066; x=1729576866; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2FhKKTN87gH/FsbwHSaPQNj+PGKF39CR0evIV3VLhpE=;
-        b=LApnVPVr5joFfRVtiw1ej7+WBGJj/3oy5zhtyDcvJAG19wDLm0A4uH328Q6K6KSv8o
-         O0yF8/qlg8T4oG2aZn0F8p8KSKaiHwk0rUAMzHEx2RDQJfNoRSTftQzWxof7KKU3fW6W
-         eb4m1rtlrMi+4l3w10Lf+F4Np9Ztxk4SvIBihvFG0Zlwz49W22ZY9bDU5RY4oxpThUz3
-         PI4k0QVMAiTscbSj3WDeAHJpQLC+0X2YNdUOT+5aWCu51AfN+pmR2VUqVxlDkHZbapvD
-         VzofrWt+joMZd5EIiXBM03mX9fJOvHgBXvZWfhmgpfLG6YVZ52ve7cEXYSNpgZmtLh7i
-         GV/Q==
+        bh=/Ek0kKp36+dCaL9+v77MGUZt4oQavlbqq5pWMXw8Vu0=;
+        b=eI16IcRjQP38SHMQHor1/4clhQGYWmpBgjwp6jhuq4GwBysMXpHWTTBbbQmpuLmsgP
+         p8P1fBt9jEHo+PUbVY+p/uyD08ZuSoSl8f/qJ3BAo7x3uO9lRdvfMYiu8d2SY0dIROVy
+         u8/FB9NhYvzHjQz+waDtiZsLKF0Lq5bQ0wFOeX9Z/jxdVym38Pb7s3SRdu4nzkeOgVDH
+         J6y2ORqPe3T4H7xBtTwSZPjN0shvuunTlCJSjhDQL3QHmVli8J4nS1llVqsH5WXoiAjU
+         FWMm4bg86/pre9+gHEU2gc3IlY/ODY9xwkaR4Go6kvRnGQgIP0Cw2v59f171rdqy8g6S
+         j/xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728971682; x=1729576482;
+        d=1e100.net; s=20230601; t=1728972066; x=1729576866;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2FhKKTN87gH/FsbwHSaPQNj+PGKF39CR0evIV3VLhpE=;
-        b=U2fEzwxMUuNmVK5SJe8ZzFderbDB99WzrUZ2mEy6z7oswnB3YBVmTlHIYYzmLF6U1K
-         mEF9Y1lum6Poorp9noXmnpOmpkWt6tqkG3+BjN8auvrsladClwN4h8tQTfKf8+eOfVci
-         nbMl0cMfW4H1bEwJ58e+Kqe89hyTfAlNQp8ZkvOUbifk+yRuKZmGojz5mmtuSuhM6duX
-         EoVmhH6hZJ2gYEyz2piJuthRpv1djbbapRw80aB1j01t9Pk3ZA6DfBFFFxZTRbFDyPSx
-         Eh8XeXF5e5vDg7PZmr4R+o1wRSBAZx3N2MiVif1ey7xULuB0Zwx/cT75uc1REBLnQ+Qt
-         3MFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhadC9WiUx+/yz1yf2rM2bhHCLcxP2rTWVPkDA485cs1IbbNT7BMdlKA2LpQJWNzinn4L8/XmM/Ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlV5Bsoea/QcaK7i62/+ol64mqV1W1MptQGuQnyQHDhO3D4LCn
-	lN20MGvaPFCmKlE0MogfbUAIo7kQhw5NE8bjPSwl40Lhlsoyd8dM7J60e2qDgQ==
-X-Google-Smtp-Source: AGHT+IEnhUCFnIrUggbKFNm6VugtK+5i7awXLCAXzEPbKoMxSp01xJuEkszJVTGkZYoCowAYjiCw5g==
-X-Received: by 2002:a17:90b:193:b0:2e2:b2ce:e41e with SMTP id 98e67ed59e1d1-2e2f0add938mr17568497a91.13.1728971681961;
-        Mon, 14 Oct 2024 22:54:41 -0700 (PDT)
+        bh=/Ek0kKp36+dCaL9+v77MGUZt4oQavlbqq5pWMXw8Vu0=;
+        b=bo34xwvxZ4AgIjLTYx/rZeeYJ2FtIX1yBI5KAJmJZSZ4+jlaYNcfFrYPRW4ftfJY7m
+         7cpbEEGjQBLPGam0Buxs9j1MVEoPBALvQWbjybx5J6wnhPYeTC7UMGZYGy7lFd2FQBbr
+         /B9kCR70AK2sNetm1ZUZyYR549UBXmTX+/T39WB3ikhwP0q3dlYVF9YG8eyNeNXkgS9f
+         ecw8DVlZMsdYJK8UwJe3Rf09b+vsn5GWczscZSXq5Psk2PxloDqxjjS3P9Ni397CWNfg
+         D9fTQRp6A1zTP35J3yh5/mKtSKaZLxbITcDDaDCYounIaFfXZKebsx18T6rxCgOemH+i
+         WyKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUniRvnPo5nZIVDBJ4GgpBMxxqcpDmaEjSa6icCSsOr0ep93/p1xHOK7bNzezRn0bwt90amMxHuME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjWJ1m7zZGqzV9Jb3yBGf8xHseTf7JjKrH2hRdSPCpNWp2flFL
+	0q23MKsNGaszs6M6bra27zEJsoAKXOQuUwsg3H/qYZgpuGd78awic6NA/9NFOg==
+X-Google-Smtp-Source: AGHT+IF7DvcQz3KWfA5YDflWesLCWqoXgd7MJN7YAuPU0ZcZGc9DXmQFXHfHfffYl0G046u/bk2DEA==
+X-Received: by 2002:a05:6a20:d81a:b0:1cf:3c60:b8dc with SMTP id adf61e73a8af0-1d8c96906a8mr14215378637.34.1728972066465;
+        Mon, 14 Oct 2024 23:01:06 -0700 (PDT)
 Received: from thinkpad ([220.158.156.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e392f76180sm640501a91.55.2024.10.14.22.54.39
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c71320bsm535828a12.77.2024.10.14.23.01.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 22:54:41 -0700 (PDT)
-Date: Tue, 15 Oct 2024 11:24:37 +0530
+        Mon, 14 Oct 2024 23:01:05 -0700 (PDT)
+Date: Tue, 15 Oct 2024 11:31:00 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+Cc: Niklas Cassel <cassel@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	Niklas Cassel <niklas.cassel@wdc.com>
-Subject: Re: [PATCH] PCI: dwc: endpoint: Clear outbound address on unmap
-Message-ID: <20241015055437.lq736d4ocjlb4rtn@thinkpad>
-References: <20241004141000.5080-1-dlemoal@kernel.org>
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Subject: Re: [PATCH v6 3/6] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
+Message-ID: <20241015060100.kvqw6jzrdf2fdro6@thinkpad>
+References: <20241012113246.95634-1-dlemoal@kernel.org>
+ <20241012113246.95634-4-dlemoal@kernel.org>
+ <ZwuNjwdRLKsaM1Sd@ryzen.lan>
+ <5a770af8-d901-4376-ae5b-2ea28893a7cc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,39 +93,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241004141000.5080-1-dlemoal@kernel.org>
+In-Reply-To: <5a770af8-d901-4376-ae5b-2ea28893a7cc@kernel.org>
 
-On Fri, Oct 04, 2024 at 11:10:00PM +0900, Damien Le Moal wrote:
-> In addition to clearing the atu index bit in ob_window_map, also clear
-> the address mapped (outbound_addr array) in dw_pcie_ep_unmap_addr(), to
-> make sure that dw_pcie_find_index() does not endup matching again an ATU
-> index that was already unmapped.
+On Mon, Oct 14, 2024 at 10:09:23PM +0900, Damien Le Moal wrote:
+> On 10/13/24 18:06, Niklas Cassel wrote:
+> >>   * @map_addr: ops to map CPU address to PCI address
+> >>   * @unmap_addr: ops to unmap CPU address and PCI address
+> >>   * @set_msi: ops to set the requested number of MSI interrupts in the MSI
+> >> @@ -61,6 +93,8 @@ struct pci_epc_ops {
+> >>  			   struct pci_epf_bar *epf_bar);
+> >>  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >>  			     struct pci_epf_bar *epf_bar);
+> >> +	phys_addr_t (*align_addr)(struct pci_epc *epc, phys_addr_t pci_addr,
+> >> +				  size_t *size, size_t *offset);
+> > 
+> > This functions returns an aligned PCI address.
+> > Making it return a phys_addr_t for someone used to reading code in
+> > drivers/pci is very confusing, as you automatically assume that this is
+> > then the "CPU address" (which is not the case here).
+> > 
+> > Please change the return type (basically the same as my first comment in
+> > this reply) in order to make the API more clear.
 > 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> Sure I can send an incremental patch to change this to use u64 like other
+> operation s (e.g. map_addr) for the pci address.
+> 
+> Mani,
+> 
+> Are you OK with that ?
+> 
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Sounds good to me.
 
 - Mani
-
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 501e527c188e..7f4c082a2d90 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -294,6 +294,7 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  	if (ret < 0)
->  		return;
->  
-> +	ep->outbound_addr[atu_index] = 0;
->  	dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, atu_index);
->  	clear_bit(atu_index, ep->ob_window_map);
->  }
-> -- 
-> 2.46.2
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
