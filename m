@@ -1,132 +1,118 @@
-Return-Path: <linux-pci+bounces-14513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F3DF99DDDE
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 08:01:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9913499DE37
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 08:24:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C83D42856AB
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 06:01:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FDCC1F23328
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 06:24:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD78D16F0EC;
-	Tue, 15 Oct 2024 06:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EE22189B8A;
+	Tue, 15 Oct 2024 06:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eI16IcRj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p85FOT8c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48471EC5
-	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 06:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7023B189B88;
+	Tue, 15 Oct 2024 06:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728972068; cv=none; b=gMsEfMPJZj4fjxlfAJBDjt8ZcR2a472YHwaSpWnbh312+cVAeRMQRpjkqUdDVOhpWgu4Rj9QZoJLadTt2DHzLZLiT7SmxzICp5ZEo6He9sKTzg/ENlLJcOag6dBxK7bMN0oz7u1MUoHtNx4Ukpe//hCEH9Ama1tb/JnYH2EP9SU=
+	t=1728973473; cv=none; b=hBj16XX98pGsu/kSyndtDGLOV4YfhFYxlWRl2dbZbyIJLF8T7uZWq+DYm6oPRInA2uzGDhshL++RW756Z9KBI9oUfLotrBa78nloPrqfawZaZ8gmQTHSG5cdXh7RAjjgGTGQ8TXz+xwVGJjkAIHGhYmTOe7TKjb7P/HdKNermyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728972068; c=relaxed/simple;
-	bh=OCZF+ogb2gFJ0Bl/bkyA2jV14682B1nBpxJUHoiauSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R68pwo5BHMlsIOPXFlfNQgSlLko2y9jhdsFISDFJY/wURtQN4uLIreeJr8zBK23oEWYlcW1Jl950d65B8l4V6Hxq1qHy8rscBEciPq8r3cvQ2FnDjH+x+DTtvpYFvkeFF7wo3MtsVvqZpFa/OmPoodBeFXZzsA0F6uF8VSncNms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eI16IcRj; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7e6ed072cdaso3139453a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 14 Oct 2024 23:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728972066; x=1729576866; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/Ek0kKp36+dCaL9+v77MGUZt4oQavlbqq5pWMXw8Vu0=;
-        b=eI16IcRjQP38SHMQHor1/4clhQGYWmpBgjwp6jhuq4GwBysMXpHWTTBbbQmpuLmsgP
-         p8P1fBt9jEHo+PUbVY+p/uyD08ZuSoSl8f/qJ3BAo7x3uO9lRdvfMYiu8d2SY0dIROVy
-         u8/FB9NhYvzHjQz+waDtiZsLKF0Lq5bQ0wFOeX9Z/jxdVym38Pb7s3SRdu4nzkeOgVDH
-         J6y2ORqPe3T4H7xBtTwSZPjN0shvuunTlCJSjhDQL3QHmVli8J4nS1llVqsH5WXoiAjU
-         FWMm4bg86/pre9+gHEU2gc3IlY/ODY9xwkaR4Go6kvRnGQgIP0Cw2v59f171rdqy8g6S
-         j/xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728972066; x=1729576866;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ek0kKp36+dCaL9+v77MGUZt4oQavlbqq5pWMXw8Vu0=;
-        b=bo34xwvxZ4AgIjLTYx/rZeeYJ2FtIX1yBI5KAJmJZSZ4+jlaYNcfFrYPRW4ftfJY7m
-         7cpbEEGjQBLPGam0Buxs9j1MVEoPBALvQWbjybx5J6wnhPYeTC7UMGZYGy7lFd2FQBbr
-         /B9kCR70AK2sNetm1ZUZyYR549UBXmTX+/T39WB3ikhwP0q3dlYVF9YG8eyNeNXkgS9f
-         ecw8DVlZMsdYJK8UwJe3Rf09b+vsn5GWczscZSXq5Psk2PxloDqxjjS3P9Ni397CWNfg
-         D9fTQRp6A1zTP35J3yh5/mKtSKaZLxbITcDDaDCYounIaFfXZKebsx18T6rxCgOemH+i
-         WyKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUniRvnPo5nZIVDBJ4GgpBMxxqcpDmaEjSa6icCSsOr0ep93/p1xHOK7bNzezRn0bwt90amMxHuME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjWJ1m7zZGqzV9Jb3yBGf8xHseTf7JjKrH2hRdSPCpNWp2flFL
-	0q23MKsNGaszs6M6bra27zEJsoAKXOQuUwsg3H/qYZgpuGd78awic6NA/9NFOg==
-X-Google-Smtp-Source: AGHT+IF7DvcQz3KWfA5YDflWesLCWqoXgd7MJN7YAuPU0ZcZGc9DXmQFXHfHfffYl0G046u/bk2DEA==
-X-Received: by 2002:a05:6a20:d81a:b0:1cf:3c60:b8dc with SMTP id adf61e73a8af0-1d8c96906a8mr14215378637.34.1728972066465;
-        Mon, 14 Oct 2024 23:01:06 -0700 (PDT)
-Received: from thinkpad ([220.158.156.88])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c71320bsm535828a12.77.2024.10.14.23.01.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 23:01:05 -0700 (PDT)
-Date: Tue, 15 Oct 2024 11:31:00 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v6 3/6] PCI: endpoint: Introduce pci_epc_mem_map()/unmap()
-Message-ID: <20241015060100.kvqw6jzrdf2fdro6@thinkpad>
-References: <20241012113246.95634-1-dlemoal@kernel.org>
- <20241012113246.95634-4-dlemoal@kernel.org>
- <ZwuNjwdRLKsaM1Sd@ryzen.lan>
- <5a770af8-d901-4376-ae5b-2ea28893a7cc@kernel.org>
+	s=arc-20240116; t=1728973473; c=relaxed/simple;
+	bh=vsXOOA5ANMXEDreUY4REBTLChawkE5C8ea8kSRyDtmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h5gIsWV3tTsbY+9BpH6iA5QGT5Do2zCmBgdlS1ekAkwzoqUhceNBg2nieq7JtvjV6gPixxpiwJvWSdk5jTrHs2a/Igm6MYQzw7MZ3RuIjrWyQ5hb0VAvOj2WiWoP3462ZScuiF4+63Z+eJASoSxvfzxIz2TpWqjYiMCQLMyLB+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p85FOT8c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52347C4CEC7;
+	Tue, 15 Oct 2024 06:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728973473;
+	bh=vsXOOA5ANMXEDreUY4REBTLChawkE5C8ea8kSRyDtmA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p85FOT8cZgvfLGCc1nlifVmk6Mi8WDsF9W8hMsGffKM4EA/8w2Su3ZQGJHMiolj0H
+	 W8zezNObIX0jzBcZBwFR50fZ9tIv46OeeTrYsFdHIEWeupFqXD4qRo9uDPeru7bTFE
+	 w0g5mWyfHRp7olfKZk1KZoM25aHTbRmNMxghlpogYHhzLfigL9XcbXCzNoIdtqXpdE
+	 Pko92kAN8yMAYTY9Y1NPj7hhanQMK9zrLShWXEBzpQcHpHRvJaHqiOAp2NW+mS7Sfh
+	 RMOlMws/3+CUa0kTE8/6R0X8yCqEPM6aymRyKEtaKl34pQw141zEX5XYvqRql4C9RB
+	 zVxHBjvRkEs9w==
+Message-ID: <b4e4718e-d601-4ea2-b5e6-e4e1e778afe3@kernel.org>
+Date: Tue, 15 Oct 2024 15:24:30 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5a770af8-d901-4376-ae5b-2ea28893a7cc@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/12] PCI: rockchip-ep: Handle PERST# signal in
+ endpoint mode
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-rockchip@lists.infradead.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
+References: <20241007041218.157516-1-dlemoal@kernel.org>
+ <20241007041218.157516-13-dlemoal@kernel.org>
+ <20241010104932.gfrunorhpnhan5wp@thinkpad>
+ <b525abc8-4066-4097-9a36-558b84144228@kernel.org>
+ <20241012123111.bg6rzxotabkxfchc@thinkpad>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20241012123111.bg6rzxotabkxfchc@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 14, 2024 at 10:09:23PM +0900, Damien Le Moal wrote:
-> On 10/13/24 18:06, Niklas Cassel wrote:
-> >>   * @map_addr: ops to map CPU address to PCI address
-> >>   * @unmap_addr: ops to unmap CPU address and PCI address
-> >>   * @set_msi: ops to set the requested number of MSI interrupts in the MSI
-> >> @@ -61,6 +93,8 @@ struct pci_epc_ops {
-> >>  			   struct pci_epf_bar *epf_bar);
-> >>  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> >>  			     struct pci_epf_bar *epf_bar);
-> >> +	phys_addr_t (*align_addr)(struct pci_epc *epc, phys_addr_t pci_addr,
-> >> +				  size_t *size, size_t *offset);
-> > 
-> > This functions returns an aligned PCI address.
-> > Making it return a phys_addr_t for someone used to reading code in
-> > drivers/pci is very confusing, as you automatically assume that this is
-> > then the "CPU address" (which is not the case here).
-> > 
-> > Please change the return type (basically the same as my first comment in
-> > this reply) in order to make the API more clear.
+On 10/12/24 21:31, Manivannan Sadhasivam wrote:
+> On Fri, Oct 11, 2024 at 06:30:31PM +0900, Damien Le Moal wrote:
+>> On 10/10/24 19:49, Manivannan Sadhasivam wrote:
+>>>> +static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
+>>>> +{
+>>>> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+>>>> +	struct rockchip_pcie *rockchip = &ep->rockchip;
+>>>> +	struct device *dev = rockchip->dev;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!rockchip->ep_gpio)
+>>>> +		return 0;
+>>>> +
+>>>> +	/* PCIe reset interrupt */
+>>>> +	ep->perst_irq = gpiod_to_irq(rockchip->ep_gpio);
+>>>> +	if (ep->perst_irq < 0) {
+>>>> +		dev_err(dev, "No corresponding IRQ for PERST GPIO\n");
+>>>> +		return ep->perst_irq;
+>>>> +	}
+>>>> +
+>>>> +	ep->perst_asserted = true;
+>>>
+>>> How come?
+>>
+>> Yeah, a bit confusing. This is because the gpio active low / inactive high, so
+>> as soon as we enable the IRQ, we are going to get one IRQ even though perst gpio
+>> signal has not changed yet.
 > 
-> Sure I can send an incremental patch to change this to use u64 like other
-> operation s (e.g. map_addr) for the pci address.
-> 
-> Mani,
-> 
-> Are you OK with that ?
-> 
+> Which means you are looking for a wrong level! What is the polarity of the
+> PERST# gpio in DT?
 
-Sounds good to me.
+It is not defined in the default DT with the kernel. I added an overlay file to
+define it together with the EP mode. And as I said above, the gpio is active
+low. If I reverse that to active high, it does not work.
 
-- Mani
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Damien Le Moal
+Western Digital Research
 
