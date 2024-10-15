@@ -1,144 +1,97 @@
-Return-Path: <linux-pci+bounces-14533-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14534-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E71C99E2A8
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 11:21:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D68499E477
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 12:47:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A8422B23DFB
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 09:21:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4BBDB21EA9
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 10:47:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CBFE1BE854;
-	Tue, 15 Oct 2024 09:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxXn0iJA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2DEA1D0490;
+	Tue, 15 Oct 2024 10:47:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FD61D014E
-	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 09:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC6E16A92D
+	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 10:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728984061; cv=none; b=BehoEj69QFM6KZQY70daLYRNagkdeBC8OU77bEKZ5K0bvrui5uhEx9YkXj4ErPy1+IJPXhtIh3avEpkdQ4/cQ1Kwx3ba8UqCOg/RzwR8jcaLw9KT/WYUHH0rKntRRD7q29psqUeSgPEcG/QwDeHl8IyL5otDvwaH9fso8DpvBBQ=
+	t=1728989252; cv=none; b=pl6tcwf5fW7IcjhqFsE1YNd0yNMzOmcRW4mBoMOdJswKy/aaO+wRnyuuo45GlngPGwVlHIwRAnb5Yi4MKqnxleV2ZDQsN2gYx6CrtEgEhZo2gOg3YwMxYC2HylBKoUsUPXoCLuC+vAxDI0HfRBdIIsTsolzVGPQyMHsz4b0Umic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728984061; c=relaxed/simple;
-	bh=YnhwqwGB0TxreHfwjU5Hc7Iv1rs6wpmBFNzPpZ8DerY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OllbPG3/nL5xe5qTcHdpBSta8SKarNY623ipxmpTcKMQyuerhXNA4MCUwOyHYZxOxpOzb844/C515f4LqM4/tMQw0Lb9pxJ2fSuKt+YHn+hC6l9S39hT5EuA6PgHYPGnanONoE5NFZ5SXpACd/YOTM6g0VQLXJNFjtCzdXjmqVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxXn0iJA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893C8C4CEC6;
-	Tue, 15 Oct 2024 09:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728984060;
-	bh=YnhwqwGB0TxreHfwjU5Hc7Iv1rs6wpmBFNzPpZ8DerY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sxXn0iJAkY6PalI21njgzvZZOSgpmIuLzde1GxopIKYiaqnQVyNsd0hFI2kYM9IdV
-	 g9M03xXgzcmFeB3YiPqWyloz+QBr10BzWr+WjOweaUm7aBdGr8ewR8wuIaw0N6Kgiq
-	 T0aFqKFbCFBLTqD5y6hqLW0TMciiBsX9Q5k0IvKPZ42kioSPkdtFUaKkaT08KF+SiG
-	 3DOXfyhOhjGHy5KQ3fVmtDBpzJw/vfYky7zg33Sa0pU086pcW1hiouGl5GxmF4W6hm
-	 QacKZ7vkrsMGwnljdHYczY8dFm5UOAAIEzi+z1KvCc8ZYA7U8oeDuxVCniqQr7s6oT
-	 hiC1w0922GByA==
-Date: Tue, 15 Oct 2024 11:20:56 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
+	s=arc-20240116; t=1728989252; c=relaxed/simple;
+	bh=umAoHZaLg8OL5sN8+MqwYrOLLhFk3DJGmdHe+GY/UiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uCDkGKEaAd+SAgNIFAPYL29Pbr93kJd6Ts9R989c/RY8cDRMMTPBG06ZoCIrFdFqHtdrKgVVlBf86BCkneXLBDlziauPrHygaODGhflW9KSJPfi8lx/XSYHffRYIw4Z7ytjZU6q3Ik6/AxXJXv8lwatqmqj+E2qVMK8MxUXlTlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2f01:8211:4b4e:86e2])
+	by michel.telenet-ops.be with cmsmtp
+	id QanN2D00G4yGcJj06anNtu; Tue, 15 Oct 2024 12:47:22 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1t0f53-003nsb-9h;
+	Tue, 15 Oct 2024 12:47:22 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1t0f5G-004mAF-Bs;
+	Tue, 15 Oct 2024 12:47:22 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Rob@rox.of.borg,
+	Herring@rox.of.borg,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v2] PCI: endpoint: Improve pci_epc_ops::align_addr()
- interface
-Message-ID: <Zw4z-K8YCGM4aIzD@ryzen.lan>
-References: <20241015090712.112674-1-dlemoal@kernel.org>
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] PCI: Constify dummy pci_register_io_range() fwnode_handle
+Date: Tue, 15 Oct 2024 12:47:20 +0200
+Message-Id: <6a3ae390e2a978ec452ecbce3082cf51f7ee3076.1728989210.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241015090712.112674-1-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 15, 2024 at 06:07:12PM +0900, Damien Le Moal wrote:
-> The PCI endpoint controller operation interface for the align_addr()
-> operation uses the phys_addr_t type for the PCI address argument and
-> return a value using this type. This is not ideal as PCI addresses are
-> bus addresses, not regular memory physical addresses. Replace the use of
-> phys_addr_t for this operation with the generic u64 type. To be
-> consistent with this change the Designware driver implementation of this
-> operation (function dw_pcie_ep_align_addr()) as well as the type of PCI
-> address fields of struct pci_epc_map are also changed.
-> 
-> Fixes: e98c99e2ccad ("PCI: endpoint: Introduce pci_epc_mem_map()/unmap()")
-> Fixes: cb6b7158fdf5 ("PCI: dwc: endpoint: Implement the pci_epc_ops::align_addr() operation")
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
-> Changes from v1:
->  - Also updated the type of the pci_addr and map_pci_addr fields of
->    struct pci_epc_map.
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +++---
->  include/linux/pci-epc.h                         | 8 ++++----
->  2 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 0ada60487c25..df1460ed63d9 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -268,12 +268,12 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
->  	return -EINVAL;
->  }
->  
-> -static phys_addr_t dw_pcie_ep_align_addr(struct pci_epc *epc,
-> -			phys_addr_t pci_addr, size_t *pci_size, size_t *offset)
-> +static u64 dw_pcie_ep_align_addr(struct pci_epc *epc, u64 pci_addr,
-> +				 size_t *pci_size, size_t *offset)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> -	phys_addr_t mask = pci->region_align - 1;
-> +	u64 mask = pci->region_align - 1;
->  	size_t ofst = pci_addr & mask;
->  
->  	*pci_size = ALIGN(ofst + *pci_size, ep->page_size);
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index f4b8dc37e447..de8cc3658220 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -49,10 +49,10 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
->   * @virt_addr: virtual address at which @pci_addr is mapped
->   */
->  struct pci_epc_map {
-> -	phys_addr_t	pci_addr;
-> +	u64		pci_addr;
->  	size_t		pci_size;
->  
-> -	phys_addr_t	map_pci_addr;
-> +	u64		map_pci_addr;
->  	size_t		map_size;
->  
->  	phys_addr_t	phys_base;
-> @@ -93,8 +93,8 @@ struct pci_epc_ops {
->  			   struct pci_epf_bar *epf_bar);
->  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  			     struct pci_epf_bar *epf_bar);
-> -	phys_addr_t (*align_addr)(struct pci_epc *epc, phys_addr_t pci_addr,
-> -				  size_t *size, size_t *offset);
-> +	u64	(*align_addr)(struct pci_epc *epc, u64 pci_addr, size_t *size,
-> +			      size_t *offset);
->  	int	(*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  			    phys_addr_t addr, u64 pci_addr, size_t size);
->  	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -- 
-> 2.47.0
-> 
+If CONFIG_PCI=n:
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+    drivers/of/address.c: In function ‘of_pci_range_to_resource’:
+    drivers/of/address.c:247:45: error: passing argument 1 of ‘pci_register_io_range’ discards ‘const’ qualifier from pointer target type [-Werror=discarded-qualifiers]
+      247 |                 err = pci_register_io_range(&np->fwnode, range->cpu_addr,
+	  |                                             ^~~~~~~~~~~
+    In file included from drivers/of/address.c:12:
+    include/linux/pci.h:2022:63: note: expected ‘struct fwnode_handle *’ but argument is of type ‘const struct fwnode_handle *’
+     2022 | static inline int pci_register_io_range(struct fwnode_handle *fwnode,
+	  |                                         ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+
+Fixes: 6ad99a07e6d2ed91 ("PCI: Constify pci_register_io_range() fwnode_handle")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ include/linux/pci.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 11421ae5c5586443..733ff6570e2d5544 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2019,7 +2019,7 @@ static inline int pci_request_regions(struct pci_dev *dev, const char *res_name)
+ { return -EIO; }
+ static inline void pci_release_regions(struct pci_dev *dev) { }
+ 
+-static inline int pci_register_io_range(struct fwnode_handle *fwnode,
++static inline int pci_register_io_range(const struct fwnode_handle *fwnode,
+ 					phys_addr_t addr, resource_size_t size)
+ { return -EINVAL; }
+ 
+-- 
+2.34.1
+
 
