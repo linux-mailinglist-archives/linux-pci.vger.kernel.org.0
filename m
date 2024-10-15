@@ -1,99 +1,141 @@
-Return-Path: <linux-pci+bounces-14586-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14587-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58EB699F7E5
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 22:11:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D101C99F8F2
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 23:18:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D43BA284011
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 20:11:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60CC4B224CA
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 21:18:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572051F582E;
-	Tue, 15 Oct 2024 20:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70F871FBF47;
+	Tue, 15 Oct 2024 21:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSVxLUjO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Es04bfnH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280E51B3936;
-	Tue, 15 Oct 2024 20:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA231FE102
+	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 21:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729023102; cv=none; b=nhE/DZ07fc2r6n/09w5RE9a9dyVvHLK2v+UgzARaMPaPJyGm8xR5ZiKE0VGZt3GkJ/L/NJ/Rm8xCnu9et7NJiZtmF780/XZdhTEn9maLdiToAeial6hCvS68qj1tUlJ5ICeTZaq6bVkfY9sHvwFLW+clGZZQ0YnTcjWZRhJKMuc=
+	t=1729027055; cv=none; b=UoM6INItXZpCXsqs05iOtLwaUcuLSlwPTHmIuVJeZ7eMtH+KhoTp+EDxq6deFZo7N9ZS07xmHNBG59YrcE0hddyN5dH9sK/NIlQoLkSvd3XHI7w8MnuRKs5z+tw+lRKcnSkXPg3IsV2XN01hrjLuGLZJQXv6yDYhv3NKFdxhz94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729023102; c=relaxed/simple;
-	bh=ch+bU3YCeAL9AGC+OR03PPFSLvIjMObE1/y1gqTqgWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bySBxFQuVypVo4Iw0/H5/4T8l4GQoJ7v7eDkK4X6LiO8uUFnxPBlzcrN8GRWaw3j18//3MVBCA15CXPey+wKWpOSqVIG7csiBylyxl+KgS0XTc5FVsa6PYMgW5eBbyEHot0JezUxhbQS733GKYxDhCovW8a8G4r7bktNsOE438o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSVxLUjO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A02C4CEC6;
-	Tue, 15 Oct 2024 20:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729023101;
-	bh=ch+bU3YCeAL9AGC+OR03PPFSLvIjMObE1/y1gqTqgWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aSVxLUjO5MT7Aro1Wr0ura4irHKfPboHSiKqyOHXoCK244uHQEeUNPNbReEGwD4Zk
-	 2kRt8/kW2sWtNjKCd/zr06e9kn0nmT1kVnLcFSr4dfnkVAWp2HFjNcMwiHfEM9UYRi
-	 XJ6E1Vq28LqsE+5r1PK/dOmfUyBEzL+IRFFxg7RL/kpMBNptnbBwAtS+tR/BORKV0X
-	 uCXePKO8UfFVbMaQUIFebFM9ORBQws/657/ktitvK3xOBotlKPfoem6xoL/WLY8b1T
-	 ok6kWPnBDE/HflRGWoVlK0NEdLMdJgRCeN48wzQ20KbfB8+vs9HAVn30yCfkYNk8R/
-	 cjw2xUkE7Jlpw==
-Date: Tue, 15 Oct 2024 15:11:40 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	s=arc-20240116; t=1729027055; c=relaxed/simple;
+	bh=sq1soXl6abewwlFa2cbC8njUDVPYJn8dPV3vVeC5jfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b9rJH3nVeQWL78X1gF9yhP6T6UeB8oEDI605ceDND1ZH1gfz3AbmCSMSWayOIWK53o6GGxQACdLRHYZuJ3TcELvcQY60zsLHra9PgfLvakbS2oT2m2CNWPLnxr9MA6iRBuJGRxmQGt+sAsQkUVjw8CNgTzW/R77XDUGT4vy+gFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Es04bfnH; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20ca96a155cso36707005ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 14:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1729027051; x=1729631851; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=45JHgiZllHV9bG+rAdE9g36380sJR4Ghem5bkWEe8y4=;
+        b=Es04bfnHbqQMIpb3BGY2wj/E7r7GNf93YN5M9k4bgRM/cQtCisjTgdtiZO4M8Raka4
+         YWaxTIakiN0meX6YmnAnooEX7ws36BKLEXo+FNzNgbq4qSXI9Oqlou24+DHBjtIy9gse
+         wwlcFBe2uCaiVFOwYF+VQ/O2UC2NW+1gwooBY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729027051; x=1729631851;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=45JHgiZllHV9bG+rAdE9g36380sJR4Ghem5bkWEe8y4=;
+        b=brxIjOR3jjC1nD/kSTvDKeFwjwBx4emNhI1imA2sLqQE4DOxdoJoMzBG96xDBi8SwB
+         9K8R5I4IaNUkniU8R9VcZbQoJfj6dck9V0oLLzpoysuc4ByLuLehETR5CSVxDhg/FDx1
+         YIwyb1LG8fOdU18R20qtTuT4RQ8R0q8Tq2FJd4GyjCkDBLbWXmMV2GiHD4J6Q7o06IUj
+         xL5eMYQ53kepHBBix0GhuQMlRn+OSI9hXhsD8nHFtDGkOybldHhfyYAM7g4Zvf48n1gD
+         w/Dma/sL5PFqxGJKZJn7nqBLjbqots1Mpr1D498Eyahr2hFqQSUhMmeY7fe3S9JbxJOY
+         OAxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKPGMgckGHbfp9s8Ltx52WathStw0V+tIf7GrcSLylIyE7CDHShg7opztUyBDtTko9GG+ahLfD6AU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBybaHqeacenTx9laCUKuRp2w3sQKjyUaLjySEHMEAZBP99NCX
+	yU5okSRqMP8HdaYlY3tb2wiqQ+Wzvr/ZOZqrG1uR0HoDJa9mEEEe5R5eEjuk6VHqkh0zFnyl7Lg
+	=
+X-Google-Smtp-Source: AGHT+IEBiwMyi3fjfu1hF5JodP8eCHbFlmnTBRYbtyOyrIuYZzVq5QuUA3QT0frTpd8QsWbReK0dag==
+X-Received: by 2002:a17:903:22c4:b0:20c:a055:9f07 with SMTP id d9443c01a7336-20ca145f3d6mr197854775ad.26.1729027051559;
+        Tue, 15 Oct 2024 14:17:31 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:eef3:dbf8:fbe3:ab12])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-20d17f828c8sm16720525ad.37.2024.10.15.14.17.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2024 14:17:31 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pci@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>,
-	linux-kernel@vger.kernel.org, Jim Quinlan <jim2101024@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH v3 01/11] dt-bindings: interrupt-controller: Add bcm2712
- MSI-X DT bindings
-Message-ID: <172902309954.1771543.1322600375013063730.robh@kernel.org>
-References: <20241014130710.413-1-svarbanov@suse.de>
- <20241014130710.413-2-svarbanov@suse.de>
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Marc Zyngier <marc.zyngier@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Brian Norris <briannorris@google.com>,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH] PCI: dwc: Use level-triggered handler for MSI IRQs
+Date: Tue, 15 Oct 2024 14:12:16 -0700
+Message-ID: <20241015141215.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241014130710.413-2-svarbanov@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Brian Norris <briannorris@google.com>
 
-On Mon, 14 Oct 2024 16:07:00 +0300, Stanimir Varbanov wrote:
-> Adds DT bindings for bcm2712 MSI-X interrupt peripheral controller.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> ---
-> v2 -> v3:
->  - dropped '>' from the description entry (Rob)
->  - dropped interrupt-controller and interrupt-cells properties (Rob)
->  - dropped msi-controller and use 'unevaluatedProperties' (Rob)
->  - use const: 0 in msi-cells (Rob)
->  - dropped msi-ranges property (Rob)
->  - re-introduce brcm,msi-offset private property,
->    which looks unavoidable at that time
-> 
-> .../brcm,bcm2712-msix.yaml                    | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
-> 
+Per Synopsis's documentation, the msi_ctrl_int signal is
+level-triggered, not edge-triggered.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
+("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
+which actually dropped preexisting use of handle_level_trigger().
+Looking at the patch history, this change was only made by request:
+
+  Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
+  https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
+
+  "Are you sure about this "handle_level_irq"? MSIs are definitely edge
+   triggered, not level."
+
+However, while the underlying MSI protocol is edge-triggered in a sense,
+the DesignWare IP is actually level-triggered.
+
+So, let's switch back to level-triggered.
+
+In many cases, the distinction doesn't really matter here, because this
+signal is hidden behind another (chained) top-level IRQ which can be
+masked on its own. But it's still wise to manipulate this interrupt line
+according to its actual specification -- specifically, to mask it while
+we handle it.
+
+Signed-off-by: Brian Norris <briannorris@google.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 3e41865c7290..0fb79a26d05e 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -198,7 +198,7 @@ static int dw_pcie_irq_domain_alloc(struct irq_domain *domain,
+ 	for (i = 0; i < nr_irqs; i++)
+ 		irq_domain_set_info(domain, virq + i, bit + i,
+ 				    pp->msi_irq_chip,
+-				    pp, handle_edge_irq,
++				    pp, handle_level_irq,
+ 				    NULL, NULL);
+ 
+ 	return 0;
+-- 
+2.47.0.rc1.288.g06298d1525-goog
 
 
