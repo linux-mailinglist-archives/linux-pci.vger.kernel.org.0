@@ -1,171 +1,186 @@
-Return-Path: <linux-pci+bounces-14519-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63B3299E169
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 10:44:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 848C899E1EE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 11:00:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7D8EB21E72
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 08:44:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2E751F24C79
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Oct 2024 09:00:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1F017335E;
-	Tue, 15 Oct 2024 08:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93CBC43AA8;
+	Tue, 15 Oct 2024 09:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giDKSgSg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBMbIueZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EE720EB
-	for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 08:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2341B0137;
+	Tue, 15 Oct 2024 09:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728981874; cv=none; b=C3GbljsktXSitIwQtiODn28PCR803q1UX+mPAPHLzqb66F+KTf+nam6UNCbuD5wvx9I95aWjx6QYVe56J2/5AbnVVCVFFKmQJVt6H3V/pmfI/7PkjjJV8eefkwzY5K+q4FsuRna9t+hObqMsh4xrQJMMhZSRyV/CTJQhgnDqnZM=
+	t=1728982844; cv=none; b=mDiqCySWuGZCLQQs0YsU9/X9LrzRhZyK4BcRJKE3q+q2raR7jo1ofOPmDrPOs1nBksdYkXDLdwIj0Qsv/3UwZJQ3BcGtOHHp7AlVG0fac7mwXs0HW4Ne5gTxYnBFfd0NqKxpKury/Y+KVkG3rbPXsOrKgplodsQ39mKY4PBAiZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728981874; c=relaxed/simple;
-	bh=j5WsRaFh897jmadK1YuA7gdX4HYeWmzFc2CXep5iFlw=;
+	s=arc-20240116; t=1728982844; c=relaxed/simple;
+	bh=qe+VieO/eCTvYDsrp/UAKb2T83UiGqmE9oBxmFoHN+4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BzBo/UWPATQQSzvxzISOS4mtndgJxe2KEImqbroaoyb6akSnWWVQZ8s0PPgNskQ77zYadKLVbUOUymsJ51GiXq7p9Nc05txzeoQwOQYIJTcEJhX2uvz4Q2Rj4C8k01ZhA/byrXy6OpQe3S5ciX4/6JliHf4tUdeTMzu1B1Ymtc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=giDKSgSg; arc=none smtp.client-ip=209.85.128.170
+	 To:Cc:Content-Type; b=nCfilgkD8SdJ6NMcFiKVnhLkGQQ6S+2ScRte3AO0nQrpzEU7zMVJlEmxNpAS/6sTWCorQdjnPcg0vz3OA7lWg9h9qWPI/PzFAlgIOBvuKPOA4wyecBUD4MTt6MFy0u0JSa7qhQolMxzhV4ZvLsq6HOOr432+jAMdoz+z0ssErxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBMbIueZ; arc=none smtp.client-ip=209.85.160.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6e2e41bd08bso52669047b3.2
-        for <linux-pci@vger.kernel.org>; Tue, 15 Oct 2024 01:44:32 -0700 (PDT)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-287b8444ff3so1889544fac.1;
+        Tue, 15 Oct 2024 02:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728981872; x=1729586672; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CV/sELMrizY0LAaxVmZiIiYO2WTkFOHnkTeI6q1+hGo=;
-        b=giDKSgSg/ny4k1QXLL37QKtjY9JxENs/DhWnpEFDArn7znIk9b+91fbd7aXugQczzk
-         37nYzYBlF0nb4A4uWt+p2ANDqIaS/RSYjnafuw/G5B6knuuvwXB3RSsEzAa94a6yxEnV
-         vDgaDwJmbYJaiv7MVvgxJys0XUP0yHQ40CQOtD8kDd3Q8TSKus1dJSPGHcCsDC3yyP5H
-         2qc6WPfX3YVirxZ+8MGQCSgcHMB8MJeYQvCT671gh8bnv+sKTQKjFOGrYAC4aQeQXStH
-         nIwfivQL0R3UxDCG8K7qml9eW9dhgQUwpCPni0CnOCZpgU5Dzk4jgrjhrKYM7yKBwRRG
-         KBDA==
+        d=gmail.com; s=20230601; t=1728982842; x=1729587642; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RLp6JVFP095nF2eYEIFQ7G5HMe9lih7YXmsVYNx7OwQ=;
+        b=BBMbIueZXl0oaApXRDpD4EY1fSsNv0KXG2/5qHQtYM5qHNI3kvBXBOcWXWfd9x41it
+         GscZ85aHygfjlGx252VjWg3oSk4Ozb8DfJTYesZEgEup215uzjeS+hnva4/EiPjFxwL/
+         esiEAghHlVjv70uvYozDK8nGiYPAUZuH1jRATquTWrYWFHbeGpgvUORB7xiWtmR8m9gx
+         nWqJvqzkOnlCNKe1oS/lHYC8OAlYSTDPJQMrSaUZ7p9pKaVz8zik8IqPXsBlkpLZRvLT
+         QVFN5AHzoWSqo9xBfh59PN4bnyFAq8dPcem6aHsjqxkYOi89uI4kj4YQ7y7sXsnTNNbg
+         AI7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728981872; x=1729586672;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CV/sELMrizY0LAaxVmZiIiYO2WTkFOHnkTeI6q1+hGo=;
-        b=lrzGg29rsXUPTuvQVPNIGdY4+C48TD78W+mKIZNgiS3bdwAKcPTbldqnoFLO/znH5k
-         QFi/jkrzUhwsKljNAeaIoAr/cMyptkWM1x89Yov/C6dzTPSKN3h23d9+CK/USBnBq9rf
-         cAwDbWImQwIrnAEME5kZT38298+E4vlL52ib8Z9LqZJ0/u38+Hb3Yeg5HMucioz5fz4k
-         2Sz9eUxfGHJgA2JwZZUT0eYQMJeFMKyBSRBXtWnXXkd5qglgt9RkHcFdWSvwP1FnJoME
-         f87MzVWELVXtv7KJv5QOrzfG4KQGyd1HwdmB9o2KWNqLoyxwgbbD82hUFUe52fke0Uva
-         9zjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXd5n3TP47uE22jwnoIPxcxlhP+8YBSk4a9l9wfJYEySmA32YRg9KIoxRCo/MJKjgK/pt4BoQr+kDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykUWkH4W9ixgpcoLS54Fox0ptJ+l3bDI/pkXGdAjqvekYOhxcz
-	dMjr713CaOae+u0jV5w8WWL71PlbTRiq22myvj255sdlqhNEvkDXwVnVpuuAuvmqfgKaSGIW6NA
-	2V3Fk6yFk/BgSo8C7hT1LzFcCAy0=
-X-Google-Smtp-Source: AGHT+IHp41ZUkuy8t7fW+V6Whg6mEvkLnWx7GtgpRR6diON7/DFFNPw9PcdirYwTH3qUiuNr6Bp3chZK6A07LJ5SjII=
-X-Received: by 2002:a05:690c:6f88:b0:6e3:ed8:7f17 with SMTP id
- 00721157ae682-6e36413ac6bmr92912517b3.16.1728981871826; Tue, 15 Oct 2024
- 01:44:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728982842; x=1729587642;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RLp6JVFP095nF2eYEIFQ7G5HMe9lih7YXmsVYNx7OwQ=;
+        b=XrafhARqKYHhZ3ipLqVIk51/IqV6UK5SrHLuZVvXnn/dw6+H2e++ON7+qaN1W+PGQ1
+         eR7RwWNExDNTP7og0bebESBlJZtiGd0DNtJX6NfUAwxfl2giOgrAuIBV61cMhuYN9zUs
+         OkZvF0U92AUjX97zYD4U4Ykx3dVk4VigK3HxUEt2PTq6IVXv8sDnBFVV1l4KewJNff+E
+         ai2n5GrhbBdfAeXg1hYpgmgoO0NpYLEoOkcXUYPdBA43V/O21izYkXmzyAR+QbG/yd94
+         3K57MYSteq7rC9xOawDB5To4ASwXDNB+nrqQ5hWb3o0eDhC9cZLc+u6Oz7T0kq/57G/c
+         DYWA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+g4CHIAJlQuxroYL08aTrCW1jmqJMjRjHo/Z1LPJ9QCsIlIk8ZuZ1XCL6gyDY50yuk+pxr9EYZtKnTQE=@vger.kernel.org, AJvYcCWwPM92xMO9ufPKvdCWw3/cog4yE2RVYbFhdX+RjbiEnfTZVe3iwPFGfg5hx8rx9Z0MAmpVmGBt91nH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwshgqZZ9fgE9XL44UuLdqfqyPODdwIXWi1XTxt5gGi90zpEuOK
+	OloWfdnyDzHKixC5HogOyop3qOAg+5aaRMc/1OiRN3Hya9hvfcILz3Zqlq1QZXqZ5gEa9nJAI3y
+	qLUkDXbzJF/9rjKuO91eKavZVZHA=
+X-Google-Smtp-Source: AGHT+IGFGtlzDsf36x9uxxnLnYaB/UrLJC/zDnON1yPfZ7aozRRs96CNtkoqkrN3NerehmbM1Xihyj4mT9OyRW0OvyU=
+X-Received: by 2002:a05:6871:250c:b0:288:aad0:b098 with SMTP id
+ 586e51a60fabf-288aad0b2a3mr2635253fac.46.1728982840464; Tue, 15 Oct 2024
+ 02:00:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALfBBTuhUcdBAQgKFhGP+9gMqEthA_dOE6V3RGn6HTZm7nNBYg@mail.gmail.com>
- <20241004215657.GA362992@bhelgaas> <CALfBBTtjXJiZBSfFTUAPsD+G15nPQQsn-2sCrAt1UwPsrNsqNg@mail.gmail.com>
-In-Reply-To: <CALfBBTtjXJiZBSfFTUAPsD+G15nPQQsn-2sCrAt1UwPsrNsqNg@mail.gmail.com>
-From: Maverickk 78 <maverickk1778@gmail.com>
-Date: Tue, 15 Oct 2024 14:14:20 +0530
-Message-ID: <CALfBBTtfbriqSoffdU-cV-OkMbomX_1o8hosaBvA6EJvC+paQQ@mail.gmail.com>
-Subject: Re: pcie hotplug driver probe is not getting called
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org, 
-	Matthew W Carlis <mattc@purestorage.com>
+References: <20241014135210.224913-1-linux.amoon@gmail.com>
+ <20241014135210.224913-3-linux.amoon@gmail.com> <20241015051141.g6fh222zrkvnn4l6@thinkpad>
+In-Reply-To: <20241015051141.g6fh222zrkvnn4l6@thinkpad>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Tue, 15 Oct 2024 14:30:23 +0530
+Message-ID: <CANAwSgSEkFtY6-i3TOPZbwB5EuD4BHboh_jsTwByQw7NLLrstQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] PCI: rockchip: Simplify reset control handling by
+ using reset_control_bulk*() function
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, 
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-pci@vger.kernel.org>, 
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-rockchip@lists.infradead.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Manivannan,
 
-The freeze was a platform issue, it's fixed and things are working as expected.
+Thanks for your review comments.
 
-Using this patch from "Matthew W Carlis <mattc@purestorage.com>", will
-this patch be merged in future ?
-
-https://patchwork.ozlabs.org/project/linux-pci/patch/20231223212235.34293-2-mattc@purestorage.com/
-
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 14a4b89a3b83..8e023aa97672 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -257,12 +257,19 @@  static int get_port_device_capability(struct
-pci_dev *dev)
-  }
-
-  /*
-+ * _OSC AER Control is required by the OS & requires OS to control AER,
-+ * but _OSC DPC Control isn't required by the OS to control DPC; however
-+ * it does require the OS to control DPC. _OSC DPC Control also requres
-+ * _OSC EDR Control (Error Disconnect Recovery) (PCI Firmware - DPC ECN rev3.2)
-+ * PCI_Express_Base 6.1, 6.2.11 Determination of DPC Control recommends
-+ * platform fw or OS always link control of DPC to AER.
-+ *
-  * With dpc-native, allow Linux to use DPC even if it doesn't have
-  * permission to use AER.
-  */
-  if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
--    pci_aer_available() &&
--    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-+    pci_aer_available() && (pcie_ports_dpc_native ||
-+    (dev->aer_cap && host->native_aer)))
-  services |= PCIE_PORT_SERVICE_DPC;
-
-  if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-
-On Mon, 7 Oct 2024 at 22:15, Maverickk 78 <maverickk1778@gmail.com> wrote:
+On Tue, 15 Oct 2024 at 10:41, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 >
-> Very helpful!
+> On Mon, Oct 14, 2024 at 07:22:03PM +0530, Anand Moon wrote:
+> > Refactor the reset control handling in the Rockchip PCIe driver,
+> > introduce a more robust and efficient method for assert and
+> > deassert reset controller using reset_control_bulk*() API. Using the
+> > reset_control_bulk APIs, the reset handling for the core clocks reset
+> > unit becomes much simpler.
+> >
+> > Spilt the reset controller in two groups as per the
+> >  RK3399 TM  17.5.8.1 PCIe Initialization Sequence
+> >     17.5.8.1.1 PCIe as Root Complex.
+> >
+> > 6. De-assert the PIPE_RESET_N/MGMT_STICKY_RESET_N/MGMT_RESET_N/RESET_N
+> >    simultaneously.
+> >
 >
-> Yes, bios doesn't support hotplug or dpc.
+> I'd reword it slightly:
 >
-> I used the patches listed in previous mail to enable both dpc & pciehp with command line Param "pcie_port=native"
+> Following the recommendations in 'Rockchip RK3399 TRM v1.3 Part2':
 >
-> Hotplug works fine, but dpc trigger after hotplug causes complete freeze, I suspect platform issue, may be issue with backdoor mechanism of hotplug is causing it, will inspect and come back.
+> 1. Split the reset controls into two groups as per section '17.5.8.1.1 PC=
+Ie
+> as Root Complex'.
 >
+> 2. Deassert the 'Pipe, MGMT Sticky, MGMT, Core' resets in groups as per s=
+ection
+> '17.5.8.1.1 PCIe as Root Complex'. This is accomplished using the
+> reset_control_bulk APIs.
 >
-> On Sat, 5 Oct 2024, 03:27 Bjorn Helgaas, <helgaas@kernel.org> wrote:
->>
->> On Fri, Oct 04, 2024 at 11:50:28PM +0530, Maverickk 78 wrote:
->> > The platform I am working on is rtl simulation of pcie switch(Gen6)
->> > with a backdoor mechanism to trigger the HotPlug event.
->> >
->> > Tried following patches independently to have both hotplug and dpc
->> > driver register and handle respective events.
->> >
->> > https://patchwork.ozlabs.org/project/linux-pci/patch/20231223212235.34293-2-mattc@purestorage.com/
->> > https://patchwork.kernel.org/project/linux-pci/patch/20240108194642.30460-1-mattc@purestorage.com/#25680870
->> >
->> > Tried following
->> >
->> > - Trigger hot removal and add, the event is triggered and respective
->> > msi in /proc/interrupt increments and kernel logs the event(dmesg)
->> > - Trigger hot removal and add, the event is triggered and respective
->> > msi in /proc/interrupt increments and kernel logs the event(dmesg)
->> > - Trigger DPC using "DPC software trigger" in DPC control register
->> >
->> > The kernel hangs, the console is non-responsive.
->> >
->> > Can dpc and pciehp co-exist and handle the events?
->>
->> Yes, they're intended to coexist.  Your platform firmware doesn't
->> advertise support for it, though:
->>
->> [    1.736168] acpi PNP0A08:00: _OSC: platform does not support [PCIeHotplug LTR DPC]
->>
->> I don't think there's a kernel parameter to force DPC usage if the
->> platform doesn't advertise it.  There should be a message like "DPC:
->> enabled with IRQ X" if the dpc driver is active.
->>
->> Even if the dpc driver isn't active, I don't think the kernel should
->> hang if you trigger DPC.  Since this is a QEMU guest, you should be
->> able to use a debugger to figure out why it's hung.
->>
->> Bjorn
+> > - devm_reset_control_bulk_get_exclusive(): Allows the driver to get all
+> >   resets defined in the DT thereby removing the hardcoded reset names
+> >   in the driver.
+> > - reset_control_bulk_assert(): Allows the driver to assert the resets
+> >   defined in the driver.
+> > - reset_control_bulk_deassert(): Allows the driver to deassert the rese=
+ts
+> >   defined in the driver.
+> >
+>
+> No need to list out the APIs. Just add them to the first paragraph itself=
+ to
+> explain how they are used.
+>
+
+Here is a short version of the commit message.
+
+Introduce a more robust and efficient method for assert and deassert
+the reset controller using the reset_control_bulk*() API.
+Simplify reset handling for the core clocks reset unit with the
+reset_control_bulk APIs.
+
+devm_reset_control_bulk_get_exclusive(): Obtain all resets from the
+            device tree, removing hardcoded names.
+reset_control_bulk_assert(): assert the resets defined in the driver.
+reset_control_bulk_deassert(): deassert the resets defined in the driver..
+
+Following the recommendations in 'Rockchip RK3399 TRM v1.3 Part2':
+
+1. Split the reset controls into two groups as per section '17.5.8.1.1 PCIe
+as Root Complex'.
+
+2. Deassert the 'Pipe, MGMT Sticky, MGMT, Core' resets in groups as per sec=
+tion
+'17.5.8.1.1 PCIe as Root Complex'. This is accomplished using the
+reset_control_bulk APIs.
+
+Does this look good to you? Let me know if you need any further adjustments=
+!
+
+I will fix this for CLK bulk as well.
+
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>
+> Some nitpicks below. Rest looks good.
+
+I will fix these in the next version.
+
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
+
+Thanks
+-Anand
 
