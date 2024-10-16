@@ -1,235 +1,275 @@
-Return-Path: <linux-pci+bounces-14669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40EEF9A101D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 18:54:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6290C9A101F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 18:54:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64A051C20B16
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 16:54:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26A48281100
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 16:54:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02301DA26;
-	Wed, 16 Oct 2024 16:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="NZ6odxnY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91E620E02F;
+	Wed, 16 Oct 2024 16:54:36 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2086.outbound.protection.outlook.com [40.107.21.86])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A275187344;
-	Wed, 16 Oct 2024 16:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729097660; cv=fail; b=qPW8HWKaq6swvFtm3sF3gWFuiTWen0mD/6IikAKASJSJHHFotFeb4f72toUrOoTR+B+ZiCac+rHNZP3VTIUt+s/kVA2NCms2VrhISeTNVjX/K3sCPH++x2Zvo+SQtZSTUbv7naTyuzCtwR4zXYSeFuQaiEli5ObtDMdJpovzI4k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729097660; c=relaxed/simple;
-	bh=dfbSaNPdBrIxz7PmlxOadv6RbebSFEP1WJpgL9StJCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rPvk0Duw7fkGI5ei3/JdZzkJhg1WANSwnlhRbtvPt0kjD7vEXSsgllYB5e+4BrLlzFgqsJG7QGXtjFu0bsuyr3NnwXkxqsXQcIck5+Yi+oEvJZm/54OgBE/vpwf7Ap8G/pvvd/cetrDat9pjg6+Z77MS7ntVWyvWspMsIYVa0z4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=NZ6odxnY; arc=fail smtp.client-ip=40.107.21.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tT59ZV3P22V5yAwHj/3YziTM2XRMeW5WwJGN83m8dlR9NLd5WjQ+jyHvphtS6JmUwW9v/AvZJsh+5lxDQwCDLHOYufYT1BIbl5tburoRNNiMnYFvL+BEJHs0XWLL+yOtBqaP5wMLgGt/Fn2fW8uLxCz34kCbo5edNUV2OUnnqiqGTtSCmPdWhs4p/THiKJrJ6PvI2qrtQOqYw6I6rfuFiUW3ZuhBKGHQR1jIednNYN/Mr1tiGNqCNBtMaVGJdK/RKZnWaG9mvj2y0hItfzt5EmXkfl1lmYqE70hRtV1bQGc7hIFTi5uR9KMwhOQIj5BnrJre38mcnbSyWPLKZjP8cA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=budkkrLsTk28a+V07QiO6ZeI7sdKGoofnMTQqGJagxw=;
- b=asstE1rz3JVfnnyyvRXFApzPx2X7LHZF48E2NVqV7NI4HB7KUl6jxI5jWH5OuTfGA6FY9qjFd7/gC6gdVrGWghXNWmoeJVZxbIi/zAsEu0tNUQkrnsK121ab1NLrEXxeVN4gLSlk+4z4NeFI+AHeGSxKpo9miVUejaJ7zpplyL6eUxlLKuaGT4fu9YXTjsiGq/w7MHFw44KBzVeq+1Ow/QfoUVf0ERnJzvVRrsxORDUu0dPuodTNTbntRF1Jt0J6E4GjoHQgoe+yJWxjx/d2pqPKJ8QQ7+CWK293Gcy5CxYv5014pOVk54FZhJZETrHHGSlhfRwCMdi6JD8meLSDEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=budkkrLsTk28a+V07QiO6ZeI7sdKGoofnMTQqGJagxw=;
- b=NZ6odxnYfln6UoGkTWm37m7nHuiN5PjGDuF5mJUe+XJQ7tEvhOPbgPRdz0JIhrr3glkP41j0m4cJqZsE6G9Gj2gML7Rzw8APuWa3oIALJH0VXLXErUpshX05Yz6oStxr2t9to6JjDyqoUirHeLwlNkt+qK0J02O+AH8MwiK+zoOEt0qP2SqNuRY64O6kXclCx0Redzky79C6gju7VERr/1X72vyLk3hWet8su3Y34+FqRpSYN7+u0yGeeqd8dB3NEhQzMfmK42p85JmfKpPbacTobI2hy5KJ3SCQHLstKWfFgrILV0R8rP2YNiJBeXsq/5VlAC/dhk8/bX+DqftiwQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB6974.eurprd04.prod.outlook.com (2603:10a6:803:133::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
- 2024 16:54:13 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8069.016; Wed, 16 Oct 2024
- 16:54:13 +0000
-Date: Wed, 16 Oct 2024 12:54:03 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
-	dlemoal@kernel.org, maz@kernel.org, jdmason@kudzu.us
-Subject: Re: [PATCH v3 3/6] PCI: endpoint: Add RC-to-EP doorbell support
- using platform MSI controller
-Message-ID: <Zw/vq4EweR+yTphB@lizhi-Precision-Tower-5810>
-References: <20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com>
- <20241015-ep-msi-v3-3-cedc89a16c1a@nxp.com>
- <87bjzkau33.ffs@tglx>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bjzkau33.ffs@tglx>
-X-ClientProxiedBy: BY5PR17CA0018.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711B41FDF99;
+	Wed, 16 Oct 2024 16:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729097676; cv=none; b=uhSZ73Ia7xgrSmeu/Y50198UHWXrqghl98MEddUtf3nUK34XpBJLpuU5P4YBMrifP8uZ86yzZN3FcOxGHzQSZ0ekG0e4PjZj0s1D36Qp2M1JOAux3JWlZFvjV2O3iss1wO0GX7Q1VqEMgZXe8AcLxUQyuB3AaMsE/5mpqtZT21c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729097676; c=relaxed/simple;
+	bh=PYlv1pv0ilaHXl9zv60mR5y5zmk1H8dbAl6VIgahPj4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mFFwbHegblbdRWS9RGDFRYg/nPcSrzKVkaHi+MBXrTtXZBcGEfmgb7zbdB5Cp9gGfTkI2p57JbQI0DWv/IkXfE9HQlGLSNJxu76qdbeIHEorGXPRz23gxxaJe7o0jg3Zee2L6LVYGFhRD8PbUIfxRtxQXQ7WY5/7bVbFer4hONw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTH522zhRz6LDKl;
+	Thu, 17 Oct 2024 00:49:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A00E2140A86;
+	Thu, 17 Oct 2024 00:54:28 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
+ 2024 18:54:27 +0200
+Date: Wed, 16 Oct 2024 17:54:26 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
+	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
+	<smita.koralahallichannabasappa@amd.com>
+Subject: Re: [PATCH 07/15] cxl/aer/pci: Add CXL PCIe port uncorrectable
+ error recovery in AER service driver
+Message-ID: <20241016175426.0000411e@Huawei.com>
+In-Reply-To: <20241008221657.1130181-8-terry.bowman@amd.com>
+References: <20241008221657.1130181-1-terry.bowman@amd.com>
+	<20241008221657.1130181-8-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB6974:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72ec0502-8666-4287-9b10-08dcee0329ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NA0rJw2946m2dCGQW1YFp0Ym/ek+uJUtG9ugBHGz/ALx8z08gl3yH2/YKnQ2?=
- =?us-ascii?Q?zIuKGgIHBvbgESQuf4MCHTWODlixQp1AwggMIMIS3ZEDrbn1NZDSuoJ9ak1q?=
- =?us-ascii?Q?OsMs0LjAihQyvt/1Xs0JKjJZm2lXULYleo1pGwLg56XmJo/ZaSGB+JMpvoRr?=
- =?us-ascii?Q?hHwOxj4+jy1qDrwYIeB3WiUTJAeVsgXhPpX2l/zte/IpEOiQycSkOubz3ub+?=
- =?us-ascii?Q?Si70AOeV6qG6A6do+p7MC2KtwGwpdB5obfWQZu3NBPHfIv9VCo8I3Bwr84FA?=
- =?us-ascii?Q?pijVSxw8Rwb+5mf9PZW+eLAm/nKC6ffnBQlDC7I2WOlHb79ZPdHf1eFTpMpj?=
- =?us-ascii?Q?9OWHkMcTEM+6drC0N/TDEm9I4wEPxvjPbGaYGZvofO7r3NNrXTOtjjlHFLVv?=
- =?us-ascii?Q?AH0Je7CXnEyCNinu3XUxGEYf6ycccsX2XowmzQQuyMQ6wolSV54NKcUVtooe?=
- =?us-ascii?Q?fjMhikvsg8Av3FeQpMfpcskiaIZQ9XOc01gkA7wEDnpPa8qZUTLV+qBSG0Z8?=
- =?us-ascii?Q?YiM9viwRTbq/dOkiDDW7utxzIYIfgz2uy1GXspXqc+scjIOsesmmC6AxFjic?=
- =?us-ascii?Q?fk2U5L5BYTcWGKaG9qNvkXGncdYP7TdU+eD80X7Ro96fGBW/sqz6jyVYYTYv?=
- =?us-ascii?Q?70mOOfk7IxlTzrrO2ro0E7LXINFt6c4jbb7EnVP+OVZBWVvw1eHuFHJzD3Rg?=
- =?us-ascii?Q?D4uXOrLruuA0UVyNgwsP90EeMTAJw/WKd30H05jEjagJ3J3k0xJlTkqlhFFS?=
- =?us-ascii?Q?Z8WzdhqfE3lv/bp9m0TQQ6G5oGHbGQdwOvY8pxNsaYJDD0ktuBJIJ30AqpZe?=
- =?us-ascii?Q?l0T1duBstmPeEJ3Oe+DAXAAG3/WhmJ0gfvZpOgP063eYY8jQRujNj2ZHCxAK?=
- =?us-ascii?Q?MwqBO8z2/dGqlTT4Re2sBxYkRLiRVC7e6Vryk2h3A0kW8OZelYVRXnmIDG+h?=
- =?us-ascii?Q?F629afBlCtX9WlIoTI1GqCbQ9sgYvYUcbxW9J8yDUvT4f5GI5Xr9l9n7WZI4?=
- =?us-ascii?Q?axHknR5nljPIEVvBVUjdZbKRbR/GsrsADS+2pda41z6brzXhriaLD8bec/um?=
- =?us-ascii?Q?OqnLOfrDmn4JLWB5v8UThvua+acNoH1eGHdoQegojJHrm6ZCHf0lW3/Bgc3k?=
- =?us-ascii?Q?Pm2aPlIUPg8pxJuDVc6d8OdHObJilO8er2RiRkXhiEZ3bOoiJizxcrI3+aS1?=
- =?us-ascii?Q?RLBbD5qxDx4Z2Ybqo/I5dN88zvuhy6p+m37CdPbiiCU8SdOpJD0frKwOlI1f?=
- =?us-ascii?Q?w4wFnvKlteCUkICojds1zq0p61YlZkFFoEAVs4ms5VHFzPnf1vPzC721fVou?=
- =?us-ascii?Q?EHIaSQu/nHmADQK7MGcVXQRhWDBLnsRz6D6W0HDI2pAQPQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Mi7pH1lwWZQW9/ihkV1WglZ3fMYX6ikbh2nHDs6RNOe07ImafcC+V4q2EKg5?=
- =?us-ascii?Q?/hddRxi5oIWrLQqbvQhD3dVwBdVUn/EShIPjPtjR/ehP7fowHLrEqq5fAZCC?=
- =?us-ascii?Q?E0RxetykxBdhVvJovVbuFVjO+COgBKxvs789Q62Qb3hFTDC5Tu+xGQ/iJvFY?=
- =?us-ascii?Q?7zc6eY7zVkqMYQIXeVNoK5xH+cnXMsnIZWby6K+RD60HCzkGVKUKysWzWOF+?=
- =?us-ascii?Q?llBnO1b6Wt0XQGfExmmucV1z9AdYmeAQ9BQcBQxTv2ol82U45037r6aSt7Nq?=
- =?us-ascii?Q?eJ6UfgAABr5mOULAoU3YQTQlPuQU6QXAqN2Nt4utWvKK7vz1lh9M/LAKhUSl?=
- =?us-ascii?Q?3HqW+XUaXxHvQliqUl7T/fKYIjPgtifrSlIRd7tnbdvWVzRnlOWIiJ0OYiWV?=
- =?us-ascii?Q?kh74iJg4MxJcyjyUZHzOfihf59PoI10HhTSk419Yo+E4xmaaLD/ggS6xhxRP?=
- =?us-ascii?Q?Jx7LHtl3Kof0RlL228goNhKYflfY/z5pHw07w4N1rSTPYwZKPyQ5VNRWzWCB?=
- =?us-ascii?Q?5bkoaAoLk4/HCjWbnjzuYpYTwODQn9A/DIKMZTNvl0U5MSYSZ6GMTBoL/URu?=
- =?us-ascii?Q?fG/uCumjIvEZs89rvms4lc7gEQvioCH1FhZL5YvooTUANBcu42K9h6MR/rLa?=
- =?us-ascii?Q?igfndmISLNtunb09VU10hVa5hL0PNj+e1pPcoUeu0xTqNWvKY+6nqKvQNBbo?=
- =?us-ascii?Q?V+nuNggwLdgQZzB8c2VJ6PpZA+T8GuDBNRDP9YOdCRU5VX94+d19GodhE3j9?=
- =?us-ascii?Q?KLFBbViHPMXAsNb0rsYEb/6KsGZ+eN5aTsEOBCsWmFSskB6FHswPWrIRshtZ?=
- =?us-ascii?Q?rafSe6jRG+prhUnO9LZ4/7hYbjfrnfbtHbG4q9GSk+hiMVUw41xFN8toEqCM?=
- =?us-ascii?Q?9pM5itHnrlvqLRjZUKQJWoeqlvNy7KZVgC55+Fp9zVMnIwjK8tFp4Z2VTQ5+?=
- =?us-ascii?Q?h/u23zx+mp91Q6/Ji+8taBXsX9/VEP0BtOB/Nhul7DtsKCoLscslNxJO3FjP?=
- =?us-ascii?Q?D8Rl1e3x+EdYsLxu+TS81TzyOezyb3fAF06IzQ3Tq+cKT/gUPp16ULP85Qkp?=
- =?us-ascii?Q?3g/Bl6iyX6SXC3xlIhWgukocqtJ2VLGeKS6rctSpZkEdt0cJgme4cCYUBA2X?=
- =?us-ascii?Q?81MZIdV7ltutRH/opmanPS7IFCNTiHcuuBgiyb7ODcZ3LXiGPokqvaJ58jcR?=
- =?us-ascii?Q?5qJPQBiOf7IfoMylxS+PrmNgcnf2KNhr4zC7SNBucnCweBbIueWOkNPZx1Ek?=
- =?us-ascii?Q?x5EXqpxM9PoYE1cN4/EJiqlAYBjoDk80HPijKb2NXWLkJMaz8OmyHPUF0seC?=
- =?us-ascii?Q?lvJm83rITc4afVmQCp4DXuxgXgPMYS6w4bwDTPPp8L3rbLtBCKgFYaAW64Bh?=
- =?us-ascii?Q?NtjJcUMHbq1idnxdrsQlPsnAyXZYuNP8MrQ8dOZeSPv5QOa++LLsAyz0kcPZ?=
- =?us-ascii?Q?HhvSP0u1R3XulfxwGx0eL+qVz0EYoaGj/rtzDhLJp8bCcjMkuIbt2fCiS8JJ?=
- =?us-ascii?Q?/mIkQwDjU+3hqJBABimuMrscwepxIzt60daCXhZJoVbCS5iZGh2a5zi/ViZO?=
- =?us-ascii?Q?huqXXTh02rEl41IbGsk=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72ec0502-8666-4287-9b10-08dcee0329ad
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 16:54:13.3020
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jZm8wniK1pc/Hk750slkgGDUOTBOU+ySkglIeaAquBXCsbBObe9A0EaujWBJbgxwqTpVb+/MRob+2cwdMKQ5HA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6974
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Oct 16, 2024 at 06:30:40PM +0200, Thomas Gleixner wrote:
-> On Tue, Oct 15 2024 at 18:07, Frank Li wrote:
-> > +static int pci_epc_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_db)
-> > +{
-> > +	struct msi_desc *desc, *failed_desc;
-> > +	struct pci_epf *epf;
-> > +	struct device *dev;
-> > +	int i = 0;
-> > +	int ret;
-> > +
-> > +	if (IS_ERR_OR_NULL(epc))
-> > +		return -EINVAL;
-> > +
-> > +	/* Currently only support one func and one vfunc for doorbell */
-> > +	if (func_no || vfunc_no)
-> > +		return -EINVAL;
-> > +
-> > +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-> > +	if (!epf)
-> > +		return -EINVAL;
-> > +
-> > +	dev = epc->dev.parent;
-> > +	ret = platform_device_msi_init_and_alloc_irqs(dev, num_db, pci_epc_write_msi_msg);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to allocate MSI\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	scoped_guard(msi_descs, dev)
-> > +		msi_for_each_desc(desc, dev, MSI_DESC_ALL) {
->
-> That's just wrong. Nothing in this code has to fiddle with MSI
-> descriptors or the descriptor lock.
->
->         for (i = 0; i < num_db; i++) {
->             virq = msi_get_virq(dev, i);
+On Tue, 8 Oct 2024 17:16:49 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Thanks, Change to msi_for_each_desc() is based on comments on
-https://lore.kernel.org/imx/20231017183722.GB137137@thinkpad/
+> The current pcie_do_recovery() handles device recovery as result of
+> uncorrectable errors (UCE). But, CXL port devices require unique
+> recovery handling.
+> 
+> Create a cxl_do_recovery() function parallel to pcie_do_recovery(). Add CXL
+> specific handling to the new recovery function.
+> 
+> The CXL port UCE recovery must invoke the AER service driver's CXL port
+> UCE callback. This is different than the standard pcie_do_recovery()
+> recovery that calls the pci_driver::err_handler UCE handler instead.
+> 
+> Treat all CXL PCIe port UCE errors as fatal and call kernel panic to
+> "recover" the error. A panic is called instead of attempting recovery
+> to avoid potential system corruption.
+> 
+> The uncorrectable support added here will be used to complete CXL PCIe
+> port error handling in the future.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
-So my original implement is correct.
+Hi Terry,
 
->
-> > +			ret = request_irq(desc->irq, pci_epf_doorbell_handler, 0,
-> > +					  kasprintf(GFP_KERNEL, "pci-epc-doorbell%d", i++), epf);
-> > +			if (ret) {
-> > +				dev_err(dev, "Failed to request doorbell\n");
-> > +				failed_desc = desc;
-> > +				goto err_request_irq;
-> > +			}
-> > +		}
-> > +
-> > +	return 0;
-> > +
-> > +err_request_irq:
-> > +	scoped_guard(msi_descs, dev)
-> > +		msi_for_each_desc(desc, dev, MSI_DESC_ALL) {
-> > +			if (desc == failed_desc)
-> > +				break;
-> > +			kfree(free_irq(desc->irq, epf));
->
-> All instances of interrupts get 'epf' as device id. So if the third
-> instance failed to be requested, you free 'epf' when freeing the first
-> interrupt and then again when freeing the second one.
+I'm a little bothered by the subtle difference in the bus walks
+in here vs the existing cases. If we need them, comments needed
+to explain why.
 
-Thanks, I actually want to free kasprintf() at request_irq(). I miss
-understand the return value of free_irq().
+If we are going to have separate handling, see if you can share
+a lot more of the code by factoring out common functions for
+the pci and cxl handling with callbacks to handle the differences.
 
-Frank
->
-> Thanks,
->
->         tglx
+I've managed to get my head around this code a few times in the past
+(I think!) and really don't fancy having two subtle variants to
+consider next time we get a bug :( The RC_EC additions hurt my head.
+
+Jonathan
+
+>  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 31090770fffc..de12f2eb19ef 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -86,6 +86,63 @@ static int report_error_detected(struct pci_dev *dev,
+>  	return 0;
+>  }
+>  
+> +static int cxl_report_error_detected(struct pci_dev *dev,
+> +				     pci_channel_state_t state,
+> +				     enum pci_ers_result *result)
+> +{
+> +	struct cxl_port_err_hndlrs *cxl_port_hndlrs;
+> +	struct pci_driver *pdrv;
+> +	pci_ers_result_t vote;
+> +
+> +	device_lock(&dev->dev);
+> +	cxl_port_hndlrs = find_cxl_port_hndlrs();
+
+Can we refactor to have a common function under this and report_error_detected()?
+
+> +	pdrv = dev->driver;
+> +	if (pci_dev_is_disconnected(dev)) {
+> +		vote = PCI_ERS_RESULT_DISCONNECT;
+> +	} else if (!pci_dev_set_io_state(dev, state)) {
+> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
+> +			dev->error_state, state);
+> +		vote = PCI_ERS_RESULT_NONE;
+> +	} else if (!cxl_port_hndlrs || !cxl_port_hndlrs->error_detected) {
+> +		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+> +			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+> +			pci_info(dev, "can't recover (no error_detected callback)\n");
+> +		} else {
+> +			vote = PCI_ERS_RESULT_NONE;
+> +		}
+> +	} else {
+> +		vote = cxl_port_hndlrs->error_detected(dev, state);
+> +	}
+> +	pci_uevent_ers(dev, vote);
+> +	*result = merge_result(*result, vote);
+> +	device_unlock(&dev->dev);
+> +	return 0;
+> +}
+
+>  static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
+>  {
+>  	pm_runtime_get_sync(&pdev->dev);
+> @@ -188,6 +245,28 @@ static void pci_walk_bridge(struct pci_dev *bridge,
+>  		cb(bridge, userdata);
+>  }
+>  
+> +/**
+> + * cxl_walk_bridge - walk bridges potentially AER affected
+> + * @bridge:	bridge which may be a Port, an RCEC, or an RCiEP
+> + * @cb:		callback to be called for each device found
+> + * @userdata:	arbitrary pointer to be passed to callback
+> + *
+> + * If the device provided is a bridge, walk the subordinate bus, including
+> + * the device itself and any bridged devices on buses under this bus.  Call
+> + * the provided callback on each device found.
+> + *
+> + * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,
+> + * call the callback on the device itself.
+only call the callback on the device itself.
+
+(as you call it as stated above either way).
+
+> + */
+> +static void cxl_walk_bridge(struct pci_dev *bridge,
+> +			    int (*cb)(struct pci_dev *, void *),
+> +			    void *userdata)
+> +{
+> +	cb(bridge, userdata);
+> +	if (bridge->subordinate)
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+The difference between this and pci_walk_bridge() is subtle and
+I'd like to avoid having both if we can.
+
+> +}
+> +
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		pci_channel_state_t state,
+>  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+> @@ -276,3 +355,74 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  
+>  	return status;
+>  }
+> +
+> +pci_ers_result_t cxl_do_recovery(struct pci_dev *bridge,
+> +				 pci_channel_state_t state,
+> +				 pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+> +{
+> +	struct pci_host_bridge *host = pci_find_host_bridge(bridge->bus);
+> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> +	int type = pci_pcie_type(bridge);
+> +
+> +	if ((type != PCI_EXP_TYPE_ROOT_PORT) &&
+> +	    (type != PCI_EXP_TYPE_RC_EC) &&
+> +	    (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+> +	    (type != PCI_EXP_TYPE_UPSTREAM)) {
+> +		pci_dbg(bridge, "Unsupported device type (%x)\n", type);
+> +		return status;
+> +	}
+> +
+
+Would similar trick to in pcie_do_recovery work here for the upstream
+and downstream ports use pci_upstream_bridge() and for the others pass the dev into
+pci_walk_bridge()?
+
+> +	cxl_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
+> +
+> +	pci_dbg(bridge, "broadcast error_detected message\n");
+> +	if (state == pci_channel_io_frozen) {
+> +		cxl_walk_bridge(bridge, cxl_report_frozen_detected, &status);
+> +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+> +			pci_warn(bridge, "subordinate device reset failed\n");
+> +			goto failed;
+> +		}
+> +	} else {
+> +		cxl_walk_bridge(bridge, cxl_report_normal_detected, &status);
+> +	}
+> +
+> +	if (status == PCI_ERS_RESULT_PANIC)
+> +		panic("CXL cachemem error. Invoking panic");
+> +
+> +	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> +		status = PCI_ERS_RESULT_RECOVERED;
+> +		pci_dbg(bridge, "broadcast mmio_enabled message\n");
+> +		cxl_walk_bridge(bridge, report_mmio_enabled, &status);
+> +	}
+> +
+> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> +		status = PCI_ERS_RESULT_RECOVERED;
+> +		pci_dbg(bridge, "broadcast slot_reset message\n");
+> +		report_slot_reset(bridge, &status);
+> +		pci_walk_bridge(bridge, report_slot_reset, &status);
+> +	}
+> +
+> +	if (status != PCI_ERS_RESULT_RECOVERED)
+> +		goto failed;
+> +
+> +	pci_dbg(bridge, "broadcast resume message\n");
+> +	cxl_walk_bridge(bridge, report_resume, &status);
+> +
+> +	if (host->native_aer || pcie_ports_native) {
+> +		pcie_clear_device_status(bridge);
+> +		pci_aer_clear_nonfatal_status(bridge);
+> +	}
+> +
+> +	cxl_walk_bridge(bridge, pci_pm_runtime_put, NULL);
+> +
+> +	pci_info(bridge, "device recovery successful\n");
+> +	return status;
+> +
+> +failed:
+> +	cxl_walk_bridge(bridge, pci_pm_runtime_put, NULL);
+> +
+> +	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
+> +
+> +	pci_info(bridge, "device recovery failed\n");
+> +
+> +	return status;
+> +}
+
 
