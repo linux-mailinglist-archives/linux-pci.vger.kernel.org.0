@@ -1,94 +1,118 @@
-Return-Path: <linux-pci+bounces-14690-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14691-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22EC69A128A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 21:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05D939A12B8
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 21:38:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D375B286563
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 19:29:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC5752862B9
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 19:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62885194A4B;
-	Wed, 16 Oct 2024 19:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6443D2141C3;
+	Wed, 16 Oct 2024 19:38:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="ZjyhWYi3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tS1OkGaV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7091165EE6
-	for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 19:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC391865ED;
+	Wed, 16 Oct 2024 19:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729106983; cv=none; b=k6Lls/wFCVr3+iiJKYSORpj04lByYVEpFK2CGnUUlnGKHdhE6t5hEIdJrVwghnAvQb/H+DVe6QcoiTGLvtiC91uoyOSrvWXpnYVo5pwbJF5f0H3caWgffLfAhDBIEM5f7ZG1Vk0DyzFdDa7w+5j/2103Pq74mHNFJD663B7re7Y=
+	t=1729107484; cv=none; b=BynfS8jrGog4bMOYW6iUdyZsRw7wnVLVqng8TNJEVzeUWnsQxP0tJ6bd1syZQPKmdLL1rPq5lPpfyYOobhwypbw+vB4W6Kh54gPrB1AIFr4SxHsM1sysZKKj88R1C2U3ZpjjK4yLvyXU5wnB121B2SIsZ6LUdOqOuO7SEGml8zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729106983; c=relaxed/simple;
-	bh=E3pz5NktMcCGwJTcSzoyiX83mvd/y+YLGX6taQ43k9c=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=bj9Ttw1VxvWer/rFZpnWD3oI/xitCRh7ztJK/2qXFKBuB5mK/xSzPzneoXL7v+EGet9ThIaxlvbsiEBoQw+n5Nr2jvWK3gs4DnVF9W+T3yKnSxUrsAauZJDSOnqHGkuZ2mUDw4A17VkbNr0+AZw2YGfOxh6umYtxphO/3lM+hvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=ZjyhWYi3; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=E3pz5NktMcCGwJTcSzoyiX83mvd/y+YLGX6taQ43k9c=; b=ZjyhWYi3kKoj0lDPInjmIHNWv7
-	p1AGmi/U/v97PQhWcRgzXCPMQh00dWWn/8/kL7Z58Qfo1O8tScKSDWfjUsraLS3DyEWS+wzMRpUva
-	P/gtgxpxc4WWEfLVSXgYjagpzFjp83q9HMYkGWmyOmHnmOPr/ZVKnmNwdrRj1ba81yUyDHKg8Ew1f
-	iCVTXV4naH5KrdUbVqzKX7ZYbXv5JW5uIDWnKwcmFtjQVCy8+DzZs8zcVeoSv/P/TrgzzfATPv/Jw
-	xMUq2+xJILS5YrLd3pnTdQcvDidGP468q42h8lG32MOItfYsevprrtqH2s6FNlDLr90Sji0ujVjCK
-	1V4E2kXQ==;
-Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1t19i8-00AvqA-2C;
-	Wed, 16 Oct 2024 13:29:33 -0600
-Message-ID: <d115cc88-cc0c-41fc-840e-e11b783919cc@deltatee.com>
-Date: Wed, 16 Oct 2024 13:29:30 -0600
+	s=arc-20240116; t=1729107484; c=relaxed/simple;
+	bh=6dGoC9a9JiCAYeGpX5fIjP+CJ42IJn9E3kkE2FQNvL0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=inyC2DyD2OqWYWJwvWc79ldVxQagOBNy0UedOPPAfAqMuODEyTx8JxXuJ4ckoVJppuCCseYOp1RHHENPdvPzNwL3GiISppkTNUM3UyrXahDeryp5unO4To/1UHpFdha7O59m+kiKGTkygWNeYGQ1h/pvcd0Weuk0tOEbAWKx8Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tS1OkGaV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82649C4CEC5;
+	Wed, 16 Oct 2024 19:38:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729107483;
+	bh=6dGoC9a9JiCAYeGpX5fIjP+CJ42IJn9E3kkE2FQNvL0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=tS1OkGaVsIsv4ZJFraTecKZ2QFO4nUAEAoichSykLSfGjHXeNTJSjpqnrQ69xbYnh
+	 URdczNK3W+SkrSWC/V9ZyJFc9etIglHTD7o4KNBZIdKvzjqj500kca4FrMAUoIE5vT
+	 yok6MdDEoiwPwiCpUm9r8k+S3Fb9BSAzaEwWEl8vupOe9Nhlb6Eztq4LBhL2hGIOg/
+	 5z4dLaBohTguxawa/FZHPqiMK3SiTDXcrO2aMgFmprS2/knK5C7rT2wSNrVQxz0VQz
+	 PQxGoNWWyxGOQ3DZKevs1L3byjSr1qq1p3uI1zEn1PwLP8fZu5X0Y2cNMIHCmerxLr
+	 5NgHJdKtbl58A==
+Date: Wed, 16 Oct 2024 14:38:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>
+Subject: Re: [PATCH v3 04/11] PCI: brcmstb: Expand inbound size calculation
+ helper
+Message-ID: <20241016193802.GA645895@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20241012024524.1377836-1-vivek.kasireddy@intel.com>
- <20241012024524.1377836-2-vivek.kasireddy@intel.com>
- <eddb423c-945f-40c9-b904-43ea8371f1c4@deltatee.com>
- <IA0PR11MB71855AF581EAA8EE8F43E820F8462@IA0PR11MB7185.namprd11.prod.outlook.com>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <IA0PR11MB71855AF581EAA8EE8F43E820F8462@IA0PR11MB7185.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 104.157.31.28
-X-SA-Exim-Rcpt-To: vivek.kasireddy@intel.com, dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, bhelgaas@google.com, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH v1 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
- of same device
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANCKTBt17LCyvQQnOqMdu1KUY61bRKCYQC8=+HDYaddj-MAd2Q@mail.gmail.com>
 
+On Wed, Oct 16, 2024 at 01:09:00PM -0400, Jim Quinlan wrote:
+> On Mon, Oct 14, 2024 at 1:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Oct 14, 2024 at 10:10:11AM -0700, Florian Fainelli wrote:
+> > > On 10/14/24 09:57, Bjorn Helgaas wrote:
+> > > > On Mon, Oct 14, 2024 at 04:07:03PM +0300, Stanimir Varbanov wrote:
+> > > > > BCM2712 memory map can supports up to 64GB of system
+> > > > > memory, thus expand the inbound size calculation in
+> > > > > helper function up to 64GB.
+> > > >
+> > > > The fact that the calculation is done in a helper isn't important
+> > > > here.  Can you make the subject line say something about supporting
+> > > > DMA for up to 64GB of system memory?
+> > > >
+> > > > This is being done specifically for BCM2712, but I assume it's safe
+> > > > for *all* brcmstb devices, right?
+> > >
+> > > It is safe in the sense that all brcmstb devices with this PCIe
+> > > controller will adopt the same encoding of the size, all of the
+> > > currently supported brcmstb devices have a variety of
+> > > limitations when it comes to the amount of addressable DRAM
+> > > however. Typically we have a hard limit at 4GB of DRAM per
+> > > memory controller, some devices can do 2GB x3, 4GB x2, or 4GB
+> > > x1.
+> > >
+> > > Does that answer your question?
+> >
+> > I'd like something in the commit log to the effect that while
+> > we're doing this to support more system memory on BCM2712, this
+> > change is safe for other SoCs that don't support as much system
+> > memory.
+> 
+> This setting configures the size of an RC's inbound window to system
+> memory.  Any inbound access outside of all of the inbound windows
+> will be discarded.
+> 
+> Some existing SoCs cannot support the 64GB size.  Configuring such
+> an SoC to 64GB will effectively disable the entire window.
 
+So I *think* you're saying that this patch will break existing SoCs
+that don't support the 64GB size, right?
 
-On 2024-10-15 23:29, Kasireddy, Vivek wrote:
-> I think it would make sense to limit the passing criteria for device functions'
-> compatibility to Intel GPUs for now. These are the devices I am currently
-> testing that we know are P2P compatible. Would this be OK?
-
-Yes, this sounds good to me. We can reconsider if we get more rules like
-it in the future.
-
-Thanks,
-
-Logan
+Bjorn
 
