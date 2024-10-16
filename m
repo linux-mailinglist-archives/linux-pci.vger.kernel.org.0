@@ -1,275 +1,178 @@
-Return-Path: <linux-pci+bounces-14670-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14671-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6290C9A101F
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 18:54:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C571D9A103A
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 18:59:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26A48281100
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 16:54:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0DC27B23076
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 16:59:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91E620E02F;
-	Wed, 16 Oct 2024 16:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C24620C031;
+	Wed, 16 Oct 2024 16:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oXT/DaDL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711B41FDF99;
-	Wed, 16 Oct 2024 16:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0E21262A
+	for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 16:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729097676; cv=none; b=uhSZ73Ia7xgrSmeu/Y50198UHWXrqghl98MEddUtf3nUK34XpBJLpuU5P4YBMrifP8uZ86yzZN3FcOxGHzQSZ0ekG0e4PjZj0s1D36Qp2M1JOAux3JWlZFvjV2O3iss1wO0GX7Q1VqEMgZXe8AcLxUQyuB3AaMsE/5mpqtZT21c=
+	t=1729097977; cv=none; b=OoOTd2EzzFoYuVancG7GwSJ8nEQgRqciXQoKOfzYrI2rd54QuJCk+0Z7g5CSeiunG8dFt5V6fHSJGHnlRnQzMsCWn4KjDhOWIIQbvuG2Y9cn86VModuaxTh6ZzLzU9zwi2jXBV1UnvVJr24dqmKnx+ytBTQE+l/Sgwf8Ohhcamc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729097676; c=relaxed/simple;
-	bh=PYlv1pv0ilaHXl9zv60mR5y5zmk1H8dbAl6VIgahPj4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mFFwbHegblbdRWS9RGDFRYg/nPcSrzKVkaHi+MBXrTtXZBcGEfmgb7zbdB5Cp9gGfTkI2p57JbQI0DWv/IkXfE9HQlGLSNJxu76qdbeIHEorGXPRz23gxxaJe7o0jg3Zee2L6LVYGFhRD8PbUIfxRtxQXQ7WY5/7bVbFer4hONw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTH522zhRz6LDKl;
-	Thu, 17 Oct 2024 00:49:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A00E2140A86;
-	Thu, 17 Oct 2024 00:54:28 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
- 2024 18:54:27 +0200
-Date: Wed, 16 Oct 2024 17:54:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
-	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<smita.koralahallichannabasappa@amd.com>
-Subject: Re: [PATCH 07/15] cxl/aer/pci: Add CXL PCIe port uncorrectable
- error recovery in AER service driver
-Message-ID: <20241016175426.0000411e@Huawei.com>
-In-Reply-To: <20241008221657.1130181-8-terry.bowman@amd.com>
-References: <20241008221657.1130181-1-terry.bowman@amd.com>
-	<20241008221657.1130181-8-terry.bowman@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1729097977; c=relaxed/simple;
+	bh=AKcige/JQY8TGrt3Mfed7RIT5Ww9iXLZUi4P87zoswA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlsSowS3KgqLu+IEHURaojK/zXgOfgEQRGlRLHf8QxSL3MGdrNZt7Z6h+u9TGYi7YVcfVg+735/xWjU9ibqQamGZyjW3ye0rm82/L7wY1zD9gwy9lY5/mNz0IcXtHzycBWBi1CRYRtfDhq7X2G5U1WAK+YyA+tsxpgC+xYBFZO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oXT/DaDL; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-71e579abb99so2974314b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 09:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729097976; x=1729702776; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9/LZ3Zn5XyWr1MU4satRczAmPXhQsZyogJP/83WgHT0=;
+        b=oXT/DaDLQTbdKyHehYvrgr5lNmm80tdurum8fRszf+slNjN34EEopOcCii/pRKOjV4
+         9yvFPTW5ZHCGu8Zw08wfFED9n+fPrdmbOQCQZfbAHb6sXKRw7UmEr/ybTuqNIJ5C0ujX
+         zkAUBV6DYZA/5WVc719typ7pZXzTM9GRM18uPxSxsaL0sK+zri0lw1N5wxK9RHxigvlR
+         rfI9IJx9w6/Wms2WgLkEMFYrmGop+kGWn/nrsHXittwCYbqZPcgI8j+5gLKUcnWNP071
+         5+M/2cnwar8M4bF2HjFLXE7yuue4Yq0Y7ROeWx8/3QM8UXLcfjR4l5hY8yvXCavmnMnK
+         FWoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729097976; x=1729702776;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9/LZ3Zn5XyWr1MU4satRczAmPXhQsZyogJP/83WgHT0=;
+        b=Ms+jKADKVO35p+6r4bc2juJ23/alQIhqi85Q7vgIf1Dyj7k/yTsu8oUG/T42lL+Eb5
+         EEG86wD+781GlTXxT9SZQdianTEsElWp92kA69Z5HwVsVsi7w4zpEToGyMR1R4rqq+yP
+         30oim9tTho0CWewj7+OxLvb7RbS6MMSw7vmOdwooUbT0X6euAHPCfcCKb2X4GICk36Hh
+         /htBgkMyqi+7Qjqrh5BDjZaHEcvBE8cZY43oK3dgZT7+lwZ6w5x6p6lthRTXy0DCwRfE
+         TBcLDJ224SmXBIr74bwihRGx6tLiZOD1n02W+E7UtAnKo7QMKJwAczc2nudrHqOqPmIG
+         gIcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVe0cqEXkK7IEe4EyCM1d39AQiMSo8CkgdZCoF5TpjXzL7SJhuT0mN5vtQ7WCwvkNL2snae5F8a64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlWZPiMfVejuLT6Xl3Sg+my7I0X9+MbGHPKpzqh0RNKcY/q0Fo
+	8gYew2yQofYqFr4m6u73iBJjVpjkUNdEhjAzop4O3nNdN6gwrRh8j/FqQMrFig==
+X-Google-Smtp-Source: AGHT+IGaLAtQabvUDeO+3j2Q4gvgcJ2hoUUgUTrT6qVHDMC5UbCskjCgqs3pgV7Ua73JvBhNlF8VNg==
+X-Received: by 2002:a05:6a00:b86:b0:71e:6ef2:6c11 with SMTP id d2e1a72fcca58-71e7da266c8mr7276457b3a.9.1729097975775;
+        Wed, 16 Oct 2024 09:59:35 -0700 (PDT)
+Received: from thinkpad ([220.158.156.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e773a2fbbsm3318397b3a.69.2024.10.16.09.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2024 09:59:35 -0700 (PDT)
+Date: Wed, 16 Oct 2024 22:29:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v2] PCI: endpoint: Improve pci_epc_ops::align_addr()
+ interface
+Message-ID: <20241016165930.djlddcgx7uhrpowd@thinkpad>
+References: <20241015090712.112674-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241015090712.112674-1-dlemoal@kernel.org>
 
-On Tue, 8 Oct 2024 17:16:49 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> The current pcie_do_recovery() handles device recovery as result of
-> uncorrectable errors (UCE). But, CXL port devices require unique
-> recovery handling.
+On Tue, Oct 15, 2024 at 06:07:12PM +0900, Damien Le Moal wrote:
+> The PCI endpoint controller operation interface for the align_addr()
+> operation uses the phys_addr_t type for the PCI address argument and
+> return a value using this type. This is not ideal as PCI addresses are
+> bus addresses, not regular memory physical addresses. Replace the use of
+> phys_addr_t for this operation with the generic u64 type. To be
+> consistent with this change the Designware driver implementation of this
+> operation (function dw_pcie_ep_align_addr()) as well as the type of PCI
+> address fields of struct pci_epc_map are also changed.
 > 
-> Create a cxl_do_recovery() function parallel to pcie_do_recovery(). Add CXL
-> specific handling to the new recovery function.
+> Fixes: e98c99e2ccad ("PCI: endpoint: Introduce pci_epc_mem_map()/unmap()")
+> Fixes: cb6b7158fdf5 ("PCI: dwc: endpoint: Implement the pci_epc_ops::align_addr() operation")
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+
+I thought of applying it, but then decided to squash it with the offending
+patches.
+
+- Mani
+
+> ---
+> Changes from v1:
+>  - Also updated the type of the pci_addr and map_pci_addr fields of
+>    struct pci_epc_map.
 > 
-> The CXL port UCE recovery must invoke the AER service driver's CXL port
-> UCE callback. This is different than the standard pcie_do_recovery()
-> recovery that calls the pci_driver::err_handler UCE handler instead.
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +++---
+>  include/linux/pci-epc.h                         | 8 ++++----
+>  2 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> Treat all CXL PCIe port UCE errors as fatal and call kernel panic to
-> "recover" the error. A panic is called instead of attempting recovery
-> to avoid potential system corruption.
-> 
-> The uncorrectable support added here will be used to complete CXL PCIe
-> port error handling in the future.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-Hi Terry,
-
-I'm a little bothered by the subtle difference in the bus walks
-in here vs the existing cases. If we need them, comments needed
-to explain why.
-
-If we are going to have separate handling, see if you can share
-a lot more of the code by factoring out common functions for
-the pci and cxl handling with callbacks to handle the differences.
-
-I've managed to get my head around this code a few times in the past
-(I think!) and really don't fancy having two subtle variants to
-consider next time we get a bug :( The RC_EC additions hurt my head.
-
-Jonathan
-
->  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 31090770fffc..de12f2eb19ef 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -86,6 +86,63 @@ static int report_error_detected(struct pci_dev *dev,
->  	return 0;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 0ada60487c25..df1460ed63d9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -268,12 +268,12 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
+>  	return -EINVAL;
 >  }
 >  
-> +static int cxl_report_error_detected(struct pci_dev *dev,
-> +				     pci_channel_state_t state,
-> +				     enum pci_ers_result *result)
-> +{
-> +	struct cxl_port_err_hndlrs *cxl_port_hndlrs;
-> +	struct pci_driver *pdrv;
-> +	pci_ers_result_t vote;
-> +
-> +	device_lock(&dev->dev);
-> +	cxl_port_hndlrs = find_cxl_port_hndlrs();
-
-Can we refactor to have a common function under this and report_error_detected()?
-
-> +	pdrv = dev->driver;
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		vote = PCI_ERS_RESULT_DISCONNECT;
-> +	} else if (!pci_dev_set_io_state(dev, state)) {
-> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
-> +			dev->error_state, state);
-> +		vote = PCI_ERS_RESULT_NONE;
-> +	} else if (!cxl_port_hndlrs || !cxl_port_hndlrs->error_detected) {
-> +		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-> +			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
-> +			pci_info(dev, "can't recover (no error_detected callback)\n");
-> +		} else {
-> +			vote = PCI_ERS_RESULT_NONE;
-> +		}
-> +	} else {
-> +		vote = cxl_port_hndlrs->error_detected(dev, state);
-> +	}
-> +	pci_uevent_ers(dev, vote);
-> +	*result = merge_result(*result, vote);
-> +	device_unlock(&dev->dev);
-> +	return 0;
-> +}
-
->  static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
+> -static phys_addr_t dw_pcie_ep_align_addr(struct pci_epc *epc,
+> -			phys_addr_t pci_addr, size_t *pci_size, size_t *offset)
+> +static u64 dw_pcie_ep_align_addr(struct pci_epc *epc, u64 pci_addr,
+> +				 size_t *pci_size, size_t *offset)
 >  {
->  	pm_runtime_get_sync(&pdev->dev);
-> @@ -188,6 +245,28 @@ static void pci_walk_bridge(struct pci_dev *bridge,
->  		cb(bridge, userdata);
->  }
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	phys_addr_t mask = pci->region_align - 1;
+> +	u64 mask = pci->region_align - 1;
+>  	size_t ofst = pci_addr & mask;
 >  
-> +/**
-> + * cxl_walk_bridge - walk bridges potentially AER affected
-> + * @bridge:	bridge which may be a Port, an RCEC, or an RCiEP
-> + * @cb:		callback to be called for each device found
-> + * @userdata:	arbitrary pointer to be passed to callback
-> + *
-> + * If the device provided is a bridge, walk the subordinate bus, including
-> + * the device itself and any bridged devices on buses under this bus.  Call
-> + * the provided callback on each device found.
-> + *
-> + * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,
-> + * call the callback on the device itself.
-only call the callback on the device itself.
-
-(as you call it as stated above either way).
-
-> + */
-> +static void cxl_walk_bridge(struct pci_dev *bridge,
-> +			    int (*cb)(struct pci_dev *, void *),
-> +			    void *userdata)
-> +{
-> +	cb(bridge, userdata);
-> +	if (bridge->subordinate)
-> +		pci_walk_bus(bridge->subordinate, cb, userdata);
-The difference between this and pci_walk_bridge() is subtle and
-I'd like to avoid having both if we can.
-
-> +}
-> +
->  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_channel_state_t state,
->  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
-> @@ -276,3 +355,74 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	*pci_size = ALIGN(ofst + *pci_size, ep->page_size);
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index f4b8dc37e447..de8cc3658220 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -49,10 +49,10 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+>   * @virt_addr: virtual address at which @pci_addr is mapped
+>   */
+>  struct pci_epc_map {
+> -	phys_addr_t	pci_addr;
+> +	u64		pci_addr;
+>  	size_t		pci_size;
 >  
->  	return status;
->  }
-> +
-> +pci_ers_result_t cxl_do_recovery(struct pci_dev *bridge,
-> +				 pci_channel_state_t state,
-> +				 pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(bridge->bus);
-> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> +	int type = pci_pcie_type(bridge);
-> +
-> +	if ((type != PCI_EXP_TYPE_ROOT_PORT) &&
-> +	    (type != PCI_EXP_TYPE_RC_EC) &&
-> +	    (type != PCI_EXP_TYPE_DOWNSTREAM) &&
-> +	    (type != PCI_EXP_TYPE_UPSTREAM)) {
-> +		pci_dbg(bridge, "Unsupported device type (%x)\n", type);
-> +		return status;
-> +	}
-> +
+> -	phys_addr_t	map_pci_addr;
+> +	u64		map_pci_addr;
+>  	size_t		map_size;
+>  
+>  	phys_addr_t	phys_base;
+> @@ -93,8 +93,8 @@ struct pci_epc_ops {
+>  			   struct pci_epf_bar *epf_bar);
+>  	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  			     struct pci_epf_bar *epf_bar);
+> -	phys_addr_t (*align_addr)(struct pci_epc *epc, phys_addr_t pci_addr,
+> -				  size_t *size, size_t *offset);
+> +	u64	(*align_addr)(struct pci_epc *epc, u64 pci_addr, size_t *size,
+> +			      size_t *offset);
+>  	int	(*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  			    phys_addr_t addr, u64 pci_addr, size_t size);
+>  	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> -- 
+> 2.47.0
+> 
 
-Would similar trick to in pcie_do_recovery work here for the upstream
-and downstream ports use pci_upstream_bridge() and for the others pass the dev into
-pci_walk_bridge()?
-
-> +	cxl_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
-> +
-> +	pci_dbg(bridge, "broadcast error_detected message\n");
-> +	if (state == pci_channel_io_frozen) {
-> +		cxl_walk_bridge(bridge, cxl_report_frozen_detected, &status);
-> +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
-> +			pci_warn(bridge, "subordinate device reset failed\n");
-> +			goto failed;
-> +		}
-> +	} else {
-> +		cxl_walk_bridge(bridge, cxl_report_normal_detected, &status);
-> +	}
-> +
-> +	if (status == PCI_ERS_RESULT_PANIC)
-> +		panic("CXL cachemem error. Invoking panic");
-> +
-> +	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> +		status = PCI_ERS_RESULT_RECOVERED;
-> +		pci_dbg(bridge, "broadcast mmio_enabled message\n");
-> +		cxl_walk_bridge(bridge, report_mmio_enabled, &status);
-> +	}
-> +
-> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> +		status = PCI_ERS_RESULT_RECOVERED;
-> +		pci_dbg(bridge, "broadcast slot_reset message\n");
-> +		report_slot_reset(bridge, &status);
-> +		pci_walk_bridge(bridge, report_slot_reset, &status);
-> +	}
-> +
-> +	if (status != PCI_ERS_RESULT_RECOVERED)
-> +		goto failed;
-> +
-> +	pci_dbg(bridge, "broadcast resume message\n");
-> +	cxl_walk_bridge(bridge, report_resume, &status);
-> +
-> +	if (host->native_aer || pcie_ports_native) {
-> +		pcie_clear_device_status(bridge);
-> +		pci_aer_clear_nonfatal_status(bridge);
-> +	}
-> +
-> +	cxl_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> +
-> +	pci_info(bridge, "device recovery successful\n");
-> +	return status;
-> +
-> +failed:
-> +	cxl_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> +
-> +	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
-> +
-> +	pci_info(bridge, "device recovery failed\n");
-> +
-> +	return status;
-> +}
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
