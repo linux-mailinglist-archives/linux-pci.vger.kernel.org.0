@@ -1,125 +1,123 @@
-Return-Path: <linux-pci+bounces-14625-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14626-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF7C49A0584
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 11:28:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0599A05AC
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 11:37:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A039E284AD3
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 09:28:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE8D3B24FD6
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 09:37:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42B89205E0E;
-	Wed, 16 Oct 2024 09:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552AC205E11;
+	Wed, 16 Oct 2024 09:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z2WrxwlF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKOX9/0G"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67859205E07;
-	Wed, 16 Oct 2024 09:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F6F205E05;
+	Wed, 16 Oct 2024 09:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729070922; cv=none; b=HRrQ4+oLfYQl6sphLVJ1EwHrObg6WI3STeD9MKIebpxuTQlHfc9KOW1kgkJ5BzUnIActv86qEa0pN5QyUqy9ysEs8AxY/SF7X8T5BSG4ix5j98DeyzKyPGGWmLP6st7G7q1Rz6HWyeEj5CmTNH1/uGC9KovPpiL1Ea3+Or8hEzo=
+	t=1729071432; cv=none; b=tMUv6aUC8PIdhk+1ZEkqzFNMbxjkAYK92e8rEkrxRAsAh8pqGy3tiPGc92oHPhDrmtZGo/urrewcAA5wSvD5wVFvFV8LVSwilyITZ2WJkYSLp7GwkgNDexnDllcOOOqGqQK9dQ3AR0NqQ35lnnb/P7O78WHtgmtmI0Z+fMN6Y1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729070922; c=relaxed/simple;
-	bh=1J6QfXBg9V1ZgA0yYgTnAj6Ox1PdlYEoRDRtJvp7+yI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uAChpFy9dmQp0uAbZhHxs0uyw5xJw1C4G6lLkDX/JJ00QqOqqK6zqMIU+vrPnFNzqafBHdK50kofiGrk7fFJiuZvceR4LT7NkV9vY4fb8xo5sOd6R7+ygFXJbdJ3euACIfIIE2Rn0bkSRGtcMMuCH+hQA2IkQo2W59cJYiK36zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z2WrxwlF; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1729070918;
-	bh=1J6QfXBg9V1ZgA0yYgTnAj6Ox1PdlYEoRDRtJvp7+yI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Z2WrxwlF/UbdQHHE3PaQ7S2n7qo/CiLPzkdsI3xTOvi2AKewdUkExHRZztiXYWHPI
-	 UesLbavjU/KvWScNPW/g3Q0UxtvFsB176XHje9NQbBtCP0HV49M9lVqyvD4BKUKrUt
-	 ThVeZukTzs/QEutWPDryjwwccLK4hwHKHEBObU2WmRaEdbWxvM3gPFBrzhBFy4txBr
-	 UxEIYy1mO0MPWI+kUSQ+lC9WfAAYjVYsIgo0w5YoM7kJEz3Nytk1FZ90NuQMgXWG4E
-	 DB87X6qHxD8Qc6Cu++5/3kumSN6xVdRMJJvqiuXdfR9jCKRhCev+eHYXmCiZIPneWd
-	 RobPZ1sJd8dqQ==
-Received: from [192.168.1.90] (unknown [188.24.146.62])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F33B617E121F;
-	Wed, 16 Oct 2024 11:28:37 +0200 (CEST)
-Message-ID: <9ca2a9dc-b643-40ce-8177-68533d0733d1@collabora.com>
-Date: Wed, 16 Oct 2024 12:28:37 +0300
+	s=arc-20240116; t=1729071432; c=relaxed/simple;
+	bh=3qs9RCIcBMaiRaaQowBtUAYRplzqstMrihAHPPNLmDY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=Cnc8wtkcZW4olhmy2rYsWJnD/QgVO9gh2vUVBSkOn67kPDmY099bhEA8vV66VwO97rNkYvxIM3kXWhNUrdu/pbB7gXJTcsJqQdGPIPjm4g3/vevlGgQ40ytb1ARV34FsVdK9InA5uAqNp79NI27YxaJ6uee+i65AQPJYPQSmYKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKOX9/0G; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83DEC4CECF;
+	Wed, 16 Oct 2024 09:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729071431;
+	bh=3qs9RCIcBMaiRaaQowBtUAYRplzqstMrihAHPPNLmDY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=TKOX9/0GP1+lza5sQLTeaGorlh3MWnyZcXGq05D/f/GBd2opmS8ChUbAgJdPb/CZ1
+	 yn5rFWuoHPLLh+d3Tn7faqhBzYHFIRUNCjskSa+aHE7Hk+eHTbbOc5TCSh9q9iJ3uy
+	 ecD+a1d8UI2TkI22bqwo5dXLynEXWBDFQZqY5PiV0eO3UFpqqqMhVJV65YiRQTDMNj
+	 WP2usCFu0zlWexw7EVaqgNj9e/FFPneDaR8h9YjjAPmN4hPc1uAoQejPiORMJPvOU5
+	 CWaLZFgGsjhgxS13aQ+7ta5bJuOGaob/3dXOYCK3/wDOU6szpcWpgz4jJlrkWESsRr
+	 s45FfeYSH4aKw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>,
+  Sergey Shtylyov <s.shtylyov@omp.ru>,  Basavaraj Natikar
+ <basavaraj.natikar@amd.com>,  Jiri Kosina <jikos@kernel.org>,  Benjamin
+ Tissoires <bentiss@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  Alex Dubov <oakad@yahoo.com>,
+  Sudarsana Kalluru <skalluru@marvell.com>,  Manish Chopra
+ <manishc@marvell.com>,  "David S. Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>,  Rasesh Mody <rmody@marvell.com>,
+  GR-Linux-NIC-Dev@marvell.com,  Igor Mitsyanko <imitsyanko@quantenna.com>,
+  Sergey Matyukevich <geomatsi@gmail.com>,  Sanjay R Mehta
+ <sanju.mehta@amd.com>,  Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,  Jon
+ Mason <jdmason@kudzu.us>,  Dave Jiang <dave.jiang@intel.com>,  Allen Hubbe
+ <allenbh@gmail.com>,  Bjorn Helgaas <bhelgaas@google.com>,  Alex
+ Williamson <alex.williamson@redhat.com>,  Juergen Gross <jgross@suse.com>,
+  Stefano Stabellini <sstabellini@kernel.org>,  Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>,  Jaroslav Kysela <perex@perex.cz>,
+  Takashi Iwai <tiwai@suse.com>,  Chen Ni <nichen@iscas.ac.cn>,  Mario
+ Limonciello <mario.limonciello@amd.com>,  Ricky Wu <ricky_wu@realtek.com>,
+  Al Viro <viro@zeniv.linux.org.uk>,  Breno Leitao <leitao@debian.org>,
+  Kevin Tian <kevin.tian@intel.com>,  Thomas Gleixner <tglx@linutronix.de>,
+  Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Andy
+ Shevchenko
+ <andriy.shevchenko@linux.intel.com>,  Mostafa Saleh <smostafa@google.com>,
+  Jason Gunthorpe <jgg@ziepe.ca>,  Yi Liu <yi.l.liu@intel.com>,  Christian
+ Brauner <brauner@kernel.org>,  Ankit Agrawal <ankita@nvidia.com>,  Eric
+ Auger <eric.auger@redhat.com>,  Reinette Chatre
+ <reinette.chatre@intel.com>,  Ye Bin <yebin10@huawei.com>,  Marek
+ =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+  Pierre-Louis
+ Bossart <pierre-louis.bossart@linux.dev>,  Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>,  Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Kai Vehmanen
+ <kai.vehmanen@linux.intel.com>,  Rui Salvaterra <rsalvaterra@gmail.com>,
+  linux-ide@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-input@vger.kernel.org,  netdev@vger.kernel.org,
+  linux-wireless@vger.kernel.org,  ntb@lists.linux.dev,
+  linux-pci@vger.kernel.org,  kvm@vger.kernel.org,
+  xen-devel@lists.xenproject.org,  linux-sound@vger.kernel.org
+Subject: Re: [PATCH 10/13] wifi: qtnfmac: use always-managed version of
+ pcim_intx()
+References: <20241015185124.64726-1-pstanner@redhat.com>
+	<20241015185124.64726-11-pstanner@redhat.com>
+Date: Wed, 16 Oct 2024 12:36:58 +0300
+In-Reply-To: <20241015185124.64726-11-pstanner@redhat.com> (Philipp Stanner's
+	message of "Tue, 15 Oct 2024 20:51:20 +0200")
+Message-ID: <87y12o4ced.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Provide devm_clk_bulk_get_all_enabled() helper
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: kernel@collabora.com, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20240926-clk_bulk_ena_fix-v2-0-9c767510fbb5@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240926-clk_bulk_ena_fix-v2-0-9c767510fbb5@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 9/26/24 1:43 PM, Cristian Ciocaltea wrote:
-> Commit 265b07df758a ("clk: Provide managed helper to get and enable bulk
-> clocks") added devm_clk_bulk_get_all_enable() function, but missed to
-> return the number of clocks stored in the clk_bulk_data table referenced
-> by the clks argument.
-> 
-> That is required in case there is a need to iterate these clocks later,
-> therefore I couldn't see any use case of this parameter and should have
-> been simply removed from the function declaration.
-> 
-> The first patch in the series provides devm_clk_bulk_get_all_enabled()
-> variant, which is consistent with devm_clk_bulk_get_all() in terms of
-> the returned value:
-> 
->  > 0 if one or more clocks have been stored
->  = 0 if there are no clocks
->  < 0 if an error occurred
-> 
-> Moreover, the naming is consistent with devm_clk_get_enabled(), i.e. use
-> the past form of 'enable'.
-> 
-> The next two patches switch existing users of devm_clk_get_enable() to
-> the new helper - there were only two, as of next-20240913.
-> 
-> The last patch drops the now obsolete devm_clk_bulk_get_all_enable()
-> helper.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
-> Changes in v2:
-> - Dropped references to 'broken' API in commit descriptions, per Mani's
->   suggestion
-> - Added R-b tags from Angelo and Mani
-> - Link to v1:
->   https://lore.kernel.org/r/20240914-clk_bulk_ena_fix-v1-0-ce3537585c06@collabora.com
+Philipp Stanner <pstanner@redhat.com> writes:
 
-[...]
+> pci_intx() is a hybrid function which can sometimes be managed through
+> devres. To remove this hybrid nature from pci_intx(), it is necessary to
+> port users to either an always-managed or a never-managed version.
+>
+> qtnfmac enables its PCI-Device with pcim_enable_device(). Thus, it needs
+> the always-managed version.
+>
+> Replace pci_intx() with pcim_intx().
+>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-This still applies cleanly on next-20241016 and there are no new users
-of devm_clk_bulk_get_all_enable(), hence I wonder if anything else is
-missing to get it merged.
+Feel free to take this via the PCI tree:
 
-Thanks,
-Cristian
+Acked-by: Kalle Valo <kvalo@kernel.org>
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
