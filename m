@@ -1,240 +1,170 @@
-Return-Path: <linux-pci+bounces-14611-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14612-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF52C9A00A2
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 07:29:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D906B9A00C0
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 07:33:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F805B24851
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 05:29:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 685371F216B2
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 05:33:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41A8721E3A4;
-	Wed, 16 Oct 2024 05:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 788164CB5B;
+	Wed, 16 Oct 2024 05:33:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXG90P4g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Stc6EvRy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E25314EC47
-	for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 05:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729056580; cv=fail; b=QUD10W7aHYlrcGmHowA13WCdh1w5X1pl3lePf1vPY+MNQ+CwbwCqKTWsPceoeoMD7jHlRMX8T2I19/9+IN1nQN13pANSK+TfmJIHfnRejlDiU3nz2pceg/JX6aAWiASXpkysdzfMio+gBstfcK1KzI0TSSo/pPrG7zF2CUXPrlM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729056580; c=relaxed/simple;
-	bh=9urCDf1tyYbjkb4qg+xn+A7O5DQiTn7YhOfB7vNBzlg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jjkq+z2TPlDq3gLmgZtyAPTMWsUjq7vhQbAL67FdIixtBciarQAqI92sWvhpvavYU6w9xdRnki0dyePmTof26lIsQJuDn1eWfrK9NmN+ZmhaVbdnfWAP8lIAG7VSA0XLFY0JdTA1yjD3O4WWVrB/29qQlaVFFstgAIS8kE5qHJY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bXG90P4g; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729056579; x=1760592579;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9urCDf1tyYbjkb4qg+xn+A7O5DQiTn7YhOfB7vNBzlg=;
-  b=bXG90P4grpNgBX0crQE/NomQGXh40+n+chIpRiETEesTSWWzfBe4Zo15
-   35kqZMqOiW/CasA4KM4MMA07UwKGl8kw5pc2ypzLOMr+PcFEUNe4D2LhF
-   dweyVaZH+zHlpf0E4b7vKg7TppBn6blJ/CQnO0r5ko4E5OphXEIO6wjj3
-   2M1l+dv7LlOLSrgd7uha+gzKtbU8kB1kvC16Zdh7DtOQsLIs7+zsY+izS
-   cxh8tL65+NBjEYkbKG+zOQlYaxv/BXdIHvwuNYcvCrmwaPSeyMApRrtEo
-   cks1NSeTSskTU7pO/JILBq9156/+QnZUdxFuZAYoBLpp9ndPHCNY4s37h
-   Q==;
-X-CSE-ConnectionGUID: phCnE9cSTD+RTt0mrjLQzg==
-X-CSE-MsgGUID: FmShdiSbRuy7SRXWSXg3hQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="45961893"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="45961893"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 22:29:38 -0700
-X-CSE-ConnectionGUID: 3vCp0FfwQMGClKWnK86Z8g==
-X-CSE-MsgGUID: 09Yka88TRg6EfmCt6gOHtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
-   d="scan'208";a="82770766"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Oct 2024 22:29:37 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 15 Oct 2024 22:29:36 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 15 Oct 2024 22:29:36 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 15 Oct 2024 22:29:36 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 15 Oct 2024 22:29:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c8AqSl1M/9ZRAXBMjyV9HLyvL9RgVnn5LUVWJhWw97Mv8mxJU/+fWrfftkzls9XPOJ8X4w1pyQrT0YxMKOMlcPFBIZpoM+7uon+0+IbBW9oJ0ZWtOoTzwQLwwG1j/TtrGC7BBFpyliR+glxX22fnQag7b3LCbkT1lBaK3yVlk/aM6I6C1REIr1j0TnBjyykbsLsHBJ4BfogEaBCjIFs7RRC6LK4ikMMk6QcFHoJaxngF5Ql0PBABsLSgPyWSHPoqHrTlJRc7mBOXSqxcoh3I13CzNokZ7fi2jwTpDB285Ftm74p4AKqfA+hjPDOtMqYBSFplwoY9u7+1kdFbJp+lnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9urCDf1tyYbjkb4qg+xn+A7O5DQiTn7YhOfB7vNBzlg=;
- b=ilXREDEoO9XBnlRuqU4JnPh8cCN/i0T1xj2LbYERC62k1JX89Z/YMbV1kHZJpx4xD+MdenigW4kYEkrDsY7jZ1ztFjnw6oGhy0gALczlBVkVC1pV606QyMu2ZhPW7ozfkNOCA5YNb9SojSNDY0NvKPhIUBcXZEce9O79+SOE473w6Mp4pqi+nr4fVxvCOBi079Oesr/xdJTGUDpvN0YWA+Y0d1oEdjs/4OjVgPleMC9m1zSgrOLskFS4krS4/7eFFFUzH+b1uxtNwfajXygBXBIaPMdx/5TiPjBfUFiDBHgTQ0rqpVXH7bXhJC4CkQk2B0VLger2yLI9XSWdRzg3VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
- by DS7PR11MB6126.namprd11.prod.outlook.com (2603:10b6:8:9e::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8048.27; Wed, 16 Oct 2024 05:29:32 +0000
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b%5]) with mapi id 15.20.8048.020; Wed, 16 Oct 2024
- 05:29:32 +0000
-From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-To: Logan Gunthorpe <logang@deltatee.com>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "intel-xe@lists.freedesktop.org"
-	<intel-xe@lists.freedesktop.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-Subject: RE: [PATCH v1 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
- of same device
-Thread-Topic: [PATCH v1 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
- of same device
-Thread-Index: AQHbHFQvAHWRDC/Db0iPupM7BWLvNLKIG0yAgABrqXA=
-Date: Wed, 16 Oct 2024 05:29:02 +0000
-Message-ID: <IA0PR11MB71855AF581EAA8EE8F43E820F8462@IA0PR11MB7185.namprd11.prod.outlook.com>
-References: <20241012024524.1377836-1-vivek.kasireddy@intel.com>
- <20241012024524.1377836-2-vivek.kasireddy@intel.com>
- <eddb423c-945f-40c9-b904-43ea8371f1c4@deltatee.com>
-In-Reply-To: <eddb423c-945f-40c9-b904-43ea8371f1c4@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|DS7PR11MB6126:EE_
-x-ms-office365-filtering-correlation-id: 32314c59-a574-44cd-9610-08dceda37199
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?NGw0K1Vsanl1RCtQY2VnRktmeDIzZ3U0Vm5VZXdzQ010K2x2VDB6dnhCUmt1?=
- =?utf-8?B?Wlo0R1JRUkpJNjdxSGFsams1R3A0UG9SOGQ4L05LTm1RbFh1dDlHUVg0TkxS?=
- =?utf-8?B?SUNvZTV5TTdkY0FWd01XMW9QcjVPSWdBaXRUVDlGVUV0c1E4VHRGUFVleHhk?=
- =?utf-8?B?K3ZLM0RjUTBCQ3BLb0VoY01BRWwxdnArV1M1ZzVQMDFBbGl3K3luNFBubzhD?=
- =?utf-8?B?b21nOHNxcktNenVmSDkwdUFyb3VRUWIycHo1NlVxQ3BjUUx5aFlWdysrWWZw?=
- =?utf-8?B?bi9PY2MxK0l4dXIyTW9xSXp5YjF2L1JMR3RRbHJNQVdlYmE2UTM5VFlERzRI?=
- =?utf-8?B?QkVUY2NTVjFUYlBHakk5U05aT2RrKzJ5ZHRpK1oyaHBLeXlpeTA5K05LWTQy?=
- =?utf-8?B?TGNPYjhoUk1NK2FYU0dxczUvNjVlNFZSTXByeFBFcFdjMGlybUlWSGgzZGRv?=
- =?utf-8?B?L3JPYU9QSlZmUkNOQkxDZ0IxYW5NZkJ3VHAwK2pqTlN3WEplaktBck9XT2g0?=
- =?utf-8?B?dUd5K3B3Ky8vQWZwcmNUUjk5TG9jVG9kL0M5OEZBSUtPc0FBa1l5YWV5cm1x?=
- =?utf-8?B?UUZqTmtRNzBCN3kwR1kzWXRxcGhEZ2RwUXk5bmhYU3BKcm93RDJ0YzBRaXo5?=
- =?utf-8?B?OGpKNEgzcDZNUThnUFRQYzZwek9NZjFlOE13WmR4RTJPcmV1YThQTmM3S1dN?=
- =?utf-8?B?RVZVTWd0WDFONlhlVzZYVVp3a01pdGFlZ0NYbGhPaDBTTThPRWVxdmYvSzlE?=
- =?utf-8?B?dUcrbFZ1YnhBR1U1aml0L3lwcFprRVBqRjc3dG1ocGRwZm5tcUltRytuSnNp?=
- =?utf-8?B?dTMxa2ZwcGQyalo2cXFxTklhTTY0cytObWZxazNFUldJaG1SYWpleXdXWGNK?=
- =?utf-8?B?MEtIR0hhaFM3WUNkR05xN09lMmpxU09XUEk0K0FSZThmSmFWd0QwNkZMZGlO?=
- =?utf-8?B?dE03ZkEyRzN1RUlyMllDL0RDdlhvTGc3bU15OXZKU0hFblJTc3JmQ2ZtQmcw?=
- =?utf-8?B?N2oxdTJXS0hFSmtEUkR2dDZsM2pDSjUxazY5UVhBaDdnS28vdU9ucUMvV0Fx?=
- =?utf-8?B?dnJ0S1NYU3pMVmxiMWF3YWMvREdNYmVGeTVyamxNVnd3aDZHemo0ditpYkpx?=
- =?utf-8?B?aUlzK3hpV0VaaGU3R2xmOEpPOEtoYXBIWXc0NHhaSDFkV29nNTBrSFJPVW0y?=
- =?utf-8?B?eGNGUm5UZHZtdU1kd2pYMUE3cUxxR0o4UmxVVnc4dFNRRWkwMzIzT2owUzhs?=
- =?utf-8?B?SlJtdnYya0Y1eWsxQTlXdDZpN2t6NllVK0xuOTJSdTNQMWh5MWNGRDB1YW4z?=
- =?utf-8?B?TjFPMHdtSC9XL3Y0OW9kR3p6azdaN1ZyRmxiNU56aU9Qa3RPSnMvTGhVbWR1?=
- =?utf-8?B?ZXdJVGh2QWxTanplcVN2QTJMeGx5RWdJR3pub3BVejhaRkZNNENmd3VJRGFl?=
- =?utf-8?B?SnhsWVVxNk9mcSt5ZndGN0ZKNEs3MWR6ZEhvS1pXY2pnYXBMOVF6UFJ6YVZN?=
- =?utf-8?B?SHhmR3RLMFMxWFl3RFlFNTBrZW1DUmlBM2ZiWWY3TDBZc0k2Y3NFSDU2aVdy?=
- =?utf-8?B?VU1keWZERnF5NDVMTEVNTGhFa1ZWT2VoSjlWUTk5dmlteDl3RDZtWnNFc212?=
- =?utf-8?B?TDFORFZ5Z2xoamppN0hPSjM1NUpjVDFRdldNWk5MNGVRbVozeG4yQXlLUTE5?=
- =?utf-8?B?OUgrMEJhL1JFLy8yem9uNUxzUit6SXB6MlJZT1daeXRiR2pYZDFxakgyTmdx?=
- =?utf-8?B?WEJtMDdoRnFaODFHaHpuZGlKMVhVOWJMUWhJaHRmcDdHREJlSkQ0bnBMUHg0?=
- =?utf-8?B?U0Z5R3RoNzhPL2NJMXFGZz09?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NlNxT3Z4WHNkc3ZDaDlvOTdvNXRFcHNwdkdRa3ZYbUZobUYvdElxZnRxRjZ2?=
- =?utf-8?B?S2pDdjhQNDkvelRYVStldnc4Z2xzRDUwTEFIbExocU1PQ20rck01VG04cEdP?=
- =?utf-8?B?SlE5OVJ2UTFUVXZKUld0eFNLM0lzUjlIZ0hwcm0vRU1ENmRRUURrNkxqK01l?=
- =?utf-8?B?Q0lhNGVTSElFZGhJdWZQdzV3SFNvUm9Vc1MwcU5YSzZ3NERMRi9UKzh6QXpj?=
- =?utf-8?B?cXJiaXYwdGVFWnpUOEhTMlJrZkJBdUc1cVRUQTlpVXc1Mi92bTFMdUIzaTJC?=
- =?utf-8?B?UU9VZisxTHVTaWFHMjE0SUZXRTRqUlM4ZEk0WHBVZHZZdzliN1Vaem96aUcz?=
- =?utf-8?B?MURBdTF5S3RpZzVOYlRxUm5HWnVHcDNmTTNiQjhJNnFEcEtWMy9aOWRDNWV2?=
- =?utf-8?B?QkFSQ1Q1cTlwb2h3c3oyVmZTV3JramZnMVd5anhKNndsNzZmZUxDZm1aV2NE?=
- =?utf-8?B?VWUwWkVFZ0lIcGxKclNpRWE5cjdUMEh5OEE5VEU0S3V0OTk0RytEUVo5NjBs?=
- =?utf-8?B?eit1SGFReEg4dXptOC9uZUQwTTFSbSs5L0lybW1DOG83aWV4d0RHTFBQUjNI?=
- =?utf-8?B?TWtvanZzN2w1ZU1hRHAwSzRFblJLY0VncEV3ZXdVUTRmWVVnOG0zTlBOVEly?=
- =?utf-8?B?YURxZ1hrRUxKZVREZ0RpdEplKzdNQWhSUEg3NE4wbVpudkZNbFZacWkzK1Bu?=
- =?utf-8?B?OStZdi9OMVg2UmY0NHdIbUE1RGxtanhnQjhLZlNXcWFJVDVNQnRrZE5xRUdY?=
- =?utf-8?B?VU1yWk53S0dVRGJOVnl6NnlFSzc3dDA3SmRjUlNlTk1pM0tHUEZ5YmFBdEV3?=
- =?utf-8?B?N0pDMHhSTDl2OThVNGdwSFd6c2dvNWoyaEtpdXpwb3hrTUlzNUJ4MlBOdHR2?=
- =?utf-8?B?QUdzRWJ1RTJuR3FvVmZtRkl2Zm9rMjFVb2VoSFVuTUtObURKQTE5ZkIyell1?=
- =?utf-8?B?M2hsdFpiT0JNWFV1aVdWMjlrTjFyQWc3Qi85K01TUmR2TzJsVTJEdHdtSTFr?=
- =?utf-8?B?Z2dZY0ttSExaSml3YVNPc3RvV2VqVEpYSzlVTkQ1SDlEanFoOUVjRFlqd08r?=
- =?utf-8?B?YWdjV0RHVU9YV0dwR2dDbHlHZzhjUGcwM3lIbGF6UEk3STVUZVdwVGczNUdl?=
- =?utf-8?B?RldKM3N0SU91Q25UNTVEbnpqOHkyTndoYlVRTVNJK1lHS2pWem1pMkFiZXFJ?=
- =?utf-8?B?ZzFFVEFVQ3RpbW1rVXNiTWJ3OHZsMElzdTl2Q09WclBoQTJ5OXRKVU54RExW?=
- =?utf-8?B?c1Vqc21BR1hMTFBVUVlpVjRyeUs4TjJHZE1ReGZaZ0FDUmxVTEJVZEFhbWZO?=
- =?utf-8?B?cVp1R2pTc3JYSHRiT0Nma29BU3YrWS9PeGdxQWhMSDBlWnBoMkYxZFR1SUJs?=
- =?utf-8?B?ZFN3S1l6Q0pBTEdNeDF5bENlb1dtN05UZ1ZnNm91Z09lMUsxaENrVE5Ba2JK?=
- =?utf-8?B?bGZwVUZzL1hQNFpvcGhtbEI1NHcrdld5ZjYwbVF2bEhrMEtsOHF2ZlZKdUJ6?=
- =?utf-8?B?dEtFVVR2UEpseklCdUJIV0k5UmF5R3lWcUplUEdyK3BaaXRSQWxQb1R2RjV0?=
- =?utf-8?B?QXhPV0pGRHl5WkpxRTZZRWZHR2E1bmpwd2xVSXF5WFhqTGJpRjJEb0FFbTZU?=
- =?utf-8?B?WWpBMHpBR01hOEFMZkxTTzRKa0FGbUxyZGZ0L3ZUaU1FNndlWllHNERUQjJt?=
- =?utf-8?B?bWlkRTZZd0lZSmtvZWhSYThWREFyVFhtME43UEhjbHJWRHczSklKMlR4akkr?=
- =?utf-8?B?YjBXWkhoR2tFbWhTU3R1dzhIVythcjZQeWVMYlkrb3d4ZGhkWVF0RGR0OUgw?=
- =?utf-8?B?eXZIMm1ETytKcVoreTFBMDhQWWVIajd0T2tGL3R2U3JCZDFxdGxuY3ZNdGQ2?=
- =?utf-8?B?MGZKZjhZWHZ3aXRsWWhmbjhSTUFscjRvbnFTL0xRRDlOUitYT1NzMFZjTTAv?=
- =?utf-8?B?UGhmVGkxalRlVGo0aytaWWFIakx1ZHhuMm1MZFN5eFc4NEp3VlJ3NnNVaFBt?=
- =?utf-8?B?WFNYQXFIMllUTlR5TGxYd3dDVjJ4aUp2MnE0YmhPQkc0MnlFSkhIUzExL3ox?=
- =?utf-8?B?TW9KWFlmcVV1azduUms3cEt5OGVGNHVpSFdneGo3ejZBQS9qdVFndEQrWXdP?=
- =?utf-8?Q?TG9LC4d1NFzcFqdW6JtqC5RMu?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54624879B;
+	Wed, 16 Oct 2024 05:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729056794; cv=none; b=YodTedeD/KnDBv95+7+04IQ1Ajzs6kMXfee93/rbe3R4dls6jaBSU9a/IBuD5xTWoWoIC5+MFGvYSc5kHBTfk3eSoXPX9H7iQZiL64iGfrF7ex92Rk5a6B1zVx3J/SXtOsAolYXJpQx5Y6r8mmAinn9/lTyicmezOANbibU65wc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729056794; c=relaxed/simple;
+	bh=AoSjNsfpPdnIXtUNgxQR+eI0bsnct7u6F++YsIzaBHc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=owq1U6KTm042guSpTmHIyI32O7DrktwgoKOEo29TDUumQwpozjpicvEa6EG72iQiZRc9L57NVvRkATMUYeZbwub0vtj0nt1b1nYvuHv+BaNw4oMu1vrvRe2vPNHmHHhJsI3hxoTCalP6BVbMdib/MdF89rIcNRzkTRxdnpgKGrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Stc6EvRy; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5e803a9f208so290502eaf.0;
+        Tue, 15 Oct 2024 22:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729056792; x=1729661592; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IKu2Ceh01dypLNi8C+RFdakH7X0Vw/2sggeNZzBLIs0=;
+        b=Stc6EvRydyOybRfUJ0t9NDp4W6TEnEPNAS7nJBXqfGxNsy4/QxjhSI/euwM9F7q+Fp
+         cFp7VgO+bVs91FC4r6v0oGBui8iOrWIvpRd5mlwjZ05lTcwPKUN2DzPk1TlGWgE5dy5L
+         EhKM6ptPMS318YhQntgRv+DfxsOnLHwFfphGPxceQMqxQvc6SeXFHH/j8B7J8yP7z8tG
+         aDoacfU6jghNx1nUo99MxvMQb2t7BD2nLkrwcoKdgi8tgkH2c57W/MDAuDUWY7UAyAEm
+         XRMTOtsh5n3U+ilcKoAfzf9NsnallX06iCskN8r3JpxwxYYrsa1PTtRX5lfIaRtgYlya
+         UkJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729056792; x=1729661592;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IKu2Ceh01dypLNi8C+RFdakH7X0Vw/2sggeNZzBLIs0=;
+        b=WWtX9srKQl8lab+tULzMkADXcG1xU2S5hOG79bomdLYv8MWWX8kUoCMKVovbabvlH7
+         4TCbgYCuNFstoZp5kH0Y8wqXMUw3b2G/a5ASKTDYjQhcWDghCS1OrT8t3oYYLXZ59HmS
+         3Ykokpkcd3Z14j4+8xuCHGwRjT8TnpzXCSQckzUYAUG0SbBVT6XtUY3I1gc/Yj/vmqst
+         yDsRWvkpCRwAXhMa32UCgHthcz+5FKuNL0ZZOXbDoiZbcVQGhaLP13gZ/XsowEwgNOMo
+         Mw2LRRSU1UGPuI6kJyOJRWWmSYogispVH1gbJQY73/fG3W82ReZruPc5Q4SLmj1UC6aj
+         ofnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWs5bEQUfgTb+g4yBAjOslk/CW05MF9azQdSKLWOSURjb5HkuYmQacwsVeyj3CyUgH2tUrPU130RfU4@vger.kernel.org, AJvYcCX1P/jg6htICwK/hlBLuUgwgLqDn5G+tSD2un/mi8lY7Qr7Vbapdz4Np8BZKepnmsPKIAfMiErz9br0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFUbYkSiBgJGG0ad3RMya1IoKQPoVnMil5ycpU234cs7+wqwce
+	lA3OF7vu5sG0dlcAnori133LTaQLK/zCGsaifhjQW/l2ghMP/PAFI+cxqNBOfZ8/D90qwDLrw06
+	C+WSXeyT7cvUJzgNyhrggzNBA7/X+0A==
+X-Google-Smtp-Source: AGHT+IEkQZzBHJtJxHZQGIJvL8lvgTVMwWVTuhLd+8QASyj6hAnhXQVhUnLzaKD51ziHx2eIZC/S2XUZWWBzWkxDaUQ=
+X-Received: by 2002:a05:6870:1705:b0:259:8858:a330 with SMTP id
+ 586e51a60fabf-2886d88a53dmr9215880fac.22.1729056791853; Tue, 15 Oct 2024
+ 22:33:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32314c59-a574-44cd-9610-08dceda37199
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2024 05:29:02.0926
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: exrTTjiHRlNaaLkL55XI9xlKzb8lildHsJuC4A5RTlimS32nZE7ZPKpn5QvvN2WXZ0tt+IAD54BdG2bHBfwSe+daf9SoObEJ8aOi4nhhRY8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6126
-X-OriginatorOrg: intel.com
+References: <20241011121408.89890-1-dlemoal@kernel.org>
+In-Reply-To: <20241011121408.89890-1-dlemoal@kernel.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Wed, 16 Oct 2024 11:02:55 +0530
+Message-ID: <CANAwSgQ+YmSTqJs3-53nmpmCRKuqfRysT37uHQNGibw5FZhRvg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/12] Fix and improve the Rockchip endpoint driver
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, 
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>, Niklas Cassel <cassel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-SGkgTG9nYW4sDQoNCj4gDQo+IE9uIDIwMjQtMTAtMTEgMjA6NDAsIFZpdmVrIEthc2lyZWRkeSB3
-cm90ZToNCj4gPiBGdW5jdGlvbnMgb2YgdGhlIHNhbWUgUENJIGRldmljZSAoc3VjaCBhcyBhIFBG
-IGFuZCBhIFZGKSBzaGFyZSB0aGUNCj4gPiBzYW1lIGJ1cyBhbmQgaGF2ZSBhIGNvbW1vbiByb290
-IHBvcnQgYW5kIHR5cGljYWxseSwgdGhlIFBGIHByb3Zpc2lvbnMNCj4gPiByZXNvdXJjZXMgZm9y
-IHRoZSBWRi4gVGhlcmVmb3JlLCB0aGV5IGNhbiBiZSBjb25zaWRlcmVkIGNvbXBhdGlibGUNCj4g
-PiBhcyBmYXIgYXMgUDJQIGFjY2VzcyBpcyBjb25zaWRlcmVkLg0KPiA+DQo+ID4gQ3VycmVudGx5
-LCBhbHRob3VnaCB0aGUgZGlzdGFuY2UgKDIpIGlzIGNvcnJlY3RseSBjYWxjdWxhdGVkIGZvcg0K
-PiA+IGZ1bmN0aW9ucyBvZiB0aGUgc2FtZSBkZXZpY2UsIGFuIEFDUyBjaGVjayBmYWlsdXJlIHBy
-ZXZlbnRzIFAyUCBETUENCj4gPiBhY2Nlc3MgYmV0d2VlbiB0aGVtLiBUaGVyZWZvcmUsIGludHJv
-ZHVjZSBhIHNtYWxsIGZ1bmN0aW9uIG5hbWVkDQo+ID4gc2FtZV9wY2lfZGV2aWNlX2Z1bmN0aW9u
-cygpIHRvIGRldGVybWluZSBpZiB0aGUgcHJvdmlkZXIgYW5kDQo+ID4gY2xpZW50IGJlbG9uZyB0
-byB0aGUgc2FtZSBkZXZpY2UgYW5kIGZhY2lsaXRhdGUgUDJQIERNQSBiZXR3ZWVuDQo+ID4gdGhl
-bSBieSBub3QgZW5mb3JjaW5nIHRoZSBBQ1MgY2hlY2suDQo+IA0KPiBJJ20gbm90IHRvdGFsbHkg
-b3Bwb3NlZCB0byB0aGlzLiBCdXQgdGhlIGN1cnJlbnQgY29kZSB3YXMgZG9uZSB0aGlzIHdheQ0K
-PiBmb3IgYSByZWFzb246IHdlIGNhbid0IGJlIHN1cmUgdGhhdCBmdW5jdGlvbnMgb24gYW55IGdp
-dmVuIGRldmljZSBjYW4NCj4gdGFsayB0byBlYWNoIG90aGVyLiBTbyB0aGlzIGNoYW5nZSBtYXkg
-YnJlYWsgaWYgdXNlZCB3aXRoIG90aGVyIGRldmljZXMNCj4gd2l0aCBtdWx0aXBsZSBmdW5jdGlv
-bnMgdGhhdCBjYW4ndCB0YWxrIHRvIGVhY2ggb3RoZXIuDQo+IA0KPiBUaGF0IGJlaW5nIHNhaWQs
-IHRoZSBvbmx5IGFsdGVybmF0aXZlIEkgY2FuIHRoaW5rIG9mIGlzIGFub3RoZXIgbGlzdCBvZg0K
-PiBhbGxvd2VkIGRldmljZXMuIEhvd2V2ZXIsIGdpdmVuIHRoZSBwYWluIGl0J3MgYmVlbiBtYWlu
-dGFpbmluZyBhbGxvd2VkDQo+IHJvb3QgcG9ydHMsIEknbSBub3QgdmVyeSBlbnRodXNpYXN0aWMg
-YWJvdXQgY3JlYXRpbmcgYW5vdGhlciBsaXN0IG9mDQo+IGFsbG93ZWQgZGV2aWNlcyBpbiB0aGUg
-a2VybmVsLg0KSSB0aGluayBpdCB3b3VsZCBtYWtlIHNlbnNlIHRvIGxpbWl0IHRoZSBwYXNzaW5n
-IGNyaXRlcmlhIGZvciBkZXZpY2UgZnVuY3Rpb25zJw0KY29tcGF0aWJpbGl0eSB0byBJbnRlbCBH
-UFVzIGZvciBub3cuIFRoZXNlIGFyZSB0aGUgZGV2aWNlcyBJIGFtIGN1cnJlbnRseQ0KdGVzdGlu
-ZyB0aGF0IHdlIGtub3cgYXJlIFAyUCBjb21wYXRpYmxlLiBXb3VsZCB0aGlzIGJlIE9LPw0KDQpU
-aGFua3MsDQpWaXZlaw0KDQo+IA0KPiBMb2dhbg0K
+Hi Damien,
+
+On Fri, 11 Oct 2024 at 17:55, Damien Le Moal <dlemoal@kernel.org> wrote:
+>
+> This patch series fix the PCI address mapping handling of the Rockchip
+> endpoint driver, refactor some of its code, improves link training and
+> adds handling of the #PERST signal.
+>
+> This series is organized as follows:
+>  - Patch 1 fixes the rockchip ATU programming
+>  - Patch 2, 3 and 4 introduce small code improvments
+>  - Patch 5 implements the .get_mem_map() operation to make the RK3399
+>    endpoint controller driver fully functional with the new
+>    pci_epc_mem_map() function
+>  - Patch 6, 7, 8 and 9 refactor the driver code to make it more readable
+>  - Patch 10 introduces the .stop() endpoint controller operation to
+>    correctly disable the endpopint controller after use
+>  - Patch 11 improves link training
+>  - Patch 12 implements handling of the #PERST signal
+>
+> This patch series depends on the PCI endpoint core patches from the
+> V5 series "Improve PCI memory mapping API". The patches were tested
+> using a Pine Rockpro64 board used as an endpoint with the test endpoint
+> function driver and a prototype nvme endpoint function driver.
+
+Can we test this feature on Radxa Rock PI 4b hardware with an external
+nvme card?
+
+Thanks
+-Anand
+
+>
+> Changes from v3:
+>  - Addressed Mani's comments (see mailing list for details).
+>  - Removed old patch 11 (dt-binding changes) and instead use in patch 12
+>    the already defined reset_gpios property.
+>  - Added patch 6
+>  - Added review tags
+>
+> Changes from v2:
+>  - Split the patch series
+>  - Corrected patch 11 to add the missing "maxItem"
+>
+> Changes from v1:
+>  - Changed pci_epc_check_func() to pci_epc_function_is_valid() in patch
+>    1.
+>  - Removed patch "PCI: endpoint: Improve pci_epc_mem_alloc_addr()"
+>    (former patch 2 of v1)
+>  - Various typos cleanups all over. Also fixed some blank space
+>    indentation.
+>  - Added review tags
+>
+> Damien Le Moal (12):
+>   PCI: rockchip-ep: Fix address translation unit programming
+>   PCI: rockchip-ep: Use a macro to define EP controller .align feature
+>   PCI: rockchip-ep: Improve rockchip_pcie_ep_unmap_addr()
+>   PCI: rockchip-ep: Improve rockchip_pcie_ep_map_addr()
+>   PCI: rockchip-ep: Implement the pci_epc_ops::get_mem_map() operation
+>   PCI: rockchip-ep: Rename rockchip_pcie_parse_ep_dt()
+>   PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations
+>   PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() MSI-X hiding
+>   PCI: rockchip-ep: Refactor endpoint link training enable
+>   PCI: rockship-ep: Implement the pci_epc_ops::stop_link() operation
+>   PCI: rockchip-ep: Improve link training
+>   PCI: rockchip-ep: Handle PERST# signal in endpoint mode
+>
+>  drivers/pci/controller/pcie-rockchip-ep.c   | 408 ++++++++++++++++----
+>  drivers/pci/controller/pcie-rockchip-host.c |   4 +-
+>  drivers/pci/controller/pcie-rockchip.c      |  21 +-
+>  drivers/pci/controller/pcie-rockchip.h      |  24 +-
+>  4 files changed, 370 insertions(+), 87 deletions(-)
+>
+> --
+> 2.47.0
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
