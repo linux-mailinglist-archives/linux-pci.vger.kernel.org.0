@@ -1,120 +1,113 @@
-Return-Path: <linux-pci+bounces-14614-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14615-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C99569A00DA
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 07:39:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 130339A0135
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 08:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 080FC1C22B63
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 05:39:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 735DBB24DB4
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 06:16:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A37918BC33;
-	Wed, 16 Oct 2024 05:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8C7B18B48D;
+	Wed, 16 Oct 2024 06:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UTPd17kq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdtNJPvO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263B718BC0B;
-	Wed, 16 Oct 2024 05:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E51360B8A;
+	Wed, 16 Oct 2024 06:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729057189; cv=none; b=On8qLn5+FETXyfi/dJjiU5YUmQEJuHmsmF6amDUJCtgrFnqI7yyqSLk5z7n25o6/jsIU+f8gdTShlhy2kQUOK2TWFsKDh/xIsYIDPVWPY3n50xFPIinw7hqHOngWoAvNJ33iqNfD77OL89Qml0HhQu6r/U8zez9vJ/4FGz2xlv0=
+	t=1729059317; cv=none; b=OyU91yqhoFKi3829VqBVD+ntZAqSr9nAEIznrhwV6eZOayxnnnmXbuAqy1TuOq2I5KI66XXtmMxobuQMyYaixIjNnetarO5ORHm+lR+1lW1QmJlQsLsoR1doeXe2wdXiZN7tpTBTVxbpui/l/rsY/8cAiq41d7lvEf9J+ESkPns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729057189; c=relaxed/simple;
-	bh=Bd5M4DzFMNGGadIfi1fklC0+ZqtBunY0WkA0awItZsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u9Oj/71ClAwjO5Y/W7bDuTvsHpGMP3oNta9KpmX7UrUKxQidQlVQVlw8jikgS9HWtRjsLvxQrzm6K9oLn5rfzxtjFBMdncOsQR8uv0pi5IVP+0Grb/zm6oJTs4GNaBonzfOk/X+DyY5nbxmmqQr4HKCxQYI3vFDrkTWlQ2Jm7KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UTPd17kq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9E85C4CEC5;
-	Wed, 16 Oct 2024 05:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729057188;
-	bh=Bd5M4DzFMNGGadIfi1fklC0+ZqtBunY0WkA0awItZsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UTPd17kqa+JStBo//drZQEXyhoDU5Ick9FOrbiK2kK6EtrjHt2psudKPkH6oC/JjU
-	 UK7DuqgB1JR/yTVSIQJrmb20KHuDiQAI5hwh8cFhK/eWYqq9mtCIzMO4GOty2SoRF6
-	 h+kDt3eL0NVejAHRkxFksFewisHYtyjgnG5HKBLU=
-Date: Wed, 16 Oct 2024 07:39:41 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Alex Dubov <oakad@yahoo.com>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-	Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Chen Ni <nichen@iscas.ac.cn>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Ricky Wu <ricky_wu@realtek.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Breno Leitao <leitao@debian.org>, Kevin Tian <kevin.tian@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mostafa Saleh <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Yi Liu <yi.l.liu@intel.com>, Christian Brauner <brauner@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Ye Bin <yebin10@huawei.com>,
-	Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Rui Salvaterra <rsalvaterra@gmail.com>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	ntb@lists.linux.dev, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 13/13] PCI: Deprecate pci_intx(), pcim_intx()
-Message-ID: <2024101652-valium-gizzard-cf14@gregkh>
-References: <20241015185124.64726-1-pstanner@redhat.com>
- <20241015185124.64726-14-pstanner@redhat.com>
+	s=arc-20240116; t=1729059317; c=relaxed/simple;
+	bh=5QlqQFbsraBNja/vvnJZK7fg7rwhZcLGk4smWz8inKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g0Ygh1n38iB8iNypIh61K8wCcdCQMXzOFBIyiuIUoyyJxX+KxapYMmj6psIEDf1fu01eBzyv5y9q9+0S3nv/izJODRtFQ7v4yfgUwpWayWIHnSzI4wWmcRgLL+rxsXDJQxLoKAk98/Cqu5MrXog4rlQB3fjK8AJRXWCApQRYtHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdtNJPvO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B421C4CECF;
+	Wed, 16 Oct 2024 06:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729059316;
+	bh=5QlqQFbsraBNja/vvnJZK7fg7rwhZcLGk4smWz8inKE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pdtNJPvOsWONhQ4vGRNvdcIHe2/KnhvO2wGB3pK1MEx2OrOtuwl5OW4EVdtAsUUZ6
+	 QWWWpoesM3mvYrqJhZUx/gbLp5STTQGTuAEyXV7p3yOHmsVbyCIZEgAnyriVjcIqFm
+	 BjPkvyzBaM7BIj5zUmXhseKZC1ZP/Kg1svvOf13jtPVaT8lh7oCr5PUZw/YnorVPUG
+	 aKuoJfPw93k6v9kEVtmwOM3N/T/jienNKbeKUWtFihPmaQyeo1ZItl9xlBYogfGJMh
+	 jSdugkECURoY5qCWWPXGsW5NhojXw9wMD90ZomcucjbO++EA9J8uyQYHx71UyESIWo
+	 KXiEknxeMuFqw==
+Message-ID: <f13618a6-0922-4fc8-af01-10be1ef95f0d@kernel.org>
+Date: Wed, 16 Oct 2024 15:15:11 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241015185124.64726-14-pstanner@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/12] Fix and improve the Rockchip endpoint driver
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-rockchip@lists.infradead.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20241011121408.89890-1-dlemoal@kernel.org>
+ <CANAwSgQ+YmSTqJs3-53nmpmCRKuqfRysT37uHQNGibw5FZhRvg@mail.gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <CANAwSgQ+YmSTqJs3-53nmpmCRKuqfRysT37uHQNGibw5FZhRvg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 15, 2024 at 08:51:23PM +0200, Philipp Stanner wrote:
-> pci_intx() and its managed counterpart pcim_intx() only exist for older
-> drivers which have not been ported yet for various reasons. Future
-> drivers should preferably use pci_alloc_irq_vectors().
+On 10/16/24 2:32 PM, Anand Moon wrote:
+> Hi Damien,
 > 
-> Mark pci_intx() and pcim_intx() as deprecated and encourage usage of
-> pci_alloc_irq_vectors() in its place.
+> On Fri, 11 Oct 2024 at 17:55, Damien Le Moal <dlemoal@kernel.org> wrote:
+>>
+>> This patch series fix the PCI address mapping handling of the Rockchip
+>> endpoint driver, refactor some of its code, improves link training and
+>> adds handling of the #PERST signal.
+>>
+>> This series is organized as follows:
+>>  - Patch 1 fixes the rockchip ATU programming
+>>  - Patch 2, 3 and 4 introduce small code improvments
+>>  - Patch 5 implements the .get_mem_map() operation to make the RK3399
+>>    endpoint controller driver fully functional with the new
+>>    pci_epc_mem_map() function
+>>  - Patch 6, 7, 8 and 9 refactor the driver code to make it more readable
+>>  - Patch 10 introduces the .stop() endpoint controller operation to
+>>    correctly disable the endpopint controller after use
+>>  - Patch 11 improves link training
+>>  - Patch 12 implements handling of the #PERST signal
+>>
+>> This patch series depends on the PCI endpoint core patches from the
+>> V5 series "Improve PCI memory mapping API". The patches were tested
+>> using a Pine Rockpro64 board used as an endpoint with the test endpoint
+>> function driver and a prototype nvme endpoint function driver.
+> 
+> Can we test this feature on Radxa Rock PI 4b hardware with an external
+> nvme card?
 
-No one is going to notice these comments, so please, if this really does
-need to be removed, just remove it from all callers and delete the
-function from the tree.
+This patch series is to fix the PCI controller operation in endpoint (EP) mode.
+If you only want to use an NVMe device connected to the board M.2 M-Key slot,
+these patches are not needed. If that board PCI controller does not work as a
+PCI host (RC mode), then these patches will not help.
 
-thanks,
-
-greg k-h
+-- 
+Damien Le Moal
+Western Digital Research
 
