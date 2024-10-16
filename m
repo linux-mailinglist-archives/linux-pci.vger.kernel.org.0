@@ -1,141 +1,267 @@
-Return-Path: <linux-pci+bounces-14672-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14673-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E4329A1059
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 19:09:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7B679A106C
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 19:15:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 324D21F21508
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 17:09:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17B471C21030
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 17:15:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E1520FAAB;
-	Wed, 16 Oct 2024 17:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TsvDD8c7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F2520E027;
+	Wed, 16 Oct 2024 17:15:09 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E5A187342;
-	Wed, 16 Oct 2024 17:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C395820FAAB;
+	Wed, 16 Oct 2024 17:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729098554; cv=none; b=PCYQZFsLpFQfydeiBHaqgvvESd0uMky2IHtbItQSXdNk9B2O8Cwugmyd67s8X7cK/zIWDGFNqCYmZUDXFV6x2OFQYwDMW5NFhXbXqD4L5mIohfMPwHzF5f2pnkRgsVqTDnI+1dXS08Z2o138RdBE37JSdWY+GO2wBvh4E06ViRQ=
+	t=1729098909; cv=none; b=QaeAF1TJ9k4SNOLlGwuS/HS+2lZJVSIG7Jgp6nWOXmpZEA1g/K/2jZHjYjpewD91FUnZSp23VbfBuXh1phpFvcw3DkYz706C29sxnwIsuuI5LTPPWJ/Jz0jlhTDyUK+qLcYCcElI5S1m6YG/TjPxHBK3/N1Jri1DM3544WDnzVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729098554; c=relaxed/simple;
-	bh=zBGxUWx1GfjqfZFR0036W4VfTQPzNpxmmZRzM+4GmLw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YLTUfP0w5sRRffj8t3Q/ZPiYA5uSQ9qxStrb6ekeSFz8Th04CsqfRtj/jCcGJTbGcqzvwkmaqGkp/bDFr3lKaNwlEEZJp3C91ZToREz0qfRRtXRV6wiMVGH6qAIxG2KqkpTd296kwBMLdeMZV19jaWpCHlZZW+UNHh9kM08ebeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TsvDD8c7; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-716a601d931so1026a34.2;
-        Wed, 16 Oct 2024 10:09:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729098552; x=1729703352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tt1PQYKIF6f8Dk/eCC4rW66g/CyyRRQlc9MaNS21pYY=;
-        b=TsvDD8c7VOWJP2qCwWEOC68dg6aao/JKXgMW9edGXgf0H1VIFMEzk1cP/MTtzFtwAT
-         /9+fi9FZeKsGGZX36TfaAi3djJMQ1hHTOz0ADrZ1JrM8n5SYp6eQQh3puNirIyRu8BEQ
-         GJRnXzx875dks3hAxcuBEUCajRwFiBdOguVz/I4j9+cSNbxIYth9HdH8KtRJOwz+zGED
-         fY9tJUBNbJAUXXO4Xk963xLaxeS/75l7DAsalrFLQMy/ZmoRhhe/fDZ/nSh/h1J6IF9t
-         CkhpoaDJQLRm8tvxXfz5BbHRGmfL9GTWUoGtP/Un041mMmQgAmtWDrZryI8InaGd4yn3
-         1QWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729098552; x=1729703352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tt1PQYKIF6f8Dk/eCC4rW66g/CyyRRQlc9MaNS21pYY=;
-        b=MLhRhixbeaGA5puW116xKHjNoIdgBqMBHh8bF3LIkF5WKl50U1bMrXCClj540wlII+
-         iBwB4vcoyea60SAxjgclakhZ+miMEzlPBI6U4yh4MYRXF7CiwKFfvyd8w5OTjfQr5HZ3
-         LTFbkKSMxePNltWBwVaTz9se5dPX7SCRb3x1SQ3J1XA1HSgAnuXPNNHiIarjOmosYOJK
-         FkAfGYwGqsLvbyfIYmpBQCCRY6mj5/PKM7WGEhCVV/lsxyMQuPqomy6KC9TDBO6DVdfH
-         1zElzhqDB8M7FYlQg65JWQT612KprD4gux7WJxYHzfmIBXsd5Q6QTvKVgNVPprdRGEOi
-         MDaw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3/NebC1x+RYsMQxuK4kSBfxxZG73wVzcNXUqr4kkZ8tv5a5mQpzlEtcyLuOu3xy6pfd9TASuA+8hzO4oG@vger.kernel.org, AJvYcCX6yB6M9N53hA/r/PmBkTG9Si27e29hseGe1poLcRGrhKAu7ZNoccZ7ZhbXuHuVVzwP3TgicdW1/Ref@vger.kernel.org, AJvYcCXdddVKMON66Z6TO9p+uATJ7QSRRMyBQjb9Harc0rzw0xHVfh9wwO2N20SoOZf63bjURvIBWExab8ri@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw46abNZRUVP6Lxp9ginsXuObCO8AEomR2mtGztnGePzEXZiWxR
-	/L4hHe3uNkSslc94bfkRm9ovGQREj8IUP/Vic6Bf/cePQElTIaFccK1O/7zoVRGkPoRtQW5yYPq
-	OzLyolqiVNKELEhyDQNcMMEXVTCs=
-X-Google-Smtp-Source: AGHT+IHF1PN8wxC7FB4mMJg4mPDfHIzjGcgYxIcan1x5MehzU5eimTl+bT6Yct73rijJlfuhs6j+M7807tozVGWovPs=
-X-Received: by 2002:a05:6358:7e10:b0:1c3:7b8e:c35b with SMTP id
- e5c5f4694b2df-1c37b8ec4d4mr372993355d.19.1729098551989; Wed, 16 Oct 2024
- 10:09:11 -0700 (PDT)
+	s=arc-20240116; t=1729098909; c=relaxed/simple;
+	bh=mvysEIx3kKKtCVA9J7u3T8Wc7Mr5NH3+qMChI6Zy3zw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kCq7lqA1nWl75Hvbc5135/TAqsygfbLkjoaPZqd+AClDRgQ+bxaqSLdGoVZ3EH2Y9OqPZisB5DewLOjFNYR12hbPxqYorXIG5owtfO7XY32Lw6LqwWrs1Erhtypb8FywVlwjFgPBuLdUAz8Plk0K4ClTiZ3iLodeNvGLqXuRiOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTHc01PVMz6J789;
+	Thu, 17 Oct 2024 01:13:20 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A78B140A46;
+	Thu, 17 Oct 2024 01:15:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
+ 2024 19:15:00 +0200
+Date: Wed, 16 Oct 2024 18:14:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <oohall@gmail.com>,
+	<Benjamin.Cheatham@amd.com>, <rrichter@amd.com>, <nathan.fontenot@amd.com>,
+	<smita.koralahallichannabasappa@amd.com>
+Subject: Re: [PATCH 09/15] cxl/pci: Map CXL PCIe downstream port RAS
+ registers
+Message-ID: <20241016181459.00000b71@Huawei.com>
+In-Reply-To: <20241008221657.1130181-10-terry.bowman@amd.com>
+References: <20241008221657.1130181-1-terry.bowman@amd.com>
+	<20241008221657.1130181-10-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <69c2f4ac-896d-4cfc-8068-45bd58aef6dd@broadcom.com> <20241014172517.GA612835@bhelgaas>
-In-Reply-To: <20241014172517.GA612835@bhelgaas>
-From: Jim Quinlan <jim2101024@gmail.com>
-Date: Wed, 16 Oct 2024 13:09:00 -0400
-Message-ID: <CANCKTBt17LCyvQQnOqMdu1KUY61bRKCYQC8=+HDYaddj-MAd2Q@mail.gmail.com>
-Subject: Re: [PATCH v3 04/11] PCI: brcmstb: Expand inbound size calculation helper
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Stanimir Varbanov <svarbanov@suse.de>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Andrea della Porta <andrea.porta@suse.com>, 
-	Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Oct 14, 2024 at 1:25=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Mon, Oct 14, 2024 at 10:10:11AM -0700, Florian Fainelli wrote:
-> > On 10/14/24 09:57, Bjorn Helgaas wrote:
-> > > On Mon, Oct 14, 2024 at 04:07:03PM +0300, Stanimir Varbanov wrote:
-> > > > BCM2712 memory map can supports up to 64GB of system
-> > > > memory, thus expand the inbound size calculation in
-> > > > helper function up to 64GB.
-> > >
-> > > The fact that the calculation is done in a helper isn't important
-> > > here.  Can you make the subject line say something about supporting
-> > > DMA for up to 64GB of system memory?
-> > >
-> > > This is being done specifically for BCM2712, but I assume it's safe
-> > > for *all* brcmstb devices, right?
-> >
-> > It is safe in the sense that all brcmstb devices with this PCIe control=
-ler
-> > will adopt the same encoding of the size, all of the currently supporte=
-d
-> > brcmstb devices have a variety of limitations when it comes to the amou=
-nt of
-> > addressable DRAM however. Typically we have a hard limit at 4GB of DRAM=
- per
-> > memory controller, some devices can do 2GB x3, 4GB x2, or 4GB x1.
-> >
-> > Does that answer your question?
->
-> I'd like something in the commit log to the effect that while we're
-> doing this to support more system memory on BCM2712, this change is
-> safe for other SoCs that don't support as much system memory.
+On Tue, 8 Oct 2024 17:16:51 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Hello,
+> RAS registers are not mapped for CXL root ports, CXL downstream switch
+> ports, or CXL upstream switch ports. To prepare for future RAS logging
+> and handling, the driver needs updating to map PCIe port RAS registers.
 
-This setting configures the size of an RC's inbound window to system
-memory.  Any inbound access outside of all of the
-inbound windows will be discarded.
+Give the upstream port is in next patch, I'd just mention that you
+are adding mapping of RP and DSP here (This confused me before I noticed
+the next patch).
+> 
+> Refactor and rename cxl_setup_parent_dport() to be cxl_init_ep_ports_aer().
+> Update the function such that it will iterate an endpoint's dports to map
+> the RAS registers.
+> 
+> Rename cxl_dport_map_regs() to be cxl_dport_init_aer(). The new
+> function name is a more accurate description of the function's work.
+> 
+> This update should also include checking for previously mapped registers
+> within the topology, particularly with CXL switches. Endpoints under a
+> CXL switch may share a common downstream and upstream port, ensure that
+> the registers are only mapped once.
 
-Some existing SoCs cannot support the 64GB size.  Configuring such an
-SoC to 64GB
-will effectively disable the entire window.
+I don't understand why we need to do this for the ras registers but
+it doesn't apply for HDM decoders for instance?  Why can't
+we map these registers in cxl_port_probe()?
 
-Regards,
-Jim Quinlan
-Broadcom STB/CM
+End of day here, so maybe I'm completely misunderstanding this.
+Will take another look tomorrow morning.
+
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 37 ++++++++++++++++---------------------
+>  drivers/cxl/cxl.h      |  7 ++++---
+>  drivers/cxl/mem.c      | 27 +++++++++++++++++++++++++--
+>  3 files changed, 45 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 51132a575b27..6f7bcdb389bf 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -787,21 +787,6 @@ static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+>  	dport->regs.dport_aer = dport_aer;
+>  }
+>  
+> -static void cxl_dport_map_regs(struct cxl_dport *dport)
+> -{
+> -	struct cxl_register_map *map = &dport->reg_map;
+> -	struct device *dev = dport->dport_dev;
+> -
+> -	if (!map->component_map.ras.valid)
+> -		dev_dbg(dev, "RAS registers not found\n");
+> -	else if (cxl_map_component_regs(map, &dport->regs.component,
+> -					BIT(CXL_CM_CAP_CAP_ID_RAS)))
+> -		dev_dbg(dev, "Failed to map RAS capability.\n");
+> -
+> -	if (dport->rch)
+> -		cxl_dport_map_rch_aer(dport);
+> -}
+> -
+>  static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+>  {
+>  	void __iomem *aer_base = dport->regs.dport_aer;
+> @@ -831,7 +816,7 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+>  	}
+>  }
+>  
+> -void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
+> +void cxl_dport_init_aer(struct cxl_dport *dport)
+>  {
+>  	struct device *dport_dev = dport->dport_dev;
+>  
+> @@ -840,15 +825,25 @@ void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport)
+>  
+>  		if (host_bridge->native_aer)
+>  			dport->rcrb.aer_cap = cxl_rcrb_to_aer(dport_dev, dport->rcrb.base);
+> +
+> +		cxl_dport_map_rch_aer(dport);
+> +		cxl_disable_rch_root_ints(dport);
+>  	}
+>  
+> -	dport->reg_map.host = host;
+> -	cxl_dport_map_regs(dport);
+> +	/* dport may have more than 1 downstream EP. Check if already mapped. */
+> +	if (dport->regs.ras) {
+> +		dev_warn(dport_dev, "RAS is already mapped\n");
+
+This is valid. Why are we warning?
+However why do we need this dance here but not for other
+root port registers etc.
+
+
+> +		return;
+> +	}
+>  
+> -	if (dport->rch)
+> -		cxl_disable_rch_root_ints(dport);
+> +	dport->reg_map.host = dport_dev;
+> +	if (cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
+> +				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
+> +		dev_err(dport_dev, "Failed to map RAS capability.\n");
+> +		return;
+> +	}
+>  }
+> -EXPORT_SYMBOL_NS_GPL(cxl_setup_parent_dport, CXL);
+> +EXPORT_SYMBOL_NS_GPL(cxl_dport_init_aer, CXL);
+>  
+>  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>  					  struct cxl_dport *dport)
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 9afb407d438f..cb9e05e2912b 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -592,6 +592,7 @@ struct cxl_dax_region {
+>   * @parent_dport: dport that points to this port in the parent
+>   * @decoder_ida: allocator for decoder ids
+>   * @reg_map: component and ras register mapping parameters
+> + * @uport_regs: mapped component registers
+>   * @nr_dports: number of entries in @dports
+>   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+>   * @commit_end: cursor to track highest committed decoder for commit ordering
+> @@ -612,6 +613,7 @@ struct cxl_port {
+>  	struct cxl_dport *parent_dport;
+>  	struct ida decoder_ida;
+>  	struct cxl_register_map reg_map;
+> +	struct cxl_component_regs uport_regs;
+>  	int nr_dports;
+>  	int hdm_end;
+>  	int commit_end;
+> @@ -761,10 +763,9 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+>  					 resource_size_t rcrb);
+>  
+>  #ifdef CONFIG_PCIEAER_CXL
+> -void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
+> +void cxl_dport_init_aer(struct cxl_dport *dport);
+>  #else
+> -static inline void cxl_setup_parent_dport(struct device *host,
+> -					  struct cxl_dport *dport) { }
+> +static inline void cxl_dport_init_aer(struct cxl_dport *dport) { }
+>  #endif
+>  
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 7de232eaeb17..b7204f010785 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -45,6 +45,30 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
+>  	return 0;
+>  }
+>  
+> +static bool dev_is_cxl_pci(struct device *dev, u32 pcie_type)
+> +{
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev_is_pci(dev))
+> +		return false;
+> +
+> +	pdev = to_pci_dev(dev);
+> +	if (pci_pcie_type(pdev) != pcie_type)
+> +		return false;
+> +
+> +	return pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +					 CXL_DVSEC_REG_LOCATOR);
+> +}
+> +
+> +static void cxl_init_ep_ports_aer(struct cxl_ep *ep)
+> +{
+> +	struct cxl_dport *dport = ep->dport;
+> +
+> +	if (dev_is_cxl_pci(dport->dport_dev, PCI_EXP_TYPE_DOWNSTREAM) ||
+> +	    dev_is_cxl_pci(dport->dport_dev, PCI_EXP_TYPE_ROOT_PORT))
+> +		cxl_dport_init_aer(dport);
+> +}
+> +
+>  static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+>  				 struct cxl_dport *parent_dport)
+>  {
+> @@ -62,6 +86,7 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+>  
+>  		ep = cxl_ep_load(iter, cxlmd);
+>  		ep->next = down;
+> +		cxl_init_ep_ports_aer(ep);
+>  	}
+>  
+>  	/* Note: endpoint port component registers are derived from @cxlds */
+> @@ -166,8 +191,6 @@ static int cxl_mem_probe(struct device *dev)
+>  	else
+>  		endpoint_parent = &parent_port->dev;
+>  
+> -	cxl_setup_parent_dport(dev, dport);
+> -
+>  	device_lock(endpoint_parent);
+>  	if (!endpoint_parent->driver) {
+>  		dev_err(dev, "CXL port topology %s not enabled\n",
+
 
