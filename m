@@ -1,138 +1,155 @@
-Return-Path: <linux-pci+bounces-14655-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1C309A0B64
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 15:25:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45C9A9A0B83
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 15:35:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8697F28434D
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 13:25:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 778651C23980
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Oct 2024 13:35:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70B2F2076C7;
-	Wed, 16 Oct 2024 13:25:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96D161FCC67;
+	Wed, 16 Oct 2024 13:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="au8nXXnO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EA51C2325;
-	Wed, 16 Oct 2024 13:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB711D8E1D;
+	Wed, 16 Oct 2024 13:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729085133; cv=none; b=aet9tcq/yfNTFDtYh2rPIvwF3F9kTulIF+xQBYw8tBJGMf2wiYcQ4y6lB481X6Cd1McgqluW2awLb+oWFBQvnW7XXXqZ2cb4fudoZAN2Pd2NiruZrR58Z9ffAdZWjxfrYqvFrm6Pf1rbXfWnZN5GvO4xZyWJ/JY1lm/pSAWMG3M=
+	t=1729085699; cv=none; b=pJ0GlOmKar8Zpn9u3eytq/3RjRSHr/eA8T9nNsFjgwWWQg97R17vYODbum/IHXxE2TQmYRMhulQZ2ObCsoXvmJcajDOBl/8uKxWGFO9yKP2Be2LfXfJthWrxitqvn/ejD360JutPrZuVjXqMszLI0wkJHBwUEpu7fu3PsA3jBlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729085133; c=relaxed/simple;
-	bh=PTfg91UCXRQuEFbsQVtKFhSJ7Kvxu/UJrJD3aHiViZ4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aTDEQWScFFrVMAZXty+rbcKLqczLj/xB5kuZKtOEjZJWIen2pVK0LIUmtc5dk9MDvKnG46QrTt3Ou81Mn+/PDX60IO4EoSK6ZToj8eINVw+MxAxIkDcNA5w5ybiOvG8ZyUu2kbM7ztk9PB4Xvnq6OTUpzGRctBIYXnhF4oQGtHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTBW64fm2z6FGQN;
-	Wed, 16 Oct 2024 21:23:46 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7230D140A77;
-	Wed, 16 Oct 2024 21:25:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Oct
- 2024 15:25:26 +0200
-Date: Wed, 16 Oct 2024 14:25:25 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Shivasharan Srikanteshwara <shivasharan.srikanteshwara@broadcom.com>
-CC: Sumanesh Samanta <sumanesh.samanta@broadcom.com>,
-	<linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-	<manivannan.sadhasivam@linaro.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <sathya.prakash@broadcom.com>,
-	<sjeaugey@nvidia.com>
-Subject: Re: [PATCH 1/2 v2] PCI/portdrv: Enable reporting inter-switch P2P
- links
-Message-ID: <20241016142525.000013ca@Huawei.com>
-In-Reply-To: <CAOHJnDv9XK3Pno4pk9bDA1SApnJ-oYmA83EndttpiFh4=i2mMw@mail.gmail.com>
-References: <1726733624-2142-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-	<1726733624-2142-2-git-send-email-shivasharan.srikanteshwara@broadcom.com>
-	<20240924155755.000069cd@Huawei.com>
-	<CADbZ7FqUxAQFT0u7QQMuSKePRCEG2nWBzv=ECbSDGu+8WX8iAQ@mail.gmail.com>
-	<20241004113933.00007ec4@Huawei.com>
-	<CAOHJnDv9XK3Pno4pk9bDA1SApnJ-oYmA83EndttpiFh4=i2mMw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1729085699; c=relaxed/simple;
+	bh=OY0qvxYgqynwJ+VveG5PA3n7LpCIo4LJHrj6PoUVQec=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=k4MTkcCIHkX043f6jqW6PzZVqH2yIMq2gmsJHkhIzHSLf5MwGOO9y0Y/1uJw1SY3UFXSPJvVXPhA2bl5yQcEEb5wBvzsHvYIxdM7m8AhR9M4WpXfQVuvINpAyIu/zATGBO5FLOUnb2prZqNZUpliLxN4Fdj+GZpvAsp5QFhDhJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=au8nXXnO; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729085698; x=1760621698;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OY0qvxYgqynwJ+VveG5PA3n7LpCIo4LJHrj6PoUVQec=;
+  b=au8nXXnO0Jzt6Ps5StvMeug0CWHTFV96nMnbrF7yUhTMDFRoepilKhhf
+   3B3OgqQQC4JwWkKpx/QMM6r/jXaNZ05VL/nEn7Bo40RiTMCv6SmaRPVLK
+   7MJDD2gyfW9Rza+0jND2pa4ufWO7QO34CC2HEB/BlpIzoS9TF09Mts7LA
+   CV8x0AAP0c276lTrAW2ev9NElXIM1yaMW9scqpU0BX28QHPhfVwLaS8PC
+   HMWeN2cM7XmHoCvTpxGRoqFa09ZD7L0V3PNQiEPrdJLqXcUgqtZrJjJP9
+   TY30+6G0VryvN1UHuPDiqmpe785TfMlKOhrwh5hJicOrpnkVPLhp3XhNN
+   g==;
+X-CSE-ConnectionGUID: l2NTsIu3QhuDkquUaNctOQ==
+X-CSE-MsgGUID: ABjFQtLMRoWItwBkrxcXtg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28628968"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28628968"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 06:34:57 -0700
+X-CSE-ConnectionGUID: pUHmFB6fR36iIR/wkEo+Sg==
+X-CSE-MsgGUID: 2grDQqx5T8es3DQ1CQnzkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,208,1725346800"; 
+   d="scan'208";a="78121898"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.221])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 06:34:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 16 Oct 2024 16:34:51 +0300 (EEST)
+To: Philipp Stanner <pstanner@redhat.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI: Convert pdev_sort_resources() to use resource
+ name helper
+In-Reply-To: <ac50d7cf2a2071f196552fa4dc4109f9a551c7e7.camel@redhat.com>
+Message-ID: <d1202665-1fb7-0a10-7c27-1a9bb0b2ecc4@linux.intel.com>
+References: <20241016120048.1355-1-ilpo.jarvinen@linux.intel.com>  <1cf314b3e91779e3353bbcaf8ad13516a00642e3.camel@redhat.com>  <fc0649b5-d065-2627-f475-d61f0594d0e5@linux.intel.com> <ac50d7cf2a2071f196552fa4dc4109f9a551c7e7.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: multipart/mixed; boundary="8323328-381602611-1729085691=:1010"
 
-On Mon, 14 Oct 2024 15:10:57 +0530
-Shivasharan Srikanteshwara <shivasharan.srikanteshwara@broadcom.com> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> On Fri, Oct 4, 2024 at 4:09=E2=80=AFPM Jonathan Cameron <Jonathan.Cameron=
-@huawei.com>
-> wrote:
-> >
-> > On Thu, 3 Oct 2024 14:41:07 -0600
-> > Sumanesh Samanta <sumanesh.samanta@broadcom.com> wrote:
-> > =20
-> > > Hi Jonathan,
-> > > =20
-> > > >> Need more data that 'there is a link' for this.
-> > > >>I'd like to see some info on bandwidth and latency. =20
-> > >
-> > > As you too noted in your comments, for now, we are only addressing p2p
-> > > connection between "virtual switches", i.e. switches that look
-> > > different to the host, but are actually part of the same physical
-> > > hardware.
-> > > Given that, I am not sure what we should display for bandwidth and
-> > > latency. There is no physical link to traverse between the virtual
-> > > switches, and usually we take that as "infinite" bandwidth and "zero"
-> > > latency. =20
-> >
-> > For a case where you have no information, not having attributes is
-> > sensible. If there is information (CXL CDAT provides this for switches
-> > for instance) then we should have an interface that provides space for
-> > that information.
-> > =20
-> > > As such, any number here will make little sense until we
-> > > start supporting p2p connection between physical switches. =20
-> >
-> > As above, it makes sense in a switch as well - if the information
-> > is available.
-> > =20
-> > > We could,
-> > > of course, have some encoding for the time being, like have "INF" for
-> > > bandwidth and 0 for latency, but again, those will not be very useful
-> > > till the day this scheme is extended to physical switch and we display
-> > > real values, like bandwidth and latency for a x16 PCIe link. Thoughts=
-? =20
-> >
-> > Hide the sysfs attributes for latency and bandwidth if we simply don't
-> > know.  Software built on top of this can then assume full bandwidth
-> > is available or better still run some measurements to establish the
-> > missing data.
-> >
-> > All I really meant by this suggestion is a directory with space for
-> > other info is probably more extensible than a single file. =20
+--8323328-381602611-1729085691=:1010
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Wed, 16 Oct 2024, Philipp Stanner wrote:
+
+> On Wed, 2024-10-16 at 16:15 +0300, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 16 Oct 2024, Philipp Stanner wrote:
+> >=20
+> > > On Wed, 2024-10-16 at 15:00 +0300, Ilpo J=C3=A4rvinen wrote:
+> > > > Use pci_resource_name() helper in pdev_sort_resources() to print
+> > > > resources in user-friendly format.
+> > > >=20
+> > > > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > > ---
+> > > > =C2=A0drivers/pci/setup-bus.c | 5 +++--
+> > > > =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > > > index 23082bc0ca37..071c5436b4a5 100644
+> > > > --- a/drivers/pci/setup-bus.c
+> > > > +++ b/drivers/pci/setup-bus.c
+> > > > @@ -134,6 +134,7 @@ static void pdev_sort_resources(struct
+> > > > pci_dev
+> > > > *dev, struct list_head *head)
+> > > > =C2=A0=09int i;
+> > > > =C2=A0
+> > > > =C2=A0=09pci_dev_for_each_resource(dev, r, i) {
+> > > > +=09=09const char *r_name =3D pci_resource_name(dev, i);
+> > > > =C2=A0=09=09struct pci_dev_resource *dev_res, *tmp;
+> > > > =C2=A0=09=09resource_size_t r_align;
+> > > > =C2=A0=09=09struct list_head *n;
+> > > > @@ -146,8 +147,8 @@ static void pdev_sort_resources(struct
+> > > > pci_dev
+> > > > *dev, struct list_head *head)
+> > > > =C2=A0
+> > > > =C2=A0=09=09r_align =3D pci_resource_alignment(dev, r);
+> > > > =C2=A0=09=09if (!r_align) {
+> > > > -=09=09=09pci_warn(dev, "BAR %d: %pR has bogus
+> > > > alignment\n",
+> > > > -=09=09=09=09 i, r);
+> > > > +=09=09=09pci_warn(dev, "%s: %pR has bogus
+> > > > alignment\n",
+> > > > +=09=09=09=09 r_name, r);
+> > >=20
+> > > Why do you remove the BAR index number, don't you think this
+> > > information is also useful?
+> >=20
+> > That's because of how pci_resource_name() works. The number will be=20
+> > included in the returned string and it won't be always same as i.
+> > So that change is done on purpose.
+> >=20
+> > > One could also consider printing r_align, would that be useful?
+> >=20
+> > As per the preceeding condition, it's known to be zero so it's not=20
+> > that useful for any developer looking at these code lines.
 >=20
-> Hi Jonathan,
-> We will make the changes to add a directory for p2p_link related informat=
-ion
-> to be exposed to user. We will only populate the information related to t=
-he
-> inter-switch P2P links. Rest of the attributes can be added for devices t=
-hat
-> report them at a later stage.
-> Please check if the directory structure makes sense to you:
-> /sys/devices/.../B:D:F/p2p_link/links -> Reading this file will return the
-> same
-> information that is returned currently by the p2p_link file.
-Sounds good to me.
+> Ah, right. Would it then make sense then to do:
+>=20
+> pci_warn(dev, "%s: %pR: Alignment must not be zero.\n", ...);
+>=20
+> Would tell then exactly what the problem is. Unless the devs know that
+> a bogus alignment is definitely always 0.
+>=20
+> ?
 
-Jonathan
+While I personally don't need that given the surrounding code, I can=20
+change the string to be more precise. Thanks.
+
+--=20
+ i.
+
+--8323328-381602611-1729085691=:1010--
 
