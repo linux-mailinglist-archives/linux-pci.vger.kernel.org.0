@@ -1,159 +1,140 @@
-Return-Path: <linux-pci+bounces-14760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 012B59A1F38
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 11:57:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 401BE9A1F8A
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 12:12:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85092B266CA
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 09:57:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C43EE1F221AD
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 10:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4801DB363;
-	Thu, 17 Oct 2024 09:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAFJ6PAI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EDC41DA0E3;
+	Thu, 17 Oct 2024 10:12:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154DC1DA60D;
-	Thu, 17 Oct 2024 09:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFED1D6DB4;
+	Thu, 17 Oct 2024 10:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729158992; cv=none; b=hDpSYEhVaqz7n503wEF7E90e5EKtE1Wrr9rBDtVQJEgRoZt586WGnaVnFCL4soZ+jX254gSOn64I5dVjxYMdYMfTTnEwYuujSoUqSkH9pGGAMCl6hSMszc2VlnzxWGPRDhtibGSLqK3+b5KKbj6b2db7k2LwxldRYCt62ZEqTeo=
+	t=1729159944; cv=none; b=Gf/WTfifdXl742PmityH11P8q9ooIByOtMHc+wRESe7NOajdBcy2gV8KkJFsQpMD6SF3GFSIQMxt9ToXzADSeN1qX6LjhkCAEBgfwAgIMFgfuo9/VUVmswDtwst+XcuYaEiSgP1o208ThwcYdOZWJKnCPV44R7PoVyZ5o04rJ7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729158992; c=relaxed/simple;
-	bh=4q66nhbhtRB2E2NWPNRJ6n4igTeASGKwvtYUoBPLkCs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d1E5hpc91s2OQ5WgbO7+dlmIT5BFt5Dru6MUaIUDVrrJFEzYRstqDv+f5YV0c0XDoRZayz18XQEjtwMUOF6GhJoc+Gv/VNBzGIHJ+hRWNcgY6v+blCauP6x8p5aNzTOEGrHmhMQmOo8+6a4cndsrW+ITRI8YeACrSX3QA7B7UFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAFJ6PAI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 814A1C4CEC5;
-	Thu, 17 Oct 2024 09:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729158991;
-	bh=4q66nhbhtRB2E2NWPNRJ6n4igTeASGKwvtYUoBPLkCs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vAFJ6PAIGpwErAX/6NNQIHWUCUhm6OCqIHrt1+rH0SEBETrbQLcj4QNyXuuRnLaVd
-	 d3Q9bk69Akh1f1w3FJCbAvAQHMt33cW15OjODfTYU0n+KqIh4VuyQKDN6BSvUpFquQ
-	 ok475/xZzE8OpDu3onODRouQJzqQ94Y8aY8X+gQcw+ql2LUFaFru/kxLyZ4aG2bZd9
-	 oA2xCZOsEu6ktNlN1kK2M690N7dvcW7Wnp08ia4dumEsMLme3vkOSh7+T49SdqKoc2
-	 YZXzHLcvCgn5hJ9dz9fTQy82TtrQsuJFBSve0sqx3gxhH4NZE2tOIu5773TsGVTWRd
-	 L44+77Ir7Dcgw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1t1NF7-004PBo-Ck;
-	Thu, 17 Oct 2024 10:56:29 +0100
-Date: Thu, 17 Oct 2024 10:56:29 +0100
-Message-ID: <86o73j3vea.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Johan Hovold <johan@kernel.org>,	Bjorn Helgaas <helgaas@kernel.org>,
-	Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,	Johan Hovold
- <johan+linaro@kernel.org>,	Kishon Vijay Abraham I <kishon@ti.com>,	Xiaowei
- Song <songxiaowei@hisilicon.com>,	Binghui Wang <wangbinghui@hisilicon.com>,
-	Thierry Reding <thierry.reding@gmail.com>,	Ryder Lee
- <ryder.lee@mediatek.com>,	Jianjun Wang <jianjun.wang@mediatek.com>,
-	linux-pci@vger.kernel.org,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kw@linux.com>,	Ley Foon Tan <ley.foon.tan@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-In-Reply-To: <20241017093040.k6pefhmfdmw4nicz@thinkpad>
-References: <Yt+6azfwd/LuMzoG@hovoldconsulting.com>
-	<20220727195716.GA220011@bhelgaas>
-	<YuJ+PZIhg8mDrdlX@hovoldconsulting.com>
-	<20241017052335.iue4jhvk5q4efigv@thinkpad>
-	<86v7xr418s.wl-maz@kernel.org>
-	<20241017082526.ppoz7ynxas5nlht5@thinkpad>
-	<86r08f3yj1.wl-maz@kernel.org>
-	<20241017093040.k6pefhmfdmw4nicz@thinkpad>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1729159944; c=relaxed/simple;
+	bh=YzeVeOLHzuEbx+F9HKk7j53SetYaUbEgSj9ZRMYNBhM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oMhtt8e9RpR7wcFh980FEa6LMB8enPPSvEm5KM1Hute40TNB7g8iKnFpo+XbTkrrNjkCD40cwnVDXbpdtpi9L16vy05hX0OSjIuFd32h09wZdJ0Rh8usN8DSBfqD/6AQee2x8ecauQuM6ki/UukLmEvCOSPwDhYxf9Y6p0btSwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XTk9h708Dz6GBxS;
+	Thu, 17 Oct 2024 18:10:32 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B37BA1400F4;
+	Thu, 17 Oct 2024 18:12:16 +0800 (CST)
+Received: from localhost (10.126.174.164) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Oct
+ 2024 12:12:15 +0200
+Date: Thu, 17 Oct 2024 11:12:13 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Lorenzo
+ Pieralisi" <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, "Maciej W. Rozycki"
+	<macro@orcam.me.uk>, Lukas Wunner <lukas@wunner.de>, Alexandru Gagniuc
+	<mr.nuke.me@gmail.com>, Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Amit Kucheria <amitk@kernel.org>, Zhang Rui
+	<rui.zhang@intel.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v8 1/8] PCI: Protect Link Control 2 Register with RMW
+ locking
+Message-ID: <20241017111213.00005d4f@Huawei.com>
+In-Reply-To: <20241009095223.7093-2-ilpo.jarvinen@linux.intel.com>
+References: <20241009095223.7093-1-ilpo.jarvinen@linux.intel.com>
+	<20241009095223.7093-2-ilpo.jarvinen@linux.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: manivannan.sadhasivam@linaro.org, johan@kernel.org, helgaas@kernel.org, pali@kernel.org, johan+linaro@kernel.org, kishon@ti.com, songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, thierry.reding@gmail.com, ryder.lee@mediatek.com, jianjun.wang@mediatek.com, linux-pci@vger.kernel.org, kw@linux.com, ley.foon.tan@intel.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 17 Oct 2024 10:30:40 +0100,
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> On Thu, Oct 17, 2024 at 09:48:50AM +0100, Marc Zyngier wrote:
-> > On Thu, 17 Oct 2024 09:25:26 +0100,
-> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > > 
-> > > On Thu, Oct 17, 2024 at 08:50:11AM +0100, Marc Zyngier wrote:
-> > > > On Thu, 17 Oct 2024 06:23:35 +0100,
-> > > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> > > > > 
-> > > > > So can we proceed with the series making Qcom driver modular?
-> > > > 
-> > > > Who is volunteering to fix the drivers that will invariably explode
-> > > > once we allow this?
-> > > > 
-> > > 
-> > > Why should anyone volunteer first up? If the issue gets reported for a driver
-> > > blowing up, then the driver has to be fixed by the maintainer or someone, just
-> > > like any other bug.
-> > 
-> > You are introducing a new behaviour, and decide that it is fair game
-> > to delegate the problems *you* introduced to someone else?
-> >
-> 
-> You are getting it completely wrong. I'm not delegating any issues. If the so
-> called *new* behavior in the controller driver uncovers the bug in a client
-> driver, then that is not called *delegating*.
-> 
-> > Maybe you should reconsider what it means to be a *responsible*
-> > maintainer.
-> > 
-> 
-> Sure, by not providing a development option useful to the users envisioning
-> issues that may not happen at all.
-> 
-> Even if any issue reported for the platform I'm maintaining, I am willing to put
-> in the efforts to fix them.
-> 
-> > > From reading the thread, the major concern was disposing the IRQs before
-> > > removing the domain and that is now taken care of. If you are worrying about a
-> > > specific issue, please say so.
-> > 
-> > That concern still exists, and I haven't seen a *consistent* approach
-> > encompassing all of the PCI controllers. What I've seen is a bunch of
-> > point hacks addressing a local issue on a particular implementation.
-> > 
-> 
-> Again, please be specific about your concern so that someone could try to
-> address them. Right now all I'm hearing is, "hey don't do this, else
-> something may blow up".
+On Wed,  9 Oct 2024 12:52:16 +0300
+Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-You know what? Have it your way. After all, this sort of behaviour is
-exactly why I stopped dealing with this subsystem.
+> PCIe Bandwidth Controller performs RMW accesses the Link Control 2
+> Register which can occur concurrently to other sources of Link Control
+> 2 Register writes. Therefore, add Link Control 2 Register among the PCI
+> Express Capability Registers that need RMW locking.
+>=20
+> Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Totally trivial comment inline.
 
-> 
-> > I don't think that's the correct approach, but hey, what do I
-> > understand about interrupts and kernel maintenance?
-> > 
-> 
-> I'd like to quote the message in your signature here: "Without deviation from
-> the norm, progress is not possible".
+LGTM
 
-You should look up who wrote this, and appreciate *why* they wrote it,
-and what they meant by that. That should put some of the above in
-perspective.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-	M.
+> ---
+>  Documentation/PCI/pciebus-howto.rst | 14 +++++++++-----
+>  include/linux/pci.h                 |  1 +
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/PCI/pciebus-howto.rst b/Documentation/PCI/pcie=
+bus-howto.rst
+> index f344452651e1..375d9ce171f6 100644
+> --- a/Documentation/PCI/pciebus-howto.rst
+> +++ b/Documentation/PCI/pciebus-howto.rst
+> @@ -217,8 +217,12 @@ capability structure except the PCI Express capabili=
+ty structure,
+>  that is shared between many drivers including the service drivers.
+>  RMW Capability accessors (pcie_capability_clear_and_set_word(),
+>  pcie_capability_set_word(), and pcie_capability_clear_word()) protect
+> -a selected set of PCI Express Capability Registers (Link Control
+> -Register and Root Control Register). Any change to those registers
+> -should be performed using RMW accessors to avoid problems due to
+> -concurrent updates. For the up-to-date list of protected registers,
+> -see pcie_capability_clear_and_set_word().
+> +a selected set of PCI Express Capability Registers:
+> +
+> +* Link Control Register
+> +* Root Control Register
+> +* Link Control 2 Register
+> +
+> +Any change to those registers should be performed using RMW accessors to
+> +avoid problems due to concurrent updates. For the up-to-date list of
+> +protected registers, see pcie_capability_clear_and_set_word().
 
--- 
-Without deviation from the norm, progress is not possible.
+If I were super fussy I'd ask for a precursor patch doing the reformat.
+
+Meh - up to Bjorn, but for me this is small enough to not be worth
+the effort.
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 573b4c4c2be6..be5ed534c39c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1274,6 +1274,7 @@ static inline int pcie_capability_clear_and_set_wor=
+d(struct pci_dev *dev,
+>  {
+>  	switch (pos) {
+>  	case PCI_EXP_LNKCTL:
+> +	case PCI_EXP_LNKCTL2:
+>  	case PCI_EXP_RTCTL:
+>  		return pcie_capability_clear_and_set_word_locked(dev, pos,
+>  								 clear, set);
+
 
