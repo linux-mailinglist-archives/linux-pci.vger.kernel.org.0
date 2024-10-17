@@ -1,169 +1,262 @@
-Return-Path: <linux-pci+bounces-14754-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14755-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AFFB9A1CAB
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 10:11:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD8849A1D25
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 10:25:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3ECC81C26F82
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 08:11:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F7941F2764B
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 08:25:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C581D2B0E;
-	Thu, 17 Oct 2024 08:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE44F1D2B0D;
+	Thu, 17 Oct 2024 08:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="orrHegpP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2vLzZROT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="orrHegpP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2vLzZROT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NiFWWN61"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FB61C32EB;
-	Thu, 17 Oct 2024 08:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E09B1D27BA
+	for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2024 08:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729152585; cv=none; b=R1q5olSgSjEJlpuWfuFAhxWAp1WelJOHEHI0n82VwhDiRVYD6YB6HPSFjcrK2oJNmjY18XqEzwA3u2S2Pj5paz8cCWPYT8FHRY5D6Ifw7q1AMbpcjFnieruhah6J1PRzkhQx5v36w3dxP4nhqUZqbi1xEHFchmgdOdSkRtICv3A=
+	t=1729153536; cv=none; b=SCnI4aum1bWiEfon7vNG5ud8gmLBr8esX1PctK0pr0dCRRuw5CRo0O9N7A3mBSPYp/PSrniNqFay7w97btr2yBJr5B+CmND7V1OIoHw1Ep3/SZwmCHkZW4HJV21y75klRghkdqOOAvQHhjIXYeiawDRDUsi2xqv5AiK+MfNYm9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729152585; c=relaxed/simple;
-	bh=DtpwZxjV//lCWUdU2vg8tsbxZYoCFt6RqV0FtlC6Da0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nM+A6NxQ2UncXJxl4pHuE74kc2+54C+Dxa1y0quyIZc50wh84MX3V0a3HmbrRAL//hsldY2FNjAMM5rZ9zOqQ5Ih+v4pgnIIFYdJ0dx4585moDAQi1PhC7XLHJfTsOzGo8N3/JaRcJBgh7uWV1mZWCABesVWtIJ8KVE2ODovJSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=orrHegpP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2vLzZROT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=orrHegpP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2vLzZROT; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9532C1F840;
-	Thu, 17 Oct 2024 08:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729152581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQVOzFVjekC7rKLqVW9fV3ddgCIKZnmqNeWupIsqSjM=;
-	b=orrHegpPWzglYcytZ+0kPqrz8T0v19pwKcSRn9TdbULgQTsxdNv9lHjrySxdjr/0HdQviN
-	hgkXibBZsyD0w6LHhx7h+dcxXTUpOUVJIHxPn1RDMTKrQSk3m2JEI9pYjpuxrmuNaFfSNm
-	NmIz3Dgqy16lbO61Q30bJxYN27DqI/4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729152581;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQVOzFVjekC7rKLqVW9fV3ddgCIKZnmqNeWupIsqSjM=;
-	b=2vLzZROT1fYNaOf5VKH80Ue/KpPiTgxPAIdFKGdf8HzlrOgwxjEklvBMr+fZADNfKtzm75
-	glbn8fXkMA3x6/DQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=orrHegpP;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=2vLzZROT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729152581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQVOzFVjekC7rKLqVW9fV3ddgCIKZnmqNeWupIsqSjM=;
-	b=orrHegpPWzglYcytZ+0kPqrz8T0v19pwKcSRn9TdbULgQTsxdNv9lHjrySxdjr/0HdQviN
-	hgkXibBZsyD0w6LHhx7h+dcxXTUpOUVJIHxPn1RDMTKrQSk3m2JEI9pYjpuxrmuNaFfSNm
-	NmIz3Dgqy16lbO61Q30bJxYN27DqI/4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729152581;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQVOzFVjekC7rKLqVW9fV3ddgCIKZnmqNeWupIsqSjM=;
-	b=2vLzZROT1fYNaOf5VKH80Ue/KpPiTgxPAIdFKGdf8HzlrOgwxjEklvBMr+fZADNfKtzm75
-	glbn8fXkMA3x6/DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C23213A53;
-	Thu, 17 Oct 2024 08:09:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qmY0EETGEGeWMgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Thu, 17 Oct 2024 08:09:40 +0000
-Message-ID: <ac03c2ff-fedc-414b-a559-662e21b5e4a6@suse.de>
-Date: Thu, 17 Oct 2024 11:09:39 +0300
+	s=arc-20240116; t=1729153536; c=relaxed/simple;
+	bh=Q2+ZoTS4ssNjsj+JyK3Y4jaHPJcRMinM6P+uR0CYaeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mg02rwTLnIKFJkS8kLl5zEcRCsfMIgqJx3FNfHt5Q1IsRKn92s8daUzE204H8S4+kamUrg8iOa2PvyKLCmRorL4rDLw24BluU8POEDeCPR71qn9lSvaMwPgVA2u6ijPGmt1+vS4cfPcZwYlwfyKLDfT+VViwCA/b5ps1bV5j5pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NiFWWN61; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7ea0ff74b15so438701a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2024 01:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729153534; x=1729758334; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RfegGKBoecFVjtOzqWqQcwcILhYUApF5JxrsUzGthNA=;
+        b=NiFWWN61KO8plJr4YiiMBofmWRk/hNeJUGVMXLIcxrU/7JCyxLaIeDIexM0zZvB/Tf
+         4ZPvX8dd9JOPGQVBMVfy4w2U8eIVKZKqlRGxc4pEbF8irG6RV0i/wvn4RsiCJh2EVDZr
+         BDe/FAZ5f8rYsaXfizQa5bXyDl4QnN1vc52CMo/OBiAuAqYozpbjkbYLLz4u0I661XbF
+         opriEvbN523YBW/0opumxjDEQ+WKnPS1GjvCFaVh/iKVXITgAbfDMNGjUQSjjYQ+ExXa
+         X6XPjdFTc76gxiL80BmWpl9lh+XITU1xcxEsNc4aKdBjvHz6jqKbZT3uwJuBp6q2fEru
+         Qr+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729153534; x=1729758334;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RfegGKBoecFVjtOzqWqQcwcILhYUApF5JxrsUzGthNA=;
+        b=EuqOUve+Ia5U84NxcKG/fe07x1moq7gbf/Mg1QJu1pFq0XEQy2oJ9Kkc7My8c9NS+q
+         1xZH7nDFkM/qnti/Y4IlRCOJG0th97qxPQd4cgQNo3p7pd0UHaDtHYfTfQRqHIh0EZuL
+         unDNfL8viSEIl5BxGd1HF0BH2QOpYW/VJSu0I171wh6v5KxC8OZJRG419dXQiaw9lqj0
+         et5Yu1ShsyPzd7Dq9E8liKu+elE93PMR+/c94rCsN6fiOF+GgwJVfpLL5+zZbVp8+ONH
+         DunWggazvtI+I+fGoP6GNLlcES5oNiEwo2ofvvH++VxJEx68UzUNSlrAooRn8wbuadz4
+         4pKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAnL6RkOXwG8hafXVrIejZfihwkIx0NiZGaW60z5Qgl4F8GuIeNQZJu9ogg3wQct1aDM70AL69wDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIzEF+w0IYSUSxguaHtNS7cpFPXGLjm9dy4+RxCJ8bITETG6bv
+	crsUfcUSqkkUDPOckmqSBbcXFLDnDdzK9lywprPuavo7A5RkL/9WKjF5lkWg8Q==
+X-Google-Smtp-Source: AGHT+IEO9+tIUsEddFQAyCxB73U5Kj3+f+ZjXM97ALdj+hz3qgqTbB3BRr7EbU5X4y3sB9bJQiDr7Q==
+X-Received: by 2002:a05:6a21:918c:b0:1d9:61:e779 with SMTP id adf61e73a8af0-1d905ea1d9amr9300508637.4.1729153534008;
+        Thu, 17 Oct 2024 01:25:34 -0700 (PDT)
+Received: from thinkpad ([220.158.156.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e3e08d0807sm1268081a91.16.2024.10.17.01.25.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 01:25:33 -0700 (PDT)
+Date: Thu, 17 Oct 2024 13:55:26 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>, linux-pci@vger.kernel.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Ley Foon Tan <ley.foon.tan@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+Message-ID: <20241017082526.ppoz7ynxas5nlht5@thinkpad>
+References: <Yt+6azfwd/LuMzoG@hovoldconsulting.com>
+ <20220727195716.GA220011@bhelgaas>
+ <YuJ+PZIhg8mDrdlX@hovoldconsulting.com>
+ <20241017052335.iue4jhvk5q4efigv@thinkpad>
+ <86v7xr418s.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/11] PCI: brcmstb: Reuse config structure
-To: Bjorn Helgaas <helgaas@kernel.org>, Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
- <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-References: <20241014170303.GA611791@bhelgaas>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20241014170303.GA611791@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9532C1F840
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[dt];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,broadcom.com,linutronix.de,kernel.org,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86v7xr418s.wl-maz@kernel.org>
 
-Hi Bjorn,
-
-On 10/14/24 20:03, Bjorn Helgaas wrote:
-> On Mon, Oct 14, 2024 at 04:07:07PM +0300, Stanimir Varbanov wrote:
->> Instead of copying fields from pcie_cfg_data structure to
->> brcm_pcie reference it directly.
+On Thu, Oct 17, 2024 at 08:50:11AM +0100, Marc Zyngier wrote:
+> On Thu, 17 Oct 2024 06:23:35 +0100,
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> > 
+> > On Thu, Jul 28, 2022 at 02:17:01PM +0200, Johan Hovold wrote:
+> > > On Wed, Jul 27, 2022 at 02:57:16PM -0500, Bjorn Helgaas wrote:
+> > > > On Tue, Jul 26, 2022 at 11:56:59AM +0200, Johan Hovold wrote:
+> > > > > On Mon, Jul 25, 2022 at 06:35:27PM +0100, Marc Zyngier wrote:
+> > > > > > On Mon, 25 Jul 2022 16:18:48 +0100,
+> > > > > > Johan Hovold <johan@kernel.org> wrote:
+> > > > > 
+> > > > > > > Since when is unloading modules something that is expected to
+> > > > > > > work perfectly? I keep hearing "well, don't do that then" when
+> > > > > > > someone complains about unloading this module while doing this
+> > > > > > > or that broke something. (And it's only root that can unload
+> > > > > > > modules in the first place.)
+> > > > > > 
+> > > > > > Well, maybe I have higher standards. For the stuff I maintain, I
+> > > > > > now point-blank refuse to support module unloading if this can
+> > > > > > result in a crash. Or worse.
+> > > > > 
+> > > > > That makes sense for regular interrupt controllers where its hard to
+> > > > > tell that all consumers are gone, but I don't think that should
+> > > > > limit the usefulness of having modular PCI controller drivers where
+> > > > > we know that the consumers are gone after deregistering the bus
+> > > > > (i.e. the consumers are descendants of the controller in the device
+> > > > > tree).
+> > > > 
+> > > > Those consumers are endpoint drivers, so I think this depends on those
+> > > > drivers correctly unmapping the interrupts they use, right?
+> > > 
+> > > Right. For MSI this means that pci_alloc_irq_vectors() in probe should
+> > > be matched by pci_free_irq_vectors() on remove.
+> > > 
+> > > For legacy interrupts, which can be shared, the mapping is created by
+> > > PCI core when binding to the first device and can only be disposed by
+> > > the host-bridge driver once all descendants have been removed.
+> > > 
+> > > The endpoint drivers still need to disable their interrupts of course.
+> > > 
+> > > Buggy endpoint-driver remove implementations can lead to all sorts of
+> > > crashes (e.g. after failing to deregister a class device), and if that's
+> > > a worry then don't unload modules (and possibly disable it completely
+> > > using CONFIG_MODULE_UNLOAD).
+> > > 
+> > > > > > > It's useful for developers, but use it at your own risk.
+> > > > > > > 
+> > > > > > > That said, I agree that if something is next to impossible to
+> > > > > > > get right, as may be the case with interrupt controllers
+> > > > > > > generally, then fine, let's disable module unloading for that
+> > > > > > > class of drivers.
+> > > > > > > 
+> > > > > > > And this would mean disabling driver unbind for the 20+ driver
+> > > > > > > PCI drivers that currently implement it to some degree.
+> > > > > > 
+> > > > > > That would be Bjorn's and Lorenzo's call.
+> > > > > 
+> > > > > Sure, but I think it would be the wrong decision here. Especially,
+> > > > > since the end result will likely just be that more drivers will
+> > > > > become always compiled-in.
+> > > > 
+> > > > Can you elaborate on this?  I think Marc is suggesting that these PCI
+> > > > controller drivers be modular but not removable.  Why would that cause
+> > > > more of them to be compiled-in?
+> > > 
+> > > As mentioned earlier in this thread, we only appear to have some 60
+> > > drivers in the entire tree that bother to try to implement that. I fear
+> > > that blocking the use of modules (including being able to unload them)
+> > > will just make people submit drivers that can only be built in.
+> > > 
+> > > Not everyone cares about Android's GKI, but being able to unload a
+> > > module during development is very useful (and keeping that out-of-tree
+> > > prevents sharing the implementation and make it susceptible to even
+> > > further bit rot).
+> > > 
+> > > So continuing to supporting modules properly is a win for everyone (e.g.
+> > > GKI and developers).
+> > >  
+> > > > > > > > > Turns out the pcie-qcom driver does not support legacy
+> > > > > > > > > interrupts so there's no risk of there being any lingering
+> > > > > > > > > mappings if I understand things correctly.
+> > > > > > > > 
+> > > > > > > > It still does MSIs, thanks to dw_pcie_host_init(). If you can
+> > > > > > > > remove the driver while devices are up and running with MSIs
+> > > > > > > > allocated, things may get ugly if things align the wrong way
+> > > > > > > > (if a driver still has a reference to an irq_desc or irq_data,
+> > > > > > > > for example).
+> > > > > > > 
+> > > > > > > That is precisely the way I've been testing it and everything
+> > > > > > > appears to be tore down as it should.
+> > > > > > >
+> > > > > > > And a PCI driver that has been unbound should have released its
+> > > > > > > resources, or that's a driver bug. Right?
+> > > > > > 
+> > > > > > But that's the thing: you can easily remove part of the
+> > > > > > infrastructure without the endpoint driver even noticing. It may
+> > > > > > not happen in your particular case if removing the RC driver will
+> > > > > > also nuke the endpoints in the process, but I can't see this is an
+> > > > > > absolute guarantee. The crash pointed to by an earlier email is
+> > > > > > symptomatic of it.
+> > > > > 
+> > > > > But that was arguably due to a driver bug, which we know how to fix.
+> > > > > For MSIs the endpoint driver will free its interrupts and all is
+> > > > > good.
+> > > > > 
+> > > > > The key observation is that the driver model will make sure that any
+> > > > > endpoint drivers have been unbound before the bus is deregistered.
+> > > > > 
+> > > > > That means there are no longer any consumers of the interrupts,
+> > > > > which can be disposed. For MSI this is handled by
+> > > > > pci_free_irq_vectors() when unbinding the endpoint drivers. For
+> > > > > legacy interrupts, which can be shared, the PCIe RC driver needs to
+> > > > > manage this itself after the consumers are gone.
+> > > > 
+> > > > The driver model ensures that endpoint drivers have been unbound. But
+> > > > doesn't the interrupt disposal depend on the correct functioning of
+> > > > those endpoint drivers?  So if a buggy endpoint driver failed to
+> > > > dispose of them, we're still vulnerable?
+> > > 
+> > > Just as you are if an endpoint-driver fails to clean up after itself in
+> > > some other way (e.g. leaves the interrupt enabled).
+> > >
+> > 
+> > The IRQ disposal issue should hopefully fixed by this series:
+> > https://lore.kernel.org/linux-pci/20240715114854.4792-3-kabel@kernel.org/
+> > 
+> > Then if the dwc driver calls pci_remove_irq_domain() instead of
+> > irq_domain_remove(), we can be sure that all the IRQs are disposed during the
+> > driver remove.
+> > 
+> > So can we proceed with the series making Qcom driver modular?
 > 
-> This seems good.  I would consider moving it earlier in the series
-> so you don't have to touch the CFG_QUIRK_AVOID_BRIDGE_SHUTDOWN stuff
-> twice.
+> Who is volunteering to fix the drivers that will invariably explode
+> once we allow this?
+> 
 
-Sure, will do it. Thank you for the review!
+Why should anyone volunteer first up? If the issue gets reported for a driver
+blowing up, then the driver has to be fixed by the maintainer or someone, just
+like any other bug.
+
+From reading the thread, the major concern was disposing the IRQs before
+removing the domain and that is now taken care of. If you are worrying about a
+specific issue, please say so.
+
+As a Qcom PCIe driver maintainer, I'd like to provide users/developers the
+flexibility to remove the driver for development purposes.
+
+- Mani
+
+> Because if the outcome is that we let things bitrot even more than
+> they already are, I don't think this is going in the correct direction
+> -- as in *the direction of correctness*.
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
