@@ -1,471 +1,427 @@
-Return-Path: <linux-pci+bounces-14806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A7629A274B
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 17:48:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B01E49A2879
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 18:21:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9DF5E1C2680E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 15:48:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D37481C20FD0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 16:21:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5131DED4F;
-	Thu, 17 Oct 2024 15:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA5F1DE2DD;
+	Thu, 17 Oct 2024 16:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j6jwaOYl"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EOmfiBV7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE871DACB8;
-	Thu, 17 Oct 2024 15:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729180115; cv=none; b=mBi2o91nd+XZJVZXgXFRTz3RBJZdYM2qgYv0PtqNa56PADpOGa4+I3DNjS0VbXgF9GICBHBB8l6yIAW9Tc96IQoZic/n/Fe22fv1/AHy7qhDr0g4ZcdNA+NeyKORLzrRQWAWVhJYJyYSFGkvOeMmSJgMT4w+lrEh5NklodWuNNA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729180115; c=relaxed/simple;
-	bh=hWyInFLtEDu2F4Vvf72QE46yB5bngaRqM+QkXyFm7+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nuhNALX20SgHZzc0l171b9wpQqYCHXfWI6ylq7gBFwaXNDsVE3MucbMVTRPf+axOYDMB2tPiefJljawwMiTc121v+kmkxjw9e+ZFKX60WHoOeGklZCkMRkirErCu8EBkfwqh3WOicORFA+eI8UzqHsN+n0Op1Y4QjrwBFw1l/uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j6jwaOYl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49H9magq017430;
-	Thu, 17 Oct 2024 15:48:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	I8ST3qrbp8sGbBOpy3rQ2FtgKqHIk9C2F0my2mI+LjY=; b=j6jwaOYlfQu5K9RJ
-	tLe62bj8DucFWdjb9gI69ciGGQGdtySjmnIndzXsu+MRBu2LvTUtyuUoPMDXu/rf
-	2dPcBvu0UvPOAwCYwMQ0CRUuCUBkaoabKKDjoO3w/U+osSG/fj2jJnMRaS+ccp5X
-	Eth7GaKfS3QpzDyuyioznW7yx5wbnPetbRfPMruPKsNch3MZLR9stR10WCTpRW9+
-	S3drsATrBL6Jh+r2FXMtvku65df2jDvwsdTHN7Ln9rqNqraLusWtXUVZwGNWw4/1
-	gw8SPontB+UmLyFCk2bsFQQJSARRSDqCTtjZrKpaBe5wP/k0Hjrl8f9iOLkCxy/2
-	c9Kefw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42a8nq56hq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 15:48:08 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49HFm7in029619
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 15:48:07 GMT
-Received: from [10.216.4.185] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 17 Oct
- 2024 08:48:00 -0700
-Message-ID: <9b2831a4-b2c5-2282-a7bc-497a7a215ffa@quicinc.com>
-Date: Thu, 17 Oct 2024 21:17:56 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958571DED70;
+	Thu, 17 Oct 2024 16:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729182106; cv=fail; b=ctfFb4c8I5JvyttNMibV4hamYmcK0jCDjQLBv4k+/bop4hNJVIliyXyyKm+pXkZ7z7CUTPC//PcesksE2SlODYAes+H+un+pLLuraLUZJKm6kCMlQaIJETNGqrMnUZ/9Ong0quceUXfEswL3Lg6vaijnEGUxeBXaNxtVzXCak8c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729182106; c=relaxed/simple;
+	bh=oERP7EMZUsJCisaSaoRb/lE0F/D1Yh3XqW0H9Sn7e/k=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QdUsXt6Qm2EB9bVD1YFfHOeZzgV2hI2bH8pXYP70NvTcjoGRh6vUcFHqkJV4t9adBodUO3nEuSHWH7GNVyU9QHSTozh8xJAbJ0GyX/uSaiNQYeLpCiFZF2OLWccaCThxiJYZ13A2nXIhZwj4a/vADNnN2Qf7MrEr0bhhOhMz8ME=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EOmfiBV7; arc=fail smtp.client-ip=40.107.243.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WuaaX1kxXnePwrNhDAkJhrxcLwndcVbRjyzRBLP3O1fhX3Zgor+iPpxZTxYT/tG+3RfrqvYA/E0rEqGpoaLqKSBkrzx6++PnaWVmvgieRicsO0rddtXGAwVh+XOhX/UwqyEroUf+7wejfIEjNNCsVth7S/IxcerunqKzPw+KDzf6T+9v2ALtJsxV6c/QSVvpkTzZe6Xb/ih+0v6gQPo8QLLEO42DPe3Dq6g3lyu5nih7yKPV5LjKGh1KIMjwGALEeUujxUYV8t72OO8S6xMH1U3IMADSKCtbo/qsksgj0Gl9/QGhlKPIDLNedAuSY0cYjCQmzP08zynvXCpxSLVGJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aNv2pqDUa8rf8kw3Zft7jyvIgfYBQW5dnZnUgpdpN94=;
+ b=pFcr3tqxoPlWWAZQ4nHeOTHO5sJqoyPFZUmJvEWadmMn8B/edJ0oNhxyENkijSrFlgWz8Nv4ax18s+LqG3PXa6L1lJpqSoeqTDbtN3AVmKiac8T3VjAYm8JXgid8zcEenYPbFKLJpkOqtsEGlBHguuCJhMH9jZ6Hv0caoBLHNeudTac8nHpLTnK0WOkZ/UhFQ61jprfCTziTA9MR2/tHTpSFB/Pn3BXDoineDTVPRrTMC1iKNv7VYn4uXWMsarrywJsg0Ra2EOFMJ2JT3jJDPz6BmT8PXoxHVtaqLHqU7Wd9OHo4fUIxHTRAWg0JQPV64ilgJR3GAs2iwzGcCoz/oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aNv2pqDUa8rf8kw3Zft7jyvIgfYBQW5dnZnUgpdpN94=;
+ b=EOmfiBV7hVrz8mKW5XT9flQiP8Ttb2H9TmEicIQ0PsxVqVDnRhh3o7vHHaxI+cSHIgg7ClvyOy88EORUI0ivHa+LODJdGSvbtw3+LynEGom+xFya/gQdqbrSJC+zCxuT4kQBObDiAAlWkrFcIfFLIFoJW+XgROUkbCb1jBcmK2k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DS0PR12MB8785.namprd12.prod.outlook.com (2603:10b6:8:14c::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8069.20; Thu, 17 Oct 2024 16:21:39 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%6]) with mapi id 15.20.8069.018; Thu, 17 Oct 2024
+ 16:21:38 +0000
+Message-ID: <c756f2e4-2fa8-413a-b6b8-2f3ca8ec27a5@amd.com>
+Date: Thu, 17 Oct 2024 11:21:36 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/15] cxl/aer/pci: Add CXL PCIe port uncorrectable error
+ recovery in AER service driver
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ Terry Bowman <Terry.Bowman@amd.com>
+Cc: ming4.li@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+ nathan.fontenot@amd.com, smita.koralahallichannabasappa@amd.com
+References: <20241008221657.1130181-1-terry.bowman@amd.com>
+ <20241008221657.1130181-8-terry.bowman@amd.com>
+ <20241016175426.0000411e@Huawei.com>
+ <ac5f05ec-5017-4ac7-b238-b90585e7a5bc@amd.com>
+ <20241017144315.0000074c@Huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <kibowman@amd.com>
+In-Reply-To: <20241017144315.0000074c@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0014.prod.exchangelabs.com (2603:10b6:805:b6::27)
+ To DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 8/8] PCI: pwrctl: Add power control driver for qps615
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        <cros-qcom-dts-watchers@chromium.org>,
-        "Bartosz
- Golaszewski" <brgl@bgdev.pl>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        <andersson@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-References: <20240803-qps615-v2-0-9560b7c71369@quicinc.com>
- <20240803-qps615-v2-8-9560b7c71369@quicinc.com>
- <spaudnuoam3cj7glxmnlw7y3m46d2vsm42s576jqwrcrmywl2n@oyrynorzhddg>
- <872e1c39-4547-7cd3-ba49-bbbe59e52087@quicinc.com>
- <32488500-05B7-4D25-9AAF-06A249CC6B1D@linaro.org>
- <d0c8b466-5df2-853c-608d-ab67af1a9f32@quicinc.com>
- <CAA8EJpo7J9ZXC9uERg=WkjMbDD-fDTOO2VXaRVOCVZXiN18oSw@mail.gmail.com>
- <4d67915a-d57d-0a33-cdef-3bdf05961d16@quicinc.com>
- <CAA8EJppa2Z-h0vH2Cmeem_1Cw8C+53q7pXkJ03mut4Bsn+Vm7A@mail.gmail.com>
- <4c111681-03b8-9b4c-6b5b-ebfa4c5a7377@quicinc.com>
- <w547dmmxqqa4atd62jqiqcfzhlnpjc7n64btjmre5pmbsci4br@w45tuny3mcmn>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <w547dmmxqqa4atd62jqiqcfzhlnpjc7n64btjmre5pmbsci4br@w45tuny3mcmn>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: wqL5lq2rXRyHB-0SkksntH-V8Ty29oOM
-X-Proofpoint-GUID: wqL5lq2rXRyHB-0SkksntH-V8Ty29oOM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
- suspectscore=0 adultscore=0 spamscore=0 bulkscore=0 clxscore=1011
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410170109
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DS0PR12MB8785:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8064d394-f4c9-4d7c-ff1f-08dceec7c711
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MWdkbW9NMENmNkdxaU1rRkNTOU1rcmdINlg0UTBPZjlRUW1xUnZHdDlUSk8y?=
+ =?utf-8?B?MndCSE5CbE1lV2t0TUluVkFlVklyemdEY2ZoelBNUGNCek5zaGVGRFJrc3c4?=
+ =?utf-8?B?WDNYK3I2MDUvK1Job1pXQk1YOGhreTltYTNxdkFCWW5JaEs4cE9UUjBpbjV4?=
+ =?utf-8?B?VkxoSHV2bFZBeDI1OVN0TzFZZzBpVCtROFBWWFZtWEpxQ1h6MWkrT2xodG96?=
+ =?utf-8?B?d1ljTlU0MCtSQlNXRkZtV1REZEIvTnJRMjFlNjlCWk1qY2k1RkwyY1RkbVBV?=
+ =?utf-8?B?bk5ISnNmK2liT21vamNmOGZ5ZzFuTTB2T2cxR3lmWFN2VDA0RDMra3pOM3FL?=
+ =?utf-8?B?TWlEeGxEUEdtVnhCSENUL0ZsbnhqOUwzRnY3ZXIrUE94aENvUEtXU2M0ZWJI?=
+ =?utf-8?B?cE90ZWJmamVwcFltZG5GYU41MTNjeXRUUDRZSGRsQXZQTnhTM3FtckdBU1Yz?=
+ =?utf-8?B?MzNHV2ZvODNnZUEvVVNHMnR6UFlhc1VxVUVEamtQeXdpWXRsSjBsNTk0dXdw?=
+ =?utf-8?B?OUNtMnRyU2tQeDdTdmo2c2M2THZqS2tlZVVqRyszbkg1VUlPY05QYThzbUQ2?=
+ =?utf-8?B?eXk3YmhUdktHMHhFcUdsL2VIMlZ5WDFBSmxjU2J3L0V2NStQK09lVXBYUEx1?=
+ =?utf-8?B?L0RmVDhvQ0ZicXdaeVZpWVBwQ2xvUnpjdnZ2eUtLS3NBazFrVmRSUmxBSWJw?=
+ =?utf-8?B?UnFHZnBPWXNqUTM2WEllN2RSdXQvMEh6dTF0dERvR29DMGNyWVlaQmZXeTMw?=
+ =?utf-8?B?cWlyVk1oQkxqMk5XTlNjU1RsQlZFNEF4dWhlT08xbWYwaDZYYm9vTkpZYTFH?=
+ =?utf-8?B?RTQ0cGE0ODBvYitoU0lCZ29MU2lPQWlEK0pPbDBRdnB6alQvWEF6dEl2NWZB?=
+ =?utf-8?B?cTRUbjVTTGJ2S1h0M0FlN0NEamU0OE9YaEhBSGMvR3hnR1ZtWWlEbUM2Uysz?=
+ =?utf-8?B?ZytSRFdxZkNFVkNxdW13bk80T0V0VVRFb1VxUHZwY2xnOWRycEpKRFdnMVN6?=
+ =?utf-8?B?cTlHUTBNT25CUTVGOHFzd0tWZ2U4Yzg4SitXY1Ftc3l6ZmdUdy9nbXZRVy9L?=
+ =?utf-8?B?cGg0ZkRnVlJGMHZpK1hnTUFhdUlMdFF3NHpYVTZuUWxwV0dvTzA0VHFzRVlJ?=
+ =?utf-8?B?UmIzV0g5eG00ellOUVlUdVhFS3FlMFVkeGRTd0o1Q3VYTWVwaUdwRWdUcW11?=
+ =?utf-8?B?WGtrdVovTWR4anh5c0wyZkt2ZDhCcmdmSGU3bGtEd05qaiswaEFLRWdWOWh2?=
+ =?utf-8?B?K2czU082VHNiejREMXpnQndPcG9YSkdSWitRdGVHSmVlRElCeXRYRlY5cklS?=
+ =?utf-8?B?c0pBRzhpcUJ6b3E4eU5BT0N2UHg2VWV2YUxtUW9RWGZ4Q2lBdzJvSHFtUXo2?=
+ =?utf-8?B?SXBFL0VFWkloc1pXNDl1TVZuN28zSTh5a1dlb29VTFkwWGpPVTIwM0kwL2o5?=
+ =?utf-8?B?RGgwR21oaXhHZklkS1k0L0U1SWlLVlQ2VzFpdEVtK2l1VnJkd05lcm4rbXpN?=
+ =?utf-8?B?Mit3QUFDYXVxWnVuQmVoU3o5VUNiRkJWWHZZOUpWbko3cSsyaW5XV0xBMWVY?=
+ =?utf-8?B?U2VXN0VWL1UwWFRsNGM0QURkS1FTaFFTV0hTZ2o3ekZLdk1rd2RDNVd6bi8r?=
+ =?utf-8?B?blc1a0ZoNSt3RExBcnlqZ2lzQTRnVHJRaFNtQTcxeEFIZlBwazVwTVE3NW0r?=
+ =?utf-8?B?Q0FFODJSY253dU1hNEtYcUZ5UHpXT2syTTkwWTAxSEU1UDBLYSsrLzdNSUEx?=
+ =?utf-8?Q?oKP6qNTT68/975FNn3YZaBiwTWf7pG0C2bKo7dU?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UnE3UHJxYzIwdGtGeFcwaWFiWDNHcXpab1pwZEFGT2hIaUdrTGdLZXB3cTdV?=
+ =?utf-8?B?dEI4eGJ1dlp0ekdlNDlZd1p5a3ZEVjVMbDd1NE0vcVFqaG1SOVZEZEFLR1F3?=
+ =?utf-8?B?UGZnRzV3dnZyMFc4Zk1MZktDdXZCOVkxQjY0b0RrL1FXSzdXMWVxUzh4OStj?=
+ =?utf-8?B?NHkvcWtUNlVVSlZWMUZOdlF5Y3dzOGtGeEhjbTRMOER0bk12aUFJRnp2a1N0?=
+ =?utf-8?B?MlZzZHZzMVJOOGMyVnV2SjViNzJlQ2d0OFk1M3o1SGtCS1haWFRYTWYwZFR5?=
+ =?utf-8?B?RnQ4eWR6M0QveXZTVVJzSG1ldEVnRzZkTW8yZ1JoVlBacjdKSUNiNGpOTDZW?=
+ =?utf-8?B?M3pzMGt6Tkt6aWtWK0ZPSlY2R1VvdHV5VTNna2lWNjZDNythNVVQdzBONkN0?=
+ =?utf-8?B?ek9kOHlESEZGekpvUzdzc2grRnE2cTE4dkYrV21qU21MT0JBeVRmLzFuaE9y?=
+ =?utf-8?B?UU9RRU5vMjNmQlpHd0d0Tlp2ZlU5MmYxVzdHNUVDMFVTRjRHVTEvMGZkSy9I?=
+ =?utf-8?B?WFhyTjFtT3czOStqRjVQeHFBTkhiNC9qVExRZlNrSng2Mm9TQkpDOHlVOWdP?=
+ =?utf-8?B?bDRNUFNvdjczbVpHTUtJT1QreHdwTXVKWU5pMFczclVNVEhlc3FKRFducWVY?=
+ =?utf-8?B?Q0dvaFg1blA0T3ZLOWRNYlJMSTFhRTJjdTA4aEVwdWdVNE53cW4xU2IyRUdj?=
+ =?utf-8?B?ZDhNMDc5bFJueEVWc2haa2Y0RWRDdDd6d2krc3pTRzlCWjlHbUR2ak4yWWtO?=
+ =?utf-8?B?YVBoaW1idXN0aEphdGdtSGxlbnZONWZ3MnpZR1FGNkRWRG1UeTJoL2ZSY2dE?=
+ =?utf-8?B?TFBOanhFZDVrenFDSjkwQ0JJNm0vaXFnR0pJSFVCbjAyNURteHNsQ3JTVHBK?=
+ =?utf-8?B?US9ibWxmQnVCMVBTNGpFYmRWb3J2WTVwdDBMMTN3dlVwS0JVTFU4K1VaZXRy?=
+ =?utf-8?B?WXRVeUlPNkR2bXhKMjNRUmZFQ3hIdm9qTko0Ym5IN1BNUVhYa3RGaHBOaVFS?=
+ =?utf-8?B?UXNyTmtlY2VtV2hlSDNyREpiUFZtQnVrV1V4eUU4VkRlUkQzMWJYR1U3Ny9i?=
+ =?utf-8?B?Q1I5ZlF1SGpEZmtIV2FwT1MxUStweEY2Z2svNzlrSEVyNWwyWS9YUE15SFFh?=
+ =?utf-8?B?Y0E4dHdoaWoyQVNGVVRBN09YSEJQbHBna1BjT3RVekJQdVdpdDkvcjJtblJX?=
+ =?utf-8?B?am5XZWxQbllRQWtNVHVHcUQzZml3bVZWbkRJUG55NGY2MThwMjVsNnh0NGRL?=
+ =?utf-8?B?UE9pZ01PWUhkNjlCWTFkblpVckF3NDdQS2ZIQUlVaFZGa1RHQ3NYTVlPMlMv?=
+ =?utf-8?B?Wld6WWt6REZHeU0yV3BFeG9UN1Evay92aFJDQjRBaDB1UWxhc2RDMDRNcXor?=
+ =?utf-8?B?YXRZdGprQUg3b3Y1Zm5kb2ZEUjR6c0hpSTQvYzRXMGxSSEtKWjdwcFArYzFG?=
+ =?utf-8?B?MkNvL1cxKzJsSkpDeHF2Z0M5S2NqWUowSTkxK2VDMGhVL2tFQTRqOHhZakNZ?=
+ =?utf-8?B?cU9Xcm5xTDdNNWpsNGI4M2l2U2MyRU1jWTdYaFZkSExxelBFQ1NQV3lNY05v?=
+ =?utf-8?B?UGxZZjRBVlBqb2ZPKzQ1bWJ4cGErYWJsVndNNzlEL2NPRFpUWXoxMU9lR1lM?=
+ =?utf-8?B?TFBXOEE2bVRDZXZydXZVY2lTYmdjSjFmMDF0UWtHcnkzalZHVVNVSUZCa3ZP?=
+ =?utf-8?B?M0lTamlnNnNtTHVuc3luSi9CbG95SUxCemppZ2J3TWRQdGJGVytFaGVOSWtH?=
+ =?utf-8?B?YWhvRGIvaHd6Zk5mSVlhUVNrUGFENFVqcXQ0WVRkMHFjTlRzWkZTV0dVWFpI?=
+ =?utf-8?B?SVZhTDNzM3pEeVFWbm5KSSt5S1lCMGdVajg1TWlrWWE5N00vV0R6VmQ5cktS?=
+ =?utf-8?B?bkFOZXN6dTFCdEt5emFvUHZFRm5CbzVVaGhSWGVuanB4ZW9GM005OWdTYkVw?=
+ =?utf-8?B?bDE5bldCS2lMbHVERUE5cXY3UmF3S21mU3lYMlpnZ2xzTWNoMDJsa1AvSkJ4?=
+ =?utf-8?B?V0d4ZXdRTTZKdjByS09sZTRQMGFWcEk0dDJYM1dXRk1iejVEekQybTNtRC9z?=
+ =?utf-8?B?N09SbEczZFZUbzhVRWQwbnBMOUYzOWFHZjNpYzhhRU5UOGtWNnIxQUo5RzZQ?=
+ =?utf-8?Q?fz6W5oTWTV/pnFBaEQPnKWQMg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8064d394-f4c9-4d7c-ff1f-08dceec7c711
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2024 16:21:38.7829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Sk6CT7eQmvfR64+AfZBYAMevf96Y6GqjhHxKYrInuxxntRLzTCOLcyiPMQwnp1RR+37quup2lUDpN4v27QA5rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8785
 
+Hi Jonathan,
 
-
-On 9/3/2024 12:07 AM, Dmitry Baryshkov wrote:
-> On Mon, Sep 02, 2024 at 04:17:06PM GMT, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 9/2/2024 3:42 PM, Dmitry Baryshkov wrote:
->>> On Mon, 2 Sept 2024 at 11:32, Krishna Chaitanya Chundru
->>> <quic_krichai@quicinc.com> wrote:
->>>>
->>>>
->>>>
->>>> On 9/2/2024 12:50 PM, Dmitry Baryshkov wrote:
->>>>> On Mon, 2 Sept 2024 at 10:13, Krishna Chaitanya Chundru
->>>>> <quic_krichai@quicinc.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 8/8/2024 9:00 AM, Dmitry Baryshkov wrote:
->>>>>>> On August 5, 2024 1:14:47 PM GMT+07:00, Krishna Chaitanya Chundru <quic_krichai@quicinc.com> wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 8/3/2024 5:04 PM, Dmitry Baryshkov wrote:
->>>>>>>>> On Sat, Aug 03, 2024 at 08:52:54AM GMT, Krishna chaitanya chundru wrote:
->>>>>>>>>> QPS615 switch needs to be configured after powering on and before
->>>>>>>>>> PCIe link was up.
->>>>>>>>>>
->>>>>>>>>> As the PCIe controller driver already enables the PCIe link training
->>>>>>>>>> at the host side, stop the link training. Otherwise the moment we turn
->>>>>>>>>> on the switch it will participate in the link training and link may come
->>>>>>>>>> up before switch is configured through i2c.
->>>>>>>>>>
->>>>>>>>>> The device tree properties are parsed per node under pci-pci bridge in the
->>>>>>>>>> driver. Each node has unique bdf value in the reg property, driver
->>>>>>>>>> uses this bdf to differentiate ports, as there are certain i2c writes to
->>>>>>>>>> select particular port.
->>>>>>>>>>
->>>>>>>>>> Based up on dt property and port, qps615 is configured through i2c.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>>>>>>>>> ---
->>>>>>>>>>       drivers/pci/pwrctl/Kconfig             |   7 +
->>>>>>>>>>       drivers/pci/pwrctl/Makefile            |   1 +
->>>>>>>>>>       drivers/pci/pwrctl/pci-pwrctl-qps615.c | 638 +++++++++++++++++++++++++++++++++
->>>>>>>>>>       3 files changed, 646 insertions(+)
->>>>>>>>>>
+On 10/17/2024 8:43 AM, Jonathan Cameron wrote:
+> On Wed, 16 Oct 2024 13:07:37 -0500
+> Terry Bowman <Terry.Bowman@amd.com> wrote:
 > 
->>>>>>>>>> +
->>>>>>>>>> +  return qps615_pwrctl_i2c_write(ctx->client,
->>>>>>>>>> +                                 is_l1 ? QPS615_PORT_L1_DELAY : QPS615_PORT_L0S_DELAY, units);
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static int qps615_pwrctl_set_tx_amplitude(struct qps615_pwrctl_ctx *ctx,
->>>>>>>>>> +                                    enum qps615_pwrctl_ports port, u32 amp)
->>>>>>>>>> +{
->>>>>>>>>> +  int port_access;
->>>>>>>>>> +
->>>>>>>>>> +  switch (port) {
->>>>>>>>>> +  case QPS615_USP:
->>>>>>>>>> +          port_access = 0x1;
->>>>>>>>>> +          break;
->>>>>>>>>> +  case QPS615_DSP1:
->>>>>>>>>> +          port_access = 0x2;
->>>>>>>>>> +          break;
->>>>>>>>>> +  case QPS615_DSP2:
->>>>>>>>>> +          port_access = 0x8;
->>>>>>>>>> +          break;
->>>>>>>>>> +  default:
->>>>>>>>>> +          return -EINVAL;
->>>>>>>>>> +  };
->>>>>>>>>> +
->>>>>>>>>> +  struct qps615_pwrctl_reg_setting tx_amp_seq[] = {
->>>>>>>>>> +          {QPS615_PORT_ACCESS_ENABLE, port_access},
->>>>>>>>>
->>>>>>>>> Hmm, this looks like another port selection, so most likely it should
->>>>>>>>> also be under the same lock.
->>>>>>>>>
->>>>>>>>>> +          {QPS615_PORT_LANE_ACCESS_ENABLE, 0x3},
->>>>>>>>>> +          {QPS615_TX_MARGIN, amp},
->>>>>>>>>> +  };
->>>>>>>>>> +
->>>>>>>>>> +  return qps615_pwrctl_i2c_bulk_write(ctx->client, tx_amp_seq, ARRAY_SIZE(tx_amp_seq));
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static int qps615_pwrctl_disable_dfe(struct qps615_pwrctl_ctx *ctx,
->>>>>>>>>> +                               enum qps615_pwrctl_ports port)
->>>>>>>>>> +{
->>>>>>>>>> +  int port_access, lane_access = 0x3;
->>>>>>>>>> +  u32 phy_rate = 0x21;
->>>>>>>>>> +
->>>>>>>>>> +  switch (port) {
->>>>>>>>>> +  case QPS615_USP:
->>>>>>>>>> +          phy_rate = 0x1;
->>>>>>>>>> +          port_access = 0x1;
->>>>>>>>>> +          break;
->>>>>>>>>> +  case QPS615_DSP1:
->>>>>>>>>> +          port_access = 0x2;
->>>>>>>>>> +          break;
->>>>>>>>>> +  case QPS615_DSP2:
->>>>>>>>>> +          port_access = 0x8;
->>>>>>>>>> +          lane_access = 0x1;
->>>>>>>>>> +          break;
->>>>>>>>>> +  default:
->>>>>>>>>> +          return -EINVAL;
->>>>>>>>>> +  };
->>>>>>>>>> +
->>>>>>>>>> +  struct qps615_pwrctl_reg_setting disable_dfe_seq[] = {
->>>>>>>>>> +          {QPS615_PORT_ACCESS_ENABLE, port_access},
->>>>>>>>>> +          {QPS615_PORT_LANE_ACCESS_ENABLE, lane_access},
->>>>>>>>>> +          {QPS615_DFE_ENABLE, 0x0},
->>>>>>>>>> +          {QPS615_DFE_EQ0_MODE, 0x411},
->>>>>>>>>> +          {QPS615_DFE_EQ1_MODE, 0x11},
->>>>>>>>>> +          {QPS615_DFE_EQ2_MODE, 0x11},
->>>>>>>>>> +          {QPS615_DFE_PD_MASK, 0x7},
->>>>>>>>>> +          {QPS615_PHY_RATE_CHANGE_OVERRIDE, 0x10},
->>>>>>>>>> +          {QPS615_PHY_RATE_CHANGE, phy_rate},
->>>>>>>>>> +          {QPS615_PHY_RATE_CHANGE, 0x0},
->>>>>>>>>> +          {QPS615_PHY_RATE_CHANGE_OVERRIDE, 0x0},
->>>>>>>>>> +
->>>>>>>>>> +  };
->>>>>>>>>> +
->>>>>>>>>> +  return qps615_pwrctl_i2c_bulk_write(ctx->client,
->>>>>>>>>> +                                      disable_dfe_seq, ARRAY_SIZE(disable_dfe_seq));
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static int qps615_pwrctl_set_nfts(struct qps615_pwrctl_ctx *ctx,
->>>>>>>>>> +                            enum qps615_pwrctl_ports port, u32 nfts)
->>>>>>>>>> +{
->>>>>>>>>> +  int ret;
->>>>>>>>>> +  struct qps615_pwrctl_reg_setting nfts_seq[] = {
->>>>>>>>>> +          {QPS615_NFTS_2_5_GT, nfts},
->>>>>>>>>> +          {QPS615_NFTS_5_GT, nfts},
->>>>>>>>>> +  };
->>>>>>>>>> +
->>>>>>>>>> +  ret =  qps615_pwrctl_i2c_write(ctx->client, QPS615_PORT_SELECT, BIT(port));
->>>>>>>>>> +  if (ret)
->>>>>>>>>> +          return ret;
->>>>>>>>>> +
->>>>>>>>>> +  return qps615_pwrctl_i2c_bulk_write(ctx->client, nfts_seq, ARRAY_SIZE(nfts_seq));
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static int qps615_pwrctl_assert_deassert_reset(struct qps615_pwrctl_ctx *ctx, bool deassert)
->>>>>>>>>> +{
->>>>>>>>>> +  int ret, val = 0;
->>>>>>>>>> +
->>>>>>>>>> +  if (deassert)
->>>>>>>>>> +          val = 0xc;
->>>>>>>>>> +
->>>>>>>>>> +  ret = qps615_pwrctl_i2c_write(ctx->client, QPS615_GPIO_CONFIG, 0xfffffff3);
->>>>>>>>>
->>>>>>>>> It's a kind of magic
->>>>>>>>>
->>>>>>>> I will add a macro in next patch.
->>>>>>>>>> +  if (ret)
->>>>>>>>>> +          return ret;
->>>>>>>>>> +
->>>>>>>>>> +  return qps615_pwrctl_i2c_write(ctx->client, QPS615_RESET_GPIO, val);
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static int qps615_pwrctl_parse_device_dt(struct qps615_pwrctl_ctx *ctx, struct device_node *node)
->>>>>>>>>> +{
->>>>>>>>>> +  enum qps615_pwrctl_ports port;
->>>>>>>>>> +  struct qps615_pwrctl_cfg *cfg;
->>>>>>>>>> +  struct device_node *np;
->>>>>>>>>> +  int bdf, fun_no;
->>>>>>>>>> +
->>>>>>>>>> +  bdf = of_pci_get_bdf(node);
->>>>>>>>>> +  if (bdf < 0) {
->>>>>>>>>
->>>>>>>>> This is incorrect, it will fail if at any point BDF uses the most
->>>>>>>>> significant bit (which is permitted by the spec, if I'm not mistaken).
->>>>>>>>>
->>>>>>>> As per the reg property as described in the binding document we are not
->>>>>>>> expecting any change here.
->>>>>>>> https://elixir.bootlin.com/linux/v6.10.3/source/Documentation/devicetree/bindings/pci/pci.txt#L50.
->>>>>>>
->>>>>>> What will this function return if the bus no is 256?
->>>>>>> The supported PCI bus number is from 0x0 to 0xff only. so we
->>>>>> are not expecting any numbers greater than 0xff.
->>>>>>> Also please either move the function to the generic PCI code is change its name to match the rest of the driver. The of_pci_ prefix is reserved for the generic code.
->>>>>>>
->>>>>> ack.
->>>>>>>
->>>>>>>>>> +          dev_err(ctx->pwrctl.dev, "Getting BDF failed\n");
->>>>>>>>>> +          return 0;
->>>>>>>>>> +  }
->>>>>>>>>> +
->>>>>>>>>> +  fun_no = bdf & 0x7;
->>>>>>>>>
->>>>>>>>> I assume that ARI is not supported?
->>>>>>>>>
->>>>>>>> Yes this doesn't support ARI.
->>>>>>>>>> +
->>>>>>>>>> +  /* In multi function node, ignore function 1 node */
->>>>>>>>>> +  if (of_pci_get_bdf(of_get_parent(node)) == ctx->bdf->dsp3_bdf && !fun_no)
->>>>>>>>>> +          port = QPS615_ETHERNET;
->>>>>>>>>> +  else if (bdf == ctx->bdf->usp_bdf)
->>>>>>>>>> +          port = QPS615_USP;
->>>>>>>>>
->>>>>>>>> The function is being called for child device nodes. Thus upstream
->>>>>>>>> facing port (I assume that this is what USP means) can not be enumerated
->>>>>>>>> in this way.
->>>>>>>> Sorry, but I didn't your question.
->>>>>>>>
->>>>>>>> These settings will not affect the enumeration sequence these are
->>>>>>>> for configuring ports only.
->>>>>>>
->>>>>>> You are handling the case of bdf equal to the USP. Is it possible at all?
->>>>>>>
->>>>>> at the time of the configuration the PCI link is not enabled yet,
->>>>>> once we are done with the configurations only we are resumeing the link
->>>>>> training. so when we start this configuration the link is not up yet.
->>>>>
->>>>> Is your answer relevant to the question I have asked?
->>>>>
->>>> sorry dmitry I might got your question wrong. what I understood is
->>>> "you are configuring USP port before the link is up, is that possible?"
->>>> I might read your statement wrongly.
+>> Hi Jonathan,
+>>
+>> On 10/16/24 11:54, Jonathan Cameron wrote:
+>>> On Tue, 8 Oct 2024 17:16:49 -0500
+>>> Terry Bowman <terry.bowman@amd.com> wrote:
+>>>    
+>>>> The current pcie_do_recovery() handles device recovery as result of
+>>>> uncorrectable errors (UCE). But, CXL port devices require unique
+>>>> recovery handling.
 >>>>
->>>> If the question is "why do we need to configure USP?" I will try to
->>>> respond below.
->>>> "USP also will have l0s, L1 entry delays, nfts etc which can be
->>>> configured".
+>>>> Create a cxl_do_recovery() function parallel to pcie_do_recovery(). Add CXL
+>>>> specific handling to the new recovery function.
 >>>>
->>>> Sorry once again if your question doesn't fall in both can you tell
->>>> me your question.
+>>>> The CXL port UCE recovery must invoke the AER service driver's CXL port
+>>>> UCE callback. This is different than the standard pcie_do_recovery()
+>>>> recovery that calls the pci_driver::err_handler UCE handler instead.
+>>>>
+>>>> Treat all CXL PCIe port UCE errors as fatal and call kernel panic to
+>>>> "recover" the error. A panic is called instead of attempting recovery
+>>>> to avoid potential system corruption.
+>>>>
+>>>> The uncorrectable support added here will be used to complete CXL PCIe
+>>>> port error handling in the future.
+>>>>
+>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 >>>
->>> My question was why the function gets executed for the root port. But
->>> after reading the qps615_pwrctl_parse_device_dt() I have another
->>> question: you are parsing DT nodes recursively. You should stop
->>> parsing at the first level, so that grandchildren nodes can not
->>> override your data (and so that the time isn't spent on parsing
->>> useless data). Also I have the feeling that BDF parsing isn't so
->>> correct. Will it work if QPS is sitting behind a PCI-PCI bridge?
+>>> Hi Terry,
 >>>
->> we are not executing for root port. we are configuring for USP
->> since there are some features of USP which can be configured.
-> 
-> What is USP? Upstream side port?
+>>> I'm a little bothered by the subtle difference in the bus walks
+>>> in here vs the existing cases. If we need them, comments needed
+>>> to explain why.
+>>>    
+>>
+>> Yes, I will add more details in the commit message about "why".
+>> I added explanation following your below comment.
+>>
+>>> If we are going to have separate handling, see if you can share
+>>> a lot more of the code by factoring out common functions for
+>>> the pci and cxl handling with callbacks to handle the differences.
+>>>    
+>>
+>> Dan requested separate paths for the PCIe and CXL recovery. The intent,
+>> as I understand, is to isolate the handling of PCIe and CXL protocol
+>> errors. This is to create 2 different classes of protocol errors.
+> Function call chain wise I'm reasonably convinced that might be a good
+> idea.  But not code wise if it means we end up with more hard to review
+> code.
 > 
 >>
->> we are trying to store each configurations in below line.
->> cfg = &ctx->cfg[port];
+>>> I've managed to get my head around this code a few times in the past
+>>> (I think!) and really don't fancy having two subtle variants to
+>>> consider next time we get a bug :( The RC_EC additions hurt my head.
+>>>
+>>> Jonathan
 >>
->> port will have enum value based upon the bdf. after filling
->> the parent node we calling recursive function for child nodes.
->> As the BDF is unique value for each node we not expecting to get
->> same enum value for child or grand child nodes and there will
->> be no overwrite. If the BDF is not matched we are just returning
->> instead of looking for the properties.
+>> Right, the UCE recovery logic is not straightforward. The code can  be
+>> refactored to take advantage of reuse. I'm interested in your thoughts
+>> after I have provided some responses here.
 >>
->> QPS615 node is defined as child of the pci-pci bridge only.
->> The pwrctl framework is designed to work if the device
->> is represented as child node in the pci-pci bridge only.
-> 
-> Of course. Each PCIe device is either a child of the root port or a
-> child of a pci-pci bridge. So are the BDFs specific to the case of
-> QPS615 being a child of the root PCIe bridge?
-> 
-yes these are specific to qps615 being a child of the root PCIe bridge.
+>>>    
+>>>>   static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>>> index 31090770fffc..de12f2eb19ef 100644
+>>>> --- a/drivers/pci/pcie/err.c
+>>>> +++ b/drivers/pci/pcie/err.c
+>>>> @@ -86,6 +86,63 @@ static int report_error_detected(struct pci_dev *dev,
+>>>>   	return 0;
+>>>>   }
+>>>>   
+>>>> +static int cxl_report_error_detected(struct pci_dev *dev,
+>>>> +				     pci_channel_state_t state,
+>>>> +				     enum pci_ers_result *result)
+>>>> +{
+>>>> +	struct cxl_port_err_hndlrs *cxl_port_hndlrs;
+>>>> +	struct pci_driver *pdrv;
+>>>> +	pci_ers_result_t vote;
+>>>> +
+>>>> +	device_lock(&dev->dev);
+>>>> +	cxl_port_hndlrs = find_cxl_port_hndlrs();
+>>>
+>>> Can we refactor to have a common function under this and report_error_detected()?
+>>>    
 >>
->> Hope it clarifies all the queries.
+>> Sure, this can be refactored.
+>>
+>> The difference between cxl_report_error_detected() and report_error_detected() is the
+>> handlers that are called.
+>>
+>> cxl_report_error_detected() calls the CXL driver's registered port error handler.
+>>
+>> report_error_recovery() calls the pcie_dev::err_handlers.
+>>
+>> Let me know if I should refactor for common code here?
 > 
-> Yes. Please drop recursive parsing and add explicit single
-> for_each_child_of_node().
+> It certainly makes sense to do that somewhere in here.  Just have light
+> wrappers that provide callbacks so the bulk of the code is shared.
 > 
-Dimitry, the ethernet nodes which are child of dsp3 need extra
-for_each_child_of_node and also we are going to add support for cascade
-switch once this patch lands, in that cascade switch one more QPS615
-switch will be connected to the one of the downstream port of the first
-switch in that case we might need to do for_each_child_of_node twice
-from  the dsp node where cascade switch is connected.
-So it will good if we have this recursive parsing.
 
-- Krishna Chaitanya.
->
->> - Krishna chaitanya.
->>>>>>>
->>>>>>>>>
->>>>>>>>>> +  else if (bdf == ctx->bdf->dsp1_bdf)
->>>>>>>>>> +          port = QPS615_DSP1;
->>>>>>>>>> +  else if (bdf == ctx->bdf->dsp2_bdf)
->>>>>>>>>> +          port = QPS615_DSP2;
->>>>>>>>>> +  else if (bdf == ctx->bdf->dsp3_bdf)
->>>>>>>>>> +          port = QPS615_DSP3;
->>>>>>>>>> +  else
->>>>>>>>>> +          return 0;
->>>>>>>>>
->>>>>>>>> -EINVAL >
->>>>>>>> There are can be nodes describing endpoints also,
->>>>>>>> for those nodes bdf will not match and we are not
->>>>>>>> returning since it is expected for endpoint nodes.
->>>>>>>
->>>>>>> Which endpoints? Bindings don't describe them.
->>>>>>>
->>>>>> The client drivers like ethernet will add them once
->>>>>> this series is merged. Their drivers are not present
->>>>>> in the linux as of now.
->>>>>
->>>>> The bindings describe the hardware, not the drivers. Also the driver
->>>>> should work with the bindings that you have submitted, not some
->>>>> imaginary to-be-submitted state. Please either update the bindings
->>>>> within the patchset or fix the driver to return -EINVAL.
->>>>>
->>>> The qps615 bindings describes only the PCIe switch part,
->>>> the endpoints binding connected to the switch should be described by the
->>>> respective clients like USB hub, NVMe, ethernet etc bindings should
->>>> describe their hardware and its properties. And these bindings will
->>>> defined in seperate bindinds file not in qps615 bindings.
->>>>
->>>> for example:-
->>>>
->>>> in the following example pcie@0,0 describes usp and
->>>> pcie@1,0 & pcie@2,0 describes dsp's of the switch.
->>>> now if we say usb hub is connected to dsp1 i.e to the
->>>> node pcie@1,0 there will be a child node to the pcie@1,0
->>>> to denote usb hub hardware.
->>>> And that node is external to the switch and we are not
->>>> configuring it through i2c. As these are pcie devices
->>>> representation is generic one we can't say if the client
->>>> nodes(in this case usb hub) will be present or not. if the child
->>>> node( for example usb hub) is present we can't return -EINVAL
->>>> because qps615 will not configure it.
->>>>
->>>> &pcieport {
->>>>           pcie@0,0 {
->>>>                   pcie@1,0 {
->>>>                           reg = <0x20800 0x0 0x0 0x0 0x0>;
->>>>                           #address-cells = <3>;
->>>>                           #size-cells = <2>;
->>>>
->>>>                           device_type = "pci";
->>>>                           ranges;
->>>>                           usb_hub@0,0 {
->>>>                                   //describes USB hub
->>>>                           };
->>>>                   };
->>>>
->>>>                   pcie@2,0 {
->>>>                           reg = <0x21000 0x0 0x0 0x0 0x0>;
->>>>                           #address-cells = <3>;
->>>>                           #size-cells = <2>;
->>>>
->>>>                           device_type = "pci";
->>>>                           ranges;
->>>>                   };
->>>>           };
->>>> };
+Ok, Ill start on that. I have a v2 ready to-go without the reuse changes.
+You want me to wait on sending v2 till it has reuse refactoring?
+
+>>
+>>
+>>>> +	pdrv = dev->driver;
+>>>> +	if (pci_dev_is_disconnected(dev)) {
+>>>> +		vote = PCI_ERS_RESULT_DISCONNECT;
+>>>> +	} else if (!pci_dev_set_io_state(dev, state)) {
+>>>> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
+>>>> +			dev->error_state, state);
+>>>> +		vote = PCI_ERS_RESULT_NONE;
+>>>> +	} else if (!cxl_port_hndlrs || !cxl_port_hndlrs->error_detected) {
+>>>> +		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+>>>> +			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+>>>> +			pci_info(dev, "can't recover (no error_detected callback)\n");
+>>>> +		} else {
+>>>> +			vote = PCI_ERS_RESULT_NONE;
+>>>> +		}
+>>>> +	} else {
+>>>> +		vote = cxl_port_hndlrs->error_detected(dev, state);
+>>>> +	}
+>>>> +	pci_uevent_ers(dev, vote);
+>>>> +	*result = merge_result(*result, vote);
+>>>> +	device_unlock(&dev->dev);
+>>>> +	return 0;
+>>>> +}
+>>>    
+>>>>   static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
+>>>>   {
+>>>>   	pm_runtime_get_sync(&pdev->dev);
+>>>> @@ -188,6 +245,28 @@ static void pci_walk_bridge(struct pci_dev *bridge,
+>>>>   		cb(bridge, userdata);
+>>>>   }
+>>>>   
+>>>> +/**
+>>>> + * cxl_walk_bridge - walk bridges potentially AER affected
+>>>> + * @bridge:	bridge which may be a Port, an RCEC, or an RCiEP
+>>>> + * @cb:		callback to be called for each device found
+>>>> + * @userdata:	arbitrary pointer to be passed to callback
+>>>> + *
+>>>> + * If the device provided is a bridge, walk the subordinate bus, including
+>>>> + * the device itself and any bridged devices on buses under this bus.  Call
+>>>> + * the provided callback on each device found.
+>>>> + *
+>>>> + * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,
+>>>> + * call the callback on the device itself.
+>>> only call the callback on the device itself.
+>>>
+>>> (as you call it as stated above either way).
+>>>    
+>>
+>> Thanks. I will update the function header to include "only".
+>>
+>>>> + */
+>>>> +static void cxl_walk_bridge(struct pci_dev *bridge,
+>>>> +			    int (*cb)(struct pci_dev *, void *),
+>>>> +			    void *userdata)
+>>>> +{
+>>>> +	cb(bridge, userdata);
+>>>> +	if (bridge->subordinate)
+>>>> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+>>> The difference between this and pci_walk_bridge() is subtle and
+>>> I'd like to avoid having both if we can.
+>>>    
+>>
+>> The cxl_walk_bridge() was added because pci_walk_bridge() does not report
+>> CXL errors as needed. If the erroring device is a bridge then pci_walk_bridge()
+>> does not call report_error_detected() for the root port itself. If the bridge
+>> is a CXL root port then the CXL port error handler is not called. This has 2
+>> problems: 1. Error logging is not provided, 2. A result vote is not provided
+>> by the root port's CXL port handler.
 > 
+> So what happens for PCIe errors on the root port?  How are they reported?
+> What I'm failing to understand is why these should be different.
+> Maybe there is something missing on the PCIe side though!
+> That code plays a game with what bridge and I thought that was there to handle
+> this case.
+> 
+
+PCIe errors (not CXL errors) on a root port will be processed as they are today.
+
+An AER error is treated as a CXL error if *all* of the following are met:
+- The AER error is not an internal error
+    - Check is in AER's is_internal_error(info) function.
+- The device is not a CXL device
+    - Check is in AER's handles_cxl_errors() function.
+
+Root port device PCIe error processing will not call the the pci_dev::err_handlers::error_detected().
+because of the walk_bridge() implementation. The result vote to direct handling
+is determined by downstream devices. This has probably been Ok until now because ports have been
+fairly vanilla and standard until CXL.
+
+
+>>
+>>>> +}
+>>>> +
+>>>>   pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>   		pci_channel_state_t state,
+>>>>   		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+>>>> @@ -276,3 +355,74 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>   
+>>>>   	return status;
+>>>>   }
+>>>> +
+>>>> +pci_ers_result_t cxl_do_recovery(struct pci_dev *bridge,
+>>>> +				 pci_channel_state_t state,
+>>>> +				 pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+>>>> +{
+>>>> +	struct pci_host_bridge *host = pci_find_host_bridge(bridge->bus);
+>>>> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>>>> +	int type = pci_pcie_type(bridge);
+>>>> +
+>>>> +	if ((type != PCI_EXP_TYPE_ROOT_PORT) &&
+>>>> +	    (type != PCI_EXP_TYPE_RC_EC) &&
+>>>> +	    (type != PCI_EXP_TYPE_DOWNSTREAM) &&
+>>>> +	    (type != PCI_EXP_TYPE_UPSTREAM)) {
+>>>> +		pci_dbg(bridge, "Unsupported device type (%x)\n", type);
+>>>> +		return status;
+>>>> +	}
+>>>> +
+>>>
+>>> Would similar trick to in pcie_do_recovery work here for the upstream
+>>> and downstream ports use pci_upstream_bridge() and for the others pass the dev into
+>>> pci_walk_bridge()?
+>>>    
+>>
+>> Yes, that would be a good starting point to begin reuse refactoring.
+>> I'm interested in getting yours and others feedback on the separation of the
+>> PCI and CXL protocol errors and how much separation is or not needed.
+> 
+> Separation may make sense (I'm still thinking about it) for separate passes
+> through the topology and separate callbacks / handling when an error is seen.
+> What I don't want to see is two horribly complex separate walking codes if
+> we can possibly avoid it.  Long term to me that just means two sets of bugs
+> and problem corners instead of one.
+> 
+> Jonathan
+> 
+
+I understand. I will look to make changes here for reuse.
+
+Regards,
+Terry
+
 
