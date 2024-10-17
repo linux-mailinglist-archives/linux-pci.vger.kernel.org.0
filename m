@@ -1,206 +1,196 @@
-Return-Path: <linux-pci+bounces-14719-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14721-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E1DD9A18B4
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 04:41:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F3BF9A18F8
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 05:04:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 116CA1F2655F
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 02:41:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93D0AB2303A
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 03:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB34753E15;
-	Thu, 17 Oct 2024 02:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98D5513A40D;
+	Thu, 17 Oct 2024 03:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="iv13tJc4"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HVqqccOg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADA13B1AC
-	for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2024 02:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDE77DA7F;
+	Thu, 17 Oct 2024 03:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729132877; cv=none; b=JJ1Vr0yLpZWaij7gkBG+YRFT/g9FloJfTZ46G1P9RN99gkV8hC4jHbaa9HMF6PnvLcLpfkMcKyzUTXDkguSXknFefrq/2N3yoWm5b/RXKifTVwJqghLU4+q9J/0HOHHhQVQGCPkR4s2IVgdTrJftMhisoqxBQN63Te44xXqU/vY=
+	t=1729134276; cv=none; b=dTkYXt/nkcJNRYzTdcz8aSiYjUGFWZKjxvX8pPFJTKczW9C9MhvHWhN/dCITSFeAxrUYGsMBBNVTm/eSf4fOBwnZBitUcuqPEjF8YZKyb0FbYKZfshP6W++nKgRstw0GjY5clRmcA2eSlmxR+IDfuVM7XL8Ogoqz08dqNhoDm0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729132877; c=relaxed/simple;
-	bh=dLAnMTgfHyWEyMiXYcOAXUOFKE+kM6b7O9NeyGqvoVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oA8Psfb45fz1j/lOYTSEudpII3d7yDzbk9a+/l2VEWzbAHZOA0lI2Ox6bYuFbm92gUoJnqtebxIiYNVgwL3SsWk4FLc1CxlRVtCQrnkjJglbwDmSb0o23XjNoB5GHPOPRSoRKTjnEQuBNST3tbrXEvOxgDBboSjmNLK4RCk6jbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=iv13tJc4; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id F0F803FE15
-	for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2024 02:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1729132865;
-	bh=T24SWxRsUs3FH0Hfu2DAqNwIbPAhsue5M4uaumpInTc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=iv13tJc41pkw8vb4zR1FkzCooBmXcVfEm998BYZi9YNe8LtD+uCDWcCJzBNHf/ke+
-	 RcnaFq6uy8kf4xd6TMdeBuCV6udRndbE/z0B8EY+en1K5XKBzpjfng46VIGcBCZzBO
-	 0Z5A9C0qfOj/F7Io3mZ/XERCECXyLqW2rHDxZm40/5lLpL0FrR0SFzk9MZ6n2VdObG
-	 zIXEYmtGnwO5juu/SJNDpcb1ew8reMHisaOFs9FEr3rPZXGKtPgtrNqlWqBghSH/cN
-	 tZA2wobjmg9hMDbu50DboiCjuhjZ4xymnzmeTgockBsot7IJIp4CX+DEgTXu9+IiDF
-	 IzeSD9ZtoM8rg==
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e035949cc4eso644916276.1
-        for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 19:41:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729132862; x=1729737662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T24SWxRsUs3FH0Hfu2DAqNwIbPAhsue5M4uaumpInTc=;
-        b=RpkIOl6Ltf4ePjsPHB2v2xAU2KblAXUmy/pxpV4f/5o+g4OTykHbRjU6CW5l4gGEUZ
-         0H0uMR0DwyNtCAZJ0ymma0Xf06we9V7IWTkvNZT8A73piB+PyIuGXA3fabeMIfa1JOyf
-         vU3DEWJDZP/Bxty51ArQC5Qj5N0LTwYkvDdG8Pw8XK14LNjQLK2+oBvwHhHHpg51SVq8
-         NKo8hfJKwOatSc508ZL4+pyrZgjCHUG1eOeKHMsN0xiHyTjpGsCZPTPqKAyYjtjgriWL
-         9tjybosUB10Py3CPFWqLjm/7nyJfOYwi1L1bTB3llkVEmlJa5CJk6BgV+nUR7uICny33
-         1kSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNr2GDMKeYCiV8McfMhwKTDM3RvkqELCPTZgYQgEHIJJwYSXsUQi8PssnOR3XjZMSI8uZF+vfEi9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA850C0HX1iyo6cIoEJdhWp0+6zXZxLVl9RlSn0052vbKOIQWF
-	BaMDkqMrAJYOeLupmxJi1MCEAWxxMBj1zWymederCLXy0wmOwEd0Xvx8EI0Q0BOOEthUf19Qojs
-	QCzHLiiFBYXMHghd2D8X6mM2lZsatMgC/Kygc8ffMijqzZUJMsxMmnJwOFIMXCoSu6o0NDeCB5G
-	qDyyHjNnuK5EgMVjw5C7okDe48HA9CYMWqVSjwW9kUiXnnbpD9
-X-Received: by 2002:a05:6902:124a:b0:e29:629f:8a7f with SMTP id 3f1490d57ef6-e297856bcccmr6141457276.35.1729132862605;
-        Wed, 16 Oct 2024 19:41:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVIn6LC4RH+ZuMQpvyr93R7VXfYfB6DsvjjWy90VkucZ4oPJS9YJUKbITF5HdXuBCRiozOb9FMG4dEuo4pjMg=
-X-Received: by 2002:a05:6902:124a:b0:e29:629f:8a7f with SMTP id
- 3f1490d57ef6-e297856bcccmr6141453276.35.1729132862313; Wed, 16 Oct 2024
- 19:41:02 -0700 (PDT)
+	s=arc-20240116; t=1729134276; c=relaxed/simple;
+	bh=p0YP5N6Jt59NHtniL1UANSn1fscKpqQY24fsktNb6vc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Mt5hjmkaRW13PsEaQW/dKg6klPGXurzHI9m9AdrB/qc7Ki0GnwodvcSpAZVCxAKCWlO9i3sb3EosY9LVMkXM4z3JPpc03ulByZXd3a/0gEgp1QRZsWJeB1xE1jE48zAI6S0fRxz3tNy67ZZ4xtHNFVLvIFmzJR5gOmU11c95NX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HVqqccOg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GEUMYr010668;
+	Thu, 17 Oct 2024 03:04:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=5zCwqDGoO029oq4bVy0qDiKknXSTNZp1igz
+	JmA5BfWE=; b=HVqqccOgzd85rqpH+fc2TUsRSnNLNaoihQrXkxBqRmvAhWKdmsT
+	gZ0heqaX/ly2krQ5+09daQAJDfibU57CxwX5FpoaEhZch5n+I+IyIrPSCM5bCVut
+	X5oeDEqEF6uw1Qb55qbs8rq5R1Xf7efqYUqF/eeSDqZB9xHRRnmTcv1xBfiJqJeu
+	MJO9DskV/XxaqGbYBQUKH6JuH8tr5I4w5KOZnmhwqH7S3dGysaRj2OJqLJxMXZSu
+	kwH/EypnJeI127Z6bDZXn62v1hdm0f7luVtPxEsl/TDhHhFou+Fj67yCD0IY15x/
+	JdUYytfLKE0VIkUN4gWOlHxnoZkIV28hgZw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 429mh56p1c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 03:04:15 +0000 (GMT)
+Received: from pps.filterd (NALASPPMTA02.qualcomm.com [127.0.0.1])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 49H306tO005211;
+	Thu, 17 Oct 2024 03:04:14 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 42aj4huu3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 03:04:14 +0000
+Received: from NALASPPMTA02.qualcomm.com (NALASPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 49H2tTTs031378;
+	Thu, 17 Oct 2024 03:04:14 GMT
+Received: from hu-devc-lv-u22-c.qualcomm.com (hu-qianyu-lv.qualcomm.com [10.81.25.114])
+	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 49H34ET4010801
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 03:04:14 +0000
+Received: by hu-devc-lv-u22-c.qualcomm.com (Postfix, from userid 4098150)
+	id ECAAE650; Wed, 16 Oct 2024 20:04:13 -0700 (PDT)
+From: Qiang Yu <quic_qianyu@quicinc.com>
+To: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
+        robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+        quic_devipriy@quicinc.com
+Cc: dmitry.baryshkov@linaro.org, kw@linux.com, lpieralisi@kernel.org,
+        neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, johan+linaro@kernel.org,
+        Qiang Yu <quic_qianyu@quicinc.com>
+Subject: [PATCH v7 0/7] Add support for PCIe3 on x1e80100
+Date: Wed, 16 Oct 2024 20:04:05 -0700
+Message-Id: <20241017030412.265000-1-quic_qianyu@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240926125909.2362244-1-acelan.kao@canonical.com>
- <ZvVgTGVSco0Kg7H5@wunner.de> <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
- <ZvZ61srt3QAca2AI@wunner.de> <Zvf7xYEA32VgLRJ6@wunner.de> <CAFv23QkwxmT7qrnbfEpJNN+mnevNAor6Dk7efvYNOdjR9tGyrw@mail.gmail.com>
- <ZvvW1ua2UjwHIOEN@wunner.de> <ZvvXDQSBRZMEI2EX@wunner.de> <CAFv23Q=4O5czQaNw2mEnwkb9LQfODfQDeW+qQD14rfdeVEwjwA@mail.gmail.com>
-In-Reply-To: <CAFv23Q=4O5czQaNw2mEnwkb9LQfODfQDeW+qQD14rfdeVEwjwA@mail.gmail.com>
-From: AceLan Kao <acelan.kao@canonical.com>
-Date: Thu, 17 Oct 2024 10:40:51 +0800
-Message-ID: <CAFv23QmAOAobFC=4tkKBM4NQPR_b3Nsji5xa+TczUbAJ1dxhvg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
- during suspend
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9CHZY2tiA-EdCXhq-OmFsaxUAxDzM6DP
+X-Proofpoint-ORIG-GUID: 9CHZY2tiA-EdCXhq-OmFsaxUAxDzM6DP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ spamscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 phishscore=0 malwarescore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410170020
 
-AceLan Kao <acelan.kao@canonical.com> =E6=96=BC 2024=E5=B9=B410=E6=9C=887=
-=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:34=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> Lukas Wunner <lukas@wunner.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=881=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:03=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Tue, Oct 01, 2024 at 01:02:46PM +0200, Lukas Wunner wrote:
-> > > On Mon, Sep 30, 2024 at 09:31:53AM +0800, AceLan Kao wrote:
-> > > > Lukas Wunner <lukas@wunner.de> 2024 9 28 8:51:
-> > > > > -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
-> > > > > +       dsn =3D pci_get_dsn(pdev);
-> > > > > +       if (!PCI_POSSIBLE_ERROR(dsn) &&
-> > > > > +           dsn !=3D ctrl->dsn)
-> > > > >                 return true;
-> > > >
-> > > > In my case, the pciehp_device_replaced() returns true from this fin=
-al check.
-> > > > And these are the values I got
-> > > > dsn =3D 0x00000000, ctrl->dsn =3D 0x7800AA00
-> > > > dsn =3D 0x00000000, ctrl->dsn =3D 0x21B7D000
-> > >
-> > > Ah because pci_get_dsn() returns 0 if the device is gone.
-> > > Below is a modified patch which returns false in that case.
-> >
-> > Sorry, forgot to include the patch:
-> >
-> > -- >8 --
-> >
-> > diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pc=
-iehp_core.c
-> > index ff458e6..957c320 100644
-> > --- a/drivers/pci/hotplug/pciehp_core.c
-> > +++ b/drivers/pci/hotplug/pciehp_core.c
-> > @@ -287,24 +287,32 @@ static int pciehp_suspend(struct pcie_device *dev=
-)
-> >  static bool pciehp_device_replaced(struct controller *ctrl)
-> >  {
-> >         struct pci_dev *pdev __free(pci_dev_put);
-> > +       u64 dsn;
-> >         u32 reg;
-> >
-> >         pdev =3D pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(=
-0, 0));
-> >         if (!pdev)
-> > +               return false;
-> > +
-> > +       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) =3D=3D 0 &=
-&
-> > +           !PCI_POSSIBLE_ERROR(reg) &&
-> > +           reg !=3D (pdev->vendor | (pdev->device << 16)))
-> >                 return true;
-> >
-> > -       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
-> > -           reg !=3D (pdev->vendor | (pdev->device << 16)) ||
-> > -           pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
-> > +       if (pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) =3D=
-=3D 0 &&
-> > +           !PCI_POSSIBLE_ERROR(reg) &&
-> >             reg !=3D (pdev->revision | (pdev->class << 8)))
-> >                 return true;
-> >
-> >         if (pdev->hdr_type =3D=3D PCI_HEADER_TYPE_NORMAL &&
-> > -           (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg)=
- ||
-> > -            reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_device=
- << 16))))
-> > +           pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) =
-=3D=3D 0 &&
-> > +           !PCI_POSSIBLE_ERROR(reg) &&
-> > +           reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_device =
-<< 16)))
-> >                 return true;
-> >
-> > -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
-> > +       if ((dsn =3D pci_get_dsn(pdev)) &&
-> > +           !PCI_POSSIBLE_ERROR(dsn) &&
-> > +           dsn !=3D ctrl->dsn)
-> >                 return true;
-> >
-> >         return false;
-> Hi Lukas,
->
-> Sorry for the late reply, just encountered a strong typhoon in my area
-> last week and can't check this in our lab.
->
-> The patched pciehp_device_replaced() returns false at the end of the
-> function in my case.
-> Unplug the dock which is connected with a tbt storage won't be
-> considered as a replacement.
->
-> But when I tried to replace the dock with the tbt storage during
-> suspend, it still returned false at the end of the function like
-> unplugged.
->
-> BTW, it's a new model, so I think the ICM is used. And the reg is
-> 0xffffffff when unplugged.
-Hi Lukas,
+This series add support for PCIe3 on x1e80100.
 
-PCI_POSSIBLE_ERROR() always returns true no matter the device is
-replaced or unplugged
-It seems difficult to distinguish between when a device is replaced
-and when it's unplugged.
+PCIe3 needs additional set of clocks, regulators and new set of PCIe QMP
+PHY configuration compare other PCIe instances on x1e80100. Hence add
+required resource configuration and usage for PCIe3.
 
-Do you have any ideas to fix the issue?
-This issue is severe to me, because the system hangs almost everytime
-when daisy chain tbt devices are unplugged when suspended.
-Thanks.
+v6->v7:
+1. Add Acked-by and Reviewed-by tags
+2. Use 70574511f3f ("PCI: qcom: Add support for SC8280XP") in Fixes tag
+3. Keep minItem of interrupt as 8 in buindings
+4. Reword commit msg 
+5. Remove [PATCH v6 5/8] clk: qcom: gcc-x1e80100: Fix halt_check for
+   pipediv2 clocks as it was applied
+6. Link to v6: https://lore.kernel.org/linux-pci/20241011104142.1181773-1-quic_qianyu@quicinc.com/
+
+v5->v6:
+1. Add Fixes tag
+2. Split [PATCH v5 6/7] into two patches
+3. Reword commit msg
+4. Link to v5: https://lore.kernel.org/linux-pci/20241009091540.1446-1-quic_qianyu@quicinc.com/
+
+v4->v5:
+1. Add Reviewed-by tag
+2. Expand and clarify usage of txz/rxz in commit message
+3. Add comments that txz/rxz must be programmed before tx/rx
+4. Change the sort order for phy register tbls
+5. Use the order defined in struct qmp_phy_cfg_tbls for phy register tbls
+   presented in x1e80100_qmp_gen4x8_pciephy_cfg
+6. Add Fixes and CC stable tag
+7. Fix ops for SC8280X and X1E80100
+8. Document global interrupt in bindings
+9. Link to v4: https://lore.kernel.org/all/20240924101444.3933828-1-quic_qianyu@quicinc.com/
+
+v3->v4:
+1. Reword commit msg of [PATCH v3 5/6]
+2. Drop opp-table property from qcom,pcie-sm8450.yaml
+3. Add Reviewed-by tag
+4. Link to v3: https://lore.kernel.org/all/20240923125713.3411487-1-quic_qianyu@quicinc.com/
+
+v2->v3:
+1. Use 'Gen 4 x8' in commit msg
+2. Move opp-table property to qcom,pcie-common.yaml
+3. Add Reviewed-by tag
+4. Add global interrupt and use GIC_SPI for the parent interrupt specifier
+5. Use 0x0 in reg property and use pcie@ for pcie3 device node
+6. Show different IP version v6.30 in commit msg
+7. Add logic in controller driver to have new ops for x1e80100
+8. Link to v2: https://lore.kernel.org/all/20240913083724.1217691-1-quic_qianyu@quicinc.com/
+
+v2->v1:
+1. Squash [PATCH 1/8], [PATCH 2/8],[PATCH 3/8] into one patch and make the
+   indentation consistent.
+2. Put dts patch at the end of the patchset.
+3. Put dt-binding patch at the first of the patchset.
+4. Add a new patch where opp-table is added in dt-binding to avoid dtbs
+   checking error.
+5. Remove GCC_PCIE_3_AUX_CLK, RPMH_CXO_CLK, put in TCSR_PCIE_8L_CLKREF_EN
+   as ref.
+6. Remove lane_broadcasting.
+7. Add 64 bit bar, Remove GCC_PCIE_3_PIPE_CLK_SRC, 
+   GCC_CFG_NOC_PCIE_ANOC_SOUTH_AHB_CLK is changed to
+   GCC_CFG_NOC_PCIE_ANOC_NORTH_AHB_CLK.
+8. Add Reviewed-by tag.
+9. Remove [PATCH 7/8], [PATCH 8/8].
+10. Link to v1: https://lore.kernel.org/all/20240827063631.3932971-1-quic_qianyu@quicinc.com/ 
+
+Qiang Yu (7):
+  dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the X1E80100
+    QMP PCIe PHY Gen4 x8
+  dt-bindings: PCI: qcom: Move OPP table to qcom,pcie-common.yaml
+  dt-bindings: PCI: qcom,pcie-x1e80100: Add 'global' interrupt
+  phy: qcom: qmp: Add phy register and clk setting for x1e80100 PCIe3
+  PCI: qcom: Remove BDF2SID mapping config for SC8280X family SoC
+  PCI: qcom: Disable ASPM L0s and remove BDF2SID mapping config for
+    X1E80100 SoC
+  arm64: dts: qcom: x1e80100: Add support for PCIe3 on x1e80100
+
+ .../bindings/pci/qcom,pcie-common.yaml        |   4 +
+ .../bindings/pci/qcom,pcie-sm8450.yaml        |   4 -
+ .../bindings/pci/qcom,pcie-x1e80100.yaml      |   9 +-
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   3 +
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 204 ++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        |  14 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 214 ++++++++++++++++++
+ .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h    |  25 ++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h |  19 ++
+ 9 files changed, 486 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_30.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_30.h
+
+-- 
+2.34.1
+
 
