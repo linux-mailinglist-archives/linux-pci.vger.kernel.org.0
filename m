@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-14716-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14717-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57E7A9A1848
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66CEF9A1849
 	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 03:59:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BF794B23483
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 01:59:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 994531C213D0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 01:59:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A370D28E0F;
-	Thu, 17 Oct 2024 01:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02BE236AF5;
+	Thu, 17 Oct 2024 01:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqHTPXQk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gssfgivM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8C1224F6;
-	Thu, 17 Oct 2024 01:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4632940F;
+	Thu, 17 Oct 2024 01:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729130356; cv=none; b=rby5InIjOwV4RW7ybUdwlvSYXjPrG7aBmnlgTtftayZypcy9XqQUsQe/4Cx/kaTckYpbANOoOqaKzeEaApxm3ET9JbeW98rJIvF/LC8q2A2v0eEj935HBHAYt3vk+68M/0HxIJJom3YOZgJ9MBb5Kyg3XR5qDQXaGDFhgdBG604=
+	t=1729130358; cv=none; b=DzG+YWA8cNfSC0K7HDxXa9t2ayqIG3/1E1WnQrQYslR9OvglXkp9zlLW0ycojaZQz6LoXHfGPSp74b4XJxlxH2PvVlRW+ZPTUsKSvJ+xFPzGhHwUj0g6U7zB1Gvnku8Z8UuLZz8e2cAzEBzb3qo2q7XseG6aPvF2YJGjtdUOV6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729130356; c=relaxed/simple;
-	bh=dmpBL/Eag2R+tT+zgAEIXVdK7rcTFEEG1GUcLmDTrGA=;
+	s=arc-20240116; t=1729130358; c=relaxed/simple;
+	bh=ueCDGH3nxJnYp5coBf9bjy2Kha4NZeZU4aWU9o3/8W4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2vIWkY8oQLF5odb+I3SRAtUD80d07QfjFogc9Tj+h3p0eMc41DZU8qf0iXkdyVN0fI1QCQjW2dFIM/1YkZ2YO3/SA5BirVeAXuY5qpjzHD9dZs7Mkmo+WM+ykUs/Hmyo9zQp6kza6ioq/HrCPRfQZntxrqqdnbEvWWlOsvE/Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqHTPXQk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B18FC4CECF;
-	Thu, 17 Oct 2024 01:59:14 +0000 (UTC)
+	 MIME-Version; b=IZ6qDRNwFoe61DrsRkMFtIfu3w7YCqGEOPyeoJO4cq+nFiaqAlPQAjJEPiSY3Fiae/MkC1Krq5WIn7aqc4ZPPomfL3d/PytC9P+aRypIo5Sfnn+w6XjKa3FrFRIyr6z3iPMzRhXUj9rXza7JE22pHjYVAAgC7HsXm+nZSD4Cifk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gssfgivM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F149C4CED0;
+	Thu, 17 Oct 2024 01:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729130356;
-	bh=dmpBL/Eag2R+tT+zgAEIXVdK7rcTFEEG1GUcLmDTrGA=;
+	s=k20201202; t=1729130358;
+	bh=ueCDGH3nxJnYp5coBf9bjy2Kha4NZeZU4aWU9o3/8W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FqHTPXQkH0ys04cEqEcg0Pp4VrxeUdiDk/euqNZf1Vf08D008lHRprDuWcrZD5hGA
-	 EbX2XGiUQ/Hc1a7BB0/dcgyafAmXiF0znf3AQE7FpIaaWSKb/fNmUPIbNKswg14+Fa
-	 zU6x6x+gzJTwjLqyzszCayie06FUURBMU59754rgZFJrYDcujQLMw3OYIqITMP3UTL
-	 6NiK82Pu/BOlOOO8V1AWfXuA9cJ4wYa+Afh/AYDoGPLcpa4LaU0ReOuQhE9SWEkTSQ
-	 5sBeBLRoLaNKqMCcDueEv6LgTPMJOSdQcoblkBL4M8byMjm6xoSvSh451p+opXAHKk
-	 5DXU2mHMk38xw==
+	b=gssfgivM4bDbm2A9irgS5VJIwPmQT2q87K6WLmlpCCPzlixtx3pqZQGtK/G+LsqJp
+	 XDvzjYeJjBzwxTYnWOUTZOrG1SVZTxlLfWbMR3VqzvP4yCl7B9/6Jx2cfbbyiVw3X/
+	 Hkqq2ZSmZ+jeUEHKjof4xnvFW0vyKOLiFdQj4EgA+V99YziCEwzO+FhkqIzibQRiFg
+	 G3o1X4WmYtArLFQrHP21eASAmdvO0hE5J19Pb6cQCho0Xa9oXiqS1hU9gxKpouD3sA
+	 ZpXPl+Zzc/THHYDpQAmWqimJm+BdC319vi6KCvD4ziuqGtFPs647+XDAkK+fVDIFAj
+	 tsUq+CZ3tM7ng==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -57,9 +57,9 @@ To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v5 12/14] PCI: rockchip-ep: Improve link training
-Date: Thu, 17 Oct 2024 10:58:47 +0900
-Message-ID: <20241017015849.190271-13-dlemoal@kernel.org>
+Subject: [PATCH v5 13/14] PCI: rockchip-ep: Handle PERST# signal in endpoint mode
+Date: Thu, 17 Oct 2024 10:58:48 +0900
+Message-ID: <20241017015849.190271-14-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241017015849.190271-1-dlemoal@kernel.org>
 References: <20241017015849.190271-1-dlemoal@kernel.org>
@@ -71,226 +71,292 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Rockchip RK3399 TRM V1.3 Part2, Section 17.5.8.1.2, step 7,
-describes the endpoint mode link training process clearly and states
-that:
-  Insure link training completion and success by observing link_st field
-  in PCIe Client BASIC_STATUS1 register change to 2'b11. If both side
-  support PCIe Gen2 speed, re-train can be Initiated by asserting the
-  Retrain Link field in Link Control and Status Register. The software
-  should insure the BASIC_STATUS0[negotiated_speed] changes to "1", that
-  indicates re-train to Gen2 successfully.
-This procedure is very similar to what is done for the root-port mode
-in rockchip_pcie_host_init_port().
+Currently, the Rockchip PCIe endpoint controller driver does not handle
+the PERST# signal, which prevents detecting when link training should
+actually be started or if the host resets the device. This however can
+be supported using the controller reset_gpios property set as an input
+GPIO for endpoint mode.
 
-Implement this link training procedure for the endpoint mode as well.
-Given that the RK3399 SoC does not have an interrupt signaling link
-status changes, training is implemented as a delayed work which is
-rescheduled until the link training completes or the endpoint controller
-is stopped. The link training work is first scheduled in
-rockchip_pcie_ep_start() when the endpoint function is started. Link
-training completion is signaled to the function using pci_epc_linkup().
-Accordingly, the linkup_notifier field of the rockchip pci_epc_features
-structure is changed to true.
+Modify the rockchip PCI endpoint controller driver to get the reset_gpio
+and its associated interrupt which is serviced using a threaded IRQ with
+the function rockchip_pcie_ep_perst_irq_thread() as handler.
+
+This handler function notifies a link down event corresponding to the RC
+side asserting the PERST# signal using pci_epc_linkdown() when the gpio
+is high. Once the gpio value goes down, corresponding to the RC
+de-asserting the PERST# signal, link training is started. The polarity
+of the gpio interrupt trigger is changed from high to low after the RC
+asserted PERST#, and conversely changed from low to high after the RC
+de-asserts PERST#.
+
+Also, given that the host mode controller and the endpoint mode
+controller use two different property names for the same PERST# signal
+(ep_gpios property and reset_gpios property respectively), for clarity,
+rename the ep_gpio field of struct rockchip_pcie to perst_gpio.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 82 ++++++++++++++++++++++-
- drivers/pci/controller/pcie-rockchip.h    | 11 +++
- 2 files changed, 92 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-rockchip-ep.c   | 124 +++++++++++++++++++-
+ drivers/pci/controller/pcie-rockchip-host.c |   4 +-
+ drivers/pci/controller/pcie-rockchip.c      |  16 +--
+ drivers/pci/controller/pcie-rockchip.h      |   2 +-
+ 4 files changed, 133 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 2f7709ba1cac..43480706b8f4 100644
+index 43480706b8f4..19cfba5230a2 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -10,12 +10,14 @@
+@@ -10,6 +10,7 @@
  
  #include <linux/configfs.h>
  #include <linux/delay.h>
-+#include <linux/iopoll.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/iopoll.h>
  #include <linux/kernel.h>
  #include <linux/of.h>
- #include <linux/pci-epc.h>
- #include <linux/platform_device.h>
- #include <linux/pci-epf.h>
- #include <linux/sizes.h>
-+#include <linux/workqueue.h>
- 
- #include "pcie-rockchip.h"
- 
-@@ -48,6 +50,7 @@ struct rockchip_pcie_ep {
+@@ -50,6 +51,9 @@ struct rockchip_pcie_ep {
  	u64			irq_pci_addr;
  	u8			irq_pci_fn;
  	u8			irq_pending;
-+	struct delayed_work	link_training;
++	int			perst_irq;
++	bool			perst_asserted;
++	bool			link_up;
+ 	struct delayed_work	link_training;
  };
  
- static void rockchip_pcie_clear_ep_ob_atu(struct rockchip_pcie *rockchip,
-@@ -470,6 +473,8 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
+@@ -467,13 +471,17 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
+ 
+ 	rockchip_pcie_write(rockchip, cfg, PCIE_CORE_PHY_FUNC_CFG);
+ 
++	if (rockchip->perst_gpio)
++		enable_irq(ep->perst_irq);
++
+ 	/* Enable configuration and start link training */
+ 	rockchip_pcie_write(rockchip,
+ 			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
  			    PCIE_CLIENT_CONF_ENABLE,
  			    PCIE_CLIENT_CONFIG);
  
-+	schedule_delayed_work(&ep->link_training, 0);
-+
+-	schedule_delayed_work(&ep->link_training, 0);
++	if (!rockchip->perst_gpio)
++		schedule_delayed_work(&ep->link_training, 0);
+ 
  	return 0;
  }
- 
-@@ -478,6 +483,8 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
+@@ -483,6 +491,11 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
  	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
  	struct rockchip_pcie *rockchip = &ep->rockchip;
  
-+	cancel_delayed_work_sync(&ep->link_training);
-+
- 	/* Stop link training and disable configuration */
- 	rockchip_pcie_write(rockchip,
- 			    PCIE_CLIENT_CONF_DISABLE |
-@@ -485,8 +492,80 @@ static void rockchip_pcie_ep_stop(struct pci_epc *epc)
- 			    PCIE_CLIENT_CONFIG);
- }
- 
-+static void rockchip_pcie_ep_retrain_link(struct rockchip_pcie *rockchip)
-+{
-+	u32 status;
-+
-+	status = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_LCS);
-+	status |= PCI_EXP_LNKCTL_RL;
-+	rockchip_pcie_write(rockchip, status, PCIE_EP_CONFIG_LCS);
-+}
-+
-+static bool rockchip_pcie_ep_link_up(struct rockchip_pcie *rockchip)
-+{
-+	u32 val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS1);
-+
-+	return PCIE_LINK_UP(val);
-+}
-+
-+static void rockchip_pcie_ep_link_training(struct work_struct *work)
-+{
-+	struct rockchip_pcie_ep *ep =
-+		container_of(work, struct rockchip_pcie_ep, link_training.work);
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+	u32 val;
-+	int ret;
-+
-+	/* Enable Gen1 training and wait for its completion */
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
-+				 val, PCIE_LINK_TRAINING_DONE(val), 50,
-+				 LINK_TRAIN_TIMEOUT);
-+	if (ret)
-+		goto again;
-+
-+	/* Make sure that the link is up */
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
-+				 val, PCIE_LINK_UP(val), 50,
-+				 LINK_TRAIN_TIMEOUT);
-+	if (ret)
-+		goto again;
-+
-+	/*
-+	 * Check the current speed: if gen2 speed was requested and we are not
-+	 * at gen2 speed yet, retrain again for gen2.
-+	 */
-+	val = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
-+	if (!PCIE_LINK_IS_GEN2(val) && rockchip->link_gen == 2) {
-+		/* Enable retrain for gen2 */
-+		rockchip_pcie_ep_retrain_link(rockchip);
-+		readl_poll_timeout(rockchip->apb_base + PCIE_CORE_CTRL,
-+				   val, PCIE_LINK_IS_GEN2(val), 50,
-+				   LINK_TRAIN_TIMEOUT);
++	if (rockchip->perst_gpio) {
++		ep->perst_asserted = true;
++		disable_irq(ep->perst_irq);
 +	}
 +
-+	/* Check again that the link is up */
-+	if (!rockchip_pcie_ep_link_up(rockchip))
-+		goto again;
+ 	cancel_delayed_work_sync(&ep->link_training);
+ 
+ 	/* Stop link training and disable configuration */
+@@ -548,6 +561,13 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
+ 	if (!rockchip_pcie_ep_link_up(rockchip))
+ 		goto again;
+ 
++	/*
++	 * If PERST# was asserted while polling the link, do not notify
++	 * the function.
++	 */
++	if (ep->perst_asserted)
++		return;
 +
-+	val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS0);
-+	dev_info(dev,
-+		 "Link UP (Negotiated speed: %sGT/s, width: x%lu)\n",
-+		 (val & PCIE_CLIENT_NEG_LINK_SPEED) ? "5" : "2.5",
-+		 ((val & PCIE_CLIENT_NEG_LINK_WIDTH_MASK) >>
-+		  PCIE_CLIENT_NEG_LINK_WIDTH_SHIFT) << 1);
+ 	val = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS0);
+ 	dev_info(dev,
+ 		 "Link UP (Negotiated speed: %sGT/s, width: x%lu)\n",
+@@ -557,6 +577,7 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
+ 
+ 	/* Notify the function */
+ 	pci_epc_linkup(ep->epc);
++	ep->link_up = true;
+ 
+ 	return;
+ 
+@@ -564,6 +585,97 @@ static void rockchip_pcie_ep_link_training(struct work_struct *work)
+ 	schedule_delayed_work(&ep->link_training, msecs_to_jiffies(5));
+ }
+ 
++static void rockchip_pcie_ep_perst_assert(struct rockchip_pcie_ep *ep)
++{
++	struct rockchip_pcie *rockchip = &ep->rockchip;
 +
-+	/* Notify the function */
-+	pci_epc_linkup(ep->epc);
++	dev_dbg(rockchip->dev, "PERST# asserted, link down\n");
 +
-+	return;
++	if (ep->perst_asserted)
++		return;
 +
-+again:
-+	schedule_delayed_work(&ep->link_training, msecs_to_jiffies(5));
++	ep->perst_asserted = true;
++
++	cancel_delayed_work_sync(&ep->link_training);
++
++	if (ep->link_up) {
++		pci_epc_linkdown(ep->epc);
++		ep->link_up = false;
++	}
++}
++
++static void rockchip_pcie_ep_perst_deassert(struct rockchip_pcie_ep *ep)
++{
++	struct rockchip_pcie *rockchip = &ep->rockchip;
++
++	dev_dbg(rockchip->dev, "PERST# de-asserted, starting link training\n");
++
++	if (!ep->perst_asserted)
++		return;
++
++	ep->perst_asserted = false;
++
++	/* Enable link re-training */
++	rockchip_pcie_ep_retrain_link(rockchip);
++
++	/* Start link training */
++	schedule_delayed_work(&ep->link_training, 0);
++}
++
++static irqreturn_t rockchip_pcie_ep_perst_irq_thread(int irq, void *data)
++{
++	struct pci_epc *epc = data;
++	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
++	struct rockchip_pcie *rockchip = &ep->rockchip;
++	u32 perst = gpiod_get_value(rockchip->perst_gpio);
++
++	if (perst)
++		rockchip_pcie_ep_perst_assert(ep);
++	else
++		rockchip_pcie_ep_perst_deassert(ep);
++
++	irq_set_irq_type(ep->perst_irq,
++			 (perst ? IRQF_TRIGGER_HIGH : IRQF_TRIGGER_LOW));
++
++	return IRQ_HANDLED;
++}
++
++static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
++{
++	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
++	struct rockchip_pcie *rockchip = &ep->rockchip;
++	struct device *dev = rockchip->dev;
++	int ret;
++
++	if (!rockchip->perst_gpio)
++		return 0;
++
++	/* PCIe reset interrupt */
++	ep->perst_irq = gpiod_to_irq(rockchip->perst_gpio);
++	if (ep->perst_irq < 0) {
++		dev_err(dev, "No IRQ for PERST# GPIO\n");
++		return ep->perst_irq;
++	}
++
++	/*
++	 * The perst_gpio is active low, so when it is inactive on start, it
++	 * is high and will trigger the perst_irq handler. So treat this initial
++	 * IRQ as a dummy one by faking the host asserting PERST#.
++	 */
++	ep->perst_asserted = true;
++	irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
++	ret = devm_request_threaded_irq(dev, ep->perst_irq, NULL,
++					rockchip_pcie_ep_perst_irq_thread,
++					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
++					"pcie-ep-perst", epc);
++	if (ret) {
++		dev_err(dev, "Request PERST# GPIO IRQ failed %d\n", ret);
++		return ret;
++	}
++
++	return 0;
 +}
 +
  static const struct pci_epc_features rockchip_pcie_epc_features = {
--	.linkup_notifier = false,
-+	.linkup_notifier = true,
+ 	.linkup_notifier = true,
  	.msi_capable = true,
- 	.msix_capable = false,
- 	.align = ROCKCHIP_PCIE_AT_SIZE_ALIGN,
-@@ -644,6 +723,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 	rockchip = &ep->rockchip;
- 	rockchip->is_rc = false;
- 	rockchip->dev = dev;
-+	INIT_DELAYED_WORK(&ep->link_training, rockchip_pcie_ep_link_training);
+@@ -757,11 +869,17 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
  
- 	epc = devm_pci_epc_create(dev, &rockchip_pcie_epc_ops);
- 	if (IS_ERR(epc)) {
+ 	pci_epc_init_notify(epc);
+ 
++	err = rockchip_pcie_ep_setup_irq(epc);
++	if (err < 0)
++		goto err_uninit_port;
++
+ 	return 0;
+-err_exit_ob_mem:
+-	rockchip_pcie_ep_exit_ob_mem(ep);
++err_uninit_port:
++	rockchip_pcie_deinit_phys(rockchip);
+ err_disable_clocks:
+ 	rockchip_pcie_disable_clocks(rockchip);
++err_exit_ob_mem:
++	rockchip_pcie_ep_exit_ob_mem(ep);
+ 	return err;
+ }
+ 
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index cbec71114825..7471d9fd18bc 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -294,7 +294,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+ 	int err, i = MAX_LANE_NUM;
+ 	u32 status;
+ 
+-	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
++	gpiod_set_value_cansleep(rockchip->perst_gpio, 0);
+ 
+ 	err = rockchip_pcie_init_port(rockchip);
+ 	if (err)
+@@ -323,7 +323,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+ 			    PCIE_CLIENT_CONFIG);
+ 
+ 	msleep(PCIE_T_PVPERL_MS);
+-	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
++	gpiod_set_value_cansleep(rockchip->perst_gpio, 1);
+ 
+ 	msleep(PCIE_T_RRS_READY_MS);
+ 
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index 154e78819e6e..b9ade7632e11 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -119,13 +119,15 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ 		return PTR_ERR(rockchip->aclk_rst);
+ 	}
+ 
+-	if (rockchip->is_rc) {
+-		rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep",
+-							    GPIOD_OUT_LOW);
+-		if (IS_ERR(rockchip->ep_gpio))
+-			return dev_err_probe(dev, PTR_ERR(rockchip->ep_gpio),
+-					     "failed to get ep GPIO\n");
+-	}
++	if (rockchip->is_rc)
++		rockchip->perst_gpio = devm_gpiod_get_optional(dev, "ep",
++							       GPIOD_OUT_LOW);
++	else
++		rockchip->perst_gpio = devm_gpiod_get_optional(dev, "reset",
++							       GPIOD_IN);
++	if (IS_ERR(rockchip->perst_gpio))
++		return dev_err_probe(dev, PTR_ERR(rockchip->perst_gpio),
++				     "failed to get PERST# GPIO\n");
+ 
+ 	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
+ 	if (IS_ERR(rockchip->aclk_pcie)) {
 diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 0263f158ee8d..24796176f658 100644
+index 24796176f658..a51b087ce878 100644
 --- a/drivers/pci/controller/pcie-rockchip.h
 +++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -26,6 +26,7 @@
- #define MAX_LANE_NUM			4
- #define MAX_REGION_LIMIT		32
- #define MIN_EP_APERTURE			28
-+#define LINK_TRAIN_TIMEOUT		(500 * USEC_PER_MSEC)
- 
- #define PCIE_CLIENT_BASE		0x0
- #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
-@@ -50,6 +51,10 @@
- #define   PCIE_CLIENT_DEBUG_LTSSM_MASK		GENMASK(5, 0)
- #define   PCIE_CLIENT_DEBUG_LTSSM_L1		0x18
- #define   PCIE_CLIENT_DEBUG_LTSSM_L2		0x19
-+#define PCIE_CLIENT_BASIC_STATUS0	(PCIE_CLIENT_BASE + 0x44)
-+#define   PCIE_CLIENT_NEG_LINK_WIDTH_MASK	GENMASK(7, 6)
-+#define   PCIE_CLIENT_NEG_LINK_WIDTH_SHIFT	6
-+#define   PCIE_CLIENT_NEG_LINK_SPEED		BIT(5)
- #define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
- #define   PCIE_CLIENT_LINK_STATUS_UP		0x00300000
- #define   PCIE_CLIENT_LINK_STATUS_MASK		0x00300000
-@@ -87,6 +92,8 @@
- 
- #define PCIE_CORE_CTRL_MGMT_BASE	0x900000
- #define PCIE_CORE_CTRL			(PCIE_CORE_CTRL_MGMT_BASE + 0x000)
-+#define   PCIE_CORE_PL_CONF_LS_MASK		0x00000001
-+#define   PCIE_CORE_PL_CONF_LS_READY		0x00000001
- #define   PCIE_CORE_PL_CONF_SPEED_5G		0x00000008
- #define   PCIE_CORE_PL_CONF_SPEED_MASK		0x00000018
- #define   PCIE_CORE_PL_CONF_LANE_MASK		0x00000006
-@@ -144,6 +151,7 @@
- #define PCIE_RC_CONFIG_BASE		0xa00000
- #define PCIE_EP_CONFIG_BASE		0xa00000
- #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
-+#define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
- #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
- #define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
- #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
-@@ -155,6 +163,7 @@
- #define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
- #define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
- #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
-+#define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
- #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
- #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
- #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
-@@ -192,6 +201,8 @@
- #define ROCKCHIP_VENDOR_ID			0x1d87
- #define PCIE_LINK_IS_L2(x) \
- 	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
-+#define PCIE_LINK_TRAINING_DONE(x) \
-+	(((x) & PCIE_CORE_PL_CONF_LS_MASK) == PCIE_CORE_PL_CONF_LS_READY)
- #define PCIE_LINK_UP(x) \
- 	(((x) & PCIE_CLIENT_LINK_STATUS_MASK) == PCIE_CLIENT_LINK_STATUS_UP)
- #define PCIE_LINK_IS_GEN2(x) \
+@@ -329,7 +329,7 @@ struct rockchip_pcie {
+ 	struct	regulator *vpcie3v3; /* 3.3V power supply */
+ 	struct	regulator *vpcie1v8; /* 1.8V power supply */
+ 	struct	regulator *vpcie0v9; /* 0.9V power supply */
+-	struct	gpio_desc *ep_gpio;
++	struct	gpio_desc *perst_gpio;
+ 	u32	lanes;
+ 	u8      lanes_map;
+ 	int	link_gen;
 -- 
 2.47.0
 
