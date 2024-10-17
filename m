@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-14712-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF1C69A1841
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 581E39A1840
 	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 03:59:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 212D2B2229F
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 01:59:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88D541C202C9
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 01:59:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B2E2B9B9;
-	Thu, 17 Oct 2024 01:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1A32D057;
+	Thu, 17 Oct 2024 01:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vft2HIxT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrIqEtrY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F56222087;
-	Thu, 17 Oct 2024 01:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F5122087;
+	Thu, 17 Oct 2024 01:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729130348; cv=none; b=Q1WxW0/0cV22vPaYxfRRigAbUt1IMT3SaFQ7noOLAqHZ4INcW6RhnVWrPjE8/d5AdQvbsEUZFtts8Ejd56plYdLt+HJUgWy+S4M0DorxQp4kOiPALZkKIJuIn4PpL718JHequGxUyL+aUhWK8ili4H6fU4Q7kBe7b2ABpsfYrEU=
+	t=1729130350; cv=none; b=Ib9FhXxOnLfdUd+ACrRPGoI+GViULu7LqMfoEDgrrqlF4Pg5MGKg8p0fG2+YqyyrZWNfxjEDRNA52zBukqiYAhSsVWO2VyuSDXyBQLr4P6c9EJfSHqlCSUt6W2xsMn59R2NV0tJM5mvqaJYu0I8VhBvnVtNOapGCYSDgWuFQnsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729130348; c=relaxed/simple;
-	bh=TZTC/UN+ioxo8kHC1srfQQYjsUIYfU7EFjfKzLP8H9w=;
+	s=arc-20240116; t=1729130350; c=relaxed/simple;
+	bh=NZPcvMNuuYIfcbG2joADk3VepWG0efvQX25DV7OprLg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pmkx9r5V6hQva2x27hXf5ROXJBJetKMLMH3/pdi06zrKvsm2R5OcqqYO7vKqDx97exLFc5u5CjTVzUqvU6XXHikYsTEUc1gPYAwEJB+rKcH+ZgUdQ/NqY03f+QbEMfYsc+lAAOaqPMXYYMl39Bklrzfe/hFOsKdRfd3I1jRc+lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vft2HIxT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FACBC4CECF;
-	Thu, 17 Oct 2024 01:59:06 +0000 (UTC)
+	 MIME-Version; b=nCxDPWAfR+7pBhLtVo2OcDBMbwEZEUmv93GCS0f6dwLCHBJYlzUh/hXYx3ZSxdi1Jy6t/NhKMzMv+50j4GRX+KUxEWH667dlLvWqPvT0A0r6AhwVjF7xAhDxoc12GeqM2vdA1ln2Fe6/g5omtTc97+2qwe2m7Y1VK8xJIwl0Hk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrIqEtrY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89AE4C4CED0;
+	Thu, 17 Oct 2024 01:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729130348;
-	bh=TZTC/UN+ioxo8kHC1srfQQYjsUIYfU7EFjfKzLP8H9w=;
+	s=k20201202; t=1729130350;
+	bh=NZPcvMNuuYIfcbG2joADk3VepWG0efvQX25DV7OprLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vft2HIxTJdPc5yRYN1H9fBOSThk3i5v6HXmTjF/BnwyJgiGCPEjFqLMJtL2LHL94U
-	 MlpR20RFwrRvQX301EZ43p3XkAezdJH+fKMfgPKUXINvg0UY388Fd/OzBGDP/8ZPpr
-	 3NLa5a3VgEM8hABxSX3lpZMl965vFDNOKO9+ogni1pE3jelgp822UZXn4QHw6vAOmH
-	 5PfWOnXoM15MxDkrDpLZ1B2mk7Z9Fyp2zC09ylbP7ygFd3klLKhydLG1MSY76U2Xne
-	 QUruNdnTxx2ZKF1KKPtfESUobk6sLUTuOZADrJ0/8Y/FSV/WVq9XEq6uUX3+BOOXxL
-	 C/yK5Cx1CZTGQ==
+	b=DrIqEtrYYKnQOh1Uw67nKZkEKJJuRVDxS4YgoykA3+sQi6CjPhbhk6C1OpGBHyEMV
+	 Kri7DLYD+oXyTKmtw0//BwGa0NOC6pnkW8LWTbH2hBYKxZcU3e4V/phXQDc/Zs/Mw+
+	 DIR2abGpt7cDbmtPOYkP52OHOBUpd3Q+JYLPLRSzyBWM+kLPCHbbB03DjUxD3TpHN8
+	 lPI/C113nXclSFHgpUx+4kOEOjIk7SfOBwW2i0zD3LXY0Rv0MhjR5YbgB+eFiu4IET
+	 8gT/phqnMEz/4SOJMdgsm3N9rrxWxLLxtF24ZYRdyydKXorvE2s9pvhrLm5r3dorcz
+	 xo+pdCESm8QeQ==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -57,9 +57,9 @@ To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v5 08/14] PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() memory allocations
-Date: Thu, 17 Oct 2024 10:58:43 +0900
-Message-ID: <20241017015849.190271-9-dlemoal@kernel.org>
+Subject: [PATCH v5 09/14] PCI: rockchip-ep: Refactor rockchip_pcie_ep_probe() MSI-X hiding
+Date: Thu, 17 Oct 2024 10:58:44 +0900
+Message-ID: <20241017015849.190271-10-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241017015849.190271-1-dlemoal@kernel.org>
 References: <20241017015849.190271-1-dlemoal@kernel.org>
@@ -71,167 +71,102 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the function rockchip_pcie_ep_init_ob_mem()
-allocate the outbound memory regions and memory needed for IRQ handling.
-
-These changes tidy up rockchip_pcie_ep_probe(). No functional change.
+Move the code in rockchip_pcie_ep_probe() to hide the MSI-X capability
+to its own function, rockchip_pcie_ep_hide_broken_msix_cap().
+No functional changes.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 107 ++++++++++++----------
- 1 file changed, 61 insertions(+), 46 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 54 +++++++++++++----------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 705f6741fa53..8dd2a812e446 100644
+index 8dd2a812e446..d980e0b92745 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -529,15 +529,66 @@ static const struct of_device_id rockchip_pcie_ep_of_match[] = {
- 	{},
- };
+@@ -582,6 +582,34 @@ static void rockchip_pcie_ep_exit_ob_mem(struct rockchip_pcie_ep *ep)
+ 	pci_epc_mem_exit(ep->epc);
+ }
  
-+static int rockchip_pcie_ep_init_ob_mem(struct rockchip_pcie_ep *ep)
++static void rockchip_pcie_ep_hide_broken_msix_cap(struct rockchip_pcie *rockchip)
 +{
-+	struct rockchip_pcie *rockchip = &ep->rockchip;
-+	struct device *dev = rockchip->dev;
-+	struct pci_epc_mem_window *windows = NULL;
-+	int err, i;
++	u32 cfg_msi, cfg_msix_cp;
 +
-+	ep->ob_addr = devm_kcalloc(dev, ep->max_regions, sizeof(*ep->ob_addr),
-+				   GFP_KERNEL);
++	/*
++	 * MSI-X is not supported but the controller still advertises the MSI-X
++	 * capability by default, which can lead to the Root Complex side
++	 * allocating MSI-X vectors which cannot be used. Avoid this by skipping
++	 * the MSI-X capability entry in the PCIe capabilities linked-list: get
++	 * the next pointer from the MSI-X entry and set that in the MSI
++	 * capability entry (which is the previous entry). This way the MSI-X
++	 * entry is skipped (left out of the linked-list) and not advertised.
++	 */
++	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
++				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
 +
-+	if (!ep->ob_addr)
-+		return -ENOMEM;
++	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
 +
-+	windows = devm_kcalloc(dev, ep->max_regions,
-+			       sizeof(struct pci_epc_mem_window), GFP_KERNEL);
-+	if (!windows)
-+		return -ENOMEM;
++	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
++					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
++					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
 +
-+	for (i = 0; i < ep->max_regions; i++) {
-+		windows[i].phys_base = rockchip->mem_res->start + (SZ_1M * i);
-+		windows[i].size = SZ_1M;
-+		windows[i].page_size = SZ_1M;
-+	}
-+	err = pci_epc_multi_mem_init(ep->epc, windows, ep->max_regions);
-+	devm_kfree(dev, windows);
++	cfg_msi |= cfg_msix_cp;
 +
-+	if (err < 0) {
-+		dev_err(dev, "failed to initialize the memory space\n");
-+		return err;
-+	}
-+
-+	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(ep->epc, &ep->irq_phys_addr,
-+						  SZ_1M);
-+	if (!ep->irq_cpu_addr) {
-+		dev_err(dev, "failed to reserve memory space for MSI\n");
-+		goto err_epc_mem_exit;
-+	}
-+
-+	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
-+
-+	return 0;
-+
-+err_epc_mem_exit:
-+	pci_epc_mem_exit(ep->epc);
-+
-+	return err;
-+}
-+
-+static void rockchip_pcie_ep_exit_ob_mem(struct rockchip_pcie_ep *ep)
-+{
-+	pci_epc_mem_exit(ep->epc);
++	rockchip_pcie_write(rockchip, cfg_msi,
++			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
 +}
 +
  static int rockchip_pcie_ep_probe(struct platform_device *pdev)
  {
  	struct device *dev = &pdev->dev;
- 	struct rockchip_pcie_ep *ep;
+@@ -589,7 +617,6 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
  	struct rockchip_pcie *rockchip;
  	struct pci_epc *epc;
--	size_t max_regions;
--	struct pci_epc_mem_window *windows = NULL;
--	int err, i;
-+	int err;
- 	u32 cfg_msi, cfg_msix_cp;
+ 	int err;
+-	u32 cfg_msi, cfg_msix_cp;
  
  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-@@ -561,10 +612,14 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	err = rockchip_pcie_enable_clocks(rockchip);
-+	err = rockchip_pcie_ep_init_ob_mem(ep);
- 	if (err)
- 		return err;
- 
-+	err = rockchip_pcie_enable_clocks(rockchip);
-+	if (err)
-+		goto err_exit_ob_mem;
-+
- 	err = rockchip_pcie_init_port(rockchip);
+ 	if (!ep)
+@@ -624,6 +651,8 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
  	if (err)
  		goto err_disable_clocks;
-@@ -573,47 +628,9 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+ 
++	rockchip_pcie_ep_hide_broken_msix_cap(rockchip);
++
+ 	/* Establish the link automatically */
  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
  			    PCIE_CLIENT_CONFIG);
- 
--	max_regions = ep->max_regions;
--	ep->ob_addr = devm_kcalloc(dev, max_regions, sizeof(*ep->ob_addr),
--				   GFP_KERNEL);
--
--	if (!ep->ob_addr) {
--		err = -ENOMEM;
--		goto err_uninit_port;
--	}
--
+@@ -631,29 +660,6 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
  	/* Only enable function 0 by default */
  	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
  
--	windows = devm_kcalloc(dev, ep->max_regions,
--			       sizeof(struct pci_epc_mem_window), GFP_KERNEL);
--	if (!windows) {
--		err = -ENOMEM;
--		goto err_uninit_port;
--	}
--	for (i = 0; i < ep->max_regions; i++) {
--		windows[i].phys_base = rockchip->mem_res->start + (SZ_1M * i);
--		windows[i].size = SZ_1M;
--		windows[i].page_size = SZ_1M;
--	}
--	err = pci_epc_multi_mem_init(epc, windows, ep->max_regions);
--	devm_kfree(dev, windows);
+-	/*
+-	 * MSI-X is not supported but the controller still advertises the MSI-X
+-	 * capability by default, which can lead to the Root Complex side
+-	 * allocating MSI-X vectors which cannot be used. Avoid this by skipping
+-	 * the MSI-X capability entry in the PCIe capabilities linked-list: get
+-	 * the next pointer from the MSI-X entry and set that in the MSI
+-	 * capability entry (which is the previous entry). This way the MSI-X
+-	 * entry is skipped (left out of the linked-list) and not advertised.
+-	 */
+-	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
+-				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
 -
--	if (err < 0) {
--		dev_err(dev, "failed to initialize the memory space\n");
--		goto err_uninit_port;
--	}
+-	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
 -
--	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
--						  SZ_1M);
--	if (!ep->irq_cpu_addr) {
--		dev_err(dev, "failed to reserve memory space for MSI\n");
--		err = -ENOMEM;
--		goto err_epc_mem_exit;
--	}
+-	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
+-					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
+-					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
 -
--	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
+-	cfg_msi |= cfg_msix_cp;
 -
- 	/*
- 	 * MSI-X is not supported but the controller still advertises the MSI-X
- 	 * capability by default, which can lead to the Root Complex side
-@@ -643,10 +660,8 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 	pci_epc_init_notify(epc);
+-	rockchip_pcie_write(rockchip, cfg_msi,
+-			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
+-
+ 	rockchip_pcie_write(rockchip, PCIE_CLIENT_CONF_ENABLE,
+ 			    PCIE_CLIENT_CONFIG);
  
- 	return 0;
--err_epc_mem_exit:
--	pci_epc_mem_exit(epc);
--err_uninit_port:
--	rockchip_pcie_deinit_phys(rockchip);
-+err_exit_ob_mem:
-+	rockchip_pcie_ep_exit_ob_mem(ep);
- err_disable_clocks:
- 	rockchip_pcie_disable_clocks(rockchip);
- 	return err;
 -- 
 2.47.0
 
