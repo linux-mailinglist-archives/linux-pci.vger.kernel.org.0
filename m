@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-14707-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14708-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863C39A1836
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 03:59:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 788119A1837
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 03:59:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 314291F27173
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 01:59:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 294B11F26CD9
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 01:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8923D224F6;
-	Thu, 17 Oct 2024 01:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDDCF282FA;
+	Thu, 17 Oct 2024 01:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJT4uRLJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cz+6vzb/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B6EF4ED;
-	Thu, 17 Oct 2024 01:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D7FF4ED;
+	Thu, 17 Oct 2024 01:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729130338; cv=none; b=nFVuwx020r0ePw3a6Zg6J4naDLCEwp/oZhU+Dp2+uBWhAi+EmXrL0V18s9VpCBKXJoUnrN09FZVrBFdPnwBkjE9KDd5f0N8pWuQMZNZbRIf8t2k+SejqqceijGfJGwE6R32GRhA5vOcqrGvCtrAXliZeWejRxME4XbMARgEZ8uo=
+	t=1729130340; cv=none; b=kPRGuFYdg5MQCfZJJiNTwdb8kQUt4EuRcsrPEM9kA7lA3bmAmmp2lrfumBYeqQlHxjAricqiszyFTBxUdVktXoJ0OHds6vtsZ0cqN4PXMVQhr7GPTvfB+BUPCvuStIHACRuOPdtVyBMPjI5LKLrxExI5zphd156VJlE8km0dQlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729130338; c=relaxed/simple;
-	bh=pSHsBhnbjSj04jRr4dxkMJFuwUPFncYPKlMS7obkf/w=;
+	s=arc-20240116; t=1729130340; c=relaxed/simple;
+	bh=fQ5LGyIBaK46oPYJY75HQ+s1l6zSxG5jS7LECMmdORg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RY5AWVm4IRngYOl+6ABS367kZYAIOYiH3jUsy7+KFmJjQO9O9oZ/wm6E3hSb+ERcbeXwOzgzcii5hvs30kryJtgXaXBX6mOhOKD69AdUG+PA3gOdGC6Fr2FQkGbSK2XlSNQzm3nE5th6ciji6jxQhNslZTArzqhMQZi13f8S2Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJT4uRLJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8184DC4CED1;
-	Thu, 17 Oct 2024 01:58:56 +0000 (UTC)
+	 MIME-Version; b=hyYFSDsvR0qAO9vsSTFztpXbEZQo5KgghEeblWnFdIvgCfu/OjlwZXOPxsE0qmtuj82REjbJvF2PZj6b9/bq7W9AU62UbiFaboAiJBiiOnM3+njf+CqNJVPlzsEUwXWEemx/p+nL0u5eDs8Z1C93ACkLg4uJnADO+sM6fAlK7RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cz+6vzb/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B99C4CECF;
+	Thu, 17 Oct 2024 01:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729130338;
-	bh=pSHsBhnbjSj04jRr4dxkMJFuwUPFncYPKlMS7obkf/w=;
+	s=k20201202; t=1729130340;
+	bh=fQ5LGyIBaK46oPYJY75HQ+s1l6zSxG5jS7LECMmdORg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RJT4uRLJMCcJrfcWJbb9Vtf91JmvWWBwMg3fdndwwUFo1kRIJJ9vhMN1iWRH7wZvH
-	 XDa5mz/cb06/gjnLpiP8J7fJPeIBdyQMp0a5wCaqCKJlbONbfULruA02HkMGpu6WcS
-	 KeVlI5fZIHtoMiLt63MXZjkYnZ33/zXBQ7N9vQXHcZxOCNZtVl/k7TKyzLW+fYGvTJ
-	 vhubomFAkPthxQPxDIXX8GMa8obGGATo+L06212lJ4eckdill45hT38sraZ2JIXECs
-	 VmLr/eJi4Pc1FqF+abIUlm6rFD11WAJ1loEB32cirqIeFVlN9eHyWEoNa4KUMv8g4z
-	 RUAGUsIVIjzaA==
+	b=Cz+6vzb/fZFpRvwRxJb4Fuz2E6UrnbUk5iAcFm5KDqJ7PEkZzH0l0M4INTCFSi6C9
+	 T10ao7kqbl9/eRuIJ514GRuX0kbq+nZTZrIaS7M0Gh4Vf+S98sMoBklE4176ywTKEY
+	 g/McpYHTqlnmotG400WETMq6YltrcFXlfckErJbvF4v+PABw14hTKsCi76/NRmF+2v
+	 oHiPhLH4nC7nh73PbDeEJkXYC7xfvlTD3AiYXAi0SXhcGuMLTY9GeN+zMJSpzb+Jae
+	 57apqdsAgA40JgiU4ICzRxQFXkIcKvGyxnci3bno/YfnP81f84EDe1UshJbrcLOePB
+	 3Gr66HdU5u3rw==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -57,9 +57,9 @@ To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v5 03/14] PCI: rockchip-ep: Improve rockchip_pcie_ep_unmap_addr()
-Date: Thu, 17 Oct 2024 10:58:38 +0900
-Message-ID: <20241017015849.190271-4-dlemoal@kernel.org>
+Subject: [PATCH v5 04/14] PCI: rockchip-ep: Improve rockchip_pcie_ep_map_addr()
+Date: Thu, 17 Oct 2024 10:58:39 +0900
+Message-ID: <20241017015849.190271-5-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241017015849.190271-1-dlemoal@kernel.org>
 References: <20241017015849.190271-1-dlemoal@kernel.org>
@@ -71,40 +71,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Add a check to verify that the outbound region to be used for mapping an
+address is not already in use.
 
-There is no need to loop over all regions to find the memory window used
-to map an address. We can use rockchip_ob_region() to determine the
-region index, together with a check that the address passed as argument
-is the address used to create the mapping. Furthermore, the
-ob_region_map bitmap should also be checked to ensure that we are not
-attempting to unmap an address that is not mapped.
-
-Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 5a07084fb7c4..89ebdf3e4737 100644
+index 89ebdf3e4737..edb84fb1ba39 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -256,13 +256,9 @@ static void rockchip_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn, u8 vfn,
- {
- 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
--	u32 r;
--
--	for (r = 0; r < ep->max_regions; r++)
--		if (ep->ob_addr[r] == addr)
--			break;
-+	u32 r = rockchip_ob_region(addr);
+@@ -243,6 +243,9 @@ static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, u8 vfn,
+ 	struct rockchip_pcie *pcie = &ep->rockchip;
+ 	u32 r = rockchip_ob_region(addr);
  
--	if (r == ep->max_regions)
-+	if (addr != ep->ob_addr[r] || !test_bit(r, &ep->ob_region_map))
- 		return;
++	if (test_bit(r, &ep->ob_region_map))
++		return -EBUSY;
++
+ 	rockchip_pcie_prog_ep_ob_atu(pcie, fn, r, addr, pci_addr, size);
  
- 	rockchip_pcie_clear_ep_ob_atu(rockchip, r);
+ 	set_bit(r, &ep->ob_region_map);
 -- 
 2.47.0
 
