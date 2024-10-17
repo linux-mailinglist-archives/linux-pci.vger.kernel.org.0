@@ -1,119 +1,159 @@
-Return-Path: <linux-pci+bounces-14759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55A1D9A1F34
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 11:57:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 012B59A1F38
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 11:57:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A23F289FA5
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 09:57:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85092B266CA
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 09:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D23FE1D95AA;
-	Thu, 17 Oct 2024 09:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4801DB363;
+	Thu, 17 Oct 2024 09:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bWj2D/Hm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAFJ6PAI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2441DA113;
-	Thu, 17 Oct 2024 09:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154DC1DA60D;
+	Thu, 17 Oct 2024 09:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729158956; cv=none; b=jPVczPelUM5ZrCxp4Vpm2q7UvnnDt9GJLQhCZxLPwVrd5l2u8TY9whSmdFxr4Kr1tuZKl0x0ttRfdgdqpP0s+mje6OP5cRqdV5KL+RadAKJZuJ4zI1rNVp7ktSCYsvzCf7vFqINSSSmV2k37Kd1UZzABcMsqS5CDJDdHYPuHrBI=
+	t=1729158992; cv=none; b=hDpSYEhVaqz7n503wEF7E90e5EKtE1Wrr9rBDtVQJEgRoZt586WGnaVnFCL4soZ+jX254gSOn64I5dVjxYMdYMfTTnEwYuujSoUqSkH9pGGAMCl6hSMszc2VlnzxWGPRDhtibGSLqK3+b5KKbj6b2db7k2LwxldRYCt62ZEqTeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729158956; c=relaxed/simple;
-	bh=wYiV3LayTuqB3bImr/dzDxL6xWUW5nltsyRpCARFUYU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=j/GMuoKm7nmih6yUzB6o+6PeJS9JXt/0iYTRJd6K35fWFLf7rpY+T/CkZ70ot8spGvAx5pcB3+H49GIGTzdQpdqA2giSWjruEx4/KrPrHCN8DKqbX6rbqxSPNGeBWhzT/g7oryacpLSyDLZC7Oh5ZQKsD2DC4KI3hXVCQI5yios=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bWj2D/Hm; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729158954; x=1760694954;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wYiV3LayTuqB3bImr/dzDxL6xWUW5nltsyRpCARFUYU=;
-  b=bWj2D/Hm9Z+ijtLG1POVrvdSt5XQczZi/UuwqYMimnnT0GI80fiuQLNQ
-   82UcSflgL0Vf0/J3MHJeQXFGRUBuxtegwGfxJWD99S8e1kM3F9WVpFVrq
-   cb7FVHVnfcdQT2IafaN4nVZT1baB9fAocPfBx9iFOM1dw1FTFIsvKI01d
-   Uw3V9w6PvfhUXyre8LZwreYTXh+QkZshSsQfoGxjfykgGsKn5H2OzrtGU
-   fHhoFQxplE0syoX9nNBB1BRe/DbLYz7ms2q4sYJHyUCdZjnlKLQIc7BZy
-   6+mgw0ASqgF05OtaQg+VlAi21+HShbQL7QqDDuXXqYDMPQfSrQ4dKXGiB
-   A==;
-X-CSE-ConnectionGUID: VDQn3VtNQWaHYkmqdOQLsg==
-X-CSE-MsgGUID: FUkXbjPiQAqHTI+nJaGaqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="46104319"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="46104319"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 02:55:53 -0700
-X-CSE-ConnectionGUID: hucNkVR6QdS/TYUZRQ947g==
-X-CSE-MsgGUID: 7DnR3U6bQ2Gq0bzFZZ8geA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="83324502"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.91])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 02:55:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Philipp Stanner <pstanner@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1729158992; c=relaxed/simple;
+	bh=4q66nhbhtRB2E2NWPNRJ6n4igTeASGKwvtYUoBPLkCs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d1E5hpc91s2OQ5WgbO7+dlmIT5BFt5Dru6MUaIUDVrrJFEzYRstqDv+f5YV0c0XDoRZayz18XQEjtwMUOF6GhJoc+Gv/VNBzGIHJ+hRWNcgY6v+blCauP6x8p5aNzTOEGrHmhMQmOo8+6a4cndsrW+ITRI8YeACrSX3QA7B7UFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAFJ6PAI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 814A1C4CEC5;
+	Thu, 17 Oct 2024 09:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729158991;
+	bh=4q66nhbhtRB2E2NWPNRJ6n4igTeASGKwvtYUoBPLkCs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vAFJ6PAIGpwErAX/6NNQIHWUCUhm6OCqIHrt1+rH0SEBETrbQLcj4QNyXuuRnLaVd
+	 d3Q9bk69Akh1f1w3FJCbAvAQHMt33cW15OjODfTYU0n+KqIh4VuyQKDN6BSvUpFquQ
+	 ok475/xZzE8OpDu3onODRouQJzqQ94Y8aY8X+gQcw+ql2LUFaFru/kxLyZ4aG2bZd9
+	 oA2xCZOsEu6ktNlN1kK2M690N7dvcW7Wnp08ia4dumEsMLme3vkOSh7+T49SdqKoc2
+	 YZXzHLcvCgn5hJ9dz9fTQy82TtrQsuJFBSve0sqx3gxhH4NZE2tOIu5773TsGVTWRd
+	 L44+77Ir7Dcgw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1t1NF7-004PBo-Ck;
+	Thu, 17 Oct 2024 10:56:29 +0100
+Date: Thu, 17 Oct 2024 10:56:29 +0100
+Message-ID: <86o73j3vea.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>,	Bjorn Helgaas <helgaas@kernel.org>,
+	Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,	Johan Hovold
+ <johan+linaro@kernel.org>,	Kishon Vijay Abraham I <kishon@ti.com>,	Xiaowei
+ Song <songxiaowei@hisilicon.com>,	Binghui Wang <wangbinghui@hisilicon.com>,
+	Thierry Reding <thierry.reding@gmail.com>,	Ryder Lee
+ <ryder.lee@mediatek.com>,	Jianjun Wang <jianjun.wang@mediatek.com>,
+	linux-pci@vger.kernel.org,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Ley Foon Tan <ley.foon.tan@intel.com>,
 	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 1/1] PCI: Improve printout in pdev_sort_resources()
-Date: Thu, 17 Oct 2024 12:55:45 +0300
-Message-Id: <20241017095545.1424-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
+In-Reply-To: <20241017093040.k6pefhmfdmw4nicz@thinkpad>
+References: <Yt+6azfwd/LuMzoG@hovoldconsulting.com>
+	<20220727195716.GA220011@bhelgaas>
+	<YuJ+PZIhg8mDrdlX@hovoldconsulting.com>
+	<20241017052335.iue4jhvk5q4efigv@thinkpad>
+	<86v7xr418s.wl-maz@kernel.org>
+	<20241017082526.ppoz7ynxas5nlht5@thinkpad>
+	<86r08f3yj1.wl-maz@kernel.org>
+	<20241017093040.k6pefhmfdmw4nicz@thinkpad>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: manivannan.sadhasivam@linaro.org, johan@kernel.org, helgaas@kernel.org, pali@kernel.org, johan+linaro@kernel.org, kishon@ti.com, songxiaowei@hisilicon.com, wangbinghui@hisilicon.com, thierry.reding@gmail.com, ryder.lee@mediatek.com, jianjun.wang@mediatek.com, linux-pci@vger.kernel.org, kw@linux.com, ley.foon.tan@intel.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Use pci_resource_name() helper in pdev_sort_resources() to print
-resources in user-friendly format. Also replace the vague "bogus
-alignment" with a more precise explanation of the problem.
+On Thu, 17 Oct 2024 10:30:40 +0100,
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> 
+> On Thu, Oct 17, 2024 at 09:48:50AM +0100, Marc Zyngier wrote:
+> > On Thu, 17 Oct 2024 09:25:26 +0100,
+> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> > > 
+> > > On Thu, Oct 17, 2024 at 08:50:11AM +0100, Marc Zyngier wrote:
+> > > > On Thu, 17 Oct 2024 06:23:35 +0100,
+> > > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> > > > > 
+> > > > > So can we proceed with the series making Qcom driver modular?
+> > > > 
+> > > > Who is volunteering to fix the drivers that will invariably explode
+> > > > once we allow this?
+> > > > 
+> > > 
+> > > Why should anyone volunteer first up? If the issue gets reported for a driver
+> > > blowing up, then the driver has to be fixed by the maintainer or someone, just
+> > > like any other bug.
+> > 
+> > You are introducing a new behaviour, and decide that it is fair game
+> > to delegate the problems *you* introduced to someone else?
+> >
+> 
+> You are getting it completely wrong. I'm not delegating any issues. If the so
+> called *new* behavior in the controller driver uncovers the bug in a client
+> driver, then that is not called *delegating*.
+> 
+> > Maybe you should reconsider what it means to be a *responsible*
+> > maintainer.
+> > 
+> 
+> Sure, by not providing a development option useful to the users envisioning
+> issues that may not happen at all.
+> 
+> Even if any issue reported for the platform I'm maintaining, I am willing to put
+> in the efforts to fix them.
+> 
+> > > From reading the thread, the major concern was disposing the IRQs before
+> > > removing the domain and that is now taken care of. If you are worrying about a
+> > > specific issue, please say so.
+> > 
+> > That concern still exists, and I haven't seen a *consistent* approach
+> > encompassing all of the PCI controllers. What I've seen is a bunch of
+> > point hacks addressing a local issue on a particular implementation.
+> > 
+> 
+> Again, please be specific about your concern so that someone could try to
+> address them. Right now all I'm hearing is, "hey don't do this, else
+> something may blow up".
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+You know what? Have it your way. After all, this sort of behaviour is
+exactly why I stopped dealing with this subsystem.
 
-v2:
-- Place colon after %s %pR to be consistent with other printouts
-- Replace vague "bogus alignment" with the exact cause
+> 
+> > I don't think that's the correct approach, but hey, what do I
+> > understand about interrupts and kernel maintenance?
+> > 
+> 
+> I'd like to quote the message in your signature here: "Without deviation from
+> the norm, progress is not possible".
 
- drivers/pci/setup-bus.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+You should look up who wrote this, and appreciate *why* they wrote it,
+and what they meant by that. That should put some of the above in
+perspective.
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 23082bc0ca37..0fd286f79674 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -134,6 +134,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
- 	int i;
- 
- 	pci_dev_for_each_resource(dev, r, i) {
-+		const char *r_name = pci_resource_name(dev, i);
- 		struct pci_dev_resource *dev_res, *tmp;
- 		resource_size_t r_align;
- 		struct list_head *n;
-@@ -146,8 +147,8 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
- 
- 		r_align = pci_resource_alignment(dev, r);
- 		if (!r_align) {
--			pci_warn(dev, "BAR %d: %pR has bogus alignment\n",
--				 i, r);
-+			pci_warn(dev, "%s %pR: alignment must not be zero\n",
-+				 r_name, r);
- 			continue;
- 		}
- 
+	M.
+
 -- 
-2.39.5
-
+Without deviation from the norm, progress is not possible.
 
