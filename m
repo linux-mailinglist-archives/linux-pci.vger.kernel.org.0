@@ -1,91 +1,92 @@
-Return-Path: <linux-pci+bounces-14731-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14732-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D40329A1A24
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 07:23:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91C1D9A1A28
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 07:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBD631C21842
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 05:23:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACFFEB20D55
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Oct 2024 05:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFDCB14EC59;
-	Thu, 17 Oct 2024 05:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B2B146013;
+	Thu, 17 Oct 2024 05:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RpXY0Cuz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iCi5Pn8k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDDC21E3C1
-	for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2024 05:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877F321E3C1
+	for <linux-pci@vger.kernel.org>; Thu, 17 Oct 2024 05:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729142623; cv=none; b=Bl7914/dvqCFrJXH3tpJHn/tMJn4GYqx4mQQzj+YYlgQ6ZAiVJSycJAzui2VDgartxF4bYVIN0BB8Ase9Jk0MikycTmMyY1N8edNvy+HV3DZVDIM2EPcDKwWItlsnpDnxBash1fnBfXLUB5x2Cn8NTF6UmrIbR2Ao9dyzfJ9VvI=
+	t=1729142918; cv=none; b=CI2wOvoLFIi9OVhLaU3Et9mjb7ze0UGIXSlEZPngSD5NLr/Ces4wc3rgkzy7yyYfiibq7+9d8cMqCGmezHxpLfdI/1e+g2iMAOAfJdmjxWWtU0GW3qn/2pXcvDwrt7A99m601/K3Owi5UK0naM+LtwtOfym3T80jmhp8uYwNSiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729142623; c=relaxed/simple;
-	bh=mExZyhdsMMf4gRVZCP39my2kunhL/jtzjTLIVTva+Ys=;
+	s=arc-20240116; t=1729142918; c=relaxed/simple;
+	bh=yYwU9C9vsauTqmDNngG7jcGAdBh99VFX3GQ5w/LjLZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CWU5Tlf3yjsIe3Cfo16btUhiewYNPN+w1QuQKztqO93jnuYqzo9seyIfuivxz4PcinUZDBgvNh58lLcxStrUPVe/s3/E6AWrPDRigzoLtRbWkDbqMFsDjYurjt7coswYNQgegaw80BP/t73DoSm3fI3obT6sNkbf5mIa/Yrw+3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RpXY0Cuz; arc=none smtp.client-ip=209.85.216.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZKu7blRevwHSyDgasOYl85m4EwwMVmEty1ff12DWEJTNOfvJPDCKJcLbtyNE4V+TiwU7yy/g91aDDduLuVHWWzwN2zg3i6NHWjxqg6KaFU3C3A6FaaUNlYZ0F+1lpSoT6yaxePYkf3YUbMYcRxIYiVVKp6CVpLGcVKNPAKs1q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iCi5Pn8k; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2e31af47681so424991a91.2
-        for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 22:23:41 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20cf6eea3c0so4611875ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 16 Oct 2024 22:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729142620; x=1729747420; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1729142916; x=1729747716; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=OCa/2861obl9V5ckCTUYjogSBw7B5osjW4tVSSSNZes=;
-        b=RpXY0Cuztn0mbdhd4VlNGDDbtpy0yiKwfp6bKWe9iwmdjnJL4JcHvEKfu2WZuSO1KN
-         pspJVEGejkf/MkAi5sULZFcRyQxRZ00o8CZty1QgPHL+tBGPZyLgfndT9JRDxCQRwy7x
-         6m7RiQG3qpD8CtgaUrGLaoNNyqzJ0q/T7dXNfOjMib+dcPL7Iy6H+NM+B84ioLfbn8g0
-         LEjkco68VmPSe87G5H0pmBN4aBJCizh4TbZiHIrGDX+9UbgK50fYBkg8tx7hnu3leVua
-         USHVDDQs4Syko0vFmtcw7OLmTnOAPrue+lXSlG7KHYj+zsMEQ/PPzNler5t6F4bPPQRH
-         5kXw==
+        bh=6hZjI6fRPqSWRpqD/TBWBTEMnYaD5tTjRkNPtt/tJec=;
+        b=iCi5Pn8ksQ0/aQSYFShFEGvgpZ8Wb43nVn2S8Fb1dv4QEzXRE9gAnUuZLJwHTxSnt1
+         RCnil/Xn1+0Ch+QWdbPwWmYMAQAxYxToRSk5c4DIkNFoWuiq34WcTX4YSQE3cHnjHVI3
+         wGR65oJpzOVMR6d0RfbHMzQD9ZCKW9RByZ5yMJBLo1Ud2IVpMsX0s7DI3Hu6+EWhC6Cu
+         vbZ7J+LMzXnSVz/boHDlXcx9zx6jud9FgH6Wb1jAQ5tcK04t8ZpSDS4jKlJ5+01owOU2
+         3UYfXKZdoTXBqDYXzaYLw8VolWQKB6A8V/2eOZeLI9johBLdkehuOICTTDoUjv4dsPc0
+         cPBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729142620; x=1729747420;
+        d=1e100.net; s=20230601; t=1729142916; x=1729747716;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OCa/2861obl9V5ckCTUYjogSBw7B5osjW4tVSSSNZes=;
-        b=boPu03H1hOnzPC9D0ahPChDC+kpaC2Sw3Xubrpm3la+nKBeDaTvRe0tjFRImAwt5o5
-         5U/eKEoTYSvAbaeS+hTjstSlUu6p7g4V1wXX7hLDX9mvp5OTLbH5FuvZhaCvyKCkGBxQ
-         20ky+rJTMBJ74/w3xYYOMzjZsg00Ebv3p4x79BOoErPG7Umd3gHJOKC1CiVMKxOHTaOJ
-         d6GfvfWh1SEQs1tcfBMShvXJDarnpg46ZFMEC81glAOEk32Daq1eLZZXT46fypbOc2Fk
-         ADM8k3+U2W85ZJpgwMXHZpUwDxoE9DZ64GJlFYcz9VMGhc7Zo7gFh9qDm1UKR3Ai2XLE
-         Wjuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWxoapKuLGO9d9wkFp6BRVb6yU9RTI2Aphq72PX1w+D6DF7MvuX9zTYhahoyepztR+8d9PyRILZ7dU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYqF7Xug2Z+TL6dxbEUx95fKFEdoJb525TZmdorImmGetWyZBU
-	+H5B55qPvOW+eMxr6VhbsAMpHJeKmJ+5aK+gfHsHohswIVF1drbjepBK5z1U9g==
-X-Google-Smtp-Source: AGHT+IGjeBk2kioaY/kHyxT3q1nImWDtOTVlpOhMJRI/BFXigA3MIpzvfkBk1ObbO7BBS1NML8GqFg==
-X-Received: by 2002:a17:90b:1241:b0:2e2:857e:fcfb with SMTP id 98e67ed59e1d1-2e2f0b09d89mr22612829a91.19.1729142620475;
-        Wed, 16 Oct 2024 22:23:40 -0700 (PDT)
+        bh=6hZjI6fRPqSWRpqD/TBWBTEMnYaD5tTjRkNPtt/tJec=;
+        b=Fse0g2FqyfC4n4gXVh83ItwQ11rceI8bc0WmZ4ABekdiW1q7K3mqKBwAM/WcWpS3eb
+         N2GE5Ls2Lm6rla4MVfllGvlb2Ax3d6zaUsYJco22juYwPrIz5mIKvahpj05HrHqltYoR
+         Ezxru4P9cNQ6At0ZygxPNn9YWqKyBXsArfzOw4AswGPPlTUPClTbBHxTmTLJAFHl5YdN
+         Ocak8+7K0MQi5mvx7mOVQUVKrGi9r2C/DgjM5kYWAmgHJOimE8+Xt0ByODypJRRqaO7Z
+         6UI680HshhDUHwXA5T+gF1mbLFlubfm9hy0Fb2abiBc4QWPzT5DbytjEPafb80arfW5g
+         sIAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWB1drFHX4sQVD1vpL5tDyxRH68Ib3zM0xmMdU89bPCNNOysmBov8Io4va/GF8iz3xLNWyR5aNR9v8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX87ADOygjHbvyUtVKCD/8ocQTuwlSpGvklXrFa+jyQEpwnR1e
+	dLEbwu5IJYoUAnHQUVO2FM7BzOLYrszyjE8KlmC8D3xyOePMZim5xi+/ioNp6A==
+X-Google-Smtp-Source: AGHT+IGUwThnhRwyhg1pkY9QuCIy+m0VwiWq/mvKZ3IRFcJOhMizDDPRXRidvOwcsMQiryJgsZ9LAg==
+X-Received: by 2002:a17:902:db0f:b0:20c:f292:3a21 with SMTP id d9443c01a7336-20d27ea856cmr88732655ad.15.1729142915759;
+        Wed, 16 Oct 2024 22:28:35 -0700 (PDT)
 Received: from thinkpad ([220.158.156.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e3e08ebf2asm865122a91.31.2024.10.16.22.23.36
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20d1804c119sm37110245ad.190.2024.10.16.22.28.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2024 22:23:40 -0700 (PDT)
-Date: Thu, 17 Oct 2024 10:53:35 +0530
+        Wed, 16 Oct 2024 22:28:34 -0700 (PDT)
+Date: Thu, 17 Oct 2024 10:58:29 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>, linux-pci@vger.kernel.org,
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Ley Foon Tan <ley.foon.tan@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: Why set .suppress_bind_attrs even though .remove() implemented?
-Message-ID: <20241017052335.iue4jhvk5q4efigv@thinkpad>
-References: <Yt+6azfwd/LuMzoG@hovoldconsulting.com>
- <20220727195716.GA220011@bhelgaas>
- <YuJ+PZIhg8mDrdlX@hovoldconsulting.com>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-pci@vger.kernel.org>,
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-rockchip@lists.infradead.org>,
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 2/3] PCI: rockchip: Simplify reset control handling by
+ using reset_control_bulk*() function
+Message-ID: <20241017052829.umil6en3rwsz7dvr@thinkpad>
+References: <20241016114915.2823-1-linux.amoon@gmail.com>
+ <20241016114915.2823-3-linux.amoon@gmail.com>
+ <20241016182343.vocxyi5ry33btw5o@thinkpad>
+ <CANAwSgRnd5jaZjoNtCLcq6nRGz3gC-VwjhxsiG7haiowrmZs_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,137 +96,336 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YuJ+PZIhg8mDrdlX@hovoldconsulting.com>
+In-Reply-To: <CANAwSgRnd5jaZjoNtCLcq6nRGz3gC-VwjhxsiG7haiowrmZs_w@mail.gmail.com>
 
-On Thu, Jul 28, 2022 at 02:17:01PM +0200, Johan Hovold wrote:
-> On Wed, Jul 27, 2022 at 02:57:16PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Jul 26, 2022 at 11:56:59AM +0200, Johan Hovold wrote:
-> > > On Mon, Jul 25, 2022 at 06:35:27PM +0100, Marc Zyngier wrote:
-> > > > On Mon, 25 Jul 2022 16:18:48 +0100,
-> > > > Johan Hovold <johan@kernel.org> wrote:
-> > > 
-> > > > > Since when is unloading modules something that is expected to
-> > > > > work perfectly? I keep hearing "well, don't do that then" when
-> > > > > someone complains about unloading this module while doing this
-> > > > > or that broke something. (And it's only root that can unload
-> > > > > modules in the first place.)
-> > > > 
-> > > > Well, maybe I have higher standards. For the stuff I maintain, I
-> > > > now point-blank refuse to support module unloading if this can
-> > > > result in a crash. Or worse.
-> > > 
-> > > That makes sense for regular interrupt controllers where its hard to
-> > > tell that all consumers are gone, but I don't think that should
-> > > limit the usefulness of having modular PCI controller drivers where
-> > > we know that the consumers are gone after deregistering the bus
-> > > (i.e. the consumers are descendants of the controller in the device
-> > > tree).
-> > 
-> > Those consumers are endpoint drivers, so I think this depends on those
-> > drivers correctly unmapping the interrupts they use, right?
+On Thu, Oct 17, 2024 at 09:17:35AM +0530, Anand Moon wrote:
+> Hi Manivannan,
 > 
-> Right. For MSI this means that pci_alloc_irq_vectors() in probe should
-> be matched by pci_free_irq_vectors() on remove.
+> On Wed, 16 Oct 2024 at 23:53, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Wed, Oct 16, 2024 at 05:19:07PM +0530, Anand Moon wrote:
+> > > Currently, the driver acquires and asserts/deasserts the resets
+> > > individually thereby making the driver complex to read. But this
+> > > can be simplified by using the reset_control_bulk APIs.
+> > > Use devm_reset_control_bulk_get_exclusive() API to acquire all
+> > > the resets and use reset_control_bulk_{assert/deassert}() APIs to
+> > > assert/deassert them in bulk.
+> > >
+> > > Following the recommendations in 'Rockchip RK3399 TRM v1.3 Part2':
+> > >
+> > > 1. Split the reset controls into two groups as per section '17.5.8.1.1 PCIe
+> > > as Root Complex'.
+> > >
+> > > 2. Deassert the 'Pipe, MGMT Sticky, MGMT, Core' resets in groups as per
+> > > section '17.5.8.1.1 PCIe as Root Complex'. This is accomplished using the
+> > > reset_control_bulk APIs.
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > > v9: Improved the commit message and try to fix few review comments.
+> >
+> > You haven't fixed all of them... Please take a look at all of my comments.
 > 
-> For legacy interrupts, which can be shared, the mapping is created by
-> PCI core when binding to the first device and can only be disposed by
-> the host-bridge driver once all descendants have been removed.
-> 
-> The endpoint drivers still need to disable their interrupts of course.
-> 
-> Buggy endpoint-driver remove implementations can lead to all sorts of
-> crashes (e.g. after failing to deregister a class device), and if that's
-> a worry then don't unload modules (and possibly disable it completely
-> using CONFIG_MODULE_UNLOAD).
-> 
-> > > > > It's useful for developers, but use it at your own risk.
-> > > > > 
-> > > > > That said, I agree that if something is next to impossible to
-> > > > > get right, as may be the case with interrupt controllers
-> > > > > generally, then fine, let's disable module unloading for that
-> > > > > class of drivers.
-> > > > > 
-> > > > > And this would mean disabling driver unbind for the 20+ driver
-> > > > > PCI drivers that currently implement it to some degree.
-> > > > 
-> > > > That would be Bjorn's and Lorenzo's call.
-> > > 
-> > > Sure, but I think it would be the wrong decision here. Especially,
-> > > since the end result will likely just be that more drivers will
-> > > become always compiled-in.
-> > 
-> > Can you elaborate on this?  I think Marc is suggesting that these PCI
-> > controller drivers be modular but not removable.  Why would that cause
-> > more of them to be compiled-in?
-> 
-> As mentioned earlier in this thread, we only appear to have some 60
-> drivers in the entire tree that bother to try to implement that. I fear
-> that blocking the use of modules (including being able to unload them)
-> will just make people submit drivers that can only be built in.
-> 
-> Not everyone cares about Android's GKI, but being able to unload a
-> module during development is very useful (and keeping that out-of-tree
-> prevents sharing the implementation and make it susceptible to even
-> further bit rot).
-> 
-> So continuing to supporting modules properly is a win for everyone (e.g.
-> GKI and developers).
->  
-> > > > > > > Turns out the pcie-qcom driver does not support legacy
-> > > > > > > interrupts so there's no risk of there being any lingering
-> > > > > > > mappings if I understand things correctly.
-> > > > > > 
-> > > > > > It still does MSIs, thanks to dw_pcie_host_init(). If you can
-> > > > > > remove the driver while devices are up and running with MSIs
-> > > > > > allocated, things may get ugly if things align the wrong way
-> > > > > > (if a driver still has a reference to an irq_desc or irq_data,
-> > > > > > for example).
-> > > > > 
-> > > > > That is precisely the way I've been testing it and everything
-> > > > > appears to be tore down as it should.
-> > > > >
-> > > > > And a PCI driver that has been unbound should have released its
-> > > > > resources, or that's a driver bug. Right?
-> > > > 
-> > > > But that's the thing: you can easily remove part of the
-> > > > infrastructure without the endpoint driver even noticing. It may
-> > > > not happen in your particular case if removing the RC driver will
-> > > > also nuke the endpoints in the process, but I can't see this is an
-> > > > absolute guarantee. The crash pointed to by an earlier email is
-> > > > symptomatic of it.
-> > > 
-> > > But that was arguably due to a driver bug, which we know how to fix.
-> > > For MSIs the endpoint driver will free its interrupts and all is
-> > > good.
-> > > 
-> > > The key observation is that the driver model will make sure that any
-> > > endpoint drivers have been unbound before the bus is deregistered.
-> > > 
-> > > That means there are no longer any consumers of the interrupts,
-> > > which can be disposed. For MSI this is handled by
-> > > pci_free_irq_vectors() when unbinding the endpoint drivers. For
-> > > legacy interrupts, which can be shared, the PCIe RC driver needs to
-> > > manage this itself after the consumers are gone.
-> > 
-> > The driver model ensures that endpoint drivers have been unbound. But
-> > doesn't the interrupt disposal depend on the correct functioning of
-> > those endpoint drivers?  So if a buggy endpoint driver failed to
-> > dispose of them, we're still vulnerable?
-> 
-> Just as you are if an endpoint-driver fails to clean up after itself in
-> some other way (e.g. leaves the interrupt enabled).
-> 
+> It is becoming a nightmare for me, my confidence is a the lowest.
 
-The IRQ disposal issue should hopefully fixed by this series:
-https://lore.kernel.org/linux-pci/20240715114854.4792-3-kabel@kernel.org/
+Me too. It makes me go crazy if the trivial comments are not addressed in
+multiple revisions and it results in waste of time for both of us.
 
-Then if the dwc driver calls pci_remove_irq_domain() instead of
-irq_domain_remove(), we can be sure that all the IRQs are disposed during the
-driver remove.
+> Can you fix this while applying or I will resend it with the fix?
 
-So can we proceed with the series making Qcom driver modular?
+I don't merge the dwc patches, so I cannot do that. But what's preventing you
+from addressing those comments. You cannot put the burden on the maintainers for
+your mistake, sorry.
 
 - Mani
+
+> >
+> > - Mani
+> >
+> Thanks
+> -Anand
+> 
+> > > v8: I tried to address reviews and comments from Mani.
+> > >     Follow the sequence of De-assert as per the driver code.
+> > >     Drop the comment in the driver.
+> > >     Improve the commit message with the description of the TMP section.
+> > >     Improve the reason for the core functional changes in the commit
+> > >     description.
+> > >     Improve the error handling messages of the code.
+> > > v7: replace devm_reset_control_bulk_get_optional_exclusive()
+> > >         with devm_reset_control_bulk_get_exclusive()
+> > >     update the functional changes.
+> > > V6: Add reason for the split of the RESET pins.
+> > > v5: Fix the De-assert reset core as per the TRM
+> > >     De-assert the PIPE_RESET_N/MGMT_STICKY_RESET_N/MGMT_RESET_N/RESET_N
+> > >     simultaneously.
+> > > v4: use dev_err_probe in error path.
+> > > v3: Fix typo in commit message, dropped reported by.
+> > > v2: Fix compilation error reported by Intel test robot
+> > >     fixed checkpatch warning.
+> > > ---
+> > >  drivers/pci/controller/pcie-rockchip.c | 154 +++++--------------------
+> > >  drivers/pci/controller/pcie-rockchip.h |  26 +++--
+> > >  2 files changed, 48 insertions(+), 132 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> > > index 2777ef0cb599..adf11208cc82 100644
+> > > --- a/drivers/pci/controller/pcie-rockchip.c
+> > > +++ b/drivers/pci/controller/pcie-rockchip.c
+> > > @@ -30,7 +30,7 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+> > >       struct platform_device *pdev = to_platform_device(dev);
+> > >       struct device_node *node = dev->of_node;
+> > >       struct resource *regs;
+> > > -     int err;
+> > > +     int err, i;
+> > >
+> > >       if (rockchip->is_rc) {
+> > >               regs = platform_get_resource_byname(pdev,
+> > > @@ -69,55 +69,23 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+> > >       if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
+> > >               rockchip->link_gen = 2;
+> > >
+> > > -     rockchip->core_rst = devm_reset_control_get_exclusive(dev, "core");
+> > > -     if (IS_ERR(rockchip->core_rst)) {
+> > > -             if (PTR_ERR(rockchip->core_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing core reset property in node\n");
+> > > -             return PTR_ERR(rockchip->core_rst);
+> > > -     }
+> > > -
+> > > -     rockchip->mgmt_rst = devm_reset_control_get_exclusive(dev, "mgmt");
+> > > -     if (IS_ERR(rockchip->mgmt_rst)) {
+> > > -             if (PTR_ERR(rockchip->mgmt_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing mgmt reset property in node\n");
+> > > -             return PTR_ERR(rockchip->mgmt_rst);
+> > > -     }
+> > > -
+> > > -     rockchip->mgmt_sticky_rst = devm_reset_control_get_exclusive(dev,
+> > > -                                                             "mgmt-sticky");
+> > > -     if (IS_ERR(rockchip->mgmt_sticky_rst)) {
+> > > -             if (PTR_ERR(rockchip->mgmt_sticky_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing mgmt-sticky reset property in node\n");
+> > > -             return PTR_ERR(rockchip->mgmt_sticky_rst);
+> > > -     }
+> > > -
+> > > -     rockchip->pipe_rst = devm_reset_control_get_exclusive(dev, "pipe");
+> > > -     if (IS_ERR(rockchip->pipe_rst)) {
+> > > -             if (PTR_ERR(rockchip->pipe_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing pipe reset property in node\n");
+> > > -             return PTR_ERR(rockchip->pipe_rst);
+> > > -     }
+> > > +     for (i = 0; i < ROCKCHIP_NUM_PM_RSTS; i++)
+> > > +             rockchip->pm_rsts[i].id = rockchip_pci_pm_rsts[i];
+> > >
+> > > -     rockchip->pm_rst = devm_reset_control_get_exclusive(dev, "pm");
+> > > -     if (IS_ERR(rockchip->pm_rst)) {
+> > > -             if (PTR_ERR(rockchip->pm_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing pm reset property in node\n");
+> > > -             return PTR_ERR(rockchip->pm_rst);
+> > > -     }
+> > > +     err = devm_reset_control_bulk_get_exclusive(dev,
+> > > +                                                 ROCKCHIP_NUM_PM_RSTS,
+> > > +                                                 rockchip->pm_rsts);
+> > > +     if (err)
+> > > +             return dev_err_probe(dev, err, "Cannot get the PM reset\n");
+> > >
+> > > -     rockchip->pclk_rst = devm_reset_control_get_exclusive(dev, "pclk");
+> > > -     if (IS_ERR(rockchip->pclk_rst)) {
+> > > -             if (PTR_ERR(rockchip->pclk_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing pclk reset property in node\n");
+> > > -             return PTR_ERR(rockchip->pclk_rst);
+> > > -     }
+> > > +     for (i = 0; i < ROCKCHIP_NUM_CORE_RSTS; i++)
+> > > +             rockchip->core_rsts[i].id = rockchip_pci_core_rsts[i];
+> > >
+> > > -     rockchip->aclk_rst = devm_reset_control_get_exclusive(dev, "aclk");
+> > > -     if (IS_ERR(rockchip->aclk_rst)) {
+> > > -             if (PTR_ERR(rockchip->aclk_rst) != -EPROBE_DEFER)
+> > > -                     dev_err(dev, "missing aclk reset property in node\n");
+> > > -             return PTR_ERR(rockchip->aclk_rst);
+> > > -     }
+> > > +     err = devm_reset_control_bulk_get_exclusive(dev,
+> > > +                                                 ROCKCHIP_NUM_CORE_RSTS,
+> > > +                                                 rockchip->core_rsts);
+> > > +     if (err)
+> > > +             return dev_err_probe(dev, err, "Cannot get the CORE resets\n");
+> > >
+> > >       if (rockchip->is_rc) {
+> > >               rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep",
+> > > @@ -147,23 +115,10 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> > >       int err, i;
+> > >       u32 regs;
+> > >
+> > > -     err = reset_control_assert(rockchip->aclk_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert aclk_rst err %d\n", err);
+> > > -             return err;
+> > > -     }
+> > > -
+> > > -     err = reset_control_assert(rockchip->pclk_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert pclk_rst err %d\n", err);
+> > > -             return err;
+> > > -     }
+> > > -
+> > > -     err = reset_control_assert(rockchip->pm_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert pm_rst err %d\n", err);
+> > > -             return err;
+> > > -     }
+> > > +     err = reset_control_bulk_assert(ROCKCHIP_NUM_PM_RSTS,
+> > > +                                     rockchip->pm_rsts);
+> > > +     if (err)
+> > > +             return dev_err_probe(dev, err, "Couldn't assert PM resets\n");
+> > >
+> > >       for (i = 0; i < MAX_LANE_NUM; i++) {
+> > >               err = phy_init(rockchip->phys[i]);
+> > > @@ -173,47 +128,17 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> > >               }
+> > >       }
+> > >
+> > > -     err = reset_control_assert(rockchip->core_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert core_rst err %d\n", err);
+> > > -             goto err_exit_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_assert(rockchip->mgmt_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert mgmt_rst err %d\n", err);
+> > > -             goto err_exit_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_assert(rockchip->mgmt_sticky_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
+> > > -             goto err_exit_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_assert(rockchip->pipe_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "assert pipe_rst err %d\n", err);
+> > > -             goto err_exit_phy;
+> > > -     }
+> > > +     err = reset_control_bulk_assert(ROCKCHIP_NUM_CORE_RSTS,
+> > > +                                     rockchip->core_rsts);
+> > > +     if (err)
+> > > +             return dev_err_probe(dev, err, "Couldn't assert Core resets\n");
+> > >
+> > >       udelay(10);
+> > >
+> > > -     err = reset_control_deassert(rockchip->pm_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "deassert pm_rst err %d\n", err);
+> > > -             goto err_exit_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_deassert(rockchip->aclk_rst);
+> > > +     err = reset_control_bulk_deassert(ROCKCHIP_NUM_PM_RSTS,
+> > > +                                       rockchip->pm_rsts);
+> > >       if (err) {
+> > > -             dev_err(dev, "deassert aclk_rst err %d\n", err);
+> > > -             goto err_exit_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_deassert(rockchip->pclk_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "deassert pclk_rst err %d\n", err);
+> > > +             dev_err(dev, "Couldn't deassert PM resets %d\n", err);
+> > >               goto err_exit_phy;
+> > >       }
+> > >
+> > > @@ -252,31 +177,10 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> > >               goto err_power_off_phy;
+> > >       }
+> > >
+> > > -     /*
+> > > -      * Please don't reorder the deassert sequence of the following
+> > > -      * four reset pins.
+> > > -      */
+> > > -     err = reset_control_deassert(rockchip->mgmt_sticky_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
+> > > -             goto err_power_off_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_deassert(rockchip->core_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "deassert core_rst err %d\n", err);
+> > > -             goto err_power_off_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_deassert(rockchip->mgmt_rst);
+> > > -     if (err) {
+> > > -             dev_err(dev, "deassert mgmt_rst err %d\n", err);
+> > > -             goto err_power_off_phy;
+> > > -     }
+> > > -
+> > > -     err = reset_control_deassert(rockchip->pipe_rst);
+> > > +     err = reset_control_bulk_deassert(ROCKCHIP_NUM_CORE_RSTS,
+> > > +                                       rockchip->core_rsts);
+> > >       if (err) {
+> > > -             dev_err(dev, "deassert pipe_rst err %d\n", err);
+> > > +             dev_err(dev, "Couldn't deassert CORE %d\n", err);
+> ok, it shipped my review process.
+> > >               goto err_power_off_phy;
+> > >       }
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> > > index bebab80c9553..cc667c73d42f 100644
+> > > --- a/drivers/pci/controller/pcie-rockchip.h
+> > > +++ b/drivers/pci/controller/pcie-rockchip.h
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/pci.h>
+> > >  #include <linux/pci-ecam.h>
+> > > +#include <linux/reset.h>
+> > >
+> > >  /*
+> > >   * The upper 16 bits of PCIE_CLIENT_CONFIG are a write mask for the lower 16
+> > > @@ -288,18 +289,29 @@
+> > >               (((c) << ((b) * 8 + 5)) & \
+> > >                ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b))
+> > >
+> > > +#define ROCKCHIP_NUM_PM_RSTS   ARRAY_SIZE(rockchip_pci_pm_rsts)
+> > > +#define ROCKCHIP_NUM_CORE_RSTS ARRAY_SIZE(rockchip_pci_core_rsts)
+> > > +
+> > > +static const char * const rockchip_pci_pm_rsts[] = {
+> > > +     "pm",
+> > > +     "pclk",
+> > > +     "aclk",
+> > > +};
+> > > +
+> > > +static const char * const rockchip_pci_core_rsts[] = {
+> > > +     "mgmt-sticky",
+> > > +     "core",
+> > > +     "mgmt",
+> > > +     "pipe",
+> > > +};
+> > > +
+> > >  struct rockchip_pcie {
+> > >       void    __iomem *reg_base;              /* DT axi-base */
+> > >       void    __iomem *apb_base;              /* DT apb-base */
+> > >       bool    legacy_phy;
+> > >       struct  phy *phys[MAX_LANE_NUM];
+> > > -     struct  reset_control *core_rst;
+> > > -     struct  reset_control *mgmt_rst;
+> > > -     struct  reset_control *mgmt_sticky_rst;
+> > > -     struct  reset_control *pipe_rst;
+> > > -     struct  reset_control *pm_rst;
+> > > -     struct  reset_control *aclk_rst;
+> > > -     struct  reset_control *pclk_rst;
+> > > +     struct  reset_control_bulk_data pm_rsts[ROCKCHIP_NUM_PM_RSTS];
+> > > +     struct  reset_control_bulk_data core_rsts[ROCKCHIP_NUM_CORE_RSTS];
+> > >       struct  clk_bulk_data *clks;
+> > >       int     num_clks;
+> > >       struct  regulator *vpcie12v; /* 12V power supply */
+> > > --
+> > > 2.44.0
+> > >
+> >
+> > --
+> > மணிவண்ணன் சதாசிவம்
 
 -- 
 மணிவண்ணன் சதாசிவம்
