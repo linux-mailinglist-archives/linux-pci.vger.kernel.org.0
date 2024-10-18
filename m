@@ -1,142 +1,143 @@
-Return-Path: <linux-pci+bounces-14851-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14852-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CB1F9A3C35
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 12:54:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F85A9A3D51
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 13:32:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C29D1C21D8D
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 10:54:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD76A1F213D1
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 11:32:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BC6202651;
-	Fri, 18 Oct 2024 10:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEABF2F46;
+	Fri, 18 Oct 2024 11:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmEbsZcN"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="NszY1Dst"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from alln-iport-1.cisco.com (alln-iport-1.cisco.com [173.37.142.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2B2201022
-	for <linux-pci@vger.kernel.org>; Fri, 18 Oct 2024 10:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E541878;
+	Fri, 18 Oct 2024 11:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.142.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729248744; cv=none; b=Jr2JQtx19qcLPZTTKg5ws7SQhZl+aes476mjQe4Otltrg9cdmcAEl4tH1eK3hG2wTYEHp7jKxZx+Iv2mViNXkDaVtGzb5pLlwxdCmal+rp9e9ADUbjqTGqIyHiU/9dqCUQGSG8fVKiIIRLTbmPLOVKE8fP1sfDdpdTQaKRB3UYo=
+	t=1729251123; cv=none; b=gD/XS7yf7qeWUwV2CQDjewUntljwhlmPFr0riaPG72EwoYNXkvVfsNIiwTrTabOaPh72bQMTFPhAw37WM252OMgX1AtkgayfN1rOBqyIJa+dh4SpIpG53mNkBwQ3ozdCUe29dcBwhXZetZivM/glo69TYtQ49D7ilx/ixufUEGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729248744; c=relaxed/simple;
-	bh=hlo66ijJb/Cdj770+zC+26WFSb2kI1W9QVwVBxx18DQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hYgWGeTDBQCZaCK1phsMngog+tqTvANrUXm3CPUX+W1C5T/4gduuckievq/x1o8WsW2BBUOSm1kr1hvKmoUfG85R2UGP9z6IvL/bwwMmEH1NoKEn60HOhdytTh5t7eXssIHal99iRc0Ddy3uClpnBPX2S73V0zxoznK/M7ZQgN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bmEbsZcN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729248742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hlo66ijJb/Cdj770+zC+26WFSb2kI1W9QVwVBxx18DQ=;
-	b=bmEbsZcN86sM4xyrCE0ADC98o7Xzw/M+FWFOi8bF+fFVf4xzzCCN+nUsiO1Bpl/KwLR4y0
-	ho7LupfUqO2lHOdSraGX8P+TzXiNuuBSB/3Ot3n/Zjs1pj+RuNnl6aWkwJxbX0sIrTubFs
-	Nd9F7zzdPeHiapYDbRoBkDzRvFbGNRc=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-103-BxO9n2K2NvCokYblz1bXdQ-1; Fri, 18 Oct 2024 06:52:21 -0400
-X-MC-Unique: BxO9n2K2NvCokYblz1bXdQ-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-460afc4747bso8461861cf.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Oct 2024 03:52:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729248740; x=1729853540;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hlo66ijJb/Cdj770+zC+26WFSb2kI1W9QVwVBxx18DQ=;
-        b=NBSN9TtHljSrS0N+7XMYkPV6fQltPID6UnhkgxWoNCHS+E1AeNZZTGm6yKbNlhTCjS
-         N0P6qWAEG72CpciJ5/o6EprjZTVJ3f6Q9v0431bAqjRAJn7XjP3GlXl0uotsZxvxLNkz
-         cndAtPfVpJYIPNmKoOPqt+OCOhMozpB7BgUKk8PhlW4c22PT8KyONM40unSUuXjcy0DK
-         A8FWH7O1RAVOhfwT0Ez6mHjAaRPoF4e+ZQOK5Rq4LycRPlAKYr/7ncpaODhIsLOcs1lc
-         7avHplKcmMXKPQ9Z6SboHh5SwRY9FZsMTFE5RC4zsFUsj1hWJcVTjeXPaIUA33BYNVBm
-         Ii1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHVpJxOMfK7mveXLl3FhpzeuFTsNLlFWYeJEviZdEpFu/ApPO4fOQGc5zZl1bMWl4OshBijFvUws8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypN27xSPV0mK9zXcn8rw2a7WnRH6R8d41dXEN/bJLFKHO5P9AD
-	0vAIWeY+BJpfnQohrCGJe5fIm4Boi6TeIi9R2TSMSccAznXet5lBTAgsWMlnotRNHBUzxJyl7GJ
-	po/ZH1fF3lizM6sKJDUVNYdjjgaR9Yz5qeJyle4i7aCYXILmz2ZzBzPaUoQ==
-X-Received: by 2002:a05:622a:4c6:b0:460:927e:c245 with SMTP id d75a77b69052e-460aee14cfbmr30643871cf.4.1729248740430;
-        Fri, 18 Oct 2024 03:52:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEItGrt1ABtCJZWw3PgN20DLJ0r2+a0t2Y2RjfBNB5gtKNiYltQvcJbpnnnEkYFE0v3Vlk5hw==
-X-Received: by 2002:a05:622a:4c6:b0:460:927e:c245 with SMTP id d75a77b69052e-460aee14cfbmr30643441cf.4.1729248740071;
-        Fri, 18 Oct 2024 03:52:20 -0700 (PDT)
-Received: from dhcp-64-16.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-460ae971993sm6164351cf.38.2024.10.18.03.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 03:52:19 -0700 (PDT)
-Message-ID: <0cf0ffed63a8645c49f043877c526b2ab0abf96e.camel@redhat.com>
-Subject: Re: [PATCH v8 2/6] PCI: Deprecate pcim_iounmap_regions()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix
- <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
- <yilun.xu@intel.com>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard
- Cochran <richardcochran@gmail.com>, Damien Le Moal <dlemoal@kernel.org>,
- Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>,  Al
- Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
- linux-block@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-fpga@vger.kernel.org,  linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Date: Fri, 18 Oct 2024 12:52:15 +0200
-In-Reply-To: <Zw-XkFcaXjlF5az0@smile.fi.intel.com>
-References: <20241016094911.24818-2-pstanner@redhat.com>
-	 <20241016094911.24818-4-pstanner@redhat.com>
-	 <Zw-XkFcaXjlF5az0@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1729251123; c=relaxed/simple;
+	bh=8ems0K1QyHygi1SqtXgmSrGquVuuN6HMjhVTmKZFanY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nN3kpJZEN33AqIZaoXmPOS9L2EkA1WIqOZ3qoJEsVi58POeKdpJA7bZ/wW/R0lz7oMvH2Aotj0SekqhybFj0DE7DjtL1CJzpjAqEdIbSlqkJF5qipWDFcLDaFGmOJbYoUWncUk1yz+dZjLP5YrCA5Euxa164FJLEnZRvANugDRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=NszY1Dst; arc=none smtp.client-ip=173.37.142.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=926; q=dns/txt; s=iport;
+  t=1729251121; x=1730460721;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3DA0NWcgl24vVYnTdhXW/PVgT6zdj6KdLX9kyr/pEYA=;
+  b=NszY1DstJecfkuB5U49ltA9HR+58ifXCYMUVe98hg5PQ57O5G2uTJfWp
+   ZnwUfL2flUCmp7bxW61sIQkdV4yGfoyvBTxTVnOo22IGzIa7UaL8FphjG
+   MLpXDC8vaBp09zANANv4SwE7+ahuxclF/McBdzE9tINNl87lcuAV9yPV/
+   I=;
+X-CSE-ConnectionGUID: rgs88DQdSViD62vmV7vgqg==
+X-CSE-MsgGUID: v9Bi5zXRQ1yrQEL6Ecj8aQ==
+X-IPAS-Result: =?us-ascii?q?A0AZAACDRhJngY0QJK1aHAEBAQEBAQcBARIBAQQEAQGBe?=
+ =?us-ascii?q?wcBAQsBhBlDSIxylUaSIoElA1YPAQEBD0QEAQGFB4olAiY0CQ4BAgQBAQEBA?=
+ =?us-ascii?q?wIDAQEBAQEBAQEBDQEBBQEBAQIBBwUUAQE9BQ47hgiGXSsLAUYpYzEBEoMBg?=
+ =?us-ascii?q?mUDr0CBeTOBAd4zgWwYgTABjUWFZycbgUlEglCBPm+ECoZ9BIdojC2CE1cPg?=
+ =?us-ascii?q?laEC4likT9IgSEDWSECEQFVEw0KCwkFiTWDAAUhBCWBa4EIFoJygkwCgleBZ?=
+ =?us-ascii?q?wlhhDqCO3BigQctgRGBHzpHgTyBNi8bIQtegUOBMAYVBIEbgQaCT2pONwINA?=
+ =?us-ascii?q?jeCJCRcglGGBUADCxgNSBEsNQYOGwY+bgesUUaCXHsTyRWEJKE/GjOqSwGYd?=
+ =?us-ascii?q?yKkGIRmgWc6gVtwFYMiUhkPjlmTAAG3fUYyOwIHCwEBAwmMHoF9AQE?=
+IronPort-Data: A9a23:wOoGAaw90NN0lwCqKK96t+fMxirEfRIJ4+MujC+fZmUNrF6WrkVVm
+ 2YcXmvUM/bcZDT2fNt/aYm08xwHvpfUz9ZhTwI+/FhgHilAwSbn6Xt1DatR0we6dJCroJdPt
+ p1GAjX4BJlpCCKa/FH1a+iJQUBUjcmgXqD7BPPPJhd/TAplTDZJoR94kobVuKYw6TSCK13L4
+ IqaT/H3Ygf/h2csazJMt8pvlTs21BjMkGJA1rABTagjUG/2zxE9EJ8ZLKetGHr0KqE8NvK6X
+ evK0Iai9Wrf+Ro3Yvv9+losWhRXKlJ6FVHmZkt+A8BOsDAbzsAB+vpT2M4nVKtio27hc+adZ
+ zl6ncfYpQ8BZsUgkQmGOvVSO3kW0aZuoNcrLZUj2CCe5xWuTpfi/xlhJFs5Jt1I1t97Ol9P2
+ aJCNjUzMQ6Mnu3jldpXSsE07igiBMDvOIVavjRryivUSK56B5vCWK7No9Rf2V/chOgXQq2YP
+ JRfMGQpNUiZC/FMEg9/5JYWlvihmWPtYjtwo1OOrq1x6G/WpOB0+OOzYIWOJ4DVG625mG6G9
+ 0jHonbJOChDJcam5B7b33mu1ub2yHaTtIU6T+DgqaUw3zV/3Fc7Ah0bUVSyqOKRhUm5VNZSb
+ UcT/0IGqbAz+VaiStjmXjW7rWSCsxpaXMBfe8Ug7wuN4qnZ+QCUAi4DVDEpQNkvss4oTDos3
+ 1nPhNrlBTV0saOcTFqZ97GdtzT0PjIaRUcBegcATA0Y85/op4RbphbOSMtzVa24lNv4HRnuz
+ D2Q6isznbMeiYgMzarT1VTGhS+844DCTyYr6QjNGGGo9AV0YMiifYPA1LTAxf9EKIDcShyKu
+ 2IJ3pDCqusPFpqK0ieKRY3hAY1F+d6fPyaM0XJWE6If9hjzoWCmQ99O7yhxcRIB3tk/RRflZ
+ 0rauAV07ZBVPWe3YaIfX25XI5p3pUQHPYq5Ps04fuZzjo5NmBhrFRyChHJ8PUi2wCDAcolmZ
+ f93lPpA615BVMyLKxLsF48gPUcDnHxW+I8qbcmTI+6b+bSffmWJbrwOLUGDaOs0hIvd/1+Eq
+ ocHb5PUlUQEOAEbXsUx2dNDRbztBSVqba0aV+QNL4Zv3yI/Qjh4UK6LqV/fU9M9xf8L/gs3w
+ p1NchQFkAWk3yKvxfSiYXF4Y7SnRodksX8+JmQtO13us0XPkq7xhJrzg6AfJOF9nMQ6lKYcZ
+ 6BcJ6297gFnEGWvF8I1N8il9NQKmdXCrV7mAhdJlxBvIc8xHlOYqo6Mk8mG3HBmMxdbfPAW+
+ 9WIvj43i7JaL+i+JK46sM6S8m4=
+IronPort-HdrOrdr: A9a23:aCspAKH/qu+NZ1GppLqE6ceALOsnbusQ8zAXPo5KJiC9Ffbo8v
+ xG88576faZslsssRIb6LK90de7IU80nKQdieJ6AV7IZmfbUQWTQL2KxLGSpwEIYxeOldK0Ec
+ xbAs5D4BqaNykcsfrH
+X-Talos-CUID: =?us-ascii?q?9a23=3AL3nCgGpZlgi4fe5Lv0is/YDmUdoqaS2N4E7cGHG?=
+ =?us-ascii?q?5JTgzVrirFkGf4awxxg=3D=3D?=
+X-Talos-MUID: =?us-ascii?q?9a23=3AY2w6gA8qFmdmBrH3cm1CtdSQf9k5yaXzGnA3qMw?=
+ =?us-ascii?q?XofCpEXJdMDXNhQ3iFw=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.11,213,1725321600"; 
+   d="scan'208";a="368735476"
+Received: from alln-l-core-04.cisco.com ([173.36.16.141])
+  by alln-iport-1.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 18 Oct 2024 11:30:53 +0000
+Received: from sjc-ads-7158.cisco.com (sjc-ads-7158.cisco.com [10.30.217.233])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by alln-l-core-04.cisco.com (Postfix) with ESMTPS id 60B26180001B2;
+	Fri, 18 Oct 2024 11:30:50 +0000 (GMT)
+Received: by sjc-ads-7158.cisco.com (Postfix, from userid 1776881)
+	id D3019CC1280; Fri, 18 Oct 2024 04:30:49 -0700 (PDT)
+From: Bartosz Wawrzyniak <bwawrzyn@cisco.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: xe-linux-external@cisco.com,
+	Daniel Walker <danielwa@cisco.com>,
+	Bartosz Stania <sbartosz@cisco.com>,
+	Bartosz Wawrzyniak <bwawrzyn@cisco.com>
+Subject: [PATCH] PCI: cadence: Lower severity of message when phy-names property is absent in DTS
+Date: Fri, 18 Oct 2024 11:30:43 +0000
+Message-Id: <20241018113045.2050295-1-bwawrzyn@cisco.com>
+X-Mailer: git-send-email 2.28.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.30.217.233, sjc-ads-7158.cisco.com
+X-Outbound-Node: alln-l-core-04.cisco.com
 
-On Wed, 2024-10-16 at 13:38 +0300, Andy Shevchenko wrote:
-> On Wed, Oct 16, 2024 at 11:49:05AM +0200, Philipp Stanner wrote:
-> > pcim_ionumap_region() has recently been made a public function and
-> > does
-> > not have the disadvantage of having to deal with the legacy iomap
-> > table,
-> > as pcim_iounmap_regions() does.
-> >=20
-> > Deprecate pcim_iounmap_regions().
->=20
-> ...
->=20
-> > + * This function is DEPRECATED. Do not use it in new code.
->=20
-> Interestingly that the syntax of the DEPRECATED is not documented
-> (yet?),
-> however the sphinx parser hints us about **DEPRECATED** format =E2=80=94 =
-see
-> Documentation/sphinx/parse-headers.pl:251. In any case the above
-> seems
-> like second used (in a form of the full sentence) and will be updated
-> in accordance with the above mentioned script.
+The phy-names property is optional, so the message indicating its absence
+during the probe should be of 'info' severity rather than 'error' severity.
 
-Can't completely follow =E2=80=93 so one should always write "**DEPRECATED*=
-*",
-correct?
+Signed-off-by: Bartosz Wawrzyniak <bwawrzyn@cisco.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is that a blocker for you?
-
-All the docstrings in pci/pci.c and pci/devres.c so far just use
-"DEPRECATED".
-
-
-P.
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 4251fac5e310..88122d480432 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -197,7 +197,7 @@ int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie)
+ 
+ 	phy_count = of_property_count_strings(np, "phy-names");
+ 	if (phy_count < 1) {
+-		dev_err(dev, "no phy-names.  PHY will not be initialized\n");
++		dev_info(dev, "no phy-names.  PHY will not be initialized\n");
+ 		pcie->phy_count = 0;
+ 		return 0;
+ 	}
+-- 
+2.28.0
 
 
