@@ -1,82 +1,52 @@
-Return-Path: <linux-pci+bounces-14883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB9AB9A48B7
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 23:10:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B21949A499A
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Oct 2024 00:22:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9517F1F219FD
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 21:10:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 299E2B23563
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 22:22:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82BA818E35F;
-	Fri, 18 Oct 2024 21:10:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D61020E33E;
+	Fri, 18 Oct 2024 22:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCC/aZR8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWfS7fxM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C909F18E341;
-	Fri, 18 Oct 2024 21:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34446190462
+	for <linux-pci@vger.kernel.org>; Fri, 18 Oct 2024 22:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729285811; cv=none; b=XZ7B3s2F82906VDpAUmizgkNSbfNUhvPPpRmgQ+aI/dFzqWKPjy90bFeGgvJc47ZF6sV8//qVatXB9Nl7sli6afoqVVWx1SLCbPVm88JU59I4L8Z3VksNLGtWYp1Do15ofG4PRgWP64EwywLe+0h3HECkXHDjsEeN9kutJVyA2M=
+	t=1729290135; cv=none; b=Om77iCvLqT6+e4Aa3wdgVUvfriwWv5eAvMkozuqbfIAQi+o5mfG7raOAdQFEgHFnsa+XI3tXc2ZCiWVU4HHL6gApxxt9fw3Ws4GnO97gUJlYGLozgjCEsXi1Yh7dS/2ScbgwwbDNjr4LUQlZhPLWD4fmYO2rkzxFvTX+UPaW5H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729285811; c=relaxed/simple;
-	bh=hQ0DG6/Eb3j0prKHYX364xskTLEd+9vKpIg1xcOPcDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxxOBegOZrX3Dfm9/r/tfspMHt2SJNwdCgDvIwFEoOhgXXqbBXrqpY7hmhp5kAenC/djxkZ4wiOzPti2U/Rt06Fg6xPI14dfyhVbH8iyu+TlXYCotDbIVqldYCH0SNvrKG/pawp8F8uLPiDi2PfvtxmzEyinmNzyP41xVgbbBSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCC/aZR8; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729285809; x=1760821809;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hQ0DG6/Eb3j0prKHYX364xskTLEd+9vKpIg1xcOPcDw=;
-  b=GCC/aZR8vwcft9DKreLN/fmFJWkpkZJFH67WpSDHNksW/CR04ZaKyeWL
-   XtoZtoCtFYtmcegKvkavN+KJGVxCjzqAhdXbd+IOOezcGUxYRgKG+kMbb
-   xQAYv8nfmcqKBuL0PvyKpfNP6vX9UeHUun1IeLr+j7jsejyAHejBEg/tT
-   s16Q+FTgxKC0wfRkNfHwQWmF7NPSlPljsyZ789mZrfGKSamDYzSLkMm8y
-   KtP6Yza+q5j5uz+ift8Tp9tKB45O2JaoAIcvYkYlpHFTGrcFA2Cp6MUp4
-   QCHIHtEr9tqwvVvFf4T9CQFxMMesDXYZZQ5B3/anHpvfvyAoXOs6vFg0M
-   Q==;
-X-CSE-ConnectionGUID: V2vtrIvqQPKeQ+r6dTJnFg==
-X-CSE-MsgGUID: Zp44uaT9Rnizfp3w3Th97w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28993129"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="28993129"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 14:10:08 -0700
-X-CSE-ConnectionGUID: dr8iIfhTSkuHbpup6ssh2A==
-X-CSE-MsgGUID: zkUFIu82SCqVszaErv+rJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
-   d="scan'208";a="78938262"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 18 Oct 2024 14:10:02 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t1uES-000OJS-0e;
-	Fri, 18 Oct 2024 21:10:00 +0000
-Date: Sat, 19 Oct 2024 05:09:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wei Fang <wei.fang@nxp.com>, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, vladimir.oltean@nxp.com,
-	claudiu.manoil@nxp.com, xiaoning.wang@nxp.com, Frank.Li@nxp.com,
-	christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
-	bhelgaas@google.com, horms@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, imx@lists.linux.dev,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 06/13] net: enetc: build enetc_pf_common.c as
- a separate module
-Message-ID: <202410190431.wiCDZy8G-lkp@intel.com>
-References: <20241017074637.1265584-7-wei.fang@nxp.com>
+	s=arc-20240116; t=1729290135; c=relaxed/simple;
+	bh=rF3sr5UzZo2UZMyl1sbe0OwC1Jf5UtqZHirAXPaIgms=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gEom7BOuCjPFMchsX4uB18rIq1ajdX/7fijxYV9P/dJYpPmkG+Xh+oEw0Dq+F4iVjs/XqjMCWzDv5OZAfQNFRMbjlQ37MUFxSpp0E8pq8yWH7QHF5rtxTkV7w72QANLB10GmJSZrBu7KK/XkZd1SW91Zk+hJyS75xtIPaLCM8ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWfS7fxM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D156C4CEC3;
+	Fri, 18 Oct 2024 22:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729290134;
+	bh=rF3sr5UzZo2UZMyl1sbe0OwC1Jf5UtqZHirAXPaIgms=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=WWfS7fxMx5yBwrncFzIkoKN+PnuWw37dGKQ7s3SCR1VcKPbJIdloRkaduPb1Nfb1K
+	 cmFrZ9CYVo/kPCLk5MoEctodwIgOie0Mlty0fK0vwhLysnXOA091Rwuo9Fi0Pg/re9
+	 CImGVIlX5lUhGb3joIswrd55ALUBPJDIkM9NkOn2tSbEvl+jlAli80eqRfLonBca4Q
+	 NeMAasaYkhCGl5J05bCXh/4m3nlNDYLOPQQPyhb+YYwJl3ij+iaVN2yW1rc2jNkyl2
+	 2JfwT2cSw10g6gMc5BnVwUfDpburQYq6/6yo6d2Vp+Plg/WMdzyj4EP/PbEBB4GyAq
+	 I4f9244QGKrdg==
+Date: Fri, 18 Oct 2024 17:22:13 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: optimize proc sequential file read
+Message-ID: <20241018222213.GA764583@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,36 +55,209 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241017074637.1265584-7-wei.fang@nxp.com>
+In-Reply-To: <20241018054728.116519-1-kanie@linux.alibaba.com>
 
-Hi Wei,
+On Fri, Oct 18, 2024 at 01:47:28PM +0800, Guixin Liu wrote:
+> PCI driver will traverse pci device list in pci_seq_start in every
+> sequential file reading, use xarry to store all pci devices to
+> accelerate finding the start.
+>
+> Use "time cat /proc/bus/pci/devices" to test on a machine with 13k
+> pci devices,  get an increase of about 90%.
 
-kernel test robot noticed the following build errors:
+s/pci/PCI/ (several times)
+s/pci_seq_start/pci_seq_start()/
+s/xarry/xarray/
+s/,  /, / (remove extra space)
 
-[auto build test ERROR on net-next/main]
+> Without this patch:
+>   real 0m0.917s
+>   user 0m0.000s
+>   sys  0m0.913s
+> With this patch:
+>   real 0m0.093s
+>   user 0m0.000s
+>   sys  0m0.093s
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Fang/dt-bindings-net-add-compatible-string-for-i-MX95-EMDIO/20241017-160848
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20241017074637.1265584-7-wei.fang%40nxp.com
-patch subject: [PATCH v3 net-next 06/13] net: enetc: build enetc_pf_common.c as a separate module
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20241019/202410190431.wiCDZy8G-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241019/202410190431.wiCDZy8G-lkp@intel.com/reproduce)
+Nice speedup, for sure!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410190431.wiCDZy8G-lkp@intel.com/
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> ---
+>  drivers/pci/pci.h    |  3 +++
+>  drivers/pci/probe.c  |  1 +
+>  drivers/pci/proc.c   | 64 +++++++++++++++++++++++++++++++++++++++-----
+>  drivers/pci/remove.c |  1 +
+>  include/linux/pci.h  |  2 ++
+>  5 files changed, 64 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 14d00ce45bfa..1a7da91eeb80 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -962,4 +962,7 @@ void pcim_release_region(struct pci_dev *pdev, int bar);
+>  	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
+>  	 PCI_CONF1_EXT_REG(reg))
+>  
+> +void pci_seq_tree_add_dev(struct pci_dev *dev);
+> +void pci_seq_tree_remove_dev(struct pci_dev *dev);
+> +
+>  #endif /* DRIVERS_PCI_H */
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4f68414c3086..1fd9e9022f70 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2592,6 +2592,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	WARN_ON(ret < 0);
+>  
+>  	pci_npem_create(dev);
+> +	pci_seq_tree_add_dev(dev);
+>  }
+>  
+>  struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
+> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+> index f967709082d6..30ca071ccad5 100644
+> --- a/drivers/pci/proc.c
+> +++ b/drivers/pci/proc.c
+> @@ -19,6 +19,9 @@
+>  
+>  static int proc_initialized;	/* = 0 */
+>  
+> +DEFINE_XARRAY_FLAGS(pci_seq_tree, 0);
+> +static unsigned long pci_max_idx;
+> +
+>  static loff_t proc_bus_pci_lseek(struct file *file, loff_t off, int whence)
+>  {
+>  	struct pci_dev *dev = pde_data(file_inode(file));
+> @@ -334,25 +337,72 @@ static const struct proc_ops proc_bus_pci_ops = {
+>  #endif /* HAVE_PCI_MMAP */
+>  };
+>  
+> +void pci_seq_tree_add_dev(struct pci_dev *dev)
+> +{
+> +	int ret;
+> +
+> +	if (dev) {
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+I don't think we should test "dev" for NULL here.  If it's NULL, I
+think we have bigger problems and we should oops.
 
-ERROR: modpost: "__delay" [drivers/net/mdio/mdio-cavium.ko] undefined!
->> ERROR: modpost: "enetc_set_ethtool_ops" [drivers/net/ethernet/freescale/enetc/nxp-enetc-pf-common.ko] undefined!
-ERROR: modpost: "devm_of_clk_add_hw_provider" [drivers/media/i2c/tc358746.ko] undefined!
-ERROR: modpost: "devm_clk_hw_register" [drivers/media/i2c/tc358746.ko] undefined!
-ERROR: modpost: "of_clk_hw_simple_get" [drivers/media/i2c/tc358746.ko] undefined!
+> +		xa_lock(&pci_seq_tree);
+> +		pci_dev_get(dev);
+> +		ret = __xa_insert(&pci_seq_tree, pci_max_idx, dev, GFP_KERNEL);
+> +		if (!ret) {
+> +			dev->proc_seq_idx = pci_max_idx;
+> +			pci_max_idx++;
+> +		} else {
+> +			pci_dev_put(dev);
+> +			WARN_ON(ret);
+> +		}
+> +		xa_unlock(&pci_seq_tree);
+> +	}
+> +}
+> +
+> +void pci_seq_tree_remove_dev(struct pci_dev *dev)
+> +{
+> +	unsigned long idx = dev->proc_seq_idx;
+> +	struct pci_dev *latest_dev = NULL;
+> +	struct pci_dev *ret;
+> +
+> +	if (!dev)
+> +		return;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Same comment about testing "dev" for NULL.
+
+> +	xa_lock(&pci_seq_tree);
+> +	__xa_erase(&pci_seq_tree, idx);
+> +	pci_dev_put(dev);
+> +	/*
+> +	 * Move the latest pci_dev to this idx to keep the continuity.
+> +	 */
+> +	if (idx != pci_max_idx - 1) {
+> +		latest_dev = __xa_erase(&pci_seq_tree, pci_max_idx - 1);
+> +		ret = __xa_cmpxchg(&pci_seq_tree, idx, NULL, latest_dev,
+> +				GFP_KERNEL);
+> +		if (!ret)
+> +			latest_dev->proc_seq_idx = idx;
+> +		WARN_ON(ret);
+> +	}
+> +	pci_max_idx--;
+> +	xa_unlock(&pci_seq_tree);
+> +}
+> +
+>  /* iterator */
+>  static void *pci_seq_start(struct seq_file *m, loff_t *pos)
+>  {
+> -	struct pci_dev *dev = NULL;
+> +	struct pci_dev *dev;
+>  	loff_t n = *pos;
+>  
+> -	for_each_pci_dev(dev) {
+> -		if (!n--)
+> -			break;
+> -	}
+> +	dev = xa_load(&pci_seq_tree, n);
+> +	if (dev)
+> +		pci_dev_get(dev);
+>  	return dev;
+
+I'm a little hesitant to add another place that keeps track of every
+PCI device.  It's a fair bit of code here, and it's redundant
+information, which means more work to keep them all synchronized.
+
+This proc interface feels inherently racy.  We keep track of the
+current item (n) in a struct seq_file, but I don't think there's
+anything to prevent a pci_dev hot-add or -remove between calls to
+pci_seq_start().
+
+Is the proc interface the only place to get this information?  If
+there's a way to get it from sysfs, maybe that is better and we don't
+need to spend effort optimizing the less-desirable path?
+
+>  }
+>  
+>  static void *pci_seq_next(struct seq_file *m, void *v, loff_t *pos)
+>  {
+> -	struct pci_dev *dev = v;
+> +	struct pci_dev *dev;
+>  
+>  	(*pos)++;
+> -	dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, dev);
+> +	dev = xa_load(&pci_seq_tree, *pos);
+> +	if (dev)
+> +		pci_dev_get(dev);
+
+Where is the pci_dev_put() that corresponds with this new
+pci_dev_get()?
+
+>  	return dev;
+>  }
+>  
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index e4ce1145aa3e..257ea46233a3 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -53,6 +53,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
+>  	pci_npem_remove(dev);
+>  
+>  	device_del(&dev->dev);
+> +	pci_seq_tree_remove_dev(dev);
+>  
+>  	down_write(&pci_bus_sem);
+>  	list_del(&dev->bus_list);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 573b4c4c2be6..aeb3d4cce06a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -534,6 +534,8 @@ struct pci_dev {
+>  
+>  	/* These methods index pci_reset_fn_methods[] */
+>  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+> +
+> +	unsigned long long	proc_seq_idx;
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> -- 
+> 2.43.0
+> 
 
