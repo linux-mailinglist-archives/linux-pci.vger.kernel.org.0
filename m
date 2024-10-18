@@ -1,63 +1,68 @@
-Return-Path: <linux-pci+bounces-14859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FA189A40A8
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 16:06:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEEC69A40AC
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 16:06:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 552AD1C258DF
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 14:06:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFE9A281115
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 14:06:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E913413D52B;
-	Fri, 18 Oct 2024 14:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D1B1DFD9B;
+	Fri, 18 Oct 2024 14:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQE3CuTR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uem0mUIV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B217955887;
-	Fri, 18 Oct 2024 14:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9471D9A41;
+	Fri, 18 Oct 2024 14:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729260387; cv=none; b=h17AK5afz98lfyAXXP4UpdmZt5BrJDFo3v0fBXVkBNS+ldNzwGSotTai5tV4haO94buCgbG2gOwVVTHUHAo/dWCDsu1M4RmtZN5oH783VNeJA7RWxgo+ZwgpXjeraPmT2Y8UuY4Xcq1Db6ZA9wgS3xmXm9h+Kn7x+X6cfpZQuNo=
+	t=1729260389; cv=none; b=AIMMNWsDFsP9f+YitjnF7c+rWbO0kuB1jnqFdfxJ+YM0hk9TdBN3dzcsoC1lWAhr4UmbHn8CZmGynn0yZRlPWzOMtHdgKvr3Gyx3k+gYwRhYYbUXlwnBZl3k3sO973H0267gpnfNEPr1sjTRgkTcbKE6kFojo2hpiOCJISKbmSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729260387; c=relaxed/simple;
-	bh=6qedp/1cR/o1KSVjTalt5dmCuTmnV7v54Ah+iXoIESg=;
+	s=arc-20240116; t=1729260389; c=relaxed/simple;
+	bh=Mj/iyexBxfRCuYiXVkHqPW+rtTdpj3ONOaTfeF67GFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nz533p05mh4QOlOFe3b8tC+lks1x4ZaNqF7DTDJFY+zWIM8ysiB/aQeshisz9QsCXIBMEHeVQhO2FuVFPsTB5/TiEk1plQo0C1Pf35xfuI3ScD6yQ5pI1QgO8lcx4kSZjIuKWnMCy6nTsuFCW09xhQ829i5P9EKOxBcE2HsALH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQE3CuTR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 446DEC4CEC7;
-	Fri, 18 Oct 2024 14:06:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=IYa8CDIa28KJ2Vp2FRAyh53ORE7hhj/uem5+Tevi5ah4Eh+pAzvM+5ScaFRchwoT4LWZ0HTyLPOJOEudjgUsVvlnj0GdxICOeMMVTRrpE3JnkIm4mT+dnDAXQ3T/bzrH4lxlPaXkz0xGGuJYOXd8+fYz/30FUH3vP5qzIGQpqkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uem0mUIV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A22C4CED8;
+	Fri, 18 Oct 2024 14:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729260387;
-	bh=6qedp/1cR/o1KSVjTalt5dmCuTmnV7v54Ah+iXoIESg=;
+	s=k20201202; t=1729260388;
+	bh=Mj/iyexBxfRCuYiXVkHqPW+rtTdpj3ONOaTfeF67GFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XQE3CuTRCoeagkP5b7EARaM6++2uNat4xsbjHrVnADwEl3AMieOVNbxZJOKTepdQU
-	 3HxKm8c0edTAuieETAraX202dX3N2qUXTMl2VZRDosOzQNp+RHQI1Z6w4BQESGRQQa
-	 P0pAfUych7wxs2DFWs2O9Qm3dwgWeGLMKbpcWS/AnwHY6K6iQCRgoUa/ZKKSkhWzCF
-	 zOtOdCzJqpVCZoSNasPO1q7wWFUrOf2R9BsnnGBeA+yopDzKrjDdq/petRwLWhLIbJ
-	 yqBg5Cr0JGU5+oiMtkpzQuRY2Q0A810cPD8CghmzlaZ+Cr1hDpb2WK3Vrc4F/GZcY/
-	 18eu0nD20gUkw==
-Date: Fri, 18 Oct 2024 16:05:43 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	b=Uem0mUIV9hqy8k5GJ0b1jautXF5iivKVCytpLXjKVdhgdRubFgE9dzSnTDs1EqrPO
+	 GFxkDurBDxlLefU2zdEuklxFegbnjyUgb8KUUt6asrNZgZZ2MKr+WQ9xG2G5lDY7cs
+	 KeV/c+8V9/tajfRmQuBg9jTekO/WX774JKiH9E8UUO/MDzRzEg7t1EJTBFxhSxks+z
+	 rOCEOcm8msrF9nt5XrnOwB4Tl0ooAeDHoTWI8ZpTydWGGSJj/2Aki8cAfrXPRGcbY3
+	 aOsKMF+1a+m6BDNrmPaHxt+xy7zKrcG9jRSH9+U+3WWi9UMkpGNrOy6ts+ljVVqF0M
+	 vuQatNbbK1fKQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1t1ncI-000000007Hw-00MJ;
+	Fri, 18 Oct 2024 16:06:10 +0200
+Date: Fri, 18 Oct 2024 16:06:09 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: manivannan.sadhasivam@linaro.org, vkoul@kernel.org, kishon@kernel.org,
+	robh@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, abel.vesa@linaro.org, quic_msarkar@quicinc.com,
+	quic_devipriy@quicinc.com, dmitry.baryshkov@linaro.org,
+	kw@linux.com, lpieralisi@kernel.org, neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
-	tglx@linutronix.de, jdmason@kudzu.us
-Subject: Re: [PATCH v3 4/6] PCI: endpoint: pci-epf-test: Add doorbell test
- support
-Message-ID: <ZxJrNwxEvXHx7QCn@ryzen.lan>
-References: <20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com>
- <20241015-ep-msi-v3-4-cedc89a16c1a@nxp.com>
- <ZxJqITunljv0PGxn@ryzen.lan>
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+	johan+linaro@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v7 6/7] PCI: qcom: Disable ASPM L0s and remove BDF2SID
+ mapping config for X1E80100 SoC
+Message-ID: <ZxJrUQDGMDw3wI3Q@hovoldconsulting.com>
+References: <20241017030412.265000-1-quic_qianyu@quicinc.com>
+ <20241017030412.265000-7-quic_qianyu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,41 +71,36 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZxJqITunljv0PGxn@ryzen.lan>
+In-Reply-To: <20241017030412.265000-7-quic_qianyu@quicinc.com>
 
-On Fri, Oct 18, 2024 at 04:01:05PM +0200, Niklas Cassel wrote:
-> @@ -741,6 +756,32 @@ static void pci_epf_test_clear_bar(struct pci_epf *epf)
->  	}
->  }
->  
-> +static void pci_epf_test_init_caps(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	const struct pci_epc_features *epc_features = epf_test->epc_features;
-> +	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> +	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	u32 caps = 0;
-> +
-> +	reg->caps_magic = cpu_to_le32(CAPS_MAGIC);
-> +	reg->caps_version = cpu_to_le32(CAPS_VERSION);
-> +
-> +	if (epc_features->msi_capable)
-> +		caps |= CAPS_MSI_SUPPORT;
-> +
-> +	if (epc_features->msix_capable)
-> +		caps |= CAPS_MSIX_SUPPORT;
-> +
-> +	if (epf_test->dma_supported)
-> +		caps |= CAPS_DMA_SUPPORT;
-> +
-> +	if (epf_test->dma_private)
-> +		caps |= CAPS_DMA_IS_PRIVATE;
-> +
-> +	reg->caps = cpu_to_le64(caps);
+Please use a more concise subject (e.g. try to stay within 72 chars)
+than:
 
-opps, this should have been cpu_to_le32(caps);
+	PCI: qcom: Disable ASPM L0s and remove BDF2SID mapping config for X1E80100 SoC
 
+Here you could drop "SoC", maybe "ASPM" and "config" for example.
 
-Kind regards,
-Niklas
+On Wed, Oct 16, 2024 at 08:04:11PM -0700, Qiang Yu wrote:
+> Currently, the cfg_1_9_0 which is being used for X1E80100 has config_sid
+> callback in its ops and doesn't disable ASPM L0s. However, as same as
+> SC8280X, PCIe controllers on X1E80100 are connected to SMMUv3, hence don't
+> need config_sid() callback and hardware team has recommended to disable
+> L0s as it is broken in the controller. Hence reuse cfg_sc8280xp for
+> X1E80100.
+
+Since the x1e80100 dtsi, like sc8280xp, do not specify an iommu-map,
+that bit is effectively just a cleanup and all this patch does is to
+disable L0s.
+
+Please rephrase to make this clear. This will also allow you to make the
+Subject even shorter (no need to mention the SID bit in Subject).
+
+Also say something about how L0s is broken so that it is more clear what
+the effect of this patch is. On sc8280xp enabling L0s lead to
+correctable errors for example.
+
+> Fixes: 6d0c39324c5f ("PCI: qcom: Add X1E80100 PCIe support")
+> Cc: stable@vger.kernel.org
+
+Johan
 
