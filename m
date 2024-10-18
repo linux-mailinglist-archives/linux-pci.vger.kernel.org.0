@@ -1,227 +1,190 @@
-Return-Path: <linux-pci+bounces-14844-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14845-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D3B89A3482
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 07:49:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B6049A362A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 08:53:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEDFF284386
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 05:49:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2740A1F25034
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 06:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECCB18990E;
-	Fri, 18 Oct 2024 05:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E45C17C21B;
+	Fri, 18 Oct 2024 06:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i8RDq8sV"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="WbUjGBPN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="dDDvIocM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF42184539
-	for <linux-pci@vger.kernel.org>; Fri, 18 Oct 2024 05:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85FB175D5F;
+	Fri, 18 Oct 2024 06:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729230467; cv=none; b=KnAXLzMsCBk2tmjJ4AvfQG+gSQhOvSiHOpXGL414VB8cnn5gTX6XFW9oSPjpVDbadxsLdEv8CQLNGJKoZC+3bIkrSo1SumR8wifGZAkdjzrbWdf6nSu1PWJS1qEnxBrVFbroKYv0otlOtk3EZUhZzKkCczo0ZKGUYJR8TCmAhY0=
+	t=1729234389; cv=none; b=ScuHE5uvHG1y6n1Qsk5jIjpqaQoD/mGKzi1Tf7rQaK4bEWeqeedNwOaMVESx3RuRqbTm1DjH1uODKWsYOg5ACdFVmnvSmcdz9GWZyENadiL55i+rRePDDmA+d/k6+2f4Gp5z5UOZ0GoJGNmkvJLuylLzFhTGkbrnZEdffo7RFvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729230467; c=relaxed/simple;
-	bh=0dSvMewFPD9jOFYK3y5c70FiHD94zbH2XswbYaVb5TU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sFz47Nr6x4O1+Zd+PvdsuO6uSaEZcwpdfi/yqGrsK4SN2mUKbWkyuHtKvPV3Czwb9yjus7MBPQvFxGnyUeDpnrJ1eC+JXSz1ynqEH3e+OxR+eSqhRHQColYJXhduNkajP4oZ5nhNO1Y9xYoKEmV8jcpGzZ8XmIw8wLLozmInvLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i8RDq8sV; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1729230456; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=YCRRfn64TyhiJ9BbpETpfVNxQVYNYTBCVt2ml02eqxw=;
-	b=i8RDq8sVrtMQJI0uyafDpp4wibcv10uswbnZ2C9RUaObKUGpTlSSJkoRBmjrFk4zv9x0M7qgKJKG5MnikMFkaQ8cZcLdvs7z7kMXpe2H8Cm1d7Cpdz3zryfATMIOv19bQdDTc7x4/+CM8FvWsh+jz502MaZ69pyPIozFl5HrTfs=
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WHN31m-_1729230448 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 18 Oct 2024 13:47:35 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: optimize proc sequential file read
-Date: Fri, 18 Oct 2024 13:47:28 +0800
-Message-ID: <20241018054728.116519-1-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1729234389; c=relaxed/simple;
+	bh=dd79JXjqD2Inpu0DT31fpEk2eIY2MmSwqg8qI66yzgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HEEwUIda5b+0byuAjwS+ej8YLYQ7oANH6zMHv43So2s9zqx9VZTd+OxFYnSC1SThUQ1baVol8s1LyNg09flNCebio5oM8q46dkPrnvp4HP2W4kphFLZVVXGc9/10mY9/m8Qm0nV/UoLgsn2b+Amq9NWmO+YxfKpB8K6NSkW0PD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=WbUjGBPN; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=dDDvIocM reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1729234386; x=1760770386;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=AOulUfPRBlXnZ1KIBNZoiOR6DzCBisOIaMADQx53Pk8=;
+  b=WbUjGBPN6EY1UmqisPrmo2wQHdtWWLjMOmSd+kzOWx0y9JjVgku+7CaZ
+   SNDqWRnhkO0TpznFlAk3e3eg2NKJUUoFw/PleNOdHKOTu6A3ahaSm+HRX
+   98jH7tKNlS79/IxMfQneEM4C/+NKBuhRlAbfOAg3W+ZLFR11x/fFkctGu
+   q3c6RjlZ8M5pluzmcOwvo8mYt7h+HfGrQoKWRewLZpc5zGdPgyHKa9xmN
+   8HXOtuXCO+IwmE2G2x7eJEkJIaCUPm5ZRTIiqyobYHV6Xq1zloIqk2oYf
+   GlRhcLz/c+VsREWbhV1KoWWkPcaAHaubYKBYKm7hlT/ogNFWy2P/5ykXl
+   Q==;
+X-CSE-ConnectionGUID: R/jNJlE+S46o+UEHtedAiQ==
+X-CSE-MsgGUID: kAkKmz8cSJmj4GNr4Mj4qA==
+X-IronPort-AV: E=Sophos;i="6.11,212,1725314400"; 
+   d="scan'208";a="39533507"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 18 Oct 2024 08:53:03 +0200
+X-CheckPoint: {671205CF-B-69FF9A8E-EE9CEDAF}
+X-MAIL-CPID: B5F18021BCC74157624FFD4DB3589D2D_0
+X-Control-Analysis: str=0001.0A682F1B.671205CF.0082,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3588816A505;
+	Fri, 18 Oct 2024 08:52:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1729234378;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=AOulUfPRBlXnZ1KIBNZoiOR6DzCBisOIaMADQx53Pk8=;
+	b=dDDvIocMcwuq7gjz2SZ8X4aCFesIG/2l7z2zp0RNsE3xB87lvFsvG363AIiMYJJzmEAFex
+	l9Toa6J/9fwbyrZsIjz6hhD9ll1QCvrAKQcmonbRljTZ6gZTbqqkK8IQ0+rm7QYqqs3DIl
+	OjCOtN445vhYDrr3A1qMwE8nU84x7ISVMKI79KJFmBPIoMQikjFwXQQxs7KFtdr7k/PjET
+	T7ghFp32zR0NBuiLqqm7MCUpq1rROCOD8XXF0Us+DFNbwQpEx/6hll48p45Hq2vjh+gxyF
+	pE96m4L/HVFVrGSDrOqbIShZkWG23RWTOgWlNkK91HlNE084TQZmIhQWNCumEw==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Frank Li <frank.li@nxp.com>, Wei Fang <wei.fang@nxp.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "bhelgaas@google.com" <bhelgaas@google.com>, "horms@kernel.org" <horms@kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 net-next 02/13] dt-bindings: net: add i.MX95 ENETC support
+Date: Fri, 18 Oct 2024 08:52:55 +0200
+Message-ID: <3657116.R56niFO833@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <PAXPR04MB851058F40F264FA9D20F385888402@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20241017074637.1265584-1-wei.fang@nxp.com> <ZxE56eMyN791RsgK@lizhi-Precision-Tower-5810> <PAXPR04MB851058F40F264FA9D20F385888402@PAXPR04MB8510.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+X-Last-TLS-Session-Version: TLSv1.3
 
-PCI driver will traverse pci device list in pci_seq_start in every
-sequential file reading, use xarry to store all pci devices to
-accelerate finding the start.
+Hi,
 
-Use "time cat /proc/bus/pci/devices" to test on a machine with 13k
-pci devices,  get an increase of about 90%.
+Am Freitag, 18. Oktober 2024, 03:20:55 CEST schrieb Wei Fang:
+> > -----Original Message-----
+> > From: Frank Li <frank.li@nxp.com>
+> > Sent: 2024=E5=B9=B410=E6=9C=8818=E6=97=A5 0:23
+> > To: Wei Fang <wei.fang@nxp.com>
+> > Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> > pabeni@redhat.com; robh@kernel.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; Vladimir Oltean <vladimir.oltean@nxp.com>; Claudiu
+> > Manoil <claudiu.manoil@nxp.com>; Clark Wang <xiaoning.wang@nxp.com>;
+> > christophe.leroy@csgroup.eu; linux@armlinux.org.uk; bhelgaas@google.com;
+> > horms@kernel.org; imx@lists.linux.dev; netdev@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-pci@vger.kernel.org
+> > Subject: Re: [PATCH v3 net-next 02/13] dt-bindings: net: add i.MX95 ENE=
+TC
+> > support
+> >=20
+> > On Thu, Oct 17, 2024 at 03:46:26PM +0800, Wei Fang wrote:
+> > > The ENETC of i.MX95 has been upgraded to revision 4.1, and the vendor
+> > > ID and device ID have also changed, so add the new compatible strings
+> > > for i.MX95 ENETC. In addition, i.MX95 supports configuration of RGMII
+> > > or RMII reference clock.
+> > >
+> > > Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> > > ---
+> > > v2: Remove "nxp,imx95-enetc" compatible string.
+> > > v3:
+> > > 1. Add restriction to "clcoks" and "clock-names" properties and rename
+> > > the clock, also remove the items from these two properties.
+> > > 2. Remove unnecessary items for "pci1131,e101" compatible string.
+> > > ---
+> > >  .../devicetree/bindings/net/fsl,enetc.yaml    | 22 ++++++++++++++++-=
+=2D-
+> > >  1 file changed, 19 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > > b/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > > index e152c93998fe..e418c3e6e6b1 100644
+> > > --- a/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > > +++ b/Documentation/devicetree/bindings/net/fsl,enetc.yaml
+> > > @@ -20,10 +20,13 @@ maintainers:
+> > >
+> > >  properties:
+> > >    compatible:
+> > > -    items:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - pci1957,e100
+> > > +          - const: fsl,enetc
+> > >        - enum:
+> > > -          - pci1957,e100
+> > > -      - const: fsl,enetc
+> > > +          - pci1131,e101
+> > >
+> > >    reg:
+> > >      maxItems: 1
+> > > @@ -40,6 +43,19 @@ required:
+> > >  allOf:
+> > >    - $ref: /schemas/pci/pci-device.yaml
+> > >    - $ref: ethernet-controller.yaml
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - pci1131,e101
+> > > +    then:
+> > > +      properties:
+> > > +        clocks:
+> > > +          maxItems: 1
+> > > +          description: MAC transmit/receiver reference clock
+> > > +        clock-names:
+> > > +          const: ref
+> >=20
+> > Did you run CHECK_DTBS for your dts file? clocks\clock-names should be =
+under
+> > top 'properties" firstly. Then use 'if' restrict it. But I am not sure =
+for that. only
+> > dt_binding_check is not enough because your example have not use clocks=
+ and
+> > clok-names.
+> >=20
+>=20
+> I have run dtbs_check and dt_binding_check in my local env. there were no
+> warnings and errors.
 
-Without this patch:
-  real 0m0.917s
-  user 0m0.000s
-  sys  0m0.913s
-With this patch:
-  real 0m0.093s
-  user 0m0.000s
-  sys  0m0.093s
+Is there already the DT part somewhere? Do you mind sharing it?
 
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
----
- drivers/pci/pci.h    |  3 +++
- drivers/pci/probe.c  |  1 +
- drivers/pci/proc.c   | 64 +++++++++++++++++++++++++++++++++++++++-----
- drivers/pci/remove.c |  1 +
- include/linux/pci.h  |  2 ++
- 5 files changed, 64 insertions(+), 7 deletions(-)
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+http://www.tq-group.com/
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 14d00ce45bfa..1a7da91eeb80 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -962,4 +962,7 @@ void pcim_release_region(struct pci_dev *pdev, int bar);
- 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
- 	 PCI_CONF1_EXT_REG(reg))
- 
-+void pci_seq_tree_add_dev(struct pci_dev *dev);
-+void pci_seq_tree_remove_dev(struct pci_dev *dev);
-+
- #endif /* DRIVERS_PCI_H */
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4f68414c3086..1fd9e9022f70 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2592,6 +2592,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	WARN_ON(ret < 0);
- 
- 	pci_npem_create(dev);
-+	pci_seq_tree_add_dev(dev);
- }
- 
- struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index f967709082d6..30ca071ccad5 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -19,6 +19,9 @@
- 
- static int proc_initialized;	/* = 0 */
- 
-+DEFINE_XARRAY_FLAGS(pci_seq_tree, 0);
-+static unsigned long pci_max_idx;
-+
- static loff_t proc_bus_pci_lseek(struct file *file, loff_t off, int whence)
- {
- 	struct pci_dev *dev = pde_data(file_inode(file));
-@@ -334,25 +337,72 @@ static const struct proc_ops proc_bus_pci_ops = {
- #endif /* HAVE_PCI_MMAP */
- };
- 
-+void pci_seq_tree_add_dev(struct pci_dev *dev)
-+{
-+	int ret;
-+
-+	if (dev) {
-+		xa_lock(&pci_seq_tree);
-+		pci_dev_get(dev);
-+		ret = __xa_insert(&pci_seq_tree, pci_max_idx, dev, GFP_KERNEL);
-+		if (!ret) {
-+			dev->proc_seq_idx = pci_max_idx;
-+			pci_max_idx++;
-+		} else {
-+			pci_dev_put(dev);
-+			WARN_ON(ret);
-+		}
-+		xa_unlock(&pci_seq_tree);
-+	}
-+}
-+
-+void pci_seq_tree_remove_dev(struct pci_dev *dev)
-+{
-+	unsigned long idx = dev->proc_seq_idx;
-+	struct pci_dev *latest_dev = NULL;
-+	struct pci_dev *ret;
-+
-+	if (!dev)
-+		return;
-+
-+	xa_lock(&pci_seq_tree);
-+	__xa_erase(&pci_seq_tree, idx);
-+	pci_dev_put(dev);
-+	/*
-+	 * Move the latest pci_dev to this idx to keep the continuity.
-+	 */
-+	if (idx != pci_max_idx - 1) {
-+		latest_dev = __xa_erase(&pci_seq_tree, pci_max_idx - 1);
-+		ret = __xa_cmpxchg(&pci_seq_tree, idx, NULL, latest_dev,
-+				GFP_KERNEL);
-+		if (!ret)
-+			latest_dev->proc_seq_idx = idx;
-+		WARN_ON(ret);
-+	}
-+	pci_max_idx--;
-+	xa_unlock(&pci_seq_tree);
-+}
-+
- /* iterator */
- static void *pci_seq_start(struct seq_file *m, loff_t *pos)
- {
--	struct pci_dev *dev = NULL;
-+	struct pci_dev *dev;
- 	loff_t n = *pos;
- 
--	for_each_pci_dev(dev) {
--		if (!n--)
--			break;
--	}
-+	dev = xa_load(&pci_seq_tree, n);
-+	if (dev)
-+		pci_dev_get(dev);
- 	return dev;
- }
- 
- static void *pci_seq_next(struct seq_file *m, void *v, loff_t *pos)
- {
--	struct pci_dev *dev = v;
-+	struct pci_dev *dev;
- 
- 	(*pos)++;
--	dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, dev);
-+	dev = xa_load(&pci_seq_tree, *pos);
-+	if (dev)
-+		pci_dev_get(dev);
- 	return dev;
- }
- 
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index e4ce1145aa3e..257ea46233a3 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -53,6 +53,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
- 	pci_npem_remove(dev);
- 
- 	device_del(&dev->dev);
-+	pci_seq_tree_remove_dev(dev);
- 
- 	down_write(&pci_bus_sem);
- 	list_del(&dev->bus_list);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 573b4c4c2be6..aeb3d4cce06a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -534,6 +534,8 @@ struct pci_dev {
- 
- 	/* These methods index pci_reset_fn_methods[] */
- 	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
-+
-+	unsigned long long	proc_seq_idx;
- };
- 
- static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
--- 
-2.43.0
 
 
