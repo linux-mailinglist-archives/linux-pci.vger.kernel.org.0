@@ -1,52 +1,78 @@
-Return-Path: <linux-pci+bounces-14884-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14885-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B21949A499A
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Oct 2024 00:22:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AC319A49A6
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Oct 2024 00:29:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 299E2B23563
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 22:22:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEB821F249C3
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 22:29:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D61020E33E;
-	Fri, 18 Oct 2024 22:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AE02190662;
+	Fri, 18 Oct 2024 22:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWfS7fxM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgTGP/U7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34446190462
-	for <linux-pci@vger.kernel.org>; Fri, 18 Oct 2024 22:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B1218CBF5;
+	Fri, 18 Oct 2024 22:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729290135; cv=none; b=Om77iCvLqT6+e4Aa3wdgVUvfriwWv5eAvMkozuqbfIAQi+o5mfG7raOAdQFEgHFnsa+XI3tXc2ZCiWVU4HHL6gApxxt9fw3Ws4GnO97gUJlYGLozgjCEsXi1Yh7dS/2ScbgwwbDNjr4LUQlZhPLWD4fmYO2rkzxFvTX+UPaW5H8=
+	t=1729290533; cv=none; b=XbVA/gzCiXgedhg0uV8PkR0WG2Y+5fYGb/k674ud9qpG6K9RPJLUQnG47F59tDKR8n9ZRDrOqV/yezC99bGfgoeGA0sLQX99xCVLVyBoZ1ge7qGNQvbdrvETjTJdDnmwSqAS7mram8+EGUnkBwe06V86TQiWHHsOsdcN6zN9Yc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729290135; c=relaxed/simple;
-	bh=rF3sr5UzZo2UZMyl1sbe0OwC1Jf5UtqZHirAXPaIgms=;
+	s=arc-20240116; t=1729290533; c=relaxed/simple;
+	bh=G7Ash0PGoqdQ1AiafmIA65zN/S2zqb3jjZ3jwkABAmI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gEom7BOuCjPFMchsX4uB18rIq1ajdX/7fijxYV9P/dJYpPmkG+Xh+oEw0Dq+F4iVjs/XqjMCWzDv5OZAfQNFRMbjlQ37MUFxSpp0E8pq8yWH7QHF5rtxTkV7w72QANLB10GmJSZrBu7KK/XkZd1SW91Zk+hJyS75xtIPaLCM8ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWfS7fxM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D156C4CEC3;
-	Fri, 18 Oct 2024 22:22:14 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=J/h+5MnbWEJ2cEmbXFbc3MLoVuAJGfvQaja0GbOUfVHWmChsxkTb6lBwQeg9g9URq6yLOliakZKlllA2ivEY1IecO7MZjWa06ylCPhkwVfxv7yM8WpIAJY54uaga++uU+JVotcw1FyN2snqnmrXNnW6CspTGOI8qvKfthIavcFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgTGP/U7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83466C4CEC3;
+	Fri, 18 Oct 2024 22:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729290134;
-	bh=rF3sr5UzZo2UZMyl1sbe0OwC1Jf5UtqZHirAXPaIgms=;
+	s=k20201202; t=1729290532;
+	bh=G7Ash0PGoqdQ1AiafmIA65zN/S2zqb3jjZ3jwkABAmI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WWfS7fxMx5yBwrncFzIkoKN+PnuWw37dGKQ7s3SCR1VcKPbJIdloRkaduPb1Nfb1K
-	 cmFrZ9CYVo/kPCLk5MoEctodwIgOie0Mlty0fK0vwhLysnXOA091Rwuo9Fi0Pg/re9
-	 CImGVIlX5lUhGb3joIswrd55ALUBPJDIkM9NkOn2tSbEvl+jlAli80eqRfLonBca4Q
-	 NeMAasaYkhCGl5J05bCXh/4m3nlNDYLOPQQPyhb+YYwJl3ij+iaVN2yW1rc2jNkyl2
-	 2JfwT2cSw10g6gMc5BnVwUfDpburQYq6/6yo6d2Vp+Plg/WMdzyj4EP/PbEBB4GyAq
-	 I4f9244QGKrdg==
-Date: Fri, 18 Oct 2024 17:22:13 -0500
+	b=TgTGP/U7RKKcvPPDH/bduN4P+U9gnrm0Owu3NhDvqbrFzpKYGJofveh67iMhF47gx
+	 DxVHWjcKgwrn0iaN76NwGiQWk7/xxcY4rQ+L7pp1Nd2Kkk8TtzJo0YFYXbvIMxdEF0
+	 J98vlhBXDMn0lJZ7WllGBfhRVDNosEI0FDeDXB/ThdbS9hWCIKjA2foUu2K9he0EGJ
+	 S+NQxiL+7x4VLYidgjOMEj9kW0pDFYr1mO2ilHgqV71iwnLywxOWjlcAupEJSfjrS9
+	 2j1cm0fzRHFBQBJ78vHz0A0bjwC5hD5OBpJSPRFaKgLnRJcC4ltNXYLLZf1cuA+LuL
+	 BJ2cjkBNl6jwg==
+Date: Fri, 18 Oct 2024 17:28:50 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Guixin Liu <kanie@linux.alibaba.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: optimize proc sequential file read
-Message-ID: <20241018222213.GA764583@bhelgaas>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
+Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
+ parsed from DT
+Message-ID: <20241018222850.GA766393@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,209 +81,89 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241018054728.116519-1-kanie@linux.alibaba.com>
+In-Reply-To: <ZxJXZ9R-Qp9CNmJk@apocalypse>
 
-On Fri, Oct 18, 2024 at 01:47:28PM +0800, Guixin Liu wrote:
-> PCI driver will traverse pci device list in pci_seq_start in every
-> sequential file reading, use xarry to store all pci devices to
-> accelerate finding the start.
->
-> Use "time cat /proc/bus/pci/devices" to test on a machine with 13k
-> pci devices,  get an increase of about 90%.
+On Fri, Oct 18, 2024 at 02:41:11PM +0200, Andrea della Porta wrote:
+> On 20:08 Mon 07 Oct     , Bjorn Helgaas wrote:
+> ... 
 
-s/pci/PCI/ (several times)
-s/pci_seq_start/pci_seq_start()/
-s/xarry/xarray/
-s/,  /, / (remove extra space)
-
-> Without this patch:
->   real 0m0.917s
->   user 0m0.000s
->   sys  0m0.913s
-> With this patch:
->   real 0m0.093s
->   user 0m0.000s
->   sys  0m0.093s
-
-Nice speedup, for sure!
-
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> ---
->  drivers/pci/pci.h    |  3 +++
->  drivers/pci/probe.c  |  1 +
->  drivers/pci/proc.c   | 64 +++++++++++++++++++++++++++++++++++++++-----
->  drivers/pci/remove.c |  1 +
->  include/linux/pci.h  |  2 ++
->  5 files changed, 64 insertions(+), 7 deletions(-)
+> > Yes, this is exactly the problem.  The pci@0 parent and child
+> > addresses in "ranges" are both in the PCI address space.  But we
+> > start with pdev->resource[N], which is a CPU address.  To get the PCI
+> > address, we need to apply pci_bus_address().  If the host bridge
+> > windows are set up correctly, the window->offset used in
+> > pcibios_resource_to_bus() should yield the PCI bus address.
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 14d00ce45bfa..1a7da91eeb80 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -962,4 +962,7 @@ void pcim_release_region(struct pci_dev *pdev, int bar);
->  	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
->  	 PCI_CONF1_EXT_REG(reg))
->  
-> +void pci_seq_tree_add_dev(struct pci_dev *dev);
-> +void pci_seq_tree_remove_dev(struct pci_dev *dev);
-> +
->  #endif /* DRIVERS_PCI_H */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4f68414c3086..1fd9e9022f70 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2592,6 +2592,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->  	WARN_ON(ret < 0);
->  
->  	pci_npem_create(dev);
-> +	pci_seq_tree_add_dev(dev);
->  }
->  
->  struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
-> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-> index f967709082d6..30ca071ccad5 100644
-> --- a/drivers/pci/proc.c
-> +++ b/drivers/pci/proc.c
-> @@ -19,6 +19,9 @@
->  
->  static int proc_initialized;	/* = 0 */
->  
-> +DEFINE_XARRAY_FLAGS(pci_seq_tree, 0);
-> +static unsigned long pci_max_idx;
-> +
->  static loff_t proc_bus_pci_lseek(struct file *file, loff_t off, int whence)
->  {
->  	struct pci_dev *dev = pde_data(file_inode(file));
-> @@ -334,25 +337,72 @@ static const struct proc_ops proc_bus_pci_ops = {
->  #endif /* HAVE_PCI_MMAP */
->  };
->  
-> +void pci_seq_tree_add_dev(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +
-> +	if (dev) {
-
-I don't think we should test "dev" for NULL here.  If it's NULL, I
-think we have bigger problems and we should oops.
-
-> +		xa_lock(&pci_seq_tree);
-> +		pci_dev_get(dev);
-> +		ret = __xa_insert(&pci_seq_tree, pci_max_idx, dev, GFP_KERNEL);
-> +		if (!ret) {
-> +			dev->proc_seq_idx = pci_max_idx;
-> +			pci_max_idx++;
-> +		} else {
-> +			pci_dev_put(dev);
-> +			WARN_ON(ret);
-> +		}
-> +		xa_unlock(&pci_seq_tree);
-> +	}
-> +}
-> +
-> +void pci_seq_tree_remove_dev(struct pci_dev *dev)
-> +{
-> +	unsigned long idx = dev->proc_seq_idx;
-> +	struct pci_dev *latest_dev = NULL;
-> +	struct pci_dev *ret;
-> +
-> +	if (!dev)
-> +		return;
-
-Same comment about testing "dev" for NULL.
-
-> +	xa_lock(&pci_seq_tree);
-> +	__xa_erase(&pci_seq_tree, idx);
-> +	pci_dev_put(dev);
-> +	/*
-> +	 * Move the latest pci_dev to this idx to keep the continuity.
-> +	 */
-> +	if (idx != pci_max_idx - 1) {
-> +		latest_dev = __xa_erase(&pci_seq_tree, pci_max_idx - 1);
-> +		ret = __xa_cmpxchg(&pci_seq_tree, idx, NULL, latest_dev,
-> +				GFP_KERNEL);
-> +		if (!ret)
-> +			latest_dev->proc_seq_idx = idx;
-> +		WARN_ON(ret);
-> +	}
-> +	pci_max_idx--;
-> +	xa_unlock(&pci_seq_tree);
-> +}
-> +
->  /* iterator */
->  static void *pci_seq_start(struct seq_file *m, loff_t *pos)
->  {
-> -	struct pci_dev *dev = NULL;
-> +	struct pci_dev *dev;
->  	loff_t n = *pos;
->  
-> -	for_each_pci_dev(dev) {
-> -		if (!n--)
-> -			break;
-> -	}
-> +	dev = xa_load(&pci_seq_tree, n);
-> +	if (dev)
-> +		pci_dev_get(dev);
->  	return dev;
-
-I'm a little hesitant to add another place that keeps track of every
-PCI device.  It's a fair bit of code here, and it's redundant
-information, which means more work to keep them all synchronized.
-
-This proc interface feels inherently racy.  We keep track of the
-current item (n) in a struct seq_file, but I don't think there's
-anything to prevent a pci_dev hot-add or -remove between calls to
-pci_seq_start().
-
-Is the proc interface the only place to get this information?  If
-there's a way to get it from sysfs, maybe that is better and we don't
-need to spend effort optimizing the less-desirable path?
-
->  }
->  
->  static void *pci_seq_next(struct seq_file *m, void *v, loff_t *pos)
->  {
-> -	struct pci_dev *dev = v;
-> +	struct pci_dev *dev;
->  
->  	(*pos)++;
-> -	dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, dev);
-> +	dev = xa_load(&pci_seq_tree, *pos);
-> +	if (dev)
-> +		pci_dev_get(dev);
-
-Where is the pci_dev_put() that corresponds with this new
-pci_dev_get()?
-
->  	return dev;
->  }
->  
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index e4ce1145aa3e..257ea46233a3 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -53,6 +53,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
->  	pci_npem_remove(dev);
->  
->  	device_del(&dev->dev);
-> +	pci_seq_tree_remove_dev(dev);
->  
->  	down_write(&pci_bus_sem);
->  	list_del(&dev->bus_list);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 573b4c4c2be6..aeb3d4cce06a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -534,6 +534,8 @@ struct pci_dev {
->  
->  	/* These methods index pci_reset_fn_methods[] */
->  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
-> +
-> +	unsigned long long	proc_seq_idx;
->  };
->  
->  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
-> -- 
-> 2.43.0
+> You mean something like this, I think:
 > 
+> @@ -129,7 +129,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
+>                 if (of_pci_get_addr_flags(&res[j], &flags))
+>                         continue;
+>  
+> -               val64 = res[j].start;
+> +               val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
+>                 of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
+>                                    false);
+>                 if (pci_is_bridge(pdev)) {
+
+Yes.
+
+> > I think it should look like this:
+> > 
+> >   pci@0: <0x82000000 0x0 0x00000000 0x82000000 0x0 0x00000000 0x0 0x600000>;
+> 
+> indeed, with the above patch applied, the result is exactly as you expected.
+> ...
+
+> > > > But I don't think it works in general because there's no
+> > > > requirement that the host bridge address translation be that
+> > > > simple.  For example, if we have two host bridges, and we want
+> > > > each to have 2GB of 32-bit PCI address space starting at 0x0,
+> > > > it might look like this:
+> > > > 
+> > > >   0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
+> > > >   0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
+> > > > 
+> > > > In this case simply ignoring the high 32 bits of the CPU
+> > > > address isn't the correct translation for the second host
+> > > > bridge.  I think we should look at each host bridge's
+> > > > "ranges", find the difference between its parent and child
+> > > > addresses, and apply the same difference to everything below
+> > > > that bridge.
+> > > 
+> > > Not sure I've got this scenario straight: can you please provide
+> > > the topology and the bit setting (32/64 bit) for those ranges?
+> > > Also, is this scenario coming from a real use case or is it
+> > > hypothetical?
+> > 
+> > This scenario is purely hypothetical, but it's a legal topology
+> > that we should handle correctly.  It's two host bridges, with
+> > independent PCI hierarchies below them:
+> > 
+> >   Host bridge A: [mem 0x2_00000000-0x2_7fffffff window] (bus address 0x00000000-0x7fffffff)
+> >   Host bridge B: [mem 0x2_80000000-0x2_ffffffff window] (bus address 0x00000000-0x7fffffff)
+> > 
+> > Bridge A has an MMIO aperture at CPU addresses
+> > 0x2_00000000-0x2_7fffffff, and when it initiates PCI transactions on
+> > its secondary side, the PCI address is CPU_addr - 0x2_00000000.
+> > 
+> > Similarly, bridge B has an MMIO aperture at CPU addresses 
+> > 0x2_80000000-0x2_ffffffff, and when it initiates PCI transactions on 
+> > its secondary side, the PCI address is CPU_addr - 0x2_80000000.
+> > 
+> > Both hierarchies use PCI bus addresses in the 0x00000000-0x7fffffff
+> > range.  In a topology like this, you can't convert a bus address back
+> > to a CPU address unless you know which hierarchy it's in.
+> > pcibios_bus_to_resource() takes a pci_bus pointer, which tells you
+> > which hierarchy (and which host bridge address translation) to use.
+> 
+> Agreed. While I think about how to adjust that specific patch,i
+> let's drop it from this patchset since the aforementioned change is
+> properly fixing the translation issue.
+
+OK.  I assume you mean to drop the "PCI: of_property: Sanitize 32 bit
+PCI address parsed from DT" patch?  Or replace it with the
+pci_bus_address() addition above?
+
+Bjorn
 
