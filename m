@@ -1,215 +1,124 @@
-Return-Path: <linux-pci+bounces-14853-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14854-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A329F9A3D5F
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 13:39:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79C469A3E84
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 14:36:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C51FF1C22C28
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 11:39:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08129B21A6E
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Oct 2024 12:36:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39DDE1D7E3D;
-	Fri, 18 Oct 2024 11:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="KRejIOPX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="qiLznpSu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A57A418028;
+	Fri, 18 Oct 2024 12:36:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBD81EE016;
-	Fri, 18 Oct 2024 11:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD9C3207;
+	Fri, 18 Oct 2024 12:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729251564; cv=none; b=axwyXCro53RcuHJsNhXAEpb2ATmzmFzWyx4UV5gaR5OTwklyAQxddJmPSx/EmhSGxWFK+c2sSHw6wqe2xAMe06ge1peyMWKavnhvek9BlG8nnMZvw83jtpvfwQQoj27EiViy0pSWzgAuRwj0M8hO7LFLS7uTjViKYQ6m00cpuUI=
+	t=1729255006; cv=none; b=n+d3zUfsULLGiJFt0Jyr1FfEbbkpuU47CB5HeYVbVSp9kZiJKW5dB52izR1d2o3p/1OXZ3dFRmskk352Kev8/RpWWfJXRIwl33CmeIk+HW6onrxT+ZynEtFbfGr/REio3CXiOPcTwgeSY/31QDhpfIVtrnAU+SDm1QJW+nMMPmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729251564; c=relaxed/simple;
-	bh=Rwphs5qi5S1XzQ4OWSmFTarZA+fNuWErHOY/vR7cDzM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FqNZr8H8eM0o3IrhYCIAA4l/aH7nOZrhApn6AFpmGFYRsBhkINNy+pOjiw7Qdm0nZWKM/flyWCRGWB1NPOv7SsxATImwZyoNrg342nRFquRxlknVJFCuxpVejQ3aXZ9xNoN/phTcThZ/9b5Iirbb6oPIFB21PMaC1vfeXwvhyF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=KRejIOPX; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=qiLznpSu reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1729251561; x=1760787561;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IIQWDK07jPvUzisRnHdaspHYVQzk9bJrYJb1eqyhans=;
-  b=KRejIOPXeH4DESx2QYjYv+PdV6/JExjOTImOiGpOrZtoBFYJFX+cyFai
-   tsEoc7h9+QJNxmskx6bwfCG/VVxk6rG2cQhLypu7CH3OsbktzybTpKFCf
-   Qj1B3QmgjoylWDvpVQ+0rA/2qLT0Vb8jwILUzNTa33GoRLeQfkccG+Dg4
-   s960q2pr+4YtZgD2zJFxE/Xx4LZs5abvCAlqLLLFYbRl9juvuZu1tu0hN
-   rria18sAbIc8AW0Z7dBl3GXp+rkPvBoLUYiuXZWbyei7UzNZmZh7nuL7J
-   gKdYK7tEiTl+p977TjGgym+7Hq8Ci6BxQbYYlXu3elbl88p+ZTGv7gxvU
-   A==;
-X-CSE-ConnectionGUID: LfXkwjYRSVuTYfD3twpHWg==
-X-CSE-MsgGUID: QTkz3N6uRJKx8nYMqH3iXw==
-X-IronPort-AV: E=Sophos;i="6.11,213,1725314400"; 
-   d="scan'208";a="39542041"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 18 Oct 2024 13:39:17 +0200
-X-CheckPoint: {671248E5-28-21611FC3-DAD22B0C}
-X-MAIL-CPID: 9F6785E2A16242C205A18BDDCAE8529D_4
-X-Control-Analysis: str=0001.0A682F19.671248E6.0003,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BEDDA16006D;
-	Fri, 18 Oct 2024 13:39:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1729251553;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=IIQWDK07jPvUzisRnHdaspHYVQzk9bJrYJb1eqyhans=;
-	b=qiLznpSuavnpXEaldsfL7ZcfXTgINywoO/R9IVRztdyafx51bURrJCjjgD/IKBaD1yz7bp
-	Tkjp8ReZz7u4oxExxp7GASKSqRZIZ+M1HftSk0Ulpzq5GK/i3HgaJejQ5g/SJuJ1KERuKh
-	2/anYtLvhu3/neYyVdfTEcfTUMBMgpXn9zbLzzRTZiSYzHNXBv44N/99o5q4+LF5Dcmt4d
-	FDLAMJVsoCRLzaF3mtHp/U1OwiAA9hmg5nRNslN5TcVV0bz1Md8FauMVSGFT4lb5iVQXdq
-	yM360OCiCRd54g1jTXmFkpPN9L+KNzQrOTl+2HncZHwNWTVCt7uke5z6D3sQvA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Frank Li <frank.li@nxp.com>, Wei Fang <wei.fang@nxp.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "bhelgaas@google.com" <bhelgaas@google.com>, "horms@kernel.org" <horms@kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 net-next 02/13] dt-bindings: net: add i.MX95 ENETC support
-Date: Fri, 18 Oct 2024 13:39:10 +0200
-Message-ID: <9407049.rMLUfLXkoz@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <PAXPR04MB8510B252A7EDE73B2E1F00BD88402@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20241017074637.1265584-1-wei.fang@nxp.com> <3657116.R56niFO833@steina-w> <PAXPR04MB8510B252A7EDE73B2E1F00BD88402@PAXPR04MB8510.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1729255006; c=relaxed/simple;
+	bh=tyMewtQqpHxg4qbfOy5HqA9327malShWrnPYHfuO2vg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K/jnKojaQEjhdZ/dbrb9d/GchnYJJJw6g0bQTaJq9dbjPoeDN1Q1T+tJrIu4n8xVUa3WhUJ/QEb2D/8rF1M/Cn3oIyg7wxjThN8X80+QMaGyxTT1ZiWlKbwq9443LC/rUnC91mKQTvGfmPKEI2k0ctFApUDN058gDswlTV7Wkho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 0cXE/RMeS8il+576EWH2vg==
+X-CSE-MsgGUID: r0T/vuPmQYqRHeav2DZvew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="39326594"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="39326594"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 05:36:45 -0700
+X-CSE-ConnectionGUID: m9kwGWSOS+q+2j/CwHgoLQ==
+X-CSE-MsgGUID: Ks+uPRRJR+C757twukfZZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,213,1725346800"; 
+   d="scan'208";a="79663802"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 05:36:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1t1mDa-00000004Sex-2cSq;
+	Fri, 18 Oct 2024 15:36:34 +0300
+Date: Fri, 18 Oct 2024 15:36:34 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v8 2/6] PCI: Deprecate pcim_iounmap_regions()
+Message-ID: <ZxJWUoMg9vYyXwMW@smile.fi.intel.com>
+References: <20241016094911.24818-2-pstanner@redhat.com>
+ <20241016094911.24818-4-pstanner@redhat.com>
+ <Zw-XkFcaXjlF5az0@smile.fi.intel.com>
+ <0cf0ffed63a8645c49f043877c526b2ab0abf96e.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0cf0ffed63a8645c49f043877c526b2ab0abf96e.camel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
+On Fri, Oct 18, 2024 at 12:52:15PM +0200, Philipp Stanner wrote:
+> On Wed, 2024-10-16 at 13:38 +0300, Andy Shevchenko wrote:
+> > On Wed, Oct 16, 2024 at 11:49:05AM +0200, Philipp Stanner wrote:
 
-Am Freitag, 18. Oktober 2024, 09:50:43 CEST schrieb Wei Fang:
-> > -----Original Message-----
-> > From: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > Sent: 2024=E5=B9=B410=E6=9C=8818=E6=97=A5 14:53
-> > To: Frank Li <frank.li@nxp.com>; Wei Fang <wei.fang@nxp.com>
-> > Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
-> > pabeni@redhat.com; robh@kernel.org; krzk+dt@kernel.org;
-> > conor+dt@kernel.org; Vladimir Oltean <vladimir.oltean@nxp.com>; Claudiu
-> > Manoil <claudiu.manoil@nxp.com>; Clark Wang <xiaoning.wang@nxp.com>;
-> > christophe.leroy@csgroup.eu; linux@armlinux.org.uk; bhelgaas@google.com;
-> > horms@kernel.org; imx@lists.linux.dev; netdev@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-pci@vger.kernel.org
-> > Subject: Re: [PATCH v3 net-next 02/13] dt-bindings: net: add i.MX95 ENE=
-TC
-> > support
-> >=20
-> > Hi,
-> >=20
-> > Am Freitag, 18. Oktober 2024, 03:20:55 CEST schrieb Wei Fang:
-> > > > -----Original Message-----
-> > > > From: Frank Li <frank.li@nxp.com>
-> > > > Sent: 2024=E5=B9=B410=E6=9C=8818=E6=97=A5 0:23
-> > > > To: Wei Fang <wei.fang@nxp.com>
-> > > > Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
-> > > > pabeni@redhat.com; robh@kernel.org; krzk+dt@kernel.org;
-> > > > conor+dt@kernel.org; Vladimir Oltean <vladimir.oltean@nxp.com>;
-> > > > conor+Claudiu
-> > > > Manoil <claudiu.manoil@nxp.com>; Clark Wang
-> > <xiaoning.wang@nxp.com>;
-> > > > christophe.leroy@csgroup.eu; linux@armlinux.org.uk;
-> > > > bhelgaas@google.com; horms@kernel.org; imx@lists.linux.dev;
-> > > > netdev@vger.kernel.org; devicetree@vger.kernel.org;
-> > > > linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
-> > > > Subject: Re: [PATCH v3 net-next 02/13] dt-bindings: net: add i.MX95
-> > > > ENETC support
-> > > >
-> > > > On Thu, Oct 17, 2024 at 03:46:26PM +0800, Wei Fang wrote:
-> > > > > The ENETC of i.MX95 has been upgraded to revision 4.1, and the
-> > > > > vendor ID and device ID have also changed, so add the new
-> > > > > compatible strings for i.MX95 ENETC. In addition, i.MX95 supports
-> > > > > configuration of RGMII or RMII reference clock.
-> > > > >
-> > > > > Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> > > > > ---
-> > > > > v2: Remove "nxp,imx95-enetc" compatible string.
-> > > > > v3:
-> > > > > 1. Add restriction to "clcoks" and "clock-names" properties and
-> > > > > rename the clock, also remove the items from these two properties.
-> > > > > 2. Remove unnecessary items for "pci1131,e101" compatible string.
-> > > > > ---
-> > > > >  .../devicetree/bindings/net/fsl,enetc.yaml    | 22
-> > ++++++++++++++++---
-> > > > >  1 file changed, 19 insertions(+), 3 deletions(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/net/fsl,enetc.yaml
-> > > > > b/Documentation/devicetree/bindings/net/fsl,enetc.yaml
-> > > > > index e152c93998fe..e418c3e6e6b1 100644
-> > > > > --- a/Documentation/devicetree/bindings/net/fsl,enetc.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/net/fsl,enetc.yaml
-> > > > > @@ -20,10 +20,13 @@ maintainers:
-> > > > >
-> > > > >  properties:
-> > > > >    compatible:
-> > > > > -    items:
-> > > > > +    oneOf:
-> > > > > +      - items:
-> > > > > +          - enum:
-> > > > > +              - pci1957,e100
-> > > > > +          - const: fsl,enetc
-> > > > >        - enum:
-> > > > > -          - pci1957,e100
-> > > > > -      - const: fsl,enetc
-> > > > > +          - pci1131,e101
-> > > > >
-> > > > >    reg:
-> > > > >      maxItems: 1
-> > > > > @@ -40,6 +43,19 @@ required:
-> > > > >  allOf:
-> > > > >    - $ref: /schemas/pci/pci-device.yaml
-> > > > >    - $ref: ethernet-controller.yaml
-> > > > > +  - if:
-> > > > > +      properties:
-> > > > > +        compatible:
-> > > > > +          contains:
-> > > > > +            enum:
-> > > > > +              - pci1131,e101
-> > > > > +    then:
-> > > > > +      properties:
-> > > > > +        clocks:
-> > > > > +          maxItems: 1
-> > > > > +          description: MAC transmit/receiver reference clock
-> > > > > +        clock-names:
-> > > > > +          const: ref
-> > > >
-> > > > Did you run CHECK_DTBS for your dts file? clocks\clock-names should
-> > > > be under top 'properties" firstly. Then use 'if' restrict it. But I
-> > > > am not sure for that. only dt_binding_check is not enough because
-> > > > your example have not use clocks and clok-names.
-> > > >
-> > >
-> > > I have run dtbs_check and dt_binding_check in my local env. there were
-> > > no warnings and errors.
-> >=20
-> > Is there already the DT part somewhere? Do you mind sharing it?
-> >=20
-> I will prepare the DT patch when this series is applied. Below is my local
-> patch of imx95.dtsi. FYI.
-> > [snip]
+...
 
-Thanks for providing the DT patch. With this I was able to get ethernet
-running on my i.MX95 based board.
-Please keep me on CC if you send DT patch. Thanks.
+> > > + * This function is DEPRECATED. Do not use it in new code.
+> > 
+> > Interestingly that the syntax of the DEPRECATED is not documented
+> > (yet?),
+> > however the sphinx parser hints us about **DEPRECATED** format — see
+> > Documentation/sphinx/parse-headers.pl:251. In any case the above
+> > seems
+> > like second used (in a form of the full sentence) and will be updated
+> > in accordance with the above mentioned script.
+> 
+> Can't completely follow – so one should always write "**DEPRECATED**",
+> correct?
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-http://www.tq-group.com/
+I can't answer to this, because there may be "rendered" form and in this case
+it should not be surrounded by double asterisks, otherwise it's better to have
+at the start.
+
+> Is that a blocker for you?
+
+Nope, I mentioned this in the last sentence in my previous reply.
+
+> All the docstrings in pci/pci.c and pci/devres.c so far just use
+> "DEPRECATED".
+
+Yeah, this, if ever needed, has to be changed at once.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
 
