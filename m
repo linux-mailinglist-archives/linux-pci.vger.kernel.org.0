@@ -1,65 +1,78 @@
-Return-Path: <linux-pci+bounces-14932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CF649A5BC6
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 08:55:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8450F9A5C81
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 09:17:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6AAE1C21589
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 06:55:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F951283F4A
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 07:17:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45DE51D0BA2;
-	Mon, 21 Oct 2024 06:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0411B1D12F9;
+	Mon, 21 Oct 2024 07:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqP9st+B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TdlnAeBq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA6015575F;
-	Mon, 21 Oct 2024 06:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976B51D131E
+	for <linux-pci@vger.kernel.org>; Mon, 21 Oct 2024 07:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729493745; cv=none; b=RxxtRC4Iequ+WkpPT2Yv8X0sA/VyYTF9SpeOt0B4FsIVK5Ck+R4aT1kua+NdjujYQKX67C65OSa1qqIXzIIkkXztC92E8n8QLWElKa/LsPd1Bb3/oSPjiOYQ9C/zREpcSdp5WvToWLIJ9tWbZ5E8OdVP5VvD25aZh46yvk+1uCM=
+	t=1729495053; cv=none; b=hgbDktUiO6DTXM/LgnmZFSmhv1erM43IXZYTTtkMjFWDprYXbJSTaw19BjC3LEHPl1RBBTbo9GwoUOZZhwebXwICQLOQMp2Ea/KENMTF+8PIYSeHMEfB82TFRFZqMxiy4emGqxM7DIKdf8hUuG4qoBLCU7X4klEsmzkIXSJAO14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729493745; c=relaxed/simple;
-	bh=07U94b6F6zmDzp669IA6TRr0lDH3z86Sqc3IMdNwgNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NbDq4P6mK9ySzucQiGuVtetWCaovsN/Wqmr1eKqWMeVYbN0YKjW3p6tpxiPOW5aHPhFieLWXXUFKNqONcrPRZKka0uMEVsSEJKiZetqKhxz2jKW2mP0f3NQGwiDveI9g+Vy3tki7opeb6i5eEVDzzM3XXXqMLOzMQpsaEdFomA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqP9st+B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB75C4CEC3;
-	Mon, 21 Oct 2024 06:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729493744;
-	bh=07U94b6F6zmDzp669IA6TRr0lDH3z86Sqc3IMdNwgNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PqP9st+BYR5vYI/1IdDe2BM9BNsFGptV4wKU4M5ozOYKdcJ26JgZC/pnBbbNVbpF0
-	 pGv7W6OQY6AA3SBfqJFQt5DGdH04+QTWY6AyCunzWtIkoClBTL2ZfMRokwpv6yBNJK
-	 wVBkecuIFlRZf9Vt4twPTy0lAJJ0D7SZlvRA8xwx5f5Fb2kds/iMPjQ2e8hXaJZThx
-	 MFgKFGhTPq5tiYMun0KeDDINMfUu6GiQGWeb6vWKzOijs/Aizk+bUUqD4dZK+6ztFB
-	 k4aldEtLJJ81a54AKjv4pG+sgJB1a5eHC+bB+QiAsSJjY6v/GS0DX2hBHFjVE9gECN
-	 o0HsPi0LZ8VkA==
-Date: Mon, 21 Oct 2024 08:55:38 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
-	tglx@linutronix.de, jdmason@kudzu.us
-Subject: Re: [PATCH v3 4/6] PCI: endpoint: pci-epf-test: Add doorbell test
- support
-Message-ID: <ZxX66guRidaeV1zO@ryzen.lan>
-References: <20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com>
- <20241015-ep-msi-v3-4-cedc89a16c1a@nxp.com>
- <ZxJqITunljv0PGxn@ryzen.lan>
- <ZxJ7HoSuYNr8mwSi@lizhi-Precision-Tower-5810>
- <ZxUWlSFEPDCCXaq0@x1-carbon.lan>
+	s=arc-20240116; t=1729495053; c=relaxed/simple;
+	bh=E7+7301djVpMUQeotCSGphW/XiK2+37+MdD3fplNdsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=OEQKDfe0i9W1HTjHAB8CUxC4AEoJqAYYMOwD92w/vr7rWfBqqVYqlDv9PLeTyghXy9UF4wS/ayMVnK5zI/fFir4b4HUWExLognFpH0dYOMVojtabd3M7kI23BN/BjkEgCRZV0MNdil4f8jRg62ylrV2Jrwu6yS4WVfqaDtI1B4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TdlnAeBq; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4314f38d274so56699635e9.1
+        for <linux-pci@vger.kernel.org>; Mon, 21 Oct 2024 00:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729495050; x=1730099850; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+m8fTvMjxKK9SDB4irlUC6OD3WAtnh15KYs4Bil8CxE=;
+        b=TdlnAeBqIjU/ttQ6vRnWURBHW7UjC6f6c/q1WaBwM94RnnzY1fMTQoHN+3oeCB4ij1
+         wm42I7aNDNxgzLZrf1AFUNVlNTiEviQdEiU/ZBT3kEUDeplvwPHFydmEYsMmh/XW3Xgq
+         NT1RqwTJUH/RjNZBFrjZBlMGXPGe3KXC0AD/GmGjlclbqLFO7rWJOEK/omm+q+Kz0klw
+         y88ddFWeIN4u3J08eEtekxvObMRvaf/NeWCeasONSNKSKwv1N4uYS91sXufAItsXUS3i
+         UFoK+J5674dvjqe4Y5QVG+dviOsXJBGq6IZnM5ywagSD3+yo37Zgd5++/1HQodtjmVFA
+         EYhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729495050; x=1730099850;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+m8fTvMjxKK9SDB4irlUC6OD3WAtnh15KYs4Bil8CxE=;
+        b=CkKsxy0SAvDvaYR7N9zCaQubSjnf6cmzIqBdyZEl4GN/mWpP6Oi8Y8HOkcnlFc27ex
+         C60RPfwJIFjXYrLvRFvbX2QCtXNa12j/cP8l0hrAiyMpKhMv5qM2QbSfOwBNyC5ULYYq
+         Jd4wNCayIq350VSs4oKMih4RxtxoFak7sC+334W/2zYnYQhAdwSDgGgLheBgf3nF/IrG
+         kk0xWbqvI5DVxA++pFxMezXwTIB0lcmWSR53/bD0843Y/wmJPjD3lKcShWajeRw9PuN4
+         9/BDAhXdyx8iK5S8sZsbSL0d+iKXZM3JUAsT7O9tUvpCe+y+S8HhiZcc7iPyBTV0Bdmm
+         oG0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWuT2/IBO6gQSdGd8s+3ltWkkOWs5MjYWXMn9eNulGnH33+QVi9wm6kNoiuSGX+rmGDYKR3WCacjxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzH9UtkLwTPoFyWdkb+yja+SnZvovTw6NmbwaSyEFeVS8y1XZy
+	xNt28qxfFdQS9DlNZYFux2tFudaKcq+AwM4LwNBBvIDF5GhZZOWeV1htBfT+kqg=
+X-Google-Smtp-Source: AGHT+IGXcjSY/qQ6Yjj36xtAVc0dYZUUx35AYEwS9RfB1wu2AACGrjRhixmmA0i0CqZsSES/VJFNnQ==
+X-Received: by 2002:a05:600c:1547:b0:42c:b508:750e with SMTP id 5b1f17b1804b1-43161627e3emr113376925e9.11.1729495049729;
+        Mon, 21 Oct 2024 00:17:29 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431605f81a2sm112892065e9.0.2024.10.21.00.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2024 00:17:29 -0700 (PDT)
+Date: Mon, 21 Oct 2024 10:17:25 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Guixin Liu <kanie@linux.alibaba.com>,
+	bhelgaas@google.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: optimize proc sequential file read
+Message-ID: <206eef75-bd2b-43ef-a324-6556c47c9b93@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,38 +81,67 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZxUWlSFEPDCCXaq0@x1-carbon.lan>
+In-Reply-To: <20241018054728.116519-1-kanie@linux.alibaba.com>
 
-On Sun, Oct 20, 2024 at 04:41:25PM +0200, Niklas Cassel wrote:
-> On Fri, Oct 18, 2024 at 11:13:34AM -0400, Frank Li wrote:
-> > On Fri, Oct 18, 2024 at 04:01:05PM +0200, Niklas Cassel wrote:
-> 
-> How about we add a new pcitest --set-doorbell-mode option
-> (that is similar to pcitest -i which sets the interrupt mode to use).
-> 
-> That way, we can do:
-> ./pcitest --set-doorbell-mode 1
-> (This will enable doorbell for e.g. BAR0, pci-epf-test will call
-> pci_epf_alloc_doorbell() when receiving this command from the RC side.
-> The command will return failure if pci_epf_alloc_doorbell() returned failure.)
-> 
-> ./pcitest -B
-> (This will perform the doorbell test)
-> 
-> ./pcitest --set-doorbell-mode 0
-> (This will disable the doorbell for BAR0,
-> so it will again not trigger IRQs when BAR0 is written,
-> and pcitest's tests to read/write the BARs will again behave as expected.)
-> 
-> (We probably also need another option pcitest --get-doorbell-mode.)
-> 
-> I think this should solve all your concerns. Thoughts?
+Hi Guixin,
 
-And just to clarify, if we go with the --set-doorbell-mode approach,
-then my previous idea (introducing capabilities in pci-epf-test and
-pci-endpoint-test) is no longer a necessity.
+kernel test robot noticed the following build warnings:
 
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Kind regards,
-Niklas
+url:    https://github.com/intel-lab-lkp/linux/commits/Guixin-Liu/PCI-optimize-proc-sequential-file-read/20241018-135026
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20241018054728.116519-1-kanie%40linux.alibaba.com
+patch subject: [PATCH] PCI: optimize proc sequential file read
+config: i386-randconfig-141-20241019 (https://download.01.org/0day-ci/archive/20241019/202410190659.9MCI8EyL-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202410190659.9MCI8EyL-lkp@intel.com/
+
+smatch warnings:
+drivers/pci/proc.c:365 pci_seq_tree_remove_dev() warn: variable dereferenced before check 'dev' (see line 361)
+
+vim +/dev +365 drivers/pci/proc.c
+
+4ca256d9a0e58a Guixin Liu 2024-10-18  359  void pci_seq_tree_remove_dev(struct pci_dev *dev)
+4ca256d9a0e58a Guixin Liu 2024-10-18  360  {
+4ca256d9a0e58a Guixin Liu 2024-10-18 @361  	unsigned long idx = dev->proc_seq_idx;
+                                                                    ^^^^^^^^^^^^^^^^^
+Dereferenced
+
+4ca256d9a0e58a Guixin Liu 2024-10-18  362  	struct pci_dev *latest_dev = NULL;
+4ca256d9a0e58a Guixin Liu 2024-10-18  363  	struct pci_dev *ret;
+4ca256d9a0e58a Guixin Liu 2024-10-18  364  
+4ca256d9a0e58a Guixin Liu 2024-10-18 @365  	if (!dev)
+                                                    ^^^^
+Checked too late
+
+4ca256d9a0e58a Guixin Liu 2024-10-18  366  		return;
+4ca256d9a0e58a Guixin Liu 2024-10-18  367  
+4ca256d9a0e58a Guixin Liu 2024-10-18  368  	xa_lock(&pci_seq_tree);
+4ca256d9a0e58a Guixin Liu 2024-10-18  369  	__xa_erase(&pci_seq_tree, idx);
+4ca256d9a0e58a Guixin Liu 2024-10-18  370  	pci_dev_put(dev);
+4ca256d9a0e58a Guixin Liu 2024-10-18  371  	/*
+4ca256d9a0e58a Guixin Liu 2024-10-18  372  	 * Move the latest pci_dev to this idx to keep the continuity.
+4ca256d9a0e58a Guixin Liu 2024-10-18  373  	 */
+4ca256d9a0e58a Guixin Liu 2024-10-18  374  	if (idx != pci_max_idx - 1) {
+4ca256d9a0e58a Guixin Liu 2024-10-18  375  		latest_dev = __xa_erase(&pci_seq_tree, pci_max_idx - 1);
+4ca256d9a0e58a Guixin Liu 2024-10-18  376  		ret = __xa_cmpxchg(&pci_seq_tree, idx, NULL, latest_dev,
+4ca256d9a0e58a Guixin Liu 2024-10-18  377  				GFP_KERNEL);
+4ca256d9a0e58a Guixin Liu 2024-10-18  378  		if (!ret)
+4ca256d9a0e58a Guixin Liu 2024-10-18  379  			latest_dev->proc_seq_idx = idx;
+4ca256d9a0e58a Guixin Liu 2024-10-18  380  		WARN_ON(ret);
+4ca256d9a0e58a Guixin Liu 2024-10-18  381  	}
+4ca256d9a0e58a Guixin Liu 2024-10-18  382  	pci_max_idx--;
+4ca256d9a0e58a Guixin Liu 2024-10-18  383  	xa_unlock(&pci_seq_tree);
+4ca256d9a0e58a Guixin Liu 2024-10-18  384  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
 
