@@ -1,116 +1,117 @@
-Return-Path: <linux-pci+bounces-14949-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14950-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43B9E9A716C
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 19:53:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D339D9A72E0
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 21:04:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF9851F2340E
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 17:53:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 582D21F248AF
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 19:04:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905A71EF0B4;
-	Mon, 21 Oct 2024 17:53:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3D21FBC98;
+	Mon, 21 Oct 2024 19:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSAuLsWm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAC5eGI2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA3D1EABD1;
-	Mon, 21 Oct 2024 17:53:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E761F942D;
+	Mon, 21 Oct 2024 19:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729533211; cv=none; b=e2cfmWTUagD9FuvHKLrkYaLZykLUYUefq6Tng3TCKnhYCZF3EpndqZgUOzu1NA0aE8IpcEWmeYtCpRkZOzfskZ0R5LdPOikBctWGO+VweRRQWA5/Tyspq9PqM05nNo4t/RqqQRyDUBhKdwcpqLdl9e4Dy6lYHGz9yN5kVNLBCh4=
+	t=1729537416; cv=none; b=tvyGwlryrIovJwdznX2QxXRfXrTt39ri/fmVP4W1xVnsq1EjnNxDXjgPPd0OdFAJZKhRwvELim0xGGEg2iSDQAL2MMmSKM2XKHR0pzOV9MfKyWeheEKrbWDnyyCTCzNLqV4Bf0M1lGXZAUjWU1D5oJsriTEWhHgKi6YhRLRlP+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729533211; c=relaxed/simple;
-	bh=pEO3WCdTG0OPmLeMMYj2xwB5T3LSe9k1uzrv7xAakx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qn8Hw+ms9wAB3jmh73j9W5AogJEWyYX8zGyAE1/XrPOtRP7+wQ5NL4pFlskVxwL7Zq1fMqBu2iJ0sr4WvYYRjePJsgsS2JnVj2qXstCB0d0kG4702wEgYS5X5WZFwaubfN+ufggqxlqyTfKj0+cWZXl+n6eXH6eg2wFAsGElbkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSAuLsWm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7F6C4CEC3;
-	Mon, 21 Oct 2024 17:53:30 +0000 (UTC)
+	s=arc-20240116; t=1729537416; c=relaxed/simple;
+	bh=rBGnIU2ChSzNbvZ5Xe+O+3llHRdoMbcsKIPRGW3IyNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EeSI3Kz6rmBLn878AHMgXlQXpzSePs7jxqy/DZXdxkT7OZGRBVV5mn8MBQK9+z/mk8CqIbo7jmjIx1ub3IdxOUNHSJvbdFT+C5BfCtRT49p9oKHggcX94ULNSUS1eP5mptFyanBqxuHbsedW2r4ZTgSnqhuFoW4K5Ds6EuFIyCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAC5eGI2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794AEC4CEC3;
+	Mon, 21 Oct 2024 19:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729533211;
-	bh=pEO3WCdTG0OPmLeMMYj2xwB5T3LSe9k1uzrv7xAakx0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oSAuLsWmFi6L0bCtv6qZr7bUMa7W/b85jFoSuSurslAl9wnf8jpPqdn9CiBD9kodq
-	 6jhgMDKF9HmmVDmXDOZp1N8/LgW/Ro6LpFAybMv7rIPqja/W2ydi8h8Z46l8iJls48
-	 oluy9OrlphhI67hn+DH/RWk5jsXXE2Cn6ZGKCt6TD+3AYiOUxpNLjVnc2TQKi8J9Gx
-	 Bygl4l5Rs8Am1QaiByzxRy8eSnEEQSWG3i36qr5Q5Jf8mDKEOxOnMHMfk5QCQYCVrD
-	 oJLlSGPw5UmRnQqG4SpnDYJNfa0NV5YrBy0RR1i+FS7q7ySToJs1Ml55Y+kOseXmbC
-	 W6UDoMX8gF59g==
-Date: Mon, 21 Oct 2024 12:53:28 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Philipp Stanner <pstanner@redhat.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: Improve printout in pdev_sort_resources()
-Message-ID: <20241021175328.GA839797@bhelgaas>
+	s=k20201202; t=1729537415;
+	bh=rBGnIU2ChSzNbvZ5Xe+O+3llHRdoMbcsKIPRGW3IyNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BAC5eGI2h/vU8QtDowYR5TEPWsNlzjzTbJNgFcJV+n7COFotJ1Q7xfI84gbctw3b9
+	 xlqtgRvkP7flzhq9MEQkb0t4Xg556IzWC/tm1+4LRsZaB3rmqHET8h76REqdPUnAqT
+	 zJ7Zkwc72vXITR1iaOR5mlPEL9iT4HNXWjRxRVKO1DrkXdFjosjO8NCH80EERSeXsb
+	 G6A8xN/lidTdzW1c1Ne0v8G73APArjVXQ+zP+CoCr/ZOivQbyscczPstZww+ZtW+05
+	 +DOAV5G1iqMOQA2ub6TOuQLcX2gZn5iqlDbrZ/zFeKDS97V8jMsSxK1I9alECXvV0x
+	 5hJaIEecAgl7g==
+Date: Mon, 21 Oct 2024 14:03:34 -0500
+From: Rob Herring <robh@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] RFC: dt bindings: Add property "brcm,gen3-eq-presets"
+Message-ID: <20241021190334.GA953710-robh@kernel.org>
+References: <20241018182247.41130-1-james.quinlan@broadcom.com>
+ <20241018182247.41130-2-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241018234258.GA770341@bhelgaas>
+In-Reply-To: <20241018182247.41130-2-james.quinlan@broadcom.com>
 
-Oops, I inadvertently removed the cc list when I sent the response
-below.  Adding it back here.
+On Fri, Oct 18, 2024 at 02:22:45PM -0400, Jim Quinlan wrote:
+> Support configuration of the GEN3 preset equalization settings, aka the
+> Lane Equalization Control Register(s) of the Secondary PCI Express
+> Extended Capability.  These registers are of type HwInit/RsvdP and
+> typically set by FW.  In our case they are set by our RC host bridge
+> driver using internal registers.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 0925c520195a..f965ad57f32f 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -104,6 +104,18 @@ properties:
+>      minItems: 1
+>      maxItems: 3
+>  
+> +  brcm,gen3-eq-presets:
+> +    description: |
+> +      A u16 array giving the GEN3 equilization presets, one for each lane.
+> +      These values are destined for the 16bit registers known as the
+> +      Lane Equalization Control Register(s) of the Secondary PCI Express
+> +      Extended Capability.  In the array, lane 0 is first term, lane 1 next,
+> +      etc. The contents of the entries reflect what is necessary for
+> +      the current board and SoC, and the details of each preset are
+> +      described in Section 7.27.4 of the PCI base spec, Revision 3.0.
 
-On Fri, Oct 18, 2024 at 06:42:59PM -0500, Bjorn Helgaas wrote:
-> [+cc Jonathan]
-> 
-> On Thu, Oct 17, 2024 at 12:55:45PM +0300, Ilpo Järvinen wrote:
-> > Use pci_resource_name() helper in pdev_sort_resources() to print
-> > resources in user-friendly format. Also replace the vague "bogus
-> > alignment" with a more precise explanation of the problem.
-> > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> Applied with Philipp's reviewed-by to pci/resource for v6.13, thanks!
-> 
-> Happy to add yours, too, Jonathan, if you want.  You basically said
-> so, but I don't want to presume :)
-> 
-> > ---
-> > 
-> > v2:
-> > - Place colon after %s %pR to be consistent with other printouts
-> > - Replace vague "bogus alignment" with the exact cause
-> > 
-> >  drivers/pci/setup-bus.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 23082bc0ca37..0fd286f79674 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -134,6 +134,7 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
-> >  	int i;
-> >  
-> >  	pci_dev_for_each_resource(dev, r, i) {
-> > +		const char *r_name = pci_resource_name(dev, i);
-> >  		struct pci_dev_resource *dev_res, *tmp;
-> >  		resource_size_t r_align;
-> >  		struct list_head *n;
-> > @@ -146,8 +147,8 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
-> >  
-> >  		r_align = pci_resource_alignment(dev, r);
-> >  		if (!r_align) {
-> > -			pci_warn(dev, "BAR %d: %pR has bogus alignment\n",
-> > -				 i, r);
-> > +			pci_warn(dev, "%s %pR: alignment must not be zero\n",
-> > +				 r_name, r);
-> >  			continue;
-> >  		}
-> >  
-> > -- 
-> > 2.39.5
-> > 
+If these are defined by the PCIe spec, then why is it Broadcom specific 
+property?
+
+> +
+> +    $ref: /schemas/types.yaml#/definitions/uint16-array
+
+minItems: 1
+maxItems: 16
+
+Last I saw, you can only have up to 16 lanes.
+
+Rob
 
