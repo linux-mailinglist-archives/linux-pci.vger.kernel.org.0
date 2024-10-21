@@ -1,221 +1,208 @@
-Return-Path: <linux-pci+bounces-14945-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14946-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D6259A6E61
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 17:40:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B1D49A6F32
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 18:17:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCA82281560
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 15:40:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28D25283561
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 16:17:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F41E1C3F0B;
-	Mon, 21 Oct 2024 15:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C2519923D;
+	Mon, 21 Oct 2024 16:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mmNc7fZ/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fCTXftZz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mmNc7fZ/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fCTXftZz"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="d1E1nl6E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2086.outbound.protection.outlook.com [40.107.104.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DB9126C0B;
-	Mon, 21 Oct 2024 15:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729525210; cv=none; b=FyvHOHkqFgsf99QVr840MDR2C4azMBY6bmnMP5wt4fQh7UTFdsXaBa1T9ohTAO2KPZ0TokNTyYTFwsui1lBV6LNNv6qt0gr2vwuMWEartLUcvEKtQfQ+WCxAJUhdALmSmn/QXwWGbPJUntMMh74/GhkmEt2VJ3SyPqUlUR31U44=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729525210; c=relaxed/simple;
-	bh=1W5B/sDDnCJ6y86lSH7pAHZK4QqYHPygiWJjNpbO+6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gwdx2xCiRV1HtPt43DEV860LwNvbfrPaNsUCPJPE3zYN/AM72JkDl2wbMvKAjxG1wAxm4PP6YgQpOstcwv7iMqOgpe98qHgbZ6PldWnRxAOac2c9iE7XE2WKaB+mXYzk9JkMAaJnI9Dd8tpb6wgybrBrtx9wo5DdrjOcz4kSXUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mmNc7fZ/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fCTXftZz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mmNc7fZ/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fCTXftZz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9E2A81F7E9;
-	Mon, 21 Oct 2024 15:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729525204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IrVNHHt0mG7LfTUbIY78i9Fn0M5UyUoiUWrwGWCGroQ=;
-	b=mmNc7fZ/SBFfmwhY33t8nV28H+U+4VBprC2U7Bm8HnioNHgslcnB380iYIMrO1VzcR9Ho8
-	h1RyVXgU2wObETww3mZc7jzvwpqQ4kX411vUC/M3E80D1T6vPQr9E6GalsORcC3icO0RJY
-	qjkCgzWHFGGiIu0B23Wlh+C+JbwXDqY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729525204;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IrVNHHt0mG7LfTUbIY78i9Fn0M5UyUoiUWrwGWCGroQ=;
-	b=fCTXftZz6SDsfFmnAFU6IrBfoPDwnEREwCHZ7OS3qSItN2lHTYy5JK5FY2tC1oIIK0PbzO
-	FlcRnCT7yOLCmWBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729525204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IrVNHHt0mG7LfTUbIY78i9Fn0M5UyUoiUWrwGWCGroQ=;
-	b=mmNc7fZ/SBFfmwhY33t8nV28H+U+4VBprC2U7Bm8HnioNHgslcnB380iYIMrO1VzcR9Ho8
-	h1RyVXgU2wObETww3mZc7jzvwpqQ4kX411vUC/M3E80D1T6vPQr9E6GalsORcC3icO0RJY
-	qjkCgzWHFGGiIu0B23Wlh+C+JbwXDqY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729525204;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IrVNHHt0mG7LfTUbIY78i9Fn0M5UyUoiUWrwGWCGroQ=;
-	b=fCTXftZz6SDsfFmnAFU6IrBfoPDwnEREwCHZ7OS3qSItN2lHTYy5JK5FY2tC1oIIK0PbzO
-	FlcRnCT7yOLCmWBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A4445139E0;
-	Mon, 21 Oct 2024 15:40:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id A/wyINN1FmdzbgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 21 Oct 2024 15:40:03 +0000
-Message-ID: <a5a4ce33-3c32-4e43-a39b-7a3514339e37@suse.de>
-Date: Mon, 21 Oct 2024 18:39:59 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EEA14A90;
+	Mon, 21 Oct 2024 16:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729527456; cv=fail; b=lCSV/khCo3pnop8EMzvR8gZjYjGdb5uNOZAiSvRTciK7hNBIP8gx7RwkBlKFS3g7Sw5blVKxBA2ie9vsqYnpYunQGA60qxs/WSHepkXJ4Ec/M68WOfTzoql8XXA99YiobLi59Oc2np86GrFfe+pRWXqhvu72qDGTukUFr8spz2U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729527456; c=relaxed/simple;
+	bh=FLzeoMkvHPB+wxZmfcHvBmvCNdevGAosTbPLRLl7ULc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LCmgHuUetHwTwvBu9sbqUSdPX87Gn1RoWTCuQkrno+lD4ce/K2QWY6n/CBWgEaXgdMxCydPqK4f9W7DaYN/YtZQ5Uh03N4sycO+RSCYH28UX8pINWQdzZwS3qcejJ5iDYKYPCERaFJ3f1Lyg72+ifXBsdxvAujDj2HyeDw7KZBI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=d1E1nl6E; arc=fail smtp.client-ip=40.107.104.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NO//9HGQFcBd/O5Ghx/+C3OmnpP57IRaAbs+lBsuaTqif7m8cTwldcWhqr5XpYzx7eVf3dV7UB37H4T7vggc/3JQQ3gCwU5MAcUG+3+kjRMoNtWjEajAqvR6vysYU6bMdgtAR8Sv5eiYBiu76cqG1OAxSq1UFQ3QLAYhf/sXIBMRX4MiYbjmR1nASq/9rRJufSQcdOBKcIMZvvvTZ9/649UwKK5LzBp/lsGOBRCxnpGoKi6wXlf7CzQcjCFnsNjSUu6h2rTMzWP81n8KvD4m1RNAnf4jVvXpq2w5AgaHd8sjnRo8fwwaKdasWiKJUg+LlSq1eXg+4+7fBFJPgvw1EA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FLzeoMkvHPB+wxZmfcHvBmvCNdevGAosTbPLRLl7ULc=;
+ b=W1Isc+uKA+OM0lyUBnxj2LhNiEsMlZDvTCEBbnTE0iml+JRrCwRdGuvtkJhJM6a9hHeceuy3qKNm2DoUVF1pxa7eSEZl/ek6x2ba/BTNsPm8YOVUIiGad5C6koe0bsTK2VlWY/E6Dfj2oXY+SEd0a8aMX+v/U+ZrnVRqzxWfuc5EePosEFV21CLfmhx9+63lQifJyAvDuRK0EvT+V/Kk0iT3YnwNBGcROAa3NSvR/ygKqw8epPFEbSuKm+u6CtDGecdJKZcicX4UBPW2wowLgPvnJk/wBJShqAz1Et9HSQ3mQLybg4l3ozzJ02mxALPB9YAvrerIewjX6FJH8xeSBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FLzeoMkvHPB+wxZmfcHvBmvCNdevGAosTbPLRLl7ULc=;
+ b=d1E1nl6EjKApGtyzbpEylYtioSZO+SYay8d7QLZxZcpUj7gwlw0Jn+EMNIo5+sJOkyHZtcLDu6926RCyaeP0qSqF72p16zb22B62cwp8eLwD4UPumj3uyXsLOn1AAN4dbsIG3uWwBMLn7EqhA41bXoqv5563NivBON8kVEse1pNtHHambfZlcOBf22jhd5/K1HvJbQwT9eCCsw5SRokOOEUD33wZptX334VrxmFXDkT4oJFUIEuYAM/nOlUWTN+DKmw036XzElverzbJXEgDI34Y4jQlYp7fTkpZwSa0w+G+CMyZixzAJ5Avx7B8POEwdqHwpuCzR8Eac0rNXZaK0A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by AS8PR04MB8072.eurprd04.prod.outlook.com (2603:10a6:20b:3f6::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Mon, 21 Oct
+ 2024 16:17:30 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%3]) with mapi id 15.20.8069.018; Mon, 21 Oct 2024
+ 16:17:30 +0000
+Date: Mon, 21 Oct 2024 12:17:22 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, dlemoal@kernel.org, maz@kernel.org,
+	tglx@linutronix.de, jdmason@kudzu.us
+Subject: Re: [PATCH v3 4/6] PCI: endpoint: pci-epf-test: Add doorbell test
+ support
+Message-ID: <ZxZ+kpAuInG9eCa9@lizhi-Precision-Tower-5810>
+References: <20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com>
+ <20241015-ep-msi-v3-4-cedc89a16c1a@nxp.com>
+ <ZxJqITunljv0PGxn@ryzen.lan>
+ <ZxJ7HoSuYNr8mwSi@lizhi-Precision-Tower-5810>
+ <ZxUWlSFEPDCCXaq0@x1-carbon.lan>
+ <ZxX66guRidaeV1zO@ryzen.lan>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZxX66guRidaeV1zO@ryzen.lan>
+X-ClientProxiedBy: SJ0PR05CA0167.namprd05.prod.outlook.com
+ (2603:10b6:a03:339::22) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/11] PCI: brcmstb: Adjust PHY PLL setup to use a
- 54MHz input refclk
-To: Jonathan Bell <jonathan@raspberrypi.com>,
- Stanimir Varbanov <svarbanov@suse.de>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Thomas Gleixner
- <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>
-References: <20241014130710.413-1-svarbanov@suse.de>
- <20241014130710.413-10-svarbanov@suse.de>
- <60de2ae5-af4b-4c31-bc63-9f62b08be2fc@broadcom.com>
- <bed7b0ea-494b-429e-8130-12d12eb11bf0@suse.de>
- <CADQZjwdO6ifEMBwh15EVPsxm4XtSYGRs==hVCZ0HmcUbADh6hw@mail.gmail.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <CADQZjwdO6ifEMBwh15EVPsxm4XtSYGRs==hVCZ0HmcUbADh6hw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[broadcom.com,vger.kernel.org,lists.infradead.org,linutronix.de,kernel.org,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AS8PR04MB8072:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8fa7c0c7-101b-4577-8853-08dcf1ebdce3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|52116014|376014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?yp0ZUSmARaGh0RlBewuoEWj3WgTbX43lWcfmOxsL9I7+H/M8lIJi83uMBv+j?=
+ =?us-ascii?Q?Iax9+TUOo+94zFWscnVm28EzrdNbY7xgD0uVHJR1zFU+Z79N2SNgVAX+/Rqp?=
+ =?us-ascii?Q?GpLf0Xp+NNLfwKVuRCaF0ox1S504oTUfxfovWxCrrbxIAPCzkg3QtS7PN+mg?=
+ =?us-ascii?Q?nevnM36jZTZssykzC8P9mI7ghWMepSmMIgDUhqOiibUL3mLSYxupfSoY5oY3?=
+ =?us-ascii?Q?SMkawMI+iCcUx29sbJIKHzoE5HmcMODOdP63hsr02NM6hFpnWF3/sx1pz+P4?=
+ =?us-ascii?Q?8Gam5+ulfajmM5ZdtJDjVfjZOb6AQgq1UxqhWN/pstxb270m3+JAXDEEX35l?=
+ =?us-ascii?Q?ahUjfWver51HvEjk2Xr6b2DAMnCleIKY2KFlKDQtogPYhtM4um1wNhpQP/Cb?=
+ =?us-ascii?Q?sksTEn00b0g9WftaaCqxGtajpd8wAnaOQffO8UrWszaa9BoLx5uOhJKDNMLd?=
+ =?us-ascii?Q?Yo++FElUoSRThFjNJjrv0cmuUTE5QeG5FP9ZHyQIl4R2u2rnypKcxbIGVeBv?=
+ =?us-ascii?Q?8oDnwnQtCe/Ey4/L5mJYVyZhzxgf9mCujzCR1iU7Z2s4bl/g+zIsK3v/p2NK?=
+ =?us-ascii?Q?7iAb4P7xJbJIOYTBnX3HMinvJrYvtLWTufIrMaL02jfRng6aiAjv9BcYOnBc?=
+ =?us-ascii?Q?TS7204lqHx5jpwLDstE0+01g8/Gd9LzXPetiwRUKBTZN7CS/ifyBLKxSfUa7?=
+ =?us-ascii?Q?ERzYuqIIFPcK6wBQLRjMTH9INw1x8UgRyQlt5mwhGxJdyOk21u3mbELQoJWD?=
+ =?us-ascii?Q?4FVrAol70ccmkkHTUf4Sro2lfYoyJDt+/Q0yyvBnvOaD/uuv7HUOZA7a3OX9?=
+ =?us-ascii?Q?1n7LE6BWvDa5xCT19I4xFmTAXJ48Et21CxhKuiRrI+8VVfx0Ha+irDhsA5Ee?=
+ =?us-ascii?Q?qG8FQMsxqebtC+sqyMy13iuZ4YWffc5WRPz5DsrRe8nygdnvTxgkCiCnkwID?=
+ =?us-ascii?Q?VYB2XYn1LnKqlnDC8L6CDNf7aytpnhi+iNRznkpzKDDhODrFogpo4RP+hlEd?=
+ =?us-ascii?Q?bJb8DLxtAX95K87+AkneyH/4X6TiztT2EF8CoHhXFC8jR/EFF3O7e/j8RsTX?=
+ =?us-ascii?Q?5ZEoMOqVAShRkDAlsNxQZmWDq57hAr3vlNHqrJB0Irv6T7y9RPy16odGz45q?=
+ =?us-ascii?Q?NNwPyTyD40zeQWabTt3UPiS0qcgaIx4UQbjip8z/BRDUIi+O7UhFpEYopffT?=
+ =?us-ascii?Q?REeixk9XzhyZvM5B2VwC5b5eYWEZxTHnmZQcsfn9S2yUXPEr5nl7mQwoK4ER?=
+ =?us-ascii?Q?Xu3LWyWRH+DC6vIWpssEmeaMdwHrXQ4kOPQgkWf3AmUUpQNBni2ywKjVuMOK?=
+ =?us-ascii?Q?FTN0zJoSme4FTxefEmgnu2MacdUw4daNQKWrWkvtR1W4wQWAWTu8PRbiztdM?=
+ =?us-ascii?Q?MAwdsfY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?iynUqRtXOtBExS7C9BaL8WH9OXReM/FgjYBHFZAEXWyz32axPAKHtdbSQXEL?=
+ =?us-ascii?Q?I+KRYTzCsF5O/y6VZgi7r3S1JlcAqm6DNYrJt4JA27xj1w1OpXiH2nF7TDCn?=
+ =?us-ascii?Q?fWVyXZL0KFnMYVHV6EXuQwunDxpANP3hWC8O4gzUcBruT3If3ttmz9PaOxRV?=
+ =?us-ascii?Q?MrkIT26hXcRrFL1nluEgBoILWE4XVVObK9i51oDABOUz5f7HArv3Rf3gGudZ?=
+ =?us-ascii?Q?CMkwMoxcugbpMpRFcM0ajgjEUMkAVdLZelJTRUIypPI09OBOU67gJepOAvXR?=
+ =?us-ascii?Q?iL2+MXY6V8+//GptIqCHTMiyLExHtNCruReVoip675whuntaKVakzIonlavt?=
+ =?us-ascii?Q?dsCPmDm0YTZB/3zCeSdofBS7I7gLcAhZAkCOJdgiq1NTqHzCJt8Mc64aBa98?=
+ =?us-ascii?Q?VwSmN1eN14Oquj1wmcDi+xoGxCRxi/wJ9bnZA2ywRh1skfoUuXbol6N7EcQt?=
+ =?us-ascii?Q?2+1U0u5DTrSoQ0Nzz6tGNkQgsND6T3Yk+e5wwI0o4GfjCoEpazmONlPDueSO?=
+ =?us-ascii?Q?RZSRZFPw2sGnyjabg6XBTyrL/EVfCOReiC9LIK3yQPFnM7ErMvCmrDHTtpNN?=
+ =?us-ascii?Q?/csxhmXfZfR8w93rNOjrxzv/qx9uk6tewmfFo3np8h3kLyxi7lpsRKVnwOYv?=
+ =?us-ascii?Q?NKfJwIlBHJufYnrdI8Y42iD9jmUyzOdrzHlwC21adTAX3NCgHGBLc7ISFl2F?=
+ =?us-ascii?Q?VZ9u9VeiMxwnw5gpO+mhsuJPYa3epUHlNQ5aGF7ALCSvzA1C1cQmvd823PD4?=
+ =?us-ascii?Q?wYSB3nxNL36Wz3cE82Frt1Ik7DIalRRjmM3yDQ0FYvfXZaSf7MrAlizRPI20?=
+ =?us-ascii?Q?zf6k4vLTBX/lYmaNeW6imbEmr/AzLlsgiObLxuNUmFyejLHStMpOWlD+EDq2?=
+ =?us-ascii?Q?dklHQch4tRGdOikqhK2sRcjiSt/WLHnr+cn+HEDSp1iHfjB5L2yveMVM+Fwe?=
+ =?us-ascii?Q?3zKeNrBTyJtSv6qEo0qTRq1Vd+2Q6xs/TCdNPE5o3YtbbfHW897ZcPlMg0np?=
+ =?us-ascii?Q?wM5r4OK0b45TnztSlq8t6bIs35mY/x3AFCk3kNHXAZLVzPZvljO/YKNB/exD?=
+ =?us-ascii?Q?J3RnDTlOVhFS4IueHc3/LUba7Rs7DUFBzc1jJoaI9OA1iQgnBTlyfhc88rKB?=
+ =?us-ascii?Q?2h0B6P08NGfrhkGi7WIJvrtSZXihCWHCMhkYaNt8ZpJaHN6oQusaT4wNtPu/?=
+ =?us-ascii?Q?XgPsXFIk9CKc6ziiWLRHuZX1ZYJW6lpA14MH7AkzS+XZvxl1A7nPIAJLxkRt?=
+ =?us-ascii?Q?XE9N0KkFUitXetr97yXMCfokSRz0mQZznVRI9hK2Kq7KRTX7UxQgdYVOs1yh?=
+ =?us-ascii?Q?IvqQcffNPnW0YUe6DqMoylPPyV+KXCjD66z07CneBdJjxLoJl5obz2X+zRXT?=
+ =?us-ascii?Q?rCcCdf/Me8QqNo5znBLSEgTcjTCeT304EEil595wf4L72Vdlx6em5U42FhLT?=
+ =?us-ascii?Q?KKPNm/7Cb/+9vHAkeajGiyGyHkK4tSjm3pHIHqjmQRyetRt666uXx6LSeCwe?=
+ =?us-ascii?Q?nYGf5nFan9VZP2bCSg4BGamqw3O1WB0jipsadJg1bhJ9mUeksKUa7gFsF0M2?=
+ =?us-ascii?Q?Ur0dQKFQeyyyGduiZ/ApLJn/f8a7l9DDZv7Z1Cq2?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fa7c0c7-101b-4577-8853-08dcf1ebdce3
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2024 16:17:30.6505
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G8/XTifu3fhkgs3uNUI7Izt7KHI4/Jh1xSaLua9/VtHQNs0uzxO0sRQiDMgv4oY1uXUF3PBwBsiAzorZv6lrzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8072
 
-Hi,
+On Mon, Oct 21, 2024 at 08:55:38AM +0200, Niklas Cassel wrote:
+> On Sun, Oct 20, 2024 at 04:41:25PM +0200, Niklas Cassel wrote:
+> > On Fri, Oct 18, 2024 at 11:13:34AM -0400, Frank Li wrote:
+> > > On Fri, Oct 18, 2024 at 04:01:05PM +0200, Niklas Cassel wrote:
+> >
+> > How about we add a new pcitest --set-doorbell-mode option
+> > (that is similar to pcitest -i which sets the interrupt mode to use).
+> >
+> > That way, we can do:
+> > ./pcitest --set-doorbell-mode 1
+> > (This will enable doorbell for e.g. BAR0, pci-epf-test will call
+> > pci_epf_alloc_doorbell() when receiving this command from the RC side.
+> > The command will return failure if pci_epf_alloc_doorbell() returned failure.)
+> >
+> > ./pcitest -B
+> > (This will perform the doorbell test)
+> >
+> > ./pcitest --set-doorbell-mode 0
+> > (This will disable the doorbell for BAR0,
+> > so it will again not trigger IRQs when BAR0 is written,
+> > and pcitest's tests to read/write the BARs will again behave as expected.)
+> >
+> > (We probably also need another option pcitest --get-doorbell-mode.)
+> >
+> > I think this should solve all your concerns. Thoughts?
+>
+> And just to clarify, if we go with the --set-doorbell-mode approach,
+> then my previous idea (introducing capabilities in pci-epf-test and
+> pci-endpoint-test) is no longer a necessity.
 
-On 10/21/24 15:56, Jonathan Bell wrote:
-> On Thu, 17 Oct 2024 at 15:42, Stanimir Varbanov <svarbanov@suse.de> wrote:
->>
->> Hi Florian,
->>
->> On 10/14/24 20:07, Florian Fainelli wrote:
->>> On 10/14/24 06:07, Stanimir Varbanov wrote:
->>>> Use canned MDIO writes from Broadcom that switch the ref_clk output
->>>> pair to run from the internal fractional PLL, and set the internal
->>>> PLL to expect a 54MHz input reference clock.
->>>>
->>>> Without this RPi5 PCIe cannot enumerate endpoint devices on
->>>> extension connector.
->>>
->>> You could say that the default reference clock for the PLL is 100MHz,
->>> except for some devices, where it is 54MHz, like 2712d0. AFAIR, 2712c1
->>> might have been 100MHz as well, so whether we need to support that
->>> revision of the chip or not might be TBD.
->>
->> I'm confused now, according to [1] :
->>
->> BCM2712C1 - 4GB and 8GB RPi5 models
->> BCM2712D0 - 2GB RPi5 models
->>
->> My device is 4GB RPi5 model so I would expect it is BCM2712C1, thus
->> according to your comment the PLL PHY adjustment is not needed. But I
->> see that the PCIex1 RC cannot enumerate devices on ext PCI connector
->> because of link training failure. Implementing PLL adjustment fixes the
->> failure.
->>
->>
->> ~Stan
->>
->> [1]
->> https://www.raspberrypi.com/documentation/computers/processors.html#bcm2712
-> 
+Yes, the problem is that it needs dynamatic switch bar mapping address.
+I am not sure all EPC support it. DWC should support it because I did it
+for vntb driver. But bar's size should be issue. PCI don't support change
+bar's size after pci bus scan devices. ITS's offset is 0x40. Anyway,
+ITS + DWC should work.
 
-Thanks for jumping in, Jon.
+Frank
 
-> The MDIO writes for 2712C1 are required because platform firmware
-> arranges for the reference input clock to be 54MHz.
-> 2712D0 can't generate a 100MHz reference input, it's 54MHz only. The
-> MDIO register defaults are also changed to suit, but there's no harm
-
-I see that MDIO register defaults for pcie2 (where RP1 is connected) are
-changed to suit to 54Mhz but this is not true for pcie1 (expansion
-connector). And that could explain why the link training is failing on
-pcie1.
-
-> in applying the writes anyway.
-> Both steppings need to behave identically for compliance and interop reasons.
-
-Yes, for sure.
-
-> RP1 is very tolerant of out-of-spec reference clocks, which is why
-> only the expansion connector appears to be affected.
-
-Thank you for clarifications.
-
-~Stan
-
-[1] Firmware version: RPi: BOOTSYS release VERSION:790da7ef DATE:
-2024/07/30 TIME: 15:25:46
+>
+>
+> Kind regards,
+> Niklas
 
