@@ -1,113 +1,118 @@
-Return-Path: <linux-pci+bounces-14940-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14941-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 514C79A6C6C
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 16:41:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E933B9A6CAB
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 16:49:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D86DBB246EE
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 14:41:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AA6E1C21CC2
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 14:49:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 158121F9AAF;
-	Mon, 21 Oct 2024 14:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D851F940B;
+	Mon, 21 Oct 2024 14:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l1NZndhc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NQNSlTxN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6485A26ACD;
-	Mon, 21 Oct 2024 14:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4328C18C36;
+	Mon, 21 Oct 2024 14:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729521703; cv=none; b=Nr4Dc7ATvnq0FPPFfPRUY7LOq2d52pZiflgxC5DS92ZQEqEBs/BQzde9i80zggLjjoobwfmuEFl8GQD/R0HBOyaqDlghOCC/JVAiYsAs7yCbs4cu9wtD3oUE4vVK+KcT63oBmQEgIDH9Q7tzqAeApmNDVPVSV30cTxz4zNR4d60=
+	t=1729522154; cv=none; b=Ts8UBl5ZJUTmkL6nJ1VDicikfLT5aH0KG+jHgJjFZPc0HTUm0NjLdvjWkNtn5I0MJNVX+r/5b3YuAg/zSk+QCrmeV0IRtlIK6Mg99vWbpUD+en5MrEe3OqmIxIbj3GrO70GslYF0zXmsGoF78TTmbVMP5immFN3mYZQJKElQvC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729521703; c=relaxed/simple;
-	bh=oES9w02HsNO+wAdgGTKwa5IUNCRPd0m/e8VFJjy8Y6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sOM/fs0DxDo82KcfjBwl5PSe2FSytOtNlqOFWO/yzYOGzHQj7YF9c0kKmOHeiDTKpCZxEDty54yhjRS4KazWNom0dbo9ueQQRLgouxfxzmTugA3ID1U5guE7MBvFZpk7eHjSOjwEGLXgzg4xLtGYuFzHPfFCMUC+ZiSTQPh+WPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l1NZndhc; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C1E1660003;
-	Mon, 21 Oct 2024 14:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1729521698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HWKKfevfqq3xTQx/qm5VhEu0R1W8s/2FfrkGVfXaCqU=;
-	b=l1NZndhcmmiFNAfOeaopATuWCDhot1mJIYIJNqbwnUDhfcG+fSZwrPO3K+LKKi1VuAKCva
-	F1XcD3cp8ikbu1KgiUyGHW3NhsuAi/a7L7vK5Ii0AMJYpEeBAWcMoNMTqSaLIkc3cDw1Vq
-	o0ochi2t0hSFRAjfr531mBmOSYHH+I//wjmQNp3rDbDDpRiloKt/kLQZrYqZsAx1O886Wk
-	L12XTFZMg0eHP4GXV8BWpe9YcF3nU1b+1pHbADu88IvXV/MWaEMs2xv0tF+LIvzb/vA3T6
-	j0JE4uEgGi9icat4PhlAuxS+BDSDzDLoJEw71RmrQusyBk00/i3tW52e7My8ag==
-Date: Mon, 21 Oct 2024 16:41:35 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Simon Horman <horms@kernel.org>, Lee Jones
- <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Derek Kiernan
- <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Herve Codina
- <herve.codina@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp
- Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>,
- Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, Andrew
- Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v10 0/6] Add support for the LAN966x PCI device using a
- DT overlay
-Message-ID: <20241021164135.494c8ff6@bootlin.com>
-In-Reply-To: <20241014124636.24221-1-herve.codina@bootlin.com>
-References: <20241014124636.24221-1-herve.codina@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1729522154; c=relaxed/simple;
+	bh=ThQKbnhwyaZ9JOppntHuNBOMJTIU2nFzLYi8fnpCZMc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fD05AkH+oWzHxYXyJI7GinjgoJ34pMNm0qAX24K5JEhrwwYgZgutn60UEAmsI3mFkWLDUh/srQFs4HYIsnaqyeDPQ5VsLcgkDiu3m6SYwKrJV7iDXLRaZbm14+JNoiiYrchK2iOwQB4Y4ZF5sOgA+v58oPdSWiEEyeRKbQ4m7vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NQNSlTxN; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729522152; x=1761058152;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ThQKbnhwyaZ9JOppntHuNBOMJTIU2nFzLYi8fnpCZMc=;
+  b=NQNSlTxNwK5yGpkJPjhAaS0IiEeQl0utwtY1CIeimSReqUDgZBUnXUm8
+   8H7rbo7QFMug9LM0mSOZ7+p9v71nWSSZnNHd1l89YFC4NKqe3hembeAg+
+   i76W/9CnNy7JU0ezpRnNC5UTm59Cpo9al2bf/GWkQm+xjC0xiH5/j9Z2d
+   xHJpfGQI4blDhICoxx9vbAb1Ae9dBdiCGcW6yU55mTLEAxCs+A5IBUlqv
+   XQBaRhKMruDlbOtZZnI+z23VothyWXbyyR85LhCV7ZlgIBw/cWwlpHRU9
+   hHr04lnljXJNQeoZBqMyLKjaYZTTsR1RAN814pkYlQsdURfbN9EKI8fYk
+   A==;
+X-CSE-ConnectionGUID: ReSbRZhsTAGeTt/VsYkZjQ==
+X-CSE-MsgGUID: Hk0RbwgITdW0BSa+n3q9lg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="46475745"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="46475745"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 07:49:12 -0700
+X-CSE-ConnectionGUID: 0HD6dPEqQX+GL68JPdBwKQ==
+X-CSE-MsgGUID: 97muYvKKRKqhu2eMwsjdnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,221,1725346800"; 
+   d="scan'208";a="79138239"
+Received: from pkwapuli-mobl1.ger.corp.intel.com (HELO vbox-pkwap.ger.corp.intel.com) ([10.246.19.66])
+  by fmviesa006.fm.intel.com with ESMTP; 21 Oct 2024 07:49:09 -0700
+From: Piotr Kwapulinski <piotr.kwapulinski@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: netdev@vger.kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [PATCH iwl-next v2 1/2] PCI: Add PCI_VDEVICE_SUB helper macro
+Date: Mon, 21 Oct 2024 16:46:54 +0200
+Message-ID: <20241021144654.5453-1-piotr.kwapulinski@intel.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Greg, Philip, Maintainers,
+PCI_VDEVICE_SUB generates the pci_device_id struct layout for
+the specific PCI device/subdevice. Private data may follow the
+output.
 
-On Mon, 14 Oct 2024 14:46:29 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Piotr Kwapulinski <piotr.kwapulinski@intel.com>
+---
+ include/linux/pci.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> Hi,
-> 
-> This series adds support for the LAN966x chip when used as a PCI
-> device.
-> 
-...
-
-All patches have received an 'Acked-by' and I didn't receive any
-feedback on this v10.
-
-Is there anything that blocks the whole series merge?
-
-Let me know if I need to do something else to have the series applied.
-
-Best regards,
-Hervé
-
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 573b4c4..7d1359e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1050,6 +1050,20 @@ struct pci_driver {
+ 	.vendor = PCI_VENDOR_ID_##vend, .device = (dev), \
+ 	.subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID, 0, 0
+ 
++/**
++ * PCI_VDEVICE_SUB - describe a specific PCI device/subdevice in a short form
++ * @vend: the vendor name
++ * @dev: the 16 bit PCI Device ID
++ * @subvend: the 16 bit PCI Subvendor ID
++ * @subdev: the 16 bit PCI Subdevice ID
++ *
++ * Generate the pci_device_id struct layout for the specific PCI
++ * device/subdevice. Private data may follow the output.
++ */
++#define PCI_VDEVICE_SUB(vend, dev, subvend, subdev) \
++	.vendor = PCI_VENDOR_ID_##vend, .device = (dev), \
++	.subvendor = (subvend), .subdevice = (subdev), 0, 0
++
+ /**
+  * PCI_DEVICE_DATA - macro used to describe a specific PCI device in very short form
+  * @vend: the vendor name (without PCI_VENDOR_ID_ prefix)
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.43.0
+
 
