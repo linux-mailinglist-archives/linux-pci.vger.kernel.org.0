@@ -1,298 +1,152 @@
-Return-Path: <linux-pci+bounces-14929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 251129A58BF
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 04:04:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E631B9A59DD
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 07:46:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 307E01C20F12
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 02:04:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20A821C208FA
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Oct 2024 05:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6515714286;
-	Mon, 21 Oct 2024 02:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E75319340D;
+	Mon, 21 Oct 2024 05:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R/I+9L5U"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MkReh8Oo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8BF14263
-	for <linux-pci@vger.kernel.org>; Mon, 21 Oct 2024 02:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B3D7462
+	for <linux-pci@vger.kernel.org>; Mon, 21 Oct 2024 05:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729476257; cv=none; b=URBHZZYbkQJ46bFUtNG+8/8FPWhITNoGi7GvHJ9aadeF6rVG+sXC+Dk4M5gViylpBndgt/cgRoCl+zer9aZzHYqepulE6hfvKimvHy4h037O/7xcPnzH68vbiNuDbbrDLLuNY055X86jBj+TUe54oVZYRpgMLeMokx+reohVft4=
+	t=1729489568; cv=none; b=CtuTp8QwwhVl22ht9K/hZnSs8wkncPLlQdxcnwYE/6iLo7DFzl0tsfEXElb4lmioQi4DbBL9cq5ufL2LuNfRlLCFmwm/2mqvuAYfOE5WC8mV0HyGRG+AGEWw+dVn0oQJjj8dYbnpzbjcKGDJOW9dngYhg0GMAczedlruPDM5L+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729476257; c=relaxed/simple;
-	bh=zFYyI8WZw2XDhMcPQsX3YCg/xRWWWaPQdTV09dA6a38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=THuVigNyZbUyPG//zni1MJ4uyYZVavHnRe9qfReQM3A+j1KliGHnugtUXh5EYcdIdXsWPCIL4oZ2oyYrp89ahsyweC/46kbaHwW+tFWlJ9gI1RfYtiyT0ITDtHucPOfIjgoDBJfQEw9fhBT5C+jQ94GmDfr71N7jRIIn+16bz58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R/I+9L5U; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1729476247; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=QPckyj6QPxLHNarv8y+4mbd5EkPERDvjm3dPzajkO64=;
-	b=R/I+9L5UDKvaXE5e5srDgQIyEMcbDQVzVbEt1d6PPd83+dKo89a677KAxC/KmmmYLLtzsg+fR7IDuNhk9x0a2VE+/+UTDfox/7ZvQZZ6Ad9XeL/UVktb41zlZKosf/URpPet6eUHG5zWJtgypMYT0xq3ldWIOOwYj2fXCEswdzM=
-Received: from 30.178.82.70(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WHU8QjJ_1729476245 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 21 Oct 2024 10:04:06 +0800
-Message-ID: <757d1cda-875b-4135-8b3e-110154a9543e@linux.alibaba.com>
-Date: Mon, 21 Oct 2024 10:04:03 +0800
+	s=arc-20240116; t=1729489568; c=relaxed/simple;
+	bh=uV5snUpY10mY+ieUbO0PLEKGL0amDrpA0hEcIDbiYHY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mSWVu5MICCC4MEyczyXO1xJ+ylX3Q9YGrgKXuG5S4cMM1cP4dSfORv56eCWdORwyInqSxWRLjz9bL0SgY7/JMBvwu2wA882F2oBKX8VksbU38I4nI4vONioWfgvk8JVDq1cN2ilOKjdVTeheqfQkQ9EEWwq12YcYiZfeJhNNGro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MkReh8Oo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729489567; x=1761025567;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uV5snUpY10mY+ieUbO0PLEKGL0amDrpA0hEcIDbiYHY=;
+  b=MkReh8OotBBxz0d84whsE4Hpi89f9Kd7pAayxcsEqUEFbcKz/UTriK3b
+   m28A+/RDlatP6rxPrCg7y5e6mnzHHMspqJ5jUrCJ5OKQECwHpkpNFBY0f
+   dW/Jtf9oLFjH1OA1kW4vOBLUpM0j3P1Ok+oMJSe4bY+YKav6bCm3kOKww
+   /fnsuqHgpcvHhVcfDz18sHReN9BJotdAWP/v2qjtijP7Tj/3X6TcDoEQn
+   4P1gYbDDwAgrsI4XjwSjrqOzFhVKlKqS8pplS+DYdMcAwBhboy6SPf7xG
+   hlCvqCOIT6YkYfStO/xTRp+5JEFvgQPyciRqsyWSf8UeNpwD0lHWbuGrn
+   w==;
+X-CSE-ConnectionGUID: PI4wWdeWQkGv7ssih5lbQg==
+X-CSE-MsgGUID: AVUk/ghdSU2WhwFDWxSoxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11231"; a="40345939"
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="40345939"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 22:46:06 -0700
+X-CSE-ConnectionGUID: UcI3brXwTsOUey9oPpOkNQ==
+X-CSE-MsgGUID: ER72puDBRjKLn/Fy7mxSSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,220,1725346800"; 
+   d="scan'208";a="110180207"
+Received: from vkasired-desk2.fm.intel.com ([10.105.128.132])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2024 22:46:05 -0700
+From: Vivek Kasireddy <vivek.kasireddy@intel.com>
+To: dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org
+Cc: Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for functions of same device
+Date: Sun, 20 Oct 2024 22:21:29 -0700
+Message-ID: <20241021052236.1820329-2-vivek.kasireddy@intel.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20241021052236.1820329-1-vivek.kasireddy@intel.com>
+References: <20241021052236.1820329-1-vivek.kasireddy@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] PCI: optimize proc sequential file read
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org
-References: <20241018222213.GA764583@bhelgaas>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <20241018222213.GA764583@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Functions of the same PCI device (such as a PF and a VF) share the
+same bus and have a common root port and typically, the PF provisions
+resources for the VF. Therefore, they can be considered compatible
+as far as P2P access is considered.
 
-在 2024/10/19 06:22, Bjorn Helgaas 写道:
-> On Fri, Oct 18, 2024 at 01:47:28PM +0800, Guixin Liu wrote:
->> PCI driver will traverse pci device list in pci_seq_start in every
->> sequential file reading, use xarry to store all pci devices to
->> accelerate finding the start.
->>
->> Use "time cat /proc/bus/pci/devices" to test on a machine with 13k
->> pci devices,  get an increase of about 90%.
-> s/pci/PCI/ (several times)
-> s/pci_seq_start/pci_seq_start()/
-> s/xarry/xarray/
-> s/,  /, / (remove extra space)
->
-OK.
->> Without this patch:
->>    real 0m0.917s
->>    user 0m0.000s
->>    sys  0m0.913s
->> With this patch:
->>    real 0m0.093s
->>    user 0m0.000s
->>    sys  0m0.093s
-> Nice speedup, for sure!
->
->> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
->> ---
->>   drivers/pci/pci.h    |  3 +++
->>   drivers/pci/probe.c  |  1 +
->>   drivers/pci/proc.c   | 64 +++++++++++++++++++++++++++++++++++++++-----
->>   drivers/pci/remove.c |  1 +
->>   include/linux/pci.h  |  2 ++
->>   5 files changed, 64 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 14d00ce45bfa..1a7da91eeb80 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -962,4 +962,7 @@ void pcim_release_region(struct pci_dev *pdev, int bar);
->>   	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
->>   	 PCI_CONF1_EXT_REG(reg))
->>   
->> +void pci_seq_tree_add_dev(struct pci_dev *dev);
->> +void pci_seq_tree_remove_dev(struct pci_dev *dev);
->> +
->>   #endif /* DRIVERS_PCI_H */
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 4f68414c3086..1fd9e9022f70 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -2592,6 +2592,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->>   	WARN_ON(ret < 0);
->>   
->>   	pci_npem_create(dev);
->> +	pci_seq_tree_add_dev(dev);
->>   }
->>   
->>   struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
->> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
->> index f967709082d6..30ca071ccad5 100644
->> --- a/drivers/pci/proc.c
->> +++ b/drivers/pci/proc.c
->> @@ -19,6 +19,9 @@
->>   
->>   static int proc_initialized;	/* = 0 */
->>   
->> +DEFINE_XARRAY_FLAGS(pci_seq_tree, 0);
->> +static unsigned long pci_max_idx;
->> +
->>   static loff_t proc_bus_pci_lseek(struct file *file, loff_t off, int whence)
->>   {
->>   	struct pci_dev *dev = pde_data(file_inode(file));
->> @@ -334,25 +337,72 @@ static const struct proc_ops proc_bus_pci_ops = {
->>   #endif /* HAVE_PCI_MMAP */
->>   };
->>   
->> +void pci_seq_tree_add_dev(struct pci_dev *dev)
->> +{
->> +	int ret;
->> +
->> +	if (dev) {
-> I don't think we should test "dev" for NULL here.  If it's NULL, I
-> think we have bigger problems and we should oops.
-Sure.
->> +		xa_lock(&pci_seq_tree);
->> +		pci_dev_get(dev);
->> +		ret = __xa_insert(&pci_seq_tree, pci_max_idx, dev, GFP_KERNEL);
->> +		if (!ret) {
->> +			dev->proc_seq_idx = pci_max_idx;
->> +			pci_max_idx++;
->> +		} else {
->> +			pci_dev_put(dev);
->> +			WARN_ON(ret);
->> +		}
->> +		xa_unlock(&pci_seq_tree);
->> +	}
->> +}
->> +
->> +void pci_seq_tree_remove_dev(struct pci_dev *dev)
->> +{
->> +	unsigned long idx = dev->proc_seq_idx;
->> +	struct pci_dev *latest_dev = NULL;
->> +	struct pci_dev *ret;
->> +
->> +	if (!dev)
->> +		return;
-> Same comment about testing "dev" for NULL.
->
-Ok.
->> +	xa_lock(&pci_seq_tree);
->> +	__xa_erase(&pci_seq_tree, idx);
->> +	pci_dev_put(dev);
->> +	/*
->> +	 * Move the latest pci_dev to this idx to keep the continuity.
->> +	 */
->> +	if (idx != pci_max_idx - 1) {
->> +		latest_dev = __xa_erase(&pci_seq_tree, pci_max_idx - 1);
->> +		ret = __xa_cmpxchg(&pci_seq_tree, idx, NULL, latest_dev,
->> +				GFP_KERNEL);
->> +		if (!ret)
->> +			latest_dev->proc_seq_idx = idx;
->> +		WARN_ON(ret);
->> +	}
->> +	pci_max_idx--;
->> +	xa_unlock(&pci_seq_tree);
->> +}
->> +
->>   /* iterator */
->>   static void *pci_seq_start(struct seq_file *m, loff_t *pos)
->>   {
->> -	struct pci_dev *dev = NULL;
->> +	struct pci_dev *dev;
->>   	loff_t n = *pos;
->>   
->> -	for_each_pci_dev(dev) {
->> -		if (!n--)
->> -			break;
->> -	}
->> +	dev = xa_load(&pci_seq_tree, n);
->> +	if (dev)
->> +		pci_dev_get(dev);
->>   	return dev;
-> I'm a little hesitant to add another place that keeps track of every
-> PCI device.  It's a fair bit of code here, and it's redundant
-> information, which means more work to keep them all synchronized.
->
-> This proc interface feels inherently racy.  We keep track of the
-> current item (n) in a struct seq_file, but I don't think there's
-> anything to prevent a pci_dev hot-add or -remove between calls to
-> pci_seq_start().
-Yes, maybe lost some information this time.
->
-> Is the proc interface the only place to get this information?  If
-> there's a way to get it from sysfs, maybe that is better and we don't
-> need to spend effort optimizing the less-desirable path?
+Currently, although the distance (2) is correctly calculated for
+functions of the same device, an ACS check failure prevents P2P DMA
+access between them. Therefore, introduce a small function named
+pci_devs_are_p2pdma_compatible() to determine if the provider and
+client belong to the same device and facilitate P2P DMA between
+them by not enforcing the ACS check.
 
-This is the situation I encountered: in scenarios of rapid container
+v2:
+- Relax the enforcment of ACS check only for Intel GPU functions
+  as they are P2PDMA compatible given the way the PF provisions
+  the resources among multiple VFs.
 
-scaling, when a container is started, it executes lscpu to traverse
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: <linux-pci@vger.kernel.org>
+Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
+---
+ drivers/pci/p2pdma.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-the /proc/bus/pci/devices file, or the container process directly
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 4f47a13cb500..a230e661f939 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -535,6 +535,17 @@ static unsigned long map_types_idx(struct pci_dev *client)
+ 	return (pci_domain_nr(client->bus) << 16) | pci_dev_id(client);
+ }
+ 
++static bool pci_devs_are_p2pdma_compatible(struct pci_dev *provider,
++					   struct pci_dev *client)
++{
++	if (provider->vendor == PCI_VENDOR_ID_INTEL) {
++		if (pci_is_vga(provider) && pci_is_vga(client))
++			return pci_physfn(provider) == pci_physfn(client);
++	}
++
++	return false;
++}
++
+ /*
+  * Calculate the P2PDMA mapping type and distance between two PCI devices.
+  *
+@@ -634,7 +645,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 
+ 	*dist = dist_a + dist_b;
+ 
+-	if (!acs_cnt) {
++	if (!acs_cnt || pci_devs_are_p2pdma_compatible(provider, client)) {
+ 		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
+ 		goto done;
+ 	}
+@@ -696,7 +707,9 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
+ 		return -1;
+ 
+ 	for (i = 0; i < num_clients; i++) {
+-		pci_client = find_parent_pci_dev(clients[i]);
++		pci_client = dev_is_pf(clients[i]) ?
++				pci_dev_get(to_pci_dev(clients[i])) :
++				find_parent_pci_dev(clients[i]);
+ 		if (!pci_client) {
+ 			if (verbose)
+ 				dev_warn(clients[i],
+-- 
+2.45.1
 
-traverses this file. When many containers are being started at once,
-
-it causes numerous containers to wait due to the locks on the klist
-
-used for traversing pci_dev, which greatly reduces the efficiency of
-
-container scaling and also causes other CPUs to become unresponsive.
-
-
-User-space programs, including Docker, are clients that we cannot easily 
-modify.
-
-Therefore, I attempted to accelerate pci_seq_start() within the kernel.
-
-This indeed resulted in the need for more code to maintain, as we must
-
-ensure both fast access and ordering. Initially, I considered directly
-
-modifying the klist in the driver base module, but such changes would
-
-impact other drivers as well.
-
-Do you have any other good suggestions?
-
-
-Best Regards,
-
-Guixin liu
-
->>   }
->>   
->>   static void *pci_seq_next(struct seq_file *m, void *v, loff_t *pos)
->>   {
->> -	struct pci_dev *dev = v;
->> +	struct pci_dev *dev;
->>   
->>   	(*pos)++;
->> -	dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, dev);
->> +	dev = xa_load(&pci_seq_tree, *pos);
->> +	if (dev)
->> +		pci_dev_get(dev);
-> Where is the pci_dev_put() that corresponds with this new
-> pci_dev_get()?
-In pci_seq_stop(), will call the pci_dev_put().
->
->>   	return dev;
->>   }
->>   
->> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
->> index e4ce1145aa3e..257ea46233a3 100644
->> --- a/drivers/pci/remove.c
->> +++ b/drivers/pci/remove.c
->> @@ -53,6 +53,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
->>   	pci_npem_remove(dev);
->>   
->>   	device_del(&dev->dev);
->> +	pci_seq_tree_remove_dev(dev);
->>   
->>   	down_write(&pci_bus_sem);
->>   	list_del(&dev->bus_list);
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 573b4c4c2be6..aeb3d4cce06a 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -534,6 +534,8 @@ struct pci_dev {
->>   
->>   	/* These methods index pci_reset_fn_methods[] */
->>   	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
->> +
->> +	unsigned long long	proc_seq_idx;
->>   };
->>   
->>   static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
->> -- 
->> 2.43.0
->>
 
