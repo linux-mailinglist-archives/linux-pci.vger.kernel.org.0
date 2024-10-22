@@ -1,132 +1,185 @@
-Return-Path: <linux-pci+bounces-15005-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15006-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 778EC9AA2AB
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 15:03:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7B059AA2B9
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 15:04:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38C52283654
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 13:03:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F3D728148E
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 13:04:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447DF19ABBD;
-	Tue, 22 Oct 2024 13:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3149D19D080;
+	Tue, 22 Oct 2024 13:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDJfnbUG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EF5yIK1c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFDB19D063;
-	Tue, 22 Oct 2024 13:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD58194ADB;
+	Tue, 22 Oct 2024 13:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729602169; cv=none; b=NnaSz6FN+gJtAcnYeqFIeYlnCSZ9RzeOSKMiHivt5dfmhZIXiPDdXA8r+/8yeZgKxo5W8sLoxK0tKxZrCcJ0TAjb6Qr3KUa7rU7ucsEg1xQyz5OCkjUgr5k1kSNWSQZJ9I79Fs21YnZbZGcVT4i5M54rj+Hj9s6e7liHdYrUEOY=
+	t=1729602285; cv=none; b=dJpcjzHl5C+xoNv+eY3X1LCXPrDCvc4GeQxAVld1fM1+lL8/4S/Edvc0NT8W3/73q9u5Brc+g6SvjT42wO27JRDAeEqcvEceowALBxpu6cMS4Xg3yZQbVG9CFKRvnoJTGB1JbQ0bB0rCeYbruhdJbFS1gOfQKlWczDApRdlhb6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729602169; c=relaxed/simple;
-	bh=ZSse1Eg98+LMzutfh1nuHu9lTL5IQL+O8CsCAOf6TnQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=o3iJqe7sJlNOO9sOMR7alfF3RJbOVizpTxy2wUWUp69pVcfHSqnOaXyaz6Y3LxExLF9YHtYElUfr+Xnr+yhl4Qcfh8AykeLHXZMb7CMz3zD0nEnuYrsT5oMcYy9BqLnVGXPmUzbEW+TUWXYTWSaebvkweo57Z8B/JeNA6lNokuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDJfnbUG; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=canonical.com
+	s=arc-20240116; t=1729602285; c=relaxed/simple;
+	bh=cbH0B8zscu4imBTHxG+Lvc8tuZdEhL0wvzGmBSkhDRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m5aRkwilMoSNewW2r81HMNOt7jgEg9jEuyzXjLZVY25KMiH+uRRtA8zCpBIY1iDlKqKqmRE0Y+TUOtqwOCfXsQf7UDraBnWnCXD1bEBAOU/wgRrgwNqHfDXYDtwLIcZDeIJAlgLSsQ2xXaUsnH0TZrGHA8bGPuFk+YdtBj0A0+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EF5yIK1c; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20e6981ca77so39683325ad.2;
-        Tue, 22 Oct 2024 06:02:46 -0700 (PDT)
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2e2ee0a47fdso1094934a91.2;
+        Tue, 22 Oct 2024 06:04:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729602166; x=1730206966; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q90p0I1RamExvHkraCkhdLHfJUzwCzfvv1jVPeRZmCQ=;
-        b=dDJfnbUGCtLam88FBwi4u0n3635kXshDNqSmbwjbwrU0G5zXFUldW69/+uVQ9YdeZL
-         boVBuB34SVFPUMJc8UgGmOenpZH1HqJ2VjPawTtHumPB90CzXYI12DlQ1TwxYiW6SH7d
-         tKcf4oJHObOdKT1fhMAJ/k23baxqd52Vza6qnE/SYt5UErz9OCCwB9f7xIyJdFCBK1t7
-         GsFRKpajcuWSDsBTXFIkAtcYtXS19ESIY7jiYp5ABAPBRgn+8X299DMZH3hEX7pXdnO3
-         KXuCXobG5GUwQ2puZ/Sxm1OSxvfnVbThCDq2aEKsvC7gRVNljmjp7TaTo2Iuh3YtMiWl
-         yhyg==
+        d=gmail.com; s=20230601; t=1729602282; x=1730207082; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pWDeRgm8AjTmhY393T7IKu9ZeB7eJOW+Adot/DNWsok=;
+        b=EF5yIK1cxKpcCdaFY9vdGXPUSsoTAdMbO/piR5a3PRRBGhkXH2R4hrsO2+48fOq/I+
+         q9GJeFG1Ox8NyrRC6yuSyxeLoNkDZ9ixgucb1LhYPHk2ivvhp4vuS5+Y3E/nzaXvSddo
+         d69RY0Q+UTqQlagrzNNmW135l7CxjWCTUyHAZrHeH1ihYmrgl6TwzU1MYsvnHqpYW5Nw
+         ThtRcG8dpgZPK3PLbO8tby/mayYPg5676CBWZWyRg7sEMQvSKsD+c1hZzmp43QVYGEgT
+         WILVOv9Vw1IlII93UdMHVPh3qHqv9NvP15WgJlv7gCXYt3MMQ8G/RjN237RaprKTb0Lf
+         oU7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729602166; x=1730206966;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q90p0I1RamExvHkraCkhdLHfJUzwCzfvv1jVPeRZmCQ=;
-        b=VJt6yikLqZZwWWyZzvRq/lSslaC41vZYC05BCwvdJx9VadONSkv00OaYO4CfyL/0+J
-         nIKzwUmE9PLQRI6UGtWIwQIXnq1ji/nS8ZbwP/qtsE8YB3C0PaBgHGCQ8UFjiOcJBfQY
-         RGsZP0OUgfIIGGfCi8qoo1zoUtWDsebwLu20TF1d4qS5+/6IsmI/oXcrPfxUmMsWXhVH
-         hUlFqZKFUT3oT1kEKMOm4CIYRXnNUDnTWFsYwzeP3OQVEJeYMr60vbIh9HiBObfGFCIg
-         LbcNL6KcYdVr46/BTbrhqle9H/ZTAlkVEupVd5r0yPI9gBl0HYszvw9mbcoSE7jmQW/0
-         Lpew==
-X-Forwarded-Encrypted: i=1; AJvYcCUE5zj5p0qnEko1BsE8B48nzyZh7cvUIkmBgI9vG9z4MmuLda1evHifzb/YuWmsMPMsFingvuMqpY8N@vger.kernel.org, AJvYcCX9IJ5EPDrgEaLsagAGTr+WCBUj8pceQbFITauwvXSVJAYtGoyzDhmCtgiOFR5CmkGfjg2mLrqtscsuuA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww7xD3dYxilRmDL22Os0IBbA+cpgPST5eliO2ptQLjelrQ8Gnu
-	X2hPSXmFok9cMnFGMCKKVoVCnY+z7VpF4ltN5cYssGieutNN4cDY
-X-Google-Smtp-Source: AGHT+IFCcz86yrNVz77sdnjYCsihCqlHFylImqt1Dq571tcbh5Glp/tYRtgDnA6h/bGZmqK8QLdFbQ==
-X-Received: by 2002:a17:902:d2cd:b0:20b:9998:e2f4 with SMTP id d9443c01a7336-20e985dbd00mr25114295ad.61.1729602165948;
-        Tue, 22 Oct 2024 06:02:45 -0700 (PDT)
-Received: from localhost (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0dba22sm42542085ad.220.2024.10.22.06.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 06:02:45 -0700 (PDT)
-Sender: AceLan Kao <acelan@gmail.com>
-From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: pciehp: Fix system hang during resume with daisy-chained hotplug controllers
-Date: Tue, 22 Oct 2024 21:02:43 +0800
-Message-ID: <20241022130243.263737-1-acelan.kao@canonical.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1729602282; x=1730207082;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pWDeRgm8AjTmhY393T7IKu9ZeB7eJOW+Adot/DNWsok=;
+        b=CVdYEqBVtgE/PHRwdF+N660VNdbsgRQCpC2JghC0dkvr8sC/MKAlyQM87Itjp+C5+g
+         4ii/dogI+4rddwQV+DNx/M3Caw5xt/b8eVFZw4fffQNAjaXZBzBnIe2Sa93qdr7FFBzW
+         9/IXsnl2FZd9Dr2Gf9QZziJh1AUY1fMkf6hv2xOxCsEO0FLTXctW/jqkoVyzO/oZ9VDA
+         spRpOfV6P6O4DdId1sWJeT/hGyHtjSa7y6v1t8yYdsRVSmkNPoscTmx8aihy9r10gkr/
+         QpxfFbzGg2Uzw5dQCo4KnLFiM1wg7IzDeTKUubbrS1jsfJ93puPHJJ+hK2eFPa9W5JIR
+         3REw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsfpsUdYkXp5tYTA/deiSl4exq/FiLEV8Z37rryD3BPhkD/5GMpDjyW893ScW5iZS+8uQIaO4XQWrRbes=@vger.kernel.org, AJvYcCWlbK5r8lxUgvlEepBDt6cyFvDpiFu9WjDsZGPoI5a1cP+j3E1AONq+CQAVrbOWxJd2apTUQbBxcyYb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw18JFZDHtqZTFKoDVE8hB8n559h7Xf/GDEsFR5CY5b4aiXA0ug
+	QDHjBHymqYpVW9demUWhLtktSOhczpjV5Sg1I1KBcfcjwoAK/O/OX/5G6qM/jZt9Sli5H1ihAZb
+	LSscmMkdiPlPZuM1zZZgYVSFBQkh3FQ==
+X-Google-Smtp-Source: AGHT+IH52G7hhVJzsWn9Mn7Q9OsulLJoDWAxP7UAnkiQV5yHiISOtioTuU80uizG3qQb9Fr754ZF0erA82kY5KLwkoo=
+X-Received: by 2002:a17:90a:e296:b0:2e2:de92:2d52 with SMTP id
+ 98e67ed59e1d1-2e561a58096mr7189173a91.9.1729602282458; Tue, 22 Oct 2024
+ 06:04:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241014152502.1477809-1-superm1@kernel.org> <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
+ <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
+In-Reply-To: <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 22 Oct 2024 09:04:30 -0400
+Message-ID: <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot
+ VGA device
+To: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: Luke Jones <luke@ljones.dev>, Mario Limonciello <superm1@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
+	Mario Limonciello <mario.limonciello@amd.com>, Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A system hang occurs when multiple PCIe hotplug controllers in a daisy-chained
-setup (like a Thunderbolt dock with NVMe storage) resume from system sleep.
-This happens when both the dock and its downstream devices try to process PDC
-events at the same time through pciehp_request().
+On Tue, Oct 22, 2024 at 2:31=E2=80=AFAM Kai-Heng Feng <kaihengf@nvidia.com>=
+ wrote:
+>
+> Hi Luke,
+>
+> On 2024/10/15 4:04 PM, Luke Jones wrote:
+> > On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
+> >> From: Mario Limonciello <mario.limonciello@amd.com>
+> >>
+> >> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display dev=
+ice.
+> >>
+> >> ```
+> >> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeForce
+> >> RTX 4070 Max-Q / Mobile] (rev a1)
+> >> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
+> >> Strix [Radeon 880M / 890M] (rev c1)
+> >> ```
+> >>
+> >> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU as th=
+e
+> >> boot VGA device, but really the eDP is connected to the AMD PCI displa=
+y
+> >> device.
+> >>
+> >> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA device=
+.
+> >>
+> >> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+> >> Reported-by: Luke D. Jones <luke@ljones.dev>
+> >> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
+> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >> ---
+> >>   drivers/pci/vgaarb.c | 7 -------
+> >>   1 file changed, 7 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> >> index 78748e8d2dba..05ac2b672d4b 100644
+> >> --- a/drivers/pci/vgaarb.c
+> >> +++ b/drivers/pci/vgaarb.c
+> >> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_device =
+*vgadev)
+> >>              return true;
+> >>      }
+> >>
+> >> -    /*
+> >> -     * Vgadev has neither IO nor MEM enabled.  If we haven't found an=
+y
+> >> -     * other VGA devices, it is the best candidate so far.
+> >> -     */
+> >> -    if (!boot_vga)
+> >> -            return true;
+> >> -
+> >>      return false;
+> >>   }
+> >>
+> >> --
+> >> 2.43.0
+> >
+> > Hi Mario,
+> >
+> > I can verify that this does leave the `boot_vga` attribute set as 0 for=
+ the NVIDIA device.
+>
+> Does the following diff work for you?
+> This variant should be less risky for most systems.
+>
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 78748e8d2dba..3fb734cb9c1b 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_device *vga=
+dev)
+>                  return true;
+>          }
+>
+> +       if (vga_arb_integrated_gpu(&pdev->dev))
+> +               return true;
+> +
 
-This patch changes pciehp_request() to atomic_or(), which adds the PDC event to
-ctrl->pending_events atomically. This change prevents the race condition by
-making the event handling atomic across multiple hotplug controllers during
-resume.
+The problem is that the integrated graphics does not support VGA.
 
-The bug was found with an Intel Thunderbolt 4 Bridge (8086:0b26) dock and a
-Phison NVMe controller (1987:5012), where the system would hang if both devices
-tried to handle presence detect changes during resume.
+Alex
 
-Changes:
-  v2:
-    * Replace pciehp_request() with atomic_or() to fix race condition
-
-  v1:
-    * https://lore.kernel.org/lkml/Zvf7xYEA32VgLRJ6@wunner.de/T/
-    * Remove pci_walk_bus() call
-    * Fix appeared to work due to lower reproduction rate
-
-Fixes: 9d573d19547b ("PCI: pciehp: Detect device replacement during system sleep")
-Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
----
- drivers/pci/hotplug/pciehp_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index ff458e692fed..56bf23d55c41 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -332,7 +332,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
- 			ctrl_dbg(ctrl, "device replaced during system sleep\n");
- 			pci_walk_bus(ctrl->pcie->port->subordinate,
- 				     pci_dev_set_disconnected, NULL);
--			pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
-+			atomic_or(PCI_EXP_SLTSTA_PDC, &ctrl->pending_events);
- 		}
- 	}
- 
--- 
-2.43.0
-
+>          /*
+>           * Vgadev has neither IO nor MEM enabled.  If we haven't found a=
+ny
+>           * other VGA devices, it is the best candidate so far.
+>
+>
+> Kai-Heng
+>
+> >
+> > Tested-by: Luke D. Jones <luke@ljones.dev>
+>
 
