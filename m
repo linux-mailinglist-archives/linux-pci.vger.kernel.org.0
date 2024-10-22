@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-15037-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15038-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE3359AB6D8
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:32:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52AF49AB70E
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:42:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFB5C1C23395
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 19:32:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C87331F2409A
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 19:42:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E00B71CC8A7;
-	Tue, 22 Oct 2024 19:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720311CB50A;
+	Tue, 22 Oct 2024 19:42:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CIx8QETA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XgKxENgb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53B71CB534;
-	Tue, 22 Oct 2024 19:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B4145A1C;
+	Tue, 22 Oct 2024 19:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729625468; cv=none; b=QPLEh8YVHFjWrPn2qFezDuDEbivtcg+oJte9yr+RjZx8JhgCuMYweCb0MAR1BLtgBcTmEbb3WAwCDlC1SShES4WS0r/R5RH4VvpP7f3hULacwhTD+4df6dQGyFuz6Aao+/x1xPTgpp8lkv4ehwKqvnPTlRRdYLDjcaPYM1fWr9I=
+	t=1729626128; cv=none; b=ojqHbsSXC0/75s7ljorJlg74+7/0OzkPyi7mlJ7oid7zhMayZtvgNvBMG3vVeFrEhp8SgJpFgRMYpQaTzPIaQbCwyINnReCXZ9rXb34g2mPd38w0ZGUFfpzLHoGUtI29FOjSbvIuRBFUxwMyxWErQiZnZipK2hL+NBop7qyxqbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729625468; c=relaxed/simple;
-	bh=I96gy9L2CueZ1inOdskqZYTcTAN8yiQLuBuZyuhO8bU=;
+	s=arc-20240116; t=1729626128; c=relaxed/simple;
+	bh=QQc7sW7+SBjdpzhiB9fl4wHUT1zzT8I+K0VfEb+0Hro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fH7fozmksIrrgvKaJ5E7d5fhV++RBCNEq6D81HK39c14hX0izFXBX9guG2iD+K36rIKjbMCbycEbJfpdpi617WdLlZTBS9208zL5JIJ/d/m9/xoPq9nmhIF8pfBFCOI6XMU5ego8ThTAEe6x4dm/5I0WSCS6SQXp6/Umf7HXTHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CIx8QETA; arc=none smtp.client-ip=192.198.163.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvSRkqgWcY1eRtff96FW5bItVFboKuLzuzT0mNAtHR0butp4sSPAzunCrxLYBWCQyBMjqp7Vc4XvvTUxWnMSoiMoPRtteH+IaCKIRiWG0ysfeAsb6TEjGKd9E3kPrAj35EI27Oq8nkdMDM6c/+bEpZR8hLV/0CH2NU3lKXS8MqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XgKxENgb; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729625466; x=1761161466;
+  t=1729626127; x=1761162127;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=I96gy9L2CueZ1inOdskqZYTcTAN8yiQLuBuZyuhO8bU=;
-  b=CIx8QETAh1ixsce63wTxkx7dgsD1NQycVzTx9FaSPt9UyhE34Dd9YzNT
-   EWNxhXOAnbVMpjSulNFLRVAMmjFQN8etgbbFvc5UrczuQlTc5mY5qmLwx
-   fJuDqJug2BRPJt85plb20puR1+lzj4cG86vOgGM4KACDPusoHmxejb3ap
-   p5zCUtUg3imODz5Wfnwhbq+f1b+W/SH9QtkaA1bV4MeaTIbKxcVSGI/6t
-   NXCIsBA/cz+edwiNwud2izxqD5N+l6nC+zTqL7bwO8Jhgpkvy1cxkkeou
-   wk6qa0hlPAbm6UpkVN9aYw1qDEZaNg2q+dvB5VvGDS7fg78bIzgAp/TA7
+  bh=QQc7sW7+SBjdpzhiB9fl4wHUT1zzT8I+K0VfEb+0Hro=;
+  b=XgKxENgb8l/LR/Sf6BrpSHwd1TCDAhT2X4ZawOG3ZYx8hPhTmLzeTwT/
+   mOvpKSfTeZv6J5Fs4svd8gJ2oQJyh/i5Eruk2z8HEiUzDp29oX2HgwXi0
+   mC0hVPEgbNgFMmkn02n3Ryftwo94VvLPjS5RV2g4g9W7bZZtJJc2PcCiC
+   o2JaVPR1DApSW1SHbWY+GfXxb5cb4hMZ6vE/GHsFhe65LwcJXLONEamYv
+   UX7DwU5HmohnVX66lKzbIZpSlWq+0Am4HD6jb9MUdtKqY77bf0R7XopUI
+   g52wivQoR/9Z4T84TPTBteWaAatGlNNlcEWy3iKz0ncrx1lUCCXVkkhnQ
    w==;
-X-CSE-ConnectionGUID: LUY8dnnsTsGF5vXTbHTv8Q==
-X-CSE-MsgGUID: HM9BVib4TJ+U+YoagLXqCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11233"; a="29077405"
-X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
-   d="scan'208";a="29077405"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 12:31:06 -0700
-X-CSE-ConnectionGUID: K93RX3e4SKSLbeqw2r8gJA==
-X-CSE-MsgGUID: l+lO5qg7TimnUo6kutzWnw==
+X-CSE-ConnectionGUID: XnwDqs9YQeqDUkZA+zARxg==
+X-CSE-MsgGUID: PtkygznMR1mrpG7zl7N2Tg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28964358"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28964358"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 12:42:06 -0700
+X-CSE-ConnectionGUID: 2NPEaIm3TUqbE4Fuzm0g3Q==
+X-CSE-MsgGUID: zh7g0qZTSpKyd6aucQOrKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
-   d="scan'208";a="84759781"
+   d="scan'208";a="84567463"
 Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 22 Oct 2024 12:30:59 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 22 Oct 2024 12:42:00 -0700
 Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1t3Kan-000U0a-2E;
-	Tue, 22 Oct 2024 19:30:57 +0000
-Date: Wed, 23 Oct 2024 03:30:47 +0800
+	id 1t3KlS-000U1g-1I;
+	Tue, 22 Oct 2024 19:41:58 +0000
+Date: Wed, 23 Oct 2024 03:41:08 +0800
 From: kernel test robot <lkp@intel.com>
 To: Frank Li <Frank.Li@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
@@ -80,14 +80,13 @@ To: Frank Li <Frank.Li@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Frank Li <Frank.Li@nxp.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
 Subject: Re: [PATCH v3 1/4] PCI: dwc: ep: Add bus_addr_base for outbound
  window
-Message-ID: <202410230325.DxAdrnbW-lkp@intel.com>
+Message-ID: <202410230328.BTHareG1-lkp@intel.com>
 References: <20241021-pcie_ep_range-v3-1-b13526eb0089@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -109,27 +108,36 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-dwc-ep-Add-b
 base:   afb15ca28055352101286046c1f9f01fdaa1ace1
 patch link:    https://lore.kernel.org/r/20241021-pcie_ep_range-v3-1-b13526eb0089%40nxp.com
 patch subject: [PATCH v3 1/4] PCI: dwc: ep: Add bus_addr_base for outbound window
-config: i386-buildonly-randconfig-002-20241023 (https://download.01.org/0day-ci/archive/20241023/202410230325.DxAdrnbW-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241023/202410230325.DxAdrnbW-lkp@intel.com/reproduce)
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20241023/202410230328.BTHareG1-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241023/202410230328.BTHareG1-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410230325.DxAdrnbW-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410230328.BTHareG1-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/pci/controller/dwc/pcie-designware-ep.c:885:35: error: incompatible pointer types passing 'phys_addr_t *' (aka 'unsigned int *') to parameter of type 'u64 *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+   drivers/pci/controller/dwc/pcie-designware-ep.c: In function 'dw_pcie_ep_init':
+>> drivers/pci/controller/dwc/pcie-designware-ep.c:885:49: error: passing argument 3 of 'of_property_read_reg' from incompatible pointer type [-Wincompatible-pointer-types]
      885 |                 of_property_read_reg(np, index, &ep->bus_addr_base, NULL);
          |                                                 ^~~~~~~~~~~~~~~~~~
-   include/linux/of_address.h:75:64: note: passing argument to parameter 'addr' here
+         |                                                 |
+         |                                                 phys_addr_t * {aka unsigned int *}
+   In file included from drivers/pci/controller/dwc/pcie-designware-ep.c:12:
+   include/linux/of_address.h:75:64: note: expected 'u64 *' {aka 'long long unsigned int *'} but argument is of type 'phys_addr_t *' {aka 'unsigned int *'}
       75 | int of_property_read_reg(struct device_node *np, int idx, u64 *addr, u64 *size);
-         |                                                                ^
-   1 error generated.
+         |                                                           ~~~~~^~~~
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for GET_FREE_REGION
+   Depends on [n]: SPARSEMEM [=n]
+   Selected by [m]:
+   - RESOURCE_KUNIT_TEST [=m] && RUNTIME_TESTING_MENU [=y] && KUNIT [=m]
 
 
-vim +885 drivers/pci/controller/dwc/pcie-designware-ep.c
+vim +/of_property_read_reg +885 drivers/pci/controller/dwc/pcie-designware-ep.c
 
    846	
    847	/**
