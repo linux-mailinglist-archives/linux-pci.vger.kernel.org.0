@@ -1,206 +1,285 @@
-Return-Path: <linux-pci+bounces-15064-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15065-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 158949AB950
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 00:06:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468C89AB961
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 00:12:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88EA21F23CF4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 22:06:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B1451C21EE8
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 22:12:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15991CCB50;
-	Tue, 22 Oct 2024 22:05:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03DD61CDA04;
+	Tue, 22 Oct 2024 22:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbWxnOU6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kgiuXXrW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7D413B58A
-	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 22:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DD31CDA0B
+	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 22:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729634758; cv=none; b=JhFfTR69nw5Oy9yMpDP/6/vnRz1ddQ15cpBshTe9+5i3jqj8DTap0h6PJrR6uJ5dGFb2a6F49uuKkzRbYB/pZsyttN8MnYBbczwtkni9rhqTqUZOeaWFfcKmQXOMz7RHSUUPbLwv/ppY+ip4xyyzpGuwOAUqyd+SXFLSBxXnvZ0=
+	t=1729635130; cv=none; b=UAZe9gtBra21iutLj+7xrvRbOXAvEMtrS1XY+ddW/t0TG8EySg+tpCFRM7lupnYlPzOtZzBl7CM8kUF0KcZjkciWQb3aC+eiyUGGUc1FQyWPm5D635J7a/dtx2iAUAL2brwKbgRL59oqZ3N7o7wDuAq8Vo1X5N+a7Qlsa82UbTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729634758; c=relaxed/simple;
-	bh=lNx0k8Y88rFJJBYAPnXXZExVsZqVdVRSmPS0Az9OfaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=reoJDF0CZ34ZfeXtsUqVOS3wd2pHPvqxi5O/nONeOSu6ZjZ9s8+R70ufcDMRHsyP/7IDdZ/083Xls3jZTIJzWb7ScG7rfedzoRqcg4oVEnwpSrNrTGiDxvYm8jXXvO3dWgv+YHCdJd5kDkZUuSfLopwB76JJyOPD64ZAfGPA9sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbWxnOU6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB05C4CEC3;
-	Tue, 22 Oct 2024 22:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729634758;
-	bh=lNx0k8Y88rFJJBYAPnXXZExVsZqVdVRSmPS0Az9OfaE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bbWxnOU6j4ew/XA0AlqQ7IiFc79zI0s3PUrllvw+WXEoln400DE005LBIk5PbiPon
-	 xAJHT2bOniiM70g0POirHldYhrPU4V6zAozl7wZ29s4akTsJtDJV55s3VvaoA6eA7V
-	 XLlZLGzki/RcTQL3GQHExDvPVj09TPSBZu30ns2NkFhuxugI3toX7eUwKE3QrCTaeV
-	 gunUv+IabTXZkLMVVksrnQzx6JpQD0pSxLq7BTio1fV2VekmXZn9ZMzf3AKTmq/ZQR
-	 shUOdeWQ4XldbHVOWuBgtegCv556+iKrNnm4ZJ5KcIYR9EIRUz9Ea3wmLhcnadXyQZ
-	 m47f+6Ys1BSgg==
-Message-ID: <2632a47f-c627-4a9b-98a9-d5dc6fd25ef8@kernel.org>
-Date: Wed, 23 Oct 2024 07:05:54 +0900
+	s=arc-20240116; t=1729635130; c=relaxed/simple;
+	bh=JT+mnPXkORH5P3mUdM3RqRItQTySKdLYthMFaNXvZuw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=sxFVf2DiNeHqJ4gF00y9j2OomOUotYVI12w2gWl+z9TZjv6h02IBZvS70Hxcd69I7C6u/0bnsS8gQL96HsmWAMyDs9AhXtaiTZtpq0mj7JGkFDICG5Zr/NS8kO8bAmC1LrI3myVBHXyyIw+d7w28J8ZwXOPSHp0jRCTiT2bn+/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kgiuXXrW; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729635129; x=1761171129;
+  h=date:from:to:cc:subject:message-id;
+  bh=JT+mnPXkORH5P3mUdM3RqRItQTySKdLYthMFaNXvZuw=;
+  b=kgiuXXrWTFOWoFtGjAKVD2OPXSLc3FgJMidAUPGmdMAgEv2NTOdP/LWW
+   euZvlTQJG6nIYQzCwca8ADJwQwMPB8HzTSgnPA5TtZnCA4U/LaJzw5XZa
+   4EGHPpqdoW5aL/XYGPtbvfSB/LTP9n1giojwhYe8lTijhUMuW7TM0nWOj
+   cZuqbK1hzprbo2K2IQ3+CjBMLTVX14BxeQqi4aSFCOC7ZusxyK4mRYiOs
+   BhiVr3hJPHRYlSbJUhTtUF/uP2wjeEiBnkYeQtw4uX7G/M6pO/vQ02zyG
+   GnjBU3Z4RnSwWEM5w6ONeuihSvzYhNs9nAwiydIJSb6oiQv8XSq1OiRd8
+   A==;
+X-CSE-ConnectionGUID: 4dh9wJ7NSDGKEUhQcxcEaA==
+X-CSE-MsgGUID: 01OCcJPwSJ2p7QFOHCZF+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11233"; a="29094965"
+X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
+   d="scan'208";a="29094965"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 15:12:09 -0700
+X-CSE-ConnectionGUID: rm9fwAY+QW6LDxTc7+TJtA==
+X-CSE-MsgGUID: I5IEKa38SPaZsZIHTA3omw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,223,1725346800"; 
+   d="scan'208";a="84619337"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 22 Oct 2024 15:12:08 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t3N6j-000UAQ-2C;
+	Tue, 22 Oct 2024 22:12:05 +0000
+Date: Wed, 23 Oct 2024 06:11:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 912bf26eced767b39b2e55691f56f2a3e5884e55
+Message-ID: <202410230629.Nhl8w7sI-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/6] Improve PCI memory mapping API
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Jingoo Han <jingoohan1@gmail.com>,
- linux-pci@vger.kernel.org, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
- Niklas Cassel <cassel@kernel.org>
-References: <20241022204752.GA881656@bhelgaas>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20241022204752.GA881656@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 10/23/24 05:47, Bjorn Helgaas wrote:
-> On Tue, Oct 22, 2024 at 10:51:53AM +0900, Damien Le Moal wrote:
->> On 10/22/24 07:19, Bjorn Helgaas wrote:
->>> On Sat, Oct 12, 2024 at 08:32:40PM +0900, Damien Le Moal wrote:
->>>> This series introduces the new functions pci_epc_mem_map() and
->>>> pci_epc_mem_unmap() to improve handling of the PCI address mapping
->>>> alignment constraints of endpoint controllers in a controller
->>>> independent manner.
->>>
->>> Hi Damien, I know this is obvious to everybody except me, but who
->>> uses this mapping?  A driver running on the endpoint that does
->>> MMIO?  DMA (Memory Reads or Writes that target an endpoint BAR)?
->>> I'm still trying to wrap my head around the whole endpoint driver
->>> model.
->>
->> The mapping API is for mmio or DMA using endpoint controller memory
->> mapped to a host PCI address range. It is not for BARs. BARs setup
->> does not use the same API and has not changed with these patches.
->>
->> BARs can still be accessed on the endpoint (within the EPF driver)
->> with regular READ_ONCE()/WRITE_ONCE() once they are set. But any
->> data transfer between the PCI RC host and the EPF driver on the EP
->> host that use mmio or DMA generic channel (memory copy offload
->> channel) needs the new mapping API. DMA transfers that can be done
->> using dedicated DMA rx/tx channels associated with the endpoint
->> controller do not need to use this API as the mapping to the host
->> PCI address space is automatically handled by the DMA driver.
-> 
-> Sorry I'm dense.  I'm really not used to thinking in the endpoint
-> point of view.  Correct me where I go off the rails:
-> 
->   - This code (pci_epc_mem_map()) runs on an endpoint, basically as
->     part of some endpoint firmware, right?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 912bf26eced767b39b2e55691f56f2a3e5884e55  Merge branch 'pci/misc'
 
-Not sure what you mean by "firmware" here. pci_epc_mem_map() is intended for use
-by a PCI endpoint function driver on the EP side, nothing else.
+elapsed time: 1340m
 
->   - On the endpoint's PCIe side, it receives memory read/write TLPs?
+configs tested: 192
+configs skipped: 4
 
-pci_epc_mem_map() does not receive anything itself. It only allocates local EP
-controller memory from outbound ATU windows and map that to a PCI address region
-of the host (RC side). Here "map" means programming the ATU using a correctly
-aligned PCI address that satisfies the EP PCI controller alignment constraints.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The memory read/write TLPs will happen once the EP function driver access the
-mapped memory with memcpy_fromio/toio() (or use generic memory copy offload DMA
-channel).
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arc                          axs103_defconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                   randconfig-001-20241022    gcc-14.1.0
+arc                   randconfig-002-20241022    gcc-14.1.0
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm                     am200epdkit_defconfig    clang-14
+arm                     davinci_all_defconfig    clang-14
+arm                                 defconfig    gcc-14.1.0
+arm                       imx_v4_v5_defconfig    clang-20
+arm                       multi_v4t_defconfig    clang-14
+arm                   randconfig-001-20241022    gcc-14.1.0
+arm                   randconfig-002-20241022    gcc-14.1.0
+arm                   randconfig-003-20241022    gcc-14.1.0
+arm                   randconfig-004-20241022    gcc-14.1.0
+arm                        shmobile_defconfig    clang-20
+arm                    vt8500_v6_v7_defconfig    clang-20
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+arm64                 randconfig-001-20241022    gcc-14.1.0
+arm64                 randconfig-002-20241022    gcc-14.1.0
+arm64                 randconfig-003-20241022    gcc-14.1.0
+arm64                 randconfig-004-20241022    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+csky                  randconfig-001-20241022    gcc-14.1.0
+csky                  randconfig-002-20241022    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+hexagon               randconfig-001-20241022    gcc-14.1.0
+hexagon               randconfig-002-20241022    gcc-14.1.0
+i386                             allmodconfig    clang-18
+i386                              allnoconfig    clang-18
+i386                             allyesconfig    clang-18
+i386        buildonly-randconfig-001-20241022    clang-18
+i386        buildonly-randconfig-002-20241022    clang-18
+i386        buildonly-randconfig-003-20241022    clang-18
+i386        buildonly-randconfig-004-20241022    clang-18
+i386        buildonly-randconfig-005-20241022    clang-18
+i386        buildonly-randconfig-006-20241022    clang-18
+i386                                defconfig    clang-18
+i386                  randconfig-001-20241022    clang-18
+i386                  randconfig-002-20241022    clang-18
+i386                  randconfig-003-20241022    clang-18
+i386                  randconfig-004-20241022    clang-18
+i386                  randconfig-005-20241022    clang-18
+i386                  randconfig-006-20241022    clang-18
+i386                  randconfig-011-20241022    clang-18
+i386                  randconfig-012-20241022    clang-18
+i386                  randconfig-013-20241022    clang-18
+i386                  randconfig-014-20241022    clang-18
+i386                  randconfig-015-20241022    clang-18
+i386                  randconfig-016-20241022    clang-18
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+loongarch             randconfig-001-20241022    gcc-14.1.0
+loongarch             randconfig-002-20241022    gcc-14.1.0
+m68k                             alldefconfig    clang-20
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                         apollo_defconfig    clang-14
+m68k                         apollo_defconfig    clang-20
+m68k                                defconfig    gcc-14.1.0
+m68k                           sun3_defconfig    clang-20
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                  cavium_octeon_defconfig    clang-20
+mips                          eyeq6_defconfig    clang-14
+mips                            gpr_defconfig    clang-20
+mips                           ip28_defconfig    clang-20
+mips                           ip32_defconfig    clang-14
+mips                      maltaaprp_defconfig    clang-14
+mips                         rt305x_defconfig    clang-14
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+nios2                 randconfig-001-20241022    gcc-14.1.0
+nios2                 randconfig-002-20241022    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20241022    gcc-14.1.0
+parisc                randconfig-002-20241022    gcc-14.1.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                    adder875_defconfig    clang-20
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                       holly_defconfig    clang-20
+powerpc               randconfig-001-20241022    gcc-14.1.0
+powerpc               randconfig-002-20241022    gcc-14.1.0
+powerpc               randconfig-003-20241022    gcc-14.1.0
+powerpc                     redwood_defconfig    clang-14
+powerpc64             randconfig-001-20241022    gcc-14.1.0
+powerpc64             randconfig-002-20241022    gcc-14.1.0
+powerpc64             randconfig-003-20241022    gcc-14.1.0
+riscv                            alldefconfig    clang-14
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+riscv                    nommu_k210_defconfig    clang-14
+riscv                 randconfig-001-20241022    gcc-14.1.0
+riscv                 randconfig-002-20241022    gcc-14.1.0
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                          debug_defconfig    clang-14
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20241022    gcc-14.1.0
+s390                  randconfig-002-20241022    gcc-14.1.0
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                             espt_defconfig    clang-20
+sh                          kfr2r09_defconfig    clang-20
+sh                    randconfig-001-20241022    gcc-14.1.0
+sh                    randconfig-002-20241022    gcc-14.1.0
+sh                          rsk7269_defconfig    clang-14
+sh                           se7724_defconfig    clang-20
+sh                     sh7710voipgw_defconfig    clang-14
+sh                            titan_defconfig    clang-14
+sparc                            allmodconfig    gcc-14.1.0
+sparc                       sparc64_defconfig    clang-14
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20241022    gcc-14.1.0
+sparc64               randconfig-002-20241022    gcc-14.1.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20241022    gcc-14.1.0
+um                    randconfig-002-20241022    gcc-14.1.0
+um                           x86_64_defconfig    clang-20
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64      buildonly-randconfig-001-20241022    clang-18
+x86_64      buildonly-randconfig-002-20241022    clang-18
+x86_64      buildonly-randconfig-003-20241022    clang-18
+x86_64      buildonly-randconfig-004-20241022    clang-18
+x86_64      buildonly-randconfig-005-20241022    clang-18
+x86_64      buildonly-randconfig-006-20241022    clang-18
+x86_64                              defconfig    clang-18
+x86_64                                  kexec    clang-18
+x86_64                                  kexec    gcc-12
+x86_64                randconfig-001-20241022    clang-18
+x86_64                randconfig-002-20241022    clang-18
+x86_64                randconfig-003-20241022    clang-18
+x86_64                randconfig-004-20241022    clang-18
+x86_64                randconfig-005-20241022    clang-18
+x86_64                randconfig-006-20241022    clang-18
+x86_64                randconfig-011-20241022    clang-18
+x86_64                randconfig-012-20241022    clang-18
+x86_64                randconfig-013-20241022    clang-18
+x86_64                randconfig-014-20241022    clang-18
+x86_64                randconfig-015-20241022    clang-18
+x86_64                randconfig-016-20241022    clang-18
+x86_64                randconfig-071-20241022    clang-18
+x86_64                randconfig-072-20241022    clang-18
+x86_64                randconfig-073-20241022    clang-18
+x86_64                randconfig-074-20241022    clang-18
+x86_64                randconfig-075-20241022    clang-18
+x86_64                randconfig-076-20241022    clang-18
+x86_64                               rhel-8.3    gcc-12
+x86_64                           rhel-8.3-bpf    clang-18
+x86_64                         rhel-8.3-kunit    clang-18
+x86_64                           rhel-8.3-ltp    clang-18
+x86_64                          rhel-8.3-rust    clang-18
+xtensa                            allnoconfig    gcc-14.1.0
+xtensa                randconfig-001-20241022    gcc-14.1.0
+xtensa                randconfig-002-20241022    gcc-14.1.0
 
->   - These TLPs would be generated elsewhere in the PCIe fabric, e.g.,
->     by a driver on the host doing MMIO to the endpoint, or possibly
->     another endpoint doing peer-to-peer DMA.
-
-MMIO or DMA, yes.
-
-> 
->   - Mem read/write TLPs are routed by address, and the endpoint
->     accepts them if the address matches one of its BARs.
-
-Yes, but pci_epc_mem_map() is not for use for BARs on the EP side. BARs setup on
-EP PCI controllers use inbound ATU windows. pci_epc_mem_map() programs outbound
-ATU windows. BARs setup use pci_epf_alloc_space() + pci_epc_set_bar() to setup a
-BAR.
-
-> 
->   - This is a little different from a Root Complex, which would
->     basically treat reads/writes to anything outside the Root Port
->     windows as incoming DMA headed to physical memory.
-> 
->   - A Root Complex would use the TLP address (the PCI bus address)
->     directly as a CPU physical memory address unless the TLP address
->     is translated by an IOMMU.
-> 
->   - For the endpoint, you want the BAR to be an aperture to physical
->     memory in the address space of the SoC driving the endpoint.
-
-Yes, and as said above this is done with pci_epf_alloc_space() +
-pci_epc_set_bar(), not pci_epc_mem_map().
-
->   - The SoC physical memory address may be different from the PCI but
->     address in the TLP, and pci_epc_mem_map() is the way to account
->     for this?
-
-pci_epc_mem_map() is essentially a call to pci_epc_mem_alloc_addr() +
-pci_epc_map_addr(). pci_epc_mem_alloc_addr() allocates memory from the EP PCI
-controller outbound windows and pci_epc_map_addr() programs an EP PCI controller
-outbound ATU entry to map that memory to some PCI address region of the host (RC).
-
-pci_epc_mem_map() was created because the current epc API does not hide any of
-the EP PCI controller PCI address alignment constraints for programming outbound
-ATU entries. This means that using directly pci_epc_mem_alloc_addr() +
-pci_epc_map_addr(), things may or may not work (often the latter) depending on
-the PCI address region (start address and its size) that is to be mapped and
-accessed by the endpoint function driver.
-
-Most EP PCI controllers at least require a PCI address to be aligned to some
-fixed boundary (e.g. 64K for the RK3588 SoC on the Rock5B board). Even such
-alignment boundary/mask is not exposed through the API (epc_features->align is
-for BARs and should not be used for outbound ATU programming). Worse yet, some
-EP PCI controllers use the lower bits of a local memory window address range as
-the lower bits of the RC PCI address range when generating TLPs (e.g. RK3399 and
-Cadence EP controller). For these EP PCI controllers, the programming of
-outbound ATU entries for mapping a RC PCI address region thus endup depending on
-the start PCI address of the region *and* the region size (as the size drives
-the number of lower bits of address that will change over the entire region).
-
-The above API issues where essentially unsolvable from a regular endpoint driver
-correctly coded to be EP controller independent. I could not get my prototype
-nvme endpoint function driver to work without introducing pci_epc_mem_map()
-(nvme does not require any special alignment of command buffers, so on an nvme
-EPF driver we end up having to deal with essentially random PCI addresses that
-have no special alignment).
-
-pci_epc_mem_map() relies on the new ->align_addr() EP controller operation to
-get information about the start address and the size to use for mapping to local
-memory a PCI address region. The size given is used for pci_epc_mem_alloc_addr()
-and the start address and size given are used with pci_epc_map_addr(). This
-generates a correct mapping regardless of the PCI address and size given.
-And for the actual data access by the EP function driver, pci_epc_mem_map()
-gives the address within the mapping that correspond to the PCI address that we
-wanted mapped.
-
-Et voila, problem solved :)
-
-> 
->   - IOMMU translations from PCI to CPU physical address space are
->     pretty arbitrary and needn't be contiguous on the CPU side.
-> 
->   - pci_epc_mem_map() sets up a conceptually similar PCI to CPU
->     address space translation, but it's much simpler because it
->     basically applies just a constant offset?
-
-
--- 
-Damien Le Moal
-Western Digital Research
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
