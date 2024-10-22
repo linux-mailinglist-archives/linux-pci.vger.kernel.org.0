@@ -1,117 +1,107 @@
-Return-Path: <linux-pci+bounces-15042-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15043-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7319AB7DB
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 22:45:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 263E19AB7E9
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 22:47:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3FB51F23B80
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 20:45:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D20851F23C34
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 20:47:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59B2E1CCB47;
-	Tue, 22 Oct 2024 20:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFC91CC89F;
+	Tue, 22 Oct 2024 20:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNZGIvQs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoQvUNkg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23481CC8B7;
-	Tue, 22 Oct 2024 20:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541B11C9ED6;
+	Tue, 22 Oct 2024 20:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729629906; cv=none; b=J4CbAmQ0w7vo0/UKvBPX4PWY7vVpBHAC7g2eRHuWr7mYRr/6e5bjf2yjZTgfEYp6JzJNh8TiqBWSlKLrEgqdRkaIoLV1eSGOEFjQn5EjiHTKe72Ntay1EsTfC79IgQBbaGB4IGYHUB79/hgpkxoZAkq/CJNMmSjgSVy23DwsxHs=
+	t=1729630014; cv=none; b=od9VTBsWwN0+PufRYrSxtE9wCeL4wCYOsPQ+IU0DIqeiF69DDja6bBZqgivzluZOINciv1mXdKvLIE4zRYqrQHYQDXbBOjo/UB2HwKR7wucEugekg087PaITh9gq1+IfLqS2AOYCQSRAj+b6E9Ske7rM5KXgjOz/+3peGu6ydpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729629906; c=relaxed/simple;
-	bh=Q/UukEPUP32zgVTdK0YRVpQPgHsDur1KaNDdLcMAZaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ekJ6hyuPtMQSYzvo+dB14U63DihlHSAg/9ytrA/f/MAI9MgU2w4pf2OTClbMuxQsXNSkNNVZmD+OiQA2bJ1RMME2t5eZ/+lAYPGssjBXNDBLS/CsX7RNvqn+6DHkhLBNr1aFUl2/L8QtTHXCQY8Xn9SyNa2preNeDKpUqix8YA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VNZGIvQs; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-20ce5e3b116so48497645ad.1;
-        Tue, 22 Oct 2024 13:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729629904; x=1730234704; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ktNgPCHPDjDnkh9XGkiZp/oSnx3cg7Ir6lSaEp/jux4=;
-        b=VNZGIvQskhwAmcs2WSy7yWf9R3WNVWy1prdSfW+VtvzIxEvh1VPb3UEbxafHYvDlYi
-         s8jRG2Li0m9e8FGD+8ob9MITWaydJ7VLXe+Stq6pm74BYg2i+66ks3ZMSO5RPRcsycKh
-         dBZWdFVoTtM8UZyROijvMRMpKCG9y/VFctqNRJvkflxcPR75oC+04YCHOYYeM+UYCkAg
-         D6ZTz9/CtPOQkmnTAlWO0zDe9dteCqPMPXJh9lBHxI21dhlhEjv2O+f3WKcK3XUCe9YF
-         ea7l6+zhnK9IZGa51vULwJzUOW6gi9tCBfFsNDXN0U8EDdhxCgr2rUqyg9sSQg5EBU47
-         s8vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729629904; x=1730234704;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktNgPCHPDjDnkh9XGkiZp/oSnx3cg7Ir6lSaEp/jux4=;
-        b=NrdfokbHbsWE8S/1TEI3wwhthoSGp+mhnhy3siIjsN83eUSPHwBvt8uPIWSiuvrRkQ
-         x+0EHfxX2bwdFYljIm6yo8U3i4YPXHecnTHCgLhyAjta5SjMHimA1K1oRBZqQr+G1Wjv
-         BzJAFfHAsyj7qvk7Fxqdlfv1hi1e4puFH0Wx3cTxhAX7GWtBViaj4Nr6ibrSMdfi7iVB
-         wAZzxgh3ul8gdwrjt8iXeLZScogBYPEM3Cfsb1Lef7A7rUQibYiFjyved2sLKg4dUIMZ
-         i3CDyjecIwt0T8ikU8QbY5o3TGmvywaiVYfw3VR910Ftcpud0JIAQXA3JIiXXlHNOUc5
-         lqKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvaRIgvi7Bi/LAQ/apsVP8HVsWMnAH5J+AS7mnUl9kqtqg7G06nfMCYaH8aWI+K6bDzEgaRtKY407D@vger.kernel.org, AJvYcCX2yF8vyROrYahxd1SPaj7WmkJD8r7ergO5unZA80WkZ6ShG55BptEweGA1wPdkpEAZrIY72YptnQS2Vg==@vger.kernel.org, AJvYcCXhUmPQMIdS0LqjubLzZ9JZ3h73h6XrFbkLMglRLRfwpYHU4nFKBR7ATgP35VL9Q2wyqmUBuRI7PLVuaSXt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5ATAxhpYkiABPXZlSwzaX6Ne99e9BX6/yq3EugSCsptVzIQL+
-	9Z01BzJ63hNwnQm3768ByKfUaNl8wNW6Nb/WGZ0BegP5qLWX146k5YcyTA==
-X-Google-Smtp-Source: AGHT+IFQ5f1JGWi+UhptttlHJLhSGC19qszYJatI3Fmus/EZkiudO/PZK4J5bokyc2Bh33lD9oHAQQ==
-X-Received: by 2002:a17:902:e005:b0:20c:862a:fcfc with SMTP id d9443c01a7336-20fa9deaccfmr4717965ad.6.1729629904037;
-        Tue, 22 Oct 2024 13:45:04 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:94ec:f4e5:1552:e2cc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0bd48fsm46541925ad.129.2024.10.22.13.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 13:45:03 -0700 (PDT)
-Date: Tue, 22 Oct 2024 13:45:00 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: Move no_pci_devices() to the only driver using
- it
-Message-ID: <ZxgOzHUqFDfBDedx@google.com>
-References: <20241009105218.7798-1-ilpo.jarvinen@linux.intel.com>
- <20241010194533.GA575181@bhelgaas>
+	s=arc-20240116; t=1729630014; c=relaxed/simple;
+	bh=Zn3g/rsmjAnDQhjuWlSialZd2N8hudka0aK2MD88RIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kHLuVUN+PHAEG8t623G1tGnknG/CSFQ5WxmIJCrta3uwFh6T/IJdGuPNm3gckgt0TV0JiMV6tbV+TKkLKxWWRrVGQReuEz8WUT6nCgzdSt5WPrE38Knrc//vkKtgrAe8yGVrhXTX5G+xqC4Pew2yG/W0qgaNFhSd0pni5PJw/O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoQvUNkg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7513C4CEC7;
+	Tue, 22 Oct 2024 20:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729630013;
+	bh=Zn3g/rsmjAnDQhjuWlSialZd2N8hudka0aK2MD88RIg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FoQvUNkgYJcOW5aPFEgdSrDVeXvX5QcUiGgnKevOhRdl3cNmPrn8ubp46XbOvqgfY
+	 QjWYO88wvIF3OgeYOej7ecpGDpjy7WQYJ2lvkxRz6lQgCE59gcF/ge/hm8ljPYMfZG
+	 v7XqG8cT3Ls/cbgeBTHnVXQzkrflXBIBnNq0DG8CL3jgtuXx23Q9zz/ytvSjuGqoAQ
+	 IWa1fhVHoidaozPgTKOI+v+vP81b6lJ1CipGte11Ybl+WqSWYxAkJ8MTChZQj1+1bt
+	 Q+VWPk4QEYqc8/V6YFBoDfXQqtJ4+gy8KmNpU0ng224ha7fZuAmH7tywyI1s3BHxju
+	 kfx2+Fq2MT/ag==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f0f9ee49so6646839e87.1;
+        Tue, 22 Oct 2024 13:46:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbRuLP37VMhVERUiWt5oSroqsH64ocxcyNDz9Hpl1Qqgo0JE0CxT7KD4DdR/27ICdznPJFtu0oc5O/@vger.kernel.org, AJvYcCUwg63QGyNDHgdCVqDY1TO4S1BFGvjyRyngtsQEFCUAsmFjgYyYf9x5dJCsxfVa8EZaJUfXHBenBYgFM3I=@vger.kernel.org, AJvYcCV8X+sso+g7uFk3wt90y7kYJMgBBN3NkI5/QCULw2KjxK6nsrbUzYXV0gidjcwx1SSTzKzR/C61+kVrFHQUEA==@vger.kernel.org, AJvYcCVKArYRELoVRJOWeDItt9EPd/fONZcYkTXCh+sqLxBGzGXYQCf+xMYzEIDgBDRNP1HhUnRvkRKhlwC3@vger.kernel.org, AJvYcCWldbjeKtzMV8SIJg8micS/MAzVu/shDoooDC071SQpZoJ2PMUfMUQ6fJaCeor2yR6zCIc7GgMeDyjg@vger.kernel.org, AJvYcCXnH271UrCHmvQb/ce3LtSkUhFngm39QdrfL36iC8/X9Qm88h0PrlHqm4cLyRydRCliTMFd0Gn/yaeoARJj@vger.kernel.org, AJvYcCXtdn3jg+2K1jxPV2hFXSnQCctA76746pWJWfRpoU4xD/oLjAmO1OuSHuH96LWwz7/hShpVElvBqAvcEME9/OH3mII=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+LYsU/6cVRS+IZSoazOWJGsW0F50Ecm2MfLBOD7zdwCBHQrkK
+	RjbGxl1cDJ01uB6jPRbQTFwTPnTFvFQWh/kRMVvTyOltbdgkUsWbgdZ2LEYuzgLfFY/zauoBYGE
+	1wmZxJ0b93avkLyjVP2wa5baYWA==
+X-Google-Smtp-Source: AGHT+IEO+TmoJNpkBRko2njnTuoGDOOp8xk5cA0fj0xWt4Uui7DHRbRD3cGMhGi7Qb+vFtNs4gUNwWTLEMBa9HTb5QA=
+X-Received: by 2002:a05:6512:1109:b0:539:9524:92bc with SMTP id
+ 2adb3069b0e04-53b1a37ce3fmr102061e87.55.1729630012208; Tue, 22 Oct 2024
+ 13:46:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241010194533.GA575181@bhelgaas>
+References: <20240925232409.2208515-1-robh@kernel.org> <172957518656.489113.4975806367588166309.b4-ty@kernel.org>
+In-Reply-To: <172957518656.489113.4975806367588166309.b4-ty@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 22 Oct 2024 15:46:39 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+=_9prwcGvM4-sKKNgq6QSsJ=bqfKcVqnbepj1i_2q4w@mail.gmail.com>
+Message-ID: <CAL_Jsq+=_9prwcGvM4-sKKNgq6QSsJ=bqfKcVqnbepj1i_2q4w@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Fix array property constraints
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Conor Dooley <conor@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Paul Elder <paul.elder@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Jim Quinlan <jim2101024@gmail.com>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Jim Quinlan <james.quinlan@broadcom.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bjorn, Ilpo,
+On Tue, Oct 22, 2024 at 12:33=E2=80=AFAM Vinod Koul <vkoul@kernel.org> wrot=
+e:
+>
+>
+> On Wed, 25 Sep 2024 18:24:06 -0500, Rob Herring (Arm) wrote:
+> > Schemas for array properties should only have 1 level of array
+> > constraints (e.g. items, maxItems, minItems). Sometimes the old
+> > encoding of all properties into a matrix leaked into the schema, and
+> > didn't matter for validation. Now the inner constraints are just
+> > silently ignored as json-schema array keywords are ignored on scalar
+> > values.
+> >
+> > [...]
+>
+> Applied, thanks!
+>
+> [1/1] dt-bindings: Fix array property constraints
+>       commit: 72c65390c61fc96cebfb91c300ca774925565383
 
-On Thu, Oct 10, 2024 at 02:45:33PM -0500, Bjorn Helgaas wrote:
-> On Wed, Oct 09, 2024 at 01:52:18PM +0300, Ilpo Järvinen wrote:
-> > Core PCI code provides no_pci_devices() that is only used in the
-> > pc110pad driver during init to detect cases when PC110 definitely cannot
-> > be present. Move this legacy detection trickery/hack into the pc110pad
-> > driver.
-> > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Thanks, this is indeed a gross hack, and I'd be glad to eradicate it
-> from PCI.
+Why? It is already in my tree and not just dma bindings.
 
-I would much rather remove pc110_pad altogether. If I can get a
-"Reviewed-by" on [1] that would be great.
-
-[1] https://lore.kernel.org/all/20240808172733.1194442-4-dmitry.torokhov@gmail.com/
-
-Thanks.
-
--- 
-Dmitry
+Rob
 
