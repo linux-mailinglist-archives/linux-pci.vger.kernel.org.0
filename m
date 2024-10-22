@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-15060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 480609AB89F
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 23:36:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A74309AB8A3
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 23:36:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD1271F225B4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:36:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AD8B1F21397
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:36:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE291E130F;
-	Tue, 22 Oct 2024 21:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905EF1CEE83;
+	Tue, 22 Oct 2024 21:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAOmv1eg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWLlpX82"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40161CDA12;
-	Tue, 22 Oct 2024 21:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF761CDA12;
+	Tue, 22 Oct 2024 21:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729632825; cv=none; b=P7hcIVr0a4uShNTDrQeE0ZXkUzeASbobHsllhElgW+Qoxs56DDPzG5uYTjtacZJb8JLCwYD5Y+VefnT2Qqhe72nMvBeZ843qvcFMFuNsTMVA0CWoRkb683muLMsawyG5ijv9QE5P14BUVcCG0GqAOMlIneJrtU5ejZd6L+cw4CY=
+	t=1729632830; cv=none; b=Qkd+MmbVLNiqCeCgKqPlzSJjQ3kXCzWK0ri6jIRdW9aFuhoUpmbzlvoJh0WPfeCd1NurekVgbOOZlQwwXmkqxM0TEwb+lB6QIrTZKk5Emyk3YsW6G+/sb5d9gM4v3Fg+dWXoWgK77VXCvGo1Op0pWuhJ2R6vMFzvvSop3w0jyw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729632825; c=relaxed/simple;
-	bh=6138rNionixW1Bs1ip5f6yRQ69Wk/93MH3AWM5T2VKQ=;
+	s=arc-20240116; t=1729632830; c=relaxed/simple;
+	bh=oZxudZpPmp3wO6kvmh14Nmt+ARxxpIUr1MKPymhU6dE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DzDarVhqE/kthxsQsFby6AtDFjQT5fNx9xBu8AAOEsA6inUut7lOvmwC7CK/CRhu0Ed5rN66K+sZzb0ON2grolohbtclFRb6YXrpmZfLGNXcVAybVoneJclAMv4iv6QDgQ0xM9UsamdZEQlU23I5GKgIpPQPIVHu/Rvl8YuTIQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAOmv1eg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5819FC4CEC3;
-	Tue, 22 Oct 2024 21:33:39 +0000 (UTC)
+	 MIME-Version; b=ROrIad3u8/raRgxkn99csH3U5aSg9ZgS567iOn7xNOAwjZqq3g1ygaQmMNAAIWtoe8B8tNbogXzg2J2HTJL/gIBeqQEOdsRSFAFjmnhlWuw1jYyhEPmI+eNmMk3FyOHtDCPmOBU+YG0Vm5d7YiwcZjlxelgxqvbCEMCPvs6l+yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWLlpX82; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3375C4CEE3;
+	Tue, 22 Oct 2024 21:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729632824;
-	bh=6138rNionixW1Bs1ip5f6yRQ69Wk/93MH3AWM5T2VKQ=;
+	s=k20201202; t=1729632829;
+	bh=oZxudZpPmp3wO6kvmh14Nmt+ARxxpIUr1MKPymhU6dE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lAOmv1egUC1nf60pQO1WFALvzxr4r5BPVf8FpkOCM/iKR/qMEz5Fo/5nJpt9+xpwQ
-	 5fBMECh+3nNb/f94WZ4dhFtdnaoXgMoqv2HvN2IdJMnH5vNW0SmWJFkwe7KJyAZEKC
-	 rtb4DUDccq/EJouKlsyvW8ucN/w/1x2pJmhF5xFkaMKXVhLpTx+UVi5t0YOCCbGjnW
-	 HjhAscHr6Gy+IwmxkMyqqjNuproDY73O8TzYBVPueY8re8UJPhp+CfFArpusFLVCJZ
-	 DBzjuCINEz98xMl2XigbybLYa69o8efX+Sy1hQ/WY/It69ocxM1R+VWlWSFJQzJEXX
-	 7MacxbvO9i9TA==
+	b=dWLlpX82/K4GKKTMSHc3mx9wavzsZ5VXCkelZAJvziHrudv3FhLTwY3BOaV5uH2gg
+	 dTftQvmoH1qr96EpbTM6W/Fn9E9VwuHCVECxljNnY5HxDe00jzynTsX25SHCB4En3C
+	 LsEV+zVrnIW/WarTVWGhAUorYRP3iQthVPL01DKnEfIobxr+qd1cpFNdh0KvgVDgQA
+	 K65J4roMfmVo+vfsYQVr55k4nKeax9xCpuAjeaioHGM2cjFxXdr+ObDMkotoZFYcKf
+	 e3m8Hlunebu/Wq/SbZpg1TKuLhGGPMlaLSZ50V7e/UTTZl+T/m9pcbFUZ9d7ZR2Nkw
+	 cKx+4sj56tu+g==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -68,9 +68,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 13/16] samples: rust: add Rust PCI sample driver
-Date: Tue, 22 Oct 2024 23:31:50 +0200
-Message-ID: <20241022213221.2383-14-dakr@kernel.org>
+Subject: [PATCH v3 14/16] rust: of: add `of::DeviceId` abstraction
+Date: Tue, 22 Oct 2024 23:31:51 +0200
+Message-ID: <20241022213221.2383-15-dakr@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241022213221.2383-1-dakr@kernel.org>
 References: <20241022213221.2383-1-dakr@kernel.org>
@@ -82,182 +82,124 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit adds a sample Rust PCI driver for QEMU's "pci-testdev"
-device. To enable this device QEMU has to be called with
-`-device pci-testdev`.
+`of::DeviceId` is an abstraction around `struct of_device_id`.
 
-The same driver shows how to use the PCI device / driver abstractions,
-as well as how to request and map PCI BARs, including a short sequence of
-MMIO operations.
+This is used by subsequent patches, in particular the platform bus
+abstractions, to create OF device ID tables.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- MAINTAINERS                     |   1 +
- samples/rust/Kconfig            |  11 ++++
- samples/rust/Makefile           |   1 +
- samples/rust/rust_driver_pci.rs | 109 ++++++++++++++++++++++++++++++++
- 4 files changed, 122 insertions(+)
- create mode 100644 samples/rust/rust_driver_pci.rs
+ MAINTAINERS                     |  1 +
+ rust/bindings/bindings_helper.h |  1 +
+ rust/kernel/lib.rs              |  1 +
+ rust/kernel/of.rs               | 63 +++++++++++++++++++++++++++++++++
+ 4 files changed, 66 insertions(+)
+ create mode 100644 rust/kernel/of.rs
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 2d00d3845b4a..d9c512a3e72b 100644
+index d9c512a3e72b..87eb9a7869eb 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -17940,6 +17940,7 @@ F:	include/linux/of_pci.h
- F:	include/linux/pci*
- F:	include/uapi/linux/pci*
- F:	rust/kernel/pci.rs
-+F:	samples/rust/rust_driver_pci.rs
- 
- PCIE DRIVER FOR AMAZON ANNAPURNA LABS
- M:	Jonathan Chocron <jonnyc@amazon.com>
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index b0f74a81c8f9..6d468193cdd8 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -30,6 +30,17 @@ config SAMPLE_RUST_PRINT
- 
- 	  If unsure, say N.
- 
-+config SAMPLE_RUST_DRIVER_PCI
-+	tristate "PCI Driver"
-+	depends on PCI
-+	help
-+	  This option builds the Rust PCI driver sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called driver_pci.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_HOSTPROGS
- 	bool "Host programs"
- 	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 03086dabbea4..b66767f4a62a 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -2,5 +2,6 @@
- 
- obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
-+obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- 
- subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+@@ -17340,6 +17340,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ F:	Documentation/ABI/testing/sysfs-firmware-ofw
+ F:	drivers/of/
+ F:	include/linux/of*.h
++F:	rust/kernel/of.rs
+ F:	scripts/dtc/
+ F:	tools/testing/selftests/dt/
+ K:	of_overlay_notifier_
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index cd4edd6496ae..312f03cbdce9 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -15,6 +15,7 @@
+ #include <linux/firmware.h>
+ #include <linux/jiffies.h>
+ #include <linux/mdio.h>
++#include <linux/of_device.h>
+ #include <linux/pci.h>
+ #include <linux/phy.h>
+ #include <linux/refcount.h>
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 3ec690eb6d43..5946f59f1688 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -51,6 +51,7 @@
+ pub mod list;
+ #[cfg(CONFIG_NET)]
+ pub mod net;
++pub mod of;
+ pub mod page;
+ pub mod prelude;
+ pub mod print;
+diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
 new file mode 100644
-index 000000000000..d24dc1fde9e8
+index 000000000000..a37629997974
 --- /dev/null
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -0,0 +1,109 @@
++++ b/rust/kernel/of.rs
+@@ -0,0 +1,63 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+//! Rust PCI driver sample (based on QEMU's `pci-testdev`).
++//! Open Firmware abstractions.
 +//!
-+//! To make this driver probe, QEMU must be run with `-device pci-testdev`.
++//! C header: [`include/linux/of_*.h`](srctree/include/linux/of_*.h)
 +
-+use kernel::{bindings, c_str, devres::Devres, pci, prelude::*};
++use crate::{bindings, device_id::RawDeviceId, prelude::*};
 +
-+struct Regs;
++/// An open firmware device id.
++#[derive(Clone, Copy)]
++pub struct DeviceId(bindings::of_device_id);
 +
-+impl Regs {
-+    const TEST: usize = 0x0;
-+    const OFFSET: usize = 0x4;
-+    const DATA: usize = 0x8;
-+    const COUNT: usize = 0xC;
-+    const END: usize = 0x10;
-+}
++// SAFETY:
++// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and does not add
++//   additional invariants, so it's safe to transmute to `RawType`.
++// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
++unsafe impl RawDeviceId for DeviceId {
++    type RawType = bindings::of_device_id;
 +
-+type Bar0 = pci::Bar<{ Regs::END }>;
++    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::of_device_id, data);
 +
-+#[derive(Debug)]
-+struct TestIndex(u8);
-+
-+impl TestIndex {
-+    const NO_EVENTFD: Self = Self(0);
-+}
-+
-+struct SampleDriver {
-+    pdev: pci::Device,
-+    bar: Devres<Bar0>,
-+}
-+
-+kernel::pci_device_table!(
-+    PCI_TABLE,
-+    MODULE_PCI_TABLE,
-+    <SampleDriver as pci::Driver>::IdInfo,
-+    [(
-+        pci::DeviceId::new(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
-+        TestIndex::NO_EVENTFD
-+    )]
-+);
-+
-+impl SampleDriver {
-+    fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
-+        // Select the test.
-+        bar.writeb(index.0, Regs::TEST);
-+
-+        let offset = u32::from_le(bar.readl(Regs::OFFSET)) as usize;
-+        let data = bar.readb(Regs::DATA);
-+
-+        // Write `data` to `offset` to increase `count` by one.
-+        //
-+        // Note that we need `try_writeb`, since `offset` can't be checked at compile-time.
-+        bar.try_writeb(data, offset)?;
-+
-+        Ok(u32::from_le(bar.readl(Regs::COUNT)))
++    fn index(&self) -> usize {
++        self.0.data as _
 +    }
 +}
 +
-+impl pci::Driver for SampleDriver {
-+    type IdInfo = TestIndex;
++impl DeviceId {
++    /// Create a new device id from an OF 'compatible' string.
++    pub const fn new(compatible: &'static CStr) -> Self {
++        let src = compatible.as_bytes_with_nul();
++        // Replace with `bindings::of_device_id::default()` once stabilized for `const`.
++        // SAFETY: FFI type is valid to be zero-initialized.
++        let mut of: bindings::of_device_id = unsafe { core::mem::zeroed() };
 +
-+    const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
++        let mut i = 0;
++        while i < src.len() {
++            of.compatible[i] = src[i] as _;
++            i += 1;
++        }
 +
-+    fn probe(
-+        pdev: &mut pci::Device,
-+        _id: &pci::DeviceId,
-+        info: &Self::IdInfo,
-+    ) -> Result<Pin<KBox<Self>>> {
-+        dev_dbg!(pdev.as_ref(), "Probe Rust PCI driver sample.\n");
++        Self(of)
++    }
 +
-+        pdev.enable_device_mem()?;
-+        pdev.set_master();
-+
-+        let bar = pdev.iomap_region_sized::<{ Regs::END }>(0, c_str!("rust_driver_pci"))?;
-+
-+        let drvdata = KBox::new(
-+            Self {
-+                pdev: pdev.clone(),
-+                bar,
-+            },
-+            GFP_KERNEL,
-+        )?;
-+
-+        let bar = drvdata.bar.try_access().ok_or(ENXIO)?;
-+
-+        dev_info!(
-+            pdev.as_ref(),
-+            "pci-testdev data-match count: {}\n",
-+            Self::testdev(info, &bar)?
-+        );
-+
-+        Ok(drvdata.into())
++    /// The compatible string of the embedded `struct bindings::of_device_id` as `&CStr`.
++    pub fn compatible<'a>(&self) -> &'a CStr {
++        // SAFETY: `self.compatible` is a valid `char` pointer.
++        unsafe { CStr::from_char_ptr(self.0.compatible.as_ptr()) }
 +    }
 +}
 +
-+impl Drop for SampleDriver {
-+    fn drop(&mut self) {
-+        dev_dbg!(self.pdev.as_ref(), "Remove Rust PCI driver sample.\n");
-+    }
-+}
++/// Create an OF `IdTable` with an "alias" for modpost.
++#[macro_export]
++macro_rules! of_device_table {
++    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
++        const $table_name: $crate::device_id::IdArray<
++            $crate::of::DeviceId,
++            $id_info_type,
++            { $table_data.len() },
++        > = $crate::device_id::IdArray::new($table_data);
 +
-+kernel::module_pci_driver! {
-+    type: SampleDriver,
-+    name: "rust_driver_pci",
-+    author: "Danilo Krummrich",
-+    description: "Rust PCI driver",
-+    license: "GPL v2",
++        $crate::module_device_table!("of", $module_table_name, $table_name);
++    };
 +}
 -- 
 2.46.2
