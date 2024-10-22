@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-14979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA7C49A9953
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 08:10:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C57659A9958
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 08:11:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10FCCB22AAA
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 06:10:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE3C4282DC7
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 06:11:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958451547E2;
-	Tue, 22 Oct 2024 06:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 350E815666C;
+	Tue, 22 Oct 2024 06:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OoKCgA1e"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="VokrsB++"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2060.outbound.protection.outlook.com [40.107.21.60])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2071.outbound.protection.outlook.com [40.107.20.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AD315443F;
-	Tue, 22 Oct 2024 06:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B6C1465A5;
+	Tue, 22 Oct 2024 06:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729577295; cv=fail; b=IUA+nibqJedOgdB/rpLNM/xh6CVJ7xxCWHb6A+PTKyPxlFwWK48V634GRjJ5l/bwojiR++wwCbpZoc8lv3jChyOXUUyToM8Yh3rLyObkEkHfi/SD8pj5Rp8y+svbXiJthoz6A26psNz2vj07WuSiyO/NJvtM3sZiyYreimB774s=
+	t=1729577301; cv=fail; b=l/d+jelXu14qKJK3rTZU96SESo9c6UYmoM3DW0O4qzVtVi6vTZ1+U7GfGB5gI7/dKqDtcRoj7F5jvB856d5AWvEQ4WFE8vnlW0sNReaQeopOlz8Hh23d/8Yp2DPvutlcD78hh9tjbsEBq40YfMhnsys26pOXWyneupaSWSG+6Ho=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729577295; c=relaxed/simple;
-	bh=Eu1BS74ANXomq1hCfFdsvWbebq6Ai6cbLT+ZoMUG2R8=;
+	s=arc-20240116; t=1729577301; c=relaxed/simple;
+	bh=RY4ZZpijTUBHMdY/ozxqU3De5Xm5alyvLCJEbAYx5sA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WF/5Ymt3vZvH7pp878ANB00HRKU/HlRsSKP47n70Yh1iaGXVMVij0LunLYGx3MRf73gyL1J+ER4dmwflBdV0exM97AvumZclErzY4nSHKc9X+9uF4YQyvYE7NbXywETYrKsWHme0F8BTYrEn6p34+0PibRsXaNAu1xJuveD5ixc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OoKCgA1e; arc=fail smtp.client-ip=40.107.21.60
+	 Content-Type:MIME-Version; b=pJzVzVDEVs7jmUufxV2BEjQkO/rSZQx01vKGfGXflyPFYbRbG4d9rtdrdOK3g/ITbaSaXXuLQLUMWcXpUp4wOudyO5H45jLFKeJ1kizMDqdi6hwLywLbQA5M57Bi6xF9dJeHwOEGYFIt6d8kqh9ziViBt0a6CMNQUp1uNzhwBAY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=VokrsB++; arc=fail smtp.client-ip=40.107.20.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FG1yi77qY2KK9Ww5nhVVf9QpPFS8aHJIR0IHgBn1wOKrafuAQsfLF2JV91jks3vxvNMi5QklMP9GneRRhKZX1FqpZCpl/U+T7F3DgEQSBFnJXGLisoxvBeRo89sm9nxVnE2KT6i04Lld5dUAw8721ULQUaIcyetugIBlF5XUBxz1m9tDo4JsU62hDHBvFA9PAlinTQEZLVGeCtJWS7kIGCizY1rVRhKQF3JLnRYbbnJ1YWz8jTwG5rnGbS2PXjSAGx4hSHv+f5VwKufasGQFwxw40k9pjkeKgAbTtz08QhBMZAVLy7pnMF3R5lOXpPLWNUypOROHigspI000zLcrXw==
+ b=azDqJqUe7XwpkSloTekzDB8banFvWqTVx0C2Ke1PDsH4OXI6eC5U9YisbvWQcYHeY43owGCYtCrAmlROvoW56G1TNSjx5J26dzxsbkLs3jkiPyptyw7HMdIfmHIOUh3rOmfGfwmuh3ZU1+BRXyBhnwvJkO+7BuJz/A3YLUiwzFC+xxcfhfM/XQ0eH+nlIJBcdc0s3N/9+hoGtzmIeni806VyzkuX87nV1XlDcF778sgg1I+ZIIp1669+v2JRZfXRoiD9FbcEVviPypsV8DYzmbzUlSMLCIBVtkDfghLddtL6UeXHVlVNK3SMaI5MMasSE2X+moy6y4pj0V0+I8TWiA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SbJbsgnVqfcvlmsoZu6lwfabIjlblR/gyIDOgIZ+eQM=;
- b=uU/aJbMTEiT+4ZIyWWb4OErDUaj5/ODygAq1Z5MSsJIG8uU3Gm3S1Ix/McM6YG4MLh4x4aQ5DKgTtVILF5JvklN6IQks+3yuRd7oipLYtqhKwIRAeUcipo0/BrIci21v6wpa1JFNHAvSOcFF2I9q0Z8F7/PnEfTKxIjkCTIssUgBVk8q3vo8MuMAEMOq4e6Lf0xWzXIezIFQ1yen9rgENcjxumADuApFR55g/J3MJcwNpLlemJhfq9wHic2EPXDgZz5KbTMtJp2/AUrR5y2JXEYPoFrnxy3/MsiS36AqrayOVWJI8oe567ky21+6dfQTAVOgnfJRYi/jNRZF40+hYw==
+ bh=2cF51rXBwr3FKJihKEGdm2vOShETmCdGZG0YyBB3HWE=;
+ b=KLgjcioWJjkqpqxD9uyxwxdcQaeeHLv5j3TP29HAGc3crRtiQXScIrqZx3E1vTaGuegOx69L3/dFbw6xWacxv6T/CnDRSrpyO0ZkEu/RwHG0Y2lkGEtqaxo+YOpC4sxbrtp8FOT99EXhnJgbBhHwz9XTnqzUW29GfxGGZJ+Pt+uQS3wFnNr792hC6dGivzrpw6zqeS1d4O+xWTghpZAN97+tZ2UfHHE+j3aKYfx4pK8u3WBBIS13gjpsprq5lRPlkPrG7uZCX0qPj/kQ5DfrprmJE4XfjX7sj4qbDQ1LdlqGqXTF3Y2lXeroCuuC1YtX8fP+h2RkxsdqVGc/KmlOlw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SbJbsgnVqfcvlmsoZu6lwfabIjlblR/gyIDOgIZ+eQM=;
- b=OoKCgA1ebC0Z8BdWNua8k3WX4f6vCGaw8RoRgHDL85V5SKnmbi8ak2Mt1Om6VM61nJn6uPXLnI4DkDHs983ZMaYGL6I5aUiLavKWCHTeYt5v0a1NLsZpk2mAffhVdQHWWQnY1J7N4QBOSIfYSFOSZtzFuRTkrgnezd7fPeWVEXWMkDokeuHoCoJKtPUyv7rbYBJiBHQdmDxW9Q45CWcFQW0gaGvlp2dZiX6cfc9GdPOahO4C3sFKdz7gNLXOVvWq9SmLrvV7RFIyv/b+fw+edgWHCbzbF9QKOQ3oNu1bZMJoOImzSUDQpuGhuY6ZnzHBvU6VL1Ng2US6TCfEuj+H+A==
+ bh=2cF51rXBwr3FKJihKEGdm2vOShETmCdGZG0YyBB3HWE=;
+ b=VokrsB++YTqNPNofEavXViXZfwNcY6z44HPuLWV/R2b2/CNJFQe8dKaDku7F+3LLcRa2s+AOgbLsuracm+kxyI0dmUB+0sTXRYDjNMgYdcvIHbqkokouCax986Q0L/1NDVrNAGSMh0iQIjz5C9W2TZ+IvAvZ7kjZf+5EOLUIvNZBjTUWn4OW2QMUJCtj18ldSPuhK5QkGBIyJZZjIPFGi74giUxaP1SKP8jefqiSnmCY3HYVO9aH2ZbYnNrj/LCFfHMSuyGY8hNkyLseyZDKW4ikzXJ1HlbTQWAS7H5aHPgwTcuDGgxOQPZh4x2qjFXoxtnH7BAgaizH66e0FaXa+w==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
  by PA1PR04MB10178.eurprd04.prod.outlook.com (2603:10a6:102:463::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Tue, 22 Oct
- 2024 06:08:10 +0000
+ 2024 06:08:16 +0000
 Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
  ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
  ([fe80::a7c2:e2fa:8e04:40db%7]) with mapi id 15.20.8069.027; Tue, 22 Oct 2024
- 06:08:10 +0000
+ 06:08:16 +0000
 From: Wei Fang <wei.fang@nxp.com>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -78,9 +78,9 @@ Cc: imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	alexander.stein@ew.tq-group.com
-Subject: [PATCH v4 net-next 07/13] net: enetc: remove ERR050089 workaround for i.MX95
-Date: Tue, 22 Oct 2024 13:52:17 +0800
-Message-Id: <20241022055223.382277-8-wei.fang@nxp.com>
+Subject: [PATCH v4 net-next 08/13] PCI: Add NXP NETC vendor ID and device IDs
+Date: Tue, 22 Oct 2024 13:52:18 +0800
+Message-Id: <20241022055223.382277-9-wei.fang@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241022055223.382277-1-wei.fang@nxp.com>
 References: <20241022055223.382277-1-wei.fang@nxp.com>
@@ -97,223 +97,117 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|PA1PR04MB10178:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38dbd55f-66c4-4fbd-a87a-08dcf25fe795
+X-MS-Office365-Filtering-Correlation-Id: e93b7dd8-9f67-4cc9-ad1f-08dcf25feb57
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|52116014|376014|7416014|1800799024|366016|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QgsOG0sQ4v0j9QAYJNRMCEP6VPZHwoN4A3o/1Yrwef1RTXCcr3LaKsGoiENu?=
- =?us-ascii?Q?B+Iocf9+yPAEFCxHZFWaF0E8tN3PF9hmdci3XtnpOX5ttd8ToSTYSgmbw5mF?=
- =?us-ascii?Q?w8o4VTCW7WGT65ylzEAGgwg4efs6jSv31Hqqo5wqoapbvCU+zmfqlHBXxehI?=
- =?us-ascii?Q?eR6Gl9uHgA+7ZO18EIXIjQ3FO0FPSlMFrJahnaa8Hoet6iBX299+ttO6Lsnf?=
- =?us-ascii?Q?zfKHN4ooiYUgPdGx6AAJCS5OgcbIZZGGZlTO5GmMTpIWuDwsV1WF7/FPrMdG?=
- =?us-ascii?Q?lqingwCdPX3WsXCfxc61fKIqtqiMM+sUQlwtabppd7j8RfiyIAt4B/IZCbVJ?=
- =?us-ascii?Q?KLM0pIUiTzcbLjtXvkVtPVuoV+Myxq6rBjBhRyzVheTxvWPNFndDe1DVJ9sM?=
- =?us-ascii?Q?FskWynrCCQVlqXzN0mK1IpRRNeRQIxYLa5OrFg4kcijAArcpMcJr0DpZ74Ej?=
- =?us-ascii?Q?1omSTLRQX5P/wYb9iDSu4+iaxWmG2z4061JEfTGZuoZB51h7u2/7V1k2BxkV?=
- =?us-ascii?Q?TCwvG1lqZJFsf1AG8VP5nmS20ZeT0YRCT2w1/aBN/uOibbtcPxCfD9slMeYl?=
- =?us-ascii?Q?YGcjXKvECGEnV2PSYTyZp6Et8fdChDp93UAj0ZzOknmYJlvDqf0JermlPuWM?=
- =?us-ascii?Q?ApBt58gRrM7dPmM9WfbC8bsWRHKdGEMrE55NMoOQovTnEIny1QD1+v+FszHg?=
- =?us-ascii?Q?YhLETHqS/Wtq97dcwAeu6ZjrZ1OGH0q7ABVzQzFaynDWGzqQH9RiLdrp9z0A?=
- =?us-ascii?Q?M5XbTWnpjGvPW2ZX6mhp4Z+xNWMSdo8dLSNu4oNr1JuaU1OTT2aZ3nhE6OsR?=
- =?us-ascii?Q?HFw5iEb9I8xItm8jFZv8/V8vf667mVrr8xxOAuQkBYrqu7ppUsGfB51QnhNT?=
- =?us-ascii?Q?dQwqgix7NlvgWkV1tEF9wgCtBCZMmcMVg6lAj4Vc2AokGdHqp+dq6+u1CbHR?=
- =?us-ascii?Q?5ooTadb/kmsoscnKdm3Mp8BcfQ/L9AY5FSJyZr9YsVy4J8QD8lv/NKigRtRb?=
- =?us-ascii?Q?rc/mnk6zHQark1DJyU4CSPQq7dXlFzhMKM8NipZeRUyGtlgYi0CJzRuTIjrK?=
- =?us-ascii?Q?XKhnreJNQKG8CoF9zpqpZHgZ7MJ85zLnNJ6lMYt89k7ydsysnwSOft/Wh3q0?=
- =?us-ascii?Q?AgaZzMbUQVQyg1WNgpeX7SoYhGDT39HyBuGtGjccOK74JVozPazxlvrmH1qQ?=
- =?us-ascii?Q?bnynB7w9+dlraq69XZnd+3c3S5I07FGxHYs5g5ReeK5qmj40OhreVlV57GZM?=
- =?us-ascii?Q?vVAoRPh2tkWRXz1czx/E/Xk+G+x8uS1tsci5GVyPCQWDxHPX4B9Sfqrx7+IC?=
- =?us-ascii?Q?AtzAoi88qlLd2g9SndaxJ/gigY2edBhOtvRj5w/OAsqV2BG7hflMYUBRAICg?=
- =?us-ascii?Q?tzAuxkSV/62YZ0NEIKf2u+RHlL4s?=
+	=?us-ascii?Q?y4NJogaqAZm8v2hvbaND9vQ7WNZHJ3q2/w4Zz9vYbShUob9eKCocVJt+IsEv?=
+ =?us-ascii?Q?bplnz1kF6tQX0iI021OyzUkKsob8jeVYbucyFUP2eDu/4h+EszQbDMRhEDV6?=
+ =?us-ascii?Q?9Yf1z57o3+tnCzSIxiqMXNELcSIaG7teiM436tgvfVuo0uvX2ywtMj1IzmrR?=
+ =?us-ascii?Q?IsiwR3I0PQgcELi05l9DTGvWy6q+VhIpAhcGEP97KbiPCHAnmHJTha0lOufE?=
+ =?us-ascii?Q?ArAK34688mqTreBwuccr+zlj6R5d5nH+/EKe9Ox6PX2P04pUuQS24kFU7Oke?=
+ =?us-ascii?Q?1nbofrr977lIwn+DbCibU4qxAwpbhZk5uDCyhLJHrv6CiHXvSzmWOnwq0MTy?=
+ =?us-ascii?Q?tSYPsWdueckynt1ufItd6dcd0zUYThYRgR/oXthZjKFRzz27DqOuk0aZ/mD3?=
+ =?us-ascii?Q?pGHa6c6Zs4pJqRpjtS0Yf6qIfmgI8iRaivr9ACS2CFABPjuMT5J3wFFqouJ6?=
+ =?us-ascii?Q?BAVspHmTK1kySF/JnSdSpY9pZDT5s3xG2dMDS7D84RS9xop379MI54KnU2r6?=
+ =?us-ascii?Q?a7mtK8K6VaeyUw9cRsyPTd3s7+wHmAlPP+8CkNYuBk0YGoE76iJxL8aDEai/?=
+ =?us-ascii?Q?Shq0OOLcne2JUOC1ZzjWQ9LjbobFdGh/5CmdMfkZaopTiD6xBRJyAkhUvbDk?=
+ =?us-ascii?Q?KgtQDgXkIgaedM4DSDQMobw7Sg4G9KlEOSJe2FUuM6de9yFfI96h3jcN4V4o?=
+ =?us-ascii?Q?yA5j6KcTzb8Fll3bADMVfu1KqkAaHE0Hon0zOusIdm3Q1QoSwR59FZwtwZVD?=
+ =?us-ascii?Q?8c6iq29E+JEYR11u7u/dXJsciGDuoCMdPJEfUVqtfw8w/EzJ1KFklvq5c5t2?=
+ =?us-ascii?Q?PTWLFrnLWZkTLXeOkOh/94L/bPMAOQ/zxSuyTsd6+NJ4FmOnZJvJBGZWx2Pu?=
+ =?us-ascii?Q?FcsRZcCNm0AfQ+6pdR6jQyxU7Kds5rcpQUG32/qhbs5kVvzwwR+obnTfUXgL?=
+ =?us-ascii?Q?zdMwafQT0nbg1sNV1ApyXIJT018FIt+zLeykxkAVDBqvbkOCZzv+M6cmt6GR?=
+ =?us-ascii?Q?yy0Tfna5CYqZ64acbDssMWudwFwMxWGeoX7GiEj254GOnh/XnhJlIUXOWjvg?=
+ =?us-ascii?Q?1wpZtmmV3MkIbZCQe05UG8OUOsnwTN76kyNiK8pa/BOCyS+Sa6+3c9r19DXP?=
+ =?us-ascii?Q?3eKdcZI0gPOQayFG3OM7LwZyth41PfEyepHIsb6MpfKeRFE6Upg6kLXbl6JR?=
+ =?us-ascii?Q?Dmqgm+/pdCA0q/nfievcbFy1kEjiory21kvaVA/4ZMD0+Mes6MZMPYUCc0eq?=
+ =?us-ascii?Q?/Ku8P+1XH2p+b7tQeFLaMGz3SnwWvRhmMCF3kvvyLainfwWTjsBN67Pg2ZwF?=
+ =?us-ascii?Q?qFVMSVaqO3kyT1qkF40+3+jDqynSmpOGTDBuQaiWCbAXOVDDG6qpELG6Xsad?=
+ =?us-ascii?Q?BHARo6YYWcESQ8SYhH0xAQqbxQ4I?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HrNMfxJ3rHUqIeFDJ1jHY6EKYurNQ8H4gpY2ZB9aEaJP8/Nd3ltt9diQsvFe?=
- =?us-ascii?Q?ZJi9o7GqR+4cbgv2rZu7tFSAUs5eSyiqLBFpoZH27eWaCl2nwwbQS5OKZAyL?=
- =?us-ascii?Q?mFRTbQ44CzQRqVods6WGLyox47N6QIrmow7/4N4RA6SJS/65F8AtmhHSsM5G?=
- =?us-ascii?Q?VfWpshu2K6AyDEyBeFnaHKMZG2ftXbAsUBUgzdPTdRil1B4NkbAVSafsMMBY?=
- =?us-ascii?Q?h6bFyB3I9Uiv84vj5GeYI8UheMPqRoY2rhQ6sLJqYiHkPbpOw9Fr8HxuNxya?=
- =?us-ascii?Q?JKS+MCPghqLa+rrLSeHnvIn+K39rTS3kuFXDdfqstpr7SYsFRQiao5dygVEA?=
- =?us-ascii?Q?rsROk/4q3zbjCCui6y2Fa/3tijf8hvvr7R3ZGgWlDyKTQU1L0UjjDFhH1I1S?=
- =?us-ascii?Q?Z7ZsvLADZEp1VCNVvgQ3QWuLUrPISBJf6y61vd5Wbi2nXdhqoB2JJdFdebiA?=
- =?us-ascii?Q?1p8YfGJYAEq5U6DDmlhPDGmttqVt7OOfr1KCNDxkH55FPF111nRJSs14SWoh?=
- =?us-ascii?Q?+B5GX87emWjV2FJq0z0KEsik2GeFoEtHb77p0D6XorHi8Yiay7xNmYkqLCAJ?=
- =?us-ascii?Q?GMdZoMoyhH2DQguIDgOPBTT8D0MZ6KSQlfNFMxHTV8OK4hxVSRkT+ZSpjE3S?=
- =?us-ascii?Q?F/nQGoZEZZAywjHdMvOoq/4y+ysRcoyHmrfljXRWEFJDQlHBj1EfbjvS+nb3?=
- =?us-ascii?Q?tmKRwlXRwBZKZNF8qKOk2KyC+1ltuDRQLFGuEiITDroz8CaECDeIOD92Jx26?=
- =?us-ascii?Q?gd8uChgrBnFFpNDa0Sv2dFLWjUN3fbGqntM5VPSjL9it96MT6wd9kWArQqAX?=
- =?us-ascii?Q?2aO2jF9gksKP5sJ2lCnl3NgEISSruj7Y0Ne0KS0hEBOsUZgmRJ+U6ZQUNiX9?=
- =?us-ascii?Q?Held6ge2HKrxIhS60exd/g06GQWV+WdwqLsIFkaaFo0Da5JjFsoPMvgUxEzc?=
- =?us-ascii?Q?nSETVZH0xFKyLXgFGPPzLXpYZe4E+uJc/1IQxZTpuGZ6DG1/YP6b++4Zley1?=
- =?us-ascii?Q?AGbr65w95oVEheF1171zWeJGCClxilf+nCkFa1qrH5mt36zWWaljmj0vaddp?=
- =?us-ascii?Q?8QVLpZOWx9uv4VCIcu3KzAdXXSJVr8mJM0eTtZTaiT3pPLGWIcNtmigyH1Mc?=
- =?us-ascii?Q?v4OhN3YQF0/hLAvsbySbmj3aolNK8CJ4CHvuiU1erjnqJpQbRGVjg1a+JCYt?=
- =?us-ascii?Q?C7cT8xdlkMqrJCqTd0JkrL1aZHD6kOgQvGSqU2auFkSR4n3NDAcTulce4hmT?=
- =?us-ascii?Q?Gp62ODciNwRosYinz1/H1YsStRrYiRG8vdtjg8KF/7HyRhbORNZyXl132uPS?=
- =?us-ascii?Q?QkPIJOkXm/Vlzy6zUPvxxAWoZ0c/M/8GO/TOwrhWjBW9rVMxHbQWcw/IX9xe?=
- =?us-ascii?Q?D7+R7mur5d9YcVdBCkAK+sK27o5w91aud83mKLYBktVOM+kkHjeF73XX6/J9?=
- =?us-ascii?Q?bfYsr18ttTYoi3Jjs0WKoRDdDo6wyhmNr1nI+BkbaQIqQc1iytGdb5oJK8XQ?=
- =?us-ascii?Q?ezfGDqu20MF4fzv+H4GOIUe5lg6aDrG7AW6d298gC5xSZwMo2QVUUQ+71nF2?=
- =?us-ascii?Q?pShZp9tX1DqEt30UfzQCSh2EB9XnF+Ws44+bEqkv?=
+	=?us-ascii?Q?NUH8tuartPOnz0dgpOUq7YOvPOb5ECd3ZCHpYhD0hUxoNi8t9owNFg8muatX?=
+ =?us-ascii?Q?RSXG2vdAmP/Ljznq9Ld8TPpokMVwmVrRv784MFkDjiQGk+pK0s71VdBzdYQu?=
+ =?us-ascii?Q?UMvdKAgEb8FM9PVn6sbMvHNFphj+AreUXSiuwX9YA4FnvwJDWM7fDU1mUVW3?=
+ =?us-ascii?Q?NAgajR4GIqRUlUBDS4b3aIay2/GlO+yHaY6sR0PmRPJn0IGGwQZdn8NPHOqK?=
+ =?us-ascii?Q?2lItGZS2PC4cR3qwyfWh5CAn+3pSPLrU2YGFcW/8VYpuz/+kefELQOGM0P2w?=
+ =?us-ascii?Q?bSkggKs+FmRRGvcfNpDrOsgjDWDsDQpBJxh1AueDd2ceQOJywCJLLqljARJF?=
+ =?us-ascii?Q?jJ5Q6k8jOr/Eca+tDKKPA+XEdaGaIi875YWEFIbu5On5ZcmIXWfFNo/0GBOy?=
+ =?us-ascii?Q?vnub3A0p8/BfHyuN4JZjMqvVTin72vIekq3sIS5ZhcTVfCoE9eVfhZbE3pSj?=
+ =?us-ascii?Q?E4+p4aCNbVHAtot44qUWrPPcf1HJt39dRaH2WAbB2Gw9aPJFjx8n/fePOgL+?=
+ =?us-ascii?Q?mZCDj50fyao5yA18p8SyhaPISr4L165DMvk/MLhSJ24cljNhsx1/duNu3XvO?=
+ =?us-ascii?Q?xgFoNfg6QiXmBBhAR4XTyHRlcAIAe9YnwfR1ED/i0RthWALkYVDV4/TJ1YOd?=
+ =?us-ascii?Q?naWv9+iQnFZopkUxOsDTIvjlR9GJSnIbU3Fh9yrNV+ptqvbQW1XoMZgO6Qki?=
+ =?us-ascii?Q?rN+to+eXrXwFgXVpbKej54ugs2n5JY8U7tJo8aQhTHN10QWruM0HJc0PoMeY?=
+ =?us-ascii?Q?e98Z8rn+z1iY9s9wmD7w2XEn3wE+mNKXSEghOB8RguuXTRuFJPq1B3F9smWx?=
+ =?us-ascii?Q?GdKkgZgog5aKCHHULEtT0VJSgD/c8xZAMHJCpqwaZlM3UCP9y/KSFgEovvIL?=
+ =?us-ascii?Q?daCK/rgL1ml+orSSRyhkfFosA2MomPzPST/UZJNC7lg4eQdc441WOZJIhTiX?=
+ =?us-ascii?Q?f+BsFS/QAbciMA/v3wAEYo8VPgwPtkppazdionVPhXN1fY0H4xKMsdVgLlbN?=
+ =?us-ascii?Q?5MFSoync5UeF8oZGTxnX7ubKqtkb1P0KaC1VX7RBudrpn8itajx5ZClFnIUY?=
+ =?us-ascii?Q?/F2Zl+OZudTAMhoC+/mqMD2uKb+OPlRaCcAOZ/+w7s98mF/O1ZGZhA0IIkPg?=
+ =?us-ascii?Q?nau70aan+p70DlC7NArBdB6eh+qhivvXb5yDTYBdmzTtW2aJYqA/d2Rlv3Y0?=
+ =?us-ascii?Q?k9rGPYGUHK3+X5FJ5X8lxhWSd85IEwna85rnCCiH/9onA+0/hIQC+5dwpEns?=
+ =?us-ascii?Q?NnngpZHHYP4nWJUGe7um/B9scnYOx4axX/vWfe9ZjY2WO+DjcxCKJb/Zpfuv?=
+ =?us-ascii?Q?s1qILx81BHU3RX0yNAUxYhkhalKj4jf/FVcCvB7s170RHZZEpi+gL1c/RbKZ?=
+ =?us-ascii?Q?vDhALvqv42Uzu7U22c1IT5ZQRkGZ6fZy0Y6wG79mBpWJqavrd9DYsIJ65ynT?=
+ =?us-ascii?Q?Q0ieOGequjiZ/RpBZnRV1fKaN4pJOEAtIZjERLFv1yF3Op83Vkd0R0+FbMCj?=
+ =?us-ascii?Q?EgS3ZZNpRjuNSamo3ebWdC8Hhu1TUlpNLDXubOJqwj1jlYyyKuH77G/lxi22?=
+ =?us-ascii?Q?AQRRbiPplrwAlvsV57K0ee0UFBtsFIEiUNUg2e+z?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38dbd55f-66c4-4fbd-a87a-08dcf25fe795
+X-MS-Exchange-CrossTenant-Network-Message-Id: e93b7dd8-9f67-4cc9-ad1f-08dcf25feb57
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 06:08:10.7412
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2024 06:08:16.8012
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MjJAgmhWbsnskJMBWvf+WNeQFoUPgUXLIJqymv5I+MoFmsyBDlamoG60gXsnj5umRwnbjsw2iIWrMb76XuoCbg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: KDXN6hD5+c/V3v4O6eubjVKfSfyo/OQCxzb9qYLc5LxJORJd9QXTG8aAvTRLPLTIXVrmF+QCdPEpI6LvxSttJg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10178
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+NXP NETC is a multi-function RCiEP and it contains multiple functions,
+such as EMDIO, PTP Timer, ENETC PF and VF. Therefore, add these device
+IDs to pci_ids.h.
 
-The ERR050089 workaround causes performance degradation and potential
-functional issues (e.g., RCU stalls) under certain workloads. Since
-new SoCs like i.MX95 do not require this workaround, use a static key
-to compile out enetc_lock_mdio() and enetc_unlock_mdio() at runtime,
-improving performance and avoiding unnecessary logic.
+Below are the device IDs and corresponding drivers.
+PCI_DEVICE_ID_NXP2_ENETC_PF: nxp-enetc4
+PCI_DEVICE_ID_NXP2_NETC_EMDIO: fsl-enetc-mdio
+PCI_DEVICE_ID_NXP2_NETC_TIMER: ptp_netc
+PCI_DEVICE_ID_NXP2_ENETC_VF: fsl-enetc-vf
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Signed-off-by: Wei Fang <wei.fang@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
-v2 changes: no changes
-v3 changes: Change the title and refactor the commit message.
+v2 changes: Refine the commit message.
+v3: no changes.
 v4: no changes.
 ---
- .../net/ethernet/freescale/enetc/enetc_hw.h   | 34 +++++++++++++------
- .../ethernet/freescale/enetc/enetc_pci_mdio.c | 17 ++++++++++
- 2 files changed, 41 insertions(+), 10 deletions(-)
+ include/linux/pci_ids.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-index 1619943fb263..6a7b9b75d660 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-@@ -396,18 +396,22 @@ struct enetc_hw {
-  */
- extern rwlock_t enetc_mdio_lock;
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 4cf6aaed5f35..acd7ae774913 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1556,6 +1556,13 @@
+ #define PCI_DEVICE_ID_PHILIPS_SAA7146	0x7146
+ #define PCI_DEVICE_ID_PHILIPS_SAA9730	0x9730
  
-+DECLARE_STATIC_KEY_FALSE(enetc_has_err050089);
++/* NXP has two vendor IDs, the other one is 0x1957 */
++#define PCI_VENDOR_ID_NXP2		PCI_VENDOR_ID_PHILIPS
++#define PCI_DEVICE_ID_NXP2_ENETC_PF	0xe101
++#define PCI_DEVICE_ID_NXP2_NETC_EMDIO	0xee00
++#define PCI_DEVICE_ID_NXP2_NETC_TIMER	0xee02
++#define PCI_DEVICE_ID_NXP2_ENETC_VF	0xef00
 +
- /* use this locking primitive only on the fast datapath to
-  * group together multiple non-MDIO register accesses to
-  * minimize the overhead of the lock
-  */
- static inline void enetc_lock_mdio(void)
- {
--	read_lock(&enetc_mdio_lock);
-+	if (static_branch_unlikely(&enetc_has_err050089))
-+		read_lock(&enetc_mdio_lock);
- }
- 
- static inline void enetc_unlock_mdio(void)
- {
--	read_unlock(&enetc_mdio_lock);
-+	if (static_branch_unlikely(&enetc_has_err050089))
-+		read_unlock(&enetc_mdio_lock);
- }
- 
- /* use these accessors only on the fast datapath under
-@@ -416,14 +420,16 @@ static inline void enetc_unlock_mdio(void)
-  */
- static inline u32 enetc_rd_reg_hot(void __iomem *reg)
- {
--	lockdep_assert_held(&enetc_mdio_lock);
-+	if (static_branch_unlikely(&enetc_has_err050089))
-+		lockdep_assert_held(&enetc_mdio_lock);
- 
- 	return ioread32(reg);
- }
- 
- static inline void enetc_wr_reg_hot(void __iomem *reg, u32 val)
- {
--	lockdep_assert_held(&enetc_mdio_lock);
-+	if (static_branch_unlikely(&enetc_has_err050089))
-+		lockdep_assert_held(&enetc_mdio_lock);
- 
- 	iowrite32(val, reg);
- }
-@@ -452,9 +458,13 @@ static inline u32 _enetc_rd_mdio_reg_wa(void __iomem *reg)
- 	unsigned long flags;
- 	u32 val;
- 
--	write_lock_irqsave(&enetc_mdio_lock, flags);
--	val = ioread32(reg);
--	write_unlock_irqrestore(&enetc_mdio_lock, flags);
-+	if (static_branch_unlikely(&enetc_has_err050089)) {
-+		write_lock_irqsave(&enetc_mdio_lock, flags);
-+		val = ioread32(reg);
-+		write_unlock_irqrestore(&enetc_mdio_lock, flags);
-+	} else {
-+		val = ioread32(reg);
-+	}
- 
- 	return val;
- }
-@@ -463,9 +473,13 @@ static inline void _enetc_wr_mdio_reg_wa(void __iomem *reg, u32 val)
- {
- 	unsigned long flags;
- 
--	write_lock_irqsave(&enetc_mdio_lock, flags);
--	iowrite32(val, reg);
--	write_unlock_irqrestore(&enetc_mdio_lock, flags);
-+	if (static_branch_unlikely(&enetc_has_err050089)) {
-+		write_lock_irqsave(&enetc_mdio_lock, flags);
-+		iowrite32(val, reg);
-+		write_unlock_irqrestore(&enetc_mdio_lock, flags);
-+	} else {
-+		iowrite32(val, reg);
-+	}
- }
- 
- #ifdef ioread64
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-index a1b595bd7993..2445e35a764a 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-@@ -9,6 +9,9 @@
- #define ENETC_MDIO_BUS_NAME	ENETC_MDIO_DEV_NAME " Bus"
- #define ENETC_MDIO_DRV_NAME	ENETC_MDIO_DEV_NAME " driver"
- 
-+DEFINE_STATIC_KEY_FALSE(enetc_has_err050089);
-+EXPORT_SYMBOL_GPL(enetc_has_err050089);
-+
- static int enetc_pci_mdio_probe(struct pci_dev *pdev,
- 				const struct pci_device_id *ent)
- {
-@@ -62,6 +65,12 @@ static int enetc_pci_mdio_probe(struct pci_dev *pdev,
- 		goto err_pci_mem_reg;
- 	}
- 
-+	if (pdev->vendor == PCI_VENDOR_ID_FREESCALE &&
-+	    pdev->device == ENETC_MDIO_DEV_ID) {
-+		static_branch_inc(&enetc_has_err050089);
-+		dev_info(&pdev->dev, "Enabled ERR050089 workaround\n");
-+	}
-+
- 	err = of_mdiobus_register(bus, dev->of_node);
- 	if (err)
- 		goto err_mdiobus_reg;
-@@ -88,6 +97,14 @@ static void enetc_pci_mdio_remove(struct pci_dev *pdev)
- 	struct enetc_mdio_priv *mdio_priv;
- 
- 	mdiobus_unregister(bus);
-+
-+	if (pdev->vendor == PCI_VENDOR_ID_FREESCALE &&
-+	    pdev->device == ENETC_MDIO_DEV_ID) {
-+		static_branch_dec(&enetc_has_err050089);
-+		if (!static_key_enabled(&enetc_has_err050089.key))
-+			dev_info(&pdev->dev, "Disabled ERR050089 workaround\n");
-+	}
-+
- 	mdio_priv = bus->priv;
- 	iounmap(mdio_priv->hw->port);
- 	pci_release_region(pdev, 0);
+ #define PCI_VENDOR_ID_EICON		0x1133
+ #define PCI_DEVICE_ID_EICON_DIVA20	0xe002
+ #define PCI_DEVICE_ID_EICON_DIVA20_U	0xe004
 -- 
 2.34.1
 
