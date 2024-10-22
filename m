@@ -1,180 +1,218 @@
-Return-Path: <linux-pci+bounces-15011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C3C99AB037
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 15:57:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 522799AB069
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 16:08:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D51C1C22139
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 13:57:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBBF71F22DCE
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 14:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA9019F133;
-	Tue, 22 Oct 2024 13:56:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D61C519F485;
+	Tue, 22 Oct 2024 14:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qSnYcX0s"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nT065qt4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XB/MFvdM";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nT065qt4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XB/MFvdM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20F419F485
-	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 13:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B4519D88F;
+	Tue, 22 Oct 2024 14:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729605400; cv=none; b=K/K3BretHyHrxyVUtiYEyzWT2OjhK9VGKrZecIPAOz+YJElCAKbz4DFQwdiDHFuLiTP7x5kO3Ez0fY4Q5mjR6Z4g6TO/knE2Fx9i2znGAHcLj0rHK6RUBz0HHhzuBeQg7lBvEeq9SRqKD5F0OxmKAoEqZG4YQYZ0znp63LnB8CY=
+	t=1729606082; cv=none; b=nlgV0+XIGAH9JPCaufdCZFempfuf4cYjMCzveogLhdQ4oseB3BGlZEAm5LmQyHjMoTlYGCIai7yZxvQ3OH9EI8HAH6IWGG5IOU6dcX6m4KxMX77mFaw+U/mzQR20bVS3JmKTqZtf6XzVyNLH+d13D36803JK1xUeHR/YWvS1vk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729605400; c=relaxed/simple;
-	bh=IrYXfjr01AsYWGDke58fAVzb6jYYRUGRFE4PeWz47mU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQHAH2I17t68s654/YDTGKCSbdNxGftcaGWp8T7bU+rG9OmOoXh0GSUtG/097ykf4YrocioRns8YoQAQQ4UdYNr7Zh99tB3DFqaBEh+6ZtIEFq+bprxCSY3vumVU+fediGsauHl78njtKPEPbfY7FkPVk6v1RP1JniTyexXnHac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qSnYcX0s; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20caccadbeeso61758165ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 06:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729605398; x=1730210198; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GDTWspOywOZ3HPMtK4sHpusjuxuRLJ4HeTrHUioH/wE=;
-        b=qSnYcX0sEQIEWHBsUrAMtVqJd3QVM2MkIMjB/z36xNQ1vW0e6VRYF0fe32nC/PKcPs
-         YGPO9q6VYclmrGa/lrinzQkaBH+ya6bqqYDPJ9V8mZwPvD3wIzPq2YRAeB1hYsHhmJy2
-         uFJJPTEaCtBeFJyMU26evihXoJoaPbL9ToA3eiGyMj1PT+FS1p1ErgL3GeZi6Y2fXUnI
-         eQeJeM4SW//HxpizbjUAegSlAo6IxsKU+XvlaAtHh7MeBBc3fwMbzNseFyUUgGMkIUuV
-         dhyLEijEzKSB+c5y1HBScPtMkb11VRtg8va1YU2w875X2YeZqGUnizDaQppXbX4kDc7G
-         qChg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729605398; x=1730210198;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GDTWspOywOZ3HPMtK4sHpusjuxuRLJ4HeTrHUioH/wE=;
-        b=p6PXP40qLsN/I9dcYOmihJkK6WQ+2hbYLrCzhz2bd/xadcYcyW03rwsK5UyimxS4Mo
-         QbB+AvPzsTwhC8JpqiKZZ0ETU4OK+V4fgQKy+jZUlxRw/ezthSNdvwIyuYYRkfoxB+E8
-         bkk8MwoNR8Wp4DQ2YWyrAtW5mvNfoEP7+JonlWlpdK/C0MSiyB6n9fQqhVO2vPSDh2yy
-         fk8ADP28HZGdEqZWW6Db3cZOlIZOXQNrG71r9luXeSLWEE1qot8aCiSBcoEalpyCGLnt
-         tDAJAsxI6CAyoO8UOrXQJyjrCKpQfX3cilY3gIqiWqRULMC7WvUNizLcXMvwS6zOWsBF
-         g8Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWubnoCWSIuFH8KqiKu65uRF/HmiGuj863ohFTqbCo7sguFdDc+5Q4RMk2emxnEXCVkU9lYutG9z1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpKcIlv+9NhOEaR/y4DSXY0c+N/yP2GL4w3J4juKo8SXwN2T/3
-	BKs2joI41W51yg/4naIAsuiDWudJpO/BB6ayyiLC6LK3yqx0fQ5MDXpicECu/A==
-X-Google-Smtp-Source: AGHT+IFtCSs+qNjfC6N3FE3WfD5/1saWBS81ePzOouDaF/EAz1pAtvGUOgOR96qAumF85xLf7JSE/g==
-X-Received: by 2002:a17:902:76c7:b0:20c:ecd8:d0af with SMTP id d9443c01a7336-20e983f02c7mr28864705ad.9.1729605397974;
-        Tue, 22 Oct 2024 06:56:37 -0700 (PDT)
-Received: from thinkpad ([36.255.17.224])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7eee62cdsm43238625ad.5.2024.10.22.06.56.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 06:56:37 -0700 (PDT)
-Date: Tue, 22 Oct 2024 19:26:31 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v6 0/6] Improve PCI memory mapping API
-Message-ID: <20241022135631.a6ux4jzb47v7jvqr@thinkpad>
-References: <20241021221956.GA851955@bhelgaas>
- <848f676b-afce-472e-872d-53a32af094c1@kernel.org>
- <ZxdkopcSp9/P4f6k@x1-carbon.wireless.wdc>
+	s=arc-20240116; t=1729606082; c=relaxed/simple;
+	bh=keN/OaFPBTwJRNnLclouCC/2PmyqicZ/HLWJKZaXkMw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qm0ySYCTCa4bIZl0Az8kmTA6pvuO0QtjQZ02xfGfgqr6tOcG4YlGgFaNj0mMMKODYKAYRVjkqRfJV3bWI3TQho8BYLR718eelOa2Mbqv4mA5WXR+2my+L7CInoUkQVOiGP0olMmqhtBj11qteujBV1PsWihaSiuIZIeKWngAIxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nT065qt4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XB/MFvdM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nT065qt4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XB/MFvdM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 30D9321962;
+	Tue, 22 Oct 2024 14:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729606078; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5YtkOoPrVW2kCBxPLqPAf7UD1c7Fz8OlNH1U+IqDi8=;
+	b=nT065qt4F0yaxGQDtCajKU5QrE+p9X22fQ5X+uJrdOXhWH71O0XxqvB04DrSIvks57q6Cu
+	JdoTUOrhC6F3VM2FqxvCZrrLy8dfmsvHOi34IxJPAYkskRCU+DNNNywW6lsBU0E9auNlTB
+	K4vW+XGRe4RK0Vn8gIuK+2eJqjzzmJQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729606078;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5YtkOoPrVW2kCBxPLqPAf7UD1c7Fz8OlNH1U+IqDi8=;
+	b=XB/MFvdM6NJqGNpPMiucMvrGVCv1meVqHtwqyxogJgSr9p1OCl+lie6l0tPeIfBtUWHx0K
+	qJIy2sce/WWFCkBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729606078; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5YtkOoPrVW2kCBxPLqPAf7UD1c7Fz8OlNH1U+IqDi8=;
+	b=nT065qt4F0yaxGQDtCajKU5QrE+p9X22fQ5X+uJrdOXhWH71O0XxqvB04DrSIvks57q6Cu
+	JdoTUOrhC6F3VM2FqxvCZrrLy8dfmsvHOi34IxJPAYkskRCU+DNNNywW6lsBU0E9auNlTB
+	K4vW+XGRe4RK0Vn8gIuK+2eJqjzzmJQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729606078;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5YtkOoPrVW2kCBxPLqPAf7UD1c7Fz8OlNH1U+IqDi8=;
+	b=XB/MFvdM6NJqGNpPMiucMvrGVCv1meVqHtwqyxogJgSr9p1OCl+lie6l0tPeIfBtUWHx0K
+	qJIy2sce/WWFCkBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 783A713894;
+	Tue, 22 Oct 2024 14:07:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vT/NHL2xF2f0awAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 22 Oct 2024 14:07:57 +0000
+Date: Tue, 22 Oct 2024 16:08:58 +0200
+Message-ID: <87v7xk2ps5.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>,	Niklas Cassel <cassel@kernel.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,	Basavaraj Natikar
+ <basavaraj.natikar@amd.com>,	Jiri Kosina <jikos@kernel.org>,	Benjamin
+ Tissoires <bentiss@kernel.org>,	Arnd Bergmann <arnd@arndb.de>,	Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,	Alex Dubov <oakad@yahoo.com>,
+	Sudarsana Kalluru <skalluru@marvell.com>,	Manish Chopra
+ <manishc@marvell.com>,	"David S. Miller" <davem@davemloft.net>,	Eric
+ Dumazet <edumazet@google.com>,	Jakub Kicinski <kuba@kernel.org>,	Paolo
+ Abeni <pabeni@redhat.com>,	Rasesh Mody <rmody@marvell.com>,
+	GR-Linux-NIC-Dev@marvell.com,	Igor Mitsyanko <imitsyanko@quantenna.com>,
+	Sergey Matyukevich <geomatsi@gmail.com>,	Kalle Valo <kvalo@kernel.org>,
+	Sanjay R Mehta <sanju.mehta@amd.com>,	Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>,	Jon Mason <jdmason@kudzu.us>,	Dave Jiang
+ <dave.jiang@intel.com>,	Allen Hubbe <allenbh@gmail.com>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	Alex Williamson <alex.williamson@redhat.com>,
+	Juergen Gross <jgross@suse.com>,	Stefano Stabellini
+ <sstabellini@kernel.org>,	Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>,	Jaroslav Kysela <perex@perex.cz>,	Takashi
+ Iwai <tiwai@suse.com>,	Chen Ni <nichen@iscas.ac.cn>,	Mario Limonciello
+ <mario.limonciello@amd.com>,	Ricky Wu <ricky_wu@realtek.com>,	Al Viro
+ <viro@zeniv.linux.org.uk>,	Breno Leitao <leitao@debian.org>,	Kevin Tian
+ <kevin.tian@intel.com>,	Thomas Gleixner <tglx@linutronix.de>,	Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,	Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>,	Mostafa Saleh
+ <smostafa@google.com>,	Jason Gunthorpe <jgg@ziepe.ca>,	Yi Liu
+ <yi.l.liu@intel.com>,	Christian Brauner <brauner@kernel.org>,	Ankit Agrawal
+ <ankita@nvidia.com>,	Eric Auger <eric.auger@redhat.com>,	Reinette Chatre
+ <reinette.chatre@intel.com>,	Ye Bin <yebin10@huawei.com>,	Marek
+ =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,	Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>,	Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,	Kai Vehmanen
+ <kai.vehmanen@linux.intel.com>,	Rui Salvaterra <rsalvaterra@gmail.com>,
+	linux-ide@vger.kernel.org,	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,	ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org,	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org,	linux-sound@vger.kernel.org
+Subject: Re: [PATCH 02/13] ALSA: hda_intel: Use always-managed version of pcim_intx()
+In-Reply-To: <20241015185124.64726-3-pstanner@redhat.com>
+References: <20241015185124.64726-1-pstanner@redhat.com>
+	<20241015185124.64726-3-pstanner@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZxdkopcSp9/P4f6k@x1-carbon.wireless.wdc>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_ENVRCPT(0.00)[yahoo.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_GT_50(0.00)[66];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,omp.ru,amd.com,arndb.de,linuxfoundation.org,yahoo.com,marvell.com,davemloft.net,google.com,redhat.com,quantenna.com,gmail.com,kudzu.us,intel.com,suse.com,epam.com,perex.cz,iscas.ac.cn,realtek.com,zeniv.linux.org.uk,debian.org,linutronix.de,linux.intel.com,ziepe.ca,nvidia.com,huawei.com,invisiblethingslab.com,linux.dev,vger.kernel.org,lists.linux.dev,lists.xenproject.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Oct 22, 2024 at 10:38:58AM +0200, Niklas Cassel wrote:
-> On Tue, Oct 22, 2024 at 10:51:53AM +0900, Damien Le Moal wrote:
-> > On 10/22/24 07:19, Bjorn Helgaas wrote:
-> > > On Sat, Oct 12, 2024 at 08:32:40PM +0900, Damien Le Moal wrote:
-> >
-> > DMA transfers that can be done using dedicated DMA rx/tx channels associated
-> > with the endpoint controller do not need to use this API as the mapping to
-> > the host PCI address space is automatically handled by the DMA driver.
+On Tue, 15 Oct 2024 20:51:12 +0200,
+Philipp Stanner wrote:
 > 
-> I disagree with this part. It think that it depends on the DMA controller.
+> pci_intx() is a hybrid function which can sometimes be managed through
+> devres. To remove this hybrid nature from pci_intx(), it is necessary to
+> port users to either an always-managed or a never-managed version.
 > 
-> Looking at the manual for e.g. the embedded DMA controller on the DWC
-> controller (eDMA):
-> ""
-> When you do not want the iATU to translate outbound requests that are generated by the
-> internal DMA module, then you must implement one of the following approaches:
-> - Ensure that the combination of DMA channel programming and iATU control register
-> programming, causes no translation of DMA traffic to be done in the iATU.
-> or
-> - Activate the DMA bypass mode to allow request TLPs which are initiated by the DMA
-> controller to pass through the iATU untranslated. You can activate DMA bypass mode by
-> setting the DMA Bypass field of the iATU Control 2 Register (IATU_REGION_C-
-> TRL_OFF_2_OUTBOUND_0).
-> ""
+> hda_intel enables its PCI-Device with pcim_enable_device(). Thus, it needs
+> the always-managed version.
 > 
-> However, we also know that, if there is no match in the iATU table:
-> ""
-> The default behavior of the ATU when there is no address match in the outbound direction or no
-> TLP attribute match in the inbound direction, is to pass the transaction through.
-> ""
+> Replace pci_intx() with pcim_intx().
 > 
-> I.e. if there is a iATU mapping (which is what pci_epc_map_addr() sets up),
-> the eDMA will take that into account. If there is none, it will go through
-> untranslated.
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>  sound/pci/hda/hda_intel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 
-> So for the eDMA embedded on the DWC controller, we do not strictly need to
-> call pci_epc_map_addr(). (However, we probably want to do it anyway, as long
-> as we haven't enabled DMA bypass mode, just to make sure that there is no
-> other iATU mapping in the mapping table that will affect our transfer.)
-> 
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index b4540c5cd2a6..b44ca7b6e54f 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -786,7 +786,7 @@ static int azx_acquire_irq(struct azx *chip, int do_disconnect)
+>  	}
+>  	bus->irq = chip->pci->irq;
+>  	chip->card->sync_irq = bus->irq;
+> -	pci_intx(chip->pci, !chip->msi);
+> +	pcim_intx(chip->pci, !chip->msi);
+>  	return 0;
+>  }
+>  
 
-I do not recommend that. EPF driver *should* know how to isolate the address
-spaces between DMA and iATU. Creating the iATU mapping for the DMA address is
-just defeating the purpose of using DMA.
+Hm, it's OK-ish to do this as it's practically same as what pci_intx()
+currently does.  But, the current code can be a bit inconsistent about
+the original intx value.  pcim_intx() always stores !enable to
+res->orig_intx unconditionally, and it means that the orig_intx value
+gets overridden at each time pcim_intx() gets called.
 
-If any overlap mapping is present, then the EPF driver has a bug!
+Meanwhile, HD-audio driver does release and re-acquire the interrupt
+after disabling MSI when something goes wrong, and pci_intx() call
+above is a part of that procedure.  So, it can rewrite the
+res->orig_intx to another value by retry without MSI.  And after the
+driver removal, it'll lead to another state.
 
-> However, if you think about a generic DMA controller, e.g. an ARM primecell
-> pl330, I don't see how it that DMA controller will be able to perform
-> transfers correctly if there is not an iATU mapping for the region that it
-> is reading/writing to.
-> 
+In anyway, as it doesn't change the current behavior, feel free to
+take my ack for now:
 
-I don't think the generic DMA controller can be used to read/write to remote
-memory. It needs to be integrated with the PCIe IP so that it can issue PCIe
-transactions.
+Acked-by: Takashi Iwai <tiwai@suse.de>
 
-> So the safest thing, that will work with any DMA controller is probably to
-> always call pci_epc_map_addr() before doing the transfer.
-> 
-> 
-> However, as I pointed out in:
-> https://lore.kernel.org/lkml/Zg5oeDzq5u3jmKIu@ryzen/
-> 
-> This behavior is still inconsistent between PCI EPF drivers:
-> E.g. for pci-epf-test.c:
-> When using dedicated DMA rx/tx channels (epf_test->dma_private == true),
-> and when FLAG_USE_DMA is set, it currently always calls pci_epc_map_addr()
-> before doing the transfer.
-> 
-> However for pci-epf-mhi.c:
-> When using dedicated DMA rx/tx channels and when MHI_EPF_USE_DMA is set,
-> it currently does not call pci_epc_map_addr() before doing the transfer.
-> 
 
-Because, there are not going to be any overlapping mappings. But I agree with
-the inconsistency between EPF drivers though...
+thanks,
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Takashi
 
