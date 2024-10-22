@@ -1,147 +1,128 @@
-Return-Path: <linux-pci+bounces-15002-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 847289AA013
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 12:29:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 142129AA189
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 13:57:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DDE55B22EED
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 10:29:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 398E41C2208E
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 11:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E89D819C54F;
-	Tue, 22 Oct 2024 10:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3C8A19CC00;
+	Tue, 22 Oct 2024 11:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyPlxy5c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pY2WpYjm"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE56019C543;
-	Tue, 22 Oct 2024 10:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFA219CC21
+	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 11:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729592883; cv=none; b=TUBljE1w1IKa7ysAK0fD8xfsXuvhDAN8ZmosRNBBcffsi3S9ieVLOQZ+7r3e8y92zBNFaIMenMnp4K9+UhP3UqzJEnZv3KdJrhsTJnMjWI+nrXbxoL7cIuK+G0v55DZCtV93NYq4icVow/pVSgsirx2gUZzbziPaunYCXFu+MJc=
+	t=1729598224; cv=none; b=feXbeVJAgNIvq+0wY33prUpRzSwh0CqBjYfQLsNpQribiKRe7SrAX5Jky+gz377T6tvH0J5LsWF8/UgxuDM40YgHXDJ/TxoJbAUAQ1m7JdmLW1TyC5+quKP7yIqljvS3VuIwbBhNgA5M1i7ee7L8JrOx5WlfujQLoO2uJVBWkBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729592883; c=relaxed/simple;
-	bh=jPx+IRUONoAgH3KFjgYaCrDCw64YdeqQ3+EqFJXljGQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SywjKgeS4IKZbL8jtYafaTu2+z48v2mj7f0Am0hTfh7GTHTrQac9ycpn+fhylotmITk9hu/MRjB26a/VdCz6vcQtH9pRsejmKC1xklg/lV653LeI8tRvR3uncliJC2u0VVewm29eOm6UJmJBeXP1wHb0hGtY6k62E/NMku1hMJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyPlxy5c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 82BFAC4CEEB;
-	Tue, 22 Oct 2024 10:28:02 +0000 (UTC)
+	s=arc-20240116; t=1729598224; c=relaxed/simple;
+	bh=/isuBtDJ+qspniIuPbrBAIHMCWCNGINnskQ2X2oaHOk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KydIWf4kWPE+9hNbtCqqfr0x771vIgV22poRpEASdwnS/TrJJOwIxTo/AtR05yEAJ2pRu5UhlRSjTyAoNBDgh0LK/iUqBcICJKl6/f6O1R4ZsWi5FUr5dc4qbfcIS8BB8U9OwE+WCWc7v+hobapviyRus+anHhNPY+ZLfMpz0RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pY2WpYjm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F41C4CEC3;
+	Tue, 22 Oct 2024 11:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729592883;
-	bh=jPx+IRUONoAgH3KFjgYaCrDCw64YdeqQ3+EqFJXljGQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=iyPlxy5cEym5z4dc5fuFg0Hs1iBgHTGF+Mzq7b7hxHgnmiWLEDpaDwcKmqkxIRF0v
-	 3glK1uFH24QFWFpU3stuYIGPyrVVrkOXgsZ3PHLjXCdjCBKIj9ZOha8WdKEpP8Y06F
-	 /3vSajHOZ9Lu2z9WbM7YDohEVZHQjbZ9pI5sVtI5syUPE1wsGDpaWMIe63XIsfKLjm
-	 Sa4q/mVXsckKYKtxbBex8tAUBFHnUpF9MTge8S8itJbLsPECkVNufGLpjOc9FRRKQU
-	 D2slIuLxUe/URAVFj6w4ZTYF7CF14CYnEC97Nm3/mxVZ+GRUPyXQdISU+Zdj6M3Zmf
-	 CATtDb6UpHlpQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9F9D1CDD7;
-	Tue, 22 Oct 2024 10:28:02 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Tue, 22 Oct 2024 15:57:33 +0530
-Subject: [PATCH 5/5] PCI/pwrctl: Remove pwrctl device without iterating
- over all children of pwrctl parent
+	s=k20201202; t=1729598224;
+	bh=/isuBtDJ+qspniIuPbrBAIHMCWCNGINnskQ2X2oaHOk=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=pY2WpYjmW087MDwejOweCl2DyejDBXD4vIWuvuFALhDEE0ZXtXK8epEBb3bN5CEPP
+	 gwQ4r1dV+uTFwY6ixwKWactzKgMiyi2DN4YGMIVOy6UuemzsH/FDSKYt7YdYQqt5rk
+	 OVZkim+x24Fx55C+g5DuIsuIZuo8M8KeJqMbmaYBBnJIJBtkASwqAQLNRwM7bpHJCg
+	 7tv90mahzvrt8oji3FrPkwUQVYhWwV6jvvuLLu5e7ddL1nZwIzngwWqAn8FDcG8vw+
+	 O9i9GmOr0Ee3Hk3IUxpmqHzepYUtyYpBhhcpki71QfDkksLHwwJc12KnyIWw2XF9NJ
+	 uWJlKhufsabeQ==
+Message-ID: <0a174951-3c0d-4a34-a631-a62f452663d3@kernel.org>
+Date: Tue, 22 Oct 2024 20:57:01 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+From: Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v6 0/6] Improve PCI memory mapping API
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Jingoo Han <jingoohan1@gmail.com>,
+ linux-pci@vger.kernel.org, Rick Wertenbroek <rick.wertenbroek@gmail.com>
+References: <20241021221956.GA851955@bhelgaas>
+ <848f676b-afce-472e-872d-53a32af094c1@kernel.org>
+ <ZxdkopcSp9/P4f6k@x1-carbon.wireless.wdc>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <ZxdkopcSp9/P4f6k@x1-carbon.wireless.wdc>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241022-pci-pwrctl-rework-v1-5-94a7e90f58c5@linaro.org>
-References: <20241022-pci-pwrctl-rework-v1-0-94a7e90f58c5@linaro.org>
-In-Reply-To: <20241022-pci-pwrctl-rework-v1-0-94a7e90f58c5@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Johan Hovold <johan+linaro@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
- Stephan Gerhold <stephan.gerhold@linaro.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1846;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=Fx4nsEA2QZpP1ERShZZ8bZw3IQBN6+Um75DdA2nrjyg=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnF34v/nlnaSD9lCRQmkUSbC0gN51VH+Ya8loNI
- VZhLq3xK7eJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZxd+LwAKCRBVnxHm/pHO
- 9WpUCACKafJIXVlw/tZAI/sQS1x6dJE+i6hX9zJsxTo/DczSyuwA6FHOswiX8NHCLJZyYTyspGt
- rFNtE5+WOuWGABNRXUvTZLGAOJZljL1UHYFJMkPRzuLUfFhTPjuEJ2aXkYTFz6tJaaAoah74P8r
- hUrkZve4eH0d3qRD3NDeZuwBIhT0ZyGPN9j32ESnqYhBhyuY6vxemjBM38NAWSDFc5gUdSBufzA
- Lwa8k652Feas0X9FUPl+RrPjjq/Yot8oDfpSiKhAnPQNYLinqbLfb6vrAbphM9VMDRv35P01xNY
- lgPl05mHeyzVat+aw1w4oGVinO277ji4pUNpIEanlGGfbcHs
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@linaro.org/default with auth_id=185
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reply-To: manivannan.sadhasivam@linaro.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On 10/22/24 17:38, Niklas Cassel wrote:
+> On Tue, Oct 22, 2024 at 10:51:53AM +0900, Damien Le Moal wrote:
+>> On 10/22/24 07:19, Bjorn Helgaas wrote:
+>>> On Sat, Oct 12, 2024 at 08:32:40PM +0900, Damien Le Moal wrote:
+>>
+>> DMA transfers that can be done using dedicated DMA rx/tx channels associated
+>> with the endpoint controller do not need to use this API as the mapping to
+>> the host PCI address space is automatically handled by the DMA driver.
+> 
+> I disagree with this part. It think that it depends on the DMA controller.
+> 
+> Looking at the manual for e.g. the embedded DMA controller on the DWC
+> controller (eDMA):
+> ""
+> When you do not want the iATU to translate outbound requests that are generated by the
+> internal DMA module, then you must implement one of the following approaches:
+> - Ensure that the combination of DMA channel programming and iATU control register
+> programming, causes no translation of DMA traffic to be done in the iATU.
+> or
+> - Activate the DMA bypass mode to allow request TLPs which are initiated by the DMA
+> controller to pass through the iATU untranslated. You can activate DMA bypass mode by
+> setting the DMA Bypass field of the iATU Control 2 Register (IATU_REGION_C-
+> TRL_OFF_2_OUTBOUND_0).
+> ""
+> 
+> However, we also know that, if there is no match in the iATU table:
+> ""
+> The default behavior of the ATU when there is no address match in the outbound direction or no
+> TLP attribute match in the inbound direction, is to pass the transaction through.
+> ""
+> 
+> I.e. if there is a iATU mapping (which is what pci_epc_map_addr() sets up),
+> the eDMA will take that into account. If there is none, it will go through
+> untranslated.
+> 
+> 
+> So for the eDMA embedded on the DWC controller, we do not strictly need to
+> call pci_epc_map_addr(). (However, we probably want to do it anyway, as long
+> as we haven't enabled DMA bypass mode, just to make sure that there is no
+> other iATU mapping in the mapping table that will affect our transfer.)
+> 
+> However, if you think about a generic DMA controller, e.g. an ARM primecell
+> pl330, I don't see how it that DMA controller will be able to perform
+> transfers correctly if there is not an iATU mapping for the region that it
+> is reading/writing to.
+> 
+> So the safest thing, that will work with any DMA controller is probably to
+> always call pci_epc_map_addr() before doing the transfer.
 
-There is no need to iterate over all children of the pwrctl device parent
-to remove the pwrctl device. Since the pwrctl device associated with the
-PCI device can be found using of_find_device_by_node() API, use it directly
-instead.
-
-If any pwrctl devices lying around without getting associated with the PCI
-devices, then those will be removed once their parent device gets removed.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/remove.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index e4ce1145aa3e..3dd9b3024956 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -17,16 +17,16 @@ static void pci_free_resources(struct pci_dev *dev)
- 	}
- }
- 
--static int pci_pwrctl_unregister(struct device *dev, void *data)
-+static void pci_pwrctl_unregister(struct device *dev)
- {
--	struct device_node *pci_node = data, *plat_node = dev_of_node(dev);
-+	struct platform_device *pdev;
- 
--	if (dev_is_platform(dev) && plat_node && plat_node == pci_node) {
--		of_device_unregister(to_platform_device(dev));
--		of_node_clear_flag(plat_node, OF_POPULATED);
--	}
-+	pdev = of_find_device_by_node(dev_of_node(dev));
-+	if (!pdev)
-+		return;
- 
--	return 0;
-+	of_device_unregister(pdev);
-+	of_node_clear_flag(dev_of_node(dev), OF_POPULATED);
- }
- 
- static void pci_stop_dev(struct pci_dev *dev)
-@@ -34,8 +34,7 @@ static void pci_stop_dev(struct pci_dev *dev)
- 	pci_pme_active(dev, false);
- 
- 	if (pci_dev_is_added(dev)) {
--		device_for_each_child(dev->dev.parent, dev_of_node(&dev->dev),
--				      pci_pwrctl_unregister);
-+		pci_pwrctl_unregister(&dev->dev);
- 		device_release_driver(&dev->dev);
- 		pci_proc_detach_device(dev);
- 		pci_remove_sysfs_dev_files(dev);
+Indeed, I think you are right. Not doing the mapping before DMA with the RK3588
+works fine, but that may not be the case for all controllers.
 
 -- 
-2.25.1
-
-
+Damien Le Moal
+Western Digital Research
 
