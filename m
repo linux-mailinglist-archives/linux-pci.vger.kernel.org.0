@@ -1,135 +1,96 @@
-Return-Path: <linux-pci+bounces-14987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 637869A9D05
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 10:39:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 564249A9DFE
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 11:11:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01B22B21077
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 08:39:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1726C285CB9
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 09:11:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB2CE157487;
-	Tue, 22 Oct 2024 08:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFC6194C9E;
+	Tue, 22 Oct 2024 09:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8is9XhZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NsWqTKOw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969FD15B102
-	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 08:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AB383CD2;
+	Tue, 22 Oct 2024 09:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729586344; cv=none; b=DVlVYS4JHqttWxg/5xCGI9EElujY/af0xMUEw1ruVzdhSBSZu+GXbKSjX1xF9nVkn8Hk9OQ3Z1kE91exZafYk9lFVDFqO2A4HLFOmPHPJeYohWVK4nDpfsdh2gJnFnZD81C8gUiSY7AikeY99x1F221THwKMiSeIYx5+E0hF/bc=
+	t=1729588311; cv=none; b=PnrAdYwlcTk6gN1VrG/221T9iK0Fj76dni7p8giz05MGtzdZuitdmehDHPFpXRW9PjPvdZ/gA35Qu83IzBLD93W2IyDfgAKlOzZJqv4gHfPA2MfCrhzJHfs9GqbJVjrNv9+AmdhKNDImj3sOol6nEJJ2IvjNSL1o+a9xBoZdLCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729586344; c=relaxed/simple;
-	bh=Ui/ivi4JUyEW3FkAKYXuH39+xJbMaUJXCm+K/DmTYvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnRXZP2NP1sCl0MEhl9PmWy4MLaql8HYtP1W85gRcQBQ8na/P+zu9fLwcZm+mG/BHewMUf9dARTkQT1r4s/owq40wuJwi2HtQivnZYvUmoSXg40x2vrToD+Y9bHhNo7m0YmJuUrnXmJatqo1jV0FB8+gx1ONAEI7X8wDwK3/K74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8is9XhZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BD2C4CEC3;
-	Tue, 22 Oct 2024 08:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729586344;
-	bh=Ui/ivi4JUyEW3FkAKYXuH39+xJbMaUJXCm+K/DmTYvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C8is9XhZKQ93dlVhzXXu+doeJWKS9OFTT9JQeBfsTQeoX2nWnVjvna19coV12DTVp
-	 iQA5OTYilyG8gxx23V/sVkembDdRUhygkDj/14LPmTw0eYl7ckq3WsnwK/FSsuS2id
-	 UygIw/bPoFCjq5lYiPE43AH3qnklqMWFJD4+HQ5oOUhkaGTSac07GGy0a3toISPxPM
-	 beSYWfn9gjNLjykkgauQc0zKKGuB6mVhvDcWquCEmvFRuoBP9LZxZSEXjKd7wXoQRL
-	 T96ZqEOZX1NddHh7hmQbh1Oc5g75IXr7Bvgxc2n1FkokQZElzVlgfZkRQxNS9KtPq5
-	 ktIJPYife6QgQ==
-Date: Tue, 22 Oct 2024 10:38:58 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: [PATCH v6 0/6] Improve PCI memory mapping API
-Message-ID: <ZxdkopcSp9/P4f6k@x1-carbon.wireless.wdc>
-References: <20241021221956.GA851955@bhelgaas>
- <848f676b-afce-472e-872d-53a32af094c1@kernel.org>
+	s=arc-20240116; t=1729588311; c=relaxed/simple;
+	bh=GiwLJ1TIGrkfQgpuBcbSAcE1gBJxRKDNPhI8vZpLpFs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jALDco51Dm/9Gfdta3ltP79MkRaMMSf3Ji8cwVpZT3aw6/fLk6FXBZjBY4qgH516XSqmmhPtoBUx5X8jKlhebSCENeCPUB3fJ1/Xai74TYD9eVPMq2KBTgKIUOVJJQeDzkYvyVuGEePLqnJLJFq0CQCYLCKJE6vTfL85y3ePOjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NsWqTKOw; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729588310; x=1761124310;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GiwLJ1TIGrkfQgpuBcbSAcE1gBJxRKDNPhI8vZpLpFs=;
+  b=NsWqTKOw2Iog9lSNKBX1D0UyFZ4tsI+UqsdeXBWBKSo8eH6AMo/Ohylm
+   Dnub4DZIk3Yy9C5XLKaSiE/KmpeN8+yAL/IHgqi4w5NZd62MLYzJIVzE7
+   0i66z4X+2jqCsccDrKMVEBn133dvZOiN2DtWyURadTh9Nk0hoRVz0h58E
+   +yxRltD1kLuFz5HW1xoDvYkOc9AVQvOKwX1JmQsKovn5uM0vQqhtPV2JF
+   S3YjhD5uCiqeNSXMec8f744jUtv3D/fkq37sgDgP1qZuc3/PpOYp6RMz5
+   S6SqYQCsb2yShTh62qzV0BhT2xJABDhpqrlF9FYeDChI/EfSq4EQwtvUn
+   w==;
+X-CSE-ConnectionGUID: 0kENBGL7QBeSnid25GDYHw==
+X-CSE-MsgGUID: GNt6j44/QO+Q1kpEfwke+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="54514031"
+X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
+   d="scan'208";a="54514031"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 02:11:49 -0700
+X-CSE-ConnectionGUID: yLEIypwvQIO+jPEL1tOn3Q==
+X-CSE-MsgGUID: pRPdQRZpQE2icYX6+op5zQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
+   d="scan'208";a="79974884"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2024 02:11:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 0/4] PCI: cpqphp: Fix and cleanups
+Date: Tue, 22 Oct 2024 12:11:36 +0300
+Message-Id: <20241022091140.3504-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <848f676b-afce-472e-872d-53a32af094c1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 22, 2024 at 10:51:53AM +0900, Damien Le Moal wrote:
-> On 10/22/24 07:19, Bjorn Helgaas wrote:
-> > On Sat, Oct 12, 2024 at 08:32:40PM +0900, Damien Le Moal wrote:
->
-> DMA transfers that can be done using dedicated DMA rx/tx channels associated
-> with the endpoint controller do not need to use this API as the mapping to
-> the host PCI address space is automatically handled by the DMA driver.
+Fix one PCIBIOS_* return value confusion in cpqphp and cleanup a few
+other things.
 
-I disagree with this part. It think that it depends on the DMA controller.
+v2:
+- Add a warning print if the path missing recursion is executed.
 
-Looking at the manual for e.g. the embedded DMA controller on the DWC
-controller (eDMA):
-""
-When you do not want the iATU to translate outbound requests that are generated by the
-internal DMA module, then you must implement one of the following approaches:
-- Ensure that the combination of DMA channel programming and iATU control register
-programming, causes no translation of DMA traffic to be done in the iATU.
-or
-- Activate the DMA bypass mode to allow request TLPs which are initiated by the DMA
-controller to pass through the iATU untranslated. You can activate DMA bypass mode by
-setting the DMA Bypass field of the iATU Control 2 Register (IATU_REGION_C-
-TRL_OFF_2_OUTBOUND_0).
-""
+Ilpo Järvinen (4):
+  PCI: cpqphp: Fix PCIBIOS_* return value confusions
+  PCI: cpqphp: Use pci_bus_read_dev_vendor_id() to detect presence
+  PCI: cpqphp: Use define to read class/revision dword
+  PCI: cpqphp: Simplify PCI_ScanBusForNonBridge()
 
-However, we also know that, if there is no match in the iATU table:
-""
-The default behavior of the ATU when there is no address match in the outbound direction or no
-TLP attribute match in the inbound direction, is to pass the transaction through.
-""
+ drivers/pci/hotplug/cpqphp_pci.c | 47 +++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 28 deletions(-)
 
-I.e. if there is a iATU mapping (which is what pci_epc_map_addr() sets up),
-the eDMA will take that into account. If there is none, it will go through
-untranslated.
+-- 
+2.39.5
 
-
-So for the eDMA embedded on the DWC controller, we do not strictly need to
-call pci_epc_map_addr(). (However, we probably want to do it anyway, as long
-as we haven't enabled DMA bypass mode, just to make sure that there is no
-other iATU mapping in the mapping table that will affect our transfer.)
-
-However, if you think about a generic DMA controller, e.g. an ARM primecell
-pl330, I don't see how it that DMA controller will be able to perform
-transfers correctly if there is not an iATU mapping for the region that it
-is reading/writing to.
-
-So the safest thing, that will work with any DMA controller is probably to
-always call pci_epc_map_addr() before doing the transfer.
-
-
-However, as I pointed out in:
-https://lore.kernel.org/lkml/Zg5oeDzq5u3jmKIu@ryzen/
-
-This behavior is still inconsistent between PCI EPF drivers:
-E.g. for pci-epf-test.c:
-When using dedicated DMA rx/tx channels (epf_test->dma_private == true),
-and when FLAG_USE_DMA is set, it currently always calls pci_epc_map_addr()
-before doing the transfer.
-
-However for pci-epf-mhi.c:
-When using dedicated DMA rx/tx channels and when MHI_EPF_USE_DMA is set,
-it currently does not call pci_epc_map_addr() before doing the transfer.
-
-
-Kind regards,
-Niklas
 
