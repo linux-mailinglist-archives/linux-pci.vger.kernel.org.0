@@ -1,130 +1,135 @@
-Return-Path: <linux-pci+bounces-14986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0B0C9A9CAE
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 10:32:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 637869A9D05
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 10:39:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15DCF1C23342
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 08:32:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01B22B21077
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 08:39:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00997152166;
-	Tue, 22 Oct 2024 08:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB2CE157487;
+	Tue, 22 Oct 2024 08:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="isz6k2P0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8is9XhZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E834A27735;
-	Tue, 22 Oct 2024 08:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969FD15B102
+	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 08:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729585932; cv=none; b=hEIBx/e8C+BfNUZAvG5s4j/dh67wgaiw6JjgEwTr9wXMEO0X2SqnnLpLQtb1lOvj7ZZU+j6z5J4GsStShdIBvLw5zBykItkKEe7fo8FdtLmMv7m0EPkR1kvFGQK5/CnXi2fstsKryFo7oonrW9CPwEx0Z1awkRhH31J921KXoCc=
+	t=1729586344; cv=none; b=DVlVYS4JHqttWxg/5xCGI9EElujY/af0xMUEw1ruVzdhSBSZu+GXbKSjX1xF9nVkn8Hk9OQ3Z1kE91exZafYk9lFVDFqO2A4HLFOmPHPJeYohWVK4nDpfsdh2gJnFnZD81C8gUiSY7AikeY99x1F221THwKMiSeIYx5+E0hF/bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729585932; c=relaxed/simple;
-	bh=24FHTTIKlshgcnqTCzujRu8x5PDDvQ70ZtdJSrLkunU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XyicZ4xnwhOYq73gV/eiAuhLMnK4UVS1fMy6VnJ1DifYw05PXXer+4v0ThimZiuK5pcjotGMgjHQntjw19QXN6yYALPcIwunZe2xDVtuh0148eESmdPm2mADz2iaKDp9EIOxPX8WmyqBdNXxjSsEUDuogRwQSNFe2BQklOVPTpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=isz6k2P0; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49M8VqwT103269;
-	Tue, 22 Oct 2024 03:31:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1729585912;
-	bh=YAMUtebJLSB7p1vdKcR9hmMWoyxoGZwJK0XkcbmsWm8=;
-	h=From:To:CC:Subject:Date;
-	b=isz6k2P0v8fKnPaNqF5TebLSNayOh1js0lHQ4hRVh8cqllDL6AX/fVn2DeM1ZeNU6
-	 SmF9yj7+a0QpNrOCHstvwgotebSqWao97gqGpKBuGy2LfYxehfLpdwbI/9IEw2GkJB
-	 fAlb/p+RgaEYEiAG3yQbU5uQ23dYNZ8qkT+my4RM=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49M8Vq1S033237;
-	Tue, 22 Oct 2024 03:31:52 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
- Oct 2024 03:31:52 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 22 Oct 2024 03:31:52 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49M8Vm4B052525;
-	Tue, 22 Oct 2024 03:31:49 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <vigneshr@ti.com>,
-        <manivannan.sadhasivam@linaro.org>, <thomas.richard@bootlin.com>
-CC: <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH] PCI: j721e: Deassert PERST# after a delay of PCIE_T_PVPERL_MS ms
-Date: Tue, 22 Oct 2024 14:01:47 +0530
-Message-ID: <20241022083147.2773123-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1729586344; c=relaxed/simple;
+	bh=Ui/ivi4JUyEW3FkAKYXuH39+xJbMaUJXCm+K/DmTYvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnRXZP2NP1sCl0MEhl9PmWy4MLaql8HYtP1W85gRcQBQ8na/P+zu9fLwcZm+mG/BHewMUf9dARTkQT1r4s/owq40wuJwi2HtQivnZYvUmoSXg40x2vrToD+Y9bHhNo7m0YmJuUrnXmJatqo1jV0FB8+gx1ONAEI7X8wDwK3/K74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8is9XhZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BD2C4CEC3;
+	Tue, 22 Oct 2024 08:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729586344;
+	bh=Ui/ivi4JUyEW3FkAKYXuH39+xJbMaUJXCm+K/DmTYvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C8is9XhZKQ93dlVhzXXu+doeJWKS9OFTT9JQeBfsTQeoX2nWnVjvna19coV12DTVp
+	 iQA5OTYilyG8gxx23V/sVkembDdRUhygkDj/14LPmTw0eYl7ckq3WsnwK/FSsuS2id
+	 UygIw/bPoFCjq5lYiPE43AH3qnklqMWFJD4+HQ5oOUhkaGTSac07GGy0a3toISPxPM
+	 beSYWfn9gjNLjykkgauQc0zKKGuB6mVhvDcWquCEmvFRuoBP9LZxZSEXjKd7wXoQRL
+	 T96ZqEOZX1NddHh7hmQbh1Oc5g75IXr7Bvgxc2n1FkokQZElzVlgfZkRQxNS9KtPq5
+	 ktIJPYife6QgQ==
+Date: Tue, 22 Oct 2024 10:38:58 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Subject: Re: [PATCH v6 0/6] Improve PCI memory mapping API
+Message-ID: <ZxdkopcSp9/P4f6k@x1-carbon.wireless.wdc>
+References: <20241021221956.GA851955@bhelgaas>
+ <848f676b-afce-472e-872d-53a32af094c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <848f676b-afce-472e-872d-53a32af094c1@kernel.org>
 
-According to Section 2.2 of the PCI Express Card Electromechanical
-Specification (Revision 5.1), in order to ensure that the power and the
-reference clock are stable, PERST# has to be deasserted after a delay of
-100 milliseconds (TPVPERL). Currently, it is being assumed that the power
-is already stable, which is not necessarily true. Hence, change the delay
-to PCIE_T_PVPERL_MS to guarantee that power and reference clock are stable.
+On Tue, Oct 22, 2024 at 10:51:53AM +0900, Damien Le Moal wrote:
+> On 10/22/24 07:19, Bjorn Helgaas wrote:
+> > On Sat, Oct 12, 2024 at 08:32:40PM +0900, Damien Le Moal wrote:
+>
+> DMA transfers that can be done using dedicated DMA rx/tx channels associated
+> with the endpoint controller do not need to use this API as the mapping to
+> the host PCI address space is automatically handled by the DMA driver.
 
-Fixes: f96b69713733 ("PCI: j721e: Use T_PERST_CLK_US macro")
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+I disagree with this part. It think that it depends on the DMA controller.
 
-Hello,
+Looking at the manual for e.g. the embedded DMA controller on the DWC
+controller (eDMA):
+""
+When you do not want the iATU to translate outbound requests that are generated by the
+internal DMA module, then you must implement one of the following approaches:
+- Ensure that the combination of DMA channel programming and iATU control register
+programming, causes no translation of DMA traffic to be done in the iATU.
+or
+- Activate the DMA bypass mode to allow request TLPs which are initiated by the DMA
+controller to pass through the iATU untranslated. You can activate DMA bypass mode by
+setting the DMA Bypass field of the iATU Control 2 Register (IATU_REGION_C-
+TRL_OFF_2_OUTBOUND_0).
+""
 
-This patch is based on commit
-c2ee9f594da8 KVM: selftests: Fix build on on non-x86 architectures
-of Mainline Linux.
+However, we also know that, if there is no match in the iATU table:
+""
+The default behavior of the ATU when there is no address match in the outbound direction or no
+TLP attribute match in the inbound direction, is to pass the transaction through.
+""
 
-Regards,
-Siddharth.
+I.e. if there is a iATU mapping (which is what pci_epc_map_addr() sets up),
+the eDMA will take that into account. If there is none, it will go through
+untranslated.
 
- drivers/pci/controller/cadence/pci-j721e.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 284f2e0e4d26..e464cfc2c332 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -671,15 +671,14 @@ static int j721e_pcie_resume_noirq(struct device *dev)
- 			return ret;
- 
- 		/*
--		 * The "Power Sequencing and Reset Signal Timings" table of the
--		 * PCI Express Card Electromechanical Specification, Revision
--		 * 5.1, Section 2.9.2, Symbol "T_PERST-CLK", indicates PERST#
--		 * should be deasserted after minimum of 100us once REFCLK is
--		 * stable. The REFCLK to the connector in RC mode is selected
--		 * while enabling the PHY. So deassert PERST# after 100 us.
-+		 * Section 2.2 of the PCI Express Card Electromechanical
-+		 * Specification (Revision 5.1) mandates that the deassertion
-+		 * of the PERST# signal should be delayed by 100 ms (TPVPERL).
-+		 * This shall ensure that the power and the reference clock
-+		 * are stable.
- 		 */
- 		if (pcie->reset_gpio) {
--			fsleep(PCIE_T_PERST_CLK_US);
-+			msleep(PCIE_T_PVPERL_MS);
- 			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
- 		}
- 
--- 
-2.40.1
+So for the eDMA embedded on the DWC controller, we do not strictly need to
+call pci_epc_map_addr(). (However, we probably want to do it anyway, as long
+as we haven't enabled DMA bypass mode, just to make sure that there is no
+other iATU mapping in the mapping table that will affect our transfer.)
 
+However, if you think about a generic DMA controller, e.g. an ARM primecell
+pl330, I don't see how it that DMA controller will be able to perform
+transfers correctly if there is not an iATU mapping for the region that it
+is reading/writing to.
+
+So the safest thing, that will work with any DMA controller is probably to
+always call pci_epc_map_addr() before doing the transfer.
+
+
+However, as I pointed out in:
+https://lore.kernel.org/lkml/Zg5oeDzq5u3jmKIu@ryzen/
+
+This behavior is still inconsistent between PCI EPF drivers:
+E.g. for pci-epf-test.c:
+When using dedicated DMA rx/tx channels (epf_test->dma_private == true),
+and when FLAG_USE_DMA is set, it currently always calls pci_epc_map_addr()
+before doing the transfer.
+
+However for pci-epf-mhi.c:
+When using dedicated DMA rx/tx channels and when MHI_EPF_USE_DMA is set,
+it currently does not call pci_epc_map_addr() before doing the transfer.
+
+
+Kind regards,
+Niklas
 
