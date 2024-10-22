@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-15059-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15060-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98E579AB89D
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 23:36:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 480609AB89F
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 23:36:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1162EB22F2D
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:36:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD1271F225B4
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:36:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 373571D2707;
-	Tue, 22 Oct 2024 21:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE291E130F;
+	Tue, 22 Oct 2024 21:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2M+tJxN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAOmv1eg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E821CDA01;
-	Tue, 22 Oct 2024 21:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40161CDA12;
+	Tue, 22 Oct 2024 21:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729632819; cv=none; b=XaNAwoZ3LYSXb/tCkvP/b3lOMZ+HdT1Oi5pBu1Rzq7BSEUJ007d6g2HTfyKjt+hraimaN8dHoT+5xCmmWerFz8dStI4JynQH/vLw35olJLxrZCdtmS2x1mrWiXoYSlgMLH3/3ujgthl/YOzVzX16ZhtyYZI88R5umQhBZoLoMNM=
+	t=1729632825; cv=none; b=P7hcIVr0a4uShNTDrQeE0ZXkUzeASbobHsllhElgW+Qoxs56DDPzG5uYTjtacZJb8JLCwYD5Y+VefnT2Qqhe72nMvBeZ843qvcFMFuNsTMVA0CWoRkb683muLMsawyG5ijv9QE5P14BUVcCG0GqAOMlIneJrtU5ejZd6L+cw4CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729632819; c=relaxed/simple;
-	bh=z5ECK64GtKy5YT46phRMAyyFvOnRMFYmZAm3K3e4hjY=;
+	s=arc-20240116; t=1729632825; c=relaxed/simple;
+	bh=6138rNionixW1Bs1ip5f6yRQ69Wk/93MH3AWM5T2VKQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bKuGypoDgwonYRYeT8bdI4mJz3AFOX5YTNSn9My9+aLAHS0VD8jxCoFaHTCPWFpv0IuFZgMmnbLTuwINXibTqSh8ac0uetZNwLGoXBSFs57nxj9lv+p8kli/nDPiQW0OLoO3SBWQr4LC9zSf9StK/gnE81adeW7wldE2EEbHv9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2M+tJxN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE35AC4CEE3;
-	Tue, 22 Oct 2024 21:33:33 +0000 (UTC)
+	 MIME-Version; b=DzDarVhqE/kthxsQsFby6AtDFjQT5fNx9xBu8AAOEsA6inUut7lOvmwC7CK/CRhu0Ed5rN66K+sZzb0ON2grolohbtclFRb6YXrpmZfLGNXcVAybVoneJclAMv4iv6QDgQ0xM9UsamdZEQlU23I5GKgIpPQPIVHu/Rvl8YuTIQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAOmv1eg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5819FC4CEC3;
+	Tue, 22 Oct 2024 21:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729632818;
-	bh=z5ECK64GtKy5YT46phRMAyyFvOnRMFYmZAm3K3e4hjY=;
+	s=k20201202; t=1729632824;
+	bh=6138rNionixW1Bs1ip5f6yRQ69Wk/93MH3AWM5T2VKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K2M+tJxNAO6GiD0xa+EbtI/k2fICfvgCQdG0jJdp/IbDCIQBpwQ4CR0ijmhbypux0
-	 tFb/eZDy57yQvK6DLJDjUk9Se3OgEZDK1FFO/7xuGKW5DnUD83MkttR4z2y2TZXIT0
-	 24Ny9kgFJ1tbK/8TY3KkXeVvuLa7xN/NNDaGBpZNISJ/+ZI7986uB++PAWv/ExJ0+v
-	 MFNnVzcHziUi7v4IJn3/t67tPGKa5XT+MvPjeJAqTnxTlOURbTnsqQAQ5kizpeTUSo
-	 j2h+y3Wnyzk5D6iB+ks+TjQkTUJloOJyOwv1G63MWncewvQtOW0qgnZHIwo30d3ok8
-	 CBnLIGTg/F2XQ==
+	b=lAOmv1egUC1nf60pQO1WFALvzxr4r5BPVf8FpkOCM/iKR/qMEz5Fo/5nJpt9+xpwQ
+	 5fBMECh+3nNb/f94WZ4dhFtdnaoXgMoqv2HvN2IdJMnH5vNW0SmWJFkwe7KJyAZEKC
+	 rtb4DUDccq/EJouKlsyvW8ucN/w/1x2pJmhF5xFkaMKXVhLpTx+UVi5t0YOCCbGjnW
+	 HjhAscHr6Gy+IwmxkMyqqjNuproDY73O8TzYBVPueY8re8UJPhp+CfFArpusFLVCJZ
+	 DBzjuCINEz98xMl2XigbybLYa69o8efX+Sy1hQ/WY/It69ocxM1R+VWlWSFJQzJEXX
+	 7MacxbvO9i9TA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -68,9 +68,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 12/16] rust: pci: implement I/O mappable `pci::Bar`
-Date: Tue, 22 Oct 2024 23:31:49 +0200
-Message-ID: <20241022213221.2383-13-dakr@kernel.org>
+Subject: [PATCH v3 13/16] samples: rust: add Rust PCI sample driver
+Date: Tue, 22 Oct 2024 23:31:50 +0200
+Message-ID: <20241022213221.2383-14-dakr@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241022213221.2383-1-dakr@kernel.org>
 References: <20241022213221.2383-1-dakr@kernel.org>
@@ -82,203 +82,183 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement `pci::Bar`, `pci::Device::iomap_region` and
-`pci::Device::iomap_region_sized` to allow for I/O mappings of PCI BARs.
+This commit adds a sample Rust PCI driver for QEMU's "pci-testdev"
+device. To enable this device QEMU has to be called with
+`-device pci-testdev`.
 
-To ensure that a `pci::Bar`, and hence the I/O memory mapping, can't
-out-live the PCI device, the `pci::Bar` type is always embedded into a
-`Devres` container, such that the `pci::Bar` is revoked once the device
-is unbound and hence the I/O mapped memory is unmapped.
+The same driver shows how to use the PCI device / driver abstractions,
+as well as how to request and map PCI BARs, including a short sequence of
+MMIO operations.
 
-A `pci::Bar` can be requested with (`pci::Device::iomap_region_sized`) or
-without (`pci::Device::iomap_region`) a const generic representing the
-minimal requested size of the I/O mapped memory region. In case of the
-latter only runtime checked I/O reads / writes are possible.
-
-Co-developed-by: Philipp Stanner <pstanner@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/pci.rs | 145 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 145 insertions(+)
+ MAINTAINERS                     |   1 +
+ samples/rust/Kconfig            |  11 ++++
+ samples/rust/Makefile           |   1 +
+ samples/rust/rust_driver_pci.rs | 109 ++++++++++++++++++++++++++++++++
+ 4 files changed, 122 insertions(+)
+ create mode 100644 samples/rust/rust_driver_pci.rs
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index ccc9a5f322e4..58f7d9c0045b 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -5,10 +5,13 @@
- //! C header: [`include/linux/pci.h`](srctree/include/linux/pci.h)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2d00d3845b4a..d9c512a3e72b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17940,6 +17940,7 @@ F:	include/linux/of_pci.h
+ F:	include/linux/pci*
+ F:	include/uapi/linux/pci*
+ F:	rust/kernel/pci.rs
++F:	samples/rust/rust_driver_pci.rs
  
- use crate::{
-+    alloc::flags::*,
-     bindings, container_of, device,
-     device_id::RawDeviceId,
-+    devres::Devres,
-     driver,
-     error::{to_result, Result},
-+    io::Io,
-     str::CStr,
-     types::{ARef, ForeignOwnable},
-     ThisModule,
-@@ -239,9 +242,116 @@ pub trait Driver {
- ///
- /// A PCI device is based on an always reference counted `device:Device` instance. Cloning a PCI
- /// device, hence, also increments the base device' reference count.
-+///
-+/// # Invariants
-+///
-+/// `Device` hold a valid reference of `ARef<device::Device>` whose underlying `struct device` is a
-+/// member of a `struct pci_dev`.
- #[derive(Clone)]
- pub struct Device(ARef<device::Device>);
+ PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
+diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+index b0f74a81c8f9..6d468193cdd8 100644
+--- a/samples/rust/Kconfig
++++ b/samples/rust/Kconfig
+@@ -30,6 +30,17 @@ config SAMPLE_RUST_PRINT
  
-+/// A PCI BAR to perform I/O-Operations on.
-+///
-+/// # Invariants
-+///
-+/// `Bar` always holds an `Io` inststance that holds a valid pointer to the start of the I/O memory
-+/// mapped PCI bar and its size.
-+pub struct Bar<const SIZE: usize = 0> {
-+    pdev: Device,
-+    io: Io<SIZE>,
-+    num: i32,
+ 	  If unsure, say N.
+ 
++config SAMPLE_RUST_DRIVER_PCI
++	tristate "PCI Driver"
++	depends on PCI
++	help
++	  This option builds the Rust PCI driver sample.
++
++	  To compile this as a module, choose M here:
++	  the module will be called driver_pci.
++
++	  If unsure, say N.
++
+ config SAMPLE_RUST_HOSTPROGS
+ 	bool "Host programs"
+ 	help
+diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+index 03086dabbea4..b66767f4a62a 100644
+--- a/samples/rust/Makefile
++++ b/samples/rust/Makefile
+@@ -2,5 +2,6 @@
+ 
+ obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
+ obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
++obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
+ 
+ subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+new file mode 100644
+index 000000000000..d24dc1fde9e8
+--- /dev/null
++++ b/samples/rust/rust_driver_pci.rs
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Rust PCI driver sample (based on QEMU's `pci-testdev`).
++//!
++//! To make this driver probe, QEMU must be run with `-device pci-testdev`.
++
++use kernel::{bindings, c_str, devres::Devres, pci, prelude::*};
++
++struct Regs;
++
++impl Regs {
++    const TEST: usize = 0x0;
++    const OFFSET: usize = 0x4;
++    const DATA: usize = 0x8;
++    const COUNT: usize = 0xC;
++    const END: usize = 0x10;
 +}
 +
-+impl<const SIZE: usize> Bar<SIZE> {
-+    fn new(pdev: Device, num: u32, name: &CStr) -> Result<Self> {
-+        let len = pdev.resource_len(num)?;
-+        if len == 0 {
-+            return Err(ENOMEM);
-+        }
++type Bar0 = pci::Bar<{ Regs::END }>;
 +
-+        // Convert to `i32`, since that's what all the C bindings use.
-+        let num = i32::try_from(num)?;
++#[derive(Debug)]
++struct TestIndex(u8);
 +
-+        // SAFETY:
-+        // `pdev` is valid by the invariants of `Device`.
-+        // `num` is checked for validity by a previous call to `Device::resource_len`.
-+        // `name` is always valid.
-+        let ret = unsafe { bindings::pci_request_region(pdev.as_raw(), num, name.as_char_ptr()) };
-+        if ret != 0 {
-+            return Err(EBUSY);
-+        }
++impl TestIndex {
++    const NO_EVENTFD: Self = Self(0);
++}
 +
-+        // SAFETY:
-+        // `pdev` is valid by the invariants of `Device`.
-+        // `num` is checked for validity by a previous call to `Device::resource_len`.
-+        // `name` is always valid.
-+        let ioptr: usize = unsafe { bindings::pci_iomap(pdev.as_raw(), num, 0) } as usize;
-+        if ioptr == 0 {
-+            // SAFETY:
-+            // `pdev` valid by the invariants of `Device`.
-+            // `num` is checked for validity by a previous call to `Device::resource_len`.
-+            unsafe { bindings::pci_release_region(pdev.as_raw(), num) };
-+            return Err(ENOMEM);
-+        }
++struct SampleDriver {
++    pdev: pci::Device,
++    bar: Devres<Bar0>,
++}
 +
-+        // SAFETY: `ioptr` is guaranteed to be the start of a valid I/O mapped memory region of size
-+        // `len`.
-+        let io = match unsafe { Io::new(ioptr, len as usize) } {
-+            Ok(io) => io,
-+            Err(err) => {
-+                // SAFETY:
-+                // `pdev` is valid by the invariants of `Device`.
-+                // `ioptr` is guaranteed to be the start of a valid I/O mapped memory region.
-+                // `num` is checked for validity by a previous call to `Device::resource_len`.
-+                unsafe { Self::do_release(&pdev, ioptr, num) };
-+                return Err(err);
-+            }
-+        };
++kernel::pci_device_table!(
++    PCI_TABLE,
++    MODULE_PCI_TABLE,
++    <SampleDriver as pci::Driver>::IdInfo,
++    [(
++        pci::DeviceId::new(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
++        TestIndex::NO_EVENTFD
++    )]
++);
 +
-+        Ok(Bar { pdev, io, num })
-+    }
++impl SampleDriver {
++    fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
++        // Select the test.
++        bar.writeb(index.0, Regs::TEST);
 +
-+    /// # Safety
-+    ///
-+    /// `ioptr` must be a valid pointer to the memory mapped PCI bar number `num`.
-+    unsafe fn do_release(pdev: &Device, ioptr: usize, num: i32) {
-+        // SAFETY:
-+        // `pdev` is valid by the invariants of `Device`.
-+        // `ioptr` is valid by the safety requirements.
-+        // `num` is valid by the safety requirements.
-+        unsafe {
-+            bindings::pci_iounmap(pdev.as_raw(), ioptr as _);
-+            bindings::pci_release_region(pdev.as_raw(), num);
-+        }
-+    }
++        let offset = u32::from_le(bar.readl(Regs::OFFSET)) as usize;
++        let data = bar.readb(Regs::DATA);
 +
-+    fn release(&self) {
-+        // SAFETY: The safety requirements are guaranteed by the type invariant of `self.pdev`.
-+        unsafe { Self::do_release(&self.pdev, self.io.base_addr(), self.num) };
++        // Write `data` to `offset` to increase `count` by one.
++        //
++        // Note that we need `try_writeb`, since `offset` can't be checked at compile-time.
++        bar.try_writeb(data, offset)?;
++
++        Ok(u32::from_le(bar.readl(Regs::COUNT)))
 +    }
 +}
 +
-+impl Bar {
-+    fn index_is_valid(index: u32) -> bool {
-+        // A `struct pci_dev` owns an array of resources with at most `PCI_NUM_RESOURCES` entries.
-+        index < bindings::PCI_NUM_RESOURCES
++impl pci::Driver for SampleDriver {
++    type IdInfo = TestIndex;
++
++    const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
++
++    fn probe(
++        pdev: &mut pci::Device,
++        _id: &pci::DeviceId,
++        info: &Self::IdInfo,
++    ) -> Result<Pin<KBox<Self>>> {
++        dev_dbg!(pdev.as_ref(), "Probe Rust PCI driver sample.\n");
++
++        pdev.enable_device_mem()?;
++        pdev.set_master();
++
++        let bar = pdev.iomap_region_sized::<{ Regs::END }>(0, c_str!("rust_driver_pci"))?;
++
++        let drvdata = KBox::new(
++            Self {
++                pdev: pdev.clone(),
++                bar,
++            },
++            GFP_KERNEL,
++        )?;
++
++        let bar = drvdata.bar.try_access().ok_or(ENXIO)?;
++
++        dev_info!(
++            pdev.as_ref(),
++            "pci-testdev data-match count: {}\n",
++            Self::testdev(info, &bar)?
++        );
++
++        Ok(drvdata.into())
 +    }
 +}
 +
-+impl<const SIZE: usize> Drop for Bar<SIZE> {
++impl Drop for SampleDriver {
 +    fn drop(&mut self) {
-+        self.release();
++        dev_dbg!(self.pdev.as_ref(), "Remove Rust PCI driver sample.\n");
 +    }
 +}
 +
-+impl<const SIZE: usize> Deref for Bar<SIZE> {
-+    type Target = Io<SIZE>;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.io
-+    }
++kernel::module_pci_driver! {
++    type: SampleDriver,
++    name: "rust_driver_pci",
++    author: "Danilo Krummrich",
++    description: "Rust PCI driver",
++    license: "GPL v2",
 +}
-+
- impl Device {
-     /// Create a PCI Device instance from an existing `device::Device`.
-     ///
-@@ -275,6 +385,41 @@ pub fn set_master(&self) {
-         // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
-         unsafe { bindings::pci_set_master(self.as_raw()) };
-     }
-+
-+    /// Returns the size of the given PCI bar resource.
-+    pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-+        if !Bar::index_is_valid(bar) {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY:
-+        // - `bar` is a valid bar number, as guaranteed by the above call to `Bar::index_is_valid`,
-+        // - by its type invariant `self.as_raw` is always a valid pointer to a `struct pci_dev`.
-+        Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.try_into()?) })
-+    }
-+
-+    /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
-+    /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
-+    pub fn iomap_region_sized<const SIZE: usize>(
-+        &self,
-+        bar: u32,
-+        name: &CStr,
-+    ) -> Result<Devres<Bar<SIZE>>> {
-+        let bar = Bar::<SIZE>::new(self.clone(), bar, name)?;
-+        let devres = Devres::new(self.as_ref(), bar, GFP_KERNEL)?;
-+
-+        Ok(devres)
-+    }
-+
-+    /// Mapps an entire PCI-BAR after performing a region-request on it.
-+    pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
-+        self.iomap_region_sized::<0>(bar, name)
-+    }
-+
-+    /// Returns a new `ARef` of the base `device::Device`.
-+    pub fn as_dev(&self) -> ARef<device::Device> {
-+        self.0.clone()
-+    }
- }
- 
- impl AsRef<device::Device> for Device {
 -- 
 2.46.2
 
