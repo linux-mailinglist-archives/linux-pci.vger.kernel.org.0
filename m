@@ -1,104 +1,141 @@
-Return-Path: <linux-pci+bounces-14970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-14971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BF529A9899
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 07:36:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 913019A989D
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 07:36:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FB9DB23492
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 05:35:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48CBF1F21442
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 05:36:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DD2142E67;
-	Tue, 22 Oct 2024 05:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36006137747;
+	Tue, 22 Oct 2024 05:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLUM1Y+H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GNckA/ba"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D279E13B59E;
-	Tue, 22 Oct 2024 05:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3BF135A79;
+	Tue, 22 Oct 2024 05:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729575195; cv=none; b=N+HcRxKgRUG/Y2nSti94S56uO6Xr3UGoTm3xYN5wzWrz+TDqNiWVjZg+zu+kprjYxbhSf2LrdCkGUeT43nDo4X/PG0gLXChNqHNUe88lao+aJ0f9JWe7fkhw3f2dDVYQUQcBFzlKdzNasPCRUwV3ML/NUs7JZRx4wGwagnu6UPw=
+	t=1729575322; cv=none; b=IRcydg6nUWlOFly4DiNgwLXzRssJQ2g5DFye3LWkxMcRme7b3uUup1nY3jlAsDqWnirLDRb4+pZORP5XQ6y9aWobKRW1e+bz3Q5CTZH1V0wyPDMw8Aep2ymuxqPmSLvKSugJixs4poh7V5kVw2wr+ScmCWrgs1dw8Dxzlajy+Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729575195; c=relaxed/simple;
-	bh=j4WAdEaL6eBPQZU9yUngRZzKGUSRNnxFRBmfn8V7nrY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fEV7lQlixqfVwyaFR//vORn/TALZyNAg4XfyRlljiaZfmVYat0GS2g/epVszNWBP78MDey3yV/cCYDg0nuPChOyx4CM7y4LQVkctod8ePwx6JXJche7C0zMqxZUz0YVmEcuU0qE0ofMutjxqWi8Av5de36fZVJOLynMhlD99J90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLUM1Y+H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5AE1C4CEC3;
-	Tue, 22 Oct 2024 05:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729575194;
-	bh=j4WAdEaL6eBPQZU9yUngRZzKGUSRNnxFRBmfn8V7nrY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KLUM1Y+HGZ1ISWpH2GGmd+P0NwR24PKGhS38Z4ZIgXSBAxJBsV22oIRIVj3FN3Q4o
-	 kmz0dC4PNwHQ6GtKtEy4ngzaawDfvdslegGBAcU2zlOYZxEwkMjzgYVBBqsoy8DHY1
-	 UdYbt977nXTLbiiiNIJLZMIrNbWVQg8oZGgBQWwYuwDglSAXoZaX8LNlKmvxzVjD5j
-	 rJhEkrIMriStUWE80qbSNemt40LgDs6yb9I5PP5vEL3eJRbY3VvTBuCAmLp9P5G3J4
-	 0rT7XUfITlpKXOGUeRmdMxKUcPn064B6WQzwO37sUr2ucaZxlCdUpty/SHW7T5XIsi
-	 xqIN74A03avIA==
-From: Vinod Koul <vkoul@kernel.org>
-To: Conor Dooley <conor@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Paul Elder <paul.elder@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Jim Quinlan <jim2101024@gmail.com>, 
- Nicolas Saenz Julienne <nsaenz@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
- Jim Quinlan <james.quinlan@broadcom.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
-In-Reply-To: <20240925232409.2208515-1-robh@kernel.org>
-References: <20240925232409.2208515-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Fix array property constraints
-Message-Id: <172957518656.489113.4975806367588166309.b4-ty@kernel.org>
-Date: Tue, 22 Oct 2024 11:03:06 +0530
+	s=arc-20240116; t=1729575322; c=relaxed/simple;
+	bh=meA9jqJFq7R1V+kv/Z3qNiGP17F+ReXJwGKUUOr0S4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGDThuDu5UwM//3muUUjwH/00d5F5G3N7neB9QqxPO+EP9T3mAXmwTT2mCKXCg4ILkqYdZI/MQdZPfQ0HPYqLQH+nLHfXOASGpbxt1nwGBpZzcjvTS358vY79T6LPyYWJI8Dw3LW7FF5ac4vp1U/3AQLJY1CcwTIhU3KnCXrvZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GNckA/ba; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729575320; x=1761111320;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=meA9jqJFq7R1V+kv/Z3qNiGP17F+ReXJwGKUUOr0S4U=;
+  b=GNckA/bac15WBp2MNYW+pen1R0FVcdrsJFMk9HRQsg3+dyqDOa2Me3rb
+   fg+RR35oJ/bTIjNbfQBdYumVREXnA3u7wurA4nl24WWcF5QCAVIDM+VEK
+   6nY85Oyc7icDhDVI1bSSXC4fY/xL2zf6zqNJBOF7SLqujMhHw/GH+CnfY
+   szCcmQK2X/qPt0ormjj6bqukwePVUI0BhbPgeGeqdYyxMRPOZtdQzmx8q
+   F/1zOwrpYUlmUZA7ZEPAl+cEyAlA1OGYBmhlVeEKGkkSZw8tHjESsffom
+   GElFr4QM5Du52qO8psraEEnIM61GBYN1ei5vOscStZa2P3Kndrf0IdUp8
+   g==;
+X-CSE-ConnectionGUID: iWACL2pHQP+Mg5itVMRlog==
+X-CSE-MsgGUID: wjkVvDepSpi5hKZiCH264Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11232"; a="33015285"
+X-IronPort-AV: E=Sophos;i="6.11,222,1725346800"; 
+   d="scan'208";a="33015285"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2024 22:35:19 -0700
+X-CSE-ConnectionGUID: CRADIpniR3azeKhOMX+utw==
+X-CSE-MsgGUID: qhdp/qqsRgKIjfc8p6I17w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="84557530"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 21 Oct 2024 22:35:15 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t37Y0-000T6z-2D;
+	Tue, 22 Oct 2024 05:35:12 +0000
+Date: Tue, 22 Oct 2024 13:34:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stefan Eichenberger <eichest@gmail.com>, hongxing.zhu@nxp.com,
+	l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com,
+	francesco.dolcini@toradex.com, Frank.li@nxp.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: Re: [PATCH v3] PCI: imx6: Add suspend/resume support for i.MX6QDL
+Message-ID: <202410221309.BXeJNrxw-lkp@intel.com>
+References: <20241021124922.5361-1-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241021124922.5361-1-eichest@gmail.com>
+
+Hi Stefan,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.12-rc4 next-20241021]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Eichenberger/PCI-imx6-Add-suspend-resume-support-for-i-MX6QDL/20241021-205155
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20241021124922.5361-1-eichest%40gmail.com
+patch subject: [PATCH v3] PCI: imx6: Add suspend/resume support for i.MX6QDL
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20241022/202410221309.BXeJNrxw-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241022/202410221309.BXeJNrxw-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410221309.BXeJNrxw-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/controller/dwc/pci-imx6.c:86: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+    * Because of ERR005723 (PCIe does not support L2 power down) we need to
 
 
-On Wed, 25 Sep 2024 18:24:06 -0500, Rob Herring (Arm) wrote:
-> Schemas for array properties should only have 1 level of array
-> constraints (e.g. items, maxItems, minItems). Sometimes the old
-> encoding of all properties into a matrix leaked into the schema, and
-> didn't matter for validation. Now the inner constraints are just
-> silently ignored as json-schema array keywords are ignored on scalar
-> values.
-> 
-> [...]
+vim +86 drivers/pci/controller/dwc/pci-imx6.c
 
-Applied, thanks!
+    75	
+    76	#define IMX_PCIE_FLAG_IMX_PHY			BIT(0)
+    77	#define IMX_PCIE_FLAG_IMX_SPEED_CHANGE		BIT(1)
+    78	#define IMX_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
+    79	#define IMX_PCIE_FLAG_HAS_PHYDRV		BIT(3)
+    80	#define IMX_PCIE_FLAG_HAS_APP_RESET		BIT(4)
+    81	#define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+    82	#define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
+    83	#define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
+    84	#define IMX_PCIE_FLAG_CPU_ADDR_FIXUP		BIT(8)
+    85	/**
+  > 86	 * Because of ERR005723 (PCIe does not support L2 power down) we need to
+    87	 * workaround suspend resume on some devices which are affected by this errata.
+    88	 */
+    89	#define IMX_PCIE_FLAG_BROKEN_SUSPEND		BIT(9)
+    90	
 
-[1/1] dt-bindings: Fix array property constraints
-      commit: 72c65390c61fc96cebfb91c300ca774925565383
-
-Best regards,
 -- 
-~Vinod
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
