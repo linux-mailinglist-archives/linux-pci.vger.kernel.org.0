@@ -1,185 +1,216 @@
-Return-Path: <linux-pci+bounces-15006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7B059AA2B9
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 15:04:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 930D89AA2C2
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 15:06:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F3D728148E
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 13:04:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFA2A1C22107
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 13:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3149D19D080;
-	Tue, 22 Oct 2024 13:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A5219DF98;
+	Tue, 22 Oct 2024 13:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EF5yIK1c"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="DqO4IO0E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD58194ADB;
-	Tue, 22 Oct 2024 13:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A106619DF4F
+	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 13:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729602285; cv=none; b=dJpcjzHl5C+xoNv+eY3X1LCXPrDCvc4GeQxAVld1fM1+lL8/4S/Edvc0NT8W3/73q9u5Brc+g6SvjT42wO27JRDAeEqcvEceowALBxpu6cMS4Xg3yZQbVG9CFKRvnoJTGB1JbQ0bB0rCeYbruhdJbFS1gOfQKlWczDApRdlhb6o=
+	t=1729602366; cv=none; b=bR/D26rUZBfNZ3a4wblJ+aCEJHb2ppCiSDF39KP0agJn4PR3WUNCN7+yvSzBBku+AK2eY6n3RQthaQOOJOk9UDVayTuQJqi/31gohM1fWXNPHE+OUnRCwV2jUf+ImAJV/Z6UPGRWUzePLVDvY+jjjZtlz1YuG+3bWHWDWxAIVl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729602285; c=relaxed/simple;
-	bh=cbH0B8zscu4imBTHxG+Lvc8tuZdEhL0wvzGmBSkhDRw=;
+	s=arc-20240116; t=1729602366; c=relaxed/simple;
+	bh=eY7mpQBbU1G0VReE9nekoD13SERU82VMupF3O+8zGHQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m5aRkwilMoSNewW2r81HMNOt7jgEg9jEuyzXjLZVY25KMiH+uRRtA8zCpBIY1iDlKqKqmRE0Y+TUOtqwOCfXsQf7UDraBnWnCXD1bEBAOU/wgRrgwNqHfDXYDtwLIcZDeIJAlgLSsQ2xXaUsnH0TZrGHA8bGPuFk+YdtBj0A0+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EF5yIK1c; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2e2ee0a47fdso1094934a91.2;
-        Tue, 22 Oct 2024 06:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729602282; x=1730207082; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pWDeRgm8AjTmhY393T7IKu9ZeB7eJOW+Adot/DNWsok=;
-        b=EF5yIK1cxKpcCdaFY9vdGXPUSsoTAdMbO/piR5a3PRRBGhkXH2R4hrsO2+48fOq/I+
-         q9GJeFG1Ox8NyrRC6yuSyxeLoNkDZ9ixgucb1LhYPHk2ivvhp4vuS5+Y3E/nzaXvSddo
-         d69RY0Q+UTqQlagrzNNmW135l7CxjWCTUyHAZrHeH1ihYmrgl6TwzU1MYsvnHqpYW5Nw
-         ThtRcG8dpgZPK3PLbO8tby/mayYPg5676CBWZWyRg7sEMQvSKsD+c1hZzmp43QVYGEgT
-         WILVOv9Vw1IlII93UdMHVPh3qHqv9NvP15WgJlv7gCXYt3MMQ8G/RjN237RaprKTb0Lf
-         oU7A==
+	 To:Cc:Content-Type; b=pyyq3vLpFJpUAlNx6eKOaujwT0wz6cer+VcN1mJc1fhuHvByAN9XuFl+LYxllG6rS97ABiaMSOmKtkqy8yFh5n++QO3UmTgYo8c7JykEfYruDfydiH13T2nxs3BTibLXGSncW8PAMgVsLAMDkb+Q4nkAVmyWMkFtWPGBnsUF+X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=DqO4IO0E; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com [209.85.128.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 0DAB33FA4D
+	for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 13:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1729602355;
+	bh=0O0WVESJ/gBslREDRe+kHvdq3pwvvgnmmFBLBmZkHXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=DqO4IO0EN8TRTx1OoXlMe4XhMhQufTgKOGWJJp0OUpA+KNB9S99nJnYEErUm3jD06
+	 qBpENA/xPTXFZW82B5YX5TzBWS7SQDd8vKcAEulbQFl1Mbsk5rI9NrGA6bmL2u5i5A
+	 eYyeR2so7j+iifTOkFDGma4xjl78TchuN59wcTbVMPjAVNGthxdiHRhukQnISF0dKV
+	 Bp/RzaIvdZnmyPPl8ggpDfsVJC25Wg9/LfY8k0ETiSEJjSWpwl12BQwfdhw9rzOyUx
+	 m76xXJ/1u3Uhqfzh0aPQfmu6zkDAC1jPQGwUMZTPTU08x8uQDkhCxVAJRls0FZtW9w
+	 ER6TTzOz4zYSw==
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-6e3d6713619so99030427b3.2
+        for <linux-pci@vger.kernel.org>; Tue, 22 Oct 2024 06:05:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729602282; x=1730207082;
+        d=1e100.net; s=20230601; t=1729602354; x=1730207154;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pWDeRgm8AjTmhY393T7IKu9ZeB7eJOW+Adot/DNWsok=;
-        b=CVdYEqBVtgE/PHRwdF+N660VNdbsgRQCpC2JghC0dkvr8sC/MKAlyQM87Itjp+C5+g
-         4ii/dogI+4rddwQV+DNx/M3Caw5xt/b8eVFZw4fffQNAjaXZBzBnIe2Sa93qdr7FFBzW
-         9/IXsnl2FZd9Dr2Gf9QZziJh1AUY1fMkf6hv2xOxCsEO0FLTXctW/jqkoVyzO/oZ9VDA
-         spRpOfV6P6O4DdId1sWJeT/hGyHtjSa7y6v1t8yYdsRVSmkNPoscTmx8aihy9r10gkr/
-         QpxfFbzGg2Uzw5dQCo4KnLFiM1wg7IzDeTKUubbrS1jsfJ93puPHJJ+hK2eFPa9W5JIR
-         3REw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsfpsUdYkXp5tYTA/deiSl4exq/FiLEV8Z37rryD3BPhkD/5GMpDjyW893ScW5iZS+8uQIaO4XQWrRbes=@vger.kernel.org, AJvYcCWlbK5r8lxUgvlEepBDt6cyFvDpiFu9WjDsZGPoI5a1cP+j3E1AONq+CQAVrbOWxJd2apTUQbBxcyYb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw18JFZDHtqZTFKoDVE8hB8n559h7Xf/GDEsFR5CY5b4aiXA0ug
-	QDHjBHymqYpVW9demUWhLtktSOhczpjV5Sg1I1KBcfcjwoAK/O/OX/5G6qM/jZt9Sli5H1ihAZb
-	LSscmMkdiPlPZuM1zZZgYVSFBQkh3FQ==
-X-Google-Smtp-Source: AGHT+IH52G7hhVJzsWn9Mn7Q9OsulLJoDWAxP7UAnkiQV5yHiISOtioTuU80uizG3qQb9Fr754ZF0erA82kY5KLwkoo=
-X-Received: by 2002:a17:90a:e296:b0:2e2:de92:2d52 with SMTP id
- 98e67ed59e1d1-2e561a58096mr7189173a91.9.1729602282458; Tue, 22 Oct 2024
- 06:04:42 -0700 (PDT)
+        bh=0O0WVESJ/gBslREDRe+kHvdq3pwvvgnmmFBLBmZkHXY=;
+        b=qSV6flyi2EuTS/eOlesmH194ppYPs2KBjREWFulUFFsNautZ+O/va1v3n4XUxBtGfi
+         nmlg54op4HYrUwCkoXgJ/NUhqEAGx2eA4FWCQM5mLCssE2fTW/BQ0iRrP0kSvUVWVPUJ
+         fQeoPGaHRgoU4G1O6vhbxH/5Rz+OP6i3sPTfmv4/aHCiPSSRNfQcvfN5rvgjr/1n5lUc
+         Qp/XD5ESkNAxVbzbdKUUKYPAleKimL9vXeh6E99YsN2X/VrQLeKGPGywoJ543vIJa0u+
+         ctYeL1ctfVvpUabEVr+1NJsBQMYM1xMYssnCcVwTSO9+irsm25wTn4wgA2mgNramEPMV
+         mX7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXbsdXYO4/aVIqpTRDa6yE/JbpGUXxhPjQhC7LDNuKTXmLVl3BaOfJ7wZlbzdMpp52HxDf7ZG8LDOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJZZunCuH0sDqIKC/UIsQTKjXE0EJ/CRy8AGsxnkNagYsAgSO0
+	G2swN2XVh4sWUkLkNYfPqailb0ZcEGY1JcEQ++e6InB2smrDBaXtAyCsd96ybYLAVUbCRj2yhgU
+	eYg3tEnSkVWYz8ETMT+moZk99mHmL1dhiTXvBa4GVM2WGudf0jzfozLnB9r/eXWN/SD7bdu5GCa
+	sq0xV0AZLga9Vb5lIV9JIHze8yPyivTrxzaTgjqg434LUkr6Uu
+X-Received: by 2002:a05:690c:6488:b0:6e2:12e5:35a2 with SMTP id 00721157ae682-6e7d3a9d0efmr35481617b3.4.1729602352383;
+        Tue, 22 Oct 2024 06:05:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxFH7L0Og3HjEiO0RR0AgMsyb3zr7MHcHrL6a+rQzlQXdmftWvF+5p4i1HxLWocDDzf5rvoAZPVYX7v9rfOlw=
+X-Received: by 2002:a05:690c:6488:b0:6e2:12e5:35a2 with SMTP id
+ 00721157ae682-6e7d3a9d0efmr35479837b3.4.1729602350449; Tue, 22 Oct 2024
+ 06:05:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241014152502.1477809-1-superm1@kernel.org> <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
- <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
-In-Reply-To: <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 22 Oct 2024 09:04:30 -0400
-Message-ID: <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot
- VGA device
-To: Kai-Heng Feng <kaihengf@nvidia.com>
-Cc: Luke Jones <luke@ljones.dev>, Mario Limonciello <superm1@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
-	Mario Limonciello <mario.limonciello@amd.com>, Alex Deucher <alexander.deucher@amd.com>
+References: <20240926125909.2362244-1-acelan.kao@canonical.com>
+ <ZvVgTGVSco0Kg7H5@wunner.de> <CAFv23Q=5KdqDHYxf9PVO=kq=VqP0LwRaHQ-KnY2taDEkZ9Fueg@mail.gmail.com>
+ <ZvZ61srt3QAca2AI@wunner.de> <Zvf7xYEA32VgLRJ6@wunner.de> <CAFv23QkwxmT7qrnbfEpJNN+mnevNAor6Dk7efvYNOdjR9tGyrw@mail.gmail.com>
+ <ZvvW1ua2UjwHIOEN@wunner.de> <ZvvXDQSBRZMEI2EX@wunner.de> <CAFv23Q=4O5czQaNw2mEnwkb9LQfODfQDeW+qQD14rfdeVEwjwA@mail.gmail.com>
+ <CAFv23QmAOAobFC=4tkKBM4NQPR_b3Nsji5xa+TczUbAJ1dxhvg@mail.gmail.com>
+In-Reply-To: <CAFv23QmAOAobFC=4tkKBM4NQPR_b3Nsji5xa+TczUbAJ1dxhvg@mail.gmail.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Date: Tue, 22 Oct 2024 21:05:39 +0800
+Message-ID: <CAFv23Q=HqyL4EGjG0VdsQH9rP0_DbRdpExbeJy6DAoKQ0OMbkA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: Fix system hang on resume after hot-unplug
+ during suspend
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024 at 2:31=E2=80=AFAM Kai-Heng Feng <kaihengf@nvidia.com>=
- wrote:
+AceLan Kao <acelan.kao@canonical.com> =E6=96=BC 2024=E5=B9=B410=E6=9C=8817=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8810:40=E5=AF=AB=E9=81=93=EF=
+=BC=9A
 >
-> Hi Luke,
->
-> On 2024/10/15 4:04 PM, Luke Jones wrote:
-> > On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
-> >> From: Mario Limonciello <mario.limonciello@amd.com>
-> >>
-> >> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display dev=
-ice.
-> >>
-> >> ```
-> >> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeForce
-> >> RTX 4070 Max-Q / Mobile] (rev a1)
-> >> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
-> >> Strix [Radeon 880M / 890M] (rev c1)
-> >> ```
-> >>
-> >> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU as th=
-e
-> >> boot VGA device, but really the eDP is connected to the AMD PCI displa=
-y
-> >> device.
-> >>
-> >> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA device=
-.
-> >>
-> >> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-> >> Reported-by: Luke D. Jones <luke@ljones.dev>
-> >> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
-> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> ---
-> >>   drivers/pci/vgaarb.c | 7 -------
-> >>   1 file changed, 7 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> >> index 78748e8d2dba..05ac2b672d4b 100644
-> >> --- a/drivers/pci/vgaarb.c
-> >> +++ b/drivers/pci/vgaarb.c
-> >> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_device =
-*vgadev)
-> >>              return true;
-> >>      }
-> >>
-> >> -    /*
-> >> -     * Vgadev has neither IO nor MEM enabled.  If we haven't found an=
-y
-> >> -     * other VGA devices, it is the best candidate so far.
-> >> -     */
-> >> -    if (!boot_vga)
-> >> -            return true;
-> >> -
-> >>      return false;
-> >>   }
-> >>
-> >> --
-> >> 2.43.0
+> AceLan Kao <acelan.kao@canonical.com> =E6=96=BC 2024=E5=B9=B410=E6=9C=887=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:34=E5=AF=AB=E9=81=93=EF=
+=BC=9A
 > >
-> > Hi Mario,
+> > Lukas Wunner <lukas@wunner.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=881=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:03=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > On Tue, Oct 01, 2024 at 01:02:46PM +0200, Lukas Wunner wrote:
+> > > > On Mon, Sep 30, 2024 at 09:31:53AM +0800, AceLan Kao wrote:
+> > > > > Lukas Wunner <lukas@wunner.de> 2024 9 28 8:51:
+> > > > > > -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
+> > > > > > +       dsn =3D pci_get_dsn(pdev);
+> > > > > > +       if (!PCI_POSSIBLE_ERROR(dsn) &&
+> > > > > > +           dsn !=3D ctrl->dsn)
+> > > > > >                 return true;
+> > > > >
+> > > > > In my case, the pciehp_device_replaced() returns true from this f=
+inal check.
+> > > > > And these are the values I got
+> > > > > dsn =3D 0x00000000, ctrl->dsn =3D 0x7800AA00
+> > > > > dsn =3D 0x00000000, ctrl->dsn =3D 0x21B7D000
+> > > >
+> > > > Ah because pci_get_dsn() returns 0 if the device is gone.
+> > > > Below is a modified patch which returns false in that case.
+> > >
+> > > Sorry, forgot to include the patch:
+> > >
+> > > -- >8 --
+> > >
+> > > diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/=
+pciehp_core.c
+> > > index ff458e6..957c320 100644
+> > > --- a/drivers/pci/hotplug/pciehp_core.c
+> > > +++ b/drivers/pci/hotplug/pciehp_core.c
+> > > @@ -287,24 +287,32 @@ static int pciehp_suspend(struct pcie_device *d=
+ev)
+> > >  static bool pciehp_device_replaced(struct controller *ctrl)
+> > >  {
+> > >         struct pci_dev *pdev __free(pci_dev_put);
+> > > +       u64 dsn;
+> > >         u32 reg;
+> > >
+> > >         pdev =3D pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVF=
+N(0, 0));
+> > >         if (!pdev)
+> > > +               return false;
+> > > +
+> > > +       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) =3D=3D 0=
+ &&
+> > > +           !PCI_POSSIBLE_ERROR(reg) &&
+> > > +           reg !=3D (pdev->vendor | (pdev->device << 16)))
+> > >                 return true;
+> > >
+> > > -       if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
+> > > -           reg !=3D (pdev->vendor | (pdev->device << 16)) ||
+> > > -           pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
+> > > +       if (pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) =3D=
+=3D 0 &&
+> > > +           !PCI_POSSIBLE_ERROR(reg) &&
+> > >             reg !=3D (pdev->revision | (pdev->class << 8)))
+> > >                 return true;
+> > >
+> > >         if (pdev->hdr_type =3D=3D PCI_HEADER_TYPE_NORMAL &&
+> > > -           (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &re=
+g) ||
+> > > -            reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_devi=
+ce << 16))))
+> > > +           pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg=
+) =3D=3D 0 &&
+> > > +           !PCI_POSSIBLE_ERROR(reg) &&
+> > > +           reg !=3D (pdev->subsystem_vendor | (pdev->subsystem_devic=
+e << 16)))
+> > >                 return true;
+> > >
+> > > -       if (pci_get_dsn(pdev) !=3D ctrl->dsn)
+> > > +       if ((dsn =3D pci_get_dsn(pdev)) &&
+> > > +           !PCI_POSSIBLE_ERROR(dsn) &&
+> > > +           dsn !=3D ctrl->dsn)
+> > >                 return true;
+> > >
+> > >         return false;
+> > Hi Lukas,
 > >
-> > I can verify that this does leave the `boot_vga` attribute set as 0 for=
- the NVIDIA device.
->
-> Does the following diff work for you?
-> This variant should be less risky for most systems.
->
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index 78748e8d2dba..3fb734cb9c1b 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_device *vga=
-dev)
->                  return true;
->          }
->
-> +       if (vga_arb_integrated_gpu(&pdev->dev))
-> +               return true;
-> +
-
-The problem is that the integrated graphics does not support VGA.
-
-Alex
-
->          /*
->           * Vgadev has neither IO nor MEM enabled.  If we haven't found a=
-ny
->           * other VGA devices, it is the best candidate so far.
->
->
-> Kai-Heng
->
+> > Sorry for the late reply, just encountered a strong typhoon in my area
+> > last week and can't check this in our lab.
 > >
-> > Tested-by: Luke D. Jones <luke@ljones.dev>
+> > The patched pciehp_device_replaced() returns false at the end of the
+> > function in my case.
+> > Unplug the dock which is connected with a tbt storage won't be
+> > considered as a replacement.
+> >
+> > But when I tried to replace the dock with the tbt storage during
+> > suspend, it still returned false at the end of the function like
+> > unplugged.
+> >
+> > BTW, it's a new model, so I think the ICM is used. And the reg is
+> > 0xffffffff when unplugged.
+> Hi Lukas,
 >
+> PCI_POSSIBLE_ERROR() always returns true no matter the device is
+> replaced or unplugged
+> It seems difficult to distinguish between when a device is replaced
+> and when it's unplugged.
+>
+> Do you have any ideas to fix the issue?
+> This issue is severe to me, because the system hangs almost everytime
+> when daisy chain tbt devices are unplugged when suspended.
+> Thanks.
+Hi Lukas,
+
+I just submitted the v2, please help to review, thanks.
+https://lore.kernel.org/linux-kernel/20241022130243.263737-1-acelan.kao@can=
+onical.com/T/#u
 
