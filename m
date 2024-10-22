@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-15054-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15055-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C34E9AB88E
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 23:34:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E02439AB891
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 23:35:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E7D6B2356D
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:34:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CDD81C23164
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Oct 2024 21:35:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D9FE1CDFCE;
-	Tue, 22 Oct 2024 21:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2563D1CFECA;
+	Tue, 22 Oct 2024 21:33:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJKCwVMg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYM0PmzN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEFF1CC144;
-	Tue, 22 Oct 2024 21:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79851CCEED;
+	Tue, 22 Oct 2024 21:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729632791; cv=none; b=Hyg8/E4ZVUoL+Aw+Xa5xJYOCQgYCPyU5Ou6TIjYiVnWe9MQodC5BRpAy+eIBQ17L1YcNzasGNRhHkelBZBCkP6g1pe3u68xwlmAUJUNiEanaoadQE1a58xUDiIEeRDsOd3BPDCysiQiolRk7+TcvTkpfuxr93FTjvM71tW4nPcQ=
+	t=1729632797; cv=none; b=XoaMs1me2vMWItvpT7bNtFqKkpb2LUBjKoPG5K+KlZQtfmcrjCTX6Gy9lhaA2olCG7lGRIWcK/ejxn9qhiAvUsDc9sbS8BL6YrKDXyUuRRhKYowWIvhrMEs6sYkVT66cJuadwQNqavUHcR8hiNtjtQDHC9k7jNFCPRskniuO/W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729632791; c=relaxed/simple;
-	bh=bGH8O0NiH1QvhCfKfneUV89UzatADxWvRdUc0lklgCs=;
+	s=arc-20240116; t=1729632797; c=relaxed/simple;
+	bh=zMwd+PwXLeh2FtxkkTa0m0kTjUL8WGaTf3+bCzOAhaY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QtM1JFAqeuQ9YzLn1+s6rybR9+y6TfwmnELojwzYr7JuwxImaNFgcgaZ8NRVQz+kqxY17HCEO98wclg2O/8hs3v71nmUbg1ID5R6jyKwRnwGgriE1cFCQ5eYTn408A78TvY0IqNYqT6xlZKyxvDBSQKHl6T/7NQGC5sFrKuiP7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJKCwVMg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E41EC4CEC7;
-	Tue, 22 Oct 2024 21:33:05 +0000 (UTC)
+	 MIME-Version; b=Qui0m90y7PBA+Z6wtahUKhGLcWirgukbVwaVDNmd3vi3oIKN+ehmsr92Xd7JgJmnqzoyVpgdb35JxBs+tqagKwfpDZj6131VnOKUi1AizeyzbTwbvFwl7lhpmBYm4LCoZj0AePB48F+n1YEuhRhHH7itiUjor/x0f0CWaCaouX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYM0PmzN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF91C4CEE3;
+	Tue, 22 Oct 2024 21:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729632790;
-	bh=bGH8O0NiH1QvhCfKfneUV89UzatADxWvRdUc0lklgCs=;
+	s=k20201202; t=1729632796;
+	bh=zMwd+PwXLeh2FtxkkTa0m0kTjUL8WGaTf3+bCzOAhaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uJKCwVMgacQWx8Kq1VbIdfjZgbRcDomK1HOv4rcF0lcP40ws1B1/ybBidmjYbGfya
-	 BsYViZ2binhXL34I3nAfDbo8XJstKBlEqadLtaq88p4qrMV0wfxN+9nmm51YGekOpr
-	 4xiVClXPuZi2+7I82rEjYe1Jg+44aXFsP+l83iWuYkS3fI3qanepfWnSV7SLmtfN9Y
-	 TlvP2h0EagqueyE66PA0ndobC6taOvmZdueHkgZ5St0F/Prfrd+UhZUOH1IY+FeIKm
-	 chOFfUJkbVn7a+PqXj5ar2uQ3ruF4OGfKI7VX+lDAeoNdlbKTYzcnvjs7uboPMYVpr
-	 ofyFQaBPiUbcw==
+	b=qYM0PmzNGtHxSwPG76pIEclci8X6cIJ7yYG4burJUSUgvAW/HrQ+GWDkZLKMYQveQ
+	 11Eao0BZHiNGi3qzyY0Z+82l49iJCO9dY85INwFrqRrtpLYytY3n68r6boP/wDlp1H
+	 UFknV/mlULP7SBwvsIPE75xzDxEQikg5rXV5TOzJd9nSkA3Y+pTgm2yPy3bTW2T4xm
+	 nfZX1addpdC6TR0Xzgz7d0lhi5YR88jfb2pF82vVN/g6j0svre7eNHN1BOF5VCZa29
+	 3KD85a/RVEW7XJPhpmO8tMnHAqn0P/fgrZMzmMCf6LRVU0LzEionPkJFySaHKCl2rl
+	 P6rQv4KdRyl2g==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -67,11 +67,11 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@google.com>,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 07/16] rust: add `Revocable` type
-Date: Tue, 22 Oct 2024 23:31:44 +0200
-Message-ID: <20241022213221.2383-8-dakr@kernel.org>
+Subject: [PATCH v3 08/16] rust: add `dev_*` print macros.
+Date: Tue, 22 Oct 2024 23:31:45 +0200
+Message-ID: <20241022213221.2383-9-dakr@kernel.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241022213221.2383-1-dakr@kernel.org>
 References: <20241022213221.2383-1-dakr@kernel.org>
@@ -83,253 +83,375 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
+From: Wedson Almeida Filho <wedsonaf@google.com>
 
-Revocable allows access to objects to be safely revoked at run time.
+Implement `dev_*` print macros for `device::Device`.
 
-This is useful, for example, for resources allocated during device probe;
-when the device is removed, the driver should stop accessing the device
-resources even if another state is kept in memory due to existing
-references (i.e., device context data is ref-counted and has a non-zero
-refcount after removal of the device).
+They behave like the macros with the same names in C, i.e., they print
+messages to the kernel ring buffer with the given level, prefixing the
+messages with corresponding device information.
 
-Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/lib.rs       |   1 +
- rust/kernel/revocable.rs | 211 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 212 insertions(+)
- create mode 100644 rust/kernel/revocable.rs
+ rust/kernel/device.rs  | 319 ++++++++++++++++++++++++++++++++++++++++-
+ rust/kernel/prelude.rs |   2 +
+ 2 files changed, 320 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 89f6bd2efcc0..b603b67dcd71 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -54,6 +54,7 @@
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-+pub mod revocable;
- pub mod sizes;
- mod static_assert;
- #[doc(hidden)]
-diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-new file mode 100644
-index 000000000000..83455558d795
---- /dev/null
-+++ b/rust/kernel/revocable.rs
-@@ -0,0 +1,211 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 851018eef885..0c28b1e6b004 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -8,7 +8,10 @@
+     bindings,
+     types::{ARef, Opaque},
+ };
+-use core::ptr;
++use core::{fmt, ptr};
 +
-+//! Revocable objects.
-+//!
-+//! The [`Revocable`] type wraps other types and allows access to them to be revoked. The existence
-+//! of a [`RevocableGuard`] ensures that objects remain valid.
++#[cfg(CONFIG_PRINTK)]
++use crate::c_str;
+ 
+ /// A reference-counted device.
+ ///
+@@ -82,6 +85,110 @@ pub unsafe fn as_ref<'a>(ptr: *mut bindings::device) -> &'a Self {
+         // SAFETY: Guaranteed by the safety requirements of the function.
+         unsafe { &*ptr.cast() }
+     }
 +
-+use crate::{
-+    bindings,
-+    init::{self},
-+    prelude::*,
-+    sync::rcu,
-+};
-+use core::{
-+    cell::UnsafeCell,
-+    marker::PhantomData,
-+    mem::MaybeUninit,
-+    ops::Deref,
-+    ptr::drop_in_place,
-+    sync::atomic::{AtomicBool, Ordering},
-+};
++    /// Prints an emergency-level message (level 0) prefixed with device information.
++    ///
++    /// More details are available from [`dev_emerg`].
++    ///
++    /// [`dev_emerg`]: crate::dev_emerg
++    pub fn pr_emerg(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_EMERG, args) };
++    }
 +
-+/// An object that can become inaccessible at runtime.
++    /// Prints an alert-level message (level 1) prefixed with device information.
++    ///
++    /// More details are available from [`dev_alert`].
++    ///
++    /// [`dev_alert`]: crate::dev_alert
++    pub fn pr_alert(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_ALERT, args) };
++    }
++
++    /// Prints a critical-level message (level 2) prefixed with device information.
++    ///
++    /// More details are available from [`dev_crit`].
++    ///
++    /// [`dev_crit`]: crate::dev_crit
++    pub fn pr_crit(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_CRIT, args) };
++    }
++
++    /// Prints an error-level message (level 3) prefixed with device information.
++    ///
++    /// More details are available from [`dev_err`].
++    ///
++    /// [`dev_err`]: crate::dev_err
++    pub fn pr_err(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_ERR, args) };
++    }
++
++    /// Prints a warning-level message (level 4) prefixed with device information.
++    ///
++    /// More details are available from [`dev_warn`].
++    ///
++    /// [`dev_warn`]: crate::dev_warn
++    pub fn pr_warn(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_WARNING, args) };
++    }
++
++    /// Prints a notice-level message (level 5) prefixed with device information.
++    ///
++    /// More details are available from [`dev_notice`].
++    ///
++    /// [`dev_notice`]: crate::dev_notice
++    pub fn pr_notice(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_NOTICE, args) };
++    }
++
++    /// Prints an info-level message (level 6) prefixed with device information.
++    ///
++    /// More details are available from [`dev_info`].
++    ///
++    /// [`dev_info`]: crate::dev_info
++    pub fn pr_info(&self, args: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++        unsafe { self.printk(bindings::KERN_INFO, args) };
++    }
++
++    /// Prints a debug-level message (level 7) prefixed with device information.
++    ///
++    /// More details are available from [`dev_dbg`].
++    ///
++    /// [`dev_dbg`]: crate::dev_dbg
++    pub fn pr_dbg(&self, args: fmt::Arguments<'_>) {
++        if cfg!(debug_assertions) {
++            // SAFETY: `klevel` is null-terminated, uses one of the kernel constants.
++            unsafe { self.printk(bindings::KERN_DEBUG, args) };
++        }
++    }
++
++    /// Prints the provided message to the console.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that `klevel` is null-terminated; in particular, one of the
++    /// `KERN_*`constants, for example, `KERN_CRIT`, `KERN_ALERT`, etc.
++    #[cfg_attr(not(CONFIG_PRINTK), allow(unused_variables))]
++    unsafe fn printk(&self, klevel: &[u8], msg: fmt::Arguments<'_>) {
++        // SAFETY: `klevel` is null-terminated and one of the kernel constants. `self.as_raw`
++        // is valid because `self` is valid. The "%pA" format string expects a pointer to
++        // `fmt::Arguments`, which is what we're passing as the last argument.
++        #[cfg(CONFIG_PRINTK)]
++        unsafe {
++            bindings::_dev_printk(
++                klevel as *const _ as *const core::ffi::c_char,
++                self.as_raw(),
++                c_str!("%pA").as_char_ptr(),
++                &msg as *const _ as *const core::ffi::c_void,
++            )
++        };
++    }
+ }
+ 
+ // SAFETY: Instances of `Device` are always reference-counted.
+@@ -103,3 +210,213 @@ unsafe impl Send for Device {}
+ // SAFETY: `Device` can be shared among threads because all immutable methods are protected by the
+ // synchronization in `struct device`.
+ unsafe impl Sync for Device {}
++
++#[doc(hidden)]
++#[macro_export]
++macro_rules! dev_printk {
++    ($method:ident, $dev:expr, $($f:tt)*) => {
++        {
++            ($dev).$method(core::format_args!($($f)*));
++        }
++    }
++}
++
++/// Prints an emergency-level message (level 0) prefixed with device information.
 +///
-+/// Once access is revoked and all concurrent users complete (i.e., all existing instances of
-+/// [`RevocableGuard`] are dropped), the wrapped object is also dropped.
++/// This level should be used if the system is unusable.
++///
++/// Equivalent to the kernel's `dev_emerg` macro.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
 +///
 +/// # Examples
 +///
 +/// ```
-+/// # use kernel::revocable::Revocable;
++/// # use kernel::device::Device;
 +///
-+/// struct Example {
-+///     a: u32,
-+///     b: u32,
++/// fn example(dev: &Device) {
++///     dev_emerg!(dev, "hello {}\n", "there");
 +/// }
-+///
-+/// fn add_two(v: &Revocable<Example>) -> Option<u32> {
-+///     let guard = v.try_access()?;
-+///     Some(guard.a + guard.b)
-+/// }
-+///
-+/// let v = KBox::pin_init(Revocable::new(Example { a: 10, b: 20 }), GFP_KERNEL).unwrap();
-+/// assert_eq!(add_two(&v), Some(30));
-+/// v.revoke();
-+/// assert_eq!(add_two(&v), None);
 +/// ```
++#[macro_export]
++macro_rules! dev_emerg {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_emerg, $($f)*); }
++}
++
++/// Prints an alert-level message (level 1) prefixed with device information.
 +///
-+/// Sample example as above, but explicitly using the rcu read side lock.
++/// This level should be used if action must be taken immediately.
++///
++/// Equivalent to the kernel's `dev_alert` macro.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
 +///
 +/// ```
-+/// # use kernel::revocable::Revocable;
-+/// use kernel::sync::rcu;
++/// # use kernel::device::Device;
 +///
-+/// struct Example {
-+///     a: u32,
-+///     b: u32,
++/// fn example(dev: &Device) {
++///     dev_alert!(dev, "hello {}\n", "there");
 +/// }
-+///
-+/// fn add_two(v: &Revocable<Example>) -> Option<u32> {
-+///     let guard = rcu::read_lock();
-+///     let e = v.try_access_with_guard(&guard)?;
-+///     Some(e.a + e.b)
-+/// }
-+///
-+/// let v = KBox::pin_init(Revocable::new(Example { a: 10, b: 20 }), GFP_KERNEL).unwrap();
-+/// assert_eq!(add_two(&v), Some(30));
-+/// v.revoke();
-+/// assert_eq!(add_two(&v), None);
 +/// ```
-+#[pin_data(PinnedDrop)]
-+pub struct Revocable<T> {
-+    is_available: AtomicBool,
-+    #[pin]
-+    data: MaybeUninit<UnsafeCell<T>>,
++#[macro_export]
++macro_rules! dev_alert {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_alert, $($f)*); }
 +}
 +
-+// SAFETY: `Revocable` is `Send` if the wrapped object is also `Send`. This is because while the
-+// functionality exposed by `Revocable` can be accessed from any thread/CPU, it is possible that
-+// this isn't supported by the wrapped object.
-+unsafe impl<T: Send> Send for Revocable<T> {}
-+
-+// SAFETY: `Revocable` is `Sync` if the wrapped object is both `Send` and `Sync`. We require `Send`
-+// from the wrapped object as well because  of `Revocable::revoke`, which can trigger the `Drop`
-+// implementation of the wrapped object from an arbitrary thread.
-+unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
-+
-+impl<T> Revocable<T> {
-+    /// Creates a new revocable instance of the given data.
-+    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
-+        pin_init!(Self {
-+            is_available: AtomicBool::new(true),
-+            // SAFETY: The closure only returns `Ok(())` if `slot` is fully initialized; on error
-+            // `slot` is not partially initialized and does not need to be dropped.
-+            data <- unsafe {
-+                init::pin_init_from_closure(move |slot: *mut MaybeUninit<UnsafeCell<T>>| {
-+                    init::PinInit::<T, core::convert::Infallible>::__pinned_init(data,
-+                                                                                 slot as *mut T)?;
-+                    Ok::<(), core::convert::Infallible>(())
-+                })
-+            },
-+        })
-+    }
-+
-+    /// Tries to access the \[revocable\] wrapped object.
-+    ///
-+    /// Returns `None` if the object has been revoked and is therefore no longer accessible.
-+    ///
-+    /// Returns a guard that gives access to the object otherwise; the object is guaranteed to
-+    /// remain accessible while the guard is alive. In such cases, callers are not allowed to sleep
-+    /// because another CPU may be waiting to complete the revocation of this object.
-+    pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
-+        let guard = rcu::read_lock();
-+        if self.is_available.load(Ordering::Relaxed) {
-+            // SAFETY: Since `self.is_available` is true, data is initialised and has to remain
-+            // valid because the RCU read side lock prevents it from being dropped.
-+            Some(unsafe { RevocableGuard::new(self.data.assume_init_ref().get(), guard) })
-+        } else {
-+            None
-+        }
-+    }
-+
-+    /// Tries to access the \[revocable\] wrapped object.
-+    ///
-+    /// Returns `None` if the object has been revoked and is therefore no longer accessible.
-+    ///
-+    /// Returns a shared reference to the object otherwise; the object is guaranteed to
-+    /// remain accessible while the rcu read side guard is alive. In such cases, callers are not
-+    /// allowed to sleep because another CPU may be waiting to complete the revocation of this
-+    /// object.
-+    pub fn try_access_with_guard<'a>(&'a self, _guard: &'a rcu::Guard) -> Option<&'a T> {
-+        if self.is_available.load(Ordering::Relaxed) {
-+            // SAFETY: Since `self.is_available` is true, data is initialised and has to remain
-+            // valid because the RCU read side lock prevents it from being dropped.
-+            Some(unsafe { &*self.data.assume_init_ref().get() })
-+        } else {
-+            None
-+        }
-+    }
-+
-+    /// Revokes access to and drops the wrapped object.
-+    ///
-+    /// Access to the object is revoked immediately to new callers of [`Revocable::try_access`]. If
-+    /// there are concurrent users of the object (i.e., ones that called [`Revocable::try_access`]
-+    /// beforehand and still haven't dropped the returned guard), this function waits for the
-+    /// concurrent access to complete before dropping the wrapped object.
-+    pub fn revoke(&self) {
-+        if self
-+            .is_available
-+            .compare_exchange(true, false, Ordering::Relaxed, Ordering::Relaxed)
-+            .is_ok()
-+        {
-+            // SAFETY: Just an FFI call, there are no further requirements.
-+            unsafe { bindings::synchronize_rcu() };
-+
-+            // SAFETY: We know `self.data` is valid because only one CPU can succeed the
-+            // `compare_exchange` above that takes `is_available` from `true` to `false`.
-+            unsafe { drop_in_place(self.data.assume_init_ref().get()) };
-+        }
-+    }
-+}
-+
-+#[pinned_drop]
-+impl<T> PinnedDrop for Revocable<T> {
-+    fn drop(self: Pin<&mut Self>) {
-+        // Drop only if the data hasn't been revoked yet (in which case it has already been
-+        // dropped).
-+        // SAFETY: We are not moving out of `p`, only dropping in place
-+        let p = unsafe { self.get_unchecked_mut() };
-+        if *p.is_available.get_mut() {
-+            // SAFETY: We know `self.data` is valid because no other CPU has changed
-+            // `is_available` to `false` yet, and no other CPU can do it anymore because this CPU
-+            // holds the only reference (mutable) to `self` now.
-+            unsafe { drop_in_place(p.data.assume_init_ref().get()) };
-+        }
-+    }
-+}
-+
-+/// A guard that allows access to a revocable object and keeps it alive.
++/// Prints a critical-level message (level 2) prefixed with device information.
 +///
-+/// CPUs may not sleep while holding on to [`RevocableGuard`] because it's in atomic context
-+/// holding the RCU read-side lock.
++/// This level should be used in critical conditions.
 +///
-+/// # Invariants
++/// Equivalent to the kernel's `dev_crit` macro.
 +///
-+/// The RCU read-side lock is held while the guard is alive.
-+pub struct RevocableGuard<'a, T> {
-+    data_ref: *const T,
-+    _rcu_guard: rcu::Guard,
-+    _p: PhantomData<&'a ()>,
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::device::Device;
++///
++/// fn example(dev: &Device) {
++///     dev_crit!(dev, "hello {}\n", "there");
++/// }
++/// ```
++#[macro_export]
++macro_rules! dev_crit {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_crit, $($f)*); }
 +}
 +
-+impl<T> RevocableGuard<'_, T> {
-+    fn new(data_ref: *const T, rcu_guard: rcu::Guard) -> Self {
-+        Self {
-+            data_ref,
-+            _rcu_guard: rcu_guard,
-+            _p: PhantomData,
-+        }
-+    }
++/// Prints an error-level message (level 3) prefixed with device information.
++///
++/// This level should be used in error conditions.
++///
++/// Equivalent to the kernel's `dev_err` macro.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::device::Device;
++///
++/// fn example(dev: &Device) {
++///     dev_err!(dev, "hello {}\n", "there");
++/// }
++/// ```
++#[macro_export]
++macro_rules! dev_err {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_err, $($f)*); }
 +}
 +
-+impl<T> Deref for RevocableGuard<'_, T> {
-+    type Target = T;
-+
-+    fn deref(&self) -> &Self::Target {
-+        // SAFETY: By the type invariants, we hold the rcu read-side lock, so the object is
-+        // guaranteed to remain valid.
-+        unsafe { &*self.data_ref }
-+    }
++/// Prints a warning-level message (level 4) prefixed with device information.
++///
++/// This level should be used in warning conditions.
++///
++/// Equivalent to the kernel's `dev_warn` macro.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::device::Device;
++///
++/// fn example(dev: &Device) {
++///     dev_warn!(dev, "hello {}\n", "there");
++/// }
++/// ```
++#[macro_export]
++macro_rules! dev_warn {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_warn, $($f)*); }
 +}
++
++/// Prints a notice-level message (level 5) prefixed with device information.
++///
++/// This level should be used in normal but significant conditions.
++///
++/// Equivalent to the kernel's `dev_notice` macro.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::device::Device;
++///
++/// fn example(dev: &Device) {
++///     dev_notice!(dev, "hello {}\n", "there");
++/// }
++/// ```
++#[macro_export]
++macro_rules! dev_notice {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_notice, $($f)*); }
++}
++
++/// Prints an info-level message (level 6) prefixed with device information.
++///
++/// This level should be used for informational messages.
++///
++/// Equivalent to the kernel's `dev_info` macro.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::device::Device;
++///
++/// fn example(dev: &Device) {
++///     dev_info!(dev, "hello {}\n", "there");
++/// }
++/// ```
++#[macro_export]
++macro_rules! dev_info {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_info, $($f)*); }
++}
++
++/// Prints a debug-level message (level 7) prefixed with device information.
++///
++/// This level should be used for debug messages.
++///
++/// Equivalent to the kernel's `dev_dbg` macro, except that it doesn't support dynamic debug yet.
++///
++/// Mimics the interface of [`std::print!`]. More information about the syntax is available from
++/// [`core::fmt`] and `alloc::format!`.
++///
++/// [`std::print!`]: https://doc.rust-lang.org/std/macro.print.html
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::device::Device;
++///
++/// fn example(dev: &Device) {
++///     dev_dbg!(dev, "hello {}\n", "there");
++/// }
++/// ```
++#[macro_export]
++macro_rules! dev_dbg {
++    ($($f:tt)*) => { $crate::dev_printk!(pr_dbg, $($f)*); }
++}
+diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
+index 8bdab9aa0d16..9ab4e0b6cbc9 100644
+--- a/rust/kernel/prelude.rs
++++ b/rust/kernel/prelude.rs
+@@ -24,6 +24,8 @@
+ // `super::std_vendor` is hidden, which makes the macro inline for some reason.
+ #[doc(no_inline)]
+ pub use super::dbg;
++pub use super::fmt;
++pub use super::{dev_alert, dev_crit, dev_dbg, dev_emerg, dev_err, dev_info, dev_notice, dev_warn};
+ pub use super::{pr_alert, pr_crit, pr_debug, pr_emerg, pr_err, pr_info, pr_notice, pr_warn};
+ 
+ pub use super::{init, pin_init, try_init, try_pin_init};
 -- 
 2.46.2
 
