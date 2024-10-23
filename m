@@ -1,237 +1,194 @@
-Return-Path: <linux-pci+bounces-15092-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15093-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A7C49ABED1
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 08:33:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D7449ABEEC
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 08:38:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FFA01F23BC2
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 06:33:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39FCF1C21038
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 06:37:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B74CC149C42;
-	Wed, 23 Oct 2024 06:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD3914A0B7;
+	Wed, 23 Oct 2024 06:37:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/1lPFaU"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HEW+sHHH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2041.outbound.protection.outlook.com [40.107.20.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8462013D53F;
-	Wed, 23 Oct 2024 06:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729665193; cv=none; b=UxGbCmfSqP/SKc/sEWsBUMGfocJLzBtXDNoSyuHTlxR91uyRtGnlCR0qG5y0QaaQ5wiCrx1hVZqK02y8R4ciOEfSxq9DKih0WnPvBrmlR9eKRZrfj7yGUmNCBjPAXacfNLZlv6fdwBXE5n76p5DbFFYLkytp0rqlLPtpUvdczmQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729665193; c=relaxed/simple;
-	bh=ZYUx7rnK41TpTiB5KIOCiGNaxeb9IcDba9ScKn7b29A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+CU+A0PU5owg8SwxRiELPoci92fUjcoeOK7rUlCpCan1zv/KTr2UhA8YRxNcrEKcHZOtkzX54QS2ggLQxBNTH1BPA3kKXcWm067dueU8tptS4paEVGzEw9NyG53IlzQxoQCRsxU72bdm1+QaFSFBR/kmr/iUUVmm6VhR79mQrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/1lPFaU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21DA0C4CEC6;
-	Wed, 23 Oct 2024 06:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729665193;
-	bh=ZYUx7rnK41TpTiB5KIOCiGNaxeb9IcDba9ScKn7b29A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B/1lPFaUb889m8GvOY+rWzcHGu7nSnW03TO90VNmnkjVahIgHxBGlTTN4vV2lJLJS
-	 2K9iuXgFWggZGNjCXz1xYGukZCOQ2Oyb1rcevAMFdH1MU/BytuU1SwsROyXNPbMWX3
-	 gsMoc7JbQqePChCBw6WKU/+a6GJBwTIW7lmbjZGy7vTjTtSkTCiFH5PIi5uPEfMYpH
-	 g5cjQSKPmLDoIfnL12ZuhGvLn1fmqV6CO7kC+EMF/VAYjHuTeaFlVlIVElrkbTsM2C
-	 IN1bxkF4bsx8JwPhaRmtcGUkJykBLYl1CaLTnIDDEXT9qdAwFwA1bVd6+ECeIvLEVk
-	 SQxKUdml9Gwew==
-Date: Wed, 23 Oct 2024 08:33:04 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
-	daniel.almeida@collabora.com, saravanak@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 14/16] rust: of: add `of::DeviceId` abstraction
-Message-ID: <ZxiYoNUwAEX8Adh5@pollux>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-15-dakr@kernel.org>
- <20241022230351.GA1848992-robh@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6EF14A0AA;
+	Wed, 23 Oct 2024 06:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729665474; cv=fail; b=FLE2LxnXdPdkPlVjmd9Y5Igmm1d+LySLkeJCtZOgq9uSytxTSqGXRJBeJeXQ8//d9bw2qFxhw002ilFb5YFCwRyzHGxzSHuH1m4Yrzr/6d3osAqq8AnTyZ5J8x/PDoBlAOvKyw2msGstFkyY0QUiFWpKTJnSa9nvpvDbQCoZe8k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729665474; c=relaxed/simple;
+	bh=BL538X9Eh0aQFwuKJjZIfh5zdIpdSUZR/9tmeV579Nc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lTtPHF7d0G6nRWrjKBDTEzIXzHeRrxV5kjOYXlhoil3t5ZJJfhfNomeM2gmvKL36Tb5MrkMlYCVGwywIeyiz2m6qWEgF6U986qtsR9OaN2WUTR7rO9j/e4vsstZ+lzdyvYjqwb+O6w2AKZNzISFKPtsaw67NFsMRP4kxGhd7x4o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HEW+sHHH; arc=fail smtp.client-ip=40.107.20.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Wxy5Ydk+cNBS15dy7CCh0Nh8Uft+LDAG7u1rlm8pzAYoiZE6aPnPs9FmoWP44OD35mSBUkGvd6yD/zJspt5vfbAsA9NUPASIWo1tYF4APFP4zAao0hjSPyvz3SyerWNyLuG9YE8cCkK5zh5oyFj9Qn1Z1uQteWFbgna7zOQfrBzM30u8laaMQFXClXsZKnPULMS9p8n25umXaqXtTvdqnu3cg5CwogtmXet5Wg9NPQelNaNx4lKYoFo7tEaHLsLDgZQnZinF0GeiWyIwwzZRN4SJ5owQ4IFplLg/5Jj4g33ITLuoGKleyUtfluv+jmqOL1oocJdYdbv2ZH6/x2g90Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BL538X9Eh0aQFwuKJjZIfh5zdIpdSUZR/9tmeV579Nc=;
+ b=U7QRjm5wVPEcwf63aZV7LW4ZnM3w00cY5GOVEmtDyET1WIflY1x8frUaBFtEzUmXBAIa4GFIEQB+Qtqi5QxD6EmCssV5d6J1dyl7AVYsX+4LSahbMm++AtkUyHX6DOjc0PnN3Mi6OwlHtjW2RfEqBJonGKboQ9fpHeUAzw7gZUpZECK9jr76PqY7lpm0+VBJPHxz5ygpAS4RKOo74LZAC4OToCeNGFBf42F9dcvIQ3SU+qOfv3nHhyJgIjBIm0F4ai5ZllkzIxm8OErW+/n9XfsYYLYQtV3sI9bTh6K5Rrwawo5+6m2HK2BoGOPnPUkwBfVt+L34Qd6iK5IyrbY09A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BL538X9Eh0aQFwuKJjZIfh5zdIpdSUZR/9tmeV579Nc=;
+ b=HEW+sHHHeJzIZ4pP+v1Z/YieQIib1sWtnVpuoBDoj4r5AHmAL/9P6OMKZXvpFTcRY4KAWPIkIa28oaSwCaRRfIO83L3uysnmm7GgDWlVnmImK121AVtb5/696ZdPgrehLdqcK1vl24eALbDBoVF1cOdv5y8GMV7b9LPEflWjksOlvucqOgTn1EWNnZqi6OWEX8Ss4ujrveuHeo/YxxoYRdZNCl14ZISPxuwhht986/1Wi6wA6ugafpC+ZqPPO808+ZXuMBw0m62LHnRcxX6AoXVgf2waG5pftMycSzQ+E8ZvooW5b4mDvy9/ZbPVG8IEdg3wndA8riuydIOGPdtWVQ==
+Received: from AS8PR04MB8849.eurprd04.prod.outlook.com (2603:10a6:20b:42c::17)
+ by DB9PR04MB9867.eurprd04.prod.outlook.com (2603:10a6:10:4c0::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.24; Wed, 23 Oct
+ 2024 06:37:49 +0000
+Received: from AS8PR04MB8849.eurprd04.prod.outlook.com
+ ([fe80::d8e2:1fd7:2395:b684]) by AS8PR04MB8849.eurprd04.prod.outlook.com
+ ([fe80::d8e2:1fd7:2395:b684%7]) with mapi id 15.20.8093.014; Wed, 23 Oct 2024
+ 06:37:48 +0000
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, Vladimir Oltean
+	<vladimir.oltean@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Frank Li
+	<frank.li@nxp.com>, "christophe.leroy@csgroup.eu"
+	<christophe.leroy@csgroup.eu>, "linux@armlinux.org.uk"
+	<linux@armlinux.org.uk>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"horms@kernel.org" <horms@kernel.org>
+CC: "imx@lists.linux.dev" <imx@lists.linux.dev>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "alexander.stein@ew.tq-group.com"
+	<alexander.stein@ew.tq-group.com>
+Subject: RE: [PATCH v4 net-next 10/13] net: enetc: extract
+ enetc_int_vector_init/destroy() from enetc_alloc_msix()
+Thread-Topic: [PATCH v4 net-next 10/13] net: enetc: extract
+ enetc_int_vector_init/destroy() from enetc_alloc_msix()
+Thread-Index: AQHbJEjRMaGd/16dp0ueGxJYDqbmkLKT3vUA
+Date: Wed, 23 Oct 2024 06:37:48 +0000
+Message-ID:
+ <AS8PR04MB88497C3155127C27C2C5A9DA964D2@AS8PR04MB8849.eurprd04.prod.outlook.com>
+References: <20241022055223.382277-1-wei.fang@nxp.com>
+ <20241022055223.382277-11-wei.fang@nxp.com>
+In-Reply-To: <20241022055223.382277-11-wei.fang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8849:EE_|DB9PR04MB9867:EE_
+x-ms-office365-filtering-correlation-id: f4ce999a-da10-4184-6411-08dcf32d362c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?oixWGAAoSOr1/uEgfDiGXXsioUj2sFOIViRs6410V0K604DhtWX4hN9YX4VH?=
+ =?us-ascii?Q?rcgmuAZWAWcjhjIvPADD8jxrRjVfaAXMXEmMHHe0k4aj7IUoKCu/gq2TKj6/?=
+ =?us-ascii?Q?mVq3IT7V/Meu6wa01vcE1wmuak79RXKhWU010QKKxSD5IWOlTSOvI2FuGxlv?=
+ =?us-ascii?Q?MMP5JQ5B6kNeuhcST6c2eNj8wgXmaPUBsX5/ogzhIUeUfRfkbM1GaZjARQoz?=
+ =?us-ascii?Q?hYG4eIjFU7glPsVRYX1PqbMW+6UZif2WOS8jEK2Nh+x6M+t8ANbrCvz8BQqU?=
+ =?us-ascii?Q?LLPWga1P2l98RSnyTrFHuQwtO5E4AKMBgOb7RlX66Lcf/wcNjT9CirqM3dEQ?=
+ =?us-ascii?Q?3Q6yb5ddkcQuUTmGMkyyCQjZBOF/Th2Ck9TTXDZRUgRVryY0yPANHKN7U5/I?=
+ =?us-ascii?Q?CJaULudkvV2hrQd4CWqJheIcpNBr5eazNQ3LrEIu8cgq8YDNK7odahtkaVqe?=
+ =?us-ascii?Q?LJEa2zJqmOC78P5/iwO9osQoxgm5mx7OcKmvHMADjBRhOcJkh4zS5kzN7N7U?=
+ =?us-ascii?Q?rhQZ2Nk6UA9+mYXBvHmG0wRI/KKwXfhU/QNdQ/JpvDEyHLaSe3G/L2XKbB3/?=
+ =?us-ascii?Q?Tnw1sIVCKBGLjMLE31KdOYyyRzH65LtnbIyE5FwcPzbX/4t/G1eL3s2nXqkY?=
+ =?us-ascii?Q?mQ43IKIcg8dC/7hKcUQK+z4ddVz5TfFgAtocxlvc7xllAogz2ISp4ZxnHduj?=
+ =?us-ascii?Q?+hdb+iOm+7WF4K6h+rT5m3xL2xcaNUFmOymOx+7s+2jjLwQu1jm9COOiZw94?=
+ =?us-ascii?Q?qoVCxZYR8k18KFZ7rwy6aVmlLvKXKxGUbf0VVzTJnDy3XSoXEevvdcT2iKS4?=
+ =?us-ascii?Q?xde93FuaP0vS6yw11ChtsMTl6RGmw8dAu2EVDdUvGy1VTIHVXTZNvXmgkW5A?=
+ =?us-ascii?Q?vvcePxfhsJ3tnJ691XB8zBWPj5DdiYCtHOjzbwFRvh0j8nd7AN7co1m781P9?=
+ =?us-ascii?Q?3biEwGGunQdwbvfKI/JFJ5gii/V4bCgC1bo+NgxQiPjmUjV4jDcMn/eDqm2U?=
+ =?us-ascii?Q?m3JUQ/0AdJvqWswcu3t4lkPvUEpSTEvhlWquM/LGVOHOVxSLP+UuwKgtqqwv?=
+ =?us-ascii?Q?UtXR70Al20WX1HKL7i3W7T5iJH2y5tMU0z6frVWIbWzQhy0/t4buyU+5JyVE?=
+ =?us-ascii?Q?dg5MSZq/Xeytod+5pKGVYoi22mKrVnUEeY86D2U/0c2dKFsEJNGOuxuoNKg+?=
+ =?us-ascii?Q?i/kZLwgkufmq44gZgEc6XioRbyzuVhdVr0gO2dh5+1u58hWJXPSjtnCKeY8I?=
+ =?us-ascii?Q?3z78BfLmTt6bu6C295PwMykVoH9IoQeLvQyTdTfnvvCQ9h4aTYIkG8SAqxo/?=
+ =?us-ascii?Q?SKpwTmM9cYA7RVdTIf70VEk7sf+oQuagLRh2ypRZaZSUx4mnX6CBidUywBcM?=
+ =?us-ascii?Q?vp0WcETD1ihIkQHFh6sjw9qBAVFv?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8849.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?85P+vEh4ymNf6PsW/+ifMXVRqhz4kzys3bGsMwONLIdVCe9aDSgfGa7FN4a5?=
+ =?us-ascii?Q?7BrisVpAk+Mh4qnKxti4yiL+3yJMDKwPbbW4p0q4pSz8fue2no0SQuU+6qzA?=
+ =?us-ascii?Q?P7ajp8DB7+PFqpZWFH+ssWUNX5VV5VbvhWwPR5i8St+M0N+9UZM2eORzzTzY?=
+ =?us-ascii?Q?oiCcg4a1Gb/yDePpQZD/mSW3ZRehqNVZpUlD0r5xjDaZOfvMcgoNqshi/NSe?=
+ =?us-ascii?Q?InmKq5qxNrTZiC/FSgtMAs6iOmisMlBcrjd4d0zUh2KIaP+bWUOsPiceo2oX?=
+ =?us-ascii?Q?tI/43T0UBXZU7ymp8NJqsobNRDtvmgMh0j6GPP2npLip/ff7EcFNFv8mDNA6?=
+ =?us-ascii?Q?d2woQWgl4eeC3zH0daocG3hSYxZ+rp0IzQk0BOmi1RsikmbqT/4pGFocegG8?=
+ =?us-ascii?Q?WfpktEJCHm8jBt70gq06h5RMl8EbIPmfjrsUiHiXIjzn3TcvsOlTyhXiOSvW?=
+ =?us-ascii?Q?P/p1IRBTn5hcW15qqRIC538LcHjENKkhSJnzEaljslk/Mi0mg1GaCu820vM2?=
+ =?us-ascii?Q?OdJsIkmveLteAYgmhLmakt3/lKdjQGDGu0bBCeqcjGJ66Kn8r85XusquDAuK?=
+ =?us-ascii?Q?MIXvfMrSda6WGit3mpf+EBcsuwRa0C6NueK0GJ1SPHzKQC8/DhMfVpW3uMSY?=
+ =?us-ascii?Q?RbR8vmPts781+xRK4rKD2APB4k/QN323WxszmAy0XcS8Paxj6tUyExjPKoUP?=
+ =?us-ascii?Q?IclTNTb5l5uNwJQ/pxDYRz2K62I/bV0OSzyEuvvN90lH0hjkF/qG5u8uHljm?=
+ =?us-ascii?Q?ne0xlkkPBefzaCM+dhLcOVybYmwi9XZxCeBvA8xEC8VtHp/66jMGhspnZSxF?=
+ =?us-ascii?Q?TA6HW7MIz2w0GJFIt+2uEhmGqCe+uucKYmstv9q9+N8qH61sDale8Cxh3vIC?=
+ =?us-ascii?Q?O1JhSWL8Kht7Zppd8v3Bd9FKyQyK4nDuBvaFqnT4nvst9u2uLksqSvJUvcPw?=
+ =?us-ascii?Q?bWeBC6b1TkmGdof2Y3KUQcpphL4rrUoiwH8FONeur8TdRA5VHcmSP/fyoUdR?=
+ =?us-ascii?Q?cYqWiLK5guQg1Fj5Lfy/X5oktTecv7KbvSa3aEu+IeCPhuU9DZTwBfpm1H2y?=
+ =?us-ascii?Q?IDwhsdLQVbu6CATeJIyLFjBMNRy/8LbAubXUSOHncoAHNA4D5pdkKPRc0+IF?=
+ =?us-ascii?Q?o8xQ0d4GrKsla05cV2W1vfTQiUM0ZMuEMxUD2gW+5wMsBDjxjL3xaZcZnaPH?=
+ =?us-ascii?Q?YyepSxlTXpuLpCjekcwkpSNV6zOUPrtv2WQ0V8/cQ/a3yASArjnbfSBWgYkb?=
+ =?us-ascii?Q?NmlrU9L4F3wog8xRSdY+AhsyyAxfiOPTGxzajpHGObJ3QB/SMos+MeSjpzIM?=
+ =?us-ascii?Q?3QhHYZwWe/bbkXhJZsjblMYvyGFmu/oR0wkcGMszWCL5Y3048sTGL3ZeUaA1?=
+ =?us-ascii?Q?aEImN8Ujq+RQIrb9YSBwdoL6P9grJfy7NsJddU34wVrZ3qynn9n76MxvNMr9?=
+ =?us-ascii?Q?xDQllWauMRsaI/6BQfag7xKRm7Qib7CHIrAE/iAwkZIMRGr2DLuSSLPrjlB8?=
+ =?us-ascii?Q?rIo+IPCgVumhcOf8IUPdpkq1u15rbxlX8PdEHVmpzQQruO3Xkjjz/GxOP5Gy?=
+ =?us-ascii?Q?ycAjSHKX46lOri4Z5RBqlDXfxPBob3WCJEAx3mgy?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241022230351.GA1848992-robh@kernel.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8849.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4ce999a-da10-4184-6411-08dcf32d362c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2024 06:37:48.7617
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hP5ESibZgY0UV8E8NkUh3JMnu1HMPAuP8Sm+3+IgHC10rB1Tp8/rz7RzAaGadsnNTgxKBe9JcDd3xtm082baSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9867
 
-On Tue, Oct 22, 2024 at 06:03:51PM -0500, Rob Herring wrote:
-> On Tue, Oct 22, 2024 at 11:31:51PM +0200, Danilo Krummrich wrote:
-> > `of::DeviceId` is an abstraction around `struct of_device_id`.
-> > 
-> > This is used by subsequent patches, in particular the platform bus
-> > abstractions, to create OF device ID tables.
-> > 
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  MAINTAINERS                     |  1 +
-> >  rust/bindings/bindings_helper.h |  1 +
-> >  rust/kernel/lib.rs              |  1 +
-> >  rust/kernel/of.rs               | 63 +++++++++++++++++++++++++++++++++
-> >  4 files changed, 66 insertions(+)
-> >  create mode 100644 rust/kernel/of.rs
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index d9c512a3e72b..87eb9a7869eb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -17340,6 +17340,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> >  F:	Documentation/ABI/testing/sysfs-firmware-ofw
-> >  F:	drivers/of/
-> >  F:	include/linux/of*.h
-> > +F:	rust/kernel/of.rs
-> >  F:	scripts/dtc/
-> >  F:	tools/testing/selftests/dt/
-> >  K:	of_overlay_notifier_
-> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> > index cd4edd6496ae..312f03cbdce9 100644
-> > --- a/rust/bindings/bindings_helper.h
-> > +++ b/rust/bindings/bindings_helper.h
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/firmware.h>
-> >  #include <linux/jiffies.h>
-> >  #include <linux/mdio.h>
-> > +#include <linux/of_device.h>
-> 
-> Technically, you don't need this for *this* patch. You need 
-> mod_devicetable.h for of_device_id. Best to not rely on implicit 
-> includes. I've tried removing it and it still built, so I guess there is 
-> another implicit include somewhere...
+> -----Original Message-----
+> From: Wei Fang <wei.fang@nxp.com>
+> Sent: Tuesday, October 22, 2024 8:52 AM
+[...]
+> Subject: [PATCH v4 net-next 10/13] net: enetc: extract
+> enetc_int_vector_init/destroy() from enetc_alloc_msix()
+>=20
+> From: Clark Wang <xiaoning.wang@nxp.com>
+>=20
+> Extract enetc_int_vector_init() and enetc_int_vector_destroy() from
+> enetc_alloc_msix() so that the code is more concise and readable. In
+> addition, slightly different from before, the cleanup helper function
+> is used to manage dynamically allocated memory resources.
+>=20
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
 
-True, however mod_devicetable.h is already needed for a previous patch "rust:
-pci: add basic PCI device / driver abstractions" already. So, I'll add it there
-and remove the of_device.h include here.
-
-> 
-> >  #include <linux/pci.h>
-> >  #include <linux/phy.h>
-> >  #include <linux/refcount.h>
-> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index 3ec690eb6d43..5946f59f1688 100644
-> > --- a/rust/kernel/lib.rs
-> > +++ b/rust/kernel/lib.rs
-> > @@ -51,6 +51,7 @@
-> >  pub mod list;
-> >  #[cfg(CONFIG_NET)]
-> >  pub mod net;
-> > +pub mod of;
-> >  pub mod page;
-> >  pub mod prelude;
-> >  pub mod print;
-> > diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-> > new file mode 100644
-> > index 000000000000..a37629997974
-> > --- /dev/null
-> > +++ b/rust/kernel/of.rs
-> > @@ -0,0 +1,63 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +//! Open Firmware abstractions.
-> 
-> s/Open Firmware/Devicetree/
-> 
-> Or keep both that prior versions of this code had. Most of DT/OF today 
-> is not OpenFirmware.
-> 
-> > +//!
-> > +//! C header: [`include/linux/of_*.h`](srctree/include/linux/of_*.h)
-> 
-> I haven't quite figured out how this gets used. I guess just a link in 
-> documentation? I somewhat doubt this file is going to handle all DT
-> abstractions. That might become quite long. Most of of_address.h and 
-> of_irq.h I actively don't want to see Rust bindings for because they 
-> are mainly used by higher level interfaces (e.g. platform dev 
-> resources). There's a slew of "don't add new users" APIs which I need to 
-> document. Also, the main header is of.h which wasn't included here.
-
-I think for now it's indeed meaningless and we should just remove it.
-
-If subsequent patches start adding abstractions for things like properties,
-device nodes, etc. they can add it back in.
-
-> 
-> As of now, only the mod_devicetable.h header is used by this file, so I 
-> think you should just put it until that changes. Maybe there would be 
-> some savings if all of mod_devicetable.h was handled by 1 rust file?
-
-AFAIK, in C we have all those device ID structs in mod_devicetable.h, such that
-in can easily be included in scripts/mod/file2alias.c. But I think implementing
-all Rust abstractions for those in a single file would be a bit odd. I'd rather
-put them together with the corresponding bus abstractions. OF and ACPI may be a
-bit of an exception.
-
-> 
-> > +
-> > +use crate::{bindings, device_id::RawDeviceId, prelude::*};
-> > +
-> > +/// An open firmware device id.
-> > +#[derive(Clone, Copy)]
-> > +pub struct DeviceId(bindings::of_device_id);
-> > +
-> > +// SAFETY:
-> > +// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and does not add
-> > +//   additional invariants, so it's safe to transmute to `RawType`.
-> > +// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-> > +unsafe impl RawDeviceId for DeviceId {
-> > +    type RawType = bindings::of_device_id;
-> > +
-> > +    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::of_device_id, data);
-> > +
-> > +    fn index(&self) -> usize {
-> > +        self.0.data as _
-> > +    }
-> > +}
-> > +
-> > +impl DeviceId {
-> > +    /// Create a new device id from an OF 'compatible' string.
-> > +    pub const fn new(compatible: &'static CStr) -> Self {
-> > +        let src = compatible.as_bytes_with_nul();
-> > +        // Replace with `bindings::of_device_id::default()` once stabilized for `const`.
-> > +        // SAFETY: FFI type is valid to be zero-initialized.
-> > +        let mut of: bindings::of_device_id = unsafe { core::mem::zeroed() };
-> > +
-> > +        let mut i = 0;
-> > +        while i < src.len() {
-> > +            of.compatible[i] = src[i] as _;
-> > +            i += 1;
-> > +        }
-> 
-> AFAICT, this loop will go away when C char maps to u8. Perhaps a note 
-> to that extent or commented code implementing that.
-
-That's true, I'll add a note.
-
-> 
-> > +
-> > +        Self(of)
-> > +    }
-> > +
-> > +    /// The compatible string of the embedded `struct bindings::of_device_id` as `&CStr`.
-> > +    pub fn compatible<'a>(&self) -> &'a CStr {
-> > +        // SAFETY: `self.compatible` is a valid `char` pointer.
-> > +        unsafe { CStr::from_char_ptr(self.0.compatible.as_ptr()) }
-> > +    }
-> 
-> I don't think we need this. The usage model is checking does a node's 
-> compatible string(s) match a compatible in the table. Most of the time 
-> we don't even need that. We just need the match data.
-
-Right, I think I just added it for the sample driver, we can get rid of it.
-
-> 
-> Rob
-> 
+Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
