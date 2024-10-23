@@ -1,191 +1,400 @@
-Return-Path: <linux-pci+bounces-15095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15096-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB0979ABEF5
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 08:38:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A35D39ABF19
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 08:45:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 649D2280FEF
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 06:38:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C533F1C2344B
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 06:45:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAF114D2AC;
-	Wed, 23 Oct 2024 06:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 409AE14D70E;
+	Wed, 23 Oct 2024 06:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CvET/Cqe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvKhH1gJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2068.outbound.protection.outlook.com [40.107.21.68])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36C914A609;
-	Wed, 23 Oct 2024 06:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729665495; cv=fail; b=kbDmCPHoI8add30/ooGDYJVPjGc/Dif2R9P3xopgPNw4j0N9gwY0Sg+AVQR+DYuPM3OHtOUSx9/S1igcWNggtrxZtWqsbjDHRYKHnB9dHbiwDZokXfENcA/L7wZO5pR6ufm9+03TVboxryOupZRPRlfFmt/QF5WbLyDeB96+2+g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729665495; c=relaxed/simple;
-	bh=lOm918QLHMoCYL5xdMkBluZRdyVzyCqWB9i4yatX92U=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JWIjwU9TzuzPlbKnRxMu31+1PP7WnGH0jYOos2qbE+hJDRd2tfPMdmDm6KoD4p3yQdN1uqH8O36c8J6ar+CylxxLkyAIo15QHAdyHwMBy4ZS4TTrQ6joN4sGMoC4CYLtFKX06hcd+HqmEb8tMvV2iZ8Er8sThGFac8+iFSb6Pvw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CvET/Cqe; arc=fail smtp.client-ip=40.107.21.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bRMIGU9xb+dNUmSbNHYEL9180kDFWkQG+53bs2vUimWRIIygwQPXjtz0XcHnPFFz8uHv0ggz9tbq6IrQYuxlQw9/2NZYR9tHqjSCue34QTvhbg5c/5D8oIFXZp1GrSbiwszmxilqh9zPktiArhBzLLB+A59elRcVLlEK/mRlc6lV6wykdbfKyQ/pmAD1ovCTk/Ox6knKBF/8Vj9hyebZsunTPR2DKH6GGnK+GpSsMGR3KpKT4OiJfZWPRyBK739fN2ixJ5qtic/V42YsxbpTp410Nod34GHu1UTdCbmujDQQ6mEjNwb+fL0l3mCIm2XxOon/7AgTHSqwVO8xIzQ4uQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lOm918QLHMoCYL5xdMkBluZRdyVzyCqWB9i4yatX92U=;
- b=dR1gw0Eoe5aPsK3B99vxVEGLfAShzEbZA/ehbctO4vdCAdlLzNf8ujgfQUhNPLzU4aQTxSJLwjJjKIdV+2JPDvlFO3JsqhjRwNo4c6ygmqWR/N2I6oPsjO7FpSMNyrsvKelzD6jYtidYi4tAnzMqa+AMqO6j3WsHRby9qXnTPqPxtn+tuDLUo5BAA5UY5oI7+xCNGYiytMr7UJok5qRCTGlnTNQ6RPj3pcyGScliBhw7jh6SJj7WqSQSLG33gjd6Fepcj871a+moh9YPTI1YQPoL14TwTdKm+rkda/N9PrkE7ZVXq1+Z2tQNccDmgX5+WSv0dD9TZbMs7lxDDehzxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lOm918QLHMoCYL5xdMkBluZRdyVzyCqWB9i4yatX92U=;
- b=CvET/CqeHSp3hveYyEu4vRKlCeFRijjRQpso94fnURQy0k+u6pYJCvX8uJkvv09/ItFYizdWdkMJKAoUwXFCfLQHaRjSjH+MQFJHBd5x4142ttNcz4cmAo3uj1U1fSYyO1WaaBoL69UCmAcvQog6YnQewdi5kBWsrQMNxdKtSzDhNkgv7sUx9BcrNMY5MT7q5iJpYJMcrcNhg1g+OZCuKPE95RL0cqBVUxW6MD1g+/kaSwDkjIapjlatW4WozIoXN9n6ZuE/yuPYrg27BfsGzEwV3C5fCilVMwmZ67UAm2JGvDcgrt/iYipBHf41rMr43nE3JCZ5xVyBLWZh4qOLvA==
-Received: from AS8PR04MB8849.eurprd04.prod.outlook.com (2603:10a6:20b:42c::17)
- by AM9PR04MB7489.eurprd04.prod.outlook.com (2603:10a6:20b:281::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Wed, 23 Oct
- 2024 06:38:10 +0000
-Received: from AS8PR04MB8849.eurprd04.prod.outlook.com
- ([fe80::d8e2:1fd7:2395:b684]) by AS8PR04MB8849.eurprd04.prod.outlook.com
- ([fe80::d8e2:1fd7:2395:b684%7]) with mapi id 15.20.8093.014; Wed, 23 Oct 2024
- 06:38:10 +0000
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-To: Wei Fang <wei.fang@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "robh@kernel.org"
-	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, Vladimir Oltean
-	<vladimir.oltean@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Frank Li
-	<frank.li@nxp.com>, "christophe.leroy@csgroup.eu"
-	<christophe.leroy@csgroup.eu>, "linux@armlinux.org.uk"
-	<linux@armlinux.org.uk>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"horms@kernel.org" <horms@kernel.org>
-CC: "imx@lists.linux.dev" <imx@lists.linux.dev>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "alexander.stein@ew.tq-group.com"
-	<alexander.stein@ew.tq-group.com>
-Subject: RE: [PATCH v4 net-next 06/13] net: enetc: build enetc_pf_common.c as
- a separate module
-Thread-Topic: [PATCH v4 net-next 06/13] net: enetc: build enetc_pf_common.c as
- a separate module
-Thread-Index: AQHbJEjD4d7XV+dQNEmGlpwr3OE4rLKT4rsg
-Date: Wed, 23 Oct 2024 06:38:09 +0000
-Message-ID:
- <AS8PR04MB88491C33CF940ED44BF685FE964D2@AS8PR04MB8849.eurprd04.prod.outlook.com>
-References: <20241022055223.382277-1-wei.fang@nxp.com>
- <20241022055223.382277-7-wei.fang@nxp.com>
-In-Reply-To: <20241022055223.382277-7-wei.fang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR04MB8849:EE_|AM9PR04MB7489:EE_
-x-ms-office365-filtering-correlation-id: 5a58a69a-4ca4-4583-149b-08dcf32d42dc
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|1800799024|366016|376014|921020|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?0U8RbiAJ4RmbtCscbNQEi726bNIM/bZy2gIpPepGzgDmNO8QFu8Ca9Cl/YDY?=
- =?us-ascii?Q?JQLDIZiPDQ8WUwaXdZ8jD/ttH3BrJp8a/hFy/RHUCcW3055WcJu+WPI8gWai?=
- =?us-ascii?Q?AXeeP7T+s2DwB5At3utetPfuDQ9c9zDdyWf2A5tnG0cyxxGScBTceYEZcMGA?=
- =?us-ascii?Q?pdKJW4RakNxXzuu6s4+fgJbeX4WeWc3lfByF1dDVpCvT4dFthvtGfWoE6cc2?=
- =?us-ascii?Q?ghboArJ1W8+KFG+xzB0MrlWoNPr3udgFvAjh/FV7cgC1MbRvVvSIHm44vwZ+?=
- =?us-ascii?Q?PNxdP1WuxT091R63q1U/2j6qIvX/tquwbAQSbHVi3I3O9Af2OoL4+LHsonzO?=
- =?us-ascii?Q?iu13UslcLxzcUShzWXgUQYwlZra0jQRBxNHfsjEohiXi8oapL0mHmaUeSe5D?=
- =?us-ascii?Q?e69kMJcPSREzldK5C+GC2JZMxPkK+MqaKDtS8kKSvMyJwwnOCUYSKTwRddCc?=
- =?us-ascii?Q?D09df07ZeLDH7Dd4304nd9oZXMNLtUZobrJRpovTXFpg5XvWJ8T4nRENfNxC?=
- =?us-ascii?Q?RHMUWeKWgzmswfCoQ/0hsrb2+Wzq1y+vjWJsWA1W6vYhzL62VmlW5XclouVh?=
- =?us-ascii?Q?KFD6sYn3EZLanYYUH1hMZUWjCE/utV7ycni7cUvedFAaeLnqLoqM4ni8x0Om?=
- =?us-ascii?Q?GqY37+I+qUQDUwYgIJH2rZOE+IMJ3wwmQ8/Tjq5nI3Ltl1l8AW+6+nJhQ0ub?=
- =?us-ascii?Q?7dU0mvW3r0brk3fbc86dKNReeio1Eg8NgR5rNZGg8L9Jeop5L0gEFjBPDYzg?=
- =?us-ascii?Q?h2u1VHJwp+y7+bQq7LGqkWFTcEzYS4aRilGa3fM4JpXzLafXKyeStHyN2l72?=
- =?us-ascii?Q?JsFQnUElNEiH/CNrdFO43CrLHAzfESv8VnqS/NDaCcYZ1xEeTiSq+vSrCjb/?=
- =?us-ascii?Q?zCZ7ZOFaijRL+nwEuX5Qea8aj/WgiB1amuD/ICTWf2lCqdkZ708glbZABrOd?=
- =?us-ascii?Q?/10o0/t+2qXG2TquUKtsC5GjEXtlFNpg8JM3KQQRXxocJ6kzddGzVckAW8eD?=
- =?us-ascii?Q?g3U3OuW5oB7UNzV0EpoUaXz32/FovQwCcu8Drct0x0yw4GnHYWJ7+JXJ9mlS?=
- =?us-ascii?Q?N+V2XjBKdBbLLgRc2zxWTmRdhuCg+JktYYzODdhg38QPYjSc5ZGNLbCTnT5T?=
- =?us-ascii?Q?LHJTmqAIXupKmwwZt60lvTMK/HrnnWFNi4hD6flpvI3sPBdwxGmy8bAlxVwV?=
- =?us-ascii?Q?bkGlSH8ZRlHaryD7R6U2W7VHE+aW26mHM+MkiytuAoDBDgeCWZldklW7XBS4?=
- =?us-ascii?Q?kz4QYS8jcKFVgI7y2ei5D0Sk6cQhMzsmkuYEeDzN31giXelU1bQgxwqC8Y6S?=
- =?us-ascii?Q?7x1rBpZZ0J/IUM2lMIoCDgAtOAwdW0841nhgeDf4hd9BNDoerrkLlw9FoNdM?=
- =?us-ascii?Q?msoKzHv+waVujc0Bmo1wMyKD4mba?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8849.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(921020)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?rZ6TEpx+FlQaoB+xB+C/DXynKMBFAYXNWuRhYPQvpw14cTyFccb7cIKXvF4E?=
- =?us-ascii?Q?/lYLlWqIrbLnNs6yhQ188HaIzCScJ83IfMZMA55REZRoA++7HLLC3qpOOG0j?=
- =?us-ascii?Q?964dSDaPEGpA7mSy+gPD6WFPUaFf5RbTc3f71CLFxcJ/iMe5keMDV/0+351v?=
- =?us-ascii?Q?vcdf3YGyMK+XOtpgthoIvs1+ZIeHo4VoemStdLAyTF4k7rOfFAnpVOUkM7E9?=
- =?us-ascii?Q?1R9/YWs9Pm1W1NGh8ypmMunu8WwUPkXOrxGwXSIs/xWraz9vJfQhx1plicNu?=
- =?us-ascii?Q?JfrTnhY0osWpdyFdUDn6+nUPHLSF9Cs31DubH4fnuXeKLnDSmcJFzJNc+UfB?=
- =?us-ascii?Q?x+RtAL3/1/6ztYzKkyxMLiIW4nXOb9D1z819DrQhQrGmWTMrAUKNIvyKipNF?=
- =?us-ascii?Q?6D+4Xt2LbjVHJq+DuwLhJ4QIig2rlNzwjR0eDngENG4Bp+JjK9W9c8npPVDY?=
- =?us-ascii?Q?bOEGAxT1S4yIF2UjTRxQokGHe+JUtcIuzOFFHON7xkgX1+hwtSCzWP4ngrRx?=
- =?us-ascii?Q?GIIYQx5Dumki0JtOlDMpJQNq/PKbAt7gOMZOQVqd4uRQqhwkssNwmUmPv2pF?=
- =?us-ascii?Q?5GjBFBeEaO1da7NFd0lEcBXbinAipCE7oQx62GZeIlNTpe10J6lAwOU6vQU2?=
- =?us-ascii?Q?jupIJ1IpeAC+Tk48tF9htcOute0j9OXAQtps2nGP1tmVSLtvd0eoEbAJQM08?=
- =?us-ascii?Q?M940j0b9suWTDzE0uWDX4ZRzDUmIpTi0lIjmyp2JWGbfxN+GrbW6VEyTZmQO?=
- =?us-ascii?Q?Zd+WsNOuqdCkFBoF09zgSKMzrhlc4WB4xyVBTURFYHn9VFeMmqbLHS4jrmNF?=
- =?us-ascii?Q?4XkxT1mAHSKGV8s9Vyzg4YVPr8bXRADY2UJIZbd6dQiK2Sn7UFM/huIARkfQ?=
- =?us-ascii?Q?Yt5vmYjuUnFgHUxCvObXxcNcZvg/2huQ+WLs1WaVLfNHMdhHNDm9cx/I+9bf?=
- =?us-ascii?Q?H0dDF4ZLr6r/eomOH0ye8lsmOoNZROkCDv44vw+F2qsztrWXaK9BHvuPZGmo?=
- =?us-ascii?Q?Pe6iMrlcw4s7ODWCc6s9J3IZWlq1rpgAYUwj6dwVYai3nRzl5uczuxZoYZqz?=
- =?us-ascii?Q?qXskzgJbJpDLWoRQaH8EyZEZMEEf1qqqd4UQ6DDWhFhhzt90XgH+sCB2uX/1?=
- =?us-ascii?Q?CpTJOU1ZMDg1N6ZjCVFme778Br3zoyx6ZNyLfxTOvnCqRss0ktMkTd6fafuq?=
- =?us-ascii?Q?KU0Owr1qe/kCCwt8E0RARxmCr5AA2Xe3VWaJjrB8ELl3HkShEk0R85bzF9NI?=
- =?us-ascii?Q?yuSPT8DocjFbr/3BqMMj9H+UjMZBx+VjHTFXgp923/8Du6/9L+tQnF/a5gXJ?=
- =?us-ascii?Q?OtMk23i0H4AubyLeT7v2KB0xq2G61u1b5FEDp/hhXsCehTDo2Veqo9PnZ6Nh?=
- =?us-ascii?Q?N6ZJ2EaUtWuOL4ZM+mkFM7EwLygPp5VdTIlPiIOZXEWnWVKTYevwiDGeSyrE?=
- =?us-ascii?Q?QYcMeWHoHCHxkw2RV1saRB2VAcJ+DD6dz6Di8h/SPBtAYeDFWv5Zc304WHtH?=
- =?us-ascii?Q?xgJbIs5BPZUzoMQKFtXjX70nkdhaUeia6HUFx29rIh7UnO6j4BeSsm5zYouf?=
- =?us-ascii?Q?sQ/s19BtJ+Bm3uZOufZiv4+Zw5vTPuWQ0RpL+vsX?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB0E14D6EB;
+	Wed, 23 Oct 2024 06:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729665891; cv=none; b=HLTDDgdqzT0U9AxEu5BM2EzcM6rY2xvLNJSpQiEI8J2kVIxMu/gMAV9fNwntnCkzd5O+HFdi4keAVAbeKIum/DXq0yj7RUlWK/zuNW+J0lu5QwwnB+EuJszeFTzVkZvDd9Na3gz2QqvEDrma8Ij5vBooXlkxgHPBMfIFjGQI3A8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729665891; c=relaxed/simple;
+	bh=rzEk3BOSftDKTKSCxGLtfyh/P3vXUtgt17SCKP00L6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qebmHPOw0LAFV1sfndAlgwcrNmh+kFV8fLXFpvv14GMB8CqmOOz5Ubmxk/JBWYwBPKnYsP+7AlAmZBMVGjgzPxvltk5iKv4mFiIUmiEaT/KwxCJYfy2Zo435x3prj8SmIbaV9yVXvnpyLgAx9+NnMCMyNE5Ss3joHsIxewrrrjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvKhH1gJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A263AC4CEC7;
+	Wed, 23 Oct 2024 06:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729665890;
+	bh=rzEk3BOSftDKTKSCxGLtfyh/P3vXUtgt17SCKP00L6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HvKhH1gJw8EQyYYBxmzmb9QhMB4D1KHbE8cMHRJwxpYM6p05kNX5g2RMQjGK88cc0
+	 1geejHY4TFos6z2oa9xbpuo9Vp9+tNwA16KahAvEvwBfftU/sBH2M+U0q5AxT98FLI
+	 VWNmMNrvsc8TkRTLu0A8rt+g+iIMzsGKTNqmj86ZbHY5MiWbBHAMPQlPPBOy0tigu+
+	 iOiWoeBc/Uh/W29Ns4b34bMxZrGDbgggrquzwIxSEgZz9Sdc2P0XSBhCpv0OCJUXRf
+	 4OuORNPj5jaoxQZxbNHPXCN1EhTU5TGClqlNj87/P7A0rdKThKoTBNU61ol6Fc5uJU
+	 A2SJ9W2QOrbOw==
+Date: Wed, 23 Oct 2024 08:44:42 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
+ driver abstractions
+Message-ID: <ZxibWpcswZxz5A07@pollux>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-16-dakr@kernel.org>
+ <20241022234712.GB1848992-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8849.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a58a69a-4ca4-4583-149b-08dcf32d42dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2024 06:38:10.0096
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 14tw1mlUIRr8bC3bkOv5V3QLFWr9qViGaqrN/WZSkCXWFPgGAaYjjHR+I/8JjqXiQrLwhTnBaxF/T7vAh0IEaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7489
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241022234712.GB1848992-robh@kernel.org>
 
-> -----Original Message-----
-> From: Wei Fang <wei.fang@nxp.com>
-> Sent: Tuesday, October 22, 2024 8:52 AM
-[...]
-> Subject: [PATCH v4 net-next 06/13] net: enetc: build enetc_pf_common.c as=
- a
-> separate module
->=20
-> Compile enetc_pf_common.c as a standalone module to allow shared usage
-> between ENETC v1 and v4 PF drivers. Add struct enetc_pf_ops to register
-> different hardware operation interfaces for both ENETC v1 and v4 PF
-> drivers.
->=20
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> ---
+On Tue, Oct 22, 2024 at 06:47:12PM -0500, Rob Herring wrote:
+> On Tue, Oct 22, 2024 at 11:31:52PM +0200, Danilo Krummrich wrote:
+> > Implement the basic platform bus abstractions required to write a basic
+> > platform driver. This includes the following data structures:
+> > 
+> > The `platform::Driver` trait represents the interface to the driver and
+> > provides `pci::Driver::probe` for the driver to implement.
+> > 
+> > The `platform::Device` abstraction represents a `struct platform_device`.
+> > 
+> > In order to provide the platform bus specific parts to a generic
+> > `driver::Registration` the `driver::RegistrationOps` trait is implemented
+> > by `platform::Adapter`.
+> > 
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > ---
+> >  MAINTAINERS                     |   1 +
+> >  rust/bindings/bindings_helper.h |   1 +
+> >  rust/helpers/helpers.c          |   1 +
+> >  rust/helpers/platform.c         |  13 ++
+> >  rust/kernel/lib.rs              |   1 +
+> >  rust/kernel/platform.rs         | 217 ++++++++++++++++++++++++++++++++
+> >  6 files changed, 234 insertions(+)
+> >  create mode 100644 rust/helpers/platform.c
+> >  create mode 100644 rust/kernel/platform.rs
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 87eb9a7869eb..173540375863 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -6985,6 +6985,7 @@ F:	rust/kernel/device.rs
+> >  F:	rust/kernel/device_id.rs
+> >  F:	rust/kernel/devres.rs
+> >  F:	rust/kernel/driver.rs
+> > +F:	rust/kernel/platform.rs
+> >  
+> >  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
+> >  M:	Nishanth Menon <nm@ti.com>
+> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> > index 312f03cbdce9..217c776615b9 100644
+> > --- a/rust/bindings/bindings_helper.h
+> > +++ b/rust/bindings/bindings_helper.h
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/of_device.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> >  #include <linux/refcount.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/slab.h>
+> > diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> > index 8bc6e9735589..663cdc2a45e0 100644
+> > --- a/rust/helpers/helpers.c
+> > +++ b/rust/helpers/helpers.c
+> > @@ -17,6 +17,7 @@
+> >  #include "kunit.c"
+> >  #include "mutex.c"
+> >  #include "page.c"
+> > +#include "platform.c"
+> >  #include "pci.c"
+> >  #include "rbtree.c"
+> >  #include "rcu.c"
+> > diff --git a/rust/helpers/platform.c b/rust/helpers/platform.c
+> > new file mode 100644
+> > index 000000000000..ab9b9f317301
+> > --- /dev/null
+> > +++ b/rust/helpers/platform.c
+> > @@ -0,0 +1,13 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/platform_device.h>
+> > +
+> > +void *rust_helper_platform_get_drvdata(const struct platform_device *pdev)
+> > +{
+> > +	return platform_get_drvdata(pdev);
+> > +}
+> > +
+> > +void rust_helper_platform_set_drvdata(struct platform_device *pdev, void *data)
+> > +{
+> > +	platform_set_drvdata(pdev, data);
+> > +}
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index 5946f59f1688..9e8dcd6d7c01 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -53,6 +53,7 @@
+> >  pub mod net;
+> >  pub mod of;
+> >  pub mod page;
+> > +pub mod platform;
+> >  pub mod prelude;
+> >  pub mod print;
+> >  pub mod rbtree;
+> > diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+> > new file mode 100644
+> > index 000000000000..addf5356f44f
+> > --- /dev/null
+> > +++ b/rust/kernel/platform.rs
+> > @@ -0,0 +1,217 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +//! Abstractions for the platform bus.
+> > +//!
+> > +//! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
+> > +
+> > +use crate::{
+> > +    bindings, container_of, device,
+> > +    device_id::RawDeviceId,
+> > +    driver,
+> > +    error::{to_result, Result},
+> > +    of,
+> > +    prelude::*,
+> > +    str::CStr,
+> > +    types::{ARef, ForeignOwnable},
+> > +    ThisModule,
+> > +};
+> > +
+> > +/// An adapter for the registration of platform drivers.
+> > +pub struct Adapter<T: Driver>(T);
+> > +
+> > +impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
+> > +    type RegType = bindings::platform_driver;
+> > +
+> > +    fn register(
+> > +        pdrv: &mut Self::RegType,
+> > +        name: &'static CStr,
+> > +        module: &'static ThisModule,
+> > +    ) -> Result {
+> > +        pdrv.driver.name = name.as_char_ptr();
+> > +        pdrv.probe = Some(Self::probe_callback);
+> > +
+> > +        // Both members of this union are identical in data layout and semantics.
+> > +        pdrv.__bindgen_anon_1.remove = Some(Self::remove_callback);
+> > +        pdrv.driver.of_match_table = T::ID_TABLE.as_ptr();
+> > +
+> > +        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+> > +        to_result(unsafe { bindings::__platform_driver_register(pdrv, module.0) })
+> > +    }
+> > +
+> > +    fn unregister(pdrv: &mut Self::RegType) {
+> > +        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+> > +        unsafe { bindings::platform_driver_unregister(pdrv) };
+> > +    }
+> > +}
+> > +
+> > +impl<T: Driver + 'static> Adapter<T> {
+> > +    fn id_info(pdev: &Device) -> Option<&'static T::IdInfo> {
+> > +        let table = T::ID_TABLE;
+> > +        let id = T::of_match_device(pdev)?;
+> > +
+> > +        Some(table.info(id.index()))
+> > +    }
+> > +
+> > +    extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> core::ffi::c_int {
+> > +        // SAFETY: The platform bus only ever calls the probe callback with a valid `pdev`.
+> > +        let dev = unsafe { device::Device::from_raw(&mut (*pdev).dev) };
+> > +        // SAFETY: `dev` is guaranteed to be embedded in a valid `struct platform_device` by the
+> > +        // call above.
+> > +        let mut pdev = unsafe { Device::from_dev(dev) };
+> > +
+> > +        let info = Self::id_info(&pdev);
+> > +        match T::probe(&mut pdev, info) {
+> > +            Ok(data) => {
+> > +                // Let the `struct platform_device` own a reference of the driver's private data.
+> > +                // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
+> > +                // `struct platform_device`.
+> > +                unsafe { bindings::platform_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
+> > +            }
+> > +            Err(err) => return Error::to_errno(err),
+> > +        }
+> > +
+> > +        0
+> > +    }
+> > +
+> > +    extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
+> > +        // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
+> > +        let ptr = unsafe { bindings::platform_get_drvdata(pdev) };
+> > +
+> > +        // SAFETY: `remove_callback` is only ever called after a successful call to
+> > +        // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
+> > +        // `KBox<T>` pointer created through `KBox::into_foreign`.
+> > +        let _ = unsafe { KBox::<T>::from_foreign(ptr) };
+> > +    }
+> > +}
+> > +
+> > +/// Declares a kernel module that exposes a single platform driver.
+> > +///
+> > +/// # Examples
+> > +///
+> > +/// ```ignore
+> > +/// kernel::module_platform_driver! {
+> > +///     type: MyDriver,
+> > +///     name: "Module name",
+> > +///     author: "Author name",
+> > +///     description: "Description",
+> > +///     license: "GPL v2",
+> > +/// }
+> > +/// ```
+> > +#[macro_export]
+> > +macro_rules! module_platform_driver {
+> > +    ($($f:tt)*) => {
+> > +        $crate::module_driver!(<T>, $crate::platform::Adapter<T>, { $($f)* });
+> > +    };
+> > +}
+> > +
+> > +/// IdTable type for platform drivers.
+> > +pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<of::DeviceId, T>;
+> > +
+> > +/// The platform driver trait.
+> > +///
+> > +/// # Example
+> > +///
+> > +///```
+> > +/// # use kernel::{bindings, c_str, of, platform};
+> > +///
+> > +/// struct MyDriver;
+> > +///
+> > +/// kernel::of_device_table!(
+> > +///     OF_TABLE,
+> > +///     MODULE_OF_TABLE,
+> > +///     <MyDriver as platform::Driver>::IdInfo,
+> > +///     [
+> > +///         (of::DeviceId::new(c_str!("redhat,my-device")), ())
+> 
+> All compatible strings have to be documented as do vendor prefixes and 
+> I don't think "redhat" is one. An exception is you can use 
+> "test,<whatever>" and not document it.
 
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Yeah, I copied that from the sample driver, where it's probably wrong too.
+
+I guess "vendor,device" would be illegal as well?
+
+> 
+> There's a check for undocumented compatibles. I guess I'll have to add 
+> rust parsing to it...
+> 
+> BTW, how do you compile this code in the kernel? 
+
+You mean this example? It gets compiled as a KUnit doctest, but it obvously
+doesn't execute anything, so it's a compile only test.
+
+> 
+> > +///     ]
+> > +/// );
+> > +///
+> > +/// impl platform::Driver for MyDriver {
+> > +///     type IdInfo = ();
+> > +///     const ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
+> > +///
+> > +///     fn probe(
+> > +///         _pdev: &mut platform::Device,
+> > +///         _id_info: Option<&Self::IdInfo>,
+> > +///     ) -> Result<Pin<KBox<Self>>> {
+> > +///         Err(ENODEV)
+> > +///     }
+> > +/// }
+> > +///```
+> > +/// Drivers must implement this trait in order to get a platform driver registered. Please refer to
+> > +/// the `Adapter` documentation for an example.
+> > +pub trait Driver {
+> > +    /// The type holding information about each device id supported by the driver.
+> > +    ///
+> > +    /// TODO: Use associated_type_defaults once stabilized:
+> > +    ///
+> > +    /// type IdInfo: 'static = ();
+> > +    type IdInfo: 'static;
+> > +
+> > +    /// The table of device ids supported by the driver.
+> > +    const ID_TABLE: IdTable<Self::IdInfo>;
+> > +
+> > +    /// Platform driver probe.
+> > +    ///
+> > +    /// Called when a new platform device is added or discovered.
+> > +    /// Implementers should attempt to initialize the device here.
+> > +    fn probe(dev: &mut Device, id_info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>>;
+> > +
+> > +    /// Find the [`of::DeviceId`] within [`Driver::ID_TABLE`] matching the given [`Device`], if any.
+> > +    fn of_match_device(pdev: &Device) -> Option<&of::DeviceId> {
+> 
+> Is this visible to drivers? It shouldn't be.
+
+Yeah, I think we should just remove it. Looking at struct of_device_id, it
+doesn't contain any useful information for a driver. I think when I added this I
+was a bit in "autopilot" mode from the PCI stuff, where struct pci_device_id is
+useful to drivers.
+
+> I just removed most of the 
+> calls of the C version earlier this year. Drivers should only need the 
+> match data. The preferred driver C API is device_get_match_data(). That 
+> is firmware agnostic and works for DT, ACPI and old platform 
+> driver_data. Obviously, ACPI is not supported here, but it will be soon 
+> enough. We could perhaps get away with not supporting the platform 
+> driver_data because that's generally not used on anything in the last 10 
+> years.
+
+Otherwise `of_match_device` is only used in `probe_callback` to get the device
+info structure, which we indeed should use device_get_match_data() for.
+
+> 
+> Another potential issue is keeping the match logic for probe and the 
+> match logic for the data in sync. If you implement your own logic here 
+> in rust and probe is using the C version, they might not be the same. 
+> Best case, we have 2 implementations of the same thing.
+> 
+> > +        let table = Self::ID_TABLE;
+> > +
+> > +        // SAFETY:
+> > +        // - `table` has static lifetime, hence it's valid for read,
+> > +        // - `dev` is guaranteed to be valid while it's alive, and so is
+> > +        //   `pdev.as_dev().as_raw()`.
+> > +        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), pdev.as_dev().as_raw()) };
+> 
+> of_match_device depends on CONFIG_OF. There's an empty static inline, 
+> but seems bindgen can't handle those. Prior versions added a helper 
+> function, but that's going to scale terribly. Can we use an annotation 
+> for CONFIG_OF here (assuming we can't get rid of using this directly)?
+> 
+> > +
+> > +        if raw_id.is_null() {
+> > +            None
+> > +        } else {
+> > +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
+> > +            // does not add additional invariants, so it's safe to transmute.
+> > +            Some(unsafe { &*raw_id.cast::<of::DeviceId>() })
+> > +        }
+> > +    }
+> > +}
+> 
 
