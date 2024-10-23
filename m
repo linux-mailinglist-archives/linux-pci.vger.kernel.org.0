@@ -1,59 +1,60 @@
-Return-Path: <linux-pci+bounces-15128-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BC139AD271
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 19:22:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D3BF9AD27A
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 19:22:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C476A282399
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 17:22:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89C871F2215C
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 17:22:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B251CDFA3;
-	Wed, 23 Oct 2024 17:22:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE23C1CFEC7;
+	Wed, 23 Oct 2024 17:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RRO7P0Fh"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u1jLQfrF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2041.outbound.protection.outlook.com [40.107.100.41])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC26F2F2;
-	Wed, 23 Oct 2024 17:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8BD1CB312;
+	Wed, 23 Oct 2024 17:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729704129; cv=fail; b=Pu/yEnUJLFYdDfgbtFgYHomVxNk8jO3bseY03LG5xhlPVf6F7euPj4ycV+K4Zu0mTzYW3we7MpkYrHnt80isCDt4llA5fC5+KexEYm7dfcSxFBm/+eeVHY6E6jVy+toc1cG0eqJwlPEuUVB8H9XkHChXGwj5wYNS0G8j/73sKhI=
+	t=1729704130; cv=fail; b=hDqg2Bvt7UrXaRekHyb/zxyRL58MP8Ovvb1snwEZkA0fRH1NRYMJ+eAAtZoT0odB1NIGGKNR4R8Y21snDkIYwqR6VYzrgvNFFBYkv+bEjx20kWMI4DY43rboWpCZXUiPRH6oP7geiqXHAribBHqd8DBIwHUKWrdopnqzLPPTgus=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729704129; c=relaxed/simple;
-	bh=e8xn0zfFplC2dAITb/W4k0ZZndFD3XKqKrSES8D+E+E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SwCpBWtiCu0jwj+lk/6PAs54HzHKvAARjvNTXHDhUZOGpL04D/v3qAfUXOuverJ/ONRwwg5CSK9zkZ1TiatKm9QLrbYAdZVz3IFBEYXa5KjzIcbFXdShxmdrb1v7lEGtXUupHEpdQmSCW90s5c0lIly8lyYSJBb3uehLWtUivqM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RRO7P0Fh; arc=fail smtp.client-ip=40.107.100.41
+	s=arc-20240116; t=1729704130; c=relaxed/simple;
+	bh=XkXJOr0gAcpQ0dkHLzCxgTlRvEvjnXtpKq2aw8oHBqI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hcX/XhjzhTxWH79DDfb+cgGiCiEiJM2f+fYPFnQ2LFx0WIdT91ErGsQDvLbTEi4YHze0KsLe98VWbfFS+xS3KCGa1/Y6Fo5lVowcBQdCNlrh4wA1FHJoHO2u7T+LCti40cdYMbCCUiEK95j7s7kzosgH1mnb2IlZRnfGjPN36bA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u1jLQfrF; arc=fail smtp.client-ip=40.107.92.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ATPNpikiXbAEtRWR/3Eab/qlqJD3RiWpewQdbWrGBTVqRf2g0Pi+t4v0AaYa9jwf8TixAxzeH2EPIwGSOMSDkc1PlffQJCWnNMycwIsjzuRzVHcBdNasDKXqU2JXcWrJ2DtVNd/8ZhS1EtDNmoo8Fl2DNkPDgPgCxRPZNsj2H+S8G41cLzg9b6O+WR1iw26CJ0PXREffsunzUOl3IzquhrXJnW8dDQ6VEUiYYA8HQNF6FmSlHW0k7Bh+Lhw/lWLBvTwWXBcJrfnV89fJaLRO3cv7L3J6dTLrBO9DYTMS0bk3tS8RpfBQi1SRu8kus024dtmkvWB38HvKEeEPRR5nSQ==
+ b=IvqPNQn/eRtSQ+sBfZ2KDJ6Bn8Zl4WzTiwgcvk7LeQe4S5S9UC0uoOQXwo66Y6dNv1rrnLgd4mqTymVXnsi2BfT5RhdOQeS6gYJvja3pxHqZWUow92BB5yM+6FcqbceuUzH5OmAd5x9lIwwP/yjgzg+zyGn+N70s7BqcfMF7uW9fEYr+Vh773dwRDyZ/wGT+Af4o5q63wNAmzQu6uyD15cWDWWj1ryTjkfNHItKzCHgFjoZUh6+JVvyANfTajUzecssfvQ7/adAq9C6pNbGjkXlNGRmF8KYoE5kRSmvCRUdJNBwv/YgLoU2mWre4sWyoCdOgSyKqaIRn2QQXqh3mOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XJxMvRuW8zDKZVBNR9CCiUrwh1fcxdS67tT1ccgOqeo=;
- b=hHuvKcfCFcfzmVFfp+k4MzYBCN0SwJ8F3dnWILmwmx3pcqArkunI3v59irBnfzC8mplMdvwxSOzbWYOfRRz71pajk5mz8sc5pUu3ponRcp07E+BuBRRziwILL6Kdqc2zCNkcjbX08k2VM5IefRz+v7qklIRi9i85vjQleA+xIyQVV8Y/O7W0uwsuF9P87d67OFD5vqJZYchX2xKSMwsmvkwrTuNwRP/tboznM3c48PiPFoA+0zrKteqjBviMoWnvmHTHiRpOi0OjKv57RbhYVDhv875480p+mhK7RBpKydDgCjfhLPvGUEqpG9nNlOzjSWvWiANnlKWaCS/ZwsJmqg==
+ bh=WAvBY+GzHfnlwh8MIGcdAH3G/HBdvL0/ocAn8GcTT/A=;
+ b=pM8w8/C6TDeutJ0UOahHK70DAcpnPyP74mWedo8klgMAKjaVOfHwWPSpOO/4AmnTvnamXQDNFuimM6TN2Y3/mOn3pyuuTojeofs5rK4mUaQg+ceuZbRiJWU6Uev/EZreA0rvF7sbp42EmFIJBZSAAkf8vnJMf5UNNHyREQ8IIinUmZn8qtM7FpgIZAHaBEdG8Cvq69+Sbuh48MeqIP7XIbxev4swjdT1YdFXBOV3mhuXTe7RxNwCHhRhMULa0aaXDJ7iBZ3V+ODrPjo1lxocSEhb2TNe+qM8pW3MtFUkHYOQTlz/TmLLN2bjcvrB6EPPFEz3KceaPewn4UESO1P3Pw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XJxMvRuW8zDKZVBNR9CCiUrwh1fcxdS67tT1ccgOqeo=;
- b=RRO7P0FhEjNxm8jD1wOb3ZduDEjMlPrQRk3mtfhsloVWn+EYFXo0zr6gGsfuVz+sU5qQWToq3dIa+eEtP8Zyrt6qwWfvRxui5NF/A2UO617kn99pwXQUjaAaepn3aYnjcgCkh5VwWNF+0vgIdrhn/9XnN0wMBjpTPk9Z0UL3AeU=
-Received: from IA1P220CA0016.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:464::10)
- by IA1PR12MB8261.namprd12.prod.outlook.com (2603:10b6:208:3f7::7) with
+ bh=WAvBY+GzHfnlwh8MIGcdAH3G/HBdvL0/ocAn8GcTT/A=;
+ b=u1jLQfrFJTwsbdfdWD05xbtjVWAK4R7i0w8xJpMPQhwITwJKZY08F2XP1doeHT5Gr38WvL5OT0wO2ohMMxiTDDRFq2kzaNh7FjanVPTNlK195gYZN9OdvTbxXkj3tfIvY4OlI/Zdizvp5b94H6sa/FkMaiUoptS3D4s2+qAiR7c=
+Received: from BN0PR08CA0022.namprd08.prod.outlook.com (2603:10b6:408:142::7)
+ by DS7PR12MB8201.namprd12.prod.outlook.com (2603:10b6:8:ef::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Wed, 23 Oct
- 2024 17:22:04 +0000
-Received: from BL6PEPF0001AB51.namprd04.prod.outlook.com
- (2603:10b6:208:464:cafe::14) by IA1P220CA0016.outlook.office365.com
- (2603:10b6:208:464::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.29 via Frontend
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.18; Wed, 23 Oct
+ 2024 17:22:05 +0000
+Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
+ (2603:10b6:408:142:cafe::c9) by BN0PR08CA0022.outlook.office365.com
+ (2603:10b6:408:142::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.16 via Frontend
  Transport; Wed, 23 Oct 2024 17:22:04 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
@@ -62,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB51.mail.protection.outlook.com (10.167.242.75) with Microsoft
+ BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8093.14 via Frontend Transport; Wed, 23 Oct 2024 17:22:03 +0000
+ 15.20.8093.14 via Frontend Transport; Wed, 23 Oct 2024 17:22:04 +0000
 Received: from purico-9eb2host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Oct
- 2024 12:22:02 -0500
+ 2024 12:22:03 -0500
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
@@ -78,11 +79,14 @@ CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
 	<linux-pci@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
 	<platform-driver-x86@vger.kernel.org>, <naveenkrishna.chatradhi@amd.com>,
-	<carlos.bilbao.osdev@gmail.com>, Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH 00/16] AMD NB and SMN rework 
-Date: Wed, 23 Oct 2024 17:21:34 +0000
-Message-ID: <20241023172150.659002-1-yazen.ghannam@amd.com>
+	<carlos.bilbao.osdev@gmail.com>, Yazen Ghannam <yazen.ghannam@amd.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: [PATCH 01/16] x86/mce/amd: Remove shared threshold bank plumbing
+Date: Wed, 23 Oct 2024 17:21:35 +0000
+Message-ID: <20241023172150.659002-2-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241023172150.659002-1-yazen.ghannam@amd.com>
+References: <20241023172150.659002-1-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,128 +99,345 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB51:EE_|IA1PR12MB8261:EE_
-X-MS-Office365-Filtering-Correlation-Id: a59ed889-bebd-4b80-923d-08dcf387367a
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|DS7PR12MB8201:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07a7bb42-d64e-4e45-5d61-08dcf38736fc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IYMo0zmag9CN9qvCQ8O47L9f3CmyLz3+b0/681FZSplH/dZhbYfkUUx6eTih?=
- =?us-ascii?Q?rRYAV4/gBI4bRPmGRDdzsBu1fEofQF7rZRgZSrkKboT7kbWQbHrapP3023OT?=
- =?us-ascii?Q?0uJQkKTIOT5pXuTwvzAjjk+KgC3QaQqhsvISu9A+iGOktWQe78U4A0z1YzK0?=
- =?us-ascii?Q?QWY7WE98pJeL+3k0yIj/7Ku1qvAOcPsNgWvFIU+aRUA8cJa/mKiDY2SuNPja?=
- =?us-ascii?Q?OqgpsuUVAO6oY5nFeWTjxqO2POk2S9cQltEzRBZLBdOBxHySuKS9QZG73yD/?=
- =?us-ascii?Q?1rHdgIpCHDm0ezbFIF7DWoh18MrNrsiHNJ/Y3cUWRVGDA/lM4QPligzcnstc?=
- =?us-ascii?Q?sTB9661uto6Mql0YHTYjbWfop3bEXECLDCnAtZN0sbZHjYZnM0ONGG68hVe0?=
- =?us-ascii?Q?YXg9i3OvvRGsyOZrZLmjGNm/awa9OaiD6AydQXFHQmHPW69UNo2fA4zUvee5?=
- =?us-ascii?Q?hyydYo07/soRQ8m2yzOyK1TUFjmpTBsl3ZduW2Dax2t28fy764fcVVxkDiLm?=
- =?us-ascii?Q?QSvrWg8BJ6p+GWjSh68KiEmFdTierlW3liZIvWTD/nWAvTti52fgkGdRTpuf?=
- =?us-ascii?Q?25zsP7bt9QSeaYm0TIxqJ7qTfd26P5tCEAVZaioYtbcqN2RbiMzBubIw1+Wn?=
- =?us-ascii?Q?tPHj+P79tHdA4+Y+HgJcmuwzr4/z4kKzU+DmOqrMlQjSZ4yOkRUKxyx6WCeU?=
- =?us-ascii?Q?M9f32GToxKl5tTpGc8a2xsXdWC85o0oRFnqQ5yg9S2dcMb8WIJEcLRvaCCA4?=
- =?us-ascii?Q?VYsnw4gvCXPPVAqWOB2f9leUPfuA1FLVvRL5ujTbVVmqv8DbSn7iwhWfglMT?=
- =?us-ascii?Q?L9vfbtcxYV6f6fdv8RCTrg9IF8HpOyaFbpHfMOD/T/AB+yWXWXoQfFurpCix?=
- =?us-ascii?Q?3qQF7bvj73WfNgzGIl0UQMA1XoQ+F1ErSJm3LnCW+WlHS85yMK+KwTPax1c/?=
- =?us-ascii?Q?j21kl3vchCP1SVukFto02ebUl6dTf/JfPVe1IuZCCNd+JavxssWtZVmr+glv?=
- =?us-ascii?Q?yiKyd9QFvCbvLdgcTOiSOxTB69uMtPGYjulHn3CYNwawTCzCmMGZ0NlJ65gw?=
- =?us-ascii?Q?ldF2pfydXw2erKy11v5cj9tQjQjYCdgIewNOpOZmkv464qo/Zgr0rE+8vBDP?=
- =?us-ascii?Q?fuyhahLF8Cm6gU7qyC9nbIZFqPCX5+ynygQQRhk3G0v1Vo755jqzDDs3aj99?=
- =?us-ascii?Q?C2XM1rNf4HyvHOTKVDg5AQPr6JrqilbpYm6jpVwbO/g/WEkXTATa72qKCHOA?=
- =?us-ascii?Q?HPmdHI57ogekCA+rIap2CRalpA7QAMyn4JRtnw1NvqMEnNokrCpXnrBBWL97?=
- =?us-ascii?Q?wTrcX7HU/MTEXeb64Pp2F7uuybuB5lV4KJ1l+cuJySZvWHDBwmNXBALyyHeJ?=
- =?us-ascii?Q?5dsGOmAf0ezoEVoSNqY0r/InXM1vvp/1qQ/BJ/ad1o6UWkSbdg=3D=3D?=
+	=?us-ascii?Q?dZyZ7kYPjPbjiTwqwHj4JKune+rTMZkMFUKicGGbEWZBtT0BWbt7Oo07Qyce?=
+ =?us-ascii?Q?zRonoEEt1Qt2PrU/mAjLWgHPUMRBCzh8Qhfsa4a79AQmFQADWthVmA+Ql76h?=
+ =?us-ascii?Q?h8X0yfPfKzjXXKkVsiF+kx3cI00EK252bAF8HkoFKp1PWrLfr44K9I31vfF6?=
+ =?us-ascii?Q?txzrfD4HltTvx2kk8b3+C2zCyf5c3311f34k6+OXNQhGZzgLXnXnUKO2ZYIG?=
+ =?us-ascii?Q?bXsIQfQClnuS/l4Vkywwjomc1pzk4PPCgkWob2gEuQUJcnaHhCykE7Sfaj4Y?=
+ =?us-ascii?Q?lwnACXP7dAwpGZ5YHfViw4Z5YndmtZB8bpQjMe4LEYRKpYP/aQxlCIvLsWbX?=
+ =?us-ascii?Q?40DemOMEfL8xg2tApDxQKE/XdoYhu+QUxYb9ETZVr10ebYxdkqhDLhUWgRmL?=
+ =?us-ascii?Q?zUNbGhLfkdOW0hIzAWel0fAwbL+d7NnZZiUMyx+nUCkqbte1QHjNdIyYeaqA?=
+ =?us-ascii?Q?fcsozzviWmuA7H/X7zKRMdI5+gkevBnR8p+ybm3AwIMry5jTAMI/TLG1jO0h?=
+ =?us-ascii?Q?Ks3ajoNPW3LeNQ57QxL0LbW1qtmgyWQU8o+Xnje0qdoGP3Buw0hzRDbguf4K?=
+ =?us-ascii?Q?JgkKHWgkeunX4c0nz3sv5B08PQEkswegzxFYHIbwCCKL3ud2Ml8viKbiKuoq?=
+ =?us-ascii?Q?mFEKLuOJTJIitu5pYm4l/fh6ArxZ4m3ioTBD/NS17cBApzEWm54V3rPyxEbr?=
+ =?us-ascii?Q?Z8i+rCh1lNGk58pskIKL0NQ+yqOr1KyI0/0P7csd5BC1s/+zFDdB+VY/jFP/?=
+ =?us-ascii?Q?YifXWz5MfRPXzZsprDESkyE+1XnX/TUWkaes1l6cYYoq119FLdCs3R2hnNbe?=
+ =?us-ascii?Q?ZrqaXNWrY+ni02vhD6XqIfdaSOGEvzu4Z8YwVhLb8GVUrO6lObqVbQ7RhMxP?=
+ =?us-ascii?Q?LZRL/NYZADMq4g09D+NZR/MzldvW0x3Ya6HrnjchaIfo15hsp1z5XYiWpAnE?=
+ =?us-ascii?Q?S4+OlhwkryAdjuqmKzntGiUCBzxUpJUqYreev5gF5eZqMZuGDBB39tAUvMoW?=
+ =?us-ascii?Q?XxUZQZ2AcIJOh+HGrlpImb1PnbdYQ4m18R2wqizhJBXBr9i5q0F7tIsy6LkG?=
+ =?us-ascii?Q?6K4gagrAqbiK/TCLr8Ped1/eQgNbVJyuhfnEFGaa7cDTlnGBpASAOFuDPyXp?=
+ =?us-ascii?Q?d+D4w+vUrGAl5lUF7QNH+ylrS9UnwVQZFoTqq17paz+RNcmIVDxfkq+jgs4u?=
+ =?us-ascii?Q?4yvSH6fXSyr9/FrPeVMGvF6yB92Xv64p49613wThQzDqezlLCDFS6VZB/keO?=
+ =?us-ascii?Q?X8SER8pc1HonP/EFX2jJRAsjj/J1U1q2JO8LOQama0hP3vPAlIM2xBK8Y74U?=
+ =?us-ascii?Q?v3aRtR7Ve7efe+mWfyjDjgoBg8dtkDjDn4GTtKewgyONJknMvkaIlFXcQTMQ?=
+ =?us-ascii?Q?ufOJJF/IU6z7RWbD300RLbYsA+hrD/G2+RLtySSYC3NEYoJSTA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 17:22:03.8967
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 17:22:04.7629
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a59ed889-bebd-4b80-923d-08dcf387367a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07a7bb42-d64e-4e45-5d61-08dcf38736fc
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB51.namprd04.prod.outlook.com
+	BL6PEPF0001AB4B.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8261
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8201
 
-Hi all,
+Legacy AMD systems include an integrated Northbridge that is represented
+by MCA bank 4. This is the only non-core MCA bank in legacy systems. The
+Northbridge is physically shared by all the CPUs within an AMD "Node".
 
-The theme of this set is decoupling the "AMD node" concept from the
-legacy northbridge support.
+However, in practice the "shared" MCA bank can only by managed by a
+single CPU within that AMD Node. This is known as the "Node Base Core"
+(NBC). For example, only the NBC will be able to read the MCA bank 4
+registers; they will be Read-as-Zero for other CPUs. Also, the MCA
+Thresholding interrupt will only signal the NBC; the other CPUs will not
+receive it. This is enforced by hardware, and it should not be managed by
+software.
 
-Additionally, AMD System Management Network (SMN) access code is
-decoupled and expanded too.
+The current AMD Thresholding code attempts to deal with the "shared" MCA
+bank by micromanaging the bank's sysfs kobjects. However, this does not
+follow the intended kobject use cases. It is also fragile, and it has
+caused bugs in the past.
 
-Patches 1-3 begin reducing the scope of AMD_NB.
+Modern AMD systems do not need this shared MCA bank support, and it
+should not be needed on legacy systems either.
 
-Patches 4-9 begin moving generic AMD node support out of AMD_NB.
+Remove the shared threshold bank code. Also, move the threshold struct
+definitions to mce/amd.c, since they are no longer needed in amd_nb.c.
 
-Patches 10-13 move SMN support out of AMD_NB and do some refactoring.
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/Kconfig              |   2 +-
+ arch/x86/include/asm/amd_nb.h |  31 ---------
+ arch/x86/kernel/cpu/mce/amd.c | 127 +++++++---------------------------
+ 3 files changed, 27 insertions(+), 133 deletions(-)
 
-Patch 14 has HSMP reuse SMN functionality.
-
-Patches 15-16 address userspace access to SMN.
-
-I say "begin" above because there is more to do here. Ultimately, AMD_NB
-should only be needed for code used on legacy systems with northbridges.
-Also, any and all SMN users in the kernel need to be updated to use the
-central SMN code. Local solutions should be avoided.
-
-Thanks,
-Yazen
-
-Mario Limonciello (4):
-  x86/amd_nb, x86/amd_node: Simplify amd_pci_dev_to_node_id()
-  x86/amd_nb: Move SMN access code to a new amd_smn driver
-  x86/amd_smn: Add SMN offsets to exclusive region access
-  x86/amd_smn: Add support for debugfs access to SMN registers
-
-Yazen Ghannam (12):
-  x86/mce/amd: Remove shared threshold bank plumbing
-  x86/amd_nb: Restrict init function to AMD-based systems
-  x86/amd_nb: Clean up early_is_amd_nb()
-  x86: Start moving AMD Node functionality out of AMD_NB
-  x86/amd_nb: Simplify function 4 search
-  x86/amd_nb: Simplify root device search
-  x86/amd_nb: Use topology info to get AMD node count
-  x86/amd_nb: Simplify function 3 search
-  x86/amd_smn: Fixup __amd_smn_rw()
-  x86/amd_smn: Remove dependency on AMD_NB
-  x86/amd_smn: Use defines for register offsets
-  x86/amd_smn, platform/x86/amd/hsmp: Have HSMP use SMN
-
- MAINTAINERS                          |  15 ++
- arch/x86/Kconfig                     |   9 +-
- arch/x86/include/asm/amd_nb.h        |  53 +----
- arch/x86/include/asm/amd_node.h      |  39 ++++
- arch/x86/include/asm/amd_smn.h       |  14 ++
- arch/x86/kernel/Makefile             |   2 +
- arch/x86/kernel/amd_nb.c             | 294 ++-------------------------
- arch/x86/kernel/amd_node.c           |  91 +++++++++
- arch/x86/kernel/amd_smn.c            | 269 ++++++++++++++++++++++++
- arch/x86/kernel/cpu/mce/amd.c        | 127 +++---------
- arch/x86/pci/fixup.c                 |   4 +-
- drivers/edac/Kconfig                 |   1 +
- drivers/edac/amd64_edac.c            |   1 +
- drivers/hwmon/Kconfig                |   2 +-
- drivers/hwmon/k10temp.c              |   2 +-
- drivers/platform/x86/amd/Kconfig     |   2 +-
- drivers/platform/x86/amd/hsmp.c      |  32 +--
- drivers/platform/x86/amd/pmc/Kconfig |   2 +-
- drivers/platform/x86/amd/pmc/pmc.c   |   2 +-
- drivers/platform/x86/amd/pmf/Kconfig |   2 +-
- drivers/platform/x86/amd/pmf/core.c  |   2 +-
- drivers/ras/amd/atl/Kconfig          |   1 +
- drivers/ras/amd/atl/internal.h       |   1 +
- 23 files changed, 495 insertions(+), 472 deletions(-)
- create mode 100644 arch/x86/include/asm/amd_node.h
- create mode 100644 arch/x86/include/asm/amd_smn.h
- create mode 100644 arch/x86/kernel/amd_node.c
- create mode 100644 arch/x86/kernel/amd_smn.c
-
-
-base-commit: 94559bac4d403b1575b32a863f5c0429cdd33eaa
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 0bdb7a394f59..c6f917b762c0 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1186,7 +1186,7 @@ config X86_MCE_INTEL
+ config X86_MCE_AMD
+ 	def_bool y
+ 	prompt "AMD MCE features"
+-	depends on X86_MCE && X86_LOCAL_APIC && AMD_NB
++	depends on X86_MCE && X86_LOCAL_APIC
+ 	help
+ 	  Additional support for AMD specific MCE features such as
+ 	  the DRAM Error Threshold.
+diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
+index 6f3b6aef47ba..b09c26a551eb 100644
+--- a/arch/x86/include/asm/amd_nb.h
++++ b/arch/x86/include/asm/amd_nb.h
+@@ -4,7 +4,6 @@
+ 
+ #include <linux/ioport.h>
+ #include <linux/pci.h>
+-#include <linux/refcount.h>
+ 
+ struct amd_nb_bus_dev_range {
+ 	u8 bus;
+@@ -29,41 +28,11 @@ struct amd_l3_cache {
+ 	u8	 subcaches[4];
+ };
+ 
+-struct threshold_block {
+-	unsigned int	 block;			/* Number within bank */
+-	unsigned int	 bank;			/* MCA bank the block belongs to */
+-	unsigned int	 cpu;			/* CPU which controls MCA bank */
+-	u32		 address;		/* MSR address for the block */
+-	u16		 interrupt_enable;	/* Enable/Disable APIC interrupt */
+-	bool		 interrupt_capable;	/* Bank can generate an interrupt. */
+-
+-	u16		 threshold_limit;	/*
+-						 * Value upon which threshold
+-						 * interrupt is generated.
+-						 */
+-
+-	struct kobject	 kobj;			/* sysfs object */
+-	struct list_head miscj;			/*
+-						 * List of threshold blocks
+-						 * within a bank.
+-						 */
+-};
+-
+-struct threshold_bank {
+-	struct kobject		*kobj;
+-	struct threshold_block	*blocks;
+-
+-	/* initialized to the number of CPUs on the node sharing this bank */
+-	refcount_t		cpus;
+-	unsigned int		shared;
+-};
+-
+ struct amd_northbridge {
+ 	struct pci_dev *root;
+ 	struct pci_dev *misc;
+ 	struct pci_dev *link;
+ 	struct amd_l3_cache l3_cache;
+-	struct threshold_bank *bank4;
+ };
+ 
+ struct amd_northbridge_info {
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 14bf8c232e45..0c80dad50664 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -4,8 +4,6 @@
+  *
+  *  Written by Jacob Shin - AMD, Inc.
+  *  Maintained by: Borislav Petkov <bp@alien8.de>
+- *
+- *  All MC4_MISCi registers are shared between cores on a node.
+  */
+ #include <linux/interrupt.h>
+ #include <linux/notifier.h>
+@@ -20,7 +18,6 @@
+ #include <linux/smp.h>
+ #include <linux/string.h>
+ 
+-#include <asm/amd_nb.h>
+ #include <asm/traps.h>
+ #include <asm/apic.h>
+ #include <asm/mce.h>
+@@ -221,6 +218,32 @@ static const struct smca_hwid smca_hwid_mcatypes[] = {
+ #define MAX_MCATYPE_NAME_LEN	30
+ static char buf_mcatype[MAX_MCATYPE_NAME_LEN];
+ 
++struct threshold_block {
++	/* This block's number within its bank. */
++	unsigned int		block;
++	/* MCA bank number that contains this block. */
++	unsigned int		bank;
++	/* CPU which controls this block's MCA bank. */
++	unsigned int		cpu;
++	/* MCA_MISC MSR address for this block. */
++	u32			address;
++	/* Enable/Disable APIC interrupt. */
++	bool			interrupt_enable;
++	/* Bank can generate an interrupt. */
++	bool			interrupt_capable;
++	/* Value upon which threshold interrupt is generated. */
++	u16			threshold_limit;
++	/* sysfs object */
++	struct kobject		kobj;
++	/* List of threshold blocks within this block's MCA bank. */
++	struct list_head	miscj;
++};
++
++struct threshold_bank {
++	struct kobject		*kobj;
++	struct threshold_block	*blocks;
++};
++
+ static DEFINE_PER_CPU(struct threshold_bank **, threshold_banks);
+ 
+ /*
+@@ -333,19 +356,6 @@ struct thresh_restart {
+ 	u16			old_limit;
+ };
+ 
+-static inline bool is_shared_bank(int bank)
+-{
+-	/*
+-	 * Scalable MCA provides for only one core to have access to the MSRs of
+-	 * a shared bank.
+-	 */
+-	if (mce_flags.smca)
+-		return false;
+-
+-	/* Bank 4 is for northbridge reporting and is thus shared */
+-	return (bank == 4);
+-}
+-
+ static const char *bank4_names(const struct threshold_block *b)
+ {
+ 	switch (b->address) {
+@@ -1194,35 +1204,10 @@ static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb
+ 	return err;
+ }
+ 
+-static int __threshold_add_blocks(struct threshold_bank *b)
+-{
+-	struct list_head *head = &b->blocks->miscj;
+-	struct threshold_block *pos = NULL;
+-	struct threshold_block *tmp = NULL;
+-	int err = 0;
+-
+-	err = kobject_add(&b->blocks->kobj, b->kobj, b->blocks->kobj.name);
+-	if (err)
+-		return err;
+-
+-	list_for_each_entry_safe(pos, tmp, head, miscj) {
+-
+-		err = kobject_add(&pos->kobj, b->kobj, pos->kobj.name);
+-		if (err) {
+-			list_for_each_entry_safe_reverse(pos, tmp, head, miscj)
+-				kobject_del(&pos->kobj);
+-
+-			return err;
+-		}
+-	}
+-	return err;
+-}
+-
+ static int threshold_create_bank(struct threshold_bank **bp, unsigned int cpu,
+ 				 unsigned int bank)
+ {
+ 	struct device *dev = this_cpu_read(mce_device);
+-	struct amd_northbridge *nb = NULL;
+ 	struct threshold_bank *b = NULL;
+ 	const char *name = get_name(cpu, bank, NULL);
+ 	int err = 0;
+@@ -1230,26 +1215,6 @@ static int threshold_create_bank(struct threshold_bank **bp, unsigned int cpu,
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+-	if (is_shared_bank(bank)) {
+-		nb = node_to_amd_nb(topology_amd_node_id(cpu));
+-
+-		/* threshold descriptor already initialized on this node? */
+-		if (nb && nb->bank4) {
+-			/* yes, use it */
+-			b = nb->bank4;
+-			err = kobject_add(b->kobj, &dev->kobj, name);
+-			if (err)
+-				goto out;
+-
+-			bp[bank] = b;
+-			refcount_inc(&b->cpus);
+-
+-			err = __threshold_add_blocks(b);
+-
+-			goto out;
+-		}
+-	}
+-
+ 	b = kzalloc(sizeof(struct threshold_bank), GFP_KERNEL);
+ 	if (!b) {
+ 		err = -ENOMEM;
+@@ -1263,17 +1228,6 @@ static int threshold_create_bank(struct threshold_bank **bp, unsigned int cpu,
+ 		goto out_free;
+ 	}
+ 
+-	if (is_shared_bank(bank)) {
+-		b->shared = 1;
+-		refcount_set(&b->cpus, 1);
+-
+-		/* nb is already initialized, see above */
+-		if (nb) {
+-			WARN_ON(nb->bank4);
+-			nb->bank4 = b;
+-		}
+-	}
+-
+ 	err = allocate_threshold_blocks(cpu, b, bank, 0, mca_msr_reg(bank, MCA_MISC));
+ 	if (err)
+ 		goto out_kobj;
+@@ -1306,40 +1260,11 @@ static void deallocate_threshold_blocks(struct threshold_bank *bank)
+ 	kobject_put(&bank->blocks->kobj);
+ }
+ 
+-static void __threshold_remove_blocks(struct threshold_bank *b)
+-{
+-	struct threshold_block *pos = NULL;
+-	struct threshold_block *tmp = NULL;
+-
+-	kobject_put(b->kobj);
+-
+-	list_for_each_entry_safe(pos, tmp, &b->blocks->miscj, miscj)
+-		kobject_put(b->kobj);
+-}
+-
+ static void threshold_remove_bank(struct threshold_bank *bank)
+ {
+-	struct amd_northbridge *nb;
+-
+ 	if (!bank->blocks)
+ 		goto out_free;
+ 
+-	if (!bank->shared)
+-		goto out_dealloc;
+-
+-	if (!refcount_dec_and_test(&bank->cpus)) {
+-		__threshold_remove_blocks(bank);
+-		return;
+-	} else {
+-		/*
+-		 * The last CPU on this node using the shared bank is going
+-		 * away, remove that bank now.
+-		 */
+-		nb = node_to_amd_nb(topology_amd_node_id(smp_processor_id()));
+-		nb->bank4 = NULL;
+-	}
+-
+-out_dealloc:
+ 	deallocate_threshold_blocks(bank);
+ 
+ out_free:
 -- 
 2.43.0
 
