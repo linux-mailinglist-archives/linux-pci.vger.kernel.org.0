@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-15125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E3E79ACEF2
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 17:37:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DFD59ACFAD
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 18:04:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 059D81F21C2B
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 15:37:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90629B220E3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 15:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90D3F1C578C;
-	Wed, 23 Oct 2024 15:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FF201C304B;
+	Wed, 23 Oct 2024 15:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8i9ZywW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvbTBSe+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4421ADFF5;
-	Wed, 23 Oct 2024 15:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE90136E21;
+	Wed, 23 Oct 2024 15:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729697825; cv=none; b=pbEVo4rDd1f01m7ohqaHYr3e605dxsPqN8qclk9bSIBLhc25W3p38jX99yQihgn9D/5L49rT/tth165J75M45IIAySDxkebvGgTvR3QEYXpWT20kG9M8qlz8settipID17Mc9Nd0qZNB9BcikLzePPjzhCRVWUJS1ivfjW1UiIw=
+	t=1729699059; cv=none; b=paPq2i674shJN7LM2M2Kr5a/v8/Dh/5vkfHfEOd+rrN2lFqjljdJhnBT61f/tD2MmBDfu5/N/PX4QGaIjbQbU8rIDckP2Q75dgz6j8Et238wyO/X0cp48AtyJGb5bPB+CbJiDdRrUpnLF+VkzrzVUKDIpCPhyzMu8/6vC4mZyxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729697825; c=relaxed/simple;
-	bh=lk0BVWNF7JihPDu8AoY+TTLyFPUHODOZeiL1akPZRvY=;
+	s=arc-20240116; t=1729699059; c=relaxed/simple;
+	bh=B78ryvKF67MiZdQxaBwJo78TUToM4c88TbX4KJ39PiQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THPpjEkw6yPWzsVK0Jtc8QTHittGbfEg/Qwj73djwKZEu2EWTaLuSMYHj+LNDgmzdTIOyV5xmJJtMwkBc8HAczHQHu1JNdPUUSzxJvz/+7CmsnJxdPnsXuf4Z8MIVUITfcNWWT+UETOcBgLPs3iB9Zx1zkLee+M+FSZAaMe2Jms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8i9ZywW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B042CC4CEC6;
-	Wed, 23 Oct 2024 15:37:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDKpYluB5Ec/4YQRMmovH8GcyeFn9h6wEX9XAeSGdV/Qq7pjSYIvNUvgX2LLl6iuWHc/1vIh1kEEU59yl5NncdaBGV0656WNVKAru6l8hhOf+lfq9YRVDremKQTKuVS7Nn+P5UgqwPU6gmJC/gkAeozQGuCNZtOXwk0iBawhKC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvbTBSe+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0E8C4CEC6;
+	Wed, 23 Oct 2024 15:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729697824;
-	bh=lk0BVWNF7JihPDu8AoY+TTLyFPUHODOZeiL1akPZRvY=;
+	s=k20201202; t=1729699058;
+	bh=B78ryvKF67MiZdQxaBwJo78TUToM4c88TbX4KJ39PiQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K8i9ZywWG1tpdwujXwquT2/K5g7j+78KPhFfoMyqJmVgJDCqTdlotB1hX/oUmisbr
-	 yuI5GmWmRTqXUNPTuRjJGGQQjv7JZrcpmof2zYnc5lHVJVc/om4nkUXf7Y2beDYC+O
-	 YS4kUcLC+z6Y+7m4pgidBbx4UHcuSr29AOqWWv14LqVOeMeEtWDaXjQ4byxBuhZ9B9
-	 UVhfnAWMvgAKJv2SLlVScKAQs6H2XWbKq4mwQ1YVE7h+AqK6GM4d0tj2sGA7TFpc5G
-	 Z1DUYs2oocSPMv273HEkHfX0RMUhAQ7oIhDludID8sNHB1hEIROK2wJNG2gWNMjI4B
-	 aDGLVMl6myaWA==
-Date: Wed, 23 Oct 2024 10:37:03 -0500
+	b=BvbTBSe+cBz60GH+b2U9iOa1nt5ktU1nEDrvXTRpBsc+xWsStGex2BnPY7cw8ZXwG
+	 dyYV2CNAoJaBFJ8L0HQduJCb1bFYU7N1moDd3Hw0iVUjcQR0JMC8HUJTwgPP5jTk21
+	 kFvhS6yr/0maF3qENtDA6vVr7DqZPO8sP2Y3nGQcVvR/MJv7UfCJlFI34GJDgCQrgk
+	 z5/bbEWd+R4uioZn7+VZV5YgFy+8eVHsv2RNMyBpMMGYkneWx/v4tUUEmgl/xsnzAg
+	 OTcxMs/oa9bZYcMr/UzxW25nXnQL8wj0xBLadtcV5Xg2eCO0w73mzJRRI4JgvNc38T
+	 HCE0mf53pUfhA==
+Date: Wed, 23 Oct 2024 10:57:37 -0500
 From: Rob Herring <robh@kernel.org>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
@@ -53,12 +53,10 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
 	daniel.almeida@collabora.com, saravanak@google.com,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 16/16] samples: rust: add Rust platform sample driver
-Message-ID: <20241023153703.GA1064929-robh@kernel.org>
+Subject: Re: [PATCH v3 13/16] samples: rust: add Rust PCI sample driver
+Message-ID: <20241023155737.GB1064929-robh@kernel.org>
 References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-17-dakr@kernel.org>
- <20241023000408.GC1848992-robh@kernel.org>
- <Zxie5Lu2z_Xc_RXM@pollux>
+ <20241022213221.2383-14-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,73 +65,145 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zxie5Lu2z_Xc_RXM@pollux>
+In-Reply-To: <20241022213221.2383-14-dakr@kernel.org>
 
-On Wed, Oct 23, 2024 at 08:59:48AM +0200, Danilo Krummrich wrote:
-> On Tue, Oct 22, 2024 at 07:04:08PM -0500, Rob Herring wrote:
-> > On Tue, Oct 22, 2024 at 11:31:53PM +0200, Danilo Krummrich wrote:
-> > > Add a sample Rust platform driver illustrating the usage of the platform
-> > > bus abstractions.
-> > > 
-> > > This driver probes through either a match of device / driver name or a
-> > > match within the OF ID table.
-> > 
-> > I know if rust compiles it works, but how does one actually use/test 
-> > this? (I know ways, but I might be in the minority. :) )
+On Tue, Oct 22, 2024 at 11:31:50PM +0200, Danilo Krummrich wrote:
+> This commit adds a sample Rust PCI driver for QEMU's "pci-testdev"
+> device. To enable this device QEMU has to be called with
+> `-device pci-testdev`.
+
+Note that the DT unittests also use this device. So this means we have 2 
+drivers that bind to the device. Probably it's okay, but does make 
+them somewhat mutually-exclusive.
+ 
+> The same driver shows how to use the PCI device / driver abstractions,
+> as well as how to request and map PCI BARs, including a short sequence of
+> MMIO operations.
 > 
-> For testing a name match I just used platform_device_register_simple() in a
-> separate module.
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  MAINTAINERS                     |   1 +
+>  samples/rust/Kconfig            |  11 ++++
+>  samples/rust/Makefile           |   1 +
+>  samples/rust/rust_driver_pci.rs | 109 ++++++++++++++++++++++++++++++++
+>  4 files changed, 122 insertions(+)
+>  create mode 100644 samples/rust/rust_driver_pci.rs
 > 
-> Probing through the OF table is indeed a bit more tricky. Since I was too lazy
-> to pull out a random ARM device of my cupboard I just used QEMU on x86 and did
-> what drivers/of/unittest.c does. If you're smart you can also just enable those
-> unit tests and change the compatible string to "unittest". :)
-> 
-> > 
-> > The DT unittests already define test platform devices. I'd be happy to 
-> > add a device node there. Then you don't have to muck with the DT on some 
-> > device and it even works on x86 or UML.
-> 
-> Sounds good, I'll add one in there for this sample driver -- any preferences?
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2d00d3845b4a..d9c512a3e72b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17940,6 +17940,7 @@ F:	include/linux/of_pci.h
+>  F:	include/linux/pci*
+>  F:	include/uapi/linux/pci*
+>  F:	rust/kernel/pci.rs
+> +F:	samples/rust/rust_driver_pci.rs
+>  
+>  PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+>  M:	Jonathan Chocron <jonnyc@amazon.com>
+> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+> index b0f74a81c8f9..6d468193cdd8 100644
+> --- a/samples/rust/Kconfig
+> +++ b/samples/rust/Kconfig
+> @@ -30,6 +30,17 @@ config SAMPLE_RUST_PRINT
+>  
+>  	  If unsure, say N.
+>  
+> +config SAMPLE_RUST_DRIVER_PCI
+> +	tristate "PCI Driver"
+> +	depends on PCI
+> +	help
+> +	  This option builds the Rust PCI driver sample.
+> +
+> +	  To compile this as a module, choose M here:
+> +	  the module will be called driver_pci.
+> +
+> +	  If unsure, say N.
+> +
+>  config SAMPLE_RUST_HOSTPROGS
+>  	bool "Host programs"
+>  	help
+> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+> index 03086dabbea4..b66767f4a62a 100644
+> --- a/samples/rust/Makefile
+> +++ b/samples/rust/Makefile
+> @@ -2,5 +2,6 @@
+>  
+>  obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
+>  obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
+> +obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
+>  
+>  subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
+> diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+> new file mode 100644
+> index 000000000000..d24dc1fde9e8
+> --- /dev/null
+> +++ b/samples/rust/rust_driver_pci.rs
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Rust PCI driver sample (based on QEMU's `pci-testdev`).
+> +//!
+> +//! To make this driver probe, QEMU must be run with `-device pci-testdev`.
+> +
+> +use kernel::{bindings, c_str, devres::Devres, pci, prelude::*};
+> +
+> +struct Regs;
+> +
+> +impl Regs {
+> +    const TEST: usize = 0x0;
+> +    const OFFSET: usize = 0x4;
+> +    const DATA: usize = 0x8;
+> +    const COUNT: usize = 0xC;
+> +    const END: usize = 0x10;
+> +}
+> +
+> +type Bar0 = pci::Bar<{ Regs::END }>;
+> +
+> +#[derive(Debug)]
+> +struct TestIndex(u8);
+> +
+> +impl TestIndex {
+> +    const NO_EVENTFD: Self = Self(0);
+> +}
+> +
+> +struct SampleDriver {
+> +    pdev: pci::Device,
+> +    bar: Devres<Bar0>,
+> +}
+> +
+> +kernel::pci_device_table!(
+> +    PCI_TABLE,
+> +    MODULE_PCI_TABLE,
+> +    <SampleDriver as pci::Driver>::IdInfo,
+> +    [(
+> +        pci::DeviceId::new(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
+> +        TestIndex::NO_EVENTFD
+> +    )]
+> +);
+> +
+> +impl SampleDriver {
+> +    fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
+> +        // Select the test.
+> +        bar.writeb(index.0, Regs::TEST);
+> +
+> +        let offset = u32::from_le(bar.readl(Regs::OFFSET)) as usize;
 
-I gave this a spin and added the patch below in. Feel free to squash it 
-into this one.
+The C version of readl takes care of from_le for you. Why not here?
 
-8<----------------------------------------------------------------
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Wed, 23 Oct 2024 10:29:47 -0500
-Subject: [PATCH] of: unittest: Add a platform device node for rust platform
- driver sample
+Also, can't we do better with rust and make this a generic:
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+let offset = bar.read::<u32>(Regs::OFFSET)) as usize;
 
-diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
-index fa39611071b3..575ea260a877 100644
---- a/drivers/of/unittest-data/tests-platform.dtsi
-+++ b/drivers/of/unittest-data/tests-platform.dtsi
-@@ -33,6 +33,11 @@ dev@100 {
-                                        reg = <0x100>;
-                                };
-                        };
-+
-+                       test-device@2 {
-+                               compatible = "test,rust-device";
-+                               reg = <0x2>;
-+                       };
-                };
-        };
- };
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-index 55caaaa4f216..5cf4a8f86c13 100644
---- a/samples/rust/rust_driver_platform.rs
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -15,7 +15,7 @@ struct SampleDriver {
-     MODULE_OF_TABLE,
-     <SampleDriver as platform::Driver>::IdInfo,
-     [(
--        of::DeviceId::new(c_str!("redhat,rust-sample-platform-driver")),
-+        of::DeviceId::new(c_str!("test,rust-device")),
-         Info(42)
-     )]
- );
+
+> +        let data = bar.readb(Regs::DATA);
+> +
+> +        // Write `data` to `offset` to increase `count` by one.
+> +        //
+> +        // Note that we need `try_writeb`, since `offset` can't be checked at compile-time.
+> +        bar.try_writeb(data, offset)?;
+> +
+> +        Ok(u32::from_le(bar.readl(Regs::COUNT)))
+> +    }
+> +}
 
