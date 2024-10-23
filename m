@@ -1,156 +1,245 @@
-Return-Path: <linux-pci+bounces-15102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62FFC9AC18F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 10:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAAD09AC194
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 10:28:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E26FC1F24454
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 08:27:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55FA31F22DC0
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 08:28:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCDE0158DA3;
-	Wed, 23 Oct 2024 08:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D675158853;
+	Wed, 23 Oct 2024 08:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xxu8n6oc"
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="EnqjKD4/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PlEBN4IM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FEF158853;
-	Wed, 23 Oct 2024 08:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A951158527;
+	Wed, 23 Oct 2024 08:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729672044; cv=none; b=p846ijfeLP2nHb+tGp55viME3M+G/Pgn9TLwsPKJS54qvhN9mmfOhbY7oc3h3LuQEqK5LODODUU4mhMuneyPAPd3FUk5ud5HDBVDHCW8TocM7oNxQBh5U9JmJ5EEA6r8p2Sm6lSy1jWQTjeEvy0WpYGNGZVqSbCrK7PJOyzHC9g=
+	t=1729672094; cv=none; b=dsR6fEn5UpuFQwAzFKDsOgSPUZBLPxzBMgAf067XXSF+8mKlaZgcrmkuRjdEWxTEt5EMLZco0lEK6UZwgCl8tTLOLimp+L1LApwiFRCP8gI5/x8KUEMSTE0e4JXPYpevw3quanBGrtd6RD3BBRrE1rX2Po0TCzoonAmzp0vyFjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729672044; c=relaxed/simple;
-	bh=Efmdsy7784WWboxNzcyHMI/+dAUXMhQMYCQtnPAq+7s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Yh69/sJvSzS1jWRQiiF0GGFIOGZPgySp/kBWc+Okl/emYug1e8B188Ze3ir38vvZARNX+aikEP/RkKECiYikgrxD0F6/9FKjaWVbN2bVSQlak/f9im2bMUjNZpSF9ApWws42RgcnLbi52s8b63pONZdI3uIrNDfB43WYNSlBVds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xxu8n6oc; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729672043; x=1761208043;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Efmdsy7784WWboxNzcyHMI/+dAUXMhQMYCQtnPAq+7s=;
-  b=Xxu8n6oc18kXuCEC+xivc69D+rMrTkG/8quYKm9p0UtSwS0zyvgpG8s3
-   6au+mD9IaoDX8jXVDqilFhefN79A+F7MTkCFieegWHFFG7pxwKohgGtKk
-   p1RJxRsyraUUxX4CCTsVJlEzt881AsRiI8itA6T58WBccYbF+XBIDneKZ
-   KZjfAr322PHnNQlLDaM0y7lqff7rScghi8OBptMbmwoNi1PYhEQA1ZOms
-   440VLGE4eOBrCsZlv42PksJ1Xd6gUA65iULGx95OSKpeDsA5fJRysgyri
-   CgxS1xwabKrJgjwp5+AUe4JqLRkeH4sNfrzlDCymq3e1ulFQ4GOs1A4pb
-   Q==;
-X-CSE-ConnectionGUID: 7bWuE50fTpqjcEVGAh072A==
-X-CSE-MsgGUID: lDFY6ZH+RCu4ShNwKf/EMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11233"; a="33168553"
-X-IronPort-AV: E=Sophos;i="6.11,225,1725346800"; 
-   d="scan'208";a="33168553"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 01:27:22 -0700
-X-CSE-ConnectionGUID: IvumlnRqTX60gu5OpdbeWg==
-X-CSE-MsgGUID: hseAE24qSLqbyZF66jw03w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="84939400"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.40])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2024 01:27:19 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 23 Oct 2024 11:27:15 +0300 (EEST)
-To: Bjorn Helgaas <bhelgaas@google.com>
-cc: linux-pci@vger.kernel.org, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Lukas Wunner <lukas@wunner.de>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v6 0/8] PCI: Consolidate TLP Log reading and printing
-In-Reply-To: <20240913143632.5277-1-ilpo.jarvinen@linux.intel.com>
-Message-ID: <cb44bafe-a7ec-889b-5c1c-ee8ca6c540a0@linux.intel.com>
-References: <20240913143632.5277-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1729672094; c=relaxed/simple;
+	bh=I5VCK+0CMmT65fmNALPGZg3TUFxmq/Z0Sb4/EwhTjp4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=PrHfjQwVCc2jRXtRK3mcuUOq2wcKD6liEXhJBFmnJeEJG458y7xKmNsDIBhBDtyBTociNBJQROWibiGW5eZ/zVTJ9glfRDusclpmOKQQ7ceHrFuNRNLvlFPcrk9XJVqA64/bmoNpmRcfXeIbm6ppuVxvRMdguwul4Ypls24tkmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=EnqjKD4/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PlEBN4IM; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 3487B1140135;
+	Wed, 23 Oct 2024 04:28:11 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Wed, 23 Oct 2024 04:28:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1729672091;
+	 x=1729758491; bh=Q99IEpRDwsQRu7/QpTx/OJI3t5lg9MCdu26wf4vKknI=; b=
+	EnqjKD4/h8D8/l8WZO46e1ElVhjhcQDKpVSnLJ4BfRgbMrYVais8akyr2U0692ep
+	zMF/JdT+kXwg2fHKWqHW8FYFdEx+3UBA6C31pNk8ff+XCnwGoC1rXiYhSSjUttI8
+	x7MQA5xNwb0snxIJDI5Mx5FzuKsPuLGAtnJnSqs2joKj1g5VBtdr2mxmPgL8wuhP
+	ERJRnec2IKfeQRJslleQavu2h9dr8lzlLXyumZHGSUpXSPyrKvNmHRr0BBqiVhSp
+	xGLFFBHaR0vrTCGcaDArcNpn/c23Fdv0mvtA11MbN8HzZe24XsOejJUjJ4KYyB2W
+	gNC646+qFkp8rWbhehFd1Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729672091; x=
+	1729758491; bh=Q99IEpRDwsQRu7/QpTx/OJI3t5lg9MCdu26wf4vKknI=; b=P
+	lEBN4IM0J23/qTbvz4rnlNKapBm7qpFJCi2v1jIGUeXo8v/Oo502wwWIni7QD8Rc
+	/n7kGuV2lGK4e9K5lhd64jRt00qmuD+RfxwARO971otT/xatnki+H4KLp21Xue2Q
+	EnPbg1WuY74JV5w3zAG9EN9PfuwPS3/dhyzTIkEakF82mfxakotybWQjM2dmSWaL
+	vH8A0J9fGN7Q5vx3y3mn5BJ+6hlw7kHnj/yGbdJTQi5fBFoLOTkwZgFqOeEzuQfS
+	uojC6CFqeWPcqYi6GUag5n26pTY5TEFJEMMGDtmsFQXp1DYRDmr8L2Wj3tT0ubly
+	HQ+GLctbYgPsqI1/vDk/g==
+X-ME-Sender: <xms:mrMYZyKXUiDaKpV8SNe7SHC26_seOY_U8VcRGh8j24R3l-iTLcSJLQ>
+    <xme:mrMYZ6IBQQ7R5vAobb7NNcRMOUEik4QhTS0dL0u-Rv9IS_GDbtiBhyXJICbWRgwGl
+    nKOAOqYuH_Fja-6GWc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdeijedgtdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
+    hvqeenucggtffrrghtthgvrhhnpeekieeftdeltdevudeukeefleejjeeitedttdfhteek
+    jefhteduhffhjefhfeejjeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
+    dpghhithhlrggsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtoheple
+    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvgigrghnuggvrhdruggvuhgt
+    hhgvrhesrghmugdrtghomhdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllh
+    hosegrmhgurdgtohhmpdhrtghpthhtoheprghlvgiguggvuhgthhgvrhesghhmrghilhdr
+    tghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpth
+    htohepshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggv
+    vhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehkrg
+    hihhgvnhhgfhesnhhvihguihgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtih
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:mrMYZyuW3W0ma7h3VYDAUpt35VMBgnhLeQd_7vLkh_KOfMCG5wanuQ>
+    <xmx:mrMYZ3b-ytoP3tvYoZ9oqvhzjW_h3Itluae8uXJbd_8FZSbB185aYg>
+    <xmx:mrMYZ5YgGK7kE0WuxIaxBWGt_MpPh8oyeEBLWrwrfrKDgs5vOUdezQ>
+    <xmx:mrMYZzBAu2wV-Swtd5bfuvdCmTgiEQIsR6YeSXgp-gynqN2OJSqhWQ>
+    <xmx:m7MYZ144VpCsV5mA50Qdc7OjWgQHdGVdEeDnvFwarLP58Z4SX_FOneCZ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C3E47336007C; Wed, 23 Oct 2024 04:28:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1808313237-1729671934=:1168"
-Content-ID: <cc279ec2-2c48-0171-1345-2b12ec189a87@linux.intel.com>
+Date: Wed, 23 Oct 2024 10:27:49 +0200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Kai-Heng Feng" <kaihengf@nvidia.com>,
+ "Alex Deucher" <alexdeucher@gmail.com>
+Cc: "Mario Limonciello" <superm1@kernel.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Alex Deucher" <alexander.deucher@amd.com>
+Message-Id: <eef7035c-2ffc-485f-b123-fffd3719be28@app.fastmail.com>
+In-Reply-To: <fd7cae9a-5ee1-4e18-915d-4115f0a6a156@nvidia.com>
+References: <20241014152502.1477809-1-superm1@kernel.org>
+ <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
+ <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
+ <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
+ <fd7cae9a-5ee1-4e18-915d-4115f0a6a156@nvidia.com>
+Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot VGA device
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1808313237-1729671934=:1168
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <74b67500-5d3a-40fd-f220-927c23ad6df0@linux.intel.com>
 
-On Fri, 13 Sep 2024, Ilpo J=E4rvinen wrote:
+On Wed, 23 Oct 2024, at 3:27 AM, Kai-Heng Feng wrote:
+> On 2024/10/22 9:04 PM, Alex Deucher wrote:
+>> External email: Use caution opening links or attachments
+>>=20
+>>=20
+>> On Tue, Oct 22, 2024 at 2:31=E2=80=AFAM Kai-Heng Feng <kaihengf@nvidi=
+a.com> wrote:
+>>>
+>>> Hi Luke,
+>>>
+>>> On 2024/10/15 4:04 PM, Luke Jones wrote:
+>>>> On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
+>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>
+>>>>> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display=
+ device.
+>>>>>
+>>>>> ```
+>>>>> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeFo=
+rce
+>>>>> RTX 4070 Max-Q / Mobile] (rev a1)
+>>>>> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
+>>>>> Strix [Radeon 880M / 890M] (rev c1)
+>>>>> ```
+>>>>>
+>>>>> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU a=
+s the
+>>>>> boot VGA device, but really the eDP is connected to the AMD PCI di=
+splay
+>>>>> device.
+>>>>>
+>>>>> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA de=
+vice.
+>>>>>
+>>>>> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+>>>>> Reported-by: Luke D. Jones <luke@ljones.dev>
+>>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
+>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>> ---
+>>>>>    drivers/pci/vgaarb.c | 7 -------
+>>>>>    1 file changed, 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>>>> index 78748e8d2dba..05ac2b672d4b 100644
+>>>>> --- a/drivers/pci/vgaarb.c
+>>>>> +++ b/drivers/pci/vgaarb.c
+>>>>> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_dev=
+ice *vgadev)
+>>>>>               return true;
+>>>>>       }
+>>>>>
+>>>>> -    /*
+>>>>> -     * Vgadev has neither IO nor MEM enabled.  If we haven't foun=
+d any
+>>>>> -     * other VGA devices, it is the best candidate so far.
+>>>>> -     */
+>>>>> -    if (!boot_vga)
+>>>>> -            return true;
+>>>>> -
+>>>>>       return false;
+>>>>>    }
+>>>>>
+>>>>> --
+>>>>> 2.43.0
+>>>>
+>>>> Hi Mario,
+>>>>
+>>>> I can verify that this does leave the `boot_vga` attribute set as 0=
+ for the NVIDIA device.
+>>>
+>>> Does the following diff work for you?
+>>> This variant should be less risky for most systems.
+>>>
+>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>> index 78748e8d2dba..3fb734cb9c1b 100644
+>>> --- a/drivers/pci/vgaarb.c
+>>> +++ b/drivers/pci/vgaarb.c
+>>> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_device=
+ *vgadev)
+>>>                   return true;
+>>>           }
+>>>
+>>> +       if (vga_arb_integrated_gpu(&pdev->dev))
+>>> +               return true;
+>>> +
+>>=20
+>> The problem is that the integrated graphics does not support VGA.
+>
+> Right, so the check has to be used much earlier.
+>
+> I wonder does the integrated GFX have _DOD/_DOS while the discrete one=
+ doesn't?=20
+> If that's the case, vga_arb_integrated_gpu() can be used to differenti=
+ate which=20
+> one is the boot GFX.
 
-> This series has the remaining patches of the AER & DPC TLP Log handling
-> consolidation and now includes a few minor improvements to the earlier
-> accepted TLP Logging code.
->=20
-> v6:
-> - Preserve "AER:"/"DPC:" prefix on the printed TLP line
-> - New patch to add "AER:" also  on other lines of the AER error dump
+Discrete might be missing the _DOS? I'm not sure how to interpret the gp=
+u related DSL. You can see the dump here https://gitlab.com/asus-linux/r=
+everse-engineering/-/tree/master/uncategorized/GA605WI?ref_type=3Dheads
 
-Hi Bjorn,
+ssdt1.dsl contains _DOD and looks to be the discrete unit, does not cont=
+ain _DOS. the dsdt contains both under "Device (VGA)"
 
-A small reminder this series exists.
+Regards,
+Luke.
 
---=20
- i.
-
-> v5:
-> - Fix build with AER=3Dy and DPC=3Dn
-> - Match kerneldoc and function parameter name
->=20
-> v4:
-> - Added patches:
-> =09- Remove EXPORT of pcie_read_tlp_log()
-> =09- Moved code to pcie/tlp.c and build only with AER enabled
-> =09- Match variables in prototype and function
-> =09- int -> unsigned int conversion
-> =09- eetlp_prefix_max into own patch
-> - struct pcie_tlp_log param consistently called "log" within tlp.c
-> - Moved function prototypes into drivers/pci/pci.h
-> - Describe AER/DPC differences more clearly in one commit message
->=20
-> v3:
-> - Small rewording in a commit message
->=20
-> v2:
-> - Don't add EXPORT()s
-> - Don't include igxbe changes
-> - Don't use pr_cont() as it's incompatible with pci_err() and according
->   to Andy Shevchenko should not be used in the first place
->=20
-> Ilpo J=E4rvinen (8):
->   PCI: Don't expose pcie_read_tlp_log() outside of PCI subsystem
->   PCI: Move TLP Log handling to own file
->   PCI: Make pcie_read_tlp_log() signature same
->   PCI: Use unsigned int i in pcie_read_tlp_log()
->   PCI: Store # of supported End-End TLP Prefixes
->   PCI: Add TLP Prefix reading into pcie_read_tlp_log()
->   PCI: Create helper to print TLP Header and Prefix Log
->   PCI/AER: Add prefixes to printouts
->=20
->  drivers/pci/ats.c             |   2 +-
->  drivers/pci/pci.c             |  28 ---------
->  drivers/pci/pci.h             |   9 +++
->  drivers/pci/pcie/Makefile     |   2 +-
->  drivers/pci/pcie/aer.c        |  26 ++++----
->  drivers/pci/pcie/dpc.c        |  14 ++---
->  drivers/pci/pcie/tlp.c        | 109 ++++++++++++++++++++++++++++++++++
->  drivers/pci/probe.c           |  14 +++--
->  include/linux/aer.h           |   3 +-
->  include/linux/pci.h           |   2 +-
->  include/uapi/linux/pci_regs.h |   2 +
->  11 files changed, 149 insertions(+), 62 deletions(-)
->  create mode 100644 drivers/pci/pcie/tlp.c
->=20
->=20
---8323328-1808313237-1729671934=:1168--
+> Kai-Heng
+>
+>>=20
+>> Alex
+>>=20
+>>>           /*
+>>>            * Vgadev has neither IO nor MEM enabled.  If we haven't f=
+ound any
+>>>            * other VGA devices, it is the best candidate so far.
+>>>
+>>>
+>>> Kai-Heng
+>>>
+>>>>
+>>>> Tested-by: Luke D. Jones <luke@ljones.dev>
+>>>
 
