@@ -1,229 +1,218 @@
-Return-Path: <linux-pci+bounces-15079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15080-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 286F29ABA57
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 02:04:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C6AB9ABAB1
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 02:51:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 789D0B230A9
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 00:04:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 746A61C20E0E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 00:51:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E4E175B1;
-	Wed, 23 Oct 2024 00:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE28A168DA;
+	Wed, 23 Oct 2024 00:51:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXK3ZBl3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ptq/Asv6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26991798C;
-	Wed, 23 Oct 2024 00:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C2E1C6A3;
+	Wed, 23 Oct 2024 00:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729641849; cv=none; b=ncKQxFKshkBjcLimSf9d9/uM2ftjFmJsieEFXEcwk9grsu34KgPropBbhyOXbE7vyeeN5QA29n7z5mclncBBwfab1v/riUSYU0v728QDkgLYPO8cCn0lqwpaaFtb53Dv7SkmYVQMSwmtwRdJ+OYHajNp3ifKBno6+XT2hY9ik3w=
+	t=1729644668; cv=none; b=sImg5hSQ9ZGCzSDmmiK6WLThYWdW9r7Ktf5I6sQ8PYYZ8mvzsqO4RsMIyV3CdB0nAice+r5ffCfuj/6KNJQ4/r54NvO4ZvqTVAqTyrJ79ypxEV3RnKG4/60UUMaCT5gb8R/lLd25W+yncH0so9eVp1Vxxwun9J5lUTE6GFZPYvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729641849; c=relaxed/simple;
-	bh=lp+qOB2AsGXn3zORPru0TEAo87RI1MyOJb9mTrSMdWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RE3MiBJVfYSBzXzlNo/b3RUbERURrn9A+B+yeznddkb3Hst7azXcf7JTAGOGAEwqjc+K+FV1nWifKCGKpX0e49Yd88xYlFLER4FwU5yQVHnXmlVYzJnAtLhkR36lQRmlnZpBdjuhEgemkUrQAJy0WCx4kxR4FyHDQSRiVXPDNdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXK3ZBl3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14756C4CEE7;
-	Wed, 23 Oct 2024 00:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729641849;
-	bh=lp+qOB2AsGXn3zORPru0TEAo87RI1MyOJb9mTrSMdWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jXK3ZBl3KW9rfPcw7U0EoPj5+z8C2qWD5+sQxr2ptHDzUelYirfjUhbN6q5T9hLZd
-	 2r+iV8vy6JlEGdPBZbwMFCCHljH4fSg9rBU/bcSxKEZvyVGBrnGAbMC58rLA5KGU/F
-	 kN6zKxos2jfMzYb4zZDqSl1vh/RXLtKiFNMFp7hZ1/npSfNl/MSRq2iPQK3audE2Bi
-	 GSsC0GLX7qsVCy0bRTqjuzw/fPP1RaBgKMaxGNcIEZknAkvNjOXRvL1r2CdQbdEm47
-	 WJvzNER/IjE+Rr1NS8bGFCqcAKB3j3yEJ55gPNSw4IQkoA+suB2rwOG+yCNK69DAAg
-	 O6K4qc5Ii+b2A==
-Date: Tue, 22 Oct 2024 19:04:08 -0500
-From: Rob Herring <robh@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
-	daniel.almeida@collabora.com, saravanak@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 16/16] samples: rust: add Rust platform sample driver
-Message-ID: <20241023000408.GC1848992-robh@kernel.org>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-17-dakr@kernel.org>
+	s=arc-20240116; t=1729644668; c=relaxed/simple;
+	bh=2CicPGy2glP1mUqm5CAPj05xgBoGuI0XdTJxJxXKrDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M8mfOGrSL+Cyp0D+wTbJLEL2Z8k1WE35Gar1ofxumN6D8VA8EP6Bs2xK1TJedCWyfuoQ8i8KdbZVAm4ubIfwjoOW649jL8Pmbkp+mGjMA0ll/QwZwDYm837+N83YGFoa58fyl+3X/En34BFVLHGp3Q3u72bBtGWgBH4unkbvrDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ptq/Asv6; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E31B820FC5F2;
+	Tue, 22 Oct 2024 17:51:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E31B820FC5F2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1729644666;
+	bh=zjZeWP3Fn8idOep3PQVo7QwCf4WCY+6296943aRWrJo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ptq/Asv6NOd+j2FY/cwnF8Hu8cTmgTkCKNGmUO8vaWOmDGr2W5C3tiAUiJjUCJHpp
+	 D3lFoU5kHF/38OOU7fNrQytJFQx60+KYnIi8VDrVVrWD1Sh/M95SHve4tCkxvaOjyU
+	 8mjWFYlVmGMrtAatziaIPXazv+vB8cutE+AlXvbQ=
+Message-ID: <725bac7d-5758-44fd-82cc-29fb85d8c53f@linux.microsoft.com>
+Date: Tue, 22 Oct 2024 17:51:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241022213221.2383-17-dakr@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] Add new headers for Hyper-V Dom0
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
+ "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>
+References: <1727985064-18362-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157F6EA7B2454D2F6CBF2ECD4782@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157F6EA7B2454D2F6CBF2ECD4782@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 22, 2024 at 11:31:53PM +0200, Danilo Krummrich wrote:
-> Add a sample Rust platform driver illustrating the usage of the platform
-> bus abstractions.
+On 10/10/2024 11:21 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, October 3, 2024 12:51 PM
+>>>> An intermediary header "hv_defs.h" is introduced to conditionally
+>> include either hyperv-tlfs.h or hvhdk.h. This is required because
+>> several headers which today include hyperv-tlfs.h, are shared
+>> between Hyper-V and KVM code (e.g. mshyperv.h).
 > 
-> This driver probes through either a match of device / driver name or a
-> match within the OF ID table.
-
-I know if rust compiles it works, but how does one actually use/test 
-this? (I know ways, but I might be in the minority. :) )
-
-The DT unittests already define test platform devices. I'd be happy to 
-add a device node there. Then you don't have to muck with the DT on some 
-device and it even works on x86 or UML.
-
-And I've started working on DT (fwnode really) property API bindings as 
-well, and this will be great to test them with.
-
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  MAINTAINERS                          |  1 +
->  samples/rust/Kconfig                 | 10 +++++
->  samples/rust/Makefile                |  1 +
->  samples/rust/rust_driver_platform.rs | 62 ++++++++++++++++++++++++++++
->  4 files changed, 74 insertions(+)
->  create mode 100644 samples/rust/rust_driver_platform.rs
+> Have you considered user space code that uses
+> include/linux/hyperv.h? Which of the two schemes will it use? That code
+> needs to compile correctly on x86 and ARM64 after your changes.
+> User space code includes the separate DPDK project, and some of the
+> tools in the kernel tree under tools/hv. Anything that uses the
+> uio_hv_generic.c driver falls into this category.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 173540375863..583b6588fd1e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6986,6 +6986,7 @@ F:	rust/kernel/device_id.rs
->  F:	rust/kernel/devres.rs
->  F:	rust/kernel/driver.rs
->  F:	rust/kernel/platform.rs
-> +F:	samples/rust/rust_driver_platform.rs
->  
->  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
->  M:	Nishanth Menon <nm@ti.com>
-> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-> index 6d468193cdd8..70126b750426 100644
-> --- a/samples/rust/Kconfig
-> +++ b/samples/rust/Kconfig
-> @@ -41,6 +41,16 @@ config SAMPLE_RUST_DRIVER_PCI
->  
->  	  If unsure, say N.
->  
-> +config SAMPLE_RUST_DRIVER_PLATFORM
-> +	tristate "Platform Driver"
-> +	help
-> +	  This option builds the Rust Platform driver sample.
-> +
-> +	  To compile this as a module, choose M here:
-> +	  the module will be called rust_driver_platform.
-> +
-> +	  If unsure, say N.
-> +
->  config SAMPLE_RUST_HOSTPROGS
->  	bool "Host programs"
->  	help
-> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-> index b66767f4a62a..11fcb312ed36 100644
-> --- a/samples/rust/Makefile
-> +++ b/samples/rust/Makefile
-> @@ -3,5 +3,6 @@
->  obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
->  obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
->  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
-> +obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
->  
->  subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
-> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-> new file mode 100644
-> index 000000000000..55caaaa4f216
-> --- /dev/null
-> +++ b/samples/rust/rust_driver_platform.rs
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Rust Platform driver sample.
-> +
-> +use kernel::{c_str, of, platform, prelude::*};
-> +
-> +struct SampleDriver {
-> +    pdev: platform::Device,
-> +}
-> +
-> +struct Info(u32);
-> +
-> +kernel::of_device_table!(
-> +    OF_TABLE,
-> +    MODULE_OF_TABLE,
-> +    <SampleDriver as platform::Driver>::IdInfo,
-> +    [(
-> +        of::DeviceId::new(c_str!("redhat,rust-sample-platform-driver")),
+Unless I misunderstand something, the uapi code isn't affected at all
+by this patch set. e.g. the code in tools/hv uses include/uapi/linux/hyperv.h,
+which doesn't include any other Hyper-V headers.
 
-Perhaps use the same compatible as the commented example. Same comments 
-on that apply to this.
+I'm not aware of how the DPDK project uses the Hyper-V definitions, but if it
+is getting headers from uapi it should also be unaffected.
 
-> +        Info(42)
-
-Most of the time this is a pointer to a struct. It would be better to 
-show how to do that.
-
-> +    )]
-> +);
-> +
-> +impl platform::Driver for SampleDriver {
-> +    type IdInfo = Info;
-> +    const ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
-
-Probably want to name this OF_ID_TABLE for when ACPI_ID_TABLE is added.
-
-> +
-> +    fn probe(pdev: &mut platform::Device, info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
-> +        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
-> +
-> +        match (Self::of_match_device(pdev), info) {
-
-That answers my question on being exposed to drivers. This is a big no 
-for me.
-
-> +            (Some(id), Some(info)) => {
-> +                dev_info!(
-> +                    pdev.as_ref(),
-> +                    "Probed by OF compatible match: '{}' with info: '{}'.\n",
-> +                    id.compatible(),
-
-As I mentioned, "real" drivers don't need the compatible string.
-
-> +                    info.0
-> +                );
-> +            }
-> +            _ => {
-> +                dev_info!(pdev.as_ref(), "Probed by name.\n");
-> +            }
-> +        };
-> +
-> +        let drvdata = KBox::new(Self { pdev: pdev.clone() }, GFP_KERNEL)?;
-> +
-> +        Ok(drvdata.into())
-> +    }
-> +}
-> +
-> +impl Drop for SampleDriver {
-> +    fn drop(&mut self) {
-> +        dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver sample.\n");
-> +    }
-> +}
-> +
-> +kernel::module_platform_driver! {
-> +    type: SampleDriver,
-> +    name: "rust_driver_platform",
-> +    author: "Danilo Krummrich",
-> +    description: "Rust Platform driver",
-> +    license: "GPL v2",
-> +}
-> -- 
-> 2.46.2
+> I think there's also user space code that is built for vDSO that might pull
+> in the .h files you are modifying. There are in-progress patches dealing
+> with vDSO include files, such as [1]. My general comment on vDSO
+> is to be careful in making #include file changes that it uses, but I'm
+> not knowledgeable enough on how vDSO is built to give specific
+> guidance. :-(
 > 
+Hmm, interesting, looks like it does get used by userspace. The tsc page
+is mapped into userspace in vdso.vma.c, and read in vdso/gettimeofday.h.
+
+That is unexpected for me, since these things aren't in uapi. However I don't
+anticipate a problem. The definitions used haven't changed, just the headers
+they are included from.
+
+Thanks
+Nuno
+
+> Michael
+> 
+> [1] https://lore.kernel.org/lkml/20241010135146.181175-1-vincenzo.frascino@arm.com/
+> 
+>>
+>> Summary:
+>> Patch 1-2: Cleanup patches
+>> Patch 3: Add the new headers (hvhdk.h, etc..) in include/hyperv/
+>> Patch 4: Add hv_defs.h and use it in mshyperv.h, svm.h,
+>>          hyperv_timer.h
+>> Patch 5: Switch to the new headers, only in Hyper-V code
+>>
+>> Nuno Das Neves (5):
+>>   hyperv: Move hv_connection_id to hyperv-tlfs.h
+>>   hyperv: Remove unnecessary #includes
+>>   hyperv: Add new Hyper-V headers
+>>   hyperv: Add hv_defs.h to conditionally include hyperv-tlfs.h or
+>>     hvhdk.h
+>>   hyperv: Use hvhdk.h instead of hyperv-tlfs.h in Hyper-V code
+>>
+>>  arch/arm64/hyperv/hv_core.c              |    3 +-
+>>  arch/arm64/hyperv/mshyperv.c             |    1 +
+>>  arch/arm64/include/asm/mshyperv.h        |    2 +-
+>>  arch/x86/entry/vdso/vma.c                |    1 +
+>>  arch/x86/hyperv/hv_apic.c                |    2 +-
+>>  arch/x86/hyperv/hv_init.c                |    3 +-
+>>  arch/x86/hyperv/hv_proc.c                |    4 +-
+>>  arch/x86/hyperv/hv_spinlock.c            |    1 +
+>>  arch/x86/hyperv/hv_vtl.c                 |    1 +
+>>  arch/x86/hyperv/irqdomain.c              |    1 +
+>>  arch/x86/hyperv/ivm.c                    |    2 +-
+>>  arch/x86/hyperv/mmu.c                    |    2 +-
+>>  arch/x86/hyperv/nested.c                 |    2 +-
+>>  arch/x86/include/asm/kvm_host.h          |    1 -
+>>  arch/x86/include/asm/mshyperv.h          |    3 +-
+>>  arch/x86/include/asm/svm.h               |    2 +-
+>>  arch/x86/include/asm/vdso/gettimeofday.h |    1 +
+>>  arch/x86/kernel/cpu/mshyperv.c           |    2 +-
+>>  arch/x86/kernel/cpu/mtrr/generic.c       |    1 +
+>>  arch/x86/kvm/vmx/vmx_onhyperv.h          |    1 -
+>>  arch/x86/mm/pat/set_memory.c             |    2 -
+>>  drivers/clocksource/hyperv_timer.c       |    2 +-
+>>  drivers/hv/channel.c                     |    1 +
+>>  drivers/hv/channel_mgmt.c                |    1 +
+>>  drivers/hv/connection.c                  |    1 +
+>>  drivers/hv/hv.c                          |    1 +
+>>  drivers/hv/hv_balloon.c                  |    5 +-
+>>  drivers/hv/hv_common.c                   |    2 +-
+>>  drivers/hv/hv_kvp.c                      |    1 -
+>>  drivers/hv/hv_snapshot.c                 |    1 -
+>>  drivers/hv/hv_util.c                     |    1 +
+>>  drivers/hv/hyperv_vmbus.h                |    1 -
+>>  drivers/hv/ring_buffer.c                 |    1 +
+>>  drivers/hv/vmbus_drv.c                   |    1 +
+>>  drivers/iommu/hyperv-iommu.c             |    1 +
+>>  drivers/net/hyperv/netvsc.c              |    1 +
+>>  drivers/pci/controller/pci-hyperv.c      |    1 +
+>>  include/asm-generic/hyperv-tlfs.h        |    9 +
+>>  include/asm-generic/mshyperv.h           |    2 +-
+>>  include/clocksource/hyperv_timer.h       |    2 +-
+>>  include/hyperv/hv_defs.h                 |   29 +
+>>  include/hyperv/hvgdk.h                   |   66 ++
+>>  include/hyperv/hvgdk_ext.h               |   46 +
+>>  include/hyperv/hvgdk_mini.h              | 1212 ++++++++++++++++++++++
+>>  include/hyperv/hvhdk.h                   |  733 +++++++++++++
+>>  include/hyperv/hvhdk_mini.h              |  310 ++++++
+>>  include/linux/hyperv.h                   |   12 +-
+>>  net/vmw_vsock/hyperv_transport.c         |    1 -
+>>  48 files changed, 2442 insertions(+), 40 deletions(-)
+>>  create mode 100644 include/hyperv/hv_defs.h
+>>  create mode 100644 include/hyperv/hvgdk.h
+>>  create mode 100644 include/hyperv/hvgdk_ext.h
+>>  create mode 100644 include/hyperv/hvgdk_mini.h
+>>  create mode 100644 include/hyperv/hvhdk.h
+>>  create mode 100644 include/hyperv/hvhdk_mini.h
+>>
+>> --
+>> 2.34.1
+>>
+> 
+
 
