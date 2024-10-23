@@ -1,113 +1,128 @@
-Return-Path: <linux-pci+bounces-15110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E00BD9AC517
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 11:23:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41C879AC68B
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 11:29:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19F371C202E7
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 09:23:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7094D1C222E5
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 09:29:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5669315CD60;
-	Wed, 23 Oct 2024 09:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57EE43AB9;
+	Wed, 23 Oct 2024 09:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HNczZDfw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mi5aVIEh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D8D15B122
-	for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2024 09:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E6145323
+	for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2024 09:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729675389; cv=none; b=aIC5TrTcc0cj0+URvgwl8mw3N/kYtHXHh3e772yLA79iHXAkBJYL9xB09jkehkJmF3Tk3UhFtes6DxROwo7GlWECNcROq0NfVnm38Z0YttkgtUHQHRcJMaHCchzILrhNx7NspSuZfrPG9UdGjVS0Cblbr1B1YMzSNUa8mWMjE1U=
+	t=1729675789; cv=none; b=OP79ut0zZPqoGjOw0JRXQMdZ+tntMs0TYhGn/HTl0ibuyRKtVfd+VLyzGHq1+oBmmozj+dsWsqMIAd1DVYRA2IcUq4bHz/BxmrYJGRETbT6mvats23ttcPCvtLslLeP/oPeUqi2uNu7F9ZgoDDK30Vuzjeqz8VuPMNSfaOfGlrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729675389; c=relaxed/simple;
-	bh=FV1ZLlJ6ihzrtTWl6CBeIqu9ifr35Cm5491ANjcacY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PaoXo3wB09u7c/MKIhrIxNVtNVV2TISOh7a9RBfiz1RJdKpDnuA13jUByEbaVIiPzO1DNjsZt7yfNRVeLxypMWRifT2GnAh9MaJThrxRi+NAy+TgQ56sqHRQ2bvKwSfPcLh9IQSAHpP/FaRTduYbgjkoqizFXZdA6KkYvsippMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HNczZDfw; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e305c2987bso62474707b3.0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2024 02:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729675387; x=1730280187; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FV1ZLlJ6ihzrtTWl6CBeIqu9ifr35Cm5491ANjcacY8=;
-        b=HNczZDfwjAo5JDmhShhuyai5ZYYuijJ1u0CJVAJY9sodKBZTseExmMtSMrhNO7kNgt
-         CJKyk5Y0Ss71oGwC6G8uUdnUo9tIpS9xSD0fQa5Fhbf3pF/GhpQezYC9YvJCg2X/gBxw
-         JJuS5A8S3Rhadeum/yvr/EhmEPwuoP2zpL382APom+OMQj3Q8RiMne5m/s08a0QrggR6
-         p7X6mgiFxVPOxQU94+0DKxyiEysYZLc/7HwMsfIRZcsKzgp0zFw0Nqjd3HuL4r9nSlA4
-         xPMjE+5tN+i7d52jhgtGtZIwLjv1ShEudNFYNpo9vIEZE75y0SNBJvEAQWxRc7VXses1
-         URuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729675387; x=1730280187;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FV1ZLlJ6ihzrtTWl6CBeIqu9ifr35Cm5491ANjcacY8=;
-        b=uLcs6HczwKlmjXiMHBQX6Aw2Trzq8K3+KymX+7iljsCIP6rLjI4pi7sO69/CeYtcXC
-         89UVTS58l9gCM5GGwBYUKC31gKJdtRH/nGFBSfCSBcWWegjTHQAhGg+qcA7gDpL+SOlf
-         1QZShzS5VNEAOFdodwL+yEsKgE8Ln5k4x1/NmYrScVN+/BrOokbN9ZZL2pIsVQfcWGEG
-         YmZuw/m2xW1ZVoa0AeUt6Afz6FWy3yrcM4v9dRaT1LQ69N4gW4fpOxjbH00LddwV4r5O
-         IcxbB6u8pIhcg9nw09njzMyTCJ7FeVV0No9X4rKY/c4fmbrDpg1IL/yC6CXRKl+FuvRx
-         yjCA==
-X-Forwarded-Encrypted: i=1; AJvYcCULLIkI4K+Y08cRUTk69fD84GdH29+FlbzFGEFw8GYxnK1MIYDng3RyhJtmoD7qpxPi9groe+t0w40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5i41mQb/lk5dCXZf6e7c0pRBCVmz66eKnURhK4sGxL6yN7sTA
-	g7TFH5U1hbAb4oJtwMl8CZUFUK/SPa+bxuSHZ3vIbyc/M6LkBIGDAyhY8srbt4vwapFrubDYSfg
-	o3uBRtnVGFsRXhxBVKHVM2k2LfO90XWSHYY6V9w==
-X-Google-Smtp-Source: AGHT+IGwT/XQGTi9q+W4JK6054qYIT+LVrJhEVBeHkw3KiZ6r1s0bvwN6zFNuF2/oxMRtTdC06ygKUosK4CfLjZmk4w=
-X-Received: by 2002:a05:690c:2b10:b0:6e5:ac5f:9c43 with SMTP id
- 00721157ae682-6e7f0fda834mr15598017b3.39.1729675386754; Wed, 23 Oct 2024
- 02:23:06 -0700 (PDT)
+	s=arc-20240116; t=1729675789; c=relaxed/simple;
+	bh=SdhOwZKI/gsrk8AGaPPuiCICEt3+t7RgqCjHGfRoBJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/7W/T5uhAFly9t2LKNBZ2cpjtgiwrWIl12yJ49SgJMMTVQpvfWJnr1EypQxHT2pPPY3jPodDSnNPoWvrvs1zdv0ij8ze8tbT9/pnY9svEGVf0vw+dpLAMztvmJY7pe4JWFzGTYfgQ04IpWMJV4gav38gsXwJBjNhlOQCd3iI7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mi5aVIEh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16C2C4CEC6;
+	Wed, 23 Oct 2024 09:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729675789;
+	bh=SdhOwZKI/gsrk8AGaPPuiCICEt3+t7RgqCjHGfRoBJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mi5aVIEh2V70eev05hlS3P4Fo3Jy34jgIiMt1fiWIM3Q5q9BM4GX1U8hj6emPQ9U9
+	 xfAjdqVBADDDL6VbqgYydtmgQhnWPGbpwd1bY9JVBRL0cKgMK+Kn3X+A9Hjd1dZ3MN
+	 2nRWMTZcHjXc/2lm78heV3zxbAxUq4/5I/5FwU1I0DCNdJN2xxAc3s9dGdcSp3wzXM
+	 70rHtzsMfUNPLeIZEmzAKFUeFSdlnas375mMPp/OAqZ9w5RNxulvAE5d5/nrSwLrvz
+	 FHohMsyNRr/6hXCTR8UchETb8WKKPJtzIsQR+0dLuB0PtWKuRmKhUoQ5EajojphLe1
+	 w/VD5xy1O63VQ==
+Date: Wed, 23 Oct 2024 11:29:43 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Subject: Re: [PATCH v6 0/6] Improve PCI memory mapping API
+Message-ID: <ZxjCB6cSTm2NukZP@ryzen>
+References: <20241022234926.GA893145@bhelgaas>
+ <fced0bf9-dcd3-4c04-af19-505b943c6440@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241022-pci-pwrctl-rework-v1-0-94a7e90f58c5@linaro.org> <20241022-pci-pwrctl-rework-v1-2-94a7e90f58c5@linaro.org>
-In-Reply-To: <20241022-pci-pwrctl-rework-v1-2-94a7e90f58c5@linaro.org>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Wed, 23 Oct 2024 11:22:56 +0200
-Message-ID: <CACMJSesnFjFuUhWnM2ecNP2S-eNCT-Gx5pGF-eb748gXRNRgsg@mail.gmail.com>
-Subject: Re: [PATCH 2/5] PCI/pwrctl: Create pwrctl devices only if at least
- one power supply is present
-To: manivannan.sadhasivam@linaro.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, stable+noautosel@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fced0bf9-dcd3-4c04-af19-505b943c6440@kernel.org>
 
-On Tue, 22 Oct 2024 at 12:28, Manivannan Sadhasivam via B4 Relay
-<devnull+manivannan.sadhasivam.linaro.org@kernel.org> wrote:
->
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> Currently, pwrctl devices are created if the corresponding PCI nodes are
-> defined in devicetree. But this is not correct, because not all PCI nodes
-> defined in devicetree require pwrctl support. Pwrctl comes into picture
-> only when the device requires kernel to manage its power state. This can
-> be determined using the power supply properties present in the devicetree
-> node of the device.
->
-> So add a new API, of_pci_is_supply_present() that checks the devicetree
-> node if at least one power supply property is present or not. If present,
-> then the pwrctl device will be created for that PCI node. Otherwise, it
-> will be skipped.
->
-> Cc: stable+noautosel@kernel.org # Depends on of_platform_device_create() rework
-> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
-> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
+On Wed, Oct 23, 2024 at 11:51:41AM +0900, Damien Le Moal wrote:
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+(snip)
+
+> For an endpoint initiated transfer, typically, the PCI address is obtained from
+> some "command" received through a BAR or through DMA. The command has the PCI
+> addresses to use for transfering data to/from the host (e.g. an nvme rw command
+> uses PRPs or SGLs to specify the PCI address segments for the data buffer of a
+> command). For this case, the EPF driver calls calls pci_epc_mem_map() for the
+> command buffer, does the transfer (memcpy_toio/fromio()) and unmaps with
+> pci_epc_mem_unmap(). Note though that here, if an eDMA channel is used for the
+> transfer, the DMA engine will do the mapping automatically and the epf does not
+> need to call pci_epc_mem_map()/pci_epc_mem_unmap(). There is still an issue in
+> this area which is that it is *not* clear if the DMA channel used can actually
+> do the mapping automatically or not. E.g. the generic DMA channel (mem copy
+> offload engine) will not. So there is still some API improvement needed to
+> abstract more HW dependent things here.
+
+FWIW, in my final reply here:
+https://lore.kernel.org/lkml/ZiYuIaX7ZV0exKMt@ryzen/
+
+"
+I did suggest that DWC-based drivers could set a DMA_SLAVE_SKIP_MEM_MAP flag
+or similar when registering the eDMA, which pci-epf-test then could check,
+but I got no response if anyone else thought that this was a good idea.
+"
+
+
+For DMA_SLAVE (private tx/rx DMA channels):
+For DWC-based controllers, we can definitely set DMA_SLAVE_SKIP_MEM_MAP when
+registering the eDMA (e.g. in dw_pcie_edma_detect()).
+
+However, I don't know how the DMA hardware (if any) in:
+drivers/pci/controller/cadence/pcie-cadence-ep.c
+drivers/pci/controller/pcie-rcar-ep.c
+drivers/pci/controller/pcie-rockchip-ep.c
+works, so I'm not sure if those drivers can set DMA_SLAVE_SKIP_MEM_MAP
+(the safest thing is to not set that flag, until we know how they work).
+
+
+For DMA_MEMCPY:
+We know that we need to perform pci_epc_mem_map() when using
+DMA API + "dummy" memcpy dma-channel (DMA_MEMCPY).
+I could imagine that some embedded DMA controllers also provide
+DMA_MEMCPY capabilities (in addition to DMA_SLAVE).
+
+
+So I guess the safest thing is to call the flag something like:
+PCI_EPC_DMA_SKIP_MEM_MAP
+(rather than PCI_EPC_DMA_SLAVE_SKIP_MEM_MAP).
+(since the embedded DMA controller might provide both DMA_SLAVE and DMA_MEMCPY).
+
+And let the EPC driver (e.g. dw_pcie_edma_detect()), or possibly the DMA
+driver itself to provide/set this flag.
+
+
+Kind regards,
+Niklas
 
