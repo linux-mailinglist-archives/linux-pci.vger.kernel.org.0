@@ -1,59 +1,60 @@
-Return-Path: <linux-pci+bounces-15150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 398BC9AD55B
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 22:12:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF0739AD5E3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 22:58:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEA0E2848BC
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 20:12:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D40D1F22934
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 20:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080931D278A;
-	Wed, 23 Oct 2024 20:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1225D1E2823;
+	Wed, 23 Oct 2024 20:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUFEmcwq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdP/bcoT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD43614EC62;
-	Wed, 23 Oct 2024 20:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D406313AA2B;
+	Wed, 23 Oct 2024 20:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729714344; cv=none; b=gaLkar9wlQBwY6jXXqcGqrecWmtCGtcrDcsrU3Fqpkd4j6MTL+zYD1S+UiilcNmKgmgCHmLGaM60d6tKpIqyOO0mjbzp8VksPd6Nd3C+QVCRZVgEGC05JPup+fG9mWVKHz0D7Ayg5FwipiGz568DNye4tEVpYWM7dK4kOmwQqu0=
+	t=1729717102; cv=none; b=fFZFVNNL4MVVBhh2MbkSiobQ/AN86HgFougvt5x5R5JFbS4L9ehGe9Zc02LFwj8ay+QCYcNeDtK1lqIvTT8HOKB9vKFp3SxkjttjdI4m2o7sunY8Sx9T7ZMx8NysgaAzbeIkbNeQMJabLGsxa1M+vh/5dBXS2ePw9ErgW0u4YiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729714344; c=relaxed/simple;
-	bh=XU78OzZBYmidEegNPScpopPHVT1Q0ZqVTdr3ZQvXXNU=;
+	s=arc-20240116; t=1729717102; c=relaxed/simple;
+	bh=ua6G8hOkmOlyX02Sg136mZtIxjo24HD4simPCtz5OZk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=otv0AlP/niPSQ/bF3u4ctF8LTEonEL5PYrd3yT8xVDpC3Si8T+5vuHHg8Oega5EJFgIsBm1A0BOaGTWveXjzhyjta9mqGabEr6lQriPWOOULTygZrDedvsZ9SGQpc1VbpHGlIKnyRTy4zUQlX2tcyaHyMZJrHRCYeASKwPisOGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUFEmcwq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F378C4CEC6;
-	Wed, 23 Oct 2024 20:12:24 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=cIBxYKruqwUTTkB35LK1vPreDBpbdYn/jQrxqFWvz9aslSOS64YughM7GhqVTfBSZeItl8rDkagNyu6v1oCpuUPL/sMY/PVF5mkysiAd7ldaR92fHOBgmR4l0LK65GlXGRSyhxnGw0zCZQmR89d+R+cn7+6exg3Z9i5dYOldLyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdP/bcoT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAB7C4CEC6;
+	Wed, 23 Oct 2024 20:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729714344;
-	bh=XU78OzZBYmidEegNPScpopPHVT1Q0ZqVTdr3ZQvXXNU=;
+	s=k20201202; t=1729717101;
+	bh=ua6G8hOkmOlyX02Sg136mZtIxjo24HD4simPCtz5OZk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KUFEmcwqycH8VEXE+3URKrH+scZKWIKrAlB/mJ38BzhD6QpwkEC0aeYwTcSalHx0u
-	 ucfRmCYcHMUXasRMiWbPYNyEpxHi5Mmca4eT2SvAj4Y4fCupDM2UgnqPacS1FtjZ0A
-	 61jNd8XVgTbjMXqMai1/N80IFVBb+rxrVS0Vwr9lCxwDjrlGG9zcmTy/NAwKBHILTZ
-	 ZegWP6yNzstozE1/WA8MxumoDJr3S9ebDvNVNc/+MnEzTrIwb1zBXYgMUUO6flLuVB
-	 /aKw+4+B06FLQiJw7LVm+lQdb0iR/PPu22GK2PHe6fABnl3ycgArSMkh49QqOuzSKp
-	 fyXNK952N50wg==
-Date: Wed, 23 Oct 2024 15:12:21 -0500
+	b=PdP/bcoTtsZprA0eIGG5u683til6mhI+2kRWD3o/S2nGZ+8hK7kjC1REuHFOih+Ih
+	 v37MvJhVrE9hq97QpWLW6squOv2WS9AHJ/X7ELVZUwQaeg+8rAnskfAe7V56aYMK77
+	 GHluSzR8LEwbmG91VilndxpUv2XtGsUvOUmX1Dvj6sGEqwZLavPFg0Ldoo7oxv361E
+	 FWeq76YDRJxjK4OKPdkCoX1IeeNNesvfi89x8sUm1XO0pjgfrcAZZywZXk3sEDKX/q
+	 DQfDLX3y5rnHy3j5vIIhmvEk8m6pAZL0Q16bjEUZYYYO6fuNmD+W1cKGQhyUlZm4sN
+	 Y7GnXdj2n8PFg==
+Date: Wed, 23 Oct 2024 15:58:18 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Stefan Eichenberger <eichest@gmail.com>
-Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	francesco.dolcini@toradex.com, Frank.li@nxp.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: Re: [PATCH v3] PCI: imx6: Add suspend/resume support for i.MX6QDL
-Message-ID: <20241023201221.GA926319@bhelgaas>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rajat Jain <rajatja@google.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	iommu@lists.linux.dev,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: Detect and trust built-in Thunderbolt chips
+Message-ID: <20241023205818.GA930054@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,50 +63,90 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zxi6f3S5p8Pnto-S@eichest-laptop>
+In-Reply-To: <ZtBAP4TayLmdiya_@wunner.de>
 
-On Wed, Oct 23, 2024 at 10:57:35AM +0200, Stefan Eichenberger wrote:
-> On Tue, Oct 22, 2024 at 10:53:49AM -0500, Bjorn Helgaas wrote:
-> > On Mon, Oct 21, 2024 at 02:49:13PM +0200, Stefan Eichenberger wrote:
-> > > From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
-> > > 
-> > > The suspend/resume support is broken on the i.MX6QDL platform. This
-> > > patch resets the link upon resuming to recover functionality. It shares
-> > > most of the sequences with other i.MX devices but does not touch the
-> > > critical registers, which might break PCIe. This patch addresses the
-> > > same issue as the following downstream commit:
-> > > https://github.com/nxp-imx/linux-imx/commit/4e92355e1f79d225ea842511fcfd42b343b32995
-> > > In comparison this patch will also reset the device if possible because
-> > > the downstream patch alone would still make the ath10k driver crash.
-> > > Without this patch suspend/resume will not work if a PCIe device is
-> > > connected. The kernel will hang on resume and print an error:
-> > > ath10k_pci 0000:01:00.0: Unable to change power state from D3hot to D0, device inaccessible
-> ...
-
-> > The downstream commit log ("WARNING: this is not the official
-> > workaround; user should take own risk to use it") doesn't exactly
-> > inspire confidence.
+On Thu, Aug 29, 2024 at 11:32:47AM +0200, Lukas Wunner wrote:
+> On Wed, Aug 28, 2024 at 05:15:24PM -0400, Esther Shimanovich wrote:
+> > On Sun, Aug 25, 2024 at 10:49???AM Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Fri, Aug 23, 2024 at 04:53:16PM +0000, Esther Shimanovich wrote:
+> > > > --- a/drivers/pci/probe.c
+> > > > +++ b/drivers/pci/probe.c
+> > > > +static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
+> > > > +{
+> > > > +     struct fwnode_handle *fwnode;
+> > > > +
+> > > > +     /*
+> > > > +      * For USB4, the tunneled PCIe root or downstream ports are marked
+> > > > +      * with the "usb4-host-interface" ACPI property, so we look for
+> > > > +      * that first. This should cover most cases.
+> > > > +      */
+> > > > +     fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
+> > > > +                                    "usb4-host-interface", 0);
+> > >
+> > > This is all ACPI only, so it should either be #ifdef'ed to CONFIG_ACPI
+> > > or moved to drivers/pci/pci-acpi.c.
+> > >
+> > > Alternatively, it could be moved to arch/x86/pci/ because ACPI can also
+> > > be enabled on arm64 or riscv but the issue seems to only affect x86.
 > > 
-> > It sounds like this resets *endpoints*?  That sounds scary and
-> > unexpected in suspend/resume.
+> > Thanks for the feedback! Adding an #ifdef to CONFIG_ACPI seems more
+> > straightforward, but I do like the idea of not having unnecessary code
+> > run on non-x86 systems.
+> > 
+> > I'd appreciate some guidance here. How would I move a portion of a
+> > function into a completely different location in the kernel src?
+> > Could you show me an example?
 > 
-> Yes, I completely agree with you, but NXP has never come up with an
-> "official" workaround. Our problem is that with the current
-> implementation, suspend/resume is completely broken when a PCIe device
-> is connected. With this proposed patch we at least have a working device
-> after resume. Even for the other i.MX devices, the driver resets the
-> endpoints in the resume function (imx_pcie_resume_noir ->
-> imx_pcie_host_init -> imx_pcie_assert_core_reset), we just do that now
-> for the i.MX6QDL as well. If it is more appropriate to call
-> imx_pcie_assert_core_reset in resume as we do for the other devices,
-> that would be fine with me as well. I was thinking that if we need to
-> reset the device anyway, we could put it into reset on suspend, as this
-> might save some extra power.
+> One way to do this would be to move pcie_is_tunneled(),
+> pcie_has_usb4_host_interface() and pcie_switch_directly_under()
+> to arch/x86/pci/acpi.c.
+> 
+> Rename pcie_is_tunneled() to arch_pci_dev_is_removable() and remove
+> the "static" declaration specifier from that function.
+> 
+> Add a function declaration for arch_pci_dev_is_removable() to
+> include/linux/pci.h.
+> 
+> Add a __weak arch_pci_dev_is_removable() function which just returns
+> false in drivers/pci/probe.c right above pci_set_removable().
+> 
+> And that's it.
+> 
+> See pcibios_device_add() for an example.
+> 
+> That's one way to do it.  It ensures that the code is only compiled
+> on x86 and only if CONFIG_ACPI=y.  Basically the linker picks the
+> arch_pci_dev_is_removable() in arch/x86/pci/acpi.c, or the empty
+> __weak function of the same name on !x86 or if CONFIG_ACPI=n.
+> 
+> An alternative approach would involve using an empty static inline.
+> I think the difference is that an empty static inline is optimized
+> away by the compiler, whereas the empty __weak function is not
+> optimized away by the compiler, but may be optimized away by the
+> linker if CONFIG_LTO=y.
+> 
+> For the static inline it's basically the same but you omit the
+> __weak arch_pci_dev_is_removable() in drivers/pci/probe.c and
+> instead constrain the function declaration in include/linux/pci.h to:
+> #if defined(CONFIG_X86) && defined(CONFIG_ACPI)
+> ...and the #else branch would contain the empty static inline
+> which just returns false.
+> 
+> See pci_mmcfg_early_init() for an example.
+> 
+> Maybe the empty static inline is better because then the entire
+> "if (arch_pci_dev_is_removable(...))" clause can be optimized away
+> without reliance on CONFIG_LTO=y.
 
-OK, I have to admit I don't know enough about suspend/resume.  Since
-we already do that for other i.MX platforms, maybe an endpoint reset
-is normal for suspend.  I really don't know.  In any case, if we do it
-for other i.MX platforms, I'm OK doing it for this one too.
+Was there ever any followup on this?  Do we need any?
+
+This uses fwnode_find_reference("usb4-host-interface"), and while
+"usb4-host-interface" is only defined for ACPI systems (as far as I
+know), the fwnode_find_reference() interface itself is not
+ACPI-specific.
+
+So maybe this is OK as-is, and it will just never find that property
+on non-ACPI systems?
 
 Bjorn
 
