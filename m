@@ -1,223 +1,107 @@
-Return-Path: <linux-pci+bounces-15099-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15100-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8D929AC007
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 09:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 79E079AC02E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 09:28:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55396B24452
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 07:19:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAC04B21445
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 07:28:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7959D1531F0;
-	Wed, 23 Oct 2024 07:19:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E381547D5;
+	Wed, 23 Oct 2024 07:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfNYIbtY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60DB14B942;
-	Wed, 23 Oct 2024 07:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B90153BF8;
+	Wed, 23 Oct 2024 07:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729667951; cv=none; b=U2KQ/SHl8wu0G+A2NWuJ3CAQHxDf9IptvnoFHWIG/odCn40YrZyBS6gAJB6rSbcaU69m8vfSreObWVK9MmqTVQYdaN88zBPEjJqAwOGpiBbYOh7IG6DvdZ89WsiDKqjmdLpTweXKle760fwjshsaDO5UIFgmDpUcrhnRgn2hGi0=
+	t=1729668499; cv=none; b=HmFEvEPYDUJY4DoyWTpT5vM1B/+09C7TxbveuTr+5Uz4q8bd+gYP2kNwBebwZ/i3ASQN/LY2WgOkyJhFk5eCVXZUkVM3Q+ERFFo4QEe3UhIfViDtJmSqyrSQODJNkqdCEnRSdgHzrsTdQdANmhF6F7+hTIpdR15orNHEZ4W5JEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729667951; c=relaxed/simple;
-	bh=VlzBZICalXL7+uRPigHr2hG8Cd22KtoBbGOuEnObFbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Omnfzu9P9Qx6b6Qw4nG25+sUsl1ZeuMZoPiAFysvUSxqPspvBdoZ6lgqzINb3YMJEUY1B7iXwokVtKz3Iygz7AoQA/UQjRZdfbIVj389CxqRAG/NaG2Sx7FMSRdO4O5W5lKVYf64x1cXVN3DjWdubpByc3ES6Ubx1e73vBPXqNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aeec7.dynamic.kabel-deutschland.de [95.90.238.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 0349C61E5FE05;
-	Wed, 23 Oct 2024 09:18:46 +0200 (CEST)
-Message-ID: <e6bd065d-0b9b-4c37-958c-fc2a09ea0475@molgen.mpg.de>
-Date: Wed, 23 Oct 2024 09:18:46 +0200
+	s=arc-20240116; t=1729668499; c=relaxed/simple;
+	bh=L5yLsoBUR0IuLJ1N3QGS6JUyNVDuJDXCUWIy6oU9b78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a54GrtGUy0XnxZyeyzEKAOvR3U+fgOUAGPlu5keW5w6K9o5QVXwhEtJ9WORKN3mYNjkcrhmwWFXYEx197sMI5xy7ixLxcO0wJbDYoKiRSJH9A4x3oqjbYC8VvesOPD2ptlUJWR2bpmxiCex0JGaBFz97W53KU7VyBxcDxXoGMiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfNYIbtY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 601F3C4CEC6;
+	Wed, 23 Oct 2024 07:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729668499;
+	bh=L5yLsoBUR0IuLJ1N3QGS6JUyNVDuJDXCUWIy6oU9b78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SfNYIbtYFfUadbPENunNtc4OXS8S7g0+icsrnc5y+c1DPfM7VJ8Jg/BqjwlF4fCv0
+	 AOq4Ko5KdqQuIEf1bFxav7GJwME49gWkJ5koLSG9GUFNHzY2Bk7cCd75SgPiG+1wZ8
+	 BuncKNFMt56EfTzhXLA4+dcE7i3SiICq0IfD6vjahkFIQis8JNdqSnCdFlmYQl8AAL
+	 RCUSAosxUWO/qyvCD2LsJxfYF66z7hsQ/pMosLaMAO8RL135EVTAUF/+HVWj5QboGf
+	 piCqOM4YfH0o9vDbLqjC56iiJUQgCqJHP4xRHYyc93GrQMZrmxEE4DeTKRTbZCX9yM
+	 iN4FSEa9cwoSQ==
+Date: Wed, 23 Oct 2024 09:28:11 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, tmgross@umich.edu,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 00/16] Device / Driver PCI / Platform Rust abstractions
+Message-ID: <Zxili5yze1l5p5GN@pollux>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <2024102324-giver-scavenger-a295@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Device suspend-resume support
- added
-To: ChandraShekar <chandrashekar.devegowda@intel.com>,
- Kiran K <kiran.k@intel.com>
-Cc: linux-bluetooth@vger.kernel.org, ravishankar.srivatsa@intel.com,
- chethan.tumkur.narayan@intel.com, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org
-References: <20241023114647.1011886-1-chandrashekar.devegowda@intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20241023114647.1011886-1-chandrashekar.devegowda@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024102324-giver-scavenger-a295@gregkh>
 
-[Cc: +Bjorn, +linux-pci]
-
-Dear Chandra,
-
-
-Thank you for the patch.
-
-First something minor: Should there be a space in your name?
-
-ChandraShekar → Chandra Shekar
-
-`git config --global user.name "…"` can configure this for your git setup.
-
-Also for the summary/title, it’d be great if you used a statement by 
-using a verb (in imperative mood):
-
-Add device suspend-resume support
-
-or shorter
-
-Support suspend-resume
-
-Am 23.10.24 um 13:46 schrieb ChandraShekar:
-> This patch contains the changes in driver to support the suspend and
-> resume i.e move the controller to D3 state when the platform is entering
-> into suspend and move the controller to D0 on resume.
-
-It’d be great if you elaborated. Please start by the history, since when 
-Intel Bluetooth PCIe have been there, and why until now this support was 
-missing.
-
-Then please describe, what is needed, and what documentation you used to 
-implement the support.
-
-Also, please document, how you tested this, including the log messages, 
-and also the time it takes to resume.
-
-Is it also possible to use Bluetooth as a wakeup source from suspend?
-
-> Signed-off-by: Kiran K <kiran.k@intel.com>
-> Signed-off-by: ChandraShekar <chandrashekar.devegowda@intel.com>
-> ---
->   drivers/bluetooth/btintel_pcie.c | 52 ++++++++++++++++++++++++++++++++
->   drivers/bluetooth/btintel_pcie.h |  4 +++
->   2 files changed, 56 insertions(+)
+On Wed, Oct 23, 2024 at 07:13:37AM +0200, Greg KH wrote:
+> On Tue, Oct 22, 2024 at 11:31:37PM +0200, Danilo Krummrich wrote:
+> > This patch series implements the necessary Rust abstractions to implement
+> > device drivers in Rust.
+> > 
+> > This includes some basic generalizations for driver registration, handling of ID
+> > tables, MMIO operations and device resource handling.
+> > 
+> > Those generalizations are used to implement device driver support for two
+> > busses, the PCI and platfrom bus (with OF IDs) in order to provide some evidence
+> > that the generalizations work as intended.
+> > 
+> > The patch series also includes two patches adding two driver samples, one PCI
+> > driver and one platform driver.
+> > 
+> > The PCI bits are motivated by the Nova driver project [1], but are used by at
+> > least one more OOT driver (rnvme [2]).
+> > 
+> > The platform bits, besides adding some more evidence to the base abstractions,
+> > are required by a few more OOT drivers aiming at going upstream, i.e. rvkms [3],
+> > cpufreq-dt [4], asahi [5] and the i2c work from Fabien [6].
+> > 
+> > The patches of this series can also be [7], [8] and [9].
 > 
-> diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
-> index fd4a8bd056fa..f2c44b9d7328 100644
-> --- a/drivers/bluetooth/btintel_pcie.c
-> +++ b/drivers/bluetooth/btintel_pcie.c
-> @@ -273,6 +273,12 @@ static int btintel_pcie_reset_bt(struct btintel_pcie_data *data)
->   	return reg == 0 ? 0 : -ENODEV;
->   }
->   
-> +static void btintel_pcie_set_persistence_mode(struct btintel_pcie_data *data)
-> +{
-> +	btintel_pcie_set_reg_bits(data, BTINTEL_PCIE_CSR_HW_BOOT_CONFIG,
-> +				  BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON);
-> +}
-> +
->   /* This function enables BT function by setting BTINTEL_PCIE_CSR_FUNC_CTRL_MAC_INIT bit in
->    * BTINTEL_PCIE_CSR_FUNC_CTRL_REG register and wait for MSI-X with
->    * BTINTEL_PCIE_MSIX_HW_INT_CAUSES_GP0.
-> @@ -297,6 +303,8 @@ static int btintel_pcie_enable_bt(struct btintel_pcie_data *data)
->   	 */
->   	data->boot_stage_cache = 0x0;
->   
-> +	btintel_pcie_set_persistence_mode(data);
-> +
->   	/* Set MAC_INIT bit to start primary bootloader */
->   	reg = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_FUNC_CTRL_REG);
->   	reg &= ~(BTINTEL_PCIE_CSR_FUNC_CTRL_FUNC_INIT |
-> @@ -1653,11 +1661,55 @@ static void btintel_pcie_remove(struct pci_dev *pdev)
->   	pci_set_drvdata(pdev, NULL);
->   }
->   
-> +static int btintel_pcie_suspend(struct device *dev)
-> +{
-> +	struct btintel_pcie_data *data;
-> +	int err;
-> +	struct  pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	data = pci_get_drvdata(pdev);
-> +	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D3_HOT);
-> +	data->gp0_received = false;
-> +	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
-> +				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
-> +	if (!err) {
-> +		bt_dev_err(data->hdev, "failed to receive gp0 interrupt for suspend");
+> Nice!
+> 
+> Thanks for redoing this, at first glance it's much better.  It will be a
+> few days before I can dive into this, It's conference season and the
+> travel is rough, so be patient but I will get to this...
 
-Please include the timeout in the message.
+No worries, I'll be also a bit less responsive than usual in the next weeks.
 
-> +		goto fail;
-> +	}
-> +	return 0;
-> +fail:
-> +	return -EBUSY;
-> +}
-> +
-> +static int btintel_pcie_resume(struct device *dev)
-> +{
-> +	struct btintel_pcie_data *data;
-> +	struct  pci_dev *pdev = to_pci_dev(dev);
-> +	int err;
-> +
-> +	data = pci_get_drvdata(pdev);
-> +	btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
-> +	data->gp0_received = false;
-> +	err = wait_event_timeout(data->gp0_wait_q, data->gp0_received,
-> +				 msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
-> +	if (!err) {
-> +		bt_dev_err(data->hdev, "failed to receive gp0 interrupt for resume");
-
-Ditto.
-
-> +		goto fail;
-> +	}
-> +	return 0;
-> +fail:
-> +	return -EBUSY;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(btintel_pcie_pm_ops, btintel_pcie_suspend,
-> +		btintel_pcie_resume);
-> +
->   static struct pci_driver btintel_pcie_driver = {
->   	.name = KBUILD_MODNAME,
->   	.id_table = btintel_pcie_table,
->   	.probe = btintel_pcie_probe,
->   	.remove = btintel_pcie_remove,
-> +	.driver.pm = &btintel_pcie_pm_ops,
->   };
->   module_pci_driver(btintel_pcie_driver);
->   
-> diff --git a/drivers/bluetooth/btintel_pcie.h b/drivers/bluetooth/btintel_pcie.h
-> index f9aada0543c4..38d0c8ea2b6f 100644
-> --- a/drivers/bluetooth/btintel_pcie.h
-> +++ b/drivers/bluetooth/btintel_pcie.h
-> @@ -8,6 +8,7 @@
->   
->   /* Control and Status Register(BTINTEL_PCIE_CSR) */
->   #define BTINTEL_PCIE_CSR_BASE			(0x000)
-> +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG		(BTINTEL_PCIE_CSR_BASE + 0x000)
->   #define BTINTEL_PCIE_CSR_FUNC_CTRL_REG		(BTINTEL_PCIE_CSR_BASE + 0x024)
->   #define BTINTEL_PCIE_CSR_HW_REV_REG		(BTINTEL_PCIE_CSR_BASE + 0x028)
->   #define BTINTEL_PCIE_CSR_RF_ID_REG		(BTINTEL_PCIE_CSR_BASE + 0x09C)
-> @@ -48,6 +49,9 @@
->   #define BTINTEL_PCIE_CSR_MSIX_IVAR_BASE		(BTINTEL_PCIE_CSR_MSIX_BASE + 0x0880)
->   #define BTINTEL_PCIE_CSR_MSIX_IVAR(cause)	(BTINTEL_PCIE_CSR_MSIX_IVAR_BASE + (cause))
->   
-> +/* CSR HW BOOT CONFIG Register */
-> +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON		(BIT(31))
-> +
->   /* Causes for the FH register interrupts */
->   enum msix_fh_int_causes {
->   	BTINTEL_PCIE_MSIX_FH_INT_CAUSES_0	= BIT(0),	/* cause 0 */
-
-
-Kind regards,
-
-Paul
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
