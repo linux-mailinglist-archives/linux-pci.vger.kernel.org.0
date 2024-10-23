@@ -1,218 +1,280 @@
-Return-Path: <linux-pci+bounces-15080-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15081-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C6AB9ABAB1
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 02:51:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9D6B9ABAFC
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 03:27:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 746A61C20E0E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 00:51:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A00DD283283
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 01:27:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE28A168DA;
-	Wed, 23 Oct 2024 00:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E505200CB;
+	Wed, 23 Oct 2024 01:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ptq/Asv6"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kX5JOCLc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C2E1C6A3;
-	Wed, 23 Oct 2024 00:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729644668; cv=none; b=sImg5hSQ9ZGCzSDmmiK6WLThYWdW9r7Ktf5I6sQ8PYYZ8mvzsqO4RsMIyV3CdB0nAice+r5ffCfuj/6KNJQ4/r54NvO4ZvqTVAqTyrJ79ypxEV3RnKG4/60UUMaCT5gb8R/lLd25W+yncH0so9eVp1Vxxwun9J5lUTE6GFZPYvI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729644668; c=relaxed/simple;
-	bh=2CicPGy2glP1mUqm5CAPj05xgBoGuI0XdTJxJxXKrDo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M8mfOGrSL+Cyp0D+wTbJLEL2Z8k1WE35Gar1ofxumN6D8VA8EP6Bs2xK1TJedCWyfuoQ8i8KdbZVAm4ubIfwjoOW649jL8Pmbkp+mGjMA0ll/QwZwDYm837+N83YGFoa58fyl+3X/En34BFVLHGp3Q3u72bBtGWgBH4unkbvrDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ptq/Asv6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E31B820FC5F2;
-	Tue, 22 Oct 2024 17:51:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E31B820FC5F2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1729644666;
-	bh=zjZeWP3Fn8idOep3PQVo7QwCf4WCY+6296943aRWrJo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ptq/Asv6NOd+j2FY/cwnF8Hu8cTmgTkCKNGmUO8vaWOmDGr2W5C3tiAUiJjUCJHpp
-	 D3lFoU5kHF/38OOU7fNrQytJFQx60+KYnIi8VDrVVrWD1Sh/M95SHve4tCkxvaOjyU
-	 8mjWFYlVmGMrtAatziaIPXazv+vB8cutE+AlXvbQ=
-Message-ID: <725bac7d-5758-44fd-82cc-29fb85d8c53f@linux.microsoft.com>
-Date: Tue, 22 Oct 2024 17:51:05 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4161804E;
+	Wed, 23 Oct 2024 01:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729646842; cv=fail; b=NXm2gdD74Q3IqkgNnIuoQM0rOmjtjtXueRyPd6rgSjVOe65Kmvel7wayVkDw4qcuL59M5Oit7+wI3UM7dIT4S3aVoLn1WtDsIzpqYiYvcgd7mSep9i/oZwjJJdcWHqwiebMNTZS1nbhOqQyh8RszhL5kQbTT6YKIZ4Eq2H9YRK8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729646842; c=relaxed/simple;
+	bh=YagPaxsrWr46Uq4REOGTzfbR7V/wkCnbNz3VYlJDC7U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=OY44euH+98TMOJ+dAu6IdsL1wymCR5Vzi6Wousb7oPwaRDWKGXEdjY5qxcUA+Gk4vc9o7v/GOIfnhaN6eh6IFx0T3mat5KM3MSxC2yFIRy4A9IGZ/k6Tti72Q/A4TYBKYFpIMP6S8n6c75tRiKz/B/7l+kJceE7mtoJKDl/9AaU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kX5JOCLc; arc=fail smtp.client-ip=40.107.223.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=udW5altgSX3iyv5WPr+QjQuBlDoPoVYVrQva9UwcSKI587zkTMjGmnYs6nOF8op7zaQwYrg1LhQ7vXjmMcaQpnfbCJ4A31blr+lYtj+2mzjPZGSpF2RMCNCkw3UF4HO+Jdy4PFoRpt/1ii5h7IeHyXDr9HxapX2nmwTgeAEFAl8UIgFJEjvsK4DGtnaizOtEHYD/j3Bt2y3cfNIZ6sbP3v2wwQ5ozqu2Aw9pHylUjyH3YjSEh6jvBqDFCGoBYyC2DCrDlFeSlqM+DTJ3HVL32/u5vIrbogVlQEnhhKvunC9OTGDaA3BKI2h4ySc92UdpMACTSoxWa2vud1XccSQuiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sxFaIz2f1CvY3+ShRgywuaxCp2drI642WvTaJ/CXDQU=;
+ b=C7IK1bxB8AGolrhtM6Z5BS37B6eiAdVgeIfyX0uPAYyKyUami+u0p/7RSy9mV5GUMvonSNwiu3z56yD6B1fuB5YEb7PqpxP8vq3qXHAns0t7TJWU25+cGJnTZnEIroYUeI6Drhv6Sl4NTnYNQmfNxgsCtYKqlzrcC+cu7QjnJ937LSFenvSO/b3u6dJ0jFxAL5UAn7Zv3RGDCqm7zwXfKuh3pz4u9ATccffwuy2lCo2J13s9YAqnmgKnNiiCpQxT8aC0NqVbXv2h/ERDRfq1QgRWddXVMNgzYKt+Cxp0t6bQlrZUSJcaTpSaHc5Rzo8DTgu0pf53rBWasPU+ip0tyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sxFaIz2f1CvY3+ShRgywuaxCp2drI642WvTaJ/CXDQU=;
+ b=kX5JOCLcplV9bbZukrhmyzzSd7HAp8dKyVr+7ICG8M7VF+zP5z4gM/xpWXdBbOYPis8B3xYWhWdtesTGqCtipdpk1UK+Hr7cxTCGzsYGChq0gaYVtlwD07hFKsa8gq0FyE2nvG74Krfl1FZzy+wCAyj+QvWY8bCMV6hDJokQQSkK6Der7DSUPj43JwXyiIQ3Q26J3qGRbjQVsT4bR5wLgsh911G7HsOzuPsvrmXJDe1j3KzztKM/PHJjksMmeu9tkxX7E2hIE/G3G/YkMLz9L6xEgJsuxeR7Z7rBM9gF/NuznP5uZ1P88PdVnB3rwJAw/b/ROMgURUg7wHkgnwwAmA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
+ by SA1PR12MB8161.namprd12.prod.outlook.com (2603:10b6:806:330::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.17; Wed, 23 Oct
+ 2024 01:27:17 +0000
+Received: from PH7PR12MB7914.namprd12.prod.outlook.com
+ ([fe80::8998:fe5c:833c:f378]) by PH7PR12MB7914.namprd12.prod.outlook.com
+ ([fe80::8998:fe5c:833c:f378%4]) with mapi id 15.20.8069.027; Wed, 23 Oct 2024
+ 01:27:17 +0000
+Message-ID: <fd7cae9a-5ee1-4e18-915d-4115f0a6a156@nvidia.com>
+Date: Wed, 23 Oct 2024 09:27:11 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot
+ VGA device
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Luke Jones <luke@ljones.dev>, Mario Limonciello <superm1@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>
+References: <20241014152502.1477809-1-superm1@kernel.org>
+ <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
+ <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
+ <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
+Content-Language: en-US
+From: Kai-Heng Feng <kaihengf@nvidia.com>
+In-Reply-To: <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TPYP295CA0037.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:7::16) To PH7PR12MB7914.namprd12.prod.outlook.com
+ (2603:10b6:510:27d::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Add new headers for Hyper-V Dom0
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "luto@kernel.org" <luto@kernel.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "seanjc@google.com" <seanjc@google.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
- <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mukeshrathor@microsoft.com" <mukeshrathor@microsoft.com>
-References: <1727985064-18362-1-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157F6EA7B2454D2F6CBF2ECD4782@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157F6EA7B2454D2F6CBF2ECD4782@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|SA1PR12MB8161:EE_
+X-MS-Office365-Filtering-Correlation-Id: 95789409-8b2d-47b5-a8dc-08dcf301d4cf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dFFTMUwwZTVTWldFSnhSTzFUNE5PaXpKUWZZUmUvbVNoYkpJdXVieDBsMEtX?=
+ =?utf-8?B?TEM3TFJudHZhSXg0cXVCRVZjRlZnUnNsNy9iTndkYUltVUp6YUdRMmozSlIx?=
+ =?utf-8?B?enFna1J5NzcwTGUwOElMVDZueXl6MXJQSFZZbzRxYldKOXVKVEdScTN6b3Ar?=
+ =?utf-8?B?RlR1ZWdUVlpLcDlURHYzc0hGS3Yvdi9pSE5IK0ZJZmtGeXVvSlNlZExpQ3JJ?=
+ =?utf-8?B?eU9HTWtNQWVHUHRwVGJNSUQ4MjIwTVgrNEloRlFkb0s0S0UwbWM3WHl5L1o2?=
+ =?utf-8?B?cmFWckR3VU9WdDVYZEkwMUxMRnFvM0tzVGRrNzRTbS9BL0d3TnNJc01XcE5B?=
+ =?utf-8?B?V00wZ2NGUWNwSER4cXh2OXl2c0YwTy9POTNWM2FYUFBPc2pJYndJVE5NNTgz?=
+ =?utf-8?B?TG5SNDZCTWtuMmxpK3lnSStHYVZNRFZxdFpoTXBaQ1lkaGE3OEFYL3E0YjFi?=
+ =?utf-8?B?VUZWUlhjWlJHa0dRRFRoZ0x1YTFYRkNXTldZVGNOZXNQbTAzYUFlZkFDSkJM?=
+ =?utf-8?B?VmhmRjVQU0NMUEI0eFdxa2dyN0RjVnYrckI2cHdObC85bWVSdE5NTFdUV2ww?=
+ =?utf-8?B?b1BJMjdhSENMN2VUVC82dXZ1eFBURFV1K2g1aWk5bnNNR3lrby9VVWpXUDhp?=
+ =?utf-8?B?MnRjOWk2VFE2bWs4YzJiNmF4UDh3cFpLalpoSHBoQy85cEhTWnBsTEZNVWtJ?=
+ =?utf-8?B?dnpNYkdMOFhrT1ZhMzE0aHVGS0xSdVBLN2FaZ1RsNGM1cnNLMnhwK0ZEblVC?=
+ =?utf-8?B?Wncyd2NlNy91dU1GaC92b29nTksyeE1maDJoaTBHVkhjY3IvMXlvQmJiaktP?=
+ =?utf-8?B?clVpNS9YUzl2aHZYbzBFMzFRM1d4M091N3U0ZzRpYi9QQmZWL3pOZUlZMHlZ?=
+ =?utf-8?B?VjRCN1FyNFJKbUhYYW5pc1ZURm5xSFdOWEFrcUo3Wnl2NFVMMUh1NmJWKytZ?=
+ =?utf-8?B?U0RsREQ2aFhHeFVDMGQwWlphc1IzOXhIM1NPZWZMTmh1aUFPUXpCamNqTGZs?=
+ =?utf-8?B?MlVXcytKK1BrQjJDOXM5cWljZ1VJb20vNkNiQnpNdzR2Y0k5NjRFWVRUTG9S?=
+ =?utf-8?B?dnpGbWFHbjBhVldVQ3RTeTA2S2k3VVB3RzVvZXFGbFJFUU9uT0doY0dTTXV5?=
+ =?utf-8?B?U3VkL3hlN1dyUFBNVVczZFpGL1FTTnJ5SGxOamg3ZnQreml6TGFYang2b2tw?=
+ =?utf-8?B?SC8xc2lBWVhNZkZuNU8rdy96WTV2TnF0Z0tFZVdRRG5ETmtnT1ErNXZPaENt?=
+ =?utf-8?B?WXJpUmg2cHVCbGd2Z01UL25NOHVpK3pKc2xUalVUVjNsNlJERGdLek1ZYVNm?=
+ =?utf-8?B?NDlacHBWbFd3RXN0MllUT3paR294eXh3bGQ4bXJXc2JtTmZXb1ErNEl0ekYr?=
+ =?utf-8?B?ZHNzemFTQjNueUphcTZ3ZER3RVg5eUt3Q1prMW8yWWFVa3RJdlNZTG5ySTZh?=
+ =?utf-8?B?WTN6b00zTEtqaStzZDU3aXo1L2lUVlRxeXIyTkpObEo5eDZDLzYrZUVoMDYy?=
+ =?utf-8?B?SEViQjlZa1NsVGlTeStXYmExVkI5ZFl3c25POExZaXpiN3NGSVhYZ3RTUGZM?=
+ =?utf-8?B?RW5nRFJnQWlXZi91bWx0TTBKbVRKNFVFZzE4WVJFait4dVpEeGVrUlVNWFZy?=
+ =?utf-8?B?UGRPMU5CbE5xU2t6Q1M3MXJKY01JeXB4cDlvaURLRDRKV2ZoeFFtQkoxa3hh?=
+ =?utf-8?B?YmdGcHM0NFlrVzJSSnM5dTRma3BEcWZ2TjFuaElyYjJEd0lnVVJTSDd3Wk52?=
+ =?utf-8?Q?keeJimRzc8mmI7cBNithVo3jgXeOT7xNxiJFKaD?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZXpYVEo4blpTQmwzYmNzUWNFZXpncTI0NUhkQTFraEJ2ck4wbG41VGxhaXlo?=
+ =?utf-8?B?SHZYOTdFVi9OUDVMTkhPVTAxdmVGREdqZTRUSGZJdU9HVnA2SFBOdy92ejFo?=
+ =?utf-8?B?UjZjRldYd3dleEJtYjRMNU5EMENQZ2lrejdMQ0JNNklGSTVrYkdhUnZJZzVn?=
+ =?utf-8?B?Mmc2aytCanNQVjUwVThXcnFOSCs2V3YrSmZHMnN3U3lMSldrRFBleXV4cUg0?=
+ =?utf-8?B?SFNobTVsUXBnMHhQNjE4MTNZQ1kxSHZNOERZU0s3WTlJTmYrZHphZjFsSWtj?=
+ =?utf-8?B?YkZNRFYzelkxaU9GMEgwT050SWNwNVFobjJENnZIcDRuVDByWTZRcW5ZV2Qx?=
+ =?utf-8?B?MGpJYmRDMjR4czAwZWoxcjlqN0pZTU5EWGxyYTVrR2cvRU15ajVBeElyYXFB?=
+ =?utf-8?B?clFnRG13S2FocWpES3FubDMzY1NXdllvMVFCeTJ6QjJjVWpsME5tM0I0UG54?=
+ =?utf-8?B?L0RNenY4SG9NbzdLaGx4VSt5Z2JzUEhTU2p2Y0pVNkU1V1FCQm5TSGZ6Z1Ix?=
+ =?utf-8?B?b2tuV28wbXdKMTY3YXc2aDJpRHVHZ204eXkwcWVPREtCbnM0bFEydTZuWkhM?=
+ =?utf-8?B?RDBVdTlnQTk2WnFkN1BYL2NrUUNYZXBHR0RncVJ1cVMxeUVCcjJFOEV2cUJH?=
+ =?utf-8?B?VVZka0NwaU5pRDU1RDBKVHN2ZHhQUVBJcE04cGZOZ3JRa0VjRE5Ra0lFV2xL?=
+ =?utf-8?B?bG9ncE9KZWJSODBhcGhKYjRmUFN6bjFHWE1jTGRsRWJhNjVvc2hGQWJXaDlH?=
+ =?utf-8?B?bFoyTldTV21uZDAybjdzZzcwendEdzQrN2lSRUFXdG51TjNPdUc2Y1VwNndX?=
+ =?utf-8?B?ZE9xZDUwY2Q0c3Fibk5CMHZVSS9mYWlSUE9welBicURCbVQwdjZSc0NxZzUx?=
+ =?utf-8?B?emlGN3YrR1JHNTNMTzd2U083Z2d2VVRITStsRVNYc0crUzVPRzNUS0xEUTha?=
+ =?utf-8?B?NzZxeEJDOEZmOVJhSzZJU2J5WHZkbm1jNHNXd1E4Qkg1MEczbzFxa2M3SmZT?=
+ =?utf-8?B?VUMzdUl0Z2pjbnhoTVFmRlJDdmJGZ1A2TjJOR3NlL0NvZVQ5R0NEYmZmTlpi?=
+ =?utf-8?B?TmZnaXR4ekpXUVV4ZDRqZkJpNFJNM0Faa1VtU0xlK1ZyemUvT2FKbjBQR0ww?=
+ =?utf-8?B?VVhhVXdQWnRVcFZPWER6TlYwTC94SFREdDBuNm91RnVZdEZER1dhRjVMQktH?=
+ =?utf-8?B?bGZETGJwejI0aVBzektDSGZoY1BIdGRsVVRuK3RQUDFyLzQrcE9vamJ6cFFa?=
+ =?utf-8?B?SnJvRlJrUDNkVndGOWgwQVNtQkorWFFLL2hOOEpBdEZZbG1HMEszcUFWOS85?=
+ =?utf-8?B?dDFmL0p6c0dpcStadERReHdSZ0JEaTRVZXRpWkw5b2dyYy9lZ3E0VlNuYzQ4?=
+ =?utf-8?B?bjl4QnVab3RUNFJNYTViMXRJVHBiQWlhL2tJWnl6N1VLNXpRRDB4N1ZkenhL?=
+ =?utf-8?B?TU00ZnJPMElDUWZhV2FXcTc2dTNmMTZSanZRUHAwaFNOZTBEanQ2MjBJQXVn?=
+ =?utf-8?B?UzRTZWk0aDgxZFNUV0o4L2ZWRllMaEZpU0hybjJqZ2pUTVBvOXh3NEhFVUo0?=
+ =?utf-8?B?bFZyQTRHQWJ1SXp0cXZlRmJNN2UxdEJUdnpKKzBFQkJUMG1WK2NFSFIvd1ZC?=
+ =?utf-8?B?OG5FK2tlejdhVjBwRHpSd0VrUHdGRFdHMkNTeHVFUnJTTURiQW5UZFhid2V4?=
+ =?utf-8?B?elhoOUpLZzB1RjNOYVFjd1lBTzRrMExUY2xLWlJNck9paFdGc2huNlZwejcr?=
+ =?utf-8?B?YXB2NW1DemI4cjdvaldCY2N4bTM0MW1ZQmh6UXpyTFM1TUQyL2NhNkUxMFJL?=
+ =?utf-8?B?NjB4RWt2b2FzZndCbythM1ZaQzZxMVpxVWJrQlhYZlRtNmN2WG9LU0JaK0k0?=
+ =?utf-8?B?aytReUFCKytBWDZHQUxCYlVnUk1VdE5YVUcxR3BvZlFuenJZK215aGoxWFA2?=
+ =?utf-8?B?M0ZENUhJM0ZzWmc5T1JvUnV5QXdpNXQ2YmxMWU1DRGRjR2lyM2crbTY5RVli?=
+ =?utf-8?B?ck9CbWJVVTlXVDVleTBNZmFyME1jSjJjc0JYQ3NIcCtEbUEvdElFR2tsYUNm?=
+ =?utf-8?B?UlZXbWQvYmpZVmhxSDNwZVNhSlRmTHdseXIyS05VWEQrSHpDRWx1QkZEc3c0?=
+ =?utf-8?Q?V9GWTbWJLQvjciklnDtJS5fj7?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95789409-8b2d-47b5-a8dc-08dcf301d4cf
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 01:27:17.1772
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7tQyJ9fzjbek5Bu/ygyvAEeErsmqfX87qCzHtwwse52ELNfEqGRY5YeSZJJZCsccr2VKwwqRFUxdf45gNv4V6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8161
 
-On 10/10/2024 11:21 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, October 3, 2024 12:51 PM
->>>> An intermediary header "hv_defs.h" is introduced to conditionally
->> include either hyperv-tlfs.h or hvhdk.h. This is required because
->> several headers which today include hyperv-tlfs.h, are shared
->> between Hyper-V and KVM code (e.g. mshyperv.h).
+
+
+On 2024/10/22 9:04 PM, Alex Deucher wrote:
+> External email: Use caution opening links or attachments
 > 
-> Have you considered user space code that uses
-> include/linux/hyperv.h? Which of the two schemes will it use? That code
-> needs to compile correctly on x86 and ARM64 after your changes.
-> User space code includes the separate DPDK project, and some of the
-> tools in the kernel tree under tools/hv. Anything that uses the
-> uio_hv_generic.c driver falls into this category.
 > 
-Unless I misunderstand something, the uapi code isn't affected at all
-by this patch set. e.g. the code in tools/hv uses include/uapi/linux/hyperv.h,
-which doesn't include any other Hyper-V headers.
-
-I'm not aware of how the DPDK project uses the Hyper-V definitions, but if it
-is getting headers from uapi it should also be unaffected.
-
-> I think there's also user space code that is built for vDSO that might pull
-> in the .h files you are modifying. There are in-progress patches dealing
-> with vDSO include files, such as [1]. My general comment on vDSO
-> is to be careful in making #include file changes that it uses, but I'm
-> not knowledgeable enough on how vDSO is built to give specific
-> guidance. :-(
-> 
-Hmm, interesting, looks like it does get used by userspace. The tsc page
-is mapped into userspace in vdso.vma.c, and read in vdso/gettimeofday.h.
-
-That is unexpected for me, since these things aren't in uapi. However I don't
-anticipate a problem. The definitions used haven't changed, just the headers
-they are included from.
-
-Thanks
-Nuno
-
-> Michael
-> 
-> [1] https://lore.kernel.org/lkml/20241010135146.181175-1-vincenzo.frascino@arm.com/
-> 
+> On Tue, Oct 22, 2024 at 2:31 AM Kai-Heng Feng <kaihengf@nvidia.com> wrote:
 >>
->> Summary:
->> Patch 1-2: Cleanup patches
->> Patch 3: Add the new headers (hvhdk.h, etc..) in include/hyperv/
->> Patch 4: Add hv_defs.h and use it in mshyperv.h, svm.h,
->>          hyperv_timer.h
->> Patch 5: Switch to the new headers, only in Hyper-V code
+>> Hi Luke,
 >>
->> Nuno Das Neves (5):
->>   hyperv: Move hv_connection_id to hyperv-tlfs.h
->>   hyperv: Remove unnecessary #includes
->>   hyperv: Add new Hyper-V headers
->>   hyperv: Add hv_defs.h to conditionally include hyperv-tlfs.h or
->>     hvhdk.h
->>   hyperv: Use hvhdk.h instead of hyperv-tlfs.h in Hyper-V code
+>> On 2024/10/15 4:04 PM, Luke Jones wrote:
+>>> On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display device.
+>>>>
+>>>> ```
+>>>> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeForce
+>>>> RTX 4070 Max-Q / Mobile] (rev a1)
+>>>> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
+>>>> Strix [Radeon 880M / 890M] (rev c1)
+>>>> ```
+>>>>
+>>>> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU as the
+>>>> boot VGA device, but really the eDP is connected to the AMD PCI display
+>>>> device.
+>>>>
+>>>> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA device.
+>>>>
+>>>> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+>>>> Reported-by: Luke D. Jones <luke@ljones.dev>
+>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> ---
+>>>>    drivers/pci/vgaarb.c | 7 -------
+>>>>    1 file changed, 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>>> index 78748e8d2dba..05ac2b672d4b 100644
+>>>> --- a/drivers/pci/vgaarb.c
+>>>> +++ b/drivers/pci/vgaarb.c
+>>>> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+>>>>               return true;
+>>>>       }
+>>>>
+>>>> -    /*
+>>>> -     * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+>>>> -     * other VGA devices, it is the best candidate so far.
+>>>> -     */
+>>>> -    if (!boot_vga)
+>>>> -            return true;
+>>>> -
+>>>>       return false;
+>>>>    }
+>>>>
+>>>> --
+>>>> 2.43.0
+>>>
+>>> Hi Mario,
+>>>
+>>> I can verify that this does leave the `boot_vga` attribute set as 0 for the NVIDIA device.
 >>
->>  arch/arm64/hyperv/hv_core.c              |    3 +-
->>  arch/arm64/hyperv/mshyperv.c             |    1 +
->>  arch/arm64/include/asm/mshyperv.h        |    2 +-
->>  arch/x86/entry/vdso/vma.c                |    1 +
->>  arch/x86/hyperv/hv_apic.c                |    2 +-
->>  arch/x86/hyperv/hv_init.c                |    3 +-
->>  arch/x86/hyperv/hv_proc.c                |    4 +-
->>  arch/x86/hyperv/hv_spinlock.c            |    1 +
->>  arch/x86/hyperv/hv_vtl.c                 |    1 +
->>  arch/x86/hyperv/irqdomain.c              |    1 +
->>  arch/x86/hyperv/ivm.c                    |    2 +-
->>  arch/x86/hyperv/mmu.c                    |    2 +-
->>  arch/x86/hyperv/nested.c                 |    2 +-
->>  arch/x86/include/asm/kvm_host.h          |    1 -
->>  arch/x86/include/asm/mshyperv.h          |    3 +-
->>  arch/x86/include/asm/svm.h               |    2 +-
->>  arch/x86/include/asm/vdso/gettimeofday.h |    1 +
->>  arch/x86/kernel/cpu/mshyperv.c           |    2 +-
->>  arch/x86/kernel/cpu/mtrr/generic.c       |    1 +
->>  arch/x86/kvm/vmx/vmx_onhyperv.h          |    1 -
->>  arch/x86/mm/pat/set_memory.c             |    2 -
->>  drivers/clocksource/hyperv_timer.c       |    2 +-
->>  drivers/hv/channel.c                     |    1 +
->>  drivers/hv/channel_mgmt.c                |    1 +
->>  drivers/hv/connection.c                  |    1 +
->>  drivers/hv/hv.c                          |    1 +
->>  drivers/hv/hv_balloon.c                  |    5 +-
->>  drivers/hv/hv_common.c                   |    2 +-
->>  drivers/hv/hv_kvp.c                      |    1 -
->>  drivers/hv/hv_snapshot.c                 |    1 -
->>  drivers/hv/hv_util.c                     |    1 +
->>  drivers/hv/hyperv_vmbus.h                |    1 -
->>  drivers/hv/ring_buffer.c                 |    1 +
->>  drivers/hv/vmbus_drv.c                   |    1 +
->>  drivers/iommu/hyperv-iommu.c             |    1 +
->>  drivers/net/hyperv/netvsc.c              |    1 +
->>  drivers/pci/controller/pci-hyperv.c      |    1 +
->>  include/asm-generic/hyperv-tlfs.h        |    9 +
->>  include/asm-generic/mshyperv.h           |    2 +-
->>  include/clocksource/hyperv_timer.h       |    2 +-
->>  include/hyperv/hv_defs.h                 |   29 +
->>  include/hyperv/hvgdk.h                   |   66 ++
->>  include/hyperv/hvgdk_ext.h               |   46 +
->>  include/hyperv/hvgdk_mini.h              | 1212 ++++++++++++++++++++++
->>  include/hyperv/hvhdk.h                   |  733 +++++++++++++
->>  include/hyperv/hvhdk_mini.h              |  310 ++++++
->>  include/linux/hyperv.h                   |   12 +-
->>  net/vmw_vsock/hyperv_transport.c         |    1 -
->>  48 files changed, 2442 insertions(+), 40 deletions(-)
->>  create mode 100644 include/hyperv/hv_defs.h
->>  create mode 100644 include/hyperv/hvgdk.h
->>  create mode 100644 include/hyperv/hvgdk_ext.h
->>  create mode 100644 include/hyperv/hvgdk_mini.h
->>  create mode 100644 include/hyperv/hvhdk.h
->>  create mode 100644 include/hyperv/hvhdk_mini.h
+>> Does the following diff work for you?
+>> This variant should be less risky for most systems.
 >>
->> --
->> 2.34.1
+>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>> index 78748e8d2dba..3fb734cb9c1b 100644
+>> --- a/drivers/pci/vgaarb.c
+>> +++ b/drivers/pci/vgaarb.c
+>> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+>>                   return true;
+>>           }
 >>
+>> +       if (vga_arb_integrated_gpu(&pdev->dev))
+>> +               return true;
+>> +
 > 
+> The problem is that the integrated graphics does not support VGA.
+
+Right, so the check has to be used much earlier.
+
+I wonder does the integrated GFX have _DOD/_DOS while the discrete one doesn't? 
+If that's the case, vga_arb_integrated_gpu() can be used to differentiate which 
+one is the boot GFX.
+
+Kai-Heng
+
+> 
+> Alex
+> 
+>>           /*
+>>            * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+>>            * other VGA devices, it is the best candidate so far.
+>>
+>>
+>> Kai-Heng
+>>
+>>>
+>>> Tested-by: Luke D. Jones <luke@ljones.dev>
+>>
 
 
