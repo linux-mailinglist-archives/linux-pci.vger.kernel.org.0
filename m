@@ -1,205 +1,381 @@
-Return-Path: <linux-pci+bounces-15119-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15120-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E4DD9ACB9E
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 15:51:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A228C9ACC33
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 16:24:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3F151F24789
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 13:51:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C925B21810
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Oct 2024 14:24:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4F21BE236;
-	Wed, 23 Oct 2024 13:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65C9E1BE23F;
+	Wed, 23 Oct 2024 14:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d95We1WZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+PoQIej"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF2EE56A
-	for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2024 13:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338A2E56A;
+	Wed, 23 Oct 2024 14:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729691417; cv=none; b=ckNE7ZS0NerZyXsfMoKFhsM+DCxRuhkMwC+j8XYH8/JzlXUypzv+gXS1dfb81eiYTCVRSDDV6Pr8T7EWlY/z801jnbnOc4FmQ/C7beOQi29pjSHpEFP0ODYHogA/iFmdhaJqgzBT+zgIeQsVCUMFVAFmibBD4vHlJ286WDjo49I=
+	t=1729693437; cv=none; b=JzN5edASNXQWhWPqTa/UVPlP39E1z5uKO8eBUOwzxHxgGDGcOxPtAMAEuRU87oyw6OLGDI3lr7NATEMrRsqTFSCy9Hppom9iUIvUsJ2vQe8HU9f0uf+3rW0j3XDuY/zVuCqesoUNliyJntxIo1eNthoI4p0jyFFQV+1bQIfVs1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729691417; c=relaxed/simple;
-	bh=1CTS0Ugnf9jJBC1ruM/WIiADBY5GmrMIo6GSJ3E70PI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DwPZryUnKpCQOLK7hSpSAdqEMMjS6rYkPmSoXn1jX5kKH+ruLHhd5rzgqrHJY44dl41HmrDAPsrpuPJopWRyuCSRbMHFxpygedba6+0B18ZmT92qxbn3OT8Nul+cApbLvvnv6E/FGyi3VUOWzt0sPBqT3aWVYMUTuxjf9cUgdYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d95We1WZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729691414;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oO7/c3KxFQ4pCLrpHRIQyFFVX9SeNU/L27HBNV7OVps=;
-	b=d95We1WZBbUdVyDSFgIvU8zgDceWjJa5cmeHp624v+Z/g5Sry4W1+LvpqC2UquTYy5le6z
-	mdUq1Pb78mNpYhkiILLaP+xU0ZrMPnMfdNJYt1NIS+rJJggkOUWu7ePkh25BDCEA92vkLI
-	LWEOXfgFl9WSkjphcdhRbUxfXpf3ORg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-350-AEYOgFOqPYeVlkgQGrZthg-1; Wed, 23 Oct 2024 09:50:13 -0400
-X-MC-Unique: AEYOgFOqPYeVlkgQGrZthg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4315afcae6cso5554485e9.0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Oct 2024 06:50:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729691412; x=1730296212;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oO7/c3KxFQ4pCLrpHRIQyFFVX9SeNU/L27HBNV7OVps=;
-        b=VnWwqB5HqAv9kfLJwZEmbqKitcjKO4lQQtar5N2ULsXa1+6ae0H3LSCx+F4ByCha8s
-         /3Hl8X0g0z6dtt85uiKNe/n2w4rL/mM6d5GeOtZTeUDFhRWO4OdVubp65fzoCd38FL3v
-         EqabN98ehpuk5pO/reL6qOQNuJTadKJcpYrRpzkQbyxRJp8ZVUpqFft/midpzS0VYKGi
-         kJiqC03gNxZUKv1Ggdktb34qvjvcG1picyskr/OJnOgFLjGhMX8JLpK4ObnCGwOAusAq
-         ekb18aw9yu3pIcSMzfrXiI8NCqX/yvVJFFkS9ZyDk3Ga81+EIp/ZTnBPXhpL7ffLIi2W
-         oLHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKbjnMLrMxu1nJnZJWpuuRzPBDndyUBWIROlizvI9unYtxz5mHGLQDz4/D7V3ZZ04rrKqgJyi4EZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcrq6ELbqAYhDBQOzl+zcHKVTqt7xt5y/yASN7xRoHEddk/Bp7
-	lw5fdVtFzhHrJWNUmJ78V+PO8OqeGS25zYLw/2hRvaL7phSbaOOwD0+YxQ2F2hmxqvSq2bGGFI4
-	UdK3mHcW6MwfUI+3u+cKQKP2xHJ6zXQWDPITo0FqyBcs9UwqIDVrJGud5LA==
-X-Received: by 2002:a05:600c:4f43:b0:42f:84ec:3e0 with SMTP id 5b1f17b1804b1-4317bd88469mr48316655e9.9.1729691412227;
-        Wed, 23 Oct 2024 06:50:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVbS2v+nb51IE57ofZXQEpzrUukFuey0NWkF8DOXs6/K2mGsAvF2UpvyCTTgP3Onw94z3R5g==
-X-Received: by 2002:a05:600c:4f43:b0:42f:84ec:3e0 with SMTP id 5b1f17b1804b1-4317bd88469mr48316115e9.9.1729691411741;
-        Wed, 23 Oct 2024 06:50:11 -0700 (PDT)
-Received: from eisenberg.fritz.box ([2001:16b8:3dac:2f00:8834:dd3a:39b8:e43b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186be7605sm16955265e9.19.2024.10.23.06.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 06:50:11 -0700 (PDT)
-Message-ID: <6f3db65fe9a5dcd1a7a8d9bd5352ecb248ef57b1.camel@redhat.com>
-Subject: Re: [PATCH 02/13] ALSA: hda_intel: Use always-managed version of
- pcim_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
- <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
- Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
- Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
- <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
- GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
- Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
- Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Chen Ni <nichen@iscas.ac.cn>, Mario Limonciello
- <mario.limonciello@amd.com>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
- <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Mostafa Saleh
- <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu
- <yi.l.liu@intel.com>,  Christian Brauner <brauner@kernel.org>, Ankit
- Agrawal <ankita@nvidia.com>, Eric Auger <eric.auger@redhat.com>, Reinette
- Chatre <reinette.chatre@intel.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,  Rui Salvaterra <rsalvaterra@gmail.com>,
- linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, netdev@vger.kernel.org, 
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org,  kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Date: Wed, 23 Oct 2024 15:50:09 +0200
-In-Reply-To: <87v7xk2ps5.wl-tiwai@suse.de>
-References: <20241015185124.64726-1-pstanner@redhat.com>
-	 <20241015185124.64726-3-pstanner@redhat.com> <87v7xk2ps5.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1729693437; c=relaxed/simple;
+	bh=GSKWRm7+KiJmw4ntv/ripLnaQt+ggFemxRWiNQsqGxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ow0sscsGboOaTybcLhDdolgjAT9QTi3h43EdssV8TijEks0P1HOdH6lnVs/QntkcMgutVFK0A0FfiwFCPgr2gPJpRAuL57K8GsemQ+rMjuiHnIFkRFSWSuF2Etf6ECfHkp/i4ELzD7Vu/Dd4iC82UNhILZZg3CMX0Obmq9nxkDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+PoQIej; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55A9C4CEC6;
+	Wed, 23 Oct 2024 14:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729693436;
+	bh=GSKWRm7+KiJmw4ntv/ripLnaQt+ggFemxRWiNQsqGxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K+PoQIejVNC+d9UpeYu7lvUT1gGdGf7SMf24VgTMpN7DTaZQtFFjOK6K5xBp7Qv8T
+	 NnMtirHIDUQKrSGNtQcnmtXv1u2sve41YM4ABKHqUdz4N9GCgDK3a++h4gpdoB/v/g
+	 hRPc9dE6yE0aBVtH+utpIv4XZlufsTUnCytk6fj3HThNpjYtrJL7fiuiubn0FUEI/9
+	 rRcBS0tr23alae5QSUI4Mc5SoDuY7Lp6ZEsghKg9OMMMcfFW5RMYZ6arNxlUbLmmS7
+	 dLCuJtC5f0IxqZ+PM/Kyh2ECUDMEYEna9EBx4vXzoCjGP8bR3eQVhnQkqpvhyQxEtM
+	 gwBipMQxMzFfg==
+Date: Wed, 23 Oct 2024 09:23:55 -0500
+From: Rob Herring <robh@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
+ driver abstractions
+Message-ID: <20241023142355.GA623906-robh@kernel.org>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-16-dakr@kernel.org>
+ <20241022234712.GB1848992-robh@kernel.org>
+ <ZxibWpcswZxz5A07@pollux>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZxibWpcswZxz5A07@pollux>
 
-On Tue, 2024-10-22 at 16:08 +0200, Takashi Iwai wrote:
-> On Tue, 15 Oct 2024 20:51:12 +0200,
-> Philipp Stanner wrote:
-> >=20
-> > pci_intx() is a hybrid function which can sometimes be managed
-> > through
-> > devres. To remove this hybrid nature from pci_intx(), it is
-> > necessary to
-> > port users to either an always-managed or a never-managed version.
-> >=20
-> > hda_intel enables its PCI-Device with pcim_enable_device(). Thus,
-> > it needs
-> > the always-managed version.
-> >=20
-> > Replace pci_intx() with pcim_intx().
-> >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > =C2=A0sound/pci/hda/hda_intel.c | 2 +-
-> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> > index b4540c5cd2a6..b44ca7b6e54f 100644
-> > --- a/sound/pci/hda/hda_intel.c
-> > +++ b/sound/pci/hda/hda_intel.c
-> > @@ -786,7 +786,7 @@ static int azx_acquire_irq(struct azx *chip,
-> > int do_disconnect)
-> > =C2=A0	}
-> > =C2=A0	bus->irq =3D chip->pci->irq;
-> > =C2=A0	chip->card->sync_irq =3D bus->irq;
-> > -	pci_intx(chip->pci, !chip->msi);
-> > +	pcim_intx(chip->pci, !chip->msi);
-> > =C2=A0	return 0;
-> > =C2=A0}
-> > =C2=A0
->=20
-> Hm, it's OK-ish to do this as it's practically same as what
-> pci_intx()
-> currently does.=C2=A0 But, the current code can be a bit inconsistent
-> about
-> the original intx value.=C2=A0 pcim_intx() always stores !enable to
-> res->orig_intx unconditionally, and it means that the orig_intx value
-> gets overridden at each time pcim_intx() gets called.
+On Wed, Oct 23, 2024 at 08:44:42AM +0200, Danilo Krummrich wrote:
+> On Tue, Oct 22, 2024 at 06:47:12PM -0500, Rob Herring wrote:
+> > On Tue, Oct 22, 2024 at 11:31:52PM +0200, Danilo Krummrich wrote:
+> > > Implement the basic platform bus abstractions required to write a basic
+> > > platform driver. This includes the following data structures:
+> > > 
+> > > The `platform::Driver` trait represents the interface to the driver and
+> > > provides `pci::Driver::probe` for the driver to implement.
+> > > 
+> > > The `platform::Device` abstraction represents a `struct platform_device`.
+> > > 
+> > > In order to provide the platform bus specific parts to a generic
+> > > `driver::Registration` the `driver::RegistrationOps` trait is implemented
+> > > by `platform::Adapter`.
+> > > 
+> > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > > ---
+> > >  MAINTAINERS                     |   1 +
+> > >  rust/bindings/bindings_helper.h |   1 +
+> > >  rust/helpers/helpers.c          |   1 +
+> > >  rust/helpers/platform.c         |  13 ++
+> > >  rust/kernel/lib.rs              |   1 +
+> > >  rust/kernel/platform.rs         | 217 ++++++++++++++++++++++++++++++++
+> > >  6 files changed, 234 insertions(+)
+> > >  create mode 100644 rust/helpers/platform.c
+> > >  create mode 100644 rust/kernel/platform.rs
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 87eb9a7869eb..173540375863 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -6985,6 +6985,7 @@ F:	rust/kernel/device.rs
+> > >  F:	rust/kernel/device_id.rs
+> > >  F:	rust/kernel/devres.rs
+> > >  F:	rust/kernel/driver.rs
+> > > +F:	rust/kernel/platform.rs
+> > >  
+> > >  DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
+> > >  M:	Nishanth Menon <nm@ti.com>
+> > > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> > > index 312f03cbdce9..217c776615b9 100644
+> > > --- a/rust/bindings/bindings_helper.h
+> > > +++ b/rust/bindings/bindings_helper.h
+> > > @@ -18,6 +18,7 @@
+> > >  #include <linux/of_device.h>
+> > >  #include <linux/pci.h>
+> > >  #include <linux/phy.h>
+> > > +#include <linux/platform_device.h>
+> > >  #include <linux/refcount.h>
+> > >  #include <linux/sched.h>
+> > >  #include <linux/slab.h>
+> > > diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> > > index 8bc6e9735589..663cdc2a45e0 100644
+> > > --- a/rust/helpers/helpers.c
+> > > +++ b/rust/helpers/helpers.c
+> > > @@ -17,6 +17,7 @@
+> > >  #include "kunit.c"
+> > >  #include "mutex.c"
+> > >  #include "page.c"
+> > > +#include "platform.c"
+> > >  #include "pci.c"
+> > >  #include "rbtree.c"
+> > >  #include "rcu.c"
+> > > diff --git a/rust/helpers/platform.c b/rust/helpers/platform.c
+> > > new file mode 100644
+> > > index 000000000000..ab9b9f317301
+> > > --- /dev/null
+> > > +++ b/rust/helpers/platform.c
+> > > @@ -0,0 +1,13 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +void *rust_helper_platform_get_drvdata(const struct platform_device *pdev)
+> > > +{
+> > > +	return platform_get_drvdata(pdev);
+> > > +}
+> > > +
+> > > +void rust_helper_platform_set_drvdata(struct platform_device *pdev, void *data)
+> > > +{
+> > > +	platform_set_drvdata(pdev, data);
+> > > +}
+> > > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > > index 5946f59f1688..9e8dcd6d7c01 100644
+> > > --- a/rust/kernel/lib.rs
+> > > +++ b/rust/kernel/lib.rs
+> > > @@ -53,6 +53,7 @@
+> > >  pub mod net;
+> > >  pub mod of;
+> > >  pub mod page;
+> > > +pub mod platform;
+> > >  pub mod prelude;
+> > >  pub mod print;
+> > >  pub mod rbtree;
+> > > diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+> > > new file mode 100644
+> > > index 000000000000..addf5356f44f
+> > > --- /dev/null
+> > > +++ b/rust/kernel/platform.rs
+> > > @@ -0,0 +1,217 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +//! Abstractions for the platform bus.
+> > > +//!
+> > > +//! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
+> > > +
+> > > +use crate::{
+> > > +    bindings, container_of, device,
+> > > +    device_id::RawDeviceId,
+> > > +    driver,
+> > > +    error::{to_result, Result},
+> > > +    of,
+> > > +    prelude::*,
+> > > +    str::CStr,
+> > > +    types::{ARef, ForeignOwnable},
+> > > +    ThisModule,
+> > > +};
+> > > +
+> > > +/// An adapter for the registration of platform drivers.
+> > > +pub struct Adapter<T: Driver>(T);
+> > > +
+> > > +impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
+> > > +    type RegType = bindings::platform_driver;
+> > > +
+> > > +    fn register(
+> > > +        pdrv: &mut Self::RegType,
+> > > +        name: &'static CStr,
+> > > +        module: &'static ThisModule,
+> > > +    ) -> Result {
+> > > +        pdrv.driver.name = name.as_char_ptr();
+> > > +        pdrv.probe = Some(Self::probe_callback);
+> > > +
+> > > +        // Both members of this union are identical in data layout and semantics.
+> > > +        pdrv.__bindgen_anon_1.remove = Some(Self::remove_callback);
+> > > +        pdrv.driver.of_match_table = T::ID_TABLE.as_ptr();
+> > > +
+> > > +        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+> > > +        to_result(unsafe { bindings::__platform_driver_register(pdrv, module.0) })
+> > > +    }
+> > > +
+> > > +    fn unregister(pdrv: &mut Self::RegType) {
+> > > +        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+> > > +        unsafe { bindings::platform_driver_unregister(pdrv) };
+> > > +    }
+> > > +}
+> > > +
+> > > +impl<T: Driver + 'static> Adapter<T> {
+> > > +    fn id_info(pdev: &Device) -> Option<&'static T::IdInfo> {
+> > > +        let table = T::ID_TABLE;
+> > > +        let id = T::of_match_device(pdev)?;
+> > > +
+> > > +        Some(table.info(id.index()))
+> > > +    }
+> > > +
+> > > +    extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> core::ffi::c_int {
+> > > +        // SAFETY: The platform bus only ever calls the probe callback with a valid `pdev`.
+> > > +        let dev = unsafe { device::Device::from_raw(&mut (*pdev).dev) };
+> > > +        // SAFETY: `dev` is guaranteed to be embedded in a valid `struct platform_device` by the
+> > > +        // call above.
+> > > +        let mut pdev = unsafe { Device::from_dev(dev) };
+> > > +
+> > > +        let info = Self::id_info(&pdev);
+> > > +        match T::probe(&mut pdev, info) {
+> > > +            Ok(data) => {
+> > > +                // Let the `struct platform_device` own a reference of the driver's private data.
+> > > +                // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
+> > > +                // `struct platform_device`.
+> > > +                unsafe { bindings::platform_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
+> > > +            }
+> > > +            Err(err) => return Error::to_errno(err),
+> > > +        }
+> > > +
+> > > +        0
+> > > +    }
+> > > +
+> > > +    extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
+> > > +        // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
+> > > +        let ptr = unsafe { bindings::platform_get_drvdata(pdev) };
+> > > +
+> > > +        // SAFETY: `remove_callback` is only ever called after a successful call to
+> > > +        // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
+> > > +        // `KBox<T>` pointer created through `KBox::into_foreign`.
+> > > +        let _ = unsafe { KBox::<T>::from_foreign(ptr) };
+> > > +    }
+> > > +}
+> > > +
+> > > +/// Declares a kernel module that exposes a single platform driver.
+> > > +///
+> > > +/// # Examples
+> > > +///
+> > > +/// ```ignore
+> > > +/// kernel::module_platform_driver! {
+> > > +///     type: MyDriver,
+> > > +///     name: "Module name",
+> > > +///     author: "Author name",
+> > > +///     description: "Description",
+> > > +///     license: "GPL v2",
+> > > +/// }
+> > > +/// ```
+> > > +#[macro_export]
+> > > +macro_rules! module_platform_driver {
+> > > +    ($($f:tt)*) => {
+> > > +        $crate::module_driver!(<T>, $crate::platform::Adapter<T>, { $($f)* });
+> > > +    };
+> > > +}
+> > > +
+> > > +/// IdTable type for platform drivers.
+> > > +pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<of::DeviceId, T>;
+> > > +
+> > > +/// The platform driver trait.
+> > > +///
+> > > +/// # Example
+> > > +///
+> > > +///```
+> > > +/// # use kernel::{bindings, c_str, of, platform};
+> > > +///
+> > > +/// struct MyDriver;
+> > > +///
+> > > +/// kernel::of_device_table!(
+> > > +///     OF_TABLE,
+> > > +///     MODULE_OF_TABLE,
+> > > +///     <MyDriver as platform::Driver>::IdInfo,
+> > > +///     [
+> > > +///         (of::DeviceId::new(c_str!("redhat,my-device")), ())
+> > 
+> > All compatible strings have to be documented as do vendor prefixes and 
+> > I don't think "redhat" is one. An exception is you can use 
+> > "test,<whatever>" and not document it.
+> 
+> Yeah, I copied that from the sample driver, where it's probably wrong too.
+> 
+> I guess "vendor,device" would be illegal as well?
 
 Yes.
 
->=20
-> Meanwhile, HD-audio driver does release and re-acquire the interrupt
-> after disabling MSI when something goes wrong, and pci_intx() call
-> above is a part of that procedure.=C2=A0 So, it can rewrite the
-> res->orig_intx to another value by retry without MSI.=C2=A0 And after the
-> driver removal, it'll lead to another state.
+> > There's a check for undocumented compatibles. I guess I'll have to add 
+> > rust parsing to it...
+> > 
+> > BTW, how do you compile this code in the kernel? 
+> 
+> You mean this example? It gets compiled as a KUnit doctest, but it obvously
+> doesn't execute anything, so it's a compile only test.
 
-I'm not sure that I understand this paragraph completely. Still, could
-a solution for the driver on the long-term just be to use pci_intx()?
+Yes. That's a question for my own education.
 
->=20
-> In anyway, as it doesn't change the current behavior, feel free to
-> take my ack for now:
->=20
-> Acked-by: Takashi Iwai <tiwai@suse.de>
+> > 
+> > > +///     ]
+> > > +/// );
+> > > +///
+> > > +/// impl platform::Driver for MyDriver {
+> > > +///     type IdInfo = ();
+> > > +///     const ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
+> > > +///
+> > > +///     fn probe(
+> > > +///         _pdev: &mut platform::Device,
+> > > +///         _id_info: Option<&Self::IdInfo>,
+> > > +///     ) -> Result<Pin<KBox<Self>>> {
+> > > +///         Err(ENODEV)
+> > > +///     }
+> > > +/// }
+> > > +///```
+> > > +/// Drivers must implement this trait in order to get a platform driver registered. Please refer to
+> > > +/// the `Adapter` documentation for an example.
+> > > +pub trait Driver {
+> > > +    /// The type holding information about each device id supported by the driver.
+> > > +    ///
+> > > +    /// TODO: Use associated_type_defaults once stabilized:
+> > > +    ///
+> > > +    /// type IdInfo: 'static = ();
+> > > +    type IdInfo: 'static;
+> > > +
+> > > +    /// The table of device ids supported by the driver.
+> > > +    const ID_TABLE: IdTable<Self::IdInfo>;
 
-Thank you,
-P.
+Another thing. I don't think this is quite right. Well, this part is 
+fine, but assigning the DT table to it is not. The underlying C code has 
+2 id tables in struct device_driver (DT and ACPI) and then the bus 
+specific one in the struct ${bus}_driver.
 
->=20
->=20
-> thanks,
->=20
-> Takashi
->=20
+> > > +
+> > > +    /// Platform driver probe.
+> > > +    ///
+> > > +    /// Called when a new platform device is added or discovered.
+> > > +    /// Implementers should attempt to initialize the device here.
+> > > +    fn probe(dev: &mut Device, id_info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>>;
+> > > +
+> > > +    /// Find the [`of::DeviceId`] within [`Driver::ID_TABLE`] matching the given [`Device`], if any.
+> > > +    fn of_match_device(pdev: &Device) -> Option<&of::DeviceId> {
+> > 
+> > Is this visible to drivers? It shouldn't be.
+> 
+> Yeah, I think we should just remove it. Looking at struct of_device_id, it
+> doesn't contain any useful information for a driver. I think when I added this I
+> was a bit in "autopilot" mode from the PCI stuff, where struct pci_device_id is
+> useful to drivers.
 
+TBC, you mean other than *data, right? If so, I agree. 
+
+The DT type and name fields are pretty much legacy, so I don't think the 
+rust bindings need to worry about them until someone converts Sparc and 
+PowerMac drivers to rust (i.e. never).
+
+I would guess the PCI cases might be questionable, too. Like DT, drivers 
+may be accessing the table fields, but that's not best practice. All the 
+match fields are stored in pci_dev, so why get them from the match 
+table? 
+
+Rob
 
