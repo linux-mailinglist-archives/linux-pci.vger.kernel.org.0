@@ -1,679 +1,302 @@
-Return-Path: <linux-pci+bounces-15204-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15205-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FB1F9AEA4A
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 17:22:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C080B9AEADF
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 17:42:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DC822837EE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 15:22:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 466481F238CB
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 15:42:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4930315746E;
-	Thu, 24 Oct 2024 15:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 041DE1F5841;
+	Thu, 24 Oct 2024 15:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="S+uNyVkd"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nf7+XH/L";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bUCNy+kH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nf7+XH/L";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bUCNy+kH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E6F1E7C33
-	for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2024 15:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159671B3937;
+	Thu, 24 Oct 2024 15:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729783327; cv=none; b=IG4/7YYbUsiaQBH2AdfFuCOHoy5dXJZvy9VAUW1OjCXpwzso0IwqETbzIOqJzLXKbJ00Wetybmr7EemmKdzgBW9B6CSAjwHgPt1B92UPLiAhue+wmj5k5t3oyzG4TCBiO3TqhGFvdllk0NSJoAT2ie+++s/5HhNH9c2Am0eRm+8=
+	t=1729784538; cv=none; b=u2x6hY5iFPEpzmOBL3Rd1kirNw4hDk3EhHFT0N5Gw6tCUyc0MbvclggUbmt2wk243pnfsmWtpYGvhdYec6gYjfbZZzWouoE/qWMr4/EINFeroqMz4VjbITo2fOx+oDPyFFmJi5XhWTK7E+1t3MeePu4fcnGoO+6SXAqnITr+1yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729783327; c=relaxed/simple;
-	bh=XocVbR1dDRuZlBCmo72di28ETlVvLHfmRCP/TVb8cvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EOVyila0zpyp4dwYx2b6P/PWKbzX5m8HibKAG3B3tMZcU4DYQXSDt+2CqiWS6Zi7gMX7iE/gfQH/KK2HLbjFS2A1guDOCMKj4PpXvhd3mOUEWpMRsqPh7Jue/Ao4Wbzq4hxP6bhnFiv8/CmvFudjd2PS9hP+doXAuB0sqQc/Xdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=S+uNyVkd; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6e3c3da5bcdso11134087b3.2
-        for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2024 08:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1729783322; x=1730388122; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ZslJuvb+R+D3hqqInl+Fp2NtOHuMudVWO0vmTv/PdQ=;
-        b=S+uNyVkdF5o9hCWuccLGo12mfVUa43GbRDW5Ak2DmkyCzIjaUhRX2AtsGBL1esmM1T
-         /5xRU1l35rH9zqwcjhHAE4IyZrn/M8a7LU5tPcqAsQdmNkndHXeRolCLAgCCz0rgM3mi
-         qG0hm6lKQeZQEz71mCiDMx5qRHxOEUrFfxeoxEDumUOiTxtDj237mzOfpvAwmVBe1+7C
-         MVL5gLbfYiXD25LdvGYi59/2bXPEQ1o0a4jnH5n0c8tKN1z9gQi7drk85ymuwqKqNZTl
-         PDXNvPg7XOzcBFBGBIY0Ju+nWm/Qilmxeabeir/zio+/i6GrZECe8afARXAYlevNdofb
-         yWWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729783322; x=1730388122;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9ZslJuvb+R+D3hqqInl+Fp2NtOHuMudVWO0vmTv/PdQ=;
-        b=XfaHi7FBdu7PqB1a2NphIQ5CvfWO/fZgZ1rNQ2WpTJ1QuRa2vYf04FQaSw4UsRbceR
-         5JnPzKDMwkAu78yFf5WfurTzUr+X9q9fQS420yq8e+FtkCweoUK1eV+LcrtuPZsIP7Ss
-         I3SsgHTWDWYtVzul8+sQFxaLXjfHy470KQHQzQVNq0FnEQDTfumbHxFiVnQ59DWMaNF0
-         m7PxvFtix8llVaFHJC5Qq7ZE/mkKRyc07GBts5sFCDDLp195vK1WAHW+UmX4+eZiTm5x
-         FYjpTfZ6IpGKCOBg8ppzoLfSLw/wwMFOzS0jIbWQE49mOgUjUEL5D6VRn7xZFQDAn//0
-         FlPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTlaF1rTP/GmYeFgVkAEVJQMKL5UZjBbz3A2Y6KBIRNdTaD1rw7XoCC3g9zQlED5OM/tmqaame/kQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx+k2/Nccr1+lsJZ/DylNaLAiR2tc/AOTTmUzxLpspUns/BJYX
-	CpLBsbVwdE2lmuYNVC0L23ugbuHjZ3ye5yLxkktTzWyx3VUCWGh3c515+BD1XgYYimxPQ4LOUGD
-	IbAJKrEELHEkaJjPVfeOIcDxGtmJSqXHjJLNvOQ==
-X-Google-Smtp-Source: AGHT+IGwL+oDyt9AiqU8vRnCAfR1pHe5h5kqQWEB+rUAizTZZV2tYZZJwpQjdyjZy0CycLEd//ANCOcPXsLPXTGu7mI=
-X-Received: by 2002:a05:690c:708a:b0:6e2:7dd:af66 with SMTP id
- 00721157ae682-6e7f0e72ea7mr77409107b3.19.1729783322369; Thu, 24 Oct 2024
- 08:22:02 -0700 (PDT)
+	s=arc-20240116; t=1729784538; c=relaxed/simple;
+	bh=fyCVM0H3wBChDlsqqMqAVhOen98CNN27wwnpuqoJWHs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=umg6neifYt6aw9zUMsT6DbmqnlPTW9gQhf7D68Qxb+bAAQ0UNXz4H8GxsqcDtqGbOd3GldsagF+/Lnq1sVISDumaaKiJBfxlsz6vbyMByMZWqREv+nksFhTbF5qvLF6MNM3sPCy4lCf4OjiCwa5TRwo1OCclZ05wEBQkukWeXWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nf7+XH/L; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bUCNy+kH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nf7+XH/L; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bUCNy+kH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2A8A422129;
+	Thu, 24 Oct 2024 15:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729784533; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e/3cTOJeo8U10J73FzqEOoczI8O2ncrtc0XB23zkv5s=;
+	b=nf7+XH/LuqrxkP91/yVelJSCFw67hxyf6AXFWk3zyABwq4t50EjV4OpunUzQwKh4O0X2HJ
+	4nMIH+IkWiV+OyB9+2lpXXEkxEb6F9xe7EmRT51s93pHP7VGseNAqLpWkAnTMF4e/9a33H
+	jIwPZWttZWt/MbrLD+5eKYCd75VNgto=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729784533;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e/3cTOJeo8U10J73FzqEOoczI8O2ncrtc0XB23zkv5s=;
+	b=bUCNy+kHeragGzzLpfz4PtWaPc3dFKTrYqlZNmv+RbyR7CQspcjxEUACIPOU4RaAWi7ash
+	i5YJ2tGAyzT1zcBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="nf7+XH/L";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bUCNy+kH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729784533; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e/3cTOJeo8U10J73FzqEOoczI8O2ncrtc0XB23zkv5s=;
+	b=nf7+XH/LuqrxkP91/yVelJSCFw67hxyf6AXFWk3zyABwq4t50EjV4OpunUzQwKh4O0X2HJ
+	4nMIH+IkWiV+OyB9+2lpXXEkxEb6F9xe7EmRT51s93pHP7VGseNAqLpWkAnTMF4e/9a33H
+	jIwPZWttZWt/MbrLD+5eKYCd75VNgto=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729784533;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e/3cTOJeo8U10J73FzqEOoczI8O2ncrtc0XB23zkv5s=;
+	b=bUCNy+kHeragGzzLpfz4PtWaPc3dFKTrYqlZNmv+RbyR7CQspcjxEUACIPOU4RaAWi7ash
+	i5YJ2tGAyzT1zcBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A023D1368E;
+	Thu, 24 Oct 2024 15:42:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g9J2JdNqGmebSAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 24 Oct 2024 15:42:11 +0000
+Date: Thu, 24 Oct 2024 17:43:12 +0200
+Message-ID: <875xphzeun.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Takashi Iwai <tiwai@suse.de>,	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Basavaraj Natikar <basavaraj.natikar@amd.com>,	Jiri Kosina
+ <jikos@kernel.org>,	Benjamin Tissoires <bentiss@kernel.org>,	Arnd Bergmann
+ <arnd@arndb.de>,	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,	Alex
+ Dubov <oakad@yahoo.com>,	Sudarsana Kalluru <skalluru@marvell.com>,	Manish
+ Chopra <manishc@marvell.com>,	"David S. Miller" <davem@davemloft.net>,	Eric
+ Dumazet <edumazet@google.com>,	Jakub Kicinski <kuba@kernel.org>,	Paolo
+ Abeni <pabeni@redhat.com>,	Rasesh Mody <rmody@marvell.com>,
+	GR-Linux-NIC-Dev@marvell.com,	Igor Mitsyanko <imitsyanko@quantenna.com>,
+	Sergey Matyukevich <geomatsi@gmail.com>,	Kalle Valo <kvalo@kernel.org>,
+	Sanjay R Mehta <sanju.mehta@amd.com>,	Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>,	Jon Mason <jdmason@kudzu.us>,	Dave Jiang
+ <dave.jiang@intel.com>,	Allen Hubbe <allenbh@gmail.com>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	Alex Williamson <alex.williamson@redhat.com>,
+	Juergen Gross <jgross@suse.com>,	Stefano Stabellini
+ <sstabellini@kernel.org>,	Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>,	Jaroslav Kysela <perex@perex.cz>,	Takashi
+ Iwai <tiwai@suse.com>,	Chen Ni <nichen@iscas.ac.cn>,	Mario Limonciello
+ <mario.limonciello@amd.com>,	Ricky Wu <ricky_wu@realtek.com>,	Al Viro
+ <viro@zeniv.linux.org.uk>,	Breno Leitao <leitao@debian.org>,	Kevin Tian
+ <kevin.tian@intel.com>,	Thomas Gleixner <tglx@linutronix.de>,	Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,	Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>,	Mostafa Saleh
+ <smostafa@google.com>,	Jason Gunthorpe <jgg@ziepe.ca>,	Yi Liu
+ <yi.l.liu@intel.com>,	Christian Brauner <brauner@kernel.org>,	Ankit Agrawal
+ <ankita@nvidia.com>,	Eric Auger <eric.auger@redhat.com>,	Reinette Chatre
+ <reinette.chatre@intel.com>,	Ye Bin <yebin10@huawei.com>,	Marek
+ =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,	Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>,	Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,	Kai Vehmanen
+ <kai.vehmanen@linux.intel.com>,	Rui Salvaterra <rsalvaterra@gmail.com>,
+	linux-ide@vger.kernel.org,	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,	ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org,	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org,	linux-sound@vger.kernel.org
+Subject: Re: [PATCH 02/13] ALSA: hda_intel: Use always-managed version of pcim_intx()
+In-Reply-To: <aec23bb79b9ff7dd7f13eb67460e0605eac22912.camel@redhat.com>
+References: <20241015185124.64726-1-pstanner@redhat.com>
+	<20241015185124.64726-3-pstanner@redhat.com>
+	<87v7xk2ps5.wl-tiwai@suse.de>
+	<6f3db65fe9a5dcd1a7a8d9bd5352ecb248ef57b1.camel@redhat.com>
+	<87ttd2276j.wl-tiwai@suse.de>
+	<aec23bb79b9ff7dd7f13eb67460e0605eac22912.camel@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1728300189.git.andrea.porta@suse.com> <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
-In-Reply-To: <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Thu, 24 Oct 2024 16:21:46 +0100
-Message-ID: <CAPY8ntC0B0RdNmvGMaDcp-p9gZOcWBbeC6BjbcihrijRXjRVkA@mail.gmail.com>
-Subject: Re: [PATCH v2 11/14] misc: rp1: RaspberryPi RP1 misc driver
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
-	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 2A8A422129
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[yahoo.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,kernel.org,omp.ru,amd.com,arndb.de,linuxfoundation.org,yahoo.com,marvell.com,davemloft.net,google.com,redhat.com,quantenna.com,gmail.com,kudzu.us,intel.com,suse.com,epam.com,perex.cz,iscas.ac.cn,realtek.com,zeniv.linux.org.uk,debian.org,linutronix.de,linux.intel.com,ziepe.ca,nvidia.com,huawei.com,invisiblethingslab.com,linux.dev,vger.kernel.org,lists.linux.dev,lists.xenproject.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[67];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Andrea
+On Thu, 24 Oct 2024 10:02:59 +0200,
+Philipp Stanner wrote:
+> 
+> On Wed, 2024-10-23 at 17:03 +0200, Takashi Iwai wrote:
+> > On Wed, 23 Oct 2024 15:50:09 +0200,
+> > Philipp Stanner wrote:
+> > > 
+> > > On Tue, 2024-10-22 at 16:08 +0200, Takashi Iwai wrote:
+> > > > On Tue, 15 Oct 2024 20:51:12 +0200,
+> > > > Philipp Stanner wrote:
+> > > > > 
+> > > > > pci_intx() is a hybrid function which can sometimes be managed
+> > > > > through
+> > > > > devres. To remove this hybrid nature from pci_intx(), it is
+> > > > > necessary to
+> > > > > port users to either an always-managed or a never-managed
+> > > > > version.
+> > > > > 
+> > > > > hda_intel enables its PCI-Device with pcim_enable_device().
+> > > > > Thus,
+> > > > > it needs
+> > > > > the always-managed version.
+> > > > > 
+> > > > > Replace pci_intx() with pcim_intx().
+> > > > > 
+> > > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > > > > ---
+> > > > >  sound/pci/hda/hda_intel.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/sound/pci/hda/hda_intel.c
+> > > > > b/sound/pci/hda/hda_intel.c
+> > > > > index b4540c5cd2a6..b44ca7b6e54f 100644
+> > > > > --- a/sound/pci/hda/hda_intel.c
+> > > > > +++ b/sound/pci/hda/hda_intel.c
+> > > > > @@ -786,7 +786,7 @@ static int azx_acquire_irq(struct azx
+> > > > > *chip,
+> > > > > int do_disconnect)
+> > > > >  	}
+> > > > >  	bus->irq = chip->pci->irq;
+> > > > >  	chip->card->sync_irq = bus->irq;
+> > > > > -	pci_intx(chip->pci, !chip->msi);
+> > > > > +	pcim_intx(chip->pci, !chip->msi);
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  
+> > > > 
+> > > > Hm, it's OK-ish to do this as it's practically same as what
+> > > > pci_intx()
+> > > > currently does.  But, the current code can be a bit inconsistent
+> > > > about
+> > > > the original intx value.  pcim_intx() always stores !enable to
+> > > > res->orig_intx unconditionally, and it means that the orig_intx
+> > > > value
+> > > > gets overridden at each time pcim_intx() gets called.
+> > > 
+> > > Yes.
+> > > 
+> > > > 
+> > > > Meanwhile, HD-audio driver does release and re-acquire the
+> > > > interrupt
+> > > > after disabling MSI when something goes wrong, and pci_intx()
+> > > > call
+> > > > above is a part of that procedure.  So, it can rewrite the
+> > > > res->orig_intx to another value by retry without MSI.  And after
+> > > > the
+> > > > driver removal, it'll lead to another state.
+> > > 
+> > > I'm not sure that I understand this paragraph completely. Still,
+> > > could
+> > > a solution for the driver on the long-term just be to use
+> > > pci_intx()?
+> > 
+> > pci_intx() misses the restore of the original value, so it's no
+> > long-term solution, either.
+> 
+> Sure that is missing – I was basically asking whether the driver could
+> live without that feature.
+> 
+> Consider that point obsolete, see below
+> 
+> > 
+> > What I meant is that pcim_intx() blindly assumes the negative of the
+> > passed argument as the original state, which isn't always true.  e.g.
+> > when the driver calls it twice with different values, a wrong value
+> > may be remembered.
+> 
+> Ah, I see – thoguh the issue is when it's called several times with the
+> *same* value, isn't it?
+> 
+> E.g.
+> 
+> pcim_intx(pdev, 1); // 0 is remembered as the old value
+> pcim_intx(pdev, 1); // 0 is falsely remembered as the old value
+> 
+> Also, it would seem that calling the function for the first time like
+> that:
+> 
+> pcim_intx(pdev, 0); // old value: 1
+> 
+> is at least incorrect, because INTx should be 0 per default, shouldn't
+> it? Could then even be a 1st class bug, because INTx would end up being
+> enabled despite having been disabled all the time.
 
-On Mon, 7 Oct 2024 at 14:07, Andrea della Porta <andrea.porta@suse.com> wrote:
->
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
->
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe.
->
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
->
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
->
-> Since the gpio line names should be provided by the user, there
-> is an interface through configfs that allows the userspace to
-> load a DT overlay that will provide gpio-line-names property.
-> The interface can be invoked like this:
->
-> cat rpi-rp1-gpios-5-b.dtbo > /sys/kernel/config/rp1-cfg/gpio_set_names
->
-> and is designed to be similar to what users are already used to
-> from distro with downstream kernel.
->
-> For reasons why this driver is contained in drivers/misc, please
-> check the links.
->
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
->
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  MAINTAINERS                   |   1 +
->  drivers/misc/Kconfig          |   1 +
->  drivers/misc/Makefile         |   1 +
->  drivers/misc/rp1/Kconfig      |  24 +++
->  drivers/misc/rp1/Makefile     |   5 +
->  drivers/misc/rp1/rp1-pci.dtso |   8 +
->  drivers/misc/rp1/rp1_pci.c    | 365 ++++++++++++++++++++++++++++++++++
->  drivers/misc/rp1/rp1_pci.h    |  14 ++
->  drivers/pci/quirks.c          |   1 +
->  include/linux/pci_ids.h       |   3 +
->  10 files changed, 423 insertions(+)
->  create mode 100644 drivers/misc/rp1/Kconfig
->  create mode 100644 drivers/misc/rp1/Makefile
->  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
->  create mode 100644 drivers/misc/rp1/rp1_pci.c
->  create mode 100644 drivers/misc/rp1/rp1_pci.h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 510a071ede78..032678fb2470 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19389,6 +19389,7 @@ F:      Documentation/devicetree/bindings/misc/pci1de4,1.yaml
->  F:     Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
->  F:     Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
->  F:     drivers/clk/clk-rp1.c
-> +F:     drivers/misc/rp1/
->  F:     drivers/pinctrl/pinctrl-rp1.c
->  F:     include/dt-bindings/clock/rp1.h
->  F:     include/dt-bindings/misc/rp1.h
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 3fe7e2a9bd29..ac85cb154100 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -628,4 +628,5 @@ source "drivers/misc/uacce/Kconfig"
->  source "drivers/misc/pvpanic/Kconfig"
->  source "drivers/misc/mchp_pci1xxxx/Kconfig"
->  source "drivers/misc/keba/Kconfig"
-> +source "drivers/misc/rp1/Kconfig"
->  endmenu
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index a9f94525e181..ae86d69997b4 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -72,3 +72,4 @@ obj-$(CONFIG_TPS6594_PFSM)    += tps6594-pfsm.o
->  obj-$(CONFIG_NSM)              += nsm.o
->  obj-$(CONFIG_MARVELL_CN10K_DPI)        += mrvl_cn10k_dpi.o
->  obj-y                          += keba/
-> +obj-$(CONFIG_MISC_RP1)         += rp1/
-> diff --git a/drivers/misc/rp1/Kconfig b/drivers/misc/rp1/Kconfig
-> new file mode 100644
-> index 000000000000..29b1fc2fc4af
-> --- /dev/null
-> +++ b/drivers/misc/rp1/Kconfig
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# RaspberryPi RP1 misc device
-> +#
-> +
-> +config MISC_RP1
-> +        tristate "RaspberryPi RP1 PCIe support"
-> +        depends on PCI && PCI_QUIRKS
-> +        select OF
-> +        select OF_IRQ
-> +        select OF_OVERLAY
-> +        select IRQ_DOMAIN
-> +        select PCI_DYNAMIC_OF_NODES
-> +        help
-> +          Support the RP1 peripheral chip found on Raspberry Pi 5 board.
-> +
-> +          This device supports several sub-devices including e.g. Ethernet
-> +         controller, USB controller, I2C, SPI and UART.
-> +
-> +          The driver is responsible for enabling the DT node once the PCIe
-> +         endpoint has been configured, and handling interrupts.
-> +
-> +          This driver uses an overlay to load other drivers to support for
-> +         RP1 internal sub-devices.
-> diff --git a/drivers/misc/rp1/Makefile b/drivers/misc/rp1/Makefile
-> new file mode 100644
-> index 000000000000..70384f5a7d7d
-> --- /dev/null
-> +++ b/drivers/misc/rp1/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +obj-$(CONFIG_MISC_RP1)         += rp1-pci.o
-> +rp1-pci-objs                   := rp1_pci.o rp1-pci.dtbo.o
-> +
-> +DTC_FLAGS_rp1-pci += -@
-> diff --git a/drivers/misc/rp1/rp1-pci.dtso b/drivers/misc/rp1/rp1-pci.dtso
-> new file mode 100644
-> index 000000000000..0bf2f4bb18e6
-> --- /dev/null
-> +++ b/drivers/misc/rp1/rp1-pci.dtso
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +
-> +/* the dts overlay is included from the dts directory so
-> + * it can be possible to check it with CHECK_DTBS while
-> + * also compile it from the driver source directory.
-> + */
-> +
-> +#include "arm64/broadcom/rp1.dtso"
-> diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
-> new file mode 100644
-> index 000000000000..a1f7bf1804c0
-> --- /dev/null
-> +++ b/drivers/misc/rp1/rp1_pci.c
-> @@ -0,0 +1,365 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> + * All rights reserved.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/msi.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +
-> +#include "rp1_pci.h"
-> +
-> +#define RP1_DRIVER_NAME                "rp1"
-> +
-> +#define RP1_HW_IRQ_MASK                GENMASK(5, 0)
-> +
-> +#define REG_SET                        0x800
-> +#define REG_CLR                        0xc00
-> +
-> +/* MSI-X CFG registers start at 0x8 */
-> +#define MSIX_CFG(x) (0x8 + (4 * (x)))
-> +
-> +#define MSIX_CFG_IACK_EN        BIT(3)
-> +#define MSIX_CFG_IACK           BIT(2)
-> +#define MSIX_CFG_ENABLE         BIT(0)
-> +
-> +/* Address map */
-> +#define RP1_PCIE_APBS_BASE     0x108000
-> +
-> +/* Interrupts */
-> +#define RP1_INT_IO_BANK0       0
-> +#define RP1_INT_IO_BANK1       1
-> +#define RP1_INT_IO_BANK2       2
-> +#define RP1_INT_AUDIO_IN       3
-> +#define RP1_INT_AUDIO_OUT      4
-> +#define RP1_INT_PWM0           5
-> +#define RP1_INT_ETH            6
-> +#define RP1_INT_I2C0           7
-> +#define RP1_INT_I2C1           8
-> +#define RP1_INT_I2C2           9
-> +#define RP1_INT_I2C3           10
-> +#define RP1_INT_I2C4           11
-> +#define RP1_INT_I2C5           12
-> +#define RP1_INT_I2C6           13
-> +#define RP1_INT_I2S0           14
-> +#define RP1_INT_I2S1           15
-> +#define RP1_INT_I2S2           16
-> +#define RP1_INT_SDIO0          17
-> +#define RP1_INT_SDIO1          18
-> +#define RP1_INT_SPI0           19
-> +#define RP1_INT_SPI1           20
-> +#define RP1_INT_SPI2           21
-> +#define RP1_INT_SPI3           22
-> +#define RP1_INT_SPI4           23
-> +#define RP1_INT_SPI5           24
-> +#define RP1_INT_UART0          25
-> +#define RP1_INT_TIMER_0                26
-> +#define RP1_INT_TIMER_1                27
-> +#define RP1_INT_TIMER_2                28
-> +#define RP1_INT_TIMER_3                29
-> +#define RP1_INT_USBHOST0       30
-> +#define RP1_INT_USBHOST0_0     31
-> +#define RP1_INT_USBHOST0_1     32
-> +#define RP1_INT_USBHOST0_2     33
-> +#define RP1_INT_USBHOST0_3     34
-> +#define RP1_INT_USBHOST1       35
-> +#define RP1_INT_USBHOST1_0     36
-> +#define RP1_INT_USBHOST1_1     37
-> +#define RP1_INT_USBHOST1_2     38
-> +#define RP1_INT_USBHOST1_3     39
-> +#define RP1_INT_DMA            40
-> +#define RP1_INT_PWM1           41
-> +#define RP1_INT_UART1          42
-> +#define RP1_INT_UART2          43
-> +#define RP1_INT_UART3          44
-> +#define RP1_INT_UART4          45
-> +#define RP1_INT_UART5          46
-> +#define RP1_INT_MIPI0          47
-> +#define RP1_INT_MIPI1          48
-> +#define RP1_INT_VIDEO_OUT      49
-> +#define RP1_INT_PIO_0          50
-> +#define RP1_INT_PIO_1          51
-> +#define RP1_INT_ADC_FIFO       52
-> +#define RP1_INT_PCIE_OUT       53
-> +#define RP1_INT_SPI6           54
-> +#define RP1_INT_SPI7           55
-> +#define RP1_INT_SPI8           56
-> +#define RP1_INT_SYSCFG         58
-> +#define RP1_INT_CLOCKS_DEFAULT 59
-> +#define RP1_INT_VBUSCTRL       60
-> +#define RP1_INT_PROC_MISC      57
-> +#define RP1_INT_END            61
-> +
-> +struct rp1_dev {
-> +       struct pci_dev *pdev;
-> +       struct device *dev;
-> +       struct clk *sys_clk;
-> +       struct irq_domain *domain;
-> +       struct irq_data *pcie_irqds[64];
-> +       void __iomem *bar1;
-> +       int ovcs_id;
-> +       bool level_triggered_irq[RP1_INT_END];
-> +};
-> +
-> +static void dump_bar(struct pci_dev *pdev, unsigned int bar)
-> +{
-> +       dev_info(&pdev->dev,
-> +                "bar%d %pR\n",
-> +                bar,
-> +                pci_resource_n(pdev, bar));
-> +}
-> +
-> +static void msix_cfg_set(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
-> +{
-> +       iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_SET + MSIX_CFG(hwirq));
-> +}
-> +
-> +static void msix_cfg_clr(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
-> +{
-> +       iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_CLR + MSIX_CFG(hwirq));
-> +}
-> +
-> +static void rp1_mask_irq(struct irq_data *irqd)
-> +{
-> +       struct rp1_dev *rp1 = irqd->domain->host_data;
-> +       struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
-> +
-> +       pci_msi_mask_irq(pcie_irqd);
-> +}
-> +
-> +static void rp1_unmask_irq(struct irq_data *irqd)
-> +{
-> +       struct rp1_dev *rp1 = irqd->domain->host_data;
-> +       struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
-> +
-> +       pci_msi_unmask_irq(pcie_irqd);
-> +}
-> +
-> +static int rp1_irq_set_type(struct irq_data *irqd, unsigned int type)
-> +{
-> +       struct rp1_dev *rp1 = irqd->domain->host_data;
-> +       unsigned int hwirq = (unsigned int)irqd->hwirq;
-> +
-> +       switch (type) {
-> +       case IRQ_TYPE_LEVEL_HIGH:
-> +               dev_dbg(rp1->dev, "MSIX IACK EN for irq %d\n", hwirq);
-> +               msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
-> +               rp1->level_triggered_irq[hwirq] = true;
-> +       break;
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               msix_cfg_clr(rp1, hwirq, MSIX_CFG_IACK_EN);
-> +               rp1->level_triggered_irq[hwirq] = false;
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static struct irq_chip rp1_irq_chip = {
-> +       .name            = "rp1_irq_chip",
-> +       .irq_mask        = rp1_mask_irq,
-> +       .irq_unmask      = rp1_unmask_irq,
-> +       .irq_set_type    = rp1_irq_set_type,
-> +};
-> +
-> +static void rp1_chained_handle_irq(struct irq_desc *desc)
-> +{
-> +       unsigned int hwirq = desc->irq_data.hwirq & RP1_HW_IRQ_MASK;
-> +       struct rp1_dev *rp1 = irq_desc_get_handler_data(desc);
-> +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       int virq;
-> +
-> +       chained_irq_enter(chip, desc);
-> +
-> +       virq = irq_find_mapping(rp1->domain, hwirq);
-> +       generic_handle_irq(virq);
-> +       if (rp1->level_triggered_irq[hwirq])
-> +               msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK);
-> +
-> +       chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int rp1_irq_xlate(struct irq_domain *d, struct device_node *node,
-> +                        const u32 *intspec, unsigned int intsize,
-> +                        unsigned long *out_hwirq, unsigned int *out_type)
-> +{
-> +       struct rp1_dev *rp1 = d->host_data;
-> +       struct irq_data *pcie_irqd;
-> +       unsigned long hwirq;
-> +       int pcie_irq;
-> +       int ret;
-> +
-> +       ret = irq_domain_xlate_twocell(d, node, intspec, intsize,
-> +                                      &hwirq, out_type);
-> +       if (ret)
-> +               return ret;
-> +
-> +       pcie_irq = pci_irq_vector(rp1->pdev, hwirq);
-> +       pcie_irqd = irq_get_irq_data(pcie_irq);
-> +       rp1->pcie_irqds[hwirq] = pcie_irqd;
-> +       *out_hwirq = hwirq;
-> +
-> +       return 0;
-> +}
-> +
-> +static int rp1_irq_activate(struct irq_domain *d, struct irq_data *irqd,
-> +                           bool reserve)
-> +{
-> +       struct rp1_dev *rp1 = d->host_data;
-> +
-> +       msix_cfg_set(rp1, (unsigned int)irqd->hwirq, MSIX_CFG_ENABLE);
-> +
-> +       return 0;
-> +}
-> +
-> +static void rp1_irq_deactivate(struct irq_domain *d, struct irq_data *irqd)
-> +{
-> +       struct rp1_dev *rp1 = d->host_data;
-> +
-> +       msix_cfg_clr(rp1, (unsigned int)irqd->hwirq, MSIX_CFG_ENABLE);
-> +}
-> +
-> +static const struct irq_domain_ops rp1_domain_ops = {
-> +       .xlate      = rp1_irq_xlate,
-> +       .activate   = rp1_irq_activate,
-> +       .deactivate = rp1_irq_deactivate,
-> +};
-> +
-> +static int rp1_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *rp1_node;
-> +       struct reset_control *reset;
-> +       struct rp1_dev *rp1;
-> +       int err  = 0;
-> +       int i;
-> +
-> +       rp1_node = dev_of_node(dev);
-> +       if (!rp1_node) {
-> +               dev_err(dev, "Missing of_node for device\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       rp1 = devm_kzalloc(&pdev->dev, sizeof(*rp1), GFP_KERNEL);
-> +       if (!rp1)
-> +               return -ENOMEM;
-> +
-> +       rp1->pdev = pdev;
-> +       rp1->dev = &pdev->dev;
-> +
-> +       reset = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-> +       if (IS_ERR(reset))
-> +               return PTR_ERR(reset);
-> +       reset_control_reset(reset);
-> +
-> +       dump_bar(pdev, 0);
-> +       dump_bar(pdev, 1);
-> +
-> +       if (pci_resource_len(pdev, 1) <= 0x10000) {
-> +               dev_err(&pdev->dev,
-> +                       "Not initialised - is the firmware running?\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       err = pcim_enable_device(pdev);
-> +       if (err < 0) {
-> +               dev_err(&pdev->dev, "Enabling PCI device has failed: %d",
-> +                       err);
-> +               return err;
-> +       }
-> +
-> +       rp1->bar1 = pcim_iomap(pdev, 1, 0);
-> +       if (!rp1->bar1) {
-> +               dev_err(&pdev->dev, "Cannot map PCI BAR\n");
-> +               return -EIO;
-> +       }
-> +
-> +       u32 dtbo_size = __dtbo_rp1_pci_end - __dtbo_rp1_pci_begin;
-> +       void *dtbo_start = __dtbo_rp1_pci_begin;
-> +
-> +       err = of_overlay_fdt_apply(dtbo_start, dtbo_size, &rp1->ovcs_id, rp1_node);
-> +       if (err)
-> +               return err;
-> +
-> +       pci_set_master(pdev);
-> +
-> +       err = pci_alloc_irq_vectors(pdev, RP1_INT_END, RP1_INT_END,
-> +                                   PCI_IRQ_MSIX);
-> +       if (err != RP1_INT_END) {
-> +               dev_err(&pdev->dev, "pci_alloc_irq_vectors failed - %d\n", err);
-> +               goto err_unload_overlay;
-> +       }
-> +
-> +       pci_set_drvdata(pdev, rp1);
-> +       rp1->domain = irq_domain_add_linear(of_find_node_by_name(NULL, "pci-ep-bus"), RP1_INT_END,
-> +                                           &rp1_domain_ops, rp1);
-> +
-> +       for (i = 0; i < RP1_INT_END; i++) {
-> +               int irq = irq_create_mapping(rp1->domain, i);
-> +
-> +               if (irq < 0) {
-> +                       dev_err(&pdev->dev, "failed to create irq mapping\n");
-> +                       err = irq;
-> +                       goto err_unload_overlay;
-> +               }
-> +               irq_set_chip_and_handler(irq, &rp1_irq_chip, handle_level_irq);
-> +               irq_set_probe(irq);
-> +               irq_set_chained_handler_and_data(pci_irq_vector(pdev, i),
-> +                                                rp1_chained_handle_irq, rp1);
-> +       }
-> +
-> +       err = of_platform_default_populate(rp1_node, NULL, dev);
-> +       if (err)
-> +               goto err_unload_overlay;
-> +
-> +       return 0;
-> +
-> +err_unload_overlay:
-> +       of_overlay_remove(&rp1->ovcs_id);
-> +
-> +       return err;
-> +}
-> +
-> +static void rp1_remove(struct pci_dev *pdev)
-> +{
-> +       struct rp1_dev *rp1 = pci_get_drvdata(pdev);
-> +       struct device *dev = &pdev->dev;
-> +
-> +       of_platform_depopulate(dev);
-> +       of_overlay_remove(&rp1->ovcs_id);
-> +
-> +       clk_unregister(rp1->sys_clk);
-> +}
-> +
-> +static const struct pci_device_id dev_id_table[] = {
-> +       { PCI_DEVICE(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0), },
-> +       { 0, }
-> +};
+Yeah, and the unexpected restore can happen even with a single call of
+pcim_intx(), if the driver calls it unnecessarily.
 
-You need a
+> > That said, I thought of something like below.
+> 
+> At first glance that looks like a good idea to me, thanks for working
+> this out!
+> 
+> IMO you can submit that as a patch so we can discuss it separately.
 
-MODULE_DEVICE_TABLE(pci, dev_id_table);
+Sure, I'm going to submit later.
 
-here in order to load the module for the cases where it isn't
-built-in. Otherwise you have to manually modprobe the module.
 
-Cheers.
-  Dave
+thanks,
 
-> +
-> +static struct pci_driver rp1_driver = {
-> +       .name           = RP1_DRIVER_NAME,
-> +       .id_table       = dev_id_table,
-> +       .probe          = rp1_probe,
-> +       .remove         = rp1_remove,
-> +};
-> +
-> +module_pci_driver(rp1_driver);
-> +
-> +MODULE_AUTHOR("Phil Elwell <phil@raspberrypi.com>");
-> +MODULE_AUTHOR("Andrea della Porta <andrea.porta@suse.com>");
-> +MODULE_DESCRIPTION("RP1 wrapper");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/misc/rp1/rp1_pci.h b/drivers/misc/rp1/rp1_pci.h
-> new file mode 100644
-> index 000000000000..7982f13bad9b
-> --- /dev/null
-> +++ b/drivers/misc/rp1/rp1_pci.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> + * All rights reserved.
-> + */
-> +
-> +#ifndef _RP1_EXTERN_H_
-> +#define _RP1_EXTERN_H_
-> +
-> +extern char __dtbo_rp1_pci_begin[];
-> +extern char __dtbo_rp1_pci_end[];
-> +
-> +#endif
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index dccb60c1d9cc..41e77d94ff73 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6266,6 +6266,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0, of_pci_make_dev_node);
->
->  /*
->   * Devices known to require a longer delay before first config space access
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 4cf6aaed5f35..c7e6cd10ac52 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2611,6 +2611,9 @@
->  #define PCI_VENDOR_ID_TEKRAM           0x1de1
->  #define PCI_DEVICE_ID_TEKRAM_DC290     0xdc29
->
-> +#define PCI_VENDOR_ID_RPI              0x1de4
-> +#define PCI_DEVICE_ID_RPI_RP1_C0       0x0001
-> +
->  #define PCI_VENDOR_ID_ALIBABA          0x1ded
->
->  #define PCI_VENDOR_ID_CXL              0x1e98
-> --
-> 2.35.3
->
->
+Takashi
 
