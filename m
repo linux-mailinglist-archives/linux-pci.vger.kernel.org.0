@@ -1,107 +1,168 @@
-Return-Path: <linux-pci+bounces-15190-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15191-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26B3A9AE12E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 11:41:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D07A39AE22E
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 12:13:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D16DC1F22AD9
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 09:41:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5EC71C2141C
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 10:13:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F66F1D174A;
-	Thu, 24 Oct 2024 09:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA4D1C07CD;
+	Thu, 24 Oct 2024 10:13:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWboTjyI"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fk7ZmD1Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CAC1D172B;
-	Thu, 24 Oct 2024 09:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6233D17B51A;
+	Thu, 24 Oct 2024 10:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729762696; cv=none; b=aam7HCvOFPltSexu9LhOqLO64F48v4ke6vSY3DGCbzGVfDn3N7gIyKOssIV//TmJZQyyuQd63VqlAEXbXepw4NPVL5vqM2A6tgV/2XxCjQhEMSv38ory1C0oWK3yDq2l4mHLrUasGSZ0EAVDnlWy9iLsS6K4zYxSsWN6Uv2SwGU=
+	t=1729764806; cv=none; b=SIHB3tzsdWCrPkwi5cmchlEyCeAuJZIEOYS/cbYlVVJpcNS7F9ayGTPAtM4LjKdin8kBAGvSBbowGWmFIpaTovXf38tNfA9kLbGh8n6gM6Cs6gsrudFX7/PNDzigKZus5oaU3IauB3HsnrBgOMLm4ZKAdznwaJDHBp5wlTb3MMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729762696; c=relaxed/simple;
-	bh=TM7UNffSSOmAOZkaONHkwvnJYn+RtQ7/d5lFvohpBnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5G2/g/Q+yKGrhExYhc9tw8QCae87hUJhU/oJPWYfQ22SFAGg9dcjg/hnC65nkQuwYFBDlPLEK5LMK4QA/A+bjMOTrVePiP+6CTzgxHMPkJIuGwthPnbAI3dyZJMTn8HLnQg++x0kcm053BUJZxDTBSQJS4CXp1OTCyFljxLit8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWboTjyI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26EEAC4CEC7;
-	Thu, 24 Oct 2024 09:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729762695;
-	bh=TM7UNffSSOmAOZkaONHkwvnJYn+RtQ7/d5lFvohpBnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AWboTjyIQkjp08p9YShGmcoM7pqqYthPP6XGtm+Dl811CsjBV+JzMBevlJyusgVvG
-	 ZgccgktLRRy7kuZSwAWnMKaIvfPi5q5hBURUdsnSpToD9FblTPvrdpYTurXr+WDZkT
-	 tyFfGAeOymPWNi0pHE1CTqovskZ4zPQQ2LJNrBWdNHkqb5jgfE1+1nAhGAXp3QC+9X
-	 jMi8qQ0igZIZghT5MSBxfjaP5aJOMap2mtjFLsMfh8cLgJ9d6K9xEc6nL3sjoeRmBY
-	 K+5zsbpi5R0nct7+/NfNmuU2y9KkyzoGS5Lch0t0z7oNG8d8vZXZdeoSYuqhcvBbFU
-	 TrTygL8pzHYTg==
-Date: Thu, 24 Oct 2024 10:38:11 +0100
-From: Conor Dooley <conor@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v5 0/2] PCI: microchip: support using either instance 1
- or 2
-Message-ID: <20241024-gout-kinfolk-0f24b28d41b7@spud>
-References: <20240814-setback-rumbling-c6393c8f1a91@spud>
+	s=arc-20240116; t=1729764806; c=relaxed/simple;
+	bh=L0wG5NAB837vwgfGLXcFMaWmBToiph15GFjRBSGChqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sVAMpqga7lDpAcv+abPSON72ftuTM9dZFjuxaIDRyNHyAMiw/3AwVwVa2hP7RCokpYhMo59TlAynhPFiLLmH9Za6zDRUfpcYFCM74nFHazR92J4NJhkmWa4W/Gq/eN3BN1MnuJqMauitcy24ZSxHSH35juacNy7CJ2bBzmQ9TtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fk7ZmD1Q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49O9xCH6031137;
+	Thu, 24 Oct 2024 10:13:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nA66XR+3hg4rn29/8sheuZijZiUknqI2xNQksymz+kY=; b=fk7ZmD1Q9IQivqrP
+	PD2Fg3g2oljO8AJl/HrTC/keDTFWv3qxD+2g5YIhrh+8o/p7+f4n/HUT0EQL8alZ
+	srHNz4tHRYSsbtHhnWa+FlfjtJmfTNlh+mzDH0mTC8p+4T734VoZtGWowPeqDEfl
+	JiPDAVVn4JLNOMyptrUSJLa383UfHeK3x6OGz8Aaj9KZOVsfzQZeHfDyGURjLu1y
+	5cQZr9ooCaPHXyekvLzW6RQHVLVc1jo9iLvsswmk+rhTMw0tSGw7V0SCPyDsUw+c
+	NMI1yu3t1lwOTSDsThrFG5KmASYPZNxsK4upIhxXdsIp1yhTgGOMXZ0jxrJ3Uztk
+	NCkLhQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42em3vwchc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Oct 2024 10:13:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49OADGVt007852
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Oct 2024 10:13:16 GMT
+Received: from [10.216.22.131] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 24 Oct
+ 2024 03:13:13 -0700
+Message-ID: <258bf011-cca6-6d56-c6f2-a9c619c9a212@quicinc.com>
+Date: Thu, 24 Oct 2024 15:43:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="U6iyZokWShLT5gWe"
-Content-Disposition: inline
-In-Reply-To: <20240814-setback-rumbling-c6393c8f1a91@spud>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 0/5] PCI/pwrctl: Ensure that the pwrctl drivers are probed
+ before PCI client drivers
+Content-Language: en-US
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        <manivannan.sadhasivam@linaro.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        "Abel
+ Vesa" <abel.vesa@linaro.org>,
+        Stephan Gerhold <stephan.gerhold@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson
+	<bjorn.andersson@oss.qualcomm.com>,
+        <stable+noautosel@kernel.org>
+References: <20241022-pci-pwrctl-rework-v1-0-94a7e90f58c5@linaro.org>
+ <CACMJSeuhEQVaXhB8hotG_cimQ4rqQVyzF1DyPwtV4m1T5D=o+g@mail.gmail.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <CACMJSeuhEQVaXhB8hotG_cimQ4rqQVyzF1DyPwtV4m1T5D=o+g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: _qhtnl4baAQi3BAw7AK3PTJtuDR3B6D2
+X-Proofpoint-ORIG-GUID: _qhtnl4baAQi3BAw7AK3PTJtuDR3B6D2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 spamscore=0 clxscore=1011 lowpriorityscore=0
+ mlxlogscore=704 priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410240081
 
 
---U6iyZokWShLT5gWe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 14, 2024 at 09:08:40AM +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->=20
-> The current driver and binding for PolarFire SoC's PCI controller assume
-> that the root port instance in use is instance 1. The second reg
-> property constitutes the region encompassing both "control" and "bridge"
-> registers for both instances. In the driver, a fixed offset is applied to
-> find the base addresses for instance 1's "control" and "bridge"
-> registers. The BeagleV Fire uses root port instance 2, so something must
-> be done so that software can differentiate. This series splits the
-> second reg property in two, with dedicated "control" and "bridge"
-> entries so that either instance can be used.
+On 10/23/2024 4:00 PM, Bartosz Golaszewski wrote:
+> On Tue, 22 Oct 2024 at 12:28, Manivannan Sadhasivam via B4 Relay
+> <devnull+manivannan.sadhasivam.linaro.org@kernel.org> wrote:
+>>
+>> Hi,
+>>
+>> This series reworks the PCI/pwrctl integration to ensure that the pwrctl drivers
+>> are always probed before the PCI client drivers. This series addresses a race
+>> condition when both pwrctl and pwrctl/pwrseq drivers probe parallely (even when
+>> the later one probes last). One such issue was reported for the Qcom X13s
+>> platform with WLAN module and fixed with 'commit a9aaf1ff88a8 ("power:
+>> sequencing: request the WLAN enable GPIO as-is")'.
+>>
+>> Though the issue was fixed with a hack in the pwrseq driver, it was clear that
+>> the issue is applicable to all pwrctl drivers. Hence, this series tries to
+>> address the issue in the PCI/pwrctl integration.
+>>
+>> - Mani
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> ---
+>> Manivannan Sadhasivam (5):
+>>        PCI/pwrctl: Use of_platform_device_create() to create pwrctl devices
+>>        PCI/pwrctl: Create pwrctl devices only if at least one power supply is present
+>>        PCI/pwrctl: Ensure that the pwrctl drivers are probed before the PCI client drivers
+>>        PCI/pwrctl: Move pwrctl device creation to its own helper function
+>>        PCI/pwrctl: Remove pwrctl device without iterating over all children of pwrctl parent
+>>
+>>   drivers/pci/bus.c         | 64 +++++++++++++++++++++++++++++++++++++++++------
+>>   drivers/pci/of.c          | 27 ++++++++++++++++++++
+>>   drivers/pci/pci.h         |  5 ++++
+>>   drivers/pci/pwrctl/core.c | 10 --------
+>>   drivers/pci/remove.c      | 17 ++++++-------
+>>   5 files changed, 96 insertions(+), 27 deletions(-)
+>> ---
+>> base-commit: 48dc7986beb60522eb217c0016f999cc7afaf0b7
+>> change-id: 20241022-pci-pwrctl-rework-a1b024158555
+>>
+>> Best regards,
+>> --
+>> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>
+>>
+> 
+> Excellent work, thanks for doing this.
+> 
+> Tested on: sc8280xp-crd, RB5 and sm8450-hdk.
+> 
+> Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Just a couple nits from my side under respective patches.
+> 
+> Bart
+Tested on: qcs6490-rb3gen board with work in progress qps615 pcie switch
 
-Just attempting to bump this patchset. It has gone over 2 months without
-response, and I am afraid it has completely fallen between the cracks.
+Tested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-Thanks,
-Conor.
-
---U6iyZokWShLT5gWe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZxoVgwAKCRB4tDGHoIJi
-0rSkAQDDxvSCVpyNBChctdnTAmn52RkLFOl+dBGBX8kpkw1apQD+LA70iId0caDT
-vs957ff3Zq274+khzayKzwkmeaf0Zgk=
-=nk2E
------END PGP SIGNATURE-----
-
---U6iyZokWShLT5gWe--
+- Krishna Chaitanya.
+> 
 
