@@ -1,279 +1,128 @@
-Return-Path: <linux-pci+bounces-15230-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15231-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D27C9AEF28
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 20:05:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17CFB9AEF89
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 20:16:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 131FC1C21DCE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 18:05:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45E4A1C23D43
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 18:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B321F8196;
-	Thu, 24 Oct 2024 18:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EECB200BA2;
+	Thu, 24 Oct 2024 18:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RgkmdbP9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vh6jwWlf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAB21F76DC
-	for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2024 18:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D921ABEC5;
+	Thu, 24 Oct 2024 18:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729793114; cv=none; b=DqOQVpzYiei6zSslKb6tjpAbX1hwZUCkdrp+pm8E1Jevo9uivQO1FAXmEu9UkzJg6dlYrVbtczmn2nmeoeifg2ZEJTJq5UvHORhTEx6+IdJNyuO22tcbqswenJe0MEv4S6Vv0JiaTCdo1M1YMGTattGVfNn8OX6npRhz9JfTCH8=
+	t=1729793793; cv=none; b=SnkoL9zkFHr8XFIS/SZ9Uj7avKWZlTVHBE9JWHX6/zYEaeNX0yvVv7zNnN3RsyMxI5nNZKpxNzQ0CuwSKPd/U9WU5nSTvkaS/+RSIenzq0odn6NAUOfb5+A/lkRsQSHQiy4XGVVhAU+BFKEcVMGxZeja9LGV8ySIymzhWZugAnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729793114; c=relaxed/simple;
-	bh=zFaNN0kA0O+fRfMoHHPBAI/70f9dW49fMPtL+2bd7O0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=s6akhVDsAye/hLfDFm7qsDmyME527dWeBBC6mMtIs6+ivpmjOzRoY0wuj7i6YpO6wQcpTJ6kLOCNHqcvinv95r6YUuo4z70hBQdUyDqll/mUuw/nuZyoHAa1/ihWJkG8TqDwFq3jN5BIIl+L6/0B5BH9MzDWNCmrpBlQn92XNX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RgkmdbP9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729793112; x=1761329112;
-  h=date:from:to:cc:subject:message-id;
-  bh=zFaNN0kA0O+fRfMoHHPBAI/70f9dW49fMPtL+2bd7O0=;
-  b=RgkmdbP9jj68RJBpA3ADuFmbesnQ1jiONcCL0OkePsHyeUvn9f0uj+Ju
-   jP7qual7/EXn65uPYguo+L61S+GE2/RO6nM1E932w019KUlmv7wIxksKl
-   wOot4alAUV8TwBzlGKNVtfwVuZEREz5WDihGl2rTyrWr4z3ZP/xRRFc0O
-   s6b2lavu8prsAfZn4/ONAOEq5NfFWUwdacUFHTR3C2IwebgojvM7uZCVJ
-   TaDwolEZnDoh+b7WQK6g5THRaT87JnS1UTBJ30aATD9lagvxtdSiTRAHI
-   GANKH6ESoM6J7FV1F7RlZB+Ndqi7B7oJQX1vRR6gtUhowzS1YJUJPtsmT
-   A==;
-X-CSE-ConnectionGUID: QPZz471ZSPOTrTJC4kvNnw==
-X-CSE-MsgGUID: SoncHMO8TFetfU+/Ym7SyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="40839935"
-X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
-   d="scan'208";a="40839935"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 11:05:12 -0700
-X-CSE-ConnectionGUID: P/MHh4zCSKCdQuqW3mP2jA==
-X-CSE-MsgGUID: Mo3bgOeGTpu52vR1RvIedA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
-   d="scan'208";a="80589192"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 24 Oct 2024 11:05:10 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t42Cq-000WpU-10;
-	Thu, 24 Oct 2024 18:05:08 +0000
-Date: Fri, 25 Oct 2024 02:04:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:locking] BUILD SUCCESS
- ab679834c47572542b8f9f42dd0839aace152fae
-Message-ID: <202410250234.BPRpytaV-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1729793793; c=relaxed/simple;
+	bh=wLQMy1fODAkR42k9k6/+Wm4LDF7pthKYgpT1trqgyOw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=f7f+AsqWmGpl50Ub80pl3SKNVLQrhgsSKMJxINv9OD6zjBV8fSk3JUDhwtupTytrJ88mghNuA1sur1rU9hZNxg4A7OPUkq6aNsMW3F5JZTqVuxQt7sXqiDJkC4vZWk216IucN7xxIxJz0Yc4NbYOAg1L5SlX66W3cJYecJTU5/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vh6jwWlf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBD6C4CEC7;
+	Thu, 24 Oct 2024 18:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729793792;
+	bh=wLQMy1fODAkR42k9k6/+Wm4LDF7pthKYgpT1trqgyOw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Vh6jwWlfQPZQfjGlftsi17vLLxsL5zZfNiCQJA2ugdrSPwdnao4cYzJyH0fJ6SOtW
+	 EF4BpJJSaW/azYChmUCGPgtF60kJ5Ga+F4UOY8t7jAnOrlLrMyGn4oouunBZzHCT1M
+	 fvE8QLJsWMtwAf8CzmBC9u+E5eiOfJXEK1ooBb+gyXZpVlB5b8noHv+zXIw2wVG1Fu
+	 XrKE3eaAMgLNmhlgI+83nsVQldtJ8ATNVcV1uV+zZQgJ4B4p/0iP//CxA9VKOft6Q7
+	 moGu1Ut3ybCF+ODoRccN/cyOjJDWUAM3zQPUSl1hfdEOGZ0XB0t7lJ2ZVYWaUK8Knr
+	 YtTARepCr42mQ==
+Date: Thu, 24 Oct 2024 13:16:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, vladimir.oltean@nxp.com,
+	claudiu.manoil@nxp.com, xiaoning.wang@nxp.com, Frank.Li@nxp.com,
+	christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
+	bhelgaas@google.com, horms@kernel.org, imx@lists.linux.dev,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	alexander.stein@ew.tq-group.com
+Subject: Re: [PATCH v5 net-next 08/13] PCI: Add NXP NETC vendor ID and device
+ IDs
+Message-ID: <20241024181630.GA966301@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241024065328.521518-9-wei.fang@nxp.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git locking
-branch HEAD: ab679834c47572542b8f9f42dd0839aace152fae  PCI: Unexport pci_walk_bus_locked()
+On Thu, Oct 24, 2024 at 02:53:23PM +0800, Wei Fang wrote:
+> NXP NETC is a multi-function RCiEP and it contains multiple functions,
+> such as EMDIO, PTP Timer, ENETC PF and VF. Therefore, add these device
+> IDs to pci_ids.h.
+> 
+> Below are the device IDs and corresponding drivers.
+> PCI_DEVICE_ID_NXP2_ENETC_PF: nxp-enetc4
+> PCI_DEVICE_ID_NXP2_NETC_EMDIO: fsl-enetc-mdio
+> PCI_DEVICE_ID_NXP2_NETC_TIMER: ptp_netc
+> PCI_DEVICE_ID_NXP2_ENETC_VF: fsl-enetc-vf
+> 
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-elapsed time: 1171m
+Please drop my ack.  I don't think these meet the spirit of the
+guidance in pci_ids.h, which is there to minimize churn in that file
+and make backports easier:
 
-configs tested: 186
-configs skipped: 3
+ *      Do not add new entries to this file unless the definitions
+ *      are shared between multiple drivers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+PCI_DEVICE_ID_NXP2_NETC_TIMER and PCI_DEVICE_ID_NXP2_ENETC_VF aren't
+used at all by this series, so they shouldn't be added to pci_ids.h.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arc                   randconfig-001-20241024    gcc-14.1.0
-arc                   randconfig-002-20241024    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                          ixp4xx_defconfig    gcc-14.1.0
-arm                           omap1_defconfig    gcc-14.1.0
-arm                             pxa_defconfig    clang-20
-arm                   randconfig-001-20241024    gcc-14.1.0
-arm                   randconfig-002-20241024    gcc-14.1.0
-arm                   randconfig-003-20241024    gcc-14.1.0
-arm                   randconfig-004-20241024    gcc-14.1.0
-arm                        realview_defconfig    clang-20
-arm                           spitz_defconfig    clang-20
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    clang-20
-arm64                               defconfig    gcc-14.1.0
-arm64                 randconfig-001-20241024    gcc-14.1.0
-arm64                 randconfig-002-20241024    gcc-14.1.0
-arm64                 randconfig-003-20241024    gcc-14.1.0
-arm64                 randconfig-004-20241024    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-csky                  randconfig-001-20241024    gcc-14.1.0
-csky                  randconfig-002-20241024    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-hexagon               randconfig-001-20241024    gcc-14.1.0
-hexagon               randconfig-002-20241024    gcc-14.1.0
-i386                             alldefconfig    clang-20
-i386                             allmodconfig    clang-19
-i386                              allnoconfig    clang-19
-i386                             allyesconfig    clang-19
-i386        buildonly-randconfig-001-20241024    clang-19
-i386        buildonly-randconfig-002-20241024    clang-19
-i386        buildonly-randconfig-003-20241024    clang-19
-i386        buildonly-randconfig-004-20241024    clang-19
-i386        buildonly-randconfig-005-20241024    clang-19
-i386        buildonly-randconfig-006-20241024    clang-19
-i386                                defconfig    clang-19
-i386                  randconfig-001-20241024    clang-19
-i386                  randconfig-002-20241024    clang-19
-i386                  randconfig-003-20241024    clang-19
-i386                  randconfig-004-20241024    clang-19
-i386                  randconfig-005-20241024    clang-19
-i386                  randconfig-006-20241024    clang-19
-i386                  randconfig-011-20241024    clang-19
-i386                  randconfig-012-20241024    clang-19
-i386                  randconfig-013-20241024    clang-19
-i386                  randconfig-014-20241024    clang-19
-i386                  randconfig-015-20241024    clang-19
-i386                  randconfig-016-20241024    clang-19
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-loongarch             randconfig-001-20241024    gcc-14.1.0
-loongarch             randconfig-002-20241024    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                         apollo_defconfig    clang-20
-m68k                       bvme6000_defconfig    clang-20
-m68k                                defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                          eyeq5_defconfig    gcc-14.1.0
-mips                            gpr_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-nios2                 randconfig-001-20241024    gcc-14.1.0
-nios2                 randconfig-002-20241024    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20241024    gcc-14.1.0
-parisc                randconfig-002-20241024    gcc-14.1.0
-parisc64                         alldefconfig    gcc-14.1.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                     akebono_defconfig    clang-20
-powerpc                     akebono_defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                       ebony_defconfig    gcc-14.1.0
-powerpc                     ep8248e_defconfig    clang-20
-powerpc                      ep88xc_defconfig    gcc-14.1.0
-powerpc                    gamecube_defconfig    clang-20
-powerpc                     mpc83xx_defconfig    clang-20
-powerpc               randconfig-001-20241024    gcc-14.1.0
-powerpc               randconfig-002-20241024    gcc-14.1.0
-powerpc               randconfig-003-20241024    gcc-14.1.0
-powerpc                     redwood_defconfig    clang-20
-powerpc                     tqm8540_defconfig    gcc-14.1.0
-powerpc                     tqm8548_defconfig    gcc-14.1.0
-powerpc64             randconfig-001-20241024    gcc-14.1.0
-powerpc64             randconfig-002-20241024    gcc-14.1.0
-powerpc64             randconfig-003-20241024    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-riscv                    nommu_k210_defconfig    gcc-14.1.0
-riscv                 randconfig-001-20241024    gcc-14.1.0
-riscv                 randconfig-002-20241024    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20241024    gcc-14.1.0
-s390                  randconfig-002-20241024    gcc-14.1.0
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                        apsh4ad0a_defconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                          kfr2r09_defconfig    clang-20
-sh                          r7780mp_defconfig    clang-20
-sh                    randconfig-001-20241024    gcc-14.1.0
-sh                    randconfig-002-20241024    gcc-14.1.0
-sh                      rts7751r2d1_defconfig    gcc-14.1.0
-sh                           se7712_defconfig    clang-20
-sh                           se7750_defconfig    gcc-14.1.0
-sh                             shx3_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20241024    gcc-14.1.0
-sparc64               randconfig-002-20241024    gcc-14.1.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20241024    gcc-14.1.0
-um                    randconfig-002-20241024    gcc-14.1.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20241024    gcc-12
-x86_64      buildonly-randconfig-002-20241024    gcc-12
-x86_64      buildonly-randconfig-003-20241024    gcc-12
-x86_64      buildonly-randconfig-004-20241024    gcc-12
-x86_64      buildonly-randconfig-005-20241024    gcc-12
-x86_64      buildonly-randconfig-006-20241024    gcc-12
-x86_64                              defconfig    clang-19
-x86_64                                  kexec    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                randconfig-001-20241024    gcc-12
-x86_64                randconfig-002-20241024    gcc-12
-x86_64                randconfig-003-20241024    gcc-12
-x86_64                randconfig-004-20241024    gcc-12
-x86_64                randconfig-005-20241024    gcc-12
-x86_64                randconfig-006-20241024    gcc-12
-x86_64                randconfig-011-20241024    gcc-12
-x86_64                randconfig-012-20241024    gcc-12
-x86_64                randconfig-013-20241024    gcc-12
-x86_64                randconfig-014-20241024    gcc-12
-x86_64                randconfig-015-20241024    gcc-12
-x86_64                randconfig-016-20241024    gcc-12
-x86_64                randconfig-071-20241024    gcc-12
-x86_64                randconfig-072-20241024    gcc-12
-x86_64                randconfig-073-20241024    gcc-12
-x86_64                randconfig-074-20241024    gcc-12
-x86_64                randconfig-075-20241024    gcc-12
-x86_64                randconfig-076-20241024    gcc-12
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                randconfig-001-20241024    gcc-14.1.0
-xtensa                randconfig-002-20241024    gcc-14.1.0
+PCI_DEVICE_ID_NXP2_NETC_EMDIO is used only by
+drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c, so it should be
+defined there, not in pci_ids.h.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+PCI_DEVICE_ID_NXP2_ENETC_PF is used by enetc.c and enetc4_pf.c, but
+it looks like those are basically part of the same driver, and it
+could be defined in enetc4_hw.h or similar.
+
+> ---
+> v5: no changes
+> ---
+>  include/linux/pci_ids.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 4cf6aaed5f35..acd7ae774913 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -1556,6 +1556,13 @@
+>  #define PCI_DEVICE_ID_PHILIPS_SAA7146	0x7146
+>  #define PCI_DEVICE_ID_PHILIPS_SAA9730	0x9730
+>  
+> +/* NXP has two vendor IDs, the other one is 0x1957 */
+> +#define PCI_VENDOR_ID_NXP2		PCI_VENDOR_ID_PHILIPS
+> +#define PCI_DEVICE_ID_NXP2_ENETC_PF	0xe101
+> +#define PCI_DEVICE_ID_NXP2_NETC_EMDIO	0xee00
+> +#define PCI_DEVICE_ID_NXP2_NETC_TIMER	0xee02
+> +#define PCI_DEVICE_ID_NXP2_ENETC_VF	0xef00
+> +
+>  #define PCI_VENDOR_ID_EICON		0x1133
+>  #define PCI_DEVICE_ID_EICON_DIVA20	0xe002
+>  #define PCI_DEVICE_ID_EICON_DIVA20_U	0xe004
+> -- 
+> 2.34.1
+> 
 
