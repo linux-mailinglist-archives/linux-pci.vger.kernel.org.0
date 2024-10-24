@@ -1,207 +1,423 @@
-Return-Path: <linux-pci+bounces-15182-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15167-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 793C69ADD4E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 09:14:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AAFC9ADCD6
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 08:57:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F12341F21235
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 07:14:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B91F22813FA
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 06:57:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38801BC065;
-	Thu, 24 Oct 2024 07:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20D0B189BA3;
+	Thu, 24 Oct 2024 06:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KQ/+hgnX"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=reimar.doeffinger@gmx.de header.b="tzP19X4m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2044.outbound.protection.outlook.com [40.107.21.44])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B70B1B85FA;
-	Thu, 24 Oct 2024 07:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729753810; cv=fail; b=J+SZGz6826iRBAfdY008p4EDZDAsyuYmWzOlB3x75YlnpMVmTVBIdXD9nebT666oy78/zwLAdp+FfB+8x6TQdNnboNn5lbsxdjPDLQh2s5GbxXEhu0YHrtoR88tQFy02mbZE+lEymSgnfmp0MO0OIz9iJDbCt9KmlRrlytPJiLo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729753810; c=relaxed/simple;
-	bh=dr9qt+8CLLI5xDCsLLrrWqJCcS32nP8ar1cVbB9DmaE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tkDhCdt7502OJ/qGBLNf5sbPrRdcdouX8IoFXbcxkPg02u25Aaq6VL6+gAFECzZYDsmk+g0NCBrmL6FBvtr2Ri/1saMmOIDUN+fkmxSBP0O+hwwh03eTkIWUEy7HkzF27NzD6FpOVa//B/dTavOStxJPKUQ2qovHvwBxLz2Dd74=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KQ/+hgnX; arc=fail smtp.client-ip=40.107.21.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yxnwZggDEP7B2yL9w6kXvt1Xt5T3nxNzVa0JwPkmcukM1YaL79A73cEQO3Ml7tWD9DSrCRqDNxUXStzVXG67cVr6NJemLr3N2LEsaJdDAcosYFoLYBLVcNXO9as1gAarj2bmr6NTIuBBwyX9ZSspukzOdcT4AfYkwSSw3NQYT6fhlQ3ooqZQeNBia4nVFP61R0KKwXAjzDVCwsoA0r61eFwXjBcki2MZUnqDsS49PJgJ2xc53MsEy6qzlqTvMebv0votmjFsdWLr5jGU5Bxdmpb/486vVXh8yTPA/FwgUvn+fCbjGW7lDeYjh6DWKdxrhRHvbwQ1NE9OF//zMLOQeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KegM9MJzzmghgX6XdsNK37mZZaPEB0COgnQ9VHSsX38=;
- b=bMs1rtGqwCVEAKLqVyUe8GttqI6hSvpKKL6rcJeGyFE7iHSmAvT0EeisLuRvx2VZi9XQL4KTTZodOdKAXNbBEt1yknvtt6KKVcr+tWh20UeV3L9zTTijUjDTliXjVtdc1Kg91jSKfKXwX6mtlqOn4PvWk3q/5Q4S6A9MKBl4Z4kl0d5XOMl+VisnCwpE2fwqrWGHLZh6lzE6E+Kle8tF4jU5uBmqsEqZBUpqA3vE0pzTxdoUzn/Y7jUoGn7qa3gS9tmUlx6G4fqnRbDo5EKW8RjL8/XupfIta/jLXQR/r9DqZ7QacUt4rHdhgA0zgi2ZiAt1crSGi4RXqTXlU0IvdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KegM9MJzzmghgX6XdsNK37mZZaPEB0COgnQ9VHSsX38=;
- b=KQ/+hgnXmKTsVyUCxulCe1/u0eK6uQ1PD7kLCkr3hcOEWUOzd3b0sqsC7/vx4qA4ALpjzjt3dGmst40yrHEqszQOQnP5ocgStNu3C4cmTTYxkJapWp0dnVozE/DNLHI6SSFmi/8/x1K4h/HVJ2PRdDeh/ItQ1LNVhsbPqgGlKeALOSBl/gyYOVJ0/sVdj6nJLFgRSb720pDU0JmG2q8y/JIvHr2u02tgcVy1ULtMbLxqC+NUr2BcTnPs+mwXK7/oy4qMtSYpeifAwKh/Gpxss4NURJnGfM2BusvtGIdgblQIdA6be1oxzpyDtizN2WIXaeCBuWWH6jnmzH0KAyOR+w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by AS8PR04MB8627.eurprd04.prod.outlook.com (2603:10a6:20b:42a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.16; Thu, 24 Oct
- 2024 07:10:03 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%7]) with mapi id 15.20.8069.027; Thu, 24 Oct 2024
- 07:10:03 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	vladimir.oltean@nxp.com,
-	claudiu.manoil@nxp.com,
-	xiaoning.wang@nxp.com,
-	Frank.Li@nxp.com,
-	christophe.leroy@csgroup.eu,
-	linux@armlinux.org.uk,
-	bhelgaas@google.com,
-	horms@kernel.org
-Cc: imx@lists.linux.dev,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	alexander.stein@ew.tq-group.com
-Subject: [PATCH v5 net-next 13/13] MAINTAINERS: update ENETC driver files and maintainers
-Date: Thu, 24 Oct 2024 14:53:28 +0800
-Message-Id: <20241024065328.521518-14-wei.fang@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241024065328.521518-1-wei.fang@nxp.com>
-References: <20241024065328.521518-1-wei.fang@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0011.apcprd04.prod.outlook.com
- (2603:1096:4:197::10) To PAXPR04MB8510.eurprd04.prod.outlook.com
- (2603:10a6:102:211::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9201662F4;
+	Thu, 24 Oct 2024 06:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729753021; cv=none; b=TQFaOSPYz3vpjaHp/DeX6agbi9/vPWdhOkVefIkZ0K5hQnPrToGvpKFxZWix0e8e/pfIiHikePcmb94BmQZFzy6nOrGTB8OF/Vo1aD/gRYeuKQVTgsHW7x+ZcUla3k1Das9nftzvB6nSSbjOZvlpZs4mr4fESJj1Y4Q/6vXw9D8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729753021; c=relaxed/simple;
+	bh=wdgD6qvXSVO8H0q9V3v24HaTgfvhkQIOWPYzBuOxHw8=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=crP+5+ds7LXYvoYhk4hoCXwqffJ3lF3lB8egIakW5VhVEMeoo0JEAjzokwjSIIT7gJn/TVAbwEwpuOIm7ZdbwtuclwUYxFQQA6LLUVZw7MJqTW6guMPrGrhiqfwrXbYI0nUOIcu7gp1tbr9rwMRwHvv3fgzYvUQjSH9LzNehaPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=reimar.doeffinger@gmx.de header.b=tzP19X4m; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1729752930; x=1730357730;
+	i=reimar.doeffinger@gmx.de;
+	bh=dbq90nrq8LfkX1Ug149kdQ8PEHRPGRI4rzHx8hOaEss=;
+	h=X-UI-Sender-Class:Content-Type:Mime-Version:Subject:From:
+	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:
+	 References:To:cc:content-transfer-encoding:content-type:date:from:
+	 message-id:mime-version:reply-to:subject:to;
+	b=tzP19X4mYfx99tlCYHElzIncUINmjJmY64Tvzhy+puX0CUzTnpXtaEFP3En+UVSW
+	 Im89H+yOxexeu/ER0tskm6M+g5FXhTgNuy9PgEyxPszxM+XXsU3rtubJEuo66VR6b
+	 Gt4vbmF3OnPk7HedzlokO8v5wr69CC/kRspI+/8vQr+6rNTyJehsV+FR6Waz3wJfb
+	 4HHDb1/43DKfrPaTFpvT8ez05Uu0bsh0FpWWvXVHGwdwjM5hvy8j3cxJ3lQ8RSTD6
+	 3VwCl3sjRXSsS6HJvJrZQyrf2Cuy40/MMgo8V5chzJFcsc3D7lqXjDxiKIlSTby1c
+	 FGzmM/YA+oOsOGL0bw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from smtpclient.apple ([155.4.74.59]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1McYCb-1tbXPo3PDR-00m2mo; Thu, 24
+ Oct 2024 08:55:29 +0200
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|AS8PR04MB8627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 250971d6-7967-423b-004e-08dcf3fae15a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|52116014|1800799024|376014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xqwHiyE74G5g7ST6HJfB5TsVrXPjeqOD+lcIclcgd6S9SgHUm/nE1/fZHCjy?=
- =?us-ascii?Q?qVhvvyYJmkIRDw7rNQnTDLGBs0XJe0jHWqKVLJutWrJazZuGhyvF8zQCVmsJ?=
- =?us-ascii?Q?BonfiFcCQTS/Ib2cIrph06CIiyKOWumRzHgZwymn60CHWo3voIFqbqLedIf0?=
- =?us-ascii?Q?KLVm3rAI6CT4/VJfmKoJuAM/e8TcaSBHsdvvcuBjY6493+1sn0SNdhgYsCfP?=
- =?us-ascii?Q?kDwwYSH1Ugi3DjiE01LOnUnc9DKD0ZVk8h/NHHmZRvNw1uxYLJ3RnJAhnGwd?=
- =?us-ascii?Q?GFS2d9uAEkQzEd0dSfwei6/hQeJRGt48nxZkIxtg2ESIU2n89RadQI9L73gx?=
- =?us-ascii?Q?Ru80lZphWhz3Y/x8zNWvGx3l7xBRHQHdznQYFCPQGxfKJwDC3yYq6y/S638u?=
- =?us-ascii?Q?PV0w6MhnCWJS0gULbGenj69qbqTd/aC8B0+QFP344yCBAf4wFDnSWDTes4YZ?=
- =?us-ascii?Q?SqZcccZCM7fvi/XaDuWLy8JSPral7gZTG5r6TxlIPBGRTtBwlHhIlWuUh1A9?=
- =?us-ascii?Q?PG0Db23l2ldcwgyM1/aPJmsGWNfBcc2XTLlEqPHoH8SottLr79FkbhgBwIkk?=
- =?us-ascii?Q?R3P2dfvVlUIh4vLsEZeTYyfBuFOmZOmt18GFf6Al9sXGOa+FX31D5l4smG2R?=
- =?us-ascii?Q?HIifmhH+6tDEVc7weOeb/tbjYJC/KEQBb7+91nRbUwaBYCRxv/H4R9WJ9lY2?=
- =?us-ascii?Q?mefgHuL/1SLha64u3LG/QEmO+aQH7AxAk6sHtBfPRBicI2cJhJ0prAWDjueM?=
- =?us-ascii?Q?y8J+DLHxHEM6IxLiUj8ssnxWLxVyOQugSxun6K9GFTkOgrnDFe95aa4fz2Ew?=
- =?us-ascii?Q?yc3RBYhhdcZvkzlfiJc8B08VheAPAY83Wpfj6s89B/Bkz13gtl7QE1Cm7eaE?=
- =?us-ascii?Q?eZR5YoWhq/QWXurv4czbmn1/IfscrPmtlyv+ymC+YeAxZsuGNzjJ7m619eg7?=
- =?us-ascii?Q?WHZQuqmEB3rMfWKeZ4KNQyHLIChFEzOjAcZyHS7EqSdkyoDXZRDCXEd5ChOT?=
- =?us-ascii?Q?ADNNDGwJaOuz0NExX6QnwN/BtvOcvHXKg7JaKiu/Ml+uH7nZEbYsX2f3LuKt?=
- =?us-ascii?Q?FXds32fJtKhw0y4RgvyZ56WmRUL0wD+GjPCulTNd8w5eM7Rt9aHr+osF9GHF?=
- =?us-ascii?Q?bCjj4IG42GvJ5VMxSHv9lfEMgEXkyMBwZjIeRScbjUzm9BSbCIZnYcp9F7zP?=
- =?us-ascii?Q?Zcji5oVT158mmjnxeXegXPtHiOZQVyNXD/i/6t1yske+a1dXNY65h3sN3+Cs?=
- =?us-ascii?Q?lcTIW3tN8x0yjGmC2yv2WAt87wV2Oce9uAEhbuwTf8U1UcnVpiXoDmh6dcaW?=
- =?us-ascii?Q?KXehdROc01x5oWNff36RQ3klTyF0PQzwYLZ31GUkrgihieCUQkQ/KPTt+VUR?=
- =?us-ascii?Q?/xLv4hQPeXBkQOHU4WcQkAOC2OHw?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(52116014)(1800799024)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ijrsBoi1fJaZ9yTZXkxm9dy7eTySJ2FDaFF/uCTAW2RrI6CsgyC3ErBioahF?=
- =?us-ascii?Q?8optk+Q2baOlG55Fl4LqyUJrno5k/zHR258VFzuqGFTGETKJjGOMDzfnSjB3?=
- =?us-ascii?Q?Oed3/lSn/TzgNsZkWmOg29WvDikJeuwxhQavGauXUR/S7Gx4nfQwbWI7kNJc?=
- =?us-ascii?Q?hdx0arZ759coHepK4QYzLATKLxlXylfXpvrB+r0D+VwMrU+0RWK+Geuofki4?=
- =?us-ascii?Q?Ic4Arni2bS0mv1lfQEIP81s22w3LCoTGCQ2FwOO3CYbfTorg3QdPUIeEvz8s?=
- =?us-ascii?Q?b+AgfeXJmVP9qOldUKluEjqvyzy6zi9W7JF/b2t2XrBXLDXlb8peTEm/i/17?=
- =?us-ascii?Q?x6heCTN5OFCC1JBVCAn6au6TL5nysMA0qntP8/CaEAyiBZbkWgHeapOEhx4E?=
- =?us-ascii?Q?xTT6JkgDpUKPm7wv/WIwiRQQkVaYg9lfW7zDODSns1YIbA4PVQtqJVMFjW9v?=
- =?us-ascii?Q?LwCB4ZzvwAe11RheFQyv947LyW4S6HU7Kv2EMl5n/TSQglFx+SXzjRi+d24M?=
- =?us-ascii?Q?R53Z/6VqVmfxgd10u8jx0zSHgJWCW0/l1GKe0DVrRoipCKLiAUKTfYx/i9b8?=
- =?us-ascii?Q?+d99Z1W+fu0xtj4KaKC2J6+ydnq9OVJiMjRBUJSUsFBtY0QFD5sJQEJFU2Aj?=
- =?us-ascii?Q?GCDIoyCl3MMcvvMqKtTdq5DZE2yHzLl2Ppc8V7SAg5TZwIuRNIaAdHX0sv08?=
- =?us-ascii?Q?737xKxGytxKvxIIp1a0cgtRkH372a3PaGaKdQuUWP4Nu4Nv8cFNJh0aKdmo4?=
- =?us-ascii?Q?SNfLINKBuNUbtUEeWNce6jRNcuvqgdxMT6xqV33pW3fuRgdnWFB13Kz7KkPR?=
- =?us-ascii?Q?ruXssHkb/TTn8cXVRO+WSGIz5f4/mhacFJOgqRAS1MNvASwB2WH6QCdOthx0?=
- =?us-ascii?Q?MTSFxQh8KAunkp8IeQ7wNFBav/qZN18z43nb0iaZWuUjn8FrqxmPyME3lZ80?=
- =?us-ascii?Q?Zhktr1MZNfbU6rFJZ3dyho/uEY2jRw3E1bqCK4N6VzDK1B21F8EIDLvLQFOR?=
- =?us-ascii?Q?Vb9J14MuihA/wI/3drz40cMMPqeXp2HuLcFEoUkW/Gc+obcelCZ76/0o/6hd?=
- =?us-ascii?Q?7YVk4wXZSMMMakYKMKJXoWZtuDFVlKMN5i0VahV4pAi1+BdDoecZzL7Z6UN0?=
- =?us-ascii?Q?4BI8HSgKiU5S4OpNoZRGuPNHTYf5WHMxtvqvPJzFz1b0no0uYwcwZr8osE64?=
- =?us-ascii?Q?R6Lh6IG3tlFCmm03ay76DGJbF8v8XSww4nU1eHls16Iz0mqXFRY3H2U4nWeZ?=
- =?us-ascii?Q?bSiy1XhXrhmGXISE2zrYPUVRyUgSMD1QZQnKW2m6BsXkM+W4PVP/8Joq6LLb?=
- =?us-ascii?Q?SV1JzgVrRTsIgN5OMQINVyK4liYY4Z98HMMVFmR8ShgcsiDCoaXtvA40yC4e?=
- =?us-ascii?Q?TeOyIRXqgg+5UMLVxBYqbKBF6p9upA9VQ5TgLOZ4vqsR2RZHlngWd+66idaB?=
- =?us-ascii?Q?qZHrCxfjWywLK8d3i2MZr4EfYToRW8s9zEqsnACiMhtmXCCpvtE9GIhdCclc?=
- =?us-ascii?Q?PlZzjiQMl8GhnRBAJMf0AAWoynq4N7bPWg5NFZNUIHn6xWfBRa51zg052iwB?=
- =?us-ascii?Q?4Hap7ul9n0haOrK6b2LTfresjECReF/+kcHKrMzz?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 250971d6-7967-423b-004e-08dcf3fae15a
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2024 07:10:03.6605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TUA6Mz69pyk+By6cN9vXzj9mIW82tAaJ48EWhTXT+NRFSBHTSuq8j1ZpQbXpvIDlKnYYvXpIUu6VKxuVyZZpEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8627
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: linux: Goodbye from a Linux community volunteer
+From: =?utf-8?Q?Reimar_D=C3=B6ffinger?= <Reimar.Doeffinger@gmx.de>
+In-Reply-To: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+Date: Thu, 24 Oct 2024 08:55:05 +0200
+Cc: Jon Mason <jdmason@kudzu.us>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev,
+ Andy Shevchenko <andy@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Cai Huoqing <cai.huoqing@linux.dev>,
+ dmaengine@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-spi@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>,
+ linux-ide@vger.kernel.org,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-mips@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>,
+ Russell King <linux@armlinux.org.uk>,
+ Vladimir Oltean <olteanv@gmail.com>,
+ Keguang Zhang <keguang.zhang@gmail.com>,
+ Yanteng Si <siyanteng@loongson.cn>,
+ netdev@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>,
+ linux-edac@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-serial@vger.kernel.org,
+ Andrew Halaney <ajhalaney@gmail.com>,
+ Nikita Travkin <nikita@trvn.ru>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Alexander Shiyan <shc_work@mail.ru>,
+ Dmitry Kozlov <xeb@mail.ru>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Evgeniy Dushistov <dushistov@mail.ru>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Nikita Shubin <nikita.shubin@maquefel.me>,
+ linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D454EE83-DFB9-4A2D-821E-EF709350D5BB@gmx.de>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+To: Serge Semin <fancer.lancer@gmail.com>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-Provags-ID: V03:K1:k3CVh5UwL8Pr/QS58KpuV8k33BndHnbC3H+BIpo/1DJWFypIkuS
+ N/hzcr7X8i2LvFoAEfWjMCcex7w3EYtjq2rYvFLATE7ycsPjRqZZ4VMdu0mv4o6o2XPEV6f
+ qG5/X5qwYvrM0UlAeg26MiHfER5UCJzK7uI5qY+nWXMqmQL1YyNU4yLTagqVf9pDO4vDvxt
+ 98ZLb+QsQUf5paugVVstQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:92UNTiVAadM=;4dqRgDg6n4gLXT6FjhukD/0b6+W
+ cAxvAWlthP+w/cgMg25Gt0gR4wH+rWwx+h1AiMjjme5RKv++iqKL0xjNBp5BM/7/Hwnpe3UYm
+ o8Vkwq66DyBaEqk3xacLhdkpkdGKTXtG++OgKShHJt3uhBdBq41d9crk8vRrBbPwKPTMbswSm
+ J6OzXOOOmi+01thCwy4mlqNnVeoifHAPabt8eX7s/0hNffoJNhFjHa1NUsWFkSrQAoNOU0E8+
+ NEtxofXAieUtzVvocrNDFaWTgCbEGhbXjHYQ3AcMPHDkJfTEC4wfl7lJIUa2xbOtqifTqzeTj
+ aF7XzVjxoVihSzQeGztEynTuma4d8SK3cNYpQ12c6/EH0NtEdhH0qYuPfDYq0JPvY9eoosSPj
+ ASljvkH7D/Xfxdu+kJ88aWu7TBbUF2oVE11gSTi6u0ZrDSYQFf2lvinhldkIIOLKw1tuDui3X
+ 5XB0CjikMWKr8iOtmdUjBbD9wAc64IQw2BPOny3Meon+nVUTZXQGvwHGvY83O0tDNepZgceyQ
+ /Nw6RoeWqH26gkVfxV28vRjfpvCfgOL+2T5gj8nuMHdEqL8yvjUA0x133sFmvA90DfsE8tij5
+ wMUerleYmMgeDpxf2+C3zNNYAXEfCtrTuTQ3hOW4fkaRq3+qsRj7twmFyNzyRugmvBmDB02Il
+ cYnFmPdNFN8VYURjGdOce1sIKREajABwRlfLyt0wBKTxhKvHTEjo25YHlURfWakMUMsPBDNw2
+ p0sdYF3h6d8d2Rq7tFGONj5aO+BbeVqqnW/hM9zNatKsA6yIpDC8E6t1oVfp/Thkl7XbYEpBs
+ 9bvjbNbLISJBRd0RxLlRiGog==
 
-Add related YAML documentation and header files. Also, add maintainers
-from the i.MX side as ENETC starts to be used on i.MX platforms.
+Hello Serge!
+I do not have many contributions to show to give it extra weight nor do
+I actually know you.
+Nevertheless I still wanted to say thank you for your nice message even =
+if
+it is for a sad occasion, and share your sentiment of hoping
+for more pleasant circumstances.
 
-Signed-off-by: Wei Fang <wei.fang@nxp.com>
----
-v5: no changes
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Best regards,
+Reimar
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 560a65b85297..cf442fcb9b49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9018,9 +9018,16 @@ F:	drivers/dma/fsl-edma*.*
- FREESCALE ENETC ETHERNET DRIVERS
- M:	Claudiu Manoil <claudiu.manoil@nxp.com>
- M:	Vladimir Oltean <vladimir.oltean@nxp.com>
-+M:	Wei Fang <wei.fang@nxp.com>
-+M:	Clark Wang <xiaoning.wang@nxp.com>
-+L:	imx@lists.linux.dev
- L:	netdev@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/net/fsl,enetc*.yaml
-+F:	Documentation/devicetree/bindings/net/nxp,netc-blk-ctrl.yaml
- F:	drivers/net/ethernet/freescale/enetc/
-+F:	include/linux/fsl/enetc_mdio.h
-+F:	include/linux/fsl/netc_global.h
- 
- FREESCALE eTSEC ETHERNET DRIVER (GIANFAR)
- M:	Claudiu Manoil <claudiu.manoil@nxp.com>
--- 
-2.34.1
+(and apologies if anyone is annoyed by the wide CC list, but I think =
+it's
+important for at least some thank yous to be public and nobody else =
+seems
+to have written one yet)
+
+> On 24 Oct 2024, at 06:27, Serge Semin <fancer.lancer@gmail.com> wrote:
+>=20
+> Hello Linux-kernel community,
+>=20
+> I am sure you have already heard the news caused by the recent Greg' =
+commit
+> 6e90b675cf942e ("MAINTAINERS: Remove some entries due to various =
+compliance
+> requirements."). As you may have noticed the change concerned some of =
+the
+> Ru-related developers removal from the list of the official kernel =
+maintainers,
+> including me.
+>=20
+> The community members rightly noted that the _quite_ short commit log =
+contained
+> very vague terms with no explicit change justification. No matter how =
+hard I
+> tried to get more details about the reason, alas the senior maintainer =
+I was
+> discussing the matter with haven't given an explanation to what =
+compliance
+> requirements that was. I won't cite the exact emails text since it was =
+a private
+> messaging, but the key words are "sanctions", "sorry", "nothing I can =
+do", "talk
+> to your (company) lawyer"... I can't say for all the guys affected by =
+the
+> change, but my work for the community has been purely _volunteer_ for =
+more than
+> a year now (and less than half of it had been payable before that). =
+For that
+> reason I have no any (company) lawyer to talk to, and honestly after =
+the way the
+> patch has been merged in I don't really want to now. Silently, behind =
+everyone's
+> back, _bypassing_ the standard patch-review process, with no affected
+> developers/subsystem notified - it's indeed the worse way to do what =
+has been
+> done. No gratitude, no credits to the developers for all these years =
+of the
+> devoted work for the community. No matter the reason of the situation =
+but
+> haven't we deserved more than that? Adding to the GREDITS file at =
+least, no?..
+>=20
+> I can't believe the kernel senior maintainers didn't consider that the =
+patch
+> wouldn't go unnoticed, and the situation might get out of control with
+> unpredictable results for the community, if not straight away then in =
+the middle
+> or long term perspective. I am sure there have been plenty ways to =
+solve the
+> problem less harmfully, but they decided to take the easiest path. =
+Alas what's
+> done is done. A bifurcation point slightly initiated a year ago has =
+just been
+> fully implemented. The reason of the situation is obviously in the =
+political
+> ground which in this case surely shatters a basement the community has =
+been built
+> on in the first place. If so then God knows what might be next (who =
+else might
+> be sanctioned...), but the implemented move clearly sends a bad signal =
+to the
+> Linux community new comers, to the already working volunteers and =
+hobbyists like
+> me.
+>=20
+> Thus even if it was still possible for me to send patches or perform =
+some
+> reviews, after what has been done my motivation to do that as a =
+volunteer has
+> simply vanished. (I might be doing a commercial upstreaming in future =
+though).
+> But before saying goodbye I'd like to express my gratitude to all the =
+community
+> members I have been lucky to work with during all these years. =
+Specifically:
+>=20
+> NTB-folks, Jon, Dave, Allen. NTB was my starting point in the kernel =
+upstream
+> work. Thanks for the initial advices and despite of very-very-very =
+tough reviews
+> with several complete patchset refactorings, I learned a lot back =
+then. That
+> experience helped me afterwards. Thanks a lot for that. BTW since then =
+I've got
+> several thank-you letters for the IDT NTB and IDT EEPROM drivers. If =
+not for you
+> it wouldn't have been possible.
+>=20
+> Andy, it's hard to remember who else would have given me more on my =
+Linux kernel
+> journey as you have. We first met in the I2C subsystem review of my DW =
+I2C
+> driver patches. Afterwards we've got to be frequently meeting here and =
+there -
+> GPIO, SPI, TTY, DMA, NET, etc, clean/fixes/features patch(set)s. Quite =
+heat
+> discussions in your first reviews drove me crazy really. But all the =
+time we
+> managed to come up with some consensus somehow. And you never quit the
+> discussions calmly explaining your point over and over. You never =
+refused to
+> provide more detailed justification to your requests/comments even =
+though you
+> didn't have to. Thanks to that I learned how to be patient to =
+reviewers
+> and reviewees. And of course thank you for the Linux-kernel knowledges =
+and all
+> the tips and tricks you shared.
+>=20
+> * Andy, please note due to the situation I am not going to work on my =
+DW DMAC
+> fixes patchset anymore. So if you ever wish to have DW UART stably =
+working with the
+> DW DMA-engine driver, then feel free to pick the series up:
+> Link: =
+https://lore.kernel.org/dmaengine/20240911184710.4207-1-fancer.lancer@gmai=
+l.com/
+>=20
+> Linus (Walleij), after you merged one of my pretty much heavy patchset =
+in you
+> suggested to me to continue the DW APB GPIO driver maintaining. It was =
+a first
+> time I was asked to maintain a not-my driver. Thank you for the trust. =
+I'll
+> never forget that.
+>=20
+> Mark, thank you very much for entrusting the DW APB SSI driver =
+maintenance to
+> me. I've put a lot of efforts into making it more generic and less =
+errors-prune,
+> especially when it comes working under a DMA-engine control or working =
+in the
+> mem-ops mode. I am sure the results have been beneficial to a lot of =
+DW
+> SPI-controller users since then.
+>=20
+> Damien, our first and last meeting was at my generic AHCI-platform and =
+DW AHCI
+> SATA driver patches review. You didn't make it a quick and easy path. =
+But still
+> all the reviews comments were purely on the technical basis, and the =
+patches
+> were eventually merged in. Thank you for your time and experience I've =
+got from
+> the reviews.
+>=20
+> Paul, Thomas, Arnd, Jiaxun, we met several times in the mailing list =
+during my
+> MIPS P5600 patches and just generic MIPS patches review. It was always =
+a
+> pleasure to discuss the matters with such brilliant experts in the =
+field. Alas
+> I've spent too much time working on the patches for another subsystems =
+and
+> failed to submit all the MIPS-related bits. Sorry I didn't keep my =
+promise, but
+> as you can see the circumstances have suddenly drawn its own deadline.
+>=20
+> Bjorn, Mani, we were working quite a lot with you in the framework of =
+the DW
+> PCIe RC drivers. You reviewed my patches. I helped you to review =
+another patches
+> for some time. Despite of some arguing it was always a pleasure to =
+work with
+> you.  Mani, special thanks for the cooperative DW eDMA driver =
+maintenance. I
+> think we were doing a great work together.
+>=20
+> Paolo, Jakub, David, Andrew, Vladimir, Russell. The network subsystem =
+and
+> particularly the STMMAC driver (no doubt the driver sucks) have turned =
+to be a
+> kind of obstacle on which my current Linux-kernel activity has =
+stopped. I really
+> hope that at least in some way my help with the incoming STMMAC and DW =
+XPCS
+> patches reviews lightened up your maintainance duty. I know Russell =
+might
+> disagree, but I honestly think that all our discussions were useful =
+after all,
+> at least for me. I also think we did a great work working together =
+with Russell
+> on the DW GMAC/QoS ETH PCS patches. Hopefully you'll find a time to =
+finish it up
+> after all.=20
+>=20
+> Rob, Krzysztof, from your reviews I've learned a lot about the most =
+hardwary part
+> of the kernel - DT sources and DT-bindings. All your comments have =
+been laconic
+> and straight to the point. That made reviews quick and easy. Thank you =
+very
+> much for that.
+>=20
+> Guenter, special thanks for reviewing and accepting my patches to the =
+hwmon and
+> watchdog subsystems. It was pleasure to be working with you.
+>=20
+> Borislav, we disagreed and argued a lot. So my DW uMCTL2 DDRC EDAC =
+patches even
+> got stuck in limbo for quite a long time. Anyway thank you for the =
+time
+> you spent reviewing my patches and trying to explain your point.
+>=20
+> * Borislav, it looks like I won't be able to work on my Synopsys EDAC =
+patchsets
+> anymore. If you or somebody else could pick them up and finish up the =
+work it
+> would be great (you can find it in the lore archive). The patches =
+convert the
+> mainly Zynq(MP)-specific Synopsys EDAC driver to supporting the =
+generic DW
+> uMCTL2 DDRC. It would be very beneficial for each platform based on =
+that
+> controller.
+>=20
+> Greg, we met several times in the mailing lists. You reviewed my =
+patches sent
+> for the USB and TTY subsystems, and all the time the process was =
+straight,
+> highly professional, and simpler than in the most of my other case.
+> Thank you very much for that.
+>=20
+> Yoshihiro, Keguang, Yanteng, Kory, Cai and everybody I was lucky to =
+meet in the
+> kernel mailing lists, but forgot to mention here. Thank you for the =
+time spent
+> for our cooperative work on making the Linux kernel better. It was a =
+pleasure to
+> meet you here.
+>=20
+> I also wish to say huge thanks to the community members trying to
+> defend the kicked off maintainers and for support you expressed in
+> these days. It means a lot.
+>=20
+> A little bit statics of my kernel-work at the end:
+>=20
+> Signed-off patches: 518
+> Reviewed and Acked patches: 253
+> Tested patches: 80
+>=20
+> You might say not the greatest achievement for seven years comparing =
+to some
+> other developers. Perhaps. But I meant each of these tags, be sure.
+>=20
+> I guess that's it. If you ever need some info or consultation =
+regarding the
+> drivers I used to maintain or the respective hardware or the Synopsys =
+IP-cores
+> (about which I've got quite comprehensive knowledge by this time), =
+feel free to
+> reach me out via this email. I am always willing to help to the =
+community
+> members.
+>=20
+> Hope we'll meet someday in more pleasant circumstances and drink a
+> couple or more beers together. But now it's time to say good bye.
+> Sorry for a long-read text. I wish good luck on your Linux-way.
+>=20
+> Best Regards,
+> -Serge(y)
+>=20
 
 
