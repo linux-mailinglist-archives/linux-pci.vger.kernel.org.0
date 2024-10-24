@@ -1,201 +1,221 @@
-Return-Path: <linux-pci+bounces-15206-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15207-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 115619AEB20
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 17:54:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAAC89AEB42
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 18:01:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3514C1C23EB5
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 15:54:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E28301C22E52
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 16:01:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E67BD1D63F3;
-	Thu, 24 Oct 2024 15:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42E261F709D;
+	Thu, 24 Oct 2024 16:01:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mj9EvosY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t/jEZzHk";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qj2ZZx4A";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OYHtWvc/"
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="NSQbMpS3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mvGufEsr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70571D514D;
-	Thu, 24 Oct 2024 15:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206631F6697;
+	Thu, 24 Oct 2024 16:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729785290; cv=none; b=OfzLaGJ3IZFOWwTnKsufJDiIgp2liqrbSYMSp0fuxdY0YVf4pZLQfQDV0zI3OQsYKsJEkV3sn8O7GFfT6DzugMLOnyS+15sI4cMYO2mw+aa9dCJv1pLRIywXwV7BHW+a10tykktDzGn9nzIkroLeBos1TX4l24GC/rou01cC5EU=
+	t=1729785679; cv=none; b=QBvSGWX7cUUZGaGq5NRiuo6+XnXwRZiqfnDga0w9Qkz/PcNi5IXu3asiHgnWlOyq20QxcIWrmj+Xb/98k651buXIhQV99RO0hZa47tC9X6BEKpsdC1w3PREGCtFRP7vLygZjofaUVk24XQRtz0ZmCQx234r/isUuuXRmWEzqILE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729785290; c=relaxed/simple;
-	bh=9c/JlGxthoyaArPlaLxY90CuKMTdSc1THCspkNfZVOs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T7xLPVu1oigWxPBWpq9b/yzPRN0bsn1AsWo6Bkb95DO4+UcZo6kjo30IS+iitQt/dTHu8MPMRYQREeL+9j949HtWv+OdN3d1O+h4snQEXPpgbffxRYXDDLthhiZMLZGms7X3y9LkvUl/tUVyHTudg5EAyo9lI5YBYMbO3LTFOTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mj9EvosY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t/jEZzHk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qj2ZZx4A; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OYHtWvc/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D958022114;
-	Thu, 24 Oct 2024 15:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729785287; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=0XZLTdWjkZ6tLKaPQHGc3uGkuwj+Z6vDYULA8eZJGeo=;
-	b=mj9EvosYXrOfAShB+YAiy+wE4l2HdPQHglIeXc0qCmjBor/X+vD8Uaiy9z2UYf7S7dMh2/
-	Gz0oIPdR/g6BiXyec2mK30fUSY0iuMo5SggKWRT9sE55aaCFgtkWh9Fus0BjSwNSYYFibl
-	osq9umzrztedGghTXIfWomuMJPNYLso=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729785287;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=0XZLTdWjkZ6tLKaPQHGc3uGkuwj+Z6vDYULA8eZJGeo=;
-	b=t/jEZzHkIaoCxL4ODJsrM8VluGx29oxL18PeWKaWZX26uJH0z94k1/z59CXXOGsM7vgaZH
-	4TKQ8MzXtDkK25Aw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qj2ZZx4A;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="OYHtWvc/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729785286; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=0XZLTdWjkZ6tLKaPQHGc3uGkuwj+Z6vDYULA8eZJGeo=;
-	b=qj2ZZx4AJA4ac4fkwytFr6kTTwhwHHzwIoowKIEHicBRyk6UTnIyYy5gbWxnMLsoPw+tOQ
-	coNdKMZNFipwYGri+tJcBGPMq/3OnBZK5yy4YuH+suCUNhp7R2nvHnDiA5uxwMwvs6PvEo
-	bi3PT6Qd7M2SG6VFzKzOv072ulihMwo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729785286;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=0XZLTdWjkZ6tLKaPQHGc3uGkuwj+Z6vDYULA8eZJGeo=;
-	b=OYHtWvc/eW4Rb5EE89wcu0nIu+qdpvzy+SGXjWqgVP//29wy1sIgeuc63jfkSU3Wd5wXgq
-	UCXUN9nbXEpDAqDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AF4921368E;
-	Thu, 24 Oct 2024 15:54:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UhspKcZtGmdGTAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 24 Oct 2024 15:54:46 +0000
-From: Takashi Iwai <tiwai@suse.de>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Philipp Stanner <pstanner@redhat.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Restore the original INTX_DISABLE bit by pcim_intx()
-Date: Thu, 24 Oct 2024 17:55:35 +0200
-Message-ID: <20241024155539.19416-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1729785679; c=relaxed/simple;
+	bh=ZnN092/uqHw1eYzx7adrt8EsAcrScv3pParyGaS6g9o=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=n4nccAY4RBeFCBvy+8Cjhpvko4GeLK4K4Kf5VqtHffrjoZ/DL4213XUdwyprbJap6lEGv2pcz9DtCjq0iUonu8rsAIrGsYVEjEMYgL94q8KoExkG+Wcd8UhrvpQ/ZNG20kUhnCQXONIz1+XYtjDkJlbVk8ikaAWHMJwPCKEzChw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=NSQbMpS3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mvGufEsr; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailflow.phl.internal (Postfix) with ESMTP id C163420071F;
+	Thu, 24 Oct 2024 12:01:15 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-09.internal (MEProxy); Thu, 24 Oct 2024 12:01:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1729785675;
+	 x=1729792875; bh=TMl54/iBi871VKim9IIS4u83CKXUQJ/FyOD1Xg77P7w=; b=
+	NSQbMpS3R3E4dlEqGdM1jhW7ZfXrAWVJ6Os5xAEWgcpLc/GZoWa+YF2nfjV6cQsl
+	H4JicpXmhhqiZU7xrhtPbFYRlGqbN+8dk7bZ13v37z3cGKpaWopRck/wkwy38Xf2
+	ci9wfYBFrIn1iJrl/ZPGnFBuXUfNLOgI7u1BN8QPYIdbuagx+h+PNfbrp9TdH0vQ
+	YnPn+LXhndnImJzamTwTTHs5+yCRsd06+7wr0B0f/spJ6zmPBU5jQKihR1Raf3+/
+	ps9K+q8x/EfLhxWEYTX/2dy0k4H/lSfQWmHZZouE2/FARpJI7u+wU1AJVndr3bIZ
+	hu1SUcObOJVPJKAcwyPfgg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1729785675; x=
+	1729792875; bh=TMl54/iBi871VKim9IIS4u83CKXUQJ/FyOD1Xg77P7w=; b=m
+	vGufEsroy45Q+Wv1N4jZczFEtycPRUA72zQWnYm47XQxy4HGYgg96mYZ1kKj32zT
+	nbZ3sUi2uN16uqvDj+ULbz6Ce1uNhKhJEFsl5V3B2BNvo7gVqD0aRi5AU5+U8eXv
+	Ar7+vMoq+CFTjZBC+o4Wv7XgGEYHf3AVRVYMJu6xZsyrt0X8pRHGBZzkImFRBbUl
+	kej18tjHQXv20f2K8urX6DqfcKZWBkQKFdLF7Mwb+0iZUYfu89j7wbWl1SEAq+ME
+	YtSvV/z/ZmwKwD1X36aWF5w43xLzHJMOKoKob3RZrMcO1pDRtMPcrwpg+rMrTn71
+	92QY+6mox409SUhACTfow==
+X-ME-Sender: <xms:R28aZ87xeuZz9ijvSAEFcpU6jsgD81FufMVxu1TFElQ_dmR4JNhnMA>
+    <xme:R28aZ94kdm1c-YnrOrgqN5552RdCdcj3MWik2MpQK0r75wOR3oRdwcPeJaUloKYQx
+    bvTV5Wq-WVRIThoUWI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdejtddgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnegfrhhlucfvnfffucdlqddutddmnecujfgurhepofggfffhvfev
+    kfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuc
+    eojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghr
+    nhepheelkeetgfeftdekgfevieegfeehleeihedvffefgfefgfeihfdtkeekjeefkeehne
+    cuffhomhgrihhnpehtrhgvrghsrdhgohhvnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtg
+    homhdpnhgspghrtghpthhtohephedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pegsphesrghlihgvnhekrdguvgdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrg
+    drfhhrrghnkhgvnhdruggvpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdho
+    rhhgrdhukhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepkh
+    horhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghv
+    vghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghjhhgrlhgrnhgvhiesgh
+    hmrghilhdrtghomhdprhgtphhtthhopegrlhhlvghnsghhsehgmhgrihhlrdgtohhmpdhr
+    tghpthhtohepfhgrnhgtvghrrdhlrghntggvrhesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:R28aZ7d-dTib9xX1eQe06cOfVXstoa8Q3ZMSX1EEBPIoT_xOiQzmww>
+    <xmx:R28aZxLKdmFaqdoIV6cB_vOFEm5guIBDYEUSvboVJvBqpZvTBoWfdg>
+    <xmx:R28aZwL6-1nzZN7U0rbUoyatJlZcyriokJaCDqEza1aRZ0RZMMSr0A>
+    <xmx:R28aZyzbpWnXaNOGS9vja1_4cbH3MFvYXMZgqfVKBfWrucklTnClDQ>
+    <xmx:S28aZ2bGpg4jByy-8VE2uAQpPJmUJEsF02dYpz4D_n5AlZiw8JbEP-bP>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5F2561C20067; Thu, 24 Oct 2024 12:01:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D958022114
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Date: Thu, 24 Oct 2024 16:59:36 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "James Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Serge Semin" <fancer.lancer@gmail.com>, "Jon Mason" <jdmason@kudzu.us>,
+ "Dave Jiang" <dave.jiang@intel.com>, "Allen Hubbe" <allenbh@gmail.com>,
+ ntb@lists.linux.dev, "Andy Shevchenko" <andy@kernel.org>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Kory Maincent" <kory.maincent@bootlin.com>,
+ "Cai Huoqing" <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
+ "Mark Brown" <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ "Damien Le Moal" <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+ "paulburton@kernel.org" <paulburton@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Arnd Bergmann" <arnd@arndb.de>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+ "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci <linux-pci@vger.kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Andrew Lunn" <andrew@lunn.ch>, "Russell King" <linux@armlinux.org.uk>,
+ "Vladimir Oltean" <olteanv@gmail.com>,
+ "Kelvin Cheung" <keguang.zhang@gmail.com>,
+ "Yanteng Si" <siyanteng@loongson.cn>, netdev@vger.kernel.org,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk@kernel.org>,
+ "Guenter Roeck" <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
+ "Borislav Petkov" <bp@alien8.de>, linux-edac@vger.kernel.org,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ linux-serial@vger.kernel.org
+Cc: "Andrew Halaney" <ajhalaney@gmail.com>, "Nikita Travkin" <nikita@trvn.ru>,
+ "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+ "Alexander Shiyan" <shc_work@mail.ru>, "Dmitry Kozlov" <xeb@mail.ru>,
+ "Sergey Shtylyov" <s.shtylyov@omp.ru>,
+ "Evgeniy Dushistov" <dushistov@mail.ru>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Sergio Paracuellos" <sergio.paracuellos@gmail.com>,
+ "Nikita Shubin" <nikita.shubin@maquefel.me>,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <753d203a-a008-4cd3-b053-38b5ce31281b@app.fastmail.com>
+In-Reply-To: 
+ <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+ <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+Subject: Re: linux: Goodbye from a Linux community volunteer
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-pcim_intx() tries to restore the INTX_DISABLE bit at removal via
-devres, but there is a chance that it restores a wrong value.
-Because the value to be restored is blindly assumed to be the negative
-of the enable argument, when a driver calls pcim_intx() unnecessarily
-for the already enabled state, it'll restore to the disabled state in
-turn.  Also, when a driver calls pcim_intx() multiple times with
-different enable argument values, the last one will win no matter what
-value it is.
 
-This patch addresses those inconsistencies by saving the original
-INTX_DISABLE state at the first devres_alloc(); this assures that the
-original state is restored properly, and the later pcim_intx() calls
-won't overwrite res->orig_intx any longer.
 
-Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
-Link: https://lore.kernel.org/87v7xk2ps5.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/pci/devres.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+=E5=9C=A82024=E5=B9=B410=E6=9C=8824=E6=97=A5=E5=8D=81=E6=9C=88 =E4=B8=8B=
+=E5=8D=883:50=EF=BC=8CJames Bottomley=E5=86=99=E9=81=93=EF=BC=9A
+> On Thu, 2024-10-24 at 07:27 +0300, Serge Semin wrote:
+>> Hello Linux-kernel community,
+[...]
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index b133967faef8..aed3c9a355cb 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -438,8 +438,17 @@ static void pcim_intx_restore(struct device *dev, void *data)
- 	__pcim_intx(pdev, res->orig_intx);
- }
- 
--static struct pcim_intx_devres *get_or_create_intx_devres(struct device *dev)
-+static void save_orig_intx(struct pci_dev *pdev, struct pcim_intx_devres *res)
- {
-+	u16 pci_command;
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-+	res->orig_intx = !(pci_command & PCI_COMMAND_INTX_DISABLE);
-+}
-+
-+static struct pcim_intx_devres *get_or_create_intx_devres(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
- 	struct pcim_intx_devres *res;
- 
- 	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
-@@ -447,8 +456,10 @@ static struct pcim_intx_devres *get_or_create_intx_devres(struct device *dev)
- 		return res;
- 
- 	res = devres_alloc(pcim_intx_restore, sizeof(*res), GFP_KERNEL);
--	if (res)
-+	if (res) {
-+		save_orig_intx(pdev, res);
- 		devres_add(dev, res);
-+	}
- 
- 	return res;
- }
-@@ -467,11 +478,10 @@ int pcim_intx(struct pci_dev *pdev, int enable)
- {
- 	struct pcim_intx_devres *res;
- 
--	res = get_or_create_intx_devres(&pdev->dev);
-+	res = get_or_create_intx_devres(pdev);
- 	if (!res)
- 		return -ENOMEM;
- 
--	res->orig_intx = !enable;
- 	__pcim_intx(pdev, enable);
- 
- 	return 0;
--- 
-2.43.0
+Hi James,
 
+Sorry to chime in here, and thanks for making things clear.
+
+However, I have some questions regarding this statement, please see belo=
+w:
+
+> Please accept all of our apologies for the way this was handled.  A
+> summary of the legal advice the kernel is operating under is
+
+In what capacity this statement was made, i.e, who is "our" here and "we"
+below? Are you representing any formal group in this case?
+
+>
+>    If your company is on the U.S. OFAC SDN lists, subject to an OFAC
+>    sanctions program, or owned/controlled by a company on the list, our
+>    ability to collaborate with you will be subject to restrictions, and
+>    you cannot be in the MAINTAINERS file.
+>
+> Anyone who wishes to can query the list here:
+>
+> https://sanctionssearch.ofac.treas.gov/
+
+I did a quick search and found the following entry:
+
+HUAWEI TECHNOLOGIES CO., LTD. Under CMIC-EO13959 sanction program.
+
+Although it's a Non-SDN sanction, it can still be interpreted as
+"subject to an OFAC sanctions program".
+
+How should we handle it?
+
+>
+[...]
+>
+> Again, we're really sorry it's come to this, but all of the Linux
+> infrastructure and a lot of its maintainers are in the US and we can't
+> ignore the requirements of US law.  We are hoping that this action
+> alone will be sufficient to satisfy the US Treasury department in
+> charge of sanctions and we won't also have to remove any existing
+> patches.
+
+I truly appreciate that someone has finally addressed the underlying iss=
+ue.
+I understand the importance of protecting infrastructure and maintainers=
+ from
+potential legal threats by ensuring compliance. My intent in asking these
+questions is not to place anyone in a difficult position, but simply to =
+gain a
+better understanding of the situation, so I can take appropriate action =
+to
+keep everyone safe.
+
+Disclaimer: I have no connection to any sanctioned body, and I'm a resid=
+ent
+of UK.
+
+Thanks
+
+>
+> Regards,
+>
+> James Bottomley
+
+--=20
+- Jiaxun
 
