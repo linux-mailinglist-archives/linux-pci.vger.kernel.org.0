@@ -1,123 +1,108 @@
-Return-Path: <linux-pci+bounces-15194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C2AB9AE425
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 13:48:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92B8D9AE461
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 14:05:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C02E1F2474D
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 11:48:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 522A028487F
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 12:05:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5132B1CFEA2;
-	Thu, 24 Oct 2024 11:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jv9NaMRk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781581C9B87;
+	Thu, 24 Oct 2024 12:05:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E401A0BC4;
-	Thu, 24 Oct 2024 11:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E3F1D1729;
+	Thu, 24 Oct 2024 12:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729770523; cv=none; b=PEeYKYIFXxeMLAAcnn4D5AaGZJkPCMnJQd3BApVBdkDZsSRH0q6ewArP5UcsvRRkgZnNnLtuEQEvS23xYybn6wW/1hGDvU+A1KKjsHQrEHqbHAvfyP8JF9mxKSYvDVE3jaOS5UA7rwu8iNzl6M6sVcZi2cQng2Q2DS4f2lyTkv0=
+	t=1729771553; cv=none; b=o9c7a5JG7SoYjObOytPe9YhpGl4HbCKt+zmeMNfxEIwVGeB3k7t84bz1GOlr2FmIVysuMktHKx4RU+j+O8FxFJ8X8JtNUhB3YkTlm22WdC4KcIzK/a98ZqAGrk8dLaycWr1tj/z+GZsvC/yT5CbUcS/X/6XBj9mliPPiRq84/GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729770523; c=relaxed/simple;
-	bh=d+qe/+ODoW5q7XT1R1VfgK5+hBdUWlBAmc0IyODhTEU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CskCdefWEBekP4KZanOuT8kxWmoujjFFfiqzNf1QyFlF4Y7LckclSsRz+L71nf2yub/ypZXeM3bwQlFYkQqs9fS0jxcPvR/zuAA0MiB7k0TxztMp2cXt7hAe9unTRrStR/c5ojFclYWtQQ7+9LyNkv6zkl7mzoKwVgNuEy8cmKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jv9NaMRk; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729770521; x=1761306521;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=d+qe/+ODoW5q7XT1R1VfgK5+hBdUWlBAmc0IyODhTEU=;
-  b=jv9NaMRkIVM+KcS9sb7u8LIIvIDxYkXI3Gy/94ZY6Sia71Sm/tf0k4ec
-   Vj5pbISK3MXNgF1wkTvmY4kX9RKCZNMRCg6WlHzAGkCc1Ts/9NCwi0822
-   CpRj9Q7j+6BJE3zvo4hI392fi68Mv/zK0aIIFWRTqhoFgZzmMCG3aJRzI
-   xvpuDfIODQUjLbxrqy06wAkpH2CboieUHnZXLxU7gm/ckOiDkWHGUo/pz
-   EO8AOYGJVsdxH+50BLWEPEC5cFwHcijEmyLBF9EbS7txmj5kHxJr9mcyK
-   stM2hdnml2/ajY0b82bRTQcIGcCWq4L7uAP0HQ6MB6q0NUM9aosUHsyw+
-   w==;
-X-CSE-ConnectionGUID: leMACKUsREK04hfvB33ECA==
-X-CSE-MsgGUID: lAzpuLPSTwi9HBvMR1zhRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="46884354"
-X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
-   d="scan'208";a="46884354"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 04:48:40 -0700
-X-CSE-ConnectionGUID: KZjPdK6kSvSUdStGO1YFkw==
-X-CSE-MsgGUID: 9RK3dTjhQg26wkfpdI3qGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
-   d="scan'208";a="111385152"
-Received: from ubik.fi.intel.com (HELO localhost) ([10.237.72.184])
-  by fmviesa001.fm.intel.com with ESMTP; 24 Oct 2024 04:48:29 -0700
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Philipp Stanner <pstanner@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
- Boris Brezillon <bbrezillon@kernel.org>, Arnaud Ebalard
- <arno@natisbad.org>, Srujana Challa <schalla@marvell.com>, Miri Korenblit
- <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, Serge
- Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Kevin Cernekee <cernekee@gmail.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
- <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Philipp Stanner <pstanner@redhat.com>, Uwe
- =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Jie Wang
- <jie.wang@intel.com>, Tero Kristo <tero.kristo@linux.intel.com>, Adam
- Guerin <adam.guerin@intel.com>, Shashank Gupta <shashank.gupta@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, Bharat Bhushan
- <bbhushan2@marvell.com>, Nithin Dabilpuram <ndabilpuram@marvell.com>,
- Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach
- <emmanuel.grumbach@intel.com>, Gregory Greenman
- <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>,
- Yedidya Benshimol <yedidya.ben.shimol@intel.com>, Breno Leitao
- <leitao@debian.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-ide@vger.kernel.org, qat-linux@intel.com,
- linux-crypto@vger.kernel.org, linux-wireless@vger.kernel.org,
- ntb@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-sound@vger.kernel.org,
- alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v4 05/10] intel_th: pci: Replace deprecated PCI functions
-In-Reply-To: <20241016124136.41540-6-pstanner@redhat.com>
-References: <20241016124136.41540-1-pstanner@redhat.com>
- <20241016124136.41540-6-pstanner@redhat.com>
-Date: Thu, 24 Oct 2024 14:48:27 +0300
-Message-ID: <878qudvi0k.fsf@ubik.fi.intel.com>
+	s=arc-20240116; t=1729771553; c=relaxed/simple;
+	bh=OVZGWlryFFcfxKdnhUmLDS5/atu4GdzNMq13xRAxjok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rHL8I5sD0tpgOBkXidOaNdGkBlRV6uEGinKfhn/dA3t4Rt51vIl3uSWSmQRjHdTUncxJXRoSi8dRG7W7Vg4pBUfwaJoMaS2OCM8FajY7K23GaSGeXjymLyLU+LNJuwb6JVv/bgHmm9TEbvg0wqLFnWhnGtZwDqZVMhRZBEYPDJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-IronPort-AV: E=Sophos;i="6.11,229,1725289200"; 
+   d="scan'208";a="222891426"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 24 Oct 2024 21:05:41 +0900
+Received: from localhost.localdomain (unknown [10.166.13.99])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 98BFD400855B;
+	Thu, 24 Oct 2024 21:05:30 +0900 (JST)
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: bhelgaas@google.com,
+	jingoohan1@gmail.com
+Cc: linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3] PCI: rcar-gen4: Add a document about the firmware
+Date: Thu, 24 Oct 2024 21:05:25 +0900
+Message-Id: <20241024120525.291885-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Philipp Stanner <pstanner@redhat.com> writes:
+Renesas R-Car V4H (r8a779g0) has PCIe controller, and it requires
+specific firmware downloading. So, add a document about the firmware
+how to get.
 
-> pcim_iomap_table() and pcim_iomap_regions_request_all() have been
-> deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> pcim_iomap_table(), pcim_iomap_regions_request_all()").
->
-> Replace these functions with their successors, pcim_iomap() and
-> pcim_request_all_regions().
->
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+Changes from v2:
+https://lore.kernel.org/linux-pci/20240703102937.1403905-1-yoshihiro.shimoda.uh@renesas.com/
+ - Rebase on v6.12-rc1.
+ - Move the document file on Documentation/PCI/.
+ - Add SPDX-License-Identifier.
 
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Changes from v1:
+https://lore.kernel.org/linux-pci/20240703101243.1403231-1-yoshihiro.shimoda.uh@renesas.com/
+ - Fix typos in both the commit description and the document.
 
-Regards,
---
-Alex
+ 
+ Documentation/PCI/rcar-pcie-firmware.rst | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/PCI/rcar-pcie-firmware.rst
+
+diff --git a/Documentation/PCI/rcar-pcie-firmware.rst b/Documentation/PCI/rcar-pcie-firmware.rst
+new file mode 100644
+index 000000000000..0d8a87ce9aa9
+--- /dev/null
++++ b/Documentation/PCI/rcar-pcie-firmware.rst
+@@ -0,0 +1,23 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=================================================
++Firmware of PCIe controller for Renesas R-Car V4H
++=================================================
++
++Renesas R-Car V4H (r8a779g0) has PCIe controller, and it requires specific
++firmware downloading. The firmware file "104_PCIe_fw_addr_data_ver1.05.txt"
++is available in the datasheet as a text file. But, Renesas is not able to
++distribute the firmware freely. So, we require converting the text file to
++a binary before the driver runs by using the following script:
++
++.. code-block:: sh
++
++   $ awk '/^\s*0x[0-9A-Fa-f]{4}\s+0x[0-9A-Fa-f]{4}/ \
++   { print substr($2,5,2) substr($2,3,2) }' \
++   104_PCIe_fw_addr_data_ver1.05.txt | xxd -p -r > \
++   rcar_gen4_pcie.bin
++
++   $ sha1sum rcar_gen4_pcie.bin
++
++   # Example output of the sha1sum:
++   1d0bd4b189b4eb009f5d564b1f93a79112994945  rcar_gen4_pcie.bin
+-- 
+2.25.1
+
 
