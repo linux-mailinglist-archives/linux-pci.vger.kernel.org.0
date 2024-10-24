@@ -1,310 +1,286 @@
-Return-Path: <linux-pci+bounces-15187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1289A9ADE65
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 10:03:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A16629AE01E
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 11:06:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D7FBB21E9E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 08:03:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C26131C2205C
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 09:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA661B0F19;
-	Thu, 24 Oct 2024 08:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06EE2757FC;
+	Thu, 24 Oct 2024 09:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtI4WtBY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cKwa/7xo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB3B14C5B3
-	for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2024 08:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6673823CB;
+	Thu, 24 Oct 2024 09:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729756999; cv=none; b=ubKxD0JtnCkzCM6cnQhFiIE1/OUDAxCP+l7w5RU9bmvZCWsLxRINxxoPSYDpUjwu2liE7ug5oMqeL/61MPLX7T2/wSDcq+6/e6ysw9lVr7l8UzIY9u250RhKvN/r7tmVG6gIuKm9KcEaePDfeGRMEXdk+zSAwaLNXD30+uBIPSk=
+	t=1729760802; cv=none; b=eh+cfxPub+YDAfIYhx/fB/jPQ5f492kR8hNLT9MOputj40oYaRg0Z4RRMx6TdrYQfEtEFJwTU9fat4bEbz0m5F+kPQ51HTHMRPUJ8R5ITuD+V8U9rKcB3AU2MwUVarH4iJqzIoi5mkF10TcS+KciX5AjQcuUjXqocC1k0P75VLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729756999; c=relaxed/simple;
-	bh=Q1kfe1t0sp4jY5sNXXPh9kCYnsSIp6kXPNBXZwj0GiI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X6BHuyy5soFY6aacE7MhJsTWp5gFerLGGqXvl5RrIUAIokEd81eVAFquPhJXqKBdCMM/ay/oIyi8T9U0V9Ocou5iWrx6toG8gImZejAFZRDhFx+2iYBdmHivM759JoT0O12K4shglPH000l+LxPIZKsMN2o9vFYPzvbriUImNZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UtI4WtBY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729756991;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eCHAxEtiIjB9/eMXdwm4L84xFlQFaCf3ZNV6cwdqU9g=;
-	b=UtI4WtBY2j/9pznS5alQKURqQDZO7EIevs6jCfACJcP1A/THgN+NEOXvZRpDnAjRsMdqSK
-	KUST2v2FGdtgkSEHK2idc6crgRsuA6+0vnmGd5OeDp41cDHVC56L34jvaq2zRjgkvAplul
-	ItpM93Ul8nh5vmavYNSeMnpVsMlLhrE=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-n1XQXQKmNqCN9lVQMtQ1og-1; Thu, 24 Oct 2024 04:03:10 -0400
-X-MC-Unique: n1XQXQKmNqCN9lVQMtQ1og-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-71817451e83so682937a34.0
-        for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2024 01:03:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729756989; x=1730361789;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eCHAxEtiIjB9/eMXdwm4L84xFlQFaCf3ZNV6cwdqU9g=;
-        b=MrTXGJJStKL+giUfZ+01pE9pfUUwJzakOm9xpdTkLQ1SbmxXje7kIs+BQzEXcIoSlM
-         Zwb9+oh1arKLnngy3bvlF9AvGV2bAfw8lBZrPnJ93FVlVC8bc35tBfJ/nlgJgSHDydl8
-         ej/X581GoDjkV66feHX7iwXPtKfFB0vRxr2gOGH48yENWZiJ7FwfpR5AyYmlVM87c8dC
-         XNf0iilM8BFFQXnxO5yzJgEwyW5ezX5TfMVedPev3OIl4HiXB8OVCuXztcnNrCIzr5qb
-         UbwRhFCbcSPyEGFQB8n+VZedV3+KmDTEK6YEyy6TQpcC+ja6XBqqWftRitZ6FIvPLWW9
-         D91g==
-X-Forwarded-Encrypted: i=1; AJvYcCWlntuuPVBXmcdoJbiWRR1O3Wq+o1ejdTjdAtItex2h4upE6dcnTYlKULqoraWWPPQVQTEyNsu9Jx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuJWWZ+ETWzrtw+jy/X0K4T3lTIuJbGIy5fZufkEyB/TgSLWW7
-	undZUHLgqWsKRRAzgF6DPQ9visrta/jxWjujD7G3Rqd/zrBqRp6zDCj7PKBo42TtTCF5qFascB5
-	95h9XWneQBbDI9RjVM9smnCyX1gh6Fufy9B//LcoLryYnfVpjYdxmGtovkQ==
-X-Received: by 2002:a05:6830:6dc7:b0:718:c0d:6bdb with SMTP id 46e09a7af769-718598599b9mr736334a34.20.1729756989523;
-        Thu, 24 Oct 2024 01:03:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVwKg5C+Tp+G04yjB73N1UyaDqsdgqmmyDICp7Nqm80mYC6tnNIzWvedx2PALg7dJ9abA7Jw==
-X-Received: by 2002:a05:6830:6dc7:b0:718:c0d:6bdb with SMTP id 46e09a7af769-718598599b9mr736305a34.20.1729756989132;
-        Thu, 24 Oct 2024 01:03:09 -0700 (PDT)
-Received: from dhcp-64-16.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ce0099a79fsm47100376d6.90.2024.10.24.01.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 01:03:08 -0700 (PDT)
-Message-ID: <aec23bb79b9ff7dd7f13eb67460e0605eac22912.camel@redhat.com>
-Subject: Re: [PATCH 02/13] ALSA: hda_intel: Use always-managed version of
- pcim_intx()
-From: Philipp Stanner <pstanner@redhat.com>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Sergey Shtylyov <s.shtylyov@omp.ru>, Basavaraj Natikar
- <basavaraj.natikar@amd.com>, Jiri Kosina <jikos@kernel.org>,  Benjamin
- Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Alex Dubov <oakad@yahoo.com>,
- Sudarsana Kalluru <skalluru@marvell.com>, Manish Chopra
- <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rasesh Mody <rmody@marvell.com>,
- GR-Linux-NIC-Dev@marvell.com, Igor Mitsyanko <imitsyanko@quantenna.com>,
- Sergey Matyukevich <geomatsi@gmail.com>, Kalle Valo <kvalo@kernel.org>,
- Sanjay R Mehta <sanju.mehta@amd.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alex Williamson <alex.williamson@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Chen Ni <nichen@iscas.ac.cn>, Mario Limonciello
- <mario.limonciello@amd.com>, Ricky Wu <ricky_wu@realtek.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Breno Leitao <leitao@debian.org>, Kevin Tian
- <kevin.tian@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Mostafa Saleh
- <smostafa@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu
- <yi.l.liu@intel.com>,  Christian Brauner <brauner@kernel.org>, Ankit
- Agrawal <ankita@nvidia.com>, Eric Auger <eric.auger@redhat.com>, Reinette
- Chatre <reinette.chatre@intel.com>, Ye Bin <yebin10@huawei.com>, Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,  Rui Salvaterra <rsalvaterra@gmail.com>,
- linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-input@vger.kernel.org, netdev@vger.kernel.org, 
- linux-wireless@vger.kernel.org, ntb@lists.linux.dev,
- linux-pci@vger.kernel.org,  kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-sound@vger.kernel.org
-Date: Thu, 24 Oct 2024 10:02:59 +0200
-In-Reply-To: <87ttd2276j.wl-tiwai@suse.de>
-References: <20241015185124.64726-1-pstanner@redhat.com>
-	 <20241015185124.64726-3-pstanner@redhat.com> <87v7xk2ps5.wl-tiwai@suse.de>
-	 <6f3db65fe9a5dcd1a7a8d9bd5352ecb248ef57b1.camel@redhat.com>
-	 <87ttd2276j.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1729760802; c=relaxed/simple;
+	bh=TPgnv4Jvv6YLw54D9uhWHUaz2XEBir0T5CcHTTI9fpU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EODDqLAKqt3yN+u/uC0IcEnDML8J+R5I4++h04FgxGE8LNiIlVcapMDTypGkbtSGi1wLB/h3Ls4gvM7DeuXuCNjKKACUlW33reB/zOTIBDhQpB7CjtrZPvOYEsNjM/KYgHH+rxFMK7bWUOGZZrMakU5XevyXml9npgk1gvngKKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cKwa/7xo; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729760801; x=1761296801;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TPgnv4Jvv6YLw54D9uhWHUaz2XEBir0T5CcHTTI9fpU=;
+  b=cKwa/7xoJT7bBjoVhSQoBP6h4ZccN6ExQvkFOT7IGBbugd8YqT9zICZb
+   GfJTlOvccOuhFtAj+usFvzFAU5L/bj5eIw6Xr9+t8wv5HjxSKJn0JUF0C
+   hmLKjQWFQoaWMkMghj5zfkpbPW0nFXq0lx96Ds7A3gljbs4EmVSeM50rR
+   URZxP8j2OhKoEvuDaF2rPCd1RjYOVd42p6DBfmcmYwr4pAXpaX+OamVdu
+   FBwsdbWThTGuu0IuCDwRK3oqQDBG9Ewj1zx5jLg+jK83XWF5gibZLTerJ
+   qthiaqJ34RocOSu5T/aClkuuzI59A42+EL1igF/Yq7RtO11o1PLD+qvZ5
+   Q==;
+X-CSE-ConnectionGUID: b+gz9RcCTie6aZcW7d6n9w==
+X-CSE-MsgGUID: rt8tMDTZQ9K5PJ0KvuV0Mg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11234"; a="29600161"
+X-IronPort-AV: E=Sophos;i="6.11,228,1725346800"; 
+   d="scan'208";a="29600161"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 02:06:40 -0700
+X-CSE-ConnectionGUID: RmzCAQGtT4Cj7Y05wqUuzQ==
+X-CSE-MsgGUID: js3TqFB2T322E0iMyIHJvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,228,1725346800"; 
+   d="scan'208";a="85141746"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.193])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 02:06:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 24 Oct 2024 12:06:33 +0300 (EEST)
+To: Paul Menzel <pmenzel@molgen.mpg.de>, 
+    ChandraShekar <chandrashekar.devegowda@intel.com>
+cc: Kiran K <kiran.k@intel.com>, linux-bluetooth@vger.kernel.org, 
+    ravishankar.srivatsa@intel.com, chethan.tumkur.narayan@intel.com, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Device suspend-resume support
+ added
+In-Reply-To: <e6bd065d-0b9b-4c37-958c-fc2a09ea0475@molgen.mpg.de>
+Message-ID: <472e30e8-a886-a268-3105-75379f722ce4@linux.intel.com>
+References: <20241023114647.1011886-1-chandrashekar.devegowda@intel.com> <e6bd065d-0b9b-4c37-958c-fc2a09ea0475@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-338810278-1729760793=:1315"
 
-On Wed, 2024-10-23 at 17:03 +0200, Takashi Iwai wrote:
-> On Wed, 23 Oct 2024 15:50:09 +0200,
-> Philipp Stanner wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-338810278-1729760793=:1315
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Wed, 23 Oct 2024, Paul Menzel wrote:
+
+> [Cc: +Bjorn, +linux-pci]
+>=20
+> Dear Chandra,
+>=20
+>=20
+> Thank you for the patch.
+>=20
+> First something minor: Should there be a space in your name?
+>=20
+> ChandraShekar =E2=86=92 Chandra Shekar
+>=20
+> `git config --global user.name "=E2=80=A6"` can configure this for your g=
+it setup.
+>=20
+> Also for the summary/title, it=E2=80=99d be great if you used a statement=
+ by using a
+> verb (in imperative mood):
+>=20
+> Add device suspend-resume support
+>=20
+> or shorter
+>=20
+> Support suspend-resume
+>=20
+> Am 23.10.24 um 13:46 schrieb ChandraShekar:
+> > This patch contains the changes in driver to support the suspend and
+> > resume i.e move the controller to D3 state when the platform is enterin=
+g
+> > into suspend and move the controller to D0 on resume.
+>=20
+> It=E2=80=99d be great if you elaborated. Please start by the history, sin=
+ce when Intel
+> Bluetooth PCIe have been there, and why until now this support was missin=
+g.
+>=20
+> Then please describe, what is needed, and what documentation you used to
+> implement the support.
+>=20
+> Also, please document, how you tested this, including the log messages, a=
+nd
+> also the time it takes to resume.
+>=20
+> Is it also possible to use Bluetooth as a wakeup source from suspend?
+>=20
+> > Signed-off-by: Kiran K <kiran.k@intel.com>
+> > Signed-off-by: ChandraShekar <chandrashekar.devegowda@intel.com>
+> > ---
+> >   drivers/bluetooth/btintel_pcie.c | 52 +++++++++++++++++++++++++++++++=
++
+> >   drivers/bluetooth/btintel_pcie.h |  4 +++
+> >   2 files changed, 56 insertions(+)
 > >=20
-> > On Tue, 2024-10-22 at 16:08 +0200, Takashi Iwai wrote:
-> > > On Tue, 15 Oct 2024 20:51:12 +0200,
-> > > Philipp Stanner wrote:
-> > > >=20
-> > > > pci_intx() is a hybrid function which can sometimes be managed
-> > > > through
-> > > > devres. To remove this hybrid nature from pci_intx(), it is
-> > > > necessary to
-> > > > port users to either an always-managed or a never-managed
-> > > > version.
-> > > >=20
-> > > > hda_intel enables its PCI-Device with pcim_enable_device().
-> > > > Thus,
-> > > > it needs
-> > > > the always-managed version.
-> > > >=20
-> > > > Replace pci_intx() with pcim_intx().
-> > > >=20
-> > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > > > ---
-> > > > =C2=A0sound/pci/hda/hda_intel.c | 2 +-
-> > > > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/sound/pci/hda/hda_intel.c
-> > > > b/sound/pci/hda/hda_intel.c
-> > > > index b4540c5cd2a6..b44ca7b6e54f 100644
-> > > > --- a/sound/pci/hda/hda_intel.c
-> > > > +++ b/sound/pci/hda/hda_intel.c
-> > > > @@ -786,7 +786,7 @@ static int azx_acquire_irq(struct azx
-> > > > *chip,
-> > > > int do_disconnect)
-> > > > =C2=A0	}
-> > > > =C2=A0	bus->irq =3D chip->pci->irq;
-> > > > =C2=A0	chip->card->sync_irq =3D bus->irq;
-> > > > -	pci_intx(chip->pci, !chip->msi);
-> > > > +	pcim_intx(chip->pci, !chip->msi);
-> > > > =C2=A0	return 0;
-> > > > =C2=A0}
-> > > > =C2=A0
-> > >=20
-> > > Hm, it's OK-ish to do this as it's practically same as what
-> > > pci_intx()
-> > > currently does.=C2=A0 But, the current code can be a bit inconsistent
-> > > about
-> > > the original intx value.=C2=A0 pcim_intx() always stores !enable to
-> > > res->orig_intx unconditionally, and it means that the orig_intx
-> > > value
-> > > gets overridden at each time pcim_intx() gets called.
-> >=20
-> > Yes.
-> >=20
-> > >=20
-> > > Meanwhile, HD-audio driver does release and re-acquire the
-> > > interrupt
-> > > after disabling MSI when something goes wrong, and pci_intx()
-> > > call
-> > > above is a part of that procedure.=C2=A0 So, it can rewrite the
-> > > res->orig_intx to another value by retry without MSI.=C2=A0 And after
-> > > the
-> > > driver removal, it'll lead to another state.
-> >=20
-> > I'm not sure that I understand this paragraph completely. Still,
-> > could
-> > a solution for the driver on the long-term just be to use
-> > pci_intx()?
+> > diff --git a/drivers/bluetooth/btintel_pcie.c
+> > b/drivers/bluetooth/btintel_pcie.c
+> > index fd4a8bd056fa..f2c44b9d7328 100644
+> > --- a/drivers/bluetooth/btintel_pcie.c
+> > +++ b/drivers/bluetooth/btintel_pcie.c
+> > @@ -273,6 +273,12 @@ static int btintel_pcie_reset_bt(struct
+> > btintel_pcie_data *data)
+> >   =09return reg =3D=3D 0 ? 0 : -ENODEV;
+> >   }
+> >   +static void btintel_pcie_set_persistence_mode(struct btintel_pcie_da=
+ta
+> > *data)
+> > +{
+> > +=09btintel_pcie_set_reg_bits(data, BTINTEL_PCIE_CSR_HW_BOOT_CONFIG,
+> > +=09=09=09=09  BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON);
+> > +}
+> > +
+> >   /* This function enables BT function by setting
+> > BTINTEL_PCIE_CSR_FUNC_CTRL_MAC_INIT bit in
+> >    * BTINTEL_PCIE_CSR_FUNC_CTRL_REG register and wait for MSI-X with
+> >    * BTINTEL_PCIE_MSIX_HW_INT_CAUSES_GP0.
+> > @@ -297,6 +303,8 @@ static int btintel_pcie_enable_bt(struct
+> > btintel_pcie_data *data)
+> >   =09 */
+> >   =09data->boot_stage_cache =3D 0x0;
+> >   +=09btintel_pcie_set_persistence_mode(data);
+> > +
+> >   =09/* Set MAC_INIT bit to start primary bootloader */
+> >   =09reg =3D btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_FUNC_CTRL_REG=
+);
+> >   =09reg &=3D ~(BTINTEL_PCIE_CSR_FUNC_CTRL_FUNC_INIT |
+> > @@ -1653,11 +1661,55 @@ static void btintel_pcie_remove(struct pci_dev
+> > *pdev)
+> >   =09pci_set_drvdata(pdev, NULL);
+> >   }
+> >   +static int btintel_pcie_suspend(struct device *dev)
+> > +{
+> > +=09struct btintel_pcie_data *data;
+> > +=09int err;
+> > +=09struct  pci_dev *pdev =3D to_pci_dev(dev);
+
+Extra space.
+
+> > +
+> > +=09data =3D pci_get_drvdata(pdev);
+> > +=09btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D3_HOT);
+> > +=09data->gp0_received =3D false;
+> > +=09err =3D wait_event_timeout(data->gp0_wait_q, data->gp0_received,
+> > +
+> > msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
+> > +=09if (!err) {
+> > +=09=09bt_dev_err(data->hdev, "failed to receive gp0 interrupt for
+> > suspend");
 >=20
-> pci_intx() misses the restore of the original value, so it's no
-> long-term solution, either.
-
-Sure that is missing =E2=80=93 I was basically asking whether the driver co=
-uld
-live without that feature.
-
-Consider that point obsolete, see below
-
+> Please include the timeout in the message.
 >=20
-> What I meant is that pcim_intx() blindly assumes the negative of the
-> passed argument as the original state, which isn't always true.=C2=A0 e.g=
-.
-> when the driver calls it twice with different values, a wrong value
-> may be remembered.
+> > +=09=09goto fail;
+> > +=09}
+> > +=09return 0;
+> > +fail:
+> > +=09return -EBUSY;
+> > +}
+> > +
+> > +static int btintel_pcie_resume(struct device *dev)
+> > +{
+> > +=09struct btintel_pcie_data *data;
+> > +=09struct  pci_dev *pdev =3D to_pci_dev(dev);
 
-Ah, I see =E2=80=93 thoguh the issue is when it's called several times with=
- the
-*same* value, isn't it?
+Ditto.
 
-E.g.
+> > +=09int err;
 
-pcim_intx(pdev, 1); // 0 is remembered as the old value
-pcim_intx(pdev, 1); // 0 is falsely remembered as the old value
+Why's the order inconsistent compared with suspend func local vars?
 
-Also, it would seem that calling the function for the first time like
-that:
-
-pcim_intx(pdev, 0); // old value: 1
-
-is at least incorrect, because INTx should be 0 per default, shouldn't
-it? Could then even be a 1st class bug, because INTx would end up being
-enabled despite having been disabled all the time.
-
+> > +
+> > +=09data =3D pci_get_drvdata(pdev);
+> > +=09btintel_pcie_wr_sleep_cntrl(data, BTINTEL_PCIE_STATE_D0);
+> > +=09data->gp0_received =3D false;
+> > +=09err =3D wait_event_timeout(data->gp0_wait_q, data->gp0_received,
+> > +
+> > msecs_to_jiffies(BTINTEL_DEFAULT_INTR_TIMEOUT_MS));
+> > +=09if (!err) {
+> > +=09=09bt_dev_err(data->hdev, "failed to receive gp0 interrupt for
+> > resume");
 >=20
-> That said, I thought of something like below.
-
-At first glance that looks like a good idea to me, thanks for working
-this out!
-
-IMO you can submit that as a patch so we can discuss it separately.
-
-Greetings,
-Philipp
-
+> Ditto.
 >=20
->=20
-> thanks,
->=20
-> Takashi
->=20
-> -- 8< --
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -438,8 +438,17 @@ static void pcim_intx_restore(struct device
-> *dev, void *data)
-> =C2=A0	__pcim_intx(pdev, res->orig_intx);
-> =C2=A0}
-> =C2=A0
-> -static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> device *dev)
-> +static void save_orig_intx(struct pci_dev *pdev)
-> =C2=A0{
-> +	u16 pci_command;
-> +
-> +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> +	res->orig_intx =3D !(pci_command & PCI_COMMAND_INTX_DISABLE);
-> +}
-> +
-> +static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> pci_dev *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> =C2=A0	struct pcim_intx_devres *res;
-> =C2=A0
-> =C2=A0	res =3D devres_find(dev, pcim_intx_restore, NULL, NULL);
-> @@ -447,8 +456,10 @@ static struct pcim_intx_devres
-> *get_or_create_intx_devres(struct device *dev)
-> =C2=A0		return res;
-> =C2=A0
-> =C2=A0	res =3D devres_alloc(pcim_intx_restore, sizeof(*res),
-> GFP_KERNEL);
-> -	if (res)
-> +	if (res) {
-> +		save_orig_intx(pdev);
-> =C2=A0		devres_add(dev, res);
-> +	}
-> =C2=A0
-> =C2=A0	return res;
-> =C2=A0}
-> @@ -467,11 +478,10 @@ int pcim_intx(struct pci_dev *pdev, int enable)
-> =C2=A0{
-> =C2=A0	struct pcim_intx_devres *res;
-> =C2=A0
-> -	res =3D get_or_create_intx_devres(&pdev->dev);
-> +	res =3D get_or_create_intx_devres(pdev);
-> =C2=A0	if (!res)
-> =C2=A0		return -ENOMEM;
-> =C2=A0
-> -	res->orig_intx =3D !enable;
-> =C2=A0	__pcim_intx(pdev, enable);
-> =C2=A0
-> =C2=A0	return 0;
->=20
+> > +=09=09goto fail;
+> > +=09}
+> > +=09return 0;
+> > +fail:
+> > +=09return -EBUSY;
 
+Quite much common code here compared with the suspend side. Perhaps a=20
+helper function would be useful?
+
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(btintel_pcie_pm_ops, btintel_pcie_suspend,
+> > +=09=09btintel_pcie_resume);
+> > +
+> >   static struct pci_driver btintel_pcie_driver =3D {
+> >   =09.name =3D KBUILD_MODNAME,
+> >   =09.id_table =3D btintel_pcie_table,
+> >   =09.probe =3D btintel_pcie_probe,
+> >   =09.remove =3D btintel_pcie_remove,
+> > +=09.driver.pm =3D &btintel_pcie_pm_ops,
+> >   };
+> >   module_pci_driver(btintel_pcie_driver);
+> >   diff --git a/drivers/bluetooth/btintel_pcie.h
+> > b/drivers/bluetooth/btintel_pcie.h
+> > index f9aada0543c4..38d0c8ea2b6f 100644
+> > --- a/drivers/bluetooth/btintel_pcie.h
+> > +++ b/drivers/bluetooth/btintel_pcie.h
+> > @@ -8,6 +8,7 @@
+> >     /* Control and Status Register(BTINTEL_PCIE_CSR) */
+> >   #define BTINTEL_PCIE_CSR_BASE=09=09=09(0x000)
+> > +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG=09=09(BTINTEL_PCIE_CSR_BASE
+> > + 0x000)
+> >   #define BTINTEL_PCIE_CSR_FUNC_CTRL_REG=09=09(BTINTEL_PCIE_CSR_BASE
+> > + 0x024)
+> >   #define BTINTEL_PCIE_CSR_HW_REV_REG=09=09(BTINTEL_PCIE_CSR_BASE +
+> > 0x028)
+> >   #define BTINTEL_PCIE_CSR_RF_ID_REG=09=09(BTINTEL_PCIE_CSR_BASE +
+> > 0x09C)
+> > @@ -48,6 +49,9 @@
+> >   #define BTINTEL_PCIE_CSR_MSIX_IVAR_BASE
+> > (BTINTEL_PCIE_CSR_MSIX_BASE + 0x0880)
+> >   #define BTINTEL_PCIE_CSR_MSIX_IVAR(cause)
+> > (BTINTEL_PCIE_CSR_MSIX_IVAR_BASE + (cause))
+> >   +/* CSR HW BOOT CONFIG Register */
+> > +#define BTINTEL_PCIE_CSR_HW_BOOT_CONFIG_KEEP_ON=09=09(BIT(31))
+
+Extra parenthesis.
+
+--=20
+ i.
+
+
+> > +
+> >   /* Causes for the FH register interrupts */
+> >   enum msix_fh_int_causes {
+> >   =09BTINTEL_PCIE_MSIX_FH_INT_CAUSES_0=09=3D BIT(0),=09/* cause 0 */
+--8323328-338810278-1729760793=:1315--
 
