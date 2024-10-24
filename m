@@ -1,144 +1,103 @@
-Return-Path: <linux-pci+bounces-15159-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15160-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F37089AD986
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 04:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 031F99ADAA4
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 05:42:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D90028193D
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 02:03:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE475280D51
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 03:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357D01CAAC;
-	Thu, 24 Oct 2024 02:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C78C1474CC;
+	Thu, 24 Oct 2024 03:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hTEli1vQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA7E156CA;
-	Thu, 24 Oct 2024 02:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541A01EB3D
+	for <linux-pci@vger.kernel.org>; Thu, 24 Oct 2024 03:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729735429; cv=none; b=ghCMvDek+dxdu5ov4XGfIqnSrKIeUeerjB4PH646rR2dRnTXBnmTQjWpv/Rqj3sVZvmyrWsS3Yje73LlE0MdvKss4n//1NE0X8ZiAudrUg4VNf+nvdl2gIhtagMBknEzrIIF30YIfYMd1EiJ9q1OnVJBd9KlMwx4jK2LMfXgDdQ=
+	t=1729741361; cv=none; b=AYUiVwf++bO90ZfkO5BniEUvL5VKjCq4pVrTUquLttjmI2mdsWHWrhVXFyk/1eCwpoR0rQ40ARs3/iVPIVdO0OcbUX23qt8ef9jNvgfNAgPbYFsqEEEFFmRbFQx8JtaJOLEM+z7jruMt0Jsci/cJwhEVPyt06WUPxNp18fVQVcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729735429; c=relaxed/simple;
-	bh=PyQrMV6z3u0TP6bvWdvWQm1mSb57Wpnk7Pak+HE+kNw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uujHE7quwQAL0sSHREdRfuFs4BNSqKoKC/SZG9idZ9O/VufY6Q0TqWSQl328obkQOJVjQ9q8hCiqxia0iAZPYxPFB6Dofxg55fk2OdiUlNUBifLLiE/P8Pt6WEM9Uivf9cJ+M+hX/x1mBccIbTlLrHFqrk6MIYAUTdQRjlE83RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XYpzr1P6zzdkNL;
-	Thu, 24 Oct 2024 10:01:12 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id CDE2B180103;
-	Thu, 24 Oct 2024 10:03:42 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by kwepemj200003.china.huawei.com
- (7.202.194.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 24 Oct
- 2024 10:03:42 +0800
-From: liwei <liwei728@huawei.com>
-To: <bhelgaas@google.com>, <jpk@sgi.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bobo.shaobowang@huawei.com>, <liwei728@huawei.com>
-Subject: [PATCH] PCI/ROM: Fix PCI ROM header check bug
-Date: Thu, 24 Oct 2024 10:17:25 +0800
-Message-ID: <20241024021725.2608037-1-liwei728@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1729741361; c=relaxed/simple;
+	bh=5E+vmuY/XFKSj68y2Huqrww82Ag1t6Sz7egdfNBbSd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JK1/b88VMtSsKBitFUXyDPah3yi+Off20QtbFur5HsFaTObu9dZTscN599CcoyEKQMrsDN1xBLnGHZH7RPtf1gjgHBrf2/hWQKy/L+qKQCF+iV3p/VZhZRwEUMNrINOZxoXzi5RxEpvYTmBECxQ8rCntBY/00cvP4Bo9WQyByKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hTEli1vQ; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1729741355; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=gquinrMR6yQnQ8hqiK8kRExAOqM5ZgNQZ+JugqpI9V8=;
+	b=hTEli1vQa4vD/HqPSzl2Wfzlt7WcCi0X/BzEZmpB5e4OUm0vaM8SDkDA/p5kzxZkvD1BMxX3oKg59SAaC5kXMQdCRzdLcbcvGlhoSHgtEO3eX7C3IfX4pEoVBsYjIP1Qn8Ll5OW/dhNp2FcmJRlL6A7nLLR56LdqWaaBYaEgQU4=
+Received: from 30.178.82.24(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WHnbmLW_1729741353 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Oct 2024 11:42:35 +0800
+Message-ID: <ac47e477-bb06-414f-9766-a3688c098beb@linux.alibaba.com>
+Date: Thu, 24 Oct 2024 11:42:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] PCI: optimize proc sequential file read
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <20241022154443.GA880326@bhelgaas>
+From: Guixin Liu <kanie@linux.alibaba.com>
+In-Reply-To: <20241022154443.GA880326@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemj200003.china.huawei.com (7.202.194.15)
 
-'pds' does not perform 4-byte alignment check. If 'pds' is not 4-byte
-aligned, it will cause alignment fault.
 
-Mem abort info:
-ESR = 0x0000000096000021
-EC = 0x25: DABT (current EL), IL = 32 bits
-SET = 0, FnV = 0
-EA = 0, S1PTW = 0
-FSC = 0x21: alignment fault
-Data abort info:
-ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
-CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000203ef6a0d000
-[ffff8000c930ffff] pgd=1000002080bcf003, p4d=1000002080bcf003, pud=100000403ae8a003, pmd=1000202027498003, pte=00680000b000ff13
-Internal error: Oops: 0000000096000021 [#1] SMP
-CPU: 16 PID: 451316 Comm: read_all Kdump: loaded Tainted: G W 6.6.0+ #6
-Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 6.57 05/17/2023
-pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : pci_get_rom_size+0x74/0x1f0
-lr : pci_map_rom+0x140/0x280
-sp : ffff8000b96178f0
-x29: ffff8000b96178f0 x28: ffff004e284b3f80 x27: ffff8000b9617be8
-x26: ffff0020facb7020 x25: 0000000000100000 x24: 00000000b0000000
-x23: ffff00208c8ea740 x22: 1ffff000172c2f2e x21: ffff8000c9300000
-x20: 0000000000100000 x19: ffff8000c9300000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-x14: 0000000000000000 x13: 0000000041b58ab3 x12: 1ffff000172c2ec8
-x11: 00000000f1f1f1f1 x10: ffff7000172c2ec8 x9 : ffffb9ba9db93ad8
-x8 : ffff7000172c2eac x7 : ffff8000c9400000 x6 : 0000000052494350
-x5 : 0000000000000000 x4 : 0000000000000000 x3 : ffff8000c930ffff
-x2 : 000000000000aa55 x1 : 0000000000000000 x0 : ffff00208c8ea000
-Call trace:
-  pci_get_rom_size+0x74/0x1f0
-  pci_map_rom+0x140/0x280
-  pci_read_rom+0xa8/0x158
-  sysfs_kf_bin_read+0xb8/0x130
-  kernfs_file_read_iter+0x124/0x278
-  kernfs_fop_read_iter+0x6c/0xa8
-  new_sync_read+0x128/0x208
-  Inject: max_dir_depth
-  vfs_read+0x244/0x2b0
-  ksys_read+0xd0/0x188
-  __arm64_sys_read+0x4c/0x68
-  invoke_syscall+0x68/0x1a0
-  el0_svc_common.constprop.0+0x11c/0x150
-  do_el0_svc+0x38/0x50
-  el0_svc+0x64/0x258
-  el0t_64_sync_handler+0x100/0x130
-  el0t_64_sync+0x188/0x190
-Code: d50331bf ca030061 b5000001 8b030263 (b9400064)
-SMP: stopping secondary CPUs
-Starting crashdump kernel...
+在 2024/10/22 23:44, Bjorn Helgaas 写道:
+> [+cc Greg]
+>
+> On Fri, Oct 18, 2024 at 01:47:28PM +0800, Guixin Liu wrote:
+>> PCI driver will traverse pci device list in pci_seq_start in every
+>> sequential file reading, use xarry to store all pci devices to
+>> accelerate finding the start.
+>>   /* iterator */
+>>   static void *pci_seq_start(struct seq_file *m, loff_t *pos)
+>>   {
+>> -	struct pci_dev *dev = NULL;
+>> +	struct pci_dev *dev;
+>>   	loff_t n = *pos;
+>>   
+>> -	for_each_pci_dev(dev) {
+>> -		if (!n--)
+>> -			break;
+>> -	}
+> Maybe another approach would be to use pci_get_device() directly
+> instead of for_each_pci_dev().
+>
+> pci_get_device() takes a "from" starting point, so instead of keeping
+> track of the index "n", you could keep track of the current pci_dev.
 
-In UEFI Specification Version 2.8, describes that the PCIR data structure must
-start on a 4-byte boundary. Fix it by verifying the 'pds' is aligned.
+You mean let struct seq_file to keep the pci_dev? Well, we also need keep
 
-Cc: stable@vger.kernel.org
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: liwei <liwei728@huawei.com>
----
- drivers/pci/rom.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+the pci_dev which held by seq_file in klist_devices, because finding 
+next rely on
 
-diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-index e18d3a4383ba..0fa6b3da63cc 100644
---- a/drivers/pci/rom.c
-+++ b/drivers/pci/rom.c
-@@ -98,6 +98,12 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
- 		}
- 		/* get the PCI data structure and check its "PCIR" signature */
- 		pds = image + readw(image + 24);
-+		/* The PCIR data structure must begin on a 4-byte boundary */
-+		if (!IS_ALIGNED((unsigned long)pds, 4)) {
-+			pci_info(pdev, "Invalid PCI ROM header signature: PCIR %#06x\n",
-+				 readw(image + 24));
-+			break;
-+		}
- 		if (readl(pds) != 0x52494350) {
- 			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
- 				 readl(pds));
--- 
-2.25.1
+it, this make things complicated.
+
+In addition, in pci_seq_start(), the pos may not increased one by one, so
+
+we dont know how many times we should skip to find the pci_dev which number
+
+is *pos.
+
+Best Regards,
+
+Guixin Liu
 
 
