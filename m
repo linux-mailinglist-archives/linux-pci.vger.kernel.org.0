@@ -1,128 +1,182 @@
-Return-Path: <linux-pci+bounces-15231-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15232-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17CFB9AEF89
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 20:16:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 055259AEFA0
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 20:20:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45E4A1C23D43
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 18:16:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4ECFF1F2145E
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Oct 2024 18:20:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EECB200BA2;
-	Thu, 24 Oct 2024 18:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA6942003DC;
+	Thu, 24 Oct 2024 18:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vh6jwWlf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZ4bFe1/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D921ABEC5;
-	Thu, 24 Oct 2024 18:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC041FE0EA;
+	Thu, 24 Oct 2024 18:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729793793; cv=none; b=SnkoL9zkFHr8XFIS/SZ9Uj7avKWZlTVHBE9JWHX6/zYEaeNX0yvVv7zNnN3RsyMxI5nNZKpxNzQ0CuwSKPd/U9WU5nSTvkaS/+RSIenzq0odn6NAUOfb5+A/lkRsQSHQiy4XGVVhAU+BFKEcVMGxZeja9LGV8ySIymzhWZugAnc=
+	t=1729794026; cv=none; b=iLS4Cr8xPYzWBKaYhJVB2te/QRZ3XEB0+mpHbm7hWPNEvCGA5EWhnYmyWlcD537+r+BWaMVq2/BUbpU8XwykDxMbD7nITQmU22Aldm2UcInQNh8tjd1HOSYhxBI5haghMlsrpOGPuWFyM1xbPRp6yE5YQFT0XvaN860EfME7Llo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729793793; c=relaxed/simple;
-	bh=wLQMy1fODAkR42k9k6/+Wm4LDF7pthKYgpT1trqgyOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=f7f+AsqWmGpl50Ub80pl3SKNVLQrhgsSKMJxINv9OD6zjBV8fSk3JUDhwtupTytrJ88mghNuA1sur1rU9hZNxg4A7OPUkq6aNsMW3F5JZTqVuxQt7sXqiDJkC4vZWk216IucN7xxIxJz0Yc4NbYOAg1L5SlX66W3cJYecJTU5/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vh6jwWlf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBD6C4CEC7;
-	Thu, 24 Oct 2024 18:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729793792;
-	bh=wLQMy1fODAkR42k9k6/+Wm4LDF7pthKYgpT1trqgyOw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Vh6jwWlfQPZQfjGlftsi17vLLxsL5zZfNiCQJA2ugdrSPwdnao4cYzJyH0fJ6SOtW
-	 EF4BpJJSaW/azYChmUCGPgtF60kJ5Ga+F4UOY8t7jAnOrlLrMyGn4oouunBZzHCT1M
-	 fvE8QLJsWMtwAf8CzmBC9u+E5eiOfJXEK1ooBb+gyXZpVlB5b8noHv+zXIw2wVG1Fu
-	 XrKE3eaAMgLNmhlgI+83nsVQldtJ8ATNVcV1uV+zZQgJ4B4p/0iP//CxA9VKOft6Q7
-	 moGu1Ut3ybCF+ODoRccN/cyOjJDWUAM3zQPUSl1hfdEOGZ0XB0t7lJ2ZVYWaUK8Knr
-	 YtTARepCr42mQ==
-Date: Thu, 24 Oct 2024 13:16:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, vladimir.oltean@nxp.com,
-	claudiu.manoil@nxp.com, xiaoning.wang@nxp.com, Frank.Li@nxp.com,
-	christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
-	bhelgaas@google.com, horms@kernel.org, imx@lists.linux.dev,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	alexander.stein@ew.tq-group.com
-Subject: Re: [PATCH v5 net-next 08/13] PCI: Add NXP NETC vendor ID and device
- IDs
-Message-ID: <20241024181630.GA966301@bhelgaas>
+	s=arc-20240116; t=1729794026; c=relaxed/simple;
+	bh=wEkB3zq4LCxabrUV4KO/q95T5XBmhZmXXKdUWSfGc14=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GLuE/Oi45QRHDk2B5Ngtewx5T97rkW0Cb3DVhEnqXptdue3NeN0hfG5sE6GFgx8D1Fc0JKg+fdgrZ65YGK77q5tljAog6Y0Nrdvx4+oVx4WsQ1sKyDSBUzzfjtnlkW5eClW68IRRoszoz9o26Fp69VRFsb6YaU+rSoMP3vhr/60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZZ4bFe1/; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-20caea61132so9311355ad.2;
+        Thu, 24 Oct 2024 11:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729794024; x=1730398824; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BJRMzi03Xu9OgYRc3CEyzmmOuaUb/klqYsHXiTiyAMg=;
+        b=ZZ4bFe1/iPRMb1EawhaHXUrhrW+71UYzE1XFHM7zo/rOpdmY6H0bURQXUnxwmQt5Nc
+         X4h477KIb0/8vOncDbbCjLG9LJCobSkv6rSj/0OkZ7jMbPIXOjdcfnX8M0H8dNjQNYGA
+         wYoKop8elWT5bsoI8F3Qxx/UE+5PnQC+q/W6yOnxTSjzKgCPkLFiwgOZnu3ccHWMfjrL
+         SJL6obE9V7LOXRqJ03akjN+hAcV4wAS3+qpntdKjyNRaVRGuguDxURihn5XWuXoecbDv
+         ToB06sFO9DGZn8bfxgLTOh5S8Y/cWAYVNdIgioQ1TnH3jHOIiE5wscnxiFs8z3JGPAPc
+         x/lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729794024; x=1730398824;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BJRMzi03Xu9OgYRc3CEyzmmOuaUb/klqYsHXiTiyAMg=;
+        b=GQq9uqoC2uv8OB6Q1zcBJwLitnhITUymiLb7tCeYNld1klwQdgRhHnvixM1ci9jGMQ
+         dL5kEAEZqomOGtL+5s9gLsXO+XMkzm6Bbz0lVsk9P9rnXhHV3kgKRuDCavN92qfhHBb7
+         RD5oBhS+Aqaj0BSmqm0fveMy/RI75dKYtg/UVF1kyVamFk7PHboBcwRoHhebvyzXIkY6
+         zyJeUZKL202lfxmgyRBeLGLzVOPUpW2G3C9TOKgciZA9nF9/DarTCbqy5omKZoWKFKkl
+         xsGZWRrs5O7UIIePiV7ECuFbJPRhJB8jyJzHP5ceYoR9PtZQDeJCI8PcgYCKPVDRZqkW
+         jG2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUfce/kltyyVvh8b1WCJYwEXJTJ2WXaMegbfLcQMYHvKQNUujIch9VdmsdV0ytf6g0YZ95qzLf/@vger.kernel.org, AJvYcCUuVMWUSCG7JrAZEK0pU21yFjVN1PQOBwNgEye5nxW3h0R8BXV0HCIiClorbFCKYxkz+ZGMjUAqvssBDJo=@vger.kernel.org, AJvYcCW4uJu9mG4i7clgF9NpgbWyQNbrxMtU5mwQ02SKLEmiZjVm5umMEREnrObgyZoCnaN4AgIgJ8tyQ/SL@vger.kernel.org, AJvYcCWJ8sGfC4tBhwKLFFiRiVN4dGZF0+wIe2gP0mVso7JQkbP7ltBeu+zya85/AIjfZvvFE1qNRg7sG2P1WARQ@vger.kernel.org, AJvYcCWRVzNyhHBIQsi/B/u4g4Ta/5zIa4UEYXVSkgV8tYHaXugraZiK8tCo1GLItqvtgeU0uUTt5Wm7qhel@vger.kernel.org, AJvYcCWed/noCn+IujYXy2k0Rl4YMznU1mUvXq/ZyF7tDrp3CV5U3qZpjaT9/bgtEGjzKpnlvt7lEIcn3babrZMSFQyfc2Q=@vger.kernel.org, AJvYcCX0q6YTiVGjpufQYlJXYxdclsuQDC2DyYPcG8M183OPdaDg3/Y0gDFffrK1+IUc0TM4y0fOimWdG6HPg529@vger.kernel.org, AJvYcCX5DYB2Fgc4ch9AkyZOozndo3wFuiteHnfqj8rHQwzU9u9KMXEVbpTDAHV3r6kamVtSuEXmTPN74NdYxw==@vger.kernel.org, AJvYcCXjiRB7/kGZgbGmGMJj4RgiDtp7ojutaLNKZIHoUZl/UFMYkgezNhTEW8MSWr0jikQm9H4OCoIupG7B@vger.kernel.org, AJvYcCXlbektPWH1PNRQcznzJu9k
+ iq9d31vwPcjZ31IqQk2P2k5BbdsR5awHod9uZqCR5BAsNyulLcIsTTI=@vger.kernel.org, AJvYcCXmEgtwQqSpWlQSYBXBDcnuvW76U8Hnuv3Z9XBeTbsM3oF74LhB7RtUL0p+ywE7OjvMW3UX/eLQbFUtsQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaSJH10gSKfyVBSZ0HmRZtKELdDIYflDgiXsuZezk1Wgg5tstc
+	r/nwiBPhoBEPLhVzhztg0B/sPZD19SyhHUvkG1xPpCQG3YzTii/B
+X-Google-Smtp-Source: AGHT+IGYKpMxQstbgNZ3LiMaRt+C1kt3vQ5CO9mGWGwaEAcyM8hDC2KY72x67dsHopqzCGRceRlU4w==
+X-Received: by 2002:a17:902:f785:b0:1fb:57e7:5bb4 with SMTP id d9443c01a7336-20fa9e9f8c6mr74829205ad.37.1729794024010;
+        Thu, 24 Oct 2024 11:20:24 -0700 (PDT)
+Received: from localhost.localdomain ([240b:4001:20c:6000::1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0bd53dsm74915625ad.122.2024.10.24.11.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 11:20:23 -0700 (PDT)
+From: Hantong Chen <cxwdyx620@gmail.com>
+To: tytso@mit.edu
+Cc: ajhalaney@gmail.com,
+	allenbh@gmail.com,
+	andrew@lunn.ch,
+	andriy.shevchenko@linux.intel.com,
+	andy@kernel.org,
+	arnd@arndb.de,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	broonie@kernel.org,
+	cai.huoqing@linux.dev,
+	cxwdyx620@gmail.com,
+	dave.jiang@intel.com,
+	davem@davemloft.net,
+	dlemoal@kernel.org,
+	dmaengine@vger.kernel.org,
+	dushistov@mail.ru,
+	fancer.lancer@gmail.com,
+	geert@linux-m68k.org,
+	gregkh@linuxfoundation.org,
+	ink@jurassic.park.msu.ru,
+	james.bottomley@hansenpartnership.com,
+	jdmason@kudzu.us,
+	jiaxun.yang@flygoat.com,
+	keguang.zhang@gmail.com,
+	kory.maincent@bootlin.com,
+	krzk@kernel.org,
+	kuba@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux@armlinux.org.uk,
+	linux@roeck-us.net,
+	manivannan.sadhasivam@linaro.org,
+	netdev@vger.kernel.org,
+	nikita.shubin@maquefel.me,
+	nikita@trvn.ru,
+	ntb@lists.linux.dev,
+	olteanv@gmail.com,
+	pabeni@redhat.com,
+	paulburton@kernel.org,
+	robh@kernel.org,
+	s.shtylyov@omp.ru,
+	sergio.paracuellos@gmail.com,
+	shc_work@mail.ru,
+	siyanteng@loongson.cn,
+	tsbogend@alpha.franken.de,
+	xeb@mail.ru,
+	yoshihiro.shimoda.uh@renesas.com
+Subject: Re: linux: Goodbye from a Linux community volunteer
+Date: Thu, 24 Oct 2024 18:19:16 +0000
+Message-ID: <20241024181917.1119-1-cxwdyx620@gmail.com>
+X-Mailer: git-send-email 2.47.0.windows.1
+In-Reply-To: <20241024173504.GN3204734@mit.edu>
+References: <20241024173504.GN3204734@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241024065328.521518-9-wei.fang@nxp.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2024 at 02:53:23PM +0800, Wei Fang wrote:
-> NXP NETC is a multi-function RCiEP and it contains multiple functions,
-> such as EMDIO, PTP Timer, ENETC PF and VF. Therefore, add these device
-> IDs to pci_ids.h.
-> 
-> Below are the device IDs and corresponding drivers.
-> PCI_DEVICE_ID_NXP2_ENETC_PF: nxp-enetc4
-> PCI_DEVICE_ID_NXP2_NETC_EMDIO: fsl-enetc-mdio
-> PCI_DEVICE_ID_NXP2_NETC_TIMER: ptp_netc
-> PCI_DEVICE_ID_NXP2_ENETC_VF: fsl-enetc-vf
-> 
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Please drop my ack.  I don't think these meet the spirit of the
-guidance in pci_ids.h, which is there to minimize churn in that file
-and make backports easier:
-
- *      Do not add new entries to this file unless the definitions
- *      are shared between multiple drivers.
-
-PCI_DEVICE_ID_NXP2_NETC_TIMER and PCI_DEVICE_ID_NXP2_ENETC_VF aren't
-used at all by this series, so they shouldn't be added to pci_ids.h.
-
-PCI_DEVICE_ID_NXP2_NETC_EMDIO is used only by
-drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c, so it should be
-defined there, not in pci_ids.h.
-
-PCI_DEVICE_ID_NXP2_ENETC_PF is used by enetc.c and enetc4_pf.c, but
-it looks like those are basically part of the same driver, and it
-could be defined in enetc4_hw.h or similar.
-
-> ---
-> v5: no changes
-> ---
->  include/linux/pci_ids.h | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 4cf6aaed5f35..acd7ae774913 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -1556,6 +1556,13 @@
->  #define PCI_DEVICE_ID_PHILIPS_SAA7146	0x7146
->  #define PCI_DEVICE_ID_PHILIPS_SAA9730	0x9730
->  
-> +/* NXP has two vendor IDs, the other one is 0x1957 */
-> +#define PCI_VENDOR_ID_NXP2		PCI_VENDOR_ID_PHILIPS
-> +#define PCI_DEVICE_ID_NXP2_ENETC_PF	0xe101
-> +#define PCI_DEVICE_ID_NXP2_NETC_EMDIO	0xee00
-> +#define PCI_DEVICE_ID_NXP2_NETC_TIMER	0xee02
-> +#define PCI_DEVICE_ID_NXP2_ENETC_VF	0xef00
-> +
->  #define PCI_VENDOR_ID_EICON		0x1133
->  #define PCI_DEVICE_ID_EICON_DIVA20	0xe002
->  #define PCI_DEVICE_ID_EICON_DIVA20_U	0xe004
-> -- 
-> 2.34.1
-> 
+> However, note that China is *not* actively attacking Taiwai=0D
+> militarily, while there are Russian missiles and drones, some of which=0D
+> may controlled by embedded Linux systems, that are being used against=0D
+> Ukraine even as we speak.  Hence, it should not be surprising that the=0D
+> rules imposed by the US Government might be different for Huawei=0D
+> compared to other sanctioned entities that are directly or indirectly=0D
+> controlled by the Russian Military-Industrial complex.=0D
+=0D
+I wonder some of Ukrainian misiles and drones might also be using=0D
+the embedded Linux controllers, and why aren't there any sanctions.=0D
+This cannot be used as an excuse.=0D
+=0D
+What LF and Linus done will inevitably create a climate of fear where=0D
+contributors and maintainers from the *Countries of Particular Concern*=0D
+feels endangered.=0D
+=0D
+This is clearly NOT what contributors truly want. People from around the wo=
+rld=0D
+once firmly believed that Linux was a free and open-source project. However=
+, =0D
+Greg's commit and Linus' response deeply disappoint them.=0D
+=0D
+Open-source projects might be international, but the people or organization=
+s=0D
+controlling them are not. This is the source of concern and disappointment.=
+=0D
+=0D
+> Of course, if China were to militarily attack Taiwan or some other=0D
+> country in Asia, circumstances might change at some point in the=0D
+> future.  Hopefully Chinese leaders will pursue a path of wisdom and=0D
+> those consequences won't come to pass.  Ultimately, though, that's not=0D
+> up to any of us on this mail thread.=0D
+=0D
+Finally, I must point out that Taiwan's status as part of China has never=0D
+changed and will never change. The term "military attack" is therefore=0D
+**inappropriate**. The move to solve the Taiwan question and achieve=0D
+China's reunification is coming soon and before that China must make full=0D
+preparation for the upcoming *sanctions* from the U.S. government, includin=
+g=0D
+handling the issue of high dependence on any international open-source=0D
+projects.=0D
 
