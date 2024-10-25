@@ -1,296 +1,283 @@
-Return-Path: <linux-pci+bounces-15264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09F949AFA4B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:49:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEBC99AFA7D
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:58:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F09D1C23432
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 06:49:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D21E31C21B40
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 06:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43DC81B0F1C;
-	Fri, 25 Oct 2024 06:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1720D1B0F24;
+	Fri, 25 Oct 2024 06:57:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFreg6s8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KWa2oYEx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCEC175D5D;
-	Fri, 25 Oct 2024 06:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729838929; cv=none; b=OR8MHSAOcMTgEJ5zksC2oLSNOJLsG7FmkM4vImCyd8ji0ha44bgCVfe7RMeNzKva72vZ3WFTLJa0fMFfi/c/3XmApF2gwA3XKglkd4MDXQqLkImmp/95TdgIJengXiLXfVMkaSBqzCw8rbABdMHV0LRQpdoRRUjbKJOu12EWyio=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729838929; c=relaxed/simple;
-	bh=rT5dHMGisDACs8x9W+qUF5G6QkagBlu7lRPcVPpr/pE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A0wPg10NUsRY9MBKPLeZAlbYaAw8SVrpmHwPwTFXtj0X42Cn242H1cO+FPLl+QbAeV6RRx1Kc6VNaHIUvjCW3Oay9YlfhPHdMZ8hOT/0aOMGKh787fpDRCXLpba9IJhoIivste0abnCYdSM8MArVnK8bYqYnTrIM+/Mngr3Pkqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFreg6s8; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46098928354so10062961cf.1;
-        Thu, 24 Oct 2024 23:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729838925; x=1730443725; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XfEm4Orygq8P16EaWOu5ZmrjwuM/R7saAJNrpndbXkk=;
-        b=CFreg6s8vdyHqBn4NOztbFLOMkRobdxSndAuoM08tkT+qEujivTj1/wy4S/48fEYQm
-         s17ICl9dR3o+1H6c3+xP3UQWkadcZtKijdfxQBMTI3CRZOxTTYRg4m7TJdj8jlr9Ml/u
-         7gjv+aWMLyJ9QmZdYHUQ/F0YRyFjlSafh4xbplY0UqF4UeKZF4WCSq2abLR99yd98cAd
-         n6tOLLAJ4VLpG6VBcrbhVCwHBH45749BGXnCrT5/6gVXnbSriUCm8e01CyziPg2ewity
-         6L/S3TjVky6MTOjzciCfXiSYxMsupJLr3TvvJvg664xjHXWXXPTIQ3Hgnr2tLMjMm+NV
-         xQUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729838925; x=1730443725;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XfEm4Orygq8P16EaWOu5ZmrjwuM/R7saAJNrpndbXkk=;
-        b=HWJr+7n3cq6Z8oQp5zLg1fvbtVaagzsfiHT+DS7MhY/1a+UwiZVJ1+Kt/K2sHavFeG
-         bU433cENdGgJHoN6oZHnYTZSySzgHwVGxtWAd9LeYkGhzj75ViP1jsyV/cerT8QlyAyh
-         1+NMVAhvzxZ1PB2jWA3OtPvQDlCM+SpA6E2emLHV6awWU7/P0qRSKlzjjTupJEOaOZoT
-         nkttQiykQ7zSBjAii5fqxi/XZfpIzPWJpIo4PyOuiUSn6Ezk9dhTHn8lHmVwbA7urnfO
-         CnQa1hE9uy0KTLHPj1FmHtSId8wPL5Fk2DDbIJrHOWbx1/1eS0xvsdos1kSOQRX5UifK
-         VkHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfI4XfGgRsNwisuzW8uO7vOoIfZnmDeD0IlpivJWUqC1e0WrfOGxU0cgo2HOSXapgVH1kAjLkmIxly@vger.kernel.org, AJvYcCUfegjej0B3L4W5TzWRoNRm6CHYF4eWcm0MFBdKZtJG6lXQIGt2JdPvVRlBtK6u4thVziiY95AQ177iI70=@vger.kernel.org, AJvYcCUnd/Tr6v6AtP9iJ46UP+QqxHz/4GW+pvneEOu7vp0u5/o2DDspL6q//QPaoxO2hC0cxcUo3LW+rhY=@vger.kernel.org, AJvYcCV52lksJS7X0hUS5LUJqoYG8caHE51w5w8QYbRQF7MR50MqVi0MyPkjnCWxdUcGfD4UiilZyPsGK+HBYBVn@vger.kernel.org, AJvYcCVYO/n5Hn6J8zZpQm5Hfn5bNY4B+LzCXML9skVacYi4RISBSX30y/JyDb4yeAlGgPasdJtdKndokhpahA==@vger.kernel.org, AJvYcCVe/bKyxhkgtNdItUdQ/l8wVOvOeZ3o4v78Efhd+wIPB157ph5FX7z+Pei3h4PyENwGFbGwVIRdCL9fREH+twr/QeQ=@vger.kernel.org, AJvYcCW6akd+rfAmhk6+UwP24CxdNkUxOttW2iOqIxflPK7AWVlIrP4oCNxNVNDBDbYW7w1SJozrc23YpLqv@vger.kernel.org, AJvYcCWFWEdj99Gia8C3nW5TVO8v5+RGN/oLZq398r3kTde9a+U2Qk7JfZ6yJhlKbe+I6Uu+w04MqP1Y@vger.kernel.org, AJvYcCWVpoWrA4924e8YSkwxLbt6ONOUISQrVCn/3NkmaodkUx3W/LDTPoW5ox0d6yUvoiH6cmTix0YFD5vTsw==@vger.kernel.org, AJvYcCWgAMJMK06RHgd2lArQ1PTL
- BkBn4Mzrflvj5LpG44CrzoeId41sdooZNzWdGh7XhU9bB931mZ119Ez8@vger.kernel.org, AJvYcCWpy+9N1PSL7Eey9IF4rlWozB33UZTVljbTvsJDexkcaj2HmoGjD0OHPTDl2bSIpJ0X7+/UYnVCAJmFzNES@vger.kernel.org
-X-Gm-Message-State: AOJu0YxypZUJRwfvE5dN5dIt+a6eUSa+tB0mKWY7wPrHGwaVC5HOTA2F
-	WcvxJbgSCCg6Mme0GWJ1A/mI4CIfSbsDuy6/URC8k48cEzmlrwAY
-X-Google-Smtp-Source: AGHT+IFY7kDEYtIH955Gm/ASIqZqwLSOcs7sDze2JR0lBp/ONGT64BNCEqpbS+natQ53n0mFjctTWQ==
-X-Received: by 2002:a05:622a:1a1d:b0:460:aeb4:b616 with SMTP id d75a77b69052e-461145c3028mr95596681cf.18.1729838925034;
-        Thu, 24 Oct 2024 23:48:45 -0700 (PDT)
-Received: from ?IPV6:2607:fea8:2221:b500::40b7? ([2607:fea8:2221:b500::40b7])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4613237456esm2843541cf.77.2024.10.24.23.48.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2024 23:48:44 -0700 (PDT)
-Message-ID: <bc76cf64-6b29-4815-bf4b-20afc43cdf35@gmail.com>
-Date: Fri, 25 Oct 2024 02:48:36 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFD01B0F1E
+	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 06:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729839464; cv=fail; b=aoNT6efhe5EDWOvfk5UFRZu3G7Kyd9nZSqYPI3XrFVmf8iluIwZwH0EoB6IUPZf+Msf8d6H4GNj5CqeZL4RrIyh3rYP2btM/hJUl20CjiCq7cQVnjA2ML9xkZuhNsCc0zSrRJFShHO4HCc1aj0ZF83sh7t3PSyREPtEP6ancry0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729839464; c=relaxed/simple;
+	bh=XuY7zBiw6fNG/tGXHIrMjA2zy7Ao0st8njvENbRLCUg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lriEC6DPG7q1tCGhx1BAihq+VRVzrCzKCiAjvdPq0cJ5BLdhP/VeJ6lRA15xoT4wgpxpvrU7bF3dDJKCBEVhdUMLEdXTtJIU1qKADA8vH3F+LQWhmmUnJmveZ1rl5ceA6zo1nq3CopIc9ufX8QqVIm52xg9Kda8XDE6skHYUU6k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KWa2oYEx; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729839462; x=1761375462;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=XuY7zBiw6fNG/tGXHIrMjA2zy7Ao0st8njvENbRLCUg=;
+  b=KWa2oYExJRiYxIEAxIktYfCOF1pGgLHGFm/vPKApAO+ZLQFEW9s6ecbM
+   yW/ZUAusubegZM12nWrvS4uyNlGxcuU9oLDuzEC1+BXUCs1SgcrGoB0Z2
+   sr8zh0AplYtt9oSp7iC/1rsHqvUFWOwO9lSx1EHtubK4Z5x3shmVvrKjx
+   wDwJipS1JuRIyyhW2PrgWlm8+uEHuxPzW9EJDh9sLrqKCk0UdsFJTYFES
+   XZnvGMDG8wIZiknJTkUvfyJYHqYW9aYy3uQ4tqEN36ExX8OWbgjgK24xD
+   tlUI0fqrgL8dv91XpHelxmYhypy8jSaIeBwAal2DV8adDLqQ0nvi6cH5u
+   A==;
+X-CSE-ConnectionGUID: MTuhKqByQt27fScuiXGZKA==
+X-CSE-MsgGUID: eWDRbm66SbCNfbZGGu0XJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="32360538"
+X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
+   d="scan'208";a="32360538"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 23:57:41 -0700
+X-CSE-ConnectionGUID: GFCu+phoTUiCmcYuJ4O4YQ==
+X-CSE-MsgGUID: o9IIQ5+YToeueYW4cqN2sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
+   d="scan'208";a="111643630"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Oct 2024 23:57:41 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 24 Oct 2024 23:57:40 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 24 Oct 2024 23:57:40 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 24 Oct 2024 23:57:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UvdY+L6zra5DwuLN0dtphl9LFPfY4nsgEvtNOxyPMRehBRw89m61ZRC8Q1YCw34z7bKQ1KrvvUT5VLCLozIPRZbJYZojC4POUrgA+NgfnIJzok4GUQKyokG/b+E5ccMiUl12mpJBly52uJmaeqs3dFuENB3yD4tgnAzbNJPs/v8jLtPkfc4uKsOmAa1HUxoPqy19agLLqNoC92xw4i2QLyGSY7I6oIwH7vNuAR4YtrvxqfWBKdXDwtMiX5T3Cj8gmSKk8Tt1VXPIwI99W2ZpXbWas6lFXnqDlrkxz79ssbzqNj1FsnXSIga1iAsBy0T4lGZkcDCtMrya0HtFYCWQzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0pqs9/4LG3gD44DEt5Uk7KE1yd5rzA/FMdtbscxM4R8=;
+ b=mBiqPQPUIMnh66cBB9THRcnthYex2Jyen5/hM8Y2ROaTIGrdnO2e5Sq/hMU3kLlCwekn8NJxGpUw0cjYokEKXVw0f3pXJ2dEBh/g2/4e9VY7K3ch7Paa4ksduMj7L6rhE1BFrRJbgi91mMNh9N0TRBq2h54c3V+lFNfNFfD0+hpxUMlPO++lR6YpNc/sOYxt7MprC5aWJtyZFYYXZcb0Sfqf2uH2aOmGA3Tb0Pd9/7Xhv6Z2GNwRbn8mgWnGrapCMKgvPX4+KfdhoMhtlepSJahRVdd6RaZjPih426Npo4HdkolXgZJRyqcHmnsxNMTodk837qj5a3l9jDoYyoaRhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
+ by PH7PR11MB5913.namprd11.prod.outlook.com (2603:10b6:510:137::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.18; Fri, 25 Oct
+ 2024 06:57:37 +0000
+Received: from IA0PR11MB7185.namprd11.prod.outlook.com
+ ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
+ ([fe80::dd3b:ce77:841a:722b%5]) with mapi id 15.20.8093.014; Fri, 25 Oct 2024
+ 06:57:37 +0000
+From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
+ of same device
+Thread-Topic: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for functions
+ of same device
+Thread-Index: AQHbI3yK84LIcNeUG0KOOkjZ4cDCubKS47QAgAKA/4CAANFWAIAAv9ig
+Date: Fri, 25 Oct 2024 06:57:37 +0000
+Message-ID: <IA0PR11MB7185C903E9468C3221615F4FF84F2@IA0PR11MB7185.namprd11.prod.outlook.com>
+References: <IA0PR11MB71853199C12F60897CDE80D4F84E2@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <20241024175944.GA965060@bhelgaas>
+In-Reply-To: <20241024175944.GA965060@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|PH7PR11MB5913:EE_
+x-ms-office365-filtering-correlation-id: e71c240a-0c28-4a1f-6446-08dcf4c24fbd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?F2H8x3XEDWP01Pi89Y2sc7Zw+CYYxfMDdv1ZcIY73tU6/rFuU4bQPdEXLhh6?=
+ =?us-ascii?Q?Rjy+0Rtbm0NZADXBqupPxWWyQEmUF/TKiOu4pMl3hguO50gEItxDb5xnrIg3?=
+ =?us-ascii?Q?U1pskx0FeziRXrPTmY1rTS8U3Tu1dZli6y9HM53Nv6nLsbX+1ymj9zG8209B?=
+ =?us-ascii?Q?Tk+DVRMCL9/DNMA2P+KRgE5cc+Ozsc6Pt0YEPLISt8LPQwJ2wrhCAdZnUIhx?=
+ =?us-ascii?Q?paYMb6R8tZMZQXaxwRAcIO7kMpd+WVC7axnF5oU2EuP6IWibG0BqlsQ89oBK?=
+ =?us-ascii?Q?AmgUXOL+PXEbT5GTBPZtvHpsO8NImBw4HaiRKxUwrITnPqycy7fLHVKrL/th?=
+ =?us-ascii?Q?zWMxoq7V56/ZGIzRALcbXKxaH9DOLNXDX1seMn4OyJe9rypkXofEteUyDtQv?=
+ =?us-ascii?Q?h+ucMOfE9un8Wsk0SnGo7ySpmbrGk1b+5SUeP4lDW4lG52gs6Um0sbqWPmSD?=
+ =?us-ascii?Q?0/ZtcwkoCLj49swV/hnGnowgT6Sj5a2y6kMRYnAWSR7Atd3C88kPZeT1Vk8v?=
+ =?us-ascii?Q?85NxrM2gZfL0odLW5QSZAxrRH6gba/t2qXgw69jcDhamvByVEAxfuxc5Owa7?=
+ =?us-ascii?Q?8Drfinm3P34yMNz1eHMESODoA9vxEIR257fQBOZRhG42XoSj3tuS3sncxSWq?=
+ =?us-ascii?Q?6bpC1mKs3n+a/S6lSOoujWskEzSIdJrwCH2fZdIsWNxYvG+QwcvdFlHE5SbY?=
+ =?us-ascii?Q?A2hr5TODhQhKFJ4p/QgImvSM+4DgRzrIwf7T4l8q3WCoHNwnWG8tMk750ihe?=
+ =?us-ascii?Q?MgqtRuZxPqv1X0lST7ux2/MEGfzWe0YxX1HcCXdVKwQXosWhsHv6Rib8nOE3?=
+ =?us-ascii?Q?nEt6IdUSuFBqx8ppdbBu/sxUyEWNg0OojYRVne32jKzFc/cT+PHhMwInz4Sd?=
+ =?us-ascii?Q?VHBTuXeel/vYgdZi6UZ0za2NsXTMz6enY7k36n/hurK2vzyxxmuT7UVgEfZZ?=
+ =?us-ascii?Q?3d2jF8YxvBOA+xVlAre/t4bCuoFh6w+vv3EOWVHx7BE+s0t7g+VGUQPOHete?=
+ =?us-ascii?Q?9VzWjUs9QLyNCJr4Z6YPxnzoND4+WyNQ7NYzu/eZ5LNl5SQDDgitThVbxjru?=
+ =?us-ascii?Q?55iLV3w8IulKLCf9XX0WwGXT8sW5CpYiqC4wFp6CLn+Z51BLYrI4dj1v2eO1?=
+ =?us-ascii?Q?poMZzrl8hrn6H/p05mcG+uzSX1RGVkx6NT2XdPanqUwe6vse+4OyQQKQ3CSe?=
+ =?us-ascii?Q?rJda9HOnEoiwEuEiXeDMIvhaOlvD/lyX61MXzUSfgwxJuIU4E9MM/9phfQyh?=
+ =?us-ascii?Q?vhTMzc3xHk8dUNwLbDzalQCCzKpqXdQ+Phl8CGj0f0+/2J94AGWskifKYTqF?=
+ =?us-ascii?Q?ZCEjMCUnso4MVlyBGsHv5x2a0+N4WMkJwVAuu+40F7m9y6fRrcztMloReu9z?=
+ =?us-ascii?Q?Eyd62Yg=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0yetdoQG8Jn7f4qzInN5n4IrlWrpuWt+IohXow4EB18klnc5bmse2qNOljwI?=
+ =?us-ascii?Q?xCpZUP/dUFPwnjC20Ah+k1eOKo6kFFcNpzMsDYcqv4O9lnn9A31vvy38rr9k?=
+ =?us-ascii?Q?hZNUHhUnCGttwgxne8UwSwEZS7eI0hm86Fu08LsGgYybvLx3mo3sMl+wTAnI?=
+ =?us-ascii?Q?mY2O68Pr4xbvWWuze3jzcG+k4302/+03Bffy4v+77zOJDOyQTPp47tTcaaXk?=
+ =?us-ascii?Q?fBAxpicMdmC8hlKVZH0lTA1yLCWnd9OoN6PV8rn16/EUN9zegsPXUzT5wJD7?=
+ =?us-ascii?Q?Cr9osRp5p2NC2gOY6k7mpbqArv51TRoELRYHCsjXDZ+cId5B3B/5KmeG8zMp?=
+ =?us-ascii?Q?GpbbbD8G9KJ14b+X56ICN8zSqNGUmzWKCgRApQ62pN1RFGnnTGBLekMYIW9w?=
+ =?us-ascii?Q?opgEkfyehQC0Ia0G00ezo2C32Zb8yWoeOMEz0jHs1uPrXm2x4Mg4ktUujeL3?=
+ =?us-ascii?Q?AidB7YqYeT8iq8P80zM25J5JiTjkDCmVjlKBpUYntgi2Ce1nRAp4YGZXZ082?=
+ =?us-ascii?Q?pEucJ4bZfuIeHh2A7Ywo84r6jO5v/iASx9qhT2d6pkIe6Ss0rJ9MtaDgjYFc?=
+ =?us-ascii?Q?8/n2CRHwo+za1mG6ZAMhtY5api5M5pETlqPB8hnF2Bh50puZfIY6n1C+TE+O?=
+ =?us-ascii?Q?wLFEUTwYFhxMmRzS7MNoSur9rqWVjrhckIArx/0ntEKK0cUwo28jLAKR96aq?=
+ =?us-ascii?Q?kaQCKyJqVByx3Is1R59vUw+79oIo9cip+tK5Wf0bapAYV7MZeyvipKH/kwTB?=
+ =?us-ascii?Q?JOJdVpUp3ICgmE36A/XpzNg0bBZur9bSvmyp+8VNRNEPxa9V8krR28RuaJsI?=
+ =?us-ascii?Q?ms1JHPO9ztON4P3RL+WSCMYu28JIJoWIE6qQsd1JStfmW7RCsGca9kGG8FeX?=
+ =?us-ascii?Q?Pfowu5uF0Sk54xTVUcB280lYK0h0MWyS4OXHeoIhjWfImTW7V0QXqNmWqdWU?=
+ =?us-ascii?Q?tymsMEvcyMf9Ch4zTXBevRNKf1jfOaaSoX078Qv07HglYIdgP22ll06iMAQ4?=
+ =?us-ascii?Q?DnbPUZJQfOEyWQl8IkTWLBLPBisV1deWOQycv4O2LOGAzcPu9clFM4r184N3?=
+ =?us-ascii?Q?/tbjql7OpvBkr9gOHSbsItu6EsBN2o9cwDybs4q8ExprfHy3puD5YZlYanJ/?=
+ =?us-ascii?Q?4wq4aIjVNAALAdslLOIrevKc1wLSWJMPsjxceJc8A7nJwCiBZ9XpYH8DCDbA?=
+ =?us-ascii?Q?43BNvaG53sInS0dXnp6JxEMHdzjVUpjG7IosGRrH3uVa2IAENM9w66Skvjo0?=
+ =?us-ascii?Q?kFRrCG1clHYEzQmwNJxPIUHIfZrPJ41LwtD3Ia4a4a7Cm+jum3eHCr63dcvi?=
+ =?us-ascii?Q?Mpjhtw97l9wbmvE2XX3NoC9pr8hLm4etuHar3ndf5Nrxb5AM9xoC993K5Lg8?=
+ =?us-ascii?Q?mf6sRutaeZhtnPXow+QUjd6CG9tZ3hmlhqFiYZOkVc9cVeMduQs1sQnUl+Yo?=
+ =?us-ascii?Q?DD9vEoJmL9p28+CjA3O8/kitgzkGchEeCIhW119bxNa7PMQ37NZ45p1lvo1b?=
+ =?us-ascii?Q?YQ4sFSD5Fz3ju7gBMxtfZgaT3cPZX4gCkYg76M9qmgIjPEHOSLBiunlqhO/M?=
+ =?us-ascii?Q?y08uw+wBwvDP485BH9dGIxOMZ8nHm4CASC0uQKpK?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux: Goodbye from a Linux community volunteer
-To: Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
- Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
- Paul Burton <paulburton@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
- Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang
- <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>,
- netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
- linux-edac@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-serial@vger.kernel.org
-Cc: Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
- Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Nikita Shubin <nikita.shubin@maquefel.me>,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
-Content-Language: en-US
-From: Khalil Fazal <spare.khalil@gmail.com>
-In-Reply-To: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e71c240a-0c28-4a1f-6446-08dcf4c24fbd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2024 06:57:37.8025
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a8Moj0whTlLLiihqZZd+Ww985AKtMEAPFxXxIok7Dsb1VGgfb8Z1PQLhZkY9tJWFnakPiD7NowDCXlzBhVoSfPshvSWCs4pbL9hbZIWZiZI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5913
+X-OriginatorOrg: intel.com
 
-Hi Serge,
+Hi Bjorn,
 
-I'm really angry that it has come to this.
-Fuck the fascists for bullying the Russians from the community.
-I'm just a regular end user who has been using Linux for 17 years.
-I was born in 1991, the same year the kernel was created.
-This is so fucking disgusting.
+> Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for
+> functions of same device
+>=20
+> On Thu, Oct 24, 2024 at 05:58:48AM +0000, Kasireddy, Vivek wrote:
+> > > Subject: Re: [PATCH v2 1/5] PCI/P2PDMA: Don't enforce ACS check for
+> > > functions of same device
+> > >
+> > > On Sun, Oct 20, 2024 at 10:21:29PM -0700, Vivek Kasireddy wrote:
+> > > > Functions of the same PCI device (such as a PF and a VF) share the
+> > > > same bus and have a common root port and typically, the PF provisio=
+ns
+> > > > resources for the VF. Therefore, they can be considered compatible
+> > > > as far as P2P access is considered.
+>=20
+> I don't understand the "therefore they can be considered compatible"
+> conclusion.  The spec quote below seems like it addresses exactly this
+> situation: it says ACS can control peer-to-peer requests between VFs.
+I am only referring to the specific case where the PF is trying to access (=
+P2P)
+a VF's resource that the PF itself has provisioned. Shouldn't this be consi=
+dered
+a valid access?
 
-Lots of love, in solidarity,
+>=20
+> > ...
+> > > I'm not sure what you refer to by "PF provisions resources for the
+> > > VF".  Isn't it *always* the case that the architected PCI
+> > > resources (BARs) are configured by the PF?  It sounds like you're
+> > > referring to something Intel GPU-specific beyond that?
+> >
+> > What I meant to say is that since PF provisions the resources for
+> > the VF in a typical scenario,
+>=20
+> Are you talking about BARs?  As far as I know, the PF BAR assignments
+> always (not just in typical scenarios) determine the VF BAR
+> assignments.
+Right, I am indeed talking about BARs.
 
-Khalil from Toronto, Canada
+>=20
+> Or are you referring to some other non-BAR resources?
+>=20
+> > they should be automatically P2PDMA compatible particularly when the
+> > provider is the VF and PF is the client. However, since this cannot
+> > be guaranteed on all the PCI devices out there for various reasons,
+> > my objective is to start including the ones that can be tested and
+> > are known to be compatible (Intel GPUs).
+>=20
+> Regardless of BAR or other VF resources, I don't think VFs are
+> automatically P2PDMA compatible.
+I agree that VFs in general are not automatically P2PDMA compatible
+but a PF and a VF should be considered compatible particularly when the
+provider is a VF and PF is the client.
 
-On 2024-10-24 00:27, Serge Semin wrote:
-> Hello Linux-kernel community,
->
-> I am sure you have already heard the news caused by the recent Greg' commit
-> 6e90b675cf942e ("MAINTAINERS: Remove some entries due to various compliance
-> requirements."). As you may have noticed the change concerned some of the
-> Ru-related developers removal from the list of the official kernel maintainers,
-> including me.
->
-> The community members rightly noted that the _quite_ short commit log contained
-> very vague terms with no explicit change justification. No matter how hard I
-> tried to get more details about the reason, alas the senior maintainer I was
-> discussing the matter with haven't given an explanation to what compliance
-> requirements that was. I won't cite the exact emails text since it was a private
-> messaging, but the key words are "sanctions", "sorry", "nothing I can do", "talk
-> to your (company) lawyer"... I can't say for all the guys affected by the
-> change, but my work for the community has been purely _volunteer_ for more than
-> a year now (and less than half of it had been payable before that). For that
-> reason I have no any (company) lawyer to talk to, and honestly after the way the
-> patch has been merged in I don't really want to now. Silently, behind everyone's
-> back, _bypassing_ the standard patch-review process, with no affected
-> developers/subsystem notified - it's indeed the worse way to do what has been
-> done. No gratitude, no credits to the developers for all these years of the
-> devoted work for the community. No matter the reason of the situation but
-> haven't we deserved more than that? Adding to the GREDITS file at least, no?..
->
-> I can't believe the kernel senior maintainers didn't consider that the patch
-> wouldn't go unnoticed, and the situation might get out of control with
-> unpredictable results for the community, if not straight away then in the middle
-> or long term perspective. I am sure there have been plenty ways to solve the
-> problem less harmfully, but they decided to take the easiest path. Alas what's
-> done is done. A bifurcation point slightly initiated a year ago has just been
-> fully implemented. The reason of the situation is obviously in the political
-> ground which in this case surely shatters a basement the community has been built
-> on in the first place. If so then God knows what might be next (who else might
-> be sanctioned...), but the implemented move clearly sends a bad signal to the
-> Linux community new comers, to the already working volunteers and hobbyists like
-> me.
->
-> Thus even if it was still possible for me to send patches or perform some
-> reviews, after what has been done my motivation to do that as a volunteer has
-> simply vanished. (I might be doing a commercial upstreaming in future though).
-> But before saying goodbye I'd like to express my gratitude to all the community
-> members I have been lucky to work with during all these years. Specifically:
->
-> NTB-folks, Jon, Dave, Allen. NTB was my starting point in the kernel upstream
-> work. Thanks for the initial advices and despite of very-very-very tough reviews
-> with several complete patchset refactorings, I learned a lot back then. That
-> experience helped me afterwards. Thanks a lot for that. BTW since then I've got
-> several thank-you letters for the IDT NTB and IDT EEPROM drivers. If not for you
-> it wouldn't have been possible.
->
-> Andy, it's hard to remember who else would have given me more on my Linux kernel
-> journey as you have. We first met in the I2C subsystem review of my DW I2C
-> driver patches. Afterwards we've got to be frequently meeting here and there -
-> GPIO, SPI, TTY, DMA, NET, etc, clean/fixes/features patch(set)s. Quite heat
-> discussions in your first reviews drove me crazy really. But all the time we
-> managed to come up with some consensus somehow. And you never quit the
-> discussions calmly explaining your point over and over. You never refused to
-> provide more detailed justification to your requests/comments even though you
-> didn't have to. Thanks to that I learned how to be patient to reviewers
-> and reviewees. And of course thank you for the Linux-kernel knowledges and all
-> the tips and tricks you shared.
->
-> * Andy, please note due to the situation I am not going to work on my DW DMAC
-> fixes patchset anymore. So if you ever wish to have DW UART stably working with the
-> DW DMA-engine driver, then feel free to pick the series up:
-> Link: https://lore.kernel.org/dmaengine/20240911184710.4207-1-fancer.lancer@gmail.com/
->
-> Linus (Walleij), after you merged one of my pretty much heavy patchset in you
-> suggested to me to continue the DW APB GPIO driver maintaining. It was a first
-> time I was asked to maintain a not-my driver. Thank you for the trust. I'll
-> never forget that.
->
-> Mark, thank you very much for entrusting the DW APB SSI driver maintenance to
-> me. I've put a lot of efforts into making it more generic and less errors-prune,
-> especially when it comes working under a DMA-engine control or working in the
-> mem-ops mode. I am sure the results have been beneficial to a lot of DW
-> SPI-controller users since then.
->
-> Damien, our first and last meeting was at my generic AHCI-platform and DW AHCI
-> SATA driver patches review. You didn't make it a quick and easy path. But still
-> all the reviews comments were purely on the technical basis, and the patches
-> were eventually merged in. Thank you for your time and experience I've got from
-> the reviews.
->
-> Paul, Thomas, Arnd, Jiaxun, we met several times in the mailing list during my
-> MIPS P5600 patches and just generic MIPS patches review. It was always a
-> pleasure to discuss the matters with such brilliant experts in the field. Alas
-> I've spent too much time working on the patches for another subsystems and
-> failed to submit all the MIPS-related bits. Sorry I didn't keep my promise, but
-> as you can see the circumstances have suddenly drawn its own deadline.
->
-> Bjorn, Mani, we were working quite a lot with you in the framework of the DW
-> PCIe RC drivers. You reviewed my patches. I helped you to review another patches
-> for some time. Despite of some arguing it was always a pleasure to work with
-> you.  Mani, special thanks for the cooperative DW eDMA driver maintenance. I
-> think we were doing a great work together.
->
-> Paolo, Jakub, David, Andrew, Vladimir, Russell. The network subsystem and
-> particularly the STMMAC driver (no doubt the driver sucks) have turned to be a
-> kind of obstacle on which my current Linux-kernel activity has stopped. I really
-> hope that at least in some way my help with the incoming STMMAC and DW XPCS
-> patches reviews lightened up your maintainance duty. I know Russell might
-> disagree, but I honestly think that all our discussions were useful after all,
-> at least for me. I also think we did a great work working together with Russell
-> on the DW GMAC/QoS ETH PCS patches. Hopefully you'll find a time to finish it up
-> after all.
->
-> Rob, Krzysztof, from your reviews I've learned a lot about the most hardwary part
-> of the kernel - DT sources and DT-bindings. All your comments have been laconic
-> and straight to the point. That made reviews quick and easy. Thank you very
-> much for that.
->
-> Guenter, special thanks for reviewing and accepting my patches to the hwmon and
-> watchdog subsystems. It was pleasure to be working with you.
->
-> Borislav, we disagreed and argued a lot. So my DW uMCTL2 DDRC EDAC patches even
-> got stuck in limbo for quite a long time. Anyway thank you for the time
-> you spent reviewing my patches and trying to explain your point.
->
-> * Borislav, it looks like I won't be able to work on my Synopsys EDAC patchsets
-> anymore. If you or somebody else could pick them up and finish up the work it
-> would be great (you can find it in the lore archive). The patches convert the
-> mainly Zynq(MP)-specific Synopsys EDAC driver to supporting the generic DW
-> uMCTL2 DDRC. It would be very beneficial for each platform based on that
-> controller.
->
-> Greg, we met several times in the mailing lists. You reviewed my patches sent
-> for the USB and TTY subsystems, and all the time the process was straight,
-> highly professional, and simpler than in the most of my other case.
-> Thank you very much for that.
->
-> Yoshihiro, Keguang, Yanteng, Kory, Cai and everybody I was lucky to meet in the
-> kernel mailing lists, but forgot to mention here. Thank you for the time spent
-> for our cooperative work on making the Linux kernel better. It was a pleasure to
-> meet you here.
->
-> I also wish to say huge thanks to the community members trying to
-> defend the kicked off maintainers and for support you expressed in
-> these days. It means a lot.
->
-> A little bit statics of my kernel-work at the end:
->
-> Signed-off patches:		518
-> Reviewed and Acked patches:	253
-> Tested patches:			80
->
-> You might say not the greatest achievement for seven years comparing to some
-> other developers. Perhaps. But I meant each of these tags, be sure.
->
-> I guess that's it. If you ever need some info or consultation regarding the
-> drivers I used to maintain or the respective hardware or the Synopsys IP-cores
-> (about which I've got quite comprehensive knowledge by this time), feel free to
-> reach me out via this email. I am always willing to help to the community
-> members.
->
-> Hope we'll meet someday in more pleasant circumstances and drink a
-> couple or more beers together. But now it's time to say good bye.
-> Sorry for a long-read text. I wish good luck on your Linux-way.
->
-> Best Regards,
-> -Serge(y)
->
+> For example, PCIe r6.0, sec 6.12.1.2  says:
+>=20
+>   For ACS requirements, single-Function devices that are SR-IOV
+>   capable must be handled as if they were Multi-Function Devices.
+>=20
+>   ...
+>=20
+>   - ACS P2P Request Redirect: must be implemented by Functions that
+>     support peer-to-peer traffic with other Functions. This includes
+>     SR-IOV Virtual Functions (VFs).  ACS P2P Request Redirect is
+>     subject to interaction with the ACS P2P Egress Control and ACS
+>     Direct Translated P2P mechanisms (if implemented). Refer to
+>     Section 6.12.3 for more information.  When ACS P2P Request
+>     Redirect is enabled in a Multi-Function Device that is not an
+>     RCiEP, peer-to-peer Requests (between Functions of the device)
+>     must be redirected Upstream towards the RC.
+>=20
+> Or do you mean something else by "P2PDMA compatible"?
+I am no longer making any generic claims about devices' P2PDMA
+compatibility. Instead, as mentioned above, I am only focused on the
+interactions between a PF (client) and a VF (provider), particularly with
+Intel GPUs.=20
+
+More specifically, I am trying to address a use-case where the VF needs to
+share a buffer with the PF but is unsuccessful because pci_p2pdma_distance_=
+many(
+provider, client, 1, true) fails (due to ACS redirect being set) although
+the buffer is located within a BAR resource that the PF has provisioned
+and has full access to it. Shouldn't this be allowed?
+
+Thanks,
+Vivek
+
+>=20
+> Bjorn
 
