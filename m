@@ -1,82 +1,75 @@
-Return-Path: <linux-pci+bounces-15263-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15264-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 766D49AF91C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 07:15:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09F949AFA4B
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:49:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 087251F22F7F
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 05:15:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F09D1C23432
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 06:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935A481ADA;
-	Fri, 25 Oct 2024 05:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43DC81B0F1C;
+	Fri, 25 Oct 2024 06:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="n9SC8FMb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFreg6s8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2059.outbound.protection.outlook.com [40.107.247.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBD7B641;
-	Fri, 25 Oct 2024 05:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729833331; cv=fail; b=GaCf3koPm7wbBN9wqNS/mWJbk9rl8DYmeDGvaY1nies70Yju2uTMvtExyXhq90g2eN9H65UiPxVVWnX+FQSFquWbdVC4greKdsZNvAR+QZ+e79vcy+JcOMsoU43FmsM/n0i683MTh3zEIjqOQxvNS1grbDTJQHA+fVHXaTNOdM0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729833331; c=relaxed/simple;
-	bh=SaNXVBj+f88hWBdF4TS8HGrhh141obfm0zPuxztEbGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g/HZPMb3FBmPaj0atNmOCx3y9PPNtxx02oRCdTcBCF5vS/qt9sjFJ/OoIo9z0u65yEhEUs8TllAwvIYW5iM9AIyGSd0UGNLMWoQLzzfd6rxvLzdDRaHA0I8a25TIPmvo86GPoMVjIcFD6nSFnrJkj+FMXwT3AaFSc2ewylZ5sgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=n9SC8FMb; arc=fail smtp.client-ip=40.107.247.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WNNIYL3Vcov3XC/P/Md/KJ2ZlW/FUnjtxggtzWOLlxJx3Tx53pXSmHTTUzFDC4XODFigLJlyD3Lvszh62GKDKHdi9O/JehHJHA8USVyok/Nvo45W77Zg2PJm19Dj98kODCeCKZTosD4UVSLWqBRPiql/VSj7ncju4K/jfMrCzLl9X2dGZ/rlIBjXVJiE3Lo4PxR85lUIYjRsBu8/ZhG/6XRXrU97r6A0DwZeT7QqTf393jlQqIY/1ivutUlVtgG4VNCmdm+tT9A88xRJN8slQmdiixziOCF0+tjARrlJjF90ylCx2NOU2By15U1dBv3LfVa6fNcJEdkJBa3w5zPNhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z0pRpCOj9rDEMoYsuBth9GOhFMd+u8z+UeimDyTIpMQ=;
- b=rUwD4TtA42EnnxqOaWiZV63lqADJmK1y8mC3TkdaoDz5GpZXab6WEUTVP7wEaM55QekFYK10vc571G2o+1QvNr4opsZOVOQKArZlyAGOR6ipcvU0Hy4svtJvgAurAqCxDiqtuxTdEVLRNkAH7MkuyVa35L9d1KuIABs2mTknWYZI/j0Adq3+KS9kcW9ir2YTFniT9oEOrYCQBtEHwJP0Fr6H8OcfGOPToMAvjYNq7+niPIzfHRFhPEjlKOuEDrhWjD2OkufeGrYRVLMSHBAW/Va/ncVElZENYOeHLxsiZsqMt+1v4jJeUM5P6vFPKaSTrzL4BiUdfPIFWg5bTRpg7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z0pRpCOj9rDEMoYsuBth9GOhFMd+u8z+UeimDyTIpMQ=;
- b=n9SC8FMb72APnK+44yrsJtV8Rhz73Iz7Gt3rlbVTTWQwxWeBBLTPtD8HmsiZxEDrOU1HfOV476/IHPR382OLR34kFy4m7rDw4RrV3KoUie1s8MG5gr/zGAFOhoo4y3xz6irKgjaeYsfrPLmx9Ev7ZCxMM+YxkQ/9rKZQeEDIQnttY1K4fcFAT9L5mL391pYdLsgXA9D47gjfqp5tPj/hUapo9pxxCKX/mriexuiAGNhw1byE/dl7qbRjSOBpp6oAGpeZxeHYmCTqGqiI+hzCSJc+6J1pCQ+2YbBugbRcCa67kFXBJ8SqLIrWXfBNE0FX6oaeMVlJDwqlJKdegHIBqw==
-Received: from AS8PR07CA0060.eurprd07.prod.outlook.com (2603:10a6:20b:459::33)
- by GVXPR10MB8001.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:1::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.16; Fri, 25 Oct
- 2024 05:15:24 +0000
-Received: from AMS1EPF0000003F.eurprd04.prod.outlook.com
- (2603:10a6:20b:459:cafe::e6) by AS8PR07CA0060.outlook.office365.com
- (2603:10a6:20b:459::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.8 via Frontend
- Transport; Fri, 25 Oct 2024 05:15:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.206) by
- AMS1EPF0000003F.mail.protection.outlook.com (10.167.16.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8093.14 via Frontend Transport; Fri, 25 Oct 2024 05:15:24 +0000
-Received: from SI-EXCAS2001.de.bosch.com (10.139.217.202) by eop.bosch-org.com
- (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 25 Oct
- 2024 07:15:23 +0200
-Received: from [10.34.219.93] (10.139.217.196) by SI-EXCAS2001.de.bosch.com
- (10.139.217.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 25 Oct
- 2024 07:15:22 +0200
-Message-ID: <7ce81fa7-c316-48fc-8013-e1aad9e24fd8@de.bosch.com>
-Date: Fri, 25 Oct 2024 07:15:12 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCEC175D5D;
+	Fri, 25 Oct 2024 06:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729838929; cv=none; b=OR8MHSAOcMTgEJ5zksC2oLSNOJLsG7FmkM4vImCyd8ji0ha44bgCVfe7RMeNzKva72vZ3WFTLJa0fMFfi/c/3XmApF2gwA3XKglkd4MDXQqLkImmp/95TdgIJengXiLXfVMkaSBqzCw8rbABdMHV0LRQpdoRRUjbKJOu12EWyio=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729838929; c=relaxed/simple;
+	bh=rT5dHMGisDACs8x9W+qUF5G6QkagBlu7lRPcVPpr/pE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A0wPg10NUsRY9MBKPLeZAlbYaAw8SVrpmHwPwTFXtj0X42Cn242H1cO+FPLl+QbAeV6RRx1Kc6VNaHIUvjCW3Oay9YlfhPHdMZ8hOT/0aOMGKh787fpDRCXLpba9IJhoIivste0abnCYdSM8MArVnK8bYqYnTrIM+/Mngr3Pkqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFreg6s8; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46098928354so10062961cf.1;
+        Thu, 24 Oct 2024 23:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729838925; x=1730443725; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XfEm4Orygq8P16EaWOu5ZmrjwuM/R7saAJNrpndbXkk=;
+        b=CFreg6s8vdyHqBn4NOztbFLOMkRobdxSndAuoM08tkT+qEujivTj1/wy4S/48fEYQm
+         s17ICl9dR3o+1H6c3+xP3UQWkadcZtKijdfxQBMTI3CRZOxTTYRg4m7TJdj8jlr9Ml/u
+         7gjv+aWMLyJ9QmZdYHUQ/F0YRyFjlSafh4xbplY0UqF4UeKZF4WCSq2abLR99yd98cAd
+         n6tOLLAJ4VLpG6VBcrbhVCwHBH45749BGXnCrT5/6gVXnbSriUCm8e01CyziPg2ewity
+         6L/S3TjVky6MTOjzciCfXiSYxMsupJLr3TvvJvg664xjHXWXXPTIQ3Hgnr2tLMjMm+NV
+         xQUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729838925; x=1730443725;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XfEm4Orygq8P16EaWOu5ZmrjwuM/R7saAJNrpndbXkk=;
+        b=HWJr+7n3cq6Z8oQp5zLg1fvbtVaagzsfiHT+DS7MhY/1a+UwiZVJ1+Kt/K2sHavFeG
+         bU433cENdGgJHoN6oZHnYTZSySzgHwVGxtWAd9LeYkGhzj75ViP1jsyV/cerT8QlyAyh
+         1+NMVAhvzxZ1PB2jWA3OtPvQDlCM+SpA6E2emLHV6awWU7/P0qRSKlzjjTupJEOaOZoT
+         nkttQiykQ7zSBjAii5fqxi/XZfpIzPWJpIo4PyOuiUSn6Ezk9dhTHn8lHmVwbA7urnfO
+         CnQa1hE9uy0KTLHPj1FmHtSId8wPL5Fk2DDbIJrHOWbx1/1eS0xvsdos1kSOQRX5UifK
+         VkHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfI4XfGgRsNwisuzW8uO7vOoIfZnmDeD0IlpivJWUqC1e0WrfOGxU0cgo2HOSXapgVH1kAjLkmIxly@vger.kernel.org, AJvYcCUfegjej0B3L4W5TzWRoNRm6CHYF4eWcm0MFBdKZtJG6lXQIGt2JdPvVRlBtK6u4thVziiY95AQ177iI70=@vger.kernel.org, AJvYcCUnd/Tr6v6AtP9iJ46UP+QqxHz/4GW+pvneEOu7vp0u5/o2DDspL6q//QPaoxO2hC0cxcUo3LW+rhY=@vger.kernel.org, AJvYcCV52lksJS7X0hUS5LUJqoYG8caHE51w5w8QYbRQF7MR50MqVi0MyPkjnCWxdUcGfD4UiilZyPsGK+HBYBVn@vger.kernel.org, AJvYcCVYO/n5Hn6J8zZpQm5Hfn5bNY4B+LzCXML9skVacYi4RISBSX30y/JyDb4yeAlGgPasdJtdKndokhpahA==@vger.kernel.org, AJvYcCVe/bKyxhkgtNdItUdQ/l8wVOvOeZ3o4v78Efhd+wIPB157ph5FX7z+Pei3h4PyENwGFbGwVIRdCL9fREH+twr/QeQ=@vger.kernel.org, AJvYcCW6akd+rfAmhk6+UwP24CxdNkUxOttW2iOqIxflPK7AWVlIrP4oCNxNVNDBDbYW7w1SJozrc23YpLqv@vger.kernel.org, AJvYcCWFWEdj99Gia8C3nW5TVO8v5+RGN/oLZq398r3kTde9a+U2Qk7JfZ6yJhlKbe+I6Uu+w04MqP1Y@vger.kernel.org, AJvYcCWVpoWrA4924e8YSkwxLbt6ONOUISQrVCn/3NkmaodkUx3W/LDTPoW5ox0d6yUvoiH6cmTix0YFD5vTsw==@vger.kernel.org, AJvYcCWgAMJMK06RHgd2lArQ1PTL
+ BkBn4Mzrflvj5LpG44CrzoeId41sdooZNzWdGh7XhU9bB931mZ119Ez8@vger.kernel.org, AJvYcCWpy+9N1PSL7Eey9IF4rlWozB33UZTVljbTvsJDexkcaj2HmoGjD0OHPTDl2bSIpJ0X7+/UYnVCAJmFzNES@vger.kernel.org
+X-Gm-Message-State: AOJu0YxypZUJRwfvE5dN5dIt+a6eUSa+tB0mKWY7wPrHGwaVC5HOTA2F
+	WcvxJbgSCCg6Mme0GWJ1A/mI4CIfSbsDuy6/URC8k48cEzmlrwAY
+X-Google-Smtp-Source: AGHT+IFY7kDEYtIH955Gm/ASIqZqwLSOcs7sDze2JR0lBp/ONGT64BNCEqpbS+natQ53n0mFjctTWQ==
+X-Received: by 2002:a05:622a:1a1d:b0:460:aeb4:b616 with SMTP id d75a77b69052e-461145c3028mr95596681cf.18.1729838925034;
+        Thu, 24 Oct 2024 23:48:45 -0700 (PDT)
+Received: from ?IPV6:2607:fea8:2221:b500::40b7? ([2607:fea8:2221:b500::40b7])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4613237456esm2843541cf.77.2024.10.24.23.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2024 23:48:44 -0700 (PDT)
+Message-ID: <bc76cf64-6b29-4815-bf4b-20afc43cdf35@gmail.com>
+Date: Fri, 25 Oct 2024 02:48:36 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,131 +77,220 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/16] Device / Driver PCI / Platform Rust abstractions
-To: Danilo Krummrich <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
-	<rafael@kernel.org>, <bhelgaas@google.com>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
-	<bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>, <tmgross@umich.edu>,
-	<a.hindborg@samsung.com>, <aliceryhl@google.com>, <airlied@gmail.com>,
-	<fujita.tomonori@gmail.com>, <lina@asahilina.net>, <pstanner@redhat.com>,
-	<ajanulgu@redhat.com>, <lyude@redhat.com>, <robh@kernel.org>,
-	<daniel.almeida@collabora.com>, <saravanak@google.com>
-CC: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20241022213221.2383-1-dakr@kernel.org>
+Subject: Re: linux: Goodbye from a Linux community volunteer
+To: Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
+ Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
+ Vladimir Oltean <olteanv@gmail.com>, Keguang Zhang
+ <keguang.zhang@gmail.com>, Yanteng Si <siyanteng@loongson.cn>,
+ netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+ linux-edac@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-serial@vger.kernel.org
+Cc: Andrew Halaney <ajhalaney@gmail.com>, Nikita Travkin <nikita@trvn.ru>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Evgeniy Dushistov <dushistov@mail.ru>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Nikita Shubin <nikita.shubin@maquefel.me>,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
 Content-Language: en-US
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20241022213221.2383-1-dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Khalil Fazal <spare.khalil@gmail.com>
+In-Reply-To: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS1EPF0000003F:EE_|GVXPR10MB8001:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04578fb3-d54c-404f-83b4-08dcf4b407ff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|82310400026|376014|1800799024|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WEFuQXc3VE9nbm5ERGlMNzNLaEtQbDc2aEwvMCtwMkpwMERuaHk5SEhQZndB?=
- =?utf-8?B?dC84Yzk3RE9CaU5RelUyRC9IYXJmSGdhUTJNSnpQQWxvUFhqQ3Zlc3FsL2Mv?=
- =?utf-8?B?Q0NaMWp6VTR6QUUvaDVPRlVkcStSTTJvbDJjbzZseXpLQ1N2VHNjRjZYRnZH?=
- =?utf-8?B?Y0xQT1FSWWtVbDdYbXkzY2RTWTFzSlN1eVkreUpZUmZDc2xaQzBxL0VQUmdt?=
- =?utf-8?B?QXNoQ3ZEZWVVVklzc2FMcFFZZ0hiaThlQzI0NWxhKzhKT284MGFCWjVXSlM2?=
- =?utf-8?B?d1dlUEdIcmt2NCtUVFZwZm1Fd3VCV1lsT3ZvN3pVRWZ5Q3ZhU2Zlc3FBdGds?=
- =?utf-8?B?L0hGL3hPS2svK2pMOGkweG0za29lYjFPQTBBK2dLVU9UT2VyQmZ5RlhkcC9F?=
- =?utf-8?B?dlFueHpjRjJQWUpSRlFZbHlPOXYzR1RVeXFsNGZPc3hyOGttNE5TSlIyVGVo?=
- =?utf-8?B?aWNFWWQ1TjVxZWFRakVlQXNEeG0vVjFGTk5IVExJRCtSTmF4RG5md2VYTGZE?=
- =?utf-8?B?UTI3ZE9PV1V6TEhsZ1dzcVVsOGpsZ281VDVHOUFrMHoyK0Q1UkRRdXU1R05u?=
- =?utf-8?B?cEdaUXpZMkNXdnFURWpocnVPQlNsUUZvR2ZJaGtuNmlMVFJSdHAwTkZ0ZUg5?=
- =?utf-8?B?MFVxNm5icnQwRzRmMEV0WFI2S2tiQ0NDazdJYVJPa0QrdDhjVVJBd1VwRTdl?=
- =?utf-8?B?THVKY1I5SzJOc0piUEFLVDlrd00vd2F2S2pJclB2bUF2dmxzVHYwRTVQSkJT?=
- =?utf-8?B?cXJEcGZuWktXNkd4NktZUDU3VmZPYjZJUGU0NG5BQTcvTHFubjltZ1djdnNW?=
- =?utf-8?B?L05HYUlxRm5wZVJIT1JpR2RNM1BEUi9nTWVnMGRhVlRhYTVOMHEwRFNuemRW?=
- =?utf-8?B?TzFRNTBKRmRTaG03Snl5UldhWFRXNmloRG9VTmhlTjAwbzVGUDhMMVFyaVVN?=
- =?utf-8?B?cXNSNGwybDVrQkFoUVdQUE1sTjloTkpGTUNEODhUbjVrK08ySU90dVBBL1c3?=
- =?utf-8?B?UGR6VThEcHZYajl5TVpMNE93aXlZbUY4Y285dVRYTkdNVFozOGtENTJhci8v?=
- =?utf-8?B?TEN2YkdLRFlmMzBBNFR2c3FKMUVoeDBCMVpRMzZQa3laZVpOTEZLWFFhM3VO?=
- =?utf-8?B?dzZqb2pwWmhFeTNsTHFpYXVRRGRpbXJWYzlTcHdXdm1PNm4wanl1dDFWSm1F?=
- =?utf-8?B?NU5COWk2RlNzZk5POXIzYUU0SjNqY0NQQlRibStPVGZqdFlRMndrR3lQaGRn?=
- =?utf-8?B?VFNwRlQzaVF1eDBDMTNYQ2QvemVWRXBqSk45SWpuTWgrbjdzYVB0L3hzUjYr?=
- =?utf-8?B?RlRoUFl1aXNQZ29rS20zM1pXVW1BVUZNMVdiWWFSZVBlcUhaOU5vSVBSSndy?=
- =?utf-8?B?THd2Y0xTQU1PQ3ZoNVV5Y2dxVXcwcmJVbTNTbkpqS21SbVdNaDV1TDQvL2F2?=
- =?utf-8?B?djRKY3luRjhMbkErR2xJTmpnNkxvQjRaR1BPc2hydzNlNEl0MGFIUnNUaEFT?=
- =?utf-8?B?a2Z1QVRrYS85WlB0SjR2cHJhYzNwR1lsazhRR1d1cURzV2EzdW1KeU96WFN4?=
- =?utf-8?B?U2FrcTByVVFFSDYzc3BNajNyYjFrdVhSdm5BWHhwVmZzTHlKZENKS1J2L1Jw?=
- =?utf-8?B?eHdnaXVYLzhTRjA0SXExdG9WTDJQWHNLL2puNE5INVduaHVBcHpZUTZpQlFP?=
- =?utf-8?B?OWdaQnRlYUgyUksrZUhOR1B6N2tlR2Rzd2xKWHBvN3hpcnpTd1lDVkQ0RE9l?=
- =?utf-8?B?Q1MzQWZKWkFBdTJURWRJQ3NTUE5UdEZZOW5YT3F0cWdBR1JOTGtjbkdWNmxZ?=
- =?utf-8?B?cnk5QzBWcDZGeHlVWXBIT0F6THFiTHhRTTdodldRcE5WV2J3WUdQUGE2T3g2?=
- =?utf-8?B?TncwV3B6WlV0S1pHOVVFb09Ld08zYWM2a3VVU3FrYm42ZVVoNUlpTmlESGRk?=
- =?utf-8?Q?T/BIY6n6PU0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 05:15:24.4619
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04578fb3-d54c-404f-83b4-08dcf4b407ff
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS1EPF0000003F.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR10MB8001
 
-Hi Danilo,
+Hi Serge,
 
-On 22.10.2024 23:31, Danilo Krummrich wrote:
-> This patch series implements the necessary Rust abstractions to implement
-> device drivers in Rust.
-> 
-> This includes some basic generalizations for driver registration, handling of ID
-> tables, MMIO operations and device resource handling.
-> 
-> Those generalizations are used to implement device driver support for two
-> busses, the PCI and platfrom bus (with OF IDs) in order to provide some evidence
-> that the generalizations work as intended.
-> 
-> The patch series also includes two patches adding two driver samples, one PCI
-> driver and one platform driver.
-> 
-> The PCI bits are motivated by the Nova driver project [1], but are used by at
-> least one more OOT driver (rnvme [2]).
-> 
-> The platform bits, besides adding some more evidence to the base abstractions,
-> are required by a few more OOT drivers aiming at going upstream, i.e. rvkms [3],
-> cpufreq-dt [4], asahi [5] and the i2c work from Fabien [6].
-> 
-> The patches of this series can also be [7], [8] and [9].
+I'm really angry that it has come to this.
+Fuck the fascists for bullying the Russians from the community.
+I'm just a regular end user who has been using Linux for 17 years.
+I was born in 1991, the same year the kernel was created.
+This is so fucking disgusting.
 
-Just some minor typos:
+Lots of love, in solidarity,
 
------------------------------------------------------
-0004_rust_implement_generic_driver_registration.patch
------------------------------------------------------
-WARNING: 'privide' may be misspelled - perhaps 'provide'?
-#63: FILE: rust/kernel/driver.rs:14:
-+/// Amba, etc.) to privide the corresponding subsystem specific 
-implementation to register /
-                     ^^^^^^^
----------------------------------------------------------
-0005_rust_implement_idarray_idtable_and_rawdeviceid.patch
----------------------------------------------------------
-WARNING: 'offest' may be misspelled - perhaps 'offset'?
-#84: FILE: rust/kernel/device_id.rs:39:
-+    /// The offest to the context/data field.
-              ^^^^^^
------------------------------------
-0009_rust_add_io_io_base_type.patch
------------------------------------
-WARNING: 'embedd' may be misspelled - perhaps 'embed'?
-#27:
-bound to, subsystems should embedd the corresponding I/O memory type
-                             ^^^^^^
+Khalil from Toronto, Canada
 
-Best regards
-
-Dirk
-
+On 2024-10-24 00:27, Serge Semin wrote:
+> Hello Linux-kernel community,
+>
+> I am sure you have already heard the news caused by the recent Greg' commit
+> 6e90b675cf942e ("MAINTAINERS: Remove some entries due to various compliance
+> requirements."). As you may have noticed the change concerned some of the
+> Ru-related developers removal from the list of the official kernel maintainers,
+> including me.
+>
+> The community members rightly noted that the _quite_ short commit log contained
+> very vague terms with no explicit change justification. No matter how hard I
+> tried to get more details about the reason, alas the senior maintainer I was
+> discussing the matter with haven't given an explanation to what compliance
+> requirements that was. I won't cite the exact emails text since it was a private
+> messaging, but the key words are "sanctions", "sorry", "nothing I can do", "talk
+> to your (company) lawyer"... I can't say for all the guys affected by the
+> change, but my work for the community has been purely _volunteer_ for more than
+> a year now (and less than half of it had been payable before that). For that
+> reason I have no any (company) lawyer to talk to, and honestly after the way the
+> patch has been merged in I don't really want to now. Silently, behind everyone's
+> back, _bypassing_ the standard patch-review process, with no affected
+> developers/subsystem notified - it's indeed the worse way to do what has been
+> done. No gratitude, no credits to the developers for all these years of the
+> devoted work for the community. No matter the reason of the situation but
+> haven't we deserved more than that? Adding to the GREDITS file at least, no?..
+>
+> I can't believe the kernel senior maintainers didn't consider that the patch
+> wouldn't go unnoticed, and the situation might get out of control with
+> unpredictable results for the community, if not straight away then in the middle
+> or long term perspective. I am sure there have been plenty ways to solve the
+> problem less harmfully, but they decided to take the easiest path. Alas what's
+> done is done. A bifurcation point slightly initiated a year ago has just been
+> fully implemented. The reason of the situation is obviously in the political
+> ground which in this case surely shatters a basement the community has been built
+> on in the first place. If so then God knows what might be next (who else might
+> be sanctioned...), but the implemented move clearly sends a bad signal to the
+> Linux community new comers, to the already working volunteers and hobbyists like
+> me.
+>
+> Thus even if it was still possible for me to send patches or perform some
+> reviews, after what has been done my motivation to do that as a volunteer has
+> simply vanished. (I might be doing a commercial upstreaming in future though).
+> But before saying goodbye I'd like to express my gratitude to all the community
+> members I have been lucky to work with during all these years. Specifically:
+>
+> NTB-folks, Jon, Dave, Allen. NTB was my starting point in the kernel upstream
+> work. Thanks for the initial advices and despite of very-very-very tough reviews
+> with several complete patchset refactorings, I learned a lot back then. That
+> experience helped me afterwards. Thanks a lot for that. BTW since then I've got
+> several thank-you letters for the IDT NTB and IDT EEPROM drivers. If not for you
+> it wouldn't have been possible.
+>
+> Andy, it's hard to remember who else would have given me more on my Linux kernel
+> journey as you have. We first met in the I2C subsystem review of my DW I2C
+> driver patches. Afterwards we've got to be frequently meeting here and there -
+> GPIO, SPI, TTY, DMA, NET, etc, clean/fixes/features patch(set)s. Quite heat
+> discussions in your first reviews drove me crazy really. But all the time we
+> managed to come up with some consensus somehow. And you never quit the
+> discussions calmly explaining your point over and over. You never refused to
+> provide more detailed justification to your requests/comments even though you
+> didn't have to. Thanks to that I learned how to be patient to reviewers
+> and reviewees. And of course thank you for the Linux-kernel knowledges and all
+> the tips and tricks you shared.
+>
+> * Andy, please note due to the situation I am not going to work on my DW DMAC
+> fixes patchset anymore. So if you ever wish to have DW UART stably working with the
+> DW DMA-engine driver, then feel free to pick the series up:
+> Link: https://lore.kernel.org/dmaengine/20240911184710.4207-1-fancer.lancer@gmail.com/
+>
+> Linus (Walleij), after you merged one of my pretty much heavy patchset in you
+> suggested to me to continue the DW APB GPIO driver maintaining. It was a first
+> time I was asked to maintain a not-my driver. Thank you for the trust. I'll
+> never forget that.
+>
+> Mark, thank you very much for entrusting the DW APB SSI driver maintenance to
+> me. I've put a lot of efforts into making it more generic and less errors-prune,
+> especially when it comes working under a DMA-engine control or working in the
+> mem-ops mode. I am sure the results have been beneficial to a lot of DW
+> SPI-controller users since then.
+>
+> Damien, our first and last meeting was at my generic AHCI-platform and DW AHCI
+> SATA driver patches review. You didn't make it a quick and easy path. But still
+> all the reviews comments were purely on the technical basis, and the patches
+> were eventually merged in. Thank you for your time and experience I've got from
+> the reviews.
+>
+> Paul, Thomas, Arnd, Jiaxun, we met several times in the mailing list during my
+> MIPS P5600 patches and just generic MIPS patches review. It was always a
+> pleasure to discuss the matters with such brilliant experts in the field. Alas
+> I've spent too much time working on the patches for another subsystems and
+> failed to submit all the MIPS-related bits. Sorry I didn't keep my promise, but
+> as you can see the circumstances have suddenly drawn its own deadline.
+>
+> Bjorn, Mani, we were working quite a lot with you in the framework of the DW
+> PCIe RC drivers. You reviewed my patches. I helped you to review another patches
+> for some time. Despite of some arguing it was always a pleasure to work with
+> you.  Mani, special thanks for the cooperative DW eDMA driver maintenance. I
+> think we were doing a great work together.
+>
+> Paolo, Jakub, David, Andrew, Vladimir, Russell. The network subsystem and
+> particularly the STMMAC driver (no doubt the driver sucks) have turned to be a
+> kind of obstacle on which my current Linux-kernel activity has stopped. I really
+> hope that at least in some way my help with the incoming STMMAC and DW XPCS
+> patches reviews lightened up your maintainance duty. I know Russell might
+> disagree, but I honestly think that all our discussions were useful after all,
+> at least for me. I also think we did a great work working together with Russell
+> on the DW GMAC/QoS ETH PCS patches. Hopefully you'll find a time to finish it up
+> after all.
+>
+> Rob, Krzysztof, from your reviews I've learned a lot about the most hardwary part
+> of the kernel - DT sources and DT-bindings. All your comments have been laconic
+> and straight to the point. That made reviews quick and easy. Thank you very
+> much for that.
+>
+> Guenter, special thanks for reviewing and accepting my patches to the hwmon and
+> watchdog subsystems. It was pleasure to be working with you.
+>
+> Borislav, we disagreed and argued a lot. So my DW uMCTL2 DDRC EDAC patches even
+> got stuck in limbo for quite a long time. Anyway thank you for the time
+> you spent reviewing my patches and trying to explain your point.
+>
+> * Borislav, it looks like I won't be able to work on my Synopsys EDAC patchsets
+> anymore. If you or somebody else could pick them up and finish up the work it
+> would be great (you can find it in the lore archive). The patches convert the
+> mainly Zynq(MP)-specific Synopsys EDAC driver to supporting the generic DW
+> uMCTL2 DDRC. It would be very beneficial for each platform based on that
+> controller.
+>
+> Greg, we met several times in the mailing lists. You reviewed my patches sent
+> for the USB and TTY subsystems, and all the time the process was straight,
+> highly professional, and simpler than in the most of my other case.
+> Thank you very much for that.
+>
+> Yoshihiro, Keguang, Yanteng, Kory, Cai and everybody I was lucky to meet in the
+> kernel mailing lists, but forgot to mention here. Thank you for the time spent
+> for our cooperative work on making the Linux kernel better. It was a pleasure to
+> meet you here.
+>
+> I also wish to say huge thanks to the community members trying to
+> defend the kicked off maintainers and for support you expressed in
+> these days. It means a lot.
+>
+> A little bit statics of my kernel-work at the end:
+>
+> Signed-off patches:		518
+> Reviewed and Acked patches:	253
+> Tested patches:			80
+>
+> You might say not the greatest achievement for seven years comparing to some
+> other developers. Perhaps. But I meant each of these tags, be sure.
+>
+> I guess that's it. If you ever need some info or consultation regarding the
+> drivers I used to maintain or the respective hardware or the Synopsys IP-cores
+> (about which I've got quite comprehensive knowledge by this time), feel free to
+> reach me out via this email. I am always willing to help to the community
+> members.
+>
+> Hope we'll meet someday in more pleasant circumstances and drink a
+> couple or more beers together. But now it's time to say good bye.
+> Sorry for a long-read text. I wish good luck on your Linux-way.
+>
+> Best Regards,
+> -Serge(y)
+>
 
