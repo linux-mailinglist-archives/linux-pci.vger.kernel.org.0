@@ -1,150 +1,202 @@
-Return-Path: <linux-pci+bounces-15378-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15379-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA3AE9B124E
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2024 00:08:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D06059B1290
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2024 00:28:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E4901C21523
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 22:08:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54D81282E04
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 22:28:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 204FD1D1E79;
-	Fri, 25 Oct 2024 22:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 317CE20F3D3;
+	Fri, 25 Oct 2024 22:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KHWvev0b"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="jsmyN1j7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DBB217F56
-	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 22:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E123B217F30
+	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 22:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729894090; cv=none; b=jkjyzbD9argkuxE5vIeeDbL6tujRc3UTU8rBckED/hrYdeDlxzNislKdJR2oXz1VKGxl8ew+9iICzSQqqoOFlmMmOgVkldyOPs0UrKS+hSuhZfEsxpQK7pRx7jeX6lkSR90DNWnc1zY4o3YtrcomzLOrs0B5Ezieyg4NDQxqNEw=
+	t=1729895299; cv=none; b=DDxrkUnh/UejRwPx1GpB5Rr4tAaodTxDVqhJ+9aopRBl9Co9ZIWQR+f/GtV2pX6rpUiWIsb/bAS8n8wE6Vbs8O/n+ZUdrppoqohiSsidTLYsnLBk9EYZvym0VsKfRfSB0hXAPOaneJ5Tfp9UcyvNLb1fJ13C1RzROL+Kp7BNlSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729894090; c=relaxed/simple;
-	bh=hFoB7xJXnCTTJFX+b1CH5YGms1/aidjhBonq6XpjBPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HAXLQ+wTh3WmLiMVPN4yGzFej4UzwUBfdXC/VlRwXtkvzWwCo+NtQivHTcQ4tfxcrtPzRH6MdMxnChcEXaQIABf7TlVCus0NcYPYubMildfbgVS+YNHZWEhundpjoAkmyxdpEkgEgJaclpQXKB0Q0ATHGnTAGJkW0L7hVC0oyo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KHWvev0b; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-71ec997ad06so1808270b3a.3
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 15:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1729894087; x=1730498887; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OBqr5/lEqbmI/hDIH3VI4HQy1crlFq/+2LAAjMEPiXM=;
-        b=KHWvev0bTJkrFamPBwg29CNORkQ78y1ZSRO94zAURXJ1GCymPDkRm57ZVu4x3PhOHq
-         vaU1DH9nJw+6ab4VQOnk4wytVjL671RoyynaULXbMb2vCCEPvjf3iflZlG2CqT95xaD9
-         FzcddNMLzAPIg8ALeN0yeNoJQJfx+0fKDbzrY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729894087; x=1730498887;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OBqr5/lEqbmI/hDIH3VI4HQy1crlFq/+2LAAjMEPiXM=;
-        b=ns/pTCF6BZJElLiEoM2oQyviXzZtT0lwJMhWkOM/3pld/6OXJ80YINKEkCR/fT6uD2
-         TKntsP8Mqdu1mGOEPB/Prt/s6sYSaHNTkDhdfYIzmkjeU4thtYzNTGibr5ppZFkTTsYd
-         ptC5Zlw7iGm2ahemxKfIAUgYZuUvTQROVAqK8NA+G43LgLEaSwNJ9o3YL+fzRI55eDd0
-         MZZFhXYY91Me97UjhmFNRkxb/LEyVghlVLgDu0KD9GgNfCM/TvfjkvbfMqlzXxuF/Z40
-         nxLdrxyN7kPzzwVX1VBqZbyEn7O+mGzcOYtONL2wYhRW1QMn4nE5cZYEvIxlP/ZOYkjo
-         03wA==
-X-Forwarded-Encrypted: i=1; AJvYcCWW8VkejEw0OucEAusTE/iNynf2VgQgTvB6i7zDK87kbP2MXYFpK9DKy/Cgls6g4cWjdeBur7b/oRQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYpTyb3jmYXVKUPMOJ29/2WQsvSyox/YtHIfiMF1AuhgKXbPeW
-	ej4ksaRqOnIGZod1cXGu3/tjCq/M6Fw6JuJKPH1oInFoCtytdpJvo4r3tI9kqA==
-X-Google-Smtp-Source: AGHT+IEsAN/vuGOObXJbV29oiWth+FFeEcn13MWc0LfoAFSeMovkdy0dgMlpJxVC05ShdRU2btO0ZQ==
-X-Received: by 2002:a05:6a00:3d49:b0:71d:f510:b791 with SMTP id d2e1a72fcca58-72062f83b0dmr1416532b3a.12.1729894087565;
-        Fri, 25 Oct 2024 15:08:07 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057a219d9sm1625474b3a.171.2024.10.25.15.08.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2024 15:08:06 -0700 (PDT)
-Message-ID: <8bf2ff23-9cb3-40f5-84dc-4aaab466961d@broadcom.com>
-Date: Fri, 25 Oct 2024 15:08:01 -0700
+	s=arc-20240116; t=1729895299; c=relaxed/simple;
+	bh=ANT9JFyMQUaNKcxTkG8jRNy8UrdWGE3X9oXozcvo7cg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d+wvE0tZK+yNDzJJe6YGlc/0ZC3rZWMvw+h8tcQZC4BrP6HAmoKaHky3crIs3drh8xznosfmwr3aSZmJXUtJG3ylvdQWNiLFvFq7I3lplTqtQqht44/lCFGUrYZy7QYhv5ELnZRhRAro48uV+ttMUAsWNRVa8+YAnjh+oe4t9Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=jsmyN1j7; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 49PMRRxP026387
+	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 15:28:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=x7TimT6snpcSSteHnI
+	S4KyD/UOy5nnU0+vlyz9YS5FM=; b=jsmyN1j7y+kWcuk3VXQwDESPTxF7H4+So9
+	KrmEnPLnLsvK/DOgujdDstMDifLNY+sAMXpAdPCeBpMzGByRyzxjXmAwOHckECWA
+	74sSE8TxOlbHKxQ9iqm1ANwadG5Dq+nehKVCBFtIDJH7cCM+oLrhOluKciIcEZYg
+	fcY0NbeGqnsRojw2HwVWgbG0GVq8EEhRS3VM0Iho2TaFHLmun8fkKWKgKR26jyjO
+	fiMYOwwG8wXAtiPOn7vCFSvjnRZ1dnzBRGLC4QR06YtZ9WZHFG/lvUTi+DY7WlDn
+	fHyLE4KIlzbyyeqqQ6WcbR5D/bY+X1Tviu44VuDJH0gZgNv3/kjg==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by m0089730.ppops.net (PPS) with ESMTPS id 42gm4x8045-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 15:28:15 -0700 (PDT)
+Received: from twshared4570.02.ash9.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Fri, 25 Oct 2024 22:28:13 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id 0950A147715FB; Fri, 25 Oct 2024 15:27:57 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
+        <alex.williamson@redhat.com>
+CC: <ameynarkhede03@gmail.com>, <raphael.norwitz@nutanix.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv2 1/2] pci: provide bus reset attribute
+Date: Fri, 25 Oct 2024 15:27:54 -0700
+Message-ID: <20241025222755.3756162-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/10] PCI: brcmstb: Adjust PHY PLL setup to use a
- 54MHz input refclk
-To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell <jonathan@raspberrypi.com>
-References: <20241025124515.14066-1-svarbanov@suse.de>
- <20241025124515.14066-9-svarbanov@suse.de>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20241025124515.14066-9-svarbanov@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: a4nqUp05hmnpQ4IgVyH7VCelxOAWNoSU
+X-Proofpoint-GUID: a4nqUp05hmnpQ4IgVyH7VCelxOAWNoSU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-05_03,2024-10-04_01,2024-09-30_01
 
-On 10/25/24 05:45, Stanimir Varbanov wrote:
-> The default input reference clock for the PHY PLL is 100Mhz, except for
-> some devices where it is 54Mhz like bcm2712C1 and bcm2712D0.
-> 
-> To implement this adjustments introduce a new .post_setup op in
-> pcie_cfg_data and call it at the end of brcm_pcie_setup function.
-> 
-> The bcm2712 .post_setup callback implements the required MDIO writes that
-> switch the PLL refclk and also change PHY PM clock period.
-> 
-> Without this RPi5 PCIex1 is unable to enumerate endpoint devices on
-> the expansion connector.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+From: Keith Busch <kbusch@kernel.org>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Resetting a bus from an end device only works if it's the only function
+on or below that bus.
+
+Provide an attribute on the pci_dev bridge device that can perform the
+secondary bus reset. This makes it possible for a user to safely reset
+multiple devices in a single command using the secondary bus reset
+action.
+
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+v1->v2:
+
+  Moved the attribute from the pci_bus to the bridge's pci_dev
+
+  And renamed it to "reset_subordinate" to distinguish from other
+  existing device "reset" attributes.
+
+  Added documentation.
+
+  Follow up patch to warn if the action was potentially harmful.
+
+ Documentation/ABI/testing/sysfs-bus-pci | 11 +++++++++++
+ drivers/pci/pci-sysfs.c                 | 23 +++++++++++++++++++++++
+ drivers/pci/pci.c                       |  2 +-
+ drivers/pci/pci.h                       |  1 +
+ 4 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/=
+testing/sysfs-bus-pci
+index 7f63c7e977735..5da6a14dc326b 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -163,6 +163,17 @@ Description:
+ 		will be present in sysfs.  Writing 1 to this file
+ 		will perform reset.
+=20
++What:		/sys/bus/pci/devices/.../reset_subordinate
++Date:		October 2024
++Contact:	linux-pci@vger.kernel.org
++Description:
++		This is visible only for bridge devices. If you want to reset
++		all devices attached through the subordinate bus of a specific
++		bridge device, writing 1 to this will try to do it.  This will
++		affect all devices attached to the system through this bridge
++		similiar to writing 1 to their individual "reset" file, so use
++		with caution.
++
+ What:		/sys/bus/pci/devices/.../vpd
+ Date:		February 2008
+ Contact:	Ben Hutchings <bwh@kernel.org>
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 5d0f4db1cab78..480a99e50612b 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -521,6 +521,28 @@ static ssize_t bus_rescan_store(struct device *dev,
+ static struct device_attribute dev_attr_bus_rescan =3D __ATTR(rescan, 02=
+00, NULL,
+ 							    bus_rescan_store);
+=20
++static ssize_t reset_subordinate_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct pci_dev *pdev =3D to_pci_dev(dev);
++	struct pci_bus *bus =3D pdev->subordinate;
++	unsigned long val;
++
++	if (kstrtoul(buf, 0, &val) < 0)
++		return -EINVAL;
++
++	if (val) {
++		int ret =3D __pci_reset_bus(bus);
++
++		if (ret)
++			return ret;
++	}
++
++	return count;
++}
++static DEVICE_ATTR_WO(reset_subordinate);
++
+ #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+ static ssize_t d3cold_allowed_store(struct device *dev,
+ 				    struct device_attribute *attr,
+@@ -625,6 +647,7 @@ static struct attribute *pci_dev_attrs[] =3D {
+ static struct attribute *pci_bridge_attrs[] =3D {
+ 	&dev_attr_subordinate_bus_number.attr,
+ 	&dev_attr_secondary_bus_number.attr,
++	&dev_attr_reset_subordinate.attr,
+ 	NULL,
+ };
+=20
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 7d85c04fbba2a..338dfcd983f1e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5880,7 +5880,7 @@ EXPORT_SYMBOL_GPL(pci_probe_reset_bus);
+  *
+  * Same as above except return -EAGAIN if the bus cannot be locked
+  */
+-static int __pci_reset_bus(struct pci_bus *bus)
++int __pci_reset_bus(struct pci_bus *bus)
+ {
+ 	int rc;
+=20
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 14d00ce45bfa9..1cdc2c9547a7e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -104,6 +104,7 @@ bool pci_reset_supported(struct pci_dev *dev);
+ void pci_init_reset_methods(struct pci_dev *dev);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
++int __pci_reset_bus(struct pci_bus *bus);
+=20
+ struct pci_cap_saved_data {
+ 	u16		cap_nr;
+--=20
+2.43.5
+
 
