@@ -1,57 +1,58 @@
-Return-Path: <linux-pci+bounces-15346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D8B39B0B12
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 19:20:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 323FB9B0BB2
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 19:36:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5AFF5B20E71
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 17:20:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD5181F29717
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 17:36:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3147620F3D9;
-	Fri, 25 Oct 2024 17:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18E618B499;
+	Fri, 25 Oct 2024 17:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z24RvjrA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbfmPqhF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD8A20F3D7
-	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 17:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F17D18452E;
+	Fri, 25 Oct 2024 17:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729876557; cv=none; b=dL3se8DPP057KdtVjBdraTfeUrbP3+drZQ6izTZz+ChRgQ0MhGQUzNpMuH3DiGisqvoEPTK/GGXT+PVrlOGiz25HJHP+chtfxWOmTw5T5bWyUppnyu5hCXAav8OReY/HDnd8BDWwmYdHax+MXoo+Ka/svG5CnDy+Hb9N1/ckn+U=
+	t=1729877487; cv=none; b=mhQTBT78E9+y6S6AS8Tv6eydv0jnjwx/5j7vY/eCRxQ1QFMFhFiHEY3pCUsXc4z5/iW1z6DX5VN6fOQWD6hGRfFglIh0eILlqRN7uVE7Kk56nZCshAs91nxe4ooZZEhRwPihj5u1A0TtsyPEg++MK+PoL6D06EUdn23IzV19Szs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729876557; c=relaxed/simple;
-	bh=yNREZ1KWcRzZAJcWPj3CZ/19R5KrhNNzuyPaua8tY7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNvkfccrRZ5LtSijG2IVvdmZyG2OZYHMbWu7chR2HZm3aGt++hb6CzaNpXG+nDcyhnEbAKNjgXczFtKee18jFySMrXCQMDmuLyd5O0FRCBPoHb8YqnNyreD/4EL/AuCJBYCYEs7vdh7m6thHS40taSpZfTH5Av0uKMbWbLSd5KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z24RvjrA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01168C4CEC3;
-	Fri, 25 Oct 2024 17:15:55 +0000 (UTC)
+	s=arc-20240116; t=1729877487; c=relaxed/simple;
+	bh=DC/+LkoXq7nUuvZxjShmyyiKPIJ9gQiOieFvR+D/1w0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=S1VUu6wNcttxZ7mppPLR6YMBfg9KSnOIkcgYn8t9vH4XNM/2A48Y3iaFzhmh8+hdrgIPwLdnmKrV2/U1SZcRRS94H+CXBt5vM8rU2Lp0Bd6cmVV0mBQ5jFPMXV+KkCX9X+YX1QTfCMIMd2pXOV4daTWgBJe4LC8SAnLCGhTRYkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbfmPqhF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2685C4CEC3;
+	Fri, 25 Oct 2024 17:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729876556;
-	bh=yNREZ1KWcRzZAJcWPj3CZ/19R5KrhNNzuyPaua8tY7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z24RvjrApipy4MXX63Sdft5xs+kd5v0O+AllznrCEwt/1MJvnvW/H3tz6ZAnZZHbw
-	 Bh14tY00VqDZLO/80YOlxLiA6rnEHiH80i3fe9k7M0MwMNg5oUH/HgjQhQuqiuB/kT
-	 RT1L29XKVuR5lIP53DOA0r9J+xeZVBUxhAPaTfmq2+RnvN6yHxtQhAqnmB69Npmh3e
-	 Q9NwLTtblV+Sne9UxefdOqzGzx70tnrn+w1gq0O4uVwpH3G8w3Xebmbhb/ip4M2euo
-	 ZadTmByZrNqsrl3JdsPBmW4AdWhy66y+L0x2SrDSR0APBrXY5VGQ82lchF0BUHM2Do
-	 ERVyIotdgXJGA==
-Date: Fri, 25 Oct 2024 11:15:53 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, Alex Williamson <alex.williamson@redhat.com>,
-	Amey Narkhede <ameynarkhede03@gmail.com>,
-	Raphael Norwitz <raphael.norwitz@nutanix.com>
-Subject: Re: [PATCH] pci: provide bus reset attribute
-Message-ID: <ZxvSSQ6zh45TiwLh@kbusch-mbp.dhcp.thefacebook.com>
-References: <20241025145021.1410645-1-kbusch@meta.com>
- <20241025165725.GA1025232@bhelgaas>
+	s=k20201202; t=1729877487;
+	bh=DC/+LkoXq7nUuvZxjShmyyiKPIJ9gQiOieFvR+D/1w0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TbfmPqhFth9hj9i9EtLVjXNaiu0adNpF9cVmT+6rdwOPjJarhayXFTZu4XANaetVV
+	 Y4zIclfjK8xY18lSr+MdQdMLt2Cn27RMeGdpglsx4Eg7iWWZZrZAnw3vf/abeX5RiP
+	 XPhfUYl5y4ycXy2R2qzLCxEPwa5KmCUo8kloAwKkCzQ9BqnjJc2h4ePCNm3Tl7NA0G
+	 bUz/6B9nHbAxvY9qj27WQoxanJ8KCGTNG/kvH/sU16CPpW/jD7oBf697hhak/n9gxJ
+	 cKbrDbCY4hwR7T7EYRnJpyIT80ehXCUlE6lxcckCa1K3o8adRfpoAuIphZ6XNd12/w
+	 MS7FbdoLgdesw==
+Date: Fri, 25 Oct 2024 12:31:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Johan Hovold <johan@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Subject: [GIT PULL] PCI fixes for v6.12
+Message-ID: <20241025173125.GA1026995@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,43 +61,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241025165725.GA1025232@bhelgaas>
 
-On Fri, Oct 25, 2024 at 11:57:25AM -0500, Bjorn Helgaas wrote:
-> [+cc Alex, Amey, Raphael]
-> 
-> On Fri, Oct 25, 2024 at 07:50:21AM -0700, Keith Busch wrote:
-> > From: Keith Busch <kbusch@kernel.org>
-> > 
-> > Attempting a bus reset on an end device only works if it's the only
-> > function on or below that bus.
-> > 
-> > Provide an attribute on the pci_bus device that can perform the
-> > secondary bus reset. This makes it possible for a user to safely reset
-> > multiple devices in a single command using the secondary bus reset
-> > method.
-> 
-> I confess to being a little ambivalent or even hesitant about
-> operations on the pci_bus (as opposed to on a pci_dev), but I can't
-> really articulate a great reason, other than the fact that the "bus"
-> is kind of abstract and from a hardware perspective, the *devices* are
-> the only things we can control.
+The following changes since commit 9852d85ec9d492ebef56dc5f229416c925758edc:
 
-If you prefer, this could probably be a pci_dev attribute specific to
-bridges. Maybe we call it "reset_subordinate" to make it different than
-the existing "reset" attribute.
+  Linux 6.12-rc1 (2024-09-29 15:06:19 -0700)
 
-> I assume this is useful in some scenario.  I guess this is root-only,
-> so there's no real concern about whether all the devices are used by
-> the same VM or in the same IOMMU group or anything?
+are available in the Git repository at:
 
-Yes, definitely root only. The concern for misuse is real, so must be
-used carefully. If you have binded drivers that are not ready for this,
-it may get confused. The same thing could happen with existing
-function-level resets though too. Making this operate on the bus just
-has potentially larger blast radius if you reset the wrong bus.
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.12-fixes-1
 
-It is still useful. Ioctl VFIO_DEVICE_PCI_HOT_RESET also eventually
-calls __pci_reset_bus(), but this gets the same thing without having to
-bind all the functions to vfio.
+for you to fetch changes up to ad783b9f8e78572fff3b04b6caee7bea3821eea8:
+
+  PCI/pwrctl: Abandon QCom WCN probe on pre-pwrseq device-trees (2024-10-23 13:34:41 -0500)
+
+----------------------------------------------------------------
+- Hold the rescan lock while adding devices to avoid race with concurrent
+  pwrctl rescan that can lead to a crash (Bartosz Golaszewski)
+
+- Avoid binding pwrctl driver to QCom WCN wifi if the DT lacks the
+  necessary PMU regulator descriptions (Bartosz Golaszewski)
+
+----------------------------------------------------------------
+Bartosz Golaszewski (2):
+      PCI: Hold rescan lock while adding devices during host probe
+      PCI/pwrctl: Abandon QCom WCN probe on pre-pwrseq device-trees
+
+ drivers/pci/probe.c                    |  2 ++
+ drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 55 ++++++++++++++++++++++++++++++----
+ 2 files changed, 52 insertions(+), 5 deletions(-)
 
