@@ -1,192 +1,306 @@
-Return-Path: <linux-pci+bounces-15267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78F589AFAF3
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 09:30:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1CFE9AFB87
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 09:52:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F125DB22280
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 07:30:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29ACFB23A0B
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 07:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA98B1B395F;
-	Fri, 25 Oct 2024 07:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78BE21C07E2;
+	Fri, 25 Oct 2024 07:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AGt2OHYi"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gVS/e2B0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2073.outbound.protection.outlook.com [40.107.243.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A677F1B21A7
-	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 07:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729841401; cv=none; b=DJK2RQvczwjaojRZwXrtSo5/TDMjV/FzkjfiGAzFqEhpPJ+A/70r2twhX/uNZHfejb6P0pbepScnFmkrhbam30ezDaC2UQ/H3sVcyuTFTGt2PA2zRc+gLc8yjl+UKDbiqBKe2N4IUW7O44i7UfrvecVYzn3YS3iX6dCYAeBLUHc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729841401; c=relaxed/simple;
-	bh=t3mnuoBJZJ/jEwT5w5END/89dgqIe63JgMbEGug3rI4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=AZ9jCFsftK5bCjRtXb/kmDQhwsOFRHMgCcFKGockJyS6ZYXZWHwEYxJhTDKq9eU/ou/MVdswMBj38BSbBEZmmgIK/Si+sgk0p+HMWmyf558ZPgb0n3ld9//9f6+Jh03nfp1LAzwd8B5NMORcQOW4R0hrRUKwG67AyromsBiApUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AGt2OHYi; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729841400; x=1761377400;
-  h=date:from:to:cc:subject:message-id;
-  bh=t3mnuoBJZJ/jEwT5w5END/89dgqIe63JgMbEGug3rI4=;
-  b=AGt2OHYiQx4bv4+K8RezTyHamrRNjmWxxr9nr87RgCNtdN0jvHXjLWDu
-   803R6MPj9W9EUG5yzj1cDFYKjOwtLSs73QM1lVkZc20ilwhErtZ9nt899
-   41Hkn9gYse2cRndylSbhDSJDr76ihlChUcDWx0fMYnvh+5EB06OUrbYhN
-   X3KCibJf4VyrmuBctJj7n2Iaa7L0VNRxfxXaNoCPudAlAjLXZeLAQ1u00
-   BUEEsOuZvfj1sVpzeWdqPx1RpEFULinUu9hfR5q0lwhZV2m6PXjTRtA3x
-   qp8gmCaWiaZCqHjtaLS6sC2YYolzY5diJ0eS0qhysRPjUj1NRIShz65Mu
-   w==;
-X-CSE-ConnectionGUID: TBMcx3yjRxye5Gx5K85EEA==
-X-CSE-MsgGUID: as+eniBNRwSHCQ6t1X9Fuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="29612235"
-X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
-   d="scan'208";a="29612235"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 00:29:48 -0700
-X-CSE-ConnectionGUID: Zh7SXwxzSDGApOQVI1PEaA==
-X-CSE-MsgGUID: dOmsupCHRj26g4y3dCcO8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
-   d="scan'208";a="81158596"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 25 Oct 2024 00:29:47 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t4ElV-000Xls-0h;
-	Fri, 25 Oct 2024 07:29:45 +0000
-Date: Fri, 25 Oct 2024 15:28:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- ad783b9f8e78572fff3b04b6caee7bea3821eea8
-Message-ID: <202410251539.AcrAF6pi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2CA18BC34;
+	Fri, 25 Oct 2024 07:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729842711; cv=fail; b=FND0Ew2jGCHcIPhC31uzetaLdWczx4MVqT2M55E1F/bjOMskVZO4y6VPSDasAt65L71oPxBJ0XmXox20ZIp6feRT8eoDrXvCsR4xLAdFOrmTRvvHzpQRUspDJlukv55Zi8QUlIE3h+VNh2aAuN9WvhVB/R1pyiBVhtj6fj942Rw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729842711; c=relaxed/simple;
+	bh=hchwLiC8Epzn1x2PPlofac4n11t6rp5y0dGg5Pjpuco=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kR+I8EokLMitsoAVqD1vXY0nzbScg4Wm+bM79Y2Yxh2/tY/ZZc9CsFDHclnVQniZ4qYp4xJVvImMDMAbcX2FZEYV38ZvQh7NUG1d2y9GppFmnSInBhODMD6+deoT2feW7oAuA/QMiD9C44G97hwQiUUd1icpLtQrUlyrGpBQxBE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gVS/e2B0; arc=fail smtp.client-ip=40.107.243.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QFObF4mqStO5T5V7PsPgnfTDPtKcTFK7LQju7kpMvCpQjAOhEQbf6ir8fc9zG16OiiiUezj+roRCdF5LhP+dDE8D7rjaWNmJOmHBP+3ZcDSzz4S0BRqXEFV+UKcWE+pN1+gmoppuSvv1ZKv4dkTvtavGggD6UId+/ZZCFZBn0xIpAELP1fYAHJt7PIHgQLyDhZlA+NUMsNwYT0JfRGOYllb2sYIkwq9hsLSCla78/CoDdQdifoQZO/DIWV2gXeijetIM8BRN7zJ8ELRqSHxaivzX9roW3w+TXP4Tz6Lg4Ef3PSRj7bxvjgCYf9CTe4xjB9Q3Uu69xE1hGuaVjfBf7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Soh5htLbmqhnQbUK8LL692N7Mzh4mOjE3biFcwK0Bf8=;
+ b=WriIM16qhA9bo2YIn8b6Jx83yz3Xa6FZKrhj1OTbm1aW8CNFYzo3C0Ww2w0cN7oHqi92JgIct8OLzT0quLiYyvdAg69IDNCkapiW2o4AoMSQCp8qZRGO9n7C3vBQjJQ98743+c8e1iVfRMfEO6TIVOHb+FAHhYeZv6/l6rAYNPcAp+uL5rzs8PAWnmTAWvpgWLVtA0eiqtGjAeTQmdPDSr6a4kXCU7Xps3aeqJNUW9o96vV0E9OjIPOhoGE+il2RVIKlo9Tx2mHEd+ay12KlvMP3Vgt1W7YEtlTmdCBM2cHE/DslsL5/cxj+io/c8fOGC72WdEeYx4h23W+DXQUbog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Soh5htLbmqhnQbUK8LL692N7Mzh4mOjE3biFcwK0Bf8=;
+ b=gVS/e2B0zqrdBbBbWTK0AZCm7l0Ex86lwUcbG7To2uAWLfg6n+ZIfA3GgOLRjyVLWXkxnywoiKWrln3MTXQrFRJjb/0fOkYfgtmXIGf6fWvjC+qZLEgWPnuBimR/L9VkY1yVva76RBQksW+4F7g2ZjGduqhPZ66Kpet58E3sXMdXCEQ9z2pfwFM1gs3PiZsMjgJKNQJpSTgYhg0WLkRCxsw5oIJ5M4rHj7fRifyJaq23MmEe9Fkn49gr2YwZVYa2v24S9Uh+0+U1IuNtcrgvnWmmlB8p39ANwftv+JoW57LFZqsgTmLQ6uGzdh6lDVKhpkuNDdihfg3xOWjGl64pww==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
+ by LV2PR12MB5920.namprd12.prod.outlook.com (2603:10b6:408:172::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.20; Fri, 25 Oct
+ 2024 07:51:46 +0000
+Received: from PH7PR12MB7914.namprd12.prod.outlook.com
+ ([fe80::8998:fe5c:833c:f378]) by PH7PR12MB7914.namprd12.prod.outlook.com
+ ([fe80::8998:fe5c:833c:f378%4]) with mapi id 15.20.8093.018; Fri, 25 Oct 2024
+ 07:51:45 +0000
+Message-ID: <46b487ec-e8a6-43fb-85d5-f264618f2e5d@nvidia.com>
+Date: Fri, 25 Oct 2024 15:51:40 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/VGA: Don't assume only VGA device found is the boot
+ VGA device
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Luke Jones <luke@ljones.dev>, Mario Limonciello <superm1@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>
+References: <20241014152502.1477809-1-superm1@kernel.org>
+ <20b48c6f-7ea9-4571-a39c-f20a9cf62319@app.fastmail.com>
+ <f56c555f-7313-43ff-abe4-28fb246e31cc@nvidia.com>
+ <CADnq5_OjfJzcOqa=NbWVw5ENvi+nmvNAZX0u_0hOvk3EVoh0bw@mail.gmail.com>
+ <fd7cae9a-5ee1-4e18-915d-4115f0a6a156@nvidia.com>
+ <CADnq5_NTBXPbW+u_AxTewH-aouLNn4gxebpzUSzsyev-VxOtcg@mail.gmail.com>
+Content-Language: en-US
+From: Kai-Heng Feng <kaihengf@nvidia.com>
+In-Reply-To: <CADnq5_NTBXPbW+u_AxTewH-aouLNn4gxebpzUSzsyev-VxOtcg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TPYP295CA0054.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:8::6)
+ To PH7PR12MB7914.namprd12.prod.outlook.com (2603:10b6:510:27d::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB7914:EE_|LV2PR12MB5920:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ff924a3-4621-4f99-3edf-08dcf4c9df7e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VDJ5cDZtNzdCelU1Z3VSbUFMbUx3VUVIZ0QvYUg3MlV0cnk1NHJ5WXJOai83?=
+ =?utf-8?B?UjlQYnk4cTJTQllCS2Qya1RHSmt4ZG1yTFFJdzFqNkJDYUhpTTAyQXZiUWgr?=
+ =?utf-8?B?eGt1S3g5UjczRkFDZCsxNzRjVlY5cXM1RS9NRk5sUXgwbnNwdjNVam9JZWdQ?=
+ =?utf-8?B?RUdaMllyMjVrUVhLQlR1KzVIVkNaMk44ZnFYTHIwVmZCZ2FWcEkwbWRHenI5?=
+ =?utf-8?B?NEFyNFl0RVFmUk8vNGo3cVkvblpqZVloUEdZTzRnZUxFeXhiVFFmQmgvdEg1?=
+ =?utf-8?B?NVp5NStuU2dVMmNMak0rSldyU1BGRGJMTXB4elF5Q3Q4ZFlCa0QrOC9ySlU1?=
+ =?utf-8?B?S3c4aFBCNi9WamZTSmdaMEp5bnlXL1djM1lIeFdUUDdpUk1ybmU5TkwvMnVJ?=
+ =?utf-8?B?aTVSTE9JelZtK2pVRnlpRHAzUVJXK0ljWkZTbWsxT2JabjhrdjB6TkVCUkxx?=
+ =?utf-8?B?K3BaTDdiVnd1VWlUTWxSYkJSb2J5ZkNJZi9SdHV2SXlqWXB5TjNHZVI4Tlp5?=
+ =?utf-8?B?eVE5djZpeFEyRm0ydEFDRUREc1UyUkpjWGNxWFJuNXA4cEd0Q2VjNllmMlhi?=
+ =?utf-8?B?U3ZpQmo4QThjRnprTzBscWdpaVlzNnhoVmFxMWYyMGQ3aWUzbVdYYURadENJ?=
+ =?utf-8?B?amtBQ3IwazVQTTRML2dLbHRwdVF1ODZwRzZ6UTI5dEthdC9ISU1oQmcrMFJ2?=
+ =?utf-8?B?c1dxUEdRZVA4bU5sVWJFUG5pQmdBSTBIOTU4Nk1MVFVvYjZpR1JXTnlMV0pU?=
+ =?utf-8?B?eEZEanZlOFBtZS95dHJZc2FqRVUwWlZxZnJQT2xzR3ZSeTdCaHZMQUlDeFpn?=
+ =?utf-8?B?OHc1dzRHdUMyNTgzR0wrOW1aMW1UbEhKSUFLWTJLRzlMYkFWSGdXY3owUFhk?=
+ =?utf-8?B?elB6ZFRSbnNGNnpXcC9EcmNzRWVqM0NkS0h1UHk4T1N1ZFJIM1lhVkhoQVhP?=
+ =?utf-8?B?V0l1Nk5JblpvYkV0cXJwRm1QQm12d2R6S0hySElrS2JRL2FrTGdRSU83cWtS?=
+ =?utf-8?B?N2daR0xJNGZYckxPNXFCandLK3c2Y0kzYmJVNHhIT015WllpZTArTnZKUlkz?=
+ =?utf-8?B?YlczUnV4SXY1a0hGeTkveGtjWnRXMVdWZ0JmTE9pTFVhV3hFMTZjSHU3Ukoz?=
+ =?utf-8?B?dERqWmMxd0Jid3RVUmJoLzc2ZnV5SHB1MlY4L3hpVHBLZXFDcGpmc0UyMVFT?=
+ =?utf-8?B?NWx5ZU1kcktVZ2xKN0MvNjBXbjlzWkxqTXEvOFFYbll0MWFRY1paMXBTenhL?=
+ =?utf-8?B?azZXaFExQlR3cityU3BVY3VaUG1SbVdMaDFlbnNDOTF0ck5lZlhCYWVib1dK?=
+ =?utf-8?B?dXhFL0tLc0duOFFiTi9SWGhJd1RsTEdPZHgvak1LVTBiREFLQ2Z6bjZEaHE1?=
+ =?utf-8?B?M3BKYnF4dWg4eFJCRytpK3Y5Z1ZKL05DOE5qRDY5aHg0cTZrWWFXZFdOVFhp?=
+ =?utf-8?B?N1hUTzVqU0RnMktEWjlEV1NVT01naXJVZVV2ZzcxT3lhMjBVZXZIZHo3NVU5?=
+ =?utf-8?B?ZVpFQ2drbWZCdDAwR0Zlck0rOEw1anJOdW8yWHdocXY2RkJ1dExCWTlPQklI?=
+ =?utf-8?B?VE1IeEFvaXJaQ05ZamlEUTdPTzQxYjZialk4SjdkUnkrMEZCWTQyZitWdXVC?=
+ =?utf-8?B?eU1QTnpQU2N2MHo1U2QvSmxlNzJJWFNoZHhySXpUeUFMQlEzSmhuM25DUWdQ?=
+ =?utf-8?B?cy9wb3h5KzIzSm1CUWhjWk1JdEo1WXlTVGR4MHBjVUQvS2ZkMFlhRnRjVlZa?=
+ =?utf-8?Q?4ZzX8zIOfxJ3FUNcfW5uAs7TEn4RK2C1chgEckY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TzZ6MTR6bGJ1MXdLY0p2WGE0TXBwcEs3TWxRek05ZkhyMDFhK2Jtem9VYTR3?=
+ =?utf-8?B?L1hiejVhd2hZazNtalQ1OUY4OE9SZVZGcWxGWldSWnlFUTZsUDFVQkgrbXFZ?=
+ =?utf-8?B?eXQ0UlVNbDdtSUg2bjMxL3RqWW9hc1BCSWJFK25sQjJHVjRCa04zUXRUb3Zt?=
+ =?utf-8?B?V3ArVEkveHVobTV5VE85TVhyazdzVFpwK2IvZSt4YW4rd09ydUsrblJvSFVa?=
+ =?utf-8?B?OGh0b3NXNnJGaTQrU3NiT0RXL0gzczl2RTBmZ3RFWjJDOVVlSUNuQ1crcE1P?=
+ =?utf-8?B?eFdLc3h6UjdhZVc2RGQxZ1dReUNyL0ZBOXUwNndablJRL25XVFRlY0VCVEVP?=
+ =?utf-8?B?bXlzQ2Rrd2R3ejhaYkJwaGE2Lys2UnZ5cGZqVlZ6NXpEYVlJcFg0V3BqT2NE?=
+ =?utf-8?B?aUV1dTMzb202YjV6czFxWnRWcHpZbURqRnpqVW1BSTlKQmcrWm04bUV1OEJk?=
+ =?utf-8?B?SjZkRmQySCtZNXlJS2t6MmdrV1duUjVndXRGWnNkL2k4VEtzWWJlWVRnNE9k?=
+ =?utf-8?B?U2ZFU0dsKzNmdWxxTTd0cnovUi9Qa3plYXBxRUtzODlYMjh3YVhkQURYRWVR?=
+ =?utf-8?B?VHpMRXZxVDRrZC9lL1ptUndscG1SM1ZYYVA5bVdjbGdCc2RQUUJuTStudVpR?=
+ =?utf-8?B?MUtXeGgxMlAwM0pSYWFpbFpRVkVHczJ4emJ0WG9GT2N1TEVjR1hVcjJCSDky?=
+ =?utf-8?B?WDFsWXhxOTdHWUV4YmZ0YUNRS1B3cEw1L25taEMveXdnczVnVnR0NlVpSUdX?=
+ =?utf-8?B?RDR3MWVBSkVFcmxZSlFnNlJib0dJK0o2cm4vNDBMOXhHbmFNaGtveDRxRm4z?=
+ =?utf-8?B?NHYyL3FuOVVnczFjd1FZUnN0amZiek84QTdWRWR4S29UZHdVRnRjQW82VktE?=
+ =?utf-8?B?dDg1Q0ZUcndTYkIvd2FxYUZtb2RJWCtnVjBaQ2FRM1VSYVd6cUxRVVYrV3h4?=
+ =?utf-8?B?dGhacllCcTJtQnF6L2QwSVBZTHk0bEVtZzZ4K1pVa0VUM2FPRFhnKzY1bGZL?=
+ =?utf-8?B?bk15dGY3bXgxRm9ZdG9tNHFISnkzTUxnczJzMmNTTHJQMU10V3oxczV3MmpZ?=
+ =?utf-8?B?c01WWkZVcGRaTDh4Q0RpL0ZGbVhiUWVkS1hFNFVDUG1JNXlOa3RPeGNuODN6?=
+ =?utf-8?B?eUkxT0l1akxvVHRBQk80SCtHNG9KT08wWTlqUys4Tk15TU5ya1ZKYzZnYWNM?=
+ =?utf-8?B?akVRWGwyNzArSDVGaE9HWlF1ZUlqNzNMRE40dG45R2NERUNwK2NiYkwvenRr?=
+ =?utf-8?B?YXBFQ0RVYTBFMURtZGYrbUU4SUZNd0dIa1U4eXVBMnowZVJZMDYyTlRad2Ix?=
+ =?utf-8?B?SVdXRndvWlR6OUluZUhmeU9ySU9NQURPa1JWVlBlUVlCT3M4L2dkMzNSM0Ux?=
+ =?utf-8?B?eS9HNUJhRXdBeTBMNkxpdkdwUGZmVlZqeXNaWWtHQ0kzSEtwRWJjUmVDT0U3?=
+ =?utf-8?B?VFgzbnRXdUFIZ3cxL2FYU0g4ZEZvdDg4TEVxUGVNZ3NCb1Qwck5XSGFBa0NZ?=
+ =?utf-8?B?aVBoa3daN0tRQXUwbFJTRlRmSkhjK3VSNjdrZExBSHNsU2cvUE5UdUpLeVVz?=
+ =?utf-8?B?dng0Tmt0NmptaTVqbkM1SzN5Zllsc0dYSjRjZU5BV3ZCYVUzU3FzckQyZGly?=
+ =?utf-8?B?aEI0aGlGRTNhQjE1N3RhdDF4K0RYMkhyRit6cldMUmdwWlhQVEFkeDFXK2M3?=
+ =?utf-8?B?UjZZTWN1U2FHL3ZENlo1L1FCTCtnTXBVakRSQ1VwWFJJaEVROEd5ZlBKZEpH?=
+ =?utf-8?B?VXZxOC8yQkxrcDA2RUZjYk80d0RJTGNvdXE2eDArQ0lFZENQTld3S0Y1eDBQ?=
+ =?utf-8?B?QVhIQ0VjaXd1YmJ5cmJnV0R1TVAzTEp1MmM2YlB6NWFxV21rb0xxeHhVVlVr?=
+ =?utf-8?B?UUM0MmpoL05DMmtnV0pQbEQwZG5PUTA3blBDalh0c2ZuL1lDYS9UM1c4ODFz?=
+ =?utf-8?B?MG1VUE94VlRRb010TWNGTUttYXRzdVJkcGN4UTBnRkVWeEtRY0c5RlB2ekll?=
+ =?utf-8?B?WWd2R0RqVlVRMlptcnhOZE04a0VGSm9CemozZG1RWWZmYUxWUFBWSFlOdkVs?=
+ =?utf-8?B?djNyY2VmSFN1Y0tpbHZ3L3k4T0pqdnJOOGtOOFBySjJaaDErbjFnbXJLTlY5?=
+ =?utf-8?Q?K+IvE09dlzEsLy3BeV80ViNCE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ff924a3-4621-4f99-3edf-08dcf4c9df7e
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 07:51:45.6331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4pwMXApkYoFm3u80xYL6ZIRx1DTZVL7UP/nWNQ0MCSydZZ1JbK4wTrUJ7QkmEGtH4nsyZ91DDJKQhkLnEDTTHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5920
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: ad783b9f8e78572fff3b04b6caee7bea3821eea8  PCI/pwrctl: Abandon QCom WCN probe on pre-pwrseq device-trees
 
-elapsed time: 2193m
 
-configs tested: 99
-configs skipped: 5
+On 2024/10/23 11:27 PM, Alex Deucher wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, Oct 22, 2024 at 9:27 PM Kai-Heng Feng <kaihengf@nvidia.com> wrote:
+>>
+>>
+>>
+>> On 2024/10/22 9:04 PM, Alex Deucher wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Tue, Oct 22, 2024 at 2:31 AM Kai-Heng Feng <kaihengf@nvidia.com> wrote:
+>>>>
+>>>> Hi Luke,
+>>>>
+>>>> On 2024/10/15 4:04 PM, Luke Jones wrote:
+>>>>> On Mon, 14 Oct 2024, at 5:25 PM, Mario Limonciello wrote:
+>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>>
+>>>>>> The ASUS GA605W has a NVIDIA PCI VGA device and an AMD PCI display device.
+>>>>>>
+>>>>>> ```
+>>>>>> 65:00.0 VGA compatible controller: NVIDIA Corporation AD106M [GeForce
+>>>>>> RTX 4070 Max-Q / Mobile] (rev a1)
+>>>>>> 66:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI]
+>>>>>> Strix [Radeon 880M / 890M] (rev c1)
+>>>>>> ```
+>>>>>>
+>>>>>> The fallback logic in vga_is_boot_device() flags the NVIDIA dGPU as the
+>>>>>> boot VGA device, but really the eDP is connected to the AMD PCI display
+>>>>>> device.
+>>>>>>
+>>>>>> Drop this case to avoid marking the NVIDIA dGPU as the boot VGA device.
+>>>>>>
+>>>>>> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+>>>>>> Reported-by: Luke D. Jones <luke@ljones.dev>
+>>>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3673
+>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>> ---
+>>>>>>     drivers/pci/vgaarb.c | 7 -------
+>>>>>>     1 file changed, 7 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>>>>> index 78748e8d2dba..05ac2b672d4b 100644
+>>>>>> --- a/drivers/pci/vgaarb.c
+>>>>>> +++ b/drivers/pci/vgaarb.c
+>>>>>> @@ -675,13 +675,6 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+>>>>>>                return true;
+>>>>>>        }
+>>>>>>
+>>>>>> -    /*
+>>>>>> -     * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+>>>>>> -     * other VGA devices, it is the best candidate so far.
+>>>>>> -     */
+>>>>>> -    if (!boot_vga)
+>>>>>> -            return true;
+>>>>>> -
+>>>>>>        return false;
+>>>>>>     }
+>>>>>>
+>>>>>> --
+>>>>>> 2.43.0
+>>>>>
+>>>>> Hi Mario,
+>>>>>
+>>>>> I can verify that this does leave the `boot_vga` attribute set as 0 for the NVIDIA device.
+>>>>
+>>>> Does the following diff work for you?
+>>>> This variant should be less risky for most systems.
+>>>>
+>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>>> index 78748e8d2dba..3fb734cb9c1b 100644
+>>>> --- a/drivers/pci/vgaarb.c
+>>>> +++ b/drivers/pci/vgaarb.c
+>>>> @@ -675,6 +675,9 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+>>>>                    return true;
+>>>>            }
+>>>>
+>>>> +       if (vga_arb_integrated_gpu(&pdev->dev))
+>>>> +               return true;
+>>>> +
+>>>
+>>> The problem is that the integrated graphics does not support VGA.
+>>
+>> Right, so the check has to be used much earlier.
+>>
+>> I wonder does the integrated GFX have _DOD/_DOS while the discrete one doesn't?
+>> If that's the case, vga_arb_integrated_gpu() can be used to differentiate which
+>> one is the boot GFX.
+> 
+> I think the problem is that the boot GPU is being conflated with vga
+> arb.  In this case the iGPU has no VGA so has no reason to be involved
+> in vga arb.  Trying to mess with any vga related resources on it could
+> be problematic.  Do higher levels of the stack look at vga arb to
+> determine the "primary" GPU?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hmm, I wonder if all those heuristic are needed for EFI based system?
 
-tested configs:
-alpha                   allnoconfig    gcc-13.3.0
-alpha                  allyesconfig    gcc-13.3.0
-alpha                     defconfig    gcc-13.3.0
-arc                    allmodconfig    gcc-13.2.0
-arc                     allnoconfig    gcc-13.2.0
-arc                    allyesconfig    gcc-13.2.0
-arc                       defconfig    gcc-13.2.0
-arc         randconfig-001-20241025    gcc-13.2.0
-arc         randconfig-002-20241025    gcc-13.2.0
-arc              vdk_hs38_defconfig    gcc-13.2.0
-arm                    allmodconfig    gcc-14.1.0
-arm                     allnoconfig    clang-20
-arm                    allyesconfig    gcc-14.1.0
-arm               bcm2835_defconfig    clang-20
-arm                       defconfig    clang-14
-arm             imx_v4_v5_defconfig    clang-16
-arm         randconfig-001-20241025    gcc-14.1.0
-arm         randconfig-002-20241025    gcc-14.1.0
-arm         randconfig-003-20241025    gcc-14.1.0
-arm         randconfig-004-20241025    gcc-14.1.0
-arm                 u8500_defconfig    gcc-14.1.0
-arm64                  allmodconfig    clang-20
-arm64                   allnoconfig    gcc-14.1.0
-arm64                     defconfig    gcc-14.1.0
-arm64       randconfig-001-20241025    clang-16
-arm64       randconfig-002-20241025    clang-14
-arm64       randconfig-003-20241025    clang-20
-arm64       randconfig-004-20241025    gcc-14.1.0
-csky                    allnoconfig    gcc-14.1.0
-csky                      defconfig    gcc-14.1.0
-csky        randconfig-001-20241025    gcc-14.1.0
-csky        randconfig-002-20241025    gcc-14.1.0
-hexagon                allmodconfig    clang-20
-hexagon                 allnoconfig    clang-20
-hexagon                allyesconfig    clang-20
-hexagon                   defconfig    clang-20
-hexagon     randconfig-001-20241025    clang-20
-hexagon     randconfig-002-20241025    clang-20
-i386                   allmodconfig    gcc-12
-i386                    allnoconfig    gcc-12
-i386                   allyesconfig    gcc-12
-i386                      defconfig    clang-19
-loongarch              allmodconfig    gcc-14.1.0
-loongarch               allnoconfig    gcc-14.1.0
-loongarch   randconfig-001-20241025    gcc-14.1.0
-loongarch   randconfig-002-20241025    gcc-14.1.0
-m68k                   allmodconfig    gcc-14.1.0
-m68k                    allnoconfig    gcc-14.1.0
-m68k                   allyesconfig    gcc-14.1.0
-microblaze             allmodconfig    gcc-14.1.0
-microblaze              allnoconfig    gcc-14.1.0
-microblaze             allyesconfig    gcc-14.1.0
-mips                    allnoconfig    gcc-14.1.0
-mips             bmips_be_defconfig    gcc-14.1.0
-mips                 ci20_defconfig    clang-20
-nios2                   allnoconfig    gcc-14.1.0
-nios2       randconfig-001-20241025    gcc-14.1.0
-nios2       randconfig-002-20241025    gcc-14.1.0
-openrisc                allnoconfig    gcc-14.1.0
-openrisc               allyesconfig    gcc-14.1.0
-openrisc                  defconfig    gcc-14.1.0
-openrisc          or1ksim_defconfig    gcc-14.1.0
-parisc                 allmodconfig    gcc-14.1.0
-parisc                  allnoconfig    gcc-14.1.0
-parisc                 allyesconfig    gcc-14.1.0
-parisc                    defconfig    gcc-14.1.0
-parisc      randconfig-001-20241025    gcc-14.1.0
-parisc      randconfig-002-20241025    gcc-14.1.0
-powerpc                allmodconfig    gcc-14.1.0
-powerpc                 allnoconfig    gcc-14.1.0
-powerpc     randconfig-003-20241025    clang-14
-powerpc64   randconfig-001-20241025    clang-20
-powerpc64   randconfig-002-20241025    gcc-14.1.0
-powerpc64   randconfig-003-20241025    clang-20
-riscv                   allnoconfig    gcc-14.1.0
-riscv                  allyesconfig    clang-20
-riscv       randconfig-001-20241025    gcc-14.1.0
-riscv       randconfig-002-20241025    gcc-14.1.0
-s390                   allmodconfig    clang-20
-s390                    allnoconfig    clang-20
-s390                   allyesconfig    gcc-14.1.0
-s390        randconfig-001-20241025    gcc-14.1.0
-s390        randconfig-002-20241025    clang-20
-sh                     allmodconfig    gcc-14.1.0
-sh                      allnoconfig    gcc-14.1.0
-sh                     allyesconfig    gcc-14.1.0
-sh                        defconfig    gcc-14.1.0
-sh          randconfig-001-20241025    gcc-14.1.0
-sh          randconfig-002-20241025    gcc-14.1.0
-sparc                  allmodconfig    gcc-14.1.0
-um                     allmodconfig    clang-20
-um                      allnoconfig    clang-17
-um                     allyesconfig    gcc-12
-x86_64                  allnoconfig    clang-19
-x86_64                 allyesconfig    clang-19
-x86_64                    defconfig    gcc-11
-x86_64                        kexec    clang-18
-x86_64                     rhel-8.3    gcc-12
-xtensa                  allnoconfig    gcc-14.1.0
+Can we assume that what being used by UEFI GOP is the primary GFX device?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kai-Heng
+
+> 
+> Alex
+> 
+>>
+>> Kai-Heng
+>>
+>>>
+>>> Alex
+>>>
+>>>>            /*
+>>>>             * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+>>>>             * other VGA devices, it is the best candidate so far.
+>>>>
+>>>>
+>>>> Kai-Heng
+>>>>
+>>>>>
+>>>>> Tested-by: Luke D. Jones <luke@ljones.dev>
+>>>>
+>>
+
 
