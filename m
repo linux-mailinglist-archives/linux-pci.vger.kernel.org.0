@@ -1,368 +1,309 @@
-Return-Path: <linux-pci+bounces-15283-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15284-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C0389AFCE9
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 10:45:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BBE79AFD06
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 10:48:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 802D01C21E12
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:45:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF51F1F22780
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:48:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE7E1BB6B8;
-	Fri, 25 Oct 2024 08:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93DE1D1F63;
+	Fri, 25 Oct 2024 08:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="clx2zOsi";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g3bikHGi";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="clx2zOsi";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g3bikHGi"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UTILEWAQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2080.outbound.protection.outlook.com [40.107.103.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68722B666;
-	Fri, 25 Oct 2024 08:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729845951; cv=none; b=EmylY3FnCWxZvscTP2Knrh3XNJF6SvFE4heBr4UfhVlF9uftYO8rA0TWSxZGFAanlQKleD2vbRSVzRMGBzxWyBj+DPqFlTAT8H1LAwonte+TKlC3P+8KjIWJ8qPqJPEtPn/dYLQbh5iWd0c6oVC460uMm/b+klciX/62pDzoeCo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729845951; c=relaxed/simple;
-	bh=C4fWJFLdEqfmiCwfG0ijR0otCuRMO6pfGtCX8B1l6tQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=grYqiJWp3kxKbkVhN8OSROr9lOi60dxAhWBuWuq2on7fM6aZbAbzM4QIGBawwwgJYcjfkm8xdrkNgSz883BwEO49D0xfRlS4FC5MgKtuKQOuGq25xFGS9sGs7n1q9BAmnoeFTLyrB5bgy1SuHvP4IxGdoSFtKaLOdnMufjlfAkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=clx2zOsi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g3bikHGi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=clx2zOsi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g3bikHGi; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AA66B1FDD6;
-	Fri, 25 Oct 2024 08:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729845946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fLLgMgD1WuFn/eZRfUUwEempoL5IxybItGs0mIW5a9c=;
-	b=clx2zOsiRnAuc/eTROpKVLO0ZG2bWwOUHl34fY82qjlAR59nmmv9gR3LTJjwI7qQYdy+Va
-	+L4ZLvLaaLX3fgCTVEAvLvlG8BUUEfsdsnwqtRtQXjsQzc/CTJMC5EoXs1I0X1WuxtBHMj
-	SGDUlg6cg2a43qISAqaOgFi37jxdQE4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729845946;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fLLgMgD1WuFn/eZRfUUwEempoL5IxybItGs0mIW5a9c=;
-	b=g3bikHGiSMvF/vrKNbyrTxKTQLKBT4FQ0i45X842GsWYwukqgd4FAz50GQEct1VSruaxQ8
-	VZrEyDx/K8YlfIAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=clx2zOsi;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=g3bikHGi
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729845946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fLLgMgD1WuFn/eZRfUUwEempoL5IxybItGs0mIW5a9c=;
-	b=clx2zOsiRnAuc/eTROpKVLO0ZG2bWwOUHl34fY82qjlAR59nmmv9gR3LTJjwI7qQYdy+Va
-	+L4ZLvLaaLX3fgCTVEAvLvlG8BUUEfsdsnwqtRtQXjsQzc/CTJMC5EoXs1I0X1WuxtBHMj
-	SGDUlg6cg2a43qISAqaOgFi37jxdQE4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729845946;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fLLgMgD1WuFn/eZRfUUwEempoL5IxybItGs0mIW5a9c=;
-	b=g3bikHGiSMvF/vrKNbyrTxKTQLKBT4FQ0i45X842GsWYwukqgd4FAz50GQEct1VSruaxQ8
-	VZrEyDx/K8YlfIAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3B42513B18;
-	Fri, 25 Oct 2024 08:45:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0kI8DblaG2dPaAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 25 Oct 2024 08:45:45 +0000
-Date: Fri, 25 Oct 2024 10:46:46 +0200
-Message-ID: <878quctvrd.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Takashi Iwai <tiwai@suse.de>,	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Basavaraj Natikar <basavaraj.natikar@amd.com>,	Jiri Kosina
- <jikos@kernel.org>,	Benjamin Tissoires <bentiss@kernel.org>,	Arnd Bergmann
- <arnd@arndb.de>,	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,	Alex
- Dubov <oakad@yahoo.com>,	Sudarsana Kalluru <skalluru@marvell.com>,	Manish
- Chopra <manishc@marvell.com>,	"David S. Miller" <davem@davemloft.net>,	Eric
- Dumazet <edumazet@google.com>,	Jakub Kicinski <kuba@kernel.org>,	Paolo
- Abeni <pabeni@redhat.com>,	Rasesh Mody <rmody@marvell.com>,
-	GR-Linux-NIC-Dev@marvell.com,	Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>,	Kalle Valo <kvalo@kernel.org>,
-	Sanjay R Mehta <sanju.mehta@amd.com>,	Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>,	Jon Mason <jdmason@kudzu.us>,	Dave Jiang
- <dave.jiang@intel.com>,	Allen Hubbe <allenbh@gmail.com>,	Bjorn Helgaas
- <bhelgaas@google.com>,	Alex Williamson <alex.williamson@redhat.com>,
-	Juergen Gross <jgross@suse.com>,	Stefano Stabellini
- <sstabellini@kernel.org>,	Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>,	Jaroslav Kysela <perex@perex.cz>,	Takashi
- Iwai <tiwai@suse.com>,	Chen Ni <nichen@iscas.ac.cn>,	Mario Limonciello
- <mario.limonciello@amd.com>,	Ricky Wu <ricky_wu@realtek.com>,	Al Viro
- <viro@zeniv.linux.org.uk>,	Breno Leitao <leitao@debian.org>,	Kevin Tian
- <kevin.tian@intel.com>,	Thomas Gleixner <tglx@linutronix.de>,	Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,	Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>,	Mostafa Saleh
- <smostafa@google.com>,	Jason Gunthorpe <jgg@ziepe.ca>,	Yi Liu
- <yi.l.liu@intel.com>,	Christian Brauner <brauner@kernel.org>,	Ankit Agrawal
- <ankita@nvidia.com>,	Eric Auger <eric.auger@redhat.com>,	Reinette Chatre
- <reinette.chatre@intel.com>,	Ye Bin <yebin10@huawei.com>,	Marek
- =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,	Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>,	Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,	Kai Vehmanen
- <kai.vehmanen@linux.intel.com>,	Rui Salvaterra <rsalvaterra@gmail.com>,
-	linux-ide@vger.kernel.org,	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,	ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org,	kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org,	linux-sound@vger.kernel.org
-Subject: Re: [PATCH 02/13] ALSA: hda_intel: Use always-managed version of pcim_intx()
-In-Reply-To: <ae081c36c49733b007a8946dceeec0af94fc449a.camel@redhat.com>
-References: <20241015185124.64726-1-pstanner@redhat.com>
-	<20241015185124.64726-3-pstanner@redhat.com>
-	<87v7xk2ps5.wl-tiwai@suse.de>
-	<6f3db65fe9a5dcd1a7a8d9bd5352ecb248ef57b1.camel@redhat.com>
-	<87ttd2276j.wl-tiwai@suse.de>
-	<aec23bb79b9ff7dd7f13eb67460e0605eac22912.camel@redhat.com>
-	<875xphzeun.wl-tiwai@suse.de>
-	<ae081c36c49733b007a8946dceeec0af94fc449a.camel@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D178818DF6E;
+	Fri, 25 Oct 2024 08:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729846106; cv=fail; b=ecMqX7lxBTyMTwFvrzXzQ5D1RQ5rui5OMSmSoM0DTR1c3IOjMWT46lJvB2iK+0S6nTnCt2GeMw9/z8rbTPri/5aO8aold2w0VUwvGznzkci4XVT6gilX3msV9yv3V/PvgITmybOH0/YXcNWc9d+1gusRVwNMcWNhvYidwRjPVHM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729846106; c=relaxed/simple;
+	bh=aqQetWAeHJGuKQK+rPa9OTj5BNJ317y3EeJvadwHipw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HRoDGaxtOv08Vs9DdOcgOkbnNQ/LvgKEGUygjzzvLvmcRQl4fPa7kBeBgyNojJUPAXZKp4GbdOE1CT4/aBEb5j3PuPnuHqFh+LJRKbI6lj5yh4DCltrsf+JXUyySkTNWmiS236yr2lwWu0I0WnffWZsb/u7cUd6S7XS2TCnhpT4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UTILEWAQ; arc=fail smtp.client-ip=40.107.103.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=G5W2rrVjjrYdm5g9QOh03q9wVQjKNd1iG+ghCgSo2XtMuMxsHo5RwAi9vDkfrjTVGnbTSiapjy3wihcpfIabqA6iY4KekC1OMMvOVUwG2T4m1Xc63j4WzK78mDQx0znqAv44UUh0zKAcW9CSEpCsXQgzODAKuyb1uGAZszy+2EZDA16NYotZmG070qAl8O4BTH+BGKDMIoY+Gx4lf8wIPE7p2+nvSspooI+gcjf/FPciAPU2F+7rOqmze4++9Oy1vWBkKCBsCESL/7UDWW1fjxJ+0ewVnb+p3A+a82XzL+gR1TNs23hNzVscdSNRTKbLMmriKjbMgwoKWmufZmndhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LPFZqmkmbB07VoF2LakOQ6rJT+Zg734igHdZu7DYsMw=;
+ b=j8qtIyccPhtDnkHDeLBQWQlPfP6l2ytS0DmbfB0c/Wu9m3zhVnIiCW1WmCp6Bk3NPfMG1IO6DQC5v/jvf0u/E1RNv3WsvsaTi4mKl/OemhhVG24W6JRd7eZ0e2GIFUKOCoYO4nsUyW1aXd6mkwQoy1uyogoftZTL26jJFp+i/rHMBuewDpGtMDfm5Mu2uiedEMIv7FfbuScJAQvbsnJXEVVqx/bnAw+kndCo+SMAX1VfvMsAthSC4WHMhW8yqngMYLF3i+6/n6WxkCf17+LFQJ2OLCi77cbbhACTLc5dJ4X9EwBsxnzKa/4zNdlKa6pU0eFifi3MMRiax1tjl7t/GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LPFZqmkmbB07VoF2LakOQ6rJT+Zg734igHdZu7DYsMw=;
+ b=UTILEWAQNZv1QAiB5hNgo5SA0D/TVKli9XOaGI1vwck7pWrnqq7OIb4lWDH76ALEDdmjMC4S+LPRp5+4C4iLLKqPRs7vPtgWJXPYESgQQo/lI2TXO8S6EzU8v34hFe3yMyizdf7ccj3rmwIboPra72HVzdAuyMGOHmjwamLMdGpikteSKIlxHdQcPXYGhIUp0uWMMTUeMMetL2Xwx0tz621RvCS0EaAT0NmMbTlaZzcn2xcEsVGWyqWNS6VuW1hBRvHQKCgDBkUlSCauAXvYCN0SAtEh6RbETdCfzjhi+Zx8x4uaXaFurgcZ5gRFS9hFGQpQIblDWJDWnls4k/N+OQ==
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by PA1PR04MB10818.eurprd04.prod.outlook.com (2603:10a6:102:48d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.16; Fri, 25 Oct
+ 2024 08:48:18 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%7]) with mapi id 15.20.8069.027; Fri, 25 Oct 2024
+ 08:48:18 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+CC: Krzysztof Kozlowski <krzk@kernel.org>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, Claudiu
+ Manoil <claudiu.manoil@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Frank Li
+	<frank.li@nxp.com>, "christophe.leroy@csgroup.eu"
+	<christophe.leroy@csgroup.eu>, "linux@armlinux.org.uk"
+	<linux@armlinux.org.uk>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"horms@kernel.org" <horms@kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>
+Subject: RE: [PATCH v4 net-next 03/13] dt-bindings: net: add bindings for NETC
+ blocks control
+Thread-Topic: [PATCH v4 net-next 03/13] dt-bindings: net: add bindings for
+ NETC blocks control
+Thread-Index: AQHbJEi1opWCvzFL8kS18Y10TWXurLKT6McAgAAQObCAAgF4AIABJnHAgAAKx9A=
+Date: Fri, 25 Oct 2024 08:48:18 +0000
+Message-ID:
+ <PAXPR04MB85102B944E851C315F4C5BE1884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20241022055223.382277-1-wei.fang@nxp.com>
+ <20241022055223.382277-4-wei.fang@nxp.com>
+ <xx4l4bs4iqmtgafs63ly2labvqzul2a7wkpyvxkbde257hfgs2@xgfs57rcdsk6>
+ <PAXPR04MB851034FDAC4E63F1866356B4884D2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <20241024143214.qhsxghepykrxbiyk@skbuf>
+ <PAXPR04MB8510BE30C31D55831BB276B2884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+In-Reply-To:
+ <PAXPR04MB8510BE30C31D55831BB276B2884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|PA1PR04MB10818:EE_
+x-ms-office365-filtering-correlation-id: ad815980-5eac-4730-5a6a-08dcf4d1c5e9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?m/+M3uuDMY22JoBlQwUPcLRcYzX8zwpZh6YGhMjtnUzZimTdpWTyESBHd/R9?=
+ =?us-ascii?Q?r9MS24lR9NWX0pZhaWOGm3jHWXagiwuGjDPwIUZvGoiq1ym2gpgOIdYAwK/Q?=
+ =?us-ascii?Q?h8F4fgERgw18Ev97QWDhRNIWa2SSpqroqWGoC4OVs3goqdNji6ZB1YOM9BvO?=
+ =?us-ascii?Q?icLN1gxKFkS079p0L6BBhTXihQAQMcwf45m322f4zrU3EajjK7moViBa7hW9?=
+ =?us-ascii?Q?C/2FqQQ2E6JPWInSvQTEI+E2lnYCBheqULgDZqkocap9cLYM5c6u2MqVyFlh?=
+ =?us-ascii?Q?UVrr3iKEvELdhpBcT9vTrwvvlR7GOByYRcalTa2u0LxiaLjLoCEPzQwyASb9?=
+ =?us-ascii?Q?C+3DHWyrzMZkJ2vUCCw6yohI/NVPKPv6ZaTmMjtDWf05RwzOuBmX7qO41ycu?=
+ =?us-ascii?Q?eUJ/OHaK9qWRnxMt4QUGXxS4vPgkMhQaoCiyUMsWLRiFRjq2ntIdcNzozYvP?=
+ =?us-ascii?Q?ncx9GJiM6PxjptVGGPBFWjZ0I7a4aMUpTgfm8/phkmOzcqajoUzZgYJMk8W8?=
+ =?us-ascii?Q?V/5H5h8oi3JICIHlHkuQOiiYVTKQ7j8PoqkK3Nm2eQBuBOwCS0L1NvZf38HN?=
+ =?us-ascii?Q?aLDYHUMBi126hB3CdZ9d9nxDxuo3RC9m3fKS4OGBdiHWzWzZgFWDLedCdWR0?=
+ =?us-ascii?Q?CnH53E8kMrylQrS/JX+sWX6XIPJ7whUMBQfo/G4D6jbbJWtg8lXbbntPEGPh?=
+ =?us-ascii?Q?jMXUikzAV7Rf6wSB7u4WUIt9iYXouO6n18kDxWaBpvcZYrhv9AYllcbMRPpS?=
+ =?us-ascii?Q?M9he2D8pWKnmr0w/xRwXRP8o4OzKNQ71mOgBhJQ9tPF5DvahRosomLNabUhI?=
+ =?us-ascii?Q?mvM2sGw4ygC1SoZjbsGIGHCQ/hSeBbqngA7NmHt6M4qvPktD4JVi7skVvhjG?=
+ =?us-ascii?Q?vzuI7h4k8TG2hlJsSm95NO1+2AnTGaUcSorjU6XOXcZm28rymptwv4qmuD37?=
+ =?us-ascii?Q?bFJK6xrfFFVzxus4NzUUi2xu9yfyv58b57lnr3VRx9tydX+rCu0eSLaDZz+m?=
+ =?us-ascii?Q?2gDC6bv1PRjtV7+y0jiR57nUzrkUrNgjFEL3vMf4AgbssWoL4aO/eDalTn8+?=
+ =?us-ascii?Q?U8QXcpqt1cvjS3gO7uQGzPHyjB0X5SRnEDrhpaI6xmfoCK4O981VmKlDu+1+?=
+ =?us-ascii?Q?hQy6ecDDpwviXZHCLWaNnkB6jSRSecA1jRTCPCltYyUo7vU+R8YmGiMEdCn5?=
+ =?us-ascii?Q?6ZeZ2p5yzSLUIkOgvwnRhtRRM295jqMtLOClwg/89sqibLyt6xw17zmyzszt?=
+ =?us-ascii?Q?jhinihrunVMpGloJvc8o5VKQlN00fwDHJwFZ7b9K69wLm+v07RkKEcEc3Nt/?=
+ =?us-ascii?Q?iOMF3YUsUp3+NP7bjUFQ41n7Abxmf6yZ52Jy7H+iGi6PzPhD27B+D+WdgwUC?=
+ =?us-ascii?Q?ttBy/ew=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?kZftV3cEEvoykUbyTU7UTkocAhVZ1KxqtVIyzHxvGshf4/dFdWGgreRThyjh?=
+ =?us-ascii?Q?hpFjmxX2I0J67MWTXqwgHoXlEamClg0bq77qNAIFK9ustR9lXLOH2iYmr5dX?=
+ =?us-ascii?Q?ApcC3UxuFh1EqXZoBxW7YIIE6goP/HjNYYxhKTvl+K7Gde9bRfBbZ6DZFWFh?=
+ =?us-ascii?Q?BDuE7gZb32Sso3RjOpFQ0T7FnpTGQ2XdR89UstVVWEnS+DJqFu2OuqxK+vnM?=
+ =?us-ascii?Q?t+IJxWXOqvXIZU/C8i0ATVVCP3NCEmoTt1ugKM3Ma1mpELhPStmj0PTuN2HC?=
+ =?us-ascii?Q?5tD12q47IO7preFBCCOcRjTl+qqM2U0MXRrpZyA9sVxmasQPYriTpu3Vsnf0?=
+ =?us-ascii?Q?9Z8aLrbssguKluEBSlfSQZzqi0cOkmvCSYRj8nvMpoDuSJXfNW8258KP8F7B?=
+ =?us-ascii?Q?4HPwuau2nVfGRl95ZXhInvs9PzYrLiYIUiZtvYCV4+DINarMVsgnYqXzmTD1?=
+ =?us-ascii?Q?L7nqrmdlQOUdA3ovt+Okdv2tAvij6NQXH9nlF4Fu5od+7qWti5UudU7KbAbT?=
+ =?us-ascii?Q?X1L2VH5Ixk7t4LCza8geght2ecTZSeXD8cFNbNMBb4xyyjIqHbcGJ7F8Yynb?=
+ =?us-ascii?Q?ImhiRWPo8vEARzxXZmvCrK1j06jXk576iBQnW6xUWqB5+gWHKTysb/sYCQc3?=
+ =?us-ascii?Q?DChqzZ0+bkgJ1xmvGOsPgfnPrNbyeBHq5826ENZuPNHI0CLm87uV18001aB5?=
+ =?us-ascii?Q?OL9oFIQMhMPPOfRxN0wKNilYKkCeiQZPK1RSvRjhkm0/i1F0vDV/CIb3Kg0K?=
+ =?us-ascii?Q?5+2uMNC+AGo/R2cl8JDKayLeR4aV6zEi1a/G0sjFS0OuAGleGAxsiUiYQxU/?=
+ =?us-ascii?Q?C0gzYfR4T8lskQwXVBeo/QKuvypJZYTebodslDyfZSU8xxjiBCpoTnLDCM2D?=
+ =?us-ascii?Q?GTEYm7feHZwLDm1H+mwaLEtyChay6q8aOfru6VxxyIlH7dQkv8NVhDMr/20J?=
+ =?us-ascii?Q?D5rSXBcGIDV9PA07i658LLxGphdulB7UVma4mQwE3o50Z79bz3vPUAk1hlSh?=
+ =?us-ascii?Q?tibsyfeSAPQ9Dv88Has5MPVojSgVWKSjIImzc9y3FqE5zaesfBMFwnwzT4Zc?=
+ =?us-ascii?Q?U9XTEt4KE0eO3IcJ/g23Y+an5pBC8QMXIMcv2TEYRpm+w5UUSF/qh6dgUg/3?=
+ =?us-ascii?Q?a3W3XW2myRYwfiC8JZP7gbRdjwwF4zg3iioQ11KkFF5f2SORyiu7utqUPisL?=
+ =?us-ascii?Q?YImO4PFQWc12i+pyhRy8XBSoucp6GQ8i6hQFP9FtjWodiJ3wO56jHVx3mUy0?=
+ =?us-ascii?Q?IlOuU5/K7xMRnhMCPhBgKJftLD7lR6368CrnJuhwpmcJ0moTj/fMuIPX2NaY?=
+ =?us-ascii?Q?g7sEu3Gi7pEDcMLHJk0gVqrOolaqEt+zKJIZgZZUjuAqb4+DC+lxgkwTd7/t?=
+ =?us-ascii?Q?BBUb4ZDQq5Lp50H2429pYopt/0Vytf3+hWvauOkC2x+GkYTvfkT46RUcheXK?=
+ =?us-ascii?Q?HOGunh2L02+G5BXy9TpfDaSPCDJ7nWxeJe4nMAim2qvqHCkqXaYlWW8ey1Uv?=
+ =?us-ascii?Q?eX+yj9AB4t4RbXnCdvE5cmtZt2Plk2fgW07ec81QEmUglRMU/IuF/A1B2hFD?=
+ =?us-ascii?Q?CkxR1mGEmQCbfDGSTOw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AA66B1FDD6
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[yahoo.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,kernel.org,omp.ru,amd.com,arndb.de,linuxfoundation.org,yahoo.com,marvell.com,davemloft.net,google.com,redhat.com,quantenna.com,gmail.com,kudzu.us,intel.com,suse.com,epam.com,perex.cz,iscas.ac.cn,realtek.com,zeniv.linux.org.uk,debian.org,linutronix.de,linux.intel.com,ziepe.ca,nvidia.com,huawei.com,invisiblethingslab.com,linux.dev,vger.kernel.org,lists.linux.dev,lists.xenproject.org];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_GT_50(0.00)[67];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad815980-5eac-4730-5a6a-08dcf4d1c5e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2024 08:48:18.4892
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gVjXqYEY7o48IKHsDbcBhA9Ur/f0SiZ5jf4CtoGHMIF5YWrtnuhEvGK8nvmthHdv5Kx08vbUMiPQrOEHL4NFMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10818
 
-On Fri, 25 Oct 2024 10:37:57 +0200,
-Philipp Stanner wrote:
-> 
-> On Thu, 2024-10-24 at 17:43 +0200, Takashi Iwai wrote:
-> > On Thu, 24 Oct 2024 10:02:59 +0200,
-> > Philipp Stanner wrote:
-> > > 
-> > > On Wed, 2024-10-23 at 17:03 +0200, Takashi Iwai wrote:
-> > > > On Wed, 23 Oct 2024 15:50:09 +0200,
-> > > > Philipp Stanner wrote:
-> > > > > 
-> > > > > On Tue, 2024-10-22 at 16:08 +0200, Takashi Iwai wrote:
-> > > > > > On Tue, 15 Oct 2024 20:51:12 +0200,
-> > > > > > Philipp Stanner wrote:
-> > > > > > > 
-> > > > > > > pci_intx() is a hybrid function which can sometimes be
-> > > > > > > managed
-> > > > > > > through
-> > > > > > > devres. To remove this hybrid nature from pci_intx(), it is
-> > > > > > > necessary to
-> > > > > > > port users to either an always-managed or a never-managed
-> > > > > > > version.
-> > > > > > > 
-> > > > > > > hda_intel enables its PCI-Device with pcim_enable_device().
-> > > > > > > Thus,
-> > > > > > > it needs
-> > > > > > > the always-managed version.
-> > > > > > > 
-> > > > > > > Replace pci_intx() with pcim_intx().
-> > > > > > > 
-> > > > > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > > > > > > ---
-> > > > > > >  sound/pci/hda/hda_intel.c | 2 +-
-> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > diff --git a/sound/pci/hda/hda_intel.c
-> > > > > > > b/sound/pci/hda/hda_intel.c
-> > > > > > > index b4540c5cd2a6..b44ca7b6e54f 100644
-> > > > > > > --- a/sound/pci/hda/hda_intel.c
-> > > > > > > +++ b/sound/pci/hda/hda_intel.c
-> > > > > > > @@ -786,7 +786,7 @@ static int azx_acquire_irq(struct azx
-> > > > > > > *chip,
-> > > > > > > int do_disconnect)
-> > > > > > >  	}
-> > > > > > >  	bus->irq = chip->pci->irq;
-> > > > > > >  	chip->card->sync_irq = bus->irq;
-> > > > > > > -	pci_intx(chip->pci, !chip->msi);
-> > > > > > > +	pcim_intx(chip->pci, !chip->msi);
-> > > > > > >  	return 0;
-> > > > > > >  }
-> > > > > > >  
-> > > > > > 
-> > > > > > Hm, it's OK-ish to do this as it's practically same as what
-> > > > > > pci_intx()
-> > > > > > currently does.  But, the current code can be a bit
-> > > > > > inconsistent
-> > > > > > about
-> > > > > > the original intx value.  pcim_intx() always stores !enable
-> > > > > > to
-> > > > > > res->orig_intx unconditionally, and it means that the
-> > > > > > orig_intx
-> > > > > > value
-> > > > > > gets overridden at each time pcim_intx() gets called.
-> > > > > 
-> > > > > Yes.
-> > > > > 
-> > > > > > 
-> > > > > > Meanwhile, HD-audio driver does release and re-acquire the
-> > > > > > interrupt
-> > > > > > after disabling MSI when something goes wrong, and pci_intx()
-> > > > > > call
-> > > > > > above is a part of that procedure.  So, it can rewrite the
-> > > > > > res->orig_intx to another value by retry without MSI.  And
-> > > > > > after
-> > > > > > the
-> > > > > > driver removal, it'll lead to another state.
-> > > > > 
-> > > > > I'm not sure that I understand this paragraph completely.
-> > > > > Still,
-> > > > > could
-> > > > > a solution for the driver on the long-term just be to use
-> > > > > pci_intx()?
-> > > > 
-> > > > pci_intx() misses the restore of the original value, so it's no
-> > > > long-term solution, either.
-> > > 
-> > > Sure that is missing – I was basically asking whether the driver
-> > > could
-> > > live without that feature.
-> > > 
-> > > Consider that point obsolete, see below
-> > > 
-> > > > 
-> > > > What I meant is that pcim_intx() blindly assumes the negative of
-> > > > the
-> > > > passed argument as the original state, which isn't always true. 
-> > > > e.g.
-> > > > when the driver calls it twice with different values, a wrong
-> > > > value
-> > > > may be remembered.
-> > > 
-> > > Ah, I see – thoguh the issue is when it's called several times with
-> > > the
-> > > *same* value, isn't it?
-> > > 
-> > > E.g.
-> > > 
-> > > pcim_intx(pdev, 1); // 0 is remembered as the old value
-> > > pcim_intx(pdev, 1); // 0 is falsely remembered as the old value
-> > > 
-> > > Also, it would seem that calling the function for the first time
-> > > like
-> > > that:
-> > > 
-> > > pcim_intx(pdev, 0); // old value: 1
-> > > 
-> > > is at least incorrect, because INTx should be 0 per default,
-> > > shouldn't
-> > > it? Could then even be a 1st class bug, because INTx would end up
-> > > being
-> > > enabled despite having been disabled all the time.
-> > 
-> > Yeah, and the unexpected restore can happen even with a single call
-> > of
-> > pcim_intx(), if the driver calls it unnecessarily.
-> > 
-> > > > That said, I thought of something like below.
-> > > 
-> > > At first glance that looks like a good idea to me, thanks for
-> > > working
-> > > this out!
-> > > 
-> > > IMO you can submit that as a patch so we can discuss it separately.
-> > 
-> > Sure, I'm going to submit later.
-> 
-> I just took a look into the old implementation of pci_intx() (there was
-> no pcim_intx() back then), before I started cleaning up PCI's devres.
-> This what it looked like before
-> 25216afc9db53d85dc648aba8fb7f6d31f2c8731:
-> 
-> void pci_intx(struct pci_dev *pdev, int enable)
-> {
-> 	u16 pci_command, new;
-> 
-> 	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> 
-> 	if (enable)
-> 		new = pci_command & ~PCI_COMMAND_INTX_DISABLE;
-> 	else
-> 		new = pci_command | PCI_COMMAND_INTX_DISABLE;
-> 
-> 	if (new != pci_command) {
-> 		struct pci_devres *dr;
-> 
-> 		pci_write_config_word(pdev, PCI_COMMAND, new);
-> 
-> 		dr = find_pci_dr(pdev);
-> 		if (dr && !dr->restore_intx) {
-> 			dr->restore_intx = 1;
-> 			dr->orig_intx = !enable;
-> 		}
-> 	}
-> }
-> EXPORT_SYMBOL_GPL(pci_intx);
-> 
-> If I'm not mistaken the old version did not have the problem because
-> the value to be restored only changed if new != pci_command.
-> 
-> That should always be correct, what do you think?
-> 
-> If so, only my commit 25216afc9db53d85dc648aba8fb7f6d31f2c8731 needs to
-> be fixed.
+> > On Wed, Oct 23, 2024 at 11:18:43AM +0300, Wei Fang wrote:
+> > > > > +maintainers:
+> > > > > +  - Wei Fang <wei.fang@nxp.com>
+> > > > > +  - Clark Wang <xiaoning.wang@nxp.com>
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    enum:
+> > > > > +      - nxp,imx95-netc-blk-ctrl
+> > > > > +
+> > > > > +  reg:
+> > > > > +    minItems: 2
+> > > > > +    maxItems: 3
+> > > >
+> > > > You have one device, why this is flexible? Device either has
+> > > > exactly 2 or exactly 3 IO spaces, not both depending on the context=
+.
+> > > >
+> > >
+> > > There are three register blocks, IERB and PRB are inside NETC IP,
+> > > but NETCMIX is outside NETC. There are dependencies between these
+> > > three blocks, so it is better to configure them in one driver. But
+> > > for other platforms like S32, it
+> > does
+> > > not have NETCMIX, so NETCMIX is optional.
+> >
+> > Looking at this patch (in v5), I was confused as to why you've made
+> > pcie@4cb00000
+> > a child of system-controller@4cde0000, when there's no obvious
+> > parent/child relationship between them (the ECAM node is not even
+> > within the same address space as the "system-controller@4cde0000"
+> > address space, and it's not even clear what the
+> > "system-controller@4cde0000" node _represents_:
+> >
+> > examples:
+> >   - |
+> >     bus {
+> >         #address-cells =3D <2>;
+> >         #size-cells =3D <2>;
+> >
+> >         system-controller@4cde0000 {
+> >             compatible =3D "nxp,imx95-netc-blk-ctrl";
+> >             reg =3D <0x0 0x4cde0000 0x0 0x10000>,
+> >                   <0x0 0x4cdf0000 0x0 0x10000>,
+> >                   <0x0 0x4c81000c 0x0 0x18>;
+> >             reg-names =3D "ierb", "prb", "netcmix";
+> >             #address-cells =3D <2>;
+> >             #size-cells =3D <2>;
+> >             ranges;
+> >             clocks =3D <&scmi_clk 98>;
+> >             clock-names =3D "ipg";
+> >             power-domains =3D <&scmi_devpd 18>;
+> >
+> >             pcie@4cb00000 {
+> >                 compatible =3D "pci-host-ecam-generic";
+> >                 reg =3D <0x0 0x4cb00000 0x0 0x100000>;
+> >                 #address-cells =3D <3>;
+> >                 #size-cells =3D <2>;
+> >                 device_type =3D "pci";
+> >                 bus-range =3D <0x1 0x1>;
+> >                 ranges =3D <0x82000000 0x0 0x4cce0000  0x0 0x4cce0000
+> > 0x0 0x20000
+> >                           0xc2000000 0x0 0x4cd10000  0x0
+> > 0x4cd10000  0x0 0x10000>;
+> >
+> > But then I saw your response, and I think your response answers my conf=
+usion.
+> > The "system-controller@4cde0000" node doesn't represent anything in
+> > and of itself, it is just a container to make the implementation easier=
+.
+> >
+> > The Linux driver treatment should not have a definitive say in the
+> > device tree bindings.
+> > To solve the dependencies problem, you have options such as the
+> > component API at your disposal to have a "component master" driver
+> > which waits until all its components have probed.
+> >
+> > But if the IERB, PRB and NETCMIX are separate register blocks, they
+> > should have separate OF nodes under their respective buses, and the
+> > ECAM should be on the same level. You should describe the hierarchy
+> > from the perspective of the SoC address space, and not abuse the
+> > "ranges" property here.
+>=20
+> I don't know much about component API. Today I spent some time to learn
+> about the component API framework. In my opinion, the framework is also
+> implemented based on DTS. For example, the master device specifies the sl=
+ave
+> devices through a port child node or a property of phandle-array type.
+>=20
+> For i.MX95 NETC, according to your suggestion, the probe sequence is as
+> follows:
+>=20
+> --> netxmix_probe() # NETCMIX
+> 		--> netc_prb_ierb_probe() # IERB and PRB
+> 				--> enetc4_probe() # ENETC 0/1/2
+> 				--> netc_timer_probe() #PTP Timer
+> 				--> enetc_pci_mdio_probe() # NETC EMDIO
+>=20
+>=20
+> From this sequence, there are two levels. The first level is IERB&PRB is =
+the
+> master device, NETCMIX is the slave device. The second level is IERB&PRB =
+is the
+> slave device, and ENETC, TIMER and EMDIO are the master devices. First of=
+ all, I
+> am not sure whether the component API supports mapping a slave device to
+> multiple master devices, I only know that multiple slave devices can be m=
+apped
+> to one master device. Secondly, the two levels will make the driver more
+> complicated, which is a greater challenge for us to support suspend/resum=
+e in
+> the future. As far as I know, the component helper also doesn't solve run=
+time
+> dependencies, e.g.
+> for system suspend and resume operations.
+>=20
+> I don't think there is anything wrong with the current approach. First, a=
+s you
+> said, it makes implementation easier. Second, establishing this parent-ch=
+ild
+> relationship in DTS can solve the suspend/resume operation order problem,
+> which we have verified locally. Why do we need each register block to has=
+ a
+> separated node? These are obviously different register blocks in the NETC
+> system.
 
-Yes, it looks so.  Fortunately my submitted patch pointed to the right
-Fixes tag :)
-
-
-thanks,
-
-Takashi
+Another reason as you know, many customers require Ethernet to work as soon
+as possible after Linux boots up. If the component API is used, this may de=
+lay the
+ENETC probe time, which may be unacceptable to customers.
 
