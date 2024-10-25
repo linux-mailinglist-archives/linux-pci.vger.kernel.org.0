@@ -1,141 +1,89 @@
-Return-Path: <linux-pci+bounces-15276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 100C09AFBBE
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 10:00:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FC079AFBF9
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 10:05:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B76A928455E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:00:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2FBA2820FC
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:05:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12576199948;
-	Fri, 25 Oct 2024 08:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 678C31C07E4;
+	Fri, 25 Oct 2024 08:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3bpuJkx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iSm5PcWT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3bpuJkx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iSm5PcWT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rg2wjwSJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D153170A1C;
-	Fri, 25 Oct 2024 08:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399CE1B6D00
+	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 08:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729843206; cv=none; b=Z0/HCLoboPmDTFXc4UYOP9EtiJl+NxxJNwJpFcJjQFjDxsq5ozrZElkXqj0QlLzinMo8TAYKos5LwoSotfvqls1TQAxViqXOU+LpFVBC8EZFmNDPmTHLkhh52qZK3zgiYyLC0CVm5ZVGP0JPjsTsOxf+oRAWYVJBbiFaJ2bQyms=
+	t=1729843487; cv=none; b=pnCwdeds8bb9gYnlcmrm6ITcuSl92ohjxYaIsaKym1dFMv7p7/IikrJKlR2hJPL0hSbP5vbiB1h9Va63vifyBmyNPVS2xI/fF4LHL0EEjWNJak0N6vLPdB8hRwkbyaTPSh4+18gJ7SKJ6fQY0Ziemzj3cE8G+/E52/Y7oKP3Mpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729843206; c=relaxed/simple;
-	bh=pDKoYNWc5esSfmM2VKEvc47EU0gOkj8FOL8qQDFJZYk=;
+	s=arc-20240116; t=1729843487; c=relaxed/simple;
+	bh=RlNTXHWaff+zW/Ig27eNg95TDnIhVzTtyEJbpUp0Ybc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3yUSWnigy60bFbw7c6IRgfHlXshTyd+aONOTTjV3D1AbMfwNKn0aQb2NHlMtGeQctlI7kpE9ubJuzrLZF7HqKOHOhkHuLUw03rkIrlWFsAIiBC0c5ZS+2bng8wJeEfmMvrE9x1td4JrOkqiFV6t8pqJWbe/GUXp8AG3qhP0VLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3bpuJkx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iSm5PcWT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3bpuJkx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iSm5PcWT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6FE8821E1F;
-	Fri, 25 Oct 2024 08:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729843202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=Q3bpuJkxSkOVve5uvDfli9jz2KlAsWAiPZucR6NpoGrjTSqrlZ9/qm3XU/eT9vQVnbET3I
-	TTAAXXZP+7z0PHH0dA3MZuiTGQ2TFSNvfRJuCAYA+pc5kGIbuwT5wE/GSeonj4dnHxaqqc
-	Fg6YV45j4Ieg70gSybwep693JDKmHFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729843202;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=iSm5PcWTohwwYs+NwSceqzvMUzvEepB2n1+Qq0val4EWG9nqyrd/iHlwKVqznKHhda8xxm
-	Jc1ZYwjEHHsRlQDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729843202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=Q3bpuJkxSkOVve5uvDfli9jz2KlAsWAiPZucR6NpoGrjTSqrlZ9/qm3XU/eT9vQVnbET3I
-	TTAAXXZP+7z0PHH0dA3MZuiTGQ2TFSNvfRJuCAYA+pc5kGIbuwT5wE/GSeonj4dnHxaqqc
-	Fg6YV45j4Ieg70gSybwep693JDKmHFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729843202;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
-	b=iSm5PcWTohwwYs+NwSceqzvMUzvEepB2n1+Qq0val4EWG9nqyrd/iHlwKVqznKHhda8xxm
-	Jc1ZYwjEHHsRlQDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C94FB132D3;
-	Fri, 25 Oct 2024 07:59:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1OmFJ/9PG2coWQAAD6G6ig
-	(envelope-from <aherrmann@suse.de>); Fri, 25 Oct 2024 07:59:59 +0000
-Date: Fri, 25 Oct 2024 09:59:53 +0200
-From: Andreas Herrmann <aherrmann@suse.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
-	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-	ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
-	"paulburton@kernel.org" <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Kelvin Cheung <keguang.zhang@gmail.com>,
-	Yanteng Si <siyanteng@loongson.cn>, netdev@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-serial@vger.kernel.org, Andrew Halaney <ajhalaney@gmail.com>,
-	Nikita Travkin <nikita@trvn.ru>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Evgeniy Dushistov <dushistov@mail.ru>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: linux: Goodbye from a Linux community volunteer
-Message-ID: <20241025075953.GA3559@alberich>
-References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
- <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
- <753d203a-a008-4cd3-b053-38b5ce31281b@app.fastmail.com>
- <f90bba20e86dac698472d686be7ec565736adca0.camel@HansenPartnership.com>
- <2f203b14-be13-4eef-bcb1-743dd9e9e9bd@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=P47Yf5EBqE5Wgbz1R1L0dqKDV3RGxrNnUf9q1TiJYTqdNB10OPxx4RGg7H6qNr2/UL4NiFTYvFNfq97BCvHbk2iopfI4LCYST1nTOGQC/qOjM6Xn4SvzqhLHQsSUI76lGxL9A6YxDqvbyFpHCuslUrkZbkhJmlHJCs9R7++/1To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rg2wjwSJ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20cdbe608b3so13749895ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 01:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729843484; x=1730448284; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9ToZJO2X6kblaBnpE+g9acjvZjb4BRJvfnxVqud+oi4=;
+        b=Rg2wjwSJfIguaBgYijKlgz/Y1ce1SLy7dOFVwvdtwMagmKx2UUtgevxmou9VV/CkVp
+         Nh9sXNuKkJSxklAuOIr6piLxbuMYM5LaxPbNqrE6vDZb2AxEYLr2b4frg9oa6Go8TaE+
+         oT854RGVkhU9dPZMfES4XqhV0liefLokpnNAXuT7aNWhOEoD7/8AHqIXjRMaX2V4RuNV
+         eCya5/Nlw2x9LNHE8We7IUsKCAFZFOOsjlOolSfdu+inNA0KcP3vqwQUj4HFkz0Jel3Z
+         eUYJ9p9rBiajRk/l7mP+edD2FQR7EFt7s8AHbsREhGz7/Vt8WYj6Sno1sPB2ATVEKSiW
+         WBMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729843484; x=1730448284;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ToZJO2X6kblaBnpE+g9acjvZjb4BRJvfnxVqud+oi4=;
+        b=t0imFGm5x9dQvC2n2e57EO/gOnSfJnou7VSdpRNDygoWy7uF/q+dQNoEZhjoN8ZQwA
+         lzCha4WSMNuynBGplQeUIzPUerb56Q74mHH+RxIynebv2SjGKLTnWmjTB2DF6GZj4o9E
+         tTFZkTy1f8bdlR3nBVBITbD0Rb0x7Ml4iTUvSxISOdBeESxaNQE0pYq7THNrjM5d+q4t
+         3Ik03v5yMABd8P/IR2vf/3czJ5pDSNbftSW0AzX1j39D2YZEtUFv/8YRfrwaMZWVgdWQ
+         WF7caTcMbSXO71VEOs1z1cvfLBr5Ba6PqTZ2wf7I2UpSNBb/qSSH2WUUbF7t9Vyys3KN
+         eyWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqj3LaYVrbe2u6javJYFdEfnQr4zQ3kPWacbq7Try9mnP+NApBjANv5uZBgh1syLRsXaoP6qY1+oU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyccPLSM3DZBSv3H26wW2RuQy+m6eY1apzDpAwQjKyHh0Sn9kai
+	Ad9tuBU5tc7DieYIgdbjmsQWM1HduNS3eVy+M0rxGUr5yJOjxdK+CEp/ZRlyPQ==
+X-Google-Smtp-Source: AGHT+IE3xVfBlAkAWoonLR8AHuCAQ391OAv5h0lkzeSWdIeRnLYGcfA4Wu9ZqlOLiWnAQjSychPilw==
+X-Received: by 2002:a17:903:244e:b0:20b:6624:70b2 with SMTP id d9443c01a7336-20fa9e13cf2mr124552065ad.19.1729843484373;
+        Fri, 25 Oct 2024 01:04:44 -0700 (PDT)
+Received: from thinkpad ([120.56.205.129])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc088565sm4990395ad.306.2024.10.25.01.04.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2024 01:04:43 -0700 (PDT)
+Date: Fri, 25 Oct 2024 13:34:39 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Subject: Re: [PATCH 4/5] PCI/pwrctl: Move pwrctl device creation to its own
+ helper function
+Message-ID: <20241025074827.fdkgyz3k767dgdqv@thinkpad>
+References: <20241022-pci-pwrctl-rework-v1-0-94a7e90f58c5@linaro.org>
+ <20241022-pci-pwrctl-rework-v1-4-94a7e90f58c5@linaro.org>
+ <CACMJSesmyfS4wj=ys16FmqpAoojuChY1OHSC750bjtM23y5baA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -145,97 +93,115 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2f203b14-be13-4eef-bcb1-743dd9e9e9bd@app.fastmail.com>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,mail.ru];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[hansenpartnership.com,gmail.com,kudzu.us,intel.com,lists.linux.dev,kernel.org,linux.intel.com,bootlin.com,linux.dev,vger.kernel.org,alpha.franken.de,arndb.de,google.com,linaro.org,renesas.com,davemloft.net,redhat.com,lunn.ch,armlinux.org.uk,loongson.cn,roeck-us.net,alien8.de,linuxfoundation.org,trvn.ru,jurassic.park.msu.ru,mail.ru,omp.ru,linux-m68k.org,maquefel.me];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[53];
-	R_RATELIMIT(0.00)[to_ip_from(RL9za9u4kxnfaar3549n6tyhyx)]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <CACMJSesmyfS4wj=ys16FmqpAoojuChY1OHSC750bjtM23y5baA@mail.gmail.com>
 
-On Thu, Oct 24, 2024 at 05:58:45PM +0100, Jiaxun Yang wrote:
-> 
-> 
-> 在2024年10月24日十月 下午5:27，James Bottomley写道：
-> > On Thu, 2024-10-24 at 16:59 +0100, Jiaxun Yang wrote:
-> [...]
-> 
-> Hi James,
-> 
+On Wed, Oct 23, 2024 at 12:23:57PM +0200, Bartosz Golaszewski wrote:
+> On Tue, 22 Oct 2024 at 12:28, Manivannan Sadhasivam via B4 Relay
+> <devnull+manivannan.sadhasivam.linaro.org@kernel.org> wrote:
 > >
-> > It's Linux, so no official capacity at all.  However, I am expressing
-> > the views of a number of people I talked to but it's not fair of me to
-> > name them.
-> 
-> Fair enough, I was hoping that it's from Linux Foundation but it's still
-> good news to me that it do represent some respectful individuals.
-> 
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > >
-> [...]
-> >> How should we handle it?
+> > This makes the pci_bus_add_device() API easier to maintain. Also add more
+> > comments to the helper to describe how the devices are created.
 > >
-> > A big chunk of the reason it's taken so long just to get the above is
-> > that the Lawyers (of which I'm not one) are still discussing the
-> > specifics and will produce a much longer policy document later, so they
-> > don't want to be drawn into questions like this.  However, my non-
-> > legal-advice rule of thumb that I'm applying until I hear otherwise is
-> > not on the SDN list, not a problem.
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/bus.c | 59 ++++++++++++++++++++++++++++++++++++++-----------------
+> >  1 file changed, 41 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 351af581904f..c4cae1775c9e 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -321,6 +321,46 @@ void __weak pcibios_resource_survey_bus(struct pci_bus *bus) { }
+> >
+> >  void __weak pcibios_bus_add_device(struct pci_dev *pdev) { }
+> >
+> > +/*
+> > + * Create pwrctl devices (if required) for the PCI devices to handle the power
+> > + * state.
+> > + */
+> > +static void pci_pwrctl_create_devices(struct pci_dev *dev)
+> > +{
+> > +       struct device_node *np = dev_of_node(&dev->dev);
+> > +       struct device *parent = &dev->dev;
+> > +       struct platform_device *pdev;
+> > +
+> > +       /*
+> > +        * First ensure that we are starting from a PCI bridge and it has a
+> > +        * corresponding devicetree node.
+> > +        */
+> > +       if (np && pci_is_bridge(dev)) {
+> > +               /*
+> > +                * Now look for the child PCI device nodes and create pwrctl
+> > +                * devices for them. The pwrctl device drivers will manage the
+> > +                * power state of the devices.
+> > +                */
+> > +               for_each_child_of_node_scoped(np, child) {
+> > +                       /*
+> > +                        * First check whether the pwrctl device really needs to
+> > +                        * be created or not. This is decided based on at least
+> > +                        * one of the power supplies being defined in the
+> > +                        * devicetree node of the device.
+> > +                        */
+> > +                       if (!of_pci_is_supply_present(child)) {
+> > +                               pci_dbg(dev, "skipping OF node: %s\n", child->name);
+> > +                               return;
+> > +                       }
+> > +
+> > +                       /* Now create the pwrctl device */
+> > +                       pdev = of_platform_device_create(child, NULL, parent);
+> > +                       if (!pdev)
+> > +                               pci_err(dev, "failed to create OF node: %s\n", child->name);
+> > +               }
+> > +       }
+> > +}
+> > +
+> >  /**
+> >   * pci_bus_add_device - start driver for a single device
+> >   * @dev: device to add
+> > @@ -345,24 +385,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >         pci_proc_attach_device(dev);
+> >         pci_bridge_d3_update(dev);
+> >
+> > -       if (dev_of_node(&dev->dev) && pci_is_bridge(dev)) {
+> > -               for_each_child_of_node_scoped(dn, child) {
+> > -                       /*
+> > -                        * First check whether the pwrctl device needs to be
+> > -                        * created or not. This is decided based on at least
+> > -                        * one of the power supplies being defined in the
+> > -                        * devicetree node of the device.
+> > -                        */
+> > -                       if (!of_pci_is_supply_present(child)) {
+> > -                               pci_dbg(dev, "skipping OF node: %s\n", child->name);
+> > -                               continue;
+> > -                       }
+> > -
+> > -                       pdev = of_platform_device_create(child, NULL, &dev->dev);
+> > -                       if (!pdev)
+> > -                               pci_err(dev, "failed to create OF node: %s\n", child->name);
+> > -               }
+> > -       }
+> > +       pci_pwrctl_create_devices(dev);
+> >
+> >         /*
+> >          * Create a device link between the PCI device and pwrctl device (if
+> >
+> > --
+> > 2.25.1
+> >
+> >
 > 
-> Thank you for sharing your insights. I'm looking forward to the document.
+> Would it be possible to move this into drivers/pwrctl/ and provide a
+> header stub for when PCI_PWRCTL is disabled in Kconfig?
+> 
 
-+1
+Unfortunately, no. Because the pwrctl drivers are modular and PCI core is
+built-in. So if we use the pwrctl APIs in PCI core, then it will require pwrctl
+to always be built-in, which we do not want.
 
-> While I remain quite upset about how things were handled, your message has
-> helped restore some of my confidence in the community.
-
-+1
-
-> I agree with Peter Cai's earlier comment that steps should be taken to address
-> the harm caused by the initial reckless actions, particularly to those who were
-> humiliated.
-
-+1
-
-> It is also important to put measures in place to prevent such drama from recurring.
-> A formal procedure for handling urgent compliance requests may be a sensible step
-> forward.
-
-+1
-
-> I hold our community in high regard and would be heartbreaking to see the reputation
-> of the Linux Kernel undermined in such an unfortunate manner. I would appreciate it
-> if you could convey those thoughts to the relevant individuals.
-
-+1
+- Mani
 
 -- 
-Regards,
-Andreas
-
-PS: What people also tend to forget. No matter how worse it gets in
-world affairs there always will come a time after a conflict. And
-people with brains should look forward to such times and how they can
-continue to work together then.
+மணிவண்ணன் சதாசிவம்
 
