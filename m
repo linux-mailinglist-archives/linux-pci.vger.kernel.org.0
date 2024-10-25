@@ -1,425 +1,208 @@
-Return-Path: <linux-pci+bounces-15316-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15317-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB8079B0631
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 16:51:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BCBA9B06A4
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 17:01:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AAD7283B1E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 14:51:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9239F1F23278
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 15:01:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C981384B3;
-	Fri, 25 Oct 2024 14:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE418171E65;
+	Fri, 25 Oct 2024 15:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DgJq/EiI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7qF3C0DH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p2ept/an";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RcOCTZ5I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XMFXXuqC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B2212198;
-	Fri, 25 Oct 2024 14:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FC6169AC5
+	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 15:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729867901; cv=none; b=FqIOc/noAvtVIeLnXWouqRYsRAOomjFTox5uy48RXEuGTEHm35Q7AVKzgwTdP0OCzZNeCtQSznw/vFNdxHTnknLP52OaB7UVIn18imi6Vm4zIPCbi1d+lus8gnlgczT7p1oc85+hQhdAFldxCOs4VXLf4+KkS4w2/kySH6VkeD4=
+	t=1729868442; cv=none; b=Y0wyYGR77fdXt0mug+aWsrVE7pUtblUyX8pNbIiG8/w2NppM+bm/KxuwJ/5jVvtxFYmH/8+r3Y2var3Innq7zpYgknJjjZP659mHmpxg/jyVw67nqVV4srafEAoEAhWw6kx16hjNaJLfJlmK36hbm+I3mZCCnAUinDld82fJiXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729867901; c=relaxed/simple;
-	bh=JzQXJixmo0pWU+4DOmASce4WDJG5m+HYBpUMuDnxyJA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j4z/y2RqbKlVmg8kRTpOiDAKw3PFuIzsyrEp/bigVw4NVpVVbXF0Gr9Q7/2hUqUx3swVd/K9tKnRVzlPQK8UV4KvoPUSt/rxyxTeJAuXzHA3GvPmS1VPwSxItREPGpo5YWoyuYO0JbyFtA+iAfEiHzin3J/3N6TQHlP9y2ba/18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DgJq/EiI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7qF3C0DH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p2ept/an; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RcOCTZ5I; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EB7511F7F8;
-	Fri, 25 Oct 2024 14:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729867896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUFv99z+SBgkrrBnKamNrjnOE4wIrlieB9qgKNwHbD4=;
-	b=DgJq/EiIZzukmfJ8ORrQIfEWu0YpGl2eyTw6v+ZYJ8jwzvpSA+lwMPFLQhPCXnc6kVTQfS
-	9VrATpolgquLp1NSsUOabrwG9kZVKsnJcFKGHqVSgnPEHkCHkgimPTHSSt2iixVLELfV24
-	m3VuoLx1bDEC6RWhyiqrsxM8XB82A4U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729867896;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUFv99z+SBgkrrBnKamNrjnOE4wIrlieB9qgKNwHbD4=;
-	b=7qF3C0DHsy4URMPQvsFfJ9Tpa5zSpSkgsEQaZ6bVyGEdowHY2c9sVKKq90Gt4e3iZNVX7b
-	k44eLrtFbZQmyfCg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="p2ept/an";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RcOCTZ5I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729867895; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUFv99z+SBgkrrBnKamNrjnOE4wIrlieB9qgKNwHbD4=;
-	b=p2ept/angdVXAEIaWM/QB7chy+U1jSNsUCPUtogk1FokvnH+P9AziLgBg5x1WCAM1Tbodw
-	C1CKeJUd/SUNy0Uv0tfyw4g3fxhgEnpuOW9IG4qUHwtP3yGFUxOd5Hwb1Mg+Ta4IYnT2oh
-	flqxV0FlcgHKqMihprX4tmQJ74ilpEc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729867895;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUFv99z+SBgkrrBnKamNrjnOE4wIrlieB9qgKNwHbD4=;
-	b=RcOCTZ5IOcbDCVH5esFFv+pEVGdGh8fygf0w51lwjf/cJDyH3H0tpd0q319ZBXnzQ6X4up
-	BwMDuSjzAvO9fRAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C362A136F5;
-	Fri, 25 Oct 2024 14:51:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id JmuDLnewG2c4YwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 25 Oct 2024 14:51:35 +0000
-Date: Fri, 25 Oct 2024 16:52:36 +0200
-Message-ID: <87ldycs097.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
+	s=arc-20240116; t=1729868442; c=relaxed/simple;
+	bh=qn2zisIVAp1A3sOByjD0CKUjzgN/331GtrAdNv9H2Gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aw1U366HIJnumf4azO3sjLr8BO51Y46FEA5nwlttGwFGLW44aN4AaUUdOt/1s6H2AHdogcYHPRUwr/uHdRVDtc6ata5ZqtoQdlNb/LxxF0jNgxW9xfcUnCtkXKwOffjQrpYNCGhGUhceEj2/BrtYUmM6nLMqFF5oXXZxo2R2NO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XMFXXuqC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729868438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6mk7pVJi4FxC5YCmtGMcoceHkePQhE8sXwo0Yl4cl4Y=;
+	b=XMFXXuqCWVUAVm2tG0dM6PHfyyu2sAT5PygTKygfI0PlWJGAFHZ3iM/d2ihMi/CP50iLyq
+	cZZbMf6XKhTF+mAjaPJoOiRsVUXeCPIGNVTjqyGiCMTSG7nZaKRqfg+nt77nzC63/p0nNY
+	hYKf70wC3UUel+04RKeBK0NIJHhSEI8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-164-sjC0DZDwMImhpX9qv60_rQ-1; Fri, 25 Oct 2024 11:00:37 -0400
+X-MC-Unique: sjC0DZDwMImhpX9qv60_rQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43163a40ee0so16020155e9.0
+        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 08:00:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729868436; x=1730473236;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6mk7pVJi4FxC5YCmtGMcoceHkePQhE8sXwo0Yl4cl4Y=;
+        b=c9t3T9IQZAoGaYG+3XHUtqhF/u2pXapaAHOC97qkJrfKCyoEcKWrvRTcBYt39O1apa
+         0YjhjGOQGsYvzpH1vJvRhh1aEJR8Wl/GTd02nOjvkxqXQ4eESTy7zGabvv7aY9cujoqn
+         ZLhp95TrC9+y2M1tX7ySvLs5EHlXvhCWQAZreaR+IojFq3rlO9h6FVvCKCG/UwOBr+sV
+         m0TlhAkPbetnnYBMdt8h5aPIG6pmUQj9aIkb0P43K8xszPOhzH1aC9RMpXd7Um+Y5U+Q
+         gXPm4dqYrn7Lvri43tR5sbalpm5jXZ+6aZe7uigs6I5NNlGIbYKuetxkF0786vTGXEOz
+         KgCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBnc+kHQdOH15davFW6MO/d9ER6wpJUncWPEF16zyGUhxGcxadutUnA/mmYL9NjGhn3nNfmEdLtIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxce5DvhxfQMnqPxF8g7xuZ5hhp4wt70bDcVQmYgKvJKao+vqKv
+	KUxl/tINh+WCuQrccn2PLZI7uktQUHYFw85Y98zhRmUIFaZt9qoiSYZpWgAzz99/BnHeGc2GpR4
+	8eg18dszZin8JxqgBXIrgXN9b/KPVW38v4t/VSF2PEjeo3KdjIL/+uWdtdQ==
+X-Received: by 2002:adf:eac4:0:b0:37c:d2f0:7331 with SMTP id ffacd0b85a97d-3803ab1a8bbmr4410345f8f.0.1729868435663;
+        Fri, 25 Oct 2024 08:00:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDs+qGkPhYGAaZ+QRORXNw+V6iATQJifr1mVHJ8hw/ogKGV0BNUWn6+ubNlvP8p8bNny4MNA==
+X-Received: by 2002:adf:eac4:0:b0:37c:d2f0:7331 with SMTP id ffacd0b85a97d-3803ab1a8bbmr4410253f8f.0.1729868435070;
+        Fri, 25 Oct 2024 08:00:35 -0700 (PDT)
+Received: from eisenberg.fritz.box (200116b82de5ba00738ac8dadaac7543.dip.versatel-1u1.de. [2001:16b8:2de5:ba00:738a:c8da:daac:7543])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b9216fsm1727189f8f.100.2024.10.25.08.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2024 08:00:34 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Arnaud Ebalard <arno@natisbad.org>,
+	Srujana Challa <schalla@marvell.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
+	Kevin Cernekee <cernekee@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jie Wang <jie.wang@intel.com>,
+	Tero Kristo <tero.kristo@linux.intel.com>,
+	Adam Guerin <adam.guerin@intel.com>,
+	Shashank Gupta <shashank.gupta@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Nithin Dabilpuram <ndabilpuram@marvell.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Breno Leitao <leitao@debian.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	qat-linux@intel.com,
+	linux-crypto@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	ntb@lists.linux.dev,
 	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Restore the original INTX_DISABLE bit by pcim_intx()
-In-Reply-To: <5b2911489844f6a970da053ebfc126eddf7c896c.camel@redhat.com>
-References: <20241024155539.19416-1-tiwai@suse.de>
-	<933083faa55109949cbb5a07dcec27f3e4bff9ec.camel@redhat.com>
-	<87y12csbqe.wl-tiwai@suse.de>
-	<5b2911489844f6a970da053ebfc126eddf7c896c.camel@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	linux-serial@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH 00/10] Remove pcim_iomap_regions_request_all()
+Date: Fri, 25 Oct 2024 16:59:43 +0200
+Message-ID: <20241025145959.185373-1-pstanner@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EB7511F7F8
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-On Fri, 25 Oct 2024 16:28:42 +0200,
-Philipp Stanner wrote:
-> 
-> On Fri, 2024-10-25 at 12:44 +0200, Takashi Iwai wrote:
-> > On Fri, 25 Oct 2024 11:26:18 +0200,
-> > Philipp Stanner wrote:
-> > > 
-> > > Hi,
-> > > 
-> > > On Thu, 2024-10-24 at 17:55 +0200, Takashi Iwai wrote:
-> > > > pcim_intx() tries to restore the INTX_DISABLE bit at removal via
-> > > > devres, but there is a chance that it restores a wrong value.
-> > > > Because the value to be restored is blindly assumed to be the
-> > > > negative
-> > > > of the enable argument, when a driver calls pcim_intx()
-> > > > unnecessarily
-> > > > for the already enabled state, it'll restore to the disabled
-> > > > state in
-> > > > turn.
-> > > 
-> > > It depends on how it is called, no?
-> > > 
-> > > // INTx == 1
-> > > pcim_intx(pdev, 0); // old INTx value assumed to be 1 -> correct
-> > > 
-> > > ---
-> > > 
-> > > // INTx == 0
-> > > pcim_intx(pdev, 0); // old INTx value assumed to be 1 -> wrong
-> > > 
-> > > Maybe it makes sense to replace part of the commit text with
-> > > something
-> > > like the example above?
-> > 
-> > If it helps better understanding, why not.
-> > 
-> > > >   Also, when a driver calls pcim_intx() multiple times with
-> > > > different enable argument values, the last one will win no matter
-> > > > what
-> > > > value it is.
-> > > 
-> > > Means
-> > > 
-> > > // INTx == 0
-> > > pcim_intx(pdev, 0); // orig_INTx == 1, INTx == 0
-> > > pcim_intx(pdev, 1); // orig_INTx == 0, INTx == 1
-> > > pcim_intx(pdev, 0); // orig_INTx == 1, INTx == 0
-> > > 
-> > > So in this example the first call would cause a wrong orig_INTx,
-> > > but
-> > > the last call – the one "who will win" – seems to do the right
-> > > thing,
-> > > dosen't it?
-> > 
-> > Yes and no.  The last call wins to write the current value, but
-> > shouldn't win for setting the original value.  The original value
-> > must
-> > be recorded only from the first call.
-> 
-> Alright, so you think that pcim_intx() should always restore the INTx
-> state that existed before the driver was loaded.
-> 
-> > > > This patch addresses those inconsistencies by saving the original
-> > > > INTX_DISABLE state at the first devres_alloc(); this assures that
-> > > > the
-> > > > original state is restored properly, and the later pcim_intx()
-> > > > calls
-> > > > won't overwrite res->orig_intx any longer.
-> > > > 
-> > > > Fixes: 25216afc9db5 ("PCI: Add managed pcim_intx()")
-> > > 
-> > > That commit is also in 6.11, so we need:
-> > > 
-> > > Cc: stable@vger.kernel.org # 6.11+
-> > 
-> > OK.
-> > 
-> > > > Link: https://lore.kernel.org/87v7xk2ps5.wl-tiwai@suse.de
-> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > > > ---
-> > > >  drivers/pci/devres.c | 18 ++++++++++++++----
-> > > >  1 file changed, 14 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> > > > index b133967faef8..aed3c9a355cb 100644
-> > > > --- a/drivers/pci/devres.c
-> > > > +++ b/drivers/pci/devres.c
-> > > > @@ -438,8 +438,17 @@ static void pcim_intx_restore(struct device
-> > > > *dev, void *data)
-> > > >  	__pcim_intx(pdev, res->orig_intx);
-> > > >  }
-> > > >  
-> > > > -static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> > > > device *dev)
-> > > > +static void save_orig_intx(struct pci_dev *pdev, struct
-> > > > pcim_intx_devres *res)
-> > > >  {
-> > > > +	u16 pci_command;
-> > > > +
-> > > > +	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
-> > > > +	res->orig_intx = !(pci_command &
-> > > > PCI_COMMAND_INTX_DISABLE);
-> > > > +}
-> > > > +
-> > > > +static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> > > > pci_dev *pdev)
-> > > > +{
-> > > > +	struct device *dev = &pdev->dev;
-> > > >  	struct pcim_intx_devres *res;
-> > > >  
-> > > >  	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
-> > > > @@ -447,8 +456,10 @@ static struct pcim_intx_devres
-> > > > *get_or_create_intx_devres(struct device *dev)
-> > > >  		return res;
-> > > >  
-> > > >  	res = devres_alloc(pcim_intx_restore, sizeof(*res),
-> > > > GFP_KERNEL);
-> > > > -	if (res)
-> > > > +	if (res) {
-> > > > +		save_orig_intx(pdev, res);
-> > > 
-> > > This is not the correct place – get_or_create_intx_devres() should
-> > > get
-> > > the resource if it exists, or allocate it if it doesn't, but its
-> > > purpose is not to modify the resource.
-> > 
-> > The behavior of the function makes the implementation a bit harder,
-> > because the initialization of res->orig_intx should be done only once
-> > at the very first call.
-> > 
-> > > >  		devres_add(dev, res);
-> > > > +	}
-> > > >  
-> > > >  	return res;
-> > > >  }
-> > > > @@ -467,11 +478,10 @@ int pcim_intx(struct pci_dev *pdev, int
-> > > > enable)
-> > > >  {
-> > > >  	struct pcim_intx_devres *res;
-> > > >  
-> > > > -	res = get_or_create_intx_devres(&pdev->dev);
-> > > > +	res = get_or_create_intx_devres(pdev);
-> > > >  	if (!res)
-> > > >  		return -ENOMEM;
-> > > >  
-> > > > -	res->orig_intx = !enable;
-> > > 
-> > > Here is the right place to call save_orig_intx(). That way you also
-> > > won't need the new variable struct device *dev above :)
-> > 
-> > The problem is that, at this place, we don't know whether it's a
-> > freshly created devres or it's an inherited one.  So, we'd need to
-> > modify get_or_create_intx_devres() to indicate that it's a new
-> > creation.  Or, maybe simpler would be rather to flatten
-> > get_or_create_intx_devres() into pcim_intx().  It's a small function,
-> > and it wouldn't be worsen the readability so much.
-> 
-> That might be the best solution. If it's done that way it should
-> include a comment detailing the problem.
-> 
-> Looking at the implementation of pci_intx() before
-> 25216afc9db53d85dc648aba8fb7f6d31f2c8731 probably indicates that you're
-> right:
-> 
-> 	if (dr && !dr->restore_intx) {
-> 		dr->restore_intx = 1;
-> 		dr->orig_intx = !enable;
-> 	}
-> 
-> 
-> So they used a boolean to only take the first state. Although that
-> still wouldn't have necessarily been the pre-driver INTx state.
+All Acked-by's are in place now.
 
-IIRC, this code path is reached only after checking that the INTx
-state is changed.  Hence "!enable" is assured to be the pre-driver
-INTx state in the old code.
+Changes in v5:
+  - Add Acked-by's from Alexander and Bharat (the latter sent off-list,
+    because of some issue with receiving the previous patch sets).
+
+Changes in v4:
+  - Add Acked-by's from Giovanni and Kalle.
+
+Changes in v3:
+  - Add missing full stops to commit messages (Andy).
+
+Changes in v2:
+  - Fix a bug in patch №4 ("crypto: marvell ...") where an error code
+    was not set before printing it. (Me)
+  - Apply Damien's Reviewed- / Acked-by to patches 1, 2 and 10. (Damien)
+  - Apply Serge's Acked-by to patch №7. (Serge)
+  - Apply Jiri's Reviewed-by to patch №8. (Jiri)
+  - Apply Takashi Iwai's Reviewed-by to patch №9. (Takashi)
 
 
-> > 
-> > That is, something like below.
-> > 
-> > 
-> > thanks,
-> > 
-> > Takashi
-> > 
-> > --- a/drivers/pci/devres.c
-> > +++ b/drivers/pci/devres.c
-> > @@ -438,21 +438,6 @@ static void pcim_intx_restore(struct device
-> > *dev, void *data)
-> >  	__pcim_intx(pdev, res->orig_intx);
-> >  }
-> >  
-> > -static struct pcim_intx_devres *get_or_create_intx_devres(struct
-> > device *dev)
-> > -{
-> > -	struct pcim_intx_devres *res;
-> > -
-> > -	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
-> > -	if (res)
-> > -		return res;
-> > -
-> > -	res = devres_alloc(pcim_intx_restore, sizeof(*res),
-> > GFP_KERNEL);
-> > -	if (res)
-> > -		devres_add(dev, res);
-> > -
-> > -	return res;
-> > -}
-> > -
-> >  /**
-> >   * pcim_intx - managed pci_intx()
-> >   * @pdev: the PCI device to operate on
-> > @@ -466,12 +451,21 @@ static struct pcim_intx_devres
-> > *get_or_create_intx_devres(struct device *dev)
-> >  int pcim_intx(struct pci_dev *pdev, int enable)
-> >  {
-> >  	struct pcim_intx_devres *res;
-> > +	struct device *dev = &pdev->dev;
-> > +	u16 pci_command;
-> >  
-> > -	res = get_or_create_intx_devres(&pdev->dev);
-> > -	if (!res)
-> > -		return -ENOMEM;
-> > +	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
-> 
-> sth like:
-> 
-> /*
->  * pcim_intx() must only restore the INTx value that existed before the
->  * driver was loaded, i.e., before it called pcim_intx() for the
->  * first time.
->  */
+Hi all,
 
-OK, will add it.
+the PCI subsystem is currently working on cleaning up its devres API. To
+do so, a few functions will be replaced with better alternatives.
 
-> > +	if (!res) {
-> > +		res = devres_alloc(pcim_intx_restore, sizeof(*res),
-> > GFP_KERNEL);
-> > +		if (!res)
-> > +			return -ENOMEM;
-> > +
-> > +		pci_read_config_word(pdev, PCI_COMMAND,
-> > &pci_command);
-> > +		res->orig_intx = !(pci_command &
-> > PCI_COMMAND_INTX_DISABLE);
-> > +
-> > +		devres_add(dev, res);
-> > +	}
-> >  
-> > -	res->orig_intx = !enable;
-> >  	__pcim_intx(pdev, enable);
-> 
-> Looks like a good idea to me
-> 
-> The only thing I'm wondering about right now is the following: In the
-> old days, there was only pci_intx(), which either did devres or didn't.
-> 
-> Now you have two functions, pcim_intx() and pci_intx().
-> 
-> The thing is that the driver could theoretically still intermingle them
-> and for example call pci_intx() before pcim_intx(), which would lead
-> the latter to still restore the wrong value.
-> 
-> But that's very unlikely and I'm not sure whether we can do something
-> about it.
+This series removes pcim_iomap_regions_request_all(), which has been
+deprecated already, and accordingly replaces the calls to
+pcim_iomap_table() (which were only necessary because of
+pcim_iomap_regions_request_all() in the first place) with calls to
+pcim_iomap().
 
-Right, pcim_intx() assures to restore INTx value back to the moment it
-was called.  And that should be enough and consistent behavior.
+Would be great if you can take a look whether this behaves as you
+intended for your respective component.
 
-BTW, a possible optimization would be to skip the devres if the value
-isn't really changed from the current state (which is similar like the
-old code before pcim_intx()).  OTOH, this can lead to inconsistencies
-when INTx is changed manually after pcim_intx() somehow.  So maybe
-it's not worth.
+Cheers,
+Philipp
 
+Philipp Stanner (10):
+  PCI: Make pcim_request_all_regions() a public function
+  ata: ahci: Replace deprecated PCI functions
+  crypto: qat - replace deprecated PCI functions
+  crypto: marvell - replace deprecated PCI functions
+  intel_th: pci: Replace deprecated PCI functions
+  wifi: iwlwifi: replace deprecated PCI functions
+  ntb: idt: Replace deprecated PCI functions
+  serial: rp2: Replace deprecated PCI functions
+  ALSA: korg1212: Replace deprecated PCI functions
+  PCI: Remove pcim_iomap_regions_request_all()
 
-thanks,
+ .../driver-api/driver-model/devres.rst        |  1 -
+ drivers/ata/acard-ahci.c                      |  6 +-
+ drivers/ata/ahci.c                            |  6 +-
+ drivers/crypto/intel/qat/qat_420xx/adf_drv.c  | 11 +++-
+ drivers/crypto/intel/qat/qat_4xxx/adf_drv.c   | 11 +++-
+ .../marvell/octeontx2/otx2_cptpf_main.c       | 14 +++--
+ .../marvell/octeontx2/otx2_cptvf_main.c       | 13 ++--
+ drivers/hwtracing/intel_th/pci.c              |  9 ++-
+ .../net/wireless/intel/iwlwifi/pcie/trans.c   | 16 ++---
+ drivers/ntb/hw/idt/ntb_hw_idt.c               | 13 ++--
+ drivers/pci/devres.c                          | 59 +------------------
+ drivers/tty/serial/rp2.c                      | 12 ++--
+ include/linux/pci.h                           |  3 +-
+ sound/pci/korg1212/korg1212.c                 |  6 +-
+ 14 files changed, 76 insertions(+), 104 deletions(-)
 
-Takashi
+-- 
+2.47.0
+
 
