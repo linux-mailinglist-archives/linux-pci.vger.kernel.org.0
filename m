@@ -1,162 +1,241 @@
-Return-Path: <linux-pci+bounces-15275-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15276-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 974A39AFBA7
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 09:57:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 100C09AFBBE
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 10:00:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55D5A28439C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 07:57:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B76A928455E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 08:00:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 629A11C07E4;
-	Fri, 25 Oct 2024 07:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12576199948;
+	Fri, 25 Oct 2024 08:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1fOE+Hpq"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3bpuJkx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iSm5PcWT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q3bpuJkx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iSm5PcWT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B561BA89C
-	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 07:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D153170A1C;
+	Fri, 25 Oct 2024 08:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729843059; cv=none; b=qX4ovWzEsGSpuK6osNOK7SN4thivKwcm/CLsrifr5kH3lDXjctXap+RSmJRL+D8k9wNzBKngfkWrG+smPKex/Gi/JK0IMZ3bAj48nFLO0wXN8WyEEC/5AT/vEIYRrq6g1DsKgvrrxav1SvCn1kprfheg6jI3dXYrtEQ60FaupBY=
+	t=1729843206; cv=none; b=Z0/HCLoboPmDTFXc4UYOP9EtiJl+NxxJNwJpFcJjQFjDxsq5ozrZElkXqj0QlLzinMo8TAYKos5LwoSotfvqls1TQAxViqXOU+LpFVBC8EZFmNDPmTHLkhh52qZK3zgiYyLC0CVm5ZVGP0JPjsTsOxf+oRAWYVJBbiFaJ2bQyms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729843059; c=relaxed/simple;
-	bh=GUWVH2uka6Ld8tCz6VApcxZXAPIqIZt0tZL1jnDrQdk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DL2zVdYnjmIZBJrORz3MTPzy9sUSqF9JzjBZSfGRlefV1byqm/Ztk+b35nMbTBb4Uz9x6B2fhhvZagFnt2pyp+3KD1a4Yu6obQ99tJ0QUL0eCZgIDob60sN7LiZscCrEA5kM3k2ob/o7Vq+KBwKPfFb497Ry0m3uthh3T6fKQJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1fOE+Hpq; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-539f8490856so1657447e87.2
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 00:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729843055; x=1730447855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XMR9mRKdj+7kyzA4vhiQt23W1ro+2aLzgQAgkPaGHvo=;
-        b=1fOE+HpqWTSJs93V/tSdANSYrglX1QBr7zHBd4sR/rYtAibgoLOmMgz1+DM04ZlN+g
-         ZF8EroAa7as8kaQ2t+hnHj1OC5osSmkUC30GNeeapxpXdXJ8QQsvf1y6dM9//QeSc/v2
-         xnU0G8YciREuXgaFGHclkp2ABFoFSXQJIddUJHI763C+e0PMUDCbWom3FeE5TnzjIuO1
-         Hti8HSqtC06JUPecBYJwCLYHrQV4cYky/yvczySIHL0GfkukZLa9aAATGzdgKHfu/MdD
-         ab13Kc3ytDJvNhoXcXa2CaiJIfil4r5UoRYEzQopUqgE1/HpgfmPDneuhM3sBg0S/4HS
-         oqUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729843055; x=1730447855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XMR9mRKdj+7kyzA4vhiQt23W1ro+2aLzgQAgkPaGHvo=;
-        b=gEH00KPu272CzgSBiQfzt4wDAu9Ww++G4RdQj2HstOvCUAc5fTGRhiodPreDT+7++1
-         Rj/YRj9iN/KD5Ri/Ewa6fZuLC1nQGhMdK85CSf8Iei3qg46w4SHvtj2LuVa7xoLwdlNg
-         MTh4b1XU+rvmdOLdCxuF0A1suZa1DFX6WgTQ7DJwSxSJSvrgP/00AEAHe0l7j+dcXnBo
-         mwPoC0S4o1N2+Gkccr8CmIuElYBtZbPr/ehbGKf6QaGB3qtC7BJYwtE1t4cc3uF4O5qh
-         MijnTuiC2zto3w7wPLvsZWp8JOhgctH9yE4Ob+h8uc+kb/EHP0B2zXIVRgpDeNv1JolS
-         UYWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpM4Oyxjxooo50OAA7KD6iz+zUM7rL0F298eTdevKxuNnoxS4HNNVF7ggV2PiDRS+TrrkxY/XCVaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG8FNCQGQMD425UmEpE9TlQ3Bx47pZGFEMxuLY/2RQso5ZjYdd
-	b/S0yDEcb6NxMIC1cy/gpDPaahlfnNB2ePMlyjmoWqFZnfZkMk9ZWWGrgnqHqmLufzQOFXfvggj
-	tTXlb6yf3NbRH5gwNSkZlO2U3gQJDzAeJ4CfMAg==
-X-Google-Smtp-Source: AGHT+IG81yduQs+Bl3t/NFGz2vsyEiOruGsX6ejobqqT+9o7J2c4ElDzuZkjCn3QbP2hahDTUHVemSq8Xd5QxoUYmdw=
-X-Received: by 2002:a05:6512:2354:b0:539:f12f:2531 with SMTP id
- 2adb3069b0e04-53b1a37ca2bmr5293218e87.50.1729843055382; Fri, 25 Oct 2024
- 00:57:35 -0700 (PDT)
+	s=arc-20240116; t=1729843206; c=relaxed/simple;
+	bh=pDKoYNWc5esSfmM2VKEvc47EU0gOkj8FOL8qQDFJZYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3yUSWnigy60bFbw7c6IRgfHlXshTyd+aONOTTjV3D1AbMfwNKn0aQb2NHlMtGeQctlI7kpE9ubJuzrLZF7HqKOHOhkHuLUw03rkIrlWFsAIiBC0c5ZS+2bng8wJeEfmMvrE9x1td4JrOkqiFV6t8pqJWbe/GUXp8AG3qhP0VLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3bpuJkx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iSm5PcWT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q3bpuJkx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iSm5PcWT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6FE8821E1F;
+	Fri, 25 Oct 2024 08:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729843202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
+	b=Q3bpuJkxSkOVve5uvDfli9jz2KlAsWAiPZucR6NpoGrjTSqrlZ9/qm3XU/eT9vQVnbET3I
+	TTAAXXZP+7z0PHH0dA3MZuiTGQ2TFSNvfRJuCAYA+pc5kGIbuwT5wE/GSeonj4dnHxaqqc
+	Fg6YV45j4Ieg70gSybwep693JDKmHFw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729843202;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
+	b=iSm5PcWTohwwYs+NwSceqzvMUzvEepB2n1+Qq0val4EWG9nqyrd/iHlwKVqznKHhda8xxm
+	Jc1ZYwjEHHsRlQDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729843202; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
+	b=Q3bpuJkxSkOVve5uvDfli9jz2KlAsWAiPZucR6NpoGrjTSqrlZ9/qm3XU/eT9vQVnbET3I
+	TTAAXXZP+7z0PHH0dA3MZuiTGQ2TFSNvfRJuCAYA+pc5kGIbuwT5wE/GSeonj4dnHxaqqc
+	Fg6YV45j4Ieg70gSybwep693JDKmHFw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729843202;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gt4eKGHTaDKGDIpEe7BbcCU3OPOhB5+NbtQhvob/2u0=;
+	b=iSm5PcWTohwwYs+NwSceqzvMUzvEepB2n1+Qq0val4EWG9nqyrd/iHlwKVqznKHhda8xxm
+	Jc1ZYwjEHHsRlQDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C94FB132D3;
+	Fri, 25 Oct 2024 07:59:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1OmFJ/9PG2coWQAAD6G6ig
+	(envelope-from <aherrmann@suse.de>); Fri, 25 Oct 2024 07:59:59 +0000
+Date: Fri, 25 Oct 2024 09:59:53 +0200
+From: Andreas Herrmann <aherrmann@suse.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Serge Semin <fancer.lancer@gmail.com>, Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+	ntb@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Cai Huoqing <cai.huoqing@linux.dev>, dmaengine@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	"paulburton@kernel.org" <paulburton@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Kelvin Cheung <keguang.zhang@gmail.com>,
+	Yanteng Si <siyanteng@loongson.cn>, netdev@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-serial@vger.kernel.org, Andrew Halaney <ajhalaney@gmail.com>,
+	Nikita Travkin <nikita@trvn.ru>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Alexander Shiyan <shc_work@mail.ru>, Dmitry Kozlov <xeb@mail.ru>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Evgeniy Dushistov <dushistov@mail.ru>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Nikita Shubin <nikita.shubin@maquefel.me>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: linux: Goodbye from a Linux community volunteer
+Message-ID: <20241025075953.GA3559@alberich>
+References: <2m53bmuzemamzc4jzk2bj7tli22ruaaqqe34a2shtdtqrd52hp@alifh66en3rj>
+ <e7d548a7fc835f9f3c9cb2e5ed97dfdfa164813f.camel@HansenPartnership.com>
+ <753d203a-a008-4cd3-b053-38b5ce31281b@app.fastmail.com>
+ <f90bba20e86dac698472d686be7ec565736adca0.camel@HansenPartnership.com>
+ <2f203b14-be13-4eef-bcb1-743dd9e9e9bd@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025-pci-pwrctl-rework-v2-0-568756156cbe@linaro.org> <20241025-pci-pwrctl-rework-v2-1-568756156cbe@linaro.org>
-In-Reply-To: <20241025-pci-pwrctl-rework-v2-1-568756156cbe@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 25 Oct 2024 09:57:23 +0200
-Message-ID: <CAMRc=MeWQLGDcjNpdnwAdXr0k3ME_g65dFXyd78bzK-tPrEW_g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] PCI/pwrctl: Use of_platform_device_create() to
- create pwrctl devices
-To: manivannan.sadhasivam@linaro.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2f203b14-be13-4eef-bcb1-743dd9e9e9bd@app.fastmail.com>
+X-Spam-Score: -2.30
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,mail.ru];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[hansenpartnership.com,gmail.com,kudzu.us,intel.com,lists.linux.dev,kernel.org,linux.intel.com,bootlin.com,linux.dev,vger.kernel.org,alpha.franken.de,arndb.de,google.com,linaro.org,renesas.com,davemloft.net,redhat.com,lunn.ch,armlinux.org.uk,loongson.cn,roeck-us.net,alien8.de,linuxfoundation.org,trvn.ru,jurassic.park.msu.ru,mail.ru,omp.ru,linux-m68k.org,maquefel.me];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[53];
+	R_RATELIMIT(0.00)[to_ip_from(RL9za9u4kxnfaar3549n6tyhyx)]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, Oct 25, 2024 at 9:55=E2=80=AFAM Manivannan Sadhasivam via B4 Relay
-<devnull+manivannan.sadhasivam.linaro.org@kernel.org> wrote:
->
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> of_platform_populate() API creates platform devices by descending through
-> the children of the parent node. But it provides no control over the chil=
-d
-> nodes, which makes it difficult to add checks for the child nodes in the
-> future. So use of_platform_device_create() API together with
-> for_each_child_of_node_scoped() so that it is possible to add checks for
-> each node before creating the platform device.
->
-> Tested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/bus.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 55c853686051..9d278d3a19ff 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -13,6 +13,7 @@
->  #include <linux/ioport.h>
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
->  #include <linux/proc_fs.h>
->  #include <linux/slab.h>
->
-> @@ -329,6 +330,7 @@ void __weak pcibios_bus_add_device(struct pci_dev *pd=
-ev) { }
->  void pci_bus_add_device(struct pci_dev *dev)
->  {
->         struct device_node *dn =3D dev->dev.of_node;
-> +       struct platform_device *pdev;
->         int retval;
->
->         /*
-> @@ -351,11 +353,11 @@ void pci_bus_add_device(struct pci_dev *dev)
->         pci_dev_assign_added(dev, true);
->
->         if (dev_of_node(&dev->dev) && pci_is_bridge(dev)) {
-> -               retval =3D of_platform_populate(dev_of_node(&dev->dev), N=
-ULL, NULL,
-> -                                             &dev->dev);
-> -               if (retval)
-> -                       pci_err(dev, "failed to populate child OF nodes (=
-%d)\n",
-> -                               retval);
-> +               for_each_available_child_of_node_scoped(dn, child) {
-> +                       pdev =3D of_platform_device_create(child, NULL, &=
-dev->dev);
-> +                       if (!pdev)
-> +                               pci_err(dev, "failed to create OF node: %=
-s\n", child->name);
-> +               }
->         }
->  }
->  EXPORT_SYMBOL_GPL(pci_bus_add_device);
->
-> --
-> 2.25.1
->
->
+On Thu, Oct 24, 2024 at 05:58:45PM +0100, Jiaxun Yang wrote:
+> 
+> 
+> 在2024年10月24日十月 下午5:27，James Bottomley写道：
+> > On Thu, 2024-10-24 at 16:59 +0100, Jiaxun Yang wrote:
+> [...]
+> 
+> Hi James,
+> 
+> >
+> > It's Linux, so no official capacity at all.  However, I am expressing
+> > the views of a number of people I talked to but it's not fair of me to
+> > name them.
+> 
+> Fair enough, I was hoping that it's from Linux Foundation but it's still
+> good news to me that it do represent some respectful individuals.
+> 
+> >
+> [...]
+> >> How should we handle it?
+> >
+> > A big chunk of the reason it's taken so long just to get the above is
+> > that the Lawyers (of which I'm not one) are still discussing the
+> > specifics and will produce a much longer policy document later, so they
+> > don't want to be drawn into questions like this.  However, my non-
+> > legal-advice rule of thumb that I'm applying until I hear otherwise is
+> > not on the SDN list, not a problem.
+> 
+> Thank you for sharing your insights. I'm looking forward to the document.
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++1
+
+> While I remain quite upset about how things were handled, your message has
+> helped restore some of my confidence in the community.
+
++1
+
+> I agree with Peter Cai's earlier comment that steps should be taken to address
+> the harm caused by the initial reckless actions, particularly to those who were
+> humiliated.
+
++1
+
+> It is also important to put measures in place to prevent such drama from recurring.
+> A formal procedure for handling urgent compliance requests may be a sensible step
+> forward.
+
++1
+
+> I hold our community in high regard and would be heartbreaking to see the reputation
+> of the Linux Kernel undermined in such an unfortunate manner. I would appreciate it
+> if you could convey those thoughts to the relevant individuals.
+
++1
+
+-- 
+Regards,
+Andreas
+
+PS: What people also tend to forget. No matter how worse it gets in
+world affairs there always will come a time after a conflict. And
+people with brains should look forward to such times and how they can
+continue to work together then.
 
