@@ -1,220 +1,216 @@
-Return-Path: <linux-pci+bounces-15349-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15350-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 800BF9B0F7F
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 22:05:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B72229B110B
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 22:58:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A23C92841E1
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 20:05:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B644B216B8
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 20:58:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E69618BBB7;
-	Fri, 25 Oct 2024 20:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC1D21F250;
+	Fri, 25 Oct 2024 20:48:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WnR+5JuU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0JoU/cz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A7418C027
-	for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 20:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A01A21A4D9;
+	Fri, 25 Oct 2024 20:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729886707; cv=none; b=UzOgHlhP36iLIzd0z8JIa9WHGyuCdWQ9P+NU0IKy4R5N2oTA0Orb65XkPttjkA4lB985ZOmsGgUcQ1ojBMRi6r4MvcZWdm4gEsshebA2JZMQdGV0KGBMTHQxD8l4TUDGwE0ahu1DoaqGLQ4Q9Zvz0VU/RiMmstdNFcZMlRYIHlc=
+	t=1729889301; cv=none; b=iEIFGlTiaHevsXj6YoFWiI5ts8fIYBHdIS07uTHwZfeaGt03Vfhfbc0HPd/djXeZIrAkeAXtJXt46lBiSfJiGRa9fg5sViLuO5z+6Ny35mTgWc0RUTNB8W5wrsnzzRDo+7UamherUU7hTcxVol3igMn9A63tPD795wAjEvBRLK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729886707; c=relaxed/simple;
-	bh=stievvjtUnbu0kEKEQUJIjUmYYYy/jyjyejrntzMS80=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k0lEYSHjbbaX/Fucsktw5rLaVcFuAYCuq9oh5CQRAy+D16t4MrlZgftoeBIXlXKJ4EWXtXpsw8+rF9j385IkiWYvh03/03wvtxb8S8UVz/bncZazd6ISfvYD2npZGQvv8kqEsYoMBwxpir8aaB7idR95dUYfQDuNa27C9KZwxBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WnR+5JuU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729886703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=521ZowZi7UIo78+UTtHFKtY/eHOSB9FKxW3FnvwmZfM=;
-	b=WnR+5JuU0NGqi6zlW7s4nQESZ71ZA8AL4W7FjdMMzav+YjVpsI4YyZxu/6HUn0kz0wGGBU
-	CE+CUQVxk1XnZxWOFL71ZWKoo8rL5aLZPpfGiUUHssqrVIF6qnMt2wEXWrOnovl1UkukPV
-	i3rjTQjqPkAGoY+bPQ4yyk7YdmoY7ew=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-100-hIYKJCo_PFK4DM72V1-Eeg-1; Fri, 25 Oct 2024 16:05:02 -0400
-X-MC-Unique: hIYKJCo_PFK4DM72V1-Eeg-1
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-5eb636b8d85so47401eaf.3
-        for <linux-pci@vger.kernel.org>; Fri, 25 Oct 2024 13:05:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729886701; x=1730491501;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=521ZowZi7UIo78+UTtHFKtY/eHOSB9FKxW3FnvwmZfM=;
-        b=Kr55JEiwav2Eds7VrN+I80iWrR/XpWB6Trl9jNyCO/ZnRy3Qgenm0HLHGxatx1zhZK
-         B6KyyIkjoxP/hOVsokAMLrhWVt7OJCQD1rEyjIlp/BrRIRC24C1Emaqa3NNU+XhMsCnP
-         sEGhG1HMEuUjTBG5gBdWlpW9rttVi65YL8U+T+TPZXzaL92e8dNU3zoB8HLX5F7TuduX
-         k7Eb+1pAvdbFCkx5kRx+zimL/VffAhrryjkBHDBDiq1U3QcijiRN4nJ4YCZTM/1S4RuP
-         zL2RHQ8KNhTMe5qI+RxnCJGc+86UVrRBBLKkdTVWjNNt3QrKRtvPIZH3NK1rAoMaMu2Y
-         Fb9g==
-X-Forwarded-Encrypted: i=1; AJvYcCW2m45Hj8oyQZeKXapDNPGS+OKD15FrSeOLrXXjQ0jlf91P/0nVMg6ePd+GLXYYOUrlei9gKXqnFDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5ZfRfhlc83GP5unpgQPnqA50FaD3R1UURfylaVYrAA93OnhRe
-	VfWreM2KqKTgsYkWZ7auA23o7/Sv3Z4++5fQC74rA24sxPJJ8JecU4sTORIzLSn7+PBcaaD+nb/
-	SzosLq+7vAaA4bp8LKgLPcm4aA4ps05YWwMYgZbwEH3Rd05NTYPuFQcGkyQ==
-X-Received: by 2002:a05:6871:694:b0:27b:9f8b:277f with SMTP id 586e51a60fabf-29051dcd160mr126189fac.14.1729886700997;
-        Fri, 25 Oct 2024 13:05:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOWokj0D8Umqplu+4UvhNHqrFV3JrlZU9YUSaD38SCqS4wjzYAzVMUSmoKRt5wq2E6xV4LCg==
-X-Received: by 2002:a05:6871:694:b0:27b:9f8b:277f with SMTP id 586e51a60fabf-29051dcd160mr126181fac.14.1729886700689;
-        Fri, 25 Oct 2024 13:05:00 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-290368a27ccsm460640fac.32.2024.10.25.13.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 13:05:00 -0700 (PDT)
-Date: Fri, 25 Oct 2024 14:04:58 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
- bhelgaas@google.com, Keith Busch <kbusch@kernel.org>, Amey Narkhede
- <ameynarkhede03@gmail.com>, Raphael Norwitz <raphael.norwitz@nutanix.com>
-Subject: Re: [PATCH] pci: provide bus reset attribute
-Message-ID: <20241025140458.5040cc29.alex.williamson@redhat.com>
-In-Reply-To: <20241025165725.GA1025232@bhelgaas>
-References: <20241025145021.1410645-1-kbusch@meta.com>
-	<20241025165725.GA1025232@bhelgaas>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1729889301; c=relaxed/simple;
+	bh=Qa6XR9RW2tuGLCT9wz9qCCFF4BPpg05WsUdkaKPe9fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=qvuWcosi3kk2SRgbiB2Jiq5KtZq9kXvT2mZlX8306Ci5RD8+6w5nILmhsgu7p7Gx/lJ96bkOvxbvs6njty1qhY0tv99pWMbqxwqFrmQP7BTV5FVNOFtMaoE2pPi2IBLN403QkrOze+Ktea/MDIg5R1YKaG/DjTIyaiVoc+zo8a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0JoU/cz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 899B8C4CEC3;
+	Fri, 25 Oct 2024 20:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729889300;
+	bh=Qa6XR9RW2tuGLCT9wz9qCCFF4BPpg05WsUdkaKPe9fc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=O0JoU/czSmbl+S8+9DjdgPrBH4OmStTDDTzQIXwjc/OMHpIXfOrQFB4U6ZVqzv0xf
+	 F1MBOFsMXtjYe4DoZdxBedNzkL7+2ieGaLLZK+yuVaTzyVti3Exkg4lm0TkWNnnr1f
+	 huLA4gDA4gUde3lNmzInCEadt86mhXxFsWeoUuL5kuu+N9hoYpz9Awaedcotpo98ol
+	 eRikEEuML8bhWNUsDjWgoM+NGO04UqXJwse0KOc43uQAa88h5Nqm+UlXR4wI4IE5b0
+	 s7TfTXzVRq2ntiZbmQOHmiBI0TxH1+Tuf+umrAbPcjDQTfMzZ6vhiFMBVibpuuY/H6
+	 J/ZkDfqrihYTQ==
+Date: Fri, 25 Oct 2024 15:48:18 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v4 0/4] PCI: ep: dwc/imx6: Add bus address support for
+ PCI endpoint devices
+Message-ID: <20241025204818.GA1028925@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241024-pcie_ep_range-v4-0-08f8dcd4e481@nxp.com>
 
-On Fri, 25 Oct 2024 11:57:25 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> [+cc Alex, Amey, Raphael]
+On Thu, Oct 24, 2024 at 04:41:42PM -0400, Frank Li wrote:
+> Endpoint          Root complex
+>                              ┌───────┐        ┌─────────┐
+>                ┌─────┐       │ EP    │        │         │      ┌─────┐
+>                │     │       │ Ctrl  │        │         │      │ CPU │
+>                │ DDR │       │       │        │ ┌────┐  │      └──┬──┘
+>                │     │◄──────┼─ATU ◄─┼────────┼─┤BarN│◄─┼─────────┘
+>                │     │       │       │        │ └────┘  │ Outbound Transfer
+>                └─────┘       │       │        │         │
+>                              │       │        │         │
+>                              │       │        │         │
+>                              │       │        │         │ Inbound Transfer
+>                              │       │        │         │      ┌──▼──┐
+>               ┌───────┐      │       │        │ ┌───────┼─────►│DDR  │
+>               │       │ outbound Transfer*    │ │       │      └─────┘
+>    ┌─────┐    │ Bus   ┼─────►│ ATU  ─┬────────┼─┘       │
+>    │     │    │ Fabric│Bus   │       │ PCI Addr         │
+>    │ CPU ├───►│       │Addr  │       │ 0xA000_0000      │
+>    │     │CPU │       │0x8000_0000   │        │         │
+>    └─────┘Addr└───────┘      │       │        │         │
+>           0x7000_0000        └───────┘        └─────────┘
 > 
-> On Fri, Oct 25, 2024 at 07:50:21AM -0700, Keith Busch wrote:
-> > From: Keith Busch <kbusch@kernel.org>
-> > 
-> > Attempting a bus reset on an end device only works if it's the only
-> > function on or below that bus.
-> > 
-> > Provide an attribute on the pci_bus device that can perform the
-> > secondary bus reset. This makes it possible for a user to safely reset
-> > multiple devices in a single command using the secondary bus reset
-> > method.  
+> Add `bus_addr_base` to configure the outbound window address for CPU write.
+> The BUS fabric generally passes the same address to the PCIe EP controller,
+> but some BUS fabrics convert the address before sending it to the PCIe EP
+> controller.
 > 
-> I confess to being a little ambivalent or even hesitant about
-> operations on the pci_bus (as opposed to on a pci_dev), but I can't
-> really articulate a great reason, other than the fact that the "bus"
-> is kind of abstract and from a hardware perspective, the *devices* are
-> the only things we can control.
+> Above diagram, CPU write data to outbound windows address 0x7000_0000,
+> Bus fabric convert it to 0x8000_0000. ATU should use BUS address
+> 0x8000_0000 as input address and convert to PCI address 0xA000_0000.
+
+The above doesn't match what's in patch 1/4, and I think the version
+in 1/4 is better, so I'll comment there.
+
+To avoid confusion, it might be better not to duplicate it in 0/4 and
+1/4.
+
+> Previously, `cpu_addr_fixup()` was used to handle address conversion. Now,
+> the device tree provides this information, preferring a common method.
 > 
-> I assume this is useful in some scenario.  I guess this is root-only,
-> so there's no real concern about whether all the devices are used by
-> the same VM or in the same IOMMU group or anything?
-
-I can understand your hesitation, but TBH I've wished for such a thing
-in the past.  We can already twiddle the secondary bus reset bit using
-setpci, but then we don't restore config space of the subordinate
-devices and at best we need to remove and rescan those devices.
-
-As Keith notes in his reply, we can also effectively trigger this same
-thing through vfio-pci, so I think we're only making it a little easier
-to accomplish through this sysfs attribute.  Yes, bad things can happen
-if we were to reset a bus of running devices, but I don't know that
-it's any more bad than resetting each of those devices individually.
-
-I would agree that "reset" is not a great name since we're resetting
-the subordinate devices and not the bridge device under which this
-attribute would appear.  Seems there should also be an update to
-Documentation/ABI/testing/sysfs-bus-pci in this patch too.  Thanks,
-
-Alex
-
- 
-> > Signed-off-by: Keith Busch <kbusch@kernel.org>
-> > ---
-> >  drivers/pci/pci-sysfs.c | 23 +++++++++++++++++++++++
-> >  drivers/pci/pci.c       |  2 +-
-> >  drivers/pci/pci.h       |  1 +
-> >  3 files changed, 25 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 5d0f4db1cab78..616d64f12da4d 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -521,6 +521,28 @@ static ssize_t bus_rescan_store(struct device *dev,
-> >  static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
-> >  							    bus_rescan_store);
-> >  
-> > +static ssize_t bus_reset_store(struct device *dev,
-> > +				struct device_attribute *attr,
-> > +				const char *buf, size_t count)
-> > +{
-> > +	struct pci_bus *bus = to_pci_bus(dev);
-> > +	unsigned long val;
-> > +
-> > +	if (kstrtoul(buf, 0, &val) < 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (val) {
-> > +		int ret = __pci_reset_bus(bus);
-> > +
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return count;
-> > +}
-> > +static struct device_attribute dev_attr_bus_reset = __ATTR(reset, 0200, NULL,
-> > +							   bus_reset_store);
-> > +
-> >  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
-> >  static ssize_t d3cold_allowed_store(struct device *dev,
-> >  				    struct device_attribute *attr,
-> > @@ -638,6 +660,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> >  
-> >  static struct attribute *pcibus_attrs[] = {
-> >  	&dev_attr_bus_rescan.attr,
-> > +	&dev_attr_bus_reset.attr,
-> >  	&dev_attr_cpuaffinity.attr,
-> >  	&dev_attr_cpulistaffinity.attr,
-> >  	NULL,
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 7d85c04fbba2a..338dfcd983f1e 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -5880,7 +5880,7 @@ EXPORT_SYMBOL_GPL(pci_probe_reset_bus);
-> >   *
-> >   * Same as above except return -EAGAIN if the bus cannot be locked
-> >   */
-> > -static int __pci_reset_bus(struct pci_bus *bus)
-> > +int __pci_reset_bus(struct pci_bus *bus)
-> >  {
-> >  	int rc;
-> >  
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 14d00ce45bfa9..1cdc2c9547a7e 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -104,6 +104,7 @@ bool pci_reset_supported(struct pci_dev *dev);
-> >  void pci_init_reset_methods(struct pci_dev *dev);
-> >  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
-> >  int pci_bus_error_reset(struct pci_dev *dev);
-> > +int __pci_reset_bus(struct pci_bus *bus);
-> >  
-> >  struct pci_cap_saved_data {
-> >  	u16		cap_nr;
-> > -- 
-> > 2.43.5
-> >   
+> bus@5f000000 {
+> 	compatible = "simple-bus";
+> 	ranges = <0x80000000 0x0 0x70000000 0x10000000>;
 > 
-
+> 	pcie-ep@5f010000 {
+> 		reg = <0x5f010000 0x00010000>,
+> 		      <0x80000000 0x10000000>;
+> 		reg-names = "dbi", "addr_space";
+> 		...
+> 	};
+> 	...
+> };
+> 
+> 'ranges' in bus@5f000000 descript how address convert from CPU address
+> to BUS address.
+> 
+> Use `of_property_read_reg()` to obtain the BUS address and set it to the
+> ATU correctly, eliminating the need for vendor-specific cpu_addr_fixup().
+> 
+> The 1st patch implement above method in dwc common driver.
+> The 2nd patch update imx6's binding doc to add fsl,imx8q-pcie-ep.
+> The 3rd patch fix a pci-mx6's a bug
+> The 4th patch enable pci ep function.
+> 
+> The imx8q's dts is usptreaming, the pcie-ep part is below.
+> 
+> hsio_subsys: bus@5f000000 {
+>         compatible = "simple-bus";
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+>         /* Only supports up to 32bits DMA, map all possible DDR as inbound ranges */
+>         dma-ranges = <0x80000000 0 0x80000000 0x80000000>;
+>         ranges = <0x5f000000 0x0 0x5f000000 0x01000000>,
+>                  <0x80000000 0x0 0x70000000 0x10000000>;
+> 
+> 	pcieb_ep: pcie-ep@5f010000 {
+>                 compatible = "fsl,imx8q-pcie-ep";
+>                 reg = <0x5f010000 0x00010000>,
+>                       <0x80000000 0x10000000>;
+>                 reg-names = "dbi", "addr_space";
+>                 num-lanes = <1>;
+>                 interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+>                 interrupt-names = "dma";
+>                 clocks = <&pcieb_lpcg IMX_LPCG_CLK_6>,
+>                          <&pcieb_lpcg IMX_LPCG_CLK_4>,
+>                          <&pcieb_lpcg IMX_LPCG_CLK_5>;
+>                 clock-names = "dbi", "mstr", "slv";
+>                 power-domains = <&pd IMX_SC_R_PCIE_B>;
+>                 fsl,max-link-speed = <3>;
+>                 num-ib-windows = <6>;
+>                 num-ob-windows = <6>;
+>         };
+> };
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Changes in v4:
+> - Fix 32bit build error
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202410230328.BTHareG1-lkp@intel.com/
+> - Link to v3: https://lore.kernel.org/r/20241021-pcie_ep_range-v3-0-b13526eb0089@nxp.com
+> 
+> Changes in v3:
+> - Add mani' review tag for patch 3,4
+> - Add varible using_dtbus_info to control use bus range information instead
+> cpu_address_fixup().
+> - Link to v2: https://lore.kernel.org/r/20240923-pcie_ep_range-v2-0-78d2ea434d9f@nxp.com
+> 
+> Changes in v2:
+> - Totally rewrite with difference method. 'range' should in bus node
+> instead pcie-ep node because address convert happen at bus fabric. Needn't
+> add 'range' property at pci-ep node.
+> - Link to v1: https://lore.kernel.org/r/20240919-pcie_ep_range-v1-0-b3e9d62780b7@nxp.com
+> 
+> ---
+> Frank Li (4):
+>       PCI: dwc: ep: Add bus_addr_base for outbound window
+>       dt-bindings: PCI: fsl,imx6q-pcie-ep: Add compatible string fsl,imx8q-pcie-ep
+>       PCI: imx6: Pass correct sub mode when calling phy_set_mode_ext()
+>       PCI: imx6: Add i.MX8Q PCIe Endpoint (EP) support
+> 
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml | 38 +++++++++++++++++++++-
+>  drivers/pci/controller/dwc/pci-imx6.c              | 26 ++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware-ep.c    | 14 +++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h       |  9 +++++
+>  4 files changed, 84 insertions(+), 3 deletions(-)
+> ---
+> base-commit: afb15ca28055352101286046c1f9f01fdaa1ace1
+> change-id: 20240918-pcie_ep_range-4c5c5e300e19
+> 
+> Best regards,
+> ---
+> Frank Li <Frank.Li@nxp.com>
+> 
 
