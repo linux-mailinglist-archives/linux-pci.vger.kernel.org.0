@@ -1,238 +1,224 @@
-Return-Path: <linux-pci+bounces-15306-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15307-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E0DB9B03E9
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 15:23:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB3C59B044E
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 15:39:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D491B22AD1
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 13:23:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF1A61C21AC3
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 13:39:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA0752F76;
-	Fri, 25 Oct 2024 13:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775781632E2;
+	Fri, 25 Oct 2024 13:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mZl+H25r"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TzUt3tKJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2080.outbound.protection.outlook.com [40.107.21.80])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C381212182;
-	Fri, 25 Oct 2024 13:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729862607; cv=fail; b=GroI6WifXSTjZRugHuySEIjQH3gP9Iagdl3OcySctlpR7zS+TcHNYglnvNE/EUsrEUYNXs7w6f+S740Fw0Le8D12bVCA2oA3b2BeEZaa0qNnW25xufDP94my99juDpw44zKkuHbxo2LtvzSRwkwTekOyI1QqGuGXxLSa1c3nsJA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729862607; c=relaxed/simple;
-	bh=6n0casdYb+NutwCrfVqH3imDOPzzDIQv0To0xihVALw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Bgu38XrSD0WbUv7mTo1OAXHaVn5QCI+0D8f8DInRU1/+fxNNDtJPwVWrIRr0TI3G/rUzB2lI+H6ktZnCGj1cCw5cmnx/LRya1fTpy0mAS5mdkPf3edV7Icwe+h2D1vRCfBOPHJXBRkhZsrbpiM6JoHQSrrzSx/P4+EOI5jOq4wk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mZl+H25r; arc=fail smtp.client-ip=40.107.21.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E/+34iOfvsDFSBoJIIBbIfqPoX/D9ewk2XLIQANUrvJrA2sC4rm0E93uwNgJ0UC1nE/cq1OhCd6apM54NDRT3pv/MPzMdrJ4GW0oJPLhDvFtqCPAG6c1frP+Q/3et+CGJBzp5M5X8d4s/SuFBUSQMarTyUEJG03kOeQ3bHtJVl01j1W2LTJHH+DinRIZy4aj6EEJ4kA46w2COjZo/sRKCFWxCypEu7I/9nLayOADrVJsjSNqL57NazgOdxJY8WQiQvPFKxsOW7xj3boAQoMmtbGfG5EKT7bbczyHwd4fosz7UyhL4nzolONXSjimPIH9CdozT9IBavkqaGxM+5dQzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ULS9ONfdOI6X4p6QMMCTEzscTbPbihSzTlXyHtoTEj8=;
- b=WGRu+WjRkXGsS2MLfp959BUXtaT5zv8Xb9PagQzYHEM7I1GZ2oBvDUK/sgg5FOqIOSYgNzBlGpZJ8Ha9x8e9NeD9JgYrb5jYjoFY0WL8w8kHXu3zVPDnVFoV4iWzHPzeD1SQPAMTWGwkQ4/KAv8yutgLnGUK7peFjGqRgnnJEAS2czxIvFaPZ8nN8jbtc5q1E3hLGpsTXW49ncVmRdmVpuPrfPkgsrQf+XMGflDKjlHDwixEO0LsvRwA8VM0/drG7N4pag+umi9yNPT16mcoMzT8JN2YJpXpXHRUOXTSapR8b9N0Rdzdekv+8Kg3DWUzf23VFXF/cjLIc2nE764dLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULS9ONfdOI6X4p6QMMCTEzscTbPbihSzTlXyHtoTEj8=;
- b=mZl+H25rZ+nErw4PO9rAOX1SKtdV/0AAJPbI+86Uh9YdwWEz5Pt6yWkFitvX2A6yTzm2iCcyGcXI7N+VPjGm9Gp1dRSkrJIPiy49YcuIb8ff4GlAtCMjOfnVODPbg9RyWQ15IYTVzHQ0AWaBAPa2SlqZAC7hf4x2QABOjVzdcdCjmg2/T3fnldGtRfDM+1rRUGiZQVjOGbTAZLwN1URFO1m2o84e5knVtM4gN6W1L0UKgKVwdF5lMDhY/8fudzu5xjkYnEA0w4TkXuuVvMpCXcr6mt255oDEkE7dI25Vl5AgMBD5mpAMW3jPYSOyX+TAGsZVaoIm/iX247ucHOD0tg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by DBBPR04MB7945.eurprd04.prod.outlook.com (2603:10a6:10:1f3::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.26; Fri, 25 Oct
- 2024 13:23:20 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8093.018; Fri, 25 Oct 2024
- 13:23:20 +0000
-Date: Fri, 25 Oct 2024 16:23:16 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>, Frank Li <frank.li@nxp.com>,
-	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"horms@kernel.org" <horms@kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>
-Subject: Re: [PATCH v5 net-next 06/13] net: enetc: build enetc_pf_common.c as
- a separate module
-Message-ID: <20241025132316.6pyamwivaupzwo6j@skbuf>
-References: <20241024065328.521518-1-wei.fang@nxp.com>
- <20241024065328.521518-1-wei.fang@nxp.com>
- <20241024065328.521518-7-wei.fang@nxp.com>
- <20241024065328.521518-7-wei.fang@nxp.com>
- <20241024173451.wsdhghmz4vyboelu@skbuf>
- <PAXPR04MB8510468F88A236EA7ABB76D8884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8510468F88A236EA7ABB76D8884F2@PAXPR04MB8510.eurprd04.prod.outlook.com>
-X-ClientProxiedBy: VI1P195CA0091.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:802:59::44) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E4C1F7566;
+	Fri, 25 Oct 2024 13:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729863573; cv=none; b=OIj3Y4GPZWvdjEJO1HMmv5F4rUa/bW8fROhlJ/tl5gvX2VDShThgX8huBbnBZe6GmiMwEI1Rk3AFmtoWkHbZVwT0hgLN9ea2pWeIAGAJu92BWzvXBU/Sxb3OduD9whWGaBrj5lIBKNF4BCLtbkkmWxC5ekKdAawIq/HgLPw/QKo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729863573; c=relaxed/simple;
+	bh=/HnzH8LIxgCAWX0/LLh1puQjwqcQ1NSbusIo7Y2Mm3Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gu2G+DRsc/IDw/hI/yWgdzXNE6/dQ7fZkL9yPY3JaeUb0WyF/L1EJe8pDJ3o31w2qMRWD4he0UO9BTSGQftLYoOkWd3hOA9C+mG4R8q0xVRlWAJweAxGPS/MxXwVf7vpF65TVf0jrGQtbgVY3xyL0NqL9Vqva0EeNgQmMrQpPB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TzUt3tKJ; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729863571; x=1761399571;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/HnzH8LIxgCAWX0/LLh1puQjwqcQ1NSbusIo7Y2Mm3Q=;
+  b=TzUt3tKJKFyWLwOZpsSNOr/CnNVKenZRKHG7W7CnzmIvtePLpj65CEuU
+   i4u/9oKhYKSrhXR/JTgJHIcyNSgqvDtCrYYWdGpQTkJPZxZITte1aymn8
+   STXIxnuchSQd/hrem4IxS7CRquATMxqGrmJIvg2frEEIFa4qI7O+0VKrd
+   UUkPIbkGLiB9X9jAg6EeXYkzSpxAQl3fcDpOU6hFU505upV33xK7C+Cc9
+   /7YDBgL5qNQSRaWNZ+O50IhUirpZXMsEqTajvWj8Bx/7y5ZDs/ChO9aMc
+   4YFLLhUE9E23MS5lPKBSydenv0cT8kXujCpplEglmYBWV1Ide7PwAZkwi
+   Q==;
+X-CSE-ConnectionGUID: uVvo5VE1Q9egw6uoeGAbIA==
+X-CSE-MsgGUID: 8uQtQPinRPihbf92JuzMWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="33229180"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="33229180"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 06:39:30 -0700
+X-CSE-ConnectionGUID: 2L9XHif8SVm9IHuMKA3KaQ==
+X-CSE-MsgGUID: m60xT2EDQUCcPtzhB4axHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
+   d="scan'208";a="111752941"
+Received: from ettammin-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 06:39:25 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Oct 2024 16:39:21 +0300 (EEST)
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+cc: linux-edac@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    tony.luck@intel.com, x86@kernel.org, avadhut.naik@amd.com, 
+    john.allen@amd.com, mario.limonciello@amd.com, bhelgaas@google.com, 
+    Shyam-sundar.S-k@amd.com, richard.gong@amd.com, jdelvare@suse.com, 
+    linux@roeck-us.net, clemens@ladisch.de, 
+    Hans de Goede <hdegoede@redhat.com>, linux-pci@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    naveenkrishna.chatradhi@amd.com, carlos.bilbao.osdev@gmail.com
+Subject: Re: [PATCH 14/16] x86/amd_smn, platform/x86/amd/hsmp: Have HSMP use
+ SMN
+In-Reply-To: <20241024160625.GC965@yaz-khff2.amd.com>
+Message-ID: <d44f45c1-a550-de07-d1fa-91dfe0adb47f@linux.intel.com>
+References: <20241023172150.659002-1-yazen.ghannam@amd.com> <20241023172150.659002-15-yazen.ghannam@amd.com> <2797ecc5-935d-21a2-bb43-273a7eae3a12@linux.intel.com> <20241024160625.GC965@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|DBBPR04MB7945:EE_
-X-MS-Office365-Filtering-Correlation-Id: 455bba8c-e789-4825-6f3e-08dcf4f831e8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?i3ugNlB6X0br4XbgO/3V2ixzrn5QUwZ3WjOi2J7TBauNcI4gUqOzbiWnE+5A?=
- =?us-ascii?Q?0wRkGl3/X/oAZTMVw4U6H36UnJ2zPlKILJNa/ms6J4TffdaOxQFy6tJ4wFQ7?=
- =?us-ascii?Q?BQIUU7Io7bxqysT0U6VB847oBf4GkGdA7tGDkTmjU8Te1HDS7EleRs4VJxzZ?=
- =?us-ascii?Q?p0bAtTOSn54dwlQXV7/lyYT14oS1RVTU5rnAbKdqto/TMBo6CCh1skbIssDW?=
- =?us-ascii?Q?eYo0XhBP8YOE6BWY+LDIgt1+xZl3uTYM+MmAWNw7pr6lhmc7iYCi54QouDL0?=
- =?us-ascii?Q?R7+HNT89wZOlZXA65P4DIm5VNGm3Z4OMKFYqkhQyT2IjN+dSdiqnuMEl9T2A?=
- =?us-ascii?Q?Mz8rvKm2WyJsIrrfMTeZrbzkskKtY60nUK5/vUioDHxJjkGWDz5T79qyaL1E?=
- =?us-ascii?Q?DSaaQ1kzHlgXjzwWq+r2YEJtj2NN0ZGrMcJuUcnK1k20X3S6F76+c54YWMj/?=
- =?us-ascii?Q?k7piFg8P/pNzAU20UQe5Bi3lMIQKOZGpjfZMnYgRmtm40NEqwFBPXOxEjFTr?=
- =?us-ascii?Q?dWEAF7OncIwcJQjrbbK4/J91wuyREd7NDA8BhHNL8eUiOXRc1Wu7dk3y4p5e?=
- =?us-ascii?Q?PRnPzo9x8yGZlPOiGnNNInUE+C9uZ70TOxMfJsweUfuUleMa/R4hFhGwMaOk?=
- =?us-ascii?Q?TT1Xy2LOjBpO3wyoyhNU1p4EQjZ7tB1Yh7SxDHkws2653RJHObb/F8VXyBSC?=
- =?us-ascii?Q?nPhjs4SLd9RZACCOGA/w0qxsJMvAKWw/NfflgbcKvPjthtMUj8FLgN++JwKj?=
- =?us-ascii?Q?AHeB7n8QkBtDC2mskWVeZj+BJiytcngUcvKhf12/7zW2692GFnbz309dlnR5?=
- =?us-ascii?Q?9IzxbRVi8bQ12yrztL/vBEEEfQ/gBf6pXpNB7x5jy/fI0yuos2zTiAZWyWRq?=
- =?us-ascii?Q?a6K1YfS9lGA/yUqx9lxKhODBKhAhU374UcpslfW4ATvVicJnzlV+Iz3Q0wMm?=
- =?us-ascii?Q?FjitFwTpeoW+QJd1tijnZqUal/G9ARHb/tEN4q69soM0EQGfc/s/dzFMwz/O?=
- =?us-ascii?Q?9pC+au7iTgVXL3qULi1mLFPI91zpkIn8L54aBN/VpQLmc/Da6IZnwQknctbb?=
- =?us-ascii?Q?jUBaBxs5sFoHdlwjrefaCX0Jbnn/epvHBou7lnY4MxqPtmooicQbs7GQUuUQ?=
- =?us-ascii?Q?h3eykYhtDnMYYHataq0pF4Q9CN6FWWnE7Nx2d6RzGtJ/UAnxehCHEOLF85eK?=
- =?us-ascii?Q?jL67dpFv9Lb931BMJtxygt5jwm3LWS2mrOUzvG3VBL2H6eFkdVwI95SijlYl?=
- =?us-ascii?Q?R1PI9YlqdbjODOnEIpCyIEsMxRUNwnC51iaFtS32QFnIWRSkcUYaUb2x8TCi?=
- =?us-ascii?Q?thjsVKLAjU30wAJNt9oLX727?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qoWBc3jYeLn2a0qGe1Qo9xJfoz969NP73r8xYdIwUhVnBQa1OtD4sOz+G7fp?=
- =?us-ascii?Q?JkoKEOOU2EaGmNOKyFAS75D8FPyPeEtVzAwchnKMu8IGTD1P2LBEuAuXh7Zw?=
- =?us-ascii?Q?X+j4jKiHlHQk336lkvzAOEtoxGf0sbI2UtoUglLnWG5SPqWJ52nsOlJcmEhu?=
- =?us-ascii?Q?nQcl4IU3g6kuN+W4rm+dKpK78py8I0DBbuzX/0fzgqpByP5Olv2NBWTdYA3A?=
- =?us-ascii?Q?takVcVsvB1EHni8BxNDiUgN+OQlFng5WNCFYDnPg8ZQhM4A0Dc0UKROqsdi1?=
- =?us-ascii?Q?lNKxIiQAbVSnQTOf0ENjeYu9t5Vglnd4GTgtJKEtX7F6n5i8wiBHq4upl4l0?=
- =?us-ascii?Q?PAXcqozCsR4QeK9bLMeARRBGYlmP9HafPaAl6URrTbIHqQt6++NgLAEorYX0?=
- =?us-ascii?Q?aqRIRAGpV40En3C29GGKSzajDY4pig2ZacrlHTMH7kFaZjZ2iTmg+y4xoI4C?=
- =?us-ascii?Q?xy3TEBQYasY07uiusp1DaWKz3PVWLWJZBGgqNp45JzU5Dlf80Y4Fp552wskK?=
- =?us-ascii?Q?xghcpQwVNmG7tv3tUyT0lsVVqH/uTBYWVRFwNpCfXMz4x1IL1bZZKLxv0mei?=
- =?us-ascii?Q?+3ipXNcm8gbBssW0CwG1YnFCz6f9ohl6TZ6t88VKa5hW6qdpwUQtsz44+7LX?=
- =?us-ascii?Q?Cams85+pmWahHwQYTzXe/vdGceNP2dCgK18aTPu6dp6KsrQPDJp8yiOfojeB?=
- =?us-ascii?Q?SKuQIxLnMQtifBFZHM+UFwoZOQ6MSdXdhoOLr50JKsT6t7VvuEsJoZkBF72F?=
- =?us-ascii?Q?LYli8syW/WO/eLRjmUNtvTEgfsnf8HlN2o7udz772RMjuOxqnGUZu/r8vRSz?=
- =?us-ascii?Q?1O2J5gGWDO7dzIzKgjb+aJ6skdYlR68/qqHMK0UkeBKRuE3xlaEhbY76ArsG?=
- =?us-ascii?Q?20+LJIxOASG2pkwv3PreRHxz4B1L5HB1aE25CnqYOnzGNw7n7kId48x9FUjZ?=
- =?us-ascii?Q?ADEerS6qZ5Y0i7NwDu0JGv4SFz7D6FYO49vFQSlXX5u3eXC5ryEM8LSWvTYa?=
- =?us-ascii?Q?XeXWLBbUz6wYyqYlG9xTKX0QkQK+JKugMJmK1IBMlesXOqFwDvGk9ZXWaCW0?=
- =?us-ascii?Q?ZJI4V+oiWrN5ohO4hsGmioJ2Q8nMfjkM2zRRzxnSOCWQULgBiLZcivaocI2B?=
- =?us-ascii?Q?eSpoh5Qsm+XdS9G29ipctjJZKlHQABoJMQZbqx0lE3zw3sa5v1keyOVPnLZE?=
- =?us-ascii?Q?jLxvJ6tajuKHcoCUD/es4bpq2/s1Is/IzXSc10fywkLLhLmTqEhZ8mu61CFP?=
- =?us-ascii?Q?8CAskyF9Wy6o1iEwj6sT9BVqsvPE1zBa9KRbRgJrv/WkMkFVNsPErn+1JkL5?=
- =?us-ascii?Q?E83yjAl4TGgv0Lphhq7WX1XdAd1fVsVhcNZKLEWcjKcG6i1NtIOAy6fRM+yX?=
- =?us-ascii?Q?N4/pjAdy8U4y6lYeqdS9cBU2WlMNGTpQ1Wo+3F4fS9QzqHWzRcEDIcbeFeyP?=
- =?us-ascii?Q?k/jgVXWjXmFtfJd5F612EXMs8BoHK3tSqzw9CDvUrEpTo82guUeFfLqJWxO9?=
- =?us-ascii?Q?2ZAF2Vh7gjSzgyiOLjM71UjebLOgtNAoEMfFjlikKKG3F7fMfsZJmcvhU8kp?=
- =?us-ascii?Q?AE4D8Ss4+652fBCQ3X/pbj+10JiM6VKRciQLl28OCc1Pu1iEWd2tqpMW65Cx?=
- =?us-ascii?Q?kw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 455bba8c-e789-4825-6f3e-08dcf4f831e8
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 13:23:20.7367
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ylYNEmKu2IJW8GW0igrKqZ9StGGiSX+81cM/mRRr3YGX/Iai5HWkDS+qfTKUBjGwQ4vtcDOQthHYx/ibrji+Rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7945
+Content-Type: multipart/mixed; boundary="8323328-983401245-1729863561=:946"
 
-On Fri, Oct 25, 2024 at 06:00:42AM +0300, Wei Fang wrote:
-> > Don't artificially create errors when there are really no errors to handle.
-> > Both enetc_pf_ops and enetc4_pf_ops provide .set_si_primary_mac(), so it
-> > is unnecessary to handle the case where it isn't present. Those functions
-> > return void, and void can be propagated to enetc_set_si_hw_addr() as well.
-> 
-> I thought checking the pointer is safer, so you mean that pointers that are
-> definitely present in the current driver do not need to be checked?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yes, there is no point to check for a condition which is impossible
-to trigger in the current code. The callee and the caller are tightly
-coupled (in the same driver), it's not a rigid API, so if the function
-pointers should be made optional for some future hardware IP, the error
-handling will be added when necessary. Ideally any change passes through
-review, and any inconsistency should be spotted when added.
+--8323328-983401245-1729863561=:946
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> > A bit inconsistent that pf->ops->set_si_primary_mac() goes through a
-> > wrapper function but this doesn't.
-> > 
-> 
-> If we really do not need to check these callback pointers, then I think I can
-> remove the wrapper.
+On Thu, 24 Oct 2024, Yazen Ghannam wrote:
 
-Fine without wrapping throughout, my comment was first and foremost
-about consistency.
+> On Thu, Oct 24, 2024 at 04:23:55PM +0300, Ilpo J=E4rvinen wrote:
+> > On Wed, 23 Oct 2024, Yazen Ghannam wrote:
+> >=20
+> > > The HSMP interface is just an SMN interface with different offsets.
+> > >=20
+> > > Define an HSMP wrapper in the SMN code and have the HSMP platform dri=
+ver
+> > > use that rather than a local solution.
+> > >=20
+> > > Also, remove the "root" member from AMD_NB, since there are no more
+> > > users of it.
+> > >=20
+> > > Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> > > ---
+> > >  arch/x86/include/asm/amd_nb.h    |  1 -
+> > >  arch/x86/include/asm/amd_smn.h   |  3 +++
+> > >  arch/x86/kernel/amd_nb.c         |  1 -
+> > >  arch/x86/kernel/amd_smn.c        |  9 +++++++++
+> > >  drivers/platform/x86/amd/Kconfig |  2 +-
+> > >  drivers/platform/x86/amd/hsmp.c  | 32 +++++-------------------------=
+--
+> > >  6 files changed, 18 insertions(+), 30 deletions(-)
+> > >=20
+> > > diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd=
+_nb.h
+> > > index 55c03d3495bc..cbe31e316e39 100644
+> > > --- a/arch/x86/include/asm/amd_nb.h
+> > > +++ b/arch/x86/include/asm/amd_nb.h
+> > > @@ -27,7 +27,6 @@ struct amd_l3_cache {
+> > >  };
+> > > =20
+> > >  struct amd_northbridge {
+> > > -=09struct pci_dev *root;
+> > >  =09struct pci_dev *misc;
+> > >  =09struct pci_dev *link;
+> > >  =09struct amd_l3_cache l3_cache;
+> > > diff --git a/arch/x86/include/asm/amd_smn.h b/arch/x86/include/asm/am=
+d_smn.h
+> > > index 6850de69f863..f0eb12859c42 100644
+> > > --- a/arch/x86/include/asm/amd_smn.h
+> > > +++ b/arch/x86/include/asm/amd_smn.h
+> > > @@ -8,4 +8,7 @@
+> > >  int __must_check amd_smn_read(u16 node, u32 address, u32 *value);
+> > >  int __must_check amd_smn_write(u16 node, u32 address, u32 value);
+> > > =20
+> > > +/* Should only be used by the HSMP driver. */
+> > > +int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value=
+, bool write);
+> > > +
+> > >  #endif /* _ASM_X86_AMD_SMN_H */
+> > > diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> > > index 10cdeddeda02..4c22317a6dfe 100644
+> > > --- a/arch/x86/kernel/amd_nb.c
+> > > +++ b/arch/x86/kernel/amd_nb.c
+> > > @@ -73,7 +73,6 @@ static int amd_cache_northbridges(void)
+> > >  =09amd_northbridges.nb =3D nb;
+> > > =20
+> > >  =09for (i =3D 0; i < amd_northbridges.num; i++) {
+> > > -=09=09node_to_amd_nb(i)->root =3D amd_node_get_root(i);
+> > >  =09=09node_to_amd_nb(i)->misc =3D amd_node_get_func(i, 3);
+> > >  =09=09node_to_amd_nb(i)->link =3D amd_node_get_func(i, 4);
+> > >  =09}
+> > > diff --git a/arch/x86/kernel/amd_smn.c b/arch/x86/kernel/amd_smn.c
+> > > index 997fd3edd9c0..527dda8e3a2b 100644
+> > > --- a/arch/x86/kernel/amd_smn.c
+> > > +++ b/arch/x86/kernel/amd_smn.c
+> > > @@ -18,6 +18,9 @@ static DEFINE_MUTEX(smn_mutex);
+> > >  #define SMN_INDEX_OFFSET=090x60
+> > >  #define SMN_DATA_OFFSET=09=090x64
+> > > =20
+> > > +#define HSMP_INDEX_OFFSET=090xc4
+> > > +#define HSMP_DATA_OFFSET=090xc8
+> > > +
+> > >  /*
+> > >   * SMN accesses may fail in ways that are difficult to detect here i=
+n the called
+> > >   * functions amd_smn_read() and amd_smn_write(). Therefore, callers =
+must do
+> > > @@ -100,6 +103,12 @@ int __must_check amd_smn_write(u16 node, u32 add=
+ress, u32 value)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(amd_smn_write);
+> > > =20
+> > > +int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value=
+, bool write)
+> > > +{
+> > > +=09return __amd_smn_rw(HSMP_INDEX_OFFSET, HSMP_DATA_OFFSET, node, ad=
+dress, value, write);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(amd_smn_hsmp_rdwr);
+> > > +
+> > >  static int amd_cache_roots(void)
+> > >  {
+> > >  =09u16 node, num_nodes =3D amd_num_nodes();
+> > > diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/=
+amd/Kconfig
+> > > index f88682d36447..e100b315c62b 100644
+> > > --- a/drivers/platform/x86/amd/Kconfig
+> > > +++ b/drivers/platform/x86/amd/Kconfig
+> > > @@ -8,7 +8,7 @@ source "drivers/platform/x86/amd/pmc/Kconfig"
+> > > =20
+> > >  config AMD_HSMP
+> > >  =09tristate "AMD HSMP Driver"
+> > > -=09depends on AMD_NB && X86_64 && ACPI
+> > > +=09depends on AMD_SMN && X86_64 && ACPI
+> > >  =09help
+> > >  =09  The driver provides a way for user space tools to monitor and m=
+anage
+> > >  =09  system management functionality on EPYC server CPUs from AMD.
+> > > diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/a=
+md/hsmp.c
+> > > index 8fcf38eed7f0..544efb0255c0 100644
+> > > --- a/drivers/platform/x86/amd/hsmp.c
+> > > +++ b/drivers/platform/x86/amd/hsmp.c
+> >=20
+> > FYI, there has been major restructuring done for this driver in=20
+> > pdx86/for-next.
+> >
+>=20
+> Yep, no problem. I can rebase these changes on top of those.
+>=20
+> Any comments on the general approach?
 
-> > This one looks extremely weird in the existing code, but I suppose I'm
-> > too late to the party to request you to clean up any of the PSFP code,
-> > so I'll make a note to do it myself after your work. I haven't spotted
-> > any actual bug, just weird coding patterns.
-> > 
-> > No change request here. I see the netc4_pf doesn't implement enable_psfp(),
-> > so making it optional here is fine.
-> 
-> Yes, PSFP is not supported in this patch set, I will remove it in future.
+I deemed looking deeper into the patch waste of my time due to the=20
+expected changes, so no comments at this time.
 
-If by "I will remove it in future" you mean "once NETC4 gains PSFP
-support, I will make enable_psfp() non-optional", then ok, great.
+--=20
+ i.
 
-> Currently, we have not add the PCS support, so the 10G ENETC is not supported
-> yet. And we also disable the 10G ENETC in DTS. Only the 1G ENETCs (without PCS)
-> are supported for i.MX95.
-
-Also think about the case where the current version of the kernel
-will boot on a newer version of the device tree, which does not have
-'status = "disabled";' for those ports. It should do something reasonable.
-In any case, "they're now disabled in the device tree" is not an argument.
-
-My anecdotal and vague understanding of the Arm SystemReady (IR I think)
-requirements is that the device tree is provided by the platform,
-separately from the kernel/rootfs. It relies on the device tree ABI
-being stable, backwards-compatible and forwards-compatible.
-
-> > A message maybe, stating what's the deal? Just that users figure out
-> > quickly that it's an expected behavior, and not spend hours debugging
-> > until they find out it's not their fault?
-> 
-> I will explain in the commit message that i.MX95 10G ENETC is not currently
-> supported.
-
-By "a message, maybe" I actually meant dev_err("Message here\n"); rather
-than silent/imprecise failure.
+--8323328-983401245-1729863561=:946--
 
