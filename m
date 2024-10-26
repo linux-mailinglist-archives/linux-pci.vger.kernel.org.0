@@ -1,71 +1,83 @@
-Return-Path: <linux-pci+bounces-15382-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15383-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 506979B12A6
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2024 00:32:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D665E9B1406
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2024 03:34:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 146A728307B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Oct 2024 22:32:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E43951C214C6
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Oct 2024 01:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9403C20EA57;
-	Fri, 25 Oct 2024 22:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A26E828E0F;
+	Sat, 26 Oct 2024 01:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMqCwlt3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wq7WzRrR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F9E20D4FC;
-	Fri, 25 Oct 2024 22:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32944B665;
+	Sat, 26 Oct 2024 01:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729895558; cv=none; b=XjTE8VHQM537vfK0wq6ISUyl/IASYUyUMqRjog/9GMY1DicS36e4eRDO+GTkWG5et3ouLeL/Fl1dv9/el0pwAWNW/vSq9GP4CC73C0zJ2m55k0K1VgM2lGMmOWK6DXJZyUjOj9LnHfycLh1sSwrNYAKClLdprD4yXE+bRoms16o=
+	t=1729906489; cv=none; b=h3NViOV2PfXhRuwlkSNRyd8R/ACDrRDVN5QKgCnqE8XX9ZpflVE6X0HrBUYKWORZIg+0b5Ik7P567nEhWKtybYOrwrO5LK9KXsR0GtLSCOmU8hWpkZJpLaL3pbYunZAtUd3Zj9/BnE2vAn3utgSyfJ5WWtr7pWudz1GLNP5G13g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729895558; c=relaxed/simple;
-	bh=lvgqZKZL3hTSMXjWYkYB2dg3KyAAN40oIeI42dzGJls=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sDxGAwGisjA9+1TCWMWScdeY1pgjRLMEGmZ15F7g0vlBGubhNzqQxxDM41UQexRqHkDhCkvSffrGLV8NuR0NWEdOTqLTPNr83TU/zOZXX7rNJPDgwpsOSRj/lAG1W7Ska+z5L+qFKL4qfAble8YejgLTZDfZ8mquG789u0BCbZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMqCwlt3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7A4C4CEC3;
-	Fri, 25 Oct 2024 22:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729895558;
-	bh=lvgqZKZL3hTSMXjWYkYB2dg3KyAAN40oIeI42dzGJls=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bMqCwlt3rfSKnmYXP3CO1qHyjKGshQkpsafQF2TFtPpe8OJLF2eHJv0QZVeGh+vbR
-	 mbzYexzaFGMPKNILD/JuyECnaOF+BCjy7vXA8rpIu+ArdNAIBFHXogFUA7gI78NmNw
-	 wOCRX2/ZwmipiTNEyEGV/F1wK5DWL6poIRULNFbfZmKBLUvU5H3rTni7OtT7niq9ka
-	 6DyqbPXG8uK7S+Rc1Pr712yHYZUiycuKhtO6fWFTbc5fYdkealO2joTF2KcJlqVq1C
-	 k9JPcaw/czcYbe+l2XGV0RtVOMjgzc35OBiIKlLVTsemNgsTlJayFIt4grrcdQFn/i
-	 K0gq2aNy4BUKQ==
-Date: Fri, 25 Oct 2024 17:32:36 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1729906489; c=relaxed/simple;
+	bh=AvdnhwNRiXKf7G4bRAt5xJWxJrdRaqp5+mhlW0iRbJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hNbIf4HP2RchtvP6YmDJn1SVKYYRVZcTCNaP1bcXenvpEgJYZFEi+vzmP4VHurnQ9b9hxOu7iT39DkuC7wde5HmNMTD/SlXs2ixwFh1hTbLSJxKhaemezKJnvjBSA/pMO9XeRpa5qVAX5vyVwL4oBmUQFcOMP0yVfaV/1h1Etjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wq7WzRrR; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729906487; x=1761442487;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AvdnhwNRiXKf7G4bRAt5xJWxJrdRaqp5+mhlW0iRbJo=;
+  b=Wq7WzRrRZOXME271vy48jIpUUW/IrhcI+rjbnGTGmnm4NnBJhZYkZCum
+   1RZlAGvZRCFn3MeLh9wjPWFXPQjSp9sQQXLHMmLOaxSGSkoBd/qyAD08a
+   fNnuwq0UTbDwimFLlCvk/16xXnbjd9ZLu6/BeARopus98t53DuBd6rO0R
+   TKAakvo319Hl6i6Qnvx5Mj8bcDEuk+LHaseyXhsoBcWaQq1do9rTe1AI6
+   AZtG0NjtbACdFlA84UVhq36pq7r2Mv67cs8UGsNWalUaNJekNEWmEt6OC
+   d0nnNRJZGbdynOAx9+auYYA0ID7sou98NZIhW/cqtj/RF0l80WJcnWVmd
+   Q==;
+X-CSE-ConnectionGUID: FaefWCtwROqymHOsvIrMDQ==
+X-CSE-MsgGUID: OjnkeOHSShGIQxvQ0UYmHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29536586"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="29536586"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 18:34:46 -0700
+X-CSE-ConnectionGUID: 70ikL1t/Sde4q68jIS/rvg==
+X-CSE-MsgGUID: SbfZrTSgSn69iYeE81rvuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,233,1725346800"; 
+   d="scan'208";a="111925452"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 25 Oct 2024 18:34:41 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t4VhO-000Z8C-1i;
+	Sat, 26 Oct 2024 01:34:38 +0000
+Date: Sat, 26 Oct 2024 09:34:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wei Fang <wei.fang@nxp.com>, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, vladimir.oltean@nxp.com,
+	claudiu.manoil@nxp.com, xiaoning.wang@nxp.com, Frank.Li@nxp.com,
+	christophe.leroy@csgroup.eu, linux@armlinux.org.uk,
+	bhelgaas@google.com, horms@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	imx@lists.linux.dev, netdev@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v4 4/4] PCI: imx6: Add i.MX8Q PCIe Endpoint (EP) support
-Message-ID: <20241025223236.GA1030308@bhelgaas>
+	linux-pci@vger.kernel.org, alexander.stein@ew.tq-group.com
+Subject: Re: [PATCH v5 net-next 05/13] net: enetc: extract common ENETC PF
+ parts for LS1028A and i.MX95 platforms
+Message-ID: <202410260911.fvWnX8cx-lkp@intel.com>
+References: <20241024065328.521518-6-wei.fang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,94 +86,87 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241024-pcie_ep_range-v4-4-08f8dcd4e481@nxp.com>
+In-Reply-To: <20241024065328.521518-6-wei.fang@nxp.com>
 
-On Thu, Oct 24, 2024 at 04:41:46PM -0400, Frank Li wrote:
-> Add support for i.MX8Q series (i.MX8QM, i.MX8QXP, and i.MX8DXL) PCIe
-> Endpoint (EP). On i.MX8Q platforms, the PCI bus addresses differ from the
-> CPU addresses. The DesignWare (DWC) driver already handles this in the
-> common code.
-> 
-> Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Chagne from v3 to v4
-> - none
-> change from v2 to v3
-> - add Mani's review tag
-> - Add pci->using_dtbus_info = true;
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index bdc2b372e6c13..5be9bac6206a7 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -70,6 +70,7 @@ enum imx_pcie_variants {
->  	IMX8MQ_EP,
->  	IMX8MM_EP,
->  	IMX8MP_EP,
-> +	IMX8Q_EP,
->  	IMX95_EP,
->  };
->  
-> @@ -1079,6 +1080,16 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
->  	.align = SZ_64K,
->  };
->  
-> +static const struct pci_epc_features imx8q_pcie_epc_features = {
-> +	.linkup_notifier = false,
-> +	.msi_capable = true,
-> +	.msix_capable = false,
-> +	.bar[BAR_1] = { .type = BAR_RESERVED, },
-> +	.bar[BAR_3] = { .type = BAR_RESERVED, },
-> +	.bar[BAR_5] = { .type = BAR_RESERVED, },
-> +	.align = SZ_64K,
-> +};
-> +
->  /*
->   * BAR#	| Default BAR enable	| Default BAR Type	| Default BAR Size	| BAR Sizing Scheme
->   * ================================================================================================
-> @@ -1448,6 +1459,8 @@ static int imx_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	pci->using_dtbus_info = true;
+Hi Wei,
 
-I mentioned this elsewhere, but I think the using_dtbus_info part
-should be part of a series that only deals with the address
-translation, and adding IMX8Q_EP should be in a separate series.
+kernel test robot noticed the following build errors:
 
->  	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
->  		ret = imx_add_pcie_ep(imx_pcie, pdev);
->  		if (ret < 0)
-> @@ -1645,6 +1658,14 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.epc_features = &imx8m_pcie_epc_features,
->  		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
->  	},
-> +	[IMX8Q_EP] = {
-> +		.variant = IMX8Q_EP,
-> +		.flags = IMX_PCIE_FLAG_HAS_PHYDRV,
-> +		.mode = DW_PCIE_EP_TYPE,
-> +		.epc_features = &imx8q_pcie_epc_features,
-> +		.clk_names = imx8q_clks,
-> +		.clks_cnt = ARRAY_SIZE(imx8q_clks),
-> +	},
->  	[IMX95_EP] = {
->  		.variant = IMX95_EP,
->  		.flags = IMX_PCIE_FLAG_HAS_SERDES |
-> @@ -1674,6 +1695,7 @@ static const struct of_device_id imx_pcie_of_match[] = {
->  	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
->  	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
->  	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
-> +	{ .compatible = "fsl,imx8q-pcie-ep", .data = &drvdata[IMX8Q_EP], },
->  	{ .compatible = "fsl,imx95-pcie-ep", .data = &drvdata[IMX95_EP], },
->  	{},
->  };
-> 
-> -- 
-> 2.34.1
-> 
+[auto build test ERROR on net-next/main]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Fang/dt-bindings-net-add-compatible-string-for-i-MX95-EMDIO/20241024-151502
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20241024065328.521518-6-wei.fang%40nxp.com
+patch subject: [PATCH v5 net-next 05/13] net: enetc: extract common ENETC PF parts for LS1028A and i.MX95 platforms
+config: x86_64-buildonly-randconfig-001-20241026 (https://download.01.org/0day-ci/archive/20241026/202410260911.fvWnX8cx-lkp@intel.com/config)
+compiler: clang version 19.1.2 (https://github.com/llvm/llvm-project 7ba7d8e2f7b6445b60679da826210cdde29eaf8b)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241026/202410260911.fvWnX8cx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410260911.fvWnX8cx-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/net/ethernet/freescale/enetc/enetc_pf.c:7:
+   In file included from include/linux/of_net.h:9:
+   In file included from include/linux/phy.h:16:
+   In file included from include/linux/ethtool.h:18:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:17:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:8:
+   In file included from include/linux/cacheflush.h:5:
+   In file included from arch/x86/include/asm/cacheflush.h:5:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/net/ethernet/freescale/enetc/enetc_pf.c:906:14: error: call to undeclared function 'of_find_compatible_node'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     906 |         ierb_node = of_find_compatible_node(NULL, NULL,
+         |                     ^
+>> drivers/net/ethernet/freescale/enetc/enetc_pf.c:906:12: error: incompatible integer to pointer conversion assigning to 'struct device_node *' from 'int' [-Wint-conversion]
+     906 |         ierb_node = of_find_compatible_node(NULL, NULL,
+         |                   ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     907 |                                             "fsl,ls1028a-enetc-ierb");
+         |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/net/ethernet/freescale/enetc/enetc_pf.c:908:21: error: call to undeclared function 'of_device_is_available'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     908 |         if (!ierb_node || !of_device_is_available(ierb_node))
+         |                            ^
+>> drivers/net/ethernet/freescale/enetc/enetc_pf.c:912:2: error: call to undeclared function 'of_node_put'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     912 |         of_node_put(ierb_node);
+         |         ^
+   drivers/net/ethernet/freescale/enetc/enetc_pf.c:1115:14: error: call to undeclared function 'of_device_is_available'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1115 |         if (node && of_device_is_available(node))
+         |                     ^
+   1 warning and 5 errors generated.
+
+
+vim +/of_find_compatible_node +906 drivers/net/ethernet/freescale/enetc/enetc_pf.c
+
+07bf34a50e3279 Vladimir Oltean 2021-02-04  900  
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  901  static int enetc_pf_register_with_ierb(struct pci_dev *pdev)
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  902  {
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  903  	struct platform_device *ierb_pdev;
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  904  	struct device_node *ierb_node;
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  905  
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17 @906  	ierb_node = of_find_compatible_node(NULL, NULL,
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  907  					    "fsl,ls1028a-enetc-ierb");
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17 @908  	if (!ierb_node || !of_device_is_available(ierb_node))
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  909  		return -ENODEV;
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  910  
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  911  	ierb_pdev = of_find_device_by_node(ierb_node);
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17 @912  	of_node_put(ierb_node);
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  913  
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  914  	if (!ierb_pdev)
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  915  		return -EPROBE_DEFER;
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  916  
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  917  	return enetc_ierb_register_pf(ierb_pdev, pdev);
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  918  }
+e7d48e5fbf30f8 Vladimir Oltean 2021-04-17  919  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
