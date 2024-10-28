@@ -1,288 +1,351 @@
-Return-Path: <linux-pci+bounces-15446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2E879B3209
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:45:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B43DC9B3294
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 15:07:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1257D1C21CBC
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 13:45:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F34A282F35
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:07:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6951DBB36;
-	Mon, 28 Oct 2024 13:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130F61DDA31;
+	Mon, 28 Oct 2024 14:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="Xx5spDXy"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cRRCKCKa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2048.outbound.protection.outlook.com [40.107.22.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6C01D5CDB;
-	Mon, 28 Oct 2024 13:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730123082; cv=fail; b=oICzdOIIY4pWTeAi7q4uZMJZgxS/VbsiyyF5DAnrMxSVKT+6zeUquAJ57CgOAAzMtDZ/ytkQ+/sL4MeVcMLm5ngTMSduUY+PYjrgddSrfSmn+92/FU1tQF7Ay4MA4AqixKnyiz6zcJGNoyLajTEZQYgygYi6wpqSYxAcmcy9HRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730123082; c=relaxed/simple;
-	bh=pV2buAt8uT/anPPqcVpXVGOKiJ/SVmEZ9AaO7uGhBdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aq0p2H/mRFKNSQJk0E6SneuzFSid76Y8vvDVU+Jt3Wq8xrfQASOKy5q5LMRQ71qJsMDCK9BXz/2a1VuWReztRUhMSMiBViNcxYdmxUCv2HwMFf/VA3+Grg4Tci0CP9wWAqZfDOlJZZNLNjR2NBEgCVZlk1wW6v6vgUbpr2SLGkw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=Xx5spDXy; arc=fail smtp.client-ip=40.107.22.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DbVj9iL2VVWtpbhLepBJlh//zBtydLbId6tlSf5/PJxTBDRHcNqtk2la3wjCpZrjeY5oUzSuHQfmiutNp35Ea6LIKRVKpz4KsgRxr72aYV/NSfN68M2LpNPdjicf3b6NTvzaNG/jLQnWCLm3X8KBHcHv+AMnDPiUyA3cMMJNe4vBA8BcecOfTFYxbx8eCC/2y884Pw060QYS9Rq+QWPR5DNre/EOjj4pm3S4xbXj2YPM0qk2h3QW7N2+VjBsTxevtB+/MdI6DvpUOa1CPCv2STXAxbHZJWjk2QtcrY5Zp2OuuWiyTWERcZtf/BgIyBC40SOWQ+o6/8awTE0kFjuRGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SJA86ey4kGizoNgHPqHvz7KSYHmIX+Z5gkOFQxwN9MA=;
- b=h0jbrj+BGwFANKFHk2S8poTIoawxHUC/4pR9F+fHe54NtMD28Js5t06o98qZW4ZuIesSbw5eqreAZvNIvAzxTFXHDlodJeIO9/fJ7SWxw8ayjexfb5ExnACYFXry48IanSZLrPBDFtTw2o1fm+b2tZ6jNUVCCX2mE5ShzpYa+BRqCbNRcsWMpA7Quj+sxXraKNRDqXtjv3g5JOvRLo1Y33zzqlGbmo8a2fuKa/CjT/KHECxS9GcgYwEfQlLplQnh4AugANfZgNTahtjwIEVUCkhcd52QSI1KCmaMDxRcNWR0/XDEg9kCzp/Hj6xYdua/pNbMsvC22t4pNGgk/ZEWdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SJA86ey4kGizoNgHPqHvz7KSYHmIX+Z5gkOFQxwN9MA=;
- b=Xx5spDXyYVS6XExnx4RFQaHnS/BgMb15GYIfgPjmF/fgRePULTgQwmmtgbzvLX20+LjCBdDpIg2FYrHU2rR28xS281zQsO74Q0LIEmhAumpKjD/fUoivO8V0nvAD5zJGrBcgXM9akqr/82MGxNfsj7A1hYtjLnUAPkxwiZjCflTUvTXXx1CLQ3i8DYvoHG3X8iWf94YtwVXJZDNRFDnp6uiUs0EwTRaKCqClOdOqyczUedJSLw7fSyq061dpJhS2Ib+7wC7svj1Ur/GzEienz/kHpCZmnlP+Eg+AQz+jA5LGofbGjzsj5HutkAhN0BntBAeKEARh6bcDEsJ8O4gkgg==
-Received: from DU2P251CA0027.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::33)
- by AM9PR10MB4086.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:1f5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.11; Mon, 28 Oct
- 2024 13:44:36 +0000
-Received: from DB1PEPF000509FD.eurprd03.prod.outlook.com
- (2603:10a6:10:230:cafe::ba) by DU2P251CA0027.outlook.office365.com
- (2603:10a6:10:230::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.26 via Frontend
- Transport; Mon, 28 Oct 2024 13:44:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.206) by
- DB1PEPF000509FD.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8114.16 via Frontend Transport; Mon, 28 Oct 2024 13:44:33 +0000
-Received: from SI-EXCAS2000.de.bosch.com (10.139.217.201) by eop.bosch-org.com
- (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 28 Oct
- 2024 14:44:11 +0100
-Received: from [10.34.219.93] (10.139.217.196) by SI-EXCAS2000.de.bosch.com
- (10.139.217.201) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 28 Oct
- 2024 14:44:10 +0100
-Message-ID: <ab0252ff-b2a1-4e59-96f7-134e4e38be5c@de.bosch.com>
-Date: Mon, 28 Oct 2024 14:44:01 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF60E1DD0EA
+	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 14:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.68
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730124438; cv=none; b=cfOW0ohNFaGyVmp6yWaEqVWZK9PLubzi50EM2wW3vO20zYRud8QMD2PV9SojF7Vi76QTOT/vi3SMN5DpSPlqDs0UtP46R7G0dppwrlRzE47geEJmnEIxoXih228P2ElOlCEvirQvzMbrsRrcKM5tzzjMBySmV6KXZaPOv5IefTc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730124438; c=relaxed/simple;
+	bh=OkQm541mL+CQThMaqvJlJK8G6Hq8gMZwEjrzY1OYG50=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=EY9ScpYlMK73Ll+SNTDjSl3VmXs5HgrLmPZtgqAsYMb3k7DjHzYGRXYlNf0jqTRAKV/dJTkuU3BlzplRpPWz9hhlDNUTULIhG5fjhHM3XglHaSzITZBR3qgeGdDk50ydXoumURIg8B8bC4RxFhoNvcdxBnuho2GjlRipDw1c4js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cRRCKCKa; arc=none smtp.client-ip=209.85.167.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f68.google.com with SMTP id 2adb3069b0e04-539f76a6f0dso3756271e87.1
+        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 07:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1730124434; x=1730729234; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fmWQwY0LyW7DZAdLbPONRZPTG7Y9Z40HVMwsEI41r2Q=;
+        b=cRRCKCKanDeOu5hJbb3zDOQ5s3DmmP8wQqMr/lNDfrzTxgoyyKDk6HMbYe1gxSQYVl
+         +s0M8TupCTtg8GZGdAMImN2k1hwpPs/8m7s9RYRfAIOxcQo05yz9gNbnZXYbxTMaR8Ko
+         dcbbkf+3h0ihJgBgKnq7zdRhWavU0SN5qomXU+5ZrT5+0mRQavbHdI9CTfbWg9Gpk2dL
+         JTARB7GQDZ4M8VvwtCK9mhF6cAAg/VK0z+YFc3WoNXewqiFxdA0Qh0YiXY+PGKhIVdyl
+         Rp/Lc1M47VeDwTxR6KiFehhe2S2awqU4OQ2WBnFfxwJhqSM7s9TwZFOwDgDGtCBZ9n0s
+         fGyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730124434; x=1730729234;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fmWQwY0LyW7DZAdLbPONRZPTG7Y9Z40HVMwsEI41r2Q=;
+        b=h8L5ogF6OySnuXFc5Vx2NhcmYMwEwRoKazhT6s5BSrlMQ1rXXNnNHsr3dtCK65LEBS
+         n8IFBTGD81NPgBBdjZmjG0qKU+1q2Eqpmd7uFT1SsNKX4dF7aKLJSL91pTIJgETGQB8X
+         FZPq7Tzk7haD4argJzsTzcTUxb8BStGbgfSvL1RrlSa7qkht/i1BiIpmGKc3dgUwYjsa
+         Rxcm9dzxZ/qwB2EHlquhF65X+caE5VdIzegpXRzRoTxiPBVR/nnzGxhS40E/gWm3FaqB
+         kxyC0EozJgiL+UsH9215M+L+BnASAIXTBFq3mnXAyZEcQ5kVge0EqmN8sbtfiCQ2OQ1T
+         Rm3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUfndYydDKOfW+lqvYT/UdX7mM4dEq1peePlrALEDP+XVvfuZ3YDeLvMtT93dOTwRxpIBPlnDo98dw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMP8rx0ydRFm9hLhl3NtRa4DRbyhsY+p4bXPaqlC+va3VFOUd6
+	544mM5iMImgdukhvluojZuD87yHch50sfsVZ14pFNS8VId1rUtRRyvlGhJBbeQo=
+X-Google-Smtp-Source: AGHT+IHUuPqkKP8P1megHNLn/ao7CtOz4cPFTAgpqvApPN3/0axwoAMsnKF52yOT43fKrZomUCJmpA==
+X-Received: by 2002:a05:6512:2399:b0:539:e9f8:d45d with SMTP id 2adb3069b0e04-53b34a1b10fmr4101627e87.52.1730124433790;
+        Mon, 28 Oct 2024 07:07:13 -0700 (PDT)
+Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b271f56d9sm388920166b.144.2024.10.28.07.07.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 07:07:13 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v3 00/12] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Mon, 28 Oct 2024 15:07:17 +0100
+Message-ID: <cover.1730123575.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
- driver abstractions
-To: Danilo Krummrich <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
-	<rafael@kernel.org>, <bhelgaas@google.com>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
-	<bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>, <tmgross@umich.edu>,
-	<a.hindborg@samsung.com>, <aliceryhl@google.com>, <airlied@gmail.com>,
-	<fujita.tomonori@gmail.com>, <lina@asahilina.net>, <pstanner@redhat.com>,
-	<ajanulgu@redhat.com>, <lyude@redhat.com>, <robh@kernel.org>,
-	<daniel.almeida@collabora.com>, <saravanak@google.com>
-CC: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20241022213221.2383-1-dakr@kernel.org>
- <20241022213221.2383-16-dakr@kernel.org>
-Content-Language: en-US
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20241022213221.2383-16-dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509FD:EE_|AM9PR10MB4086:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8a33a15-0204-4a01-6e77-08dcf756a825
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aEhtRTFxNUhLOGFIM3RYODJwbUYyZTJaSWNjbTFIZWpYQmRjTUJ6Y0tGTVJB?=
- =?utf-8?B?RkNGYk5zSDNsQjV1V3Z3VnZMMHdVam44NnRXZkxXbUIyWW1mS2tIWnBWTHVN?=
- =?utf-8?B?UTQrakNENGxydkJsaVdueVR6aklhTXk2eVB5eHBBeEpuU1AybjRvMlBia0Zl?=
- =?utf-8?B?WllwL1RNT3I3Y1o4WjlWdzVUN0NsMlBKRThqNHdkZk5tTG1pTGE5dmdzNzFs?=
- =?utf-8?B?Z1MvWExFNDhSZnlUZWd5MVJ5dmRZd2hveURwWnBqSjJYcUpjSExNQlc4OEVL?=
- =?utf-8?B?cUJ3eWhTZ0k1b0xHMDlnQkJ5a0s5NWF3MldkaE9GS3paWC9xV3NVQmhSL2V5?=
- =?utf-8?B?bEROQVROcnZ2c0FJRG5vQVdmV3hQQ0pVaThOa2h5N044OFp0QnppL2R1OG1G?=
- =?utf-8?B?TXFudTFrSEpocjZsbGFucVFwZlhyaDhLOFVadXN2aTFjbnIyc0N1ZkNEQ1dX?=
- =?utf-8?B?d0R4OFlvY203TENnVElHbURtZTlqU09GMTZ1ZzFISXUxdW45VkgyWTR3RzVw?=
- =?utf-8?B?STVCRml4aW9IOGo2MkkzUGRkL3Z6VVluNDIwOXUyZm5zemhDVjRyM0N1THY4?=
- =?utf-8?B?UHh3MmJCMXBPRUZYNjVLLzlCNzVkT0tic3plbGcyRm5YeVJsc0pvbkNGQUdw?=
- =?utf-8?B?Vmcva1VZNEV0b0hmeXRrT3VBNXNINFVaTFpZRmVTZzJyZERrYytvbHN0N1Jr?=
- =?utf-8?B?OXRPSmlwZ0tOeEk2dEIyK1ZQZ2JWcTB3MkxSdXVCUURpemF5SFhwK3liMTlL?=
- =?utf-8?B?MzRkeUNvYzZobWM3eEwvSk13MlVxdVBkZXRxYmU2QXNJOG5pT2N2cGdsRnpa?=
- =?utf-8?B?SEtaY25Kc0JEOTh0ckpSSkJXWERLb3lMUkUzY2NuVm1TTU1jMjNpTkI3SWVI?=
- =?utf-8?B?cFBnV0FPdDBBQmJiVlh3OFkwZ0tVRWkxOE96bi9YZ1dLNjUxY2tZY2FHSGc3?=
- =?utf-8?B?SzNqOGZxZC9sQnlhVnZ4Uk8vZUtqZTAyNC9oMkg0YlliUFNaWlpqdExnSUIw?=
- =?utf-8?B?MU1uSFdIb1ZnVHBHQVd5a1VrZ0tXRzRmMnFneG14KzIwdnp0aitlbUJ6OUIv?=
- =?utf-8?B?VW5URXRwM3ZYRFlZaXpST2cwUnMwZVNyemFybGdwV0tVOU5YWFFSQWdqWFBr?=
- =?utf-8?B?eEVQL2FKekFVRkRlZnpMU1BxdkdqdDJWTEtJbU1uY0pGWUxKRFVIQVN5TENW?=
- =?utf-8?B?T0dzWHRxak1ydGpuWEQ1bDZ3RUxmRUxFQm41MTVFOHhQNGxNbGxiRzdMOXVF?=
- =?utf-8?B?QnFHOU1tYURxVm00aE5CZ2E5TGp0cGVmdGhMNlBva2RIL3VaZUo5bytXNm1U?=
- =?utf-8?B?dVdpRzNXajZMU05GK21JODdLRzBzNTRGVmNxWVZpckw1a0J2SklSaFlTS0Rp?=
- =?utf-8?B?MGwzdmJNNFBXb3BHSkNjQUxCdWFPd3hCUFVhV1F0MGNNMlk5b25DUEFjNXRD?=
- =?utf-8?B?RW9nV0NUdTRldXo5M1BoNUpCb0pSblRsU1ZqaitqR3d6TTlSWVFYcUhwNjVY?=
- =?utf-8?B?UksvdWNyMlJ4bUxjeTlRWG0zNEZuYVNpb0VmMmhtVGM4cG9RN0lKUy95ejVi?=
- =?utf-8?B?a3FWSThUTXBFWFlPNFBDQ2kzelJYYjVSeFdUa0ZGT2pYMGlkVEV4aUs5Zkpy?=
- =?utf-8?B?MkcyZ3NJOC9qOUxUbUFIaStaTXFBWE1YNGtpRDh5STZlSXEvM1Bhdk8rUDhY?=
- =?utf-8?B?dmZrS3p5TG5QbXViUWVLRGFzZEJ0SXpmOW9seEErQVR5ZkU3VVNlL21WY0tU?=
- =?utf-8?B?SkkyRlIxdDhGQmczc0ZYVzZ0ZFlqbTVWeE9JOGdCK2h0K210VkFTT3pUZGhm?=
- =?utf-8?B?dE9FRVNpR0lORFFOTzE2N2xMajA4ZzRqZ2tqcTVwSDk4NjlSVGRUOGFKb1Y4?=
- =?utf-8?B?SmFTL2tLSkRoSUp6Szl2ZTlEeGRHekFrdFNMUmpNVDJockl3YjMwcjU5N0d1?=
- =?utf-8?Q?oldAn7PFp8o=3D?=
-X-Forefront-Antispam-Report:
-	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 13:44:33.9103
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8a33a15-0204-4a01-6e77-08dcf756a825
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509FD.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR10MB4086
+Content-Transfer-Encoding: 8bit
 
-On 22.10.2024 23:31, Danilo Krummrich wrote:
-> Implement the basic platform bus abstractions required to write a basic
-> platform driver. This includes the following data structures:
-> 
-> The `platform::Driver` trait represents the interface to the driver and
-> provides `pci::Driver::probe` for the driver to implement.
-> 
-> The `platform::Device` abstraction represents a `struct platform_device`.
-> 
-> In order to provide the platform bus specific parts to a generic
-> `driver::Registration` the `driver::RegistrationOps` trait is implemented
-> by `platform::Adapter`.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
-...
-> diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-> new file mode 100644
-> index 000000000000..addf5356f44f
-> --- /dev/null
-> +++ b/rust/kernel/platform.rs
-...
-> +/// IdTable type for platform drivers.
-> +pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<of::DeviceId, T>;
-> +
-> +/// The platform driver trait.
-> +///
-> +/// # Example
-> +///
-> +///```
-> +/// # use kernel::{bindings, c_str, of, platform};
-> +///
-> +/// struct MyDriver;
-> +///
-> +/// kernel::of_device_table!(
-> +///     OF_TABLE,
-> +///     MODULE_OF_TABLE,
-> +///     <MyDriver as platform::Driver>::IdInfo,
-> +///     [
-> +///         (of::DeviceId::new(c_str!("redhat,my-device")), ())
-> +///     ]
-> +/// );
-> +///
-> +/// impl platform::Driver for MyDriver {
-> +///     type IdInfo = ();
-> +///     const ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
-> +///
-> +///     fn probe(
-> +///         _pdev: &mut platform::Device,
-> +///         _id_info: Option<&Self::IdInfo>,
-> +///     ) -> Result<Pin<KBox<Self>>> {
-> +///         Err(ENODEV)
-> +///     }
-> +/// }
-> +///```
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
+
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+Followup patches should add support for the several peripherals contained
+in RP1.
+
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
+
+The patches are ordered as follows:
+
+-PATCHES 1 to 4: add binding schemas for clock, gpio and RP1 peripherals.
+ They are needed to support the other peripherals, e.g. the ethernet mac
+ depends on a clock generated by RP1 and the phy is reset though the
+ on-board gpio controller.
+
+-PATCHES 5 and 6: preparatory patches that fix the address mapping
+ translation (especially wrt dma-ranges).
+
+-PATCH 7 and 8: add clock and gpio device drivers.
+
+-PATCH 9: the devicetree overlay describing the RP1 chipset. Please
+ note that this patch should be taken by the same maintainer that will
+ also take patch 11, since txeieh dtso is compiled in as binary blob and is
+ closely coupled to the driver.
+
+-PATCH 10: this is the main patch to support RP1 chipset and peripherals
+ enabling through dtb overlay. The dtso since is intimately coupled with
+ the driver and will be linked in as binary blob in the driver obj.
+ The real dtso is in devicetree folder while the dtso in driver folder is
+ just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+ The reason why drivers/misc has been selected as containing folder
+ for this driver can be seen in [6], [7] and [8].
+
+-PATCH 11: add the external clock node (used by RP1) to the main dts.
+
+-PATCH 12: add the relevant kernel CONFIG_ options to defconfig.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been already promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Please note that albeit this patchset has no prerequisites in order to
+be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
+PCIe controller (see [5]) in order to work at runtime.
+
+Many thanks,
+Andrea della Porta
+
+Link:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+- [6]: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+- [7]: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+- [8]: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
 
 
-Just in case it helps, having CONFIG_OF_UNITTEST with Rob's device tree 
-add ons enabled adding something like [1] makes this example not compile 
-only, but being executed as well:
+CHANGES IN V3:
 
-...
-rust_example_platform_driver testcase-data:platform-tests:test-device@2: 
-Rust example platform driver probe() called.
-...
-# rust_doctest_kernel_platform_rs_0.location: rust/kernel/platform.rs:114
-ok 63 rust_doctest_kernel_platform_rs_0
-...
+NEW ADDITIONS ------------------------------------------------
 
-Best regards
+- Fixed a bug in of_pci_prop_ranges() that was incorrectly using
+  a CPU address instead of PCI bus address while assigning "ranges"
+  properties to PCI-PCI bridge nodes.
+  As a side effect, the patch "PCI: of_property: Sanitize 32 bit PCI
+  address parsed from DT" has been dropped since it's no longer
+  necessary.
 
-Dirk
+RP1 misc driver -----------------------------------
 
-[1]
+- Dropped -@ option while compiling the dtso.
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index addf5356f44f..a926233a789f 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -112,7 +112,8 @@ macro_rules! module_platform_driver {
-  /// # Example
-  ///
-  ///```
--/// # use kernel::{bindings, c_str, of, platform};
-+/// # mod module_example_platform_driver {
-+/// # use kernel::{bindings, c_str, of, platform, prelude::*};
-  ///
-  /// struct MyDriver;
-  ///
-@@ -121,7 +122,7 @@ macro_rules! module_platform_driver {
-  ///     MODULE_OF_TABLE,
-  ///     <MyDriver as platform::Driver>::IdInfo,
-  ///     [
--///         (of::DeviceId::new(c_str!("redhat,my-device")), ())
-+///         (of::DeviceId::new(c_str!("test,rust-device")), ())
-  ///     ]
-  /// );
-  ///
-@@ -130,12 +131,22 @@ macro_rules! module_platform_driver {
-  ///     const ID_TABLE: platform::IdTable<Self::IdInfo> = &OF_TABLE;
-  ///
-  ///     fn probe(
--///         _pdev: &mut platform::Device,
-+///         pdev: &mut platform::Device,
-  ///         _id_info: Option<&Self::IdInfo>,
-  ///     ) -> Result<Pin<KBox<Self>>> {
-+///         dev_info!(pdev.as_ref(), "Rust example platform driver 
-probe() called.\n");
-  ///         Err(ENODEV)
-  ///     }
-  /// }
-+///
-+/// kernel::module_platform_driver! {
-+///     type: MyDriver,
-+///     name: "rust_example_platform_driver",
-+///     author: "Danilo Krummrich",
-+///     description: "Rust example platform driver",
-+///     license: "GPL v2",
-+/// }
-+/// # }
-  ///```
-  /// Drivers must implement this trait in order to get a platform 
-driver registered. Please refer to
-  /// the `Adapter` documentation for an example.
+- Removed unused includes.
 
+- Dropped unused sys_clk references.
+
+- Got rid of dump_bar().
+
+- Added the relevant unregister function on exit paths for mapped
+  interrupts and domain.
+
+- Added missing MODULE_DEVICE_TABLE().
+
+- reset_control no longer claimed in probe().
+
+- dtbo_size and dtbo_start local vars definition moved at the
+  beginnning of the probe() function.
+
+- the DTB overlay is now applied after the interrupt controller
+  has been setup.
+
+- Reworked the Kconfig dependency list for CONFIG_MISC_RP1 to avoid
+  a recursion.
+
+
+GPIO/PINCTRL --------------------------------------
+
+- Gpio line names changes (and relative dtbo and preparatory patches)
+  have been dropped.
+
+
+CLOCKS --------------------------------------
+
+- raspberrypi,rp1-clocks.h: license adjusted.
+
+- Removed unused headers.
+
+- Replaced locally defined KHZ and MHZ with defines from linux/units.h
+
+- Added regmap support for registers which also has builtin support
+  for showing regs via debugfs. Dropped the previous implementation
+  of debugfs attributes.
+
+- Reworked the clock tree using clk_parent_data instead of strings. This
+  also allowed to get rid of __clk_get_hw() and friends.
+
+- Split a couple of lines assigning to calc_rate into multi-lines for
+  ease of understanding.
+
+- Dropped .set_rate function from rp1_pll_ph_ops since it does nothing.
+
+- Initialize struct clk_init_data init via = {} instead of memset.
+
+- Used dev_err_probe() instead of dev_err().
+
+- Module init/exit declaration replaced by module_platform_driver().
+
+- Kconfig: CONFIG_COMMON_CLOCK_RP1 now depends on CONFIG_MISC_RP1 instead
+  of CONFIG_PCI.
+
+
+DTS -----------------------------------------
+
+- "rp1-xosc" renamed to "xosc"
+
+
+BINDINGS ------------------------------------
+
+- raspberrypi,rp1-gpio.yaml: removed a paragraph in the description of
+  pinctrl node since it's already covered by pinctrl-bindings.
+
+- All paths to referenced bindings are now full-paths.
+
+- Uniformly using single quotes over double quotes on patterns and strings.
+
+- Amended some node names to adhere to DTS coding style.
+
+- Dropped unused labels in examples.
+
+- pci-ep-bus.yaml: simplified the definition of pci-ep-bus node.
+
+- pci-ep-bus.yaml: added additionalProperties: true.
+
+- pci1de4,1.yaml: interrupt-controller and #interrupt-cells moved from
+  pci-ep-bus node to the main device.
+
+- pci1de4,1.yaml: @unit-number not optional anymore.
+
+- pci1de4,1.yaml: droppped pci-ep-bus redefinition (already inherited by
+  pci-ep-bus.yaml). Also removed the internal SoC nodes.
+
+
+
+Andrea della Porta (12):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  dt-bindings: pci: Add common schema for devices accessible through PCI
+    BARs
+  dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
+  PCI: of_property: Assign PCI instead of CPU bus address to dynamic
+    bridge nodes
+  of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   62 +
+ .../devicetree/bindings/misc/pci1de4,1.yaml   |   80 +
+ .../devicetree/bindings/pci/pci-ep-bus.yaml   |   58 +
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  163 ++
+ MAINTAINERS                                   |   14 +
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |    7 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |   61 +
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1540 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   21 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.dtso                 |    8 +
+ drivers/misc/rp1/rp1_pci.c                    |  357 ++++
+ drivers/misc/rp1/rp1_pci.h                    |   14 +
+ drivers/of/address.c                          |    3 +-
+ drivers/pci/of_property.c                     |    2 +-
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   11 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  801 +++++++++
+ .../clock/raspberrypi,rp1-clocks.h            |   61 +
+ include/linux/pci_ids.h                       |    3 +
+ 26 files changed, 3283 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/misc/rp1/rp1_pci.c
+ create mode 100644 drivers/misc/rp1/rp1_pci.h
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+
+-- 
+2.35.3
 
 
