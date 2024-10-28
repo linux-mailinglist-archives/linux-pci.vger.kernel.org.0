@@ -1,265 +1,226 @@
-Return-Path: <linux-pci+bounces-15444-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15445-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F13E09B2ECA
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 12:24:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27A349B3197
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:23:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9556C286250
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 11:24:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A05171F2267A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 13:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB7F1D4342;
-	Mon, 28 Oct 2024 11:20:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F3B1DAC8C;
+	Mon, 28 Oct 2024 13:23:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UCV1K2GJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PudSzRtk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024CD558BC;
-	Mon, 28 Oct 2024 11:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730114431; cv=fail; b=Eu0BSJ7Hvjf6QK4NcGH7ZlLCDHxb5i98Mu9HvPTMa5MtrGEQeKXCJSbMB2twuWbq+vj0aCo7mg7cgVi+PkMr2MmUDjmoiP6qCcNaYa9LJQO0VSofsodinPObrPVCfAQgJBhwHSOdMlpZmdOTCGToF1XnoqdqP/vVM62imogARcg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730114431; c=relaxed/simple;
-	bh=s/ys3wWK78AnU5snqjY5U49igKiPcYpTg+CVPb45NB4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PE79ezPM2YW1kavd62MT7tA8biXvmmejyy0l/2aajoeIyCOVOx7BAKkBK6n2hc4Z5s55p20i7cvg5DhKaEfKHRBuZBvbqdJtroohpzyLZFhiG1TJ5vGUkTC/JlX6gjEnXWY3axn+kpRBPHn0Cr/DlmEn1flwMyhsfcfdUvwjQz8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UCV1K2GJ; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730114430; x=1761650430;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=s/ys3wWK78AnU5snqjY5U49igKiPcYpTg+CVPb45NB4=;
-  b=UCV1K2GJjz02u3c6LkMN859lz3uWW6P2pD0FP8OhK20Gql+Kxt3WrakT
-   jPJVevLGVP/l2EgNE0xdDqvvF8nhijcO8qqijiUzpFN0dMQcMxfENRMhP
-   2xO6GF78O3SJcLiWMvtNRm8cC5QEb3Yo58xJ4uc2Gvqt4xM37HnO9xvPU
-   CipXMbm9xva3wGSQGrxYEq18znRgXdQoVRWokPppcrDiIsinoHaUHtuxR
-   Tin9bMW8rJl6tkYlO4fiQeF9Ncw/py9lWuD6rkT4Q3SIxWqSsm+frcpUy
-   myoLFB+a76ihTOqjD8pZXjGDPI+HBqvl5u8HZmbnJ950ImynACfpecuyR
-   g==;
-X-CSE-ConnectionGUID: 69r6X9ZDTMW+A9zvpNSz5w==
-X-CSE-MsgGUID: qinJ9b/fRcKLW1dsUASQ3g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29479326"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29479326"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 04:20:29 -0700
-X-CSE-ConnectionGUID: QDWYcAfKQFKu+spb3vCEpw==
-X-CSE-MsgGUID: PsUmy5YFQ+64vUoNSUPiIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
-   d="scan'208";a="81908597"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Oct 2024 04:20:29 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 28 Oct 2024 04:20:27 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 28 Oct 2024 04:20:27 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 28 Oct 2024 04:20:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KVQ3ERDmxL4d2eP9GUj0NYeZrxkPJvg0ZsNRKAiWKUQAjKQjlsHvwnGgj5C6nS5ocwXJg0U/tlzSOHoHbHRl3xZzA/nYSmctUl9DhdcRDVFdjmPRn62NgyPn2XFVddvwf2sRYfcG8X/Ni78M8uvVV8/UT6/p35mhDh/c4gVwm15fykzIok1V0+GtG+Yp0G2yVfK76YMh5j6Wl3jDDaODcR+vcWWPq9YMHtPntwj9KkZF4USGzOoTVn/pu2ckidKPPKu8D/DyDDlp2hE4q2jXeMty6qSNXxmQ8ofYT0AtU2gqO0PZjM2jpAc521uvnm1/7i9XuRq9/h+fh68NwPaIWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EcYdBNjXg8GwBXGlLpkI0RGATDARN1CkPvzZK6DEupI=;
- b=foVTj6r/ghvKr3uCeKPlVG630z2JfEOLFuCKQDLAN5FGUcple9DAnem0fKe//elwpIjf5EBmeYHpU9fPTWpLmQTZV2S0+t1HOcRg3TnrU98L+f743mw2D48/3FDlArDOmGCiLHRoqGhJagZwe9ip8eTElvcMN4j/XbDRZgznzlt/SnxbM8Zc5ur8LSp5WWpRmvzByOpuhQV69ewcp9G0zraNAdtOmzmqhjGrFBsoaqrm7LJm6pBDmqKDG1gw2esbdlZS/2AcrRdN/pSPZSlqfGvjZGLiRmKsYIEgN50AQ+26MY2yAVUq9ZgByxNx4CzZmWzp+y2WYIVSPmbr6kZ28Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL1PR11MB5365.namprd11.prod.outlook.com (2603:10b6:208:308::18)
- by DS0PR11MB8207.namprd11.prod.outlook.com (2603:10b6:8:164::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.25; Mon, 28 Oct
- 2024 11:20:24 +0000
-Received: from BL1PR11MB5365.namprd11.prod.outlook.com
- ([fe80::8637:9cfc:1235:8987]) by BL1PR11MB5365.namprd11.prod.outlook.com
- ([fe80::8637:9cfc:1235:8987%4]) with mapi id 15.20.8093.023; Mon, 28 Oct 2024
- 11:20:24 +0000
-Date: Mon, 28 Oct 2024 12:20:21 +0100
-From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-To: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Bjorn
- Helgaas" <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
-	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
-	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
-	<matthew.d.roper@intel.com>
-Subject: Re: [PATCH v4 5/7] PCI/IOV: Check that VF BAR fits within the
- reservation
-Message-ID: <2i4733f7fc7qa3qrseq4pb2u32k4ckh3ns4cmsj4czbucpd7mw@i7e674csuedb>
-References: <20241025215038.3125626-1-michal.winiarski@intel.com>
- <20241025215038.3125626-6-michal.winiarski@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241025215038.3125626-6-michal.winiarski@intel.com>
-X-ClientProxiedBy: WA0P291CA0011.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1::23) To BL1PR11MB5365.namprd11.prod.outlook.com
- (2603:10b6:208:308::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F8538396;
+	Mon, 28 Oct 2024 13:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730121784; cv=none; b=QHpNzAjF+L/ZxrA1jUNi+hIG3HwOOe0vVKDyhnt9D/IaeazejB1HYlG73HlXS61i7aKFP8GgmwoTc8Dhuca60nfyJsuzsroCh+7G9Vo3iGU8lnLdwNfWDKFC3BkR+0W5ECccnMKeAJBoYAYOnTtWsw622INXeDSXvO04VxAZ/ME=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730121784; c=relaxed/simple;
+	bh=9tECmQTWRmCrctZx1DA72M0oCUbizMBPA+xl+7zZJYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a7iPZFw1JBZbxyzidJOQjssUfxgBGmWu8TtTx2jjbFxJ0+q39wjHLfUwTzVb4gr9mvtS73KccDfZJ6YLKb3+eXMxGl2GU1qNXuH8GX8znxtMshl4kqi+CYdhi3PD3XmzOVIbMcRS8eE9BPXHRk7G7XmUM7tv22taRnwBxqq4mVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PudSzRtk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED931C4CEC3;
+	Mon, 28 Oct 2024 13:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730121783;
+	bh=9tECmQTWRmCrctZx1DA72M0oCUbizMBPA+xl+7zZJYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PudSzRtksSiVNKwGVRWY+Dv/cjY6o52UJ0NnBF7zVDLApZAd+3k1U+8KEOalpOQSz
+	 POD/7Kbnv5zzk76wsCPMIf0GzShT7MPuShwXhOmvrxsYnXj/H/8UMUCSnH8fHWrJz8
+	 fqBbtiavtPcg2WMEWraY9Vozjtw5ejFDYzr62CACQtyvybrbMMo28MQtnYVd4S7Vu/
+	 gFF4y9CUyjwEyQXnBnNs+gniZG0KiyXqY+D55Gcivzne0KfVo0RRDyw8lWaxqlrPJV
+	 UTO4rZjPzhelBMLEhjQBnbfbQPc0JrbawU9rmefiYtL8ehhGebUyH4kPGwkxWcpUA+
+	 JQiK+GV53c/3g==
+Date: Mon, 28 Oct 2024 14:22:56 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	daniel.almeida@collabora.com, saravanak@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 13/16] samples: rust: add Rust PCI sample driver
+Message-ID: <Zx-QMBHtWSFkLiKm@pollux>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-14-dakr@kernel.org>
+ <20241023155737.GB1064929-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR11MB5365:EE_|DS0PR11MB8207:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9ea5cfd-aeb9-4f88-abae-08dcf7428482
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?V0hDRnI4aTRLQjhVbnVNdTRrVDdrTm1ER280TythQ1lxd25rS2ZIOGNGS3BM?=
- =?utf-8?B?SWh6RkdIK1lVQm1DRlBJTERhTUFQYVRHV0xCMkd3MnpSN3dQcVVaN3NtcUxn?=
- =?utf-8?B?cHB1OStTWmkvTWJFelFJSnRlc21yWUVTUHlJVWVzWWZlZ0h6RExxNVJ6Yk5z?=
- =?utf-8?B?aDVNSnFiYzRDWmM5L1BBVzhQZXpVcm1uMTF4S1N1dE9IMU4yMy81VkwxQXJy?=
- =?utf-8?B?a0dqbTFUR2c0N3pkQ0txZ2dyMHhuNXg3Zm8wVmF3ZTlDZlNZTjQ5NHJFMzk4?=
- =?utf-8?B?Z2dLK1c3SEJONnlKQWcveFFSeFlLRS9OQldUUks2L2UxRUJRcjU4Ri9RZ0dy?=
- =?utf-8?B?eDVVYTRBcS8zSWVoZzJYOHdPV2VocWROUVJQS09tOURQUGJKbjIzV0VrWklz?=
- =?utf-8?B?SEVYcXBkWFdUWTlVSTNhS0FFdDMrQjdLRnZNbE5QenBaMHJRYWI2L2JGRWxI?=
- =?utf-8?B?TW10R1ZmQTJsYTIyZ2RMU3kvd2cxcDMwbTBBM3BzMU9kUGdVSmx5YXo5SXA0?=
- =?utf-8?B?MkRVWEtyUjF3MDZySUY1bjdsZjlHOHp1c1RKcW5IdEcvNjJtZUE2UDNjZm4r?=
- =?utf-8?B?MFJLLzdpdkh6Nm8xejg4aU5Jbm5EM0ZzeGw4M3ozUGFKeTBhcVdUYW5pb0Fz?=
- =?utf-8?B?RG1QbXk4NllabDBrK09lUXpZc21xVGxFV2ZmYkxHdmEyMUw3RVBCbFc1enJp?=
- =?utf-8?B?MGtoTjlYU0J2ekgyNzFOdmdrMHpMZkdpNC91d3VSS1NGdzBYMXRteHA1Yi9L?=
- =?utf-8?B?UEg5bHI4WVNzRWhZSWRzZGJrVjlURk1DRlpXRnpxaDFiUDhVY2IvNzJxTDVW?=
- =?utf-8?B?T1lOQWpYeGsrOUNuakZ4TS9BTVhsbVIwRkFZdy9SdGd6bkdUN0pES1ZhaG1w?=
- =?utf-8?B?akpJdHhOSGNhRFYvdHp6cDlYUkFYSFlJbkVsQ1RYUDJmdlJUc1FMeUg4V3d1?=
- =?utf-8?B?c25VdFhNSjlHV3pqUDBwTnF2UEV3SGxGMFVrbG5jLzg5VEJsTm4xY0krWm9I?=
- =?utf-8?B?MnZyZDJJMlJSbkprSGNYbzI5MnJQd0VqSVRFbGU1aHlsaG4wVSt0ZlM4cG50?=
- =?utf-8?B?NksvUzN4MHhJMUhsNm1zRitRSEk2U1VlMGhacVQ5RjlPanArbDUvamRuczBs?=
- =?utf-8?B?OU1sTTVxREppTXgram9rcEdBdWI5ZmZianBFRXdsMENsVGJwbXdjS0lMMHJ3?=
- =?utf-8?B?U1Q0VTlUUVFWVXNRRElHRTczbmhyRlhTaTM1andUN2RtM0h3d0FyWllwWmZU?=
- =?utf-8?B?YmZvdElxeE1jT3BZcitXUnlQREN2NStYZjl4K1gxaERaeXlzWjlQMU5iNFp6?=
- =?utf-8?B?aFFxVlIzaHJhZ1FtOVNPSDIydDlGd1l3dm8vNEFseFdmREIzTU4zTHNPZG9q?=
- =?utf-8?B?MEJaUm9XbVVqMENvSzBSNWNYOTBZdVQ1RGYrTjRGWDVjeEtoOHFaa2hMdTFw?=
- =?utf-8?B?SHJOUWdUWkJBZm5ySjdldGVBWmRXTVNiTStEQjBuNFFmMmxXYm93Tk9MQVY1?=
- =?utf-8?B?UmxGWCtMUXhJZlZFdU1BdzB0MldvNjJGZkZnKy9hRDhCNFlBdTJ6dnV1VWFy?=
- =?utf-8?B?NkNvc3Q2ak4wcE41V3ZsVVo4WjNhVWo2QnhUalQ2Zk5kUU1HNE9jelJqc0pk?=
- =?utf-8?B?WmFqZ1kyTXBieFc3TGEyK3hWR2kyYjFkOUptNjRQbkZqWXNaWml0a3ZhYXNT?=
- =?utf-8?B?a3dTU3VQWVV6eXdjTjduMjJXWFdjZWFTMTFuRXlvMXUrdGlGYnJ0M016M2Zt?=
- =?utf-8?Q?nOt1fwBdgzj2oHZ2NBGeJYDfg9un2XUT8yy706E?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5365.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Sndub3huQzJzV0R6VFlGWW5aRXpnMWpNWGxjcVF5RUs0MGtnZ01EK2xwNGxx?=
- =?utf-8?B?M1ljZUNBY3R2bnI3K3NQQS9Ud0hKZlc4Y29zNlBpdHA2REE0bkVQeStiUzda?=
- =?utf-8?B?Y0sxUFg0aVpEWENORGZ3L0Nodk1RYVhZOHdWbUE3QTUvOWZsdE15WDVJRzM1?=
- =?utf-8?B?VERlOVhEWnIwaENydmFMRFVlZlZMRkptOFIzdkpibElPQ0xNeE1Xa3psVnJY?=
- =?utf-8?B?aDJVZ1BFNGVvSkZTemJJQW5pQ2IyVlI1ZkU4RWJaYzBpSjNNVmhzQWVSOFpm?=
- =?utf-8?B?SE02ZUczblF4eG01WWs5Y21HSEFXN2tLUWJnQllnanlaYjlkRHd5N0lmYk5K?=
- =?utf-8?B?YXRzZFQ0YlZjc1NwMHphWnZZcEoxNk0rTGZkYTViK3Bnb0QxK09NUnQ4VlpG?=
- =?utf-8?B?Z09JdkpCMWlFRXY5K1ErZzRJYXRMRWdSZVNBbjQwMmpqTHIrSDA5VDBYaGhV?=
- =?utf-8?B?REI4UFhkdDFZZW5saWl5aHFiaHhNU2cyVEN3V0ZNTVFCL0NsN3hiTG55Q0NI?=
- =?utf-8?B?TjJKLzJLODJhaXBWVWlKd3VyY0ovQ1R2bjJCczZCWUVlSmZwOUN5d3ZZWnVN?=
- =?utf-8?B?ODZ5T1J4NnZnTG5kVkVJNnhpQmc3cGcvb3h1Mkc4UThyZERJcTZRanlTWC9w?=
- =?utf-8?B?c3BvTE5PaTNlK1BJVnZVd3VVVTA3dHU1NjdURzlhZk9FU2k0dDJaeE82THg2?=
- =?utf-8?B?Q3QzcGNaZ1NoWTdEc0d6VkVFRXN0eEhic2UxbTVSOWRFVWlnV01NTU50Mk50?=
- =?utf-8?B?bU4rbEZWK1EvOTBoZ0Y0K3pMUWR3OThtSXlhSHhDcUF1QzdxZ091NlJ4VHM5?=
- =?utf-8?B?REJBeDZEWXIySWpmNDVlSloxQkFzQTRsOTN3S0orcGlJLzIxNkRNOVVKenJt?=
- =?utf-8?B?ZW1vdDB5Vi9YaFRXMzFvR3Y1b1Y3RUtUOHZ4NUs4VzFWbXgxQTllQ2JqVjMv?=
- =?utf-8?B?NGsySGh3ZkVtby85OXk2VHNhaXFmL2FQalpzYmdYVTEzdGdUbEJ2VVRBVksv?=
- =?utf-8?B?UjZtaHpNelYzZndRQy9HNjIvTUZieUJGbFZLUUxUcVZFY1p0dkJpTVkvT2Yz?=
- =?utf-8?B?Q0hRNStVcDdqTEtPblpJMmRlOHVXR0ZiZEV5UThuUzNUN0FiYjhyVmZWUWFv?=
- =?utf-8?B?a0hocXp2QUpDblR2S2ZxVHBISTVxejA3YVNxNDFuWWVSckVuMXRQMXIyVnRk?=
- =?utf-8?B?bDBTSDAvT2kzcVBRWUdFSTdTVVgvVGNoQ0t5UzdPWS9sM0FmRnRRbFY1S0l5?=
- =?utf-8?B?SlFONjBPcjdBMmJRSktEY2Ftbkp4YnZ4MXhiVWpmWFlXaEJDRVorTGU5a0lX?=
- =?utf-8?B?S0xoWkMzMFJkRXNMaHo2YmY1M3Boci9kNEhoenIzcjFSa1kxbjNCRGlxQnpR?=
- =?utf-8?B?TmpuK2NMd09oU1NMQ0NEZ1lkNDJ5LzRVdERqRS96Z0NsZWliYzFVTy9BRWRy?=
- =?utf-8?B?MWRIUm8yWmkrcmlENUtDbHhIVVphRDNNUUNrK0RZL2FST2RaVU9KbStBV2NN?=
- =?utf-8?B?NVM1V0RSMmM4UGpXR3I0RmQ1RkZiT0x4U1pLQ0JOVVJ4VnAySHN2cFl6Zktq?=
- =?utf-8?B?OTYrTmErMGhIOGViOG5BcStSNUZZdVBqY2JobGp1bHZJUzVWRjZsTllIQ0pS?=
- =?utf-8?B?NzBJTTc3RTBsd0Jad2ZnRnEyMFFIMzB5WmdQWVppSC96bTBWMTVWQjFYRFdJ?=
- =?utf-8?B?Z0NkeDd1S01BdHJ2ekwyUXZTU3BocS9PcjlVT0FlMzNHUlJ0NHJqM3l1Ynds?=
- =?utf-8?B?Tm16aVM2QmtPeVdkNCs1L3k5a0wzUkp2a3hPK1Z1QXZ1VWh1dVc0M2VjTkFU?=
- =?utf-8?B?VGgxakcxNkdBT2pZVmJ5aEZHelFmaFM4QnhWU2tpSW1OUXd2OXFlWExsVHp0?=
- =?utf-8?B?QzI3OTY2NUVWTkFKMmJsZ1hsU2kxamNaN0xhTWtEekJEV1VKVWdLeWpxWlJq?=
- =?utf-8?B?U3ZHQmMxc05LNEs2YmwzOGFESnpNYWdvNnM5Q3hCQngrMjNDaU5hYXlLbTgr?=
- =?utf-8?B?VHVJc1o2ZWlsU0MxeGNaNmJ5ajg1K0NqZ0V0eFBjS0hCbXQ1NENvYnNHdGhu?=
- =?utf-8?B?dkVwYjRTb2QvYXY3QkE5dVhjMGN5SVJYSkc3TU1scWQyWllINGNNQ1ZXbC9a?=
- =?utf-8?B?aEpCbXA4dGNJV3VRdjdGWmZCdXEwd056cEpES0VIVUZOZENrK1pkMUtyNElE?=
- =?utf-8?B?ZWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9ea5cfd-aeb9-4f88-abae-08dcf7428482
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5365.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2024 11:20:24.5665
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KjuwXbrt7OnyXkns0yhfq+5Uh7iVH6WLp2Ie/y4zUWB7WibkW4rMWZmDSsz/FcCiwDHYEVsTm2japYC5M+agSQCFqqicJUbK9LNYgmmAcgc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8207
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241023155737.GB1064929-robh@kernel.org>
 
-On Fri, Oct 25, 2024 at 11:50:36PM +0200, Michał Winiarski wrote:
-> VF MMIO resource reservation, either created by system firmware and
-> inherited by Linux PCI subsystem or created by the subsystem itself,
-> should contain enough space to fit the BAR of all SR-IOV Virtual
-> Functions that can potentially be created (total VFs supported by the
-> device).
+On Wed, Oct 23, 2024 at 10:57:37AM -0500, Rob Herring wrote:
+> On Tue, Oct 22, 2024 at 11:31:50PM +0200, Danilo Krummrich wrote:
+> > This commit adds a sample Rust PCI driver for QEMU's "pci-testdev"
+> > device. To enable this device QEMU has to be called with
+> > `-device pci-testdev`.
 > 
-> However, that assumption only holds in an environment where VF BAR size
-> can't be modified.
-> 
-> Add an additional check that verifies that VF BAR for all enabled VFs
-> fits within the underlying reservation resource.
-> 
-> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
-> ---
->  drivers/pci/iov.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 79143c1bc7bb4..5de828e5a26ea 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -645,10 +645,14 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> Note that the DT unittests also use this device. So this means we have 2 
+> drivers that bind to the device. Probably it's okay, but does make 
+> them somewhat mutually-exclusive.
 >  
->  	nres = 0;
->  	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> +		int vf_bar_sz = pci_iov_resource_size(dev,
-> +						      pci_resource_to_iov(i));
+> > The same driver shows how to use the PCI device / driver abstractions,
+> > as well as how to request and map PCI BARs, including a short sequence of
+> > MMIO operations.
+> > 
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > ---
+> >  MAINTAINERS                     |   1 +
+> >  samples/rust/Kconfig            |  11 ++++
+> >  samples/rust/Makefile           |   1 +
+> >  samples/rust/rust_driver_pci.rs | 109 ++++++++++++++++++++++++++++++++
+> >  4 files changed, 122 insertions(+)
+> >  create mode 100644 samples/rust/rust_driver_pci.rs
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2d00d3845b4a..d9c512a3e72b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -17940,6 +17940,7 @@ F:	include/linux/of_pci.h
+> >  F:	include/linux/pci*
+> >  F:	include/uapi/linux/pci*
+> >  F:	rust/kernel/pci.rs
+> > +F:	samples/rust/rust_driver_pci.rs
+> >  
+> >  PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+> >  M:	Jonathan Chocron <jonnyc@amazon.com>
+> > diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+> > index b0f74a81c8f9..6d468193cdd8 100644
+> > --- a/samples/rust/Kconfig
+> > +++ b/samples/rust/Kconfig
+> > @@ -30,6 +30,17 @@ config SAMPLE_RUST_PRINT
+> >  
+> >  	  If unsure, say N.
+> >  
+> > +config SAMPLE_RUST_DRIVER_PCI
+> > +	tristate "PCI Driver"
+> > +	depends on PCI
+> > +	help
+> > +	  This option builds the Rust PCI driver sample.
+> > +
+> > +	  To compile this as a module, choose M here:
+> > +	  the module will be called driver_pci.
+> > +
+> > +	  If unsure, say N.
+> > +
+> >  config SAMPLE_RUST_HOSTPROGS
+> >  	bool "Host programs"
+> >  	help
+> > diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+> > index 03086dabbea4..b66767f4a62a 100644
+> > --- a/samples/rust/Makefile
+> > +++ b/samples/rust/Makefile
+> > @@ -2,5 +2,6 @@
+> >  
+> >  obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
+> >  obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
+> > +obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
+> >  
+> >  subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
+> > diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+> > new file mode 100644
+> > index 000000000000..d24dc1fde9e8
+> > --- /dev/null
+> > +++ b/samples/rust/rust_driver_pci.rs
+> > @@ -0,0 +1,109 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +//! Rust PCI driver sample (based on QEMU's `pci-testdev`).
+> > +//!
+> > +//! To make this driver probe, QEMU must be run with `-device pci-testdev`.
+> > +
+> > +use kernel::{bindings, c_str, devres::Devres, pci, prelude::*};
+> > +
+> > +struct Regs;
+> > +
+> > +impl Regs {
+> > +    const TEST: usize = 0x0;
+> > +    const OFFSET: usize = 0x4;
+> > +    const DATA: usize = 0x8;
+> > +    const COUNT: usize = 0xC;
+> > +    const END: usize = 0x10;
+> > +}
+> > +
+> > +type Bar0 = pci::Bar<{ Regs::END }>;
+> > +
+> > +#[derive(Debug)]
+> > +struct TestIndex(u8);
+> > +
+> > +impl TestIndex {
+> > +    const NO_EVENTFD: Self = Self(0);
+> > +}
+> > +
+> > +struct SampleDriver {
+> > +    pdev: pci::Device,
+> > +    bar: Devres<Bar0>,
+> > +}
+> > +
+> > +kernel::pci_device_table!(
+> > +    PCI_TABLE,
+> > +    MODULE_PCI_TABLE,
+> > +    <SampleDriver as pci::Driver>::IdInfo,
+> > +    [(
+> > +        pci::DeviceId::new(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
+> > +        TestIndex::NO_EVENTFD
+> > +    )]
+> > +);
+> > +
+> > +impl SampleDriver {
+> > +    fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
+> > +        // Select the test.
+> > +        bar.writeb(index.0, Regs::TEST);
+> > +
+> > +        let offset = u32::from_le(bar.readl(Regs::OFFSET)) as usize;
+> 
+> The C version of readl takes care of from_le for you. Why not here?
 
-And that should be resource_size_t.
+It's just an abstraction around the C readl(), so it does -- good catch.
 
-Fortunately, CI caught it:
-https://lore.kernel.org/intel-xe/172990062085.1334319.8298861567163770193@2413ebb6fbb6/
+> 
+> Also, can't we do better with rust and make this a generic:
+> 
+> let offset = bar.read::<u32>(Regs::OFFSET)) as usize;
 
-I'll address that in the next rev.
+I think we probably could, but we'd still need to handle the special cases for 1
+to 8 bytes type size (always using memcopy_{to,from}io() would lead to
+unnecessary overhead). Hence, there's probably not much benefit in that.
 
--Michał
+Also, what would be the logic for a generic `{read, write}::<T>` in terms of
+memory barriers? I think memcopy_{to,from}io() is always "relaxed", isn't it?
 
->  		bars |= (1 << pci_resource_to_iov(i));
->  		res = &dev->resource[pci_resource_to_iov(i)];
-> -		if (res->parent)
-> -			nres++;
-> +		if (!res->parent || vf_bar_sz * nr_virtfn > resource_size(res))
-> +			continue;
-> +
-> +		nres++;
->  	}
->  	if (nres != iov->nres) {
->  		pci_err(dev, "not enough MMIO resources for SR-IOV\n");
-> -- 
-> 2.47.0
+I think it's probably best to keep the two separate, the b,w,l,q variants and
+a generic one that maps to memcopy_{to,from}io().
+
+> 
+> 
+> > +        let data = bar.readb(Regs::DATA);
+> > +
+> > +        // Write `data` to `offset` to increase `count` by one.
+> > +        //
+> > +        // Note that we need `try_writeb`, since `offset` can't be checked at compile-time.
+> > +        bar.try_writeb(data, offset)?;
+> > +
+> > +        Ok(u32::from_le(bar.readl(Regs::COUNT)))
+> > +    }
+> > +}
 > 
 
