@@ -1,54 +1,53 @@
-Return-Path: <linux-pci+bounces-15482-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50E729B39D2
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 19:59:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3444F9B391C
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 19:28:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0BDEB21820
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 18:59:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBF5A280E34
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 18:28:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D035C1DFDA8;
-	Mon, 28 Oct 2024 18:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBFA51DF966;
+	Mon, 28 Oct 2024 18:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="F6gb8mek"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="WMjqOgKe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE07E1DF269;
-	Mon, 28 Oct 2024 18:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF3F1DF266;
+	Mon, 28 Oct 2024 18:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730141941; cv=none; b=UE9kKO4ibte4gSAVebbJvCaML5DIH8Ld/5KrZWySIfePvBuovR2HdjGGDr5pSPrKXCrGnvexDhlYBopBVarRL6waQbdOvdZdz/9KbmvWSN8PFn4c5Rn47P+wTCB90W0+G0Zdu7dSkkvDgWUAjcRapY7Hi+6/dtK+moEmeDh9Yl8=
+	t=1730140092; cv=none; b=pW6dssa28rzocVKYJMtPEFLytAYmmchKPdzaDDcP1cOo+td2rvpY86CPmcCgf5Z5iyZdQK6JVuE/lPydKhgSlazu5iVoNJoJFvxB4SreznZcGJ6XILji2Ry8u7QhKtV2KPxfHWXbRTxp9qHTQ5uOBVvH6ms4POXVBY4E86/tNIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730141941; c=relaxed/simple;
-	bh=8WGafjVya077ILDXHhSSvM5YhVRBuyPpmORE/9ykOCg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SEMPJarT87n3laO+EVN4NLvJHkyT5incRHpOt/Ri0eXW/j9xPihNrBobFTz2l3r3P9thguCNT/EOZ6vTbR3H1PkABsgDp4TB8TQLipVxQfG0M+qAL2tL77JsrRN6hhRjEF0Wvr/6LrTnW9WnHZYMDm/V/VvLyA0Bdgw6Wjg5NjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=F6gb8mek; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 358858910C;
-	Mon, 28 Oct 2024 19:58:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1730141931;
-	bh=xh/GaRY+S5pcuyrQRU2xRgm2fWL9H46nXW1L/svE3qQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F6gb8mektYwkf0MT4BocRTHfT9GteUxFyFg3u8umCoJxO+nXwbbCZZTpRwZR3ZNbD
-	 ygxH1lt2tFgUhY8Qm9eMg3xgeZMFIAHa3bPlrI/ICmcn99WO8x8EVczGJJdrUjf2tZ
-	 C1HZ1wk0fYSs1XICEEY4XDyNbpdikHIVqxabPnkoCLsmxfjLFXsNPMyESJJZAPWbq4
-	 9HKd2Ru2lmtfsQLxpV/YXDw4BuOtw5Vwnztm5B8C7kI3d4u11ZYEYbHK2roS8+JeBG
-	 v34DEM5EvddxMBlWkYf2wwPErhPOEMNIuulQEUuiPoSvXaSWuG5pznyazHV96MCSeL
-	 /cWmJQfWPA5wQ==
-Message-ID: <6b47cc49-dd3b-4c4f-827d-f9b3a8719eb9@denx.de>
-Date: Mon, 28 Oct 2024 19:25:27 +0100
+	s=arc-20240116; t=1730140092; c=relaxed/simple;
+	bh=jysc9seah1CkGTogQocmaGVdqs178PC3SgenoTMtVGU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Subject; b=YIZH5js2bZpjzPlV2WDCLlUBbZ54xciUVZXz7tbkF9DoWhuqu2uYf9kfrHOX4aLVLAT4bcMLIWEFMuDKxrZBM3e7/UBIQ6LxRNVFU95l0ZhMICiq4GZy083F0qSRl82+xOAe/sScdR68GOwW3DURXbtV8pBCpllYIZYIvNwDukY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=WMjqOgKe; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=xfwaAlX8xBNBzzQd8cWtPopo9omhZXUl1zo673gmZPU=; b=WMjqOgKeRu8KLmj0e+FfaKQ5nw
+	SgLTeMPtlxn7YvNSwEXm9WRVO6V3OfUYWzBkFxex8g5DhluJnjtGZAOP88y+oEYbhTswl001wqbjC
+	VAMp0KBM1cV3pxfWiT9t7GEpH6PP3iHvzxFOSltTDDGP1nFT4qfRwTkyuhh+Ij31rgOzU9qZSzueN
+	FXFsu3EvxwXrCsD6Ddkf3+5bHEPJculCmwf5FKruYO+4w5MEugAU88AXgFQlK1emwFsWfp6VAnMOR
+	XgGvOU7wsYcyzcO9LPQQNiLmuWtrD8A0tY2Ryo4R36g1lHw3F9kJrwi9exvBKqXcTantt6HmE9C2I
+	NC3mHOlg==;
+Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1t5UT4-002Zeg-0P;
+	Mon, 28 Oct 2024 12:27:54 -0600
+Message-ID: <9db04bd9-81e1-4e60-a590-0882cd86052f@deltatee.com>
+Date: Mon, 28 Oct 2024 12:27:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,37 +55,57 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [RFC] PCI/PM: Do not RPM suspend devices without drivers
-To: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Lukas Wunner <lukas@wunner.de>
-References: <20241012004857.218874-1-marex@denx.de>
- <ZwupHAAwTo5mDyyA@wunner.de> <52b90ab1-2759-45e9-ae86-3d3073a0add0@denx.de>
- <7ad59d82-8122-438e-9682-791816ab0366@intel.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <7ad59d82-8122-438e-9682-791816ab0366@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
+Cc: Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+ iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
+References: <cover.1730037261.git.leon@kernel.org>
+ <34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+X-SA-Exim-Connect-IP: 104.157.31.28
+X-SA-Exim-Rcpt-To: leon@kernel.org, axboe@kernel.dk, jgg@ziepe.ca, robin.murphy@arm.com, joro@8bytes.org, will@kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, bhelgaas@google.com, yishaih@nvidia.com, shameerali.kolothum.thodi@huawei.com, kevin.tian@intel.com, alex.williamson@redhat.com, m.szyprowski@samsung.com, jglisse@redhat.com, akpm@linux-foundation.org, corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-rdma@vger.kernel.org, iommu@lists.linux.dev, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [RFC PATCH 2/7] block: don't merge different kinds of P2P
+ transfers in a single bio
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On 10/28/24 6:52 PM, Wysocki, Rafael J wrote:
-> On 10/26/2024 2:19 AM, Marek Vasut wrote:
->> On 10/13/24 1:03 PM, Lukas Wunner wrote:
->>> On Sat, Oct 12, 2024 at 02:48:48AM +0200, Marek Vasut wrote:
->>>> The pci_host_probe() does reallocate BARs for devices which start up 
->>>> with
->>>> uninitialized BAR addresses set to 0 by calling 
->>>> pci_bus_assign_resources(),
->>>> which updates the device config space content.
->>>>
->>>> At the same time, pci_pm_runtime_suspend() triggers pci_save_state() 
->>>> for
->>>> all devices which do not have drivers assigned to them to store current
->>>> content of their config space registers.
+
+
+On 2024-10-27 08:21, Leon Romanovsky wrote:
+> From: Christoph Hellwig <hch@lst.de>
 > 
-> What exactly do you mean by "at the same time"?
-I mean these two blocks of code run in parallel and likely race each other.
+> To get out of the dma mapping helpers having to check every segment for
+> it's P2P status, ensure that bios either contain P2P transfers or non-P2P
+> transfers, and that a P2P bio only contains ranges from a single device.
+> 
+> This means we do the page zone access in the bio add path where it should
+> be still page hot, and will only have do the fairly expensive P2P topology
+> lookup once per bio down in the dma mapping path, and only for already
+> marked bios.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+
+Looks good to me.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
 
