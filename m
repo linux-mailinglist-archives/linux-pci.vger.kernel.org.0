@@ -1,115 +1,169 @@
-Return-Path: <linux-pci+bounces-15476-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15477-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97E589B38DF
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 19:13:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7583A9B38EE
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 19:18:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9BD31C217EE
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 18:13:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21A5E1F22143
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 18:18:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5471DF97B;
-	Mon, 28 Oct 2024 18:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637491DEFD2;
+	Mon, 28 Oct 2024 18:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="K19VSXkL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfzpFEJN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B21A1DF97A;
-	Mon, 28 Oct 2024 18:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E84F1547CA;
+	Mon, 28 Oct 2024 18:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730139171; cv=none; b=VZKbRqFpTCxPqw9s9DRnRvyqb8voqGOYWD/4iv/GForaMkvXpdSK/DbYFTu/rBApk0Is9a64Vmj/sDnPnfzL6PlZRlKbuFIHKc+DHyJUTCPEi1NNb0ZqtrMFdbaMCmD1ZORWyDVMv6XlaoR836nqB/J3a8whX0pB/hNlkmYH5bI=
+	t=1730139528; cv=none; b=d02uC/ZcMlMekHLSlH5lcr9sX9UCZ228LswhHHzRlJb/+zNyTxaQr54GguBwzjzrLfqsrRu+wn9FTor/x084szND6rhpq+5G4irqtcMmqblhLKwquaMCENPg8nWFllSYuT94FEyhJLHnBFqzhoBq/ULhsCUHt9GEySpVZWOgSt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730139171; c=relaxed/simple;
-	bh=5MaPsfR2hKKODgbANuDJ+3vdVd9wsJj23KxRLquFmkc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=Ra6FpbEM9XLjA6K3ULHuTl8jODPqEmw9qDKatyh/BfvcTwbUBUT4DWxknevcxtdnxKwLy80jd59WvHDRDSoemrE9plldeCsxVKBTn9nin0odWhtlSnm7wXCQrVfnyvLTN7gjww0TqvAqkDWPWAgjZmWIra2AXCQyc3tKeSNa+m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=K19VSXkL; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=PVgGO8I+aKJHmvYCR04uOsA3HSUhN0BC0EboYMzK8as=; b=K19VSXkL0jbE9wKlLQwlzKl5Qt
-	dFI8msaT1mELaj5hwKIwDlCJ46EwcaMmEobLfzfEKq+Eq7nTnteRjLb92tlfPf+mQ1jHZs/uau/Zv
-	btPElz6z7lxamWA9dafk7bpsCpOHuPE5ytvXdPKxSvkskCQz9G9p+Cd3hVlToTbBzJvAgoSIlT37A
-	r+ZWM2l+KvYFm7d2b43t3ljFpzoofdPK8h6WvgnWHW7sU/zCs1CIEnQebX78Y3u5+eOJI3mrSnt5j
-	dSSu52KwvY+eSIGe4RXd3JdoU0j37bdCROcQ7YHpM0slV0+MpM5Xaz7qZFasLUl12Cvd6Oj0uBW7u
-	ffpSvEzg==;
-Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1t5UEF-002ZWw-0E;
-	Mon, 28 Oct 2024 12:12:35 -0600
-Message-ID: <30e87c78-1021-4fa4-8aa6-e81245e77379@deltatee.com>
-Date: Mon, 28 Oct 2024 12:12:34 -0600
+	s=arc-20240116; t=1730139528; c=relaxed/simple;
+	bh=R2DVy8iU7fbfJEnyj+dAeHE6Oyfz71RsNxNurlp22O8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UNJdmIuQPU2ghcF99I5cG4KFOWUzA3d9WzwfgeXuc+KNQC3G91Poy6Eo6DBixsExwlKfB66hC7VzpI+z2w3zRWn/h+PFhWh7axXh+onaK5cPBpHM/BHTBRPHzdboXmNU9y/q5akfQzibCMv/jDp9Q4QfkbRMSzv34zF+3/tm/08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfzpFEJN; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730139526; x=1761675526;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=R2DVy8iU7fbfJEnyj+dAeHE6Oyfz71RsNxNurlp22O8=;
+  b=DfzpFEJNEJCnb9R7Mt1JIKBxOvPlziISPLdVwVGExwcAmHPykv+IKKTV
+   HL6r2YmztsoJqMs0xvFw6FKpFPKLEkg0pY7zRminCgMTnqXPLbQA5iYMH
+   6j4T8aHC1vvTgXjYCjm+wVwyPy/pWQc5RKTHvfUlnEy2rQGlp70vkTJnM
+   mNK9WvpLjFon7JZPFHrHiDVKML3mSY+JKBeGn30LJlZXJzRAfGsU8Hmv0
+   fnwf2GTzkPM8ba8a1P9ZqcbZjYJcCv+ns7zKat0j0kB4fBeTbmPwU+SWh
+   ZVQk8pAvhFgk2zj3Ed4YMm5p3+eCWJJX4xL5tVKo+YVhk1l5cuB5iLE1J
+   A==;
+X-CSE-ConnectionGUID: luYixyotSDGEq9NLiImvJw==
+X-CSE-MsgGUID: wBCtcbrERNCrgQNAE+D+sw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29890417"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="29890417"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 11:18:45 -0700
+X-CSE-ConnectionGUID: nlwtlu05TdqCiPMMaaJHTQ==
+X-CSE-MsgGUID: a1iIFpFwRWOLai9o3BreiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
+   d="scan'208";a="85647119"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.203])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 11:18:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 28 Oct 2024 20:18:39 +0200 (EET)
+To: Keith Busch <kbusch@kernel.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] PCI/sysfs: Use __free() in reset_method_store()
+In-Reply-To: <8862b34b-26b3-af75-5d23-d765fb41b5d4@linux.intel.com>
+Message-ID: <d07973e2-0ac1-d3e0-25f0-7b1270ca4a15@linux.intel.com>
+References: <20241028174046.1736-1-ilpo.jarvinen@linux.intel.com> <20241028174046.1736-3-ilpo.jarvinen@linux.intel.com> <Zx_Pt2ObNKIS8cu2@kbusch-mbp> <8862b34b-26b3-af75-5d23-d765fb41b5d4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-Cc: Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
- iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <cover.1730037276.git.leon@kernel.org>
- <f7ee023a7497ad3d8a7a31b12f492339d155ac39.1730037276.git.leon@kernel.org>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <f7ee023a7497ad3d8a7a31b12f492339d155ac39.1730037276.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 104.157.31.28
-X-SA-Exim-Rcpt-To: leon@kernel.org, axboe@kernel.dk, jgg@ziepe.ca, robin.murphy@arm.com, joro@8bytes.org, will@kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, bhelgaas@google.com, yishaih@nvidia.com, shameerali.kolothum.thodi@huawei.com, kevin.tian@intel.com, alex.williamson@redhat.com, m.szyprowski@samsung.com, jglisse@redhat.com, akpm@linux-foundation.org, corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-rdma@vger.kernel.org, iommu@lists.linux.dev, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 09/18] docs: core-api: document the IOVA-based API
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/mixed; boundary="8323328-1788405296-1730139519=:947"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1788405296-1730139519=:947
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 28 Oct 2024, Ilpo J=E4rvinen wrote:
+
+> On Mon, 28 Oct 2024, Keith Busch wrote:
+>=20
+> > On Mon, Oct 28, 2024 at 07:40:45PM +0200, Ilpo J=E4rvinen wrote:
+> > > @@ -1430,7 +1431,7 @@ static ssize_t reset_method_store(struct device=
+ *dev,
+> > >  =09=09=09=09  const char *buf, size_t count)
+> > >  {
+> > >  =09struct pci_dev *pdev =3D to_pci_dev(dev);
+> > > -=09char *options, *tmp_options, *name;
+> > > +=09char *tmp_options, *name;
+> > >  =09int m, n;
+> > >  =09u8 reset_methods[PCI_NUM_RESET_METHODS] =3D { 0 };
+> > > =20
+> > > @@ -1445,7 +1446,7 @@ static ssize_t reset_method_store(struct device=
+ *dev,
+> > >  =09=09return count;
+> > >  =09}
+> > > =20
+> > > -=09options =3D kstrndup(buf, count, GFP_KERNEL);
+> > > +=09char *options __free(kfree) =3D kstrndup(buf, count, GFP_KERNEL);
+> >=20
+> > We should avoid mixing declarations with code. Please declare it with
+> > the cleanup attribute at the top like before, and just initialize it to
+> > NULL.
+>=20
+> Hi,
+>=20
+> I don't exactly disagree with you myself and would prefer to keep=20
+> declarations at top, but I think as done now is exactly what Bjorn wants=
+=20
+> for the specific case where __free() is used. This was discussed earlier=
+=20
+> on the list.
+
+Hi again,
+
+I went to archives and found out it had already made itself into=20
+include/linux/cleanup.h which now says this:
+
+"
+ * Now, when a function uses both __free() and guard(), or multiple
+ * instances of __free(), the LIFO order of variable definition order
+ * matters. GCC documentation says:
+ *
+ * "When multiple variables in the same scope have cleanup attributes,
+ * at exit from the scope their associated cleanup functions are run in
+ * reverse order of definition (last defined, first cleanup)."
+ *
+ * When the unwind order matters it requires that variables be defined
+ * mid-function scope rather than at the top of the file.
+
+[...snip examples...]
+
+ * Given that the "__free(...) =3D NULL" pattern for variables defined at
+ * the top of the function poses this potential interdependency problem
+ * the recommendation is to always define and assign variables in one
+ * statement and not group variable definitions at the top of the
+ * function when __free() is used.
+"
+
+After reading the documentation for real now myself :-), I realized it's
+not just about maintainer preferences but about order of releasing things,=
+=20
+so it's a BAD PATTERN to put those declarations into the usual place when
+using __free().
 
 
-I noticed a couple of typos below:
+For completeness, the discussion thread (there might have been another=20
+thread earlier than these):
 
-On 2024-10-27 08:21, Leon Romanovsky wrote:
+https://lore.kernel.org/linux-pci/171140738438.1574931.15717256954707430472=
+=2Estgit@dwillia2-xfh.jf.intel.com/T/#u
 
-> +Part Ie - IOVA-based DMA mappings
-> +---------------------------------
-> +
-> +These APIs allow a very efficient mapping when using an IOMMU.  They are an
-> +optional path that requires extra code and are only recommended for drivers
-> +where DMA mapping performance, or the space usage for storing the dma addresses
+> If I misunderstood the conclusion of the earlier cleanup related=20
+> discussion, can you please correct me Bjorn?
+>=20
+>=20
 
-The second 'dma' should be capitalized as it is in other uses.
+--=20
+ i.
 
-
-> +    int dma_iova_sync(struct device *dev, struct dma_iova_state *state,
-> +		size_t offset, size_t size, int ret);
-> +
-> +Must called to sync the IOMMU page tables for IOVA-range mapped by one or
-> +more calls to ``dma_iova_link()``.
-
-"Must be called" instead of "Must called"
-
-Thanks,
-
-Logan
+--8323328-1788405296-1730139519=:947--
 
