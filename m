@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-15451-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15452-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E3AA9B32A9
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 15:08:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B5DA9B32B0
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 15:08:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A133282ECD
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:08:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3BA2282F01
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CD11DE2DF;
-	Mon, 28 Oct 2024 14:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AED921DE3CB;
+	Mon, 28 Oct 2024 14:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="csPIyBmi"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BomfZmJl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E4E1DDC0F
-	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 14:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD2E1DDC21
+	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 14:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730124444; cv=none; b=Pb371E9ENozOtnPARyZvvmo1X0rIayXh1jJNvSbM/2B99oyNTB49sbi29AwIsD6YYYyG6r+2sjdWXd7/MdRcScSRzXbfxGlDGalvihFXl88HTj2HAO32amODPpk0ENZN57Ezh1wZRSZrKThYfgiVh9dIVWhtBDAavQ8H00pDlA4=
+	t=1730124445; cv=none; b=NByx3Y3nrW3jnq+JcR9KMptKBqxsOi019+41NkrkfCfUrO0jUIQHvxN6fE9XBjFtwRkPCLMDAUWVkEI99mcXJsIVQNh61iFxrBYmF8h6rwy9WiN21nw4MEDdtdIo88cWSflViRWs+wQJbLx07B/Zvdzeg4kwIjueXNNv6kkqgu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730124444; c=relaxed/simple;
-	bh=KWzJH01MBbP+2MBa2bGY8qrZZJMVX7VaS+5unE5ZJRA=;
+	s=arc-20240116; t=1730124445; c=relaxed/simple;
+	bh=bBaN0X0jScd/15W+2/fScdw6Spc8ffLYU0CeQxKdTas=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LKR/U7hlPp9Cth+WjU65MqThGdJnkFHV1OUUHzwehhc8FLBkPe3qizy/PrBSUOPROCEuCrv1tTDaPi/KNirCkHM4ZSIT0kitPRXaRUL3s3l19X4+HIAx0XNUQL8mQl8K8FaFJdSQeRLJy8yqTGqXatIbZH5QTmpqC3x7Z5q9mrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=csPIyBmi; arc=none smtp.client-ip=209.85.218.65
+	 MIME-Version; b=dxgHuTK9J12cnOFqAjfB9N1qccJbNVrJoAMrWmrNH4xSqCWVlipp5a7R0XZBbppL3SnPY/HKJAc+XUzpZDxublb7s7ImKCIij2h11DN5XKceJL/cO651c7bqJ269QZ7jIDVqSyBDH0cs6yMS9etcHgUZALOVEFsVly4vxmfm3Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BomfZmJl; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-a9a0f198d38so631331866b.1
-        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 07:07:20 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9a2209bd7fso648687066b.2
+        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 07:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1730124439; x=1730729239; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1730124440; x=1730729240; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iNEc7Ab11J7D2bwXEyWPM+PpwLENCKqu46gw0+Cu+lU=;
-        b=csPIyBmimIuaIUUUOWaOirSwgf/xHd6HWzZ5vJ/Vbw0CEU9WnCRBp3n/9C+pcZAY/O
-         eqfIA8IDBN8hUDq8xzLasWypEAfnDOIVo3KRGTj1+FiBQx1KD9QtIfE+Jr5uYeMtMlC0
-         iiU+xf0P9pEx5w3c0ELsG6d5IpyctBAidQ/i1jPRHOyYT7x9/s2QRCPjsHckiqAHFTik
-         Ht17jfu1PzhHRah1/hXunwWXu7rmbdGWTqY2F7FPDf5L5K2EAqjLAJapKtL0XzEuJkc6
-         k17xGrQk0plppaMhEtQuBhpVNCG6pfuU5XxKygDwVDa+de0i5tSrKrERFEFc2QfbNeeW
-         B4zA==
+        bh=yqh56MHAf6NGyxNJb5XjKGyAFS1Pm7/dh/+rsUlSsqw=;
+        b=BomfZmJlug7ZwpBY6Rw8s/hVg8VMdkshumj8yk04yvy72sDEPdWUREZq2Hhg0S4M8u
+         gDJLYX5zIJAZF8guDj4/4a90eBM3JPx9O0eCsZcovLXelDNFW8lhr1XuhO+f5Gvoq7g3
+         2RdzF8Kxnj7MBV34UnZqFH2k0c+uRLezZBRIdtqqBM/tm9eFS1sZwatTjloHuVjTalmY
+         zWOifKCEMs/rR3S8FsrgqmN4a6oOLrCl1Kij/mBRZAeQtNAhcyiw67Q6tS/z+fQ2avFr
+         Ez9u30lvsd49FVcTxDrg25C5V4aYUUTUIBTe9iCyGrwRcaxRllKu5u32vLi7PRUTt0BG
+         +OMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730124439; x=1730729239;
+        d=1e100.net; s=20230601; t=1730124440; x=1730729240;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iNEc7Ab11J7D2bwXEyWPM+PpwLENCKqu46gw0+Cu+lU=;
-        b=bjWTAuqXfK5ZVtvvaD7U0zlkhPLlXax2sjObRgBahpYDrFD7V8hDc7ejuFhFy2Dt24
-         o0LubYNLVKUH5E/areUQEpixxGN9g0ieJ42j28d0f35OkCoU+BarP6j2o+BHjRe12z/z
-         hhiircB6+1d7aW6uIt/g0vQHA6pO6IggmDFLsCBta5ZrRLY/Y5QgLjQuDxmepCbCSL43
-         EU0bUx8k9cvjMUhVtgK/3qoWGipTsORbmZPBJxEy5FGYPpOZPZ0BS+sCLRczi7h6aqyF
-         PJn2I2PSOc7TBbFpYHJWw7tiBuktcodJS8lha/YF2khyJGPoLj8366/QvwbCHb833iXm
-         L+iA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVGn8HydW1dGi9Ohc9nzb3J/iguBb3CNh4FHtA34V92hy8Cu0YnQ1RikY/XKBMhFCoFEQ4APRRBCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJOoIfkt8uGLCbCG6sMQJZMT/SDz/pipGUo3yqRKcBqIBvpK7B
-	7kjc1Si1ttGTAe5sdY0FWiR9zwsKCtFcIZOD6RzcWCnXraU9JzuMFxSrJyFcg/M=
-X-Google-Smtp-Source: AGHT+IGLRlQTVhRPQemiDdTWqan8eXJlYIgmzJ3VjDMdLX43CD2E2sNJ5FgkqwMaVS/d3Bu6+8CK3Q==
-X-Received: by 2002:a17:907:3da1:b0:a99:4e35:9a25 with SMTP id a640c23a62f3a-a9de61a17a1mr698709666b.44.1730124439054;
-        Mon, 28 Oct 2024 07:07:19 -0700 (PDT)
+        bh=yqh56MHAf6NGyxNJb5XjKGyAFS1Pm7/dh/+rsUlSsqw=;
+        b=wwYG7o0MkIdW4AZqZF/Vh3UrSPuV9YHRC4O8kG9/LAlTu3TI1mJJqaffxGxzVtHoo5
+         lwmPhGgkcNgsJbojS1jpJtUqDMLClRlBPoCXJQ4gwVoI0qnlcRkwid0q6hcC6kWqGhjr
+         fuFXrTgIAwcEuqcIRpef5pjXlelaxLPekF+9S6etI49m76U3ZnX993f8WYlI0AA917fI
+         h8kqWWOdy8KewvjaXJdKPvBsXxOX2AKze/P7p+xVn9xeNVmeOtyLCcFypJUV/H9aWSe6
+         EcXUlwOzl0Cfmnd3m1d+3KT+bLmmn1JOhdn+hz6J6M4Jhdn/CSoRiId7rdhtye5f8ksZ
+         HKzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrhLFxoTgYXRye5AYCyA8TlPemrmMXLN9oFyFbHXiYmCIt0CC7ZziTu1TXVsA+r3Q0Wt7ajmICbNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkFemnVz/GUM5RBcCGGHJyJlgTxZxKCJUfxgLpNoTNFldD9UTp
+	EPM/SqHk4Efyh9O/rUfXBl6bV8xbc1/K6bOFJmOYxaxPzT9QFnMby7AYfCRZmtY=
+X-Google-Smtp-Source: AGHT+IEJsXz3JLUo8t8BMAbJDLTmQNDfk74M3MzGZPfukI0B32f64s3so2uEdukAd0Pl42XLPpmBkw==
+X-Received: by 2002:a17:907:3e1a:b0:a99:f4be:7a6c with SMTP id a640c23a62f3a-a9de61669cdmr835551966b.52.1730124440047;
+        Mon, 28 Oct 2024 07:07:20 -0700 (PDT)
 Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b3a08b29asm383846066b.225.2024.10.28.07.07.18
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b32455a14sm388970666b.178.2024.10.28.07.07.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 07:07:18 -0700 (PDT)
+        Mon, 28 Oct 2024 07:07:19 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -102,9 +102,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 04/12] dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
-Date: Mon, 28 Oct 2024 15:07:21 +0100
-Message-ID: <768d2307342e1054c58324a9d51957456dc82cbf.1730123575.git.andrea.porta@suse.com>
+Subject: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus address to dynamic bridge nodes
+Date: Mon, 28 Oct 2024 15:07:22 +0100
+Message-ID: <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1730123575.git.andrea.porta@suse.com>
 References: <cover.1730123575.git.andrea.porta@suse.com>
@@ -116,115 +116,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-schema is intended as minimal support for the clock generator and
-gpio controller peripherals which are accessible through BAR1.
+When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
+incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
+bridge, the window should instead be in PCI address space. Call
+pci_bus_address() on the resource in order to obtain the PCI bus
+address.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- .../devicetree/bindings/misc/pci1de4,1.yaml   | 80 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+ drivers/pci/of_property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/pci1de4,1.yaml b/Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-new file mode 100644
-index 000000000000..d66b2fc130d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/misc/pci1de4,1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RaspberryPi RP1 MFD PCI device
-+
-+maintainers:
-+  - Andrea della Porta <andrea.porta@suse.com>
-+
-+description:
-+  The RaspberryPi RP1 is a PCI multi function device containing
-+  peripherals ranging from Ethernet to USB controller, I2C, SPI
-+  and others.
-+  The peripherals are accessed by addressing the PCI BAR1 region.
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-ep-bus.yaml
-+
-+properties:
-+  compatible:
-+    additionalItems: true
-+    maxItems: 3
-+    items:
-+      - const: pci1de4,1
-+
-+  '#interrupt-cells':
-+    const: 2
-+    description:
-+      Specifies respectively the interrupt number and flags as defined
-+      in include/dt-bindings/interrupt-controller/irq.h.
-+
-+  interrupt-controller: true
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - '#interrupt-cells'
-+  - interrupt-controller
-+  - pci-ep-bus@1
-+
-+examples:
-+  - |
-+    pci {
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+
-+        rp1@0,0 {
-+            compatible = "pci1de4,1";
-+            ranges = <0x01 0x00 0x00000000
-+                      0x82010000 0x00 0x00
-+                      0x00 0x400000>;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+
-+            pci_ep_bus: pci-ep-bus@1 {
-+                compatible = "simple-bus";
-+                ranges = <0xc0 0x40000000
-+                          0x01 0x00 0x00000000
-+                          0x00 0x00400000>;
-+                dma-ranges = <0x10 0x00000000
-+                              0x43000000 0x10 0x00000000
-+                              0x10 0x00000000>;
-+                #address-cells = <2>;
-+                #size-cells = <2>;
-+
-+                rp1_clocks: clocks@c040018000 {
-+                    compatible = "raspberrypi,rp1-clocks";
-+                    reg = <0xc0 0x40018000 0x0 0x10038>;
-+                    #clock-cells = <1>;
-+                    clocks = <&clk_rp1_xosc>;
-+                    clock-names =  "xosc";
-+                };
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ccf123b805c8..2aea5a6166bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19384,6 +19384,7 @@ RASPBERRY PI RP1 PCI DRIVER
- M:	Andrea della Porta <andrea.porta@suse.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-+F:	Documentation/devicetree/bindings/misc/pci1de4,1.yaml
- F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
- F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
- F:	include/dt-bindings/clock/rp1.h
+diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+index 5a0b98e69795..886c236e5de6 100644
+--- a/drivers/pci/of_property.c
++++ b/drivers/pci/of_property.c
+@@ -126,7 +126,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
+ 		if (of_pci_get_addr_flags(&res[j], &flags))
+ 			continue;
+ 
+-		val64 = res[j].start;
++		val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
+ 		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
+ 				   false);
+ 		if (pci_is_bridge(pdev)) {
 -- 
 2.35.3
 
