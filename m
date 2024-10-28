@@ -1,69 +1,55 @@
-Return-Path: <linux-pci+bounces-15495-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15496-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D3739B3C6B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 21:59:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 340B69B3CA2
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 22:27:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 534E5B21A3A
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 20:59:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B1B31C221A4
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 21:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A331E0DA7;
-	Mon, 28 Oct 2024 20:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27C391E1041;
+	Mon, 28 Oct 2024 21:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHWCjZnS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7udAymQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE311DFE1C;
-	Mon, 28 Oct 2024 20:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026C71D2796
+	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 21:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730149145; cv=none; b=IwWKSDkJkiHsCLPQpDeOGR5tFABIVQ2O7tZHohbWqIKczY8nI/uFVF7bryeYno2+Z9uGY+UwUPcA1Pf7Kz5icTs+Y/TrpmyTJxloHYiEO+cE0f1v7US7CiIHeXxo2wzh8gSrfGjwlCgRxtelk5y7BUbRrjg8oUr4wU/MZp5B8Dg=
+	t=1730150848; cv=none; b=C19b6wZmdIsKdO8rJeXrIhBJJk1MdGeu6mOH7Ux6LSNF2mhcQ6vbKfvx+9RI4YYqw79FmFFVeTCVzLCFAXOcaFf8ozQvPLtwnWGUNbDw8Rvb2C9OFIeOxFGVkXmfIghKWB0uinzU7cjTScMrAXeTM0m/hi6hXJn9nvutnbWTm7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730149145; c=relaxed/simple;
-	bh=XDchRQtmy6pHQo4VldmyUQn5KpIMSBE9FuRx/IQ/fLc=;
+	s=arc-20240116; t=1730150848; c=relaxed/simple;
+	bh=1w4zhaC6Nix0pEDGiclIODAJfrcEfkB2G6atZGAwqgQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ba/i5GJSzfWbnG6cDm5hqDqK02WJ9aIR73MA4UJvgfoayCXD69BlugrdoOGNP71ujMbWyTRPGgFsT3/+TlQAjK9+7cwoQl8Dss5CEmS5T7fVf7F4vg9td8FxKUHSSqYzblQd/LHdaVFTOUCColqZ78UojIU0LzkvuaaByoNlj+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHWCjZnS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8324C4CEC3;
-	Mon, 28 Oct 2024 20:59:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=IGIaAZspYz7h+OjTlidT2dWgzD5MQGnxX1tHouHmsj6ERWd673iAZRrUxAB2TFjgOAxFTX4fss8aA5KS6iP48mnF3fbenmQFJU3uouu9P6fexp2I8p2npzzc/2tE9usY446qLZ24J+3vfDhkW28mjki6Dg+1QyvjWdSO+nF++yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7udAymQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FD5C4CEC3;
+	Mon, 28 Oct 2024 21:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730149144;
-	bh=XDchRQtmy6pHQo4VldmyUQn5KpIMSBE9FuRx/IQ/fLc=;
+	s=k20201202; t=1730150847;
+	bh=1w4zhaC6Nix0pEDGiclIODAJfrcEfkB2G6atZGAwqgQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YHWCjZnSvGD0FLXm38frIZRba2sQQ98rHEmaoqo7+IGWHJUxibwDnNsBZgESkMQf2
-	 TsIZgg66kDAZi3cQ/raC0xLCHxFt/n+Q+GfpSPikoPYWogMwVVkT2YGGo6r+mvlpQs
-	 LYcYZiWraEirilGEQRB7r1dSqxIlLl6PnIyzBEG69k5H5ZL/4V51yCX9ue/AQ9hoao
-	 YtQPx9n4wU6TLKUu3BMoGWW4nbSLG6WcdHPvYzg+727B9k+tQFNcmm7b2B+OIclaEr
-	 WoCdB/gjnaxlHYJSzABbNThj3fTHRWtRg5gmc802RNwzAtTGyuBAMLTzhdJzsWVOka
-	 YksEeTIOFMwbA==
-Date: Mon, 28 Oct 2024 15:59:02 -0500
+	b=s7udAymQ0feVfuHyIyLBZCAQOqTAwq0dXMiqsW1lA8kI8NqDfU89q0LBxlw6GQvks
+	 Pkb27Fpcv4f0VqqnotKHHnUU+xVZAu3c4s/DGzzC1mYrOOC3g5YaqXqon9YIYjbDYL
+	 11tfFhnYZBEg5ksMr5CCrU+CjJgV5/H6Hrsbaa6GucetH+uJuf91UombpmtutS2fXh
+	 Z/cRyobQ8So8aoyUEOtv5SBhYl9NL381Es4Rl3we33P/TtzoDAhuMkivWYJeiDa4VG
+	 iFqFAVBLM5SqbOPjpbevOqN1MjA5j3TtTwQL0LTnHwopZ8TW7fvqpHLWsA3Kw0FrXM
+	 YgQ28gAJtZleQ==
+Date: Mon, 28 Oct 2024 16:27:25 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 01/18] PCI/P2PDMA: refactor the p2pdma mapping helpers
-Message-ID: <20241028205902.GA1114413@bhelgaas>
+To: Szymon Durawa <szymon.durawa@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Subject: Re: [RFC PATCH v1 1/3] PCI: vmd: Clean up vmd_enable_domain function
+Message-ID: <20241028212725.GA1118694@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,121 +58,60 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a4d93ca45f7ad09105a1cf347e6b6d6b6fb7e303.1730037276.git.leon@kernel.org>
+In-Reply-To: <20241025150153.983306-2-szymon.durawa@linux.intel.com>
 
-Prefer subject capitalization in drivers/pci:
+On Fri, Oct 25, 2024 at 05:01:51PM +0200, Szymon Durawa wrote:
+> This function is too long and needs to be shortened to make it more readable.
 
-  PCI/P2PDMA: Refactor ...
+Use the actual function name here instead of "This function".
 
-On Sun, Oct 27, 2024 at 04:21:01PM +0200, Leon Romanovsky wrote:
-> From: Christoph Hellwig <hch@lst.de>
-> 
-> The current scheme with a single helper to determine the P2P status
-> and map a scatterlist segment force users to always use the map_sg
-> helper to DMA map, which we're trying to get away from because they
-> are very cache inefficient.
-> ...
+Include "()" after function names, including in the subject line.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> +enum vmd_resource {
+> +	VMD_RES_CFGBAR = 0,
+> +	VMD_RES_MBAR_1, /*VMD Resource MemBAR 1 */
+> +	VMD_RES_MBAR_2, /*VMD Resource MemBAR 2 */
 
-A couple minor nits below.
+Add space after "/*".
 
-> @@ -1412,28 +1411,29 @@ int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
->  		size_t s_length = s->length;
->  		size_t pad_len = (mask - iova_len + 1) & mask;
+> @@ -132,10 +144,10 @@ struct vmd_dev {
+>  	struct vmd_irq_list	*irqs;
 >  
-> -		if (is_pci_p2pdma_page(sg_page(s))) {
-> -			map = pci_p2pdma_map_segment(&p2pdma_state, dev, s);
-> -			switch (map) {
-> -			case PCI_P2PDMA_MAP_BUS_ADDR:
-> -				/*
-> -				 * iommu_map_sg() will skip this segment as
-> -				 * it is marked as a bus address,
-> -				 * __finalise_sg() will copy the dma address
-> -				 * into the output segment.
-> -				 */
-> -				continue;
-> -			case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> -				/*
-> -				 * Mapping through host bridge should be
-> -				 * mapped with regular IOVAs, thus we
-> -				 * do nothing here and continue below.
-> -				 */
-> -				break;
-> -			default:
-> -				ret = -EREMOTEIO;
-> -				goto out_restore_sg;
-> -			}
-> +		switch (pci_p2pdma_state(&p2pdma_state, dev, sg_page(s))) {
-> +		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> +			/*
-> +			 * Mapping through host bridge should be mapped with
-> +			 * regular IOVAs, thus we do nothing here and continue
-> +			 * below.
-> +			 */
+>  	struct pci_sysdata	sysdata;
+> -	struct resource		resources[3];
+> +	struct resource		resources[VMD_RES_COUNT];
+>  	struct irq_domain	*irq_domain;
+> -	struct pci_bus		*bus;
+> -	u8			busn_start;
+> +	struct pci_bus		*bus[VMD_BUS_COUNT];
+> +	u8			busn_start[VMD_BUS_COUNT];
 
-I guess this is technically not a fall-through to the next case
-because there's no executable code here, but since the comment
-separates these two cases, I would find it easier to read if you
-included the break here explicitly.
+This looks like a combination of things that don't logically need to
+be in the same patch, e.g., adding VMD_RES_COUNT (basically cosmetic),
+converting "bus" from a scalar to an array (possibly new
+functionality?)
 
-> +		case PCI_P2PDMA_MAP_NONE:
-> +			break;
-
-> +void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
-> +		struct device *dev, struct page *page);
-> +
-> +/**
-> + * pci_p2pdma_state - check the P2P transfer state of a page
-> + * @state: 	P2P state structure
-
-Checkpatch complains about space before tab here.
-
-> + * pci_p2pdma_bus_addr_map - map a PCI_P2PDMA_MAP_BUS_ADDR P2P transfer
-> + * @state: 	P2P state structure
-
-And here.
-
-> @@ -462,34 +462,32 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
->  		enum dma_data_direction dir, unsigned long attrs)
+> -static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> +static void vmd_configure_cfgbar(struct vmd_dev *vmd)
 >  {
->  	struct pci_p2pdma_map_state p2pdma_state = {};
-> -	enum pci_p2pdma_map_type map;
->  	struct scatterlist *sg;
->  	int i, ret;
->  
->  	for_each_sg(sgl, sg, nents, i) {
-> -		if (is_pci_p2pdma_page(sg_page(sg))) {
-> -			map = pci_p2pdma_map_segment(&p2pdma_state, dev, sg);
-> -			switch (map) {
-> -			case PCI_P2PDMA_MAP_BUS_ADDR:
-> -				continue;
-> -			case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> -				/*
-> -				 * Any P2P mapping that traverses the PCI
-> -				 * host bridge must be mapped with CPU physical
-> -				 * address and not PCI bus addresses. This is
-> -				 * done with dma_direct_map_page() below.
-> -				 */
-> -				break;
-> -			default:
-> -				ret = -EREMOTEIO;
-> +		switch (pci_p2pdma_state(&p2pdma_state, dev, sg_page(sg))) {
-> +		case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> +			/*
-> +			 * Any P2P mapping that traverses the PCI host bridge
-> +			 * must be mapped with CPU physical address and not PCI
-> +			 * bus addresses.
-> +			 */
+> -	struct pci_sysdata *sd = &vmd->sysdata;
+> -	struct resource *res;
+> +	struct resource *res = &vmd->dev->resource[VMD_CFGBAR];
+> +
+> +	vmd->resources[VMD_RES_CFGBAR] = (struct resource){
+> +		.name = "VMD CFGBAR",
+> +		.start = vmd->busn_start[VMD_BUS_0],
+> +		.end = vmd->busn_start[VMD_BUS_0] +
+> +		       (resource_size(res) >> 20) - 1,
+> +		.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED,
+> +	};
+> +}
 
-Same fall-through comment.
+This might need to be split into several patches, each of which moves
+some code from vmd_enable_domain() into a helper function, to make
+this easily reviewable.  I think generally these are simple, obvious
+changes, but when they're all collected together in a single patch,
+it's hard to tell that.
 
-> +		case PCI_P2PDMA_MAP_NONE:
-> +			sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
-> +					sg->offset, sg->length, dir, attrs);
-> +			if (sg->dma_address == DMA_MAPPING_ERROR) {
-> +				ret = -EIO;
->  				goto out_unmap;
->  			}
-> -		}
+Bjorn
 
