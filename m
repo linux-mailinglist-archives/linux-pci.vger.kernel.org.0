@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-15497-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15498-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEB039B3D32
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 22:58:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D845E9B3D45
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 23:00:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DD69B228A7
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 21:58:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B65F1F21787
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 22:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87BF1E1338;
-	Mon, 28 Oct 2024 21:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3C31EE01E;
+	Mon, 28 Oct 2024 21:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIT6NBc8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIp28ImB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941DD1E0DA7
-	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 21:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2833B1EE01D
+	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 21:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730152209; cv=none; b=mfR3bqWsSdhr30u1qXUhpzv/BHAEMniNEjI4auFw1s0fbnFng2vK89otaDs4112CvjYvottQYIGv+Z8D0xRJcFjkCDfPxlU75RtE55GeJ4ZcLluDVn37zXl0wVOS3BpFUSDMWvjMlRp+R77i4+RBEoP8VR+iEKfi9eozmdJxYEA=
+	t=1730152396; cv=none; b=IMbv9kcqqJIrVg5CDFTOBeFptr7AOWriy0MXKEl0w0OavpudW7JLTfrklhcZBiOcwsdlEyH4aSazywSOfjgF8Piv1NXl5nMhcUElxxSzd3waUZ8SsadadyNoj44+vxcF0g1Sf+6Vfr6ig6/NIEuk0+Pb+o2yDtOuvyEFcTRlD94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730152209; c=relaxed/simple;
-	bh=UgLtVPiDhZj25vMRNESVS0ZVOdavlT6ItmK858muKAY=;
+	s=arc-20240116; t=1730152396; c=relaxed/simple;
+	bh=r0KxdIOxII3yw4aXWGxXNwVDUfMaUmVPBXCecJMQ1P4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dPhSJjBIEbqExcrHigryFi5m7guC8nMwuAx2QPBjL4XCYJ4czMW4m/LPgdDSkjWOjYxY+8o5Y9KWrhTWcA8o6WfoTsFwocV1HBtdIjsaO+GqXaIDE6IjrQSvxlUylTREHfI/92OB7Uf8vWqbBN0WarbRlCPCA5F4HToIQ/L2aIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIT6NBc8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01077C4CEE4;
-	Mon, 28 Oct 2024 21:50:08 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=dJhs4wlh6IhFqn36gRbDzYV5Y2fx+hfAhXa9QhZpB/xMs9zGgaJ/GMxgWWlQUQ7r7ty1aorx7bcRwC+laHMOhqDUKp2PeuQ9tm4NnHERhusLwFKAn14YrvAE0I7ORJpgnNZB8CM1/TQYZ7wgJPpcUM+WbHZlPxKeL+BbHy9r6DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIp28ImB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1618C4CEC3;
+	Mon, 28 Oct 2024 21:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730152209;
-	bh=UgLtVPiDhZj25vMRNESVS0ZVOdavlT6ItmK858muKAY=;
+	s=k20201202; t=1730152395;
+	bh=r0KxdIOxII3yw4aXWGxXNwVDUfMaUmVPBXCecJMQ1P4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UIT6NBc850y9LgEccv6NqlTFIQUoBvrFZd9fFeH1z25elJqtYdVNQlUcto0jOx91i
-	 5DAjwdJe4nj5G+QIzRRddHBURBt6MAYGyyuwWtYTTwcLyvWP6MzsHhPMK6OnsQbN/z
-	 29nQKMSaw0SYXBSAe+GQCJyZX7TCgVeTBzzDoBOHyBhwNNxv2YOJF8gZmFIFQ5kZAy
-	 aJZWg6yrStVVkA03I7r3g8VxpEs+JtpN8jo1Fx+V0yUEGeBCl9YsNkiaxtOt3cOAdA
-	 3/QyNlaos7MozKbzl7WI6BjMmT6HD0hdbfBfuOddDbknQmk4S+d0JcfYffVF41ES0f
-	 JpuZ33b9LdcAQ==
-Date: Mon, 28 Oct 2024 16:50:07 -0500
+	b=dIp28ImBP+45rohDN6xzjxXZXDN/6yTeq4Ny5Hjdyxv8C+8Qc4GCtdJdVH9DjfIv/
+	 5126arW/819QeDIyn8e0LGfAiXqpm23OyJFqdQ30hUEp4EE5HksvmdOIurAu9/ZzZZ
+	 mYhyjvmOOvy5B2qNVqYDj1aToXQVs2NTt7ifYmjqo4ce1FBGLB/wJSB1NQbrrTpZ9h
+	 WuCG+RZ2zUYPoRfofOKfVV+SJyjfUK3xGpcw5HBSMUvBiTs3w7l+Xeeq1NNXT41Hpo
+	 Jjiay81LCau7hMDO0EoCDdaMDau5lYQcHzz8/y1h4JErg2vXjZlmCcvku5K4Rzcgdb
+	 7nXCk12t9oBFg==
+Date: Mon, 28 Oct 2024 16:53:14 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Szymon Durawa <szymon.durawa@linux.intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>, Lukas Wunner <lukas@wunner.de>,
 	linux-pci@vger.kernel.org,
 	Nirmal Patel <nirmal.patel@linux.intel.com>,
 	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Subject: Re: [RFC PATCH v1 2/3] PCI: vmd: Add VMD PCH rootbus support
-Message-ID: <20241028215007.GA1119652@bhelgaas>
+Subject: Re: [RFC PATCH v1 3/3] PCI: vmd: Add WA for VMD PCH rootbus support
+Message-ID: <20241028215314.GA1117849@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,127 +58,94 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241025150153.983306-3-szymon.durawa@linux.intel.com>
+In-Reply-To: <20241025150153.983306-4-szymon.durawa@linux.intel.com>
 
-On Fri, Oct 25, 2024 at 05:01:52PM +0200, Szymon Durawa wrote:
-> Starting from Intel Arrow Lake VMD enhacement introduces separate
-> rotbus for PCH. It means that all 3 MMIO BARs exposed by VMD are
+In subject (and the code comment), spell out "WA" (I assume it means
+workaround?)
 
-enhancement
-root bus
+Also make it more specific than "VMD PCH rootbus support," which
+doesn't say anything about what the actual issue is.
 
-Does VMD still have only 3 MMIO BARs?  VMD_RES_PCH_* suggests more
-BARs.
+On Fri, Oct 25, 2024 at 05:01:53PM +0200, Szymon Durawa wrote:
+> VMD PCH rootbus primary number is 0x80 and pci_scan_bridge_extend()
+> cannot assign it as "hard-wired to 0" and marks setup as broken. To
+> avoid this, PCH bus number has to be the same as PCH primary number.
 
-> shared now between CPU IOC and PCH. This patch adds PCH bus
-> enumeration and MMIO management for devices with VMD enhancement
-> support.
+From the cover letter, I infer that whatever the issue is, it doesn't
+happen when VMD is integrated into an IOC, but it does happen when VMD
+is in a PCH.  These details should be in this commit log because they
+are relevant to *this* patch, and the cover letter doesn't make it
+into git.
 
-s/This patch adds/Add/
+Maybe the problem is that some root bus numbers are hardwired to fixed
+non-zero values?  I thought we already handled that, but perhaps not.
 
-We already had bus enumeration and MMIO management.
+What does the user see without this patch?  Some warning?  Failure to
+enumerate some devices?  Include a hint here if possible so users can
+find the fix to their issue.
 
-It'd be nice to have something specific about what changes with PCH.
-A different fixed root bus number?  Multiple root buses?  Additional
-BARs in the VMD endpoint?
-
-If possible, describe this in generic PCIe topology terms, not in
-Intel-speak (IOC, PCH, etc).
-
-> +#define VMD_PRIMARY_PCH_BUS 0x80
-> +#define VMD_BUSRANGE0 0xC8
-> +#define VMD_BUSRANGE1 0xCC
-> +#define VMD_MEMBAR1_OFFSET 0xD0
-> +#define VMD_MEMBAR2_OFFSET1 0xD8
-> +#define VMD_MEMBAR2_OFFSET2 0xDC
-
-This file (mostly) uses lower-case hex; match that style.
-
-> +#define VMD_BUS_END(busr) ((busr >> 8) & 0xff)
-> +#define VMD_BUS_START(busr) (busr & 0x00ff)
-> +
->  #define MB2_SHADOW_OFFSET	0x2000
->  #define MB2_SHADOW_SIZE		16
->  
-> @@ -38,11 +47,15 @@ enum vmd_resource {
->  	VMD_RES_CFGBAR = 0,
->  	VMD_RES_MBAR_1, /*VMD Resource MemBAR 1 */
->  	VMD_RES_MBAR_2, /*VMD Resource MemBAR 2 */
-> +	VMD_RES_PCH_CFGBAR,
-> +	VMD_RES_PCH_MBAR_1, /*VMD Resource PCH MemBAR 1 */
-> +	VMD_RES_PCH_MBAR_2, /*VMD Resource PCH MemBAR 2 */
-
-Space after "/*".
-
-> +static inline u8 vmd_has_pch_rootbus(struct vmd_dev *vmd)
-> +{
-> +	return vmd->busn_start[VMD_BUS_1] != 0;
-
-Seems a little weird to learn this by testing whether this kzalloc'ed
-field has been set.  Could easily save the driver_data pointer or just
-the "features" value in struct vmd_dev.
-
-> +		case 3:
-> +			if (!(features & VMD_FEAT_HAS_PCH_ROOTBUS)) {
-> +				pci_err(dev, "VMD Bus Restriction detected type %d, but PCH Rootbus is not supported, aborting.\n",
-> +					BUS_RESTRICT_CFG(reg));
-> +				return -ENODEV;
-> +			}
-> +
-> +			/* IOC start bus */
-> +			vmd->busn_start[VMD_BUS_0] = 224;
-> +			/* PCH start bus */
-> +			vmd->busn_start[VMD_BUS_1] = 225;
-
-Seems like these magic numbers could have #defines.  I see we've been
-using 128 and 224 already, and this basically adds 225.
-
-> +static int vmd_create_pch_bus(struct vmd_dev *vmd, struct pci_sysdata *sd,
-> +			      resource_size_t *offset)
-> +{
-> +	LIST_HEAD(resources_pch);
-> +
-> +	pci_add_resource(&resources_pch, &vmd->resources[VMD_RES_PCH_CFGBAR]);
-> +	pci_add_resource_offset(&resources_pch,
-> +				&vmd->resources[VMD_RES_PCH_MBAR_1], offset[0]);
-> +	pci_add_resource_offset(&resources_pch,
-> +				&vmd->resources[VMD_RES_PCH_MBAR_2], offset[1]);
-> +
-> +	vmd->bus[VMD_BUS_1] = pci_create_root_bus(&vmd->dev->dev,
-> +						  vmd->busn_start[VMD_BUS_1],
-> +						  &vmd_ops, sd, &resources_pch);
-> +
-> +	if (!vmd->bus[VMD_BUS_1]) {
-> +		pci_free_resource_list(&resources_pch);
-> +		pci_stop_root_bus(vmd->bus[VMD_BUS_1]);
-> +		pci_remove_root_bus(vmd->bus[VMD_BUS_1]);
-> +		return -ENODEV;
-> +	}
+> Suggested-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> Reviewed-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+> Signed-off-by: Szymon Durawa <szymon.durawa@linux.intel.com>
+> ---
+>  drivers/pci/controller/vmd.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 842b70a21325..bb47e0a76c89 100755
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -404,8 +404,22 @@ static inline u8 vmd_has_pch_rootbus(struct vmd_dev *vmd)
+>  static void __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
+>  				  unsigned int devfn, int reg, int len)
+>  {
+> -	unsigned int busnr_ecam = bus->number - vmd->busn_start[VMD_BUS_0];
+> -	u32 offset = PCIE_ECAM_OFFSET(busnr_ecam, devfn, reg);
+> +	unsigned char bus_number;
+> +	unsigned int busnr_ecam;
+> +	u32 offset;
 > +
 > +	/*
-> +	 * primary bus is not set by pci_create_root_bus(), it is updated here
+> +	 * VMD WA: for PCH rootbus, bus number is set to VMD_PRIMARY_PCH_BUS
+> +	 * (see comment in vmd_create_pch_bus()) but original value is 0xE1
+> +	 * which is stored in vmd->busn_start[VMD_BUS_1].
+
+Used 225 elsewhere.  Would be nice to at least use the same base (dec
+vs hex), and preferably the same #define.
+
 > +	 */
-> +	vmd->bus[VMD_BUS_1]->primary = VMD_PRIMARY_PCH_BUS;
-> +
-> +	vmd_copy_host_bridge_flags(
-> +		pci_find_host_bridge(vmd->dev->bus),
-> +		to_pci_host_bridge(vmd->bus[VMD_BUS_1]->bridge));
-> +
-> +	if (vmd->irq_domain)
-> +		dev_set_msi_domain(&vmd->bus[VMD_BUS_1]->dev,
-> +				   vmd->irq_domain);
+> +	if (vmd_has_pch_rootbus(vmd) && bus->number == VMD_PRIMARY_PCH_BUS)
+> +		bus_number = vmd->busn_start[VMD_BUS_1];
 > +	else
-> +		dev_set_msi_domain(&vmd->bus[VMD_BUS_1]->dev,
-> +				   dev_get_msi_domain(&vmd->dev->dev));
+> +		bus_number = bus->number;
 > +
-> +	return 0;
+> +	busnr_ecam = bus_number - vmd->busn_start[VMD_BUS_0];
+> +	offset = PCIE_ECAM_OFFSET(busnr_ecam, devfn, reg);
+>  
+>  	if (offset + len >= resource_size(&vmd->dev->resource[VMD_CFGBAR]))
+>  		return NULL;
+> @@ -1023,6 +1037,14 @@ static int vmd_create_pch_bus(struct vmd_dev *vmd, struct pci_sysdata *sd,
+>  	 */
+>  	vmd->bus[VMD_BUS_1]->primary = VMD_PRIMARY_PCH_BUS;
+>  
+> +	/* This is a workaround for pci_scan_bridge_extend() code.
 
-This looks a lot like parts of vmd_enable_domain().  Could this be
-factored out into a helper function that could be used for both
-VMD_BUS_0 and VMD_BUS_1?
+Use the prevailing comment style:
 
-Why is vmd_attach_resource() is different between them?  Why is
-sysfs_create_link() is different?
+  /*
+   * This is ...
 
-Bjorn
+> +	 * It assigns setup as broken when primary != bus->number and
+> +	 * for PCH rootbus primary is not "hard-wired to 0".
+> +	 * To avoid this, vmd->bus[VMD_BUS_1]->number and
+> +	 * vmd->bus[VMD_BUS_1]->primary are updated to the same value.
+> +	 */
+> +	vmd->bus[VMD_BUS_1]->number = VMD_PRIMARY_PCH_BUS;
+> +
+>  	vmd_copy_host_bridge_flags(
+>  		pci_find_host_bridge(vmd->dev->bus),
+>  		to_pci_host_bridge(vmd->bus[VMD_BUS_1]->bridge));
+> -- 
+> 2.39.3
+> 
 
