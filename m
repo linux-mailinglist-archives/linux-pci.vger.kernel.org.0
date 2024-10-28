@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-15452-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15453-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B5DA9B32B0
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 15:08:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AD2E9B32B5
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 15:08:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3BA2282F01
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:08:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D38E0282F89
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 14:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AED921DE3CB;
-	Mon, 28 Oct 2024 14:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10CA81DE3CE;
+	Mon, 28 Oct 2024 14:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BomfZmJl"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fwly0pM7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD2E1DDC21
-	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 14:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9D41DE2A7
+	for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 14:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730124445; cv=none; b=NByx3Y3nrW3jnq+JcR9KMptKBqxsOi019+41NkrkfCfUrO0jUIQHvxN6fE9XBjFtwRkPCLMDAUWVkEI99mcXJsIVQNh61iFxrBYmF8h6rwy9WiN21nw4MEDdtdIo88cWSflViRWs+wQJbLx07B/Zvdzeg4kwIjueXNNv6kkqgu8=
+	t=1730124446; cv=none; b=rj8xK77UI7XLZxMc2GtF0KJpCVWBlUxSJT0U1v4ZEz19KwyqW7Ohqm3C55VNknQblv04fk8CBkcQUrN/5TM3s0CG04LkPBjI8ksMOBg+WVVbIZta6NKzuIP8eL/2sXm0p33uXroIrr7qoX2c5TEpG+L+LCiN5pNWuxiSwNfiMKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730124445; c=relaxed/simple;
-	bh=bBaN0X0jScd/15W+2/fScdw6Spc8ffLYU0CeQxKdTas=;
+	s=arc-20240116; t=1730124446; c=relaxed/simple;
+	bh=GYXHeaG8wpR2BIrXpx816pDyYa9dHkRtT9dpld+pBs8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dxgHuTK9J12cnOFqAjfB9N1qccJbNVrJoAMrWmrNH4xSqCWVlipp5a7R0XZBbppL3SnPY/HKJAc+XUzpZDxublb7s7ImKCIij2h11DN5XKceJL/cO651c7bqJ269QZ7jIDVqSyBDH0cs6yMS9etcHgUZALOVEFsVly4vxmfm3Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BomfZmJl; arc=none smtp.client-ip=209.85.218.53
+	 MIME-Version; b=ehpoFfdG0uXed3xVY4tRFSGa5QL4AnRmYNMdJoVdMFiZ36vZwLmwyFkoiB1r/u/rymyamucMow9gLZNrsgzzYDhmJj3Gys5wYmtiSNCRHwqaGeLNCQjEeafyS/e9c57UMJgrbd3RcHK9dCKPQYGk84Ur7V1TZrmBv9TlpvrBTPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fwly0pM7; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9a2209bd7fso648687066b.2
-        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 07:07:21 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a99f1fd20c4so627741666b.0
+        for <linux-pci@vger.kernel.org>; Mon, 28 Oct 2024 07:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1730124440; x=1730729240; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1730124441; x=1730729241; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yqh56MHAf6NGyxNJb5XjKGyAFS1Pm7/dh/+rsUlSsqw=;
-        b=BomfZmJlug7ZwpBY6Rw8s/hVg8VMdkshumj8yk04yvy72sDEPdWUREZq2Hhg0S4M8u
-         gDJLYX5zIJAZF8guDj4/4a90eBM3JPx9O0eCsZcovLXelDNFW8lhr1XuhO+f5Gvoq7g3
-         2RdzF8Kxnj7MBV34UnZqFH2k0c+uRLezZBRIdtqqBM/tm9eFS1sZwatTjloHuVjTalmY
-         zWOifKCEMs/rR3S8FsrgqmN4a6oOLrCl1Kij/mBRZAeQtNAhcyiw67Q6tS/z+fQ2avFr
-         Ez9u30lvsd49FVcTxDrg25C5V4aYUUTUIBTe9iCyGrwRcaxRllKu5u32vLi7PRUTt0BG
-         +OMQ==
+        bh=GW6kvc4ZbQp7jOxwPlUXi8bHuXjPpwn11nTKKI/C1qY=;
+        b=Fwly0pM7JZeed2l9/IOqhf6VXgJap3Odnu14FTJlEGBK9leaUm/+lGtlw51jL14whJ
+         i+96cfa8Z4i6HCXX39/mC2MOE0yTiM6KxGDt04DB4uXFpN5bBhDU/ZNHXxQv7JnGDOci
+         9C1mnU2yr7Ll0ONE/+Y5jxfxWJyMI3SFf8aF72UmQ2RVjc6m7pljGOyy7QMKqX3OEtyy
+         WMwgTYTXUKvRNbI2mwd5YI3cPDfjraeyiPVSd8RaeZsm8V9FriEF/rjx9rl9O8Gxmcby
+         RYJwTD7UbCHUCJqzx/nIjP3mI9pWXWDN+rV/u4dodCc0YBzdGZGafCzIh0sSTkw76M0L
+         D8QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730124440; x=1730729240;
+        d=1e100.net; s=20230601; t=1730124441; x=1730729241;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yqh56MHAf6NGyxNJb5XjKGyAFS1Pm7/dh/+rsUlSsqw=;
-        b=wwYG7o0MkIdW4AZqZF/Vh3UrSPuV9YHRC4O8kG9/LAlTu3TI1mJJqaffxGxzVtHoo5
-         lwmPhGgkcNgsJbojS1jpJtUqDMLClRlBPoCXJQ4gwVoI0qnlcRkwid0q6hcC6kWqGhjr
-         fuFXrTgIAwcEuqcIRpef5pjXlelaxLPekF+9S6etI49m76U3ZnX993f8WYlI0AA917fI
-         h8kqWWOdy8KewvjaXJdKPvBsXxOX2AKze/P7p+xVn9xeNVmeOtyLCcFypJUV/H9aWSe6
-         EcXUlwOzl0Cfmnd3m1d+3KT+bLmmn1JOhdn+hz6J6M4Jhdn/CSoRiId7rdhtye5f8ksZ
-         HKzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrhLFxoTgYXRye5AYCyA8TlPemrmMXLN9oFyFbHXiYmCIt0CC7ZziTu1TXVsA+r3Q0Wt7ajmICbNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkFemnVz/GUM5RBcCGGHJyJlgTxZxKCJUfxgLpNoTNFldD9UTp
-	EPM/SqHk4Efyh9O/rUfXBl6bV8xbc1/K6bOFJmOYxaxPzT9QFnMby7AYfCRZmtY=
-X-Google-Smtp-Source: AGHT+IEJsXz3JLUo8t8BMAbJDLTmQNDfk74M3MzGZPfukI0B32f64s3so2uEdukAd0Pl42XLPpmBkw==
-X-Received: by 2002:a17:907:3e1a:b0:a99:f4be:7a6c with SMTP id a640c23a62f3a-a9de61669cdmr835551966b.52.1730124440047;
-        Mon, 28 Oct 2024 07:07:20 -0700 (PDT)
+        bh=GW6kvc4ZbQp7jOxwPlUXi8bHuXjPpwn11nTKKI/C1qY=;
+        b=cwDS5Wv7Jd9Y45ebjsXbov0mFehhax4cqCwR2kXWE2Z9e4yd2sGBZPomWZ4+1/Z7lI
+         ESSeNrCbO7vr2uW5a7goLURiLkDtRUq5y0ukJoxQAYVOrmeYWocnhKCpQmAN+hRV89CX
+         9FyN7T/auPrVFVxBpLNRYqyFAunezh13/w81VfQxbIKQWAyw86pqT8VND3Dz3PGTR5WG
+         6lGnS2bkPBsBUnonc2s7IHq/qJ9/ec7vuy/XPvs/Kn6X/3EVgMUAxT4XcR5Oo2LWftQU
+         LezCYDdF/zKWT2+ptr93+tnZbUk7fwL2+WxqH8X3C6H6G3oK7GUj4IvQNZWE7CZySOuu
+         OtBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXk6ElY52MvTgMaZG0kxxTpdr8stMXy5K+FI+zSllpSb+tNQGzT0sq4VE6PFL2wNBmNZdhG7BLgpOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylvYoAcDmeVa3OjWRFrjQaFJVi5gTVJTui+FLpOdHQsxtL6DIn
+	wOi5FFjYDUXDYwV22bec12lG5qIRdrMKDuGn7pOEoH8v9llzc1zw3yJB8/Iz2q0=
+X-Google-Smtp-Source: AGHT+IE5csQvNeeQQV2TiEg3S3V6yZpGcfTplYGENkEB1u6HmkJa4la0HF/+Zf2tdkb6gQWZYObepQ==
+X-Received: by 2002:a17:907:9452:b0:a99:fbfc:5ff3 with SMTP id a640c23a62f3a-a9de5ce1611mr802908466b.18.1730124441130;
+        Mon, 28 Oct 2024 07:07:21 -0700 (PDT)
 Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b32455a14sm388970666b.178.2024.10.28.07.07.19
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f2982ecsm376935166b.106.2024.10.28.07.07.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 07:07:19 -0700 (PDT)
+        Mon, 28 Oct 2024 07:07:20 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -102,9 +102,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus address to dynamic bridge nodes
-Date: Mon, 28 Oct 2024 15:07:22 +0100
-Message-ID: <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
+Subject: [PATCH v3 06/12] of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+Date: Mon, 28 Oct 2024 15:07:23 +0100
+Message-ID: <3029857353c9499659369c1540ba887d7860670f.1730123575.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1730123575.git.andrea.porta@suse.com>
 References: <cover.1730123575.git.andrea.porta@suse.com>
@@ -116,30 +116,36 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
-incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
-bridge, the window should instead be in PCI address space. Call
-pci_bus_address() on the resource in order to obtain the PCI bus
-address.
+A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
+translations. In this specific case, the current behaviour is to zero out
+the entire specifier so that the translation could be carried on as an
+offset from zero.  This includes address specifier that has flags (e.g.
+PCI ranges).
+Once the flags portion has been zeroed, the translation chain is broken
+since the mapping functions will check the upcoming address specifier
+against mismatching flags, always failing the 1:1 mapping and its entire
+purpose of always succeeding.
+Set to zero only the address portion while passing the flags through.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/pci/of_property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/address.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index 5a0b98e69795..886c236e5de6 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -126,7 +126,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
- 		if (of_pci_get_addr_flags(&res[j], &flags))
- 			continue;
- 
--		val64 = res[j].start;
-+		val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
- 		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
- 				   false);
- 		if (pci_is_bridge(pdev)) {
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 286f0c161e33..72b6accff21c 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -455,7 +455,8 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	}
+ 	if (ranges == NULL || rlen == 0) {
+ 		offset = of_read_number(addr, na);
+-		memset(addr, 0, pna * 4);
++		/* copy the address while preserving the flags */
++		memset(addr + pbus->flag_cells, 0, (pna - pbus->flag_cells) * 4);
+ 		pr_debug("empty ranges; 1:1 translation\n");
+ 		goto finish;
+ 	}
 -- 
 2.35.3
 
