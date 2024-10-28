@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-15464-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15465-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97BEE9B3710
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 17:50:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D22B39B3727
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 17:56:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E9DA1F22238
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 16:50:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E23F1F23333
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Oct 2024 16:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43ECB1DED59;
-	Mon, 28 Oct 2024 16:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0631DED60;
+	Mon, 28 Oct 2024 16:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkI5kqhF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crWultVX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E751DED57;
-	Mon, 28 Oct 2024 16:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426EE155C97;
+	Mon, 28 Oct 2024 16:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730134234; cv=none; b=P2NFcxjcoHyCwCtAHzYCv2T/uzNQPm3yhkbkamelIOYFfwxnCw1DiQDpOQxHGKVfK0TIL9kgeON9I+umOulyJmLTVSMFw+IQwINJy/zyPGvRLsVpKij2m+zyZLcQSeEUM70pUA0fmZv2QUWhKVNamPNJqCXMR1lN1is5HRiOvcI=
+	t=1730134566; cv=none; b=gIMCaXdNbsAlEF7yV8+R9lO3/WnnPeoFQFrjrPxC8BB8eGLX6HCxKB/7dIwYZLrx/lK7LST7b7hAkj9N0JmhwGgU+Cr61gSpTI66I9PUbtrp77A2p84UQkk+MRWe/M5XE3/Ea/5rFMGEEuRiUazg4ezGXp9h+g6NzFOzAk7Ynqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730134234; c=relaxed/simple;
-	bh=pMWXPesuF8JzrcGMxw6QNKDodBCUrn/XJfWhJqOIi/k=;
+	s=arc-20240116; t=1730134566; c=relaxed/simple;
+	bh=zFHnF7cGEYGwCxaLixcm3YUBNgWn7en7LiCB5J6XxGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MpGXK3spTOSGCJeS7js+h4QmXNoLnybeHZFbCqkykG7hEYbyQliovZaRm5qf0NBHYIeGo3dXr3UYn1llUyP3VRIZcICA3NiOxtHrbCYT9sTSyfm8VwDFZeYOmpH7F+P5f4K0gcwrYdrU9BmFwEMccQArgneAaK7haxGtCpjCQ0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkI5kqhF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EDE5C4CEC7;
-	Mon, 28 Oct 2024 16:50:33 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=pbbeZK78z3SB+iRcnUHrqYYVvnpI+PiFX1Hjk2hIc67gqf+P0YVaKDzjoQ044p0w8b7gPB3iLyPUzld6iNr4+FbjRm0b0IpsXDRI/TqBAQO9h+TQUmBVdxG0D1wQDY/8BxRm8wzsibEQl9EObII2mCm5O3ClkVvPx+h3bLwYERs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crWultVX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7440C4CEC3;
+	Mon, 28 Oct 2024 16:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730134233;
-	bh=pMWXPesuF8JzrcGMxw6QNKDodBCUrn/XJfWhJqOIi/k=;
+	s=k20201202; t=1730134565;
+	bh=zFHnF7cGEYGwCxaLixcm3YUBNgWn7en7LiCB5J6XxGU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pkI5kqhFOL4hPrCJsofC2stUnspJjm6zGrt4OxWKdikOpGkx9D4nmXJx4C/VcJftq
-	 mE/iv5zzaJNUwYeH+8UGSMffivBEWZTqJMxCYzZ/9RFDHN5GNWtEv594Vs8OqFbqFC
-	 KvHQ6yoKZLdlFCOHSacP0wOL0jLUNBLI+n9RCK3vySApUKgsE0v84V1CxaSLOD4/et
-	 Cwwgtu2Hp9Ae77Da0pXA4iasz1yvXST1obtG2ttbSY9QAIHmWR8QgQNkU9M3rHvNrv
-	 o2jLzg4XdR80Z4O+4l7LuGU2IhXufItbN14hvCNEZt4ssz6b4CVBKdRM0a6Jlr6sbV
-	 SgNclE/avtfMQ==
-Date: Mon, 28 Oct 2024 11:50:31 -0500
+	b=crWultVXOmNOEWB7o8sIuKDEqFUlt3r+Br/8GzgAliwpSKBoSujztI2uuYN+2lbtB
+	 Ewnbd5OGtkZss7AkIZRlt71MQD/mHGyKKxqWn++ikTxS+0TAAo+CVEjSzYq7vkXQcD
+	 0nRDB1qdVegbRS2Ukf325gS9bslRdnSiSbBvySxs1lVxoXM2NXh44OofuZegv4oGBI
+	 AAfEuhcg0IPljWfYhVBMbGPR0MEUeQiVo17bAlmY2ImXM3YTHvmfRm5lXkiz7sMjvx
+	 Z5IHcbEbhyendDuKBmmhX5jmSiJj6+bq6F7bUfEfBAmQG4exPUGqCXwlS2IYu2/w+s
+	 uA96h5/dKXs4w==
+Date: Mon, 28 Oct 2024 11:56:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
 Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
@@ -59,8 +59,9 @@ Cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
 	Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v4 6/7] PCI: Allow drivers to control VF BAR size
-Message-ID: <20241028165031.GA1106195@bhelgaas>
+Subject: Re: [PATCH v4 5/7] PCI/IOV: Check that VF BAR fits within the
+ reservation
+Message-ID: <20241028165604.GA1105091@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,58 +71,63 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241025215038.3125626-7-michal.winiarski@intel.com>
+In-Reply-To: <20241025215038.3125626-6-michal.winiarski@intel.com>
 
-On Fri, Oct 25, 2024 at 11:50:37PM +0200, Michał Winiarski wrote:
-> Drivers could leverage the fact that the VF BAR MMIO reservation is
-> created for total number of VFs supported by the device by resizing the
-> BAR to larger size when smaller number of VFs is enabled.
+On Fri, Oct 25, 2024 at 11:50:36PM +0200, Michał Winiarski wrote:
+> VF MMIO resource reservation, either created by system firmware and
+> inherited by Linux PCI subsystem or created by the subsystem itself,
+> should contain enough space to fit the BAR of all SR-IOV Virtual
+> Functions that can potentially be created (total VFs supported by the
+> device).
+
+I don't think "VF resource reservation ... should contain enough
+space" is really accurate or actionable.  It would be *nice* if the PF
+BAR is large enough to accommodate the largest supported VF BARs for
+all possible VFs, but if it doesn't, it's not really an error.  It's
+just a reflection of the fact that resource space is limited.
+
+> However, that assumption only holds in an environment where VF BAR size
+> can't be modified.
+
+There's no reason to assume anything about how many VF BARs fit.  The
+existing code should avoid enabling the requested nr_virtfn VFs if the
+PF doesn't have enough space -- I think that's what the "if
+(res->parent)" is supposed to be checking.
+
+The fact that you need a change here makes me suspect that we're
+missing some resource claim (and corresponding res->parent update)
+elsewhere when resizing the VF BAR.
+
+> Add an additional check that verifies that VF BAR for all enabled VFs
+> fits within the underlying reservation resource.
 > 
-> Add a pci_iov_vf_bar_set_size() function to control the size and a
-> pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
-> allow up to num_vfs to be successfully enabled with the current
-> underlying reservation size.
-> ...
-
-> + * pci_iov_vf_bar_get_sizes - get VF BAR sizes that allow to create up to num_vfs
-> + * @dev: the PCI device
-> + * @resno: the resource number
-> + * @num_vfs: number of VFs
-> + *
-> + * Get the sizes of a VF resizable BAR that can fit up to num_vfs within the
-> + * resource that reserves the MMIO space (originally up to total_VFs) the as
-> + * bitmask defined in the spec (bit 0=1MB, bit 19=512GB).
-
-This sentence doesn't quite parse; something is missing around "the as".
-
-I'm guessing you mean to say something about the return value being a
-bitmask of VF BAR sizes that can be accommodated if num_vfs are
-enabled?  If so, maybe combine it with the following paragraph:
-
-> + * Returns 0 if BAR isn't resizable.
-> + *
-> + */
-> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs)
-> +{
-> +	resource_size_t size;
-> +	u32 sizes;
-> +	int i;
+> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/pci/iov.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 79143c1bc7bb4..5de828e5a26ea 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -645,10 +645,14 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+>  
+>  	nres = 0;
+>  	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
+> +		int vf_bar_sz = pci_iov_resource_size(dev,
+> +						      pci_resource_to_iov(i));
+>  		bars |= (1 << pci_resource_to_iov(i));
+>  		res = &dev->resource[pci_resource_to_iov(i)];
+> -		if (res->parent)
+> -			nres++;
+> +		if (!res->parent || vf_bar_sz * nr_virtfn > resource_size(res))
+> +			continue;
 > +
-> +	sizes = pci_rebar_get_possible_sizes(dev, resno);
-> +	if (!sizes)
-> +		return 0;
-> +
-> +	while (sizes > 0) {
-> +		i = __fls(sizes);
-> +		size = pci_rebar_size_to_bytes(i);
-> +
-> +		if (size * num_vfs <= pci_resource_len(dev, resno))
-> +			break;
-> +
-> +		sizes &= ~BIT(i);
-> +	}
-> +
-> +	return sizes;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
+> +		nres++;
+>  	}
+>  	if (nres != iov->nres) {
+>  		pci_err(dev, "not enough MMIO resources for SR-IOV\n");
+> -- 
+> 2.47.0
+> 
 
