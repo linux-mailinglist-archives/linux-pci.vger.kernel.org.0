@@ -1,110 +1,315 @@
-Return-Path: <linux-pci+bounces-15535-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A2BE9B4D0E
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 16:09:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3CD29B4D24
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 16:11:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEF87B22B88
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 15:09:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 832E4286456
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 15:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A88A0192B7F;
-	Tue, 29 Oct 2024 15:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A2111946A2;
+	Tue, 29 Oct 2024 15:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iPqZJMWP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyBQOUO2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E211885BD;
-	Tue, 29 Oct 2024 15:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03183192D62;
+	Tue, 29 Oct 2024 15:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730214559; cv=none; b=tgdeHTEV6hjKikIASlLon3/nhh4fHbh20oy7dTCGqzTV/l256J4vjbm8tW+MXMw4KMDjNiXtUl/sQRFE6Ba7vhzTFtT3pybWAzdBDEm5t8Mg8n4PRwwipOLXnigyyAsY9HBgLSLau+tIdAh9mtKbOdMfAK/9iEyj3AOTdVvojzc=
+	t=1730214666; cv=none; b=VYJ0+xyF70APgI4uQKuMpO/sj8bA4ADWpxSzc7fNTlgcapkFK8bmACitwzXWYg6FkCy5h2T3AWysr8AgdvRAh3JMa5I3+lSYeAfOtQFt7JgZnajLyomivgQLLTpZBbtkbiTDCGDnXCcyZq/OQCHpvBAthpT8JeglkuUh9wMlYrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730214559; c=relaxed/simple;
-	bh=Uu7MSsIfwM/nK86sCizAjmT3qbPGspNamKH58t1cCtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tyqaEQRa2zlHYVj4KAm4nuL2RCQvbJxi0atzuONwIXq9HQ61JfyQ2Yz0FLeZeRB8ZybYE5v3dqjytqkbaqvFZjeGnBoqW1XKISTQ+eH3/CSACvSQuBOUJ1MbIeHhJFx8O9XJBNgUdBD+8G8v3SmPw6GcjcylhhWP5mzFhDMrVjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iPqZJMWP; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7B99D40E0191;
-	Tue, 29 Oct 2024 15:09:14 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id UpTCgdSWcxWY; Tue, 29 Oct 2024 15:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1730214550; bh=CGpcOAn8UHlSL3WE5rbvoEk8vV1upCzgOQR+a5Jg3zw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iPqZJMWP/S97Nw3qt0o9eoCnSWA0S5IDfZgXGAEtZQ7JZWnosysRxl+HGVtwoGUDq
-	 +jCfzuzv6y8wrw84eZ18870uqv8Fjyxpl3DixUrwno6AP9ikM0/qQTn6R+uIN+yEve
-	 aSyl5n6iZmq3s+w8MIUIDTedEpgvJeGNNpL8gxyySd0YolqY8l97DSFa3wpb7cbGBx
-	 IhcwlV0Qml8Tymeq8EFT+PcsDfCG7cpM7cM0lUhyDa3u+wP5I3p+PqKdzbK0WY8CfQ
-	 Ud8ZIfFZj7hILM02w8A4I9ypSPnZH8eBr0rdQeRXOw0JrZp8fwM8RPbM8w7AOe7CNr
-	 TwLHRBgdKJh3p2egKaVB2EaVEjjVaB0soGOBUZVHK8wi6EDX2zyzDLVSw4pvqO3j/t
-	 PmT6bBBIWguwUsk2La+8SbgbEsaMrIkwEEcxJAut/d9BSKX7rBZ5KituH3bUdBe6IH
-	 AIui1ceCdOEGc8IjUzBLWtxRPZ8tdLRs3uBgN2QkauRlEfM3qkGzptraA2n3xfjgud
-	 ui73I8Fi54+uW8qOnoq0hqGjMEEGZPnXixtvpktbVta1g959eDcsQOGQXwNDnYrTN6
-	 96M2oubTs2pilfIE/35/3JQm6AQXZav8+IafheJvSgDsbTKbxxRuEQApGD81J55wU/
-	 I0NTZEfjkQl0Ovif27+b2MRg=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCA8F40E0192;
-	Tue, 29 Oct 2024 15:08:48 +0000 (UTC)
-Date: Tue, 29 Oct 2024 16:08:47 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tony.luck@intel.com, x86@kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, mario.limonciello@amd.com, bhelgaas@google.com,
-	Shyam-sundar.S-k@amd.com, richard.gong@amd.com, jdelvare@suse.com,
-	linux@roeck-us.net, clemens@ladisch.de, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	naveenkrishna.chatradhi@amd.com, carlos.bilbao.osdev@gmail.com
-Subject: Re: [PATCH 03/16] x86/amd_nb: Clean up early_is_amd_nb()
-Message-ID: <20241029150847.GLZyD6f-Hk6pRTEt2c@fat_crate.local>
-References: <20241023172150.659002-1-yazen.ghannam@amd.com>
- <20241023172150.659002-4-yazen.ghannam@amd.com>
- <20241025155830.GQZxvAJkJnfLfNpSRx@fat_crate.local>
- <20241029143928.GA1011322@yaz-khff2.amd.com>
+	s=arc-20240116; t=1730214666; c=relaxed/simple;
+	bh=SQQchx1vtsZlKAa985I87v+ow+U4p33UlUeg+FERc0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ukMNT9cv/evKIahb5k1kbBzkfygm7Bd0j6atcLFrQk5Rg6wEID3xkgeM8ac10Gdr8YAwZWee1aIrzEO3M2jqIEdPpFVM5hnlG0X87hAwFY7Po7QsG0LygVH4s+VnbtOquSfGiq5euGhMOBSWFVhe1FGN9MuuFEN6vugddxYdg20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyBQOUO2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 518F5C4CEE5;
+	Tue, 29 Oct 2024 15:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730214665;
+	bh=SQQchx1vtsZlKAa985I87v+ow+U4p33UlUeg+FERc0I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LyBQOUO2cEsu+Tni0G/a2shPNK+3v0pcWANBtQ3I2TpwqpZtXMDurKkmJNCB2oohh
+	 FDq6iFWCCGs1KozCEG39c2+UBJ4oZAul+Fh/hrzx93pik7koNtaiystZtJXr9nHeci
+	 OVwi2t8duMu/ih5zjJmkGrY1Z7RUHbWslWh8nCjnILiVUmGdP96opvDh6vYyZzJkDL
+	 iqTq3OInuyi1xereyTOtUDDWIjp64Dk1bkhfTokQgnE7hOvGaX6nT86WvQCFXPs9aA
+	 8JqhSVbH+n/fg2UKLL9y5lDCFyFvtph8fNrcQaCSJLpiFtY+LSFpMwaLG+EvyuCA64
+	 9EBM45hwMqjQg==
+Date: Tue, 29 Oct 2024 10:11:04 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 02/18] dma-mapping: move the PCI P2PDMA mapping helpers
+ to pci-p2pdma.h
+Message-ID: <20241029151104.GA1156518@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241029143928.GA1011322@yaz-khff2.amd.com>
+In-Reply-To: <27698e7cc55f6ca5371c3d86c50fd3afce9afddd.1730037276.git.leon@kernel.org>
 
-On Tue, Oct 29, 2024 at 10:39:28AM -0400, Yazen Ghannam wrote:
-> How can I enable this check myself?
+On Sun, Oct 27, 2024 at 04:21:02PM +0200, Leon Romanovsky wrote:
+> From: Christoph Hellwig <hch@lst.de>
+> 
+> To support the upcoming non-scatterlist mapping helpers, we need to go
+> back to have them called outside of the DMA API.  Thus move them out of
+> dma-map-ops.h, which is only for DMA API implementations to pci-p2pdma.h,
+> which is for driver use.
+> 
+> Note that the core helper is still not exported as the mapping is
+> expected to be done only by very highlevel subsystem code at least for
+> now.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 
-It is part of my silly patch checking script:
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=vp
-
-in here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/tree/.tip/bin/vp.py?h=vp
-
-but it probably isn't ready for public consumption yet.
-
-I probably should try to package it properly when there's time...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> ---
+>  drivers/iommu/dma-iommu.c   |  1 +
+>  include/linux/dma-map-ops.h | 84 -------------------------------------
+>  include/linux/pci-p2pdma.h  | 84 +++++++++++++++++++++++++++++++++++++
+>  kernel/dma/direct.c         |  1 +
+>  4 files changed, 86 insertions(+), 84 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 6e50023c8112..c422e36c0d66 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/of_iommu.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-p2pdma.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/swiotlb.h>
+> diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
+> index 49edcbda19d1..6ee626e50708 100644
+> --- a/include/linux/dma-map-ops.h
+> +++ b/include/linux/dma-map-ops.h
+> @@ -435,88 +435,4 @@ static inline void debug_dma_dump_mappings(struct device *dev)
+>  
+>  extern const struct dma_map_ops dma_dummy_ops;
+>  
+> -enum pci_p2pdma_map_type {
+> -	/*
+> -	 * PCI_P2PDMA_MAP_UNKNOWN: Used internally for indicating the mapping
+> -	 * type hasn't been calculated yet. Functions that return this enum
+> -	 * never return this value.
+> -	 */
+> -	PCI_P2PDMA_MAP_UNKNOWN = 0,
+> -
+> -	/*
+> -	 * Not a PCI P2PDMA transfer.
+> -	 */
+> -	PCI_P2PDMA_MAP_NONE,
+> -
+> -	/*
+> -	 * PCI_P2PDMA_MAP_NOT_SUPPORTED: Indicates the transaction will
+> -	 * traverse the host bridge and the host bridge is not in the
+> -	 * allowlist. DMA Mapping routines should return an error when
+> -	 * this is returned.
+> -	 */
+> -	PCI_P2PDMA_MAP_NOT_SUPPORTED,
+> -
+> -	/*
+> -	 * PCI_P2PDMA_BUS_ADDR: Indicates that two devices can talk to
+> -	 * each other directly through a PCI switch and the transaction will
+> -	 * not traverse the host bridge. Such a mapping should program
+> -	 * the DMA engine with PCI bus addresses.
+> -	 */
+> -	PCI_P2PDMA_MAP_BUS_ADDR,
+> -
+> -	/*
+> -	 * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE: Indicates two devices can talk
+> -	 * to each other, but the transaction traverses a host bridge on the
+> -	 * allowlist. In this case, a normal mapping either with CPU physical
+> -	 * addresses (in the case of dma-direct) or IOVA addresses (in the
+> -	 * case of IOMMUs) should be used to program the DMA engine.
+> -	 */
+> -	PCI_P2PDMA_MAP_THRU_HOST_BRIDGE,
+> -};
+> -
+> -struct pci_p2pdma_map_state {
+> -	struct dev_pagemap *pgmap;
+> -	enum pci_p2pdma_map_type map;
+> -	u64 bus_off;
+> -};
+> -
+> -/* helper for pci_p2pdma_state(), do not use directly */
+> -void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
+> -		struct device *dev, struct page *page);
+> -
+> -/**
+> - * pci_p2pdma_state - check the P2P transfer state of a page
+> - * @state: 	P2P state structure
+> - * @dev:	device to transfer to/from
+> - * @page:	page to map
+> - *
+> - * Check if @page is a PCI P2PDMA page, and if yes of what kind.  Returns the
+> - * map type, and updates @state with all information needed for a P2P transfer.
+> - */
+> -static inline enum pci_p2pdma_map_type
+> -pci_p2pdma_state(struct pci_p2pdma_map_state *state, struct device *dev,
+> -		struct page *page)
+> -{
+> -	if (IS_ENABLED(CONFIG_PCI_P2PDMA) && is_pci_p2pdma_page(page)) {
+> -		if (state->pgmap != page->pgmap)
+> -			__pci_p2pdma_update_state(state, dev, page);
+> -		return state->map;
+> -	}
+> -	return PCI_P2PDMA_MAP_NONE;
+> -}
+> -
+> -/**
+> - * pci_p2pdma_bus_addr_map - map a PCI_P2PDMA_MAP_BUS_ADDR P2P transfer
+> - * @state: 	P2P state structure
+> - * @paddr:	physical address to map
+> - *
+> - * Map a physically contigous PCI_P2PDMA_MAP_BUS_ADDR transfer.
+> - */
+> -static inline dma_addr_t
+> -pci_p2pdma_bus_addr_map(struct pci_p2pdma_map_state *state, phys_addr_t paddr)
+> -{
+> -	WARN_ON_ONCE(state->map != PCI_P2PDMA_MAP_BUS_ADDR);
+> -	return paddr + state->bus_off;
+> -}
+> -
+>  #endif /* _LINUX_DMA_MAP_OPS_H */
+> diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
+> index 2c07aa6b7665..66b71f60a811 100644
+> --- a/include/linux/pci-p2pdma.h
+> +++ b/include/linux/pci-p2pdma.h
+> @@ -104,4 +104,88 @@ static inline struct pci_dev *pci_p2pmem_find(struct device *client)
+>  	return pci_p2pmem_find_many(&client, 1);
+>  }
+>  
+> +enum pci_p2pdma_map_type {
+> +	/*
+> +	 * PCI_P2PDMA_MAP_UNKNOWN: Used internally for indicating the mapping
+> +	 * type hasn't been calculated yet. Functions that return this enum
+> +	 * never return this value.
+> +	 */
+> +	PCI_P2PDMA_MAP_UNKNOWN = 0,
+> +
+> +	/*
+> +	 * Not a PCI P2PDMA transfer.
+> +	 */
+> +	PCI_P2PDMA_MAP_NONE,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_MAP_NOT_SUPPORTED: Indicates the transaction will
+> +	 * traverse the host bridge and the host bridge is not in the
+> +	 * allowlist. DMA Mapping routines should return an error when
+> +	 * this is returned.
+> +	 */
+> +	PCI_P2PDMA_MAP_NOT_SUPPORTED,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_BUS_ADDR: Indicates that two devices can talk to
+> +	 * each other directly through a PCI switch and the transaction will
+> +	 * not traverse the host bridge. Such a mapping should program
+> +	 * the DMA engine with PCI bus addresses.
+> +	 */
+> +	PCI_P2PDMA_MAP_BUS_ADDR,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE: Indicates two devices can talk
+> +	 * to each other, but the transaction traverses a host bridge on the
+> +	 * allowlist. In this case, a normal mapping either with CPU physical
+> +	 * addresses (in the case of dma-direct) or IOVA addresses (in the
+> +	 * case of IOMMUs) should be used to program the DMA engine.
+> +	 */
+> +	PCI_P2PDMA_MAP_THRU_HOST_BRIDGE,
+> +};
+> +
+> +struct pci_p2pdma_map_state {
+> +	struct dev_pagemap *pgmap;
+> +	enum pci_p2pdma_map_type map;
+> +	u64 bus_off;
+> +};
+> +
+> +/* helper for pci_p2pdma_state(), do not use directly */
+> +void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
+> +		struct device *dev, struct page *page);
+> +
+> +/**
+> + * pci_p2pdma_state - check the P2P transfer state of a page
+> + * @state: 	P2P state structure
+> + * @dev:	device to transfer to/from
+> + * @page:	page to map
+> + *
+> + * Check if @page is a PCI P2PDMA page, and if yes of what kind.  Returns the
+> + * map type, and updates @state with all information needed for a P2P transfer.
+> + */
+> +static inline enum pci_p2pdma_map_type
+> +pci_p2pdma_state(struct pci_p2pdma_map_state *state, struct device *dev,
+> +		struct page *page)
+> +{
+> +	if (IS_ENABLED(CONFIG_PCI_P2PDMA) && is_pci_p2pdma_page(page)) {
+> +		if (state->pgmap != page->pgmap)
+> +			__pci_p2pdma_update_state(state, dev, page);
+> +		return state->map;
+> +	}
+> +	return PCI_P2PDMA_MAP_NONE;
+> +}
+> +
+> +/**
+> + * pci_p2pdma_bus_addr_map - map a PCI_P2PDMA_MAP_BUS_ADDR P2P transfer
+> + * @state: 	P2P state structure
+> + * @paddr:	physical address to map
+> + *
+> + * Map a physically contigous PCI_P2PDMA_MAP_BUS_ADDR transfer.
+> + */
+> +static inline dma_addr_t
+> +pci_p2pdma_bus_addr_map(struct pci_p2pdma_map_state *state, phys_addr_t paddr)
+> +{
+> +	WARN_ON_ONCE(state->map != PCI_P2PDMA_MAP_BUS_ADDR);
+> +	return paddr + state->bus_off;
+> +}
+> +
+>  #endif /* _LINUX_PCI_P2P_H */
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index a793400161c2..47e124561fff 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <linux/set_memory.h>
+>  #include <linux/slab.h>
+> +#include <linux/pci-p2pdma.h>
+>  #include "direct.h"
+>  
+>  /*
+> -- 
+> 2.46.2
+> 
 
