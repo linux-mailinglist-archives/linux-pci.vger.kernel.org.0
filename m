@@ -1,213 +1,240 @@
-Return-Path: <linux-pci+bounces-15503-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15504-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AF189B41C6
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 06:17:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47E789B42F7
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 08:19:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1797F1F22C95
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 05:17:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65F5C1C21F37
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 07:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECD2200BBC;
-	Tue, 29 Oct 2024 05:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A802022DE;
+	Tue, 29 Oct 2024 07:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OJqtFvdA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XDD2zK2y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8D218858E;
-	Tue, 29 Oct 2024 05:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251681FCF49;
+	Tue, 29 Oct 2024 07:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730179051; cv=none; b=pG63tzXq/ylaSvX9zeIsA9lkFPk0o9e3QkqcqDoTuSw/8GukrccFDcoht6+0lVGobGcsxupZkSdgWHKOW+g3CEG+V20tFcuS5u5WoDxksMtxxQyRZYkcIqoPSRXjQl0Hg2nhrZlqkL9XlH/q4NxKp/Et5Sg4NaEkciTC1U+HL5U=
+	t=1730186335; cv=none; b=pO5SoNthAHSOLvOKXBqC6W6+i6qjfIm9xxT8GOQhMUCIv2pjObg0PcjJyDrcLyE8c3h4l8ASzVPiH4Y1sWDUI54P/NT6dRGyBDm3XP1GuB0cv8ustJ0q6auQ+vk3ItTuY8HGnSGnsGvDxbN6LC0dUXElqn6/q9tzBgyIDZX/9ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730179051; c=relaxed/simple;
-	bh=wYzqGG4Q4km+Ns90Q8Gc0gCM5Ljv8dlXhbxvfw/BdJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=s6fswdRnR0JeqjshW2BYqL6rJeyr8T9R91hp7v2OwRNqxOgF8eqN25UiCPkh6M7AfMRZg7wNsMDZofNCwmAP9m/zQcBD1Y/K1s9P+FqXC8IhZQ5jbvNAUTwcFEjYmvUluMf3kZNdqWE2FZ8MoR4kQitqU82P4obkNMVnXR8qqAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OJqtFvdA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49SKlFmP004097;
-	Tue, 29 Oct 2024 05:17:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0MyGFX8jJVi9uGPNcl3ITQ2goh4f1GsXNKt44nFiyqg=; b=OJqtFvdALEKElghO
-	Kb3d2JIGsu3a+a2FzoYefeLqMLiOwpnjbdRkBStR7xXMRyMvTirV7fgBEIgN7MEa
-	a+A1tnMcRaI9Qpai/0cZzcj3iZapGShhvvDbYfPAKmfbQ2PulaCi/y+yDqFk3euY
-	94Who8OOCxyE4bs8v9kNc2mYiZzTzFOZDC4AzgmG9nEmV6TMklE5lmR596axoMq/
-	xW/hVuWu1tdFu9FU7x7nlnEZV73e53HF4GOGfzFQBV2+0RSrS5qR/nEG1v2vfs/5
-	rf5ZVMa2f7G/Zk+iesPnmYgPT9AzMmp5CpjFrUZ9hgJ17O+Y5S3Qgh/HzUpkBf5I
-	aKodrA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42gnsmqf9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Oct 2024 05:17:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49T5H80D012175
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Oct 2024 05:17:08 GMT
-Received: from [10.216.61.9] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Oct
- 2024 22:17:03 -0700
-Message-ID: <36ec01f4-c0fb-188e-06e9-10c7360a8ef0@quicinc.com>
-Date: Tue, 29 Oct 2024 10:47:00 +0530
+	s=arc-20240116; t=1730186335; c=relaxed/simple;
+	bh=BdYcTmAXb1SfXEeowtRZE7Rf2n06MdmrBquWG32nqao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qu89YFFuFry2A+rSJAt5tcIbMFI1/M2hNWUZWUfNQ7xOS2EDQLp4CuGRpI/2j4JM8iK+30E0UKT4FRCZkBnApT7fKJVvumpfUmYaudakHFbqtmi9z9u7Ha7bgq9yBWHs+PpcumVNPER01cuIaqyowavWTTmOLNTpXUopOcIpJ4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XDD2zK2y; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730186333; x=1761722333;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BdYcTmAXb1SfXEeowtRZE7Rf2n06MdmrBquWG32nqao=;
+  b=XDD2zK2y3X8oWGvs67rmpMvz0e4WxNU0+5inf4mNT79cFRA96fOsgmZa
+   M4e6ICC8m8Y/aj2VYR3FmDqTGGCBFFmwLPHlx5KPOFMq4w6s/QPw9tGQ0
+   Gss58xxPFYqg4qas2Cy1Z5td+CTKxrtsWAQ/xAeUDaShnBuubDfdJyuG/
+   0k45CQe7mQ4kNVh73YJTxdSGBqYEya0HmD6qgN6n2TTg0cOzDq7SbasPM
+   4rAOnyJYJOMSpAOx6ZQnZkbC80fQ7iGFJmKJ2tJ5EhdhYfhL2Yeo9QbKl
+   9ZuLan8m20vrLpexLGL3qy0qtcdB4g/yRdk7DdGs4k2zsGPZb4T3C4ZvR
+   g==;
+X-CSE-ConnectionGUID: TqyIiT45RUW6A+N5yXzEXA==
+X-CSE-MsgGUID: REZznhKnR/iTnjw3Xmyo+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29774257"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="29774257"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 00:18:52 -0700
+X-CSE-ConnectionGUID: ifNbUCZ6QHay4UdqM/kgoQ==
+X-CSE-MsgGUID: qNn49BT5RyqWAcTYDzsScw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
+   d="scan'208";a="81430699"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 29 Oct 2024 00:18:46 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t5gV2-000dN8-1u;
+	Tue, 29 Oct 2024 07:18:44 +0000
+Date: Tue, 29 Oct 2024 15:18:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v6 2/7] PCI: dwc: Using parent_bus_addr in of_range to
+ eliminate cpu_addr_fixup()
+Message-ID: <202410291546.kvgEWJv7-lkp@intel.com>
+References: <20241028-pci_fixup_addr-v6-2-ebebcd8fd4ff@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 1/1] RFC: dt bindings: Add property "brcm,gen3-eq-presets"
-Content-Language: en-US
-To: James Quinlan <james.quinlan@broadcom.com>, Rob Herring <robh@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi
-	<lorenzo.pieralisi@arm.com>,
-        <bcm-kernel-feedback-list@broadcom.com>, <jim2101024@gmail.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-        "moderated
- list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
-	<linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND
- FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        open list
-	<linux-kernel@vger.kernel.org>
-References: <20241018182247.41130-1-james.quinlan@broadcom.com>
- <20241018182247.41130-2-james.quinlan@broadcom.com>
- <20241021190334.GA953710-robh@kernel.org>
- <77d3a1a9-c22d-0fd3-5942-91b9a3d74a43@quicinc.com>
- <954d6c11-ab4e-485f-8152-94bf38625f9c@broadcom.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <954d6c11-ab4e-485f-8152-94bf38625f9c@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: jcJScyLt2nHXQq_s-udtJhOC43-wGizG
-X-Proofpoint-GUID: jcJScyLt2nHXQq_s-udtJhOC43-wGizG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- malwarescore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- adultscore=0 priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410290040
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241028-pci_fixup_addr-v6-2-ebebcd8fd4ff@nxp.com>
+
+Hi Frank,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 9852d85ec9d492ebef56dc5f229416c925758edc]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/of-address-Add-parent_bus_addr-to-struct-of_pci_range/20241029-030935
+base:   9852d85ec9d492ebef56dc5f229416c925758edc
+patch link:    https://lore.kernel.org/r/20241028-pci_fixup_addr-v6-2-ebebcd8fd4ff%40nxp.com
+patch subject: [PATCH v6 2/7] PCI: dwc: Using parent_bus_addr in of_range to eliminate cpu_addr_fixup()
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20241029/202410291546.kvgEWJv7-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241029/202410291546.kvgEWJv7-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410291546.kvgEWJv7-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pci/controller/dwc/pcie-designware-host.c:782:55: error: incompatible pointer types passing 'u64 *' (aka 'unsigned long long *') to parameter of type 'resource_size_t *' (aka 'unsigned int *') [-Werror,-Wincompatible-pointer-types]
+                   if (dw_pcie_get_untranslate_addr(pci, atu.pci_addr, &atu.cpu_addr))
+                                                                       ^~~~~~~~~~~~~
+   drivers/pci/controller/dwc/pcie-designware-host.c:422:23: note: passing argument to parameter 'i_addr' here
+                                           resource_size_t *i_addr)
+                                                            ^
+   1 error generated.
 
 
+vim +782 drivers/pci/controller/dwc/pcie-designware-host.c
 
-On 10/29/2024 12:21 AM, James Quinlan wrote:
-> On 10/24/24 21:08, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 10/22/2024 12:33 AM, Rob Herring wrote:
->>> On Fri, Oct 18, 2024 at 02:22:45PM -0400, Jim Quinlan wrote:
->>>> Support configuration of the GEN3 preset equalization settings, aka the
->>>> Lane Equalization Control Register(s) of the Secondary PCI Express
->>>> Extended Capability.  These registers are of type HwInit/RsvdP and
->>>> typically set by FW.  In our case they are set by our RC host bridge
->>>> driver using internal registers.
->>>>
->>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>>> ---
->>>>   .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 
->>>> ++++++++++++
->>>>   1 file changed, 12 insertions(+)
->>>>
->>>> diff --git 
->>>> a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml 
->>>> b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>>> index 0925c520195a..f965ad57f32f 100644
->>>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>>> @@ -104,6 +104,18 @@ properties:
->>>>       minItems: 1
->>>>       maxItems: 3
->>>>   +  brcm,gen3-eq-presets:
->>>> +    description: |
->>>> +      A u16 array giving the GEN3 equilization presets, one for 
->>>> each lane.
->>>> +      These values are destined for the 16bit registers known as the
->>>> +      Lane Equalization Control Register(s) of the Secondary PCI 
->>>> Express
->>>> +      Extended Capability.  In the array, lane 0 is first term, 
->>>> lane 1 next,
->>>> +      etc. The contents of the entries reflect what is necessary for
->>>> +      the current board and SoC, and the details of each preset are
->>>> +      described in Section 7.27.4 of the PCI base spec, Revision 3.0.
->>>
->>> If these are defined by the PCIe spec, then why is it Broadcom specific
->>> property?
-> Yes, I will remove the "brcm," prefix.
->>>
->> Hi Rob,
->>
->> qcom pcie driver also needs to program these presets as you suggested
->> this can go to common pci bridge binding.
->>
->> from PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4.2 for data rates
->> of  8.0 GT/s, 16.0 GT/s, and 32.0 GT/s uses one class of preset (P0
->> through P10) and where as data rates of 64.0 GT/s use different class of
->> presets (Q0 through Q10) (Table 4-23). And data rates of 8.0 GT/s also
->> have optional preset hints (Table 4-24).
->>
->> And there is possibility that for each data rate we may require
->> different preset configuration.
->>
->> Can we have a dt binding for each data rate of 16 byte array.
->> like gen3-eq-preset array, gen4-eq-preset array etc.
-> 
-> Yes, that was the idea when using "genX-eq-preset", for X in {3,4...}.
-> 
-> Keep in mind that this is an RFC; I have a backlog of commit submissions 
-> before I can submit the code that uses this DT property.  If you 
-> (Krishna) want to submit something now I'd be quite happy to go with 
-> that.  I don't believe it is acceptable to submit a bindings commit w/o 
-> code that uses it (if I'm incorrect I'll be glad to do a V2).
-> 
-Hi Jim,
+   745	
+   746	static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+   747	{
+   748		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+   749		struct dw_pcie_ob_atu_cfg atu = { 0 };
+   750		struct resource_entry *entry;
+   751		int i, ret;
+   752	
+   753		/* Note the very first outbound ATU is used for CFG IOs */
+   754		if (!pci->num_ob_windows) {
+   755			dev_err(pci->dev, "No outbound iATU found\n");
+   756			return -EINVAL;
+   757		}
+   758	
+   759		/*
+   760		 * Ensure all out/inbound windows are disabled before proceeding with
+   761		 * the MEM/IO (dma-)ranges setups.
+   762		 */
+   763		for (i = 0; i < pci->num_ob_windows; i++)
+   764			dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
+   765	
+   766		for (i = 0; i < pci->num_ib_windows; i++)
+   767			dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
+   768	
+   769		i = 0;
+   770		resource_list_for_each_entry(entry, &pp->bridge->windows) {
+   771			if (resource_type(entry->res) != IORESOURCE_MEM)
+   772				continue;
+   773	
+   774			if (pci->num_ob_windows <= ++i)
+   775				break;
+   776	
+   777			atu.index = i;
+   778			atu.type = PCIE_ATU_TYPE_MEM;
+   779			atu.cpu_addr = entry->res->start;
+   780			atu.pci_addr = entry->res->start - entry->offset;
+   781	
+ > 782			if (dw_pcie_get_untranslate_addr(pci, atu.pci_addr, &atu.cpu_addr))
+   783				return -EINVAL;
+   784	
+   785			/* Adjust iATU size if MSG TLP region was allocated before */
+   786			if (pp->msg_res && pp->msg_res->parent == entry->res)
+   787				atu.size = resource_size(entry->res) -
+   788						resource_size(pp->msg_res);
+   789			else
+   790				atu.size = resource_size(entry->res);
+   791	
+   792			ret = dw_pcie_prog_outbound_atu(pci, &atu);
+   793			if (ret) {
+   794				dev_err(pci->dev, "Failed to set MEM range %pr\n",
+   795					entry->res);
+   796				return ret;
+   797			}
+   798		}
+   799	
+   800		if (pp->io_size) {
+   801			if (pci->num_ob_windows > ++i) {
+   802				atu.index = i;
+   803				atu.type = PCIE_ATU_TYPE_IO;
+   804				atu.cpu_addr = pp->io_base;
+   805				atu.pci_addr = pp->io_bus_addr;
+   806				atu.size = pp->io_size;
+   807	
+   808				ret = dw_pcie_prog_outbound_atu(pci, &atu);
+   809				if (ret) {
+   810					dev_err(pci->dev, "Failed to set IO range %pr\n",
+   811						entry->res);
+   812					return ret;
+   813				}
+   814			} else {
+   815				pp->cfg0_io_shared = true;
+   816			}
+   817		}
+   818	
+   819		if (pci->num_ob_windows <= i)
+   820			dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+   821				 pci->num_ob_windows);
+   822	
+   823		pp->msg_atu_index = i;
+   824	
+   825		i = 0;
+   826		resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
+   827			if (resource_type(entry->res) != IORESOURCE_MEM)
+   828				continue;
+   829	
+   830			if (pci->num_ib_windows <= i)
+   831				break;
+   832	
+   833			ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
+   834						       entry->res->start,
+   835						       entry->res->start - entry->offset,
+   836						       resource_size(entry->res));
+   837			if (ret) {
+   838				dev_err(pci->dev, "Failed to set DMA range %pr\n",
+   839					entry->res);
+   840				return ret;
+   841			}
+   842		}
+   843	
+   844		if (pci->num_ib_windows <= i)
+   845			dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
+   846				 pci->num_ib_windows);
+   847	
+   848		return 0;
+   849	}
+   850	
 
-I submitted a pull request for this. if you have any other suggestions
-or if we need to have any other details we can update this pull request.
-https://github.com/devicetree-org/dt-schema/pull/146
-
-- Krishna Chaitanya.
-> Regards,
-> 
-> Jim Quinlan
-> Broadcom STB/CM
-> 
->>
->> - Krishna Chaitanya
->>>> +
->>>> +    $ref: /schemas/types.yaml#/definitions/uint16-array
->>>
->>> minItems: 1
->>> maxItems: 16
->>>
->>> Last I saw, you can only have up to 16 lanes.
->>>
->>> Rob
->>>
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
