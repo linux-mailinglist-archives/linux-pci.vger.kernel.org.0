@@ -1,200 +1,111 @@
-Return-Path: <linux-pci+bounces-15554-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15555-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AD739B510C
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 18:38:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EAC29B523D
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 19:57:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 592AC284A7A
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 17:38:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13B3D285FFF
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 18:57:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBEEE206E96;
-	Tue, 29 Oct 2024 17:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE5B205159;
+	Tue, 29 Oct 2024 18:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ak+9NkxN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ht/8h+U7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBB51D5CD6;
-	Tue, 29 Oct 2024 17:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A301D201022;
+	Tue, 29 Oct 2024 18:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730223285; cv=none; b=cwylYo8dOmw0qmdbF86YfajTLW5bRMDQ66x1qGhdR4wBAOxp1++hpoXoEiTiamF3vK4Z7cJujN1kTFyQDn0sTNXM1IhxpVv08cslxN0FTyIAxdxRDiFLnWWOH1bVQrGwAaC82OhxqB7TCMN0bl5sht/ccqBkiIGneYZaLiEun9U=
+	t=1730228267; cv=none; b=nKutT1Y9Qi5IXa7XK36w1EP7FhXk82/kPme/SQF10Cxibdkx2/hHb7AHmZRAZxga9SZn83NiaaF0p97Z+OmBZ0rg1ngf9jBFy9UiIW9ib/8g/5ygcDTU+StXClMtH1b5YMi6VWzLerlyNItlzt9U/KBlqh73GVdLwMysZXG0a0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730223285; c=relaxed/simple;
-	bh=ZHnpIHQ+J8HOssHQ5IPGz+tNjWCdkyKzKzgKZXxB1Ks=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oTvcQNJkJ1T5Yp/nSRRIBavZsIu4UWd35XMcCJUi9RPSBe1r8DyrVW7FygZySjwkBcCRZdKlXpx4jHZ/+bv9ukQgDog1ZYo7ShZiEEXNcTciVGjzSOj6CAxLEG3FiZArLF1fITyoMovGCZg9cZv6/Da/2nbOK+3k9Q3P8UI+3aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ak+9NkxN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3F3C4CECD;
-	Tue, 29 Oct 2024 17:34:45 +0000 (UTC)
+	s=arc-20240116; t=1730228267; c=relaxed/simple;
+	bh=D1tnc82FcEdTMHQqlb9wRa0oMIVi2ZiBsAuNNQ7hehQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C9N8PjUjHzKugVI5zchGSRgHD80HfeFukZSi4iKj4zGipe9d9k9Wd5UttpbS293hprZ9kwJ4Q7AEBvORu5wzOdcKVzHB2ndTCFMY56ulbKKKo+ayTEPJ5jZhShim1qN94ZTOCmrfFT/XCvb1AKhImdAZYBZmwzvKJ0b8goIYfi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ht/8h+U7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EDAC4CEE5;
+	Tue, 29 Oct 2024 18:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730223285;
-	bh=ZHnpIHQ+J8HOssHQ5IPGz+tNjWCdkyKzKzgKZXxB1Ks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ak+9NkxNn2HgunkI0eVl+316kJFKadFn5Jn2pViRpAtdn+kZH1RbHy0ZvxHyna9sH
-	 +04kx1Ydf7WoE36kCDKXSqL0AvDKtlczjxb/lQQqtWHdDbxr/Xe4XNKlaVB4mJzcqs
-	 gZZHLngzUTs0c8yi53AxbXLw+cKYYjjBVRWhK2U+KxhFT0jdB6THgKtdg9cQSzlPhe
-	 9XFG1AoEfgFzurc1V1f0sSR1LdMVqrlWRJLy2SEhAWCUXu5pjwYRkWaeiYrpAreqLH
-	 FqXqSHYQdOnlEiNWd/5Lq+VMKEKWV+YTG9DS31SHOij49GaYKduffBUUueobhIo9S6
-	 gnjbZ8+AUeoLQ==
-Date: Tue, 29 Oct 2024 12:34:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Jim Quinlan <james.quinlan@broadcom.com>, Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>,
-	Mayank Rana <quic_mrana@quicinc.com>
-Subject: Re: [PATCH 1/1] RFC: dt bindings: Add property "brcm,gen3-eq-presets"
-Message-ID: <20241029173442.GA1164705@bhelgaas>
+	s=k20201202; t=1730228267;
+	bh=D1tnc82FcEdTMHQqlb9wRa0oMIVi2ZiBsAuNNQ7hehQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ht/8h+U7JIgjTAlkj+TZnVnGjlgdl5AT9osPUYpI5DiZaEvYueHj+g10n/r/Ak/cH
+	 nGXLVvR83MgcXasWOLZO94H9e0l3iHMGoOThgTeRleZsX1Rm7SwrcDeuyllU2u7qrL
+	 etzjOD4vPF25GPugHtn1ie+VkfIOUfD59I9fA5tOULIz5M0ClNmlWFkJbJ7pJ125TR
+	 wlWWsPu5br8jo3lNlyS0hScz+4zIleJ5oalUGi+XgD/Gaz3EKfXwZM0QW1bibjEdFH
+	 g9X+Ufg3g8R4eiiWhqQyeEY03qay0oqLPW4mIKNj/JfP7OF9DzsmNdWGHdvVNwclaJ
+	 ixaez7/4FtHHg==
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7092dd03223so2000243a34.1;
+        Tue, 29 Oct 2024 11:57:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ65mBTm1lKS5v+kw0iLuPK4XkZswRIzNRgkUU/zx4KR4b3bi0Hl1/oZc2zvKbAcHb9KoKlKUww78=@vger.kernel.org, AJvYcCV3/MGkXgpW3T2QBit1ooyp+2y75YnPrSjzBV3o9xdUmtSXxRa4FeF6lgsHt/DcN2zTXumjLgjPzhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5/AYvMV7UU60gykjjsEXbozbGYKnnI6WfPYSJ4xBSzWSlwqYi
+	dEx6uPDdvzwU5guOSBPlDPS1xCy25H4aWw2TD93U1zd9BbMVXDu/i78xS8lrWgmQqEUsIkyzZ3A
+	kHDSeMbDDw7es5SX+T4ZpFePjGY0=
+X-Google-Smtp-Source: AGHT+IE1WNmrSXoffbXTuDxeYOeJnmO3oQDL5oFexHmT4a7own5HBZ7JlmqDIIqTGgg4Q7b5FDnxt/rrmAuYEQVnL0k=
+X-Received: by 2002:a05:6870:1654:b0:286:f24f:c231 with SMTP id
+ 586e51a60fabf-29051c046c4mr12408665fac.25.1730228266464; Tue, 29 Oct 2024
+ 11:57:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d63f16ac-c5ed-35cd-ec75-0bf6d7dab9ca@quicinc.com>
+References: <20241012004857.218874-1-marex@denx.de> <ZwupHAAwTo5mDyyA@wunner.de>
+ <52b90ab1-2759-45e9-ae86-3d3073a0add0@denx.de> <7ad59d82-8122-438e-9682-791816ab0366@intel.com>
+ <6b47cc49-dd3b-4c4f-827d-f9b3a8719eb9@denx.de>
+In-Reply-To: <6b47cc49-dd3b-4c4f-827d-f9b3a8719eb9@denx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 29 Oct 2024 19:57:34 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0h590S_6xcj_ydF+qrBk+OeF6-5r+YDTXhc1whArT=f+Q@mail.gmail.com>
+Message-ID: <CAJZ5v0h590S_6xcj_ydF+qrBk+OeF6-5r+YDTXhc1whArT=f+Q@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] PCI/PM: Do not RPM suspend devices without drivers
+To: Marek Vasut <marex@denx.de>
+Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, linux-pci@vger.kernel.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 29, 2024 at 10:24:48PM +0530, Krishna Chaitanya Chundru wrote:
-> On 10/29/2024 9:25 PM, Bjorn Helgaas wrote:
-> > On Tue, Oct 29, 2024 at 10:40:32AM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Oct 29, 2024 at 08:52:15PM +0530, Krishna Chaitanya Chundru wrote:
-> > > > On 10/29/2024 8:18 PM, Bjorn Helgaas wrote:
-> > > > > On Tue, Oct 29, 2024 at 10:22:36AM -0400, Jim Quinlan wrote:
-> > > > > > On Tue, Oct 29, 2024 at 1:17 AM Krishna Chaitanya Chundru
-> > > > > > <quic_krichai@quicinc.com> wrote:
-> > > > > > > On 10/29/2024 12:21 AM, James Quinlan wrote:
-> > > > > > > > On 10/24/24 21:08, Krishna Chaitanya Chundru wrote:
-> > > > > > > > > On 10/22/2024 12:33 AM, Rob Herring wrote:
-> > > > > > > > > > On Fri, Oct 18, 2024 at 02:22:45PM -0400, Jim Quinlan wrote:
-> > > > > > > > > > > Support configuration of the GEN3 preset equalization settings, aka the
-> > > > > > > > > > > Lane Equalization Control Register(s) of the Secondary PCI Express
-> > > > > > > > > > > Extended Capability.  These registers are of type HwInit/RsvdP and
-> > > > > > > > > > > typically set by FW.  In our case they are set by our RC host bridge
-> > > > > > > > > > > driver using internal registers.
-> > > > > > > > > > > 
-> > > > > > > > > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > > > > > > > > > ---
-> > > > > > > > > > >     .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12
-> > > > > > > > > > > ++++++++++++
-> > > > > > > > > > >     1 file changed, 12 insertions(+)
-> > > > > > > > > > > 
-> > > > > > > > > > > diff --git
-> > > > > > > > > > > a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > > > > > > > > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > > > > > > > > index 0925c520195a..f965ad57f32f 100644
-> > > > > > > > > > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > > > > > > > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > > > > > > > > @@ -104,6 +104,18 @@ properties:
-> > > > > > > > > > >         minItems: 1
-> > > > > > > > > > >         maxItems: 3
-> > > > > > > > > > >     +  brcm,gen3-eq-presets:
-> > > > > > > > > > > +    description: |
-> > > > > > > > > > > +      A u16 array giving the GEN3 equilization presets, one for
-> > > > > > > > > > > each lane.
-> > > > > > > > > > > +      These values are destined for the 16bit registers known as the
-> > > > > > > > > > > +      Lane Equalization Control Register(s) of the Secondary PCI
-> > > > > > > > > > > Express
-> > > > > > > > > > > +      Extended Capability.  In the array, lane 0 is first term,
-> > > > > > > > > > > lane 1 next,
-> > > > > > > > > > > +      etc. The contents of the entries reflect what is necessary for
-> > > > > > > > > > > +      the current board and SoC, and the details of each preset are
-> > > > > > > > > > > +      described in Section 7.27.4 of the PCI base spec, Revision 3.0.
-> > > > > > > > > > 
-> > > > > > > > > > If these are defined by the PCIe spec, then why is it Broadcom specific
-> > > > > > > > > > property?
-> > > > > > > > Yes, I will remove the "brcm," prefix.
-> > > > > > > > > > 
-> > > > > > > > > Hi Rob,
-> > > > > > > > > 
-> > > > > > > > > qcom pcie driver also needs to program these presets as you suggested
-> > > > > > > > > this can go to common pci bridge binding.
-> > > > > > > > > 
-> > > > > > > > > from PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4.2 for data rates
-> > > > > > > > > of  8.0 GT/s, 16.0 GT/s, and 32.0 GT/s uses one class of preset (P0
-> > > > > > > > > through P10) and where as data rates of 64.0 GT/s use different class of
-> > > > > > > > > presets (Q0 through Q10) (Table 4-23). And data rates of 8.0 GT/s also
-> > > > > > > > > have optional preset hints (Table 4-24).
-> > > > > > > > > 
-> > > > > > > > > And there is possibility that for each data rate we may require
-> > > > > > > > > different preset configuration.
-> > > > > > > > > 
-> > > > > > > > > Can we have a dt binding for each data rate of 16 byte array.
-> > > > > > > > > like gen3-eq-preset array, gen4-eq-preset array etc.
-> > > > > > > > 
-> > > > > > > > Yes, that was the idea when using "genX-eq-preset", for X in {3,4...}.
-> > > > > > > > 
-> > > > > > > > Keep in mind that this is an RFC; I have a backlog of commit submissions
-> > > > > > > > before I can submit the code that uses this DT property.  If you
-> > > > > > > > (Krishna) want to submit something now I'd be quite happy to go with
-> > > > > > > > that.  I don't believe it is acceptable to submit a bindings commit w/o
-> > > > > > > > code that uses it (if I'm incorrect I'll be glad to do a V2).
-> > > > > > > > 
-> > > > > > > I submitted a pull request for this. if you have any other suggestions
-> > > > > > > or if we need to have any other details we can update this pull request.
-> > > > > > > https://github.com/devicetree-org/dt-schema/pull/146
-> > > > > > 
-> > > > > > Thanks for doing this.   However, why a u8 array?  The registers are
-> > > > > > defined as u16 so it would be more natural to use a u16 array, each
-> > > > > > entry giving
-> > > > > > all of the data for a single lane.  In our implementation we read a
-> > > > > > u16 and we write it to the register -- what advantage is there by
-> > > > > > using a u8 array?
-> > > > > > 
-> > > > > > Also if there are 16 lanes, you will need 32 maxItems, correct?
-> > > > > 
-> > > > > I added these questions to the github PR.
-> > > > > 
-> > > > > Also, why does it define gen3-eq-presets, gen4-eq-presets,
-> > > > > gen5-eq-presets, and gen6-eq-presets?  I think there's only a single
-> > > > > place to write these values (the Lane Equalization Control registers,
-> > > > > PCIe r6.0, sec 7.7.3.4), isn't here?  How would software choose the
-> > > > > correct values to use?
-> > > ...
-> > 
-> > Oh, one more thing: I guess "gen3", "gen4", etc. are well-entrenched
-> > terms in the industry, and they're probably fine in marketing
-> > materials.
-> > 
-> > But I really don't like them in device trees or drivers because the
-> > spec doesn't use those terms.  In fact, the spec specifically advises
-> > *avoiding* them (PCIe r6.0, sec 1.2 footnote):
-> > 
-> >    Terms like “PCIe Gen3” are ambiguous and should be avoided. For
-> >    example, “gen3” could mean (1) compliant with Base 3.0, (2)
-> >    compliant with Base 3.1 (last revision of 3.x), (3) compliant with
-> >    Base 3.0 and supporting 8.0 GT/s, (4) compliant with Base 3.0 or
-> >    later and supporting 8.0 GT/s, ....
-> > 
-> > As a practical matter, those terms make it hard to use the spec: where
-> > do I go to learn how to use "gen4-eq-presets"?  There's no instance of
-> > "gen4" in the PCIe spec.  AFAICT, all I can do is look up the PCIe
-> > r4.0 spec and try to figure out what was added in that revision, which
-> > is a real hassle.
-> > 
-> is it fine if I change names from gen3-eq-presets, gen4-eq-presets etc
-> to 8gts-eq-presets, 16gts-eq-presets  etc.
+On Mon, Oct 28, 2024 at 7:58=E2=80=AFPM Marek Vasut <marex@denx.de> wrote:
+>
+> On 10/28/24 6:52 PM, Wysocki, Rafael J wrote:
+> > On 10/26/2024 2:19 AM, Marek Vasut wrote:
+> >> On 10/13/24 1:03 PM, Lukas Wunner wrote:
+> >>> On Sat, Oct 12, 2024 at 02:48:48AM +0200, Marek Vasut wrote:
+> >>>> The pci_host_probe() does reallocate BARs for devices which start up
+> >>>> with
+> >>>> uninitialized BAR addresses set to 0 by calling
+> >>>> pci_bus_assign_resources(),
+> >>>> which updates the device config space content.
+> >>>>
+> >>>> At the same time, pci_pm_runtime_suspend() triggers pci_save_state()
+> >>>> for
+> >>>> all devices which do not have drivers assigned to them to store curr=
+ent
+> >>>> content of their config space registers.
+> >
+> > What exactly do you mean by "at the same time"?
+> I mean these two blocks of code run in parallel and likely race each othe=
+r.
 
-Those would be fine with me.  If names starting with digits don't
-work, things like "eq-presets-8gts" would also be fine.
+Which two blocks of code?
+
+I'm guessing one of them is pci_host_probe() and what's the other?
+
+Unbound PCI devices have their PM-runtime usage counters incremented
+at init time; see pci_pm_init().  This can be undone by user space if
+it changes their /sys/devices/.../power/control attributes to "auto",
+but in that case the device will be suspended immediately from
+control_store().
+
+If pci_host_probe() can race against this (and it looks like it can
+from your problem description), it needs to call pm_runtime_get_sync()
+on each PCI device before accessing its registers.
 
