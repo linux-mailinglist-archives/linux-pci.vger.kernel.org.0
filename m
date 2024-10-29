@@ -1,334 +1,374 @@
-Return-Path: <linux-pci+bounces-15526-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15527-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB539B4AD3
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 14:21:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F3289B4AE2
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 14:27:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E03E1F23B1F
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 13:21:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4603284F6E
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 13:27:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42034206071;
-	Tue, 29 Oct 2024 13:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57DF20607A;
+	Tue, 29 Oct 2024 13:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WOyE0Jue"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T+uupmNB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D374C204013;
-	Tue, 29 Oct 2024 13:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730208052; cv=fail; b=E85akAOHeVybu/JehBOOPUT9Pqn3CcMcI7/4LnPSFT+iOJCqB12no5wjKBViumobFSZcGT7CrrYvwpYPb8M5jJDwegq5K0aCWBxsfA+aXbusbjiPOhw5BBM0p25SRSCvWnqIXhK12yDs7o8w01d82zGGrexn6micZmp+RlVgTQQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730208052; c=relaxed/simple;
-	bh=0sUhd3d4CkDAuMVOkm7FShw9O5OtTtt8GTeeL66sp7w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z5BJ7Wn17Srw7mjiSoxHyEc+tBR4KALPbgcrodPG/6tF/YdIoaHsICHWoaZNF4Q6MRr7I1kdDNcTAtnbWn9UG/jhNHtHG3n5Am6sR+3mUGDR4stUe8TFKbsKp3y3Et/UtPseAii9ttN6/nCSeB0c73RYR8avrhQYra3ecVMLEXw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WOyE0Jue; arc=fail smtp.client-ip=40.107.94.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YS3H7f2QxPzeHfUANn2HpderZewMGDx+9+ROBgIox93iBBhZAjXyN8awyBiinUakR3KuD/268TuBrpomBPF2HP4diyG281pH9YoSBp4ZaV9wQbvOdNDWdylXf6TbRqDjMQFEiuYUBI5XQToya9LkI+PeUfVauz6Xoyso8kkipertekOB5uCEfYdh9uNeyG2/GSHNkRI9RFTnbkqj13JUhh3oSqh6YcBkhmlu6/WIoGKGMJ5Ub8SP9FYtK0C7linqlwQXrua5+iwmrswPhgEzZ3XMbs6SVV1S/dT+TreVfD5sFFWQiiwfCD87CQSHNjc7on3tdFXu2qCdI3nTZ/ez9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+HELSPjBdJHTSKTwfVQAIEKkgFTmVic9fIrqMUpG3pw=;
- b=T6zdOAyBf/+fkWxDDZH58IcxdkCpS2PN2nCtSO6CMm6Ktdi+EZLuL3jXBvqkq8mBxYd3UN8FIKJaogvN6ZpR1VjTtsV7Vdxc2Z5CsJ5lkdc2vA38uyDUNKp9ywRpIsgOSwQsinno5hsXODbSBzrDG48LylaJRlMnE66Gwaw41p5VVUrAsaDAPt4h8zgBCJdinojY0h80r/iEt/UkcSkNGS137SnnmKiuW/KQ/osToAgQ+POqnrSg74liqrUdlkVvcQ1w/tfZADRLYYYCSGbHGosXxl6V+XC41FhBvPd7O26/im9nsd2lcTeevF+u3ZNDZt3GWAVmldbPs1Up+eI51Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+HELSPjBdJHTSKTwfVQAIEKkgFTmVic9fIrqMUpG3pw=;
- b=WOyE0JueLc+RDyLGme1246fZ8vzSwKCDp2G7PQYHO85L24btGqnBBjDyrxzwhiXkAe8bYCrwSwt2NaAD5hBwWEawGVDfKhIISMWa80Ye+DQXeFCfspcHah/C/qFetyqfq097JYVXJN45fDYZSumvtXTYPG7t1VOn96YrZIpGhRo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Tue, 29 Oct
- 2024 13:20:46 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%2]) with mapi id 15.20.8093.021; Tue, 29 Oct 2024
- 13:20:46 +0000
-Message-ID: <44356002-eeca-41ee-8a42-5ef528f69465@amd.com>
-Date: Tue, 29 Oct 2024 14:20:39 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/7] PCI: Add a helper to convert between standard and
- IOV resources
-To: =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Michal Wajdeczko <michal.wajdeczko@intel.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Matt Roper <matthew.d.roper@intel.com>
-References: <20241025215038.3125626-1-michal.winiarski@intel.com>
- <20241025215038.3125626-4-michal.winiarski@intel.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20241025215038.3125626-4-michal.winiarski@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0017.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1d::20) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11732205ACF
+	for <linux-pci@vger.kernel.org>; Tue, 29 Oct 2024 13:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730208433; cv=none; b=ar6qjd+SVLEeqhWUbJfta+frcBSAjchTbZibvcMsA/1NMNSJRdMnk3Dkls3Fsx1ICWQ/WgKsig76CSRgeNLP/WAAoG0kVJs8hLWB5LqCwhhD2e4v7LCnW9KrMtawPgdoqnfkl84ObfpxhaY/AdzlYu6FdjHr/JkrfHZrmsLfCQk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730208433; c=relaxed/simple;
+	bh=0l0pGwPPXUKryR0mqg/2ZJbi/yLW7k9MKNg+xvqxwtM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bc2aVSyaVsjiduL9gAiJRvEPZz+u8+f+aBdYKpuNVu4MkOpZMWIfywJKEC25droN+tXzRl3gFeEW3HfIYOEOh4Yz1fO1qntD2bd1zsDMoNw5CZqb0Tf8rtz2OchSn9k57Ay5v6yE9YVK1JXA+OkLCg5h+o2Im2sChudc9SkoMnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T+uupmNB; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-20c9978a221so58787095ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 29 Oct 2024 06:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730208429; x=1730813229; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bPmbbkDdlgj5tS54qzNXga3fylyvP9KnhhI/PLfNTwk=;
+        b=T+uupmNBwuy7DtS9taEVtLVI0AaS6djVyFZpHnp8393T7J6qiOekGT+JsXSam1rWd8
+         H1tYiM77b9Dil/vAvZ78BGje04zfDaLWypOK0PjOUAnIub58sse3F7oSd3UnLD2D2zQp
+         QIeOewYELo9NDcBGqcEYKfnz5FJKYleG3HJBT/0lv9l/4t+/0+a4+7BCwgtV50AdF+qg
+         HZ2RenjBotNCzPAQTqNEtgGhsyjWZP2TapfEYYRlKLFbkJBUacz3r0B8DM03XjJQQUjm
+         421MRAJEZPLo9remtyPcA0mroR28W6Qgtk2pTLIC4IltDEONgTTb8KVM651nNC73bS6S
+         dC8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730208429; x=1730813229;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bPmbbkDdlgj5tS54qzNXga3fylyvP9KnhhI/PLfNTwk=;
+        b=Q+G9IdJKp5OH7Ix/7UBgt1+dRzZBQ1sf7JdkozekrlAIKpTX9WiKKR/6jZ5GgmviW5
+         V1y8ukasC3i0yDFAsoz81Rm/St6jkw//QMoq7yiScx7+mjwQl1rwIz4APeazrc8zBBKm
+         Rq++kD4mDM7gNISwG+eahxN77YNfWBUaeFEwjyffFYD5+t7ih7+BdAzqsCE/+0TJf94m
+         vTcXcJrcyk+AbDU5XBmaxrAYoreDFhVvlvzLdKvM9YnyErBEwbobBXSoYI8food3K6g4
+         R86f3PRG7BihYArSDnRjdKWVgV/o6Omim6ZyjigCSCR7mBKGyTQ+Ni3wzmnxPKwEigYo
+         CCYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzYAmXVMEjvqUiSqj3/NbJ8KUDhdgA9OWcOeTsOKlzu+/bSkIMBha7DhZbvLhFpd/BtlEoz7YYlNg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7suHskk329YvqFYdT5H0JGkTg82qS9J8j1xSJtvqFTd8Pt9Jb
+	svq1x89fsKJOuUvcXM9kwdMQkhNZOkdpzXTnEZ4Ahcm2t4DA5R7Ms4SiXtwsue8nt23GmFCvAja
+	RD4judhgjgVtHCNXutA2z67LnKiUmUPZQL3rB
+X-Google-Smtp-Source: AGHT+IEUNZ/udRp7n1cUowspy1x3Bn3BLvEgiqcEq2EHGavw+WCKwCDiifwnii7tkTSakAD08lG9y4jmuYIdK6y3Srw=
+X-Received: by 2002:a17:903:2b08:b0:20c:ceb4:aa7f with SMTP id
+ d9443c01a7336-210c68a1acdmr163437405ad.11.1730208428942; Tue, 29 Oct 2024
+ 06:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB7199:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f491798-84c7-41bb-85ca-08dcf81c7f85
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WEpxNmFONGlxOXlEbFdCVndqVjdtSFRNT3NuTTk5MHgyUmg5Q1lEekpFSERF?=
- =?utf-8?B?TlBlODloYUVtMWw2eVk1RUFZQklqam9pdE93Z2tGMVNaNSs4em5HVTBjWU54?=
- =?utf-8?B?V25pVWd5T3JjR0k0RXdFbVJxOFpob2h0UjgvTzY5Vzc2UUVMNzd5d2o1akw5?=
- =?utf-8?B?VDJrOFVIV1Z6WkFuUGNPNnlscjh6dU9MalAwMG1ST2tSK29RbldZcHhhRFI5?=
- =?utf-8?B?d0Q5OHdZRG1oVUNIMGlmVU80WXZzWloraHdSTE01VzlqM0lOSno3K0VUMG01?=
- =?utf-8?B?V1lBYko5MjFRWDh5VlN5SE1KaDZwTDZWdzc5WlN2Vzh1aGFsV242dEFzbzRQ?=
- =?utf-8?B?VzJYK0xrcFE1dVlhYlBna0psRHpsdWE4c08vMjFGWThiMm1PbWVvelNZZm1W?=
- =?utf-8?B?VTJrclJzeERaVjVoMjVuT2MwK2x2RUt2bElGRGV1YXhaM2JNZVFkMVBiSmx4?=
- =?utf-8?B?ZUpMUjB0QlZKelpDM0Y2NTk3R05DNTB0YXhvYVpna2ZuM3EvVERnZ0dwQ2t0?=
- =?utf-8?B?QnM1Z2kwWThORURjVUVFSFhWTkc2czYzVW1QK2hJbkh4dWd1NlpSbWI2cTlK?=
- =?utf-8?B?SjR5dFJCSisvWjFyQVVEK0p6VHk3NHlSVVB2MW5qMTI1aVRMUVJLbVF6aXA0?=
- =?utf-8?B?SVRETUlBTjQrVS9GSmVQNy9lUHhVU3JjNFFmSkVtVXY2RmZxWFhGNmx2MUNO?=
- =?utf-8?B?NGk0MnJaZXkzaDRGbkNneHhnMVZmMk9wOHJuNzQzQkhuZUpnaHZtT2Y5M01F?=
- =?utf-8?B?Q2tIeW16czMvRWhLUndmOUpYTzJWdllZajYzU253aXVlem9tM3hXQ0NxTkFN?=
- =?utf-8?B?T1NmU3hMRndMc203MTZ6ZE5reUNUc25NNHZLYTBVUVNYOVlJWmhDYlVrZndM?=
- =?utf-8?B?Z0NPSUthZ2Q1b2JScENJSVEzdURPTVE1aGxqL3hVQ2o3enMrQ3YwVW14U0dZ?=
- =?utf-8?B?VFV0dGhSREQyYXJjYVMrU3c2bXRvL3NBUFBTbUVUN1ROcVNhTE5meUxvejE0?=
- =?utf-8?B?UEl4a2VDcGFOQUJsck9GOTEyNmR5WWs0cllMVi80MlRnK1VuNVRwczZQTWZP?=
- =?utf-8?B?K0dOVmxEZjBZV2NVL3NuNDByLzNXRFZxUzZVQmtoeGFqUS92QzExTmlLSEh6?=
- =?utf-8?B?QUgxMlFsenB1Z3UrZTlvb3lXTFQvRlZqSXZMbmdYUE0vWkk1OUxPbmo0UTZD?=
- =?utf-8?B?VVRETGdsVVIyWVNoY0tjSTl3d3pYd0t6YzluMHRtSlFaOTc3MXJrZDFEYWRk?=
- =?utf-8?B?OE94WE85aXREL3VwTEJBeDdROERYZ3VnME9PNVJTeXF3OGswMll2UURWS1JE?=
- =?utf-8?B?NWtjakRDZ2xKanZ3NHNNLzVDVzMvcGJ3Z3ZxMnZESlZiK2ZkU3JST2NhWWxw?=
- =?utf-8?B?ZktPQ2hlZFZQMlFkYXdEUWtsVEowWU5DeGdCaXBWUEdrMk1ieFVwQnN3ZkJ4?=
- =?utf-8?B?b21WN1Nyb0EzRFl0NW41OWtiYnc5VGdsekFkTFhMVEZjcmRITU83ODUzamgr?=
- =?utf-8?B?K1BEb1RnSCtVMnpkZTUzb1EzREw5d0hyMDZHUFdQRUdXY1JjZ3hQUWVyVHJ5?=
- =?utf-8?B?Zk9Zc3hUa3BMeUVIV2N0ZVRvUlQ4MFhHd0RLaDFXTHg0KzlNN1pmblB3R20v?=
- =?utf-8?B?OVlJeWZlV09LS1AxZEU5ZFhZM1JJL2M2ZE9mZjQzSWFuSXhyeWxWL1N6c01J?=
- =?utf-8?B?dFBWNWN0ZXRIZkNuVnJ3b1N1enpaU0hqS05oUHJ1VVo5VC9HOC9uQVlsUmVO?=
- =?utf-8?Q?0X4p9yhCGwwEnBzzf5tdRTB5ec2DaDA/24T3w3b?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NFJWL2RhYkRjNHd4VjFSTEt4c1RycVlyMndqUVozRHRGT0xzS1VaRzl5ajRY?=
- =?utf-8?B?b0dxWkovQms3RDNYMmlTeVU5aUlLYjBuSGRtcStCNmhxVUZocVJLbFpPMVNI?=
- =?utf-8?B?WE5MMkplOTJIM2lGNWEzWDlrRU5FczlHRE1GRzFTazhGOGZ0S3Z2ZGxWRG1B?=
- =?utf-8?B?bkVNSUFuQXNmQ0kvOEgvUFlUaEEyUG16TS82N2wvdk1RanVzZXRpcVlvVW9Y?=
- =?utf-8?B?N1IyM3VqMDlQRHZyc1JkYUVkbWhyaVQzS2NKYlZORGphYTVrdVlhZ205bU9m?=
- =?utf-8?B?OVVTWVBqbnIyOUV1WjFMTVlWcS95cmFTbCtHY05ac1RwRk9BUzRyWUVUcEg3?=
- =?utf-8?B?RkQzcTZaVTVKcTFKdFVZVXIvL3BoeGUyT01tazFzOGlkSGwwUSs0WFFEL0xK?=
- =?utf-8?B?UnMwRS9Wa211KzNWcTg4TW9tcUdncXFBRm1QWkJ5RGFLeTZqekJLeFNTVGVj?=
- =?utf-8?B?K1BoWlNxSGNBRE5DSGpTc21XSkk5RTBBVDJqZU11c0ROVWg5MEt0RWlVcmRK?=
- =?utf-8?B?MlorbFlvSjQxZnFsdURrNGJDZDRyVDVrb0VHNnMvY21HeEJ4RUJnMTlvWVNi?=
- =?utf-8?B?WTlQaGFtWkU0VFc4KzZvcW8zRDR0d2Q2RW40Y3UwMGRKRmtncTZyV1pxeHRM?=
- =?utf-8?B?R0MzUE9yZFlPWjVnNThlem1QUklNbU1UTjBDd29yWU15QlhlNjQ0c004aFpl?=
- =?utf-8?B?MDBGQ2F1VWNwaDJ4c25OUjhjejZ1OE9HL1NqMjZMeEhUNTZGRXl4TFBnS3NF?=
- =?utf-8?B?MDBvZkgvR2dwbm4yU3hsR010V3BKcXFGTTZZREw3N1ZTQTR6UXFqajRjZlZ2?=
- =?utf-8?B?dVdSblg0bCt5d2ZocG9vbWF6OUloQWc5Vms3M3pBcXMyY3JSU1BSYTVXSTdh?=
- =?utf-8?B?T1ZDK203QmRIV0RjeWJ2RXRDR2E5RkdPWUVMR09vZW5abFVWVkxBVE1scWxC?=
- =?utf-8?B?SGRkQm00bXVJVmdLWEJIU1N3WklINDdNcCs4ZlJZUDErdkZZVkdwQmdjY1Vq?=
- =?utf-8?B?VXBGaVZJU3BVenM5UnRML0t4U3A2TlRZZGdsWDRsZklzQkoyN2FWcTBmUm5C?=
- =?utf-8?B?SFVtR0ZCNDBYWnVKVzc5UUdSUWtOemJUY3RMKzh5b1VQZ1h4K0NQM24vM2Fq?=
- =?utf-8?B?Sm5YNHgzbFVpSG94Q1J4ZWFWQzBBTlVmK0tGZjkxQWdlMVlYQlV6TEZSdEU3?=
- =?utf-8?B?aUJmbmNvb0FBWGRYenF5UnIrTWpCN1FabS9WY1pscnEwVEthalJ4RGNUWENE?=
- =?utf-8?B?cHdUSkljMmdmT2ZjQXE0T1h0T2VlVDFOYXRmMmlweWxWSGlacnk3eVNnQ0c0?=
- =?utf-8?B?K295aVplby9ldVFuL3Yzd0RpTm5PcDgwdVZ5ZWZVK0FqR3FwRC9OLzZ6SDVC?=
- =?utf-8?B?cnl4bUZzZWdrUWZ5ekR1enZPNFlkMnNRV1RhZWgyMGFjVWJia2kwdm96a1E4?=
- =?utf-8?B?UUR4bmpMOGh5dVY1SXVFQ2tvQlZPemI4eDRzR2RFUjJYTVZNZkxBdGxZck91?=
- =?utf-8?B?OU1CRnpYM2ZGYXU1Vm9rM2NRVmdEZnowVGJjSDlNdjNuVUhVWkJyeWw2dW1m?=
- =?utf-8?B?Q0c2TU9UeTBJdDZDOUJaN3JSRFBiWjhUd3JhQkRiRS92TFFDWGJsS05XTXhB?=
- =?utf-8?B?WHpYaSt3RWMyQXIzb0FVRkcvdFVhdVRXazNBWGo0UDNCUlRnbHVhTUJQR2FW?=
- =?utf-8?B?SUlUdmNta2owQzN3Mi9ubnpEOXNuWVJVNXhzUmJoVmh5Q0NucHBMeWpWOVFN?=
- =?utf-8?B?WjAzdTZCaEs1WlBwRjYzMFZUZGxhM0h1UjZZU0Q4UHNQeEJ0L3JTekhSM2Vj?=
- =?utf-8?B?Zm1tRmhLR2JSQ0lwLzZXMHFpMGFzY05Vd3k3SDFCNnRNT0xzdHhQenFIU0pG?=
- =?utf-8?B?YjlZYjVMNnNZdm8wUGZlTlFKcUdxUkpySVYraSt6Z0dUZVJKcU9zbjkrek5j?=
- =?utf-8?B?Uk5EUGs0NjlTRFIwVmw0TVhzdzFyYjMxamRTRkZTbnhMS2tCcWV3Uk9zV1g0?=
- =?utf-8?B?ZUFvKzZ4N253YzdVb1RqM2pQWnFhMWxMVWRmNi9WRVdycUpCUHJpYnBHNkRR?=
- =?utf-8?B?cG1BamRIbEMvNG83S2pSUXRpK1VlNzNGSjZJRUtlTUlkQ2o2UGlvVnAxNkps?=
- =?utf-8?Q?lA+no/pf4yg/tHrZ5LG/vfl9J?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f491798-84c7-41bb-85ca-08dcf81c7f85
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2024 13:20:46.4719
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e1eZAenK8dFoE1+JMsj/VOc6iypm2Kveazw5OnAnKnp9GExGx1edS08d0Scs055k
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7199
+References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-8-dakr@kernel.org>
+In-Reply-To: <20241022213221.2383-8-dakr@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 29 Oct 2024 14:26:55 +0100
+Message-ID: <CAH5fLgjcy=DQrCYt-k40D4_NcwgdrykUW9d74srGn5hxxo2Xmw@mail.gmail.com>
+Subject: Re: [PATCH v3 07/16] rust: add `Revocable` type
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com, 
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 25.10.24 um 23:50 schrieb Michał Winiarski:
-> There are multiple places where conversions between IOV resources and
-> standard resources are done.
+On Tue, Oct 22, 2024 at 11:33=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
 >
-> Extract the logic to pci_resource_to_iov() and pci_resource_from_iov()
-> helpers.
+> From: Wedson Almeida Filho <wedsonaf@gmail.com>
 >
-> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
-
-I don't work enough with that code to fully judge if that is useful or not.
-
-But feel free to add Acked-by: Christian König 
-<christian.koenig@amd.com> since style etc.. looks good to me.
-
-Regards,
-Christian.
-
+> Revocable allows access to objects to be safely revoked at run time.
+>
+> This is useful, for example, for resources allocated during device probe;
+> when the device is removed, the driver should stop accessing the device
+> resources even if another state is kept in memory due to existing
+> references (i.e., device context data is ref-counted and has a non-zero
+> refcount after removal of the device).
+>
+> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
->   drivers/pci/iov.c       | 20 ++++++++++----------
->   drivers/pci/pci.h       | 18 ++++++++++++++++++
->   drivers/pci/setup-bus.c |  2 +-
->   3 files changed, 29 insertions(+), 11 deletions(-)
+>  rust/kernel/lib.rs       |   1 +
+>  rust/kernel/revocable.rs | 211 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 212 insertions(+)
+>  create mode 100644 rust/kernel/revocable.rs
 >
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 6bdc9950b9787..eedc1df56c49e 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -151,7 +151,7 @@ resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
->   	if (!dev->is_physfn)
->   		return 0;
->   
-> -	return dev->sriov->barsz[resno - PCI_IOV_RESOURCES];
-> +	return dev->sriov->barsz[pci_resource_from_iov(resno)];
->   }
->   
->   static void pci_read_vf_config_common(struct pci_dev *virtfn)
-> @@ -322,12 +322,12 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->   	virtfn->multifunction = 0;
->   
->   	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -		res = &dev->resource[i + PCI_IOV_RESOURCES];
-> +		res = &dev->resource[pci_resource_to_iov(i)];
->   		if (!res->parent)
->   			continue;
->   		virtfn->resource[i].name = pci_name(virtfn);
->   		virtfn->resource[i].flags = res->flags;
-> -		size = pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
-> +		size = pci_iov_resource_size(dev, pci_resource_to_iov(i));
->   		virtfn->resource[i].start = res->start + size * id;
->   		virtfn->resource[i].end = virtfn->resource[i].start + size - 1;
->   		rc = request_resource(res, &virtfn->resource[i]);
-> @@ -624,8 +624,8 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
->   
->   	nres = 0;
->   	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -		bars |= (1 << (i + PCI_IOV_RESOURCES));
-> -		res = &dev->resource[i + PCI_IOV_RESOURCES];
-> +		bars |= (1 << pci_resource_to_iov(i));
-> +		res = &dev->resource[pci_resource_to_iov(i)];
->   		if (res->parent)
->   			nres++;
->   	}
-> @@ -786,8 +786,8 @@ static int sriov_init(struct pci_dev *dev, int pos)
->   
->   	nres = 0;
->   	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -		res = &dev->resource[i + PCI_IOV_RESOURCES];
-> -		res_name = pci_resource_name(dev, i + PCI_IOV_RESOURCES);
-> +		res = &dev->resource[pci_resource_to_iov(i)];
-> +		res_name = pci_resource_name(dev, pci_resource_to_iov(i));
->   
->   		/*
->   		 * If it is already FIXED, don't change it, something
-> @@ -844,7 +844,7 @@ static int sriov_init(struct pci_dev *dev, int pos)
->   	dev->is_physfn = 0;
->   failed:
->   	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -		res = &dev->resource[i + PCI_IOV_RESOURCES];
-> +		res = &dev->resource[pci_resource_to_iov(i)];
->   		res->flags = 0;
->   	}
->   
-> @@ -906,7 +906,7 @@ static void sriov_restore_state(struct pci_dev *dev)
->   	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, ctrl);
->   
->   	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++)
-> -		pci_update_resource(dev, i + PCI_IOV_RESOURCES);
-> +		pci_update_resource(dev, pci_resource_to_iov(i));
->   
->   	pci_write_config_dword(dev, iov->pos + PCI_SRIOV_SYS_PGSIZE, iov->pgsz);
->   	pci_iov_set_numvfs(dev, iov->num_VFs);
-> @@ -972,7 +972,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno)
->   {
->   	struct pci_sriov *iov = dev->is_physfn ? dev->sriov : NULL;
->   	struct resource *res = dev->resource + resno;
-> -	int vf_bar = resno - PCI_IOV_RESOURCES;
-> +	int vf_bar = pci_resource_from_iov(resno);
->   	struct pci_bus_region region;
->   	u16 cmd;
->   	u32 new;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 48d345607e57e..1f8d88f0243b7 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -584,6 +584,15 @@ static inline bool pci_resource_is_iov(int resno)
->   {
->   	return resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END;
->   }
-> +static inline int pci_resource_to_iov(int resno)
-> +{
-> +	return resno + PCI_IOV_RESOURCES;
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 89f6bd2efcc0..b603b67dcd71 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -54,6 +54,7 @@
+>  pub mod prelude;
+>  pub mod print;
+>  pub mod rbtree;
+> +pub mod revocable;
+>  pub mod sizes;
+>  mod static_assert;
+>  #[doc(hidden)]
+> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+> new file mode 100644
+> index 000000000000..83455558d795
+> --- /dev/null
+> +++ b/rust/kernel/revocable.rs
+> @@ -0,0 +1,211 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Revocable objects.
+> +//!
+> +//! The [`Revocable`] type wraps other types and allows access to them t=
+o be revoked. The existence
+> +//! of a [`RevocableGuard`] ensures that objects remain valid.
+> +
+> +use crate::{
+> +    bindings,
+> +    init::{self},
+> +    prelude::*,
+> +    sync::rcu,
+> +};
+> +use core::{
+> +    cell::UnsafeCell,
+> +    marker::PhantomData,
+> +    mem::MaybeUninit,
+> +    ops::Deref,
+> +    ptr::drop_in_place,
+> +    sync::atomic::{AtomicBool, Ordering},
+> +};
+> +
+> +/// An object that can become inaccessible at runtime.
+> +///
+> +/// Once access is revoked and all concurrent users complete (i.e., all =
+existing instances of
+> +/// [`RevocableGuard`] are dropped), the wrapped object is also dropped.
+> +///
+> +/// # Examples
+> +///
+> +/// ```
+> +/// # use kernel::revocable::Revocable;
+> +///
+> +/// struct Example {
+> +///     a: u32,
+> +///     b: u32,
+> +/// }
+> +///
+> +/// fn add_two(v: &Revocable<Example>) -> Option<u32> {
+> +///     let guard =3D v.try_access()?;
+> +///     Some(guard.a + guard.b)
+> +/// }
+> +///
+> +/// let v =3D KBox::pin_init(Revocable::new(Example { a: 10, b: 20 }), G=
+FP_KERNEL).unwrap();
+> +/// assert_eq!(add_two(&v), Some(30));
+> +/// v.revoke();
+> +/// assert_eq!(add_two(&v), None);
+> +/// ```
+> +///
+> +/// Sample example as above, but explicitly using the rcu read side lock=
+.
+> +///
+> +/// ```
+> +/// # use kernel::revocable::Revocable;
+> +/// use kernel::sync::rcu;
+> +///
+> +/// struct Example {
+> +///     a: u32,
+> +///     b: u32,
+> +/// }
+> +///
+> +/// fn add_two(v: &Revocable<Example>) -> Option<u32> {
+> +///     let guard =3D rcu::read_lock();
+> +///     let e =3D v.try_access_with_guard(&guard)?;
+> +///     Some(e.a + e.b)
+> +/// }
+> +///
+> +/// let v =3D KBox::pin_init(Revocable::new(Example { a: 10, b: 20 }), G=
+FP_KERNEL).unwrap();
+> +/// assert_eq!(add_two(&v), Some(30));
+> +/// v.revoke();
+> +/// assert_eq!(add_two(&v), None);
+> +/// ```
+> +#[pin_data(PinnedDrop)]
+> +pub struct Revocable<T> {
+> +    is_available: AtomicBool,
+> +    #[pin]
+> +    data: MaybeUninit<UnsafeCell<T>>,
 > +}
 > +
-> +static inline int pci_resource_from_iov(int resno)
-> +{
-> +	return resno - PCI_IOV_RESOURCES;
-> +}
->   extern const struct attribute_group sriov_pf_dev_attr_group;
->   extern const struct attribute_group sriov_vf_dev_attr_group;
->   #else
-> @@ -608,6 +617,15 @@ static inline bool pci_resource_is_iov(int resno)
->   {
->   	return false;
->   }
-> +static inline int pci_resource_to_iov(int resno)
-> +{
-> +	return -ENODEV;
-> +}
+> +// SAFETY: `Revocable` is `Send` if the wrapped object is also `Send`. T=
+his is because while the
+> +// functionality exposed by `Revocable` can be accessed from any thread/=
+CPU, it is possible that
+> +// this isn't supported by the wrapped object.
+> +unsafe impl<T: Send> Send for Revocable<T> {}
 > +
-> +static inline int pci_resource_from_iov(int resno)
-> +{
-> +	return -ENODEV;
-> +}
->   #endif /* CONFIG_PCI_IOV */
->   
->   #ifdef CONFIG_PCIE_PTM
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index ba293df10c050..c5ad7c4ad6eb1 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1778,7 +1778,7 @@ static int iov_resources_unassigned(struct pci_dev *dev, void *data)
->   	bool *unassigned = data;
->   
->   	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -		struct resource *r = &dev->resource[i + PCI_IOV_RESOURCES];
-> +		struct resource *r = &dev->resource[pci_resource_to_iov(i)];
->   		struct pci_bus_region region;
->   
->   		/* Not assigned or rejected by kernel? */
+> +// SAFETY: `Revocable` is `Sync` if the wrapped object is both `Send` an=
+d `Sync`. We require `Send`
+> +// from the wrapped object as well because  of `Revocable::revoke`, whic=
+h can trigger the `Drop`
+> +// implementation of the wrapped object from an arbitrary thread.
+> +unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
+> +
+> +impl<T> Revocable<T> {
+> +    /// Creates a new revocable instance of the given data.
+> +    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
+> +        pin_init!(Self {
+> +            is_available: AtomicBool::new(true),
+> +            // SAFETY: The closure only returns `Ok(())` if `slot` is fu=
+lly initialized; on error
+> +            // `slot` is not partially initialized and does not need to =
+be dropped.
+> +            data <- unsafe {
+> +                init::pin_init_from_closure(move |slot: *mut MaybeUninit=
+<UnsafeCell<T>>| {
+> +                    init::PinInit::<T, core::convert::Infallible>::__pin=
+ned_init(data,
+> +                                                                        =
+         slot as *mut T)?;
+> +                    Ok::<(), core::convert::Infallible>(())
+> +                })
 
+If you change `data` to be `Opaque`, then this can just be
+
+data <- Opaque::ffi_init(data)
+
+(or maybe you need try_ffi_init)
+
+> +
+> +    /// Tries to access the \[revocable\] wrapped object.
+> +    ///
+> +    /// Returns `None` if the object has been revoked and is therefore n=
+o longer accessible.
+> +    ///
+> +    /// Returns a guard that gives access to the object otherwise; the o=
+bject is guaranteed to
+> +    /// remain accessible while the guard is alive. In such cases, calle=
+rs are not allowed to sleep
+> +    /// because another CPU may be waiting to complete the revocation of=
+ this object.
+> +    pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
+> +        let guard =3D rcu::read_lock();
+> +        if self.is_available.load(Ordering::Relaxed) {
+> +            // SAFETY: Since `self.is_available` is true, data is initia=
+lised and has to remain
+> +            // valid because the RCU read side lock prevents it from bei=
+ng dropped.
+> +            Some(unsafe { RevocableGuard::new(self.data.assume_init_ref(=
+).get(), guard) })
+> +        } else {
+> +            None
+> +        }
+> +    }
+> +
+> +    /// Tries to access the \[revocable\] wrapped object.
+
+These backslashes seem wrong.
+
+> +    /// Returns `None` if the object has been revoked and is therefore n=
+o longer accessible.
+> +    ///
+> +    /// Returns a shared reference to the object otherwise; the object i=
+s guaranteed to
+> +    /// remain accessible while the rcu read side guard is alive. In suc=
+h cases, callers are not
+> +    /// allowed to sleep because another CPU may be waiting to complete =
+the revocation of this
+> +    /// object.
+> +    pub fn try_access_with_guard<'a>(&'a self, _guard: &'a rcu::Guard) -=
+> Option<&'a T> {
+> +        if self.is_available.load(Ordering::Relaxed) {
+> +            // SAFETY: Since `self.is_available` is true, data is initia=
+lised and has to remain
+> +            // valid because the RCU read side lock prevents it from bei=
+ng dropped.
+> +            Some(unsafe { &*self.data.assume_init_ref().get() })
+> +        } else {
+> +            None
+> +        }
+> +    }
+> +
+> +    /// Revokes access to and drops the wrapped object.
+> +    ///
+> +    /// Access to the object is revoked immediately to new callers of [`=
+Revocable::try_access`]. If
+> +    /// there are concurrent users of the object (i.e., ones that called=
+ [`Revocable::try_access`]
+> +    /// beforehand and still haven't dropped the returned guard), this f=
+unction waits for the
+> +    /// concurrent access to complete before dropping the wrapped object=
+.
+> +    pub fn revoke(&self) {
+> +        if self
+> +            .is_available
+> +            .compare_exchange(true, false, Ordering::Relaxed, Ordering::=
+Relaxed)
+> +            .is_ok()
+> +        {
+> +            // SAFETY: Just an FFI call, there are no further requiremen=
+ts.
+> +            unsafe { bindings::synchronize_rcu() };
+> +
+> +            // SAFETY: We know `self.data` is valid because only one CPU=
+ can succeed the
+> +            // `compare_exchange` above that takes `is_available` from `=
+true` to `false`.
+> +            unsafe { drop_in_place(self.data.assume_init_ref().get()) };
+> +        }
+> +    }
+> +}
+> +
+> +#[pinned_drop]
+> +impl<T> PinnedDrop for Revocable<T> {
+> +    fn drop(self: Pin<&mut Self>) {
+> +        // Drop only if the data hasn't been revoked yet (in which case =
+it has already been
+> +        // dropped).
+> +        // SAFETY: We are not moving out of `p`, only dropping in place
+> +        let p =3D unsafe { self.get_unchecked_mut() };
+> +        if *p.is_available.get_mut() {
+> +            // SAFETY: We know `self.data` is valid because no other CPU=
+ has changed
+> +            // `is_available` to `false` yet, and no other CPU can do it=
+ anymore because this CPU
+> +            // holds the only reference (mutable) to `self` now.
+> +            unsafe { drop_in_place(p.data.assume_init_ref().get()) };
+> +        }
+> +    }
+> +}
+> +
+> +/// A guard that allows access to a revocable object and keeps it alive.
+> +///
+> +/// CPUs may not sleep while holding on to [`RevocableGuard`] because it=
+'s in atomic context
+> +/// holding the RCU read-side lock.
+> +///
+> +/// # Invariants
+> +///
+> +/// The RCU read-side lock is held while the guard is alive.
+> +pub struct RevocableGuard<'a, T> {
+> +    data_ref: *const T,
+> +    _rcu_guard: rcu::Guard,
+> +    _p: PhantomData<&'a ()>,
+> +}
+
+Is this needed? Can't all users just use `try_access_with_guard`?
+
+Alice
 
