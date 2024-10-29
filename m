@@ -1,240 +1,345 @@
-Return-Path: <linux-pci+bounces-15504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15505-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47E789B42F7
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 08:19:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD9439B4301
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 08:22:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65F5C1C21F37
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 07:18:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36C6BB21344
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 07:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A802022DE;
-	Tue, 29 Oct 2024 07:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 671D41FF7A8;
+	Tue, 29 Oct 2024 07:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XDD2zK2y"
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="TZuimXo4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2081.outbound.protection.outlook.com [40.107.241.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251681FCF49;
-	Tue, 29 Oct 2024 07:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730186335; cv=none; b=pO5SoNthAHSOLvOKXBqC6W6+i6qjfIm9xxT8GOQhMUCIv2pjObg0PcjJyDrcLyE8c3h4l8ASzVPiH4Y1sWDUI54P/NT6dRGyBDm3XP1GuB0cv8ustJ0q6auQ+vk3ItTuY8HGnSGnsGvDxbN6LC0dUXElqn6/q9tzBgyIDZX/9ww=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730186335; c=relaxed/simple;
-	bh=BdYcTmAXb1SfXEeowtRZE7Rf2n06MdmrBquWG32nqao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qu89YFFuFry2A+rSJAt5tcIbMFI1/M2hNWUZWUfNQ7xOS2EDQLp4CuGRpI/2j4JM8iK+30E0UKT4FRCZkBnApT7fKJVvumpfUmYaudakHFbqtmi9z9u7Ha7bgq9yBWHs+PpcumVNPER01cuIaqyowavWTTmOLNTpXUopOcIpJ4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XDD2zK2y; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730186333; x=1761722333;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BdYcTmAXb1SfXEeowtRZE7Rf2n06MdmrBquWG32nqao=;
-  b=XDD2zK2y3X8oWGvs67rmpMvz0e4WxNU0+5inf4mNT79cFRA96fOsgmZa
-   M4e6ICC8m8Y/aj2VYR3FmDqTGGCBFFmwLPHlx5KPOFMq4w6s/QPw9tGQ0
-   Gss58xxPFYqg4qas2Cy1Z5td+CTKxrtsWAQ/xAeUDaShnBuubDfdJyuG/
-   0k45CQe7mQ4kNVh73YJTxdSGBqYEya0HmD6qgN6n2TTg0cOzDq7SbasPM
-   4rAOnyJYJOMSpAOx6ZQnZkbC80fQ7iGFJmKJ2tJ5EhdhYfhL2Yeo9QbKl
-   9ZuLan8m20vrLpexLGL3qy0qtcdB4g/yRdk7DdGs4k2zsGPZb4T3C4ZvR
-   g==;
-X-CSE-ConnectionGUID: TqyIiT45RUW6A+N5yXzEXA==
-X-CSE-MsgGUID: REZznhKnR/iTnjw3Xmyo+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29774257"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29774257"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2024 00:18:52 -0700
-X-CSE-ConnectionGUID: ifNbUCZ6QHay4UdqM/kgoQ==
-X-CSE-MsgGUID: qNn49BT5RyqWAcTYDzsScw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,241,1725346800"; 
-   d="scan'208";a="81430699"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 29 Oct 2024 00:18:46 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t5gV2-000dN8-1u;
-	Tue, 29 Oct 2024 07:18:44 +0000
-Date: Tue, 29 Oct 2024 15:18:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v6 2/7] PCI: dwc: Using parent_bus_addr in of_range to
- eliminate cpu_addr_fixup()
-Message-ID: <202410291546.kvgEWJv7-lkp@intel.com>
-References: <20241028-pci_fixup_addr-v6-2-ebebcd8fd4ff@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0311220127A;
+	Tue, 29 Oct 2024 07:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730186551; cv=fail; b=YoCePp/AhF4UYk/96GeRffC+tsPubensxHq+qr51Nv31ewshpZCY/MixIcmIOZqszCN1lUAU49/SjQO4dyrNWhlLxFUowzj7CnRdCy9Urd56TKohwE+pkDQ1Bz7SRhOZmXEdYPhlF2TTox3ougqx74QYq9sfr/04cF0f9Yjb2o4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730186551; c=relaxed/simple;
+	bh=Yk2qAUYU0AFSDgMR2vvfEM9UwjHtVW2iPBcN81elVls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Y1LRQ5Pg1YVLiEDJFiom8TElhPpEkvSA1O2e2LdcENAbs2T1K1nYQwIZvg/JM+Yo3CX5rOPahC29aPNZT2of7Q0Z+fwQPNbvgLL1RP13fyM20xWP0GM9nBgPObJkfUZz+WvHsRq/ZuYvaO9mSzfCBKRKcvKbMgXYPxwfqGCqtYg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=TZuimXo4; arc=fail smtp.client-ip=40.107.241.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VW4QzDqrurqFKot7zhzat9NO4YCSYGSkMGoxIxp2CT6gF1PJ22rYvmsMYjlZ7MT4CYGkGHktJ+bYSlm/GQlvRF/xVDMKZ3tPkmStb8AOPKJfhTGnNm8jMsfGSr5DBOLTqdtlFnAE/7dHnOt5bs122yJ2d+DnAqKQMJPAaaHNsA/g4FnrgTThuyc8F1Fx83YWz27InGPWh3T+wtptHI8JnwpLj209RobP8otSZAsCU/PcQVy7QmGbDLwnkS4kFxOaaJku9kgL/W/VrepI163Ut5ZwoNSlpUIwPoAmZI+wcnf9sa/zte3Y1d2Es52dTVwDiDmnD8CjVzRBHDGXvMJ+NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ItbvLAyOtuWRT2gLACoOLaMGlSuhB8RhQeMpL4ziLs4=;
+ b=j3vyIsHiVhvd/PQnO92PY3VARujEb81/XtYHDQxkQpACRHR8l86exkjWgWIAtz75/qEvMCP99t6lpa/qrhPGTTU9Vomg+7js7DCMshRkV9eAQ1IIJk+Nhn63DHOnnXW1vgNxNDRaxRB4CNcop/dbdsCHndwroga1Cb5FLp1WPRrFFtDeVkhdTCyRl3xHgMcuMIGiIeQLBe8pu4QOkZQnwA7Q7l+vKjejGKrJ0Fo4XK6Y/GrqzXgWS9a/+cEzHPbxg1MrRO9p39kVzzVH/nwwWPlxvRYTeeb1ucOV9EHhxmFB1d5/ZGuMmK6pn50B4f7YjseTa5IpeFcA+cNrIkHdrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ItbvLAyOtuWRT2gLACoOLaMGlSuhB8RhQeMpL4ziLs4=;
+ b=TZuimXo4dqRnEN3llUJl0QElM5IasEuv9+aV+bD9mEbjvMHe2tCelWzGZmsCgAsSTsOUmTytLzb6VIIBStLds7pISuAj54FBLIYNCF9GmqVPui0cGKxdsx62LS+ttHEK4k5SL34K+WvNWSEnvkU1Dq9CO6ENugUkbHnQE15mUU22R/NOb8Fylw9RMJ4drq4b8+TfrGdkAn3x/y3A33kYRyvmcIKK9H79mKyDrRv9LX/ygK24Dp0643xVBQZB6daa0NF/RE4Xt/Xtss+rMkgsZr6Ld8CE9WynVjvk3Wx5Y/YvERIPivMK6h6VrfUnXuhh/Mu4oh1dr/3lbf+S0E/YMQ==
+Received: from AS9PR04CA0031.eurprd04.prod.outlook.com (2603:10a6:20b:46a::10)
+ by DU4PR10MB8322.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:566::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.19; Tue, 29 Oct
+ 2024 07:22:22 +0000
+Received: from AMS1EPF0000004E.eurprd04.prod.outlook.com
+ (2603:10a6:20b:46a:cafe::3f) by AS9PR04CA0031.outlook.office365.com
+ (2603:10a6:20b:46a::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.26 via Frontend
+ Transport; Tue, 29 Oct 2024 07:22:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.206) by
+ AMS1EPF0000004E.mail.protection.outlook.com (10.167.16.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8114.16 via Frontend Transport; Tue, 29 Oct 2024 07:22:22 +0000
+Received: from SI-EXCAS2001.de.bosch.com (10.139.217.202) by eop.bosch-org.com
+ (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 29 Oct
+ 2024 08:22:21 +0100
+Received: from [10.34.219.93] (10.139.217.196) by SI-EXCAS2001.de.bosch.com
+ (10.139.217.202) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Oct
+ 2024 08:22:21 +0100
+Message-ID: <fd9f5a0e-b2d4-4b72-9f34-9d8fcc74c00c@de.bosch.com>
+Date: Tue, 29 Oct 2024 08:20:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241028-pci_fixup_addr-v6-2-ebebcd8fd4ff@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
+ driver abstractions
+To: Danilo Krummrich <dakr@kernel.org>
+CC: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <bhelgaas@google.com>,
+	<ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
+	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+	<tmgross@umich.edu>, <a.hindborg@samsung.com>, <aliceryhl@google.com>,
+	<airlied@gmail.com>, <fujita.tomonori@gmail.com>, <lina@asahilina.net>,
+	<pstanner@redhat.com>, <ajanulgu@redhat.com>, <lyude@redhat.com>,
+	<robh@kernel.org>, <daniel.almeida@collabora.com>, <saravanak@google.com>,
+	<rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20241022213221.2383-1-dakr@kernel.org>
+ <20241022213221.2383-16-dakr@kernel.org>
+ <42a5af26-8b86-45ce-8432-d7980a185bde@de.bosch.com> <Zx9lFG1XKnC_WaG0@pollux>
+Content-Language: en-US
+From: Dirk Behme <dirk.behme@de.bosch.com>
+In-Reply-To: <Zx9lFG1XKnC_WaG0@pollux>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS1EPF0000004E:EE_|DU4PR10MB8322:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77e142ec-12b6-42a9-476a-08dcf7ea6e29
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aXFUMVRzNkxCRENTNnlwZTA3eFVXajRFV0FabDlDL1NmUXFGdHk1YzRra3pY?=
+ =?utf-8?B?aFRWSXdWeWtDaEpBTGNjZSs2T2tBaTlyUjVkUnN4dXB1SVZkTC9nVVJCRU1D?=
+ =?utf-8?B?M29OcTBWUkE1Vml6NS9sQ2hXbUY4TTdFMy8yWGFtNHFnN0U5eG5TZ2dwa1ZV?=
+ =?utf-8?B?TlBkUDd2emJLMW84ZVF2OHhpRktWcUxsek5ySjI0VEE0WFk5VWI0QzFMTkpO?=
+ =?utf-8?B?SWUzVHc2Z0ludDlSOVY3dDdkOVpFd0J4TDJadUJ6QlMyV2xScmM0Z2ltQ2N4?=
+ =?utf-8?B?dERqREgrNWxYNHJpa1pIRnBSemNTU1lVUmNubU5kWDM1ejJRVE16NkNaNTZs?=
+ =?utf-8?B?SXBZcGRpWVc0Q2U2Z2ozRjg3OGRrUGQ1OXdoNW82enFRYU5vQ2hwaFJNL0lZ?=
+ =?utf-8?B?bUhocmRROXNGbWErUGJ6c2JFODh4ekROVyt4S291cnNzU0daV0NaelZqcnM4?=
+ =?utf-8?B?V3FBNlF0UzY5cWVYV3BKb3pCODNIY1RaUGtNV3RTRjBSOEluRmVLZkdhTzA5?=
+ =?utf-8?B?R3NsY0lCdjVzcE9EREdEY2VPSVJiTHd6SkxVUkhnQ2VJOWtRR3BxYWlia3pY?=
+ =?utf-8?B?T2RCcnlDc0RtS2VybENFRlJYSXJYSXVYeHlFT0tTQ1FrdHFWSmY4dFNOc3VJ?=
+ =?utf-8?B?VVkrZWRHeStKbDlPRktTZ3ZZaHYySFVWaEVSL1JGLzJBNkREb0IrVTk4Kyt4?=
+ =?utf-8?B?aE51RElaNXdQRGUyQWlxN2t6NDI0bm5mN2h5K0JOeHNGVVFDNjdwU3gxSi9v?=
+ =?utf-8?B?SElCMmhIYjVGcG1Nek5iazBjZStHNkZPdmY5RmV3d2Q5MU9ONkNBazJSa0FP?=
+ =?utf-8?B?YlordGNOZERZT3ZISE1kRFNtQlJSOHZTbUhmOGl5VG56MXBMdjJPMkkyaEtt?=
+ =?utf-8?B?SDRzN2h4SkFBWDhIajNBUWNrbnA5YVdMbkNHMEQyU2FIbVZVYmY3ZmVOUWRq?=
+ =?utf-8?B?MDZuNS91ZmV5NXF4OEpjZkJ6SlRSUlgwRzVDa0N0ZktsQ1RTaGJIRENEWTgy?=
+ =?utf-8?B?QXVXU0U3VldhbkhzLzZxdFNkbERSMnR4UmVMbEtyZUQ4QUlqbzJUblhJUy9D?=
+ =?utf-8?B?NHRjTWZrWDk5bnVIMEtCWWdtOVhuMlYwMndFbThOc0xHSm43NkpXbmsvVEE0?=
+ =?utf-8?B?c2MyUFZISUxaUEhjTGp5WDRrRGE2Vmc5ZGFsaWQzRTEwVlhjajlvVVNjeXlJ?=
+ =?utf-8?B?RzlqTUpuRW1TTkFuTENoN3lLdVNQVWZwNnhxdDZLeFRUSWNNV1lhRVFVRUFx?=
+ =?utf-8?B?NnhmZEt1OGpnTjF6c1l6amE3bXFXdjdIY2xoMVJsMmNJT1BsZ3NKVCt3UDg5?=
+ =?utf-8?B?czd2TndEbEpXTDlKOXZWTjRiY2RldXNwbTBMSkdRSllsRFp4RVd0UksrNjRH?=
+ =?utf-8?B?VzJqOFExalBobUFCU0JUYnhSWGFCaitYYnltdklEYm1jRWRIUlZKSW1WQ0V0?=
+ =?utf-8?B?MUhLWXJ1cXlIRUtwK0RSRlNpYVJidFhIWGx5Skt4YkhYYkl0VHNBY3Q0cDgv?=
+ =?utf-8?B?YytxWE9obFpjd0dDd1grQmMwVFQ0bVg1NU9FR3JzWGVIak1YOUxndWR3aGhS?=
+ =?utf-8?B?MVhCNWtsVkxCejFJdG1ITEtvVUhEMVE3Yjc5bXZ3b2c3dTBncHpyRnMwZ04z?=
+ =?utf-8?B?bWZQRDJxYmtUSkpWZmFGalM1NHVVVWFmS29YL3EyNUZZSmJCZDFQU2pBQWRV?=
+ =?utf-8?B?WlV6RStCQUNJZTRTQzJyMjdDaTc1Vzl6eTFIcVZNVldJamxHcHdVZlgrWWJR?=
+ =?utf-8?B?MkMvM0lyNUg0OFJMaGhJM0N0Vy8rTjNvejJxemdtOUpkTkpRQkVLNGtuT21M?=
+ =?utf-8?B?Yk9uNllGWFJxL2FEa2p4amlrY2VZMFZCVWN6RXFQRUJhQW9NbnBJdmJZbHdZ?=
+ =?utf-8?B?QmFJZGN5UGIzMENrMXFZUU1adnlmRlJGdE5YQlhaemxaRlE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2024 07:22:22.1593
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77e142ec-12b6-42a9-476a-08dcf7ea6e29
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS1EPF0000004E.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR10MB8322
 
-Hi Frank,
+On 28.10.2024 11:19, Danilo Krummrich wrote:
+> On Thu, Oct 24, 2024 at 11:11:50AM +0200, Dirk Behme wrote:
+>>> +/// IdTable type for platform drivers.
+>>> +pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<of::DeviceId, T>;
+>>> +
+>>> +/// The platform driver trait.
+>>> +///
+>>> +/// # Example
+>>> +///
+>>> +///```
+>>> +/// # use kernel::{bindings, c_str, of, platform};
+>>> +///
+>>> +/// struct MyDriver;
+>>> +///
+>>> +/// kernel::of_device_table!(
+>>> +///     OF_TABLE,
+>>> +///     MODULE_OF_TABLE,
+>>
+>> It looks to me that OF_TABLE and MODULE_OF_TABLE are quite generic names
+>> used here. Shouldn't they be somehow driver specific, e.g. OF_TABLE_MYDRIVER
+>> and MODULE_OF_TABLE_MYDRIVER or whatever? Same for the other
+>> examples/samples in this patch series. Found that while using the *same*
+>> somewhere else ;)
+> 
+> I think the names by themselves are fine. They're local to the module. However,
+> we stringify `OF_TABLE` in `module_device_table` to build the export name, i.e.
+> "__mod_of__OF_TABLE_device_table". Hence the potential duplicate symbols.
+> 
+> I think we somehow need to build the module name into the symbol name as well.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 9852d85ec9d492ebef56dc5f229416c925758edc]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/of-address-Add-parent_bus_addr-to-struct-of_pci_range/20241029-030935
-base:   9852d85ec9d492ebef56dc5f229416c925758edc
-patch link:    https://lore.kernel.org/r/20241028-pci_fixup_addr-v6-2-ebebcd8fd4ff%40nxp.com
-patch subject: [PATCH v6 2/7] PCI: dwc: Using parent_bus_addr in of_range to eliminate cpu_addr_fixup()
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20241029/202410291546.kvgEWJv7-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241029/202410291546.kvgEWJv7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410291546.kvgEWJv7-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pci/controller/dwc/pcie-designware-host.c:782:55: error: incompatible pointer types passing 'u64 *' (aka 'unsigned long long *') to parameter of type 'resource_size_t *' (aka 'unsigned int *') [-Werror,-Wincompatible-pointer-types]
-                   if (dw_pcie_get_untranslate_addr(pci, atu.pci_addr, &atu.cpu_addr))
-                                                                       ^~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-designware-host.c:422:23: note: passing argument to parameter 'i_addr' here
-                                           resource_size_t *i_addr)
-                                                            ^
-   1 error generated.
+Something like this?
 
 
-vim +782 drivers/pci/controller/dwc/pcie-designware-host.c
+Subject: [PATCH] rust: device: Add the module name to the symbol name
 
-   745	
-   746	static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
-   747	{
-   748		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-   749		struct dw_pcie_ob_atu_cfg atu = { 0 };
-   750		struct resource_entry *entry;
-   751		int i, ret;
-   752	
-   753		/* Note the very first outbound ATU is used for CFG IOs */
-   754		if (!pci->num_ob_windows) {
-   755			dev_err(pci->dev, "No outbound iATU found\n");
-   756			return -EINVAL;
-   757		}
-   758	
-   759		/*
-   760		 * Ensure all out/inbound windows are disabled before proceeding with
-   761		 * the MEM/IO (dma-)ranges setups.
-   762		 */
-   763		for (i = 0; i < pci->num_ob_windows; i++)
-   764			dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
-   765	
-   766		for (i = 0; i < pci->num_ib_windows; i++)
-   767			dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
-   768	
-   769		i = 0;
-   770		resource_list_for_each_entry(entry, &pp->bridge->windows) {
-   771			if (resource_type(entry->res) != IORESOURCE_MEM)
-   772				continue;
-   773	
-   774			if (pci->num_ob_windows <= ++i)
-   775				break;
-   776	
-   777			atu.index = i;
-   778			atu.type = PCIE_ATU_TYPE_MEM;
-   779			atu.cpu_addr = entry->res->start;
-   780			atu.pci_addr = entry->res->start - entry->offset;
-   781	
- > 782			if (dw_pcie_get_untranslate_addr(pci, atu.pci_addr, &atu.cpu_addr))
-   783				return -EINVAL;
-   784	
-   785			/* Adjust iATU size if MSG TLP region was allocated before */
-   786			if (pp->msg_res && pp->msg_res->parent == entry->res)
-   787				atu.size = resource_size(entry->res) -
-   788						resource_size(pp->msg_res);
-   789			else
-   790				atu.size = resource_size(entry->res);
-   791	
-   792			ret = dw_pcie_prog_outbound_atu(pci, &atu);
-   793			if (ret) {
-   794				dev_err(pci->dev, "Failed to set MEM range %pr\n",
-   795					entry->res);
-   796				return ret;
-   797			}
-   798		}
-   799	
-   800		if (pp->io_size) {
-   801			if (pci->num_ob_windows > ++i) {
-   802				atu.index = i;
-   803				atu.type = PCIE_ATU_TYPE_IO;
-   804				atu.cpu_addr = pp->io_base;
-   805				atu.pci_addr = pp->io_bus_addr;
-   806				atu.size = pp->io_size;
-   807	
-   808				ret = dw_pcie_prog_outbound_atu(pci, &atu);
-   809				if (ret) {
-   810					dev_err(pci->dev, "Failed to set IO range %pr\n",
-   811						entry->res);
-   812					return ret;
-   813				}
-   814			} else {
-   815				pp->cfg0_io_shared = true;
-   816			}
-   817		}
-   818	
-   819		if (pci->num_ob_windows <= i)
-   820			dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
-   821				 pci->num_ob_windows);
-   822	
-   823		pp->msg_atu_index = i;
-   824	
-   825		i = 0;
-   826		resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
-   827			if (resource_type(entry->res) != IORESOURCE_MEM)
-   828				continue;
-   829	
-   830			if (pci->num_ib_windows <= i)
-   831				break;
-   832	
-   833			ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
-   834						       entry->res->start,
-   835						       entry->res->start - entry->offset,
-   836						       resource_size(entry->res));
-   837			if (ret) {
-   838				dev_err(pci->dev, "Failed to set DMA range %pr\n",
-   839					entry->res);
-   840				return ret;
-   841			}
-   842		}
-   843	
-   844		if (pci->num_ib_windows <= i)
-   845			dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
-   846				 pci->num_ib_windows);
-   847	
-   848		return 0;
-   849	}
-   850	
+Make the symbol name unique by adding the module name to avoid
+duplicate symbol errors like
 
+ld.lld: error: duplicate symbol: __mod_of__OF_TABLE_device_table
+ >>> defined at doctests_kernel_generated.ff18649a828ae8c4-cgu.0
+ >>> 
+rust/doctests_kernel_generated.o:(__mod_of__OF_TABLE_device_table) in 
+archive vmlinux.a
+ >>> defined at rust_driver_platform.2308c4225c4e08b3-cgu.0
+ >>>            samples/rust/rust_driver_platform.o:(.rodata+0x5A8) in 
+archive vmlinux.a
+make[2]: *** [scripts/Makefile.vmlinux_o:65: vmlinux.o] Error 1
+make[1]: *** [Makefile:1154: vmlinux_o] Error 2
+
+__mod_of__OF_TABLE_device_table is too generic. Add the module name.
+
+Proposed-by: Danilo Krummrich <dakr@kernel.org>
+Link: https://lore.kernel.org/rust-for-linux/Zx9lFG1XKnC_WaG0@pollux/
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+---
+  rust/kernel/device_id.rs             | 4 ++--
+  rust/kernel/of.rs                    | 4 ++--
+  rust/kernel/pci.rs                   | 5 +++--
+  rust/kernel/platform.rs              | 1 +
+  samples/rust/rust_driver_pci.rs      | 1 +
+  samples/rust/rust_driver_platform.rs | 1 +
+  6 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+index 5b1329fba528..231f34362da9 100644
+--- a/rust/kernel/device_id.rs
++++ b/rust/kernel/device_id.rs
+@@ -151,10 +151,10 @@ fn info(&self, index: usize) -> &U {
+  /// Create device table alias for modpost.
+  #[macro_export]
+  macro_rules! module_device_table {
+-    ($table_type: literal, $module_table_name:ident, $table_name:ident) 
+=> {
++    ($table_type: literal, $device_name: literal, 
+$module_table_name:ident, $table_name:ident) => {
+          #[rustfmt::skip]
+          #[export_name =
+-            concat!("__mod_", $table_type, "__", 
+stringify!($table_name), "_device_table")
++            concat!("__mod_", $table_type, "__", 
+stringify!($table_name), "_", $device_name, "_device_table")
+          ]
+          static $module_table_name: [core::mem::MaybeUninit<u8>; 
+$table_name.raw_ids().size()] =
+              unsafe { core::mem::transmute_copy($table_name.raw_ids()) };
+diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
+index a37629997974..77679c30638c 100644
+--- a/rust/kernel/of.rs
++++ b/rust/kernel/of.rs
+@@ -51,13 +51,13 @@ pub fn compatible<'a>(&self) -> &'a CStr {
+  /// Create an OF `IdTable` with an "alias" for modpost.
+  #[macro_export]
+  macro_rules! of_device_table {
+-    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, 
+$table_data: expr) => {
++    ($device_name: literal, $table_name:ident, 
+$module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
+          const $table_name: $crate::device_id::IdArray<
+              $crate::of::DeviceId,
+              $id_info_type,
+              { $table_data.len() },
+          > = $crate::device_id::IdArray::new($table_data);
+
+-        $crate::module_device_table!("of", $module_table_name, 
+$table_name);
++        $crate::module_device_table!("of", $device_name, 
+$module_table_name, $table_name);
+      };
+  }
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 58f7d9c0045b..806d192b9600 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -176,14 +176,14 @@ fn index(&self) -> usize {
+  /// Create a PCI `IdTable` with its alias for modpost.
+  #[macro_export]
+  macro_rules! pci_device_table {
+-    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, 
+$table_data: expr) => {
++    ($device_name: literal, $table_name:ident, 
+$module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
+          const $table_name: $crate::device_id::IdArray<
+              $crate::pci::DeviceId,
+              $id_info_type,
+              { $table_data.len() },
+          > = $crate::device_id::IdArray::new($table_data);
+
+-        $crate::module_device_table!("pci", $module_table_name, 
+$table_name);
++        $crate::module_device_table!("pci", $device_name, 
+$module_table_name, $table_name);
+      };
+  }
+
+@@ -197,6 +197,7 @@ macro_rules! pci_device_table {
+  /// struct MyDriver;
+  ///
+  /// kernel::pci_device_table!(
++///     "MyDriver",
+  ///     PCI_TABLE,
+  ///     MODULE_PCI_TABLE,
+  ///     <MyDriver as pci::Driver>::IdInfo,
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index a926233a789f..fcdd3c5da0e5 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -118,6 +118,7 @@ macro_rules! module_platform_driver {
+  /// struct MyDriver;
+  ///
+  /// kernel::of_device_table!(
++///     "MyDriver",
+  ///     OF_TABLE,
+  ///     MODULE_OF_TABLE,
+  ///     <MyDriver as platform::Driver>::IdInfo,
+diff --git a/samples/rust/rust_driver_pci.rs 
+b/samples/rust/rust_driver_pci.rs
+index d24dc1fde9e8..6ee570b59233 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -31,6 +31,7 @@ struct SampleDriver {
+  }
+
+  kernel::pci_device_table!(
++    "SampleDriver",
+      PCI_TABLE,
+      MODULE_PCI_TABLE,
+      <SampleDriver as pci::Driver>::IdInfo,
+diff --git a/samples/rust/rust_driver_platform.rs 
+b/samples/rust/rust_driver_platform.rs
+index fd7a5ad669fe..9dfbe3b9932b 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -11,6 +11,7 @@ struct SampleDriver {
+  struct Info(u32);
+
+  kernel::of_device_table!(
++    "SampleDriver",
+      OF_TABLE,
+      MODULE_OF_TABLE,
+      <SampleDriver as platform::Driver>::IdInfo,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.46.2
+
 
