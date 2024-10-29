@@ -1,124 +1,293 @@
-Return-Path: <linux-pci+bounces-15524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD2139B4AB0
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 14:16:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E6F69B4AC2
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 14:18:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67A261F22E01
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 13:16:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D7A32842C7
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Oct 2024 13:18:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C17205126;
-	Tue, 29 Oct 2024 13:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A66E2022D6;
+	Tue, 29 Oct 2024 13:18:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ogG0of+B"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NqK7FGCL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2062.outbound.protection.outlook.com [40.107.92.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5167FD
-	for <linux-pci@vger.kernel.org>; Tue, 29 Oct 2024 13:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730207791; cv=none; b=L0ZCzoO4m3W7Zv5oMTOnzJPpzmwqtFe+aZ1sOcLEVpuscI6pjb086IIKLVoC0ylxHa+fiVp8Q17wERuuazdOS+ixhJU/cw3o21gLxSXvZdve5uCeA1yuz3INumsdD4dwjXl2JmKccF5PkmpsoEyOlTT0Bvez5jvUxdvnU0jbWJo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730207791; c=relaxed/simple;
-	bh=ORScFiiSj6DBWVhn8Ip6edyJLDCC004uaKK2dEp4X1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BxTkrIWHiyULMlMKh3/P3hB7CwKbooDRs9IRkaXTdQmzi+Chn/qXefz99pLMXPcLP0gYH4TQbzBO7m2L7UVePad/t6MW+VAeoecVCGRe3z9MQgn6Zk2LDM7Caaw68Eund6yr/tf1MIlNsaM+FK8sKv/ZB3RMA+3CDltgjCb0jJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ogG0of+B; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c8b557f91so50018225ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 29 Oct 2024 06:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730207789; x=1730812589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G4FgCQ6GkthTlMOY7Hwmvw1LED0yrWV2Of7OG03sNbg=;
-        b=ogG0of+Bgo8R4elC2gdsau+roG160QzUNvRJF+l8FYhN6C+6f/yCSqPvHuI3DYybXf
-         e9zun2XeDN2QAb3xiauDaqFLlxGC0luC30X47Q9s9vz0UJrqkBCDUQxlMAkYG6pcyvaD
-         bsDfLyKaJ5mKdDfL4aTXohFz+ywzYuE4EFVKf+sy3QU6NCQM+KfePC9ECtECRskG7lP7
-         wDSr2h6Yfy4WOUnRhizfobsqLx/p4bIOv9GeJUABS0RIZDJpsK4vh2XzZ4ASe4KYWXvz
-         Iw7AY8bbZ3YPl06EaIYRlI+ZqDk2/Bxw4r1J/yriK6i96vLcYLhr7yh7liNiM/7tolUK
-         PHEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730207789; x=1730812589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G4FgCQ6GkthTlMOY7Hwmvw1LED0yrWV2Of7OG03sNbg=;
-        b=AIudkEJMfi33tvnc4ZhBznuW1RuZyfCJdcIABdmspPGshyNHZ7CIAzrWAdEg1lXm+S
-         I3s/fAMgThy0nzgIJac4LYcGAR/cpT10PXNSAx3tl0SFv8iWu5mZzT6/RjzSd5I/23RQ
-         nSyLWN7ajA59Lj5lYTOrj5+edpc4dWGfYtgAhEOyRHGg6Qg+P3/n4pn5fOcvv3n4RYQX
-         c6WD8TyeXZYUSOpndkF329cqg4jmP9W0c3RNmH5NPtXEWL3I+E45DSON2WXLoIXTLjzl
-         fWOSfZ6ma18tExzQQxBOGYuVk1rMV5s2+ILpheOZzugupWBo3gkMATcCHstdD/CgQoQU
-         +ZVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVssctiHfZnxe27z32rAwbCljbxflay4xqd7kMBh6sUo7/tn17wlm1KJT8wKn4ZIL69KXCcqsT8WMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXq3X0xXFPF9dHkErZ1BSuiBLujklR2zeV3MS0ctl6MyhBZao6
-	NUPImle7/wIz5zWUortzjGJae/knkSU+J10sEU4767gdEQ5wPTdHNE7MkJFMXgJqngZCHTOOA4o
-	PqQoNvvcMd/pqGckYNmXCAe8wM6DCvnrmH6TF
-X-Google-Smtp-Source: AGHT+IG7aPEWXrKU2oQ6UttFO6K5zHHkqze1cQRhd6cCywBZr/BAJUMAwKfw3MVUjRift3AdGsm8Yxujz0XZfRoELXY=
-X-Received: by 2002:a17:902:d4c3:b0:20b:b0ab:4fc3 with SMTP id
- d9443c01a7336-210c6c934c1mr173443635ad.49.1730207789184; Tue, 29 Oct 2024
- 06:16:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45C8206044;
+	Tue, 29 Oct 2024 13:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730207931; cv=fail; b=uPdAtmUQ0lcSzxtHdkuJw9gcgTwrl0qEfxmS+VecQ7SAKpfoB0/lp+DR6gL3S7a+v1+ij1trZSQpbLKVLnoRbWdWb8SEgmCPvS+2r7oeHQ4uUUH+8YP5uKWSy66gzJp/hxA1LSannBEJWGdvpoDD8Fg9JUcQ68H2XWojxEjxris=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730207931; c=relaxed/simple;
+	bh=qDrY+UAsawNB/1sAyy1taJzMYoDe+Y7PwLZ3oZTy244=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pl2MLqvilhbhSaU3fSNbWGcCvSO8Nzlw3u6BxVuOpsbhQonObfHqKbRaGHBMcQ9G+/K3jj5S8wRQHKsF4c112B5JPsuEXHWUcX2xZybR4u7bcTm0+ckKvtcJh/utMJC01o/coZ5fUoXtQyP8hM6yOETUqJ4C9p1PxKVXhqqnq7M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NqK7FGCL; arc=fail smtp.client-ip=40.107.92.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NDf6VShFG/EMTWNEtYwDzPRqRv7XOCmE7ZCbLunxYDKLq1u+Enu9Uzt0Uqby52/+4P8R77P8IjOR/nnF3E+bRaAhJDsnnnhVomIc9coKA7A1JBzHrm3EV5Dh0bjRwKWlsDSj+v0djKALTPb5IPGxsNpLeUxDq1YEO+fp3JTqnISQisbQ5xNw6dEoEwICUzbuM+oZDNl1BTll0OKvL8YQy/O+djz5D6bVCHcOZ2RDt+HCOU64ZIS7WqJ3xULQG5hjJD5O565nOaejQc4M+84MiJkpOr0SflgW017Uf7aSfN9A3qGdEl6iQV+9rlLLBgJ+BLufWoBY+SjaMO7Vp6OvyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lLDEyt73k555qbz38MXyfZEcnxtzuc8fC7eUIMPHtmQ=;
+ b=dlppzlrw936w20wA1OAasXK9b/CTrpqU9AefjA6aTiTf+Ojv6ITDmLckfyoqLJK5RnO1/sOgOnv3HS7zcpseaksq1++SbFeuEhZt7+4XSFUY0yhF73tF6OEa1QPA732CHAH73GOeW9nkDbpT/tDbqQEjoWBGHqbM0kGE1IzObDnS04MKAhHVOxCb0q5cHZYIr8/XGXGgleLKCQc9noqobxDFDW7ZHE9b6d0GO0bu5WkAfVnOVUMsK7uIEv3gSw8XKDW4VnN+hg4LwY6aWzDZWqufCEYL14Xx8LGvUcLi6jZfvVHaOyzKKICyyNYC6C7Zi3BcaIXXHbmvKYAAJYNhxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lLDEyt73k555qbz38MXyfZEcnxtzuc8fC7eUIMPHtmQ=;
+ b=NqK7FGCLczos9I/QEPjedLhX1nrXeb/lvSNaZn4kh4nQwTc4vkIQeW2U/DQ8rhlkpW5xzwjiUaucX9IB0TelSyFI2B2QbqSwFZ6qhfM9h46R47FbYrM1klygbZzwhNHUH8EKDHlUQXEnbH5rZhudRQ3sIId6bQNrt3R4YNxXGBM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.28; Tue, 29 Oct
+ 2024 13:18:40 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%2]) with mapi id 15.20.8093.021; Tue, 29 Oct 2024
+ 13:18:39 +0000
+Message-ID: <bc5473f8-1c40-4e50-bf8b-43233b3d53a5@amd.com>
+Date: Tue, 29 Oct 2024 14:18:32 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/7] PCI: Add a helper to identify IOV resources
+To: =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Michal Wajdeczko <michal.wajdeczko@intel.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Matt Roper <matthew.d.roper@intel.com>
+References: <20241025215038.3125626-1-michal.winiarski@intel.com>
+ <20241025215038.3125626-3-michal.winiarski@intel.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20241025215038.3125626-3-michal.winiarski@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR0P281CA0101.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a9::19) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241022213221.2383-1-dakr@kernel.org> <20241022213221.2383-16-dakr@kernel.org>
-In-Reply-To: <20241022213221.2383-16-dakr@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 29 Oct 2024 14:16:14 +0100
-Message-ID: <CAH5fLgiab5vssuQ2CO4kuKHhhWma=17858w8wbtmYUOXA-Cd1Q@mail.gmail.com>
-Subject: Re: [PATCH v3 15/16] rust: platform: add basic platform device /
- driver abstractions
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	tmgross@umich.edu, a.hindborg@samsung.com, airlied@gmail.com, 
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
-	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
-	daniel.almeida@collabora.com, saravanak@google.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB7199:EE_
+X-MS-Office365-Filtering-Correlation-Id: 765504b8-69dd-4887-a889-08dcf81c3411
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c3NaVG5HVUVFUlI4TWZteDkrYUZRSTlaMFhnc3B1bU0wVG5XUGY5dWMyM0NU?=
+ =?utf-8?B?M2JRZXV6MEs3R3pPY0hCVDZyZ3RiRjRpUHhWTWozajNmc0NFRElDY1hDVTRn?=
+ =?utf-8?B?d2toTHNzazI0am1KbTI2ZmdQMkZwRWRnaEpUVkZTSFI2T0tYT3N1YTNrSzNv?=
+ =?utf-8?B?ZmFkWXdRNHMvdExGdWxrTkJSR1NtVlR4aXo2by9ndWYzNkhZQjd1QmhzYTRS?=
+ =?utf-8?B?MERjQ1FuK3lLb1hGM3d4WlBSRVVYR2FGZUxqb0NaVGJUTWJScmlqejkyaTgy?=
+ =?utf-8?B?ZTZyTXh1YnZ1RTIwQTd5Z1BKeEtvRFFGMC9wUGU2MWpOMGxDY04zQ2lvQzBr?=
+ =?utf-8?B?cFdzeEgyUDd2eXpQYmx1UVFVWXpxZmlBMXBXSzBVTjNjRk0zUHl4akF4Smll?=
+ =?utf-8?B?TnRiVWFVc05xZ1BYOW5welc5Z1E0VnNjOVo2V2FkU0ZzS3RtZDFlTXdjRDVH?=
+ =?utf-8?B?alBoWWRsVklYU2tValZMc3MvOGNmanZEaDdDREJJbTQ3cTJ6djNLOGJqMy91?=
+ =?utf-8?B?QWJWZnBVNUc1elRKSVo2Q0p1VlRpMmlORVROTXFzQ1p0eXJrSjV5Y29lSmxz?=
+ =?utf-8?B?T0hkQ29ucTBucG5LVEZxbXpKQjBlVXk3MXBqQXgybjRaVWhHNVdBcjV6QzJa?=
+ =?utf-8?B?ZVNyS2ZON2Fzc1lmbUdGN05RbG9Nb2JFYXUwR0lnUzZCcnZ1ZVJDbFRKcy9q?=
+ =?utf-8?B?YlBZdlVjUjY1S3JCMjlWeDdoeXVCejRSSDJXbzJFR0pEUU9KR3hDNktYNHM1?=
+ =?utf-8?B?SkZXQm9nM1YxdytmcmxQc1NqSGVCaWlPZXV6RXY3YVA4WXMyT1Z4Mlh4SHly?=
+ =?utf-8?B?TzcyNytXTUd3VllqLzF5Q0JYT2poaWY0L0wwSk85SkhVSUg0MFlOOHRaQ0hh?=
+ =?utf-8?B?TStsL2xCbG9zZ1FLVUE5Y243ckxoNWp2UWliY3l4UkRLbGJ3Uko0MWJhcVRp?=
+ =?utf-8?B?RmxSYUNQRFEzTTRTN0EzYTFOSlBGbHJ2cWh6RTdYVFU2dExoamIzMnNFNkdX?=
+ =?utf-8?B?T2FwblRERGxSa0Z3d3ZJbU91aXZaZVV2eVRWQTFNaXV6djE3bnUycE5QZmx0?=
+ =?utf-8?B?MXZLYWZoZ1c4SGZvcFpHTmd5UktYWEY2VUlwajZ6Y1NaYWFzRktyUkpNN3ZT?=
+ =?utf-8?B?ckJHcDNPSmhidDJmNHgrM1BBVWNLYVlhTXFTeHUybGtYdUE5TWlRcStpQ0Y5?=
+ =?utf-8?B?Y2xjR1V1cHRaR0V2ZkZPNEV2L3FHRkM5QmpBY1gvSGh6ZG1lSmpaUy84NWNT?=
+ =?utf-8?B?YVFSckpOdXB0M3R1K3h5d2JDaEtsMy9tMENZOC9hTVBxTHRhNDVnNE9QY0s5?=
+ =?utf-8?B?by9SdkJwdDFUSTdVL2ppcjR1WmxXNHQ4K3FNeWgwd1BMU1lLNFI2VjVrRjRs?=
+ =?utf-8?B?MXJ4dmp6aEplTWJOZ1BnWk5Ha2dRNU1pZ0tWMWVja3dRQ3dUS2hsUFo5U3k0?=
+ =?utf-8?B?STd4WmZKZ0IrTjJSVlRzMU4xZXhKeVY1ajhPOW9tQ2szbDc5dkNNS3BmbVhN?=
+ =?utf-8?B?WWNSVG93azBmWjdqRU5mdmcrYTR5aGpxdVNTYUVoc1RuRnMxRGJGS2xNWHcz?=
+ =?utf-8?B?dklHVzUxRHYvcXdOZUNEQWF2YnZReUswR1R3ZTdEWnJwcmVlTVoyVGpyYXFq?=
+ =?utf-8?B?Wms0QnBkU2VoTXNuYmRmcjBwNTJreW5Ec2VSaGtUMEJEUmRZZWd1L1pMY3BV?=
+ =?utf-8?B?c1FWTFlkZkZYSlZ0SmdrSkNFVyt6WkdaYTJzNFlmdEw5WXhJQ3J5QUJabCtC?=
+ =?utf-8?Q?jac4ywinL8L5VF7bsR3SRGCv1Tk2KZibpVZW8Pa?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eExObFBsUE93aFkyNFkrcXB0dkhNUEVzbm01bURZc3NnQ2V4dXptN2JaUzJv?=
+ =?utf-8?B?Rkc1VmRpWTNqcDRDcWE2WEJpdCtuVlBKdUwwV2dyRWs5dXBxUEZkYXowdytO?=
+ =?utf-8?B?WkVYVzF5TmlwdkZ2OHhaQVhEblVZOVk0cVByMkhWNGE5YldwMnh6a1Jra0o4?=
+ =?utf-8?B?MVYwcXVUY21paUJJN3YwVThQUHR2Ulh3MHB2OVBSSkxnM2h2dXVxVzNPby80?=
+ =?utf-8?B?TFlwMmZSb1Rla1ZIcUh1cGFjSlJZdHVGMG5Jak04Vk5STXFvMnRPN2FvSU1j?=
+ =?utf-8?B?ajdEYnN4T3Zub2ZRK2haVGJCUm01enhXQXU4Sm9UWk1NaGZmeXd5djAwMmNh?=
+ =?utf-8?B?Z1UxRU1OY2xlWWFyV2wxVWJoUjdWUE54cTRpYXJKQ214RERaeS9WM00ydS9T?=
+ =?utf-8?B?VU9oTWpaaU1vTEdBNUk2RnlxdXd3cVpZdGlWdE14MHNKVENiUkViQlNSQWxW?=
+ =?utf-8?B?bGpmcDF5U1E3M3ZxcWc5NVJvZFQvaEp5ak90d045UVJOY012WExWNnFvWTZx?=
+ =?utf-8?B?T1BqRWpac1RoNG5ydmlTQnBVMGdBbkdhbk5od1I2UmdKaE8vYWtHMXE5ZWR2?=
+ =?utf-8?B?dnBmQmQ5Nmo5UGhTaXdzQ05kUnNpQ1dGOU4wTXlhN2laWGx3QVdlQ1dCT3kx?=
+ =?utf-8?B?YmR2K1kvVTNuUGNrRXIrbDhWaGZFWEpRM3JnMHVaSzBIVDUxNDFTVFBISEto?=
+ =?utf-8?B?V1hCQW45bFRib25obVlIN3h2bXh0dlMwdnZRZm1UaW1vNWFKcTZLMVFTcE54?=
+ =?utf-8?B?QjhJajRiN1FqSTZIQmZRYXFiT1g0U3lOOXY3ZnAvNXAxcDhHazd5RUErb0Nk?=
+ =?utf-8?B?ZldjSnE0ZlljZnI0cHF1Vmg0RDNBejFSUjBxb3NoQThrV093MzhKL2JobUNN?=
+ =?utf-8?B?ZzFtMmZCYzBiVjdxVlJMMlhtVHhiZ0xBREQwSEN2TkVodElMRDNVZDVEb3Z0?=
+ =?utf-8?B?K1g5KzlJbWRpK3JXV0ErTTZTRGhIRXM4QlhTcVl0emNNcFo2NE9XeXkzZC82?=
+ =?utf-8?B?cGE0UitPZ2VSMkZEblNsM2Z2L2s2cm5LMUNzb3VUd0tzdXFNaFlPZGI4VGNZ?=
+ =?utf-8?B?L2N2dkpYeXkyVTJNbGVxbTVxVWlpS3BUSjdjZW1QM3E3c3VvMkhDWGRiWHRl?=
+ =?utf-8?B?Myt1aFF2NXNGNlpJSzRCYmVFd2ROZXhBY2lpbmtSZEhGdTllb01Ca05xcWRS?=
+ =?utf-8?B?U1ZxMTAwRW04YVdwVGRxd2NMWWNKNUJScStRaVVSaXEzUExsL3dnV2tNNG1y?=
+ =?utf-8?B?VndLbDVVWHE4TTRDaFRnQUJJdUs5dEZvRGJhMUwwbDlMS2JNZ3hlY0R3RTN0?=
+ =?utf-8?B?a0l0ZitZOEJKYUtRZEl3RFMzTjNMVHlDMzZpTGFEN1ZwSTNXMTR3Sjd2TE1v?=
+ =?utf-8?B?WFpIQlNNQ3YxWXRreFZabTc5V2RLWlM2Vm5mOUFFV0NTdTJhejliSndOdmVO?=
+ =?utf-8?B?SXY1THhIWnNLbEtLci9ndGNVQ1g3aVJEZmFEWmMyb3p2a056MWVadnhHbnpa?=
+ =?utf-8?B?cXBBOXhQL1JXUTU1M1U1OUQ0clBhTnVtNmlCVEk0Y2VLZWFRQTEvd0VOSmgx?=
+ =?utf-8?B?eEVFeFF0eXlCcmRtR2ZSS2JBV3MrRmxISnpnVXNUMXNYdUlOMVRZRTJ4M3dY?=
+ =?utf-8?B?cUlHYWU1VXBrZjUwU0xIMVB2ZXQxQ3JHanI0Qk9KejZURjRWQWlEdm50c2E0?=
+ =?utf-8?B?azVZRk1GZHpYMnp1UEZOaGRmdGl4RVNlaVhrQ3ZHVmhwZ1Jqb215WXFRWmln?=
+ =?utf-8?B?RGRWMG5GcEZCVk1FU1pOcHFLeW1Gd1hmK08zUWZ2M2VzK2lSL00vZ0lqTjdX?=
+ =?utf-8?B?NVk3VzRuWTNTTkpaVGwwTEhWdDN6NG1rcXRsOE91d0lUNS9rWWhtYVcrTG9P?=
+ =?utf-8?B?QWhYWkVhc3NrRloyNUpZUExQeHRhZmxpYWVBTzhPb2FhcVdKNU1sTDM3QUxX?=
+ =?utf-8?B?Q1Q2aWhsQnk4TythVi9mYitlYkdQQkd2ZnlJbWZCREFPU3NHYzFCKzVmSjd6?=
+ =?utf-8?B?YWxuUTN6ajBDUVhDYytiMm8wVDZqUlprQU1pZ3NQWmNJMGliTnF3RkZta0Fs?=
+ =?utf-8?B?RUxnYVg5cW5LN3VPM2RSS1E5SUFWSWtNNldyVXJVcWFmd0l2NzVtRWVtUVlI?=
+ =?utf-8?Q?5Pzarhwb6xreQm9u8boRyAk6h?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 765504b8-69dd-4887-a889-08dcf81c3411
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2024 13:18:39.8065
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EYQT3q6yNTESBsMPrM+ziHsA0CfbGVVsHfVVPK1gJbDZ4Ijjcx7sojv0DNKN+rnd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7199
 
-On Tue, Oct 22, 2024 at 11:33=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
- wrote:
-> +    /// Find the [`of::DeviceId`] within [`Driver::ID_TABLE`] matching t=
-he given [`Device`], if any.
-> +    fn of_match_device(pdev: &Device) -> Option<&of::DeviceId> {
-> +        let table =3D Self::ID_TABLE;
+Am 25.10.24 um 23:50 schrieb Michał Winiarski:
+> There are multiple places where special handling is required for IOV
+> resources.
+>
+> Extract it to pci_resource_is_iov() helper and drop a few ifdefs.
+>
+> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Reviewed-by: Christian König <christian.koenig@amd.com>
+
+> ---
+>   drivers/pci/pci.h       | 19 +++++++++++++++----
+>   drivers/pci/setup-bus.c |  7 +++----
+>   drivers/pci/setup-res.c |  4 +---
+>   3 files changed, 19 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 14d00ce45bfa9..48d345607e57e 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -580,6 +580,10 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
+>   resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
+>   void pci_restore_iov_state(struct pci_dev *dev);
+>   int pci_iov_bus_range(struct pci_bus *bus);
+> +static inline bool pci_resource_is_iov(int resno)
+> +{
+> +	return resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END;
+> +}
+>   extern const struct attribute_group sriov_pf_dev_attr_group;
+>   extern const struct attribute_group sriov_vf_dev_attr_group;
+>   #else
+> @@ -589,12 +593,21 @@ static inline int pci_iov_init(struct pci_dev *dev)
+>   }
+>   static inline void pci_iov_release(struct pci_dev *dev) { }
+>   static inline void pci_iov_remove(struct pci_dev *dev) { }
+> +static inline void pci_iov_update_resource(struct pci_dev *dev, int resno) { }
+> +static inline resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev,
+> +							   int resno)
+> +{
+> +	return 0;
+> +}
+>   static inline void pci_restore_iov_state(struct pci_dev *dev) { }
+>   static inline int pci_iov_bus_range(struct pci_bus *bus)
+>   {
+>   	return 0;
+>   }
+> -
+> +static inline bool pci_resource_is_iov(int resno)
+> +{
+> +	return false;
+> +}
+>   #endif /* CONFIG_PCI_IOV */
+>   
+>   #ifdef CONFIG_PCIE_PTM
+> @@ -616,12 +629,10 @@ unsigned long pci_cardbus_resource_alignment(struct resource *);
+>   static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+>   						     struct resource *res)
+>   {
+> -#ifdef CONFIG_PCI_IOV
+>   	int resno = res - dev->resource;
+>   
+> -	if (resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END)
+> +	if (pci_resource_is_iov(resno))
+>   		return pci_sriov_resource_alignment(dev, resno);
+> -#endif
+>   	if (dev->class >> 8 == PCI_CLASS_BRIDGE_CARDBUS)
+>   		return pci_cardbus_resource_alignment(res);
+>   	return resource_alignment(res);
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 23082bc0ca37a..ba293df10c050 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1093,17 +1093,16 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>   			     (r->flags & mask) != type3))
+>   				continue;
+>   			r_size = resource_size(r);
+> -#ifdef CONFIG_PCI_IOV
 > +
-> +        // SAFETY:
-> +        // - `table` has static lifetime, hence it's valid for read,
-> +        // - `dev` is guaranteed to be valid while it's alive, and so is
-> +        //   `pdev.as_dev().as_raw()`.
-> +        let raw_id =3D unsafe { bindings::of_match_device(table.as_ptr()=
-, pdev.as_dev().as_raw()) };
+>   			/* Put SRIOV requested res to the optional list */
+> -			if (realloc_head && i >= PCI_IOV_RESOURCES &&
+> -					i <= PCI_IOV_RESOURCE_END) {
+> +			if (realloc_head && pci_resource_is_iov(i)) {
+>   				add_align = max(pci_resource_alignment(dev, r), add_align);
+>   				r->end = r->start - 1;
+>   				add_to_list(realloc_head, dev, r, r_size, 0 /* Don't care */);
+>   				children_add_size += r_size;
+>   				continue;
+>   			}
+> -#endif
 > +
-> +        if raw_id.is_null() {
-> +            None
-> +        } else {
-> +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of =
-`struct of_device_id` and
-> +            // does not add additional invariants, so it's safe to trans=
-mute.
-> +            Some(unsafe { &*raw_id.cast::<of::DeviceId>() })
-> +        }
-> +    }
+>   			/*
+>   			 * aligns[0] is for 1MB (since bridge memory
+>   			 * windows are always at least 1MB aligned), so
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index c6d933ddfd464..e2cf79253ebda 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -127,10 +127,8 @@ void pci_update_resource(struct pci_dev *dev, int resno)
+>   {
+>   	if (resno <= PCI_ROM_RESOURCE)
+>   		pci_std_update_resource(dev, resno);
+> -#ifdef CONFIG_PCI_IOV
+> -	else if (resno >= PCI_IOV_RESOURCES && resno <= PCI_IOV_RESOURCE_END)
+> +	else if (pci_resource_is_iov(resno))
+>   		pci_iov_update_resource(dev, resno);
+> -#endif
+>   }
+>   
+>   int pci_claim_resource(struct pci_dev *dev, int resource)
 
-Sorry if this has already been mentioned, but this method should
-probably be marked #[cfg(CONFIG_OF)] so that you can use these
-abstractions even if OF is disabled.
-
-Alice
 
