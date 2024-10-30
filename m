@@ -1,96 +1,155 @@
-Return-Path: <linux-pci+bounces-15605-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-15607-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 749C09B66A6
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 15:57:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 663889B66E5
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 16:03:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E8AF1F22014
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 14:57:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF5B6282791
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Oct 2024 15:03:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123F21F471A;
-	Wed, 30 Oct 2024 14:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400C41F80A0;
+	Wed, 30 Oct 2024 15:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b="qomTIikI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9399D26AD4;
-	Wed, 30 Oct 2024 14:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009F200CA2;
+	Wed, 30 Oct 2024 15:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730300243; cv=none; b=TmMVml5HcqQjy3VPGLQikG19waN6fGWD9RMdPk8Yx1ke8OJfDGxD69qsJGhfM4OyEfDoK2HwjKwuXCW/tdTlthe8409lbTXtrCkYd0m3wjICj6rqAJ6LsEy4ebB6NI0LKrm1j182LACnki+IaI+T/xWT1pHVs+QvS4NJNkf8ua0=
+	t=1730300611; cv=none; b=fSLnKluJDFy8cQ5uINPhoHsKjosiiOTeF6XdRmLU/BB5HZ7On6Tto8iPB2AXUMJizjICbB/tfMHL/a8XKleFweHtFz4876vlwDvxfH7QLFP6wg1tOvRaQi+WtJwBF3pR6F4d9bRXMcsoAoiv2tdtLxDBBByIiQBGZXf2516TNkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730300243; c=relaxed/simple;
-	bh=NFNwA1nAENuRUepB0mrjvJghMwFFjdV9BjvwSmBmWQU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BG4yzX1EXiv9OP9JI15xdX/vhdIhEw3g0oT2KnYNoNR7Tju8tSYcOi5LsRb5ZHEfRN8Z2+F4uflvytwWr2vj8pX+AgACqS8zSeUehGziCjUJpOyErJ7Hd7Ywo3mVk2phqc5gYxJLUF50Y/JifNCmQLZi5WYsJjuqqxGSgZ/Axo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Xdqpz1946z6GFD4;
-	Wed, 30 Oct 2024 22:52:27 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 65FF3140158;
-	Wed, 30 Oct 2024 22:57:18 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Oct
- 2024 15:57:17 +0100
-Date: Wed, 30 Oct 2024 14:57:15 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v2 03/14] cxl/pci: Introduce helper functions
- pcie_is_cxl() and pcie_is_cxl_port()
-Message-ID: <20241030145715.00001d78@Huawei.com>
-In-Reply-To: <20241025210305.27499-4-terry.bowman@amd.com>
-References: <20241025210305.27499-1-terry.bowman@amd.com>
-	<20241025210305.27499-4-terry.bowman@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1730300611; c=relaxed/simple;
+	bh=NAJDFpr9nmdU19C3JKcxMzbLsCujnceVqhZ/RKnEwwg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Af+TFKHbaNb+31NyYomIGXM73EbTT6cTqSu98SsoWPf9nOox0LZkrVYTYwFp+I+wNaLYmJk8frvjgX/RPZmzBKdUFVwnUGYm49zXP0bFaKHdfny3PyILmseqRbzytFLMMDTu/p8ax9QRp+1oc96YfhX0b314DFEoItACsgBOMu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b=qomTIikI; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1730300534; x=1730905334; i=metux@gmx.de;
+	bh=NAJDFpr9nmdU19C3JKcxMzbLsCujnceVqhZ/RKnEwwg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=qomTIikI/OgfmxAbFKh1e8iCRJShu7EnlgU5G434TkB+7QieI60zcRnRQmNHY7mL
+	 26XECiyiNu12zXTWRy2asSgHeF6VwbBHM3aDnQ3uox6d+N5j3vyz2V29nf9ZEHI/7
+	 qUlSXTqxVipxXZ1JSehQTzpHDHQPSPiL/eaweFb8E7BUCEPOvfqCWNoLR7qjkN1j/
+	 p49vWpG4avdBGfWZrfUUn1QQPJYBKupzAA27zZiM0BrIysUJtE3I4oi18t2KU2Jgp
+	 NR5BKuTzLj4AssNq/jcoRi8JEym9/1eHXVRmJDUQ/Hacah+zbe10IoOhncuicwk4Q
+	 B7fK/ijaayh5nLVM0A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.178] ([77.2.112.201]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wPh-1tCUne2tcR-003w9y; Wed, 30
+ Oct 2024 16:02:13 +0100
+Message-ID: <0369c687-db33-4665-b3dc-143000ef2e47@gmx.de>
+Date: Wed, 30 Oct 2024 16:02:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Maintainers now blocked from kernel.org mail access [WAS Re:
+ linux: Goodbye from a Linux community volunteer]
+From: metux <metux@gmx.de>
+To: Hantong Chen <cxwdyx620@gmail.com>, tytso@mit.edu
+Cc: ajhalaney@gmail.com, allenbh@gmail.com, andrew@lunn.ch,
+ andriy.shevchenko@linux.intel.com, andy@kernel.org, arnd@arndb.de,
+ bhelgaas@google.com, bp@alien8.de, broonie@kernel.org,
+ cai.huoqing@linux.dev, dave.jiang@intel.com, davem@davemloft.net,
+ dlemoal@kernel.org, dmaengine@vger.kernel.org, dushistov@mail.ru,
+ fancer.lancer@gmail.com, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+ ink@jurassic.park.msu.ru, james.bottomley@hansenpartnership.com,
+ jdmason@kudzu.us, jiaxun.yang@flygoat.com, keguang.zhang@gmail.com,
+ kory.maincent@bootlin.com, krzk@kernel.org, kuba@kernel.org,
+ linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux@armlinux.org.uk, linux@roeck-us.net,
+ manivannan.sadhasivam@linaro.org, netdev@vger.kernel.org,
+ nikita.shubin@maquefel.me, nikita@trvn.ru, ntb@lists.linux.dev,
+ olteanv@gmail.com, pabeni@redhat.com, paulburton@kernel.org,
+ robh@kernel.org, s.shtylyov@omp.ru, sergio.paracuellos@gmail.com,
+ shc_work@mail.ru, siyanteng@loongson.cn, tsbogend@alpha.franken.de,
+ xeb@mail.ru, yoshihiro.shimoda.uh@renesas.com
+References: <20241024173504.GN3204734@mit.edu>
+ <20241024181917.1119-1-cxwdyx620@gmail.com>
+ <e3559794-ab4a-48f2-8c28-52ef46258051@metux.net>
+Content-Language: tl
+In-Reply-To: <e3559794-ab4a-48f2-8c28-52ef46258051@metux.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jSWmplSFQgV90c2A0bkkvj2t8ExnIUMHHQD7NlbYYqtnVH71j/A
+ Pj4uZIi6YPufmEMjudXa4dJHIygmTV1wIFJJkHGM+GIBFRAfnlev+sgkCZr+MF54lQRidxS
+ bkG2HCXJq0essmv69s27h4WdycA0Rnb+4K1fnTHuD/qBR+mEDSBS53MElG91weJLYtaeg5k
+ OTPFgaQ3fak8gIXNj4JDQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WLKWUYisdM4=;2yNj/laS7SIY5FYvJFi4MhOmvxZ
+ pHFbD0J1kye994bqbqLhdCTnBHW8Ug5JybvfzVUSlvhHAACTecoQE51xKKnV5hpKkUhCo8yLr
+ /EvJ6VglOAgdSAY02WiKyUBPuOArNFiBamR/Fukdo2XJTgsXt550Q9Uu3s0mVOwxlXCMnWMns
+ Fn7g+nMUVDwZg2peIk913PvjXMFh4d9Lkvh3kvC90QEiN4qogLfcOyB8IyykJPV3DQeeXp5hf
+ +MrDjTpn28aqOi4W0rgu+IoyVD3neDdXwidld0Di4C2B0Xjeof79KSNCRhE6HCopzETXFL3/P
+ Eq20+VJdDS4NGHO7dtKR96RqKlqckwmu3AywKAhNuZLL3xf4qG/GG7lFzucn1PmOwB9qzuDQ0
+ T83E1gkoEctHd2TIp9iZslkwtRvZoLEaBVqlMchJ2WhOacIxu0B7j2GBH/lqButUW3kxkamyr
+ QKLpEtwiYtP4mMfbOjHeKNuT587VBOcJ0soGtjcr5abLWdDOKEep1at+A6hNDrbBSP1f6/IBo
+ BK+2+hzwJ3piZW/Yn1eaXBx6/3MBI0Lr+ftdHokUiS61Mp+GLxSd3NlP9E5Ud6tWQlNEOE+TO
+ 3A3+h1iPb9qNj+J4fjqMCG2p0nA6l58zMiSBfI4P0CjndwksOOuTcigJ6T1hzsfD+NMuWWKR6
+ sAOmiaHvt7qnuiw6srIxEdbhvlRklDpq1Rv8Lrce6Ts8Z8qBYDnh7sqT0QOx+5KI9Lsu5iX3q
+ 5le4iVFFC4QhG4eqQ5l+1SnoJ0wgVAVlJ5k6YKhwZo8jzqS56dXAir9zu5tn+DGzJFsWUTgbd
+ rbwM2pncFYXiGznL6foV5OhA==
 
-On Fri, 25 Oct 2024 16:02:54 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+Resending with another address, since the other one is
+hard-blocked / censored by kernel.org mail server.
 
-> CXL and AER drivers need the ability to identify CXL devices and CXL port
-> devices.
-> 
-> First, add set_pcie_cxl() with logic checking for CXL Flexbus DVSEC
-> presence. The CXL Flexbus DVSEC presence is used because it is required
-> for all the CXL PCIe devices.[1]
-> 
-> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
-> Flexbus presence.
-> 
-> Add pcie_is_cxl() as a macro to return 'struct pci_dev::is_cxl',
-> 
-> Add pcie_is_cxl_port() to check if a device is a CXL root port, CXL
-> upstream switch port, or CXL downstream switch port. Also, verify the
-> CXL extensions DVSEC for port is present.[1]
-> 
-> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
->     Capability (DVSEC) ID Assignment, Table 8-2
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Make sense to improve the trace point info if nothing else.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On 30.10.24 15:33, Enrico Weigelt, metux IT consult wrote:
+> On 24.10.24 20:19, Hantong Chen wrote:
+>
+>> What LF and Linus done will inevitably create a climate of fear where
+>> contributors and maintainers from the *Countries of Particular Concern*
+>> feels endangered.
+>
+> And it's getting worse:
+>
+> They're now blocking mail traffic on kernel.org, even from maintainers.
+> (my whole company is hard-marked as "spam"). Anything @kernel.org -
+> lists as well as invidual inboxes.
+>
+> Still in the process of compiling evidence report. Anybody out there
+> who's affected too, let me know - will be added to the report.
+>
+> I wonder when this one will be blocked, too. (I've still got many more
+> left).
+>
+>> This is clearly NOT what contributors truly want. People from around
+>> the world
+>> once firmly believed that Linux was a free and open-source project.
+>> However,
+>> Greg's commit and Linus' response deeply disappoint them.
+>
+> Indeed. The trust that had been bulit up in decades is now finally
+> destroyed - just by a few mails.
+>
+> Linux has been turned into POSS, politware.
+>
+>> Open-source projects might be international, but the people or
+>> organizations
+>> controlling them are not. This is the source of concern and
+>> disappointment.
+>
+> That's why those projects should never depend on just a few individuals
+> or organisations in one specific country.
+>
+>
+>
+> --mtx
+>
 
